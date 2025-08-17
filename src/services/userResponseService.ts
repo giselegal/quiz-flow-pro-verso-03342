@@ -27,14 +27,16 @@ export const userResponseService = {
   }): Promise<QuizUser> {
     try {
       console.log('📝 Creating quiz user in Supabase:', userData);
-      
+
       const { data, error } = await supabase
         .from('quiz_users')
-        .insert([{
-          session_id: userData.sessionId,
-          name: userData.name,
-          email: userData.email,
-        }])
+        .insert([
+          {
+            session_id: userData.sessionId,
+            name: userData.name,
+            email: userData.email,
+          },
+        ])
         .select()
         .single();
 
@@ -66,10 +68,10 @@ export const userResponseService = {
   }): Promise<UserResponse> {
     try {
       console.log('📝 Saving response to Supabase:', response);
-      
+
       // Mapear step para número
       const stepNumber = parseInt(response.step.replace(/\D/g, '')) || 1;
-      
+
       const { data, error } = await supabase
         .from('quiz_step_responses')
         .insert({
@@ -80,8 +82,8 @@ export const userResponseService = {
           response_data: {
             originalData: response.data,
             timestamp: response.timestamp,
-            step: response.step
-          }
+            step: response.step,
+          },
         } as any)
         .select();
 
@@ -91,9 +93,9 @@ export const userResponseService = {
       }
 
       console.log('✅ Response saved successfully:', data);
-      
+
       const responseRecord = Array.isArray(data) ? data[0] : data;
-      
+
       return {
         id: responseRecord.id,
         userId: response.userId,
@@ -115,8 +117,11 @@ export const userResponseService = {
         timestamp: response.timestamp,
         created_at: new Date(),
       };
-      
-      localStorage.setItem(`quiz_response_${fallbackResponse.id}`, JSON.stringify(fallbackResponse));
+
+      localStorage.setItem(
+        `quiz_response_${fallbackResponse.id}`,
+        JSON.stringify(fallbackResponse)
+      );
       console.log('📦 Saved response to localStorage as fallback');
       return fallbackResponse;
     }
@@ -126,7 +131,7 @@ export const userResponseService = {
     try {
       // Primeiro tentar buscar pela session_id ativa e component_id
       const sessionId = localStorage.getItem('quiz_session_id') || '';
-      
+
       if (sessionId) {
         const { data, error } = await supabase
           .from('quiz_step_responses')
@@ -138,10 +143,15 @@ export const userResponseService = {
           .single();
 
         if (!error && data) {
-          return (data as any)?.response_data?.originalData?.name || (data as any)?.response_data?.value || JSON.stringify((data as any)?.response_data) || '';
+          return (
+            (data as any)?.response_data?.originalData?.name ||
+            (data as any)?.response_data?.value ||
+            JSON.stringify((data as any)?.response_data) ||
+            ''
+          );
         }
       }
-      
+
       // Fallback to localStorage
       const stored = localStorage.getItem(`quiz_response_${componentId}`);
       return stored ? JSON.parse(stored).data : '';
@@ -162,7 +172,7 @@ export const userResponseService = {
         .order('responded_at', { ascending: true });
 
       if (error) throw error;
-      
+
       return data.map(item => ({
         id: item.id,
         userId: userId,
@@ -190,10 +200,7 @@ export const userResponseService = {
 
   async deleteResponse(id: string): Promise<boolean> {
     try {
-      const { error } = await supabase
-        .from('quiz_step_responses')
-        .delete()
-        .eq('id', id);
+      const { error } = await supabase.from('quiz_step_responses').delete().eq('id', id);
 
       if (error) throw error;
       console.log('🗑️ Response deleted successfully');

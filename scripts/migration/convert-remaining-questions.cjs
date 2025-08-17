@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
-const fs = require("fs");
-const path = require("path");
+const fs = require('fs');
+const path = require('path');
 
-const filePath = "/workspaces/quiz-quest-challenge-verse/src/data/realQuizTemplates.ts";
+const filePath = '/workspaces/quiz-quest-challenge-verse/src/data/realQuizTemplates.ts';
 
 // Função para converter uma questão da estrutura components para blocks
 function convertQuestionToBlocks(questionContent, questionNumber, progress) {
@@ -20,7 +20,7 @@ function convertQuestionToBlocks(questionContent, questionNumber, progress) {
 
   const id = idMatch[1];
   const title = titleMatch[1];
-  const questionType = questionTypeMatch ? questionTypeMatch[1] : "text";
+  const questionType = questionTypeMatch ? questionTypeMatch[1] : 'text';
   const multiSelect = multiSelectMatch ? parseInt(multiSelectMatch[1]) : 1;
 
   // Extrair opções
@@ -64,7 +64,7 @@ function convertQuestionToBlocks(questionContent, questionNumber, progress) {
       progress: ${progress},
       showHeader: true,
       showProgress: true,
-      questionType: "${questionType}",${multiSelect > 1 ? `\n      multiSelect: ${multiSelect},` : ""}
+      questionType: "${questionType}",${multiSelect > 1 ? `\n      multiSelect: ${multiSelect},` : ''}
       blocks: [
         {
           id: '${id}-header',
@@ -112,20 +112,20 @@ ${options
   .map(opt => {
     const optionStr = `              { 
                 id: "${opt.id}", 
-                text: "${opt.text}",${opt.imageUrl ? `\n                imageUrl: "${opt.imageUrl}",` : ""}
+                text: "${opt.text}",${opt.imageUrl ? `\n                imageUrl: "${opt.imageUrl}",` : ''}
                 value: "${opt.value}",
                 category: "${opt.category}"
               }`;
     return optionStr;
   })
-  .join(",\n")}
+  .join(',\n')}
             ],
             columns: ${hasImages ? 2 : 1},
-            showImages: ${hasImages},${hasImages ? "\n            imageSize: 'large'," : ""}
+            showImages: ${hasImages},${hasImages ? "\n            imageSize: 'large'," : ''}
             multipleSelection: ${multiSelect > 1},
             maxSelections: ${multiSelect},
             minSelections: 1,
-            validationMessage: 'Selecione ${multiSelect > 1 ? `até ${multiSelect} opções` : "uma opção"}',
+            validationMessage: 'Selecione ${multiSelect > 1 ? `até ${multiSelect} opções` : 'uma opção'}',
             gridGap: ${hasImages ? 16 : 12},
             responsiveColumns: true
           }
@@ -159,7 +159,7 @@ ${options
 }
 
 // Ler o arquivo
-const content = fs.readFileSync(filePath, "utf8");
+const content = fs.readFileSync(filePath, 'utf8');
 
 // Encontrar e converter questões 6-10
 const questions = [
@@ -210,4 +210,4 @@ questions.forEach(({ number, progress, pattern }) => {
 
 // Escrever o arquivo atualizado
 fs.writeFileSync(filePath, updatedContent);
-console.log("\n🎉 Conversão concluída! Arquivo atualizado.");
+console.log('\n🎉 Conversão concluída! Arquivo atualizado.');

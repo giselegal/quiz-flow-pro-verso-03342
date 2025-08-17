@@ -7,23 +7,23 @@ import { BlockComponentProps } from '@/types/blocks';
  * Facilitam importação e configuração automática de variantes
  */
 
-export const QuizIntroHeaderBlock: React.FC<BlockComponentProps> = (props) => (
+export const QuizIntroHeaderBlock: React.FC<BlockComponentProps> = props => (
   <UnifiedHeaderBlock {...props} variant="quiz-intro" />
 );
 
-export const QuizResultHeaderBlock: React.FC<BlockComponentProps> = (props) => (
+export const QuizResultHeaderBlock: React.FC<BlockComponentProps> = props => (
   <UnifiedHeaderBlock {...props} variant="quiz-result" />
 );
 
-export const OfferHeaderBlock: React.FC<BlockComponentProps> = (props) => (
+export const OfferHeaderBlock: React.FC<BlockComponentProps> = props => (
   <UnifiedHeaderBlock {...props} variant="offer-hero" />
 );
 
-export const VerticalCanvasHeaderBlock: React.FC<BlockComponentProps> = (props) => (
+export const VerticalCanvasHeaderBlock: React.FC<BlockComponentProps> = props => (
   <UnifiedHeaderBlock {...props} variant="vertical-canvas" />
 );
 
-export const GenericHeaderBlock: React.FC<BlockComponentProps> = (props) => (
+export const GenericHeaderBlock: React.FC<BlockComponentProps> = props => (
   <UnifiedHeaderBlock {...props} variant="generic" />
 );
 

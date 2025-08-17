@@ -15,7 +15,7 @@
 
 ```typescript
 // No seu arquivo /src/pages/editor-fixed-dragdrop.tsx (ou onde estiver seu editor)
-import { useEditorWithJson } from "@/components/editor-fixed/useEditorWithJson";
+import { useEditorWithJson } from '@/components/editor-fixed/useEditorWithJson';
 
 // Dentro do seu componente:
 const YourExistingEditor = () => {
@@ -68,8 +68,8 @@ await jsonFeatures.loadStepTemplate(1);
 
 // Exportar configuração atual como JSON
 const template = jsonFeatures.exportCurrentAsTemplate({
-  name: "Meu Funil Personalizado",
-  category: "custom",
+  name: 'Meu Funil Personalizado',
+  category: 'custom',
 });
 jsonFeatures.saveTemplateToFile(template);
 // ✅ Download automático do arquivo JSON

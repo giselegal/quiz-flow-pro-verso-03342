@@ -64,7 +64,7 @@ const {
 // Status bar com métricas em tempo real
 <div className="bg-gradient-to-r from-purple-100 to-blue-100">
   <span>
-    {currentBlocks.length} blocos • {totalBlocks} total •{stageCount} etapas • Ativa:{" "}
+    {currentBlocks.length} blocos • {totalBlocks} total •{stageCount} etapas • Ativa:{' '}
     {activeStageId}
   </span>
   <span>Viewport: {viewportSize.toUpperCase()}</span>

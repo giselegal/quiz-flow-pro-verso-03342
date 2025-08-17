@@ -1,7 +1,7 @@
 // @ts-nocheck
-import { useCallback } from 'react';
-import type { BlockData } from '@/types/blocks';
 import { useToast } from '@/hooks/use-toast';
+import type { BlockData } from '@/types/blocks';
+import { useCallback } from 'react';
 
 export // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {

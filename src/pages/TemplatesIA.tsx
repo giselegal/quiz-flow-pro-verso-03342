@@ -2,11 +2,11 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from '@/hooks/use-toast';
 import { FunnelAIAgent, type FunnelTemplate } from '@/services/FunnelAIAgent';
 import { Bot, Check, Eye, Play, Sparkles, Wand2 } from 'lucide-react';
 import React, { useState } from 'react';
-import { useLocation } from "wouter";
+import { useLocation } from 'wouter';
 
 // Template da Consultora de Estilo com IA
 const STYLE_CONSULTANT_TEMPLATE: FunnelTemplate = {
@@ -470,7 +470,7 @@ const TemplatesIA: React.FC = () => {
   const [selectedTemplate, setSelectedTemplate] = useState<'STYLE_QUIZ' | 'STYLE_CONSULTANT'>(
     'STYLE_QUIZ'
   );
-  const [, setLocation] = useLocation(); 
+  const [, setLocation] = useLocation();
   const { toast } = useToast();
 
   const AVAILABLE_TEMPLATES = {
@@ -484,9 +484,9 @@ const TemplatesIA: React.FC = () => {
   const validateSelection = () => {
     if (!selectedTemplate) {
       toast({
-        title: "⚠️ Template não selecionado",
-        description: "Por favor, selecione um template antes de continuar.",
-        variant: "destructive",
+        title: '⚠️ Template não selecionado',
+        description: 'Por favor, selecione um template antes de continuar.',
+        variant: 'destructive',
       });
       return false;
     }
@@ -494,9 +494,9 @@ const TemplatesIA: React.FC = () => {
     const template = getCurrentTemplate();
     if (!template) {
       toast({
-        title: "❌ Erro no Template",
-        description: "Template selecionado não encontrado. Tente novamente.",
-        variant: "destructive",
+        title: '❌ Erro no Template',
+        description: 'Template selecionado não encontrado. Tente novamente.',
+        variant: 'destructive',
       });
       return false;
     }
@@ -504,10 +504,8 @@ const TemplatesIA: React.FC = () => {
     return true;
   };
 
-  const updateStepStatus = (stepId: string, status: AgentStep["status"], progress: number) => {
-    setSteps(prev =>
-      prev.map(step => (step.id === stepId ? { ...step, status, progress } : step))
-    );
+  const updateStepStatus = (stepId: string, status: AgentStep['status'], progress: number) => {
+    setSteps(prev => prev.map(step => (step.id === stepId ? { ...step, status, progress } : step)));
   };
 
   const simulateAgentWork = async () => {
@@ -536,18 +534,18 @@ const TemplatesIA: React.FC = () => {
 
       const templateName = getCurrentTemplate().meta.name;
       toast({
-        title: "✅ Funil Criado com Sucesso!",
+        title: '✅ Funil Criado com Sucesso!',
         description: `${templateName} criado dinamicamente com IA. ID: ${funnelId}`,
       });
     } catch (error) {
       console.error('Erro ao gerar funil:', error);
       setIsGenerating(false);
       setCurrentStep(-1);
-      
+
       toast({
-        title: "❌ Erro na Geração",
-        description: "Houve um problema ao gerar o funil. Tente novamente.",
-        variant: "destructive",
+        title: '❌ Erro na Geração',
+        description: 'Houve um problema ao gerar o funil. Tente novamente.',
+        variant: 'destructive',
       });
     }
   };

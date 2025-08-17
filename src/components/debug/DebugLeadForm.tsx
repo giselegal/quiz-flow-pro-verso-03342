@@ -7,7 +7,7 @@ import React from 'react';
 const DebugLeadForm: React.FC = () => {
   const handleTestLeadForm = () => {
     console.log('🧪 Teste de debug do LeadFormBlock');
-    
+
     // Simular dados do bloco
     const mockBlock = {
       id: 'debug-lead-form',
@@ -18,8 +18,8 @@ const DebugLeadForm: React.FC = () => {
         backgroundColor: '#FFFFFF',
         borderColor: '#B89B7A',
         textColor: '#432818',
-        primaryColor: '#B89B7A'
-      }
+        primaryColor: '#B89B7A',
+      },
     };
 
     console.log('🎯 Mock block criado:', mockBlock);
@@ -27,7 +27,7 @@ const DebugLeadForm: React.FC = () => {
     // Disparar evento para teste
     window.dispatchEvent(
       new CustomEvent('debug-test-lead-form', {
-        detail: mockBlock
+        detail: mockBlock,
       })
     );
   };
@@ -42,9 +42,7 @@ const DebugLeadForm: React.FC = () => {
         >
           Testar Lead Form
         </button>
-        <div className="text-xs text-yellow-600">
-          Verifique o console para logs
-        </div>
+        <div className="text-xs text-yellow-600">Verifique o console para logs</div>
       </div>
     </div>
   );

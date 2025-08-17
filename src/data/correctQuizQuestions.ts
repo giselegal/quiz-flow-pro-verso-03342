@@ -670,7 +670,7 @@ export const COMPLETE_QUIZ_QUESTIONS: QuizQuestion[] = [
   },
 
   // ✅ QUESTÕES ESTRATÉGICAS (12-17) - 1 seleção obrigatória, pontuação 0
-  
+
   // QUESTÃO ESTRATÉGICA 1: Como você se vê hoje?
   {
     id: 'strategic1',
@@ -747,7 +747,8 @@ export const COMPLETE_QUIZ_QUESTIONS: QuizQuestion[] = [
   {
     id: 'strategic3',
     text: 'Com que frequência você se pega pensando: "Com que roupa eu vou?" — mesmo com o guarda-roupa cheio?',
-    title: 'Com que frequência você se pega pensando: "Com que roupa eu vou?" — mesmo com o guarda-roupa cheio?',
+    title:
+      'Com que frequência você se pega pensando: "Com que roupa eu vou?" — mesmo com o guarda-roupa cheio?',
     order: 14,
     type: 'strategic-question',
     multiSelect: 1,
@@ -783,7 +784,8 @@ export const COMPLETE_QUIZ_QUESTIONS: QuizQuestion[] = [
   {
     id: 'strategic4',
     text: 'Pense no quanto você já gastou com roupas que não usa ou que não representam quem você é...',
-    title: 'Pense no quanto você já gastou com roupas que não usa ou que não representam quem você é...',
+    title:
+      'Pense no quanto você já gastou com roupas que não usa ou que não representam quem você é...',
     order: 15,
     type: 'strategic-question',
     multiSelect: 1,
@@ -819,7 +821,8 @@ export const COMPLETE_QUIZ_QUESTIONS: QuizQuestion[] = [
   {
     id: 'strategic5',
     text: 'Se esse conteúdo completo custasse R$ 97,00 — incluindo Guia de Estilo, bônus especiais e um passo a passo prático para transformar sua imagem pessoal — você consideraria um bom investimento?',
-    title: 'Se esse conteúdo completo custasse R$ 97,00 — incluindo Guia de Estilo, bônus especiais e um passo a passo prático para transformar sua imagem pessoal — você consideraria um bom investimento?',
+    title:
+      'Se esse conteúdo completo custasse R$ 97,00 — incluindo Guia de Estilo, bônus especiais e um passo a passo prático para transformar sua imagem pessoal — você consideraria um bom investimento?',
     order: 16,
     type: 'strategic-question',
     multiSelect: 1,

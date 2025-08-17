@@ -5,7 +5,7 @@
 ### 🔧 **React Core & Hooks**
 
 ```typescript
-import React, { useState, useCallback, useMemo, useEffect } from "react";
+import React, { useState, useCallback, useMemo, useEffect } from 'react';
 ```
 
 - **React**: Biblioteca principal para criação de componentes
@@ -17,9 +17,9 @@ import React, { useState, useCallback, useMemo, useEffect } from "react";
 ### 🎨 **UI Components (Shadcn/UI)**
 
 ```typescript
-import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "../ui/resizable";
-import { ScrollArea } from "../ui/scroll-area";
-import { Button } from "../ui/button";
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '../ui/resizable';
+import { ScrollArea } from '../ui/scroll-area';
+import { Button } from '../ui/button';
 ```
 
 - **ResizablePanelGroup/Panel/Handle**: Cria layout dividido em painéis redimensionáveis
@@ -41,7 +41,7 @@ import {
   Smartphone,
   PlayCircle,
   ExternalLink,
-} from "lucide-react";
+} from 'lucide-react';
 ```
 
 - **Plus**: Adicionar blocos/etapas
@@ -55,7 +55,7 @@ import {
 ### 🛠️ **Utilitários Core**
 
 ```typescript
-import { cn } from "../../lib/utils";
+import { cn } from '../../lib/utils';
 ```
 
 - **cn**: Função para combinar classes CSS condicionalmente (clsx + tailwind-merge)
@@ -63,7 +63,7 @@ import { cn } from "../../lib/utils";
 ### 🎮 **Editor Core**
 
 ```typescript
-import { useEditor } from "../../hooks/useEditor";
+import { useEditor } from '../../hooks/useEditor';
 ```
 
 - **useEditor**: Hook principal que gerencia:
@@ -75,10 +75,10 @@ import { useEditor } from "../../hooks/useEditor";
 ### 🧱 **Sistema de Blocos**
 
 ```typescript
-import { UniversalBlockRenderer } from "./blocks/UniversalBlockRenderer";
-import type { BlockData } from "../../types/blocks";
-import { EditorBlock } from "../../types/editor";
-import { normalizeBlock } from "../../utils/blockTypeMapping";
+import { UniversalBlockRenderer } from './blocks/UniversalBlockRenderer';
+import type { BlockData } from '../../types/blocks';
+import { EditorBlock } from '../../types/editor';
+import { normalizeBlock } from '../../utils/blockTypeMapping';
 ```
 
 - **UniversalBlockRenderer**: Renderiza qualquer tipo de bloco dinamicamente
@@ -89,10 +89,10 @@ import { normalizeBlock } from "../../utils/blockTypeMapping";
 ### 🎛️ **Painéis do Editor**
 
 ```typescript
-import { DynamicPropertiesPanel } from "./panels/DynamicPropertiesPanel";
-import { EditorStatus } from "./components/EditorStatus";
-import { StepsPanel } from "./StepsPanel";
-import { ComponentsPanel } from "./ComponentsPanel";
+import { DynamicPropertiesPanel } from './panels/DynamicPropertiesPanel';
+import { EditorStatus } from './components/EditorStatus';
+import { StepsPanel } from './StepsPanel';
+import { ComponentsPanel } from './ComponentsPanel';
 ```
 
 - **DynamicPropertiesPanel**: Painel de propriedades do bloco selecionado
@@ -103,7 +103,7 @@ import { ComponentsPanel } from "./ComponentsPanel";
 ### 🏗️ **Arquitetura de Steps**
 
 ```typescript
-import { getStepById } from "./steps";
+import { getStepById } from './steps';
 ```
 
 - **getStepById**: Função para buscar dados específicos de uma etapa
@@ -112,8 +112,8 @@ import { getStepById } from "./steps";
 ### 🚀 **Serviços de Backend**
 
 ```typescript
-import { schemaDrivenFunnelService } from "../../services/schemaDrivenFunnelService";
-import { stepTemplateService } from "../../services/stepTemplateService";
+import { schemaDrivenFunnelService } from '../../services/schemaDrivenFunnelService';
+import { stepTemplateService } from '../../services/stepTemplateService';
 ```
 
 - **schemaDrivenFunnelService**: Carrega funis salvos do backend/supabase
@@ -122,7 +122,7 @@ import { stepTemplateService } from "../../services/stepTemplateService";
 ### 🍞 **UI Feedback**
 
 ```typescript
-import { useToast } from "../../hooks/use-toast";
+import { useToast } from '../../hooks/use-toast';
 ```
 
 - **useToast**: Sistema de notificações toast (sucesso, erro, info)
@@ -198,7 +198,7 @@ const handleStepSelect = useCallback(
 ```typescript
 const handlePopulateStep = useCallback((stepId: string) => {
   // 1. Extrair número da etapa (etapa-1 → 1)
-  const stepNumber = parseInt(stepId.replace("etapa-", ""));
+  const stepNumber = parseInt(stepId.replace('etapa-', ''));
 
   // 2. Buscar template no stepTemplateService
   const stepTemplate = getStepTemplate(stepNumber.toString());
@@ -249,8 +249,8 @@ const sortedBlocks = useMemo(() => {
 ### ❌ **1. Conflito de Imports**
 
 ```typescript
-import { getStepById } from "./steps"; // ← Pode estar obsoleto
-import { stepTemplateService } from "../../services/stepTemplateService"; // ← Novo sistema
+import { getStepById } from './steps'; // ← Pode estar obsoleto
+import { stepTemplateService } from '../../services/stepTemplateService'; // ← Novo sistema
 ```
 
 **Solução**: Usar apenas stepTemplateService como fonte única
@@ -283,10 +283,10 @@ const stepTemplate = getStepTemplate(stepNumber.toString());
 
 ```typescript
 // ❌ Remover
-import { getStepById } from "./steps";
+import { getStepById } from './steps';
 
 // ✅ Manter apenas
-import { stepTemplateService } from "../../services/stepTemplateService";
+import { stepTemplateService } from '../../services/stepTemplateService';
 ```
 
 ### 2️⃣ **Garantir Associação de Blocos**
@@ -319,16 +319,16 @@ const getStepTemplate = (stepId: string) => {
     // ✅ Fallback básico
     return [
       {
-        type: "heading-inline",
+        type: 'heading-inline',
         properties: { content: `Etapa ${stepNumber}` },
       },
       {
-        type: "text-inline",
-        properties: { content: "Template em desenvolvimento" },
+        type: 'text-inline',
+        properties: { content: 'Template em desenvolvimento' },
       },
     ];
   } catch (error) {
-    console.error("❌ Erro ao obter template:", error);
+    console.error('❌ Erro ao obter template:', error);
     return [];
   }
 };
@@ -533,7 +533,7 @@ const stepTemplate = getStepTemplate(stepNumber.toString());
 // Resultado: stepTemplate = []
 
 // ✅ SOLUÇÃO: Debug e fallback
-console.log("🧪 [DEBUG] Template retornado:", stepTemplate);
+console.log('🧪 [DEBUG] Template retornado:', stepTemplate);
 if (!stepTemplate || stepTemplate.length === 0) {
   // Fallback básico
 }

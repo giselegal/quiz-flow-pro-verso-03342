@@ -39,7 +39,7 @@ Sempre defina largura e altura em imagens, especialmente na imagem do logo e na 
 Use placeholders com proporções corretas para conteúdo que será carregado:
 
 ```tsx
-<div style={{ aspectRatio: "1/1" }} className="bg-gray-100 w-full max-w-md">
+<div style={{ aspectRatio: '1/1' }} className="bg-gray-100 w-full max-w-md">
   {/* Conteúdo carregado de forma assíncrona */}
 </div>
 ```
@@ -53,7 +53,7 @@ Certifique-se de que elementos como banners, notificações ou modais não empur
 Utilize a técnica de Low Quality Image Placeholder para manter a estrutura da página enquanto a imagem principal carrega:
 
 ```tsx
-<div className="relative w-full" style={{ aspectRatio: "1/1" }}>
+<div className="relative w-full" style={{ aspectRatio: '1/1' }}>
   {/* Imagem de baixa qualidade (carrega rapidamente) */}
   {!imageLoaded && (
     <img
@@ -84,8 +84,8 @@ Adicione a propriedade `font-display: swap` às suas declarações de fonte para
 
 ```css
 @font-face {
-  font-family: "Playfair Display";
-  src: url("/fonts/PlayfairDisplay-Regular.woff2") format("woff2");
+  font-family: 'Playfair Display';
+  src: url('/fonts/PlayfairDisplay-Regular.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap; /* Permite que o texto seja exibido com uma fonte alternativa enquanto a personalizada carrega */
@@ -135,7 +135,7 @@ Para contêineres que terão altura dinâmica, defina uma altura mínima:
 ```tsx
 <div
   className="w-full max-w-md relative bg-white shadow-sm rounded-lg overflow-hidden"
-  style={{ aspectRatio: "1/1" }}
+  style={{ aspectRatio: '1/1' }}
 >
   <img
     src={optimizedImageUrl}

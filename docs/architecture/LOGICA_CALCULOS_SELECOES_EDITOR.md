@@ -71,7 +71,7 @@ const calculateResults = useCallback(
     // 2. CALCULAR PERCENTUAIS
     const styleResults: StyleResult[] = Object.entries(styleCounter)
       .map(([category, score]) => ({
-        category: category as StyleResult["category"],
+        category: category as StyleResult['category'],
         score,
         percentage: totalSelections > 0 ? Math.round((score / totalSelections) * 100) : 0,
       }))
@@ -97,7 +97,7 @@ const calculateResults = useCallback(
       primaryStyle,
       secondaryStyles,
       totalSelections,
-      userName: "User",
+      userName: 'User',
     };
 
     return result;
@@ -112,7 +112,7 @@ const calculateResults = useCallback(
 
 ```typescript
 // Usuário seleciona 3 opções:
-selectedOptions = ["1a", "1d", "1f"];
+selectedOptions = ['1a', '1d', '1f'];
 
 // Pontuação gerada:
 styleCounter = {
@@ -127,7 +127,7 @@ styleCounter = {
 
 ```typescript
 // Usuário seleciona 3 opções:
-selectedOptions = ["3a", "3a", "3d"];
+selectedOptions = ['3a', '3a', '3d'];
 
 // Pontuação acumulada:
 styleCounter = {
@@ -197,14 +197,14 @@ const handleOptionClick = (optionId: string) => {
 ```typescript
 const styleConfig = {
   elegante: {
-    name: "Elegante",
-    image: "https://res.cloudinary.com/.../ELEGANTE_PREDOMINANTE.webp",
-    description: "Seu estilo reflete sofisticação e refinamento.",
+    name: 'Elegante',
+    image: 'https://res.cloudinary.com/.../ELEGANTE_PREDOMINANTE.webp',
+    description: 'Seu estilo reflete sofisticação e refinamento.',
     characteristics: [
-      "Peças estruturadas e bem cortadas",
-      "Cores neutras e sóbrias",
-      "Acessórios refinados",
-      "Tecidos nobres e de qualidade",
+      'Peças estruturadas e bem cortadas',
+      'Cores neutras e sóbrias',
+      'Acessórios refinados',
+      'Tecidos nobres e de qualidade',
     ],
   },
   // outros estilos...

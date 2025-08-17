@@ -27,14 +27,16 @@ export const userResponseService = {
   }): Promise<QuizUser> {
     try {
       console.log('📝 Creating quiz user in Supabase:', userData);
-      
+
       const { data, error } = await supabase
         .from('quiz_users')
-        .insert([{
-          session_id: userData.sessionId,
-          name: userData.name,
-          email: userData.email,
-        }])
+        .insert([
+          {
+            session_id: userData.sessionId,
+            name: userData.name,
+            email: userData.email,
+          },
+        ])
         .select()
         .single();
 
@@ -66,18 +68,22 @@ export const userResponseService = {
   }): Promise<UserResponse> {
     try {
       console.log('📝 Saving response to Supabase:', response);
-      
+
       const { data, error } = await supabase
         .from('quiz_step_responses')
-        .insert([{
-          session_id: response.sessionId,
-          step_number: parseInt(response.step.replace('step-', '')) || 1,
-          question_id: response.step,
-          answer_text: typeof response.data === 'string' ? response.data : JSON.stringify(response.data),
-          answer_value: typeof response.data === 'object' ? JSON.stringify(response.data) : response.data,
-          metadata: { timestamp: response.timestamp, userId: response.userId },
-          responded_at: response.timestamp,
-        }])
+        .insert([
+          {
+            session_id: response.sessionId,
+            step_number: parseInt(response.step.replace('step-', '')) || 1,
+            question_id: response.step,
+            answer_text:
+              typeof response.data === 'string' ? response.data : JSON.stringify(response.data),
+            answer_value:
+              typeof response.data === 'object' ? JSON.stringify(response.data) : response.data,
+            metadata: { timestamp: response.timestamp, userId: response.userId },
+            responded_at: response.timestamp,
+          },
+        ])
         .select()
         .single();
 
@@ -108,8 +114,11 @@ export const userResponseService = {
         timestamp: response.timestamp,
         created_at: new Date(),
       };
-      
-      localStorage.setItem(`quiz_response_${fallbackResponse.id}`, JSON.stringify(fallbackResponse));
+
+      localStorage.setItem(
+        `quiz_response_${fallbackResponse.id}`,
+        JSON.stringify(fallbackResponse)
+      );
       console.log('📦 Saved response to localStorage as fallback');
       return fallbackResponse;
     }
@@ -142,7 +151,7 @@ export const userResponseService = {
         .order('responded_at', { ascending: true });
 
       if (error) throw error;
-      
+
       return data.map(item => ({
         id: item.id,
         userId: userId,
@@ -170,10 +179,7 @@ export const userResponseService = {
 
   async deleteResponse(id: string): Promise<boolean> {
     try {
-      const { error } = await supabase
-        .from('quiz_step_responses')
-        .delete()
-        .eq('id', id);
+      const { error } = await supabase.from('quiz_step_responses').delete().eq('id', id);
 
       if (error) throw error;
       console.log('🗑️ Response deleted successfully');

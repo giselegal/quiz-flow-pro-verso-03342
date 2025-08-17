@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 /**
  * 🎯 STEP 01 CONECTADO - INTRODUÇÃO E CAPTURA DE NOME
  * ✅ INTEGRADO: useEditor + useTemplateConfig + JSON híbrido
- * 
+ *
  * Funcionalidades:
  * - Carrega configuração JSON para design e layout
  * - Conecta ao EditorContext.quizState para capturar nome
@@ -18,7 +18,7 @@ export const ConnectedStep01Template = () => {
 
   // Aplicar tokens de design da configuração JSON
   const designTokens = getDesignTokens();
-  
+
   useEffect(() => {
     // Sincronizar nome local com o estado global
     if (quizState.userName) {
@@ -31,10 +31,10 @@ export const ConnectedStep01Template = () => {
     if (localName.trim()) {
       console.log('👤 ConnectedStep01: Capturando nome:', localName);
       quizState.setUserNameFromInput(localName);
-      
+
       // Disparar evento personalizado para navegação
       const event = new CustomEvent('quiz-form-complete', {
-        detail: { formData: { name: localName.trim() } }
+        detail: { formData: { name: localName.trim() } },
       });
       window.dispatchEvent(event);
     }
@@ -52,11 +52,11 @@ export const ConnectedStep01Template = () => {
   }
 
   return (
-    <div 
+    <div
       className="min-h-screen flex flex-col"
-      style={{ 
+      style={{
         backgroundColor: designTokens?.backgroundColor || '#FAF9F7',
-        fontFamily: designTokens?.fontFamily || "'Playfair Display', serif"
+        fontFamily: designTokens?.fontFamily || "'Playfair Display', serif",
       }}
     >
       {/* Header com logo */}
@@ -75,13 +75,13 @@ export const ConnectedStep01Template = () => {
         <div className="max-w-2xl w-full text-center space-y-8">
           {/* Título principal */}
           <div className="space-y-4">
-            <h1 
+            <h1
               className="text-4xl md:text-5xl font-bold leading-tight"
               style={{ color: designTokens?.secondaryColor || '#432818' }}
             >
               Descubra Seu Estilo Pessoal Único
             </h1>
-            <p 
+            <p
               className="text-xl md:text-2xl leading-relaxed"
               style={{ color: designTokens?.primaryColor || '#B89B7A' }}
             >
@@ -92,8 +92,8 @@ export const ConnectedStep01Template = () => {
           {/* Formulário de nome */}
           <form onSubmit={handleNameSubmit} className="space-y-6">
             <div className="space-y-2">
-              <label 
-                htmlFor="userName" 
+              <label
+                htmlFor="userName"
                 className="text-lg font-medium block"
                 style={{ color: designTokens?.secondaryColor || '#432818' }}
               >
@@ -103,12 +103,12 @@ export const ConnectedStep01Template = () => {
                 type="text"
                 id="userName"
                 value={localName}
-                onChange={(e) => setLocalName(e.target.value)}
+                onChange={e => setLocalName(e.target.value)}
                 placeholder="Digite seu primeiro nome..."
                 className="w-full px-6 py-4 rounded-lg border-2 border-gray-200 focus:border-[#B89B7A] focus:outline-none text-lg transition-colors"
                 style={{
                   background: designTokens?.card.background || '#fff',
-                  borderRadius: designTokens?.card.borderRadius || '16px'
+                  borderRadius: designTokens?.card.borderRadius || '16px',
                 }}
                 required
               />
@@ -119,13 +119,13 @@ export const ConnectedStep01Template = () => {
               disabled={!localName.trim()}
               className="w-full py-4 px-8 text-white font-semibold text-lg rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 active:scale-95"
               style={{
-                background: localName.trim() 
+                background: localName.trim()
                   ? designTokens?.button.background || 'linear-gradient(90deg, #B89B7A, #aa6b5d)'
                   : '#ccc',
                 borderRadius: designTokens?.button.borderRadius || '10px',
-                boxShadow: localName.trim() 
+                boxShadow: localName.trim()
                   ? designTokens?.button.shadow || '0 4px 14px rgba(184, 155, 122, 0.15)'
-                  : 'none'
+                  : 'none',
               }}
             >
               Começar Quiz →

@@ -46,12 +46,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
   const {
     activeStageId,
     selectedBlockId,
-    blockActions: {
-      addBlock,
-      setSelectedBlockId,
-      deleteBlock,
-      updateBlock,
-    },
+    blockActions: { addBlock, setSelectedBlockId, deleteBlock, updateBlock },
     persistenceActions: { saveFunnel },
     uiState: { isPreviewing, setIsPreviewing, viewportSize, setViewportSize },
     computed: { currentBlocks, selectedBlock, totalBlocks, stageCount },
@@ -99,13 +94,13 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
   const handleImportTemplate = (template: any) => {
     try {
       console.log('📥 Importando template:', template);
-      
+
       // TODO: Implement template import logic
       // This would involve:
       // 1. Clear current blocks
       // 2. Load template components
       // 3. Update funnel data
-      
+
       console.log('✅ Template importado com sucesso!');
     } catch (error) {
       console.error('❌ Erro ao importar template:', error);
@@ -172,8 +167,8 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
             isPreviewing={isPreviewing}
             onTogglePreview={() => setIsPreviewing(!isPreviewing)}
             onSave={handleSave}
-            viewportSize={viewportSize as "sm" | "md" | "lg" | "xl"}
-            onViewportSizeChange={(size: "sm" | "md" | "lg" | "xl") => setViewportSize(size)}
+            viewportSize={viewportSize as 'sm' | 'md' | 'lg' | 'xl'}
+            onViewportSizeChange={(size: 'sm' | 'md' | 'lg' | 'xl') => setViewportSize(size)}
             onShowFunnelSettings={() => setShowFunnelSettings(true)}
             currentFunnelData={{}} // TODO: Get actual funnel data from context
             currentComponents={currentBlocks || []}

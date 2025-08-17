@@ -1,7 +1,7 @@
-import fs from "fs";
-import path from "path";
+import fs from 'fs';
+import path from 'path';
 
-const componentsDir = "/workspaces/quiz-quest-challenge-verse/client/src/components/editor/blocks";
+const componentsDir = '/workspaces/quiz-quest-challenge-verse/client/src/components/editor/blocks';
 
 // Padrões de classes responsivas do Tailwind
 const responsivePatterns = [
@@ -38,7 +38,7 @@ const gridProblems = [
 
 function analyzeFile(filePath) {
   try {
-    const content = fs.readFileSync(filePath, "utf8");
+    const content = fs.readFileSync(filePath, 'utf8');
     const fileName = path.basename(filePath);
 
     let hasResponsive = false;
@@ -83,17 +83,17 @@ function analyzeFile(filePath) {
 
 function analyzeComponents() {
   if (!fs.existsSync(componentsDir)) {
-    console.log("❌ Diretório de componentes não encontrado:", componentsDir);
+    console.log('❌ Diretório de componentes não encontrado:', componentsDir);
     return;
   }
 
   const files = fs
     .readdirSync(componentsDir)
-    .filter(file => file.endsWith(".tsx"))
+    .filter(file => file.endsWith('.tsx'))
     .map(file => path.join(componentsDir, file));
 
   console.log(`📱 ANÁLISE DE RESPONSIVIDADE - ${files.length} COMPONENTES\n`);
-  console.log("=====================================\n");
+  console.log('=====================================\n');
 
   const results = files.map(analyzeFile).filter(result => !result.error);
 
@@ -102,28 +102,28 @@ function analyzeComponents() {
   const partiallyResponsive = results.filter(r => r.hasResponsive && r.hasProblems);
   const nonResponsive = results.filter(r => !r.hasResponsive);
 
-  console.log("✅ COMPONENTES TOTALMENTE RESPONSIVOS:", fullyResponsive.length);
+  console.log('✅ COMPONENTES TOTALMENTE RESPONSIVOS:', fullyResponsive.length);
   fullyResponsive.forEach(r => {
     console.log(`   📱 ${r.fileName} (${r.responsiveCount} classes responsivas)`);
   });
 
-  console.log("\n⚠️  COMPONENTES PARCIALMENTE RESPONSIVOS:", partiallyResponsive.length);
+  console.log('\n⚠️  COMPONENTES PARCIALMENTE RESPONSIVOS:', partiallyResponsive.length);
   partiallyResponsive.forEach(r => {
     console.log(`   📱 ${r.fileName}`);
     console.log(
-      `      ✓ Classes responsivas: ${r.responsiveMatches.slice(0, 3).join(", ")}${r.responsiveMatches.length > 3 ? "..." : ""}`
+      `      ✓ Classes responsivas: ${r.responsiveMatches.slice(0, 3).join(', ')}${r.responsiveMatches.length > 3 ? '...' : ''}`
     );
     console.log(
-      `      ⚠️  Problemas: ${r.problemMatches.slice(0, 3).join(", ")}${r.problemMatches.length > 3 ? "..." : ""}`
+      `      ⚠️  Problemas: ${r.problemMatches.slice(0, 3).join(', ')}${r.problemMatches.length > 3 ? '...' : ''}`
     );
   });
 
-  console.log("\n❌ COMPONENTES NÃO RESPONSIVOS:", nonResponsive.length);
+  console.log('\n❌ COMPONENTES NÃO RESPONSIVOS:', nonResponsive.length);
   nonResponsive.forEach(r => {
     console.log(`   📱 ${r.fileName}`);
   });
 
-  console.log("\n📊 RESUMO:");
+  console.log('\n📊 RESUMO:');
   console.log(`   Total de componentes: ${results.length}`);
   console.log(
     `   Totalmente responsivos: ${fullyResponsive.length} (${Math.round((fullyResponsive.length / results.length) * 100)}%)`
@@ -143,7 +143,7 @@ function analyzeComponents() {
   });
 
   if (Object.keys(problemCounts).length > 0) {
-    console.log("\n🔍 PROBLEMAS MAIS COMUNS:");
+    console.log('\n🔍 PROBLEMAS MAIS COMUNS:');
     Object.entries(problemCounts)
       .sort(([, a], [, b]) => b - a)
       .slice(0, 10)

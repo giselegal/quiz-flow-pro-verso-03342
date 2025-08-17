@@ -112,9 +112,9 @@
       n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
     };
     // ... código completo do pixel
-  })(window, document, "script", "https://connect.facebook.net/en_US/fbevents.js");
-  fbq("init", "1311550759901086");
-  fbq("track", "PageView");
+  })(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '1311550759901086');
+  fbq('track', 'PageView');
 </script>
 ```
 

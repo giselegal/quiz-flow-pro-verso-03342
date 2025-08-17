@@ -140,9 +140,9 @@ const useTemplateCache = () => {
 ```typescript
 // Lazy load por categoria
 const LazyBlockRegistry = {
-  quiz: lazy(() => import("./blocks/quiz")),
-  layout: lazy(() => import("./blocks/layout")),
-  media: lazy(() => import("./blocks/media")),
+  quiz: lazy(() => import('./blocks/quiz')),
+  layout: lazy(() => import('./blocks/layout')),
+  media: lazy(() => import('./blocks/media')),
 };
 ```
 

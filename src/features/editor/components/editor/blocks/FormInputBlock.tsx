@@ -1,7 +1,7 @@
+import type { BlockComponentProps } from '@/types/blocks';
 import { TextCursorInput } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { userResponseService } from '../../../services/userResponseService';
-import type { BlockComponentProps } from '@/types/blocks';
 
 interface FormInputBlockProps extends BlockComponentProps {
   funnelId?: string;
@@ -103,7 +103,7 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
     // Get or create session ID
     const existing = localStorage.getItem('quiz_session_id');
     if (existing) return existing;
-    
+
     const newSessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     localStorage.setItem('quiz_session_id', newSessionId);
     return newSessionId;
@@ -160,10 +160,10 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
               userId: sessionId,
               sessionId: sessionId,
               step: 'step-01',
-              data: { 
-                name: newValue.trim(), 
+              data: {
+                name: newValue.trim(),
                 fieldName: name,
-                componentId: block?.id || 'intro-name-input'
+                componentId: block?.id || 'intro-name-input',
               },
               timestamp: new Date().toISOString(),
             });

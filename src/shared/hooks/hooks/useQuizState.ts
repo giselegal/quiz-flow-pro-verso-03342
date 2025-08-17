@@ -1,6 +1,6 @@
 /**
  * useQuizState Hook - State Management and Persistence
- * 
+ *
  * Manages quiz state, user progress, and data persistence for the Quiz Quest application.
  * Based on the requirements from the checklist verification.
  */
@@ -31,17 +31,17 @@ export const useQuizState = (): QuizStateHook => {
   const updateState = useCallback((updates: Partial<QuizState>) => {
     setState(prevState => {
       const newState = { ...prevState, ...updates };
-      
+
       // Calculate progress automatically
       if (updates.currentStepNumber || updates.totalSteps) {
         newState.progress = Math.round((newState.currentStepNumber / newState.totalSteps) * 100);
       }
-      
+
       // Auto-calculate scores if user answers are updated
       if (updates.userAnswers) {
         newState.scores = calculateScores(newState.userAnswers);
       }
-      
+
       return newState;
     });
   }, []);

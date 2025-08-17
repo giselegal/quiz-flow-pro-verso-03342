@@ -102,10 +102,13 @@ const PreviewProvider: React.FC<PreviewProviderProps> = ({
         // Dispatch event for editor to handle step change
         window.dispatchEvent(
           new CustomEvent('quiz-navigate-to-step', {
-            detail: { stepId: `step-${nextStep.toString().padStart(2, '0')}`, source: 'preview-navigation' },
+            detail: {
+              stepId: `step-${nextStep.toString().padStart(2, '0')}`,
+              source: 'preview-navigation',
+            },
           })
         );
-        
+
         if (funnelId) {
           const newUrl = `/dashboard/funnel/${funnelId}/step/${nextStep}`;
           console.log('🚀 Preview: Navegando para etapa', nextStep, '-', newUrl);
@@ -126,10 +129,13 @@ const PreviewProvider: React.FC<PreviewProviderProps> = ({
         // Dispatch event for editor to handle step change
         window.dispatchEvent(
           new CustomEvent('quiz-navigate-to-step', {
-            detail: { stepId: `step-${previousStep.toString().padStart(2, '0')}`, source: 'preview-navigation' },
+            detail: {
+              stepId: `step-${previousStep.toString().padStart(2, '0')}`,
+              source: 'preview-navigation',
+            },
           })
         );
-        
+
         if (funnelId) {
           const newUrl = `/dashboard/funnel/${funnelId}/step/${previousStep}`;
           console.log('🚀 Preview: Navegando para etapa', previousStep, '-', newUrl);
@@ -162,7 +168,10 @@ const PreviewProvider: React.FC<PreviewProviderProps> = ({
         if (isPreviewing) {
           window.dispatchEvent(
             new CustomEvent('quiz-navigate-to-step', {
-              detail: { stepId: `step-${stepNumber.toString().padStart(2, '0')}`, source: 'preview-direct-navigation' },
+              detail: {
+                stepId: `step-${stepNumber.toString().padStart(2, '0')}`,
+                source: 'preview-direct-navigation',
+              },
             })
           );
         }

@@ -155,7 +155,7 @@ class QuizResultsService {
     try {
       // 1. Extrair nome do usuário da etapa 1
       const userName = this.extractUserName(responses);
-      
+
       // 2. Analisar respostas por categoria
       const analysis = this.analyzeResponses(responses);
 
@@ -210,7 +210,7 @@ class QuizResultsService {
     if (step1Response && typeof step1Response === 'object') {
       // Buscar campo de nome em diferentes formatos possíveis
       const nameFields = ['name', 'nome', 'userName', 'user_name', 'fullName', 'step01-lead-form'];
-      
+
       for (const field of nameFields) {
         if (step1Response[field] && typeof step1Response[field] === 'string') {
           const name = step1Response[field].trim();
@@ -220,9 +220,12 @@ class QuizResultsService {
           }
         }
       }
-      
+
       // Verificar se existe um objeto aninhado com dados do formulário
-      if (step1Response['step01-lead-form'] && typeof step1Response['step01-lead-form'] === 'object') {
+      if (
+        step1Response['step01-lead-form'] &&
+        typeof step1Response['step01-lead-form'] === 'object'
+      ) {
         const formData = step1Response['step01-lead-form'];
         if (formData.name && typeof formData.name === 'string') {
           const name = formData.name.trim();

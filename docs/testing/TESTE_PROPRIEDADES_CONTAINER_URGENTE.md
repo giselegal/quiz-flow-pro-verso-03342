@@ -11,10 +11,10 @@ O painel de propriedades está mostrando controles de tamanho (50%, 90%, 200%), 
 1. **Step01Template.tsx** - Propriedades adicionadas:
 
    ```javascript
-   containerWidth: "large"; // ✅ Adicionado
-   containerPosition: "center"; // ✅ Adicionado
-   spacing: "normal"; // ✅ Adicionado
-   backgroundColor: "transparent"; // ✅ Adicionado
+   containerWidth: 'large'; // ✅ Adicionado
+   containerPosition: 'center'; // ✅ Adicionado
+   spacing: 'normal'; // ✅ Adicionado
+   backgroundColor: 'transparent'; // ✅ Adicionado
    marginTop: 0; // ✅ Adicionado
    marginBottom: 32; // ✅ Adicionado
    ```

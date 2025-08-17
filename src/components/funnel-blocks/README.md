@@ -54,7 +54,7 @@ import {
   FunnelConfigProvider,
   FunnelIntroStep,
   useFunnelNavigation,
-} from "@/components/funnel-blocks";
+} from '@/components/funnel-blocks';
 
 export default function MyFunnel() {
   // Configurar navegação do funil
@@ -66,11 +66,11 @@ export default function MyFunnel() {
   const funnelData = {
     steps: [
       {
-        id: "intro",
-        type: "intro",
+        id: 'intro',
+        type: 'intro',
         data: {
-          title: "Meu Quiz Personalizado",
-          subtitle: "Responda e descubra seu perfil",
+          title: 'Meu Quiz Personalizado',
+          subtitle: 'Responda e descubra seu perfil',
         },
       },
       // ... outras etapas

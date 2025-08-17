@@ -118,7 +118,7 @@ interface BlockData {
 ### **Exemplo de Uso**
 
 ```tsx
-import AdvancedEditor from "@/components/editor/AdvancedEditor";
+import AdvancedEditor from '@/components/editor/AdvancedEditor';
 
 function MyQuizEditor() {
   const handleSave = async (blocks: BlockData[]) => {

@@ -19,26 +19,26 @@ O painel de propriedades estava fazendo match exato dos tipos de componente:
 ```typescript
 // Antes
 switch (selectedBlock.type) {
-  case "text":
+  case 'text':
     return renderTextProperties();
-  case "button":
+  case 'button':
     return renderButtonProperties();
-  case "image":
+  case 'image':
     return renderImageProperties();
 }
 
 // Depois
 const normalizedType = blockType
-  .replace("-inline", "")
-  .replace("-display", "")
-  .replace("-component", "");
+  .replace('-inline', '')
+  .replace('-display', '')
+  .replace('-component', '');
 
 switch (normalizedType) {
-  case "text":
+  case 'text':
     return renderTextProperties();
-  case "button":
+  case 'button':
     return renderButtonProperties();
-  case "image":
+  case 'image':
     return renderImageProperties();
 }
 ```

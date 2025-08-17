@@ -7,22 +7,22 @@
 // 1. Abrir /editor-fixed
 // 2. Colar este código no console
 
-console.log("🔍 TESTE DE DEBUG - ETAPA 2");
+console.log('🔍 TESTE DE DEBUG - ETAPA 2');
 
 // Função para testar carregamento de template
 function testStep2Template() {
   // Verificar se existe EditorContext
   const editorDiv =
-    document.querySelector('[data-step="2"]') || document.querySelector(".editor-canvas");
-  console.log("Editor div encontrado:", !!editorDiv);
+    document.querySelector('[data-step="2"]') || document.querySelector('.editor-canvas');
+  console.log('Editor div encontrado:', !!editorDiv);
 
   // Verificar se há blocos options-grid
   const optionsGrids = document.querySelectorAll('[data-block-id*="step02-clothing-options"]');
-  console.log("Blocos options-grid encontrados:", optionsGrids.length);
+  console.log('Blocos options-grid encontrados:', optionsGrids.length);
 
   // Verificar se há mensagens de debug
-  const debugMessages = document.querySelectorAll(".bg-yellow-50");
-  console.log("Mensagens de debug encontradas:", debugMessages.length);
+  const debugMessages = document.querySelectorAll('.bg-yellow-50');
+  console.log('Mensagens de debug encontradas:', debugMessages.length);
 
   if (debugMessages.length > 0) {
     debugMessages.forEach((msg, i) => {

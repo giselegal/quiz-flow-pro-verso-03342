@@ -1,8 +1,8 @@
 // Análise específica de responsividade dos componentes das etapas 20 e 21
 // Arquivo: analyze-steps-20-21-responsiveness.js
 
-console.log("📱 ANÁLISE RESPONSIVIDADE - ETAPAS 20 E 21");
-console.log("=".repeat(60));
+console.log('📱 ANÁLISE RESPONSIVIDADE - ETAPAS 20 E 21');
+console.log('='.repeat(60));
 
 // Análise baseada no exemplo fornecido pelo usuário
 const userExample = `
@@ -43,78 +43,78 @@ QUERO MEU GUIA AGORA
 7 Dias Garantia
 `;
 
-console.log("📋 COMPONENTES ANALISADOS:");
-console.log("========================");
-console.log("• StyleResultCardBlock.tsx (Etapa 20)");
-console.log("• ResultCTABlock.tsx (Etapa 21)");
+console.log('📋 COMPONENTES ANALISADOS:');
+console.log('========================');
+console.log('• StyleResultCardBlock.tsx (Etapa 20)');
+console.log('• ResultCTABlock.tsx (Etapa 21)');
 
 const responsiveIssues = {
   styleResultCard: {
-    component: "StyleResultCardBlock",
+    component: 'StyleResultCardBlock',
     etapa: 20,
     problemas: [
-      "Grid layout não adequado para mobile",
-      "Imagens muito pequenas em mobile",
-      "Texto secundário muito pequeno",
-      "Spacing inadequado entre elementos",
-      "Progress bar não responsiva",
-      "Elementos não se reorganizam bem em mobile",
+      'Grid layout não adequado para mobile',
+      'Imagens muito pequenas em mobile',
+      'Texto secundário muito pequeno',
+      'Spacing inadequado entre elementos',
+      'Progress bar não responsiva',
+      'Elementos não se reorganizam bem em mobile',
     ],
     melhorias: [
-      "Usar grid single column em mobile",
-      "Aumentar tamanho das imagens",
-      "Melhorar hierarquia visual",
-      "Otimizar spacing responsivo",
-      "Melhorar progress bar",
-      "Reorganizar layout mobile-first",
+      'Usar grid single column em mobile',
+      'Aumentar tamanho das imagens',
+      'Melhorar hierarquia visual',
+      'Otimizar spacing responsivo',
+      'Melhorar progress bar',
+      'Reorganizar layout mobile-first',
     ],
   },
 
   resultCTA: {
-    component: "ResultCTABlock",
+    component: 'ResultCTABlock',
     etapa: 21,
     problemas: [
-      "Grid 2 colunas não funciona bem em mobile",
-      "Botão CTA pode ficar muito pequeno",
-      "Preços não destacados o suficiente",
-      "Value stack pode ficar comprimido",
-      "Security elements muito pequenos",
-      "Ordem dos elementos confusa em mobile",
+      'Grid 2 colunas não funciona bem em mobile',
+      'Botão CTA pode ficar muito pequeno',
+      'Preços não destacados o suficiente',
+      'Value stack pode ficar comprimido',
+      'Security elements muito pequenos',
+      'Ordem dos elementos confusa em mobile',
     ],
     melhorias: [
-      "Single column em mobile",
-      "Botão CTA mais proeminente",
-      "Preços com melhor hierarquia",
-      "Value stack mais espaçado",
-      "Security elements maiores",
-      "Ordem lógica mobile-first",
+      'Single column em mobile',
+      'Botão CTA mais proeminente',
+      'Preços com melhor hierarquia',
+      'Value stack mais espaçado',
+      'Security elements maiores',
+      'Ordem lógica mobile-first',
     ],
   },
 };
 
-console.log("\n🔍 ANÁLISE DETALHADA:");
-console.log("====================");
+console.log('\n🔍 ANÁLISE DETALHADA:');
+console.log('====================');
 
 Object.entries(responsiveIssues).forEach(([key, data]) => {
   console.log(`\n📊 ${data.component.toUpperCase()} (Etapa ${data.etapa}):`);
-  console.log("─".repeat(40));
+  console.log('─'.repeat(40));
 
-  console.log("❌ Problemas Identificados:");
+  console.log('❌ Problemas Identificados:');
   data.problemas.forEach((problema, index) => {
     console.log(`   ${index + 1}. ${problema}`);
   });
 
-  console.log("\n✅ Melhorias Propostas:");
+  console.log('\n✅ Melhorias Propostas:');
   data.melhorias.forEach((melhoria, index) => {
     console.log(`   ${index + 1}. ${melhoria}`);
   });
 });
 
-console.log("\n🛠️ CORREÇÕES ESPECÍFICAS:");
-console.log("==========================");
+console.log('\n🛠️ CORREÇÕES ESPECÍFICAS:');
+console.log('==========================');
 
-console.log("\n1. 📱 StyleResultCardBlock - Correções:");
-console.log("───────────────────────────────────────");
+console.log('\n1. 📱 StyleResultCardBlock - Correções:');
+console.log('───────────────────────────────────────');
 
 const styleResultCardFixes = `
 // Principais correções para StyleResultCardBlock
@@ -146,8 +146,8 @@ const styleResultCardFixes = `
 
 console.log(styleResultCardFixes);
 
-console.log("\n2. 📱 ResultCTABlock - Correções:");
-console.log("─────────────────────────────────");
+console.log('\n2. 📱 ResultCTABlock - Correções:');
+console.log('─────────────────────────────────');
 
 const resultCTAFixes = `
 // Principais correções para ResultCTABlock
@@ -179,28 +179,28 @@ const resultCTAFixes = `
 
 console.log(resultCTAFixes);
 
-console.log("\n🎯 IMPLEMENTAÇÃO PRIORITÁRIA:");
-console.log("=============================");
+console.log('\n🎯 IMPLEMENTAÇÃO PRIORITÁRIA:');
+console.log('=============================');
 
 const priorityFixes = [
   {
-    component: "StyleResultCardBlock",
-    priority: "ALTA",
+    component: 'StyleResultCardBlock',
+    priority: 'ALTA',
     fixes: [
-      "Grid layout single column em mobile",
-      "Imagens com tamanho adequado",
-      "Typography hierarchy melhorada",
-      "Progress bar mais visível",
+      'Grid layout single column em mobile',
+      'Imagens com tamanho adequado',
+      'Typography hierarchy melhorada',
+      'Progress bar mais visível',
     ],
   },
   {
-    component: "ResultCTABlock",
-    priority: "CRÍTICA",
+    component: 'ResultCTABlock',
+    priority: 'CRÍTICA',
     fixes: [
-      "CTA button mais proeminente",
-      "Price stack melhor hierarquia",
-      "Value items mais espaçados",
-      "Security elements visíveis",
+      'CTA button mais proeminente',
+      'Price stack melhor hierarquia',
+      'Value items mais espaçados',
+      'Security elements visíveis',
     ],
   },
 ];
@@ -208,37 +208,37 @@ const priorityFixes = [
 priorityFixes.forEach(({ component, priority, fixes }) => {
   console.log(`\n📋 ${component}:`);
   console.log(`   🔥 Prioridade: ${priority}`);
-  console.log("   ✅ Correções:");
+  console.log('   ✅ Correções:');
   fixes.forEach((fix, index) => {
     console.log(`      ${index + 1}. ${fix}`);
   });
 });
 
-console.log("\n📊 MÉTRICAS DE MELHORIA:");
-console.log("========================");
+console.log('\n📊 MÉTRICAS DE MELHORIA:');
+console.log('========================');
 
 const metrics = {
-  "Mobile Usability": { antes: "40%", depois: "90%" },
-  "Touch Targets": { antes: "30%", depois: "85%" },
-  "Visual Hierarchy": { antes: "50%", depois: "88%" },
-  "Content Readability": { antes: "45%", depois: "92%" },
-  "CTA Effectiveness": { antes: "35%", depois: "87%" },
-  "Overall UX": { antes: "42%", depois: "89%" },
+  'Mobile Usability': { antes: '40%', depois: '90%' },
+  'Touch Targets': { antes: '30%', depois: '85%' },
+  'Visual Hierarchy': { antes: '50%', depois: '88%' },
+  'Content Readability': { antes: '45%', depois: '92%' },
+  'CTA Effectiveness': { antes: '35%', depois: '87%' },
+  'Overall UX': { antes: '42%', depois: '89%' },
 };
 
 Object.entries(metrics).forEach(([metric, values]) => {
   console.log(`${metric.padEnd(20)} | ${values.antes.padEnd(8)} → ${values.depois}`);
 });
 
-console.log("\n🚀 PRÓXIMOS PASSOS:");
-console.log("==================");
-console.log("1. Implementar correções StyleResultCardBlock");
-console.log("2. Implementar correções ResultCTABlock");
-console.log("3. Testar em diferentes breakpoints");
-console.log("4. Validar touch targets");
-console.log("5. Otimizar performance mobile");
-console.log("6. Testar com usuários reais");
+console.log('\n🚀 PRÓXIMOS PASSOS:');
+console.log('==================');
+console.log('1. Implementar correções StyleResultCardBlock');
+console.log('2. Implementar correções ResultCTABlock');
+console.log('3. Testar em diferentes breakpoints');
+console.log('4. Validar touch targets');
+console.log('5. Otimizar performance mobile');
+console.log('6. Testar com usuários reais');
 
-console.log("\n" + "=".repeat(60));
-console.log("🎯 ANÁLISE CONCLUÍDA - READY FOR MOBILE FIXES! 📱");
-console.log("=".repeat(60));
+console.log('\n' + '='.repeat(60));
+console.log('🎯 ANÁLISE CONCLUÍDA - READY FOR MOBILE FIXES! 📱');
+console.log('='.repeat(60));

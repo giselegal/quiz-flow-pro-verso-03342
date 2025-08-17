@@ -1,12 +1,12 @@
 import React from 'react';
-import { 
-  Undo, 
-  Redo, 
-  Save, 
-  Cloud, 
-  Monitor, 
-  Smartphone, 
-  Settings, 
+import {
+  Undo,
+  Redo,
+  Save,
+  Cloud,
+  Monitor,
+  Smartphone,
+  Settings,
   Play,
   X,
   Clipboard,
@@ -14,7 +14,7 @@ import {
   Workflow,
   Palette,
   UserRoundSearch,
-  Cog
+  Cog,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useEditor } from '@/context/EditorContext';
@@ -42,8 +42,11 @@ const FunnelNavbar: React.FC<FunnelNavbarProps> = ({
   viewportSize = 'lg',
   onViewportSizeChange = () => console.log('Change viewport'),
 }) => {
-  const { activeStageId, computed: { stageCount, totalBlocks } } = useEditor();
-  
+  const {
+    activeStageId,
+    computed: { stageCount, totalBlocks },
+  } = useEditor();
+
   const [activeTab, setActiveTab] = React.useState('construtor');
 
   const tabItems = [
@@ -68,7 +71,7 @@ const FunnelNavbar: React.FC<FunnelNavbarProps> = ({
               <X className="h-4 w-4" />
             </Button>
           </div>
-          
+
           <div className="flex flex-row justify-between">
             <div className="flex p-3 gap-1 md:gap-2">
               <Button
@@ -80,7 +83,7 @@ const FunnelNavbar: React.FC<FunnelNavbarProps> = ({
               >
                 <Undo className="h-4 w-4" />
               </Button>
-              
+
               <Button
                 variant="outline"
                 size="sm"
@@ -90,7 +93,7 @@ const FunnelNavbar: React.FC<FunnelNavbarProps> = ({
               >
                 <Redo className="h-4 w-4" />
               </Button>
-              
+
               <Button
                 variant="outline"
                 size="sm"
@@ -108,9 +111,13 @@ const FunnelNavbar: React.FC<FunnelNavbarProps> = ({
                 className="h-10 w-10 border-zinc-700 bg-zinc-800/50 hover:bg-primary hover:text-foreground"
                 onClick={() => onViewportSizeChange(viewportSize === 'sm' ? 'lg' : 'sm')}
               >
-                {viewportSize === 'sm' ? <Monitor className="h-4 w-4" /> : <Smartphone className="h-4 w-4" />}
+                {viewportSize === 'sm' ? (
+                  <Monitor className="h-4 w-4" />
+                ) : (
+                  <Smartphone className="h-4 w-4" />
+                )}
               </Button>
-              
+
               <Button
                 variant="outline"
                 size="sm"
@@ -118,7 +125,7 @@ const FunnelNavbar: React.FC<FunnelNavbarProps> = ({
               >
                 <Settings className="h-4 w-4" />
               </Button>
-              
+
               <Button
                 variant="outline"
                 size="sm"
@@ -127,7 +134,7 @@ const FunnelNavbar: React.FC<FunnelNavbarProps> = ({
               >
                 <Play className="h-4 w-4" />
               </Button>
-              
+
               <Button
                 variant="outline"
                 size="sm"
@@ -137,7 +144,7 @@ const FunnelNavbar: React.FC<FunnelNavbarProps> = ({
                 <span className="md:inline hidden">Salvar</span>
                 <Save className="w-4 h-4 md:hidden block" />
               </Button>
-              
+
               <Button
                 className="h-10 px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90"
                 onClick={onPublish}
@@ -152,18 +159,18 @@ const FunnelNavbar: React.FC<FunnelNavbarProps> = ({
         {/* Center Section - Tab Navigation */}
         <div className="border-t md:border-t-0 md:order-1 w-full">
           <div className="md:mx-auto md:max-w-[32rem] flex h-full items-center justify-center p-1 md:p-0 gap-1 md:gap-2">
-            {tabItems.map((item) => {
+            {tabItems.map(item => {
               const Icon = item.icon;
               const isActive = activeTab === item.id;
-              
+
               return (
                 <Button
                   key={item.id}
                   variant="ghost"
                   size="sm"
                   className={`h-10 px-4 py-2 ${
-                    isActive 
-                      ? 'bg-primary text-foreground' 
+                    isActive
+                      ? 'bg-primary text-foreground'
                       : 'hover:bg-primary hover:text-foreground'
                   }`}
                   onClick={() => setActiveTab(item.id)}
@@ -184,9 +191,13 @@ const FunnelNavbar: React.FC<FunnelNavbarProps> = ({
             className="h-10 w-10 border-zinc-700 bg-zinc-800/50 hover:bg-primary hover:text-foreground"
             onClick={() => onViewportSizeChange(viewportSize === 'sm' ? 'lg' : 'sm')}
           >
-            {viewportSize === 'sm' ? <Monitor className="h-4 w-4" /> : <Smartphone className="h-4 w-4" />}
+            {viewportSize === 'sm' ? (
+              <Monitor className="h-4 w-4" />
+            ) : (
+              <Smartphone className="h-4 w-4" />
+            )}
           </Button>
-          
+
           <Button
             variant="outline"
             size="sm"
@@ -194,7 +205,7 @@ const FunnelNavbar: React.FC<FunnelNavbarProps> = ({
           >
             <Settings className="h-4 w-4" />
           </Button>
-          
+
           <Button
             variant="outline"
             size="sm"
@@ -203,7 +214,7 @@ const FunnelNavbar: React.FC<FunnelNavbarProps> = ({
           >
             <Play className="h-4 w-4" />
           </Button>
-          
+
           <Button
             variant="outline"
             size="sm"
@@ -213,7 +224,7 @@ const FunnelNavbar: React.FC<FunnelNavbarProps> = ({
             <span className="md:inline hidden">Salvar</span>
             <Save className="w-4 h-4 md:hidden block" />
           </Button>
-          
+
           <Button
             className="h-10 px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90"
             onClick={onPublish}
@@ -230,9 +241,7 @@ const FunnelNavbar: React.FC<FunnelNavbarProps> = ({
           <span>
             Etapa {activeStageId} • {stageCount} etapas • {totalBlocks} componentes
           </span>
-          <span className="text-green-400">
-            ● Sistema Ativo
-          </span>
+          <span className="text-green-400">● Sistema Ativo</span>
         </div>
       </div>
     </div>

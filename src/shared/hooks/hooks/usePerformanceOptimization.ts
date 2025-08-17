@@ -1,12 +1,12 @@
 /**
  * Performance Optimization Hook - ENHANCED
- * 
+ *
  * Addresses critical performance issues:
  * - 49 setTimeout violations
- * - 0 FPS framerate  
+ * - 0 FPS framerate
  * - 82% memory usage
  * - High timeout consumption
- * 
+ *
  * Solutions:
  * - Aggressive debouncing
  * - Timeout cleanup
@@ -45,11 +45,11 @@ export const usePerformanceOptimization = (): PerformanceHookReturn => {
   const activeIntervals = useRef<Set<NodeJS.Timer>>(new Set());
   const debounceTimers = useRef<Map<string, NodeJS.Timeout>>(new Map());
   const throttleTimers = useRef<Map<string, boolean>>(new Map());
-  
+
   // Performance monitoring
   const fpsCounter = useRef<{ frames: number; startTime: number }>({
     frames: 0,
-    startTime: performance.now()
+    startTime: performance.now(),
   });
 
   // Render optimization tracking
@@ -59,14 +59,14 @@ export const usePerformanceOptimization = (): PerformanceHookReturn => {
   // Aggressive debouncing with cleanup
   const debouncedCallback = useCallback((callback: () => void, delay: number = 300) => {
     const callbackKey = callback.toString().substring(0, 100); // Limit key size
-    
+
     // Clear existing timer
     const existingTimer = debounceTimers.current.get(callbackKey);
     if (existingTimer) {
       clearTimeout(existingTimer);
       activeTimeouts.current.delete(existingTimer);
     }
-    
+
     // Create new timer with cleanup tracking
     const timer = setTimeout(() => {
       try {
@@ -79,7 +79,7 @@ export const usePerformanceOptimization = (): PerformanceHookReturn => {
         debounceTimers.current.delete(callbackKey);
       }
     }, delay);
-    
+
     // Track timer
     activeTimeouts.current.add(timer);
     debounceTimers.current.set(callbackKey, timer);
@@ -88,67 +88,68 @@ export const usePerformanceOptimization = (): PerformanceHookReturn => {
   // Throttling with memory optimization
   const throttledCallback = useCallback((callback: () => void, delay: number = 200) => {
     const callbackKey = callback.toString().substring(0, 100);
-    
+
     if (throttleTimers.current.get(callbackKey)) {
       return; // Still in throttle period
     }
-    
+
     // Execute immediately
     try {
       callback();
     } catch (error) {
       console.error('Throttled callback error:', error);
     }
-    
+
     // Set throttle
     throttleTimers.current.set(callbackKey, true);
-    
+
     const timer = setTimeout(() => {
       throttleTimers.current.delete(callbackKey);
       activeTimeouts.current.delete(timer);
     }, delay);
-    
+
     activeTimeouts.current.add(timer);
   }, []);
 
   // Clean up all active timeouts and intervals
   const cleanupTimeouts = useCallback(() => {
     // Clear all debounce timers
-    debounceTimers.current.forEach((timer) => {
+    debounceTimers.current.forEach(timer => {
       clearTimeout(timer);
     });
     debounceTimers.current.clear();
-    
+
     // Clear all tracked timeouts
-    activeTimeouts.current.forEach((timer) => {
+    activeTimeouts.current.forEach(timer => {
       clearTimeout(timer);
     });
     activeTimeouts.current.clear();
-    
+
     // Clear all intervals
-    activeIntervals.current.forEach((interval) => {
+    activeIntervals.current.forEach(interval => {
       clearInterval(interval as NodeJS.Timeout);
     });
     activeIntervals.current.clear();
-    
+
     // Clear throttle flags
     throttleTimers.current.clear();
-    
+
     console.log('All timers and intervals cleaned up');
   }, []);
 
   // Render optimization - only re-render if dependencies actually changed
   const optimizeRenders = useCallback((dependencies: any[]): boolean => {
     renderCountRef.current++;
-    
+
     // Shallow comparison of dependencies
-    const hasChanged = dependencies.length !== lastDependencies.current.length ||
+    const hasChanged =
+      dependencies.length !== lastDependencies.current.length ||
       dependencies.some((dep, index) => dep !== lastDependencies.current[index]);
-    
+
     if (hasChanged) {
       lastDependencies.current = [...dependencies];
     }
-    
+
     // Update render count in state (throttled)
     if (renderCountRef.current % 10 === 0) {
       setPerformanceState(prev => ({
@@ -157,7 +158,7 @@ export const usePerformanceOptimization = (): PerformanceHookReturn => {
         timeoutCount: activeTimeouts.current.size,
       }));
     }
-    
+
     return hasChanged;
   }, []);
 
@@ -167,30 +168,30 @@ export const usePerformanceOptimization = (): PerformanceHookReturn => {
     fpsCounter.current.frames++;
     const currentTime = performance.now();
     const elapsed = currentTime - fpsCounter.current.startTime;
-    
+
     if (elapsed >= 1000) {
       const fps = Math.round((fpsCounter.current.frames * 1000) / elapsed);
-      
+
       // Memory usage (if available)
       let memoryUsage = 0;
       if ('memory' in performance) {
         const memory = (performance as any).memory;
         memoryUsage = Math.round((memory.usedJSHeapSize / memory.jsHeapSizeLimit) * 100);
       }
-      
+
       setPerformanceState({
         fps,
         memoryUsage,
         timeoutCount: activeTimeouts.current.size,
         renderCount: renderCountRef.current,
       });
-      
+
       // Reset counters
       fpsCounter.current = {
         frames: 0,
-        startTime: currentTime
+        startTime: currentTime,
       };
-      
+
       // Log performance warnings
       if (fps < 30) {
         console.warn(`Low FPS detected: ${fps}fps`);
@@ -207,19 +208,19 @@ export const usePerformanceOptimization = (): PerformanceHookReturn => {
   // Setup performance monitoring
   useEffect(() => {
     let animationId: number;
-    
+
     const performanceLoop = () => {
       measurePerformance();
       animationId = requestAnimationFrame(performanceLoop);
     };
-    
+
     // Start with a delay to avoid immediate measurement
     const timer = setTimeout(() => {
       animationId = requestAnimationFrame(performanceLoop);
     }, 1000);
-    
+
     activeTimeouts.current.add(timer as any);
-    
+
     return () => {
       clearTimeout(timer);
       if (animationId) {
@@ -251,15 +252,15 @@ export const usePerformanceOptimization = (): PerformanceHookReturn => {
           }
         });
       }
-      
+
       // Garbage collection hint (if available)
       if (typeof window !== 'undefined' && 'gc' in window) {
         (window as any).gc();
       }
     }, 30000); // Every 30 seconds
-    
+
     activeIntervals.current.add(cleanup);
-    
+
     return () => {
       clearInterval(cleanup);
       activeIntervals.current.delete(cleanup);

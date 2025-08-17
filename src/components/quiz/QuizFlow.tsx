@@ -1,8 +1,8 @@
 /**
  * QuizFlow Component - Complete Quiz Implementation
- * 
+ *
  * This component demonstrates the full quiz flow using our new hooks
- * and interfaces. It serves as a reference implementation for the 
+ * and interfaces. It serves as a reference implementation for the
  * 21-step quiz system.
  */
 
@@ -20,41 +20,30 @@ export interface QuizFlowProps {
   onComplete?: (result: any) => void;
 }
 
-export const QuizFlow: React.FC<QuizFlowProps> = ({
-  className = '',
-  onComplete,
-}) => {
+export const QuizFlow: React.FC<QuizFlowProps> = ({ className = '', onComplete }) => {
   // Initialize hooks
   const { state, updateState } = useQuizState();
-  const { 
+  const {
     // navigation, // unused for now
-    nextStep, 
-    previousStep, 
+    nextStep,
+    previousStep,
     // goToStep, // unused for now
     canAdvance,
     isFirstStep,
-    isLastStep 
-  } = useQuizNavigation(
-    state.currentStepNumber,
-    state.totalSteps,
-    (stepNumber) => {
-      updateState({ 
-        currentStepNumber: stepNumber,
-        currentStepId: `step-${stepNumber}`,
-      });
-    }
-  );
-  
-  const { 
+    isLastStep,
+  } = useQuizNavigation(state.currentStepNumber, state.totalSteps, stepNumber => {
+    updateState({
+      currentStepNumber: stepNumber,
+      currentStepId: `step-${stepNumber}`,
+    });
+  });
+
+  const {
     // validateStep, // unused for now
-    isStepValid 
+    isStepValid,
   } = useQuizValidation(state.userAnswers, state.sessionData);
-  
-  const { 
-    trackStepStart, 
-    trackStepComplete,
-    trackQuizComplete 
-  } = useQuizAnalytics();
+
+  const { trackStepStart, trackStepComplete, trackQuizComplete } = useQuizAnalytics();
 
   // Track step start when step changes
   useEffect(() => {
@@ -67,7 +56,7 @@ export const QuizFlow: React.FC<QuizFlowProps> = ({
   // Handle step completion
   const handleStepComplete = (stepData: any) => {
     const { stepId, selections, selectedOptionDetails } = stepData;
-    
+
     // Create user answer
     const userAnswer: UserAnswer = {
       stepId,
@@ -99,11 +88,11 @@ export const QuizFlow: React.FC<QuizFlowProps> = ({
 
   // Handle name submission (step 1)
   const handleNameSubmit = (name: string) => {
-    updateState({ 
+    updateState({
       userName: name,
-      sessionData: { ...state.sessionData, userName: name }
+      sessionData: { ...state.sessionData, userName: name },
     });
-    
+
     // Auto-advance to next step
     setTimeout(() => {
       nextStep();
@@ -129,7 +118,7 @@ export const QuizFlow: React.FC<QuizFlowProps> = ({
 
     updateState({ result, isCompleted: true });
     trackQuizComplete(result);
-    
+
     if (onComplete) {
       onComplete(result);
     }
@@ -159,7 +148,7 @@ export const QuizFlow: React.FC<QuizFlowProps> = ({
       sessionData: {
         ...state.sessionData,
         [key]: value,
-      }
+      },
     });
   };
 
@@ -189,7 +178,7 @@ export const QuizFlow: React.FC<QuizFlowProps> = ({
 
       // Render using the registry
       const renderedBlock = renderQuizBlock(block.type, blockProps);
-      
+
       if (renderedBlock) {
         return renderedBlock;
       }
@@ -198,9 +187,7 @@ export const QuizFlow: React.FC<QuizFlowProps> = ({
       return (
         <div key={block.id || index} className="p-4 border border-gray-200 rounded mb-4">
           <p className="text-sm text-gray-500">Tipo de bloco não suportado: {block.type}</p>
-          <pre className="text-xs text-gray-400 mt-2">
-            {JSON.stringify(block, null, 2)}
-          </pre>
+          <pre className="text-xs text-gray-400 mt-2">{JSON.stringify(block, null, 2)}</pre>
         </div>
       );
     });
@@ -215,12 +202,10 @@ export const QuizFlow: React.FC<QuizFlowProps> = ({
             <span className="text-sm text-gray-600">
               Etapa {state.currentStepNumber} de {state.totalSteps}
             </span>
-            <span className="text-sm text-gray-600">
-              {Math.round(state.progress)}% completo
-            </span>
+            <span className="text-sm text-gray-600">{Math.round(state.progress)}% completo</span>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-2">
-            <div 
+            <div
               className="bg-blue-600 h-2 rounded-full transition-all duration-300"
               style={{ width: `${state.progress}%` }}
             />
@@ -229,9 +214,7 @@ export const QuizFlow: React.FC<QuizFlowProps> = ({
       </div>
 
       {/* Main Content */}
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        {renderStepBlocks()}
-      </div>
+      <div className="max-w-4xl mx-auto px-4 py-8">{renderStepBlocks()}</div>
 
       {/* Navigation */}
       {state.currentStepNumber > 1 && state.currentStepNumber < 20 && (
@@ -244,7 +227,7 @@ export const QuizFlow: React.FC<QuizFlowProps> = ({
             >
               Voltar
             </button>
-            
+
             <button
               onClick={handleNext}
               disabled={!currentStepValid}
@@ -272,8 +255,7 @@ export const QuizFlow: React.FC<QuizFlowProps> = ({
 
 // Helper functions for result calculation
 function calculatePrimaryStyle(scores: Record<string, number>): string {
-  const sortedStyles = Object.entries(scores)
-    .sort(([, a], [, b]) => b - a);
+  const sortedStyles = Object.entries(scores).sort(([, a], [, b]) => b - a);
   return sortedStyles[0]?.[0] || 'natural';
 }
 
@@ -288,11 +270,11 @@ function calculateSecondaryStyles(scores: Record<string, number>): string[] {
 function calculatePercentages(scores: Record<string, number>): Record<string, number> {
   const total = Object.values(scores).reduce((sum, score) => sum + score, 0);
   const percentages: Record<string, number> = {};
-  
+
   Object.entries(scores).forEach(([style, score]) => {
     percentages[style] = total > 0 ? (score / total) * 100 : 0;
   });
-  
+
   return percentages;
 }
 

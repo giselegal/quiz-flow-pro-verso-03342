@@ -8,16 +8,17 @@ interface PanelProps {
   onDelete: (blockId: string) => void;
 }
 
-const Label: React.FC<{ htmlFor?: string; children: React.ReactNode }>=({ htmlFor, children }) => (
+const Label: React.FC<{ htmlFor?: string; children: React.ReactNode }> = ({
+  htmlFor,
+  children,
+}) => (
   <label htmlFor={htmlFor} className="block text-sm font-medium mb-1">
     {children}
   </label>
 );
 
-const FieldWrapper: React.FC<{ children: React.ReactNode }>=({ children }) => (
-  <div className="space-y-1">
-    {children}
-  </div>
+const FieldWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <div className="space-y-1">{children}</div>
 );
 
 const Input: React.FC<React.InputHTMLAttributes<HTMLInputElement>> = props => (
@@ -40,7 +41,10 @@ const Textarea: React.FC<React.TextareaHTMLAttributes<HTMLTextAreaElement>> = pr
   />
 );
 
-const Switch: React.FC<{ checked: boolean; onChange: (val: boolean) => void }> = ({ checked, onChange }) => (
+const Switch: React.FC<{ checked: boolean; onChange: (val: boolean) => void }> = ({
+  checked,
+  onChange,
+}) => (
   <button
     type="button"
     onClick={() => onChange(!checked)}
@@ -58,8 +62,24 @@ const Switch: React.FC<{ checked: boolean; onChange: (val: boolean) => void }> =
 );
 
 const OptionsListEditor: React.FC<{
-  value?: Array<{ text: string; value?: string; category?: string; imageUrl?: string; description?: string; points?: number }>;
-  onChange: (val: Array<{ text: string; value?: string; category?: string; imageUrl?: string; description?: string; points?: number }>) => void;
+  value?: Array<{
+    text: string;
+    value?: string;
+    category?: string;
+    imageUrl?: string;
+    description?: string;
+    points?: number;
+  }>;
+  onChange: (
+    val: Array<{
+      text: string;
+      value?: string;
+      category?: string;
+      imageUrl?: string;
+      description?: string;
+      points?: number;
+    }>
+  ) => void;
 }> = ({ value = [], onChange }) => {
   return (
     <div className="space-y-4">
@@ -71,7 +91,9 @@ const OptionsListEditor: React.FC<{
             <label className="block text-xs font-medium mb-1">Colunas</label>
             <select className="w-full text-xs p-1 border rounded">
               <option value="1">1 Coluna</option>
-              <option value="2" selected>2 Colunas</option>
+              <option value="2" selected>
+                2 Colunas
+              </option>
               <option value="3">3 Colunas</option>
               <option value="4">4 Colunas</option>
             </select>
@@ -79,14 +101,18 @@ const OptionsListEditor: React.FC<{
           <div>
             <label className="block text-xs font-medium mb-1">Direção</label>
             <select className="w-full text-xs p-1 border rounded">
-              <option value="vertical" selected>Vertical</option>
+              <option value="vertical" selected>
+                Vertical
+              </option>
               <option value="horizontal">Horizontal</option>
             </select>
           </div>
           <div>
             <label className="block text-xs font-medium mb-1">Disposição</label>
             <select className="w-full text-xs p-1 border rounded">
-              <option value="image-text" selected>Imagem|Texto</option>
+              <option value="image-text" selected>
+                Imagem|Texto
+              </option>
               <option value="text-image">Texto|Imagem</option>
               <option value="image-only">Só Imagem</option>
               <option value="text-only">Só Texto</option>
@@ -103,12 +129,16 @@ const OptionsListEditor: React.FC<{
             {/* Miniatura da Imagem */}
             <div className="flex-shrink-0 w-12 h-12 border-2 border-dashed rounded-lg flex items-center justify-center bg-muted/50 cursor-pointer hover:border-primary transition-colors">
               {opt.imageUrl ? (
-                <img src={opt.imageUrl} alt="Preview" className="w-full h-full object-cover rounded" />
+                <img
+                  src={opt.imageUrl}
+                  alt="Preview"
+                  className="w-full h-full object-cover rounded"
+                />
               ) : (
                 <span className="text-xs text-muted-foreground">📷</span>
               )}
             </div>
-            
+
             {/* Texto Descritivo */}
             <div className="flex-1">
               <Input
@@ -133,7 +163,7 @@ const OptionsListEditor: React.FC<{
                 rows={2}
               />
             </div>
-            
+
             {/* Ações */}
             <div className="flex-shrink-0 flex flex-col gap-1">
               <button
@@ -160,7 +190,12 @@ const OptionsListEditor: React.FC<{
         <button
           type="button"
           className="flex-1 text-sm py-2 px-3 border border-dashed rounded-lg hover:bg-muted transition-colors"
-          onClick={() => onChange([...(value || []), { text: '', value: '', category: '', imageUrl: '', description: '', points: 0 }])}
+          onClick={() =>
+            onChange([
+              ...(value || []),
+              { text: '', value: '', category: '', imageUrl: '', description: '', points: 0 },
+            ])
+          }
         >
           + Adicionar opção
         </button>
@@ -178,7 +213,15 @@ const OptionsListEditor: React.FC<{
   );
 };
 
-function PropertyField({ field, value, onChange }: { field: BlockFieldSchema; value: any; onChange: (val: any) => void }) {
+function PropertyField({
+  field,
+  value,
+  onChange,
+}: {
+  field: BlockFieldSchema;
+  value: any;
+  onChange: (val: any) => void;
+}) {
   switch (field.type) {
     case 'text':
       return (
@@ -198,7 +241,11 @@ function PropertyField({ field, value, onChange }: { field: BlockFieldSchema; va
       return (
         <FieldWrapper>
           <Label>{field.label}</Label>
-          <Input type="number" value={value ?? 0} onChange={e => onChange(Number(e.target.value))} />
+          <Input
+            type="number"
+            value={value ?? 0}
+            onChange={e => onChange(Number(e.target.value))}
+          />
         </FieldWrapper>
       );
     case 'boolean':
@@ -210,7 +257,7 @@ function PropertyField({ field, value, onChange }: { field: BlockFieldSchema; va
       );
     case 'select': {
       const opts = field.options || [];
-      const isNum = typeof (opts[0]?.value) === 'number';
+      const isNum = typeof opts[0]?.value === 'number';
       const current = value ?? '';
       return (
         <FieldWrapper>
@@ -271,7 +318,12 @@ function PropertyField({ field, value, onChange }: { field: BlockFieldSchema; va
   }
 }
 
-const EnhancedUniversalPropertiesPanelFixed: React.FC<PanelProps> = ({ selectedBlock, onUpdate, onClose, onDelete }) => {
+const EnhancedUniversalPropertiesPanelFixed: React.FC<PanelProps> = ({
+  selectedBlock,
+  onUpdate,
+  onClose,
+  onDelete,
+}) => {
   if (!selectedBlock) return null;
 
   const schema = blockPropertySchemas[selectedBlock.type];
@@ -307,7 +359,10 @@ const EnhancedUniversalPropertiesPanelFixed: React.FC<PanelProps> = ({ selectedB
       >
         {schema.fields
           .filter(f => {
-            if ((f.key === 'minSelections' || f.key === 'maxSelections') && !selectedBlock.properties?.multipleSelection) {
+            if (
+              (f.key === 'minSelections' || f.key === 'maxSelections') &&
+              !selectedBlock.properties?.multipleSelection
+            ) {
               return false;
             }
             return true;
@@ -322,9 +377,10 @@ const EnhancedUniversalPropertiesPanelFixed: React.FC<PanelProps> = ({ selectedB
             </div>
           ))}
 
-
         <div className="pt-2 flex gap-2">
-          <button type="submit" className="px-3 py-2 rounded-md border text-sm">Fechar Painel</button>
+          <button type="submit" className="px-3 py-2 rounded-md border text-sm">
+            Fechar Painel
+          </button>
           <button
             type="button"
             className="px-3 py-2 rounded-md border text-sm"

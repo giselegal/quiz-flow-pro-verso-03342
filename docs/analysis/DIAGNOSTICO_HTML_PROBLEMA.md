@@ -38,12 +38,12 @@ O TextInlineBlock continua mostrando HTML cru ao invés de renderizar as tags `<
 ### Solução 2: Debug completo no console
 
 ```typescript
-console.log("🐛 TextInlineBlock DEBUG:", {
+console.log('🐛 TextInlineBlock DEBUG:', {
   rawContent: personalizedContent,
-  hasSpanTag: personalizedContent?.includes("<span"),
-  hasStrongTag: personalizedContent?.includes("<strong"),
+  hasSpanTag: personalizedContent?.includes('<span'),
+  hasStrongTag: personalizedContent?.includes('<strong'),
   isHtmlContent,
-  willRenderAsHTML: isHtmlContent || personalizedContent?.includes("<"),
+  willRenderAsHTML: isHtmlContent || personalizedContent?.includes('<'),
 });
 ```
 

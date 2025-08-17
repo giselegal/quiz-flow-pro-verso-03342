@@ -6,7 +6,7 @@
     <title>Teste do Componente Decorative Bar</title>
     <style>
       body {
-        font-family: "Inter", sans-serif;
+        font-family: 'Inter', sans-serif;
         margin: 20px;
         background: #f5f5f5;
       }
@@ -198,38 +198,38 @@
 
     <script>
       function updateBar() {
-        const height = document.getElementById("height").value;
-        const color = document.getElementById("color").value;
-        const borderRadius = document.getElementById("borderRadius").value;
-        const marginTop = document.getElementById("marginTop").value;
-        const marginBottom = document.getElementById("marginBottom").value;
-        const showShadow = document.getElementById("showShadow").checked;
+        const height = document.getElementById('height').value;
+        const color = document.getElementById('color').value;
+        const borderRadius = document.getElementById('borderRadius').value;
+        const marginTop = document.getElementById('marginTop').value;
+        const marginBottom = document.getElementById('marginBottom').value;
+        const showShadow = document.getElementById('showShadow').checked;
 
-        const barElement = document.getElementById("demo-bar-element");
+        const barElement = document.getElementById('demo-bar-element');
 
-        barElement.style.height = height + "px";
+        barElement.style.height = height + 'px';
         barElement.style.background = `linear-gradient(90deg, ${color}, ${adjustColor(color, 20)}, ${color})`;
-        barElement.style.borderRadius = borderRadius + "px";
-        barElement.style.marginTop = marginTop + "px";
-        barElement.style.marginBottom = marginBottom + "px";
-        barElement.style.boxShadow = showShadow ? "0 2px 6px rgba(184, 155, 122, 0.4)" : "none";
+        barElement.style.borderRadius = borderRadius + 'px';
+        barElement.style.marginTop = marginTop + 'px';
+        barElement.style.marginBottom = marginBottom + 'px';
+        barElement.style.boxShadow = showShadow ? '0 2px 6px rgba(184, 155, 122, 0.4)' : 'none';
 
         // Atualizar labels
-        document.getElementById("height-value").textContent = height + "px";
-        document.getElementById("borderRadius-value").textContent = borderRadius + "px";
-        document.getElementById("marginTop-value").textContent = marginTop + "px";
-        document.getElementById("marginBottom-value").textContent = marginBottom + "px";
+        document.getElementById('height-value').textContent = height + 'px';
+        document.getElementById('borderRadius-value').textContent = borderRadius + 'px';
+        document.getElementById('marginTop-value').textContent = marginTop + 'px';
+        document.getElementById('marginBottom-value').textContent = marginBottom + 'px';
       }
 
       function adjustColor(color, amount) {
         // Função simples para criar variação de cor
-        const num = parseInt(color.replace("#", ""), 16);
+        const num = parseInt(color.replace('#', ''), 16);
         const amt = Math.round(2.55 * amount);
         const R = (num >> 16) + amt;
         const G = ((num >> 8) & 0x00ff) + amt;
         const B = (num & 0x0000ff) + amt;
         return (
-          "#" +
+          '#' +
           (
             0x1000000 +
             (R < 255 ? (R < 1 ? 0 : R) : 255) * 0x10000 +
@@ -241,8 +241,8 @@
         );
       }
 
-      console.log("🎨 Teste do Decorative Bar carregado!");
-      console.log("📊 Status: Componente deve estar funcionando no /editor-fixed");
+      console.log('🎨 Teste do Decorative Bar carregado!');
+      console.log('📊 Status: Componente deve estar funcionando no /editor-fixed');
     </script>
   </body>
 </html>

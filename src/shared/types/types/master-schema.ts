@@ -1,9 +1,9 @@
 /**
  * MASTER UNIFIED SCHEMA
- * 
+ *
  * This is the single source of truth for all schemas in the application.
  * Consolidates multiple fragmented schema definitions into one unified system.
- * 
+ *
  * Design Principles:
  * - Single source of truth
  * - Zod-first validation with TypeScript inference
@@ -19,7 +19,7 @@ import { z } from 'zod';
 
 export const PropertyTypeEnum = z.enum([
   'text',
-  'textarea', 
+  'textarea',
   'number',
   'range',
   'color',
@@ -40,18 +40,18 @@ export const PropertyTypeEnum = z.enum([
   'email',
   'phone',
   'image',
-  'video'
+  'video',
 ]);
 
 export const PropertyCategoryEnum = z.enum([
   'content',
-  'style', 
+  'style',
   'layout',
   'behavior',
   'advanced',
   'animation',
   'accessibility',
-  'seo'
+  'seo',
 ]);
 
 export const BlockTypeEnum = z.enum([
@@ -71,7 +71,7 @@ export const BlockTypeEnum = z.enum([
   'faq',
   'countdown',
   'progress',
-  'custom'
+  'custom',
 ]);
 
 // =============================================================================
@@ -82,7 +82,7 @@ export const ValidationRuleSchema = z.object({
   type: z.enum(['required', 'minLength', 'maxLength', 'pattern', 'min', 'max', 'custom']),
   value: z.any().optional(),
   message: z.string(),
-  validator: z.function().optional()
+  validator: z.function().optional(),
 });
 
 export const PropertyValidationSchema = z.union([
@@ -91,10 +91,10 @@ export const PropertyValidationSchema = z.union([
     max: z.number().optional(),
     pattern: z.string().optional(),
     required: z.boolean().optional(),
-    custom: z.function().optional()
+    custom: z.function().optional(),
   }),
   z.array(ValidationRuleSchema),
-  z.function()
+  z.function(),
 ]);
 
 // =============================================================================
@@ -109,34 +109,43 @@ export const UnifiedPropertySchema = z.object({
   category: PropertyCategoryEnum.optional().default('content'),
   defaultValue: z.any(),
   value: z.any().optional(),
-  
+
   // Validation
   validation: PropertyValidationSchema.optional(),
   required: z.boolean().optional().default(false),
-  
+
   // UI Configuration
   placeholder: z.string().optional(),
   helpText: z.string().optional(),
-  options: z.array(z.object({
-    label: z.string(),
-    value: z.any()
-  })).optional(),
-  
+  options: z
+    .array(
+      z.object({
+        label: z.string(),
+        value: z.any(),
+      })
+    )
+    .optional(),
+
   // Conditional Display
-  condition: z.object({
-    dependsOn: z.string(),
-    value: z.any(),
-    operator: z.enum(['equals', 'not-equals', 'contains', 'not-contains', 'greater', 'less']).optional().default('equals')
-  }).optional(),
-  
+  condition: z
+    .object({
+      dependsOn: z.string(),
+      value: z.any(),
+      operator: z
+        .enum(['equals', 'not-equals', 'contains', 'not-contains', 'greater', 'less'])
+        .optional()
+        .default('equals'),
+    })
+    .optional(),
+
   // Advanced
   readonly: z.boolean().optional().default(false),
   hidden: z.boolean().optional().default(false),
   order: z.number().optional().default(0),
-  
+
   // Metadata
   version: z.string().optional().default('1.0'),
-  lastModified: z.date().optional()
+  lastModified: z.date().optional(),
 });
 
 // =============================================================================
@@ -147,33 +156,33 @@ export const UnifiedBlockSchema = z.object({
   id: z.string(),
   type: BlockTypeEnum,
   name: z.string().optional(),
-  
+
   // Properties
   properties: z.record(z.string(), z.any()).default({}),
   propertyDefinitions: z.array(UnifiedPropertySchema).optional(),
-  
+
   // Hierarchy
   parentId: z.string().optional(),
   children: z.array(z.string()).optional().default([]),
   order: z.number().default(0),
-  
+
   // Styling
   className: z.string().optional(),
   style: z.record(z.string(), z.any()).optional(),
-  
+
   // Behavior
   events: z.record(z.string(), z.any()).optional().default({}),
-  
+
   // Metadata
   locked: z.boolean().optional().default(false),
   visible: z.boolean().optional().default(true),
   version: z.string().optional().default('1.0'),
   createdAt: z.date().optional(),
-  updatedAt: z.date().optional()
+  updatedAt: z.date().optional(),
 });
 
 // =============================================================================
-// STAGE/PAGE SCHEMA  
+// STAGE/PAGE SCHEMA
 // =============================================================================
 
 export const UnifiedStageSchema = z.object({
@@ -181,23 +190,23 @@ export const UnifiedStageSchema = z.object({
   name: z.string(),
   title: z.string().optional(),
   description: z.string().optional(),
-  
+
   // Blocks
   blocks: z.array(UnifiedBlockSchema).default([]),
   blockOrder: z.array(z.string()).optional().default([]),
-  
+
   // Configuration
   settings: z.record(z.string(), z.any()).optional().default({}),
   theme: z.string().optional(),
-  
+
   // Navigation
   nextStageId: z.string().optional(),
   prevStageId: z.string().optional(),
-  
+
   // Metadata
   order: z.number().default(0),
   active: z.boolean().optional().default(true),
-  version: z.string().optional().default('1.0')
+  version: z.string().optional().default('1.0'),
 });
 
 // =============================================================================
@@ -209,34 +218,41 @@ export const UnifiedFunnelSchema = z.object({
   name: z.string(),
   title: z.string().optional(),
   description: z.string().optional(),
-  
+
   // Structure
   stages: z.array(UnifiedStageSchema).default([]),
   activeStageId: z.string().optional(),
-  
+
   // Configuration
-  settings: z.object({
-    theme: z.string().optional(),
-    analytics: z.object({
-      enabled: z.boolean().default(true),
-      trackingId: z.string().optional()
-    }).optional(),
-    seo: z.object({
-      title: z.string().optional(),
-      description: z.string().optional(),
-      keywords: z.array(z.string()).optional()
-    }).optional()
-  }).optional().default({}),
-  
+  settings: z
+    .object({
+      theme: z.string().optional(),
+      analytics: z
+        .object({
+          enabled: z.boolean().default(true),
+          trackingId: z.string().optional(),
+        })
+        .optional(),
+      seo: z
+        .object({
+          title: z.string().optional(),
+          description: z.string().optional(),
+          keywords: z.array(z.string()).optional(),
+        })
+        .optional(),
+    })
+    .optional()
+    .default({}),
+
   // Publishing
   status: z.enum(['draft', 'published', 'archived']).default('draft'),
   publishedAt: z.date().optional(),
-  
+
   // Metadata
   authorId: z.string().optional(),
   createdAt: z.date().optional(),
   updatedAt: z.date().optional(),
-  version: z.string().optional().default('1.0')
+  version: z.string().optional().default('1.0'),
 });
 
 // =============================================================================
@@ -244,7 +260,7 @@ export const UnifiedFunnelSchema = z.object({
 // =============================================================================
 
 export type PropertyType = z.infer<typeof PropertyTypeEnum>;
-export type PropertyCategory = z.infer<typeof PropertyCategoryEnum>; 
+export type PropertyCategory = z.infer<typeof PropertyCategoryEnum>;
 export type BlockType = z.infer<typeof BlockTypeEnum>;
 export type ValidationRule = z.infer<typeof ValidationRuleSchema>;
 export type PropertyValidation = z.infer<typeof PropertyValidationSchema>;
@@ -273,7 +289,7 @@ export class SchemaMigration {
         hidden: false,
         order: 0,
         required: false,
-        readonly: false
+        readonly: false,
       };
 
       // Add optional fields if they exist
@@ -298,7 +314,7 @@ export class SchemaMigration {
         hidden: false,
         order: 0,
         required: false,
-        readonly: false
+        readonly: false,
       };
     }
   }
@@ -311,7 +327,7 @@ export class SchemaMigration {
       const isValid = UnifiedPropertySchema.safeParse(converted).success;
       const preservedKey = original.key === converted.key || original.name === converted.key;
       const preservedType = original.type === converted.type;
-      
+
       return isValid && preservedKey && preservedType;
     } catch {
       return false;
@@ -349,10 +365,10 @@ export class ValidationService {
         if (options.logErrors) {
           console.error(error, { data, errors: result.error.errors });
         }
-        return { 
-          success: false, 
+        return {
+          success: false,
           error,
-          fallback: options.fallback 
+          fallback: options.fallback,
         };
       }
     } catch (error) {
@@ -360,10 +376,10 @@ export class ValidationService {
       if (options.logErrors) {
         console.error(errorMessage, { data, error });
       }
-      return { 
-        success: false, 
+      return {
+        success: false,
         error: errorMessage,
-        fallback: options.fallback 
+        fallback: options.fallback,
       };
     }
   }
@@ -379,7 +395,7 @@ export class ValidationService {
       hidden: false,
       order: 0,
       required: false,
-      readonly: false
+      readonly: false,
     };
   }
 
@@ -393,7 +409,7 @@ export class ValidationService {
       events: {},
       version: '1.0',
       visible: true,
-      locked: false
+      locked: false,
     };
   }
 }

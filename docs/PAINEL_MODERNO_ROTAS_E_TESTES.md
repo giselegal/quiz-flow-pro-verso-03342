@@ -69,25 +69,25 @@ interface PropertyField {
 
 ```typescript
 const STYLE_CATEGORIES = [
-  { id: "Natural", color: "#8B7355", gradient: "from-amber-100 to-stone-100" },
-  { id: "Clássico", color: "#4A4A4A", gradient: "from-slate-100 to-gray-100" },
+  { id: 'Natural', color: '#8B7355', gradient: 'from-amber-100 to-stone-100' },
+  { id: 'Clássico', color: '#4A4A4A', gradient: 'from-slate-100 to-gray-100' },
   {
-    id: "Contemporâneo",
-    color: "#2563EB",
-    gradient: "from-blue-100 to-indigo-100",
+    id: 'Contemporâneo',
+    color: '#2563EB',
+    gradient: 'from-blue-100 to-indigo-100',
   },
   {
-    id: "Elegante",
-    color: "#7C3AED",
-    gradient: "from-purple-100 to-violet-100",
+    id: 'Elegante',
+    color: '#7C3AED',
+    gradient: 'from-purple-100 to-violet-100',
   },
-  { id: "Romântico", color: "#EC4899", gradient: "from-pink-100 to-rose-100" },
-  { id: "Sexy", color: "#EF4444", gradient: "from-red-100 to-pink-100" },
-  { id: "Dramático", color: "#1F2937", gradient: "from-gray-100 to-slate-100" },
+  { id: 'Romântico', color: '#EC4899', gradient: 'from-pink-100 to-rose-100' },
+  { id: 'Sexy', color: '#EF4444', gradient: 'from-red-100 to-pink-100' },
+  { id: 'Dramático', color: '#1F2937', gradient: 'from-gray-100 to-slate-100' },
   {
-    id: "Criativo",
-    color: "#F59E0B",
-    gradient: "from-yellow-100 to-orange-100",
+    id: 'Criativo',
+    color: '#F59E0B',
+    gradient: 'from-yellow-100 to-orange-100',
   },
 ];
 ```

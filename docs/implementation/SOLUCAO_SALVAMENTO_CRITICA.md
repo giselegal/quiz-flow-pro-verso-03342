@@ -7,14 +7,14 @@ O motivo pelo qual **as etapas do funil não salvam** é que o serviço `schemaD
 ### Tabela Incorreta (sendo usada):
 
 ```typescript
-await supabase.from("quizzes"); // ❌ Esta tabela não existe!
+await supabase.from('quizzes'); // ❌ Esta tabela não existe!
 ```
 
 ### Tabelas Corretas (que existem):
 
 ```typescript
-await supabase.from("funnels"); // ✅ Tabela principal do funil
-await supabase.from("funnel_pages"); // ✅ Tabela das etapas/páginas
+await supabase.from('funnels'); // ✅ Tabela principal do funil
+await supabase.from('funnel_pages'); // ✅ Tabela das etapas/páginas
 ```
 
 ## 🗄️ Estrutura Correta do Banco
@@ -65,7 +65,7 @@ mv src/services/correctedSchemaDrivenFunnelService.ts src/services/schemaDrivenF
 
 ```typescript
 // Em useSchemaEditorFixed.ts
-import { correctedSchemaDrivenFunnelService } from "./correctedSchemaDrivenFunnelService";
+import { correctedSchemaDrivenFunnelService } from './correctedSchemaDrivenFunnelService';
 
 // Substituir todas as chamadas:
 // schemaDrivenFunnelService.saveFunnel()

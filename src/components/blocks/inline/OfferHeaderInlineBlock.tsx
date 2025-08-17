@@ -18,27 +18,27 @@ const OfferHeaderInlineBlock: React.FC<BlockComponentProps> = ({
   const properties = safeGetBlockProperties(block);
 
   const {
-    logoUrl = "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-    logoAlt = "Logo Gisele Galvão",
+    logoUrl = 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+    logoAlt = 'Logo Gisele Galvão',
     logoWidth = 180,
     logoHeight = 80,
     isSticky = true,
-    backgroundColor = "rgba(255, 255, 255, 0.9)",
+    backgroundColor = 'rgba(255, 255, 255, 0.9)',
     backdropBlur = true,
-    containerWidth = "full",
-    spacing = "small"
+    containerWidth = 'full',
+    spacing = 'small',
   } = properties;
 
   const spacingClasses = {
-    small: "py-4 px-6",
-    medium: "py-6 px-8", 
-    large: "py-8 px-10"
+    small: 'py-4 px-6',
+    medium: 'py-6 px-8',
+    large: 'py-8 px-10',
   };
 
   const containerClasses = {
-    full: "w-full max-w-none",
-    container: "max-w-7xl mx-auto",
-    narrow: "max-w-4xl mx-auto"
+    full: 'w-full max-w-none',
+    container: 'max-w-7xl mx-auto',
+    narrow: 'max-w-4xl mx-auto',
   };
 
   return (
@@ -53,15 +53,18 @@ const OfferHeaderInlineBlock: React.FC<BlockComponentProps> = ({
         className
       )}
       style={{
-        backgroundColor
+        backgroundColor,
       }}
       onClick={onClick}
     >
-      <div className={cn(
-        spacingClasses[spacing as keyof typeof spacingClasses] || spacingClasses.small,
-        containerClasses[containerWidth as keyof typeof containerClasses] || containerClasses.container,
-        "flex justify-center"
-      )}>
+      <div
+        className={cn(
+          spacingClasses[spacing as keyof typeof spacingClasses] || spacingClasses.small,
+          containerClasses[containerWidth as keyof typeof containerClasses] ||
+            containerClasses.container,
+          'flex justify-center'
+        )}
+      >
         <img
           src={logoUrl}
           alt={logoAlt}

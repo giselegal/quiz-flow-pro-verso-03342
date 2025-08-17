@@ -1,9 +1,9 @@
 // ===== SNIPPETS PRÁTICOS PARA SEU PROJETO DE QUIZ =====
 // Como usar os snippets ES7 React/Redux/React-Native/JS no seu projeto
-import React from "react";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { trackButtonClick } from "@/utils/analytics";
+import React from 'react';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { trackButtonClick } from '@/utils/analytics';
 
 // ===== 1. COMPONENTE DE PERGUNTA DO QUIZ =====
 // Digite "rafce" + Tab para criar este componente:
@@ -39,7 +39,7 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({
       console.log(`Resposta selecionada: ${answer}`);
 
       // Tracking com analytics
-      trackButtonClick("quiz_answer_selected", `Pergunta ${questionNumber}`, "quiz_page");
+      trackButtonClick('quiz_answer_selected', `Pergunta ${questionNumber}`, 'quiz_page');
 
       setTimeout(() => {
         onAnswerSelect(answer);
@@ -80,9 +80,9 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({
         {options.map((option, index) => (
           <Button
             key={index}
-            variant={selectedAnswer === option ? "default" : "outline"}
+            variant={selectedAnswer === option ? 'default' : 'outline'}
             className={`w-full p-4 text-left justify-start transition-all duration-200 ${
-              isAnimating ? "pointer-events-none opacity-50" : ""
+              isAnimating ? 'pointer-events-none opacity-50' : ''
             }`}
             onClick={() => handleAnswerClick(option)}
             disabled={isAnimating}
@@ -212,7 +212,7 @@ const QuizTimer: React.FC<QuizTimerProps> = ({ duration, onTimeUp, isActive }) =
   const formattedTime = React.useMemo(() => {
     const minutes = Math.floor(timeLeft / 60);
     const seconds = timeLeft % 60;
-    return `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   }, [timeLeft]);
 
   const progressPercentage = React.useMemo(() => {
@@ -226,7 +226,7 @@ const QuizTimer: React.FC<QuizTimerProps> = ({ duration, onTimeUp, isActive }) =
         <div className="w-full bg-gray-300 rounded-full h-2">
           <div
             className={`h-2 rounded-full transition-all duration-1000 ${
-              timeLeft < 30 ? "bg-red-500" : "bg-green-500"
+              timeLeft < 30 ? 'bg-red-500' : 'bg-green-500'
             }`}
             style={{ width: `${progressPercentage}%` }}
           />
@@ -271,10 +271,10 @@ const QuizResult: React.FC<QuizResultProps> = ({
   }, [timeSpent]);
 
   const resultMessage = React.useMemo(() => {
-    if (percentage >= 90) return "Excelente! Você é um expert!";
-    if (percentage >= 70) return "Muito bom! Você está no caminho certo!";
-    if (percentage >= 50) return "Bom trabalho! Continue praticando!";
-    return "Não desanime! Tente novamente!";
+    if (percentage >= 90) return 'Excelente! Você é um expert!';
+    if (percentage >= 70) return 'Muito bom! Você está no caminho certo!';
+    if (percentage >= 50) return 'Bom trabalho! Continue praticando!';
+    return 'Não desanime! Tente novamente!';
   }, [percentage]);
 
   // Digite "useCallback" + Tab:
@@ -283,14 +283,14 @@ const QuizResult: React.FC<QuizResultProps> = ({
 
     try {
       // Digite "clg" + Tab:
-      console.log("Compartilhando resultado...");
+      console.log('Compartilhando resultado...');
 
       await onShareResult();
 
       // Tracking
-      trackButtonClick("quiz_result_shared", `Score: ${percentage}%`, "quiz_result");
+      trackButtonClick('quiz_result_shared', `Score: ${percentage}%`, 'quiz_result');
     } catch (error) {
-      console.error("Erro ao compartilhar:", error);
+      console.error('Erro ao compartilhar:', error);
     } finally {
       setIsSharing(false);
     }
@@ -298,9 +298,9 @@ const QuizResult: React.FC<QuizResultProps> = ({
 
   const handleRestart = React.useCallback(() => {
     // Digite "clg" + Tab:
-    console.log("Reiniciando quiz...");
+    console.log('Reiniciando quiz...');
 
-    trackButtonClick("quiz_restart", "Quiz Reiniciado", "quiz_result");
+    trackButtonClick('quiz_restart', 'Quiz Reiniciado', 'quiz_result');
     onRestart();
   }, [onRestart]);
 
@@ -343,7 +343,7 @@ const QuizResult: React.FC<QuizResultProps> = ({
           Tentar Novamente
         </Button>
         <Button onClick={handleShare} disabled={isSharing} size="lg">
-          {isSharing ? "Compartilhando..." : "Compartilhar Resultado"}
+          {isSharing ? 'Compartilhando...' : 'Compartilhar Resultado'}
         </Button>
       </div>
     </Card>
@@ -380,7 +380,7 @@ const useQuizProgress = (quizId: string) => {
         localStorage.setItem(storageKey, JSON.stringify(progressData));
         setProgress(progressData);
       } catch (error) {
-        console.error("Erro ao salvar progresso:", error);
+        console.error('Erro ao salvar progresso:', error);
       }
     },
     [storageKey]
@@ -391,7 +391,7 @@ const useQuizProgress = (quizId: string) => {
       localStorage.removeItem(storageKey);
       setProgress(null);
     } catch (error) {
-      console.error("Erro ao limpar progresso:", error);
+      console.error('Erro ao limpar progresso:', error);
     }
   }, [storageKey]);
 
@@ -517,7 +517,7 @@ const QuizApp: React.FC<QuizAppProps> = ({ quizData, onComplete }) => {
         onRestart={handleRestart}
         onShareResult={async () => {
           // Implementar compartilhamento
-          console.log("Compartilhando resultado...");
+          console.log('Compartilhando resultado...');
         }}
       />
     );
@@ -554,7 +554,7 @@ const QuizApp: React.FC<QuizAppProps> = ({ quizData, onComplete }) => {
         </Button>
 
         <Button onClick={handleNext} disabled={!canProceed}>
-          {currentQuestion === quizData.questions.length - 1 ? "Finalizar" : "Próxima"}
+          {currentQuestion === quizData.questions.length - 1 ? 'Finalizar' : 'Próxima'}
         </Button>
       </div>
     </div>

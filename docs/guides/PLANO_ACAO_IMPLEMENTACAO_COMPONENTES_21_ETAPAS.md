@@ -119,7 +119,7 @@ import {
   QuizDevelopmentPlanInlineBlock,
   QuizGoalsDashboardInlineBlock,
   QuizFinalResultsInlineBlock,
-} from "./inline";
+} from './inline';
 ```
 
 #### **1.2 Criar Mapeamento de Tipos para Componentes**
@@ -127,59 +127,59 @@ import {
 ```typescript
 const COMPONENT_MAP: Record<string, React.ComponentType<any>> = {
   // ===== COMPONENTES BÁSICOS =====
-  "text-inline": TextInlineBlock,
-  "heading-inline": HeadingInlineBlock,
-  "button-inline": ButtonInlineBlock,
-  "image-display-inline": ImageDisplayInlineBlock,
-  "badge-inline": BadgeInlineBlock,
-  "progress-inline": ProgressInlineBlock,
-  "stat-inline": StatInlineBlock,
-  "countdown-inline": CountdownInlineBlock,
+  'text-inline': TextInlineBlock,
+  'heading-inline': HeadingInlineBlock,
+  'button-inline': ButtonInlineBlock,
+  'image-display-inline': ImageDisplayInlineBlock,
+  'badge-inline': BadgeInlineBlock,
+  'progress-inline': ProgressInlineBlock,
+  'stat-inline': StatInlineBlock,
+  'countdown-inline': CountdownInlineBlock,
 
   // ===== COMPONENTES DE DESIGN =====
-  "style-card-inline": StyleCardInlineBlock,
-  "result-card-inline": ResultCardInlineBlock,
-  "pricing-card-inline": PricingCardInlineBlock,
-  "testimonial-card-inline": TestimonialCardInlineBlock,
+  'style-card-inline': StyleCardInlineBlock,
+  'result-card-inline': ResultCardInlineBlock,
+  'pricing-card-inline': PricingCardInlineBlock,
+  'testimonial-card-inline': TestimonialCardInlineBlock,
 
   // ===== COMPONENTES DE RESULTADO (ETAPA 20) =====
-  "result-header-inline": ResultHeaderInlineBlock,
-  "testimonials-inline": TestimonialsInlineBlock,
-  "before-after-inline": BeforeAfterInlineBlock,
-  "step-header-inline": StepHeaderInlineBlock,
+  'result-header-inline': ResultHeaderInlineBlock,
+  'testimonials-inline': TestimonialsInlineBlock,
+  'before-after-inline': BeforeAfterInlineBlock,
+  'step-header-inline': StepHeaderInlineBlock,
 
   // ===== COMPONENTES DE OFERTA (ETAPA 21) =====
-  "quiz-offer-pricing-inline": QuizOfferPricingInlineBlock,
-  "quiz-offer-cta-inline": QuizOfferCTAInlineBlock,
-  "bonus-list-inline": BonusListInlineBlock,
+  'quiz-offer-pricing-inline': QuizOfferPricingInlineBlock,
+  'quiz-offer-cta-inline': QuizOfferCTAInlineBlock,
+  'bonus-list-inline': BonusListInlineBlock,
 
   // ===== COMPONENTES ESPECIALIZADOS QUIZ =====
-  "quiz-intro-header": QuizIntroHeaderBlock,
-  "loading-animation": LoadingAnimationBlock,
+  'quiz-intro-header': QuizIntroHeaderBlock,
+  'loading-animation': LoadingAnimationBlock,
 
   // ===== COMPONENTES DAS 21 ETAPAS =====
-  "quiz-start-page-inline": QuizStartPageInlineBlock,
-  "quiz-personal-info-inline": QuizPersonalInfoInlineBlock,
-  "quiz-experience-inline": QuizExperienceInlineBlock,
-  "quiz-question-inline": QuizQuestionInlineBlock,
-  "quiz-progress-inline": QuizProgressInlineBlock,
-  "quiz-transition-inline": QuizTransitionInlineBlock,
-  "quiz-loading-inline": QuizLoadingInlineBlock,
-  "quiz-result-inline": QuizResultInlineBlock,
-  "quiz-analysis-inline": QuizAnalysisInlineBlock,
-  "quiz-category-inline": QuizCategoryInlineBlock,
-  "quiz-recommendation-inline": QuizRecommendationInlineBlock,
-  "quiz-metrics-inline": QuizMetricsInlineBlock,
-  "quiz-comparison-inline": QuizComparisonInlineBlock,
-  "quiz-certificate-inline": QuizCertificateInlineBlock,
-  "quiz-leaderboard-inline": QuizLeaderboardInlineBlock,
-  "quiz-badges-inline": QuizBadgesInlineBlock,
-  "quiz-evolution-inline": QuizEvolutionInlineBlock,
-  "quiz-networking-inline": QuizNetworkingInlineBlock,
-  "quiz-action-plan-inline": QuizActionPlanInlineBlock,
-  "quiz-development-plan-inline": QuizDevelopmentPlanInlineBlock,
-  "quiz-goals-dashboard-inline": QuizGoalsDashboardInlineBlock,
-  "quiz-final-results-inline": QuizFinalResultsInlineBlock,
+  'quiz-start-page-inline': QuizStartPageInlineBlock,
+  'quiz-personal-info-inline': QuizPersonalInfoInlineBlock,
+  'quiz-experience-inline': QuizExperienceInlineBlock,
+  'quiz-question-inline': QuizQuestionInlineBlock,
+  'quiz-progress-inline': QuizProgressInlineBlock,
+  'quiz-transition-inline': QuizTransitionInlineBlock,
+  'quiz-loading-inline': QuizLoadingInlineBlock,
+  'quiz-result-inline': QuizResultInlineBlock,
+  'quiz-analysis-inline': QuizAnalysisInlineBlock,
+  'quiz-category-inline': QuizCategoryInlineBlock,
+  'quiz-recommendation-inline': QuizRecommendationInlineBlock,
+  'quiz-metrics-inline': QuizMetricsInlineBlock,
+  'quiz-comparison-inline': QuizComparisonInlineBlock,
+  'quiz-certificate-inline': QuizCertificateInlineBlock,
+  'quiz-leaderboard-inline': QuizLeaderboardInlineBlock,
+  'quiz-badges-inline': QuizBadgesInlineBlock,
+  'quiz-evolution-inline': QuizEvolutionInlineBlock,
+  'quiz-networking-inline': QuizNetworkingInlineBlock,
+  'quiz-action-plan-inline': QuizActionPlanInlineBlock,
+  'quiz-development-plan-inline': QuizDevelopmentPlanInlineBlock,
+  'quiz-goals-dashboard-inline': QuizGoalsDashboardInlineBlock,
+  'quiz-final-results-inline': QuizFinalResultsInlineBlock,
 };
 ```
 
@@ -333,7 +333,7 @@ A função `getStepTemplate` já está implementada e integrada:
 // Já implementado em SchemaDrivenEditorResponsive.tsx
 const getStepTemplate = (stepId: string) => {
   try {
-    const stepNumber = parseInt(stepId.replace(/\D/g, ""));
+    const stepNumber = parseInt(stepId.replace(/\D/g, ''));
     const template = stepTemplateService.getStepTemplate(stepNumber);
 
     return template.map((block: any) => ({
@@ -341,7 +341,7 @@ const getStepTemplate = (stepId: string) => {
       properties: block.properties,
     }));
   } catch (error) {
-    console.error("❌ Erro ao obter template da etapa:", error);
+    console.error('❌ Erro ao obter template da etapa:', error);
     return [];
   }
 };
@@ -438,16 +438,16 @@ window.testStepNavigation = stepId => {
   console.log(`🧪 Testando navegação para etapa ${stepId}`);
 
   // Simular seleção de etapa
-  const event = new CustomEvent("stepSelect", {
+  const event = new CustomEvent('stepSelect', {
     detail: { stepId: `etapa-${stepId}` },
   });
   document.dispatchEvent(event);
 
   setTimeout(() => {
-    const blocks = document.querySelectorAll("[data-block-type]");
+    const blocks = document.querySelectorAll('[data-block-type]');
     console.log(`📊 ${blocks.length} blocos renderizados`);
     blocks.forEach(block => {
-      console.log(`  - ${block.getAttribute("data-block-type")}`);
+      console.log(`  - ${block.getAttribute('data-block-type')}`);
     });
   }, 500);
 };
@@ -464,11 +464,11 @@ for (let i = 1; i <= 21; i++) {
 // Teste individual de componentes
 const testComponentRendering = componentType => {
   const testBlock = {
-    id: "test-block",
+    id: 'test-block',
     type: componentType,
     properties: {
-      content: "Teste",
-      title: "Título de Teste",
+      content: 'Teste',
+      title: 'Título de Teste',
     },
   };
 
@@ -476,7 +476,7 @@ const testComponentRendering = componentType => {
 
   // Verificar se o componente está mapeado
   const isMapping = COMPONENT_MAP.hasOwnProperty(componentType);
-  console.log(`📋 Mapeamento: ${isMapping ? "✅" : "❌"}`);
+  console.log(`📋 Mapeamento: ${isMapping ? '✅' : '❌'}`);
 
   return isMapping;
 };
@@ -604,21 +604,21 @@ window.testComponent = componentType => {
   console.log(`🧪 Testando componente: ${componentType}`);
 
   const testBlock = {
-    id: "test-block",
+    id: 'test-block',
     type: componentType,
     properties: {
-      content: "Teste",
-      title: "Título de Teste",
+      content: 'Teste',
+      title: 'Título de Teste',
     },
   };
 
   // Verificar se está mapeado
-  const renderer = document.querySelector("[data-block-type]");
-  console.log(`📊 Renderizado: ${renderer ? "✅" : "❌"}`);
+  const renderer = document.querySelector('[data-block-type]');
+  console.log(`📊 Renderizado: ${renderer ? '✅' : '❌'}`);
 };
 
 // Testar componentes críticos
-["text-inline", "quiz-start-page-inline", "quiz-question-inline"].forEach(type => {
+['text-inline', 'quiz-start-page-inline', 'quiz-question-inline'].forEach(type => {
   window.testComponent(type);
 });
 ```

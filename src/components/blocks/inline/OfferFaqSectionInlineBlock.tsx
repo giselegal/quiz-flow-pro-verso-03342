@@ -19,22 +19,23 @@ const OfferFaqSectionInlineBlock: React.FC<BlockComponentProps> = ({
   const properties = safeGetBlockProperties(block);
 
   const {
-    title = "Perguntas Frequentes",
+    title = 'Perguntas Frequentes',
     questions = [
       {
-        question: "Quanto tempo leva para fazer o quiz?",
-        answer: "O quiz leva apenas alguns minutos para ser completado. São perguntas simples e objetivas sobre suas preferências e estilo de vida."
-      }
+        question: 'Quanto tempo leva para fazer o quiz?',
+        answer:
+          'O quiz leva apenas alguns minutos para ser completado. São perguntas simples e objetivas sobre suas preferências e estilo de vida.',
+      },
     ],
-    spacing = "large"
+    spacing = 'large',
   } = properties;
 
   const [openItem, setOpenItem] = useState<number | null>(null);
 
   const spacingClasses = {
-    small: "py-8",
-    medium: "py-12",
-    large: "py-16"
+    small: 'py-8',
+    medium: 'py-12',
+    large: 'py-16',
   };
 
   const toggleItem = (index: number) => {
@@ -67,15 +68,13 @@ const OfferFaqSectionInlineBlock: React.FC<BlockComponentProps> = ({
                 className="bg-white rounded-lg shadow-md overflow-hidden border-l-4 border-[#B89B7A]"
               >
                 <button
-                  onClick={(e) => {
+                  onClick={e => {
                     e.stopPropagation(); // Prevent triggering parent onClick
                     toggleItem(index);
                   }}
                   className="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-gray-50 transition-colors"
                 >
-                  <span className="font-medium text-[#432818] text-lg">
-                    {item.question}
-                  </span>
+                  <span className="font-medium text-[#432818] text-lg">{item.question}</span>
                   <ChevronRight
                     size={24}
                     className={cn(

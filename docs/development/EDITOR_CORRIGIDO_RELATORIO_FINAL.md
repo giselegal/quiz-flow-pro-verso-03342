@@ -98,9 +98,9 @@ export const getBlockComponent = (type: string) => {
 
   // 2. Fallbacks inteligentes por categoria
   if (!component) {
-    if (type.includes("text")) return TextInlineBlock;
-    if (type.includes("button")) return ButtonInlineFixed;
-    if (type.includes("quiz")) return OptionsGridInlineBlock;
+    if (type.includes('text')) return TextInlineBlock;
+    if (type.includes('button')) return ButtonInlineFixed;
+    if (type.includes('quiz')) return OptionsGridInlineBlock;
     // ...
   }
 

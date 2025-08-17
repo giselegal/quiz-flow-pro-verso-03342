@@ -3,7 +3,10 @@ import { getOptimizedBlockComponent } from '@/utils/optimizedRegistry';
 import { useContainerProperties } from '@/hooks/useContainerProperties';
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
-import { ProductionBlockBoundary, SimpleBlockFallback } from '../editor/blocks/ProductionBlockBoundary';
+import {
+  ProductionBlockBoundary,
+  SimpleBlockFallback,
+} from '../editor/blocks/ProductionBlockBoundary';
 
 export interface ConsolidatedBlockRendererProps {
   block: Block;
@@ -28,9 +31,9 @@ const getMarginClass = (
 ): string => {
   const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
   if (!numValue || isNaN(numValue) || numValue === 0) return '';
-  
+
   const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
-  
+
   // Margens negativas
   if (numValue < 0) {
     const absValue = Math.abs(numValue);
@@ -44,7 +47,7 @@ const getMarginClass = (
     if (absValue <= 40) return `-${prefix}-10`;
     return `-${prefix}-12`; // Máximo
   }
-  
+
   // Margens positivas
   if (numValue <= 4) return `${prefix}-1`;
   if (numValue <= 8) return `${prefix}-2`;
@@ -106,7 +109,7 @@ const ConsolidatedBlockRenderer: React.FC<ConsolidatedBlockRendererProps> = ({
           data-block-type={block.type}
           data-block-id={block.id}
         >
-          <Suspense 
+          <Suspense
             fallback={
               <div className="animate-pulse bg-muted h-16 rounded-md flex items-center justify-center">
                 <span className="text-muted-foreground text-sm">Carregando {block.type}...</span>
@@ -127,7 +130,7 @@ const ConsolidatedBlockRenderer: React.FC<ConsolidatedBlockRendererProps> = ({
     );
   } catch (error) {
     console.error(`🚨 Erro crítico ao renderizar bloco ${block.type}:`, error);
-    
+
     return (
       <SimpleBlockFallback
         blockType={block.type}

@@ -395,7 +395,8 @@ const DragAndDropEditor: React.FC<DragAndDropEditorProps> = ({
             <div className="flex items-center gap-1">
               <Eye className="w-3 h-3" />
               <span>
-                {blocks.filter(b => getEnhancedBlockComponent(b.type)).length} de {blocks.length} funcionais
+                {blocks.filter(b => getEnhancedBlockComponent(b.type)).length} de {blocks.length}{' '}
+                funcionais
               </span>
             </div>
           </div>

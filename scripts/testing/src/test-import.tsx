@@ -1,4 +1,4 @@
-import { PageEditorCanvas } from "./components/editor";
+import { PageEditorCanvas } from './components/editor';
 
 // This file is just to test the import
 const Test = () => null;

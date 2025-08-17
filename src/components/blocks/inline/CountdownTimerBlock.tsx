@@ -25,7 +25,7 @@ const CountdownTimerBlock: React.FC<CountdownTimerProps> = ({
 
     if (isActive && timeLeft > 0) {
       interval = setInterval(() => {
-        setTimeLeft((time) => {
+        setTimeLeft(time => {
           if (time <= 1) {
             setIsActive(false);
             if (onComplete) {
@@ -54,7 +54,7 @@ const CountdownTimerBlock: React.FC<CountdownTimerProps> = ({
   const sizeClasses = {
     small: 'text-2xl w-16 h-16',
     medium: 'text-3xl w-20 h-20',
-    large: 'text-4xl w-24 h-24'
+    large: 'text-4xl w-24 h-24',
   };
 
   const formatTime = (seconds: number): string => {
@@ -69,18 +69,8 @@ const CountdownTimerBlock: React.FC<CountdownTimerProps> = ({
     <div className={containerClasses}>
       <div className="relative">
         {/* Circular Progress Background */}
-        <svg 
-          className={`${sizeClasses[size]} transform -rotate-90`}
-          viewBox="0 0 100 100"
-        >
-          <circle
-            cx="50"
-            cy="50"
-            r="45"
-            fill="none"
-            stroke="#E5E7EB"
-            strokeWidth="8"
-          />
+        <svg className={`${sizeClasses[size]} transform -rotate-90`} viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="45" fill="none" stroke="#E5E7EB" strokeWidth="8" />
           <circle
             cx="50"
             cy="50"
@@ -96,10 +86,7 @@ const CountdownTimerBlock: React.FC<CountdownTimerProps> = ({
 
         {/* Timer Text */}
         <div className="absolute inset-0 flex items-center justify-center">
-          <span 
-            className={`font-bold ${sizeClasses[size].split(' ')[0]}`}
-            style={{ color }}
-          >
+          <span className={`font-bold ${sizeClasses[size].split(' ')[0]}`} style={{ color }}>
             {formatTime(timeLeft)}
           </span>
         </div>

@@ -72,14 +72,14 @@ interface BlockCategory {
 }
 
 const BLOCK_CATEGORIES = {
-  basico: { name: "Básico", blocks: ["text", "heading", "image", "button"] },
+  basico: { name: 'Básico', blocks: ['text', 'heading', 'image', 'button'] },
   quiz: {
-    name: "Quiz",
-    blocks: ["quiz-question", "quiz-progress", "quiz-result"],
+    name: 'Quiz',
+    blocks: ['quiz-question', 'quiz-progress', 'quiz-result'],
   },
-  vendas: { name: "Vendas", blocks: ["pricing", "testimonials", "guarantee"] },
-  design: { name: "Design", blocks: ["carousel", "gallery", "grid"] },
-  avancado: { name: "Avançado", blocks: ["advanced-cta", "product-features"] },
+  vendas: { name: 'Vendas', blocks: ['pricing', 'testimonials', 'guarantee'] },
+  design: { name: 'Design', blocks: ['carousel', 'gallery', 'grid'] },
+  avancado: { name: 'Avançado', blocks: ['advanced-cta', 'product-features'] },
 };
 ```
 
@@ -93,29 +93,29 @@ const BLOCK_CATEGORIES = {
 
 ```typescript
 // /src/components/editor/blocks/EnhancedBlockRegistry.tsx
-import { lazy } from "react";
+import { lazy } from 'react';
 
 // Lazy loading para performance
 const ENHANCED_BLOCK_REGISTRY = {
   // Blocks Básicos
-  text: lazy(() => import("./TextBlock")),
-  heading: lazy(() => import("./HeadingBlock")),
-  image: lazy(() => import("./ImageBlock")),
+  text: lazy(() => import('./TextBlock')),
+  heading: lazy(() => import('./HeadingBlock')),
+  image: lazy(() => import('./ImageBlock')),
 
   // Blocks de Quiz
-  "quiz-question": lazy(() => import("./QuizQuestionBlock")),
-  "quiz-progress": lazy(() => import("./QuizProgressBlock")),
-  "quiz-result": lazy(() => import("./QuizResultCalculatedBlock")),
+  'quiz-question': lazy(() => import('./QuizQuestionBlock')),
+  'quiz-progress': lazy(() => import('./QuizProgressBlock')),
+  'quiz-result': lazy(() => import('./QuizResultCalculatedBlock')),
 
   // Blocks de Vendas
-  "testimonials-grid": lazy(() => import("./TestimonialsGridBlock")),
-  "pricing-table": lazy(() => import("./AdvancedPricingTableBlock")),
-  "product-carousel": lazy(() => import("./ProductCarouselBlock")),
+  'testimonials-grid': lazy(() => import('./TestimonialsGridBlock')),
+  'pricing-table': lazy(() => import('./AdvancedPricingTableBlock')),
+  'product-carousel': lazy(() => import('./ProductCarouselBlock')),
 
   // Blocks Avançados
-  "advanced-cta": lazy(() => import("./AdvancedCTABlock")),
-  "animated-stats": lazy(() => import("./AnimatedStatCounterBlock")),
-  "bonus-carousel": lazy(() => import("./BonusCarouselBlock")),
+  'advanced-cta': lazy(() => import('./AdvancedCTABlock')),
+  'animated-stats': lazy(() => import('./AnimatedStatCounterBlock')),
+  'bonus-carousel': lazy(() => import('./BonusCarouselBlock')),
 
   // ... mais 140+ componentes
 };
@@ -133,23 +133,23 @@ export interface BlockDefinition {
 }
 
 export const BLOCK_DEFINITIONS: Record<string, BlockDefinition> = {
-  "quiz-question": {
-    type: "quiz-question",
-    name: "Questão do Quiz",
-    category: "quiz",
-    icon: "❓",
-    description: "Pergunta com opções de resposta",
-    component: ENHANCED_BLOCK_REGISTRY["quiz-question"],
-    editor: lazy(() => import("./editors/QuizQuestionEditor")),
+  'quiz-question': {
+    type: 'quiz-question',
+    name: 'Questão do Quiz',
+    category: 'quiz',
+    icon: '❓',
+    description: 'Pergunta com opções de resposta',
+    component: ENHANCED_BLOCK_REGISTRY['quiz-question'],
+    editor: lazy(() => import('./editors/QuizQuestionEditor')),
     defaultProps: {
-      question: "Sua pergunta aqui",
-      options: ["Opção 1", "Opção 2", "Opção 3"],
+      question: 'Sua pergunta aqui',
+      options: ['Opção 1', 'Opção 2', 'Opção 3'],
       multiSelect: false,
     },
     schema: [
-      { key: "question", type: "textarea", label: "Pergunta", required: true },
-      { key: "options", type: "array", label: "Opções de Resposta" },
-      { key: "multiSelect", type: "boolean", label: "Múltipla Escolha" },
+      { key: 'question', type: 'textarea', label: 'Pergunta', required: true },
+      { key: 'options', type: 'array', label: 'Opções de Resposta' },
+      { key: 'multiSelect', type: 'boolean', label: 'Múltipla Escolha' },
     ],
   },
   // ... definições para todos os 150+ componentes
@@ -428,10 +428,10 @@ export const PropertyField: React.FC<PropertyFieldProps> = ({
 
 ```typescript
 // Substituir imports no editor-fixed.tsx
-import { EnhancedComponentsSidebar } from "@/components/editor/sidebar/EnhancedComponentsSidebar";
-import { UniversalBlockRendererV2 } from "@/components/editor/blocks/UniversalBlockRendererV2";
-import { ModernPropertiesPanel } from "@/components/editor/properties/ModernPropertiesPanel";
-import { BLOCK_DEFINITIONS } from "@/components/editor/blocks/EnhancedBlockRegistry";
+import { EnhancedComponentsSidebar } from '@/components/editor/sidebar/EnhancedComponentsSidebar';
+import { UniversalBlockRendererV2 } from '@/components/editor/blocks/UniversalBlockRendererV2';
+import { ModernPropertiesPanel } from '@/components/editor/properties/ModernPropertiesPanel';
+import { BLOCK_DEFINITIONS } from '@/components/editor/blocks/EnhancedBlockRegistry';
 
 // Atualizar EditorCanvas para usar UniversalBlockRendererV2
 // Substituir ComponentsSidebar por EnhancedComponentsSidebar

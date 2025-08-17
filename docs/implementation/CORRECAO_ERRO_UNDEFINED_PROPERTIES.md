@@ -25,10 +25,10 @@ TypeError: Cannot read properties of undefined (reading 'text')
 // ANTES:
 const categorizedProperties = useMemo(
   () => ({
-    content: getPropertiesByCategory("content"),
-    style: getPropertiesByCategory("style"),
-    layout: getPropertiesByCategory("layout"),
-    advanced: getPropertiesByCategory("advanced"),
+    content: getPropertiesByCategory('content'),
+    style: getPropertiesByCategory('style'),
+    layout: getPropertiesByCategory('layout'),
+    advanced: getPropertiesByCategory('advanced'),
   }),
   [getPropertiesByCategory]
 );
@@ -45,10 +45,10 @@ const categorizedProperties = useMemo(() => {
   }
 
   return {
-    content: getPropertiesByCategory("content"),
-    style: getPropertiesByCategory("style"),
-    layout: getPropertiesByCategory("layout"),
-    advanced: getPropertiesByCategory("advanced"),
+    content: getPropertiesByCategory('content'),
+    style: getPropertiesByCategory('style'),
+    layout: getPropertiesByCategory('layout'),
+    advanced: getPropertiesByCategory('advanced'),
   };
 }, [properties, getPropertiesByCategory]);
 ```

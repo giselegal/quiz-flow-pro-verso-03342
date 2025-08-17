@@ -41,26 +41,15 @@ const ResultDisplayBlock: React.FC<ResultDisplayProps> = ({
 
         {/* Title */}
         <div className="text-center mb-4">
-          <h2 className="text-3xl font-bold text-[#432818] mb-2">
-            {title}
-          </h2>
-          <p className="text-xl text-[#B89B7A] font-medium">
-            {category}
-          </p>
+          <h2 className="text-3xl font-bold text-[#432818] mb-2">{title}</h2>
+          <p className="text-xl text-[#B89B7A] font-medium">{category}</p>
         </div>
 
         {/* Score Circle */}
         <div className="flex justify-center mb-6">
           <div className="relative w-24 h-24">
             <svg className="w-24 h-24 transform -rotate-90" viewBox="0 0 100 100">
-              <circle
-                cx="50"
-                cy="50"
-                r="40"
-                fill="none"
-                stroke="#E5E7EB"
-                strokeWidth="8"
-              />
+              <circle cx="50" cy="50" r="40" fill="none" stroke="#E5E7EB" strokeWidth="8" />
               <circle
                 cx="50"
                 cy="50"
@@ -74,18 +63,14 @@ const ResultDisplayBlock: React.FC<ResultDisplayProps> = ({
               />
             </svg>
             <div className="absolute inset-0 flex items-center justify-center">
-              <span className="text-2xl font-bold text-[#432818]">
-                {score}%
-              </span>
+              <span className="text-2xl font-bold text-[#432818]">{score}%</span>
             </div>
           </div>
         </div>
 
         {/* Description */}
         <div className="text-center">
-          <p className="text-stone-700 text-lg leading-relaxed">
-            {description}
-          </p>
+          <p className="text-stone-700 text-lg leading-relaxed">{description}</p>
         </div>
       </div>
     </div>

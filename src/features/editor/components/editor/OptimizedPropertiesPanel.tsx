@@ -496,7 +496,6 @@ export const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> =
           </div>
         </div>
 
-
         {/* Enhanced Content with Tabs */}
         <div className="flex-1 overflow-hidden">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col">
@@ -593,7 +592,7 @@ export const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> =
         <div className="p-4 border-t bg-background/95 backdrop-blur-sm">
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2">
-                 <Badge variant="outline" className="text-xs font-mono">
+              <Badge variant="outline" className="text-xs font-mono">
                 ID: {selectedBlock.id}
               </Badge>
             </div>

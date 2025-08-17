@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * 🏭 GERADOR DE TEMPLATES CONECTADOS
- * 
+ *
  * Gera templates conectados para Steps 3-19 baseado no padrão do Step02TemplateConnected
  * Usage: node generate-connected-templates.mjs
  */
@@ -29,14 +29,14 @@ const stepConfigs = {
   16: { title: 'Estratégica 5 - Investimento', type: 'strategic', minSelections: 1 },
   17: { title: 'Estratégica 6 - Marcas e Referências', type: 'strategic', minSelections: 1 },
   18: { title: 'Estratégica 7 - Objetivos Finais', type: 'strategic', minSelections: 1 },
-  19: { title: 'Preparando seu Resultado...', type: 'result', minSelections: 0 }
+  19: { title: 'Preparando seu Resultado...', type: 'result', minSelections: 0 },
 };
 
 // Template base para gerar os componentes
 const generateTemplate = (stepNumber, config) => {
   const stepStr = stepNumber.toString().padStart(2, '0');
   const stepType = config.type;
-  
+
   return `import ConnectedTemplateWrapper from '@/components/quiz/ConnectedTemplateWrapper';
 import QuizNavigation from '@/components/quiz/QuizNavigation';
 import { Card, CardContent } from '@/components/ui/card';
@@ -51,15 +51,21 @@ interface Step${stepStr}TemplateProps {
  * 🎯 STEP ${stepStr}: ${config.title}
  * ✅ CONECTADO AOS HOOKS: useQuizLogic.${stepType === 'question' ? 'answerQuestion' : stepType === 'strategic' ? 'answerStrategicQuestion' : 'completeQuiz'}()
  *
- * ${stepType === 'question' ? 'Questão regular do quiz que coleta preferências de estilo' : 
-     stepType === 'strategic' ? 'Questão estratégica para dados complementares' :
-     'Etapa de resultado que exibe cálculos finais'}
+ * ${
+   stepType === 'question'
+     ? 'Questão regular do quiz que coleta preferências de estilo'
+     : stepType === 'strategic'
+       ? 'Questão estratégica para dados complementares'
+       : 'Etapa de resultado que exibe cálculos finais'
+ }
  */
 const Step${stepStr}TemplateConnected: React.FC<Step${stepStr}TemplateProps> = ({ sessionId, onNext }) => {
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   ${config.minSelections > 0 ? `const [isLoading, setIsLoading] = useState(false);` : ''}
 
-  ${config.minSelections > 0 ? `// Opções da questão (configurar baseado no JSON template)
+  ${
+    config.minSelections > 0
+      ? `// Opções da questão (configurar baseado no JSON template)
   const options = [
     {
       id: '${stepNumber}a',
@@ -101,10 +107,10 @@ const Step${stepStr}TemplateConnected: React.FC<Step${stepStr}TemplateProps> = (
     });
   };
 
-  const isValidSelection = selectedOptions.length >= ${config.minSelections};` : 
-  
-  `// Resultado automático - sem seleção necessária
-  const isValidSelection = true;`}
+  const isValidSelection = selectedOptions.length >= ${config.minSelections};`
+      : `// Resultado automático - sem seleção necessária
+  const isValidSelection = true;`
+  }
 
   return (
     <ConnectedTemplateWrapper 
@@ -141,13 +147,19 @@ const Step${stepStr}TemplateConnected: React.FC<Step${stepStr}TemplateProps> = (
               ${config.title.toUpperCase()}
             </h1>
             <p className="text-sm text-gray-600">
-              ${stepType === 'question' ? `Questão ${stepNumber - 1} de 10` : 
-                stepType === 'strategic' ? `Dados Complementares ${stepNumber - 11} de 7` :
-                'Processando seu resultado...'} ${config.minSelections > 0 ? `• Selecione ${config.minSelections === 1 ? '1 opção' : `${config.minSelections} opções`}` : ''}
+              ${
+                stepType === 'question'
+                  ? `Questão ${stepNumber - 1} de 10`
+                  : stepType === 'strategic'
+                    ? `Dados Complementares ${stepNumber - 11} de 7`
+                    : 'Processando seu resultado...'
+              } ${config.minSelections > 0 ? `• Selecione ${config.minSelections === 1 ? '1 opção' : `${config.minSelections} opções`}` : ''}
             </p>
           </div>
 
-          ${config.minSelections > 0 ? `{/* Grid de opções */}
+          ${
+            config.minSelections > 0
+              ? `{/* Grid de opções */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
             {options.map(option => {
               const isSelected = selectedOptions.includes(option.id);
@@ -182,13 +194,13 @@ const Step${stepStr}TemplateConnected: React.FC<Step${stepStr}TemplateProps> = (
                 </Card>
               );
             })}
-          </div>` : 
-          
-          `{/* Resultado em processamento */}
+          </div>`
+              : `{/* Resultado em processamento */}
           <div className="text-center">
             <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#B89B7A] mb-4"></div>
             <p className="text-gray-600">Analisando suas respostas...</p>
-          </div>`}
+          </div>`
+          }
 
           {/* Botão de continuar */}
           <div className="text-center">
@@ -207,11 +219,15 @@ const Step${stepStr}TemplateConnected: React.FC<Step${stepStr}TemplateProps> = (
               }
             </button>
             
-            ${config.minSelections > 0 ? `{selectedOptions.length > 0 && (
+            ${
+              config.minSelections > 0
+                ? `{selectedOptions.length > 0 && (
               <p className="text-sm text-gray-600 mt-2">
                 {selectedOptions.length}/${config.minSelections} opções selecionadas
               </p>
-            )}` : ''}
+            )}`
+                : ''
+            }
           </div>
 
           {/* Debug info */}
@@ -238,21 +254,21 @@ Object.entries(stepConfigs).forEach(([stepNumber, config]) => {
   const stepStr = stepNumber.padStart(2, '0');
   const fileName = `Step${stepStr}TemplateConnected.tsx`;
   const filePath = path.join(baseDir, 'src', 'components', 'steps', fileName);
-  
+
   // Verificar se já existe
   if (fs.existsSync(filePath)) {
     console.log(`⏭️ ${fileName} - Already exists, skipping`);
     skippedCount++;
     return;
   }
-  
+
   // Gerar template
   const templateContent = generateTemplate(parseInt(stepNumber), config);
-  
+
   // Salvar arquivo
   try {
     fs.writeFileSync(filePath, templateContent);
-    console.log(`✅ ${fileName} - Generated (${Math.round(templateContent.length/1024)}KB)`);
+    console.log(`✅ ${fileName} - Generated (${Math.round(templateContent.length / 1024)}KB)`);
     generatedCount++;
   } catch (error) {
     console.log(`❌ ${fileName} - Error: ${error.message}`);
@@ -268,7 +284,7 @@ console.log(`📁 Localização: src/components/steps/`);
 console.log('\n🎯 PRÓXIMOS PASSOS:');
 console.log('==================');
 console.log('1. Revisar cada template gerado');
-console.log('2. Configurar opções baseadas nos JSONs correspondentes');  
+console.log('2. Configurar opções baseadas nos JSONs correspondentes');
 console.log('3. Ajustar categorias e pontuações para cálculo');
 console.log('4. Testar integração em navegador');
 console.log('5. Ativar persistência Supabase quando necessário');

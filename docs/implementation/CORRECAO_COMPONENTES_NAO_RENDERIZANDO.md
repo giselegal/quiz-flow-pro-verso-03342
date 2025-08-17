@@ -49,11 +49,11 @@ O `UniversalBlockRenderer` estava retornando erro "Componente não encontrado" p
 
 ```typescript
 // NOVOS IMPORTS ADICIONADOS
-import DecorativeBarInlineBlock from "../components/editor/blocks/DecorativeBarInlineBlock";
-import FormInputBlock from "../components/editor/blocks/FormInputBlock";
-import LegalNoticeInlineBlock from "../components/editor/blocks/LegalNoticeInlineBlock";
-import OptionsGridBlock from "../components/editor/blocks/OptionsGridBlock";
-import QuizIntroHeaderBlock from "../components/editor/blocks/QuizIntroHeaderBlock";
+import DecorativeBarInlineBlock from '../components/editor/blocks/DecorativeBarInlineBlock';
+import FormInputBlock from '../components/editor/blocks/FormInputBlock';
+import LegalNoticeInlineBlock from '../components/editor/blocks/LegalNoticeInlineBlock';
+import OptionsGridBlock from '../components/editor/blocks/OptionsGridBlock';
+import QuizIntroHeaderBlock from '../components/editor/blocks/QuizIntroHeaderBlock';
 ```
 
 ### **2. Registry Atualizado**
@@ -62,18 +62,18 @@ import QuizIntroHeaderBlock from "../components/editor/blocks/QuizIntroHeaderBlo
 // INLINE COMPONENTS
 const inlineComponents = {
   // ... componentes existentes
-  "decorative-bar-inline": DecorativeBarInlineBlock,
-  "image-display-inline": ImageDisplayInlineBlock,
-  "legal-notice-inline": LegalNoticeInlineBlock,
+  'decorative-bar-inline': DecorativeBarInlineBlock,
+  'image-display-inline': ImageDisplayInlineBlock,
+  'legal-notice-inline': LegalNoticeInlineBlock,
   // ...
 };
 
 // STANDARD BLOCKS
 const standardBlocks = {
   // ... componentes existentes
-  "form-input": FormInputBlock,
-  "options-grid": OptionsGridBlock,
-  "quiz-intro-header": QuizIntroHeaderBlock,
+  'form-input': FormInputBlock,
+  'options-grid': OptionsGridBlock,
+  'quiz-intro-header': QuizIntroHeaderBlock,
   // ...
 };
 ```

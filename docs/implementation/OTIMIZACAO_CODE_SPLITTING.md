@@ -23,40 +23,40 @@
 ```typescript
 manualChunks: id => {
   // Vendor libraries separados por categoria
-  if (id.includes("node_modules")) {
-    if (id.includes("react") || id.includes("react-dom")) {
-      return "react-vendor";
+  if (id.includes('node_modules')) {
+    if (id.includes('react') || id.includes('react-dom')) {
+      return 'react-vendor';
     }
-    if (id.includes("lucide-react") || id.includes("radix")) {
-      return "ui-vendor";
+    if (id.includes('lucide-react') || id.includes('radix')) {
+      return 'ui-vendor';
     }
-    if (id.includes("wouter")) {
-      return "router-vendor";
+    if (id.includes('wouter')) {
+      return 'router-vendor';
     }
-    if (id.includes("framer-motion")) {
-      return "animation-vendor";
+    if (id.includes('framer-motion')) {
+      return 'animation-vendor';
     }
-    return "vendor";
+    return 'vendor';
   }
 
   // Application chunks por funcionalidade
-  if (id.includes("src/pages/")) {
-    if (id.includes("editor")) return "editor-pages";
-    if (id.includes("admin")) return "admin-pages";
-    if (id.includes("quiz")) return "quiz-pages";
-    return "app-pages";
+  if (id.includes('src/pages/')) {
+    if (id.includes('editor')) return 'editor-pages';
+    if (id.includes('admin')) return 'admin-pages';
+    if (id.includes('quiz')) return 'quiz-pages';
+    return 'app-pages';
   }
 
-  if (id.includes("src/components/")) {
-    if (id.includes("editor")) return "editor-components";
-    if (id.includes("ui/")) return "ui-components";
-    if (id.includes("auth")) return "auth-components";
-    if (id.includes("quiz")) return "quiz-components";
-    return "app-components";
+  if (id.includes('src/components/')) {
+    if (id.includes('editor')) return 'editor-components';
+    if (id.includes('ui/')) return 'ui-components';
+    if (id.includes('auth')) return 'auth-components';
+    if (id.includes('quiz')) return 'quiz-components';
+    return 'app-components';
   }
 
-  if (id.includes("src/context/")) return "app-context";
-  if (id.includes("src/utils/")) return "app-utils";
+  if (id.includes('src/context/')) return 'app-context';
+  if (id.includes('src/utils/')) return 'app-utils';
 };
 ```
 
@@ -64,10 +64,10 @@ manualChunks: id => {
 
 ```tsx
 // Lazy load das páginas principais
-const Home = lazy(() => import("./pages/Home"));
-const AuthPage = lazy(() => import("./pages/AuthPage"));
-const EditorPage = lazy(() => import("./pages/editor-fixed"));
-const TemplatesIA = lazy(() => import("./pages/TemplatesIA"));
+const Home = lazy(() => import('./pages/Home'));
+const AuthPage = lazy(() => import('./pages/AuthPage'));
+const EditorPage = lazy(() => import('./pages/editor-fixed'));
+const TemplatesIA = lazy(() => import('./pages/TemplatesIA'));
 
 // Loading component
 const PageLoading = () => (

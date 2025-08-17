@@ -28,7 +28,8 @@ export const STEP01_COMPONENTS_CONFIG: Step01ComponentConfig[] = [
     id: 'step01-header-logo',
     type: 'quiz-intro-header',
     properties: {
-      logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+      logoUrl:
+        'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
       logoAlt: 'Logo Gisele Galvão',
       logoWidth: 120,
       logoHeight: 120,
@@ -75,7 +76,8 @@ export const STEP01_COMPONENTS_CONFIG: Step01ComponentConfig[] = [
     id: 'step01-main-title',
     type: 'text',
     properties: {
-      content: '<span style="color: #B89B7A; font-weight: 700; font-family: \'Playfair Display\', serif;">Chega</span> <span style="font-family: \'Playfair Display\', serif;">de um guarda-roupa lotado e da sensação de que</span> <span style="color: #B89B7A; font-weight: 700; font-family: \'Playfair Display\', serif;">nada combina com você.</span>',
+      content:
+        '<span style="color: #B89B7A; font-weight: 700; font-family: \'Playfair Display\', serif;">Chega</span> <span style="font-family: \'Playfair Display\', serif;">de um guarda-roupa lotado e da sensação de que</span> <span style="color: #B89B7A; font-weight: 700; font-family: \'Playfair Display\', serif;">nada combina com você.</span>',
       fontSize: 'text-3xl',
       fontWeight: 'font-bold',
       fontFamily: 'Playfair Display, serif',
@@ -206,7 +208,8 @@ export const STEP01_COMPONENTS_CONFIG: Step01ComponentConfig[] = [
     id: 'step01-legal-notice',
     type: 'legal-notice',
     properties: {
-      content: '© 2025 Gisele Galvão - Todos os direitos reservados. Suas informações são seguras.',
+      content:
+        '© 2025 Gisele Galvão - Todos os direitos reservados. Suas informações são seguras.',
       fontSize: 'text-xs',
       textAlign: 'text-center',
       color: '#9CA3AF',
@@ -230,20 +233,20 @@ export const STEP01_COMPONENTS_CONFIG: Step01ComponentConfig[] = [
 export const STEP01_PROPERTIES_PANEL_CONFIG = {
   // Desabilita edição inline em favor do painel
   disableInlineEditing: true,
-  
+
   // Habilita painel de propriedades para todos os componentes
   enablePropertiesPanel: true,
-  
+
   // Categorias ativas por padrão
   defaultOpenCategories: ['content', 'style', 'layout'],
-  
+
   // Configurações específicas do Supabase
   supabaseIntegration: {
     enabled: true,
     autoSave: true,
     realTimeUpdates: true,
   },
-  
+
   // Validações automáticas
   validation: {
     enabled: true,
@@ -263,10 +266,19 @@ export const getStep01ComponentConfig = (componentId: string): Step01ComponentCo
  * 🎯 FUNÇÃO PARA VERIFICAR SE UM COMPONENTE É DA ETAPA 1
  */
 export const isStep01Component = (componentId: string): boolean => {
-  return componentId.startsWith('step01-') || 
-         ['intro-header', 'intro-decorative-bar', 'intro-main-title', 
-          'intro-image', 'intro-subtitle', 'intro-form-input', 
-          'intro-cta-button', 'intro-legal-notice'].includes(componentId);
+  return (
+    componentId.startsWith('step01-') ||
+    [
+      'intro-header',
+      'intro-decorative-bar',
+      'intro-main-title',
+      'intro-image',
+      'intro-subtitle',
+      'intro-form-input',
+      'intro-cta-button',
+      'intro-legal-notice',
+    ].includes(componentId)
+  );
 };
 
 /**
@@ -280,26 +292,26 @@ export const validateStep01Configuration = (): {
   issues: string[];
 } => {
   const issues: string[] = [];
-  
+
   // Verificar se todos os componentes têm configurações válidas
   STEP01_COMPONENTS_CONFIG.forEach(config => {
     if (!config.id || !config.type) {
       issues.push(`Componente ${config.id || 'sem-id'} está mal configurado`);
     }
-    
+
     if (!config.propertiesPanelConfig?.enabled) {
       issues.push(`Componente ${config.id} não tem painel de propriedades habilitado`);
     }
   });
-  
-  const supabaseEnabled = STEP01_COMPONENTS_CONFIG.filter(c => 
-    c.supabaseConfig?.enabled || c.properties?.saveToSupabase
+
+  const supabaseEnabled = STEP01_COMPONENTS_CONFIG.filter(
+    c => c.supabaseConfig?.enabled || c.properties?.saveToSupabase
   ).length;
-  
-  const propertiesPanelEnabled = STEP01_COMPONENTS_CONFIG.filter(c => 
-    c.propertiesPanelConfig?.enabled
+
+  const propertiesPanelEnabled = STEP01_COMPONENTS_CONFIG.filter(
+    c => c.propertiesPanelConfig?.enabled
   ).length;
-  
+
   return {
     valid: issues.length === 0,
     components: STEP01_COMPONENTS_CONFIG.length,

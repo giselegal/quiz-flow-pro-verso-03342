@@ -1,11 +1,11 @@
-import fs from "fs";
-import path from "path";
+import fs from 'fs';
+import path from 'path';
 
-const componentsDir = "/workspaces/quiz-quest-challenge-verse/client/src/components/editor/blocks";
+const componentsDir = '/workspaces/quiz-quest-challenge-verse/client/src/components/editor/blocks';
 
 function analyzeComponentResponsiveness(filePath) {
   try {
-    const content = fs.readFileSync(filePath, "utf8");
+    const content = fs.readFileSync(filePath, 'utf8');
     const fileName = path.basename(filePath);
 
     const issues = [];
@@ -13,18 +13,18 @@ function analyzeComponentResponsiveness(filePath) {
 
     // Padrões problemáticos simples
     const problemPatterns = [
-      { pattern: /w-\[\d+px\]/g, penalty: 15, name: "Largura fixa em pixels" },
-      { pattern: /h-\[\d+px\]/g, penalty: 15, name: "Altura fixa em pixels" },
-      { pattern: /min-w-\[\d+px\]/g, penalty: 10, name: "Largura mínima fixa" },
-      { pattern: /min-h-\[\d+px\]/g, penalty: 10, name: "Altura mínima fixa" },
-      { pattern: /text-\[\d+px\]/g, penalty: 15, name: "Fonte fixa em pixels" },
+      { pattern: /w-\[\d+px\]/g, penalty: 15, name: 'Largura fixa em pixels' },
+      { pattern: /h-\[\d+px\]/g, penalty: 15, name: 'Altura fixa em pixels' },
+      { pattern: /min-w-\[\d+px\]/g, penalty: 10, name: 'Largura mínima fixa' },
+      { pattern: /min-h-\[\d+px\]/g, penalty: 10, name: 'Altura mínima fixa' },
+      { pattern: /text-\[\d+px\]/g, penalty: 15, name: 'Fonte fixa em pixels' },
       {
         pattern: /grid-cols-\d+(?!\s+(?:sm|md|lg|xl|2xl):)/g,
         penalty: 12,
-        name: "Grid sem responsividade",
+        name: 'Grid sem responsividade',
       },
-      { pattern: /\babsolute\b/g, penalty: 5, name: "Posicionamento absoluto" },
-      { pattern: /\bfixed\b/g, penalty: 8, name: "Posicionamento fixo" },
+      { pattern: /\babsolute\b/g, penalty: 5, name: 'Posicionamento absoluto' },
+      { pattern: /\bfixed\b/g, penalty: 8, name: 'Posicionamento fixo' },
     ];
 
     // Verificar padrões problemáticos
@@ -56,8 +56,8 @@ function analyzeComponentResponsiveness(filePath) {
     if (!hasResponsiveClasses) {
       score -= 30;
       issues.push({
-        pattern: "Sem breakpoints",
-        problem: "Ausência de classes responsivas",
+        pattern: 'Sem breakpoints',
+        problem: 'Ausência de classes responsivas',
         penalty: 30,
       });
     }
@@ -70,7 +70,7 @@ function analyzeComponentResponsiveness(filePath) {
       score,
       issues,
       hasResponsiveClasses,
-      status: score >= 80 ? "✅ Bom" : score >= 60 ? "⚠️ Médio" : "❌ Ruim",
+      status: score >= 80 ? '✅ Bom' : score >= 60 ? '⚠️ Médio' : '❌ Ruim',
     };
   } catch (error) {
     console.error(`Erro ao analisar ${filePath}:`, error.message);
@@ -80,13 +80,13 @@ function analyzeComponentResponsiveness(filePath) {
 
 function main() {
   if (!fs.existsSync(componentsDir)) {
-    console.log("❌ Diretório não encontrado:", componentsDir);
+    console.log('❌ Diretório não encontrado:', componentsDir);
     return;
   }
 
   const files = fs
     .readdirSync(componentsDir)
-    .filter(file => file.endsWith(".tsx"))
+    .filter(file => file.endsWith('.tsx'))
     .map(file => path.join(componentsDir, file));
 
   console.log(`📱 ANÁLISE DE RESPONSIVIDADE - ${files.length} COMPONENTES\n`);
@@ -94,7 +94,7 @@ function main() {
   const results = files.map(analyzeComponentResponsiveness).filter(Boolean);
 
   if (results.length === 0) {
-    console.log("❌ Nenhum resultado válido encontrado");
+    console.log('❌ Nenhum resultado válido encontrado');
     return;
   }
 
@@ -107,7 +107,7 @@ function main() {
   const okComponents = results.filter(r => r.score >= 60 && r.score < 80);
   const badComponents = results.filter(r => r.score < 60);
 
-  console.log("📊 ESTATÍSTICAS:");
+  console.log('📊 ESTATÍSTICAS:');
   console.log(`   Score médio: ${averageScore.toFixed(1)}/100`);
   console.log(
     `   ✅ Bons (≥80): ${goodComponents.length} (${Math.round((goodComponents.length / results.length) * 100)}%)`
@@ -120,7 +120,7 @@ function main() {
   );
 
   // Top 15 piores
-  console.log("❌ TOP 15 COMPONENTES MAIS PROBLEMÁTICOS:\n");
+  console.log('❌ TOP 15 COMPONENTES MAIS PROBLEMÁTICOS:\n');
   results.slice(0, 15).forEach((result, index) => {
     console.log(`${index + 1}. ${result.status} ${result.fileName} (${result.score}/100)`);
 
@@ -133,7 +133,7 @@ function main() {
         console.log(`     ... +${result.issues.length - 3} outros problemas`);
       }
     }
-    console.log("");
+    console.log('');
   });
 
   // Problemas mais comuns
@@ -143,7 +143,7 @@ function main() {
     problemCounts[issue.problem] = (problemCounts[issue.problem] || 0) + 1;
   });
 
-  console.log("🔍 PROBLEMAS MAIS FREQUENTES:\n");
+  console.log('🔍 PROBLEMAS MAIS FREQUENTES:\n');
   Object.entries(problemCounts)
     .sort(([, a], [, b]) => b - a)
     .slice(0, 8)
@@ -151,7 +151,7 @@ function main() {
       console.log(`   ${count}x: ${problem}`);
     });
 
-  console.log("\n");
+  console.log('\n');
 
   // Componentes críticos
   const criticalComponents = results.filter(r => r.score < 40);
@@ -160,15 +160,15 @@ function main() {
     criticalComponents.forEach(result => {
       console.log(`   📱 ${result.fileName} (${result.score}/100)`);
     });
-    console.log("");
+    console.log('');
   }
 
-  console.log("💡 RECOMENDAÇÕES:\n");
-  console.log("   1. Priorizar componentes com score < 60");
-  console.log("   2. Substituir valores em pixels por classes Tailwind");
-  console.log("   3. Adicionar breakpoints (sm:, md:, lg:)");
-  console.log("   4. Testar em dispositivos móveis");
-  console.log("   5. Implementar grid responsivo");
+  console.log('💡 RECOMENDAÇÕES:\n');
+  console.log('   1. Priorizar componentes com score < 60');
+  console.log('   2. Substituir valores em pixels por classes Tailwind');
+  console.log('   3. Adicionar breakpoints (sm:, md:, lg:)');
+  console.log('   4. Testar em dispositivos móveis');
+  console.log('   5. Implementar grid responsivo');
 }
 
 main();

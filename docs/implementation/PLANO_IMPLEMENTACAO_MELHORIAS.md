@@ -58,7 +58,7 @@
 ```typescript
 interface ValidationRule {
   field: string;
-  type: "required" | "minLength" | "maxLength" | "pattern" | "custom";
+  type: 'required' | 'minLength' | 'maxLength' | 'pattern' | 'custom';
   message: string;
   validator?: (value: any) => boolean;
 }
@@ -132,10 +132,10 @@ interface ValidationRule {
 
 ```typescript
 interface FunnelFilters {
-  status: "all" | "draft" | "active" | "paused" | "archived";
+  status: 'all' | 'draft' | 'active' | 'paused' | 'archived';
   dateRange: { start: Date; end: Date };
   category: string[];
-  performance: "low" | "medium" | "high";
+  performance: 'low' | 'medium' | 'high';
   author: string[];
   tags: string[];
 }
@@ -185,7 +185,7 @@ CREATE TABLE funnel_audit_logs (
 
 ```typescript
 interface UserPermissions {
-  role: "admin" | "editor" | "viewer";
+  role: 'admin' | 'editor' | 'viewer';
   funnels: {
     create: boolean;
     read: string[]; // funnel IDs
@@ -249,10 +249,10 @@ interface SEOMetadata {
     title: string;
     description: string;
     image: string;
-    type: "website" | "quiz";
+    type: 'website' | 'quiz';
   };
   twitterCard: {
-    card: "summary" | "summary_large_image";
+    card: 'summary' | 'summary_large_image';
     title: string;
     description: string;
     image: string;
@@ -282,12 +282,12 @@ interface SEOMetadata {
 
 ```typescript
 type FunnelStatus =
-  | "draft" // Rascunho - editável
-  | "review" // Em revisão - aguardando aprovação
-  | "scheduled" // Agendado - publicação futura
-  | "published" // Publicado - live
-  | "paused" // Pausado - temporariamente offline
-  | "archived"; // Arquivado - não editável
+  | 'draft' // Rascunho - editável
+  | 'review' // Em revisão - aguardando aprovação
+  | 'scheduled' // Agendado - publicação futura
+  | 'published' // Publicado - live
+  | 'paused' // Pausado - temporariamente offline
+  | 'archived'; // Arquivado - não editável
 ```
 
 **B. Workflow de Aprovação**

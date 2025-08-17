@@ -24,8 +24,8 @@ const InterBlockDropZone = ({ position, isActive }) => {
   const { setNodeRef, isOver } = useDroppable({
     id: `drop-zone-${position}`, // IDs únicos
     data: {
-      type: "canvas-drop-zone",
-      accepts: ["sidebar-component"],
+      type: 'canvas-drop-zone',
+      accepts: ['sidebar-component'],
       position: position, // Posição específica
     },
   });
@@ -41,7 +41,7 @@ const InterBlockDropZone = ({ position, isActive }) => {
 
 ```tsx
 // DndProvider.tsx - Cálculo de posição baseado no ID
-if (over.id?.toString().startsWith("drop-zone-")) {
+if (over.id?.toString().startsWith('drop-zone-')) {
   const positionMatch = over.id.toString().match(/drop-zone-(\\d+)/);
   if (positionMatch) {
     position = parseInt(positionMatch[1], 10); // Extrair posição

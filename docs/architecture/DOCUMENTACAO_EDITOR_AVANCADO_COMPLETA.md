@@ -155,7 +155,7 @@ src/hooks/
 
 ```tsx
 // Alternar entre modos de preview
-<Button onClick={() => setPreviewMode("mobile")}>
+<Button onClick={() => setPreviewMode('mobile')}>
   <Smartphone className="w-4 h-4" />
 </Button>
 ```

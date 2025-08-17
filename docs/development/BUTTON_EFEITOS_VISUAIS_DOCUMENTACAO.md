@@ -43,7 +43,7 @@
 
    ```tsx
    <span className="flex-1 text-center truncate relative z-10 font-medium">
-     {text || "Clique aqui"}
+     {text || 'Clique aqui'}
    </span>
    ```
 
@@ -51,7 +51,7 @@
 
    ```typescript
    const getShadowStyles = () => {
-     if (shadowType === "glow") {
+     if (shadowType === 'glow') {
        return {
          boxShadow: `0 0 20px ${shadowColor}40, 0 0 40px ${shadowColor}20`,
        };
@@ -63,7 +63,7 @@
 3. **Efeitos Visuais com CSS + React**:
    ```tsx
    {
-     effectType === "shine" && (
+     effectType === 'shine' && (
        <div className="absolute inset-0 -top-1 -bottom-1 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out" />
      );
    }
@@ -100,7 +100,7 @@ case "button-inline":
 ```css
 /* Efeito de brilho deslizante */
 .button-shine::before {
-  content: "";
+  content: '';
   position: absolute;
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
   transition: left 0.7s ease-in-out;

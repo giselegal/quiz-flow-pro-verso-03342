@@ -90,7 +90,7 @@
 
 ```tsx
 // Adicionar na sua aplicação:
-import SystemIntegrationTest from "./components/testing/SystemIntegrationTest";
+import SystemIntegrationTest from './components/testing/SystemIntegrationTest';
 
 // Usar em uma rota de desenvolvimento:
 <Route path="/dev/test" component={SystemIntegrationTest} />;

@@ -6,9 +6,7 @@ const EditorFixedMinimal: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-indigo-50">
       <div className="container mx-auto px-4 py-8">
         <div className="text-center space-y-4 mb-8">
-          <h1 className="text-4xl font-bold text-slate-800">
-            Editor Fixed - Sistema Integrado
-          </h1>
+          <h1 className="text-4xl font-bold text-slate-800">Editor Fixed - Sistema Integrado</h1>
           <p className="text-lg text-slate-600 max-w-2xl mx-auto">
             Sistema de quiz personalizado com resultado dinâmico e painel de propriedades completo.
           </p>
@@ -17,9 +15,7 @@ const EditorFixedMinimal: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 min-h-[600px]">
           {/* Coluna 1: Componentes */}
           <Card className="p-4 bg-white shadow-lg">
-            <h3 className="font-bold text-lg mb-4 text-slate-700">
-              📦 Componentes
-            </h3>
+            <h3 className="font-bold text-lg mb-4 text-slate-700">📦 Componentes</h3>
             <div className="space-y-2">
               <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
                 <div className="text-sm font-medium text-blue-700">Text Block</div>
@@ -38,15 +34,11 @@ const EditorFixedMinimal: React.FC = () => {
 
           {/* Coluna 2: Etapas */}
           <Card className="p-4 bg-white shadow-lg">
-            <h3 className="font-bold text-lg mb-4 text-slate-700">
-              📝 Etapas (1-21)
-            </h3>
+            <h3 className="font-bold text-lg mb-4 text-slate-700">📝 Etapas (1-21)</h3>
             <div className="space-y-2 max-h-[500px] overflow-y-auto">
               {Array.from({ length: 21 }, (_, i) => (
                 <div key={i + 1} className="p-2 bg-slate-50 rounded border border-slate-200">
-                  <div className="text-sm font-medium text-slate-700">
-                    Step {i + 1}
-                  </div>
+                  <div className="text-sm font-medium text-slate-700">Step {i + 1}</div>
                   <div className="text-xs text-slate-500">
                     {i === 0 && 'Introdução'}
                     {i === 1 && 'Nome do usuário'}
@@ -61,16 +53,12 @@ const EditorFixedMinimal: React.FC = () => {
 
           {/* Coluna 3: Preview/Canvas */}
           <Card className="p-4 bg-white shadow-lg">
-            <h3 className="font-bold text-lg mb-4 text-slate-700">
-              👁️ Preview
-            </h3>
+            <h3 className="font-bold text-lg mb-4 text-slate-700">👁️ Preview</h3>
             <div className="bg-slate-50 rounded-lg border-2 border-dashed border-slate-300 p-8 text-center min-h-[400px] flex flex-col justify-center">
               <div className="text-slate-400 text-lg mb-2">🎯</div>
               <div className="text-slate-600 font-medium">Preview da Etapa Atual</div>
-              <div className="text-sm text-slate-500 mt-2">
-                Selecione uma etapa para visualizar
-              </div>
-              
+              <div className="text-sm text-slate-500 mt-2">Selecione uma etapa para visualizar</div>
+
               <div className="mt-8 p-4 bg-white rounded-lg shadow-sm">
                 <div className="h-2 bg-slate-200 rounded-full mb-3">
                   <div className="h-2 bg-blue-500 rounded-full" style={{ width: '45%' }}></div>
@@ -85,14 +73,10 @@ const EditorFixedMinimal: React.FC = () => {
 
           {/* Coluna 4: Propriedades */}
           <Card className="p-4 bg-white shadow-lg">
-            <h3 className="font-bold text-lg mb-4 text-slate-700">
-              ⚙️ Propriedades
-            </h3>
+            <h3 className="font-bold text-lg mb-4 text-slate-700">⚙️ Propriedades</h3>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
-                  Título
-                </label>
+                <label className="block text-sm font-medium text-slate-700 mb-1">Título</label>
                 <input
                   type="text"
                   placeholder="Digite o título"
@@ -100,7 +84,7 @@ const EditorFixedMinimal: React.FC = () => {
                   defaultValue="Qual seu estilo preferido?"
                 />
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">
                   Cor do texto
@@ -113,16 +97,8 @@ const EditorFixedMinimal: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
-                  Progresso
-                </label>
-                <input
-                  type="range"
-                  min="0"
-                  max="100"
-                  defaultValue="45"
-                  className="w-full"
-                />
+                <label className="block text-sm font-medium text-slate-700 mb-1">Progresso</label>
+                <input type="range" min="0" max="100" defaultValue="45" className="w-full" />
                 <div className="text-xs text-slate-500 mt-1">45%</div>
               </div>
 
@@ -159,8 +135,8 @@ const EditorFixedMinimal: React.FC = () => {
               ✅ Sistema Implementado com Sucesso
             </h3>
             <p className="text-green-700">
-              Editor Fixed integrado com 21 etapas, resultado personalizado (Step 20) 
-              e painel de propriedades completo funcionando.
+              Editor Fixed integrado com 21 etapas, resultado personalizado (Step 20) e painel de
+              propriedades completo funcionando.
             </p>
           </Card>
         </div>

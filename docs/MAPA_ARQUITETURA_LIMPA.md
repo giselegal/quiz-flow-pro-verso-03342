@@ -103,7 +103,7 @@ EditorContext (ÚNICA FONTE DE VERDADE):
 ```typescript
 🗑️ REMOVIDOS COM SUCESSO:
 ├── ❌ useQuiz.ts                    // Wrapper desnecessário
-├── ❌ useQuizHooks.ts               // Versão simplificada redundante  
+├── ❌ useQuizHooks.ts               // Versão simplificada redundante
 ├── ❌ useQuizStages_new.ts          // Arquivo vazio
 └── ❌ *.backup.*                    // 83 arquivos backup removidos
 ```
@@ -120,7 +120,7 @@ EditorContext (ÚNICA FONTE DE VERDADE):
 └─────────────────────────────────────────────────────────────────────────────────────┘
 
 🎯 ETAPA 1 - COLETA DO NOME:
-├── Step01Template.tsx 
+├── Step01Template.tsx
 ├── EditorContext.quizState.userName
 ├── useQuizLogic.setUserName()
 └── 🔄 Dados salvos localmente + Supabase
@@ -155,7 +155,7 @@ EditorContext (ÚNICA FONTE DE VERDADE):
 -- TABELAS SUPABASE (unified-schema.ts):
 ├── funnels (funis principais)
 ├── funnel_pages (páginas de cada etapa)
-├── quiz_users (usuários do quiz)  
+├── quiz_users (usuários do quiz)
 ├── quiz_sessions (sessões ativas)
 ├── quiz_results (resultados calculados)
 ├── quiz_step_responses (respostas por etapa)
@@ -176,6 +176,7 @@ EditorContext (ÚNICA FONTE DE VERDADE):
 ```
 
 ### **🔄 INTEGRAÇÃO PENDENTE:**
+
 ```
 UI Components → Supabase Services:
 ├── ⚠️ Componentes ainda usam dados mock
@@ -199,7 +200,7 @@ UI Components → Supabase Services:
 
 📦 ESTRUTURA CONSOLIDADA:
 ├── ✅ 1 contexto principal (EditorContext.tsx)
-├── ✅ 4 hooks core mantidos 
+├── ✅ 4 hooks core mantidos
 ├── ✅ 6 serviços Supabase funcionais
 └── ✅ Fluxo /editor-fixed totalmente integrado
 ```
@@ -219,12 +220,14 @@ UI Components → Supabase Services:
 ## 📚 **PRÓXIMOS PASSOS RECOMENDADOS**
 
 ### **🔥 PRIORITÁRIO:**
+
 - [ ] Conectar UI aos serviços Supabase existentes
-- [ ] Implementar useQuizData hook real  
+- [ ] Implementar useQuizData hook real
 - [ ] Testes end-to-end do fluxo completo
 - [ ] Documentação do fluxo para desenvolvedores
 
 ### **⏭️ FUTURO:**
+
 - [ ] Consolidar contextos restantes (QuizContext → EditorContext)
 - [ ] Otimizar performance com lazy loading
 - [ ] Implementar cache de dados
@@ -232,5 +235,5 @@ UI Components → Supabase Services:
 
 ---
 
-**🎉 ARQUITETURA REORGANIZADA COM SUCESSO!** 
-*Sistema mais limpo, organizado e fácil de manter.*
+**🎉 ARQUITETURA REORGANIZADA COM SUCESSO!**
+_Sistema mais limpo, organizado e fácil de manter._

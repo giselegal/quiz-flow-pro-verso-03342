@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * 🧪 TESTE DE INTEGRAÇÃO: Templates → Hooks → Supabase
- * 
+ *
  * Verifica se todas as integrações estão configuradas corretamente
  */
 
@@ -22,14 +22,14 @@ const filesToCheck = [
   'src/components/forms/ConnectedLeadForm.tsx',
   'src/components/steps/Step02TemplateConnected.tsx',
   'src/components/steps/Step01Template.tsx',
-  'src/components/steps/Step20Result.tsx'
+  'src/components/steps/Step20Result.tsx',
 ];
 
 filesToCheck.forEach(filePath => {
   const fullPath = path.join(baseDir, filePath);
   if (fs.existsSync(fullPath)) {
     const stats = fs.statSync(fullPath);
-    console.log(`✅ ${filePath} (${Math.round(stats.size/1024)}KB)`);
+    console.log(`✅ ${filePath} (${Math.round(stats.size / 1024)}KB)`);
   } else {
     console.log(`❌ ${filePath} - NOT FOUND`);
   }
@@ -55,34 +55,34 @@ const checkFileContent = (filePath, searchTerms) => {
 // ConnectedTemplateWrapper
 checkFileContent('src/components/quiz/ConnectedTemplateWrapper.tsx', [
   'useQuizLogic',
-  'useSupabaseQuiz', 
+  'useSupabaseQuiz',
   'quiz-form-complete',
   'quiz-selection-change',
   'setUserNameFromInput',
   'answerQuestion',
-  'answerStrategicQuestion'
+  'answerStrategicQuestion',
 ]);
 
 console.log('');
 
-// Step01Template  
+// Step01Template
 checkFileContent('src/components/steps/Step01Template.tsx', [
   'ConnectedTemplateWrapper',
   'ConnectedLeadForm',
   'stepNumber={1}',
-  'stepType="intro"'
+  'stepType="intro"',
 ]);
 
 console.log('');
 
 // Step20Result
 checkFileContent('src/components/steps/Step20Result.tsx', [
-  'ConnectedTemplateWrapper', 
+  'ConnectedTemplateWrapper',
   'useQuizLogic',
   'stepNumber={20}',
   'stepType="result"',
   'quizResult',
-  'userName'
+  'userName',
 ]);
 
 // Verificar hooks principais
@@ -91,17 +91,22 @@ console.log('-------------------------------');
 
 const hooksToCheck = [
   'src/hooks/useQuizLogic.ts',
-  'src/hooks/useSupabaseQuiz.ts', 
-  'src/hooks/useQuizCRUD.ts'
+  'src/hooks/useSupabaseQuiz.ts',
+  'src/hooks/useQuizCRUD.ts',
 ];
 
 hooksToCheck.forEach(hookPath => {
   if (fs.existsSync(path.join(baseDir, hookPath))) {
     const content = fs.readFileSync(path.join(baseDir, hookPath), 'utf8');
     console.log(`✅ ${path.basename(hookPath)}:`);
-    
+
     if (hookPath.includes('useQuizLogic')) {
-      const methods = ['setUserNameFromInput', 'answerQuestion', 'answerStrategicQuestion', 'calculateStyleScores'];
+      const methods = [
+        'setUserNameFromInput',
+        'answerQuestion',
+        'answerStrategicQuestion',
+        'calculateStyleScores',
+      ];
       methods.forEach(method => {
         if (content.includes(method)) {
           console.log(`  ✅ ${method}`);
@@ -110,12 +115,12 @@ hooksToCheck.forEach(hookPath => {
         }
       });
     }
-    
+
     if (hookPath.includes('useSupabaseQuiz')) {
       const methods = ['startQuiz', 'saveAnswer', 'completeQuiz'];
       methods.forEach(method => {
         if (content.includes(method)) {
-          console.log(`  ✅ ${method}`);  
+          console.log(`  ✅ ${method}`);
         } else {
           console.log(`  ❌ ${method}`);
         }
@@ -133,7 +138,7 @@ console.log('------------------------------');
 const jsonTemplates = [
   'src/config/templates/step-01.json',
   'src/config/templates/step-02.json',
-  'src/config/templates/step-20.json'
+  'src/config/templates/step-20.json',
 ];
 
 jsonTemplates.forEach(templatePath => {

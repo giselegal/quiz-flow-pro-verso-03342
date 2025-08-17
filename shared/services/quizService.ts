@@ -1,4 +1,4 @@
-import { supabase } from "../lib/supabase";
+import { supabase } from '../lib/supabase';
 
 export interface QuizData {
   id?: string;
@@ -33,13 +33,13 @@ export interface CreateQuestionData {
 export class QuizService {
   static async createQuiz(quizData: QuizData) {
     const { data, error } = await supabase
-      .from("quizzes")
+      .from('quizzes')
       .insert([
         {
           title: quizData.title,
           description: quizData.description || null,
           author_id: quizData.author_id,
-          category: quizData.category || "general",
+          category: quizData.category || 'general',
           difficulty: quizData.difficulty || null,
           time_limit: quizData.time_limit || null,
           settings: quizData.settings || {},
@@ -59,10 +59,10 @@ export class QuizService {
 
   static async getQuizzes(userId: string) {
     const { data, error } = await supabase
-      .from("quizzes")
-      .select("*")
-      .eq("author_id", userId)
-      .order("created_at", { ascending: false });
+      .from('quizzes')
+      .select('*')
+      .eq('author_id', userId)
+      .order('created_at', { ascending: false });
 
     if (error) {
       throw new Error(`Erro ao buscar quizzes: ${error.message}`);
@@ -72,10 +72,10 @@ export class QuizService {
   }
 
   static async getQuiz(id: string) {
-    const { data, error } = await supabase.from("quizzes").select("*").eq("id", id).single();
+    const { data, error } = await supabase.from('quizzes').select('*').eq('id', id).single();
 
     if (error) {
-      if (error.code === "PGRST116") {
+      if (error.code === 'PGRST116') {
         return null;
       }
       throw new Error(`Erro ao buscar quiz: ${error.message}`);
@@ -91,9 +91,9 @@ export class QuizService {
     };
 
     const { data, error } = await supabase
-      .from("quizzes")
+      .from('quizzes')
       .update(processedUpdates)
-      .eq("id", id)
+      .eq('id', id)
       .select()
       .single();
 
@@ -105,7 +105,7 @@ export class QuizService {
   }
 
   static async deleteQuiz(id: string) {
-    const { error } = await supabase.from("quizzes").delete().eq("id", id);
+    const { error } = await supabase.from('quizzes').delete().eq('id', id);
 
     if (error) {
       throw new Error(`Erro ao deletar quiz: ${error.message}`);
@@ -122,15 +122,15 @@ export class QuizService {
       points: q.points,
       time_limit: q.time_limit,
       required: q.required || false,
-      explanation: q.explanation || "",
-      hint: q.hint || "",
+      explanation: q.explanation || '',
+      hint: q.hint || '',
       media_url: q.media_url || null,
       media_type: q.media_type || null,
       tags: q.tags,
       order_index: q.order_index,
     }));
 
-    const { data, error } = await supabase.from("quiz_questions").insert(questionsData).select();
+    const { data, error } = await supabase.from('quiz_questions').insert(questionsData).select();
 
     if (error) {
       throw new Error(`Erro ao criar perguntas: ${error.message}`);
@@ -141,10 +141,10 @@ export class QuizService {
 
   static async getQuizQuestions(quizId: string) {
     const { data, error } = await supabase
-      .from("quiz_questions")
-      .select("*")
-      .eq("quiz_id", quizId)
-      .order("order_index", { ascending: true });
+      .from('quiz_questions')
+      .select('*')
+      .eq('quiz_id', quizId)
+      .order('order_index', { ascending: true });
 
     if (error) {
       throw new Error(`Erro ao buscar perguntas: ${error.message}`);
@@ -155,9 +155,9 @@ export class QuizService {
 
   static async updateQuestion(id: string, updates: Partial<CreateQuestionData>) {
     const { data, error } = await supabase
-      .from("quiz_questions")
+      .from('quiz_questions')
       .update(updates)
-      .eq("id", id)
+      .eq('id', id)
       .select()
       .single();
 
@@ -169,7 +169,7 @@ export class QuizService {
   }
 
   static async deleteQuestion(id: string) {
-    const { error } = await supabase.from("quiz_questions").delete().eq("id", id);
+    const { error } = await supabase.from('quiz_questions').delete().eq('id', id);
 
     if (error) {
       throw new Error(`Erro ao deletar pergunta: ${error.message}`);

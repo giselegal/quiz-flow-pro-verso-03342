@@ -28,11 +28,11 @@ TouchSensor: { delay: 50, tolerance: 8 }
 
 ```typescript
 // ✅ ADICIONADO: Debug completo do DragStart
-console.log("🟢 DragStart COMPLETO:", {
-  "active.id": active.id,
-  "active.data": active.data,
-  "active.data.current": active.data.current,
-  "JSON.stringify(active.data.current)": JSON.stringify(active.data.current),
+console.log('🟢 DragStart COMPLETO:', {
+  'active.id': active.id,
+  'active.data': active.data,
+  'active.data.current': active.data.current,
+  'JSON.stringify(active.data.current)': JSON.stringify(active.data.current),
 });
 ```
 

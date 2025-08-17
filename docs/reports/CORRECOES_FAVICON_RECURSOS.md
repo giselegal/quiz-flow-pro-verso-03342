@@ -69,10 +69,10 @@
 
 ```javascript
 // Service Worker simples para PWA básico
-const CACHE_NAME = "quiz-quest-v1";
-const urlsToCache = ["/", "/static/js/bundle.js", "/static/css/main.css"];
+const CACHE_NAME = 'quiz-quest-v1';
+const urlsToCache = ['/', '/static/js/bundle.js', '/static/css/main.css'];
 
-self.addEventListener("install", function (event) {
+self.addEventListener('install', function (event) {
   event.waitUntil(
     caches.open(CACHE_NAME).then(function (cache) {
       return cache.addAll(urlsToCache.filter(url => url));
@@ -87,8 +87,8 @@ self.addEventListener("install", function (event) {
 - **Solução**: Implementação correta para ES modules
 
 ```typescript
-import { fileURLToPath } from "url";
-import { dirname } from "path";
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
 // Get __dirname equivalent for ES modules
 const __filename = fileURLToPath(import.meta.url);

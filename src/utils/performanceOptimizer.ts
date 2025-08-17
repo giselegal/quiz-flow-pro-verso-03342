@@ -204,7 +204,11 @@ export const QUIZ_PERF = {
 // 5️⃣ EXPORT: API pública otimizada com fallbacks
 export const PerformanceOptimizer = {
   // Schedulers otimizados com fallbacks seguros
-  schedule: (callback: () => void, delay: number = 0, strategy: 'animation' | 'message' | 'timeout' = 'animation') => {
+  schedule: (
+    callback: () => void,
+    delay: number = 0,
+    strategy: 'animation' | 'message' | 'timeout' = 'animation'
+  ) => {
     try {
       return SmartTimeout.schedule(callback, delay, strategy);
     } catch (error) {
@@ -213,8 +217,12 @@ export const PerformanceOptimizer = {
       return setTimeout(callback, Math.max(delay, 0));
     }
   },
-  
-  scheduleInterval: (callback: () => void, delay: number, strategy: 'animation' | 'timeout' = 'animation') => {
+
+  scheduleInterval: (
+    callback: () => void,
+    delay: number,
+    strategy: 'animation' | 'timeout' = 'animation'
+  ) => {
     try {
       return SmartTimeout.scheduleInterval(callback, delay, strategy);
     } catch (error) {
@@ -236,7 +244,7 @@ export const PerformanceOptimizer = {
         clearTimeout(timeoutId);
         timeoutId = setTimeout(() => fn(...args), delay);
       }) as T & { cancel: () => void };
-      
+
       debouncedFn.cancel = () => clearTimeout(timeoutId);
       return debouncedFn;
     }

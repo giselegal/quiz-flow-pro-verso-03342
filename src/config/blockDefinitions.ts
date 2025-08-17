@@ -294,7 +294,8 @@ export const blockDefinitions: BlockDefinition[] = [
     properties: {
       logoUrl: {
         type: 'string',
-        default: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+        default:
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
         label: 'URL do Logo',
         description: 'URL da imagem do logo',
       },
@@ -337,7 +338,8 @@ export const blockDefinitions: BlockDefinition[] = [
     },
     label: 'Header Resultado',
     defaultProps: {
-      logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+      logoUrl:
+        'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
       logoAlt: 'Logo Gisele Galvão',
       showUserName: true,
       containerWidth: 'full',
@@ -369,7 +371,8 @@ export const blockDefinitions: BlockDefinition[] = [
       },
       subtitle: {
         type: 'textarea',
-        default: 'Agora que descobrimos sua essência estilística, é hora de transformar isso em looks poderosos que comunicam exatamente quem você é.',
+        default:
+          'Agora que descobrimos sua essência estilística, é hora de transformar isso em looks poderosos que comunicam exatamente quem você é.',
         label: 'Subtítulo',
       },
       ctaText: {
@@ -416,7 +419,8 @@ export const blockDefinitions: BlockDefinition[] = [
       },
       primaryGuideImage: {
         type: 'string',
-        default: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911668/GUIA_ELEGANTE_bcksfq.webp',
+        default:
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911668/GUIA_ELEGANTE_bcksfq.webp',
         label: 'Imagem do Guia Principal',
       },
       primaryStylePercentage: {
@@ -524,7 +528,8 @@ export const blockDefinitions: BlockDefinition[] = [
       },
       subtitle: {
         type: 'textarea',
-        default: 'Mulheres que aplicaram seu guia de estilo e transformaram completamente sua imagem',
+        default:
+          'Mulheres que aplicaram seu guia de estilo e transformaram completamente sua imagem',
         label: 'Subtítulo',
       },
       showTestimonials: {
@@ -627,12 +632,14 @@ export const blockDefinitions: BlockDefinition[] = [
       },
       subtitle: {
         type: 'textarea',
-        default: 'Seu estilo é uma ferramenta poderosa. Não se trata apenas de roupas, mas de comunicar quem você é e aspira ser.',
+        default:
+          'Seu estilo é uma ferramenta poderosa. Não se trata apenas de roupas, mas de comunicar quem você é e aspira ser.',
         label: 'Subtítulo',
       },
       motivationText: {
         type: 'textarea',
-        default: 'Com a orientação certa, você pode transformar completamente a forma como o mundo te vê e, mais importante, como você se vê.',
+        default:
+          'Com a orientação certa, você pode transformar completamente a forma como o mundo te vê e, mais importante, como você se vê.',
         label: 'Texto Motivacional',
       },
       showMotivationText: {
@@ -673,7 +680,8 @@ export const blockDefinitions: BlockDefinition[] = [
       },
       subtitle: {
         type: 'textarea',
-        default: 'Além do guia principal, você receberá estas ferramentas complementares para potencializar sua jornada de transformação:',
+        default:
+          'Além do guia principal, você receberá estas ferramentas complementares para potencializar sua jornada de transformação:',
         label: 'Subtítulo',
       },
       showValues: {
@@ -770,7 +778,8 @@ export const blockDefinitions: BlockDefinition[] = [
       },
       subtitle: {
         type: 'textarea',
-        default: 'Experimente nosso guia por 7 dias. Se não ficar completamente satisfeita, devolvemos seu investimento.',
+        default:
+          'Experimente nosso guia por 7 dias. Se não ficar completamente satisfeita, devolvemos seu investimento.',
         label: 'Subtítulo',
       },
       guaranteeDays: {
@@ -822,12 +831,14 @@ export const blockDefinitions: BlockDefinition[] = [
       },
       mentorImage: {
         type: 'string',
-        default: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/GISELE_MENTOR_FOTO_PROFISSIONAL_r14oz2.webp',
+        default:
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/GISELE_MENTOR_FOTO_PROFISSIONAL_r14oz2.webp',
         label: 'Imagem do Mentor',
       },
       mentorDescription: {
         type: 'textarea',
-        default: 'Com mais de 10 anos de experiência em consultoria de imagem, Gisele já transformou a vida de mais de 2.000 mulheres, ajudando-as a descobrir seu estilo único e elevar sua autoestima.',
+        default:
+          'Com mais de 10 anos de experiência em consultoria de imagem, Gisele já transformou a vida de mais de 2.000 mulheres, ajudando-as a descobrir seu estilo único e elevar sua autoestima.',
         label: 'Descrição do Mentor',
       },
       showCredentials: {

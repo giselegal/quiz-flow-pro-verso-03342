@@ -20,7 +20,7 @@
         },
         {
           "id": "step-{number}-question-header",
-          "type": "heading-inline", 
+          "type": "heading-inline",
           "order": 2,
           "properties": {
             "text": "{Question text}",
@@ -60,10 +60,10 @@
       "title": "Qual é o tamanho do ambiente principal?",
       "questionId": "room-size",
       "options": [
-        {"text": "Pequeno (até 20m²)", "value": "small"},
-        {"text": "Médio (20-40m²)", "value": "medium"}, 
-        {"text": "Grande (40-60m²)", "value": "large"},
-        {"text": "Muito Grande (60m²+)", "value": "xlarge"}
+        { "text": "Pequeno (até 20m²)", "value": "small" },
+        { "text": "Médio (20-40m²)", "value": "medium" },
+        { "text": "Grande (40-60m²)", "value": "large" },
+        { "text": "Muito Grande (60m²+)", "value": "xlarge" }
       ]
     },
     {
@@ -73,11 +73,11 @@
       "allowMultiple": true,
       "maxSelections": 3,
       "options": [
-        {"text": "Relaxar e descansar", "value": "relax"},
-        {"text": "Trabalhar/estudar", "value": "work"},
-        {"text": "Receber visitas", "value": "entertain"},
-        {"text": "Atividades familiares", "value": "family"},
-        {"text": "Hobbies criativos", "value": "creative"}
+        { "text": "Relaxar e descansar", "value": "relax" },
+        { "text": "Trabalhar/estudar", "value": "work" },
+        { "text": "Receber visitas", "value": "entertain" },
+        { "text": "Atividades familiares", "value": "family" },
+        { "text": "Hobbies criativos", "value": "creative" }
       ]
     }
   ]

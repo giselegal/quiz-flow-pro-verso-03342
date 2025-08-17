@@ -78,16 +78,16 @@ const MyComponent = ({
 ```typescript
 // ANTES
 const blockConfig = {
-  type: "text",
-  properties: { editable: true, placeholder: "Digite aqui", maxLength: 100 },
+  type: 'text',
+  properties: { editable: true, placeholder: 'Digite aqui', maxLength: 100 },
 };
 
 // DEPOIS
 const blockConfig = {
-  type: "text",
+  type: 'text',
   properties: {
     editable: true,
-    placeholder: "Digite aqui",
+    placeholder: 'Digite aqui',
     maxLength: 100,
   },
 };
@@ -98,16 +98,16 @@ const blockConfig = {
 ```typescript
 // ANTES
 const properties = [
-  { name: "color", type: "string" },
-  { name: "size", type: "number" },
-  { name: "visible", type: "boolean" },
+  { name: 'color', type: 'string' },
+  { name: 'size', type: 'number' },
+  { name: 'visible', type: 'boolean' },
 ];
 
 // DEPOIS
 const properties = [
-  { name: "color", type: "string" },
-  { name: "size", type: "number" },
-  { name: "visible", type: "boolean" },
+  { name: 'color', type: 'string' },
+  { name: 'size', type: 'number' },
+  { name: 'visible', type: 'boolean' },
 ];
 ```
 

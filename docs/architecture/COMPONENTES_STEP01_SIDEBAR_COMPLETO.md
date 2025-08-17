@@ -29,12 +29,12 @@ Os componentes da **Etapa 1 (Introdução)** foram **sucessivamente adicionados*
 
 ```typescript
 // Importação adicionada
-import { IntroBlock } from "@/components/steps/step01/IntroBlock";
+import { IntroBlock } from '@/components/steps/step01/IntroBlock';
 
 // Mapeamento registrado
 export const QUIZ_BLOCK_COMPONENTS = {
   IntroBlock: IntroBlock,
-  "step01-intro": IntroBlock,
+  'step01-intro': IntroBlock,
 } as const;
 ```
 
@@ -59,12 +59,12 @@ if (isIntroBlock) {
 ```typescript
 // Definição na função generateQuizBlocks()
 const introBlock: BlockDefinition = {
-  type: "step01-intro",
-  name: "Introdução - Step 1",
-  description: "Componente de introdução para a primeira etapa do quiz",
-  category: "Questões do Quiz",
+  type: 'step01-intro',
+  name: 'Introdução - Step 1',
+  description: 'Componente de introdução para a primeira etapa do quiz',
+  category: 'Questões do Quiz',
   icon: Type,
-  component: "IntroBlock" as any,
+  component: 'IntroBlock' as any,
   // ... propriedades completas
 };
 

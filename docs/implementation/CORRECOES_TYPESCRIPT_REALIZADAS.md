@@ -65,13 +65,13 @@
 ### **Antes (incorreto):**
 
 ```typescript
-import { ComponentsSidebar } from "../sidebar/ComponentsSidebar";
+import { ComponentsSidebar } from '../sidebar/ComponentsSidebar';
 ```
 
 ### **Depois (correto):**
 
 ```typescript
-import ComponentsSidebar from "../sidebar/ComponentsSidebar";
+import ComponentsSidebar from '../sidebar/ComponentsSidebar';
 ```
 
 **Razão**: ComponentsSidebar é exportado como default export, não named export.

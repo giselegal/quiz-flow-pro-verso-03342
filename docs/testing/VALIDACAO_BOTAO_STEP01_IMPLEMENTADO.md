@@ -103,7 +103,7 @@ Implementar ativação de botão **apenas após o usuário digitar seu nome** no
 
 ```javascript
 // Carregar script de teste
-import("./test-validation-console.js");
+import('./test-validation-console.js');
 
 // Testar nome válido
 testInputEvent(); // João → botão habilitado
@@ -116,10 +116,10 @@ testEmptyEvent(); // "" → botão desabilitado
 
 ```javascript
 // Escutar mudanças no input
-window.addEventListener("quiz-input-change", console.log);
+window.addEventListener('quiz-input-change', console.log);
 
 // Escutar mudanças no botão
-window.addEventListener("step01-button-state-change", console.log);
+window.addEventListener('step01-button-state-change', console.log);
 ```
 
 ## 📁 Arquivos Modificados

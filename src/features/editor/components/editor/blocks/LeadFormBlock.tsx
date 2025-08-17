@@ -14,11 +14,7 @@ interface LeadFormBlockProps {
   previewMode?: string;
 }
 
-const LeadFormBlock: React.FC<LeadFormBlockProps> = ({
-  block,
-  isSelected,
-  onClick,
-}) => {
+const LeadFormBlock: React.FC<LeadFormBlockProps> = ({ block, isSelected, onClick }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -36,11 +32,12 @@ const LeadFormBlock: React.FC<LeadFormBlockProps> = ({
   };
 
   const title = block?.properties?.title || block?.title || 'Cadastre-se agora';
-  const description = block?.properties?.description || block?.description || 'Preencha seus dados para continuar';
+  const description =
+    block?.properties?.description || block?.description || 'Preencha seus dados para continuar';
   const buttonText = block?.properties?.buttonText || block?.buttonText || 'Enviar';
 
   return (
-    <Card 
+    <Card
       className={`max-w-md mx-auto ${isSelected ? 'ring-2 ring-blue-500' : ''}`}
       onClick={onClick}
     >
@@ -48,9 +45,7 @@ const LeadFormBlock: React.FC<LeadFormBlockProps> = ({
         <div className="space-y-4">
           <div className="text-center">
             <h3 className="text-xl font-semibold text-gray-800">{title}</h3>
-            {description && (
-              <p className="text-gray-600 mt-2">{description}</p>
-            )}
+            {description && <p className="text-gray-600 mt-2">{description}</p>}
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -61,7 +56,7 @@ const LeadFormBlock: React.FC<LeadFormBlockProps> = ({
                 type="text"
                 placeholder="Seu nome"
                 value={formData.name}
-                onChange={(e) => handleInputChange('name', e.target.value)}
+                onChange={e => handleInputChange('name', e.target.value)}
                 required
               />
             </div>
@@ -73,7 +68,7 @@ const LeadFormBlock: React.FC<LeadFormBlockProps> = ({
                 type="email"
                 placeholder="seu@email.com"
                 value={formData.email}
-                onChange={(e) => handleInputChange('email', e.target.value)}
+                onChange={e => handleInputChange('email', e.target.value)}
                 required
               />
             </div>
@@ -85,7 +80,7 @@ const LeadFormBlock: React.FC<LeadFormBlockProps> = ({
                 type="tel"
                 placeholder="(11) 99999-9999"
                 value={formData.phone}
-                onChange={(e) => handleInputChange('phone', e.target.value)}
+                onChange={e => handleInputChange('phone', e.target.value)}
               />
             </div>
 
@@ -94,9 +89,7 @@ const LeadFormBlock: React.FC<LeadFormBlockProps> = ({
             </Button>
           </form>
 
-          <p className="text-xs text-gray-500 text-center">
-            Seus dados estão seguros conosco
-          </p>
+          <p className="text-xs text-gray-500 text-center">Seus dados estão seguros conosco</p>
         </div>
       </CardContent>
     </Card>

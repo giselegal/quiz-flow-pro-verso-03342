@@ -170,7 +170,7 @@ export class AnalyticsService {
       },
     };
 
-    await this.supabaseClient.from("user_sessions").insert(sessionData);
+    await this.supabaseClient.from('user_sessions').insert(sessionData);
   }
 
   // Rastrear entrada em step
@@ -180,7 +180,7 @@ export class AnalyticsService {
     this.addEvent({
       sessionId: this.sessionId,
       stepNumber,
-      actionType: "step_enter",
+      actionType: 'step_enter',
       elementText: stepName,
       additionalData,
     });
@@ -194,7 +194,7 @@ export class AnalyticsService {
     this.addEvent({
       sessionId: this.sessionId,
       stepNumber,
-      actionType: "step_exit",
+      actionType: 'step_exit',
       elementText: stepName,
       additionalData: { timeOnStep },
     });
@@ -213,7 +213,7 @@ export class AnalyticsService {
     this.addEvent({
       sessionId: this.sessionId,
       stepNumber,
-      actionType: "click",
+      actionType: 'click',
       elementId,
       elementType,
       elementText,
@@ -226,7 +226,7 @@ export class AnalyticsService {
     this.addEvent({
       sessionId: this.sessionId,
       stepNumber,
-      actionType: "selection",
+      actionType: 'selection',
       additionalData: {
         option: optionData,
         question: questionText,
@@ -239,15 +239,15 @@ export class AnalyticsService {
     this.addEvent({
       sessionId: this.sessionId,
       stepNumber,
-      actionType: "form_submit",
-      elementType: formType || "form",
+      actionType: 'form_submit',
+      elementType: formType || 'form',
       formData,
       additionalData: { formType },
     });
 
     // Registrar evento de conversão se for captura de dados
     if (formData.email || formData.name || formData.phone) {
-      this.trackConversion("form_submit", stepNumber, formData);
+      this.trackConversion('form_submit', stepNumber, formData);
     }
   }
 
@@ -261,7 +261,7 @@ export class AnalyticsService {
       timestamp: new Date().toISOString(),
     };
 
-    await this.supabaseClient.from("conversion_events").insert(conversionData);
+    await this.supabaseClient.from('conversion_events').insert(conversionData);
   }
 
   // Adicionar evento à fila
@@ -287,9 +287,9 @@ export class AnalyticsService {
     this.eventQueue = [];
 
     try {
-      await this.supabaseClient.from("quiz_step_tracking").insert(eventsToSend);
+      await this.supabaseClient.from('quiz_step_tracking').insert(eventsToSend);
     } catch (error) {
-      console.error("Erro ao enviar eventos de analytics:", error);
+      console.error('Erro ao enviar eventos de analytics:', error);
       // Re-adicionar eventos na fila em caso de erro
       this.eventQueue.unshift(...eventsToSend);
     }
@@ -300,12 +300,12 @@ export class AnalyticsService {
     await this.flushEvents();
 
     await this.supabaseClient
-      .from("user_sessions")
+      .from('user_sessions')
       .update({
         ended_at: new Date().toISOString(),
-        duration_seconds: Math.floor((Date.now() - parseInt(this.sessionId.split("-")[0])) / 1000),
+        duration_seconds: Math.floor((Date.now() - parseInt(this.sessionId.split('-')[0])) / 1000),
       })
-      .eq("session_id", this.sessionId);
+      .eq('session_id', this.sessionId);
   }
 }
 ```
@@ -340,11 +340,11 @@ export const useQuizAnalytics = (stepNumber: number, stepName: string) => {
     // Capturar UTM parameters
     const urlParams = new URLSearchParams(window.location.search);
     const utmData = {
-      utm_source: urlParams.get("utm_source") || "",
-      utm_medium: urlParams.get("utm_medium") || "",
-      utm_campaign: urlParams.get("utm_campaign") || "",
-      utm_content: urlParams.get("utm_content") || "",
-      utm_term: urlParams.get("utm_term") || "",
+      utm_source: urlParams.get('utm_source') || '',
+      utm_medium: urlParams.get('utm_medium') || '',
+      utm_campaign: urlParams.get('utm_campaign') || '',
+      utm_content: urlParams.get('utm_content') || '',
+      utm_term: urlParams.get('utm_term') || '',
     };
 
     // Iniciar sessão
@@ -430,7 +430,7 @@ export const useQuizAnalytics = (stepNumber: number, stepName: string) => {
 ```typescript
 // src/hooks/useUserDataCapture.ts
 export const useUserDataCapture = () => {
-  const { trackFormSubmit, trackConversion } = useQuizAnalytics(1, "user-data-capture");
+  const { trackFormSubmit, trackConversion } = useQuizAnalytics(1, 'user-data-capture');
   const supabaseClient = createClientComponentClient();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -445,7 +445,7 @@ export const useUserDataCapture = () => {
     try {
       // Salvar dados do usuário
       const { data: profile, error } = await supabaseClient
-        .from("profiles")
+        .from('profiles')
         .upsert({
           email: userData.email,
           first_name: userData.firstName,
@@ -460,17 +460,17 @@ export const useUserDataCapture = () => {
       if (error) throw error;
 
       // Rastrear captura de dados
-      trackFormSubmit(userData, "user-capture");
-      trackConversion("name_capture", userData);
-      trackConversion("email_capture", userData);
+      trackFormSubmit(userData, 'user-capture');
+      trackConversion('name_capture', userData);
+      trackConversion('email_capture', userData);
 
       if (userData.phone) {
-        trackConversion("phone_capture", userData);
+        trackConversion('phone_capture', userData);
       }
 
       return { success: true, profile };
     } catch (error) {
-      console.error("Erro ao capturar dados do usuário:", error);
+      console.error('Erro ao capturar dados do usuário:', error);
       return { success: false, error };
     } finally {
       setIsSubmitting(false);
@@ -578,7 +578,7 @@ export const UserDataCaptureForm: React.FC = () => {
 // src/hooks/useQuizResultsWithAnalytics.ts
 export const useQuizResultsWithAnalytics = () => {
   const { calculateCategoryScores, applyCalculationMethod, determineResult } = useQuizResults();
-  const { trackConversion } = useQuizAnalytics(20, "quiz-results");
+  const { trackConversion } = useQuizAnalytics(20, 'quiz-results');
 
   const calculateAndSaveResults = async (
     answers: Map<string, QuestionOption[]>,
@@ -603,7 +603,7 @@ export const useQuizResultsWithAnalytics = () => {
     // 3. Salvar resultado no Supabase
     const supabaseClient = createClientComponentClient();
     const { data: attempt } = await supabaseClient
-      .from("quiz_attempts")
+      .from('quiz_attempts')
       .insert({
         answers: Object.fromEntries(answers),
         score: metrics.totalPoints,
@@ -614,7 +614,7 @@ export const useQuizResultsWithAnalytics = () => {
       .single();
 
     // 4. Rastrear conclusão do quiz
-    trackConversion("quiz_complete", {
+    trackConversion('quiz_complete', {
       result: finalResult,
       score: metrics.totalPoints,
       categories: categoryScores,

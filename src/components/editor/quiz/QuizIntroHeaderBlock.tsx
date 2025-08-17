@@ -12,11 +12,7 @@ interface ProgressBarProps {
   height?: number;
 }
 
-const ProgressBar: React.FC<ProgressBarProps> = ({ 
-  percentage, 
-  color = '#B89B7A', 
-  height = 8 
-}) => (
+const ProgressBar: React.FC<ProgressBarProps> = ({ percentage, color = '#B89B7A', height = 8 }) => (
   <div className="w-full bg-gray-200 rounded-full" style={{ height: `${height}px` }}>
     <div
       className="rounded-full transition-all duration-300"
@@ -280,39 +276,49 @@ export const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
       {/* Seção de Resultados de Estilo */}
       <div className="style-results-section" style={{ marginTop: '24px' }}>
         {/* Estilo Predominante */}
-        {(showPredominantStyleName || showPredominantStyleDescription || showPredominantStylePercentage || showPredominantStyleImage || showPredominantStyleGuide) && (
+        {(showPredominantStyleName ||
+          showPredominantStyleDescription ||
+          showPredominantStylePercentage ||
+          showPredominantStyleImage ||
+          showPredominantStyleGuide) && (
           <div className="predominant-style" style={{ marginBottom: '16px' }}>
-            <h3 style={{ 
-              color: '#432818', 
-              fontSize: `${14 * (scale / 100)}px`, 
-              fontWeight: 600, 
-              marginBottom: '8px',
-              textAlign: alignment 
-            }}>
+            <h3
+              style={{
+                color: '#432818',
+                fontSize: `${14 * (scale / 100)}px`,
+                fontWeight: 600,
+                marginBottom: '8px',
+                textAlign: alignment,
+              }}
+            >
               Seu Estilo Predominante
             </h3>
-            
+
             {/* Nome do Estilo Predominante */}
             {showPredominantStyleName && (
-              <h4 style={{ 
-                color: styleResults.primaryStyle.color, 
-                fontSize: `${18 * (scale / 100)}px`, 
-                fontWeight: 700, 
-                margin: '4px 0',
-                textAlign: alignment 
-              }}>
+              <h4
+                style={{
+                  color: styleResults.primaryStyle.color,
+                  fontSize: `${18 * (scale / 100)}px`,
+                  fontWeight: 700,
+                  margin: '4px 0',
+                  textAlign: alignment,
+                }}
+              >
                 {styleResults.primaryStyle.name}
               </h4>
             )}
 
             {/* Descrição do Estilo Predominante */}
             {showPredominantStyleDescription && (
-              <p style={{ 
-                color: '#6B4F43', 
-                fontSize: `${13 * (scale / 100)}px`, 
-                margin: '8px 0',
-                textAlign: alignment 
-              }}>
+              <p
+                style={{
+                  color: '#6B4F43',
+                  fontSize: `${13 * (scale / 100)}px`,
+                  margin: '8px 0',
+                  textAlign: alignment,
+                }}
+              >
                 {styleResults.primaryStyle.description}
               </p>
             )}
@@ -320,40 +326,48 @@ export const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
             {/* Barrinha de Porcentagem do Estilo Predominante */}
             {showPredominantStylePercentage && (
               <div style={{ margin: '12px 0' }}>
-                <div style={{ 
-                  display: 'flex', 
-                  justifyContent: 'space-between', 
-                  alignItems: 'center', 
-                  marginBottom: '4px' 
-                }}>
-                  <span style={{ 
-                    fontSize: `${12 * (scale / 100)}px`, 
-                    color: '#6B4F43' 
-                  }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    marginBottom: '4px',
+                  }}
+                >
+                  <span
+                    style={{
+                      fontSize: `${12 * (scale / 100)}px`,
+                      color: '#6B4F43',
+                    }}
+                  >
                     Compatibilidade
                   </span>
-                  <span style={{ 
-                    fontSize: `${12 * (scale / 100)}px`, 
-                    color: styleResults.primaryStyle.color,
-                    fontWeight: 600 
-                  }}>
+                  <span
+                    style={{
+                      fontSize: `${12 * (scale / 100)}px`,
+                      color: styleResults.primaryStyle.color,
+                      fontWeight: 600,
+                    }}
+                  >
                     {styleResults.primaryStyle.percentage}%
                   </span>
                 </div>
-                <ProgressBar 
-                  percentage={styleResults.primaryStyle.percentage} 
-                  color={styleResults.primaryStyle.color} 
+                <ProgressBar
+                  percentage={styleResults.primaryStyle.percentage}
+                  color={styleResults.primaryStyle.color}
                 />
               </div>
             )}
 
             {/* Imagem do Estilo Pessoal */}
             {showPredominantStyleImage && styleResults.primaryStyle.image && (
-              <div style={{ 
-                display: 'flex', 
-                justifyContent: alignment, 
-                margin: '12px 0' 
-              }}>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: alignment,
+                  margin: '12px 0',
+                }}
+              >
                 <img
                   src={styleResults.primaryStyle.image}
                   alt={`Estilo ${styleResults.primaryStyle.name}`}
@@ -362,9 +376,9 @@ export const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
                     height: '120px',
                     objectFit: 'cover',
                     borderRadius: '8px',
-                    border: `2px solid ${styleResults.primaryStyle.color}`
+                    border: `2px solid ${styleResults.primaryStyle.color}`,
                   }}
-                  onError={(e) => {
+                  onError={e => {
                     const target = e.target as HTMLImageElement;
                     target.style.display = 'none';
                   }}
@@ -374,11 +388,13 @@ export const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
 
             {/* Imagem do Guia de Estilo */}
             {showPredominantStyleGuide && styleResults.primaryStyle.guideImage && (
-              <div style={{ 
-                display: 'flex', 
-                justifyContent: alignment, 
-                margin: '12px 0' 
-              }}>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: alignment,
+                  margin: '12px 0',
+                }}
+              >
                 <img
                   src={styleResults.primaryStyle.guideImage}
                   alt={`Guia do estilo ${styleResults.primaryStyle.name}`}
@@ -388,9 +404,9 @@ export const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
                     height: 'auto',
                     objectFit: 'cover',
                     borderRadius: '8px',
-                    border: `1px solid ${styleResults.primaryStyle.color}`
+                    border: `1px solid ${styleResults.primaryStyle.color}`,
                   }}
-                  onError={(e) => {
+                  onError={e => {
                     const target = e.target as HTMLImageElement;
                     target.style.display = 'none';
                   }}
@@ -401,15 +417,20 @@ export const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
         )}
 
         {/* Estilos Secundários */}
-        {(showSecondaryStyleName || showSecondaryStylePercentage || showThirdStyleName || showThirdStylePercentage) && (
+        {(showSecondaryStyleName ||
+          showSecondaryStylePercentage ||
+          showThirdStyleName ||
+          showThirdStylePercentage) && (
           <div className="secondary-styles">
-            <h3 style={{ 
-              color: '#432818', 
-              fontSize: `${14 * (scale / 100)}px`, 
-              fontWeight: 600, 
-              marginBottom: '12px',
-              textAlign: alignment 
-            }}>
+            <h3
+              style={{
+                color: '#432818',
+                fontSize: `${14 * (scale / 100)}px`,
+                fontWeight: 600,
+                marginBottom: '12px',
+                textAlign: alignment,
+              }}
+            >
               Estilos Secundários
             </h3>
 
@@ -417,42 +438,50 @@ export const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
             {(showSecondaryStyleName || showSecondaryStylePercentage) && (
               <div style={{ marginBottom: '12px' }}>
                 {showSecondaryStyleName && (
-                  <h5 style={{ 
-                    color: styleResults.secondaryStyle.color, 
-                    fontSize: `${15 * (scale / 100)}px`, 
-                    fontWeight: 600, 
-                    margin: '4px 0',
-                    textAlign: alignment 
-                  }}>
+                  <h5
+                    style={{
+                      color: styleResults.secondaryStyle.color,
+                      fontSize: `${15 * (scale / 100)}px`,
+                      fontWeight: 600,
+                      margin: '4px 0',
+                      textAlign: alignment,
+                    }}
+                  >
                     2º - {styleResults.secondaryStyle.name}
                   </h5>
                 )}
-                
+
                 {showSecondaryStylePercentage && (
                   <div style={{ margin: '8px 0' }}>
-                    <div style={{ 
-                      display: 'flex', 
-                      justifyContent: 'space-between', 
-                      alignItems: 'center', 
-                      marginBottom: '4px' 
-                    }}>
-                      <span style={{ 
-                        fontSize: `${11 * (scale / 100)}px`, 
-                        color: '#6B4F43' 
-                      }}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        marginBottom: '4px',
+                      }}
+                    >
+                      <span
+                        style={{
+                          fontSize: `${11 * (scale / 100)}px`,
+                          color: '#6B4F43',
+                        }}
+                      >
                         Compatibilidade
                       </span>
-                      <span style={{ 
-                        fontSize: `${11 * (scale / 100)}px`, 
-                        color: styleResults.secondaryStyle.color,
-                        fontWeight: 600 
-                      }}>
+                      <span
+                        style={{
+                          fontSize: `${11 * (scale / 100)}px`,
+                          color: styleResults.secondaryStyle.color,
+                          fontWeight: 600,
+                        }}
+                      >
                         {styleResults.secondaryStyle.percentage}%
                       </span>
                     </div>
-                    <ProgressBar 
-                      percentage={styleResults.secondaryStyle.percentage} 
-                      color={styleResults.secondaryStyle.color} 
+                    <ProgressBar
+                      percentage={styleResults.secondaryStyle.percentage}
+                      color={styleResults.secondaryStyle.color}
                       height={6}
                     />
                   </div>
@@ -464,42 +493,50 @@ export const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
             {(showThirdStyleName || showThirdStylePercentage) && (
               <div style={{ marginBottom: '12px' }}>
                 {showThirdStyleName && (
-                  <h5 style={{ 
-                    color: styleResults.thirdStyle.color, 
-                    fontSize: `${15 * (scale / 100)}px`, 
-                    fontWeight: 600, 
-                    margin: '4px 0',
-                    textAlign: alignment 
-                  }}>
+                  <h5
+                    style={{
+                      color: styleResults.thirdStyle.color,
+                      fontSize: `${15 * (scale / 100)}px`,
+                      fontWeight: 600,
+                      margin: '4px 0',
+                      textAlign: alignment,
+                    }}
+                  >
                     3º - {styleResults.thirdStyle.name}
                   </h5>
                 )}
-                
+
                 {showThirdStylePercentage && (
                   <div style={{ margin: '8px 0' }}>
-                    <div style={{ 
-                      display: 'flex', 
-                      justifyContent: 'space-between', 
-                      alignItems: 'center', 
-                      marginBottom: '4px' 
-                    }}>
-                      <span style={{ 
-                        fontSize: `${11 * (scale / 100)}px`, 
-                        color: '#6B4F43' 
-                      }}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        marginBottom: '4px',
+                      }}
+                    >
+                      <span
+                        style={{
+                          fontSize: `${11 * (scale / 100)}px`,
+                          color: '#6B4F43',
+                        }}
+                      >
                         Compatibilidade
                       </span>
-                      <span style={{ 
-                        fontSize: `${11 * (scale / 100)}px`, 
-                        color: styleResults.thirdStyle.color,
-                        fontWeight: 600 
-                      }}>
+                      <span
+                        style={{
+                          fontSize: `${11 * (scale / 100)}px`,
+                          color: styleResults.thirdStyle.color,
+                          fontWeight: 600,
+                        }}
+                      >
                         {styleResults.thirdStyle.percentage}%
                       </span>
                     </div>
-                    <ProgressBar 
-                      percentage={styleResults.thirdStyle.percentage} 
-                      color={styleResults.thirdStyle.color} 
+                    <ProgressBar
+                      percentage={styleResults.thirdStyle.percentage}
+                      color={styleResults.thirdStyle.color}
                       height={6}
                     />
                   </div>

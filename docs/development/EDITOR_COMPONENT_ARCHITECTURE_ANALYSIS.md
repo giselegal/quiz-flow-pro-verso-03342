@@ -23,7 +23,7 @@ Após análise do código atual, identifiquei os melhores padrões para o `/edit
 const EditorFixedPageWithDragDrop = () => {
   // 270 linhas com muitas responsabilidades
   const [showFunnelSettings, setShowFunnelSettings] = useState(false);
-  const { scrollRef } = useSyncedScroll({ source: "canvas" });
+  const { scrollRef } = useSyncedScroll({ source: 'canvas' });
   const propertyHistory = usePropertyHistory();
   // + 50 outras linhas de lógica...
 };
@@ -268,11 +268,11 @@ src/components/editor-fixed/
 
 ```typescript
 // ✅ API LIMPA E EXTENSÍVEL
-export { EditorFixed } from "./EditorFixed";
-export { useEditor, useEditorBlocks, useEditorCanvas } from "./core/EditorHooks";
-export { EditorProvider } from "./core/EditorProvider";
-export { BlockRegistry } from "./blocks/BlockRegistry";
-export type { EditorConfig, BlockComponent, EditorPlugin } from "./types";
+export { EditorFixed } from './EditorFixed';
+export { useEditor, useEditorBlocks, useEditorCanvas } from './core/EditorHooks';
+export { EditorProvider } from './core/EditorProvider';
+export { BlockRegistry } from './blocks/BlockRegistry';
+export type { EditorConfig, BlockComponent, EditorPlugin } from './types';
 ```
 
 ---

@@ -1,12 +1,17 @@
 // @ts-nocheck
 /**
  * Unified Block Storage Service - TEMPORARILY DISABLED
- * 
+ *
  * Type conflicts with Supabase Json types need to be resolved
  */
 
 import { supabase } from '../integrations/supabase/client';
-import { FunnelPage, ComponentInstance, InsertFunnelPage, InsertComponentInstance } from '../types/unified-schema';
+import {
+  FunnelPage,
+  ComponentInstance,
+  InsertFunnelPage,
+  InsertComponentInstance,
+} from '../types/unified-schema';
 
 export interface BlockData {
   id: string;
@@ -26,27 +31,45 @@ export interface BlockMetadata {
 }
 
 interface UnifiedBlockStorageReturn {
-  saveBlocks: (funnelId: string, pageId: string, blocks: BlockData[], metadata?: BlockMetadata[]) => Promise<boolean>;
-  loadBlocks: (funnelId: string, pageId: string) => Promise<{ blocks: BlockData[]; metadata: BlockMetadata[] } | null>;
-  syncBlockWithMetadata: (funnelId: string, pageId: string, blockId: string, blockData: BlockData, metadata: BlockMetadata) => Promise<boolean>;
+  saveBlocks: (
+    funnelId: string,
+    pageId: string,
+    blocks: BlockData[],
+    metadata?: BlockMetadata[]
+  ) => Promise<boolean>;
+  loadBlocks: (
+    funnelId: string,
+    pageId: string
+  ) => Promise<{ blocks: BlockData[]; metadata: BlockMetadata[] } | null>;
+  syncBlockWithMetadata: (
+    funnelId: string,
+    pageId: string,
+    blockId: string,
+    blockData: BlockData,
+    metadata: BlockMetadata
+  ) => Promise<boolean>;
   deleteBlock: (funnelId: string, pageId: string, blockId: string) => Promise<boolean>;
   migrateFromDoubleStorage: (funnelId: string) => Promise<{ migrated: number; errors: number }>;
 }
 
 export class UnifiedBlockStorageService implements UnifiedBlockStorageReturn {
-  
   /**
    * Save blocks to funnel_pages.blocks (single source of truth)
    * Update component_instances only for metadata/configuration
    */
-  async saveBlocks(funnelId: string, pageId: string, blocks: BlockData[], metadata?: BlockMetadata[]): Promise<boolean> {
+  async saveBlocks(
+    funnelId: string,
+    pageId: string,
+    blocks: BlockData[],
+    metadata?: BlockMetadata[]
+  ): Promise<boolean> {
     try {
       // 1. Save blocks to funnel_pages.blocks (primary storage)
       const { error: pageError } = await supabase
         .from('funnel_pages')
-        .update({ 
+        .update({
           blocks: blocks,
-          updated_at: new Date().toISOString()
+          updated_at: new Date().toISOString(),
         })
         .eq('id', pageId)
         .eq('funnel_id', funnelId);
@@ -67,7 +90,7 @@ export class UnifiedBlockStorageService implements UnifiedBlockStorageReturn {
 
         // Insert new instances with metadata
         const instances: InsertComponentInstance[] = blocks.map((block, index) => {
-          const meta = metadata[index] || {} as BlockMetadata;
+          const meta = metadata[index] || ({} as BlockMetadata);
           return {
             id: `ci_${block.id}`,
             funnel_id: funnelId,
@@ -79,7 +102,7 @@ export class UnifiedBlockStorageService implements UnifiedBlockStorageReturn {
             properties: {
               // Only metadata, not the actual block content
               metadata: meta,
-              block_reference: block.id
+              block_reference: block.id,
             },
             is_active: meta.isActive ?? true,
             is_locked: meta.isLocked ?? false,
@@ -111,7 +134,10 @@ export class UnifiedBlockStorageService implements UnifiedBlockStorageReturn {
    * Load blocks from funnel_pages.blocks (single source of truth)
    * Load metadata from component_instances if available
    */
-  async loadBlocks(funnelId: string, pageId: string): Promise<{ blocks: BlockData[]; metadata: BlockMetadata[] } | null> {
+  async loadBlocks(
+    funnelId: string,
+    pageId: string
+  ): Promise<{ blocks: BlockData[]; metadata: BlockMetadata[] } | null> {
     try {
       // 1. Load blocks from funnel_pages (primary source)
       const { data: page, error: pageError } = await supabase
@@ -164,7 +190,13 @@ export class UnifiedBlockStorageService implements UnifiedBlockStorageReturn {
   /**
    * Sync a single block with its metadata
    */
-  async syncBlockWithMetadata(funnelId: string, pageId: string, blockId: string, blockData: BlockData, metadata: BlockMetadata): Promise<boolean> {
+  async syncBlockWithMetadata(
+    funnelId: string,
+    pageId: string,
+    blockId: string,
+    blockData: BlockData,
+    metadata: BlockMetadata
+  ): Promise<boolean> {
     try {
       // Load current blocks
       const current = await this.loadBlocks(funnelId, pageId);
@@ -201,7 +233,9 @@ export class UnifiedBlockStorageService implements UnifiedBlockStorageReturn {
 
       // Remove the block
       const filteredBlocks = current.blocks.filter(b => b.id !== blockId);
-      const filteredMetadata = current.metadata.filter((_, index) => current.blocks[index]?.id !== blockId);
+      const filteredMetadata = current.metadata.filter(
+        (_, index) => current.blocks[index]?.id !== blockId
+      );
 
       // Save updated blocks
       return await this.saveBlocks(funnelId, pageId, filteredBlocks, filteredMetadata);
@@ -244,7 +278,11 @@ export class UnifiedBlockStorageService implements UnifiedBlockStorageReturn {
           }
 
           // If we have instances but no blocks in funnel_pages, migrate
-          if (instances && instances.length > 0 && (!page.blocks || (Array.isArray(page.blocks) && page.blocks.length === 0))) {
+          if (
+            instances &&
+            instances.length > 0 &&
+            (!page.blocks || (Array.isArray(page.blocks) && page.blocks.length === 0))
+          ) {
             const blocks: BlockData[] = instances.map(instance => ({
               id: instance.instance_key,
               type: instance.component_type_key,

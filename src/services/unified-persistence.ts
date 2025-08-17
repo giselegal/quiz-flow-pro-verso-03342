@@ -1,9 +1,9 @@
 /**
  * UNIFIED PERSISTENCE SERVICE
- * 
+ *
  * Single source of truth for data persistence operations.
  * Eliminates conflicts between multiple persistence implementations.
- * 
+ *
  * Features:
  * - Unified save/load interface
  * - Automatic backup creation
@@ -58,15 +58,10 @@ export class UnifiedPersistenceService {
   // =============================================================================
 
   async save(data: any, options: PersistenceOptions = {}): Promise<PersistenceResult> {
-    const {
-      immediate = false,
-      validate = true,
-      backup = true,
-      timeout = 10000
-    } = options;
+    const { immediate = false, validate = true, backup = true, timeout = 10000 } = options;
 
     const key = this.generateKey(data);
-    
+
     // Prevent concurrent saves to same key
     if (this.pendingSaves.has(key) && !immediate) {
       return this.pendingSaves.get(key)!;
@@ -83,24 +78,26 @@ export class UnifiedPersistenceService {
     }
   }
 
-  private async performSave(data: any, options: { validate: boolean; backup: boolean; timeout: number }): Promise<PersistenceResult> {
+  private async performSave(
+    data: any,
+    options: { validate: boolean; backup: boolean; timeout: number }
+  ): Promise<PersistenceResult> {
     // const _startTime = Date.now();
 
     try {
       // Validation
       if (options.validate) {
-        const validation = ValidationService.validateWithRecovery(
-          data,
-          UnifiedFunnelSchema,
-          { source: 'UnifiedPersistenceService.save', logErrors: true }
-        );
+        const validation = ValidationService.validateWithRecovery(data, UnifiedFunnelSchema, {
+          source: 'UnifiedPersistenceService.save',
+          logErrors: true,
+        });
 
         if (!validation.success) {
           return {
             success: false,
             error: `Validation failed: ${validation.error}`,
             timestamp: new Date(),
-            source: 'cache'
+            source: 'cache',
           };
         }
 
@@ -114,7 +111,7 @@ export class UnifiedPersistenceService {
 
       // Try Supabase first (if available), then localStorage
       let result = await this.saveToSupabase(data, options.timeout);
-      
+
       if (!result.success) {
         result = await this.saveToLocalStorage(data);
       }
@@ -125,13 +122,12 @@ export class UnifiedPersistenceService {
       }
 
       return result;
-
     } catch (error) {
       return {
         success: false,
         error: `Save operation failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
         timestamp: new Date(),
-        source: 'cache'
+        source: 'cache',
       };
     }
   }
@@ -141,19 +137,19 @@ export class UnifiedPersistenceService {
       // Mock Supabase implementation
       // TODO: Replace with actual Supabase integration
       await new Promise(resolve => setTimeout(resolve, 100));
-      
+
       return {
         success: true,
         data,
         timestamp: new Date(),
-        source: 'supabase'
+        source: 'supabase',
       };
     } catch (error) {
       return {
         success: false,
         error: `Supabase save failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
         timestamp: new Date(),
-        source: 'supabase'
+        source: 'supabase',
       };
     }
   }
@@ -164,7 +160,7 @@ export class UnifiedPersistenceService {
       const serialized = JSON.stringify({
         data,
         timestamp: Date.now(),
-        version: '1.0'
+        version: '1.0',
       });
 
       localStorage.setItem(key, serialized);
@@ -173,14 +169,14 @@ export class UnifiedPersistenceService {
         success: true,
         data,
         timestamp: new Date(),
-        source: 'localStorage'
+        source: 'localStorage',
       };
     } catch (error) {
       return {
         success: false,
         error: `localStorage save failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
         timestamp: new Date(),
-        source: 'localStorage'
+        source: 'localStorage',
       };
     }
   }
@@ -190,11 +186,7 @@ export class UnifiedPersistenceService {
   // =============================================================================
 
   async load(id: string, options: LoadOptions = {}): Promise<PersistenceResult> {
-    const {
-      validate = true,
-      fallback,
-      timeout = 5000
-    } = options;
+    const { validate = true, fallback, timeout = 5000 } = options;
 
     try {
       // Check cache first
@@ -204,13 +196,13 @@ export class UnifiedPersistenceService {
           success: true,
           data: cached,
           timestamp: new Date(),
-          source: 'cache'
+          source: 'cache',
         };
       }
 
       // Try Supabase first, then localStorage
       let result = await this.loadFromSupabase(id, timeout);
-      
+
       if (!result.success) {
         result = await this.loadFromLocalStorage(id);
       }
@@ -221,7 +213,7 @@ export class UnifiedPersistenceService {
           success: true,
           data: fallback,
           timestamp: new Date(),
-          source: 'cache'
+          source: 'cache',
         };
       }
 
@@ -230,10 +222,10 @@ export class UnifiedPersistenceService {
         const validation = ValidationService.validateWithRecovery(
           result.data,
           UnifiedFunnelSchema,
-          { 
+          {
             source: 'UnifiedPersistenceService.load',
             fallback,
-            logErrors: true 
+            logErrors: true,
           }
         );
 
@@ -253,13 +245,12 @@ export class UnifiedPersistenceService {
       }
 
       return result;
-
     } catch (error) {
       return {
         success: false,
         error: `Load operation failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
         timestamp: new Date(),
-        source: 'cache'
+        source: 'cache',
       };
     }
   }
@@ -269,19 +260,19 @@ export class UnifiedPersistenceService {
       // Mock Supabase implementation
       // TODO: Replace with actual Supabase integration
       await new Promise(resolve => setTimeout(resolve, 100));
-      
+
       return {
         success: false,
         error: 'Supabase integration not implemented',
         timestamp: new Date(),
-        source: 'supabase'
+        source: 'supabase',
       };
     } catch (error) {
       return {
         success: false,
         error: `Supabase load failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
         timestamp: new Date(),
-        source: 'supabase'
+        source: 'supabase',
       };
     }
   }
@@ -289,30 +280,30 @@ export class UnifiedPersistenceService {
   private async loadFromLocalStorage(id: string): Promise<PersistenceResult> {
     try {
       const stored = localStorage.getItem(id);
-      
+
       if (!stored) {
         return {
           success: false,
           error: 'Data not found in localStorage',
           timestamp: new Date(),
-          source: 'localStorage'
+          source: 'localStorage',
         };
       }
 
       const parsed = JSON.parse(stored);
-      
+
       return {
         success: true,
         data: parsed.data || parsed, // Handle both wrapped and unwrapped data
         timestamp: new Date(),
-        source: 'localStorage'
+        source: 'localStorage',
       };
     } catch (error) {
       return {
         success: false,
         error: `localStorage load failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
         timestamp: new Date(),
-        source: 'localStorage'
+        source: 'localStorage',
       };
     }
   }
@@ -321,21 +312,22 @@ export class UnifiedPersistenceService {
   // CACHE MANAGEMENT
   // =============================================================================
 
-  private updateCache(key: string, data: any, ttl: number = 300000): void { // 5 minutes default TTL
+  private updateCache(key: string, data: any, ttl: number = 300000): void {
+    // 5 minutes default TTL
     this.cache.set(key, {
       data: JSON.parse(JSON.stringify(data)), // Deep clone
       timestamp: Date.now(),
-      ttl
+      ttl,
     });
   }
 
   private getFromCache(key: string): any | null {
     const cached = this.cache.get(key);
-    
+
     if (!cached) return null;
-    
+
     const isExpired = Date.now() - cached.timestamp > cached.ttl;
-    
+
     if (isExpired) {
       this.cache.delete(key);
       return null;
@@ -346,7 +338,7 @@ export class UnifiedPersistenceService {
 
   private clearExpiredCache(): void {
     const now = Date.now();
-    
+
     for (const [key, cached] of this.cache.entries()) {
       if (now - cached.timestamp > cached.ttl) {
         this.cache.delete(key);
@@ -362,11 +354,11 @@ export class UnifiedPersistenceService {
     try {
       const key = this.generateKey(data);
       const backupKey = `${key}_backup_${Date.now()}`;
-      
+
       this.backupStorage.set(backupKey, {
         data: JSON.parse(JSON.stringify(data)),
         timestamp: Date.now(),
-        originalKey: key
+        originalKey: key,
       });
 
       // Limit backup storage to prevent memory issues
@@ -381,13 +373,13 @@ export class UnifiedPersistenceService {
 
   getBackups(originalKey: string): Array<{ key: string; timestamp: number; data: any }> {
     const backups = [];
-    
+
     for (const [key, backup] of this.backupStorage.entries()) {
       if (backup.originalKey === originalKey) {
         backups.push({
           key,
           timestamp: backup.timestamp,
-          data: backup.data
+          data: backup.data,
         });
       }
     }
@@ -438,7 +430,7 @@ export class UnifiedPersistenceService {
     return {
       cacheSize: this.cache.size,
       backupsSize: this.backupStorage.size,
-      pendingSaves: this.pendingSaves.size
+      pendingSaves: this.pendingSaves.size,
     };
   }
 

@@ -6,16 +6,16 @@
  * Este script identifica implementações paralelas que podem estar causando conflitos
  */
 
-const fs = require("fs");
-const path = require("path");
+const fs = require('fs');
+const path = require('path');
 
-console.log("🔍 ANÁLISE COMPLETA: SISTEMAS PARALELOS E CONFLITOS");
-console.log("=======================================================");
+console.log('🔍 ANÁLISE COMPLETA: SISTEMAS PARALELOS E CONFLITOS');
+console.log('=======================================================');
 
 // Função para ler arquivo com tratamento de erro
 function safeReadFile(filePath) {
   try {
-    return fs.readFileSync(filePath, "utf8");
+    return fs.readFileSync(filePath, 'utf8');
   } catch (error) {
     return null;
   }
@@ -23,15 +23,15 @@ function safeReadFile(filePath) {
 
 // 1. ANÁLISE DE REGISTRIES PARALELOS
 function analyzeRegistries() {
-  console.log("\\n📦 1. REGISTRIES PARALELOS");
-  console.log("==============================");
+  console.log('\\n📦 1. REGISTRIES PARALELOS');
+  console.log('==============================');
 
   const registries = [
-    "src/config/enhancedBlockRegistry.ts",
-    "src/components/editor/blocks/EnhancedBlockRegistry.tsx",
-    "src/components/result-editor/ComponentRegistry.tsx",
-    "src/config/smartBlockRegistry.ts",
-    "src/config/editorBlocksMapping.ts",
+    'src/config/enhancedBlockRegistry.ts',
+    'src/components/editor/blocks/EnhancedBlockRegistry.tsx',
+    'src/components/result-editor/ComponentRegistry.tsx',
+    'src/config/smartBlockRegistry.ts',
+    'src/config/editorBlocksMapping.ts',
   ];
 
   const registryAnalysis = {};
@@ -44,18 +44,18 @@ function analyzeRegistries() {
           exists: true,
           size: content.length,
           isEmpty: content.trim().length === 0,
-          hasExport: content.includes("export"),
-          hasComponents: content.includes("Component"),
+          hasExport: content.includes('export'),
+          hasComponents: content.includes('Component'),
         };
 
         console.log(`\\n📁 ${registryPath}`);
         console.log(`   📏 Tamanho: ${content.length} chars`);
-        console.log(`   📋 Vazio: ${registryAnalysis[registryPath].isEmpty ? "SIM" : "NÃO"}`);
+        console.log(`   📋 Vazio: ${registryAnalysis[registryPath].isEmpty ? 'SIM' : 'NÃO'}`);
         console.log(
-          `   📤 Tem exports: ${registryAnalysis[registryPath].hasExport ? "SIM" : "NÃO"}`
+          `   📤 Tem exports: ${registryAnalysis[registryPath].hasExport ? 'SIM' : 'NÃO'}`
         );
         console.log(
-          `   🧩 Tem componentes: ${registryAnalysis[registryPath].hasComponents ? "SIM" : "NÃO"}`
+          `   🧩 Tem componentes: ${registryAnalysis[registryPath].hasComponents ? 'SIM' : 'NÃO'}`
         );
       }
     } else {
@@ -68,17 +68,17 @@ function analyzeRegistries() {
 
 // 2. ANÁLISE DE HOOKS DE PROPRIEDADES
 function analyzePropertiesHooks() {
-  console.log("\\n🔗 2. HOOKS DE PROPRIEDADES");
-  console.log("==============================");
+  console.log('\\n🔗 2. HOOKS DE PROPRIEDADES');
+  console.log('==============================');
 
   // Procurar hooks
-  const hooksDir = "src/hooks";
+  const hooksDir = 'src/hooks';
   const propertiesHooks = [];
 
   if (fs.existsSync(hooksDir)) {
     const files = fs.readdirSync(hooksDir);
     files.forEach(file => {
-      if (file.includes("Properties") || file.includes("properties")) {
+      if (file.includes('Properties') || file.includes('properties')) {
         propertiesHooks.push(path.join(hooksDir, file));
       }
     });
@@ -90,10 +90,10 @@ function analyzePropertiesHooks() {
       console.log(`\\n📄 ${hookPath}`);
       console.log(`   📏 Tamanho: ${content.length} chars`);
       console.log(
-        `   🎯 Função principal: ${content.includes("useUnifiedProperties") ? "useUnifiedProperties" : "outro"}`
+        `   🎯 Função principal: ${content.includes('useUnifiedProperties') ? 'useUnifiedProperties' : 'outro'}`
       );
       console.log(`   📋 Cases: ${(content.match(/case\\s+"/g) || []).length}`);
-      console.log(`   ⚙️ Está sendo usado: ${content.includes("export") ? "SIM" : "NÃO"}`);
+      console.log(`   ⚙️ Está sendo usado: ${content.includes('export') ? 'SIM' : 'NÃO'}`);
     }
   });
 
@@ -102,8 +102,8 @@ function analyzePropertiesHooks() {
 
 // 3. ANÁLISE DE PAINÉIS PARALELOS
 function analyzePropertiesPanels() {
-  console.log("\\n🎛️ 3. PAINÉIS DE PROPRIEDADES PARALELOS");
-  console.log("===========================================");
+  console.log('\\n🎛️ 3. PAINÉIS DE PROPRIEDADES PARALELOS');
+  console.log('===========================================');
 
   const panels = [];
 
@@ -118,13 +118,13 @@ function analyzePropertiesPanels() {
 
       if (entry.isDirectory()) {
         findPanels(fullPath);
-      } else if (entry.name.includes("PropertiesPanel") && entry.name.endsWith(".tsx")) {
+      } else if (entry.name.includes('PropertiesPanel') && entry.name.endsWith('.tsx')) {
         panels.push(fullPath);
       }
     });
   }
 
-  findPanels("src");
+  findPanels('src');
 
   panels.forEach(panelPath => {
     const content = safeReadFile(panelPath);
@@ -132,9 +132,9 @@ function analyzePropertiesPanels() {
       console.log(`\\n📋 ${panelPath}`);
       console.log(`   📏 Tamanho: ${content.length} chars`);
       console.log(
-        `   🎯 Hook usado: ${content.includes("useUnifiedProperties") ? "useUnifiedProperties" : "outro/nenhum"}`
+        `   🎯 Hook usado: ${content.includes('useUnifiedProperties') ? 'useUnifiedProperties' : 'outro/nenhum'}`
       );
-      console.log(`   📤 É exportado: ${content.includes("export default") ? "SIM" : "NÃO"}`);
+      console.log(`   📤 É exportado: ${content.includes('export default') ? 'SIM' : 'NÃO'}`);
     }
   });
 
@@ -143,13 +143,13 @@ function analyzePropertiesPanels() {
 
 // 4. ANÁLISE DE IMPORTS CONFLITANTES
 function analyzeImportConflicts() {
-  console.log("\\n⚡ 4. CONFLITOS DE IMPORTS");
-  console.log("==============================");
+  console.log('\\n⚡ 4. CONFLITOS DE IMPORTS');
+  console.log('==============================');
 
   const mainFiles = [
-    "src/pages/editor-fixed-dragdrop.tsx",
-    "src/components/editor/canvas/SortableBlockWrapper.tsx",
-    "src/components/universal/EnhancedUniversalPropertiesPanel.tsx",
+    'src/pages/editor-fixed-dragdrop.tsx',
+    'src/components/editor/canvas/SortableBlockWrapper.tsx',
+    'src/components/universal/EnhancedUniversalPropertiesPanel.tsx',
   ];
 
   const conflicts = {};
@@ -189,33 +189,33 @@ function analyzeImportConflicts() {
 
 // 5. VERIFICAR QUAL SISTEMA ESTÁ ATIVO
 function analyzeActiveSystem() {
-  console.log("\\n🎯 5. SISTEMA ATUALMENTE ATIVO");
-  console.log("==============================");
+  console.log('\\n🎯 5. SISTEMA ATUALMENTE ATIVO');
+  console.log('==============================');
 
   // Verificar qual registry está sendo usado
-  const mainEditor = "src/pages/editor-fixed-dragdrop.tsx";
-  const wrapper = "src/components/editor/canvas/SortableBlockWrapper.tsx";
+  const mainEditor = 'src/pages/editor-fixed-dragdrop.tsx';
+  const wrapper = 'src/components/editor/canvas/SortableBlockWrapper.tsx';
 
   if (fs.existsSync(mainEditor)) {
     const content = safeReadFile(mainEditor);
     if (content) {
-      console.log("\\n📱 EDITOR PRINCIPAL (editor-fixed-dragdrop.tsx):");
+      console.log('\\n📱 EDITOR PRINCIPAL (editor-fixed-dragdrop.tsx):');
 
       // Registry usado
-      if (content.includes("enhancedBlockRegistry")) {
-        console.log("   📦 Registry: src/config/enhancedBlockRegistry.ts ✅");
-      } else if (content.includes("EnhancedBlockRegistry")) {
-        console.log("   📦 Registry: src/components/editor/blocks/EnhancedBlockRegistry.tsx ⚠️");
+      if (content.includes('enhancedBlockRegistry')) {
+        console.log('   📦 Registry: src/config/enhancedBlockRegistry.ts ✅');
+      } else if (content.includes('EnhancedBlockRegistry')) {
+        console.log('   📦 Registry: src/components/editor/blocks/EnhancedBlockRegistry.tsx ⚠️');
       }
 
       // Painel usado
-      if (content.includes("EnhancedUniversalPropertiesPanel")) {
-        console.log("   🎛️ Painel: EnhancedUniversalPropertiesPanel ✅");
+      if (content.includes('EnhancedUniversalPropertiesPanel')) {
+        console.log('   🎛️ Painel: EnhancedUniversalPropertiesPanel ✅');
       }
 
       // Hook usado
-      if (content.includes("useUnifiedProperties")) {
-        console.log("   🔗 Hook: useUnifiedProperties ✅");
+      if (content.includes('useUnifiedProperties')) {
+        console.log('   🔗 Hook: useUnifiedProperties ✅');
       }
     }
   }
@@ -223,10 +223,10 @@ function analyzeActiveSystem() {
   if (fs.existsSync(wrapper)) {
     const content = safeReadFile(wrapper);
     if (content) {
-      console.log("\\n🔄 WRAPPER (SortableBlockWrapper.tsx):");
+      console.log('\\n🔄 WRAPPER (SortableBlockWrapper.tsx):');
 
       // Registry usado
-      if (content.includes("getBlockComponent")) {
+      if (content.includes('getBlockComponent')) {
         const registryMatch = content.match(/from ["']([^"']*[Rr]egistry[^"']*)/);
         if (registryMatch) {
           console.log(`   📦 Registry: ${registryMatch[1]} ✅`);
@@ -234,8 +234,8 @@ function analyzeActiveSystem() {
       }
 
       // Hooks usados
-      if (content.includes("useContainerProperties")) {
-        console.log("   🔗 Hook: useContainerProperties ✅");
+      if (content.includes('useContainerProperties')) {
+        console.log('   🔗 Hook: useContainerProperties ✅');
       }
     }
   }
@@ -243,8 +243,8 @@ function analyzeActiveSystem() {
 
 // 6. RECOMENDAÇÕES DE LIMPEZA
 function generateCleanupRecommendations(registryAnalysis, panels) {
-  console.log("\\n🧹 6. RECOMENDAÇÕES DE LIMPEZA");
-  console.log("==============================");
+  console.log('\\n🧹 6. RECOMENDAÇÕES DE LIMPEZA');
+  console.log('==============================');
 
   const recommendations = [];
 
@@ -252,15 +252,15 @@ function generateCleanupRecommendations(registryAnalysis, panels) {
   Object.entries(registryAnalysis).forEach(([path, info]) => {
     if (info.isEmpty) {
       recommendations.push(`❌ REMOVER: ${path} (arquivo vazio)`);
-    } else if (path !== "src/config/enhancedBlockRegistry.ts" && info.hasComponents) {
+    } else if (path !== 'src/config/enhancedBlockRegistry.ts' && info.hasComponents) {
       recommendations.push(`⚠️ AVALIAR: ${path} (registry paralelo com componentes)`);
     }
   });
 
   // Painéis
-  const activePanels = ["EnhancedUniversalPropertiesPanel"];
+  const activePanels = ['EnhancedUniversalPropertiesPanel'];
   panels.forEach(panelPath => {
-    const panelName = path.basename(panelPath, ".tsx");
+    const panelName = path.basename(panelPath, '.tsx');
     if (!activePanels.some(active => panelPath.includes(active))) {
       recommendations.push(`⚠️ AVALIAR: ${panelPath} (painel não usado)`);
     }
@@ -282,8 +282,8 @@ async function main() {
     analyzeActiveSystem();
     const recommendations = generateCleanupRecommendations(registryAnalysis, panels);
 
-    console.log("\\n\\n📋 RESUMO DOS CONFLITOS ENCONTRADOS:");
-    console.log("=====================================");
+    console.log('\\n\\n📋 RESUMO DOS CONFLITOS ENCONTRADOS:');
+    console.log('=====================================');
 
     const totalRegistries = Object.keys(registryAnalysis).length;
     const totalPanels = panels.length;
@@ -295,14 +295,14 @@ async function main() {
     console.log(`🧹 Recomendações de limpeza: ${recommendations.length}`);
 
     if (recommendations.length > 0) {
-      console.log("\\n⚠️ AÇÃO NECESSÁRIA: Limpar sistemas paralelos para evitar conflitos");
+      console.log('\\n⚠️ AÇÃO NECESSÁRIA: Limpar sistemas paralelos para evitar conflitos');
     } else {
-      console.log("\\n✅ SISTEMA LIMPO: Sem conflitos significativos detectados");
+      console.log('\\n✅ SISTEMA LIMPO: Sem conflitos significativos detectados');
     }
 
-    console.log("\\n✅ Análise concluída!");
+    console.log('\\n✅ Análise concluída!');
   } catch (error) {
-    console.error("❌ Erro durante a análise:", error.message);
+    console.error('❌ Erro durante a análise:', error.message);
     process.exit(1);
   }
 }

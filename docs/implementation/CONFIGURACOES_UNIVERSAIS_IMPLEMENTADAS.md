@@ -137,13 +137,13 @@ Uso: ...getTextProperties()
 
 ```typescript
 const BRAND_COLORS = {
-  primary: "#B89B7A", // Cor principal
-  secondary: "#D4C2A8", // Cor secundária
-  accent: "#F3E8D3", // Cor de destaque
-  text: "#432818", // Cor do texto
-  textPrimary: "#2c1810", // Texto primário
-  textSecondary: "#8F7A6A", // Texto secundário
-  background: "#FEFDFB", // Fundo
+  primary: '#B89B7A', // Cor principal
+  secondary: '#D4C2A8', // Cor secundária
+  accent: '#F3E8D3', // Cor de destaque
+  text: '#432818', // Cor do texto
+  textPrimary: '#2c1810', // Texto primário
+  textSecondary: '#8F7A6A', // Texto secundário
+  background: '#FEFDFB', // Fundo
   // ... outras cores
 };
 ```

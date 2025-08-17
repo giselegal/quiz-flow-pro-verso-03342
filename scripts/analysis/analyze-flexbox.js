@@ -1,30 +1,30 @@
 #!/usr/bin/env node
 
-import fs from "fs";
-import path from "path";
+import fs from 'fs';
+import path from 'path';
 
-console.log("📦 ANÁLISE DE FLEXBOX - ETAPAS 20 E 21\n");
+console.log('📦 ANÁLISE DE FLEXBOX - ETAPAS 20 E 21\n');
 
-const componentsDir = "/workspaces/quiz-quest-challenge-verse/client/src/components/editor/blocks";
+const componentsDir = '/workspaces/quiz-quest-challenge-verse/client/src/components/editor/blocks';
 
 // Componentes das etapas 20 e 21
 const step20Components = [
-  "QuizResultMainCardBlock.tsx",
-  "QuizResultHeaderBlock.tsx",
-  "QuizResultDisplayBlock.tsx",
-  "QuizResultSecondaryStylesBlock.tsx",
-  "CaktoQuizResult.tsx",
+  'QuizResultMainCardBlock.tsx',
+  'QuizResultHeaderBlock.tsx',
+  'QuizResultDisplayBlock.tsx',
+  'QuizResultSecondaryStylesBlock.tsx',
+  'CaktoQuizResult.tsx',
 ];
 
 const step21Components = [
-  "QuizOfferPageBlock.tsx",
-  "QuizOfferHeroBlock.tsx",
-  "QuizOfferPricingBlock.tsx",
-  "QuizOfferTestimonialsBlock.tsx",
-  "QuizOfferCountdownBlock.tsx",
-  "QuizOfferFinalCTABlock.tsx",
-  "QuizOfferFAQBlock.tsx",
-  "CaktoQuizOffer.tsx",
+  'QuizOfferPageBlock.tsx',
+  'QuizOfferHeroBlock.tsx',
+  'QuizOfferPricingBlock.tsx',
+  'QuizOfferTestimonialsBlock.tsx',
+  'QuizOfferCountdownBlock.tsx',
+  'QuizOfferFinalCTABlock.tsx',
+  'QuizOfferFAQBlock.tsx',
+  'CaktoQuizOffer.tsx',
 ];
 
 // Padrões de Flexbox para detectar
@@ -89,11 +89,11 @@ function analyzeFlexboxUsage(filePath, componentName, step) {
       flexboxUsage: {},
       alternatives: {},
       score: 0,
-      issues: ["Arquivo não encontrado"],
+      issues: ['Arquivo não encontrado'],
     };
   }
 
-  const content = fs.readFileSync(filePath, "utf8");
+  const content = fs.readFileSync(filePath, 'utf8');
   const flexboxUsage = {};
   const alternatives = {};
   const issues = [];
@@ -140,18 +140,18 @@ function analyzeFlexboxUsage(filePath, componentName, step) {
   // Penalizações por uso excessivo de alternativas problemáticas
   if (alternatives.grid && alternatives.grid.length > flexboxUsage.container?.length) {
     score -= 5;
-    issues.push("Uso excessivo de Grid em vez de Flexbox");
+    issues.push('Uso excessivo de Grid em vez de Flexbox');
   }
 
   // Verificar padrões problemáticos específicos
-  if (content.includes("float:") || content.includes("float-")) {
+  if (content.includes('float:') || content.includes('float-')) {
     score -= 10;
-    issues.push("Uso de float (obsoleto)");
+    issues.push('Uso de float (obsoleto)');
   }
 
-  if (content.includes("display: table") || content.includes("table-")) {
+  if (content.includes('display: table') || content.includes('table-')) {
     score -= 5;
-    issues.push("Uso de table layout");
+    issues.push('Uso de table layout');
   }
 
   // Verificar responsividade do flexbox
@@ -172,7 +172,7 @@ function analyzeFlexboxUsage(filePath, componentName, step) {
   if (responsiveFlexCount > 0) {
     score += Math.min(20, responsiveFlexCount * 2);
   } else if (totalFlexUsage > 0) {
-    issues.push("Flexbox não é responsivo");
+    issues.push('Flexbox não é responsivo');
     score -= 5;
   }
 
@@ -190,32 +190,32 @@ function analyzeFlexboxUsage(filePath, componentName, step) {
   };
 }
 
-console.log("📊 ETAPA 20 - RESULTADO");
-console.log("==================================================");
+console.log('📊 ETAPA 20 - RESULTADO');
+console.log('==================================================');
 
 const step20Results = [];
 step20Components.forEach(component => {
   const filePath = path.join(componentsDir, component);
-  const analysis = analyzeFlexboxUsage(filePath, component.replace(".tsx", ""), 20);
+  const analysis = analyzeFlexboxUsage(filePath, component.replace('.tsx', ''), 20);
   step20Results.push(analysis);
 
   const emoji =
-    analysis.score >= 80 ? "🟢" : analysis.score >= 60 ? "🟡" : analysis.score >= 40 ? "🟠" : "🔴";
+    analysis.score >= 80 ? '🟢' : analysis.score >= 60 ? '🟡' : analysis.score >= 40 ? '🟠' : '🔴';
   const flexType =
     Object.keys(analysis.flexboxUsage).length > 0
-      ? "FLEXBOX"
+      ? 'FLEXBOX'
       : analysis.alternatives.grid
-        ? "GRID"
+        ? 'GRID'
         : analysis.alternatives.block
-          ? "BLOCK"
-          : "UNKNOWN";
+          ? 'BLOCK'
+          : 'UNKNOWN';
 
   console.log(`${emoji} ${analysis.name} - Score: ${analysis.score}/100 (${flexType})`);
 
   // Mostrar uso de flexbox
   if (Object.keys(analysis.flexboxUsage).length > 0) {
     Object.entries(analysis.flexboxUsage).forEach(([category, classes]) => {
-      console.log(`   📦 ${category}: ${classes.join(", ")}`);
+      console.log(`   📦 ${category}: ${classes.join(', ')}`);
     });
   }
 
@@ -224,7 +224,7 @@ step20Components.forEach(component => {
     Object.entries(analysis.alternatives).forEach(([category, classes]) => {
       if (classes.length > 0) {
         console.log(
-          `   ⚡ ${category}: ${classes.slice(0, 3).join(", ")}${classes.length > 3 ? "..." : ""}`
+          `   ⚡ ${category}: ${classes.slice(0, 3).join(', ')}${classes.length > 3 ? '...' : ''}`
         );
       }
     });
@@ -237,35 +237,35 @@ step20Components.forEach(component => {
     });
   }
 
-  console.log("");
+  console.log('');
 });
 
-console.log("📊 ETAPA 21 - OFERTA");
-console.log("==================================================");
+console.log('📊 ETAPA 21 - OFERTA');
+console.log('==================================================');
 
 const step21Results = [];
 step21Components.forEach(component => {
   const filePath = path.join(componentsDir, component);
-  const analysis = analyzeFlexboxUsage(filePath, component.replace(".tsx", ""), 21);
+  const analysis = analyzeFlexboxUsage(filePath, component.replace('.tsx', ''), 21);
   step21Results.push(analysis);
 
   const emoji =
-    analysis.score >= 80 ? "🟢" : analysis.score >= 60 ? "🟡" : analysis.score >= 40 ? "🟠" : "🔴";
+    analysis.score >= 80 ? '🟢' : analysis.score >= 60 ? '🟡' : analysis.score >= 40 ? '🟠' : '🔴';
   const flexType =
     Object.keys(analysis.flexboxUsage).length > 0
-      ? "FLEXBOX"
+      ? 'FLEXBOX'
       : analysis.alternatives.grid
-        ? "GRID"
+        ? 'GRID'
         : analysis.alternatives.block
-          ? "BLOCK"
-          : "UNKNOWN";
+          ? 'BLOCK'
+          : 'UNKNOWN';
 
   console.log(`${emoji} ${analysis.name} - Score: ${analysis.score}/100 (${flexType})`);
 
   // Mostrar uso de flexbox
   if (Object.keys(analysis.flexboxUsage).length > 0) {
     Object.entries(analysis.flexboxUsage).forEach(([category, classes]) => {
-      console.log(`   📦 ${category}: ${classes.join(", ")}`);
+      console.log(`   📦 ${category}: ${classes.join(', ')}`);
     });
   }
 
@@ -274,7 +274,7 @@ step21Components.forEach(component => {
     Object.entries(analysis.alternatives).forEach(([category, classes]) => {
       if (classes.length > 0) {
         console.log(
-          `   ⚡ ${category}: ${classes.slice(0, 3).join(", ")}${classes.length > 3 ? "..." : ""}`
+          `   ⚡ ${category}: ${classes.slice(0, 3).join(', ')}${classes.length > 3 ? '...' : ''}`
         );
       }
     });
@@ -287,12 +287,12 @@ step21Components.forEach(component => {
     });
   }
 
-  console.log("");
+  console.log('');
 });
 
 // Estatísticas finais
-console.log("📈 RESUMO GERAL");
-console.log("==================================================");
+console.log('📈 RESUMO GERAL');
+console.log('==================================================');
 
 const allResults = [...step20Results, ...step21Results].filter(r => r.exists);
 const flexboxComponents = allResults.filter(r => Object.keys(r.flexboxUsage).length > 0);
@@ -328,21 +328,21 @@ console.log(`📊 Etapa 20 - Score Flexbox médio: ${Math.round(step20FlexScore)
 console.log(`📊 Etapa 21 - Score Flexbox médio: ${Math.round(step21FlexScore)}/100`);
 
 // Recomendações
-console.log("\n💡 RECOMENDAÇÕES");
-console.log("==================================================");
+console.log('\n💡 RECOMENDAÇÕES');
+console.log('==================================================');
 
 if (flexboxComponents.length < allResults.length * 0.7) {
-  console.log("🔧 Considere migrar mais componentes para Flexbox");
-  console.log("   • Flexbox é mais eficiente para layouts 1D");
-  console.log("   • Melhor suporte para responsividade");
-  console.log("   • Mais fácil de manter");
+  console.log('🔧 Considere migrar mais componentes para Flexbox');
+  console.log('   • Flexbox é mais eficiente para layouts 1D');
+  console.log('   • Melhor suporte para responsividade');
+  console.log('   • Mais fácil de manter');
 }
 
 if (avgFlexScore < 80) {
-  console.log("📈 Melhore o uso de Flexbox:");
-  console.log("   • Use justify-content e align-items adequadamente");
-  console.log("   • Implemente gaps em vez de margins");
-  console.log("   • Adicione breakpoints responsivos");
+  console.log('📈 Melhore o uso de Flexbox:');
+  console.log('   • Use justify-content e align-items adequadamente');
+  console.log('   • Implemente gaps em vez de margins');
+  console.log('   • Adicione breakpoints responsivos');
 }
 
-console.log("\n🏁 ANÁLISE DE FLEXBOX CONCLUÍDA!");
+console.log('\n🏁 ANÁLISE DE FLEXBOX CONCLUÍDA!');

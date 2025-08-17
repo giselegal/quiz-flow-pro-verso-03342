@@ -1,19 +1,19 @@
 // Script para contar EXATAMENTE quantos blocos existem no array
 
-import fs from "fs";
+import fs from 'fs';
 
-const filePath = "./client/src/config/blockDefinitions.ts";
-const content = fs.readFileSync(filePath, "utf8");
+const filePath = './client/src/config/blockDefinitions.ts';
+const content = fs.readFileSync(filePath, 'utf8');
 
-console.log("🔍 CONTAGEM PRECISA DOS BLOCOS NO ARRAY blockDefinitions");
-console.log("=".repeat(60));
+console.log('🔍 CONTAGEM PRECISA DOS BLOCOS NO ARRAY blockDefinitions');
+console.log('='.repeat(60));
 
 // Extrair apenas o conteúdo do array (linha 171 até linha 2468)
-const lines = content.split("\n");
+const lines = content.split('\n');
 const startLine = 170; // linha 171 (index 170)
 const endLine = 2467; // linha 2468 (index 2467)
 
-const arrayContent = lines.slice(startLine + 1, endLine).join("\n");
+const arrayContent = lines.slice(startLine + 1, endLine).join('\n');
 
 // Contar objetos que começam com '  {' (2 espaços + chave)
 const objectMatches = arrayContent.match(/^\s*{/gm);
@@ -33,8 +33,8 @@ console.log(`\n📦 TOTAL DE OBJETOS SEPARADOS: ${objects.length}`);
 objects.forEach((obj, index) => {
   // Reconstituir o objeto
   let fullObj = obj;
-  if (index > 0 && !fullObj.startsWith("{")) fullObj = "{" + fullObj;
-  if (index < objects.length - 1 && !fullObj.endsWith("}")) fullObj = fullObj + "}";
+  if (index > 0 && !fullObj.startsWith('{')) fullObj = '{' + fullObj;
+  if (index < objects.length - 1 && !fullObj.endsWith('}')) fullObj = fullObj + '}';
 
   const hasType = /type:\s*['"`]([^'"`]+)['"`]/.test(fullObj);
   const hasName = /name:\s*['"`]([^'"`]+)['"`]/.test(fullObj);
@@ -43,7 +43,7 @@ objects.forEach((obj, index) => {
     validBlocks++;
 
     const categoryMatch = fullObj.match(/category:\s*['"`]([^'"`]+)['"`]/);
-    const category = categoryMatch ? categoryMatch[1] : "Sem Categoria";
+    const category = categoryMatch ? categoryMatch[1] : 'Sem Categoria';
 
     if (categories.has(category)) {
       categories.set(category, categories.get(category) + 1);
@@ -55,7 +55,7 @@ objects.forEach((obj, index) => {
     if (index < 5) {
       // Mostrar os primeiros objetos inválidos
       console.log(`\n❌ Objeto inválido ${index + 1}:`);
-      console.log(fullObj.substring(0, 200) + "...");
+      console.log(fullObj.substring(0, 200) + '...');
     }
   }
 });
@@ -70,5 +70,5 @@ sortedCategories.forEach(([category, count]) => {
   console.log(`📁 ${category}: ${count} componentes`);
 });
 
-console.log("\n" + "=".repeat(60));
+console.log('\n' + '='.repeat(60));
 console.log(`🎯 RESULTADO: ${validBlocks} componentes válidos de ${objects.length} objetos total`);

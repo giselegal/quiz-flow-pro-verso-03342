@@ -39,27 +39,27 @@ export const STEP_TEMPLATES: StepTemplate[] = [
   {
     stepNumber: 1,
     templateFunction: getStep01Template,
-    name: "Quiz Intro",
-    description: "Tela inicial com nome",
+    name: 'Quiz Intro',
+    description: 'Tela inicial com nome',
   },
   {
     stepNumber: 2,
     templateFunction: getStep02Template,
-    name: "Pergunta 1",
-    description: "Tipo de roupa favorita",
+    name: 'Pergunta 1',
+    description: 'Tipo de roupa favorita',
   },
   {
     stepNumber: 3,
     templateFunction: getStep03Template,
-    name: "Pergunta 2",
-    description: "Personalidade",
+    name: 'Pergunta 2',
+    description: 'Personalidade',
   },
   // ... continua até step 21
   {
     stepNumber: 21,
     templateFunction: getStep21Template,
-    name: "Oferta Final",
-    description: "Página de conversão",
+    name: 'Oferta Final',
+    description: 'Página de conversão',
   },
 ];
 ```
@@ -72,11 +72,11 @@ export const STEP_TEMPLATES: StepTemplate[] = [
 export const defaultFunnelStages: FunnelStage[] = [
   // Step 1 - Introdução
   {
-    id: "step-1",
-    name: "Introdução",
-    description: "Página inicial do quiz",
+    id: 'step-1',
+    name: 'Introdução',
+    description: 'Página inicial do quiz',
     order: 1,
-    type: "intro",
+    type: 'intro',
     isActive: true,
     metadata: {
       blocksCount: 8,
@@ -87,11 +87,11 @@ export const defaultFunnelStages: FunnelStage[] = [
 
   // Steps 2-14 - Questões do Quiz
   {
-    id: "step-2",
-    name: "Q1 - Tipo de Roupa",
-    description: "Qual o seu tipo de roupa favorita?",
+    id: 'step-2',
+    name: 'Q1 - Tipo de Roupa',
+    description: 'Qual o seu tipo de roupa favorita?',
     order: 2,
-    type: "question",
+    type: 'question',
     isActive: false,
     metadata: {
       blocksCount: 6,
@@ -132,7 +132,7 @@ export interface FunnelStage {
   id: string; // "step-1", "step-2", etc.
   name: string; // "Quiz Intro", "Pergunta 1", etc.
   order: number; // 1, 2, 3, ... 21
-  type: "intro" | "question" | "transition" | "processing" | "result" | "lead" | "offer" | "final";
+  type: 'intro' | 'question' | 'transition' | 'processing' | 'result' | 'lead' | 'offer' | 'final';
   description?: string; // Descrição da etapa
   isActive?: boolean; // Se é a etapa ativa
   metadata?: {
@@ -182,9 +182,9 @@ const {
 } = useEditor();
 
 // Exemplos de uso:
-console.log("Total de etapas:", stages.length); // 21
-console.log("Etapa ativa:", activeStageId); // "step-1"
-console.log("Nome da etapa ativa:", stages.find(s => s.id === activeStageId)?.name); // "Quiz Intro"
+console.log('Total de etapas:', stages.length); // 21
+console.log('Etapa ativa:', activeStageId); // "step-1"
+console.log('Nome da etapa ativa:', stages.find(s => s.id === activeStageId)?.name); // "Quiz Intro"
 
 // Mudar para próxima etapa:
 const currentIndex = stages.findIndex(s => s.id === activeStageId);

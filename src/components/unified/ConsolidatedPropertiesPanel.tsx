@@ -6,7 +6,13 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { Trash2, Settings, Edit3, Layers } from 'lucide-react';
@@ -38,44 +44,67 @@ const ConsolidatedPropertiesPanel: React.FC<ConsolidatedPropertiesPanelProps> = 
   // Propriedades mockadas para demonstração (substituir pelo hook real quando funcional)
   const propertyDefinitions = useMemo(() => {
     const blockType = selectedBlock?.type || '';
-    
+
     // Sistema básico de propriedades baseado no tipo do bloco
     if (blockType.includes('text') || blockType.includes('heading')) {
-        return [
-          { key: 'text', type: 'text', label: 'Texto', defaultValue: '' },
-          { key: 'fontSize', type: 'number', label: 'Tamanho da Fonte', defaultValue: 16, min: 10, max: 72 },
-          { key: 'textAlign', type: 'select', label: 'Alinhamento', options: [
+      return [
+        { key: 'text', type: 'text', label: 'Texto', defaultValue: '' },
+        {
+          key: 'fontSize',
+          type: 'number',
+          label: 'Tamanho da Fonte',
+          defaultValue: 16,
+          min: 10,
+          max: 72,
+        },
+        {
+          key: 'textAlign',
+          type: 'select',
+          label: 'Alinhamento',
+          options: [
             { value: 'left', label: 'Esquerda' },
             { value: 'center', label: 'Centro' },
-            { value: 'right', label: 'Direita' }
-          ], defaultValue: 'left' },
-          { key: 'color', type: 'color', label: 'Cor do Texto', defaultValue: '#000000' },
-        ];
+            { value: 'right', label: 'Direita' },
+          ],
+          defaultValue: 'left',
+        },
+        { key: 'color', type: 'color', label: 'Cor do Texto', defaultValue: '#000000' },
+      ];
     } else if (blockType.includes('button')) {
-        return [
-          { key: 'text', type: 'text', label: 'Texto do Botão', defaultValue: 'Clique aqui' },
-          { key: 'variant', type: 'select', label: 'Estilo', options: [
+      return [
+        { key: 'text', type: 'text', label: 'Texto do Botão', defaultValue: 'Clique aqui' },
+        {
+          key: 'variant',
+          type: 'select',
+          label: 'Estilo',
+          options: [
             { value: 'default', label: 'Padrão' },
             { value: 'outline', label: 'Contorno' },
-            { value: 'ghost', label: 'Transparente' }
-          ], defaultValue: 'default' },
-          { key: 'size', type: 'select', label: 'Tamanho', options: [
+            { value: 'ghost', label: 'Transparente' },
+          ],
+          defaultValue: 'default',
+        },
+        {
+          key: 'size',
+          type: 'select',
+          label: 'Tamanho',
+          options: [
             { value: 'sm', label: 'Pequeno' },
             { value: 'md', label: 'Médio' },
-            { value: 'lg', label: 'Grande' }
-          ], defaultValue: 'md' },
-        ];
-    } else if (blockType.includes('image')) {
-        return [
-          { key: 'src', type: 'text', label: 'URL da Imagem', defaultValue: '' },
-          { key: 'alt', type: 'text', label: 'Texto Alternativo', defaultValue: '' },
-          { key: 'width', type: 'number', label: 'Largura', defaultValue: 300, min: 50, max: 1200 },
-          { key: 'height', type: 'number', label: 'Altura', defaultValue: 200, min: 50, max: 800 },
-        ];
-    } else {
-      return [
-        { key: 'content', type: 'text', label: 'Conteúdo', defaultValue: '' }
+            { value: 'lg', label: 'Grande' },
+          ],
+          defaultValue: 'md',
+        },
       ];
+    } else if (blockType.includes('image')) {
+      return [
+        { key: 'src', type: 'text', label: 'URL da Imagem', defaultValue: '' },
+        { key: 'alt', type: 'text', label: 'Texto Alternativo', defaultValue: '' },
+        { key: 'width', type: 'number', label: 'Largura', defaultValue: 300, min: 50, max: 1200 },
+        { key: 'height', type: 'number', label: 'Altura', defaultValue: 200, min: 50, max: 800 },
+      ];
+    } else {
+      return [{ key: 'content', type: 'text', label: 'Conteúdo', defaultValue: '' }];
     }
   }, [selectedBlock?.type]);
 
@@ -111,7 +140,7 @@ const ConsolidatedPropertiesPanel: React.FC<ConsolidatedPropertiesPanelProps> = 
             <Input
               id={key}
               value={currentValue || ''}
-              onChange={(e) => handlePropertyChange(key, e.target.value)}
+              onChange={e => handlePropertyChange(key, e.target.value)}
               placeholder={`Insira ${label.toLowerCase()}`}
               className="w-full"
             />
@@ -132,7 +161,7 @@ const ConsolidatedPropertiesPanel: React.FC<ConsolidatedPropertiesPanelProps> = 
             <Slider
               id={key}
               value={[currentValue || defaultValue]}
-              onValueChange={(value) => handlePropertyChange(key, value[0])}
+              onValueChange={value => handlePropertyChange(key, value[0])}
               min={min || 0}
               max={max || 100}
               step={step || 1}
@@ -150,7 +179,7 @@ const ConsolidatedPropertiesPanel: React.FC<ConsolidatedPropertiesPanelProps> = 
             <Switch
               id={key}
               checked={!!currentValue}
-              onCheckedChange={(checked) => handlePropertyChange(key, checked)}
+              onCheckedChange={checked => handlePropertyChange(key, checked)}
             />
           </div>
         );
@@ -161,7 +190,7 @@ const ConsolidatedPropertiesPanel: React.FC<ConsolidatedPropertiesPanelProps> = 
             <Label className="text-sm font-medium">{label}</Label>
             <Select
               value={currentValue || defaultValue}
-              onValueChange={(value) => handlePropertyChange(key, value)}
+              onValueChange={value => handlePropertyChange(key, value)}
             >
               <SelectTrigger className="w-full">
                 <SelectValue placeholder={`Selecione ${label.toLowerCase()}`} />
@@ -188,12 +217,12 @@ const ConsolidatedPropertiesPanel: React.FC<ConsolidatedPropertiesPanelProps> = 
                 id={key}
                 type="color"
                 value={currentValue || defaultValue || '#000000'}
-                onChange={(e) => handlePropertyChange(key, e.target.value)}
+                onChange={e => handlePropertyChange(key, e.target.value)}
                 className="w-16 h-10"
               />
               <Input
                 value={currentValue || defaultValue || '#000000'}
-                onChange={(e) => handlePropertyChange(key, e.target.value)}
+                onChange={e => handlePropertyChange(key, e.target.value)}
                 className="flex-1"
                 placeholder="#000000"
               />
@@ -207,7 +236,7 @@ const ConsolidatedPropertiesPanel: React.FC<ConsolidatedPropertiesPanelProps> = 
             <Label className="text-sm font-medium">{label}</Label>
             <Input
               value={currentValue || ''}
-              onChange={(e) => handlePropertyChange(key, e.target.value)}
+              onChange={e => handlePropertyChange(key, e.target.value)}
               className="w-full"
             />
           </div>
@@ -246,9 +275,7 @@ const ConsolidatedPropertiesPanel: React.FC<ConsolidatedPropertiesPanelProps> = 
             <Badge variant="outline" className="text-xs">
               {selectedBlock.type}
             </Badge>
-            <span className="text-xs text-muted-foreground">
-              ID: {selectedBlock.id}
-            </span>
+            <span className="text-xs text-muted-foreground">ID: {selectedBlock.id}</span>
           </div>
         </div>
         <div className="flex space-x-2">
@@ -269,9 +296,9 @@ const ConsolidatedPropertiesPanel: React.FC<ConsolidatedPropertiesPanelProps> = 
           )}
         </div>
       </CardHeader>
-      
+
       <Separator />
-      
+
       <CardContent className="flex-1 p-0">
         <ScrollArea className="h-full px-6 py-4">
           <div className="space-y-6">
@@ -284,7 +311,7 @@ const ConsolidatedPropertiesPanel: React.FC<ConsolidatedPropertiesPanelProps> = 
                     Configurações do {selectedBlock.type}
                   </h4>
                 </div>
-                
+
                 {propertyDefinitions.map(renderPropertyControl)}
               </div>
             ) : (
@@ -294,18 +321,16 @@ const ConsolidatedPropertiesPanel: React.FC<ConsolidatedPropertiesPanelProps> = 
                 </p>
               </div>
             )}
-            
+
             {/* Propriedades de margem universais */}
             <div className="space-y-4">
               <Separator />
               <div className="flex items-center space-x-2">
                 <Layers className="h-4 w-4 text-muted-foreground" />
-                <h4 className="text-sm font-medium text-foreground">
-                  Espaçamento
-                </h4>
+                <h4 className="text-sm font-medium text-foreground">Espaçamento</h4>
               </div>
-              
-              {['marginTop', 'marginBottom', 'marginLeft', 'marginRight'].map((marginKey) => (
+
+              {['marginTop', 'marginBottom', 'marginLeft', 'marginRight'].map(marginKey => (
                 <div key={marginKey} className="space-y-2">
                   <div className="flex justify-between items-center">
                     <Label className="text-sm font-medium capitalize">
@@ -317,7 +342,7 @@ const ConsolidatedPropertiesPanel: React.FC<ConsolidatedPropertiesPanelProps> = 
                   </div>
                   <Slider
                     value={[blockProperties[marginKey] || 0]}
-                    onValueChange={(value) => handlePropertyChange(marginKey, value[0])}
+                    onValueChange={value => handlePropertyChange(marginKey, value[0])}
                     min={-40}
                     max={128}
                     step={4}

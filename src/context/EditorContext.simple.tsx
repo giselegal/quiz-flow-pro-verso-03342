@@ -67,18 +67,18 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   const stages = useMemo<FunnelStage[]>(() => {
     const allSteps = getAllSteps();
     console.log('🎯 EditorContext: Carregando', allSteps.length, 'etapas reais');
-    
-    return allSteps.map((template) => {
+
+    return allSteps.map(template => {
       const templateBlocks = getStepTemplate(template.stepNumber);
       const stageId = `step-${String(template.stepNumber).padStart(2, '0')}`;
-      
+
       // Mapear tipo conforme enum do FunnelStage
       let stageType: FunnelStage['type'] = 'question';
       if (template.stepNumber === 1) stageType = 'intro';
       else if (template.stepNumber >= 17 && template.stepNumber <= 20) stageType = 'result';
       else if (template.stepNumber === 21) stageType = 'offer';
       else if ([15, 16].includes(template.stepNumber)) stageType = 'processing';
-      
+
       return {
         id: stageId,
         name: template.name,
@@ -105,12 +105,16 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   // Inicializar stageBlocks com template blocks das 21 etapas
   const [stageBlocks, setStageBlocks] = useState<Record<string, EditorBlock[]>>(() => {
     const initialBlocks: Record<string, EditorBlock[]> = {};
-    
+
     stages.forEach(stage => {
       initialBlocks[stage.id] = stage.metadata?.templateBlocks || [];
     });
-    
-    console.log('🎯 EditorContext: Inicializando stageBlocks para', Object.keys(initialBlocks).length, 'etapas');
+
+    console.log(
+      '🎯 EditorContext: Inicializando stageBlocks para',
+      Object.keys(initialBlocks).length,
+      'etapas'
+    );
     return initialBlocks;
   });
 
@@ -119,131 +123,148 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   const selectedBlock = currentBlocks.find(block => block.id === selectedBlockId);
 
   // ✅ ACTIONS SIMPLIFICADAS
-  const addBlock = useCallback(async (type: string, stageId?: string): Promise<string> => {
-    const targetStageId = stageId || activeStageId;
-    const newBlockId = `block-${type}-${Date.now()}`;
-    
-    const newBlock: EditorBlock = {
-      id: newBlockId,
-      type: type as any,
-      content: {
-        text: `Novo bloco ${type}`,
-      },
-      properties: {},
-      order: currentBlocks.length,
-    };
+  const addBlock = useCallback(
+    async (type: string, stageId?: string): Promise<string> => {
+      const targetStageId = stageId || activeStageId;
+      const newBlockId = `block-${type}-${Date.now()}`;
 
-    setStageBlocks(prev => ({
-      ...prev,
-      [targetStageId]: [...(prev[targetStageId] || []), newBlock],
-    }));
+      const newBlock: EditorBlock = {
+        id: newBlockId,
+        type: type as any,
+        content: {
+          text: `Novo bloco ${type}`,
+        },
+        properties: {},
+        order: currentBlocks.length,
+      };
 
-    console.log('✅ Bloco adicionado:', newBlockId, 'tipo:', type);
-    return newBlockId;
-  }, [activeStageId, currentBlocks.length]);
+      setStageBlocks(prev => ({
+        ...prev,
+        [targetStageId]: [...(prev[targetStageId] || []), newBlock],
+      }));
 
-  const updateBlock = useCallback(async (blockId: string, updates: Partial<EditorBlock>): Promise<void> => {
-    setStageBlocks(prev => {
-      const newStageBlocks = { ...prev };
-      
-      for (const stageId in newStageBlocks) {
-        const blocks = newStageBlocks[stageId];
-        const blockIndex = blocks.findIndex(b => b.id === blockId);
-        
-        if (blockIndex >= 0) {
+      console.log('✅ Bloco adicionado:', newBlockId, 'tipo:', type);
+      return newBlockId;
+    },
+    [activeStageId, currentBlocks.length]
+  );
+
+  const updateBlock = useCallback(
+    async (blockId: string, updates: Partial<EditorBlock>): Promise<void> => {
+      setStageBlocks(prev => {
+        const newStageBlocks = { ...prev };
+
+        for (const stageId in newStageBlocks) {
+          const blocks = newStageBlocks[stageId];
+          const blockIndex = blocks.findIndex(b => b.id === blockId);
+
+          if (blockIndex >= 0) {
             newStageBlocks[stageId] = [
               ...blocks.slice(0, blockIndex),
-              { 
-                ...blocks[blockIndex], 
+              {
+                ...blocks[blockIndex],
                 ...updates,
               },
               ...blocks.slice(blockIndex + 1),
             ];
-          break;
+            break;
+          }
         }
-      }
-      
-      return newStageBlocks;
-    });
-    
-    console.log('✅ Bloco atualizado:', blockId);
-  }, []);
 
-  const deleteBlock = useCallback(async (blockId: string): Promise<void> => {
-    setStageBlocks(prev => {
-      const newStageBlocks = { ...prev };
-      
-      for (const stageId in newStageBlocks) {
-        newStageBlocks[stageId] = newStageBlocks[stageId].filter(b => b.id !== blockId);
-      }
-      
-      return newStageBlocks;
-    });
-
-    if (selectedBlockId === blockId) {
-      setSelectedBlockId(null);
-    }
-
-    console.log('✅ Bloco deletado:', blockId);
-  }, [selectedBlockId]);
-
-  const addBlockAtPosition = useCallback(async (type: string, position: number, stageId?: string): Promise<string> => {
-    const targetStageId = stageId || activeStageId;
-    const newBlockId = `block-${type}-${Date.now()}`;
-    
-    const newBlock: EditorBlock = {
-      id: newBlockId,
-      type: type as any,
-      content: {
-        text: `Novo bloco ${type}`,
-      },
-      properties: {},
-      order: position,
-    };
-
-    setStageBlocks(prev => {
-      const existingBlocks = prev[targetStageId] || [];
-      const newBlocks = [...existingBlocks];
-      newBlocks.splice(position, 0, newBlock);
-      
-      // Reordenar os orders
-      newBlocks.forEach((block, index) => {
-        block.order = index;
+        return newStageBlocks;
       });
 
-      return {
-        ...prev,
-        [targetStageId]: newBlocks,
-      };
-    });
+      console.log('✅ Bloco atualizado:', blockId);
+    },
+    []
+  );
 
-    console.log('✅ Bloco adicionado na posição:', position, 'ID:', newBlockId, 'tipo:', type);
-    return newBlockId;
-  }, [activeStageId]);
+  const deleteBlock = useCallback(
+    async (blockId: string): Promise<void> => {
+      setStageBlocks(prev => {
+        const newStageBlocks = { ...prev };
 
-  const reorderBlocks = useCallback(async (blockIds: string[], stageId?: string): Promise<void> => {
-    const targetStageId = stageId || activeStageId;
-    
-    setStageBlocks(prev => {
-      const existingBlocks = prev[targetStageId] || [];
-      const reorderedBlocks = blockIds.map(id => {
-        const block = existingBlocks.find(b => b.id === id);
-        return block;
-      }).filter(Boolean) as EditorBlock[];
+        for (const stageId in newStageBlocks) {
+          newStageBlocks[stageId] = newStageBlocks[stageId].filter(b => b.id !== blockId);
+        }
 
-      // Atualizar ordem
-      reorderedBlocks.forEach((block, index) => {
-        block.order = index;
+        return newStageBlocks;
       });
 
-      return {
-        ...prev,
-        [targetStageId]: reorderedBlocks,
-      };
-    });
+      if (selectedBlockId === blockId) {
+        setSelectedBlockId(null);
+      }
 
-    console.log('✅ Blocos reordenados:', blockIds.length);
-  }, [activeStageId]);
+      console.log('✅ Bloco deletado:', blockId);
+    },
+    [selectedBlockId]
+  );
+
+  const addBlockAtPosition = useCallback(
+    async (type: string, position: number, stageId?: string): Promise<string> => {
+      const targetStageId = stageId || activeStageId;
+      const newBlockId = `block-${type}-${Date.now()}`;
+
+      const newBlock: EditorBlock = {
+        id: newBlockId,
+        type: type as any,
+        content: {
+          text: `Novo bloco ${type}`,
+        },
+        properties: {},
+        order: position,
+      };
+
+      setStageBlocks(prev => {
+        const existingBlocks = prev[targetStageId] || [];
+        const newBlocks = [...existingBlocks];
+        newBlocks.splice(position, 0, newBlock);
+
+        // Reordenar os orders
+        newBlocks.forEach((block, index) => {
+          block.order = index;
+        });
+
+        return {
+          ...prev,
+          [targetStageId]: newBlocks,
+        };
+      });
+
+      console.log('✅ Bloco adicionado na posição:', position, 'ID:', newBlockId, 'tipo:', type);
+      return newBlockId;
+    },
+    [activeStageId]
+  );
+
+  const reorderBlocks = useCallback(
+    async (blockIds: string[], stageId?: string): Promise<void> => {
+      const targetStageId = stageId || activeStageId;
+
+      setStageBlocks(prev => {
+        const existingBlocks = prev[targetStageId] || [];
+        const reorderedBlocks = blockIds
+          .map(id => {
+            const block = existingBlocks.find(b => b.id === id);
+            return block;
+          })
+          .filter(Boolean) as EditorBlock[];
+
+        // Atualizar ordem
+        reorderedBlocks.forEach((block, index) => {
+          block.order = index;
+        });
+
+        return {
+          ...prev,
+          [targetStageId]: reorderedBlocks,
+        };
+      });
+
+      console.log('✅ Blocos reordenados:', blockIds.length);
+    },
+    [activeStageId]
+  );
 
   const saveFunnel = useCallback(async (): Promise<{ success: boolean; error?: string }> => {
     console.log('💾 Salvando funil...');
@@ -257,7 +278,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     stages,
     activeStageId,
     selectedBlockId,
-    
+
     uiState: {
       isPreviewing,
       setIsPreviewing,
@@ -295,9 +316,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   });
 
   return (
-    <SimpleEditorContext.Provider value={contextValue}>
-      {children}
-    </SimpleEditorContext.Provider>
+    <SimpleEditorContext.Provider value={contextValue}>{children}</SimpleEditorContext.Provider>
   );
 };
 

@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { BlockComponentProps } from '@/types/blocks';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 /**
  * TextInlineBlock - Componente modular inline horizontal

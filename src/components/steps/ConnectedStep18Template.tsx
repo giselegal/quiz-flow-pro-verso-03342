@@ -7,30 +7,33 @@ import { COMPLETE_QUIZ_QUESTIONS } from '@/data/correctQuizQuestions';
 
 export const ConnectedStep18Template = () => {
   const { answerStrategicQuestion, strategicAnswers } = useQuizLogic();
-  
+
   // 🎯 Buscar questão estratégica real dos dados
   const questionData = COMPLETE_QUIZ_QUESTIONS.find(q => q.id === 'strategic6');
-  
-  const handleOptionSelect = useCallback(async (optionIds: string[]) => {
-    try {
-      const selectedOption = questionData?.options.find((opt: any) => optionIds.includes(opt.id));
-      if (selectedOption) {
-        await answerStrategicQuestion(
-          questionData?.id || '', 
-          selectedOption.id,
-          (selectedOption as any).category || 'desired-outcome',
-          (selectedOption as any).strategicType || 'goal-analysis'
-        );
-        
-        console.log('✅ Connected Step18: Resposta estratégica salva', { 
-          questionId: questionData?.id, 
-          selectedOptions: optionIds 
-        });
+
+  const handleOptionSelect = useCallback(
+    async (optionIds: string[]) => {
+      try {
+        const selectedOption = questionData?.options.find((opt: any) => optionIds.includes(opt.id));
+        if (selectedOption) {
+          await answerStrategicQuestion(
+            questionData?.id || '',
+            selectedOption.id,
+            (selectedOption as any).category || 'desired-outcome',
+            (selectedOption as any).strategicType || 'goal-analysis'
+          );
+
+          console.log('✅ Connected Step18: Resposta estratégica salva', {
+            questionId: questionData?.id,
+            selectedOptions: optionIds,
+          });
+        }
+      } catch (error) {
+        console.error('❌ Connected Step18: Erro ao salvar resposta estratégica', error);
       }
-    } catch (error) {
-      console.error('❌ Connected Step18: Erro ao salvar resposta estratégica', error);
-    }
-  }, [answerStrategicQuestion, questionData]);
+    },
+    [answerStrategicQuestion, questionData]
+  );
 
   return [
     // 📱 CABEÇALHO COM LOGO E PROGRESSO
@@ -38,7 +41,8 @@ export const ConnectedStep18Template = () => {
       id: 'step18-header',
       type: 'quiz-intro-header',
       properties: {
-        logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+        logoUrl:
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
         logoAlt: 'Logo Gisele Galvão',
         logoWidth: 96,
         logoHeight: 96,
@@ -56,7 +60,9 @@ export const ConnectedStep18Template = () => {
       id: 'step18-question-title',
       type: 'text-inline',
       properties: {
-        content: questionData?.text || 'Qual desses resultados você mais gostaria de alcançar com os Guias de Estilo e Imagem?',
+        content:
+          questionData?.text ||
+          'Qual desses resultados você mais gostaria de alcançar com os Guias de Estilo e Imagem?',
         fontSize: 'text-2xl',
         fontWeight: 'font-bold',
         textAlign: 'text-center',
@@ -74,7 +80,7 @@ export const ConnectedStep18Template = () => {
       type: 'options-grid',
       properties: {
         questionId: questionData?.id,
-        
+
         // 🎯 OPÇÕES ESTRATÉGICAS REAIS
         options: (questionData?.options || []).map((option: any) => ({
           id: option.id,
@@ -88,7 +94,7 @@ export const ConnectedStep18Template = () => {
           spacing: 'small',
           marginBottom: 0,
         })),
-        
+
         // 🎨 LAYOUT QUESTÕES ESTRATÉGICAS (1 coluna)
         columns: 1,
         showImages: false,
@@ -104,7 +110,9 @@ export const ConnectedStep18Template = () => {
         onSelectionChange: handleOptionSelect,
 
         // 📊 STATUS CONECTADO
-        currentSelections: strategicAnswers.filter(a => a.questionId === questionData?.id).map(a => a.optionId) || [],
+        currentSelections:
+          strategicAnswers.filter(a => a.questionId === questionData?.id).map(a => a.optionId) ||
+          [],
         isLoading: false,
       },
     },
@@ -140,7 +148,7 @@ export const ConnectedStep18Template = () => {
         // 🔗 HANDLER MANUAL
         onClick: () => {
           console.log('🎯 Connected Step18: Usuário clicou para avançar manualmente');
-        }
+        },
       },
     },
   ];

@@ -92,13 +92,13 @@ export const getOptimizedContainerClasses = (
 Todos os componentes agora importam:
 
 ```typescript
-import { getOptimizedContainerClasses } from "@/config/containerConfig";
+import { getOptimizedContainerClasses } from '@/config/containerConfig';
 ```
 
 #### **Uso Padrão:**
 
 ```typescript
-const containerClasses = getOptimizedContainerClasses(deviceView, "tight", "full", className);
+const containerClasses = getOptimizedContainerClasses(deviceView, 'tight', 'full', className);
 ```
 
 ---

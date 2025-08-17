@@ -2,7 +2,7 @@
 
 /**
  * Quiz Quest Implementation Verification
- * 
+ *
  * This script verifies the implementation against the checklist requirements
  */
 
@@ -16,9 +16,7 @@ console.log('=========================================================\n');
 
 // Test 1: Core Interfaces
 console.log('📋 1. CHECKING CORE INTERFACES...');
-const coreTypes = [
-  'src/types/quizCore.ts',
-];
+const coreTypes = ['src/types/quizCore.ts'];
 
 let interfaceChecks = 0;
 let totalInterfaces = 8; // Quiz, Template, Block, Step, Option, Result, QuizState, QuizNavigation
@@ -26,9 +24,18 @@ let totalInterfaces = 8; // Quiz, Template, Block, Step, Option, Result, QuizSta
 coreTypes.forEach(typePath => {
   if (fs.existsSync(path.join(baseDir, typePath))) {
     const content = fs.readFileSync(path.join(baseDir, typePath), 'utf8');
-    
+
     // Check for required interfaces
-    const interfaces = ['Quiz', 'Template', 'Block', 'Step', 'Option', 'Result', 'QuizState', 'QuizNavigation'];
+    const interfaces = [
+      'Quiz',
+      'Template',
+      'Block',
+      'Step',
+      'Option',
+      'Result',
+      'QuizState',
+      'QuizNavigation',
+    ];
     interfaces.forEach(interfaceName => {
       if (content.includes(`interface ${interfaceName}`)) {
         console.log(`  ✅ Interface ${interfaceName} defined`);
@@ -75,15 +82,9 @@ console.log('🧱 3. CHECKING QUIZ BLOCK REGISTRY...');
 const registryFile = 'src/components/editor/quiz/QuizBlockRegistry.tsx';
 if (fs.existsSync(path.join(baseDir, registryFile))) {
   const content = fs.readFileSync(path.join(baseDir, registryFile), 'utf8');
-  
-  const requiredBlocks = [
-    'quiz-intro-header',
-    'options-grid', 
-    'form-container',
-    'button',
-    'text'
-  ];
-  
+
+  const requiredBlocks = ['quiz-intro-header', 'options-grid', 'form-container', 'button', 'text'];
+
   let blockChecks = 0;
   requiredBlocks.forEach(block => {
     if (content.includes(`'${block}':`)) {
@@ -93,7 +94,7 @@ if (fs.existsSync(path.join(baseDir, registryFile))) {
       console.log(`  ❌ Block type '${block}' missing`);
     }
   });
-  
+
   console.log(`\n📊 Block Registry: ${blockChecks}/${requiredBlocks.length} complete\n`);
 } else {
   console.log(`  ❌ Registry file missing: ${registryFile}\n`);
@@ -104,7 +105,7 @@ console.log('📋 4. CHECKING TEMPLATE INTEGRATION...');
 const templateFile = 'src/templates/quiz21StepsComplete.ts';
 if (fs.existsSync(path.join(baseDir, templateFile))) {
   const content = fs.readFileSync(path.join(baseDir, templateFile), 'utf8');
-  
+
   // Check for step coverage
   const stepChecks = [];
   for (let i = 1; i <= 21; i++) {
@@ -113,10 +114,10 @@ if (fs.existsSync(path.join(baseDir, templateFile))) {
       stepChecks.push(i);
     }
   }
-  
+
   console.log(`  ✅ Template has ${stepChecks.length}/21 steps defined`);
   console.log(`  ✅ Template exports QUIZ_STYLE_21_STEPS_TEMPLATE`);
-  
+
   console.log(`\n📊 Template: ${stepChecks.length >= 20 ? 'Complete' : 'Partial'}\n`);
 } else {
   console.log(`  ❌ Template file missing: ${templateFile}\n`);
@@ -127,16 +128,16 @@ console.log('🚀 5. CHECKING EXAMPLE IMPLEMENTATION...');
 const exampleFile = 'src/components/quiz/QuizFlow.tsx';
 if (fs.existsSync(path.join(baseDir, exampleFile))) {
   const content = fs.readFileSync(path.join(baseDir, exampleFile), 'utf8');
-  
+
   const features = [
     'useQuizState',
-    'useQuizNavigation', 
+    'useQuizNavigation',
     'useQuizValidation',
     'useQuizAnalytics',
     'renderQuizBlock',
-    'QUIZ_STYLE_21_STEPS_TEMPLATE'
+    'QUIZ_STYLE_21_STEPS_TEMPLATE',
   ];
-  
+
   let featureChecks = 0;
   features.forEach(feature => {
     if (content.includes(feature)) {
@@ -146,7 +147,7 @@ if (fs.existsSync(path.join(baseDir, exampleFile))) {
       console.log(`  ❌ Missing ${feature}`);
     }
   });
-  
+
   console.log(`\n📊 Implementation: ${featureChecks}/${features.length} features\n`);
 } else {
   console.log(`  ❌ Example implementation missing: ${exampleFile}\n`);
@@ -155,13 +156,19 @@ if (fs.existsSync(path.join(baseDir, exampleFile))) {
 // Summary
 console.log('📈 IMPLEMENTATION SUMMARY');
 console.log('========================');
-console.log(`✅ Core Interfaces: ${interfaceChecks}/${totalInterfaces} (${Math.round(interfaceChecks/totalInterfaces*100)}%)`);
-console.log(`✅ Core Hooks: ${hookChecks}/${hooks.length} (${Math.round(hookChecks/hooks.length*100)}%)`);
+console.log(
+  `✅ Core Interfaces: ${interfaceChecks}/${totalInterfaces} (${Math.round((interfaceChecks / totalInterfaces) * 100)}%)`
+);
+console.log(
+  `✅ Core Hooks: ${hookChecks}/${hooks.length} (${Math.round((hookChecks / hooks.length) * 100)}%)`
+);
 console.log(`✅ Build Status: ✅ Compiles without errors`);
 console.log(`✅ Template Integration: ✅ Complete`);
 console.log(`✅ Example Implementation: ✅ Available`);
 
-const overallProgress = Math.round(((interfaceChecks/totalInterfaces) + (hookChecks/hooks.length) + 1 + 1 + 1) / 5 * 100);
+const overallProgress = Math.round(
+  ((interfaceChecks / totalInterfaces + hookChecks / hooks.length + 1 + 1 + 1) / 5) * 100
+);
 console.log(`\n🎯 Overall Progress: ${overallProgress}% Complete`);
 
 if (overallProgress >= 80) {

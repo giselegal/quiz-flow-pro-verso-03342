@@ -24,7 +24,7 @@ const stepBlocks = blocks.filter(block => {
   if (block.stepId) {
     return block.stepId === selectedStepId; // APENAS da etapa atual
   }
-  return selectedStepId === "etapa-1"; // Fallback
+  return selectedStepId === 'etapa-1'; // Fallback
 });
 ```
 
@@ -34,7 +34,7 @@ const stepBlocks = blocks.filter(block => {
 // SEMPRE carregar stepTemplateService primeiro
 const serviceSteps = stepTemplateService.getAllSteps();
 setSteps(serviceSteps);
-setSelectedStepId("etapa-1");
+setSelectedStepId('etapa-1');
 
 // Supabase opcional em background
 ```

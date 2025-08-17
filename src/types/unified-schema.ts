@@ -1,12 +1,12 @@
 /**
  * UNIFIED SCHEMA - Based on real Supabase database structure
- * 
+ *
  * This file consolidates all database schemas into a single source of truth,
  * eliminating conflicts between multiple schema files and ensuring consistency.
- * 
+ *
  * Based on actual Supabase tables:
  * - component_instances
- * - component_types  
+ * - component_types
  * - funnel_pages
  * - funnels
  * - profiles
@@ -100,7 +100,7 @@ export const FunnelPageSchema = z.object({
   id: z.string().uuid('Invalid page ID format'),
   funnel_id: z.string().uuid('Invalid funnel ID format'),
   page_type: z.enum(['intro', 'question', 'result', 'lead_form', 'transition'], {
-    errorMap: () => ({ message: 'Invalid page type' })
+    errorMap: () => ({ message: 'Invalid page type' }),
   }),
   page_order: z.number().int().min(0, 'Page order must be non-negative'),
   title: z.string().max(255, 'Title too long').optional().nullable(),
@@ -151,9 +151,12 @@ export const QuizSessionSchema = z.object({
   quiz_user_id: z.string().uuid('Invalid quiz user ID format'),
   current_step: z.number().int().min(0, 'Current step must be non-negative').optional().nullable(),
   total_steps: z.number().int().min(0, 'Total steps must be non-negative').optional().nullable(),
-  status: z.enum(['active', 'completed', 'abandoned', 'paused'], {
-    errorMap: () => ({ message: 'Invalid session status' })
-  }).optional().nullable(),
+  status: z
+    .enum(['active', 'completed', 'abandoned', 'paused'], {
+      errorMap: () => ({ message: 'Invalid session status' }),
+    })
+    .optional()
+    .nullable(),
   score: z.number().min(0, 'Score must be non-negative').optional().nullable(),
   max_score: z.number().min(0, 'Max score must be non-negative').optional().nullable(),
   completed_at: z.string().datetime('Invalid date format').optional().nullable(),
@@ -164,19 +167,35 @@ export const QuizSessionSchema = z.object({
 // Enhanced block validation with specific types
 export const EditorBlockSchema = z.object({
   id: z.string().min(1, 'Block ID is required'),
-  type: z.enum([
-    'text', 'image', 'video', 'audio', 'button', 'input', 'select', 
-    'quiz-question', 'quiz-result', 'form', 'layout', 'divider'
-  ], {
-    errorMap: () => ({ message: 'Invalid block type' })
-  }),
+  type: z.enum(
+    [
+      'text',
+      'image',
+      'video',
+      'audio',
+      'button',
+      'input',
+      'select',
+      'quiz-question',
+      'quiz-result',
+      'form',
+      'layout',
+      'divider',
+    ],
+    {
+      errorMap: () => ({ message: 'Invalid block type' }),
+    }
+  ),
   properties: z.record(z.any()).default({}),
   styling: z.record(z.any()).optional(),
   order: z.number().int().min(0, 'Order must be non-negative'),
 });
 
 // Runtime validation functions with better error handling
-export const safeValidate = <T>(schema: z.ZodSchema<T>, data: unknown): {
+export const safeValidate = <T>(
+  schema: z.ZodSchema<T>,
+  data: unknown
+): {
   success: boolean;
   data?: T;
   error?: string;
@@ -190,9 +209,9 @@ export const safeValidate = <T>(schema: z.ZodSchema<T>, data: unknown): {
       return { success: false, error: errorMessage };
     }
   } catch (error) {
-    return { 
-      success: false, 
-      error: error instanceof Error ? error.message : 'Validation error' 
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Validation error',
     };
   }
 };
@@ -254,7 +273,9 @@ export const generateId = (): string => {
 };
 
 // Enhanced validation functions with proper error handling
-export const validateFunnel = (data: unknown): { valid: boolean; data?: Funnel; errors?: string[] } => {
+export const validateFunnel = (
+  data: unknown
+): { valid: boolean; data?: Funnel; errors?: string[] } => {
   const result = safeValidate(FunnelSchema, data);
   if (result.success) {
     return { valid: true, data: result.data as Funnel };
@@ -262,7 +283,9 @@ export const validateFunnel = (data: unknown): { valid: boolean; data?: Funnel; 
   return { valid: false, errors: [result.error || 'Validation failed'] };
 };
 
-export const validateFunnelPage = (data: unknown): { valid: boolean; data?: FunnelPage; errors?: string[] } => {
+export const validateFunnelPage = (
+  data: unknown
+): { valid: boolean; data?: FunnelPage; errors?: string[] } => {
   const result = safeValidate(FunnelPageSchema, data);
   if (result.success) {
     return { valid: true, data: result.data as FunnelPage };
@@ -270,7 +293,9 @@ export const validateFunnelPage = (data: unknown): { valid: boolean; data?: Funn
   return { valid: false, errors: [result.error || 'Validation failed'] };
 };
 
-export const validateQuizUser = (data: unknown): { valid: boolean; data?: QuizUser; errors?: string[] } => {
+export const validateQuizUser = (
+  data: unknown
+): { valid: boolean; data?: QuizUser; errors?: string[] } => {
   const result = safeValidate(QuizUserSchema, data);
   if (result.success) {
     return { valid: true, data: result.data as QuizUser };
@@ -278,7 +303,9 @@ export const validateQuizUser = (data: unknown): { valid: boolean; data?: QuizUs
   return { valid: false, errors: [result.error || 'Validation failed'] };
 };
 
-export const validateQuizSession = (data: unknown): { valid: boolean; data?: QuizSession; errors?: string[] } => {
+export const validateQuizSession = (
+  data: unknown
+): { valid: boolean; data?: QuizSession; errors?: string[] } => {
   const result = safeValidate(QuizSessionSchema, data);
   if (result.success) {
     return { valid: true, data: result.data as QuizSession };
@@ -286,7 +313,9 @@ export const validateQuizSession = (data: unknown): { valid: boolean; data?: Qui
   return { valid: false, errors: [result.error || 'Validation failed'] };
 };
 
-export const validateEditorBlock = (data: unknown): { valid: boolean; data?: EditorBlock; errors?: string[] } => {
+export const validateEditorBlock = (
+  data: unknown
+): { valid: boolean; data?: EditorBlock; errors?: string[] } => {
   const result = safeValidate(EditorBlockSchema, data);
   if (result.success) {
     return { valid: true, data: result.data as EditorBlock };

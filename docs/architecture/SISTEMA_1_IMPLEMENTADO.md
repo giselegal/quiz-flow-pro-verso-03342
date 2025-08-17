@@ -97,9 +97,9 @@ const optionId = `option-${Date.now()}`; // "option-1691234567890"
 ```typescript
 // ✅ ID semântico e reproduzível
 const optionId = generateSemanticId({
-  context: "quiz",
-  type: "option",
-  identifier: "classico",
+  context: 'quiz',
+  type: 'option',
+  identifier: 'classico',
   index: 1,
 }); // "quiz-option-classico-1"
 ```
@@ -108,10 +108,10 @@ const optionId = generateSemanticId({
 
 ```typescript
 // ✅ Sistema automático de numeração
-duplicateBlock("quiz-option-classico-1");
+duplicateBlock('quiz-option-classico-1');
 // Resultado: "quiz-option-classico-1-copia"
 
-duplicateBlock("quiz-option-classico-1-copia");
+duplicateBlock('quiz-option-classico-1-copia');
 // Resultado: "quiz-option-classico-1-copia-2"
 ```
 

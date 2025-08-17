@@ -1,11 +1,11 @@
 import { supabase } from '@/integrations/supabase/client';
-import { 
-  type InsertFunnel, 
+import {
+  type InsertFunnel,
   type InsertFunnelPage,
   type UpdateFunnel,
   type AutoSaveState,
   type FunnelVersion,
-  generateId
+  generateId,
 } from '@/types/unified-schema';
 
 export interface SchemaDrivenFunnelData {
@@ -95,7 +95,10 @@ export const schemaDrivenFunnelService = {
     }
   },
 
-  async updateFunnel(id: string, updates: Partial<SchemaDrivenFunnelData>): Promise<SchemaDrivenFunnelData | null> {
+  async updateFunnel(
+    id: string,
+    updates: Partial<SchemaDrivenFunnelData>
+  ): Promise<SchemaDrivenFunnelData | null> {
     try {
       const {
         data: { user },
@@ -301,7 +304,10 @@ export const schemaDrivenFunnelService = {
     }
   },
 
-  async createPage(funnelId: string, page: Partial<SchemaDrivenPageData>): Promise<SchemaDrivenPageData | null> {
+  async createPage(
+    funnelId: string,
+    page: Partial<SchemaDrivenPageData>
+  ): Promise<SchemaDrivenPageData | null> {
     try {
       const {
         data: { user },

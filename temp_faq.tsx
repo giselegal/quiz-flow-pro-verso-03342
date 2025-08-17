@@ -15,7 +15,7 @@ const FAQBlock: React.FC<FAQBlockProps> = ({
   const getCardStyleClasses = (isHighlight: boolean = false) => {
     const baseClasses = 'transition-all duration-300 cursor-pointer';
     let styleClasses = '';
-    
+
     switch (cardStyle) {
       case 'modern':
       default:

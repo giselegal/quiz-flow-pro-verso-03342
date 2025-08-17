@@ -92,18 +92,18 @@ interface QuizStep {
 
 export const STAGE_PROPERTY_DEFINITIONS = {
   intro: [
-    { key: "title", type: "text", label: "Título da Introdução" },
-    { key: "description", type: "textarea", label: "Descrição" },
-    { key: "backgroundImage", type: "image", label: "Imagem de Fundo" },
+    { key: 'title', type: 'text', label: 'Título da Introdução' },
+    { key: 'description', type: 'textarea', label: 'Descrição' },
+    { key: 'backgroundImage', type: 'image', label: 'Imagem de Fundo' },
   ],
   question: [
-    { key: "questionText", type: "textarea", label: "Texto da Pergunta" },
-    { key: "questionType", type: "select", label: "Tipo de Pergunta" },
-    { key: "options", type: "array", label: "Opções de Resposta" },
+    { key: 'questionText', type: 'textarea', label: 'Texto da Pergunta' },
+    { key: 'questionType', type: 'select', label: 'Tipo de Pergunta' },
+    { key: 'options', type: 'array', label: 'Opções de Resposta' },
   ],
   result: [
-    { key: "resultTemplate", type: "select", label: "Template do Resultado" },
-    { key: "showScores", type: "switch", label: "Exibir Pontuações" },
+    { key: 'resultTemplate', type: 'select', label: 'Template do Resultado' },
+    { key: 'showScores', type: 'switch', label: 'Exibir Pontuações' },
   ],
 };
 ```

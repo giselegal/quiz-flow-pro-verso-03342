@@ -54,8 +54,8 @@ templateBlocks: getTemplateByStep(stepTemplate.stepNumber)?.templateFunction()
 ```typescript
 // Apenas ~30 componentes registrados:
 export const ENHANCED_BLOCK_REGISTRY = {
-  "text-inline": TextInlineBlock,
-  "heading-inline": HeadingInlineBlock,
+  'text-inline': TextInlineBlock,
+  'heading-inline': HeadingInlineBlock,
   // Faltam muitos tipos que os templates usam!
 };
 ```
@@ -139,7 +139,7 @@ templateBlocks: await TemplateManager.loadStepBlocks(`step-${stepNumber}`);
 
 ```typescript
 // useUnifiedProperties precisa definir propriedades para:
--"quiz-intro-header" - "form-input" - "options-grid" - "decorative-bar-inline";
+-'quiz-intro-header' - 'form-input' - 'options-grid' - 'decorative-bar-inline';
 // ... todos os tipos
 ```
 

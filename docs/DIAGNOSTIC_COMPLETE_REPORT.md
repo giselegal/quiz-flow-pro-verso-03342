@@ -91,8 +91,8 @@ useEditorDiagnostics({
 
 ```typescript
 // Schedulers otimizados
-PerformanceOptimizer.schedule(callback, delay, "animation");
-PerformanceOptimizer.scheduleInterval(callback, delay, "animation");
+PerformanceOptimizer.schedule(callback, delay, 'animation');
+PerformanceOptimizer.scheduleInterval(callback, delay, 'animation');
 
 // Debounce inteligente
 PerformanceOptimizer.debounce(fn, delay, key);

@@ -38,7 +38,7 @@ Criei um **sistema JSON completo** para o seu `/editor-fixed` que:
 
 ```typescript
 // 1. Importar
-import { useEditorWithJson } from "@/components/editor-fixed/useEditorWithJson";
+import { useEditorWithJson } from '@/components/editor-fixed/useEditorWithJson';
 
 // 2. Usar no seu componente
 const [blocks, setBlocks] = useState<Block[]>([]);
@@ -70,7 +70,7 @@ await jsonFeatures.loadStepTemplate(5); // Pergunta específica
 await jsonFeatures.loadStepTemplate(21); // Resultado final
 
 // Carregar template customizado
-await jsonFeatures.loadCustomTemplate("/path/to/custom.json");
+await jsonFeatures.loadCustomTemplate('/path/to/custom.json');
 ```
 
 ### 💾 Export/Import
@@ -78,12 +78,12 @@ await jsonFeatures.loadCustomTemplate("/path/to/custom.json");
 ```typescript
 // Exportar configuração atual como JSON
 const template = jsonFeatures.exportCurrentAsTemplate({
-  name: "Meu Funil Personalizado",
-  category: "custom",
+  name: 'Meu Funil Personalizado',
+  category: 'custom',
 });
 
 // Salvar arquivo JSON automaticamente
-jsonFeatures.saveTemplateToFile(template, "meu-funil.json");
+jsonFeatures.saveTemplateToFile(template, 'meu-funil.json');
 ```
 
 ### 🔍 Validação & Debug
@@ -91,11 +91,11 @@ jsonFeatures.saveTemplateToFile(template, "meu-funil.json");
 ```typescript
 // Validar template
 const validation = jsonFeatures.validateCurrentTemplate();
-console.log("Válido:", validation.isValid);
+console.log('Válido:', validation.isValid);
 
 // Ver componentes disponíveis
 const components = jsonFeatures.getAvailableComponents();
-console.log("Total:", components.length);
+console.log('Total:', components.length);
 ```
 
 ---
@@ -108,10 +108,10 @@ O sistema se integra **perfeitamente** com seus componentes:
 
 ```typescript
 export const ENHANCED_BLOCK_REGISTRY = {
-  "quiz-intro-header": QuizIntroHeaderComponent,
-  "text-inline": TextInlineComponent,
-  "button-inline": ButtonInlineComponent,
-  "options-grid": OptionsGridComponent,
+  'quiz-intro-header': QuizIntroHeaderComponent,
+  'text-inline': TextInlineComponent,
+  'button-inline': ButtonInlineComponent,
+  'options-grid': OptionsGridComponent,
   // ... mais 290+ componentes
 };
 ```
@@ -174,16 +174,16 @@ export const ENHANCED_BLOCK_REGISTRY = {
 // Vira Block[] automaticamente:
 [
   {
-    id: "header-1",
-    type: "quiz-intro-header",
+    id: 'header-1',
+    type: 'quiz-intro-header',
     order: 0,
     content: {
-      logoUrl: "https://...",
+      logoUrl: 'https://...',
       progressValue: 5,
       showProgress: true,
     },
     properties: {
-      logoUrl: "https://...",
+      logoUrl: 'https://...',
       progressValue: 5,
       showProgress: true,
     },
@@ -198,7 +198,7 @@ export const ENHANCED_BLOCK_REGISTRY = {
 ### Teste Automático:
 
 ```typescript
-import JsonIntegrationTest from "@/components/editor-fixed/JsonIntegrationTest";
+import JsonIntegrationTest from '@/components/editor-fixed/JsonIntegrationTest';
 
 // Componente que testa:
 // ✅ Carregamento de templates
@@ -211,7 +211,7 @@ import JsonIntegrationTest from "@/components/editor-fixed/JsonIntegrationTest";
 ### Demo Completa:
 
 ```typescript
-import JsonSystemDemo from "@/components/editor-fixed/JsonSystemDemo";
+import JsonSystemDemo from '@/components/editor-fixed/JsonSystemDemo';
 
 // Demonstração com interface visual:
 // 🎯 Carregar qualquer das 21 etapas

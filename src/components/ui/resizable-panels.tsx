@@ -1,57 +1,53 @@
-import * as React from "react"
-import { DragHandleDots2Icon } from "@radix-ui/react-icons"
-import { cn } from "@/lib/utils"
+import * as React from 'react';
+import { DragHandleDots2Icon } from '@radix-ui/react-icons';
+import { cn } from '@/lib/utils';
 
 const ResizablePanelGroup = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & {
-    direction?: "horizontal" | "vertical"
+    direction?: 'horizontal' | 'vertical';
   }
->(({ className, direction = "horizontal", ...props }, ref) => (
+>(({ className, direction = 'horizontal', ...props }, ref) => (
   <div
     ref={ref}
-    className={cn(
-      "flex",
-      direction === "horizontal" ? "flex-row" : "flex-col",
-      className
-    )}
+    className={cn('flex', direction === 'horizontal' ? 'flex-row' : 'flex-col', className)}
     {...props}
   />
-))
-ResizablePanelGroup.displayName = "ResizablePanelGroup"
+));
+ResizablePanelGroup.displayName = 'ResizablePanelGroup';
 
 const ResizablePanel = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & {
-    defaultSize?: number
-    minSize?: number
-    maxSize?: number
+    defaultSize?: number;
+    minSize?: number;
+    maxSize?: number;
   }
 >(({ className, style, defaultSize, minSize, maxSize, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("relative", className)}
+    className={cn('relative', className)}
     style={{
-      flex: defaultSize ? `0 0 ${defaultSize}%` : "1",
+      flex: defaultSize ? `0 0 ${defaultSize}%` : '1',
       minWidth: minSize ? `${minSize}%` : undefined,
       maxWidth: maxSize ? `${maxSize}%` : undefined,
       ...style,
     }}
     {...props}
   />
-))
-ResizablePanel.displayName = "ResizablePanel"
+));
+ResizablePanel.displayName = 'ResizablePanel';
 
 const ResizableHandle = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & {
-    withHandle?: boolean
+    withHandle?: boolean;
   }
 >(({ className, withHandle = false, ...props }, ref) => (
   <div
     ref={ref}
     className={cn(
-      "relative flex w-px items-center justify-center bg-border after:absolute after:inset-y-0 after:left-1/2 after:w-1 after:-translate-x-1/2 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1 data-[panel-group-direction=vertical]:h-px data-[panel-group-direction=vertical]:w-full data-[panel-group-direction=vertical]:after:left-0 data-[panel-group-direction=vertical]:after:h-1 data-[panel-group-direction=vertical]:after:w-full data-[panel-group-direction=vertical]:after:-translate-y-1/2 data-[panel-group-direction=vertical]:after:translate-x-0 [&[data-panel-group-direction=vertical]>div]:rotate-90",
+      'relative flex w-px items-center justify-center bg-border after:absolute after:inset-y-0 after:left-1/2 after:w-1 after:-translate-x-1/2 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1 data-[panel-group-direction=vertical]:h-px data-[panel-group-direction=vertical]:w-full data-[panel-group-direction=vertical]:after:left-0 data-[panel-group-direction=vertical]:after:h-1 data-[panel-group-direction=vertical]:after:w-full data-[panel-group-direction=vertical]:after:-translate-y-1/2 data-[panel-group-direction=vertical]:after:translate-x-0 [&[data-panel-group-direction=vertical]>div]:rotate-90',
       className
     )}
     {...props}
@@ -62,7 +58,7 @@ const ResizableHandle = React.forwardRef<
       </div>
     )}
   </div>
-))
-ResizableHandle.displayName = "ResizableHandle"
+));
+ResizableHandle.displayName = 'ResizableHandle';
 
-export { ResizablePanelGroup, ResizablePanel, ResizableHandle }
+export { ResizablePanelGroup, ResizablePanel, ResizableHandle };

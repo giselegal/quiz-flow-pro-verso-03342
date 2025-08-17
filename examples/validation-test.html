@@ -76,23 +76,23 @@
 
     <script>
       // Configuração
-      document.getElementById("currentDate").textContent = new Date().toLocaleString("pt-BR");
+      document.getElementById('currentDate').textContent = new Date().toLocaleString('pt-BR');
 
       // Verificar servidor
       async function checkServer() {
         try {
-          const response = await fetch("/");
+          const response = await fetch('/');
           if (response.ok) {
-            document.getElementById("serverStatus").innerHTML =
+            document.getElementById('serverStatus').innerHTML =
               '<span class="status success">🟢 Online</span>';
             return true;
           } else {
-            document.getElementById("serverStatus").innerHTML =
+            document.getElementById('serverStatus').innerHTML =
               '<span class="status error">🔴 Resposta inválida</span>';
             return false;
           }
         } catch (error) {
-          document.getElementById("serverStatus").innerHTML =
+          document.getElementById('serverStatus').innerHTML =
             '<span class="status error">🔴 Offline</span>';
           return false;
         }
@@ -101,36 +101,36 @@
       // Lista de verificações
       const componentChecks = [
         {
-          name: "UniversalBlockRenderer implementado",
+          name: 'UniversalBlockRenderer implementado',
           test: () => window.fetch && window.Promise, // Proxy test
           critical: true,
         },
         {
-          name: "Componentes inline carregados",
+          name: 'Componentes inline carregados',
           test: () => true, // Assumindo que estão carregados
           critical: true,
         },
         {
-          name: "stepTemplateService funcional",
+          name: 'stepTemplateService funcional',
           test: () => true, // Assumindo que está funcional
           critical: true,
         },
         {
-          name: "Sistema de navegação entre etapas",
+          name: 'Sistema de navegação entre etapas',
           test: () => true, // Assumindo que está funcional
           critical: true,
         },
         {
-          name: "Editor responsivo carregando",
-          test: () => document.getElementById("editorFrame"),
+          name: 'Editor responsivo carregando',
+          test: () => document.getElementById('editorFrame'),
           critical: false,
         },
       ];
 
       // Executar verificações
       function runChecks() {
-        const container = document.getElementById("componentChecks");
-        let html = "<h3>🔍 Verificações do Sistema:</h3>";
+        const container = document.getElementById('componentChecks');
+        let html = '<h3>🔍 Verificações do Sistema:</h3>';
 
         let passedCritical = 0;
         let totalCritical = 0;
@@ -144,9 +144,9 @@
 
           html += `
                     <div class="component-item">
-                        <span class="status ${passed ? "success" : "error"}">${passed ? "✅" : "❌"}</span>
+                        <span class="status ${passed ? 'success' : 'error'}">${passed ? '✅' : '❌'}</span>
                         <strong>${check.name}</strong>
-                        ${check.critical ? '<span class="status warning">CRÍTICO</span>' : ""}
+                        ${check.critical ? '<span class="status warning">CRÍTICO</span>' : ''}
                     </div>
                 `;
         });
@@ -163,8 +163,8 @@
 
       // Monitorar carregamento do iframe
       function monitorEditor() {
-        const iframe = document.getElementById("editorFrame");
-        const resultsContainer = document.getElementById("validationResults");
+        const iframe = document.getElementById('editorFrame');
+        const resultsContainer = document.getElementById('validationResults');
 
         iframe.onload = function () {
           setTimeout(() => {
@@ -227,18 +227,18 @@
         const { passedCritical, totalCritical } = runChecks();
 
         if (serverOnline && passedCritical === totalCritical) {
-          console.log("✅ Todos os testes passaram - Sistema funcionando!");
+          console.log('✅ Todos os testes passaram - Sistema funcionando!');
           monitorEditor();
         } else {
-          console.log("⚠️ Alguns testes falharam - Verificação manual necessária");
+          console.log('⚠️ Alguns testes falharam - Verificação manual necessária');
         }
       }
 
       // Iniciar
       runAllTests();
 
-      console.log("🧪 Validação iniciada");
-      console.log("🎯 Para teste completo, navegue manualmente no editor");
+      console.log('🧪 Validação iniciada');
+      console.log('🎯 Para teste completo, navegue manualmente no editor');
     </script>
   </body>
 </html>

@@ -59,7 +59,7 @@ src/components/demo/SchemaDrivenDemo.tsx               ✅ ModernPropertiesPanel
 
 ```typescript
 // ✅ Todos os arquivos importam corretamente:
-import { ModernPropertiesPanel } from "./panels/ModernPropertiesPanel";
+import { ModernPropertiesPanel } from './panels/ModernPropertiesPanel';
 ```
 
 ### **⚙️ Funcionalidades Implementadas:**

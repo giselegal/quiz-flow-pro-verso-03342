@@ -98,12 +98,12 @@ Após análise detalhada dos dois painéis de propriedades, o **EnhancedUniversa
 
 ```typescript
 const categoryOrder = [
-  "content", // 📝 Conteúdo
-  "style", // 🎨 Aparência
-  "alignment", // 📐 Alinhamento
-  "behavior", // ⚙️ Comportamento
-  "scoring", // 🏆 Pontuação
-  "advanced", // 🔧 Avançado
+  'content', // 📝 Conteúdo
+  'style', // 🎨 Aparência
+  'alignment', // 📐 Alinhamento
+  'behavior', // ⚙️ Comportamento
+  'scoring', // 🏆 Pontuação
+  'advanced', // 🔧 Avançado
 ];
 ```
 
@@ -113,10 +113,10 @@ const categoryOrder = [
 
 ```typescript
 // Sistema de abas
-"content"; // Conteúdo
-"style"; // Estilo
-"layout"; // Layout
-"advanced"; // Avançado (behavior + advanced)
+'content'; // Conteúdo
+'style'; // Estilo
+'layout'; // Layout
+'advanced'; // Avançado (behavior + advanced)
 ```
 
 **4 abas (5 categorias internas)** 📋
@@ -228,7 +228,7 @@ onClick={() => {
 
 ```typescript
 // ❌ PROBLEMA: Estado declarado mas não usado
-const [previewMode, setPreviewMode] = useState<"desktop" | "tablet" | "mobile">("desktop");
+const [previewMode, setPreviewMode] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
 ```
 
 ### **3. Tipagem Fraca**

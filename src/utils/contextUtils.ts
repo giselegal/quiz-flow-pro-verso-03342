@@ -1,14 +1,11 @@
 // Safe context hook that provides fallback values
 import React from 'react';
 
-export const createSafeContext = <T,>(
-  contextName: string,
-  defaultValue?: T
-) => {
+export const createSafeContext = <T>(contextName: string, defaultValue?: T) => {
   const Context = React.createContext<T | undefined>(defaultValue);
-  
+
   const Provider = Context.Provider;
-  
+
   const useContext = (): T => {
     const context = React.useContext(Context);
     if (context === undefined && !defaultValue) {
@@ -18,16 +15,12 @@ export const createSafeContext = <T,>(
     }
     return context || defaultValue!;
   };
-  
+
   return { Provider, useContext, Context };
 };
 
 // Safe hook wrapper for existing contexts
-export const createSafeHook = <T,>(
-  hookFn: () => T,
-  fallbackValue: T,
-  hookName: string
-) => {
+export const createSafeHook = <T>(hookFn: () => T, fallbackValue: T, hookName: string) => {
   return (): T => {
     try {
       return hookFn();

@@ -7,7 +7,7 @@ import { COMPLETE_QUIZ_QUESTIONS } from '@/data/correctQuizQuestions';
 export const ConnectedStep12Template = () => {
   // 🎯 Buscar dados da transição
   const transitionData = COMPLETE_QUIZ_QUESTIONS.find(q => q.id === 'transition1');
-  
+
   const handleContinue = useCallback(() => {
     console.log('🎯 Connected Step12: Navegando para questões estratégicas');
   }, []);
@@ -18,7 +18,8 @@ export const ConnectedStep12Template = () => {
       id: 'step12-header',
       type: 'quiz-intro-header',
       properties: {
-        logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+        logoUrl:
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
         logoAlt: 'Logo Gisele Galvão',
         logoWidth: 96,
         logoHeight: 96,
@@ -66,7 +67,9 @@ export const ConnectedStep12Template = () => {
       id: 'step12-subtitle',
       type: 'text-inline',
       properties: {
-        content: (transitionData as any)?.subtitle || 'Queremos te fazer algumas perguntas que vão tornar sua experiência ainda mais completa.',
+        content:
+          (transitionData as any)?.subtitle ||
+          'Queremos te fazer algumas perguntas que vão tornar sua experiência ainda mais completa.',
         fontSize: 'text-xl',
         fontWeight: 'font-medium',
         textAlign: 'text-center',
@@ -82,7 +85,9 @@ export const ConnectedStep12Template = () => {
       id: 'step12-description',
       type: 'text-inline',
       properties: {
-        content: (transitionData as any)?.description || 'A ideia é simples: te ajudar a enxergar com mais clareza onde você está agora — e para onde pode ir com mais intenção, leveza e autenticidade.',
+        content:
+          (transitionData as any)?.description ||
+          'A ideia é simples: te ajudar a enxergar com mais clareza onde você está agora — e para onde pode ir com mais intenção, leveza e autenticidade.',
         fontSize: 'text-lg',
         fontWeight: 'font-normal',
         textAlign: 'text-center',
@@ -99,7 +104,9 @@ export const ConnectedStep12Template = () => {
       id: 'step12-call-to-action',
       type: 'text-inline',
       properties: {
-        content: (transitionData as any)?.callToAction || '💬 Responda com sinceridade. Isso é só entre você e a sua nova versão.',
+        content:
+          (transitionData as any)?.callToAction ||
+          '💬 Responda com sinceridade. Isso é só entre você e a sua nova versão.',
         fontSize: 'text-lg',
         fontWeight: 'font-medium',
         textAlign: 'text-center',
@@ -121,7 +128,7 @@ export const ConnectedStep12Template = () => {
         size: 'large',
         backgroundColor: '#B89B7A',
         textColor: '#ffffff',
-        
+
         // 🔗 SEMPRE HABILITADO (página de transição)
         disabled: false,
         requiresValidInput: false,

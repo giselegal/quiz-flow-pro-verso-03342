@@ -49,8 +49,8 @@ export const STEP_TEMPLATES_MAPPING = {
   1: {
     stepNumber: 1,
     templateFunction: getStep01Template,
-    name: "Introdução",
-    description: "Página inicial do quiz",
+    name: 'Introdução',
+    description: 'Página inicial do quiz',
   },
   // ... 20 mais
 };

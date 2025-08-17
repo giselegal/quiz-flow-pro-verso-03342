@@ -2,11 +2,11 @@
 const ComponenteAntes = () => (
   <OptimizedPropertiesPanel
     block={{
-      id: "test",
-      type: "button",
-      content: { text: "Click me", color: "blue", size: "large", disabled: false },
+      id: 'test',
+      type: 'button',
+      content: { text: 'Click me', color: 'blue', size: 'large', disabled: false },
     }}
-    blockDefinition={getBlockDefinition("button")}
+    blockDefinition={getBlockDefinition('button')}
     onUpdateBlock={(id, updates) => {
       console.log(id, updates);
     }}
@@ -18,16 +18,16 @@ const ComponenteAntes = () => (
 const ComponenteDepois = () => (
   <OptimizedPropertiesPanel
     block={{
-      id: "test",
-      type: "button",
+      id: 'test',
+      type: 'button',
       content: {
-        text: "Click me",
-        color: "blue",
-        size: "large",
+        text: 'Click me',
+        color: 'blue',
+        size: 'large',
         disabled: false,
       },
     }}
-    blockDefinition={getBlockDefinition("button")}
+    blockDefinition={getBlockDefinition('button')}
     onUpdateBlock={(id, updates) => {
       console.log(id, updates);
     }}

@@ -119,17 +119,17 @@ A animação funciona perfeitamente em:
 ### Biblioteca: **Framer Motion 11.13.1**
 
 ```tsx
-import { motion } from "framer-motion";
+import { motion } from 'framer-motion';
 ```
 
 ### Estrutura:
 
 ```tsx
 <motion.div>
-  {" "}
+  {' '}
   // Container principal
   <motion.div>
-    {" "}
+    {' '}
     // Logo com animação de brilho
     <Logo /> // Componente da logo
   </motion.div>

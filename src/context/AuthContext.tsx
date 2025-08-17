@@ -43,7 +43,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      console.log('🔑 AuthProvider: Estado de auth mudou:', { event: _event, hasSession: !!session });
+      console.log('🔑 AuthProvider: Estado de auth mudou:', {
+        event: _event,
+        hasSession: !!session,
+      });
       setSession(session);
 
       if (session?.user) {

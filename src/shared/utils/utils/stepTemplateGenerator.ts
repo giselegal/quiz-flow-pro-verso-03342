@@ -41,7 +41,7 @@ export const generateQuestionStepConfig = (config: QuestionConfig): StepConfig =
     maxSelections = 1,
     showImages = false,
     columns = 2,
-    options
+    options,
   } = config;
 
   const blocks: Block[] = [
@@ -51,14 +51,14 @@ export const generateQuestionStepConfig = (config: QuestionConfig): StepConfig =
       type: 'progress-inline' as BlockType,
       order: 1,
       content: {
-        title: 'Progress'
+        title: 'Progress',
       },
       properties: {
         currentStep: stepNumber - 1,
         totalSteps: 19,
         showPercentage: true,
-        marginBottom: 32
-      }
+        marginBottom: 32,
+      },
     },
     // Question header
     {
@@ -70,12 +70,12 @@ export const generateQuestionStepConfig = (config: QuestionConfig): StepConfig =
         level: 2,
         textAlign: 'center',
         fontSize: '1.75rem',
-        fontWeight: 'semibold'
+        fontWeight: 'semibold',
       },
       properties: {
-        marginBottom: description ? 16 : 32
-      }
-    }
+        marginBottom: description ? 16 : 32,
+      },
+    },
   ];
 
   // Optional description
@@ -87,12 +87,12 @@ export const generateQuestionStepConfig = (config: QuestionConfig): StepConfig =
       content: {
         text: description,
         textAlign: 'center',
-        fontSize: '1.1rem'
+        fontSize: '1.1rem',
       },
       properties: {
         color: 'hsl(var(--muted-foreground))',
-        marginBottom: 32
-      }
+        marginBottom: 32,
+      },
     });
   }
 
@@ -102,7 +102,7 @@ export const generateQuestionStepConfig = (config: QuestionConfig): StepConfig =
     type: 'options-grid' as BlockType,
     order: description ? 4 : 3,
     content: {
-      title: 'Options'
+      title: 'Options',
     },
     properties: {
       questionId,
@@ -112,8 +112,8 @@ export const generateQuestionStepConfig = (config: QuestionConfig): StepConfig =
       showImages,
       columns,
       options,
-      marginBottom: 32
-    }
+      marginBottom: 32,
+    },
   });
 
   // Next button
@@ -122,7 +122,7 @@ export const generateQuestionStepConfig = (config: QuestionConfig): StepConfig =
     type: 'button-inline' as BlockType,
     order: description ? 5 : 4,
     content: {
-      title: allowMultiple ? 'Continuar' : 'Próxima Questão'
+      title: allowMultiple ? 'Continuar' : 'Próxima Questão',
     },
     properties: {
       variant: 'default',
@@ -130,8 +130,8 @@ export const generateQuestionStepConfig = (config: QuestionConfig): StepConfig =
       action: 'next-step',
       disabled: true,
       requiresValidation: true,
-      validationTarget: `step-${stepNumber}-options-grid`
-    }
+      validationTarget: `step-${stepNumber}-options-grid`,
+    },
   });
 
   return {
@@ -141,7 +141,7 @@ export const generateQuestionStepConfig = (config: QuestionConfig): StepConfig =
     layout: 'vertical',
     spacing: 'md',
     padding: 'p-6',
-    blocks
+    blocks,
   };
 };
 
@@ -162,7 +162,7 @@ export const generateIntroStepConfig = (config: {
     description,
     features,
     ctaText = 'Começar Quiz',
-    image
+    image,
   } = config;
 
   const blocks: Block[] = [
@@ -175,12 +175,12 @@ export const generateIntroStepConfig = (config: {
         level: 1,
         textAlign: 'center',
         fontSize: 'clamp(2rem, 5vw, 3.5rem)',
-        fontWeight: 'bold'
+        fontWeight: 'bold',
       },
       properties: {
-        marginBottom: subtitle ? 16 : 24
-      }
-    }
+        marginBottom: subtitle ? 16 : 24,
+      },
+    },
   ];
 
   if (subtitle) {
@@ -191,12 +191,12 @@ export const generateIntroStepConfig = (config: {
       content: {
         text: subtitle,
         textAlign: 'center',
-        fontSize: '1.25rem'
+        fontSize: '1.25rem',
       },
       properties: {
         color: 'hsl(var(--muted-foreground))',
-        marginBottom: 24
-      }
+        marginBottom: 24,
+      },
     });
   }
 
@@ -209,13 +209,13 @@ export const generateIntroStepConfig = (config: {
         url: image,
         alt: 'Imagem ilustrativa',
         width: '400px',
-        height: '300px'
+        height: '300px',
       },
       properties: {
         borderRadius: 16,
         alignment: 'center',
-        marginBottom: 32
-      }
+        marginBottom: 32,
+      },
     });
   }
 
@@ -227,12 +227,12 @@ export const generateIntroStepConfig = (config: {
       content: {
         text: features.join('\n'),
         textAlign: 'center',
-        fontSize: '1.1rem'
+        fontSize: '1.1rem',
       },
       properties: {
         lineHeight: '1.8',
-        marginBottom: 40
-      }
+        marginBottom: 40,
+      },
     });
   }
 
@@ -244,12 +244,12 @@ export const generateIntroStepConfig = (config: {
       content: {
         text: description,
         textAlign: 'center',
-        fontSize: '1rem'
+        fontSize: '1rem',
       },
       properties: {
         color: 'hsl(var(--muted-foreground))',
-        marginBottom: 32
-      }
+        marginBottom: 32,
+      },
     });
   }
 
@@ -258,13 +258,13 @@ export const generateIntroStepConfig = (config: {
     type: 'button-inline' as BlockType,
     order: blocks.length + 1,
     content: {
-      title: ctaText
+      title: ctaText,
     },
     properties: {
       variant: 'default',
       size: 'lg',
-      action: 'next-step'
-    }
+      action: 'next-step',
+    },
   });
 
   return {
@@ -274,7 +274,7 @@ export const generateIntroStepConfig = (config: {
     layout: 'vertical',
     spacing: 'lg',
     padding: 'p-8',
-    blocks
+    blocks,
   };
 };
 
@@ -287,8 +287,8 @@ export const STANDARD_QUESTIONS = {
       { id: 'small', text: 'Pequeno (até 20m²)', value: 'small' },
       { id: 'medium', text: 'Médio (20-40m²)', value: 'medium' },
       { id: 'large', text: 'Grande (40-60m²)', value: 'large' },
-      { id: 'xlarge', text: 'Muito Grande (60m²+)', value: 'xlarge' }
-    ]
+      { id: 'xlarge', text: 'Muito Grande (60m²+)', value: 'xlarge' },
+    ],
   },
   8: {
     title: 'Como você pretende usar o espaço?',
@@ -301,7 +301,7 @@ export const STANDARD_QUESTIONS = {
       { id: 'work', text: 'Trabalhar/estudar', value: 'work' },
       { id: 'entertain', text: 'Receber visitas', value: 'entertain' },
       { id: 'family', text: 'Atividades familiares', value: 'family' },
-      { id: 'creative', text: 'Hobbies criativos', value: 'creative' }
-    ]
-  }
+      { id: 'creative', text: 'Hobbies criativos', value: 'creative' },
+    ],
+  },
 } as const;

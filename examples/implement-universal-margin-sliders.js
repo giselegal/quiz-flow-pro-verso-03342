@@ -1,23 +1,23 @@
 #!/usr/bin/env node
 
-const fs = require("fs");
-const path = require("path");
-const { execSync } = require("child_process");
+const fs = require('fs');
+const path = require('path');
+const { execSync } = require('child_process');
 
 /**
  * 🎛️ SCRIPT INTELIGENTE DE LOTE - CONTROLES DESLIZANTES UNIVERSAIS
  * Implementa controles de margem deslizantes para TODOS os componentes
  */
 
-console.log("🎛️ INICIANDO IMPLEMENTAÇÃO UNIVERSAL DE CONTROLES DESLIZANTES...\n");
+console.log('🎛️ INICIANDO IMPLEMENTAÇÃO UNIVERSAL DE CONTROLES DESLIZANTES...\n');
 
 // Configurações dos controles deslizantes
 const MARGIN_CONFIG = {
   ranges: {
-    marginTop: { min: -40, max: 100, step: 4, unit: "px", label: "Margem Superior" },
-    marginBottom: { min: -40, max: 100, step: 4, unit: "px", label: "Margem Inferior" },
-    marginLeft: { min: -40, max: 100, step: 4, unit: "px", label: "Margem Esquerda" },
-    marginRight: { min: -40, max: 100, step: 4, unit: "px", label: "Margem Direita" },
+    marginTop: { min: -40, max: 100, step: 4, unit: 'px', label: 'Margem Superior' },
+    marginBottom: { min: -40, max: 100, step: 4, unit: 'px', label: 'Margem Inferior' },
+    marginLeft: { min: -40, max: 100, step: 4, unit: 'px', label: 'Margem Esquerda' },
+    marginRight: { min: -40, max: 100, step: 4, unit: 'px', label: 'Margem Direita' },
   },
   defaultValues: {
     marginTop: 8,
@@ -77,28 +77,28 @@ const generateMarginClassFunction = `
 // Função para encontrar todos os arquivos de componentes
 function findComponentFiles() {
   const componentDirs = [
-    "src/components/blocks",
-    "src/components/quiz",
-    "src/components/templates",
-    "src/components/editor",
+    'src/components/blocks',
+    'src/components/quiz',
+    'src/components/templates',
+    'src/components/editor',
   ];
 
   let files = [];
 
   componentDirs.forEach(dir => {
     if (fs.existsSync(dir)) {
-      const found = walkDirectory(dir, [".tsx", ".ts"]);
+      const found = walkDirectory(dir, ['.tsx', '.ts']);
       files = files.concat(found);
     }
   });
 
   return files.filter(
     file =>
-      (!file.includes(".test.") &&
-        !file.includes(".spec.") &&
-        !file.includes("index.ts") &&
-        file.includes("Block")) ||
-      file.includes("Component")
+      (!file.includes('.test.') &&
+        !file.includes('.spec.') &&
+        !file.includes('index.ts') &&
+        file.includes('Block')) ||
+      file.includes('Component')
   );
 }
 
@@ -130,16 +130,16 @@ function walkDirectory(dir, extensions) {
 function updateComponent(filePath) {
   console.log(`🔧 Processando: ${path.relative(process.cwd(), filePath)}`);
 
-  let content = fs.readFileSync(filePath, "utf8");
+  let content = fs.readFileSync(filePath, 'utf8');
   let modified = false;
 
   // Verifica se já tem sistema de margem
   const hasMarginSystem =
-    content.includes("getMarginClass") ||
-    content.includes("marginTop") ||
-    content.includes("marginBottom") ||
-    content.includes("marginLeft") ||
-    content.includes("marginRight");
+    content.includes('getMarginClass') ||
+    content.includes('marginTop') ||
+    content.includes('marginBottom') ||
+    content.includes('marginLeft') ||
+    content.includes('marginRight');
 
   if (!hasMarginSystem) {
     console.log(`  ➕ Adicionando sistema de margem completo`);
@@ -150,7 +150,7 @@ function updateComponent(filePath) {
       const currentProps = destructuringMatch[1];
 
       // Adicionar margens se não existirem
-      if (!currentProps.includes("marginTop")) {
+      if (!currentProps.includes('marginTop')) {
         const newProps =
           currentProps.trim() +
           `,
@@ -170,25 +170,25 @@ function updateComponent(filePath) {
     }
 
     // Adicionar função getMarginClass
-    if (!content.includes("getMarginClass")) {
+    if (!content.includes('getMarginClass')) {
       const importSection =
-        content.indexOf("const ") !== -1
-          ? content.indexOf("const ")
-          : content.indexOf("function ") !== -1
-            ? content.indexOf("function ")
-            : content.indexOf("export");
+        content.indexOf('const ') !== -1
+          ? content.indexOf('const ')
+          : content.indexOf('function ') !== -1
+            ? content.indexOf('function ')
+            : content.indexOf('export');
 
       content =
         content.slice(0, importSection) +
         generateMarginClassFunction +
-        "\n\n" +
+        '\n\n' +
         content.slice(importSection);
       modified = true;
     }
 
     // Adicionar classes de margem no className principal
     const classNameMatch = content.match(/className=\{cn\(([\s\S]*?)\)\}/);
-    if (classNameMatch && !content.includes("getMarginClass(marginTop")) {
+    if (classNameMatch && !content.includes('getMarginClass(marginTop')) {
       const currentClasses = classNameMatch[1];
       const newClasses =
         currentClasses +
@@ -209,7 +209,7 @@ function updateComponent(filePath) {
   }
 
   // Atualizar função getMarginClass existente para versão completa
-  if (content.includes("getMarginClass") && !content.includes('type === "left"')) {
+  if (content.includes('getMarginClass') && !content.includes('type === "left"')) {
     console.log(`  🔄 Atualizando função getMarginClass para suporte completo`);
 
     content = content.replace(
@@ -232,7 +232,7 @@ function updateComponent(filePath) {
 // Função principal
 function main() {
   try {
-    console.log("🔍 Procurando componentes...\n");
+    console.log('🔍 Procurando componentes...\n');
 
     const componentFiles = findComponentFiles();
     console.log(`📁 Encontrados ${componentFiles.length} arquivos de componentes\n`);
@@ -252,30 +252,30 @@ function main() {
       }
     });
 
-    console.log("\n📊 RESULTADO DA IMPLEMENTAÇÃO:");
+    console.log('\n📊 RESULTADO DA IMPLEMENTAÇÃO:');
     console.log(`✅ Componentes atualizados: ${updatedCount}`);
     console.log(`ℹ️  Componentes já completos: ${skippedCount}`);
     console.log(`📁 Total processados: ${componentFiles.length}`);
 
     // Aplicar Prettier
-    console.log("\n🎨 Aplicando formatação Prettier...");
+    console.log('\n🎨 Aplicando formatação Prettier...');
     try {
       execSync('npx prettier --write "src/components/**/*.{ts,tsx}" --ignore-unknown', {
-        stdio: "inherit",
+        stdio: 'inherit',
       });
-      console.log("✅ Formatação aplicada com sucesso!");
+      console.log('✅ Formatação aplicada com sucesso!');
     } catch (error) {
-      console.log("⚠️  Erro na formatação Prettier:", error.message);
+      console.log('⚠️  Erro na formatação Prettier:', error.message);
     }
 
-    console.log("\n🎉 IMPLEMENTAÇÃO CONCLUÍDA!");
+    console.log('\n🎉 IMPLEMENTAÇÃO CONCLUÍDA!');
     console.log(
-      "🎛️  Todos os componentes agora possuem controles deslizantes de margem universais"
+      '🎛️  Todos os componentes agora possuem controles deslizantes de margem universais'
     );
-    console.log("📐 Suporte completo: marginTop, marginBottom, marginLeft, marginRight");
-    console.log("🎚️  Ranges: -40px a +100px com step de 4px");
+    console.log('📐 Suporte completo: marginTop, marginBottom, marginLeft, marginRight');
+    console.log('🎚️  Ranges: -40px a +100px com step de 4px');
   } catch (error) {
-    console.error("❌ ERRO CRÍTICO:", error.message);
+    console.error('❌ ERRO CRÍTICO:', error.message);
     process.exit(1);
   }
 }

@@ -125,9 +125,9 @@ Quando nenhum bloco está selecionado:
 
 ```typescript
 const isQuizQuestionBlock =
-  selectedBlock.type === "quiz-question-inline" ||
-  selectedBlock.type === "quiz-question-configurable" ||
-  selectedBlock.type.toLowerCase().includes("question");
+  selectedBlock.type === 'quiz-question-inline' ||
+  selectedBlock.type === 'quiz-question-configurable' ||
+  selectedBlock.type.toLowerCase().includes('question');
 ```
 
 #### Interface de Opções

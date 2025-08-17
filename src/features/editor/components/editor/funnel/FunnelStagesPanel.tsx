@@ -17,12 +17,18 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
 }) => {
   // Get stages from FunnelsContext (21 stages system)
   const { steps: stages } = useFunnels();
-  
+
   // Get editor functionality for blocks and UI (optional properties)
   const editorContext = useEditor();
   const activeStageId = editorContext.activeStageId || 'step-1';
-  const setActiveStage = editorContext.stageActions?.setActiveStage || (() => console.log('setActiveStage not available'));
-  const quizState = editorContext.quizState || { userName: '', answers: [], isQuizCompleted: false };
+  const setActiveStage =
+    editorContext.stageActions?.setActiveStage ||
+    (() => console.log('setActiveStage not available'));
+  const quizState = editorContext.quizState || {
+    userName: '',
+    answers: [],
+    isQuizCompleted: false,
+  };
 
   const handleAddStage = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -35,13 +41,13 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
       e.preventDefault();
       e.stopPropagation();
     }
-    
+
     // Extrair o número da etapa do stageId (por exemplo, 'step-3' -> 3)
     const stepNumber = parseInt(stageId.replace('step-', ''), 10);
-    
+
     if (!isNaN(stepNumber)) {
       console.log(`🔄 Carregando template para etapa ${stepNumber}`);
-      
+
       // Usar a função loadTemplateByStep do EditorContext
       try {
         if (editorContext.templateActions?.loadTemplateByStep) {
@@ -56,7 +62,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
         console.error(`❌ Erro ao carregar template para etapa ${stepNumber}:`, error);
       }
     }
-    
+
     setActiveStage(stageId);
     if (onStageSelect) {
       onStageSelect(stageId);
@@ -103,9 +109,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
         <CardTitle className="text-lg font-semibold flex items-center gap-2">
           Etapas do Funil
           <div className="ml-auto flex items-center gap-2">
-            <Badge variant="secondary">
-              {stages.length}/21
-            </Badge>
+            <Badge variant="secondary">{stages.length}/21</Badge>
             {/* ✅ NOVO: Indicador de progresso do quiz */}
             {quizState.userName && (
               <Badge variant="outline" className="text-xs">

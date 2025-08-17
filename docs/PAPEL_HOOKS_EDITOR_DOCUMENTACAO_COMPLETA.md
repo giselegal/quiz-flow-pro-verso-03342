@@ -129,7 +129,7 @@ const {
 #### **3.3 `useSyncedScroll`** - Scroll Sincronizado
 
 ```typescript
-const { scrollRef } = useSyncedScroll({ source: "canvas" });
+const { scrollRef } = useSyncedScroll({ source: 'canvas' });
 ```
 
 **Papel**: Sincronização de scroll entre painéis
@@ -230,7 +230,7 @@ const {
 
 // Uso em componente:
 const handleAddHeading = () => {
-  const blockId = addBlock("heading");
+  const blockId = addBlock('heading');
   console.log(`Bloco ${blockId} adicionado!`);
 };
 ```
@@ -243,7 +243,7 @@ const { updateProperty } = useUnifiedProperties();
 
 // Uso em painel de propriedades:
 const handleMarginChange = (value: string) => {
-  updateProperty("marginTop", value);
+  updateProperty('marginTop', value);
   // ✅ Auto-debounced
   // ✅ Auto-historized
   // ✅ Auto-synchronized
@@ -323,7 +323,7 @@ export const useContextHook = () => {
   const context = useContext(SomeContext);
 
   if (!context) {
-    throw new Error("Hook must be used within Provider");
+    throw new Error('Hook must be used within Provider');
   }
 
   return context;

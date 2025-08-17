@@ -7,7 +7,7 @@ import { COMPLETE_QUIZ_QUESTIONS } from '@/data/correctQuizQuestions';
 export const ConnectedStep19Template = () => {
   // 🎯 Buscar dados da transição 2
   const transitionData = COMPLETE_QUIZ_QUESTIONS.find(q => q.id === 'transition2');
-  
+
   const handleContinue = useCallback(() => {
     console.log('🎯 Connected Step19: Navegando para resultado');
   }, []);
@@ -18,7 +18,8 @@ export const ConnectedStep19Template = () => {
       id: 'step19-header',
       type: 'quiz-intro-header',
       properties: {
-        logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+        logoUrl:
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
         logoAlt: 'Logo Gisele Galvão',
         logoWidth: 96,
         logoHeight: 96,
@@ -66,7 +67,9 @@ export const ConnectedStep19Template = () => {
       id: 'step19-main-description',
       type: 'text-inline',
       properties: {
-        content: (transitionData as any)?.description || 'Chegar até aqui já mostra que você está pronta para se olhar com mais amor, se vestir com mais intenção e deixar sua imagem comunicar quem você é de verdade — com leveza e propósito.',
+        content:
+          (transitionData as any)?.description ||
+          'Chegar até aqui já mostra que você está pronta para se olhar com mais amor, se vestir com mais intenção e deixar sua imagem comunicar quem você é de verdade — com leveza e propósito.',
         fontSize: 'text-lg',
         fontWeight: 'font-normal',
         textAlign: 'text-center',
@@ -83,7 +86,9 @@ export const ConnectedStep19Template = () => {
       id: 'step19-result-subtitle',
       type: 'text-inline',
       properties: {
-        content: (transitionData as any)?.subtitle || 'Agora, é hora de revelar o seu Estilo Predominante — e os seus Estilos Complementares. E, mais do que isso, uma oportunidade real de aplicar o seu Estilo com leveza e confiança — todos os dias.',
+        content:
+          (transitionData as any)?.subtitle ||
+          'Agora, é hora de revelar o seu Estilo Predominante — e os seus Estilos Complementares. E, mais do que isso, uma oportunidade real de aplicar o seu Estilo com leveza e confiança — todos os dias.',
         fontSize: 'text-xl',
         fontWeight: 'font-medium',
         textAlign: 'text-center',
@@ -99,7 +104,9 @@ export const ConnectedStep19Template = () => {
       id: 'step19-surprise-cta',
       type: 'text-inline',
       properties: {
-        content: (transitionData as any)?.callToAction || 'Ah, e lembra do valor que mencionamos? Prepare-se para uma surpresa: o que você vai receber vale muito mais do que imagina — e vai custar muito menos do que você esperava.',
+        content:
+          (transitionData as any)?.callToAction ||
+          'Ah, e lembra do valor que mencionamos? Prepare-se para uma surpresa: o que você vai receber vale muito mais do que imagina — e vai custar muito menos do que você esperava.',
         fontSize: 'text-lg',
         fontWeight: 'font-medium',
         textAlign: 'text-center',
@@ -121,7 +128,7 @@ export const ConnectedStep19Template = () => {
         size: 'large',
         backgroundColor: '#B89B7A',
         textColor: '#ffffff',
-        
+
         // 🔗 SEMPRE HABILITADO (página de transição)
         disabled: false,
         requiresValidInput: false,

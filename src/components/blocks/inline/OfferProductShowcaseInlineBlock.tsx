@@ -19,43 +19,44 @@ const OfferProductShowcaseInlineBlock: React.FC<BlockComponentProps> = ({
   const properties = safeGetBlockProperties(block);
 
   const {
-    title = "Transformação Completa",
-    subtitle = "Tudo que você precisa para descobrir e aplicar seu estilo",
+    title = 'Transformação Completa',
+    subtitle = 'Tudo que você precisa para descobrir e aplicar seu estilo',
     products = [
       {
-        id: "main-guide",
-        title: "Guia Personalizado",
-        description: "Para seu estilo específico",
-        imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071347/MOCKUP_TABLETE_-_GUIA_DE_IMAGEM_E_ESTILO_ncctzi.webp",
-        imageAlt: "Guia Personalizado",
+        id: 'main-guide',
+        title: 'Guia Personalizado',
+        description: 'Para seu estilo específico',
+        imageUrl:
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1745071347/MOCKUP_TABLETE_-_GUIA_DE_IMAGEM_E_ESTILO_ncctzi.webp',
+        imageAlt: 'Guia Personalizado',
         imageWidth: 250,
-        imageHeight: 312
-      }
+        imageHeight: 312,
+      },
     ],
     pricing = {
       installments: {
         quantity: 5,
-        amount: "8,83"
+        amount: '8,83',
       },
-      fullPrice: "39,90",
-      discount: "77% OFF",
-      savings: "R$ 135,10",
-      limitedOffer: true
+      fullPrice: '39,90',
+      discount: '77% OFF',
+      savings: 'R$ 135,10',
+      limitedOffer: true,
     },
-    finalCtaText = "Garantir Minha Transformação",
-    finalCtaUrl = "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
-    spacing = "large"
+    finalCtaText = 'Garantir Minha Transformação',
+    finalCtaUrl = 'https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912',
+    spacing = 'large',
   } = properties;
 
   const spacingClasses = {
-    small: "py-8",
-    medium: "py-12",
-    large: "py-16"
+    small: 'py-8',
+    medium: 'py-12',
+    large: 'py-16',
   };
 
   const handleCtaClick = () => {
     if (finalCtaUrl) {
-      window.open(finalCtaUrl, "_blank");
+      window.open(finalCtaUrl, '_blank');
     }
   };
 
@@ -77,9 +78,7 @@ const OfferProductShowcaseInlineBlock: React.FC<BlockComponentProps> = ({
             <h2 className="text-3xl md:text-4xl font-bold text-[#432818] mb-4 font-playfair">
               {title}
             </h2>
-            <p className="text-lg text-[#6B4F43]">
-              {subtitle}
-            </p>
+            <p className="text-lg text-[#6B4F43]">{subtitle}</p>
           </div>
 
           {/* Products Grid */}
@@ -108,12 +107,8 @@ const OfferProductShowcaseInlineBlock: React.FC<BlockComponentProps> = ({
               <p className="text-sm opacity-90 mb-2">Oferta por tempo limitado</p>
             )}
             <div className="mb-4">
-              <span className="text-sm">
-                {pricing.installments.quantity}x de
-              </span>
-              <span className="text-4xl font-bold mx-2">
-                R$ {pricing.installments.amount}
-              </span>
+              <span className="text-sm">{pricing.installments.quantity}x de</span>
+              <span className="text-4xl font-bold mx-2">R$ {pricing.installments.amount}</span>
             </div>
             <p className="text-lg">
               ou à vista <strong>R$ {pricing.fullPrice}</strong>

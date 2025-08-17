@@ -86,7 +86,7 @@
 **Verificar localStorage** (F12 → Console):
 
 ```javascript
-Object.keys(localStorage).filter(k => k.includes("funnel") || k.includes("schema"));
+Object.keys(localStorage).filter(k => k.includes('funnel') || k.includes('schema'));
 ```
 
 ---
@@ -97,19 +97,19 @@ Cole este código para teste automático:
 
 ```javascript
 // Verificar funcionalidades
-console.log("🧪 TESTANDO FUNCIONALIDADES...");
+console.log('🧪 TESTANDO FUNCIONALIDADES...');
 
 // 1. Verificar se está no dashboard
-if (location.pathname.includes("/admin")) {
+if (location.pathname.includes('/admin')) {
   const templates = document.querySelectorAll('[class*="Card"], .card');
-  const buttons = Array.from(document.querySelectorAll("button")).filter(
-    b => b.textContent?.includes("Template") || b.textContent?.includes("Usar")
+  const buttons = Array.from(document.querySelectorAll('button')).filter(
+    b => b.textContent?.includes('Template') || b.textContent?.includes('Usar')
   );
   console.log(`✅ Dashboard: ${templates.length} templates, ${buttons.length} botões`);
 }
 
 // 2. Verificar se está no editor
-if (location.pathname.includes("/editor")) {
+if (location.pathname.includes('/editor')) {
   const sidebars = document.querySelectorAll('[class*="sidebar"], aside');
   const canvas = document.querySelector('main, [class*="canvas"], [class*="preview"]');
   const tabs = document.querySelectorAll('[role="tab"], [class*="tab"]');
@@ -117,10 +117,10 @@ if (location.pathname.includes("/editor")) {
 }
 
 // 3. Verificar localStorage
-const storage = Object.keys(localStorage).filter(k => k.includes("funnel") || k.includes("schema"));
+const storage = Object.keys(localStorage).filter(k => k.includes('funnel') || k.includes('schema'));
 console.log(`✅ Storage: ${storage.length} chaves`, storage);
 
-console.log("🎉 Teste concluído!");
+console.log('🎉 Teste concluído!');
 ```
 
 ---

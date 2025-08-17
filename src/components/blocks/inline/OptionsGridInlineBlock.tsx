@@ -81,7 +81,7 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
         // Dispatch quiz selection change event
         const stepNumber = parseInt(block.id?.match(/step-(\d+)/)?.[1] || '0');
         const questionId = stepNumber > 1 ? `q${stepNumber - 1}` : `q1`; // Step 2 = q1, etc.
-        
+
         window.dispatchEvent(
           new CustomEvent('quiz-selection-change', {
             detail: {
@@ -115,7 +115,7 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
       // Dispatch quiz selection change event
       const stepNumber = parseInt(block.id?.match(/step-(\d+)/)?.[1] || '0');
       const questionId = stepNumber > 1 ? `q${stepNumber - 1}` : `q1`; // Step 2 = q1, etc.
-      
+
       window.dispatchEvent(
         new CustomEvent('quiz-selection-change', {
           detail: {
@@ -265,10 +265,7 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
 
       {/* Feedback de seleção */}
       <div className="selection-feedback mt-4 text-center">
-        <p className={cn(
-          'text-sm',
-          isValidSelection ? 'text-green-600' : 'text-muted-foreground'
-        )}>
+        <p className={cn('text-sm', isValidSelection ? 'text-green-600' : 'text-muted-foreground')}>
           {multipleSelection
             ? `${selectedOptions.length} de ${maxSelections} selecionados${!isValidSelection ? ` (mínimo ${minSelections})` : ''}`
             : selectedOptions.length > 0

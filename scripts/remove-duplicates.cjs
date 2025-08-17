@@ -1,9 +1,9 @@
 // remove-duplicates.cjs
-const fs = require("fs");
+const fs = require('fs');
 
 // Ler o arquivo
-const filePath = "src/hooks/useUnifiedProperties.ts";
-let content = fs.readFileSync(filePath, "utf8");
+const filePath = 'src/hooks/useUnifiedProperties.ts';
+let content = fs.readFileSync(filePath, 'utf8');
 
 // Localizar e remover seções duplicadas específicas
 const duplicatesToRemove = [
@@ -12,63 +12,63 @@ const duplicatesToRemove = [
     start: 'case "badge":',
     end: 'case "cta":',
     startLine: 1918,
-    description: "badge duplicado",
+    description: 'badge duplicado',
   },
   // cta (segunda ocorrência)
   {
     start: 'case "cta":',
     end: 'case "progress":',
     startLine: 1945,
-    description: "cta duplicado",
+    description: 'cta duplicado',
   },
   // progress (segunda ocorrência)
   {
     start: 'case "progress":',
     end: 'case "stat":',
     startLine: 1979,
-    description: "progress duplicado",
+    description: 'progress duplicado',
   },
   // stat (segunda ocorrência)
   {
     start: 'case "stat":',
     end: 'case "image-display-inline":',
     startLine: 2009,
-    description: "stat duplicado",
+    description: 'stat duplicado',
   },
   // image-display-inline (segunda ocorrência)
   {
     start: 'case "image-display-inline":',
     end: 'case "pricing-card":',
     startLine: 2036,
-    description: "image-display-inline duplicado",
+    description: 'image-display-inline duplicado',
   },
   // pricing-card (segunda ocorrência)
   {
     start: 'case "pricing-card":',
     end: 'case "quiz-progress":',
     startLine: 2081,
-    description: "pricing-card duplicado",
+    description: 'pricing-card duplicado',
   },
   // quiz-intro-header (segunda ocorrência)
   {
     start: 'case "quiz-intro-header":',
     end: 'case "form-input":',
     startLine: 2301,
-    description: "quiz-intro-header duplicado",
+    description: 'quiz-intro-header duplicado',
   },
   // form-input (segunda ocorrência)
   {
     start: 'case "form-input":',
     end: 'case "legal-notice-inline":',
     startLine: 2354,
-    description: "form-input duplicado",
+    description: 'form-input duplicado',
   },
 ];
 
-console.log("Removendo duplicatas...");
+console.log('Removendo duplicatas...');
 
 // Dividir em linhas para processamento
-const lines = content.split("\n");
+const lines = content.split('\n');
 
 // Identificar seções duplicadas para remoção
 const linesToRemove = new Set();
@@ -105,8 +105,8 @@ duplicateRanges.forEach(([start, end]) => {
 const filteredLines = lines.filter((line, index) => !linesToRemove.has(index));
 
 // Escrever o arquivo corrigido
-const correctedContent = filteredLines.join("\n");
-fs.writeFileSync(filePath, correctedContent, "utf8");
+const correctedContent = filteredLines.join('\n');
+fs.writeFileSync(filePath, correctedContent, 'utf8');
 
 console.log(`Removidas ${linesToRemove.size} linhas duplicadas.`);
-console.log("Arquivo corrigido!");
+console.log('Arquivo corrigido!');

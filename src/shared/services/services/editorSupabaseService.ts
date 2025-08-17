@@ -81,7 +81,7 @@ export const fetchComponents = async (
 
     let query = supabase.from('component_instances').select('*', { count: 'exact' });
 
-    // Apply filters  
+    // Apply filters
     if (filters.funnelId) {
       query = query.eq('funnel_id', filters.funnelId);
     }

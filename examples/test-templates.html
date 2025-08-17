@@ -6,7 +6,7 @@
     <title>🧪 Teste de Templates - Quiz Etapas</title>
     <style>
       body {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         max-width: 1200px;
         margin: 0 auto;
         padding: 20px;
@@ -80,7 +80,7 @@
     </div>
 
     <script type="module">
-      console.log("🚀 Iniciando teste de templates...");
+      console.log('🚀 Iniciando teste de templates...');
 
       // Mock das funcionalidades que seriam importadas
       const mockStepTemplateService = {
@@ -91,33 +91,33 @@
           const basicTemplates = {
             1: [
               {
-                type: "quiz-intro-header",
-                properties: { title: "Introdução" },
+                type: 'quiz-intro-header',
+                properties: { title: 'Introdução' },
               },
               {
-                type: "text-inline",
-                properties: { content: "Bem-vindo ao quiz!" },
+                type: 'text-inline',
+                properties: { content: 'Bem-vindo ao quiz!' },
               },
-              { type: "button-inline", properties: { text: "Começar" } },
+              { type: 'button-inline', properties: { text: 'Começar' } },
             ],
             2: [
               {
-                type: "heading-inline",
-                properties: { text: "Como podemos te chamar?" },
+                type: 'heading-inline',
+                properties: { text: 'Como podemos te chamar?' },
               },
-              { type: "form-input", properties: { label: "Seu nome" } },
-              { type: "button-inline", properties: { text: "Continuar" } },
+              { type: 'form-input', properties: { label: 'Seu nome' } },
+              { type: 'button-inline', properties: { text: 'Continuar' } },
             ],
             3: [
               {
-                type: "quiz-progress",
+                type: 'quiz-progress',
                 properties: { currentStep: 3, totalSteps: 21 },
               },
               {
-                type: "quiz-question",
-                properties: { title: "QUAL O SEU TIPO DE ROUPA FAVORITA?" },
+                type: 'quiz-question',
+                properties: { title: 'QUAL O SEU TIPO DE ROUPA FAVORITA?' },
               },
-              { type: "options-grid", properties: { layout: "grid" } },
+              { type: 'options-grid', properties: { layout: 'grid' } },
             ],
           };
 
@@ -134,16 +134,16 @@
               order: i,
               type:
                 i === 1
-                  ? "intro"
+                  ? 'intro'
                   : i === 2
-                    ? "intro"
+                    ? 'intro'
                     : i <= 13
-                      ? "question"
+                      ? 'question'
                       : i <= 19
-                        ? "strategic"
+                        ? 'strategic'
                         : i === 20
-                          ? "result"
-                          : "offer",
+                          ? 'result'
+                          : 'offer',
               description: `Descrição da etapa ${i}`,
               blocksCount: template.length,
               hasTemplate: template.length > 0,
@@ -154,19 +154,19 @@
       };
 
       async function testTemplateSystem() {
-        const statusDiv = document.getElementById("template-status");
-        const stepsDiv = document.getElementById("step-tests");
-        const logsDiv = document.getElementById("debug-logs");
+        const statusDiv = document.getElementById('template-status');
+        const stepsDiv = document.getElementById('step-tests');
+        const logsDiv = document.getElementById('debug-logs');
 
-        let logs = "";
+        let logs = '';
         function addLog(message) {
-          logs += new Date().toLocaleTimeString() + " - " + message + "\n";
+          logs += new Date().toLocaleTimeString() + ' - ' + message + '\n';
           logsDiv.textContent = logs;
           console.log(message);
         }
 
         try {
-          addLog("🔍 Testando sistema de templates...");
+          addLog('🔍 Testando sistema de templates...');
 
           // Teste 1: Verificar se consegue obter todas as etapas
           const allSteps = await mockStepTemplateService.getAllSteps();
@@ -184,13 +184,13 @@
                 </div>`;
 
           if (stepsWithoutTemplates.length > 0) {
-            statusHtml += `<div class="error">⚠️ Etapas sem template: ${stepsWithoutTemplates.map(s => s.name).join(", ")}</div>`;
+            statusHtml += `<div class="error">⚠️ Etapas sem template: ${stepsWithoutTemplates.map(s => s.name).join(', ')}</div>`;
           }
 
           statusDiv.innerHTML = statusHtml;
 
           // Teste 3: Testar cada etapa individual
-          let stepsHtml = "";
+          let stepsHtml = '';
           for (let i = 1; i <= 5; i++) {
             // Testar apenas as primeiras 5 para não sobrecarregar
             const template = await mockStepTemplateService.getStepTemplate(i);
@@ -201,20 +201,20 @@
                         <p><strong>Blocos:</strong> ${template.length}</p>`;
 
             if (template.length > 0) {
-              stepsHtml += "<div>Tipos de blocos:<br>";
+              stepsHtml += '<div>Tipos de blocos:<br>';
               template.forEach(block => {
                 stepsHtml += `<div class="block-item">${block.type}</div>`;
               });
-              stepsHtml += "</div>";
+              stepsHtml += '</div>';
             } else {
               stepsHtml += '<div class="error">❌ Nenhum bloco encontrado</div>';
             }
 
-            stepsHtml += "</div>";
+            stepsHtml += '</div>';
           }
 
           stepsDiv.innerHTML = stepsHtml;
-          addLog("✅ Teste concluído com sucesso!");
+          addLog('✅ Teste concluído com sucesso!');
         } catch (error) {
           addLog(`❌ Erro durante teste: ${error.message}`);
           statusDiv.innerHTML = `<div class="error">❌ Erro: ${error.message}</div>`;
@@ -225,12 +225,12 @@
       testTemplateSystem();
 
       // Adicionar botão para testar novamente
-      const retestButton = document.createElement("button");
-      retestButton.textContent = "🔄 Testar Novamente";
+      const retestButton = document.createElement('button');
+      retestButton.textContent = '🔄 Testar Novamente';
       retestButton.style.cssText =
-        "padding: 10px 20px; background: #3b82f6; color: white; border: none; border-radius: 4px; cursor: pointer; margin: 10px 0;";
+        'padding: 10px 20px; background: #3b82f6; color: white; border: none; border-radius: 4px; cursor: pointer; margin: 10px 0;';
       retestButton.onclick = () => {
-        document.getElementById("debug-logs").textContent = "Aguardando logs...";
+        document.getElementById('debug-logs').textContent = 'Aguardando logs...';
         testTemplateSystem();
       };
       document.body.appendChild(retestButton);

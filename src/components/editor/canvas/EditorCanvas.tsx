@@ -27,18 +27,21 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
   viewportSize = 'lg',
 }) => {
   // Memoizar handler de drag end
-  const handleDragEnd = useCallback((event: DragEndEvent) => {
-    const { active, over } = event;
+  const handleDragEnd = useCallback(
+    (event: DragEndEvent) => {
+      const { active, over } = event;
 
-    if (!over || active.id === over.id) return;
+      if (!over || active.id === over.id) return;
 
-    const oldIndex = blocks.findIndex(block => block.id === active.id);
-    const newIndex = blocks.findIndex(block => block.id === over.id);
+      const oldIndex = blocks.findIndex(block => block.id === active.id);
+      const newIndex = blocks.findIndex(block => block.id === over.id);
 
-    if (oldIndex !== -1 && newIndex !== -1) {
-      onReorderBlocks(oldIndex, newIndex);
-    }
-  }, [blocks, onReorderBlocks]);
+      if (oldIndex !== -1 && newIndex !== -1) {
+        onReorderBlocks(oldIndex, newIndex);
+      }
+    },
+    [blocks, onReorderBlocks]
+  );
 
   // Memoizar viewport classes
   const viewportClasses = useMemo(() => {
@@ -55,17 +58,16 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
   }, [viewportSize]);
 
   // Memoizar handler de update
-  const handleUpdateBlock = useCallback((blockId: string, updates: any) => {
-    onUpdateBlock(blockId, updates);
-  }, [onUpdateBlock]);
+  const handleUpdateBlock = useCallback(
+    (blockId: string, updates: any) => {
+      onUpdateBlock(blockId, updates);
+    },
+    [onUpdateBlock]
+  );
 
   // Componente otimizado para preview
   const PreviewBlock = React.memo<{ block: Block }>(({ block }) => (
-    <OptimizedBlockRenderer
-      block={block}
-      isSelected={false}
-      isPreviewing={true}
-    />
+    <OptimizedBlockRenderer block={block} isSelected={false} isPreviewing={true} />
   ));
 
   // Memoizar lista de IDs dos blocos para DnD

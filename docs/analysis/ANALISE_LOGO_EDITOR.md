@@ -28,8 +28,8 @@ import BrandHeader from '@/components/ui/BrandHeader';
 ### **1. BrandHeader** (`/src/components/ui/BrandHeader.tsx`)
 
 ```tsx
-import React from "react";
-import Logo from "./logo";
+import React from 'react';
+import Logo from './logo';
 
 interface BrandHeaderProps {
   className?: string;
@@ -57,8 +57,8 @@ export default BrandHeader;
 ### **2. Logo** (`/src/components/ui/logo.tsx`)
 
 ```tsx
-import React from "react";
-import { OptimizedImage } from "./optimized-image";
+import React from 'react';
+import { OptimizedImage } from './optimized-image';
 
 interface LogoProps {
   src?: string;
@@ -71,9 +71,9 @@ interface LogoProps {
 }
 
 const Logo: React.FC<LogoProps> = ({
-  src = "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-  alt = "Logo Gisele Galvão",
-  className = "h-14 mx-auto",
+  src = 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+  alt = 'Logo Gisele Galvão',
+  className = 'h-14 mx-auto',
   style,
   priority = true,
   width = 200,
@@ -85,7 +85,7 @@ const Logo: React.FC<LogoProps> = ({
         src={src}
         alt={alt}
         className={`${className} mx-auto`}
-        style={{ ...style, objectFit: "contain" }}
+        style={{ ...style, objectFit: 'contain' }}
         priority={priority}
         width={width}
         height={height}
@@ -147,16 +147,16 @@ export default Logo;
 
 ```tsx
 // Em /src/components/ui/logo.tsx, linha 12
-src = "NOVA_URL_DA_IMAGEM.webp";
+src = 'NOVA_URL_DA_IMAGEM.webp';
 ```
 
 ### **Opção 2: Ajustar tamanho**
 
 ```tsx
 // Em /src/components/ui/logo.tsx, linha 14
-className = "h-16 mx-auto"; // Aumentar altura
+className = 'h-16 mx-auto'; // Aumentar altura
 // ou
-className = "h-12 mx-auto"; // Diminuir altura
+className = 'h-12 mx-auto'; // Diminuir altura
 ```
 
 ### **Opção 3: Remover completamente**

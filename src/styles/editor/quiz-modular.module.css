@@ -1,8 +1,8 @@
 /* src/styles/quiz.module.css */
 
 /* Importação da fonte do quiz real */
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap');
 
 :root {
   /* Cores idênticas ao quiz real */
@@ -19,8 +19,8 @@
   --quiz-neutral: #6b7280;
 
   /* Tipografia idêntica ao quiz real */
-  --quiz-font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --quiz-font-display: "Playfair Display", serif;
+  --quiz-font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --quiz-font-display: 'Playfair Display', serif;
   --quiz-font-size-title: 1.875rem;
   --quiz-font-size-subtitle: 1.25rem;
   --quiz-font-size-body: 1rem;
@@ -503,7 +503,7 @@
 }
 
 .quizOption.loading::after {
-  content: "";
+  content: '';
   position: absolute;
   top: 50%;
   left: 50%;

@@ -8,17 +8,17 @@ export interface BlockComponentProps {
   onClick?: () => void;
   onPropertyChange?: (key: string, value: any) => void;
   className?: string;
-  
+
   // Quiz-specific props
   isPreviewMode?: boolean;
   onNext?: () => void;
   onPrevious?: () => void;
   canProceed?: boolean;
   sessionId?: string;
-  
+
   // Layout props
-  containerWidth?: "full" | "large" | "medium" | "small";
-  containerPosition?: "center" | "left" | "right";
+  containerWidth?: 'full' | 'large' | 'medium' | 'small';
+  containerPosition?: 'center' | 'left' | 'right';
   spacing?: string;
   marginTop?: number;
   marginBottom?: number;
@@ -28,7 +28,7 @@ export interface BlockComponentProps {
   borderRadius?: number;
   shadow?: string;
   scale?: number;
-  
+
   // Allow any additional props for flexibility
   [key: string]: any;
 }

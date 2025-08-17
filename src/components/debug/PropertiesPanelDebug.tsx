@@ -1,4 +1,3 @@
-
 import { useEditor } from '@/context/EditorContext';
 
 interface PropertiesPanelDebugProps {
@@ -8,11 +7,7 @@ interface PropertiesPanelDebugProps {
 export const PropertiesPanelDebug: React.FC<PropertiesPanelDebugProps> = ({
   title = 'Painel Debug',
 }) => {
-  const {
-    selectedBlockId,
-    computed,
-    uiState,
-  } = useEditor();
+  const { selectedBlockId, computed, uiState } = useEditor();
 
   const selectedBlock = computed?.selectedBlock;
   const currentBlocks = computed?.currentBlocks || [];

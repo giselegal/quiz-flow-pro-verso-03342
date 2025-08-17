@@ -124,23 +124,23 @@ step21 - final - text; // Texto final
 ### **❌ ANTES (Pouco semântico):**
 
 ```typescript
-id: "step02-title"; // Genérico
-id: "step02-text"; // Não indica função
-id: "step02-options"; // Não especifica tipo
-id: "step02-button"; // Não indica ação
-id: "step19-text-2"; // Numeração não semântica
-id: "step20-button"; // Função não clara
+id: 'step02-title'; // Genérico
+id: 'step02-text'; // Não indica função
+id: 'step02-options'; // Não especifica tipo
+id: 'step02-button'; // Não indica ação
+id: 'step19-text-2'; // Numeração não semântica
+id: 'step20-button'; // Função não clara
 ```
 
 ### **✅ DEPOIS (100% semântico):**
 
 ```typescript
-id: "step02-question-title"; // Específico: título de questão
-id: "step02-question-counter"; // Específico: contador de progresso
-id: "step02-clothing-options"; // Específico: opções de roupas
-id: "step02-continue-button"; // Específico: ação de continuar
-id: "step19-reveal-text"; // Específico: texto sobre revelação
-id: "step20-view-offer-button"; // Específico: visualizar oferta
+id: 'step02-question-title'; // Específico: título de questão
+id: 'step02-question-counter'; // Específico: contador de progresso
+id: 'step02-clothing-options'; // Específico: opções de roupas
+id: 'step02-continue-button'; // Específico: ação de continuar
+id: 'step19-reveal-text'; // Específico: texto sobre revelação
+id: 'step20-view-offer-button'; // Específico: visualizar oferta
 ```
 
 ---
@@ -196,7 +196,7 @@ id: "step20-view-offer-button"; // Específico: visualizar oferta
 ### **💡 EXEMPLO PERFEITO:**
 
 ```typescript
-id: "step09-shoes-options";
+id: 'step09-shoes-options';
 //   ^^^^^^^^ ^^^^^ ^^^^^^^
 //   Step 09  Sobre Opções
 //           sapatos (tipo)

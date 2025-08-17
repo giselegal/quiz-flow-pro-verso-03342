@@ -24,11 +24,7 @@ interface Step01TemplateProps {
  */
 export default function Step01Template({ sessionId, onNext }: Step01TemplateProps) {
   return (
-    <ConnectedTemplateWrapper 
-      stepNumber={1} 
-      stepType="intro" 
-      sessionId={sessionId}
-    >
+    <ConnectedTemplateWrapper stepNumber={1} stepType="intro" sessionId={sessionId}>
       {/* 🚀 NAVEGAÇÃO PREMIUM */}
       <QuizNavigation
         canProceed={true}
@@ -168,13 +164,13 @@ export default function Step01Template({ sessionId, onNext }: Step01TemplateProp
               <CardContent className="p-8">
                 <h3 className="text-2xl font-bold mb-4">Pronta para descobrir seu estilo?</h3>
                 <p className="text-white/90 mb-6 max-w-xl mx-auto">
-                  Vamos começar capturando seu nome para personalizar sua experiência e depois descobrir
-                  juntas qual estilo reflete sua verdadeira essência.
+                  Vamos começar capturando seu nome para personalizar sua experiência e depois
+                  descobrir juntas qual estilo reflete sua verdadeira essência.
                 </p>
 
                 {/* ✅ FORMULÁRIO CONECTADO AOS HOOKS */}
-                <ConnectedLeadForm 
-                  onSubmit={(data) => {
+                <ConnectedLeadForm
+                  onSubmit={data => {
                     console.log('✅ Step01: Nome capturado via ConnectedLeadForm:', data.name);
                     // Avançar para próxima etapa após capturar nome
                     setTimeout(() => onNext && onNext(), 500);

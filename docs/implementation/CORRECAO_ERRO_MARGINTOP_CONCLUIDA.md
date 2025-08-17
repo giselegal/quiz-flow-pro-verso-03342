@@ -31,12 +31,12 @@ CountdownInlineBlock.tsx:138:23
 
 ```typescript
 // ❌ ANTES - SEM DEFINIÇÃO:
-const { size = "md", theme = "default" } = style;
+const { size = 'md', theme = 'default' } = style;
 
 // ✅ DEPOIS - COM MARGENS:
 const {
-  size = "md",
-  theme = "default",
+  size = 'md',
+  theme = 'default',
   marginTop = 0,
   marginBottom = 0,
   marginLeft = 0,
@@ -110,10 +110,10 @@ const getMarginClass = (value: number | string | undefined, type: string): strin
 
 ```typescript
 // ❌ ANTES - Erro com undefined:
-if (isNaN(numValue) || numValue === 0) return "";
+if (isNaN(numValue) || numValue === 0) return '';
 
 // ✅ DEPOIS - Tratamento seguro:
-if (!numValue || isNaN(numValue) || numValue === 0) return "";
+if (!numValue || isNaN(numValue) || numValue === 0) return '';
 ```
 
 ---

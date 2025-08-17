@@ -103,22 +103,21 @@ export const useTemplateConfig = (stepNumber: number) => {
     try {
       const stepId = String(stepNumber).padStart(2, '0');
       const configPath = `/src/config/templates/step-${stepId}.json`;
-      
+
       // Tentar carregar a configuração JSON
       const response = await fetch(configPath);
-      
+
       if (!response.ok) {
         throw new Error(`Não foi possível carregar configuração para step ${stepNumber}`);
       }
 
-      const jsonConfig = await response.json() as TemplateConfig;
+      const jsonConfig = (await response.json()) as TemplateConfig;
       setConfig(jsonConfig);
-      
+
       console.log(`✅ useTemplateConfig: Carregado step-${stepId}.json`, jsonConfig.metadata);
-      
     } catch (err) {
       console.warn(`⚠️ useTemplateConfig: Erro ao carregar step-${stepNumber}:`, err);
-      
+
       // Fallback: criar configuração básica
       const fallbackConfig: TemplateConfig = {
         templateVersion: '2.0',
@@ -131,7 +130,7 @@ export const useTemplateConfig = (stepNumber: number) => {
           tags: ['quiz', 'style'],
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
-          author: 'system'
+          author: 'system',
         },
         design: {
           primaryColor: '#B89B7A',
@@ -143,23 +142,23 @@ export const useTemplateConfig = (stepNumber: number) => {
             background: 'linear-gradient(90deg, #B89B7A, #aa6b5d)',
             textColor: '#fff',
             borderRadius: '10px',
-            shadow: '0 4px 14px rgba(184, 155, 122, 0.15)'
+            shadow: '0 4px 14px rgba(184, 155, 122, 0.15)',
           },
           card: {
             background: '#fff',
             borderRadius: '16px',
-            shadow: '0 4px 20px rgba(184, 155, 122, 0.10)'
+            shadow: '0 4px 20px rgba(184, 155, 122, 0.10)',
           },
           progressBar: {
             color: '#B89B7A',
             background: '#F3E8E6',
-            height: '6px'
+            height: '6px',
           },
           animations: {
             questionTransition: 'fade, scale',
             optionSelect: 'glow, scale',
-            button: 'hover:scale-105, active:scale-95'
-          }
+            button: 'hover:scale-105, active:scale-95',
+          },
         },
         layout: {
           containerWidth: 'full',
@@ -169,12 +168,12 @@ export const useTemplateConfig = (stepNumber: number) => {
           animations: {
             questionTransition: 'fade, scale',
             optionSelect: 'glow, scale',
-            button: 'hover:scale-105, active:scale-95'
-          }
+            button: 'hover:scale-105, active:scale-95',
+          },
         },
-        blocks: []
+        blocks: [],
       };
-      
+
       setConfig(fallbackConfig);
       setError(`Usando configuração padrão para step ${stepNumber}`);
     } finally {
@@ -187,10 +186,13 @@ export const useTemplateConfig = (stepNumber: number) => {
   }, [loadConfig]);
 
   // Função para obter propriedades de um bloco específico
-  const getBlockConfig = useCallback((blockId: string) => {
-    if (!config) return null;
-    return config.blocks.find(block => block.id === blockId);
-  }, [config]);
+  const getBlockConfig = useCallback(
+    (blockId: string) => {
+      if (!config) return null;
+      return config.blocks.find(block => block.id === blockId);
+    },
+    [config]
+  );
 
   // Função para obter propriedades de design
   const getDesignTokens = useCallback(() => {
@@ -204,6 +206,6 @@ export const useTemplateConfig = (stepNumber: number) => {
     error,
     getBlockConfig,
     getDesignTokens,
-    reload: loadConfig
+    reload: loadConfig,
   };
 };

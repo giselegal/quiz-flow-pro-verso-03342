@@ -1,17 +1,17 @@
 /**
  * useQuizAnalytics Hook - Event Tracking and Metrics
- * 
+ *
  * Provides analytics tracking for quiz interactions, user behavior, and performance metrics.
  * Integrates with Facebook Pixel, Google Analytics, and custom tracking systems.
  */
 
 import { useCallback, useState, useEffect } from 'react';
-import { 
-  QuizAnalyticsHook, 
-  AnalyticsEvent, 
-  AnalyticsData, 
-  UserAnswer, 
-  Result 
+import {
+  QuizAnalyticsHook,
+  AnalyticsEvent,
+  AnalyticsData,
+  UserAnswer,
+  Result,
 } from '@/types/quizCore';
 
 export const useQuizAnalytics = (): QuizAnalyticsHook => {
@@ -67,137 +67,146 @@ export const useQuizAnalytics = (): QuizAnalyticsHook => {
   }, []);
 
   // Track when a step starts
-  const trackStepStart = useCallback((stepId: string) => {
-    const timestamp = Date.now();
-    
-    setStepStartTimes(prev => ({
-      ...prev,
-      [stepId]: timestamp,
-    }));
+  const trackStepStart = useCallback(
+    (stepId: string) => {
+      const timestamp = Date.now();
 
-    trackEvent({
-      name: 'quiz_step_start',
-      category: 'Quiz Navigation',
-      action: 'step_start',
-      label: stepId,
-      value: parseInt(stepId.replace('step-', ''), 10),
-    });
-  }, [trackEvent]);
+      setStepStartTimes(prev => ({
+        ...prev,
+        [stepId]: timestamp,
+      }));
+
+      trackEvent({
+        name: 'quiz_step_start',
+        category: 'Quiz Navigation',
+        action: 'step_start',
+        label: stepId,
+        value: parseInt(stepId.replace('step-', ''), 10),
+      });
+    },
+    [trackEvent]
+  );
 
   // Track when a step is completed
-  const trackStepComplete = useCallback((stepId: string, answers: UserAnswer[]) => {
-    const timestamp = Date.now();
-    const startTime = stepStartTimes[stepId];
-    const timeSpent = startTime ? timestamp - startTime : 0;
+  const trackStepComplete = useCallback(
+    (stepId: string, answers: UserAnswer[]) => {
+      const timestamp = Date.now();
+      const startTime = stepStartTimes[stepId];
+      const timeSpent = startTime ? timestamp - startTime : 0;
 
-    // Update step timings
-    setAnalyticsData(prev => ({
-      ...prev,
-      stepTimings: {
-        ...prev.stepTimings,
-        [stepId]: timeSpent,
-      },
-    }));
+      // Update step timings
+      setAnalyticsData(prev => ({
+        ...prev,
+        stepTimings: {
+          ...prev.stepTimings,
+          [stepId]: timeSpent,
+        },
+      }));
 
-    // Track completion event
-    trackEvent({
-      name: 'quiz_step_complete',
-      category: 'Quiz Navigation',
-      action: 'step_complete',
-      label: stepId,
-      value: timeSpent,
-    });
+      // Track completion event
+      trackEvent({
+        name: 'quiz_step_complete',
+        category: 'Quiz Navigation',
+        action: 'step_complete',
+        label: stepId,
+        value: timeSpent,
+      });
 
-    // Track selection details for analytics
-    if (answers.length > 0) {
-      const stepAnswer = answers.find(answer => answer.stepId === stepId);
-      if (stepAnswer) {
-        trackEvent({
-          name: 'quiz_selection_made',
-          category: 'Quiz Interaction',
-          action: 'option_selected',
-          label: `${stepId}_selections_${stepAnswer.selectedOptions.length}`,
-          value: stepAnswer.selectedOptions.length,
-        });
+      // Track selection details for analytics
+      if (answers.length > 0) {
+        const stepAnswer = answers.find(answer => answer.stepId === stepId);
+        if (stepAnswer) {
+          trackEvent({
+            name: 'quiz_selection_made',
+            category: 'Quiz Interaction',
+            action: 'option_selected',
+            label: `${stepId}_selections_${stepAnswer.selectedOptions.length}`,
+            value: stepAnswer.selectedOptions.length,
+          });
+        }
       }
-    }
-  }, [stepStartTimes, trackEvent]);
+    },
+    [stepStartTimes, trackEvent]
+  );
 
   // Track when the entire quiz is completed
-  const trackQuizComplete = useCallback((result: Result) => {
-    const sessionDuration = Date.now() - sessionStartTime;
+  const trackQuizComplete = useCallback(
+    (result: Result) => {
+      const sessionDuration = Date.now() - sessionStartTime;
 
-    // Update analytics data with completion
-    setAnalyticsData(prev => ({
-      ...prev,
-      sessionDuration,
-      completionRate: 100,
-    }));
+      // Update analytics data with completion
+      setAnalyticsData(prev => ({
+        ...prev,
+        sessionDuration,
+        completionRate: 100,
+      }));
 
-    // Track quiz completion
-    trackEvent({
-      name: 'quiz_complete',
-      category: 'Quiz Completion',
-      action: 'quiz_finished',
-      label: result.primaryStyle,
-      value: Math.round(sessionDuration / 1000), // Duration in seconds
-    });
+      // Track quiz completion
+      trackEvent({
+        name: 'quiz_complete',
+        category: 'Quiz Completion',
+        action: 'quiz_finished',
+        label: result.primaryStyle,
+        value: Math.round(sessionDuration / 1000), // Duration in seconds
+      });
 
-    // Track primary style result
-    trackEvent({
-      name: 'quiz_result_primary_style',
-      category: 'Quiz Results',
-      action: 'primary_style_determined',
-      label: result.primaryStyle,
-      value: Math.round(result.percentages[result.primaryStyle] || 0),
-    });
+      // Track primary style result
+      trackEvent({
+        name: 'quiz_result_primary_style',
+        category: 'Quiz Results',
+        action: 'primary_style_determined',
+        label: result.primaryStyle,
+        value: Math.round(result.percentages[result.primaryStyle] || 0),
+      });
 
-    // Track top scores for all styles
-    Object.entries(result.percentages).forEach(([style, percentage]) => {
-      if (percentage > 0) {
-        trackEvent({
-          name: 'quiz_result_style_score',
-          category: 'Quiz Results',
-          action: 'style_score',
-          label: style,
-          value: Math.round(percentage),
-        });
+      // Track top scores for all styles
+      Object.entries(result.percentages).forEach(([style, percentage]) => {
+        if (percentage > 0) {
+          trackEvent({
+            name: 'quiz_result_style_score',
+            category: 'Quiz Results',
+            action: 'style_score',
+            label: style,
+            value: Math.round(percentage),
+          });
+        }
+      });
+
+      // Send conversion event to Facebook Pixel
+      if (typeof window !== 'undefined' && (window as any).fbq) {
+        try {
+          (window as any).fbq('track', 'CompleteRegistration', {
+            content_name: 'Quiz Completion',
+            status: 'completed',
+            value: 1,
+            currency: 'BRL',
+          });
+        } catch (error) {
+          console.warn('⚠️ Facebook Pixel conversion tracking failed:', error);
+        }
       }
-    });
 
-    // Send conversion event to Facebook Pixel
-    if (typeof window !== 'undefined' && (window as any).fbq) {
-      try {
-        (window as any).fbq('track', 'CompleteRegistration', {
-          content_name: 'Quiz Completion',
-          status: 'completed',
-          value: 1,
-          currency: 'BRL',
-        });
-      } catch (error) {
-        console.warn('⚠️ Facebook Pixel conversion tracking failed:', error);
+      // Send conversion to Google Analytics
+      if (typeof window !== 'undefined' && (window as any).gtag) {
+        try {
+          (window as any).gtag('event', 'conversion', {
+            send_to: 'AW-CONVERSION_ID', // Replace with actual conversion ID
+            value: 1,
+            currency: 'BRL',
+            transaction_id: result.id,
+          });
+        } catch (error) {
+          console.warn('⚠️ Google Analytics conversion tracking failed:', error);
+        }
       }
-    }
-
-    // Send conversion to Google Analytics
-    if (typeof window !== 'undefined' && (window as any).gtag) {
-      try {
-        (window as any).gtag('event', 'conversion', {
-          send_to: 'AW-CONVERSION_ID', // Replace with actual conversion ID
-          value: 1,
-          currency: 'BRL',
-          transaction_id: result.id,
-        });
-      } catch (error) {
-        console.warn('⚠️ Google Analytics conversion tracking failed:', error);
-      }
-    }
-  }, [sessionStartTime, trackEvent]);
+    },
+    [sessionStartTime, trackEvent]
+  );
 
   // Get current analytics data
   const getAnalytics = useCallback((): AnalyticsData => {
     const currentSessionDuration = Date.now() - sessionStartTime;
-    
+
     return {
       ...analyticsData,
       sessionDuration: currentSessionDuration,

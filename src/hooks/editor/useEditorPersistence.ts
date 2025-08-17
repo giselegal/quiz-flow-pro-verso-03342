@@ -113,7 +113,8 @@ export const useEditorPersistence = () => {
             pageOrder: page.page_order || 1,
             title: page.title || 'Untitled',
             blocks: Array.isArray(page.blocks) ? page.blocks : [],
-            metadata: typeof page.metadata === 'object' && page.metadata !== null ? page.metadata : {},
+            metadata:
+              typeof page.metadata === 'object' && page.metadata !== null ? page.metadata : {},
           })),
           createdAt: schemaDrivenData.createdAt?.toISOString(),
           updatedAt: schemaDrivenData.lastModified?.toISOString(),

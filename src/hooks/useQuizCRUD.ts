@@ -52,7 +52,8 @@ export const useQuizCRUD = () => {
       // Use funnels table from unified schema instead of quizzes table
       const { data, error } = await supabase
         .from('funnels')
-        .select(`
+        .select(
+          `
           id,
           name,
           description,
@@ -68,7 +69,8 @@ export const useQuizCRUD = () => {
             blocks,
             page_order
           )
-        `)
+        `
+        )
         .eq('user_id', user.id)
         .order('updated_at', { ascending: false });
 
@@ -78,7 +80,7 @@ export const useQuizCRUD = () => {
       const formattedQuizzes: SavedQuiz[] = (data || []).map(funnel => {
         // Extract questions from funnel pages
         const questions: QuizQuestion[] = [];
-        
+
         funnel.funnel_pages?.forEach(page => {
           if (page.page_type === 'question' && page.blocks) {
             const blocks = Array.isArray(page.blocks) ? page.blocks : [];

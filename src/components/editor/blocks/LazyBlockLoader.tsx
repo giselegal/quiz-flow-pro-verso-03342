@@ -49,7 +49,12 @@ const LAZY_COMPONENTS = {
   'text-inline': () => lazy(() => import('@/components/editor/blocks/TextInlineBlock')),
 
   // QUIZ COMPONENTS
-  'quiz-intro-header': () => lazy(() => import('@/components/blocks/unified/UnifiedHeaderVariant').then(module => ({ default: module.QuizIntroHeaderBlock }))),
+  'quiz-intro-header': () =>
+    lazy(() =>
+      import('@/components/blocks/unified/UnifiedHeaderVariant').then(module => ({
+        default: module.QuizIntroHeaderBlock,
+      }))
+    ),
   'quiz-question': () => lazy(() => import('@/components/editor/blocks/QuizQuestionBlock')),
   'quiz-option': () => lazy(() => import('@/components/editor/blocks/QuizOptionBlock')),
   'quiz-progress': () => lazy(() => import('@/components/editor/blocks/QuizProgressBlock')),

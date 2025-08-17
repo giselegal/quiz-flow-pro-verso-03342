@@ -54,7 +54,7 @@ const getStageComponents = (stageId: string) => {
   return blocks.map(block => ({
     id: block.id,
     type: block.type,
-    name: block.type.replace(/[-_]/g, " ").replace(/\b\w/g, l => l.toUpperCase()),
+    name: block.type.replace(/[-_]/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
   }));
 };
 

@@ -1,9 +1,9 @@
 // ===== SNIPPETS PRÁTICOS PARA SEU PROJETO QUIZ =====
 
-import React from "react";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
+import React from 'react';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
 
 // ===== 1. COMPONENTE DE PERGUNTA (usando rafce) =====
 const QuizQuestion = ({ question, options, onAnswer, currentIndex, totalQuestions }) => {
@@ -49,8 +49,8 @@ const QuizQuestion = ({ question, options, onAnswer, currentIndex, totalQuestion
             onClick={() => handleAnswerSelect(option)}
             className={`w-full p-4 text-left rounded-lg border-2 transition-all ${
               selectedAnswer === option
-                ? "border-blue-500 bg-blue-50"
-                : "border-gray-200 hover:border-gray-300"
+                ? 'border-blue-500 bg-blue-50'
+                : 'border-gray-200 hover:border-gray-300'
             }`}
           >
             {option.text}
@@ -59,7 +59,7 @@ const QuizQuestion = ({ question, options, onAnswer, currentIndex, totalQuestion
       </div>
 
       <Button onClick={handleSubmitAnswer} disabled={!selectedAnswer} className="w-full">
-        {currentIndex < totalQuestions - 1 ? "Próxima Pergunta" : "Finalizar Quiz"}
+        {currentIndex < totalQuestions - 1 ? 'Próxima Pergunta' : 'Finalizar Quiz'}
       </Button>
     </Card>
   );
@@ -74,14 +74,14 @@ const useQuizLogic = questions => {
   const [answers, setAnswers] = React.useState([]);
 
   // useState para status do quiz
-  const [quizStatus, setQuizStatus] = React.useState("active"); // 'active', 'completed', 'paused'
+  const [quizStatus, setQuizStatus] = React.useState('active'); // 'active', 'completed', 'paused'
 
   // useCallback para próxima pergunta
   const nextQuestion = React.useCallback(() => {
     setCurrentQuestionIndex(prev => {
       const newIndex = prev + 1;
       if (newIndex >= questions.length) {
-        setQuizStatus("completed");
+        setQuizStatus('completed');
         return prev;
       }
       return newIndex;
@@ -105,7 +105,7 @@ const useQuizLogic = questions => {
       if (currentQuestionIndex < questions.length - 1) {
         nextQuestion();
       } else {
-        setQuizStatus("completed");
+        setQuizStatus('completed');
       }
     },
     [currentQuestionIndex, questions.length, nextQuestion]
@@ -115,7 +115,7 @@ const useQuizLogic = questions => {
   const resetQuiz = React.useCallback(() => {
     setCurrentQuestionIndex(0);
     setAnswers([]);
-    setQuizStatus("active");
+    setQuizStatus('active');
   }, []);
 
   // useMemo para pergunta atual
@@ -164,8 +164,8 @@ const QuizResult = ({ answers, questions, onRestart }) => {
   // useEffect para analytics
   React.useEffect(() => {
     // Enviar resultado para analytics
-    if (typeof window !== "undefined" && window.gtag) {
-      window.gtag("event", "quiz_completed", {
+    if (typeof window !== 'undefined' && window.gtag) {
+      window.gtag('event', 'quiz_completed', {
         score: result.score,
         percentage: result.percentage,
       });
@@ -205,20 +205,20 @@ const QuizApp = () => {
     () => [
       {
         id: 1,
-        text: "Qual é seu estilo de roupa preferido?",
+        text: 'Qual é seu estilo de roupa preferido?',
         options: [
-          { text: "Clássico e elegante", points: 1, category: "elegante" },
-          { text: "Moderno e descolado", points: 2, category: "moderno" },
-          { text: "Romântico e delicado", points: 3, category: "romantico" },
+          { text: 'Clássico e elegante', points: 1, category: 'elegante' },
+          { text: 'Moderno e descolado', points: 2, category: 'moderno' },
+          { text: 'Romântico e delicado', points: 3, category: 'romantico' },
         ],
       },
       {
         id: 2,
-        text: "Que tipo de cores você prefere?",
+        text: 'Que tipo de cores você prefere?',
         options: [
-          { text: "Tons neutros", points: 1, category: "elegante" },
-          { text: "Cores vibrantes", points: 2, category: "moderno" },
-          { text: "Cores pastel", points: 3, category: "romantico" },
+          { text: 'Tons neutros', points: 1, category: 'elegante' },
+          { text: 'Cores vibrantes', points: 2, category: 'moderno' },
+          { text: 'Cores pastel', points: 3, category: 'romantico' },
         ],
       },
     ],
@@ -245,7 +245,7 @@ const QuizApp = () => {
   );
 
   // Renderização condicional baseada no status
-  if (quizStatus === "completed") {
+  if (quizStatus === 'completed') {
     return <QuizResult answers={answers} questions={questions} onRestart={resetQuiz} />;
   }
 
@@ -272,7 +272,7 @@ const useLocalStorage = (key, initialValue) => {
       const item = window.localStorage.getItem(key);
       return item ? JSON.parse(item) : initialValue;
     } catch (error) {
-      console.error("Error reading localStorage:", error);
+      console.error('Error reading localStorage:', error);
       return initialValue;
     }
   });
@@ -285,7 +285,7 @@ const useLocalStorage = (key, initialValue) => {
         setStoredValue(valueToStore);
         window.localStorage.setItem(key, JSON.stringify(valueToStore));
       } catch (error) {
-        console.error("Error setting localStorage:", error);
+        console.error('Error setting localStorage:', error);
       }
     },
     [key, storedValue]
@@ -295,7 +295,7 @@ const useLocalStorage = (key, initialValue) => {
 };
 
 // ===== 6. COMPONENTE DE LOADING (usando rafce) =====
-const LoadingSpinner = ({ message = "Carregando..." }) => {
+const LoadingSpinner = ({ message = 'Carregando...' }) => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
       <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
@@ -345,7 +345,7 @@ class QuizErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    console.error("Quiz Error:", error, errorInfo);
+    console.error('Quiz Error:', error, errorInfo);
   }
 
   render() {

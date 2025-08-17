@@ -116,10 +116,10 @@
 ```typescript
 // Cores da marca implementadas
 const BRAND_COLORS = {
-  primary: "#B89B7A",
-  secondary: "#8F7A6A",
-  text: "#432818",
-  background: "#FAF9F7",
+  primary: '#B89B7A',
+  secondary: '#8F7A6A',
+  text: '#432818',
+  background: '#FAF9F7',
   // ... outras cores
 };
 ```
@@ -135,7 +135,7 @@ const BRAND_COLORS = {
 ```typescript
 const getMarginClass = (
   value: string | number,
-  type: "top" | "bottom" | "left" | "right"
+  type: 'top' | 'bottom' | 'left' | 'right'
 ): string => {
   // Implementação universal
 };
@@ -146,8 +146,8 @@ const getMarginClass = (
 ```typescript
 const {
   // Propriedades específicas
-  backgroundColor = "#FFFFFF",
-  textColor = "#432818",
+  backgroundColor = '#FFFFFF',
+  textColor = '#432818',
   // Margens universais
   marginTop = 8,
   marginBottom = 8,

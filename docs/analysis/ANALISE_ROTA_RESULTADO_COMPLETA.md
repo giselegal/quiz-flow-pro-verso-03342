@@ -14,7 +14,7 @@ A rota `/resultado` está **perfeitamente configurada** e direcionada para o com
 
 ```tsx
 // Import correto com lazy loading
-const ResultPage = lazy(() => import("./pages/ResultPage"));
+const ResultPage = lazy(() => import('./pages/ResultPage'));
 
 // Rota configurada corretamente
 <Route path="/resultado" component={ResultPage} />;
@@ -24,7 +24,7 @@ const ResultPage = lazy(() => import("./pages/ResultPage"));
 
 ```typescript
 export const ROUTES = {
-  RESULTADO: "/resultado",
+  RESULTADO: '/resultado',
   // ... outras rotas
 };
 ```
@@ -124,12 +124,12 @@ http://localhost:5173/test-resultado
 
 ```tsx
 // No QuizPage, ao finalizar o quiz:
-window.location.href = "/resultado";
+window.location.href = '/resultado';
 
 // Ou usando o router:
-import { useLocation } from "wouter";
+import { useLocation } from 'wouter';
 const [, setLocation] = useLocation();
-setLocation("/resultado");
+setLocation('/resultado');
 ```
 
 ---
@@ -148,7 +148,7 @@ setLocation("/resultado");
 ```tsx
 // Carrega dados mock se não houver resultado real
 useEffect(() => {
-  if (!primaryStyle && process.env.NODE_ENV === "development") {
+  if (!primaryStyle && process.env.NODE_ENV === 'development') {
     loadMockData();
     window.location.reload();
   }
@@ -213,7 +213,7 @@ style={{
 4. **Confirme os dados do quiz**
    ```tsx
    // No console do navegador:
-   console.log("Quiz data:", localStorage.getItem("quiz-data"));
+   console.log('Quiz data:', localStorage.getItem('quiz-data'));
    ```
 
 ### **Problemas Comuns:**

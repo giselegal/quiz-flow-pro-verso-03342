@@ -61,7 +61,7 @@ const sortedBlocks = useMemo(() => {
       return block.stepId === selectedStepId;
     }
     // Se não tem stepId, só mostrar se for a primeira etapa
-    return selectedStepId === "etapa-1";
+    return selectedStepId === 'etapa-1';
   });
 
   console.log(`🔍 Etapa: ${selectedStepId}, Blocos: ${stepBlocks.length}`);
@@ -80,11 +80,11 @@ useEffect(() => {
       const serviceSteps = stepTemplateService.getAllSteps();
       if (serviceSteps && serviceSteps.length > 0) {
         setSteps(serviceSteps);
-        setSelectedStepId("etapa-1");
-        console.log("✅ Etapas locais carregadas:", serviceSteps.length);
+        setSelectedStepId('etapa-1');
+        console.log('✅ Etapas locais carregadas:', serviceSteps.length);
       }
     } catch (error) {
-      console.error("❌ Erro ao carregar etapas locais:", error);
+      console.error('❌ Erro ao carregar etapas locais:', error);
     }
   };
 
@@ -94,7 +94,7 @@ useEffect(() => {
   // Supabase opcional, em background
   if (funnelId) {
     loadSupabaseData(funnelId).catch(() => {
-      console.log("🔄 Supabase indisponível, mantendo dados locais");
+      console.log('🔄 Supabase indisponível, mantendo dados locais');
     });
   }
 }, []);
@@ -106,7 +106,7 @@ useEffect(() => {
 // 4. CORREÇÃO: getStepTemplate com fallback garantido
 const getStepTemplate = useCallback((stepId: string) => {
   try {
-    const stepNumber = parseInt(stepId.replace(/\D/g, ""));
+    const stepNumber = parseInt(stepId.replace(/\D/g, ''));
     console.log(`🔍 Buscando template para step ${stepNumber}`);
 
     const template = stepTemplateService.getStepTemplate(stepNumber);
@@ -120,23 +120,23 @@ const getStepTemplate = useCallback((stepId: string) => {
     console.warn(`⚠️ Template vazio, usando fallback para step ${stepNumber}`);
     return [
       {
-        type: "heading-inline",
+        type: 'heading-inline',
         properties: {
           content: `Etapa ${stepNumber}`,
-          level: "h2",
-          textAlign: "center",
+          level: 'h2',
+          textAlign: 'center',
         },
       },
       {
-        type: "text-inline",
+        type: 'text-inline',
         properties: {
           content: `Conteúdo da etapa ${stepNumber}`,
-          textAlign: "center",
+          textAlign: 'center',
         },
       },
     ];
   } catch (error) {
-    console.error("❌ Erro crítico no getStepTemplate:", error);
+    console.error('❌ Erro crítico no getStepTemplate:', error);
     return [];
   }
 }, []);
@@ -153,7 +153,7 @@ const getStepTemplate = useCallback((stepId: string) => {
 ### **2. `/src/hooks/useHistory.ts`** - CRIAR
 
 ```typescript
-import { useState } from "react";
+import { useState } from 'react';
 
 export const useHistory = <T>(initialState: T) => {
   const [past, setPast] = useState<T[]>([]);

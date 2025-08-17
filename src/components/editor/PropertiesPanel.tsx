@@ -15,7 +15,7 @@ interface PropertiesPanelProps {
 
 /**
  * 🎛️ PROPERTIES PANEL: Painel de propriedades otimizado
- * 
+ *
  * Otimizações aplicadas:
  * ✅ Componente separado e reutilizável
  * ✅ Callbacks memoizados para performance
@@ -25,19 +25,25 @@ interface PropertiesPanelProps {
  */
 export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({ block, onUpdate }) => {
   // Memoização das funções de update
-  const updateContent = useCallback((key: string, value: any) => {
-    if (!block) return;
-    onUpdate(block.id, {
-      content: { ...block.content, [key]: value }
-    });
-  }, [block, onUpdate]);
+  const updateContent = useCallback(
+    (key: string, value: any) => {
+      if (!block) return;
+      onUpdate(block.id, {
+        content: { ...block.content, [key]: value },
+      });
+    },
+    [block, onUpdate]
+  );
 
-  const updateProperty = useCallback((key: string, value: any) => {
-    if (!block) return;
-    onUpdate(block.id, {
-      properties: { ...block.properties, [key]: value }
-    });
-  }, [block, onUpdate]);
+  const updateProperty = useCallback(
+    (key: string, value: any) => {
+      if (!block) return;
+      onUpdate(block.id, {
+        properties: { ...block.properties, [key]: value },
+      });
+    },
+    [block, onUpdate]
+  );
 
   // Renderização específica por tipo de bloco
   const renderPropertiesForType = useMemo(() => {
@@ -46,23 +52,23 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({ block, onUpdat
     const commonProps = {
       updateContent,
       updateProperty,
-      block
+      block,
     };
 
     const renderers: Record<string, () => React.ReactNode> = {
-      'text': () => <TextProperties {...commonProps} />,
+      text: () => <TextProperties {...commonProps} />,
       'text-inline': () => <TextProperties {...commonProps} />,
       'quiz-header': () => <QuizHeaderProperties {...commonProps} />,
       'quiz-intro-header': () => <QuizHeaderProperties {...commonProps} />,
       'lead-form': () => <LeadFormProperties {...commonProps} />,
       'options-grid': () => <OptionsGridProperties {...commonProps} />,
-      'button': () => <ButtonProperties {...commonProps} />,
+      button: () => <ButtonProperties {...commonProps} />,
       'button-inline': () => <ButtonProperties {...commonProps} />,
-      'image': () => <ImageProperties {...commonProps} />,
+      image: () => <ImageProperties {...commonProps} />,
       'image-inline': () => <ImageProperties {...commonProps} />,
       'image-display-inline': () => <ImageProperties {...commonProps} />,
       'result-display': () => <ResultProperties {...commonProps} />,
-      'offer-cta': () => <OfferProperties {...commonProps} />
+      'offer-cta': () => <OfferProperties {...commonProps} />,
     };
 
     const renderer = renderers[block.type];
@@ -94,9 +100,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({ block, onUpdat
           </Badge>
         </div>
       </CardHeader>
-      <CardContent className="space-y-4 p-4 pt-0">
-        {renderPropertiesForType}
-      </CardContent>
+      <CardContent className="space-y-4 p-4 pt-0">{renderPropertiesForType}</CardContent>
     </Card>
   );
 };
@@ -112,13 +116,15 @@ const TextProperties: React.FC<{
       <Type className="h-4 w-4" />
       <span className="text-sm font-medium">Texto</span>
     </div>
-    
+
     <div>
-      <Label htmlFor="text-content" className="text-xs">Conteúdo</Label>
+      <Label htmlFor="text-content" className="text-xs">
+        Conteúdo
+      </Label>
       <Textarea
         id="text-content"
         value={block.content?.text || ''}
-        onChange={(e) => updateContent('text', e.target.value)}
+        onChange={e => updateContent('text', e.target.value)}
         placeholder="Digite o texto..."
         rows={4}
         className="text-sm"
@@ -137,24 +143,24 @@ const QuizHeaderProperties: React.FC<{
       <Settings className="h-4 w-4" />
       <span className="text-sm font-medium">Header do Quiz</span>
     </div>
-    
+
     <div>
       <Label className="text-xs">URL do Logo</Label>
       <Input
         value={block.properties?.logoUrl || ''}
-        onChange={(e) => updateProperty('logoUrl', e.target.value)}
+        onChange={e => updateProperty('logoUrl', e.target.value)}
         placeholder="https://..."
         className="text-sm"
       />
     </div>
-    
+
     <div className="grid grid-cols-2 gap-2">
       <div>
         <Label className="text-xs">Largura</Label>
         <Input
           type="number"
           value={block.properties?.logoWidth || 96}
-          onChange={(e) => updateProperty('logoWidth', parseInt(e.target.value))}
+          onChange={e => updateProperty('logoWidth', parseInt(e.target.value))}
           className="text-sm"
         />
       </div>
@@ -163,19 +169,21 @@ const QuizHeaderProperties: React.FC<{
         <Input
           type="number"
           value={block.properties?.logoHeight || 96}
-          onChange={(e) => updateProperty('logoHeight', parseInt(e.target.value))}
+          onChange={e => updateProperty('logoHeight', parseInt(e.target.value))}
           className="text-sm"
         />
       </div>
     </div>
-    
+
     <div className="flex items-center space-x-2">
       <Switch
         id="show-progress"
         checked={block.properties?.showProgress ?? true}
-        onCheckedChange={(checked) => updateProperty('showProgress', checked)}
+        onCheckedChange={checked => updateProperty('showProgress', checked)}
       />
-      <Label htmlFor="show-progress" className="text-xs">Mostrar Progresso</Label>
+      <Label htmlFor="show-progress" className="text-xs">
+        Mostrar Progresso
+      </Label>
     </div>
   </div>
 );
@@ -190,44 +198,46 @@ const LeadFormProperties: React.FC<{
       <MousePointer className="h-4 w-4" />
       <span className="text-sm font-medium">Formulário Lead</span>
     </div>
-    
+
     <div>
       <Label className="text-xs">Título</Label>
       <Input
         value={block.content?.title || ''}
-        onChange={(e) => updateContent('title', e.target.value)}
+        onChange={e => updateContent('title', e.target.value)}
         placeholder="Digite seu nome"
         className="text-sm"
       />
     </div>
-    
+
     <div>
       <Label className="text-xs">Placeholder</Label>
       <Input
         value={block.content?.placeholder || ''}
-        onChange={(e) => updateContent('placeholder', e.target.value)}
+        onChange={e => updateContent('placeholder', e.target.value)}
         placeholder="Nome"
         className="text-sm"
       />
     </div>
-    
+
     <div>
       <Label className="text-xs">Texto do Botão</Label>
       <Input
         value={block.content?.buttonText || ''}
-        onChange={(e) => updateContent('buttonText', e.target.value)}
+        onChange={e => updateContent('buttonText', e.target.value)}
         placeholder="Quero Descobrir meu Estilo Agora!"
         className="text-sm"
       />
     </div>
-    
+
     <div className="flex items-center space-x-2">
       <Switch
         id="is-required"
         checked={block.properties?.required ?? true}
-        onCheckedChange={(checked) => updateProperty('required', checked)}
+        onCheckedChange={checked => updateProperty('required', checked)}
       />
-      <Label htmlFor="is-required" className="text-xs">Campo Obrigatório</Label>
+      <Label htmlFor="is-required" className="text-xs">
+        Campo Obrigatório
+      </Label>
     </div>
   </div>
 );
@@ -242,17 +252,17 @@ const OptionsGridProperties: React.FC<{
       <Settings className="h-4 w-4" />
       <span className="text-sm font-medium">Grid de Opções</span>
     </div>
-    
+
     <div>
       <Label className="text-xs">Título da Questão</Label>
       <Input
         value={block.content?.title || ''}
-        onChange={(e) => updateContent('title', e.target.value)}
+        onChange={e => updateContent('title', e.target.value)}
         placeholder="QUAL O SEU TIPO DE ROUPA FAVORITA?"
         className="text-sm"
       />
     </div>
-    
+
     <div>
       <Label className="text-xs">Seleções Obrigatórias</Label>
       <Input
@@ -260,28 +270,32 @@ const OptionsGridProperties: React.FC<{
         min="1"
         max="8"
         value={block.properties?.requiredSelections || 3}
-        onChange={(e) => updateProperty('requiredSelections', parseInt(e.target.value))}
+        onChange={e => updateProperty('requiredSelections', parseInt(e.target.value))}
         className="text-sm"
       />
     </div>
-    
+
     <div className="space-y-2">
       <div className="flex items-center space-x-2">
         <Switch
           id="auto-advance"
           checked={block.properties?.autoAdvance || false}
-          onCheckedChange={(checked) => updateProperty('autoAdvance', checked)}
+          onCheckedChange={checked => updateProperty('autoAdvance', checked)}
         />
-        <Label htmlFor="auto-advance" className="text-xs">Avanço Automático</Label>
+        <Label htmlFor="auto-advance" className="text-xs">
+          Avanço Automático
+        </Label>
       </div>
-      
+
       <div className="flex items-center space-x-2">
         <Switch
           id="show-images"
           checked={block.properties?.showImages || false}
-          onCheckedChange={(checked) => updateProperty('showImages', checked)}
+          onCheckedChange={checked => updateProperty('showImages', checked)}
         />
-        <Label htmlFor="show-images" className="text-xs">Mostrar Imagens</Label>
+        <Label htmlFor="show-images" className="text-xs">
+          Mostrar Imagens
+        </Label>
       </div>
     </div>
   </div>
@@ -297,22 +311,22 @@ const ButtonProperties: React.FC<{
       <MousePointer className="h-4 w-4" />
       <span className="text-sm font-medium">Botão</span>
     </div>
-    
+
     <div>
       <Label className="text-xs">Texto</Label>
       <Input
         value={block.content?.text || ''}
-        onChange={(e) => updateContent('text', e.target.value)}
+        onChange={e => updateContent('text', e.target.value)}
         placeholder="Clique aqui"
         className="text-sm"
       />
     </div>
-    
+
     <div>
       <Label className="text-xs">URL</Label>
       <Input
         value={block.content?.url || ''}
-        onChange={(e) => updateContent('url', e.target.value)}
+        onChange={e => updateContent('url', e.target.value)}
         placeholder="#"
         className="text-sm"
       />
@@ -330,22 +344,22 @@ const ImageProperties: React.FC<{
       <ImageIcon className="h-4 w-4" />
       <span className="text-sm font-medium">Imagem</span>
     </div>
-    
+
     <div>
       <Label className="text-xs">URL</Label>
       <Input
         value={block.content?.url || ''}
-        onChange={(e) => updateContent('url', e.target.value)}
+        onChange={e => updateContent('url', e.target.value)}
         placeholder="https://..."
         className="text-sm"
       />
     </div>
-    
+
     <div>
       <Label className="text-xs">Texto Alternativo</Label>
       <Input
         value={block.content?.alt || ''}
-        onChange={(e) => updateContent('alt', e.target.value)}
+        onChange={e => updateContent('alt', e.target.value)}
         placeholder="Descrição da imagem"
         className="text-sm"
       />
@@ -363,22 +377,22 @@ const ResultProperties: React.FC<{
       <Settings className="h-4 w-4" />
       <span className="text-sm font-medium">Resultado</span>
     </div>
-    
+
     <div>
       <Label className="text-xs">Título</Label>
       <Input
         value={block.content?.title || ''}
-        onChange={(e) => updateContent('title', e.target.value)}
+        onChange={e => updateContent('title', e.target.value)}
         placeholder="Seu Resultado"
         className="text-sm"
       />
     </div>
-    
+
     <div>
       <Label className="text-xs">Descrição</Label>
       <Textarea
         value={block.content?.description || ''}
-        onChange={(e) => updateContent('description', e.target.value)}
+        onChange={e => updateContent('description', e.target.value)}
         placeholder="Resultado personalizado"
         rows={3}
         className="text-sm"
@@ -397,33 +411,33 @@ const OfferProperties: React.FC<{
       <Settings className="h-4 w-4" />
       <span className="text-sm font-medium">Oferta CTA</span>
     </div>
-    
+
     <div>
       <Label className="text-xs">Título</Label>
       <Input
         value={block.content?.title || ''}
-        onChange={(e) => updateContent('title', e.target.value)}
+        onChange={e => updateContent('title', e.target.value)}
         placeholder="Oferta Especial"
         className="text-sm"
       />
     </div>
-    
+
     <div>
       <Label className="text-xs">Descrição</Label>
       <Textarea
         value={block.content?.description || ''}
-        onChange={(e) => updateContent('description', e.target.value)}
+        onChange={e => updateContent('description', e.target.value)}
         placeholder="Não perca esta oportunidade"
         rows={2}
         className="text-sm"
       />
     </div>
-    
+
     <div>
       <Label className="text-xs">Texto do Botão</Label>
       <Input
         value={block.content?.buttonText || ''}
-        onChange={(e) => updateContent('buttonText', e.target.value)}
+        onChange={e => updateContent('buttonText', e.target.value)}
         placeholder="Aproveitar Oferta"
         className="text-sm"
       />
@@ -441,7 +455,7 @@ const DefaultProperties: React.FC<{
       <Settings className="h-4 w-4" />
       <span className="text-sm font-medium">Propriedades Gerais</span>
     </div>
-    
+
     <div className="p-3 bg-muted/50 rounded-lg">
       <p className="text-xs text-muted-foreground">
         Tipo: <span className="font-mono">{block.type}</span>

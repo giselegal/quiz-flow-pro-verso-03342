@@ -97,7 +97,7 @@ export const MyComponent = ({ name, age }) => {
 ```tsx
 const [isOpen, setIsOpen] = useState(false);
 
-return <button onClick={() => setIsOpen(!isOpen)}>{isOpen ? "Fechar" : "Abrir"}</button>;
+return <button onClick={() => setIsOpen(!isOpen)}>{isOpen ? 'Fechar' : 'Abrir'}</button>;
 ```
 
 2. **Estado Dinâmico**
@@ -115,8 +115,8 @@ useEffect(() => {
 
 ```tsx
 const calculateDiscount = (price, userType) => {
-  if (userType === "premium") return price * 0.8;
-  if (userType === "student") return price * 0.9;
+  if (userType === 'premium') return price * 0.8;
+  if (userType === 'student') return price * 0.9;
   return price;
 };
 ```
@@ -168,7 +168,7 @@ export const QuizQuestion = ({ properties }) => {
         <button
           key={option.value}
           onClick={() => handleSelect(option)}
-          className={selected?.value === option.value ? "selected" : ""}
+          className={selected?.value === option.value ? 'selected' : ''}
         >
           {option.text}
         </button>

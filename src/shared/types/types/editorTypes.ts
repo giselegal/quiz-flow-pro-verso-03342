@@ -1,4 +1,3 @@
-
 import { Block } from './editor';
 
 export interface EditorState {
@@ -9,7 +8,14 @@ export interface EditorState {
 }
 
 export interface EditorAction {
-  type: 'SET_BLOCKS' | 'ADD_BLOCK' | 'UPDATE_BLOCK' | 'DELETE_BLOCK' | 'SET_SELECTED_BLOCK' | 'SET_PREVIEW_MODE' | 'SET_GLOBAL_STYLES_OPEN';
+  type:
+    | 'SET_BLOCKS'
+    | 'ADD_BLOCK'
+    | 'UPDATE_BLOCK'
+    | 'DELETE_BLOCK'
+    | 'SET_SELECTED_BLOCK'
+    | 'SET_PREVIEW_MODE'
+    | 'SET_GLOBAL_STYLES_OPEN';
   payload: any;
 }
 

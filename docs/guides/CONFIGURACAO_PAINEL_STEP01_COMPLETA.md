@@ -138,10 +138,10 @@
 
 ```typescript
 const brandColors = {
-  primary: "#B89B7A", // Dourado principal
-  secondary: "#432818", // Marrom escuro
-  accent: "#E8D5C4", // Dourado claro
-  light: "#F5F0E8", // Bege claro
+  primary: '#B89B7A', // Dourado principal
+  secondary: '#432818', // Marrom escuro
+  accent: '#E8D5C4', // Dourado claro
+  light: '#F5F0E8', // Bege claro
 };
 ```
 
@@ -181,14 +181,14 @@ const brandColors = {
 ```typescript
 // Ao selecionar um text-inline no Step01:
 selectedBlock = {
-  id: "text-intro-title",
-  type: "text-inline",
+  id: 'text-intro-title',
+  type: 'text-inline',
   properties: {
     content: "<span style='color: #B89B7A'>Chega</span> de um guarda-roupa...",
-    fontSize: "text-4xl",
-    fontFamily: "Playfair Display, serif",
-    textAlign: "text-center",
-    color: "#432818",
+    fontSize: 'text-4xl',
+    fontFamily: 'Playfair Display, serif',
+    textAlign: 'text-center',
+    color: '#432818',
   },
 };
 

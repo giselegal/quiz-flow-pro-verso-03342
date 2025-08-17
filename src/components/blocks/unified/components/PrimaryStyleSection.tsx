@@ -19,7 +19,7 @@ export const PrimaryStyleSection: React.FC<PrimaryStyleSectionProps> = ({
   showProgress,
   showImage,
   showGuide,
-  stepId
+  stepId,
 }) => {
   // Gerar prefixo dos IDs baseado no stepId
   const idPrefix = stepId ? `${stepId}-` : 'header-';
@@ -32,7 +32,9 @@ export const PrimaryStyleSection: React.FC<PrimaryStyleSectionProps> = ({
     <div id={`${idPrefix}primary-style-section`} className="mt-6 space-y-4">
       {/* Título da seção */}
       <div className="text-center">
-        <h3 id={`${idPrefix}primary-style-title`} className="text-lg font-semibold text-foreground">Seu Estilo Predominante</h3>
+        <h3 id={`${idPrefix}primary-style-title`} className="text-lg font-semibold text-foreground">
+          Seu Estilo Predominante
+        </h3>
       </div>
 
       {/* Conteúdo principal */}
@@ -40,7 +42,7 @@ export const PrimaryStyleSection: React.FC<PrimaryStyleSectionProps> = ({
         {/* Nome do estilo */}
         {showName && (
           <div className="text-center">
-            <h4 
+            <h4
               id={`${idPrefix}primary-style-name`}
               className="text-2xl font-bold"
               style={{ color: styleResult.color }}
@@ -53,7 +55,10 @@ export const PrimaryStyleSection: React.FC<PrimaryStyleSectionProps> = ({
         {/* Descrição do estilo */}
         {showDescription && (
           <div className="text-center px-4">
-            <p id={`${idPrefix}primary-style-description`} className="text-sm text-muted-foreground leading-relaxed">
+            <p
+              id={`${idPrefix}primary-style-description`}
+              className="text-sm text-muted-foreground leading-relaxed"
+            >
               {styleResult.description}
             </p>
           </div>
@@ -71,9 +76,11 @@ export const PrimaryStyleSection: React.FC<PrimaryStyleSectionProps> = ({
               value={styleResult.percentage}
               className="h-2"
               indicatorClassName="transition-all duration-500"
-              style={{
-                '--progress-indicator-bg': styleResult.color
-              } as React.CSSProperties}
+              style={
+                {
+                  '--progress-indicator-bg': styleResult.color,
+                } as React.CSSProperties
+              }
             />
           </div>
         )}
@@ -90,7 +97,7 @@ export const PrimaryStyleSection: React.FC<PrimaryStyleSectionProps> = ({
                   alt={`Estilo ${styleResult.name}`}
                   className="w-32 h-32 rounded-full object-cover border-4 shadow-lg"
                   style={{ borderColor: styleResult.color }}
-                  onError={(e) => {
+                  onError={e => {
                     e.currentTarget.src = 'https://via.placeholder.com/128x128?text=Estilo';
                   }}
                 />
@@ -108,7 +115,7 @@ export const PrimaryStyleSection: React.FC<PrimaryStyleSectionProps> = ({
                   src={styleResult.guideImage}
                   alt={`Guia de estilo ${styleResult.name}`}
                   className="w-full h-32 rounded-lg object-cover shadow-lg"
-                  onError={(e) => {
+                  onError={e => {
                     e.currentTarget.src = 'https://via.placeholder.com/192x128?text=Guia';
                   }}
                 />

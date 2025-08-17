@@ -47,23 +47,25 @@ const ProgressBarBlock: React.FC<ProgressBarProps> = ({
   return (
     <div className={containerClasses}>
       <div className="w-full">
-        <div 
+        <div
           className={`w-full ${height} rounded-full overflow-hidden`}
           style={{ backgroundColor }}
         >
           <div
             className={`${height} ${animated ? 'transition-all duration-1000 ease-out' : ''} rounded-full`}
-            style={{ 
+            style={{
               width: `${percentage}%`,
-              backgroundColor: color
+              backgroundColor: color,
             }}
           />
         </div>
-        
+
         {showLabel && (
           <div className="flex justify-between mt-2 text-sm text-stone-600">
             <span>{Math.round(percentage)}%</span>
-            <span>{displayValue}/{max}</span>
+            <span>
+              {displayValue}/{max}
+            </span>
           </div>
         )}
       </div>

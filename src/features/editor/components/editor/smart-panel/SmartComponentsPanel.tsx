@@ -20,7 +20,7 @@ const SmartComponentsPanel: React.FC<SmartComponentsPanelProps> = ({ onAddCompon
     type: comp.type,
     name: comp.label,
     category: comp.category,
-    description: `Componente ${comp.label}`
+    description: `Componente ${comp.label}`,
   }));
 
   // Filter based on search term

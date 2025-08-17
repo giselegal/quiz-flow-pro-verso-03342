@@ -19,24 +19,24 @@ const OfferHeroSectionInlineBlock: React.FC<BlockComponentProps> = ({
   const properties = safeGetBlockProperties(block);
 
   const {
-    badgeText = "3000+ mulheres transformadas",
-    badgeIcon = "Award",
-    title = "Descubra Seu",
-    titleHighlight = "Estilo Predominante",
-    titleSuffix = "em 5 Minutos",
-    subtitle = "Tenha finalmente um guarda-roupa que **funciona 100%**, onde tudo combina e reflete sua personalidade",
-    heroImageUrl = "https://res.cloudinary.com/dqljyf76t/image/upload/v1745193445/4fb35a75-02dd-40b9-adae-854e90228675_ibkrmt.webp",
-    heroImageAlt = "Transformação de guarda-roupa",
+    badgeText = '3000+ mulheres transformadas',
+    badgeIcon = 'Award',
+    title = 'Descubra Seu',
+    titleHighlight = 'Estilo Predominante',
+    titleSuffix = 'em 5 Minutos',
+    subtitle = 'Tenha finalmente um guarda-roupa que **funciona 100%**, onde tudo combina e reflete sua personalidade',
+    heroImageUrl = 'https://res.cloudinary.com/dqljyf76t/image/upload/v1745193445/4fb35a75-02dd-40b9-adae-854e90228675_ibkrmt.webp',
+    heroImageAlt = 'Transformação de guarda-roupa',
     heroImageWidth = 600,
     heroImageHeight = 400,
-    ctaText = "Descobrir Meu Estilo Agora",
-    ctaIcon = "ArrowRight", 
-    ctaUrl = "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
+    ctaText = 'Descobrir Meu Estilo Agora',
+    ctaIcon = 'ArrowRight',
+    ctaUrl = 'https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912',
     trustElements = [
-      { icon: "Lock", text: "100% Seguro" },
-      { icon: "Shield", text: "7 Dias Garantia" }
+      { icon: 'Lock', text: '100% Seguro' },
+      { icon: 'Shield', text: '7 Dias Garantia' },
     ],
-    spacing = "large"
+    spacing = 'large',
   } = properties;
 
   // Icon mapping
@@ -44,18 +44,18 @@ const OfferHeroSectionInlineBlock: React.FC<BlockComponentProps> = ({
     Award,
     ArrowRight,
     Lock,
-    Shield
+    Shield,
   };
 
   const spacingClasses = {
-    small: "py-8",
-    medium: "py-12",
-    large: "py-16"
+    small: 'py-8',
+    medium: 'py-12',
+    large: 'py-16',
   };
 
   const handleCtaClick = () => {
     if (ctaUrl) {
-      window.open(ctaUrl, "_blank");
+      window.open(ctaUrl, '_blank');
     }
   };
 
@@ -87,12 +87,14 @@ const OfferHeroSectionInlineBlock: React.FC<BlockComponentProps> = ({
             <br />
             {titleSuffix}
           </h1>
-          
+
           {/* Subtítulo */}
           <p className="text-lg md:text-xl text-[#6B4F43] mb-8 max-w-2xl mx-auto leading-relaxed">
-            {subtitle.split('**').map((part: string, index: number) => 
-              index % 2 === 1 ? <strong key={index}>{part}</strong> : part
-            )}
+            {subtitle
+              .split('**')
+              .map((part: string, index: number) =>
+                index % 2 === 1 ? <strong key={index}>{part}</strong> : part
+              )}
           </p>
 
           {/* Imagem hero */}
@@ -117,7 +119,7 @@ const OfferHeroSectionInlineBlock: React.FC<BlockComponentProps> = ({
             <CtaIconComponent size={20} />
             {ctaText}
           </button>
-          
+
           {/* Trust elements */}
           {trustElements && trustElements.length > 0 && (
             <div className="flex items-center justify-center gap-6 text-sm text-[#8B7355]">

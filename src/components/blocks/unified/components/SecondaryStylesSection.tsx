@@ -19,15 +19,15 @@ export const SecondaryStylesSection: React.FC<SecondaryStylesSectionProps> = ({
   showSecondaryProgress,
   showThirdName,
   showThirdProgress,
-  stepId
+  stepId,
 }) => {
   // Gerar prefixo dos IDs baseado no stepId
   const idPrefix = stepId ? `${stepId}-` : 'header-';
-  
+
   // Se nenhum elemento estiver ativo, não renderizar nada
   const hasSecondaryElements = showSecondaryName || showSecondaryProgress;
   const hasThirdElements = showThirdName || showThirdProgress;
-  
+
   if (!hasSecondaryElements && !hasThirdElements) {
     return null;
   }
@@ -36,17 +36,25 @@ export const SecondaryStylesSection: React.FC<SecondaryStylesSectionProps> = ({
     <div id={`${idPrefix}secondary-styles-section`} className="mt-6 space-y-4">
       {/* Título da seção */}
       <div className="text-center">
-        <h3 id={`${idPrefix}secondary-styles-title`} className="text-base font-medium text-muted-foreground">Estilos Complementares</h3>
+        <h3
+          id={`${idPrefix}secondary-styles-title`}
+          className="text-base font-medium text-muted-foreground"
+        >
+          Estilos Complementares
+        </h3>
       </div>
 
       {/* Grid de estilos secundários */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 px-4">
         {/* Segundo estilo */}
         {hasSecondaryElements && (
-          <div id={`${idPrefix}secondary-style-card`} className="space-y-2 p-3 rounded-lg bg-muted/30">
+          <div
+            id={`${idPrefix}secondary-style-card`}
+            className="space-y-2 p-3 rounded-lg bg-muted/30"
+          >
             {showSecondaryName && (
               <div className="text-center">
-                <h4 
+                <h4
                   id={`${idPrefix}secondary-style-name`}
                   className="text-sm font-semibold"
                   style={{ color: secondaryStyle.color }}
@@ -55,7 +63,7 @@ export const SecondaryStylesSection: React.FC<SecondaryStylesSectionProps> = ({
                 </h4>
               </div>
             )}
-            
+
             {showSecondaryProgress && (
               <div>
                 <div className="flex justify-between text-xs text-muted-foreground mb-1">
@@ -67,9 +75,11 @@ export const SecondaryStylesSection: React.FC<SecondaryStylesSectionProps> = ({
                   value={secondaryStyle.percentage}
                   className="h-1.5"
                   indicatorClassName="transition-all duration-300"
-                  style={{
-                    '--progress-indicator-bg': secondaryStyle.color
-                  } as React.CSSProperties}
+                  style={
+                    {
+                      '--progress-indicator-bg': secondaryStyle.color,
+                    } as React.CSSProperties
+                  }
                 />
               </div>
             )}
@@ -81,7 +91,7 @@ export const SecondaryStylesSection: React.FC<SecondaryStylesSectionProps> = ({
           <div id={`${idPrefix}third-style-card`} className="space-y-2 p-3 rounded-lg bg-muted/30">
             {showThirdName && (
               <div className="text-center">
-                <h4 
+                <h4
                   id={`${idPrefix}third-style-name`}
                   className="text-sm font-semibold"
                   style={{ color: thirdStyle.color }}
@@ -90,7 +100,7 @@ export const SecondaryStylesSection: React.FC<SecondaryStylesSectionProps> = ({
                 </h4>
               </div>
             )}
-            
+
             {showThirdProgress && (
               <div>
                 <div className="flex justify-between text-xs text-muted-foreground mb-1">
@@ -102,9 +112,11 @@ export const SecondaryStylesSection: React.FC<SecondaryStylesSectionProps> = ({
                   value={thirdStyle.percentage}
                   className="h-1.5"
                   indicatorClassName="transition-all duration-300"
-                  style={{
-                    '--progress-indicator-bg': thirdStyle.color
-                  } as React.CSSProperties}
+                  style={
+                    {
+                      '--progress-indicator-bg': thirdStyle.color,
+                    } as React.CSSProperties
+                  }
                 />
               </div>
             )}

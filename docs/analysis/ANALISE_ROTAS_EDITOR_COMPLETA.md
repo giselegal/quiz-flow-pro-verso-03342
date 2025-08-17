@@ -30,10 +30,10 @@ Contextos: EditorProvider + ScrollSyncProvider
 ```tsx
 <ErrorBoundary>
   <EditorProvider>
-    {" "}
+    {' '}
     // Estado global do editor
     <ScrollSyncProvider>
-      {" "}
+      {' '}
       // Sincronização de scroll
       <EditorPage /> // Interface principal
     </ScrollSyncProvider>

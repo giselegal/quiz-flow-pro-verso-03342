@@ -1,16 +1,16 @@
 // Script para testar todos os componentes do blockDefinitionsOptimized.ts
 
-import fs from "fs";
+import fs from 'fs';
 
 // Ler o arquivo blockDefinitionsOptimized.ts
-const filePath = "./client/src/config/blockDefinitionsOptimized.ts";
-const content = fs.readFileSync(filePath, "utf8");
+const filePath = './client/src/config/blockDefinitionsOptimized.ts';
+const content = fs.readFileSync(filePath, 'utf8');
 
 // Extrair apenas os tipos de blocos (não as propriedades)
 const blockMatches = content.match(/{\s*type:\s*['"`]([^'"`]+)['"`][^}]*}/g);
 
-console.log("🎯 COMPONENTES ATIVADOS NO EDITOR:");
-console.log("=".repeat(50));
+console.log('🎯 COMPONENTES ATIVADOS NO EDITOR:');
+console.log('='.repeat(50));
 
 if (blockMatches) {
   const blockTypes = blockMatches
@@ -41,4 +41,4 @@ if (categoryMatches) {
 }
 
 console.log('\n✅ Todos os componentes estão agora ativos na aba "Blocos" do editor!');
-console.log("🧪 Você pode testar cada um para decidir quais manter.");
+console.log('🧪 Você pode testar cada um para decidir quais manter.');

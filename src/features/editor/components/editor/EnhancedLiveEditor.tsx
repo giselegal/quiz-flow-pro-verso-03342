@@ -23,11 +23,9 @@ const EnhancedLiveEditor: React.FC<EnhancedLiveEditorProps> = ({
     selectedBlockId,
     blockActions: { setSelectedBlockId, addBlock, updateBlock, deleteBlock },
     uiState: { isPreviewing, viewportSize },
-    
   } = useEditor();
 
   const propertyHistory = usePropertyHistory();
-
 
   const handleComponentSelect = async (type: string) => {
     try {
@@ -52,7 +50,6 @@ const EnhancedLiveEditor: React.FC<EnhancedLiveEditorProps> = ({
     }
   };
 
-
   const handleDeleteBlock = (blockId: string) => {
     if (window.confirm('Tem certeza que deseja deletar este bloco?')) {
       deleteBlock(blockId);
@@ -72,7 +69,8 @@ const EnhancedLiveEditor: React.FC<EnhancedLiveEditorProps> = ({
 
   // Get canvas classes based on viewport size for responsive preview
   const getCanvasClassName = () => {
-    const baseClasses = 'transition-all duration-300 ease-out mx-auto bg-white rounded-lg shadow-lg border';
+    const baseClasses =
+      'transition-all duration-300 ease-out mx-auto bg-white rounded-lg shadow-lg border';
 
     switch (viewportSize) {
       case 'sm':
@@ -159,7 +157,9 @@ const EnhancedLiveEditor: React.FC<EnhancedLiveEditorProps> = ({
                   ) : (
                     <>
                       <h3 className="font-medium mb-2">Selecione um Componente</h3>
-                      <p className="text-sm">Clique em um bloco no canvas para editar suas propriedades</p>
+                      <p className="text-sm">
+                        Clique em um bloco no canvas para editar suas propriedades
+                      </p>
                     </>
                   )}
                 </div>
@@ -168,7 +168,6 @@ const EnhancedLiveEditor: React.FC<EnhancedLiveEditorProps> = ({
           </div>
         </ResizablePanel>
       </ResizablePanelGroup>
-
     </div>
   );
 };

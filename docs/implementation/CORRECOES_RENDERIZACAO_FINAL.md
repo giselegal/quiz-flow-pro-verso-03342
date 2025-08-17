@@ -16,13 +16,13 @@
 
 ```tsx
 // ANTES (não funcionava):
-const text = content.text || directText || "Digite seu texto aqui...";
+const text = content.text || directText || 'Digite seu texto aqui...';
 
 // DEPOIS (funciona com ambos):
 const text =
-  (typeof content === "string" ? content : content.text) ||
+  (typeof content === 'string' ? content : content.text) ||
   directText ||
-  "Digite seu texto aqui...";
+  'Digite seu texto aqui...';
 ```
 
 **RESULTADO**: Agora aceita `content` como string OU objeto
@@ -31,10 +31,10 @@ const text =
 
 ```tsx
 // ANTES:
-const text = properties.text || properties.title || "Título";
+const text = properties.text || properties.title || 'Título';
 
 // DEPOIS:
-const text = properties.content || properties.text || properties.title || "Título";
+const text = properties.content || properties.text || properties.title || 'Título';
 ```
 
 **RESULTADO**: Agora aceita `content` diretamente

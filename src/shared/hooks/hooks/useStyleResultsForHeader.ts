@@ -25,10 +25,10 @@ export interface StyleResultsForHeader {
 export const useStyleResultsForHeader = (): StyleResultsForHeader => {
   // 🔥 CONECTANDO DADOS REAIS DO QUIZ
   const { primaryStyle, secondaryStyles } = useQuizResult();
-  
+
   return useMemo(() => {
     console.log('🎯 useStyleResultsForHeader - Dados reais:', { primaryStyle, secondaryStyles });
-    
+
     const createStyleResult = (name: string, percentage: number): StyleResultForHeader => {
       const config = styleConfig[name];
       if (!config) {
@@ -39,7 +39,7 @@ export const useStyleResultsForHeader = (): StyleResultsForHeader => {
           percentage,
           image: 'https://via.placeholder.com/120x120',
           guideImage: 'https://via.placeholder.com/400x200',
-          color: '#B89B7A'
+          color: '#B89B7A',
         };
       }
 
@@ -49,40 +49,40 @@ export const useStyleResultsForHeader = (): StyleResultsForHeader => {
         percentage,
         image: config.image,
         guideImage: config.guideImage,
-        color: getStyleColor(name as any)
+        color: getStyleColor(name as any),
       };
     };
-    
+
     // Se temos dados reais do quiz, usar eles
     if (primaryStyle && secondaryStyles && secondaryStyles.length >= 2) {
       const realStyles = [
         { name: primaryStyle.style, percentage: Math.round(primaryStyle.percentage) },
         { name: secondaryStyles[0].style, percentage: Math.round(secondaryStyles[0].percentage) },
-        { name: secondaryStyles[1].style, percentage: Math.round(secondaryStyles[1].percentage) }
+        { name: secondaryStyles[1].style, percentage: Math.round(secondaryStyles[1].percentage) },
       ];
-      
+
       console.log('✅ Usando dados REAIS do quiz:', realStyles);
-      
+
       return {
         primaryStyle: createStyleResult(realStyles[0].name, realStyles[0].percentage),
         secondaryStyle: createStyleResult(realStyles[1].name, realStyles[1].percentage),
-        thirdStyle: createStyleResult(realStyles[2].name, realStyles[2].percentage)
+        thirdStyle: createStyleResult(realStyles[2].name, realStyles[2].percentage),
       };
     }
-    
+
     // Fallback: Dados mock para preview no editor
     const mockStyles = [
       { name: 'Natural', percentage: 45 },
       { name: 'Contemporâneo', percentage: 28 },
-      { name: 'Clássico', percentage: 27 }
+      { name: 'Clássico', percentage: 27 },
     ];
-    
+
     console.log('📝 Usando dados MOCK (preview):', mockStyles);
 
     return {
       primaryStyle: createStyleResult(mockStyles[0].name, mockStyles[0].percentage),
       secondaryStyle: createStyleResult(mockStyles[1].name, mockStyles[1].percentage),
-      thirdStyle: createStyleResult(mockStyles[2].name, mockStyles[2].percentage)
+      thirdStyle: createStyleResult(mockStyles[2].name, mockStyles[2].percentage),
     };
   }, [primaryStyle, secondaryStyles]);
 };

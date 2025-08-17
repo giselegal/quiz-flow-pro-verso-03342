@@ -1,12 +1,12 @@
 /**
  * 🎯 UNIFIED PROPERTY SCHEMA
- * 
+ *
  * Consolidated PropertySchema interface that unifies all fragmented implementations:
  * - src/types/editor.ts
- * - src/components/editor/blocks/EnhancedBlockRegistry.tsx  
+ * - src/components/editor/blocks/EnhancedBlockRegistry.tsx
  * - src/config/blockDefinitionsOptimized.ts
  * - src/hooks/useUnifiedProperties.ts
- * 
+ *
  * This creates a single source of truth for property definitions across the system.
  */
 
@@ -87,46 +87,46 @@ export interface PropertySchema {
   key: string;
   type: PropertyType;
   label: string;
-  
-  // Metadata  
+
+  // Metadata
   description?: string;
   category?: PropertyCategoryOrString;
   required?: boolean;
   placeholder?: string;
-  
+
   // Value configuration
   defaultValue?: any;
-  
+
   // Validation - support both object and function forms
-  validation?: 
+  validation?:
     | {
         min?: number;
-        max?: number; 
+        max?: number;
         pattern?: string;
-      } 
+      }
     | ((value: any) => boolean | string);
-  
+
   // Range/Number specific
   min?: number;
   max?: number;
   step?: number;
   unit?: string;
-  
+
   // Select specific
-  options?: Array<{ 
-    value: string | number; 
-    label: string; 
+  options?: Array<{
+    value: string | number;
+    label: string;
     disabled?: boolean;
   }>;
-  
-  // Textarea specific  
+
+  // Textarea specific
   rows?: number;
-  
+
   // Array specific
   itemSchema?: PropertySchema[];
   maxItems?: number;
   minItems?: number;
-  
+
   // Advanced features
   nestedPath?: string;
   tooltip?: string;
@@ -161,7 +161,17 @@ export interface LegacyPropertySchema {
 // Enhanced Block Registry PropertySchema
 export interface EnhancedPropertySchema {
   key: string;
-  type: 'text' | 'textarea' | 'number' | 'boolean' | 'select' | 'color' | 'image' | 'array' | 'object' | 'rich-text';
+  type:
+    | 'text'
+    | 'textarea'
+    | 'number'
+    | 'boolean'
+    | 'select'
+    | 'color'
+    | 'image'
+    | 'array'
+    | 'object'
+    | 'rich-text';
   label: string;
   description?: string;
   required?: boolean;
@@ -175,11 +185,21 @@ export interface EnhancedPropertySchema {
   };
 }
 
-// Block Definitions Optimized PropertySchema  
+// Block Definitions Optimized PropertySchema
 export interface OptimizedPropertySchema {
   key: string;
   label: string;
-  type: 'text-input' | 'textarea' | 'number-input' | 'boolean-switch' | 'color-picker' | 'select' | 'image-url' | 'video-url' | 'array-editor' | 'json-editor';
+  type:
+    | 'text-input'
+    | 'textarea'
+    | 'number-input'
+    | 'boolean-switch'
+    | 'color-picker'
+    | 'select'
+    | 'image-url'
+    | 'video-url'
+    | 'array-editor'
+    | 'json-editor';
   placeholder?: string;
   options?: Array<{ label: string; value: string }>;
   defaultValue?: any;
@@ -202,14 +222,14 @@ export interface OptimizedPropertySchema {
 export function legacyToUnified(legacy: LegacyPropertySchema, key: string): PropertySchema {
   // Map legacy types to PropertyType enum
   const typeMap: Record<string, PropertyType> = {
-    'string': PropertyType.TEXT,
-    'number': PropertyType.NUMBER,
-    'boolean': PropertyType.SWITCH,
-    'select': PropertyType.SELECT,
-    'textarea': PropertyType.TEXTAREA,
-    'array': PropertyType.ARRAY,
-    'color': PropertyType.COLOR,
-    'range': PropertyType.RANGE
+    string: PropertyType.TEXT,
+    number: PropertyType.NUMBER,
+    boolean: PropertyType.SWITCH,
+    select: PropertyType.SELECT,
+    textarea: PropertyType.TEXTAREA,
+    array: PropertyType.ARRAY,
+    color: PropertyType.COLOR,
+    range: PropertyType.RANGE,
   };
 
   return {
@@ -225,7 +245,7 @@ export function legacyToUnified(legacy: LegacyPropertySchema, key: string): Prop
     min: legacy.min,
     max: legacy.max,
     step: legacy.step,
-    rows: legacy.rows
+    rows: legacy.rows,
   };
 }
 
@@ -235,16 +255,16 @@ export function legacyToUnified(legacy: LegacyPropertySchema, key: string): Prop
 export function enhancedToUnified(enhanced: EnhancedPropertySchema): PropertySchema {
   // Map enhanced types to PropertyType enum
   const typeMap: Record<string, PropertyType> = {
-    'text': PropertyType.TEXT,
-    'textarea': PropertyType.TEXTAREA,
-    'number': PropertyType.NUMBER,
-    'boolean': PropertyType.SWITCH,
-    'select': PropertyType.SELECT,
-    'color': PropertyType.COLOR,
-    'image': PropertyType.UPLOAD,
-    'array': PropertyType.ARRAY,
-    'object': PropertyType.JSON,
-    'rich-text': PropertyType.RICH_TEXT
+    text: PropertyType.TEXT,
+    textarea: PropertyType.TEXTAREA,
+    number: PropertyType.NUMBER,
+    boolean: PropertyType.SWITCH,
+    select: PropertyType.SELECT,
+    color: PropertyType.COLOR,
+    image: PropertyType.UPLOAD,
+    array: PropertyType.ARRAY,
+    object: PropertyType.JSON,
+    'rich-text': PropertyType.RICH_TEXT,
   };
 
   return {
@@ -256,7 +276,7 @@ export function enhancedToUnified(enhanced: EnhancedPropertySchema): PropertySch
     tooltip: enhanced.tooltip,
     options: enhanced.options,
     defaultValue: enhanced.defaultValue,
-    validation: enhanced.validation
+    validation: enhanced.validation,
   };
 }
 
@@ -267,15 +287,15 @@ export function optimizedToUnified(optimized: OptimizedPropertySchema): Property
   // Map optimized types to PropertyType enum
   const typeMap: Record<string, PropertyType> = {
     'text-input': PropertyType.TEXT,
-    'textarea': PropertyType.TEXTAREA,
+    textarea: PropertyType.TEXTAREA,
     'number-input': PropertyType.NUMBER,
     'boolean-switch': PropertyType.SWITCH,
     'color-picker': PropertyType.COLOR,
-    'select': PropertyType.SELECT,
+    select: PropertyType.SELECT,
     'image-url': PropertyType.URL,
     'video-url': PropertyType.URL,
     'array-editor': PropertyType.ARRAY,
-    'json-editor': PropertyType.JSON
+    'json-editor': PropertyType.JSON,
   };
 
   return {
@@ -290,7 +310,7 @@ export function optimizedToUnified(optimized: OptimizedPropertySchema): Property
     max: optimized.max,
     description: optimized.description,
     nestedPath: optimized.nestedPath,
-    itemSchema: optimized.itemSchema?.map(optimizedToUnified)
+    itemSchema: optimized.itemSchema?.map(optimizedToUnified),
   };
 }
 
@@ -314,7 +334,7 @@ export function unifiedPropertyToSchema(property: UnifiedProperty): PropertySche
     unit: property.unit,
     options: property.options,
     dependencies: property.dependencies,
-    conditional: property.conditional
+    conditional: property.conditional,
   };
 }
 
@@ -339,7 +359,7 @@ export function schemaToUnifiedProperty(schema: PropertySchema): UnifiedProperty
     unit: schema.unit,
     options: schema.options,
     dependencies: schema.dependencies,
-    conditional: schema.conditional
+    conditional: schema.conditional,
   };
 }
 

@@ -22,26 +22,26 @@ export const QUIZ_BLOCK_COMPONENTS = {
   QuizQuestionBlock: QuizQuestionBlock,
   QuizIntroHeaderBlock: QuizIntroHeaderBlock,
   IntroBlock: IntroBlock,
-  
+
   // Main quiz block types from template
   'quiz-intro-header': QuizIntroHeaderBlock,
   'options-grid': OptionsGridBlock,
   'form-container': FormContainerBlock,
-  'button': ButtonBlock,
-  'text': TextBlock,
-  
+  button: ButtonBlock,
+  text: TextBlock,
+
   // Result page components
   'result-header-inline': ResultHeaderInlineBlock,
   'style-card-inline': StyleCardInlineBlock,
   'secondary-styles': SecondaryStylesBlockEditor,
-  
+
   // Offer page components
-  'hero': TextBlock, // Fallback to text block for now
-  'benefits': TextBlock, // Fallback to text block for now
-  'testimonials': TestimonialsBlock,
-  'guarantee': GuaranteeBlock,
+  hero: TextBlock, // Fallback to text block for now
+  benefits: TextBlock, // Fallback to text block for now
+  testimonials: TestimonialsBlock,
+  guarantee: GuaranteeBlock,
   'quiz-offer-cta-inline': ButtonBlock, // Reuse button for CTA
-  
+
   // Legacy mappings
   'quiz-intro': QuizQuestionBlock,
   'quiz-questions': OptionsGridBlock, // Use OptionsGrid for questions
@@ -96,7 +96,7 @@ export const getQuizBlockInfo = (type: string) => {
       name: 'Resultado',
       description: 'Exibição do resultado personalizado',
     },
-    
+
     // Block types from template
     'quiz-intro-header': {
       name: 'Cabeçalho do Quiz',
@@ -110,11 +110,11 @@ export const getQuizBlockInfo = (type: string) => {
       name: 'Formulário',
       description: 'Container para formulários de coleta de dados',
     },
-    'button': {
+    button: {
       name: 'Botão',
       description: 'Botão de ação para navegação',
     },
-    'text': {
+    text: {
       name: 'Texto',
       description: 'Bloco de texto simples',
     },
@@ -130,19 +130,19 @@ export const getQuizBlockInfo = (type: string) => {
       name: 'Estilos Secundários',
       description: 'Exibição dos estilos secundários',
     },
-    'hero': {
+    hero: {
       name: 'Hero Section',
       description: 'Seção hero da página de oferta',
     },
-    'benefits': {
+    benefits: {
       name: 'Benefícios',
       description: 'Lista de benefícios do produto/serviço',
     },
-    'testimonials': {
+    testimonials: {
       name: 'Depoimentos',
       description: 'Seção de depoimentos de clientes',
     },
-    'guarantee': {
+    guarantee: {
       name: 'Garantia',
       description: 'Seção de garantia do produto',
     },

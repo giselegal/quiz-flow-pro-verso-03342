@@ -63,7 +63,7 @@ Para diagnosticar problemas de imagem, utilize o ImageChecker no console do nave
 
 ```javascript
 // Importar o utilitário
-import ImageChecker from "@/utils/ImageChecker";
+import ImageChecker from '@/utils/ImageChecker';
 
 // Verificar todas as imagens em cache
 ImageChecker.checkImageStatus();

@@ -1,6 +1,6 @@
 /**
  * LocalStorage Migration Utility
- * 
+ *
  * Helps migrate from localStorage to Supabase for critical data,
  * while keeping localStorage for temporary/cache data only.
  */
@@ -9,7 +9,7 @@ export class LocalStorageMigration {
   // Critical keys that should be migrated to Supabase
   private static readonly CRITICAL_KEYS = [
     'userName',
-    'userEmail', 
+    'userEmail',
     'quiz_start_time',
     'quiz_start_tracked',
     'current_quiz_session',
@@ -32,7 +32,7 @@ export class LocalStorageMigration {
    */
   static getCriticalData(): Record<string, any> {
     const data: Record<string, any> = {};
-    
+
     this.CRITICAL_KEYS.forEach(key => {
       const value = localStorage.getItem(key);
       if (value !== null) {
@@ -43,7 +43,7 @@ export class LocalStorageMigration {
         }
       }
     });
-    
+
     return data;
   }
 
@@ -54,7 +54,7 @@ export class LocalStorageMigration {
     this.CRITICAL_KEYS.forEach(key => {
       localStorage.removeItem(key);
     });
-    
+
     console.log('Critical localStorage data cleaned up');
   }
 
@@ -69,13 +69,13 @@ export class LocalStorageMigration {
 
     try {
       const serialized = JSON.stringify(value);
-      
+
       // Check size limit (1MB default)
       if (serialized.length > maxSize) {
         console.warn(`Data too large for localStorage key "${key}": ${serialized.length} bytes`);
         return false;
       }
-      
+
       localStorage.setItem(key, serialized);
       return true;
     } catch (error) {
@@ -96,7 +96,7 @@ export class LocalStorageMigration {
     try {
       const value = localStorage.getItem(key);
       if (value === null) return defaultValue || null;
-      
+
       return JSON.parse(value);
     } catch (error) {
       console.error(`Error parsing localStorage key "${key}":`, error);
@@ -111,7 +111,7 @@ export class LocalStorageMigration {
     // Remove any localStorage keys not in our allowed list
     const allKeys = Object.keys(localStorage);
     const allowedKeys = [...this.CRITICAL_KEYS, ...this.TEMPORARY_KEYS];
-    
+
     allKeys.forEach(key => {
       if (!allowedKeys.includes(key)) {
         console.log(`Removing unknown localStorage key: ${key}`);
@@ -137,7 +137,7 @@ export class LocalStorageMigration {
           const size = value.length;
           totalSize += size;
           keyCount++;
-          
+
           if (size > largestSize) {
             largestSize = size;
             largestKey = key;

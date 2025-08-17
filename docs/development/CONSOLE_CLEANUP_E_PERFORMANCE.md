@@ -23,17 +23,17 @@
 
 ```typescript
 const ignoredWarnings = [
-  "Unrecognized feature:",
-  "was preloaded using link preload but not used",
-  "iframe which has both allow-scripts and allow-same-origin",
+  'Unrecognized feature:',
+  'was preloaded using link preload but not used',
+  'iframe which has both allow-scripts and allow-same-origin',
   "[Violation] 'setTimeout' handler took",
   "[Violation] 'requestAnimationFrame' callback took",
-  "Strategy 4: No clear indicators found",
-  "Max reconnect attempts",
-  "The resource https://www.facebook.com",
+  'Strategy 4: No clear indicators found',
+  'Max reconnect attempts',
+  'The resource https://www.facebook.com',
 ];
 
-const ignoredLogs = ["Strategy 4: No clear indicators found", "assuming All tab"];
+const ignoredLogs = ['Strategy 4: No clear indicators found', 'assuming All tab'];
 ```
 
 **Funcionalidades:**
@@ -57,7 +57,7 @@ const wrappedCallback = () => {
   callback();
   const duration = performance.now() - start;
 
-  if (duration > 50 && callback.toString().includes("src/")) {
+  if (duration > 50 && callback.toString().includes('src/')) {
     console.warn(`⚡ Slow timeout detected: ${duration.toFixed(2)}ms`);
   }
 };
@@ -105,8 +105,8 @@ optimizedUtils.smoothAnimation(
 
 ```typescript
 optimizedUtils.batchDOMOperations([
-  () => (element1.style.left = "100px"),
-  () => (element2.style.top = "200px"),
+  () => (element1.style.left = '100px'),
+  () => (element2.style.top = '200px'),
 ]);
 // Agrupa operações DOM para evitar layout thrashing
 ```
@@ -132,9 +132,9 @@ dragDropDebugger.logSuccess(action, details);
 **Performance Monitoring:**
 
 ```typescript
-performanceMonitor.startTiming("drag-operation");
+performanceMonitor.startTiming('drag-operation');
 // ... drag operation ...
-performanceMonitor.endTiming("drag-operation");
+performanceMonitor.endTiming('drag-operation');
 // ⚡ Performance: drag-operation took 23.45ms
 ```
 
@@ -146,7 +146,7 @@ O sistema é ativado automaticamente no `main.tsx`:
 
 ```typescript
 // 🧹 Inicializar limpeza de avisos do console em desenvolvimento
-if (process.env.NODE_ENV === "development") {
+if (process.env.NODE_ENV === 'development') {
   cleanupConsoleWarnings();
 }
 ```
@@ -154,7 +154,7 @@ if (process.env.NODE_ENV === "development") {
 ### 2. **Import Manual (se necessário)**
 
 ```typescript
-import { dragDropDebugger, optimizedUtils, performanceMonitor } from "@/utils/development";
+import { dragDropDebugger, optimizedUtils, performanceMonitor } from '@/utils/development';
 ```
 
 ### 3. **Uso nos Componentes**
@@ -196,7 +196,7 @@ optimizedUtils.throttledTimeout(callback, 100);
 
 ```typescript
 // Adicionar novos padrões ignorados
-const customIgnoredWarnings = ["seu-padrão-customizado", "outro-aviso-específico"];
+const customIgnoredWarnings = ['seu-padrão-customizado', 'outro-aviso-específico'];
 ```
 
 ### Ajustar Thresholds de Performance:
@@ -213,9 +213,9 @@ if (measure.duration > 32) {
 
 ```typescript
 // Monitorar operações específicas
-performanceMonitor.startTiming("my-operation");
+performanceMonitor.startTiming('my-operation');
 // ... sua operação ...
-performanceMonitor.endTiming("my-operation");
+performanceMonitor.endTiming('my-operation');
 ```
 
 ## 🎯 Impacto

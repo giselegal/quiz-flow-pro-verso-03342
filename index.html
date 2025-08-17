@@ -27,14 +27,14 @@
         if (!f._fbq) f._fbq = n;
         n.push = n;
         n.loaded = !0;
-        n.version = "2.0";
+        n.version = '2.0';
         n.queue = [];
         t = b.createElement(e);
         t.async = !0;
         t.src = v;
         s = b.getElementsByTagName(e)[0];
         s.parentNode.insertBefore(t, s);
-      })(window, document, "script", "https://connect.facebook.net/en_US/fbevents.js");
+      })(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
       // Pixel ID será inicializado dinamicamente baseado na rota
     </script>
 
@@ -117,7 +117,7 @@
       body {
         margin: 0;
         padding: 0;
-        font-family: "Inter", sans-serif;
+        font-family: 'Inter', sans-serif;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
       }
@@ -149,7 +149,7 @@
         }
       }
       .font-playfair {
-        font-family: "Playfair Display", serif;
+        font-family: 'Playfair Display', serif;
       }
     </style>
   </head>
@@ -164,13 +164,13 @@
     <div id="root"></div>
     <script>
       // Unregister any existing service workers to avoid caching/fetch conflicts
-      if ("serviceWorker" in navigator) {
+      if ('serviceWorker' in navigator) {
         navigator.serviceWorker.getRegistrations().then(regs => {
           for (const reg of regs) {
             reg.unregister().catch(() => {});
           }
         });
-        if (typeof caches !== "undefined") {
+        if (typeof caches !== 'undefined') {
           caches
             .keys()
             .then(keys => keys.forEach(k => caches.delete(k)))

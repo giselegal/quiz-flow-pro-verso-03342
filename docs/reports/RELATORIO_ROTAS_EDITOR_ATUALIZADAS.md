@@ -25,7 +25,7 @@
 ### **ANTES:**
 
 ```tsx
-import OptimizedPropertiesPanel from "@/components/editor/OptimizedPropertiesPanel";
+import OptimizedPropertiesPanel from '@/components/editor/OptimizedPropertiesPanel';
 
 // No JSX:
 <OptimizedPropertiesPanel
@@ -41,8 +41,8 @@ import OptimizedPropertiesPanel from "@/components/editor/OptimizedPropertiesPan
 ### **DEPOIS:**
 
 ```tsx
-import UniversalPropertiesPanel from "@/components/universal/UniversalPropertiesPanel";
-import { useUnifiedProperties } from "@/hooks/useUnifiedProperties";
+import UniversalPropertiesPanel from '@/components/universal/UniversalPropertiesPanel';
+import { useUnifiedProperties } from '@/hooks/useUnifiedProperties';
 
 // No JSX:
 <UniversalPropertiesPanel

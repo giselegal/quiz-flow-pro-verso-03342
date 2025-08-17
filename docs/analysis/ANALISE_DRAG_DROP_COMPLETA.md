@@ -172,7 +172,7 @@
 // ✅ IMPLEMENTADO em DndProvider.tsx
 const handleDragStart = (event: DragStartEvent) => {
   // 🎯 Haptic feedback para dispositivos móveis
-  if ("vibrate" in navigator) {
+  if ('vibrate' in navigator) {
     navigator.vibrate(50);
   }
   // ... resto da lógica
@@ -223,7 +223,7 @@ const sensors = useSensors(
 
 ```typescript
 // Para adicionar futuramente
-import { AutoScrollModifier } from "@dnd-kit/modifiers";
+import { AutoScrollModifier } from '@dnd-kit/modifiers';
 
 const modifiers = [
   restrictToVerticalAxis,
@@ -237,7 +237,7 @@ const modifiers = [
 ```typescript
 // Controle granular do que pode ser arrastado
 const canDrag = (block: BlockData) => {
-  return !block.properties?.locked && block.type !== "system";
+  return !block.properties?.locked && block.type !== 'system';
 };
 ```
 
@@ -247,11 +247,11 @@ const canDrag = (block: BlockData) => {
 // Validação de onde componentes podem ser soltos
 const canDrop = (dragType: string, dropZone: string) => {
   const rules = {
-    header: ["top-section"],
-    button: ["content-section", "footer-section"],
-    text: ["any"],
+    header: ['top-section'],
+    button: ['content-section', 'footer-section'],
+    text: ['any'],
   };
-  return rules[dragType]?.includes(dropZone) || rules[dragType]?.includes("any");
+  return rules[dragType]?.includes(dropZone) || rules[dragType]?.includes('any');
 };
 ```
 

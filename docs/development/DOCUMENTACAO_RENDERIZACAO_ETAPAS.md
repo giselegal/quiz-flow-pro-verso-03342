@@ -52,10 +52,10 @@ const [stages, setStages] = useState<FunnelStage[]>(() => {
           <div
             key={stage.id}
             className={cn(
-              "group relative rounded-lg border-2 transition-all cursor-pointer",
+              'group relative rounded-lg border-2 transition-all cursor-pointer',
               activeStageId === stage.id
-                ? "border-purple-500 bg-purple-50 ring-2 ring-purple-200" // ✅ ETAPA ATIVA
-                : "border-gray-300 bg-white hover:bg-gray-50"
+                ? 'border-purple-500 bg-purple-50 ring-2 ring-purple-200' // ✅ ETAPA ATIVA
+                : 'border-gray-300 bg-white hover:bg-gray-50'
             )}
             onClick={() => handleStageClick(stage.id)} // 🎯 NAVEGAÇÃO
           >
@@ -116,8 +116,8 @@ const { currentBlocks } = useEditor(); // Blocos da etapa selecionada
             className={`border-2 rounded-xl p-6 cursor-pointer transition-all
             ${
               selectedBlockId === block.id
-                ? "border-yellow-300 bg-yellow-50/80 shadow-lg"
-                : "border-stone-200/60 hover:border-yellow-200"
+                ? 'border-yellow-300 bg-yellow-50/80 shadow-lg'
+                : 'border-stone-200/60 hover:border-yellow-200'
             }`}
             onClick={() => setSelectedBlockId(block.id)}
           >
@@ -192,17 +192,17 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
 
 ```typescript
 // ✅ IMPORTA TODOS OS 21 TEMPLATES
-import { getStep01Template } from "@/components/steps/Step01Template";
-import { getStep02Template } from "@/components/steps/Step02Template";
+import { getStep01Template } from '@/components/steps/Step01Template';
+import { getStep02Template } from '@/components/steps/Step02Template';
 // ... até Step21Template
 
 // 🗺️ MAPEAMENTO COMPLETO
 export const STEP_TEMPLATES_MAPPING: Record<number, StepTemplate> = {
-  1: { stepNumber: 1, templateFunction: getStep01Template, name: "Introdução" },
+  1: { stepNumber: 1, templateFunction: getStep01Template, name: 'Introdução' },
   2: {
     stepNumber: 2,
     templateFunction: getStep02Template,
-    name: "Q1 - Tipo de Roupa",
+    name: 'Q1 - Tipo de Roupa',
   },
   // ... até 21
 };

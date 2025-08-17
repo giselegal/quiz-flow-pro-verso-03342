@@ -44,15 +44,15 @@
 
     <script type="module">
       async function testStepTemplates() {
-        const results = document.getElementById("results");
+        const results = document.getElementById('results');
 
         try {
           // Simular o que o stepTemplateService deveria fazer
-          console.log("🔄 Testando templates das etapas...");
+          console.log('🔄 Testando templates das etapas...');
 
           for (let i = 1; i <= 21; i++) {
-            const stepDiv = document.createElement("div");
-            stepDiv.className = "step";
+            const stepDiv = document.createElement('div');
+            stepDiv.className = 'step';
 
             try {
               // Simular chamada para getStepTemplate
@@ -65,7 +65,7 @@
                             <div class="info">Número: ${stepNumber}</div>
                             <div class="blocks">
                                 <div class="block success">✅ Template deve ser carregado aqui</div>
-                                <div class="block">Tentando carregar Step${i.toString().padStart(2, "0")}Template...</div>
+                                <div class="block">Tentando carregar Step${i.toString().padStart(2, '0')}Template...</div>
                             </div>
                         `;
 
@@ -81,10 +81,10 @@
             results.appendChild(stepDiv);
           }
 
-          console.log("✅ Teste concluído");
+          console.log('✅ Teste concluído');
         } catch (error) {
           results.innerHTML = `<div class="error">❌ Erro geral: ${error.message}</div>`;
-          console.error("Erro geral:", error);
+          console.error('Erro geral:', error);
         }
       }
 

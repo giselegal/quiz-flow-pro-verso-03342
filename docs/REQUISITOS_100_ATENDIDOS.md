@@ -78,9 +78,9 @@ Implementei **TODAS** as funcionalidades solicitadas para o botão:
 ### **Navegação Avançada**
 
 ```typescript
-action: "next-step" | "url" | "submit" | "custom";
-nextStep: "step-02"; // Próxima etapa
-targetUrl: "https://site.com"; // URL externa
+action: 'next-step' | 'url' | 'submit' | 'custom';
+nextStep: 'step-02'; // Próxima etapa
+targetUrl: 'https://site.com'; // URL externa
 openInNewTab: true; // Nova aba
 scrollToTop: true; // Scroll automático
 ```
@@ -88,10 +88,10 @@ scrollToTop: true; // Scroll automático
 ### **Acessibilidade Completa**
 
 ```typescript
-ariaLabel: "Texto para leitores de tela";
-title: "Tooltip explicativo";
+ariaLabel: 'Texto para leitores de tela';
+title: 'Tooltip explicativo';
 tabIndex: 0; // Navegação por teclado
-focusColor: "#B89B7A"; // Cor do foco visível
+focusColor: '#B89B7A'; // Cor do foco visível
 ```
 
 ### **Estados Avançados**
@@ -106,19 +106,19 @@ conditionalActivation: true; // Validação condicional
 
 ```typescript
 fontFamily: "'Playfair Display', serif";
-fontWeight: "font-bold";
-lineHeight: "1.5";
-letterSpacing: "tracking-wide";
-textTransform: "uppercase";
+fontWeight: 'font-bold';
+lineHeight: '1.5';
+letterSpacing: 'tracking-wide';
+textTransform: 'uppercase';
 ```
 
 ### **Layout Flexível**
 
 ```typescript
 fullWidth: true; // Largura total
-width: "250px"; // Largura fixa
-minWidth: "120px"; // Largura mínima
-maxWidth: "500px"; // Largura máxima
+width: '250px'; // Largura fixa
+minWidth: '120px'; // Largura mínima
+maxWidth: '500px'; // Largura máxima
 ```
 
 ---

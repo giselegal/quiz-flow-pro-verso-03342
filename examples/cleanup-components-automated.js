@@ -12,10 +12,10 @@
  * 5. Aplica prettier em todos os arquivos modificados
  */
 
-import { execSync } from "child_process";
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
+import { execSync } from 'child_process';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -27,48 +27,48 @@ const __dirname = path.dirname(__filename);
 const CLEANUP_CONFIG = {
   // Duplicatas para remover (manter a versão /editor/blocks)
   duplicatesToRemove: [
-    "src/components/blocks/inline/BadgeInlineBlock.tsx",
-    "src/components/blocks/inline/BeforeAfterInlineBlock.tsx",
-    "src/components/blocks/inline/ButtonInlineBlock.tsx",
-    "src/components/blocks/inline/CTAInlineBlock.tsx",
-    "src/components/blocks/inline/FormInputBlock.tsx",
-    "src/components/blocks/inline/GuaranteeInlineBlock.tsx",
-    "src/components/blocks/inline/HeadingInlineBlock.tsx",
-    "src/components/blocks/inline/ProgressInlineBlock.tsx",
-    "src/components/blocks/inline/QuizIntroHeaderBlock.tsx",
-    "src/components/blocks/inline/ResultHeaderInlineBlock.tsx",
-    "src/components/blocks/inline/SpacerInlineBlock.tsx",
-    "src/components/blocks/inline/StatInlineBlock.tsx",
-    "src/components/blocks/inline/StyleCardInlineBlock.tsx",
-    "src/components/blocks/inline/TextInlineBlock.tsx",
+    'src/components/blocks/inline/BadgeInlineBlock.tsx',
+    'src/components/blocks/inline/BeforeAfterInlineBlock.tsx',
+    'src/components/blocks/inline/ButtonInlineBlock.tsx',
+    'src/components/blocks/inline/CTAInlineBlock.tsx',
+    'src/components/blocks/inline/FormInputBlock.tsx',
+    'src/components/blocks/inline/GuaranteeInlineBlock.tsx',
+    'src/components/blocks/inline/HeadingInlineBlock.tsx',
+    'src/components/blocks/inline/ProgressInlineBlock.tsx',
+    'src/components/blocks/inline/QuizIntroHeaderBlock.tsx',
+    'src/components/blocks/inline/ResultHeaderInlineBlock.tsx',
+    'src/components/blocks/inline/SpacerInlineBlock.tsx',
+    'src/components/blocks/inline/StatInlineBlock.tsx',
+    'src/components/blocks/inline/StyleCardInlineBlock.tsx',
+    'src/components/blocks/inline/TextInlineBlock.tsx',
   ],
 
   // Componentes específicos para remover (substituir por genéricos)
   specificToRemove: [
-    "src/components/blocks/inline/QuizStartPageInlineBlock.tsx",
-    "src/components/blocks/inline/QuizPersonalInfoInlineBlock.tsx",
-    "src/components/blocks/inline/QuizExperienceInlineBlock.tsx",
-    "src/components/blocks/inline/QuizQuestionInlineBlock.tsx",
-    "src/components/blocks/inline/QuizTransitionInlineBlock.tsx",
-    "src/components/blocks/inline/QuizLoadingInlineBlock.tsx",
-    "src/components/blocks/inline/QuizResultInlineBlock.tsx",
-    "src/components/blocks/inline/QuizAnalysisInlineBlock.tsx",
-    "src/components/blocks/inline/QuizCategoryInlineBlock.tsx",
-    "src/components/blocks/inline/QuizRecommendationInlineBlock.tsx",
-    "src/components/blocks/inline/QuizMetricsInlineBlock.tsx",
-    "src/components/blocks/inline/QuizComparisonInlineBlock.tsx",
-    "src/components/blocks/inline/QuizCertificateInlineBlock.tsx",
-    "src/components/blocks/inline/QuizLeaderboardInlineBlock.tsx",
-    "src/components/blocks/inline/QuizBadgesInlineBlock.tsx",
-    "src/components/blocks/inline/QuizEvolutionInlineBlock.tsx",
+    'src/components/blocks/inline/QuizStartPageInlineBlock.tsx',
+    'src/components/blocks/inline/QuizPersonalInfoInlineBlock.tsx',
+    'src/components/blocks/inline/QuizExperienceInlineBlock.tsx',
+    'src/components/blocks/inline/QuizQuestionInlineBlock.tsx',
+    'src/components/blocks/inline/QuizTransitionInlineBlock.tsx',
+    'src/components/blocks/inline/QuizLoadingInlineBlock.tsx',
+    'src/components/blocks/inline/QuizResultInlineBlock.tsx',
+    'src/components/blocks/inline/QuizAnalysisInlineBlock.tsx',
+    'src/components/blocks/inline/QuizCategoryInlineBlock.tsx',
+    'src/components/blocks/inline/QuizRecommendationInlineBlock.tsx',
+    'src/components/blocks/inline/QuizMetricsInlineBlock.tsx',
+    'src/components/blocks/inline/QuizComparisonInlineBlock.tsx',
+    'src/components/blocks/inline/QuizCertificateInlineBlock.tsx',
+    'src/components/blocks/inline/QuizLeaderboardInlineBlock.tsx',
+    'src/components/blocks/inline/QuizBadgesInlineBlock.tsx',
+    'src/components/blocks/inline/QuizEvolutionInlineBlock.tsx',
   ],
 
   // Arquivos para atualizar imports
   filesToUpdateImports: [
-    "src/config/blockDefinitions.ts",
-    "src/config/enhancedBlockRegistry.ts",
-    "src/hooks/useUnifiedProperties.ts",
-    "src/components/enhanced-editor/universal/UniversalBlockRenderer.tsx",
+    'src/config/blockDefinitions.ts',
+    'src/config/enhancedBlockRegistry.ts',
+    'src/hooks/useUnifiedProperties.ts',
+    'src/components/enhanced-editor/universal/UniversalBlockRenderer.tsx',
   ],
 };
 
@@ -76,20 +76,20 @@ const CLEANUP_CONFIG = {
 // 🛠️ FUNÇÕES DE LIMPEZA
 // ====================================================================
 
-function logAction(action, details = "", type = "info") {
+function logAction(action, details = '', type = 'info') {
   const colors = {
-    info: "\x1b[36m", // Cyan
-    success: "\x1b[32m", // Green
-    warning: "\x1b[33m", // Yellow
-    error: "\x1b[31m", // Red
-    reset: "\x1b[0m", // Reset
+    info: '\x1b[36m', // Cyan
+    success: '\x1b[32m', // Green
+    warning: '\x1b[33m', // Yellow
+    error: '\x1b[31m', // Red
+    reset: '\x1b[0m', // Reset
   };
 
   const icons = {
-    info: "ℹ️",
-    success: "✅",
-    warning: "⚠️",
-    error: "❌",
+    info: 'ℹ️',
+    success: '✅',
+    warning: '⚠️',
+    error: '❌',
   };
 
   console.log(`${colors[type]}${icons[type]} ${action}${colors.reset}`);
@@ -99,9 +99,9 @@ function logAction(action, details = "", type = "info") {
 }
 
 function createBackup() {
-  logAction("Criando backup de segurança...", "", "info");
+  logAction('Criando backup de segurança...', '', 'info');
 
-  const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+  const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
   const backupDir = path.join(__dirname, `backup-cleanup-${timestamp}`);
 
   try {
@@ -110,28 +110,28 @@ function createBackup() {
 
     // Copiar componentes críticos
     const criticalDirs = [
-      "src/components/editor/blocks",
-      "src/components/blocks/inline",
-      "src/config",
+      'src/components/editor/blocks',
+      'src/components/blocks/inline',
+      'src/config',
     ];
 
     criticalDirs.forEach(dir => {
       const fullPath = path.join(__dirname, dir);
       if (fs.existsSync(fullPath)) {
-        execSync(`cp -r "${fullPath}" "${backupDir}/"`, { stdio: "pipe" });
+        execSync(`cp -r "${fullPath}" "${backupDir}/"`, { stdio: 'pipe' });
       }
     });
 
-    logAction("Backup criado com sucesso", backupDir, "success");
+    logAction('Backup criado com sucesso', backupDir, 'success');
     return backupDir;
   } catch (error) {
-    logAction("Erro ao criar backup", error.message, "error");
+    logAction('Erro ao criar backup', error.message, 'error');
     throw error;
   }
 }
 
-function removeFiles(filePaths, reason = "") {
-  logAction(`Removendo ${filePaths.length} arquivos...`, reason, "warning");
+function removeFiles(filePaths, reason = '') {
+  logAction(`Removendo ${filePaths.length} arquivos...`, reason, 'warning');
 
   let removedCount = 0;
   let errorCount = 0;
@@ -147,15 +147,15 @@ function removeFiles(filePaths, reason = "") {
       }
     } catch (error) {
       errorCount++;
-      logAction(`Erro ao remover ${filePath}`, error.message, "error");
+      logAction(`Erro ao remover ${filePath}`, error.message, 'error');
     }
   });
 
-  logAction(`Remoção concluída`, `${removedCount} removidos, ${errorCount} erros`, "success");
+  logAction(`Remoção concluída`, `${removedCount} removidos, ${errorCount} erros`, 'success');
 }
 
 function updateImports() {
-  logAction("Atualizando imports nos arquivos principais...", "", "info");
+  logAction('Atualizando imports nos arquivos principais...', '', 'info');
 
   const importUpdates = {
     // Remover imports de componentes removidos
@@ -168,34 +168,34 @@ function updateImports() {
     QuizResultInlineBlock: null,
 
     // Atualizar caminhos para versões mantidas
-    "@/components/blocks/inline/BadgeInlineBlock": "@/components/editor/blocks/BadgeInlineBlock",
-    "@/components/blocks/inline/ButtonInlineBlock": "@/components/editor/blocks/ButtonInlineBlock",
-    "@/components/blocks/inline/FormInputBlock": "@/components/editor/blocks/FormInputBlock",
-    "@/components/blocks/inline/HeadingInlineBlock":
-      "@/components/editor/blocks/HeadingInlineBlock",
-    "@/components/blocks/inline/TextInlineBlock": "@/components/editor/blocks/TextInlineBlock",
-    "@/components/blocks/inline/SpacerInlineBlock": "@/components/editor/blocks/SpacerInlineBlock",
+    '@/components/blocks/inline/BadgeInlineBlock': '@/components/editor/blocks/BadgeInlineBlock',
+    '@/components/blocks/inline/ButtonInlineBlock': '@/components/editor/blocks/ButtonInlineBlock',
+    '@/components/blocks/inline/FormInputBlock': '@/components/editor/blocks/FormInputBlock',
+    '@/components/blocks/inline/HeadingInlineBlock':
+      '@/components/editor/blocks/HeadingInlineBlock',
+    '@/components/blocks/inline/TextInlineBlock': '@/components/editor/blocks/TextInlineBlock',
+    '@/components/blocks/inline/SpacerInlineBlock': '@/components/editor/blocks/SpacerInlineBlock',
   };
 
   CLEANUP_CONFIG.filesToUpdateImports.forEach(filePath => {
     const fullPath = path.join(__dirname, filePath);
 
     if (fs.existsSync(fullPath)) {
-      let content = fs.readFileSync(fullPath, "utf8");
+      let content = fs.readFileSync(fullPath, 'utf8');
       let modified = false;
 
       Object.entries(importUpdates).forEach(([oldImport, newImport]) => {
         if (newImport === null) {
           // Remover import completamente
-          const importRegex = new RegExp(`import.*${oldImport}.*from.*\n`, "g");
+          const importRegex = new RegExp(`import.*${oldImport}.*from.*\n`, 'g');
           if (content.match(importRegex)) {
-            content = content.replace(importRegex, "");
+            content = content.replace(importRegex, '');
             modified = true;
           }
         } else {
           // Substituir caminho do import
           if (content.includes(oldImport)) {
-            content = content.replace(new RegExp(oldImport, "g"), newImport);
+            content = content.replace(new RegExp(oldImport, 'g'), newImport);
             modified = true;
           }
         }
@@ -210,44 +210,44 @@ function updateImports() {
 }
 
 function updateBlockDefinitions() {
-  logAction("Atualizando blockDefinitions.ts com configuração otimizada...", "", "info");
+  logAction('Atualizando blockDefinitions.ts com configuração otimizada...', '', 'info');
 
-  const blockDefPath = path.join(__dirname, "src/config/blockDefinitions.ts");
+  const blockDefPath = path.join(__dirname, 'src/config/blockDefinitions.ts');
 
   if (fs.existsSync(blockDefPath)) {
-    let content = fs.readFileSync(blockDefPath, "utf8");
+    let content = fs.readFileSync(blockDefPath, 'utf8');
 
     // Remover definições de componentes removidos
     const componentsToRemove = [
-      "quiz-start-page-inline",
-      "quiz-personal-info-inline",
-      "quiz-experience-inline",
-      "quiz-question-inline",
-      "quiz-transition-inline",
-      "quiz-loading-inline",
-      "quiz-result-inline",
+      'quiz-start-page-inline',
+      'quiz-personal-info-inline',
+      'quiz-experience-inline',
+      'quiz-question-inline',
+      'quiz-transition-inline',
+      'quiz-loading-inline',
+      'quiz-result-inline',
     ];
 
     componentsToRemove.forEach(componentType => {
       // Remover bloco completo do componente (procurar por type e remover até próximo bloco)
-      const regex = new RegExp(`\\s*{[^}]*type:\\s*["']${componentType}["'][^}]*},?`, "gs");
-      content = content.replace(regex, "");
+      const regex = new RegExp(`\\s*{[^}]*type:\\s*["']${componentType}["'][^}]*},?`, 'gs');
+      content = content.replace(regex, '');
     });
 
     // Aplicar prettier
     fs.writeFileSync(blockDefPath, content);
 
     try {
-      execSync(`npx prettier --write "${blockDefPath}"`, { stdio: "pipe" });
-      logAction("blockDefinitions.ts atualizado e formatado", "", "success");
+      execSync(`npx prettier --write "${blockDefPath}"`, { stdio: 'pipe' });
+      logAction('blockDefinitions.ts atualizado e formatado', '', 'success');
     } catch (error) {
-      logAction("Erro ao aplicar prettier", error.message, "warning");
+      logAction('Erro ao aplicar prettier', error.message, 'warning');
     }
   }
 }
 
 function generateOptimizedStepTemplates() {
-  logAction("Gerando templates otimizados das 21 etapas...", "", "info");
+  logAction('Gerando templates otimizados das 21 etapas...', '', 'info');
 
   const templateContent = `/**
  * 🎯 TEMPLATES OTIMIZADOS DAS 21 ETAPAS
@@ -586,55 +586,55 @@ export function generateStepFromTemplate(stepNumber, questionData = null) {
 
 export default OPTIMIZED_STEP_TEMPLATES;`;
 
-  const templatePath = path.join(__dirname, "src/config/optimizedStepTemplates.ts");
+  const templatePath = path.join(__dirname, 'src/config/optimizedStepTemplates.ts');
   fs.writeFileSync(templatePath, templateContent);
 
   try {
-    execSync(`npx prettier --write "${templatePath}"`, { stdio: "pipe" });
-    logAction("Templates otimizados gerados e formatados", templatePath, "success");
+    execSync(`npx prettier --write "${templatePath}"`, { stdio: 'pipe' });
+    logAction('Templates otimizados gerados e formatados', templatePath, 'success');
   } catch (error) {
-    logAction("Templates gerados (prettier falhou)", error.message, "warning");
+    logAction('Templates gerados (prettier falhou)', error.message, 'warning');
   }
 }
 
 function updateUnifiedProperties() {
-  logAction("Atualizando useUnifiedProperties.ts...", "", "info");
+  logAction('Atualizando useUnifiedProperties.ts...', '', 'info');
 
-  const hookPath = path.join(__dirname, "src/hooks/useUnifiedProperties.ts");
+  const hookPath = path.join(__dirname, 'src/hooks/useUnifiedProperties.ts');
 
   if (fs.existsSync(hookPath)) {
-    let content = fs.readFileSync(hookPath, "utf8");
+    let content = fs.readFileSync(hookPath, 'utf8');
 
     // Remover cases de componentes removidos
     const casesToRemove = [
-      "quiz-start-page-inline",
-      "quiz-personal-info-inline",
-      "quiz-experience-inline",
-      "quiz-question-inline",
-      "quiz-transition-inline",
-      "quiz-loading-inline",
-      "quiz-result-inline",
+      'quiz-start-page-inline',
+      'quiz-personal-info-inline',
+      'quiz-experience-inline',
+      'quiz-question-inline',
+      'quiz-transition-inline',
+      'quiz-loading-inline',
+      'quiz-result-inline',
     ];
 
     casesToRemove.forEach(caseType => {
       // Remover case completo
-      const regex = new RegExp(`\\s*case\\s*["']${caseType}["']:.*?(?=case|default:|\\s*})`, "gs");
-      content = content.replace(regex, "");
+      const regex = new RegExp(`\\s*case\\s*["']${caseType}["']:.*?(?=case|default:|\\s*})`, 'gs');
+      content = content.replace(regex, '');
     });
 
     fs.writeFileSync(hookPath, content);
 
     try {
-      execSync(`npx prettier --write "${hookPath}"`, { stdio: "pipe" });
-      logAction("useUnifiedProperties.ts atualizado", "", "success");
+      execSync(`npx prettier --write "${hookPath}"`, { stdio: 'pipe' });
+      logAction('useUnifiedProperties.ts atualizado', '', 'success');
     } catch (error) {
-      logAction("Hook atualizado (prettier falhou)", error.message, "warning");
+      logAction('Hook atualizado (prettier falhou)', error.message, 'warning');
     }
   }
 }
 
 function validateCleanup() {
-  logAction("Validando limpeza...", "", "info");
+  logAction('Validando limpeza...', '', 'info');
 
   // Verificar se arquivos foram removidos
   const removedFiles = [...CLEANUP_CONFIG.duplicatesToRemove, ...CLEANUP_CONFIG.specificToRemove];
@@ -648,57 +648,57 @@ function validateCleanup() {
   });
 
   if (notRemoved === 0) {
-    logAction("Todos os arquivos foram removidos corretamente", "", "success");
+    logAction('Todos os arquivos foram removidos corretamente', '', 'success');
   } else {
-    logAction(`${notRemoved} arquivos não foram removidos`, "", "warning");
+    logAction(`${notRemoved} arquivos não foram removidos`, '', 'warning');
   }
 
   // Verificar sintaxe TypeScript
   try {
-    execSync("npx tsc --noEmit --skipLibCheck", { stdio: "pipe" });
-    logAction("Sintaxe TypeScript válida", "", "success");
+    execSync('npx tsc --noEmit --skipLibCheck', { stdio: 'pipe' });
+    logAction('Sintaxe TypeScript válida', '', 'success');
   } catch (error) {
-    logAction("Possíveis erros de TypeScript", "Execute: npx tsc --noEmit", "warning");
+    logAction('Possíveis erros de TypeScript', 'Execute: npx tsc --noEmit', 'warning');
   }
 }
 
 function generateSummaryReport() {
-  logAction("", "", "info");
-  console.log("🎉 RELATÓRIO DE LIMPEZA CONCLUÍDO");
-  console.log("================================");
+  logAction('', '', 'info');
+  console.log('🎉 RELATÓRIO DE LIMPEZA CONCLUÍDO');
+  console.log('================================');
 
-  console.log("\n📊 ESTATÍSTICAS:");
+  console.log('\n📊 ESTATÍSTICAS:');
   console.log(`• Duplicatas removidas: ${CLEANUP_CONFIG.duplicatesToRemove.length}`);
   console.log(`• Componentes específicos removidos: ${CLEANUP_CONFIG.specificToRemove.length}`);
   console.log(`• Arquivos atualizados: ${CLEANUP_CONFIG.filesToUpdateImports.length}`);
   console.log(`• Templates otimizados gerados: 4 (step01, questionTemplate, step20, step21)`);
 
-  console.log("\n🎯 COMPONENTES CORE MANTIDOS:");
+  console.log('\n🎯 COMPONENTES CORE MANTIDOS:');
   const coreComponents = [
-    "quiz-intro-header",
-    "heading-inline",
-    "text-inline",
-    "decorative-bar-inline",
-    "form-input",
-    "button-inline",
-    "options-grid",
-    "quiz-progress",
-    "quiz-results",
-    "style-results",
-    "final-step",
-    "image-display-inline",
-    "legal-notice-inline",
+    'quiz-intro-header',
+    'heading-inline',
+    'text-inline',
+    'decorative-bar-inline',
+    'form-input',
+    'button-inline',
+    'options-grid',
+    'quiz-progress',
+    'quiz-results',
+    'style-results',
+    'final-step',
+    'image-display-inline',
+    'legal-notice-inline',
   ];
 
   coreComponents.forEach(comp => console.log(`  ✅ ${comp}`));
 
-  console.log("\n🚀 PRÓXIMOS PASSOS:");
-  console.log("1. Testar o editor: http://localhost:8081/editor-fixed");
-  console.log("2. Verificar se todos os componentes carregam");
-  console.log("3. Testar configuração das propriedades");
-  console.log("4. Validar templates das 21 etapas");
+  console.log('\n🚀 PRÓXIMOS PASSOS:');
+  console.log('1. Testar o editor: http://localhost:8081/editor-fixed');
+  console.log('2. Verificar se todos os componentes carregam');
+  console.log('3. Testar configuração das propriedades');
+  console.log('4. Validar templates das 21 etapas');
 
-  console.log("\n✅ LIMPEZA CONCLUÍDA COM SUCESSO!");
+  console.log('\n✅ LIMPEZA CONCLUÍDA COM SUCESSO!');
 }
 
 // ====================================================================
@@ -706,18 +706,18 @@ function generateSummaryReport() {
 // ====================================================================
 
 function runCleanup() {
-  console.log("🧹 INICIANDO LIMPEZA AUTOMATIZADA DE COMPONENTES");
-  console.log("=".repeat(80));
+  console.log('🧹 INICIANDO LIMPEZA AUTOMATIZADA DE COMPONENTES');
+  console.log('='.repeat(80));
 
   try {
     // 1. Criar backup
     const backupDir = createBackup();
 
     // 2. Remover duplicatas
-    removeFiles(CLEANUP_CONFIG.duplicatesToRemove, "Removendo duplicatas");
+    removeFiles(CLEANUP_CONFIG.duplicatesToRemove, 'Removendo duplicatas');
 
     // 3. Remover componentes específicos
-    removeFiles(CLEANUP_CONFIG.specificToRemove, "Removendo componentes específicos");
+    removeFiles(CLEANUP_CONFIG.specificToRemove, 'Removendo componentes específicos');
 
     // 4. Atualizar imports
     updateImports();
@@ -739,8 +739,8 @@ function runCleanup() {
 
     return { success: true, backupDir };
   } catch (error) {
-    logAction("ERRO DURANTE LIMPEZA", error.message, "error");
-    console.log("\n🔄 Restaure o backup se necessário:", backupDir);
+    logAction('ERRO DURANTE LIMPEZA', error.message, 'error');
+    console.log('\n🔄 Restaure o backup se necessário:', backupDir);
     throw error;
   }
 }

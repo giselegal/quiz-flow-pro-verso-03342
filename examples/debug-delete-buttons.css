@@ -9,7 +9,7 @@
 }
 
 /* Destacar botões de exclusão */
-button[class*="hover:bg-red"] {
+button[class*='hover:bg-red'] {
   background-color: rgba(239, 68, 68, 0.1) !important;
   border: 1px solid #ef4444 !important;
 }
@@ -26,7 +26,7 @@ button {
 }
 
 /* Específico para ícones de lixeira */
-svg[class*="lucide-trash"] {
+svg[class*='lucide-trash'] {
   color: red !important;
   font-size: 16px !important;
 }

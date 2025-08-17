@@ -109,18 +109,18 @@ export default MyCustomBlock;
 
 ```typescript
 // src/config/enhancedBlockRegistry.tsx
-import { Star, Layers } from "lucide-react";
-import MyCustomBlock from "@/components/blocks/custom/MyCustomBlock";
+import { Star, Layers } from 'lucide-react';
+import MyCustomBlock from '@/components/blocks/custom/MyCustomBlock';
 
 export const blockRegistry = {
   // ... outros componentes ...
 
   myCustomBlock: {
     // Identificação
-    type: "MyCustomBlock",
-    name: "Bloco Customizado",
-    description: "Um bloco personalizável com título, descrição e ícone",
-    category: "custom",
+    type: 'MyCustomBlock',
+    name: 'Bloco Customizado',
+    description: 'Um bloco personalizável com título, descrição e ícone',
+    category: 'custom',
     icon: Star,
 
     // Componente React
@@ -128,13 +128,13 @@ export const blockRegistry = {
 
     // Propriedades padrão (serão aplicadas quando o componente for criado)
     defaultProps: {
-      title: "Título do Bloco",
-      description: "Descrição detalhada do conteúdo do bloco.",
-      backgroundColor: "#FFFFFF",
-      textColor: "#432818",
+      title: 'Título do Bloco',
+      description: 'Descrição detalhada do conteúdo do bloco.',
+      backgroundColor: '#FFFFFF',
+      textColor: '#432818',
       borderRadius: 8,
       showIcon: true,
-      iconPosition: "left",
+      iconPosition: 'left',
       padding: {
         top: 20,
         bottom: 20,
@@ -147,124 +147,124 @@ export const blockRegistry = {
     properties: {
       // Grupo: Conteúdo
       title: {
-        type: "string",
-        label: "Título Principal",
-        default: "Título do Bloco",
-        category: "content",
+        type: 'string',
+        label: 'Título Principal',
+        default: 'Título do Bloco',
+        category: 'content',
         validation: {
           required: true,
           maxLength: 100,
         },
-        description: "Texto principal do bloco",
+        description: 'Texto principal do bloco',
       },
 
       description: {
-        type: "textarea",
-        label: "Descrição",
-        default: "Descrição detalhada do conteúdo do bloco.",
-        category: "content",
+        type: 'textarea',
+        label: 'Descrição',
+        default: 'Descrição detalhada do conteúdo do bloco.',
+        category: 'content',
         validation: {
           maxLength: 500,
         },
         rows: 3,
-        description: "Texto secundário do bloco",
+        description: 'Texto secundário do bloco',
       },
 
       // Grupo: Aparência
       backgroundColor: {
-        type: "color",
-        label: "Cor de Fundo",
-        default: "#FFFFFF",
-        category: "appearance",
-        description: "Define a cor de fundo do bloco",
+        type: 'color',
+        label: 'Cor de Fundo',
+        default: '#FFFFFF',
+        category: 'appearance',
+        description: 'Define a cor de fundo do bloco',
       },
 
       textColor: {
-        type: "color",
-        label: "Cor do Texto",
-        default: "#432818",
-        category: "appearance",
-        description: "Define a cor do texto do bloco",
+        type: 'color',
+        label: 'Cor do Texto',
+        default: '#432818',
+        category: 'appearance',
+        description: 'Define a cor do texto do bloco',
       },
 
       borderRadius: {
-        type: "range",
-        label: "Bordas Arredondadas",
+        type: 'range',
+        label: 'Bordas Arredondadas',
         min: 0,
         max: 50,
         step: 1,
         default: 8,
-        unit: "px",
-        category: "appearance",
-        description: "Controla o arredondamento das bordas",
+        unit: 'px',
+        category: 'appearance',
+        description: 'Controla o arredondamento das bordas',
       },
 
       // Grupo: Layout
       showIcon: {
-        type: "boolean",
-        label: "Mostrar Ícone",
+        type: 'boolean',
+        label: 'Mostrar Ícone',
         default: true,
-        category: "layout",
-        description: "Controla se o ícone será exibido",
+        category: 'layout',
+        description: 'Controla se o ícone será exibido',
       },
 
       iconPosition: {
-        type: "select",
-        label: "Posição do Ícone",
+        type: 'select',
+        label: 'Posição do Ícone',
         options: [
-          { value: "left", label: "Esquerda" },
-          { value: "right", label: "Direita" },
-          { value: "top", label: "Acima" },
+          { value: 'left', label: 'Esquerda' },
+          { value: 'right', label: 'Direita' },
+          { value: 'top', label: 'Acima' },
         ],
-        default: "left",
-        category: "layout",
+        default: 'left',
+        category: 'layout',
         dependsOn: { showIcon: true }, // Só aparece se showIcon for true
-        description: "Define onde o ícone será posicionado",
+        description: 'Define onde o ícone será posicionado',
       },
 
       // Grupo: Espaçamento
-      "padding.top": {
-        type: "range",
-        label: "Espaçamento Superior",
+      'padding.top': {
+        type: 'range',
+        label: 'Espaçamento Superior',
         min: 0,
         max: 100,
         step: 4,
         default: 20,
-        unit: "px",
-        category: "spacing",
+        unit: 'px',
+        category: 'spacing',
       },
 
-      "padding.bottom": {
-        type: "range",
-        label: "Espaçamento Inferior",
+      'padding.bottom': {
+        type: 'range',
+        label: 'Espaçamento Inferior',
         min: 0,
         max: 100,
         step: 4,
         default: 20,
-        unit: "px",
-        category: "spacing",
+        unit: 'px',
+        category: 'spacing',
       },
 
-      "padding.left": {
-        type: "range",
-        label: "Espaçamento Esquerdo",
+      'padding.left': {
+        type: 'range',
+        label: 'Espaçamento Esquerdo',
         min: 0,
         max: 100,
         step: 4,
         default: 24,
-        unit: "px",
-        category: "spacing",
+        unit: 'px',
+        category: 'spacing',
       },
 
-      "padding.right": {
-        type: "range",
-        label: "Espaçamento Direito",
+      'padding.right': {
+        type: 'range',
+        label: 'Espaçamento Direito',
         min: 0,
         max: 100,
         step: 4,
         default: 24,
-        unit: "px",
-        category: "spacing",
+        unit: 'px',
+        category: 'spacing',
       },
     },
 
@@ -272,8 +272,8 @@ export const blockRegistry = {
     advanced: {
       // Responsividade
       responsive: {
-        breakpoints: ["sm", "md", "lg", "xl"],
-        properties: ["padding", "fontSize", "borderRadius"],
+        breakpoints: ['sm', 'md', 'lg', 'xl'],
+        properties: ['padding', 'fontSize', 'borderRadius'],
       },
 
       // Animações
@@ -291,14 +291,14 @@ export const blockRegistry = {
       // Validações customizadas
       customValidations: [
         {
-          property: "title",
+          property: 'title',
           rule: (value: string) => value.length > 0,
-          message: "Título não pode estar vazio",
+          message: 'Título não pode estar vazio',
         },
       ],
 
       // Preview modes
-      previewModes: ["desktop", "tablet", "mobile"],
+      previewModes: ['desktop', 'tablet', 'mobile'],
     },
   },
 };

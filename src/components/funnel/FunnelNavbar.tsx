@@ -62,9 +62,7 @@ const FunnelNavbar: React.FC<FunnelNavbarProps> = ({ className = '' }) => {
 
         {/* Center section - Step name */}
         <div className="flex-1 text-center">
-          <h2 className="text-lg font-semibold text-gray-800">
-            {stepName}
-          </h2>
+          <h2 className="text-lg font-semibold text-gray-800">{stepName}</h2>
         </div>
 
         {/* Right section - Actions */}

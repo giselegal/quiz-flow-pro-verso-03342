@@ -19,21 +19,21 @@ const OfferSolutionSectionInlineBlock: React.FC<BlockComponentProps> = ({
   const properties = safeGetBlockProperties(block);
 
   const {
-    title = "A Solução: Quiz de Estilo",
-    description = "Método preciso para identificar seu estilo entre os **7 estilos universais** + guia personalizado completo.",
-    imageUrl = "https://res.cloudinary.com/dqljyf76t/image/upload/v1746650306/oie_1_gcozz9.webp",
-    imageAlt = "Quiz de Estilo",
+    title = 'A Solução: Quiz de Estilo',
+    description = 'Método preciso para identificar seu estilo entre os **7 estilos universais** + guia personalizado completo.',
+    imageUrl = 'https://res.cloudinary.com/dqljyf76t/image/upload/v1746650306/oie_1_gcozz9.webp',
+    imageAlt = 'Quiz de Estilo',
     imageWidth = 400,
     imageHeight = 300,
-    ctaText = "Fazer o Quiz Agora",
-    ctaUrl = "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
+    ctaText = 'Fazer o Quiz Agora',
+    ctaUrl = 'https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912',
     showCountdown = true,
     countdownInitial = {
       hours: 1,
       minutes: 59,
-      seconds: 59
+      seconds: 59,
     },
-    spacing = "large"
+    spacing = 'large',
   } = properties;
 
   // Estado do countdown
@@ -62,14 +62,14 @@ const OfferSolutionSectionInlineBlock: React.FC<BlockComponentProps> = ({
   const formatNumber = (num: number) => num.toString().padStart(2, '0');
 
   const spacingClasses = {
-    small: "py-8",
-    medium: "py-12",
-    large: "py-16"
+    small: 'py-8',
+    medium: 'py-12',
+    large: 'py-16',
   };
 
   const handleCtaClick = () => {
     if (ctaUrl) {
-      window.open(ctaUrl, "_blank");
+      window.open(ctaUrl, '_blank');
     }
   };
 
@@ -90,7 +90,7 @@ const OfferSolutionSectionInlineBlock: React.FC<BlockComponentProps> = ({
           <h2 className="text-3xl md:text-4xl font-bold text-[#432818] mb-6 font-playfair">
             {title}
           </h2>
-          
+
           {/* Imagem */}
           {imageUrl && (
             <div className="max-w-md mx-auto mb-8">
@@ -107,9 +107,11 @@ const OfferSolutionSectionInlineBlock: React.FC<BlockComponentProps> = ({
 
           {/* Descrição */}
           <p className="text-lg text-[#6B4F43] mb-8 max-w-2xl mx-auto">
-            {description.split('**').map((part: string, index: number) => 
-              index % 2 === 1 ? <strong key={index}>{part}</strong> : part
-            )}
+            {description
+              .split('**')
+              .map((part: string, index: number) =>
+                index % 2 === 1 ? <strong key={index}>{part}</strong> : part
+              )}
           </p>
 
           {/* CTA */}

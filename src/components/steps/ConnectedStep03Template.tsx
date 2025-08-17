@@ -7,26 +7,30 @@ import { COMPLETE_QUIZ_QUESTIONS } from '@/data/correctQuizQuestions';
 
 export const ConnectedStep03Template = () => {
   const { answerQuestion, answers } = useQuizLogic();
-  
+
   // 🎯 Buscar questão real dos dados (q2 = segunda questão)
-  const questionData = COMPLETE_QUIZ_QUESTIONS.find(q => q.id === 'q2') || COMPLETE_QUIZ_QUESTIONS[2];
-  
-  const handleOptionSelect = useCallback(async (optionIds: string[]) => {
-    try {
-      // 🎯 Usar hook real do sistema - answerQuestion espera 2 argumentos  
-      const selectedOption = questionData.options.find((opt: any) => optionIds.includes(opt.id));
-      if (selectedOption) {
-        await answerQuestion(questionData.id, selectedOption.id);
-        
-        console.log('✅ Connected Step03: Resposta salva via hooks', { 
-          questionId: questionData.id, 
-          selectedOptions: optionIds 
-        });
+  const questionData =
+    COMPLETE_QUIZ_QUESTIONS.find(q => q.id === 'q2') || COMPLETE_QUIZ_QUESTIONS[2];
+
+  const handleOptionSelect = useCallback(
+    async (optionIds: string[]) => {
+      try {
+        // 🎯 Usar hook real do sistema - answerQuestion espera 2 argumentos
+        const selectedOption = questionData.options.find((opt: any) => optionIds.includes(opt.id));
+        if (selectedOption) {
+          await answerQuestion(questionData.id, selectedOption.id);
+
+          console.log('✅ Connected Step03: Resposta salva via hooks', {
+            questionId: questionData.id,
+            selectedOptions: optionIds,
+          });
+        }
+      } catch (error) {
+        console.error('❌ Connected Step03: Erro ao salvar resposta', error);
       }
-    } catch (error) {
-      console.error('❌ Connected Step03: Erro ao salvar resposta', error);
-    }
-  }, [answerQuestion, questionData]);
+    },
+    [answerQuestion, questionData]
+  );
 
   return [
     // 📱 CABEÇALHO COM LOGO E PROGRESSO
@@ -34,7 +38,8 @@ export const ConnectedStep03Template = () => {
       id: 'step03-header',
       type: 'quiz-intro-header',
       properties: {
-        logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+        logoUrl:
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
         logoAlt: 'Logo Gisele Galvão',
         logoWidth: 96,
         logoHeight: 96,
@@ -85,7 +90,7 @@ export const ConnectedStep03Template = () => {
       type: 'options-grid',
       properties: {
         questionId: questionData.id,
-        
+
         // 🎯 OPÇÕES REAIS DOS DADOS
         options: questionData.options.map((option: any) => ({
           id: option.id,
@@ -99,7 +104,7 @@ export const ConnectedStep03Template = () => {
           spacing: 'small',
           marginBottom: 0,
         })),
-        
+
         // 🎨 LAYOUT BASEADO NO TIPO (text = 1 coluna)
         columns: 1, // SEM IMAGENS = 1 COLUNA
         showImages: false, // Questão de personalidade não tem imagens
@@ -124,7 +129,8 @@ export const ConnectedStep03Template = () => {
         onSelectionChange: handleOptionSelect,
 
         // 📊 STATUS CONECTADO - Usando answers do useQuizLogic
-        currentSelections: answers.filter(a => a.questionId === questionData.id).map(a => a.optionId) || [],
+        currentSelections:
+          answers.filter(a => a.questionId === questionData.id).map(a => a.optionId) || [],
         isLoading: false,
       },
     },
@@ -146,7 +152,9 @@ export const ConnectedStep03Template = () => {
         disabledTextColor: '#9CA3AF',
 
         // 🔗 ESTADO CONECTADO - Usando answers do useQuizLogic
-        disabled: answers.filter(a => a.questionId === questionData.id).length < (questionData.multiSelect || 3),
+        disabled:
+          answers.filter(a => a.questionId === questionData.id).length <
+          (questionData.multiSelect || 3),
         requiresValidInput: true,
         instantActivation: true,
         noDelay: true,

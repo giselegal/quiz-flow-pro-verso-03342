@@ -150,10 +150,10 @@ const {
 ```typescript
 // Sistema inteligente que detecta o tipo baseado no ID da etapa
 function getStepTypeFromStageId(stageId: string) {
-  if (stageId.includes("intro")) return "intro";
-  if (stageId.includes("question")) return "question";
-  if (stageId.includes("transition")) return "transition";
-  if (stageId.includes("result")) return "result";
+  if (stageId.includes('intro')) return 'intro';
+  if (stageId.includes('question')) return 'question';
+  if (stageId.includes('transition')) return 'transition';
+  if (stageId.includes('result')) return 'result';
   // ...
 }
 ```
@@ -163,9 +163,9 @@ function getStepTypeFromStageId(stageId: string) {
 ```typescript
 // Validação automática das regras de ativação baseada no JSON
 const FUNNEL_ACTIVATION_RULES = {
-  intro: { activateOn: "name-filled", requiredField: "userName" },
-  questions: { activateOn: "min-selections", minSelections: 3, autoAdvance: true },
-  strategic: { activateOn: "single-selection", autoAdvance: false },
+  intro: { activateOn: 'name-filled', requiredField: 'userName' },
+  questions: { activateOn: 'min-selections', minSelections: 3, autoAdvance: true },
+  strategic: { activateOn: 'single-selection', autoAdvance: false },
   // ...
 };
 ```

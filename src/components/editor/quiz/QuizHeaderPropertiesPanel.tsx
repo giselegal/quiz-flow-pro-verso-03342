@@ -451,7 +451,9 @@ export const QuizHeaderPropertiesPanel: React.FC<QuizHeaderPropertiesPanelProps>
                   </Label>
                   <Switch
                     checked={properties.showPredominantStyleName ?? true}
-                    onCheckedChange={checked => handlePropertyUpdate('showPredominantStyleName', checked)}
+                    onCheckedChange={checked =>
+                      handlePropertyUpdate('showPredominantStyleName', checked)
+                    }
                   />
                 </div>
 
@@ -461,7 +463,9 @@ export const QuizHeaderPropertiesPanel: React.FC<QuizHeaderPropertiesPanelProps>
                   </Label>
                   <Switch
                     checked={properties.showPredominantStyleDescription ?? true}
-                    onCheckedChange={checked => handlePropertyUpdate('showPredominantStyleDescription', checked)}
+                    onCheckedChange={checked =>
+                      handlePropertyUpdate('showPredominantStyleDescription', checked)
+                    }
                   />
                 </div>
 
@@ -471,7 +475,9 @@ export const QuizHeaderPropertiesPanel: React.FC<QuizHeaderPropertiesPanelProps>
                   </Label>
                   <Switch
                     checked={properties.showPredominantStylePercentage ?? true}
-                    onCheckedChange={checked => handlePropertyUpdate('showPredominantStylePercentage', checked)}
+                    onCheckedChange={checked =>
+                      handlePropertyUpdate('showPredominantStylePercentage', checked)
+                    }
                   />
                 </div>
 
@@ -481,7 +487,9 @@ export const QuizHeaderPropertiesPanel: React.FC<QuizHeaderPropertiesPanelProps>
                   </Label>
                   <Switch
                     checked={properties.showPredominantStyleImage ?? true}
-                    onCheckedChange={checked => handlePropertyUpdate('showPredominantStyleImage', checked)}
+                    onCheckedChange={checked =>
+                      handlePropertyUpdate('showPredominantStyleImage', checked)
+                    }
                   />
                 </div>
 
@@ -491,7 +499,9 @@ export const QuizHeaderPropertiesPanel: React.FC<QuizHeaderPropertiesPanelProps>
                   </Label>
                   <Switch
                     checked={properties.showPredominantStyleGuide ?? false}
-                    onCheckedChange={checked => handlePropertyUpdate('showPredominantStyleGuide', checked)}
+                    onCheckedChange={checked =>
+                      handlePropertyUpdate('showPredominantStyleGuide', checked)
+                    }
                   />
                 </div>
               </CardContent>
@@ -510,7 +520,9 @@ export const QuizHeaderPropertiesPanel: React.FC<QuizHeaderPropertiesPanelProps>
                   </Label>
                   <Switch
                     checked={properties.showSecondaryStyleName ?? true}
-                    onCheckedChange={checked => handlePropertyUpdate('showSecondaryStyleName', checked)}
+                    onCheckedChange={checked =>
+                      handlePropertyUpdate('showSecondaryStyleName', checked)
+                    }
                   />
                 </div>
 
@@ -520,7 +532,9 @@ export const QuizHeaderPropertiesPanel: React.FC<QuizHeaderPropertiesPanelProps>
                   </Label>
                   <Switch
                     checked={properties.showSecondaryStylePercentage ?? true}
-                    onCheckedChange={checked => handlePropertyUpdate('showSecondaryStylePercentage', checked)}
+                    onCheckedChange={checked =>
+                      handlePropertyUpdate('showSecondaryStylePercentage', checked)
+                    }
                   />
                 </div>
 
@@ -540,7 +554,9 @@ export const QuizHeaderPropertiesPanel: React.FC<QuizHeaderPropertiesPanelProps>
                   </Label>
                   <Switch
                     checked={properties.showThirdStylePercentage ?? true}
-                    onCheckedChange={checked => handlePropertyUpdate('showThirdStylePercentage', checked)}
+                    onCheckedChange={checked =>
+                      handlePropertyUpdate('showThirdStylePercentage', checked)
+                    }
                   />
                 </div>
               </CardContent>

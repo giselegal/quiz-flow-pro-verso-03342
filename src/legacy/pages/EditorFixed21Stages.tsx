@@ -3,16 +3,13 @@ import { useFunnels } from '@/context/FunnelsContext';
 import { FunnelStagesPanel } from '@/components/editor/funnel/FunnelStagesPanel';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Eye, 
-  Settings, 
-  Save, 
-  Component,
-  Trash2,
-  Copy
-} from 'lucide-react';
+import { Eye, Settings, Save, Component, Trash2, Copy } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable-panels';
+import {
+  ResizablePanelGroup,
+  ResizablePanel,
+  ResizableHandle,
+} from '@/components/ui/resizable-panels';
 import { BlockType } from '@/types/editor';
 
 // Componentes otimizados
@@ -24,17 +21,17 @@ import BlockRenderer from '@/components/editor/blocks/BlockRenderer';
 
 /**
  * 🚀 EDITOR REFATORADO: Versão otimizada com hooks especializados
- * 
+ *
  * Melhorias aplicadas:
  * ✅ Hooks especializados para performance
- * ✅ Componentes separados e reutilizáveis  
+ * ✅ Componentes separados e reutilizáveis
  * ✅ Error boundaries para estabilidade
  * ✅ Loading states apropriados
  * ✅ Cache otimizado de templates
  */
 const EditorFixed21Stages: React.FC = () => {
   const { steps } = useFunnels();
-  
+
   // Hook centralizado para todo o estado do editor
   const {
     selectedStep,
@@ -53,12 +50,21 @@ const EditorFixed21Stages: React.FC = () => {
     userResponses,
     setUserResponses,
     isLoading,
-    error
+    error,
   } = useEditorState();
 
   // Helper para validar tipos de blocos
   const isValidBlockType = (type: string): type is BlockType => {
-    const validTypes = ['text', 'button', 'image', 'lead-form', 'options-grid', 'quiz-header', 'result-display', 'offer-cta'];
+    const validTypes = [
+      'text',
+      'button',
+      'image',
+      'lead-form',
+      'options-grid',
+      'quiz-header',
+      'result-display',
+      'offer-cta',
+    ];
     return validTypes.includes(type);
   };
 
@@ -68,22 +74,22 @@ const EditorFixed21Stages: React.FC = () => {
   // Helper functions para drag & drop
   const getDefaultProperties = (componentType: string) => {
     const defaults: Record<string, any> = {
-      'text': { fontSize: '16px', color: '#000000' },
-      'button': { backgroundColor: '#B89B7A', color: '#ffffff' },
-      'image': { width: '100%', height: 'auto' },
+      text: { fontSize: '16px', color: '#000000' },
+      button: { backgroundColor: '#B89B7A', color: '#ffffff' },
+      image: { width: '100%', height: 'auto' },
       'lead-form': { required: true },
-      'options-grid': { requiredSelections: 3, autoAdvance: false }
+      'options-grid': { requiredSelections: 3, autoAdvance: false },
     };
     return defaults[componentType] || {};
   };
 
   const getDefaultContent = (componentType: string) => {
     const defaults: Record<string, any> = {
-      'text': { text: 'Novo texto' },
-      'button': { text: 'Clique aqui', url: '#' },
-      'image': { url: '', alt: 'Nova imagem' },
+      text: { text: 'Novo texto' },
+      button: { text: 'Clique aqui', url: '#' },
+      image: { url: '', alt: 'Nova imagem' },
       'lead-form': { title: 'Digite seu nome', placeholder: 'Nome', buttonText: 'Continuar' },
-      'options-grid': { title: 'Selecione suas opções', options: [] }
+      'options-grid': { title: 'Selecione suas opções', options: [] },
     };
     return defaults[componentType] || {};
   };
@@ -91,14 +97,14 @@ const EditorFixed21Stages: React.FC = () => {
   const handleComponentDrop = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragOver(false);
-    
+
     const componentType = e.dataTransfer.getData('component-type');
     if (componentType && isValidBlockType(componentType)) {
       addBlock({
         type: componentType as BlockType,
         properties: getDefaultProperties(componentType),
         content: getDefaultContent(componentType),
-        order: blocks.length
+        order: blocks.length,
       });
     }
   };
@@ -127,10 +133,7 @@ const EditorFixed21Stages: React.FC = () => {
   if (error) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center p-4">
-        <BlockLoadingStates.Error 
-          error={error}
-          onRetry={() => window.location.reload()}
-        />
+        <BlockLoadingStates.Error error={error} onRetry={() => window.location.reload()} />
       </div>
     );
   }
@@ -162,13 +165,11 @@ const EditorFixed21Stages: React.FC = () => {
                 <div className="flex items-center justify-between mb-4">
                   <div>
                     <h1 className="text-lg font-semibold">Editor de Funil</h1>
-                    <p className="text-sm text-muted-foreground">
-                      Etapa {currentStepNumber} de 21
-                    </p>
+                    <p className="text-sm text-muted-foreground">Etapa {currentStepNumber} de 21</p>
                   </div>
                   <div className="flex items-center gap-2">
                     <Button
-                      variant={isPreviewMode ? "default" : "outline"}
+                      variant={isPreviewMode ? 'default' : 'outline'}
                       size="sm"
                       onClick={togglePreviewMode}
                       className="flex items-center gap-2"
@@ -182,18 +183,16 @@ const EditorFixed21Stages: React.FC = () => {
                     </Button>
                   </div>
                 </div>
-                
-                <FunnelStagesPanel
-                  onStageSelect={setSelectedStep}
-                />
+
+                <FunnelStagesPanel onStageSelect={setSelectedStep} />
               </div>
 
               {/* Canvas */}
               <div className="flex-1 overflow-auto">
-                <div 
+                <div
                   className={cn(
-                    "min-h-full p-6",
-                    isDragOver && "bg-primary/5 border-primary border-dashed border-2"
+                    'min-h-full p-6',
+                    isDragOver && 'bg-primary/5 border-primary border-dashed border-2'
                   )}
                   onDrop={handleComponentDrop}
                   onDragOver={handleDragOver}
@@ -202,49 +201,46 @@ const EditorFixed21Stages: React.FC = () => {
                   <div className="max-w-2xl mx-auto space-y-4">
                     <div className="flex items-center justify-between mb-6">
                       <div>
-                        <h2 className="text-xl font-medium">
-                          {currentStepInfo?.name || 'Etapa'}
-                        </h2>
+                        <h2 className="text-xl font-medium">{currentStepInfo?.name || 'Etapa'}</h2>
                         <p className="text-sm text-muted-foreground">
                           {currentStepInfo?.description || 'Configure os blocos desta etapa'}
                         </p>
                       </div>
-                      <Badge variant="secondary">
-                        {blocks.length} blocos
-                      </Badge>
+                      <Badge variant="secondary">{blocks.length} blocos</Badge>
                     </div>
 
                     <div className="space-y-3">
                       {blocks.length > 0 ? (
-                        blocks.map((block) => (
+                        blocks.map(block => (
                           <div
                             key={block.id}
                             className={cn(
-                              "relative group border rounded-lg transition-colors",
+                              'relative group border rounded-lg transition-colors',
                               selectedBlock === block.id
-                                 ? "border-primary bg-primary/5" 
-                                : !isPreviewMode && "hover:border-muted-foreground/30 hover:bg-muted/20"
+                                ? 'border-primary bg-primary/5'
+                                : !isPreviewMode &&
+                                    'hover:border-muted-foreground/30 hover:bg-muted/20'
                             )}
                             onClick={() => !isPreviewMode && selectBlock(block.id)}
                           >
                             {!isPreviewMode && selectedBlock === block.id && (
                               <div className="absolute -top-2 -right-2 z-10 flex items-center gap-1">
-                                <Button 
-                                  size="sm" 
-                                  variant="outline" 
+                                <Button
+                                  size="sm"
+                                  variant="outline"
                                   className="h-6 w-6 p-0 bg-background hover:bg-muted"
-                                  onClick={(e) => {
+                                  onClick={e => {
                                     e.stopPropagation();
                                     // handleDuplicate(block.id);
                                   }}
                                 >
                                   <Copy className="h-3 w-3" />
                                 </Button>
-                                <Button 
-                                  size="sm" 
-                                  variant="outline" 
+                                <Button
+                                  size="sm"
+                                  variant="outline"
                                   className="h-6 w-6 p-0 bg-background hover:bg-destructive hover:text-destructive-foreground"
-                                  onClick={(e) => {
+                                  onClick={e => {
                                     e.stopPropagation();
                                     deleteBlock(block.id);
                                   }}
@@ -253,10 +249,14 @@ const EditorFixed21Stages: React.FC = () => {
                                 </Button>
                               </div>
                             )}
-                            
+
                             <ErrorBoundary>
-                              <BlockRenderer 
-                                block={{ ...block, position: block.order, properties: block.properties || {} }}
+                              <BlockRenderer
+                                block={{
+                                  ...block,
+                                  position: block.order,
+                                  properties: block.properties || {},
+                                }}
                                 isPreviewMode={isPreviewMode}
                                 stepNumber={currentStepNumber}
                                 userResponses={userResponses}
@@ -290,10 +290,7 @@ const EditorFixed21Stages: React.FC = () => {
                 </h2>
               </div>
               <div className="p-4">
-                <PropertiesPanel
-                  block={selectedBlockData}
-                  onUpdate={updateBlock}
-                />
+                <PropertiesPanel block={selectedBlockData} onUpdate={updateBlock} />
               </div>
             </div>
           </ResizablePanel>
@@ -307,35 +304,35 @@ const EditorFixed21Stages: React.FC = () => {
 const ComponentsLibrary: React.FC = () => {
   const componentCategories = [
     {
-      name: "Formulários",
+      name: 'Formulários',
       components: [
         { id: 'lead-form', name: 'Formulário de Nome', icon: '📝' },
         { id: 'form-input', name: 'Campo de Entrada', icon: '⌨️' },
-      ]
+      ],
     },
     {
-      name: "Conteúdo", 
+      name: 'Conteúdo',
       components: [
         { id: 'text', name: 'Texto', icon: '📄' },
         { id: 'quiz-header', name: 'Cabeçalho Quiz', icon: '🎯' },
         { id: 'options-grid', name: 'Grid de Opções', icon: '⭕' },
-      ]
+      ],
     },
     {
-      name: "Mídia",
+      name: 'Mídia',
       components: [
         { id: 'image', name: 'Imagem', icon: '🖼️' },
         { id: 'video', name: 'Vídeo', icon: '🎥' },
-      ]
+      ],
     },
     {
-      name: "Ações",
+      name: 'Ações',
       components: [
         { id: 'button', name: 'Botão', icon: '🔘' },
         { id: 'result-display', name: 'Exibir Resultado', icon: '📊' },
         { id: 'offer-cta', name: 'Oferta CTA', icon: '💰' },
-      ]
-    }
+      ],
+    },
   ];
 
   const handleDragStart = (e: React.DragEvent, componentType: string) => {
@@ -346,17 +343,17 @@ const ComponentsLibrary: React.FC = () => {
   return (
     <div className="h-full overflow-auto">
       <div className="p-4 space-y-6">
-        {componentCategories.map((category) => (
+        {componentCategories.map(category => (
           <div key={category.name}>
             <h3 className="text-xs font-medium text-muted-foreground mb-3 uppercase tracking-wider">
               {category.name}
             </h3>
             <div className="space-y-2">
-              {category.components.map((component) => (
+              {category.components.map(component => (
                 <div
                   key={component.id}
                   draggable
-                  onDragStart={(e) => handleDragStart(e, component.id)}
+                  onDragStart={e => handleDragStart(e, component.id)}
                   className="flex items-center gap-3 p-2 rounded-md border bg-background cursor-grab hover:bg-muted/50 hover:border-muted-foreground/30 active:cursor-grabbing transition-colors"
                 >
                   <span className="text-lg">{component.icon}</span>

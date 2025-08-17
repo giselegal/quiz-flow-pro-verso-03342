@@ -21,10 +21,10 @@ interface UnifiedHeaderProps {
 
 /**
  * UnifiedHeaderBlock - Componente unificado para todos os cabeçalhos
- * 
+ *
  * Consolida todos os tipos de cabeçalho em um único componente:
  * - quiz-intro-header
- * - quiz-result-header  
+ * - quiz-result-header
  * - offer-header
  * - vertical-canvas-header
  */
@@ -88,7 +88,9 @@ const UnifiedHeaderBlock: React.FC<UnifiedHeaderProps> = ({
           </div>
           <div className="flex justify-between mt-2 text-xs text-stone-500">
             <span>{Math.round(progressPercentage)}%</span>
-            <span>{progressValue}/{progressMax || progressTotal}</span>
+            <span>
+              {progressValue}/{progressMax || progressTotal}
+            </span>
           </div>
         </div>
       )}

@@ -131,10 +131,10 @@ npm run dev
 
 ```typescript
 // Usar mock data e logs detalhados
-const isDev = process.env.NODE_ENV === "development";
+const isDev = process.env.NODE_ENV === 'development';
 
 if (isDev) {
-  console.log("Enhanced Editor: Modo desenvolvimento ativo");
+  console.log('Enhanced Editor: Modo desenvolvimento ativo');
 }
 ```
 
@@ -142,7 +142,7 @@ if (isDev) {
 
 ```typescript
 // Remover logs e otimizar performance
-const isProd = process.env.NODE_ENV === "production";
+const isProd = process.env.NODE_ENV === 'production';
 ```
 
 ---

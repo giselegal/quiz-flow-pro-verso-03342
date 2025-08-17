@@ -52,11 +52,11 @@
 
 ```typescript
 // Componentes críticos sempre carregados
-export { TextInlineBlock, HeadingInlineBlock } from "./basic";
+export { TextInlineBlock, HeadingInlineBlock } from './basic';
 
 // Componentes pesados lazy-loaded
-export const StyleCardInlineBlock = lazy(() => import("./StyleCard"));
-export const QuizStartPageInlineBlock = lazy(() => import("./QuizStart"));
+export const StyleCardInlineBlock = lazy(() => import('./StyleCard'));
+export const QuizStartPageInlineBlock = lazy(() => import('./QuizStart'));
 ```
 
 ### **3. Micro-chunking do Editor**

@@ -79,8 +79,8 @@
 ```typescript
 // ✅ 46 tipos mapeados no COMPONENT_MAP
 const COMPONENT_MAP: Record<string, React.ComponentType<any>> = {
-  "quiz-start-page-inline": QuizStartPageInlineBlock,
-  "quiz-personal-info-inline": QuizPersonalInfoInlineBlock,
+  'quiz-start-page-inline': QuizStartPageInlineBlock,
+  'quiz-personal-info-inline': QuizPersonalInfoInlineBlock,
   // ... todos os 46 tipos mapeados
 };
 
@@ -95,8 +95,8 @@ if (!ComponentToRender) {
 
 ```typescript
 // ✅ 47 exports configurados
-export { default as QuizStartPageInlineBlock } from "./QuizStartPageInlineBlock";
-export { default as QuizPersonalInfoInlineBlock } from "./QuizPersonalInfoInlineBlock";
+export { default as QuizStartPageInlineBlock } from './QuizStartPageInlineBlock';
+export { default as QuizPersonalInfoInlineBlock } from './QuizPersonalInfoInlineBlock';
 // ... todos os 47 exports
 ```
 

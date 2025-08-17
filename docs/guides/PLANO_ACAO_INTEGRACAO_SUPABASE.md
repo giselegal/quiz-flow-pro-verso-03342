@@ -48,12 +48,12 @@ Este plano de ação tem como objetivo conectar a lógica de cálculo e o fluxo 
 const startQuiz = async (name: string, email: string, quizId: string) => {
   try {
     console.log(`Starting quiz for ${name} (${email}) with quiz ID ${quizId}`);
-    return { id: "1", name, email };
+    return { id: '1', name, email };
   } catch (error) {
     toast({
-      title: "Erro ao iniciar o quiz",
-      description: "Por favor, tente novamente.",
-      variant: "destructive",
+      title: 'Erro ao iniciar o quiz',
+      description: 'Por favor, tente novamente.',
+      variant: 'destructive',
     });
     throw error;
   }
@@ -83,9 +83,9 @@ const startQuiz = async (name: string, email: string, quizId: string) => {
     return { id: session.id, name, email, sessionId: session.id };
   } catch (error) {
     toast({
-      title: "Erro ao iniciar o quiz",
-      description: "Por favor, tente novamente.",
-      variant: "destructive",
+      title: 'Erro ao iniciar o quiz',
+      description: 'Por favor, tente novamente.',
+      variant: 'destructive',
     });
     throw error;
   }
@@ -96,7 +96,7 @@ const startQuiz = async (name: string, email: string, quizId: string) => {
 
 ```typescript
 // Adicionar integração com Supabase
-import { quizSupabaseService } from "@/services/quizSupabaseService";
+import { quizSupabaseService } from '@/services/quizSupabaseService';
 
 // Modificar função de resposta
 const answerQuestion = useCallback(
@@ -128,10 +128,10 @@ const answerQuestion = useCallback(
         // Atualizar sessão
         await quizSupabaseService.updateQuizSession(sessionId, {
           currentStep: currentQuestionIndex + 1,
-          status: "in_progress",
+          status: 'in_progress',
         });
       } catch (error) {
-        console.error("Erro ao salvar resposta:", error);
+        console.error('Erro ao salvar resposta:', error);
       }
     }
   },
@@ -154,7 +154,7 @@ const completeQuiz = useCallback(
       try {
         // Marcar sessão como completa
         await quizSupabaseService.updateQuizSession(sessionId, {
-          status: "completed",
+          status: 'completed',
           score: calculatedResult.primaryStyle.score,
           completedAt: new Date(),
         });
@@ -173,7 +173,7 @@ const completeQuiz = useCallback(
           },
         });
       } catch (error) {
-        console.error("Erro ao salvar resultado:", error);
+        console.error('Erro ao salvar resultado:', error);
       }
     }
   },
@@ -190,11 +190,11 @@ const [sessionId, setSessionId] = useState<string | null>(null);
 // Modificar início do quiz
 const startQuizFlow = async (name: string, email: string) => {
   try {
-    const { id, sessionId } = await startQuiz(name, email, "quiz-style-test");
+    const { id, sessionId } = await startQuiz(name, email, 'quiz-style-test');
     setSessionId(sessionId);
     // Continuar fluxo
   } catch (error) {
-    console.error("Erro ao iniciar quiz:", error);
+    console.error('Erro ao iniciar quiz:', error);
   }
 };
 

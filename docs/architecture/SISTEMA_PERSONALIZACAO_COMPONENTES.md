@@ -95,11 +95,11 @@ Implementado um sistema de personalização onde ao clicar em um componente, o p
 // No ComponentSpecificPropertiesPanel.tsx
 const renderPropertiesByType = () => {
   switch (selectedBlock.type) {
-    case "text":
+    case 'text':
       return renderTextProperties();
-    case "button":
+    case 'button':
       return renderButtonProperties();
-    case "image":
+    case 'image':
       return renderImageProperties();
     default:
       return renderGenericProperties();

@@ -6,38 +6,38 @@ export const ENHANCED_BLOCK_REGISTRY = {
   // ✅ Step01 Components - Properly registered for Etapa 1
   'quiz-intro-header': lazy(() => import('@/components/editor/blocks/QuizIntroHeaderBlock')),
   'decorative-bar': lazy(() => import('@/components/editor/blocks/DecorativeBarInlineBlock')),
-  'text': lazy(() => import('@/components/editor/blocks/TextInlineBlock')),
-  'image': lazy(() => import('@/components/editor/blocks/ImageInlineBlock')),
+  text: lazy(() => import('@/components/editor/blocks/TextInlineBlock')),
+  image: lazy(() => import('@/components/editor/blocks/ImageInlineBlock')),
   'form-input': lazy(() => import('@/components/editor/blocks/FormInputBlock')),
-  'button': lazy(() => import('@/components/editor/blocks/ButtonInlineBlock')),
+  button: lazy(() => import('@/components/editor/blocks/ButtonInlineBlock')),
   'legal-notice': lazy(() => import('@/components/editor/blocks/LegalNoticeInlineBlock')),
-  
+
   // ✅ Componentes principais do quiz (com identidade visual da marca)
   'text-inline': lazy(() => import('@/components/editor/blocks/TextInlineBlock')),
-  'options-grid': lazy(() => import('@/components/editor/blocks/OptionsGridBlock')), 
+  'options-grid': lazy(() => import('@/components/editor/blocks/OptionsGridBlock')),
   'button-inline': lazy(() => import('@/components/editor/blocks/ButtonInlineBlock')),
   'lead-form': lazy(() => import('@/components/editor/blocks/LeadFormBlock')),
-  
+
   // ✅ Componentes específicos do quiz
   'loading-animation': lazy(() => import('@/components/editor/blocks/LoaderInlineBlock')),
   'progress-bar': lazy(() => import('@/components/editor/blocks/ProgressInlineBlock')),
   'result-card': lazy(() => import('@/components/editor/blocks/StyleCardInlineBlock')),
   'image-display-inline': lazy(() => import('@/components/blocks/inline/ImageDisplayInlineBlock')),
-  
+
   // ✅ Additional aliases for compatibility
-  'heading': lazy(() => import('@/components/editor/blocks/HeadingInlineBlock')),
+  heading: lazy(() => import('@/components/editor/blocks/HeadingInlineBlock')),
 };
 
 // Função para obter componente do registry
 export const getEnhancedBlockComponent = (type: string) => {
   const component = ENHANCED_BLOCK_REGISTRY[type as keyof typeof ENHANCED_BLOCK_REGISTRY];
-  
+
   if (!component) {
     console.warn(`⚠️ Componente não encontrado no registry: ${type}`);
     // Fallback para componente de texto
     return ENHANCED_BLOCK_REGISTRY['text-inline'];
   }
-  
+
   return component;
 };
 
@@ -51,7 +51,7 @@ export const AVAILABLE_COMPONENTS = [
   { type: 'form-input', label: 'Campo de Nome', category: 'step01' },
   { type: 'button', label: 'Botão', category: 'step01' },
   { type: 'legal-notice', label: 'Aviso Legal', category: 'step01' },
-  
+
   // Quiz Components
   { type: 'text-inline', label: 'Texto Inline', category: 'content' },
   { type: 'options-grid', label: 'Opções em Grid', category: 'quiz' },

@@ -114,8 +114,8 @@ export const QuizFinalResultsInlineBlock = lazy(() => import('./QuizFinalResults
 
 ```typescript
 const COMPONENT_MAP = {
-  "text-inline": TextInlineBlock,
-  "quiz-final-results-inline": QuizFinalResultsInlineBlock,
+  'text-inline': TextInlineBlock,
+  'quiz-final-results-inline': QuizFinalResultsInlineBlock,
   // ... 41 componentes mapeados
 };
 ```

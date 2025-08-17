@@ -188,7 +188,7 @@ O projeto já possui **sistemas de banco funcionais**, mas o servidor manual cri
 
 ```typescript
 // Usar o sistema existente:
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from '@/integrations/supabase/client';
 
 // Já configurado e funcionando
 // Sem necessidade de servidor adicional

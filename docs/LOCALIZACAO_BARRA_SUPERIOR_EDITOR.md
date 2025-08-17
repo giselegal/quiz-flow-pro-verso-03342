@@ -78,8 +78,8 @@ A barra superior do **editor-fixed** está localizada em `/src/pages/editor-fixe
 ### Importações Relevantes
 
 ```tsx
-import BrandHeader from "@/components/ui/BrandHeader";
-import { EditorToolbar } from "@/components/editor/toolbar/EditorToolbar";
+import BrandHeader from '@/components/ui/BrandHeader';
+import { EditorToolbar } from '@/components/editor/toolbar/EditorToolbar';
 ```
 
 ## 🎨 CORES APLICADAS (Paleta Aprovada)

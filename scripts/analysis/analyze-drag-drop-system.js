@@ -1,24 +1,24 @@
 // Análise completa do sistema Drag & Drop
 // Arquivo: analyze-drag-drop-system.js
 
-import fs from "fs";
-import path from "path";
+import fs from 'fs';
+import path from 'path';
 
-console.log("📋 ANÁLISE COMPLETA DO SISTEMA DRAG & DROP");
-console.log("=".repeat(50));
+console.log('📋 ANÁLISE COMPLETA DO SISTEMA DRAG & DROP');
+console.log('='.repeat(50));
 
 // Configuração da análise
-const projectRoot = "/workspaces/quiz-quest-challenge-verse/client/src";
+const projectRoot = '/workspaces/quiz-quest-challenge-verse/client/src';
 const dragDropFiles = [
-  "components/result-editor/DraggableBlockList.tsx",
-  "components/result-editor/SortableBlock.tsx",
-  "components/quiz-builder/preview/DraggableComponent.tsx",
-  "components/quiz-builder/preview/NewComponentPreviewPanel.tsx",
-  "components/quiz-builder/StagesPanel.tsx",
-  "components/enhanced-editor/preview/PreviewPanel.tsx",
-  "components/enhanced-editor/preview/BlockPreviewRenderer.tsx",
-  "hooks/useQuizComponents.ts",
-  "hooks/useUnifiedEditor.ts",
+  'components/result-editor/DraggableBlockList.tsx',
+  'components/result-editor/SortableBlock.tsx',
+  'components/quiz-builder/preview/DraggableComponent.tsx',
+  'components/quiz-builder/preview/NewComponentPreviewPanel.tsx',
+  'components/quiz-builder/StagesPanel.tsx',
+  'components/enhanced-editor/preview/PreviewPanel.tsx',
+  'components/enhanced-editor/preview/BlockPreviewRenderer.tsx',
+  'hooks/useQuizComponents.ts',
+  'hooks/useUnifiedEditor.ts',
 ];
 
 // Padrões de análise
@@ -65,13 +65,13 @@ function analyzeFile(filePath) {
     return null;
   }
 
-  const content = fs.readFileSync(fullPath, "utf8");
+  const content = fs.readFileSync(fullPath, 'utf8');
   const fileName = path.basename(filePath);
 
   const analysis = {
     file: fileName,
     path: filePath,
-    lines: content.split("\n").length,
+    lines: content.split('\n').length,
     analysis: {
       libraries: [],
       functionality: {},
@@ -174,7 +174,7 @@ function analyzeFile(filePath) {
 }
 
 // Executar análise
-console.log("🔍 ANALISANDO ARQUIVOS...\n");
+console.log('🔍 ANALISANDO ARQUIVOS...\n');
 
 dragDropFiles.forEach(file => {
   const analysis = analyzeFile(file);
@@ -183,15 +183,15 @@ dragDropFiles.forEach(file => {
 
     const statusIcon =
       analysis.score >= 80
-        ? "🟢"
+        ? '🟢'
         : analysis.score >= 60
-          ? "🟡"
+          ? '🟡'
           : analysis.score >= 40
-            ? "🟠"
-            : "🔴";
+            ? '🟠'
+            : '🔴';
 
     console.log(`${statusIcon} ${analysis.file} - Score: ${analysis.score}/100`);
-    console.log(`   📚 Bibliotecas: ${analysis.analysis.libraries.join(", ") || "Nenhuma"}`);
+    console.log(`   📚 Bibliotecas: ${analysis.analysis.libraries.join(', ') || 'Nenhuma'}`);
     console.log(
       `   ⚙️ Funcionalidades: ${Object.values(analysis.analysis.functionality).reduce((a, b) => a + b, 0)}`
     );
@@ -210,13 +210,13 @@ dragDropFiles.forEach(file => {
     console.log(
       `   ⚡ Performance: ${Object.values(analysis.analysis.performance).reduce((a, b) => a + b, 0)}`
     );
-    console.log("");
+    console.log('');
   }
 });
 
 // Resumo geral
-console.log("\n📊 RESUMO GERAL");
-console.log("=".repeat(50));
+console.log('\n📊 RESUMO GERAL');
+console.log('='.repeat(50));
 
 const scores = Object.values(analysisResults).map(r => r.score);
 const avgScore = scores.reduce((a, b) => a + b, 0) / scores.length;
@@ -228,49 +228,49 @@ console.log(`🟠 Arquivos regulares (40-59): ${scores.filter(s => s >= 40 && s 
 console.log(`🔴 Arquivos críticos (<40): ${scores.filter(s => s < 40).length}`);
 
 // Recomendações
-console.log("\n🛠️ RECOMENDAÇÕES DE MELHORIA");
-console.log("=".repeat(50));
+console.log('\n🛠️ RECOMENDAÇÕES DE MELHORIA');
+console.log('='.repeat(50));
 
-console.log("\n1. 📚 BIBLIOTECAS E DEPENDÊNCIAS:");
-console.log("   • @dnd-kit/core: ^6.3.1 ✅ Atualizada");
-console.log("   • @dnd-kit/sortable: ^10.0.0 ✅ Atualizada");
-console.log("   • @dnd-kit/utilities: ^3.2.2 ✅ Atualizada");
-console.log("   • @dnd-kit/modifiers: ^9.0.0 ✅ Atualizada");
+console.log('\n1. 📚 BIBLIOTECAS E DEPENDÊNCIAS:');
+console.log('   • @dnd-kit/core: ^6.3.1 ✅ Atualizada');
+console.log('   • @dnd-kit/sortable: ^10.0.0 ✅ Atualizada');
+console.log('   • @dnd-kit/utilities: ^3.2.2 ✅ Atualizada');
+console.log('   • @dnd-kit/modifiers: ^9.0.0 ✅ Atualizada');
 
-console.log("\n2. 🎯 FUNCIONALIDADES PRINCIPAIS:");
-console.log("   • Implementar drag visual feedback");
-console.log("   • Adicionar preview durante drag");
-console.log("   • Melhorar collision detection");
-console.log("   • Implementar drag constraints");
+console.log('\n2. 🎯 FUNCIONALIDADES PRINCIPAIS:');
+console.log('   • Implementar drag visual feedback');
+console.log('   • Adicionar preview durante drag');
+console.log('   • Melhorar collision detection');
+console.log('   • Implementar drag constraints');
 
-console.log("\n3. ♿ ACESSIBILIDADE:");
-console.log("   • Adicionar mais atributos ARIA");
-console.log("   • Implementar navegação por teclado");
-console.log("   • Adicionar screen reader support");
-console.log("   • Implementar focus management");
+console.log('\n3. ♿ ACESSIBILIDADE:');
+console.log('   • Adicionar mais atributos ARIA');
+console.log('   • Implementar navegação por teclado');
+console.log('   • Adicionar screen reader support');
+console.log('   • Implementar focus management');
 
-console.log("\n4. ⚡ PERFORMANCE:");
-console.log("   • Usar React.memo em componentes drag");
-console.log("   • Implementar useCallback para handlers");
-console.log("   • Otimizar re-renders durante drag");
-console.log("   • Usar requestAnimationFrame para animações");
+console.log('\n4. ⚡ PERFORMANCE:');
+console.log('   • Usar React.memo em componentes drag');
+console.log('   • Implementar useCallback para handlers');
+console.log('   • Otimizar re-renders durante drag');
+console.log('   • Usar requestAnimationFrame para animações');
 
-console.log("\n5. 🔧 CONFIGURAÇÃO:");
-console.log("   • Padronizar sensores em todos os contextos");
-console.log("   • Implementar modifiers consistentes");
-console.log("   • Adicionar activation constraints");
-console.log("   • Configurar collision detection otimizada");
+console.log('\n5. 🔧 CONFIGURAÇÃO:');
+console.log('   • Padronizar sensores em todos os contextos');
+console.log('   • Implementar modifiers consistentes');
+console.log('   • Adicionar activation constraints');
+console.log('   • Configurar collision detection otimizada');
 
-console.log("\n6. 📱 MOBILE:");
-console.log("   • Implementar touch sensors");
-console.log("   • Adicionar haptic feedback");
-console.log("   • Otimizar para gestos touch");
-console.log("   • Implementar drag threshold para mobile");
+console.log('\n6. 📱 MOBILE:');
+console.log('   • Implementar touch sensors');
+console.log('   • Adicionar haptic feedback');
+console.log('   • Otimizar para gestos touch');
+console.log('   • Implementar drag threshold para mobile');
 
-console.log("\n7. 🎨 UX/UI:");
-console.log("   • Adicionar drag indicators visuais");
-console.log("   • Implementar drag overlay customizado");
-console.log("   • Adicionar animações suaves");
-console.log("   • Implementar drop zones visuais");
+console.log('\n7. 🎨 UX/UI:');
+console.log('   • Adicionar drag indicators visuais');
+console.log('   • Implementar drag overlay customizado');
+console.log('   • Adicionar animações suaves');
+console.log('   • Implementar drop zones visuais');
 
-console.log("\n🏁 ANÁLISE COMPLETA CONCLUÍDA!");
+console.log('\n🏁 ANÁLISE COMPLETA CONCLUÍDA!');

@@ -39,17 +39,17 @@ O sistema de propriedades do `/editor-fixed` foi **100% otimizado** com a implem
 
 ```typescript
 export enum PropertyType {
-  TEXT = 'text',           // ✅ Input de texto simples
-  TEXTAREA = 'textarea',   // ✅ Área de texto multi-linha
-  NUMBER = 'number',       // ✅ Campo numérico
-  RANGE = 'range',         // ✅ Slider visual
-  COLOR = 'color',         // ✅ Seletor de cor
-  SELECT = 'select',       // ✅ Dropdown de opções
-  SWITCH = 'switch',       // ✅ Interruptor ligado/desligado
-  ARRAY = 'array',         // ✅ Editor de lista (quiz options)
-  OBJECT = 'object',       // ✅ Objeto complexo
-  UPLOAD = 'upload',       // 🚧 Upload de arquivo
-  URL = 'url',             // 🚧 Campo de URL
+  TEXT = 'text', // ✅ Input de texto simples
+  TEXTAREA = 'textarea', // ✅ Área de texto multi-linha
+  NUMBER = 'number', // ✅ Campo numérico
+  RANGE = 'range', // ✅ Slider visual
+  COLOR = 'color', // ✅ Seletor de cor
+  SELECT = 'select', // ✅ Dropdown de opções
+  SWITCH = 'switch', // ✅ Interruptor ligado/desligado
+  ARRAY = 'array', // ✅ Editor de lista (quiz options)
+  OBJECT = 'object', // ✅ Objeto complexo
+  UPLOAD = 'upload', // 🚧 Upload de arquivo
+  URL = 'url', // 🚧 Campo de URL
   // + 20 outros tipos suportados
 }
 ```
@@ -58,11 +58,11 @@ export enum PropertyType {
 
 ```typescript
 export enum PropertyCategory {
-  CONTENT = 'content',      // 📝 Conteúdo e texto
-  STYLE = 'style',          // 🎨 Cores, fontes, visual
-  LAYOUT = 'layout',        // 📐 Posicionamento, tamanho
-  BEHAVIOR = 'behavior',    // ⚙️ Interações, funcionalidade
-  ADVANCED = 'advanced',    // 🔧 Configurações avançadas
+  CONTENT = 'content', // 📝 Conteúdo e texto
+  STYLE = 'style', // 🎨 Cores, fontes, visual
+  LAYOUT = 'layout', // 📐 Posicionamento, tamanho
+  BEHAVIOR = 'behavior', // ⚙️ Interações, funcionalidade
+  ADVANCED = 'advanced', // 🔧 Configurações avançadas
 }
 ```
 
@@ -75,7 +75,7 @@ export enum PropertyCategory {
 ```typescript
 // O hook detecta o tipo do bloco e gera propriedades automaticamente
 const { properties, updateProperty } = useUnifiedProperties(
-  blockType,     // Ex: 'text-inline', 'button-inline', 'quiz-question'
+  blockType, // Ex: 'text-inline', 'button-inline', 'quiz-question'
   blockId,
   block,
   onUpdate
@@ -108,7 +108,7 @@ export const textBlockSchema = z.object({
 const { errors, isValid } = useBlockForm(block, {
   onUpdate: onUpdate,
   debounceMs: 300,
-  validateOnChange: true
+  validateOnChange: true,
 });
 ```
 
@@ -170,24 +170,28 @@ export const blockSchemas = {
 ## 📈 **BENEFÍCIOS DA IMPLEMENTAÇÃO**
 
 ### **🚀 Performance**
+
 - **300ms de debouncing** para evitar atualizações excessivas
 - **Re-renders otimizados** com React Hook Form
 - **Memoização automática** de propriedades
 - **Validação lazy** apenas quando necessário
 
 ### **🎯 Experiência do Usuário**
+
 - **Feedback visual instantâneo** com cores da marca
 - **Categorização intuitiva** por abas
 - **Mensagens de erro contextuais** em português
 - **Status de validação** em tempo real
 
 ### **🔧 Desenvolvedor Experience**
+
 - **Tipagem completa** com TypeScript
 - **Schema reutilizável** entre componentes
 - **API consistente** para todos os tipos
 - **Extensibilidade** para novos tipos
 
 ### **📊 Manutenibilidade**
+
 - **Single Source of Truth** no useUnifiedProperties
 - **Validação centralizada** com Zod
 - **Componente único** para todas as propriedades
@@ -198,10 +202,11 @@ export const blockSchemas = {
 ## ✅ **COMPARATIVO: ANTES vs DEPOIS**
 
 ### **❌ ANTES - Problemas Identificados**
+
 ```typescript
 // 19 diferentes implementações de PropertiesPanel
 PropertiesPanel.tsx (358 linhas)
-EnhancedPropertiesPanel.tsx (522 linhas)  
+EnhancedPropertiesPanel.tsx (522 linhas)
 DynamicPropertiesPanel.tsx (356 linhas)
 // ... e mais 16 painéis diferentes
 
@@ -214,6 +219,7 @@ DynamicPropertiesPanel.tsx (356 linhas)
 ```
 
 ### **✅ DEPOIS - OptimizedPropertiesPanel**
+
 ```typescript
 // 1 único painel otimizado (652 linhas)
 OptimizedPropertiesPanel.tsx

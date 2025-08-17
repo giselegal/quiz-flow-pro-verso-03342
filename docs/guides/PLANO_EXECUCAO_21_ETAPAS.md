@@ -86,17 +86,17 @@ interface ConversionProps {
 ```typescript
 // Para componentes de Quiz
 const quizProperties = {
-  content: ["title", "description", "validationMessage"],
-  behavior: ["multiSelect", "autoAdvance", "showProgress"],
-  styling: ["primaryColor", "layout", "imageSize"],
-  validation: ["minSelections", "maxSelections", "required"],
+  content: ['title', 'description', 'validationMessage'],
+  behavior: ['multiSelect', 'autoAdvance', 'showProgress'],
+  styling: ['primaryColor', 'layout', 'imageSize'],
+  validation: ['minSelections', 'maxSelections', 'required'],
 };
 
 // Para componentes de Transição
 const transitionProperties = {
-  content: ["title", "description"],
-  visual: ["backgroundImage", "textColor", "animation"],
-  behavior: ["delay", "autoAdvance", "showProgress"],
+  content: ['title', 'description'],
+  visual: ['backgroundImage', 'textColor', 'animation'],
+  behavior: ['delay', 'autoAdvance', 'showProgress'],
 };
 ```
 
@@ -116,19 +116,19 @@ const transitionProperties = {
 interface ScoringSystem {
   categories: StyleCategory[];
   weights: { questions: 0.7; strategic: 0.3 };
-  calculation: "sum-by-category";
-  tieBreaker: "first-selected";
+  calculation: 'sum-by-category';
+  tieBreaker: 'first-selected';
 }
 
 const styleCategories = [
-  "Natural",
-  "Clássico",
-  "Contemporâneo",
-  "Elegante",
-  "Romântico",
-  "Sexy",
-  "Dramático",
-  "Criativo",
+  'Natural',
+  'Clássico',
+  'Contemporâneo',
+  'Elegante',
+  'Romântico',
+  'Sexy',
+  'Dramático',
+  'Criativo',
 ];
 ```
 
@@ -136,14 +136,14 @@ const styleCategories = [
 
 ```typescript
 interface NavigationRules {
-  intro: { activateOn: "name-filled" };
+  intro: { activateOn: 'name-filled' };
   questions: {
-    activateOn: "min-selections";
+    activateOn: 'min-selections';
     autoAdvance: true;
     stages: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
   };
   strategic: {
-    activateOn: "single-selection";
+    activateOn: 'single-selection';
     autoAdvance: false;
     manualClick: true;
   };
@@ -174,9 +174,9 @@ interface AnalyticsEvents {
 
 ```typescript
 interface PreviewModes {
-  desktop: { width: "100%"; responsive: true };
-  tablet: { width: "768px"; scale: 0.8 };
-  mobile: { width: "375px"; scale: 0.6 };
+  desktop: { width: '100%'; responsive: true };
+  tablet: { width: '768px'; scale: 0.8 };
+  mobile: { width: '375px'; scale: 0.6 };
 }
 ```
 

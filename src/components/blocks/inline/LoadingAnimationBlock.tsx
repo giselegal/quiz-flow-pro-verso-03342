@@ -24,7 +24,7 @@ const LoadingAnimationBlock: React.FC<LoadingAnimationProps> = ({
   const sizeClasses = {
     small: 'w-6 h-6',
     medium: 'w-8 h-8',
-    large: 'w-12 h-12'
+    large: 'w-12 h-12',
   };
 
   const renderSpinner = () => (
@@ -36,13 +36,13 @@ const LoadingAnimationBlock: React.FC<LoadingAnimationProps> = ({
 
   const renderDots = () => (
     <div className="flex space-x-2">
-      {[0, 1, 2].map((i) => (
+      {[0, 1, 2].map(i => (
         <div
           key={i}
           className={`${sizeClasses[size]} rounded-full animate-pulse`}
-          style={{ 
+          style={{
             backgroundColor: color,
-            animationDelay: `${i * 0.2}s`
+            animationDelay: `${i * 0.2}s`,
           }}
         />
       ))}
@@ -58,17 +58,16 @@ const LoadingAnimationBlock: React.FC<LoadingAnimationProps> = ({
 
   const renderAnimation = () => {
     switch (type) {
-      case 'dots': return renderDots();
-      case 'pulse': return renderPulse();
-      default: return renderSpinner();
+      case 'dots':
+        return renderDots();
+      case 'pulse':
+        return renderPulse();
+      default:
+        return renderSpinner();
     }
   };
 
-  return (
-    <div className={containerClasses}>
-      {renderAnimation()}
-    </div>
-  );
+  return <div className={containerClasses}>{renderAnimation()}</div>;
 };
 
 export default LoadingAnimationBlock;

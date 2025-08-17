@@ -43,7 +43,7 @@ export type PropertyType =
   | 'textarea'
   | 'rich-text';
 
-// Legacy PropertySchema for this file  
+// Legacy PropertySchema for this file
 export interface PropertySchema {
   key: string;
   label: string;

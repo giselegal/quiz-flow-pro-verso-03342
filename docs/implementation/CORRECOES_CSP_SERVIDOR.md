@@ -27,7 +27,7 @@
 ```typescript
 // Content Security Policy - Allow necessary resources
 res.header(
-  "Content-Security-Policy",
+  'Content-Security-Policy',
   "default-src 'self'; script-src 'self' 'unsafe-inline' https://replit.com; style-src 'self' 'unsafe-inline' data:; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https:; frame-src 'self';"
 );
 ```
@@ -36,12 +36,12 @@ res.header(
 
 ```typescript
 // Serve static files from dist/public
-app.use(express.static(path.join(__dirname, "./public")));
+app.use(express.static(path.join(__dirname, './public')));
 
 // SPA fallback
-app.get("*", (req, res) => {
-  if (!req.url.startsWith("/api/")) {
-    const indexPath = path.join(__dirname, "./public/index.html");
+app.get('*', (req, res) => {
+  if (!req.url.startsWith('/api/')) {
+    const indexPath = path.join(__dirname, './public/index.html');
     res.sendFile(indexPath);
   }
 });

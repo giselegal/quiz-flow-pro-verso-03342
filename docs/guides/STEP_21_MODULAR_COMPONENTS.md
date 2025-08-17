@@ -53,7 +53,7 @@ Transformamos o código da `QuizOfferPage` em um sistema completamente modular e
 ### **Método 1: Renderização Automática (Recomendado)**
 
 ```tsx
-import { OfferPageJson } from "@/components/editor-fixed";
+import { OfferPageJson } from '@/components/editor-fixed';
 
 export const Step21Page: React.FC = () => {
   return <OfferPageJson stepNumber={21} />;
@@ -83,7 +83,7 @@ export const CustomOfferPage: React.FC = () => {
 ### **Método 3: Sistema JSON (Editável)**
 
 ```tsx
-import { useEditorWithJson } from "@/components/editor-fixed";
+import { useEditorWithJson } from '@/components/editor-fixed';
 
 export const EditableOfferPage: React.FC = () => {
   const [blocks, setBlocks] = useState([]);
@@ -118,7 +118,7 @@ export const EditableOfferPage: React.FC = () => {
 ### **Estilos CSS**
 
 ```tsx
-import { injectOfferPageStyles } from "@/components/editor-fixed";
+import { injectOfferPageStyles } from '@/components/editor-fixed';
 
 // Injetar estilos automaticamente
 useEffect(() => {
@@ -218,7 +218,7 @@ useEffect(() => {
 
 4. **Personalizar componentes:**
    ```tsx
-   import { OfferHeroSection } from "@/components/editor-fixed";
+   import { OfferHeroSection } from '@/components/editor-fixed';
    ```
 
 ---

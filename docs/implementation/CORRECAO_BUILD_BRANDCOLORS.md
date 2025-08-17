@@ -25,12 +25,12 @@
 
 ```typescript
 export const COLOR_MIGRATION = {
-  "bg-[#B89B7A]/10": "bg-[#B89B7A]/10",
-  "border-[#B89B7A]": "border-[#B89B7A]",
-  "border-[#B89B7A]": "border-[#B89B7A]", // ❌ DUPLICATA
-  "bg-[#B89B7A]/10": "bg-[#B89B7A]/10", // ❌ DUPLICATA
-  "text-[#B89B7A]": "text-[#B89B7A]",
-  "text-[#B89B7A]": "text-[#B89B7A]", // ❌ DUPLICATA
+  'bg-[#B89B7A]/10': 'bg-[#B89B7A]/10',
+  'border-[#B89B7A]': 'border-[#B89B7A]',
+  'border-[#B89B7A]': 'border-[#B89B7A]', // ❌ DUPLICATA
+  'bg-[#B89B7A]/10': 'bg-[#B89B7A]/10', // ❌ DUPLICATA
+  'text-[#B89B7A]': 'text-[#B89B7A]',
+  'text-[#B89B7A]': 'text-[#B89B7A]', // ❌ DUPLICATA
 };
 ```
 
@@ -39,21 +39,21 @@ export const COLOR_MIGRATION = {
 ```typescript
 export const COLOR_MIGRATION = {
   // Azul → Brand
-  "bg-blue-50": "bg-[#B89B7A]/10",
-  "bg-blue-100": "bg-[#B89B7A]/20",
-  "bg-blue-500": "bg-[#B89B7A]",
-  "text-blue-600": "text-[#B89B7A]",
-  "border-blue-200": "border-[#B89B7A]/30",
+  'bg-blue-50': 'bg-[#B89B7A]/10',
+  'bg-blue-100': 'bg-[#B89B7A]/20',
+  'bg-blue-500': 'bg-[#B89B7A]',
+  'text-blue-600': 'text-[#B89B7A]',
+  'border-blue-200': 'border-[#B89B7A]/30',
 
   // Cores da marca já corretas (mantém)
-  "bg-[#B89B7A]/10": "bg-[#B89B7A]/10", // ✅ ÚNICA
-  "bg-[#B89B7A]": "bg-[#B89B7A]", // ✅ ÚNICA
-  "text-[#B89B7A]": "text-[#B89B7A]", // ✅ ÚNICA
-  "border-[#B89B7A]": "border-[#B89B7A]", // ✅ ÚNICA
+  'bg-[#B89B7A]/10': 'bg-[#B89B7A]/10', // ✅ ÚNICA
+  'bg-[#B89B7A]': 'bg-[#B89B7A]', // ✅ ÚNICA
+  'text-[#B89B7A]': 'text-[#B89B7A]', // ✅ ÚNICA
+  'border-[#B89B7A]': 'border-[#B89B7A]', // ✅ ÚNICA
 
   // Outras cores organizadas
-  "bg-yellow-100": "bg-stone-100",
-  "text-purple-600": "text-[#B89B7A]",
+  'bg-yellow-100': 'bg-stone-100',
+  'text-purple-600': 'text-[#B89B7A]',
 };
 ```
 

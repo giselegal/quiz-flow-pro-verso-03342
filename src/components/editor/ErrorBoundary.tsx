@@ -17,7 +17,7 @@ interface ErrorBoundaryState {
 
 /**
  * 🛡️ ERROR BOUNDARY: Captura erros de renderização
- * 
+ *
  * Funcionalidades:
  * ✅ Captura erros de componentes filhos
  * ✅ UI de fallback amigável
@@ -86,7 +86,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
             <p className="text-sm text-muted-foreground">
               Ocorreu um erro inesperado ao renderizar este componente.
             </p>
-            
+
             {process.env.NODE_ENV === 'development' && this.state.error && (
               <details className="bg-muted p-3 rounded-md text-xs">
                 <summary className="cursor-pointer font-mono font-medium mb-2 flex items-center gap-2">
@@ -105,27 +105,29 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
                   {this.state.errorInfo?.componentStack && (
                     <div>
                       <strong>Component Stack:</strong>
-                      <pre className="mt-1 overflow-auto">{this.state.errorInfo.componentStack}</pre>
+                      <pre className="mt-1 overflow-auto">
+                        {this.state.errorInfo.componentStack}
+                      </pre>
                     </div>
                   )}
                 </div>
               </details>
             )}
-            
+
             <div className="flex gap-2">
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={this.handleReset}
                 className="flex items-center gap-2"
               >
                 <RefreshCw size={14} />
                 Tentar Novamente
               </Button>
-              
-              <Button 
-                variant="outline" 
-                size="sm" 
+
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={() => window.location.reload()}
                 className="flex items-center gap-2"
               >
@@ -155,9 +157,9 @@ export const withErrorBoundary = <P extends object>(
       <Component {...(props as any)} ref={ref} />
     </ErrorBoundary>
   ));
-  
+
   WrappedComponent.displayName = `withErrorBoundary(${Component.displayName || Component.name})`;
-  
+
   return WrappedComponent;
 };
 

@@ -7,25 +7,29 @@ import { COMPLETE_QUIZ_QUESTIONS } from '@/data/correctQuizQuestions';
 
 export const ConnectedStep06Template = () => {
   const { answerQuestion, answers } = useQuizLogic();
-  
+
   // 🎯 Buscar questão real dos dados (q5)
-  const questionData = COMPLETE_QUIZ_QUESTIONS.find(q => q.id === 'q5') || COMPLETE_QUIZ_QUESTIONS[5];
-  
-  const handleOptionSelect = useCallback(async (optionIds: string[]) => {
-    try {
-      const selectedOption = questionData.options.find((opt: any) => optionIds.includes(opt.id));
-      if (selectedOption) {
-        await answerQuestion(questionData.id, selectedOption.id);
-        
-        console.log('✅ Connected Step06: Resposta salva via hooks', { 
-          questionId: questionData.id, 
-          selectedOptions: optionIds 
-        });
+  const questionData =
+    COMPLETE_QUIZ_QUESTIONS.find(q => q.id === 'q5') || COMPLETE_QUIZ_QUESTIONS[5];
+
+  const handleOptionSelect = useCallback(
+    async (optionIds: string[]) => {
+      try {
+        const selectedOption = questionData.options.find((opt: any) => optionIds.includes(opt.id));
+        if (selectedOption) {
+          await answerQuestion(questionData.id, selectedOption.id);
+
+          console.log('✅ Connected Step06: Resposta salva via hooks', {
+            questionId: questionData.id,
+            selectedOptions: optionIds,
+          });
+        }
+      } catch (error) {
+        console.error('❌ Connected Step06: Erro ao salvar resposta', error);
       }
-    } catch (error) {
-      console.error('❌ Connected Step06: Erro ao salvar resposta', error);
-    }
-  }, [answerQuestion, questionData]);
+    },
+    [answerQuestion, questionData]
+  );
 
   return [
     // 📱 CABEÇALHO COM LOGO E PROGRESSO
@@ -33,7 +37,8 @@ export const ConnectedStep06Template = () => {
       id: 'step06-header',
       type: 'quiz-intro-header',
       properties: {
-        logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+        logoUrl:
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
         logoAlt: 'Logo Gisele Galvão',
         logoWidth: 96,
         logoHeight: 96,
@@ -114,7 +119,8 @@ export const ConnectedStep06Template = () => {
         hoverColor: '#F3E8D3',
 
         // 📊 STATUS - Usando answers do useQuizLogic
-        currentSelections: answers.filter(a => a.questionId === questionData.id).map(a => a.optionId) || [],
+        currentSelections:
+          answers.filter(a => a.questionId === questionData.id).map(a => a.optionId) || [],
         isLoading: false,
 
         containerWidth: 'full',
@@ -140,7 +146,9 @@ export const ConnectedStep06Template = () => {
         disabledTextColor: '#9ca3af',
 
         // 🔗 ESTADO CONECTADO - Usando answers do useQuizLogic
-        disabled: answers.filter(a => a.questionId === questionData.id).length < (questionData.multiSelect || 3),
+        disabled:
+          answers.filter(a => a.questionId === questionData.id).length <
+          (questionData.multiSelect || 3),
         requiresValidInput: true,
         instantActivation: false,
 
@@ -153,7 +161,7 @@ export const ConnectedStep06Template = () => {
         // 🔗 HANDLER DE NAVEGAÇÃO CONECTADO
         onClick: () => {
           console.log('🎯 Connected Step06: Navegando para próximo step');
-        }
+        },
       },
     },
   ];

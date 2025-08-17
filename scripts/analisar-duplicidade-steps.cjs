@@ -10,10 +10,10 @@
  * 4. Conflitos potenciais
  */
 
-const fs = require("fs");
-const path = require("path");
+const fs = require('fs');
+const path = require('path');
 
-console.log("🔍 ANÁLISE DE DUPLICIDADE DE STEPS NO PROJETO\n");
+console.log('🔍 ANÁLISE DE DUPLICIDADE DE STEPS NO PROJETO\n');
 
 // Função para categorizar arquivos
 function categorizeStepFiles() {
@@ -27,12 +27,12 @@ function categorizeStepFiles() {
 
   // Buscar todos os arquivos relacionados a Step
   const directories = [
-    "./src/components/steps/",
-    "./src/components/editor/steps/",
-    "./backup/",
-    "./backup-cleanup-2025-08-06T19-17-41-611Z/",
-    "./backup_duplicated_20250806_134328/",
-    "./backup_editor_blocks_inline_20250806_133020/",
+    './src/components/steps/',
+    './src/components/editor/steps/',
+    './backup/',
+    './backup-cleanup-2025-08-06T19-17-41-611Z/',
+    './backup_duplicated_20250806_134328/',
+    './backup_editor_blocks_inline_20250806_133020/',
   ];
 
   directories.forEach(dir => {
@@ -42,15 +42,15 @@ function categorizeStepFiles() {
         files.forEach(file => {
           const fullPath = path.join(dir, file);
 
-          if (typeof file === "string" && file.includes("Step") && file.endsWith(".tsx")) {
-            const relativePath = fullPath.replace("./src/components/", "");
+          if (typeof file === 'string' && file.includes('Step') && file.endsWith('.tsx')) {
+            const relativePath = fullPath.replace('./src/components/', '');
 
             // Categorizar arquivo
-            if (file.includes(".backup") || dir.includes("backup")) {
+            if (file.includes('.backup') || dir.includes('backup')) {
               stepFiles.backups.push(fullPath);
-            } else if (file.includes("_OLD") || file.includes("_NEW")) {
+            } else if (file.includes('_OLD') || file.includes('_NEW')) {
               stepFiles.old.push(fullPath);
-            } else if (dir === "./src/components/steps/") {
+            } else if (dir === './src/components/steps/') {
               stepFiles.active.push(fullPath);
             } else {
               stepFiles.orphan.push(fullPath);
@@ -68,14 +68,14 @@ function categorizeStepFiles() {
 
 // Analisar templates ativos
 function analyzeActiveTemplates() {
-  const activeDir = "./src/components/steps/";
+  const activeDir = './src/components/steps/';
   const activeFiles = [];
 
   if (fs.existsSync(activeDir)) {
     const files = fs.readdirSync(activeDir);
 
     files.forEach(file => {
-      if (file.endsWith(".tsx") && file.includes("Template") && !file.includes(".backup")) {
+      if (file.endsWith('.tsx') && file.includes('Template') && !file.includes('.backup')) {
         const stepNumber = file.match(/Step(\d+)Template/);
         if (stepNumber) {
           activeFiles.push({
@@ -108,26 +108,26 @@ const stepFiles = categorizeStepFiles();
 const activeTemplates = analyzeActiveTemplates();
 const completeness = checkCompletenessSteps(activeTemplates);
 
-console.log("📊 RESULTADO DA ANÁLISE:\n");
+console.log('📊 RESULTADO DA ANÁLISE:\n');
 
 // 1. Templates Ativos
-console.log("✅ TEMPLATES ATIVOS (src/components/steps/):");
+console.log('✅ TEMPLATES ATIVOS (src/components/steps/):');
 console.log(`   Total: ${activeTemplates.length} arquivos`);
 activeTemplates.forEach(template => {
   const sizeKB = (template.size / 1024).toFixed(1);
   console.log(
-    `   Step${template.stepNumber.toString().padStart(2, "0")} - ${template.file} (${sizeKB}KB)`
+    `   Step${template.stepNumber.toString().padStart(2, '0')} - ${template.file} (${sizeKB}KB)`
   );
 });
 
 // 2. Completude dos Steps
 console.log(`\n🎯 COMPLETUDE DOS STEPS (1-21):`);
-console.log(`   ✅ Completo: ${completeness.complete ? "SIM" : "NÃO"}`);
+console.log(`   ✅ Completo: ${completeness.complete ? 'SIM' : 'NÃO'}`);
 if (completeness.missing.length > 0) {
-  console.log(`   ❌ Faltando: Step${completeness.missing.join(", Step")}`);
+  console.log(`   ❌ Faltando: Step${completeness.missing.join(', Step')}`);
 }
 if (completeness.extras.length > 0) {
-  console.log(`   ⚠️  Extras: Step${completeness.extras.join(", Step")}`);
+  console.log(`   ⚠️  Extras: Step${completeness.extras.join(', Step')}`);
 }
 
 // 3. Arquivos de Backup
@@ -136,7 +136,7 @@ console.log(`   Total: ${stepFiles.backups.length} arquivos`);
 if (stepFiles.backups.length > 0) {
   const backupsByDir = {};
   stepFiles.backups.forEach(backup => {
-    const dir = backup.split("/").slice(0, -1).join("/");
+    const dir = backup.split('/').slice(0, -1).join('/');
     if (!backupsByDir[dir]) backupsByDir[dir] = [];
     backupsByDir[dir].push(path.basename(backup));
   });
@@ -162,11 +162,11 @@ stepFiles.orphan.forEach(orphan => {
 
 // 6. Possíveis Duplicatas
 const duplicateAnalysis = activeTemplates.filter(template => {
-  const baseName = template.file.replace(".tsx", "");
+  const baseName = template.file.replace('.tsx', '');
   const possibleDuplicates = stepFiles.backups.filter(
     backup =>
       backup.includes(baseName) ||
-      backup.includes(`Step${template.stepNumber.toString().padStart(2, "0")}`)
+      backup.includes(`Step${template.stepNumber.toString().padStart(2, '0')}`)
   );
   return possibleDuplicates.length > 0;
 });
@@ -178,9 +178,9 @@ console.log(`   Templates com possíveis duplicatas: ${duplicateAnalysis.length}
 console.log(`\n🎯 RECOMENDAÇÕES:\n`);
 
 if (completeness.complete) {
-  console.log("✅ SISTEMA COMPLETO: Todos os 21 steps estão presentes");
+  console.log('✅ SISTEMA COMPLETO: Todos os 21 steps estão presentes');
 } else {
-  console.log("❌ SISTEMA INCOMPLETO: Alguns steps estão faltando");
+  console.log('❌ SISTEMA INCOMPLETO: Alguns steps estão faltando');
 }
 
 console.log(`📦 LIMPEZA RECOMENDADA:`);
@@ -202,5 +202,5 @@ console.log(`   Arquivos ativos: ${stepFiles.active.length}`);
 console.log(`   Potencial de limpeza: ${cleanupPotential} arquivos (${cleanupPercentage}%)`);
 
 console.log(
-  `\n✅ CONCLUSÃO: ${completeness.complete ? "Sistema funcional com muitos backups" : "Sistema incompleto - verificar steps faltantes"}`
+  `\n✅ CONCLUSÃO: ${completeness.complete ? 'Sistema funcional com muitos backups' : 'Sistema incompleto - verificar steps faltantes'}`
 );

@@ -5,7 +5,7 @@ import type {
   FunnelPage,
   InsertFunnelPage,
   FunnelVersion,
-} from "@/types/unified-schema";
+} from '@/types/unified-schema';
 
 // Additional interfaces for backward compatibility
 interface InsertFunnelVersion extends Omit<FunnelVersion, 'id'> {}

@@ -11,7 +11,7 @@
  * 4. Complete o código
  */
 
-import React from "react";
+import React from 'react';
 
 // ===== EXERCÍCIO 1: COMPONENTES =====
 
@@ -77,8 +77,8 @@ export const ExercicioHooks = () => {
 // ===== EXERCÍCIO 5: DEBUGGING =====
 
 export const ExercicioDebug = () => {
-  const data = { name: "João", age: 30 };
-  const items = ["item1", "item2", "item3"];
+  const data = { name: 'João', age: 30 };
+  const items = ['item1', 'item2', 'item3'];
 
   // TODO: Adicione um console.log simples usando clg + Tab
   // Cursor aqui:
@@ -100,8 +100,8 @@ export const ExercicioDebug = () => {
 // ===== EXERCÍCIO 7: DESTRUCTURING =====
 
 export const ExercicioDestructuring = () => {
-  const user = { name: "Maria", email: "maria@email.com", age: 25 };
-  const colors = ["red", "green", "blue"];
+  const user = { name: 'Maria', email: 'maria@email.com', age: 25 };
+  const colors = ['red', 'green', 'blue'];
 
   // TODO: Faça destructuring do objeto user usando dob + Tab
   // Cursor aqui:
@@ -178,22 +178,22 @@ function Sidebar() {
 
 export const RespostaHooks = () => {
   // useState + Tab
-  const [nome, setNome] = React.useState("");
-  const [email, setEmail] = React.useState("");
+  const [nome, setNome] = React.useState('');
+  const [email, setEmail] = React.useState('');
 
   // useEffect + Tab
   React.useEffect(() => {
-    console.log("Componente montado");
+    console.log('Componente montado');
   }, []);
 
   // useCallback + Tab
   const handleSubmit = React.useCallback(() => {
-    console.log("Formulário enviado", { nome, email });
+    console.log('Formulário enviado', { nome, email });
   }, [nome, email]);
 
   // useMemo + Tab
   const isEmailValid = React.useMemo(() => {
-    return email.includes("@");
+    return email.includes('@');
   }, [email]);
 
   return (
@@ -268,15 +268,15 @@ export default useCounter;
 // ===== RESPOSTA 5: DEBUGGING =====
 
 export const RespostaDebug = () => {
-  const data = { name: "João", age: 30 };
-  const items = ["item1", "item2", "item3"];
+  const data = { name: 'João', age: 30 };
+  const items = ['item1', 'item2', 'item3'];
 
   // clg + Tab
-  console.log("Componente renderizado");
+  console.log('Componente renderizado');
 
   // clo + Tab
-  console.log("data", data);
-  console.log("items", items);
+  console.log('data', data);
+  console.log('items', items);
 
   return <div>Debug Component</div>;
 };
@@ -285,19 +285,19 @@ export const RespostaDebug = () => {
 
 // anfn + Tab
 const minhaArrowFunction = () => {
-  console.log("Arrow function executada");
+  console.log('Arrow function executada');
 };
 
 // nfn + Tab
 function minhaFunctionNomeada() {
-  console.log("Function nomeada executada");
+  console.log('Function nomeada executada');
 }
 
 // ===== RESPOSTA 7: DESTRUCTURING =====
 
 export const RespostaDestructuring = () => {
-  const user = { name: "Maria", email: "maria@email.com", age: 25 };
-  const colors = ["red", "green", "blue"];
+  const user = { name: 'Maria', email: 'maria@email.com', age: 25 };
+  const colors = ['red', 'green', 'blue'];
 
   // dob + Tab
   const { name, email, age } = user;
@@ -340,7 +340,7 @@ export const QuizCard = ({ question, options, onSelect }: QuizCardProps) => {
   // useEffect + Tab
   React.useEffect(() => {
     if (selected) {
-      console.log("Opção selecionada:", selected);
+      console.log('Opção selecionada:', selected);
     }
   }, [selected]);
 
@@ -352,7 +352,7 @@ export const QuizCard = ({ question, options, onSelect }: QuizCardProps) => {
           <button
             key={option}
             onClick={() => handleClick(option)}
-            className={selected === option ? "selected" : ""}
+            className={selected === option ? 'selected' : ''}
           >
             {option}
           </button>

@@ -9,6 +9,7 @@ O projeto possui uma base sólida mas sofre de **crescimento orgânico descontro
 ## 📂 **ESTRUTURA ATUAL**
 
 ### ✅ **Pontos Positivos**
+
 - **Separação clara** entre `src/components`, `src/pages`, `src/types`
 - **Context API** bem estruturado em `src/context/`
 - **Sistema de UI components** consolidado em `src/components/ui/`
@@ -19,14 +20,17 @@ O projeto possui uma base sólida mas sofre de **crescimento orgânico descontro
 ### ❌ **Problemas Identificados**
 
 #### 1. **Proliferação de Arquivos de Análise** (CRÍTICO)
+
 ```
 ANALISE_*.md (20+ arquivos)
 RELATORIO_*.md (15+ arquivos)
 STATUS_*.md (10+ arquivos)
 ```
+
 **Impacto**: Poluição visual, dificuldade de navegação, confusão para novos desenvolvedores
 
 #### 2. **Duplicação de Editores** (CRÍTICO)
+
 ```
 src/pages/
 ├── editor.tsx
@@ -41,9 +45,11 @@ src/pages/
     ├── editor-debug-minimal.tsx
     └── editor-fixed-simples.tsx
 ```
+
 **Impacto**: Confusão sobre qual editor usar, manutenção multiplicada, bugs inconsistentes
 
 #### 3. **Fragmentação de Componentes** (ALTO)
+
 ```
 src/components/
 ├── editor/
@@ -53,9 +59,11 @@ src/components/
 ├── unified-editor/
 └── universal/
 ```
+
 **Impacto**: Lógica espalhada, reutilização dificultada, testing complexo
 
 #### 4. **Estrutura de Páginas Confusa** (ALTO)
+
 ```
 src/pages/
 ├── QuizEditor.tsx
@@ -64,9 +72,11 @@ src/pages/
 ├── QuizBuilderTestPage.tsx
 └── admin/
 ```
+
 **Impacto**: Navegação inconsistente, responsabilidades sobrepostas
 
 #### 5. **Acúmulo de Arquivos Temporários** (MÉDIO)
+
 ```
 src/
 ├── temp/
@@ -117,6 +127,7 @@ quiz-quest-challenge-verse/
 ### 🎯 **Feature-Based Architecture**
 
 #### **1. Editor Feature**
+
 ```
 src/features/editor/
 ├── components/
@@ -143,6 +154,7 @@ src/features/editor/
 ```
 
 #### **2. Quiz Feature**
+
 ```
 src/features/quiz/
 ├── components/
@@ -170,6 +182,7 @@ src/features/quiz/
 ```
 
 #### **3. Templates Feature**
+
 ```
 src/features/templates/
 ├── components/
@@ -189,6 +202,7 @@ src/features/templates/
 ### 🔄 **Shared Resources**
 
 #### **Shared Components**
+
 ```
 src/shared/components/
 ├── ui/                             # Design system
@@ -211,6 +225,7 @@ src/shared/components/
 ```
 
 #### **Shared Services**
+
 ```
 src/shared/services/
 ├── api/
@@ -235,6 +250,7 @@ src/shared/services/
 ### **Fase 1: Limpeza e Consolidação** (1-2 semanas)
 
 #### **1.1 Limpeza de Arquivos**
+
 ```bash
 # Mover documentação
 mkdir docs/
@@ -249,11 +265,13 @@ rm -rf src/temp/
 ```
 
 #### **1.2 Consolidação de Editores**
+
 - ✅ Manter apenas `EditorWithPreview` como editor principal
 - ❌ Remover todos os outros editores legacy
 - 🔄 Migrar funcionalidades únicas para o editor principal
 
 #### **1.3 Reorganização de Componentes**
+
 ```bash
 # Consolidar editores
 mv src/components/editor/* src/features/editor/components/
@@ -265,16 +283,19 @@ rm -rf src/components/simple-editor/
 ### **Fase 2: Reestruturação** (2-3 semanas)
 
 #### **2.1 Criar Feature Modules**
+
 ```bash
 mkdir -p src/features/{auth,editor,quiz,templates,results}
 ```
 
 #### **2.2 Migrar Componentes por Feature**
+
 - Mover componentes relacionados para suas respectivas features
 - Criar exports centralizados (`index.ts`)
 - Atualizar imports em toda a aplicação
 
 #### **2.3 Consolidar Shared Resources**
+
 ```bash
 mkdir -p src/shared/{components,services,hooks,types,utils}
 ```
@@ -282,11 +303,13 @@ mkdir -p src/shared/{components,services,hooks,types,utils}
 ### **Fase 3: Otimização** (1 semana)
 
 #### **3.1 Performance**
+
 - Implementar code splitting por feature
 - Otimizar bundle size
 - Implementar lazy loading inteligente
 
 #### **3.2 Developer Experience**
+
 - Configurar path aliases para features
 - Implementar linting rules para arquitetura
 - Criar templates para novos componentes
@@ -297,30 +320,33 @@ mkdir -p src/shared/{components,services,hooks,types,utils}
 
 ### **Atual vs Ideal**
 
-| Métrica | Atual | Ideal | Melhoria |
-|---------|-------|-------|----------|
-| **Arquivos de Documentação** | 50+ espalhados | 10-15 organizados | -70% |
-| **Editores Duplicados** | 8+ versões | 1 principal | -85% |
-| **Depth de Pastas** | 6+ níveis | 3-4 níveis | -40% |
-| **Import Paths** | `../../../..` | `@/features/` | +100% legibilidade |
-| **Bundle Size** | ~2.5MB | ~1.8MB | -30% |
-| **Build Time** | ~11s | ~7s | -35% |
+| Métrica                      | Atual          | Ideal             | Melhoria           |
+| ---------------------------- | -------------- | ----------------- | ------------------ |
+| **Arquivos de Documentação** | 50+ espalhados | 10-15 organizados | -70%               |
+| **Editores Duplicados**      | 8+ versões     | 1 principal       | -85%               |
+| **Depth de Pastas**          | 6+ níveis      | 3-4 níveis        | -40%               |
+| **Import Paths**             | `../../../..`  | `@/features/`     | +100% legibilidade |
+| **Bundle Size**              | ~2.5MB         | ~1.8MB            | -30%               |
+| **Build Time**               | ~11s           | ~7s               | -35%               |
 
 ### **Benefícios Esperados**
 
 #### **Para Desenvolvedores** 👨‍💻
+
 - ✅ **Onboarding 3x mais rápido** - estrutura clara e documentada
 - ✅ **Debugging simplificado** - responsabilidades bem definidas
 - ✅ **Reutilização aumentada** - componentes organizados por domínio
 - ✅ **Testing facilitado** - isolamento de features
 
 #### **Para Performance** 🚀
+
 - ✅ **Lazy loading otimizado** - carregamento por feature
 - ✅ **Bundle splitting inteligente** - chunks menores
 - ✅ **Cache hit rate melhorado** - estrutura estável
 - ✅ **Hot reload mais rápido** - dependências reduzidas
 
 #### **Para Manutenção** 🔧
+
 - ✅ **Mudanças isoladas** - feature boundaries
 - ✅ **Refactoring seguro** - acoplamento reduzido
 - ✅ **Documentação centralizada** - single source of truth
@@ -331,6 +357,7 @@ mkdir -p src/shared/{components,services,hooks,types,utils}
 ## ⚡ **AÇÕES IMEDIATAS RECOMENDADAS**
 
 ### **1. Limpeza Urgente** (Esta semana)
+
 ```bash
 # Mover arquivos de análise
 mkdir docs/project-analysis
@@ -345,11 +372,13 @@ rm src/pages/EditorFixedSimple.tsx
 ```
 
 ### **2. Consolidação de Editor** (Próxima semana)
+
 - Padronizar em `EditorWithPreview`
 - Migrar funcionalidades únicas dos outros editores
 - Atualizar todas as rotas para usar o editor único
 
 ### **3. Reorganização Gradual** (Próximas 2 semanas)
+
 - Implementar feature folders um por vez
 - Começar com `editor` (mais complexo)
 - Migrar `quiz` em seguida

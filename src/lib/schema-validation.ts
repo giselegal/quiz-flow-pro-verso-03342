@@ -84,10 +84,13 @@ export const normalizeComponentProperties = (properties: any) => {
   return properties;
 };
 
-export const validateBatch = <T>(items: T[], validator: (item: T) => any): { valid: T[]; invalid: T[] } => {
+export const validateBatch = <T>(
+  items: T[],
+  validator: (item: T) => any
+): { valid: T[]; invalid: T[] } => {
   const valid: T[] = [];
   const invalid: T[] = [];
-  
+
   items.forEach(item => {
     try {
       validator(item);
@@ -96,7 +99,7 @@ export const validateBatch = <T>(items: T[], validator: (item: T) => any): { val
       invalid.push(item);
     }
   });
-  
+
   return { valid, invalid };
 };
 
@@ -105,7 +108,7 @@ export const ComponentInstanceSchema = SchemaValidator.validateFunnelPage;
 export const InsertComponentInstanceSchema = SchemaValidator.validateFunnelPage;
 export const UpdateComponentInstanceSchema = SchemaValidator.validateFunnelPage;
 
-// Type aliases for backward compatibility  
+// Type aliases for backward compatibility
 export type InsertComponentInstance = any;
 export type UpdateComponentInstance = any;
 export type ComponentType = any;

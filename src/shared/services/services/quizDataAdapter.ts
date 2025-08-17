@@ -9,13 +9,13 @@ interface SchemaDrivenFunnelData {
 }
 
 // interface SchemaDrivenPageData {
-  // id: string;
-  // name: string;
-  // title: string;
-  // type: string;
-  // order: number;
-  // blocks: any[];
-  // settings?: any;
+// id: string;
+// name: string;
+// title: string;
+// type: string;
+// order: number;
+// blocks: any[];
+// settings?: any;
 // }
 
 export class QuizDataAdapter {

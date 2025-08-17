@@ -68,11 +68,11 @@ app.get("/api/quizzes", (req, res) => { ... });
 
 ```typescript
 // NECESSÁRIO: Servir arquivos estáticos e fallback para SPA
-app.use(express.static("dist"));
+app.use(express.static('dist'));
 
 // Fallback: qualquer rota não-API deve servir index.html
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "dist/index.html"));
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist/index.html'));
 });
 ```
 
@@ -126,10 +126,10 @@ server: {
 ### **1. Atualizar server/index.ts**
 
 ```typescript
-import express from "express";
-import cors from "cors";
-import path from "path";
-import { createServer } from "http";
+import express from 'express';
+import cors from 'cors';
+import path from 'path';
+import { createServer } from 'http';
 
 const app = express();
 const server = createServer(app);
@@ -138,18 +138,18 @@ app.use(cors());
 app.use(express.json());
 
 // Servir arquivos estáticos do build
-app.use(express.static(path.join(__dirname, "../dist")));
+app.use(express.static(path.join(__dirname, '../dist')));
 
 // API endpoints
-app.get("/health", (req, res) => {
-  res.json({ status: "OK", timestamp: new Date().toISOString() });
+app.get('/health', (req, res) => {
+  res.json({ status: 'OK', timestamp: new Date().toISOString() });
 });
 
 // ... outros endpoints de API
 
 // SPA Fallback - CRÍTICO para rotas funcionarem
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../dist/index.html"));
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dist/index.html'));
 });
 ```
 
@@ -186,21 +186,21 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
+      '@': path.resolve(__dirname, './src'),
     },
   },
   server: {
-    host: "0.0.0.0",
+    host: '0.0.0.0',
     port: 8080,
     // CRÍTICO: Necessário para SPA routing funcionar em dev
     historyApiFallback: true,
   },
   build: {
-    outDir: "dist",
+    outDir: 'dist',
     sourcemap: true,
   },
   optimizeDeps: {
-    exclude: ["lucide-react"],
+    exclude: ['lucide-react'],
   },
 });
 ```

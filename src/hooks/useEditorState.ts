@@ -7,7 +7,7 @@ interface UseEditorStateReturn {
   // Step management
   selectedStep: string;
   setSelectedStep: (step: string) => void;
-  
+
   // Block management
   blocks: Block[];
   selectedBlock: string | null;
@@ -17,21 +17,21 @@ interface UseEditorStateReturn {
   addBlock: (block: Omit<Block, 'id' | 'position'>) => void;
   duplicateBlock: (blockId: string) => void;
   getSelectedBlockData: () => Block | undefined;
-  
+
   // UI States
   isPreviewMode: boolean;
   togglePreviewMode: () => void;
   isDragOver: boolean;
   setIsDragOver: (isDragOver: boolean) => void;
-  
+
   // User interactions
   userResponses: Record<string, any>;
   setUserResponses: (responses: Record<string, any>) => void;
-  
+
   // Loading & Error states
   isLoading: boolean;
   error: string | null;
-  
+
   // Actions
   loadStep: (stepId: string) => void;
   clearCache: () => void;
@@ -39,7 +39,7 @@ interface UseEditorStateReturn {
 
 /**
  * 🚀 HOOK CENTRAL: Estado do Editor
- * 
+ *
  * Centraliza todo o estado do editor em um hook reutilizável
  * Otimizações aplicadas:
  * ✅ Composição de hooks especializados
@@ -53,7 +53,7 @@ export const useEditorState = (): UseEditorStateReturn => {
   const [isPreviewMode, setIsPreviewMode] = useState(false);
   const [isDragOver, setIsDragOver] = useState(false);
   const [userResponses, setUserResponses] = useState<Record<string, any>>({});
-  
+
   // Hooks especializados
   const { getTemplate, isLoading, error, clearCache } = useTemplateCache();
   const {
@@ -69,15 +69,18 @@ export const useEditorState = (): UseEditorStateReturn => {
   } = useBlockManager();
 
   // Carregamento otimizado de steps
-  const loadStep = useCallback((stepId: string) => {
-    const stepNumber = parseInt(stepId.replace('step-', ''));
-    
-    if (stepNumber && stepNumber >= 1 && stepNumber <= 21) {
-      const templateBlocks = getTemplate(stepNumber);
-      setBlocks(templateBlocks);
-      console.log(`✅ Step ${stepNumber} carregado com ${templateBlocks.length} blocos`);
-    }
-  }, [getTemplate, setBlocks]);
+  const loadStep = useCallback(
+    (stepId: string) => {
+      const stepNumber = parseInt(stepId.replace('step-', ''));
+
+      if (stepNumber && stepNumber >= 1 && stepNumber <= 21) {
+        const templateBlocks = getTemplate(stepNumber);
+        setBlocks(templateBlocks);
+        console.log(`✅ Step ${stepNumber} carregado com ${templateBlocks.length} blocos`);
+      }
+    },
+    [getTemplate, setBlocks]
+  );
 
   // Auto-carregamento quando step muda
   useEffect(() => {
@@ -85,10 +88,13 @@ export const useEditorState = (): UseEditorStateReturn => {
   }, [selectedStep, loadStep]);
 
   // Callback otimizado para mudança de step
-  const handleSetSelectedStep = useCallback((step: string) => {
-    setSelectedStep(step);
-    selectBlock(null); // Desseleciona bloco ao mudar step
-  }, [selectBlock]);
+  const handleSetSelectedStep = useCallback(
+    (step: string) => {
+      setSelectedStep(step);
+      selectBlock(null); // Desseleciona bloco ao mudar step
+    },
+    [selectBlock]
+  );
 
   // Callback otimizado para preview mode
   const togglePreviewMode = useCallback(() => {
@@ -100,7 +106,7 @@ export const useEditorState = (): UseEditorStateReturn => {
     // Step management
     selectedStep,
     setSelectedStep: handleSetSelectedStep,
-    
+
     // Block management
     blocks,
     selectedBlock,
@@ -110,21 +116,21 @@ export const useEditorState = (): UseEditorStateReturn => {
     addBlock,
     duplicateBlock,
     getSelectedBlockData,
-    
+
     // UI States
     isPreviewMode,
     togglePreviewMode,
     isDragOver,
     setIsDragOver,
-    
+
     // User interactions
     userResponses,
     setUserResponses,
-    
+
     // Loading & Error states
     isLoading,
     error,
-    
+
     // Actions
     loadStep,
     clearCache,

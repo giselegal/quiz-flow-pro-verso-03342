@@ -113,11 +113,11 @@ case "options-grid":
 ```typescript
 options: [
   {
-    id: "option-a",
-    text: "Amo roupas confortáveis e práticas para o dia a dia.",
-    image: "cloudinary-url",
+    id: 'option-a',
+    text: 'Amo roupas confortáveis e práticas para o dia a dia.',
+    image: 'cloudinary-url',
     points: 1,
-    category: "Casual",
+    category: 'Casual',
   },
   // ... até 8 opções configuráveis
 ];

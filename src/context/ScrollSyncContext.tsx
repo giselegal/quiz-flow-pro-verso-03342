@@ -17,7 +17,7 @@ export const useScrollSync = () => {
     // Return fallback refs and functions
     return {
       canvasScrollRef: React.useRef<HTMLDivElement>(null),
-      componentsScrollRef: React.useRef<HTMLDivElement>(null), 
+      componentsScrollRef: React.useRef<HTMLDivElement>(null),
       propertiesScrollRef: React.useRef<HTMLDivElement>(null),
       syncScroll: () => {},
       isScrolling: false,

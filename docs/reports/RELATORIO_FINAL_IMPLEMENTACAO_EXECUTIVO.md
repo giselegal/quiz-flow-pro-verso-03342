@@ -189,7 +189,7 @@
 
 ```typescript
 // 1. Importar o hook principal
-import { useOptimizedEditor } from "@/utils/optimizedEditorLoader";
+import { useOptimizedEditor } from '@/utils/optimizedEditorLoader';
 
 // 2. Usar no componente
 const editor = useOptimizedEditor();
@@ -201,7 +201,7 @@ const stepData = editor.loadStep(1);
 editor.navigateToStep(2);
 
 // 5. Atualizar resposta
-editor.updateResponse("step-1", userData);
+editor.updateResponse('step-1', userData);
 
 // 6. Calcular resultado
 const result = editor.calculateResult();

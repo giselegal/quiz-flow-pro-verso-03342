@@ -68,14 +68,14 @@ if (isQuizQuestionBlock) {
 
 ```typescript
 export const STYLE_CATEGORIES = [
-  "Natural", // Verde
-  "Clássico", // Azul
-  "Contemporâneo", // Roxo
-  "Elegante", // Cinza
-  "Romântico", // Rosa
-  "Sexy", // Vermelho
-  "Dramático", // Preto
-  "Criativo", // Amarelo
+  'Natural', // Verde
+  'Clássico', // Azul
+  'Contemporâneo', // Roxo
+  'Elegante', // Cinza
+  'Romântico', // Rosa
+  'Sexy', // Vermelho
+  'Dramático', // Preto
+  'Criativo', // Amarelo
 ] as const;
 ```
 
@@ -176,7 +176,7 @@ export const STYLE_CATEGORIES = [
 - **Código Aplicado:**
 
 ```typescript
-import { CORRECT_QUIZ_QUESTIONS } from "@/data/correctQuizQuestions";
+import { CORRECT_QUIZ_QUESTIONS } from '@/data/correctQuizQuestions';
 
 // Usar as questões originais corrigidas
 const REAL_QUIZ_QUESTIONS = CORRECT_QUIZ_QUESTIONS;

@@ -4,7 +4,7 @@
   display: flex;
   height: 100vh;
   overflow: hidden;
-  font-family: "Inter", sans-serif; /* Usando Inter como font-sans */
+  font-family: 'Inter', sans-serif; /* Usando Inter como font-sans */
   color: #432818; /* Cor de texto padrão do editor */
 }
 

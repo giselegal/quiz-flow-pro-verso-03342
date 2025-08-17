@@ -37,7 +37,7 @@ export interface QuizQuestion {
   // Interface real (não documentada)
   id: string;
   title: string; // ✅ 'title', não 'question'
-  type: "text" | "both"; // ✅ Campo ausente nos tipos enviados
+  type: 'text' | 'both'; // ✅ Campo ausente nos tipos enviados
   multiSelect: number; // ✅ 'multiSelect', não 'maxSelection'
   options: QuizOptionReal[]; // ✅ Estrutura muito mais rica
 }
@@ -71,7 +71,7 @@ Com base no código de produção analisado, a interface real deveria ser:
 export interface QuizQuestion {
   id: string;
   title: string; // Campo real usado
-  type: "text" | "both" | "image"; // Tipos de display
+  type: 'text' | 'both' | 'image'; // Tipos de display
   multiSelect: number; // Número exato de seleções obrigatórias
   imageUrl?: string; // URL da imagem da questão (se aplicável)
   options: QuizOption[];
@@ -172,9 +172,9 @@ export const personalityQuestions: QuizQuestion[] = [
 
 ```typescript
 // Questão 4 (Q4) - Estampas
-"https://res.cloudinary.com/der8kogzu/image/upload/v1752430276/Q4_-_A_k6gvtc.png";
-"https://res.cloudinary.com/der8kogzu/image/upload/v1752430277/Q4_-_B_a1emi6.png";
-"https://res.cloudinary.com/der8kogzu/image/upload/v1752430277/Q4_-_C_ywcxcx.png";
+'https://res.cloudinary.com/der8kogzu/image/upload/v1752430276/Q4_-_A_k6gvtc.png';
+'https://res.cloudinary.com/der8kogzu/image/upload/v1752430277/Q4_-_B_a1emi6.png';
+'https://res.cloudinary.com/der8kogzu/image/upload/v1752430277/Q4_-_C_ywcxcx.png';
 // ... demais opções com padrão Q4_-_[LETRA]_[ID].png
 ```
 
@@ -189,20 +189,20 @@ export const personalityQuestions: QuizQuestion[] = [
 const getStep03Template = () => {
   return [
     {
-      id: "personality-question-header",
-      type: "quiz-header",
+      id: 'personality-question-header',
+      type: 'quiz-header',
       properties: {
-        title: "RESUMA A SUA PERSONALIDADE:",
-        subtitle: "Selecione exatamente 3 características que mais combinam com você",
+        title: 'RESUMA A SUA PERSONALIDADE:',
+        subtitle: 'Selecione exatamente 3 características que mais combinam com você',
       },
     },
     {
-      id: "personality-options-text",
-      type: "option-list-multiple", // Apenas texto, sem imagens
+      id: 'personality-options-text',
+      type: 'option-list-multiple', // Apenas texto, sem imagens
       properties: {
         multiSelect: 3,
         required: true,
-        displayType: "text-only",
+        displayType: 'text-only',
         options: [
           /* 8 opções apenas com texto */
         ],
@@ -219,20 +219,20 @@ const getStep03Template = () => {
 const getStep05Template = () => {
   return [
     {
-      id: "stamps-question-header",
-      type: "quiz-header",
+      id: 'stamps-question-header',
+      type: 'quiz-header',
       properties: {
-        title: "QUAL DESSAS ESTAMPAS VOCÊ MAIS GOSTA?",
-        subtitle: "Selecione exatamente 3 estampas que mais combinam com você",
+        title: 'QUAL DESSAS ESTAMPAS VOCÊ MAIS GOSTA?',
+        subtitle: 'Selecione exatamente 3 estampas que mais combinam com você',
       },
     },
     {
-      id: "stamps-options-grid",
-      type: "option-grid-multiple",
+      id: 'stamps-options-grid',
+      type: 'option-grid-multiple',
       properties: {
         multiSelect: 3,
         required: true,
-        displayType: "image-and-text",
+        displayType: 'image-and-text',
         options: [
           /* 8 opções com URLs corrigidas */
         ],
@@ -329,13 +329,13 @@ const canProceed = selectedCount === 3; // Exatamente 3 seleções
 
 ```typescript
 // Questão 1 (Q1)
-"https://res.cloudinary.com/der8kogzu/image/upload/v1752430262/Q1_-_A_xlh5cg.png";
-"https://res.cloudinary.com/der8kogzu/image/upload/v1752430263/Q1_-_B_bm79bg.png";
+'https://res.cloudinary.com/der8kogzu/image/upload/v1752430262/Q1_-_A_xlh5cg.png';
+'https://res.cloudinary.com/der8kogzu/image/upload/v1752430263/Q1_-_B_bm79bg.png';
 // ... demais opções
 
 // Questão 3 (Q3)
-"https://res.cloudinary.com/der8kogzu/image/upload/v1752430272/Q3_-_A_plsfwp.png";
-"https://res.cloudinary.com/der8kogzu/image/upload/v1752430270/Q3_-_B_w75tyg.png";
+'https://res.cloudinary.com/der8kogzu/image/upload/v1752430272/Q3_-_A_plsfwp.png';
+'https://res.cloudinary.com/der8kogzu/image/upload/v1752430270/Q3_-_B_w75tyg.png';
 // ... demais opções
 ```
 
@@ -350,16 +350,16 @@ const canProceed = selectedCount === 3; // Exatamente 3 seleções
 const getStep02Template = () => {
   return [
     {
-      id: "clothing-question-header",
-      type: "quiz-header",
+      id: 'clothing-question-header',
+      type: 'quiz-header',
       properties: {
-        title: "QUAL O SEU TIPO DE ROUPA FAVORITA?",
-        subtitle: "Selecione exatamente 3 opções que mais combinam com você",
+        title: 'QUAL O SEU TIPO DE ROUPA FAVORITA?',
+        subtitle: 'Selecione exatamente 3 opções que mais combinam com você',
       },
     },
     {
-      id: "clothing-options-grid",
-      type: "option-grid-multiple",
+      id: 'clothing-options-grid',
+      type: 'option-grid-multiple',
       properties: {
         multiSelect: 3,
         required: true,
@@ -388,13 +388,13 @@ const getStep02Template = () => {
 #### **📋 Estrutura Modular das Questões**
 
 ```typescript
-import { QuizQuestion } from "../types/quiz";
-import { clothingQuestions } from "./questions/clothingQuestions";
-import { personalityQuestions } from "./questions/personalityQuestions";
-import { accessoriesQuestions } from "./questions/accessoriesQuestions";
-import { stylePreferencesQuestions } from "./questions/stylePreferencesQuestions";
-import { outerwearQuestions } from "./questions/outerwearQuestions";
-import { accessoryStyleQuestions } from "./questions/accessoryStyleQuestions";
+import { QuizQuestion } from '../types/quiz';
+import { clothingQuestions } from './questions/clothingQuestions';
+import { personalityQuestions } from './questions/personalityQuestions';
+import { accessoriesQuestions } from './questions/accessoriesQuestions';
+import { stylePreferencesQuestions } from './questions/stylePreferencesQuestions';
+import { outerwearQuestions } from './questions/outerwearQuestions';
+import { accessoryStyleQuestions } from './questions/accessoryStyleQuestions';
 
 export const quizQuestions: QuizQuestion[] = [
   ...clothingQuestions, // Questões 1 e 3
@@ -463,33 +463,33 @@ Etapa 15: strategicQuestions[2] // Objetivo
 ```typescript
 export const strategicQuestions = [
   {
-    id: "motivacao", // Questão Estratégica 1
-    question: "Qual é sua principal motivação para buscar uma transformação no seu estilo?",
+    id: 'motivacao', // Questão Estratégica 1
+    question: 'Qual é sua principal motivação para buscar uma transformação no seu estilo?',
     options: [
-      "Sentir-se mais confiante no dia a dia",
-      "Ter praticidade na hora de se vestir",
-      "Refletir melhor minha personalidade e valores",
-      "Ter mais clareza do que comprar",
+      'Sentir-se mais confiante no dia a dia',
+      'Ter praticidade na hora de se vestir',
+      'Refletir melhor minha personalidade e valores',
+      'Ter mais clareza do que comprar',
     ],
   },
   {
-    id: "desafio", // Questão Estratégica 2
-    question: "Qual o maior desafio que você enfrenta com seu guarda-roupa atualmente?",
+    id: 'desafio', // Questão Estratégica 2
+    question: 'Qual o maior desafio que você enfrenta com seu guarda-roupa atualmente?',
     options: [
-      "Não saber como combinar peças",
-      "Sentir que nada reflete quem eu sou hoje",
-      "Falta de tempo para pensar em looks",
-      "Comprar por impulso e se arrepender depois",
+      'Não saber como combinar peças',
+      'Sentir que nada reflete quem eu sou hoje',
+      'Falta de tempo para pensar em looks',
+      'Comprar por impulso e se arrepender depois',
     ],
   },
   {
-    id: "objetivo", // Questão Estratégica 3
-    question: "Qual objetivo você gostaria de alcançar com essa transformação?",
+    id: 'objetivo', // Questão Estratégica 3
+    question: 'Qual objetivo você gostaria de alcançar com essa transformação?',
     options: [
-      "Montar looks com mais facilidade",
-      "Sentir orgulho do meu estilo",
-      "Reduzir compras desnecessárias",
-      "Me expressar com autenticidade",
+      'Montar looks com mais facilidade',
+      'Sentir orgulho do meu estilo',
+      'Reduzir compras desnecessárias',
+      'Me expressar com autenticidade',
     ],
   },
 ];
@@ -559,7 +559,7 @@ Com base na análise completa das questões de produção, agora posso implement
 // Todas as questões principais
 const canProceed = selectedOptions.length === 3; // Exatamente 3 seleções
 const buttonText =
-  selectedOptions.length === 3 ? "Continuar" : `Selecione ${3 - selectedOptions.length} opção(ões)`;
+  selectedOptions.length === 3 ? 'Continuar' : `Selecione ${3 - selectedOptions.length} opção(ões)`;
 ```
 
 #### **📸 URLs Cloudinary para Corrigir**
@@ -597,16 +597,16 @@ interface QuizNavigationProps {
 
 ```typescript
 // Botão Voltar - Enabled
-"bg-white text-[#432818] border-[#B89B7A]/40 hover:bg-[#F3E8E6]";
+'bg-white text-[#432818] border-[#B89B7A]/40 hover:bg-[#F3E8E6]';
 
 // Botão Voltar - Disabled
-"bg-[#FAF9F7] text-[#B89B7A]/40 border-[#B89B7A]/20 cursor-not-allowed";
+'bg-[#FAF9F7] text-[#B89B7A]/40 border-[#B89B7A]/20 cursor-not-allowed';
 
 // Botão Próxima - Enabled
-"bg-[#B89B7A] text-white border-[#B89B7A] hover:bg-[#a0845c]";
+'bg-[#B89B7A] text-white border-[#B89B7A] hover:bg-[#a0845c]';
 
 // Botão Próxima - Disabled
-"bg-[#FAF9F7] text-[#B89B7A]/40 border-[#B89B7A]/20 cursor-not-allowed";
+'bg-[#FAF9F7] text-[#B89B7A]/40 border-[#B89B7A]/20 cursor-not-allowed';
 ```
 
 **📝 Textos Dinâmicos**:
@@ -616,9 +616,9 @@ interface QuizNavigationProps {
 {
   isLastQuestion
     ? isStrategic
-      ? "Finalizar" // Última questão estratégica
-      : "Próxima etapa" // Última questão principal
-    : "Próxima"; // Questões intermediárias
+      ? 'Finalizar' // Última questão estratégica
+      : 'Próxima etapa' // Última questão principal
+    : 'Próxima'; // Questões intermediárias
 }
 ```
 
@@ -678,13 +678,13 @@ criticalImages.forEach(src => {
 **🧪 Teste A/B**:
 
 ```typescript
-const [testVariant, setTestVariant] = useState<"A" | "B">("A");
+const [testVariant, setTestVariant] = useState<'A' | 'B'>('A');
 
 useEffect(() => {
-  let variant = localStorage.getItem("ab_test_urgency_countdown_position");
+  let variant = localStorage.getItem('ab_test_urgency_countdown_position');
   if (!variant) {
-    variant = Math.random() < 0.5 ? "A" : "B"; // 50/50 split
-    localStorage.setItem("ab_test_urgency_countdown_position", variant);
+    variant = Math.random() < 0.5 ? 'A' : 'B'; // 50/50 split
+    localStorage.setItem('ab_test_urgency_countdown_position', variant);
   }
   // Analytics tracking...
 });
@@ -695,16 +695,16 @@ useEffect(() => {
 ```typescript
 const handleCTAClick = () => {
   // Analytics tracking para teste A/B
-  if (typeof window !== "undefined" && (window as any).gtag) {
-    (window as any).gtag("event", "checkout_initiated", {
-      test_name: "urgency_countdown_position",
+  if (typeof window !== 'undefined' && (window as any).gtag) {
+    (window as any).gtag('event', 'checkout_initiated', {
+      test_name: 'urgency_countdown_position',
       variant: testVariant,
-      event_category: "ecommerce",
+      event_category: 'ecommerce',
     });
   }
 
-  trackButtonClick("checkout_button", "Iniciar Checkout", "results_page");
-  window.location.href = "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912";
+  trackButtonClick('checkout_button', 'Iniciar Checkout', 'results_page');
+  window.location.href = 'https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912';
 };
 ```
 
@@ -737,25 +737,25 @@ const handleCTAClick = () => {
 
 ```typescript
 // Tracking consistente em todas as etapas
-trackButtonClick("button_type", "Button Label", "page_context");
+trackButtonClick('button_type', 'Button Label', 'page_context');
 
 // A/B Testing framework
-localStorage.setItem("ab_test_name", variant);
-gtag("event", "ab_test_view", { test_name, variant });
+localStorage.setItem('ab_test_name', variant);
+gtag('event', 'ab_test_view', { test_name, variant });
 ```
 
 **3. Design System Extraído**:
 
 ```typescript
 const RESULT_PAGE_COLORS = {
-  background: "#fffaf7",
-  cardBg: "white",
-  primary: "#B89B7A",
-  secondary: "#aa6b5d",
-  success: "#4CAF50",
-  urgent: "#ff6b6b",
-  text: "#432818",
-  textLight: "#8F7A6A",
+  background: '#fffaf7',
+  cardBg: 'white',
+  primary: '#B89B7A',
+  secondary: '#aa6b5d',
+  success: '#4CAF50',
+  urgent: '#ff6b6b',
+  text: '#432818',
+  textLight: '#8F7A6A',
 };
 ```
 
@@ -819,13 +819,13 @@ disabled={!isSelected && !isStrategic && selectedOptions.length >= maxSelection}
 // Em StepXXTemplate.tsx
 const convertTemplateToQuizContent = (templateBlocks: Block[], stepData: any) => {
   // Encontra o bloco de questão no template
-  const questionBlock = templateBlocks.find(b => b.type.includes("question"));
-  const optionsBlock = templateBlocks.find(b => b.type.includes("options"));
+  const questionBlock = templateBlocks.find(b => b.type.includes('question'));
+  const optionsBlock = templateBlocks.find(b => b.type.includes('options'));
 
   // Converte para formato QuizContent
   return {
     question: {
-      question: questionBlock?.properties.title || "",
+      question: questionBlock?.properties.title || '',
       options: optionsBlock?.properties.options || [],
     },
     selectedOptions: stepData.selectedOptions || [],
@@ -892,17 +892,17 @@ const StepXXTemplate = ({ stepData }) => {
 
 ```typescript
 const QUIZ_COLORS = {
-  primary: "#B89B7A", // Cor principal dos botões selecionados
-  primaryText: "#432818", // Cor do texto principal
-  lightText: "#8F7A6A", // Cor do texto de instrução
-  hoverBg: "#F3E8E6", // Background hover dos botões
-  borderLight: "#B89B7A]/40", // Border dos botões normais
+  primary: '#B89B7A', // Cor principal dos botões selecionados
+  primaryText: '#432818', // Cor do texto principal
+  lightText: '#8F7A6A', // Cor do texto de instrução
+  hoverBg: '#F3E8E6', // Background hover dos botões
+  borderLight: '#B89B7A]/40', // Border dos botões normais
 };
 
 const QUIZ_TYPOGRAPHY = {
-  questionTitle: "text-xl md:text-2xl font-playfair font-bold",
-  buttonText: "text-lg",
-  instructionText: "text-xs",
+  questionTitle: 'text-xl md:text-2xl font-playfair font-bold',
+  buttonText: 'text-lg',
+  instructionText: 'text-xs',
 };
 ```
 
@@ -911,9 +911,9 @@ const QUIZ_TYPOGRAPHY = {
 ```typescript
 const QUIZ_BEHAVIORS = {
   // Animações
-  buttonTransition: "transition-all duration-200",
-  selectedScale: "scale-105",
-  selectedShadow: "shadow-md",
+  buttonTransition: 'transition-all duration-200',
+  selectedScale: 'scale-105',
+  selectedShadow: 'shadow-md',
 
   // Interações
   toggleSelection: true, // Para questões normais
@@ -967,14 +967,14 @@ const QUIZ_BEHAVIORS = {
 ```typescript
 // Design tokens centralizados - Sistema de cores unificado
 const colors = {
-  primary: "#B89B7A",
-  primaryDark: "#A1835D",
-  secondary: "#432818",
-  background: "#FEFEFE",
-  backgroundAlt: "#F8F5F0",
-  text: "#432818",
-  textLight: "#6B7280",
-  border: "#E5E7EB",
+  primary: '#B89B7A',
+  primaryDark: '#A1835D',
+  secondary: '#432818',
+  background: '#FEFEFE',
+  backgroundAlt: '#F8F5F0',
+  text: '#432818',
+  textLight: '#6B7280',
+  border: '#E5E7EB',
 };
 ```
 
@@ -982,23 +982,23 @@ const colors = {
 
 ```typescript
 // Logo - Cloudinary Account: dqljyf76t
-const LOGO_BASE_URL = "https://res.cloudinary.com/dqljyf76t/image/upload/";
-const LOGO_IMAGE_ID = "v1744911572/LOGO_DA_MARCA_GISELE_r14oz2";
+const LOGO_BASE_URL = 'https://res.cloudinary.com/dqljyf76t/image/upload/';
+const LOGO_IMAGE_ID = 'v1744911572/LOGO_DA_MARCA_GISELE_r14oz2';
 
 // URLs Pré-construídas para Performance
 STATIC_LOGO_IMAGE_URLS = {
-  webp: "dqljyf76t/image/upload/f_webp,q_70,w_120,h_50,c_fit/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-  png: "dqljyf76t/image/upload/f_png,q_70,w_120,h_50,c_fit/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.png",
+  webp: 'dqljyf76t/image/upload/f_webp,q_70,w_120,h_50,c_fit/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+  png: 'dqljyf76t/image/upload/f_png,q_70,w_120,h_50,c_fit/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.png',
 };
 
 // Imagem LCP Principal - ID Real da Produção
 const INTRO_IMAGE_ID =
-  "v1746838118/20250509_2137_Desordem_e_Reflex%C3%A3o_simple_compose_01jtvszf8sfaytz493z9f16rf2_z1c2up";
+  'v1746838118/20250509_2137_Desordem_e_Reflex%C3%A3o_simple_compose_01jtvszf8sfaytz493z9f16rf2_z1c2up';
 
 STATIC_INTRO_IMAGE_URLS = {
-  avif: "dqljyf76t/.../f_avif,q_85,w_300,c_limit/v1746838118/20250509_2137_Desordem_e_Reflex%C3%A3o_simple_compose_01jtvszf8sfaytz493z9f16rf2_z1c2up.avif",
-  webp: "dqljyf76t/.../f_webp,q_85,w_300,c_limit/...",
-  png: "dqljyf76t/.../f_png,q_85,w_300,c_limit/...",
+  avif: 'dqljyf76t/.../f_avif,q_85,w_300,c_limit/v1746838118/20250509_2137_Desordem_e_Reflex%C3%A3o_simple_compose_01jtvszf8sfaytz493z9f16rf2_z1c2up.avif',
+  webp: 'dqljyf76t/.../f_webp,q_85,w_300,c_limit/...',
+  png: 'dqljyf76t/.../f_png,q_85,w_300,c_limit/...',
 };
 ```
 
@@ -1007,11 +1007,11 @@ STATIC_INTRO_IMAGE_URLS = {
 ```typescript
 // Web Vitals Reporting
 useEffect(() => {
-  window.performance.mark("component-mounted");
+  window.performance.mark('component-mounted');
 
   const reportLcpRendered = () => {
     if (window.QUIZ_PERF) {
-      window.QUIZ_PERF.mark("lcp_rendered");
+      window.QUIZ_PERF.mark('lcp_rendered');
     }
   };
 
@@ -1023,7 +1023,7 @@ useEffect(() => {
 // User Interaction Tracking
 const handleSubmit = e => {
   // ... validação
-  window.performance.mark("user-interaction");
+  window.performance.mark('user-interaction');
 };
 ```
 
@@ -1185,7 +1185,7 @@ export const getStep01Template = () => {
 
 ```typescript
 // 🎯 PRIORIDADE PARA TEMPLATE MODULAR DA ETAPA 1
-if (stepId === "step-1") {
+if (stepId === 'step-1') {
   console.log(`🚀 Usando template modular para ${stepId}`);
   const modularBlocks = getStep01Template();
   // Conversão e cache automático
@@ -1196,10 +1196,10 @@ if (stepId === "step-1") {
 
 ```typescript
 // Logo
-logoUrl: "https://res.cloudinary.com/der8kogzu/image/upload/f_webp,q_70,w_120,h_50,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.webp";
+logoUrl: 'https://res.cloudinary.com/der8kogzu/image/upload/f_webp,q_70,w_120,h_50,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.webp';
 
 // Imagem LCP
-src: "https://res.cloudinary.com/der8kogzu/image/upload/f_avif,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.avif";
+src: 'https://res.cloudinary.com/der8kogzu/image/upload/f_avif,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.avif';
 ```
 
 ### 🧪 **TESTES E VALIDAÇÃO**
@@ -1247,7 +1247,7 @@ export const getStepXXTemplate = () => {
 
 ```typescript
 // Adicionar prioridade no TemplateManager.ts
-if (stepId === "step-XX") {
+if (stepId === 'step-XX') {
   const modularBlocks = getStepXXTemplate();
   // Conversão e cache
 }
@@ -1266,12 +1266,12 @@ if (stepId === "step-XX") {
 
 ```typescript
 const COLORS = {
-  primary: "#B89B7A",
-  primaryDark: "#A1835D",
-  secondary: "#432818",
-  background: "#FEFEFE",
-  text: "#432818",
-  textLight: "#6B7280",
+  primary: '#B89B7A',
+  primaryDark: '#A1835D',
+  secondary: '#432818',
+  background: '#FEFEFE',
+  text: '#432818',
+  textLight: '#6B7280',
 };
 ```
 
@@ -1280,8 +1280,8 @@ const COLORS = {
 ```typescript
 const TYPOGRAPHY = {
   headings: '"Playfair Display", serif',
-  body: "system-ui, sans-serif",
-  responsive: "text-sm sm:text-base md:text-lg",
+  body: 'system-ui, sans-serif',
+  responsive: 'text-sm sm:text-base md:text-lg',
 };
 ```
 
@@ -1290,11 +1290,11 @@ const TYPOGRAPHY = {
 ```typescript
 const PERFORMANCE = {
   images: {
-    loading: "eager", // Para elementos críticos
-    fetchPriority: "high",
-    formats: ["avif", "webp", "png"],
+    loading: 'eager', // Para elementos críticos
+    fetchPriority: 'high',
+    formats: ['avif', 'webp', 'png'],
   },
-  webVitals: ["lcp_rendered", "user_interaction"],
+  webVitals: ['lcp_rendered', 'user_interaction'],
 };
 ```
 
@@ -1359,13 +1359,13 @@ src/
 
 ```typescript
 // Gerenciamento de formulários
-import { useBlockForm } from "@/hooks/useBlockForm";
+import { useBlockForm } from '@/hooks/useBlockForm';
 
 // Otimização de performance
-import { PerformanceOptimizer } from "@/utils/performanceOptimizer";
+import { PerformanceOptimizer } from '@/utils/performanceOptimizer';
 
 // Diagnósticos do editor
-import { useEditorDiagnostics } from "@/hooks/useEditorDiagnostics";
+import { useEditorDiagnostics } from '@/hooks/useEditorDiagnostics';
 ```
 
 ### **📋 Scripts de Automação**
@@ -1480,7 +1480,7 @@ const blocks: Block[] = modularBlocks.map((block, index) => ({
   order: index,
   properties: block.properties,
   content: {
-    title: block.properties.content || block.properties.text || "",
+    title: block.properties.content || block.properties.text || '',
     // Mapping de propriedades
   },
 }));

@@ -45,12 +45,12 @@ interface SchemaDrivenEditorResponsiveProps {
 // Estado principal do editor
 const [blocks, setBlocks] = useState<Block[]>([]);
 const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
-const [viewMode, setViewMode] = useState<"mobile" | "tablet" | "desktop">("desktop");
+const [viewMode, setViewMode] = useState<'mobile' | 'tablet' | 'desktop'>('desktop');
 const [sidebarOpen, setSidebarOpen] = useState(false);
 
 // Estados de UI
 const [isLoading, setIsLoading] = useState(false);
-const [saveStatus, setSaveStatus] = useState<"saved" | "saving" | "error">("saved");
+const [saveStatus, setSaveStatus] = useState<'saved' | 'saving' | 'error'>('saved');
 const [isDragging, setIsDragging] = useState(false);
 ```
 
@@ -98,7 +98,7 @@ interface QuizQuestionContent {
   progressPercent: number;
   logoUrl?: string;
   showBackButton: boolean;
-  optionLayout: "list" | "grid";
+  optionLayout: 'list' | 'grid';
 }
 ```
 
@@ -139,9 +139,9 @@ interface QuizResultContent {
 interface HeadlineContent {
   title: string;
   subtitle?: string;
-  alignment: "left" | "center" | "right";
-  titleSize: "sm" | "md" | "lg" | "xl";
-  subtitleSize: "sm" | "md" | "lg";
+  alignment: 'left' | 'center' | 'right';
+  titleSize: 'sm' | 'md' | 'lg' | 'xl';
+  subtitleSize: 'sm' | 'md' | 'lg';
 }
 ```
 
@@ -151,9 +151,9 @@ interface HeadlineContent {
 // Blocos de texto
 interface TextContent {
   text: string;
-  alignment: "left" | "center" | "right" | "justify";
-  fontSize: "sm" | "md" | "lg";
-  fontWeight: "normal" | "medium" | "semibold" | "bold";
+  alignment: 'left' | 'center' | 'right' | 'justify';
+  fontSize: 'sm' | 'md' | 'lg';
+  fontWeight: 'normal' | 'medium' | 'semibold' | 'bold';
 }
 ```
 
@@ -164,7 +164,7 @@ interface TextContent {
 interface ImageContent {
   imageUrl: string;
   imageAlt: string;
-  alignment: "left" | "center" | "right";
+  alignment: 'left' | 'center' | 'right';
   width?: number;
   height?: number;
   borderRadius?: BorderRadiusType;
@@ -180,8 +180,8 @@ interface ImageContent {
 interface CTAButtonContent {
   text: string;
   url: string;
-  variant: "primary" | "secondary" | "outline";
-  size: "sm" | "md" | "lg";
+  variant: 'primary' | 'secondary' | 'outline';
+  size: 'sm' | 'md' | 'lg';
   fullWidth: boolean;
   backgroundColor?: string;
   textColor?: string;
@@ -199,7 +199,7 @@ interface PricingContent {
   ctaText: string;
   ctaUrl: string;
   features?: string[];
-  alignment: "left" | "center" | "right";
+  alignment: 'left' | 'center' | 'right';
 }
 ```
 
@@ -219,7 +219,7 @@ interface TestimonialsContent {
     rating?: number;
     image?: string;
   }>;
-  layout: "list" | "grid" | "carousel";
+  layout: 'list' | 'grid' | 'carousel';
   showRating: boolean;
   showAvatar: boolean;
 }
@@ -234,7 +234,7 @@ interface GuaranteeContent {
   text: string;
   imageUrl?: string;
   badgeText?: string;
-  alignment: "left" | "center" | "right";
+  alignment: 'left' | 'center' | 'right';
 }
 ```
 
@@ -265,7 +265,7 @@ interface BlockStyle {
   lineHeight?: string;
 
   // Layout
-  textAlign?: "left" | "center" | "right";
+  textAlign?: 'left' | 'center' | 'right';
   width?: string;
   minHeight?: string;
 }
@@ -276,23 +276,23 @@ interface BlockStyle {
 ```typescript
 // Cores do tema
 const themeColors = {
-  primary: "#432818", // Marrom principal
-  secondary: "#B89B7A", // Bege secundário
-  accent: "#4CAF50", // Verde CTA
-  background: "#F9F5F1", // Fundo claro
-  white: "#ffffff", // Branco
-  text: "#432818", // Texto principal
-  textLight: "#8F7A6A", // Texto secundário
+  primary: '#432818', // Marrom principal
+  secondary: '#B89B7A', // Bege secundário
+  accent: '#4CAF50', // Verde CTA
+  background: '#F9F5F1', // Fundo claro
+  white: '#ffffff', // Branco
+  text: '#432818', // Texto principal
+  textLight: '#8F7A6A', // Texto secundário
 };
 
 // Espaçamentos consistentes
 const spacing = {
-  xs: "4px", // space-1
-  sm: "8px", // space-2
-  md: "16px", // space-4
-  lg: "24px", // space-6
-  xl: "32px", // space-8
-  xxl: "48px", // space-12
+  xs: '4px', // space-1
+  sm: '8px', // space-2
+  md: '16px', // space-4
+  lg: '24px', // space-6
+  xl: '32px', // space-8
+  xxl: '48px', // space-12
 };
 ```
 
@@ -302,9 +302,9 @@ const spacing = {
 
 ```typescript
 const breakpoints = {
-  mobile: "0px", // < 640px
-  tablet: "640px", // 640px - 1023px
-  desktop: "1024px", // >= 1024px
+  mobile: '0px', // < 640px
+  tablet: '640px', // 640px - 1023px
+  desktop: '1024px', // >= 1024px
 };
 ```
 
@@ -386,11 +386,11 @@ export const createBlock = (
 // Validação de conteúdo por tipo
 export const validateBlockContent = (type: BlockType, content: EditableContent): boolean => {
   switch (type) {
-    case "quiz-question":
+    case 'quiz-question':
       return !!(content.question && content.options?.length);
-    case "headline":
+    case 'headline':
       return !!content.title;
-    case "text":
+    case 'text':
       return !!content.text;
     // ... outros validadores
   }
@@ -436,11 +436,11 @@ export const blockDefinitions = {
 ```typescript
 // Use classes consistentes
 const buttonClasses = cn(
-  "px-4 py-2 rounded-md font-medium transition-colors",
-  variant === "primary" && "bg-primary text-white hover:bg-primary/90",
-  variant === "secondary" && "bg-secondary text-white hover:bg-secondary/90",
-  size === "sm" && "text-sm px-3 py-1",
-  size === "lg" && "text-lg px-6 py-3"
+  'px-4 py-2 rounded-md font-medium transition-colors',
+  variant === 'primary' && 'bg-primary text-white hover:bg-primary/90',
+  variant === 'secondary' && 'bg-secondary text-white hover:bg-secondary/90',
+  size === 'sm' && 'text-sm px-3 py-1',
+  size === 'lg' && 'text-lg px-6 py-3'
 );
 ```
 

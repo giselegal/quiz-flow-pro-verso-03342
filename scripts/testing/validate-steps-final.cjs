@@ -2,7 +2,7 @@
 
 /**
  * 🧪 VALIDAÇÃO FINAL - Sistema das 21 Etapas
- * 
+ *
  * Executa todos os testes e valida o alinhamento completo
  */
 
@@ -18,30 +18,37 @@ async function validateStepTemplates() {
     totalBlocks: 0,
     errors: [],
     warnings: [],
-    summary: {}
+    summary: {},
   };
 
   // 1. Verificar se todos os 21 templates existem
   console.log('1️⃣ Verificando existência dos templates...');
-  
+
   for (let step = 1; step <= 21; step++) {
     const stepId = step.toString().padStart(2, '0');
-    const templatePath = path.join(__dirname, 'public', 'templates', `step-${stepId}-template.json`);
-    
+    const templatePath = path.join(
+      __dirname,
+      'public',
+      'templates',
+      `step-${stepId}-template.json`
+    );
+
     if (fs.existsSync(templatePath)) {
       results.templatesFound++;
-      
+
       try {
         const content = fs.readFileSync(templatePath, 'utf8');
         const template = JSON.parse(content);
-        
+
         // Validação básica
         if (template.metadata && template.blocks && Array.isArray(template.blocks)) {
           results.validTemplates++;
           results.totalBlocks += template.blocks.length;
-          
-          console.log(`✅ Step ${step}: ${template.metadata.name} (${template.blocks.length} blocos)`);
-          
+
+          console.log(
+            `✅ Step ${step}: ${template.metadata.name} (${template.blocks.length} blocos)`
+          );
+
           // Analisar tipos de blocos
           template.blocks.forEach(block => {
             const blockType = block.type;
@@ -50,7 +57,6 @@ async function validateStepTemplates() {
             }
             results.summary[blockType]++;
           });
-          
         } else {
           results.errors.push(`Template ${step} tem estrutura inválida`);
           console.log(`❌ Step ${step}: Estrutura inválida`);
@@ -67,7 +73,7 @@ async function validateStepTemplates() {
 
   // 2. Verificar configurações do sistema
   console.log('\n2️⃣ Verificando configurações do sistema...');
-  
+
   // Verificar se Vite config está correto
   const viteConfigPath = path.join(__dirname, 'vite.config.ts');
   if (fs.existsSync(viteConfigPath)) {
@@ -83,15 +89,15 @@ async function validateStepTemplates() {
 
   // 3. Verificar principais arquivos do sistema
   console.log('\n3️⃣ Verificando arquivos principais...');
-  
+
   const coreFiles = [
     'src/components/editor-fixed/index.ts',
     'src/components/editor-fixed/EditorFixed.tsx',
     'src/components/editor-fixed/JsonTemplateEngine.ts',
     'src/components/editor-fixed/TemplateAdapter.ts',
-    'src/components/editor-fixed/useEditorWithJson.ts'
+    'src/components/editor-fixed/useEditorWithJson.ts',
   ];
-  
+
   coreFiles.forEach(filePath => {
     const fullPath = path.join(__dirname, filePath);
     if (fs.existsSync(fullPath)) {
@@ -105,11 +111,11 @@ async function validateStepTemplates() {
   // 4. Relatório final
   console.log('\n📊 RELATÓRIO FINAL:');
   console.log('=' * 50);
-  
+
   console.log(`📁 Templates encontrados: ${results.templatesFound}/21`);
   console.log(`✅ Templates válidos: ${results.validTemplates}/21`);
   console.log(`📦 Total de blocos: ${results.totalBlocks}`);
-  console.log(`🎯 Taxa de sucesso: ${(results.validTemplates / 21 * 100).toFixed(1)}%`);
+  console.log(`🎯 Taxa de sucesso: ${((results.validTemplates / 21) * 100).toFixed(1)}%`);
 
   if (Object.keys(results.summary).length > 0) {
     console.log('\n📋 Tipos de blocos encontrados:');
@@ -132,9 +138,8 @@ async function validateStepTemplates() {
   }
 
   // 5. Conclusão
-  const isFullyAligned = results.templatesFound === 21 && 
-                        results.validTemplates === 21 && 
-                        results.errors.length === 0;
+  const isFullyAligned =
+    results.templatesFound === 21 && results.validTemplates === 21 && results.errors.length === 0;
 
   console.log('\n🎯 CONCLUSÃO:');
   if (isFullyAligned) {
@@ -154,7 +159,7 @@ async function validateStepTemplates() {
   return {
     aligned: isFullyAligned,
     successRate: results.validTemplates / 21,
-    ...results
+    ...results,
   };
 }
 

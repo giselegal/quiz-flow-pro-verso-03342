@@ -38,7 +38,7 @@ export const SidebarStep01Verification = () => {
     type: comp.type,
     name: comp.label,
     category: comp.category,
-    description: `Componente ${comp.label}`
+    description: `Componente ${comp.label}`,
   }));
   const allBlocks = [...quizBlocks, ...regularBlocks];
 

@@ -76,29 +76,25 @@ const BaseStepTemplate: React.FC<BaseStepTemplateProps> = ({
       {stepConfig.title && (
         <div className="step-header mb-6">
           <div className="flex items-center space-x-2 mb-2">
-            <span className="text-sm font-medium text-muted-foreground">
-              Etapa {stepNumber}
-            </span>
+            <span className="text-sm font-medium text-muted-foreground">Etapa {stepNumber}</span>
           </div>
-          <h1 className="text-2xl font-bold text-foreground">
-            {stepConfig.title}
-          </h1>
+          <h1 className="text-2xl font-bold text-foreground">{stepConfig.title}</h1>
           {stepConfig.description && (
-            <p className="text-muted-foreground mt-2">
-              {stepConfig.description}
-            </p>
+            <p className="text-muted-foreground mt-2">{stepConfig.description}</p>
           )}
         </div>
       )}
 
       {/* Renderização dos Blocos */}
-      <div className={cn(
-        'step-content flex-1',
-        layout === 'vertical' && spacingClasses[spacing],
-        layout === 'horizontal' && 'flex flex-wrap gap-4',
-        layout === 'grid' && 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'
-      )}>
-        {blocks.map((block) => (
+      <div
+        className={cn(
+          'step-content flex-1',
+          layout === 'vertical' && spacingClasses[spacing],
+          layout === 'horizontal' && 'flex flex-wrap gap-4',
+          layout === 'grid' && 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'
+        )}
+      >
+        {blocks.map(block => (
           <div
             key={block.id}
             className={cn(
@@ -110,9 +106,9 @@ const BaseStepTemplate: React.FC<BaseStepTemplateProps> = ({
               block={block}
               isSelected={selectedBlockId === block.id}
               onClick={() => onBlockSelect?.(block.id)}
-              onPropertyChange={(key, value) => 
-                onBlockUpdate?.(block.id, { 
-                  properties: { ...block.properties, [key]: value } 
+              onPropertyChange={(key, value) =>
+                onBlockUpdate?.(block.id, {
+                  properties: { ...block.properties, [key]: value },
                 })
               }
             />
@@ -125,9 +121,7 @@ const BaseStepTemplate: React.FC<BaseStepTemplateProps> = ({
         <div className="step-empty flex items-center justify-center py-12">
           <div className="text-center space-y-4">
             <div className="w-16 h-16 mx-auto bg-muted rounded-full flex items-center justify-center">
-              <span className="text-2xl font-bold text-muted-foreground">
-                {stepNumber}
-              </span>
+              <span className="text-2xl font-bold text-muted-foreground">{stepNumber}</span>
             </div>
             <div className="space-y-2">
               <h3 className="font-medium">Step {stepNumber} Template</h3>

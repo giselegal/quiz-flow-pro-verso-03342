@@ -7,7 +7,7 @@
 
 console.log(`
 🎉 PARABÉNS! SISTEMA DE QUIZ COMPLETO IMPLEMENTADO
-${"=".repeat(80)}
+${'='.repeat(80)}
 
 📋 O QUE FOI CONFIGURADO:
 
@@ -54,7 +54,7 @@ ${"=".repeat(80)}
    • Margens, espaçamentos e dimensões configuráveis
    • Sistema de preview em tempo real
 
-${"=".repeat(80)}
+${'='.repeat(80)}
 
 🚀 COMO USAR O SISTEMA:
 
@@ -64,7 +64,7 @@ ${"=".repeat(80)}
 4. 💾 Salve as configurações
 5. 🎯 Publique o quiz completo
 
-${"=".repeat(80)}
+${'='.repeat(80)}
 
 📁 ARQUIVOS CRIADOS/MODIFICADOS:
 
@@ -84,7 +84,7 @@ ${"=".repeat(80)}
    scripts/configure-21-etapas-completas.mjs
    scripts/testar-quiz-completo.mjs
 
-${"=".repeat(80)}
+${'='.repeat(80)}
 
 🎯 PRÓXIMOS PASSOS RECOMENDADOS:
 
@@ -96,7 +96,7 @@ ${"=".repeat(80)}
 6. 📱 Testar responsividade em diferentes dispositivos
 7. 🚀 Fazer deploy em produção
 
-${"=".repeat(80)}
+${'='.repeat(80)}
 
 💡 DICAS DE USO:
 
@@ -106,7 +106,7 @@ ${"=".repeat(80)}
 • As animações podem ser desabilitadas se necessário
 • O sistema é totalmente responsivo e acessível
 
-${"=".repeat(80)}
+${'='.repeat(80)}
 
 ✨ SISTEMA PRONTO PARA PRODUÇÃO!
 O quiz de 21 etapas está completamente configurado e funcional.

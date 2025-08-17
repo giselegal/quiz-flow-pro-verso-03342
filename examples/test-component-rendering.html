@@ -85,7 +85,7 @@
     </div>
 
     <script type="module">
-      console.log("🧪 Iniciando teste de componentes...");
+      console.log('🧪 Iniciando teste de componentes...');
 
       // Função para testar se um componente pode ser importado
       async function testComponent(componentName, modulePath) {
@@ -97,7 +97,7 @@
             return { success: true, component: Component };
           } else {
             console.error(`❌ ${componentName} não encontrado no módulo`);
-            return { success: false, error: "Componente não encontrado" };
+            return { success: false, error: 'Componente não encontrado' };
           }
         } catch (error) {
           console.error(`❌ Erro ao carregar ${componentName}:`, error);
@@ -109,48 +109,48 @@
       const componentsToTest = [
         // Básicos
         {
-          name: "TextInlineBlock",
-          path: "/src/components/editor/blocks/inline/TextInlineBlock.tsx",
-          type: "basic",
+          name: 'TextInlineBlock',
+          path: '/src/components/editor/blocks/inline/TextInlineBlock.tsx',
+          type: 'basic',
         },
         {
-          name: "HeadingInlineBlock",
-          path: "/src/components/editor/blocks/inline/HeadingInlineBlock.tsx",
-          type: "basic",
+          name: 'HeadingInlineBlock',
+          path: '/src/components/editor/blocks/inline/HeadingInlineBlock.tsx',
+          type: 'basic',
         },
         {
-          name: "ButtonInlineBlock",
-          path: "/src/components/editor/blocks/inline/ButtonInlineBlock.tsx",
-          type: "basic",
+          name: 'ButtonInlineBlock',
+          path: '/src/components/editor/blocks/inline/ButtonInlineBlock.tsx',
+          type: 'basic',
         },
         {
-          name: "ImageDisplayInlineBlock",
-          path: "/src/components/editor/blocks/inline/ImageDisplayInlineBlock.tsx",
-          type: "basic",
+          name: 'ImageDisplayInlineBlock',
+          path: '/src/components/editor/blocks/inline/ImageDisplayInlineBlock.tsx',
+          type: 'basic',
         },
 
         // Design
         {
-          name: "StyleCardInlineBlock",
-          path: "/src/components/editor/blocks/inline/StyleCardInlineBlock.tsx",
-          type: "design",
+          name: 'StyleCardInlineBlock',
+          path: '/src/components/editor/blocks/inline/StyleCardInlineBlock.tsx',
+          type: 'design',
         },
         {
-          name: "PricingCardInlineBlock",
-          path: "/src/components/editor/blocks/inline/PricingCardInlineBlock.tsx",
-          type: "design",
+          name: 'PricingCardInlineBlock',
+          path: '/src/components/editor/blocks/inline/PricingCardInlineBlock.tsx',
+          type: 'design',
         },
 
         // Quiz
         {
-          name: "QuizStartPageInlineBlock",
-          path: "/src/components/editor/blocks/inline/QuizStartPageInlineBlock.tsx",
-          type: "quiz",
+          name: 'QuizStartPageInlineBlock',
+          path: '/src/components/editor/blocks/inline/QuizStartPageInlineBlock.tsx',
+          type: 'quiz',
         },
         {
-          name: "QuizResultInlineBlock",
-          path: "/src/components/editor/blocks/inline/QuizResultInlineBlock.tsx",
-          type: "quiz",
+          name: 'QuizResultInlineBlock',
+          path: '/src/components/editor/blocks/inline/QuizResultInlineBlock.tsx',
+          type: 'quiz',
         },
       ];
 
@@ -171,16 +171,16 @@
         const container = document.getElementById(`${type}-components`);
         const status = document.getElementById(`${type}-status`);
 
-        let html = "";
+        let html = '';
         let successCount = 0;
 
         results.forEach(result => {
-          const statusClass = result.success ? "success" : "error";
-          const statusText = result.success ? "✅ OK" : `❌ ${result.error}`;
+          const statusClass = result.success ? 'success' : 'error';
+          const statusText = result.success ? '✅ OK' : `❌ ${result.error}`;
           successCount += result.success ? 1 : 0;
 
           html += `
-                    <div style="margin: 8px 0; padding: 8px; border-left: 3px solid ${result.success ? "#28a745" : "#dc3545"}; background: ${result.success ? "#f8fff9" : "#fff8f8"};">
+                    <div style="margin: 8px 0; padding: 8px; border-left: 3px solid ${result.success ? '#28a745' : '#dc3545'}; background: ${result.success ? '#f8fff9' : '#fff8f8'};">
                         <strong>${result.name}</strong>: 
                         <span class="status ${statusClass}">${statusText}</span>
                     </div>
@@ -192,20 +192,20 @@
         // Atualizar status geral
         const totalCount = results.length;
         if (successCount === totalCount) {
-          status.className = "status success";
+          status.className = 'status success';
           status.textContent = `${successCount}/${totalCount} ✅`;
         } else {
-          status.className = "status error";
+          status.className = 'status error';
           status.textContent = `${successCount}/${totalCount} ❌`;
         }
       }
 
       // Atualizar resultados na interface
-      updateResults("basic", results.basic);
-      updateResults("design", results.design);
-      updateResults("quiz", results.quiz);
+      updateResults('basic', results.basic);
+      updateResults('design', results.design);
+      updateResults('quiz', results.quiz);
 
-      console.log("🧪 Teste de componentes concluído!", results);
+      console.log('🧪 Teste de componentes concluído!', results);
     </script>
   </body>
 </html>

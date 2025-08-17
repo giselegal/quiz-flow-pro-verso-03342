@@ -1,19 +1,19 @@
 import React, { useState, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from '@/hooks/use-toast';
-import { 
-  Download, 
-  Upload, 
-  CheckCircle, 
-  AlertCircle,
-  Copy,
-  Save
-} from 'lucide-react';
+import { Download, Upload, CheckCircle, AlertCircle, Copy, Save } from 'lucide-react';
 
 interface JsonTemplate {
   templateVersion: string;
@@ -42,7 +42,7 @@ const TemplateImportExport: React.FC<TemplateImportExportProps> = ({
   currentComponents = [],
   onImportTemplate,
   onExportComplete,
-  className
+  className,
 }) => {
   const [importDialogOpen, setImportDialogOpen] = useState(false);
   const [exportDialogOpen, setExportDialogOpen] = useState(false);
@@ -52,28 +52,28 @@ const TemplateImportExport: React.FC<TemplateImportExportProps> = ({
     errors: string[];
     warnings: string[];
   } | null>(null);
-  
+
   // Export form state
   const [exportMetadata, setExportMetadata] = useState({
     name: 'Meu Funil Personalizado',
     description: 'Funil criado no editor',
     category: 'custom',
-    tags: ['personalizado']
+    tags: ['personalizado'],
   });
 
   // Validate JSON template structure
   const validateJsonTemplate = useCallback((jsonText: string) => {
     const errors: string[] = [];
     const warnings: string[] = [];
-    
+
     try {
       const parsed = JSON.parse(jsonText);
-      
+
       // Check required fields
       if (!parsed.templateVersion) {
         errors.push('Campo "templateVersion" é obrigatório');
       }
-      
+
       if (!parsed.metadata) {
         errors.push('Campo "metadata" é obrigatório');
       } else {
@@ -84,13 +84,13 @@ const TemplateImportExport: React.FC<TemplateImportExportProps> = ({
           warnings.push('Campo "metadata.id" não encontrado, será gerado automaticamente');
         }
       }
-      
+
       if (!parsed.components || !Array.isArray(parsed.components)) {
         errors.push('Campo "components" deve ser um array');
       } else if (parsed.components.length === 0) {
         warnings.push('Template não contém componentes');
       }
-      
+
       // Check components structure
       parsed.components?.forEach((component: any, index: number) => {
         if (!component.type) {
@@ -100,27 +100,30 @@ const TemplateImportExport: React.FC<TemplateImportExportProps> = ({
           warnings.push(`Componente ${index + 1}: campo "properties" não encontrado`);
         }
       });
-      
+
       return { isValid: errors.length === 0, errors, warnings };
     } catch (error) {
-      return { 
-        isValid: false, 
-        errors: ['JSON inválido: ' + (error as Error).message], 
-        warnings: [] 
+      return {
+        isValid: false,
+        errors: ['JSON inválido: ' + (error as Error).message],
+        warnings: [],
       };
     }
   }, []);
 
   // Handle JSON input change
-  const handleJsonInputChange = useCallback((value: string) => {
-    setJsonInput(value);
-    if (value.trim()) {
-      const result = validateJsonTemplate(value);
-      setValidationResult(result);
-    } else {
-      setValidationResult(null);
-    }
-  }, [validateJsonTemplate]);
+  const handleJsonInputChange = useCallback(
+    (value: string) => {
+      setJsonInput(value);
+      if (value.trim()) {
+        const result = validateJsonTemplate(value);
+        setValidationResult(result);
+      } else {
+        setValidationResult(null);
+      }
+    },
+    [validateJsonTemplate]
+  );
 
   // Import template
   const handleImport = useCallback(() => {
@@ -128,26 +131,26 @@ const TemplateImportExport: React.FC<TemplateImportExportProps> = ({
       toast({
         title: 'Erro na validação',
         description: 'Corrija os erros antes de importar',
-        variant: 'destructive'
+        variant: 'destructive',
       });
       return;
     }
 
     try {
       const template = JSON.parse(jsonInput) as JsonTemplate;
-      
+
       // Generate ID if missing
       if (!template.metadata.id) {
         template.metadata.id = `imported-${Date.now()}`;
       }
-      
+
       onImportTemplate?.(template);
-      
+
       toast({
         title: 'Template importado com sucesso',
-        description: `"${template.metadata.name}" foi carregado no editor`
+        description: `"${template.metadata.name}" foi carregado no editor`,
       });
-      
+
       setImportDialogOpen(false);
       setJsonInput('');
       setValidationResult(null);
@@ -155,7 +158,7 @@ const TemplateImportExport: React.FC<TemplateImportExportProps> = ({
       toast({
         title: 'Erro ao importar',
         description: (error as Error).message,
-        variant: 'destructive'
+        variant: 'destructive',
       });
     }
   }, [jsonInput, validationResult, onImportTemplate]);
@@ -171,15 +174,15 @@ const TemplateImportExport: React.FC<TemplateImportExportProps> = ({
           description: exportMetadata.description,
           category: exportMetadata.category,
           tags: exportMetadata.tags,
-          createdAt: new Date().toISOString()
+          createdAt: new Date().toISOString(),
         },
         funnelData: currentFunnelData || {},
-        components: currentComponents || []
+        components: currentComponents || [],
       };
 
       const jsonString = JSON.stringify(template, null, 2);
       const filename = `${exportMetadata.name.toLowerCase().replace(/[^a-z0-9]/g, '-')}.json`;
-      
+
       // Create and trigger download
       const blob = new Blob([jsonString], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
@@ -193,7 +196,7 @@ const TemplateImportExport: React.FC<TemplateImportExportProps> = ({
 
       toast({
         title: 'Template exportado',
-        description: `Arquivo "${filename}" foi baixado`
+        description: `Arquivo "${filename}" foi baixado`,
       });
 
       onExportComplete?.(filename);
@@ -202,7 +205,7 @@ const TemplateImportExport: React.FC<TemplateImportExportProps> = ({
       toast({
         title: 'Erro ao exportar',
         description: (error as Error).message,
-        variant: 'destructive'
+        variant: 'destructive',
       });
     }
   }, [exportMetadata, currentFunnelData, currentComponents, onExportComplete]);
@@ -213,31 +216,34 @@ const TemplateImportExport: React.FC<TemplateImportExportProps> = ({
       navigator.clipboard.writeText(jsonInput).then(() => {
         toast({
           title: 'Copiado para a área de transferência',
-          description: 'JSON template foi copiado'
+          description: 'JSON template foi copiado',
         });
       });
     }
   }, [jsonInput]);
 
   // Load from file
-  const handleFileLoad = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const content = e.target?.result as string;
-        handleJsonInputChange(content);
-      };
-      reader.readAsText(file);
-    }
-  }, [handleJsonInputChange]);
+  const handleFileLoad = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = e => {
+          const content = e.target?.result as string;
+          handleJsonInputChange(content);
+        };
+        reader.readAsText(file);
+      }
+    },
+    [handleJsonInputChange]
+  );
 
   return (
     <div className={`flex space-x-2 ${className}`}>
       {/* Import Dialog */}
       <Dialog open={importDialogOpen} onOpenChange={setImportDialogOpen}>
         <DialogTrigger asChild>
-          <Button 
+          <Button
             variant="outline"
             className="border-[#B89B7A] text-[#6B4F43] hover:bg-[#B89B7A]/10"
           >
@@ -252,7 +258,7 @@ const TemplateImportExport: React.FC<TemplateImportExportProps> = ({
               Cole o JSON do template ou carregue um arquivo para importar
             </DialogDescription>
           </DialogHeader>
-          
+
           <div className="space-y-4">
             {/* File Upload */}
             <div>
@@ -281,7 +287,7 @@ const TemplateImportExport: React.FC<TemplateImportExportProps> = ({
                 id="json-input"
                 placeholder="Cole aqui o JSON do template..."
                 value={jsonInput}
-                onChange={(e) => handleJsonInputChange(e.target.value)}
+                onChange={e => handleJsonInputChange(e.target.value)}
                 className="mt-1 font-mono text-sm min-h-[200px]"
               />
             </div>
@@ -310,7 +316,7 @@ const TemplateImportExport: React.FC<TemplateImportExportProps> = ({
                       </ul>
                     </div>
                   )}
-                  
+
                   {validationResult.warnings.length > 0 && (
                     <div>
                       <p className="text-sm font-medium text-yellow-600">Avisos:</p>
@@ -336,7 +342,7 @@ const TemplateImportExport: React.FC<TemplateImportExportProps> = ({
               <Button variant="outline" onClick={() => setImportDialogOpen(false)}>
                 Cancelar
               </Button>
-              <Button 
+              <Button
                 onClick={handleImport}
                 disabled={!validationResult?.isValid}
                 className="bg-[#B89B7A] hover:bg-[#A38A69]"
@@ -352,7 +358,7 @@ const TemplateImportExport: React.FC<TemplateImportExportProps> = ({
       {/* Export Dialog */}
       <Dialog open={exportDialogOpen} onOpenChange={setExportDialogOpen}>
         <DialogTrigger asChild>
-          <Button 
+          <Button
             variant="outline"
             className="border-[#B89B7A] text-[#6B4F43] hover:bg-[#B89B7A]/10"
           >
@@ -367,14 +373,14 @@ const TemplateImportExport: React.FC<TemplateImportExportProps> = ({
               Configure os metadados do template antes de exportar
             </DialogDescription>
           </DialogHeader>
-          
+
           <div className="space-y-4">
             <div>
               <Label htmlFor="export-name">Nome do Template</Label>
               <Input
                 id="export-name"
                 value={exportMetadata.name}
-                onChange={(e) => setExportMetadata(prev => ({ ...prev, name: e.target.value }))}
+                onChange={e => setExportMetadata(prev => ({ ...prev, name: e.target.value }))}
                 placeholder="Nome do seu template"
                 className="mt-1"
               />
@@ -385,7 +391,9 @@ const TemplateImportExport: React.FC<TemplateImportExportProps> = ({
               <Textarea
                 id="export-description"
                 value={exportMetadata.description}
-                onChange={(e) => setExportMetadata(prev => ({ ...prev, description: e.target.value }))}
+                onChange={e =>
+                  setExportMetadata(prev => ({ ...prev, description: e.target.value }))
+                }
                 placeholder="Descreva o seu template"
                 className="mt-1"
               />
@@ -396,7 +404,7 @@ const TemplateImportExport: React.FC<TemplateImportExportProps> = ({
               <Input
                 id="export-category"
                 value={exportMetadata.category}
-                onChange={(e) => setExportMetadata(prev => ({ ...prev, category: e.target.value }))}
+                onChange={e => setExportMetadata(prev => ({ ...prev, category: e.target.value }))}
                 placeholder="Categoria do template"
                 className="mt-1"
               />
@@ -407,10 +415,15 @@ const TemplateImportExport: React.FC<TemplateImportExportProps> = ({
               <Input
                 id="export-tags"
                 value={exportMetadata.tags.join(', ')}
-                onChange={(e) => setExportMetadata(prev => ({ 
-                  ...prev, 
-                  tags: e.target.value.split(',').map(tag => tag.trim()).filter(Boolean)
-                }))}
+                onChange={e =>
+                  setExportMetadata(prev => ({
+                    ...prev,
+                    tags: e.target.value
+                      .split(',')
+                      .map(tag => tag.trim())
+                      .filter(Boolean),
+                  }))
+                }
                 placeholder="tag1, tag2, tag3"
                 className="mt-1"
               />
@@ -422,8 +435,13 @@ const TemplateImportExport: React.FC<TemplateImportExportProps> = ({
                 <CardTitle className="text-sm">Preview do Export</CardTitle>
               </CardHeader>
               <CardContent className="text-sm space-y-1">
-                <p><strong>Componentes:</strong> {currentComponents.length}</p>
-                <p><strong>Arquivo:</strong> {exportMetadata.name.toLowerCase().replace(/[^a-z0-9]/g, '-')}.json</p>
+                <p>
+                  <strong>Componentes:</strong> {currentComponents.length}
+                </p>
+                <p>
+                  <strong>Arquivo:</strong>{' '}
+                  {exportMetadata.name.toLowerCase().replace(/[^a-z0-9]/g, '-')}.json
+                </p>
               </CardContent>
             </Card>
 
@@ -432,10 +450,7 @@ const TemplateImportExport: React.FC<TemplateImportExportProps> = ({
               <Button variant="outline" onClick={() => setExportDialogOpen(false)}>
                 Cancelar
               </Button>
-              <Button 
-                onClick={handleExport}
-                className="bg-[#B89B7A] hover:bg-[#A38A69]"
-              >
+              <Button onClick={handleExport} className="bg-[#B89B7A] hover:bg-[#A38A69]">
                 <Save className="w-4 h-4 mr-2" />
                 Exportar Template
               </Button>

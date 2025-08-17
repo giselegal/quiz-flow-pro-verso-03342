@@ -49,10 +49,10 @@
 ### **📁 /src/pages/SchemaDrivenEditorPage.tsx:**
 
 ```tsx
-import SchemaDrivenEditorResponsive from "@/components/editor/SchemaDrivenEditorResponsive";
+import SchemaDrivenEditorResponsive from '@/components/editor/SchemaDrivenEditorResponsive';
 
 const SchemaDrivenEditorPage: React.FC = () => {
-  const [match, params] = useRoute("/editor/:id");
+  const [match, params] = useRoute('/editor/:id');
   const funnelId = params?.id;
 
   return (
@@ -104,7 +104,7 @@ O projeto usa **Wouter para roteamento** (não Next.js App Router), então o arq
 
 ```tsx
 // /src/App.tsx
-import { Router, Route, Switch } from "wouter";
+import { Router, Route, Switch } from 'wouter';
 
 <Router>
   <Route path="/editor" component={SchemaDrivenEditorPage} />

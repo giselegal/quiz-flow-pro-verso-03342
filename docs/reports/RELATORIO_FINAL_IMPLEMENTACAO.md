@@ -38,9 +38,9 @@
 
 ```typescript
 // Cores padronizadas em todo o projeto
-primary: "#B89B7A"; // Dourado elegante
-secondary: "#432818"; // Marrom escuro
-accent: "#E8D5C4"; // Bege claro
+primary: '#B89B7A'; // Dourado elegante
+secondary: '#432818'; // Marrom escuro
+accent: '#E8D5C4'; // Bege claro
 ```
 
 ### **Componentes Redesenhados**

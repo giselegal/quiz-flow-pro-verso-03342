@@ -7,14 +7,14 @@
 #### **ANTES (Código Bagunçado):**
 
 ```tsx
-import React, { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import React, { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 const MyComponent: React.FC<{ title: string; onClick: () => void }> = ({ title, onClick }) => {
   const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
-    console.log("Component mounted");
+    console.log('Component mounted');
   }, []);
   return (
     <Card className="w-full max-w-md mx-auto">
@@ -27,7 +27,7 @@ const MyComponent: React.FC<{ title: string; onClick: () => void }> = ({ title, 
           disabled={isLoading}
           className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md transition-colors duration-200"
         >
-          {isLoading ? "Loading..." : "Click Me"}
+          {isLoading ? 'Loading...' : 'Click Me'}
         </Button>
       </CardContent>
     </Card>
@@ -38,9 +38,9 @@ const MyComponent: React.FC<{ title: string; onClick: () => void }> = ({ title, 
 #### **DEPOIS (Código Perfeito):**
 
 ```tsx
-import React, { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import React, { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 const MyComponent: React.FC<{
   title: string;
@@ -49,7 +49,7 @@ const MyComponent: React.FC<{
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    console.log("Component mounted");
+    console.log('Component mounted');
   }, []);
 
   return (
@@ -63,7 +63,7 @@ const MyComponent: React.FC<{
           disabled={isLoading}
           className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md transition-colors duration-200"
         >
-          {isLoading ? "Loading..." : "Click Me"}
+          {isLoading ? 'Loading...' : 'Click Me'}
         </Button>
       </CardContent>
     </Card>

@@ -180,11 +180,11 @@ npm install lucide-react @radix-ui/react-tabs @radix-ui/react-toast
 
 ```tsx
 // Opção 1: Substituição direta
-import EnhancedEditor from "./components/editor/EnhancedEditor";
+import EnhancedEditor from './components/editor/EnhancedEditor';
 <EnhancedEditor funnelId="123" />;
 
 // Opção 2: Integração incremental
-import { ValidationSystem } from "./components/editor/validation/ValidationSystem";
+import { ValidationSystem } from './components/editor/validation/ValidationSystem';
 // Use cada sistema individualmente
 ```
 

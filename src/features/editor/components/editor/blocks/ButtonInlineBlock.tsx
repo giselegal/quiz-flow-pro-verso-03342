@@ -125,11 +125,14 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
   useEffect(() => {
     if (requiresValidInput) {
       // Verificar se há input válido (exemplo: nome preenchido)
-      userResponseService.getResponse('intro-name-input').then(nameValue => {
-        setIsValidated(!!nameValue && nameValue.trim().length > 0);
-      }).catch(() => {
-        setIsValidated(false);
-      });
+      userResponseService
+        .getResponse('intro-name-input')
+        .then(nameValue => {
+          setIsValidated(!!nameValue && nameValue.trim().length > 0);
+        })
+        .catch(() => {
+          setIsValidated(false);
+        });
     } else {
       setIsValidated(true);
     }
@@ -147,7 +150,10 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
     if (requiresValidInput) {
       window.addEventListener('quiz-selection-change', handleQuizSelectionChange as EventListener);
       return () => {
-        window.removeEventListener('quiz-selection-change', handleQuizSelectionChange as EventListener);
+        window.removeEventListener(
+          'quiz-selection-change',
+          handleQuizSelectionChange as EventListener
+        );
       };
     }
   }, [requiresValidInput]);
@@ -399,7 +405,8 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
 
             // Handle quiz start button
             if (text && text.includes('Descobrir meu Estilo')) {
-              const userName = await userResponseService.getResponse('intro-name-input') || 'Anônimo';
+              const userName =
+                (await userResponseService.getResponse('intro-name-input')) || 'Anônimo';
               console.log('🚀 Iniciando tracking do quiz para:', userName);
 
               // Initialize quiz with Supabase

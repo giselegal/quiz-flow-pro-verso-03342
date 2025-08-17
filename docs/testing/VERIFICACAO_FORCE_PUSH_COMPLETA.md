@@ -49,7 +49,7 @@ Realizei uma análise completa de todos os arquivos principais implementados no 
 ```typescript
 const adapter = new EditorDatabaseAdapter({
   useDatabase: true,
-  quizId: "quiz-estilo-pessoal",
+  quizId: 'quiz-estilo-pessoal',
   fallbackToLocal: true,
 });
 ```

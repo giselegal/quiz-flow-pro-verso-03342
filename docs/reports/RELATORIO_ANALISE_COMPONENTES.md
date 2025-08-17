@@ -224,9 +224,9 @@ const handleClick = (e: React.MouseEvent) => {
 // Estilos de seleção
 const containerStyle: React.CSSProperties = {
   // ... estilos existentes
-  cursor: onClick ? "pointer" : "default",
-  border: isSelected ? "2px dashed #B89B7A" : "none",
-  borderRadius: isSelected ? "8px" : "0",
+  cursor: onClick ? 'pointer' : 'default',
+  border: isSelected ? '2px dashed #B89B7A' : 'none',
+  borderRadius: isSelected ? '8px' : '0',
 };
 ```
 

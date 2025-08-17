@@ -37,7 +37,7 @@ const LeadFormBlock: React.FC<LeadFormProps> = ({
 
     // Dispatch form completion event
     const event = new CustomEvent('quiz-form-complete', {
-      detail: { formData, source: 'LeadFormBlock' }
+      detail: { formData, source: 'LeadFormBlock' },
     });
     window.dispatchEvent(event);
 
@@ -80,12 +80,9 @@ const LeadFormBlock: React.FC<LeadFormProps> = ({
   return (
     <div className={containerClasses}>
       <form onSubmit={handleSubmit} className="space-y-4">
-        {fields.map((field) => (
+        {fields.map(field => (
           <div key={field} className="space-y-2">
-            <Label 
-              htmlFor={field}
-              className="text-sm font-medium text-stone-700"
-            >
+            <Label htmlFor={field} className="text-sm font-medium text-stone-700">
               {getFieldLabel(field)}
             </Label>
             <Input
@@ -94,7 +91,7 @@ const LeadFormBlock: React.FC<LeadFormProps> = ({
               type={getFieldType(field)}
               placeholder={getFieldPlaceholder(field)}
               value={formData[field] || ''}
-              onChange={(e) => handleInputChange(field, e.target.value)}
+              onChange={e => handleInputChange(field, e.target.value)}
               className="w-full"
               required
             />

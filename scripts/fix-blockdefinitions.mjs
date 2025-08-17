@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * 🔧 CORREÇÃO SEGURA DO BLOCKDEFINITIONS
- * 
+ *
  * Remove componentes problemáticos e mantém apenas os funcionais
  */
 
@@ -20,7 +20,7 @@ console.log('🔧 CORRIGINDO BLOCKDEFINITIONS - VERSÃO SEGURA');
 // Componentes testados e funcionais
 const SAFE_COMPONENTS = [
   'HeadingInlineBlock',
-  'TextInlineBlock', 
+  'TextInlineBlock',
   'SpacerInlineBlock',
   'QuizIntroHeaderBlock',
   'QuizProgressBlock',
@@ -30,7 +30,7 @@ const SAFE_COMPONENTS = [
   'FormInputBlock',
   'BadgeInlineBlock',
   'DecorativeBarInlineBlock',
-  'LegalNoticeInlineBlock'
+  'LegalNoticeInlineBlock',
 ];
 
 const SAFE_CONTENT = `import { BlockDefinition } from '@/types/editor';

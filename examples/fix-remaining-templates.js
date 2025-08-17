@@ -1,69 +1,69 @@
 #!/usr/bin/env node
 
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-console.log("🔧 CORREÇÃO FINAL DOS 8 TEMPLATES RESTANTES\n");
+console.log('🔧 CORREÇÃO FINAL DOS 8 TEMPLATES RESTANTES\n');
 
-const stepsDir = path.join(__dirname, "src/components/steps");
+const stepsDir = path.join(__dirname, 'src/components/steps');
 
 // 🎯 TEMPLATES QUE PRECISAM DE CORREÇÃO
 const templatesToFix = [
   {
-    file: "Step01Template.tsx",
+    file: 'Step01Template.tsx',
     step: 1,
     needsInterface: true,
     needsProgress: false, // Etapa 1 já tem progressValue: 0
     needsStepNumber: true,
   },
   {
-    file: "Step02Template.tsx",
+    file: 'Step02Template.tsx',
     step: 2,
     needsInterface: true,
     needsProgress: false, // Etapa 2 já tem progressValue: 10
     needsStepNumber: true,
   },
   {
-    file: "Step03Template.tsx",
+    file: 'Step03Template.tsx',
     step: 3,
     needsInterface: true,
     needsProgress: true,
     needsStepNumber: true,
   },
   {
-    file: "Step04Template.tsx",
+    file: 'Step04Template.tsx',
     step: 4,
     needsInterface: true,
     needsProgress: true,
     needsStepNumber: true,
   },
   {
-    file: "Step05Template.tsx",
+    file: 'Step05Template.tsx',
     step: 5,
     needsInterface: true,
     needsProgress: true,
     needsStepNumber: true,
   },
   {
-    file: "Step06Template.tsx",
+    file: 'Step06Template.tsx',
     step: 6,
     needsInterface: true,
     needsProgress: true,
     needsStepNumber: true,
   },
   {
-    file: "Step07Template.tsx",
+    file: 'Step07Template.tsx',
     step: 7,
     needsInterface: true,
     needsProgress: true,
     needsStepNumber: true,
   },
   {
-    file: "Step19Template.tsx",
+    file: 'Step19Template.tsx',
     step: 19,
     needsInterface: true,
     needsProgress: true,
@@ -73,7 +73,7 @@ const templatesToFix = [
 
 // 🔧 FUNÇÃO PARA ADICIONAR INTERFACE
 function addInterface(content, stepNumber) {
-  const stepId = stepNumber.toString().padStart(2, "0");
+  const stepId = stepNumber.toString().padStart(2, '0');
   const interfaceCode = `import React from "react";
 
 export interface Step${stepId}Props {
@@ -91,9 +91,9 @@ export const Step${stepId} = ({ onNext, onBlockAdd, onAnswer, userAnswers }: Ste
 
   // Remove imports e componentes existentes
   const cleanContent = content
-    .replace(/^import React from "react";\s*\n?/m, "")
-    .replace(/^export interface.*?\}\s*\n?/ms, "")
-    .replace(/^export const Step\d+.*?\};\s*\n?/ms, "");
+    .replace(/^import React from "react";\s*\n?/m, '')
+    .replace(/^export interface.*?\}\s*\n?/ms, '')
+    .replace(/^export const Step\d+.*?\};\s*\n?/ms, '');
 
   return interfaceCode + cleanContent;
 }
@@ -131,7 +131,7 @@ for (const template of templatesToFix) {
   try {
     console.log(`🔧 Corrigindo ${template.file}...`);
 
-    let content = fs.readFileSync(filePath, "utf8");
+    let content = fs.readFileSync(filePath, 'utf8');
 
     // Aplicar correções necessárias
     if (template.needsInterface) {
@@ -150,7 +150,7 @@ for (const template of templatesToFix) {
     }
 
     // Escrever arquivo corrigido
-    fs.writeFileSync(filePath, content, "utf8");
+    fs.writeFileSync(filePath, content, 'utf8');
 
     console.log(`✅ ${template.file} corrigido com sucesso!\n`);
     correctedFiles++;
@@ -160,18 +160,18 @@ for (const template of templatesToFix) {
   }
 }
 
-console.log("=".repeat(60));
-console.log("📋 RELATÓRIO DE CORREÇÃO FINAL:");
+console.log('='.repeat(60));
+console.log('📋 RELATÓRIO DE CORREÇÃO FINAL:');
 console.log(`✅ Arquivos corrigidos: ${correctedFiles}`);
 console.log(`❌ Arquivos com erro: ${errorFiles}`);
 console.log(`📊 Total processado: ${correctedFiles + errorFiles}`);
 
 if (correctedFiles > 0) {
-  console.log("\n🎯 CORREÇÕES APLICADAS:");
-  console.log("   ✅ Interfaces TypeScript completas");
-  console.log("   ✅ Progresso atualizado para valores corretos");
-  console.log("   ✅ Números das etapas padronizados (X de 21)");
-  console.log("   ✅ Props padronizadas");
+  console.log('\n🎯 CORREÇÕES APLICADAS:');
+  console.log('   ✅ Interfaces TypeScript completas');
+  console.log('   ✅ Progresso atualizado para valores corretos');
+  console.log('   ✅ Números das etapas padronizados (X de 21)');
+  console.log('   ✅ Props padronizadas');
 }
 
-console.log("\n🚀 EXECUTAR: node final-report-21-templates.js para verificação final");
+console.log('\n🚀 EXECUTAR: node final-report-21-templates.js para verificação final');

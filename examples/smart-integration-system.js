@@ -8,9 +8,9 @@
  * toda a estrutura existente de 97% compatibilidade.
  */
 
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -20,16 +20,16 @@ const __dirname = path.dirname(__filename);
 // ====================================================================
 
 function integrateInlineComponentsToBlockDefinitions() {
-  console.log("🔧 INTEGRANDO COMPONENTES INLINE AO BLOCKDEFINITIONS...");
+  console.log('🔧 INTEGRANDO COMPONENTES INLINE AO BLOCKDEFINITIONS...');
 
-  const blockDefPath = path.join(__dirname, "src/config/blockDefinitions.ts");
+  const blockDefPath = path.join(__dirname, 'src/config/blockDefinitions.ts');
 
   if (!fs.existsSync(blockDefPath)) {
-    console.log("  ❌ blockDefinitions.ts não encontrado");
+    console.log('  ❌ blockDefinitions.ts não encontrado');
     return false;
   }
 
-  let content = fs.readFileSync(blockDefPath, "utf8");
+  let content = fs.readFileSync(blockDefPath, 'utf8');
 
   // Adicionar imports dos componentes inline se não existirem
   const newImports = `
@@ -43,11 +43,11 @@ import ImageDisplayInline from '@/components/blocks/inline/ImageDisplayInline';
 import LegalNoticeInline from '@/components/blocks/inline/LegalNoticeInline';`;
 
   // Adicionar imports apenas se não existirem
-  if (!content.includes("HeadingInline") || !content.includes("TextInline")) {
-    const importIndex = content.indexOf("import React");
+  if (!content.includes('HeadingInline') || !content.includes('TextInline')) {
+    const importIndex = content.indexOf('import React');
     if (importIndex !== -1) {
-      content = content.slice(0, importIndex) + newImports + "\n\n" + content.slice(importIndex);
-      console.log("  ✅ Imports adicionados");
+      content = content.slice(0, importIndex) + newImports + '\n\n' + content.slice(importIndex);
+      console.log('  ✅ Imports adicionados');
     }
   }
 
@@ -364,46 +364,46 @@ import LegalNoticeInline from '@/components/blocks/inline/LegalNoticeInline';`;
   },`;
 
   // Inserir as definições antes do fechamento do objeto blockDefinitions
-  const closingBrace = content.lastIndexOf("};");
+  const closingBrace = content.lastIndexOf('};');
   if (closingBrace !== -1) {
     // Verificar se já não foram adicionadas
-    if (!content.includes("heading-inline")) {
+    if (!content.includes('heading-inline')) {
       content =
-        content.slice(0, closingBrace) + inlineDefinitions + "\n" + content.slice(closingBrace);
-      console.log("  ✅ Definições dos componentes adicionadas");
+        content.slice(0, closingBrace) + inlineDefinitions + '\n' + content.slice(closingBrace);
+      console.log('  ✅ Definições dos componentes adicionadas');
     } else {
-      console.log("  ℹ️ Definições já existem");
+      console.log('  ℹ️ Definições já existem');
     }
   }
 
   // Salvar arquivo atualizado
   fs.writeFileSync(blockDefPath, content);
-  console.log("  ✅ blockDefinitions.ts atualizado");
+  console.log('  ✅ blockDefinitions.ts atualizado');
 
   return true;
 }
 
 function integrateWithUnifiedProperties() {
-  console.log("\n🔧 INTEGRANDO COM USEUNIFIEDPROPERTIES...");
+  console.log('\n🔧 INTEGRANDO COM USEUNIFIEDPROPERTIES...');
 
-  const unifiedPropsPath = path.join(__dirname, "src/hooks/useUnifiedProperties.ts");
+  const unifiedPropsPath = path.join(__dirname, 'src/hooks/useUnifiedProperties.ts');
 
   if (!fs.existsSync(unifiedPropsPath)) {
-    console.log("  ❌ useUnifiedProperties.ts não encontrado");
+    console.log('  ❌ useUnifiedProperties.ts não encontrado');
     return false;
   }
 
-  let content = fs.readFileSync(unifiedPropsPath, "utf8");
+  let content = fs.readFileSync(unifiedPropsPath, 'utf8');
 
   // Verificar se já tem suporte aos nossos componentes
   const inlineComponentTypes = [
-    "heading-inline",
-    "text-inline",
-    "button-inline",
-    "decorative-bar-inline",
-    "form-input",
-    "image-display-inline",
-    "legal-notice-inline",
+    'heading-inline',
+    'text-inline',
+    'button-inline',
+    'decorative-bar-inline',
+    'form-input',
+    'image-display-inline',
+    'legal-notice-inline',
   ];
 
   let hasInlineSupport = false;
@@ -414,10 +414,10 @@ function integrateWithUnifiedProperties() {
   });
 
   if (!hasInlineSupport) {
-    console.log("  🔧 Adicionando suporte aos componentes inline...");
+    console.log('  🔧 Adicionando suporte aos componentes inline...');
 
     // Procurar local adequado para adicionar os tipos
-    const blockTypeIndex = content.indexOf("// Adicione novos tipos de blocos aqui");
+    const blockTypeIndex = content.indexOf('// Adicione novos tipos de blocos aqui');
     if (blockTypeIndex !== -1) {
       const inlineTypes = `
   // 🎯 COMPONENTES INLINE OTIMIZADOS
@@ -430,14 +430,14 @@ function integrateWithUnifiedProperties() {
   | "legal-notice-inline"`;
 
       content =
-        content.slice(0, blockTypeIndex) + inlineTypes + "\n  " + content.slice(blockTypeIndex);
+        content.slice(0, blockTypeIndex) + inlineTypes + '\n  ' + content.slice(blockTypeIndex);
     }
   } else {
-    console.log("  ✅ Suporte aos componentes inline já existe");
+    console.log('  ✅ Suporte aos componentes inline já existe');
   }
 
   // Verificar se precisa adicionar mapeamentos especiais
-  if (!content.includes("getInlineComponentProperties")) {
+  if (!content.includes('getInlineComponentProperties')) {
     const helperFunction = `
 /**
  * 🎯 Helper para componentes inline otimizados
@@ -507,48 +507,48 @@ export const getInlineComponentProperties = (type: string, currentProps: any = {
 };`;
 
     // Adicionar no final do arquivo antes da última linha
-    const lastExportIndex = content.lastIndexOf("export");
+    const lastExportIndex = content.lastIndexOf('export');
     if (lastExportIndex !== -1) {
       content =
         content.slice(0, lastExportIndex) +
         helperFunction +
-        "\n\n" +
+        '\n\n' +
         content.slice(lastExportIndex);
-      console.log("  ✅ Helper function adicionada");
+      console.log('  ✅ Helper function adicionada');
     }
   }
 
   fs.writeFileSync(unifiedPropsPath, content);
-  console.log("  ✅ useUnifiedProperties.ts integrado");
+  console.log('  ✅ useUnifiedProperties.ts integrado');
 
   return true;
 }
 
 function enhanceEditorContext() {
-  console.log("\n🔧 APRIMORANDO EDITORCONTEXT...");
+  console.log('\n🔧 APRIMORANDO EDITORCONTEXT...');
 
-  const editorContextPath = path.join(__dirname, "src/context/EditorContext.tsx");
+  const editorContextPath = path.join(__dirname, 'src/context/EditorContext.tsx');
 
   if (!fs.existsSync(editorContextPath)) {
-    console.log("  ❌ EditorContext.tsx não encontrado");
+    console.log('  ❌ EditorContext.tsx não encontrado');
     return false;
   }
 
-  let content = fs.readFileSync(editorContextPath, "utf8");
+  let content = fs.readFileSync(editorContextPath, 'utf8');
 
   // Adicionar import da configuração otimizada se não existir
-  if (!content.includes("OPTIMIZED_FUNNEL_CONFIG")) {
+  if (!content.includes('OPTIMIZED_FUNNEL_CONFIG')) {
     const importLine = `import { OPTIMIZED_FUNNEL_CONFIG } from '@/config/optimized21StepsFunnel';`;
 
-    const importIndex = content.indexOf("import React");
+    const importIndex = content.indexOf('import React');
     if (importIndex !== -1) {
-      content = content.slice(0, importIndex) + importLine + "\n" + content.slice(importIndex);
-      console.log("  ✅ Import da configuração otimizada adicionado");
+      content = content.slice(0, importIndex) + importLine + '\n' + content.slice(importIndex);
+      console.log('  ✅ Import da configuração otimizada adicionado');
     }
   }
 
   // Adicionar helper para carregar etapas otimizadas
-  if (!content.includes("loadOptimizedSteps")) {
+  if (!content.includes('loadOptimizedSteps')) {
     const helperFunction = `
   /**
    * 🎯 Carrega etapas otimizadas do funil de 21 etapas
@@ -571,45 +571,45 @@ function enhanceEditorContext() {
   }, []);`;
 
     // Encontrar local adequado para inserir
-    const contextProviderIndex = content.indexOf("const EditorContext");
+    const contextProviderIndex = content.indexOf('const EditorContext');
     if (contextProviderIndex !== -1) {
       content =
         content.slice(0, contextProviderIndex) +
         helperFunction +
-        "\n\n  " +
+        '\n\n  ' +
         content.slice(contextProviderIndex);
-      console.log("  ✅ Helper para etapas otimizadas adicionado");
+      console.log('  ✅ Helper para etapas otimizadas adicionado');
     }
   }
 
   fs.writeFileSync(editorContextPath, content);
-  console.log("  ✅ EditorContext.tsx aprimorado");
+  console.log('  ✅ EditorContext.tsx aprimorado');
 
   return true;
 }
 
 function upgradePropertiesPanel() {
-  console.log("\n🔧 ATUALIZANDO PAINEL DE PROPRIEDADES...");
+  console.log('\n🔧 ATUALIZANDO PAINEL DE PROPRIEDADES...');
 
   const panelPath = path.join(
     __dirname,
-    "src/components/editor/properties/EnhancedUniversalPropertiesPanel.tsx"
+    'src/components/editor/properties/EnhancedUniversalPropertiesPanel.tsx'
   );
 
   if (!fs.existsSync(panelPath)) {
-    console.log("  ⚠️ Painel não encontrado, usando o que criamos anteriormente");
+    console.log('  ⚠️ Painel não encontrado, usando o que criamos anteriormente');
     return true;
   }
 
-  let content = fs.readFileSync(panelPath, "utf8");
+  let content = fs.readFileSync(panelPath, 'utf8');
 
   // Adicionar suporte específico aos nossos componentes inline
-  if (!content.includes("getInlineComponentProperties")) {
+  if (!content.includes('getInlineComponentProperties')) {
     const importLine = `import { getInlineComponentProperties } from '@/hooks/useUnifiedProperties';`;
 
-    const importIndex = content.indexOf("import React");
+    const importIndex = content.indexOf('import React');
     if (importIndex !== -1) {
-      content = content.slice(0, importIndex) + importLine + "\n" + content.slice(importIndex);
+      content = content.slice(0, importIndex) + importLine + '\n' + content.slice(importIndex);
     }
 
     // Adicionar lógica para usar propriedades inline
@@ -622,27 +622,27 @@ function upgradePropertiesPanel() {
     return block.properties || {};
   }, []);`;
 
-    const componentStartIndex = content.indexOf("export const EnhancedUniversalPropertiesPanel");
+    const componentStartIndex = content.indexOf('export const EnhancedUniversalPropertiesPanel');
     if (componentStartIndex !== -1) {
       content =
         content.slice(0, componentStartIndex) +
         enhancedLogic +
-        "\n\n" +
+        '\n\n' +
         content.slice(componentStartIndex);
-      console.log("  ✅ Lógica inline adicionada ao painel");
+      console.log('  ✅ Lógica inline adicionada ao painel');
     }
   }
 
   fs.writeFileSync(panelPath, content);
-  console.log("  ✅ Painel de propriedades atualizado");
+  console.log('  ✅ Painel de propriedades atualizado');
 
   return true;
 }
 
 function createOptimizedEditorLoader() {
-  console.log("\n🔧 CRIANDO CARREGADOR OTIMIZADO DO EDITOR...");
+  console.log('\n🔧 CRIANDO CARREGADOR OTIMIZADO DO EDITOR...');
 
-  const loaderPath = path.join(__dirname, "src/utils/optimizedEditorLoader.ts");
+  const loaderPath = path.join(__dirname, 'src/utils/optimizedEditorLoader.ts');
 
   const loaderContent = `/**
  * 🚀 CARREGADOR OTIMIZADO DO EDITOR
@@ -861,15 +861,15 @@ export const useOptimizedEditorContext = () => {
 export default useOptimizedEditor;`;
 
   fs.writeFileSync(loaderPath, loaderContent);
-  console.log("  ✅ Carregador otimizado criado");
+  console.log('  ✅ Carregador otimizado criado');
 
   return true;
 }
 
 function createPerformanceEnhancements() {
-  console.log("\n🔧 CRIANDO MELHORIAS DE PERFORMANCE...");
+  console.log('\n🔧 CRIANDO MELHORIAS DE PERFORMANCE...');
 
-  const enhancementsPath = path.join(__dirname, "src/utils/optimizedPerformance.ts");
+  const enhancementsPath = path.join(__dirname, 'src/utils/optimizedPerformance.ts');
 
   const enhancementsContent = `/**
  * ⚡ MELHORIAS DE PERFORMANCE PARA SISTEMA OTIMIZADO
@@ -980,25 +980,25 @@ export default {
 };`;
 
   fs.writeFileSync(enhancementsPath, enhancementsContent);
-  console.log("  ✅ Melhorias de performance criadas");
+  console.log('  ✅ Melhorias de performance criadas');
 
   return true;
 }
 
 function updateTypeDefinitions() {
-  console.log("\n🔧 ATUALIZANDO DEFINIÇÕES DE TIPOS...");
+  console.log('\n🔧 ATUALIZANDO DEFINIÇÕES DE TIPOS...');
 
-  const editorTypesPath = path.join(__dirname, "src/types/editor.ts");
+  const editorTypesPath = path.join(__dirname, 'src/types/editor.ts');
 
   if (!fs.existsSync(editorTypesPath)) {
-    console.log("  ❌ Arquivo de tipos não encontrado");
+    console.log('  ❌ Arquivo de tipos não encontrado');
     return false;
   }
 
-  let content = fs.readFileSync(editorTypesPath, "utf8");
+  let content = fs.readFileSync(editorTypesPath, 'utf8');
 
   // Adicionar tipos inline se não existirem
-  const inlineTypes = ["decorative-bar-inline", "form-input", "legal-notice-inline"];
+  const inlineTypes = ['decorative-bar-inline', 'form-input', 'legal-notice-inline'];
 
   inlineTypes.forEach(type => {
     if (!content.includes(`"${type}"`)) {
@@ -1013,7 +1013,7 @@ function updateTypeDefinitions() {
   });
 
   // Adicionar interface para editor otimizado se não existir
-  if (!content.includes("OptimizedEditorConfig")) {
+  if (!content.includes('OptimizedEditorConfig')) {
     const optimizedInterface = `
 /**
  * 🎯 CONFIGURAÇÃO DO EDITOR OTIMIZADO
@@ -1049,30 +1049,30 @@ export interface OptimizedSystemState {
 
     // Adicionar no final do arquivo
     content += optimizedInterface;
-    console.log("  ✅ Interfaces otimizadas adicionadas");
+    console.log('  ✅ Interfaces otimizadas adicionadas');
   }
 
   fs.writeFileSync(editorTypesPath, content);
-  console.log("  ✅ Definições de tipos atualizadas");
+  console.log('  ✅ Definições de tipos atualizadas');
 
   return true;
 }
 
 function generateIntegrationReport() {
-  console.log("\n📋 GERANDO RELATÓRIO DE INTEGRAÇÃO...");
+  console.log('\n📋 GERANDO RELATÓRIO DE INTEGRAÇÃO...');
 
   const report = {
     timestamp: new Date().toISOString(),
-    version: "2.0.0-optimized",
-    integrationStatus: "completed",
+    version: '2.0.0-optimized',
+    integrationStatus: 'completed',
     components: {
-      blockDefinitions: "integrated",
-      unifiedProperties: "enhanced",
-      editorContext: "upgraded",
-      propertiesPanel: "optimized",
-      editorLoader: "created",
-      performance: "enhanced",
-      types: "updated",
+      blockDefinitions: 'integrated',
+      unifiedProperties: 'enhanced',
+      editorContext: 'upgraded',
+      propertiesPanel: 'optimized',
+      editorLoader: 'created',
+      performance: 'enhanced',
+      types: 'updated',
     },
     features: {
       inlineComponents: 7,
@@ -1084,79 +1084,79 @@ function generateIntegrationReport() {
       existingComponents: 21,
     },
     performance: {
-      compatibilityScore: "97%",
-      integrationMethod: "direct",
-      refactoringRequired: "minimal",
-      existingCodePreserved: "100%",
+      compatibilityScore: '97%',
+      integrationMethod: 'direct',
+      refactoringRequired: 'minimal',
+      existingCodePreserved: '100%',
     },
     nextSteps: [
-      "Testar editor otimizado",
-      "Validar todas as 21 etapas",
-      "Verificar performance",
-      "Executar testes de integração",
-      "Deploy para produção",
+      'Testar editor otimizado',
+      'Validar todas as 21 etapas',
+      'Verificar performance',
+      'Executar testes de integração',
+      'Deploy para produção',
     ],
   };
 
-  const reportPath = path.join(__dirname, "integration-report.json");
+  const reportPath = path.join(__dirname, 'integration-report.json');
   fs.writeFileSync(reportPath, JSON.stringify(report, null, 2));
 
-  console.log("  ✅ Relatório salvo em:", reportPath);
+  console.log('  ✅ Relatório salvo em:', reportPath);
 
   return report;
 }
 
 function generateOptimizedSummary() {
-  console.log("\n🎉 INTEGRAÇÃO INTELIGENTE CONCLUÍDA");
-  console.log("=".repeat(80));
+  console.log('\n🎉 INTEGRAÇÃO INTELIGENTE CONCLUÍDA');
+  console.log('='.repeat(80));
 
-  console.log("\n✅ COMPONENTES INTEGRADOS:");
-  console.log("  🎯 blockDefinitions.ts - 7 componentes inline adicionados");
-  console.log("  🔧 useUnifiedProperties.ts - Suporte inline integrado");
-  console.log("  📋 EditorContext.tsx - Configuração otimizada carregada");
-  console.log("  🎨 EnhancedUniversalPropertiesPanel.tsx - Lógica inline adicionada");
-  console.log("  ⚡ optimizedEditorLoader.ts - Carregador inteligente criado");
-  console.log("  🚀 optimizedPerformance.ts - Melhorias de performance");
-  console.log("  📝 editor.ts - Tipos atualizados");
+  console.log('\n✅ COMPONENTES INTEGRADOS:');
+  console.log('  🎯 blockDefinitions.ts - 7 componentes inline adicionados');
+  console.log('  🔧 useUnifiedProperties.ts - Suporte inline integrado');
+  console.log('  📋 EditorContext.tsx - Configuração otimizada carregada');
+  console.log('  🎨 EnhancedUniversalPropertiesPanel.tsx - Lógica inline adicionada');
+  console.log('  ⚡ optimizedEditorLoader.ts - Carregador inteligente criado');
+  console.log('  🚀 optimizedPerformance.ts - Melhorias de performance');
+  console.log('  📝 editor.ts - Tipos atualizados');
 
-  console.log("\n🎁 RECURSOS APROVEITADOS:");
-  console.log("  ✅ 50 hooks existentes (8.491 linhas de código)");
-  console.log("  ✅ 21 componentes inline já criados");
-  console.log("  ✅ 3 sistemas de editor (editor, result-editor, enhanced-editor)");
-  console.log("  ✅ Sistema de propriedades unificado robusto");
-  console.log("  ✅ Autosave, History, Keyboard shortcuts");
-  console.log("  ✅ Otimizações de performance para mobile");
+  console.log('\n🎁 RECURSOS APROVEITADOS:');
+  console.log('  ✅ 50 hooks existentes (8.491 linhas de código)');
+  console.log('  ✅ 21 componentes inline já criados');
+  console.log('  ✅ 3 sistemas de editor (editor, result-editor, enhanced-editor)');
+  console.log('  ✅ Sistema de propriedades unificado robusto');
+  console.log('  ✅ Autosave, History, Keyboard shortcuts');
+  console.log('  ✅ Otimizações de performance para mobile');
 
-  console.log("\n🚀 FUNCIONALIDADES ATIVAS:");
-  console.log("  • 🎯 Editor com 21 etapas otimizadas");
-  console.log("  • ⚡ Performance otimizada para mobile");
-  console.log("  • 💾 Autosave automático integrado");
-  console.log("  • ⌨️ Atalhos de teclado configurados");
-  console.log("  • 📱 Otimizações específicas para mobile");
-  console.log("  • 🔧 Painel de propriedades universal");
-  console.log("  • 📊 Sistema de cálculo de resultados");
-  console.log("  • 🎨 Personalização dinâmica de componentes");
+  console.log('\n🚀 FUNCIONALIDADES ATIVAS:');
+  console.log('  • 🎯 Editor com 21 etapas otimizadas');
+  console.log('  • ⚡ Performance otimizada para mobile');
+  console.log('  • 💾 Autosave automático integrado');
+  console.log('  • ⌨️ Atalhos de teclado configurados');
+  console.log('  • 📱 Otimizações específicas para mobile');
+  console.log('  • 🔧 Painel de propriedades universal');
+  console.log('  • 📊 Sistema de cálculo de resultados');
+  console.log('  • 🎨 Personalização dinâmica de componentes');
 
-  console.log("\n🎯 COMO USAR:");
+  console.log('\n🎯 COMO USAR:');
   console.log('  1. import { useOptimizedEditor } from "@/utils/optimizedEditorLoader"');
-  console.log("  2. const editor = useOptimizedEditor()");
-  console.log("  3. editor.loadStep(1) // Carregar etapa");
-  console.log("  4. editor.navigateToStep(2) // Navegar");
+  console.log('  2. const editor = useOptimizedEditor()');
+  console.log('  3. editor.loadStep(1) // Carregar etapa');
+  console.log('  4. editor.navigateToStep(2) // Navegar');
   console.log('  5. editor.updateResponse("step-1", data) // Atualizar');
-  console.log("  6. editor.calculateResult() // Calcular resultado");
+  console.log('  6. editor.calculateResult() // Calcular resultado');
 
-  console.log("\n✅ SISTEMA 100% INTEGRADO E PRONTO PARA USO!");
-  console.log("🏆 Aproveitamento máximo da estrutura existente");
-  console.log("⚡ Performance otimizada e funcionalidades avançadas");
-  console.log("🎯 Compatibilidade de 97% mantida");
+  console.log('\n✅ SISTEMA 100% INTEGRADO E PRONTO PARA USO!');
+  console.log('🏆 Aproveitamento máximo da estrutura existente');
+  console.log('⚡ Performance otimizada e funcionalidades avançadas');
+  console.log('🎯 Compatibilidade de 97% mantida');
 }
 
 // ====================================================================
 // 🚀 EXECUÇÃO PRINCIPAL
 // ====================================================================
 
-console.log("🚀 INICIANDO INTEGRAÇÃO INTELIGENTE DO SISTEMA OTIMIZADO");
-console.log("=".repeat(80));
+console.log('🚀 INICIANDO INTEGRAÇÃO INTELIGENTE DO SISTEMA OTIMIZADO');
+console.log('='.repeat(80));
 
 try {
   // Executar integrações em sequência
@@ -1172,10 +1172,10 @@ try {
   const report = generateIntegrationReport();
   generateOptimizedSummary();
 
-  console.log("\n🎉 INTEGRAÇÃO INTELIGENTE CONCLUÍDA COM SUCESSO!");
-  console.log("✅ Sistema 100% funcional com todos os recursos aproveitados");
+  console.log('\n🎉 INTEGRAÇÃO INTELIGENTE CONCLUÍDA COM SUCESSO!');
+  console.log('✅ Sistema 100% funcional com todos os recursos aproveitados');
 } catch (error) {
-  console.error("\n❌ ERRO NA INTEGRAÇÃO:", error.message);
+  console.error('\n❌ ERRO NA INTEGRAÇÃO:', error.message);
   console.error(error.stack);
   process.exit(1);
 }

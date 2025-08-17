@@ -22,25 +22,25 @@ Este guia descreve como implementar a integração completa entre os cálculos d
 // src/config/stepTemplatesMapping.ts
 const Step20ResultTemplate = [
   {
-    id: "quiz-results-header",
-    type: "heading",
+    id: 'quiz-results-header',
+    type: 'heading',
     content: {
-      text: "Seu Resultado: {primaryStyle}",
-      level: "h1",
-      align: "center",
+      text: 'Seu Resultado: {primaryStyle}',
+      level: 'h1',
+      align: 'center',
     },
   },
   {
-    id: "quiz-results-display",
-    type: "quiz-results-block", // Usar o componente de resultados
+    id: 'quiz-results-display',
+    type: 'quiz-results-block', // Usar o componente de resultados
     content: {
       showScores: true,
       showAllStyles: false,
     },
   },
   {
-    id: "style-results-display",
-    type: "style-results-block", // Usar o componente de estilo
+    id: 'style-results-display',
+    type: 'style-results-block', // Usar o componente de estilo
     content: {
       showGuideImage: true,
       showAllStyles: true,
@@ -55,23 +55,23 @@ const Step20ResultTemplate = [
 // src/config/stepTemplatesMapping.ts
 const Step21OfferTemplate = [
   {
-    id: "final-step-header",
-    type: "heading",
+    id: 'final-step-header',
+    type: 'heading',
     content: {
-      text: "Oferta Exclusiva para Seu Estilo: {primaryStyle}",
-      level: "h1",
-      align: "center",
+      text: 'Oferta Exclusiva para Seu Estilo: {primaryStyle}',
+      level: 'h1',
+      align: 'center',
     },
   },
   {
-    id: "final-step-editor",
-    type: "final-step", // Usar o editor de etapa final
+    id: 'final-step-editor',
+    type: 'final-step', // Usar o editor de etapa final
     content: {
       stepNumber: 21,
-      title: "Sua Oferta Personalizada",
-      subtitle: "Baseada no seu estilo predominante",
+      title: 'Sua Oferta Personalizada',
+      subtitle: 'Baseada no seu estilo predominante',
       styleResult: {
-        selectedStyle: "{primaryStyle}", // Será substituído pelo estilo real
+        selectedStyle: '{primaryStyle}', // Será substituído pelo estilo real
         showAllStyles: false,
         showGuideImage: true,
       },
@@ -215,22 +215,22 @@ export default ConnectedStyleResultsBlock;
 // src/config/enhancedBlockRegistry.ts
 
 // Adicionar os novos componentes conectados
-import ConnectedQuizResultsBlock from "../components/blocks/quiz/ConnectedQuizResultsBlock";
-import ConnectedStyleResultsBlock from "../components/blocks/quiz/ConnectedStyleResultsBlock";
+import ConnectedQuizResultsBlock from '../components/blocks/quiz/ConnectedQuizResultsBlock';
+import ConnectedStyleResultsBlock from '../components/blocks/quiz/ConnectedStyleResultsBlock';
 
 export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> = {
   // ... outros componentes
 
   // Componentes originais (para editor)
-  "quiz-results": QuizResultsEditor,
-  "quiz-results-block": QuizResultsBlock,
-  "style-results": StyleResultsEditor,
-  "style-results-block": StyleResultsBlock,
-  "final-step": FinalStepEditor,
+  'quiz-results': QuizResultsEditor,
+  'quiz-results-block': QuizResultsBlock,
+  'style-results': StyleResultsEditor,
+  'style-results-block': StyleResultsBlock,
+  'final-step': FinalStepEditor,
 
   // Componentes conectados (para visualização real)
-  "connected-quiz-results": ConnectedQuizResultsBlock,
-  "connected-style-results": ConnectedStyleResultsBlock,
+  'connected-quiz-results': ConnectedQuizResultsBlock,
+  'connected-style-results': ConnectedStyleResultsBlock,
 
   // ... outros componentes
 };
@@ -244,15 +244,15 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> =
 // No método de renderização
 const renderBlock = (block: EditorBlock) => {
   // Verificar se estamos no modo preview ou visualização
-  const isPreview = mode === "preview";
+  const isPreview = mode === 'preview';
 
   // Substituir blocos por versões conectadas quando em preview
   let blockType = block.type;
   if (isPreview) {
     // Mapeamento para componentes conectados
     const connectedComponents: Record<string, string> = {
-      "quiz-results-block": "connected-quiz-results",
-      "style-results-block": "connected-style-results",
+      'quiz-results-block': 'connected-quiz-results',
+      'style-results-block': 'connected-style-results',
     };
 
     // Substituir se houver uma versão conectada
@@ -277,7 +277,7 @@ const loadStage = useCallback(
     // ...
 
     // Se for etapa 20 ou 21, carregar dados dinamicamente
-    if (stageId === "step-20" || stageId === "step-21") {
+    if (stageId === 'step-20' || stageId === 'step-21') {
       try {
         // Usar o hook de quiz para acessar os dados
         const { result } = useSupabaseQuiz();
@@ -289,15 +289,15 @@ const loadStage = useCallback(
             const newContent = { ...block.content };
 
             // Substituir placeholders
-            if (typeof newContent.text === "string") {
+            if (typeof newContent.text === 'string') {
               newContent.text = newContent.text.replace(
-                "{primaryStyle}",
+                '{primaryStyle}',
                 result.primaryStyle.category
               );
             }
 
             // Para o bloco final-step
-            if (block.type === "final-step" && newContent.styleResult) {
+            if (block.type === 'final-step' && newContent.styleResult) {
               newContent.styleResult.selectedStyle = result.primaryStyle.style;
             }
 
@@ -314,7 +314,7 @@ const loadStage = useCallback(
           });
         }
       } catch (error) {
-        console.error("Erro ao carregar dados dinâmicos para etapa:", error);
+        console.error('Erro ao carregar dados dinâmicos para etapa:', error);
       }
     }
   },

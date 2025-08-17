@@ -21,7 +21,7 @@ className={cn(
 ### **Container 2: Componente Individual** (SEM bordas)
 
 ```tsx
-className = "p-2"; // Apenas padding, sem bordas ou rings
+className = 'p-2'; // Apenas padding, sem bordas ou rings
 ```
 
 ---

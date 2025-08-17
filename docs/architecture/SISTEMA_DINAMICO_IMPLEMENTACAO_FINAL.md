@@ -58,22 +58,22 @@ src/components/universal/
 ```typescript
 export const STEP_CONFIGURATIONS = {
   step01: {
-    id: "step01",
-    title: "BEM-VINDA AO SEU QUIZ PESSOAL!",
-    subtitle: "Vamos descobrir qual é o seu estilo único",
+    id: 'step01',
+    title: 'BEM-VINDA AO SEU QUIZ PESSOAL!',
+    subtitle: 'Vamos descobrir qual é o seu estilo único',
     questionNumber: 1,
     totalQuestions: 21,
     options: [
       {
-        id: "intro_start",
-        text: "Vamos começar!",
-        value: "start",
-        category: "Introdução",
-        styleCategory: "Inicio",
+        id: 'intro_start',
+        text: 'Vamos começar!',
+        value: 'start',
+        category: 'Introdução',
+        styleCategory: 'Inicio',
         points: 0,
       },
     ],
-    layout: "grid-2",
+    layout: 'grid-2',
     allowMultiple: false,
     showImages: false,
   },
@@ -106,7 +106,7 @@ export const STEP_TEMPLATES_MAPPING: Record<number, StepTemplate> = {
   1: {
     stepNumber: 1,
     questionConfig: STEP_CONFIGURATIONS.step01,
-    name: "Introdução",
+    name: 'Introdução',
     component: DynamicStepTemplate, // ✅ Mesmo componente para todos
   },
   // ... todos os 21 steps usam o mesmo componente

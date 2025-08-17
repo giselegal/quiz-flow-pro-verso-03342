@@ -138,10 +138,10 @@ src/components/steps/Step*.backup ✅
 
 ```typescript
 // FORMATO: step{XX}-{component}-{description}
-"step01-header-logo"; // Step 01, cabeçalho, logo
-"step02-question-title"; // Step 02, título da questão
-"step03-options-grid"; // Step 03, grade de opções
-"step19-text-4"; // Step 19, texto específico #4
+'step01-header-logo'; // Step 01, cabeçalho, logo
+'step02-question-title'; // Step 02, título da questão
+'step03-options-grid'; // Step 03, grade de opções
+'step19-text-4'; // Step 19, texto específico #4
 ```
 
 #### **Mapeamento de Componentes:**

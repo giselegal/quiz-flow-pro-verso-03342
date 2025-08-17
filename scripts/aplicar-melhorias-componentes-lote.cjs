@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-const fs = require("fs");
-const path = require("path");
+const fs = require('fs');
+const path = require('path');
 
 // Padrão de melhoria para aplicar nos componentes
 const PATTERN_IMPORTS = `import React from "react";
@@ -61,33 +61,33 @@ export default COMPONENT_NAME;`;
 
 // Lista de componentes a serem atualizados
 const componentsToUpdate = [
-  "VideoBlock",
-  "FAQBlock",
-  "GuaranteeBlock",
-  "CTAInlineBlock",
-  "CountdownTimerBlock",
-  "ConfettiBlock",
-  "MarqueeBlock",
-  "StatsMetricsBlock",
-  "QuizTitleBlock",
-  "FinalCTABlock",
-  "QuizOfferFinalCTABlock",
-  "QuizOfferTestimonialsBlock",
-  "ResultHeaderBlock",
-  "QuizStartPageBlock",
-  "InteractiveQuizBlock",
-  "StrategicQuestionBlock",
-  "OptionsGridBlock",
-  "QuizStepBlock",
+  'VideoBlock',
+  'FAQBlock',
+  'GuaranteeBlock',
+  'CTAInlineBlock',
+  'CountdownTimerBlock',
+  'ConfettiBlock',
+  'MarqueeBlock',
+  'StatsMetricsBlock',
+  'QuizTitleBlock',
+  'FinalCTABlock',
+  'QuizOfferFinalCTABlock',
+  'QuizOfferTestimonialsBlock',
+  'ResultHeaderBlock',
+  'QuizStartPageBlock',
+  'InteractiveQuizBlock',
+  'StrategicQuestionBlock',
+  'OptionsGridBlock',
+  'QuizStepBlock',
 ];
 
 function updateComponent(componentName) {
   const filePath = path.join(
     __dirname,
-    "src",
-    "components",
-    "editor",
-    "blocks",
+    'src',
+    'components',
+    'editor',
+    'blocks',
     `${componentName}.tsx`
   );
 
@@ -97,14 +97,14 @@ function updateComponent(componentName) {
   }
 
   try {
-    let content = fs.readFileSync(filePath, "utf8");
+    let content = fs.readFileSync(filePath, 'utf8');
 
     // Se o arquivo está vazio, criar um componente básico
-    if (content.trim() === "") {
+    if (content.trim() === '') {
       content = createBasicComponent(componentName);
     } else {
       // Verificar se já está atualizado
-      if (content.includes("BlockComponentProps")) {
+      if (content.includes('BlockComponentProps')) {
         console.log(`✅ ${componentName} já está atualizado`);
         return true;
       }
@@ -113,7 +113,7 @@ function updateComponent(componentName) {
       content = applyImprovements(content, componentName);
     }
 
-    fs.writeFileSync(filePath, content, "utf8");
+    fs.writeFileSync(filePath, content, 'utf8');
     console.log(`✅ ${componentName} atualizado com sucesso`);
     return true;
   } catch (error) {
@@ -187,7 +187,7 @@ export default ${componentName};
 function applyImprovements(content, componentName) {
   // Esta função aplicaria melhorias mais sofisticadas em componentes existentes
   // Por ora, vamos apenas garantir que tenha as importações corretas
-  if (!content.includes("BlockComponentProps")) {
+  if (!content.includes('BlockComponentProps')) {
     // Adicionar import do tipo se não existir
     content = content.replace(
       /import React from ["']react["'];/,
@@ -200,7 +200,7 @@ import type { BlockComponentProps } from "../../../types/blocks";`
 }
 
 // Executar atualizações
-console.log("🚀 Iniciando aplicação de melhorias em lote nos componentes...\n");
+console.log('🚀 Iniciando aplicação de melhorias em lote nos componentes...\n');
 
 let successCount = 0;
 let totalCount = componentsToUpdate.length;
@@ -216,7 +216,7 @@ console.log(`✅ Componentes atualizados: ${successCount}/${totalCount}`);
 console.log(`❌ Componentes com erro: ${totalCount - successCount}/${totalCount}`);
 
 if (successCount === totalCount) {
-  console.log("\n🎉 Todas as melhorias foram aplicadas com sucesso!");
+  console.log('\n🎉 Todas as melhorias foram aplicadas com sucesso!');
 } else {
-  console.log("\n⚠️  Algumas melhorias falharam. Verifique os logs acima.");
+  console.log('\n⚠️  Algumas melhorias falharam. Verifique os logs acima.');
 }

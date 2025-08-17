@@ -36,8 +36,8 @@ const InterBlockDropZone = ({ position, isActive }) => {
   const { setNodeRef, isOver } = useDroppable({
     id: `drop-zone-${position}`, // ID único
     data: {
-      type: "canvas-drop-zone",
-      accepts: ["sidebar-component"],
+      type: 'canvas-drop-zone',
+      accepts: ['sidebar-component'],
       position: position, // Posição específica
     },
   });
@@ -46,7 +46,7 @@ const InterBlockDropZone = ({ position, isActive }) => {
     <div
       className={`
       h-3 transition-all duration-200 
-      ${isOver ? "h-12 bg-brand/10 border-dashed" : ""}
+      ${isOver ? 'h-12 bg-brand/10 border-dashed' : ''}
     `}
     >
       {isOver && <p>Inserir aqui (posição {position})</p>}
@@ -59,7 +59,7 @@ const InterBlockDropZone = ({ position, isActive }) => {
 
 ```tsx
 // DndProvider.tsx - handleDragEnd
-if (over.id?.toString().startsWith("drop-zone-")) {
+if (over.id?.toString().startsWith('drop-zone-')) {
   // Extrair posição: "drop-zone-0" → posição 0
   const positionMatch = over.id.toString().match(/drop-zone-(\\d+)/);
   if (positionMatch) {
@@ -67,7 +67,7 @@ if (over.id?.toString().startsWith("drop-zone-")) {
   }
 }
 
-console.log("Inserindo na posição:", position);
+console.log('Inserindo na posição:', position);
 onBlockAdd(blockType, position);
 ```
 

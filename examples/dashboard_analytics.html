@@ -11,7 +11,7 @@
         box-sizing: border-box;
       }
       body {
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: #333;
         min-height: 100vh;
@@ -181,9 +181,9 @@
 
     <script>
       // Configuração da URL base - AJUSTE CONFORME NECESSÁRIO
-      const BASE_URL = "http://localhost:3000/api";
-      const resultsDiv = document.getElementById("results");
-      const titleDiv = document.getElementById("data-title");
+      const BASE_URL = 'http://localhost:3000/api';
+      const resultsDiv = document.getElementById('results');
+      const titleDiv = document.getElementById('data-title');
 
       // Função principal para carregar dados
       async function loadData(endpoint, title, emoji) {
@@ -214,7 +214,7 @@
                     <pre>${JSON.stringify(data, null, 2)}</pre>
                 `;
         } catch (error) {
-          console.error("Erro ao carregar dados:", error);
+          console.error('Erro ao carregar dados:', error);
           resultsDiv.innerHTML = `
                     <div class="error">
                         <h3>❌ Erro ao carregar dados</h3>
@@ -248,7 +248,7 @@
             `;
 
         // Estatísticas específicas por tipo
-        if (title.includes("Quiz")) {
+        if (title.includes('Quiz')) {
           const styles = [...new Set(data.map(item => item.predominantStyle).filter(Boolean))];
           statsHtml += `
                     <div class="stat-card">
@@ -256,7 +256,7 @@
                         <div class="stat-label">Estilos Diferentes</div>
                     </div>
                 `;
-        } else if (title.includes("Eventos")) {
+        } else if (title.includes('Eventos')) {
           const types = [...new Set(data.map(item => item.eventType).filter(Boolean))];
           statsHtml += `
                     <div class="stat-card">
@@ -264,7 +264,7 @@
                         <div class="stat-label">Tipos de Eventos</div>
                     </div>
                 `;
-        } else if (title.includes("Vendas")) {
+        } else if (title.includes('Vendas')) {
           const total = data.reduce((sum, item) => sum + (parseFloat(item.amount) || 0), 0);
           statsHtml += `
                     <div class="stat-card">
@@ -276,7 +276,7 @@
 
         // Data do último registro
         if (data.length > 0 && data[0].createdAt) {
-          const lastDate = new Date(data[0].createdAt).toLocaleDateString("pt-BR");
+          const lastDate = new Date(data[0].createdAt).toLocaleDateString('pt-BR');
           statsHtml += `
                     <div class="stat-card">
                         <div class="stat-number">${lastDate}</div>
@@ -285,42 +285,42 @@
                 `;
         }
 
-        statsHtml += "</div>";
+        statsHtml += '</div>';
         return statsHtml;
       }
 
       // Funções específicas para cada API
       function loadQuizResults() {
-        loadData("/quiz-results", "Resultados dos Quizzes", "🎯");
+        loadData('/quiz-results', 'Resultados dos Quizzes', '🎯');
       }
 
       function loadConversionEvents() {
-        loadData("/conversion-events", "Eventos de Conversão", "📊");
+        loadData('/conversion-events', 'Eventos de Conversão', '📊');
       }
 
       function loadHotmartPurchases() {
-        loadData("/hotmart-purchases", "Vendas Hotmart", "💰");
+        loadData('/hotmart-purchases', 'Vendas Hotmart', '💰');
       }
 
       function loadUtmAnalytics() {
-        loadData("/utm-analytics", "Analytics UTM", "📈");
+        loadData('/utm-analytics', 'Analytics UTM', '📈');
       }
 
       function loadParticipants() {
-        loadData("/quiz-participants", "Participantes", "👥");
+        loadData('/quiz-participants', 'Participantes', '👥');
       }
 
       // Função para testar todas as APIs
       async function testAllAPIs() {
-        titleDiv.textContent = "🚀 Testando Todas as APIs";
+        titleDiv.textContent = '🚀 Testando Todas as APIs';
         resultsDiv.innerHTML = '<div class="loading">🔄 Testando todas as APIs...</div>';
 
         const apis = [
-          { endpoint: "/quiz-results", name: "Quiz Results" },
-          { endpoint: "/conversion-events", name: "Conversion Events" },
-          { endpoint: "/hotmart-purchases", name: "Hotmart Purchases" },
-          { endpoint: "/utm-analytics", name: "UTM Analytics" },
-          { endpoint: "/quiz-participants", name: "Quiz Participants" },
+          { endpoint: '/quiz-results', name: 'Quiz Results' },
+          { endpoint: '/conversion-events', name: 'Conversion Events' },
+          { endpoint: '/hotmart-purchases', name: 'Hotmart Purchases' },
+          { endpoint: '/utm-analytics', name: 'UTM Analytics' },
+          { endpoint: '/quiz-participants', name: 'Quiz Participants' },
         ];
 
         let results = [];
@@ -328,7 +328,7 @@
         for (const api of apis) {
           try {
             const response = await fetch(`${BASE_URL}${api.endpoint}`);
-            const status = response.ok ? "✅" : "❌";
+            const status = response.ok ? '✅' : '❌';
             const data = await response.json();
             const count = data.data ? data.data.length : 0;
 
@@ -343,7 +343,7 @@
             results.push({
               name: api.name,
               endpoint: api.endpoint,
-              status: "❌",
+              status: '❌',
               count: 0,
               error: error.message,
             });
@@ -366,8 +366,8 @@
                 `;
         });
 
-        html += "</div>";
-        html += "<h3>📋 Detalhes Completos:</h3>";
+        html += '</div>';
+        html += '<h3>📋 Detalhes Completos:</h3>';
         html += `<pre>${JSON.stringify(results, null, 2)}</pre>`;
 
         resultsDiv.innerHTML = html;
@@ -378,17 +378,17 @@
         try {
           const response = await fetch(`${BASE_URL}/quiz-results`);
           if (response.ok) {
-            console.log("✅ Conexão com API estabelecida");
+            console.log('✅ Conexão com API estabelecida');
           } else {
-            console.warn("⚠️ API respondeu mas com erro:", response.status);
+            console.warn('⚠️ API respondeu mas com erro:', response.status);
           }
         } catch (error) {
-          console.warn("⚠️ Não foi possível conectar com a API:", error.message);
+          console.warn('⚠️ Não foi possível conectar com a API:', error.message);
         }
       }
 
       // Verificar conexão ao carregar a página
-      document.addEventListener("DOMContentLoaded", checkConnection);
+      document.addEventListener('DOMContentLoaded', checkConnection);
     </script>
   </body>
 </html>

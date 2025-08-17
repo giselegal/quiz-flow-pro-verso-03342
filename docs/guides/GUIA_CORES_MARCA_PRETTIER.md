@@ -69,20 +69,20 @@ ring - brand - primary; // #B89B7A
 
 ```tsx
 // ❌ Cores antigas
-className = "bg-blue-500 text-blue-600 border-blue-300";
-className = "bg-yellow-100 text-yellow-800";
-className = "bg-orange-50 border-orange-300";
-className = "text-purple-600";
+className = 'bg-blue-500 text-blue-600 border-blue-300';
+className = 'bg-yellow-100 text-yellow-800';
+className = 'bg-orange-50 border-orange-300';
+className = 'text-purple-600';
 ```
 
 ### Depois (cores da marca)
 
 ```tsx
 // ✅ Cores da marca
-className = "bg-brand-primary text-brand-primary border-brand-primary";
-className = "bg-stone-100 text-stone-700";
-className = "bg-brand-primary/10 border-brand-primary/40";
-className = "text-brand-primary";
+className = 'bg-brand-primary text-brand-primary border-brand-primary';
+className = 'bg-stone-100 text-stone-700';
+className = 'bg-brand-primary/10 border-brand-primary/40';
+className = 'text-brand-primary';
 ```
 
 ## 📚 EXEMPLOS PRÁTICOS

@@ -55,8 +55,8 @@ interface Option {
 
 ```typescript
 // Suporte para imageSize como string (ex: "256px" ou "256")
-if (typeof imageSize === "string" && imageSize.includes("px")) {
-  const size = parseInt(imageSize.replace("px", ""), 10);
+if (typeof imageSize === 'string' && imageSize.includes('px')) {
+  const size = parseInt(imageSize.replace('px', ''), 10);
   return { width: size, height: size };
 }
 ```
@@ -65,7 +65,7 @@ if (typeof imageSize === "string" && imageSize.includes("px")) {
 
 ```typescript
 // Aceita tanto number quanto string
-const colNum = typeof columns === "string" ? parseInt(columns, 10) : columns;
+const colNum = typeof columns === 'string' ? parseInt(columns, 10) : columns;
 ```
 
 ### **🔧 Step02Template.tsx:**

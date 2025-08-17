@@ -4,7 +4,10 @@
 // =====================================================================
 
 // Import the unified PropertySchema for future migration
-import { PropertySchema as UnifiedPropertySchema, optimizedToUnified } from '@/types/propertySchema';
+import {
+  PropertySchema as UnifiedPropertySchema,
+  optimizedToUnified,
+} from '@/types/propertySchema';
 
 // Keep original types for this file to maintain compatibility
 export type PropertyInputType =

@@ -5,9 +5,9 @@
  * Executa migração diretamente via Node.js
  */
 
-import { createClient } from "@supabase/supabase-js";
-import path from "path";
-import { fileURLToPath } from "url";
+import { createClient } from '@supabase/supabase-js';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 // Configurar paths para ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -24,7 +24,7 @@ const SUPABASE_KEY =
   process.env.VITE_SUPABASE_ANON_KEY;
 
 if (!SUPABASE_URL || !SUPABASE_KEY) {
-  console.error("❌ Variáveis SUPABASE_URL e SUPABASE_ANON_KEY são obrigatórias");
+  console.error('❌ Variáveis SUPABASE_URL e SUPABASE_ANON_KEY são obrigatórias');
   process.exit(1);
 }
 
@@ -36,30 +36,30 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 async function checkConnection() {
   try {
-    console.log("🔌 Testando conexão com Supabase...");
+    console.log('🔌 Testando conexão com Supabase...');
 
-    const { data, error } = await supabase.from("_postgres_version").select("*").limit(1);
+    const { data, error } = await supabase.from('_postgres_version').select('*').limit(1);
 
     if (error && !error.message.includes('relation "_postgres_version" does not exist')) {
       throw error;
     }
 
-    console.log("✅ Conexão com Supabase estabelecida");
+    console.log('✅ Conexão com Supabase estabelecida');
     return true;
   } catch (error) {
-    console.error("❌ Erro de conexão:", error.message);
+    console.error('❌ Erro de conexão:', error.message);
     return false;
   }
 }
 
 async function checkExistingTables() {
-  const tables = ["profiles", "component_types", "component_instances"];
+  const tables = ['profiles', 'component_types', 'component_instances'];
   const existing = [];
   const missing = [];
 
   for (const table of tables) {
     try {
-      const { error } = await supabase.from(table).select("*").limit(1);
+      const { error } = await supabase.from(table).select('*').limit(1);
 
       if (!error) {
         existing.push(table);
@@ -78,7 +78,7 @@ async function checkExistingTables() {
 }
 
 async function createEssentialTables() {
-  console.log("🔧 Criando tabelas essenciais...");
+  console.log('🔧 Criando tabelas essenciais...');
 
   const queries = [
     // Extensão UUID
@@ -166,41 +166,41 @@ async function createEssentialTables() {
 }
 
 async function insertInitialData() {
-  console.log("🌱 Inserindo dados iniciais...");
+  console.log('🌱 Inserindo dados iniciais...');
 
   try {
     const componentTypes = [
       {
-        type_key: "quiz-header",
-        display_name: "Cabeçalho do Quiz",
-        category: "layout",
-        description: "Cabeçalho principal com título e logo",
+        type_key: 'quiz-header',
+        display_name: 'Cabeçalho do Quiz',
+        category: 'layout',
+        description: 'Cabeçalho principal com título e logo',
         default_properties: {
-          title: "Meu Quiz",
-          subtitle: "Descubra seu estilo pessoal",
+          title: 'Meu Quiz',
+          subtitle: 'Descubra seu estilo pessoal',
           logoUrl:
-            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+            'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
         },
       },
       {
-        type_key: "question-multiple",
-        display_name: "Questão Múltipla Escolha",
-        category: "question",
-        description: "Questão com opções de múltipla escolha",
+        type_key: 'question-multiple',
+        display_name: 'Questão Múltipla Escolha',
+        category: 'question',
+        description: 'Questão com opções de múltipla escolha',
         default_properties: {
-          title: "Qual é o seu estilo preferido?",
+          title: 'Qual é o seu estilo preferido?',
           options: [
-            { id: "classic", label: "Clássico", image: "" },
-            { id: "modern", label: "Moderno", image: "" },
-            { id: "casual", label: "Casual", image: "" },
+            { id: 'classic', label: 'Clássico', image: '' },
+            { id: 'modern', label: 'Moderno', image: '' },
+            { id: 'casual', label: 'Casual', image: '' },
           ],
         },
       },
       {
-        type_key: "progress-bar",
-        display_name: "Barra de Progresso",
-        category: "navigation",
-        description: "Indicador visual do progresso do quiz",
+        type_key: 'progress-bar',
+        display_name: 'Barra de Progresso',
+        category: 'navigation',
+        description: 'Indicador visual do progresso do quiz',
         default_properties: {
           currentStep: 1,
           totalSteps: 5,
@@ -208,42 +208,42 @@ async function insertInitialData() {
         },
       },
       {
-        type_key: "result-card",
-        display_name: "Card de Resultado",
-        category: "result",
-        description: "Exibição dos resultados do quiz",
+        type_key: 'result-card',
+        display_name: 'Card de Resultado',
+        category: 'result',
+        description: 'Exibição dos resultados do quiz',
         default_properties: {
-          title: "Seu Estilo é: Clássico",
-          description: "Você aprecia elegância atemporal...",
-          image: "",
+          title: 'Seu Estilo é: Clássico',
+          description: 'Você aprecia elegância atemporal...',
+          image: '',
         },
       },
     ];
 
     const { error } = await supabase
-      .from("component_types")
-      .upsert(componentTypes, { onConflict: "type_key" });
+      .from('component_types')
+      .upsert(componentTypes, { onConflict: 'type_key' });
 
     if (error) {
-      console.error("❌ Erro ao inserir component_types:", error);
+      console.error('❌ Erro ao inserir component_types:', error);
       return false;
     }
 
     console.log(`✅ ${componentTypes.length} tipos de componentes inseridos`);
     return true;
   } catch (error) {
-    console.error("❌ Erro ao inserir dados iniciais:", error.message);
+    console.error('❌ Erro ao inserir dados iniciais:', error.message);
     return false;
   }
 }
 
 async function main() {
-  console.log("🚀 INICIANDO MIGRAÇÃO AUTOMÁTICA\n");
+  console.log('🚀 INICIANDO MIGRAÇÃO AUTOMÁTICA\n');
 
   // 1. Verificar conexão
   const connected = await checkConnection();
   if (!connected) {
-    console.error("❌ Falha na conexão. Abortando migração.");
+    console.error('❌ Falha na conexão. Abortando migração.');
     process.exit(1);
   }
 
@@ -251,14 +251,14 @@ async function main() {
   const { existing, missing } = await checkExistingTables();
 
   if (missing.length === 0) {
-    console.log("✅ Todas as tabelas já existem!");
+    console.log('✅ Todas as tabelas já existem!');
   } else {
     console.log(`⚠️  ${missing.length} tabelas precisam ser criadas`);
 
     // 3. Criar tabelas essenciais
     const created = await createEssentialTables();
     if (!created) {
-      console.error("❌ Falha ao criar tabelas. Verifique permissões.");
+      console.error('❌ Falha ao criar tabelas. Verifique permissões.');
       process.exit(1);
     }
   }
@@ -266,25 +266,25 @@ async function main() {
   // 4. Inserir dados iniciais
   const seeded = await insertInitialData();
   if (!seeded) {
-    console.warn("⚠️  Falha ao inserir dados iniciais (pode ser normal se já existem)");
+    console.warn('⚠️  Falha ao inserir dados iniciais (pode ser normal se já existem)');
   }
 
   // 5. Verificação final
   const finalCheck = await checkExistingTables();
 
-  console.log("\n🎉 MIGRAÇÃO CONCLUÍDA!");
+  console.log('\n🎉 MIGRAÇÃO CONCLUÍDA!');
   console.log(`✅ Tabelas ativas: ${finalCheck.existing.length}`);
   console.log(`❌ Tabelas ausentes: ${finalCheck.missing.length}`);
 
   if (finalCheck.missing.length === 0) {
-    console.log("🎯 Sistema de componentes reutilizáveis está pronto!");
+    console.log('🎯 Sistema de componentes reutilizáveis está pronto!');
   } else {
-    console.log("⚠️  Algumas tabelas ainda precisam ser criadas manualmente no Supabase");
+    console.log('⚠️  Algumas tabelas ainda precisam ser criadas manualmente no Supabase');
   }
 }
 
 // Executar script
 main().catch(error => {
-  console.error("💥 Erro fatal:", error);
+  console.error('💥 Erro fatal:', error);
   process.exit(1);
 });

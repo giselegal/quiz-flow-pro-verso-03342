@@ -54,10 +54,10 @@ export const getStep01Template = () => {
   return [
     // 🎯 CABEÇALHO DO QUIZ
     {
-      id: "quiz-intro-header-step01",
-      type: "quiz-intro-header",
+      id: 'quiz-intro-header-step01',
+      type: 'quiz-intro-header',
       properties: {
-        logoUrl: "https://res.cloudinary.com/...",
+        logoUrl: 'https://res.cloudinary.com/...',
         logoWidth: 120,
         logoHeight: 120,
         progressValue: 0,
@@ -67,10 +67,10 @@ export const getStep01Template = () => {
 
     // 🎨 BARRA DECORATIVA
     {
-      id: "decorative-bar-step01",
-      type: "decorative-bar-inline",
+      id: 'decorative-bar-step01',
+      type: 'decorative-bar-inline',
       properties: {
-        width: "100%",
+        width: '100%',
         // ... configurações
       },
     },
@@ -87,14 +87,14 @@ export const STEP_TEMPLATES_MAPPING: Record<number, StepTemplate> = {
   1: {
     stepNumber: 1,
     templateFunction: getStep01Template,
-    name: "Introdução",
-    description: "Página inicial do quiz",
+    name: 'Introdução',
+    description: 'Página inicial do quiz',
   },
   2: {
     stepNumber: 2,
     templateFunction: getStep02Template,
-    name: "Q1 - Rotina Diária",
-    description: "Como você descreveria sua rotina diária?",
+    name: 'Q1 - Rotina Diária',
+    description: 'Como você descreveria sua rotina diária?',
   },
   // ... 19 etapas restantes
 };

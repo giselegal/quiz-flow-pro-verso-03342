@@ -1,6 +1,6 @@
 // Exemplo de como modificar o EditorContext para usar templates JSON
 
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode, useState } from 'react';
 // import { useJsonTemplate, useMultiJsonTemplate } from "@/hooks/useJsonTemplate";
 // import { EditorContext } from "@/context/EditorContext";
 
@@ -17,7 +17,7 @@ const { blocks } = useEffect(() => {
 export const EditorProviderWithJsonTemplates: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [activeStepId, setActiveStepId] = useState("step-1");
+  const [activeStepId, setActiveStepId] = useState('step-1');
 
   // Opção 1: Carregar template individual
   const {
@@ -40,7 +40,7 @@ export const EditorProviderWithJsonTemplates: React.FC<{ children: ReactNode }> 
     templatesData,
     loading: multiLoading,
     getBlocks,
-  } = useMultiJsonTemplate(["step-1", "step-2", "step-3", "step-4", "step-5"]);
+  } = useMultiJsonTemplate(['step-1', 'step-2', 'step-3', 'step-4', 'step-5']);
 
   const handleStageChange = async (newStepId: string) => {
     setActiveStepId(newStepId);
@@ -75,7 +75,7 @@ export const ExampleUsage = () => {
   const { blocks, loading, loadStep } = useJsonTemplate();
 
   const handleLoadStep2 = () => {
-    loadStep("step-2");
+    loadStep('step-2');
   };
 
   if (loading) {

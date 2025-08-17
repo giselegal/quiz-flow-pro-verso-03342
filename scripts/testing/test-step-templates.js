@@ -1,12 +1,12 @@
 // Teste simples para verificar se os templates estão funcionando
-const fs = require("fs");
+const fs = require('fs');
 
-console.log("🧪 Testando sistema de templates...");
+console.log('🧪 Testando sistema de templates...');
 
 // Verificar se todos os arquivos existem
 const expectedFiles = [];
 for (let i = 1; i <= 21; i++) {
-  const stepNum = i.toString().padStart(2, "0");
+  const stepNum = i.toString().padStart(2, '0');
   let fileName;
 
   if (i === 1) {
@@ -24,9 +24,9 @@ for (let i = 1; i <= 21; i++) {
   });
 }
 
-console.log("\n📁 Verificação de arquivos:");
+console.log('\n📁 Verificação de arquivos:');
 expectedFiles.forEach(({ step, file, exists }) => {
-  console.log(`Step ${step}: ${exists ? "✅" : "❌"} ${file}`);
+  console.log(`Step ${step}: ${exists ? '✅' : '❌'} ${file}`);
 });
 
 // Verificar quantos estão faltando

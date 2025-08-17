@@ -26,7 +26,7 @@ interface ComponentProps {
     color?: string;
     fontSize?: string;
     fontWeight?: string;
-    alignment?: "left" | "center" | "right";
+    alignment?: 'left' | 'center' | 'right';
     width?: string;
     maxWidth?: string;
 
@@ -48,16 +48,16 @@ interface ComponentProps {
 ```typescript
 export const ComponentName: React.FC<ComponentProps> = ({
   id,
-  className = "",
+  className = '',
   style = {},
   properties = {
     // Valores padrão aqui
     enabled: true,
-    text: "Texto padrão",
-    color: "#000000",
-    fontSize: "16px",
-    alignment: "left",
-    width: "100%",
+    text: 'Texto padrão',
+    color: '#000000',
+    fontSize: '16px',
+    alignment: 'left',
+    width: '100%',
   },
   isEditing = false,
   isSelected = false,
@@ -298,20 +298,20 @@ const getCategoryIcon = (category: string) => {
 // Em ComponentSpecificPropertiesPanel.tsx
 const getComponentDisplayName = (type: string) => {
   // Verificar tipos específicos primeiro
-  if (type === "component-name") {
-    return "Nome Amigável do Componente";
+  if (type === 'component-name') {
+    return 'Nome Amigável do Componente';
   }
 
   const normalizedType = type
-    .replace("-inline", "")
-    .replace("-display", "")
-    .replace("-component", "");
+    .replace('-inline', '')
+    .replace('-display', '')
+    .replace('-component', '');
 
   const names: Record<string, string> = {
-    text: "Texto",
-    button: "Botão",
-    image: "Imagem",
-    component: "Componente Personalizado", // Adicionar aqui
+    text: 'Texto',
+    button: 'Botão',
+    image: 'Imagem',
+    component: 'Componente Personalizado', // Adicionar aqui
   };
 
   return names[normalizedType] || normalizedType.charAt(0).toUpperCase() + normalizedType.slice(1);
@@ -327,28 +327,28 @@ const getComponentDisplayName = (type: string) => {
 ```typescript
 const styles: React.CSSProperties = {
   // Propriedades básicas
-  width: properties.width || "100%",
+  width: properties.width || '100%',
   maxWidth: properties.maxWidth,
-  color: properties.color || "#000000",
-  fontSize: properties.fontSize || "16px",
-  fontWeight: properties.fontWeight || "normal",
-  textAlign: properties.alignment as "left" | "center" | "right",
+  color: properties.color || '#000000',
+  fontSize: properties.fontSize || '16px',
+  fontWeight: properties.fontWeight || 'normal',
+  textAlign: properties.alignment as 'left' | 'center' | 'right',
 
   // Box model
   margin: 0,
-  padding: isEditing ? "8px" : 0,
-  boxSizing: "border-box",
+  padding: isEditing ? '8px' : 0,
+  boxSizing: 'border-box',
 
   // Visual feedback
-  cursor: isEditing ? "pointer" : "default",
-  border: isSelected ? "2px dashed #B89B7A" : "transparent",
-  borderRadius: "4px",
-  minHeight: isEditing ? "24px" : "auto",
-  transition: "all 0.2s ease",
+  cursor: isEditing ? 'pointer' : 'default',
+  border: isSelected ? '2px dashed #B89B7A' : 'transparent',
+  borderRadius: '4px',
+  minHeight: isEditing ? '24px' : 'auto',
+  transition: 'all 0.2s ease',
 
   // Estados especiais
   opacity: properties.enabled === false ? 0.5 : 1,
-  pointerEvents: properties.enabled === false ? "none" : "auto",
+  pointerEvents: properties.enabled === false ? 'none' : 'auto',
 };
 ```
 

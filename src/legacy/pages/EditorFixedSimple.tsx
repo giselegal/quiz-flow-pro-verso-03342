@@ -7,9 +7,7 @@ const EditorFixedSimple: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-8">
       <div className="max-w-6xl mx-auto bg-white rounded-xl shadow-lg p-8">
-        <h1 className="text-4xl font-bold text-gray-800 mb-4">
-          🚀 Editor Fixed - Rota Simples
-        </h1>
+        <h1 className="text-4xl font-bold text-gray-800 mb-4">🚀 Editor Fixed - Rota Simples</h1>
         <p className="text-gray-600 mb-8">
           Rota simplificada do Editor Fixed funcionando corretamente
         </p>
@@ -39,7 +37,8 @@ const EditorFixedSimple: React.FC = () => {
         <div className="mt-8 p-4 bg-green-50 border border-green-200 rounded-lg">
           <h3 className="font-semibold text-green-800 mb-2">✅ Success!</h3>
           <p className="text-green-700">
-            A rota /editor-fixed está carregando corretamente. O EditorContext está funcionando e todas as funcionalidades básicas estão disponíveis.
+            A rota /editor-fixed está carregando corretamente. O EditorContext está funcionando e
+            todas as funcionalidades básicas estão disponíveis.
           </p>
         </div>
       </div>

@@ -24,17 +24,17 @@
 
 ```typescript
 // Aplicar em mais componentes de layout
-import { useContainerProperties } from "@/hooks/useContainerProperties";
+import { useContainerProperties } from '@/hooks/useContainerProperties';
 
 // Uso em Step Templates
-const { containerProps } = useContainerProperties("step-container");
+const { containerProps } = useContainerProperties('step-container');
 ```
 
 #### 🔧 **Ativar `useReusableComponents` completamente:**
 
 ```typescript
 // Integrar no painel de componentes
-import { useReusableComponents } from "@/hooks/useReusableComponents";
+import { useReusableComponents } from '@/hooks/useReusableComponents';
 
 const { getReusableComponent } = useReusableComponents();
 ```

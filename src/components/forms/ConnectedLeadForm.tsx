@@ -8,16 +8,13 @@ interface ConnectedLeadFormProps {
 
 /**
  * 🔗 CONNECTED LEAD FORM - INTEGRADO COM QUIZ HOOKS
- * 
+ *
  * Formulário que dispara eventos customizados para ConnectedTemplateWrapper capturar
  * - Captura nome do usuário
  * - Dispara evento 'quiz-form-complete' para integração com useQuizLogic
  * - Validação em tempo real
  */
-const ConnectedLeadForm: React.FC<ConnectedLeadFormProps> = ({ 
-  onSubmit, 
-  className = '' 
-}) => {
+const ConnectedLeadForm: React.FC<ConnectedLeadFormProps> = ({ onSubmit, className = '' }) => {
   const [name, setName] = useState('');
   const [isValid, setIsValid] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -27,7 +24,7 @@ const ConnectedLeadForm: React.FC<ConnectedLeadFormProps> = ({
     const trimmed = value.trim();
     const valid = trimmed.length >= 2 && trimmed.length <= 50;
     setIsValid(valid);
-    
+
     // Disparar evento de mudança para outros componentes
     window.dispatchEvent(
       new CustomEvent('quiz-input-change', {
@@ -39,7 +36,7 @@ const ConnectedLeadForm: React.FC<ConnectedLeadFormProps> = ({
         },
       })
     );
-    
+
     return valid;
   }, []);
 
@@ -51,7 +48,7 @@ const ConnectedLeadForm: React.FC<ConnectedLeadFormProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateName(name)) {
       return;
     }
@@ -60,7 +57,7 @@ const ConnectedLeadForm: React.FC<ConnectedLeadFormProps> = ({
 
     try {
       const formData = { name: name.trim() };
-      
+
       console.log('📋 ConnectedLeadForm: Submetendo formulário', formData);
 
       // ✅ DISPARAR EVENTO PARA CONNECTEDTEMPLATEWRAPPER
@@ -81,7 +78,6 @@ const ConnectedLeadForm: React.FC<ConnectedLeadFormProps> = ({
 
       // Feedback visual
       console.log('✅ Formulário enviado com sucesso');
-
     } catch (error) {
       console.error('❌ Erro ao enviar formulário:', error);
     } finally {
@@ -94,8 +90,8 @@ const ConnectedLeadForm: React.FC<ConnectedLeadFormProps> = ({
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Campo de nome */}
         <div className="space-y-2">
-          <label 
-            htmlFor="quiz-name-input" 
+          <label
+            htmlFor="quiz-name-input"
             className="block text-sm font-semibold text-[#432818] uppercase tracking-wide"
           >
             NOME
@@ -122,18 +118,12 @@ const ConnectedLeadForm: React.FC<ConnectedLeadFormProps> = ({
               maxLength={50}
             />
           </div>
-          
+
           {/* Mensagem de validação */}
           {name && !isValid && (
-            <p className="text-sm text-red-600">
-              Nome deve ter entre 2 e 50 caracteres
-            </p>
+            <p className="text-sm text-red-600">Nome deve ter entre 2 e 50 caracteres</p>
           )}
-          {isValid && (
-            <p className="text-sm text-green-600">
-              ✓ Nome válido
-            </p>
-          )}
+          {isValid && <p className="text-sm text-green-600">✓ Nome válido</p>}
         </div>
 
         {/* Botão de submit */}
@@ -143,9 +133,10 @@ const ConnectedLeadForm: React.FC<ConnectedLeadFormProps> = ({
           className={`
             w-full py-3 px-6 rounded-lg font-semibold text-lg 
             transition-all duration-200 transform
-            ${isValid && !isSubmitting
-              ? 'bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] text-white hover:scale-105 shadow-lg hover:shadow-xl'
-              : 'bg-gray-400 text-gray-600 cursor-not-allowed opacity-60'
+            ${
+              isValid && !isSubmitting
+                ? 'bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] text-white hover:scale-105 shadow-lg hover:shadow-xl'
+                : 'bg-gray-400 text-gray-600 cursor-not-allowed opacity-60'
             }
           `}
         >
@@ -163,8 +154,7 @@ const ConnectedLeadForm: React.FC<ConnectedLeadFormProps> = ({
 
         {/* Texto de privacidade */}
         <p className="text-xs text-center text-gray-500">
-          Seu nome é necessário para personalizar sua experiência.{' '}
-          <br />
+          Seu nome é necessário para personalizar sua experiência. <br />
           Ao clicar, você concorda com nossa{' '}
           <a href="#" className="text-[#B89B7A] hover:text-[#A1835D] underline">
             política de privacidade
@@ -173,8 +163,8 @@ const ConnectedLeadForm: React.FC<ConnectedLeadFormProps> = ({
 
         {/* Debug info */}
         <div className="text-xs text-gray-400 text-center">
-          Debug: {name ? `Nome: "${name.trim()}"` : 'Nenhum nome inserido'} | 
-          Válido: {isValid ? 'Sim' : 'Não'}
+          Debug: {name ? `Nome: "${name.trim()}"` : 'Nenhum nome inserido'} | Válido:{' '}
+          {isValid ? 'Sim' : 'Não'}
         </div>
       </form>
     </div>

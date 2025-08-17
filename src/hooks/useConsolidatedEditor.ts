@@ -1,10 +1,10 @@
 // @ts-nocheck
 /**
  * Consolidated Editor Hook - Replaces useEditor conflicts
- * 
+ *
  * This hook consolidates useEditor and EditorContext functionality,
  * providing a unified interface for editor operations.
- * 
+ *
  * Eliminates the conflict between:
  * - useEditor (simple block operations)
  * - EditorContext (comprehensive editor state)
@@ -31,18 +31,18 @@ export interface ConsolidatedEditorReturn {
   reorderBlocks: (startIndex: number, endIndex: number) => Promise<void>;
   setAllBlocks: (newBlocks: Block[]) => void;
   clearAllBlocks: () => void;
-  
+
   // Enhanced EditorContext features
   stages: any[];
   activeStageId: string;
   selectedBlockId: string | null;
   setActiveStage: (stageId: string) => void;
   setSelectedBlock: (blockId: string | null) => void;
-  
+
   // Performance and persistence
   isSaving: boolean;
   saveFunnel: () => Promise<{ success: boolean; error?: string }>;
-  
+
   // UI state
   isPreviewing: boolean;
   setIsPreviewing: (value: boolean) => void;
@@ -53,7 +53,7 @@ export interface ConsolidatedEditorReturn {
  */
 export const useUnifiedEditor = (): ConsolidatedEditorReturn => {
   const context = useContext(EditorContext);
-  
+
   if (!context) {
     throw new Error('useUnifiedEditor must be used within EditorProvider');
   }
@@ -70,13 +70,14 @@ export const useUnifiedEditor = (): ConsolidatedEditorReturn => {
 
   // Convert EditorContext blocks to legacy Block format for compatibility
   const currentStage = stages.find(stage => stage.id === activeStageId);
-  const blocks: Block[] = currentStage?.blocks?.map(block => ({
-    id: block.id,
-    type: block.type as BlockType,
-    content: block.properties || {},
-    order: block.order || 0,
-    properties: block.properties || {},
-  })) || [];
+  const blocks: Block[] =
+    currentStage?.blocks?.map(block => ({
+      id: block.id,
+      type: block.type as BlockType,
+      content: block.properties || {},
+      order: block.order || 0,
+      properties: block.properties || {},
+    })) || [];
 
   // Legacy config for backward compatibility
   const config: LegacyEditorConfig = {
@@ -141,18 +142,18 @@ export const useUnifiedEditor = (): ConsolidatedEditorReturn => {
     reorderBlocks,
     setAllBlocks,
     clearAllBlocks,
-    
+
     // Enhanced EditorContext features
     stages,
     activeStageId,
     selectedBlockId,
     setActiveStage: stageActions.setActiveStage,
     setSelectedBlock: blockActions.setSelectedBlockId,
-    
+
     // Performance and persistence
     isSaving: persistenceActions.isSaving,
     saveFunnel: persistenceActions.saveFunnel,
-    
+
     // UI state
     isPreviewing: uiState.isPreviewing,
     setIsPreviewing: uiState.setIsPreviewing,
@@ -165,16 +166,16 @@ export const useUnifiedEditor = (): ConsolidatedEditorReturn => {
  */
 export const useEditor = (): Partial<ConsolidatedEditorReturn> => {
   console.warn('useEditor is deprecated. Use useUnifiedEditor instead.');
-  
+
   try {
     return useUnifiedEditor();
   } catch (error) {
     // Fallback to simple editor if EditorContext is not available
     console.warn('EditorContext not available, using fallback editor');
-    
+
     // Simple fallback implementation
     const blocks: Block[] = [];
-    
+
     return {
       blocks,
       config: { blocks, title: 'Editor', description: '' },

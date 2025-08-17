@@ -18,14 +18,14 @@ const handlePopulateStep = useCallback(
     // Blocos padrão para uma etapa de quiz
     const defaultBlocks = [
       {
-        type: "heading-inline",
+        type: 'heading-inline',
         properties: {
-          content: "Nova Questão",
-          level: "h2",
-          fontSize: "text-2xl",
-          fontWeight: "font-bold",
-          textAlign: "text-center",
-          color: "#432818",
+          content: 'Nova Questão',
+          level: 'h2',
+          fontSize: 'text-2xl',
+          fontWeight: 'font-bold',
+          textAlign: 'text-center',
+          color: '#432818',
           marginBottom: 8,
         },
       },

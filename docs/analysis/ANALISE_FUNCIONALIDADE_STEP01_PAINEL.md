@@ -280,7 +280,7 @@ case "legal-notice-inline":
 
 ```typescript
 // ✅ RESULTADO: Painel carrega corretamente
-selectedBlock = { type: "quiz-intro-header", id: "test", properties: {} };
+selectedBlock = { type: 'quiz-intro-header', id: 'test', properties: {} };
 // → 18 propriedades exibidas em 4 categorias
 ```
 
@@ -288,7 +288,7 @@ selectedBlock = { type: "quiz-intro-header", id: "test", properties: {} };
 
 ```typescript
 // ✅ RESULTADO: Propriedades editam em tempo real
-updateProperty("logoWidth", 120);
+updateProperty('logoWidth', 120);
 // → Atualiza componente instantaneamente
 ```
 

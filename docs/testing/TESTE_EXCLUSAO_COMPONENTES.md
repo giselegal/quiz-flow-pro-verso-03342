@@ -18,7 +18,7 @@
    - OU use a função JavaScript no console:
      ```javascript
      // No console do navegador
-     localStorage.setItem("currentFunnelId", "funnel_1753399767385_kgc4wwjsc");
+     localStorage.setItem('currentFunnelId', 'funnel_1753399767385_kgc4wwjsc');
      location.reload();
      ```
 
@@ -47,27 +47,27 @@
 
 ```javascript
 // 1. Forçar hover em todos os componentes para mostrar botões
-console.log("Mostrando botões de todos os componentes...");
-const blocks = document.querySelectorAll(".group, [data-block-id]");
+console.log('Mostrando botões de todos os componentes...');
+const blocks = document.querySelectorAll('.group, [data-block-id]');
 blocks.forEach(block => {
-  block.classList.add("hover:opacity-90");
+  block.classList.add('hover:opacity-90');
   // Simular hover
-  const event = new MouseEvent("mouseenter", { bubbles: true });
+  const event = new MouseEvent('mouseenter', { bubbles: true });
   block.dispatchEvent(event);
 });
 
 // 2. Procurar especificamente o botão de exclusão
-const deleteButtons = document.querySelectorAll("button");
+const deleteButtons = document.querySelectorAll('button');
 const trashButtons = [];
 deleteButtons.forEach((btn, i) => {
   const hasTrashIcon =
-    btn.innerHTML.includes("Trash2") || btn.querySelector('svg[class*="lucide-trash"]');
+    btn.innerHTML.includes('Trash2') || btn.querySelector('svg[class*="lucide-trash"]');
   if (hasTrashIcon) {
     trashButtons.push(btn);
     console.log(`Botão de exclusão ${i}:`, btn);
     // Destacar visualmente
-    btn.style.border = "2px solid red";
-    btn.style.opacity = "1";
+    btn.style.border = '2px solid red';
+    btn.style.opacity = '1';
   }
 });
 
@@ -75,7 +75,7 @@ console.log(`Encontrados ${trashButtons.length} botões de exclusão`);
 
 // 3. Se encontrou botões, testar o primeiro
 if (trashButtons.length > 0) {
-  console.log("Para testar, execute: trashButtons[0].click()");
+  console.log('Para testar, execute: trashButtons[0].click()');
   window.testDeleteButton = trashButtons[0];
 }
 ```
@@ -86,7 +86,7 @@ if (trashButtons.length > 0) {
 
    ```javascript
    // Forçar visibilidade dos controles
-   const style = document.createElement("style");
+   const style = document.createElement('style');
    style.textContent = `
      .group .opacity-0 { opacity: 1 !important; }
      .group-hover\\:opacity-90 { opacity: 1 !important; }
@@ -96,9 +96,9 @@ if (trashButtons.length > 0) {
 
 2. **Destacar visualmente os componentes:**
    ```javascript
-   document.querySelectorAll("[data-block-id], .sortable-block").forEach(el => {
-     el.style.border = "3px solid blue";
-     el.style.position = "relative";
+   document.querySelectorAll('[data-block-id], .sortable-block').forEach(el => {
+     el.style.border = '3px solid blue';
+     el.style.position = 'relative';
    });
    ```
 
@@ -120,19 +120,19 @@ if (trashButtons.length > 0) {
 
 ```javascript
 // Se nada funcionar, force a exclusão
-const blockToDelete = document.querySelector("[data-block-id]");
+const blockToDelete = document.querySelector('[data-block-id]');
 if (blockToDelete) {
-  const blockId = blockToDelete.getAttribute("data-block-id") || "test-block-1";
+  const blockId = blockToDelete.getAttribute('data-block-id') || 'test-block-1';
 
   // Tentar disparar evento de exclusão customizado
   window.dispatchEvent(
-    new CustomEvent("forceDeleteBlock", {
+    new CustomEvent('forceDeleteBlock', {
       detail: { blockId },
     })
   );
 
   // Ou tentar encontrar a função no React
-  console.log("Block ID para exclusão manual:", blockId);
+  console.log('Block ID para exclusão manual:', blockId);
 }
 ```
 

@@ -7,32 +7,32 @@
 ```typescript
 // Componentes da sua marca Gisele Galvão
 const brandComponents = {
-  "gisele-header": {
-    display_name: "Header Gisele Galvão",
+  'gisele-header': {
+    display_name: 'Header Gisele Galvão',
     default_properties: {
-      logoUrl: "https://res.cloudinary.com/.../LOGO_DA_MARCA_GISELE.webp",
-      backgroundColor: "transparent",
+      logoUrl: 'https://res.cloudinary.com/.../LOGO_DA_MARCA_GISELE.webp',
+      backgroundColor: 'transparent',
       logoWidth: 120,
     },
   },
 
-  "gisele-button": {
-    display_name: "Botão Marca Gisele",
+  'gisele-button': {
+    display_name: 'Botão Marca Gisele',
     default_properties: {
-      backgroundColor: "#B89B7A",
-      textColor: "#ffffff",
-      borderRadius: "rounded-full",
-      fontFamily: "Playfair Display",
+      backgroundColor: '#B89B7A',
+      textColor: '#ffffff',
+      borderRadius: 'rounded-full',
+      fontFamily: 'Playfair Display',
     },
   },
 
-  "style-question": {
-    display_name: "Pergunta de Estilo",
+  'style-question': {
+    display_name: 'Pergunta de Estilo',
     default_properties: {
-      fontSize: "text-2xl",
-      fontWeight: "font-bold",
-      color: "#432818",
-      textAlign: "text-center",
+      fontSize: 'text-2xl',
+      fontWeight: 'font-bold',
+      color: '#432818',
+      textAlign: 'text-center',
     },
   },
 };
@@ -91,7 +91,7 @@ function QuizBuilder() {
 ```typescript
 // Duplicar pergunta bem-sucedida para outros quizzes
 const duplicateSuccessfulComponent = async () => {
-  const bestPerformingQuestion = stepComponents[6].find(c => c.component_type === "style-question");
+  const bestPerformingQuestion = stepComponents[6].find(c => c.component_type === 'style-question');
 
   // Usar em novo quiz
   await duplicateComponent(bestPerformingQuestion.id, 3);
@@ -99,14 +99,14 @@ const duplicateSuccessfulComponent = async () => {
 
 // Atualizar todos os botões da marca de uma vez
 const updateBrandButtons = async () => {
-  const allButtons = getComponentsByType("gisele-button");
+  const allButtons = getComponentsByType('gisele-button');
 
   for (const button of allButtons) {
     await updateComponent(button.id, {
       properties: {
         ...button.properties,
-        backgroundColor: "#D4C2A8", // Nova cor da marca
-        boxShadow: "shadow-xl",
+        backgroundColor: '#D4C2A8', // Nova cor da marca
+        boxShadow: 'shadow-xl',
       },
     });
   }

@@ -29,12 +29,12 @@ graph TD
     B --> C[quiz-form-complete event]
     C --> D[ConnectedTemplateWrapper]
     D --> E[useQuizLogic.setUserNameFromInput()]
-    
-    F[Step 2-11: Questões] --> G[OptionsGrid]  
+
+    F[Step 2-11: Questões] --> G[OptionsGrid]
     G --> H[quiz-selection-change event]
     H --> D
     D --> I[useQuizLogic.answerQuestion()]
-    
+
     J[Step 19-21: Resultado] --> D
     D --> K[useQuizLogic.completeQuiz()]
     K --> L[Cálculo automático de scores]
@@ -47,6 +47,7 @@ graph TD
 Para cada Step template restante, seguir o padrão do `Step02TemplateConnected.tsx`:
 
 #### **1. Criar Template Conectado:**
+
 ```typescript
 // src/components/steps/Step[XX]TemplateConnected.tsx
 import ConnectedTemplateWrapper from '@/components/quiz/ConnectedTemplateWrapper';
@@ -56,14 +57,14 @@ import React, { useState } from 'react';
 
 const Step[XX]TemplateConnected: React.FC<{sessionId: string, onNext?: () => void}> = ({ sessionId, onNext }) => {
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
-  
+
   // Determinar stepType baseado no número
   const stepType = stepNumber <= 11 ? 'question' : stepNumber <= 18 ? 'strategic' : 'result';
-  
+
   const handleOptionSelect = (optionId: string) => {
     const newSelected = /* lógica de seleção */;
     setSelectedOptions(newSelected);
-    
+
     // Disparar evento para ConnectedTemplateWrapper
     window.dispatchEvent(
       new CustomEvent('quiz-selection-change', {
@@ -79,9 +80,9 @@ const Step[XX]TemplateConnected: React.FC<{sessionId: string, onNext?: () => voi
   };
 
   return (
-    <ConnectedTemplateWrapper 
-      stepNumber={[XX]} 
-      stepType={stepType} 
+    <ConnectedTemplateWrapper
+      stepNumber={[XX]}
+      stepType={stepType}
       sessionId={sessionId}
     >
       {/* Conteúdo da questão */}
@@ -91,6 +92,7 @@ const Step[XX]TemplateConnected: React.FC<{sessionId: string, onNext?: () => voi
 ```
 
 #### **2. Mapear Opções com Pontuação:**
+
 Para cada step, definir opções baseadas no JSON template correspondente:
 
 ```typescript
@@ -100,7 +102,7 @@ const options = [
     text: 'Texto da opção',
     imageUrl: 'URL da imagem',
     category: 'Categoria do estilo', // Natural, Clássico, etc.
-    points: 1 // Pontuação para cálculo
+    points: 1, // Pontuação para cálculo
   },
   // ... mais opções
 ];
@@ -109,12 +111,13 @@ const options = [
 ### **PRIORIDADE 2: Automatizar Conversão JSON → TSX**
 
 #### **1. Criar Conversor Automático:**
+
 ```typescript
 // src/utils/templateConverter.ts
 export const convertJsonToConnectedTemplate = (jsonTemplate: any, stepNumber: number) => {
   const stepType = getStepType(stepNumber);
   const options = extractOptions(jsonTemplate);
-  
+
   return generateConnectedTemplate(stepNumber, stepType, options);
 };
 
@@ -127,6 +130,7 @@ const getStepType = (stepNumber: number): 'intro' | 'question' | 'strategic' | '
 ```
 
 #### **2. Integrar com TemplateManager:**
+
 ```typescript
 // Modificar TemplateManager para usar templates conectados
 export class TemplateManager {
@@ -140,29 +144,30 @@ export class TemplateManager {
 ### **PRIORIDADE 3: Ativar Persistência Supabase**
 
 #### **1. Conectar useSupabaseQuiz em ConnectedTemplateWrapper:**
+
 ```typescript
 // No ConnectedTemplateWrapper.tsx
 const handleNameCapture = useCallback(async (event: CustomEvent) => {
   const { formData } = event.detail;
-  
+
   // Conectar ao useQuizLogic (já feito)
   quizLogic.setUserNameFromInput(formData.name);
-  
+
   // ✅ ATIVAR: Iniciar sessão no Supabase
   await supabaseQuiz.startQuiz({
     name: formData.name,
     email: formData.email || '',
-    quizId: sessionId
+    quizId: sessionId,
   });
 }, []);
 
 const handleQuestionAnswer = useCallback(async (event: CustomEvent) => {
   const { selectedOptions } = event.detail;
-  
+
   // Processar cada resposta
   for (const optionId of selectedOptions) {
     quizLogic.answerQuestion(questionId, optionId);
-    
+
     // ✅ ATIVAR: Salvar no Supabase
     await supabaseQuiz.saveAnswer(questionId, optionId);
   }
@@ -170,11 +175,12 @@ const handleQuestionAnswer = useCallback(async (event: CustomEvent) => {
 ```
 
 #### **2. Completar Integração no Step20:**
+
 ```typescript
 // No Step20Result.tsx - já parcialmente implementado
 useEffect(() => {
   if (quizResult && answers.length > 0) {
-    // ✅ ATIVAR: Salvar resultado final no Supabase  
+    // ✅ ATIVAR: Salvar resultado final no Supabase
     supabaseQuiz.completeQuiz().then(result => {
       console.log('✅ Resultado salvo no Supabase:', result);
     });
@@ -185,6 +191,7 @@ useEffect(() => {
 ### **PRIORIDADE 4: Testes e Validação**
 
 #### **1. Teste de Fluxo Completo:**
+
 ```bash
 # Abrir navegador em modo desenvolvimento
 npm run dev
@@ -196,13 +203,14 @@ npm run dev
 ```
 
 #### **2. Debug em Navegador:**
+
 ```javascript
 // Console do navegador para debug
-window.addEventListener('quiz-form-complete', (e) => {
+window.addEventListener('quiz-form-complete', e => {
   console.log('🎯 Nome capturado:', e.detail);
 });
 
-window.addEventListener('quiz-selection-change', (e) => {
+window.addEventListener('quiz-selection-change', e => {
   console.log('📊 Seleção mudou:', e.detail);
 });
 
@@ -213,8 +221,9 @@ window.addEventListener('quiz-selection-change', (e) => {
 ## 📋 **CHECKLIST DE IMPLEMENTAÇÃO**
 
 ### **Fase 1: Templates Conectados (Steps 3-19)**
+
 - [ ] Step03TemplateConnected - Questão 2
-- [ ] Step04TemplateConnected - Questão 3  
+- [ ] Step04TemplateConnected - Questão 3
 - [ ] Step05TemplateConnected - Questão 4
 - [ ] Step06TemplateConnected - Questão 5
 - [ ] Step07TemplateConnected - Questão 6
@@ -232,19 +241,22 @@ window.addEventListener('quiz-selection-change', (e) => {
 - [ ] Step19TemplateConnected - Cálculo inicial
 
 ### **Fase 2: Automação**
+
 - [ ] Conversor JSON → TSX automático
 - [ ] Integração com TemplateManager
 - [ ] Gerador de templates baseado em configuração
 
 ### **Fase 3: Supabase Completo**
+
 - [ ] Ativar persistência em ConnectedTemplateWrapper
 - [ ] Completar integração Step20Result
 - [ ] Testar salvamento/carregamento de dados
 - [ ] Implementar cache local para offline
 
-### **Fase 4: Testes e Otimização**  
+### **Fase 4: Testes e Otimização**
+
 - [ ] Testes unitários para ConnectedTemplateWrapper
-- [ ] Testes de integração E2E  
+- [ ] Testes de integração E2E
 - [ ] Performance optimization
 - [ ] Error handling e fallbacks
 

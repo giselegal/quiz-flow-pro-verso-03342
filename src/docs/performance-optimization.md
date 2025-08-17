@@ -32,7 +32,7 @@ Para imagens hospedadas no Cloudinary, adicione parâmetros de transformação n
 ```tsx
 // URL otimizada para Cloudinary
 src =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/f_auto,q_auto:good,w_320/v1744920983/imagem.png";
+  'https://res.cloudinary.com/dqljyf76t/image/upload/f_auto,q_auto:good,w_320/v1744920983/imagem.png';
 ```
 
 ### Dimensões Explícitas
@@ -73,18 +73,18 @@ Reduza o tamanho do JavaScript para melhorar o desempenho:
 
    ```tsx
    // Ruim - importa toda a biblioteca
-   import * as Lucide from "lucide-react";
+   import * as Lucide from 'lucide-react';
 
    // Bom - importa apenas os ícones necessários
-   import { ShoppingCart, Clock } from "lucide-react";
+   import { ShoppingCart, Clock } from 'lucide-react';
    ```
 
 2. **Use lazy loading para componentes grandes**:
 
    ```tsx
-   import React, { lazy, Suspense } from "react";
+   import React, { lazy, Suspense } from 'react';
 
-   const HeavyComponent = lazy(() => import("./HeavyComponent"));
+   const HeavyComponent = lazy(() => import('./HeavyComponent'));
 
    const MyComponent = () => (
      <Suspense fallback={<LoadingSpinner />}>
@@ -100,7 +100,7 @@ Evite importar CSS que não é utilizado:
 1. Use classes condicionais:
 
    ```tsx
-   <div className={isActive ? "active-class" : "inactive-class"} />
+   <div className={isActive ? 'active-class' : 'inactive-class'} />
    ```
 
 2. Remova imports de CSS não utilizados.

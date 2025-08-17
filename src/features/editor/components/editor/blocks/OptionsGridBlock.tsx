@@ -22,7 +22,7 @@ interface OptionsGridBlockProps extends BlockComponentProps {
   sessionData?: Record<string, any>;
   onStepComplete?: (data: any) => void;
   autoAdvanceOnComplete?: boolean;
-  
+
   properties: {
     question?: string;
     questionId?: string;
@@ -167,7 +167,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
 
   // State for preview mode selections
   const [previewSelections, setPreviewSelections] = React.useState<string[]>([]);
-  
+
   React.useEffect(() => {
     // Initialize from session data in preview mode
     if (isPreviewMode && sessionData) {
@@ -253,7 +253,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
     if (isPreviewMode) {
       // Preview mode: Handle selection with real behavior
       let newSelections: string[];
-      
+
       if (multipleSelection) {
         if (previewSelections.includes(optionId)) {
           // Deselect if already selected
@@ -278,14 +278,14 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
           newSelections = [optionId];
         }
       }
-      
+
       setPreviewSelections(newSelections);
-      
+
       // Save to session data
       if (onUpdateSessionData) {
         const sessionKey = `step_selections_${block?.id}`;
         onUpdateSessionData(sessionKey, newSelections);
-        
+
         // Save individual option details for analytics
         const selectedOptionDetails = newSelections.map(id => {
           const option = options.find((opt: any) => opt.id === id);
@@ -299,11 +299,12 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
         });
         onUpdateSessionData(`${sessionKey}_details`, selectedOptionDetails);
       }
-      
+
       // Check if we should auto-advance
       const hasMinSelections = newSelections.length >= (minSelections || 1);
-      const hasRequiredSelections = newSelections.length >= (requiredSelections || minSelections || 1);
-      
+      const hasRequiredSelections =
+        newSelections.length >= (requiredSelections || minSelections || 1);
+
       // Calculate option details for completion events
       const selectedOptionDetails = newSelections.map(id => {
         const option = options.find((opt: any) => opt.id === id);
@@ -315,10 +316,10 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
           points: option?.points,
         };
       });
-      
+
       if (autoAdvanceOnComplete && hasRequiredSelections && onNext) {
         console.log('🚀 OptionsGrid: Auto-advancing after selection', newSelections);
-        
+
         // Trigger step completion event
         if (onStepComplete) {
           onStepComplete({
@@ -328,7 +329,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
             autoAdvance: true,
           });
         }
-        
+
         // Auto-advance with delay
         setTimeout(() => {
           onNext();
@@ -357,7 +358,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       }
     }
   };
-  
+
   // NOTE: getCurrentSelections function available if needed
   /*
   const getCurrentSelections = () => {
@@ -367,7 +368,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
     return multipleSelection ? (selectedOptions || []) : (selectedOption ? [selectedOption] : []);
   };
   */
-  
+
   // const currentSelections = getCurrentSelections(); // unused variable
 
   return (

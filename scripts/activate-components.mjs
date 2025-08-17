@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * 🚀 ATIVAÇÃO MASSIVA DE COMPONENTES - EDITOR FIXED
- * 
+ *
  * Conecta automaticamente todos os componentes físicos ao blockDefinitions.ts
  * Transformando de 21 para 167+ componentes ativos
  */
@@ -21,21 +21,21 @@ const BACKUP_FILE = BLOCK_DEFINITIONS_FILE + '.backup';
 
 // Mapeamento de ícones por categoria
 const CATEGORY_ICONS = {
-  'action': 'MousePointer',
-  'text': 'Type', 
-  'quiz': 'HelpCircle',
-  'media': 'Image',
-  'layout': 'Layout',
-  'pricing': 'DollarSign',
+  action: 'MousePointer',
+  text: 'Type',
+  quiz: 'HelpCircle',
+  media: 'Image',
+  layout: 'Layout',
+  pricing: 'DollarSign',
   'social-proof': 'Users',
-  'analytics': 'BarChart',
-  'forms': 'FileText',
-  'urgency': 'Clock',
-  'faq': 'MessageCircle',
-  'feedback': 'Activity',
-  'gallery': 'Grid',
-  'conversion': 'Target',
-  'misc': 'Square'
+  analytics: 'BarChart',
+  forms: 'FileText',
+  urgency: 'Clock',
+  faq: 'MessageCircle',
+  feedback: 'Activity',
+  gallery: 'Grid',
+  conversion: 'Target',
+  misc: 'Square',
 };
 
 console.log('🚀 ATIVAÇÃO MASSIVA DE COMPONENTES DO EDITOR');
@@ -53,52 +53,58 @@ function createBackup() {
 function scanAllComponents() {
   const components = [];
   const files = fs.readdirSync(BLOCKS_DIR, { withFileTypes: true });
-  
+
   for (const file of files) {
-    if (file.isFile() && file.name.endsWith('.tsx') && 
-        !file.name.includes('index') && 
-        !file.name.includes('types') && 
-        !file.name.includes('suppress') &&
-        !file.name.includes('disable')) {
-      
+    if (
+      file.isFile() &&
+      file.name.endsWith('.tsx') &&
+      !file.name.includes('index') &&
+      !file.name.includes('types') &&
+      !file.name.includes('suppress') &&
+      !file.name.includes('disable')
+    ) {
       const filePath = path.join(BLOCKS_DIR, file.name);
       const content = fs.readFileSync(filePath, 'utf-8');
-      
+
       // Extrair nome do componente
       const componentMatch = content.match(/^export\s+(?:default\s+)?(?:const|function)\s+(\w+)/m);
       const exportDefaultMatch = content.match(/export\s+default\s+(\w+)/);
-      
-      const componentName = componentMatch ? componentMatch[1] : 
-                           exportDefaultMatch ? exportDefaultMatch[1] : 
-                           file.name.replace('.tsx', '');
-      
+
+      const componentName = componentMatch
+        ? componentMatch[1]
+        : exportDefaultMatch
+          ? exportDefaultMatch[1]
+          : file.name.replace('.tsx', '');
+
       // Skip componentes que não são válidos
-      if (componentName.includes('HEADING_LEVELS') || 
-          componentName.includes('_clean') || 
-          componentName.includes('_new') ||
-          componentName.length < 3) {
+      if (
+        componentName.includes('HEADING_LEVELS') ||
+        componentName.includes('_clean') ||
+        componentName.includes('_new') ||
+        componentName.length < 3
+      ) {
         continue;
       }
-      
+
       const category = inferCategory(componentName);
-      
+
       components.push({
         fileName: file.name,
         componentName,
         category,
         type: generateTypeId(componentName),
-        importPath: `@/components/editor/blocks/${componentName}`
+        importPath: `@/components/editor/blocks/${componentName}`,
       });
     }
   }
-  
+
   return components.sort((a, b) => a.componentName.localeCompare(b.componentName));
 }
 
 // 3. Inferir categoria
 function inferCategory(componentName) {
   const name = componentName.toLowerCase();
-  
+
   if (name.includes('quiz') || name.includes('question')) return 'quiz';
   if (name.includes('text') || name.includes('heading') || name.includes('title')) return 'text';
   if (name.includes('button') || name.includes('cta') || name.includes('call')) return 'action';
@@ -107,13 +113,18 @@ function inferCategory(componentName) {
   if (name.includes('pricing') || name.includes('price')) return 'pricing';
   if (name.includes('testimonial') || name.includes('review')) return 'social-proof';
   if (name.includes('faq')) return 'faq';
-  if (name.includes('countdown') || name.includes('timer') || name.includes('urgency')) return 'urgency';
-  if (name.includes('chart') || name.includes('stats') || name.includes('metrics')) return 'analytics';
+  if (name.includes('countdown') || name.includes('timer') || name.includes('urgency'))
+    return 'urgency';
+  if (name.includes('chart') || name.includes('stats') || name.includes('metrics'))
+    return 'analytics';
   if (name.includes('carousel') || name.includes('gallery')) return 'gallery';
-  if (name.includes('spacer') || name.includes('divider') || name.includes('section')) return 'layout';
-  if (name.includes('progress') || name.includes('loader') || name.includes('notification')) return 'feedback';
-  if (name.includes('result') || name.includes('offer') || name.includes('hero')) return 'conversion';
-  
+  if (name.includes('spacer') || name.includes('divider') || name.includes('section'))
+    return 'layout';
+  if (name.includes('progress') || name.includes('loader') || name.includes('notification'))
+    return 'feedback';
+  if (name.includes('result') || name.includes('offer') || name.includes('hero'))
+    return 'conversion';
+
   return 'misc';
 }
 
@@ -135,8 +146,8 @@ function generateBasicProperties(componentName, category) {
       type: 'string',
       default: `${componentName.toLowerCase()}-${Date.now()}`,
       label: 'ID',
-      description: 'Identificador único do componente'
-    }
+      description: 'Identificador único do componente',
+    },
   };
 
   // Propriedades específicas por categoria
@@ -147,7 +158,7 @@ function generateBasicProperties(componentName, category) {
         type: 'textarea',
         default: 'Texto de exemplo',
         label: 'Conteúdo',
-        description: 'Conteúdo do texto'
+        description: 'Conteúdo do texto',
       },
       textAlign: {
         type: 'select',
@@ -156,9 +167,9 @@ function generateBasicProperties(componentName, category) {
         options: [
           { value: 'left', label: 'Esquerda' },
           { value: 'center', label: 'Centro' },
-          { value: 'right', label: 'Direita' }
-        ]
-      }
+          { value: 'right', label: 'Direita' },
+        ],
+      },
     };
   }
 
@@ -169,13 +180,13 @@ function generateBasicProperties(componentName, category) {
         type: 'string',
         default: 'Clique aqui',
         label: 'Texto do Botão',
-        description: 'Texto exibido no botão'
+        description: 'Texto exibido no botão',
       },
       url: {
         type: 'string',
         default: '#',
         label: 'URL',
-        description: 'Link de destino'
+        description: 'Link de destino',
       },
       style: {
         type: 'select',
@@ -184,9 +195,9 @@ function generateBasicProperties(componentName, category) {
         options: [
           { value: 'primary', label: 'Primário' },
           { value: 'secondary', label: 'Secundário' },
-          { value: 'outline', label: 'Contorno' }
-        ]
-      }
+          { value: 'outline', label: 'Contorno' },
+        ],
+      },
     };
   }
 
@@ -197,14 +208,14 @@ function generateBasicProperties(componentName, category) {
         type: 'string',
         default: 'https://via.placeholder.com/400x300',
         label: 'URL da Imagem',
-        description: 'URL da imagem ou vídeo'
+        description: 'URL da imagem ou vídeo',
       },
       alt: {
         type: 'string',
         default: 'Descrição da imagem',
         label: 'Texto Alternativo',
-        description: 'Descrição para acessibilidade'
-      }
+        description: 'Descrição para acessibilidade',
+      },
     };
   }
 
@@ -215,14 +226,14 @@ function generateBasicProperties(componentName, category) {
       type: 'string',
       default: 'Título do Componente',
       label: 'Título',
-      description: 'Título do componente'
+      description: 'Título do componente',
     },
     description: {
       type: 'textarea',
       default: 'Descrição do componente',
       label: 'Descrição',
-      description: 'Descrição detalhada'
-    }
+      description: 'Descrição detalhada',
+    },
   };
 }
 
@@ -230,7 +241,7 @@ function generateBasicProperties(componentName, category) {
 function generateBlockDefinition(component) {
   const icon = CATEGORY_ICONS[component.category] || 'Square';
   const properties = generateBasicProperties(component.componentName, component.category);
-  
+
   return `  {
     type: '${component.type}',
     name: '${generateDisplayName(component.componentName)}',
@@ -256,23 +267,23 @@ function generateDisplayName(componentName) {
 function generateDescription(componentName, category) {
   const name = generateDisplayName(componentName);
   const categoryDesc = {
-    'quiz': 'para questionários e interação',
-    'text': 'para conteúdo textual',
-    'action': 'para chamadas para ação',
-    'media': 'para conteúdo multimídia',
-    'layout': 'para estrutura e layout',
-    'pricing': 'para tabelas de preços',
+    quiz: 'para questionários e interação',
+    text: 'para conteúdo textual',
+    action: 'para chamadas para ação',
+    media: 'para conteúdo multimídia',
+    layout: 'para estrutura e layout',
+    pricing: 'para tabelas de preços',
     'social-proof': 'para prova social',
-    'analytics': 'para dados e métricas',
-    'forms': 'para formulários',
-    'urgency': 'para criar urgência',
-    'faq': 'para perguntas frequentes',
-    'feedback': 'para feedback visual',
-    'gallery': 'para galerias de imagem',
-    'conversion': 'para conversão',
-    'misc': 'de uso geral'
+    analytics: 'para dados e métricas',
+    forms: 'para formulários',
+    urgency: 'para criar urgência',
+    faq: 'para perguntas frequentes',
+    feedback: 'para feedback visual',
+    gallery: 'para galerias de imagem',
+    conversion: 'para conversão',
+    misc: 'de uso geral',
   };
-  
+
   return `Componente ${name} ${categoryDesc[category] || 'personalizado'}`;
 }
 
@@ -289,25 +300,29 @@ function extractDefaultProps(properties) {
 // 8. Ler componentes já conectados
 function getExistingConnections() {
   if (!fs.existsSync(BLOCK_DEFINITIONS_FILE)) return new Set();
-  
+
   const content = fs.readFileSync(BLOCK_DEFINITIONS_FILE, 'utf-8');
   const componentMatches = content.match(/component:\s*(\w+)/g) || [];
-  
-  return new Set(componentMatches.map(match => {
-    const nameMatch = match.match(/component:\s*(\w+)/);
-    return nameMatch ? nameMatch[1] : null;
-  }).filter(Boolean));
+
+  return new Set(
+    componentMatches
+      .map(match => {
+        const nameMatch = match.match(/component:\s*(\w+)/);
+        return nameMatch ? nameMatch[1] : null;
+      })
+      .filter(Boolean)
+  );
 }
 
 // 9. Gerar arquivo completo
 function generateNewBlockDefinitions(allComponents, existingConnections) {
   const newComponents = allComponents.filter(comp => !existingConnections.has(comp.componentName));
-  
+
   console.log(`\n📊 ESTATÍSTICAS:`);
   console.log(`• Total de componentes: ${allComponents.length}`);
   console.log(`• Já conectados: ${existingConnections.size}`);
   console.log(`• Novos a conectar: ${newComponents.length}`);
-  
+
   // Organizar por categoria
   const componentsByCategory = {};
   allComponents.forEach(comp => {
@@ -316,18 +331,20 @@ function generateNewBlockDefinitions(allComponents, existingConnections) {
     }
     componentsByCategory[comp.category].push(comp);
   });
-  
+
   // Gerar imports
-  const imports = allComponents.map(comp => 
-    `import ${comp.componentName} from '${comp.importPath}';`
-  ).join('\n');
-  
+  const imports = allComponents
+    .map(comp => `import ${comp.componentName} from '${comp.importPath}';`)
+    .join('\n');
+
   // Gerar definições
-  const definitions = Object.entries(componentsByCategory).map(([category, components]) => {
-    const categoryDefs = components.map(comp => generateBlockDefinition(comp)).join(',\n\n');
-    return `  // ========== ${category.toUpperCase()} COMPONENTS ==========\n${categoryDefs}`;
-  }).join(',\n\n');
-  
+  const definitions = Object.entries(componentsByCategory)
+    .map(([category, components]) => {
+      const categoryDefs = components.map(comp => generateBlockDefinition(comp)).join(',\n\n');
+      return `  // ========== ${category.toUpperCase()} COMPONENTS ==========\n${categoryDefs}`;
+    })
+    .join(',\n\n');
+
   return `import { BlockDefinition } from '@/types/editor';
 import { 
   AlignLeft, 
@@ -367,12 +384,12 @@ function activateComponents() {
   console.log('\n🔍 Escaneando componentes...');
   const allComponents = scanAllComponents();
   const existingConnections = getExistingConnections();
-  
+
   if (allComponents.length === 0) {
     console.log('❌ Nenhum componente encontrado!');
     return;
   }
-  
+
   console.log(`\n📦 Componentes por categoria:`);
   const categories = {};
   allComponents.forEach(comp => {
@@ -381,18 +398,18 @@ function activateComponents() {
   Object.entries(categories).forEach(([cat, count]) => {
     console.log(`  • ${cat}: ${count} componentes`);
   });
-  
+
   console.log('\n📝 Gerando novo blockDefinitions.ts...');
   createBackup();
-  
+
   const newContent = generateNewBlockDefinitions(allComponents, existingConnections);
   fs.writeFileSync(BLOCK_DEFINITIONS_FILE, newContent, 'utf-8');
-  
+
   console.log(`\n✅ ATIVAÇÃO COMPLETA!`);
   console.log(`• Arquivo: ${path.basename(BLOCK_DEFINITIONS_FILE)}`);
   console.log(`• Backup: ${path.basename(BACKUP_FILE)}`);
   console.log(`• Componentes ativados: ${allComponents.length}`);
-  
+
   console.log('\n🎯 PRÓXIMOS PASSOS:');
   console.log('1. Teste o build: npm run build');
   console.log('2. Inicie o servidor: npm run dev');

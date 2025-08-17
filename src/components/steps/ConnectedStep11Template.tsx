@@ -7,25 +7,29 @@ import { COMPLETE_QUIZ_QUESTIONS } from '@/data/correctQuizQuestions';
 
 export const ConnectedStep11Template = () => {
   const { answerQuestion, answers } = useQuizLogic();
-  
+
   // 🎯 Buscar questão real dos dados (q10)
-  const questionData = COMPLETE_QUIZ_QUESTIONS.find(q => q.id === 'q10') || COMPLETE_QUIZ_QUESTIONS[10];
-  
-  const handleOptionSelect = useCallback(async (optionIds: string[]) => {
-    try {
-      const selectedOption = questionData.options.find((opt: any) => optionIds.includes(opt.id));
-      if (selectedOption) {
-        await answerQuestion(questionData.id, selectedOption.id);
-        
-        console.log('✅ Connected Step11: Resposta salva via hooks', { 
-          questionId: questionData.id, 
-          selectedOptions: optionIds 
-        });
+  const questionData =
+    COMPLETE_QUIZ_QUESTIONS.find(q => q.id === 'q10') || COMPLETE_QUIZ_QUESTIONS[10];
+
+  const handleOptionSelect = useCallback(
+    async (optionIds: string[]) => {
+      try {
+        const selectedOption = questionData.options.find((opt: any) => optionIds.includes(opt.id));
+        if (selectedOption) {
+          await answerQuestion(questionData.id, selectedOption.id);
+
+          console.log('✅ Connected Step11: Resposta salva via hooks', {
+            questionId: questionData.id,
+            selectedOptions: optionIds,
+          });
+        }
+      } catch (error) {
+        console.error('❌ Connected Step11: Erro ao salvar resposta', error);
       }
-    } catch (error) {
-      console.error('❌ Connected Step11: Erro ao salvar resposta', error);
-    }
-  }, [answerQuestion, questionData]);
+    },
+    [answerQuestion, questionData]
+  );
 
   return [
     // 📱 CABEÇALHO COM LOGO E PROGRESSO
@@ -33,7 +37,8 @@ export const ConnectedStep11Template = () => {
       id: 'step11-header',
       type: 'quiz-intro-header',
       properties: {
-        logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+        logoUrl:
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
         logoAlt: 'Logo Gisele Galvão',
         logoWidth: 96,
         logoHeight: 96,
@@ -83,7 +88,7 @@ export const ConnectedStep11Template = () => {
       type: 'options-grid',
       properties: {
         questionId: questionData.id,
-        
+
         // 🎯 OPÇÕES REAIS DOS DADOS
         options: questionData.options.map((option: any) => ({
           id: option.id,
@@ -97,7 +102,7 @@ export const ConnectedStep11Template = () => {
           spacing: 'small',
           marginBottom: 0,
         })),
-        
+
         // 🎨 LAYOUT BASEADO NO TIPO (text = 1 coluna)
         columns: 1,
         showImages: false,
@@ -109,7 +114,7 @@ export const ConnectedStep11Template = () => {
         gridGap: 12,
         responsiveColumns: false,
 
-        // 🚀 AUTOAVANÇO 
+        // 🚀 AUTOAVANÇO
         autoAdvanceOnComplete: true,
         autoAdvanceDelay: 1500,
         instantActivation: true,
@@ -119,7 +124,8 @@ export const ConnectedStep11Template = () => {
         onSelectionChange: handleOptionSelect,
 
         // 📊 STATUS CONECTADO
-        currentSelections: answers.filter(a => a.questionId === questionData.id).map(a => a.optionId) || [],
+        currentSelections:
+          answers.filter(a => a.questionId === questionData.id).map(a => a.optionId) || [],
         isLoading: false,
       },
     },
@@ -141,7 +147,9 @@ export const ConnectedStep11Template = () => {
         disabledTextColor: '#9CA3AF',
 
         // 🔗 ESTADO CONECTADO
-        disabled: answers.filter(a => a.questionId === questionData.id).length < (questionData.multiSelect || 3),
+        disabled:
+          answers.filter(a => a.questionId === questionData.id).length <
+          (questionData.multiSelect || 3),
         requiresValidInput: true,
         instantActivation: true,
 

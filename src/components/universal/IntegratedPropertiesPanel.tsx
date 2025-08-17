@@ -2,7 +2,7 @@
  * 🚀 IntegratedPropertiesPanel - Melhor dos Dois Mundos v1.0
  *
  * FUNCIONALIDADES INTEGRADAS:
- * ✅ useUnifiedProperties (fonte única de verdade) 
+ * ✅ useUnifiedProperties (fonte única de verdade)
  * ✅ 15 comportamentos do unified-header funcionando
  * ✅ Performance otimizada com memoização avançada
  * ✅ Loading states e feedback visual aprimorado
@@ -74,13 +74,13 @@ const EnhancedArrayEditor: React.FC<{
   maxItems?: number;
   minItems?: number;
   label?: string;
-}> = ({ 
-  items = [], 
-  onChange, 
-  addButtonText = 'Adicionar Item', 
-  maxItems = 10, 
+}> = ({
+  items = [],
+  onChange,
+  addButtonText = 'Adicionar Item',
+  maxItems = 10,
   minItems = 0,
-  label = 'Lista'
+  label = 'Lista',
 }) => {
   const [isAdding, setIsAdding] = useState(false);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
@@ -88,7 +88,7 @@ const EnhancedArrayEditor: React.FC<{
   const addItem = useCallback(async () => {
     if (items.length >= maxItems) return;
     setIsAdding(true);
-    
+
     // Determina o tipo do novo item
     const newItem = typeof items[0] === 'string' ? '' : { text: '', value: '' };
 
@@ -121,7 +121,7 @@ const EnhancedArrayEditor: React.FC<{
   return (
     <div className="space-y-3">
       <Label className="text-sm font-medium text-[#432818]">{label}</Label>
-      
+
       <div className="border border-[#B89B7A]/30 rounded-lg p-3 space-y-2 max-h-48 overflow-y-auto bg-white/50">
         {items.length > 0 ? (
           items.map((item, index) => (
@@ -134,9 +134,10 @@ const EnhancedArrayEditor: React.FC<{
                   <Input
                     value={typeof item === 'string' ? item : item.text || ''}
                     onChange={e => {
-                      const newValue = typeof item === 'string' 
-                        ? e.target.value 
-                        : { ...item, text: e.target.value };
+                      const newValue =
+                        typeof item === 'string'
+                          ? e.target.value
+                          : { ...item, text: e.target.value };
                       updateItem(index, newValue);
                     }}
                     onBlur={() => setEditingIndex(null)}
@@ -149,15 +150,17 @@ const EnhancedArrayEditor: React.FC<{
                     autoFocus
                   />
                 ) : (
-                  <div 
+                  <div
                     className="cursor-pointer text-sm py-1 px-2 hover:bg-[#B89B7A]/10 rounded"
                     onClick={() => setEditingIndex(index)}
                   >
-                    {typeof item === 'string' ? item || `Item ${index + 1}` : item.text || `Item ${index + 1}`}
+                    {typeof item === 'string'
+                      ? item || `Item ${index + 1}`
+                      : item.text || `Item ${index + 1}`}
                   </div>
                 )}
               </div>
-              
+
               <Button
                 type="button"
                 variant="ghost"
@@ -198,10 +201,10 @@ const EnhancedArrayEditor: React.FC<{
       </Button>
 
       <div className="flex items-center justify-between text-xs text-muted-foreground">
-        <span>Total: {items.length} {items.length === 1 ? 'item' : 'itens'}</span>
-        {items.length >= maxItems && (
-          <span className="text-[#432818]/70">Máximo atingido</span>
-        )}
+        <span>
+          Total: {items.length} {items.length === 1 ? 'item' : 'itens'}
+        </span>
+        {items.length >= maxItems && <span className="text-[#432818]/70">Máximo atingido</span>}
       </div>
     </div>
   );
@@ -218,7 +221,9 @@ const PropertyChangeIndicator: React.FC<{ children: React.ReactNode }> = ({ chil
   }, [children]);
 
   return (
-    <div className={`transition-all duration-300 ${hasChanged ? 'ring-2 ring-[#B89B7A]/30 ring-offset-2' : ''}`}>
+    <div
+      className={`transition-all duration-300 ${hasChanged ? 'ring-2 ring-[#B89B7A]/30 ring-offset-2' : ''}`}
+    >
       {children}
     </div>
   );
@@ -238,11 +243,11 @@ const EnhancedPropertyInput: React.FC<{
   step?: number;
   required?: boolean;
   error?: string;
-}> = ({ 
-  label, 
-  value, 
-  onChange, 
-  type = 'text', 
+}> = ({
+  label,
+  value,
+  onChange,
+  type = 'text',
   placeholder,
   className = '',
   rows,
@@ -250,7 +255,7 @@ const EnhancedPropertyInput: React.FC<{
   max,
   step,
   required,
-  error
+  error,
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   const [localValue, setLocalValue] = useState(value);
@@ -277,11 +282,13 @@ const EnhancedPropertyInput: React.FC<{
   return (
     <PropertyChangeIndicator>
       <div className="space-y-2">
-        <Label className={`text-sm font-medium text-[#432818] ${isFocused ? 'text-[#B89B7A]' : ''}`}>
-          {label} 
+        <Label
+          className={`text-sm font-medium text-[#432818] ${isFocused ? 'text-[#B89B7A]' : ''}`}
+        >
+          {label}
           {required && <span className="text-destructive ml-1">*</span>}
         </Label>
-        
+
         {type === 'textarea' ? (
           <Textarea
             value={localValue || ''}
@@ -297,9 +304,12 @@ const EnhancedPropertyInput: React.FC<{
             type={type}
             value={localValue || ''}
             onChange={e => {
-              const newValue = type === 'number' 
-                ? (e.target.value === '' ? '' : parseFloat(e.target.value)) 
-                : e.target.value;
+              const newValue =
+                type === 'number'
+                  ? e.target.value === ''
+                    ? ''
+                    : parseFloat(e.target.value)
+                  : e.target.value;
               setLocalValue(newValue);
             }}
             placeholder={placeholder || `Digite ${label.toLowerCase()}`}
@@ -311,7 +321,7 @@ const EnhancedPropertyInput: React.FC<{
             onBlur={() => setIsFocused(false)}
           />
         )}
-        
+
         {error && (
           <p className="text-xs text-destructive flex items-center gap-1">
             <AlertCircle className="h-3 w-3" />
@@ -342,15 +352,22 @@ export const IntegratedPropertiesPanel: React.FC<IntegratedPropertiesPanelProps>
   const [activeTab, setActiveTab] = useState<string>('properties');
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
-  
+
   // Refs para navegação por teclado
   const panelRef = useRef<HTMLDivElement>(null);
 
   // Hook de propriedades unificadas (fonte única de verdade)
-  console.log('🔥 IntegratedPanel - ANTES do hook:', { selectedBlock, type: selectedBlock?.type, id: selectedBlock?.id });
+  console.log('🔥 IntegratedPanel - ANTES do hook:', {
+    selectedBlock,
+    type: selectedBlock?.type,
+    id: selectedBlock?.id,
+  });
   const { properties, updateProperty, resetProperties, getPropertiesByCategory } =
     useUnifiedProperties(selectedBlock?.type || '', selectedBlock?.id, selectedBlock, onUpdate);
-  console.log('🔥 IntegratedPanel - DEPOIS do hook:', { properties: properties?.length, onUpdate: !!onUpdate });
+  console.log('🔥 IntegratedPanel - DEPOIS do hook:', {
+    properties: properties?.length,
+    onUpdate: !!onUpdate,
+  });
 
   // Logs de debug para desenvolvimento
   useEffect(() => {
@@ -359,10 +376,12 @@ export const IntegratedPropertiesPanel: React.FC<IntegratedPropertiesPanelProps>
         id: selectedBlock.id,
         type: selectedBlock.type,
         propertiesCount: properties?.length || 0,
-        categoriesWithData: categoryOrder.map(cat => ({
-          category: cat,
-          count: getPropertiesByCategory(cat).length
-        })).filter(c => c.count > 0)
+        categoriesWithData: categoryOrder
+          .map(cat => ({
+            category: cat,
+            count: getPropertiesByCategory(cat).length,
+          }))
+          .filter(c => c.count > 0),
       });
     }
   }, [selectedBlock, properties, getPropertiesByCategory]);
@@ -424,15 +443,21 @@ export const IntegratedPropertiesPanel: React.FC<IntegratedPropertiesPanelProps>
   // Renderizador de campo otimizado e melhorado
   const renderField = useCallback(
     (property: UnifiedProperty, idx: number) => {
-      const { key, label, type, value, options, required, min, max, step, placeholder, unit } = property;
+      const { key, label, type, value, options, required, min, max, step, placeholder, unit } =
+        property;
       const errorMessage = errors[key];
 
       const handleChange = async (newValue: any) => {
         setIsLoading(true);
-        console.log('🔥 IntegratedPanel handleChange CHAMADO:', { key, newValue, label, selectedBlockId: selectedBlock?.id });
+        console.log('🔥 IntegratedPanel handleChange CHAMADO:', {
+          key,
+          newValue,
+          label,
+          selectedBlockId: selectedBlock?.id,
+        });
         console.log('🔥 updateProperty function exists?', !!updateProperty);
         console.log('🔥 onUpdate function exists?', !!onUpdate);
-        
+
         try {
           // Validação simples
           if (required && (!newValue || newValue === '')) {
@@ -539,9 +564,7 @@ export const IntegratedPropertiesPanel: React.FC<IntegratedPropertiesPanelProps>
                   label={label}
                   allowTransparent={true}
                 />
-                <div className="text-xs text-muted-foreground">
-                  Cor atual: {value || '#432818'}
-                </div>
+                <div className="text-xs text-muted-foreground">Cor atual: {value || '#432818'}</div>
                 {errorMessage && (
                   <p className="text-xs text-destructive flex items-center gap-1">
                     <AlertCircle className="h-3 w-3" />
@@ -566,7 +589,11 @@ export const IntegratedPropertiesPanel: React.FC<IntegratedPropertiesPanelProps>
                   </SelectTrigger>
                   <SelectContent>
                     {options?.map((option, optionIdx) => (
-                      <SelectItem key={`${option.value}-${optionIdx}`} value={option.value} disabled={option.disabled}>
+                      <SelectItem
+                        key={`${option.value}-${optionIdx}`}
+                        value={option.value}
+                        disabled={option.disabled}
+                      >
                         {option.label}
                       </SelectItem>
                     ))}
@@ -597,7 +624,7 @@ export const IntegratedPropertiesPanel: React.FC<IntegratedPropertiesPanelProps>
                 </div>
                 <Switch
                   checked={Boolean(value)}
-                  onCheckedChange={(checked) => {
+                  onCheckedChange={checked => {
                     console.log('🎯 IntegratedPanel SWITCH mudou:', { key, checked, label });
                     handleChange(checked);
                   }}
@@ -619,10 +646,7 @@ export const IntegratedPropertiesPanel: React.FC<IntegratedPropertiesPanelProps>
               <PropertyChangeIndicator key={fieldId}>
                 <div className="space-y-2">
                   <Label className="text-sm font-medium text-[#432818]">{label}</Label>
-                  <AlignmentButtons
-                    value={value || 'left'}
-                    onChange={handleChange}
-                  />
+                  <AlignmentButtons value={value || 'left'} onChange={handleChange} />
                 </div>
               </PropertyChangeIndicator>
             );
@@ -727,7 +751,16 @@ export const IntegratedPropertiesPanel: React.FC<IntegratedPropertiesPanelProps>
   }, [errors]);
 
   // Categorias organizadas
-  const categoryOrder = ['logo', 'content', 'style', 'layout', 'alignment', 'behavior', 'scoring', 'advanced'];
+  const categoryOrder = [
+    'logo',
+    'content',
+    'style',
+    'layout',
+    'alignment',
+    'behavior',
+    'scoring',
+    'advanced',
+  ];
 
   // Se nenhum bloco selecionado
   if (!selectedBlock) {
@@ -813,11 +846,17 @@ export const IntegratedPropertiesPanel: React.FC<IntegratedPropertiesPanelProps>
         <div className="flex-1 overflow-hidden">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col">
             <TabsList className="grid w-full grid-cols-2 m-4 mb-0 bg-[#F8F6F3]/50">
-              <TabsTrigger value="properties" className="gap-2 data-[state=active]:bg-[#B89B7A] data-[state=active]:text-white">
+              <TabsTrigger
+                value="properties"
+                className="gap-2 data-[state=active]:bg-[#B89B7A] data-[state=active]:text-white"
+              >
                 <Type className="h-4 w-4" />
                 Propriedades
               </TabsTrigger>
-              <TabsTrigger value="style" className="gap-2 data-[state=active]:bg-[#B89B7A] data-[state=active]:text-white">
+              <TabsTrigger
+                value="style"
+                className="gap-2 data-[state=active]:bg-[#B89B7A] data-[state=active]:text-white"
+              >
                 <Paintbrush className="h-4 w-4" />
                 Estilo
               </TabsTrigger>

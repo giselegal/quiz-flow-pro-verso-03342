@@ -87,11 +87,11 @@ http://localhost:8086/test/components
 
 ```typescript
 // Normalização de tipos
-const normalizedType = type.replace("-inline", "").replace("-display", "");
+const normalizedType = type.replace('-inline', '').replace('-display', '');
 
 // Compatibilidade de propriedades
-handlePropertyUpdate("text", value);
-handlePropertyUpdate("content", value); // Garantir compatibilidade
+handlePropertyUpdate('text', value);
+handlePropertyUpdate('content', value); // Garantir compatibilidade
 ```
 
 ## 📊 Resultados Esperados

@@ -1,14 +1,14 @@
 /**
  * UNIFIED EDITOR HOOK
- * 
+ *
  * Consolidates all editor-related hooks into a single, unified interface.
  * Replaces conflicting hooks:
  * - useEditor
- * - useUnifiedEditor  
+ * - useUnifiedEditor
  * - useEditorReusableComponents
  * - useLiveEditor
  * - useEditorDiagnostics
- * 
+ *
  * Provides:
  * - Unified state management
  * - Robust persistence
@@ -43,14 +43,14 @@ export interface UnifiedEditorActions {
   saveFunnel: () => Promise<{ success: boolean; error?: string }>;
   createFunnel: (name: string) => Promise<string>;
   deleteFunnel: (id: string) => Promise<boolean>;
-  
+
   // Stage operations
   addStage: (name: string, afterId?: string) => Promise<string>;
   updateStage: (id: string, updates: Partial<UnifiedStage>) => Promise<void>;
   deleteStage: (id: string) => Promise<void>;
   reorderStages: (fromIndex: number, toIndex: number) => Promise<void>;
   setActiveStage: (stageId: string) => void;
-  
+
   // Block operations
   addBlock: (stageId: string, type: string, afterId?: string) => Promise<string>;
   updateBlock: (blockId: string, updates: Partial<UnifiedBlock>) => Promise<void>;
@@ -58,17 +58,17 @@ export interface UnifiedEditorActions {
   duplicateBlock: (blockId: string) => Promise<string>;
   reorderBlocks: (stageId: string, fromIndex: number, toIndex: number) => Promise<void>;
   setSelectedBlock: (blockId: string | null) => void;
-  
+
   // Property operations
   updateBlockProperty: (blockId: string, propertyKey: string, value: any) => Promise<void>;
   updateBlockProperties: (blockId: string, properties: Record<string, any>) => Promise<void>;
   resetBlockProperties: (blockId: string) => Promise<void>;
-  
+
   // UI state
   setIsPreviewing: (value: boolean) => void;
   setError: (error: string | null) => void;
   clearError: () => void;
-  
+
   // Utility
   undo: () => void;
   redo: () => void;
@@ -80,14 +80,14 @@ export interface UnifiedEditorReturn extends UnifiedEditorState, UnifiedEditorAc
   // Derived state
   activeStage: UnifiedStage | null;
   activeBlocks: UnifiedBlock[];
-  
+
   // Performance metrics
   performanceMetrics: {
     renderCount: number;
     lastRenderTime: number;
     memoryUsage: number;
   };
-  
+
   // Legacy compatibility (for gradual migration)
   legacy: {
     blocks: UnifiedBlock[];
@@ -105,7 +105,7 @@ export const useUnifiedEditor = (): UnifiedEditorReturn => {
   // Performance tracking
   const renderCountRef = useRef(0);
   const startTimeRef = useRef(performance.now());
-  
+
   useEffect(() => {
     renderCountRef.current++;
     // Note: PerformanceManager and UnifiedPersistenceService will be created later
@@ -113,7 +113,7 @@ export const useUnifiedEditor = (): UnifiedEditorReturn => {
 
   // Context (will be implemented later)
   // const editorContext = useContext(EditorContext);
-  
+
   // Core state
   const [state, setState] = useState<UnifiedEditorState>({
     funnel: null,
@@ -125,16 +125,16 @@ export const useUnifiedEditor = (): UnifiedEditorReturn => {
     isDirty: false,
     isPreviewing: false,
     lastSaved: null,
-    error: null
+    error: null,
   });
 
   // History management for undo/redo
   const [history, setHistory] = useState<UnifiedFunnel[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
-  
+
   // Cleanup timeouts to prevent memory leaks
   const timeoutsRef = useRef<Set<NodeJS.Timeout>>(new Set());
-  
+
   useEffect(() => {
     return () => {
       // Cleanup all timeouts on unmount
@@ -159,7 +159,7 @@ export const useUnifiedEditor = (): UnifiedEditorReturn => {
 
   const loadFunnel = useCallback(async (id: string) => {
     setState(prev => ({ ...prev, isLoading: true, error: null }));
-    
+
     try {
       // Mock implementation - will be replaced with actual persistence service
       const mockFunnel: UnifiedFunnel = {
@@ -168,7 +168,7 @@ export const useUnifiedEditor = (): UnifiedEditorReturn => {
         stages: [],
         settings: {},
         status: 'draft' as const,
-        version: '1.0'
+        version: '1.0',
       };
 
       setState(prev => ({
@@ -177,9 +177,9 @@ export const useUnifiedEditor = (): UnifiedEditorReturn => {
         activeStageId: mockFunnel.stages[0]?.id || null,
         isLoading: false,
         isDirty: false,
-        lastSaved: new Date()
+        lastSaved: new Date(),
       }));
-      
+
       // Reset history
       setHistory([mockFunnel]);
       setHistoryIndex(0);
@@ -187,7 +187,7 @@ export const useUnifiedEditor = (): UnifiedEditorReturn => {
       setState(prev => ({
         ...prev,
         isLoading: false,
-        error: error instanceof Error ? error.message : 'Unknown error'
+        error: error instanceof Error ? error.message : 'Unknown error',
       }));
     }
   }, []);
@@ -202,12 +202,12 @@ export const useUnifiedEditor = (): UnifiedEditorReturn => {
     try {
       // Mock save implementation
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
+
       setState(prev => ({
         ...prev,
         isSaving: false,
         isDirty: false,
-        lastSaved: new Date()
+        lastSaved: new Date(),
       }));
       return { success: true };
     } catch (error) {
@@ -215,7 +215,7 @@ export const useUnifiedEditor = (): UnifiedEditorReturn => {
       setState(prev => ({
         ...prev,
         isSaving: false,
-        error: errorMessage
+        error: errorMessage,
       }));
       return { success: false, error: errorMessage };
     }
@@ -228,14 +228,14 @@ export const useUnifiedEditor = (): UnifiedEditorReturn => {
       stages: [],
       settings: {},
       version: '1.0',
-      status: 'draft'
+      status: 'draft',
     };
 
     setState(prev => ({
       ...prev,
       funnel: newFunnel,
       activeStageId: null,
-      isDirty: true
+      isDirty: true,
     }));
 
     // Add to history
@@ -249,53 +249,56 @@ export const useUnifiedEditor = (): UnifiedEditorReturn => {
   // STAGE OPERATIONS
   // =============================================================================
 
-  const addStage = useCallback(async (name: string, afterId?: string): Promise<string> => {
-    if (!state.funnel) throw new Error('No funnel loaded');
+  const addStage = useCallback(
+    async (name: string, afterId?: string): Promise<string> => {
+      if (!state.funnel) throw new Error('No funnel loaded');
 
-    const newStage: UnifiedStage = {
-      id: `stage_${Date.now()}`,
-      name,
-      blocks: [],
-      blockOrder: [],
-      settings: {},
-      order: state.funnel.stages.length,
-      version: '1.0',
-      active: true
-    };
+      const newStage: UnifiedStage = {
+        id: `stage_${Date.now()}`,
+        name,
+        blocks: [],
+        blockOrder: [],
+        settings: {},
+        order: state.funnel.stages.length,
+        version: '1.0',
+        active: true,
+      };
 
-    const updatedFunnel = { ...state.funnel };
-    
-    if (afterId) {
-      const afterIndex = updatedFunnel.stages.findIndex(s => s.id === afterId);
-      updatedFunnel.stages.splice(afterIndex + 1, 0, newStage);
-    } else {
-      updatedFunnel.stages.push(newStage);
-    }
+      const updatedFunnel = { ...state.funnel };
 
-    // Update orders
-    updatedFunnel.stages.forEach((stage, index) => {
-      stage.order = index;
-    });
+      if (afterId) {
+        const afterIndex = updatedFunnel.stages.findIndex(s => s.id === afterId);
+        updatedFunnel.stages.splice(afterIndex + 1, 0, newStage);
+      } else {
+        updatedFunnel.stages.push(newStage);
+      }
 
-    setState(prev => ({
-      ...prev,
-      funnel: updatedFunnel,
-      activeStageId: newStage.id,
-      isDirty: true
-    }));
+      // Update orders
+      updatedFunnel.stages.forEach((stage, index) => {
+        stage.order = index;
+      });
 
-    // Add to history
-    addToHistory(updatedFunnel);
+      setState(prev => ({
+        ...prev,
+        funnel: updatedFunnel,
+        activeStageId: newStage.id,
+        isDirty: true,
+      }));
 
-    return newStage.id;
-  }, [state.funnel]);
+      // Add to history
+      addToHistory(updatedFunnel);
+
+      return newStage.id;
+    },
+    [state.funnel]
+  );
 
   const setActiveStage = useCallback((stageId: string) => {
     setState(prev => ({
       ...prev,
       activeStageId: stageId,
       selectedBlockId: null,
-      selectedBlock: null
+      selectedBlock: null,
     }));
   }, []);
 
@@ -303,142 +306,154 @@ export const useUnifiedEditor = (): UnifiedEditorReturn => {
   // BLOCK OPERATIONS
   // =============================================================================
 
-  const addBlock = useCallback(async (stageId: string, type: string, afterId?: string): Promise<string> => {
-    if (!state.funnel) throw new Error('No funnel loaded');
+  const addBlock = useCallback(
+    async (stageId: string, type: string, afterId?: string): Promise<string> => {
+      if (!state.funnel) throw new Error('No funnel loaded');
 
-    const stage = state.funnel.stages.find(s => s.id === stageId);
-    if (!stage) throw new Error('Stage not found');
+      const stage = state.funnel.stages.find(s => s.id === stageId);
+      if (!stage) throw new Error('Stage not found');
 
-    const newBlock: UnifiedBlock = {
-      id: `block_${Date.now()}`,
-      type: type as any,
-      properties: {},
-      children: [],
-      order: stage.blocks.length,
-      events: {},
-      version: '1.0',
-      visible: true,
-      locked: false
-    };
+      const newBlock: UnifiedBlock = {
+        id: `block_${Date.now()}`,
+        type: type as any,
+        properties: {},
+        children: [],
+        order: stage.blocks.length,
+        events: {},
+        version: '1.0',
+        visible: true,
+        locked: false,
+      };
 
-    const updatedStage = { ...stage };
-    
-    if (afterId) {
-      const afterIndex = updatedStage.blocks.findIndex(b => b.id === afterId);
-      updatedStage.blocks.splice(afterIndex + 1, 0, newBlock);
-    } else {
-      updatedStage.blocks.push(newBlock);
-    }
+      const updatedStage = { ...stage };
 
-    // Update orders and blockOrder
-    updatedStage.blocks.forEach((block, index) => {
-      block.order = index;
-    });
-    updatedStage.blockOrder = updatedStage.blocks.map(b => b.id);
+      if (afterId) {
+        const afterIndex = updatedStage.blocks.findIndex(b => b.id === afterId);
+        updatedStage.blocks.splice(afterIndex + 1, 0, newBlock);
+      } else {
+        updatedStage.blocks.push(newBlock);
+      }
 
-    const updatedFunnel = {
-      ...state.funnel,
-      stages: state.funnel.stages.map(s => s.id === stageId ? updatedStage : s)
-    };
+      // Update orders and blockOrder
+      updatedStage.blocks.forEach((block, index) => {
+        block.order = index;
+      });
+      updatedStage.blockOrder = updatedStage.blocks.map(b => b.id);
 
-    setState(prev => ({
-      ...prev,
-      funnel: updatedFunnel,
-      selectedBlockId: newBlock.id,
-      selectedBlock: newBlock,
-      isDirty: true
-    }));
+      const updatedFunnel = {
+        ...state.funnel,
+        stages: state.funnel.stages.map(s => (s.id === stageId ? updatedStage : s)),
+      };
 
-    addToHistory(updatedFunnel);
-
-    return newBlock.id;
-  }, [state.funnel]);
-
-  const updateBlock = useCallback(async (blockId: string, updates: Partial<UnifiedBlock>) => {
-    if (!state.funnel) throw new Error('No funnel loaded');
-
-    const updatedFunnel = { ...state.funnel };
-    let blockFound = false;
-
-    updatedFunnel.stages = updatedFunnel.stages.map(stage => ({
-      ...stage,
-      blocks: stage.blocks.map(block => {
-        if (block.id === blockId) {
-          blockFound = true;
-          const updatedBlock = { ...block, ...updates };
-          
-          // Update selected block if it's the current one
-          if (state.selectedBlockId === blockId) {
-            setState(prev => ({ ...prev, selectedBlock: updatedBlock }));
-          }
-          
-          return updatedBlock;
-        }
-        return block;
-      })
-    }));
-
-    if (!blockFound) {
-      throw new Error('Block not found');
-    }
-
-    setState(prev => ({
-      ...prev,
-      funnel: updatedFunnel,
-      isDirty: true
-    }));
-
-    addToHistory(updatedFunnel);
-  }, [state.funnel, state.selectedBlockId]);
-
-  const setSelectedBlock = useCallback((blockId: string | null) => {
-    if (!blockId) {
       setState(prev => ({
         ...prev,
-        selectedBlockId: null,
-        selectedBlock: null
+        funnel: updatedFunnel,
+        selectedBlockId: newBlock.id,
+        selectedBlock: newBlock,
+        isDirty: true,
       }));
-      return;
-    }
 
-    if (!state.funnel) return;
+      addToHistory(updatedFunnel);
 
-    // Find the block across all stages
-    let foundBlock: UnifiedBlock | null = null;
-    for (const stage of state.funnel.stages) {
-      const block = stage.blocks.find(b => b.id === blockId);
-      if (block) {
-        foundBlock = block;
-        break;
+      return newBlock.id;
+    },
+    [state.funnel]
+  );
+
+  const updateBlock = useCallback(
+    async (blockId: string, updates: Partial<UnifiedBlock>) => {
+      if (!state.funnel) throw new Error('No funnel loaded');
+
+      const updatedFunnel = { ...state.funnel };
+      let blockFound = false;
+
+      updatedFunnel.stages = updatedFunnel.stages.map(stage => ({
+        ...stage,
+        blocks: stage.blocks.map(block => {
+          if (block.id === blockId) {
+            blockFound = true;
+            const updatedBlock = { ...block, ...updates };
+
+            // Update selected block if it's the current one
+            if (state.selectedBlockId === blockId) {
+              setState(prev => ({ ...prev, selectedBlock: updatedBlock }));
+            }
+
+            return updatedBlock;
+          }
+          return block;
+        }),
+      }));
+
+      if (!blockFound) {
+        throw new Error('Block not found');
       }
-    }
 
-    setState(prev => ({
-      ...prev,
-      selectedBlockId: blockId,
-      selectedBlock: foundBlock
-    }));
-  }, [state.funnel]);
+      setState(prev => ({
+        ...prev,
+        funnel: updatedFunnel,
+        isDirty: true,
+      }));
+
+      addToHistory(updatedFunnel);
+    },
+    [state.funnel, state.selectedBlockId]
+  );
+
+  const setSelectedBlock = useCallback(
+    (blockId: string | null) => {
+      if (!blockId) {
+        setState(prev => ({
+          ...prev,
+          selectedBlockId: null,
+          selectedBlock: null,
+        }));
+        return;
+      }
+
+      if (!state.funnel) return;
+
+      // Find the block across all stages
+      let foundBlock: UnifiedBlock | null = null;
+      for (const stage of state.funnel.stages) {
+        const block = stage.blocks.find(b => b.id === blockId);
+        if (block) {
+          foundBlock = block;
+          break;
+        }
+      }
+
+      setState(prev => ({
+        ...prev,
+        selectedBlockId: blockId,
+        selectedBlock: foundBlock,
+      }));
+    },
+    [state.funnel]
+  );
 
   // =============================================================================
   // HISTORY MANAGEMENT
   // =============================================================================
 
-  const addToHistory = useCallback((funnel: UnifiedFunnel) => {
-    setHistory(prev => {
-      const newHistory = prev.slice(0, historyIndex + 1);
-      newHistory.push({ ...funnel });
-      
-      // Limit history size to prevent memory issues
-      if (newHistory.length > 50) {
-        newHistory.shift();
+  const addToHistory = useCallback(
+    (funnel: UnifiedFunnel) => {
+      setHistory(prev => {
+        const newHistory = prev.slice(0, historyIndex + 1);
+        newHistory.push({ ...funnel });
+
+        // Limit history size to prevent memory issues
+        if (newHistory.length > 50) {
+          newHistory.shift();
+          return newHistory;
+        }
+
         return newHistory;
-      }
-      
-      return newHistory;
-    });
-    setHistoryIndex(prev => prev + 1);
-  }, [historyIndex]);
+      });
+      setHistoryIndex(prev => prev + 1);
+    },
+    [historyIndex]
+  );
 
   const undo = useCallback(() => {
     if (historyIndex > 0) {
@@ -446,7 +461,7 @@ export const useUnifiedEditor = (): UnifiedEditorReturn => {
       setState(prev => ({
         ...prev,
         funnel: prevFunnel,
-        isDirty: true
+        isDirty: true,
       }));
       setHistoryIndex(prev => prev - 1);
     }
@@ -458,7 +473,7 @@ export const useUnifiedEditor = (): UnifiedEditorReturn => {
       setState(prev => ({
         ...prev,
         funnel: nextFunnel,
-        isDirty: true
+        isDirty: true,
       }));
       setHistoryIndex(prev => prev + 1);
     }
@@ -478,25 +493,31 @@ export const useUnifiedEditor = (): UnifiedEditorReturn => {
   }, [activeStage]);
 
   // Performance metrics
-  const performanceMetrics = useMemo(() => ({
-    renderCount: renderCountRef.current,
-    lastRenderTime: performance.now() - startTimeRef.current,
-    memoryUsage: (performance as any).memory?.usedJSHeapSize || 0
-  }), []);
+  const performanceMetrics = useMemo(
+    () => ({
+      renderCount: renderCountRef.current,
+      lastRenderTime: performance.now() - startTimeRef.current,
+      memoryUsage: (performance as any).memory?.usedJSHeapSize || 0,
+    }),
+    []
+  );
 
   // Legacy compatibility interface
-  const legacy = useMemo(() => ({
-    blocks: activeBlocks,
-    addBlock: async (type: string) => {
-      if (!state.activeStageId) throw new Error('No active stage');
-      return addBlock(state.activeStageId, type);
-    },
-    updateBlock,
-    deleteBlock: async (_blockId: string) => {
-      // Implementation for delete block
-      console.warn('Legacy deleteBlock called - implement as needed');
-    }
-  }), [activeBlocks, state.activeStageId, addBlock, updateBlock]);
+  const legacy = useMemo(
+    () => ({
+      blocks: activeBlocks,
+      addBlock: async (type: string) => {
+        if (!state.activeStageId) throw new Error('No active stage');
+        return addBlock(state.activeStageId, type);
+      },
+      updateBlock,
+      deleteBlock: async (_blockId: string) => {
+        // Implementation for delete block
+        console.warn('Legacy deleteBlock called - implement as needed');
+      },
+    }),
+    [activeBlocks, state.activeStageId, addBlock, updateBlock]
+  );
 
   // =============================================================================
   // RETURN INTERFACE
@@ -514,35 +535,35 @@ export const useUnifiedEditor = (): UnifiedEditorReturn => {
     saveFunnel,
     createFunnel,
     deleteFunnel: async () => false, // TODO: Implement
-    
+
     addStage,
     updateStage: async () => {}, // TODO: Implement
     deleteStage: async () => {}, // TODO: Implement
     reorderStages: async () => {}, // TODO: Implement
     setActiveStage,
-    
+
     addBlock,
     updateBlock,
-    deleteBlock: async () => {}, // TODO: Implement  
+    deleteBlock: async () => {}, // TODO: Implement
     duplicateBlock: async () => '', // TODO: Implement
     reorderBlocks: async () => {}, // TODO: Implement
     setSelectedBlock,
-    
+
     updateBlockProperty: async () => {}, // TODO: Implement
     updateBlockProperties: async () => {}, // TODO: Implement
     resetBlockProperties: async () => {}, // TODO: Implement
-    
+
     setIsPreviewing: (value: boolean) => setState(prev => ({ ...prev, isPreviewing: value })),
     setError: (error: string | null) => setState(prev => ({ ...prev, error })),
     clearError: () => setState(prev => ({ ...prev, error: null })),
-    
+
     undo,
     redo,
     canUndo: historyIndex > 0,
     canRedo: historyIndex < history.length - 1,
 
     // Legacy compatibility
-    legacy
+    legacy,
   };
 };
 
@@ -556,21 +577,21 @@ export const useUnifiedEditor = (): UnifiedEditorReturn => {
  */
 export const useEditor = (): any => {
   const unified = useUnifiedEditor();
-  
+
   console.warn('useEditor is deprecated. Use useUnifiedEditor instead.');
-  
+
   return unified.legacy;
 };
 
 /**
- * Legacy useConsolidatedEditor hook for backward compatibility  
+ * Legacy useConsolidatedEditor hook for backward compatibility
  * @deprecated Use useUnifiedEditor instead
  */
 export const useConsolidatedEditor = (): any => {
   const unified = useUnifiedEditor();
-  
+
   console.warn('useConsolidatedEditor is deprecated. Use useUnifiedEditor instead.');
-  
+
   return {
     blocks: unified.activeBlocks,
     addBlock: unified.legacy.addBlock,
@@ -584,7 +605,7 @@ export const useConsolidatedEditor = (): any => {
     isSaving: unified.isSaving,
     saveFunnel: unified.saveFunnel,
     isPreviewing: unified.isPreviewing,
-    setIsPreviewing: unified.setIsPreviewing
+    setIsPreviewing: unified.setIsPreviewing,
   };
 };
 

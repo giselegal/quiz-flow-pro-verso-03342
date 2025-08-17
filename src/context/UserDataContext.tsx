@@ -1,6 +1,6 @@
 /**
  * User Data Context - Replaces critical localStorage usage with Supabase
- * 
+ *
  * This context manages user-specific data that was previously stored in localStorage,
  * now properly persisted in Supabase for reliability and consistency.
  */
@@ -13,21 +13,21 @@ interface UserDataContextType {
   // User information (previously in localStorage as userName, userEmail)
   currentUser: QuizUser | null;
   setCurrentUser: (user: QuizUser | null) => void;
-  
+
   // Current quiz session (previously in localStorage as current_quiz_session)
   currentSession: QuizSession | null;
   setCurrentSession: (session: QuizSession | null) => void;
-  
+
   // UTM parameters (previously in localStorage as quiz_utm_parameters)
   utmParameters: Record<string, string> | null;
   setUtmParameters: (params: Record<string, string> | null) => void;
-  
+
   // Helper functions
   createUser: (userData: Partial<InsertQuizUser>) => Promise<QuizUser | null>;
   createSession: (sessionData: Partial<InsertQuizSession>) => Promise<QuizSession | null>;
   updateSession: (sessionId: string, updates: Partial<QuizSession>) => Promise<boolean>;
   clearUserData: () => void;
-  
+
   // Loading states
   isLoading: boolean;
   error: string | null;
@@ -73,14 +73,14 @@ export const UserDataProvider: React.FC<UserDataProviderProps> = ({ children }) 
       // Try to recover user from localStorage as fallback (migration period)
       const storedUserName = localStorage.getItem('userName');
       const storedUserEmail = localStorage.getItem('userEmail');
-      
+
       if (storedUserName || storedUserEmail) {
         const userData: Partial<InsertQuizUser> = {
           name: storedUserName || undefined,
           email: storedUserEmail || undefined,
           ...utm,
         };
-        
+
         const user = await createUser(userData);
         if (user) {
           setCurrentUser(user);
@@ -89,7 +89,6 @@ export const UserDataProvider: React.FC<UserDataProviderProps> = ({ children }) 
           localStorage.removeItem('userEmail');
         }
       }
-
     } catch (err) {
       setError('Erro ao inicializar dados do usuário');
       console.error('Error initializing user data:', err);
@@ -102,11 +101,15 @@ export const UserDataProvider: React.FC<UserDataProviderProps> = ({ children }) 
     try {
       const { data, error } = await supabase
         .from('quiz_users')
-        .insert([{
-          id: `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-          session_id: userData.session_id || `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-          ...userData,
-        }])
+        .insert([
+          {
+            id: `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+            session_id:
+              userData.session_id ||
+              `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+            ...userData,
+          },
+        ])
         .select()
         .single();
 
@@ -118,7 +121,9 @@ export const UserDataProvider: React.FC<UserDataProviderProps> = ({ children }) 
     }
   };
 
-  const createSession = async (sessionData: Partial<InsertQuizSession>): Promise<QuizSession | null> => {
+  const createSession = async (
+    sessionData: Partial<InsertQuizSession>
+  ): Promise<QuizSession | null> => {
     try {
       if (!currentUser) {
         throw new Error('No current user for session creation');
@@ -126,13 +131,15 @@ export const UserDataProvider: React.FC<UserDataProviderProps> = ({ children }) 
 
       const { data, error } = await supabase
         .from('quiz_sessions')
-        .insert([{
-          id: `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-          quiz_user_id: currentUser.id,
-          funnel_id: sessionData.funnel_id || 'default_funnel',
-          last_activity: new Date().toISOString(),
-          ...sessionData,
-        }])
+        .insert([
+          {
+            id: `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+            quiz_user_id: currentUser.id,
+            funnel_id: sessionData.funnel_id || 'default_funnel',
+            last_activity: new Date().toISOString(),
+            ...sessionData,
+          },
+        ])
         .select()
         .single();
 
@@ -144,7 +151,10 @@ export const UserDataProvider: React.FC<UserDataProviderProps> = ({ children }) 
     }
   };
 
-  const updateSession = async (sessionId: string, updates: Partial<QuizSession>): Promise<boolean> => {
+  const updateSession = async (
+    sessionId: string,
+    updates: Partial<QuizSession>
+  ): Promise<boolean> => {
     try {
       const { error } = await supabase
         .from('quiz_sessions')
@@ -166,7 +176,7 @@ export const UserDataProvider: React.FC<UserDataProviderProps> = ({ children }) 
     setCurrentUser(null);
     setCurrentSession(null);
     setUtmParameters(null);
-    
+
     // Clean up any remaining localStorage items (migration period)
     localStorage.removeItem('userName');
     localStorage.removeItem('userEmail');
@@ -189,11 +199,7 @@ export const UserDataProvider: React.FC<UserDataProviderProps> = ({ children }) 
     error,
   };
 
-  return (
-    <UserDataContext.Provider value={value}>
-      {children}
-    </UserDataContext.Provider>
-  );
+  return <UserDataContext.Provider value={value}>{children}</UserDataContext.Provider>;
 };
 
 export const useUserData = (): UserDataContextType => {
@@ -207,7 +213,7 @@ export const useUserData = (): UserDataContextType => {
 // Helper hook for backward compatibility
 export const useUserName = () => {
   const { currentUser, setCurrentUser, createUser } = useUserData();
-  
+
   return {
     userName: currentUser?.name || '',
     setUserName: async (name: string) => {
@@ -217,7 +223,7 @@ export const useUserName = () => {
           .from('quiz_users')
           .update({ name })
           .eq('id', currentUser.id);
-          
+
         if (!error) {
           setCurrentUser({ ...currentUser, name });
         }
@@ -228,7 +234,7 @@ export const useUserName = () => {
           setCurrentUser(user);
         }
       }
-    }
+    },
   };
 };
 

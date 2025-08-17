@@ -105,7 +105,10 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
 
         {/* Painel de propriedades */}
         <ResizablePanel defaultSize={25}>
-          <EnhancedUniversalPropertiesPanel selectedBlock={selectedBlock || null} onUpdate={handleUpdateSelectedBlock} />
+          <EnhancedUniversalPropertiesPanel
+            selectedBlock={selectedBlock || null}
+            onUpdate={handleUpdateSelectedBlock}
+          />
         </ResizablePanel>
       </ResizablePanelGroup>
     </div>

@@ -1,15 +1,9 @@
-
 import React from 'react';
 import { useEditor } from '@/context/EditorContext';
 import { getStep02Template } from '@/components/steps/Step02Template';
 
 const DebugStep02: React.FC = () => {
-  const {
-    computed,
-    stageActions,
-    blockActions,
-    activeStageId,
-  } = useEditor();
+  const { computed, stageActions, blockActions, activeStageId } = useEditor();
 
   const step02Template = getStep02Template();
   const optionsBlock = step02Template.find(block => block.type === 'options-grid');
@@ -45,7 +39,7 @@ const DebugStep02: React.FC = () => {
   return (
     <div className="p-6 bg-white border rounded-lg shadow-sm">
       <h2 className="text-xl font-bold mb-4 text-[#432818]">🧪 Debug Step 02</h2>
-      
+
       <div className="space-y-4">
         <div className="bg-blue-50 p-4 rounded">
           <h3 className="font-semibold mb-2">Template Info:</h3>

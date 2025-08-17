@@ -49,15 +49,15 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"), // ✅ Alias funcionando
+      '@': path.resolve(__dirname, './src'), // ✅ Alias funcionando
     },
   },
   server: {
-    host: "0.0.0.0",
+    host: '0.0.0.0',
     port: 8080,
   },
   build: {
-    outDir: "dist",
+    outDir: 'dist',
     sourcemap: true,
   },
 });

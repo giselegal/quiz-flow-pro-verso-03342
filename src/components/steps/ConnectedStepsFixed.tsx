@@ -7,14 +7,15 @@ import { COMPLETE_QUIZ_QUESTIONS } from '@/data/correctQuizQuestions';
 export const generateConnectedStepTemplate = (stepNumber: number, questionIndex: number) => {
   const questionData = COMPLETE_QUIZ_QUESTIONS[questionIndex] || COMPLETE_QUIZ_QUESTIONS[0];
   const progressValue = (stepNumber / 21) * 100;
-  
+
   return [
     // 📱 CABEÇALHO COM LOGO E PROGRESSO
     {
       id: `step${String(stepNumber).padStart(2, '0')}-header`,
       type: 'quiz-intro-header',
       properties: {
-        logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+        logoUrl:
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
         logoAlt: 'Logo Gisele Galvão',
         logoWidth: 96,
         logoHeight: 96,

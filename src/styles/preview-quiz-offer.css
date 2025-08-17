@@ -2,7 +2,7 @@
 
 /* Fontes */
 body {
-  font-family: "Inter", sans-serif;
+  font-family: 'Inter', sans-serif;
   background-color: #fffbf7;
   color: #4a2e20;
   scroll-behavior: smooth;
@@ -11,7 +11,7 @@ body {
 }
 
 .font-playfair {
-  font-family: "Playfair Display", serif;
+  font-family: 'Playfair Display', serif;
 }
 
 /* Botão primário 3D */
@@ -31,7 +31,7 @@ body {
 }
 
 .btn-primary-3d:before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 0;

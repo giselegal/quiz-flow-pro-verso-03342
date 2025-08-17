@@ -12,9 +12,9 @@ export interface EditorBlockBaseProps {
 }
 
 export interface EditorCanvasBlockProps extends EditorBlockBaseProps {
-  containerWidth?: "full" | "large" | "medium" | "small";
-  containerPosition?: "center" | "left" | "right";
-  spacing?: "normal" | "none" | "small" | "compact" | "horizontal-only" | string;
+  containerWidth?: 'full' | 'large' | 'medium' | 'small';
+  containerPosition?: 'center' | 'left' | 'right';
+  spacing?: 'normal' | 'none' | 'small' | 'compact' | 'horizontal-only' | string;
   marginTop?: number;
   marginBottom?: number;
   paddingTop?: number;

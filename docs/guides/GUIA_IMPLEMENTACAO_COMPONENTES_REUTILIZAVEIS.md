@@ -102,9 +102,9 @@ VITE_SUPABASE_ANON_KEY=eyJhb...
 ```typescript
 // Todos os componentes do ENHANCED_BLOCK_REGISTRY aparecem automaticamente
 const availableComponents = [
-  { type_key: "text-inline", display_name: "Texto Inline", category: "content" },
-  { type_key: "quiz-intro-header", display_name: "Header do Quiz", category: "headers" },
-  { type_key: "options-grid", display_name: "Grade de Opções", category: "interactive" },
+  { type_key: 'text-inline', display_name: 'Texto Inline', category: 'content' },
+  { type_key: 'quiz-intro-header', display_name: 'Header do Quiz', category: 'headers' },
+  { type_key: 'options-grid', display_name: 'Grade de Opções', category: 'interactive' },
   // ... todos os outros automaticamente
 ];
 ```
@@ -115,21 +115,21 @@ const availableComponents = [
 // Componentes personalizados já incluídos no database:
 const brandComponents = [
   {
-    type_key: "gisele-header",
-    display_name: "Header Gisele Galvão",
+    type_key: 'gisele-header',
+    display_name: 'Header Gisele Galvão',
     default_properties: {
-      logoUrl: "https://res.cloudinary.com/.../LOGO_DA_MARCA_GISELE.webp",
-      backgroundColor: "transparent",
+      logoUrl: 'https://res.cloudinary.com/.../LOGO_DA_MARCA_GISELE.webp',
+      backgroundColor: 'transparent',
       logoWidth: 120,
     },
   },
   {
-    type_key: "gisele-button",
-    display_name: "Botão Gisele Galvão",
+    type_key: 'gisele-button',
+    display_name: 'Botão Gisele Galvão',
     default_properties: {
-      backgroundColor: "#B89B7A",
-      borderRadius: "rounded-full",
-      fontFamily: "Playfair Display, serif",
+      backgroundColor: '#B89B7A',
+      borderRadius: 'rounded-full',
+      fontFamily: 'Playfair Display, serif',
     },
   },
 ];
@@ -139,10 +139,10 @@ const brandComponents = [
 
 ```typescript
 // Templates prontos para usar:
-await applyComponentTemplate("gisele-question-step", 6);
+await applyComponentTemplate('gisele-question-step', 6);
 // Adiciona automaticamente: header + pergunta + opções + botão
 
-await applyComponentTemplate("gisele-input-step", 1);
+await applyComponentTemplate('gisele-input-step', 1);
 // Adiciona: header + pergunta + input + botão
 ```
 
@@ -150,8 +150,8 @@ await applyComponentTemplate("gisele-input-step", 1);
 
 ```typescript
 // Adiciona no editor E no database simultaneamente
-const component = await addReusableComponentToEditor("gisele-button", 6, {
-  text: "Continuar para Próxima Questão",
+const component = await addReusableComponentToEditor('gisele-button', 6, {
+  text: 'Continuar para Próxima Questão',
 });
 
 // Resultado:

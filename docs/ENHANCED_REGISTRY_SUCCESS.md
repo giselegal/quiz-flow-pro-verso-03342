@@ -15,8 +15,8 @@
 
 ```typescript
 // INLINE COMPONENTS - TESTADOS E FUNCIONAIS
-import BadgeInlineBlock from "../components/editor/blocks/inline/BadgeInlineBlock";
-import BeforeAfterInlineBlock from "../components/editor/blocks/inline/BeforeAfterInlineBlock";
+import BadgeInlineBlock from '../components/editor/blocks/inline/BadgeInlineBlock';
+import BeforeAfterInlineBlock from '../components/editor/blocks/inline/BeforeAfterInlineBlock';
 // ... 28+ imports validados
 ```
 
@@ -29,7 +29,7 @@ const validateComponent = (component: any, type: string): boolean => {
     return false;
   }
 
-  if (typeof component !== "function" && !React.isValidElement(component)) {
+  if (typeof component !== 'function' && !React.isValidElement(component)) {
     console.warn(`❌ Componente ${type} não é uma função React válida`);
     return false;
   }
@@ -124,7 +124,7 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> =
 
 ```typescript
 // Usar o registry no UniversalBlockRenderer
-import { getEnhancedComponent } from "@/config/enhancedBlockRegistry";
+import { getEnhancedComponent } from '@/config/enhancedBlockRegistry';
 
 const Component = getEnhancedComponent(block.type);
 ```

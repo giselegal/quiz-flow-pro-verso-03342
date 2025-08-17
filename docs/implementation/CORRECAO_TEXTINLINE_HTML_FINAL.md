@@ -46,13 +46,13 @@ O componente TextInlineBlock estava mostrando HTML cru ao invés de renderizar a
 content: block.content?.title ||
   block.content?.question ||
   block.properties?.content ||
-  "Componente sem conteúdo definido";
+  'Componente sem conteúdo definido';
 
 // Novo - preserva content original
 content: block.properties?.content || // PRESERVA o content original primeiro
   block.content?.title ||
   block.content?.question ||
-  "Componente sem conteúdo definido";
+  'Componente sem conteúdo definido';
 ```
 
 ### 3. **UniversalBlockRenderer.tsx** - Props corretas:

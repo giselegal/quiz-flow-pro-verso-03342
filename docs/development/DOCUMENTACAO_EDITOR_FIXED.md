@@ -183,10 +183,10 @@ const setActiveStage = useCallback(
 
 ```typescript
 // ✅ IMPLEMENTADO: Logs estruturados por contexto
-console.log("🔄 EditorContext: Mudança para etapa:", stageId);
-console.log("✅ EditorContext: Bloco adicionado à etapa:", stageId);
-console.log("🎯 FunnelStagesPanel: Etapa ativa:", activeStageId);
-console.log("🎛️ PropertiesPanel: Carregando propriedades:", blockId);
+console.log('🔄 EditorContext: Mudança para etapa:', stageId);
+console.log('✅ EditorContext: Bloco adicionado à etapa:', stageId);
+console.log('🎯 FunnelStagesPanel: Etapa ativa:', activeStageId);
+console.log('🎛️ PropertiesPanel: Carregando propriedades:', blockId);
 ```
 
 ## 🧠 SISTEMA DE CONTEXTOS OTIMIZADO
@@ -456,15 +456,15 @@ console.log(`🎯 [timestamp] FunnelStagesPanel - Dados completos:`, steps);
 **Editor Principal:**
 
 ```javascript
-console.log("🔄 Editor: Mudando para etapa:", stageId);
-console.log("📦 Carregando blocos da etapa:", stageId);
-console.log("🔢 Blocos disponíveis:", stageBlocks[stageId]?.length || 0);
+console.log('🔄 Editor: Mudando para etapa:', stageId);
+console.log('📦 Carregando blocos da etapa:', stageId);
+console.log('🔢 Blocos disponíveis:', stageBlocks[stageId]?.length || 0);
 ```
 
 **Enhanced Block Registry:**
 
 ```javascript
-console.log("✅ Registry Stats:", {
+console.log('✅ Registry Stats:', {
   active: componentsCount,
   total: totalKeys,
 });
@@ -890,7 +890,7 @@ src/pages/editor.tsx                       # Editor antigo (16 refs)
 ```typescript
 // INICIALIZAÇÃO IMEDIATA (✅ OK)
 const [steps, setSteps] = useState<FunnelStep[]>(() => {
-  const initialTemplate = FUNNEL_TEMPLATES["funil-21-etapas"];
+  const initialTemplate = FUNNEL_TEMPLATES['funil-21-etapas'];
   return initialTemplate.defaultSteps; // 21 steps carregadas
 });
 

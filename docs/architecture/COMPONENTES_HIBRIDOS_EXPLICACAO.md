@@ -84,9 +84,9 @@ const StyledQuestion = ({ template }) => {
 
 ```typescript
 const ComponentRegistry = {
-  "quiz-question": QuizQuestionComponent,
-  "result-card": ResultCardComponent,
-  "style-analysis": StyleAnalysisComponent,
+  'quiz-question': QuizQuestionComponent,
+  'result-card': ResultCardComponent,
+  'style-analysis': StyleAnalysisComponent,
 };
 ```
 

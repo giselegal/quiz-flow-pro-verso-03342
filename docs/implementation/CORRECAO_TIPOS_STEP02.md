@@ -146,14 +146,14 @@ Os componentes não estavam sendo renderizados porque estavam usando **tipos inc
 ```typescript
 export const ENHANCED_BLOCK_REGISTRY = {
   // ✅ Tipos Corretos Registrados:
-  "text-inline": TextInlineBlock,
-  "heading-inline": HeadingInlineBlock,
-  "image-display-inline": ImageDisplayInlineBlock,
-  "button-inline": ButtonInlineFixed,
-  "quiz-intro-header": QuizIntroHeaderBlock,
-  "form-input": FormInputBlock,
-  "options-grid": OptionsGridBlock,
-  "legal-notice-inline": LegalNoticeInlineBlock,
+  'text-inline': TextInlineBlock,
+  'heading-inline': HeadingInlineBlock,
+  'image-display-inline': ImageDisplayInlineBlock,
+  'button-inline': ButtonInlineFixed,
+  'quiz-intro-header': QuizIntroHeaderBlock,
+  'form-input': FormInputBlock,
+  'options-grid': OptionsGridBlock,
+  'legal-notice-inline': LegalNoticeInlineBlock,
 
   // ✅ Aliases para Compatibilidade:
   text: TextInline,

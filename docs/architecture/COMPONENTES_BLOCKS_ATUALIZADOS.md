@@ -115,7 +115,7 @@ import {
   TextInlineBlock,
   QuizStartPageInlineBlock,
   ResultHeaderInlineBlock,
-} from "./src/components/editor/blocks/inline";
+} from './src/components/editor/blocks/inline';
 ```
 
 ### **3. DOCUMENTAÇÃO:**

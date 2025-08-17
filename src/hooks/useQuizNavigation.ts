@@ -1,6 +1,6 @@
 /**
  * useQuizNavigation Hook - Flow Control and Navigation History
- * 
+ *
  * Manages quiz navigation flow, step transitions, and navigation history.
  * Integrates with the quiz state management for seamless user experience.
  */
@@ -35,42 +35,45 @@ export const useQuizNavigation = (
   }, [currentStep, totalSteps]);
 
   // Navigate to a specific step
-  const goToStep = useCallback((stepNumber: number) => {
-    if (stepNumber < 1 || stepNumber > totalSteps) {
-      console.warn(`⚠️ Invalid step number: ${stepNumber}. Must be between 1 and ${totalSteps}`);
-      return;
-    }
-
-    console.log(`🧭 Navigating to step ${stepNumber}`);
-    
-    setNavigation(prev => {
-      const newHistory = [...prev.history];
-      
-      // Add to history if not going back
-      if (stepNumber > prev.currentStep) {
-        newHistory.push(stepNumber.toString());
-      } else if (stepNumber < prev.currentStep) {
-        // Remove future steps from history when going back
-        const stepIndex = newHistory.indexOf(stepNumber.toString());
-        if (stepIndex !== -1) {
-          newHistory.splice(stepIndex + 1);
-        }
+  const goToStep = useCallback(
+    (stepNumber: number) => {
+      if (stepNumber < 1 || stepNumber > totalSteps) {
+        console.warn(`⚠️ Invalid step number: ${stepNumber}. Must be between 1 and ${totalSteps}`);
+        return;
       }
 
-      return {
-        currentStep: stepNumber,
-        totalSteps,
-        canGoBack: stepNumber > 1,
-        canGoForward: stepNumber < totalSteps,
-        history: newHistory,
-      };
-    });
+      console.log(`🧭 Navigating to step ${stepNumber}`);
 
-    // Notify parent component of step change
-    if (onStepChange) {
-      onStepChange(stepNumber);
-    }
-  }, [totalSteps, onStepChange]);
+      setNavigation(prev => {
+        const newHistory = [...prev.history];
+
+        // Add to history if not going back
+        if (stepNumber > prev.currentStep) {
+          newHistory.push(stepNumber.toString());
+        } else if (stepNumber < prev.currentStep) {
+          // Remove future steps from history when going back
+          const stepIndex = newHistory.indexOf(stepNumber.toString());
+          if (stepIndex !== -1) {
+            newHistory.splice(stepIndex + 1);
+          }
+        }
+
+        return {
+          currentStep: stepNumber,
+          totalSteps,
+          canGoBack: stepNumber > 1,
+          canGoForward: stepNumber < totalSteps,
+          history: newHistory,
+        };
+      });
+
+      // Notify parent component of step change
+      if (onStepChange) {
+        onStepChange(stepNumber);
+      }
+    },
+    [totalSteps, onStepChange]
+  );
 
   // Navigate to next step
   const nextStep = useCallback(() => {

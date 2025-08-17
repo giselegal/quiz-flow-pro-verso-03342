@@ -37,7 +37,7 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
     type: comp.type,
     name: comp.label,
     category: comp.category,
-    description: `Componente ${comp.label}`
+    description: `Componente ${comp.label}`,
   }));
 
   const handleSearch = (query: string) => {

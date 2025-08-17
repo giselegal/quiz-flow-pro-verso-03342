@@ -7,7 +7,7 @@
 
 console.log(`
 🎯 ESTRATÉGIA RECOMENDADA: EVOLUIR SEU SISTEMA ATUAL
-${"=".repeat(80)}
+${'='.repeat(80)}
 
 📊 ANÁLISE COMPARATIVA:
 
@@ -27,7 +27,7 @@ ${"=".repeat(80)}
    • Performance otimizada
    • Zero dependências externas
 
-${"=".repeat(80)}
+${'='.repeat(80)}
 
 🚀 PLANO DE EVOLUÇÃO EM 3 FASES:
 
@@ -49,7 +49,7 @@ ${"=".repeat(80)}
    🎯 Editor de animações
    🎯 Marketplace de templates
 
-${"=".repeat(80)}
+${'='.repeat(80)}
 
 💡 POR QUE SEU SISTEMA É SUPERIOR:
 
@@ -73,7 +73,7 @@ ${"=".repeat(80)}
    • Seus dados ficam no seu servidor
    • Sem dependência de terceiros
 
-${"=".repeat(80)}
+${'='.repeat(80)}
 
 🛠️ IMPLEMENTAÇÕES RECOMENDADAS:
 
@@ -97,7 +97,7 @@ ${"=".repeat(80)}
    • Heatmaps de cliques
    • Relatórios de abandono
 
-${"=".repeat(80)}
+${'='.repeat(80)}
 
 ⚡ PRÓXIMOS PASSOS IMEDIATOS:
 
@@ -121,7 +121,7 @@ ${"=".repeat(80)}
    • Compartilhamento de templates
    • Marketplace interno
 
-${"=".repeat(80)}
+${'='.repeat(80)}
 
 🎉 CONCLUSÃO:
 
@@ -132,7 +132,7 @@ A evolução incremental vai te dar o melhor de dois mundos:
 
 Investir na evolução do seu sistema é a estratégia mais inteligente!
 
-${"=".repeat(80)}
+${'='.repeat(80)}
 `);
 
-console.log("\n🚀 READY TO EVOLVE! Vamos implementar as melhorias? 💪");
+console.log('\n🚀 READY TO EVOLVE! Vamos implementar as melhorias? 💪');

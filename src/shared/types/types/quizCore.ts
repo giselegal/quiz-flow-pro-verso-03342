@@ -1,7 +1,7 @@
 /**
  * Comprehensive Quiz Types - Master Interface Definition
- * 
- * This file consolidates all quiz-related types based on the quiz21StepsComplete.ts 
+ *
+ * This file consolidates all quiz-related types based on the quiz21StepsComplete.ts
  * template analysis and extends the existing type definitions.
  */
 
@@ -11,7 +11,7 @@ export type {
   Style,
   QuizOption as LegacyQuizOption,
   QuizQuestion as LegacyQuizQuestion,
-  QuizComponentStyle
+  QuizComponentStyle,
 } from './quiz';
 
 // ============================================================================
@@ -101,22 +101,16 @@ export interface Result {
 // Supporting Types
 // ============================================================================
 
-export type StepType = 
-  | 'intro' 
-  | 'question' 
-  | 'strategic' 
-  | 'transition' 
-  | 'result' 
-  | 'offer';
+export type StepType = 'intro' | 'question' | 'strategic' | 'transition' | 'result' | 'offer';
 
-export type BlockType = 
+export type BlockType =
   // Core blocks
   | 'text'
-  | 'heading' 
+  | 'heading'
   | 'image'
   | 'button'
   | 'spacer'
-  
+
   // Quiz specific blocks
   | 'quiz-intro-header'
   | 'options-grid'
@@ -124,7 +118,7 @@ export type BlockType =
   | 'quiz-question'
   | 'quiz-result'
   | 'style-result'
-  
+
   // Layout blocks
   | 'text-inline'
   | 'image-display-inline'
@@ -153,12 +147,12 @@ export interface BlockProperties {
   margin?: string;
   borderRadius?: string;
   boxShadow?: string;
-  
+
   // Typography properties
   fontSize?: string;
   fontWeight?: string;
   color?: string;
-  
+
   // Quiz specific properties
   showImages?: boolean;
   columns?: number;
@@ -168,7 +162,7 @@ export interface BlockProperties {
   multipleSelection?: boolean;
   autoAdvanceOnComplete?: boolean;
   autoAdvanceDelay?: number;
-  
+
   // Selection and validation
   questionId?: string;
   enableButtonOnlyWhenValid?: boolean;
@@ -176,21 +170,21 @@ export interface BlockProperties {
   validationMessage?: string;
   progressMessage?: string;
   showSelectionCount?: boolean;
-  
+
   // Styling
   selectionStyle?: 'border' | 'background' | 'shadow';
   selectedColor?: string;
   hoverColor?: string;
   gridGap?: number;
   responsiveColumns?: boolean;
-  
+
   // Animation
   animation?: string;
   animationDuration?: string;
-  
+
   // Score values for quiz logic
   scoreValues?: Record<string, number>;
-  
+
   [key: string]: any;
 }
 
@@ -234,7 +228,7 @@ export interface AnalyticsEvent {
 export interface QuizSettings {
   title: string;
   description?: string;
-  
+
   // Scoring configuration
   scoring: {
     normalQuestionPoints: number;
@@ -244,7 +238,7 @@ export interface QuizSettings {
     normalSelectionLimit: number;
     strategicSelectionLimit: number;
   };
-  
+
   // Results configuration
   results: {
     showUserName: boolean;
@@ -254,21 +248,21 @@ export interface QuizSettings {
     showStyleImages: boolean;
     showStyleGuides: boolean;
   };
-  
+
   // SEO and meta
   seo?: {
     title: string;
     description: string;
     keywords: string[];
   };
-  
+
   // Analytics
   analytics?: {
     facebookPixelId?: string;
     googleAnalyticsId?: string;
     utmParams?: Record<string, string>;
   };
-  
+
   // Appearance
   theme?: {
     primaryColor: string;
@@ -285,39 +279,39 @@ export interface TemplateSettings {
     version: string;
     author: string;
   };
-  
+
   design: {
     primaryColor: string;
     secondaryColor: string;
     accentColor: string;
     backgroundColor: string;
     fontFamily: string;
-    
+
     button: {
       background: string;
       textColor: string;
       borderRadius: string;
       shadow: string;
     };
-    
+
     animations: {
       questionTransition: string;
       optionSelect: string;
       button: string;
     };
   };
-  
+
   logic: {
     selection: {
       normal: string;
       strategic: string;
     };
-    
+
     calculation: {
       method: string;
       resultado: string;
     };
-    
+
     transitions: {
       betweenSteps: string;
       toResult: string;

@@ -24,22 +24,22 @@ Uncaught TypeError: Cannot read properties of null (reading 'useState')
 
 ```tsx
 // ❌ ANTES
-"use client";
-import React, { useEffect, useState } from "react";
+'use client';
+import React, { useEffect, useState } from 'react';
 
 // ✅ DEPOIS
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 ```
 
 #### **ClientLayout.tsx**
 
 ```tsx
 // ❌ ANTES
-"use client";
-import React from "react";
+'use client';
+import React from 'react';
 
 // ✅ DEPOIS
-import React from "react";
+import React from 'react';
 ```
 
 #### **Outros arquivos corrigidos:**

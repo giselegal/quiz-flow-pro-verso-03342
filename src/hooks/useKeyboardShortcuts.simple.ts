@@ -21,7 +21,10 @@ export const useKeyboardShortcuts = (options: KeyboardShortcutsOptions) => {
       }
 
       // Ctrl+Y ou Ctrl+Shift+Z para refazer
-      if ((event.ctrlKey && event.key === 'y') || (event.ctrlKey && event.shiftKey && event.key === 'z')) {
+      if (
+        (event.ctrlKey && event.key === 'y') ||
+        (event.ctrlKey && event.shiftKey && event.key === 'z')
+      ) {
         event.preventDefault();
         if (options.canRedo && options.onRedo) {
           options.onRedo();
@@ -38,7 +41,7 @@ export const useKeyboardShortcuts = (options: KeyboardShortcutsOptions) => {
     };
 
     window.addEventListener('keydown', handleKeyDown);
-    
+
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };

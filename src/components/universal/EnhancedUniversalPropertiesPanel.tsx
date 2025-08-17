@@ -257,12 +257,12 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
           <PropertyChangeIndicator key={`${key}-${idx}`}>
             <div className="flex items-center justify-between">
               <Label className="text-sm font-medium text-[#432818]">{label}</Label>
-              <Switch 
-                checked={!!value} 
-                onCheckedChange={(checked) => {
+              <Switch
+                checked={!!value}
+                onCheckedChange={checked => {
                   console.log('🎯 EnhancedPanel SWITCH mudou:', { key, checked, label });
                   updateProperty(key, checked);
-                }} 
+                }}
               />
             </div>
           </PropertyChangeIndicator>
@@ -316,15 +316,15 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
         return (
           <PropertyChangeIndicator key={`${key}-${idx}`}>
             <Select
-              value={value || (options?.find(opt => opt.value !== "")?.value) || ""}
+              value={value || options?.find(opt => opt.value !== '')?.value || ''}
               onValueChange={newValue => updateProperty(key, newValue)}
             >
               <SelectTrigger className="border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20">
                 <SelectValue placeholder={`Selecione ${label.toLowerCase()}`} />
               </SelectTrigger>
               <SelectContent>
-                {options?.map((option, optionIdx) => 
-                  option.value !== "" ? (
+                {options?.map((option, optionIdx) =>
+                  option.value !== '' ? (
                     <SelectItem key={`${option.value}-${optionIdx}`} value={option.value}>
                       {option.label}
                     </SelectItem>

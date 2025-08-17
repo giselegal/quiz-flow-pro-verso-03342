@@ -52,9 +52,9 @@ graph TD
 
 ```typescript
 export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> = {
-  "options-grid": OptionsGridInlineBlock, // ← JSON "type" → Componente React
-  "text-inline": TextInlineBlock,
-  "button-inline": ButtonInlineFixed,
+  'options-grid': OptionsGridInlineBlock, // ← JSON "type" → Componente React
+  'text-inline': TextInlineBlock,
+  'button-inline': ButtonInlineFixed,
   // ... outros componentes
 };
 ```
@@ -84,7 +84,7 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
     // ... lógica de seleção
 
     if (onPropertyChange) {
-      onPropertyChange("selectedOptions", newSelected);
+      onPropertyChange('selectedOptions', newSelected);
     }
   };
 
@@ -227,7 +227,7 @@ const CustomComponentBlock: React.FC<BlockComponentProps> = ({ block }) => {
 
 ```tsx
 export const ENHANCED_BLOCK_REGISTRY = {
-  "custom-component": CustomComponentBlock,
+  'custom-component': CustomComponentBlock,
   // ... outros componentes
 };
 ```

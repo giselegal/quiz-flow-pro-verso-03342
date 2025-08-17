@@ -92,7 +92,7 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
             variant="secondary"
             size="sm"
             className="h-6 w-6 p-0 text-red-600 hover:bg-red-100"
-            onClick={(e) => {
+            onClick={e => {
               e.stopPropagation();
               onDelete();
             }}
@@ -103,7 +103,7 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
 
         {/* Component content */}
         <div className="p-4" onClick={onSelect}>
-          <React.Suspense 
+          <React.Suspense
             fallback={
               <div className="animate-pulse bg-gray-200 h-16 rounded flex items-center justify-center">
                 <span className="text-gray-500 text-sm">Carregando...</span>

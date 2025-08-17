@@ -251,27 +251,30 @@ export const performanceAnalyzer = PerformanceAnalyzer.getInstance();
 if (process.env.NODE_ENV === 'development') {
   // Usar requestIdleCallback para não bloquear inicialização
   if ('requestIdleCallback' in window) {
-    (window as any).requestIdleCallback(() => {
-      // Aguardar app estabilizar mais tempo
-      setTimeout(() => {
-        performanceAnalyzer.startMonitoring();
-        
-        // Relatórios muito menos frequentes - a cada 5 minutos
-        const reportInterval = setInterval(() => {
-          if ('requestIdleCallback' in window) {
-            (window as any).requestIdleCallback(() => {
-              performanceAnalyzer.logReport();
-            });
-          }
-        }, 300000); // 5 minutos
-        
-        // Limpar após 30 minutos para evitar memory leaks
+    (window as any).requestIdleCallback(
+      () => {
+        // Aguardar app estabilizar mais tempo
         setTimeout(() => {
-          clearInterval(reportInterval);
-          performanceAnalyzer.stopMonitoring();
-        }, 1800000); // 30 minutos
-      }, 10000); // 10s para estabilizar
-    }, { timeout: 5000 });
+          performanceAnalyzer.startMonitoring();
+
+          // Relatórios muito menos frequentes - a cada 5 minutos
+          const reportInterval = setInterval(() => {
+            if ('requestIdleCallback' in window) {
+              (window as any).requestIdleCallback(() => {
+                performanceAnalyzer.logReport();
+              });
+            }
+          }, 300000); // 5 minutos
+
+          // Limpar após 30 minutos para evitar memory leaks
+          setTimeout(() => {
+            clearInterval(reportInterval);
+            performanceAnalyzer.stopMonitoring();
+          }, 1800000); // 30 minutos
+        }, 10000); // 10s para estabilizar
+      },
+      { timeout: 5000 }
+    );
   }
 }
 

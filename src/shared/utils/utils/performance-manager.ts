@@ -1,6 +1,6 @@
 /**
  * PERFORMANCE MANAGER
- * 
+ *
  * Centralized performance monitoring and optimization system.
  * Replaces scattered performance utilities and provides:
  * - Hook usage tracking
@@ -31,7 +31,7 @@ export class PerformanceManager {
     renderCounts: new Map(),
     memorySnapshots: [],
     leakedTimeouts: new Set(),
-    lastCleanup: Date.now()
+    lastCleanup: Date.now(),
   };
 
   private static cleanupInterval: NodeJS.Timeout | null = null;
@@ -45,9 +45,9 @@ export class PerformanceManager {
     if (!this.metrics.hookUsage.has(hookName)) {
       this.metrics.hookUsage.set(hookName, new Set());
     }
-    
+
     this.metrics.hookUsage.get(hookName)!.add(componentId);
-    
+
     // Track render count
     const renderKey = `${hookName}:${componentId}`;
     const currentCount = this.metrics.renderCounts.get(renderKey) || 0;
@@ -61,24 +61,24 @@ export class PerformanceManager {
 
   static getHookUsageStats(): Record<string, number> {
     const stats: Record<string, number> = {};
-    
+
     for (const [hookName, components] of this.metrics.hookUsage.entries()) {
       stats[hookName] = components.size;
     }
-    
+
     return stats;
   }
 
   static getRenderStats(): Array<{ component: string; renders: number }> {
     const stats = [];
-    
+
     for (const [key, count] of this.metrics.renderCounts.entries()) {
       stats.push({
         component: key,
-        renders: count
+        renders: count,
       });
     }
-    
+
     return stats.sort((a, b) => b.renders - a.renders);
   }
 
@@ -90,7 +90,7 @@ export class PerformanceManager {
     const suggestions: OptimizationSuggestion[] = [];
     const renderStats = this.getRenderStats();
     const componentStats = renderStats.filter(s => s.component.includes(component));
-    
+
     for (const stat of componentStats) {
       if (stat.renders > 100) {
         suggestions.push({
@@ -98,14 +98,14 @@ export class PerformanceManager {
           issue: 'Excessive re-renders',
           severity: stat.renders > 500 ? 'critical' : stat.renders > 200 ? 'high' : 'medium',
           suggestion: 'Consider using React.memo, useMemo, or useCallback to reduce re-renders',
-          impact: `Component has rendered ${stat.renders} times`
+          impact: `Component has rendered ${stat.renders} times`,
         });
       }
     }
 
     // Check for hook overuse
     const hookStats = this.getHookUsageStats();
-    const componentHooks = Object.entries(hookStats).filter(([hook]) => 
+    const componentHooks = Object.entries(hookStats).filter(([hook]) =>
       this.metrics.hookUsage.get(hook)?.has(component)
     );
 
@@ -115,7 +115,7 @@ export class PerformanceManager {
         issue: 'Too many hooks',
         severity: componentHooks.length > 20 ? 'high' : 'medium',
         suggestion: 'Consider consolidating related hooks or splitting component',
-        impact: `Component uses ${componentHooks.length} different hooks`
+        impact: `Component uses ${componentHooks.length} different hooks`,
       });
     }
 
@@ -129,10 +129,10 @@ export class PerformanceManager {
   static takeMemorySnapshot(): void {
     if (typeof window !== 'undefined' && (performance as any).memory) {
       const memoryInfo = (performance as any).memory;
-      
+
       this.metrics.memorySnapshots.push({
         timestamp: Date.now(),
-        usage: memoryInfo.usedJSHeapSize
+        usage: memoryInfo.usedJSHeapSize,
       });
 
       // Keep only last 100 snapshots
@@ -144,19 +144,19 @@ export class PerformanceManager {
 
   static getMemoryTrend(): 'increasing' | 'stable' | 'decreasing' | 'unknown' {
     const snapshots = this.metrics.memorySnapshots;
-    
+
     if (snapshots.length < 10) return 'unknown';
-    
+
     const recent = snapshots.slice(-10);
     const older = snapshots.slice(-20, -10);
-    
+
     if (older.length === 0) return 'unknown';
-    
+
     const recentAvg = recent.reduce((sum, s) => sum + s.usage, 0) / recent.length;
     const olderAvg = older.reduce((sum, s) => sum + s.usage, 0) / older.length;
-    
+
     const change = (recentAvg - olderAvg) / olderAvg;
-    
+
     if (change > 0.1) return 'increasing';
     if (change < -0.1) return 'decreasing';
     return 'stable';
@@ -165,14 +165,14 @@ export class PerformanceManager {
   static detectMemoryLeaks(): OptimizationSuggestion[] {
     const suggestions: OptimizationSuggestion[] = [];
     const trend = this.getMemoryTrend();
-    
+
     if (trend === 'increasing') {
       suggestions.push({
         component: 'Application',
         issue: 'Potential memory leak',
         severity: 'high',
         suggestion: 'Check for uncleaned timeouts, intervals, and event listeners',
-        impact: 'Memory usage is consistently increasing'
+        impact: 'Memory usage is consistently increasing',
       });
     }
 
@@ -183,7 +183,7 @@ export class PerformanceManager {
         issue: 'Timeout leaks detected',
         severity: 'medium',
         suggestion: 'Ensure all setTimeout/setInterval calls are properly cleared',
-        impact: `${this.metrics.leakedTimeouts.size} potential leaked timeouts`
+        impact: `${this.metrics.leakedTimeouts.size} potential leaked timeouts`,
       });
     }
 
@@ -199,7 +199,7 @@ export class PerformanceManager {
       this.metrics.leakedTimeouts.delete(timeout);
       callback();
     }, delay);
-    
+
     this.metrics.leakedTimeouts.add(timeout);
     return timeout;
   }
@@ -226,7 +226,7 @@ export class PerformanceManager {
 
   static async cleanupTimers(): Promise<number> {
     let cleaned = 0;
-    
+
     // Clear all tracked timeouts/intervals
     for (const timeout of this.metrics.leakedTimeouts) {
       try {
@@ -237,15 +237,15 @@ export class PerformanceManager {
         // Timeout might already be cleared
       }
     }
-    
+
     this.metrics.leakedTimeouts.clear();
     return cleaned;
   }
 
   static cleanupMetrics(): void {
     // Clear old data
-    const cutoff = Date.now() - (24 * 60 * 60 * 1000); // 24 hours ago
-    
+    const cutoff = Date.now() - 24 * 60 * 60 * 1000; // 24 hours ago
+
     this.metrics.memorySnapshots = this.metrics.memorySnapshots.filter(
       snapshot => snapshot.timestamp > cutoff
     );
@@ -279,13 +279,13 @@ export class PerformanceManager {
 
   static startMonitoring(): void {
     if (this.isMonitoring) return;
-    
+
     this.isMonitoring = true;
-    
+
     // Take memory snapshots every 30 seconds
     this.cleanupInterval = this.safeInterval(() => {
       this.takeMemorySnapshot();
-      
+
       // Run cleanup every 5 minutes
       if (Date.now() - this.metrics.lastCleanup > 300000) {
         this.cleanupMetrics();
@@ -297,12 +297,12 @@ export class PerformanceManager {
 
   static stopMonitoring(): void {
     if (!this.isMonitoring) return;
-    
+
     if (this.cleanupInterval) {
       this.safeClearInterval(this.cleanupInterval);
       this.cleanupInterval = null;
     }
-    
+
     this.isMonitoring = false;
     console.log('⏹️ Performance monitoring stopped');
   }
@@ -329,11 +329,11 @@ export class PerformanceManager {
     const hookStats = this.getHookUsageStats();
     const renderStats = this.getRenderStats();
     const memoryLeaks = this.detectMemoryLeaks();
-    
+
     // Get suggestions for top rendering components
     const suggestions: OptimizationSuggestion[] = [...memoryLeaks];
     const topComponents = renderStats.slice(0, 5);
-    
+
     for (const component of topComponents) {
       const componentName = component.component.split(':')[1] || component.component;
       suggestions.push(...this.optimizeRenders(componentName));
@@ -345,16 +345,17 @@ export class PerformanceManager {
         activeComponents: new Set(renderStats.map(s => s.component.split(':')[1])).size,
         totalRenders: renderStats.reduce((sum, s) => sum + s.renders, 0),
         memoryTrend: this.getMemoryTrend(),
-        leakedTimeouts: this.metrics.leakedTimeouts.size
+        leakedTimeouts: this.metrics.leakedTimeouts.size,
       },
-      suggestions: suggestions.filter((s, i, arr) => 
-        arr.findIndex(other => other.component === s.component && other.issue === s.issue) === i
+      suggestions: suggestions.filter(
+        (s, i, arr) =>
+          arr.findIndex(other => other.component === s.component && other.issue === s.issue) === i
       ),
       details: {
         hookUsage: hookStats,
         topRenders: renderStats.slice(0, 10),
-        memorySnapshots: this.metrics.memorySnapshots.length
-      }
+        memorySnapshots: this.metrics.memorySnapshots.length,
+      },
     };
   }
 
@@ -365,13 +366,13 @@ export class PerformanceManager {
   static reset(): void {
     this.stopMonitoring();
     this.cleanupTimers();
-    
+
     this.metrics = {
       hookUsage: new Map(),
       renderCounts: new Map(),
       memorySnapshots: [],
       leakedTimeouts: new Set(),
-      lastCleanup: Date.now()
+      lastCleanup: Date.now(),
     };
   }
 

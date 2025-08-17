@@ -52,9 +52,7 @@ export const ConnectedQuizResultsBlock: React.FC<QuizResultsProps> = ({
     <div className="bg-gradient-to-b from-blue-50 to-white rounded-xl shadow-lg p-8">
       {/* Header Personalizado */}
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-blue-600 mb-4">
-          🎉 Parabéns, {displayName}!
-        </h1>
+        <h1 className="text-3xl font-bold text-blue-600 mb-4">🎉 Parabéns, {displayName}!</h1>
         <p className="text-lg text-gray-700">
           Seu resultado personalizado baseado em suas respostas
         </p>
@@ -66,17 +64,15 @@ export const ConnectedQuizResultsBlock: React.FC<QuizResultsProps> = ({
           Seu Estilo Predominante: {primaryStyle.category}
         </h2>
         <div className="flex items-center justify-between mb-4">
-          <div className="text-4xl font-bold text-blue-600">
-            {primaryStyle.percentage}%
-          </div>
+          <div className="text-4xl font-bold text-blue-600">{primaryStyle.percentage}%</div>
           <div className="text-sm text-gray-600">
             {primaryStyle.points} pontos de {quizResult.totalQuestions * 3}
           </div>
         </div>
-        
+
         {/* Barra de Progresso */}
         <div className="w-full bg-gray-200 rounded-full h-3 mb-4">
-          <div 
+          <div
             className="bg-blue-600 h-3 rounded-full transition-all duration-1000"
             style={{ width: `${primaryStyle.percentage}%` }}
           ></div>
@@ -91,11 +87,9 @@ export const ConnectedQuizResultsBlock: React.FC<QuizResultsProps> = ({
             {secondaryStyles.map((style, index) => (
               <div key={index} className="bg-gray-50 rounded-lg p-4 border">
                 <h4 className="font-medium text-gray-900 mb-2">{style.category}</h4>
-                <div className="text-lg font-bold text-gray-700">
-                  {style.percentage}%
-                </div>
+                <div className="text-lg font-bold text-gray-700">{style.percentage}%</div>
                 <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
-                  <div 
+                  <div
                     className="bg-gray-400 h-2 rounded-full"
                     style={{ width: `${style.percentage}%` }}
                   ></div>
@@ -121,12 +115,8 @@ export const ConnectedQuizResultsBlock: React.FC<QuizResultsProps> = ({
       {showOffer && (
         <div className="text-center">
           <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg p-6">
-            <h3 className="text-xl font-bold mb-2">
-              Quer descobrir mais sobre seu estilo?
-            </h3>
-            <p className="mb-4">
-              Temos uma oferta especial baseada no seu resultado
-            </p>
+            <h3 className="text-xl font-bold mb-2">Quer descobrir mais sobre seu estilo?</h3>
+            <p className="mb-4">Temos uma oferta especial baseada no seu resultado</p>
             <button className="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
               Ver Oferta Personalizada
             </button>

@@ -14,7 +14,7 @@ interface TemplateRendererProps {
 /**
  * 🎯 TEMPLATE RENDERER HÍBRIDO
  * ✅ Sistema que decide se renderizar template conectado ou usar fallback
- * 
+ *
  * Funcionalidades:
  * - Detecta se template tem versão conectada
  * - Usa templates conectados quando disponíveis
@@ -50,18 +50,18 @@ export const TemplateRenderer = ({ stepNumber, sessionId, onContinue }: Template
 
   if (ConnectedTemplate && renderMode === 'connected') {
     console.log(`✅ TemplateRenderer: Usando template conectado para step ${stepNumber}`);
-    
+
     // Renderizar template conectado com props apropriadas
     if (stepNumber === 20) {
       return <ConnectedTemplate sessionId={sessionId || 'demo'} onContinue={onContinue} />;
     }
-    
+
     return <ConnectedTemplate sessionId={sessionId || 'demo'} onContinue={onContinue} />;
   }
 
   // Fallback: renderizar baseado na configuração JSON
   console.log(`📄 TemplateRenderer: Usando fallback JSON para step ${stepNumber}`);
-  
+
   return (
     <div className="min-h-screen bg-[#FAF9F7] flex flex-col">
       {/* Header básico */}
@@ -72,9 +72,7 @@ export const TemplateRenderer = ({ stepNumber, sessionId, onContinue }: Template
             alt="Logo Gisele Galvão"
             className="w-16 h-16 object-contain"
           />
-          <div className="text-right text-sm text-gray-600">
-            Step {stepNumber} de 21
-          </div>
+          <div className="text-right text-sm text-gray-600">Step {stepNumber} de 21</div>
         </div>
       </div>
 
@@ -84,17 +82,13 @@ export const TemplateRenderer = ({ stepNumber, sessionId, onContinue }: Template
           {/* Conteúdo baseado no tipo de template */}
           {stepNumber === 1 && (
             <div className="space-y-6">
-              <h1 className="text-4xl font-bold text-[#432818]">
-                Descubra Seu Estilo Pessoal
-              </h1>
-              <p className="text-lg text-gray-600">
-                Para começar, qual é o seu nome?
-              </p>
+              <h1 className="text-4xl font-bold text-[#432818]">Descubra Seu Estilo Pessoal</h1>
+              <p className="text-lg text-gray-600">Para começar, qual é o seu nome?</p>
               <input
                 type="text"
                 placeholder="Digite seu nome..."
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#B89B7A]"
-                onChange={(e) => {
+                onChange={e => {
                   if (e.target.value.trim()) {
                     quizState.setUserNameFromInput(e.target.value.trim());
                   }
@@ -102,19 +96,15 @@ export const TemplateRenderer = ({ stepNumber, sessionId, onContinue }: Template
               />
             </div>
           )}
-          
+
           {stepNumber >= 2 && stepNumber <= 14 && (
             <div className="space-y-6">
-              <h1 className="text-3xl font-bold text-[#432818]">
-                Questão {stepNumber - 1}
-              </h1>
+              <h1 className="text-3xl font-bold text-[#432818]">Questão {stepNumber - 1}</h1>
               <p className="text-lg text-gray-600">
                 {config?.metadata.name || `Template para step ${stepNumber}`}
               </p>
               <div className="p-8 bg-white rounded-lg border border-gray-200">
-                <p className="text-gray-500">
-                  Template JSON em desenvolvimento...
-                </p>
+                <p className="text-gray-500">Template JSON em desenvolvimento...</p>
                 <div className="mt-4">
                   <button
                     onClick={() => setRenderMode('connected')}
@@ -133,22 +123,16 @@ export const TemplateRenderer = ({ stepNumber, sessionId, onContinue }: Template
                 {config?.metadata.name || `Etapa ${stepNumber}`}
               </h1>
               <div className="p-8 bg-white rounded-lg border border-gray-200">
-                <p className="text-gray-500">
-                  Template em desenvolvimento para step {stepNumber}
-                </p>
+                <p className="text-gray-500">Template em desenvolvimento para step {stepNumber}</p>
               </div>
             </div>
           )}
 
           {stepNumber === 21 && (
             <div className="space-y-6">
-              <h1 className="text-3xl font-bold text-[#432818]">
-                Oferta Final
-              </h1>
+              <h1 className="text-3xl font-bold text-[#432818]">Oferta Final</h1>
               <div className="p-8 bg-white rounded-lg border border-gray-200">
-                <p className="text-lg text-gray-600">
-                  Página de conversão final
-                </p>
+                <p className="text-lg text-gray-600">Página de conversão final</p>
               </div>
             </div>
           )}
@@ -166,7 +150,9 @@ export const TemplateRenderer = ({ stepNumber, sessionId, onContinue }: Template
       {/* Debug info */}
       {process.env.NODE_ENV === 'development' && (
         <div className="fixed bottom-4 right-4 bg-white/90 p-3 rounded-lg text-xs text-gray-600 border space-y-1">
-          <div><strong>Template Renderer Debug</strong></div>
+          <div>
+            <strong>Template Renderer Debug</strong>
+          </div>
           <div>Step: {stepNumber}</div>
           <div>Mode: {renderMode}</div>
           <div>Connected: {!!ConnectedTemplate ? 'Sim' : 'Não'}</div>

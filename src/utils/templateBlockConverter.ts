@@ -2,7 +2,7 @@ import { Block } from '@/types/editor';
 
 /**
  * Template Block Converter - Converte templates TSX para blocos JSON editáveis
- * 
+ *
  * Este utilitário resolve a incompatibilidade entre:
  * - Templates TSX que retornam arrays de objetos
  * - Editor que espera blocos JSON editáveis
@@ -89,7 +89,7 @@ export class TemplateBlockConverter {
 
     try {
       const templateResult = templateFunction(userData);
-      
+
       if (!Array.isArray(templateResult)) {
         console.warn(`Template da etapa ${stepNumber} não retornou array:`, templateResult);
         return this.generateFallbackBlocks(stepNumber);
@@ -111,7 +111,8 @@ export class TemplateBlockConverter {
         id: `step${stepNumber}-fallback-header`,
         type: 'quiz-intro-header' as any,
         content: {
-          logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+          logoUrl:
+            'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
           logoAlt: 'Logo Gisele Galvão',
           logoWidth: '96',
           logoHeight: '96',
@@ -121,7 +122,8 @@ export class TemplateBlockConverter {
         },
         order: 0,
         properties: {
-          logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+          logoUrl:
+            'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
           progressValue: (stepNumber / 21) * 100,
         },
       },

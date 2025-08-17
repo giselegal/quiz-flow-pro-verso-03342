@@ -28,7 +28,7 @@ const EditorFixedStatus: React.FC = () => {
               <CheckCircle className="text-green-600" size={24} />
               <h3 className="text-xl font-bold text-slate-800">Providers Corrigidos</h3>
             </div>
-            
+
             <div className="space-y-3">
               <div className="flex items-center gap-2">
                 <CheckCircle className="text-green-500" size={16} />
@@ -51,7 +51,7 @@ const EditorFixedStatus: React.FC = () => {
               <CheckCircle className="text-green-600" size={24} />
               <h3 className="text-xl font-bold text-slate-800">Hooks Seguros</h3>
             </div>
-            
+
             <div className="space-y-3">
               <div className="flex items-center gap-2">
                 <CheckCircle className="text-green-500" size={16} />
@@ -74,7 +74,7 @@ const EditorFixedStatus: React.FC = () => {
               <CheckCircle className="text-green-600" size={24} />
               <h3 className="text-xl font-bold text-slate-800">Build Status</h3>
             </div>
-            
+
             <div className="space-y-3">
               <div className="flex items-center gap-2">
                 <CheckCircle className="text-green-500" size={16} />
@@ -97,7 +97,7 @@ const EditorFixedStatus: React.FC = () => {
               <CheckCircle className="text-green-600" size={24} />
               <h3 className="text-xl font-bold text-slate-800">Sistema Completo</h3>
             </div>
-            
+
             <div className="space-y-3">
               <div className="flex items-center gap-2">
                 <CheckCircle className="text-green-500" size={16} />
@@ -120,27 +120,25 @@ const EditorFixedStatus: React.FC = () => {
           <Card className="p-6 bg-gradient-to-r from-green-50 to-blue-50 border border-green-200">
             <div className="flex items-center justify-center gap-3 mb-4">
               <CheckCircle className="text-green-600" size={32} />
-              <h3 className="text-2xl font-bold text-green-800">
-                Sistema Funcionando!
-              </h3>
+              <h3 className="text-2xl font-bold text-green-800">Sistema Funcionando!</h3>
             </div>
-            
+
             <p className="text-green-700 mb-6">
-              Todas as correções foram aplicadas. O /editor-fixed agora está totalmente operacional 
+              Todas as correções foram aplicadas. O /editor-fixed agora está totalmente operacional
               com 4 colunas, drag & drop, e sistema de propriedades funcionando.
             </p>
-            
+
             <div className="flex justify-center gap-4">
               <Button
-                onClick={() => window.location.href = '/editor-fixed'}
+                onClick={() => (window.location.href = '/editor-fixed')}
                 className="bg-green-600 hover:bg-green-700 text-white px-8 py-3"
               >
                 Acessar Editor Fixed
               </Button>
-              
+
               <Button
                 variant="outline"
-                onClick={() => window.location.href = '/'}
+                onClick={() => (window.location.href = '/')}
                 className="border-green-600 text-green-700 hover:bg-green-50 px-8 py-3"
               >
                 Voltar ao Início

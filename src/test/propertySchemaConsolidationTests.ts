@@ -1,18 +1,18 @@
 /**
  * 🧪 PropertySchema Consolidation Tests
- * 
+ *
  * Tests to validate the unified PropertySchema system works correctly.
  */
 
-import { 
-  PropertySchema, 
-  PropertyType, 
+import {
+  PropertySchema,
+  PropertyType,
   PropertyCategory,
   legacyToUnified,
   enhancedToUnified,
   optimizedToUnified,
   schemaToUnifiedProperty,
-  unifiedPropertyToSchema
+  unifiedPropertyToSchema,
 } from '@/types/propertySchema';
 
 // Test basic PropertySchema creation
@@ -27,8 +27,8 @@ const textPropertySchema: PropertySchema = {
   placeholder: 'Enter title...',
   validation: {
     min: 1,
-    max: 100
-  }
+    max: 100,
+  },
 };
 
 // Test color property
@@ -37,7 +37,7 @@ const colorPropertySchema: PropertySchema = {
   type: PropertyType.COLOR,
   label: 'Background Color',
   category: PropertyCategory.STYLE,
-  defaultValue: '#ffffff'
+  defaultValue: '#ffffff',
 };
 
 // Test select property with options
@@ -50,8 +50,8 @@ const selectPropertySchema: PropertySchema = {
   options: [
     { value: 'left', label: 'Left' },
     { value: 'center', label: 'Center' },
-    { value: 'right', label: 'Right' }
-  ]
+    { value: 'right', label: 'Right' },
+  ],
 };
 
 // Test array property with itemSchema
@@ -61,17 +61,20 @@ const arrayPropertySchema: PropertySchema = {
   label: 'Quiz Options',
   category: PropertyCategory.CONTENT,
   defaultValue: [],
-  itemSchema: [{
-    key: 'text',
-    type: PropertyType.TEXT,
-    label: 'Option Text',
-    defaultValue: ''
-  }, {
-    key: 'value', 
-    type: PropertyType.TEXT,
-    label: 'Option Value',
-    defaultValue: ''
-  }]
+  itemSchema: [
+    {
+      key: 'text',
+      type: PropertyType.TEXT,
+      label: 'Option Text',
+      defaultValue: '',
+    },
+    {
+      key: 'value',
+      type: PropertyType.TEXT,
+      label: 'Option Value',
+      defaultValue: '',
+    },
+  ],
 };
 
 // Test conversion from legacy format
@@ -81,7 +84,7 @@ const legacySchema = {
   label: 'Test Field',
   description: 'Test description',
   category: 'content' as const,
-  required: true
+  required: true,
 };
 
 const convertedFromLegacy = legacyToUnified(legacySchema, 'testField');
@@ -94,8 +97,8 @@ const enhancedSchema = {
   description: 'Enhanced color field',
   defaultValue: '#ff0000',
   validation: {
-    pattern: '^#[0-9a-fA-F]{6}$'
-  }
+    pattern: '^#[0-9a-fA-F]{6}$',
+  },
 };
 
 const convertedFromEnhanced = enhancedToUnified(enhancedSchema);
@@ -107,9 +110,9 @@ const optimizedSchema = {
   type: 'select' as const,
   options: [
     { label: 'Option A', value: 'a' },
-    { label: 'Option B', value: 'b' }
+    { label: 'Option B', value: 'b' },
   ],
-  defaultValue: 'a'
+  defaultValue: 'a',
 };
 
 const convertedFromOptimized = optimizedToUnified(optimizedSchema);
@@ -138,7 +141,10 @@ console.log('- Array has itemSchema:', arrayPropertySchema.itemSchema?.length ==
 console.log('- Legacy conversion works:', convertedFromLegacy.type === PropertyType.TEXT);
 console.log('- Enhanced conversion works:', convertedFromEnhanced.type === PropertyType.COLOR);
 console.log('- Optimized conversion works:', convertedFromOptimized.type === PropertyType.SELECT);
-console.log('- Bidirectional conversion preserves data:', backToSchema.key === textPropertySchema.key);
+console.log(
+  '- Bidirectional conversion preserves data:',
+  backToSchema.key === textPropertySchema.key
+);
 
 export {
   textPropertySchema,
@@ -147,5 +153,5 @@ export {
   arrayPropertySchema,
   convertedFromLegacy,
   convertedFromEnhanced,
-  convertedFromOptimized
+  convertedFromOptimized,
 };

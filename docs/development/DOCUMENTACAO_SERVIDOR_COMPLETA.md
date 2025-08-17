@@ -57,7 +57,7 @@ Esta documentação explica como o servidor funciona, suas configurações e com
 // vite.config.ts
 export default defineConfig({
   server: {
-    host: "0.0.0.0", // Aceita conexões de qualquer IP
+    host: '0.0.0.0', // Aceita conexões de qualquer IP
     port: 8080, // Porta preferencial
     strictPort: false, // Permite fallback para 8081
     allowedHosts: true, // Aceita todos os hosts
@@ -66,9 +66,9 @@ export default defineConfig({
       overlay: false, // Não mostra overlay de erros
     },
     proxy: {
-      "/api": {
+      '/api': {
         // Proxy para backend
-        target: "http://localhost:3001",
+        target: 'http://localhost:3001',
         changeOrigin: true,
         secure: false,
       },
@@ -122,9 +122,9 @@ Response: JSON data
 
 ```typescript
 // server/index.ts
-import express from "express";
-import cors from "cors";
-import { createServer } from "http";
+import express from 'express';
+import cors from 'cors';
+import { createServer } from 'http';
 
 const app = express();
 const server = createServer(app);
@@ -134,30 +134,30 @@ app.use(cors()); // Permite CORS
 app.use(express.json()); // Parse JSON
 
 // Health Check
-app.get("/health", (req, res) => {
+app.get('/health', (req, res) => {
   res.json({
-    status: "OK",
+    status: 'OK',
     timestamp: new Date().toISOString(),
   });
 });
 
 // API Endpoints
-app.get("/api/quizzes", (req, res) => {
+app.get('/api/quizzes', (req, res) => {
   res.json([]);
 });
 
-app.post("/api/quizzes", (req, res) => {
+app.post('/api/quizzes', (req, res) => {
   res.json({ id: Date.now().toString(), ...req.body });
 });
 
-app.get("/api/quizzes/:id", (req, res) => {
-  res.json({ id: req.params.id, title: "Mock Quiz" });
+app.get('/api/quizzes/:id', (req, res) => {
+  res.json({ id: req.params.id, title: 'Mock Quiz' });
 });
 
 // Error Handler Global
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).json({ error: "Something went wrong!" });
+  res.status(500).json({ error: 'Something went wrong!' });
 });
 
 const PORT = process.env.PORT || 3001;
@@ -218,16 +218,16 @@ shared/
 
 ```typescript
 // src/services/quizSupabaseService.ts
-import { createClient } from "@supabase/supabase-js";
+import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = "https://projeto.supabase.co";
-const supabaseKey = "sua-chave-publica";
+const supabaseUrl = 'https://projeto.supabase.co';
+const supabaseKey = 'sua-chave-publica';
 
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Exemplo de uso
 export const saveQuiz = async quizData => {
-  const { data, error } = await supabase.from("quizzes").insert(quizData);
+  const { data, error } = await supabase.from('quizzes').insert(quizData);
 
   return { data, error };
 };
@@ -368,8 +368,8 @@ proxy: {
 
 ```typescript
 // server/index.ts
-import helmet from "helmet";
-import rateLimit from "express-rate-limit";
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
 
 // Segurança
 app.use(helmet());

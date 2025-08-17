@@ -54,11 +54,11 @@ StyleCharacteristicsInlineBlock.tsx - VAZIO (0 bytes)
 
 ```typescript
 // Imports do diretório pai
-export { default as HeadingInlineBlock } from "../HeadingInlineBlock";
-export { default as ButtonInlineBlock } from "../ButtonInlineBlock";
+export { default as HeadingInlineBlock } from '../HeadingInlineBlock';
+export { default as ButtonInlineBlock } from '../ButtonInlineBlock';
 
 // Todos os outros são do diretório atual
-export { default as TextInlineBlock } from "./TextInlineBlock";
+export { default as TextInlineBlock } from './TextInlineBlock';
 ```
 
 ### 🛠️ Correções Aplicadas

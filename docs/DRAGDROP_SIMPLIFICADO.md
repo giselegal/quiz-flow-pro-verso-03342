@@ -8,8 +8,8 @@ O problema anterior pode ter sido **excesso de logs** que travavam o sistema. Si
 
 ```typescript
 // ✅ SIMPLES
-console.log("🟢 DragStart:", active.id, active.data.current);
-console.log("✅ Dados válidos:", active.data.current.type);
+console.log('🟢 DragStart:', active.id, active.data.current);
+console.log('✅ Dados válidos:', active.data.current.type);
 ```
 
 ### 2. **Sensores Resetados para Valores Mínimos**

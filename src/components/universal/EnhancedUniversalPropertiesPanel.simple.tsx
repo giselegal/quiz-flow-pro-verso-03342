@@ -49,18 +49,10 @@ export const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropert
       <div className="p-4 border-b border-gray-200 bg-white">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-lg font-semibold text-gray-800">
-              Propriedades do Bloco
-            </h3>
-            <p className="text-sm text-gray-600">
-              Tipo: {selectedBlock.type}
-            </p>
+            <h3 className="text-lg font-semibold text-gray-800">Propriedades do Bloco</h3>
+            <p className="text-sm text-gray-600">Tipo: {selectedBlock.type}</p>
           </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onClose}
-          >
+          <Button variant="ghost" size="sm" onClick={onClose}>
             <X className="w-4 h-4" />
           </Button>
         </div>
@@ -80,7 +72,7 @@ export const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropert
               <Input
                 id="block-title"
                 value={localTitle}
-                onChange={(e) => handleTitleChange(e.target.value)}
+                onChange={e => handleTitleChange(e.target.value)}
                 placeholder="Digite o título do bloco"
               />
             </div>
@@ -91,7 +83,7 @@ export const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropert
               <Textarea
                 id="block-text"
                 value={localText}
-                onChange={(e) => handleTextChange(e.target.value)}
+                onChange={e => handleTextChange(e.target.value)}
                 placeholder="Digite o texto do bloco"
                 rows={4}
               />
@@ -120,12 +112,7 @@ export const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropert
 
       {/* Footer */}
       <div className="p-4 border-t border-gray-200 bg-gray-50">
-        <Button
-          variant="destructive"
-          size="sm"
-          onClick={onDelete}
-          className="w-full"
-        >
+        <Button variant="destructive" size="sm" onClick={onDelete} className="w-full">
           <Trash2 className="w-4 h-4 mr-2" />
           Deletar Bloco
         </Button>
