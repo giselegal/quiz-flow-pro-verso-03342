@@ -310,8 +310,12 @@ function App() {
                         <EditorProvider>
                           <div className="p-8">
                             <h1 className="text-2xl font-bold mb-4">Editor Debug Minimal</h1>
-                            <p className="text-muted-foreground">Esta página foi movida. Redirecionando para o editor principal.</p>
-                            <a href="/editor" className="text-blue-600 hover:underline">Ir para o Editor</a>
+                            <p className="text-muted-foreground">
+                              Esta página foi movida. Redirecionando para o editor principal.
+                            </p>
+                            <a href="/editor" className="text-blue-600 hover:underline">
+                              Ir para o Editor
+                            </a>
                           </div>
                         </EditorProvider>
                       </ErrorBoundary>
@@ -521,7 +525,9 @@ function App() {
                     <Suspense fallback={<PageLoading />}>
                       <div className="p-8">
                         <h1 className="text-2xl font-bold mb-4">Templates Dashboard</h1>
-                        <p className="text-muted-foreground">Dashboard de templates em desenvolvimento.</p>
+                        <p className="text-muted-foreground">
+                          Dashboard de templates em desenvolvimento.
+                        </p>
                       </div>
                     </Suspense>
                   )}
@@ -532,7 +538,9 @@ function App() {
                     <Suspense fallback={<PageLoading />}>
                       <div className="p-8">
                         <h1 className="text-2xl font-bold mb-4">Templates</h1>
-                        <p className="text-muted-foreground">Página de templates em desenvolvimento.</p>
+                        <p className="text-muted-foreground">
+                          Página de templates em desenvolvimento.
+                        </p>
                       </div>
                     </Suspense>
                   )}
