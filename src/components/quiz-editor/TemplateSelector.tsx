@@ -31,6 +31,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Plus, Copy, Trash2, Edit, Check, X } from 'lucide-react';
 import { styleQuizTemplate } from '@/services/templates/styleQuizTemplate';
+import { toast } from '@/hooks/use-toast';
 
 interface TemplateSelectorProps {
   onSelectTemplate: (templateId: string) => void;
