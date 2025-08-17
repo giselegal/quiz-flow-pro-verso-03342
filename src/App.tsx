@@ -48,9 +48,6 @@ const EditorWithPreview = lazy(() =>
   import('./pages/editor').then(module => ({ default: module.EditorWithPreview }))
 );
 
-// 🧪 EDITOR SIMPLES - TESTE DE SALVAMENTO
-const EditorSimpleSave = lazy(() => import('./pages/EditorSimpleSave'));
-
 const ComponentTestingPage = lazy(() => import('./legacy/pages/component-testing'));
 const TestNavigation = lazy(() => import('./legacy/pages/TestNavigation'));
 // Removed: EditorDebugMinimal - file moved to backup
@@ -123,26 +120,6 @@ function App() {
                       </Suspense>
                     );
                   }}
-                />
-
-                {/* Editor Fixed Simples - Redirects to main editor */}
-                <ProtectedRoute
-                  path="/editor-simples"
-                  component={() => (
-                    <Suspense fallback={<PageLoading />}>
-                      <ErrorBoundary>
-                        <EditorProvider>
-                          <FunnelsProvider debug={true}>
-                            <ScrollSyncProvider>
-                              <div className="relative">
-                                <EditorWithPreview />
-                              </div>
-                            </ScrollSyncProvider>
-                          </FunnelsProvider>
-                        </EditorProvider>
-                      </ErrorBoundary>
-                    </Suspense>
-                  )}
                 />
 
                 {/* Editor Fixed Route - Using Best Available Editor */}
@@ -252,22 +229,6 @@ function App() {
                             instead.
                           </p>
                         </div>
-                      </ErrorBoundary>
-                    </Suspense>
-                  )}
-                />
-
-                {/* Editor Fixed Minimal Route */}
-                <ProtectedRoute
-                  path="/editor-save-test"
-                  component={() => (
-                    <Suspense fallback={<PageLoading />}>
-                      <ErrorBoundary>
-                        <EditorProvider>
-                          <FunnelsProvider debug={true}>
-                            <EditorSimpleSave />
-                          </FunnelsProvider>
-                        </EditorProvider>
                       </ErrorBoundary>
                     </Suspense>
                   )}

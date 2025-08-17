@@ -21,6 +21,7 @@ import { useEditor } from '@/context/EditorContext';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { usePropertyHistory } from '@/hooks/usePropertyHistory';
 import { useSyncedScroll } from '@/hooks/useSyncedScroll';
+import { useAutoSaveWithDebounce } from '@/hooks/editor/useAutoSaveWithDebounce';
 import { BlockType } from '@/types/editor';
 import { useLocation } from 'wouter';
 
