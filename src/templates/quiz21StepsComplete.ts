@@ -11,7 +11,7 @@
  * - Etapa 21: Página de oferta
  */
 
-import { Block } from '@/types/editor';
+import { Block } from '../types/editor';
 
 export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
   // 🎯 ETAPA 1: COLETA DO NOME

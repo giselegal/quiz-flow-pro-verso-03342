@@ -67,19 +67,23 @@ export const userResponseService = {
     try {
       console.log('📝 Saving response to Supabase:', response);
       
+      // Mapear step para número
+      const stepNumber = parseInt(response.step.replace(/\D/g, '')) || 1;
+      
       const { data, error } = await supabase
         .from('quiz_step_responses')
-        .insert([{
+        .insert({
           session_id: response.sessionId,
-          step_number: parseInt(response.step.replace('step-', '')) || 1,
-          question_id: response.step,
-          answer_text: typeof response.data === 'string' ? response.data : JSON.stringify(response.data),
-          answer_value: typeof response.data === 'object' ? JSON.stringify(response.data) : response.data,
-          metadata: { timestamp: response.timestamp, userId: response.userId },
-          responded_at: response.timestamp,
-        }])
-        .select()
-        .single();
+          step_number: stepNumber,
+          component_id: response.data.componentId || 'unknown',
+          component_type: response.data.componentType || 'form-input',
+          response_data: {
+            originalData: response.data,
+            timestamp: response.timestamp,
+            step: response.step
+          }
+        } as any)
+        .select();
 
       if (error) {
         console.error('❌ Error saving response:', error);
@@ -87,14 +91,17 @@ export const userResponseService = {
       }
 
       console.log('✅ Response saved successfully:', data);
+      
+      const responseRecord = Array.isArray(data) ? data[0] : data;
+      
       return {
-        id: data.id,
+        id: responseRecord.id,
         userId: response.userId,
         sessionId: response.sessionId,
         step: response.step,
         data: response.data,
         timestamp: response.timestamp,
-        created_at: new Date(data.responded_at),
+        created_at: new Date(responseRecord.responded_at),
       };
     } catch (error) {
       console.error('❌ Failed to save response:', error);
@@ -120,11 +127,11 @@ export const userResponseService = {
       const { data, error } = await supabase
         .from('quiz_step_responses')
         .select('*')
-        .eq('question_id', id)
+        .eq('id', id)
         .single();
 
       if (error) throw error;
-      return data?.answer_text || data?.answer_value || '';
+      return (data as any)?.response_data?.value || JSON.stringify((data as any)?.response_data) || '';
     } catch (error) {
       console.error('❌ Failed to get response:', error);
       // Fallback to localStorage
@@ -146,9 +153,9 @@ export const userResponseService = {
       return data.map(item => ({
         id: item.id,
         userId: userId,
-        sessionId: item.session_id,
+        sessionId: (item as any).session_id,
         step: `step-${item.step_number}`,
-        data: item.answer_text || item.answer_value || '',
+        data: (item as any).response_data || item.answer_text || item.answer_value || '',
         timestamp: item.responded_at,
         created_at: new Date(item.responded_at),
       }));
