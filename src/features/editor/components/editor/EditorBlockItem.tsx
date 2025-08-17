@@ -15,7 +15,7 @@ interface EditorBlockItemProps {
   onDelete: () => void;
 }
 
-export // Função para converter valores de margem em classes Tailwind (Sistema Universal)
+// Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
   const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
@@ -112,6 +112,14 @@ const EditorBlockItem: React.FC<EditorBlockItemProps> = ({ block, onUpdate, onDe
     ...block,
     properties: block.properties || {},
   };
+
+  // Extract margin values from block properties
+  const {
+    marginTop = 0,
+    marginBottom = 0,
+    marginLeft = 0,
+    marginRight = 0,
+  } = (blockWithProperties.properties as any) || {};
 
   return (
     <Card
