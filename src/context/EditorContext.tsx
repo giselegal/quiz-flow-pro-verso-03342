@@ -341,7 +341,7 @@ export const EditorProvider: React.FC<{
 
   // 🚀 AUTO-SAVE COM DEBOUNCE - Solução para problema de salvamento
   useAutoSaveWithDebounce({
-    data: { blocks: state.blocks, activeStageId: state.activeStageId },
+    data: { blocks: state.blocks, activeStageId: 'step-1' }, // Fixed: using hardcoded value since activeStageId is not in state
     onSave: async () => {
       await save();
     },

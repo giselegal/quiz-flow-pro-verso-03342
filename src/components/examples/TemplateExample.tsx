@@ -41,7 +41,7 @@ export const TemplateExample: React.FC = () => {
 
   const handleBlockChange = (blockId: string, values: Record<string, unknown>) => {
     setBlocks(prevBlocks =>
-      prevBlocks.map(block => (block.id === blockId ? { ...block, values } : block))
+      prevBlocks.map(block => (block.id === blockId ? { ...block, values: values as any } : block))
     );
 
     // Validar o bloco quando seus valores mudam

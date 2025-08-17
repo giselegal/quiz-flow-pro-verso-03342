@@ -6,7 +6,9 @@ import Step20Result from '../steps/Step20Result';
 import { useState } from 'react';
 
 interface TemplateRendererProps {
-  stepNumber: number;
+  stepNumber?: number;
+  templateId?: string;
+  fallbackStep?: number;
   sessionId?: string;
   onContinue?: () => void;
 }
@@ -21,9 +23,10 @@ interface TemplateRendererProps {
  * - Fallback para templates JSON quando necessário
  * - Integração completa com EditorContext e hooks de quiz
  */
-export const TemplateRenderer = ({ stepNumber, sessionId, onContinue }: TemplateRendererProps) => {
+export const TemplateRenderer = ({ stepNumber, fallbackStep, sessionId, onContinue }: TemplateRendererProps) => {
   const { quizState } = useEditor();
-  const { config, loading } = useTemplateConfig(stepNumber);
+  const actualStepNumber = stepNumber || fallbackStep || 1;
+  const { config, loading } = useTemplateConfig(actualStepNumber);
   const [renderMode, setRenderMode] = useState<'connected' | 'fallback'>('connected');
 
   // Mapa de templates conectados disponíveis
@@ -39,20 +42,20 @@ export const TemplateRenderer = ({ stepNumber, sessionId, onContinue }: Template
         <div className="text-center space-y-4">
           <div className="animate-spin w-8 h-8 border-2 border-[#B89B7A] border-t-transparent rounded-full mx-auto"></div>
           <p className="text-[#432818]">Carregando template...</p>
-          <p className="text-sm text-gray-600">Step {stepNumber}</p>
+          <p className="text-sm text-gray-600">Step {actualStepNumber}</p>
         </div>
       </div>
     );
   }
 
   // Verificar se existe template conectado para este step
-  const ConnectedTemplate = connectedTemplates[stepNumber as keyof typeof connectedTemplates];
+  const ConnectedTemplate = connectedTemplates[actualStepNumber as keyof typeof connectedTemplates];
 
   if (ConnectedTemplate && renderMode === 'connected') {
-    console.log(`✅ TemplateRenderer: Usando template conectado para step ${stepNumber}`);
+    console.log(`✅ TemplateRenderer: Usando template conectado para step ${actualStepNumber}`);
 
     // Renderizar template conectado com props apropriadas
-    if (stepNumber === 20) {
+    if (actualStepNumber === 20) {
       return <ConnectedTemplate sessionId={sessionId || 'demo'} onContinue={onContinue} />;
     }
 
@@ -60,7 +63,7 @@ export const TemplateRenderer = ({ stepNumber, sessionId, onContinue }: Template
   }
 
   // Fallback: renderizar baseado na configuração JSON
-  console.log(`📄 TemplateRenderer: Usando fallback JSON para step ${stepNumber}`);
+  console.log(`📄 TemplateRenderer: Usando fallback JSON para step ${actualStepNumber}`);
 
   return (
     <div className="min-h-screen bg-[#FAF9F7] flex flex-col">
@@ -72,7 +75,7 @@ export const TemplateRenderer = ({ stepNumber, sessionId, onContinue }: Template
             alt="Logo Gisele Galvão"
             className="w-16 h-16 object-contain"
           />
-          <div className="text-right text-sm text-gray-600">Step {stepNumber} de 21</div>
+          <div className="text-right text-sm text-gray-600">Step {actualStepNumber} de 21</div>
         </div>
       </div>
 
@@ -80,7 +83,7 @@ export const TemplateRenderer = ({ stepNumber, sessionId, onContinue }: Template
       <div className="flex-1 flex items-center justify-center px-6">
         <div className="max-w-2xl w-full text-center space-y-6">
           {/* Conteúdo baseado no tipo de template */}
-          {stepNumber === 1 && (
+          {actualStepNumber === 1 && (
             <div className="space-y-6">
               <h1 className="text-4xl font-bold text-[#432818]">Descubra Seu Estilo Pessoal</h1>
               <p className="text-lg text-gray-600">Para começar, qual é o seu nome?</p>
@@ -97,11 +100,11 @@ export const TemplateRenderer = ({ stepNumber, sessionId, onContinue }: Template
             </div>
           )}
 
-          {stepNumber >= 2 && stepNumber <= 14 && (
+          {actualStepNumber >= 2 && actualStepNumber <= 14 && (
             <div className="space-y-6">
-              <h1 className="text-3xl font-bold text-[#432818]">Questão {stepNumber - 1}</h1>
+              <h1 className="text-3xl font-bold text-[#432818]">Questão {actualStepNumber - 1}</h1>
               <p className="text-lg text-gray-600">
-                {config?.metadata.name || `Template para step ${stepNumber}`}
+                {config?.metadata.name || `Template para step ${actualStepNumber}`}
               </p>
               <div className="p-8 bg-white rounded-lg border border-gray-200">
                 <p className="text-gray-500">Template JSON em desenvolvimento...</p>
@@ -117,18 +120,18 @@ export const TemplateRenderer = ({ stepNumber, sessionId, onContinue }: Template
             </div>
           )}
 
-          {stepNumber >= 15 && stepNumber <= 19 && (
+          {actualStepNumber >= 15 && actualStepNumber <= 19 && (
             <div className="space-y-6">
               <h1 className="text-3xl font-bold text-[#432818]">
-                {config?.metadata.name || `Etapa ${stepNumber}`}
+                {config?.metadata.name || `Etapa ${actualStepNumber}`}
               </h1>
               <div className="p-8 bg-white rounded-lg border border-gray-200">
-                <p className="text-gray-500">Template em desenvolvimento para step {stepNumber}</p>
+                <p className="text-gray-500">Template em desenvolvimento para step {actualStepNumber}</p>
               </div>
             </div>
           )}
 
-          {stepNumber === 21 && (
+          {actualStepNumber === 21 && (
             <div className="space-y-6">
               <h1 className="text-3xl font-bold text-[#432818]">Oferta Final</h1>
               <div className="p-8 bg-white rounded-lg border border-gray-200">
@@ -153,7 +156,7 @@ export const TemplateRenderer = ({ stepNumber, sessionId, onContinue }: Template
           <div>
             <strong>Template Renderer Debug</strong>
           </div>
-          <div>Step: {stepNumber}</div>
+          <div>Step: {actualStepNumber}</div>
           <div>Mode: {renderMode}</div>
           <div>Connected: {!!ConnectedTemplate ? 'Sim' : 'Não'}</div>
           <div>Config: {config ? 'Carregado' : 'Ausente'}</div>

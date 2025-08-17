@@ -34,11 +34,11 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({ className }) => {
   });
 
   // Gerenciamento de arrasto
-  const [isDragging, setIsDragging] = React.useState(false);
+  // const [isDragging, setIsDragging] = React.useState(false); // Unused, handled by DragDropContext
 
   const handleDragEnd = useCallback(
     (result: any) => {
-      setIsDragging(false);
+      // setIsDragging(false); // No longer needed
 
       if (!result.destination) return;
 
@@ -53,7 +53,7 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({ className }) => {
   );
 
   const handleDragStart = useCallback(() => {
-    setIsDragging(true);
+    // setIsDragging(true); // No longer needed
   }, []);
 
   const moveBlock = useCallback(

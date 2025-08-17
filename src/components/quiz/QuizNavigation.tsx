@@ -25,7 +25,7 @@ interface QuizNavigationProps {
   canProceed: boolean;
   onNext: () => void;
   onPrevious?: () => void;
-  currentQuestionType: 'normal' | 'strategic';
+  currentQuestionType: 'normal' | 'strategic' | 'final';
   selectedOptionsCount: number;
   isLastQuestion?: boolean;
   // Novas props para navegação premium

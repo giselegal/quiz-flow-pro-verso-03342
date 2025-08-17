@@ -138,7 +138,7 @@ const getDefaultTemplate = (stepNumber: number) => {
 export const STEP_TEMPLATES_MAPPING: Record<number, StepTemplate> = {
   1: {
     stepNumber: 1,
-    templateFunction: getStep01Template,
+    templateFunction: () => getStepTemplate(1), // Fixed: using getStepTemplate
     name: STEP_CONFIGS[0]?.name || 'Quiz de Estilo Pessoal',
     description: STEP_CONFIGS[0]?.description || 'Descubra seu estilo único',
   },
@@ -267,7 +267,7 @@ export const STEP_TEMPLATES_MAPPING: Record<number, StepTemplate> = {
   },
   21: {
     stepNumber: 21,
-    templateFunction: getStep21Template,
+    templateFunction: () => getStepTemplate(21), // Fixed: using getStepTemplate
     name: STEP_CONFIGS[20]?.name || 'RECEBA SEU GUIA COMPLETO',
     description: STEP_CONFIGS[20]?.description || 'Página de conversão',
   },

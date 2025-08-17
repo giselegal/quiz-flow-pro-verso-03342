@@ -127,7 +127,7 @@ const QuizNavigationBlock: React.FC<QuizNavigationBlockProps> = ({
         selectedOptionsCount={config.selectedOptionsCount}
         isLastQuestion={config.isLastQuestion}
         onNext={handleNext}
-        onBack={config.showBackButton ? handleBack : undefined}
+        onPrevious={config.showBackButton ? handleBack : undefined}
       />
 
       {/* Debug info (apenas em desenvolvimento) */}
