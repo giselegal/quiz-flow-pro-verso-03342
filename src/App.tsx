@@ -15,7 +15,8 @@ import QuizFlowPage from './pages/QuizFlowPage';
 import ResultPage from './pages/ResultPage';
 
 // 🎨 EDITORES MAIS COMPLETOS - Lazy load
-const EditorFixedPageWithDragDrop = lazy(() => import('./pages/editor')); // Editor 4 colunas mais completo
+// Temporariamente usando editor-fixed (simplificado) até resolver o problema
+const EditorFixedPageWithDragDrop = lazy(() => import('./pages/editor-fixed')); // Editor simplicado
 const SchemaDrivenEditorResponsive = lazy(
   () => import('./components/editor/SchemaDrivenEditorResponsive')
 );
