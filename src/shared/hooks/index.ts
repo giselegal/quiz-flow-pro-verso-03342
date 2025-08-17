@@ -1,2 +1,0 @@
-// Shared Hooks Index
-export {};
