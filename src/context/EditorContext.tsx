@@ -291,28 +291,28 @@ export const EditorProvider: React.FC<{
 
     try {
       // Preparar dados para salvamento
-      const _funnelData = {
-        id: currentFunnelId,
-        name: `Funnel ${currentFunnelId}`,
-        description: 'Funnel criado no editor',
-        userId: 'anonymous',
-        isPublished: false,
-        version: 1,
-        settings: {},
-        pages: [
-          {
-            id: `page-${currentFunnelId}-1`,
-            pageType: 'quiz-step',
-            pageOrder: 1,
-            title: 'Quiz Step',
-            blocks: state.blocks,
-            metadata: { stage: 'step-1', timestamp: new Date().toISOString() },
-          },
-        ],
-      };
+      // const funnelData = {
+      //   id: currentFunnelId,
+      //   name: `Funnel ${currentFunnelId}`,
+      //   description: 'Funnel criado no editor',
+      //   userId: 'anonymous',
+      //   isPublished: false,
+      //   version: 1,
+      //   settings: {},
+      //   pages: [
+      //     {
+      //       id: `page-${currentFunnelId}-1`,
+      //       pageType: 'quiz-step',
+      //       pageOrder: 1,
+      //       title: 'Quiz Step',
+      //       blocks: state.blocks,
+      //       metadata: { stage: 'step-1', timestamp: new Date().toISOString() },
+      //     },
+      //   ],
+      // };
 
       // Salvar usando o serviço de persistência
-      // const result = await funnelPersistenceService.saveFunnel(_funnelData);
+      // const result = await funnelPersistenceService.saveFunnel(funnelData);
       const result = { success: true, error: null };
 
       if (result.success) {
@@ -506,9 +506,9 @@ export const EditorProvider: React.FC<{
   // const validation = useTemplateValidation();
   const validation = { 
     validateTemplate: () => ({ isValid: true, errors: {} }),
-    validateStep: () => ({ errors: {} }),
-    validateTemplateField: () => ({}),
-    hasTemplateErrors: () => false
+    validateStep: () => ({ isValid: true, errors: {} }),
+    validateTemplateField: () => ({ success: true, errors: [] }),
+    hasTemplateErrors: false
   };
 
   const contextValue: EditorContextType = {
