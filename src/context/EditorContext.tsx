@@ -4,6 +4,7 @@ import React, {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useReducer,
   useState,
@@ -38,6 +39,9 @@ interface EditorContextType {
   setIsPreviewing: (preview: boolean) => void;
   isGlobalStylesOpen: boolean;
   setGlobalStylesOpen: (open: boolean) => void;
+
+  // Loading state
+  isLoading?: boolean;
 
   // Connection status
   connectionStatus: 'connected' | 'disconnected' | 'connecting';
@@ -162,6 +166,41 @@ export const EditorProvider: React.FC<{ children: React.ReactNode; funnelId?: st
 }) => {
   const [state, dispatch] = useReducer(editorReducer, initialState);
   const [currentFunnelId, setCurrentFunnelId] = useState<string>(initialFunnelId);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  // Efeito para carregar o template inicial automaticamente
+  useEffect(() => {
+    const loadInitialTemplate = async () => {
+      try {
+        setIsLoading(true);
+        console.log('🚀 Carregando template inicial para etapa 1...');
+
+        // Importar o serviço de template dinamicamente
+        const { templateService } = await import('../services/templateService');
+
+        // Carregar o template da etapa 1
+        const template = await templateService.getTemplateByStep(1);
+
+        if (template && template.blocks && template.blocks.length > 0) {
+          console.log(`✅ Template inicial carregado: ${template.blocks.length} blocos`);
+
+          // Converter os blocos do template para o formato do editor
+          const editorBlocks = templateService.convertTemplateBlocksToEditorBlocks(template.blocks);
+
+          // Atualizar os blocos no estado do editor
+          dispatch({ type: 'SET_BLOCKS', payload: editorBlocks });
+        } else {
+          console.warn('⚠️ Template inicial não contém blocos');
+        }
+      } catch (error) {
+        console.error('❌ Erro ao carregar template inicial:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadInitialTemplate();
+  }, []);
 
   // Block management functions
   const addBlock = useCallback(
@@ -335,16 +374,44 @@ export const EditorProvider: React.FC<{ children: React.ReactNode; funnelId?: st
     () => ({
       loadTemplate: (templateId: string) => {
         console.log('Loading template:', templateId);
+        // Adicionar implementação futura aqui
       },
       saveTemplate: () => {
         console.log('Saving template');
       },
-      loadTemplateByStep: (step: number) => {
-        console.log('Loading template by step:', step);
+      loadTemplateByStep: async (step: number) => {
+        console.log('🔄 Loading template by step:', step);
+        try {
+          // Importar o serviço de template dinamicamente para evitar problemas de circular dependency
+          const { templateService } = await import('../services/templateService');
+
+          // Carregar o template
+          const template = await templateService.getTemplateByStep(step);
+
+          if (template && template.blocks && template.blocks.length > 0) {
+            console.log(`✅ Template carregado com sucesso: ${template.blocks.length} blocos`);
+
+            // Converter os blocos do template para o formato do editor
+            const editorBlocks = templateService.convertTemplateBlocksToEditorBlocks(
+              template.blocks
+            );
+
+            // Atualizar os blocos no estado do editor
+            dispatch({ type: 'SET_BLOCKS', payload: editorBlocks });
+
+            return true;
+          } else {
+            console.warn(`⚠️ Template para etapa ${step} não contém blocos`);
+            return false;
+          }
+        } catch (error) {
+          console.error(`❌ Erro ao carregar template para etapa ${step}:`, error);
+          return false;
+        }
       },
       isLoadingTemplate: false,
     }),
-    []
+    [dispatch]
   );
 
   // Persistence actions
@@ -392,6 +459,9 @@ export const EditorProvider: React.FC<{ children: React.ReactNode; funnelId?: st
     setIsPreviewing,
     isGlobalStylesOpen: state.isGlobalStylesOpen,
     setGlobalStylesOpen,
+
+    // Loading state
+    isLoading,
 
     // Connection status
     connectionStatus: 'connected' as const,

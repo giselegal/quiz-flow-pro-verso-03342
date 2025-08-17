@@ -1,10 +1,11 @@
-import React from 'react';
-import { useDroppable } from '@dnd-kit/core';
-import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { Button } from '@/components/ui/button';
+import { usePreview } from '@/contexts/PreviewContext';
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
+import { useDroppable } from '@dnd-kit/core';
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import React from 'react';
 import { SortableBlockWrapper } from './SortableBlockWrapper';
-import { usePreview } from '@/contexts/PreviewContext';
 
 // Componente para drop zone entre blocos
 const InterBlockDropZone: React.FC<{
@@ -99,6 +100,44 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
               ? 'Modo Preview - Nenhum componente nesta etapa'
               : 'Canvas vazio - Arraste componentes da sidebar para começar'}
           </p>
+
+          {/* Botão para recarregar template */}
+          {!isPreviewing && (
+            <div className="mt-4">
+              <Button
+                variant="outline"
+                className="mx-auto border-dashed"
+                onClick={async () => {
+                  try {
+                    // Extrair número da etapa atual
+                    const stepId =
+                      document
+                        .querySelector('.editor-stage-active')
+                        ?.getAttribute('data-stage-id') || 'step-1';
+                    const stepNumber = parseInt(stepId.replace('step-', ''), 10) || 1;
+
+                    // Importar dinamicamente o templateService
+                    const { templateService } = await import('@/services/templateService');
+                    const template = await templateService.getTemplateByStep(stepNumber);
+
+                    if (template && template.blocks && template.blocks.length > 0) {
+                      // Converter para formato do editor
+                      const editorBlocks = templateService.convertTemplateBlocksToEditorBlocks(
+                        template.blocks
+                      );
+                      // Atualizar os blocos no estado (via callback para acesso direto)
+                      onUpdateBlock('template-update', { blocks: editorBlocks });
+                    }
+                  } catch (error) {
+                    console.error('Erro ao recarregar template:', error);
+                  }
+                }}
+              >
+                🔄 Recarregar Template
+              </Button>
+            </div>
+          )}
+
           {isOver && !isPreviewing && (
             <div className="mt-4 p-4 border-2 border-dashed border-brand/30 rounded-lg bg-brand/5">
               <p className="text-brand font-medium">Solte o componente aqui</p>

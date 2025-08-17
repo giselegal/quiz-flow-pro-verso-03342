@@ -382,10 +382,10 @@ const FUNNEL_TEMPLATES: Record<
 };
 
 export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debug = true }) => {
-  const [currentFunnelId, setCurrentFunnelId] = useState<string>('funil-21-etapas');
+  const [currentFunnelId, setCurrentFunnelId] = useState<string>('quiz-estilo-completo');
   // ✅ FASE 1: Inicialização imediata com dados pré-carregados
   const [steps, setSteps] = useState<FunnelStep[]>(() => {
-    const initialTemplate = FUNNEL_TEMPLATES['funil-21-etapas'];
+    const initialTemplate = FUNNEL_TEMPLATES['quiz-estilo-completo'];
     console.log('🚀 FunnelsContext: Inicialização IMEDIATA com template completo');
     console.log('📊 Steps carregadas na inicialização:', initialTemplate.defaultSteps.length);
     return initialTemplate.defaultSteps;
@@ -404,10 +404,23 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
 
   // Função para obter blocos de um template específico
   const getTemplateBlocks = useCallback((templateId: string, stepId: string) => {
+    // Verifica se é o template quiz-estilo-completo
     if (templateId === 'quiz-estilo-completo') {
       return QUIZ_STYLE_21_STEPS_TEMPLATE[stepId] || [];
     }
+
+    // ✅ CORREÇÃO: Template funil-21-etapas também deve usar QUIZ_STYLE_21_STEPS_TEMPLATE
+    if (templateId === 'funil-21-etapas') {
+      console.log(`🔄 Carregando blocos para template funil-21-etapas, etapa ${stepId}`);
+      const blocos = QUIZ_STYLE_21_STEPS_TEMPLATE[stepId] || [];
+      console.log(`📦 Encontrados ${blocos.length} blocos para a etapa ${stepId}`);
+      return blocos;
+    }
+
     // Para outros templates, retorna array vazio (implementação futura)
+    console.warn(
+      `⚠️ Template não suportado: ${templateId}, retornando array vazio para etapa ${stepId}`
+    );
     return [];
   }, []);
 
