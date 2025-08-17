@@ -380,6 +380,55 @@ export const useUnifiedProperties = (
             { min: 0.5, max: 3, step: 0.1, unit: 'x' }
           ),
 
+          // 🎯 BARRA DE PROGRESSO
+          createProperty(
+            'enableProgressBar',
+            currentBlock?.properties?.enableProgressBar ?? false,
+            PropertyType.SWITCH,
+            'Mostrar Barra de Progresso',
+            PropertyCategory.BEHAVIOR
+          ),
+          createProperty(
+            'progressValue',
+            currentBlock?.properties?.progressValue || 0,
+            PropertyType.RANGE,
+            'Porcentagem do Progresso',
+            PropertyCategory.BEHAVIOR,
+            { min: 0, max: 100, step: 1, unit: '%' }
+          ),
+          createProperty(
+            'progressMax',
+            currentBlock?.properties?.progressMax || 100,
+            PropertyType.NUMBER,
+            'Valor Máximo do Progresso',
+            PropertyCategory.BEHAVIOR,
+            { min: 1, placeholder: '100' }
+          ),
+          createProperty(
+            'progressBarThickness',
+            currentBlock?.properties?.progressBarThickness || 4,
+            PropertyType.RANGE,
+            'Espessura da Barra de Progresso',
+            PropertyCategory.STYLE,
+            { min: 1, max: 20, step: 1, unit: 'px' }
+          ),
+
+          // 🎯 NAVEGAÇÃO (SETAS DISCRETAS)
+          createProperty(
+            'showBackButton',
+            currentBlock?.properties?.showBackButton ?? false,
+            PropertyType.SWITCH,
+            'Mostrar Seta Voltar',
+            PropertyCategory.BEHAVIOR
+          ),
+          createProperty(
+            'showForwardButton',
+            currentBlock?.properties?.showForwardButton ?? false,
+            PropertyType.SWITCH,
+            'Mostrar Seta Avançar',
+            PropertyCategory.BEHAVIOR
+          ),
+
           // 🎯 CONTROLES DE EXIBIÇÃO
           createProperty(
             'showTitle',
@@ -424,12 +473,97 @@ export const useUnifiedProperties = (
             { placeholder: 'Nome de fallback (usado se não encontrado dinamicamente)' }
           ),
 
+          // 🎯 ESCALA E DIMENSÕES DO CONTAINER
+          createProperty(
+            'containerScale',
+            currentBlock?.properties?.containerScale || 1,
+            PropertyType.RANGE,
+            'Escala do Container',
+            PropertyCategory.LAYOUT,
+            { min: 0.5, max: 2, step: 0.1, unit: 'x' }
+          ),
+
+          // 🎯 MARGENS EXTERNAS
+          createProperty(
+            'marginTop',
+            currentBlock?.properties?.marginTop || 0,
+            PropertyType.RANGE,
+            'Margem Externa Superior',
+            PropertyCategory.LAYOUT,
+            { min: 0, max: 100, step: 4, unit: 'px' }
+          ),
+          createProperty(
+            'marginBottom',
+            currentBlock?.properties?.marginBottom || 24,
+            PropertyType.RANGE,
+            'Margem Externa Inferior',
+            PropertyCategory.LAYOUT,
+            { min: 0, max: 100, step: 4, unit: 'px' }
+          ),
+          createProperty(
+            'marginLeft',
+            currentBlock?.properties?.marginLeft || 0,
+            PropertyType.RANGE,
+            'Margem Externa Esquerda',
+            PropertyCategory.LAYOUT,
+            { min: 0, max: 100, step: 4, unit: 'px' }
+          ),
+          createProperty(
+            'marginRight',
+            currentBlock?.properties?.marginRight || 0,
+            PropertyType.RANGE,
+            'Margem Externa Direita',
+            PropertyCategory.LAYOUT,
+            { min: 0, max: 100, step: 4, unit: 'px' }
+          ),
+
+          // 🎯 MARGENS INTERNAS (PADDING)
+          createProperty(
+            'paddingTop',
+            currentBlock?.properties?.paddingTop || 16,
+            PropertyType.RANGE,
+            'Margem Interna Superior',
+            PropertyCategory.LAYOUT,
+            { min: 0, max: 80, step: 4, unit: 'px' }
+          ),
+          createProperty(
+            'paddingBottom',
+            currentBlock?.properties?.paddingBottom || 16,
+            PropertyType.RANGE,
+            'Margem Interna Inferior',
+            PropertyCategory.LAYOUT,
+            { min: 0, max: 80, step: 4, unit: 'px' }
+          ),
+          createProperty(
+            'paddingLeft',
+            currentBlock?.properties?.paddingLeft || 16,
+            PropertyType.RANGE,
+            'Margem Interna Esquerda',
+            PropertyCategory.LAYOUT,
+            { min: 0, max: 80, step: 4, unit: 'px' }
+          ),
+          createProperty(
+            'paddingRight',
+            currentBlock?.properties?.paddingRight || 16,
+            PropertyType.RANGE,
+            'Margem Interna Direita',
+            PropertyCategory.LAYOUT,
+            { min: 0, max: 80, step: 4, unit: 'px' }
+          ),
+
           // 🎯 CORES E ESTILO
           createProperty(
             'backgroundColor',
             currentBlock?.properties?.backgroundColor || '#ffffff',
             PropertyType.COLOR,
-            'Cor de Fundo',
+            'Cor de Fundo do Componente',
+            PropertyCategory.STYLE
+          ),
+          createProperty(
+            'containerBackgroundColor',
+            currentBlock?.properties?.containerBackgroundColor || 'transparent',
+            PropertyType.COLOR,
+            'Cor de Fundo do Container',
             PropertyCategory.STYLE
           ),
           createProperty(
@@ -461,47 +595,6 @@ export const useUnifiedProperties = (
             PropertyType.SWITCH,
             'Header Fixo',
             PropertyCategory.LAYOUT
-          ),
-          createProperty(
-            'marginTop',
-            currentBlock?.properties?.marginTop || 0,
-            PropertyType.RANGE,
-            'Margem Superior',
-            PropertyCategory.LAYOUT,
-            { min: 0, max: 100, step: 4, unit: 'px' }
-          ),
-          createProperty(
-            'marginBottom',
-            currentBlock?.properties?.marginBottom || 24,
-            PropertyType.RANGE,
-            'Margem Inferior',
-            PropertyCategory.LAYOUT,
-            { min: 0, max: 100, step: 4, unit: 'px' }
-          ),
-
-          // 🎯 PROGRESSO (Para Quiz Headers)
-          createProperty(
-            'enableProgressBar',
-            currentBlock?.properties?.enableProgressBar ?? false,
-            PropertyType.SWITCH,
-            'Ativar Barra de Progresso',
-            PropertyCategory.BEHAVIOR
-          ),
-          createProperty(
-            'progressValue',
-            currentBlock?.properties?.progressValue || 0,
-            PropertyType.NUMBER,
-            'Valor do Progresso',
-            PropertyCategory.BEHAVIOR,
-            { min: 0, max: 100 }
-          ),
-          createProperty(
-            'progressMax',
-            currentBlock?.properties?.progressMax || 100,
-            PropertyType.NUMBER,
-            'Valor Máximo do Progresso',
-            PropertyCategory.BEHAVIOR,
-            { min: 1, placeholder: '100' }
           ),
 
           // ✅ ESTILOS - ESTILO PREDOMINANTE
@@ -568,15 +661,6 @@ export const useUnifiedProperties = (
             currentBlock?.properties?.showThirdStyleProgress ?? false,
             PropertyType.SWITCH,
             'Mostrar Barra do 3º Estilo',
-            PropertyCategory.BEHAVIOR
-          ),
-
-          // 🎯 NAVEGAÇÃO
-          createProperty(
-            'showBackButton',
-            currentBlock?.properties?.showBackButton ?? false,
-            PropertyType.SWITCH,
-            'Mostrar Botão Voltar',
             PropertyCategory.BEHAVIOR
           ),
 

@@ -91,9 +91,35 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
   // 🎯 ETAPA 2: QUESTÃO 1 - TIPO DE ROUPA FAVORITA
   'step-2': [
     {
+      id: 'step2-quiz-header',
+      type: 'quiz-intro-header',
+      order: 0,
+      content: {
+        title: 'Questão 1 de 10',
+        subtitle: 'Descubra seu Estilo Predominante',
+        description: 'Responda com honestidade para obter um resultado mais preciso.',
+      },
+      properties: {
+        backgroundColor: '#F8F9FA',
+        textAlign: 'center',
+        showBackground: true,
+        padding: '24px',
+        borderRadius: '8px',
+        marginBottom: '16px',
+        boxShadow: 'sm',
+        logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+        logoAlt: 'Logo Gisele Galvão',
+        showLogo: true,
+        enableProgressBar: true,
+        progressValue: 10,
+        progressMax: 100,
+        showBackButton: true,
+      },
+    },
+    {
       id: 'step2-question',
       type: 'options-grid',
-      order: 0,
+      order: 1,
       content: {
         question: 'QUAL O SEU TIPO DE ROUPA FAVORITA?',
         options: [
