@@ -65,7 +65,7 @@ const ConnectedLeadFormBlock: React.FC<ConnectedLeadFormBlockProps> = ({
 
   const handleSubmit = (data: any) => {
     console.log('✅ ConnectedLeadFormBlock: Dados capturados:', data);
-    
+
     // Callback personalizado
     if (onFormSubmit) {
       onFormSubmit(data);
@@ -98,7 +98,7 @@ const ConnectedLeadFormBlock: React.FC<ConnectedLeadFormBlockProps> = ({
         validationEnabled={config.enableValidation}
         realTimeValidation={config.realTimeValidation}
       />
-      
+
       {/* Debug info (apenas em desenvolvimento) */}
       {process.env.NODE_ENV === 'development' && (
         <div className="mt-2 text-xs text-gray-500">

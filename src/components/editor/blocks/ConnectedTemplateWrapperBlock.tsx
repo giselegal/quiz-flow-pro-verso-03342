@@ -83,9 +83,7 @@ const ConnectedTemplateWrapperBlock: React.FC<ConnectedTemplateWrapperBlockProps
         </ConnectedTemplateWrapper>
       ) : (
         // Fallback sem hooks para casos especiais
-        <div className="template-wrapper-fallback">
-          {children}
-        </div>
+        <div className="template-wrapper-fallback">{children}</div>
       )}
     </div>
   );

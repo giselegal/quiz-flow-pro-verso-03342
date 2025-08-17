@@ -25,7 +25,9 @@ export const ENHANCED_BLOCK_REGISTRY = {
   'image-display-inline': lazy(() => import('@/components/blocks/inline/ImageDisplayInlineBlock')),
 
   // ✅ COMPONENTES AVANÇADOS - Funcionalidades do Step01 para todos os steps
-  'connected-template-wrapper': lazy(() => import('@/components/editor/blocks/ConnectedTemplateWrapperBlock')),
+  'connected-template-wrapper': lazy(
+    () => import('@/components/editor/blocks/ConnectedTemplateWrapperBlock')
+  ),
   'connected-lead-form': lazy(() => import('@/components/editor/blocks/ConnectedLeadFormBlock')),
   'quiz-navigation': lazy(() => import('@/components/editor/blocks/QuizNavigationBlock')),
   'style-cards-grid': lazy(() => import('@/components/editor/blocks/StyleCardsGridBlock')),

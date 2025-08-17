@@ -1,15 +1,15 @@
 /**
  * 🚀 ENHANCED TEMPLATE GENERATOR
- * 
+ *
  * Gerador de templates JSON que inclui automaticamente as configurações avançadas:
  * - ConnectedTemplateWrapper (hooks integrados)
- * - ConnectedLeadForm (validação complexa)  
+ * - ConnectedLeadForm (validação complexa)
  * - QuizNavigation (navegação premium)
  * - StyleCardsGrid (cards interativos dos 8 estilos)
  * - GradientAnimation (gradientes e animações personalizadas)
  */
 
-import { TemplateData, TemplateBlock } from './templateService';
+import { TemplateBlock, TemplateData } from './templateService';
 
 export interface EnhancedTemplateConfig {
   stepNumber: number;
@@ -48,7 +48,7 @@ export class EnhancedTemplateGenerator {
       includeGradientBackground = true,
       includeLeadForm = false,
       customBlocks = [],
-      questionData
+      questionData,
     } = config;
 
     const blocks: TemplateBlock[] = [];
@@ -115,7 +115,8 @@ export class EnhancedTemplateGenerator {
       id: `step${stepNumber}-header`,
       type: 'quiz-intro-header',
       properties: {
-        logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+        logoUrl:
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
         logoAlt: 'Logo Gisele Galvão',
         logoWidth: 96,
         logoHeight: 96,
@@ -203,8 +204,14 @@ export class EnhancedTemplateGenerator {
           scoring: {
             enabled: true,
             categories: [
-              'Natural', 'Clássico', 'Contemporâneo', 'Elegante',
-              'Romântico', 'Sexy', 'Dramático', 'Criativo'
+              'Natural',
+              'Clássico',
+              'Contemporâneo',
+              'Elegante',
+              'Romântico',
+              'Sexy',
+              'Dramático',
+              'Criativo',
             ],
           },
         },
@@ -279,7 +286,7 @@ export class EnhancedTemplateGenerator {
       },
       design: {
         primaryColor: '#B89B7A',
-        secondaryColor: '#432818', 
+        secondaryColor: '#432818',
         accentColor: '#3B82F6', // Baseado no quiz21StepsComplete
         backgroundColor: '#F8F9FA', // Baseado no quiz21StepsComplete
         fontFamily: "'Playfair Display', 'Inter', serif",
@@ -291,7 +298,7 @@ export class EnhancedTemplateGenerator {
         },
         card: {
           background: '#fff',
-          borderRadius: '8px', // Baseado no quiz21StepsComplete  
+          borderRadius: '8px', // Baseado no quiz21StepsComplete
           shadow: '0 4px 20px rgba(184, 155, 122, 0.10)',
           padding: '24px', // Baseado no quiz21StepsComplete
         },
@@ -328,9 +335,9 @@ export class EnhancedTemplateGenerator {
         required: true,
         minAnswers: questionData?.minSelections || 1,
         maxAnswers: questionData?.maxSelections || 3,
-        validationMessage: questionData ? 
-          `Selecione ${questionData.minSelections || 3} opções para avançar.` : 
-          'Complete os campos obrigatórios.',
+        validationMessage: questionData
+          ? `Selecione ${questionData.minSelections || 3} opções para avançar.`
+          : 'Complete os campos obrigatórios.',
       },
       analytics: {
         trackingId: `enhanced-step-${stepNumber.toString().padStart(2, '0')}`,
@@ -358,8 +365,14 @@ export class EnhancedTemplateGenerator {
           enabled: stepType === 'question',
           method: 'category-points',
           categories: [
-            'Natural', 'Clássico', 'Contemporâneo', 'Elegante',
-            'Romântico', 'Sexy', 'Dramático', 'Criativo'
+            'Natural',
+            'Clássico',
+            'Contemporâneo',
+            'Elegante',
+            'Romântico',
+            'Sexy',
+            'Dramático',
+            'Criativo',
           ],
         },
         conditions: null,
@@ -461,15 +474,13 @@ export class EnhancedTemplateGenerator {
 
     // Steps 2-21: Questões (exemplo com dados mock)
     for (let i = 2; i <= 21; i++) {
-      templates.push(this.generateQuestionTemplate(
-        i,
-        `Questão ${i - 1} do Quiz de Estilo`,
-        [
+      templates.push(
+        this.generateQuestionTemplate(i, `Questão ${i - 1} do Quiz de Estilo`, [
           { id: `${i}a`, text: 'Opção A', styleCategory: 'Natural', points: 1 },
           { id: `${i}b`, text: 'Opção B', styleCategory: 'Clássico', points: 2 },
           { id: `${i}c`, text: 'Opção C', styleCategory: 'Elegante', points: 3 },
-        ]
-      ));
+        ])
+      );
     }
 
     return templates;

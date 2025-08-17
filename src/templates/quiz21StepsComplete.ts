@@ -36,6 +36,14 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         boxShadow: 'sm',
         animation: 'fadeIn',
         animationDuration: '0.8s',
+        logoUrl:
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+        logoAlt: 'Logo Gisele Galvão',
+        showLogo: true,
+        enableProgressBar: false,
+        progressValue: 0,
+        progressMax: 100,
+        showBackButton: false,
       },
     },
     {

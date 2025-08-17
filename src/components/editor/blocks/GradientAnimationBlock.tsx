@@ -44,11 +44,7 @@ const GradientAnimationBlock: React.FC<GradientAnimationBlockProps> = ({
   onPropertyChange,
 }) => {
   const properties = block?.properties || {};
-  const {
-    className = '',
-    gradientConfig,
-    containerStyles,
-  } = properties;
+  const { className = '', gradientConfig, containerStyles } = properties;
 
   // Configuração padrão
   const config = gradientConfig || {
@@ -73,7 +69,7 @@ const GradientAnimationBlock: React.FC<GradientAnimationBlockProps> = ({
   // Gerar CSS do gradiente
   const generateGradientCSS = () => {
     const { type, direction, colors } = config;
-    
+
     switch (type) {
       case 'radial':
         return `radial-gradient(circle, ${colors.join(', ')})`;
@@ -152,15 +148,15 @@ const GradientAnimationBlock: React.FC<GradientAnimationBlockProps> = ({
     // Injetar estilos customizados
     const styleId = `gradient-animations-${block?.id || 'default'}`;
     let styleElement = document.getElementById(styleId);
-    
+
     if (!styleElement) {
       styleElement = document.createElement('style');
       styleElement.id = styleId;
       document.head.appendChild(styleElement);
     }
-    
+
     styleElement.textContent = customStyles;
-    
+
     return () => {
       // Cleanup ao desmontar
       if (styleElement && styleElement.parentNode) {
@@ -176,9 +172,11 @@ const GradientAnimationBlock: React.FC<GradientAnimationBlockProps> = ({
     zIndex: config.zIndex,
   } as React.CSSProperties;
 
-  const overlayStyle = config.overlay ? {
-    background: `linear-gradient(${config.direction}, rgba(0,0,0,${config.overlayOpacity}), transparent)`,
-  } : {};
+  const overlayStyle = config.overlay
+    ? {
+        background: `linear-gradient(${config.direction}, rgba(0,0,0,${config.overlayOpacity}), transparent)`,
+      }
+    : {};
 
   return (
     <div
@@ -191,27 +189,14 @@ const GradientAnimationBlock: React.FC<GradientAnimationBlockProps> = ({
       )}
     >
       {/* Gradiente de fundo */}
-      <div
-        className={cn(
-          'absolute inset-0',
-          generateAnimationClass()
-        )}
-        style={backgroundStyle}
-      />
-      
+      <div className={cn('absolute inset-0', generateAnimationClass())} style={backgroundStyle} />
+
       {/* Overlay opcional */}
-      {config.overlay && (
-        <div
-          className="absolute inset-0"
-          style={overlayStyle}
-        />
-      )}
-      
+      {config.overlay && <div className="absolute inset-0" style={overlayStyle} />}
+
       {/* Conteúdo */}
-      <div className="relative z-10">
-        {children}
-      </div>
-      
+      <div className="relative z-10">{children}</div>
+
       {/* Debug info (apenas em desenvolvimento) */}
       {process.env.NODE_ENV === 'development' && (
         <div className="fixed bottom-4 right-4 z-50 text-xs text-gray-500 bg-white/90 p-2 rounded shadow-lg max-w-xs">
@@ -233,7 +218,10 @@ const GradientAnimationBlock: React.FC<GradientAnimationBlockProps> = ({
 export default GradientAnimationBlock;
 
 // ✅ CONFIGURAÇÃO JSON EXPORTÁVEL - PRESETS
-export const getGradientAnimationConfig = (preset: 'intro' | 'question' | 'result' | 'custom' = 'intro', customConfig?: Partial<any>) => {
+export const getGradientAnimationConfig = (
+  preset: 'intro' | 'question' | 'result' | 'custom' = 'intro',
+  customConfig?: Partial<any>
+) => {
   const presets = {
     intro: {
       type: 'linear' as const,

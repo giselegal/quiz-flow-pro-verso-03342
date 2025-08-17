@@ -1,12 +1,12 @@
-import React, { useMemo, useCallback } from 'react';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Settings, Type, Image as ImageIcon, MousePointer } from 'lucide-react';
+import { Textarea } from '@/components/ui/textarea';
 import type { Block } from '@/types/editor';
+import { Image as ImageIcon, MousePointer, Settings, Type } from 'lucide-react';
+import React, { useCallback, useMemo } from 'react';
 
 interface PropertiesPanelProps {
   block: Block | undefined;
@@ -61,6 +61,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({ block, onUpdat
       'quiz-header': () => <QuizHeaderProperties {...commonProps} />,
       'quiz-intro-header': () => <QuizHeaderProperties {...commonProps} />,
       'lead-form': () => <LeadFormProperties {...commonProps} />,
+      'form-container': () => <LeadFormProperties {...commonProps} />, // ✅ ADICIONADO
       'options-grid': () => <OptionsGridProperties {...commonProps} />,
       button: () => <ButtonProperties {...commonProps} />,
       'button-inline': () => <ButtonProperties {...commonProps} />,
@@ -68,7 +69,10 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({ block, onUpdat
       'image-inline': () => <ImageProperties {...commonProps} />,
       'image-display-inline': () => <ImageProperties {...commonProps} />,
       'result-display': () => <ResultProperties {...commonProps} />,
+      'result-header-inline': () => <ResultProperties {...commonProps} />, // ✅ ADICIONADO
       'offer-cta': () => <OfferProperties {...commonProps} />,
+      'quiz-offer-cta-inline': () => <OfferProperties {...commonProps} />, // ✅ ADICIONADO
+      hero: () => <DefaultProperties {...commonProps} />, // ✅ ADICIONADO (genérico por enquanto)
     };
 
     const renderer = renderers[block.type];

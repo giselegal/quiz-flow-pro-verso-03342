@@ -1,6 +1,6 @@
 /**
  * 🎯 QUIZ21 ENHANCED ADAPTER
- * 
+ *
  * Adaptador que extrai configurações diretamente do quiz21StepsComplete.ts
  * e aplica as melhorias enhanced mantendo 100% compatibilidade
  */
@@ -56,18 +56,19 @@ export class Quiz21EnhancedAdapter {
    */
   private static extractQuestionData(blocks: any[]): any | null {
     const optionsBlock = blocks.find(block => block.type === 'options-grid');
-    
+
     if (!optionsBlock) return null;
 
     return {
       title: optionsBlock.content?.question || 'Questão do Quiz',
-      options: optionsBlock.content?.options?.map((option: any) => ({
-        id: option.id,
-        text: option.text,
-        imageUrl: option.imageUrl,
-        styleCategory: this.extractStyleCategoryFromId(option.id),
-        points: optionsBlock.properties?.scoreValues?.[option.id] || 1,
-      })) || [],
+      options:
+        optionsBlock.content?.options?.map((option: any) => ({
+          id: option.id,
+          text: option.text,
+          imageUrl: option.imageUrl,
+          styleCategory: this.extractStyleCategoryFromId(option.id),
+          points: optionsBlock.properties?.scoreValues?.[option.id] || 1,
+        })) || [],
       minSelections: optionsBlock.properties?.minSelections || 3,
       maxSelections: optionsBlock.properties?.maxSelections || 3,
     };
@@ -92,7 +93,10 @@ export class Quiz21EnhancedAdapter {
   /**
    * 🔍 Determina tipo do step baseado no conteúdo original
    */
-  private static determineStepType(stepNumber: number, _blocks: any[]): 'intro' | 'question' | 'strategic' | 'result' {
+  private static determineStepType(
+    stepNumber: number,
+    _blocks: any[]
+  ): 'intro' | 'question' | 'strategic' | 'result' {
     if (stepNumber === 1) return 'intro';
     if (stepNumber >= 13 && stepNumber <= 18) return 'strategic'; // Baseado no quiz21StepsComplete
     if (stepNumber >= 19) return 'result'; // Baseado no quiz21StepsComplete
@@ -105,7 +109,7 @@ export class Quiz21EnhancedAdapter {
   private static extractStyleCategoryFromId(optionId: string): string {
     const styleMap: Record<string, string> = {
       natural: 'Natural',
-      classico: 'Clássico', 
+      classico: 'Clássico',
       contemporaneo: 'Contemporâneo',
       elegante: 'Elegante',
       romantico: 'Romântico',
@@ -153,17 +157,15 @@ export class Quiz21EnhancedAdapter {
    * 🔧 Aplica propriedades específicas do template original
    */
   private static applyOriginalProperties(
-    enhancedTemplate: TemplateData, 
+    enhancedTemplate: TemplateData,
     _originalBlocks: any[],
     headerData: any,
     formData: any
   ): void {
     // Aplicar propriedades do header original
     if (headerData) {
-      const headerBlock = enhancedTemplate.blocks.find(block => 
-        block.type === 'quiz-intro-header'
-      );
-      
+      const headerBlock = enhancedTemplate.blocks.find(block => block.type === 'quiz-intro-header');
+
       if (headerBlock) {
         headerBlock.properties = {
           ...headerBlock.properties,
@@ -190,10 +192,8 @@ export class Quiz21EnhancedAdapter {
 
     // Aplicar propriedades do form original
     if (formData) {
-      const formBlock = enhancedTemplate.blocks.find(block => 
-        block.type === 'connected-lead-form'
-      );
-      
+      const formBlock = enhancedTemplate.blocks.find(block => block.type === 'connected-lead-form');
+
       if (formBlock) {
         formBlock.properties.formConfig = {
           ...formBlock.properties.formConfig,

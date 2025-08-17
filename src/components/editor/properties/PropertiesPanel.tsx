@@ -83,6 +83,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
     switch (blockType) {
       case 'header':
       case 'quiz-intro-header':
+      case 'quiz-header':
         return (
           <HeaderPropertyEditor
             block={selectedBlock}
@@ -241,6 +242,12 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
           'form-container',
           'form-input',
           'input-field',
+          'lead-form',
+          'quiz-question-inline',
+          'options-grid-inline',
+          'result-header-inline',
+          'quiz-offer-cta-inline',
+          'hero',
         ];
 
         const isKnownType =

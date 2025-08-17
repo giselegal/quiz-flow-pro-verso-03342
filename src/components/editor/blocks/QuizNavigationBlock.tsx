@@ -52,11 +52,7 @@ const QuizNavigationBlock: React.FC<QuizNavigationBlockProps> = ({
   onBack,
 }) => {
   const properties = block?.properties || {};
-  const {
-    className = '',
-    backgroundColor = 'transparent',
-    navigationConfig,
-  } = properties;
+  const { className = '', backgroundColor = 'transparent', navigationConfig } = properties;
 
   // Configuração padrão ou do JSON
   const config = navigationConfig || {
@@ -81,7 +77,7 @@ const QuizNavigationBlock: React.FC<QuizNavigationBlockProps> = ({
 
   const handleNext = () => {
     console.log('🚀 QuizNavigationBlock: Próxima etapa');
-    
+
     // Atualizar propriedades
     if (onPropertyChange) {
       onPropertyChange('lastAction', 'next');
@@ -96,7 +92,7 @@ const QuizNavigationBlock: React.FC<QuizNavigationBlockProps> = ({
 
   const handleBack = () => {
     console.log('🔙 QuizNavigationBlock: Etapa anterior');
-    
+
     // Atualizar propriedades
     if (onPropertyChange) {
       onPropertyChange('lastAction', 'back');
@@ -112,11 +108,13 @@ const QuizNavigationBlock: React.FC<QuizNavigationBlockProps> = ({
   return (
     <div
       className={cn('quiz-navigation-block', className)}
-      style={{ 
-        backgroundColor,
-        '--primary-color': config.theme?.primaryColor,
-        '--text-color': config.theme?.textColor,
-      } as React.CSSProperties}
+      style={
+        {
+          backgroundColor,
+          '--primary-color': config.theme?.primaryColor,
+          '--text-color': config.theme?.textColor,
+        } as React.CSSProperties
+      }
     >
       <QuizNavigation
         currentStep={config.currentStep}
@@ -131,7 +129,7 @@ const QuizNavigationBlock: React.FC<QuizNavigationBlockProps> = ({
         onNext={handleNext}
         onBack={config.showBackButton ? handleBack : undefined}
       />
-      
+
       {/* Debug info (apenas em desenvolvimento) */}
       {process.env.NODE_ENV === 'development' && (
         <div className="mt-2 text-xs text-gray-500">

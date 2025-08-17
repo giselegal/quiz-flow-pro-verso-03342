@@ -57,11 +57,7 @@ const StyleCardsGridBlock: React.FC<StyleCardsGridBlockProps> = ({
   onStyleSelect,
 }) => {
   const properties = block?.properties || {};
-  const {
-    className = '',
-    backgroundColor = 'transparent',
-    styleCardsConfig,
-  } = properties;
+  const { className = '', backgroundColor = 'transparent', styleCardsConfig } = properties;
 
   // Configuração padrão com os 8 estilos
   const config = styleCardsConfig || {
@@ -96,14 +92,14 @@ const StyleCardsGridBlock: React.FC<StyleCardsGridBlockProps> = ({
 
   const [selectedStyles, setSelectedStyles] = React.useState<string[]>([]);
 
-  const handleStyleClick = (style: typeof config.styles[0]) => {
+  const handleStyleClick = (style: (typeof config.styles)[0]) => {
     if (!config.interactive) return;
 
     const styleId = style.name.toLowerCase();
-    
+
     if (config.selectable) {
       let newSelection = [...selectedStyles];
-      
+
       if (selectedStyles.includes(styleId)) {
         newSelection = newSelection.filter(id => id !== styleId);
       } else {
@@ -113,9 +109,9 @@ const StyleCardsGridBlock: React.FC<StyleCardsGridBlockProps> = ({
           newSelection.push(styleId);
         }
       }
-      
+
       setSelectedStyles(newSelection);
-      
+
       if (onPropertyChange) {
         onPropertyChange('selectedStyles', newSelection);
       }
@@ -130,40 +126,49 @@ const StyleCardsGridBlock: React.FC<StyleCardsGridBlockProps> = ({
 
   const getCardSizeClass = () => {
     switch (config.layout.cardSize) {
-      case 'sm': return 'h-20 w-20';
-      case 'lg': return 'h-32 w-32';
-      default: return 'h-24 w-24';
+      case 'sm':
+        return 'h-20 w-20';
+      case 'lg':
+        return 'h-32 w-32';
+      default:
+        return 'h-24 w-24';
     }
   };
 
   const getColumnsClass = () => {
     switch (config.layout.columns) {
-      case 2: return 'grid-cols-2 md:grid-cols-2';
-      case 3: return 'grid-cols-2 md:grid-cols-3';
-      case 4: return 'grid-cols-2 md:grid-cols-4';
-      case 8: return 'grid-cols-4 md:grid-cols-8';
-      default: return 'grid-cols-2 md:grid-cols-4';
+      case 2:
+        return 'grid-cols-2 md:grid-cols-2';
+      case 3:
+        return 'grid-cols-2 md:grid-cols-3';
+      case 4:
+        return 'grid-cols-2 md:grid-cols-4';
+      case 8:
+        return 'grid-cols-4 md:grid-cols-8';
+      default:
+        return 'grid-cols-2 md:grid-cols-4';
     }
   };
 
   const getAnimationClass = () => {
     switch (config.layout.animationType) {
-      case 'pulse': return 'hover:animate-pulse';
-      case 'glow': return 'hover:shadow-2xl hover:shadow-current/20';
-      case 'hover': return 'transition-all duration-300 hover:scale-105';
-      default: return '';
+      case 'pulse':
+        return 'hover:animate-pulse';
+      case 'glow':
+        return 'hover:shadow-2xl hover:shadow-current/20';
+      case 'hover':
+        return 'transition-all duration-300 hover:scale-105';
+      default:
+        return '';
     }
   };
 
   return (
-    <div
-      className={cn('style-cards-grid-block', className)}
-      style={{ backgroundColor }}
-    >
+    <div className={cn('style-cards-grid-block', className)} style={{ backgroundColor }}>
       <div className={cn('grid', getColumnsClass(), config.layout.gap)}>
         {config.styles.map((style, index) => {
           const isSelected = selectedStyles.includes(style.name.toLowerCase());
-          
+
           return (
             <Card
               key={index}
@@ -174,11 +179,13 @@ const StyleCardsGridBlock: React.FC<StyleCardsGridBlockProps> = ({
                 isSelected && 'ring-2 ring-offset-2',
                 config.interactive ? 'hover:shadow-lg' : 'cursor-default'
               )}
-              style={{
-                backgroundColor: config.theme.cardBackground,
-                borderColor: config.theme.cardBorder,
-                '--ring-color': style.color,
-              } as React.CSSProperties}
+              style={
+                {
+                  backgroundColor: config.theme.cardBackground,
+                  borderColor: config.theme.cardBorder,
+                  '--ring-color': style.color,
+                } as React.CSSProperties
+              }
               onClick={() => handleStyleClick(style)}
             >
               <CardContent className="p-4 text-center flex flex-col items-center justify-center">
@@ -193,23 +200,21 @@ const StyleCardsGridBlock: React.FC<StyleCardsGridBlockProps> = ({
                     {style.letter}
                   </div>
                 )}
-                
-                <h3 
+
+                <h3
                   className="font-semibold text-sm mb-1"
                   style={{ color: config.theme.textColor }}
                 >
                   {style.name}
                 </h3>
-                
+
                 {config.layout.showDescriptions && style.description && (
-                  <p className="text-xs text-gray-600 text-center">
-                    {style.description}
-                  </p>
+                  <p className="text-xs text-gray-600 text-center">{style.description}</p>
                 )}
-                
+
                 {isSelected && (
-                  <Badge 
-                    variant="secondary" 
+                  <Badge
+                    variant="secondary"
                     className="mt-2 text-xs"
                     style={{ backgroundColor: style.color, color: 'white' }}
                   >
@@ -221,7 +226,7 @@ const StyleCardsGridBlock: React.FC<StyleCardsGridBlockProps> = ({
           );
         })}
       </div>
-      
+
       {/* Debug info (apenas em desenvolvimento) */}
       {process.env.NODE_ENV === 'development' && (
         <div className="mt-4 text-xs text-gray-500">
