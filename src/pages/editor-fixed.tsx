@@ -4,6 +4,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
 import { Eye, Image, Layout, Mouse, Save, Settings, Type } from 'lucide-react';
 import { useState } from 'react';
+import { useEditor } from '@/context/EditorContext';
+import { PropertiesPanel } from '@/components/editor/properties/PropertiesPanel';
+import { BlockType } from '@/types/editor';
 
 /**
  * 🏆 EDITOR PRINCIPAL: EditorFixedPageWithDragDrop
