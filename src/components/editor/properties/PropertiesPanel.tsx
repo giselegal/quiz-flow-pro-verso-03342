@@ -5,6 +5,7 @@ import { Block } from '@/types/editor';
 import { Eye, Settings, X } from 'lucide-react';
 import React, { useMemo } from 'react';
 import { ButtonPropertyEditor } from './editors/ButtonPropertyEditor';
+import { FormContainerPropertyEditor } from './editors/FormContainerPropertyEditor';
 import { HeaderPropertyEditor } from './editors/HeaderPropertyEditor';
 import { default as ImagePropertyEditor } from './editors/ImagePropertyEditor';
 import { NavigationPropertyEditor } from './editors/NavigationPropertyEditor';
@@ -86,6 +87,17 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
       case 'quiz-header':
         return (
           <HeaderPropertyEditor
+            block={selectedBlock}
+            onUpdate={handleUpdate}
+            isPreviewMode={isPreviewMode}
+          />
+        );
+
+      case 'form-container':
+      case 'form-input':
+      case 'lead-form':
+        return (
+          <FormContainerPropertyEditor
             block={selectedBlock}
             onUpdate={handleUpdate}
             isPreviewMode={isPreviewMode}

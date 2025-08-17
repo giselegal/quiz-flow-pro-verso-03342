@@ -9,7 +9,7 @@ import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '../templates/quiz21StepsComplete';
 import { EnhancedTemplateGenerator } from './enhancedTemplateGenerator';
 import { TemplateData } from './templateService';
 
-export class Quiz21EnhancedAdapter {
+export class   Quiz21EnhancedAdapter {
   /**
    * 🎯 Extrai template original do quiz21StepsComplete e aplica melhorias enhanced
    */
@@ -25,27 +25,32 @@ export class Quiz21EnhancedAdapter {
     console.log(`🔍 Adaptando Step ${stepNumber} do quiz21StepsComplete...`);
 
     // Extrair dados da questão do template original
-    const questionData = this.extractQuestionData(originalBlocks);
-    const headerData = this.extractHeaderData(originalBlocks);
-    const formData = this.extractFormData(originalBlocks);
+    const questionData = Quiz21EnhancedAdapter.extractQuestionData(originalBlocks);
+    const headerData = Quiz21EnhancedAdapter.extractHeaderData(originalBlocks);
+    const formData = Quiz21EnhancedAdapter.extractFormData(originalBlocks);
 
     // Configuração baseada no original
     const enhancedConfig = {
       stepNumber,
-      stepType: this.determineStepType(stepNumber, originalBlocks),
+      stepType: Quiz21EnhancedAdapter.determineStepType(stepNumber, originalBlocks),
       includeNavigation: true,
       includeStyleCards: stepNumber === 1, // Apenas no Step 1 como no original
       includeGradientBackground: true,
       includeLeadForm: stepNumber === 1, // Apenas no Step 1 como no original
       questionData: questionData || undefined,
-      customBlocks: this.createCustomBlocksFromOriginal(originalBlocks),
+      customBlocks: Quiz21EnhancedAdapter.createCustomBlocksFromOriginal(originalBlocks),
     };
 
     // Gerar template enhanced baseado no original
     const enhancedTemplate = EnhancedTemplateGenerator.generateTemplate(enhancedConfig);
 
     // Preservar propriedades específicas do original
-    this.applyOriginalProperties(enhancedTemplate, originalBlocks, headerData, formData);
+    Quiz21EnhancedAdapter.applyOriginalProperties(
+      enhancedTemplate,
+      originalBlocks,
+      headerData,
+      formData
+    );
 
     console.log(`✅ Step ${stepNumber} adaptado com configurações enhanced`);
     return enhancedTemplate;
@@ -66,7 +71,7 @@ export class Quiz21EnhancedAdapter {
           id: option.id,
           text: option.text,
           imageUrl: option.imageUrl,
-          styleCategory: this.extractStyleCategoryFromId(option.id),
+          styleCategory: Quiz21EnhancedAdapter.extractStyleCategoryFromId(option.id),
           points: optionsBlock.properties?.scoreValues?.[option.id] || 1,
         })) || [],
       minSelections: optionsBlock.properties?.minSelections || 3,

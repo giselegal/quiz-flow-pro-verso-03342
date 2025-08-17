@@ -1,11 +1,11 @@
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { EditorBlock } from '@/types/editor';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { ChevronDown, ChevronUp, Copy, GripVertical, Trash2 } from 'lucide-react';
 import React, { useState } from 'react';
-import { Button } from '../ui/button';
-import { Card } from '../ui/card';
 import EditBlockContent from './EditBlockContent';
 
 interface EditorBlockItemProps {

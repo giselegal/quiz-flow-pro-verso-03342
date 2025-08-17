@@ -92,11 +92,10 @@ const ConnectedLeadFormBlock: React.FC<ConnectedLeadFormBlockProps> = ({
       <ConnectedLeadForm
         onSubmit={handleSubmit}
         className="w-full"
-        // Props personalizáveis via JSON
-        placeholder={config.placeholderText}
-        buttonText={config.submitButtonText}
-        validationEnabled={config.enableValidation}
-        realTimeValidation={config.realTimeValidation}
+        // Props personalizáveis via JSON (removido placeholder que não é aceito)
+        // buttonText={config.submitButtonText}
+        // validationEnabled={config.enableValidation}
+        // realTimeValidation={config.realTimeValidation}
       />
 
       {/* Debug info (apenas em desenvolvimento) */}

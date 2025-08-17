@@ -23,12 +23,12 @@ export const ValidationFeedback: React.FC<FeedbackProps> = ({
     return () => setIsVisible(false);
   }, [validation]);
 
-  if (!validation || (!validation.errors.length && !validation.warnings.length)) {
+  if (!validation || (!validation.errors?.length && !validation.warnings?.length)) {
     return null;
   }
 
-  const hasErrors = validation.errors.length > 0;
-  const hasWarnings = validation.warnings.length > 0;
+  const hasErrors = validation.errors?.length > 0;
+  const hasWarnings = (validation.warnings?.length || 0) > 0;
 
   return (
     <div
@@ -62,7 +62,7 @@ export const ValidationFeedback: React.FC<FeedbackProps> = ({
             </ul>
           ) : hasWarnings ? (
             <ul className="list-disc list-inside">
-              {validation.warnings.map((warning, index) => (
+              {(validation.warnings || []).map((warning, index) => (
                 <li key={index}>{warning}</li>
               ))}
             </ul>
