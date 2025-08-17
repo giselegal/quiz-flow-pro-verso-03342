@@ -1,5 +1,5 @@
 import React from 'react';
-import { TemplateRenderer } from '../template/TemplateRenderer';
+import { TemplateRenderer } from '../templates/TemplateRenderer';
 
 /**
  * 📋 STEP 08 - Quiz Template Component
@@ -10,8 +10,8 @@ import { TemplateRenderer } from '../template/TemplateRenderer';
 export const Step08Template: React.FC = () => {
   return (
     <TemplateRenderer 
-      templateId="step-8"
-      fallbackStep={8}
+      stepNumber={8}
+      sessionId="demo"
     />
   );
 };
