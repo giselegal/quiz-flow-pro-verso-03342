@@ -9,10 +9,10 @@ export { PropertyTextarea } from './components/PropertyTextarea';
 
 // Configuration and registry
 export {
-  PROPERTY_EDITOR_REGISTRY,
   getBlockEditorConfig,
   getBlockTypesByCategory,
   getBlockTypesByPriority,
+  PROPERTY_EDITOR_REGISTRY,
 } from './PropertyEditorRegistry';
 
 // Types and interfaces

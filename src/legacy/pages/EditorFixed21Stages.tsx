@@ -1,27 +1,24 @@
-import React from 'react';
-import { useFunnels } from '@/context/FunnelsContext';
 import { FunnelStagesPanel } from '@/components/editor/funnel/FunnelStagesPanel';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Eye, Settings, Save, Component, Trash2, Copy } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
 import {
-  ResizablePanelGroup,
-  ResizablePanel,
   ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
 } from '@/components/ui/resizable-panels';
+import { useFunnels } from '@/context/FunnelsContext';
+import { cn } from '@/lib/utils';
 import { BlockType } from '@/types/editor';
+import { Component, Copy, Eye, Save, Settings, Trash2 } from 'lucide-react';
+import React from 'react';
 
 // Componentes otimizados
-import { useEditorState } from '@/hooks/useEditorState';
 import { BlockLoadingStates } from '@/components/editor/LoadingStates';
-import { PreviewNavigation } from '@/components/preview/PreviewNavigation';
-import { PreviewToggleButton } from '@/components/preview/PreviewToggleButton';
-import { PreviewProvider } from '@/contexts/PreviewContext';
+import { useEditorState } from '@/hooks/useEditorState';
 // 🆕 NOVO PAINEL DE PROPRIEDADES (AGORA PADRÃO)
-import { PropertiesPanel } from '@/components/editor/properties/PropertiesPanel';
 import { ErrorBoundary } from '@/components/editor/ErrorBoundary';
 import BlockRenderer from '@/components/editor/blocks/BlockRenderer';
+import { PropertiesPanel } from '@/components/editor/properties/PropertiesPanel';
 
 /**
  * 🚀 EDITOR REFATORADO: Versão otimizada com hooks especializados
@@ -294,8 +291,8 @@ const EditorFixed21Stages: React.FC = () => {
                 </h2>
               </div>
               <div className="p-4">
-                <PropertiesPanel 
-                  selectedBlock={selectedBlockData} 
+                <PropertiesPanel
+                  selectedBlock={selectedBlockData}
                   onUpdate={updateBlock}
                   onClose={() => selectBlock(null)}
                   onDelete={(blockId: string) => {
