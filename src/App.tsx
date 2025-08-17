@@ -5,13 +5,13 @@ import { Toaster } from '@/components/ui/toaster';
 import { ThemeProvider } from '@/components/theme-provider';
 import { LoadingFallback } from '@/components/ui/loading-fallback';
 
-// Main pages
-import QuizPage from './pages/QuizPage';
-import ResultPageTest from './pages/ResultPageTest';
-import AdminResultEditor from './pages/admin/ResultEditor';
+// Main pages - using existing files
+import ModernQuizPage from './pages/ModernQuizPage';
+import ResultPage from './pages/ResultPage';
+import DashboardPage from './pages/admin/DashboardPage';
 import EditorPage from './pages/admin/EditorPage';
 import EditorFixed from './pages/editor-fixed';
-import HomePage from './pages/HomePage';
+import Home from './pages/Home';
 
 const App = () => {
   return (
@@ -20,18 +20,18 @@ const App = () => {
         <Suspense fallback={<LoadingFallback />}>
           <Switch>
             {/* 🏠 Página Inicial */}
-            <Route path="/" component={HomePage} />
+            <Route path="/" component={Home} />
 
             {/* 🎯 Quiz Principal */}
-            <Route path="/quiz" component={QuizPage} />
+            <Route path="/quiz" component={ModernQuizPage} />
 
             {/* 📊 Resultados */}
-            <Route path="/result" component={ResultPageTest} />
-            <Route path="/result-test" component={ResultPageTest} />
+            <Route path="/result" component={ResultPage} />
+            <Route path="/result-test" component={ResultPage} />
 
             {/* ⚙️ Admin/Editor */}
-            <Route path="/admin/editor" component={AdminResultEditor} />
-            <Route path="/admin" component={EditorPage} />
+            <Route path="/admin/editor" component={EditorPage} />
+            <Route path="/admin" component={DashboardPage} />
             <Route path="/editor" component={EditorFixed} />
             <Route path="/editor-fixed" component={EditorFixed} />
 
