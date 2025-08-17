@@ -8,6 +8,7 @@ import {
   Maximize2,
   Settings,
   Activity,
+  FileText,
 } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
@@ -19,6 +20,7 @@ interface EditorToolbarProps {
   onViewportSizeChange: (size: 'sm' | 'md' | 'lg' | 'xl') => void;
   onTogglePreview: () => void;
   onSave: () => void;
+  onSaveAsTemplate?: () => void;
   onShowFunnelSettings?: () => void;
   onShowMonitoring?: () => void;
   currentFunnelData?: any;
@@ -32,6 +34,7 @@ export function EditorToolbar({
   onViewportSizeChange,
   onTogglePreview,
   onSave,
+  onSaveAsTemplate,
   onShowFunnelSettings,
   onShowMonitoring,
   currentFunnelData,
@@ -167,6 +170,18 @@ export function EditorToolbar({
           <Save className="w-4 h-4 mr-2" />
           Salvar
         </Button>
+
+        {onSaveAsTemplate && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onSaveAsTemplate}
+            className="border-[#B89B7A] text-[#432818] hover:bg-[#B89B7A]/10"
+          >
+            <FileText className="w-4 h-4 mr-2" />
+            Salvar como Template
+          </Button>
+        )}
       </div>
     </div>
   );

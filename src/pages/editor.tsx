@@ -8,6 +8,7 @@ import { FunnelSettingsPanel } from '@/components/editor/funnel-settings/FunnelS
 import { FunnelStagesPanel } from '@/components/editor/funnel/FunnelStagesPanel';
 import { FourColumnLayout } from '@/components/editor/layout/FourColumnLayout';
 import { EditorToolbar } from '@/components/enhanced-editor/toolbar/EditorToolbar';
+import { SaveTemplateModal } from '@/components/editor/SaveTemplateModal';
 // 🚀 PREVIEW SYSTEM
 import { PreviewNavigation } from '@/components/preview/PreviewNavigation';
 import { PreviewToggleButton } from '@/components/preview/PreviewToggleButton';
@@ -41,6 +42,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
 
   // Estado local
   const [showFunnelSettings, setShowFunnelSettings] = useState(false);
+  const [showSaveTemplateModal, setShowSaveTemplateModal] = useState(false);
 
   // Editor Context - Estado centralizado do editor
   const {
@@ -167,6 +169,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
             isPreviewing={isPreviewing}
             onTogglePreview={() => setIsPreviewing(!isPreviewing)}
             onSave={handleSave}
+            onSaveAsTemplate={() => setShowSaveTemplateModal(true)}
             viewportSize={viewportSize as 'sm' | 'md' | 'lg' | 'xl'}
             onViewportSizeChange={(size: 'sm' | 'md' | 'lg' | 'xl') => setViewportSize(size)}
             onShowFunnelSettings={() => setShowFunnelSettings(true)}
@@ -250,6 +253,18 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
             onClose={() => setShowFunnelSettings(false)}
           />
         )}
+
+        {/* Modal de Salvamento de Template */}
+        <SaveTemplateModal
+          isOpen={showSaveTemplateModal}
+          onClose={() => setShowSaveTemplateModal(false)}
+          currentBlocks={currentBlocks || []}
+          currentFunnelId={activeStageId || 'default'}
+          onSaveSuccess={(templateId) => {
+            console.log('✅ Template salvo com ID:', templateId);
+            // Opcional: redirecionar para dashboard ou mostrar próximos passos
+          }}
+        />
       </div>
     </DndProvider>
   );
