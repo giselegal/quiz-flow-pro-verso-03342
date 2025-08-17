@@ -35,7 +35,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         marginBottom: '16px',
         boxShadow: 'sm',
         animation: 'fadeIn',
-        animationDuration: '0.8s'
+        animationDuration: '0.8s',
       },
     },
     {
@@ -169,6 +169,17 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         hoverColor: '#EBF5FF',
         gridGap: 16,
         responsiveColumns: true,
+        // Pontuação por opção
+        scoreValues: {
+          natural_q1: 1,
+          classico_q1: 1,
+          contemporaneo_q1: 1,
+          elegante_q1: 1,
+          romantico_q1: 1,
+          sexy_q1: 1,
+          dramatico_q1: 1,
+          criativo_q1: 1,
+        },
       },
     },
   ],
@@ -248,6 +259,16 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         hoverColor: '#EBF5FF',
         gridGap: 16,
         responsiveColumns: true,
+        scoreValues: {
+          natural_q3: 1,
+          classico_q3: 1,
+          contemporaneo_q3: 1,
+          elegante_q3: 1,
+          romantico_q3: 1,
+          sexy_q3: 1,
+          dramatico_q3: 1,
+          criativo_q3: 1,
+        },
       },
     },
   ],
@@ -315,6 +336,16 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         hoverColor: '#EBF5FF',
         gridGap: 12,
         responsiveColumns: false,
+        scoreValues: {
+          natural_q4: 1,
+          classico_q4: 1,
+          contemporaneo_q4: 1,
+          elegante_q4: 1,
+          romantico_q4: 1,
+          sexy_q4: 1,
+          dramatico_q4: 1,
+          criativo_q4: 1,
+        },
       },
     },
   ],
@@ -382,6 +413,16 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         hoverColor: '#EBF5FF',
         gridGap: 12,
         responsiveColumns: false,
+        scoreValues: {
+          natural_q2: 1,
+          classico_q2: 1,
+          contemporaneo_q2: 1,
+          elegante_q2: 1,
+          romantico_q2: 1,
+          sexy_q2: 1,
+          dramatico_q2: 1,
+          criativo_q2: 1,
+        },
       },
     },
   ],
@@ -468,6 +509,16 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         hoverColor: '#EBF5FF',
         gridGap: 16,
         responsiveColumns: true,
+        scoreValues: {
+          natural_q5: 1,
+          classico_q5: 1,
+          contemporaneo_q5: 1,
+          elegante_q5: 1,
+          romantico_q5: 1,
+          sexy_q5: 1,
+          dramatico_q5: 1,
+          criativo_q5: 1,
+        },
       },
     },
   ],
@@ -554,6 +605,16 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         hoverColor: '#EBF5FF',
         gridGap: 16,
         responsiveColumns: true,
+        scoreValues: {
+          natural_q6: 1,
+          classico_q6: 1,
+          contemporaneo_q6: 1,
+          elegante_q6: 1,
+          romantico_q6: 1,
+          sexy_q6: 1,
+          dramatico_q6: 1,
+          criativo_q6: 1,
+        },
       },
     },
   ],
@@ -570,44 +631,52 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
           {
             id: 'natural_q7',
             text: 'Calça fluida acetinada bege',
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735419/38_iilv0l.webp'
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735419/38_iilv0l.webp',
           },
           {
             id: 'classico_q7',
             text: 'Calça de alfaiataria cinza',
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735417/39_arsswu.webp'
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735417/39_arsswu.webp',
           },
           {
             id: 'contemporaneo_q7',
             text: 'Jeans reto e básico',
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735419/40_beq52x.webp'
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735419/40_beq52x.webp',
           },
           {
             id: 'elegante_q7',
             text: 'Calça reta bege de tecido',
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735419/41_hconq4.webp'
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735419/41_hconq4.webp',
           },
           {
             id: 'romantico_q7',
             text: 'Calça ampla rosa alfaiatada',
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735420/42_q8xws1.webp'
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735420/42_q8xws1.webp',
           },
           {
             id: 'sexy_q7',
             text: 'Legging preta de couro',
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735424/43_ljy7sh.webp'
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735424/43_ljy7sh.webp',
           },
           {
             id: 'dramatico_q7',
             text: 'Calça reta preta de couro',
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735424/44_nqgvoq.webp'
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735424/44_nqgvoq.webp',
           },
           {
             id: 'criativo_q7',
             text: 'Calça estampada floral leve e ampla',
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735425/45_lp64m8.webp'
-          }
-        ]
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735425/45_lp64m8.webp',
+          },
+        ],
       },
       properties: {
         questionId: 'q7_calca',
@@ -632,11 +701,21 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         hoverColor: '#EBF5FF',
         gridGap: 16,
         responsiveColumns: true,
+        scoreValues: {
+          natural_q7: 1,
+          classico_q7: 1,
+          contemporaneo_q7: 1,
+          elegante_q7: 1,
+          romantico_q7: 1,
+          sexy_q7: 1,
+          dramatico_q7: 1,
+          criativo_q7: 1,
+        },
       },
     },
   ],
 
-  // 🎯 ETAPA 9: QUESTÃO 8 - QUAL SAIA OU VESTIDO MAIS COMBINA COM VOCÊ?
+  // 🎯 ETAPA 9: QUESTÃO 8 - SAPATOS
   'step-9': [
     {
       id: 'step9-question',
@@ -648,47 +727,55 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
           {
             id: 'natural_q8',
             text: 'Tênis nude casual e confortável',
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735426/47_bi6vgf.webp'
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735426/47_bi6vgf.webp',
           },
           {
             id: 'classico_q8',
             text: 'Scarpin nude de salto baixo',
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735427/48_ymo1ur.webp'
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735427/48_ymo1ur.webp',
           },
           {
             id: 'contemporaneo_q8',
             text: 'Sandália dourada com salto bloco',
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735427/49_apcrwa.webp'
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735427/49_apcrwa.webp',
           },
           {
             id: 'elegante_q8',
             text: 'Scarpin nude salto alto e fino',
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735428/50_qexxxo.webp'
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735428/50_qexxxo.webp',
           },
           {
             id: 'romantico_q8',
             text: 'Sandália anabela off white',
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735428/51_xbgntp.webp'
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735428/51_xbgntp.webp',
           },
           {
             id: 'sexy_q8',
             text: 'Sandália rosa de tiras finas',
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735429/52_edlp0e.webp'
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735429/52_edlp0e.webp',
           },
           {
             id: 'dramatico_q8',
             text: 'Scarpin preto moderno com vinil transparente',
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735429/53_bfdp6f.webp'
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735429/53_bfdp6f.webp',
           },
           {
             id: 'criativo_q8',
             text: 'Scarpin colorido estampado',
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735430/54_xnilkc.webp'
-          }
-        ]
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735430/54_xnilkc.webp',
+          },
+        ],
       },
       properties: {
-        questionId: 'q8_vestido',
+        questionId: 'q8_sapatos',
         showImages: true,
         imageSize: 'custom',
         imageWidth: 300,
@@ -710,11 +797,21 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         hoverColor: '#EBF5FF',
         gridGap: 16,
         responsiveColumns: true,
+        scoreValues: {
+          natural_q8: 1,
+          classico_q8: 1,
+          contemporaneo_q8: 1,
+          elegante_q8: 1,
+          romantico_q8: 1,
+          sexy_q8: 1,
+          dramatico_q8: 1,
+          criativo_q8: 1,
+        },
       },
     },
   ],
 
-  // 🎯 ETAPA 10: QUESTÃO 9 - QUAL SAPATO MAIS COMBINA COM VOCÊ?
+  // 🎯 ETAPA 10: QUESTÃO 9 - ACESSÓRIOS (TEXTO)
   'step-10': [
     {
       id: 'step10-question',
@@ -726,47 +823,55 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
           {
             id: 'natural_q9',
             text: 'Pequenos e discretos, às vezes nem uso',
-            imageUrl: 'https://res.cloudinary.com/der8kogzu/image/upload/v1752430351/Q9_-_A_cffjcw.webp'
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735431/56_acessorios_natural_zghkwe.webp',
           },
           {
             id: 'classico_q9',
             text: 'Brincos pequenos e discretos. Corrente fininha',
-            imageUrl: 'https://res.cloudinary.com/der8kogzu/image/upload/v1752431503/Q9_B.webp'
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735431/57_acessorios_classico_kfhmwp.webp',
           },
           {
             id: 'contemporaneo_q9',
             text: 'Acessórios que elevem meu look com um toque moderno',
-            imageUrl: 'https://res.cloudinary.com/der8kogzu/image/upload/v1752431483/Q9_C_fr3bxa.webp'
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735431/58_acessorios_contemporaneo_lmsnqw.webp',
           },
           {
             id: 'elegante_q9',
             text: 'Acessórios sofisticados, joias ou semijoias',
-            imageUrl: 'https://res.cloudinary.com/der8kogzu/image/upload/v1752430353/Q9_-_D_e1flwe.webp'
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735432/59_acessorios_elegante_hxkmpq.webp',
           },
           {
             id: 'romantico_q9',
             text: 'Peças delicadas e com um toque feminino',
-            imageUrl: 'https://res.cloudinary.com/der8kogzu/image/upload/v1752430363/Q9_-_E_f9thcb.webp'
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735432/60_acessorios_romantico_ytrpnm.webp',
           },
           {
             id: 'sexy_q9',
             text: 'Brincos longos, colares que valorizem minha beleza',
-            imageUrl: 'https://res.cloudinary.com/der8kogzu/image/upload/v1752430351/Q9_-_F_gtxs9r.webp'
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735432/61_acessorios_sexy_qplmkn.webp',
           },
           {
             id: 'dramatico_q9',
             text: 'Acessórios pesados, que causem um impacto',
-            imageUrl: 'https://res.cloudinary.com/der8kogzu/image/upload/v1752430352/Q9_-_G_bihqmg.webp'
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735433/62_acessorios_dramatico_mnbvcx.webp',
           },
           {
             id: 'criativo_q9',
             text: 'Acessórios diferentes, grandes e marcantes',
-            imageUrl: 'https://res.cloudinary.com/der8kogzu/image/upload/v1752430352/Q9_-_H_bddztd.webp'
-          }
-        ]
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735433/63_acessorios_criativo_poiuyt.webp',
+          },
+        ],
       },
       properties: {
-        questionId: 'q9_sapato',
+        questionId: 'q9_acessorios',
         showImages: true,
         imageSize: 'custom',
         imageWidth: 300,
@@ -788,6 +893,16 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         hoverColor: '#EBF5FF',
         gridGap: 16,
         responsiveColumns: true,
+        scoreValues: {
+          natural_q9: 1,
+          classico_q9: 1,
+          contemporaneo_q9: 1,
+          elegante_q9: 1,
+          romantico_q9: 1,
+          sexy_q9: 1,
+          dramatico_q9: 1,
+          criativo_q9: 1,
+        },
       },
     },
   ],
@@ -803,37 +918,37 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         options: [
           {
             id: 'natural_q10',
-            text: 'São fáceis de cuidar'
+            text: 'São fáceis de cuidar',
           },
           {
             id: 'classico_q10',
-            text: 'São de excelente qualidade'
+            text: 'São de excelente qualidade',
           },
           {
             id: 'contemporaneo_q10',
-            text: 'São fáceis de cuidar e modernos'
+            text: 'São fáceis de cuidar e modernos',
           },
           {
             id: 'elegante_q10',
-            text: 'São sofisticados'
+            text: 'São sofisticados',
           },
           {
             id: 'romantico_q10',
-            text: 'São delicados'
+            text: 'São delicados',
           },
           {
             id: 'sexy_q10',
-            text: 'São perfeitos ao meu corpo'
+            text: 'São perfeitos ao meu corpo',
           },
           {
             id: 'dramatico_q10',
-            text: 'São diferentes, e trazem um efeito para minha roupa'
+            text: 'São diferentes, e trazem um efeito para minha roupa',
           },
           {
             id: 'criativo_q10',
-            text: 'São exclusivos, criam identidade no look'
-          }
-        ]
+            text: 'São exclusivos, criam identidade no look',
+          },
+        ],
       },
       properties: {
         questionId: 'q10_tecidos',
@@ -856,61 +971,18 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         gridGap: 12,
         responsiveColumns: false,
         scoreValues: {
-          'natural_q10': 1,
-          'classico_q10': 1,
-          'contemporaneo_q10': 1,
-          'elegante_q10': 1,
-          'romantico_q10': 1,
-          'sexy_q10': 1,
-          'dramatico_q10': 1,
-          'criativo_q10': 1
-        }
-      }
-    }
-  ],
-        autoAdvanceOnComplete: true,
-        autoAdvanceDelay: 1500,
-        enableButtonOnlyWhenValid: true,
-        showValidationFeedback: true,
-        validationMessage: 'Selecione 3 opções para continuar',
-        progressMessage: 'Você selecionou {count} de {required} opções',
-        showSelectionCount: true,
-        selectionStyle: 'background',
-        selectedColor: '#3B82F6',
-        hoverColor: '#EBF5FF',
-        gridGap: 12,
-        responsiveColumns: false,
-        scoreValues: {
-          'natural_q10': 1,
-          'classico_q10': 1,
-          'contemporaneo_q10': 1,
-          'elegante_q10': 1,
-          'romantico_q10': 1,
-          'sexy_q10': 1,
-          'dramatico_q10': 1,
-          'criativo_q10': 1
-        }
-      }
-        requiredSelections: 3,
-        maxSelections: 3,
-        minSelections: 3,
-        multipleSelection: true,
-        autoAdvanceOnComplete: true,
-        autoAdvanceDelay: 1500,
-        enableButtonOnlyWhenValid: true,
-        showValidationFeedback: true,
-        validationMessage: 'Selecione 3 opções para continuar',
-        progressMessage: 'Você selecionou {count} de {required} opções',
-        showSelectionCount: true,
-        selectionStyle: 'border',
-        selectedColor: '#3B82F6',
-        hoverColor: '#EBF5FF',
-        gridGap: 16,
-        responsiveColumns: true,
+          natural_q10: 1,
+          classico_q10: 1,
+          contemporaneo_q10: 1,
+          elegante_q10: 1,
+          romantico_q10: 1,
+          sexy_q10: 1,
+          dramatico_q10: 1,
+          criativo_q10: 1,
+        },
       },
     },
   ],
-
   // 🎯 ETAPA 12: TRANSIÇÃO PARA QUESTÕES ESTRATÉGICAS
   'step-12': [
     {
@@ -918,25 +990,23 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       type: 'hero',
       order: 0,
       content: {
-        title: 'AGUARDE UM MOMENTO...',
-        subtitle: 'Estamos analisando suas respostas!',
+        title: 'Enquanto calculamos o seu resultado...',
+        subtitle: 'Só mais alguns passos para personalizar ainda mais sua experiência',
         description:
-          'Nosso algoritmo está processando suas preferências para identificar seu estilo predominante. Para finalizar a análise, precisamos conhecer um pouco mais sobre seus desafios atuais.',
+          'Queremos te fazer algumas perguntas que vão tornar sua experiência ainda mais completa. Responda com sinceridade. Isso é só entre você e a sua nova versão.',
         imageUrl:
           'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735378/transition_analysis_dkqmpw.webp',
       },
       properties: {
         backgroundColor: '#F0F9FF',
         textAlign: 'center',
-        imageWidth: 250,
-        imageHeight: 250,
+        imageWidth: 260,
+        imageHeight: 260,
         showButton: true,
-        buttonText: 'Continuar',
+        buttonText: 'Vamos lá?',
         buttonColor: '#3B82F6',
         buttonTextColor: '#FFFFFF',
-        autoAdvanceDelay: 5000,
-        autoAdvance: true,
-        animation: 'pulse',
+        autoAdvance: false,
         borderRadius: 16,
         boxShadow: 'md',
         padding: 24,
@@ -944,43 +1014,31 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
     },
   ],
 
-  // 🎯 ETAPA 13: QUESTÃO ESTRATÉGICA 1 - COMO VOCÊ SE VÊ HOJE?
+  // 🎯 ETAPA 13: QUESTÃO ESTRATÉGICA 1 - AUTOAVALIAÇÃO
   'step-13': [
     {
       id: 'step13-question',
       type: 'options-grid',
       order: 0,
       content: {
-        question: 'COMO VOCÊ SE VÊ HOJE?',
+        question:
+          'Quando você se olha no espelho, como se sente com sua imagem pessoal atualmente?',
         options: [
-          {
-            id: 'opcao_q11_1',
-            text: 'Sei exatamente qual é meu estilo e me visto de acordo com ele',
-          },
-          {
-            id: 'opcao_q11_2',
-            text: 'Tenho uma ideia do meu estilo, mas ainda tenho dúvidas em alguns momentos',
-          },
-          {
-            id: 'opcao_q11_3',
-            text: 'Não tenho certeza do meu estilo e isso reflete no meu guarda-roupa',
-          },
-          {
-            id: 'opcao_q11_4',
-            text: 'Estou completamente perdida e não sei qual é meu estilo',
-          },
+          { id: 'q13_opt1', text: 'Me sinto desconectada da mulher que sou hoje' },
+          { id: 'q13_opt2', text: 'Tenho dúvidas sobre o que realmente me valoriza' },
+          { id: 'q13_opt3', text: 'Às vezes acerto, às vezes erro' },
+          { id: 'q13_opt4', text: 'Me sinto segura, mas sei que posso evoluir' },
         ],
       },
       properties: {
-        questionId: 'q11_autoavaliacao',
+        questionId: 'qs1_autoavaliacao',
         showImages: false,
         columns: 1,
         requiredSelections: 1,
         maxSelections: 1,
         minSelections: 1,
         multipleSelection: false,
-        autoAdvanceOnComplete: true,
-        autoAdvanceDelay: 1000,
+        autoAdvanceOnComplete: false,
         enableButtonOnlyWhenValid: true,
         showValidationFeedback: true,
         validationMessage: 'Selecione 1 opção para continuar',
@@ -989,47 +1047,36 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         hoverColor: '#EBF5FF',
         gridGap: 12,
         responsiveColumns: false,
+        nextButtonText: 'Avançar',
+        showNextButton: true,
       },
     },
   ],
 
-  // 🎯 ETAPA 14: QUESTÃO ESTRATÉGICA 2 - O QUE MAIS TE DESAFIA?
+  // 🎯 ETAPA 14: QUESTÃO ESTRATÉGICA 2 - DESAFIO PRINCIPAL
   'step-14': [
     {
       id: 'step14-question',
       type: 'options-grid',
       order: 0,
       content: {
-        question: 'O QUE MAIS TE DESAFIA NA HORA DE SE VESTIR?',
+        question: 'O que mais te desafia na hora de se vestir?',
         options: [
-          {
-            id: 'opcao_q12_1',
-            text: 'Não sei quais peças combinam entre si',
-          },
-          {
-            id: 'opcao_q12_2',
-            text: 'Tenho muitas roupas, mas não sei como usar',
-          },
-          {
-            id: 'opcao_q12_3',
-            text: 'Não tenho certeza de quais cores me favorecem',
-          },
-          {
-            id: 'opcao_q12_4',
-            text: 'Não consigo montar looks que reflitam minha personalidade',
-          },
+          { id: 'q14_opt1', text: 'Tenho peças, mas não sei como combiná-las' },
+          { id: 'q14_opt2', text: 'Compro por impulso e me arrependo depois' },
+          { id: 'q14_opt3', text: 'Minha imagem não reflete quem eu sou' },
+          { id: 'q14_opt4', text: 'Perco tempo e acabo usando sempre os mesmos looks' },
         ],
       },
       properties: {
-        questionId: 'q12_desafio',
+        questionId: 'qs2_desafio',
         showImages: false,
         columns: 1,
         requiredSelections: 1,
         maxSelections: 1,
         minSelections: 1,
         multipleSelection: false,
-        autoAdvanceOnComplete: true,
-        autoAdvanceDelay: 1000,
+        autoAdvanceOnComplete: false,
         enableButtonOnlyWhenValid: true,
         showValidationFeedback: true,
         validationMessage: 'Selecione 1 opção para continuar',
@@ -1038,6 +1085,8 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         hoverColor: '#EBF5FF',
         gridGap: 12,
         responsiveColumns: false,
+        nextButtonText: 'Avançar',
+        showNextButton: true,
       },
     },
   ],
@@ -1049,36 +1098,24 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       type: 'options-grid',
       order: 0,
       content: {
-        question: 'COM QUE FREQUÊNCIA VOCÊ SE PEGA PENSANDO: "COM QUE ROUPA EU VOU?"',
+        question:
+          'Com que frequência você se pega pensando: “Com que roupa eu vou?” — mesmo com o guarda-roupa cheio?',
         options: [
-          {
-            id: 'opcao_q13_1',
-            text: 'Quase nunca, sempre sei o que usar',
-          },
-          {
-            id: 'opcao_q13_2',
-            text: 'Algumas vezes, principalmente em ocasiões especiais',
-          },
-          {
-            id: 'opcao_q13_3',
-            text: 'Frequentemente, pelo menos 1-2 vezes por semana',
-          },
-          {
-            id: 'opcao_q13_4',
-            text: 'Todos os dias, é uma batalha constante',
-          },
+          { id: 'q15_opt1', text: 'Quase todos os dias — é sempre uma indecisão' },
+          { id: 'q15_opt2', text: 'Sempre que tenho um compromisso importante' },
+          { id: 'q15_opt3', text: 'Às vezes, mas me sinto limitada nas escolhas' },
+          { id: 'q15_opt4', text: 'Raramente — já me sinto segura ao me vestir' },
         ],
       },
       properties: {
-        questionId: 'q13_frequencia',
+        questionId: 'qs3_frequencia',
         showImages: false,
         columns: 1,
         requiredSelections: 1,
         maxSelections: 1,
         minSelections: 1,
         multipleSelection: false,
-        autoAdvanceOnComplete: true,
-        autoAdvanceDelay: 1000,
+        autoAdvanceOnComplete: false,
         enableButtonOnlyWhenValid: true,
         showValidationFeedback: true,
         validationMessage: 'Selecione 1 opção para continuar',
@@ -1087,47 +1124,37 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         hoverColor: '#EBF5FF',
         gridGap: 12,
         responsiveColumns: false,
+        nextButtonText: 'Avançar',
+        showNextButton: true,
       },
     },
   ],
 
-  // 🎯 ETAPA 16: QUESTÃO ESTRATÉGICA 4 - INVESTIMENTO EM ROUPAS NÃO USADAS
+  // 🎯 ETAPA 16: QUESTÃO ESTRATÉGICA 4 - INVESTIMENTO
   'step-16': [
     {
       id: 'step16-question',
       type: 'options-grid',
       order: 0,
       content: {
-        question: 'PENSE NO QUANTO VOCÊ JÁ GASTOU COM ROUPAS QUE NÃO USA...',
+        question:
+          'Pense no quanto você já gastou com roupas que não usa ou que não representam quem você é... Você acredita que um material estratégico ajudaria?',
         options: [
-          {
-            id: 'opcao_q14_1',
-            text: 'Quase nada, uso praticamente tudo que compro',
-          },
-          {
-            id: 'opcao_q14_2',
-            text: 'Menos de R$ 1.000 nos últimos anos',
-          },
-          {
-            id: 'opcao_q14_3',
-            text: 'Entre R$ 1.000 e R$ 3.000 nos últimos anos',
-          },
-          {
-            id: 'opcao_q14_4',
-            text: 'Mais de R$ 3.000 em roupas que raramente ou nunca usei',
-          },
+          { id: 'q16_opt1', text: 'Sim! Se existisse algo assim, eu quero' },
+          { id: 'q16_opt2', text: 'Sim, mas teria que ser no momento certo' },
+          { id: 'q16_opt3', text: 'Tenho dúvidas se funcionaria pra mim' },
+          { id: 'q16_opt4', text: 'Não, prefiro continuar como estou' },
         ],
       },
       properties: {
-        questionId: 'q14_investimento',
+        questionId: 'qs4_material',
         showImages: false,
         columns: 1,
         requiredSelections: 1,
         maxSelections: 1,
         minSelections: 1,
         multipleSelection: false,
-        autoAdvanceOnComplete: true,
-        autoAdvanceDelay: 1000,
+        autoAdvanceOnComplete: false,
         enableButtonOnlyWhenValid: true,
         showValidationFeedback: true,
         validationMessage: 'Selecione 1 opção para continuar',
@@ -1136,47 +1163,37 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         hoverColor: '#EBF5FF',
         gridGap: 12,
         responsiveColumns: false,
+        nextButtonText: 'Avançar',
+        showNextButton: true,
       },
     },
   ],
 
-  // 🎯 ETAPA 17: QUESTÃO ESTRATÉGICA 5 - VALOR PERCEBIDO
+  // 🎯 ETAPA 17: QUESTÃO ESTRATÉGICA 5 - PREÇO
   'step-17': [
     {
       id: 'step17-question',
       type: 'options-grid',
       order: 0,
       content: {
-        question: 'SE ESSE CONTEÚDO COMPLETO CUSTASSE R$ 97,00...',
+        question:
+          'Se esse conteúdo completo custasse R$ 97,00 — você consideraria um bom investimento?',
         options: [
-          {
-            id: 'opcao_q15_1',
-            text: 'Não compraria, prefiro descobrir sozinho(a)',
-          },
-          {
-            id: 'opcao_q15_2',
-            text: 'Talvez compraria, mas teria que pensar bastante',
-          },
-          {
-            id: 'opcao_q15_3',
-            text: 'Provavelmente compraria, parece valer a pena',
-          },
-          {
-            id: 'opcao_q15_4',
-            text: 'Compraria com certeza, seria um ótimo investimento',
-          },
+          { id: 'q17_opt1', text: 'Sim! Por esse resultado, vale muito' },
+          { id: 'q17_opt2', text: 'Sim, mas só se eu tiver certeza de que funciona pra mim' },
+          { id: 'q17_opt3', text: 'Talvez — depende do que está incluso' },
+          { id: 'q17_opt4', text: 'Não, ainda não estou pronta para investir' },
         ],
       },
       properties: {
-        questionId: 'q15_valor',
+        questionId: 'qs5_preco',
         showImages: false,
         columns: 1,
         requiredSelections: 1,
         maxSelections: 1,
         minSelections: 1,
         multipleSelection: false,
-        autoAdvanceOnComplete: true,
-        autoAdvanceDelay: 1000,
+        autoAdvanceOnComplete: false,
         enableButtonOnlyWhenValid: true,
         showValidationFeedback: true,
         validationMessage: 'Selecione 1 opção para continuar',
@@ -1185,6 +1202,8 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         hoverColor: '#EBF5FF',
         gridGap: 12,
         responsiveColumns: false,
+        nextButtonText: 'Avançar',
+        showNextButton: true,
       },
     },
   ],
@@ -1196,36 +1215,24 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       type: 'options-grid',
       order: 0,
       content: {
-        question: 'QUAL DESSES RESULTADOS VOCÊ MAIS GOSTARIA DE ALCANÇAR?',
+        question: 'Qual desses resultados você mais gostaria de alcançar?',
         options: [
-          {
-            id: 'opcao_q16_1',
-            text: 'Montar um guarda-roupa funcional com menos peças',
-          },
-          {
-            id: 'opcao_q16_2',
-            text: 'Expressar minha personalidade através das roupas',
-          },
-          {
-            id: 'opcao_q16_3',
-            text: 'Economizar dinheiro e parar de comprar roupas erradas',
-          },
-          {
-            id: 'opcao_q16_4',
-            text: 'Sentir mais confiança e segurança com meus looks',
-          },
+          { id: 'q18_opt1', text: 'Montar looks com mais facilidade e confiança' },
+          { id: 'q18_opt2', text: 'Usar o que já tenho e me sentir estilosa' },
+          { id: 'q18_opt3', text: 'Comprar com mais consciência e sem culpa' },
+          { id: 'q18_opt4', text: 'Ser admirada pela imagem que transmito' },
+          { id: 'q18_opt5', text: 'Resgatar peças esquecidas e criar novos looks com estilo' },
         ],
       },
       properties: {
-        questionId: 'q16_objetivo',
+        questionId: 'qs6_objetivo',
         showImages: false,
         columns: 1,
         requiredSelections: 1,
         maxSelections: 1,
         minSelections: 1,
         multipleSelection: false,
-        autoAdvanceOnComplete: true,
-        autoAdvanceDelay: 1000,
+        autoAdvanceOnComplete: false,
         enableButtonOnlyWhenValid: true,
         showValidationFeedback: true,
         validationMessage: 'Selecione 1 opção para continuar',
@@ -1234,6 +1241,8 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         hoverColor: '#EBF5FF',
         gridGap: 12,
         responsiveColumns: false,
+        nextButtonText: 'Avançar',
+        showNextButton: true,
       },
     },
   ],
@@ -1245,25 +1254,23 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       type: 'hero',
       order: 0,
       content: {
-        title: 'ESTAMOS QUASE LÁ!',
+        title: 'Estamos quase lá!',
         subtitle: 'Preparando seu resultado personalizado...',
         description:
-          'Nosso sistema está calculando seu estilo predominante e preparando recomendações exclusivas para você. Este processo leva apenas alguns segundos.',
+          'Estamos calculando seu estilo predominante e preparando recomendações exclusivas. Isso levará apenas alguns segundos.',
         imageUrl:
           'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735378/calculating_result_jksldq.webp',
       },
       properties: {
         backgroundColor: '#F0F9FF',
         textAlign: 'center',
-        imageWidth: 300,
-        imageHeight: 300,
+        imageWidth: 280,
+        imageHeight: 280,
         showButton: true,
-        buttonText: 'Ver Meu Resultado',
+        buttonText: 'Ver meu resultado',
         buttonColor: '#3B82F6',
         buttonTextColor: '#FFFFFF',
-        autoAdvanceDelay: 3000,
-        autoAdvance: true,
-        animation: 'pulse',
+        autoAdvance: false,
         borderRadius: 16,
         boxShadow: 'md',
         padding: 24,
@@ -1271,7 +1278,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
     },
   ],
 
-  // 🎯 ETAPA 20: PÁGINA DE RESULTADO PERSONALIZADA
+  // 🎯 ETAPA 20: RESULTADO PERSONALIZADO + OFERTA (Teste A)
   'step-20': [
     {
       id: 'step20-result-header',
@@ -1279,17 +1286,20 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       order: 0,
       content: {
         title: '{userName}, seu estilo predominante é:',
-        subtitle: 'ESTILO {resultStyle}',
+        subtitle: 'Estilo {resultStyle}',
         description:
-          'Com base nas suas respostas, identificamos que seu estilo predominante é o {resultStyle}. Isso significa que você se conecta mais com looks que expressam {resultDescription}',
+          'Com base nas suas respostas, identificamos que seu estilo predominante é o {resultStyle}.',
         imageUrl:
           'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735378/result_style_photo_kjsdlq.webp',
+        styleGuideImageUrl:
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735378/style_guide_examples_mdkeud.webp',
+        showBothImages: true,
       },
       properties: {
         backgroundColor: '#F0F9FF',
         textAlign: 'center',
-        imageWidth: 400,
-        imageHeight: 400,
+        imageWidth: 380,
+        imageHeight: 380,
         borderRadius: 16,
         boxShadow: 'md',
         padding: 24,
@@ -1301,8 +1311,8 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       type: 'style-card-inline',
       order: 1,
       content: {
-        title: 'CARACTERÍSTICAS DO SEU ESTILO',
-        description: 'Seu estilo {resultStyle} se caracteriza pelos seguintes elementos:',
+        title: 'Características do seu estilo',
+        description: 'O estilo {resultStyle} se caracteriza por:',
         features: [
           'Personalidade: {resultPersonality}',
           'Cores: {resultColors}',
@@ -1319,7 +1329,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         padding: 24,
         marginBottom: 24,
         showIcon: true,
-        iconName: 'check-circle',
+        iconName: 'sparkles',
         iconColor: '#3B82F6',
       },
     },
@@ -1328,7 +1338,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       type: 'secondary-styles',
       order: 2,
       content: {
-        title: 'SEUS ESTILOS SECUNDÁRIOS',
+        title: 'Seus estilos complementares',
         subtitle: 'Você também apresenta elementos destes estilos:',
         secondaryStyles: [
           {
@@ -1357,7 +1367,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       type: 'button',
       order: 3,
       content: {
-        buttonText: 'QUERO SABER MAIS SOBRE MEU ESTILO',
+        buttonText: 'Quero saber mais sobre meu estilo',
         buttonUrl: '#next-step',
       },
       properties: {
@@ -1375,21 +1385,21 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
     },
   ],
 
-  // 🎯 ETAPA 21: PÁGINA DE OFERTA
+  // 🎯 ETAPA 21: PÁGINA DE OFERTA (Teste B)
   'step-21': [
     {
       id: 'step21-offer-header',
       type: 'quiz-offer-cta-inline',
       order: 0,
       content: {
-        title: 'LIBERE TODO O POTENCIAL DO SEU ESTILO PESSOAL',
+        title: 'Libere todo o potencial do seu estilo pessoal',
         subtitle:
           'Descubra como montar looks que realçam sua beleza natural e expressam sua personalidade!',
         description:
-          'Parabéns por descobrir seu estilo predominante! Este é apenas o primeiro passo na sua jornada de autoconhecimento e expressão através da moda. Que tal aprofundar este conhecimento e transformar seu guarda-roupa e sua relação com as roupas?',
+          'Parabéns por descobrir seu estilo predominante! Este é só o primeiro passo. Que tal aprofundar esse conhecimento e transformar seu guarda-roupa?',
         imageUrl:
           'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735378/offer_image_main_jkldsd.webp',
-        buttonText: 'QUERO TRANSFORMAR MEU ESTILO AGORA',
+        buttonText: 'Quero transformar meu estilo agora',
         buttonUrl: 'https://checkout.stylequest.com.br/oferta-especial',
       },
       properties: {
@@ -1408,7 +1418,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         regularPrice: 'R$ 197,00',
         salePrice: 'R$ 97,00',
         showTimer: true,
-        timerDuration: 900, // 15 minutos em segundos
+        timerDuration: 900,
         timerLabel: 'Esta oferta expira em:',
       },
     },
@@ -1417,7 +1427,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       type: 'benefits',
       order: 1,
       content: {
-        title: 'O QUE VOCÊ VAI RECEBER',
+        title: 'O que você vai receber',
         benefits: [
           {
             id: 'benefit1',
@@ -1464,12 +1474,12 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       type: 'testimonials',
       order: 2,
       content: {
-        title: 'O QUE DIZEM NOSSAS CLIENTES',
+        title: 'O que dizem nossas clientes',
         testimonials: [
           {
             id: 'testimonial1',
             quote:
-              'Finalmente entendi meu estilo e parei de gastar dinheiro com roupas que não combinavam comigo. Meu guarda-roupa agora tem menos peças, mas muito mais possibilidades!',
+              'Finalmente entendi meu estilo e parei de gastar dinheiro com roupas que não combinavam comigo.',
             author: 'Márcia Silva',
             authorTitle: '38 anos, Advogada',
             rating: 5,
@@ -1477,7 +1487,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
           {
             id: 'testimonial2',
             quote:
-              'Economizei muito dinheiro depois que aprendi a comprar apenas o que realmente combina com meu estilo. Me sinto mais confiante e recebo elogios todos os dias.',
+              'Economizei muito dinheiro depois que aprendi a comprar apenas o que realmente combina com meu estilo.',
             author: 'Carolina Mendes',
             authorTitle: '42 anos, Empresária',
             rating: 5,
@@ -1485,7 +1495,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
           {
             id: 'testimonial3',
             quote:
-              'Transformei completamente minha relação com as roupas. Hoje me visto com mais confiança e praticidade, sem perder tempo pensando no que vestir.',
+              'Hoje me visto com mais confiança e praticidade, sem perder tempo pensando no que vestir.',
             author: 'Juliana Costa',
             authorTitle: '35 anos, Professora',
             rating: 5,
@@ -1508,9 +1518,9 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       type: 'guarantee',
       order: 3,
       content: {
-        title: 'GARANTIA INCONDICIONAL DE 7 DIAS',
+        title: 'Garantia incondicional de 7 dias',
         description:
-          'Se por qualquer motivo você não ficar satisfeita com o conteúdo, devolvemos 100% do seu dinheiro, sem perguntas e sem burocracia.',
+          'Se por qualquer motivo você não ficar satisfeita, devolvemos 100% do seu dinheiro.',
         imageUrl:
           'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735378/guarantee_seal_klsjda.webp',
       },
@@ -1533,7 +1543,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       type: 'button',
       order: 4,
       content: {
-        buttonText: 'QUERO TRANSFORMAR MEU ESTILO AGORA',
+        buttonText: 'Quero transformar meu estilo agora',
         buttonUrl: 'https://checkout.stylequest.com.br/oferta-especial',
       },
       properties: {
@@ -1569,8 +1579,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
 
 // Lista completa das questões do quiz
 
-// Lista completa das questões do quiz
-export const QUIZ_QUESTIONS_COMPLETE = {
+export const QUIZ_QUESTIONS_COMPLETE: Record<number, string> = {
   1: 'Coleta do nome',
   2: 'QUAL O SEU TIPO DE ROUPA FAVORITA?',
   3: 'RESUMA A SUA PERSONALIDADE:',
