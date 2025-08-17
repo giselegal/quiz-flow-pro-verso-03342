@@ -25,6 +25,13 @@ export const ENHANCED_BLOCK_REGISTRY = {
   'result-card': lazy(() => import('@/components/editor/blocks/StyleCardInlineBlock')),
   'image-display-inline': lazy(() => import('@/components/blocks/inline/ImageDisplayInlineBlock')),
 
+  // ✅ NOVOS COMPONENTES AVANÇADOS - Funcionalidades do Step01 para todos os steps
+  'connected-template-wrapper': lazy(() => import('@/components/editor/blocks/ConnectedTemplateWrapperBlock')),
+  'connected-lead-form': lazy(() => import('@/components/editor/blocks/ConnectedLeadFormBlock')),
+  'quiz-navigation': lazy(() => import('@/components/editor/blocks/QuizNavigationBlock')),
+  'style-cards-grid': lazy(() => import('@/components/editor/blocks/StyleCardsGridBlock')),
+  'gradient-animation': lazy(() => import('@/components/editor/blocks/GradientAnimationBlock')),
+
   // ✅ Additional aliases for compatibility
   heading: lazy(() => import('@/components/editor/blocks/HeadingInlineBlock')),
 };
@@ -63,6 +70,13 @@ export const AVAILABLE_COMPONENTS = [
   { type: 'result-card', label: 'Card de Resultado', category: 'quiz' },
   { type: 'loading-animation', label: 'Animação de Loading', category: 'ui' },
   { type: 'progress-bar', label: 'Barra de Progresso', category: 'ui' },
+
+  // ✅ NOVOS COMPONENTES AVANÇADOS
+  { type: 'connected-template-wrapper', label: 'Template Wrapper Conectado', category: 'advanced' },
+  { type: 'connected-lead-form', label: 'Formulário Conectado', category: 'advanced' },
+  { type: 'quiz-navigation', label: 'Navegação Premium', category: 'advanced' },
+  { type: 'style-cards-grid', label: 'Grid de Estilos', category: 'advanced' },
+  { type: 'gradient-animation', label: 'Gradiente Animado', category: 'advanced' },
 ];
 
 export default ENHANCED_BLOCK_REGISTRY;
