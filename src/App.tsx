@@ -499,6 +499,32 @@ function App() {
                     </Suspense>
                   )}
                 />
+                <ProtectedRoute
+                  path="/admin/templates"
+                  component={() => (
+                    <Suspense fallback={<PageLoading />}>
+                      <FunnelTemplatesDashboard 
+                        onSelectTemplate={(id) => console.log('Template selected:', id)}
+                        onCreateFromTemplate={(id) => console.log('Create from template:', id)}
+                        onImportTemplate={() => console.log('Import template')}
+                        onExportTemplate={(id) => console.log('Export template:', id)}
+                      />
+                    </Suspense>
+                  )}
+                />
+                <Route
+                  path="/templates"
+                  component={() => (
+                    <Suspense fallback={<PageLoading />}>
+                      <FunnelTemplatesDashboard 
+                        onSelectTemplate={(id) => console.log('Template selected:', id)}
+                        onCreateFromTemplate={(id) => console.log('Create from template:', id)}
+                        onImportTemplate={() => console.log('Import template')}
+                        onExportTemplate={(id) => console.log('Export template:', id)}
+                      />
+                    </Suspense>
+                  )}
+                />
               </Switch>
               <Toaster />
             </div>

@@ -2,7 +2,10 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { BarChart3, Users, TrendingUp, Eye, Edit3, Copy, Trash2, Plus } from 'lucide-react';
+import FunnelTemplatesDashboard from './FunnelTemplatesDashboard';
+import TemplateImportExport from '../TemplateImportExport';
 
 interface DashboardStats {
   totalFunnels: number;
@@ -29,6 +32,9 @@ interface EnhancedEditorDashboardProps {
   onDuplicateFunnel?: (funnelId: string) => void;
   onDeleteFunnel?: (funnelId: string) => void;
   onPreviewFunnel?: (funnelId: string) => void;
+  onCreateFromTemplate?: (templateId: string) => void;
+  onImportTemplate?: () => void;
+  onExportTemplate?: (templateId: string) => void;
 }
 
 const DEFAULT_STATS: DashboardStats = {
@@ -76,8 +82,12 @@ export const EnhancedEditorDashboard: React.FC<EnhancedEditorDashboardProps> = (
   onDuplicateFunnel,
   onDeleteFunnel,
   onPreviewFunnel,
+  onCreateFromTemplate,
+  onImportTemplate,
+  onExportTemplate,
 }) => {
   const [selectedFunnel, setSelectedFunnel] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState('my-funnels');
 
   const getStatusColor = (status: FunnelSummary['status']) => {
     switch (status) {
@@ -113,13 +123,26 @@ export const EnhancedEditorDashboard: React.FC<EnhancedEditorDashboardProps> = (
           <h1 style={{ color: '#432818' }}>Dashboard de Funis</h1>
           <p style={{ color: '#6B4F43' }}>Gerencie seus funis de conversão</p>
         </div>
-        <Button onClick={onCreateFunnel} className="bg-[#B89B7A] hover:bg-[#A38A69]">
-          <Plus className="w-4 h-4 mr-2" />
-          Criar Funil
-        </Button>
+        <div className="flex space-x-3">
+          <TemplateImportExport
+            onImportTemplate={onImportTemplate}
+          />
+          <Button onClick={onCreateFunnel} className="bg-[#B89B7A] hover:bg-[#A38A69]">
+            <Plus className="w-4 h-4 mr-2" />
+            Criar Funil
+          </Button>
+        </div>
       </div>
 
-      {/* Stats Cards */}
+      {/* Tabs for different views */}
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="my-funnels">Meus Funis</TabsTrigger>
+          <TabsTrigger value="templates">Modelos de Funil</TabsTrigger>
+        </TabsList>
+
+        {/* My Funnels Tab */}
+        <TabsContent value="my-funnels" className="space-y-6">{/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <Card>
           <CardHeader className="pb-2">
@@ -253,6 +276,20 @@ export const EnhancedEditorDashboard: React.FC<EnhancedEditorDashboardProps> = (
           </div>
         </CardContent>
       </Card>
+      </TabsContent>
+
+      {/* Templates Tab */}
+      <TabsContent value="templates">
+        <FunnelTemplatesDashboard
+          onSelectTemplate={(templateId) => {
+            console.log('Template selected:', templateId);
+          }}
+          onImportTemplate={onImportTemplate}
+          onExportTemplate={onExportTemplate}
+          onCreateFromTemplate={onCreateFromTemplate}
+        />
+      </TabsContent>
+      </Tabs>
     </div>
   );
 };

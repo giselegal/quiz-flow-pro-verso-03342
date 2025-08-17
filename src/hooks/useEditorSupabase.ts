@@ -9,7 +9,8 @@ export interface SupabaseComponent {
   created_at: string | null;
   created_by: string | null;
   custom_styling: any;
-  funnel_id: string;
+  funnel_id: string | null;
+  quiz_id: string | null; // Added for backward compatibility
   instance_key: string;
   is_active: boolean | null;
   is_locked: boolean | null;
@@ -21,30 +22,42 @@ export interface SupabaseComponent {
   updated_at: string | null;
 }
 
-export const useEditorSupabase = (funnelId: string) => {
+export const useEditorSupabase = (funnelId?: string, quizId?: string) => {
   const [components, setComponents] = useState<SupabaseComponent[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   // Load components from Supabase
   const loadComponents = useCallback(async () => {
-    if (!funnelId) return;
+    if (!funnelId && !quizId) return;
 
     setIsLoading(true);
     setError(null);
 
     try {
-      const { data, error: fetchError } = await supabase
+      let query = supabase
         .from('component_instances')
         .select('*')
-        .eq('funnel_id', funnelId)
         .order('order_index', { ascending: true });
+
+      // Use funnel_id or quiz_id depending on what's available
+      if (funnelId) {
+        query = query.eq('funnel_id', funnelId);
+      } else if (quizId) {
+        query = query.eq('quiz_id', quizId);
+      }
+
+      const { data, error: fetchError } = await query;
 
       if (fetchError) {
         throw fetchError;
       }
 
-      setComponents(data || []);
+      setComponents((data || []).map(item => ({
+        ...item,
+        funnel_id: item.funnel_id || null,
+        quiz_id: null // Legacy field for backward compatibility
+      })));
       console.log('✅ Componentes carregados do Supabase:', data?.length || 0);
     } catch (err: any) {
       const errorMessage = `Erro ao carregar componentes: ${err.message}`;
@@ -58,7 +71,7 @@ export const useEditorSupabase = (funnelId: string) => {
     } finally {
       setIsLoading(false);
     }
-  }, [funnelId]);
+  }, [funnelId, quizId]);
 
   // Add component to Supabase
   const addComponent = useCallback(async (
@@ -67,13 +80,12 @@ export const useEditorSupabase = (funnelId: string) => {
     properties: any = {},
     orderIndex?: number
   ) => {
-    if (!funnelId) return null;
+    if (!funnelId && !quizId) return null;
 
     setIsLoading(true);
     try {
-      const newComponent = {
+      const newComponent: any = {
         component_type_key: componentTypeKey,
-        funnel_id: funnelId,
         instance_key: `${componentTypeKey}_${Date.now()}`,
         step_number: stepNumber,
         order_index: orderIndex ?? components.length,
@@ -84,6 +96,13 @@ export const useEditorSupabase = (funnelId: string) => {
         is_template: false,
         stage_id: null,
       };
+
+      // Set the appropriate ID field
+      if (funnelId) {
+        newComponent.funnel_id = funnelId;
+      } else if (quizId) {
+        newComponent.quiz_id = quizId;
+      }
 
       const { data, error: insertError } = await supabase
         .from('component_instances')
@@ -98,6 +117,7 @@ export const useEditorSupabase = (funnelId: string) => {
       const componentWithDefaults: SupabaseComponent = {
         ...data,
         order_index: data.order_index ?? 0,
+        quiz_id: null, // Legacy field for backward compatibility
       };
 
       setComponents(prev => [...prev, componentWithDefaults]);
@@ -122,7 +142,7 @@ export const useEditorSupabase = (funnelId: string) => {
     } finally {
       setIsLoading(false);
     }
-  }, [funnelId, components.length]);
+  }, [funnelId, quizId, components.length]);
 
   // Update component in Supabase
   const updateComponent = useCallback(async (
@@ -133,10 +153,15 @@ export const useEditorSupabase = (funnelId: string) => {
 
     setIsLoading(true);
     try {
+      // Clean the updates object to remove null values that aren't allowed by Supabase
+      const cleanedUpdates = Object.fromEntries(
+        Object.entries(updates).filter(([_, value]) => value !== null)
+      );
+      
       const { data, error: updateError } = await supabase
         .from('component_instances')
         .update({
-          ...updates,
+          ...cleanedUpdates,
           updated_at: new Date().toISOString(),
         })
         .eq('id', componentId)
@@ -150,6 +175,7 @@ export const useEditorSupabase = (funnelId: string) => {
       const updatedComponent: SupabaseComponent = {
         ...data,
         order_index: data.order_index ?? 0,
+        quiz_id: null, // Legacy field for backward compatibility
       };
 
       setComponents(prev =>

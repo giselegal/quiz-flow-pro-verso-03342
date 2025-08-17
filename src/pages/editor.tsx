@@ -96,6 +96,22 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
     // O EditorContext já gerencia internamente
   };
 
+  const handleImportTemplate = (template: any) => {
+    try {
+      console.log('📥 Importando template:', template);
+      
+      // TODO: Implement template import logic
+      // This would involve:
+      // 1. Clear current blocks
+      // 2. Load template components
+      // 3. Update funnel data
+      
+      console.log('✅ Template importado com sucesso!');
+    } catch (error) {
+      console.error('❌ Erro ao importar template:', error);
+    }
+  };
+
   const getStepNumberFromStageId = (stageId: string | null): number => {
     if (!stageId) return 1;
     const match = stageId.match(/step-(\d+)/);
@@ -159,6 +175,9 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
             viewportSize={viewportSize as "sm" | "md" | "lg" | "xl"}
             onViewportSizeChange={(size: "sm" | "md" | "lg" | "xl") => setViewportSize(size)}
             onShowFunnelSettings={() => setShowFunnelSettings(true)}
+            currentFunnelData={{}} // TODO: Get actual funnel data from context
+            currentComponents={currentBlocks || []}
+            onImportTemplate={handleImportTemplate}
           />
 
           {/* Top Bar - Otimizado */}
