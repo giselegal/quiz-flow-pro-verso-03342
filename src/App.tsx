@@ -15,8 +15,8 @@ import QuizFlowPage from './pages/QuizFlowPage';
 import ResultPage from './pages/ResultPage';
 
 // 🎨 EDITORES MAIS COMPLETOS - Lazy load
-// 🏆 EDITOR PRINCIPAL: /editor-fixed (src/pages/editor-fixed.tsx → EditorFixedPageWithDragDrop)
-const EditorFixedPageWithDragDrop = lazy(() => import('./pages/editor-fixed')); // 🏆 EDITOR CORRETO
+const EditorFixedPageWithDragDrop = lazy(() => import('./pages/editor-fixed')); // Editor simplificado
+const EditorCompleto = lazy(() => import('./pages/editor')); // 🏆 EDITOR COMPLETO REAL (FourColumnLayout)
 const SchemaDrivenEditorResponsive = lazy(
   () => import('./components/editor/SchemaDrivenEditorResponsive')
 );
@@ -47,6 +47,13 @@ const App = () => {
                   </div>
                 </Route>
 
+                {/* 🏆 EDITOR PRINCIPAL - Rota específica do editor-fixed */}
+                <Route path="/editor-fixed">
+                  <div className="h-screen w-full">
+                    <EditorCompleto />
+                  </div>
+                </Route>
+
                 {/* 🎨 EDITORES ALTERNATIVOS */}
                 <Route path="/editor-schema">
                   <div className="h-screen w-full">
@@ -74,7 +81,8 @@ const App = () => {
                       <p className="text-gray-600">A página que você procura não existe.</p>
                       <div className="mt-4 text-sm text-gray-500">
                         <p>🎨 Editores disponíveis:</p>
-                        <p>/editor - Editor completo de 4 colunas</p>
+                        <p>/editor - Editor simplificado</p>
+                        <p>/editor-fixed - 🏆 Editor completo com FourColumnLayout</p>
                         <p>/editor-schema - Editor schema-driven</p>
                         <p>/editor-improved - Editor melhorado</p>
                       </div>
