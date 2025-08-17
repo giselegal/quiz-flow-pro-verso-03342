@@ -1,31 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { funnelTemplateService, type FunnelTemplate } from '@/services/funnelTemplateService';
 import {
-  Download,
-  Upload,
-  Eye,
-  Edit3,
   Copy,
-  Palette,
+  Download,
+  Edit3,
+  Eye,
   FileText,
-  Heart,
-  TrendingUp,
-  Users,
   Gift,
+  Heart,
+  Palette,
+  TrendingUp,
+  Upload,
+  Users,
   Zap,
 } from 'lucide-react';
-import { funnelTemplateService, type FunnelTemplate } from '@/services/funnelTemplateService';
-
-// Mock templates para demonstração
-  thumbnailUrl?: string;
-  stepCount: number;
-  isOfficial: boolean;
-  usageCount: number;
-  tags: string[];
-  previewUrl?: string;
-}
+import React, { useEffect, useState } from 'react';
 
 interface FunnelTemplatesDashboardProps {
   onSelectTemplate?: (templateId: string) => void;
@@ -87,6 +78,10 @@ const SAMPLE_TEMPLATES: FunnelTemplate[] = [
     tags: ['estilo', 'moda', 'personalidade', 'completo'],
     thumbnailUrl:
       'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=300&h=200&fit=crop&auto=format',
+    templateData: {},
+    components: [],
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   },
   {
     id: 'lead-capture-simple',
@@ -100,6 +95,10 @@ const SAMPLE_TEMPLATES: FunnelTemplate[] = [
     tags: ['leads', 'simples', 'conversão'],
     thumbnailUrl:
       'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=300&h=200&fit=crop&auto=format',
+    templateData: {},
+    components: [],
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   },
   {
     id: 'personality-assessment',
@@ -113,6 +112,10 @@ const SAMPLE_TEMPLATES: FunnelTemplate[] = [
     tags: ['personalidade', 'psicologia', 'comportamento'],
     thumbnailUrl:
       'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=300&h=200&fit=crop&auto=format',
+    templateData: {},
+    components: [],
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   },
   {
     id: 'product-matcher',
@@ -126,6 +129,10 @@ const SAMPLE_TEMPLATES: FunnelTemplate[] = [
     tags: ['produto', 'recomendação', 'vendas'],
     thumbnailUrl:
       'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=300&h=200&fit=crop&auto=format',
+    templateData: {},
+    components: [],
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   },
   {
     id: 'skill-assessment',
@@ -139,6 +146,10 @@ const SAMPLE_TEMPLATES: FunnelTemplate[] = [
     tags: ['habilidades', 'profissional', 'certificação'],
     thumbnailUrl:
       'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=200&fit=crop&auto=format',
+    templateData: {},
+    components: [],
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   },
   {
     id: 'sales-funnel-premium',
@@ -152,6 +163,10 @@ const SAMPLE_TEMPLATES: FunnelTemplate[] = [
     tags: ['vendas', 'premium', 'alta-conversão'],
     thumbnailUrl:
       'https://images.unsplash.com/photo-1553729459-efe14ef6055d?w=300&h=200&fit=crop&auto=format',
+    templateData: {},
+    components: [],
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   },
   {
     id: 'wellness-assessment',
@@ -165,6 +180,10 @@ const SAMPLE_TEMPLATES: FunnelTemplate[] = [
     tags: ['bem-estar', 'saúde', 'lifestyle'],
     thumbnailUrl:
       'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=300&h=200&fit=crop&auto=format',
+    templateData: {},
+    components: [],
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   },
   {
     id: 'mini-lead-magnet',
@@ -178,6 +197,10 @@ const SAMPLE_TEMPLATES: FunnelTemplate[] = [
     tags: ['rápido', 'magnet', 'express'],
     thumbnailUrl:
       'https://images.unsplash.com/photo-1552664730-d307ca884978?w=300&h=200&fit=crop&auto=format',
+    templateData: {},
+    components: [],
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   },
   {
     id: 'career-assessment',
@@ -191,6 +214,10 @@ const SAMPLE_TEMPLATES: FunnelTemplate[] = [
     tags: ['carreira', 'profissional', 'orientação'],
     thumbnailUrl:
       'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=200&fit=crop&auto=format',
+    templateData: {},
+    components: [],
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   },
   {
     id: 'luxury-product-finder',
@@ -204,6 +231,10 @@ const SAMPLE_TEMPLATES: FunnelTemplate[] = [
     tags: ['luxo', 'premium', 'exclusivo'],
     thumbnailUrl:
       'https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=300&h=200&fit=crop&auto=format',
+    templateData: {},
+    components: [],
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   },
 ];
 
