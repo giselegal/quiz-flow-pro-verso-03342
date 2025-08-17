@@ -1,22 +1,24 @@
 // @ts-nocheck
-import { Suspense, lazy } from 'react';
-import { Router, Route, Switch } from 'wouter';
-import { Toaster } from '@/components/ui/toaster';
 import { ThemeProvider } from '@/components/theme-provider';
 import { LoadingFallback } from '@/components/ui/loading-fallback';
+import { Toaster } from '@/components/ui/toaster';
 import { AuthProvider } from '@/context/AuthContext';
 import { EditorProvider } from '@/context/EditorContext';
+import { Suspense, lazy } from 'react';
+import { Route, Router, Switch } from 'wouter';
 
 // Main pages - using existing files that work
-import QuizFlowPage from './pages/QuizFlowPage';
-import ResultPage from './pages/ResultPage';
 import DashboardPage from './pages/admin/DashboardPage';
 import EditorPage from './pages/admin/EditorPage';
 import Home from './pages/Home';
+import QuizFlowPage from './pages/QuizFlowPage';
+import ResultPage from './pages/ResultPage';
 
 // 🎨 EDITORES MAIS COMPLETOS - Lazy load
 const EditorFixedPageWithDragDrop = lazy(() => import('./pages/editor')); // Editor 4 colunas mais completo
-const SchemaDrivenEditorResponsive = lazy(() => import('./components/editor/SchemaDrivenEditorResponsive'));
+const SchemaDrivenEditorResponsive = lazy(
+  () => import('./components/editor/SchemaDrivenEditorResponsive')
+);
 const ImprovedEditor = lazy(() => import('./components/editor/ImprovedEditor'));
 
 const App = () => {
@@ -24,61 +26,63 @@ const App = () => {
     <AuthProvider>
       <EditorProvider>
         <ThemeProvider defaultTheme="light" storageKey="ui-theme">
-        <Router>
-          <Suspense fallback={<LoadingFallback />}>
-            <Switch>
-              {/* 🏠 Página Inicial */}
-              <Route path="/" component={Home} />
+          <Router>
+            <Suspense fallback={<LoadingFallback />}>
+              <Switch>
+                {/* 🏠 Página Inicial */}
+                <Route path="/" component={Home} />
 
-              {/* 🎯 Quiz Principal */}
-              <Route path="/quiz" component={QuizFlowPage} />
+                {/* 🎯 Quiz Principal */}
+                <Route path="/quiz" component={QuizFlowPage} />
 
-              {/* 📊 Resultados */}
-              <Route path="/result" component={ResultPage} />
-              <Route path="/result-test" component={ResultPage} />
+                {/* 📊 Resultados */}
+                <Route path="/result" component={ResultPage} />
+                <Route path="/result-test" component={ResultPage} />
 
-              {/* 🎨 EDITOR MAIS COMPLETO - 4 Colunas com Drag & Drop */}
-              <Route path="/editor">
-                <div className="h-screen w-full">
-                  <EditorFixedPageWithDragDrop />
-                </div>
-              </Route>
-              
-              {/* 🎨 EDITORES ALTERNATIVOS */}
-              <Route path="/editor-schema">
-                <div className="h-screen w-full">
-                  <SchemaDrivenEditorResponsive />
-                </div>
-              </Route>
+                {/* 🎨 EDITOR MAIS COMPLETO - 4 Colunas com Drag & Drop */}
+                <Route path="/editor">
+                  <div className="h-screen w-full">
+                    <EditorFixedPageWithDragDrop />
+                  </div>
+                </Route>
 
-              <Route path="/editor-improved">
-                <div className="h-screen w-full">
-                  <ImprovedEditor />
-                </div>
-              </Route>
+                {/* 🎨 EDITORES ALTERNATIVOS */}
+                <Route path="/editor-schema">
+                  <div className="h-screen w-full">
+                    <SchemaDrivenEditorResponsive />
+                  </div>
+                </Route>
 
-              {/* ⚙️ Admin/Editor */}
-              <Route path="/admin/editor" component={EditorPage} />
-              <Route path="/admin" component={DashboardPage} />
+                <Route path="/editor-improved">
+                  <div className="h-screen w-full">
+                    <ImprovedEditor />
+                  </div>
+                </Route>
 
-              {/* 🔧 Fallback */}
-              <Route>
-                <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-50 to-gray-100">
-                  <div className="text-center">
-                    <h1 className="text-3xl font-bold text-gray-800 mb-4">Página não encontrada</h1>
-                    <p className="text-gray-600">A página que você procura não existe.</p>
-                    <div className="mt-4 text-sm text-gray-500">
-                      <p>🎨 Editores disponíveis:</p>
-                      <p>/editor - Editor completo de 4 colunas</p>
-                      <p>/editor-schema - Editor schema-driven</p>
-                      <p>/editor-improved - Editor melhorado</p>
+                {/* ⚙️ Admin/Editor */}
+                <Route path="/admin/editor" component={EditorPage} />
+                <Route path="/admin" component={DashboardPage} />
+
+                {/* 🔧 Fallback */}
+                <Route>
+                  <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-50 to-gray-100">
+                    <div className="text-center">
+                      <h1 className="text-3xl font-bold text-gray-800 mb-4">
+                        Página não encontrada
+                      </h1>
+                      <p className="text-gray-600">A página que você procura não existe.</p>
+                      <div className="mt-4 text-sm text-gray-500">
+                        <p>🎨 Editores disponíveis:</p>
+                        <p>/editor - Editor completo de 4 colunas</p>
+                        <p>/editor-schema - Editor schema-driven</p>
+                        <p>/editor-improved - Editor melhorado</p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </Route>
-            </Switch>
-          </Suspense>
-        </Router>
+                </Route>
+              </Switch>
+            </Suspense>
+          </Router>
         </ThemeProvider>
         <Toaster />
       </EditorProvider>
