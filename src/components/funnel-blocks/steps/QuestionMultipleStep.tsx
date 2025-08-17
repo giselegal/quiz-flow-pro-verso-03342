@@ -3,20 +3,22 @@ import { Button } from '@/components/ui/button';
 import { FunnelStepProps } from '@/types/funnel';
 
 interface QuizOptionProps {
+  id: string;
   text: string;
   imageUrl?: string;
   isSelected: boolean;
   onSelect: () => void;
+  multiSelect?: boolean;
   disabled: boolean;
 }
 
 const QuizOption: React.FC<QuizOptionProps> = ({
-  id,
+  // id, // unused in component
   text,
   imageUrl,
   isSelected,
   onSelect,
-  multiSelect,
+  // multiSelect, // unused in component
   disabled,
 }) => {
   return (

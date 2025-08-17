@@ -46,7 +46,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
       try {
         if (editorContext.templateActions?.loadTemplateByStep) {
           const success = await editorContext.templateActions.loadTemplateByStep(stepNumber);
-          if (success) {
+          if (success !== undefined) {
             console.log(`✅ Template para etapa ${stepNumber} carregado com sucesso`);
           } else {
             console.warn(`⚠️ Não foi possível carregar o template para etapa ${stepNumber}`);

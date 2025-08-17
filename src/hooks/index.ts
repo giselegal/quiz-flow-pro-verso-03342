@@ -25,6 +25,12 @@ export {
 export { useOptimizedQuizData } from './useOptimizedQuizData';
 export { useUserName } from '../context/UserDataContext';
 
+// 🎯 NEW: Core Quiz Hooks (Checklist Implementation)
+export { useQuizState } from './useQuizState';
+export { useQuizNavigation } from './useQuizNavigation';
+export { useQuizValidation } from './useQuizValidation';
+export { useQuizAnalytics } from './useQuizAnalytics';
+
 // 🚧 DEPRECATED: Legacy editor hooks (use useUnifiedEditor instead)
 // These are marked for consolidation and will show deprecation warnings
 export { useUnifiedProperties } from './useUnifiedProperties';
