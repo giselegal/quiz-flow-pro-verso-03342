@@ -63,9 +63,9 @@ interface OptionsGridBlockProps extends BlockComponentProps {
   };
 }
 
-// @ts-nocheck
-// Função para converter valores de margem em classes Tailwind (Sistema Universal)
-const getMarginClass = (value, type) => {
+// NOTE: getMarginClass function available if needed for margin calculations
+/*
+const getMarginClass = (value: string | number, type: 'top' | 'bottom' | 'left' | 'right'): string => {
   const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
   if (isNaN(numValue) || numValue === 0) return '';
@@ -108,11 +108,12 @@ const getMarginClass = (value, type) => {
   if (numValue <= 112) return `${prefix}-28`;
   return `${prefix}-32`; // Máximo suportado
 };
+*/
 
 const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
   block,
   isSelected = false,
-  isEditing = false,
+  // isEditing = false, // unused
   onClick,
   onPropertyChange,
   className = '',
@@ -125,10 +126,10 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
 }) => {
   const {
     question,
-    questionId,
+    // questionId, // unused
     options = [],
     columns = 2,
-    selectedOption,
+    // selectedOption, // unused for now
     selectedOptions = [],
     // 🎯 PROPRIEDADES DE IMAGEM
     showImages = true,
@@ -145,20 +146,20 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
     minSelections = 1,
     requiredSelections = 1,
     // 🎯 PROPRIEDADES DE ESTILO
-    selectionStyle = 'border',
-    selectedColor = '#B89B7A',
-    hoverColor = '#D4C2A8',
+    // selectionStyle = 'border', // unused
+    // selectedColor = '#B89B7A', // unused
+    // hoverColor = '#D4C2A8', // unused
     // 🎯 PROPRIEDADES DE COMPORTAMENTO
     allowDeselection = true,
-    showSelectionCount = true,
-    validationMessage = 'Selecione uma opção',
-    progressMessage = '{selected} de {maxSelections} selecionados',
-    enableButtonOnlyWhenValid = true,
-    showValidationFeedback = true,
+    // showSelectionCount = true, // unused
+    // validationMessage = 'Selecione uma opção', // unused
+    // progressMessage = '{selected} de {maxSelections} selecionados', // unused
+    // enableButtonOnlyWhenValid = true, // unused
+    // showValidationFeedback = true, // unused
     autoAdvanceOnComplete = false,
     autoAdvanceDelay = 1500,
-    instantActivation = true,
-    trackSelectionOrder = false,
+    // instantActivation = true, // unused
+    // trackSelectionOrder = false, // unused
     // 🎯 PROPRIEDADES LEGADAS
     className: blockClassName,
     showQuestionTitle = true,
@@ -287,7 +288,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
         
         // Save individual option details for analytics
         const selectedOptionDetails = newSelections.map(id => {
-          const option = options.find(opt => opt.id === id);
+          const option = options.find((opt: any) => opt.id === id);
           return {
             id,
             text: option?.text,
@@ -302,6 +303,18 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       // Check if we should auto-advance
       const hasMinSelections = newSelections.length >= (minSelections || 1);
       const hasRequiredSelections = newSelections.length >= (requiredSelections || minSelections || 1);
+      
+      // Calculate option details for completion events
+      const selectedOptionDetails = newSelections.map(id => {
+        const option = options.find((opt: any) => opt.id === id);
+        return {
+          id,
+          text: option?.text,
+          category: option?.category,
+          styleCategory: option?.styleCategory,
+          points: option?.points,
+        };
+      });
       
       if (autoAdvanceOnComplete && hasRequiredSelections && onNext) {
         console.log('🚀 OptionsGrid: Auto-advancing after selection', newSelections);
@@ -335,7 +348,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
         if (multipleSelection) {
           const currentSelections = selectedOptions || [];
           const newSelections = currentSelections.includes(optionId)
-            ? currentSelections.filter(id => id !== optionId)
+            ? currentSelections.filter((id: string) => id !== optionId)
             : [...currentSelections, optionId];
           onPropertyChange('selectedOptions', newSelections);
         } else {
@@ -345,15 +358,17 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
     }
   };
   
-  // Get current selections (different logic for preview vs editor mode)
+  // NOTE: getCurrentSelections function available if needed
+  /*
   const getCurrentSelections = () => {
     if (isPreviewMode) {
       return previewSelections;
     }
     return multipleSelection ? (selectedOptions || []) : (selectedOption ? [selectedOption] : []);
   };
+  */
   
-  const currentSelections = getCurrentSelections();
+  // const currentSelections = getCurrentSelections(); // unused variable
 
   return (
     <div
