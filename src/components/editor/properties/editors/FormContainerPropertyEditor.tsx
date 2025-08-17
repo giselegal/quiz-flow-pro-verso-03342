@@ -11,7 +11,7 @@ import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Block } from '@/types/editor';
-import { Eye, FileText, Layout, Palette, Settings, MousePointer, Navigation } from 'lucide-react';
+import { FileText, Palette, Settings, MousePointer, Navigation } from 'lucide-react';
 import React, { useState } from 'react';
 import { PropertyColorPicker } from '../components/PropertyColorPicker';
 import { PropertyInput } from '../components/PropertyInput';
@@ -71,7 +71,7 @@ export const FormContainerPropertyEditor: React.FC<FormContainerPropertyEditorPr
 
   // === COMPORTAMENTO ===
   const autoAdvanceOnComplete = block.content?.autoAdvanceOnComplete ?? false;
-  const showValidationFeedback = block.content?.showValidationFeedback ?? true;
+  // const showValidationFeedback = block.content?.showValidationFeedback ?? true; // Not used
   const dataKey = block.content?.dataKey || 'userData';
 
   // === ESTILO GERAL ===
@@ -620,8 +620,8 @@ export const FormContainerPropertyEditor: React.FC<FormContainerPropertyEditorPr
 
               <PropertySlider
                 label="Tamanho da Fonte dos Campos"
-                value={fontSize}
-                onChange={value => handleContentUpdate('fontSize', value)}
+                 value={Number(fontSize)}
+                 onChange={value => handleContentUpdate('fontSize', value)}
                 min={12}
                 max={24}
                 step={1}
@@ -630,8 +630,8 @@ export const FormContainerPropertyEditor: React.FC<FormContainerPropertyEditorPr
 
               <PropertySlider
                 label="Arredondamento dos Campos"
-                value={borderRadius}
-                onChange={value => handleContentUpdate('borderRadius', value)}
+                 value={Number(borderRadius)}
+                 onChange={value => handleContentUpdate('borderRadius', value)}
                 min={0}
                 max={20}
                 step={1}

@@ -41,7 +41,7 @@ interface GradientAnimationBlockProps {
 const GradientAnimationBlock: React.FC<GradientAnimationBlockProps> = ({
   block,
   children,
-  onPropertyChange,
+  onPropertyChange: _onPropertyChange,
 }) => {
   const properties = block?.properties || {};
   const { className = '', gradientConfig, containerStyles } = properties;

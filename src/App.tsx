@@ -37,9 +37,8 @@ const DebugEditorContext = lazy(() => import('./legacy/pages/debug-editor'));
 const TestButton = lazy(() => import('./legacy/pages/test-button'));
 const TestPropertiesPanel = lazy(() => import('./legacy/pages/test-properties'));
 const DebugStep02 = lazy(() => import('./components/debug/DebugStep02'));
-const TestAllTemplates = lazy(() => import('./components/debug/TestAllTemplates'));
+// Removed deleted debug components
 const TestOptionsRendering = lazy(() => import('./components/debug/TestOptionsRendering'));
-const TestStep02Direct = lazy(() => import('./components/debug/TestStep02Direct'));
 const MyTemplatesPage = lazy(() => import('./pages/MyTemplatesPage'));
 // Removed: EditorFixedPageWithDragDrop - file deleted
 // Removed: EditorFixedDebug - file moved to backup
@@ -354,20 +353,7 @@ function App() {
                     </Suspense>
                   )}
                 </Route>
-                <Route path="/test/step02-direct">
-                  {() => (
-                    <Suspense fallback={<PageLoading />}>
-                      <TestStep02Direct />
-                    </Suspense>
-                  )}
-                </Route>
-                <Route path="/test/all-templates">
-                  {() => (
-                    <Suspense fallback={<PageLoading />}>
-                      <TestAllTemplates />
-                    </Suspense>
-                  )}
-                </Route>
+                {/* Removed deleted test routes */}
 
                 {/* Test Navigation Route */}
                 <Route path="/test/navigation">

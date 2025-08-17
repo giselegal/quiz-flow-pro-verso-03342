@@ -1,5 +1,4 @@
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -11,11 +10,11 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
-import { Slider } from '@/components/ui/slider';
+// Removed unused Slider import
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Block } from '@/types/editor';
-import { Eye, Image, Layout, Palette, Type, Upload } from 'lucide-react';
+import { Eye, Image, Layout, Palette, Type } from 'lucide-react';
 import React, { useState } from 'react';
 import { PropertyInput } from '../components/PropertyInput';
 import { PropertySlider } from '../components/PropertySlider';

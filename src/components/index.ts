@@ -1,7 +1,7 @@
 // Core Editor Components
 export { ComponentsSidebar } from './editor/ComponentsSidebar';
 export { EditorCanvas } from './editor/EditorCanvas';
-export { PropertiesPanel } from './editor/PropertiesPanel';
+export { PropertiesPanel } from './editor/properties/PropertiesPanel';
 
 // Block Components que realmente existem (usando default exports)
 export { default as ButtonBlock } from './blocks/ButtonBlock';

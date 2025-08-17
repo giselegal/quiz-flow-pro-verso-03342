@@ -39,7 +39,7 @@ interface ConnectedTemplateWrapperBlockProps {
 const ConnectedTemplateWrapperBlock: React.FC<ConnectedTemplateWrapperBlockProps> = ({
   block,
   children,
-  onPropertyChange,
+  onPropertyChange: _onPropertyChange,
 }) => {
   const properties = block?.properties || {};
   const {
@@ -62,11 +62,7 @@ const ConnectedTemplateWrapperBlock: React.FC<ConnectedTemplateWrapperBlockProps
     validationEnabled: true,
   };
 
-  const handlePropertyUpdate = (key: string, value: any) => {
-    if (onPropertyChange) {
-      onPropertyChange(key, value);
-    }
-  };
+  // Removed unused handlePropertyUpdate function
 
   return (
     <div
