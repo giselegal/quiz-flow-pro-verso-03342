@@ -8,7 +8,7 @@ import {
   Award,
   Box,
   CheckSquare,
-  Form,
+  FileText,
   Gift,
   Grid,
   Heading,
@@ -81,7 +81,7 @@ const blockCategories: BlockCategory[] = [
       {
         type: 'lead-form',
         label: 'Form Lead',
-        icon: <Form className="h-4 w-4" />,
+        icon: <FileText className="h-4 w-4" />,
         description: 'Formulário de captura',
       },
       {
