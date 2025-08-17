@@ -3,7 +3,8 @@ import { supabase } from '@/integrations/supabase/client';
 export interface SupabaseComponent {
   id: string;
   component_type_key: string;
-  funnel_id: string;
+  funnel_id: string | null;
+  quiz_id: string | null; // Added for backward compatibility
   instance_key: string;
   properties: any;
   order_index: number;
@@ -20,6 +21,7 @@ export interface SupabaseComponent {
 
 export interface ComponentFilters {
   funnelId?: string;
+  quizId?: string; // Added for backward compatibility
   stepNumber?: number;
   isActive?: boolean;
   componentType?: string;
@@ -79,9 +81,12 @@ export const fetchComponents = async (
 
     let query = supabase.from('component_instances').select('*', { count: 'exact' });
 
-    // Apply filters
+    // Apply filters  
     if (filters.funnelId) {
       query = query.eq('funnel_id', filters.funnelId);
+    }
+    if (filters.quizId) {
+      query = query.eq('quiz_id', filters.quizId);
     }
     if (filters.stepNumber !== undefined) {
       query = query.eq('step_number', filters.stepNumber);
