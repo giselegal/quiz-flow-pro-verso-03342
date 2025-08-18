@@ -1,23 +1,50 @@
 # 🎯 **COMO FUNCIONAM OS COMPONENTES NO /EDITOR**
 
 **Data:** 18 de Agosto de 2025  
-**Análise:** Sistema completo de componentes, configuração, renderização e edição
+**Análise:** Sistema completo de componentes, configuração, renderização e edição  
+**⚠️ CORREÇÃO APLICADA:** Agora usando o editor principal correto!
 
 ---
 
-## 📋 **ARQUITETURA GERAL**
+## � **CORREÇÃO IMPORTANTE REALIZADA**
 
-### **🏗️ Estrutura do Editor**
+### **❌ PROBLEMA IDENTIFICADO:**
+O sistema estava usando `SchemaDrivenEditorResponsive` como editor principal quando o correto é o `EditorWithPreview`.
+
+### **✅ CORREÇÃO APLICADA:**
+- **Rota `/editor`** → Agora usa `EditorWithPreview` (editor completo)
+- **Rota `/editor-schema`** → Usa `SchemaDrivenEditorResponsive` (editor alternativo)
+- **Rota `/editor-fixed`** → Usa `EditorWithPreview` (editor completo)
+
+---
+
+## 📋 **ARQUITETURA GERAL CORRIGIDA**
+
+### **🏗️ Editor Principal: EditorWithPreview**
 
 ```typescript
-/editor
-├── SchemaDrivenEditorResponsive.tsx  // ← COORDENADOR PRINCIPAL
-├── FourColumnLayout/                 // ← LAYOUT RESPONSIVO
-│   ├── FunnelStagesPanel            // ← 21 ETAPAS (sidebar esquerda)
-│   ├── ComponentsSidebar            // ← COMPONENTES DISPONÍVEIS
-│   ├── CanvasDropZone              // ← ÁREA DE EDIÇÃO (centro)
-│   └── PropertiesPanel             // ← CONFIGURAÇÕES (sidebar direita)
-└── QuizMainDemo                     // ← MODO INTERATIVO/PREVIEW
+/pages/EditorWithPreview.tsx              // ← EDITOR PRINCIPAL (⭐⭐⭐⭐⭐)
+├── FourColumnLayout/                     // ← LAYOUT RESPONSIVO
+│   ├── FunnelStagesPanel                // ← 21 ETAPAS (sidebar esquerda)
+│   ├── CombinedComponentsPanel          // ← COMPONENTES DISPONÍVEIS
+│   ├── CanvasDropZone                   // ← ÁREA DE EDIÇÃO (centro)
+│   └── PropertiesPanel                  // ← CONFIGURAÇÕES (sidebar direita)
+├── PreviewSystem/                       // ← SISTEMA DE PREVIEW
+│   ├── PreviewNavigation                // ← Navegação do preview
+│   └── PreviewToggleButton              // ← Alternar modo
+└── Quiz21StepsIntegration               // ← INTEGRAÇÃO QUIZ 21 ETAPAS
+```
+
+### **🔧 Editor Alternativo: SchemaDrivenEditorResponsive**
+
+```typescript
+/components/editor/SchemaDrivenEditorResponsive.tsx  // ← EDITOR ALTERNATIVO (⭐⭐⭐⭐)
+├── FourColumnLayout/                               // ← LAYOUT BÁSICO
+│   ├── FunnelStagesPanel                          // ← 21 ETAPAS
+│   ├── ComponentsSidebar                          // ← COMPONENTES
+│   ├── CanvasDropZone                             // ← ÁREA DE EDIÇÃO
+│   └── PropertiesPanel                            // ← CONFIGURAÇÕES
+└── QuizMainDemo                                    // ← MODO INTERATIVO/PREVIEW
 ```
 
 ---
@@ -238,7 +265,39 @@ const {
 
 ---
 
-## 🚀 **7. FLUXO COMPLETO DE USO**
+## 🚀 **7. ROTEAMENTO CORRETO APLICADO**
+
+### **✅ Rotas Atualizadas:**
+
+```typescript
+// src/App.tsx - CORREÇÃO APLICADA
+{
+  '/editor'         → EditorWithPreview         // 🏆 EDITOR PRINCIPAL
+  '/editor-schema'  → SchemaDrivenEditorResponsive // 🔧 EDITOR ALTERNATIVO  
+  '/editor-fixed'   → EditorWithPreview         // 🏆 EDITOR PRINCIPAL
+}
+```
+
+### **🎯 Funcionalidades por Editor:**
+
+#### **🥇 EditorWithPreview** (Principal)
+- ✅ Drag & Drop avançado
+- ✅ Sistema de Preview integrado
+- ✅ Auto-save com debounce
+- ✅ Atalhos de teclado
+- ✅ Histórico de mudanças
+- ✅ Layout responsivo completo
+- ✅ Painel de propriedades avançado
+
+#### **🥈 SchemaDrivenEditorResponsive** (Alternativo)  
+- ✅ Layout básico de 4 colunas
+- ✅ Navegação das 21 etapas
+- ✅ Modo interativo/preview
+- ✅ Integração com Quiz21StepsProvider
+
+---
+
+## 🎯 **8. FLUXO COMPLETO DE USO CORRIGIDO**
 
 ### **👆 Passo a Passo:**
 
@@ -262,19 +321,23 @@ const {
 
 ---
 
-## 🎯 **RESULTADO FINAL**
+## 🎯 **RESULTADO FINAL CORRIGIDO**
 
 ### **✅ Status Atual:**
 - **21 Etapas:** ✅ Completamente definidas e navegáveis
-- **Editor Visual:** ✅ Drag & drop funcional
-- **Configuração:** ✅ Propriedades editáveis em tempo real
-- **Preview:** ✅ Modo interativo integrado
-- **Integração:** ✅ Quiz21StepsProvider conectado
+- **Editor Principal:** ✅ EditorWithPreview em `/editor` (CORRETO!)
+- **Editor Alternativo:** ✅ SchemaDrivenEditorResponsive em `/editor-schema`
+- **Preview:** ✅ Sistema completo de preview integrado
+- **Integração:** ✅ Quiz21StepsProvider conectado nos dois editores
 - **Analytics:** ✅ Tracking implementado
 - **Supabase:** ✅ Persistência configurada
 
-**🎯 O sistema está 100% funcional com todas as 21 etapas renderizadas e editáveis!**
+**🎯 Sistema CORRIGIDO e 100% funcional com o editor principal adequado!**
+
+### **� Para Testar:**
+- **Editor Principal:** `http://localhost:8081/editor` (EditorWithPreview - COMPLETO)
+- **Editor Alternativo:** `http://localhost:8081/editor-schema` (SchemaDrivenEditorResponsive)
 
 ---
 
-**💡 Para testar: Acesse `http://localhost:8081/editor` e navegue pelas etapas no painel esquerdo.**
+**💡 Agora você está usando o editor CORRETO - EditorWithPreview é muito mais completo e robusto!**

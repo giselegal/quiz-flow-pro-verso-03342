@@ -19,6 +19,9 @@ interface Quiz21SupabaseSession {
   responses: QuizAnswer[];
   strategicResponses: any[];
   result: QuizResult | null;
+  // Propriedades derivadas do status para compatibilidade
+  isStarted: boolean;
+  isCompleted: boolean;
 }
 
 // Interface para parâmetros UTM
@@ -61,6 +64,8 @@ export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
     responses: [],
     strategicResponses: [],
     result: null,
+    isStarted: false,
+    isCompleted: false,
   });
 
   // Estado de carregamento
@@ -102,9 +107,11 @@ export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
           ...session,
           id: quizSession.id,
           userId: user.id,
-          isStarted: true,
+          status: 'started',
           currentStep: 0,
           responses: [],
+          isStarted: true,
+          isCompleted: false,
         });
 
         // Rastrear evento de início
@@ -182,6 +189,7 @@ export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
         setSession({
           ...session,
           currentStep: session.currentStep + 1,
+          status: 'in_progress',
           responses: newResponses,
         });
 
@@ -241,8 +249,9 @@ export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
       // Atualizar estado local
       setSession({
         ...session,
-        isCompleted: true,
+        status: 'completed',
         result,
+        isCompleted: true,
       });
 
       // Salvar no localStorage para referência futura
@@ -306,12 +315,18 @@ export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
     setSession({
       id: null,
       userId: null,
+      funnelId: 'default-funnel',
+      status: 'idle',
       currentStep: 0,
       totalSteps: questions.length,
+      score: 0,
+      startedAt: null,
+      lastActivity: null,
+      responses: [],
+      strategicResponses: [],
+      result: null,
       isStarted: false,
       isCompleted: false,
-      responses: [],
-      result: null,
     });
 
     setError(null);
@@ -340,8 +355,9 @@ export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
           if (parsedResult.primaryStyle && parsedResult.secondaryStyles) {
             setSession(prev => ({
               ...prev,
-              isCompleted: true,
+              status: 'completed',
               result: parsedResult,
+              isCompleted: true,
             }));
           }
         }

@@ -9,7 +9,8 @@ import { Route, Router, Switch } from 'wouter';
 // Lazy load das páginas principais para code splitting
 const Home = lazy(() => import('./pages/Home'));
 const AuthPage = lazy(() => import('./pages/AuthPage'));
-const EditorPage = lazy(() => import('./pages/EditorWithPreview'));
+const EditorWithPreview = lazy(() => import('./pages/EditorWithPreview'));
+const EditorSchemaPage = lazy(() => import('./pages/editor')); // Editor alternativo
 const QuizPage = lazy(() => import('./pages/Quiz'));
 const QuizFlowPage = lazy(() => import('./pages/QuizFlowPage'));
 const QuizIntegratedPage = lazy(() => import('./pages/QuizIntegratedPage'));
@@ -28,8 +29,8 @@ const PageLoading = () => (
  * 🎯 APLICAÇÃO PRINCIPAL - Quiz Quest
  *
  * Estrutura de roteamento unificada com:
- * ✅ EditorWithPreview - Editor principal completo
- * ✅ SchemaDrivenEditorResponsive - Editor alternativo
+ * ✅ EditorWithPreview - Editor principal completo (/editor)
+ * ✅ SchemaDrivenEditorResponsive - Editor alternativo (/editor-schema)
  * ✅ Sistema de lazy loading
  * ✅ Providers centralizados
  */
@@ -48,7 +49,7 @@ function App() {
                 <Route path="/editor">
                   <EditorProvider>
                     <Suspense fallback={<PageLoading />}>
-                      <EditorPage />
+                      <EditorWithPreview />
                     </Suspense>
                   </EditorProvider>
                 </Route>
@@ -57,7 +58,7 @@ function App() {
                 <Route path="/editor-schema">
                   <EditorProvider>
                     <Suspense fallback={<PageLoading />}>
-                      <EditorPage />
+                      <EditorSchemaPage />
                     </Suspense>
                   </EditorProvider>
                 </Route>
@@ -66,7 +67,7 @@ function App() {
                 <Route path="/editor-fixed">
                   <EditorProvider>
                     <Suspense fallback={<PageLoading />}>
-                      <EditorPage />
+                      <EditorWithPreview />
                     </Suspense>
                   </EditorProvider>
                 </Route>
