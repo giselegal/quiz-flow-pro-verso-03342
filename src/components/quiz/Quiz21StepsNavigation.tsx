@@ -37,15 +37,36 @@ export const Quiz21StepsNavigation: React.FC<Quiz21StepsNavigationProps> = ({
     totalSteps,
     canGoNext,
     canGoPrevious,
+    isCurrentStepComplete,
+    autoAdvanceEnabled,
     goToNextStep,
     goToPreviousStep,
     resetQuiz,
     getProgress,
+    getStepRequirements,
     userName,
     answers,
+    currentStepSelections,
   } = useQuiz21Steps();
 
   const progress = getProgress();
+  const stepRequirements = getStepRequirements();
+  const selectionsCount = Object.keys(currentStepSelections).length;
+
+  // Determinar se o botão de avançar deve estar ativo
+  const shouldHighlightNext = () => {
+    if (!isCurrentStepComplete) return false;
+    
+    // Etapas com auto-advance: destacar quando completo
+    if (autoAdvanceEnabled) {
+      return selectionsCount >= stepRequirements.requiredSelections;
+    }
+    
+    // Outras etapas: sempre destacar quando pode avançar
+    return canGoNext;
+  };
+
+  const nextButtonActive = shouldHighlightNext();
 
   // Classes de posicionamento
   const getPositionClasses = () => {
@@ -107,6 +128,14 @@ export const Quiz21StepsNavigation: React.FC<Quiz21StepsNavigationProps> = ({
     }
   };
 
+  // Obter informações sobre as seleções necessárias
+  const getSelectionInfo = () => {
+    if (stepRequirements.requiredSelections > 0) {
+      return `${selectionsCount}/${stepRequirements.requiredSelections} seleções`;
+    }
+    return null;
+  };
+
   return (
     <div className={`${getPositionClasses()} ${className}`}>
       <Card
@@ -118,9 +147,20 @@ export const Quiz21StepsNavigation: React.FC<Quiz21StepsNavigationProps> = ({
             <div className="mb-4">
               <div className="flex items-center justify-between text-sm text-stone-600 mb-2">
                 <span className="font-medium">{getPhaseLabel()}</span>
-                <span className="text-xs bg-stone-100 px-2 py-1 rounded">
-                  {currentStep}/{totalSteps}
-                </span>
+                <div className="flex items-center space-x-2">
+                  <span className="text-xs bg-stone-100 px-2 py-1 rounded">
+                    {currentStep}/{totalSteps}
+                  </span>
+                  {getSelectionInfo() && (
+                    <span className={`text-xs px-2 py-1 rounded ${
+                      isCurrentStepComplete 
+                        ? 'bg-green-100 text-green-700' 
+                        : 'bg-orange-100 text-orange-700'
+                    }`}>
+                      {getSelectionInfo()}
+                    </span>
+                  )}
+                </div>
               </div>
 
               <div className="w-full bg-stone-200 rounded-full h-2">
@@ -160,11 +200,18 @@ export const Quiz21StepsNavigation: React.FC<Quiz21StepsNavigationProps> = ({
               <Button
                 onClick={goToNextStep}
                 disabled={!canGoNext}
-                variant="outline"
+                variant={nextButtonActive ? "default" : "outline"}
                 size="sm"
-                className="h-9 px-3"
+                className={`h-9 px-3 ${
+                  nextButtonActive 
+                    ? 'bg-gradient-to-r from-blue-500 to-green-500 text-white shadow-lg animate-pulse' 
+                    : ''
+                }`}
               >
-                Avançar
+                {autoAdvanceEnabled && stepRequirements.requiredSelections > 0 && !isCurrentStepComplete
+                  ? `Selecione ${stepRequirements.requiredSelections - selectionsCount} mais`
+                  : 'Avançar'
+                }
                 <ChevronRight className="h-4 w-4 ml-1" />
               </Button>
             </div>

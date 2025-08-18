@@ -12,10 +12,13 @@ interface Quiz21StepsContextType {
   userName: string;
   answers: any[];
   sessionData: Record<string, any>;
+  currentStepSelections: Record<string, any>;
 
   // Navegação
   canGoNext: boolean;
   canGoPrevious: boolean;
+  isCurrentStepComplete: boolean;
+  autoAdvanceEnabled: boolean;
   goToNextStep: () => void;
   goToPreviousStep: () => void;
   goToStep: (step: number) => void;
@@ -23,11 +26,13 @@ interface Quiz21StepsContextType {
   // Ações
   setUserName: (name: string) => void;
   saveAnswer: (questionId: string, optionId: string, value?: any) => void;
+  updateStepSelections: (selections: Record<string, any>) => void;
   resetQuiz: () => void;
 
   // Sistema
   getCurrentStageData: () => any;
   getProgress: () => number;
+  getStepRequirements: () => { requiredSelections: number; maxSelections: number; autoAdvance: boolean };
 }
 
 const Quiz21StepsContext = createContext<Quiz21StepsContextType | undefined>(undefined);
@@ -90,6 +95,7 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [userName, setUserNameState] = useState('');
   const [sessionData, setSessionData] = useState<Record<string, any>>({});
+  const [currentStepSelections, setCurrentStepSelections] = useState<Record<string, any>>({});
 
   const totalSteps = 21;
 
@@ -97,10 +103,62 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
   const canGoNext = currentStep < totalSteps;
   const canGoPrevious = currentStep > 1;
 
+  // Funções para determinar requisitos da etapa atual
+  const getStepRequirements = useCallback(() => {
+    // Etapas 2-11: Questões principais (3 seleções, auto-advance)
+    if (currentStep >= 2 && currentStep <= 11) {
+      return {
+        requiredSelections: 3,
+        maxSelections: 3,
+        autoAdvance: true
+      };
+    }
+    
+    // Etapas 13-18: Questões estratégicas (1 seleção, auto-advance)
+    if (currentStep >= 13 && currentStep <= 18) {
+      return {
+        requiredSelections: 1,
+        maxSelections: 1,
+        autoAdvance: true
+      };
+    }
+    
+    // Outras etapas: Navegação manual
+    return {
+      requiredSelections: 0,
+      maxSelections: 0,
+      autoAdvance: false
+    };
+  }, [currentStep]);
+
+  // Verificar se a etapa atual está completa
+  const isCurrentStepComplete = useCallback(() => {
+    const requirements = getStepRequirements();
+    
+    // Etapa 1: Verificar se o nome foi inserido
+    if (currentStep === 1) {
+      return Boolean(userName && userName.trim().length > 0);
+    }
+    
+    // Etapas com seleções: Verificar se o número necessário foi atingido
+    if (requirements.requiredSelections > 0) {
+      const selectionsCount = Object.keys(currentStepSelections).length;
+      return selectionsCount >= requirements.requiredSelections;
+    }
+    
+    // Outras etapas: Sempre podem avançar manualmente
+    return true;
+  }, [currentStep, userName, currentStepSelections, getStepRequirements]);
+
+  const autoAdvanceEnabled = useCallback(() => {
+    return getStepRequirements().autoAdvance;
+  }, [getStepRequirements]);
+
   const goToStep = useCallback(
     (step: number) => {
       if (step >= 1 && step <= totalSteps) {
         setCurrentStep(step);
+        setCurrentStepSelections({}); // Limpar seleções da etapa anterior
 
         // Atualizar stage no FunnelsContext
         const stageId = `step-${step}`;
@@ -157,6 +215,17 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
         answerStrategicQuestion(questionId, optionId, 'strategic', 'tracking');
       }
 
+      // Atualizar seleções da etapa atual
+      setCurrentStepSelections(prev => ({
+        ...prev,
+        [optionId]: {
+          questionId,
+          optionId,
+          value,
+          timestamp: Date.now()
+        }
+      }));
+
       // Salvar em session data
       setSessionData(prev => ({
         ...prev,
@@ -172,14 +241,36 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
       if (debug) {
         console.log('🎯 Quiz21Steps: Resposta salva:', { questionId, optionId, step: currentStep });
       }
+
+      // Auto-advance se as condições forem atendidas
+      setTimeout(() => {
+        const requirements = getStepRequirements();
+        const newSelectionsCount = Object.keys(currentStepSelections).length + 1;
+        
+        if (requirements.autoAdvance && newSelectionsCount >= requirements.requiredSelections) {
+          if (debug) {
+            console.log('🚀 Quiz21Steps: Auto-avançando para próxima etapa');
+          }
+          goToNextStep();
+        }
+      }, 1500); // Delay para permitir visualização da seleção
     },
-    [currentStep, answerQuestion, answerStrategicQuestion, debug]
+    [currentStep, answerQuestion, answerStrategicQuestion, debug, currentStepSelections, getStepRequirements, goToNextStep]
   );
+
+  const updateStepSelections = useCallback((selections: Record<string, any>) => {
+    setCurrentStepSelections(selections);
+    
+    if (debug) {
+      console.log('🎯 Quiz21Steps: Seleções atualizadas:', selections);
+    }
+  }, [debug]);
 
   const resetQuiz = useCallback(() => {
     setCurrentStep(1);
     setUserNameState('');
     setSessionData({});
+    setCurrentStepSelections({});
     setActiveStageId('step-1');
 
     if (debug) {
@@ -221,10 +312,13 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
     userName: userName || quizUserName,
     answers,
     sessionData,
+    currentStepSelections,
 
     // Navegação
     canGoNext,
     canGoPrevious,
+    isCurrentStepComplete: isCurrentStepComplete(),
+    autoAdvanceEnabled: autoAdvanceEnabled(),
     goToNextStep,
     goToPreviousStep,
     goToStep,
@@ -232,11 +326,13 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
     // Ações
     setUserName,
     saveAnswer,
+    updateStepSelections,
     resetQuiz,
 
     // Sistema
     getCurrentStageData,
     getProgress,
+    getStepRequirements,
   };
 
   return <Quiz21StepsContext.Provider value={contextValue}>{children}</Quiz21StepsContext.Provider>;
