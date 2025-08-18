@@ -7,10 +7,10 @@ import { Suspense, lazy } from 'react';
 import { Route, Router, Switch } from 'wouter';
 
 // Lazy load das páginas principais para code splitting
-const Home = lazy(() => import("./pages/Home"));
-const AuthPage = lazy(() => import("./pages/AuthPage"));
-const EditorPage = lazy(() => import("./pages/editor"));
-const QuizPage = lazy(() => import("./pages/Quiz"));
+const Home = lazy(() => import('./pages/Home'));
+const AuthPage = lazy(() => import('./pages/AuthPage'));
+const EditorPage = lazy(() => import('./pages/editor'));
+const QuizPage = lazy(() => import('./pages/Quiz'));
 
 // Lazy load das páginas admin
 const DashboardPage = lazy(() => import('./pages/admin/DashboardPage'));
@@ -35,65 +35,55 @@ function App() {
   return (
     <ThemeProvider defaultTheme="light" storageKey="quiz-quest-theme">
       <AuthProvider>
-          <Router>
-            <div className="min-h-screen bg-background">
-              <Suspense fallback={<LoadingFallback />}>
-                <Switch>
-                  {/* 🏠 PÁGINA INICIAL */}
-                  <Route path="/" component={Home} />
+        <Router>
+          <div className="min-h-screen bg-background">
+            <Suspense fallback={<LoadingFallback />}>
+              <Switch>
+                {/* 🏠 PÁGINA INICIAL */}
+                <Route path="/" component={Home} />
 
-                  {/* 📊 DASHBOARD ADMINISTRATIVO */}
-                  <Route path="/admin" component={DashboardPage} />
-                  <Route path="/dashboard" component={DashboardPage} />
-
-                  {/* 🎯 EDITOR PRINCIPAL */}
-                  <Route path="/editor">
-                    <EditorProvider>
-                      <Suspense fallback={<PageLoading />}>
-                        <EditorPage />
-                      </Suspense>
-                    </EditorProvider>
-                  </Route>
-
-                  {/* 🔧 EDITOR ALTERNATIVO */}
-                  <Route path="/editor-schema">
-                    <EditorProvider>
-                      <Suspense fallback={<PageLoading />}>
-                        <EditorPage />
-                      </Suspense>
-                    </EditorProvider>
-                  </Route>
-
-                  {/* 🏆 EDITOR FIXED */}
-                  <Route path="/editor-fixed">
-                    <EditorProvider>
-                      <Suspense fallback={<PageLoading />}>
-                        <EditorPage />
-                      </Suspense>
-                    </EditorProvider>
-                  </Route>
-
-                {/* Admin Routes */}
-                <Route path="/admin">
-                  <Suspense fallback={<PageLoading />}>
-                    <DashboardPage />
-                  </Suspense>
+                {/* 🎯 EDITOR PRINCIPAL */}
+                <Route path="/editor">
+                  <EditorProvider>
+                    <Suspense fallback={<PageLoading />}>
+                      <EditorPage />
+                    </Suspense>
+                  </EditorProvider>
                 </Route>
 
-                {/* Public Routes */}
-                <Route path="/">
-                  <Suspense fallback={<PageLoading />}>
-                    <Home />
-                  </Suspense>
+                {/* 🔧 EDITOR ALTERNATIVO */}
+                <Route path="/editor-schema">
+                  <EditorProvider>
+                    <Suspense fallback={<PageLoading />}>
+                      <EditorPage />
+                    </Suspense>
+                  </EditorProvider>
                 </Route>
-                <Route path="/quiz-modular">
-                  <Suspense fallback={<PageLoading />}>
-                    <QuizPage />
-                  </Suspense>
+
+                {/* 🏆 EDITOR FIXED */}
+                <Route path="/editor-fixed">
+                  <EditorProvider>
+                    <Suspense fallback={<PageLoading />}>
+                      <EditorPage />
+                    </Suspense>
+                  </EditorProvider>
                 </Route>
+
+                {/* 📊 DASHBOARD ADMINISTRATIVO */}
+                <Route path="/admin" component={DashboardPage} />
+                <Route path="/dashboard" component={DashboardPage} />
+
+                {/* 🔐 AUTENTICAÇÃO */}
                 <Route path="/auth">
                   <Suspense fallback={<PageLoading />}>
                     <AuthPage />
+                  </Suspense>
+                </Route>
+
+                {/* 🎮 QUIZ */}
+                <Route path="/quiz-modular">
+                  <Suspense fallback={<PageLoading />}>
+                    <QuizPage />
                   </Suspense>
                 </Route>
 

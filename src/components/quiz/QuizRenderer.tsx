@@ -1,36 +1,33 @@
 // src/components/quiz/QuizRenderer.tsx
 // Renderizador principal do quiz seguindo a nova configuração modular
 
-import React, { useState, useEffect } from "react";
-import { QUIZ_CONFIGURATION } from "@/config/quizConfiguration";
-import { QuizIntroHeaderBlock } from "@/components/editor/quiz/QuizIntroHeaderBlock";
-import { IntroBlock } from "@/components/steps/step01/IntroBlock";
-import { QuizQuestionBlock } from "@/components/editor/quiz/QuizQuestionBlock";
-import { QuizContainer } from "@/components/quiz/QuizContainer";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { QuizIntroHeaderBlock } from '@/components/editor/quiz/QuizIntroHeaderBlock';
+import QuizQuestionBlock from '@/components/editor/quiz/QuizQuestionBlock';
+import { QuizContainer } from '@/components/quiz/QuizContainer';
+import { IntroBlock } from '@/components/steps/step01/IntroBlock';
+import { Button } from '@/components/ui/button';
+import { QUIZ_CONFIGURATION } from '@/config/quizConfiguration';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
+import React, { useState } from 'react';
 
 interface QuizRendererProps {
   className?: string;
   style?: React.CSSProperties;
 }
 
-export const QuizRenderer: React.FC<QuizRendererProps> = ({
-  className = "",
-  style = {}
-}) => {
+export const QuizRenderer: React.FC<QuizRendererProps> = ({ className = '', style = {} }) => {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [quizData, setQuizData] = useState<any>({});
 
   // Obter a ordem dos componentes da configuração
   const componentOrder = QUIZ_CONFIGURATION.order || [
-    "quiz-intro-header",
-    "intro", 
-    "questions",
-    "mainTransition",
-    "strategicQuestions", 
-    "finalTransition",
-    "result"
+    'quiz-intro-header',
+    'intro',
+    'questions',
+    'mainTransition',
+    'strategicQuestions',
+    'finalTransition',
+    'result',
   ];
 
   const currentComponent = componentOrder[currentStepIndex];
@@ -53,16 +50,16 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
   const handleUpdateQuizData = (componentType: string, data: any) => {
     setQuizData(prev => ({
       ...prev,
-      [componentType]: data
+      [componentType]: data,
     }));
   };
 
   // Renderizar componente baseado no tipo
   const renderComponent = (componentType: string) => {
     const componentConfig = QUIZ_CONFIGURATION.components?.[componentType];
-    
+
     switch (componentType) {
-      case "quiz-intro-header":
+      case 'quiz-intro-header':
         return (
           <QuizIntroHeaderBlock
             id="quiz-intro-header"
@@ -71,19 +68,19 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
           />
         );
 
-      case "intro":
+      case 'intro':
         return (
           <IntroBlock
             id="intro"
             properties={{
               ...componentConfig?.props,
-              onDataUpdate: (data: any) => handleUpdateQuizData("intro", data)
+              onDataUpdate: (data: any) => handleUpdateQuizData('intro', data),
             }}
             isEditing={false}
           />
         );
 
-      case "questions":
+      case 'questions':
         return (
           <QuizQuestionBlock
             id="questions"
@@ -91,14 +88,14 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
               stepIndex: 1, // Primeira questão
               showProgress: true,
               columns: 2,
-              ...componentConfig?.props
+              ...componentConfig?.props,
             }}
             isEditing={false}
-            onUpdate={(id, updates) => handleUpdateQuizData("questions", updates)}
+            onUpdate={(id, updates) => handleUpdateQuizData('questions', updates)}
           />
         );
 
-      case "strategicQuestions":
+      case 'strategicQuestions':
         return (
           <QuizQuestionBlock
             id="strategicQuestions"
@@ -106,17 +103,20 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
               stepIndex: 11, // Primeira questão estratégica
               showProgress: true,
               columns: 1,
-              ...componentConfig?.props
+              ...componentConfig?.props,
             }}
             isEditing={false}
-            onUpdate={(id, updates) => handleUpdateQuizData("strategicQuestions", updates)}
+            onUpdate={(id, updates) => handleUpdateQuizData('strategicQuestions', updates)}
           />
         );
 
-      case "mainTransition":
+      case 'mainTransition':
         return (
           <div className="text-center p-8 space-y-4">
-            <h2 className="text-2xl font-semibold" style={{ color: QUIZ_CONFIGURATION.design.secondaryColor }}>
+            <h2
+              className="text-2xl font-semibold"
+              style={{ color: QUIZ_CONFIGURATION.design.secondaryColor }}
+            >
               Analisando suas respostas...
             </h2>
             <p className="text-lg" style={{ color: QUIZ_CONFIGURATION.design.primaryColor }}>
@@ -125,10 +125,13 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
           </div>
         );
 
-      case "finalTransition":
+      case 'finalTransition':
         return (
           <div className="text-center p-8 space-y-4">
-            <h2 className="text-2xl font-semibold" style={{ color: QUIZ_CONFIGURATION.design.secondaryColor }}>
+            <h2
+              className="text-2xl font-semibold"
+              style={{ color: QUIZ_CONFIGURATION.design.secondaryColor }}
+            >
               Finalizando análise...
             </h2>
             <p className="text-lg" style={{ color: QUIZ_CONFIGURATION.design.primaryColor }}>
@@ -137,14 +140,14 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
           </div>
         );
 
-      case "result":
+      case 'result':
         return (
           <QuizQuestionBlock
             id="result"
             properties={{
               stepIndex: QUIZ_CONFIGURATION.steps.length - 1, // Último step (resultado)
               showProgress: false,
-              ...componentConfig?.props
+              ...componentConfig?.props,
             }}
             isEditing={false}
           />
@@ -166,38 +169,39 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
 
   return (
     <QuizContainer>
-      <div 
+      <div
         className={`quiz-renderer ${className}`}
         style={{
           backgroundColor: QUIZ_CONFIGURATION.design.backgroundColor,
           fontFamily: QUIZ_CONFIGURATION.design.fontFamily,
-          ...style
+          ...style,
         }}
       >
         {/* Renderizar componente atual */}
-        <div className="min-h-[500px]">
-          {renderComponent(currentComponent)}
-        </div>
+        <div className="min-h-[500px]">{renderComponent(currentComponent)}</div>
 
         {/* Barra de progresso */}
-        {currentComponent !== "quiz-intro-header" && (
+        {currentComponent !== 'quiz-intro-header' && (
           <div className="mt-6 space-y-2">
-            <div className="flex justify-between text-sm" style={{ color: QUIZ_CONFIGURATION.design.secondaryColor }}>
+            <div
+              className="flex justify-between text-sm"
+              style={{ color: QUIZ_CONFIGURATION.design.secondaryColor }}
+            >
               <span>Progresso</span>
               <span>{Math.round(progressPercent)}%</span>
             </div>
-            <div 
+            <div
               className="w-full rounded-full overflow-hidden"
-              style={{ 
+              style={{
                 height: QUIZ_CONFIGURATION.design.progressBar.height,
-                backgroundColor: QUIZ_CONFIGURATION.design.progressBar.background 
+                backgroundColor: QUIZ_CONFIGURATION.design.progressBar.background,
               }}
             >
-              <div 
+              <div
                 className="h-full transition-all duration-300"
-                style={{ 
+                style={{
                   width: `${progressPercent}%`,
-                  backgroundColor: QUIZ_CONFIGURATION.design.progressBar.color 
+                  backgroundColor: QUIZ_CONFIGURATION.design.progressBar.color,
                 }}
               />
             </div>
@@ -210,9 +214,9 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
             variant="outline"
             onClick={handlePrevious}
             disabled={currentStepIndex === 0}
-            style={{ 
+            style={{
               borderColor: QUIZ_CONFIGURATION.design.primaryColor,
-              color: QUIZ_CONFIGURATION.design.secondaryColor 
+              color: QUIZ_CONFIGURATION.design.secondaryColor,
             }}
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
@@ -226,11 +230,11 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
           <Button
             onClick={handleNext}
             disabled={currentStepIndex === componentOrder.length - 1}
-            style={{ 
+            style={{
               background: QUIZ_CONFIGURATION.design.button.background,
               color: QUIZ_CONFIGURATION.design.button.textColor,
               borderRadius: QUIZ_CONFIGURATION.design.button.borderRadius,
-              boxShadow: QUIZ_CONFIGURATION.design.button.shadow
+              boxShadow: QUIZ_CONFIGURATION.design.button.shadow,
             }}
           >
             Próximo
@@ -241,9 +245,8 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
         {/* Debug info (apenas em desenvolvimento) */}
         {process.env.NODE_ENV === 'development' && (
           <div className="mt-4 p-3 bg-gray-100 rounded text-xs">
-            <strong>Debug:</strong> Componente atual: {currentComponent} | 
-            Índice: {currentStepIndex} | 
-            Dados: {JSON.stringify(quizData, null, 2)}
+            <strong>Debug:</strong> Componente atual: {currentComponent} | Índice:{' '}
+            {currentStepIndex} | Dados: {JSON.stringify(quizData, null, 2)}
           </div>
         )}
       </div>
