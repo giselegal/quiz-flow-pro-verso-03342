@@ -5,6 +5,7 @@ import ConnectedStep01Template from '../steps/ConnectedStep01Template';
 import { ConnectedStep13Template } from '../steps/Step13Template';
 import Step20Result from '../steps/Step20Result';
 import { useState } from 'react';
+import { runValidation } from '@/utils/validateDataSync';
 
 interface TemplateRendererProps {
   stepNumber?: number;
@@ -24,11 +25,22 @@ interface TemplateRendererProps {
  * - Fallback para templates JSON quando necessário
  * - Integração completa com EditorContext e hooks de quiz
  */
-export const TemplateRenderer = ({ stepNumber, fallbackStep, sessionId, onContinue }: TemplateRendererProps) => {
+export function TemplateRenderer({
+  stepNumber,
+  templateId,
+  fallbackStep = 1,
+  sessionId,
+  onContinue,
+}: TemplateRendererProps) {
   const { quizState } = useEditor();
   const actualStepNumber = stepNumber || fallbackStep || 1;
   const { config, loading } = useTemplateConfig(actualStepNumber);
   const [renderMode, setRenderMode] = useState<'connected' | 'fallback'>('connected');
+
+  // 🔍 EXECUTAR VALIDAÇÃO DE SINCRONIZAÇÃO
+  if (process.env.NODE_ENV === 'development') {
+    runValidation();
+  }
 
   // 🎯 NOVA ABORDAGEM: Usar stepTemplatesMapping como fonte única
   const stepTemplate = STEP_TEMPLATES_MAPPING[actualStepNumber];
