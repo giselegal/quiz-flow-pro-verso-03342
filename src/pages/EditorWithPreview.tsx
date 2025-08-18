@@ -23,11 +23,9 @@ import { EditorQuizProvider } from '@/context/EditorQuizContext';
 import { useAutoSaveWithDebounce } from '@/hooks/editor/useAutoSaveWithDebounce';
 import { toast } from '@/hooks/use-toast';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
-import { usePropertyHistory } from '@/hooks/usePropertyHistory';
 import { useSyncedScroll } from '@/hooks/useSyncedScroll';
 import { BlockType } from '@/types/editor';
 import { useLocation } from 'wouter';
-import { saveEditor } from '@/services/editorService';
 import { saveEditor } from '@/services/editorService';
 
 /**
@@ -49,7 +47,6 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
 
   // Hooks para funcionalidades avançadas
   const { scrollRef } = useSyncedScroll({ source: 'canvas' });
-  const propertyHistory = usePropertyHistory();
 
   // Estado local
   const [showFunnelSettings, setShowFunnelSettings] = useState(false);
@@ -308,11 +305,15 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
 // 🌟 EXPORT WRAPPER - Component com Preview System e FunnelsProvider
 export const EditorWithPreview: React.FC = () => {
   return (
-    <EditorProvider>
-      <FunnelsProvider debug={true}>
-        <EditorFixedPageWithDragDrop />
-      </FunnelsProvider>
-    </EditorProvider>
+    <FunnelsProvider debug={true}>
+      <EditorProvider>
+        <EditorQuizProvider>
+          <PreviewProvider>
+            <EditorFixedPageWithDragDrop />
+          </PreviewProvider>
+        </EditorQuizProvider>
+      </EditorProvider>
+    </FunnelsProvider>
   );
 };
 
