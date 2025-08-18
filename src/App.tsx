@@ -9,7 +9,7 @@ import { Route, Router, Switch } from 'wouter';
 // Lazy load das páginas principais para code splitting
 const Home = lazy(() => import('./pages/Home'));
 const AuthPage = lazy(() => import('./pages/AuthPage'));
-const EditorPage = lazy(() => import('./pages/editor'));
+const EditorPage = lazy(() => import('./pages/EditorWithPreview'));
 const QuizPage = lazy(() => import('./pages/Quiz'));
 
 // Lazy load das páginas admin
