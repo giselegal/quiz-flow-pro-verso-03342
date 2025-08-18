@@ -8,6 +8,7 @@
 ## 🔧 CORREÇÕES APLICADAS
 
 ### 1️⃣ **EditorWithPreview.tsx - Hook Adicionado**
+
 ```typescript
 // ✅ IMPORT CORRIGIDO
 import { Quiz21StepsProvider, useQuiz21Steps } from '@/components/quiz/Quiz21StepsProvider';
@@ -18,7 +19,7 @@ const {
   totalSteps,
   canGoNext,
   canGoPrevious,
-  isLoading: stepsLoading
+  isLoading: stepsLoading,
 } = useQuiz21Steps();
 
 // ✅ DEBUG LOGS ADICIONADOS
@@ -31,11 +32,12 @@ console.log('🎯 EditorWithPreview DEBUG:', {
   stepsLoading,
   canGoNext,
   canGoPrevious,
-  timestamp: new Date().toISOString()
+  timestamp: new Date().toISOString(),
 });
 ```
 
 ### 2️⃣ **Interface Visual Melhorada**
+
 ```typescript
 // ✅ INDICADOR VISUAL DAS ETAPAS
 {!isPreviewing && (
@@ -49,7 +51,7 @@ console.log('🎯 EditorWithPreview DEBUG:', {
         ✅ {totalSteps} etapas carregadas | Etapa atual: {currentStep}
       </div>
     )}
-    
+
     <Quiz21StepsNavigation
       position="sticky"
       variant="full"
@@ -61,6 +63,7 @@ console.log('🎯 EditorWithPreview DEBUG:', {
 ```
 
 ### 3️⃣ **FunnelStagesPanel.tsx - Debug Adicionado**
+
 ```typescript
 // ✅ DEBUG PARA VERIFICAR CARREGAMENTO DAS ETAPAS
 const { steps: stages, loading, error, currentFunnelId } = useFunnels();
@@ -71,13 +74,14 @@ console.log('🏗️ FunnelStagesPanel:', {
   activeStageId,
   loading,
   error,
-  hasSteps: !!stages && stages.length > 0
+  hasSteps: !!stages && stages.length > 0,
 });
 ```
 
 ## 📊 STATUS ATUAL
 
 ### ✅ **COMPONENTES FUNCIONAIS**
+
 - ✅ `useQuiz21Steps()` hook conectado e funcional
 - ✅ `useFunnels()` fornecendo 21 etapas do template 'quiz-estilo-completo'
 - ✅ Debug logs implementados para troubleshooting
@@ -85,11 +89,13 @@ console.log('🏗️ FunnelStagesPanel:', {
 - ✅ Quiz21StepsNavigation renderizado quando não em preview
 
 ### 🔍 **DEBUG LOGS IMPLEMENTADOS**
+
 1. **EditorWithPreview**: Status geral do editor e etapas
 2. **FunnelStagesPanel**: Status das etapas no painel lateral
 3. **Quiz21StepsProvider**: Context interno (já existia)
 
 ### 🎮 **FUNCIONALIDADES ATIVAS**
+
 - **Navegação das 21 etapas**: Via Quiz21StepsNavigation
 - **Indicadores visuais**: Status de carregamento e progresso
 - **Context sharing**: Dados compartilhados entre componentes
@@ -100,6 +106,7 @@ console.log('🏗️ FunnelStagesPanel:', {
 **URL**: http://localhost:8080/editor
 
 **O que verificar**:
+
 1. ✅ Indicador verde: "✅ X etapas carregadas | Etapa atual: Y"
 2. ✅ Componente Quiz21StepsNavigation visível
 3. ✅ Logs no console do browser com dados das etapas

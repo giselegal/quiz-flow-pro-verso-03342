@@ -82,6 +82,27 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
   };
 
   const { steps } = funnels;
+
+  // 🔍 VERIFICAÇÃO CRÍTICA: Garantir que as etapas foram carregadas
+  React.useEffect(() => {
+    if (debug) {
+      console.log('🔍 VERIFICAÇÃO CRÍTICA - Quiz21StepsProvider:');
+      console.log('  - FunnelsContext disponível:', !!funnels);
+      console.log('  - Steps disponíveis:', !!steps);
+      console.log('  - Quantidade de steps:', steps?.length || 0);
+      console.log('  - Primeira step:', steps?.[0] || 'nenhuma');
+      console.log('  - Última step:', steps?.[steps.length - 1] || 'nenhuma');
+
+      if (!steps || steps.length === 0) {
+        console.error('🔴 PROBLEMA IDENTIFICADO: Steps não carregadas pelo FunnelsContext!');
+        console.error('🔴 Possible Solutions:');
+        console.error('  1. Verificar se FunnelsProvider está antes de Quiz21StepsProvider');
+        console.error('  2. Verificar se template "quiz-estilo-completo" existe');
+        console.error('  3. Verificar se inicialização do FunnelsProvider está correta');
+      }
+    }
+  }, [funnels, steps, debug]);
+
   // Para compatibilidade, criar activeStageId e setActiveStageId localmente
   const [activeStageId, setActiveStageId] = useState(`step-${initialStep}`);
 
@@ -399,7 +420,23 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
         stepsCount: steps.length,
         supabaseSessionId: supabaseSession.id,
         isSupabaseLoading,
+        funnelsProvider: {
+          hasSteps: steps && steps.length > 0,
+          stepsLength: steps?.length || 0,
+          firstStepId: steps?.[0]?.id || 'nenhum',
+          lastStepId: steps?.[steps.length - 1]?.id || 'nenhum',
+        },
       });
+
+      // 🔍 PONTO CEGO: Verificar se as etapas realmente estão sendo fornecidas pelo FunnelsContext
+      if (!steps || steps.length === 0) {
+        console.error('🔴 PONTO CEGO IDENTIFICADO: FunnelsContext não está fornecendo etapas!');
+        console.error('🔴 Possíveis causas:');
+        console.error('  - FunnelsProvider não inicializado');
+        console.error('  - Template não encontrado');
+        console.error('  - Erro na configuração do currentFunnelId');
+        console.error('  - Problema na importação dos templates');
+      }
     }
   }, [
     currentStep,
@@ -411,6 +448,7 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
     steps.length,
     supabaseSession.id,
     isSupabaseLoading,
+    steps,
   ]);
 
   const contextValue: Quiz21StepsContextType = {

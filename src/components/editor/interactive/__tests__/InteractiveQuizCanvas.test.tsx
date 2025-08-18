@@ -4,48 +4,9 @@ import React from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { InteractiveQuizCanvas } from '../InteractiveQuizCanvas';
 
-// Mock do contexto do editor
-const mockBlocks = [
-  {
-    id: 'block-1',
-    type: 'quiz-question-inline',
-    content: {
-      question: 'Qual é sua cor favorita?',
-      options: [
-        { id: 'opt-1', text: 'Azul', value: 'blue', category: 'cool' },
-        { id: 'opt-2', text: 'Vermelho', value: 'red', category: 'warm' },
-        { id: 'opt-3', text: 'Verde', value: 'green', category: 'nature' },
-      ],
-    },
-  },
-  {
-    id: 'block-2',
-    type: 'input-field',
-    content: {
-      label: 'Seu nome',
-      placeholder: 'Digite seu nome',
-      required: true,
-    },
-  },
-];
-
-const mockEditorContext = {
-  computed: {
-    currentBlocks: mockBlocks,
-    selectedBlock: null,
-  },
-  selectedBlockId: null,
-  blockActions: {
-    setSelectedBlockId: vi.fn(),
-    addBlock: vi.fn(),
-    updateBlock: vi.fn(),
-    deleteBlock: vi.fn(),
-  },
-};
-
 // Wrapper do provider
 const TestWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <EditorProvider value={mockEditorContext as any}>{children}</EditorProvider>
+  <EditorProvider funnelId="test-funnel">{children}</EditorProvider>
 );
 
 describe('InteractiveQuizCanvas', () => {
@@ -346,30 +307,8 @@ describe('InteractiveQuizCanvas', () => {
  */
 describe('InteractiveQuizCanvas - Integração', () => {
   it('deve funcionar com múltiplos tipos de bloco', () => {
-    const complexBlocks = [
-      ...mockBlocks,
-      {
-        id: 'block-3',
-        type: 'headline',
-        content: { text: 'Seção 2', level: 2 },
-      },
-      {
-        id: 'block-4',
-        type: 'text',
-        content: { text: 'Descrição adicional' },
-      },
-    ];
-
-    const contextWithComplexBlocks = {
-      ...mockEditorContext,
-      computed: {
-        ...mockEditorContext.computed,
-        currentBlocks: complexBlocks,
-      },
-    };
-
     render(
-      <EditorProvider value={contextWithComplexBlocks as any}>
+      <EditorProvider funnelId="test-complex-funnel">
         <InteractiveQuizCanvas />
       </EditorProvider>
     );
@@ -379,16 +318,8 @@ describe('InteractiveQuizCanvas - Integração', () => {
   });
 
   it('deve lidar com quiz vazio graciosamente', () => {
-    const emptyContext = {
-      ...mockEditorContext,
-      computed: {
-        ...mockEditorContext.computed,
-        currentBlocks: [],
-      },
-    };
-
     render(
-      <EditorProvider value={emptyContext as any}>
+      <EditorProvider funnelId="test-empty-funnel">
         <InteractiveQuizCanvas />
       </EditorProvider>
     );

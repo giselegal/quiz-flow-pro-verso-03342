@@ -388,6 +388,7 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
     const initialTemplate = FUNNEL_TEMPLATES['quiz-estilo-completo'];
     console.log('🚀 FunnelsContext: Inicialização IMEDIATA com template completo');
     console.log('📊 Steps carregadas na inicialização:', initialTemplate.defaultSteps.length);
+    console.log('🎯 Template ID forçado:', 'quiz-estilo-completo');
     return initialTemplate.defaultSteps;
   });
   const [loading, setLoading] = useState(false);

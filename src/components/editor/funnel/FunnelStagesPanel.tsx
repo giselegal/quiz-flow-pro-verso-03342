@@ -41,7 +41,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
     activeStageId,
     loading,
     error,
-    hasSteps: !!stages && stages.length > 0
+    hasSteps: !!stages && stages.length > 0,
   });
   const quizState = editorContext.quizState || {
     userName: '',
