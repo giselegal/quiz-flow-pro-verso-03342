@@ -26,7 +26,6 @@ function App() {
   return (
     <ThemeProvider defaultTheme="light" storageKey="quiz-quest-theme">
       <AuthProvider>
-        <EditorProvider>
           <Router>
             <div className="min-h-screen bg-background">
               <Suspense fallback={<LoadingFallback />}>
@@ -40,23 +39,29 @@ function App() {
 
                   {/* 🎯 EDITOR PRINCIPAL - SchemaDrivenEditor (FUNCIONAL) */}
                   <Route path="/editor">
-                    <div className="h-screen w-full">
-                      <SchemaDrivenEditorResponsive />
-                    </div>
+                    <EditorProvider>
+                      <div className="h-screen w-full">
+                        <SchemaDrivenEditorResponsive />
+                      </div>
+                    </EditorProvider>
                   </Route>
 
                   {/* 🔧 EDITOR ALTERNATIVO - SchemaDrivenEditor */}
                   <Route path="/editor-schema">
-                    <div className="h-screen w-full">
-                      <SchemaDrivenEditorResponsive />
-                    </div>
+                    <EditorProvider>
+                      <div className="h-screen w-full">
+                        <SchemaDrivenEditorResponsive />
+                      </div>
+                    </EditorProvider>
                   </Route>
 
                   {/* 🏆 EDITOR FIXED - SchemaDrivenEditor */}
                   <Route path="/editor-fixed">
-                    <div className="h-screen w-full">
-                      <SchemaDrivenEditorResponsive />
-                    </div>
+                    <EditorProvider>
+                      <div className="h-screen w-full">
+                        <SchemaDrivenEditorResponsive />
+                      </div>
+                    </EditorProvider>
                   </Route>
 
                   {/* 🚫 ROTA PADRÃO - 404 */}
@@ -74,13 +79,12 @@ function App() {
                       </div>
                     </div>
                   </Route>
-                </Switch>
-              </Suspense>
+              </Switch>
+            </Suspense>
 
-              <Toaster />
-            </div>
-          </Router>
-        </EditorProvider>
+            <Toaster />
+          </div>
+        </Router>
       </AuthProvider>
     </ThemeProvider>
   );
