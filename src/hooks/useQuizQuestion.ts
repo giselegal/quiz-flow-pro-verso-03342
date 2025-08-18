@@ -5,7 +5,6 @@ interface UseQuizQuestionProps {
   questionId: string;
   requiredSelections?: number;
   maxSelections?: number;
-  autoAdvance?: boolean;
 }
 
 interface UseQuizQuestionReturn {
