@@ -46,7 +46,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
   const handleStageClick = (stageId: string, e?: React.MouseEvent) => {
     console.log('🚨 EVENTO CLICK RECEBIDO - StageID:', stageId);
     console.log('📊 Estado atual - ActiveStageId:', activeStageId);
-    console.log('🔢 Blocos atuais:', computed.currentBlocks.length);
+    console.log('🔢 Blocos atuais:', currentBlocks.length);
     
     if (e) {
       e.preventDefault();
