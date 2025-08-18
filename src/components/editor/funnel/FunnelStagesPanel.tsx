@@ -4,7 +4,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useEditor } from '@/context/EditorContext';
 import { useFunnels } from '@/context/FunnelsContext';
 import { cn } from '@/lib/utils';
-import { Copy, Eye, GripVertical, Plus, Settings, Trash2 } from 'lucide-react';
+import { Copy, Eye, GripVertical, Plus, Settings, Trash2, Navigation } from 'lucide-react';
+import { useState } from 'react';
+import { StepNavigationPropertyEditor } from '@/components/editor/properties/editors/StepNavigationPropertyEditor';
+import { useStepNavigationStore } from '@/stores/useStepNavigationStore';
 
 interface FunnelStagesPanelProps {
   className?: string;
@@ -15,6 +18,12 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
   className,
   onStageSelect,
 }) => {
+  // Estado para o editor de navegação
+  const [editingStepNavigation, setEditingStepNavigation] = useState<string | null>(null);
+  
+  // Store de configurações de navegação
+  const { updateStepConfig, getStepConfig } = useStepNavigationStore();
+
   // Get stages from FunnelsContext (21 stages system)
   const { steps: stages } = useFunnels();
 
@@ -77,12 +86,35 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
       case 'view':
         handleStageClick(stageId);
         break;
+      case 'settings':
+        // Abrir configurações gerais da etapa
+        console.log('Configurações gerais para:', stageId);
+        break;
+      case 'navigation':
+        // Abrir editor de navegação NoCode
+        setEditingStepNavigation(stageId);
+        break;
+      case 'copy':
+        // Copiar configurações da etapa
+        console.log('Copiar etapa:', stageId);
+        break;
       case 'delete':
         if (confirm(`Deseja excluir a etapa "${stageId}"?`)) {
           console.log('Remove stage not implemented for FunnelsContext:', stageId);
         }
         break;
     }
+  };
+
+  // Manipular mudanças nas configurações de navegação
+  const handleNavigationConfigChange = (stepId: string, config: any) => {
+    updateStepConfig(stepId, config);
+    console.log(`✅ Configurações de navegação atualizadas para ${stepId}:`, config);
+  };
+
+  // Fechar editor de navegação
+  const handleCloseNavigationEditor = () => {
+    setEditingStepNavigation(null);
   };
 
   if (!stages || stages.length === 0) {
@@ -161,9 +193,17 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
                 </div>
 
                 <div className="flex items-center justify-between opacity-0 group-hover:opacity-100 transition-opacity">
-                  <Badge variant="outline" className="text-xs">
-                    {stage.blocksCount} componentes
-                  </Badge>
+                  <div className="flex items-center gap-2">
+                    <Badge variant="outline" className="text-xs">
+                      {stage.blocksCount} componentes
+                    </Badge>
+                    {/* 🎯 NOVO: Indicador de configuração personalizada de navegação */}
+                    {getStepConfig(stage.id).requiredSelections !== getStepConfig(stage.id).requiredSelections && (
+                      <Badge variant="default" className="text-xs bg-blue-500">
+                        ⚙️ Custom
+                      </Badge>
+                    )}
+                  </div>
                   <div className="flex gap-1">
                     <Button
                       variant="ghost"
@@ -173,6 +213,15 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
                       title="Visualizar"
                     >
                       <Eye className="w-3 h-3" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-6 w-6 p-0"
+                      onClick={e => handleActionClick('navigation', stage.id, e)}
+                      title="Configurar Navegação"
+                    >
+                      <Navigation className="w-3 h-3" />
                     </Button>
                     <Button
                       variant="ghost"
@@ -217,6 +266,20 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
           </div>
         </div>
       </CardContent>
+
+      {/* 🎯 MODAL/OVERLAY PARA EDITOR DE NAVEGAÇÃO NOCODE */}
+      {editingStepNavigation && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="max-w-4xl w-full max-h-[90vh] overflow-auto">
+            <StepNavigationPropertyEditor
+              stepId={editingStepNavigation}
+              currentConfig={getStepConfig(editingStepNavigation)}
+              onConfigChange={handleNavigationConfigChange}
+              onClose={handleCloseNavigationEditor}
+            />
+          </div>
+        </div>
+      )}
     </Card>
   );
 };
