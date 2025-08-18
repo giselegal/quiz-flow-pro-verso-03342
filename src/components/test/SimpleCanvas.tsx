@@ -1,5 +1,5 @@
-import React from 'react';
 import { useQuiz21Steps } from '@/components/quiz/Quiz21StepsProvider';
+import React from 'react';
 
 /**
  * 🎯 CANVAS SIMPLES PARA TESTE DAS 21 ETAPAS
@@ -32,30 +32,26 @@ export const SimpleCanvas: React.FC = () => {
       <div className="max-w-4xl mx-auto">
         {/* HEADER COM INFO DAS ETAPAS */}
         <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-          <h1 className="text-2xl font-bold text-gray-800 mb-4">
-            🎯 Teste das 21 Etapas
-          </h1>
-          
+          <h1 className="text-2xl font-bold text-gray-800 mb-4">🎯 Teste das 21 Etapas</h1>
+
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
             <div className="bg-blue-50 p-3 rounded">
               <div className="text-2xl font-bold text-blue-600">{currentStep}</div>
               <div className="text-sm text-gray-600">Etapa Atual</div>
             </div>
-            
+
             <div className="bg-green-50 p-3 rounded">
               <div className="text-2xl font-bold text-green-600">{totalSteps}</div>
               <div className="text-sm text-gray-600">Total de Etapas</div>
             </div>
-            
+
             <div className="bg-purple-50 p-3 rounded">
               <div className="text-2xl font-bold text-purple-600">{progress}%</div>
               <div className="text-sm text-gray-600">Progresso</div>
             </div>
-            
+
             <div className="bg-orange-50 p-3 rounded">
-              <div className="text-2xl font-bold text-orange-600">
-                {canGoNext ? '✅' : '❌'}
-              </div>
+              <div className="text-2xl font-bold text-orange-600">{canGoNext ? '✅' : '❌'}</div>
               <div className="text-sm text-gray-600">Pode Avançar</div>
             </div>
           </div>
@@ -64,7 +60,7 @@ export const SimpleCanvas: React.FC = () => {
         {/* NAVEGAÇÃO */}
         <div className="bg-white rounded-lg shadow-md p-6 mb-6">
           <h2 className="text-lg font-semibold mb-4">Navegação</h2>
-          
+
           <div className="flex gap-4 mb-4">
             <button
               onClick={goToPrevious}
@@ -77,7 +73,7 @@ export const SimpleCanvas: React.FC = () => {
             >
               ← Anterior
             </button>
-            
+
             <button
               onClick={goToNext}
               disabled={!canGoNext}
@@ -96,7 +92,7 @@ export const SimpleCanvas: React.FC = () => {
             {Array.from({ length: totalSteps }, (_, index) => {
               const stepNum = index + 1;
               const isActive = stepNum === currentStep;
-              
+
               return (
                 <button
                   key={stepNum}

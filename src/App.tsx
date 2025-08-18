@@ -10,7 +10,6 @@ import { Route, Router, Switch } from 'wouter';
 const Home = lazy(() => import('./pages/Home'));
 const AuthPage = lazy(() => import('./pages/AuthPage'));
 const EditorWithPreview = lazy(() => import('./pages/EditorWithPreview'));
-const EditorSchemaPage = lazy(() => import('./pages/editor')); // Editor alternativo
 const QuizPage = lazy(() => import('./pages/Quiz'));
 const QuizFlowPage = lazy(() => import('./pages/QuizFlowPage'));
 const QuizIntegratedPage = lazy(() => import('./pages/QuizIntegratedPage'));
@@ -37,7 +36,6 @@ const PageLoading = () => (
  *
  * Estrutura de roteamento unificada com:
  * ✅ EditorWithPreview - Editor principal completo (/editor)
- * ✅ SchemaDrivenEditorResponsive - Editor alternativo (/editor-schema)
  * ✅ Sistema de lazy loading
  * ✅ Providers centralizados
  */
@@ -57,15 +55,6 @@ function App() {
                   <EditorProvider>
                     <Suspense fallback={<PageLoading />}>
                       <EditorWithPreview />
-                    </Suspense>
-                  </EditorProvider>
-                </Route>
-
-                {/* 🔧 EDITOR ALTERNATIVO */}
-                <Route path="/editor-schema">
-                  <EditorProvider>
-                    <Suspense fallback={<PageLoading />}>
-                      <EditorSchemaPage />
                     </Suspense>
                   </EditorProvider>
                 </Route>
