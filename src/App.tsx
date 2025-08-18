@@ -52,20 +52,24 @@ function App() {
 
                 {/* 🎯 EDITOR PRINCIPAL */}
                 <Route path="/editor">
-                  <EditorProvider>
-                    <Suspense fallback={<PageLoading />}>
-                      <EditorWithPreview />
-                    </Suspense>
-                  </EditorProvider>
+                  <FunnelsProvider>
+                    <EditorProvider>
+                      <Suspense fallback={<PageLoading />}>
+                        <EditorWithPreview />
+                      </Suspense>
+                    </EditorProvider>
+                  </FunnelsProvider>
                 </Route>
 
                 {/* 🏆 EDITOR FIXED */}
                 <Route path="/editor-fixed">
-                  <EditorProvider>
-                    <Suspense fallback={<PageLoading />}>
-                      <EditorWithPreview />
-                    </Suspense>
-                  </EditorProvider>
+                  <FunnelsProvider>
+                    <EditorProvider>
+                      <Suspense fallback={<PageLoading />}>
+                        <EditorWithPreview />
+                      </Suspense>
+                    </EditorProvider>
+                  </FunnelsProvider>
                 </Route>
 
                 {/* 📊 DASHBOARD ADMINISTRATIVO */}
