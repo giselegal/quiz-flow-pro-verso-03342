@@ -117,7 +117,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
     },
     delay: 3000, // 3 segundos após última alteração
     enabled: true, // Sempre ativo
-ver    showToasts: false, // Não mostrar toast para auto-save (só para manual)
+showToasts: false, // Não mostrar toast para auto-save (só para manual)
   });
 
   // Configuração de viewport responsivo
