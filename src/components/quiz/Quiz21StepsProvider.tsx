@@ -60,8 +60,23 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
   initialStep = 1,
   debug = false,
 }) => {
-  // Hooks externos
-  const { activeStageId, stages, setActiveStageId } = useFunnels();
+  // Hooks externos - com fallback para quando não estiver em FunnelsProvider
+  const funnels = React.useMemo(() => {
+    try {
+      return useFunnels();
+    } catch (error) {
+      if (debug) {
+        console.warn('🎯 Quiz21Steps: FunnelsProvider não encontrado, usando fallback');
+      }
+      return {
+        activeStageId: `step-${initialStep}`,
+        steps: [],
+        setActiveStageId: () => {},
+      };
+    }
+  }, [initialStep, debug]);
+
+  const { activeStageId, steps, setActiveStageId } = funnels;
   const { 
     answers, 
     answerQuestion, 
@@ -166,8 +181,8 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
   // Utils
   const getCurrentStageData = useCallback(() => {
     const stageId = `step-${currentStep}`;
-    return stages[stageId] || null;
-  }, [currentStep, stages]);
+    return steps.find(step => step.id === stageId) || null;
+  }, [currentStep, steps]);
 
   const getProgress = useCallback(() => {
     return Math.round((currentStep / totalSteps) * 100);
@@ -181,10 +196,11 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
         activeStageId,
         userName,
         answersCount: answers.length,
-        sessionDataKeys: Object.keys(sessionData)
+        sessionDataKeys: Object.keys(sessionData),
+        stepsCount: steps.length
       });
     }
-  }, [currentStep, activeStageId, userName, answers.length, sessionData, debug]);
+  }, [currentStep, activeStageId, userName, answers.length, sessionData, debug, steps.length]);
 
   const contextValue: Quiz21StepsContextType = {
     // Estado
