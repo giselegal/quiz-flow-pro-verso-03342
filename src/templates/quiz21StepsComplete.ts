@@ -238,12 +238,149 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
     },
   ],
 
+  // 🎯 ETAPA 3: QUESTÃO 2 - PERSONALIDADE (CORRIGIDO - MOVIDO PARA POSIÇÃO CORRETA)
+  'step-3': [
+    {
+      id: 'step3-quiz-header',
+      type: 'quiz-intro-header',
+      order: 0,
+      content: {
+        title: 'Questão 2 de 10',
+        subtitle: 'Descubra seu Estilo Predominante',
+        description: 'Responda com honestidade para obter um resultado mais preciso.',
+        showLogo: true,
+        showProgress: true,
+        showNavigation: true,
+      },
+      properties: {
+        backgroundColor: '#F8F9FA',
+        textAlign: 'center',
+        showBackground: true,
+        padding: '24px',
+        borderRadius: '8px',
+        marginBottom: '16px',
+        boxShadow: 'sm',
+        logoUrl:
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+        logoAlt: 'Logo Gisele Galvão',
+        showLogo: true,
+        enableProgressBar: true,
+        progressValue: 20,
+        progressMax: 100,
+        showBackButton: true,
+      },
+    },
+    {
+      id: 'step3-question',
+      type: 'options-grid',
+      order: 1,
+      content: {
+        question: 'RESUMA A SUA PERSONALIDADE:',
+        options: [
+          {
+            id: 'natural_q2',
+            text: 'Informal, espontânea, alegre, essencialista',
+          },
+          {
+            id: 'classico_q2',
+            text: 'Conservadora, séria, organizada',
+          },
+          {
+            id: 'contemporaneo_q2',
+            text: 'Informada, ativa, prática',
+          },
+          {
+            id: 'elegante_q2',
+            text: 'Exigente, sofisticada, seletiva',
+          },
+          {
+            id: 'romantico_q2',
+            text: 'Feminina, meiga, delicada, sensível',
+          },
+          {
+            id: 'sexy_q2',
+            text: 'Glamorosa, vaidosa, sensual',
+          },
+          {
+            id: 'dramatico_q2',
+            text: 'Cosmopolita, moderna e audaciosa',
+          },
+          {
+            id: 'criativo_q2',
+            text: 'Exótica, aventureira, livre',
+          },
+        ],
+      },
+      properties: {
+        questionId: 'q2_personalidade',
+        showImages: false,
+        columns: 1,
+        requiredSelections: 3,
+        maxSelections: 3,
+        minSelections: 3,
+        multipleSelection: true,
+        autoAdvanceOnComplete: true,
+        autoAdvanceDelay: 1500,
+        enableButtonOnlyWhenValid: true,
+        showValidationFeedback: true,
+        validationMessage: 'Selecione 3 opções para continuar',
+        progressMessage: 'Você selecionou {count} de {required} opções',
+        showSelectionCount: true,
+        selectionStyle: 'background',
+        selectedColor: '#3B82F6',
+        hoverColor: '#EBF5FF',
+        gridGap: 12,
+        responsiveColumns: false,
+        scoreValues: {
+          natural_q2: 1,
+          classico_q2: 1,
+          contemporaneo_q2: 1,
+          elegante_q2: 1,
+          romantico_q2: 1,
+          sexy_q2: 1,
+          dramatico_q2: 1,
+          criativo_q2: 1,
+        },
+      },
+    },
+  ],
+
   // 🎯 ETAPA 4: QUESTÃO 3 - QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?
   'step-4': [
     {
+      id: 'step4-quiz-header',
+      type: 'quiz-intro-header',
+      order: 0,
+      content: {
+        title: 'Questão 3 de 10',
+        subtitle: 'Descubra seu Estilo Predominante',
+        description: 'Responda com honestidade para obter um resultado mais preciso.',
+        showLogo: true,
+        showProgress: true,
+        showNavigation: true,
+      },
+      properties: {
+        backgroundColor: '#F8F9FA',
+        textAlign: 'center',
+        showBackground: true,
+        padding: '24px',
+        borderRadius: '8px',
+        marginBottom: '16px',
+        boxShadow: 'sm',
+        logoUrl:
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+        logoAlt: 'Logo Gisele Galvão',
+        showLogo: true,
+        enableProgressBar: true,
+        progressValue: 30,
+        progressMax: 100,
+        showBackButton: true,
+      },
+    },
+    {
       id: 'step4-question',
       type: 'options-grid',
-      order: 0,
+      order: 1,
       content: {
         question: 'QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?',
         options: [
@@ -330,9 +467,39 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
   // 🎯 ETAPA 5: QUESTÃO 4 - QUAIS DETALHES VOCÊ GOSTA?
   'step-5': [
     {
+      id: 'step5-quiz-header',
+      type: 'quiz-intro-header',
+      order: 0,
+      content: {
+        title: 'Questão 4 de 10',
+        subtitle: 'Descubra seu Estilo Predominante',
+        description: 'Responda com honestidade para obter um resultado mais preciso.',
+        showLogo: true,
+        showProgress: true,
+        showNavigation: true,
+      },
+      properties: {
+        backgroundColor: '#F8F9FA',
+        textAlign: 'center',
+        showBackground: true,
+        padding: '24px',
+        borderRadius: '8px',
+        marginBottom: '16px',
+        boxShadow: 'sm',
+        logoUrl:
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+        logoAlt: 'Logo Gisele Galvão',
+        showLogo: true,
+        enableProgressBar: true,
+        progressValue: 40,
+        progressMax: 100,
+        showBackButton: true,
+      },
+    },
+    {
       id: 'step5-question',
       type: 'options-grid',
-      order: 0,
+      order: 1,
       content: {
         question: 'QUAIS DETALHES VOCÊ GOSTA?',
         options: [
@@ -404,89 +571,42 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
     },
   ],
 
-  // 🎯 ETAPA 3: QUESTÃO 2 - PERSONALIDADE
-  'step-3': [
-    {
-      id: 'step3-question',
-      type: 'options-grid',
-      order: 0,
-      content: {
-        question: 'RESUMA A SUA PERSONALIDADE:',
-        options: [
-          {
-            id: 'natural_q2',
-            text: 'Informal, espontânea, alegre, essencialista',
-          },
-          {
-            id: 'classico_q2',
-            text: 'Conservadora, séria, organizada',
-          },
-          {
-            id: 'contemporaneo_q2',
-            text: 'Informada, ativa, prática',
-          },
-          {
-            id: 'elegante_q2',
-            text: 'Exigente, sofisticada, seletiva',
-          },
-          {
-            id: 'romantico_q2',
-            text: 'Feminina, meiga, delicada, sensível',
-          },
-          {
-            id: 'sexy_q2',
-            text: 'Glamorosa, vaidosa, sensual',
-          },
-          {
-            id: 'dramatico_q2',
-            text: 'Cosmopolita, moderna e audaciosa',
-          },
-          {
-            id: 'criativo_q2',
-            text: 'Exótica, aventureira, livre',
-          },
-        ],
-      },
-      properties: {
-        questionId: 'q2_personalidade',
-        showImages: false,
-        columns: 1,
-        requiredSelections: 3,
-        maxSelections: 3,
-        minSelections: 3,
-        multipleSelection: true,
-        autoAdvanceOnComplete: true,
-        autoAdvanceDelay: 1500,
-        enableButtonOnlyWhenValid: true,
-        showValidationFeedback: true,
-        validationMessage: 'Selecione 3 opções para continuar',
-        progressMessage: 'Você selecionou {count} de {required} opções',
-        showSelectionCount: true,
-        selectionStyle: 'background',
-        selectedColor: '#3B82F6',
-        hoverColor: '#EBF5FF',
-        gridGap: 12,
-        responsiveColumns: false,
-        scoreValues: {
-          natural_q2: 1,
-          classico_q2: 1,
-          contemporaneo_q2: 1,
-          elegante_q2: 1,
-          romantico_q2: 1,
-          sexy_q2: 1,
-          dramatico_q2: 1,
-          criativo_q2: 1,
-        },
-      },
-    },
-  ],
-
   // 🎯 ETAPA 6: QUESTÃO 5 - QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?
   'step-6': [
     {
+      id: 'step6-quiz-header',
+      type: 'quiz-intro-header',
+      order: 0,
+      content: {
+        title: 'Questão 5 de 10',
+        subtitle: 'Descubra seu Estilo Predominante',
+        description: 'Responda com honestidade para obter um resultado mais preciso.',
+        showLogo: true,
+        showProgress: true,
+        showNavigation: true,
+      },
+      properties: {
+        backgroundColor: '#F8F9FA',
+        textAlign: 'center',
+        showBackground: true,
+        padding: '24px',
+        borderRadius: '8px',
+        marginBottom: '16px',
+        boxShadow: 'sm',
+        logoUrl:
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+        logoAlt: 'Logo Gisele Galvão',
+        showLogo: true,
+        enableProgressBar: true,
+        progressValue: 50,
+        progressMax: 100,
+        showBackButton: true,
+      },
+    },
+    {
       id: 'step6-question',
       type: 'options-grid',
-      order: 0,
+      order: 1,
       content: {
         question: 'QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?',
         options: [
@@ -580,9 +700,39 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
   // 🎯 ETAPA 7: QUESTÃO 6 - QUAL CASACO É SEU FAVORITO?
   'step-7': [
     {
+      id: 'step7-quiz-header',
+      type: 'quiz-intro-header',
+      order: 0,
+      content: {
+        title: 'Questão 6 de 10',
+        subtitle: 'Descubra seu Estilo Predominante',
+        description: 'Responda com honestidade para obter um resultado mais preciso.',
+        showLogo: true,
+        showProgress: true,
+        showNavigation: true,
+      },
+      properties: {
+        backgroundColor: '#F8F9FA',
+        textAlign: 'center',
+        showBackground: true,
+        padding: '24px',
+        borderRadius: '8px',
+        marginBottom: '16px',
+        boxShadow: 'sm',
+        logoUrl:
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+        logoAlt: 'Logo Gisele Galvão',
+        showLogo: true,
+        enableProgressBar: true,
+        progressValue: 60,
+        progressMax: 100,
+        showBackButton: true,
+      },
+    },
+    {
       id: 'step7-question',
       type: 'options-grid',
-      order: 0,
+      order: 1,
       content: {
         question: 'QUAL CASACO É SEU FAVORITO?',
         options: [
@@ -676,9 +826,39 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
   // 🎯 ETAPA 8: QUESTÃO 7 - QUAL ESTILO DE CALÇA MAIS COMBINA COM VOCÊ?
   'step-8': [
     {
+      id: 'step8-quiz-header',
+      type: 'quiz-intro-header',
+      order: 0,
+      content: {
+        title: 'Questão 7 de 10',
+        subtitle: 'Descubra seu Estilo Predominante',
+        description: 'Responda com honestidade para obter um resultado mais preciso.',
+        showLogo: true,
+        showProgress: true,
+        showNavigation: true,
+      },
+      properties: {
+        backgroundColor: '#F8F9FA',
+        textAlign: 'center',
+        showBackground: true,
+        padding: '24px',
+        borderRadius: '8px',
+        marginBottom: '16px',
+        boxShadow: 'sm',
+        logoUrl:
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+        logoAlt: 'Logo Gisele Galvão',
+        showLogo: true,
+        enableProgressBar: true,
+        progressValue: 70,
+        progressMax: 100,
+        showBackButton: true,
+      },
+    },
+    {
       id: 'step8-question',
       type: 'options-grid',
-      order: 0,
+      order: 1,
       content: {
         question: 'QUAL SUA CALÇA FAVORITA?',
         options: [
@@ -772,9 +952,39 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
   // 🎯 ETAPA 9: QUESTÃO 8 - SAPATOS
   'step-9': [
     {
+      id: 'step9-quiz-header',
+      type: 'quiz-intro-header',
+      order: 0,
+      content: {
+        title: 'Questão 8 de 10',
+        subtitle: 'Descubra seu Estilo Predominante',
+        description: 'Responda com honestidade para obter um resultado mais preciso.',
+        showLogo: true,
+        showProgress: true,
+        showNavigation: true,
+      },
+      properties: {
+        backgroundColor: '#F8F9FA',
+        textAlign: 'center',
+        showBackground: true,
+        padding: '24px',
+        borderRadius: '8px',
+        marginBottom: '16px',
+        boxShadow: 'sm',
+        logoUrl:
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+        logoAlt: 'Logo Gisele Galvão',
+        showLogo: true,
+        enableProgressBar: true,
+        progressValue: 80,
+        progressMax: 100,
+        showBackButton: true,
+      },
+    },
+    {
       id: 'step9-question',
       type: 'options-grid',
-      order: 0,
+      order: 1,
       content: {
         question: 'QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA?',
         options: [
@@ -868,9 +1078,39 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
   // 🎯 ETAPA 10: QUESTÃO 9 - ACESSÓRIOS (TEXTO)
   'step-10': [
     {
+      id: 'step10-quiz-header',
+      type: 'quiz-intro-header',
+      order: 0,
+      content: {
+        title: 'Questão 9 de 10',
+        subtitle: 'Descubra seu Estilo Predominante',
+        description: 'Responda com honestidade para obter um resultado mais preciso.',
+        showLogo: true,
+        showProgress: true,
+        showNavigation: true,
+      },
+      properties: {
+        backgroundColor: '#F8F9FA',
+        textAlign: 'center',
+        showBackground: true,
+        padding: '24px',
+        borderRadius: '8px',
+        marginBottom: '16px',
+        boxShadow: 'sm',
+        logoUrl:
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+        logoAlt: 'Logo Gisele Galvão',
+        showLogo: true,
+        enableProgressBar: true,
+        progressValue: 90,
+        progressMax: 100,
+        showBackButton: true,
+      },
+    },
+    {
       id: 'step10-question',
       type: 'options-grid',
-      order: 0,
+      order: 1,
       content: {
         question: 'QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA?',
         options: [
@@ -964,9 +1204,39 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
   // 🎯 ETAPA 11: QUESTÃO 10 - TECIDOS
   'step-11': [
     {
+      id: 'step11-quiz-header',
+      type: 'quiz-intro-header',
+      order: 0,
+      content: {
+        title: 'Questão 10 de 10',
+        subtitle: 'Descubra seu Estilo Predominante',
+        description: 'Responda com honestidade para obter um resultado mais preciso.',
+        showLogo: true,
+        showProgress: true,
+        showNavigation: true,
+      },
+      properties: {
+        backgroundColor: '#F8F9FA',
+        textAlign: 'center',
+        showBackground: true,
+        padding: '24px',
+        borderRadius: '8px',
+        marginBottom: '16px',
+        boxShadow: 'sm',
+        logoUrl:
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+        logoAlt: 'Logo Gisele Galvão',
+        showLogo: true,
+        enableProgressBar: true,
+        progressValue: 100,
+        progressMax: 100,
+        showBackButton: true,
+      },
+    },
+    {
       id: 'step11-question',
       type: 'options-grid',
-      order: 0,
+      order: 1,
       content: {
         question: 'VOCÊ ESCOLHE CERTOS TECIDOS, PRINCIPALMENTE PORQUE ELES...',
         options: [

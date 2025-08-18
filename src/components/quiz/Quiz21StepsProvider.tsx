@@ -3,7 +3,7 @@ import { useQuizAnalytics } from '@/hooks/useQuizAnalytics';
 import { useQuizLogic } from '@/hooks/useQuizLogic';
 import { useSupabaseQuiz } from '@/hooks/useSupabaseQuiz';
 import { useStepNavigationStore } from '@/stores/useStepNavigationStore';
-import React, { createContext, useCallback, useContext, useState } from 'react';
+import React, { createContext, useCallback, useContext, useState, useEffect } from 'react';
 
 interface Quiz21StepsContextType {
   // Estado
@@ -75,6 +75,21 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
   initialStep = 1,
   debug = false,
 }) => {
+  // 🔍 DEBUG: Log inicial detalhado
+  console.log('🚀 Quiz21StepsProvider: Iniciando com debug =', debug);
+  
+  // 🎯 INTEGRAÇÃO COM FUNNELS CONTEXT
+  const funnelsContext = useFunnels();
+  
+  // 🔍 DEBUG: Verificar se o FunnelsContext está disponível
+  console.log('🔍 Quiz21StepsProvider: FunnelsContext disponível?', !!funnelsContext);
+  console.log('🔍 Quiz21StepsProvider: FunnelsContext data:', {
+    hasSteps: !!funnelsContext?.steps,
+    stepsLength: funnelsContext?.steps?.length || 0,
+    currentFunnelId: funnelsContext?.currentFunnelId,
+    activeStageId: funnelsContext?.activeStageId
+  });
+
   // 🎯 INTEGRAÇÃO: FunnelsContext para dados das etapas
   let funnels;
   let steps: any[] = [];
