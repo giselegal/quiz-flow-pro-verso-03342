@@ -6,7 +6,7 @@ import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts.simple';
 import { CanvasDropZone } from './canvas/CanvasDropZone.simple';
 import { EnhancedUniversalPropertiesPanel } from '@/components/universal/EnhancedUniversalPropertiesPanel.simple';
 import FunnelStagesPanel from './funnel/FunnelStagesPanel.simple';
-import ComponentsSidebar from './sidebar/ComponentsSidebar';
+import ComponentsSidebar from './components/ComponentsSidebar';
 import FunnelNavbar from '@/components/funnel/FunnelNavbar';
 
 interface EnhancedLiveEditorProps {

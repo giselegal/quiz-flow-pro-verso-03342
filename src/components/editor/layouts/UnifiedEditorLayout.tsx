@@ -5,7 +5,7 @@ import { useResultPageConfig } from '@/hooks/useResultPageConfig';
 import React, { useState } from 'react';
 import { EditorCanvas } from '../canvas/EditorCanvas';
 import PropertiesPanel from '../properties/PropertiesPanel';
-import ComponentsSidebar from '../sidebar/ComponentsSidebar';
+import ComponentsSidebar from '../components/ComponentsSidebar';
 
 interface UnifiedEditorLayoutProps {
   className?: string;

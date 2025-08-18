@@ -2,7 +2,7 @@ import React from 'react';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
 import { useEditor } from '@/hooks/useEditor';
 import { StyleResult } from '@/types/quiz';
-import ComponentsSidebar from '../sidebar/ComponentsSidebar';
+import ComponentsSidebar from '../components/ComponentsSidebar';
 import { PreviewPanel } from './PreviewPanel';
 import { PropertiesPanel } from './PropertiesPanel';
 
