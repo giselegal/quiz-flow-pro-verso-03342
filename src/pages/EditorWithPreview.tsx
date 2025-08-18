@@ -205,14 +205,17 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
                           ✅ {totalSteps} etapas carregadas | Etapa atual: {currentStep}
                         </div>
                         <div className="text-sm mt-1">
-                          Navegação: {canGoNext ? '➡️' : '🚫'} Próximo | {canGoPrevious ? '⬅️' : '🚫'} Anterior
+                          Navegação: {canGoNext ? '➡️' : '🚫'} Próximo |{' '}
+                          {canGoPrevious ? '⬅️' : '🚫'} Anterior
                         </div>
                         {!canGoNext && !canGoPrevious && (
-                          <small className="text-orange-600">⚠️ Navegação bloqueada - verificar configurações</small>
+                          <small className="text-orange-600">
+                            ⚠️ Navegação bloqueada - verificar configurações
+                          </small>
                         )}
                       </div>
                     )}
-                    
+
                     <Quiz21StepsNavigation
                       position="static"
                       variant="full"

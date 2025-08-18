@@ -1,6 +1,6 @@
 import { useEditor } from '@/context/EditorContext';
 import { ValidationResult } from '@/types/validation';
-import React, { memo, useCallback, useEffect, useState, useMemo } from 'react';
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
 // import { InteractiveBlockRenderer } from './InteractiveBlockRenderer';
 // import { QuizHeader } from './QuizHeader';
 import { QuizNavigation } from './QuizNavigation';
@@ -82,7 +82,7 @@ export const InteractiveQuizCanvas: React.FC<InteractiveQuizCanvasProps> = memo(
       [scores]
     );
 
-        // Estado de progresso
+    // Estado de progresso
     const hasAnsweredCurrentStep = useMemo(() => {
       return currentBlocks.some(block => {
         if (block.type === 'quiz-question-inline') {
