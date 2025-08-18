@@ -13,20 +13,23 @@ import { EditorToolbar } from '@/components/editor/toolbar/EditorToolbar';
 import { PreviewNavigation } from '@/components/preview/PreviewNavigation';
 import { PreviewToggleButton } from '@/components/preview/PreviewToggleButton';
 import { PreviewProvider } from '@/contexts/PreviewContext';
+// 🎯 QUIZ 21 STEPS SYSTEM
+import { Quiz21StepsProvider } from '@/components/quiz/Quiz21StepsProvider';
+import { Quiz21StepsNavigation } from '@/components/quiz/Quiz21StepsNavigation';
 // 🆕 NOVO PAINEL DE PROPRIEDADES (AGORA PADRÃO)
 import { PropertiesPanel } from '@/components/editor/properties/PropertiesPanel';
 
 // Context & Hooks
-import { useEditor, EditorProvider } from '@/context/EditorContext';
-import { FunnelsProvider } from '@/context/FunnelsContext';
+import { EditorProvider, useEditor } from '@/context/EditorContext';
 import { EditorQuizProvider } from '@/context/EditorQuizContext';
+import { FunnelsProvider } from '@/context/FunnelsContext';
 import { useAutoSaveWithDebounce } from '@/hooks/editor/useAutoSaveWithDebounce';
 import { toast } from '@/hooks/use-toast';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { useSyncedScroll } from '@/hooks/useSyncedScroll';
+import { saveEditor } from '@/services/editorService';
 import { BlockType } from '@/types/editor';
 import { useLocation } from 'wouter';
-import { saveEditor } from '@/services/editorService';
 
 /**
  * Editor Fixed - Versão Corrigida do Editor Principal
@@ -225,6 +228,16 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
               <>
                 {/* 📱 PREVIEW NAVIGATION - Sistema de Navegação do Preview */}
                 {isPreviewing && <PreviewNavigation />}
+                
+                {/* 🎯 QUIZ 21 STEPS NAVIGATION - Navegação das 21 Etapas (quando não estiver em preview) */}
+                {!isPreviewing && (
+                  <Quiz21StepsNavigation 
+                    position="sticky" 
+                    variant="full" 
+                    showProgress={true}
+                    showControls={true}
+                  />
+                )}
 
                 {/* 🎨 CANVAS PRINCIPAL - Sistema de Drop Zone */}
                 <div className="flex-1 overflow-auto">
@@ -235,19 +248,16 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
                   >
                     <div className={getCanvasClassName()}>
                       <CanvasDropZone
-                        stageId={activeStageId || 'step-1'}
                         blocks={currentBlocks}
                         onBlockSelect={setSelectedBlockId}
                         selectedBlockId={selectedBlockId}
                         onBlockUpdate={updateBlock}
                         onBlockDelete={handleDeleteBlock}
-                        isPreviewing={isPreviewing}
                       />
                     </div>
 
                     {/* 🎮 PREVIEW TOGGLE - Botão flutuante para alternar preview */}
                     <PreviewToggleButton
-                      isPreviewing={isPreviewing}
                       onToggle={() => setIsPreviewing(!isPreviewing)}
                     />
                   </div>
@@ -302,14 +312,16 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
   );
 };
 
-// 🌟 EXPORT WRAPPER - Component com Preview System e FunnelsProvider
+//   EXPORT WRAPPER - Component com Preview System, FunnelsProvider e Quiz21StepsProvider
 export const EditorWithPreview: React.FC = () => {
   return (
     <FunnelsProvider debug={true}>
       <EditorProvider>
         <EditorQuizProvider>
           <PreviewProvider>
-            <EditorFixedPageWithDragDrop />
+            <Quiz21StepsProvider debug={true}>
+              <EditorFixedPageWithDragDrop />
+            </Quiz21StepsProvider>
           </PreviewProvider>
         </EditorQuizProvider>
       </EditorProvider>

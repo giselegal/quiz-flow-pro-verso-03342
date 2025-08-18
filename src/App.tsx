@@ -11,6 +11,8 @@ const Home = lazy(() => import('./pages/Home'));
 const AuthPage = lazy(() => import('./pages/AuthPage'));
 const EditorPage = lazy(() => import('./pages/EditorWithPreview'));
 const QuizPage = lazy(() => import('./pages/Quiz'));
+const QuizFlowPage = lazy(() => import('./pages/QuizFlowPage'));
+const QuizIntegratedPage = lazy(() => import('./pages/QuizIntegratedPage'));
 
 // Lazy load das páginas admin
 const DashboardPage = lazy(() => import('./pages/admin/DashboardPage'));
@@ -84,6 +86,20 @@ function App() {
                 <Route path="/quiz-modular">
                   <Suspense fallback={<PageLoading />}>
                     <QuizPage />
+                  </Suspense>
+                </Route>
+
+                {/* 🎯 QUIZ 21 ETAPAS - PRODUÇÃO */}
+                <Route path="/quiz">
+                  <Suspense fallback={<PageLoading />}>
+                    <QuizFlowPage />
+                  </Suspense>
+                </Route>
+
+                {/* 🎯 QUIZ INTEGRADO - SISTEMA TEMPLATE */}
+                <Route path="/quiz-integrado">
+                  <Suspense fallback={<PageLoading />}>
+                    <QuizIntegratedPage />
                   </Suspense>
                 </Route>
 
