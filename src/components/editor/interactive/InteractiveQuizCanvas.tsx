@@ -63,8 +63,28 @@ export const InteractiveQuizCanvas: React.FC<InteractiveQuizCanvasProps> = memo(
       }
     }, [quizAnswers]);
 
+    // Calcular pontuação
+    const calculateAndUpdateScores = useCallback(
+      (selectedOptions: string[], scoreValues: Record<string, number>) => {
+        const newScores = { ...scores };
+
+        selectedOptions.forEach(optionId => {
+          Object.entries(scoreValues).forEach(([category, points]) => {
+            const categoryKey = category.split('_')[0]; // ex: 'natural_q2' -> 'natural'
+            if (optionId.includes(categoryKey)) {
+              newScores[categoryKey] = (newScores[categoryKey] || 0) + points;
+            }
+          });
+        });
+
+        setScores(newScores);
+        console.log('📊 Updated Scores:', newScores);
+      },
+      [scores]
+    );
+
     // Handler para resposta de pergunta
-    // const handleQuizAnswer = useCallback(
+    const handleQuizAnswer = useCallback(
       (answer: {
         questionId: string;
         selectedOptions: string[];
@@ -110,27 +130,7 @@ export const InteractiveQuizCanvas: React.FC<InteractiveQuizCanvasProps> = memo(
           'interactive'
         );
       },
-      [activeStageId, quizState]
-    );
-
-    // Calcular pontuação
-    const calculateAndUpdateScores = useCallback(
-      (selectedOptions: string[], scoreValues: Record<string, number>) => {
-        const newScores = { ...scores };
-
-        selectedOptions.forEach(optionId => {
-          Object.entries(scoreValues).forEach(([category, points]) => {
-            const categoryKey = category.split('_')[0]; // ex: 'natural_q2' -> 'natural'
-            if (optionId.includes(categoryKey)) {
-              newScores[categoryKey] = (newScores[categoryKey] || 0) + points;
-            }
-          });
-        });
-
-        setScores(newScores);
-        console.log('📊 Updated Scores:', newScores);
-      },
-      [scores]
+      [activeStageId, quizState, calculateAndUpdateScores]
     );
 
     // Verificar se pode avançar para próxima etapa
@@ -162,7 +162,7 @@ export const InteractiveQuizCanvas: React.FC<InteractiveQuizCanvasProps> = memo(
     }, [activeStageId]);
 
     // Obter respostas para uma pergunta específica
-    // const getAnswersForQuestion = useCallback(
+    const getAnswersForQuestion = useCallback(
       (questionId: string) => {
         const answer = quizAnswers.find(a => a.questionId === questionId);
         return answer?.selectedOptions || [];
