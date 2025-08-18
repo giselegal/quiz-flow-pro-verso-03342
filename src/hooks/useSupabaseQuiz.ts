@@ -1,19 +1,23 @@
-// Hook de integração com Supabase para o Quiz
+// Hook de integração com Supabase para o Quiz - ATUALIZADO para Quiz21StepsProvider
 import { useToast } from '@/components/ui/use-toast';
 import { calculateQuizResult } from '@/lib/quizEngine';
 import { quizSupabaseService } from '@/services/quizSupabaseService';
 import { QuizAnswer, QuizQuestion, QuizResult } from '@/types/quiz';
 import { useCallback, useEffect, useState } from 'react';
 
-// Interface para a sessão mantida em memória
-interface QuizSessionState {
+// Interface para a sessão integrada com Quiz21StepsProvider
+interface Quiz21SupabaseSession {
   id: string | null;
   userId: string | null;
+  funnelId: string;
+  status: 'idle' | 'started' | 'in_progress' | 'completed' | 'abandoned';
   currentStep: number;
   totalSteps: number;
-  isStarted: boolean;
-  isCompleted: boolean;
+  score: number;
+  startedAt: Date | null;
+  lastActivity: Date | null;
   responses: QuizAnswer[];
+  strategicResponses: any[];
   result: QuizResult | null;
 }
 
@@ -44,14 +48,18 @@ export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
   const { toast } = useToast();
 
   // Estado da sessão do quiz
-  const [session, setSession] = useState<QuizSessionState>({
+  const [session, setSession] = useState<Quiz21SupabaseSession>({
     id: null,
     userId: null,
-    currentStep: 0,
-    totalSteps: questions.length,
-    isStarted: false,
-    isCompleted: false,
+    funnelId: 'default-funnel',
+    status: 'idle',
+    currentStep: 1,
+    totalSteps: 21,
+    score: 0,
+    startedAt: null,
+    lastActivity: null,
     responses: [],
+    strategicResponses: [],
     result: null,
   });
 

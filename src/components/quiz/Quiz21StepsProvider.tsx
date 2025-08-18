@@ -1,6 +1,8 @@
 import { useFunnels } from '@/context/FunnelsContext';
+import { useQuizAnalytics } from '@/hooks/useQuizAnalytics';
 import { useQuizLogic } from '@/hooks/useQuizLogic';
-import { useStepNavigationStore } from '@/stores/useStepNavigationStore';
+import { useSupabaseQuiz } from '@/hooks/useSupabaseQuiz'; // 🎯 NOVO: Integração Sup      // 🗄️ SUPABASE: Salvar resposta no banco
+      saveSupabaseAnswer(questionId, optionId);mport { useStepNavigationStore } from '@/stores/useStepNavigationStore';
 import React, { createContext, useCallback, useContext, useState } from 'react';
 
 interface Quiz21StepsContextType {
@@ -29,6 +31,7 @@ interface Quiz21StepsContextType {
   saveAnswer: (questionId: string, optionId: string, value?: any) => void;
   updateStepSelections: (selections: Record<string, any>) => void;
   resetQuiz: () => void;
+  completeQuizWithAnalytics: () => any; // 🎯 NOVO: Completar quiz com analytics
 
   // Sistema
   getCurrentStageData: () => any;
@@ -86,13 +89,17 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
     }
   }, [initialStep, debug]);
 
-  const { activeStageId, steps, setActiveStageId } = funnels;
+  const { steps } = funnels;
+  // Para compatibilidade, criar activeStageId e setActiveStageId localmente
+  const [activeStageId, setActiveStageId] = useState(`step-${initialStep}`);
   const {
     answers,
     answerQuestion,
     answerStrategicQuestion,
     setUserNameFromInput,
     userName: quizUserName,
+    completeQuiz: completeQuizLogic,
+    quizResult: quizLogicResult,
   } = useQuizLogic();
 
   // 🎯 NOVO: Integração com store de configurações NoCode
@@ -100,10 +107,22 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
 
   // Estado local
   const [currentStep, setCurrentStep] = useState(initialStep);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading] = useState(false);
   const [userName, setUserNameState] = useState('');
   const [sessionData, setSessionData] = useState<Record<string, any>>({});
   const [currentStepSelections, setCurrentStepSelections] = useState<Record<string, any>>({});
+
+  // 📊 NOVO: Integração com Analytics (após estados)
+  const { trackStepStart, trackStepComplete, trackQuizComplete } = useQuizAnalytics();
+
+  // 🗄️ NOVO: Integração com Supabase
+  const {
+    session: supabaseSession,
+    saveAnswer: saveSupabaseAnswer,
+    completeQuiz: completeSupabaseQuiz,
+    isLoading: isSupabaseLoading,
+    startQuiz: startSupabaseQuiz,
+  } = useSupabaseQuiz();
 
   const totalSteps = 21;
 
@@ -154,6 +173,27 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
   const goToStep = useCallback(
     (step: number) => {
       if (step >= 1 && step <= totalSteps) {
+        // 📊 ANALYTICS: Track step navigation
+        if (step > currentStep) {
+          // Para trackStepComplete, precisa dos answers - usar answers do useQuizLogic
+          const userAnswers = answers.map(a => ({
+            stepId: `step-${currentStep}`,
+            questionId: a.questionId,
+            selectedOptions: [a.optionId],
+            selectedOptionDetails: [
+              {
+                id: a.optionId,
+                text: a.optionId,
+                category: a.optionId,
+              },
+            ],
+            answeredAt: new Date(),
+            timeSpent: 0,
+          }));
+          trackStepComplete(`step-${currentStep}`, userAnswers);
+        }
+        trackStepStart(`step-${step}`);
+
         setCurrentStep(step);
         setCurrentStepSelections({}); // Limpar seleções da etapa anterior
 
@@ -166,7 +206,7 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
         }
       }
     },
-    [setActiveStageId, debug, totalSteps]
+    [setActiveStageId, debug, totalSteps, currentStep, trackStepStart, trackStepComplete, answers]
   );
 
   const goToNextStep = useCallback(() => {
@@ -211,6 +251,17 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
         // Questões estratégicas (etapas 13-18)
         answerStrategicQuestion(questionId, optionId, 'strategic', 'tracking');
       }
+
+      // �️ SUPABASE: Salvar resposta no banco
+      saveSupabaseAnswer(questionId, optionId, {
+        stepId: `step-${currentStep}`,
+        stepNumber: currentStep,
+        value,
+        timestamp: Date.now(),
+      });
+
+      // �📊 ANALYTICS: Track user interaction
+      // trackUserInteraction seria ideal aqui, mas vamos usar trackEvent por enquanto
 
       // Atualizar seleções da etapa atual
       setCurrentStepSelections(prev => ({
@@ -286,6 +337,40 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
     }
   }, [setActiveStageId, debug]);
 
+  // 🎯 NOVO: Completar quiz com analytics
+  const completeQuizWithAnalytics = useCallback(() => {
+    // Usar função do useQuizLogic para completar
+    completeQuizLogic();
+
+    // Se há resultado disponível, fazer tracking
+    // Note: quizLogicResult será atualizado após completeQuizLogic() por useQuizLogic
+    setTimeout(() => {
+      if (quizLogicResult) {
+        // 📊 Converter QuizResult para Result para analytics
+        const resultForAnalytics = {
+          id: crypto.randomUUID(),
+          quizId: 'quiz-21-steps',
+          styleCategory: quizLogicResult.primaryStyle.category,
+          primaryStyle: quizLogicResult.primaryStyle.category,
+          scores: quizLogicResult.scores,
+          percentages: quizLogicResult.scores,
+          userAnswers: [], // TODO: Mapear de answers se necessário
+          completedAt: quizLogicResult.completedAt,
+          totalScore: Object.values(quizLogicResult.scores).reduce((acc, score) => acc + score, 0),
+        };
+
+        // 📊 ANALYTICS: Track quiz completion
+        trackQuizComplete(resultForAnalytics);
+
+        if (debug) {
+          console.log('🎯 Quiz21Steps: Quiz completado com analytics:', quizLogicResult);
+        }
+      }
+    }, 100); // Pequeno delay para garantir que quizLogicResult foi atualizado
+
+    return quizLogicResult;
+  }, [completeQuizLogic, quizLogicResult, trackQuizComplete, debug]);
+
   // Utils
   const getCurrentStageData = useCallback(() => {
     const stageId = `step-${currentStep}`;
@@ -336,6 +421,7 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
     saveAnswer,
     updateStepSelections,
     resetQuiz,
+    completeQuizWithAnalytics, // 🎯 NOVO: Função para completar quiz com analytics
 
     // Sistema
     getCurrentStageData,
