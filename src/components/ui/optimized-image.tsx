@@ -38,6 +38,9 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
   const imgRef = useRef<HTMLImageElement>(null);
   const observerRef = useRef<IntersectionObserver>();
 
+  // Define shouldLoad based on priority or if image is in view
+  const shouldLoad = priority || isInView;
+
   // Setup intersection observer for lazy loading
   useEffect(() => {
     if (priority) {
