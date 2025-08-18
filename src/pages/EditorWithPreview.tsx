@@ -15,7 +15,6 @@ import { PreviewProvider } from '@/contexts/PreviewContext';
 // 🎯 QUIZ 21 STEPS SYSTEM
 import { Quiz21StepsNavigation } from '@/components/quiz/Quiz21StepsNavigation';
 import { Quiz21StepsProvider, useQuiz21Steps } from '@/components/quiz/Quiz21StepsProvider';
-import { SimpleCanvas } from '@/components/test/SimpleCanvas';
 // 🆕 NOVO PAINEL DE PROPRIEDADES (AGORA PADRÃO)
 import { PropertiesPanel } from '@/components/editor/properties/PropertiesPanel';
 
@@ -299,7 +298,7 @@ export const EditorWithPreview: React.FC = () => {
         <EditorQuizProvider>
           <PreviewProvider>
             <Quiz21StepsProvider debug={true} initialStep={1}>
-              <SimpleCanvas />
+              <EditorFixedPageWithDragDrop />
             </Quiz21StepsProvider>
           </PreviewProvider>
         </EditorQuizProvider>
