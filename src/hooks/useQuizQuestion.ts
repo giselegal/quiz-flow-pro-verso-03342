@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useQuiz21Steps } from '../providers/Quiz21StepsProvider';
+import { useQuiz21Steps } from '../components/quiz/Quiz21StepsProvider';
 
 interface UseQuizQuestionProps {
   questionId: string;
@@ -37,7 +37,6 @@ export const useQuizQuestion = ({
   questionId,
   requiredSelections,
   maxSelections,
-  autoAdvance,
 }: UseQuizQuestionProps): UseQuizQuestionReturn => {
   const {
     currentStepSelections,
@@ -51,7 +50,6 @@ export const useQuizQuestion = ({
   const stepReqs = getStepRequirements();
   const effectiveRequiredSelections = requiredSelections ?? stepReqs.requiredSelections;
   const effectiveMaxSelections = maxSelections ?? stepReqs.maxSelections;
-  const effectiveAutoAdvance = autoAdvance ?? stepReqs.autoAdvance;
 
   // Estado local das seleções desta questão
   const [localSelections, setLocalSelections] = useState<Record<string, any>>({});

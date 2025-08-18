@@ -165,11 +165,13 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
           stepId: `step-${currentStep}`,
           questionId: a.questionId,
           selectedOptions: [a.optionId],
-          selectedOptionDetails: [{
-            id: a.optionId,
-            text: a.optionId,
-            category: a.optionId,
-          }],
+          selectedOptionDetails: [
+            {
+              id: a.optionId,
+              text: a.optionId,
+              category: a.optionId,
+            },
+          ],
           answeredAt: new Date(),
           timeSpent: 0,
         }));
@@ -372,7 +374,14 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
       canGoBack: canGoPrevious,
       selections: currentStepSelections,
     };
-  }, [currentStep, totalSteps, isCurrentStepComplete, canGoNext, canGoPrevious, currentStepSelections]);
+  }, [
+    currentStep,
+    totalSteps,
+    isCurrentStepComplete,
+    canGoNext,
+    canGoPrevious,
+    currentStepSelections,
+  ]);
 
   const getProgress = useCallback(() => {
     return Math.round((currentStep / totalSteps) * 100);
@@ -392,7 +401,17 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
         isSupabaseLoading,
       });
     }
-  }, [currentStep, activeStageId, userName, answers.length, sessionData, debug, steps.length, supabaseSession.id, isSupabaseLoading]);
+  }, [
+    currentStep,
+    activeStageId,
+    userName,
+    answers.length,
+    sessionData,
+    debug,
+    steps.length,
+    supabaseSession.id,
+    isSupabaseLoading,
+  ]);
 
   const contextValue: Quiz21StepsContextType = {
     // Estado
