@@ -18,12 +18,38 @@ import { useQuiz21Steps } from '@/components/quiz/Quiz21StepsProvider';
  * - Persistência de dados
  */
 const QuizIntegratedRenderer: React.FC = () => {
+  // Hooks devem estar dentro dos providers corretos
+  const editorContext = React.useMemo(() => {
+    try {
+      return useEditor();
+    } catch (error) {
+      console.warn('EditorContext não disponível:', error);
+      return {
+        computed: { currentBlocks: [] },
+        blockActions: { 
+          setSelectedBlockId: () => {}, 
+          updateBlock: () => Promise.resolve(), 
+          deleteBlock: () => {} 
+        }
+      };
+    }
+  }, []);
+
+  const quizContext = React.useMemo(() => {
+    try {
+      return useQuiz21Steps();
+    } catch (error) {
+      console.warn('Quiz21StepsContext não disponível:', error);
+      return { currentStep: 1 };
+    }
+  }, []);
+
   const { 
     computed: { currentBlocks },
     blockActions: { setSelectedBlockId, updateBlock, deleteBlock }
-  } = useEditor();
+  } = editorContext;
   
-  const { currentStep } = useQuiz21Steps();
+  const { currentStep } = quizContext;
 
   const handleDeleteBlock = (blockId: string) => {
     if (window.confirm('Tem certeza que deseja deletar este bloco?')) {
