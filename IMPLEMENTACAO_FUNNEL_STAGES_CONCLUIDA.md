@@ -7,11 +7,13 @@ O editor `/editor` já está usando o componente **FunnelStagesPanelUnified.tsx*
 ### 📍 **LOCALIZAÇÃO E CONFIGURAÇÃO:**
 
 #### **1. SchemaDrivenEditorResponsive.tsx** (linha 6)
+
 ```tsx
 import FunnelStagesPanel from './funnel/FunnelStagesPanelUnified';
 ```
 
 #### **2. Uso no Layout** (linha 49)
+
 ```tsx
 <FourColumnLayout
   stagesPanel={<FunnelStagesPanel />}
