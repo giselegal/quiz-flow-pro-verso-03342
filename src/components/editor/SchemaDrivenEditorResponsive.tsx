@@ -2,7 +2,7 @@ import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/componen
 import { useEditor } from '@/context/EditorContext';
 import { useFunnelNavigation } from '@/hooks/useFunnelNavigation';
 import { CanvasDropZone } from './canvas/CanvasDropZone';
-import { EnhancedUniversalPropertiesPanel } from '@/components/universal/EnhancedUniversalPropertiesPanel';
+import { PropertiesPanel } from './properties/PropertiesPanel';
 import ComponentsSidebar from './sidebar/ComponentsSidebar';
 import { FunnelStagesPanel } from './funnel/FunnelStagesPanel';
 import { BlockType } from '@/types/editor';
@@ -39,11 +39,11 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
     }
   };
 
-  const handleUpdateSelectedBlock = async (updates: any) => {
-    if (selectedBlockId) {
+  const handleUpdateSelectedBlock = async (blockId: string, updates: any) => {
+    if (blockId) {
       try {
-        await updateBlock(selectedBlockId, updates);
-        console.log('✅ Bloco atualizado via editor responsivo:', selectedBlockId);
+        await updateBlock(blockId, updates);
+        console.log('✅ Bloco atualizado via editor responsivo:', blockId);
       } catch (error) {
         console.error('❌ Erro ao atualizar bloco:', error);
       }
@@ -111,9 +111,12 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
 
         {/* ⚙️ COLUNA 4: PAINEL DE PROPRIEDADES AVANÇADO */}
         <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
-          <EnhancedUniversalPropertiesPanel
+          <PropertiesPanel
             selectedBlock={selectedBlock || null}
             onUpdate={handleUpdateSelectedBlock}
+            onClose={() => setSelectedBlockId(null)}
+            onDelete={(blockId) => deleteBlock(blockId)}
+            isPreviewMode={false}
           />
         </ResizablePanel>
       </ResizablePanelGroup>
