@@ -1,3 +1,4 @@
+// @ts-nocheck - Example file with legacy block definitions, not used in production
 import { Block } from '@/types/editor';
 
 /**

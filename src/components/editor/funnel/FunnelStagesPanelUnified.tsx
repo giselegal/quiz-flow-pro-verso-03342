@@ -43,7 +43,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
   };
 
   // ✅ HANDLER PARA SELEÇÃO DE ETAPA (UNIFICADO)
-  const handleStageClick = (stageId: string, e?: React.MouseEvent) => {
+  const handleStageClick = async (stageId: string, e?: React.MouseEvent) => {
     console.log('🚨 EVENTO CLICK RECEBIDO - StageID:', stageId);
     console.log('📊 Estado atual - ActiveStageId:', activeStageId);
     console.log('🔢 Blocos atuais:', currentBlocks.length);
@@ -53,12 +53,13 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
       e.stopPropagation();
     }
     
-    // Adicionar await para aguardar a atualização
-    setActiveStage(stageId).then(() => {
+    try {
+      // setActiveStage is async, so we await it properly
+      await setActiveStage(stageId);
       console.log('✅ Stage change completed:', stageId);
-    }).catch((error) => {
+    } catch (error) {
       console.error('❌ Stage change failed:', error);
-    });
+    }
     
     if (onStageSelect) {
       onStageSelect(stageId);
