@@ -16,11 +16,10 @@ interface PageEditorProps {
 export const PageEditor: React.FC<PageEditorProps> = ({
   blocks,
   onBlocksChange,
-  onPreviewToggle,
   isPreviewing,
 }) => {
-  const { addToHistory, undo, redo, canUndo, canRedo } = useEditorHistory(blocks);
-  const { handleAddBlock, handleUpdateBlock, handleDeleteBlock, handleSave } = useEditorActions(
+  const { addToHistory } = useEditorHistory(blocks);
+  const { handleAddBlock, handleUpdateBlock, handleDeleteBlock } = useEditorActions(
     blocks,
     onBlocksChange,
     addToHistory
@@ -45,15 +44,7 @@ export const PageEditor: React.FC<PageEditorProps> = ({
 
   return (
     <div className="h-full flex flex-col">
-      <EditorToolbar
-        onUndo={undo}
-        onRedo={redo}
-        onTogglePreview={onPreviewToggle}
-        onSave={handleSave}
-        isPreviewing={isPreviewing}
-        canUndo={canUndo}
-        canRedo={canRedo}
-      />
+      <EditorToolbar />
 
       <div className="flex-1 overflow-auto p-4 bg-[#FAF9F7]">
         <EditorContent

@@ -332,12 +332,21 @@ export class EnhancedTemplateGenerator {
       },
       blocks,
       validation: {
-        required: true,
-        minAnswers: questionData?.minSelections || 1,
-        maxAnswers: questionData?.maxSelections || 3,
-        validationMessage: questionData
-          ? `Selecione ${questionData.minSelections || 3} opções para avançar.`
-          : 'Complete os campos obrigatórios.',
+        requiredFields: ['name'],
+        customValidation: questionData 
+          ? ((data: any) => ({ 
+              isValid: data.selections?.length >= (questionData.minSelections || 1), 
+              errors: data.selections?.length < (questionData.minSelections || 1) 
+                ? [`Selecione ${questionData.minSelections || 3} opções`] 
+                : [] 
+            }))
+          : undefined,
+        // Validation message handled via customValidation above
+      },
+      integrations: {
+        analytics: true,
+        marketing: false,
+        crm: false,
       },
       analytics: {
         trackingId: `enhanced-step-${stepNumber.toString().padStart(2, '0')}`,

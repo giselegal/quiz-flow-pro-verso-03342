@@ -65,21 +65,8 @@ export interface TemplateData {
   };
 }
 
-// ✅ CONVERTER BLOCOS DE TEMPLATE (array de objetos) PARA EDITOR BLOCKS
-function convertStepTemplateToEditorBlocks(templateBlocks: any[]): Block[] {
-  if (!Array.isArray(templateBlocks)) {
-    console.warn('⚠️ Template blocks não é um array:', templateBlocks);
-    return [];
-  }
-
-  return templateBlocks.map((block, index) => ({
-    id: block.id || `block-${index + 1}`,
-    type: block.type || 'text',
-    content: block.content || block.properties || {},
-    order: block.order || index,
-    stageId: block.stageId || 'step-1',
-  }));
-}
+// Functions available for future use if needed
+// convertStepTemplateToEditorBlocks and related functions were commented out
 
 // ✅ CONVERTER ARRAY DE TEMPLATE BLOCKS PARA TEMPLATE DATA
 function convertStepTemplateToTemplateData(

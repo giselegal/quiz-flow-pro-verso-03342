@@ -63,132 +63,76 @@ export interface TemplateData {
     crm?: boolean;
     customCode?: string;
   };
-}
-
-// ✅ CONVERTER BLOCOS DE TEMPLATE (array de objetos) PARA EDITOR BLOCKS
-function convertStepTemplateToEditorBlocks(templateBlocks: any[]): Block[] {
-  if (!Array.isArray(templateBlocks)) {
-    console.warn('⚠️ Template blocks não é um array:', templateBlocks);
-    return [];
-  }
-
-  return templateBlocks.map((block, index) => ({
-    id: block.id || `block-${index + 1}`,
-    type: block.type || 'text',
-    content: block.content || block.properties || {},
-    order: block.order || index,
-    stageId: block.stageId || 'step-1',
-  }));
-}
-
-// ✅ CONVERTER ARRAY DE TEMPLATE BLOCKS PARA TEMPLATE DATA
-function convertStepTemplateToTemplateData(
-  stepNumber: number, 
-  templateBlocks: any[]
-): TemplateData {
-  return {
-    templateVersion: '1.0.0',
-    metadata: {
-      id: `step-${stepNumber.toString().padStart(2, '0')}`,
-      name: `Step ${stepNumber}`,
-      description: `Template para etapa ${stepNumber}`,
-      category: 'quiz',
-      type: 'step',
-      tags: ['quiz', 'step', `step-${stepNumber}`],
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      author: 'Quiz Quest System'
-    },
-    design: {
-      primaryColor: '#6366f1',
-      secondaryColor: '#8b5cf6',
-      accentColor: '#f59e0b',
-      backgroundColor: '#ffffff',
-      fontFamily: 'Inter',
-      button: {},
-      card: {},
-      progressBar: {},
-      animations: {},
-      imageOptionSize: {}
-    },
-    layout: {
-      containerWidth: '100%',
-      spacing: '1rem',
-      backgroundColor: '#ffffff',
-      responsive: true,
-      animations: {}
-    },
-    blocks: templateBlocks.map((block, index) => ({
-      id: block.id || `block-${index + 1}`,
-      type: block.type || 'text',
-      properties: block.content || block.properties || {},
-      children: block.children || []
-    })),
-    validation: {
-      nameField: {
-        required: true,
-        minLength: 2,
-        maxLength: 50
-      },
-      requiredFields: []
-    },
-    integrations: {
-      analytics: true,
-      marketing: false,
-      crm: false
-    }
+  analytics?: {
+    trackingId?: string;
+    events?: string[];
+    utmParams?: boolean;
+    customEvents?: string[];
   };
+  logic?: {
+    navigation?: {
+      nextStep?: string | null;
+      prevStep?: string | null;
+      allowBack?: boolean;
+      autoAdvance?: boolean;
+    };
+    formHandling?: {
+      onSubmit?: string;
+      validation?: string;
+      errorHandling?: string;
+    };
+    stateManagement?: {
+      localState?: string[];
+      globalState?: string[];
+    };
+    scoring?: any;
+    conditions?: any;
+  };
+  performance?: {
+    webVitals?: {
+      markComponentMounted?: boolean;
+      markLcpRendered?: boolean;
+      markUserInteraction?: boolean;
+    };
+    optimizations?: {
+      preloadCriticalImages?: boolean;
+      inlineStyles?: boolean;
+      lazyLoadNonCritical?: boolean;
+      useRequestAnimationFrame?: boolean;
+    };
+  };
+  accessibility?: {
+    skipLinks?: boolean;
+    ariaLabels?: boolean;
+    focusManagement?: boolean;
+    keyboardNavigation?: boolean;
+    screenReader?: boolean;
+  };
+  step?: number;
 }
 
-// Mock STEP_TEMPLATES for type safety
-const STEP_TEMPLATES = {} as Record<number, TemplateData>;
-
-type StepNumber = keyof typeof STEP_TEMPLATES;
-type StepTemplate = (typeof STEP_TEMPLATES)[StepNumber];
-
-function isValidStep(step: number): step is StepNumber {
+// Helper function to validate step numbers
+function isValidStep(step: number): boolean {
   return step >= 1 && step <= 21;
 }
 
 export const templateService = {
   async getTemplates(): Promise<TemplateData[]> {
-    const templates = (Object.entries(STEP_TEMPLATES) as [string, StepTemplate][]).map(
-      ([stepStr, template]) => ({
-        ...template,
-        step: parseInt(stepStr),
-      })
-    );
-
-    return templates;
+    // Return empty array for now
+    return [];
   },
 
-  async getTemplate(id: string): Promise<TemplateData | null> {
-    const step = parseInt(id.replace('step-', ''));
-
-    if (!isValidStep(step)) {
-      return null;
-    }
-
-    const template = STEP_TEMPLATES[step];
-    return {
-      ...template,
-      step,
-    };
+  async getTemplate(_id: string): Promise<TemplateData | null> {
+    // Return null for now
+    return null;
   },
 
-  async searchTemplates(query: string): Promise<TemplateData[]> {
-    const templates = await this.getTemplates();
-    const searchQuery = query.toLowerCase();
-
-    return templates.filter(
-      template =>
-        template.metadata.name.toLowerCase().includes(searchQuery) ||
-        template.metadata.description.toLowerCase().includes(searchQuery) ||
-        template.metadata.tags.some(tag => tag.toLowerCase().includes(searchQuery))
-    );
+  async searchTemplates(_query: string): Promise<TemplateData[]> {
+    // Return empty array for now
+    return [];
   },
 
-  // Nova função para obter template por número da etapa - COM INTEGRAÇÃO JSON STEP01
+  // Nova função para obter template por número da etapa
   async getTemplateByStep(step: number): Promise<TemplateData | null> {
     if (!isValidStep(step)) {
       console.warn(`⚠️ Número da etapa inválido: ${step}`);
@@ -196,7 +140,6 @@ export const templateService = {
     }
 
     try {
-      // ===== TODAS AS STEPS (1-21): USAR SISTEMA JSON CONSOLIDADO =====
       console.log(`🔍 Step${step}: Usando template JSON consolidado`);
       const template = await getStepTemplate(step);
 
@@ -205,23 +148,21 @@ export const templateService = {
         return null;
       }
 
-      // Verificar se ainda está carregando ou se veio vazio
-      if (template.__loading || !template.blocks || template.blocks.length === 0) {
-        console.warn(`⚠️ Template da etapa ${step} ainda carregando ou vazio`);
-        return null; // Retornar null para triggerar fallback
+      // Check if template is valid
+      if (!Array.isArray(template) || template.length === 0) {
+        console.warn(`⚠️ Template da etapa ${step} está vazio`);
+        return null;
       }
 
-      return {
-        ...template,
-        step,
-      };
+      // Return template directly as it comes from getStepTemplate
+      return template as any;
     } catch (error) {
       console.error(`❌ Erro ao carregar template da etapa ${step}:`, error);
       return null;
     }
   },
 
-  // Nova função para converter blocos do template para blocos do editor - CORRIGIDA
+  // Nova função para converter blocos do template para blocos do editor
   convertTemplateBlocksToEditorBlocks(templateBlocks: TemplateBlock[]): Block[] {
     return templateBlocks.map((block, index) => ({
       id: block.id,
