@@ -17,7 +17,8 @@ import { PreviewProvider } from '@/contexts/PreviewContext';
 import { PropertiesPanel } from '@/components/editor/properties/PropertiesPanel';
 
 // Context & Hooks
-import { useEditor } from '@/context/EditorContext';
+import { useEditor, EditorProvider } from '@/context/EditorContext';
+import { FunnelsProvider } from '@/context/FunnelsContext';
 import { useAutoSaveWithDebounce } from '@/hooks/editor/useAutoSaveWithDebounce';
 import { toast } from '@/hooks/use-toast';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
@@ -303,9 +304,15 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
   );
 };
 
-// 🌟 EXPORT WRAPPER - Component com Preview System
+// 🌟 EXPORT WRAPPER - Component com Preview System e FunnelsProvider
 export const EditorWithPreview: React.FC = () => {
-  return <EditorFixedPageWithDragDrop />;
+  return (
+    <EditorProvider>
+      <FunnelsProvider debug={true}>
+        <EditorFixedPageWithDragDrop />
+      </FunnelsProvider>
+    </EditorProvider>
+  );
 };
 
 // ✅ EXPORT DEFAULT
