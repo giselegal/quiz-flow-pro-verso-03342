@@ -9,26 +9,11 @@ import { Route, Router, Switch } from 'wouter';
 // Lazy load das páginas principais para code splitting
 const Home = lazy(() => import("./pages/Home"));
 const AuthPage = lazy(() => import("./pages/AuthPage"));
-const EditorPage = lazy(() => import("./pages/editor-fixed"));
-const TemplatesIA = lazy(() => import("./pages/TemplatesIA"));
-const FunnelsPage = lazy(() => import("./pages/FunnelsPage"));
-const ResultPage = lazy(() => import("./pages/ResultPage"));
-const ResultConfigPage = lazy(() => import("./pages/ResultConfigPage").then(module => ({ default: module.ResultConfigPage })));
-const QuizPageUser = lazy(() => import("./components/QuizPageUser"));
+const EditorPage = lazy(() => import("./pages/editor"));
 const QuizPage = lazy(() => import("./pages/Quiz"));
 
 // Lazy load das páginas admin
-const DashboardPage = lazy(() => import("./pages/admin/DashboardPage"));
-const MigrationPanel = lazy(() => import("./components/admin/MigrationPanel"));
-
-// Lazy load das páginas de debug (apenas em desenvolvimento)
-const DebugEditorContext = lazy(() => import("./pages/debug-editor"));
-const TestButton = lazy(() => import("./pages/test-button"));
-const TestPropertiesPanel = lazy(() => import("./pages/test-properties"));
-const DebugStep02 = lazy(() => import("./components/debug/DebugStep02"));
-const TestAllTemplates = lazy(() => import("./components/debug/TestAllTemplates"));
-const TestOptionsRendering = lazy(() => import("./components/debug/TestOptionsRendering"));
-const TestStep02Direct = lazy(() => import("./components/debug/TestStep02Direct"));
+const DashboardPage = lazy(() => import('./pages/admin/DashboardPage'));
 
 // Loading component
 const PageLoading = () => (
@@ -61,21 +46,21 @@ function App() {
                   <Route path="/admin" component={DashboardPage} />
                   <Route path="/dashboard" component={DashboardPage} />
 
-                  {/* 🎯 EDITOR PRINCIPAL - SchemaDrivenEditor (FUNCIONAL) */}
+                  {/* 🎯 EDITOR PRINCIPAL */}
                   <Route path="/editor">
                     <EditorProvider>
-                      <div className="h-screen w-full">
-                        <SchemaDrivenEditorResponsive />
-                      </div>
+                      <Suspense fallback={<PageLoading />}>
+                        <EditorPage />
+                      </Suspense>
                     </EditorProvider>
                   </Route>
 
-                  {/* 🔧 EDITOR ALTERNATIVO - SchemaDrivenEditor */}
+                  {/* 🔧 EDITOR ALTERNATIVO */}
                   <Route path="/editor-schema">
                     <EditorProvider>
-                      <div className="h-screen w-full">
-                        <SchemaDrivenEditorResponsive />
-                      </div>
+                      <Suspense fallback={<PageLoading />}>
+                        <EditorPage />
+                      </Suspense>
                     </EditorProvider>
                   </Route>
 
@@ -89,54 +74,27 @@ function App() {
                   </Route>
 
                 {/* Admin Routes */}
-                <Route path="/admin" nest>
+                <Route path="/admin">
                   <Suspense fallback={<PageLoading />}>
                     <DashboardPage />
                   </Suspense>
                 </Route>
-                <Route path="/admin/migrate">
-                  {() => (
-                    <Suspense fallback={<PageLoading />}>
-                      <MigrationPanel />
-                    </Suspense>
-                  )}
-                </Route>
 
                 {/* Public Routes */}
                 <Route path="/">
-                  {() => (
-                    <Suspense fallback={<PageLoading />}>
-                      <Home />
-                    </Suspense>
-                  )}
+                  <Suspense fallback={<PageLoading />}>
+                    <Home />
+                  </Suspense>
                 </Route>
                 <Route path="/quiz-modular">
-                  {() => (
-                    <Suspense fallback={<PageLoading />}>
-                      <QuizPage />
-                    </Suspense>
-                  )}
-                </Route>
-                <Route path="/quiz/:id">
-                  {() => (
-                    <Suspense fallback={<PageLoading />}>
-                      <QuizPageUser />
-                    </Suspense>
-                  )}
-                </Route>
-                <Route path="/resultado/:resultId">
-                  {() => (
-                    <Suspense fallback={<PageLoading />}>
-                      <ResultPage />
-                    </Suspense>
-                  )}
+                  <Suspense fallback={<PageLoading />}>
+                    <QuizPage />
+                  </Suspense>
                 </Route>
                 <Route path="/auth">
-                  {() => (
-                    <Suspense fallback={<PageLoading />}>
-                      <AuthPage />
-                    </Suspense>
-                  )}
+                  <Suspense fallback={<PageLoading />}>
+                    <AuthPage />
+                  </Suspense>
                 </Route>
 
                 {/* 🚫 ROTA PADRÃO - 404 */}
