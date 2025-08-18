@@ -47,7 +47,7 @@ const AnimationBlockEditor: React.FC<AnimationBlockEditorProps> = ({ block, onUp
               <SelectValue placeholder="Escolha o tipo de animação" />
             </SelectTrigger>
             <SelectContent>
-              {animationTypes.map(animation => (
+              {animationTypes.filter(animation => animation.value && animation.value !== '').map(animation => (
                 <SelectItem key={animation.value} value={animation.value}>
                   {animation.label}
                 </SelectItem>
@@ -92,7 +92,7 @@ const AnimationBlockEditor: React.FC<AnimationBlockEditorProps> = ({ block, onUp
               <SelectValue placeholder="Escolha quando a animação acontece" />
             </SelectTrigger>
             <SelectContent>
-              {animationTriggers.map(trigger => (
+              {animationTriggers.filter(trigger => trigger.value && trigger.value !== '').map(trigger => (
                 <SelectItem key={trigger.value} value={trigger.value}>
                   {trigger.label}
                 </SelectItem>

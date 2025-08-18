@@ -78,7 +78,7 @@ const QuestionOptionEditor: React.FC<QuestionOptionEditorProps> = ({
                     <SelectValue placeholder="Selecione a categoria" />
                   </SelectTrigger>
                   <SelectContent>
-                    {styleCategories.map(category => (
+                    {styleCategories.filter(category => category.value && category.value !== '').map(category => (
                       <SelectItem key={category.value} value={category.value}>
                         {category.label}
                       </SelectItem>

@@ -588,7 +588,7 @@ export const IntegratedPropertiesPanel: React.FC<IntegratedPropertiesPanelProps>
                     <SelectValue placeholder={`Selecione ${label.toLowerCase()}`} />
                   </SelectTrigger>
                   <SelectContent>
-                    {options?.map((option, optionIdx) => (
+                    {options?.filter(option => option.value && option.value !== '').map((option, optionIdx) => (
                       <SelectItem
                         key={`${option.value}-${optionIdx}`}
                         value={option.value}

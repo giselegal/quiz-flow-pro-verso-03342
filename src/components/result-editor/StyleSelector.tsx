@@ -38,7 +38,7 @@ const StyleSelector: React.FC<StyleSelectorProps> = ({ selectedStyle, onStyleCha
             <SelectValue placeholder="Selecione um estilo" />
           </SelectTrigger>
           <SelectContent>
-            {Object.keys(styleConfig).map(style => (
+            {Object.keys(styleConfig).filter(style => style && style !== '').map(style => (
               <SelectItem key={style} value={style}>
                 {style}
               </SelectItem>

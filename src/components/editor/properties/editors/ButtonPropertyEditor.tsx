@@ -249,7 +249,7 @@ export const ButtonPropertyEditor: React.FC<ButtonPropertyEditorProps> = ({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {buttonTypeOptions.map(option => (
+                  {buttonTypeOptions.filter(option => option.value && option.value !== '').map(option => (
                     <SelectItem key={option.value} value={option.value}>
                       <div className="flex flex-col">
                         <span>{option.label}</span>

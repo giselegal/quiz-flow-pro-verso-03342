@@ -168,7 +168,7 @@ export function StylePropertiesEditor({ style, onUpdate }: StylePropertiesEditor
               <SelectValue placeholder="Selecione o alinhamento" />
             </SelectTrigger>
             <SelectContent>
-              {textAlignOptions.map(option => (
+              {textAlignOptions.filter(option => option.value && option.value !== '').map(option => (
                 <SelectItem key={option.value} value={option.value}>
                   {option.label}
                 </SelectItem>
