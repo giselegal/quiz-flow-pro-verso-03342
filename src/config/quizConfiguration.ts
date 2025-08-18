@@ -3,9 +3,9 @@
 
 export const QUIZ_CONFIGURATION = {
   meta: {
-    name: "Quiz Estilo Pessoal - Template Completo",
-    description: "Modelo completo para quiz de estilo pessoal, pronto para sistemas de moda.",
-    version: "1.2.3",
+    name: "Quiz Estilo Pessoal - Funil Modular",
+    description: "Template modular, cada etapa como componente independente e editável para painéis.",
+    version: "1.4.0",
     author: "giselegal",
   },
   design: {
@@ -19,6 +19,7 @@ export const QUIZ_CONFIGURATION = {
       textColor: "#fff",
       borderRadius: "10px",
       shadow: "0 4px 14px rgba(184, 155, 122, 0.15)",
+      activationRule: "Etapa 1: Ativa após nome preenchido; Etapas 2-11: Ativa após 3 seleções; Etapas estratégicas: Ativa após 1 seleção (com clique manual)",
     },
     card: {
       background: "#fff",
@@ -34,6 +35,11 @@ export const QUIZ_CONFIGURATION = {
       questionTransition: "fade, scale",
       optionSelect: "glow, scale",
       button: "hover:scale-105, active:scale-95",
+      autoAdvance: {
+        enabled: true,
+        stages: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+        description: "Avança automaticamente para próxima etapa após a 3ª seleção",
+      },
     },
     imageOptionSize: {
       default: { width: 256, height: 256, aspect: "square" },
@@ -44,13 +50,29 @@ export const QUIZ_CONFIGURATION = {
         internalMargin: 0,
         containerPadding: 0,
         imageFill: "cover",
-        imageHighlight:
-          "A imagem deve ocupar todo o espaço disponível do grid, sem margens internas, e ser bem destacada.",
+        imageHighlight: "A imagem deve ocupar todo o espaço disponível do grid, sem margens internas, e ser bem destacada.",
         imageSize: { width: 256, height: 256 },
+      },
+    },
+    canvas: {
+      backgroundColor: "#FAF9F7",
+      backgroundColorOptions: ["#FAF9F7", "#fff", "#F3E8E6", "#B89B7A", "#aa6b5d"],
+      scale: 100,
+      scaleMin: 50,
+      scaleMax: 110,
+      scaleSlider: {
+        enabled: true,
+        style: "barra fina e elegante",
+        step: 1,
+      },
+      alignment: {
+        options: ["left", "center", "right", "justify"],
+        default: "center",
       },
     },
   },
   order: [
+    "quiz-intro-header",
     "intro",
     "questions",
     "mainTransition",
@@ -58,6 +80,90 @@ export const QUIZ_CONFIGURATION = {
     "finalTransition",
     "result",
   ],
+  components: {
+    "quiz-intro-header": {
+      defaultEnabled: true,
+      props: {
+        enabled: { type: "boolean", editable: true, default: true },
+        showLogo: { type: "boolean", editable: true, default: true },
+        showBar: { type: "boolean", editable: true, default: true },
+        onlyLogo: { type: "boolean", editable: true, default: false },
+        onlyBar: { type: "boolean", editable: true, default: false },
+        logoUpload: { type: "string", editable: true, format: "image-url" },
+        barColor: {
+          type: "string",
+          editable: true,
+          format: "color-picker",
+          palette: ["#B89B7A", "#aa6b5d", "#432818", "#F3E8E6", "#fff"],
+        },
+        alignment: {
+          type: "string",
+          editable: true,
+          options: ["left", "center", "right"],
+          default: "center",
+        },
+      },
+    },
+    Intro: {
+      props: {
+        title: { type: "string", editable: true },
+        descriptionTop: { type: "string", editable: true },
+        imageIntro: { type: "string", editable: true },
+        descriptionBottom: { type: "string", editable: true },
+        inputType: { type: "string", editable: true, options: ["text", "email"] },
+        inputLabel: { type: "string", editable: true },
+        inputPlaceholder: { type: "string", editable: true },
+        buttonText: { type: "string", editable: true },
+        required: { type: "boolean", editable: true },
+        validation: {
+          minLength: { type: "number", editable: true },
+          errorMessage: { type: "string", editable: true },
+        },
+        privacyText: { type: "string", editable: true },
+        footerText: { type: "string", editable: true },
+        buttonActivationRule: {
+          type: "string",
+          editable: false,
+          value: "Ativa apenas após o usuário preencher o nome",
+        },
+      },
+    },
+    QuestionGroup: {
+      props: {
+        title: { type: "string", editable: true },
+        description: { type: "string", editable: true },
+        progressBar: {
+          show: { type: "boolean", editable: true },
+          color: { type: "string", editable: true },
+          background: { type: "string", editable: true },
+          height: { type: "string", editable: true },
+        },
+        animations: {
+          transition: { type: "string", editable: true },
+          optionSelect: { type: "string", editable: true },
+        },
+        rules: {
+          multiSelect: { type: "number", editable: true, default: 3 },
+          colunas: { type: "number", editable: true, default: 2 },
+          buttonActivation: { type: "string", editable: false, value: "Ativa após 3 seleções obrigatórias" },
+          autoAdvance: { type: "boolean", editable: true, default: true },
+          errorMessage: { type: "string", editable: true },
+        },
+        layout: {
+          type: "string",
+          editable: true,
+          options: ["1col", "2col"],
+          default: "2col",
+        },
+        direction: {
+          type: "string",
+          editable: true,
+          options: ["horizontal", "vertical"],
+          default: "vertical",
+        },
+      },
+    },
+  },
   steps: [
     {
       type: "intro",

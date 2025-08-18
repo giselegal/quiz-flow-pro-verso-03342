@@ -46,6 +46,10 @@ import ResultStyleCardBlock from "../components/blocks/inline/ResultStyleCardBlo
 // Componentes Step01
 import { IntroBlock } from "../components/steps/step01/IntroBlock";
 
+// Componentes Quiz Modular
+import QuizRenderer from "../components/quiz/QuizRenderer";
+import QuizQuestionBlock from "../components/editor/quiz/QuizQuestionBlock";
+
 // === REGISTRY PRINCIPAL - SEM DUPLICATAS ===
 
 export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> = {
@@ -89,6 +93,10 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> =
   "result-style-card": ResultStyleCardBlock, // step-21
   "bonus-showcase": BonusShowcaseBlock,     // ofertas especiais
   "loading-animation": LoadingAnimationBlock, // transições
+
+  // ✅ COMPONENTES QUIZ MODULAR
+  "quiz-renderer": QuizRenderer,            // Renderizador completo do quiz modular
+  "quiz-question": QuizQuestionBlock,       // Bloco de questão do quiz
 
   // ✅ COMPONENTES LEGACY (COMPATIBILIDADE)
   text: TextInline,
@@ -135,6 +143,11 @@ export const getBlockComponent = (type: string): React.ComponentType<any> | null
     "intro": "step01-intro",
     "form": "form-input",
     "options": "options-grid",
+    
+    // Quiz modular
+    "quiz": "quiz-renderer",
+    "modular-quiz": "quiz-renderer",
+    "question-block": "quiz-question",
     
     // Tipos estruturais → componentes visuais
     "question": "text-inline",
@@ -257,6 +270,28 @@ export const generateBlockDefinitions = (): BlockDefinition[] => {
       description: "Barra decorativa colorida",
       component: DecorativeBarInline,
       label: "Barra Decorativa",
+      properties: {},
+      defaultProps: {},
+    },
+    {
+      type: "quiz-renderer",
+      name: "Quiz Modular",
+      icon: Type,
+      category: "quiz",
+      description: "Renderizador completo do quiz modular",
+      component: QuizRenderer,
+      label: "Quiz Modular",
+      properties: {},
+      defaultProps: {},
+    },
+    {
+      type: "quiz-question",
+      name: "Questão Quiz",
+      icon: MousePointer,
+      category: "quiz",
+      description: "Bloco de questão do quiz",
+      component: QuizQuestionBlock,
+      label: "Questão Quiz",
       properties: {},
       defaultProps: {},
     },

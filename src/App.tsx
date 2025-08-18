@@ -18,6 +18,7 @@ const FunnelsPage = lazy(() => import("./pages/FunnelsPage"));
 const ResultPage = lazy(() => import("./pages/ResultPage"));
 const ResultConfigPage = lazy(() => import("./pages/ResultConfigPage").then(module => ({ default: module.ResultConfigPage })));
 const QuizPageUser = lazy(() => import("./components/QuizPageUser"));
+const QuizPage = lazy(() => import("./pages/Quiz"));
 
 // Lazy load das páginas admin
 const DashboardPage = lazy(() => import("./pages/admin/DashboardPage"));
@@ -181,6 +182,13 @@ function App() {
                   {() => (
                     <Suspense fallback={<PageLoading />}>
                       <Home />
+                    </Suspense>
+                  )}
+                </Route>
+                <Route path="/quiz-modular">
+                  {() => (
+                    <Suspense fallback={<PageLoading />}>
+                      <QuizPage />
                     </Suspense>
                   )}
                 </Route>
