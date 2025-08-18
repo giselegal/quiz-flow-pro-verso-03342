@@ -125,6 +125,7 @@ const CanvasSettings: React.FC<CanvasSettingsProps> = ({
               <SelectContent>
                 {Object.entries(viewportSizes).map(([key, config]) => {
                   const IconComponent = config.icon;
+                  if (!key || key === '') return null;
                   return (
                     <SelectItem key={key} value={key}>
                       <div className="flex items-center gap-2">

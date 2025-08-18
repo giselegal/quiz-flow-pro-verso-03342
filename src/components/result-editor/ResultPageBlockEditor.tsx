@@ -392,7 +392,7 @@ export const ResultPageBlockEditor: React.FC<ResultPageBlockEditorProps> = ({
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">Todas as variantes</SelectItem>
-                    {abTestVariants.map(variant => (
+                    {abTestVariants.filter(variant => variant && variant !== '').map(variant => (
                       <SelectItem key={variant} value={variant}>
                         {variant}
                       </SelectItem>

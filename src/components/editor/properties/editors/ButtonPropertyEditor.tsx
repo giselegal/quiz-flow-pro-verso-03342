@@ -268,7 +268,7 @@ export const ButtonPropertyEditor: React.FC<ButtonPropertyEditorProps> = ({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {sizeOptions.map(option => (
+                  {sizeOptions.filter(option => option.value && option.value !== '').map(option => (
                     <SelectItem key={option.value} value={option.value}>
                       {option.label}
                     </SelectItem>
@@ -361,7 +361,7 @@ export const ButtonPropertyEditor: React.FC<ButtonPropertyEditorProps> = ({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {iconOptions.map(option => (
+                  {iconOptions.filter(option => option.value && option.value !== '').map(option => (
                     <SelectItem key={option.value} value={option.value}>
                       <div className="flex items-center gap-2">
                         {option.icon && <option.icon className="h-4 w-4" />}
@@ -547,7 +547,7 @@ export const ButtonPropertyEditor: React.FC<ButtonPropertyEditorProps> = ({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {animationOptions.map(option => (
+                  {animationOptions.filter(option => option.value && option.value !== '').map(option => (
                     <SelectItem key={option.value} value={option.value}>
                       {option.label}
                     </SelectItem>

@@ -266,7 +266,7 @@ export const TestimonialPropertyEditor: React.FC<TestimonialPropertyEditorProps>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                {layoutOptions.map(option => (
+                {layoutOptions.filter(option => option.value && option.value !== '').map(option => (
                   <SelectItem key={option.value} value={option.value}>
                     <div className="flex flex-col">
                       <span>{option.label}</span>

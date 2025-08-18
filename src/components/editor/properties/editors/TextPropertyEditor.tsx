@@ -193,7 +193,7 @@ export const TextPropertyEditor: React.FC<TextPropertyEditorProps> = ({
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                {textTypeOptions.map(option => (
+                {textTypeOptions.filter(option => option.value && option.value !== '').map(option => (
                   <SelectItem key={option.value} value={option.value}>
                     {option.label}
                   </SelectItem>
@@ -225,7 +225,7 @@ export const TextPropertyEditor: React.FC<TextPropertyEditorProps> = ({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {fontWeightOptions.map(option => (
+                  {fontWeightOptions.filter(option => option.value && option.value !== '').map(option => (
                     <SelectItem key={option.value} value={option.value}>
                       {option.label}
                     </SelectItem>

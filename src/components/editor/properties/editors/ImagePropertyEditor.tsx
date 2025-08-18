@@ -152,7 +152,7 @@ export const ImagePropertyEditor: React.FC<ImagePropertyEditorProps> = ({
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                {fitOptions.map(opt => (
+                {fitOptions.filter(opt => opt.value && opt.value !== '').map(opt => (
                   <SelectItem key={opt.value} value={opt.value}>
                     {opt.label}
                   </SelectItem>

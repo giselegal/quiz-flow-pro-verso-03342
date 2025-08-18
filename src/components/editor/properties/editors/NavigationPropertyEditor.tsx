@@ -317,7 +317,7 @@ export const NavigationPropertyEditor: React.FC<NavigationPropertyEditorProps> =
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          {iconOptions.map(option => (
+                          {iconOptions.filter(option => option.value && option.value !== '').map(option => (
                             <SelectItem key={option.value} value={option.value}>
                               <div className="flex items-center gap-2">
                                 {option.icon && <option.icon className="h-3 w-3" />}
@@ -420,7 +420,7 @@ export const NavigationPropertyEditor: React.FC<NavigationPropertyEditorProps> =
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {layoutOptions.map(option => (
+                  {layoutOptions.filter(option => option.value && option.value !== '').map(option => (
                     <SelectItem key={option.value} value={option.value}>
                       {option.label}
                     </SelectItem>
@@ -440,7 +440,7 @@ export const NavigationPropertyEditor: React.FC<NavigationPropertyEditorProps> =
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {alignmentOptions.map(option => (
+                  {alignmentOptions.filter(option => option.value && option.value !== '').map(option => (
                     <SelectItem key={option.value} value={option.value}>
                       {option.label}
                     </SelectItem>
@@ -461,7 +461,7 @@ export const NavigationPropertyEditor: React.FC<NavigationPropertyEditorProps> =
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {dropdownStyleOptions.map(option => (
+                  {dropdownStyleOptions.filter(option => option.value && option.value !== '').map(option => (
                     <SelectItem key={option.value} value={option.value}>
                       {option.label}
                     </SelectItem>
