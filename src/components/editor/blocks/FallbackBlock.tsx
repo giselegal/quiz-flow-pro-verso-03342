@@ -64,6 +64,11 @@ const FallbackBlock: React.FC<BlockComponentProps & { blockType?: string }> = ({
   blockType,
   className = '',
 }) => {
+  const marginTop = block.properties?.marginTop || 0;
+  const marginBottom = block.properties?.marginBottom || 0;
+  const marginLeft = block.properties?.marginLeft || 0;
+  const marginRight = block.properties?.marginRight || 0;
+
   const handleClick = () => {
     if (onClick) {
       onClick();

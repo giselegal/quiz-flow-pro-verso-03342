@@ -103,6 +103,11 @@ const CTAInlineBlock: React.FC<BlockComponentProps> = ({
     clickAction = 'redirect',
     redirectUrl = '#',
     conversionValue = 100,
+    // Sistema de margens
+    marginTop = 0,
+    marginBottom = 0,
+    marginLeft = 0,
+    marginRight = 0,
   } = block.properties || {};
 
   const [isLoading, setIsLoading] = useState(false);

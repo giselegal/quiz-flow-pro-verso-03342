@@ -54,6 +54,10 @@ const BasicTextBlock: React.FC<BlockComponentProps> = ({
   className = '',
 }) => {
   const text = block.properties?.content || 'Adicione seu texto aqui';
+  const marginTop = block.properties?.marginTop || 0;
+  const marginBottom = block.properties?.marginBottom || 0;
+  const marginLeft = block.properties?.marginLeft || 0;
+  const marginRight = block.properties?.marginRight || 0;
 
   return (
     <div
