@@ -1,6 +1,6 @@
 /**
  * 🎨 SISTEMA DE TEMAS PARA QUIZ INTERATIVO
- * 
+ *
  * Refinamentos visuais e de UX para diferentes contextos
  */
 
@@ -20,16 +20,16 @@ export const QUIZ_THEMES = {
       background: 'bg-gray-50',
       surface: 'bg-white',
       text: 'text-gray-800',
-      textSecondary: 'text-gray-600'
+      textSecondary: 'text-gray-600',
     },
     spacing: {
       container: 'max-w-4xl mx-auto px-4',
       section: 'mb-8',
-      element: 'mb-4'
+      element: 'mb-4',
     },
     borderRadius: 'rounded-lg',
     shadows: 'shadow-lg',
-    animations: 'transition-all duration-300'
+    animations: 'transition-all duration-300',
   },
 
   elegant: {
@@ -45,16 +45,16 @@ export const QUIZ_THEMES = {
       background: 'bg-slate-50',
       surface: 'bg-white',
       text: 'text-slate-900',
-      textSecondary: 'text-slate-600'
+      textSecondary: 'text-slate-600',
     },
     spacing: {
       container: 'max-w-3xl mx-auto px-6',
       section: 'mb-12',
-      element: 'mb-6'
+      element: 'mb-6',
     },
     borderRadius: 'rounded-xl',
     shadows: 'shadow-2xl',
-    animations: 'transition-all duration-500'
+    animations: 'transition-all duration-500',
   },
 
   modern: {
@@ -70,16 +70,16 @@ export const QUIZ_THEMES = {
       background: 'bg-gradient-to-br from-purple-50 to-pink-50',
       surface: 'bg-white/80 backdrop-blur-sm',
       text: 'text-gray-900',
-      textSecondary: 'text-gray-700'
+      textSecondary: 'text-gray-700',
     },
     spacing: {
       container: 'max-w-5xl mx-auto px-4',
       section: 'mb-10',
-      element: 'mb-5'
+      element: 'mb-5',
     },
     borderRadius: 'rounded-2xl',
     shadows: 'shadow-xl',
-    animations: 'transition-all duration-300 ease-out'
+    animations: 'transition-all duration-300 ease-out',
   },
 
   minimal: {
@@ -95,16 +95,16 @@ export const QUIZ_THEMES = {
       background: 'bg-white',
       surface: 'bg-gray-50',
       text: 'text-black',
-      textSecondary: 'text-gray-500'
+      textSecondary: 'text-gray-500',
     },
     spacing: {
       container: 'max-w-2xl mx-auto px-4',
       section: 'mb-16',
-      element: 'mb-8'
+      element: 'mb-8',
     },
     borderRadius: 'rounded-none',
     shadows: 'shadow-sm',
-    animations: 'transition-opacity duration-200'
+    animations: 'transition-opacity duration-200',
   },
 
   colorful: {
@@ -120,17 +120,17 @@ export const QUIZ_THEMES = {
       background: 'bg-gradient-to-br from-yellow-50 via-pink-50 to-blue-50',
       surface: 'bg-white',
       text: 'text-gray-900',
-      textSecondary: 'text-gray-700'
+      textSecondary: 'text-gray-700',
     },
     spacing: {
       container: 'max-w-4xl mx-auto px-4',
       section: 'mb-8',
-      element: 'mb-4'
+      element: 'mb-4',
     },
     borderRadius: 'rounded-3xl',
     shadows: 'shadow-2xl',
-    animations: 'transition-all duration-500 ease-bounce'
-  }
+    animations: 'transition-all duration-500 ease-bounce',
+  },
 };
 
 /**
@@ -143,29 +143,29 @@ export const ANIMATION_CONFIGS = {
     enterTo: 'opacity-100 translate-x-0',
     leave: 'transform transition-all duration-300 ease-in',
     leaveFrom: 'opacity-100 translate-x-0',
-    leaveTo: 'opacity-0 -translate-x-8'
+    leaveTo: 'opacity-0 -translate-x-8',
   },
 
   fadeIn: {
     enter: 'transition-opacity duration-300',
     enterFrom: 'opacity-0',
-    enterTo: 'opacity-100'
+    enterTo: 'opacity-100',
   },
 
   slideUp: {
     enter: 'transform transition-all duration-400 ease-out',
     enterFrom: 'opacity-0 translate-y-4',
-    enterTo: 'opacity-100 translate-y-0'
+    enterTo: 'opacity-100 translate-y-0',
   },
 
   bounce: {
     enter: 'transition-transform duration-300 ease-out',
-    action: 'hover:scale-105 active:scale-95'
+    action: 'hover:scale-105 active:scale-95',
   },
 
   pulse: {
-    action: 'animate-pulse'
-  }
+    action: 'animate-pulse',
+  },
 };
 
 /**
@@ -176,7 +176,7 @@ export const COLOR_PALETTES = {
   creative: ['#7c3aed', '#a855f7', '#c084fc', '#d8b4fe', '#f3e8ff'],
   nature: ['#059669', '#10b981', '#34d399', '#6ee7b7', '#d1fae5'],
   warm: ['#dc2626', '#ef4444', '#f87171', '#fca5a5', '#fecaca'],
-  elegant: ['#374151', '#6b7280', '#9ca3af', '#d1d5db', '#f9fafb']
+  elegant: ['#374151', '#6b7280', '#9ca3af', '#d1d5db', '#f9fafb'],
 };
 
 /**
@@ -188,21 +188,21 @@ export const RESPONSIVE_CONFIGS = {
     text: {
       title: 'text-2xl',
       subtitle: 'text-lg',
-      body: 'text-base'
+      body: 'text-base',
     },
     spacing: 'space-y-4',
-    button: 'py-3 px-6 text-base'
+    button: 'py-3 px-6 text-base',
   },
 
   tablet: {
     container: 'px-6',
     text: {
       title: 'text-3xl',
-      subtitle: 'text-xl', 
-      body: 'text-lg'
+      subtitle: 'text-xl',
+      body: 'text-lg',
     },
     spacing: 'space-y-6',
-    button: 'py-3 px-8 text-lg'
+    button: 'py-3 px-8 text-lg',
   },
 
   desktop: {
@@ -210,11 +210,11 @@ export const RESPONSIVE_CONFIGS = {
     text: {
       title: 'text-4xl',
       subtitle: 'text-2xl',
-      body: 'text-xl'
+      body: 'text-xl',
     },
     spacing: 'space-y-8',
-    button: 'py-4 px-10 text-xl'
-  }
+    button: 'py-4 px-10 text-xl',
+  },
 };
 
 /**
@@ -225,17 +225,17 @@ export const ACCESSIBILITY_CONFIGS = {
   highContrast: {
     text: 'text-gray-900',
     background: 'bg-white',
-    border: 'border-gray-900'
+    border: 'border-gray-900',
   },
   keyboard: {
     navigation: 'focus:outline-none focus:ring-2 focus:ring-offset-2',
-    skip: 'sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4'
+    skip: 'sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4',
   },
   screenReader: {
     hidden: 'sr-only',
     describe: 'aria-describedby',
-    label: 'aria-label'
-  }
+    label: 'aria-label',
+  },
 };
 
 /**
@@ -245,23 +245,23 @@ export const SPECIAL_EFFECTS = {
   confetti: {
     trigger: 'quiz-complete',
     duration: 3000,
-    colors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff']
+    colors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff'],
   },
 
   progressGlow: {
     class: 'animate-pulse bg-gradient-to-r from-blue-400 to-purple-500',
-    duration: 1000
+    duration: 1000,
   },
 
   successPulse: {
     class: 'animate-bounce text-green-500',
-    duration: 500
+    duration: 500,
   },
 
   errorShake: {
     class: 'animate-shake text-red-500',
-    duration: 300
-  }
+    duration: 300,
+  },
 };
 
 /**
@@ -275,8 +275,8 @@ export const SOUND_CONFIGS = {
     success: '/sounds/success.mp3',
     error: '/sounds/error.mp3',
     complete: '/sounds/complete.mp3',
-    transition: '/sounds/transition.mp3'
-  }
+    transition: '/sounds/transition.mp3',
+  },
 };
 
 /**
@@ -284,7 +284,7 @@ export const SOUND_CONFIGS = {
  */
 export function useQuizTheme(themeName: QuizTheme = 'default') {
   const theme = QUIZ_THEMES[themeName];
-  
+
   return {
     theme,
     getClass: (element: keyof typeof theme.colors | keyof typeof theme) => {
@@ -297,7 +297,7 @@ export function useQuizTheme(themeName: QuizTheme = 'default') {
       element.style.setProperty('--quiz-primary', theme.colors.primary);
       element.style.setProperty('--quiz-background', theme.colors.background);
       // Adicionar mais propriedades CSS customizadas conforme necessário
-    }
+    },
   };
 }
 
@@ -316,21 +316,21 @@ export class QuizStyleManager {
   getButtonClass(variant: 'primary' | 'secondary' | 'success' | 'error' = 'primary'): string {
     const themeConfig = QUIZ_THEMES[this.theme];
     const responsiveConfig = RESPONSIVE_CONFIGS[this.device];
-    
+
     const baseClasses = [
       responsiveConfig.button,
       themeConfig.borderRadius,
       themeConfig.animations,
       'font-medium',
       'focus:outline-none',
-      ACCESSIBILITY_CONFIGS.focusRing
+      ACCESSIBILITY_CONFIGS.focusRing,
     ];
 
     const variantClasses = {
       primary: [themeConfig.colors.primary, themeConfig.colors.primaryHover, 'text-white'],
       secondary: [themeConfig.colors.secondary, 'hover:bg-gray-200', 'text-gray-800'],
       success: [themeConfig.colors.success, 'hover:opacity-90', 'text-white'],
-      error: [themeConfig.colors.error, 'hover:opacity-90', 'text-white']
+      error: [themeConfig.colors.error, 'hover:opacity-90', 'text-white'],
     };
 
     return [...baseClasses, ...variantClasses[variant]].join(' ');
@@ -339,24 +339,24 @@ export class QuizStyleManager {
   getContainerClass(): string {
     const themeConfig = QUIZ_THEMES[this.theme];
     const responsiveConfig = RESPONSIVE_CONFIGS[this.device];
-    
+
     return [
       themeConfig.spacing.container,
       responsiveConfig.container,
       themeConfig.colors.background,
-      'min-h-screen'
+      'min-h-screen',
     ].join(' ');
   }
 
   getCardClass(): string {
     const themeConfig = QUIZ_THEMES[this.theme];
-    
+
     return [
       themeConfig.colors.surface,
       themeConfig.borderRadius,
       themeConfig.shadows,
       'p-6',
-      themeConfig.spacing.element
+      themeConfig.spacing.element,
     ].join(' ');
   }
 }

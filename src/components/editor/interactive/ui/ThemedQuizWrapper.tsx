@@ -1,11 +1,7 @@
 import React from 'react';
 import { InteractiveQuizCanvas } from '../InteractiveQuizCanvas';
-import { 
-  QuizCard, 
-  QuizButton, 
-  QuizAnimationWrapper 
-} from '../ui/StyledComponents';
-import { QuizTheme, QUIZ_THEMES, QuizStyleManager } from '../styles/QuizThemes';
+import { QUIZ_THEMES, QuizStyleManager, QuizTheme } from '../styles/QuizThemes';
+import { QuizAnimationWrapper, QuizButton, QuizCard } from '../ui/StyledComponents';
 
 interface ThemedQuizWrapperProps {
   theme?: QuizTheme;
@@ -15,13 +11,13 @@ interface ThemedQuizWrapperProps {
 
 /**
  * 🎨 WRAPPER TEMÁTICO PARA QUIZ INTERATIVO
- * 
+ *
  * Aplica temas visuais ao InteractiveQuizCanvas
  */
-export const ThemedQuizWrapper: React.FC<ThemedQuizWrapperProps> = ({ 
+export const ThemedQuizWrapper: React.FC<ThemedQuizWrapperProps> = ({
   theme = 'default',
   onThemeChange,
-  onClose 
+  onClose,
 }) => {
   const styleManager = new QuizStyleManager(theme);
   const themeConfig = QUIZ_THEMES[theme];
@@ -34,19 +30,17 @@ export const ThemedQuizWrapper: React.FC<ThemedQuizWrapperProps> = ({
           <QuizCard theme={theme} variant="glass" className="mb-6">
             <div className="flex justify-between items-center">
               <div>
-                <h1 className="text-2xl font-bold mb-1">
-                  🎯 Quiz Interativo
-                </h1>
+                <h1 className="text-2xl font-bold mb-1">🎯 Quiz Interativo</h1>
                 <p className="text-sm text-gray-600">
                   Tema: {themeConfig.name} - {themeConfig.description}
                 </p>
               </div>
-              
+
               <div className="flex items-center space-x-4">
                 {onThemeChange && (
                   <select
                     value={theme}
-                    onChange={(e) => onThemeChange(e.target.value as QuizTheme)}
+                    onChange={e => onThemeChange(e.target.value as QuizTheme)}
                     className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     {Object.entries(QUIZ_THEMES).map(([key, config]) => (
@@ -56,13 +50,9 @@ export const ThemedQuizWrapper: React.FC<ThemedQuizWrapperProps> = ({
                     ))}
                   </select>
                 )}
-                
+
                 {onClose && (
-                  <QuizButton
-                    variant="secondary"
-                    onClick={onClose}
-                    theme={theme}
-                  >
+                  <QuizButton variant="secondary" onClick={onClose} theme={theme}>
                     ✕ Fechar
                   </QuizButton>
                 )}
@@ -72,10 +62,7 @@ export const ThemedQuizWrapper: React.FC<ThemedQuizWrapperProps> = ({
 
           {/* Canvas do Quiz com tema aplicado */}
           <QuizCard theme={theme} variant="elevated">
-            <InteractiveQuizCanvas 
-              className={`quiz-canvas theme-${theme}`}
-              theme={theme}
-            />
+            <InteractiveQuizCanvas className={`quiz-canvas theme-${theme}`} theme={theme} />
           </QuizCard>
         </div>
       </QuizAnimationWrapper>

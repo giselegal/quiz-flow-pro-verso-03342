@@ -9,25 +9,27 @@
 ## 🔄 **SITUAÇÃO ATUAL DO PREVIEW**
 
 ### ❌ **Preview Limitado Atual**
+
 ```tsx
 // ATUAL - CanvasDropZone.tsx
 const { isPreviewing } = useEditor();
 
 // Preview básico apenas no canvas
-{isPreviewing ? (
-  <div className="preview-mode">
-    {blocks.map(block => (
-      <StaticBlockRenderer block={block} />
-    ))}
-  </div>
-) : (
-  <div className="edit-mode">
-    {/* Modo edição */}
-  </div>
-)}
+{
+  isPreviewing ? (
+    <div className="preview-mode">
+      {blocks.map(block => (
+        <StaticBlockRenderer block={block} />
+      ))}
+    </div>
+  ) : (
+    <div className="edit-mode">{/* Modo edição */}</div>
+  );
+}
 ```
 
 ### 🚨 **Problemas do Preview Atual:**
+
 - ❌ **Não usa TemplateRenderer** - Preview diferente da produção
 - ❌ **Sem contexto de quiz** - Falta dados reais
 - ❌ **Sem navegação entre steps** - Preview estático
@@ -46,23 +48,22 @@ import { TemplateRenderer } from '@/components/templates/TemplateRenderer';
 import { useEditor } from '@/context/EditorContext';
 
 const EditorToTemplateRenderer = memo(() => {
-  const { 
-    activeStageId, 
-    currentBlocks, 
-    quizState 
-  } = useEditor();
+  const { activeStageId, currentBlocks, quizState } = useEditor();
 
   // Converter blocos do editor para formato de template
-  const convertedTemplate = useMemo(() => ({
-    stepNumber: parseInt(activeStageId),
-    sessionId: 'editor-preview',
-    components: currentBlocks.map(block => ({
-      type: block.type,
-      data: block.data,
-      properties: block.properties,
-      style: block.style
-    }))
-  }), [activeStageId, currentBlocks]);
+  const convertedTemplate = useMemo(
+    () => ({
+      stepNumber: parseInt(activeStageId),
+      sessionId: 'editor-preview',
+      components: currentBlocks.map(block => ({
+        type: block.type,
+        data: block.data,
+        properties: block.properties,
+        style: block.style,
+      })),
+    }),
+    [activeStageId, currentBlocks]
+  );
 
   return (
     <TemplateRenderer
@@ -80,21 +81,21 @@ const EditorToTemplateRenderer = memo(() => {
 
 ```tsx
 // ✅ MELHORADO: TemplateRenderer.tsx
-export const TemplateRenderer = ({ 
-  stepNumber, 
-  sessionId, 
-  editorData, 
-  isEditorPreview = false 
+export const TemplateRenderer = ({
+  stepNumber,
+  sessionId,
+  editorData,
+  isEditorPreview = false,
 }) => {
   const { quizState } = useEditor();
-  
+
   // Mode: EDITOR PREVIEW ou PRODUCTION
   if (isEditorPreview && editorData) {
     // ✅ USAR DADOS DO EDITOR EM TEMPO REAL
     return (
       <div className="template-preview-mode">
         <TemplateHeader stepNumber={stepNumber} />
-        
+
         <div className="template-content">
           {editorData.components.map((component, index) => (
             <DynamicComponentRenderer
@@ -110,8 +111,8 @@ export const TemplateRenderer = ({
             />
           ))}
         </div>
-        
-        <TemplateNavigation 
+
+        <TemplateNavigation
           currentStep={stepNumber}
           totalSteps={21}
           onNext={() => console.log('Preview navigation')}
@@ -121,12 +122,7 @@ export const TemplateRenderer = ({
   }
 
   // Modo produção normal
-  return (
-    <ConnectedTemplateRenderer 
-      stepNumber={stepNumber}
-      sessionId={sessionId}
-    />
-  );
+  return <ConnectedTemplateRenderer stepNumber={stepNumber} sessionId={sessionId} />;
 };
 ```
 
@@ -138,35 +134,25 @@ import React, { memo, Suspense } from 'react';
 import { FixedSizeList as List } from 'react-window';
 
 const VirtualizedCanvasWithPreview = memo(() => {
-  const { 
-    isPreviewing, 
-    currentBlocks, 
-    activeStageId,
-    viewportSize 
-  } = useEditor();
+  const { isPreviewing, currentBlocks, activeStageId, viewportSize } = useEditor();
 
   // ✅ PREVIEW MODO: TemplateRenderer identico à produção
   if (isPreviewing) {
     return (
       <div className="preview-container">
         <PreviewModeSelector />
-        
+
         <Suspense fallback={<PreviewLoadingSkeleton />}>
           <EditorToTemplateRenderer />
         </Suspense>
-        
+
         <PreviewControls />
       </div>
     );
   }
 
   // ✅ EDIT MODO: Canvas virtualizado otimizado
-  return (
-    <VirtualizedEditCanvas 
-      blocks={currentBlocks}
-      viewportSize={viewportSize}
-    />
-  );
+  return <VirtualizedEditCanvas blocks={currentBlocks} viewportSize={viewportSize} />;
 });
 ```
 
@@ -188,7 +174,7 @@ const PreviewControls = memo(() => {
 
       {/* Step Navigation */}
       <div className="step-controls">
-        <Button 
+        <Button
           onClick={() => stageActions.setActiveStage('1')}
           variant={activeStageId === '1' ? 'default' : 'outline'}
         >
@@ -199,12 +185,8 @@ const PreviewControls = memo(() => {
 
       {/* Preview Options */}
       <div className="preview-options">
-        <Button onClick={() => openFullScreenPreview()}>
-          🔍 Full Screen
-        </Button>
-        <Button onClick={() => generatePreviewURL()}>
-          🔗 Share Preview
-        </Button>
+        <Button onClick={() => openFullScreenPreview()}>🔍 Full Screen</Button>
+        <Button onClick={() => generatePreviewURL()}>🔗 Share Preview</Button>
       </div>
     </div>
   );
@@ -216,16 +198,14 @@ const PreviewControls = memo(() => {
 ## 🎯 **VANTAGENS DO PREVIEW OTIMIZADO**
 
 ### ✅ **1. IDENTICO À PRODUÇÃO**
+
 ```tsx
 // ✅ Mesmo componente, mesmos dados
-<TemplateRenderer 
-  stepNumber={activeStageId}
-  isEditorPreview={true}
-  editorData={convertedBlocks}
-/>
+<TemplateRenderer stepNumber={activeStageId} isEditorPreview={true} editorData={convertedBlocks} />
 ```
 
 ### ✅ **2. TEMPO REAL**
+
 ```tsx
 // ✅ Mudanças no editor refletem instantaneamente
 const [debouncedBlocks] = useDebouncedValue(currentBlocks, 300);
@@ -237,23 +217,25 @@ useEffect(() => {
 ```
 
 ### ✅ **3. CONTEXTO COMPLETO**
+
 ```tsx
 // ✅ Acesso a todos os dados do quiz
 const previewContext = {
   userName: quizState.userName,
   answers: quizState.answers,
   currentStep: activeStageId,
-  isPreview: true
+  isPreview: true,
 };
 ```
 
 ### ✅ **4. MULTI-DEVICE**
+
 ```tsx
 // ✅ Preview responsivo real
 const devicePreviews = {
   mobile: { width: 375, height: 667 },
   tablet: { width: 768, height: 1024 },
-  desktop: { width: 1920, height: 1080 }
+  desktop: { width: 1920, height: 1080 },
 };
 ```
 
@@ -294,6 +276,7 @@ const devicePreviews = {
 ## 🎯 **IMPLEMENTAÇÃO PRÁTICA**
 
 ### **📅 SEMANA 1: Bridge System**
+
 ```tsx
 ✅ EditorToTemplateRenderer.tsx
 ✅ TemplateRenderer preview mode
@@ -301,6 +284,7 @@ const devicePreviews = {
 ```
 
 ### **📅 SEMANA 2: Preview Controls**
+
 ```tsx
 ✅ PreviewControls.tsx
 ✅ Device preview modes
@@ -308,6 +292,7 @@ const devicePreviews = {
 ```
 
 ### **📅 SEMANA 3: Real-time Sync**
+
 ```tsx
 ✅ Debounced preview updates
 ✅ Context synchronization
@@ -315,6 +300,7 @@ const devicePreviews = {
 ```
 
 ### **📅 SEMANA 4: Polish & Test**
+
 ```tsx
 ✅ Performance optimization
 ✅ Preview URL generation
@@ -326,6 +312,7 @@ const devicePreviews = {
 ## 🏆 **RESULTADO FINAL**
 
 ### ✅ **PREVIEW PERFEITO:**
+
 - 🎯 **100% IDENTICO À PRODUÇÃO** - Usa TemplateRenderer real
 - ⚡ **TEMPO REAL** - Mudanças refletem instantaneamente
 - 📱 **MULTI-DEVICE** - Preview mobile, tablet, desktop
@@ -334,6 +321,7 @@ const devicePreviews = {
 - 🔗 **COMPARTILHÁVEL** - URLs de preview geradas
 
 ### 🎉 **BENEFÍCIOS:**
+
 1. **Designers** veem exatamente como ficará em produção
 2. **Desenvolvedores** testam componentes em contexto real
 3. **Stakeholders** aprovam com preview idêntico ao final

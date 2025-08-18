@@ -1,8 +1,8 @@
-import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { InteractiveQuizCanvas } from '../InteractiveQuizCanvas';
 import { EditorProvider } from '@/context/EditorContext';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import React from 'react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { InteractiveQuizCanvas } from '../InteractiveQuizCanvas';
 
 // Mock do contexto do editor
 const mockBlocks = [
@@ -14,9 +14,9 @@ const mockBlocks = [
       options: [
         { id: 'opt-1', text: 'Azul', value: 'blue', category: 'cool' },
         { id: 'opt-2', text: 'Vermelho', value: 'red', category: 'warm' },
-        { id: 'opt-3', text: 'Verde', value: 'green', category: 'nature' }
-      ]
-    }
+        { id: 'opt-3', text: 'Verde', value: 'green', category: 'nature' },
+      ],
+    },
   },
   {
     id: 'block-2',
@@ -24,30 +24,28 @@ const mockBlocks = [
     content: {
       label: 'Seu nome',
       placeholder: 'Digite seu nome',
-      required: true
-    }
-  }
+      required: true,
+    },
+  },
 ];
 
 const mockEditorContext = {
   computed: {
     currentBlocks: mockBlocks,
-    selectedBlock: null
+    selectedBlock: null,
   },
   selectedBlockId: null,
   blockActions: {
     setSelectedBlockId: vi.fn(),
     addBlock: vi.fn(),
     updateBlock: vi.fn(),
-    deleteBlock: vi.fn()
-  }
+    deleteBlock: vi.fn(),
+  },
 };
 
 // Wrapper do provider
 const TestWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <EditorProvider value={mockEditorContext as any}>
-    {children}
-  </EditorProvider>
+  <EditorProvider value={mockEditorContext as any}>{children}</EditorProvider>
 );
 
 describe('InteractiveQuizCanvas', () => {
@@ -122,7 +120,9 @@ describe('InteractiveQuizCanvas', () => {
       fireEvent.click(proximoBtn);
 
       await waitFor(() => {
-        expect(screen.getByText('Complete todos os campos obrigatórios para continuar')).toBeInTheDocument();
+        expect(
+          screen.getByText('Complete todos os campos obrigatórios para continuar')
+        ).toBeInTheDocument();
       });
     });
 
@@ -165,7 +165,7 @@ describe('InteractiveQuizCanvas', () => {
       await waitFor(() => {
         const savedState = localStorage.getItem('quiz-state');
         expect(savedState).toBeTruthy();
-        
+
         const state = JSON.parse(savedState!);
         expect(state.answers).toHaveProperty('block-1');
         expect(state.answers['block-1'].value).toBe('blue');
@@ -181,10 +181,10 @@ describe('InteractiveQuizCanvas', () => {
             questionId: 'block-1',
             selectedOptions: ['blue'],
             timestamp: new Date(),
-            stepId: '1'
-          }
+            stepId: '1',
+          },
         },
-        scores: { cool: 1 }
+        scores: { cool: 1 },
       };
       localStorage.setItem('quiz-state', JSON.stringify(savedState));
 
@@ -351,21 +351,21 @@ describe('InteractiveQuizCanvas - Integração', () => {
       {
         id: 'block-3',
         type: 'headline',
-        content: { text: 'Seção 2', level: 2 }
+        content: { text: 'Seção 2', level: 2 },
       },
       {
         id: 'block-4',
         type: 'text',
-        content: { text: 'Descrição adicional' }
-      }
+        content: { text: 'Descrição adicional' },
+      },
     ];
 
     const contextWithComplexBlocks = {
       ...mockEditorContext,
       computed: {
         ...mockEditorContext.computed,
-        currentBlocks: complexBlocks
-      }
+        currentBlocks: complexBlocks,
+      },
     };
 
     render(
@@ -383,8 +383,8 @@ describe('InteractiveQuizCanvas - Integração', () => {
       ...mockEditorContext,
       computed: {
         ...mockEditorContext.computed,
-        currentBlocks: []
-      }
+        currentBlocks: [],
+      },
     };
 
     render(

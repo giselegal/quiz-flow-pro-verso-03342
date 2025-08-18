@@ -1,15 +1,15 @@
 import { useEditor } from '@/context/EditorContext';
 import { BlockType } from '@/types/editor';
+import { QuizMainDemo } from './QuizMainDemo';
 import { CanvasDropZone } from './canvas/CanvasDropZone';
 import ComponentsSidebar from './components/ComponentsSidebar';
 import FunnelStagesPanel from './funnel/FunnelStagesPanelUnified';
+import './interactive/styles/quiz-animations.css';
 import { FourColumnLayout } from './layout/FourColumnLayout';
 import { PropertiesPanel } from './properties/PropertiesPanel';
 import { EditorToolbar } from './toolbar/EditorToolbar';
-import { InteractiveQuizCanvas } from './interactive';
-import './interactive/styles/quiz-animations.css';
 
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState } from 'react';
 
 interface SchemaDrivenEditorResponsiveProps {
   funnelId?: string;
@@ -87,9 +87,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
 
         {/* Canvas Interativo */}
         <div className="h-[calc(100%-56px)]">
-          <InteractiveQuizCanvas
-            className="h-full"
-          />
+          <QuizMainDemo />
         </div>
       </div>
     );

@@ -1,16 +1,16 @@
 import React from 'react';
 import { InteractiveQuizCanvas } from '../InteractiveQuizCanvas';
-import { 
-  QuizCard, 
-  QuizButton, 
-  QuizProgressBar, 
-  QuizAnimationWrapper,
+import { QUIZ_THEMES, QuizStyleManager, QuizTheme } from '../styles/QuizThemes';
+import {
   QuizAlert,
+  QuizAnimationWrapper,
   QuizBadge,
+  QuizButton,
+  QuizCard,
+  QuizProgressBar,
+  useAccessibility,
   useResponsiveDesign,
-  useAccessibility
 } from '../ui/StyledComponents';
-import { QuizTheme, QUIZ_THEMES, QuizStyleManager } from '../styles/QuizThemes';
 
 interface QuizShowcaseProps {
   onClose?: () => void;
@@ -18,7 +18,7 @@ interface QuizShowcaseProps {
 
 /**
  * 🎨 SHOWCASE DE TEMAS E COMPONENTES ESTILIZADOS
- * 
+ *
  * Demonstra todos os temas e componentes visuais disponíveis
  */
 export const QuizShowcase: React.FC<QuizShowcaseProps> = ({ onClose }) => {
@@ -48,7 +48,7 @@ export const QuizShowcase: React.FC<QuizShowcaseProps> = ({ onClose }) => {
                   ← Voltar ao Showcase
                 </QuizButton>
               </div>
-              
+
               <InteractiveQuizCanvas />
             </QuizCard>
           </div>
@@ -65,13 +65,9 @@ export const QuizShowcase: React.FC<QuizShowcaseProps> = ({ onClose }) => {
           <QuizCard theme={selectedTheme} variant="glass" className="mb-8">
             <div className="flex justify-between items-center">
               <div>
-                <h1 className="text-4xl font-bold mb-2">
-                  🎨 Quiz Showcase
-                </h1>
-                <p className="text-lg text-gray-600">
-                  Explore temas e componentes visuais
-                </p>
-                
+                <h1 className="text-4xl font-bold mb-2">🎨 Quiz Showcase</h1>
+                <p className="text-lg text-gray-600">Explore temas e componentes visuais</p>
+
                 {/* Informações de Acessibilidade */}
                 <div className="flex space-x-4 mt-4">
                   {highContrast && (
@@ -89,13 +85,9 @@ export const QuizShowcase: React.FC<QuizShowcaseProps> = ({ onClose }) => {
                   </QuizBadge>
                 </div>
               </div>
-              
+
               {onClose && (
-                <QuizButton
-                  variant="secondary"
-                  onClick={onClose}
-                  theme={selectedTheme}
-                >
+                <QuizButton variant="secondary" onClick={onClose} theme={selectedTheme}>
                   ✕ Fechar
                 </QuizButton>
               )}
@@ -104,23 +96,22 @@ export const QuizShowcase: React.FC<QuizShowcaseProps> = ({ onClose }) => {
 
           {/* Seletor de Temas */}
           <QuizCard theme={selectedTheme} className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">
-              🎭 Seletor de Temas
-            </h2>
-            
+            <h2 className="text-2xl font-semibold mb-4">🎭 Seletor de Temas</h2>
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-              {themeNames.map((themeName) => {
+              {themeNames.map(themeName => {
                 const themeConfig = QUIZ_THEMES[themeName];
                 const isSelected = selectedTheme === themeName;
-                
+
                 return (
                   <div
                     key={themeName}
                     className={`
                       p-4 border-2 rounded-lg cursor-pointer transition-all duration-300
-                      ${isSelected 
-                        ? 'border-blue-500 bg-blue-50 scale-105' 
-                        : 'border-gray-200 hover:border-gray-300'
+                      ${
+                        isSelected
+                          ? 'border-blue-500 bg-blue-50 scale-105'
+                          : 'border-gray-200 hover:border-gray-300'
                       }
                     `}
                     onClick={() => setSelectedTheme(themeName)}
@@ -133,14 +124,14 @@ export const QuizShowcase: React.FC<QuizShowcaseProps> = ({ onClose }) => {
                         </QuizBadge>
                       )}
                     </div>
-                    
-                    <p className="text-sm text-gray-600 mb-3">
-                      {themeConfig.description}
-                    </p>
-                    
+
+                    <p className="text-sm text-gray-600 mb-3">{themeConfig.description}</p>
+
                     {/* Preview das cores */}
                     <div className="flex space-x-2">
-                      <div className={`w-6 h-6 rounded ${themeConfig.colors.primary.replace('bg-', 'bg-')}`} />
+                      <div
+                        className={`w-6 h-6 rounded ${themeConfig.colors.primary.replace('bg-', 'bg-')}`}
+                      />
                       <div className={`w-6 h-6 rounded ${themeConfig.colors.secondary}`} />
                       <div className={`w-6 h-6 rounded ${themeConfig.colors.success}`} />
                     </div>
@@ -148,7 +139,7 @@ export const QuizShowcase: React.FC<QuizShowcaseProps> = ({ onClose }) => {
                 );
               })}
             </div>
-            
+
             <QuizButton
               variant="primary"
               size="large"
@@ -162,9 +153,7 @@ export const QuizShowcase: React.FC<QuizShowcaseProps> = ({ onClose }) => {
 
           {/* Demonstração de Componentes */}
           <QuizCard theme={selectedTheme} className="mb-8">
-            <h2 className="text-2xl font-semibold mb-6">
-              🧩 Componentes Disponíveis
-            </h2>
+            <h2 className="text-2xl font-semibold mb-6">🧩 Componentes Disponíveis</h2>
 
             {/* Barra de Progresso */}
             <div className="mb-8">
@@ -238,11 +227,21 @@ export const QuizShowcase: React.FC<QuizShowcaseProps> = ({ onClose }) => {
             <div className="mb-8">
               <h3 className="text-lg font-medium mb-4">🏷️ Badges</h3>
               <div className="flex flex-wrap gap-2">
-                <QuizBadge variant="default" theme={selectedTheme}>Padrão</QuizBadge>
-                <QuizBadge variant="success" theme={selectedTheme}>Completo</QuizBadge>
-                <QuizBadge variant="warning" theme={selectedTheme}>Pendente</QuizBadge>
-                <QuizBadge variant="error" theme={selectedTheme}>Erro</QuizBadge>
-                <QuizBadge variant="info" theme={selectedTheme}>Info</QuizBadge>
+                <QuizBadge variant="default" theme={selectedTheme}>
+                  Padrão
+                </QuizBadge>
+                <QuizBadge variant="success" theme={selectedTheme}>
+                  Completo
+                </QuizBadge>
+                <QuizBadge variant="warning" theme={selectedTheme}>
+                  Pendente
+                </QuizBadge>
+                <QuizBadge variant="error" theme={selectedTheme}>
+                  Erro
+                </QuizBadge>
+                <QuizBadge variant="info" theme={selectedTheme}>
+                  Info
+                </QuizBadge>
               </div>
             </div>
 
@@ -252,30 +251,22 @@ export const QuizShowcase: React.FC<QuizShowcaseProps> = ({ onClose }) => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <QuizCard theme={selectedTheme} variant="default">
                   <h4 className="font-semibold mb-2">Cartão Padrão</h4>
-                  <p className="text-sm text-gray-600">
-                    Layout básico para conteúdo geral.
-                  </p>
+                  <p className="text-sm text-gray-600">Layout básico para conteúdo geral.</p>
                 </QuizCard>
-                
+
                 <QuizCard theme={selectedTheme} variant="elevated">
                   <h4 className="font-semibold mb-2">Cartão Elevado</h4>
-                  <p className="text-sm text-gray-600">
-                    Com efeito hover e elevação.
-                  </p>
+                  <p className="text-sm text-gray-600">Com efeito hover e elevação.</p>
                 </QuizCard>
-                
+
                 <QuizCard theme={selectedTheme} variant="bordered">
                   <h4 className="font-semibold mb-2">Cartão com Borda</h4>
-                  <p className="text-sm text-gray-600">
-                    Destaque visual com bordas.
-                  </p>
+                  <p className="text-sm text-gray-600">Destaque visual com bordas.</p>
                 </QuizCard>
-                
+
                 <QuizCard theme={selectedTheme} variant="glass">
                   <h4 className="font-semibold mb-2">Efeito Vidro</h4>
-                  <p className="text-sm text-gray-600">
-                    Transparência com blur moderno.
-                  </p>
+                  <p className="text-sm text-gray-600">Transparência com blur moderno.</p>
                 </QuizCard>
               </div>
             </div>
@@ -283,45 +274,58 @@ export const QuizShowcase: React.FC<QuizShowcaseProps> = ({ onClose }) => {
 
           {/* Informações Técnicas */}
           <QuizCard theme={selectedTheme} variant="bordered">
-            <h2 className="text-xl font-semibold mb-4">
-              ⚡ Informações Técnicas
-            </h2>
-            
+            <h2 className="text-xl font-semibold mb-4">⚡ Informações Técnicas</h2>
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
               <div>
                 <h4 className="font-medium mb-2">🎨 Tema Atual</h4>
                 <p className="text-gray-600">
-                  <strong>{QUIZ_THEMES[selectedTheme].name}</strong><br />
+                  <strong>{QUIZ_THEMES[selectedTheme].name}</strong>
+                  <br />
                   {QUIZ_THEMES[selectedTheme].description}
                 </p>
               </div>
-              
+
               <div>
                 <h4 className="font-medium mb-2">📱 Responsividade</h4>
                 <p className="text-gray-600">
-                  Dispositivo: <strong>{device}</strong><br />
+                  Dispositivo: <strong>{device}</strong>
+                  <br />
                   Adaptação automática de layout
                 </p>
               </div>
-              
+
               <div>
                 <h4 className="font-medium mb-2">♿ Acessibilidade</h4>
                 <p className="text-gray-600">
-                  Alto contraste: {highContrast ? '✅' : '❌'}<br />
+                  Alto contraste: {highContrast ? '✅' : '❌'}
+                  <br />
                   Movimento reduzido: {reducedMotion ? '✅' : '❌'}
                 </p>
               </div>
             </div>
-            
+
             <div className="mt-6 p-4 bg-gray-50 rounded-lg">
               <h4 className="font-medium mb-2">🔧 Recursos Implementados</h4>
               <div className="flex flex-wrap gap-2">
-                <QuizBadge size="small" variant="success">Temas Dinâmicos</QuizBadge>
-                <QuizBadge size="small" variant="success">Animações CSS</QuizBadge>
-                <QuizBadge size="small" variant="success">Design Responsivo</QuizBadge>
-                <QuizBadge size="small" variant="success">Acessibilidade WCAG</QuizBadge>
-                <QuizBadge size="small" variant="success">TypeScript</QuizBadge>
-                <QuizBadge size="small" variant="success">Tailwind CSS</QuizBadge>
+                <QuizBadge size="small" variant="success">
+                  Temas Dinâmicos
+                </QuizBadge>
+                <QuizBadge size="small" variant="success">
+                  Animações CSS
+                </QuizBadge>
+                <QuizBadge size="small" variant="success">
+                  Design Responsivo
+                </QuizBadge>
+                <QuizBadge size="small" variant="success">
+                  Acessibilidade WCAG
+                </QuizBadge>
+                <QuizBadge size="small" variant="success">
+                  TypeScript
+                </QuizBadge>
+                <QuizBadge size="small" variant="success">
+                  Tailwind CSS
+                </QuizBadge>
               </div>
             </div>
           </QuizCard>

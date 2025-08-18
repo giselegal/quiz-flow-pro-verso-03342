@@ -1,11 +1,11 @@
-import { render, screen, fireEvent, beforeEach } from '@testing-library/react';
-import { describe, it, expect, vi } from 'vitest';
-import { QuizNavigation } from '../QuizNavigation';
 import { ValidationResult } from '@/types/validation';
+import { beforeEach, fireEvent, render, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
+import { QuizNavigation } from '../QuizNavigation';
 
 const mockValidation: ValidationResult = {
   success: true,
-  errors: []
+  errors: [],
 };
 
 describe('QuizNavigation', () => {
@@ -15,7 +15,7 @@ describe('QuizNavigation', () => {
     canProceed: true,
     onNext: vi.fn(),
     onPrevious: vi.fn(),
-    validation: mockValidation
+    validation: mockValidation,
   };
 
   beforeEach(() => {
@@ -27,7 +27,7 @@ describe('QuizNavigation', () => {
       render(<QuizNavigation {...defaultProps} />);
 
       expect(screen.getByText('Etapa 5 de 21')).toBeInTheDocument();
-      
+
       // Calcular progresso: (5/21) * 100 ≈ 24%
       const progress = Math.round((5 / 21) * 100);
       expect(screen.getByText(`${progress}% concluído`)).toBeInTheDocument();
@@ -50,12 +50,7 @@ describe('QuizNavigation', () => {
 
   describe('Estados de Navegação', () => {
     it('deve desabilitar botão anterior na primeira etapa', () => {
-      render(
-        <QuizNavigation 
-          {...defaultProps} 
-          currentStep={1}
-        />
-      );
+      render(<QuizNavigation {...defaultProps} currentStep={1} />);
 
       const anteriorBtn = screen.getByText('Anterior');
       expect(anteriorBtn).toBeDisabled();
@@ -69,12 +64,7 @@ describe('QuizNavigation', () => {
     });
 
     it('deve desabilitar botão próximo quando canProceed=false', () => {
-      render(
-        <QuizNavigation 
-          {...defaultProps} 
-          canProceed={false}
-        />
-      );
+      render(<QuizNavigation {...defaultProps} canProceed={false} />);
 
       const proximoBtn = screen.getByText('Próximo');
       expect(proximoBtn).toBeDisabled();
@@ -91,13 +81,8 @@ describe('QuizNavigation', () => {
   describe('Interações', () => {
     it('deve chamar onNext quando clicar em Próximo', () => {
       const onNext = vi.fn();
-      
-      render(
-        <QuizNavigation 
-          {...defaultProps} 
-          onNext={onNext}
-        />
-      );
+
+      render(<QuizNavigation {...defaultProps} onNext={onNext} />);
 
       const proximoBtn = screen.getByText('Próximo');
       fireEvent.click(proximoBtn);
@@ -107,13 +92,8 @@ describe('QuizNavigation', () => {
 
     it('deve chamar onPrevious quando clicar em Anterior', () => {
       const onPrevious = vi.fn();
-      
-      render(
-        <QuizNavigation 
-          {...defaultProps} 
-          onPrevious={onPrevious}
-        />
-      );
+
+      render(<QuizNavigation {...defaultProps} onPrevious={onPrevious} />);
 
       const anteriorBtn = screen.getByText('Anterior');
       fireEvent.click(anteriorBtn);
@@ -123,14 +103,8 @@ describe('QuizNavigation', () => {
 
     it('não deve chamar onNext quando botão estiver desabilitado', () => {
       const onNext = vi.fn();
-      
-      render(
-        <QuizNavigation 
-          {...defaultProps} 
-          canProceed={false}
-          onNext={onNext}
-        />
-      );
+
+      render(<QuizNavigation {...defaultProps} canProceed={false} onNext={onNext} />);
 
       const proximoBtn = screen.getByText('Próximo');
       fireEvent.click(proximoBtn);
@@ -143,15 +117,10 @@ describe('QuizNavigation', () => {
     it('deve exibir ícone de sucesso quando validação é válida', () => {
       const validValidation: ValidationResult = {
         success: true,
-        errors: []
+        errors: [],
       };
 
-      render(
-        <QuizNavigation 
-          {...defaultProps} 
-          validation={validValidation}
-        />
-      );
+      render(<QuizNavigation {...defaultProps} validation={validValidation} />);
 
       // Deve mostrar ícone de sucesso se houver
       const successIcon = screen.queryByTestId('validation-success');
@@ -163,15 +132,10 @@ describe('QuizNavigation', () => {
     it('deve exibir ícone de erro quando validação é inválida', () => {
       const invalidValidation: ValidationResult = {
         success: false,
-        errors: [{ path: 'field1', message: 'Campo obrigatório' }]
+        errors: [{ path: 'field1', message: 'Campo obrigatório' }],
       };
 
-      render(
-        <QuizNavigation 
-          {...defaultProps} 
-          validation={invalidValidation}
-        />
-      );
+      render(<QuizNavigation {...defaultProps} validation={invalidValidation} />);
 
       // Deve mostrar ícone de erro se houver
       const errorIcon = screen.queryByTestId('validation-error');
@@ -183,38 +147,21 @@ describe('QuizNavigation', () => {
 
   describe('Diferentes Etapas', () => {
     it('deve mostrar primeira etapa corretamente', () => {
-      render(
-        <QuizNavigation 
-          {...defaultProps}
-          currentStep={1}
-        />
-      );
+      render(<QuizNavigation {...defaultProps} currentStep={1} />);
 
       expect(screen.getByText('Etapa 1 de 21')).toBeInTheDocument();
       expect(screen.getByText('5% concluído')).toBeInTheDocument();
     });
 
     it('deve mostrar última etapa corretamente', () => {
-      render(
-        <QuizNavigation 
-          {...defaultProps}
-          currentStep={21}
-          totalSteps={21}
-        />
-      );
+      render(<QuizNavigation {...defaultProps} currentStep={21} totalSteps={21} />);
 
       expect(screen.getByText('Etapa 21 de 21')).toBeInTheDocument();
       expect(screen.getByText('100% concluído')).toBeInTheDocument();
     });
 
     it('deve mostrar "Finalizar" na última etapa', () => {
-      render(
-        <QuizNavigation 
-          {...defaultProps}
-          currentStep={21}
-          totalSteps={21}
-        />
-      );
+      render(<QuizNavigation {...defaultProps} currentStep={21} totalSteps={21} />);
 
       expect(screen.getByText('Finalizar')).toBeInTheDocument();
       expect(screen.queryByText('Próximo')).not.toBeInTheDocument();
@@ -232,15 +179,11 @@ describe('QuizNavigation', () => {
 
       testCases.forEach(({ current, total, expected }) => {
         const { rerender } = render(
-          <QuizNavigation 
-            {...defaultProps}
-            currentStep={current}
-            totalSteps={total}
-          />
+          <QuizNavigation {...defaultProps} currentStep={current} totalSteps={total} />
         );
 
         expect(screen.getByText(`${expected}% concluído`)).toBeInTheDocument();
-        
+
         rerender(<div />); // Limpar para próximo teste
       });
     });
@@ -252,7 +195,7 @@ describe('QuizNavigation', () => {
 
       const progressBar = screen.getByRole('progressbar');
       expect(progressBar).toHaveAttribute('aria-label');
-      
+
       // Botões devem ter labels adequados
       const anteriorBtn = screen.getByText('Anterior');
       expect(anteriorBtn).toHaveAttribute('type', 'button');
@@ -266,22 +209,17 @@ describe('QuizNavigation', () => {
 
       const proximoBtn = screen.getByText('Próximo');
       proximoBtn.focus();
-      
+
       expect(proximoBtn).toHaveFocus();
     });
 
     it('deve suportar navegação por teclado', () => {
       const onNext = vi.fn();
-      
-      render(
-        <QuizNavigation 
-          {...defaultProps} 
-          onNext={onNext}
-        />
-      );
+
+      render(<QuizNavigation {...defaultProps} onNext={onNext} />);
 
       const proximoBtn = screen.getByText('Próximo');
-      
+
       // Simular Enter
       fireEvent.keyDown(proximoBtn, { key: 'Enter', code: 'Enter' });
       expect(onNext).toHaveBeenCalledTimes(1);

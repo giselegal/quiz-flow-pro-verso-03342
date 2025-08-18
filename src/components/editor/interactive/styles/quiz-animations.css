@@ -60,22 +60,35 @@
 
 /* Animações de feedback */
 @keyframes shake {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateX(0);
   }
-  10%, 30%, 50%, 70%, 90% {
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
     transform: translateX(-10px);
   }
-  20%, 40%, 60%, 80% {
+  20%,
+  40%,
+  60%,
+  80% {
     transform: translateX(10px);
   }
 }
 
 @keyframes bounce {
-  0%, 20%, 53%, 80%, 100% {
+  0%,
+  20%,
+  53%,
+  80%,
+  100% {
     transform: translateY(0);
   }
-  40%, 43% {
+  40%,
+  43% {
     transform: translateY(-30px);
   }
   70% {
@@ -326,7 +339,8 @@
   left: -50%;
   width: 200%;
   height: 200%;
-  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="50" font-size="40">🎉</text></svg>') repeat;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="50" font-size="40">🎉</text></svg>')
+    repeat;
   animation: confetti 3s ease-out;
   pointer-events: none;
 }
@@ -349,27 +363,29 @@
 }
 
 @keyframes dots {
-  0%, 20% {
-    color: rgba(0,0,0,0);
+  0%,
+  20% {
+    color: rgba(0, 0, 0, 0);
     text-shadow:
-      .25em 0 0 rgba(0,0,0,0),
-      .5em 0 0 rgba(0,0,0,0);
+      0.25em 0 0 rgba(0, 0, 0, 0),
+      0.5em 0 0 rgba(0, 0, 0, 0);
   }
   40% {
-    color: rgba(0,0,0,1);
+    color: rgba(0, 0, 0, 1);
     text-shadow:
-      .25em 0 0 rgba(0,0,0,0),
-      .5em 0 0 rgba(0,0,0,0);
+      0.25em 0 0 rgba(0, 0, 0, 0),
+      0.5em 0 0 rgba(0, 0, 0, 0);
   }
   60% {
     text-shadow:
-      .25em 0 0 rgba(0,0,0,1),
-      .5em 0 0 rgba(0,0,0,0);
+      0.25em 0 0 rgba(0, 0, 0, 1),
+      0.5em 0 0 rgba(0, 0, 0, 0);
   }
-  80%, 100% {
+  80%,
+  100% {
     text-shadow:
-      .25em 0 0 rgba(0,0,0,1),
-      .5em 0 0 rgba(0,0,0,1);
+      0.25em 0 0 rgba(0, 0, 0, 1),
+      0.5em 0 0 rgba(0, 0, 0, 1);
   }
 }
 
@@ -378,15 +394,15 @@
   .mobile-stack {
     flex-direction: column;
   }
-  
+
   .mobile-full {
     width: 100%;
   }
-  
+
   .mobile-hidden {
     display: none;
   }
-  
+
   .mobile-text-center {
     text-align: center;
   }
@@ -396,7 +412,7 @@
   .mobile-sm-padding {
     padding: 1rem;
   }
-  
+
   .mobile-sm-text {
     font-size: 0.875rem;
   }

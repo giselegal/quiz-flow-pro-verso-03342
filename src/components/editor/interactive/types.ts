@@ -1,6 +1,6 @@
 /**
  * 🎯 TIPOS E INTERFACES DO SISTEMA INTERATIVO DE QUIZ
- * 
+ *
  * Definições TypeScript para todo o sistema de quiz interativo
  */
 
@@ -260,7 +260,7 @@ export interface QuizContextValue {
 /**
  * Tipos de blocos suportados no modo interativo
  */
-export type InteractiveBlockType = 
+export type InteractiveBlockType =
   | 'quiz-question-inline'
   | 'input-field'
   | 'headline'
@@ -272,7 +272,7 @@ export type InteractiveBlockType =
 /**
  * Tipos de entrada de dados
  */
-export type InputType = 
+export type InputType =
   | 'text'
   | 'email'
   | 'phone'

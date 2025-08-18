@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
 import { EditorProvider } from '@/context/EditorContext';
+import { Block } from '@/types/editor';
+import React, { useState } from 'react';
 import { InteractiveQuizCanvas } from '../InteractiveQuizCanvas';
 import { QUIZ_EXEMPLO_COMPLETO, calcularResultadoQuiz } from './QuizExemploCompleto';
-import { Block } from '@/types/editor';
 
 /**
  * 🎯 DEMONSTRAÇÃO COMPLETA DO QUIZ INTERATIVO
- * 
+ *
  * Página de exemplo que mostra o sistema interativo funcionando
  * com um quiz completo de 21 etapas sobre estilo pessoal.
  */
@@ -18,15 +18,15 @@ export const QuizDemo: React.FC = () => {
   const mockEditorContext = {
     computed: {
       currentBlocks: QUIZ_EXEMPLO_COMPLETO as Block[],
-      selectedBlock: null
+      selectedBlock: null,
     },
     selectedBlockId: null,
     blockActions: {
       setSelectedBlockId: () => {},
       addBlock: async () => 'mock-id',
       updateBlock: async () => {},
-      deleteBlock: async () => {}
-    }
+      deleteBlock: async () => {},
+    },
   };
 
   const handleQuizComplete = (respostas: Record<string, any>) => {
@@ -58,7 +58,9 @@ export const QuizDemo: React.FC = () => {
           </div>
 
           {/* Resultado Principal */}
-          <div className={`bg-gradient-to-br ${resultados.resultado.color} p-8 rounded-2xl shadow-xl text-white mb-8`}>
+          <div
+            className={`bg-gradient-to-br ${resultados.resultado.color} p-8 rounded-2xl shadow-xl text-white mb-8`}
+          >
             <div className="text-center">
               <h2 className="text-3xl font-bold mb-2">{resultados.resultado.title}</h2>
               <p className="text-xl opacity-90 mb-4">{resultados.resultado.subtitle}</p>
@@ -83,9 +85,7 @@ export const QuizDemo: React.FC = () => {
 
           {/* Recomendações */}
           <div className="bg-white p-6 rounded-xl shadow-lg mb-8">
-            <h3 className="text-xl font-bold text-gray-800 mb-4">
-              🎯 Recomendações Para Você:
-            </h3>
+            <h3 className="text-xl font-bold text-gray-800 mb-4">🎯 Recomendações Para Você:</h3>
             <div className="space-y-3">
               {resultados.resultado.recommendations.map((rec: string, index: number) => (
                 <div key={index} className="flex items-start gap-3 p-4 bg-green-50 rounded-lg">
@@ -105,9 +105,11 @@ export const QuizDemo: React.FC = () => {
             </h3>
             <div className="space-y-3">
               {Object.entries(resultados.pontuacoes)
-                .sort(([,a], [,b]) => (b as number) - (a as number))
+                .sort(([, a], [, b]) => (b as number) - (a as number))
                 .map(([categoria, pontos]) => {
-                  const pontuacaoTotal = Math.max(...Object.values(resultados.pontuacoes) as number[]);
+                  const pontuacaoTotal = Math.max(
+                    ...(Object.values(resultados.pontuacoes) as number[])
+                  );
                   const porcentagem = Math.round(((pontos as number) / pontuacaoTotal) * 100);
                   return (
                     <div key={categoria} className="space-y-2">
@@ -116,29 +118,40 @@ export const QuizDemo: React.FC = () => {
                         <span className="text-gray-600">{pontos as number} pontos</span>
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div 
+                        <div
                           className="bg-blue-500 h-2 rounded-full transition-all duration-500"
                           style={{ width: `${porcentagem}%` }}
                         />
                       </div>
                     </div>
                   );
-                })
-              }
+                })}
             </div>
           </div>
 
           {/* Debug Info */}
           {process.env.NODE_ENV === 'development' && (
             <div className="bg-gray-100 p-6 rounded-xl shadow-lg mb-8">
-              <h3 className="text-lg font-bold text-gray-800 mb-4">
-                🔍 Debug - Dados Técnicos:
-              </h3>
+              <h3 className="text-lg font-bold text-gray-800 mb-4">🔍 Debug - Dados Técnicos:</h3>
               <div className="space-y-2 text-sm font-mono text-gray-600">
-                <div><strong>Total de Respostas:</strong> {Object.keys(resultados.respostas).length}</div>
-                <div><strong>Categoria Dominante:</strong> {Object.entries(resultados.pontuacoes).sort(([,a], [,b]) => (b as number) - (a as number))[0]?.[0]}</div>
-                <div><strong>Pontuação Máxima:</strong> {Math.max(...Object.values(resultados.pontuacoes) as number[])}</div>
-                <div><strong>Tempo de Conclusão:</strong> Calculado automaticamente</div>
+                <div>
+                  <strong>Total de Respostas:</strong> {Object.keys(resultados.respostas).length}
+                </div>
+                <div>
+                  <strong>Categoria Dominante:</strong>{' '}
+                  {
+                    Object.entries(resultados.pontuacoes).sort(
+                      ([, a], [, b]) => (b as number) - (a as number)
+                    )[0]?.[0]
+                  }
+                </div>
+                <div>
+                  <strong>Pontuação Máxima:</strong>{' '}
+                  {Math.max(...(Object.values(resultados.pontuacoes) as number[]))}
+                </div>
+                <div>
+                  <strong>Tempo de Conclusão:</strong> Calculado automaticamente
+                </div>
               </div>
             </div>
           )}
@@ -151,7 +164,7 @@ export const QuizDemo: React.FC = () => {
             >
               🔄 Fazer Quiz Novamente
             </button>
-            
+
             <div className="text-sm text-gray-600">
               <p>Este é um exemplo do sistema interativo funcionando!</p>
               <p>Os dados foram processados em tempo real conforme você respondia.</p>
@@ -176,14 +189,14 @@ export const QuizDemo: React.FC = () => {
                 Experimente o sistema interativo com um quiz real de 21 etapas
               </p>
             </div>
-            
+
             <div className="flex items-center gap-4">
               <div className="text-sm text-gray-500">
                 <div>✅ Sistema integrado</div>
                 <div>✅ Validação em tempo real</div>
                 <div>✅ Resultados personalizados</div>
               </div>
-              
+
               <button
                 onClick={resetQuiz}
                 className="px-4 py-2 text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors"
@@ -197,9 +210,7 @@ export const QuizDemo: React.FC = () => {
 
       {/* Quiz Canvas */}
       <EditorProvider>
-        <InteractiveQuizCanvas 
-          className="h-[calc(100vh-120px)]"
-        />
+        <InteractiveQuizCanvas className="h-[calc(100vh-120px)]" />
       </EditorProvider>
     </div>
   );
