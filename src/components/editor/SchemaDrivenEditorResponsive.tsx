@@ -7,7 +7,9 @@ import { FourColumnLayout } from './layout/FourColumnLayout';
 import { PropertiesPanel } from './properties/PropertiesPanel';
 import { EditorToolbar } from './toolbar/EditorToolbar';
 import { InteractiveQuizCanvas } from './interactive';
-import { useState } from 'react';
+import './interactive/styles/quiz-animations.css';
+
+import React, { useState, useMemo, useCallback } from 'react';
 
 interface SchemaDrivenEditorResponsiveProps {
   funnelId?: string;

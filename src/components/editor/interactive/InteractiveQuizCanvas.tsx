@@ -5,6 +5,7 @@ import { InteractiveBlockRenderer } from './InteractiveBlockRenderer';
 import { QuizNavigation } from './QuizNavigation';
 import { QuizHeader } from './QuizHeader';
 import { ValidationResult } from '@/types/validation';
+import { QuizTheme } from './styles/QuizThemes';
 
 interface QuizAnswer {
   questionId: string;
@@ -15,6 +16,7 @@ interface QuizAnswer {
 
 interface InteractiveQuizCanvasProps {
   className?: string;
+  theme?: QuizTheme;
 }
 
 /**
@@ -28,7 +30,8 @@ interface InteractiveQuizCanvasProps {
  * - Estado persistido
  */
 export const InteractiveQuizCanvas: React.FC<InteractiveQuizCanvasProps> = memo(({ 
-  className = '' 
+  className = '',
+  theme = 'default'
 }) => {
   const {
     computed: { currentBlocks },
