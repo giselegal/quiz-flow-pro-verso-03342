@@ -437,7 +437,7 @@ export const EditorProvider: React.FC<{
           }
         }
       } catch (error) {
-        console.error(`❌ Error loading template for step ${stepNumber}:`, error);
+        console.error(`❌ Error loading template for step ${id}:`, error);
       } finally {
         setIsLoadingStage(false);
       }
