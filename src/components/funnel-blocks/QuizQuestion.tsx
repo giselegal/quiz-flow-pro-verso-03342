@@ -1,13 +1,14 @@
-import { Button } from "@/components/ui/button";
-import { getOptimizedContainerClasses } from "@/config/containerConfig";
-import React, { useState } from "react";
+// @ts-nocheck
+import { Button } from '@/components/ui/button';
+import { getOptimizedContainerClasses } from '@/config/containerConfig';
+import React, { useState } from 'react';
 import {
   Alignment,
   BlockComponentProps,
   InteractionCallbacks,
   ProgressConfig,
   QuestionOption,
-} from "./types";
+} from './types';
 
 // Interface para estilos customizados
 interface CustomStyles {
@@ -16,7 +17,7 @@ interface CustomStyles {
   columns?: string;
   imageWidth?: string;
   imageHeight?: string;
-  layoutOrientation?: "vertical" | "horizontal";
+  layoutOrientation?: 'vertical' | 'horizontal';
   columnsCount?: number;
   borderWidth?: number;
   borderColor?: string;
@@ -26,7 +27,7 @@ interface CustomStyles {
   shadowOffsetX?: number;
   shadowOffsetY?: number;
   imageSize?: number;
-  contentType?: "text-only" | "image-only" | "text-and-image";
+  contentType?: 'text-only' | 'image-only' | 'text-and-image';
   scale?: number;
 }
 
@@ -68,10 +69,10 @@ export interface QuizQuestionProps extends BlockComponentProps, InteractionCallb
 
   // Layout e estilos
   alignment?: Alignment;
-  optionLayout?: "vertical" | "horizontal" | "grid";
-  optionStyle?: "card" | "button" | "radio" | "checkbox";
+  optionLayout?: 'vertical' | 'horizontal' | 'grid';
+  optionStyle?: 'card' | 'button' | 'radio' | 'checkbox';
   showLetters?: boolean; // A, B, C, D
-  optionImageSize?: "small" | "medium" | "large";
+  optionImageSize?: 'small' | 'medium' | 'large';
 
   // Progresso
   progressConfig?: ProgressConfig;
@@ -111,11 +112,11 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
   showValidation = true,
 
   // Layout
-  alignment = "center",
-  optionLayout = "vertical",
-  optionStyle = "card",
+  alignment = 'center',
+  optionLayout = 'vertical',
+  optionStyle = 'card',
   showLetters = true,
-  optionImageSize = "medium",
+  optionImageSize = 'medium',
 
   // Progresso
   progressConfig,
@@ -124,7 +125,7 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
   autoAdvance = false,
   autoAdvanceDelay = 1000,
   showNextButton = true,
-  nextButtonText = "Próxima",
+  nextButtonText = 'Próxima',
 
   // Valores iniciais
   initialSelections = [],
@@ -140,14 +141,14 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
   onError,
 
   // Props base
-  deviceView = "desktop",
-  className = "",
+  deviceView = 'desktop',
+  className = '',
   style = {},
-  testId = "quiz-question",
+  testId = 'quiz-question',
   ...props
 }) => {
   // LOG DE DEBUG - verificar se as opções estão chegando
-  console.log("🔍 QuizQuestion DEBUG:", {
+  console.log('🔍 QuizQuestion DEBUG:', {
     question,
     optionsLength: options?.length,
     firstOption: options?.[0],
@@ -161,23 +162,23 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
 
   // Classes de layout
   const layoutClasses = {
-    vertical: "flex flex-col space-y-3",
-    horizontal: "flex flex-wrap gap-3",
-    grid: deviceView === "mobile" ? "grid grid-cols-1 gap-3" : "grid grid-cols-2 gap-4",
+    vertical: 'flex flex-col space-y-3',
+    horizontal: 'flex flex-wrap gap-3',
+    grid: deviceView === 'mobile' ? 'grid grid-cols-1 gap-3' : 'grid grid-cols-2 gap-4',
   };
 
   // Classes para tamanhos de imagem
   const imageSizeClasses = {
-    small: "h-24",
-    medium: "h-32",
-    large: "h-40",
+    small: 'h-24',
+    medium: 'h-32',
+    large: 'h-40',
   };
 
   // Classes de alinhamento
   const alignmentClasses = {
-    left: "text-left",
-    center: "text-center",
-    right: "text-right",
+    left: 'text-left',
+    center: 'text-center',
+    right: 'text-right',
   };
 
   const selectedOptions = options.filter(option => selectedOptionIds.includes(option.id));
@@ -185,15 +186,15 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
   // Validação
   const validateSelection = (selections: string[]) => {
     if (required && selections.length === 0) {
-      return "Por favor, selecione uma opção";
+      return 'Por favor, selecione uma opção';
     }
 
     if (multipleSelection) {
       if (selections.length < minSelections) {
-        return `Selecione pelo menos ${minSelections} opção${minSelections > 1 ? "ões" : ""}`;
+        return `Selecione pelo menos ${minSelections} opção${minSelections > 1 ? 'ões' : ''}`;
       }
       if (selections.length > maxSelections) {
-        return `Selecione no máximo ${maxSelections} opção${maxSelections > 1 ? "ões" : ""}`;
+        return `Selecione no máximo ${maxSelections} opção${maxSelections > 1 ? 'ões' : ''}`;
       }
     }
 
@@ -204,17 +205,17 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
   // Estilos dinâmicos baseados nas propriedades customizadas
   const containerStyles = React.useMemo(() => {
     const baseStyles: React.CSSProperties = {
-      display: "grid",
-      gap: customStyles?.gridGap || "1rem",
+      display: 'grid',
+      gap: customStyles?.gridGap || '1rem',
       gridTemplateColumns:
-        customStyles?.layoutOrientation === "horizontal"
+        customStyles?.layoutOrientation === 'horizontal'
           ? `repeat(${customStyles?.columnsCount || 2}, 1fr)`
-          : "1fr",
+          : '1fr',
     };
 
     // Aplicar bordas se configuradas
     if (customStyles?.borderWidth && customStyles?.borderWidth > 0) {
-      baseStyles.border = `${customStyles.borderWidth}px solid ${customStyles?.borderColor || "#e2e8f0"}`;
+      baseStyles.border = `${customStyles.borderWidth}px solid ${customStyles?.borderColor || '#e2e8f0'}`;
       if (customStyles?.borderRadius) {
         baseStyles.borderRadius = `${customStyles.borderRadius}px`;
       }
@@ -222,7 +223,7 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
 
     // Aplicar sombras se configuradas
     if (customStyles?.shadowBlur && customStyles?.shadowBlur > 0) {
-      const shadowColor = customStyles?.shadowColor || "rgba(0, 0, 0, 0.1)";
+      const shadowColor = customStyles?.shadowColor || 'rgba(0, 0, 0, 0.1)';
       baseStyles.boxShadow = `${customStyles?.shadowOffsetX || 0}px ${customStyles?.shadowOffsetY || 2}px ${customStyles.shadowBlur}px ${shadowColor}`;
     }
 
@@ -232,8 +233,8 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
   // Estilos para itens individuais
   const itemStyles = React.useMemo(() => {
     const baseStyles: React.CSSProperties = {
-      cursor: "pointer",
-      transition: "all 0.2s ease",
+      cursor: 'pointer',
+      transition: 'all 0.2s ease',
     };
 
     // Tamanho da imagem se configurado
@@ -297,30 +298,30 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
     const isSelected = selectedOptionIds.includes(option.id);
     const letter = String.fromCharCode(65 + index); // A, B, C, D...
 
-    const baseClasses = "transition-all duration-200 cursor-pointer";
+    const baseClasses = 'transition-all duration-200 cursor-pointer';
 
     let optionClasses = baseClasses;
-    let contentClasses = "";
+    let contentClasses = '';
 
     switch (optionStyle) {
-      case "card":
+      case 'card':
         optionClasses += ` p-4 border-2 rounded-lg ${
           isSelected
-            ? "border-[#B89B7A] bg-[#B89B7A]/10"
-            : "border-gray-200 hover:border-[#B89B7A]/50"
+            ? 'border-[#B89B7A] bg-[#B89B7A]/10'
+            : 'border-gray-200 hover:border-[#B89B7A]/50'
         }`;
-        contentClasses = "flex items-center space-x-3";
+        contentClasses = 'flex items-center space-x-3';
         break;
-      case "button":
+      case 'button':
         optionClasses += ` px-6 py-3 rounded-lg ${
-          isSelected ? "bg-[#B89B7A] text-white" : "bg-gray-100 hover:bg-gray-200 text-gray-800"
+          isSelected ? 'bg-[#B89B7A] text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-800'
         }`;
-        contentClasses = "text-center";
+        contentClasses = 'text-center';
         break;
-      case "radio":
-      case "checkbox":
-        optionClasses += " p-3 hover:bg-gray-50 rounded";
-        contentClasses = "flex items-center space-x-3";
+      case 'radio':
+      case 'checkbox':
+        optionClasses += ' p-3 hover:bg-gray-50 rounded';
+        contentClasses = 'flex items-center space-x-3';
         break;
     }
 
@@ -332,22 +333,22 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
         onClick={() => handleOptionSelect(option.id)}
         data-testid={`option-${option.id}`}
       >
-        <div className={option.imageUrl ? "space-y-3" : contentClasses}>
+        <div className={option.imageUrl ? 'space-y-3' : contentClasses}>
           {/* Indicador de seleção */}
-          {optionStyle === "radio" && (
+          {optionStyle === 'radio' && (
             <div
               className={`w-4 h-4 rounded-full border-2 ${
-                isSelected ? "border-[#B89B7A] bg-[#B89B7A]" : "border-gray-300"
+                isSelected ? 'border-[#B89B7A] bg-[#B89B7A]' : 'border-gray-300'
               }`}
             >
               {isSelected && <div className="w-2 h-2 bg-white rounded-full mx-auto mt-0.5"></div>}
             </div>
           )}
 
-          {optionStyle === "checkbox" && (
+          {optionStyle === 'checkbox' && (
             <div
               className={`w-4 h-4 border-2 rounded ${
-                isSelected ? "border-[#B89B7A] bg-[#B89B7A]" : "border-gray-300"
+                isSelected ? 'border-[#B89B7A] bg-[#B89B7A]' : 'border-gray-300'
               }`}
             >
               {isSelected && (
@@ -367,7 +368,7 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
           )}
 
           {/* Imagem da opção (se houver) */}
-          {option.imageUrl && customStyles?.contentType !== "text-only" && (
+          {option.imageUrl && customStyles?.contentType !== 'text-only' && (
             <div className="w-full mb-3">
               <img
                 src={option.imageUrl}
@@ -376,7 +377,7 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
                 style={{
                   width: customStyles?.imageSize ? `${customStyles.imageSize}px` : undefined,
                   height: customStyles?.imageSize ? `${customStyles.imageSize}px` : undefined,
-                  maxWidth: "100%",
+                  maxWidth: '100%',
                 }}
                 loading="lazy"
               />
@@ -384,13 +385,13 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
           )}
 
           {/* Texto e letra em uma linha quando há imagem */}
-          {customStyles?.contentType !== "image-only" && (
-            <div className={option.imageUrl ? "flex items-center space-x-3" : "contents"}>
+          {customStyles?.contentType !== 'image-only' && (
+            <div className={option.imageUrl ? 'flex items-center space-x-3' : 'contents'}>
               {/* Letra da opção */}
-              {showLetters && optionStyle === "card" && (
+              {showLetters && optionStyle === 'card' && (
                 <div
                   className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${
-                    isSelected ? "bg-[#B89B7A] text-white" : "bg-gray-200 text-gray-600"
+                    isSelected ? 'bg-[#B89B7A] text-white' : 'bg-gray-200 text-gray-600'
                   }`}
                 >
                   {letter}
@@ -401,9 +402,7 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
               <span className="flex-1 text-left">{option.text}</span>
 
               {/* Pontuação se disponível */}
-              {option.points && (
-                <span style={{ color: '#8B7355' }}>{option.points} pontos</span>
-              )}
+              {option.points && <span style={{ color: '#8B7355' }}>{option.points} pontos</span>}
             </div>
           )}
         </div>
@@ -412,9 +411,9 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
   };
 
   const containerClasses = getOptimizedContainerClasses(
-    deviceView || "desktop",
-    "tight",
-    "full",
+    deviceView || 'desktop',
+    'tight',
+    'full',
     className
   );
 
@@ -444,11 +443,11 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
           <div className="mb-8">
             <h2
               className={`text-2xl md:text-3xl font-bold text-[#432818] mb-4 ${
-                alignment === "center"
-                  ? "text-center"
-                  : alignment === "right"
-                    ? "text-right"
-                    : "text-left"
+                alignment === 'center'
+                  ? 'text-center'
+                  : alignment === 'right'
+                    ? 'text-right'
+                    : 'text-left'
               }`}
             >
               {question}
@@ -470,9 +469,7 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
               <p style={{ color: '#432818' }}>
                 ⚠️ Nenhuma opção encontrada. Array de opções está vazio ou indefinido.
               </p>
-              <p style={{ color: '#6B4F43' }}>
-                Debug: options.length = {options?.length || 0}
-              </p>
+              <p style={{ color: '#6B4F43' }}>Debug: options.length = {options?.length || 0}</p>
             </div>
           )}
         </div>

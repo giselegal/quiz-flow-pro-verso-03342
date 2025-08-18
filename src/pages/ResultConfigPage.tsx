@@ -1,5 +1,4 @@
-import React from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 
 export const ResultConfigPage: React.FC = () => {
   return (
@@ -12,9 +11,7 @@ export const ResultConfigPage: React.FC = () => {
 
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="text-center py-12">
-            <h2 style={{ color: '#6B4F43' }}>
-              Nenhum resultado configurado
-            </h2>
+            <h2 style={{ color: '#6B4F43' }}>Nenhum resultado configurado</h2>
             <p style={{ color: '#6B4F43' }}>
               Configure os resultados que serão exibidos após completar o quiz
             </p>

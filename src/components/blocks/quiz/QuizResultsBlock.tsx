@@ -1,8 +1,7 @@
 // @ts-nocheck
-import React from "react";
-import { Button } from "@/components/ui/button";
-import { QuizResult } from "@/hooks/useQuizResults";
-import { Block } from "@/types/editor";
+import { Button } from '@/components/ui/button';
+import { QuizResult } from '@/hooks/useQuizResults';
+import { Block } from '@/types/editor';
 
 // Interface original para uso direto
 interface QuizResultsBlockProps {
@@ -25,11 +24,11 @@ interface UniversalQuizResultsBlockProps {
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -83,10 +82,10 @@ const UniversalQuizResultsBlock: React.FC<UniversalQuizResultsBlockProps> = ({
 
   // Extrair result das propriedades ou criar um padrão
   const result: QuizResult = allProps.result || {
-    id: "default-result",
-    title: "Seu Resultado",
-    description: "Parabéns por completar o quiz!",
-    category: "Geral",
+    id: 'default-result',
+    title: 'Seu Resultado',
+    description: 'Parabéns por completar o quiz!',
+    category: 'Geral',
     minScore: 0,
     maxScore: 100,
     displayOrder: 1,
@@ -100,7 +99,7 @@ const UniversalQuizResultsBlock: React.FC<UniversalQuizResultsBlockProps> = ({
     if (allProps.onReset) {
       allProps.onReset();
     } else {
-      console.log("🔄 Reset quiz requested");
+      console.log('🔄 Reset quiz requested');
     }
   };
 
@@ -108,13 +107,13 @@ const UniversalQuizResultsBlock: React.FC<UniversalQuizResultsBlockProps> = ({
     if (allProps.onShare) {
       allProps.onShare();
     } else {
-      console.log("📤 Share result requested");
+      console.log('📤 Share result requested');
     }
   };
 
   return (
     <div
-      className={`quiz-results-wrapper ${isSelected ? "ring-2 ring-blue-500" : ""}`}
+      className={`quiz-results-wrapper ${isSelected ? 'ring-2 ring-blue-500' : ''}`}
       onClick={onClick}
     >
       <QuizResultsBlockCore
@@ -138,12 +137,12 @@ const QuizResultsBlockCore: React.FC<QuizResultsBlockProps> = ({
 }) => {
   // ✅ CORREÇÃO: Verificação de segurança para result
   if (!result) {
-    console.warn("QuizResultsBlock: result prop is undefined, usando dados padrão");
+    console.warn('QuizResultsBlock: result prop is undefined, usando dados padrão');
     const defaultResult: QuizResult = {
-      id: "default-result",
-      title: "Seu Resultado",
-      description: "Parabéns por completar o quiz!",
-      category: "Geral",
+      id: 'default-result',
+      title: 'Seu Resultado',
+      description: 'Parabéns por completar o quiz!',
+      category: 'Geral',
       minScore: 0,
       maxScore: 100,
       displayOrder: 1,
@@ -162,10 +161,10 @@ const QuizResultsBlockCore: React.FC<QuizResultsBlockProps> = ({
 
   // ✅ CORREÇÃO: Verificação adicional de propriedades obrigatórias
   const safeResult = {
-    id: result.id || "default-result",
-    title: result.title || "Seu Resultado",
-    description: result.description || "Parabéns por completar o quiz!",
-    category: result.category || "Geral",
+    id: result.id || 'default-result',
+    title: result.title || 'Seu Resultado',
+    description: result.description || 'Parabéns por completar o quiz!',
+    category: result.category || 'Geral',
     minScore: result.minScore || 0,
     maxScore: result.maxScore || 100,
     displayOrder: result.displayOrder || 1,

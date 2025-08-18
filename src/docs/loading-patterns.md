@@ -9,7 +9,7 @@ Este documento descreve os padrões de carregamento padronizados para o projeto 
 Um spinner de carregamento simples e customizável para uso em qualquer contexto.
 
 ```tsx
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 
 <LoadingSpinner
   size="md" // Tamanhos: xs, sm, md, lg, xl
@@ -24,7 +24,7 @@ import { LoadingSpinner } from "@/components/ui/loading-spinner";
 Um estado de carregamento em tela cheia, ideal para carregamento inicial de páginas.
 
 ```tsx
-import { LoadingState } from "@/components/ui/loading-state";
+import { LoadingState } from '@/components/ui/loading-state';
 
 <LoadingState
   message="Carregando quiz..." // Mensagem personalizada (opcional)
@@ -56,7 +56,7 @@ Para componentes específicos (como a página de resultados), utilizamos o padr�
          Carregando...
        </>
      ) : (
-       "Salvar"
+       'Salvar'
      )}
    </Button>
    ```

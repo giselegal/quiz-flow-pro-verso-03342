@@ -1,20 +1,20 @@
 // components/editor/StepsPanel.tsx - Versão Refatorada
-import React, { useState, useCallback } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { ScrollArea } from "../ui/scroll-area";
-import { Badge } from "../ui/badge";
-import { GripVertical, Plus, MoreHorizontal, Edit2, Trash2, Copy, Check, X } from "lucide-react";
+import React, { useState, useCallback } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { ScrollArea } from '../ui/scroll-area';
+import { Badge } from '../ui/badge';
+import { GripVertical, Plus, MoreHorizontal, Edit2, Trash2, Copy, Check, X } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
-import { cn } from "@/lib/utils";
-import { useSteps, QuizStep } from "../../context/StepsContext";
+} from '../ui/dropdown-menu';
+import { cn } from '@/lib/utils';
+import { useSteps, QuizStep } from '../../context/StepsContext';
 
 interface StepsPanelProps {
   className?: string;
@@ -27,7 +27,7 @@ interface StepsPanelProps {
  * Este componente utiliza o StepsContext para gerenciar o estado das etapas,
  * simplificando a interface e removendo a necessidade de passar múltiplos callbacks.
  */
-export const StepsPanel: React.FC<StepsPanelProps> = ({ className = "", onPopulateStep }) => {
+export const StepsPanel: React.FC<StepsPanelProps> = ({ className = '', onPopulateStep }) => {
   // Consumir o contexto de etapas
   const {
     steps,
@@ -37,12 +37,10 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({ className = "", onPopula
     updateStep,
     deleteStep,
     duplicateStep,
-    reorderStep,
-    populateStep,
   } = useSteps();
 
   const [editingStepId, setEditingStepId] = useState<string | null>(null);
-  const [editingName, setEditingName] = useState("");
+  const [editingName, setEditingName] = useState('');
 
   const handleEditStart = useCallback((step: QuizStep) => {
     setEditingStepId(step.id);
@@ -54,19 +52,19 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({ className = "", onPopula
       updateStep(editingStepId, { name: editingName.trim() });
     }
     setEditingStepId(null);
-    setEditingName("");
+    setEditingName('');
   }, [editingStepId, editingName, updateStep]);
 
   const handleEditCancel = useCallback(() => {
     setEditingStepId(null);
-    setEditingName("");
+    setEditingName('');
   }, []);
 
   const handleKeyPress = useCallback(
     (e: React.KeyboardEvent) => {
-      if (e.key === "Enter") {
+      if (e.key === 'Enter') {
         handleEditSave();
-      } else if (e.key === "Escape") {
+      } else if (e.key === 'Escape') {
         handleEditCancel();
       }
     },
@@ -74,7 +72,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({ className = "", onPopula
   );
 
   return (
-    <Card className={cn("h-full flex flex-col", className)}>
+    <Card className={cn('h-full flex flex-col', className)}>
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <CardTitle style={{ color: '#432818' }}>Etapas Quiz</CardTitle>
@@ -91,11 +89,11 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({ className = "", onPopula
               <div
                 key={step.id}
                 className={cn(
-                  "group relative flex items-center p-3 rounded-lg border transition-all duration-200",
-                  "hover:shadow-sm cursor-pointer",
+                  'group relative flex items-center p-3 rounded-lg border transition-all duration-200',
+                  'hover:shadow-sm cursor-pointer',
                   selectedStepId === step.id
-                    ? "bg-[#B89B7A]/10 border-[#B89B7A]/30 shadow-sm"
-                    : "bg-white border-gray-200 hover:border-gray-300"
+                    ? 'bg-[#B89B7A]/10 border-[#B89B7A]/30 shadow-sm'
+                    : 'bg-white border-gray-200 hover:border-gray-300'
                 )}
                 onClick={() => setSelectedStepId(step.id)}
               >
@@ -150,7 +148,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({ className = "", onPopula
                       </div>
                       <p style={{ color: '#8B7355' }}>
                         Etapa {index + 1} • {step.blocksCount} componente
-                        {step.blocksCount !== 1 ? "s" : ""}
+                        {step.blocksCount !== 1 ? 's' : ''}
                       </p>
                     </div>
                   )}
@@ -206,11 +204,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({ className = "", onPopula
             ))}
 
             {/* Add New Step Button */}
-            <Button
-              variant="outline"
-              style={{ borderColor: '#E5DDD5' }}
-              onClick={addStep}
-            >
+            <Button variant="outline" style={{ borderColor: '#E5DDD5' }} onClick={addStep}>
               <Plus className="w-4 h-4" />
               <span>Adicionar Nova Etapa</span>
             </Button>

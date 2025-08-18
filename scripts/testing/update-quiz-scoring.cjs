@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 
-const fs = require("fs");
-const path = require("path");
+const fs = require('fs');
+const path = require('path');
 
-console.log("🔧 Atualizando configurações de pontuação do quiz...");
+console.log('🔧 Atualizando configurações de pontuação do quiz...');
 
-const filePath = path.join(__dirname, "src/data/realQuizTemplates.ts");
-let content = fs.readFileSync(filePath, "utf8");
+const filePath = path.join(__dirname, 'src/data/realQuizTemplates.ts');
+let content = fs.readFileSync(filePath, 'utf8');
 
 // Questão 5 - Estampas
 const q5OldPattern =
@@ -100,7 +100,7 @@ content = content.replace(q10OldPattern, (match, letter, text, category) => {
 // Adicionar metadados de scoring para cada questão
 const questionsMetadata = {
   q1: {
-    type: "normal",
+    type: 'normal',
     scoring: true,
     multiSelect: 3,
     minSelections: 1,
@@ -109,7 +109,7 @@ const questionsMetadata = {
     scoreWeight: 1,
   },
   q2: {
-    type: "normal",
+    type: 'normal',
     scoring: true,
     multiSelect: 3,
     minSelections: 1,
@@ -118,7 +118,7 @@ const questionsMetadata = {
     scoreWeight: 1,
   },
   q3: {
-    type: "normal",
+    type: 'normal',
     scoring: true,
     multiSelect: 3,
     minSelections: 1,
@@ -127,7 +127,7 @@ const questionsMetadata = {
     scoreWeight: 1,
   },
   q4: {
-    type: "normal",
+    type: 'normal',
     scoring: true,
     multiSelect: 3,
     minSelections: 1,
@@ -136,7 +136,7 @@ const questionsMetadata = {
     scoreWeight: 1,
   },
   q5: {
-    type: "normal",
+    type: 'normal',
     scoring: true,
     multiSelect: 3,
     minSelections: 1,
@@ -145,7 +145,7 @@ const questionsMetadata = {
     scoreWeight: 1,
   },
   q6: {
-    type: "normal",
+    type: 'normal',
     scoring: true,
     multiSelect: 3,
     minSelections: 1,
@@ -154,7 +154,7 @@ const questionsMetadata = {
     scoreWeight: 1,
   },
   q7: {
-    type: "normal",
+    type: 'normal',
     scoring: true,
     multiSelect: 3,
     minSelections: 1,
@@ -163,7 +163,7 @@ const questionsMetadata = {
     scoreWeight: 1,
   },
   q8: {
-    type: "normal",
+    type: 'normal',
     scoring: true,
     multiSelect: 3,
     minSelections: 1,
@@ -172,7 +172,7 @@ const questionsMetadata = {
     scoreWeight: 1,
   },
   q9: {
-    type: "normal",
+    type: 'normal',
     scoring: true,
     multiSelect: 3,
     minSelections: 1,
@@ -181,7 +181,7 @@ const questionsMetadata = {
     scoreWeight: 1,
   },
   q10: {
-    type: "normal",
+    type: 'normal',
     scoring: true,
     multiSelect: 3,
     minSelections: 1,
@@ -223,16 +223,16 @@ export const SCORING_CONFIG = {
 `;
 
 // Verificar se os metadados já existem para evitar duplicação
-if (!content.includes("QUIZ_QUESTIONS_METADATA")) {
+if (!content.includes('QUIZ_QUESTIONS_METADATA')) {
   content += metadataExport;
 }
 
 fs.writeFileSync(filePath, content);
 
-console.log("✅ Configurações de pontuação atualizadas com sucesso!");
-console.log("\n📋 Recursos implementados:");
-console.log("  • styleCategory e points adicionados a todas as opções");
-console.log("  • Metadados de validação para cada questão");
-console.log("  • Configurações de scoring globais");
-console.log("  • Constantes de categorias de estilo");
-console.log("  • Sistema de desempate configurado");
+console.log('✅ Configurações de pontuação atualizadas com sucesso!');
+console.log('\n📋 Recursos implementados:');
+console.log('  • styleCategory e points adicionados a todas as opções');
+console.log('  • Metadados de validação para cada questão');
+console.log('  • Configurações de scoring globais');
+console.log('  • Constantes de categorias de estilo');
+console.log('  • Sistema de desempate configurado');

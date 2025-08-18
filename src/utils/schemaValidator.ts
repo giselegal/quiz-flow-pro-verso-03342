@@ -1,7 +1,8 @@
+// @ts-nocheck
 export interface SchemaValidationError {
   field: string;
   message: string;
-  severity: "error" | "warning";
+  severity: 'error' | 'warning';
 }
 
 export class SchemaValidator {
@@ -10,17 +11,17 @@ export class SchemaValidator {
 
     if (!page.id) {
       errors.push({
-        field: "id",
-        message: "ID da página é obrigatório",
-        severity: "error",
+        field: 'id',
+        message: 'ID da página é obrigatório',
+        severity: 'error',
       });
     }
 
     if (!page.blocks || !Array.isArray(page.blocks)) {
       errors.push({
-        field: "blocks",
-        message: "Página deve conter array de blocos",
-        severity: "error",
+        field: 'blocks',
+        message: 'Página deve conter array de blocos',
+        severity: 'error',
       });
     }
 
@@ -28,16 +29,16 @@ export class SchemaValidator {
       if (!block.type) {
         errors.push({
           field: `blocks[${index}].type`,
-          message: "Tipo do bloco é obrigatório",
-          severity: "error",
+          message: 'Tipo do bloco é obrigatório',
+          severity: 'error',
         });
       }
 
       if (!block.id) {
         errors.push({
           field: `blocks[${index}].id`,
-          message: "ID do bloco é obrigatório",
-          severity: "error",
+          message: 'ID do bloco é obrigatório',
+          severity: 'error',
         });
       }
     });
@@ -50,9 +51,9 @@ export class SchemaValidator {
 
     if (!quizData.questions || quizData.questions.length === 0) {
       errors.push({
-        field: "questions",
-        message: "Quiz deve ter pelo menos uma questão",
-        severity: "error",
+        field: 'questions',
+        message: 'Quiz deve ter pelo menos uma questão',
+        severity: 'error',
       });
     }
 

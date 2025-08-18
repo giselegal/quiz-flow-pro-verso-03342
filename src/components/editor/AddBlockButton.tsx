@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { EditorBlock } from "@/types/editor";
-import { Button } from "../ui/button";
+import React, { useState } from 'react';
+import { EditorBlock } from '@/types/editor';
+import { Button } from '../ui/button';
 import {
   Plus,
   Type,
@@ -10,35 +10,34 @@ import {
   DollarSign,
   Shield,
   MousePointer,
-} from "lucide-react";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+} from 'lucide-react';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 interface AddBlockButtonProps {
-  onAddBlock: (type: EditorBlock["type"]) => void;
+  onAddBlock: (type: EditorBlock['type']) => void;
 }
-
 
 const AddBlockButton: React.FC<AddBlockButtonProps> = ({ onAddBlock }) => {
   const [open, setOpen] = useState(false);
 
-  const handleAddBlock = (type: EditorBlock["type"]) => {
+  const handleAddBlock = (type: EditorBlock['type']) => {
     onAddBlock(type);
     setOpen(false);
   };
 
   const blockTypes = [
-    { type: "headline" as const, label: "Título", icon: Type },
-    { type: "text" as const, label: "Texto", icon: Type },
-    { type: "image" as const, label: "Imagem", icon: Image },
-    { type: "benefits" as const, label: "Benefícios", icon: ListChecks },
+    { type: 'headline' as const, label: 'Título', icon: Type },
+    { type: 'text' as const, label: 'Texto', icon: Type },
+    { type: 'image' as const, label: 'Imagem', icon: Image },
+    { type: 'benefits' as const, label: 'Benefícios', icon: ListChecks },
     {
-      type: "testimonials" as const,
-      label: "Depoimentos",
+      type: 'testimonials' as const,
+      label: 'Depoimentos',
       icon: MessageSquare,
     },
-    { type: "pricing" as const, label: "Preço", icon: DollarSign },
-    { type: "guarantee" as const, label: "Garantia", icon: Shield },
-    { type: "cta" as const, label: "Botão CTA", icon: MousePointer },
+    { type: 'pricing' as const, label: 'Preço', icon: DollarSign },
+    { type: 'guarantee' as const, label: 'Garantia', icon: Shield },
+    { type: 'cta' as const, label: 'Botão CTA', icon: MousePointer },
   ];
 
   return (

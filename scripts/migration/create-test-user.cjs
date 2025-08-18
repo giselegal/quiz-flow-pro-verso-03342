@@ -1,44 +1,44 @@
-const { createClient } = require("@supabase/supabase-js");
+const { createClient } = require('@supabase/supabase-js');
 
 // Configuração do Supabase
-const supabaseUrl = "https://txqljpitotmcxntprxiu.supabase.co";
+const supabaseUrl = 'https://txqljpitotmcxntprxiu.supabase.co';
 const supabaseKey =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR4cWxqcGl0b3RtY3hudHByeGl1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk4NjI3MzQsImV4cCI6MjA2NTQzODczNH0.rHGZV47KUnSJ0fDNXbL-OjuB50BsuzT2IeO_LL-P8ok";
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR4cWxqcGl0b3RtY3hudHByeGl1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk4NjI3MzQsImV4cCI6MjA2NTQzODczNH0.rHGZV47KUnSJ0fDNXbL-OjuB50BsuzT2IeO_LL-P8ok';
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 async function createTestUser() {
   try {
-    console.log("🔍 Verificando se já existe um usuário de teste...");
+    console.log('🔍 Verificando se já existe um usuário de teste...');
 
     // Verificar se já existe um usuário
     const { data: existingUsers, error: selectError } = await supabase
-      .from("users")
-      .select("*")
+      .from('users')
+      .select('*')
       .limit(1);
 
     if (selectError) {
-      console.error("❌ Erro ao verificar usuários existentes:", selectError);
+      console.error('❌ Erro ao verificar usuários existentes:', selectError);
       return;
     }
 
     if (existingUsers && existingUsers.length > 0) {
-      console.log("✅ Já existe pelo menos um usuário:", existingUsers[0]);
+      console.log('✅ Já existe pelo menos um usuário:', existingUsers[0]);
       return existingUsers[0];
     }
 
-    console.log("👤 Criando usuário de teste...");
+    console.log('👤 Criando usuário de teste...');
 
     // Criar um usuário de teste
-    const testUserId = "00000000-0000-0000-0000-000000000000";
+    const testUserId = '00000000-0000-0000-0000-000000000000';
     const { data, error } = await supabase
-      .from("users")
+      .from('users')
       .insert([
         {
           id: testUserId,
-          email: "admin@test.com",
-          name: "Admin Teste",
-          role: "admin",
+          email: 'admin@test.com',
+          name: 'Admin Teste',
+          role: 'admin',
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
         },
@@ -47,14 +47,14 @@ async function createTestUser() {
       .single();
 
     if (error) {
-      console.error("❌ Erro ao criar usuário de teste:", error);
+      console.error('❌ Erro ao criar usuário de teste:', error);
       return;
     }
 
-    console.log("✅ Usuário de teste criado com sucesso:", data);
+    console.log('✅ Usuário de teste criado com sucesso:', data);
     return data;
   } catch (error) {
-    console.error("❌ Erro geral:", error);
+    console.error('❌ Erro geral:', error);
   }
 }
 
@@ -62,11 +62,11 @@ async function createTestUser() {
 if (require.main === module) {
   createTestUser()
     .then(() => {
-      console.log("🎉 Script concluído!");
+      console.log('🎉 Script concluído!');
       process.exit(0);
     })
     .catch(error => {
-      console.error("💥 Erro fatal:", error);
+      console.error('💥 Erro fatal:', error);
       process.exit(1);
     });
 }

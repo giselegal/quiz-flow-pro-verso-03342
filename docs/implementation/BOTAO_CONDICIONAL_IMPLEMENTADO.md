@@ -119,10 +119,10 @@
 document.querySelector('[data-block-id="intro-cta-button"] button').disabled;
 
 // Verificar nome salvo
-localStorage.getItem("quiz-responses");
+localStorage.getItem('quiz-responses');
 
 // Monitorar eventos
-window.addEventListener("quiz-input-change", console.log);
+window.addEventListener('quiz-input-change', console.log);
 ```
 
 ## 🚀 **Status Final**

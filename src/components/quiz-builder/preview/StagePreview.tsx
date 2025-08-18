@@ -1,6 +1,5 @@
-import React from "react";
-import { QuizStage, QuizComponentData } from "@/types/quizBuilder";
-import ComponentRenderer from "../ComponentRenderer";
+import { QuizStage, QuizComponentData } from '@/types/quizBuilder';
+import ComponentRenderer from '../ComponentRenderer';
 
 interface StagePreviewProps {
   stage: QuizStage;

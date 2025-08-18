@@ -1,17 +1,17 @@
-import React, { useState } from "react";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import React, { useState } from 'react';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card } from "@/components/ui/card";
-import { Image, Upload } from "lucide-react";
+} from '@/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card } from '@/components/ui/card';
+import { Image, Upload } from 'lucide-react';
 
 interface EnhancedImagePropertiesProps {
   data: any;
@@ -19,7 +19,7 @@ interface EnhancedImagePropertiesProps {
 }
 
 const EnhancedImageProperties: React.FC<EnhancedImagePropertiesProps> = ({ data, onUpdate }) => {
-  const [activeTab, setActiveTab] = useState("url");
+  const [activeTab, setActiveTab] = useState('url');
 
   return (
     <div className="space-y-6">
@@ -43,7 +43,7 @@ const EnhancedImageProperties: React.FC<EnhancedImagePropertiesProps> = ({ data,
               <Label>URL da Imagem</Label>
               <Input
                 type="text"
-                value={data.imageUrl || ""}
+                value={data.imageUrl || ''}
                 onChange={e =>
                   onUpdate({
                     ...data,
@@ -59,9 +59,7 @@ const EnhancedImageProperties: React.FC<EnhancedImagePropertiesProps> = ({ data,
             <Card className="border border-dashed p-6 text-center">
               <div className="flex flex-col items-center gap-2">
                 <Upload className="h-8 w-8 text-gray-400" />
-                <p style={{ color: '#8B7355' }}>
-                  Arraste uma imagem ou clique para fazer upload
-                </p>
+                <p style={{ color: '#8B7355' }}>Arraste uma imagem ou clique para fazer upload</p>
                 <Button className="mt-2" size="sm">
                   Selecionar arquivo
                 </Button>
@@ -73,7 +71,7 @@ const EnhancedImageProperties: React.FC<EnhancedImagePropertiesProps> = ({ data,
                 id="image-upload"
                 onChange={e => {
                   // Implementar lógica de upload
-                  console.log("Implementar lógica de upload", e.target.files);
+                  console.log('Implementar lógica de upload', e.target.files);
                 }}
               />
             </Card>
@@ -101,14 +99,14 @@ const EnhancedImageProperties: React.FC<EnhancedImagePropertiesProps> = ({ data,
         </Tabs>
       </div>
 
-      {data.imageUrl && activeTab === "url" && (
+      {data.imageUrl && activeTab === 'url' && (
         <div className="border rounded-md p-4">
           <img
             src={data.imageUrl}
             alt="Preview"
             className="max-h-40 mx-auto object-contain"
             onError={e => {
-              e.currentTarget.src = "https://placehold.co/300x300?text=Error+loading+image";
+              e.currentTarget.src = 'https://placehold.co/300x300?text=Error+loading+image';
             }}
           />
         </div>
@@ -117,7 +115,7 @@ const EnhancedImageProperties: React.FC<EnhancedImagePropertiesProps> = ({ data,
       <div className="space-y-2">
         <Label>Texto Alternativo</Label>
         <Input
-          value={data.alt || ""}
+          value={data.alt || ''}
           onChange={e =>
             onUpdate({
               ...data,
@@ -131,7 +129,7 @@ const EnhancedImageProperties: React.FC<EnhancedImagePropertiesProps> = ({ data,
       <div className="space-y-2">
         <Label>Tamanho da Imagem</Label>
         <Select
-          value={data.imageSize || "medium"}
+          value={data.imageSize || 'medium'}
           onValueChange={value =>
             onUpdate({
               ...data,

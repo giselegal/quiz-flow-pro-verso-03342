@@ -1,7 +1,6 @@
-import React from "react";
-import { Card } from "@/components/ui/card";
-import { Check } from "lucide-react";
-import { motion } from "framer-motion";
+import { Card } from '@/components/ui/card';
+import { Check } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 interface BenefitItem {
   title: string;
@@ -14,22 +13,22 @@ interface BenefitListProps {
 
 const defaultBenefits = [
   {
-    title: "Peças que revelam sua essência",
+    title: 'Peças que revelam sua essência',
     description:
-      "Descobrir as roupas e acessórios que comunicam quem você realmente é, valorizando seu corpo e sua personalidade.",
+      'Descobrir as roupas e acessórios que comunicam quem você realmente é, valorizando seu corpo e sua personalidade.',
   },
   {
-    title: "Compras com propósito",
+    title: 'Compras com propósito',
     description:
-      "Parar de acumular peças que não combinam e investir no que faz sentido para o seu momento.",
+      'Parar de acumular peças que não combinam e investir no que faz sentido para o seu momento.',
   },
   {
-    title: "Versatilidade sem esforço",
-    description: "Criar combinações que expressam quem você é com menos esforço e mais impacto.",
+    title: 'Versatilidade sem esforço',
+    description: 'Criar combinações que expressam quem você é com menos esforço e mais impacto.',
   },
   {
-    title: "Autoconfiança visível",
-    description: "Sentir segurança no que veste porque cada escolha tem harmonia com quem você é.",
+    title: 'Autoconfiança visível',
+    description: 'Sentir segurança no que veste porque cada escolha tem harmonia com quem você é.',
   },
 ];
 
@@ -53,7 +52,7 @@ const BenefitList: React.FC<BenefitListProps> = ({ items }) => {
       opacity: 1,
       x: 0,
       transition: {
-        type: "spring",
+        type: 'spring',
         stiffness: 100,
       },
     },
@@ -73,7 +72,7 @@ const BenefitList: React.FC<BenefitListProps> = ({ items }) => {
         <motion.div
           className="h-0.5 bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d]/70 mt-1"
           initial={{ width: 0 }}
-          whileInView={{ width: "100%" }}
+          whileInView={{ width: '100%' }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.5 }}
         />

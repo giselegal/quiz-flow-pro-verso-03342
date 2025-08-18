@@ -171,12 +171,12 @@
 ### **IMPORTS NECESSÁRIOS** (linha ~30-40):
 
 ```tsx
-import { useAnalytics } from "../../services/analyticsService";
-import AnalyticsDashboard from "../analytics/AnalyticsDashboard";
-import { TemplateSelector } from "../templates/TemplateSelector";
-import { VersioningService } from "../../services/versioningService";
-import { ReportService } from "../../services/reportService";
-import { ABTestService } from "../../services/abTestService";
+import { useAnalytics } from '../../services/analyticsService';
+import AnalyticsDashboard from '../analytics/AnalyticsDashboard';
+import { TemplateSelector } from '../templates/TemplateSelector';
+import { VersioningService } from '../../services/versioningService';
+import { ReportService } from '../../services/reportService';
+import { ABTestService } from '../../services/abTestService';
 ```
 
 ### **HOOKS E ESTADOS** (linha ~90-106):

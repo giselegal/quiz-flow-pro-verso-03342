@@ -3,12 +3,12 @@
  * Interface para executar migrações via browser
  */
 
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { AlertTriangle, CheckCircle, Play, RefreshCw, XCircle } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { AlertTriangle, CheckCircle, Play, RefreshCw, XCircle } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 interface MigrationStatus {
   hasSchema: boolean;
@@ -39,11 +39,11 @@ export function MigrationPanel() {
   const checkStatus = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch("/api/admin/migrate", {
-        method: "GET",
+      const response = await fetch('/api/admin/migrate', {
+        method: 'GET',
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("admin_token") || "dev-token"}`,
-          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem('admin_token') || 'dev-token'}`,
+          'Content-Type': 'application/json',
         },
       });
 
@@ -53,7 +53,7 @@ export function MigrationPanel() {
         setStatus(data.status);
       }
     } catch (error) {
-      console.error("Erro ao verificar status:", error);
+      console.error('Erro ao verificar status:', error);
     } finally {
       setIsLoading(false);
     }
@@ -64,11 +64,11 @@ export function MigrationPanel() {
     setMigrationResult(null);
 
     try {
-      const response = await fetch("/api/admin/migrate", {
-        method: "POST",
+      const response = await fetch('/api/admin/migrate', {
+        method: 'POST',
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("admin_token") || "dev-token"}`,
-          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem('admin_token') || 'dev-token'}`,
+          'Content-Type': 'application/json',
         },
       });
 
@@ -80,7 +80,7 @@ export function MigrationPanel() {
     } catch (error: any) {
       setMigrationResult({
         success: false,
-        message: "Erro de conexão",
+        message: 'Erro de conexão',
         executed: [],
         errors: [error.message],
         timestamp: new Date().toISOString(),
@@ -95,7 +95,7 @@ export function MigrationPanel() {
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">🚀 Migração do Schema</h1>
         <Button onClick={checkStatus} disabled={isLoading} variant="outline" size="sm">
-          <RefreshCw className={`w-4 h-4 mr-2 ${isLoading ? "animate-spin" : ""}`} />
+          <RefreshCw className={`w-4 h-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
           Atualizar Status
         </Button>
       </div>
@@ -164,8 +164,8 @@ export function MigrationPanel() {
                 <AlertTriangle className="h-4 w-4" />
                 <AlertDescription>
                   {status.needsMigration
-                    ? "⚠️ Migração necessária para completar o schema"
-                    : "✅ Schema está completo e atualizado"}
+                    ? '⚠️ Migração necessária para completar o schema'
+                    : '✅ Schema está completo e atualizado'}
                 </AlertDescription>
               </Alert>
             </div>
@@ -186,8 +186,8 @@ export function MigrationPanel() {
           </CardHeader>
           <CardContent>
             <Button onClick={executeMigration} disabled={isExecuting} className="w-full" size="lg">
-              <Play className={`w-4 h-4 mr-2 ${isExecuting ? "animate-pulse" : ""}`} />
-              {isExecuting ? "Executando Migração..." : "Executar Migração"}
+              <Play className={`w-4 h-4 mr-2 ${isExecuting ? 'animate-pulse' : ''}`} />
+              {isExecuting ? 'Executando Migração...' : 'Executar Migração'}
             </Button>
           </CardContent>
         </Card>
@@ -216,7 +216,7 @@ export function MigrationPanel() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <Alert className={migrationResult.success ? "border-green-200" : "border-red-200"}>
+            <Alert className={migrationResult.success ? 'border-green-200' : 'border-red-200'}>
               <AlertDescription>{migrationResult.message}</AlertDescription>
             </Alert>
 
@@ -239,9 +239,7 @@ export function MigrationPanel() {
             {/* Erros */}
             {migrationResult.errors.length > 0 && (
               <div>
-                <h4 style={{ color: '#432818' }}>
-                  ❌ Erros ({migrationResult.errors.length})
-                </h4>
+                <h4 style={{ color: '#432818' }}>❌ Erros ({migrationResult.errors.length})</h4>
                 <div style={{ backgroundColor: '#FAF9F7' }}>
                   {migrationResult.errors.map((error, index) => (
                     <div key={index} className="text-sm text-red-700">

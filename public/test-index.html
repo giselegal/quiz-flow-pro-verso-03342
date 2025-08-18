@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🧪 Índice de Testes - Quiz Quest Challenge Verse</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family:
+          system-ui,
+          -apple-system,
+          sans-serif;
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        min-height: 100vh;
+        padding: 2rem;
+        color: #334155;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 3rem;
+      }
+
+      .header h1 {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #1e293b;
+        margin-bottom: 0.5rem;
+      }
+
+      .header p {
+        font-size: 1.1rem;
+        color: #64748b;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 2rem;
+        margin-bottom: 2rem;
+      }
+
+      .card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e2e8f0;
+        transition: all 0.2s ease;
+      }
+
+      .card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.15);
+      }
+
+      .card-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+      }
+
+      .card-icon {
+        font-size: 1.5rem;
+        margin-right: 0.75rem;
+      }
+
+      .card-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #1e293b;
+      }
+
+      .card-description {
+        color: #64748b;
+        margin-bottom: 1.5rem;
+        line-height: 1.5;
+      }
+
+      .card-link {
+        display: inline-block;
+        background: #3b82f6;
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: background-color 0.2s ease;
+        margin-right: 0.5rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .card-link:hover {
+        background: #2563eb;
+      }
+
+      .card-link.secondary {
+        background: #6b7280;
+      }
+
+      .card-link.secondary:hover {
+        background: #4b5563;
+      }
+
+      .status-badge {
+        display: inline-block;
+        background: #10b981;
+        color: white;
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        margin-left: auto;
+      }
+
+      .status-badge.warning {
+        background: #f59e0b;
+      }
+
+      .footer {
+        text-align: center;
+        margin-top: 3rem;
+        padding-top: 2rem;
+        border-top: 1px solid #e2e8f0;
+        color: #64748b;
+        font-size: 0.9rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>🧪 Ambiente de Testes</h1>
+        <p>Quiz Quest Challenge Verse - Índice de todas as páginas de teste e desenvolvimento</p>
+      </div>
+
+      <div class="grid">
+        <!-- Teste de Componentes -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-icon">🎨</span>
+            <span class="card-title">Teste de Componentes</span>
+            <span class="status-badge">✅ Novo</span>
+          </div>
+          <p class="card-description">
+            Ambiente completo para testar personalização de todos os componentes das etapas.
+            Interface dividida: componentes à esquerda, propriedades à direita.
+          </p>
+          <a href="/test/components" class="card-link">🚀 Acessar Teste</a>
+          <a
+            href="https://github.com/giselegal/quiz-quest-challenge-verse/blob/main/GUIA_TESTE_COMPONENTES.md"
+            class="card-link secondary"
+            >📖 Documentação</a
+          >
+        </div>
+
+        <!-- Editor Principal -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-icon">⚡</span>
+            <span class="card-title">Editor Principal</span>
+            <span class="status-badge">✅ Funcionando</span>
+          </div>
+          <p class="card-description">
+            Editor principal com drag & drop, 4 colunas, sistema de personalização por componente e
+            21 etapas de funil completas.
+          </p>
+          <a href="/editor-fixed-dragdrop" class="card-link">🎯 Editor Completo</a>
+          <a
+            href="https://github.com/giselegal/quiz-quest-challenge-verse/blob/main/SISTEMA_PERSONALIZACAO_COMPONENTES.md"
+            class="card-link secondary"
+            >📋 Funcionalidades</a
+          >
+        </div>
+
+        <!-- Debug do Editor -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-icon">🔧</span>
+            <span class="card-title">Debug do Editor</span>
+            <span class="status-badge">✅ Ativo</span>
+          </div>
+          <p class="card-description">
+            Interface de debug para contexto do editor, estados, propriedades e troubleshooting de
+            componentes.
+          </p>
+          <a href="/debug-editor" class="card-link">🔍 Debug Context</a>
+          <a href="/debug/editor" class="card-link secondary">🛠️ Debug Alternativo</a>
+        </div>
+
+        <!-- Teste de Propriedades -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-icon">⚙️</span>
+            <span class="card-title">Teste de Propriedades</span>
+            <span class="status-badge">✅ Disponível</span>
+          </div>
+          <p class="card-description">
+            Teste isolado do painel de propriedades inteligente com diferentes tipos de componentes
+            e configurações.
+          </p>
+          <a href="/test/properties" class="card-link">🎛️ Testar Propriedades</a>
+        </div>
+
+        <!-- Páginas do Sistema -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-icon">🏠</span>
+            <span class="card-title">Páginas do Sistema</span>
+            <span class="status-badge">✅ Funcionando</span>
+          </div>
+          <p class="card-description">
+            Acesso às páginas principais do sistema: home, quiz de usuário, resultados e área
+            administrativa.
+          </p>
+          <a href="/" class="card-link">🏡 Home</a>
+          <a href="/quiz/1" class="card-link secondary">📝 Quiz</a>
+          <a href="/admin" class="card-link secondary">👨‍💼 Admin</a>
+        </div>
+
+        <!-- Funcionalidades Experimentais -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-icon">🧬</span>
+            <span class="card-title">Experimentais</span>
+            <span class="status-badge warning">⚠️ Beta</span>
+          </div>
+          <p class="card-description">
+            Recursos em desenvolvimento: templates IA, testes A/B, componentes avançados e
+            funcionalidades experimentais.
+          </p>
+          <a href="/templates-ia" class="card-link">🤖 Templates IA</a>
+          <a href="/test/button" class="card-link secondary">🔘 Teste Botão</a>
+        </div>
+      </div>
+
+      <div class="footer">
+        <p><strong>Quiz Quest Challenge Verse</strong> | Ambiente de Desenvolvimento</p>
+        <p>
+          Servidor rodando em <code>localhost:8086</code> • Última atualização: 11 de Agosto de 2025
+        </p>
+        <p>
+          <a
+            href="https://github.com/giselegal/quiz-quest-challenge-verse"
+            style="color: #3b82f6; text-decoration: none"
+            >📂 Repositório GitHub</a
+          >
+          |
+          <a
+            href="https://github.com/giselegal/quiz-quest-challenge-verse/blob/main/README.md"
+            style="color: #3b82f6; text-decoration: none"
+            >📖 Documentação</a
+          >
+        </p>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,5 +1,4 @@
-import React from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 
 interface PricingBlockPreviewProps {
   content: {
@@ -25,7 +24,7 @@ const PricingBlockPreview: React.FC<PricingBlockPreviewProps> = ({ content }) =>
       </div>
 
       <Button className="w-full bg-[#aa6b5d] hover:bg-[#8f5a4c] text-white p-6 text-lg">
-        {content.buttonText || "Comprar Agora"}
+        {content.buttonText || 'Comprar Agora'}
       </Button>
 
       {content.urgencyText && <p className="text-sm text-[#aa6b5d]">{content.urgencyText}</p>}

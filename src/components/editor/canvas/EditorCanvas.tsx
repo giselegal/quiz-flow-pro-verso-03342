@@ -1,11 +1,9 @@
-import { getBlockComponent } from "@/config/enhancedBlockRegistry";
-import { useContainerProperties } from "@/hooks/useContainerProperties";
-import { cn } from "@/lib/utils";
-import { Block } from "@/types/editor";
-import { DndContext, DragEndEvent } from "@dnd-kit/core";
-import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
-import React from "react";
-import { SortableBlockWrapper } from "./SortableBlockWrapper";
+import React, { useMemo, useCallback } from 'react';
+import { Block } from '@/types/editor';
+import { DndContext, DragEndEvent } from '@dnd-kit/core';
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { SortableBlockWrapper } from './SortableBlockWrapper';
+import OptimizedBlockRenderer from '../blocks/OptimizedBlockRenderer';
 
 interface EditorCanvasProps {
   blocks: Block[];
@@ -15,7 +13,7 @@ interface EditorCanvasProps {
   onDeleteBlock: (blockId: string) => void;
   onReorderBlocks: (sourceIndex: number, destinationIndex: number) => void;
   isPreviewing?: boolean;
-  viewportSize?: "sm" | "md" | "lg";
+  viewportSize?: 'sm' | 'md' | 'lg';
 }
 
 export const EditorCanvas: React.FC<EditorCanvasProps> = ({
@@ -26,76 +24,63 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
   onDeleteBlock,
   onReorderBlocks,
   isPreviewing = false,
-  viewportSize = "lg",
+  viewportSize = 'lg',
 }) => {
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
+  // Memoizar handler de drag end
+  const handleDragEnd = useCallback(
+    (event: DragEndEvent) => {
+      const { active, over } = event;
 
-    if (!over || active.id === over.id) return;
+      if (!over || active.id === over.id) return;
 
-    const oldIndex = blocks.findIndex(block => block.id === active.id);
-    const newIndex = blocks.findIndex(block => block.id === over.id);
+      const oldIndex = blocks.findIndex(block => block.id === active.id);
+      const newIndex = blocks.findIndex(block => block.id === over.id);
 
-    if (oldIndex !== -1 && newIndex !== -1) {
-      onReorderBlocks(oldIndex, newIndex);
-    }
-  };
+      if (oldIndex !== -1 && newIndex !== -1) {
+        onReorderBlocks(oldIndex, newIndex);
+      }
+    },
+    [blocks, onReorderBlocks]
+  );
 
-  const getViewportClasses = () => {
+  // Memoizar viewport classes
+  const viewportClasses = useMemo(() => {
     switch (viewportSize) {
-      case "sm":
-        return "max-w-full mx-auto px-2";
-      case "md":
-        return "max-w-full mx-auto px-4";
-      case "lg":
-        return "max-w-full mx-auto px-6";
+      case 'sm':
+        return 'max-w-full mx-auto px-2';
+      case 'md':
+        return 'max-w-full mx-auto px-4';
+      case 'lg':
+        return 'max-w-full mx-auto px-6';
       default:
-        return "max-w-full mx-auto px-6";
+        return 'max-w-full mx-auto px-6';
     }
-  };
+  }, [viewportSize]);
 
-  const handleUpdateBlock = (blockId: string, updates: any) => {
-    onUpdateBlock(blockId, updates);
-  };
+  // Memoizar handler de update
+  const handleUpdateBlock = useCallback(
+    (blockId: string, updates: any) => {
+      onUpdateBlock(blockId, updates);
+    },
+    [onUpdateBlock]
+  );
 
-  // 🎯 Componente simplificado para preview (2 containers apenas)
-  const PreviewBlock: React.FC<{ block: Block }> = ({ block }) => {
-    const { containerClasses, inlineStyles } = useContainerProperties(block.properties);
-    const Component = getBlockComponent(block.type);
+  // Componente otimizado para preview
+  const PreviewBlock = React.memo<{ block: Block }>(({ block }) => (
+    <OptimizedBlockRenderer block={block} isSelected={false} isPreviewing={true} />
+  ));
 
-    if (!Component) {
-      return (
-        <div style={{ borderColor: '#E5DDD5' }}>
-          <p>Componente não encontrado: {block.type}</p>
-        </div>
-      );
-    }
+  // Memoizar lista de IDs dos blocos para DnD
+  const blockIds = useMemo(() => blocks.map(b => b.id), [blocks]);
 
-    // 🔧 CORREÇÃO CRÍTICA: Passar properties diretamente para QuizOptionsGridBlock
-    const componentProps = {
-      id: block.id,
-      properties: block.properties,
-      isSelected: false,
-      // Manter compatibilidade com outros componentes que esperam block
-      block: block,
-    };
-
-    return (
-      <div className={cn("transition-all duration-200", containerClasses)} style={inlineStyles}>
-        <Component {...componentProps} />
-      </div>
-    );
-  };
-
+  // Renderização otimizada para preview
   if (isPreviewing) {
     return (
-      <div className={`py-1 ${getViewportClasses()}`}>
+      <div className={`py-1 ${viewportClasses}`}>
         <div className="space-y-1">
           {blocks.map(block => (
-            <div key={block.id} className="w-full flex justify-center">
-              <div className="w-full max-w-none">
-                <PreviewBlock block={block} />
-              </div>
+            <div key={`preview-${block.id}`} className="w-full">
+              <PreviewBlock block={block} />
             </div>
           ))}
         </div>
@@ -103,29 +88,29 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
     );
   }
 
+  // Renderização otimizada para edição
   return (
-    <div className={`py-1 ${getViewportClasses()}`}>
+    <div className={`py-1 ${viewportClasses}`}>
       <DndContext onDragEnd={handleDragEnd}>
-        <SortableContext items={blocks.map(b => b.id)} strategy={verticalListSortingStrategy}>
+        <SortableContext items={blockIds} strategy={verticalListSortingStrategy}>
           <div className="space-y-1">
             {blocks.map(block => (
-              <div key={block.id} className="w-full flex justify-center">
-                <div className="w-full max-w-none">
-                  <SortableBlockWrapper
-                    key={block.id}
-                    block={block}
-                    isSelected={selectedBlockId === block.id}
-                    onSelect={() => onSelectBlock(block.id)}
-                    onUpdate={updates => handleUpdateBlock(block.id, updates)}
-                    onDelete={() => onDeleteBlock(block.id)}
-                  />
-                </div>
+              <div key={`edit-${block.id}`} className="w-full">
+                <SortableBlockWrapper
+                  block={block}
+                  isSelected={selectedBlockId === block.id}
+                  onSelect={() => onSelectBlock(block.id)}
+                  onUpdate={updates => handleUpdateBlock(block.id, updates)}
+                  onDelete={() => onDeleteBlock(block.id)}
+                />
               </div>
             ))}
             {blocks.length === 0 && (
-              <div style={{ color: '#8B7355' }}>
-                <p>Nenhum componente adicionado ainda.</p>
-                <p className="text-sm">Arraste componentes da barra lateral para começar.</p>
+              <div className="text-center py-8" style={{ color: '#8B7355' }}>
+                <p className="text-lg font-medium">Nenhum componente adicionado ainda.</p>
+                <p className="text-sm opacity-70 mt-2">
+                  Arraste componentes da barra lateral para começar.
+                </p>
               </div>
             )}
           </div>

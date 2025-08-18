@@ -1,6 +1,5 @@
-import { cn } from "@/lib/utils";
-import React from "react";
-import type { BlockComponentProps } from "../../../types/blocks";
+import { cn } from '@/lib/utils';
+import type { BlockComponentProps } from '@/types/blocks';
 
 /**
  * DecorativeBarInlineBlock - Barra decorativa dourada
@@ -11,13 +10,13 @@ import type { BlockComponentProps } from "../../../types/blocks";
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (
   value: string | number,
-  type: "top" | "bottom" | "left" | "right"
+  type: 'top' | 'bottom' | 'left' | 'right'
 ): string => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -60,14 +59,14 @@ const DecorativeBarInlineBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   onClick,
-  onPropertyChange, // ✅ Adicionando suporte a edição de propriedades
-  className = "",
+  onPropertyChange: _onPropertyChange, // ✅ Adicionando suporte a edição de propriedades
+  className = '',
 }) => {
   const {
-    width = "100%",
+    width = '100%',
     height = 4,
-    color = "#B89B7A",
-    gradientColors = ["#B89B7A", "#D4C2A8", "#B89B7A"],
+    color = '#B89B7A',
+    gradientColors = ['#B89B7A', '#D4C2A8', '#B89B7A'],
     borderRadius = 3,
     marginTop = 8,
     marginBottom = 24,
@@ -79,15 +78,15 @@ const DecorativeBarInlineBlock: React.FC<BlockComponentProps> = ({
   return (
     <div
       className={cn(
-        "w-full flex justify-center items-center",
-        isSelected && "ring-2 ring-[#B89B7A] ring-offset-2 rounded-md p-1",
-        "cursor-pointer transition-all duration-200",
+        'w-full flex justify-center items-center',
+        isSelected && 'ring-2 ring-[#B89B7A] ring-offset-2 rounded-md p-1',
+        'cursor-pointer transition-all duration-200',
         className,
         // Margens universais com controles deslizantes
-        getMarginClass(marginTop, "top"),
-        getMarginClass(marginBottom, "bottom"),
-        getMarginClass(marginLeft, "left"),
-        getMarginClass(marginRight, "right")
+        getMarginClass(marginTop, 'top'),
+        getMarginClass(marginBottom, 'bottom'),
+        getMarginClass(marginLeft, 'left'),
+        getMarginClass(marginRight, 'right')
       )}
       style={{
         marginTop: `${marginTop}px`,
@@ -104,7 +103,7 @@ const DecorativeBarInlineBlock: React.FC<BlockComponentProps> = ({
           height: `${height}px`,
           background:
             gradientColors.length > 1
-              ? `linear-gradient(90deg, ${gradientColors.join(", ")})`
+              ? `linear-gradient(90deg, ${gradientColors.join(', ')})`
               : color,
           borderRadius: `${borderRadius}px`,
           ...(showShadow && {

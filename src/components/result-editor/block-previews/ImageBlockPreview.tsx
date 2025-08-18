@@ -1,5 +1,3 @@
-import React from "react";
-
 interface ImageBlockPreviewProps {
   content: {
     imageUrl?: string;
@@ -13,9 +11,9 @@ interface ImageBlockPreviewProps {
 
 const ImageBlockPreview: React.FC<ImageBlockPreviewProps> = ({ content }) => {
   const imageStyle = {
-    width: content.width || "100%",
-    height: content.height || "auto",
-    borderRadius: content.borderRadius || "0.5rem",
+    width: content.width || '100%',
+    height: content.height || 'auto',
+    borderRadius: content.borderRadius || '0.5rem',
     ...content.style,
   };
 
@@ -24,7 +22,7 @@ const ImageBlockPreview: React.FC<ImageBlockPreviewProps> = ({ content }) => {
       {content.imageUrl ? (
         <img
           src={content.imageUrl}
-          alt={content.imageAlt || "Imagem"}
+          alt={content.imageAlt || 'Imagem'}
           style={imageStyle}
           className="mx-auto"
         />

@@ -1,5 +1,3 @@
-import React from "react";
-
 interface SpacerBlockPreviewProps {
   content: {
     height?: string;
@@ -8,13 +6,11 @@ interface SpacerBlockPreviewProps {
 }
 
 const SpacerBlockPreview: React.FC<SpacerBlockPreviewProps> = ({ content }) => {
-  const height = content.height || "40px";
+  const height = content.height || '40px';
 
   return (
     <div style={{ ...content.style, height }} className="relative">
-      <div style={{ borderColor: '#E5DDD5' }}>
-        Espaçamento: {height}
-      </div>
+      <div style={{ borderColor: '#E5DDD5' }}>Espaçamento: {height}</div>
     </div>
   );
 };

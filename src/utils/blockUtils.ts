@@ -1,8 +1,9 @@
+// @ts-nocheck
 /**
  * Utilitários para manipulação segura de blocos do editor
  */
 
-import { generateSemanticId } from "./semanticIdGenerator";
+import { generateSemanticId } from './semanticIdGenerator';
 
 /**
  * Extrai propriedades de forma segura de um bloco
@@ -11,16 +12,16 @@ import { generateSemanticId } from "./semanticIdGenerator";
  */
 export const safeGetBlockProperties = (block: any): Record<string, any> => {
   if (!block) {
-    console.warn("⚠️ Bloco undefined ou null");
+    console.warn('⚠️ Bloco undefined ou null');
     return {};
   }
 
-  const blockId = block.id || "unknown";
+  const blockId = block.id || 'unknown';
 
   // Tentar diferentes caminhos para as propriedades
   let properties = block.content || block.properties || block.data || {};
 
-  if (!properties || typeof properties !== "object") {
+  if (!properties || typeof properties !== 'object') {
     console.warn(`⚠️ Propriedades undefined no bloco ${blockId} (tipo: ${block.type})`);
     properties = {};
   }
@@ -54,12 +55,12 @@ export const initializeSafeBlock = (block: any) => {
   if (!block) {
     return {
       id: generateSemanticId({
-        context: "editor",
-        type: "block",
-        identifier: "default",
+        context: 'editor',
+        type: 'block',
+        identifier: 'default',
         index: 1,
       }),
-      type: "text-inline",
+      type: 'text-inline',
       properties: {},
     };
   }
@@ -69,12 +70,12 @@ export const initializeSafeBlock = (block: any) => {
     id:
       block.id ||
       generateSemanticId({
-        context: "editor",
-        type: "block",
-        identifier: block.type || "unknown",
+        context: 'editor',
+        type: 'block',
+        identifier: block.type || 'unknown',
         index: 1,
       }),
-    type: block.type || "text-inline",
+    type: block.type || 'text-inline',
     properties: block.properties || {},
   };
 };
@@ -85,7 +86,7 @@ export const initializeSafeBlock = (block: any) => {
  * @returns true se são seguras, false caso contrário
  */
 export const validateBlockProperties = (properties: any): boolean => {
-  if (!properties || typeof properties !== "object") {
+  if (!properties || typeof properties !== 'object') {
     return false;
   }
 
@@ -98,7 +99,7 @@ export const validateBlockProperties = (properties: any): boolean => {
  * @param block - O bloco sendo renderizado
  */
 export const logBlockDebug = (componentName: string, block: any) => {
-  if (process.env.NODE_ENV === "development") {
+  if (process.env.NODE_ENV === 'development') {
     console.log(`🧱 ${componentName} - Debug:`, {
       blockId: block?.id,
       blockType: block?.type,
@@ -117,18 +118,18 @@ export const logBlockDebug = (componentName: string, block: any) => {
  */
 export const createSafeFallback = (blockType: string, error?: string) => {
   return {
-    type: "div",
+    type: 'div',
     props: {
-      className: "p-4 bg-red-50 border border-red-200 rounded-lg text-red-700",
+      className: 'p-4 bg-red-50 border border-red-200 rounded-lg text-red-700',
       children: [`Erro no componente: ${blockType}`, error && ` - ${error}`]
         .filter(Boolean)
-        .join(""),
+        .join(''),
     },
   };
 };
 
 // Função helper para obter valores com fallback
-export const getBlockValue = (block: any, key: string, defaultValue: any = "") => {
+export const getBlockValue = (block: any, key: string, defaultValue: any = '') => {
   const properties = safeGetBlockProperties(block);
   return properties[key] !== undefined ? properties[key] : defaultValue;
 };

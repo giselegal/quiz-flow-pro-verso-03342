@@ -1,77 +1,79 @@
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
-import { useAuth } from "@/context/AuthContext";
-import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { 
-  ArrowLeft, 
-  ArrowRight, 
-  CheckCircle, 
-  Eye, 
-  EyeOff, 
-  Lock, 
-  Mail, 
-  Shield, 
-  Sparkles, 
-  User, 
-  Zap 
-} from "lucide-react";
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { useAuth } from '@/context/AuthContext';
+// import { useTranslation } from "react-i18next";
+import {
+  ArrowLeft,
+  ArrowRight,
+  CheckCircle,
+  Eye,
+  EyeOff,
+  Lock,
+  Mail,
+  Shield,
+  Sparkles,
+  User,
+  Zap,
+} from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 const AuthPage = () => {
-  const { login, register, user } = useAuth();
-  const { t } = useTranslation();
-  const navigate = useNavigate();
-  
+  const { login, signup, user } = useAuth();
+  // const { t } = useTranslation();
+  const navigate = (path: string) => {
+    // Para wouter, usamos window.location diretamente
+    window.location.href = path;
+  };
+
   const [isLogin, setIsLogin] = useState(true);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   useEffect(() => {
     if (user) {
-      navigate("/admin");
+      navigate('/admin');
     }
   }, [user, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
-    setSuccess("");
+    setError('');
+    setSuccess('');
 
     try {
       if (isLogin) {
         await login(email, password);
-        setSuccess("Login realizado com sucesso!");
-        setTimeout(() => navigate("/admin"), 1000);
+        setSuccess('Login realizado com sucesso!');
+        setTimeout(() => navigate('/admin'), 1000);
       } else {
-        await register(email, password, name);
-        setSuccess("Conta criada com sucesso! Redirecionando...");
-        setTimeout(() => navigate("/admin"), 1000);
+        await signup(email, password, name);
+        setSuccess('Conta criada com sucesso! Redirecionando...');
+        setTimeout(() => navigate('/admin'), 1000);
       }
     } catch (err: any) {
-      setError(err.message || "Erro ao processar solicitação");
+      setError(err.message || 'Erro ao processar solicitação');
     } finally {
       setLoading(false);
     }
   };
 
   const benefits = [
-    "Editor visual drag-and-drop",
-    "Templates profissionais inclusos",
-    "Analytics em tempo real",
-    "Integração com CRM",
-    "Suporte 24/7",
-    "LGPD Compliant"
+    'Editor visual drag-and-drop',
+    'Templates profissionais inclusos',
+    'Analytics em tempo real',
+    'Integração com CRM',
+    'Suporte 24/7',
+    'LGPD Compliant',
   ];
 
   return (
@@ -81,12 +83,15 @@ const AuthPage = () => {
         {/* Background Pattern */}
         <div className="absolute inset-0 bg-gradient-to-br from-blue-600/90 to-purple-800/90"></div>
         <div className="absolute inset-0 opacity-5">
-          <div className="w-full h-full" style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-            backgroundRepeat: 'repeat'
-          }}></div>
+          <div
+            className="w-full h-full"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+              backgroundRepeat: 'repeat',
+            }}
+          ></div>
         </div>
-        
+
         <div className="relative z-10 flex flex-col justify-center px-12 py-20 text-white">
           {/* Logo */}
           <div className="flex items-center space-x-3 mb-12">
@@ -106,7 +111,8 @@ const AuthPage = () => {
               <span className="text-blue-200 block">clientes engajados</span>
             </h2>
             <p className="text-xl text-blue-100 leading-relaxed">
-              Crie quizzes interativos e funnels de conversão que capturam leads qualificados e aumentam suas vendas.
+              Crie quizzes interativos e funnels de conversão que capturam leads qualificados e
+              aumentam suas vendas.
             </p>
           </div>
 
@@ -162,7 +168,7 @@ const AuthPage = () => {
           {/* Back Button */}
           <Button
             variant="ghost"
-            onClick={() => navigate("/")}
+            onClick={() => navigate('/')}
             className="mb-6 text-slate-600 hover:text-slate-900 p-0"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
@@ -174,19 +180,18 @@ const AuthPage = () => {
               <div className="flex justify-center mb-4">
                 <Badge className="bg-gradient-to-r from-blue-100 to-purple-100 text-blue-700 border-0 px-4 py-2">
                   <Sparkles className="h-4 w-4 mr-2" />
-                  {isLogin ? "Acesse sua conta" : "Crie sua conta grátis"}
+                  {isLogin ? 'Acesse sua conta' : 'Crie sua conta grátis'}
                 </Badge>
               </div>
-              
+
               <CardTitle className="text-2xl font-bold text-slate-900">
-                {isLogin ? "Entrar na plataforma" : "Começar gratuitamente"}
+                {isLogin ? 'Entrar na plataforma' : 'Começar gratuitamente'}
               </CardTitle>
-              
+
               <CardDescription className="text-slate-600">
-                {isLogin 
-                  ? "Acesse seu dashboard e continue criando experiências incríveis"
-                  : "Crie sua conta e comece a converter mais em minutos"
-                }
+                {isLogin
+                  ? 'Acesse seu dashboard e continue criando experiências incríveis'
+                  : 'Crie sua conta e comece a converter mais em minutos'}
               </CardDescription>
             </CardHeader>
 
@@ -216,7 +221,7 @@ const AuthPage = () => {
                         type="text"
                         placeholder="Seu nome completo"
                         value={name}
-                        onChange={(e) => setName(e.target.value)}
+                        onChange={e => setName(e.target.value)}
                         required={!isLogin}
                         className="pl-10 h-12 border-slate-200 focus:border-blue-500 focus:ring-blue-500"
                       />
@@ -235,7 +240,7 @@ const AuthPage = () => {
                       type="email"
                       placeholder="seu@email.com"
                       value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      onChange={e => setEmail(e.target.value)}
                       required
                       className="pl-10 h-12 border-slate-200 focus:border-blue-500 focus:ring-blue-500"
                     />
@@ -250,10 +255,10 @@ const AuthPage = () => {
                     <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
                     <Input
                       id="password"
-                      type={showPassword ? "text" : "password"}
+                      type={showPassword ? 'text' : 'password'}
                       placeholder="Sua senha"
                       value={password}
-                      onChange={(e) => setPassword(e.target.value)}
+                      onChange={e => setPassword(e.target.value)}
                       required
                       className="pl-10 pr-10 h-12 border-slate-200 focus:border-blue-500 focus:ring-blue-500"
                     />
@@ -265,11 +270,7 @@ const AuthPage = () => {
                       {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </button>
                   </div>
-                  {!isLogin && (
-                    <p className="text-xs text-slate-500">
-                      Mínimo 6 caracteres
-                    </p>
-                  )}
+                  {!isLogin && <p className="text-xs text-slate-500">Mínimo 6 caracteres</p>}
                 </div>
 
                 <Button
@@ -284,7 +285,7 @@ const AuthPage = () => {
                     </div>
                   ) : (
                     <div className="flex items-center space-x-2">
-                      <span>{isLogin ? "Entrar na plataforma" : "Criar conta grátis"}</span>
+                      <span>{isLogin ? 'Entrar na plataforma' : 'Criar conta grátis'}</span>
                       <ArrowRight className="h-4 w-4" />
                     </div>
                   )}
@@ -294,18 +295,18 @@ const AuthPage = () => {
               {/* Toggle Mode */}
               <div className="text-center pt-4 border-t border-slate-100">
                 <p className="text-slate-600">
-                  {isLogin ? "Ainda não tem uma conta?" : "Já tem uma conta?"}
+                  {isLogin ? 'Ainda não tem uma conta?' : 'Já tem uma conta?'}
                 </p>
                 <Button
                   variant="link"
                   onClick={() => {
                     setIsLogin(!isLogin);
-                    setError("");
-                    setSuccess("");
+                    setError('');
+                    setSuccess('');
                   }}
                   className="text-blue-600 hover:text-blue-700 font-semibold p-0 h-auto"
                 >
-                  {isLogin ? "Criar conta grátis" : "Fazer login"}
+                  {isLogin ? 'Criar conta grátis' : 'Fazer login'}
                 </Button>
               </div>
 
@@ -320,11 +321,17 @@ const AuthPage = () => {
           {/* Footer Links */}
           <div className="text-center mt-8 space-y-2">
             <div className="flex items-center justify-center space-x-4 text-xs text-slate-500">
-              <a href="#" className="hover:text-slate-700 transition-colors">Termos de Uso</a>
+              <a href="#" className="hover:text-slate-700 transition-colors">
+                Termos de Uso
+              </a>
               <span>•</span>
-              <a href="#" className="hover:text-slate-700 transition-colors">Política de Privacidade</a>
+              <a href="#" className="hover:text-slate-700 transition-colors">
+                Política de Privacidade
+              </a>
               <span>•</span>
-              <a href="#" className="hover:text-slate-700 transition-colors">Suporte</a>
+              <a href="#" className="hover:text-slate-700 transition-colors">
+                Suporte
+              </a>
             </div>
             <p className="text-xs text-slate-400">
               © 2024 QuizFlow. Todos os direitos reservados.

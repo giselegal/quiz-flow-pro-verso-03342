@@ -1,5 +1,4 @@
-import React from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 
 interface CTABlockPreviewProps {
   content: {
@@ -16,7 +15,7 @@ const CTABlockPreview: React.FC<CTABlockPreviewProps> = ({ content }) => {
       {content.title && <h3 className="text-xl font-semibold text-[#aa6b5d]">{content.title}</h3>}
 
       <Button className="bg-[#aa6b5d] hover:bg-[#8f5a4c] text-white px-8 py-6 text-lg">
-        {content.buttonText || "Clique Aqui"}
+        {content.buttonText || 'Clique Aqui'}
       </Button>
     </div>
   );

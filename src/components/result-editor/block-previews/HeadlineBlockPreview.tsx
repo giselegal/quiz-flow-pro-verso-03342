@@ -1,5 +1,3 @@
-import React from "react";
-
 interface HeadlineBlockPreviewProps {
   content: {
     title?: string;
@@ -13,17 +11,17 @@ const HeadlineBlockPreview: React.FC<HeadlineBlockPreviewProps> = ({ content }) 
 
   // Aplicar estilos ou usar padrões
   const titleStyle = {
-    fontSize: style.fontSize || "1.5rem",
-    fontWeight: style.fontWeight || "600",
-    color: style.color || "#432818",
-    textAlign: style.textAlign || "left",
+    fontSize: style.fontSize || '1.5rem',
+    fontWeight: style.fontWeight || '600',
+    color: style.color || '#432818',
+    textAlign: style.textAlign || 'left',
     ...style,
   };
 
   const subtitleStyle = {
-    fontSize: "1rem",
-    color: "#8F7A6A",
-    textAlign: style.textAlign || "left",
+    fontSize: '1rem',
+    color: '#8F7A6A',
+    textAlign: style.textAlign || 'left',
   };
 
   return (

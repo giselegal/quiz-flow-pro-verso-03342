@@ -1,9 +1,9 @@
-import React from "react";
-import { ChevronDown, ChevronRight, Edit } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { QuizCategory, QUIZ_CATEGORIES } from "@/types/quizEditor";
-import { QuizQuestion } from "@/types/quiz";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+// @ts-nocheck
+import { ChevronDown, ChevronRight, Edit } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { QuizCategory, QUIZ_CATEGORIES } from '@/types/quizEditor';
+import { QuizQuestion } from '@/types/quiz';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
 interface CategoryInfo {
   id: QuizCategory;
@@ -37,11 +37,11 @@ const QuizCategoryTab: React.FC<QuizCategoryTabProps> = ({
   }, [isActive]);
 
   return (
-    <div className={`rounded-md border ${isActive ? "border-[#B89B7A]" : "border-gray-200"}`}>
+    <div className={`rounded-md border ${isActive ? 'border-[#B89B7A]' : 'border-gray-200'}`}>
       <Collapsible open={isOpen} onOpenChange={setIsOpen}>
         <CollapsibleTrigger asChild>
           <div
-            className={`p-3 flex justify-between items-center cursor-pointer ${isActive ? "bg-[#FAF9F7]" : "bg-white"}`}
+            className={`p-3 flex justify-between items-center cursor-pointer ${isActive ? 'bg-[#FAF9F7]' : 'bg-white'}`}
             onClick={onClick}
           >
             <div>

@@ -1,11 +1,10 @@
-import React from "react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Card } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Block } from "@/types/editor";
-import StyleEditor from "../style-editors/StyleEditor";
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Card } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Block } from '@/types/editor';
+import StyleEditor from '../style-editors/StyleEditor';
 
 interface TwoColumnBlockEditorProps {
   block: Block;
@@ -17,13 +16,13 @@ const TwoColumnBlockEditor: React.FC<TwoColumnBlockEditorProps> = ({ block, onUp
 
   // Ensure leftColumn and rightColumn exist and have style property
   const leftColumn = content.leftColumn || {
-    content: "",
-    width: "50%",
+    content: '',
+    width: '50%',
     style: {},
   };
   const rightColumn = content.rightColumn || {
-    content: "",
-    width: "50%",
+    content: '',
+    width: '50%',
     style: {},
   };
 
@@ -68,7 +67,7 @@ const TwoColumnBlockEditor: React.FC<TwoColumnBlockEditorProps> = ({ block, onUp
               <Label htmlFor="columnGap">Espaçamento entre Colunas</Label>
               <Input
                 id="columnGap"
-                value={content.columnGap || "20px"}
+                value={content.columnGap || '20px'}
                 onChange={e => onUpdate({ ...content, columnGap: e.target.value })}
                 placeholder="ex: 20px ou 1rem"
               />
@@ -78,7 +77,7 @@ const TwoColumnBlockEditor: React.FC<TwoColumnBlockEditorProps> = ({ block, onUp
               <Label htmlFor="leftColumnWidth">Largura da Coluna Esquerda</Label>
               <Input
                 id="leftColumnWidth"
-                value={leftColumn.width || "50%"}
+                value={leftColumn.width || '50%'}
                 onChange={e => handleLeftColumnUpdate({ width: e.target.value })}
                 placeholder="ex: 50% ou 300px"
               />
@@ -91,7 +90,7 @@ const TwoColumnBlockEditor: React.FC<TwoColumnBlockEditorProps> = ({ block, onUp
               <Label htmlFor="rightColumnWidth">Largura da Coluna Direita</Label>
               <Input
                 id="rightColumnWidth"
-                value={rightColumn.width || "50%"}
+                value={rightColumn.width || '50%'}
                 onChange={e => handleRightColumnUpdate({ width: e.target.value })}
                 placeholder="ex: 50% ou 300px"
               />
@@ -103,7 +102,7 @@ const TwoColumnBlockEditor: React.FC<TwoColumnBlockEditorProps> = ({ block, onUp
               <Label htmlFor="leftContent">Conteúdo da Coluna Esquerda</Label>
               <Textarea
                 id="leftContent"
-                value={leftColumn.content || ""}
+                value={leftColumn.content || ''}
                 onChange={e => handleLeftColumnUpdate({ content: e.target.value })}
                 placeholder="Adicione conteúdo HTML ou texto simples aqui"
                 className="min-h-[150px]"
@@ -127,7 +126,7 @@ const TwoColumnBlockEditor: React.FC<TwoColumnBlockEditorProps> = ({ block, onUp
               <Label htmlFor="rightContent">Conteúdo da Coluna Direita</Label>
               <Textarea
                 id="rightContent"
-                value={rightColumn.content || ""}
+                value={rightColumn.content || ''}
                 onChange={e => handleRightColumnUpdate({ content: e.target.value })}
                 placeholder="Adicione conteúdo HTML ou texto simples aqui"
                 className="min-h-[150px]"

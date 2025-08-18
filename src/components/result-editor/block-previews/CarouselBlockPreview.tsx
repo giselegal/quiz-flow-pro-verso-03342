@@ -1,12 +1,12 @@
-import React from "react";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from "@/components/ui/carousel";
-import { cn } from "@/lib/utils";
+} from '@/components/ui/carousel';
+import { cn } from '@/lib/utils';
+import React, { useEffect, useState } from 'react';
 
 interface CarouselBlockPreviewProps {
   content: {
@@ -34,10 +34,10 @@ const CarouselBlockPreview: React.FC<CarouselBlockPreviewProps> = ({ content }) 
   } = content;
 
   // Referência para o API do carrossel para autoplay
-  const [api, setApi] = React.useState<any>(null);
+  const [api, setApi] = useState<any>(null);
 
   // Configurar autoplay
-  React.useEffect(() => {
+  useEffect(() => {
     if (!api || !autoPlay) return;
 
     // Função para avançar para o próximo slide
@@ -63,7 +63,7 @@ const CarouselBlockPreview: React.FC<CarouselBlockPreviewProps> = ({ content }) 
                 <div className="p-1">
                   <div className="overflow-hidden rounded-lg">
                     <img
-                      src={image.url || "/placeholder.svg"}
+                      src={image.url || '/placeholder.svg'}
                       alt={image.alt}
                       className="w-full h-auto aspect-[16/9] object-cover"
                     />
@@ -79,9 +79,9 @@ const CarouselBlockPreview: React.FC<CarouselBlockPreviewProps> = ({ content }) 
           {showArrows && carouselImages.length > 1 && (
             <>
               <CarouselPrevious
-                className={cn("absolute left-2 top-1/2 transform -translate-y-1/2")}
+                className={cn('absolute left-2 top-1/2 transform -translate-y-1/2')}
               />
-              <CarouselNext className={cn("absolute right-2 top-1/2 transform -translate-y-1/2")} />
+              <CarouselNext className={cn('absolute right-2 top-1/2 transform -translate-y-1/2')} />
             </>
           )}
 

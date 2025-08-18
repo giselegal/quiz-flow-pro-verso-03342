@@ -1,8 +1,8 @@
 // @ts-nocheck
-import React from "react";
-import { cn } from "@/lib/utils";
-import { Image as ImageIcon, Edit3 } from "lucide-react";
-import type { BlockComponentProps } from "@/types/blocks";
+import React from 'react';
+import { cn } from '@/lib/utils';
+import { Image as ImageIcon, Edit3 } from 'lucide-react';
+import type { BlockComponentProps } from '@/types/blocks';
 
 /**
  * ImageInlineBlock - Componente modular inline horizontal
@@ -12,11 +12,11 @@ import type { BlockComponentProps } from "@/types/blocks";
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -60,66 +60,71 @@ const ImageInlineBlock: React.FC<BlockComponentProps> = ({
   isSelected = false,
   onClick,
   onPropertyChange,
-  className = "",
+  className = '',
 }) => {
   const {
-    src = "",
-    alt = "Imagem",
-    width = "auto",
-    height = "auto",
-    objectFit = "cover", // cover, contain, fill, none, scale-down
-    borderRadius = "medium",
-    aspectRatio = "auto", // auto, square, video, portrait
-    maxWidth = "full",
-    alignment = "center",
+    src = '',
+    alt = 'Imagem',
+    width = 'auto',
+    height = 'auto',
+    objectFit = 'cover', // cover, contain, fill, none, scale-down
+    borderRadius = 'medium',
+    aspectRatio = 'auto', // auto, square, video, portrait
+    maxWidth = 'full',
+    alignment = 'center',
     showCaption = false,
-    caption = "",
+    caption = '',
     clickable = false,
-    href = "",
-    target = "_blank",
+    href = '',
+    target = '_blank',
+    // Sistema de margens
+    marginTop = 0,
+    marginBottom = 0,
+    marginLeft = 0,
+    marginRight = 0,
   } = block?.properties || {};
 
   // Object fit classes
   const objectFitClasses = {
-    cover: "object-cover",
-    contain: "object-contain",
-    fill: "object-fill",
-    none: "object-none",
-    "scale-down": "object-scale-down",
+    cover: 'object-cover',
+    contain: 'object-contain',
+    fill: 'object-fill',
+    none: 'object-none',
+    'scale-down': 'object-scale-down',
   };
 
   // Border radius classes
   const borderRadiusClasses = {
-    none: "rounded-none",
-    small: "rounded-sm",
-    medium: "rounded-md",
-    large: "rounded-lg",
-    full: "rounded-full",
+    none: 'rounded-none',
+    small: 'rounded-sm',
+    medium: 'rounded-md',
+    large: 'rounded-lg',
+    full: 'rounded-full',
   };
 
   // Aspect ratio classes
   const aspectRatioClasses = {
-    auto: "",
-    square: "aspect-square",
-    video: "aspect-video",
-    portrait: "aspect-[3/4]",
+    auto: '',
+    square: 'aspect-square',
+    video: 'aspect-video',
+    portrait: 'aspect-[3/4]',
   };
 
   // Max width classes
   const maxWidthClasses = {
-    sm: "max-w-sm",
-    md: "max-w-md",
-    lg: "max-w-lg",
-    xl: "max-w-xl",
-    "2xl": "max-w-2xl",
-    full: "max-w-full",
+    sm: 'max-w-sm',
+    md: 'max-w-md',
+    lg: 'max-w-lg',
+    xl: 'max-w-xl',
+    '2xl': 'max-w-2xl',
+    full: 'max-w-full',
   };
 
   // Alignment classes
   const alignmentClasses = {
-    left: "mx-0 mr-auto",
-    center: "mx-auto",
-    right: "mx-0 ml-auto",
+    left: 'mx-0 mr-auto',
+    center: 'mx-auto',
+    right: 'mx-0 ml-auto',
   };
 
   const handleImageClick = () => {
@@ -132,18 +137,18 @@ const ImageInlineBlock: React.FC<BlockComponentProps> = ({
     <div
       className={cn(
         // INLINE HORIZONTAL: Flexível
-        "flex-shrink-0 flex-grow-0 relative group",
+        'flex-shrink-0 flex-grow-0 relative group',
         // Container editável
-        "p-2 rounded-lg border border-transparent",
-        "hover:border-gray-200 hover:bg-gray-50/30 transition-all duration-200",
-        "cursor-pointer",
-        isSelected && "border-[#B89B7A] bg-[#B89B7A]/10/30",
+        'p-2 rounded-lg border border-transparent',
+        'hover:border-gray-200 hover:bg-gray-50/30 transition-all duration-200',
+        'cursor-pointer',
+        isSelected && 'border-[#B89B7A] bg-[#B89B7A]/10/30',
         className,
         // Margens universais com controles deslizantes
-        getMarginClass(marginTop, "top"),
-        getMarginClass(marginBottom, "bottom"),
-        getMarginClass(marginLeft, "left"),
-        getMarginClass(marginRight, "right")
+        getMarginClass(marginTop, 'top'),
+        getMarginClass(marginBottom, 'bottom'),
+        getMarginClass(marginLeft, 'left'),
+        getMarginClass(marginRight, 'right')
       )}
       onClick={onClick}
     >
@@ -151,12 +156,12 @@ const ImageInlineBlock: React.FC<BlockComponentProps> = ({
         <div className="space-y-2">
           <div
             className={cn(
-              "relative overflow-hidden",
+              'relative overflow-hidden',
               borderRadiusClasses[borderRadius as keyof typeof borderRadiusClasses],
               aspectRatioClasses[aspectRatio as keyof typeof aspectRatioClasses],
               maxWidthClasses[maxWidth as keyof typeof maxWidthClasses],
               alignmentClasses[alignment as keyof typeof alignmentClasses],
-              clickable && "cursor-pointer"
+              clickable && 'cursor-pointer'
             )}
             onClick={handleImageClick}
           >
@@ -164,19 +169,17 @@ const ImageInlineBlock: React.FC<BlockComponentProps> = ({
               src={src}
               alt={alt}
               className={cn(
-                "w-full h-full transition-transform duration-200 hover:scale-105",
+                'w-full h-full transition-transform duration-200 hover:scale-105',
                 objectFitClasses[objectFit as keyof typeof objectFitClasses]
               )}
               style={{
-                width: width === "auto" ? undefined : width,
-                height: height === "auto" ? undefined : height,
+                width: width === 'auto' ? undefined : width,
+                height: height === 'auto' ? undefined : height,
               }}
             />
           </div>
 
-          {showCaption && caption && (
-            <p style={{ color: '#6B4F43' }}>{caption}</p>
-          )}
+          {showCaption && caption && <p style={{ color: '#6B4F43' }}>{caption}</p>}
         </div>
       ) : (
         <div style={{ backgroundColor: '#E5DDD5' }}>

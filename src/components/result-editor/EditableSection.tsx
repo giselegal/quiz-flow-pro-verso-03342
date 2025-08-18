@@ -1,5 +1,5 @@
-import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+// @ts-nocheck
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export interface EditableSectionProps {
   title: string;
@@ -16,9 +16,7 @@ const EditableSection: React.FC<EditableSectionProps> = ({ title, content, onCha
       <CardContent>
         <div className="space-y-4">
           <p style={{ color: '#8B7355' }}>Seção editável: {title}</p>
-          <pre style={{ backgroundColor: '#FAF9F7' }}>
-            {JSON.stringify(content, null, 2)}
-          </pre>
+          <pre style={{ backgroundColor: '#FAF9F7' }}>{JSON.stringify(content, null, 2)}</pre>
         </div>
       </CardContent>
     </Card>

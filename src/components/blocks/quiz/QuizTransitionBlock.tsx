@@ -1,8 +1,8 @@
 // @ts-nocheck
-import React, { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { ChevronRight, Sparkles, ArrowRight } from "lucide-react";
-import { useQuizTracking } from "@/hooks/useQuizTracking";
+import React, { useEffect, useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { ChevronRight, Sparkles, ArrowRight } from 'lucide-react';
+import { useQuizTracking } from '@/hooks/useQuizTracking';
 
 /**
  * QuizTransitionBlock - Componente de transição do quiz 100% reutilizável e editável
@@ -49,7 +49,7 @@ export interface QuizTransitionBlockProps {
 
   // Configurações de animação
   showAnimation?: boolean;
-  animationType?: "loading" | "celebration" | "progress" | "sparkles";
+  animationType?: 'loading' | 'celebration' | 'progress' | 'sparkles';
   animationDuration?: number;
 
   // Configurações de navegação
@@ -61,7 +61,7 @@ export interface QuizTransitionBlockProps {
   // Estilos
   backgroundColor?: string;
   textColor?: string;
-  alignment?: "left" | "center" | "right";
+  alignment?: 'left' | 'center' | 'right';
   minHeight?: string;
 
   // Callbacks
@@ -74,11 +74,11 @@ export interface QuizTransitionBlockProps {
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -119,24 +119,24 @@ const getMarginClass = (value, type) => {
 
 const QuizTransitionBlock: React.FC<QuizTransitionBlockProps> = ({
   blockId,
-  className = "",
+  className = '',
   style = {},
-  title = "Perfeito!",
+  title = 'Perfeito!',
   subtitle,
-  message = "Suas respostas estão sendo processadas...",
+  message = 'Suas respostas estão sendo processadas...',
   image,
   imageAlt,
   showAnimation = true,
-  animationType = "celebration",
+  animationType = 'celebration',
   animationDuration = 2000,
   showContinueButton = true,
-  continueButtonText = "Continuar",
+  continueButtonText = 'Continuar',
   autoAdvance = false,
   autoAdvanceDelay = 3000,
   backgroundColor,
   textColor,
-  alignment = "center",
-  minHeight = "400px",
+  alignment = 'center',
+  minHeight = '400px',
   onContinue,
   onAutoAdvance,
   loading = false,
@@ -147,7 +147,7 @@ const QuizTransitionBlock: React.FC<QuizTransitionBlockProps> = ({
 
   useEffect(() => {
     // Track visualização da transição
-    trackLoadingState("transition", animationDuration);
+    trackLoadingState('transition', animationDuration);
 
     // Iniciar animação
     if (showAnimation) {
@@ -189,25 +189,25 @@ const QuizTransitionBlock: React.FC<QuizTransitionBlockProps> = ({
 
   const getAnimationComponent = () => {
     switch (animationType) {
-      case "loading":
+      case 'loading':
         return (
           <div className="flex items-center justify-center space-x-2">
             <div className="w-3 h-3 bg-[#B89B7A] rounded-full animate-bounce"></div>
             <div
               className="w-3 h-3 bg-[#B89B7A] rounded-full animate-bounce"
-              style={{ animationDelay: "0.1s" }}
+              style={{ animationDelay: '0.1s' }}
             ></div>
             <div
               className="w-3 h-3 bg-[#B89B7A] rounded-full animate-bounce"
-              style={{ animationDelay: "0.2s" }}
+              style={{ animationDelay: '0.2s' }}
             ></div>
           </div>
         );
 
-      case "celebration":
+      case 'celebration':
         return (
           <div className="relative">
-            <div className={`text-6xl ${animationActive ? "animate-bounce" : ""}`}>🎉</div>
+            <div className={`text-6xl ${animationActive ? 'animate-bounce' : ''}`}>🎉</div>
             {animationActive && (
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="w-16 h-16 border-4 border-[#B89B7A] border-t-transparent rounded-full animate-spin"></div>
@@ -216,33 +216,33 @@ const QuizTransitionBlock: React.FC<QuizTransitionBlockProps> = ({
           </div>
         );
 
-      case "progress":
+      case 'progress':
         return (
           <div style={{ backgroundColor: '#E5DDD5' }}>
             <div
               className={`h-full bg-[#B89B7A] rounded-full transition-all duration-1000 ${
-                animationActive ? "w-full" : "w-0"
+                animationActive ? 'w-full' : 'w-0'
               }`}
             ></div>
           </div>
         );
 
-      case "sparkles":
+      case 'sparkles':
         return (
           <div className="relative">
             <Sparkles
-              className={`w-12 h-12 text-[#B89B7A] ${animationActive ? "animate-pulse" : ""}`}
+              className={`w-12 h-12 text-[#B89B7A] ${animationActive ? 'animate-pulse' : ''}`}
             />
             {animationActive && (
               <>
                 <Sparkles className="absolute -top-2 -right-2 w-6 h-6 text-yellow-400 animate-ping" />
                 <Sparkles
                   className="absolute -bottom-2 -left-2 w-4 h-4 text-pink-400 animate-ping"
-                  style={{ animationDelay: "0.5s" }}
+                  style={{ animationDelay: '0.5s' }}
                 />
                 <Sparkles
                   className="absolute top-0 left-8 w-3 h-3 text-[#B89B7A] animate-ping"
-                  style={{ animationDelay: "1s" }}
+                  style={{ animationDelay: '1s' }}
                 />
               </>
             )}
@@ -256,7 +256,7 @@ const QuizTransitionBlock: React.FC<QuizTransitionBlockProps> = ({
 
   const handleContinue = () => {
     // Track clique no botão continuar
-    trackCTAClick("transition_continue", continueButtonText);
+    trackCTAClick('transition_continue', continueButtonText);
 
     if (onContinue && !loading) {
       onContinue();
@@ -285,7 +285,7 @@ const QuizTransitionBlock: React.FC<QuizTransitionBlockProps> = ({
           <div className="mb-6">
             <img
               src={image}
-              alt={imageAlt || "Transição"}
+              alt={imageAlt || 'Transição'}
               className="max-w-xs h-auto rounded-lg shadow-md"
             />
           </div>
@@ -294,7 +294,7 @@ const QuizTransitionBlock: React.FC<QuizTransitionBlockProps> = ({
         {/* Conteúdo */}
         <div
           className={`space-y-4 max-w-2xl mx-auto transition-all duration-500 ${
-            showContent ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+            showContent ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
           }`}
         >
           {/* Título */}

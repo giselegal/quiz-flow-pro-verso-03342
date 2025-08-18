@@ -1,11 +1,11 @@
-import fs from "fs";
+import fs from 'fs';
 
 // Ler o arquivo
-const content = fs.readFileSync("./client/src/config/blockDefinitions.ts", "utf8");
+const content = fs.readFileSync('./client/src/config/blockDefinitions.ts', 'utf8');
 
 // Extrair apenas o array blockDefinitions
-const startIndex = content.indexOf("export const blockDefinitions: BlockDefinition[] = [");
-const endIndex = content.indexOf("];", startIndex);
+const startIndex = content.indexOf('export const blockDefinitions: BlockDefinition[] = [');
+const endIndex = content.indexOf('];', startIndex);
 const arrayContent = content.substring(startIndex, endIndex + 2);
 
 // Contar objetos que começam com {

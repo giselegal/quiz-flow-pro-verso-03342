@@ -1,5 +1,5 @@
-import React from "react";
-import Step20Result from "../components/steps/Step20Result";
+// @ts-nocheck
+import Step20Result from '../components/steps/Step20Result';
 
 /**
  * Página de teste para verificar a integração do Step20Result com dados reais

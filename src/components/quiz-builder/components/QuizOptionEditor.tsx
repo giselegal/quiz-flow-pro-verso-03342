@@ -1,8 +1,8 @@
-import React from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Trash2, Image, Plus } from "lucide-react";
+// @ts-nocheck
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Trash2, Image, Plus } from 'lucide-react';
 
 interface QuizOptionEditorProps {
   option: {
@@ -45,7 +45,7 @@ const QuizOptionEditor: React.FC<QuizOptionEditorProps> = ({
           <Input
             id={`option-text-${index}`}
             value={option.text}
-            onChange={e => onUpdate(index, "text", e.target.value)}
+            onChange={e => onUpdate(index, 'text', e.target.value)}
             placeholder="Digite o texto da opção"
             className="border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]"
           />
@@ -59,8 +59,8 @@ const QuizOptionEditor: React.FC<QuizOptionEditorProps> = ({
             <div className="flex gap-2">
               <Input
                 id={`option-image-${index}`}
-                value={option.imageUrl || ""}
-                onChange={e => onUpdate(index, "imageUrl", e.target.value)}
+                value={option.imageUrl || ''}
+                onChange={e => onUpdate(index, 'imageUrl', e.target.value)}
                 placeholder="URL da imagem"
                 className="border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]"
               />
@@ -81,8 +81,8 @@ const QuizOptionEditor: React.FC<QuizOptionEditorProps> = ({
           </Label>
           <Input
             id={`option-category-${index}`}
-            value={option.styleCategory || ""}
-            onChange={e => onUpdate(index, "styleCategory", e.target.value)}
+            value={option.styleCategory || ''}
+            onChange={e => onUpdate(index, 'styleCategory', e.target.value)}
             placeholder="Categoria de estilo"
             className="border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]"
           />

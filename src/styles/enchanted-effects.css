@@ -107,7 +107,7 @@
 }
 
 .enchanted-hover::before {
-  content: "";
+  content: '';
   position: absolute;
   top: -2px;
   left: -2px;
@@ -194,7 +194,7 @@
 }
 
 .enchanted-loading::after {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: -100%;

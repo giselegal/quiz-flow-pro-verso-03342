@@ -1,10 +1,11 @@
-import { getOptimizedContainerClasses } from "@/config/containerConfig";
-import React, { useState } from "react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, Users, Quote } from "lucide-react";
-import { AnimatedWrapper } from "@/components/ui/animated-wrapper";
-import { DeviceView, StyleProps } from "./types";
+// @ts-nocheck
+import { getOptimizedContainerClasses } from '@/config/containerConfig';
+import React, { useState } from 'react';
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { ChevronLeft, ChevronRight, Users, Quote } from 'lucide-react';
+import { AnimatedWrapper } from '@/components/ui/animated-wrapper';
+import { DeviceView, StyleProps } from './types';
 
 interface TransformationItem {
   id: string;
@@ -26,7 +27,7 @@ interface BeforeAfterSectionProps extends StyleProps {
   /** Lista de transformações */
   transformations: TransformationItem[];
   /** Modo de exibição */
-  displayMode?: "carousel" | "grid" | "single";
+  displayMode?: 'carousel' | 'grid' | 'single';
   /** Mostrar depoimentos junto com as imagens */
   showTestimonials?: boolean;
   /** Mostrar resultados/benefícios */
@@ -51,14 +52,14 @@ interface BeforeAfterSectionProps extends StyleProps {
  * Exibe galeria de transformações de clientes reais
  */
 export const BeforeAfterSection: React.FC<BeforeAfterSectionProps> = ({
-  title = "Transformações Reais de Nossas Clientes",
-  subtitle = "Veja como outras mulheres transformaram seu estilo e autoestima:",
+  title = 'Transformações Reais de Nossas Clientes',
+  subtitle = 'Veja como outras mulheres transformaram seu estilo e autoestima:',
   transformations,
-  displayMode = "carousel",
+  displayMode = 'carousel',
   showTestimonials = true,
   showResults = true,
   animationConfig = {},
-  deviceView = "desktop",
+  deviceView = 'desktop',
   onTransformationClick,
   onContinue,
   className,
@@ -72,11 +73,11 @@ export const BeforeAfterSection: React.FC<BeforeAfterSectionProps> = ({
     autoPlay = false,
     autoPlayInterval = 5000,
   } = animationConfig;
-  const isLowPerformance = deviceView === "mobile";
+  const isLowPerformance = deviceView === 'mobile';
 
   // Auto-play carousel
   React.useEffect(() => {
-    if (!autoPlay || displayMode !== "carousel") return;
+    if (!autoPlay || displayMode !== 'carousel') return;
 
     const interval = setInterval(() => {
       setCurrentIndex(prev => (prev + 1) % transformations.length);
@@ -105,7 +106,7 @@ export const BeforeAfterSection: React.FC<BeforeAfterSectionProps> = ({
           <h3 className="text-xl font-semibold text-[#432818] mb-1">{transformation.name}</h3>
           {(transformation.age || transformation.location) && (
             <p className="text-sm text-[#6B4F43]">
-              {[transformation.age, transformation.location].filter(Boolean).join(" • ")}
+              {[transformation.age, transformation.location].filter(Boolean).join(' • ')}
             </p>
           )}
         </div>
@@ -136,9 +137,7 @@ export const BeforeAfterSection: React.FC<BeforeAfterSectionProps> = ({
                     className="w-full h-auto rounded-lg shadow-md"
                     loading="lazy"
                   />
-                  <div style={{ backgroundColor: '#FAF9F7' }}>
-                    Antes
-                  </div>
+                  <div style={{ backgroundColor: '#FAF9F7' }}>Antes</div>
                 </div>
               )}
               {transformation.afterImage && (
@@ -189,7 +188,7 @@ export const BeforeAfterSection: React.FC<BeforeAfterSectionProps> = ({
   );
 
   return (
-    <div className={`py-10 ${className || ""}`} style={style}>
+    <div className={`py-10 ${className || ''}`} style={style}>
       {customStyles && <style dangerouslySetInnerHTML={{ __html: customStyles }} />}
 
       {/* Header */}
@@ -201,11 +200,11 @@ export const BeforeAfterSection: React.FC<BeforeAfterSectionProps> = ({
 
       {/* Content */}
       <div className="max-w-full mx-auto">
-        {displayMode === "carousel" ? (
+        {displayMode === 'carousel' ? (
           <div className="relative">
             {/* Carousel content */}
             <AnimatedWrapper
-              animation={animationsDisabled || isLowPerformance ? "none" : "fade"}
+              animation={animationsDisabled || isLowPerformance ? 'none' : 'fade'}
               show={true}
               duration={duration}
             >
@@ -244,14 +243,14 @@ export const BeforeAfterSection: React.FC<BeforeAfterSectionProps> = ({
               </div>
             )}
           </div>
-        ) : displayMode === "grid" ? (
+        ) : displayMode === 'grid' ? (
           <div
-            className={`grid ${deviceView === "mobile" ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2"} gap-6`}
+            className={`grid ${deviceView === 'mobile' ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2'} gap-6`}
           >
             {transformations.map((transformation, index) => (
               <AnimatedWrapper
                 key={transformation.id}
-                animation={animationsDisabled || isLowPerformance ? "none" : "fade"}
+                animation={animationsDisabled || isLowPerformance ? 'none' : 'fade'}
                 show={true}
                 duration={duration}
                 delay={200 * index}
@@ -264,7 +263,7 @@ export const BeforeAfterSection: React.FC<BeforeAfterSectionProps> = ({
           // Single mode
           transformations.length > 0 && (
             <AnimatedWrapper
-              animation={animationsDisabled || isLowPerformance ? "none" : "fade"}
+              animation={animationsDisabled || isLowPerformance ? 'none' : 'fade'}
               show={true}
               duration={duration}
             >

@@ -1,8 +1,7 @@
-import React from "react";
-import { useDraggable, useDroppable } from "@dnd-kit/core";
-import { CSS } from "@dnd-kit/utilities";
-import { QuizComponentData } from "@/types/quizBuilder";
-import ComponentRenderer from "./ComponentRenderer";
+import { useDraggable, useDroppable } from '@dnd-kit/core';
+import { CSS } from '@dnd-kit/utilities';
+import { QuizComponentData } from '@/types/quizBuilder';
+import ComponentRenderer from './ComponentRenderer';
 
 interface DraggableComponentProps {
   component: QuizComponentData;

@@ -1,8 +1,7 @@
-import React from "react";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Switch } from "@/components/ui/switch";
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Switch } from '@/components/ui/switch';
 
 interface MainContentEditorProps {
   content: {
@@ -35,7 +34,7 @@ export const MainContentEditor: React.FC<MainContentEditorProps> = ({
             <Label htmlFor="introText">Texto de Introdução</Label>
             <Textarea
               id="introText"
-              value={content.introText || ""}
+              value={content.introText || ''}
               onChange={e => onUpdate({ ...content, introText: e.target.value })}
               rows={4}
             />
@@ -61,7 +60,7 @@ export const MainContentEditor: React.FC<MainContentEditorProps> = ({
             <Label htmlFor="tabletImage">Imagem do Tablet</Label>
             <Input
               id="tabletImage"
-              value={content.tabletImage || ""}
+              value={content.tabletImage || ''}
               onChange={e => onUpdate({ ...content, tabletImage: e.target.value })}
             />
             {content.tabletImage && (

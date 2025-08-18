@@ -12,7 +12,7 @@ let skipped = 0;
 blockFiles.forEach(file => {
   try {
     const content = fs.readFileSync(file, 'utf8');
-    
+
     if (!content.startsWith('// @ts-nocheck')) {
       const newContent = '// @ts-nocheck\n' + content;
       fs.writeFileSync(file, newContent);

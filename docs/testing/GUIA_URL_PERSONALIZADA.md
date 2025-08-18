@@ -70,12 +70,12 @@ Após publicar, aparece automaticamente um botão para copiar a URL do quiz.
 
 ```javascript
 // Dados principais
-"schema-editor-project-current"; // Projeto atual
-"quiz-preview-data"; // Dados temporários para preview
+'schema-editor-project-current'; // Projeto atual
+'quiz-preview-data'; // Dados temporários para preview
 
 // Projetos publicados
-"schema-editor-project-published"; // Estado de publicação
-"published-quiz-[slug]"; // Projeto por slug específico
+'schema-editor-project-published'; // Estado de publicação
+'published-quiz-[slug]'; // Projeto por slug específico
 ```
 
 ### Dados Salvos na Publicação:

@@ -1,13 +1,12 @@
 // Loading skeletons universais
-import React from "react";
-import { cn } from "@/lib/utils";
+import { cn } from '@/lib/utils';
 
 interface SkeletonProps {
   className?: string;
 }
 
 export const Skeleton: React.FC<SkeletonProps> = ({ className }) => (
-  <div className={cn("animate-pulse bg-muted rounded", className)} />
+  <div className={cn('animate-pulse bg-muted rounded', className)} />
 );
 
 export const SkeletonCard: React.FC = () => (

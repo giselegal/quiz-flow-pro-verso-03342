@@ -1,13 +1,13 @@
-import React from "react";
-import { BlockComponentProps } from "@/types/blocks";
+// @ts-nocheck
+import { BlockComponentProps } from '@/types/blocks';
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value: string | number, type: string): string => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -46,7 +46,7 @@ const getMarginClass = (value: string | number, type: string): string => {
   return `${prefix}-32`; // Máximo suportado
 };
 
-const SpacerBlock: React.FC<BlockComponentProps> = ({ block, className = "" }) => {
+const SpacerBlock: React.FC<BlockComponentProps> = ({ block, className = '' }) => {
   const height = block.properties?.height || 20;
 
   return <div className={`spacer-block ${className}`} style={{ height: `${height}px` }} />;

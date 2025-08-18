@@ -1,5 +1,4 @@
-import React from "react";
-import { StyleResult } from "@/types/quiz";
+import { StyleResult } from '@/types/quiz';
 
 interface HeroSectionBlockPreviewProps {
   content: {
@@ -21,16 +20,16 @@ const HeroSectionBlockPreview: React.FC<HeroSectionBlockPreviewProps> = ({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
         <div className="space-y-4 flex flex-col justify-center">
           <h2 className="text-2xl md:text-3xl font-playfair font-bold text-[#aa6b5d]">
-            {content.title || "VOCÊ DESCOBRIU SEU ESTILO"}
+            {content.title || 'VOCÊ DESCOBRIU SEU ESTILO'}
           </h2>
 
           <p className="text-[#1A1818]/80">
-            {content.subtitle || "Agora é hora de aplicar com clareza — e se vestir de você"}
+            {content.subtitle || 'Agora é hora de aplicar com clareza — e se vestir de você'}
           </p>
 
           <div className="bg-white p-4 rounded-lg inline-block">
             <p className="text-[#aa6b5d] font-medium">
-              Seu estilo predominante é{" "}
+              Seu estilo predominante é{' '}
               <span className="font-semibold">{primaryStyle.category}</span>
             </p>
           </div>

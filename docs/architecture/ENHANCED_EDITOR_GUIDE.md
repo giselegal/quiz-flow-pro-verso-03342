@@ -74,10 +74,10 @@ EnhancedEditor/
 
 ```tsx
 // Antes
-import SchemaDrivenEditorResponsive from "./SchemaDrivenEditorResponsive";
+import SchemaDrivenEditorResponsive from './SchemaDrivenEditorResponsive';
 
 // Depois
-import EnhancedEditor from "./EnhancedEditor";
+import EnhancedEditor from './EnhancedEditor';
 
 // Uso
 <EnhancedEditor funnelId="123" />;
@@ -86,7 +86,7 @@ import EnhancedEditor from "./EnhancedEditor";
 ### 2. Uso em Páginas
 
 ```tsx
-import { EnhancedEditorPage } from "./EnhancedEditor";
+import { EnhancedEditorPage } from './EnhancedEditor';
 
 // Na sua rota
 <Route path="/editor/:funnelId" component={EnhancedEditorPage} />;

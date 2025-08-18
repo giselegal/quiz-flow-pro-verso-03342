@@ -99,10 +99,10 @@ Substituir `ComponentsSidebar` por `EnhancedComponentsSidebar` no `SchemaDrivenE
 
 ```tsx
 // ANTES ❌
-import { ComponentsSidebar } from "./sidebar/ComponentsSidebar";
+import { ComponentsSidebar } from './sidebar/ComponentsSidebar';
 
 // DEPOIS ✅
-import EnhancedComponentsSidebar from "./EnhancedComponentsSidebar";
+import EnhancedComponentsSidebar from './EnhancedComponentsSidebar';
 ```
 
 ### **PASSO 2: Integrar DndProvider**

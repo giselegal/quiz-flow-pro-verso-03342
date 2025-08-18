@@ -4,9 +4,8 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion";
-import React from "react";
-import type { BlockComponentProps } from "../../../types/blocks";
+} from '@/components/ui/accordion';
+import type { BlockComponentProps } from '@/types/blocks';
 
 interface FAQItem {
   question: string;
@@ -15,11 +14,11 @@ interface FAQItem {
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -63,7 +62,7 @@ const FAQSectionInlineBlock: React.FC<BlockComponentProps> = ({
   isSelected = false,
   onClick,
   onPropertyChange,
-  className = "",
+  className = '',
 }) => {
   // Verificação de segurança para evitar erro de undefined
   if (!block) {
@@ -74,27 +73,27 @@ const FAQSectionInlineBlock: React.FC<BlockComponentProps> = ({
     );
   }
 
-  const { title = "Perguntas Frequentes", faqItems = [] } = block.properties || {};
+  const { title = 'Perguntas Frequentes', faqItems = [] } = block.properties || {};
 
   const handleAddItem = () => {
     const newItem: FAQItem = {
-      question: "Nova pergunta",
-      answer: "Nova resposta",
+      question: 'Nova pergunta',
+      answer: 'Nova resposta',
     };
     const updatedItems = [...faqItems, newItem];
-    onPropertyChange?.("faqItems", updatedItems);
+    onPropertyChange?.('faqItems', updatedItems);
   };
 
   const handleUpdateItem = (index: number, field: keyof FAQItem, value: string) => {
     const updatedItems = faqItems.map((item: FAQItem, i: number) =>
       i === index ? { ...item, [field]: value } : item
     );
-    onPropertyChange?.("faqItems", updatedItems);
+    onPropertyChange?.('faqItems', updatedItems);
   };
 
   const handleRemoveItem = (index: number) => {
     const updatedItems = faqItems.filter((_: FAQItem, i: number) => i !== index);
-    onPropertyChange?.("faqItems", updatedItems);
+    onPropertyChange?.('faqItems', updatedItems);
   };
 
   return (
@@ -103,8 +102,8 @@ const FAQSectionInlineBlock: React.FC<BlockComponentProps> = ({
         p-6 rounded-lg cursor-pointer transition-all duration-200
         ${
           isSelected
-            ? "border-2 border-[#B89B7A] bg-[#B89B7A]/10"
-            : "border-2 border-dashed border-gray-300 hover:border-gray-400"
+            ? 'border-2 border-[#B89B7A] bg-[#B89B7A]/10'
+            : 'border-2 border-dashed border-gray-300 hover:border-gray-400'
         }
         ${className}
       `}

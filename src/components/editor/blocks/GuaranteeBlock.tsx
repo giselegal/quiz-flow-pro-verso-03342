@@ -1,8 +1,7 @@
 // @ts-nocheck
-import React from "react";
-import type { BlockComponentProps } from "../../../types/blocks";
-import { cn } from "@/lib/utils";
-import { Shield, CheckCircle } from "lucide-react";
+import type { BlockComponentProps } from '@/types/blocks';
+import { cn } from '@/lib/utils';
+import { Shield, CheckCircle } from 'lucide-react';
 
 interface GuaranteeBlockProps {
   title?: string;
@@ -13,11 +12,11 @@ interface GuaranteeBlockProps {
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -57,21 +56,21 @@ const getMarginClass = (value, type) => {
 };
 
 const GuaranteeBlock: React.FC<GuaranteeBlockProps> = ({
-  title = "Garantia Incondicional",
-  guaranteePeriod = "7 dias",
+  title = 'Garantia Incondicional',
+  guaranteePeriod = '7 dias',
   showIcon = true,
   className,
 }) => {
   return (
     <div
       className={cn(
-        "py-4 sm:py-6 md:py-8",
+        'py-4 sm:py-6 md:py-8',
         className,
         // Margens universais com controles deslizantes
-        getMarginClass(marginTop, "top"),
-        getMarginClass(marginBottom, "bottom"),
-        getMarginClass(marginLeft, "left"),
-        getMarginClass(marginRight, "right")
+        getMarginClass(marginTop, 'top'),
+        getMarginClass(marginBottom, 'bottom'),
+        getMarginClass(marginLeft, 'left'),
+        getMarginClass(marginRight, 'right')
       )}
     >
       <div className="max-w-2xl mx-auto px-4">

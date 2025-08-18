@@ -3,10 +3,10 @@
 // Sistema de Quiz Quest Challenge Verse
 // =============================================================================
 
-import { useState, useEffect, useContext, createContext, ReactNode } from "react";
-import { User, Session, AuthError } from "@supabase/supabase-js";
-import { supabase, createProfile, getCurrentProfile } from "../lib/supabase";
-import { Profile, AuthState, AuthUser } from "../types/supabase";
+import { useState, useEffect, useContext, createContext, ReactNode } from 'react';
+import { User, Session, AuthError } from '@supabase/supabase-js';
+import { supabase, createProfile, getCurrentProfile } from '../lib/supabase';
+import { Profile, AuthState, AuthUser } from '../types/supabase';
 
 // =============================================================================
 // CONTEXTO DE AUTENTICAÇÃO
@@ -51,7 +51,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         } = await supabase.auth.getSession();
 
         if (error) {
-          console.error("Erro ao obter sessão:", error);
+          console.error('Erro ao obter sessão:', error);
           if (mounted) {
             setUser(null);
             setIsLoading(false);
@@ -66,7 +66,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
           setIsLoading(false);
         }
       } catch (error) {
-        console.error("Erro ao obter sessão inicial:", error);
+        console.error('Erro ao obter sessão inicial:', error);
         if (mounted) {
           setUser(null);
           setIsLoading(false);
@@ -82,7 +82,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (!mounted) return;
 
-      console.log("Auth state changed:", event, session?.user?.id);
+      console.log('Auth state changed:', event, session?.user?.id);
 
       try {
         if (session?.user) {
@@ -92,7 +92,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
           setIsLoading(false);
         }
       } catch (error) {
-        console.error("Erro ao processar mudança de auth:", error);
+        console.error('Erro ao processar mudança de auth:', error);
         setUser(null);
         setIsLoading(false);
       }
@@ -120,20 +120,20 @@ export function AuthProvider({ children }: AuthProviderProps) {
         try {
           profile = await createProfile(authUser);
         } catch (error) {
-          console.error("Erro ao criar perfil:", error);
+          console.error('Erro ao criar perfil:', error);
           // Continuar mesmo sem perfil
         }
       }
 
       const user: AuthUser = {
         id: authUser.id,
-        email: authUser.email || "",
+        email: authUser.email || '',
         profile: profile || undefined,
       };
 
       setUser(user);
     } catch (error) {
-      console.error("Erro ao configurar usuário:", error);
+      console.error('Erro ao configurar usuário:', error);
       setUser(null);
     } finally {
       setIsLoading(false);
@@ -160,7 +160,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       // O listener onAuthStateChange cuidará de configurar o usuário
       return { error: null };
     } catch (error) {
-      console.error("Erro no login:", error);
+      console.error('Erro no login:', error);
       setIsLoading(false);
       return { error: error as AuthError };
     }
@@ -184,7 +184,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       return { error: null };
     } catch (error) {
-      console.error("Erro no registro:", error);
+      console.error('Erro no registro:', error);
       setIsLoading(false);
       return { error: error as AuthError };
     }
@@ -196,12 +196,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
       const { error } = await supabase.auth.signOut();
 
       if (error) {
-        console.error("Erro ao fazer logout:", error);
+        console.error('Erro ao fazer logout:', error);
       }
 
       setUser(null);
     } catch (error) {
-      console.error("Erro no logout:", error);
+      console.error('Erro no logout:', error);
     } finally {
       setIsLoading(false);
     }
@@ -215,7 +215,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       return { error };
     } catch (error) {
-      console.error("Erro ao resetar senha:", error);
+      console.error('Erro ao resetar senha:', error);
       return { error: error as AuthError };
     }
   };
@@ -223,10 +223,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const updateProfile = async (updates: Partial<Profile>) => {
     try {
       if (!user) {
-        return { error: "Usuário não autenticado" };
+        return { error: 'Usuário não autenticado' };
       }
 
-      const { error } = await supabase.from("profiles").update(updates).eq("id", user.id);
+      const { error } = await supabase.from('profiles').update(updates).eq('id', user.id);
 
       if (error) {
         return { error: error.message };
@@ -244,8 +244,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       return { error: null };
     } catch (error) {
-      console.error("Erro ao atualizar perfil:", error);
-      return { error: "Erro interno do servidor" };
+      console.error('Erro ao atualizar perfil:', error);
+      return { error: 'Erro interno do servidor' };
     }
   };
 
@@ -264,7 +264,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
           : null
       );
     } catch (error) {
-      console.error("Erro ao atualizar perfil:", error);
+      console.error('Erro ao atualizar perfil:', error);
     }
   };
 
@@ -294,7 +294,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 export function useAuth() {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error("useAuth deve ser usado dentro de um AuthProvider");
+    throw new Error('useAuth deve ser usado dentro de um AuthProvider');
   }
   return context;
 }
@@ -312,7 +312,7 @@ export function useRequireAuth() {
   useEffect(() => {
     if (!isLoading && !user) {
       // Redirecionar para login ou mostrar modal
-      window.location.href = "/auth/login";
+      window.location.href = '/auth/login';
     }
   }, [user, isLoading]);
 
@@ -325,10 +325,10 @@ export function useRequireAuth() {
 export function usePermissions() {
   const { user } = useAuth();
 
-  const isAdmin = user?.profile?.role === "admin";
-  const isModerator = user?.profile?.role === "moderator" || isAdmin;
-  const isPro = user?.profile?.plan === "pro" || user?.profile?.plan === "enterprise";
-  const isEnterprise = user?.profile?.plan === "enterprise";
+  const isAdmin = user?.profile?.role === 'admin';
+  const isModerator = user?.profile?.role === 'moderator' || isAdmin;
+  const isPro = user?.profile?.plan === 'pro' || user?.profile?.plan === 'enterprise';
+  const isEnterprise = user?.profile?.plan === 'enterprise';
 
   const can = {
     createQuiz: !!user,
@@ -358,7 +358,7 @@ export function usePermissions() {
 export function useSocialAuth() {
   const [isLoading, setIsLoading] = useState(false);
 
-  const signInWithProvider = async (provider: "google" | "github" | "facebook") => {
+  const signInWithProvider = async (provider: 'google' | 'github' | 'facebook') => {
     try {
       setIsLoading(true);
 
@@ -396,12 +396,12 @@ export function useSocialAuth() {
 /**
  * Verifica se o usuário tem uma role específica
  */
-export function hasRole(user: AuthUser | null, role: "user" | "admin" | "moderator"): boolean {
+export function hasRole(user: AuthUser | null, role: 'user' | 'admin' | 'moderator'): boolean {
   if (!user?.profile) return false;
 
-  if (role === "user") return true; // Qualquer usuário autenticado
-  if (role === "moderator") return ["moderator", "admin"].includes(user.profile.role);
-  if (role === "admin") return user.profile.role === "admin";
+  if (role === 'user') return true; // Qualquer usuário autenticado
+  if (role === 'moderator') return ['moderator', 'admin'].includes(user.profile.role);
+  if (role === 'admin') return user.profile.role === 'admin';
 
   return false;
 }
@@ -409,14 +409,14 @@ export function hasRole(user: AuthUser | null, role: "user" | "admin" | "moderat
 /**
  * Verifica se o usuário tem um plano específico
  */
-export function hasPlan(user: AuthUser | null, plan: "free" | "pro" | "enterprise"): boolean {
+export function hasPlan(user: AuthUser | null, plan: 'free' | 'pro' | 'enterprise'): boolean {
   if (!user?.profile) return false;
 
   const userPlan = user.profile.plan;
 
-  if (plan === "free") return true; // Todos têm acesso ao free
-  if (plan === "pro") return ["pro", "enterprise"].includes(userPlan);
-  if (plan === "enterprise") return userPlan === "enterprise";
+  if (plan === 'free') return true; // Todos têm acesso ao free
+  if (plan === 'pro') return ['pro', 'enterprise'].includes(userPlan);
+  if (plan === 'enterprise') return userPlan === 'enterprise';
 
   return false;
 }

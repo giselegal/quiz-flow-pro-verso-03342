@@ -2,7 +2,7 @@
 
 /**
  * FINAL TYPESCRIPT ERROR RESOLUTION
- * 
+ *
  * This script adds @ts-nocheck to ALL remaining block files with TypeScript errors.
  * Usage: node fix-all-remaining-blocks.js
  */
@@ -90,14 +90,14 @@ const errorFiles = [
   'src/components/editor/blocks/ValueStackBlock.tsx',
   'src/components/editor/blocks/ValueStackInlineBlock.tsx',
   'src/components/editor/blocks/VerticalCanvasHeaderBlock.tsx',
-  'src/components/editor/blocks/VideoPlayerInlineBlock.tsx'
+  'src/components/editor/blocks/VideoPlayerInlineBlock.tsx',
 ];
 
 function addTsNocheck(filePath) {
   try {
     if (fs.existsSync(filePath)) {
       const content = fs.readFileSync(filePath, 'utf8');
-      
+
       if (!content.startsWith('// @ts-nocheck')) {
         const newContent = '// @ts-nocheck\n' + content;
         fs.writeFileSync(filePath, newContent);
@@ -117,7 +117,9 @@ function addTsNocheck(filePath) {
   }
 }
 
-console.log('🔧 FINAL TypeScript Error Resolution - Adding @ts-nocheck to all remaining block files...\n');
+console.log(
+  '🔧 FINAL TypeScript Error Resolution - Adding @ts-nocheck to all remaining block files...\n'
+);
 
 let processedCount = 0;
 let skippedCount = 0;

@@ -115,9 +115,9 @@ export default function transformer(fileInfo, api) {
   const j = api.jscodeshift;
   return j(fileInfo.source)
     .find(j.JSXAttribute, {
-      name: { name: "color" },
+      name: { name: 'color' },
     })
-    .replaceWith(j.jsxAttribute(j.jsxIdentifier("backgroundColor"), node.value))
+    .replaceWith(j.jsxAttribute(j.jsxIdentifier('backgroundColor'), node.value))
     .toSource();
 }
 ```
@@ -144,20 +144,20 @@ npm install --save-dev plop
 ```javascript
 // plopfile.js
 export default function (plop) {
-  plop.setGenerator("component-with-props", {
-    description: "Criar componente com propriedades padrão",
+  plop.setGenerator('component-with-props', {
+    description: 'Criar componente com propriedades padrão',
     prompts: [
       {
-        type: "input",
-        name: "name",
-        message: "Nome do componente:",
+        type: 'input',
+        name: 'name',
+        message: 'Nome do componente:',
       },
     ],
     actions: [
       {
-        type: "add",
-        path: "src/components/{{name}}.tsx",
-        templateFile: "templates/component-with-props.hbs",
+        type: 'add',
+        path: 'src/components/{{name}}.tsx',
+        templateFile: 'templates/component-with-props.hbs',
       },
     ],
   });
@@ -208,10 +208,10 @@ ast-grep --pattern 'size="$old"' --replace 'variant="$old"' src/
 // .eslintrc.js
 module.exports = {
   rules: {
-    "react/prop-types": "error",
-    "react/require-default-props": "error",
-    "@typescript-eslint/consistent-type-definitions": "error",
-    "custom/consistent-prop-naming": "error",
+    'react/prop-types': 'error',
+    'react/require-default-props': 'error',
+    '@typescript-eslint/consistent-type-definitions': 'error',
+    'custom/consistent-prop-naming': 'error',
   },
 };
 ```

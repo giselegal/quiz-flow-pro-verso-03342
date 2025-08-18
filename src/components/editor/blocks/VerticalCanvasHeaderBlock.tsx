@@ -1,8 +1,7 @@
 // @ts-nocheck
-import React from "react";
-import { Progress } from "@/components/ui/progress";
-import { Button } from "@/components/ui/button";
-import { ChevronLeft } from "lucide-react";
+import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
+import { ChevronLeft } from 'lucide-react';
 
 interface VerticalCanvasHeaderProps {
   logoSrc?: string;
@@ -21,11 +20,11 @@ interface VerticalCanvasHeaderProps {
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -65,8 +64,8 @@ const getMarginClass = (value, type) => {
 };
 
 const VerticalCanvasHeaderBlock: React.FC<VerticalCanvasHeaderProps> = ({
-  logoSrc = "",
-  logoAlt = "Logo",
+  logoSrc = '',
+  logoAlt = 'Logo',
   logoWidth = 120,
   logoHeight = 40,
   progressValue = 0,
@@ -74,9 +73,9 @@ const VerticalCanvasHeaderBlock: React.FC<VerticalCanvasHeaderProps> = ({
   showProgress = true,
   showBackButton = false,
   onBackClick = () => {},
-  containerWidth = "100%",
-  gap = "1rem",
-  className = "",
+  containerWidth = '100%',
+  gap = '1rem',
+  className = '',
 }) => {
   const progressPercentage = progressMax > 0 ? (progressValue / progressMax) * 100 : 0;
 
@@ -103,12 +102,7 @@ const VerticalCanvasHeaderBlock: React.FC<VerticalCanvasHeaderProps> = ({
               className="object-contain"
             />
           ) : (
-            <div
-              style={{ color: '#8B7355' }}
-              style={{ width: logoWidth, height: logoHeight }}
-            >
-              Logo
-            </div>
+            <div style={{ color: '#8B7355', width: logoWidth, height: logoHeight }}>Logo</div>
           )}
         </div>
 

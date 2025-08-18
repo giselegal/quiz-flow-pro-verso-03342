@@ -1,5 +1,3 @@
-import React from "react";
-
 interface HeaderBlockPreviewProps {
   content: {
     title?: string;
@@ -14,10 +12,10 @@ interface HeaderBlockPreviewProps {
 
 const HeaderBlockPreview: React.FC<HeaderBlockPreviewProps> = ({ content }) => {
   const logoStyle = {
-    width: content.logoWidth || "auto",
-    height: content.logoHeight || "auto",
-    maxWidth: "100%",
-    objectFit: "contain" as "contain", // Type assertion to ObjectFit
+    width: content.logoWidth || 'auto',
+    height: content.logoHeight || 'auto',
+    maxWidth: '100%',
+    objectFit: 'contain' as 'contain', // Type assertion to ObjectFit
   };
 
   return (
@@ -25,7 +23,7 @@ const HeaderBlockPreview: React.FC<HeaderBlockPreviewProps> = ({ content }) => {
       {content.logo && (
         <img
           src={content.logo}
-          alt={content.logoAlt || "Logo"}
+          alt={content.logoAlt || 'Logo'}
           style={logoStyle}
           className="mx-auto mb-4"
         />

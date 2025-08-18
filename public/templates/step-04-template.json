@@ -1,28 +1,38 @@
 {
-  "templateVersion": "2.0",
-  "metadata": {
-    "id": "quiz-step-04",
-    "name": "Q3 - QUAL DESSAS CORES",
-    "description": "Questão 3 de 13",
-    "category": "quiz-question",
-    "type": "question",
-    "tags": ["quiz", "colors", "quiz-question", "gisele-galvao"],
-    "createdAt": "2025-08-10T03:45:03.511Z",
-    "updatedAt": "2025-08-10T03:45:03.511Z",
-    "author": "giselegal"
-  },
-  "design": {
-    "primaryColor": "#B89B7A",
-    "secondaryColor": "#432818",
-    "accentColor": "#aa6b5d",
-    "backgroundColor": "#FAF9F7",
-    "fontFamily": "'Playfair Display', 'Inter', serif"
-  },
+  "templateVersion": "1.0",
   "layout": {
     "containerWidth": "full",
-    "spacing": "responsive",
-    "backgroundColor": "#FAF9F7",
+    "spacing": "small",
+    "backgroundColor": "transparent",
     "responsive": true
+  },
+  "validation": {
+    "required": true,
+    "minAnswers": 3,
+    "maxAnswers": 3,
+    "validationMessage": "Selecione 3 opções para continuar"
+  },
+  "analytics": {
+    "events": [
+      "page_view",
+      "option_selected",
+      "validation_error",
+      "completion"
+    ],
+    "trackingId": "step-04-quiz-question"
+  },
+  "metadata": {
+    "id": "quiz-step-04",
+    "name": "Q3 - Estilo Pessoal",
+    "description": "Questão sobre preferências de estilo",
+    "category": "quiz-question",
+    "tags": [
+      "quiz",
+      "style",
+      "quiz-question"
+    ],
+    "createdAt": "2025-08-11T01:02:19.341Z",
+    "updatedAt": "2025-08-11T01:02:19.341Z"
   },
   "blocks": [
     {
@@ -34,10 +44,9 @@
         "logoAlt": "Logo Gisele Galvão",
         "logoWidth": 96,
         "logoHeight": 96,
-        "progressValue": 20,
+        "progressValue": 19,
         "progressTotal": 100,
         "showProgress": true,
-        "showBackButton": true,
         "containerWidth": "full",
         "spacing": "small"
       }
@@ -47,12 +56,11 @@
       "type": "text-inline",
       "position": 1,
       "properties": {
-        "content": "QUAL DESSAS CORES MAIS TE REPRESENTA?",
+        "content": "Q3 - ESTILO PESSOAL",
         "fontSize": "text-2xl",
         "fontWeight": "font-bold",
         "textAlign": "text-center",
         "color": "#432818",
-        "fontFamily": "'Playfair Display', serif",
         "containerWidth": "full",
         "spacing": "small"
       }
@@ -78,58 +86,54 @@
       "properties": {
         "options": [
           {
-            "id": "3a",
-            "text": "Tons neutros e terrosos",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/color1_neutral.webp",
-            "styleCategory": "Natural",
+            "id": "4a",
+            "text": "Opção A - Descrição personalizada",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
+            "value": "4a",
+            "category": "Natural",
             "points": 1
           },
           {
-            "id": "3b",
-            "text": "Cores clássicas e atemporais",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/color2_classic.webp",
-            "styleCategory": "Clássico",
+            "id": "4b",
+            "text": "Opção B - Descrição personalizada",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
+            "value": "4b",
+            "category": "Clássico",
             "points": 2
           },
           {
-            "id": "3c",
-            "text": "Cores vibrantes e modernas",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/color3_contemporary.webp",
-            "styleCategory": "Contemporâneo",
+            "id": "4c",
+            "text": "Opção C - Descrição personalizada",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
+            "value": "4c",
+            "category": "Contemporâneo",
             "points": 2
           },
           {
-            "id": "3d",
-            "text": "Tons sofisticados e elegantes",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/color4_elegant.webp",
-            "styleCategory": "Elegante",
+            "id": "4d",
+            "text": "Opção D - Descrição personalizada",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
+            "value": "4d",
+            "category": "Elegante",
             "points": 3
           }
         ],
         "columns": 2,
         "imageSize": 256,
         "showImages": true,
-        "multipleSelection": false,
-        "minSelections": 1,
-        "maxSelections": 1,
+        "multipleSelection": true,
+        "minSelections": 3,
+        "maxSelections": 3,
         "borderColor": "#E5E7EB",
         "selectedBorderColor": "#B89B7A",
         "hoverColor": "#F3E8D3",
         "containerWidth": "full",
         "spacing": "small",
         "marginBottom": 16,
-        "selectionStyle": "glow",
-        "animationType": "scale",
-        "validationMessage": "Selecione uma opção para avançar.",
-        "scoring": {
-          "enabled": true,
-          "categories": [
-            "Natural",
-            "Clássico",
-            "Contemporâneo",
-            "Elegante"
-          ]
-        }
+        "validationMessage": "Selecione 3 opções para continuar",
+        "autoAdvance": true,
+        "autoAdvanceOnComplete": true,
+        "autoAdvanceDelay": 1500
       }
     },
     {
@@ -138,55 +142,18 @@
       "position": 4,
       "properties": {
         "text": "Próxima Questão →",
-        "textWhenDisabled": "Selecione uma opção para avançar",
+        "textWhenDisabled": "Selecione 3 opções para continuar",
         "variant": "primary",
         "size": "large",
         "fullWidth": true,
         "backgroundColor": "#B89B7A",
-        "backgroundGradient": "linear-gradient(90deg, #B89B7A, #aa6b5d)",
         "textColor": "#ffffff",
-        "borderRadius": "10px",
-        "shadow": "0 4px 14px rgba(184, 155, 122, 0.15)",
-        "disabled": true,
-        "requiresValidInput": true,
         "enableOnSelection": true,
-        "minSelections": 1,
-        "animation": "hover:scale-105, active:scale-95",
         "containerWidth": "full",
         "spacing": "small",
-        "marginTop": 24
+        "marginTop": 24,
+        "requiresValidSelection": true
       }
     }
-  ],
-  "validation": {
-    "required": true,
-    "minAnswers": 1,
-    "maxAnswers": 1,
-    "validationMessage": "Selecione uma opção para avançar."
-  },
-  "analytics": {
-    "trackingId": "step-04-quiz-question",
-    "events": ["page_view", "interaction", "validation_error", "completion"],
-    "utmParams": true,
-    "customEvents": []
-  },
-  "logic": {
-    "navigation": {
-      "nextStep": "step-05",
-      "prevStep": "step-03",
-      "allowBack": true,
-      "autoAdvance": false
-    },
-    "scoring": {
-      "enabled": true,
-      "method": "category-points",
-      "categories": [
-        "Natural",
-        "Clássico",
-        "Contemporâneo",
-        "Elegante"
-      ]
-    },
-    "conditions": null
-  }
+  ]
 }

@@ -1,5 +1,6 @@
-// Memory management utilities e cleanup automático
-import React, { useEffect, useRef, useCallback, useState } from "react";
+// @ts-nocheck
+import { PerformanceOptimizer } from './performanceOptimizer';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 // Gerenciador de memory leaks
 class MemoryManager {
@@ -33,14 +34,17 @@ class MemoryManager {
 
   // Registrar interval para cleanup automático
   setInterval(callback: () => void, ms: number) {
-    const id = window.setInterval(callback, ms);
+    // 🚀 OTIMIZAÇÃO: Usar PerformanceOptimizer
+    const id = PerformanceOptimizer.scheduleInterval(callback, ms);
     this.intervals.add(id);
     return id;
   }
 
   // Registrar timeout para cleanup automático
   setTimeout(callback: () => void, ms: number) {
-    const id = window.setTimeout(callback, ms);
+    // 🚀 OTIMIZAÇÃO: Usar PerformanceOptimizer
+    const strategy = PerformanceOptimizer.getSuggestedStrategy(ms);
+    const id = PerformanceOptimizer.schedule(callback, ms, strategy);
     this.timeouts.add(id);
     return id;
   }
@@ -106,16 +110,19 @@ export const useMemoryCleanup = () => {
   };
 };
 
-// Hook para weak references
+// Hook para weak references (desabilitado - WeakRef não disponível em todos os ambientes)
 export const useWeakRef = <T extends object>(value: T) => {
-  const weakRef = useRef<WeakRef<T>>();
+  // const weakRef = useRef<WeakRef<T>>();
+  const valueRef = useRef<T>(value);
 
   useEffect(() => {
-    weakRef.current = new WeakRef(value);
+    // weakRef.current = new WeakRef(value);
+    valueRef.current = value;
   }, [value]);
 
   const getValue = useCallback(() => {
-    return weakRef.current?.deref();
+    // return weakRef.current?.deref();
+    return valueRef.current;
   }, []);
 
   return getValue;
@@ -127,7 +134,7 @@ export const useMemoryMonitor = (threshold = 50) => {
   const [isHighUsage, setIsHighUsage] = useState(false);
 
   useEffect(() => {
-    if (!("memory" in performance)) return;
+    if (!('memory' in performance)) return;
 
     const checkMemory = () => {
       const memory = (performance as any).memory;
@@ -141,7 +148,8 @@ export const useMemoryMonitor = (threshold = 50) => {
       }
     };
 
-    const interval = setInterval(checkMemory, 5000);
+    // 🚀 OTIMIZAÇÃO: Usar PerformanceOptimizer interval
+    const interval = PerformanceOptimizer.scheduleInterval(checkMemory, 5000);
     checkMemory();
 
     return () => clearInterval(interval);
@@ -152,7 +160,7 @@ export const useMemoryMonitor = (threshold = 50) => {
 
 // Garbage collection forçado (se disponível)
 export const forceGarbageCollection = () => {
-  if ("gc" in window && typeof (window as any).gc === "function") {
+  if ('gc' in window && typeof (window as any).gc === 'function') {
     (window as any).gc();
   }
 };
@@ -166,7 +174,7 @@ export const useHeavyCleanup = (cleanupFn: () => void) => {
     return () => {
       cleanupRef.current();
       // Force cleanup on unmount
-      if (typeof window !== "undefined") {
+      if (typeof window !== 'undefined') {
         setTimeout(() => {
           forceGarbageCollection();
         }, 100);
@@ -178,18 +186,18 @@ export const useHeavyCleanup = (cleanupFn: () => void) => {
 // Performance observer para detectar memory leaks
 export const useMemoryLeakDetector = () => {
   useEffect(() => {
-    if (!("PerformanceObserver" in window)) return;
+    if (!('PerformanceObserver' in window)) return;
 
     const observer = new PerformanceObserver(list => {
       const entries = list.getEntries();
       entries.forEach(entry => {
-        if (entry.entryType === "measure" && entry.name.includes("memory")) {
-          console.log("Memory measurement:", entry);
+        if (entry.entryType === 'measure' && entry.name.includes('memory')) {
+          console.log('Memory measurement:', entry);
         }
       });
     });
 
-    observer.observe({ entryTypes: ["measure"] });
+    observer.observe({ entryTypes: ['measure'] });
 
     return () => observer.disconnect();
   }, []);

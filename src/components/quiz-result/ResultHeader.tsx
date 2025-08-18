@@ -1,7 +1,6 @@
-import { StepTemplateIds } from "@/utils/semanticIdGenerator";
-import { motion } from "framer-motion";
-import React from "react";
-import Logo from "../ui/logo";
+import { StepTemplateIds } from '@/utils/semanticIdGenerator';
+import { motion } from 'framer-motion';
+import Logo from '../ui/logo';
 
 interface ResultHeaderProps {
   userName: string;
@@ -17,7 +16,7 @@ const ResultHeader: React.FC<ResultHeaderProps> = ({ userName, customTitle }) =>
       className="text-center space-y-4 py-4"
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.7, ease: "easeOut" }}
+      transition={{ duration: 0.7, ease: 'easeOut' }}
       data-component-id={componentId}
     >
       <motion.div

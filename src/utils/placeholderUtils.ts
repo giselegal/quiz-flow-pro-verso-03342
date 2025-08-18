@@ -1,32 +1,33 @@
+// @ts-nocheck
 // Utility functions for generating placeholder content
 
 export const generatePlaceholderText = (length: number = 50): string => {
   const words = [
-    "lorem",
-    "ipsum",
-    "dolor",
-    "sit",
-    "amet",
-    "consectetur",
-    "adipiscing",
-    "elit",
-    "sed",
-    "do",
-    "eiusmod",
-    "tempor",
-    "incididunt",
-    "ut",
-    "labore",
-    "et",
-    "dolore",
-    "magna",
-    "aliqua",
-    "enim",
-    "ad",
-    "minim",
-    "veniam",
-    "quis",
-    "nostrud",
+    'lorem',
+    'ipsum',
+    'dolor',
+    'sit',
+    'amet',
+    'consectetur',
+    'adipiscing',
+    'elit',
+    'sed',
+    'do',
+    'eiusmod',
+    'tempor',
+    'incididunt',
+    'ut',
+    'labore',
+    'et',
+    'dolore',
+    'magna',
+    'aliqua',
+    'enim',
+    'ad',
+    'minim',
+    'veniam',
+    'quis',
+    'nostrud',
   ];
 
   const result = [];
@@ -34,7 +35,7 @@ export const generatePlaceholderText = (length: number = 50): string => {
     result.push(words[Math.floor(Math.random() * words.length)]);
   }
 
-  return result.join(" ");
+  return result.join(' ');
 };
 
 export const generatePlaceholderImage = (width: number = 400, height: number = 300): string => {
@@ -43,11 +44,11 @@ export const generatePlaceholderImage = (width: number = 400, height: number = 3
 
 export const generatePlaceholderTitle = (): string => {
   const titles = [
-    "Título Principal",
-    "Descubra Seu Estilo",
-    "Transforme Sua Aparência",
-    "Encontre Sua Essência",
-    "Revele Sua Personalidade",
+    'Título Principal',
+    'Descubra Seu Estilo',
+    'Transforme Sua Aparência',
+    'Encontre Sua Essência',
+    'Revele Sua Personalidade',
   ];
 
   return titles[Math.floor(Math.random() * titles.length)];

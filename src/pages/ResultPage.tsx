@@ -1,8 +1,7 @@
-import React from "react";
-import { useRoute } from "wouter";
+import { useRoute } from 'wouter';
 
-const ResultPage: React.FC = () => {
-  const [match, params] = useRoute("/resultado/:resultId");
+function ResultPage() {
+  const [_match, params] = useRoute('/resultado/:resultId');
   const resultId = params?.resultId;
 
   return (
@@ -13,13 +12,13 @@ const ResultPage: React.FC = () => {
         <div className="bg-white p-8 rounded-lg shadow-md">
           <h2 className="text-2xl font-semibold mb-4">Seu Resultado</h2>
           <p style={{ color: '#6B4F43' }}>
-            Esta é uma página de resultado de exemplo. O conteúdo seria carregado baseado no ID:{" "}
+            Esta é uma página de resultado de exemplo. O conteúdo seria carregado baseado no ID:{' '}
             {resultId}
           </p>
         </div>
       </div>
     </div>
   );
-};
+}
 
 export default ResultPage;

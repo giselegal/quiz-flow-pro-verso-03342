@@ -1,34 +1,32 @@
-import React from "react";
-import { cn } from "@/lib/utils";
-import type { BlockComponentProps } from "@/types/blocks";
-import { safeGetBlockProperties, logBlockDebug } from "@/utils/blockUtils";
+import { cn } from '@/lib/utils';
+import type { BlockComponentProps } from '@/types/blocks';
+import { safeGetBlockProperties, logBlockDebug } from '@/utils/blockUtils';
 
 /**
  * TestimonialsInlineBlock - Seção de depoimentos
  */
 
-
 const TestimonialsInlineBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   onClick,
-  className = "",
+  className = '',
 }) => {
-  logBlockDebug("TestimonialsInlineBlock", block);
+  logBlockDebug('TestimonialsInlineBlock', block);
   const properties = safeGetBlockProperties(block);
 
   const {
-    title = "Depoimentos",
-    testimonials = [{ name: "Ana Silva", text: "Ótimo produto!", rating: 5 }],
+    title = 'Depoimentos',
+    testimonials = [{ name: 'Ana Silva', text: 'Ótimo produto!', rating: 5 }],
   } = properties;
 
   return (
     <div
       className={cn(
-        "w-full p-4 rounded-lg transition-all duration-200",
-        isSelected && "ring-2 ring-blue-500",
-        "cursor-pointer",
-        className,
+        'w-full p-4 rounded-lg transition-all duration-200',
+        isSelected && 'ring-2 ring-blue-500',
+        'cursor-pointer',
+        className
       )}
       onClick={onClick}
     >

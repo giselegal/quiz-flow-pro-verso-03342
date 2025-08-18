@@ -11,33 +11,33 @@ export interface SchemaDrivenFunnelData {
 
 export const correctedSchemaDrivenFunnelService = {
   async createFunnel(funnel: any): Promise<SchemaDrivenFunnelData> {
-    console.log("Would create funnel:", funnel);
+    console.log('Would create funnel:', funnel);
     return {
       id: `funnel_${Date.now()}`,
-      name: funnel.name || "New Funnel",
-      description: funnel.description || "",
+      name: funnel.name || 'New Funnel',
+      description: funnel.description || '',
       settings: funnel.settings || {},
       pages: funnel.pages || [],
     };
   },
 
   async updateFunnel(id: string, updates: any): Promise<SchemaDrivenFunnelData | null> {
-    console.log("Would update funnel:", id, updates);
+    console.log('Would update funnel:', id, updates);
     return null;
   },
 
   async getFunnel(id: string): Promise<SchemaDrivenFunnelData | null> {
-    console.log("Would get funnel:", id);
+    console.log('Would get funnel:', id);
     return null;
   },
 
   async listFunnels(): Promise<SchemaDrivenFunnelData[]> {
-    console.log("Would list funnels");
+    console.log('Would list funnels');
     return [];
   },
 
   async deleteFunnel(id: string): Promise<boolean> {
-    console.log("Would delete funnel:", id);
+    console.log('Would delete funnel:', id);
     return true;
   },
 };

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface Particle {
   id: number;
@@ -14,7 +14,7 @@ interface Particle {
 interface ParticleSystemProps {
   trigger: boolean;
   origin: { x: number; y: number };
-  type: "selection" | "celebration" | "strategic";
+  type: 'selection' | 'celebration' | 'strategic';
   onComplete?: () => void;
 }
 
@@ -27,11 +27,11 @@ export const ParticleSystem: React.FC<ParticleSystemProps> = ({
   const [particles, setParticles] = useState<Particle[]>([]);
 
   const createParticles = () => {
-    const particleCount = type === "celebration" ? 20 : type === "strategic" ? 15 : 8;
+    const particleCount = type === 'celebration' ? 20 : type === 'strategic' ? 15 : 8;
     const colors = {
-      selection: ["#B89B7A", "#A78BFA", "#C4B5FD"],
-      celebration: ["#F59E0B", "#EAB308", "#FDE047", "#84CC16"],
-      strategic: ["#aa6b5d", "#F97316", "#F59E0B", "#EAB308"],
+      selection: ['#B89B7A', '#A78BFA', '#C4B5FD'],
+      celebration: ['#F59E0B', '#EAB308', '#FDE047', '#84CC16'],
+      strategic: ['#aa6b5d', '#F97316', '#F59E0B', '#EAB308'],
     };
 
     const newParticles: Particle[] = [];

@@ -1,8 +1,8 @@
 // 🧪 TESTE DE VALIDAÇÃO STEP01
 // Componente para testar sistema de validação de botão por nome
 
-import React from "react";
-import { Step01ValidationProvider } from "./src/hooks/useStep01Validation";
+import React from 'react';
+import { Step01ValidationProvider } from './src/hooks/useStep01Validation';
 
 // Mock dos componentes para teste
 const MockFormInput = ({ id }: { id: string }) => {
@@ -11,7 +11,7 @@ const MockFormInput = ({ id }: { id: string }) => {
     const valid = value.trim().length >= 2;
 
     window.dispatchEvent(
-      new CustomEvent("quiz-input-change", {
+      new CustomEvent('quiz-input-change', {
         detail: { blockId: id, value: value.trim(), valid },
       })
     );
@@ -32,7 +32,7 @@ const MockFormInput = ({ id }: { id: string }) => {
 
 const MockButton = ({ id }: { id: string }) => {
   const [isDisabled, setIsDisabled] = React.useState(true);
-  const [text, setText] = React.useState("Digite seu nome para continuar");
+  const [text, setText] = React.useState('Digite seu nome para continuar');
 
   React.useEffect(() => {
     const handleButtonStateChange = (event: CustomEvent) => {
@@ -40,15 +40,15 @@ const MockButton = ({ id }: { id: string }) => {
 
       if (buttonId === id) {
         setIsDisabled(!enabled);
-        setText(enabled ? "Quero Descobrir Meu Estilo!" : "Digite seu nome para continuar");
+        setText(enabled ? 'Quero Descobrir Meu Estilo!' : 'Digite seu nome para continuar');
       }
     };
 
-    window.addEventListener("step01-button-state-change", handleButtonStateChange as EventListener);
+    window.addEventListener('step01-button-state-change', handleButtonStateChange as EventListener);
 
     return () => {
       window.removeEventListener(
-        "step01-button-state-change",
+        'step01-button-state-change',
         handleButtonStateChange as EventListener
       );
     };
@@ -56,7 +56,7 @@ const MockButton = ({ id }: { id: string }) => {
 
   const handleClick = () => {
     if (!isDisabled) {
-      alert("🎉 Botão funcionou! Quiz pode prosseguir.");
+      alert('🎉 Botão funcionou! Quiz pode prosseguir.');
     }
   };
 
@@ -68,8 +68,8 @@ const MockButton = ({ id }: { id: string }) => {
         w-full py-4 px-8 text-lg font-bold rounded-lg transition-all duration-300
         ${
           isDisabled
-            ? "bg-gray-400 text-gray-600 cursor-not-allowed opacity-50"
-            : "bg-[#B89B7A] text-white hover:bg-[#aa6b5d] hover:shadow-xl"
+            ? 'bg-gray-400 text-gray-600 cursor-not-allowed opacity-50'
+            : 'bg-[#B89B7A] text-white hover:bg-[#aa6b5d] hover:shadow-xl'
         }
       `}
     >

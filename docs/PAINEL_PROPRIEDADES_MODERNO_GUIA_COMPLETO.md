@@ -29,13 +29,13 @@ O **Enhanced Properties Panel** foi desenvolvido seguindo as melhores práticas 
 ```tsx
 // Propriedades organizadas em categorias
 categories = {
-  general: "Configurações básicas",
-  content: "Conteúdo e texto",
-  layout: "Layout e posicionamento",
-  styling: "Cores e estilos",
-  behavior: "Comportamento interativo",
-  validation: "Regras de validação",
-  advanced: "Configurações avançadas",
+  general: 'Configurações básicas',
+  content: 'Conteúdo e texto',
+  layout: 'Layout e posicionamento',
+  styling: 'Cores e estilos',
+  behavior: 'Comportamento interativo',
+  validation: 'Regras de validação',
+  advanced: 'Configurações avançadas',
 };
 ```
 
@@ -129,7 +129,7 @@ properties: {
 
    ```typescript
    // Atualize blockDefinitions.ts com as novas categorias
-   import { getEnhancedBlockDefinition } from "@/config/enhancedPropertyConfigurations";
+   import { getEnhancedBlockDefinition } from '@/config/enhancedPropertyConfigurations';
    ```
 
 3. **Implementar Array Editor para Opções**
@@ -153,13 +153,13 @@ properties: {
 
    ```tsx
    // Usando @dnd-kit (já instalado)
-   import { DndContext, closestCenter } from "@dnd-kit/core";
+   import { DndContext, closestCenter } from '@dnd-kit/core';
    ```
 
 3. **Validação de Formulários**
    ```tsx
    // Usando react-hook-form (já instalado)
-   import { useForm } from "react-hook-form";
+   import { useForm } from 'react-hook-form';
    ```
 
 ### **Prioridade Baixa:**
@@ -202,7 +202,7 @@ Todas as dependências necessárias já estão instaladas. O painel utiliza:
 
 ```typescript
 // Configuração completa para options-grid
-const quizGridConfig = getEnhancedBlockDefinition("options-grid");
+const quizGridConfig = getEnhancedBlockDefinition('options-grid');
 // Inclui: layout, comportamento, validação, estilização
 ```
 
@@ -210,7 +210,7 @@ const quizGridConfig = getEnhancedBlockDefinition("options-grid");
 
 ```typescript
 // Configuração para títulos e textos
-const headingConfig = getEnhancedBlockDefinition("heading-inline");
+const headingConfig = getEnhancedBlockDefinition('heading-inline');
 // Inclui: tipografia, cores, alinhamento, margens
 ```
 

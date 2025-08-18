@@ -1,10 +1,9 @@
-import React from "react";
-import { QuizComponentData, QuizStage } from "@/types/quizBuilder";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { cn } from "@/lib/utils";
-import ComponentRenderer from "./ComponentRenderer";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { QuizComponentData, QuizStage } from '@/types/quizBuilder';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { cn } from '@/lib/utils';
+import ComponentRenderer from './ComponentRenderer';
+import { Button } from '@/components/ui/button';
+import { Plus } from 'lucide-react';
 
 interface ComponentPreviewPanelProps {
   components: QuizComponentData[];
@@ -44,8 +43,8 @@ export const ComponentPreviewPanel: React.FC<ComponentPreviewPanelProps> = ({
       <ScrollArea className="flex-1 p-4">
         <div
           className={cn(
-            "min-h-full w-full max-w-4xl mx-auto",
-            isPreviewing ? "pointer-events-none select-none" : ""
+            'min-h-full w-full max-w-4xl mx-auto',
+            isPreviewing ? 'pointer-events-none select-none' : ''
           )}
         >
           {sortedComponents.length === 0 ? (

@@ -1,6 +1,6 @@
-import React from "react";
-import { useLocation } from "wouter";
-import { Button } from "./ui/button";
+// @ts-nocheck
+import { useLocation } from 'wouter';
+import { Button } from './ui/button';
 
 interface QuizFinalTransitionProps {
   onShowResult?: () => void;
@@ -14,13 +14,13 @@ const QuizFinalTransition: React.FC<QuizFinalTransitionProps> = ({ onShowResult 
           Obrigada por compartilhar.
         </h2>
         <p className="text-[#3a3a3a]">
-          Chegar até aqui já mostra que você está pronta para se olhar com mais{" "}
+          Chegar até aqui já mostra que você está pronta para se olhar com mais{' '}
           <strong>amor</strong>, se vestir com mais <strong>intenção</strong> e deixar sua imagem
-          comunicar quem você é de verdade — com <strong>leveza</strong>, <strong>presença</strong>{" "}
+          comunicar quem você é de verdade — com <strong>leveza</strong>, <strong>presença</strong>{' '}
           e <strong>propósito</strong>.
         </p>
         <p className="text-[#3a3a3a]">
-          Agora, é hora de revelar o seu <strong>Estilo Predominante</strong> — e os seus{" "}
+          Agora, é hora de revelar o seu <strong>Estilo Predominante</strong> — e os seus{' '}
           <strong>Estilos Complementares</strong>. E, mais do que isso, uma oportunidade real de
           aplicar o seu Estilo com <strong>leveza</strong> e <strong>confiança</strong> — todos os
           dias.

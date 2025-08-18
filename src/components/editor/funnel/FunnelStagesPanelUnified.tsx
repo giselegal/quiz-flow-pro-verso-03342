@@ -1,11 +1,10 @@
-import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Plus, GripVertical, Eye, Settings, Copy, Trash2 } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { useEditor } from "@/context/EditorContext";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Plus, GripVertical, Eye, Settings, Copy, Trash2 } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { useEditor } from '@/context/EditorContext';
 
 interface FunnelStagesPanelProps {
   className?: string;
@@ -20,7 +19,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
   const {
     stages,
     activeStageId,
-    stageActions: { setActiveStage, addStage, removeStage, updateStage },
+    stageActions: { setActiveStage, addStage, removeStage },
     computed: { stageCount },
   } = useEditor();
 
@@ -29,7 +28,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
   console.log(
     `🔍 [${timestamp}] FunnelStagesPanel - Stages:`,
     stages?.length || 0,
-    "ActiveStage:",
+    'ActiveStage:',
     activeStageId
   );
 
@@ -37,16 +36,16 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
   const handleAddStage = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log("🎯 CLICK: Adicionar nova etapa");
+    console.log('🎯 CLICK: Adicionar nova etapa');
 
     const newStageId = addStage();
-    console.log("✅ Nova etapa criada:", newStageId);
+    console.log('✅ Nova etapa criada:', newStageId);
   };
 
   // ✅ HANDLER PARA SELEÇÃO DE ETAPA (UNIFICADO)
   const handleStageClick = (stageId: string, e?: React.MouseEvent) => {
-    console.log("🚨 EVENTO CLICK RECEBIDO - StageID:", stageId);
-    console.log("🚨 Current ActiveStageId:", activeStageId);
+    console.log('🚨 EVENTO CLICK RECEBIDO - StageID:', stageId);
+    console.log('🚨 Current ActiveStageId:', activeStageId);
 
     if (e) {
       e.preventDefault();
@@ -58,35 +57,35 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
 
     // ✅ CALLBACK OPCIONAL PARA SINCRONIZAÇÃO EXTERNA
     if (onStageSelect) {
-      console.log("🚨 Chamando onStageSelect para callback externo");
+      console.log('🚨 Chamando onStageSelect para callback externo');
       onStageSelect(stageId);
     }
 
-    console.log("✅ Etapa ativada:", stageId);
+    console.log('✅ Etapa ativada:', stageId);
   };
 
   // ✅ HANDLER PARA ACTIONS DOS BOTÕES
   const handleActionClick = (action: string, stageId: string, e: React.MouseEvent) => {
-    console.log("🚨 ACTION CLICK RECEBIDO:", action, stageId);
+    console.log('🚨 ACTION CLICK RECEBIDO:', action, stageId);
 
     e.preventDefault();
     e.stopPropagation();
 
     switch (action) {
-      case "view":
-        console.log("👁️ Visualizar etapa:", stageId);
+      case 'view':
+        console.log('👁️ Visualizar etapa:', stageId);
         handleStageClick(stageId); // Apenas selecionar a etapa
         break;
-      case "settings":
-        console.log("⚙️ Configurar etapa:", stageId);
+      case 'settings':
+        console.log('⚙️ Configurar etapa:', stageId);
         // TODO: Abrir modal de configurações
         break;
-      case "copy":
-        console.log("📋 Copiar etapa:", stageId);
+      case 'copy':
+        console.log('📋 Copiar etapa:', stageId);
         // TODO: Implementar duplicação de etapa
         break;
-      case "delete":
-        console.log("🗑️ EXECUTANDO DELETE da etapa:", stageId);
+      case 'delete':
+        console.log('🗑️ EXECUTANDO DELETE da etapa:', stageId);
         if (confirm(`Deseja realmente deletar a etapa "${stageId}"?`)) {
           removeStage(stageId);
         }
@@ -99,7 +98,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
     console.warn(`⚠️ [${timestamp}] FunnelStagesPanel - PROBLEMA: Nenhuma etapa encontrada!`);
     return (
       <Card
-        className={cn("h-full flex flex-col min-h-[400px] bg-red-50/50 border-red-200", className)}
+        className={cn('h-full flex flex-col min-h-[400px] bg-red-50/50 border-red-200', className)}
       >
         <CardHeader className="flex-shrink-0 pb-3 bg-red-100/50">
           <CardTitle className="text-lg font-semibold text-red-700 flex items-center gap-2">
@@ -135,7 +134,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
   return (
     <Card
       className={cn(
-        "h-full flex flex-col min-h-[400px] border-2 bg-green-50/30 border-green-200",
+        'h-full flex flex-col min-h-[400px] border-2 bg-green-50/30 border-green-200',
         className
       )}
     >
@@ -151,29 +150,29 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
       <CardContent className="flex-1 p-0 overflow-hidden">
         <ScrollArea className="h-full">
           <div className="space-y-2 p-4">
-            {stages.map((stage, index) => {
-              console.log("🚨 RENDERIZANDO STAGE:", stage.id, stage.name);
+            {stages.map(stage => {
+              console.log('🚨 RENDERIZANDO STAGE:', stage.id, stage.name);
               return (
                 <div
                   key={stage.id}
                   className={cn(
-                    "group relative rounded-lg border-2 transition-all duration-200 cursor-pointer select-none",
-                    "hover:border-purple-400 hover:shadow-lg active:scale-[0.95]",
-                    "min-h-[80px] bg-white",
+                    'group relative rounded-lg border-2 transition-all duration-200 cursor-pointer select-none',
+                    'hover:border-purple-400 hover:shadow-lg active:scale-[0.95]',
+                    'min-h-[80px] bg-white',
                     // ✅ USAR activeStageId DO EDITORCONTEXT PARA HIGHLIGHT
                     activeStageId === stage.id
-                      ? "border-purple-500 bg-[#B89B7A]/10 shadow-md ring-2 ring-purple-200"
-                      : "border-gray-300 bg-white hover:bg-gray-50"
+                      ? 'border-purple-500 bg-[#B89B7A]/10 shadow-md ring-2 ring-purple-200'
+                      : 'border-gray-300 bg-white hover:bg-gray-50'
                   )}
                   onClick={e => {
-                    console.log("🚨 CLICK DIRETO NO DIV - StageID:", stage.id);
-                    console.log("🚨 Current activeStageId:", activeStageId);
+                    console.log('🚨 CLICK DIRETO NO DIV - StageID:', stage.id);
+                    console.log('🚨 Current activeStageId:', activeStageId);
                     handleStageClick(stage.id, e);
                   }}
                   role="button"
                   tabIndex={0}
                   onKeyDown={e => {
-                    if (e.key === "Enter" || e.key === " ") {
+                    if (e.key === 'Enter' || e.key === ' ') {
                       handleStageClick(stage.id);
                     }
                   }}
@@ -185,21 +184,21 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
                         <div className="flex items-center justify-between">
                           <span
                             className={cn(
-                              "font-medium text-sm",
-                              activeStageId === stage.id ? "text-[#A38A69]" : "text-foreground"
+                              'font-medium text-sm',
+                              activeStageId === stage.id ? 'text-[#A38A69]' : 'text-foreground'
                             )}
                           >
                             Etapa {stage.order}
                           </span>
                           <Badge
-                            variant={activeStageId === stage.id ? "default" : "secondary"}
+                            variant={activeStageId === stage.id ? 'default' : 'secondary'}
                             className="text-xs"
                           >
                             {stage.metadata?.blocksCount || 0} blocos
                           </Badge>
                         </div>
                         <p className="text-xs text-muted-foreground mt-1 line-clamp-1">
-                          {stage.name || stage.description || "Sem título"}
+                          {stage.name || stage.description || 'Sem título'}
                         </p>
                         {/* ✅ INDICADOR VISUAL DE ETAPA ATIVA */}
                         {activeStageId === stage.id && (
@@ -217,7 +216,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
                         variant="ghost"
                         size="sm"
                         className="h-6 w-6 p-0 hover:bg-background/80"
-                        onClick={e => handleActionClick("view", stage.id, e)}
+                        onClick={e => handleActionClick('view', stage.id, e)}
                         title="Visualizar etapa"
                       >
                         <Eye className="w-3 h-3" />
@@ -226,7 +225,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
                         variant="ghost"
                         size="sm"
                         className="h-6 w-6 p-0 hover:bg-background/80"
-                        onClick={e => handleActionClick("settings", stage.id, e)}
+                        onClick={e => handleActionClick('settings', stage.id, e)}
                         title="Configurações"
                       >
                         <Settings className="w-3 h-3" />
@@ -235,7 +234,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
                         variant="ghost"
                         size="sm"
                         className="h-6 w-6 p-0 hover:bg-background/80"
-                        onClick={e => handleActionClick("copy", stage.id, e)}
+                        onClick={e => handleActionClick('copy', stage.id, e)}
                         title="Copiar etapa"
                       >
                         <Copy className="w-3 h-3" />
@@ -244,7 +243,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
                         variant="ghost"
                         size="sm"
                         className="h-6 w-6 p-0 hover:bg-destructive hover:text-destructive-foreground"
-                        onClick={e => handleActionClick("delete", stage.id, e)}
+                        onClick={e => handleActionClick('delete', stage.id, e)}
                         title="Excluir etapa"
                       >
                         <Trash2 className="w-3 h-3" />
@@ -271,3 +270,5 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
     </Card>
   );
 };
+
+export default FunnelStagesPanel;

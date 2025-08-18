@@ -2,18 +2,13 @@
   "templateVersion": "2.0",
   "metadata": {
     "id": "quiz-step-01",
-    "name": "Bem-vinda ao Quiz de Estilo",
-    "description": "Página de entrada com captura de nome",
-    "category": "intro",
+    "name": "Intro - Descubra seu Estilo",
+    "description": "Introdução ao Quiz de Estilo",
+    "category": "quiz-intro",
     "type": "intro",
-    "tags": [
-      "quiz",
-      "style",
-      "intro",
-      "gisele-galvao"
-    ],
-    "createdAt": "2025-08-10T03:45:03.511Z",
-    "updatedAt": "2025-08-10T03:45:03.511Z",
+    "tags": ["quiz", "style", "intro", "gisele-galvao"],
+    "createdAt": "2025-08-11T03:45:03.511Z",
+    "updatedAt": "2025-08-11T03:45:03.511Z",
     "author": "giselegal"
   },
   "design": {
@@ -69,136 +64,149 @@
   },
   "blocks": [
     {
+      "id": "step01-skip-link",
+      "type": "accessibility-skip-link",
+      "properties": {
+        "target": "#quiz-form",
+        "text": "Pular para o formulário",
+        "className": "sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-50 bg-white text-[#432818] px-4 py-2 rounded-md shadow-md"
+      }
+    },
+    {
       "id": "step01-header",
       "type": "quiz-intro-header",
       "properties": {
         "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
         "logoAlt": "Logo Gisele Galvão",
-        "logoWidth": 96,
-        "logoHeight": 96,
-        "progressValue": 0,
-        "progressTotal": 100,
+        "logoWidth": 120,
+        "logoHeight": 50,
         "showProgress": false,
+        "progressValue": 1,
+        "progressMax": 21,
+        "showBackButton": false,
+        "containerWidth": "full",
+        "spacing": "small",
+        "showLogo": true,
+        "progressBarColor": "#B89B7A",
+        "progressBarThickness": 6,
+        "backgroundColor": "#FFFFFF",
+        "textColor": "#432818",
+        "paddingTop": 16,
+        "paddingBottom": 16,
+        "paddingLeft": 24,
+        "paddingRight": 24,
+        "marginBottom": 24,
+        "progressTotal": 100,
+        "type": "quiz-intro-header"
+      }
+    },
+    {
+      "id": "step01-main-title",
+      "type": "text-inline",
+      "properties": {
+        "content": "<span class=\"text-[#B89B7A]\">Chega</span> de um guarda-roupa lotado e da sensação de que nada combina com <span class=\"text-[#B89B7A]\">Você</span>.",
+        "fontSize": "text-2xl sm:text-3xl md:text-4xl",
+        "fontWeight": "font-bold",
+        "textAlign": "text-center",
+        "color": "#432818",
+        "fontFamily": "'Playfair Display', serif",
         "containerWidth": "full",
         "spacing": "small"
       }
     },
     {
       "id": "step01-hero-image",
-      "type": "image-display-inline",
+      "type": "image-inline",
       "properties": {
-        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911667/WhatsApp_Image_2025-04-02_at_09.40.53_cv8p5y.jpg",
-        "alt": "Quiz de Estilo Pessoal",
-        "width": "100%",
-        "height": "auto",
-        "borderRadius": "16px",
+        "src": "https://res.cloudinary.com/der8kogzu/image/upload/f_avif,q_85,w_400,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.avif",
+        "alt": "Descubra seu estilo predominante e transforme seu guarda-roupa",
+        "width": 400,
+        "height": 300,
+        "aspectRatio": "4/3",
+        "className": "mx-auto rounded-lg shadow-sm",
         "containerWidth": "full",
-        "spacing": "medium"
+        "spacing": "small",
+        "priority": true,
+        "loading": "eager"
       }
     },
     {
-      "id": "step01-title",
+      "id": "step01-description",
       "type": "text-inline",
       "properties": {
-        "content": "DESCUBRA SEU ESTILO PESSOAL",
-        "fontSize": "text-4xl",
-        "fontWeight": "font-bold",
-        "textAlign": "text-center",
-        "color": "#432818",
-        "fontFamily": "'Playfair Display', serif",
-        "containerWidth": "full",
-        "spacing": "medium"
-      }
-    },
-    {
-      "id": "step01-description-top",
-      "type": "text-inline",
-      "properties": {
-        "content": "Chega de um guarda-roupa lotado e da sensação de que nada combina com Você.",
-        "fontSize": "text-xl",
+        "content": "Em poucos minutos, descubra seu <span class=\"font-semibold text-[#B89B7A]\">Estilo Predominante</span> — e aprenda a montar looks que realmente refletem sua <span class=\"font-semibold text-[#432818]\">essência</span>, com praticidade e <span class=\"font-semibold text-[#432818]\">confiança</span>.",
+        "fontSize": "text-sm sm:text-base",
         "textAlign": "text-center",
         "color": "#6B7280",
+        "marginTop": 16,
+        "marginBottom": 24,
         "containerWidth": "full",
-        "spacing": "medium"
+        "spacing": "small"
       }
     },
     {
-      "id": "step01-description-bottom",
-      "type": "text-inline",
+      "id": "step01-lead-form",
+      "type": "lead-form",
       "properties": {
-        "content": "Em poucos minutos, descubra seu Estilo Predominante — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.",
-        "fontSize": "text-lg",
-        "textAlign": "text-center",
-        "color": "#6B7280",
-        "containerWidth": "full",
-        "spacing": "medium"
-      }
-    },
-    {
-      "id": "step01-name-input",
-      "type": "form-input",
-      "properties": {
-        "inputType": "text",
-        "label": "NOME *",
-        "placeholder": "Digite seu nome",
-        "required": true,
-        "validation": {
-          "minLength": 2,
-          "errorMessage": "Digite seu nome para continuar"
-        },
-        "containerWidth": "full",
-        "spacing": "medium"
-      }
-    },
-    {
-      "id": "step01-continue-button",
-      "type": "button-inline",
-      "properties": {
-        "text": "Digite seu nome para continuar",
-        "textWhenDisabled": "Digite seu nome para continuar",
-        "variant": "primary",
-        "size": "large",
-        "fullWidth": true,
-        "backgroundColor": "#B89B7A",
-        "backgroundGradient": "linear-gradient(90deg, #B89B7A, #aa6b5d)",
-        "textColor": "#ffffff",
-        "borderRadius": "10px",
-        "shadow": "0 4px 14px rgba(184, 155, 122, 0.15)",
-        "disabled": true,
-        "requiresValidInput": true,
-        "containerWidth": "full",
-        "spacing": "medium"
+        "showNameField": true,
+        "showEmailField": false,
+        "showPhoneField": false,
+        "nameLabel": "NOME",
+        "namePlaceholder": "Digite seu nome",
+        "submitText": "Quero Descobrir meu Estilo Agora!",
+        "loadingText": "Digite seu nome para continuar",
+        "successText": "Perfeito! Vamos descobrir seu estilo!",
+        "requiredFields": "name",
+        "backgroundColor": "#FFFFFF",
+        "borderColor": "#B89B7A",
+        "textColor": "#432818",
+        "primaryColor": "#B89B7A",
+        "marginTop": 32,
+        "marginBottom": 8,
+        "fieldSpacing": 6
       }
     },
     {
       "id": "step01-privacy-text",
       "type": "text-inline",
       "properties": {
-        "content": "Seu nome é necessário para personalizar sua experiência. Ao clicar, você concorda com nossa política de privacidade",
-        "fontSize": "text-sm",
+        "content": "Seu nome é necessário para personalizar sua experiência. Ao clicar, você concorda com nossa <a href=\"#\" class=\"text-[#B89B7A] hover:text-[#A1835D] underline\">política de privacidade</a>",
+        "fontSize": "text-xs",
         "textAlign": "text-center",
         "color": "#9CA3AF",
+        "marginTop": 8,
+        "containerWidth": "full",
+        "spacing": "small"
+      }
+    },
+    {
+      "id": "step01-footer",
+      "type": "text-inline",
+      "properties": {
+        "content": "© 2025 Gisele Galvão - Todos os direitos reservados",
+        "fontSize": "text-xs",
+        "textAlign": "text-center",
+        "color": "#9CA3AF",
+        "marginTop": 32,
         "containerWidth": "full",
         "spacing": "small"
       }
     }
   ],
   "validation": {
-    "required": false,
-    "minAnswers": 0,
-    "maxAnswers": 0,
-    "validationMessage": "Selecione uma opção para avançar."
+    "nameField": {
+      "required": true,
+      "minLength": 2,
+      "maxLength": 32,
+      "errorMessage": "Por favor, digite seu nome para continuar",
+      "realTimeValidation": true
+    }
   },
   "analytics": {
-    "trackingId": "step-01-intro",
-    "events": [
-      "page_view",
-      "interaction",
-      "validation_error",
-      "completion"
-    ],
+    "trackingId": "step-01-quiz-intro",
+    "events": ["page_view", "form_submit", "validation_error", "completion"],
     "utmParams": true,
-    "customEvents": []
+    "customEvents": ["component_mounted", "lcp_rendered", "user_interaction"]
   },
   "logic": {
     "navigation": {
@@ -207,7 +215,37 @@
       "allowBack": false,
       "autoAdvance": false
     },
+    "formHandling": {
+      "onSubmit": "handleQuizStart",
+      "validation": "realTime",
+      "errorHandling": "inline"
+    },
+    "stateManagement": {
+      "localState": ["nome", "error"],
+      "globalState": ["userName"]
+    },
     "scoring": null,
     "conditions": null
-  }
+  },
+  "performance": {
+    "webVitals": {
+      "markComponentMounted": true,
+      "markLcpRendered": true,
+      "markUserInteraction": true
+    },
+    "optimizations": {
+      "preloadCriticalImages": true,
+      "inlineStyles": false,
+      "lazyLoadNonCritical": true,
+      "useRequestAnimationFrame": true
+    }
+  },
+  "accessibility": {
+    "skipLinks": true,
+    "ariaLabels": true,
+    "focusManagement": true,
+    "keyboardNavigation": true,
+    "screenReader": true
+  },
+  "updatedAt": "2025-08-17T19:06:10.212Z"
 }

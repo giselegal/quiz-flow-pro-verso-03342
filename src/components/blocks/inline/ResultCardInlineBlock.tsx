@@ -1,9 +1,8 @@
-import { Progress } from "@/components/ui/progress";
-import { cn } from "@/lib/utils";
-import type { BlockComponentProps } from "@/types/blocks";
-import { isValidBlock, logBlockDebug, safeGetBlockProperties } from "@/utils/blockUtils";
-import { Award, TrendingUp } from "lucide-react";
-import React from "react";
+import { Progress } from '@/components/ui/progress';
+import { cn } from '@/lib/utils';
+import type { BlockComponentProps } from '@/types/blocks';
+import { isValidBlock, logBlockDebug, safeGetBlockProperties } from '@/utils/blockUtils';
+import { Award, TrendingUp } from 'lucide-react';
 
 /**
  * ResultCardInlineBlock - Componente modular inline horizontal
@@ -11,80 +10,79 @@ import React from "react";
  * MODULAR | REUTILIZÁVEL | RESPONSIVO | INDEPENDENTE
  */
 
-
 const ResultCardInlineBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   onClick,
-  className = "",
+  className = '',
 }) => {
   // 🛡️ Validação e logging de debug
   if (!isValidBlock(block)) {
-    console.error("❌ ResultCardInlineBlock: Bloco inválido recebido", block);
+    console.error('❌ ResultCardInlineBlock: Bloco inválido recebido', block);
     return <div style={{ color: '#432818' }}>Erro: Bloco inválido</div>;
   }
 
-  logBlockDebug("ResultCardInlineBlock", block);
+  logBlockDebug('ResultCardInlineBlock', block);
 
   // 🛡️ Extração segura das propriedades
   const properties = safeGetBlockProperties(block);
 
   const {
-    styleName = "Elegante",
+    styleName = 'Elegante',
     percentage = 85,
-    description = "Você valoriza sofisticação e refinamento",
+    description = 'Você valoriza sofisticação e refinamento',
     showProgress = true,
     showIcon = true,
-    cardVariant = "elevated", // elevated, flat, outlined
-    size = "medium", // small, medium, large
-    backgroundColor = "white",
-    accentColor = "#432818",
+    cardVariant = 'elevated', // elevated, flat, outlined
+    size = 'medium', // small, medium, large
+    backgroundColor = 'white',
+    accentColor = '#432818',
   } = properties;
 
   // Variantes de card
   const cardVariants = {
-    elevated: "shadow-lg hover:shadow-xl bg-white border border-gray-100",
-    flat: "bg-gray-50 hover:bg-gray-100",
-    outlined: "border-2 border-gray-200 hover:border-gray-300 bg-white",
+    elevated: 'shadow-lg hover:shadow-xl bg-white border border-gray-100',
+    flat: 'bg-gray-50 hover:bg-gray-100',
+    outlined: 'border-2 border-gray-200 hover:border-gray-300 bg-white',
   };
 
   // Tamanhos
   const sizeClasses = {
-    small: "p-4 min-h-[140px]",
-    medium: "p-6 min-h-[180px]",
-    large: "p-8 min-h-[220px]",
+    small: 'p-4 min-h-[140px]',
+    medium: 'p-6 min-h-[180px]',
+    large: 'p-8 min-h-[220px]',
   };
 
   const iconSizes = {
-    small: "w-8 h-8",
-    medium: "w-10 h-10",
-    large: "w-12 h-12",
+    small: 'w-8 h-8',
+    medium: 'w-10 h-10',
+    large: 'w-12 h-12',
   };
 
   const titleSizes = {
-    small: "text-lg",
-    medium: "text-xl",
-    large: "text-2xl",
+    small: 'text-lg',
+    medium: 'text-xl',
+    large: 'text-2xl',
   };
 
   return (
     <div
       className={cn(
         // INLINE HORIZONTAL: Flexível e quebra linha automaticamente
-        "flex-shrink-0 flex-grow-0",
+        'flex-shrink-0 flex-grow-0',
         // Card responsivo
-        "w-full max-w-sm mx-auto rounded-xl transition-all duration-300",
+        'w-full max-w-sm mx-auto rounded-xl transition-all duration-300',
         // Tamanho
         sizeClasses[size as keyof typeof sizeClasses],
         // Variante
         cardVariants[cardVariant as keyof typeof cardVariants],
         // Estados do editor
-        isSelected && "ring-2 ring-[#432818] ring-offset-2",
-        "cursor-pointer hover:scale-[1.02]",
+        isSelected && 'ring-2 ring-[#432818] ring-offset-2',
+        'cursor-pointer hover:scale-[1.02]',
         className
       )}
       style={{
-        backgroundColor: backgroundColor === "white" ? undefined : backgroundColor,
+        backgroundColor: backgroundColor === 'white' ? undefined : backgroundColor,
       }}
       onClick={onClick}
     >
@@ -93,13 +91,13 @@ const ResultCardInlineBlock: React.FC<BlockComponentProps> = ({
         {showIcon && (
           <div
             className={cn(
-              "rounded-full p-2 flex items-center justify-center",
+              'rounded-full p-2 flex items-center justify-center',
               iconSizes[size as keyof typeof iconSizes]
             )}
             style={{ backgroundColor: `${accentColor}20` }}
           >
             <Award
-              className={cn("text-current", iconSizes[size as keyof typeof iconSizes])}
+              className={cn('text-current', iconSizes[size as keyof typeof iconSizes])}
               style={{ color: accentColor }}
             />
           </div>
@@ -108,7 +106,7 @@ const ResultCardInlineBlock: React.FC<BlockComponentProps> = ({
         {showProgress && (
           <div className="text-right">
             <div
-              className={cn("font-bold", titleSizes[size as keyof typeof titleSizes])}
+              className={cn('font-bold', titleSizes[size as keyof typeof titleSizes])}
               style={{ color: accentColor }}
             >
               {percentage}%
@@ -120,7 +118,7 @@ const ResultCardInlineBlock: React.FC<BlockComponentProps> = ({
 
       {/* Nome do estilo */}
       <h3
-        className={cn("font-bold mb-3 text-gray-900", titleSizes[size as keyof typeof titleSizes])}
+        className={cn('font-bold mb-3 text-gray-900', titleSizes[size as keyof typeof titleSizes])}
       >
         Estilo {styleName}
       </h3>

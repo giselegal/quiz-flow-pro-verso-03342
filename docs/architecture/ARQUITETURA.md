@@ -90,7 +90,7 @@ interface EditorState {
 
   // Configurações do editor
   editorSettings: {
-    viewMode: "mobile" | "tablet" | "desktop";
+    viewMode: 'mobile' | 'tablet' | 'desktop';
     sidebarOpen: boolean;
     previewMode: boolean;
   };
@@ -199,13 +199,13 @@ export default defineConfig({
   plugins: [react()],
   server: { port: 5000 },
   build: {
-    target: "esnext",
+    target: 'esnext',
     sourcemap: true,
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ["react", "react-dom"],
-          editor: ["@dnd-kit/core", "@dnd-kit/sortable"],
+          vendor: ['react', 'react-dom'],
+          editor: ['@dnd-kit/core', '@dnd-kit/sortable'],
         },
       },
     },

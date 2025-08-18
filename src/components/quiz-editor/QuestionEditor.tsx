@@ -1,10 +1,10 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { QuizOption, QuizQuestion } from "@/types/quiz";
-import { Plus, Trash } from "lucide-react";
-import React, { useEffect, useState } from "react";
-import { generateSemanticId } from "../../utils/semanticIdGenerator";
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { QuizOption, QuizQuestion } from '@/types/quiz';
+import { Plus, Trash } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { generateSemanticId } from '../../utils/semanticIdGenerator';
 
 interface QuestionEditorProps {
   question: QuizQuestion | null;
@@ -29,16 +29,16 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({
     // Create a proper QuizQuestion object with all required properties
     return {
       id: generateSemanticId({
-        context: "quiz",
-        type: "question",
-        identifier: "question",
+        context: 'quiz',
+        type: 'question',
+        identifier: 'question',
         index: Math.floor(Math.random() * 1000),
       }),
-      text: "", // Add required 'text' property
+      text: '', // Add required 'text' property
       order: 0,
-      question: "", // Add required 'question' property
-      title: "", // Keep title for backward compatibility
-      type: "normal" as const,
+      question: '', // Add required 'question' property
+      title: '', // Keep title for backward compatibility
+      type: 'normal' as const,
       multiSelect: 3,
       options: [] as QuizOption[],
     };
@@ -54,8 +54,8 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({
     // Ensure we have both question and title populated
     const questionToSave: QuizQuestion = {
       ...editedQuestion,
-      question: editedQuestion.question || editedQuestion.title || "",
-      title: editedQuestion.title || editedQuestion.question || "",
+      question: editedQuestion.question || editedQuestion.title || '',
+      title: editedQuestion.title || editedQuestion.question || '',
     };
 
     onSave(questionToSave);
@@ -68,13 +68,13 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({
         ...prev.options,
         {
           id: generateSemanticId({
-            context: "quiz",
-            type: "question",
-            identifier: "option",
+            context: 'quiz',
+            type: 'question',
+            identifier: 'option',
             index: Math.floor(Math.random() * 1000),
           }),
-          text: "",
-          style: "natural",
+          text: '',
+          style: 'natural',
         },
       ],
     }));
@@ -100,15 +100,10 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({
     <div className="space-y-6 p-6 bg-white rounded-lg border border-[#B89B7A]/20">
       <div className="flex justify-between items-center">
         <h3 className="text-lg font-medium text-[#432818]">
-          {isNew ? "Nova Pergunta" : "Editar Pergunta"}
+          {isNew ? 'Nova Pergunta' : 'Editar Pergunta'}
         </h3>
         {onDelete && !isNew && (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={onDelete}
-            style={{ color: '#432818' }}
-          >
+          <Button variant="outline" size="sm" onClick={onDelete} style={{ color: '#432818' }}>
             <Trash className="w-4 h-4" />
           </Button>
         )}
@@ -119,7 +114,7 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({
           <Label htmlFor="question-title">Título da Pergunta</Label>
           <Input
             id="question-title"
-            value={editedQuestion.title || ""}
+            value={editedQuestion.title || ''}
             onChange={e =>
               setEditedQuestion(prev => ({
                 ...prev,
@@ -167,14 +162,11 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({
 
           <div className="space-y-3">
             {editedQuestion.options.map((option, index) => (
-              <div
-                key={option.id || index}
-                style={{ borderColor: '#E5DDD5' }}
-              >
+              <div key={option.id || index} style={{ borderColor: '#E5DDD5' }}>
                 <div className="flex-1">
                   <Input
                     value={option.text}
-                    onChange={e => handleOptionChange(index, "text", e.target.value)}
+                    onChange={e => handleOptionChange(index, 'text', e.target.value)}
                     placeholder={`Opção ${index + 1}`}
                   />
                 </div>

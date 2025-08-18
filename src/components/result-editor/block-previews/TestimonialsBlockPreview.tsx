@@ -1,5 +1,3 @@
-import React from "react";
-
 interface TestimonialsBlockPreviewProps {
   content: {
     title?: string;
@@ -12,7 +10,7 @@ const TestimonialsBlockPreview: React.FC<TestimonialsBlockPreviewProps> = ({ con
   return (
     <div style={content.style}>
       <h3 className="text-xl font-bold mb-6 text-[#aa6b5d] text-center">
-        {content.title || "O que estão dizendo"}
+        {content.title || 'O que estão dizendo'}
       </h3>
 
       {content.testimonialsImage ? (

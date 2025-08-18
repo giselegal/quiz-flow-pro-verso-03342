@@ -1,7 +1,5 @@
-import React from "react";
-import { useQuizBuilder } from "@/hooks/useQuizBuilder";
-import { useLocation } from "wouter";
-import { Button } from "@/components/ui/button";
+import { useLocation } from 'wouter';
+import { Button } from '@/components/ui/button';
 
 /**
  * EnhancedQuizBuilder é um wrapper para o componente QuizBuilder
@@ -11,7 +9,7 @@ const EnhancedQuizBuilder: React.FC = () => {
   const [, setLocation] = useLocation();
 
   const handleOpenUnifiedEditor = () => {
-    setLocation("/editor");
+    setLocation('/editor');
   };
 
   return (

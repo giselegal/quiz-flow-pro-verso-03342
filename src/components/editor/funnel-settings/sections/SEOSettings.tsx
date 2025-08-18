@@ -1,9 +1,8 @@
-import React from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { SEOSettings as SEOSettingsType } from "@/types/funnelSettings";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { SEOSettings as SEOSettingsType } from '@/types/funnelSettings';
 
 interface SEOSettingsProps {
   settings: SEOSettingsType;

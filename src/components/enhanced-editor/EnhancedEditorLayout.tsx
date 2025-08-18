@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { useUnifiedProperties } from "@/hooks/useUnifiedProperties";
-import { BlockType, EditorBlock } from "@/types/editor";
+import React, { useState } from 'react';
+
+import { BlockType, EditorBlock } from '@/types/editor';
 
 interface EnhancedEditorLayoutProps {
   onBlockAdd?: (type: BlockType) => void;
@@ -15,7 +15,7 @@ export const EnhancedEditorLayout: React.FC<EnhancedEditorLayoutProps> = ({
   selectedBlockId,
   onBlockSelect,
 }) => {
-  const [activeTab, setActiveTab] = useState("editor");
+  const [activeTab, setActiveTab] = useState('editor');
 
   const handleAddBlock = (type: string) => {
     if (onBlockAdd) {
@@ -29,22 +29,13 @@ export const EnhancedEditorLayout: React.FC<EnhancedEditorLayoutProps> = ({
         <div className="p-4">
           <h2 className="text-lg font-semibold mb-4">Componentes</h2>
           <div className="space-y-2">
-            <button
-              onClick={() => handleAddBlock("text")}
-              style={{ backgroundColor: '#E5DDD5' }}
-            >
+            <button onClick={() => handleAddBlock('text')} style={{ backgroundColor: '#E5DDD5' }}>
               Texto
             </button>
-            <button
-              onClick={() => handleAddBlock("image")}
-              style={{ backgroundColor: '#E5DDD5' }}
-            >
+            <button onClick={() => handleAddBlock('image')} style={{ backgroundColor: '#E5DDD5' }}>
               Imagem
             </button>
-            <button
-              onClick={() => handleAddBlock("button")}
-              style={{ backgroundColor: '#E5DDD5' }}
-            >
+            <button onClick={() => handleAddBlock('button')} style={{ backgroundColor: '#E5DDD5' }}>
               Botão
             </button>
           </div>
@@ -55,17 +46,17 @@ export const EnhancedEditorLayout: React.FC<EnhancedEditorLayoutProps> = ({
         <div className="toolbar border-b p-2">
           <div className="flex space-x-2">
             <button
-              onClick={() => setActiveTab("editor")}
+              onClick={() => setActiveTab('editor')}
               className={`px-3 py-1 rounded ${
-                activeTab === "editor" ? "bg-[#B89B7A] text-white" : "bg-gray-100"
+                activeTab === 'editor' ? 'bg-[#B89B7A] text-white' : 'bg-gray-100'
               }`}
             >
               Editor
             </button>
             <button
-              onClick={() => setActiveTab("preview")}
+              onClick={() => setActiveTab('preview')}
               className={`px-3 py-1 rounded ${
-                activeTab === "preview" ? "bg-[#B89B7A] text-white" : "bg-gray-100"
+                activeTab === 'preview' ? 'bg-[#B89B7A] text-white' : 'bg-gray-100'
               }`}
             >
               Preview
@@ -86,8 +77,8 @@ export const EnhancedEditorLayout: React.FC<EnhancedEditorLayoutProps> = ({
                   key={block.id}
                   className={`border rounded p-4 cursor-pointer ${
                     selectedBlockId === block.id
-                      ? "border-[#B89B7A] bg-[#B89B7A]/10"
-                      : "border-gray-200 hover:border-gray-300"
+                      ? 'border-[#B89B7A] bg-[#B89B7A]/10'
+                      : 'border-gray-200 hover:border-gray-300'
                   }`}
                   onClick={() => onBlockSelect?.(block.id)}
                 >

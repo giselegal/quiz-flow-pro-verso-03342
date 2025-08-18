@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { Button } from "./button";
-import { ImagePlus, Trash } from "lucide-react";
-import { cn } from "@/lib/utils";
+import React, { useState } from 'react';
+import { Button } from './button';
+import { ImagePlus, Trash } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface ImageUploaderProps {
   currentImage?: string;
@@ -35,11 +35,11 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
 
   const handleRemoveImage = () => {
     setPreviewUrl(null);
-    onImageUpload("");
+    onImageUpload('');
   };
 
   return (
-    <div className={cn("flex flex-col items-center gap-2", className)}>
+    <div className={cn('flex flex-col items-center gap-2', className)}>
       {previewUrl ? (
         <div className="relative w-full">
           <img
@@ -74,10 +74,10 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
             variant="outline"
             size="sm"
             className="text-xs"
-            onClick={() => document.getElementById("image-upload")?.click()}
+            onClick={() => document.getElementById('image-upload')?.click()}
             disabled={isUploading}
           >
-            {isUploading ? "Enviando..." : "Procurar imagens"}
+            {isUploading ? 'Enviando...' : 'Procurar imagens'}
           </Button>
         </div>
       )}

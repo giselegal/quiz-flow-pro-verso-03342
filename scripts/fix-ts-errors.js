@@ -46,7 +46,7 @@ function addTsNoCheck(filePath) {
     }
 
     const content = fs.readFileSync(filePath, 'utf8');
-    
+
     // Verificar se já tem @ts-nocheck
     if (content.includes('@ts-nocheck')) {
       console.log(`✅ Já tem @ts-nocheck: ${filePath}`);
@@ -56,7 +56,7 @@ function addTsNoCheck(filePath) {
     // Adicionar @ts-nocheck no início
     const newContent = `// @ts-nocheck\n${content}`;
     fs.writeFileSync(filePath, newContent, 'utf8');
-    
+
     console.log(`✅ Adicionado @ts-nocheck: ${filePath}`);
     return true;
   } catch (error) {

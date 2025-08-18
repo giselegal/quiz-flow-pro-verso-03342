@@ -2,10 +2,10 @@
   "templateVersion": "2.0",
   "metadata": {
     "id": "quiz-step-11",
-    "name": "Q10 - QUAL VISUAL VOC MAIS",
-    "description": "Questão 10 de 13",
-    "category": "quiz-question",
-    "type": "question",
+    "name": "Etapa de Transição 1: Apresenta primeira questão estratégica",
+    "description": "Transição para questões estratégicas",
+    "category": "quiz-transition",
+    "type": "transition",
     "tags": [
       "quiz",
       "style",
@@ -74,21 +74,33 @@
       "properties": {
         "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
         "logoAlt": "Logo Gisele Galvão",
-        "logoWidth": 96,
-        "logoHeight": 96,
-        "progressValue": 54,
-        "progressTotal": 100,
+        "logoWidth": 120,
+        "logoHeight": 50,
         "showProgress": true,
+        "progressValue": 11,
+        "progressMax": 21,
         "showBackButton": true,
         "containerWidth": "full",
-        "spacing": "small"
+        "spacing": "small",
+        "showLogo": true,
+        "progressBarColor": "#B89B7A",
+        "progressBarThickness": 6,
+        "backgroundColor": "#FFFFFF",
+        "textColor": "#432818",
+        "paddingTop": 16,
+        "paddingBottom": 16,
+        "paddingLeft": 24,
+        "paddingRight": 24,
+        "marginBottom": 24,
+        "progressTotal": 100,
+        "type": "quiz-intro-header"
       }
     },
     {
       "id": "step11-question-title",
       "type": "text-inline",
       "properties": {
-        "content": "QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?",
+        "content": "🕐 Enquanto calculamos o seu resultado...",
         "fontSize": "text-2xl",
         "fontWeight": "font-bold",
         "textAlign": "text-center",
@@ -102,7 +114,7 @@
       "id": "step11-question-counter",
       "type": "text-inline",
       "properties": {
-        "content": "Questão 10 de 13",
+        "content": "Queremos te fazer algumas perguntas que vão tornar sua experiência ainda mais completa.",
         "fontSize": "text-sm",
         "textAlign": "text-center",
         "color": "#6B7280",
@@ -112,135 +124,71 @@
       }
     },
     {
-      "id": "step11-options-grid",
-      "type": "options-grid",
+      "id": "step11-transition-description",
+      "type": "text-inline",
       "properties": {
-        "options": [
-          {
-            "id": "3a",
-            "text": "Visual leve, despojado e natural.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp",
-            "styleCategory": "Natural",
-            "points": 1
-          },
-          {
-            "id": "3b",
-            "text": "Visual clássico e tradicional.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/3_asaunw.webp",
-            "styleCategory": "Clássico",
-            "points": 2
-          },
-          {
-            "id": "3c",
-            "text": "Visual casual com toque atual.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/13_uvbciq.webp",
-            "styleCategory": "Contemporâneo",
-            "points": 2
-          },
-          {
-            "id": "3d",
-            "text": "Visual refinado e imponente.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/5_dhrgpf.webp",
-            "styleCategory": "Elegante",
-            "points": 3
-          },
-          {
-            "id": "3e",
-            "text": "Visual romântico, feminino e delicado.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/6_gnoxfg.webp",
-            "styleCategory": "Romântico",
-            "points": 2
-          },
-          {
-            "id": "3f",
-            "text": "Visual sensual, com saia justa e decote.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735327/7_ynez1z.webp",
-            "styleCategory": "Sexy",
-            "points": 3
-          },
-          {
-            "id": "3g",
-            "text": "Visual marcante e urbano (jeans + jaqueta).",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/8_yqu3hw.webp",
-            "styleCategory": "Dramático",
-            "points": 3
-          },
-          {
-            "id": "3h",
-            "text": "Visual criativo, colorido e ousado.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/9_x6so6a.webp",
-            "styleCategory": "Criativo",
-            "points": 4
-          }
-        ],
-        "columns": 2,
-        "imageSize": 256,
-        "showImages": true,
-        "multipleSelection": true,
-        "minSelections": 3,
-        "maxSelections": 3,
-        "borderColor": "#E5E7EB",
-        "selectedBorderColor": "#B89B7A",
-        "hoverColor": "#F3E8D3",
+        "content": "A ideia é simples: te ajudar a enxergar com mais clareza onde você está agora — e para onde pode ir com mais intenção, leveza e autenticidade.",
+        "fontSize": "text-base",
+        "textAlign": "text-center",
+        "color": "#6B7280",
+        "marginBottom": 24,
         "containerWidth": "full",
-        "spacing": "small",
-        "marginBottom": 16,
-        "selectionStyle": "glow",
-        "animationType": "scale",
-        "validationMessage": "Selecione 3 opções para avançar.",
-        "scoring": {
-          "enabled": true,
-          "categories": [
-            "Natural",
-            "Clássico",
-            "Contemporâneo",
-            "Elegante",
-            "Romântico",
-            "Sexy",
-            "Dramático",
-            "Criativo"
-          ]
-        }
+        "spacing": "small"
       }
     },
     {
-      "id": "step11-continue-button",
-      "type": "button-inline",
+      "id": "step11-transition-call",
+      "type": "text-inline",
       "properties": {
-        "text": "Próxima Questão →",
-        "textWhenDisabled": "Selecione 3 opções para avançar",
-        "variant": "primary",
-        "size": "large",
-        "fullWidth": true,
-        "backgroundColor": "#B89B7A",
-        "backgroundGradient": "linear-gradient(90deg, #B89B7A, #aa6b5d)",
-        "textColor": "#ffffff",
-        "borderRadius": "10px",
-        "shadow": "0 4px 14px rgba(184, 155, 122, 0.15)",
-        "disabled": true,
-        "requiresValidInput": true,
-        "enableOnSelection": true,
-        "minSelections": 3,
-        "animation": "hover:scale-105, active:scale-95",
+        "content": "💬 Responda com sinceridade. Isso é só entre você e a sua nova versão.",
+        "fontSize": "text-base",
+        "fontWeight": "font-medium",
+        "textAlign": "text-center",
+        "color": "#B89B7A",
+        "marginBottom": 32,
         "containerWidth": "full",
-        "spacing": "small",
-        "marginTop": 24
+        "spacing": "small"
+      }
+    },
+    {
+      "id": "step11-navigation",
+      "type": "navigation",
+      "properties": {
+        "buttons": [
+          {
+            "id": "step11-start-strategic",
+            "label": "🚀 Vamos lá!",
+            "action": "next",
+            "variant": "primary",
+            "style": {
+              "backgroundColor": "#B89B7A",
+              "color": "white",
+              "borderColor": "#B89B7A",
+              "hoverColor": "#aa6b5d",
+              "width": "full",
+              "padding": "py-4 px-8",
+              "borderRadius": "rounded-lg",
+              "fontSize": "text-lg",
+              "fontWeight": "font-semibold",
+              "transition": "all 0.3s ease",
+              "marginTop": 24,
+              "shadow": "0 4px 14px rgba(184, 155, 122, 0.15)",
+              "animation": "hover:scale-105, active:scale-95"
+            }
+          }
+        ]
       }
     }
   ],
   "validation": {
-    "required": true,
-    "minAnswers": 3,
-    "maxAnswers": 3,
-    "validationMessage": "Selecione 3 opções para avançar."
+    "required": false,
+    "type": "transition"
   },
   "analytics": {
-    "trackingId": "step-11-quiz-question",
+    "trackingId": "step-11-transition-page",
     "events": [
       "page_view",
-      "interaction",
-      "validation_error",
-      "completion"
+      "transition_continue"
     ],
     "utmParams": true,
     "customEvents": []
@@ -252,20 +200,8 @@
       "allowBack": true,
       "autoAdvance": false
     },
-    "scoring": {
-      "enabled": true,
-      "method": "category-points",
-      "categories": [
-        "Natural",
-        "Clássico",
-        "Contemporâneo",
-        "Elegante",
-        "Romântico",
-        "Sexy",
-        "Dramático",
-        "Criativo"
-      ]
-    },
+    "scoring": null,
     "conditions": null
-  }
+  },
+  "updatedAt": "2025-08-17T19:06:10.217Z"
 }

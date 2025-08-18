@@ -1,5 +1,3 @@
-import React from "react";
-
 interface GuaranteeBlockPreviewProps {
   content: {
     title?: string;
@@ -23,11 +21,11 @@ const GuaranteeBlockPreview: React.FC<GuaranteeBlockPreviewProps> = ({ content }
 
       <div className="flex-1">
         <h3 className="text-xl font-bold mb-2 text-[#aa6b5d]">
-          {content.title || "Garantia de 7 dias"}
+          {content.title || 'Garantia de 7 dias'}
         </h3>
         <p className="text-[#1A1818]/80">
           {content.text ||
-            "Se você não ficar 100% satisfeita com o conteúdo nos primeiros 7 dias, devolvemos seu dinheiro integralmente, sem burocracia."}
+            'Se você não ficar 100% satisfeita com o conteúdo nos primeiros 7 dias, devolvemos seu dinheiro integralmente, sem burocracia.'}
         </p>
       </div>
     </div>

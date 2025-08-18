@@ -1,12 +1,12 @@
 // Script para análise completa do blockDefinitions.ts
 
-import fs from "fs";
+import fs from 'fs';
 
-const filePath = "./client/src/config/blockDefinitions.ts";
-const content = fs.readFileSync(filePath, "utf8");
+const filePath = './client/src/config/blockDefinitions.ts';
+const content = fs.readFileSync(filePath, 'utf8');
 
-console.log("🔍 ANÁLISE DETALHADA DO ARQUIVO blockDefinitions.ts");
-console.log("=".repeat(60));
+console.log('🔍 ANÁLISE DETALHADA DO ARQUIVO blockDefinitions.ts');
+console.log('='.repeat(60));
 
 // Contar diferentes padrões
 const typeMatches = content.match(/type:\s*['"`]([^'"`]+)['"`]/g);
@@ -27,9 +27,9 @@ if (arrayMatch) {
   // Contar objetos válidos que têm pelo menos type e name
   const validBlocks = [];
   const objects = arrayContent.split(/},\s*{/).map((obj, index, arr) => {
-    if (index === 0) return obj + "}";
-    if (index === arr.length - 1) return "{" + obj;
-    return "{" + obj + "}";
+    if (index === 0) return obj + '}';
+    if (index === arr.length - 1) return '{' + obj;
+    return '{' + obj + '}';
   });
 
   console.log(`\n📦 OBJETOS NO ARRAY: ${objects.length}`);
@@ -45,9 +45,9 @@ if (arrayMatch) {
 
       validBlocks.push({
         index: index + 1,
-        type: typeMatch ? typeMatch[1] : "unknown",
-        name: nameMatch ? nameMatch[1] : "unknown",
-        category: categoryMatch ? categoryMatch[1] : "Sem Categoria",
+        type: typeMatch ? typeMatch[1] : 'unknown',
+        name: nameMatch ? nameMatch[1] : 'unknown',
+        category: categoryMatch ? categoryMatch[1] : 'Sem Categoria',
       });
     }
   });
@@ -74,8 +74,8 @@ if (arrayMatch) {
     }
   });
 } else {
-  console.log("❌ Não foi possível encontrar o array blockDefinitions");
+  console.log('❌ Não foi possível encontrar o array blockDefinitions');
 }
 
-console.log("\n" + "=".repeat(60));
-console.log("🔧 VERIFICAÇÃO: O problema pode estar na estrutura do array ou na exportação");
+console.log('\n' + '='.repeat(60));
+console.log('🔧 VERIFICAÇÃO: O problema pode estar na estrutura do array ou na exportação');

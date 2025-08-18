@@ -1,16 +1,15 @@
 // @ts-nocheck
-import React from "react";
-import { InlineEditableText } from "./InlineEditableText";
-import { ArrowRightLeft } from "lucide-react";
-import type { BlockComponentProps } from "@/types/blocks";
+import { InlineEditableText } from './InlineEditableText';
+import { ArrowRightLeft } from 'lucide-react';
+import type { BlockComponentProps } from '@/types/blocks';
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -55,14 +54,14 @@ const MarqueeBlock: React.FC<BlockComponentProps> = ({
   isEditing = false,
   onClick,
   onPropertyChange,
-  className = "",
+  className = '',
 }) => {
   const {
-    text = "Texto rolando na marquise!",
+    text = 'Texto rolando na marquise!',
     speed = 50,
-    direction = "left",
-    textColor = "#000000",
-    backgroundColor = "#f0f0f0",
+    direction = 'left',
+    textColor = '#000000',
+    backgroundColor = '#f0f0f0',
   } = block?.properties || {};
 
   const handlePropertyChange = (key: string, value: any) => {
@@ -71,17 +70,17 @@ const MarqueeBlock: React.FC<BlockComponentProps> = ({
     }
   };
 
-  const animationSpeed = speed ? `${speed / 10}s` : "5s";
-  const animationDirection = direction === "right" ? "marquee-right" : "marquee-left";
+  const animationSpeed = speed ? `${speed / 10}s` : '5s';
+  const animationDirection = direction === 'right' ? 'marquee-right' : 'marquee-left';
 
   return (
     <div
       className={`
         py-2 px-0 relative overflow-hidden cursor-pointer transition-all duration-200
-        ${isSelected ? "ring-1 ring-gray-400/40 bg-gray-50/30" : "hover:shadow-sm"}
+        ${isSelected ? 'ring-1 ring-gray-400/40 bg-gray-50/30' : 'hover:shadow-sm'}
         ${className}
       `}
-      style={{ backgroundColor: backgroundColor || "#f0f0f0" }}
+      style={{ backgroundColor: backgroundColor || '#f0f0f0' }}
       onClick={onClick}
       data-block-id={block.id}
       data-block-type={block.type}
@@ -90,21 +89,21 @@ const MarqueeBlock: React.FC<BlockComponentProps> = ({
         className={`whitespace-nowrap inline-block ${animationDirection}`}
         style={{
           animationDuration: animationSpeed,
-          color: textColor || "#000000",
-          animationIterationCount: "infinite",
-          animationTimingFunction: "linear",
+          color: textColor || '#000000',
+          animationIterationCount: 'infinite',
+          animationTimingFunction: 'linear',
         }}
       >
         <span className="px-4">
           <InlineEditableText
             value={text}
-            onChange={(value: string) => handlePropertyChange("text", value)}
+            onChange={(value: string) => handlePropertyChange('text', value)}
             className="inline-block"
             placeholder="Texto da marquise"
           />
         </span>
         {/* Duplica o texto para um loop contínuo */}
-        <span className="px-4">{text || "Texto rolando na marquise!"}</span>
+        <span className="px-4">{text || 'Texto rolando na marquise!'}</span>
       </div>
 
       <style>{`

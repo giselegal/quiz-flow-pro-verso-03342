@@ -1,148 +1,79 @@
-import QuizOptionsGridBlock from "@/components/blocks/quiz/QuizOptionsGridBlock";
-import { getStep02Template } from "@/components/steps/Step02Template";
-import { useEditor } from "@/context/EditorContext";
-import React, { useEffect } from "react";
-
-// 🛡️ Helper para garantir props corretas
-const ensureOptionsProps = (props: any) => {
-  return {
-    question: props?.question || "",
-    description: props?.description || "",
-    options: props?.options || [],
-    requireOption: props?.requireOption || false,
-    autoAdvance: props?.autoAdvance || false,
-    autoAdvanceDelay: props?.autoAdvanceDelay || 1000,
-    showCorrectAnswer: props?.showCorrectAnswer || false,
-    correctOptionIndex: props?.correctOptionIndex || 0,
-    useLetterOptions: props?.useLetterOptions || false,
-    optionsLayout: props?.optionsLayout || "grid",
-    optionsPerRow: props?.optionsPerRow || 2,
-    showOptionImages: props?.showOptionImages || true,
-    optionImageSize: props?.optionImageSize || "medium",
-    alignment: props?.alignment || "center",
-    optionStyle: props?.optionStyle || "card",
-    nextButtonText: props?.nextButtonText || "Próxima",
-    minSelections: props?.minSelections || 1,
-    maxSelections: props?.maxSelections || 1,
-    columns: props?.columns || 2,
-    layoutOrientation: props?.layoutOrientation || "vertical",
-    contentType: props?.contentType || "text-and-image",
-    showImages: props?.showImages !== false,
-    imagePosition: props?.imagePosition || "top",
-    imageSize: props?.imageSize || 120,
-    imageWidth: props?.imageWidth || 120,
-    imageHeight: props?.imageHeight || 120,
-    responsiveColumns: props?.responsiveColumns || { mobile: 1, tablet: 2, desktop: 2 },
-    ...props,
-  };
-};
+import { useEditor } from '@/context/EditorContext';
+import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
+import React from 'react';
 
 const DebugStep02: React.FC = () => {
-  const {
-    stageActions: { setActiveStage },
-    blockActions: { getBlocksForStage },
-    activeStageId,
-  } = useEditor();
+  const { computed, stageActions, blockActions, activeStageId } = useEditor();
 
-  useEffect(() => {
-    // Forçar carregar etapa 2
-    setActiveStage("step-2");
-  }, [setActiveStage]);
+  // Obtém o template da etapa 2 do template completo
+  const step02Template = QUIZ_STYLE_21_STEPS_TEMPLATE['step-2'] || [];
+  const optionsBlock = step02Template.find(block => block.type === 'options-grid');
 
-  const step02Blocks = getBlocksForStage("step-2");
-  const optionsGridBlock = step02Blocks.find(block => String(block.type) === "options-grid") as any;
-  const step02Template = getStep02Template();
-  const templateOptionsGrid = step02Template.find(
-    block => String(block.type) === "options-grid"
-  ) as any;
+  const debugInfo = {
+    template: {
+      totalBlocks: step02Template.length,
+      hasOptionsBlock: !!optionsBlock,
+      optionsCount: optionsBlock?.properties?.options?.length || 0,
+    },
+    editor: {
+      currentBlocks: computed?.currentBlocks?.length || 0,
+      selectedBlock: computed?.selectedBlock?.id || 'none',
+      activeStageId: activeStageId || 'none',
+      hasStageActions: !!stageActions,
+      hasBlockActions: !!blockActions,
+    },
+  };
 
-  console.log("🔍 DebugStep02 - Dados:", {
-    activeStageId,
-    step02BlocksCount: step02Blocks.length,
-    optionsGridBlock: optionsGridBlock,
-    templateOptionsGrid: templateOptionsGrid,
-    templateOptionsGridProperties: templateOptionsGrid?.properties,
-  });
+  const handleLoadStep02 = () => {
+    if (blockActions?.addBlock) {
+      step02Template.forEach(async (block: any) => {
+        try {
+          await blockActions.addBlock(block.type);
+          console.log(`✅ Added block: ${block.type}`);
+        } catch (error) {
+          console.error(`❌ Failed to add block ${block.type}:`, error);
+        }
+      });
+    }
+  };
 
   return (
-    <div className="p-8 max-w-4xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6">Debug Step02 - Options Grid</h1>
+    <div className="p-6 bg-white border rounded-lg shadow-sm">
+      <h2 className="text-xl font-bold mb-4 text-[#432818]">🧪 Debug Step 02</h2>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="space-y-4">
-          <h2 className="text-xl font-semibold">Dados do Editor Context</h2>
-          <div style={{ backgroundColor: '#E5DDD5' }}>
-            <p>
-              <strong>Etapa Ativa:</strong> {activeStageId}
-            </p>
-            <p>
-              <strong>Blocos na Etapa 2:</strong> {step02Blocks.length}
-            </p>
-            <p>
-              <strong>Options Grid Block:</strong>{" "}
-              {optionsGridBlock ? "✅ Encontrado" : "❌ Não encontrado"}
-            </p>
-          </div>
+      <div className="space-y-4">
+        <div className="bg-blue-50 p-4 rounded">
+          <h3 className="font-semibold mb-2">Template Info:</h3>
+          <pre className="text-sm">{JSON.stringify(debugInfo.template, null, 2)}</pre>
+        </div>
 
-          {optionsGridBlock && (
-            <div style={{ backgroundColor: '#FAF9F7' }}>
-              <h3 className="font-semibold mb-2">Options Grid Block Properties</h3>
-              <pre className="text-xs overflow-auto">
-                {JSON.stringify(optionsGridBlock.properties, null, 2)}
+        <div className="bg-green-50 p-4 rounded">
+          <h3 className="font-semibold mb-2">Editor State:</h3>
+          <pre className="text-sm">{JSON.stringify(debugInfo.editor, null, 2)}</pre>
+        </div>
+
+        <div className="bg-yellow-50 p-4 rounded">
+          <h3 className="font-semibold mb-2">Actions:</h3>
+          <button
+            onClick={handleLoadStep02}
+            className="px-4 py-2 bg-[#B89B7A] text-white rounded hover:bg-[#A38A69]"
+          >
+            Load Step 02 Template
+          </button>
+        </div>
+
+        {optionsBlock && (
+          <div className="bg-purple-50 p-4 rounded">
+            <h3 className="font-semibold mb-2">Options Block:</h3>
+            <p>Type: {optionsBlock.type}</p>
+            <p>Options: {optionsBlock.properties?.options?.length || 0}</p>
+            <div className="mt-2 max-h-32 overflow-y-auto">
+              <pre className="text-xs">
+                {JSON.stringify(optionsBlock.properties?.options?.[0], null, 2)}
               </pre>
             </div>
-          )}
-        </div>
-
-        <div className="space-y-4">
-          <h2 className="text-xl font-semibold">Dados do Template</h2>
-          <div style={{ backgroundColor: '#E5DDD5' }}>
-            <p>
-              <strong>Template Blocos:</strong> {step02Template.length}
-            </p>
-            <p>
-              <strong>Template Options Grid:</strong>{" "}
-              {templateOptionsGrid ? "✅ Encontrado" : "❌ Não encontrado"}
-            </p>
           </div>
-
-          {templateOptionsGrid && (
-            <div className="bg-green-50 p-4 rounded">
-              <h3 className="font-semibold mb-2">Template Options Grid Properties</h3>
-              <pre className="text-xs overflow-auto max-h-64">
-                {JSON.stringify(templateOptionsGrid.properties, null, 2)}
-              </pre>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Renderização Direta do QuizOptionsGridBlock */}
-      <div className="mt-8">
-        <h2 className="text-xl font-semibold mb-4">Teste de Renderização Direta</h2>
-        <div style={{ borderColor: '#E5DDD5' }}>
-          {optionsGridBlock ? (
-            <QuizOptionsGridBlock
-              id={optionsGridBlock.id}
-              type="options-grid"
-              properties={ensureOptionsProps(optionsGridBlock.properties)}
-              onPropertyChange={(key, value) => {
-                console.log("Property changed:", key, value);
-              }}
-            />
-          ) : templateOptionsGrid ? (
-            <QuizOptionsGridBlock
-              id="test-options-grid"
-              type="options-grid"
-              properties={ensureOptionsProps(templateOptionsGrid.properties)}
-              onPropertyChange={(key, value) => {
-                console.log("Property changed:", key, value);
-              }}
-            />
-          ) : (
-            <div style={{ color: '#432818' }}>❌ Nenhum Options Grid encontrado</div>
-          )}
-        </div>
+        )}
       </div>
     </div>
   );

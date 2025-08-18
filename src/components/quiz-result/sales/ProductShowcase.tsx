@@ -1,22 +1,21 @@
-import React from "react";
-import { Card } from "@/components/ui/card";
-import { Check, Sparkles, Star } from "lucide-react";
-import { motion } from "framer-motion";
+import { Card } from '@/components/ui/card';
+import { Check, Sparkles, Star } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const benefits = [
   {
-    title: "Guia de Estilo e Imagem",
+    title: 'Guia de Estilo e Imagem',
     icon: <Sparkles className="w-5 h-5 text-amber-500" />,
     items: [
-      "Descubra seu estilo com precisão",
-      "Aprenda a criar looks autênticos",
-      "Técnicas de composição visual",
+      'Descubra seu estilo com precisão',
+      'Aprenda a criar looks autênticos',
+      'Técnicas de composição visual',
     ],
   },
   {
-    title: "Bônus Exclusivos",
+    title: 'Bônus Exclusivos',
     icon: <Star className="w-5 h-5 text-amber-500" />,
-    items: ["Visagismo Facial Estratégico", "Peças-Chave do Guarda-Roupa", "Consultoria em Grupo"],
+    items: ['Visagismo Facial Estratégico', 'Peças-Chave do Guarda-Roupa', 'Consultoria em Grupo'],
   },
 ];
 
@@ -47,7 +46,7 @@ const ProductShowcase = () => {
       className="space-y-10 py-4"
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, margin: "-50px" }}
+      viewport={{ once: true, margin: '-50px' }}
       variants={containerVariants}
     >
       <div className="grid md:grid-cols-2 gap-10 items-center">
@@ -55,7 +54,7 @@ const ProductShowcase = () => {
           variants={itemVariants}
           className="relative group"
           whileHover={{ scale: 1.02 }}
-          transition={{ type: "spring", stiffness: 300 }}
+          transition={{ type: 'spring', stiffness: 300 }}
         >
           <motion.img
             src="https://res.cloudinary.com/dqljyf76t/image/upload/v1744911682/C%C3%B3pia_de_MOCKUPS_14_oxegnd.webp"
@@ -85,13 +84,13 @@ const ProductShowcase = () => {
               className="text-3xl font-playfair text-[#aa6b5d] relative inline-block"
               variants={itemVariants}
               whileHover={{ x: 3 }}
-              transition={{ type: "spring" }}
+              transition={{ type: 'spring' }}
             >
               Transforme seu Estilo
               <motion.div
                 className="absolute -bottom-2 left-0 h-[3px] bg-gradient-to-r from-amber-400 to-transparent rounded-full"
                 initial={{ width: 0 }}
-                whileInView={{ width: "100%" }}
+                whileInView={{ width: '100%' }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.8, duration: 0.8 }}
               />
@@ -106,7 +105,7 @@ const ProductShowcase = () => {
               key={index}
               variants={itemVariants}
               whileHover={{ y: -5 }}
-              transition={{ type: "spring", stiffness: 300 }}
+              transition={{ type: 'spring', stiffness: 300 }}
             >
               <Card className="p-6 bg-white border-[#aa6b5d]/20 hover:shadow-lg transition-shadow duration-300">
                 <div className="flex items-center gap-3 mb-4">
@@ -124,11 +123,11 @@ const ProductShowcase = () => {
                       variants={checkItemVariants}
                       custom={idx}
                       whileHover={{ x: 3 }}
-                      transition={{ type: "spring" }}
+                      transition={{ type: 'spring' }}
                     >
                       <motion.div
                         className="mt-1 bg-gradient-to-br from-amber-100 to-amber-200 p-1 rounded-full flex-shrink-0"
-                        whileHover={{ scale: 1.1, backgroundColor: "#fcd34d" }}
+                        whileHover={{ scale: 1.1, backgroundColor: '#fcd34d' }}
                       >
                         <Check className="w-4 h-4 text-amber-600" />
                       </motion.div>

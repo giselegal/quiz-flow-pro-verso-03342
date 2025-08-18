@@ -2,14 +2,14 @@
 // components/editor/components/PropertyHistory.tsx - Histórico de propriedades
 // =====================================================================
 
-import React, { useState } from "react";
-import { Button } from "../../ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "../../ui/card";
-import { Popover, PopoverContent, PopoverTrigger } from "../../ui/popover";
-import { ScrollArea } from "../../ui/scroll-area";
-import { Badge } from "../../ui/badge";
-import { Separator } from "../../ui/separator";
-import { History, Undo2, Redo2, RotateCcw, Clock, CheckCircle, Circle, Trash2 } from "lucide-react";
+import React, { useState } from 'react';
+import { Button } from '../../ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
+import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover';
+import { ScrollArea } from '../../ui/scroll-area';
+import { Badge } from '../../ui/badge';
+import { Separator } from '../../ui/separator';
+import { History, Undo2, Redo2, Clock, CheckCircle, Circle, Trash2 } from 'lucide-react';
 
 interface HistoryEntry {
   id: string;
@@ -47,7 +47,7 @@ export const PropertyHistory: React.FC<PropertyHistoryProps> = ({
     const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
 
     if (diffInSeconds < 60) {
-      return "Agora mesmo";
+      return 'Agora mesmo';
     } else if (diffInSeconds < 3600) {
       const minutes = Math.floor(diffInSeconds / 60);
       return `${minutes} min atrás`;
@@ -55,11 +55,11 @@ export const PropertyHistory: React.FC<PropertyHistoryProps> = ({
       const hours = Math.floor(diffInSeconds / 3600);
       return `${hours}h atrás`;
     } else {
-      return date.toLocaleDateString("pt-BR", {
-        day: "2-digit",
-        month: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit",
+      return date.toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
       });
     }
   };
@@ -150,10 +150,10 @@ export const PropertyHistory: React.FC<PropertyHistoryProps> = ({
                           }}
                           className={`w-full text-left p-2 rounded-md transition-colors ${
                             isCurrentEntry
-                              ? "bg-[#B89B7A]/10 border border-[#B89B7A]/30"
+                              ? 'bg-[#B89B7A]/10 border border-[#B89B7A]/30'
                               : isFutureEntry
-                                ? "opacity-50 hover:bg-gray-50"
-                                : "hover:bg-gray-50"
+                                ? 'opacity-50 hover:bg-gray-50'
+                                : 'hover:bg-gray-50'
                           }`}
                         >
                           <div className="flex items-center space-x-2">
@@ -166,9 +166,7 @@ export const PropertyHistory: React.FC<PropertyHistoryProps> = ({
                             </div>
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center justify-between">
-                                <p style={{ color: '#432818' }}>
-                                  {entry.description}
-                                </p>
+                                <p style={{ color: '#432818' }}>{entry.description}</p>
                                 <div style={{ color: '#8B7355' }}>
                                   <Clock className="w-3 h-3" />
                                   <span>{formatTime(entry.timestamp)}</span>

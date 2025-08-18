@@ -1,13 +1,14 @@
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { getBlockComponent } from "@/config/enhancedBlockRegistry";
-import { useContainerProperties } from "@/hooks/useContainerProperties";
-import { cn } from "@/lib/utils";
-import { Block } from "@/types/editor";
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
-import { GripVertical, Trash2 } from "lucide-react";
-import React from "react";
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { getEnhancedBlockComponent } from '@/components/editor/blocks/enhancedBlockRegistry';
+import { usePreview } from '@/contexts/PreviewContext';
+import { useContainerProperties } from '@/hooks/useContainerProperties';
+import { cn } from '@/lib/utils';
+import { Block } from '@/types/editor';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { GripVertical, Trash2 } from 'lucide-react';
+import React from 'react';
 
 interface SortableBlockWrapperProps {
   block: Block;
@@ -20,13 +21,13 @@ interface SortableBlockWrapperProps {
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (
   value: number | string,
-  type: "top" | "bottom" | "left" | "right"
+  type: 'top' | 'bottom' | 'left' | 'right'
 ): string => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -72,12 +73,15 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
   onUpdate,
   onDelete,
 }) => {
+  // 🚀 Usar contexto de preview em vez de prop
+  const { isPreviewing } = usePreview();
+
   // 🔧 Integrar propriedades de container diretamente
   const { containerClasses, inlineStyles, processedProperties } = useContainerProperties(
     block.properties
   );
 
-  console.log("🔧 SortableBlockWrapper - processedProperties:", {
+  console.log('🔧 SortableBlockWrapper - processedProperties:', {
     blockId: block.id,
     blockType: block.type,
     originalProperties: block.properties,
@@ -91,16 +95,16 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
     marginBottom = 0,
     marginLeft = 0,
     marginRight = 0,
-    containerBackgroundColor = "transparent",
+    containerBackgroundColor = 'transparent',
   } = block.properties || {};
 
   // Buscar componente no registry (eliminando UniversalBlockRenderer)
-  const Component = getBlockComponent(block.type);
+  const Component = getEnhancedBlockComponent(block.type);
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: block.id,
     data: {
-      type: "canvas-block", // TIPO CRUCIAL que o DndProvider espera
+      type: 'canvas-block', // TIPO CRUCIAL que o DndProvider espera
       blockId: block.id,
       block: block,
     },
@@ -108,14 +112,14 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
 
   // Debug: verificar se o sortable está sendo configurado
   React.useEffect(() => {
-    console.log("🔧 SortableBlockWrapper configurado:", {
+    console.log('🔧 SortableBlockWrapper configurado:', {
       id: block.id,
       blockType: block.type,
       isDragging,
       containerClasses, // Agora integrado diretamente
       processedProperties,
       data: {
-        type: "canvas-block",
+        type: 'canvas-block',
         blockId: block.id,
       },
     });
@@ -125,7 +129,7 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : 1,
-    zIndex: isDragging ? 50 : "auto", // Z-index maior durante drag
+    zIndex: isDragging ? 50 : 'auto', // Z-index maior durante drag
     // 🎯 NÃO aplicar scale aqui para não afetar margens
   };
 
@@ -158,65 +162,88 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
       {/* 🎯 Espaçamento FIXO de 4px (my-1 = 0.25rem = 4px) - SEMPRE IGUAL independente da escala */}
       <Card
         className={cn(
-          "relative group transition-all duration-200 border-transparent", // 🎯 Borda transparente por padrão
+          'relative group transition-all duration-200', // 🎯 Transição suave
           // 🎯 Aplicar classes de container diretamente no Card
           containerClasses,
-          // 🎯 Apenas borda tracejada discreta quando selecionado
-          isSelected && "border-dashed border-[#B89B7A]/60 border-2",
+          // 🎯 Destaque visual quando selecionado
+          isSelected &&
+            'ring-2 ring-blue-500 ring-offset-1 border-blue-300 bg-blue-50/30 shadow-lg',
+          !isSelected && 'border-stone-200 hover:border-stone-300',
           // Margens universais com controles deslizantes
-          getMarginClass(marginTop, "top"),
-          getMarginClass(marginBottom, "bottom"),
-          getMarginClass(marginLeft, "left"),
-          getMarginClass(marginRight, "right")
+          getMarginClass(marginTop, 'top'),
+          getMarginClass(marginBottom, 'bottom'),
+          getMarginClass(marginLeft, 'left'),
+          getMarginClass(marginRight, 'right')
         )}
         style={{
           ...contentStyles, // 🎯 Aplicar estilos inline (scale) apenas no Card, não nas margens
           backgroundColor:
-            containerBackgroundColor === "transparent" ? "transparent" : containerBackgroundColor,
+            containerBackgroundColor === 'transparent' ? 'transparent' : containerBackgroundColor,
+          borderColor: isSelected ? '#3b82f6' : '#E5DDD5',
         }}
       >
-        {/* Drag handle and controls - only show on hover */}
-        <div className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity z-10 flex items-center gap-1">
-          <Button
-            variant="secondary"
-            size="sm"
-            className="h-6 w-6 p-0 cursor-grab active:cursor-grabbing touch-none"
-            style={{ touchAction: "none" }} // Importante para dispositivos touch
-            {...attributes}
-            {...listeners}
-          >
-            <GripVertical className="h-3 w-3" />
-          </Button>
-          <Button
-            variant="secondary"
-            size="sm"
-            style={{ color: '#432818' }}
-            onClick={e => {
-              e.stopPropagation();
-              onDelete();
-            }}
-          >
-            <Trash2 className="h-3 w-3" />
-          </Button>
-        </div>
+        {/* Drag handle and controls - only show on hover and NOT in preview mode */}
+        {!isPreviewing && (
+          <div className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity z-10 flex items-center gap-1">
+            <Button
+              variant="secondary"
+              size="sm"
+              className="h-6 w-6 p-0 cursor-grab active:cursor-grabbing touch-none"
+              style={{ touchAction: 'none' }} // Importante para dispositivos touch
+              {...attributes}
+              {...listeners}
+            >
+              <GripVertical className="h-3 w-3" />
+            </Button>
+            <Button
+              variant="secondary"
+              size="sm"
+              style={{ color: '#432818' }}
+              onClick={e => {
+                e.stopPropagation();
+                onDelete();
+              }}
+            >
+              <Trash2 className="h-3 w-3" />
+            </Button>
+          </div>
+        )}
 
         {/* 🎯 Container 2: Componente Individual sem bordas - apenas padding mínimo */}
         <div
           className="p-1" // 🎯 Apenas padding, sem bordas
-          onClick={onSelect}
+          onClick={!isPreviewing ? onSelect : undefined} // Não executar onClick no modo preview
         >
-          <Component
-            block={{
-              ...block,
-              properties: {
-                ...block.properties,
-                ...processedProperties, // ✅ CORREÇÃO: Passar propriedades processadas para o componente
+          {(() => {
+            // Props base para o componente - usar props originais do bloco para evitar conflitos
+            const componentProps = {
+              block: block,
+              isSelected: false,
+              onClick: onSelect,
+              onPropertyChange: handlePropertyChange,
+              onValidate: (isValid: boolean) => {
+                onUpdate({ properties: { __isValid: isValid } });
               },
-            }}
-            isSelected={false} // 🎯 Forçar isSelected=false para remover bordas do componente
-            onClick={onSelect}
-            onPropertyChange={handlePropertyChange}
-          />
+            } as any; // Use any to avoid type conflicts temporarily
+
+            // 🎯 MODO PREVIEW: Adicionar props funcionais para comportamento de produção
+            if (isPreviewing) {
+              return (
+                <React.Suspense
+                  fallback={<div className="animate-pulse bg-gray-200 h-16 rounded" />}
+                >
+                  <Component {...componentProps} />
+                </React.Suspense>
+              );
+            }
+
+            // Modo editor normal
+            return (
+              <React.Suspense fallback={<div className="animate-pulse bg-gray-200 h-16 rounded" />}>
+                <Component {...componentProps} />
+              </React.Suspense>
+            );
+          })()}
         </div>
       </Card>
     </div>

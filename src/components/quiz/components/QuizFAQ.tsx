@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { ComponentProps } from "@/interfaces/quiz";
-import styles from "@/styles/quiz.module.css";
+import React, { useState } from 'react';
+import { ComponentProps } from '@/interfaces/quiz';
+import styles from '@/styles/quiz.module.css';
 
 interface FAQItem {
   question: string;
@@ -13,15 +13,15 @@ interface QuizFAQProps extends ComponentProps {
 }
 
 const QuizFAQ: React.FC<QuizFAQProps> = ({
-  title = "Perguntas Frequentes",
+  title = 'Perguntas Frequentes',
   items = [
     {
-      question: "Como funciona o produto?",
-      answer: "O produto funciona de forma simples e intuitiva...",
+      question: 'Como funciona o produto?',
+      answer: 'O produto funciona de forma simples e intuitiva...',
     },
     {
-      question: "Qual a garantia?",
-      answer: "Oferecemos 30 dias de garantia incondicional.",
+      question: 'Qual a garantia?',
+      answer: 'Oferecemos 30 dias de garantia incondicional.',
     },
   ],
   isSelected,
@@ -41,7 +41,7 @@ const QuizFAQ: React.FC<QuizFAQProps> = ({
 
   return (
     <div
-      className={`${styles.quizComponent} ${styles.faq} ${isSelected ? styles.selected : ""}`}
+      className={`${styles.quizComponent} ${styles.faq} ${isSelected ? styles.selected : ''}`}
       onClick={handleClick}
     >
       <div className={styles.faqCard}>
@@ -51,11 +51,11 @@ const QuizFAQ: React.FC<QuizFAQProps> = ({
           {items.map((item, index) => (
             <div key={index} className={styles.faqItem}>
               <button
-                className={`${styles.faqQuestion} ${openItems.includes(index) ? styles.open : ""}`}
+                className={`${styles.faqQuestion} ${openItems.includes(index) ? styles.open : ''}`}
                 onClick={e => toggleItem(index, e)}
               >
                 <span>{item.question}</span>
-                <span className={styles.faqToggle}>{openItems.includes(index) ? "−" : "+"}</span>
+                <span className={styles.faqToggle}>{openItems.includes(index) ? '−' : '+'}</span>
               </button>
 
               {openItems.includes(index) && (

@@ -1,8 +1,7 @@
 // @ts-nocheck
-import React from "react";
-import { InlineEditableText } from "./InlineEditableText";
-import { CheckCircle } from "lucide-react";
-import type { BlockComponentProps } from "@/types/blocks";
+import { InlineEditableText } from './InlineEditableText';
+import { CheckCircle } from 'lucide-react';
+import type { BlockComponentProps } from '@/types/blocks';
 
 interface ValueItem {
   name: string;
@@ -11,11 +10,11 @@ interface ValueItem {
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -58,24 +57,24 @@ const ValueStackInlineBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   onPropertyChange,
-  className = "",
+  className = '',
 }) => {
   const {
-    title = "O Que Você Recebe Hoje",
+    title = 'O Que Você Recebe Hoje',
     items = [
-      { name: "Guia Principal", value: "R$ 67,00" },
-      { name: "Bônus - Peças-chave", value: "R$ 79,00" },
-      { name: "Bônus - Visagismo Facial", value: "R$ 29,00" },
+      { name: 'Guia Principal', value: 'R$ 67,00' },
+      { name: 'Bônus - Peças-chave', value: 'R$ 79,00' },
+      { name: 'Bônus - Visagismo Facial', value: 'R$ 29,00' },
     ] as ValueItem[],
-    totalValue = "R$ 175,00",
-    finalPrice = "R$ 39,00",
-    finalPriceLabel = "Hoje por apenas",
-    paymentInfo = "Pagamento único",
+    totalValue = 'R$ 175,00',
+    finalPrice = 'R$ 39,00',
+    finalPriceLabel = 'Hoje por apenas',
+    paymentInfo = 'Pagamento único',
     benefits = [
-      "Looks com intenção e identidade",
-      "Cores, modelagens e tecidos a seu favor",
-      "Imagem alinhada aos seus objetivos",
-      "Guarda-roupa funcional, sem compras por impulso",
+      'Looks com intenção e identidade',
+      'Cores, modelagens e tecidos a seu favor',
+      'Imagem alinhada aos seus objetivos',
+      'Guarda-roupa funcional, sem compras por impulso',
     ] as string[],
   } = block?.properties || {};
 
@@ -85,16 +84,16 @@ const ValueStackInlineBlock: React.FC<BlockComponentProps> = ({
     }
   };
 
-  const handleItemChange = (index: number, field: "name" | "value", newValue: string) => {
+  const handleItemChange = (index: number, field: 'name' | 'value', newValue: string) => {
     const newItems = [...items];
     newItems[index] = { ...newItems[index], [field]: newValue };
-    handlePropertyChange("items", newItems);
+    handlePropertyChange('items', newItems);
   };
 
   const handleBenefitChange = (index: number, newValue: string) => {
     const newBenefits = [...benefits];
     newBenefits[index] = newValue;
-    handlePropertyChange("benefits", newBenefits);
+    handlePropertyChange('benefits', newBenefits);
   };
 
   return (
@@ -104,8 +103,8 @@ const ValueStackInlineBlock: React.FC<BlockComponentProps> = ({
         p-3 rounded-lg transition-all duration-200
         ${
           isSelected
-            ? "border-2 border-[#B89B7A] bg-[#B89B7A]/10"
-            : "border-2 border-dashed border-transparent hover:border-[#B89B7A]/40 hover:bg-[#B89B7A]/10/30"
+            ? 'border-2 border-[#B89B7A] bg-[#B89B7A]/10'
+            : 'border-2 border-dashed border-transparent hover:border-[#B89B7A]/40 hover:bg-[#B89B7A]/10/30'
         }
         ${className}
       `}
@@ -115,7 +114,7 @@ const ValueStackInlineBlock: React.FC<BlockComponentProps> = ({
         <h3 className="text-xl font-medium text-[#aa6b5d] mb-4">
           <InlineEditableText
             value="O Guia de Estilo e Imagem + Bônus Exclusivos"
-            onChange={value => handlePropertyChange("benefitsTitle", value)}
+            onChange={value => handlePropertyChange('benefitsTitle', value)}
             placeholder="Título dos benefícios"
             className="text-xl font-medium text-[#aa6b5d]"
           />
@@ -130,7 +129,7 @@ const ValueStackInlineBlock: React.FC<BlockComponentProps> = ({
               <span
                 className="cursor-pointer hover:bg-[#B89B7A]/10/50 rounded px-1"
                 onClick={() => {
-                  const newBenefit = prompt("Editar benefício:", benefit);
+                  const newBenefit = prompt('Editar benefício:', benefit);
                   if (newBenefit !== null) handleBenefitChange(index, newBenefit);
                 }}
               >
@@ -146,7 +145,7 @@ const ValueStackInlineBlock: React.FC<BlockComponentProps> = ({
         <h3 className="text-xl font-medium text-center text-[#aa6b5d] mb-4">
           <InlineEditableText
             value={title}
-            onChange={value => handlePropertyChange("title", value)}
+            onChange={value => handlePropertyChange('title', value)}
             placeholder="Título do valor"
             className="text-xl font-medium text-center text-[#aa6b5d]"
           />
@@ -161,8 +160,8 @@ const ValueStackInlineBlock: React.FC<BlockComponentProps> = ({
               <span
                 className="cursor-pointer hover:bg-[#B89B7A]/10/50 rounded px-1"
                 onClick={() => {
-                  const newName = prompt("Editar nome do item:", item.name);
-                  if (newName !== null) handleItemChange(index, "name", newName);
+                  const newName = prompt('Editar nome do item:', item.name);
+                  if (newName !== null) handleItemChange(index, 'name', newName);
                 }}
               >
                 {item.name}
@@ -170,8 +169,8 @@ const ValueStackInlineBlock: React.FC<BlockComponentProps> = ({
               <span
                 className="font-medium cursor-pointer hover:bg-[#B89B7A]/10/50 rounded px-1"
                 onClick={() => {
-                  const newValue = prompt("Editar valor do item:", item.value);
-                  if (newValue !== null) handleItemChange(index, "value", newValue);
+                  const newValue = prompt('Editar valor do item:', item.value);
+                  if (newValue !== null) handleItemChange(index, 'value', newValue);
                 }}
               >
                 {item.value}
@@ -185,8 +184,8 @@ const ValueStackInlineBlock: React.FC<BlockComponentProps> = ({
               <span
                 className="cursor-pointer hover:bg-[#B89B7A]/10/50 rounded px-1"
                 onClick={() => {
-                  const newTotal = prompt("Editar valor total:", totalValue);
-                  if (newTotal !== null) handlePropertyChange("totalValue", newTotal);
+                  const newTotal = prompt('Editar valor total:', totalValue);
+                  if (newTotal !== null) handlePropertyChange('totalValue', newTotal);
                 }}
               >
                 {totalValue}
@@ -200,7 +199,7 @@ const ValueStackInlineBlock: React.FC<BlockComponentProps> = ({
           <p className="text-sm text-[#aa6b5d] uppercase font-medium">
             <InlineEditableText
               value={finalPriceLabel}
-              onChange={value => handlePropertyChange("finalPriceLabel", value)}
+              onChange={value => handlePropertyChange('finalPriceLabel', value)}
               placeholder="Label do preço final"
               className="text-sm text-[#aa6b5d] uppercase font-medium"
             />
@@ -208,8 +207,8 @@ const ValueStackInlineBlock: React.FC<BlockComponentProps> = ({
           <p
             className="text-4xl font-bold text-[#B89B7A] cursor-pointer hover:bg-[#B89B7A]/10/50 rounded px-1"
             onClick={() => {
-              const newPrice = prompt("Editar preço final:", finalPrice);
-              if (newPrice !== null) handlePropertyChange("finalPrice", newPrice);
+              const newPrice = prompt('Editar preço final:', finalPrice);
+              if (newPrice !== null) handlePropertyChange('finalPrice', newPrice);
             }}
           >
             {finalPrice}
@@ -217,7 +216,7 @@ const ValueStackInlineBlock: React.FC<BlockComponentProps> = ({
           <p className="text-xs text-[#3a3a3a]/60 mt-1">
             <InlineEditableText
               value={paymentInfo}
-              onChange={value => handlePropertyChange("paymentInfo", value)}
+              onChange={value => handlePropertyChange('paymentInfo', value)}
               placeholder="Informação de pagamento"
               className="text-xs text-[#3a3a3a]/60"
             />

@@ -1,7 +1,6 @@
-import React from "react";
-import { Button } from "@/components/ui/button";
-import { Save, Eye, RefreshCw, Palette } from "lucide-react";
-import { JsonConfigEditor } from "./JsonConfigEditor";
+import { Button } from '@/components/ui/button';
+import { Save, Eye, RefreshCw, Palette } from 'lucide-react';
+import { JsonConfigEditor } from './JsonConfigEditor';
 
 interface EditorToolbarProps {
   onSave: () => void;
@@ -34,7 +33,7 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({
         )}
         <Button variant="outline" size="sm" onClick={onPreviewToggle}>
           <Eye className="w-4 h-4 mr-2" />
-          {isPreviewMode ? "Modo Edição" : "Visualizar"}
+          {isPreviewMode ? 'Modo Edição' : 'Visualizar'}
         </Button>
 
         <Button variant="outline" size="sm" onClick={onEditGlobalStyles}>
@@ -46,12 +45,7 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({
           <JsonConfigEditor config={resultPageConfig} onUpdate={onUpdateConfig} />
         )}
 
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={onReset}
-          style={{ color: '#6B4F43' }}
-        >
+        <Button variant="outline" size="sm" onClick={onReset} style={{ color: '#6B4F43' }}>
           <RefreshCw className="w-4 h-4 mr-2" />
           Resetar
         </Button>

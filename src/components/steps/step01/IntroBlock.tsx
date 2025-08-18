@@ -1,32 +1,30 @@
 // src/components/steps/step01/IntroBlock.tsx
 // Componente principal da etapa 1 - Introdução baseada no JSON
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { QUIZ_CONFIGURATION } from "@/config/quizConfiguration";
-import { BlockComponentProps } from "@/types/blocks";
-import React, { useEffect, useState } from "react";
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { QUIZ_CONFIGURATION } from '@/config/quizConfiguration';
+import { BlockComponentProps } from '@/types/blocks';
+import React, { useEffect, useState } from 'react';
 
 export const IntroBlock: React.FC<BlockComponentProps> = ({
   block,
-  isSelected = false,
   isEditing = false,
-  onClick,
   onPropertyChange,
-  className = "",
+  className = '',
 }) => {
-  const [userName, setUserName] = useState("");
+  const [userName, setUserName] = useState('');
   const [isValid, setIsValid] = useState(false);
 
   // Extrair propriedades do bloco
   const properties = block?.properties || {};
-  const id = block?.id || "intro-block";
+  const id = block?.id || 'intro-block';
 
   // Configuração padrão baseada no JSON
   const introStep =
-    QUIZ_CONFIGURATION.steps.find(step => step.type === "intro") || QUIZ_CONFIGURATION.steps[0];
+    QUIZ_CONFIGURATION.steps.find(step => step.type === 'intro') || QUIZ_CONFIGURATION.steps[0];
 
   // Extrair propriedades com valores padrão do JSON
   const {
@@ -41,10 +39,9 @@ export const IntroBlock: React.FC<BlockComponentProps> = ({
     footerText = introStep.footerText,
     required = introStep.required,
     scale = 100,
-    alignment = "center",
-    backgroundColor = "transparent",
+    alignment = 'center',
+    backgroundColor = 'transparent',
     backgroundOpacity = 100,
-    jsonConfig,
   } = properties;
 
   // Validação baseada nas regras do JSON
@@ -61,29 +58,29 @@ export const IntroBlock: React.FC<BlockComponentProps> = ({
   const containerStyle: React.CSSProperties = {
     transform: `scale(${scale / 100})`,
     transformOrigin:
-      alignment === "left" ? "left center" : alignment === "right" ? "right center" : "center",
+      alignment === 'left' ? 'left center' : alignment === 'right' ? 'right center' : 'center',
     textAlign: alignment,
-    backgroundColor: backgroundColor === "transparent" ? "transparent" : backgroundColor,
+    backgroundColor: backgroundColor === 'transparent' ? 'transparent' : backgroundColor,
     opacity: backgroundOpacity / 100,
-    padding: "32px",
-    minHeight: "600px",
+    padding: '32px',
+    minHeight: '600px',
   };
 
   const handleInputChange = (value: string) => {
     setUserName(value);
 
     if (onPropertyChange) {
-      onPropertyChange("userInput", value);
+      onPropertyChange('userInput', value);
     }
   };
 
   const handleContinue = () => {
     if (isValid) {
-      console.log("✅ Usuário válido:", userName);
+      console.log('✅ Usuário válido:', userName);
       // Aqui seria implementada a lógica de navegação
       if (onPropertyChange) {
-        onPropertyChange("userInput", userName);
-        onPropertyChange("completed", true);
+        onPropertyChange('userInput', userName);
+        onPropertyChange('completed', true);
       }
     }
   };
@@ -91,7 +88,7 @@ export const IntroBlock: React.FC<BlockComponentProps> = ({
   return (
     <div
       id={id}
-      className={`intro-block ${className} ${isEditing ? "editing-mode" : ""}`}
+      className={`intro-block ${className} ${isEditing ? 'editing-mode' : ''}`}
       style={containerStyle}
     >
       <div className="intro-content max-w-2xl mx-auto space-y-6">
@@ -106,7 +103,7 @@ export const IntroBlock: React.FC<BlockComponentProps> = ({
 
           {/* Descrição superior */}
           {descriptionTop && (
-            <p className="text-lg mb-6" style={{ color: "#6B4F43" }}>
+            <p className="text-lg mb-6" style={{ color: '#6B4F43' }}>
               {descriptionTop}
             </p>
           )}
@@ -125,7 +122,7 @@ export const IntroBlock: React.FC<BlockComponentProps> = ({
               }}
               onError={e => {
                 const target = e.target as HTMLImageElement;
-                target.style.display = "none";
+                target.style.display = 'none';
               }}
             />
           </div>
@@ -134,7 +131,7 @@ export const IntroBlock: React.FC<BlockComponentProps> = ({
         {/* Descrição inferior */}
         {descriptionBottom && (
           <div className="text-center mb-8">
-            <p className="text-base" style={{ color: "#6B4F43" }}>
+            <p className="text-base" style={{ color: '#6B4F43' }}>
               {descriptionBottom}
             </p>
           </div>
@@ -144,7 +141,7 @@ export const IntroBlock: React.FC<BlockComponentProps> = ({
         <Card
           className="p-6 border-2"
           style={{
-            borderColor: QUIZ_CONFIGURATION.design.primaryColor + "30",
+            borderColor: QUIZ_CONFIGURATION.design.primaryColor + '30',
             backgroundColor: QUIZ_CONFIGURATION.design.card.background,
             borderRadius: QUIZ_CONFIGURATION.design.card.borderRadius,
             boxShadow: QUIZ_CONFIGURATION.design.card.shadow,
@@ -165,10 +162,10 @@ export const IntroBlock: React.FC<BlockComponentProps> = ({
                 value={userName}
                 onChange={e => handleInputChange(e.target.value)}
                 placeholder={inputPlaceholder}
-                className={`text-base p-3 ${!isValid && userName.length > 0 ? "border-red-400" : ""}`}
+                className={`text-base p-3 ${!isValid && userName.length > 0 ? 'border-red-400' : ''}`}
                 style={{
-                  borderColor: isValid ? QUIZ_CONFIGURATION.design.primaryColor + "50" : "#ef4444",
-                  fontSize: "16px", // Evita zoom no iOS
+                  borderColor: isValid ? QUIZ_CONFIGURATION.design.primaryColor + '50' : '#ef4444',
+                  fontSize: '16px', // Evita zoom no iOS
                 }}
                 required={required}
               />
@@ -191,20 +188,20 @@ export const IntroBlock: React.FC<BlockComponentProps> = ({
                 className="w-full p-3 text-base font-medium transition-all duration-200"
                 style={{
                   background:
-                    isValid && userName ? QUIZ_CONFIGURATION.design.button.background : "#d1d5db",
+                    isValid && userName ? QUIZ_CONFIGURATION.design.button.background : '#d1d5db',
                   color: QUIZ_CONFIGURATION.design.button.textColor,
                   borderRadius: QUIZ_CONFIGURATION.design.button.borderRadius,
-                  boxShadow: isValid && userName ? QUIZ_CONFIGURATION.design.button.shadow : "none",
+                  boxShadow: isValid && userName ? QUIZ_CONFIGURATION.design.button.shadow : 'none',
                 }}
               >
-                {buttonText || `Continuar ${userName ? `como ${userName}` : ""}`}
+                {buttonText || `Continuar ${userName ? `como ${userName}` : ''}`}
               </Button>
             </div>
 
             {/* Texto de privacidade */}
             {privacyText && (
               <div className="text-center pt-2">
-                <p className="text-xs opacity-70" style={{ color: "#6B4F43" }}>
+                <p className="text-xs opacity-70" style={{ color: '#6B4F43' }}>
                   {privacyText}
                 </p>
               </div>
@@ -215,7 +212,7 @@ export const IntroBlock: React.FC<BlockComponentProps> = ({
         {/* Footer */}
         {footerText && (
           <div className="text-center pt-6">
-            <p className="text-xs opacity-60" style={{ color: "#6B4F43" }}>
+            <p className="text-xs opacity-60" style={{ color: '#6B4F43' }}>
               {footerText}
             </p>
           </div>
@@ -232,8 +229,8 @@ export const IntroBlock: React.FC<BlockComponentProps> = ({
             >
               Bloco de Introdução - Etapa 1
             </Badge>
-            <div className="text-xs mt-2" style={{ color: "#6B4F43" }}>
-              {title} • {userName ? `Usuário: ${userName}` : "Nome não preenchido"}
+            <div className="text-xs mt-2" style={{ color: '#6B4F43' }}>
+              {title} • {userName ? `Usuário: ${userName}` : 'Nome não preenchido'}
             </div>
           </div>
         </div>

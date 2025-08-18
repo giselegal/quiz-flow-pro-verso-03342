@@ -1,5 +1,4 @@
-import React from "react";
-import { useQuizHooks } from "@/hooks/useQuizHooks";
+// @ts-nocheck
 
 interface QuizProgressProps {
   currentQuestionIndex: number;

@@ -1,16 +1,17 @@
-import { useState, useCallback } from "react";
-import { EditorBlock, EditorConfig, EditableContent } from "@/types/editor";
-import { EditorActions } from "@/types/editorActions";
-import { getDefaultContentForType } from "@/utils/editorDefaults";
-import { generateId } from "@/utils/idGenerator";
+import { useCallback } from 'react';
+import { EditorBlock, EditorConfig, EditableContent } from '@/types/editor';
+import { EditorActions } from '@/types/editorActions';
+import { getDefaultContentForType } from '@/utils/editorDefaults';
+import { generateId } from '@/utils/idGenerator';
 
 export const useEditorBlocks = (
   config: EditorConfig,
   setConfig: (config: EditorConfig) => void
 ): EditorActions => {
   const addBlock = useCallback(
-    (type: EditorBlock["type"]) => {
-      const blocksLength = config.blocks.length;
+    (type: EditorBlock['type']) => {
+      const blocks = Array.isArray(config.blocks) ? config.blocks : [];
+      const blocksLength = blocks.length;
       const newBlock: EditorBlock = {
         id: generateId(),
         type,
@@ -20,7 +21,7 @@ export const useEditorBlocks = (
 
       setConfig({
         ...config,
-        blocks: [...config.blocks, newBlock],
+        blocks: [...blocks, newBlock] as any,
       });
 
       return newBlock.id;
@@ -30,11 +31,12 @@ export const useEditorBlocks = (
 
   const updateBlock = useCallback(
     (id: string, content: Partial<EditableContent>) => {
+      const blocks = Array.isArray(config.blocks) ? config.blocks : [];
       setConfig({
         ...config,
-        blocks: config.blocks.map((block: EditorBlock) =>
+        blocks: blocks.map((block: EditorBlock) =>
           block.id === id ? { ...block, content: { ...block.content, ...content } } : block
-        ),
+        ) as any,
       });
     },
     [config, setConfig]
@@ -42,14 +44,15 @@ export const useEditorBlocks = (
 
   const deleteBlock = useCallback(
     (id: string) => {
+      const blocks = Array.isArray(config.blocks) ? config.blocks : [];
       setConfig({
         ...config,
-        blocks: config.blocks
+        blocks: blocks
           .filter((block: EditorBlock) => block.id !== id)
           .map((block: EditorBlock, index: number) => ({
             ...block,
             order: index,
-          })),
+          })) as any,
       });
     },
     [config, setConfig]
@@ -57,7 +60,8 @@ export const useEditorBlocks = (
 
   const reorderBlocks = useCallback(
     (startIndex: number, endIndex: number) => {
-      const newBlocks = Array.from(config.blocks);
+      const blocks = Array.isArray(config.blocks) ? config.blocks : [];
+      const newBlocks = Array.from(blocks);
       const [removed] = newBlocks.splice(startIndex, 1);
       newBlocks.splice(endIndex, 0, removed);
 
@@ -66,7 +70,7 @@ export const useEditorBlocks = (
         blocks: newBlocks.map((block: EditorBlock, index: number) => ({
           ...block,
           order: index,
-        })),
+        })) as any,
       });
     },
     [config, setConfig]

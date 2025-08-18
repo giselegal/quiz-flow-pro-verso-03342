@@ -1,6 +1,5 @@
-import React from "react";
-import { ComponentProps } from "@/interfaces/quiz";
-import styles from "@/styles/quiz.module.css";
+import { ComponentProps } from '@/interfaces/quiz';
+import styles from '@/styles/quiz.module.css';
 
 interface BonusItem {
   name: string;
@@ -13,11 +12,11 @@ interface QuizBonusProps extends ComponentProps {
 }
 
 const QuizBonus: React.FC<QuizBonusProps> = ({
-  title = "Bônus Exclusivos",
+  title = 'Bônus Exclusivos',
   items = [
-    { name: "E-book Gratuito", value: "R$ 47" },
-    { name: "Consultoria Grátis", value: "R$ 197" },
-    { name: "Acesso VIP", value: "R$ 97" },
+    { name: 'E-book Gratuito', value: 'R$ 47' },
+    { name: 'Consultoria Grátis', value: 'R$ 197' },
+    { name: 'Acesso VIP', value: 'R$ 97' },
   ],
   isSelected,
   onClick,
@@ -29,14 +28,14 @@ const QuizBonus: React.FC<QuizBonusProps> = ({
 
   const getTotalValue = () => {
     return items.reduce((total, item) => {
-      const value = parseFloat(item.value.replace(/[^\d,]/g, "").replace(",", ".")) || 0;
+      const value = parseFloat(item.value.replace(/[^\d,]/g, '').replace(',', '.')) || 0;
       return total + value;
     }, 0);
   };
 
   return (
     <div
-      className={`${styles.quizComponent} ${styles.bonus} ${isSelected ? styles.selected : ""}`}
+      className={`${styles.quizComponent} ${styles.bonus} ${isSelected ? styles.selected : ''}`}
       onClick={handleClick}
     >
       <div className={styles.bonusCard}>

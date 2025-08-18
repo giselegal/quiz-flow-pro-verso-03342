@@ -1,6 +1,5 @@
-import React from "react";
-import { ComponentProps } from "@/interfaces/quiz";
-import styles from "@/styles/quiz.module.css";
+import { ComponentProps } from '@/interfaces/quiz';
+import styles from '@/styles/quiz.module.css';
 
 interface QuizPhoneProps extends ComponentProps {
   label?: string;
@@ -10,10 +9,10 @@ interface QuizPhoneProps extends ComponentProps {
 }
 
 const QuizPhone: React.FC<QuizPhoneProps> = ({
-  label = "Seu telefone",
-  placeholder = "(11) 99999-9999",
+  label = 'Seu telefone',
+  placeholder = '(11) 99999-9999',
   required = false,
-  width = "100%",
+  width = '100%',
   isSelected,
   onClick,
 }) => {
@@ -28,7 +27,7 @@ const QuizPhone: React.FC<QuizPhoneProps> = ({
 
   return (
     <div
-      className={`${styles.quizComponent} ${styles.inputField} ${isSelected ? styles.selected : ""}`}
+      className={`${styles.quizComponent} ${styles.inputField} ${isSelected ? styles.selected : ''}`}
       onClick={handleClick}
       style={{ width }}
     >

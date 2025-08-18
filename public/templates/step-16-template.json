@@ -1,0 +1,81 @@
+{
+  "templateVersion": "1.0",
+  "layout": {
+    "containerWidth": "full",
+    "spacing": "small",
+    "backgroundColor": "transparent",
+    "responsive": true
+  },
+  "validation": {
+    "required": true,
+    "minAnswers": 1,
+    "maxAnswers": 1,
+    "validationMessage": "Selecione uma opção para continuar"
+  },
+  "analytics": {
+    "events": [
+      "page_view",
+      "option_selected",
+      "validation_error",
+      "completion"
+    ],
+    "trackingId": "step-16-processing"
+  },
+  "metadata": {
+    "id": "quiz-step-16",
+    "name": "Processamento",
+    "description": "Página de carregamento do resultado",
+    "category": "processing",
+    "tags": [
+      "quiz",
+      "style",
+      "processing"
+    ],
+    "createdAt": "2025-08-11T01:02:19.344Z",
+    "updatedAt": "2025-08-11T01:02:19.344Z"
+  },
+  "blocks": [
+    {
+      "id": "step16-header",
+      "type": "quiz-intro-header",
+      "position": 0,
+      "properties": {
+        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        "logoAlt": "Logo Gisele Galvão",
+        "logoWidth": 96,
+        "logoHeight": 96,
+        "progressValue": 76,
+        "progressTotal": 100,
+        "showProgress": true,
+        "containerWidth": "full",
+        "spacing": "small"
+      }
+    },
+    {
+      "id": "step16-title",
+      "type": "text-inline",
+      "position": 1,
+      "properties": {
+        "content": "PREPARANDO SEU RESULTADO PERSONALIZADO...",
+        "fontSize": "text-2xl",
+        "fontWeight": "font-bold",
+        "textAlign": "text-center",
+        "color": "#432818",
+        "containerWidth": "full",
+        "spacing": "small"
+      }
+    },
+    {
+      "id": "step16-progress-bar",
+      "type": "progress-bar",
+      "position": 2,
+      "properties": {
+        "value": 100,
+        "animated": true,
+        "color": "#B89B7A",
+        "containerWidth": "full",
+        "spacing": "small"
+      }
+    }
+  ]
+}

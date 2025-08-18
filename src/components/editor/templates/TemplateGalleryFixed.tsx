@@ -1,5 +1,5 @@
 // 📋 Template Gallery - Sistema de Gerenciamento de Templates
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -8,24 +8,24 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import React, { useState } from "react";
+} from '@/components/ui/dialog';
+import React, { useState } from 'react';
 // Update the import path below if your Input component is located elsewhere, for example:
-import { Input } from "../../ui/input";
+import { Input } from '../../ui/input';
 // Or, if using a library like 'shadcn/ui':
 // import { Input } from 'shadcn-ui';
-import { Badge } from "@/components/ui/badge";
-import { Label } from "@/components/ui/label";
+import { Badge } from '@/components/ui/badge';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { BlockData } from "@/types/blocks";
+} from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { BlockData } from '@/types/blocks';
 import {
   Clock,
   Copy,
@@ -41,14 +41,14 @@ import {
   SortDesc,
   Star,
   Trash2,
-} from "lucide-react";
+} from 'lucide-react';
 
 // Tipos do Template
 interface Template {
   id: string;
   name: string;
   description: string;
-  category: "intro" | "question" | "result" | "custom";
+  category: 'intro' | 'question' | 'result' | 'custom';
   tags: string[];
   blocks: BlockData[];
   thumbnail?: string;
@@ -64,29 +64,29 @@ interface Template {
 interface TemplateGalleryProps {
   onApplyTemplate: (template: Template) => void;
   currentBlocks: BlockData[];
-  onSaveAsTemplate?: (template: Omit<Template, "id" | "createdAt" | "updatedAt">) => void;
+  onSaveAsTemplate?: (template: Omit<Template, 'id' | 'createdAt' | 'updatedAt'>) => void;
 }
 
 // Templates predefinidos
 const PREDEFINED_TEMPLATES: Template[] = [
   {
-    id: "elegant-intro",
-    name: "Introdução Elegante",
-    description: "Template sofisticado para página inicial do quiz",
-    category: "intro",
+    id: 'elegant-intro',
+    name: 'Introdução Elegante',
+    description: 'Template sofisticado para página inicial do quiz',
+    category: 'intro',
     isPublic: true,
     isFavorite: false,
-    thumbnail: "🎭",
-    author: "Quiz Design Team",
+    thumbnail: '🎭',
+    author: 'Quiz Design Team',
     downloads: 42,
     rating: 4.8,
     blocks: [
       {
-        id: "intro-header",
-        type: "quiz-intro-header",
+        id: 'intro-header',
+        type: 'quiz-intro-header',
         properties: {
           logoUrl:
-            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+            'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
           progressValue: 0,
           showProgress: true,
         },
@@ -94,37 +94,37 @@ const PREDEFINED_TEMPLATES: Template[] = [
         order: 0,
       },
       {
-        id: "intro-title",
-        type: "heading-inline",
+        id: 'intro-title',
+        type: 'heading-inline',
         properties: {
-          content: "Descubra Seu Estilo Único",
-          level: "h1",
-          textAlign: "center",
-          color: "#432818",
-          fontSize: "text-3xl",
+          content: 'Descubra Seu Estilo Único',
+          level: 'h1',
+          textAlign: 'center',
+          color: '#432818',
+          fontSize: 'text-3xl',
         },
         content: {},
         order: 1,
       },
       {
-        id: "intro-subtitle",
-        type: "text-inline",
+        id: 'intro-subtitle',
+        type: 'text-inline',
         properties: {
-          content: "Um quiz personalizado para descobrir qual estilo combina mais com você",
-          textAlign: "center",
-          color: "#6B4F43",
+          content: 'Um quiz personalizado para descobrir qual estilo combina mais com você',
+          textAlign: 'center',
+          color: '#6B4F43',
         },
         content: {},
         order: 2,
       },
       {
-        id: "intro-button",
-        type: "button-inline",
+        id: 'intro-button',
+        type: 'button-inline',
         properties: {
-          text: "Começar Quiz",
-          variant: "primary",
-          backgroundColor: "#B89B7A",
-          textColor: "#fff",
+          text: 'Começar Quiz',
+          variant: 'primary',
+          backgroundColor: '#B89B7A',
+          textColor: '#fff',
           fullWidth: false,
         },
         content: {},
@@ -133,52 +133,52 @@ const PREDEFINED_TEMPLATES: Template[] = [
     ],
     createdAt: new Date(),
     updatedAt: new Date(),
-    tags: ["intro", "elegante", "quiz", "boas-vindas"],
+    tags: ['intro', 'elegante', 'quiz', 'boas-vindas'],
   },
   {
-    id: "question-visual",
-    name: "Pergunta Visual",
-    description: "Layout otimizado para perguntas com imagens",
-    category: "question",
+    id: 'question-visual',
+    name: 'Pergunta Visual',
+    description: 'Layout otimizado para perguntas com imagens',
+    category: 'question',
     isPublic: true,
     isFavorite: true,
-    thumbnail: "❓",
-    author: "Quiz Design Team",
+    thumbnail: '❓',
+    author: 'Quiz Design Team',
     downloads: 38,
     rating: 4.9,
     blocks: [
       {
-        id: "question-header",
-        type: "quiz-header",
+        id: 'question-header',
+        type: 'quiz-header',
         properties: {
           logoUrl:
-            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+            'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
           progressValue: 25,
           showProgress: true,
-          stepNumber: "2 de 8",
+          stepNumber: '2 de 8',
         },
         content: {},
         order: 0,
       },
       {
-        id: "question-title",
-        type: "text-inline",
+        id: 'question-title',
+        type: 'text-inline',
         properties: {
-          content: "Qual dessas opções mais combina com você?",
-          fontSize: "text-2xl",
-          fontWeight: "font-bold",
-          textAlign: "center",
-          color: "#432818",
+          content: 'Qual dessas opções mais combina com você?',
+          fontSize: 'text-2xl',
+          fontWeight: 'font-bold',
+          textAlign: 'center',
+          color: '#432818',
         },
         content: {},
         order: 1,
       },
       {
-        id: "question-image",
-        type: "image-display-inline",
+        id: 'question-image',
+        type: 'image-display-inline',
         properties: {
-          src: "https://res.cloudinary.com/dqljyf76t/image/upload/v1746838066/sample-question.webp",
-          alt: "Imagem da pergunta",
+          src: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1746838066/sample-question.webp',
+          alt: 'Imagem da pergunta',
           width: 400,
           height: 300,
         },
@@ -186,14 +186,14 @@ const PREDEFINED_TEMPLATES: Template[] = [
         order: 2,
       },
       {
-        id: "question-options",
-        type: "quiz-options-grid",
+        id: 'question-options',
+        type: 'quiz-options-grid',
         properties: {
           options: [
-            { id: "opt1", text: "Opção A", value: "a" },
-            { id: "opt2", text: "Opção B", value: "b" },
-            { id: "opt3", text: "Opção C", value: "c" },
-            { id: "opt4", text: "Opção D", value: "d" },
+            { id: 'opt1', text: 'Opção A', value: 'a' },
+            { id: 'opt2', text: 'Opção B', value: 'b' },
+            { id: 'opt3', text: 'Opção C', value: 'c' },
+            { id: 'opt4', text: 'Opção D', value: 'd' },
           ],
           columns: 2,
           showImages: true,
@@ -204,39 +204,39 @@ const PREDEFINED_TEMPLATES: Template[] = [
     ],
     createdAt: new Date(),
     updatedAt: new Date(),
-    tags: ["pergunta", "visual", "imagem", "options"],
+    tags: ['pergunta', 'visual', 'imagem', 'options'],
   },
   {
-    id: "result-celebration",
-    name: "Resultado Celebração",
-    description: "Template comemorativo para exibir resultados",
-    category: "result",
+    id: 'result-celebration',
+    name: 'Resultado Celebração',
+    description: 'Template comemorativo para exibir resultados',
+    category: 'result',
     isPublic: true,
     isFavorite: false,
-    thumbnail: "🎉",
-    author: "Quiz Design Team",
+    thumbnail: '🎉',
+    author: 'Quiz Design Team',
     downloads: 29,
     rating: 4.7,
     blocks: [
       {
-        id: "result-celebration",
-        type: "text-inline",
+        id: 'result-celebration',
+        type: 'text-inline',
         properties: {
-          content: "🎉 Parabéns! Descobrimos seu estilo!",
-          fontSize: "text-3xl",
-          fontWeight: "font-bold",
-          textAlign: "center",
-          color: "#10B981",
+          content: '🎉 Parabéns! Descobrimos seu estilo!',
+          fontSize: 'text-3xl',
+          fontWeight: 'font-bold',
+          textAlign: 'center',
+          color: '#10B981',
         },
         content: {},
         order: 0,
       },
       {
-        id: "result-image",
-        type: "image-display-inline",
+        id: 'result-image',
+        type: 'image-display-inline',
         properties: {
-          src: "https://res.cloudinary.com/dqljyf76t/image/upload/v1746838175/result-celebration.webp",
-          alt: "Resultado do quiz",
+          src: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1746838175/result-celebration.webp',
+          alt: 'Resultado do quiz',
           width: 500,
           height: 400,
         },
@@ -244,14 +244,14 @@ const PREDEFINED_TEMPLATES: Template[] = [
         order: 1,
       },
       {
-        id: "result-description",
-        type: "text-inline",
+        id: 'result-description',
+        type: 'text-inline',
         properties: {
           content:
-            "Seu estilo reflete uma personalidade única. Veja as recomendações personalizadas para você.",
-          textAlign: "center",
-          fontSize: "text-lg",
-          color: "#6B7280",
+            'Seu estilo reflete uma personalidade única. Veja as recomendações personalizadas para você.',
+          textAlign: 'center',
+          fontSize: 'text-lg',
+          color: '#6B7280',
         },
         content: {},
         order: 2,
@@ -259,7 +259,7 @@ const PREDEFINED_TEMPLATES: Template[] = [
     ],
     createdAt: new Date(),
     updatedAt: new Date(),
-    tags: ["resultado", "celebração", "final", "parabéns"],
+    tags: ['resultado', 'celebração', 'final', 'parabéns'],
   },
 ];
 
@@ -270,20 +270,20 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
 }) => {
   // Estados
   const [templates, setTemplates] = useState<Template[]>(PREDEFINED_TEMPLATES);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string>("all");
-  const [sortBy, setSortBy] = useState<"name" | "created" | "downloads" | "rating">("created");
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [sortBy, setSortBy] = useState<'name' | 'created' | 'downloads' | 'rating'>('created');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
 
   // Estados para criação/edição de templates
   const [showCreateDialog, setShowCreateDialog] = useState(false);
-  const [editingTemplate, setEditingTemplate] = useState<Template | null>(null);
+
   const [newTemplate, setNewTemplate] = useState({
-    name: "",
-    description: "",
-    category: "custom" as Template["category"],
+    name: '',
+    description: '',
+    category: 'custom' as Template['category'],
     tags: [] as string[],
     isPublic: false,
   });
@@ -295,7 +295,7 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
       template.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
       template.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
 
-    const matchesCategory = selectedCategory === "all" || template.category === selectedCategory;
+    const matchesCategory = selectedCategory === 'all' || template.category === selectedCategory;
     const matchesFavorites = !showFavoritesOnly || template.isFavorite;
 
     return matchesSearch && matchesCategory && matchesFavorites;
@@ -306,21 +306,21 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
     let comparison = 0;
 
     switch (sortBy) {
-      case "name":
+      case 'name':
         comparison = a.name.localeCompare(b.name);
         break;
-      case "created":
+      case 'created':
         comparison = a.createdAt.getTime() - b.createdAt.getTime();
         break;
-      case "downloads":
+      case 'downloads':
         comparison = (a.downloads || 0) - (b.downloads || 0);
         break;
-      case "rating":
+      case 'rating':
         comparison = (a.rating || 0) - (b.rating || 0);
         break;
     }
 
-    return sortOrder === "asc" ? comparison : -comparison;
+    return sortOrder === 'asc' ? comparison : -comparison;
   });
 
   // Aplicar template
@@ -332,11 +332,11 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
   const handleSaveTemplate = () => {
     if (!newTemplate.name.trim()) return;
 
-    const template: Omit<Template, "id" | "createdAt" | "updatedAt"> = {
+    const template: Omit<Template, 'id' | 'createdAt' | 'updatedAt'> = {
       ...newTemplate,
       blocks: currentBlocks,
       isFavorite: false,
-      author: "Você",
+      author: 'Você',
       downloads: 0,
       rating: 5,
     };
@@ -355,9 +355,9 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
     setTemplates(prev => [...prev, newTemplateWithId]);
     setShowCreateDialog(false);
     setNewTemplate({
-      name: "",
-      description: "",
-      category: "custom",
+      name: '',
+      description: '',
+      category: 'custom',
       tags: [],
       isPublic: false,
     });
@@ -443,7 +443,7 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
                 <Label htmlFor="template-category">Categoria</Label>
                 <Select
                   value={newTemplate.category}
-                  onValueChange={(value: Template["category"]) =>
+                  onValueChange={(value: Template['category']) =>
                     setNewTemplate(prev => ({ ...prev, category: value }))
                   }
                 >
@@ -514,18 +514,18 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
-                  variant={sortOrder === "desc" ? "default" : "outline"}
+                  variant={sortOrder === 'desc' ? 'default' : 'outline'}
                   size="sm"
-                  onClick={() => setSortOrder(prev => (prev === "asc" ? "desc" : "asc"))}
+                  onClick={() => setSortOrder(prev => (prev === 'asc' ? 'desc' : 'asc'))}
                 >
-                  {sortOrder === "desc" ? (
+                  {sortOrder === 'desc' ? (
                     <SortDesc className="w-4 h-4" />
                   ) : (
                     <SortAsc className="w-4 h-4" />
                   )}
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>{sortOrder === "desc" ? "Decrescente" : "Crescente"}</TooltipContent>
+              <TooltipContent>{sortOrder === 'desc' ? 'Decrescente' : 'Crescente'}</TooltipContent>
             </Tooltip>
           </TooltipProvider>
 
@@ -533,11 +533,11 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
-                  variant={showFavoritesOnly ? "default" : "outline"}
+                  variant={showFavoritesOnly ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setShowFavoritesOnly(prev => !prev)}
                 >
-                  <Heart className={`w-4 h-4 ${showFavoritesOnly ? "fill-current" : ""}`} />
+                  <Heart className={`w-4 h-4 ${showFavoritesOnly ? 'fill-current' : ''}`} />
                 </Button>
               </TooltipTrigger>
               <TooltipContent>Apenas Favoritos</TooltipContent>
@@ -548,11 +548,11 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
-                  variant={viewMode === "grid" ? "default" : "outline"}
+                  variant={viewMode === 'grid' ? 'default' : 'outline'}
                   size="sm"
-                  onClick={() => setViewMode(prev => (prev === "grid" ? "list" : "grid"))}
+                  onClick={() => setViewMode(prev => (prev === 'grid' ? 'list' : 'grid'))}
                 >
-                  {viewMode === "grid" ? (
+                  {viewMode === 'grid' ? (
                     <Grid className="w-4 h-4" />
                   ) : (
                     <List className="w-4 h-4" />
@@ -560,7 +560,7 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
-                {viewMode === "grid" ? "Visualização em Grade" : "Visualização em Lista"}
+                {viewMode === 'grid' ? 'Visualização em Grade' : 'Visualização em Lista'}
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
@@ -570,23 +570,23 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
       {/* Grid/Lista de Templates */}
       <div
         className={
-          viewMode === "grid" ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" : "space-y-4"
+          viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6' : 'space-y-4'
         }
       >
         {sortedTemplates.map(template => (
           <div
             key={template.id}
             className={`bg-white border rounded-lg overflow-hidden hover:shadow-lg transition-shadow ${
-              viewMode === "list" ? "flex" : ""
+              viewMode === 'list' ? 'flex' : ''
             }`}
           >
             {/* Thumbnail/Preview */}
             <div
               className={`bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center ${
-                viewMode === "grid" ? "h-32" : "w-24 h-24 flex-shrink-0"
+                viewMode === 'grid' ? 'h-32' : 'w-24 h-24 flex-shrink-0'
               }`}
             >
-              <span className="text-3xl">{template.thumbnail || "📄"}</span>
+              <span className="text-3xl">{template.thumbnail || '📄'}</span>
             </div>
 
             {/* Conteúdo */}
@@ -605,13 +605,13 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
                         >
                           <Heart
                             className={`w-3 h-3 ${
-                              template.isFavorite ? "fill-current text-red-500" : "text-gray-400"
+                              template.isFavorite ? 'fill-current text-red-500' : 'text-gray-400'
                             }`}
                           />
                         </Button>
                       </TooltipTrigger>
                       <TooltipContent>
-                        {template.isFavorite ? "Remover dos Favoritos" : "Adicionar aos Favoritos"}
+                        {template.isFavorite ? 'Remover dos Favoritos' : 'Adicionar aos Favoritos'}
                       </TooltipContent>
                     </Tooltip>
                   </TooltipProvider>
@@ -654,7 +654,7 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
                 </div>
                 <div className="flex items-center gap-1">
                   <Clock className="w-3 h-3" />
-                  <span>{template.createdAt.toLocaleDateString("pt-BR")}</span>
+                  <span>{template.createdAt.toLocaleDateString('pt-BR')}</span>
                 </div>
               </div>
 
@@ -680,7 +680,7 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
                   </Tooltip>
                 </TooltipProvider>
 
-                {(!template.isPublic || template.author === "Você") && (
+                {(!template.isPublic || template.author === 'Você') && (
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
@@ -708,11 +708,11 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
           <LayoutTemplate className="w-16 h-16 text-gray-300 mx-auto mb-4" />
           <h3 style={{ color: '#432818' }}>Nenhum template encontrado</h3>
           <p style={{ color: '#6B4F43' }}>
-            {searchTerm || selectedCategory !== "all" || showFavoritesOnly
-              ? "Tente ajustar os filtros de busca"
-              : "Crie seu primeiro template personalizado"}
+            {searchTerm || selectedCategory !== 'all' || showFavoritesOnly
+              ? 'Tente ajustar os filtros de busca'
+              : 'Crie seu primeiro template personalizado'}
           </p>
-          {!searchTerm && selectedCategory === "all" && !showFavoritesOnly && (
+          {!searchTerm && selectedCategory === 'all' && !showFavoritesOnly && (
             <Button onClick={() => setShowCreateDialog(true)}>
               <Plus className="w-4 h-4 mr-2" />
               Criar Template

@@ -1,9 +1,9 @@
-import React from "react";
+import React from 'react';
 
 interface HeadingInlineProps {
   content: string;
-  level?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
-  textAlign?: "left" | "center" | "right";
+  level?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
+  textAlign?: 'left' | 'center' | 'right';
   color?: string;
   fontWeight?: string;
   className?: string;
@@ -11,11 +11,11 @@ interface HeadingInlineProps {
 
 export const HeadingInline: React.FC<HeadingInlineProps> = ({
   content,
-  level = "h2",
-  textAlign = "left",
-  color = "#000000",
-  fontWeight = "normal",
-  className = "",
+  level = 'h2',
+  textAlign = 'left',
+  color = '#000000',
+  fontWeight = 'normal',
+  className = '',
 }) => {
   const Tag = level;
 

@@ -1,11 +1,9 @@
-import React from "react";
-
 interface AdminLayoutProps {
   children: React.ReactNode;
   title?: string;
 }
 
-const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title = "Administração" }) => {
+const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title = 'Administração' }) => {
   return (
     <div className="min-h-screen bg-[#FAF9F7]">
       <header className="bg-white border-b border-[#B89B7A]/20">

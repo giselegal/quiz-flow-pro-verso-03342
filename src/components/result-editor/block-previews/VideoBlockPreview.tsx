@@ -1,5 +1,3 @@
-import React from "react";
-
 interface VideoBlockPreviewProps {
   content: {
     videoUrl?: string;
@@ -14,7 +12,7 @@ interface VideoBlockPreviewProps {
 
 const VideoBlockPreview: React.FC<VideoBlockPreviewProps> = ({ content }) => {
   const getVideoId = (url: string) => {
-    if (!url) return "";
+    if (!url) return '';
 
     // For YouTube URLs
     const youtubeRegex =
@@ -28,16 +26,16 @@ const VideoBlockPreview: React.FC<VideoBlockPreviewProps> = ({ content }) => {
     const vimeoMatch = url.match(vimeoRegex);
     if (vimeoMatch) return vimeoMatch[1];
 
-    return "";
+    return '';
   };
 
   const getEmbedUrl = (url: string) => {
-    if (!url) return "";
+    if (!url) return '';
     const videoId = getVideoId(url);
 
-    if (url.includes("youtube")) {
+    if (url.includes('youtube')) {
       return `https://www.youtube.com/embed/${videoId}`;
-    } else if (url.includes("vimeo")) {
+    } else if (url.includes('vimeo')) {
       return `https://player.vimeo.com/video/${videoId}`;
     }
 
@@ -51,7 +49,7 @@ const VideoBlockPreview: React.FC<VideoBlockPreviewProps> = ({ content }) => {
           <iframe
             src={getEmbedUrl(content.videoUrl)}
             className="w-full h-full rounded-lg"
-            title={content.videoTitle || "Video"}
+            title={content.videoTitle || 'Video'}
             frameBorder="0"
             allowFullScreen
           />

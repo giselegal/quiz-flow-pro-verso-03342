@@ -1,5 +1,3 @@
-import React from "react";
-
 interface TwoColumnBlockPreviewProps {
   content: {
     leftColumn?: {
@@ -18,9 +16,9 @@ interface TwoColumnBlockPreviewProps {
 }
 
 const TwoColumnBlockPreview: React.FC<TwoColumnBlockPreviewProps> = ({ content }) => {
-  const leftWidth = content.leftColumn?.width || "50%";
-  const rightWidth = content.rightColumn?.width || "50%";
-  const gap = content.columnGap || "20px";
+  const leftWidth = content.leftColumn?.width || '50%';
+  const rightWidth = content.rightColumn?.width || '50%';
+  const gap = content.columnGap || '20px';
 
   return (
     <div style={content.style} className="w-full">

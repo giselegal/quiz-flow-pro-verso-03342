@@ -15,7 +15,7 @@ rcce → React Class Component Export
 */
 
 // Exemplo usando "rafce":
-import React from "react";
+import React from 'react';
 
 const ComponenteExemplo = () => {
   return (
@@ -112,13 +112,13 @@ cte → console.timeEnd()
 
 const exemploConsole = () => {
   // clg + Tab
-  console.log("Hello World");
+  console.log('Hello World');
 
   // clo + Tab
-  console.log("count", count);
+  console.log('count', count);
 
   // ctr + Tab
-  console.trace("trace");
+  console.trace('trace');
 };
 
 // ===== FUNCTION SNIPPETS =====
@@ -133,17 +133,17 @@ iife → (() => {})()
 
 // anfn + Tab
 const minhaFuncao = () => {
-  console.log("Função arrow");
+  console.log('Função arrow');
 };
 
 // nfn + Tab
 const minhaFuncao2 = function () {
-  console.log("Função normal");
+  console.log('Função normal');
 };
 
 // fn + Tab
 function minhaFuncao3() {
-  console.log("Function declaration");
+  console.log('Function declaration');
 }
 
 // ===== DESTRUCTURING SNIPPETS =====
@@ -157,7 +157,7 @@ si → setInterval(() => {}, intervalInms)
 */
 
 const exemploDestructuring = () => {
-  const user = { name: "João", age: 30 };
+  const user = { name: 'João', age: 30 };
   const numbers = [1, 2, 3, 4, 5];
 
   // dob + Tab
@@ -168,12 +168,12 @@ const exemploDestructuring = () => {
 
   // sti + Tab
   setTimeout(() => {
-    console.log("Timeout executado");
+    console.log('Timeout executado');
   }, 1000);
 
   // si + Tab
   setInterval(() => {
-    console.log("Interval executado");
+    console.log('Interval executado');
   }, 1000);
 };
 
@@ -219,10 +219,10 @@ const useCounter = (initialValue = 0) => {
 const ThemeContext = React.createContext();
 
 const ThemeProvider = ({ children }) => {
-  const [theme, setTheme] = React.useState("light");
+  const [theme, setTheme] = React.useState('light');
 
   const toggleTheme = React.useCallback(() => {
-    setTheme(prev => (prev === "light" ? "dark" : "light"));
+    setTheme(prev => (prev === 'light' ? 'dark' : 'light'));
   }, []);
 
   return <ThemeContext.Provider value={{ theme, toggleTheme }}>{children}</ThemeContext.Provider>;
@@ -233,11 +233,11 @@ const initialState = { count: 0 };
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case "increment":
+    case 'increment':
       return { count: state.count + 1 };
-    case "decrement":
+    case 'decrement':
       return { count: state.count - 1 };
-    case "reset":
+    case 'reset':
       return initialState;
     default:
       throw new Error();
@@ -250,9 +250,9 @@ const ExemploReducer = () => {
   return (
     <div>
       Count: {state.count}
-      <button onClick={() => dispatch({ type: "increment" })}>+</button>
-      <button onClick={() => dispatch({ type: "decrement" })}>-</button>
-      <button onClick={() => dispatch({ type: "reset" })}>Reset</button>
+      <button onClick={() => dispatch({ type: 'increment' })}>+</button>
+      <button onClick={() => dispatch({ type: 'decrement' })}>-</button>
+      <button onClick={() => dispatch({ type: 'reset' })}>Reset</button>
     </div>
   );
 };
@@ -264,7 +264,7 @@ const CustomInput = React.forwardRef((props, ref) => {
 
 // 14. memo Example
 const MemoizedComponent = React.memo(({ title, count }) => {
-  console.log("MemoizedComponent renderizado");
+  console.log('MemoizedComponent renderizado');
   return (
     <div>
       <h3>{title}</h3>
@@ -285,7 +285,7 @@ class ErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    console.error("Error caught:", error, errorInfo);
+    console.error('Error caught:', error, errorInfo);
   }
 
   render() {

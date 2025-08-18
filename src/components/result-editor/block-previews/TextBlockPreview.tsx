@@ -1,5 +1,3 @@
-import React from "react";
-
 interface TextBlockPreviewProps {
   content: {
     text?: string;
@@ -11,10 +9,10 @@ const TextBlockPreview: React.FC<TextBlockPreviewProps> = ({ content }) => {
   const { text, style = {} } = content;
 
   const textStyle = {
-    fontSize: style.fontSize || "1rem",
-    lineHeight: style.lineHeight || "1.6",
-    color: style.color || "#3A3A3A",
-    textAlign: style.textAlign || "left",
+    fontSize: style.fontSize || '1rem',
+    lineHeight: style.lineHeight || '1.6',
+    color: style.color || '#3A3A3A',
+    textAlign: style.textAlign || 'left',
     ...style,
   };
 

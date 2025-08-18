@@ -1,26 +1,26 @@
 #!/usr/bin/env node
 
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-console.log("🔧 CORREÇÃO DEFINITIVA DOS TEMPLATES - ANÁLISE ESPECÍFICA\n");
+console.log('🔧 CORREÇÃO DEFINITIVA DOS TEMPLATES - ANÁLISE ESPECÍFICA\n');
 
-const stepsDir = path.join(__dirname, "src/components/steps");
+const stepsDir = path.join(__dirname, 'src/components/steps');
 
 // 🎯 ARQUIVOS QUE AINDA PRECISAM DE CORREÇÃO
 const filesToCheck = [
-  "Step01Template.tsx",
-  "Step02Template.tsx",
-  "Step03Template.tsx",
-  "Step04Template.tsx",
-  "Step05Template.tsx",
-  "Step06Template.tsx",
-  "Step07Template.tsx",
-  "Step19Template.tsx",
+  'Step01Template.tsx',
+  'Step02Template.tsx',
+  'Step03Template.tsx',
+  'Step04Template.tsx',
+  'Step05Template.tsx',
+  'Step06Template.tsx',
+  'Step07Template.tsx',
+  'Step19Template.tsx',
 ];
 
 let totalFixed = 0;
@@ -31,11 +31,11 @@ for (const fileName of filesToCheck) {
 
   try {
     console.log(`🔍 Analisando ${fileName}...`);
-    let content = fs.readFileSync(filePath, "utf8");
+    let content = fs.readFileSync(filePath, 'utf8');
     let hasChanges = false;
 
     // 1. VERIFICAR SE PRECISA ADICIONAR stepNumber (apenas se tiver type: "quiz-header")
-    if (content.includes('type: "quiz-header"') && !content.includes("stepNumber:")) {
+    if (content.includes('type: "quiz-header"') && !content.includes('stepNumber:')) {
       console.log(`   🔧 Adicionando stepNumber para etapa ${stepNumber}`);
 
       // Encontrar o bloco quiz-header e adicionar stepNumber
@@ -72,7 +72,7 @@ for (const fileName of filesToCheck) {
 
     // 3. SALVAR SE HOUVE MUDANÇAS
     if (hasChanges) {
-      fs.writeFileSync(filePath, content, "utf8");
+      fs.writeFileSync(filePath, content, 'utf8');
       console.log(`   ✅ ${fileName} corrigido com sucesso!`);
       totalFixed++;
     } else {
@@ -82,14 +82,14 @@ for (const fileName of filesToCheck) {
     console.log(`   ❌ Erro ao processar ${fileName}: ${error.message}`);
   }
 
-  console.log("");
+  console.log('');
 }
 
-console.log("=".repeat(60));
+console.log('='.repeat(60));
 console.log(`📊 TOTAL DE ARQUIVOS CORRIGIDOS: ${totalFixed}`);
 
 if (totalFixed > 0) {
-  console.log("\n🎯 EXECUTANDO VERIFICAÇÃO FINAL...\n");
+  console.log('\n🎯 EXECUTANDO VERIFICAÇÃO FINAL...\n');
 
   // Executar verificação final
   const finalReport = `
@@ -136,9 +136,9 @@ if (validSteps === 21) {
 }
 `;
 
-  console.log("🎯 RESULTADO ESPERADO: Todos os 21 templates com dados e imagens corretas!");
+  console.log('🎯 RESULTADO ESPERADO: Todos os 21 templates com dados e imagens corretas!');
 } else {
-  console.log("\n✅ Todos os templates já estavam corretos!");
+  console.log('\n✅ Todos os templates já estavam corretos!');
 }
 
-console.log("\n🚀 EXECUTE: node final-report-21-templates.js para verificação completa");
+console.log('\n🚀 EXECUTE: node final-report-21-templates.js para verificação completa');

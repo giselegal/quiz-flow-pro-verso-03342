@@ -78,49 +78,49 @@
 
     <script>
       // Atualizar timestamp
-      document.getElementById("timestamp").textContent = new Date().toLocaleString();
-      document.getElementById("current-url").textContent = window.location.href;
+      document.getElementById('timestamp').textContent = new Date().toLocaleString();
+      document.getElementById('current-url').textContent = window.location.href;
 
-      function addResult(title, content, type = "info") {
-        const div = document.createElement("div");
+      function addResult(title, content, type = 'info') {
+        const div = document.createElement('div');
         div.className = `status ${type}`;
         div.innerHTML = `
                 <h3>${title}</h3>
                 <pre>${content}</pre>
             `;
-        document.getElementById("results").appendChild(div);
+        document.getElementById('results').appendChild(div);
       }
 
       function testEditorFixed() {
-        addResult("🧪 Testando /editor-fixed", "Redirecionando para /editor-fixed...", "info");
-        window.open("/editor-fixed", "_blank");
+        addResult('🧪 Testando /editor-fixed', 'Redirecionando para /editor-fixed...', 'info');
+        window.open('/editor-fixed', '_blank');
       }
 
       function testDebugEditor() {
-        addResult("🐞 Testando /debug-editor", "Redirecionando para /debug-editor...", "info");
-        window.open("/debug-editor", "_blank");
+        addResult('🐞 Testando /debug-editor', 'Redirecionando para /debug-editor...', 'info');
+        window.open('/debug-editor', '_blank');
       }
 
       function checkConsole() {
         addResult(
-          "📝 Instruções Console",
-          "Abra o DevTools (F12) e verifique:\n" +
-            "1. Console para logs do EditorProvider\n" +
-            "2. Network para requests\n" +
-            "3. Components para hierarquia React\n\n" +
-            "Procure por:\n" +
+          '📝 Instruções Console',
+          'Abra o DevTools (F12) e verifique:\n' +
+            '1. Console para logs do EditorProvider\n' +
+            '2. Network para requests\n' +
+            '3. Components para hierarquia React\n\n' +
+            'Procure por:\n' +
             '- "🔥 EditorProvider: INICIANDO PROVIDER!"\n' +
             '- "✅ EditorProvider: 21 stages criadas"\n' +
             '- "🔍 FunnelStagesPanel - Stages: X"\n' +
-            "- Erros em vermelho",
-          "warning"
+            '- Erros em vermelho',
+          'warning'
         );
       }
 
       // Log automático
-      console.log("🔍 Debug Context State carregado");
-      console.log("📍 URL:", window.location.href);
-      console.log("⏰ Timestamp:", new Date().toLocaleString());
+      console.log('🔍 Debug Context State carregado');
+      console.log('📍 URL:', window.location.href);
+      console.log('⏰ Timestamp:', new Date().toLocaleString());
     </script>
   </body>
 </html>

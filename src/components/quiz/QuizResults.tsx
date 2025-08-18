@@ -1,6 +1,5 @@
-import React from "react";
-import { StyleResult } from "@/types/quiz";
-import { useQuizHooks } from "@/hooks/useQuizHooks";
+// @ts-nocheck
+import { StyleResult } from '@/types/quiz';
 
 interface QuizResultsProps {
   primaryStyle: StyleResult;

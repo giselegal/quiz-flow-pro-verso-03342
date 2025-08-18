@@ -1,15 +1,14 @@
 // @ts-nocheck
-import React from "react";
-import { Code } from "lucide-react";
-import type { BlockComponentProps } from "../../../types/blocks";
+import { Code } from 'lucide-react';
+import type { BlockComponentProps } from '@/types/blocks';
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -54,16 +53,16 @@ const ScriptBlock: React.FC<BlockComponentProps> = ({
   isEditing = false,
   onClick,
   onPropertyChange,
-  className = "",
+  className = '',
 }) => {
-  const { code = "// Seu código JavaScript aqui...", placement = "body-end" } =
+  const { code = '// Seu código JavaScript aqui...', placement = 'body-end' } =
     block?.properties || {};
 
   return (
     <div
       className={`
         py-6 bg-gray-800 text-white rounded-lg p-4 font-mono text-sm overflow-auto max-h-48 cursor-pointer transition-all duration-200
-        ${isSelected ? "ring-1 ring-gray-400/40 bg-gray-50/30" : "hover:shadow-sm"}
+        ${isSelected ? 'ring-1 ring-gray-400/40 bg-gray-50/30' : 'hover:shadow-sm'}
         ${className}
       `}
       onClick={onClick}
@@ -72,10 +71,10 @@ const ScriptBlock: React.FC<BlockComponentProps> = ({
     >
       <div className="flex items-center gap-2 mb-2 text-gray-400">
         <Code className="w-4 h-4" />
-        <span>Bloco de Script ({placement || "body-end"})</span>
+        <span>Bloco de Script ({placement || 'body-end'})</span>
       </div>
       <pre className="whitespace-pre-wrap break-all text-gray-200">
-        {code || "// Seu código JavaScript aqui..."}
+        {code || '// Seu código JavaScript aqui...'}
       </pre>
       <p style={{ color: '#8B7355' }}>Este código será injetado na página publicada.</p>
     </div>

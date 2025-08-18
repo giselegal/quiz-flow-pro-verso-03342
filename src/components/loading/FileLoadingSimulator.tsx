@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
-import { Progress } from "@/components/ui/progress";
+import React, { useState, useEffect } from 'react';
+import { Progress } from '@/components/ui/progress';
 
 interface FileLoadingSimulatorProps {
   totalFiles?: number;
   initialLoaded?: number;
   onComplete?: () => void;
   redirectAfterComplete?: string;
-  speed?: "slow" | "medium" | "fast";
+  speed?: 'slow' | 'medium' | 'fast';
 }
 
 export const FileLoadingSimulator: React.FC<FileLoadingSimulatorProps> = ({
@@ -14,28 +14,28 @@ export const FileLoadingSimulator: React.FC<FileLoadingSimulatorProps> = ({
   initialLoaded = 2000,
   onComplete,
   redirectAfterComplete,
-  speed = "medium",
+  speed = 'medium',
 }) => {
   const [filesLoaded, setFilesLoaded] = useState(initialLoaded);
   const [isComplete, setIsComplete] = useState(false);
-  const [randomFileName, setRandomFileName] = useState("");
+  const [randomFileName, setRandomFileName] = useState('');
 
   const fileNames = [
-    "lovable-components.tsx",
-    "editor-schema.json",
-    "visual-styles.css",
-    "template-renderer.ts",
-    "unified-editor.tsx",
-    "quiz-builder.tsx",
-    "result-page-template.json",
-    "sales-page-config.ts",
-    "component-library.js",
-    "theme-provider.tsx",
-    "lovable-renderer.tsx",
-    "studio-connector.ts",
+    'lovable-components.tsx',
+    'editor-schema.json',
+    'visual-styles.css',
+    'template-renderer.ts',
+    'unified-editor.tsx',
+    'quiz-builder.tsx',
+    'result-page-template.json',
+    'sales-page-config.ts',
+    'component-library.js',
+    'theme-provider.tsx',
+    'lovable-renderer.tsx',
+    'studio-connector.ts',
   ];
 
-  const fileExtensions = [".js", ".ts", ".tsx", ".json", ".css", ".html"];
+  const fileExtensions = ['.js', '.ts', '.tsx', '.json', '.css', '.html'];
 
   useEffect(() => {
     if (filesLoaded >= totalFiles) {
@@ -56,9 +56,9 @@ export const FileLoadingSimulator: React.FC<FileLoadingSimulatorProps> = ({
     const interval = setInterval(
       () => {
         const increment =
-          speed === "slow"
+          speed === 'slow'
             ? Math.floor(Math.random() * 3) + 1
-            : speed === "medium"
+            : speed === 'medium'
               ? Math.floor(Math.random() * 10) + 5
               : Math.floor(Math.random() * 50) + 20;
 
@@ -70,10 +70,10 @@ export const FileLoadingSimulator: React.FC<FileLoadingSimulatorProps> = ({
         // Gerar um nome de arquivo aleatório
         const randomBase = fileNames[Math.floor(Math.random() * fileNames.length)];
         const randomExt = fileExtensions[Math.floor(Math.random() * fileExtensions.length)];
-        const fileName = randomBase.replace(/\.\w+$/, "") + randomExt;
+        const fileName = randomBase.replace(/\.\w+$/, '') + randomExt;
         setRandomFileName(fileName);
       },
-      speed === "slow" ? 1000 : speed === "medium" ? 300 : 100
+      speed === 'slow' ? 1000 : speed === 'medium' ? 300 : 100
     );
 
     return () => clearInterval(interval);
@@ -150,7 +150,7 @@ export const FileLoadingSimulator: React.FC<FileLoadingSimulatorProps> = ({
               </div>
               <span>
                 {isComplete
-                  ? "Carregamento concluído! Redirecionando..."
+                  ? 'Carregamento concluído! Redirecionando...'
                   : `Carregando ${randomFileName}`}
               </span>
             </div>
@@ -158,8 +158,8 @@ export const FileLoadingSimulator: React.FC<FileLoadingSimulatorProps> = ({
 
           <div className="text-sm text-center text-[#8F7A6A]">
             {isComplete
-              ? "Carregamento completo! Você será redirecionado para o editor."
-              : "Por favor, aguarde enquanto carregamos os arquivos necessários."}
+              ? 'Carregamento completo! Você será redirecionado para o editor.'
+              : 'Por favor, aguarde enquanto carregamos os arquivos necessários.'}
           </div>
         </div>
       </div>

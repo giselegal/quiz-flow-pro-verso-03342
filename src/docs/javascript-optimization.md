@@ -35,11 +35,11 @@ Dividir o código em chunks menores para carregar sob demanda:
 
 ```tsx
 // Antes - Importação direta
-import { HeavyComponent } from "./HeavyComponent";
+import { HeavyComponent } from './HeavyComponent';
 
 // Depois - Importação dinâmica
-import React, { lazy, Suspense } from "react";
-const HeavyComponent = lazy(() => import("./HeavyComponent"));
+import React, { lazy, Suspense } from 'react';
+const HeavyComponent = lazy(() => import('./HeavyComponent'));
 
 function App() {
   return (
@@ -56,10 +56,10 @@ Importar apenas o necessário de bibliotecas:
 
 ```tsx
 // Ruim - Importa tudo
-import * as Lucide from "lucide-react";
+import * as Lucide from 'lucide-react';
 
 // Bom - Importa apenas componentes específicos
-import { ShoppingCart, Clock } from "lucide-react";
+import { ShoppingCart, Clock } from 'lucide-react';
 ```
 
 ### 4. Lazy Loading de Componentes
@@ -68,8 +68,8 @@ Carregar componentes apenas quando necessário:
 
 ```tsx
 // Em App.tsx
-const QuizPage = lazy(() => import("./pages/QuizPage"));
-const ResultPage = lazy(() => import("./pages/ResultPage"));
+const QuizPage = lazy(() => import('./pages/QuizPage'));
+const ResultPage = lazy(() => import('./pages/ResultPage'));
 ```
 
 ### 5. Diferir Scripts Não Críticos
@@ -92,7 +92,7 @@ npm install --save-dev rollup-plugin-visualizer
 E adicione ao arquivo vite.config.ts:
 
 ```typescript
-import { visualizer } from "rollup-plugin-visualizer";
+import { visualizer } from 'rollup-plugin-visualizer';
 
 export default defineConfig({
   plugins: [
@@ -117,7 +117,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ["react", "react-dom", "react-router-dom"],
+          vendor: ['react', 'react-dom', 'react-router-dom'],
           ui: [
             // Listar componentes da UI que podem ser agrupados
           ],

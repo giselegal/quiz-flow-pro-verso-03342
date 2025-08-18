@@ -1,14 +1,14 @@
-"use client";
+'use client';
 // Facebook Pixel Initializer Component
-import { useEffect } from "react";
-import { loadFacebookPixel } from "@/utils/facebookPixel";
-import { trackPageView } from "@/utils/analytics";
+import { useEffect } from 'react';
+import { loadFacebookPixel } from '@/utils/facebookPixel';
+import { trackPageView } from '@/utils/analytics';
 
 interface PixelInitializerProps {
-  pageType?: "quiz" | "result" | "offer" | "other";
+  pageType?: 'quiz' | 'result' | 'offer' | 'other';
 }
 
-const PixelInitializer = ({ pageType = "other" }: PixelInitializerProps) => {
+const PixelInitializer = ({ pageType = 'other' }: PixelInitializerProps) => {
   useEffect(() => {
     // Inicializa o Facebook Pixel com o ID correto do funil atual
     loadFacebookPixel();
@@ -17,7 +17,7 @@ const PixelInitializer = ({ pageType = "other" }: PixelInitializerProps) => {
     trackPageView(window.location.pathname, {
       page_type: pageType,
       page_url: window.location.href,
-      referrer: document.referrer || "direct",
+      referrer: document.referrer || 'direct',
     });
     console.log(`[PixelInitializer] Pixel inicializado na página: ${pageType}`);
     return () => {

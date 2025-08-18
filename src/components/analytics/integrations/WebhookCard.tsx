@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   Card,
   CardContent,
@@ -6,13 +6,13 @@ import {
   CardHeader,
   CardTitle,
   CardFooter,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
-import { Badge } from "@/components/ui/badge";
-import { toast } from "@/components/ui/use-toast";
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
+import { Badge } from '@/components/ui/badge';
+import { toast } from '@/components/ui/use-toast';
 
 interface WebhookCardProps {
   initialUrl?: string;
@@ -20,7 +20,7 @@ interface WebhookCardProps {
 }
 
 export const WebhookCard: React.FC<WebhookCardProps> = ({
-  initialUrl = "",
+  initialUrl = '',
   initialEnabled = false,
 }) => {
   const [webhookUrl, setWebhookUrl] = useState(initialUrl);
@@ -28,27 +28,27 @@ export const WebhookCard: React.FC<WebhookCardProps> = ({
 
   const handleSaveWebhook = () => {
     try {
-      localStorage.setItem("webhook_url", webhookUrl);
-      localStorage.setItem("webhook_enabled", String(webhookEnabled));
+      localStorage.setItem('webhook_url', webhookUrl);
+      localStorage.setItem('webhook_enabled', String(webhookEnabled));
       toast({
-        title: "Webhook settings saved",
-        description: "Your webhook integration settings have been updated.",
+        title: 'Webhook settings saved',
+        description: 'Your webhook integration settings have been updated.',
       });
     } catch (error) {
       toast({
-        title: "Error saving settings",
-        description: "There was an error saving your settings. Please try again.",
-        variant: "destructive",
+        title: 'Error saving settings',
+        description: 'There was an error saving your settings. Please try again.',
+        variant: 'destructive',
       });
     }
   };
 
   const handleTestConnection = () => {
     toast({
-      title: "Testing Webhook connection",
-      description: "Connection test initiated. Please check the console for results.",
+      title: 'Testing Webhook connection',
+      description: 'Connection test initiated. Please check the console for results.',
     });
-    console.log("Testing connection to Webhook...");
+    console.log('Testing connection to Webhook...');
   };
 
   return (
@@ -59,8 +59,8 @@ export const WebhookCard: React.FC<WebhookCardProps> = ({
             <CardTitle>Custom Webhook</CardTitle>
             <CardDescription>Send analytics events to your own endpoint</CardDescription>
           </div>
-          <Badge variant={webhookEnabled ? "default" : "outline"}>
-            {webhookEnabled ? "Active" : "Inactive"}
+          <Badge variant={webhookEnabled ? 'default' : 'outline'}>
+            {webhookEnabled ? 'Active' : 'Inactive'}
           </Badge>
         </div>
       </CardHeader>

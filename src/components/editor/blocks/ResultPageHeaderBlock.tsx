@@ -1,5 +1,4 @@
-import React from "react";
-import { cn } from "@/lib/utils";
+import { cn } from '@/lib/utils';
 // import { Progress } from '@/components/ui/progress';
 
 interface ResultPageHeaderBlockProps {
@@ -26,11 +25,11 @@ interface ResultPageHeaderBlockProps {
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value: string | number, type: string): string => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -77,28 +76,28 @@ const ResultPageHeaderBlock: React.FC<ResultPageHeaderBlockProps> = ({
   className,
 }) => {
   const {
-    logoUrl = "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-    logoAlt = "Logo Gisele Galvão",
-    logoHeight = "60px",
-    userName = "Seu Nome",
-    primaryStyle = "Elegante",
+    logoUrl = 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+    logoAlt = 'Logo Gisele Galvão',
+    logoHeight = '60px',
+    userName = 'Seu Nome',
+    primaryStyle = 'Elegante',
     showProgress = true,
     progressValue = 100,
-    backgroundColor = "#ffffff",
-    textColor = "#432818",
+    backgroundColor = '#ffffff',
+    textColor = '#432818',
   } = block?.properties || {};
 
   return (
     <div
       className={cn(
-        "w-full border-2 border-transparent transition-all duration-200 rounded-lg",
-        isSelected && "border-[#B89B7A] shadow-lg",
+        'w-full border-2 border-transparent transition-all duration-200 rounded-lg',
+        isSelected && 'border-[#B89B7A] shadow-lg',
         className,
         // Margens universais com controles deslizantes
-        getMarginClass((marginTop as number | string) ?? 0, "top"),
-        getMarginClass((marginBottom as number | string) ?? 0, "bottom"),
-        getMarginClass((marginLeft as number | string) ?? 0, "left"),
-        getMarginClass((marginRight as number | string) ?? 0, "right")
+        getMarginClass((marginTop as number | string) ?? 0, 'top'),
+        getMarginClass((marginBottom as number | string) ?? 0, 'bottom'),
+        getMarginClass((marginLeft as number | string) ?? 0, 'left'),
+        getMarginClass((marginRight as number | string) ?? 0, 'right')
       )}
       onClick={onClick}
       style={{
@@ -135,7 +134,7 @@ const ResultPageHeaderBlock: React.FC<ResultPageHeaderBlockProps> = ({
           <div className="text-right">
             <p style={{ color: '#6B4F43' }}>Olá,</p>
             <p className="text-lg font-semibold" style={{ color: textColor }}>
-              {userName || "Usuário"}
+              {userName || 'Usuário'}
             </p>
           </div>
           <div className="text-right">

@@ -1,8 +1,7 @@
-import React from "react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Block } from "@/types/editor";
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Block } from '@/types/editor';
 
 interface GuaranteeBlockEditorProps {
   block: Block;
@@ -18,7 +17,7 @@ const GuaranteeBlockEditor: React.FC<GuaranteeBlockEditorProps> = ({ block, onUp
         <Label htmlFor="title">Título</Label>
         <Input
           id="title"
-          value={content.title || ""}
+          value={content.title || ''}
           onChange={e => onUpdate({ title: e.target.value })}
           placeholder="Garantia de 7 dias"
         />
@@ -29,7 +28,7 @@ const GuaranteeBlockEditor: React.FC<GuaranteeBlockEditorProps> = ({ block, onUp
         <Textarea
           id="text"
           rows={3}
-          value={content.text || ""}
+          value={content.text || ''}
           onChange={e => onUpdate({ text: e.target.value })}
           placeholder="Se você não ficar 100% satisfeita com o conteúdo nos primeiros 7 dias, devolvemos seu dinheiro integralmente, sem burocracia."
         />
@@ -39,7 +38,7 @@ const GuaranteeBlockEditor: React.FC<GuaranteeBlockEditorProps> = ({ block, onUp
         <Label htmlFor="image">URL da Imagem</Label>
         <Input
           id="image"
-          value={content.image || ""}
+          value={content.image || ''}
           onChange={e => onUpdate({ image: e.target.value })}
           placeholder="https://exemplo.com/garantia.jpg"
         />

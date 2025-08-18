@@ -1,9 +1,8 @@
-import React, { useState, useCallback } from "react";
-import { DragEndEvent } from "@dnd-kit/core";
-import { DndContext, closestCenter } from "@dnd-kit/core";
-import { SortableContext, verticalListSortingStrategy, arrayMove } from "@dnd-kit/sortable";
-import { SortableItem } from "./SortableItem";
-import ComponentRenderer from "./ComponentRenderer";
+import { DragEndEvent } from '@dnd-kit/core';
+import { DndContext, closestCenter } from '@dnd-kit/core';
+import { SortableContext, verticalListSortingStrategy, arrayMove } from '@dnd-kit/sortable';
+import { SortableItem } from './SortableItem';
+import ComponentRenderer from './ComponentRenderer';
 
 interface Component {
   id: string;
@@ -24,40 +23,6 @@ export default function EditorCanvas({
   onChange,
   selectedComponent,
 }: EditorCanvasProps) {
-  const getDefaultProps = (type: string): Record<string, any> => {
-    switch (type) {
-      case "heading":
-        return { text: "Novo Título", level: 1, style: {} };
-      case "paragraph":
-        return {
-          text: "Novo parágrafo de texto. Clique para editar.",
-          style: {},
-        };
-      case "button":
-        return {
-          text: "Clique aqui",
-          variant: "primary",
-          href: "#",
-          style: {},
-        };
-      case "image":
-        return {
-          src: "https://via.placeholder.com/400x200",
-          alt: "Imagem",
-          style: {},
-        };
-      case "divider":
-        return { style: {} };
-      case "container":
-        return {
-          children: [],
-          style: { padding: "20px", backgroundColor: "#f9f9f9" },
-        };
-      default:
-        return { style: {} };
-    }
-  };
-
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     if (over && active.id !== over.id) {

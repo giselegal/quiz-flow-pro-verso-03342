@@ -1,7 +1,6 @@
 // @ts-nocheck
-import React from "react";
-import { EditableContent } from "@/types/editor";
-import { cn } from "@/lib/utils";
+import { cn } from '@/lib/utils';
+import { EditableContent } from '@/types/editor';
 
 interface QuizQuestionBlockProps {
   content?: EditableContent;
@@ -12,13 +11,13 @@ interface QuizQuestionBlockProps {
   className?: string;
 }
 
-export // Função para converter valores de margem em classes Tailwind (Sistema Universal)
+// Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -73,31 +72,31 @@ const QuizQuestionBlock: React.FC<QuizQuestionBlockProps> = ({
 
   // Safely handle style object
   const style = content.style || {};
-  const styleProps = typeof style === "object" ? style : {};
+  const styleProps = typeof style === 'object' ? style : {};
 
   const containerStyle = {
-    backgroundColor: styleProps.backgroundColor || content.backgroundColor || "#ffffff",
-    padding: styleProps.padding || content.padding || "1rem",
-    margin: styleProps.margin || content.margin || "0",
-    borderRadius: styleProps.borderRadius || content.borderRadius || "8px",
-    border: isSelected ? "2px solid #3b82f6" : "1px solid #e5e7eb",
+    backgroundColor: styleProps.backgroundColor || content.backgroundColor || '#ffffff',
+    padding: styleProps.padding || content.padding || '1rem',
+    margin: styleProps.margin || content.margin || '0',
+    borderRadius: styleProps.borderRadius || content.borderRadius || '8px',
+    border: isSelected ? '2px solid #3b82f6' : '1px solid #e5e7eb',
   };
 
   const options = content.options || [
-    { id: "1", text: "Opção 1" },
-    { id: "2", text: "Opção 2" },
+    { id: '1', text: 'Opção 1' },
+    { id: '2', text: 'Opção 2' },
   ];
 
   return (
     <div
       className={cn(
-        "quiz-question-block cursor-pointer transition-all",
+        'quiz-question-block cursor-pointer transition-all',
         className,
         // Margens universais com controles deslizantes
-        getMarginClass(marginTop, "top"),
-        getMarginClass(marginBottom, "bottom"),
-        getMarginClass(marginLeft, "left"),
-        getMarginClass(marginRight, "right")
+        getMarginClass(marginTop, 'top'),
+        getMarginClass(marginBottom, 'bottom'),
+        getMarginClass(marginLeft, 'left'),
+        getMarginClass(marginRight, 'right')
       )}
       style={containerStyle}
       onClick={handleClick}
@@ -109,10 +108,7 @@ const QuizQuestionBlock: React.FC<QuizQuestionBlockProps> = ({
 
         <div className="space-y-2">
           {options.map((option: any) => (
-            <div
-              key={option.id}
-              style={{ backgroundColor: '#E5DDD5' }}
-            >
+            <div key={option.id} style={{ backgroundColor: '#E5DDD5' }}>
               <span style={{ color: '#432818' }}>{option.text}</span>
             </div>
           ))}

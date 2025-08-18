@@ -1,7 +1,6 @@
 // @ts-nocheck
-import React from "react";
-import { cn } from "@/lib/utils";
-import { ShoppingCart } from "lucide-react";
+import { cn } from '@/lib/utils';
+import { ShoppingCart } from 'lucide-react';
 
 interface ProductCarouselBlockProps {
   title?: string;
@@ -11,11 +10,11 @@ interface ProductCarouselBlockProps {
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -55,24 +54,24 @@ const getMarginClass = (value, type) => {
 };
 
 const ProductCarouselBlock: React.FC<ProductCarouselBlockProps> = ({
-  title = "Vista-se de Você — na Prática",
+  title = 'Vista-se de Você — na Prática',
   showDescription = true,
   className,
 }) => {
   const handleCTAClick = () => {
-    window.location.href = "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912";
+    window.location.href = 'https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912';
   };
 
   return (
     <div
       className={cn(
-        "text-center mt-10",
+        'text-center mt-10',
         className,
         // Margens universais com controles deslizantes
-        getMarginClass(marginTop, "top"),
-        getMarginClass(marginBottom, "bottom"),
-        getMarginClass(marginLeft, "left"),
-        getMarginClass(marginRight, "right")
+        getMarginClass(marginTop, 'top'),
+        getMarginClass(marginBottom, 'bottom'),
+        getMarginClass(marginLeft, 'left'),
+        getMarginClass(marginRight, 'right')
       )}
     >
       <h2 className="text-2xl md:text-3xl font-playfair text-[#aa6b5d] mb-4">{title}</h2>
@@ -89,9 +88,9 @@ const ProductCarouselBlock: React.FC<ProductCarouselBlockProps> = ({
         onClick={handleCTAClick}
         className="text-white py-5 px-8 rounded-md shadow-md transition-all duration-300 transform hover:scale-105"
         style={{
-          background: "linear-gradient(to right, #4CAF50, #45a049)",
-          boxShadow: "0 4px 14px rgba(76, 175, 80, 0.4)",
-          fontSize: "1rem",
+          background: 'linear-gradient(to right, #4CAF50, #45a049)',
+          boxShadow: '0 4px 14px rgba(76, 175, 80, 0.4)',
+          fontSize: '1rem',
         }}
       >
         <span className="flex items-center justify-center gap-2">

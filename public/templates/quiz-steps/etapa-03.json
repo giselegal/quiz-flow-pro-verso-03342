@@ -1,0 +1,95 @@
+{
+  "id": "etapa-03-transicao-personalidade",
+  "name": "Etapa 3: Transição para Personalidade",
+  "description": "Transição entre seção de estilo e personalidade com feedback positivo",
+  "version": "1.0.0",
+  "type": "quiz-transition",
+  "metadata": {
+    "author": "Quiz Quest",
+    "createdAt": "2024-01-20",
+    "category": "transition",
+    "stepNumber": 3,
+    "totalSteps": 21,
+    "estimatedTime": "30 segundos"
+  },
+  "blocks": [
+    {
+      "id": "header-transicao",
+      "type": "QuizHeaderBlock",
+      "properties": {
+        "title": "Ótimo Progresso!",
+        "subtitle": "Agora vamos conhecer sua personalidade",
+        "description": "Com base nas suas escolhas de estilo, vamos descobrir como sua personalidade se reflete nas suas preferências.",
+        "showProgress": true
+      },
+      "config": {
+        "currentStep": 3,
+        "totalSteps": 21,
+        "quizType": "personality"
+      }
+    },
+    {
+      "id": "transition-message",
+      "type": "QuizTransition",
+      "properties": {
+        "message": "Perfeito! Já identificamos muito sobre seu estilo. Agora vamos entender melhor sua personalidade para criar recomendações ainda mais precisas.",
+        "variant": "success",
+        "showDivider": true,
+        "showButton": false
+      },
+      "config": {
+        "fromSection": "clothing",
+        "toSection": "personality"
+      }
+    },
+    {
+      "id": "navigation-transicao",
+      "type": "QuizNavigationIntegration",
+      "properties": {
+        "showPrevious": true,
+        "showNext": true,
+        "nextButtonText": "Vamos começar"
+      },
+      "config": {
+        "isLastQuestion": false,
+        "isStrategic": false
+      }
+    }
+  ],
+  "settings": {
+    "analytics": {
+      "trackingEnabled": true,
+      "events": ["transition_viewed", "section_completed", "next_section_started"]
+    },
+    "validation": {
+      "requireMinSelections": false,
+      "showValidationErrors": false
+    },
+    "navigation": {
+      "allowSkip": true,
+      "showProgress": true,
+      "autoAdvance": false
+    },
+    "styling": {
+      "theme": "transition",
+      "colorScheme": {
+        "primary": "#B89B7A",
+        "secondary": "#432818",
+        "accent": "#F3E8E6",
+        "text": "#5A453A"
+      }
+    }
+  },
+  "integration": {
+    "nextStep": "etapa-04-personalidade-comportamento",
+    "dataCollection": {
+      "storeSelections": false,
+      "updateUserProfile": true,
+      "fieldMapping": {}
+    },
+    "conditionalLogic": {
+      "rules": [],
+      "defaultNextStep": "etapa-04-personalidade-comportamento"
+    }
+  }
+}

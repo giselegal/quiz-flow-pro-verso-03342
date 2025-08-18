@@ -6,10 +6,10 @@
  */
 
 // Blocos de Quiz (Etapas 1-19) - IMPLEMENTADOS ✅
-export * from "./quiz";
+export * from './quiz';
 
 // Blocos de Resultado (Etapa 20) - IMPLEMENTADOS ✅
-export * from "./result";
+export * from './result';
 
 // Blocos de Oferta (Etapa 21) - IMPLEMENTADOS ✅
-export * from "./offer";
+export * from './offer';

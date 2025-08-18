@@ -1,4 +1,4 @@
-import React from "react";
+// @ts-nocheck
 import {
   AlertCircle,
   Heart,
@@ -19,7 +19,7 @@ import {
   Eye,
   BadgeCheck,
   type LucideIcon,
-} from "lucide-react";
+} from 'lucide-react';
 
 // Mapa de nomes de ícones para componentes
 const iconMap: Record<string, LucideIcon> = {

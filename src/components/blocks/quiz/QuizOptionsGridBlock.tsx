@@ -1,7 +1,7 @@
 // @ts-nocheck
-import QuizQuestion from "@/components/funnel-blocks/QuizQuestion";
-import React, { useState } from "react";
-import { QuizBlockProps } from "./types";
+import QuizQuestion from '@/components/funnel-blocks/QuizQuestion';
+import React, { useState } from 'react';
+import { QuizBlockProps } from './types';
 
 /**
  * QuizOptionsGridBlock - Componente de grid de opções para quiz
@@ -29,23 +29,23 @@ export interface QuizOptionsGridBlockProps extends QuizBlockProps {
     showCorrectAnswer?: boolean;
     correctOptionIndex?: number;
     useLetterOptions?: boolean;
-    optionsLayout?: "vertical" | "horizontal" | "grid";
+    optionsLayout?: 'vertical' | 'horizontal' | 'grid';
     optionsPerRow?: number;
     showOptionImages?: boolean;
-    optionImageSize?: "small" | "medium" | "large";
-    alignment?: "left" | "center" | "right";
-    optionStyle?: "card" | "button" | "radio" | "checkbox";
+    optionImageSize?: 'small' | 'medium' | 'large';
+    alignment?: 'left' | 'center' | 'right';
+    optionStyle?: 'card' | 'button' | 'radio' | 'checkbox';
     nextButtonText?: string;
     minSelections?: number;
     maxSelections?: number;
     // === NOVAS PROPRIEDADES ===
     // Layout e Orientação
     columns?: number | string;
-    layoutOrientation?: "vertical" | "horizontal";
-    contentType?: "text-only" | "image-only" | "text-and-image";
+    layoutOrientation?: 'vertical' | 'horizontal';
+    contentType?: 'text-only' | 'image-only' | 'text-and-image';
     // Imagens
     showImages?: boolean;
-    imagePosition?: "top" | "left" | "right" | "background";
+    imagePosition?: 'top' | 'left' | 'right' | 'background';
     imageSize?: number;
     imageWidth?: number;
     imageHeight?: number;
@@ -68,20 +68,20 @@ export interface QuizOptionsGridBlockProps extends QuizBlockProps {
     hoverColor?: string;
     // Validação e Seleção
     multipleSelection?: boolean;
-    selectionStyle?: "border" | "background" | "shadow" | "scale";
+    selectionStyle?: 'border' | 'background' | 'shadow' | 'scale';
     gridGap?: number;
     responsiveColumns?: boolean;
   };
-  deviceView?: "mobile" | "tablet" | "desktop";
+  deviceView?: 'mobile' | 'tablet' | 'desktop';
 }
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -129,7 +129,7 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
   const [selectedOptions, setSelectedOptions] = useState<any[]>([]);
 
   // 🔍 DEBUG DETALHADO - LOG DE TODAS AS PROPRIEDADES
-  console.log("🔍 QuizOptionsGridBlock DEBUG COMPLETO:", {
+  console.log('🔍 QuizOptionsGridBlock DEBUG COMPLETO:', {
     id,
     properties,
     optionsFromProperties: properties?.options,
@@ -139,38 +139,38 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
 
   // Extrair as opções - pode ser array de objetos ou string
   const parseOptions = (options: any) => {
-    console.log("QuizOptionsGridBlock - parseOptions input:", options);
+    console.log('QuizOptionsGridBlock - parseOptions input:', options);
 
     // Se já é um array de objetos, retornar diretamente
-    if (Array.isArray(options) && options.length > 0 && typeof options[0] === "object") {
-      console.log("QuizOptionsGridBlock - returning object array:", options);
+    if (Array.isArray(options) && options.length > 0 && typeof options[0] === 'object') {
+      console.log('QuizOptionsGridBlock - returning object array:', options);
       return options;
     }
 
     // Se é uma string, parsear linha por linha
-    if (typeof options === "string") {
+    if (typeof options === 'string') {
       const parsed = options
-        .split("\n")
-        .filter(line => line.trim() !== "")
+        .split('\n')
+        .filter(line => line.trim() !== '')
         .map((line, index) => ({
           id: `option-${index}`,
           text: line.trim(),
           value: `option-${index}`,
-          imageUrl: "",
+          imageUrl: '',
         }));
-      console.log("QuizOptionsGridBlock - returning parsed string:", parsed);
+      console.log('QuizOptionsGridBlock - returning parsed string:', parsed);
       return parsed;
     }
 
     // Fallback: retornar array vazio
-    console.log("QuizOptionsGridBlock - returning empty array");
+    console.log('QuizOptionsGridBlock - returning empty array');
     return [];
   };
 
   const options = parseOptions(properties?.options || []);
 
   // LOG DE DEBUG - vamos ver o que está acontecendo
-  console.log("🔍 QuizOptionsGridBlock DEBUG:", {
+  console.log('🔍 QuizOptionsGridBlock DEBUG:', {
     id,
     propertiesOptions: properties?.options,
     optionsLength: options?.length,
@@ -201,22 +201,47 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
   const handleAnswer = (selectedOptions: any[]) => {
     setSelectedOptions(selectedOptions);
 
+    // Determinar se a seleção está válida
+    const isValid = selectedOptions.length >= minSelections;
+    const currentCount = selectedOptions.length;
+
+    // ✅ NOVO: Disparar evento customizado para validação de botão
+    window.dispatchEvent(
+      new CustomEvent('quiz-selection-change', {
+        detail: {
+          gridId: id,
+          selectedCount: currentCount,
+          minRequired: minSelections,
+          maxAllowed: maxSelections,
+          isValid: isValid,
+          selectedOptions: selectedOptions.map(opt => opt.id),
+        },
+      })
+    );
+
+    console.log('🔘 [QuizOptionsGridBlock] Evento de seleção disparado:', {
+      gridId: id,
+      selectedCount: currentCount,
+      minRequired: minSelections,
+      isValid: isValid,
+    });
+
     // Notificar o editor que uma seleção foi feita
     if (onPropertyChange) {
       onPropertyChange(
-        "selectedOptions",
+        'selectedOptions',
         selectedOptions.map(opt => opt.id)
       );
-      onPropertyChange("hasCompleteSelection", selectedOptions.length >= minSelections);
+      onPropertyChange('hasCompleteSelection', isValid);
     }
   };
 
   const handleNext = () => {
     // Notificar o editor que o usuário quer avançar
     if (onPropertyChange) {
-      onPropertyChange("complete", true);
+      onPropertyChange('complete', true);
       onPropertyChange(
-        "selectedOptions",
+        'selectedOptions',
         selectedOptions.map(opt => opt.id)
       );
     }
@@ -226,34 +251,34 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
   const {
     // Layout e Orientação
     columns = 2,
-    layoutOrientation = "vertical",
-    contentType = "text-and-image",
+    layoutOrientation = 'vertical',
+    contentType = 'text-and-image',
     // Imagens
     showImages = true,
-    imagePosition = "top",
+    imagePosition = 'top',
     imageSize = 256,
     imageWidth,
     imageHeight,
     // Bordas e Estilo Visual
     showBorders = true,
     borderWidth = 2,
-    borderColor = "#E5E7EB",
-    selectedBorderColor = "#B89B7A",
+    borderColor = '#E5E7EB',
+    selectedBorderColor = '#B89B7A',
     borderRadius = 8,
     // Sombras
     showShadows = true,
-    shadowColor = "#00000020",
-    selectedShadowColor = "#B89B7A40",
+    shadowColor = '#00000020',
+    selectedShadowColor = '#B89B7A40',
     shadowIntensity = 3,
     // Escala
     scale = 100,
     // Cores
-    primaryColor = "#B89B7A",
-    selectedColor = "#B89B7A",
-    hoverColor = "#D4C2A8",
+    primaryColor = '#B89B7A',
+    selectedColor = '#B89B7A',
+    hoverColor = '#D4C2A8',
     // Seleção
     multipleSelection = true,
-    selectionStyle = "border",
+    selectionStyle = 'border',
     gridGap = 8,
     responsiveColumns = true,
   } = properties || {};
@@ -263,22 +288,22 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
   const finalImageHeight = imageHeight || imageSize;
 
   // Classes de layout baseadas na orientação
-  const layoutClass = layoutOrientation === "horizontal" ? "grid" : "flex flex-col";
+  const layoutClass = layoutOrientation === 'horizontal' ? 'grid' : 'flex flex-col';
   const gridColumnsClass =
-    typeof columns === "string" ? `grid-cols-${columns}` : `grid-cols-${columns}`;
+    typeof columns === 'string' ? `grid-cols-${columns}` : `grid-cols-${columns}`;
 
   // Estilos dinâmicos para bordas e sombras
   const optionStyles = {
-    borderWidth: showBorders ? `${borderWidth}px` : "0px",
+    borderWidth: showBorders ? `${borderWidth}px` : '0px',
     borderColor: borderColor,
     borderRadius: `${borderRadius}px`,
     boxShadow: showShadows
       ? `0 ${shadowIntensity}px ${shadowIntensity * 2}px ${shadowColor}`
-      : "none",
+      : 'none',
     // CSS vars para controle dinâmico
-    "--selected-border-color": selectedBorderColor,
-    "--selected-shadow-color": selectedShadowColor,
-    "--hover-color": hoverColor,
+    '--selected-border-color': selectedBorderColor,
+    '--selected-shadow-color': selectedShadowColor,
+    '--hover-color': hoverColor,
   } as React.CSSProperties;
 
   return (
@@ -287,37 +312,37 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
       data-block-id={id}
       style={{
         transform: `scale(${scale / 100})`,
-        transformOrigin: "top center",
-        transition: "transform 0.2s ease-in-out",
+        transformOrigin: 'top center',
+        transition: 'transform 0.2s ease-in-out',
       }}
     >
       <QuizQuestion
-        question={properties?.question || ""}
-        description={properties?.description || ""}
+        question={properties?.question || ''}
+        description={properties?.description || ''}
         options={options.map(option => ({
           ...option,
           // Aplicar configurações visuais
-          imageUrl: contentType === "text-only" ? undefined : option.imageUrl,
-          text: contentType === "image-only" ? "" : option.text,
+          imageUrl: contentType === 'text-only' ? undefined : option.imageUrl,
+          text: contentType === 'image-only' ? '' : option.text,
         }))}
         multipleSelection={multipleSelection}
         minSelections={minSelections}
         maxSelections={maxSelections}
         required={properties?.requireOption !== false}
-        alignment={properties?.alignment || "center"}
-        optionLayout={layoutOrientation === "horizontal" ? "grid" : "vertical"}
-        optionStyle={properties?.optionStyle || "card"}
+        alignment={properties?.alignment || 'center'}
+        optionLayout={layoutOrientation === 'horizontal' ? 'grid' : 'vertical'}
+        optionStyle={properties?.optionStyle || 'card'}
         showLetters={properties?.useLetterOptions === false}
         optionImageSize={
-          finalImageWidth <= 128 ? "small" : finalImageWidth >= 256 ? "large" : "medium"
+          finalImageWidth <= 128 ? 'small' : finalImageWidth >= 256 ? 'large' : 'medium'
         }
         autoAdvance={properties?.autoAdvance === false}
         autoAdvanceDelay={properties?.autoAdvanceDelay || 1000}
         showNextButton={true}
-        nextButtonText={properties?.nextButtonText || "Avançar"}
+        nextButtonText={properties?.nextButtonText || 'Avançar'}
         onAnswer={handleAnswer}
         onNext={handleNext}
-        deviceView={props.deviceView || "desktop"}
+        deviceView={props.deviceView || 'desktop'}
         // Passar propriedades customizadas via props
         customStyles={{
           optionStyles,
@@ -329,7 +354,7 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
           imageHeight: `${finalImageHeight}px`,
           scale: scale,
           layoutOrientation,
-          columnsCount: typeof columns === "number" ? columns : parseInt(columns as string) || 2,
+          columnsCount: typeof columns === 'number' ? columns : parseInt(columns as string) || 2,
           borderWidth,
           borderColor,
           borderRadius,

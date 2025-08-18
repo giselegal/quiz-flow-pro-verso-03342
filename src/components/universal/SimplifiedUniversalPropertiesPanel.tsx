@@ -1,6 +1,8 @@
 // Este é um componente simplificado para resolver problemas de compilação
-
+import { useSyncedScroll } from '@/hooks/useSyncedScroll';
 const UniversalPropertiesPanel = ({ selectedBlock, onUpdate, onDelete, onClose }: any) => {
+  const { scrollRef } = useSyncedScroll({ source: 'properties' });
+
   const handleScaleChange = (value: number) => {
     if (!selectedBlock || !onUpdate) return;
 
@@ -14,7 +16,7 @@ const UniversalPropertiesPanel = ({ selectedBlock, onUpdate, onDelete, onClose }
   };
 
   return (
-    <div>
+    <div ref={scrollRef} className="h-full overflow-y-auto">
       <h2>Propriedades do Componente</h2>
       {selectedBlock && (
         <div>

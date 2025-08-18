@@ -1,20 +1,20 @@
-import React, { useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import React, { useState } from 'react';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 // import { Switch } from '@/components/ui/switch';
-import { Switch } from "@radix-ui/react-switch"; // Update to correct import if using Radix UI
-import { Slider } from "@/components/ui/slider";
+import { Switch } from '@radix-ui/react-switch'; // Update to correct import if using Radix UI
+import { Slider } from '@/components/ui/slider';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Info, Upload } from "lucide-react";
-import { cn } from "@/lib/utils";
+} from '@/components/ui/select';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { Info, Upload } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface PropertyFieldProps {
   property: {
@@ -47,20 +47,20 @@ export const PropertyField: React.FC<PropertyFieldProps> = ({
 
   const renderField = () => {
     switch (property.type) {
-      case "text-input":
+      case 'text-input':
         return (
           <Input
-            value={value || ""}
+            value={value || ''}
             onChange={e => onChange(e.target.value)}
             placeholder={property.placeholder}
             className="w-full"
           />
         );
 
-      case "text-area":
+      case 'text-area':
         return (
           <Textarea
-            value={value || ""}
+            value={value || ''}
             onChange={e => onChange(e.target.value)}
             placeholder={property.placeholder}
             rows={property.rows || 3}
@@ -68,11 +68,11 @@ export const PropertyField: React.FC<PropertyFieldProps> = ({
           />
         );
 
-      case "number-input":
+      case 'number-input':
         return (
           <Input
             type="number"
-            value={value || ""}
+            value={value || ''}
             onChange={e => onChange(Number(e.target.value))}
             min={property.min}
             max={property.max}
@@ -82,7 +82,7 @@ export const PropertyField: React.FC<PropertyFieldProps> = ({
           />
         );
 
-      case "range-slider":
+      case 'range-slider':
         return (
           <div className="space-y-2">
             <Slider
@@ -97,25 +97,25 @@ export const PropertyField: React.FC<PropertyFieldProps> = ({
           </div>
         );
 
-      case "boolean-switch":
+      case 'boolean-switch':
         return (
           <div className="flex items-center justify-between">
             <Switch checked={Boolean(value)} onCheckedChange={onChange} />
-            <span style={{ color: '#6B4F43' }}>{value ? "Ativado" : "Desativado"}</span>
+            <span style={{ color: '#6B4F43' }}>{value ? 'Ativado' : 'Desativado'}</span>
           </div>
         );
 
-      case "color-picker":
+      case 'color-picker':
         return (
           <div className="flex gap-2">
             <Input
               type="color"
-              value={value || "#000000"}
+              value={value || '#000000'}
               onChange={e => onChange(e.target.value)}
               className="w-16 h-10 p-1 rounded border"
             />
             <Input
-              value={value || ""}
+              value={value || ''}
               onChange={e => onChange(e.target.value)}
               placeholder="#000000"
               className="flex-1"
@@ -123,14 +123,14 @@ export const PropertyField: React.FC<PropertyFieldProps> = ({
           </div>
         );
 
-      case "select":
+      case 'select':
         return (
-          <Select value={value || ""} onValueChange={onChange}>
+          <Select value={value || ''} onValueChange={onChange}>
             <SelectTrigger className="w-full">
               <SelectValue placeholder={property.placeholder} />
             </SelectTrigger>
             <SelectContent>
-              {property.options?.map(option => (
+              {property.options?.filter(option => option.value && option.value !== '').map(option => (
                 <SelectItem key={option.value} value={option.value}>
                   {option.label}
                 </SelectItem>
@@ -139,16 +139,16 @@ export const PropertyField: React.FC<PropertyFieldProps> = ({
           </Select>
         );
 
-      case "file-upload":
+      case 'file-upload':
         return (
           <div className="space-y-2">
             <Button
               variant="outline"
               className="w-full h-20 border-dashed"
               onClick={() => {
-                const input = document.createElement("input");
-                input.type = "file";
-                input.accept = property.accept || "image/*";
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = property.accept || 'image/*';
                 input.onchange = e => {
                   const file = (e.target as HTMLInputElement).files?.[0];
                   if (file) {
@@ -176,28 +176,28 @@ export const PropertyField: React.FC<PropertyFieldProps> = ({
           </div>
         );
 
-      case "url":
+      case 'url':
         return (
           <Input
             type="url"
-            value={value || ""}
+            value={value || ''}
             onChange={e => onChange(e.target.value)}
-            placeholder={property.placeholder || "https://"}
+            placeholder={property.placeholder || 'https://'}
             className="w-full"
           />
         );
 
-      case "datetime-local":
+      case 'datetime-local':
         return (
           <Input
             type="datetime-local"
-            value={value || ""}
+            value={value || ''}
             onChange={e => onChange(e.target.value)}
             className="w-full"
           />
         );
 
-      case "array":
+      case 'array':
         const arrayValue = Array.isArray(value) ? value : [];
         return (
           <div className="space-y-2">
@@ -228,7 +228,7 @@ export const PropertyField: React.FC<PropertyFieldProps> = ({
             <Button
               variant="outline"
               size="sm"
-              onClick={() => onChange([...arrayValue, ""])}
+              onClick={() => onChange([...arrayValue, ''])}
               className="w-full"
             >
               + Adicionar Item
@@ -239,7 +239,7 @@ export const PropertyField: React.FC<PropertyFieldProps> = ({
       default:
         return (
           <Input
-            value={value || ""}
+            value={value || ''}
             onChange={e => onChange(e.target.value)}
             placeholder={property.placeholder}
             className="w-full"
@@ -249,7 +249,7 @@ export const PropertyField: React.FC<PropertyFieldProps> = ({
   };
 
   return (
-    <div className={cn("space-y-2", className)}>
+    <div className={cn('space-y-2', className)}>
       <div className="flex items-center justify-between">
         <Label style={{ color: '#6B4F43' }}>
           {property.label}

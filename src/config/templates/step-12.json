@@ -2,14 +2,14 @@
   "templateVersion": "2.0",
   "metadata": {
     "id": "quiz-step-12",
-    "name": "Q11 - QUAL VISUAL VOC MAIS",
-    "description": "Questão 11 de 13",
-    "category": "quiz-question",
-    "type": "question",
+    "name": "Etapa de Transição 1: Preparação para questões estratégicas",
+    "description": "Transição para questões estratégicas",
+    "category": "quiz-transition",
+    "type": "transition",
     "tags": [
       "quiz",
       "style",
-      "quiz-question",
+      "quiz-transition",
       "gisele-galvao"
     ],
     "createdAt": "2025-08-10T03:45:03.515Z",
@@ -74,21 +74,33 @@
       "properties": {
         "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
         "logoAlt": "Logo Gisele Galvão",
-        "logoWidth": 96,
-        "logoHeight": 96,
-        "progressValue": 59,
-        "progressTotal": 100,
+        "logoWidth": 120,
+        "logoHeight": 50,
         "showProgress": true,
+        "progressValue": 12,
+        "progressMax": 21,
         "showBackButton": true,
         "containerWidth": "full",
-        "spacing": "small"
+        "spacing": "small",
+        "showLogo": true,
+        "progressBarColor": "#B89B7A",
+        "progressBarThickness": 6,
+        "backgroundColor": "#FFFFFF",
+        "textColor": "#432818",
+        "paddingTop": 16,
+        "paddingBottom": 16,
+        "paddingLeft": 24,
+        "paddingRight": 24,
+        "marginBottom": 24,
+        "progressTotal": 100,
+        "type": "quiz-intro-header"
       }
     },
     {
-      "id": "step12-question-title",
+      "id": "step12-transition-title",
       "type": "text-inline",
       "properties": {
-        "content": "QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?",
+        "content": "🕐 Enquanto calculamos o seu resultado...",
         "fontSize": "text-2xl",
         "fontWeight": "font-bold",
         "textAlign": "text-center",
@@ -99,14 +111,41 @@
       }
     },
     {
-      "id": "step12-question-counter",
+      "id": "step12-transition-subtitle",
       "type": "text-inline",
       "properties": {
-        "content": "Questão 11 de 13",
-        "fontSize": "text-sm",
+        "content": "Queremos te fazer algumas perguntas que vão tornar sua experiência ainda mais completa.",
+        "fontSize": "text-lg",
+        "textAlign": "text-center",
+        "color": "#6B7280",
+        "marginBottom": 16,
+        "containerWidth": "full",
+        "spacing": "small"
+      }
+    },
+    {
+      "id": "step12-transition-description",
+      "type": "text-inline",
+      "properties": {
+        "content": "A ideia é simples: te ajudar a enxergar com mais clareza onde você está agora — e para onde pode ir com mais intenção, leveza e autenticidade.",
+        "fontSize": "text-base",
         "textAlign": "text-center",
         "color": "#6B7280",
         "marginBottom": 24,
+        "containerWidth": "full",
+        "spacing": "small"
+      }
+    },
+    {
+      "id": "step12-transition-call",
+      "type": "text-inline",
+      "properties": {
+        "content": "💬 Responda com sinceridade. Isso é só entre você e a sua nova versão.",
+        "fontSize": "text-base",
+        "fontWeight": "font-medium",
+        "textAlign": "text-center",
+        "color": "#B89B7A",
+        "marginBottom": 32,
         "containerWidth": "full",
         "spacing": "small"
       }
@@ -117,68 +156,36 @@
       "properties": {
         "options": [
           {
-            "id": "3a",
-            "text": "Visual leve, despojado e natural.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp",
-            "styleCategory": "Natural",
+            "id": "12a",
+            "text": "Me sinto desconectada da mulher que sou hoje",
+            "value": "desconectada",
             "points": 1
           },
           {
-            "id": "3b",
-            "text": "Visual clássico e tradicional.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/3_asaunw.webp",
-            "styleCategory": "Clássico",
+            "id": "12b",
+            "text": "Tenho dúvidas sobre o que realmente me valoriza",
+            "value": "duvidas",
             "points": 2
           },
           {
-            "id": "3c",
-            "text": "Visual casual com toque atual.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/13_uvbciq.webp",
-            "styleCategory": "Contemporâneo",
-            "points": 2
-          },
-          {
-            "id": "3d",
-            "text": "Visual refinado e imponente.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/5_dhrgpf.webp",
-            "styleCategory": "Elegante",
+            "id": "12c",
+            "text": "Às vezes acerto, às vezes erro",
+            "value": "inconsistente",
             "points": 3
           },
           {
-            "id": "3e",
-            "text": "Visual romântico, feminino e delicado.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/6_gnoxfg.webp",
-            "styleCategory": "Romântico",
-            "points": 2
-          },
-          {
-            "id": "3f",
-            "text": "Visual sensual, com saia justa e decote.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735327/7_ynez1z.webp",
-            "styleCategory": "Sexy",
-            "points": 3
-          },
-          {
-            "id": "3g",
-            "text": "Visual marcante e urbano (jeans + jaqueta).",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/8_yqu3hw.webp",
-            "styleCategory": "Dramático",
-            "points": 3
-          },
-          {
-            "id": "3h",
-            "text": "Visual criativo, colorido e ousado.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/9_x6so6a.webp",
-            "styleCategory": "Criativo",
+            "id": "12d",
+            "text": "Me sinto segura, mas sei que posso evoluir",
+            "value": "segura_evolucao",
             "points": 4
           }
         ],
-        "columns": 2,
-        "imageSize": 256,
-        "showImages": true,
-        "multipleSelection": true,
-        "minSelections": 3,
-        "maxSelections": 3,
+        "columns": 1,
+        "imageSize": 0,
+        "showImages": false,
+        "multipleSelection": false,
+        "minSelections": 1,
+        "maxSelections": 1,
         "borderColor": "#E5E7EB",
         "selectedBorderColor": "#B89B7A",
         "hoverColor": "#F3E8D3",
@@ -187,19 +194,10 @@
         "marginBottom": 16,
         "selectionStyle": "glow",
         "animationType": "scale",
-        "validationMessage": "Selecione 3 opções para avançar.",
+        "validationMessage": "Selecione uma opção para avançar.",
         "scoring": {
           "enabled": true,
-          "categories": [
-            "Natural",
-            "Clássico",
-            "Contemporâneo",
-            "Elegante",
-            "Romântico",
-            "Sexy",
-            "Dramático",
-            "Criativo"
-          ]
+          "method": "strategic-points"
         }
       }
     },
@@ -208,7 +206,7 @@
       "type": "button-inline",
       "properties": {
         "text": "Próxima Questão →",
-        "textWhenDisabled": "Selecione 3 opções para avançar",
+        "textWhenDisabled": "Selecione uma opção para avançar",
         "variant": "primary",
         "size": "large",
         "fullWidth": true,
@@ -220,7 +218,7 @@
         "disabled": true,
         "requiresValidInput": true,
         "enableOnSelection": true,
-        "minSelections": 3,
+        "minSelections": 1,
         "animation": "hover:scale-105, active:scale-95",
         "containerWidth": "full",
         "spacing": "small",
@@ -230,9 +228,9 @@
   ],
   "validation": {
     "required": true,
-    "minAnswers": 3,
-    "maxAnswers": 3,
-    "validationMessage": "Selecione 3 opções para avançar."
+    "minAnswers": 1,
+    "maxAnswers": 1,
+    "validationMessage": "Selecione uma opção para avançar."
   },
   "analytics": {
     "trackingId": "step-12-quiz-question",
@@ -254,18 +252,9 @@
     },
     "scoring": {
       "enabled": true,
-      "method": "category-points",
-      "categories": [
-        "Natural",
-        "Clássico",
-        "Contemporâneo",
-        "Elegante",
-        "Romântico",
-        "Sexy",
-        "Dramático",
-        "Criativo"
-      ]
+      "method": "strategic-points"
     },
     "conditions": null
-  }
+  },
+  "updatedAt": "2025-08-17T19:06:10.218Z"
 }

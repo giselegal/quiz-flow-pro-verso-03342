@@ -1,7 +1,6 @@
-import React from "react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { CheckCircle, ShoppingCart } from "lucide-react";
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { CheckCircle, ShoppingCart } from 'lucide-react';
 
 const TransformationBlock: React.FC = () => {
   return (
@@ -51,7 +50,7 @@ const TransformationBlock: React.FC = () => {
                 className="btn-cta-green w-full py-3 text-lg font-medium"
                 onClick={() =>
                   (window.location.href =
-                    "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912")
+                    'https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912')
                 }
               >
                 <ShoppingCart className="mr-2" />

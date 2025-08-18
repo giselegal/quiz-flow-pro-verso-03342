@@ -1,6 +1,5 @@
 // @ts-nocheck
-import React from "react";
-import BeforeAfterTransformation from "@/components/result/BeforeAfterTransformation";
+import BeforeAfterTransformation from '@/components/result/BeforeAfterTransformation';
 
 /**
  * BLOCO EDITÁVEL: Transformação Antes e Depois
@@ -40,11 +39,11 @@ export interface BeforeAfterTransformationBlockProps {
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -84,17 +83,17 @@ const getMarginClass = (value, type) => {
 };
 
 const BeforeAfterTransformationBlock: React.FC<BeforeAfterTransformationBlockProps> = ({
-  blockId = "before-after-transformation",
-  title = "Sua Transformação Começa Agora",
-  beforeTitle = "Antes",
-  afterTitle = "Depois",
-  beforeImage = "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=600&fit=crop",
-  afterImage = "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=400&h=600&fit=crop",
-  description = "Descubra como pequenas mudanças podem criar uma transformação incrível no seu estilo.",
+  blockId = 'before-after-transformation',
+  title = 'Sua Transformação Começa Agora',
+  beforeTitle = 'Antes',
+  afterTitle = 'Depois',
+  beforeImage = 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=600&fit=crop',
+  afterImage = 'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=400&h=600&fit=crop',
+  description = 'Descubra como pequenas mudanças podem criar uma transformação incrível no seu estilo.',
   showCTA = true,
-  ctaText = "Quero me transformar",
-  backgroundColor = "#ffffff",
-  className = "",
+  ctaText = 'Quero me transformar',
+  backgroundColor = '#ffffff',
+  className = '',
 }) => {
   return (
     <div

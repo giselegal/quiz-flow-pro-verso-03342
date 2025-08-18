@@ -43,7 +43,7 @@ const errorFiles = [
   'src/components/editor/blocks/unified/UnifiedFunnelHeroBlock.tsx',
   'src/components/editor/blocks/unified/UnifiedFunnelPainBlock.tsx',
   'src/components/editor/canvas/SortableBlockWrapper_temp.tsx',
-  'src/components/editor/components/ComponentPalette.tsx'
+  'src/components/editor/components/ComponentPalette.tsx',
 ];
 
 let processed = 0;
@@ -56,7 +56,7 @@ errorFiles.forEach(filePath => {
   try {
     if (fs.existsSync(filePath)) {
       const content = fs.readFileSync(filePath, 'utf8');
-      
+
       // Check if @ts-nocheck is already at the beginning
       if (!content.trim().startsWith('// @ts-nocheck')) {
         const newContent = '// @ts-nocheck\n' + content;

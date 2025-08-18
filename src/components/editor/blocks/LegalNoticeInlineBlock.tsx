@@ -1,16 +1,15 @@
-import type { BlockComponentProps } from "@/types/blocks";
-import React from "react";
+import type { BlockComponentProps } from '@/types/blocks';
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (
   value: string | number,
-  type: "top" | "bottom" | "left" | "right"
+  type: 'top' | 'bottom' | 'left' | 'right'
 ): string => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -52,10 +51,9 @@ const getMarginClass = (
 const LegalNoticeInlineBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
-  isEditing = false,
   onClick,
-  onPropertyChange,
-  className = "",
+  onPropertyChange: _onPropertyChange,
+  className = '',
 }) => {
   // Verificação de segurança para evitar erro de undefined
   if (!block) {
@@ -67,22 +65,22 @@ const LegalNoticeInlineBlock: React.FC<BlockComponentProps> = ({
   }
 
   // Debug: Log das propriedades recebidas
-  console.log("🔍 [LegalNoticeInlineBlock] Propriedades:", block.properties);
+  console.log('🔍 [LegalNoticeInlineBlock] Propriedades:', block.properties);
 
   const {
     // Configurações de conteúdo
-    privacyText = "Política de Privacidade",
-    copyrightText = "© 2025 Gisele Galvão Consultoria",
-    termsText = "Termos de Uso",
+    privacyText = 'Política de Privacidade',
+    copyrightText = '© 2025 Gisele Galvão Consultoria',
+    termsText = 'Termos de Uso',
     // Configurações de estilo
-    fontSize = "12",
-    fontFamily = "inherit",
-    fontWeight = "400",
-    textAlign = "center",
-    textColor = "#8F7A6A",
-    linkColor = "#B89B7A",
-    backgroundColor = "transparent",
-    lineHeight = "1.5",
+    fontSize = '12',
+    fontFamily = 'inherit',
+    fontWeight = '400',
+    textAlign = 'center',
+    textColor = '#8F7A6A',
+    linkColor = '#B89B7A',
+    backgroundColor = 'transparent',
+    lineHeight = '1.5',
     // Sistema de margens
     marginTop = 8,
     marginBottom = 8,
@@ -90,17 +88,11 @@ const LegalNoticeInlineBlock: React.FC<BlockComponentProps> = ({
     marginRight = 0,
   } = (block?.properties as any) || {};
 
-  const handlePropertyChange = (key: string, value: any) => {
-    if (onPropertyChange) {
-      onPropertyChange(key, value);
-    }
-  };
-
   // Estilos CSS dinâmicos
   const containerStyles: React.CSSProperties = {
-    backgroundColor: backgroundColor === "transparent" ? "transparent" : backgroundColor,
-    textAlign: textAlign as "left" | "center" | "right",
-    padding: "24px 16px",
+    backgroundColor: backgroundColor === 'transparent' ? 'transparent' : backgroundColor,
+    textAlign: textAlign as 'left' | 'center' | 'right',
+    padding: '24px 16px',
   };
 
   const textStyles: React.CSSProperties = {
@@ -118,28 +110,28 @@ const LegalNoticeInlineBlock: React.FC<BlockComponentProps> = ({
     fontWeight: fontWeight,
     color: linkColor,
     lineHeight: lineHeight,
-    textDecoration: "none",
-    cursor: "pointer",
-    transition: "all 0.2s ease",
+    textDecoration: 'none',
+    cursor: 'pointer',
+    transition: 'all 0.2s ease',
   };
 
   return (
     <div
       className={`
         cursor-pointer transition-all duration-200
-        ${isSelected ? "ring-2 ring-[#B89B7A]/50 bg-gray-50/30" : "hover:shadow-sm"}
+        ${isSelected ? 'ring-2 ring-[#B89B7A]/50 bg-gray-50/30' : 'hover:shadow-sm'}
         ${className}
-        ${getMarginClass(marginTop, "top")}
-        ${getMarginClass(marginBottom, "bottom")}
-        ${getMarginClass(marginLeft, "left")}
-        ${getMarginClass(marginRight, "right")}
+        ${getMarginClass(marginTop, 'top')}
+        ${getMarginClass(marginBottom, 'bottom')}
+        ${getMarginClass(marginLeft, 'left')}
+        ${getMarginClass(marginRight, 'right')}
       `}
       style={containerStyles}
       onClick={onClick}
       data-block-id={block?.id}
       data-block-type={block?.type}
     >
-      <div style={{ maxWidth: "800px", margin: "0 auto" }}>
+      <div style={{ maxWidth: '800px', margin: '0 auto' }}>
         {/* Copyright */}
         <div style={textStyles} className="mb-2">
           {copyrightText}
@@ -148,12 +140,12 @@ const LegalNoticeInlineBlock: React.FC<BlockComponentProps> = ({
         {/* Links legais */}
         <div
           style={{
-            display: "flex",
-            flexWrap: "wrap",
+            display: 'flex',
+            flexWrap: 'wrap',
             justifyContent:
-              textAlign === "left" ? "flex-start" : textAlign === "right" ? "flex-end" : "center",
-            gap: "16px",
-            alignItems: "center",
+              textAlign === 'left' ? 'flex-start' : textAlign === 'right' ? 'flex-end' : 'center',
+            gap: '16px',
+            alignItems: 'center',
           }}
         >
           <a
@@ -162,10 +154,10 @@ const LegalNoticeInlineBlock: React.FC<BlockComponentProps> = ({
             className="hover:underline"
             onClick={e => e.stopPropagation()}
             onMouseEnter={e => {
-              e.currentTarget.style.textDecoration = "underline";
+              e.currentTarget.style.textDecoration = 'underline';
             }}
             onMouseLeave={e => {
-              e.currentTarget.style.textDecoration = "none";
+              e.currentTarget.style.textDecoration = 'none';
             }}
           >
             {privacyText}
@@ -177,10 +169,10 @@ const LegalNoticeInlineBlock: React.FC<BlockComponentProps> = ({
             className="hover:underline"
             onClick={e => e.stopPropagation()}
             onMouseEnter={e => {
-              e.currentTarget.style.textDecoration = "underline";
+              e.currentTarget.style.textDecoration = 'underline';
             }}
             onMouseLeave={e => {
-              e.currentTarget.style.textDecoration = "none";
+              e.currentTarget.style.textDecoration = 'none';
             }}
           >
             {termsText}

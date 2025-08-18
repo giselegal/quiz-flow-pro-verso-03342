@@ -1,10 +1,9 @@
-import React from "react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import { Plus, Trash } from "lucide-react";
-import { Block } from "@/types/editor";
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
+import { Plus, Trash } from 'lucide-react';
+import { Block } from '@/types/editor';
 
 interface ProductsBlockEditorProps {
   block: Block;
@@ -18,7 +17,7 @@ interface ProductImage {
 
 export const ProductsBlockEditor: React.FC<ProductsBlockEditorProps> = ({ block, onUpdate }) => {
   const addImage = () => {
-    const images = [...(block.content.images || []), { url: "", alt: "" }];
+    const images = [...(block.content.images || []), { url: '', alt: '' }];
     onUpdate({ ...block.content, images });
   };
 
@@ -40,7 +39,7 @@ export const ProductsBlockEditor: React.FC<ProductsBlockEditorProps> = ({ block,
         <Label htmlFor={`${block.id}-title`}>Título</Label>
         <Input
           id={`${block.id}-title`}
-          value={block.content.title || ""}
+          value={block.content.title || ''}
           onChange={e => onUpdate({ ...block.content, title: e.target.value })}
           className="mt-1"
         />
@@ -50,7 +49,7 @@ export const ProductsBlockEditor: React.FC<ProductsBlockEditorProps> = ({ block,
         <Label htmlFor={`${block.id}-description`}>Descrição</Label>
         <Textarea
           id={`${block.id}-description`}
-          value={block.content.description || ""}
+          value={block.content.description || ''}
           onChange={e => onUpdate({ ...block.content, description: e.target.value })}
           className="mt-1"
           rows={3}
@@ -76,16 +75,16 @@ export const ProductsBlockEditor: React.FC<ProductsBlockEditorProps> = ({ block,
               <div>
                 <Label>URL da Imagem</Label>
                 <Input
-                  value={image.url || ""}
-                  onChange={e => updateImage(index, "url", e.target.value)}
+                  value={image.url || ''}
+                  onChange={e => updateImage(index, 'url', e.target.value)}
                   placeholder="https://exemplo.com/produto.jpg"
                 />
               </div>
               <div>
                 <Label>Texto Alternativo</Label>
                 <Input
-                  value={image.alt || ""}
-                  onChange={e => updateImage(index, "alt", e.target.value)}
+                  value={image.alt || ''}
+                  onChange={e => updateImage(index, 'alt', e.target.value)}
                   placeholder="Descrição do produto"
                 />
               </div>

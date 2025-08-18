@@ -1,7 +1,6 @@
-import { Button } from "@/components/ui/button";
-import { styleConfig } from "@/data/styleConfig";
-import { XIcon } from "lucide-react";
-import React from "react";
+import { Button } from '@/components/ui/button';
+import { styleConfig } from '@/config/styleConfig';
+import { XIcon } from 'lucide-react';
 
 interface StyleGuideModalProps {
   style: keyof typeof styleConfig;

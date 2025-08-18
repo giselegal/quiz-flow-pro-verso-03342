@@ -1,18 +1,17 @@
 // @ts-nocheck
-import React from "react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { Plus, Trash } from "lucide-react";
-import { BlockEditorProps } from "./types";
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { Plus, Trash } from 'lucide-react';
+import { BlockEditorProps } from './types';
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -55,7 +54,7 @@ const BonusCarouselBlockEditor: React.FC<BlockEditorProps> = ({ block, onUpdate 
   const bonusImages = block.content.bonusImages || [];
 
   const addImage = () => {
-    const newImages = [...bonusImages, { url: "", alt: "", title: "" }];
+    const newImages = [...bonusImages, { url: '', alt: '', title: '' }];
     onUpdate({ bonusImages: newImages });
   };
 
@@ -64,7 +63,7 @@ const BonusCarouselBlockEditor: React.FC<BlockEditorProps> = ({ block, onUpdate 
     onUpdate({ bonusImages: newImages });
   };
 
-  const updateImage = (index: number, field: "url" | "alt" | "title", value: string) => {
+  const updateImage = (index: number, field: 'url' | 'alt' | 'title', value: string) => {
     const newImages = bonusImages.map((img: any, i: number) =>
       i === index ? { ...img, [field]: value } : img
     );
@@ -77,7 +76,7 @@ const BonusCarouselBlockEditor: React.FC<BlockEditorProps> = ({ block, onUpdate 
         <Label htmlFor={`${block.id}-title`}>Título da Seção</Label>
         <Input
           id={`${block.id}-title`}
-          value={block.content.title || ""}
+          value={block.content.title || ''}
           onChange={e => onUpdate({ title: e.target.value })}
           className="mt-1"
           placeholder="Você recebe também:"
@@ -102,21 +101,21 @@ const BonusCarouselBlockEditor: React.FC<BlockEditorProps> = ({ block, onUpdate 
 
             <Input
               value={image.url}
-              onChange={e => updateImage(index, "url", e.target.value)}
+              onChange={e => updateImage(index, 'url', e.target.value)}
               placeholder="URL da imagem"
               className="mt-1"
             />
 
             <Input
-              value={image.title || ""}
-              onChange={e => updateImage(index, "title", e.target.value)}
+              value={image.title || ''}
+              onChange={e => updateImage(index, 'title', e.target.value)}
               placeholder="Título do bônus"
               className="mt-1"
             />
 
             <Input
               value={image.alt}
-              onChange={e => updateImage(index, "alt", e.target.value)}
+              onChange={e => updateImage(index, 'alt', e.target.value)}
               placeholder="Texto alternativo"
               className="mt-1"
             />

@@ -1,10 +1,9 @@
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useEditorReusableComponents } from "@/hooks/useEditorReusableComponents.simple";
-import { Copy, Edit3, Package, Plus, Trash2 } from "lucide-react";
-import React from "react";
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useEditorReusableComponents } from '@/hooks/useEditorReusableComponents.simple';
+import { Copy, Edit3, Package, Plus, Trash2 } from 'lucide-react';
 
 // ============================================================================
 // PAINEL DE COMPONENTES REUTILIZÁVEIS PARA O EDITOR
@@ -21,7 +20,6 @@ export const ReusableComponentsPanel: React.FC<ReusableComponentsPanelProps> = (
   onComponentAdd,
 }) => {
   const {
-    availableComponents,
     stepComponents,
     loading,
     getComponentsByCategory,
@@ -37,7 +35,7 @@ export const ReusableComponentsPanel: React.FC<ReusableComponentsPanelProps> = (
       await addReusableComponentToEditor(componentTypeKey, currentStepNumber);
       onComponentAdd?.(componentTypeKey);
     } catch (error) {
-      console.error("Erro ao adicionar componente:", error);
+      console.error('Erro ao adicionar componente:', error);
     }
   };
 
@@ -45,7 +43,7 @@ export const ReusableComponentsPanel: React.FC<ReusableComponentsPanelProps> = (
     try {
       await applyComponentTemplate(templateKey, currentStepNumber);
     } catch (error) {
-      console.error("Erro ao aplicar template:", error);
+      console.error('Erro ao aplicar template:', error);
     }
   };
 
@@ -88,30 +86,27 @@ export const ReusableComponentsPanel: React.FC<ReusableComponentsPanelProps> = (
               return (
                 <div key={category}>
                   <h4 style={{ color: '#6B4F43' }}>
-                    {category === "content" && "📝 Conteúdo"}
-                    {category === "interactive" && "🎯 Interativo"}
-                    {category === "headers" && "📱 Cabeçalhos"}
-                    {category === "forms" && "📋 Formulários"}
-                    {category === "media" && "🖼️ Mídia"}
-                    {category === "visual" && "🎨 Visual"}
-                    {category === "legal" && "⚖️ Legal"}
+                    {category === 'content' && '📝 Conteúdo'}
+                    {category === 'interactive' && '🎯 Interativo'}
+                    {category === 'headers' && '📱 Cabeçalhos'}
+                    {category === 'forms' && '📋 Formulários'}
+                    {category === 'media' && '🖼️ Mídia'}
+                    {category === 'visual' && '🎨 Visual'}
+                    {category === 'legal' && '⚖️ Legal'}
                     {![
-                      "content",
-                      "interactive",
-                      "headers",
-                      "forms",
-                      "media",
-                      "visual",
-                      "legal",
+                      'content',
+                      'interactive',
+                      'headers',
+                      'forms',
+                      'media',
+                      'visual',
+                      'legal',
                     ].includes(category) && `📦 ${category}`}
                   </h4>
 
                   <div className="grid grid-cols-1 gap-2">
                     {categoryComponents.map(component => (
-                      <div
-                        key={component.type_key}
-                        style={{ backgroundColor: '#FAF9F7' }}
-                      >
+                      <div key={component.type_key} style={{ backgroundColor: '#FAF9F7' }}>
                         <div className="flex-1">
                           <div className="flex items-center gap-2">
                             <h5 className="text-sm font-medium">{component.display_name}</h5>
@@ -150,7 +145,7 @@ export const ReusableComponentsPanel: React.FC<ReusableComponentsPanelProps> = (
                   <Button
                     size="sm"
                     variant="outline"
-                    onClick={() => handleApplyTemplate("gisele-step-header")}
+                    onClick={() => handleApplyTemplate('gisele-step-header')}
                   >
                     <Copy className="h-3 w-3 mr-1" />
                     Aplicar
@@ -174,15 +169,13 @@ export const ReusableComponentsPanel: React.FC<ReusableComponentsPanelProps> = (
                   <Button
                     size="sm"
                     variant="outline"
-                    onClick={() => handleApplyTemplate("gisele-question-step")}
+                    onClick={() => handleApplyTemplate('gisele-question-step')}
                   >
                     <Copy className="h-3 w-3 mr-1" />
                     Aplicar
                   </Button>
                 </div>
-                <p style={{ color: '#8B7355' }}>
-                  Header + pergunta + opções + botão continuar
-                </p>
+                <p style={{ color: '#8B7355' }}>Header + pergunta + opções + botão continuar</p>
                 <div className="flex gap-1 mt-2 flex-wrap">
                   <Badge variant="secondary" className="text-xs">
                     gisele-header
@@ -206,15 +199,13 @@ export const ReusableComponentsPanel: React.FC<ReusableComponentsPanelProps> = (
                   <Button
                     size="sm"
                     variant="outline"
-                    onClick={() => handleApplyTemplate("gisele-input-step")}
+                    onClick={() => handleApplyTemplate('gisele-input-step')}
                   >
                     <Copy className="h-3 w-3 mr-1" />
                     Aplicar
                   </Button>
                 </div>
-                <p style={{ color: '#8B7355' }}>
-                  Header + pergunta + campo de entrada + botão
-                </p>
+                <p style={{ color: '#8B7355' }}>Header + pergunta + campo de entrada + botão</p>
                 <div className="flex gap-1 mt-2 flex-wrap">
                   <Badge variant="secondary" className="text-xs">
                     gisele-header
@@ -244,10 +235,7 @@ export const ReusableComponentsPanel: React.FC<ReusableComponentsPanelProps> = (
               {stepComponents[currentStepNumber]
                 .sort((a, b) => a.order_index - b.order_index)
                 .map(component => (
-                  <div
-                    key={component.id}
-                    style={{ backgroundColor: '#FAF9F7' }}
-                  >
+                  <div key={component.id} style={{ backgroundColor: '#FAF9F7' }}>
                     <div className="flex-1">
                       <span className="text-sm font-medium">{component.display_name}</span>
                       <Badge variant="outline" className="ml-2 text-xs">

@@ -65,14 +65,14 @@ Ação do Usuário → Hook useSchemaEditor → Estado Local → Supabase
 ```typescript
 // Componentes disponíveis
 const blockTypes = [
-  "heading-inline", // Títulos
-  "text-inline", // Textos
-  "image-display-inline", // Imagens
-  "form-input", // Campos de entrada
-  "options-grid", // Grade de opções
-  "quiz-intro-header", // Cabeçalho do quiz
-  "style-card-inline", // Cards de estilo
-  "button-inline", // Botões
+  'heading-inline', // Títulos
+  'text-inline', // Textos
+  'image-display-inline', // Imagens
+  'form-input', // Campos de entrada
+  'options-grid', // Grade de opções
+  'quiz-intro-header', // Cabeçalho do quiz
+  'style-card-inline', // Cards de estilo
+  'button-inline', // Botões
 ];
 ```
 
@@ -97,7 +97,7 @@ const blockTypes = [
 #### **Criar Bloco**
 
 ```typescript
-const addBlock = (blockData: Omit<BlockData, "id">) => {
+const addBlock = (blockData: Omit<BlockData, 'id'>) => {
   const newBlock = {
     ...blockData,
     id: `block-${Date.now()}`,
@@ -161,12 +161,12 @@ const saveFunnel = async (manual: boolean = true) => {
 
     if (manual) {
       toast({
-        title: "Funil salvo!",
-        description: "Todas as alterações foram salvas.",
+        title: 'Funil salvo!',
+        description: 'Todas as alterações foram salvas.',
       });
     }
   } catch (error) {
-    toast({ title: "Erro ao salvar", variant: "destructive" });
+    toast({ title: 'Erro ao salvar', variant: 'destructive' });
   } finally {
     setIsSaving(false);
   }
@@ -178,11 +178,11 @@ const saveFunnel = async (manual: boolean = true) => {
 ```typescript
 const saveToLocal = (funnelData: SchemaDrivenFunnelData) => {
   try {
-    localStorage.setItem("schema-driven-funnel", JSON.stringify(funnelData));
+    localStorage.setItem('schema-driven-funnel', JSON.stringify(funnelData));
   } catch (error) {
     // Limpeza automática se quota excedida
-    localStorage.removeItem("schema-driven-versions");
-    localStorage.setItem("schema-driven-funnel", JSON.stringify(funnelData));
+    localStorage.removeItem('schema-driven-versions');
+    localStorage.setItem('schema-driven-funnel', JSON.stringify(funnelData));
   }
 };
 ```
@@ -269,7 +269,7 @@ const saveVersion = (funnel: SchemaDrivenFunnelData) => {
 
   const versions = getVersionHistory();
   versions.push(version);
-  localStorage.setItem("schema-driven-versions", JSON.stringify(versions));
+  localStorage.setItem('schema-driven-versions', JSON.stringify(versions));
 };
 ```
 
@@ -277,18 +277,18 @@ const saveVersion = (funnel: SchemaDrivenFunnelData) => {
 
 ```typescript
 // Visualização responsiva
-const deviceViews = ["mobile", "tablet", "desktop"];
-const [deviceView, setDeviceView] = useState<DeviceView>("desktop");
+const deviceViews = ['mobile', 'tablet', 'desktop'];
+const [deviceView, setDeviceView] = useState<DeviceView>('desktop');
 
 // CSS responsivo automático
 const getDeviceStyles = () => {
   switch (deviceView) {
-    case "mobile":
-      return "max-w-sm";
-    case "tablet":
-      return "max-w-2xl";
-    case "desktop":
-      return "max-w-4xl";
+    case 'mobile':
+      return 'max-w-sm';
+    case 'tablet':
+      return 'max-w-2xl';
+    case 'desktop':
+      return 'max-w-4xl';
   }
 };
 ```
@@ -371,7 +371,7 @@ interface SchemaDrivenPageData {
   id: string;
   name: string;
   title: string;
-  type: "intro" | "question" | "transition" | "result" | "offer";
+  type: 'intro' | 'question' | 'transition' | 'result' | 'offer';
   order: number;
   blocks: BlockData[];
   settings: PageSettings;

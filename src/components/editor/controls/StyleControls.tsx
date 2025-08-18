@@ -1,15 +1,13 @@
-import React from "react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { ColorPicker } from "@/components/result-editor/ColorPicker";
-import { Switch } from "@/components/ui/switch";
+} from '@/components/ui/select';
+import { ColorPicker } from '@/components/result-editor/ColorPicker';
 
 interface StyleControlsProps {
   style: any;
@@ -40,8 +38,8 @@ export const StyleControls: React.FC<StyleControlsProps> = ({
       <div>
         <Label>Cor do Fundo</Label>
         <ColorPicker
-          color={style.backgroundColor || "#FFFFFF"}
-          onChange={color => handleChange("backgroundColor", color)}
+          color={style.backgroundColor || '#FFFFFF'}
+          onChange={color => handleChange('backgroundColor', color)}
         />
       </div>
 
@@ -52,16 +50,16 @@ export const StyleControls: React.FC<StyleControlsProps> = ({
             <div>
               <Label className="text-xs">Largura</Label>
               <Input
-                value={logoWidth || ""}
-                onChange={e => onLogoSizeChange(e.target.value, logoHeight?.toString() || "")}
+                value={logoWidth || ''}
+                onChange={e => onLogoSizeChange(e.target.value, logoHeight?.toString() || '')}
                 placeholder="auto"
               />
             </div>
             <div>
               <Label className="text-xs">Altura</Label>
               <Input
-                value={logoHeight || ""}
-                onChange={e => onLogoSizeChange(logoWidth?.toString() || "", e.target.value)}
+                value={logoHeight || ''}
+                onChange={e => onLogoSizeChange(logoWidth?.toString() || '', e.target.value)}
                 placeholder="auto"
               />
             </div>
@@ -75,16 +73,16 @@ export const StyleControls: React.FC<StyleControlsProps> = ({
           <div>
             <Label className="text-xs">Largura</Label>
             <Input
-              value={style.width || ""}
-              onChange={e => handleChange("width", e.target.value)}
+              value={style.width || ''}
+              onChange={e => handleChange('width', e.target.value)}
               placeholder="100%"
             />
           </div>
           <div>
             <Label className="text-xs">Altura</Label>
             <Input
-              value={style.height || ""}
-              onChange={e => handleChange("height", e.target.value)}
+              value={style.height || ''}
+              onChange={e => handleChange('height', e.target.value)}
               placeholder="auto"
             />
           </div>
@@ -94,8 +92,8 @@ export const StyleControls: React.FC<StyleControlsProps> = ({
       <div>
         <Label>Ajuste da Imagem</Label>
         <Select
-          value={style.objectFit || "cover"}
-          onValueChange={value => handleChange("objectFit", value)}
+          value={style.objectFit || 'cover'}
+          onValueChange={value => handleChange('objectFit', value)}
         >
           <SelectTrigger>
             <SelectValue placeholder="Selecione o ajuste" />
@@ -116,16 +114,16 @@ export const StyleControls: React.FC<StyleControlsProps> = ({
           <div>
             <Label className="text-xs">Margem</Label>
             <Input
-              value={style.margin || ""}
-              onChange={e => handleChange("margin", e.target.value)}
+              value={style.margin || ''}
+              onChange={e => handleChange('margin', e.target.value)}
               placeholder="0px"
             />
           </div>
           <div>
             <Label className="text-xs">Padding</Label>
             <Input
-              value={style.padding || ""}
-              onChange={e => handleChange("padding", e.target.value)}
+              value={style.padding || ''}
+              onChange={e => handleChange('padding', e.target.value)}
               placeholder="0px"
             />
           </div>
@@ -135,8 +133,8 @@ export const StyleControls: React.FC<StyleControlsProps> = ({
       <div>
         <Label>Arredondamento das Bordas</Label>
         <Input
-          value={style.borderRadius || ""}
-          onChange={e => handleChange("borderRadius", e.target.value)}
+          value={style.borderRadius || ''}
+          onChange={e => handleChange('borderRadius', e.target.value)}
           placeholder="0px"
         />
       </div>

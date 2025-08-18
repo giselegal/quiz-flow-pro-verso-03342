@@ -1,9 +1,8 @@
 // @ts-nocheck
-import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Check, Star, X } from "lucide-react";
-import type { BlockComponentProps, BlockData } from "@/types/blocks";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Check, Star, X } from 'lucide-react';
+import type { BlockComponentProps, BlockData } from '@/types/blocks';
 
 interface PricingPlan {
   id: string;
@@ -21,12 +20,12 @@ interface PricingPlan {
 
 interface PriceComparisonBlockProps extends BlockComponentProps {
   block: BlockData & {
-    type: "price-comparison";
+    type: 'price-comparison';
     properties: {
       title?: string;
       subtitle?: string;
       plans?: PricingPlan[];
-      layout?: "cards" | "table" | "minimal";
+      layout?: 'cards' | 'table' | 'minimal';
       showDiscount?: boolean;
       showFeatures?: boolean;
       highlightPopular?: boolean;
@@ -35,18 +34,18 @@ interface PriceComparisonBlockProps extends BlockComponentProps {
       textColor?: string;
       accentColor?: string;
       borderRadius?: string;
-      cardStyle?: "modern" | "classic" | "flat" | "rounded";
+      cardStyle?: 'modern' | 'classic' | 'flat' | 'rounded';
     };
   };
 }
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -89,47 +88,47 @@ const PriceComparisonBlock: React.FC<PriceComparisonBlockProps> = ({
   block,
   isSelected = false,
   onClick,
-  className = "",
+  className = '',
 }) => {
   const {
-    title = "Escolha seu Plano",
-    subtitle = "Planos flexíveis para todas as necessidades",
+    title = 'Escolha seu Plano',
+    subtitle = 'Planos flexíveis para todas as necessidades',
     plans = [],
-    layout = "cards",
+    layout = 'cards',
     showDiscount = true,
     showFeatures = true,
     highlightPopular = true,
     animateOnHover = true,
-    backgroundColor = "#ffffff",
-    textColor = "#1f2937",
-    accentColor = "#3b82f6",
-    borderRadius = "12px",
-    cardStyle = "modern",
+    backgroundColor = '#ffffff',
+    textColor = '#1f2937',
+    accentColor = '#3b82f6',
+    borderRadius = '12px',
+    cardStyle = 'modern',
   } = block?.properties || {};
 
   const getCardStyleClasses = () => {
     switch (cardStyle) {
-      case "classic":
-        return "border-2 border-gray-300 shadow-md";
-      case "flat":
-        return "border border-gray-200 shadow-none";
-      case "rounded":
-        return "border border-gray-200 shadow-lg rounded-2xl";
-      case "modern":
+      case 'classic':
+        return 'border-2 border-gray-300 shadow-md';
+      case 'flat':
+        return 'border border-gray-200 shadow-none';
+      case 'rounded':
+        return 'border border-gray-200 shadow-lg rounded-2xl';
+      case 'modern':
       default:
-        return "border border-gray-100 shadow-lg hover:shadow-xl transition-shadow";
+        return 'border border-gray-100 shadow-lg hover:shadow-xl transition-shadow';
     }
   };
 
-  if (layout === "table") {
+  if (layout === 'table') {
     return (
       <div
         className={`
           w-full p-6 rounded-lg cursor-pointer transition-all duration-200
           ${
             isSelected
-              ? "border-2 border-[#B89B7A] bg-[#B89B7A]/10"
-              : "border-2 border-dashed border-[#B89B7A]/40 hover:bg-[#FAF9F7]"
+              ? 'border-2 border-[#B89B7A] bg-[#B89B7A]/10'
+              : 'border-2 border-dashed border-[#B89B7A]/40 hover:bg-[#FAF9F7]'
           }
           ${className}
         `}
@@ -196,11 +195,11 @@ const PriceComparisonBlock: React.FC<PriceComparisonBlockProps> = ({
                       className="px-4 py-2 rounded-lg font-medium transition-colors"
                       style={{
                         backgroundColor: accentColor,
-                        color: "white",
-                        border: "none",
+                        color: 'white',
+                        border: 'none',
                       }}
                     >
-                      {plan.buttonText || "Escolher"}
+                      {plan.buttonText || 'Escolher'}
                     </button>
                   </td>
                 </tr>
@@ -219,8 +218,8 @@ const PriceComparisonBlock: React.FC<PriceComparisonBlockProps> = ({
         w-full p-6 rounded-lg cursor-pointer transition-all duration-200
         ${
           isSelected
-            ? "border-2 border-[#B89B7A] bg-[#B89B7A]/10"
-            : "border-2 border-dashed border-[#B89B7A]/40 hover:bg-[#FAF9F7]"
+            ? 'border-2 border-[#B89B7A] bg-[#B89B7A]/10'
+            : 'border-2 border-dashed border-[#B89B7A]/40 hover:bg-[#FAF9F7]'
         }
         ${className}
       `}
@@ -243,10 +242,10 @@ const PriceComparisonBlock: React.FC<PriceComparisonBlockProps> = ({
         grid gap-6 
         ${
           plans.length === 1
-            ? "grid-cols-1 max-w-md mx-auto"
+            ? 'grid-cols-1 max-w-md mx-auto'
             : plans.length === 2
-              ? "grid-cols-1 md:grid-cols-2"
-              : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+              ? 'grid-cols-1 md:grid-cols-2'
+              : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
         }
       `}
       >
@@ -255,8 +254,8 @@ const PriceComparisonBlock: React.FC<PriceComparisonBlockProps> = ({
             key={plan.id}
             className={`
               relative h-full ${getCardStyleClasses()}
-              ${plan.isPopular && highlightPopular ? "ring-2 ring-[#B89B7A] scale-105" : ""}
-              ${animateOnHover ? "hover:scale-105 transition-transform" : ""}
+              ${plan.isPopular && highlightPopular ? 'ring-2 ring-[#B89B7A] scale-105' : ''}
+              ${animateOnHover ? 'hover:scale-105 transition-transform' : ''}
             `}
             style={{ borderRadius }}
           >
@@ -304,34 +303,32 @@ const PriceComparisonBlock: React.FC<PriceComparisonBlockProps> = ({
                   w-full py-3 px-4 rounded-lg font-semibold transition-all
                   ${
                     plan.isPopular && highlightPopular
-                      ? "text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-                      : "border-2 hover:text-white"
+                      ? 'text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5'
+                      : 'border-2 hover:text-white'
                   }
                 `}
                 style={{
-                  backgroundColor: plan.isPopular && highlightPopular ? accentColor : "transparent",
+                  backgroundColor: plan.isPopular && highlightPopular ? accentColor : 'transparent',
                   borderColor: accentColor,
-                  color: plan.isPopular && highlightPopular ? "white" : accentColor,
+                  color: plan.isPopular && highlightPopular ? 'white' : accentColor,
                 }}
                 onMouseEnter={e => {
                   if (!plan.isPopular || !highlightPopular) {
                     e.currentTarget.style.backgroundColor = accentColor;
-                    e.currentTarget.style.color = "white";
+                    e.currentTarget.style.color = 'white';
                   }
                 }}
                 onMouseLeave={e => {
                   if (!plan.isPopular || !highlightPopular) {
-                    e.currentTarget.style.backgroundColor = "transparent";
+                    e.currentTarget.style.backgroundColor = 'transparent';
                     e.currentTarget.style.color = accentColor;
                   }
                 }}
               >
-                {plan.buttonText || "Escolher Plano"}
+                {plan.buttonText || 'Escolher Plano'}
               </button>
 
-              {plan.footerText && (
-                <p style={{ color: '#8B7355' }}>{plan.footerText}</p>
-              )}
+              {plan.footerText && <p style={{ color: '#8B7355' }}>{plan.footerText}</p>}
             </CardContent>
           </Card>
         ))}

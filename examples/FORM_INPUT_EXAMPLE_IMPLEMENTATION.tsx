@@ -1,8 +1,8 @@
 // 🎯 EXEMPLO PRÁTICO: Como implementar form-input avançado
 // Arquivo: /src/components/quiz/examples/FormInputExample.tsx
 
-import React, { useEffect, useState } from "react";
-import { useUnifiedProperties } from "../../../hooks/useUnifiedProperties";
+import React, { useEffect, useState } from 'react';
+import { useUnifiedProperties } from '../../../hooks/useUnifiedProperties';
 
 interface FormInputAdvancedProps {
   blockId: string;
@@ -17,7 +17,7 @@ export const FormInputAdvanced: React.FC<FormInputAdvancedProps> = ({
   properties,
   onUpdate,
 }) => {
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState('');
   const [isValid, setIsValid] = useState(false);
   const [showError, setShowError] = useState(false);
 
@@ -33,24 +33,24 @@ export const FormInputAdvanced: React.FC<FormInputAdvancedProps> = ({
   );
 
   // Propriedades extraídas
-  const label = getPropertyByKey("label")?.value || "Campo de Input";
-  const placeholder = getPropertyByKey("placeholder")?.value || "Digite aqui...";
-  const required = getPropertyByKey("required")?.value || false;
-  const enableButtonWhenFilled = getPropertyByKey("enableButtonWhenFilled")?.value !== false;
-  const minLength = getPropertyByKey("minLength")?.value || 1;
-  const maxLength = getPropertyByKey("maxLength")?.value || 255;
-  const validationPattern = getPropertyByKey("validationPattern")?.value || "";
-  const errorMessage = getPropertyByKey("errorMessage")?.value || "Por favor, preencha este campo";
+  const label = getPropertyByKey('label')?.value || 'Campo de Input';
+  const placeholder = getPropertyByKey('placeholder')?.value || 'Digite aqui...';
+  const required = getPropertyByKey('required')?.value || false;
+  const enableButtonWhenFilled = getPropertyByKey('enableButtonWhenFilled')?.value !== false;
+  const minLength = getPropertyByKey('minLength')?.value || 1;
+  const maxLength = getPropertyByKey('maxLength')?.value || 255;
+  const validationPattern = getPropertyByKey('validationPattern')?.value || '';
+  const errorMessage = getPropertyByKey('errorMessage')?.value || 'Por favor, preencha este campo';
 
   // Configurações do botão
-  const buttonText = getPropertyByKey("buttonText")?.value || "Continuar";
-  const buttonStyle = getPropertyByKey("buttonStyle")?.value || "primary";
-  const buttonSize = getPropertyByKey("buttonSize")?.value || "medium";
+  const buttonText = getPropertyByKey('buttonText')?.value || 'Continuar';
+  const buttonStyle = getPropertyByKey('buttonStyle')?.value || 'primary';
+  const buttonSize = getPropertyByKey('buttonSize')?.value || 'medium';
 
   // Configurações de navegação
-  const nextStepAction = getPropertyByKey("nextStepAction")?.value || "next-step";
-  const specificStep = getPropertyByKey("specificStep")?.value || "";
-  const targetUrl = getPropertyByKey("targetUrl")?.value || "";
+  const nextStepAction = getPropertyByKey('nextStepAction')?.value || 'next-step';
+  const specificStep = getPropertyByKey('specificStep')?.value || '';
+  const targetUrl = getPropertyByKey('targetUrl')?.value || '';
 
   // Validação em tempo real
   useEffect(() => {
@@ -86,7 +86,7 @@ export const FormInputAdvanced: React.FC<FormInputAdvancedProps> = ({
     setShowError(false);
 
     // Atualizar propriedades
-    updateProperty("value", value);
+    updateProperty('value', value);
   };
 
   // Handler do botão
@@ -98,32 +98,32 @@ export const FormInputAdvanced: React.FC<FormInputAdvancedProps> = ({
 
     // Executar ação baseada na configuração
     switch (nextStepAction) {
-      case "next-step":
+      case 'next-step':
         // Navegar para próxima etapa
-        onUpdate(blockId, { action: "next-step", value: inputValue });
+        onUpdate(blockId, { action: 'next-step', value: inputValue });
         break;
 
-      case "specific-step":
+      case 'specific-step':
         // Navegar para etapa específica
         onUpdate(blockId, {
-          action: "navigate-to-step",
+          action: 'navigate-to-step',
           targetStep: specificStep,
           value: inputValue,
         });
         break;
 
-      case "url":
+      case 'url':
         // Abrir URL
         if (targetUrl) {
-          window.open(targetUrl, "_blank");
+          window.open(targetUrl, '_blank');
         }
-        onUpdate(blockId, { action: "url-opened", url: targetUrl, value: inputValue });
+        onUpdate(blockId, { action: 'url-opened', url: targetUrl, value: inputValue });
         break;
 
-      case "submit":
+      case 'submit':
         // Enviar formulário
         onUpdate(blockId, {
-          action: "submit-form",
+          action: 'submit-form',
           formData: { [blockId]: inputValue },
         });
         break;
@@ -136,23 +136,23 @@ export const FormInputAdvanced: React.FC<FormInputAdvancedProps> = ({
   // Classes CSS responsivas para o botão
   const getButtonClasses = () => {
     const baseClasses =
-      "transition-all duration-200 font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2";
+      'transition-all duration-200 font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2';
 
     const sizeClasses = {
-      small: "px-3 py-1.5 text-sm",
-      medium: "px-4 py-2 text-base",
-      large: "px-6 py-3 text-lg",
-      full: "w-full px-4 py-3 text-base sm:text-lg",
+      small: 'px-3 py-1.5 text-sm',
+      medium: 'px-4 py-2 text-base',
+      large: 'px-6 py-3 text-lg',
+      full: 'w-full px-4 py-3 text-base sm:text-lg',
     };
 
     const styleClasses = {
       primary:
-        "bg-[#B89B7A] text-white hover:bg-[#A68B6A] focus:ring-[#B89B7A] disabled:bg-gray-300",
+        'bg-[#B89B7A] text-white hover:bg-[#A68B6A] focus:ring-[#B89B7A] disabled:bg-gray-300',
       secondary:
-        "bg-[#D4C2A8] text-[#432818] hover:bg-[#C4B298] focus:ring-[#D4C2A8] disabled:bg-gray-200",
+        'bg-[#D4C2A8] text-[#432818] hover:bg-[#C4B298] focus:ring-[#D4C2A8] disabled:bg-gray-200',
       outline:
-        "border-2 border-[#B89B7A] text-[#B89B7A] hover:bg-[#B89B7A] hover:text-white focus:ring-[#B89B7A] disabled:border-gray-300 disabled:text-gray-300",
-      ghost: "text-[#B89B7A] hover:bg-[#F3E8D3] focus:ring-[#B89B7A] disabled:text-gray-300",
+        'border-2 border-[#B89B7A] text-[#B89B7A] hover:bg-[#B89B7A] hover:text-white focus:ring-[#B89B7A] disabled:border-gray-300 disabled:text-gray-300',
+      ghost: 'text-[#B89B7A] hover:bg-[#F3E8D3] focus:ring-[#B89B7A] disabled:text-gray-300',
     };
 
     return `${baseClasses} ${sizeClasses[buttonSize]} ${styleClasses[buttonStyle]}`;
@@ -169,7 +169,7 @@ export const FormInputAdvanced: React.FC<FormInputAdvancedProps> = ({
       {/* Input */}
       <div className="relative">
         <input
-          type={getPropertyByKey("inputType")?.value || "text"}
+          type={getPropertyByKey('inputType')?.value || 'text'}
           value={inputValue}
           onChange={handleInputChange}
           placeholder={placeholder}
@@ -179,14 +179,14 @@ export const FormInputAdvanced: React.FC<FormInputAdvancedProps> = ({
             focus:outline-none focus:ring-2 focus:ring-offset-1
             ${
               isValid
-                ? "border-green-300 focus:border-green-500 focus:ring-green-200"
+                ? 'border-green-300 focus:border-green-500 focus:ring-green-200'
                 : showError
-                  ? "border-red-300 focus:border-red-500 focus:ring-red-200"
-                  : "border-[#B89B7A] focus:border-[#A68B6A] focus:ring-[#F3E8D3]"
+                  ? 'border-red-300 focus:border-red-500 focus:ring-red-200'
+                  : 'border-[#B89B7A] focus:border-[#A68B6A] focus:ring-[#F3E8D3]'
             }
           `}
           style={{
-            borderColor: getPropertyByKey("borderColor")?.value || "#B89B7A",
+            borderColor: getPropertyByKey('borderColor')?.value || '#B89B7A',
           }}
         />
 
@@ -243,12 +243,12 @@ export const FormInputAdvanced: React.FC<FormInputAdvancedProps> = ({
       </button>
 
       {/* Debug info (apenas em desenvolvimento) */}
-      {process.env.NODE_ENV === "development" && (
+      {process.env.NODE_ENV === 'development' && (
         <div className="mt-4 p-3 bg-gray-100 rounded-lg text-xs">
           <strong>Debug Info:</strong>
           <br />• Valid: {isValid.toString()}
           <br />• Action: {nextStepAction}
-          <br />• Target: {specificStep || targetUrl || "next-step"}
+          <br />• Target: {specificStep || targetUrl || 'next-step'}
           <br />• Button Enabled: {isButtonEnabled.toString()}
         </div>
       )}

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback, useEffect } from "react";
+import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 
 // Interface simplificada para etapas
 export interface QuizStep {
@@ -8,14 +8,14 @@ export interface QuizStep {
   blocksCount: number;
   isActive: boolean;
   type:
-    | "intro"
-    | "name-input"
-    | "question"
-    | "transition"
-    | "strategic"
-    | "result"
-    | "offer"
-    | "custom";
+    | 'intro'
+    | 'name-input'
+    | 'question'
+    | 'transition'
+    | 'strategic'
+    | 'result'
+    | 'offer'
+    | 'custom';
   description: string;
   multiSelect?: number;
 }
@@ -40,203 +40,203 @@ const StepsContext = createContext<StepsContextType | undefined>(undefined);
 // As 21 etapas iniciais do quiz
 const initialQuiz21Steps: QuizStep[] = [
   {
-    id: "etapa-1",
-    name: "Introdução",
+    id: 'etapa-1',
+    name: 'Introdução',
     order: 1,
     blocksCount: 0,
     isActive: true,
-    type: "intro",
-    description: "Apresentação do Quiz de Estilo",
+    type: 'intro',
+    description: 'Apresentação do Quiz de Estilo',
   },
   {
-    id: "etapa-2",
-    name: "Coleta de Nome",
+    id: 'etapa-2',
+    name: 'Coleta de Nome',
     order: 2,
     blocksCount: 0,
     isActive: false,
-    type: "name-input",
-    description: "Captura do nome do participante",
+    type: 'name-input',
+    description: 'Captura do nome do participante',
   },
   {
-    id: "etapa-3",
-    name: "Q1: Tipo de Roupa",
+    id: 'etapa-3',
+    name: 'Q1: Tipo de Roupa',
     order: 3,
     blocksCount: 0,
     isActive: false,
-    type: "question",
-    description: "QUAL O SEU TIPO DE ROUPA FAVORITA?",
+    type: 'question',
+    description: 'QUAL O SEU TIPO DE ROUPA FAVORITA?',
     multiSelect: 3,
   },
   {
-    id: "etapa-4",
-    name: "Q2: Personalidade",
+    id: 'etapa-4',
+    name: 'Q2: Personalidade',
     order: 4,
     blocksCount: 0,
     isActive: false,
-    type: "question",
-    description: "RESUMA A SUA PERSONALIDADE:",
+    type: 'question',
+    description: 'RESUMA A SUA PERSONALIDADE:',
     multiSelect: 3,
   },
   {
-    id: "etapa-5",
-    name: "Q3: Visual",
+    id: 'etapa-5',
+    name: 'Q3: Visual',
     order: 5,
     blocksCount: 0,
     isActive: false,
-    type: "question",
-    description: "QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?",
+    type: 'question',
+    description: 'QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?',
     multiSelect: 3,
   },
   {
-    id: "etapa-6",
-    name: "Q4: Detalhes",
+    id: 'etapa-6',
+    name: 'Q4: Detalhes',
     order: 6,
     blocksCount: 0,
     isActive: false,
-    type: "question",
-    description: "QUAIS DETALHES VOCÊ GOSTA?",
+    type: 'question',
+    description: 'QUAIS DETALHES VOCÊ GOSTA?',
     multiSelect: 3,
   },
   {
-    id: "etapa-7",
-    name: "Q5: Estampas",
+    id: 'etapa-7',
+    name: 'Q5: Estampas',
     order: 7,
     blocksCount: 0,
     isActive: false,
-    type: "question",
-    description: "QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?",
+    type: 'question',
+    description: 'QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?',
     multiSelect: 3,
   },
   {
-    id: "etapa-8",
-    name: "Q6: Casacos",
+    id: 'etapa-8',
+    name: 'Q6: Casacos',
     order: 8,
     blocksCount: 0,
     isActive: false,
-    type: "question",
-    description: "QUAL CASACO É SEU FAVORITO?",
+    type: 'question',
+    description: 'QUAL CASACO É SEU FAVORITO?',
     multiSelect: 3,
   },
   {
-    id: "etapa-9",
-    name: "Q7: Calças",
+    id: 'etapa-9',
+    name: 'Q7: Calças',
     order: 9,
     blocksCount: 0,
     isActive: false,
-    type: "question",
-    description: "QUAL SUA CALÇA FAVORITA?",
+    type: 'question',
+    description: 'QUAL SUA CALÇA FAVORITA?',
     multiSelect: 3,
   },
   {
-    id: "etapa-10",
-    name: "Q8: Sapatos",
+    id: 'etapa-10',
+    name: 'Q8: Sapatos',
     order: 10,
     blocksCount: 0,
     isActive: false,
-    type: "question",
-    description: "QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA?",
+    type: 'question',
+    description: 'QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA?',
     multiSelect: 3,
   },
   {
-    id: "etapa-11",
-    name: "Q9: Acessórios",
+    id: 'etapa-11',
+    name: 'Q9: Acessórios',
     order: 11,
     blocksCount: 0,
     isActive: false,
-    type: "question",
-    description: "QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA?",
+    type: 'question',
+    description: 'QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA?',
     multiSelect: 3,
   },
   {
-    id: "etapa-12",
-    name: "Q10: Tecidos",
+    id: 'etapa-12',
+    name: 'Q10: Tecidos',
     order: 12,
     blocksCount: 0,
     isActive: false,
-    type: "question",
-    description: "O QUE MAIS VALORIZAS NOS ACESSÓRIOS?",
+    type: 'question',
+    description: 'O QUE MAIS VALORIZAS NOS ACESSÓRIOS?',
     multiSelect: 3,
   },
   {
-    id: "etapa-13",
-    name: "Transição",
+    id: 'etapa-13',
+    name: 'Transição',
     order: 13,
     blocksCount: 0,
     isActive: false,
-    type: "transition",
-    description: "Análise dos resultados parciais",
+    type: 'transition',
+    description: 'Análise dos resultados parciais',
   },
   {
-    id: "etapa-14",
-    name: "S1: Dificuldades",
+    id: 'etapa-14',
+    name: 'S1: Dificuldades',
     order: 14,
     blocksCount: 0,
     isActive: false,
-    type: "strategic",
-    description: "Principal dificuldade com roupas",
+    type: 'strategic',
+    description: 'Principal dificuldade com roupas',
   },
   {
-    id: "etapa-15",
-    name: "S2: Problemas",
+    id: 'etapa-15',
+    name: 'S2: Problemas',
     order: 15,
     blocksCount: 0,
     isActive: false,
-    type: "strategic",
-    description: "Problemas frequentes de estilo",
+    type: 'strategic',
+    description: 'Problemas frequentes de estilo',
   },
   {
-    id: "etapa-16",
-    name: "S3: Frequência",
+    id: 'etapa-16',
+    name: 'S3: Frequência',
     order: 16,
     blocksCount: 0,
     isActive: false,
-    type: "strategic",
+    type: 'strategic',
     description: '"Com que roupa eu vou?" - frequência',
   },
   {
-    id: "etapa-17",
-    name: "S4: Guia de Estilo",
+    id: 'etapa-17',
+    name: 'S4: Guia de Estilo',
     order: 17,
     blocksCount: 0,
     isActive: false,
-    type: "strategic",
-    description: "O que valoriza em um guia",
+    type: 'strategic',
+    description: 'O que valoriza em um guia',
   },
   {
-    id: "etapa-18",
-    name: "S5: Investimento",
+    id: 'etapa-18',
+    name: 'S5: Investimento',
     order: 18,
     blocksCount: 0,
     isActive: false,
-    type: "strategic",
-    description: "Quanto investiria em consultoria",
+    type: 'strategic',
+    description: 'Quanto investiria em consultoria',
   },
   {
-    id: "etapa-19",
-    name: "S6: Ajuda Imediata",
+    id: 'etapa-19',
+    name: 'S6: Ajuda Imediata',
     order: 19,
     blocksCount: 0,
     isActive: false,
-    type: "strategic",
-    description: "O que mais precisa de ajuda",
+    type: 'strategic',
+    description: 'O que mais precisa de ajuda',
   },
   {
-    id: "etapa-20",
-    name: "Resultado",
+    id: 'etapa-20',
+    name: 'Resultado',
     order: 20,
     blocksCount: 0,
     isActive: false,
-    type: "result",
-    description: "Página de resultado personalizada",
+    type: 'result',
+    description: 'Página de resultado personalizada',
   },
   {
-    id: "etapa-21",
-    name: "Oferta",
+    id: 'etapa-21',
+    name: 'Oferta',
     order: 21,
     blocksCount: 0,
     isActive: false,
-    type: "offer",
-    description: "Apresentação da oferta final",
+    type: 'offer',
+    description: 'Apresentação da oferta final',
   },
 ];
 
@@ -245,20 +245,20 @@ export const StepsProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   // Recuperar estado salvo ou usar o padrão
   const getSavedSteps = () => {
     try {
-      const savedSteps = localStorage.getItem("quiz-steps");
+      const savedSteps = localStorage.getItem('quiz-steps');
       return savedSteps ? JSON.parse(savedSteps) : initialQuiz21Steps;
     } catch (error) {
-      console.error("Erro ao carregar etapas do localStorage:", error);
+      console.error('Erro ao carregar etapas do localStorage:', error);
       return initialQuiz21Steps;
     }
   };
 
   const [steps, setSteps] = useState<QuizStep[]>(getSavedSteps);
-  const [selectedStepId, setSelectedStepId] = useState<string | null>("etapa-1");
+  const [selectedStepId, setSelectedStepId] = useState<string | null>('etapa-1');
 
   // Salvar etapas no localStorage quando mudarem
   useEffect(() => {
-    localStorage.setItem("quiz-steps", JSON.stringify(steps));
+    localStorage.setItem('quiz-steps', JSON.stringify(steps));
   }, [steps]);
 
   // Adicionar nova etapa
@@ -269,7 +269,7 @@ export const StepsProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       order: steps.length + 1,
       blocksCount: 0,
       isActive: false,
-      type: "custom",
+      type: 'custom',
       description: `Etapa personalizada ${steps.length + 1}`,
     };
     setSteps(prev => [...prev, newStep]);
@@ -284,7 +284,7 @@ export const StepsProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const deleteStep = useCallback(
     (stepId: string) => {
       if (steps.length <= 1) {
-        alert("Não é possível excluir a última etapa");
+        alert('Não é possível excluir a última etapa');
         return;
       }
 
@@ -389,7 +389,7 @@ export const StepsProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 export const useSteps = () => {
   const context = useContext(StepsContext);
   if (context === undefined) {
-    throw new Error("useSteps must be used within a StepsProvider");
+    throw new Error('useSteps must be used within a StepsProvider');
   }
   return context;
 };

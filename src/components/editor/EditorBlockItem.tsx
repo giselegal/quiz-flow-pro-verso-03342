@@ -1,13 +1,13 @@
 // @ts-nocheck
-import React, { useState } from "react";
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
-import { EditorBlock } from "@/types/editor";
-import { Card } from "../ui/card";
-import { Button } from "../ui/button";
-import { Trash2, GripVertical, ChevronDown, ChevronUp, Copy } from "lucide-react";
-import { cn } from "@/lib/utils";
-import EditBlockContent from "./EditBlockContent";
+import React, { useState } from 'react';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { EditorBlock } from '@/types/editor';
+import { Card } from '../ui/card';
+import { Button } from '../ui/button';
+import { Trash2, GripVertical, ChevronDown, ChevronUp, Copy } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import EditBlockContent from './EditBlockContent';
 
 interface EditorBlockItemProps {
   block: EditorBlock;
@@ -17,11 +17,11 @@ interface EditorBlockItemProps {
 
 export // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -71,36 +71,36 @@ const EditorBlockItem: React.FC<EditorBlockItemProps> = ({ block, onUpdate, onDe
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : 1,
-    position: "relative" as const,
+    position: 'relative' as const,
     zIndex: isDragging ? 1 : 0,
   };
 
   const getBlockTitle = () => {
     switch (block.type) {
-      case "headline":
-        return "Título";
-      case "text":
-        return "Texto";
-      case "image":
-        return "Imagem";
-      case "benefits":
-        return "Benefícios";
-      case "testimonials":
-        return "Depoimentos";
-      case "pricing":
-        return "Preço";
-      case "guarantee":
-        return "Garantia";
-      case "cta":
-        return "Botão CTA";
+      case 'headline':
+        return 'Título';
+      case 'text':
+        return 'Texto';
+      case 'image':
+        return 'Imagem';
+      case 'benefits':
+        return 'Benefícios';
+      case 'testimonials':
+        return 'Depoimentos';
+      case 'pricing':
+        return 'Preço';
+      case 'guarantee':
+        return 'Garantia';
+      case 'cta':
+        return 'Botão CTA';
       default:
-        return "Bloco";
+        return 'Bloco';
     }
   };
 
   const handleDuplicate = () => {
     // This would be handled by the parent component
-    alert("Duplicar bloco não implementado ainda");
+    alert('Duplicar bloco não implementado ainda');
   };
 
   const handleUpdateBlock = (blockId: string, properties: any) => {
@@ -118,13 +118,13 @@ const EditorBlockItem: React.FC<EditorBlockItemProps> = ({ block, onUpdate, onDe
       ref={setNodeRef}
       style={style}
       className={cn(
-        "border-2 overflow-hidden",
-        isDragging ? "border-[#B89B7A]" : "border-[#B89B7A]/20",
+        'border-2 overflow-hidden',
+        isDragging ? 'border-[#B89B7A]' : 'border-[#B89B7A]/20',
         // Margens universais com controles deslizantes
-        getMarginClass(marginTop, "top"),
-        getMarginClass(marginBottom, "bottom"),
-        getMarginClass(marginLeft, "left"),
-        getMarginClass(marginRight, "right")
+        getMarginClass(marginTop, 'top'),
+        getMarginClass(marginBottom, 'bottom'),
+        getMarginClass(marginLeft, 'left'),
+        getMarginClass(marginRight, 'right')
       )}
     >
       {/* Block Header */}
@@ -146,12 +146,7 @@ const EditorBlockItem: React.FC<EditorBlockItemProps> = ({ block, onUpdate, onDe
               <ChevronDown className="w-4 h-4 text-[#8F7A6A]" />
             )}
           </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onDelete}
-            style={{ color: '#432818' }}
-          >
+          <Button variant="ghost" size="sm" onClick={onDelete} style={{ color: '#432818' }}>
             <Trash2 className="w-3 h-3" />
           </Button>
         </div>

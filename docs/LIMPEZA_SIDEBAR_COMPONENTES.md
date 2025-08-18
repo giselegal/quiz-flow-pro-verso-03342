@@ -42,7 +42,7 @@ const matchesCategory = !selectedCategory || block.category === selectedCategory
 
 ```tsx
 // ❌ REMOVIDO
-import { getRegistryStats, ENHANCED_BLOCK_REGISTRY } from "...";
+import { getRegistryStats, ENHANCED_BLOCK_REGISTRY } from '...';
 ```
 
 ## ✅ **RESULTADO FINAL:**
@@ -66,7 +66,7 @@ import { getRegistryStats, ENHANCED_BLOCK_REGISTRY } from "...";
 
 ```tsx
 const EnhancedComponentsSidebar = ({ onAddComponent }) => {
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
   const allBlocks = generateBlockDefinitions();
 
   const handleSearch = (query: string) => {

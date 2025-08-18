@@ -1,5 +1,5 @@
-declare module "@lovable/react" {
-  import React from "react";
+declare module '@lovable/react' {
+  import React from 'react';
 
   interface LovableProviderProps {
     children: React.ReactNode;
@@ -16,7 +16,7 @@ declare module "@lovable/react" {
   export const Editable: (props: EditableProps) => JSX.Element;
 }
 
-declare module "@lovable/editor" {
+declare module '@lovable/editor' {
   // Caso precise de APIs específicas do editor
 }
 

@@ -89,7 +89,7 @@ backup/deprecated-components/
 
 ```tsx
 // ❌ REMOVIDO
-import SchemaDrivenEditorResponsive from "@/components/editor/SchemaDrivenEditorResponsive";
+import SchemaDrivenEditorResponsive from '@/components/editor/SchemaDrivenEditorResponsive';
 ```
 
 ---

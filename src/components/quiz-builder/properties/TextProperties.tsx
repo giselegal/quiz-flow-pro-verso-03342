@@ -1,8 +1,7 @@
-import React from "react";
-import { QuizComponentData } from "@/types/quizBuilder";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
+import { QuizComponentData } from '@/types/quizBuilder';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Input } from '@/components/ui/input';
 
 interface TextPropertiesProps {
   component: QuizComponentData;
@@ -25,8 +24,8 @@ export const TextProperties: React.FC<TextPropertiesProps> = ({ component, onUpd
         <Label htmlFor="text">Texto</Label>
         <Textarea
           id="text"
-          value={data.text || ""}
-          onChange={e => handleUpdate("text", e.target.value)}
+          value={data.text || ''}
+          onChange={e => handleUpdate('text', e.target.value)}
           placeholder="Digite o texto"
           rows={4}
         />
@@ -37,8 +36,8 @@ export const TextProperties: React.FC<TextPropertiesProps> = ({ component, onUpd
         <Input
           id="textColor"
           type="color"
-          value={data.textColor || "#000000"}
-          onChange={e => handleUpdate("textColor", e.target.value)}
+          value={data.textColor || '#000000'}
+          onChange={e => handleUpdate('textColor', e.target.value)}
         />
       </div>
 
@@ -46,8 +45,8 @@ export const TextProperties: React.FC<TextPropertiesProps> = ({ component, onUpd
         <Label htmlFor="fontSize">Tamanho da Fonte</Label>
         <Input
           id="fontSize"
-          value={data.fontSize || "16"}
-          onChange={e => handleUpdate("fontSize", e.target.value)}
+          value={data.fontSize || '16'}
+          onChange={e => handleUpdate('fontSize', e.target.value)}
           placeholder="Tamanho em px"
         />
       </div>

@@ -1,4 +1,4 @@
-import { Block } from "./editor";
+import { Block } from './editor';
 
 export interface InlineBlockBaseProperties {
   [key: string]: any;

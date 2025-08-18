@@ -10,8 +10,8 @@ Integrar o Step20Template.tsx com dados reais das respostas dos Steps para cálc
 
 ```typescript
 // ANTES: Template strings não funcionais
-styleName: "{{primaryStyle.category}}";
-description: "{{primaryStyle.description}}";
+styleName: '{{primaryStyle.category}}';
+description: '{{primaryStyle.description}}';
 
 // DEPOIS: Dados reais do styleConfig
 styleName: primaryStyle.category;

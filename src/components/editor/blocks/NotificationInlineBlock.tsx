@@ -1,9 +1,9 @@
 // @ts-nocheck
-import React, { useState } from "react";
-import { cn } from "@/lib/utils";
-import { Edit3, Bell, MessageSquare, User, DollarSign, AlertCircle } from "lucide-react";
+import React, { useState } from 'react';
+import { cn } from '@/lib/utils';
+import { Edit3, Bell, MessageSquare, User, DollarSign, AlertCircle } from 'lucide-react';
 
-type NotificationType = "message" | "user" | "payment" | "alert" | "general";
+type NotificationType = 'message' | 'user' | 'payment' | 'alert' | 'general';
 
 interface NotificationItem {
   id: string;
@@ -21,15 +21,19 @@ interface NotificationInlineBlockProps {
   className?: string;
   onPropertyChange?: (key: string, value: any) => void;
   disabled?: boolean;
+  marginTop?: number;
+  marginBottom?: number;
+  marginLeft?: number;
+  marginRight?: number;
 }
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -71,32 +75,32 @@ const getMarginClass = (value, type) => {
 const NotificationInlineBlock: React.FC<NotificationInlineBlockProps> = ({
   notifications = [
     {
-      id: "1",
-      icon: "🗞️",
-      title: "Novo evento",
-      subtitle: "Cakto",
-      backgroundColor: "rgb(0, 201, 167)",
+      id: '1',
+      icon: '🗞️',
+      title: 'Novo evento',
+      subtitle: 'Cakto',
+      backgroundColor: 'rgb(0, 201, 167)',
     },
     {
-      id: "2",
-      icon: "💬",
-      title: "Nova mensagem",
-      subtitle: "Cakto",
-      backgroundColor: "rgb(255, 61, 113)",
+      id: '2',
+      icon: '💬',
+      title: 'Nova mensagem',
+      subtitle: 'Cakto',
+      backgroundColor: 'rgb(255, 61, 113)',
     },
     {
-      id: "3",
-      icon: "👤",
-      title: "Usuário se cadastrou",
-      subtitle: "Cakto",
-      backgroundColor: "rgb(0, 201, 167)",
+      id: '3',
+      icon: '👤',
+      title: 'Usuário se cadastrou',
+      subtitle: 'Cakto',
+      backgroundColor: 'rgb(0, 201, 167)',
     },
     {
-      id: "4",
-      icon: "💸",
-      title: "Pagamento recebido",
-      subtitle: "Cakto",
-      backgroundColor: "rgb(255, 184, 0)",
+      id: '4',
+      icon: '💸',
+      title: 'Pagamento recebido',
+      subtitle: 'Cakto',
+      backgroundColor: 'rgb(255, 184, 0)',
     },
   ],
   maxVisible = 4,
@@ -105,6 +109,10 @@ const NotificationInlineBlock: React.FC<NotificationInlineBlockProps> = ({
   className,
   onPropertyChange,
   disabled = false,
+  marginTop = 0,
+  marginBottom = 0,
+  marginLeft = 0,
+  marginRight = 0,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const visibleNotifications = notifications.slice(0, maxVisible);
@@ -114,17 +122,17 @@ const NotificationInlineBlock: React.FC<NotificationInlineBlockProps> = ({
       role="button"
       tabIndex={0}
       className={cn(
-        "group/canvas-item inline-block relative w-full",
-        "min-h-[1.25rem] border-2 border-dashed rounded-md p-4",
-        "hover:border-[#B89B7A] transition-all cursor-pointer",
-        isHovered ? "border-[#B89B7A]" : "border-gray-300",
-        disabled && "opacity-75 cursor-not-allowed",
+        'group/canvas-item inline-block relative w-full',
+        'min-h-[1.25rem] border-2 border-dashed rounded-md p-4',
+        'hover:border-[#B89B7A] transition-all cursor-pointer',
+        isHovered ? 'border-[#B89B7A]' : 'border-gray-300',
+        disabled && 'opacity-75 cursor-not-allowed',
         className,
         // Margens universais com controles deslizantes
-        getMarginClass(marginTop, "top"),
-        getMarginClass(marginBottom, "bottom"),
-        getMarginClass(marginLeft, "left"),
-        getMarginClass(marginRight, "right")
+        getMarginClass(marginTop, 'top'),
+        getMarginClass(marginBottom, 'bottom'),
+        getMarginClass(marginLeft, 'left'),
+        getMarginClass(marginRight, 'right')
       )}
       onClick={!disabled ? onClick : undefined}
       onMouseEnter={() => setIsHovered(true)}
@@ -136,13 +144,13 @@ const NotificationInlineBlock: React.FC<NotificationInlineBlockProps> = ({
             <div
               key={notification.id}
               className={cn(
-                "mx-auto w-full transition-all duration-200 ease-in-out",
-                animated && "hover:scale-[103%]"
+                'mx-auto w-full transition-all duration-200 ease-in-out',
+                animated && 'hover:scale-[103%]'
               )}
               style={{
                 opacity: 1,
-                transform: "none",
-                transformOrigin: "50% 0% 0px",
+                transform: 'none',
+                transformOrigin: '50% 0% 0px',
               }}
             >
               <figure className="relative mx-auto min-h-fit w-full max-w-sm cursor-pointer overflow-hidden rounded-2xl p-4 transition-all duration-200 ease-in-out hover:scale-[103%] bg-white shadow-sm border border-gray-100">
@@ -159,14 +167,14 @@ const NotificationInlineBlock: React.FC<NotificationInlineBlockProps> = ({
                       onClick={e => {
                         e.stopPropagation();
                         if (onPropertyChange && !disabled) {
-                          const newTitle = prompt("Novo título:", notification.title);
+                          const newTitle = prompt('Novo título:', notification.title);
                           if (newTitle !== null) {
                             const updatedNotifications = [...notifications];
                             updatedNotifications[index] = {
                               ...notification,
                               title: newTitle,
                             };
-                            onPropertyChange("notifications", updatedNotifications);
+                            onPropertyChange('notifications', updatedNotifications);
                           }
                         }
                       }}
@@ -180,14 +188,14 @@ const NotificationInlineBlock: React.FC<NotificationInlineBlockProps> = ({
                       onClick={e => {
                         e.stopPropagation();
                         if (onPropertyChange && !disabled) {
-                          const newSubtitle = prompt("Novo subtítulo:", notification.subtitle);
+                          const newSubtitle = prompt('Novo subtítulo:', notification.subtitle);
                           if (newSubtitle !== null) {
                             const updatedNotifications = [...notifications];
                             updatedNotifications[index] = {
                               ...notification,
                               subtitle: newSubtitle,
                             };
-                            onPropertyChange("notifications", updatedNotifications);
+                            onPropertyChange('notifications', updatedNotifications);
                           }
                         }
                       }}

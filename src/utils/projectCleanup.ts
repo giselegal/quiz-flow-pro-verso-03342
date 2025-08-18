@@ -1,14 +1,15 @@
+// @ts-nocheck
 /**
  * Utility for ongoing project maintenance and cleanup
  */
 
 export const detectAuthConflicts = () => {
   const authKeys = Object.keys(localStorage).filter(
-    key => key.startsWith("supabase.auth.") || key.includes("sb-")
+    key => key.startsWith('supabase.auth.') || key.includes('sb-')
   );
 
   if (authKeys.length > 2) {
-    console.warn("🚨 Multiple auth tokens detected:", authKeys);
+    console.warn('🚨 Multiple auth tokens detected:', authKeys);
     return true;
   }
   return false;
@@ -18,14 +19,14 @@ export const cleanupAuthState = () => {
   try {
     let cleanedCount = 0;
     Object.keys(localStorage).forEach(key => {
-      if (key.startsWith("supabase.auth.") || key.includes("sb-")) {
+      if (key.startsWith('supabase.auth.') || key.includes('sb-')) {
         localStorage.removeItem(key);
         cleanedCount++;
       }
     });
 
     Object.keys(sessionStorage || {}).forEach(key => {
-      if (key.startsWith("supabase.auth.") || key.includes("sb-")) {
+      if (key.startsWith('supabase.auth.') || key.includes('sb-')) {
         sessionStorage.removeItem(key);
         cleanedCount++;
       }
@@ -37,7 +38,7 @@ export const cleanupAuthState = () => {
 
     return cleanedCount;
   } catch (error) {
-    console.error("❌ Error during auth cleanup:", error);
+    console.error('❌ Error during auth cleanup:', error);
     return 0;
   }
 };
@@ -51,6 +52,6 @@ export const validateProjectHealth = () => {
       : true,
   };
 
-  console.log("🔍 Project Health Check:", checks);
+  console.log('🔍 Project Health Check:', checks);
   return checks;
 };

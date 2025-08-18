@@ -1,7 +1,6 @@
-import React from "react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 
 interface MainContentEditorProps {
   content: {
@@ -26,8 +25,8 @@ const MainContentEditor: React.FC<MainContentEditorProps> = ({ content, onUpdate
         <Label htmlFor="description">Descrição do Estilo</Label>
         <Textarea
           id="description"
-          value={content.description || ""}
-          onChange={e => handleChange("description", e.target.value)}
+          value={content.description || ''}
+          onChange={e => handleChange('description', e.target.value)}
           placeholder="Descrição personalizada para o estilo predominante"
           rows={5}
         />
@@ -37,8 +36,8 @@ const MainContentEditor: React.FC<MainContentEditorProps> = ({ content, onUpdate
         <Label htmlFor="customImage">URL da Imagem Personalizada</Label>
         <Input
           id="customImage"
-          value={content.customImage || ""}
-          onChange={e => handleChange("customImage", e.target.value)}
+          value={content.customImage || ''}
+          onChange={e => handleChange('customImage', e.target.value)}
           placeholder="https://exemplo.com/imagem.jpg"
         />
 
@@ -52,7 +51,7 @@ const MainContentEditor: React.FC<MainContentEditorProps> = ({ content, onUpdate
                 className="h-40 object-contain mx-auto"
                 onError={e => {
                   (e.target as HTMLImageElement).src =
-                    "https://placehold.co/400x300?text=Imagem+Inválida";
+                    'https://placehold.co/400x300?text=Imagem+Inválida';
                 }}
               />
             </div>

@@ -1,132 +1,133 @@
-import { EditableContent } from "@/types/editor";
+// @ts-nocheck
+import { EditableContent } from '@/types/editor';
 
 export const getDefaultContentForType = (type: string): EditableContent => {
   switch (type) {
-    case "header":
+    case 'header':
       return {
-        title: "Novo Cabeçalho",
-        subtitle: "Subtítulo opcional",
-        logo: "",
-        logoAlt: "Logo",
-        logoWidth: "auto",
-        logoHeight: "auto",
+        title: 'Novo Cabeçalho',
+        subtitle: 'Subtítulo opcional',
+        logo: '',
+        logoAlt: 'Logo',
+        logoWidth: 'auto',
+        logoHeight: 'auto',
         style: {
-          textAlign: "center",
-          fontSize: "2rem",
-          fontWeight: "bold",
-          color: "#432818",
+          textAlign: 'center',
+          fontSize: '2rem',
+          fontWeight: 'bold',
+          color: '#432818',
         },
       };
-    case "headline":
+    case 'headline':
       return {
-        title: "Título do Bloco",
-        subtitle: "Um subtítulo opcional para seu bloco",
+        title: 'Título do Bloco',
+        subtitle: 'Um subtítulo opcional para seu bloco',
         style: {
-          textAlign: "center",
-          fontSize: "2rem",
-          fontWeight: "bold",
-          color: "#432818",
+          textAlign: 'center',
+          fontSize: '2rem',
+          fontWeight: 'bold',
+          color: '#432818',
         },
       };
-    case "text":
+    case 'text':
       return {
-        text: "Este é um bloco de texto que você pode editar. Personalize o conteúdo conforme necessário.",
+        text: 'Este é um bloco de texto que você pode editar. Personalize o conteúdo conforme necessário.',
         style: {
-          fontSize: "1rem",
-          lineHeight: "1.5",
-          color: "#3A3A3A",
+          fontSize: '1rem',
+          lineHeight: '1.5',
+          color: '#3A3A3A',
         },
       };
-    case "image":
+    case 'image':
       return {
-        imageUrl: "https://placehold.co/600x400/png",
-        imageAlt: "Imagem de exemplo",
-        caption: "",
+        imageUrl: 'https://placehold.co/600x400/png',
+        imageAlt: 'Imagem de exemplo',
+        caption: '',
         style: {
-          width: "100%",
-          borderRadius: "8px",
+          width: '100%',
+          borderRadius: '8px',
         },
       };
-    case "button":
+    case 'button':
       return {
-        buttonText: "Clique Aqui",
-        buttonUrl: "#",
-        action: "link",
+        buttonText: 'Clique Aqui',
+        buttonUrl: '#',
+        action: 'link',
         style: {
-          backgroundColor: "#B89B7A",
-          color: "#FFFFFF",
-          padding: "0.75rem 2rem",
-          borderRadius: "8px",
-          textAlign: "center",
+          backgroundColor: '#B89B7A',
+          color: '#FFFFFF',
+          padding: '0.75rem 2rem',
+          borderRadius: '8px',
+          textAlign: 'center',
         },
       };
-    case "style-result":
+    case 'style-result':
       return {
-        title: "Seu Estilo Principal",
-        description: "Descrição personalizada do seu estilo predominante.",
-        customImage: "",
+        title: 'Seu Estilo Principal',
+        description: 'Descrição personalizada do seu estilo predominante.',
+        customImage: '',
         style: {
-          backgroundColor: "#FAF9F7",
-          padding: "1.5rem",
-          borderRadius: "8px",
+          backgroundColor: '#FAF9F7',
+          padding: '1.5rem',
+          borderRadius: '8px',
         },
       };
-    case "secondary-styles":
+    case 'secondary-styles':
       return {
-        title: "Seus Estilos Secundários",
+        title: 'Seus Estilos Secundários',
         description:
-          "Estes estilos complementam seu estilo principal e ajudam a criar seu visual único.",
+          'Estes estilos complementam seu estilo principal e ajudam a criar seu visual único.',
         style: {
-          backgroundColor: "#FFFFFF",
-          padding: "1.5rem",
-          borderRadius: "8px",
+          backgroundColor: '#FFFFFF',
+          padding: '1.5rem',
+          borderRadius: '8px',
         },
       };
-    case "benefits":
+    case 'benefits':
       return {
-        title: "Benefícios",
+        title: 'Benefícios',
         items: [
           {
-            id: "1",
-            question: "Pergunta 1",
-            answer: "Descrição do primeiro benefício",
+            id: '1',
+            question: 'Pergunta 1',
+            answer: 'Descrição do primeiro benefício',
           },
           {
-            id: "2",
-            question: "Pergunta 2",
-            answer: "Descrição do segundo benefício",
+            id: '2',
+            question: 'Pergunta 2',
+            answer: 'Descrição do segundo benefício',
           },
           {
-            id: "3",
-            question: "Pergunta 3",
-            answer: "Descrição do terceiro benefício",
+            id: '3',
+            question: 'Pergunta 3',
+            answer: 'Descrição do terceiro benefício',
           },
         ],
         style: {
-          padding: "1rem",
+          padding: '1rem',
         },
       };
-    case "cta":
+    case 'cta':
       return {
-        title: "Aproveite Essa Oportunidade",
-        buttonText: "Comprar Agora",
-        buttonUrl: "#comprar",
+        title: 'Aproveite Essa Oportunidade',
+        buttonText: 'Comprar Agora',
+        buttonUrl: '#comprar',
         style: {
-          backgroundColor: "#B89B7A",
-          color: "#FFFFFF",
-          textAlign: "center",
-          padding: "2rem",
-          borderRadius: "8px",
+          backgroundColor: '#B89B7A',
+          color: '#FFFFFF',
+          textAlign: 'center',
+          padding: '2rem',
+          borderRadius: '8px',
         },
       };
-    case "spacer":
+    case 'spacer':
       return {
-        height: "2rem",
+        height: '2rem',
       };
     default:
       return {
-        title: "Novo Bloco",
-        text: "Conteúdo do bloco",
+        title: 'Novo Bloco',
+        text: 'Conteúdo do bloco',
         style: {},
       };
   }

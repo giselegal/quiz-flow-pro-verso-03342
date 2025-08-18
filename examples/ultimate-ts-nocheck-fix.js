@@ -4,7 +4,7 @@ const path = require('path');
 // Apply @ts-nocheck to all remaining block files
 const errorFiles = [
   'src/components/editor/blocks/InlineDemoLayoutBlock.tsx',
-  'src/components/editor/blocks/InteractiveQuizBlock.tsx', 
+  'src/components/editor/blocks/InteractiveQuizBlock.tsx',
   'src/components/editor/blocks/InteractiveStatisticsBlock.tsx',
   'src/components/editor/blocks/LoaderBlock.tsx',
   'src/components/editor/blocks/LoaderInlineBlock.tsx',
@@ -79,14 +79,14 @@ const errorFiles = [
   'src/components/editor/blocks/ValueStackBlock.tsx',
   'src/components/editor/blocks/ValueStackInlineBlock.tsx',
   'src/components/editor/blocks/VerticalCanvasHeaderBlock.tsx',
-  'src/components/editor/blocks/VideoPlayerInlineBlock.tsx'
+  'src/components/editor/blocks/VideoPlayerInlineBlock.tsx',
 ];
 
 function addTsNocheck(filePath) {
   try {
     if (fs.existsSync(filePath)) {
       const content = fs.readFileSync(filePath, 'utf8');
-      
+
       if (!content.startsWith('// @ts-nocheck')) {
         const newContent = '// @ts-nocheck\n' + content;
         fs.writeFileSync(filePath, newContent);
@@ -106,7 +106,9 @@ function addTsNocheck(filePath) {
   }
 }
 
-console.log('🔧 ULTIMATE TypeScript Error Resolution - Adding @ts-nocheck to ALL remaining files...\n');
+console.log(
+  '🔧 ULTIMATE TypeScript Error Resolution - Adding @ts-nocheck to ALL remaining files...\n'
+);
 
 let processedCount = 0;
 let skippedCount = 0;

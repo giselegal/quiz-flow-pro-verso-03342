@@ -23,10 +23,10 @@
 
 ```tsx
 // Novos blocos na categoria "Questões do Quiz":
--"Descubra seu Estilo"(intro) -
-  "Como você se veste normalmente?"(questions) -
-  "Qual situação define melhor seu contexto atual?"(strategicQuestions) -
-  "Seu Estilo Pessoal"(result);
+-'Descubra seu Estilo'(intro) -
+  'Como você se veste normalmente?'(questions) -
+  'Qual situação define melhor seu contexto atual?'(strategicQuestions) -
+  'Seu Estilo Pessoal'(result);
 // Total: 21 etapas baseadas na configuração JSON
 ```
 
@@ -35,7 +35,7 @@
 ```tsx
 // Detecção automática de blocos de quiz:
 const isQuizBlock =
-  actualBlock?.type?.startsWith("quiz-") || actualBlock?.component === "QuizQuestionBlock";
+  actualBlock?.type?.startsWith('quiz-') || actualBlock?.component === 'QuizQuestionBlock';
 
 // Se for bloco de quiz, mostra QuizConfigurationPanel
 if (isQuizBlock) {

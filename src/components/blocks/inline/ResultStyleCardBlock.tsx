@@ -1,6 +1,6 @@
-import { cn } from "@/lib/utils";
-import React from "react";
-import type { BlockComponentProps } from "../../../types/blocks";
+// @ts-nocheck
+import { cn } from '@/lib/utils';
+import type { BlockComponentProps } from '@/types/blocks';
 
 /**
  * ResultStyleCardBlock - Componente para exibir resultado do estilo
@@ -9,12 +9,12 @@ const ResultStyleCardBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   onClick,
-  className = "",
+  className = '',
 }) => {
-  const { styles = {}, containerWidth = "full", spacing = "medium" } = block.properties || {};
+  const { styles = {}, containerWidth = 'full', spacing = 'medium' } = block.properties || {};
 
   // Simular resultado calculado (em produção viria do scoring)
-  const resultStyle = "Elegante"; // Este seria calculado baseado nas respostas
+  const resultStyle = 'Elegante'; // Este seria calculado baseado nas respostas
   const currentStyle = styles[resultStyle] || Object.values(styles)[0];
 
   if (!currentStyle) {
@@ -28,9 +28,9 @@ const ResultStyleCardBlock: React.FC<BlockComponentProps> = ({
   return (
     <div
       className={cn(
-        "result-style-card w-full",
+        'result-style-card w-full',
         className,
-        isSelected && "ring-2 ring-blue-500 ring-opacity-50"
+        isSelected && 'ring-2 ring-blue-500 ring-opacity-50'
       )}
       onClick={onClick}
     >

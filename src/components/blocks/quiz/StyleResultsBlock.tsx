@@ -1,10 +1,10 @@
 // @ts-nocheck
-import { Button } from "@/components/ui/button";
-import { useAuth } from "@/context/AuthContext";
-import { styleConfig } from "@/data/styleConfig";
-import { QuizResult } from "@/hooks/useQuizResults";
-import React, { useState } from "react";
-import StyleGuideModal from "./StyleGuideModal";
+import { Button } from '@/components/ui/button';
+import { styleConfig } from '@/config/styleConfig';
+import { useAuth } from '@/context/AuthContext';
+import { QuizResult } from '@/hooks/useQuizResults';
+import React, { useState } from 'react';
+import StyleGuideModal from './StyleGuideModal';
 
 interface StyleResultsBlockProps {
   result: QuizResult;
@@ -18,11 +18,11 @@ interface StyleResultsBlockProps {
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -71,7 +71,7 @@ const StyleResultsBlock: React.FC<StyleResultsBlockProps> = ({
   onShare,
 }) => {
   const { user } = useAuth();
-  const userName = user?.name || user?.email || "Usuário";
+  const userName = user?.name || user?.email || 'Usuário';
   const [showGuideModal, setShowGuideModal] = useState(false);
 
   // Obter estilos ordenados por pontuação
@@ -86,9 +86,7 @@ const StyleResultsBlock: React.FC<StyleResultsBlockProps> = ({
     <div className="max-w-3xl mx-auto p-6 bg-white rounded-2xl shadow-lg">
       <div className="text-center mb-8">
         <h2 className="text-3xl font-bold text-[#432818] mb-2">{result.title}</h2>
-        <p style={{ color: '#8B7355' }}>
-          Parabéns, {userName}! Seu estilo predominante é:
-        </p>
+        <p style={{ color: '#8B7355' }}>Parabéns, {userName}! Seu estilo predominante é:</p>
 
         {result.imageUrl && (
           <div className="mb-6">

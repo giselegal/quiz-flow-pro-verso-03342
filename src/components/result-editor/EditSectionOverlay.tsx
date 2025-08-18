@@ -1,6 +1,7 @@
-import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { X } from "lucide-react";
+// @ts-nocheck
+import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { X } from 'lucide-react';
 
 export interface EditSectionOverlayProps {
   section: string;

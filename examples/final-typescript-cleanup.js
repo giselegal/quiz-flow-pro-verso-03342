@@ -42,7 +42,7 @@ const remainingErrorFiles = [
   'src/components/editor/components/ComponentRenderer.tsx',
   'src/components/editor/debug/BlocksDebugTest.tsx',
   'src/components/editor/dnd/SortableBlockItem.tsx',
-  'src/components/editor/hooks/useBlockHandlers.ts'
+  'src/components/editor/hooks/useBlockHandlers.ts',
 ];
 
 let processed = 0;
@@ -55,7 +55,7 @@ remainingErrorFiles.forEach(filePath => {
   try {
     if (fs.existsSync(filePath)) {
       const content = fs.readFileSync(filePath, 'utf8');
-      
+
       // Check if @ts-nocheck is already at the beginning
       if (!content.trim().startsWith('// @ts-nocheck')) {
         const newContent = '// @ts-nocheck\n' + content;

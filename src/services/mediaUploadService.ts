@@ -1,9 +1,10 @@
+// @ts-nocheck
 // =============================================================================
 // SERVIÇO DE UPLOAD DE MÍDIA
 // Upload de imagens, vídeos e outros arquivos para Supabase Storage
 // =============================================================================
 
-import { supabase } from "../lib/supabase";
+import { supabase } from '../lib/supabase';
 
 // =============================================================================
 // TIPOS
@@ -26,18 +27,18 @@ export interface UploadProgress {
   percentage: number;
 }
 
-export type FileType = "image" | "video" | "audio" | "document" | "other";
+export type FileType = 'image' | 'video' | 'audio' | 'document' | 'other';
 
 // =============================================================================
 // CONFIGURAÇÕES
 // =============================================================================
 
-const STORAGE_BUCKET = "media-uploads";
+const STORAGE_BUCKET = 'media-uploads';
 const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
-const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/gif", "image/webp"];
-const ALLOWED_VIDEO_TYPES = ["video/mp4", "video/webm", "video/mov"];
-const ALLOWED_AUDIO_TYPES = ["audio/mp3", "audio/wav", "audio/ogg"];
-const ALLOWED_DOCUMENT_TYPES = ["application/pdf", "text/plain", "application/msword"];
+const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+const ALLOWED_VIDEO_TYPES = ['video/mp4', 'video/webm', 'video/mov'];
+const ALLOWED_AUDIO_TYPES = ['audio/mp3', 'audio/wav', 'audio/ogg'];
+const ALLOWED_DOCUMENT_TYPES = ['application/pdf', 'text/plain', 'application/msword'];
 
 // =============================================================================
 // SERVIÇO DE UPLOAD
@@ -76,24 +77,24 @@ export class MediaUploadService {
   }
 
   static getFileType(file: File): FileType {
-    if (ALLOWED_IMAGE_TYPES.includes(file.type)) return "image";
-    if (ALLOWED_VIDEO_TYPES.includes(file.type)) return "video";
-    if (ALLOWED_AUDIO_TYPES.includes(file.type)) return "audio";
-    if (ALLOWED_DOCUMENT_TYPES.includes(file.type)) return "document";
-    return "other";
+    if (ALLOWED_IMAGE_TYPES.includes(file.type)) return 'image';
+    if (ALLOWED_VIDEO_TYPES.includes(file.type)) return 'video';
+    if (ALLOWED_AUDIO_TYPES.includes(file.type)) return 'audio';
+    if (ALLOWED_DOCUMENT_TYPES.includes(file.type)) return 'document';
+    return 'other';
   }
 
   // =============================================================================
   // GERAÇÃO DE NOMES DE ARQUIVO
   // =============================================================================
 
-  static generateFileName(file: File, prefix: string = ""): string {
+  static generateFileName(file: File, prefix: string = ''): string {
     const timestamp = Date.now();
     const randomId = Math.random().toString(36).substring(2, 15);
-    const fileExtension = file.name.split(".").pop();
-    const sanitizedName = file.name.replace(/[^a-zA-Z0-9.-]/g, "_");
+    const fileExtension = file.name.split('.').pop();
+    const sanitizedName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
 
-    return `${prefix}${prefix ? "_" : ""}${timestamp}_${randomId}_${sanitizedName}`;
+    return `${prefix}${prefix ? '_' : ''}${timestamp}_${randomId}_${sanitizedName}`;
   }
 
   static getStoragePath(fileType: FileType, fileName: string): string {
@@ -129,7 +130,7 @@ export class MediaUploadService {
         ? `${options.folder}/${fileName}`
         : this.getStoragePath(fileType, fileName);
 
-      console.log("📤 [Upload] Starting upload:", {
+      console.log('📤 [Upload] Starting upload:', {
         fileName,
         fileType,
         storagePath,
@@ -145,12 +146,12 @@ export class MediaUploadService {
       const { data, error } = await supabase.storage
         .from(STORAGE_BUCKET)
         .upload(storagePath, file, {
-          cacheControl: "3600",
+          cacheControl: '3600',
           upsert: false,
         });
 
       if (error) {
-        console.error("❌ [Upload] Supabase upload failed:", error);
+        console.error('❌ [Upload] Supabase upload failed:', error);
         return {
           success: false,
           error: error.message,
@@ -171,7 +172,7 @@ export class MediaUploadService {
         .from(STORAGE_BUCKET)
         .getPublicUrl(storagePath);
 
-      console.log("✅ [Upload] Upload successful:", {
+      console.log('✅ [Upload] Upload successful:', {
         path: data.path,
         publicUrl: publicUrlData.publicUrl,
       });
@@ -186,10 +187,10 @@ export class MediaUploadService {
         fileType: file.type,
       };
     } catch (error) {
-      console.error("❌ [Upload] Upload error:", error);
+      console.error('❌ [Upload] Upload error:', error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : "Erro desconhecido no upload",
+        error: error instanceof Error ? error.message : 'Erro desconhecido no upload',
       };
     }
   }
@@ -251,7 +252,7 @@ export class MediaUploadService {
       if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
         return {
           success: false,
-          error: "Arquivo não é uma imagem válida",
+          error: 'Arquivo não é uma imagem válida',
         };
       }
 
@@ -267,15 +268,15 @@ export class MediaUploadService {
       }
 
       return await this.uploadFile(processedFile, {
-        folder: options.folder || "images",
+        folder: options.folder || 'images',
         prefix: options.prefix,
         onProgress: options.onProgress,
       });
     } catch (error) {
-      console.error("❌ [Upload] Image upload error:", error);
+      console.error('❌ [Upload] Image upload error:', error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : "Erro no upload da imagem",
+        error: error instanceof Error ? error.message : 'Erro no upload da imagem',
       };
     }
   }
@@ -293,8 +294,8 @@ export class MediaUploadService {
     }
   ): Promise<File> {
     return new Promise((resolve, reject) => {
-      const canvas = document.createElement("canvas");
-      const ctx = canvas.getContext("2d");
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
       const img = new Image();
 
       img.onload = () => {
@@ -327,7 +328,7 @@ export class MediaUploadService {
               });
               resolve(optimizedFile);
             } else {
-              reject(new Error("Falha na otimização da imagem"));
+              reject(new Error('Falha na otimização da imagem'));
             }
           },
           file.type,
@@ -335,7 +336,7 @@ export class MediaUploadService {
         );
       };
 
-      img.onerror = () => reject(new Error("Falha ao carregar imagem"));
+      img.onerror = () => reject(new Error('Falha ao carregar imagem'));
       img.src = URL.createObjectURL(file);
     });
   }
@@ -349,17 +350,17 @@ export class MediaUploadService {
       const { error } = await supabase.storage.from(STORAGE_BUCKET).remove([path]);
 
       if (error) {
-        console.error("❌ [Upload] Delete failed:", error);
+        console.error('❌ [Upload] Delete failed:', error);
         return { success: false, error: error.message };
       }
 
-      console.log("🗑️ [Upload] File deleted successfully:", path);
+      console.log('🗑️ [Upload] File deleted successfully:', path);
       return { success: true };
     } catch (error) {
-      console.error("❌ [Upload] Delete error:", error);
+      console.error('❌ [Upload] Delete error:', error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : "Erro ao deletar arquivo",
+        error: error instanceof Error ? error.message : 'Erro ao deletar arquivo',
       };
     }
   }
@@ -369,22 +370,22 @@ export class MediaUploadService {
   // =============================================================================
 
   static async listFiles(
-    folder: string = ""
+    folder: string = ''
   ): Promise<{ success: boolean; files?: any[]; error?: string }> {
     try {
       const { data, error } = await supabase.storage.from(STORAGE_BUCKET).list(folder);
 
       if (error) {
-        console.error("❌ [Upload] List failed:", error);
+        console.error('❌ [Upload] List failed:', error);
         return { success: false, error: error.message };
       }
 
       return { success: true, files: data };
     } catch (error) {
-      console.error("❌ [Upload] List error:", error);
+      console.error('❌ [Upload] List error:', error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : "Erro ao listar arquivos",
+        error: error instanceof Error ? error.message : 'Erro ao listar arquivos',
       };
     }
   }

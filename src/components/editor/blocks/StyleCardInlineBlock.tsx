@@ -1,6 +1,5 @@
-import React from "react";
-import { cn } from "@/lib/utils";
-import { Sparkles, Edit3 } from "lucide-react";
+import { cn } from '@/lib/utils';
+import { Sparkles, Edit3 } from 'lucide-react';
 
 interface StyleCardInlineBlockProps {
   title?: string;
@@ -11,15 +10,19 @@ interface StyleCardInlineBlockProps {
   className?: string;
   onPropertyChange?: (key: string, value: any) => void;
   disabled?: boolean;
+  marginTop?: number;
+  marginBottom?: number;
+  marginLeft?: number;
+  marginRight?: number;
 }
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value: string | number, type: string): string => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -59,28 +62,32 @@ const getMarginClass = (value: string | number, type: string): string => {
 };
 
 const StyleCardInlineBlock: React.FC<StyleCardInlineBlockProps> = ({
-  title = "Seu Estilo Único",
-  subtitle = "Descoberto através do quiz",
-  description = "Características principais do seu perfil de estilo pessoal",
+  title = 'Seu Estilo Único',
+  subtitle = 'Descoberto através do quiz',
+  description = 'Características principais do seu perfil de estilo pessoal',
   showIcon = true,
   onClick,
   className,
   onPropertyChange,
   disabled = false,
+  marginTop = 0,
+  marginBottom = 0,
+  marginLeft = 0,
+  marginRight = 0,
 }) => {
   return (
     <div
       className={cn(
-        "inline-flex items-center gap-3 p-4 bg-white rounded-lg border-l-4 border-[#B89B7A] shadow-sm",
-        "transition-all duration-200 hover:shadow-md hover:scale-105 cursor-pointer",
-        "w-full",
-        disabled && "opacity-75 cursor-not-allowed",
+        'inline-flex items-center gap-3 p-4 bg-white rounded-lg border-l-4 border-[#B89B7A] shadow-sm',
+        'transition-all duration-200 hover:shadow-md hover:scale-105 cursor-pointer',
+        'w-full',
+        disabled && 'opacity-75 cursor-not-allowed',
         className,
         // Margens universais com controles deslizantes
-        getMarginClass((marginTop as number | string) ?? 0, "top"),
-        getMarginClass((marginBottom as number | string) ?? 0, "bottom"),
-        getMarginClass((marginLeft as number | string) ?? 0, "left"),
-        getMarginClass((marginRight as number | string) ?? 0, "right")
+        getMarginClass(marginTop, 'top'),
+        getMarginClass(marginBottom, 'bottom'),
+        getMarginClass(marginLeft, 'left'),
+        getMarginClass(marginRight, 'right')
       )}
       onClick={!disabled ? onClick : undefined}
     >
@@ -98,8 +105,8 @@ const StyleCardInlineBlock: React.FC<StyleCardInlineBlockProps> = ({
           onClick={e => {
             e.stopPropagation();
             if (onPropertyChange && !disabled) {
-              const newTitle = prompt("Novo título:", title);
-              if (newTitle !== null) onPropertyChange("title", newTitle);
+              const newTitle = prompt('Novo título:', title);
+              if (newTitle !== null) onPropertyChange('title', newTitle);
             }
           }}
         >
@@ -110,8 +117,8 @@ const StyleCardInlineBlock: React.FC<StyleCardInlineBlockProps> = ({
           onClick={e => {
             e.stopPropagation();
             if (onPropertyChange && !disabled) {
-              const newSubtitle = prompt("Novo subtítulo:", subtitle);
-              if (newSubtitle !== null) onPropertyChange("subtitle", newSubtitle);
+              const newSubtitle = prompt('Novo subtítulo:', subtitle);
+              if (newSubtitle !== null) onPropertyChange('subtitle', newSubtitle);
             }
           }}
         >
@@ -123,8 +130,8 @@ const StyleCardInlineBlock: React.FC<StyleCardInlineBlockProps> = ({
             onClick={e => {
               e.stopPropagation();
               if (onPropertyChange && !disabled) {
-                const newDescription = prompt("Nova descrição:", description);
-                if (newDescription !== null) onPropertyChange("description", newDescription);
+                const newDescription = prompt('Nova descrição:', description);
+                if (newDescription !== null) onPropertyChange('description', newDescription);
               }
             }}
           >

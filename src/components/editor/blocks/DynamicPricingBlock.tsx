@@ -1,16 +1,15 @@
 // @ts-nocheck
-import React from "react";
-import { DollarSign } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import type { BlockComponentProps } from "../../../types/blocks";
+import { DollarSign } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import type { BlockComponentProps } from '@/types/blocks';
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -54,23 +53,23 @@ const DynamicPricingBlock: React.FC<BlockComponentProps> = ({
   isSelected = false,
   onClick,
   onPropertyChange,
-  className = "",
+  className = '',
 }) => {
   const {
-    title = "Preço Especial",
-    price = "197",
-    originalPrice = "497",
-    currency = "R$",
+    title = 'Preço Especial',
+    price = '197',
+    originalPrice = '497',
+    currency = 'R$',
     features = [],
-    buttonText = "Comprar Agora",
-    buttonUrl = "#",
+    buttonText = 'Comprar Agora',
+    buttonUrl = '#',
   } = block.properties || {};
 
   return (
     <div
       className={`
         p-6 bg-white rounded-lg border cursor-pointer transition-all duration-200
-        ${isSelected ? "border-[#B89B7A] ring-2 ring-blue-200" : "border-gray-200 hover:border-gray-300"}
+        ${isSelected ? 'border-[#B89B7A] ring-2 ring-blue-200' : 'border-gray-200 hover:border-gray-300'}
         ${className}
       `}
       onClick={onClick}

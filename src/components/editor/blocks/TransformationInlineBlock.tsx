@@ -1,16 +1,15 @@
 // @ts-nocheck
-import React from "react";
-import { InlineEditableText } from "./InlineEditableText";
-import { ArrowRight, Sparkles } from "lucide-react";
-import type { BlockComponentProps } from "@/types/blocks";
+import { InlineEditableText } from './InlineEditableText';
+import { ArrowRight, Sparkles } from 'lucide-react';
+import type { BlockComponentProps } from '@/types/blocks';
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -53,18 +52,18 @@ const TransformationInlineBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   onPropertyChange,
-  className = "",
+  className = '',
 }) => {
   const {
-    title = "Sua Transformação Começa Aqui",
-    subtitle = "Veja o que você vai alcançar",
-    beforeTitle = "ANTES",
-    beforeDescription = "Sem direção no guarda-roupa, comprando por impulso e se sentindo sempre inadequada.",
-    beforeImage = "https://via.placeholder.com/300x200?text=Antes",
-    afterTitle = "DEPOIS",
-    afterDescription = "Com um estilo autêntico, confiante e alinhado com seus objetivos pessoais e profissionais.",
-    afterImage = "https://via.placeholder.com/300x200?text=Depois",
-    arrowColor = "#B89B7A",
+    title = 'Sua Transformação Começa Aqui',
+    subtitle = 'Veja o que você vai alcançar',
+    beforeTitle = 'ANTES',
+    beforeDescription = 'Sem direção no guarda-roupa, comprando por impulso e se sentindo sempre inadequada.',
+    beforeImage = 'https://via.placeholder.com/300x200?text=Antes',
+    afterTitle = 'DEPOIS',
+    afterDescription = 'Com um estilo autêntico, confiante e alinhado com seus objetivos pessoais e profissionais.',
+    afterImage = 'https://via.placeholder.com/300x200?text=Depois',
+    arrowColor = '#B89B7A',
   } = block?.properties || {};
 
   const handlePropertyChange = (key: string, value: any) => {
@@ -80,8 +79,8 @@ const TransformationInlineBlock: React.FC<BlockComponentProps> = ({
         p-3 rounded-lg transition-all duration-200
         ${
           isSelected
-            ? "border-2 border-[#B89B7A] bg-[#B89B7A]/10"
-            : "border-2 border-dashed border-transparent hover:border-[#B89B7A]/40 hover:bg-[#B89B7A]/10/30"
+            ? 'border-2 border-[#B89B7A] bg-[#B89B7A]/10'
+            : 'border-2 border-dashed border-transparent hover:border-[#B89B7A]/40 hover:bg-[#B89B7A]/10/30'
         }
         ${className}
       `}
@@ -96,7 +95,7 @@ const TransformationInlineBlock: React.FC<BlockComponentProps> = ({
           <h2 className="text-2xl md:text-3xl font-bold text-[#aa6b5d] mb-2">
             <InlineEditableText
               value={title}
-              onChange={value => handlePropertyChange("title", value)}
+              onChange={value => handlePropertyChange('title', value)}
               placeholder="Título da transformação"
               className="text-2xl md:text-3xl font-bold text-[#aa6b5d]"
             />
@@ -105,7 +104,7 @@ const TransformationInlineBlock: React.FC<BlockComponentProps> = ({
           <p className="text-[#432818] text-lg">
             <InlineEditableText
               value={subtitle}
-              onChange={value => handlePropertyChange("subtitle", value)}
+              onChange={value => handlePropertyChange('subtitle', value)}
               placeholder="Subtítulo da transformação"
               className="text-[#432818] text-lg"
             />
@@ -125,7 +124,7 @@ const TransformationInlineBlock: React.FC<BlockComponentProps> = ({
               <div style={{ backgroundColor: '#FAF9F7' }}>
                 <InlineEditableText
                   value={beforeTitle}
-                  onChange={value => handlePropertyChange("beforeTitle", value)}
+                  onChange={value => handlePropertyChange('beforeTitle', value)}
                   placeholder="ANTES"
                   className="text-white text-sm font-bold"
                 />
@@ -135,7 +134,7 @@ const TransformationInlineBlock: React.FC<BlockComponentProps> = ({
             <p className="text-[#432818] text-sm leading-relaxed">
               <InlineEditableText
                 value={beforeDescription}
-                onChange={value => handlePropertyChange("beforeDescription", value)}
+                onChange={value => handlePropertyChange('beforeDescription', value)}
                 placeholder="Descrição do antes..."
                 className="text-[#432818] text-sm leading-relaxed"
                 multiline
@@ -165,7 +164,7 @@ const TransformationInlineBlock: React.FC<BlockComponentProps> = ({
               <div className="absolute top-2 left-2 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-bold">
                 <InlineEditableText
                   value={afterTitle}
-                  onChange={value => handlePropertyChange("afterTitle", value)}
+                  onChange={value => handlePropertyChange('afterTitle', value)}
                   placeholder="DEPOIS"
                   className="text-white text-sm font-bold"
                 />
@@ -175,7 +174,7 @@ const TransformationInlineBlock: React.FC<BlockComponentProps> = ({
             <p className="text-[#432818] text-sm leading-relaxed">
               <InlineEditableText
                 value={afterDescription}
-                onChange={value => handlePropertyChange("afterDescription", value)}
+                onChange={value => handlePropertyChange('afterDescription', value)}
                 placeholder="Descrição do depois..."
                 className="text-[#432818] text-sm leading-relaxed"
                 multiline

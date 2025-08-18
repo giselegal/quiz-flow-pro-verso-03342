@@ -13,9 +13,9 @@ O usuário relatou que "as etapas estão vazias" no `/editor-fixed`. Analisando 
 ```typescript
 const [stages, setStages] = useState<FunnelStage[]>(() => {
   // ✅ INICIALIZAÇÃO SÍNCRONA: 21 etapas criadas no useState
-  console.log("🚀 EditorProvider: Inicializando stages no useState");
+  console.log('🚀 EditorProvider: Inicializando stages no useState');
   // ... 21 templates predefinidos
-  console.log("✅ EditorProvider: 21 stages criadas no useState:", initialStages.length);
+  console.log('✅ EditorProvider: 21 stages criadas no useState:', initialStages.length);
   return initialStages;
 });
 ```
@@ -48,7 +48,7 @@ const {
   // ... outras propriedades
 } = useEditor(); // ✅ Hook correto
 
-console.log("🔥 EditorFixedPage: Dados do editor:", {
+console.log('🔥 EditorFixedPage: Dados do editor:', {
   stages: stages?.length || 0, // ✅ Verificação segura
   activeStageId,
   selectedBlockId,
@@ -96,9 +96,9 @@ if (!stages || stages.length === 0) {
 
 ```typescript
 // ✅ Logs detalhados em cada componente
-console.log("🔥 EditorProvider: INICIANDO PROVIDER!");
-console.log("✅ EditorProvider: 21 stages criadas no useState:", initialStages.length);
-console.log("🔍 FunnelStagesPanel - Stages:", stages?.length || 0);
+console.log('🔥 EditorProvider: INICIANDO PROVIDER!');
+console.log('✅ EditorProvider: 21 stages criadas no useState:', initialStages.length);
+console.log('🔍 FunnelStagesPanel - Stages:', stages?.length || 0);
 ```
 
 #### **Solução 2: Renderização Condicional Robusta**

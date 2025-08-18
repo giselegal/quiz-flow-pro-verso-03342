@@ -1,7 +1,6 @@
-import React from "react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Cloud,
   CloudOff,
@@ -13,8 +12,8 @@ import {
   History,
   Wifi,
   WifiOff,
-} from "lucide-react";
-import { type AutoSaveState } from "@/services/schemaDrivenFunnelService";
+} from 'lucide-react';
+import { type AutoSaveState } from '@/services/schemaDrivenFunnelService';
 
 interface SyncStatusProps {
   autoSaveState: AutoSaveState;
@@ -34,7 +33,7 @@ export const SyncStatus: React.FC<SyncStatusProps> = ({
   onManualSave,
   onSync,
   onToggleAutoSave,
-  className = "",
+  className = '',
   compact = false,
 }) => {
   const getStatusIcon = () => {
@@ -59,23 +58,23 @@ export const SyncStatus: React.FC<SyncStatusProps> = ({
 
   const getStatusText = () => {
     if (isSaving) {
-      return "Salvando...";
+      return 'Salvando...';
     }
 
     if (!isOnline) {
-      return "Offline";
+      return 'Offline';
     }
 
     if (autoSaveState.pendingChanges) {
-      return "Mudanças pendentes";
+      return 'Mudanças pendentes';
     }
 
     if (autoSaveState.errorCount > 0) {
       return `Erro no auto-save (${autoSaveState.errorCount})`;
     }
 
-    if (autoSaveState.lastSave) {
-      const timeDiff = Math.floor((Date.now() - autoSaveState.lastSave.getTime()) / 1000);
+    if (autoSaveState.lastSaved) {
+      const timeDiff = Math.floor((Date.now() - autoSaveState.lastSaved.getTime()) / 1000);
       if (timeDiff < 60) {
         return `Salvo há ${timeDiff}s`;
       } else if (timeDiff < 3600) {
@@ -85,15 +84,15 @@ export const SyncStatus: React.FC<SyncStatusProps> = ({
       }
     }
 
-    return "Aguardando mudanças";
+    return 'Aguardando mudanças';
   };
 
   const getStatusBadgeVariant = () => {
-    if (isSaving) return "secondary";
-    if (!isOnline) return "destructive";
-    if (autoSaveState.pendingChanges) return "secondary";
-    if (autoSaveState.errorCount > 0) return "destructive";
-    return "default";
+    if (isSaving) return 'secondary';
+    if (!isOnline) return 'destructive';
+    if (autoSaveState.pendingChanges) return 'secondary';
+    if (autoSaveState.errorCount > 0) return 'destructive';
+    return 'default';
   };
 
   if (compact) {
@@ -112,7 +111,7 @@ export const SyncStatus: React.FC<SyncStatusProps> = ({
         </Badge>
 
         {/* Auto-save indicator */}
-        {autoSaveState.isEnabled && (
+        {autoSaveState.enabled && (
           <Badge variant="outline" className="text-xs">
             Auto-save: {autoSaveState.interval}s
           </Badge>
@@ -165,16 +164,16 @@ export const SyncStatus: React.FC<SyncStatusProps> = ({
             {getStatusIcon()}
             <span className="text-sm">{getStatusText()}</span>
           </div>
-          <Badge variant={getStatusBadgeVariant()}>{isOnline ? "Online" : "Offline"}</Badge>
+          <Badge variant={getStatusBadgeVariant()}>{isOnline ? 'Online' : 'Offline'}</Badge>
         </div>
 
         {/* Auto-save settings */}
         <div className="flex items-center justify-between">
           <div style={{ color: '#6B4F43' }}>
-            Auto-save: {autoSaveState.isEnabled ? `${autoSaveState.interval}s` : "Desabilitado"}
+            Auto-save: {autoSaveState.enabled ? `${autoSaveState.interval}s` : 'Desabilitado'}
           </div>
           <Button size="sm" variant="outline" onClick={onToggleAutoSave} className="h-7 text-xs">
-            {autoSaveState.isEnabled ? "Desabilitar" : "Habilitar"}
+            {autoSaveState.enabled ? 'Desabilitar' : 'Habilitar'}
           </Button>
         </div>
 
@@ -190,10 +189,10 @@ export const SyncStatus: React.FC<SyncStatusProps> = ({
         )}
 
         {/* Última sincronização */}
-        {autoSaveState.lastSave && (
+        {autoSaveState.lastSaved && (
           <div style={{ color: '#8B7355' }}>
             <History className="w-3 h-3" />
-            <span>Última sincronização: {autoSaveState.lastSave.toLocaleTimeString()}</span>
+            <span>Última sincronização: {autoSaveState.lastSaved.toLocaleTimeString()}</span>
           </div>
         )}
 

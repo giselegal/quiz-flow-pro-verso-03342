@@ -4,16 +4,12 @@
  * Integra React Hook Form com Zod para validação tipada
  */
 
-import { useForm, UseFormReturn, FieldValues, Path } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useCallback, useEffect } from "react";
-import { z } from "zod";
-import {
-  blockSchemas,
-  BlockType,
-  validateBlockData,
-  safeValidateBlockData,
-} from "@/schemas/blockSchemas";
+import { blockSchemas, BlockType, safeValidateBlockData } from '@/schemas/blockSchemas';
+import { PerformanceOptimizer } from '@/utils/performanceOptimizer';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useCallback, useEffect } from 'react';
+import { useForm, UseFormReturn } from 'react-hook-form';
+import { z } from 'zod';
 
 export interface Block {
   id: string;
@@ -59,7 +55,7 @@ export function useBlockForm(
   const form = useForm({
     resolver: zodResolver(schema),
     defaultValues: block?.properties || {},
-    mode: validateOnChange ? "onChange" : "onBlur",
+    mode: validateOnChange ? 'onChange' : 'onBlur',
   });
 
   const { watch, setValue, reset, formState } = form;
@@ -72,20 +68,25 @@ export function useBlockForm(
     }
   }, [block?.id, reset]);
 
-  // Watch para mudanças e debounce das atualizações
+  // Watch para mudanças e debounce das atualizações - OTIMIZADO
   useEffect(() => {
     if (!block || !onUpdate) return;
 
     const subscription = watch(values => {
-      const timer = setTimeout(() => {
-        if (isDirty) {
-          onUpdate({
-            properties: values as Record<string, any>,
-          });
-        }
-      }, debounceMs);
+      // 🚀 OTIMIZAÇÃO: Usar PerformanceOptimizer ao invés de setTimeout
+      const strategy = PerformanceOptimizer.getSuggestedStrategy(debounceMs, true);
 
-      return () => clearTimeout(timer);
+      PerformanceOptimizer.schedule(
+        () => {
+          if (isDirty) {
+            onUpdate({
+              properties: values as Record<string, any>,
+            });
+          }
+        },
+        debounceMs,
+        strategy
+      );
     });
 
     return () => subscription.unsubscribe();
@@ -127,7 +128,7 @@ export function useBlockForm(
   // Converte erros do formulário para formato simples
   const flatErrors = Object.entries(errors).reduce(
     (acc, [key, error]) => {
-      if (error && typeof error === "object" && "message" in error && error.message) {
+      if (error && typeof error === 'object' && 'message' in error && error.message) {
         acc[key] = error.message as string;
       }
       return acc;
@@ -167,23 +168,28 @@ export function useArrayFieldForm<T extends Record<string, any>>(
   const form = useForm({
     resolver: zodResolver(arraySchema),
     defaultValues: { items: initialItems },
-    mode: "onChange",
+    mode: 'onChange',
   });
 
   const { watch, setValue, getValues } = form;
 
-  // Watch para mudanças
+  // Watch para mudanças - OTIMIZADO
   useEffect(() => {
     if (!onUpdate) return;
 
     const subscription = watch(values => {
-      const timer = setTimeout(() => {
-        if (values.items) {
-          onUpdate({ items: values.items as T[] });
-        }
-      }, debounceMs);
+      // 🚀 OTIMIZAÇÃO: Usar PerformanceOptimizer ao invés de setTimeout
+      const strategy = PerformanceOptimizer.getSuggestedStrategy(debounceMs, true);
 
-      return () => clearTimeout(timer);
+      PerformanceOptimizer.schedule(
+        () => {
+          if (values.items) {
+            onUpdate({ items: values.items as T[] });
+          }
+        },
+        debounceMs,
+        strategy
+      );
     });
 
     return () => subscription.unsubscribe();
@@ -191,8 +197,8 @@ export function useArrayFieldForm<T extends Record<string, any>>(
 
   const addItem = useCallback(
     (item: T) => {
-      const currentItems = getValues("items");
-      setValue("items", [...currentItems, item], {
+      const currentItems = getValues('items');
+      setValue('items', [...currentItems, item], {
         shouldValidate: true,
         shouldDirty: true,
       });
@@ -202,9 +208,9 @@ export function useArrayFieldForm<T extends Record<string, any>>(
 
   const removeItem = useCallback(
     (index: number) => {
-      const currentItems = getValues("items");
+      const currentItems = getValues('items');
       setValue(
-        "items",
+        'items',
         currentItems.filter((_, i) => i !== index),
         {
           shouldValidate: true,
@@ -217,11 +223,11 @@ export function useArrayFieldForm<T extends Record<string, any>>(
 
   const updateItem = useCallback(
     (index: number, updates: Partial<T>) => {
-      const currentItems = getValues("items");
+      const currentItems = getValues('items');
       const updatedItems = currentItems.map((item, i) =>
         i === index ? { ...item, ...updates } : item
       );
-      setValue("items", updatedItems, {
+      setValue('items', updatedItems, {
         shouldValidate: true,
         shouldDirty: true,
       });
@@ -231,12 +237,12 @@ export function useArrayFieldForm<T extends Record<string, any>>(
 
   const moveItem = useCallback(
     (fromIndex: number, toIndex: number) => {
-      const currentItems = getValues("items");
+      const currentItems = getValues('items');
       const newItems = [...currentItems];
       const [removed] = newItems.splice(fromIndex, 1);
       newItems.splice(toIndex, 0, removed);
 
-      setValue("items", newItems, {
+      setValue('items', newItems, {
         shouldValidate: true,
         shouldDirty: true,
       });
@@ -250,7 +256,7 @@ export function useArrayFieldForm<T extends Record<string, any>>(
     removeItem,
     updateItem,
     moveItem,
-    items: watch("items"),
+    items: watch('items'),
   };
 }
 
@@ -267,7 +273,7 @@ export function useBlockValidation(block: Block | null) {
       return { isValid: true, errors: [] };
     } else {
       const errors =
-        "errors" in result.error ? result.error.errors : [{ message: result.error.message }];
+        'errors' in result.error ? result.error.errors : [{ message: result.error.message }];
       return {
         isValid: false,
         errors,
@@ -291,51 +297,51 @@ export function getDefaultBlockValues(blockType: BlockType): Record<string, any>
   } catch {
     // Se falhar, retorna defaults manuais baseados no tipo
     switch (blockType) {
-      case "text":
+      case 'text':
         return {
-          content: "Novo texto",
+          content: 'Novo texto',
           fontSize: 16,
-          textColor: "#000000",
-          textAlign: "left",
+          textColor: '#000000',
+          textAlign: 'left',
         };
-      case "rich-text":
+      case 'rich-text':
         return {
-          content: "<p>Novo texto rico</p>",
+          content: '<p>Novo texto rico</p>',
           minHeight: 100,
         };
-      case "button":
+      case 'button':
         return {
-          text: "Clique aqui",
-          link: "",
-          backgroundColor: "#3b82f6",
-          textColor: "#ffffff",
+          text: 'Clique aqui',
+          link: '',
+          backgroundColor: '#3b82f6',
+          textColor: '#ffffff',
           paddingX: 16,
           paddingY: 8,
           borderRadius: 6,
           fullWidth: false,
         };
-      case "quiz-step":
+      case 'quiz-step':
         return {
           headerEnabled: true,
-          questionText: "Sua pergunta aqui",
-          questionTextColor: "#000000",
+          questionText: 'Sua pergunta aqui',
+          questionTextColor: '#000000',
           questionTextSize: 24,
-          questionTextAlign: "center",
-          layout: "2-columns",
-          direction: "vertical",
-          disposition: "image-text",
+          questionTextAlign: 'center',
+          layout: '2-columns',
+          direction: 'vertical',
+          disposition: 'image-text',
           options: [],
           isMultipleChoice: false,
           isRequired: true,
           autoProceed: false,
-          borderRadius: "medium",
-          boxShadow: "medium",
-          spacing: "medium",
-          detail: "none",
-          optionStyle: "card",
-          primaryColor: "#3b82f6",
-          secondaryColor: "#ffffff",
-          borderColor: "#e5e7eb",
+          borderRadius: 'medium',
+          boxShadow: 'medium',
+          spacing: 'medium',
+          detail: 'none',
+          optionStyle: 'card',
+          primaryColor: '#3b82f6',
+          secondaryColor: '#ffffff',
+          borderColor: '#e5e7eb',
           maxWidth: 100,
         };
       default:

@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import { cn } from "@/lib/utils";
-import { FunnelStepProps } from "@/types/funnel";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import React, { useState } from 'react';
+import { cn } from '@/lib/utils';
+import { FunnelStepProps } from '@/types/funnel';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 /**
  * NameCollectStep - Etapa 2: Coleta de nome do usuário
@@ -12,7 +12,7 @@ import { Label } from "@/components/ui/label";
  */
 export const NameCollectStep: React.FC<FunnelStepProps> = ({
   id,
-  className = "",
+  className = '',
   isEditable = false,
   onNext,
   stepNumber,
@@ -21,17 +21,17 @@ export const NameCollectStep: React.FC<FunnelStepProps> = ({
   onEdit,
 }) => {
   const {
-    title = "Como podemos te chamar?",
-    description = "Para personalizar sua experiência, gostaríamos de saber seu nome:",
-    buttonText = "Continuar",
-    placeholder = "Digite seu nome aqui",
+    title = 'Como podemos te chamar?',
+    description = 'Para personalizar sua experiência, gostaríamos de saber seu nome:',
+    buttonText = 'Continuar',
+    placeholder = 'Digite seu nome aqui',
     imageUrl,
-    backgroundColor = "bg-white",
+    backgroundColor = 'bg-white',
   } = data;
 
   // No modo de visualização, usamos estado real
-  const [name, setName] = useState("");
-  const [error, setError] = useState("");
+  const [name, setName] = useState('');
+  const [error, setError] = useState('');
 
   // Função para validar e avançar
   const handleSubmit = (e: React.FormEvent) => {
@@ -39,12 +39,12 @@ export const NameCollectStep: React.FC<FunnelStepProps> = ({
 
     if (!isEditable) {
       if (!name.trim()) {
-        setError("Por favor, digite seu nome");
+        setError('Por favor, digite seu nome');
         return;
       }
 
       // Limpar erro se existir
-      setError("");
+      setError('');
 
       // Avançar para próxima etapa
       if (onNext) {
@@ -55,7 +55,7 @@ export const NameCollectStep: React.FC<FunnelStepProps> = ({
 
   return (
     <div
-      className={cn("relative rounded-xl shadow-md p-8", backgroundColor, className)}
+      className={cn('relative rounded-xl shadow-md p-8', backgroundColor, className)}
       onClick={isEditable ? onEdit : undefined}
       data-funnel-step-id={id}
     >
@@ -88,7 +88,7 @@ export const NameCollectStep: React.FC<FunnelStepProps> = ({
                 placeholder={placeholder}
                 value={name}
                 onChange={e => setName(e.target.value)}
-                className={cn("w-full", error && "border-red-500")}
+                className={cn('w-full', error && 'border-red-500')}
                 disabled={isEditable}
               />
               {error && <p style={{ color: '#432818' }}>{error}</p>}

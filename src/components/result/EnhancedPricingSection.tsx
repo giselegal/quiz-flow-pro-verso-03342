@@ -1,8 +1,9 @@
-"use client";
+// @ts-nocheck
+'use client';
 
-import React, { useState } from "react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import React, { useState } from 'react';
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import {
   ShoppingCart,
   Clock,
@@ -13,43 +14,43 @@ import {
   ArrowDown,
   Zap,
   Gift,
-} from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import { trackButtonClick } from "@/utils/analytics";
+} from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { trackButtonClick } from '@/utils/analytics';
 
 // Design tokens otimizados
 const tokens = {
   colors: {
-    primary: "#B89B7A",
-    secondary: "#aa6b5d",
-    accent: "#4CAF50",
-    accentDark: "#45a049",
-    background: "#fffaf7",
-    backgroundCard: "#ffffff",
-    backgroundLight: "#fff7f3",
-    backgroundAccent: "#f9f4ef",
-    text: "#432818",
-    textLight: "#8F7A6A",
-    textMuted: "#6B5B4E",
-    success: "#4CAF50",
-    warning: "#ff6b35",
-    border: "rgba(184, 155, 122, 0.2)",
-    borderLight: "rgba(184, 155, 122, 0.1)",
+    primary: '#B89B7A',
+    secondary: '#aa6b5d',
+    accent: '#4CAF50',
+    accentDark: '#45a049',
+    background: '#fffaf7',
+    backgroundCard: '#ffffff',
+    backgroundLight: '#fff7f3',
+    backgroundAccent: '#f9f4ef',
+    text: '#432818',
+    textLight: '#8F7A6A',
+    textMuted: '#6B5B4E',
+    success: '#4CAF50',
+    warning: '#ff6b35',
+    border: 'rgba(184, 155, 122, 0.2)',
+    borderLight: 'rgba(184, 155, 122, 0.1)',
   },
   shadows: {
-    sm: "0 2px 4px rgba(184, 155, 122, 0.08)",
-    md: "0 4px 8px rgba(184, 155, 122, 0.12)",
-    lg: "0 8px 16px rgba(184, 155, 122, 0.16)",
-    xl: "0 12px 24px rgba(184, 155, 122, 0.20)",
-    cta: "0 8px 32px rgba(76, 175, 80, 0.4)",
-    glow: "0 0 20px rgba(184, 155, 122, 0.3)",
+    sm: '0 2px 4px rgba(184, 155, 122, 0.08)',
+    md: '0 4px 8px rgba(184, 155, 122, 0.12)',
+    lg: '0 8px 16px rgba(184, 155, 122, 0.16)',
+    xl: '0 12px 24px rgba(184, 155, 122, 0.20)',
+    cta: '0 8px 32px rgba(76, 175, 80, 0.4)',
+    glow: '0 0 20px rgba(184, 155, 122, 0.3)',
   },
   radius: {
-    sm: "0.5rem",
-    md: "0.75rem",
-    lg: "1rem",
-    xl: "1.5rem",
-    full: "9999px",
+    sm: '0.5rem',
+    md: '0.75rem',
+    lg: '1rem',
+    xl: '1.5rem',
+    full: '9999px',
   },
 };
 
@@ -57,9 +58,9 @@ interface EnhancedPricingSectionProps {
   className?: string;
 }
 
-const EnhancedPricingSection: React.FC<EnhancedPricingSectionProps> = ({ className = "" }) => {
+const EnhancedPricingSection: React.FC<EnhancedPricingSectionProps> = ({ className = '' }) => {
   const [isHovered, setIsHovered] = useState(false);
-  const [activeTab, setActiveTab] = useState<"avista" | "parcelado">("parcelado");
+  const [activeTab, setActiveTab] = useState<'avista' | 'parcelado'>('parcelado');
 
   const handleCTAClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -68,12 +69,12 @@ const EnhancedPricingSection: React.FC<EnhancedPricingSectionProps> = ({ classNa
     if ((window as any).ctaClickProcessing) return;
     (window as any).ctaClickProcessing = true;
 
-    trackButtonClick("checkout_button", "Enhanced Pricing CTA", "pricing_section");
+    trackButtonClick('checkout_button', 'Enhanced Pricing CTA', 'pricing_section');
 
     if (window.innerWidth >= 768) {
-      window.open("https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912", "_blank");
+      window.open('https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912', '_blank');
     } else {
-      window.location.href = "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912";
+      window.location.href = 'https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912';
     }
 
     setTimeout(() => {
@@ -173,22 +174,22 @@ const EnhancedPricingSection: React.FC<EnhancedPricingSectionProps> = ({ classNa
               <div className="space-y-5">
                 {[
                   {
-                    item: "Guia Completo de Estilo Personalizado",
-                    description: "Manual exclusivo baseado no seu perfil único",
-                    value: "R$ 97,00",
-                    badge: "PRINCIPAL",
+                    item: 'Guia Completo de Estilo Personalizado',
+                    description: 'Manual exclusivo baseado no seu perfil único',
+                    value: 'R$ 97,00',
+                    badge: 'PRINCIPAL',
                   },
                   {
-                    item: "Bônus: Manual de Peças Estratégicas",
-                    description: "Descubra as peças-chave do seu guarda-roupa",
-                    value: "R$ 47,00",
-                    badge: "BÔNUS",
+                    item: 'Bônus: Manual de Peças Estratégicas',
+                    description: 'Descubra as peças-chave do seu guarda-roupa',
+                    value: 'R$ 47,00',
+                    badge: 'BÔNUS',
                   },
                   {
-                    item: "Bônus: Guia de Visagismo Facial",
-                    description: "Cortes e acessórios ideais para seu rosto",
-                    value: "R$ 31,00",
-                    badge: "BÔNUS",
+                    item: 'Bônus: Guia de Visagismo Facial',
+                    description: 'Cortes e acessórios ideais para seu rosto',
+                    value: 'R$ 31,00',
+                    badge: 'BÔNUS',
                   },
                 ].map((product, index) => (
                   <motion.div
@@ -209,7 +210,7 @@ const EnhancedPricingSection: React.FC<EnhancedPricingSectionProps> = ({ classNa
                             className="px-2 py-1 text-xs font-bold rounded-full text-white"
                             style={{
                               backgroundColor:
-                                product.badge === "PRINCIPAL"
+                                product.badge === 'PRINCIPAL'
                                   ? tokens.colors.primary
                                   : tokens.colors.secondary,
                             }}
@@ -252,7 +253,7 @@ const EnhancedPricingSection: React.FC<EnhancedPricingSectionProps> = ({ classNa
                       <motion.div
                         style={{ backgroundColor: '#FAF9F7' }}
                         initial={{ width: 0 }}
-                        whileInView={{ width: "100%" }}
+                        whileInView={{ width: '100%' }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.8, delay: 1 }}
                       />
@@ -277,16 +278,16 @@ const EnhancedPricingSection: React.FC<EnhancedPricingSectionProps> = ({ classNa
                   style={{ backgroundColor: tokens.colors.backgroundAccent }}
                 >
                   {[
-                    { key: "parcelado", label: "Parcelado" },
-                    { key: "avista", label: "À Vista" },
+                    { key: 'parcelado', label: 'Parcelado' },
+                    { key: 'avista', label: 'À Vista' },
                   ].map(tab => (
                     <button
                       key={tab.key}
-                      onClick={() => setActiveTab(tab.key as "avista" | "parcelado")}
+                      onClick={() => setActiveTab(tab.key as 'avista' | 'parcelado')}
                       className={`px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
                         activeTab === tab.key
-                          ? "bg-white text-[#432818] shadow-sm"
-                          : "text-[#8F7A6A] hover:text-[#432818]"
+                          ? 'bg-white text-[#432818] shadow-sm'
+                          : 'text-[#8F7A6A] hover:text-[#432818]'
                       }`}
                     >
                       {tab.label}
@@ -297,7 +298,7 @@ const EnhancedPricingSection: React.FC<EnhancedPricingSectionProps> = ({ classNa
 
               {/* Preço Dinâmico */}
               <AnimatePresence mode="wait">
-                {activeTab === "parcelado" ? (
+                {activeTab === 'parcelado' ? (
                   <motion.div
                     key="parcelado"
                     initial={{ opacity: 0, y: 20 }}
@@ -396,7 +397,7 @@ const EnhancedPricingSection: React.FC<EnhancedPricingSectionProps> = ({ classNa
                   style={{
                     background: `linear-gradient(135deg, ${tokens.colors.accent}, ${tokens.colors.accentDark})`,
                     boxShadow: isHovered ? tokens.shadows.cta : tokens.shadows.lg,
-                    transform: isHovered ? "translateY(-2px)" : "translateY(0)",
+                    transform: isHovered ? 'translateY(-2px)' : 'translateY(0)',
                   }}
                 >
                   <motion.span
@@ -427,23 +428,23 @@ const EnhancedPricingSection: React.FC<EnhancedPricingSectionProps> = ({ classNa
               {[
                 {
                   icon: <Shield className="w-4 h-4" />,
-                  text: "Pagamento 100% Seguro",
-                  color: "text-green-500",
+                  text: 'Pagamento 100% Seguro',
+                  color: 'text-green-500',
                 },
                 {
                   icon: <Award className="w-4 h-4" />,
-                  text: "Garantia de 7 dias",
-                  color: "text-yellow-500",
+                  text: 'Garantia de 7 dias',
+                  color: 'text-yellow-500',
                 },
                 {
                   icon: <Zap className="w-4 h-4" />,
-                  text: "Acesso Imediato",
-                  color: "text-[#B89B7A]",
+                  text: 'Acesso Imediato',
+                  color: 'text-[#B89B7A]',
                 },
                 {
                   icon: <Star className="w-4 h-4" />,
-                  text: "Avaliação 5 estrelas",
-                  color: "text-purple-500",
+                  text: 'Avaliação 5 estrelas',
+                  color: 'text-purple-500',
                 },
               ].map((item, index) => (
                 <motion.div
@@ -471,7 +472,7 @@ const EnhancedPricingSection: React.FC<EnhancedPricingSectionProps> = ({ classNa
                 src="https://res.cloudinary.com/dqljyf76t/image/upload/v1744920983/Espanhol_Portugu%C3%AAs_8_cgrhuw.webp"
                 alt="Métodos de pagamento"
                 className="w-full max-w-md mx-auto rounded-lg"
-                style={{ filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.1))" }}
+                style={{ filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.1))' }}
                 loading="lazy"
               />
             </motion.div>

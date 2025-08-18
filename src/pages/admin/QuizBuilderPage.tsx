@@ -1,6 +1,5 @@
-import React from "react";
-import AdminLayout from "../../components/admin/AdminLayout";
-import EnhancedQuizBuilder from "@/components/enhanced-editor/EnhancedQuizBuilder";
+import AdminLayout from '../../components/admin/AdminLayout';
+import EnhancedQuizBuilder from '@/components/enhanced-editor/EnhancedQuizBuilder';
 
 const QuizBuilderPage = () => {
   return (

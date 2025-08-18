@@ -1,15 +1,15 @@
 // @ts-nocheck
-import { useCallback } from "react";
-import type { BlockData } from "../../../types/blocks";
-import { useToast } from "../../../hooks/use-toast";
+import { useCallback } from 'react';
+import type { BlockData } from '@/types/blocks';
+import { useToast } from '@/hooks/use-toast';
 
 export // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -86,53 +86,53 @@ const useBlockHandlers = (
     try {
       setSelectedBlockId(null);
 
-      console.log("🔄 Carregando blocos de teste básicos...");
+      console.log('🔄 Carregando blocos de teste básicos...');
 
       // Blocos de teste extremamente simples para garantir funcionamento
       const testBlocks = [
         {
-          id: "test-1",
-          type: "heading",
+          id: 'test-1',
+          type: 'heading',
           properties: {
-            content: "Bem-vindo ao Editor Visual das 21 Etapas",
-            level: "h1",
-            textAlign: "center",
-            color: "#1f2937",
+            content: 'Bem-vindo ao Editor Visual das 21 Etapas',
+            level: 'h1',
+            textAlign: 'center',
+            color: '#1f2937',
           },
         },
         {
-          id: "test-2",
-          type: "text",
+          id: 'test-2',
+          type: 'text',
           properties: {
             content:
-              "Este é um exemplo de texto editável. Clique neste bloco para configurar suas propriedades.",
-            textAlign: "left",
+              'Este é um exemplo de texto editável. Clique neste bloco para configurar suas propriedades.',
+            textAlign: 'left',
           },
         },
         {
-          id: "test-3",
-          type: "button",
+          id: 'test-3',
+          type: 'button',
           properties: {
-            content: "Botão de Exemplo",
-            backgroundColor: "#3b82f6",
-            textColor: "#ffffff",
-            size: "medium",
+            content: 'Botão de Exemplo',
+            backgroundColor: '#3b82f6',
+            textColor: '#ffffff',
+            size: 'medium',
           },
         },
         {
-          id: "test-4",
-          type: "text-inline",
+          id: 'test-4',
+          type: 'text-inline',
           properties: {
-            content: "Componente de texto inline - totalmente responsivo e editável",
+            content: 'Componente de texto inline - totalmente responsivo e editável',
           },
         },
         {
-          id: "test-5",
-          type: "heading-inline",
+          id: 'test-5',
+          type: 'heading-inline',
           properties: {
-            content: "Título Responsivo",
-            level: "h2",
-            color: "#059669",
+            content: 'Título Responsivo',
+            level: 'h2',
+            color: '#059669',
           },
         },
       ];
@@ -159,12 +159,12 @@ const useBlockHandlers = (
 
       console.log(`✅ ${addedCount} blocos de teste adicionados com sucesso!`);
     } catch (error) {
-      console.error("❌ Erro ao carregar template:", error);
+      console.error('❌ Erro ao carregar template:', error);
     }
   }, [addBlock, updateBlock, selectedStepId, setSelectedBlockId]);
 
   const handleClearAll = useCallback(() => {
-    if (confirm("Tem certeza que deseja limpar todos os blocos?")) {
+    if (confirm('Tem certeza que deseja limpar todos os blocos?')) {
       // Limpar todos os blocos
       blocks.forEach(block => {
         deleteBlock(block.id);
@@ -173,14 +173,14 @@ const useBlockHandlers = (
 
       // 🧹 LIMPEZA ADICIONAL: Remover dados corrompidos do localStorage
       try {
-        localStorage.removeItem("editorConfig");
-        localStorage.removeItem("quiz-blocks");
-        console.log("🗑️ Cache local limpo");
+        localStorage.removeItem('editorConfig');
+        localStorage.removeItem('quiz-blocks');
+        console.log('🗑️ Cache local limpo');
       } catch (error) {
-        console.warn("⚠️ Erro ao limpar cache local:", error);
+        console.warn('⚠️ Erro ao limpar cache local:', error);
       }
 
-      console.log("🗑️ Todos os blocos foram removidos");
+      console.log('🗑️ Todos os blocos foram removidos');
     }
   }, [blocks, deleteBlock, setSelectedBlockId]);
 
@@ -190,7 +190,7 @@ const useBlockHandlers = (
 
     let removedCount = 0;
     blocks.forEach(block => {
-      if (block.type === "guarantee" || block.type === "Garantia") {
+      if (block.type === 'guarantee' || block.type === 'Garantia') {
         console.log(`🗑️ Removendo bloco corrompido: ${block.type} (${block.id})`);
         deleteBlock(block.id);
         removedCount++;
@@ -200,7 +200,7 @@ const useBlockHandlers = (
     if (removedCount > 0) {
       console.log(`✅ ${removedCount} blocos "guarantee" removidos`);
       toast({
-        title: "Blocos corrompidos removidos",
+        title: 'Blocos corrompidos removidos',
         description: `${removedCount} blocos "guarantee" foram removidos do editor.`,
       });
     } else {

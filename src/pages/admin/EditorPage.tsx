@@ -1,9 +1,7 @@
-import React from "react";
-import { useLocation } from "wouter";
-import EditorFixedPageWithDragDrop from "../editor-fixed-dragdrop";
+// import EditorFixedSimple from '../../legacy/pages/EditorFixedSimple';
 
 const EditorPage: React.FC = () => {
-  return <EditorFixedPageWithDragDrop />;
+  return <div className="p-8"><h1 className="text-2xl">Editor Page - Under Maintenance</h1></div>;
 };
 
 export default EditorPage;

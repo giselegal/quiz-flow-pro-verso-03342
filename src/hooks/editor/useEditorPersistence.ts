@@ -1,7 +1,7 @@
-import { useState, useCallback } from "react";
-import { schemaDrivenFunnelService } from "../../services/schemaDrivenFunnelService";
-import type { SchemaDrivenFunnelData } from "../../services/schemaDrivenFunnelService";
-import { useToast } from "../../components/ui/use-toast";
+import { useCallback, useState } from 'react';
+import { useToast } from '../../components/ui/use-toast';
+import type { SchemaDrivenFunnelData } from '../../services/schemaDrivenFunnelService';
+import { schemaDrivenFunnelService } from '../../services/schemaDrivenFunnelService';
 
 // Interface para compatibilidade com o editor existente
 export interface FunnelData {
@@ -39,55 +39,49 @@ export const useEditorPersistence = () => {
         const schemaDrivenData: SchemaDrivenFunnelData = {
           id: data.id,
           name: data.name,
-          description: data.description || "",
-          theme: "default",
+          description: data.description || '',
+          theme: 'default',
           isPublished: data.isPublished,
           pages: data.pages.map(page => ({
             id: page.id,
-            name: page.title,
-            title: page.title,
-            type: page.pageType as any,
-            order: page.pageOrder,
-            blocks: page.blocks,
-            settings: {
-              showProgress: false,
-              progressValue: 0,
-              backgroundColor: "#ffffff",
-              textColor: "#432818",
-              maxWidth: "max-w-4xl",
-              padding: "p-6",
-            },
-            metadata: page.metadata,
+            funnel_id: data.id,
+            page_type: page.pageType || 'step',
+            page_order: page.pageOrder || 1,
+            title: page.title || null,
+            blocks: page.blocks || [],
+            metadata: page.metadata || {},
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
           })),
           config: {
             name: data.name,
-            description: data.description || "",
+            description: data.description || '',
             isPublished: data.isPublished,
-            theme: "default",
-            primaryColor: "#B89B7A",
-            secondaryColor: "#432818",
-            fontFamily: "Inter, sans-serif",
+            theme: 'default',
+            primaryColor: '#B89B7A',
+            secondaryColor: '#432818',
+            fontFamily: 'Inter, sans-serif',
           },
           version: data.version,
           lastModified: new Date(),
           createdAt: data.createdAt ? new Date(data.createdAt) : new Date(),
         };
 
-        const result = await schemaDrivenFunnelService.saveFunnel(schemaDrivenData);
+        await schemaDrivenFunnelService.saveFunnel(schemaDrivenData);
 
         toast({
-          title: "Sucesso",
-          description: "Funil salvo com sucesso!",
+          title: 'Sucesso',
+          description: 'Funil salvo com sucesso!',
         });
         return { success: true };
       } catch (error) {
-        console.error("Error saving funnel:", error);
+        console.error('Error saving funnel:', error);
         toast({
-          title: "Erro",
-          description: "Erro inesperado ao salvar",
-          variant: "destructive",
+          title: 'Erro',
+          description: 'Erro inesperado ao salvar',
+          variant: 'destructive',
         });
-        return { success: false, error: "Unexpected error" };
+        return { success: false, error: 'Unexpected error' };
       } finally {
         setIsSaving(false);
       }
@@ -109,17 +103,18 @@ export const useEditorPersistence = () => {
         const funnelData: FunnelData = {
           id: schemaDrivenData.id,
           name: schemaDrivenData.name,
-          description: schemaDrivenData.description || "",
+          description: schemaDrivenData.description || '',
           isPublished: schemaDrivenData.isPublished || false,
           version: schemaDrivenData.version || 1,
           settings: schemaDrivenData.config || {},
           pages: schemaDrivenData.pages.map(page => ({
             id: page.id,
-            pageType: page.type,
-            pageOrder: page.order,
-            title: page.title,
-            blocks: page.blocks,
-            metadata: page.metadata || {},
+            pageType: page.page_type || 'step',
+            pageOrder: page.page_order || 1,
+            title: page.title || 'Untitled',
+            blocks: Array.isArray(page.blocks) ? page.blocks : [],
+            metadata:
+              typeof page.metadata === 'object' && page.metadata !== null ? page.metadata : {},
           })),
           createdAt: schemaDrivenData.createdAt?.toISOString(),
           updatedAt: schemaDrivenData.lastModified?.toISOString(),
@@ -127,11 +122,11 @@ export const useEditorPersistence = () => {
 
         return funnelData;
       } catch (error) {
-        console.error("Error loading funnel:", error);
+        console.error('Error loading funnel:', error);
         toast({
-          title: "Erro",
-          description: "Erro ao carregar funil",
-          variant: "destructive",
+          title: 'Erro',
+          description: 'Erro ao carregar funil',
+          variant: 'destructive',
         });
         return null;
       } finally {
@@ -145,14 +140,14 @@ export const useEditorPersistence = () => {
     setIsLoading(true);
     try {
       // TODO: Implementar listagem de funis no schemaDrivenFunnelService
-      console.warn("listFunnels não implementado ainda no schemaDrivenFunnelService");
+      console.warn('listFunnels não implementado ainda no schemaDrivenFunnelService');
       return [];
     } catch (error) {
-      console.error("Error listing funnels:", error);
+      console.error('Error listing funnels:', error);
       toast({
-        title: "Erro",
-        description: "Erro ao listar funis",
-        variant: "destructive",
+        title: 'Erro',
+        description: 'Erro ao listar funis',
+        variant: 'destructive',
       });
       return [];
     } finally {
@@ -161,46 +156,46 @@ export const useEditorPersistence = () => {
   }, [toast]);
 
   const deleteFunnel = useCallback(
-    async (id: string) => {
+    async (_id: string) => {
       try {
         // TODO: Implementar deleteFunnel no schemaDrivenFunnelService
-        console.warn("deleteFunnel não implementado ainda no schemaDrivenFunnelService");
+        console.warn('deleteFunnel não implementado ainda no schemaDrivenFunnelService');
         toast({
-          title: "Sucesso",
-          description: "Funil deletado com sucesso!",
+          title: 'Sucesso',
+          description: 'Funil deletado com sucesso!',
         });
         return { success: true };
       } catch (error) {
-        console.error("Error deleting funnel:", error);
+        console.error('Error deleting funnel:', error);
         toast({
-          title: "Erro",
-          description: "Erro inesperado ao deletar",
-          variant: "destructive",
+          title: 'Erro',
+          description: 'Erro inesperado ao deletar',
+          variant: 'destructive',
         });
-        return { success: false, error: "Unexpected error" };
+        return { success: false, error: 'Unexpected error' };
       }
     },
     [toast]
   );
 
   const publishFunnel = useCallback(
-    async (id: string) => {
+    async (_id: string) => {
       try {
         // TODO: Implementar publishFunnel no schemaDrivenFunnelService
-        console.warn("publishFunnel não implementado ainda no schemaDrivenFunnelService");
+        console.warn('publishFunnel não implementado ainda no schemaDrivenFunnelService');
         toast({
-          title: "Sucesso",
-          description: "Funil publicado com sucesso!",
+          title: 'Sucesso',
+          description: 'Funil publicado com sucesso!',
         });
         return { success: true };
       } catch (error) {
-        console.error("Error publishing funnel:", error);
+        console.error('Error publishing funnel:', error);
         toast({
-          title: "Erro",
-          description: "Erro inesperado ao publicar",
-          variant: "destructive",
+          title: 'Erro',
+          description: 'Erro inesperado ao publicar',
+          variant: 'destructive',
         });
-        return { success: false, error: "Unexpected error" };
+        return { success: false, error: 'Unexpected error' };
       }
     },
     [toast]

@@ -4,20 +4,20 @@
  * Suporta upload por arquivo, URL e drag & drop
  */
 
-import React, { useState, useRef, useCallback } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import React, { useState, useRef, useCallback } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Upload, Image as ImageIcon, Link, X, Eye } from "lucide-react";
-import { cn } from "@/lib/utils";
+} from '@/components/ui/dialog';
+import { Upload, Image as ImageIcon, Link, X, Eye } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface ImageUploaderProps {
   value: string;
@@ -35,10 +35,10 @@ export function ImageUploader({
   onChange,
   label,
   disabled = false,
-  accept = "image/*",
+  accept = 'image/*',
   maxSize = 5,
   aspectRatio,
-  placeholder = "Selecione uma imagem",
+  placeholder = 'Selecione uma imagem',
 }: ImageUploaderProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [urlValue, setUrlValue] = useState(value);
@@ -70,7 +70,7 @@ export function ImageUploader({
       setDragActive(false);
 
       const file = e.dataTransfer.files[0];
-      if (file && file.type.startsWith("image/")) {
+      if (file && file.type.startsWith('image/')) {
         handleFileSelect(file);
       }
     },
@@ -95,8 +95,8 @@ export function ImageUploader({
   };
 
   const clearImage = () => {
-    onChange("");
-    setUrlValue("");
+    onChange('');
+    setUrlValue('');
   };
 
   const openPreview = () => {
@@ -111,8 +111,8 @@ export function ImageUploader({
         {/* Preview da imagem atual */}
         <div
           className={cn(
-            "w-20 h-20 rounded-md border border-gray-300 flex-shrink-0 overflow-hidden bg-gray-50",
-            aspectRatio && "aspect-square"
+            'w-20 h-20 rounded-md border border-gray-300 flex-shrink-0 overflow-hidden bg-gray-50',
+            aspectRatio && 'aspect-square'
           )}
         >
           {value ? (
@@ -136,7 +136,7 @@ export function ImageUploader({
               <DialogTrigger asChild>
                 <Button variant="outline" size="sm" disabled={disabled} className="flex-1">
                   <Upload className="w-4 h-4 mr-2" />
-                  {value ? "Alterar" : "Selecionar"}
+                  {value ? 'Alterar' : 'Selecionar'}
                 </Button>
               </DialogTrigger>
               <DialogContent className="max-w-md">
@@ -153,9 +153,9 @@ export function ImageUploader({
                   <TabsContent value="upload" className="space-y-4">
                     <div
                       className={cn(
-                        "border-2 border-dashed rounded-lg p-6 text-center transition-colors",
-                        dragActive ? "border-[#B89B7A] bg-[#B89B7A]/10" : "border-gray-300",
-                        "hover:border-gray-400"
+                        'border-2 border-dashed rounded-lg p-6 text-center transition-colors',
+                        dragActive ? 'border-[#B89B7A] bg-[#B89B7A]/10' : 'border-gray-300',
+                        'hover:border-gray-400'
                       )}
                       onDrop={handleDrop}
                       onDragOver={handleDragOver}

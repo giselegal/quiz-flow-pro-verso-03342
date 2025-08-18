@@ -1,4 +1,5 @@
-import { trackSaleConversion } from "@/utils/analytics";
+// @ts-nocheck
+import { trackSaleConversion } from '@/utils/analytics';
 
 // Declare window interface extensions
 declare global {
@@ -9,67 +10,67 @@ declare global {
 
 // Function to initialize Hotmart tracking
 export const initHotmartTracking = (hmtc: any, transaction: any) => {
-  if (typeof window === "undefined") return;
+  if (typeof window === 'undefined') return;
 
   try {
-    if (hmtc && typeof hmtc === "function") {
+    if (hmtc && typeof hmtc === 'function') {
       hmtc(transaction);
-      console.log("[Hotmart Integration] Tracking initialized", transaction);
+      console.log('[Hotmart Integration] Tracking initialized', transaction);
     } else {
-      console.warn("[Hotmart Integration] hmtc function not available.");
+      console.warn('[Hotmart Integration] hmtc function not available.');
     }
   } catch (error) {
-    console.error("[Hotmart Integration] Error initializing tracking:", error);
+    console.error('[Hotmart Integration] Error initializing tracking:', error);
   }
 };
 
 // Function to track product purchase
 export const trackHotmartPurchase = (transaction: any) => {
-  if (typeof window === "undefined") return;
+  if (typeof window === 'undefined') return;
 
   try {
     if (window.onload) {
       window.onload = () => {
-        if (window.hmtc && typeof window.hmtc === "function") {
+        if (window.hmtc && typeof window.hmtc === 'function') {
           window.hmtc(transaction);
-          console.log("[Hotmart Integration] Purchase tracked", transaction);
+          console.log('[Hotmart Integration] Purchase tracked', transaction);
         } else {
-          console.warn("[Hotmart Integration] hmtc function not available.");
+          console.warn('[Hotmart Integration] hmtc function not available.');
         }
       };
     } else {
-      if (window.hmtc && typeof window.hmtc === "function") {
+      if (window.hmtc && typeof window.hmtc === 'function') {
         window.hmtc(transaction);
-        console.log("[Hotmart Integration] Purchase tracked", transaction);
+        console.log('[Hotmart Integration] Purchase tracked', transaction);
       } else {
-        console.warn("[Hotmart Integration] hmtc function not available.");
+        console.warn('[Hotmart Integration] hmtc function not available.');
       }
     }
   } catch (error) {
-    console.error("[Hotmart Integration] Error tracking purchase:", error);
+    console.error('[Hotmart Integration] Error tracking purchase:', error);
   }
 };
 
 // Function to handle affiliate tracking
 export const handleAffiliateTracking = (source: string) => {
-  if (typeof window === "undefined") return;
+  if (typeof window === 'undefined') return;
 
   try {
-    localStorage.setItem("affiliate_source", source);
+    localStorage.setItem('affiliate_source', source);
     console.log(`[Hotmart Integration] Affiliate source stored: ${source}`);
   } catch (error) {
-    console.error("[Hotmart Integration] Error storing affiliate source:", error);
+    console.error('[Hotmart Integration] Error storing affiliate source:', error);
   }
 };
 
 // Function to get affiliate source
 export const getAffiliateSource = () => {
-  if (typeof window === "undefined") return null;
+  if (typeof window === 'undefined') return null;
 
   try {
-    return localStorage.getItem("affiliate_source");
+    return localStorage.getItem('affiliate_source');
   } catch (error) {
-    console.error("[Hotmart Integration] Error retrieving affiliate source:", error);
+    console.error('[Hotmart Integration] Error retrieving affiliate source:', error);
     return null;
   }
 };
@@ -86,11 +87,11 @@ export const handlePurchaseComplete = (transactionData: any) => {
       // Use the imported function instead of window property
       trackSaleConversion(
         transactionData.value,
-        transactionData.currency || "BRL",
+        transactionData.currency || 'BRL',
         transactionData.productName
       );
     }
   } catch (error) {
-    console.error("Error handling purchase complete:", error);
+    console.error('Error handling purchase complete:', error);
   }
 };

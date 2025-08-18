@@ -1,5 +1,4 @@
-import React from "react";
-import { StyleResult } from "@/types/quiz";
+import { StyleResult } from '@/types/quiz';
 
 interface StyleResultBlockPreviewProps {
   content: {
@@ -14,7 +13,7 @@ const StyleResultBlockPreview: React.FC<StyleResultBlockPreviewProps> = ({
   primaryStyle,
 }) => {
   const getStyleImage = (): string => {
-    const defaultImage = "https://placehold.co/600x400/png";
+    const defaultImage = 'https://placehold.co/600x400/png';
     return content.customImage || defaultImage;
   };
 

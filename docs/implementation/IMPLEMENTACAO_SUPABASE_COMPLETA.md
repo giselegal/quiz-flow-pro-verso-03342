@@ -119,9 +119,9 @@ Esta implementação adiciona integração completa com **Supabase** para coleta
 // Criação automática do usuário com dados UTM
 await quizSupabaseService.createOrUpdateUser({
   name: userName,
-  utm_source: "google",
-  utm_medium: "cpc",
-  utm_campaign: "quiz-style",
+  utm_source: 'google',
+  utm_medium: 'cpc',
+  utm_campaign: 'quiz-style',
   referrer: document.referrer,
 });
 ```
@@ -131,10 +131,10 @@ await quizSupabaseService.createOrUpdateUser({
 ```typescript
 // Inicia sessão com tracking completo
 await quizSupabaseService.startQuizSession({
-  started_from: "step1-button",
+  started_from: 'step1-button',
   user_name: userName,
-  device_type: "mobile",
-  funnel_id: "quiz-style-21-etapas",
+  device_type: 'mobile',
+  funnel_id: 'quiz-style-21-etapas',
 });
 ```
 
@@ -144,11 +144,11 @@ await quizSupabaseService.startQuizSession({
 // Salva cada resposta automaticamente
 await quizSupabaseService.saveStepResponse({
   step_number: 2,
-  step_id: "etapa-2",
+  step_id: 'etapa-2',
   response_data: {
-    question_id: "q1",
-    selected_options: ["Clássico e elegante"],
-    style_category: "Visionário",
+    question_id: 'q1',
+    selected_options: ['Clássico e elegante'],
+    style_category: 'Visionário',
     points: 3,
   },
 });
@@ -166,10 +166,10 @@ const results = await quizSupabaseService.calculateStyleResults();
 
 ```typescript
 // Rastreia eventos do usuário
-await quizSupabaseService.trackEvent("checkout_click", {
+await quizSupabaseService.trackEvent('checkout_click', {
   step_number: 21,
-  step_id: "oferta",
-  event_data: { button_text: "Comprar Agora", offer_price: "R$ 39,00" },
+  step_id: 'oferta',
+  event_data: { button_text: 'Comprar Agora', offer_price: 'R$ 39,00' },
 });
 ```
 
@@ -177,7 +177,7 @@ await quizSupabaseService.trackEvent("checkout_click", {
 
 ```typescript
 // Rastreia conversões de vendas
-await quizSupabaseService.trackConversion("purchase");
+await quizSupabaseService.trackConversion('purchase');
 ```
 
 ## 🎨 Categorias de Estilo Implementadas
@@ -232,7 +232,7 @@ O sistema está configurado para funcionar automaticamente. O Supabase é inicia
 
 ```typescript
 // No ButtonInlineBlock, quando usuário clica "Descobrir meu Estilo"
-const userName = userResponseService.getResponse("intro-name-input");
+const userName = userResponseService.getResponse('intro-name-input');
 await initializeQuizWithSupabase(userName);
 ```
 
@@ -255,7 +255,7 @@ console.log(results.primary_style, results.secondary_style);
 
 ```typescript
 // Quando usuário clica em botão de compra
-await quizSupabaseService.trackEvent("checkout_click", eventData);
+await quizSupabaseService.trackEvent('checkout_click', eventData);
 ```
 
 ## 📈 Benefícios da Implementação

@@ -1,17 +1,16 @@
 // @ts-nocheck
-import React from "react";
-import { InlineEditableText } from "./InlineEditableText";
-import { Progress } from "@/components/ui/progress";
-import { Card } from "@/components/ui/card";
-import type { BlockComponentProps } from "@/types/blocks";
+import { InlineEditableText } from './InlineEditableText';
+import { Progress } from '@/components/ui/progress';
+import { Card } from '@/components/ui/card';
+import type { BlockComponentProps } from '@/types/blocks';
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -54,16 +53,16 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   onPropertyChange,
-  className = "",
+  className = '',
 }) => {
   const {
-    title = "Seu Estilo Predominante",
+    title = 'Seu Estilo Predominante',
     percentage = 85,
-    description = "Descubra como aplicar seu estilo pessoal único na prática...",
-    imageUrl = "https://via.placeholder.com/238x320?text=Estilo",
-    guideImageUrl = "https://via.placeholder.com/540x300?text=Guia+de+Estilo",
-    progressColor = "#B89B7A",
-    badgeText = "Exclusivo",
+    description = 'Descubra como aplicar seu estilo pessoal único na prática...',
+    imageUrl = 'https://via.placeholder.com/238x320?text=Estilo',
+    guideImageUrl = 'https://via.placeholder.com/540x300?text=Guia+de+Estilo',
+    progressColor = '#B89B7A',
+    badgeText = 'Exclusivo',
   } = block?.properties || {};
 
   const handlePropertyChange = (key: string, value: any) => {
@@ -79,8 +78,8 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
         p-3 rounded-lg transition-all duration-200
         ${
           isSelected
-            ? "border-2 border-[#B89B7A] bg-[#B89B7A]/10"
-            : "border-2 border-dashed border-transparent hover:border-[#B89B7A]/40 hover:bg-[#B89B7A]/10/30"
+            ? 'border-2 border-[#B89B7A] bg-[#B89B7A]/10'
+            : 'border-2 border-dashed border-transparent hover:border-[#B89B7A]/40 hover:bg-[#B89B7A]/10/30'
         }
         ${className}
       `}
@@ -92,7 +91,7 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
               <span className="text-sm text-[#8F7A6A]">
                 <InlineEditableText
                   value={title}
-                  onChange={value => handlePropertyChange("title", value)}
+                  onChange={value => handlePropertyChange('title', value)}
                   placeholder="Título do resultado"
                   className="text-sm text-[#8F7A6A]"
                 />
@@ -100,10 +99,10 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
               <span
                 className="text-[#aa6b5d] font-medium cursor-pointer"
                 onClick={() => {
-                  const newPercentage = prompt("Nova porcentagem (0-100):", percentage.toString());
+                  const newPercentage = prompt('Nova porcentagem (0-100):', percentage.toString());
                   if (newPercentage !== null && !isNaN(Number(newPercentage))) {
                     handlePropertyChange(
-                      "percentage",
+                      'percentage',
                       Math.max(0, Math.min(100, Number(newPercentage)))
                     );
                   }
@@ -117,7 +116,7 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
               className="h-2 bg-[#F3E8E6]"
               style={
                 {
-                  "--progress-color": progressColor,
+                  '--progress-color': progressColor,
                 } as React.CSSProperties
               }
             />
@@ -129,7 +128,7 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
             <p className="text-[#432818] leading-relaxed">
               <InlineEditableText
                 value={description}
-                onChange={value => handlePropertyChange("description", value)}
+                onChange={value => handlePropertyChange('description', value)}
                 placeholder="Descrição do estilo predominante..."
                 className="text-[#432818] leading-relaxed"
                 multiline
@@ -143,8 +142,8 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
               alt="Estilo"
               className="w-full h-auto rounded-lg shadow-md hover:scale-105 transition-transform duration-300 cursor-pointer"
               onClick={() => {
-                const newUrl = prompt("Nova URL da imagem:", imageUrl);
-                if (newUrl !== null) handlePropertyChange("imageUrl", newUrl);
+                const newUrl = prompt('Nova URL da imagem:', imageUrl);
+                if (newUrl !== null) handlePropertyChange('imageUrl', newUrl);
               }}
             />
             {/* Decorative corners */}
@@ -159,8 +158,8 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
             alt="Guia de Estilo"
             className="w-full h-auto rounded-lg shadow-md hover:scale-105 transition-transform duration-300 cursor-pointer"
             onClick={() => {
-              const newUrl = prompt("Nova URL da imagem do guia:", guideImageUrl);
-              if (newUrl !== null) handlePropertyChange("guideImageUrl", newUrl);
+              const newUrl = prompt('Nova URL da imagem do guia:', guideImageUrl);
+              if (newUrl !== null) handlePropertyChange('guideImageUrl', newUrl);
             }}
           />
 
@@ -168,8 +167,8 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
           <div
             className="absolute -top-4 -right-4 bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] text-white px-4 py-2 rounded-full shadow-lg text-sm font-medium transform rotate-12 cursor-pointer"
             onClick={() => {
-              const newBadge = prompt("Novo texto do badge:", badgeText);
-              if (newBadge !== null) handlePropertyChange("badgeText", newBadge);
+              const newBadge = prompt('Novo texto do badge:', badgeText);
+              if (newBadge !== null) handlePropertyChange('badgeText', newBadge);
             }}
           >
             {badgeText}

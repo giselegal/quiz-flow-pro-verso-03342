@@ -4,7 +4,7 @@ const path = require('path');
 
 const filesToFix = [
   'src/components/blocks/quiz/QuizMultipleChoiceBlock.tsx',
-  'src/components/blocks/quiz/QuizNavigationBlock.tsx', 
+  'src/components/blocks/quiz/QuizNavigationBlock.tsx',
   'src/components/blocks/quiz/QuizOptionsGridBlock.tsx',
   'src/components/blocks/quiz/QuizResultsBlockEditor.tsx',
   'src/components/blocks/quiz/QuizTransitionBlock.tsx',
@@ -16,7 +16,7 @@ const filesToFix = [
   'src/components/editor/DeleteBlockButton.tsx',
   'src/components/editor/EditBlockContent.tsx',
   'src/components/editor/EditorBlockItem.tsx',
-  'src/components/editor/TestDeleteComponent.tsx'
+  'src/components/editor/TestDeleteComponent.tsx',
 ];
 
 filesToFix.forEach(file => {

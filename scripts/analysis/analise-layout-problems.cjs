@@ -5,96 +5,96 @@
  * Identificação e correção de problemas visuais
  */
 
-const fs = require("fs");
-const path = require("path");
+const fs = require('fs');
+const path = require('path');
 
-console.log("🎨 ANÁLISE DE PROBLEMAS DE LAYOUT NO RESULTPAGE");
-console.log("📊 Identificação de Problemas Visuais");
-console.log("=".repeat(70));
+console.log('🎨 ANÁLISE DE PROBLEMAS DE LAYOUT NO RESULTPAGE');
+console.log('📊 Identificação de Problemas Visuais');
+console.log('='.repeat(70));
 
 // Carregar arquivo ResultPage
-const resultPagePath = path.join(__dirname, "src/pages/ResultPage.tsx");
-let resultPageContent = "";
+const resultPagePath = path.join(__dirname, 'src/pages/ResultPage.tsx');
+let resultPageContent = '';
 
 if (fs.existsSync(resultPagePath)) {
-  resultPageContent = fs.readFileSync(resultPagePath, "utf8");
-  console.log("✅ ResultPage.tsx carregado");
+  resultPageContent = fs.readFileSync(resultPagePath, 'utf8');
+  console.log('✅ ResultPage.tsx carregado');
 } else {
-  console.log("❌ ResultPage.tsx não encontrado");
+  console.log('❌ ResultPage.tsx não encontrado');
   process.exit(1);
 }
 
-console.log("\n📋 PROBLEMAS DE LAYOUT IDENTIFICADOS:\n");
+console.log('\n📋 PROBLEMAS DE LAYOUT IDENTIFICADOS:\n');
 
 // 1. Analisar estrutura do layout
-console.log("🔧 ESTRUTURA DO LAYOUT:");
+console.log('🔧 ESTRUTURA DO LAYOUT:');
 
 const layoutProblems = [
   {
-    problema: "Container overflow",
+    problema: 'Container overflow',
     regex: /overflow-hidden/g,
-    descricao: "Pode estar cortando conteúdo",
-    nivel: "médio",
+    descricao: 'Pode estar cortando conteúdo',
+    nivel: 'médio',
   },
   {
-    problema: "Z-index conflicts",
+    problema: 'Z-index conflicts',
     regex: /z-10|z-20|z-30/g,
-    descricao: "Conflitos de camadas",
-    nivel: "alto",
+    descricao: 'Conflitos de camadas',
+    nivel: 'alto',
   },
   {
-    problema: "Grid responsivo",
+    problema: 'Grid responsivo',
     regex: /grid.*md:grid-cols-2/g,
-    descricao: "Layout pode quebrar em mobile",
-    nivel: "alto",
+    descricao: 'Layout pode quebrar em mobile',
+    nivel: 'alto',
   },
   {
-    problema: "Fixed heights",
+    problema: 'Fixed heights',
     regex: /h-\[\d+px\]|height:\s*\d+px/g,
-    descricao: "Alturas fixas podem quebrar",
-    nivel: "médio",
+    descricao: 'Alturas fixas podem quebrar',
+    nivel: 'médio',
   },
   {
-    problema: "Absolute positioning",
+    problema: 'Absolute positioning',
     regex: /absolute.*top-|absolute.*bottom-/g,
-    descricao: "Posicionamento absoluto pode sobrepor",
-    nivel: "alto",
+    descricao: 'Posicionamento absoluto pode sobrepor',
+    nivel: 'alto',
   },
 ];
 
 layoutProblems.forEach(problem => {
   const matches = (resultPageContent.match(problem.regex) || []).length;
-  const status = matches > 0 ? "⚠️" : "✅";
+  const status = matches > 0 ? '⚠️' : '✅';
   console.log(`  ${status} ${problem.problema} (${matches}x) - ${problem.descricao}`);
 });
 
-console.log("\n🎨 PROBLEMAS DE CSS ESPECÍFICOS:\n");
+console.log('\n🎨 PROBLEMAS DE CSS ESPECÍFICOS:\n');
 
 // 2. Problemas específicos encontrados
 const specificProblems = [
   {
-    issue: "Container principal sem padding adequado",
-    current: "px-4 py-6",
-    better: "px-4 py-8 md:px-6 lg:px-8",
-    reason: "Melhor espaçamento em diferentes devices",
+    issue: 'Container principal sem padding adequado',
+    current: 'px-4 py-6',
+    better: 'px-4 py-8 md:px-6 lg:px-8',
+    reason: 'Melhor espaçamento em diferentes devices',
   },
   {
-    issue: "Cards com shadow muito leve",
-    current: "shadow-md",
-    better: "shadow-lg hover:shadow-xl",
-    reason: "Melhor hierarquia visual",
+    issue: 'Cards com shadow muito leve',
+    current: 'shadow-md',
+    better: 'shadow-lg hover:shadow-xl',
+    reason: 'Melhor hierarquia visual',
   },
   {
-    issue: "Grid quebra em mobile",
-    current: "grid md:grid-cols-2",
-    better: "flex flex-col md:grid md:grid-cols-2",
-    reason: "Comportamento mais previsível",
+    issue: 'Grid quebra em mobile',
+    current: 'grid md:grid-cols-2',
+    better: 'flex flex-col md:grid md:grid-cols-2',
+    reason: 'Comportamento mais previsível',
   },
   {
-    issue: "Elementos decorativos podem sobrepor",
-    current: "absolute top-0 right-0 w-1/3 h-1/3",
-    better: "absolute top-0 right-0 w-1/4 h-1/4 pointer-events-none",
-    reason: "Evita interferência com cliques",
+    issue: 'Elementos decorativos podem sobrepor',
+    current: 'absolute top-0 right-0 w-1/3 h-1/3',
+    better: 'absolute top-0 right-0 w-1/4 h-1/4 pointer-events-none',
+    reason: 'Evita interferência com cliques',
   },
 ];
 
@@ -105,39 +105,39 @@ specificProblems.forEach((problem, index) => {
   console.log(`   💡 Razão: ${problem.reason}\n`);
 });
 
-console.log("🔧 SOLUÇÕES RECOMENDADAS:\n");
+console.log('🔧 SOLUÇÕES RECOMENDADAS:\n');
 
 const solutions = [
   {
-    area: "Container Principal",
+    area: 'Container Principal',
     fixes: [
-      "Adicionar padding responsivo adequado",
-      "Melhorar max-width para diferentes telas",
-      "Garantir scroll suave e sem overflow",
+      'Adicionar padding responsivo adequado',
+      'Melhorar max-width para diferentes telas',
+      'Garantir scroll suave e sem overflow',
     ],
   },
   {
-    area: "Cards e Componentes",
+    area: 'Cards e Componentes',
     fixes: [
-      "Padronizar shadows e bordas",
-      "Melhorar espaçamentos internos",
-      "Garantir altura mínima consistente",
+      'Padronizar shadows e bordas',
+      'Melhorar espaçamentos internos',
+      'Garantir altura mínima consistente',
     ],
   },
   {
-    area: "Grid Responsivo",
+    area: 'Grid Responsivo',
     fixes: [
-      "Implementar breakpoints mais suaves",
-      "Usar flexbox como fallback",
-      "Testar em diferentes resoluções",
+      'Implementar breakpoints mais suaves',
+      'Usar flexbox como fallback',
+      'Testar em diferentes resoluções',
     ],
   },
   {
-    area: "Elementos Decorativos",
+    area: 'Elementos Decorativos',
     fixes: [
-      "Reduzir opacidade para não competir",
-      "Adicionar pointer-events-none",
-      "Garantir que não atrapalham leitura",
+      'Reduzir opacidade para não competir',
+      'Adicionar pointer-events-none',
+      'Garantir que não atrapalham leitura',
     ],
   },
 ];
@@ -147,24 +147,24 @@ solutions.forEach(solution => {
   solution.fixes.forEach(fix => {
     console.log(`  ✨ ${fix}`);
   });
-  console.log("");
+  console.log('');
 });
 
-console.log("📱 PROBLEMAS MOBILE ESPECÍFICOS:\n");
+console.log('📱 PROBLEMAS MOBILE ESPECÍFICOS:\n');
 
 const mobileIssues = [
-  "Cards muito largos em telas pequenas",
-  "Texto pode ficar muito pequeno",
-  "Botões podem ficar difíceis de clicar",
-  "Imagens podem não se ajustar bem",
-  "Espaçamentos inadequados entre seções",
+  'Cards muito largos em telas pequenas',
+  'Texto pode ficar muito pequeno',
+  'Botões podem ficar difíceis de clicar',
+  'Imagens podem não se ajustar bem',
+  'Espaçamentos inadequados entre seções',
 ];
 
 mobileIssues.forEach((issue, index) => {
   console.log(`${index + 1}. 📱 ${issue}`);
 });
 
-console.log("\n🎨 CSS MELHORADO SUGERIDO:\n");
+console.log('\n🎨 CSS MELHORADO SUGERIDO:\n');
 
 console.log(`
 /* Container principal mais robusto */
@@ -225,24 +225,24 @@ console.log(`
 }
 `);
 
-console.log("\n✅ RESUMO DAS CORREÇÕES NECESSÁRIAS:\n");
+console.log('\n✅ RESUMO DAS CORREÇÕES NECESSÁRIAS:\n');
 
 const corrections = [
-  "1. 🎯 Melhorar padding e margens responsivos",
-  "2. 📱 Corrigir quebras de layout em mobile",
-  "3. 🎨 Padronizar shadows e efeitos visuais",
-  "4. 🔧 Garantir z-index hierarchy adequada",
-  "5. ⚡ Adicionar transições suaves",
-  "6. 📊 Melhorar espaçamento entre componentes",
-  "7. 🎭 Reduzir opacidade de elementos decorativos",
+  '1. 🎯 Melhorar padding e margens responsivos',
+  '2. 📱 Corrigir quebras de layout em mobile',
+  '3. 🎨 Padronizar shadows e efeitos visuais',
+  '4. 🔧 Garantir z-index hierarchy adequada',
+  '5. ⚡ Adicionar transições suaves',
+  '6. 📊 Melhorar espaçamento entre componentes',
+  '7. 🎭 Reduzir opacidade de elementos decorativos',
 ];
 
 corrections.forEach(correction => {
   console.log(correction);
 });
 
-console.log("\n🚀 PRIORIDADE DE IMPLEMENTAÇÃO:");
-console.log("🔥 CRÍTICA: Layout mobile responsivo");
-console.log("⚡ ALTA: Espaçamentos e shadows");
-console.log("📈 MÉDIA: Elementos decorativos");
-console.log("💎 BAIXA: Micro-animações");
+console.log('\n🚀 PRIORIDADE DE IMPLEMENTAÇÃO:');
+console.log('🔥 CRÍTICA: Layout mobile responsivo');
+console.log('⚡ ALTA: Espaçamentos e shadows');
+console.log('📈 MÉDIA: Elementos decorativos');
+console.log('💎 BAIXA: Micro-animações');

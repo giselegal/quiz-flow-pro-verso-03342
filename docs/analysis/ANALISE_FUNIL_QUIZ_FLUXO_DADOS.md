@@ -149,11 +149,11 @@ O funil de quiz é composto por 21 etapas definidas no `StepsContext.tsx`, cada 
   ```typescript
   export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> = {
     // ...
-    "quiz-results": QuizResultsEditor,
-    "quiz-results-block": QuizResultsBlock,
-    "style-results": StyleResultsEditor,
-    "style-results-block": StyleResultsBlock,
-    "final-step": FinalStepEditor,
+    'quiz-results': QuizResultsEditor,
+    'quiz-results-block': QuizResultsBlock,
+    'style-results': StyleResultsEditor,
+    'style-results-block': StyleResultsBlock,
+    'final-step': FinalStepEditor,
     // ...
   };
   ```

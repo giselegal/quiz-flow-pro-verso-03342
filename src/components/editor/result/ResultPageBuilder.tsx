@@ -1,17 +1,17 @@
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
-import { useEditor } from "@/hooks/useEditor";
-import { StyleResult } from "@/types/quiz";
-import React from "react";
-import ComponentsSidebar from "../sidebar/ComponentsSidebar";
-import { PreviewPanel } from "./PreviewPanel";
-import { PropertiesPanel } from "./PropertiesPanel";
+import React from 'react';
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
+import { useEditor } from '@/hooks/useEditor';
+import { StyleResult } from '@/types/quiz';
+import ComponentsSidebar from '../components/ComponentsSidebar';
+import { PreviewPanel } from './PreviewPanel';
+import { PropertiesPanel } from './PropertiesPanel';
 
 interface ResultPageBuilderProps {
   primaryStyle: StyleResult;
 }
 
 export const ResultPageBuilder: React.FC<ResultPageBuilderProps> = ({ primaryStyle }) => {
-  const { config, addBlock, updateBlock, deleteBlock } = useEditor();
+  const { addBlock, updateBlock, deleteBlock } = useEditor();
   const [selectedComponent, setSelectedComponent] = React.useState<string | null>(null);
 
   return (

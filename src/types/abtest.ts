@@ -1,4 +1,4 @@
-export type ABTestVariant = "A" | "B";
+export type ABTestVariant = 'A' | 'B';
 
 export interface ABTestConfig {
   testName: string;

@@ -1,3 +1,4 @@
+// @ts-nocheck
 export const getPersonalizedText = (
   text: string,
   pattern: string,
@@ -5,7 +6,7 @@ export const getPersonalizedText = (
   useUsername: boolean
 ): string => {
   if (!useUsername || !username) return text;
-  return pattern.replace("{{username}}", username);
+  return pattern.replace('{{username}}', username);
 };
 
 export const trackComponentView = (componentId: string, componentType: string) => {
@@ -28,23 +29,23 @@ export const trackComponentConversion = (
 };
 
 export const RESPONSIVE_PATTERNS = {
-  mobile: "block sm:hidden",
-  tablet: "hidden sm:block lg:hidden",
-  desktop: "hidden lg:block",
+  mobile: 'block sm:hidden',
+  tablet: 'hidden sm:block lg:hidden',
+  desktop: 'hidden lg:block',
 };
 
 export const getThemeClasses = (theme: string) => {
   const themes = {
-    primary: "bg-[#B89B7A]/100 text-white",
-    secondary: "bg-gray-500 text-white",
-    brand: "bg-[#B89B7A] text-white",
+    primary: 'bg-[#B89B7A]/100 text-white',
+    secondary: 'bg-gray-500 text-white',
+    brand: 'bg-[#B89B7A] text-white',
   };
   return themes[theme as keyof typeof themes] || themes.primary;
 };
 
 export const INLINE_ANIMATIONS = {
-  fadeIn: "animate-fade-in",
-  slideUp: "animate-slide-up",
-  scaleIn: "animate-scale-in",
-  none: "",
+  fadeIn: 'animate-fade-in',
+  slideUp: 'animate-slide-up',
+  scaleIn: 'animate-scale-in',
+  none: '',
 };

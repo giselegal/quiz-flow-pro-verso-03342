@@ -12,7 +12,7 @@ O arquivo `stepTemplatesMapping.ts` é o **CORAÇÃO** do sistema `/editor-fixed
 
 ```typescript
 // IMPORT DO MAPEAMENTO
-import { getAllSteps, getStepTemplate } from "@/config/stepTemplatesMapping";
+import { getAllSteps, getStepTemplate } from '@/config/stepTemplatesMapping';
 
 // CARREGAMENTO INICIAL DAS 21 ETAPAS
 const allStepTemplates = getAllSteps(); // ✅ CARREGA TODAS AS 21 ETAPAS
@@ -29,7 +29,7 @@ const initialStages = allStepTemplates.map(stepTemplate => ({
 
 ```typescript
 // QUANDO USUÁRIO CLICA EM UMA ETAPA
-const stepNumber = parseInt(stageId.replace("step-", ""));
+const stepNumber = parseInt(stageId.replace('step-', ''));
 
 // ✅ CARREGA TEMPLATE ESPECÍFICO DA ETAPA
 const templateBlocks = getStepTemplate(stepNumber);

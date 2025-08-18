@@ -72,12 +72,12 @@ export interface AnalyticsEvent {
   user_id?: string;
   session_id: string;
   event_type:
-    | "quiz_started"
-    | "question_answered"
-    | "quiz_completed"
-    | "page_viewed"
-    | "button_clicked"
-    | "form_submitted";
+    | 'quiz_started'
+    | 'question_answered'
+    | 'quiz_completed'
+    | 'page_viewed'
+    | 'button_clicked'
+    | 'form_submitted';
   event_data: Record<string, any>;
   timestamp: string;
   user_agent?: string;
@@ -131,17 +131,17 @@ export interface AnalyticsEvent {
 ```javascript
 // No frontend, quando usuário clica em uma opção:
 analyticsService.trackQuestionAnswer(
-  "quiz_quest_challenge_v1",
-  "question_1",
-  "mountains", // resposta selecionada
-  "user_12345"
+  'quiz_quest_challenge_v1',
+  'question_1',
+  'mountains', // resposta selecionada
+  'user_12345'
 );
 
 analyticsService.trackButtonClick(
-  "quiz_quest_challenge_v1",
-  "option_mountains",
-  "🏔️ Montanhas geladas",
-  "user_12345"
+  'quiz_quest_challenge_v1',
+  'option_mountains',
+  '🏔️ Montanhas geladas',
+  'user_12345'
 );
 ```
 
@@ -293,17 +293,17 @@ ORDER BY click_count DESC;
 // Em SchemaDrivenEditorResponsive.tsx
 const handleSave = async () => {
   // Rastrear clique no botão salvar
-  await analyticsService.trackButtonClick(funnel?.id || "", "save_button", "Salvar Funil");
+  await analyticsService.trackButtonClick(funnel?.id || '', 'save_button', 'Salvar Funil');
 
   // Salvar funil
   await saveFunnel(true);
 
   // Rastrear sucesso
   await analyticsService.trackEvent({
-    quiz_id: funnel?.id || "",
-    event_type: "form_submitted",
+    quiz_id: funnel?.id || '',
+    event_type: 'form_submitted',
     event_data: {
-      action: "funnel_saved",
+      action: 'funnel_saved',
       pages_count: funnel?.pages?.length || 0,
     },
   });
@@ -318,7 +318,7 @@ const setCurrentPage = (pageId: string) => {
   setCurrentPageId(pageId);
 
   // Rastrear visualização da página
-  analyticsService.trackPageView(funnel?.id || "", pageId);
+  analyticsService.trackPageView(funnel?.id || '', pageId);
 };
 ```
 

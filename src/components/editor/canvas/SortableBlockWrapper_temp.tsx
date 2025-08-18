@@ -1,14 +1,13 @@
 // @ts-nocheck
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { getBlockComponent } from "@/config/enhancedBlockRegistry";
-import { useContainerProperties } from "@/hooks/useContainerProperties";
-import { cn } from "@/lib/utils";
-import { Block } from "@/types/editor";
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
-import { GripVertical, Trash2 } from "lucide-react";
-import React from "react";
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { getBlockComponent } from '@/config/enhancedBlockRegistry';
+import { useContainerProperties } from '@/hooks/useContainerProperties';
+import { cn } from '@/lib/utils';
+import { Block } from '@/types/editor';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { GripVertical, Trash2 } from 'lucide-react';
 
 interface SortableBlockWrapperProps {
   block: Block;
@@ -20,11 +19,11 @@ interface SortableBlockWrapperProps {
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -81,7 +80,7 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: block.id,
     data: {
-      type: "canvas-block", // TIPO CRUCIAL que o DndProvider espera
+      type: 'canvas-block', // TIPO CRUCIAL que o DndProvider espera
       blockId: block.id,
       block: block,
     },
@@ -89,14 +88,14 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
 
   // Debug: verificar se o sortable está sendo configurado
   React.useEffect(() => {
-    console.log("🔧 SortableBlockWrapper configurado:", {
+    console.log('🔧 SortableBlockWrapper configurado:', {
       id: block.id,
       blockType: block.type,
       isDragging,
       containerClasses, // Agora integrado diretamente
       processedProperties,
       data: {
-        type: "canvas-block",
+        type: 'canvas-block',
         blockId: block.id,
       },
     });
@@ -106,7 +105,7 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : 1,
-    zIndex: isDragging ? 50 : "auto", // Z-index maior durante drag
+    zIndex: isDragging ? 50 : 'auto', // Z-index maior durante drag
   };
 
   const handlePropertyChange = (key: string, value: any) => {
@@ -117,7 +116,7 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
   if (!Component) {
     return (
       <div ref={setNodeRef} style={style} className="my-2">
-        {" "}
+        {' '}
         {/* 🎯 Espaçamento FIXO de 8px */}
         <Card style={{ borderColor: '#B89B7A' }}>
           <div style={{ color: '#432818' }}>
@@ -131,20 +130,20 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
 
   return (
     <div ref={setNodeRef} style={style} className="my-2">
-      {" "}
+      {' '}
       {/* 🎯 Espaçamento FIXO de 8px - SEMPRE IGUAL independente da escala */}
       <Card
         className={cn(
-          "relative group transition-all duration-200 border-transparent", // 🎯 Borda transparente por padrão
+          'relative group transition-all duration-200 border-transparent', // 🎯 Borda transparente por padrão
           // 🎯 Aplicar classes de container diretamente no Card
           containerClasses,
           // 🎯 Apenas borda tracejada discreta quando selecionado
-          isSelected && "border-dashed border-[#B89B7A]/60 border-2",
+          isSelected && 'border-dashed border-[#B89B7A]/60 border-2',
           // Margens universais com controles deslizantes
-          getMarginClass(marginTop, "top"),
-          getMarginClass(marginBottom, "bottom"),
-          getMarginClass(marginLeft, "left"),
-          getMarginClass(marginRight, "right")
+          getMarginClass(marginTop, 'top'),
+          getMarginClass(marginBottom, 'bottom'),
+          getMarginClass(marginLeft, 'left'),
+          getMarginClass(marginRight, 'right')
         )}
         style={inlineStyles} // 🎯 Aplicar estilos inline (scale) diretamente
       >
@@ -154,7 +153,7 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
             variant="secondary"
             size="sm"
             className="h-6 w-6 p-0 cursor-grab active:cursor-grabbing touch-none"
-            style={{ touchAction: "none" }} // Importante para dispositivos touch
+            style={{ touchAction: 'none' }} // Importante para dispositivos touch
             {...attributes}
             {...listeners}
           >

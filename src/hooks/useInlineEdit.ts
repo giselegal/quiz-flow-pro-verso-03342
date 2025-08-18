@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback } from 'react';
 
 interface UseInlineEditProps {
   value: string;
@@ -72,10 +72,10 @@ export const useInlineEdit = ({
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
-      if (e.key === "Enter" && !e.shiftKey && !multiline) {
+      if (e.key === 'Enter' && !e.shiftKey && !multiline) {
         e.preventDefault();
         saveEdit();
-      } else if (e.key === "Escape") {
+      } else if (e.key === 'Escape') {
         e.preventDefault();
         cancelEdit();
       }

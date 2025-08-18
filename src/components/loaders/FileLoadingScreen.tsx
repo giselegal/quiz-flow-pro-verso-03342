@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Progress } from "@/components/ui/progress";
+import React, { useState, useEffect } from 'react';
+import { Progress } from '@/components/ui/progress';
 
 interface FileLoadingScreenProps {
   fileUrl?: string;
@@ -8,10 +8,13 @@ interface FileLoadingScreenProps {
 }
 
 const FileLoadingScreen: React.FC<FileLoadingScreenProps> = ({
-  fileUrl = "",
+  fileUrl = '',
   onFileLoaded = () => {},
   onError = () => {},
 }) => {
+  // Avoid unused warnings when props are optional
+  void fileUrl;
+  void onError;
   const [progress, setProgress] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
 

@@ -1,9 +1,7 @@
-import React from "react";
-import { Button } from "@/components/ui/button";
-import { ShoppingCart } from "lucide-react";
-import { trackButtonClick } from "@/utils/analytics";
-import { getCtaUrl } from "@/services/pixelManager";
-import OptimizedImage from "@/components/ui/OptimizedImage";
+import { Button } from '@/components/ui/button';
+import { ShoppingCart } from 'lucide-react';
+import { trackButtonClick } from '@/utils/analytics';
+import { getCtaUrl } from '@/services/pixelManager';
 
 interface QuizOfferHeroProps {
   onStartQuizClick: () => void;
@@ -11,12 +9,12 @@ interface QuizOfferHeroProps {
 
 export const QuizOfferHero: React.FC<QuizOfferHeroProps> = ({ onStartQuizClick }) => {
   const handleCtaClick = () => {
-    trackButtonClick("hero-cta", "Comprar Quiz", "hero");
+    trackButtonClick('hero-cta', 'Comprar Quiz', 'hero');
     window.location.href = getCtaUrl();
   };
 
   const handleStartQuizClick = () => {
-    trackButtonClick("hero-start-quiz", "Começar Quiz", "hero");
+    trackButtonClick('hero-start-quiz', 'Começar Quiz', 'hero');
     onStartQuizClick();
   };
 

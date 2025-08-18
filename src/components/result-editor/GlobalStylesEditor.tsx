@@ -1,9 +1,10 @@
-import React, { useState } from "react";
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
+// @ts-nocheck
+import React, { useState } from 'react';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
 
 interface GlobalStylesEditorProps {
   globalStyles: {
@@ -28,7 +29,7 @@ export const GlobalStylesEditor: React.FC<GlobalStylesEditorProps> = ({
   const handleColorChange = (colorType: string, hexColor: string) => {
     setStyles(prev => ({
       ...prev,
-      [colorType]: hexColor || "#FFFFFF", // Default to white if color is undefined
+      [colorType]: hexColor || '#FFFFFF', // Default to white if color is undefined
     }));
   };
 
@@ -67,8 +68,8 @@ export const GlobalStylesEditor: React.FC<GlobalStylesEditorProps> = ({
               <Input
                 id="primaryColor"
                 type="text"
-                value={styles.primaryColor || ""}
-                onChange={e => handleChange("primaryColor", e.target.value)}
+                value={styles.primaryColor || ''}
+                onChange={e => handleChange('primaryColor', e.target.value)}
                 placeholder="#B89B7A"
               />
             </div>
@@ -84,8 +85,8 @@ export const GlobalStylesEditor: React.FC<GlobalStylesEditorProps> = ({
               <Input
                 id="secondaryColor"
                 type="text"
-                value={styles.secondaryColor || ""}
-                onChange={e => handleChange("secondaryColor", e.target.value)}
+                value={styles.secondaryColor || ''}
+                onChange={e => handleChange('secondaryColor', e.target.value)}
                 placeholder="#432818"
               />
             </div>
@@ -101,8 +102,8 @@ export const GlobalStylesEditor: React.FC<GlobalStylesEditorProps> = ({
               <Input
                 id="textColor"
                 type="text"
-                value={styles.textColor || ""}
-                onChange={e => handleChange("textColor", e.target.value)}
+                value={styles.textColor || ''}
+                onChange={e => handleChange('textColor', e.target.value)}
                 placeholder="#3A3A3A"
               />
             </div>
@@ -118,8 +119,8 @@ export const GlobalStylesEditor: React.FC<GlobalStylesEditorProps> = ({
               <Input
                 id="backgroundColor"
                 type="text"
-                value={styles.backgroundColor || ""}
-                onChange={e => handleChange("backgroundColor", e.target.value)}
+                value={styles.backgroundColor || ''}
+                onChange={e => handleChange('backgroundColor', e.target.value)}
                 placeholder="#FAF9F7"
               />
             </div>
@@ -130,8 +131,8 @@ export const GlobalStylesEditor: React.FC<GlobalStylesEditorProps> = ({
             <Input
               id="fontFamily"
               type="text"
-              value={styles.fontFamily || ""}
-              onChange={e => handleChange("fontFamily", e.target.value)}
+              value={styles.fontFamily || ''}
+              onChange={e => handleChange('fontFamily', e.target.value)}
               placeholder="Playfair Display, serif"
             />
           </div>

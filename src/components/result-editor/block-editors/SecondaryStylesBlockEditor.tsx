@@ -1,7 +1,6 @@
-import React from "react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Block } from "@/types/editor";
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Block } from '@/types/editor';
 
 interface SecondaryStylesBlockEditorProps {
   block: Block;
@@ -20,7 +19,7 @@ const SecondaryStylesBlockEditor: React.FC<SecondaryStylesBlockEditorProps> = ({
         <Label htmlFor="title">Título</Label>
         <Input
           id="title"
-          value={content.title || ""}
+          value={content.title || ''}
           onChange={e => onUpdate({ title: e.target.value })}
           placeholder="Seus Estilos Complementares"
         />

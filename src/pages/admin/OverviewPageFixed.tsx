@@ -1,7 +1,7 @@
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
 import {
   ArrowDownRight,
   ArrowUpRight,
@@ -20,8 +20,7 @@ import {
   TrendingUp,
   Users,
   Zap,
-} from "lucide-react";
-import React from "react";
+} from 'lucide-react';
 
 const OverviewPage: React.FC = () => {
   return (
@@ -36,10 +35,7 @@ const OverviewPage: React.FC = () => {
             <h1 className="text-3xl font-bold bg-gradient-to-r from-slate-900 to-indigo-800 bg-clip-text text-transparent">
               QuizFlow Dashboard
             </h1>
-            <Badge
-              variant="secondary"
-              style={{ color: '#6B4F43' }}
-            >
+            <Badge variant="secondary" style={{ color: '#6B4F43' }}>
               <Crown className="h-3 w-3 mr-1" />
               Pro
             </Badge>
@@ -305,10 +301,7 @@ const OverviewPage: React.FC = () => {
             </div>
 
             <div className="pt-2">
-              <Button
-                variant="outline"
-                style={{ backgroundColor: '#FAF9F7' }}
-              >
+              <Button variant="outline" style={{ backgroundColor: '#FAF9F7' }}>
                 <Eye className="h-4 w-4 mr-2" />
                 Ver Todos os Funis
               </Button>
@@ -403,18 +396,12 @@ const OverviewPage: React.FC = () => {
                 Relatório Detalhado
               </Button>
 
-              <Button
-                variant="outline"
-                style={{ backgroundColor: '#FAF9F7' }}
-              >
+              <Button variant="outline" style={{ backgroundColor: '#FAF9F7' }}>
                 <Share className="h-4 w-4 mr-2" />
                 Compartilhar Dashboard
               </Button>
 
-              <Button
-                variant="outline"
-                style={{ backgroundColor: '#FAF9F7' }}
-              >
+              <Button variant="outline" style={{ backgroundColor: '#FAF9F7' }}>
                 <Calendar className="h-4 w-4 mr-2" />
                 Agendar Análise
               </Button>

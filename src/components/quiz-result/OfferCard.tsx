@@ -1,14 +1,14 @@
-import React, { useState } from "react";
-import { Card } from "../ui/card";
-import { Button } from "../ui/button";
-import { ShoppingCart } from "lucide-react";
-import { StyleResult } from "@/types/quiz";
-import BenefitList from "./sales/BenefitList";
-import Testimonials from "./sales/Testimonials";
-import Guarantee from "./sales/Guarantee";
-import Logo from "../ui/logo";
-import { OfferContent } from "@/types/resultPageConfig";
-import { motion } from "framer-motion";
+import React, { useState } from 'react';
+import { Card } from '../ui/card';
+import { Button } from '../ui/button';
+import { ShoppingCart } from 'lucide-react';
+import { StyleResult } from '@/types/quiz';
+import BenefitList from './sales/BenefitList';
+import Testimonials from './sales/Testimonials';
+import Guarantee from './sales/Guarantee';
+import Logo from '../ui/logo';
+import { OfferContent } from '@/types/resultPageConfig';
+import { motion } from 'framer-motion';
 
 interface OfferCardProps {
   primaryStyle: StyleResult;
@@ -19,29 +19,29 @@ const OfferCard: React.FC<OfferCardProps> = ({ primaryStyle, config }) => {
   // Defaults with fallbacks for missing config values
   const title =
     config?.title ||
-    "Revelamos seu estilo. Agora é hora da sua transformação elegante e autêntica.";
+    'Revelamos seu estilo. Agora é hora da sua transformação elegante e autêntica.';
   const subtitle =
     config?.subtitle ||
     `Descubra como expressar seu estilo ${primaryStyle.category} com confiança e naturalidade, eliminando as dúvidas do "o que vestir" para sempre. ✨`;
-  const regularPrice = config?.regularPrice || "197,00";
-  const salePrice = config?.price || "39,00";
+  const regularPrice = config?.regularPrice || '197,00';
+  const salePrice = config?.price || '39,00';
   const ctaText = config?.ctaText || `Quero Meu Guia Personalizado + Bônus por R$${salePrice}`;
   const ctaUrl =
-    config?.ctaUrl || "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912";
+    config?.ctaUrl || 'https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912';
 
   // Images with fallbacks
   const heroImage =
     config?.heroImage ||
-    "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911666/C%C3%B3pia_de_Template_Dossi%C3%AA_Completo_2024_15_-_Copia_ssrhu3.webp";
+    'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911666/C%C3%B3pia_de_Template_Dossi%C3%AA_Completo_2024_15_-_Copia_ssrhu3.webp';
   const productsImage =
     config?.allProductsImage ||
-    "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911682/C%C3%B3pia_de_MOCKUPS_13_znzbks.webp";
+    'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911682/C%C3%B3pia_de_MOCKUPS_13_znzbks.webp';
   const mentorImage =
     config?.mentorImage ||
-    "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911667/WhatsApp_Image_2025-04-02_at_09.40.53_cv8p5y.webp";
+    'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911667/WhatsApp_Image_2025-04-02_at_09.40.53_cv8p5y.webp';
   const bonusImage =
     config?.bonusImage ||
-    "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911677/C%C3%B3pia_de_MOCKUPS_15_-_Copia_grstwl.webp";
+    'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911677/C%C3%B3pia_de_MOCKUPS_15_-_Copia_grstwl.webp';
 
   const [isHovered, setIsHovered] = useState(false);
 
@@ -77,12 +77,12 @@ const OfferCard: React.FC<OfferCardProps> = ({ primaryStyle, config }) => {
         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-[#FAF9F7]/50 to-transparent pointer-events-none"></div>
 
         <h2 className="text-2xl font-playfair text-[#aa6b5d] mb-5 relative">
-          {config?.productTitle || "Guia de Estilo Personalizado + Bônus Exclusivos"}
+          {config?.productTitle || 'Guia de Estilo Personalizado + Bônus Exclusivos'}
           <motion.div
             className="absolute -bottom-2 left-0 h-0.5 bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d]/80"
-            initial={{ width: "0%" }}
-            whileInView={{ width: "100%" }}
-            transition={{ duration: 1, ease: "easeOut" }}
+            initial={{ width: '0%' }}
+            whileInView={{ width: '100%' }}
+            transition={{ duration: 1, ease: 'easeOut' }}
             viewport={{ once: true }}
           />
         </h2>
@@ -102,7 +102,7 @@ const OfferCard: React.FC<OfferCardProps> = ({ primaryStyle, config }) => {
             className="absolute -inset-0.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"
             style={{
               background:
-                "linear-gradient(45deg, rgba(184,155,122,0.2) 0%, rgba(170,107,93,0.2) 100%)",
+                'linear-gradient(45deg, rgba(184,155,122,0.2) 0%, rgba(170,107,93,0.2) 100%)',
             }}
             whileHover={{ opacity: 1 }}
           />
@@ -126,7 +126,7 @@ const OfferCard: React.FC<OfferCardProps> = ({ primaryStyle, config }) => {
                 transition={{
                   duration: 3,
                   repeat: Infinity,
-                  repeatType: "reverse",
+                  repeatType: 'reverse',
                 }}
               />
               <p className="text-sm text-[#aa6b5d] font-medium mb-1">Oferta Exclusiva</p>
@@ -142,7 +142,7 @@ const OfferCard: React.FC<OfferCardProps> = ({ primaryStyle, config }) => {
                 transition={{
                   duration: 2,
                   repeat: Infinity,
-                  repeatType: "reverse",
+                  repeatType: 'reverse',
                 }}
               >
                 HOJE
@@ -159,7 +159,7 @@ const OfferCard: React.FC<OfferCardProps> = ({ primaryStyle, config }) => {
             >
               <span className="flex items-center gap-2">
                 <ShoppingCart
-                  className={`w-5 h-5 transition-transform duration-300 ${isHovered ? "scale-110 rotate-12" : ""}`}
+                  className={`w-5 h-5 transition-transform duration-300 ${isHovered ? 'scale-110 rotate-12' : ''}`}
                 />
                 {ctaText}
               </span>
@@ -177,7 +177,7 @@ const OfferCard: React.FC<OfferCardProps> = ({ primaryStyle, config }) => {
         <motion.div
           className="interactive-section rounded-lg overflow-hidden shadow-lg"
           whileHover={{ scale: 1.03 }}
-          transition={{ type: "spring", stiffness: 300, damping: 15 }}
+          transition={{ type: 'spring', stiffness: 300, damping: 15 }}
         >
           <img
             src={bonusImage}
@@ -191,7 +191,7 @@ const OfferCard: React.FC<OfferCardProps> = ({ primaryStyle, config }) => {
         <motion.div
           className="interactive-section rounded-lg overflow-hidden shadow-lg"
           whileHover={{ scale: 1.03 }}
-          transition={{ type: "spring", stiffness: 300, damping: 15 }}
+          transition={{ type: 'spring', stiffness: 300, damping: 15 }}
         >
           <img
             src={mentorImage}
@@ -227,7 +227,7 @@ const OfferCard: React.FC<OfferCardProps> = ({ primaryStyle, config }) => {
           transition={{
             duration: 1.5,
             repeat: Infinity,
-            repeatType: "reverse",
+            repeatType: 'reverse',
           }}
         >
           ⏳ Oferta exclusiva por tempo limitado

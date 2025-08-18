@@ -1,5 +1,5 @@
-import { useCallback } from "react";
-import { stepTemplateService } from "../../../services/stepTemplateService";
+import { useCallback } from 'react';
+import { stepTemplateService } from '../../../services/stepTemplateService';
 
 // 🎯 FUNÇÃO PARA OBTER TEMPLATE DE ETAPA USANDO STEPTEMPLATE SERVICE
 export const getStepTemplate = (stepId: string) => {
@@ -8,8 +8,8 @@ export const getStepTemplate = (stepId: string) => {
 
     // Converter stepId para número (etapa-1 → 1, ou "1" → 1)
     const stepNumber =
-      typeof stepId === "string"
-        ? parseInt(stepId.replace(/\D/g, "")) // Remove tudo que não é dígito
+      typeof stepId === 'string'
+        ? parseInt(stepId.replace(/\D/g, '')) // Remove tudo que não é dígito
         : stepId;
 
     console.log(`🔧 Convertido "${stepId}" para número: ${stepNumber}`);
@@ -33,7 +33,7 @@ export const getStepTemplate = (stepId: string) => {
     console.warn(`⚠️ Nenhum template encontrado para etapa ${stepNumber}`);
     return [];
   } catch (error) {
-    console.error("❌ Erro ao obter template da etapa:", error);
+    console.error('❌ Erro ao obter template da etapa:', error);
     return [];
   }
 };
@@ -98,14 +98,14 @@ export const useStepTemplateHandlers = (
       // 🧹 LIMPEZA: Remover blocos existentes antes de carregar novos
       console.log(`🧹 Limpando blocos existentes antes de carregar template...`);
       blocks.forEach(block => {
-        if (block.type === "guarantee" || block.type === "Garantia") {
+        if (block.type === 'guarantee' || block.type === 'Garantia') {
           console.log(`🗑️ Removendo bloco corrompido: ${block.type} (${block.id})`);
           deleteBlock(block.id);
         }
       });
 
       // Extrair número da step (etapa-1 → 1, etapa-2 → 2, etc.)
-      const stepNumber = parseInt(stepId.replace("etapa-", ""));
+      const stepNumber = parseInt(stepId.replace('etapa-', ''));
       if (isNaN(stepNumber) || stepNumber < 1 || stepNumber > 21) {
         console.error(`❌ Step ID inválido: ${stepId}`);
         return;
@@ -126,24 +126,24 @@ export const useStepTemplateHandlers = (
           // Fallback simples
           const fallbackBlocks = [
             {
-              type: "heading-inline",
+              type: 'heading-inline',
               properties: {
                 content: `Etapa ${stepNumber}`,
-                level: "h2",
-                fontSize: "text-2xl",
-                fontWeight: "font-bold",
-                textAlign: "text-center",
-                color: "#432818",
+                level: 'h2',
+                fontSize: 'text-2xl',
+                fontWeight: 'font-bold',
+                textAlign: 'text-center',
+                color: '#432818',
                 marginBottom: 16,
               },
             },
             {
-              type: "text-inline",
+              type: 'text-inline',
               properties: {
                 content: `Template da etapa ${stepNumber} em desenvolvimento`,
-                fontSize: "text-lg",
-                textAlign: "text-center",
-                color: "#6B7280",
+                fontSize: 'text-lg',
+                textAlign: 'text-center',
+                color: '#6B7280',
                 marginBottom: 32,
               },
             },
@@ -173,7 +173,7 @@ export const useStepTemplateHandlers = (
           console.log(`🧪 [DEBUG] Dados do bloco:`, blockData);
 
           // 🛡️ VALIDAÇÃO: Garantir que não é um bloco 'guarantee' indesejado
-          if (blockData.type === "guarantee" || blockData.type === "Garantia") {
+          if (blockData.type === 'guarantee' || blockData.type === 'Garantia') {
             console.warn(
               `⚠️ Bloco 'guarantee' detectado no template - pulando para evitar problema`
             );
@@ -191,7 +191,7 @@ export const useStepTemplateHandlers = (
 
         // 📊 Atualizar contador de blocos da step
         const updatedBlocksCount = stepTemplate.filter(
-          b => b.type !== "guarantee" && b.type !== "Garantia"
+          b => b.type !== 'guarantee' && b.type !== 'Garantia'
         ).length;
         setSteps(prevSteps =>
           prevSteps.map(step =>
@@ -208,12 +208,12 @@ export const useStepTemplateHandlers = (
         // 🚨 Fallback de emergência
         const emergencyBlocks = [
           {
-            type: "text-inline",
+            type: 'text-inline',
             properties: {
               content: `Erro ao carregar template da Etapa ${stepNumber}`,
-              fontSize: "text-lg",
-              textAlign: "text-center",
-              color: "#aa6b5d",
+              fontSize: 'text-lg',
+              textAlign: 'text-center',
+              color: '#aa6b5d',
               marginBottom: 16,
             },
           },

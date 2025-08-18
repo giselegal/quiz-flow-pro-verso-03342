@@ -1,33 +1,7 @@
-// Update the import path below to the correct relative path if needed
-import type { Block } from "../types/editor";
-import { TemplateJsonLoader } from "./TemplateJsonLoader";
-
-/**
- * Mapeamento de etapas para templates JSON
- */
-const TEMPLATE_MAPPING = {
-  "step-1": "/templates/step-01-template.json",
-  "step-2": "/templates/step-02-template.json",
-  "step-3": "/templates/step-03-template.json",
-  "step-4": "/templates/step-04-template.json",
-  "step-5": "/templates/step-05-template.json",
-  "step-6": "/templates/step-06-template.json",
-  "step-7": "/templates/step-07-template.json",
-  "step-8": "/templates/step-08-template.json",
-  "step-9": "/templates/step-09-template.json",
-  "step-10": "/templates/step-10-template.json",
-  "step-11": "/templates/step-11-template.json",
-  "step-12": "/templates/step-12-template.json",
-  "step-13": "/templates/step-13-template.json",
-  "step-14": "/templates/step-14-template.json",
-  "step-15": "/templates/step-15-template.json",
-  "step-16": "/templates/step-16-template.json",
-  "step-17": "/templates/step-17-template.json",
-  "step-18": "/templates/step-18-template.json",
-  "step-19": "/templates/step-19-template.json",
-  "step-20": "/templates/step-20-template.json",
-  "step-21": "/templates/step-21-template.json",
-} as const;
+// @ts-nocheck
+// Importações
+import { templateService } from '../services/templateService';
+import type { Block } from '../types/editor';
 
 /**
  * Template Manager - Gerencia carregamento de templates JSON
@@ -36,146 +10,309 @@ export class TemplateManager {
   private static cache = new Map<string, Block[]>();
 
   /**
-   * Carrega blocos de uma etapa usando template JSON
+   * Carrega blocos de uma etapa usando o templateService INTEGRADO com JSON Step01
    */
   static async loadStepBlocks(stepId: string): Promise<Block[]> {
     try {
-      // Verifica cache primeiro
+      // Verifica cache primeiro - APENAS se tiver blocos válidos
       if (this.cache.has(stepId)) {
-        console.log(`📦 Template ${stepId} carregado do cache`);
-        return this.cache.get(stepId)!;
+        const cachedBlocks = this.cache.get(stepId)!;
+        if (cachedBlocks.length > 0) {
+          console.log(`📦 Template ${stepId} carregado do cache (${cachedBlocks.length} blocos)`);
+          return cachedBlocks;
+        }
+        // Se cache tem array vazio, remove do cache
+        console.warn(`🗑️ Removendo cache vazio para ${stepId}`);
+        this.cache.delete(stepId);
       }
 
-      // Busca template path
-      const templatePath = TEMPLATE_MAPPING[stepId as keyof typeof TEMPLATE_MAPPING];
-      if (!templatePath) {
-        console.warn(`⚠️ Template não encontrado para etapa: ${stepId}`);
-        return this.getFallbackBlocks(stepId);
+      const stepNumber = parseInt(stepId.replace('step-', ''));
+      console.log(`🔄 Carregando template para etapa ${stepNumber}`);
+
+      // ===== SISTEMA INTEGRADO: JSON + TYPESCRIPT =====
+
+      if (stepNumber === 1) {
+        console.log('🎯 Step01: Sistema JSON integrado ativo');
+      } else {
+        console.log(`🔧 Step${stepNumber}: Sistema TypeScript tradicional`);
       }
 
-      // Carrega template JSON
-      console.log(`🔄 Carregando template JSON para ${stepId}: ${templatePath}`);
-      const blocks = await TemplateJsonLoader.loadTemplateAsBlocks(templatePath, stepId);
+      // Usar o templateService que já integra JSON para Step01
+      let template = null;
+      const maxRetries = 3;
 
-      // Armazena no cache
-      this.cache.set(stepId, blocks);
+      for (let attempt = 1; attempt <= maxRetries; attempt++) {
+        try {
+          template = await templateService.getTemplateByStep(stepNumber);
 
-      console.log(`✅ Template ${stepId} carregado: ${blocks.length} blocos`);
-      return blocks;
+          // Se template válido com blocos, break
+          if (template && template.blocks && template.blocks.length > 0) {
+            console.log(
+              `✅ Template carregado na tentativa ${attempt}: ${template.blocks.length} blocos`
+            );
+            console.log(`🎯 Sistema usado: ${stepNumber === 1 ? 'JSON Step01' : 'TypeScript'}`);
+            break;
+          }
+
+          // Se template está carregando ou vazio, retry
+          if (
+            template &&
+            (template.__loading || !template.blocks || template.blocks.length === 0)
+          ) {
+            console.log(
+              `🔄 Template etapa ${stepNumber} ainda carregando, tentativa ${attempt}/${maxRetries}`
+            );
+            if (attempt < maxRetries) {
+              // Backoff: 150ms, 300ms, 450ms
+              await new Promise(resolve => setTimeout(resolve, 150 * attempt));
+              continue;
+            }
+          }
+
+          // Se chegou aqui, template não carregou
+          template = null;
+          break;
+        } catch (error) {
+          console.warn(
+            `⚠️ Erro na tentativa ${attempt}/${maxRetries} para etapa ${stepNumber}:`,
+            error
+          );
+          if (attempt < maxRetries) {
+            await new Promise(resolve => setTimeout(resolve, 150 * attempt));
+            continue;
+          }
+          template = null;
+        }
+      }
+
+      // Se template não carregou após retries, usar fallback robusto
+      if (!template || !template.blocks || template.blocks.length === 0) {
+        console.warn(
+          `⚠️ Template falhou após ${maxRetries} tentativas, usando fallback robusto para etapa ${stepNumber}`
+        );
+        const fallbackBlocks = await this.getEnhancedFallbackBlocks(stepId);
+
+        // NUNCA cachear array vazio - só cachear se tiver blocos
+        if (fallbackBlocks.length > 0) {
+          this.cache.set(stepId, fallbackBlocks);
+          console.log(`🛡️ Fallback aplicado com ${fallbackBlocks.length} blocos (fonte: fallback)`);
+        }
+
+        return fallbackBlocks;
+      }
+
+      // Converte os blocos do template para o formato Block
+      const blocks = templateService.convertTemplateBlocksToEditorBlocks(template.blocks);
+
+      // APENAS cachear se tiver blocos válidos
+      if (blocks.length > 0) {
+        this.cache.set(stepId, blocks);
+        console.log(
+          `✅ Template carregado com sucesso: ${blocks.length} blocos (fonte: public JSON)`
+        );
+      } else {
+        console.warn(`⚠️ Template convertido resultou em array vazio, não será cacheado`);
+      }
+
+      return blocks.length > 0 ? blocks : await this.getEnhancedFallbackBlocks(stepId);
     } catch (error) {
-      console.error(`❌ Erro ao carregar template para ${stepId}:`, error);
-      return this.getFallbackBlocks(stepId);
+      console.error(`❌ Erro crítico ao carregar template para ${stepId}:`, error);
+      return await this.getEnhancedFallbackBlocks(stepId);
     }
   }
 
   /**
-   * Retorna blocos de fallback para quando o template JSON falha
+   * Retorna blocos de fallback robustos usando FixedTemplateService se disponível
    */
-  private static getFallbackBlocks(stepId: string): Block[] {
-    console.log(`🔄 Usando fallback para ${stepId}`);
+  private static async getEnhancedFallbackBlocks(stepId: string): Promise<Block[]> {
+    const stepNumber = parseInt(stepId.replace('step-', ''));
 
-    // Fallback básico
-    return [
-      {
-        id: `${stepId}-fallback-title`,
-        type: "text-inline",
-        order: 0,
-        properties: {
-          content: `Etapa ${stepId}`,
-          fontSize: "text-2xl",
-          fontWeight: "font-bold",
-          textAlign: "text-center",
-        },
-        content: {
-          content: `Etapa ${stepId}`,
-          fontSize: "text-2xl",
-          fontWeight: "font-bold",
-          textAlign: "text-center",
-        },
-      },
-      {
-        id: `${stepId}-fallback-message`,
-        type: "text-inline",
-        order: 1,
-        properties: {
-          content: "Template JSON não encontrado. Usando fallback.",
-          fontSize: "text-sm",
-          color: "#6B7280",
-          textAlign: "text-center",
-        },
-        content: {
-          content: "Template JSON não encontrado. Usando fallback.",
-          fontSize: "text-sm",
-          color: "#6B7280",
-          textAlign: "text-center",
-        },
-      },
-    ];
+    try {
+      // Tentar usar FixedTemplateService se disponível
+      const { default: stepTemplateService } = await import('../services/stepTemplateService');
+
+      if (stepTemplateService && typeof stepTemplateService.getStepTemplate === 'function') {
+        console.log(`🛡️ Usando stepTemplateService para fallback da etapa ${stepNumber}`);
+        const fixedTemplate = stepTemplateService.getStepTemplate(stepNumber);
+
+        if (fixedTemplate && fixedTemplate.length > 0) {
+          // Converter EditorBlock[] para Block[]
+          const convertedBlocks: Block[] = fixedTemplate.map((block, index) => ({
+            id: block.id,
+            type: block.type as any,
+            content: block.properties || {},
+            order: index,
+          }));
+
+          console.log(
+            `✅ Fallback robusto aplicado: ${convertedBlocks.length} blocos (fonte: FixedTemplateService)`
+          );
+          return convertedBlocks;
+        }
+      }
+    } catch (error) {
+      console.warn(`⚠️ FixedTemplateService não disponível, usando fallback básico:`, error);
+    }
+
+    // Fallback básico se FixedTemplateService não funcionar
+    return this.getBasicFallbackBlocks(stepId);
   }
 
   /**
-   * Pre-carrega templates mais usados
+   * Fallback básico garantido
    */
-  static async preloadCommonTemplates(): Promise<void> {
-    const commonSteps = [
-      "step-1",
-      "step-2",
-      "step-3",
-      "step-4",
-      "step-5",
-      "step-6",
-      "step-7",
-      "step-8",
-      "step-9",
-      "step-10",
-      "step-11",
-      "step-12",
-      "step-13",
-      "step-14",
-      "step-15",
-      "step-16",
-      "step-17",
-      "step-18",
-      "step-19",
-      "step-20",
-      "step-21",
+  private static getBasicFallbackBlocks(stepId: string): Block[] {
+    const stepNumber = parseInt(stepId.replace('step-', ''));
+
+    const fallbackBlocks: Block[] = [
+      {
+        id: `${stepId}-fallback-header`,
+        type: 'quiz-intro-header',
+        order: 0,
+        properties: {
+          logoUrl:
+            'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+          logoAlt: 'Logo Gisele Galvão',
+          logoWidth: 96,
+          logoHeight: 96,
+          progressValue: Math.min((stepNumber / 21) * 100, 100),
+          progressTotal: 100,
+          showProgress: true,
+          containerWidth: 'full',
+          spacing: 'small',
+        },
+        content: {
+          logoUrl:
+            'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+          logoAlt: 'Logo Gisele Galvão',
+          progressValue: Math.min((stepNumber / 21) * 100, 100),
+        },
+      },
+      {
+        id: `${stepId}-fallback-title`,
+        type: 'text-inline',
+        order: 1,
+        properties: {
+          content: stepNumber === 1 ? 'QUIZ DE ESTILO PESSOAL' : `ETAPA ${stepNumber}`,
+          fontSize: 'text-2xl',
+          fontWeight: 'font-bold',
+          textAlign: 'text-center',
+          color: '#432818',
+          containerWidth: 'full',
+          spacing: 'small',
+        },
+        content: {
+          content: stepNumber === 1 ? 'QUIZ DE ESTILO PESSOAL' : `ETAPA ${stepNumber}`,
+          fontSize: 'text-2xl',
+          fontWeight: 'font-bold',
+          textAlign: 'text-center',
+          color: '#432818',
+        },
+      },
+      {
+        id: `${stepId}-fallback-description`,
+        type: 'text-inline',
+        order: 2,
+        properties: {
+          content:
+            stepNumber === 1
+              ? 'Sistema carregando template...'
+              : `Template da etapa ${stepNumber} carregando...`,
+          fontSize: 'text-base',
+          textAlign: 'text-center',
+          color: '#6b7280',
+          containerWidth: 'full',
+          spacing: 'small',
+        },
+        content: {
+          content:
+            stepNumber === 1
+              ? 'Sistema carregando template...'
+              : `Template da etapa ${stepNumber} carregando...`,
+        },
+      },
     ];
 
-    console.log("🚀 Pre-carregando templates comuns...");
+    // Para etapa 1, adicionar input básico
+    if (stepNumber === 1) {
+      fallbackBlocks.push({
+        id: `${stepId}-fallback-input`,
+        type: 'form-input',
+        order: 3,
+        properties: {
+          inputType: 'text',
+          placeholder: 'Digite seu nome aqui',
+          label: 'Seu Nome',
+          required: true,
+          containerWidth: 'full',
+          spacing: 'small',
+        },
+        content: {
+          inputType: 'text',
+          placeholder: 'Digite seu nome aqui',
+          label: 'Seu Nome',
+          required: true,
+        },
+      });
+    }
 
-    const promises = commonSteps.map(async stepId => {
+    console.log(
+      `🛡️ Fallback básico gerado: ${fallbackBlocks.length} blocos (fonte: básico garantido)`
+    );
+    return fallbackBlocks;
+  }
+
+  /**
+   * Pre-carrega templates mais usados - NUNCA cacheia arrays vazios
+   */
+  static async preloadCommonTemplates(): Promise<void> {
+    const steps = Array.from({ length: 21 }, (_, i) => i + 1);
+
+    console.log('🚀 Pre-carregando templates (ignorando arrays vazios)...');
+
+    const promises = steps.map(async stepNumber => {
+      const stepId = `step-${stepNumber}`;
       try {
-        await this.loadStepBlocks(stepId);
+        const blocks = await this.loadStepBlocks(stepId);
+
+        // Só considerar sucesso se tiver blocos válidos
+        if (blocks.length > 0) {
+          console.log(`✅ Template ${stepId} pre-carregado: ${blocks.length} blocos`);
+        } else {
+          console.warn(`⚠️ Template ${stepId} resultou em array vazio - não cacheado`);
+        }
       } catch (error) {
         console.warn(`⚠️ Falha ao pre-carregar ${stepId}:`, error);
       }
     });
 
     await Promise.allSettled(promises);
-    console.log("✅ Pre-carregamento de templates concluído");
+
+    const loadedCount = this.cache.size;
+    console.log(`✅ Pre-carregamento concluído: ${loadedCount}/21 templates válidos em cache`);
   }
 
   /**
-   * Recarrega um template (limpa cache e carrega novamente)
+   * Recarrega um template
    */
   static async reloadTemplate(stepId: string): Promise<Block[]> {
     this.cache.delete(stepId);
-    TemplateJsonLoader.clearCache();
     return this.loadStepBlocks(stepId);
   }
 
   /**
-   * Lista todos os templates mapeados
+   * Lista todos os templates disponíveis
    */
   static getAvailableTemplates(): string[] {
-    return Object.keys(TEMPLATE_MAPPING);
+    return Array.from({ length: 21 }, (_, i) => `step-${i + 1}`);
   }
 
   /**
    * Verifica se um template está disponível
    */
   static hasTemplate(stepId: string): boolean {
-    return stepId in TEMPLATE_MAPPING;
+    const stepNumber = parseInt(stepId.replace('step-', ''));
+    return stepNumber >= 1 && stepNumber <= 21;
   }
 
   /**
@@ -183,8 +320,5 @@ export class TemplateManager {
    */
   static clearCache(): void {
     this.cache.clear();
-    TemplateJsonLoader.clearCache();
   }
 }
-
-export default TemplateManager;

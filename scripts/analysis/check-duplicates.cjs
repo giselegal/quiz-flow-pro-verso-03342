@@ -1,10 +1,10 @@
 // Script para verificar tipos duplicados no blockDefinitions
-const fs = require("fs");
-const path = require("path");
+const fs = require('fs');
+const path = require('path');
 
 // Ler o arquivo blockDefinitions.ts
-const filePath = path.join(__dirname, "src", "config", "blockDefinitions.ts");
-const content = fs.readFileSync(filePath, "utf8");
+const filePath = path.join(__dirname, 'src', 'config', 'blockDefinitions.ts');
+const content = fs.readFileSync(filePath, 'utf8');
 
 // Extrair todos os tipos usando regex
 const typeMatches = content.match(/type:\s*['"]([^'"]+)['"]/g);
@@ -26,16 +26,16 @@ if (typeMatches) {
   const duplicates = Object.entries(typeCounts).filter(([type, count]) => count > 1);
 
   if (duplicates.length > 0) {
-    console.log("Tipos duplicados encontrados:");
+    console.log('Tipos duplicados encontrados:');
     duplicates.forEach(([type, count]) => {
       console.log(`- ${type}: ${count} ocorrências`);
     });
   } else {
-    console.log("Nenhum tipo duplicado encontrado nos blockDefinitions.");
+    console.log('Nenhum tipo duplicado encontrado nos blockDefinitions.');
   }
 
   console.log(`\nTotal de tipos encontrados: ${types.length}`);
   console.log(`Tipos únicos: ${Object.keys(typeCounts).length}`);
 } else {
-  console.log("Nenhum tipo encontrado no arquivo.");
+  console.log('Nenhum tipo encontrado no arquivo.');
 }

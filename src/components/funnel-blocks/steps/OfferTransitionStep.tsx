@@ -1,6 +1,5 @@
-import React from "react";
-import { Button } from "@/components/ui/button";
-import { FunnelStepProps } from "@/types/funnel";
+import { Button } from '@/components/ui/button';
+import { FunnelStepProps } from '@/types/funnel';
 
 interface OfferTransitionStepProps extends FunnelStepProps {
   data?: {
@@ -18,23 +17,23 @@ interface OfferTransitionStepProps extends FunnelStepProps {
 
 const OfferTransitionStep: React.FC<OfferTransitionStepProps> = ({ data, onNext }) => {
   const {
-    title = "Agora que você conhece seu estilo...",
-    subtitle = "É hora de colocá-lo em prática!",
-    resultSummary = "Baseado nas suas respostas, identificamos que você tem um estilo único que merece ser explorado.",
+    title = 'Agora que você conhece seu estilo...',
+    subtitle = 'É hora de colocá-lo em prática!',
+    resultSummary = 'Baseado nas suas respostas, identificamos que você tem um estilo único que merece ser explorado.',
     benefits = [
       {
-        title: "Autoconfiança",
-        description: "Sinta-se confiante em qualquer ocasião",
+        title: 'Autoconfiança',
+        description: 'Sinta-se confiante em qualquer ocasião',
       },
-      { title: "Economia", description: "Pare de comprar peças que não usa" },
-      { title: "Praticidade", description: "Monte looks incríveis em minutos" },
+      { title: 'Economia', description: 'Pare de comprar peças que não usa' },
+      { title: 'Praticidade', description: 'Monte looks incríveis em minutos' },
       {
-        title: "Estilo Único",
-        description: "Desenvolva sua identidade visual",
+        title: 'Estilo Único',
+        description: 'Desenvolva sua identidade visual',
       },
     ],
-    transitionMessage = "Quer descobrir como elevar seu estilo para o próximo nível?",
-    ctaText = "SIM, QUERO ELEVAR MEU ESTILO!",
+    transitionMessage = 'Quer descobrir como elevar seu estilo para o próximo nível?',
+    ctaText = 'SIM, QUERO ELEVAR MEU ESTILO!',
   } = data || {};
 
   return (

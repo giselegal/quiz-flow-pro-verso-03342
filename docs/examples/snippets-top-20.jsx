@@ -12,7 +12,7 @@ Como usar:
 
 // ===== 1. COMPONENTE FUNCIONAL COM EXPORT (rafce) =====
 // Digite: rafce + Tab
-import React from "react";
+import React from 'react';
 
 const NomeDoComponente = () => {
   return <div></div>;
@@ -44,11 +44,11 @@ const memoizedValue = React.useMemo(() => {
 
 // ===== 6. CONSOLE.LOG (clg) =====
 // Digite: clg + Tab
-console.log("texto");
+console.log('texto');
 
 // ===== 7. CONSOLE.LOG COM OBJETO (clo) =====
 // Digite: clo + Tab
-console.log("objeto", objeto);
+console.log('objeto', objeto);
 
 // ===== 8. ARROW FUNCTION (anfn) =====
 // Digite: anfn + Tab
@@ -137,7 +137,7 @@ const QuizQuestion = ({ question, onAnswer }) => {
         <button
           key={index}
           onClick={() => setSelectedAnswer(option)}
-          className={selectedAnswer === option ? "selected" : ""}
+          className={selectedAnswer === option ? 'selected' : ''}
         >
           {option.text}
         </button>
@@ -180,7 +180,7 @@ const QuizResult = ({ score, totalQuestions, onRestart }) => {
 
   React.useEffect(() => {
     // Analytics do resultado
-    console.log("Quiz completed with score:", score);
+    console.log('Quiz completed with score:', score);
   }, [score]);
 
   return (
@@ -234,7 +234,7 @@ const useLocalStorage = (key, initialValue) => {
         setStoredValue(value);
         window.localStorage.setItem(key, JSON.stringify(value));
       } catch (error) {
-        console.error("Error saving to localStorage:", error);
+        console.error('Error saving to localStorage:', error);
       }
     },
     [key]
@@ -245,7 +245,7 @@ const useLocalStorage = (key, initialValue) => {
 
 // 📝 TEMPLATE: Componente de Loading
 // Digite: rafce + Tab e personalize:
-const LoadingSpinner = ({ message = "Carregando..." }) => {
+const LoadingSpinner = ({ message = 'Carregando...' }) => {
   return (
     <div className="loading-spinner">
       <div className="spinner"></div>

@@ -75,11 +75,11 @@ if (!active.data.current?.type) return;
 ```typescript
 // ✅ DEPOIS - Validação mais robusta
 if (!active.data.current) {
-  console.error("❌ active.data.current está undefined!");
+  console.error('❌ active.data.current está undefined!');
   return;
 }
 if (!active.data.current.type) {
-  console.error("❌ active.data.current.type está undefined!");
+  console.error('❌ active.data.current.type está undefined!');
   return;
 }
 ```
@@ -90,14 +90,14 @@ if (!active.data.current.type) {
 
 ```typescript
 // ❌ ANTES
-accepts: ["component"];
+accepts: ['component'];
 ```
 
 **✅ CORRIGIDO**:
 
 ```typescript
 // ✅ DEPOIS
-accepts: ["sidebar-component", "canvas-block"];
+accepts: ['sidebar-component', 'canvas-block'];
 ```
 
 ### **5. LÓGICA DE DROP INCOMPLETA**
@@ -170,9 +170,9 @@ document.querySelectorAll('[id^="sidebar-"]').length;
 document.querySelectorAll('[id="canvas-drop-zone"]').length;
 
 // Remover CSS interferente
-document.querySelectorAll("*").forEach(el => {
-  if (getComputedStyle(el).pointerEvents === "none") {
-    el.style.pointerEvents = "auto";
+document.querySelectorAll('*').forEach(el => {
+  if (getComputedStyle(el).pointerEvents === 'none') {
+    el.style.pointerEvents = 'auto';
   }
 });
 ```

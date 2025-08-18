@@ -1,4 +1,4 @@
-import { Block } from "./editor";
+import { Block } from './editor';
 
 export interface EditorState {
   selectedBlockId: string | null;
@@ -7,8 +7,20 @@ export interface EditorState {
   isGlobalStylesOpen: boolean;
 }
 
+export interface EditorAction {
+  type:
+    | 'SET_BLOCKS'
+    | 'ADD_BLOCK'
+    | 'UPDATE_BLOCK'
+    | 'DELETE_BLOCK'
+    | 'SET_SELECTED_BLOCK'
+    | 'SET_PREVIEW_MODE'
+    | 'SET_GLOBAL_STYLES_OPEN';
+  payload: any;
+}
+
 export interface BlockManipulationActions {
-  handleAddBlock: (type: Block["type"]) => string;
+  handleAddBlock: (type: Block['type']) => string;
   handleUpdateBlock: (id: string, content: any) => void;
   handleDeleteBlock: (id: string) => void;
   handleReorderBlocks: (sourceIndex: number, destinationIndex: number) => void;

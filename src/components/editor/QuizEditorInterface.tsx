@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { toast } from "@/components/ui/use-toast";
+import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { toast } from '@/components/ui/use-toast';
 
 interface QuizEditorInterfaceProps {
   onSave?: () => void;
@@ -17,15 +17,15 @@ export const QuizEditorInterface: React.FC<QuizEditorInterfaceProps> = ({ onSave
       await new Promise(resolve => setTimeout(resolve, 1000));
       onSave?.();
       toast({
-        title: "Sucesso",
-        description: "Quiz salvo com sucesso",
+        title: 'Sucesso',
+        description: 'Quiz salvo com sucesso',
       });
     } catch (error) {
-      console.error("Save error:", error);
+      console.error('Save error:', error);
       toast({
-        title: "Erro",
-        description: "Erro ao salvar quiz",
-        variant: "destructive",
+        title: 'Erro',
+        description: 'Erro ao salvar quiz',
+        variant: 'destructive',
       });
     } finally {
       setIsLoading(false);
@@ -38,15 +38,15 @@ export const QuizEditorInterface: React.FC<QuizEditorInterfaceProps> = ({ onSave
       // Simulate publish operation
       await new Promise(resolve => setTimeout(resolve, 1000));
       toast({
-        title: "Sucesso",
-        description: "Quiz publicado com sucesso",
+        title: 'Sucesso',
+        description: 'Quiz publicado com sucesso',
       });
     } catch (error) {
-      console.error("Publish error:", error);
+      console.error('Publish error:', error);
       toast({
-        title: "Erro",
-        description: "Erro ao publicar quiz",
-        variant: "destructive",
+        title: 'Erro',
+        description: 'Erro ao publicar quiz',
+        variant: 'destructive',
       });
     } finally {
       setIsLoading(false);
@@ -62,11 +62,11 @@ export const QuizEditorInterface: React.FC<QuizEditorInterfaceProps> = ({ onSave
 
         <div className="flex gap-2">
           <Button onClick={handleSave} disabled={isLoading} variant="outline">
-            {isLoading ? "Salvando..." : "Salvar"}
+            {isLoading ? 'Salvando...' : 'Salvar'}
           </Button>
 
           <Button onClick={handlePublish} disabled={isLoading}>
-            {isLoading ? "Publicando..." : "Publicar"}
+            {isLoading ? 'Publicando...' : 'Publicar'}
           </Button>
         </div>
       </div>

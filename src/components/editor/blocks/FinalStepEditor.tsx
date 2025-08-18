@@ -1,10 +1,10 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { styleConfig } from "@/data/styleConfig";
-import React, { useState } from "react";
-import StyleResultsEditor from "./StyleResultsEditor";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { styleConfig } from '@/config/styleConfig';
+import React, { useState } from 'react';
+import StyleResultsEditor from './StyleResultsEditor';
 
 interface FinalStepEditorProps {
   stepConfig: {
@@ -21,16 +21,16 @@ interface FinalStepEditorProps {
 }
 
 const FinalStepEditor: React.FC<FinalStepEditorProps> = ({ stepConfig, onChange }) => {
-  const [activeTab, setActiveTab] = useState("general");
+  const [activeTab, setActiveTab] = useState('general');
 
   // ✅ CORREÇÃO: Validação e valores padrão mais robustos
-  console.log("🎯 FinalStepEditor recebeu:", { stepConfig, onChange: !!onChange });
+  console.log('🎯 FinalStepEditor recebeu:', { stepConfig, onChange: !!onChange });
 
   const safeStepConfig = stepConfig || {};
   const {
     stepNumber = 21,
-    title = "Seu Resultado",
-    subtitle = "Descubra seu estilo predominante",
+    title = 'Seu Resultado',
+    subtitle = 'Descubra seu estilo predominante',
     styleResult = {
       selectedStyle: Object.keys(styleConfig)[0],
       showAllStyles: false,
@@ -39,8 +39,8 @@ const FinalStepEditor: React.FC<FinalStepEditorProps> = ({ stepConfig, onChange 
   } = safeStepConfig;
 
   // ✅ CORREÇÃO: Função para atualizar com validação
-  const updateConfig = (updates: Partial<FinalStepEditorProps["stepConfig"]>) => {
-    console.log("🚀 FinalStepEditor.updateConfig chamado:", {
+  const updateConfig = (updates: Partial<FinalStepEditorProps['stepConfig']>) => {
+    console.log('🚀 FinalStepEditor.updateConfig chamado:', {
       updates,
       currentConfig: safeStepConfig,
     });
@@ -52,7 +52,7 @@ const FinalStepEditor: React.FC<FinalStepEditorProps> = ({ stepConfig, onChange 
       };
       onChange(newConfig);
     } else {
-      console.warn("⚠️ FinalStepEditor: onChange não foi fornecido");
+      console.warn('⚠️ FinalStepEditor: onChange não foi fornecido');
     }
   };
 

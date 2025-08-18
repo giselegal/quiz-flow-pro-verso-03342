@@ -1,6 +1,5 @@
 // @ts-nocheck
-import React from "react";
-import MotivationSection from "@/components/result/MotivationSection";
+import MotivationSection from '@/components/result/MotivationSection';
 
 /**
  * BLOCO EDITÁVEL: Seção de Motivação
@@ -34,17 +33,17 @@ export interface MotivationSectionBlockProps {
   buttonText?: string;
   buttonColor?: string;
   backgroundColor?: string;
-  textAlign?: "left" | "center" | "right";
+  textAlign?: 'left' | 'center' | 'right';
   className?: string;
 }
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -84,16 +83,16 @@ const getMarginClass = (value, type) => {
 };
 
 const MotivationSectionBlock: React.FC<MotivationSectionBlockProps> = ({
-  blockId = "motivation-section",
-  title = "Sua transformação começa agora",
-  subtitle = "Descubra seu potencial único",
-  content = "Com as estratégias certas, você pode transformar completamente seu estilo e autoestima.",
+  blockId = 'motivation-section',
+  title = 'Sua transformação começa agora',
+  subtitle = 'Descubra seu potencial único',
+  content = 'Com as estratégias certas, você pode transformar completamente seu estilo e autoestima.',
   showButton = true,
-  buttonText = "Quero me transformar",
-  buttonColor = "#B89B7A",
-  backgroundColor = "#ffffff",
-  textAlign = "center",
-  className = "",
+  buttonText = 'Quero me transformar',
+  buttonColor = '#B89B7A',
+  backgroundColor = '#ffffff',
+  textAlign = 'center',
+  className = '',
 }) => {
   return (
     <div

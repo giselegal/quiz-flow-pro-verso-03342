@@ -2,14 +2,14 @@
   "templateVersion": "2.0",
   "metadata": {
     "id": "quiz-step-13",
-    "name": "Q12 - QUAL VISUAL VOC MAIS",
-    "description": "Questão 12 de 13",
-    "category": "quiz-question",
-    "type": "question",
+    "name": "O que mais te desafia na hora de se vestir?",
+    "description": "Questão estratégica 2 - Desafios na vestimenta",
+    "category": "quiz-strategic",
+    "type": "strategic-question",
     "tags": [
       "quiz",
       "style",
-      "quiz-question",
+      "quiz-strategic",
       "gisele-galvao"
     ],
     "createdAt": "2025-08-10T03:45:03.516Z",
@@ -74,21 +74,33 @@
       "properties": {
         "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
         "logoAlt": "Logo Gisele Galvão",
-        "logoWidth": 96,
-        "logoHeight": 96,
-        "progressValue": 65,
-        "progressTotal": 100,
+        "logoWidth": 120,
+        "logoHeight": 50,
         "showProgress": true,
+        "progressValue": 13,
+        "progressMax": 21,
         "showBackButton": true,
         "containerWidth": "full",
-        "spacing": "small"
+        "spacing": "small",
+        "showLogo": true,
+        "progressBarColor": "#B89B7A",
+        "progressBarThickness": 6,
+        "backgroundColor": "#FFFFFF",
+        "textColor": "#432818",
+        "paddingTop": 16,
+        "paddingBottom": 16,
+        "paddingLeft": 24,
+        "paddingRight": 24,
+        "marginBottom": 24,
+        "progressTotal": 100,
+        "type": "quiz-intro-header"
       }
     },
     {
       "id": "step13-question-title",
       "type": "text-inline",
       "properties": {
-        "content": "QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?",
+        "content": "O que mais te desafia na hora de se vestir?",
         "fontSize": "text-2xl",
         "fontWeight": "font-bold",
         "textAlign": "text-center",
@@ -117,68 +129,36 @@
       "properties": {
         "options": [
           {
-            "id": "3a",
-            "text": "Visual leve, despojado e natural.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp",
-            "styleCategory": "Natural",
+            "id": "13a",
+            "text": "Tenho peças, mas não sei como combiná-las",
+            "value": "combinacao",
             "points": 1
           },
           {
-            "id": "3b",
-            "text": "Visual clássico e tradicional.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/3_asaunw.webp",
-            "styleCategory": "Clássico",
+            "id": "13b",
+            "text": "Compro por impulso e me arrependo depois",
+            "value": "impulso",
             "points": 2
           },
           {
-            "id": "3c",
-            "text": "Visual casual com toque atual.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/13_uvbciq.webp",
-            "styleCategory": "Contemporâneo",
-            "points": 2
-          },
-          {
-            "id": "3d",
-            "text": "Visual refinado e imponente.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/5_dhrgpf.webp",
-            "styleCategory": "Elegante",
+            "id": "13c",
+            "text": "Minha imagem não reflete quem eu sou",
+            "value": "desalinhamento",
             "points": 3
           },
           {
-            "id": "3e",
-            "text": "Visual romântico, feminino e delicado.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/6_gnoxfg.webp",
-            "styleCategory": "Romântico",
-            "points": 2
-          },
-          {
-            "id": "3f",
-            "text": "Visual sensual, com saia justa e decote.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735327/7_ynez1z.webp",
-            "styleCategory": "Sexy",
-            "points": 3
-          },
-          {
-            "id": "3g",
-            "text": "Visual marcante e urbano (jeans + jaqueta).",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/8_yqu3hw.webp",
-            "styleCategory": "Dramático",
-            "points": 3
-          },
-          {
-            "id": "3h",
-            "text": "Visual criativo, colorido e ousado.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/9_x6so6a.webp",
-            "styleCategory": "Criativo",
+            "id": "13d",
+            "text": "Perco tempo e acabo usando sempre os mesmos looks",
+            "value": "repeticao",
             "points": 4
           }
         ],
-        "columns": 2,
-        "imageSize": 256,
-        "showImages": true,
-        "multipleSelection": true,
-        "minSelections": 3,
-        "maxSelections": 3,
+        "columns": 1,
+        "imageSize": 0,
+        "showImages": false,
+        "multipleSelection": false,
+        "minSelections": 1,
+        "maxSelections": 1,
         "borderColor": "#E5E7EB",
         "selectedBorderColor": "#B89B7A",
         "hoverColor": "#F3E8D3",
@@ -187,19 +167,10 @@
         "marginBottom": 16,
         "selectionStyle": "glow",
         "animationType": "scale",
-        "validationMessage": "Selecione 3 opções para avançar.",
+        "validationMessage": "Selecione uma opção para avançar.",
         "scoring": {
           "enabled": true,
-          "categories": [
-            "Natural",
-            "Clássico",
-            "Contemporâneo",
-            "Elegante",
-            "Romântico",
-            "Sexy",
-            "Dramático",
-            "Criativo"
-          ]
+          "method": "strategic-points"
         }
       }
     },
@@ -267,5 +238,6 @@
       ]
     },
     "conditions": null
-  }
+  },
+  "updatedAt": "2025-08-17T19:06:10.218Z"
 }

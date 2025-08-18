@@ -1,5 +1,4 @@
-import React from "react";
-import { cn } from "@/lib/utils";
+import { cn } from '@/lib/utils';
 
 interface HeaderComponentProps {
   data: {
@@ -18,13 +17,13 @@ interface HeaderComponentProps {
 const HeaderComponent: React.FC<HeaderComponentProps> = ({ data, style, isSelected }) => {
   return (
     <div
-      className={cn("p-4 text-center", isSelected && "outline-dashed outline-1 outline-blue-400")}
+      className={cn('p-4 text-center', isSelected && 'outline-dashed outline-1 outline-blue-400')}
       style={{
-        backgroundColor: style?.backgroundColor || "transparent",
-        color: style?.textColor || "inherit",
+        backgroundColor: style?.backgroundColor || 'transparent',
+        color: style?.textColor || 'inherit',
       }}
     >
-      <h1 className="text-2xl md:text-3xl font-bold mb-2">{data.title || "Título Principal"}</h1>
+      <h1 className="text-2xl md:text-3xl font-bold mb-2">{data.title || 'Título Principal'}</h1>
       {data.subtitle && <p className="text-sm md:text-base opacity-75">{data.subtitle}</p>}
     </div>
   );

@@ -1,20 +1,17 @@
-import React from "react";
-import { StyleResult } from "@/types/quiz";
-import { useLocation } from "wouter";
-import { useEffect } from "react";
+import { StyleResult } from '@/types/quiz';
+import { useEffect } from 'react';
 
-export const ResultPagePrototype: React.FC = () => {
-  const [location, setLocation] = useLocation();
-
+export default function ResultPagePrototype() {
   useEffect(() => {
     // Prevent any navigation issues
-    console.log("ResultPagePrototype loaded");
+    console.log('ResultPagePrototype loaded');
   }, []);
 
-  const mockPrimaryStyle = "Elegante";
-  const mockSecondaryStyles = ["Clássico", "Contemporâneo", "Natural"];
+  const mockPrimaryStyle = 'Elegante';
+  const mockSecondaryStyles = ['Clássico', 'Contemporâneo', 'Natural'];
 
-  const primaryStyle: StyleResult = mockPrimaryStyle
+  // Mock data for prototype - variables intentionally unused for now
+  const _primaryStyle: StyleResult = mockPrimaryStyle
     ? {
         category: mockPrimaryStyle,
         score: 100,
@@ -24,15 +21,15 @@ export const ResultPagePrototype: React.FC = () => {
         rank: 1,
       }
     : {
-        category: "Natural",
+        category: 'Natural',
         score: 100,
         percentage: 85,
-        style: "natural",
+        style: 'natural',
         points: 100,
         rank: 1,
       };
 
-  const secondaryStyles: StyleResult[] = mockSecondaryStyles.map((style, index) => ({
+  const _secondaryStyles: StyleResult[] = mockSecondaryStyles.map((style, index) => ({
     category: style,
     score: 80 - index * 10,
     percentage: 75 - index * 10,
@@ -40,6 +37,9 @@ export const ResultPagePrototype: React.FC = () => {
     points: 80 - index * 10,
     rank: index + 2,
   }));
+
+  void _primaryStyle;
+  void _secondaryStyles;
 
   return (
     <div className="min-h-screen bg-[#FAF9F7]">
@@ -54,4 +54,4 @@ export const ResultPagePrototype: React.FC = () => {
       />
     </div>
   );
-};
+}

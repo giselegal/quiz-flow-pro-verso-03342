@@ -4,12 +4,12 @@
  * Permite que o projeto rode enquanto corrigimos os erros
  */
 
-declare module "*.tsx" {
+declare module '*.tsx' {
   const component: any;
   export default component;
 }
 
-declare module "*.ts" {
+declare module '*.ts' {
   const module: any;
   export = module;
 }

@@ -13,7 +13,7 @@
 ### 1. **PAINEL DE PROPRIEDADES VAZIO**
 
 ```typescript
-import { ModernPropertiesPanel } from "../components/editor/panels/ModernPropertiesPanel";
+import { ModernPropertiesPanel } from '../components/editor/panels/ModernPropertiesPanel';
 ```
 
 - **Problema**: O arquivo `ModernPropertiesPanel.tsx` está **completamente vazio**
@@ -45,18 +45,18 @@ const SimpleBlockRenderer: React.FC<{...}> = ({ block, isSelected, onClick }) =>
 ```typescript
 const AVAILABLE_BLOCKS = [
   // 38 tipos listados na interface
-  { type: "heading", name: "Título", icon: "📝", category: "text" },
+  { type: 'heading', name: 'Título', icon: '📝', category: 'text' },
   {
-    type: "quiz-question",
-    name: "Questão do Quiz",
-    icon: "❓",
-    category: "quiz",
+    type: 'quiz-question',
+    name: 'Questão do Quiz',
+    icon: '❓',
+    category: 'quiz',
   },
   {
-    type: "video-player",
-    name: "Player de Vídeo",
-    icon: "🎬",
-    category: "media",
+    type: 'video-player',
+    name: 'Player de Vídeo',
+    icon: '🎬',
+    category: 'media',
   },
   // ... mais 35 tipos
 ];
@@ -217,7 +217,7 @@ MODERNOS: video-player, faq-section, testimonials, guarantee
 
 ```typescript
 // 1. Substituir SimpleBlockRenderer
-import { UniversalBlockRenderer } from "../components/editor/blocks/UniversalBlockRenderer";
+import { UniversalBlockRenderer } from '../components/editor/blocks/UniversalBlockRenderer';
 
 // 2. Implementar ModernPropertiesPanel básico
 // 3. Conectar 10-15 componentes principais

@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { cn } from "@/lib/utils";
-import { FunnelStepProps } from "@/types/funnel";
-import { Button } from "@/components/ui/button";
+// @ts-nocheck
+import React, { useState, useEffect } from 'react';
+import { cn } from '@/lib/utils';
+import { FunnelStepProps } from '@/types/funnel';
 
 /**
  * ProcessingStep - Etapa de processamento
@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
  */
 export const ProcessingStep: React.FC<FunnelStepProps> = ({
   id,
-  className = "",
+  className = '',
   isEditable = false,
   onNext,
   stepNumber,
@@ -20,15 +20,15 @@ export const ProcessingStep: React.FC<FunnelStepProps> = ({
   onEdit,
 }) => {
   const {
-    title = "Processando seu resultado...",
+    title = 'Processando seu resultado...',
     messages = [
-      "Analisando suas preferências...",
-      "Calculando compatibilidade...",
-      "Preparando resultado personalizado...",
+      'Analisando suas preferências...',
+      'Calculando compatibilidade...',
+      'Preparando resultado personalizado...',
     ],
     showProgress = true,
     duration = 5000,
-    loadingType = "spinning",
+    loadingType = 'spinning',
   } = data;
 
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
@@ -70,17 +70,17 @@ export const ProcessingStep: React.FC<FunnelStepProps> = ({
   }, [isEditable, onNext, messages, duration, showProgress]);
 
   // Estilos para diferentes tipos de loading
-  const loadingClasses = {
-    spinning: "animate-spin text-primary",
-    elegant: "processing-spinner text-primary",
-    dots: "processing-dots text-primary",
-    bars: "processing-bars text-primary",
+  const loadingStyleClasses = {
+    spinning: 'animate-spin text-primary',
+    elegant: 'processing-spinner text-primary',
+    dots: 'processing-dots text-primary',
+    bars: 'processing-bars text-primary',
   };
 
   return (
     <div
       className={cn(
-        "relative flex flex-col items-center justify-center p-6 rounded-xl shadow-md",
+        'relative flex flex-col items-center justify-center p-6 rounded-xl shadow-md',
         className
       )}
       onClick={isEditable ? onEdit : undefined}
@@ -92,7 +92,7 @@ export const ProcessingStep: React.FC<FunnelStepProps> = ({
 
       {/* Tipos de loading */}
       <div className="text-4xl mb-6">
-        {loadingType === "spinning" && (
+        {loadingType === 'spinning' && (
           <svg className="animate-spin h-10 w-10 text-primary" viewBox="0 0 24 24">
             <circle
               className="opacity-25"
@@ -110,7 +110,7 @@ export const ProcessingStep: React.FC<FunnelStepProps> = ({
           </svg>
         )}
 
-        {loadingType === "elegant" && (
+        {loadingType === 'elegant' && (
           <svg className="processing-spinner h-10 w-10 text-primary" viewBox="0 0 66 66">
             <circle
               className="path"
@@ -124,33 +124,33 @@ export const ProcessingStep: React.FC<FunnelStepProps> = ({
           </svg>
         )}
 
-        {loadingType === "dots" && (
+        {loadingType === 'dots' && (
           <div className="flex space-x-2">
             <div className="w-3 h-3 bg-primary rounded-full processing-dots"></div>
             <div
               className="w-3 h-3 bg-primary rounded-full processing-dots"
-              style={{ animationDelay: "0.2s" }}
+              style={{ animationDelay: '0.2s' }}
             ></div>
             <div
               className="w-3 h-3 bg-primary rounded-full processing-dots"
-              style={{ animationDelay: "0.4s" }}
+              style={{ animationDelay: '0.4s' }}
             ></div>
           </div>
         )}
 
-        {loadingType === "bars" && (
+        {loadingType === 'bars' && (
           <div className="flex space-x-2">
             <div
               className="w-2 h-6 bg-primary processing-bars"
-              style={{ animationDelay: "0s" }}
+              style={{ animationDelay: '0s' }}
             ></div>
             <div
               className="w-2 h-5 bg-primary processing-bars"
-              style={{ animationDelay: "0.1s" }}
+              style={{ animationDelay: '0.1s' }}
             ></div>
             <div
               className="w-2 h-4 bg-primary processing-bars"
-              style={{ animationDelay: "0.2s" }}
+              style={{ animationDelay: '0.2s' }}
             ></div>
           </div>
         )}

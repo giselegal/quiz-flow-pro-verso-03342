@@ -117,45 +117,45 @@ errorMessage: "Mensagem personalizada"
 ### 🎯 **Caso 1: Captura de Nome com Validação**
 
 ```typescript
-label: "Qual é o seu nome?";
-placeholder: "Digite seu nome completo";
+label: 'Qual é o seu nome?';
+placeholder: 'Digite seu nome completo';
 enableButtonWhenFilled: true;
 minLength: 2;
-buttonText: "Prosseguir";
-buttonSize: "full"; // Responsivo
-nextStepAction: "next-step";
+buttonText: 'Prosseguir';
+buttonSize: 'full'; // Responsivo
+nextStepAction: 'next-step';
 ```
 
 ### 🎯 **Caso 2: Navegação para Etapa Específica**
 
 ```typescript
-label: "Código de Acesso";
-inputType: "password";
+label: 'Código de Acesso';
+inputType: 'password';
 enableButtonWhenFilled: true;
-nextStepAction: "specific-step";
-specificStep: "step-05";
-buttonText: "Acessar Área VIP";
+nextStepAction: 'specific-step';
+specificStep: 'step-05';
+buttonText: 'Acessar Área VIP';
 ```
 
 ### 🎯 **Caso 3: Redirecionamento para URL**
 
 ```typescript
-label: "E-mail para Newsletter";
-inputType: "email";
-nextStepAction: "url";
-targetUrl: "https://exemplo.com/obrigado";
-buttonText: "Inscrever-se";
-buttonSize: "large";
+label: 'E-mail para Newsletter';
+inputType: 'email';
+nextStepAction: 'url';
+targetUrl: 'https://exemplo.com/obrigado';
+buttonText: 'Inscrever-se';
+buttonSize: 'large';
 ```
 
 ### 🎯 **Caso 4: Envio de Formulário**
 
 ```typescript
-label: "Comentários Finais";
-inputType: "text";
-nextStepAction: "submit";
-buttonText: "Enviar Feedback";
-buttonSize: "full";
+label: 'Comentários Finais';
+inputType: 'text';
+nextStepAction: 'submit';
+buttonText: 'Enviar Feedback';
+buttonSize: 'full';
 ```
 
 ---
@@ -241,8 +241,8 @@ graph TD
 ### ⭐ **Validação Personalizada com RegEx**
 
 ```typescript
-validationPattern: "^[A-Za-z\s]{2,50}$"; // Apenas letras e espaços
-errorMessage: "Use apenas letras (2-50 caracteres)";
+validationPattern: '^[A-Za-z\s]{2,50}$'; // Apenas letras e espaços
+errorMessage: 'Use apenas letras (2-50 caracteres)';
 ```
 
 ### ⭐ **Estilos de Botão Variados**
@@ -332,7 +332,7 @@ saveInterval: number; // Intervalo em segundos
 ### 4. **Validação de E-mail Avançada**
 
 ```typescript
-emailValidation: "basic" | "advanced" | "disposable-check";
+emailValidation: 'basic' | 'advanced' | 'disposable-check';
 ```
 
 ---

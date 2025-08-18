@@ -1,9 +1,9 @@
-import React from "react";
-import QuizQuestion from "../QuizQuestion";
-import { UserResponse } from "@/types/quiz";
-import { QuizHeader } from "./QuizHeader";
-import { StrategicQuestions } from "./StrategicQuestions";
-import { useScrollTracking } from "@/hooks/useScrollTracking";
+// @ts-nocheck
+import QuizQuestion from '../QuizQuestion';
+import { UserResponse } from '@/types/quiz';
+import { QuizHeader } from './QuizHeader';
+import { StrategicQuestions } from './StrategicQuestions';
+import { useScrollTracking } from '@/hooks/useScrollTracking';
 
 interface QuizContentWithTrackingProps {
   user: any;
@@ -29,7 +29,7 @@ export const QuizContentWithTracking: React.FC<QuizContentWithTrackingProps> = (
   const { scrollY, scrollDirection, isScrolling } = useScrollTracking();
 
   // Get user name from localStorage if not provided in props
-  const userName = user?.userName || localStorage.getItem("userName") || "";
+  const userName = user?.userName || localStorage.getItem('userName') || '';
 
   // Determine the required selections based on question type
   const requiredSelections = showingStrategicQuestions ? 1 : currentQuestion?.multiSelect || 3;

@@ -1,55 +1,66 @@
-import React from "react";
-import { Button } from "@/components/ui/button";
-import Logo from "@/components/ui/logo";
-import { motion } from "framer-motion";
-import {
-  Save,
-  Eye,
-  EyeOff,
-  Undo,
-  Redo,
-  Smartphone,
-  Tablet,
-  Monitor,
-  LayoutGrid,
-} from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import Logo from '@/components/ui/logo';
+import { useEditor } from '@/context/EditorContext';
+import { useFunnelNavigation } from '@/hooks/useFunnelNavigation';
+import { cn } from '@/lib/utils';
+import { motion } from 'framer-motion';
+import { Eye, EyeOff, LayoutGrid, Monitor, Save, Settings, Smartphone, Tablet } from 'lucide-react';
 
 interface EditorToolbarProps {
-  isPreviewing: boolean;
-  onTogglePreview: () => void;
-  onSave: () => void;
-  onUndo?: () => void;
-  onRedo?: () => void;
-  canUndo?: boolean;
-  canRedo?: boolean;
-  viewportSize?: "sm" | "md" | "lg" | "xl";
-  onViewportSizeChange?: (size: "sm" | "md" | "lg" | "xl") => void;
+  className?: string;
 }
 
-export const EditorToolbar: React.FC<EditorToolbarProps> = ({
-  isPreviewing,
-  onTogglePreview,
-  onSave,
-  onUndo,
-  onRedo,
-  canUndo = false,
-  canRedo = false,
-  viewportSize = "lg",
-  onViewportSizeChange = () => {},
-}) => {
+/**
+ * 🎨 TOOLBAR SUPERIOR UNIFICADA
+ *
+ * Centraliza todos os controles principais do editor integrados com EditorContext:
+ * - Informações do projeto
+ * - Controles de viewport (Desktop/Tablet/Mobile)
+ * - Ações principais (Save, Preview, Undo/Redo)
+ * - Configurações globais
+ */
+export const EditorToolbar: React.FC<EditorToolbarProps> = ({ className = '' }) => {
+  const {
+    isPreviewing,
+    setIsPreviewing,
+    uiState: { viewportSize, setViewportSize },
+    persistenceActions: { save },
+    computed: { totalBlocks },
+  } = useEditor();
+
+  const funnelNavigation = useFunnelNavigation();
+
+  const handleSave = async () => {
+    try {
+      await save();
+      console.log('✅ Projeto salvo com sucesso');
+    } catch (error) {
+      console.error('❌ Erro ao salvar projeto:', error);
+    }
+  };
+
+  const viewportOptions = [
+    { id: 'sm', icon: Smartphone, label: 'Mobile', size: '375px' },
+    { id: 'md', icon: Tablet, label: 'Tablet', size: '768px' },
+    { id: 'lg', icon: Monitor, label: 'Desktop', size: '1024px' },
+    { id: 'xl', icon: LayoutGrid, label: 'Desktop XL', size: '1920px' },
+  ];
   return (
     <div
-      className="border-b border-amber-700/30 p-3 flex items-center justify-between shadow-lg backdrop-blur-sm"
-      style={{ backgroundColor: "#d1b586" }}
+      className={cn(
+        'border-b border-amber-700/30 p-3 flex items-center justify-between shadow-lg backdrop-blur-sm',
+        className
+      )}
+      style={{ backgroundColor: '#d1b586' }}
     >
-      {/* Logo à esquerda com animação Framer Motion */}
-      <div className="flex items-center">
+      {/* Logo e informações do projeto */}
+      <div className="flex items-center space-x-4">
         <motion.div
           className="relative group cursor-pointer"
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5, ease: "easeOut" }}
+          transition={{ duration: 0.5, ease: 'easeOut' }}
           whileHover={{
             scale: 1.05,
             rotate: [0, -1, 1, 0],
@@ -57,117 +68,43 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
           }}
           whileTap={{ scale: 0.95 }}
         >
-          <motion.div
-            animate={{
-              filter: [
-                "brightness(1) saturate(1)",
-                "brightness(1.1) saturate(1.1)",
-                "brightness(1) saturate(1)",
-              ],
-            }}
-            transition={{
-              duration: 3,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          >
-            <Logo className="h-8 w-auto transform-gpu" />
-          </motion.div>
-
-          {/* Glow effect animado */}
-          <motion.div
-            className="absolute inset-0 rounded-lg bg-white/10 blur-sm -z-10"
-            initial={{ opacity: 0, scale: 0.8 }}
-            whileHover={{
-              opacity: 0.3,
-              scale: 1.1,
-              transition: { duration: 0.2 },
-            }}
-          />
+          <Logo className="h-8 w-auto transform-gpu" />
         </motion.div>
+
+        {/* Informações do projeto */}
+        <div className="flex items-center gap-2 text-sm text-white/90">
+          <Badge variant="outline" className="text-xs bg-white/20 text-white border-white/30">
+            4 Colunas
+          </Badge>
+          <span>•</span>
+          <span>{totalBlocks} blocos</span>
+          <span>•</span>
+          <span>
+            Etapa {funnelNavigation.currentStepNumber || 1} de {funnelNavigation.totalSteps || 21}
+          </span>
+        </div>
       </div>
 
-      {/* Ferramentas no centro */}
+      {/* Controles de viewport no centro */}
       <div className="flex items-center space-x-3">
-        {onUndo && (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onUndo}
-            disabled={!canUndo}
-            title="Desfazer"
-            className="text-white hover:bg-white/20 disabled:opacity-50"
-          >
-            <Undo className="h-4 w-4" />
-          </Button>
-        )}
-
-        {onRedo && (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onRedo}
-            disabled={!canRedo}
-            title="Refazer"
-            className="text-white hover:bg-white/20 disabled:opacity-50"
-          >
-            <Redo className="h-4 w-4" />
-          </Button>
-        )}
-
-        <div className="h-6 w-px bg-white/30 mx-2" />
-
-        <Button
-          variant="ghost"
-          size="sm"
-          className={cn(
-            "text-white hover:bg-white/20 transition-all",
-            viewportSize === "sm" && "bg-white/30 shadow-md"
-          )}
-          onClick={() => onViewportSizeChange("sm")}
-          title="Mobile"
-        >
-          <Smartphone className="h-4 w-4" />
-        </Button>
-
-        <Button
-          variant="ghost"
-          size="sm"
-          className={cn(
-            "text-white hover:bg-white/20 transition-all",
-            viewportSize === "md" && "bg-white/30 shadow-md"
-          )}
-          onClick={() => onViewportSizeChange("md")}
-          title="Tablet"
-        >
-          <Tablet className="h-4 w-4" />
-        </Button>
-
-        <Button
-          variant="ghost"
-          size="sm"
-          className={cn(
-            "text-white hover:bg-white/20 transition-all",
-            viewportSize === "lg" && "bg-white/30 shadow-md"
-          )}
-          onClick={() => onViewportSizeChange("lg")}
-          title="Desktop"
-        >
-          <Monitor className="h-4 w-4" />
-        </Button>
-
-        <Button
-          variant="ghost"
-          size="sm"
-          className={cn(
-            "text-white hover:bg-white/20 transition-all",
-            viewportSize === "xl" && "bg-white/30 shadow-md"
-          )}
-          onClick={() => onViewportSizeChange("xl")}
-          title="Desktop Large"
-        >
-          <LayoutGrid className="h-4 w-4" />
-        </Button>
+        {viewportOptions.map(option => {
+          const IconComponent = option.icon;
+          return (
+            <Button
+              key={option.id}
+              variant="ghost"
+              size="sm"
+              className={cn(
+                'text-white hover:bg-white/20 transition-all',
+                viewportSize === option.id && 'bg-white/30 shadow-md'
+              )}
+              onClick={() => setViewportSize(option.id as any)}
+              title={`${option.label} (${option.size})`}
+            >
+              <IconComponent className="h-4 w-4" />
+            </Button>
+          );
+        })}
       </div>
 
       {/* Botões de ação à direita */}
@@ -175,7 +112,7 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
         <Button
           variant="outline"
           size="sm"
-          onClick={onTogglePreview}
+          onClick={() => setIsPreviewing(!isPreviewing)}
           className="border-white/30 text-white hover:bg-white/20 bg-transparent"
         >
           {isPreviewing ? (
@@ -191,13 +128,18 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
           )}
         </Button>
 
-        <Button
-          onClick={onSave}
-          size="sm"
-          style={{ backgroundColor: '#FAF9F7' }}
-        >
+        <Button onClick={handleSave} size="sm" style={{ backgroundColor: '#FAF9F7' }}>
           <Save className="mr-2 h-4 w-4" />
           Salvar
+        </Button>
+
+        <Button
+          variant="ghost"
+          size="sm"
+          className="text-white hover:bg-white/20 h-8 w-8 p-0"
+          title="Configurações"
+        >
+          <Settings className="w-4 h-4" />
         </Button>
       </div>
     </div>

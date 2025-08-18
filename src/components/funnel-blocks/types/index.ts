@@ -4,19 +4,19 @@
  */
 
 // Tipos de alinhamento comuns
-export type Alignment = "left" | "center" | "right";
+export type Alignment = 'left' | 'center' | 'right';
 
 // Tipos de tamanho comuns
-export type Size = "small" | "medium" | "large";
+export type Size = 'small' | 'medium' | 'large';
 
 // Tipos de estilo de botão
-export type ButtonStyle = "primary" | "secondary" | "accent" | "outline";
+export type ButtonStyle = 'primary' | 'secondary' | 'accent' | 'outline';
 
 // Tipos de animação de loading
-export type LoadingType = "spinning" | "elegant" | "dots" | "bars";
+export type LoadingType = 'spinning' | 'elegant' | 'dots' | 'bars';
 
 // Tipos de dispositivo para responsividade
-export type DeviceView = "mobile" | "tablet" | "desktop";
+export type DeviceView = 'mobile' | 'tablet' | 'desktop';
 
 // Interface base para estilos customizáveis
 export interface BaseStyles {
@@ -124,7 +124,7 @@ export interface VideoConfig {
   controls?: boolean;
   muted?: boolean;
   loop?: boolean;
-  aspectRatio?: "16:9" | "4:3" | "1:1" | "9:16";
+  aspectRatio?: '16:9' | '4:3' | '1:1' | '9:16';
 }
 
 // Interface para preços

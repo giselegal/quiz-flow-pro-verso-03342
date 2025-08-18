@@ -48,7 +48,7 @@ const blockFiles = [
   'src/components/editor/blocks/TitleInlineBlock.tsx',
   'src/components/editor/blocks/VideoBlock.tsx',
   'src/components/editor/blocks/VideoInlineBlock.tsx',
-  'src/components/editor/blocks/WaitingListBlock.tsx'
+  'src/components/editor/blocks/WaitingListBlock.tsx',
 ];
 
 console.log(`📁 Processing ${blockFiles.length} files...`);
@@ -61,7 +61,7 @@ blockFiles.forEach(filePath => {
   try {
     if (fs.existsSync(filePath)) {
       const content = fs.readFileSync(filePath, 'utf8');
-      
+
       // Check if @ts-nocheck is already at the beginning
       if (!content.trim().startsWith('// @ts-nocheck')) {
         const newContent = '// @ts-nocheck\n' + content;

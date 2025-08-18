@@ -1,5 +1,4 @@
 // @ts-nocheck
-import React from "react";
 
 interface ComponentRendererProps {
   component: any;
@@ -10,11 +9,11 @@ interface ComponentRendererProps {
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -60,9 +59,9 @@ const ComponentRenderer: React.FC<ComponentRendererProps> = ({
   onUpdate,
 }) => {
   return (
-    <div className={`component-renderer ${isSelected ? "selected" : ""}`} onClick={onSelect}>
+    <div className={`component-renderer ${isSelected ? 'selected' : ''}`} onClick={onSelect}>
       <div className="p-4 border rounded">
-        <p>Componente: {component?.type || "Desconhecido"}</p>
+        <p>Componente: {component?.type || 'Desconhecido'}</p>
         {/* Implementar renderização real aqui */}
       </div>
     </div>

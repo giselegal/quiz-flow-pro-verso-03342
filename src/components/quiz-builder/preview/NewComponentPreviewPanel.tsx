@@ -1,7 +1,6 @@
-import React from "react";
-import { QuizComponentData, QuizStage } from "@/types/quizBuilder";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { cn } from "@/lib/utils";
+import { QuizComponentData, QuizStage } from '@/types/quizBuilder';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { cn } from '@/lib/utils';
 import {
   DndContext,
   closestCenter,
@@ -9,11 +8,11 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
-} from "@dnd-kit/core";
-import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
-import { DraggableComponent } from "./DraggableComponent";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+} from '@dnd-kit/core';
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { DraggableComponent } from './DraggableComponent';
+import { Button } from '@/components/ui/button';
+import { Plus } from 'lucide-react';
 
 interface ComponentPreviewPanelProps {
   components: QuizComponentData[];
@@ -69,8 +68,8 @@ export const NewComponentPreviewPanel: React.FC<ComponentPreviewPanelProps> = ({
       <ScrollArea className="flex-1 p-4">
         <div
           className={cn(
-            "min-h-full w-full max-w-4xl mx-auto",
-            isPreviewing ? "pointer-events-none select-none" : ""
+            'min-h-full w-full max-w-4xl mx-auto',
+            isPreviewing ? 'pointer-events-none select-none' : ''
           )}
         >
           {sortedComponents.length === 0 ? (

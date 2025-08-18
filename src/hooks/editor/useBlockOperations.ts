@@ -1,7 +1,7 @@
-import { useState, useCallback } from "react";
-import { Block } from "@/types/editor";
-import { generateId } from "@/utils/idGenerator";
-import { getDefaultContentForType } from "@/utils/editorDefaults";
+import { useState, useCallback } from 'react';
+import { Block } from '@/types/editor';
+import { generateId } from '@/utils/idGenerator';
+import { getDefaultContentForType } from '@/utils/editorDefaults';
 
 export const useBlockOperations = () => {
   const [blocks, setBlocks] = useState<Block[]>([]);
@@ -12,7 +12,7 @@ export const useBlockOperations = () => {
   }, []);
 
   const handleAddBlock = useCallback(
-    (type: Block["type"]) => {
+    (type: Block['type']) => {
       const newBlock: Block = {
         id: generateId(),
         type,

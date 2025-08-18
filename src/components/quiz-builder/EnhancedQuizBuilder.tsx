@@ -1,5 +1,4 @@
-import React from "react";
-import QuizBuilder from "./QuizBuilder";
+import QuizBuilder from './QuizBuilder';
 
 /**
  * EnhancedQuizBuilder é um wrapper para o componente QuizBuilder

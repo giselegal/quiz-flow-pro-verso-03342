@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { Award, Star, Gift, Crown, Users, CheckCircle, ShoppingBag } from "lucide-react";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { AnimatedWrapper } from "@/components/ui/animated-wrapper";
-import type { BlockComponentProps } from "@/types/blocks";
+import { AnimatedWrapper } from '@/components/ui/animated-wrapper';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import type { BlockComponentProps } from '@/types/blocks';
+import { Award, CheckCircle, Crown, Gift, ShoppingBag, Star, Users } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
 
 interface ModernResultPageComponentProps extends BlockComponentProps {
   // Props específicas do componente
@@ -14,23 +14,22 @@ const ModernResultPageComponent: React.FC<ModernResultPageComponentProps> = ({
   isSelected = false,
   isEditing = false,
   onClick,
-  onPropertyChange,
-  className = "",
+  className = '',
 }) => {
   const {
-    logoUrl = "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-    logoAlt = "Logo Gisele Galvão",
-    logoHeight = "60px",
-    userName = "Querida",
-    primaryStyle = "elegante",
+    logoUrl = 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+    logoAlt = 'Logo Gisele Galvão',
+    logoHeight = '60px',
+    userName = 'Querida',
+    primaryStyle = 'elegante',
     showStyleImage = true,
     showCharacteristics = true,
     showSecondaryStyles = true,
-    ctaText = "DESCOBRIR MEU GUARDA-ROUPA IDEAL",
-    ctaUrl = "#oferta",
-    backgroundColor = "#FFFBF7",
-    accentColor = "#B89B7A",
-    textColor = "#432818",
+    ctaText = 'DESCOBRIR MEU GUARDA-ROUPA IDEAL',
+    ctaUrl = '#oferta',
+    backgroundColor = '#FFFBF7',
+    accentColor = '#B89B7A',
+    textColor = '#432818',
   } = block.properties;
 
   const [isLoaded, setIsLoaded] = useState(false);
@@ -40,50 +39,44 @@ const ModernResultPageComponent: React.FC<ModernResultPageComponentProps> = ({
     return () => clearTimeout(timer);
   }, []);
 
-  const handlePropertyChange = (key: string, value: any) => {
-    if (onPropertyChange) {
-      onPropertyChange(key, value);
-    }
-  };
-
   // Configuração dos estilos
   const styleConfig = {
     elegante: {
-      name: "Elegante",
+      name: 'Elegante',
       image:
-        "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911574/ELEGANTE_PREDOMINANTE_awmgit.webp",
-      description: "Seu estilo reflete sofisticação e refinamento em cada detalhe.",
+        'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911574/ELEGANTE_PREDOMINANTE_awmgit.webp',
+      description: 'Seu estilo reflete sofisticação e refinamento em cada detalhe.',
       characteristics: [
-        "Peças estruturadas e bem cortadas",
-        "Cores neutras e sóbrias",
-        "Acessórios refinados",
-        "Tecidos nobres e de qualidade",
+        'Peças estruturadas e bem cortadas',
+        'Cores neutras e sóbrias',
+        'Acessórios refinados',
+        'Tecidos nobres e de qualidade',
       ],
       icon: Crown,
     },
     natural: {
-      name: "Natural",
+      name: 'Natural',
       image:
-        "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911575/NATURAL_PREDOMINANTE_baqkts.webp",
-      description: "Você valoriza o conforto e a autenticidade acima de tudo.",
+        'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911575/NATURAL_PREDOMINANTE_baqkts.webp',
+      description: 'Você valoriza o conforto e a autenticidade acima de tudo.',
       characteristics: [
-        "Conforto em primeiro lugar",
-        "Tecidos naturais e respiráveis",
-        "Cores terrosas e suaves",
-        "Silhuetas relaxadas",
+        'Conforto em primeiro lugar',
+        'Tecidos naturais e respiráveis',
+        'Cores terrosas e suaves',
+        'Silhuetas relaxadas',
       ],
       icon: Star,
     },
     contemporaneo: {
-      name: "Contemporâneo",
+      name: 'Contemporâneo',
       image:
-        "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911573/CONTEMPORANEO_PREDOMINANTE_xllhxm.webp",
-      description: "Você está sempre em sintonia com as tendências atuais.",
+        'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911573/CONTEMPORANEO_PREDOMINANTE_xllhxm.webp',
+      description: 'Você está sempre em sintonia com as tendências atuais.',
       characteristics: [
-        "Tendências da moda atual",
-        "Mix de texturas modernas",
-        "Cores em alta",
-        "Peças statement",
+        'Tendências da moda atual',
+        'Mix de texturas modernas',
+        'Cores em alta',
+        'Peças statement',
       ],
       icon: Award,
     },
@@ -112,7 +105,7 @@ const ModernResultPageComponent: React.FC<ModernResultPageComponentProps> = ({
     <div
       className={`
         min-h-screen p-4 md:p-8 transition-all duration-200
-        ${isSelected ? "outline-2 outline-[#B89B7A] outline-offset-2" : "hover:shadow-sm"}
+        ${isSelected ? 'outline-2 outline-[#B89B7A] outline-offset-2' : 'hover:shadow-sm'}
         ${className}
       `}
       style={{ backgroundColor }}
@@ -216,9 +209,7 @@ const ModernResultPageComponent: React.FC<ModernResultPageComponentProps> = ({
                           <h4 className="font-semibold mb-2" style={{ color: textColor }}>
                             {style.name}
                           </h4>
-                          <p style={{ color: '#6B4F43' }}>
-                            {style.description}
-                          </p>
+                          <p style={{ color: '#6B4F43' }}>{style.description}</p>
                         </div>
                       );
                     })}
@@ -255,14 +246,14 @@ const ModernResultPageComponent: React.FC<ModernResultPageComponentProps> = ({
               className="px-8 py-4 text-lg font-semibold rounded-full shadow-lg hover:scale-105 transition-all duration-300"
               style={{
                 backgroundColor: accentColor,
-                color: "white",
-                border: "none",
+                color: 'white',
+                border: 'none',
               }}
               onClick={() => {
-                if (ctaUrl.startsWith("#")) {
-                  document.querySelector(ctaUrl)?.scrollIntoView({ behavior: "smooth" });
+                if (ctaUrl.startsWith('#')) {
+                  document.querySelector(ctaUrl)?.scrollIntoView({ behavior: 'smooth' });
                 } else {
-                  window.open(ctaUrl, "_blank");
+                  window.open(ctaUrl, '_blank');
                 }
               }}
             >

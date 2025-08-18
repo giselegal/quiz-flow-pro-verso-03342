@@ -1,0 +1,327 @@
+{
+  "templateVersion": "2.0",
+  "metadata": {
+    "id": "quiz-intro-optimized",
+    "name": "Quiz Intro Otimizado",
+    "description": "Componente de introdução ultra-otimizado baseado no QuizIntro real",
+    "category": "intro",
+    "type": "intro",
+    "tags": ["quiz", "intro", "optimized", "lcp"],
+    "performance": {
+      "criticalPath": true,
+      "lcpOptimized": true,
+      "webVitals": true
+    }
+  },
+  "design": {
+    "colors": {
+      "primary": "#B89B7A",
+      "primaryDark": "#A1835D",
+      "secondary": "#432818",
+      "background": "#FEFEFE",
+      "backgroundAlt": "#F8F5F0",
+      "text": "#432818",
+      "textLight": "#6B7280",
+      "border": "#E5E7EB"
+    },
+    "fonts": {
+      "primary": "Playfair Display, serif",
+      "secondary": "Inter, sans-serif"
+    },
+    "spacing": {
+      "containerMaxWidth": "max-w-xs sm:max-w-md md:max-w-lg",
+      "sectionSpacing": "space-y-6 md:space-y-8"
+    },
+    "gradients": {
+      "background": "bg-gradient-to-b from-white to-gray-50"
+    }
+  },
+  "assets": {
+    "logo": {
+      "baseUrl": "https://res.cloudinary.com/der8kogzu/image/upload/",
+      "imageId": "v1752430327/LOGO_DA_MARCA_GISELE_l78gin",
+      "optimized": {
+        "webp": "f_webp,q_70,w_120,h_50,c_fit",
+        "png": "f_png,q_70,w_120,h_50,c_fit"
+      },
+      "dimensions": {
+        "width": 120,
+        "height": 50
+      },
+      "loading": "eager",
+      "priority": "high"
+    },
+    "heroImage": {
+      "baseUrl": "https://res.cloudinary.com/der8kogzu/image/upload/",
+      "imageId": "v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb",
+      "optimized": {
+        "avif": "f_avif,q_85,w_300,c_limit",
+        "webp": "f_webp,q_85,w_300,c_limit",
+        "png": "f_png,q_85,w_300,c_limit"
+      },
+      "dimensions": {
+        "width": 300,
+        "height": 204,
+        "aspectRatio": "1.47"
+      },
+      "loading": "eager",
+      "priority": "high",
+      "isLcp": true
+    }
+  },
+  "blocks": [
+    {
+      "id": "intro-skip-link",
+      "type": "accessibility-skip-link",
+      "properties": {
+        "target": "#quiz-form",
+        "text": "Pular para o formulário",
+        "className": "sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-50 bg-white text-[#432818] px-4 py-2 rounded-md shadow-md"
+      }
+    },
+    {
+      "id": "intro-header",
+      "type": "header-section",
+      "properties": {
+        "className": "w-full max-w-xs sm:max-w-md md:max-w-lg px-4 space-y-8 mx-auto",
+        "spacing": "large"
+      },
+      "children": [
+        {
+          "id": "intro-logo-container",
+          "type": "logo-container",
+          "properties": {
+            "className": "flex flex-col items-center space-y-2",
+            "alignment": "center"
+          },
+          "children": [
+            {
+              "id": "intro-logo-image",
+              "type": "optimized-image",
+              "properties": {
+                "baseUrl": "{{assets.logo.baseUrl}}",
+                "imageId": "{{assets.logo.imageId}}",
+                "formats": {
+                  "webp": "{{assets.logo.optimized.webp}}",
+                  "png": "{{assets.logo.optimized.png}}"
+                },
+                "alt": "Logo Gisele Galvão",
+                "width": "{{assets.logo.dimensions.width}}",
+                "height": "{{assets.logo.dimensions.height}}",
+                "className": "h-auto mx-auto",
+                "loading": "{{assets.logo.loading}}",
+                "fetchPriority": "{{assets.logo.priority}}",
+                "style": {
+                  "objectFit": "contain",
+                  "maxWidth": "100%",
+                  "aspectRatio": "120 / 50"
+                }
+              }
+            },
+            {
+              "id": "intro-decorative-bar",
+              "type": "decorative-bar",
+              "properties": {
+                "height": "3px",
+                "backgroundColor": "#B89B7A",
+                "width": "300px",
+                "maxWidth": "90%",
+                "borderRadius": "rounded-full",
+                "className": "mt-1.5",
+                "style": {
+                  "margin": "0 auto"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "intro-main-title",
+          "type": "main-title",
+          "properties": {
+            "content": "<span class=\"text-[#B89B7A]\">Chega</span> de um guarda-roupa lotado e da sensação de que nada combina com <span class=\"text-[#B89B7A]\">Você</span>.",
+            "className": "text-2xl font-bold text-center leading-tight px-2 sm:text-3xl md:text-4xl playfair-display text-[#432818]",
+            "tag": "h1",
+            "fontFamily": "Playfair Display, serif",
+            "fontWeight": 400,
+            "highlights": [
+              {
+                "text": "Chega",
+                "color": "#B89B7A"
+              },
+              {
+                "text": "Você",
+                "color": "#B89B7A"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "intro-main-section",
+      "type": "main-section",
+      "properties": {
+        "className": "w-full max-w-xs sm:max-w-md md:max-w-lg px-4 space-y-6 md:space-y-8 mx-auto"
+      },
+      "children": [
+        {
+          "id": "intro-hero-image-container",
+          "type": "hero-image-container",
+          "properties": {
+            "className": "mt-2 w-full max-w-xs sm:max-w-md md:max-w-lg mx-auto"
+          },
+          "children": [
+            {
+              "id": "intro-hero-image-wrapper",
+              "type": "image-wrapper",
+              "properties": {
+                "className": "w-full overflow-hidden rounded-lg shadow-sm",
+                "style": {
+                  "aspectRatio": "1.47",
+                  "maxHeight": "204px"
+                }
+              },
+              "children": [
+                {
+                  "id": "intro-hero-image",
+                  "type": "lcp-optimized-image",
+                  "properties": {
+                    "baseUrl": "{{assets.heroImage.baseUrl}}",
+                    "imageId": "{{assets.heroImage.imageId}}",
+                    "formats": {
+                      "avif": "{{assets.heroImage.optimized.avif}}",
+                      "webp": "{{assets.heroImage.optimized.webp}}",
+                      "png": "{{assets.heroImage.optimized.png}}"
+                    },
+                    "alt": "Descubra seu estilo predominante e transforme seu guarda-roupa",
+                    "width": "{{assets.heroImage.dimensions.width}}",
+                    "height": "{{assets.heroImage.dimensions.height}}",
+                    "className": "w-full h-full object-contain",
+                    "loading": "{{assets.heroImage.loading}}",
+                    "fetchPriority": "{{assets.heroImage.priority}}",
+                    "isLcp": "{{assets.heroImage.isLcp}}",
+                    "elementId": "lcp-image",
+                    "containerStyle": {
+                      "position": "relative",
+                      "width": "100%",
+                      "height": "100%",
+                      "backgroundColor": "#F8F5F0"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "intro-description",
+          "type": "description-text",
+          "properties": {
+            "content": "Em poucos minutos, descubra seu <span class=\"font-semibold text-[#B89B7A]\">Estilo Predominante</span> — e aprenda a montar looks que realmente refletem sua <span class=\"font-semibold text-[#432818]\">essência</span>, com praticidade e <span class=\"font-semibold text-[#432818]\">confiança</span>.",
+            "className": "text-sm text-center leading-relaxed px-2 sm:text-base text-gray-600",
+            "highlights": [
+              {
+                "text": "Estilo Predominante",
+                "className": "font-semibold text-[#B89B7A]"
+              },
+              {
+                "text": "essência",
+                "className": "font-semibold text-[#432818]"
+              },
+              {
+                "text": "confiança",
+                "className": "font-semibold text-[#432818]"
+              }
+            ]
+          }
+        },
+        {
+          "id": "intro-lead-form",
+          "type": "lead-form",
+          "properties": {
+            "showNameField": true,
+            "showEmailField": false,
+            "showPhoneField": false,
+            "nameLabel": "NOME",
+            "namePlaceholder": "Digite seu nome",
+            "submitText": "Quero Descobrir meu Estilo Agora!",
+            "loadingText": "Digite seu nome para continuar",
+            "successText": "Perfeito! Vamos descobrir seu estilo!",
+            "requiredFields": "name",
+            "backgroundColor": "#FFFFFF",
+            "borderColor": "#B89B7A",
+            "textColor": "#432818",
+            "primaryColor": "#B89B7A",
+            "marginTop": 32,
+            "marginBottom": 8,
+            "fieldSpacing": 6
+          }
+        }
+      ]
+    },
+    {
+      "id": "intro-footer",
+      "type": "footer-section",
+      "properties": {
+        "className": "w-full max-w-xs sm:max-w-md md:max-w-lg px-4 mt-auto pt-6 text-center mx-auto",
+        "content": "© {{currentYear}} Gisele Galvão - Todos os direitos reservados",
+        "textClassName": "text-xs text-gray-500"
+      }
+    }
+  ],
+  "performance": {
+    "webVitals": {
+      "markComponentMounted": true,
+      "markLcpRendered": true,
+      "markUserInteraction": true
+    },
+    "optimizations": {
+      "preloadCriticalImages": true,
+      "inlineStyles": false,
+      "lazyLoadNonCritical": true,
+      "useRequestAnimationFrame": true
+    }
+  },
+  "accessibility": {
+    "skipLinks": true,
+    "ariaLabels": true,
+    "focusManagement": true,
+    "keyboardNavigation": true,
+    "screenReader": true
+  },
+  "validation": {
+    "nameField": {
+      "required": true,
+      "minLength": 1,
+      "maxLength": 32,
+      "errorMessage": "Por favor, digite seu nome para continuar",
+      "realTimeValidation": true
+    }
+  },
+  "analytics": {
+    "trackingEvents": [
+      "component_mounted",
+      "lcp_rendered",
+      "user_interaction",
+      "form_submit",
+      "validation_error"
+    ],
+    "webVitalsReporting": true
+  },
+  "logic": {
+    "formHandling": {
+      "onSubmit": "handleQuizStart",
+      "validation": "realTime",
+      "errorHandling": "inline"
+    },
+    "navigation": {
+      "nextStep": "step-02",
+      "allowBack": false
+    },
+    "stateManagement": {
+      "localState": ["nome", "error"],
+      "globalState": ["userName"]
+    }
+  }
+}

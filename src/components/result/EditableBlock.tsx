@@ -1,14 +1,14 @@
-import React, { useState, useRef, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Pencil, Save, X, Plus, Trash2, Image as ImageIcon, Type, List, Quote } from "lucide-react";
-import { cn } from "@/lib/utils";
+import React, { useState, useRef, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Card } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Pencil, Save, X, Plus, Trash2, Image as ImageIcon, Type, List, Quote } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface EditableBlockProps {
-  type: "header" | "text" | "image" | "benefits" | "quote" | "cta";
+  type: 'header' | 'text' | 'image' | 'benefits' | 'quote' | 'cta';
   content: any;
   onUpdate: (content: any) => void;
   onDelete?: () => void;
@@ -64,13 +64,13 @@ export const EditableBlock: React.FC<EditableBlockProps> = ({
         <div className="space-y-4">
           <Input
             ref={inputRef}
-            value={editContent.title || ""}
+            value={editContent.title || ''}
             onChange={e => setEditContent({ ...editContent, title: e.target.value })}
             placeholder="Título"
             className="text-2xl font-bold"
           />
           <Input
-            value={editContent.subtitle || ""}
+            value={editContent.subtitle || ''}
             onChange={e => setEditContent({ ...editContent, subtitle: e.target.value })}
             placeholder="Subtítulo"
             className="text-lg"
@@ -91,7 +91,7 @@ export const EditableBlock: React.FC<EditableBlockProps> = ({
 
     return (
       <div className="space-y-2">
-        <h1 className="text-3xl font-bold text-[#432818]">{content.title || "Título"}</h1>
+        <h1 className="text-3xl font-bold text-[#432818]">{content.title || 'Título'}</h1>
         {content.subtitle && <p style={{ color: '#6B4F43' }}>{content.subtitle}</p>}
       </div>
     );
@@ -103,7 +103,7 @@ export const EditableBlock: React.FC<EditableBlockProps> = ({
         <div className="space-y-4">
           <Textarea
             ref={textareaRef}
-            value={editContent.text || ""}
+            value={editContent.text || ''}
             onChange={e => setEditContent({ ...editContent, text: e.target.value })}
             placeholder="Seu texto aqui..."
             rows={4}
@@ -122,11 +122,7 @@ export const EditableBlock: React.FC<EditableBlockProps> = ({
       );
     }
 
-    return (
-      <p style={{ color: '#6B4F43' }}>
-        {content.text || "Clique para editar este texto..."}
-      </p>
-    );
+    return <p style={{ color: '#6B4F43' }}>{content.text || 'Clique para editar este texto...'}</p>;
   };
 
   const renderImage = () => {
@@ -134,17 +130,17 @@ export const EditableBlock: React.FC<EditableBlockProps> = ({
       return (
         <div className="space-y-4">
           <Input
-            value={editContent.imageUrl || ""}
+            value={editContent.imageUrl || ''}
             onChange={e => setEditContent({ ...editContent, imageUrl: e.target.value })}
             placeholder="URL da imagem"
           />
           <Input
-            value={editContent.imageAlt || ""}
+            value={editContent.imageAlt || ''}
             onChange={e => setEditContent({ ...editContent, imageAlt: e.target.value })}
             placeholder="Texto alternativo"
           />
           <Input
-            value={editContent.caption || ""}
+            value={editContent.caption || ''}
             onChange={e => setEditContent({ ...editContent, caption: e.target.value })}
             placeholder="Legenda (opcional)"
           />
@@ -167,7 +163,7 @@ export const EditableBlock: React.FC<EditableBlockProps> = ({
         {content.imageUrl ? (
           <img
             src={content.imageUrl}
-            alt={content.imageAlt || "Imagem"}
+            alt={content.imageAlt || 'Imagem'}
             className="mx-auto rounded-lg max-w-full h-auto"
           />
         ) : (
@@ -186,17 +182,17 @@ export const EditableBlock: React.FC<EditableBlockProps> = ({
       return (
         <div className="space-y-4">
           <Input
-            value={editContent.title || ""}
+            value={editContent.title || ''}
             onChange={e => setEditContent({ ...editContent, title: e.target.value })}
             placeholder="Título dos benefícios"
           />
           <div className="space-y-2">
-            {(editContent.items || [""]).map((item: string, index: number) => (
+            {(editContent.items || ['']).map((item: string, index: number) => (
               <div key={index} className="flex gap-2">
                 <Input
                   value={item}
                   onChange={e => {
-                    const newItems = [...(editContent.items || [""])];
+                    const newItems = [...(editContent.items || [''])];
                     newItems[index] = e.target.value;
                     setEditContent({ ...editContent, items: newItems });
                   }}
@@ -204,7 +200,7 @@ export const EditableBlock: React.FC<EditableBlockProps> = ({
                 />
                 <Button
                   onClick={() => {
-                    const newItems = (editContent.items || [""]).filter(
+                    const newItems = (editContent.items || ['']).filter(
                       (_: any, i: number) => i !== index
                     );
                     setEditContent({ ...editContent, items: newItems });
@@ -218,7 +214,7 @@ export const EditableBlock: React.FC<EditableBlockProps> = ({
             ))}
             <Button
               onClick={() => {
-                const newItems = [...(editContent.items || [""]), ""];
+                const newItems = [...(editContent.items || ['']), ''];
                 setEditContent({ ...editContent, items: newItems });
               }}
               variant="outline"
@@ -245,7 +241,7 @@ export const EditableBlock: React.FC<EditableBlockProps> = ({
     return (
       <div>
         <h3 className="text-xl font-semibold mb-4 text-[#432818]">
-          {content.title || "Benefícios"}
+          {content.title || 'Benefícios'}
         </h3>
         <ul className="space-y-2">
           {(content.items || []).map((item: string, index: number) => (
@@ -266,13 +262,13 @@ export const EditableBlock: React.FC<EditableBlockProps> = ({
       return (
         <div className="space-y-4">
           <Textarea
-            value={editContent.quote || ""}
+            value={editContent.quote || ''}
             onChange={e => setEditContent({ ...editContent, quote: e.target.value })}
             placeholder="Citação..."
             rows={3}
           />
           <Input
-            value={editContent.author || ""}
+            value={editContent.author || ''}
             onChange={e => setEditContent({ ...editContent, author: e.target.value })}
             placeholder="Autor"
           />
@@ -293,11 +289,9 @@ export const EditableBlock: React.FC<EditableBlockProps> = ({
     return (
       <blockquote className="border-l-4 border-[#B89B7A] pl-6 italic">
         <p style={{ color: '#6B4F43' }}>
-          "{content.quote || "Clique para adicionar uma citação..."}"
+          "{content.quote || 'Clique para adicionar uma citação...'}"
         </p>
-        {content.author && (
-          <cite style={{ color: '#6B4F43' }}>— {content.author}</cite>
-        )}
+        {content.author && <cite style={{ color: '#6B4F43' }}>— {content.author}</cite>}
       </blockquote>
     );
   };
@@ -307,12 +301,12 @@ export const EditableBlock: React.FC<EditableBlockProps> = ({
       return (
         <div className="space-y-4">
           <Input
-            value={editContent.text || ""}
+            value={editContent.text || ''}
             onChange={e => setEditContent({ ...editContent, text: e.target.value })}
             placeholder="Texto do botão"
           />
           <Input
-            value={editContent.href || ""}
+            value={editContent.href || ''}
             onChange={e => setEditContent({ ...editContent, href: e.target.value })}
             placeholder="URL do link"
           />
@@ -334,9 +328,9 @@ export const EditableBlock: React.FC<EditableBlockProps> = ({
       <div className="text-center">
         <Button
           className="bg-[#B89B7A] hover:bg-[#A38A69] text-white px-8 py-3 text-lg"
-          onClick={() => content.href && window.open(content.href, "_blank")}
+          onClick={() => content.href && window.open(content.href, '_blank')}
         >
-          {content.text || "Clique aqui"}
+          {content.text || 'Clique aqui'}
         </Button>
       </div>
     );
@@ -344,17 +338,17 @@ export const EditableBlock: React.FC<EditableBlockProps> = ({
 
   const renderContent = () => {
     switch (type) {
-      case "header":
+      case 'header':
         return renderHeader();
-      case "text":
+      case 'text':
         return renderText();
-      case "image":
+      case 'image':
         return renderImage();
-      case "benefits":
+      case 'benefits':
         return renderBenefits();
-      case "quote":
+      case 'quote':
         return renderQuote();
-      case "cta":
+      case 'cta':
         return renderCTA();
       default:
         return null;
@@ -363,17 +357,17 @@ export const EditableBlock: React.FC<EditableBlockProps> = ({
 
   const getIcon = () => {
     switch (type) {
-      case "header":
+      case 'header':
         return <Type className="w-4 h-4" />;
-      case "text":
+      case 'text':
         return <Type className="w-4 h-4" />;
-      case "image":
+      case 'image':
         return <ImageIcon className="w-4 h-4" />;
-      case "benefits":
+      case 'benefits':
         return <List className="w-4 h-4" />;
-      case "quote":
+      case 'quote':
         return <Quote className="w-4 h-4" />;
-      case "cta":
+      case 'cta':
         return <Type className="w-4 h-4" />;
       default:
         return <Type className="w-4 h-4" />;
@@ -383,8 +377,8 @@ export const EditableBlock: React.FC<EditableBlockProps> = ({
   return (
     <Card
       className={cn(
-        "p-6 cursor-pointer transition-all duration-200 relative group",
-        isSelected && "ring-2 ring-[#B89B7A] border-[#B89B7A]",
+        'p-6 cursor-pointer transition-all duration-200 relative group',
+        isSelected && 'ring-2 ring-[#B89B7A] border-[#B89B7A]',
         className
       )}
       onClick={onClick}

@@ -1,16 +1,15 @@
 // @ts-nocheck
-import React from "react";
-import { InlineEditableText } from "./InlineEditableText";
-import { Book, CheckCircle } from "lucide-react";
-import type { BlockComponentProps } from "@/types/blocks";
+import { InlineEditableText } from './InlineEditableText';
+import { Book, CheckCircle } from 'lucide-react';
+import type { BlockComponentProps } from '@/types/blocks';
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -55,14 +54,14 @@ const ArgumentsBlock: React.FC<BlockComponentProps> = ({
   isEditing = false,
   onClick,
   onPropertyChange,
-  className = "",
+  className = '',
 }) => {
   const {
-    title = "Por que escolher nosso produto?",
+    title = 'Por que escolher nosso produto?',
     items = [
-      { text: "Qualidade superior garantida", icon: "CheckCircle" },
-      { text: "Suporte 24/7", icon: "CheckCircle" },
-      { text: "Entrega rápida", icon: "CheckCircle" },
+      { text: 'Qualidade superior garantida', icon: 'CheckCircle' },
+      { text: 'Suporte 24/7', icon: 'CheckCircle' },
+      { text: 'Entrega rápida', icon: 'CheckCircle' },
     ],
   } = block?.properties || {};
 
@@ -74,18 +73,18 @@ const ArgumentsBlock: React.FC<BlockComponentProps> = ({
 
   // Fallback para ícone
   const getIcon = (iconName: string) => {
-    if (iconName === "CheckCircle") {
+    if (iconName === 'CheckCircle') {
       return <CheckCircle className="w-5 h-5 text-[#B89B7A] flex-shrink-0 mt-0.5" />;
     }
     // Se não é um ícone conhecido, trata como emoji ou usa bullet
-    return <span className="text-xl flex-shrink-0">{iconName || "✅"}</span>;
+    return <span className="text-xl flex-shrink-0">{iconName || '✅'}</span>;
   };
 
   return (
     <div
       className={`
         py-6 space-y-4 cursor-pointer transition-all duration-200
-        ${isSelected ? "ring-1 ring-gray-400/40 bg-gray-50/30" : "hover:shadow-sm"}
+        ${isSelected ? 'ring-1 ring-gray-400/40 bg-gray-50/30' : 'hover:shadow-sm'}
         ${className}
       `}
       onClick={onClick}
@@ -95,7 +94,7 @@ const ArgumentsBlock: React.FC<BlockComponentProps> = ({
       <h3 className="text-xl font-bold text-center text-[#432818]">
         <InlineEditableText
           value={title}
-          onChange={(value: string) => handlePropertyChange("title", value)}
+          onChange={(value: string) => handlePropertyChange('title', value)}
           className="inline-block"
           placeholder="Título dos argumentos"
         />

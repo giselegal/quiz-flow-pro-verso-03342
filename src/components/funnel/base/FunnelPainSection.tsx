@@ -1,5 +1,4 @@
-import React from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 
 interface FunnelPainSectionProps {
   title?: string;
@@ -14,23 +13,23 @@ interface FunnelPainSectionProps {
 }
 
 const FunnelPainSection: React.FC<FunnelPainSectionProps> = ({
-  title = "Você está enfrentando esses desafios?",
-  description = "Muitas pessoas passam pelos mesmos problemas:",
+  title = 'Você está enfrentando esses desafios?',
+  description = 'Muitas pessoas passam pelos mesmos problemas:',
   painPoints = [
-    "Dificuldade para encontrar seu estilo pessoal",
-    "Guarda-roupa cheio mas nada para vestir",
-    "Insegurança com as próprias escolhas de moda",
+    'Dificuldade para encontrar seu estilo pessoal',
+    'Guarda-roupa cheio mas nada para vestir',
+    'Insegurança com as próprias escolhas de moda',
   ],
-  ctaText = "Descobrir Meu Estilo",
+  ctaText = 'Descobrir Meu Estilo',
   onCTAClick,
   isSelected = false,
   onClick,
-  className = "",
+  className = '',
 }) => {
   return (
     <div
       className={`bg-white rounded-lg p-8 shadow-sm border ${
-        isSelected ? "border-[#B89B7A]" : "border-gray-100"
+        isSelected ? 'border-[#B89B7A]' : 'border-gray-100'
       } ${className}`}
       onClick={onClick}
     >

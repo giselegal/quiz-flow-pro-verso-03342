@@ -1,23 +1,22 @@
-import { useEditor } from "@/context/EditorContext";
-import React from "react";
+import { useEditor } from '@/context/EditorContext';
 
 interface PropertiesPanelDebugProps {
   title?: string;
 }
 
 export const PropertiesPanelDebug: React.FC<PropertiesPanelDebugProps> = ({
-  title = "Painel Debug",
+  title = 'Painel Debug',
 }) => {
-  const {
-    selectedBlockId,
-    computed: { selectedBlock, currentBlocks },
-    uiState: { isPreviewing },
-  } = useEditor();
+  const { selectedBlockId, computed, uiState } = useEditor();
 
-  console.log("🔍 PropertiesPanelDebug - Estado atual:", {
+  const selectedBlock = computed?.selectedBlock;
+  const currentBlocks = computed?.currentBlocks || [];
+  const isPreviewing = uiState?.isPreviewing || false;
+
+  console.log('🔍 PropertiesPanelDebug - Estado atual:', {
     selectedBlockId,
     selectedBlock,
-    currentBlocks: currentBlocks?.length || 0,
+    currentBlocks: currentBlocks.length,
     isPreviewing,
     shouldShowPanel: !isPreviewing && selectedBlock,
     selectedBlockDetails: selectedBlock
@@ -38,23 +37,23 @@ export const PropertiesPanelDebug: React.FC<PropertiesPanelDebugProps> = ({
 
       <div className="space-y-2 text-sm">
         <div>
-          <strong>Selected Block ID:</strong> {selectedBlockId || "null"}
+          <strong>Selected Block ID:</strong> {selectedBlockId || 'null'}
         </div>
 
         <div>
-          <strong>Selected Block:</strong> {selectedBlock ? "Exists" : "null"}
+          <strong>Selected Block:</strong> {selectedBlock ? 'Exists' : 'null'}
         </div>
 
         <div>
-          <strong>Is Previewing:</strong> {isPreviewing ? "true" : "false"}
+          <strong>Is Previewing:</strong> {isPreviewing ? 'true' : 'false'}
         </div>
 
         <div>
-          <strong>Should Show Panel:</strong> {!isPreviewing && selectedBlock ? "true" : "false"}
+          <strong>Should Show Panel:</strong> {!isPreviewing && selectedBlock ? 'true' : 'false'}
         </div>
 
         <div>
-          <strong>Current Blocks Count:</strong> {currentBlocks?.length || 0}
+          <strong>Current Blocks Count:</strong> {currentBlocks.length}
         </div>
 
         {selectedBlock && (
@@ -75,14 +74,14 @@ export const PropertiesPanelDebug: React.FC<PropertiesPanelDebugProps> = ({
           </div>
         )}
 
-        {currentBlocks && currentBlocks.length > 0 && (
+        {currentBlocks.length > 0 && (
           <div className="bg-white p-2 rounded border">
             <strong>Available Blocks:</strong>
             <ul className="text-xs mt-1">
-              {currentBlocks.map(block => (
+              {currentBlocks.map((block: any) => (
                 <li
                   key={block.id}
-                  className={block.id === selectedBlockId ? "font-bold text-blue-600" : ""}
+                  className={block.id === selectedBlockId ? 'font-bold text-blue-600' : ''}
                 >
                   {block.id} - {block.type}
                 </li>

@@ -2,7 +2,7 @@
 
 /**
  * COMPREHENSIVE TYPESCRIPT ERROR RESOLUTION
- * 
+ *
  * This script applies @ts-nocheck to ALL remaining block files with TypeScript errors.
  * Usage: node comprehensive-ts-fix.js
  */
@@ -100,14 +100,14 @@ const ALL_ERROR_FILES = [
   'src/components/editor/blocks/ScriptBlock.tsx',
   'src/components/editor/blocks/SecurePurchaseBlock.tsx',
   'src/components/editor/blocks/StrategicQuestionBlock.tsx',
-  'src/components/editor/blocks/TermsBlock.tsx'
+  'src/components/editor/blocks/TermsBlock.tsx',
 ];
 
 function addTsNocheck(filePath) {
   try {
     if (fs.existsSync(filePath)) {
       const content = fs.readFileSync(filePath, 'utf8');
-      
+
       if (!content.startsWith('// @ts-nocheck')) {
         const newContent = '// @ts-nocheck\n' + content;
         fs.writeFileSync(filePath, newContent);
@@ -127,7 +127,9 @@ function addTsNocheck(filePath) {
   }
 }
 
-console.log('🔧 COMPREHENSIVE TypeScript Error Resolution - Adding @ts-nocheck to all block files...\n');
+console.log(
+  '🔧 COMPREHENSIVE TypeScript Error Resolution - Adding @ts-nocheck to all block files...\n'
+);
 
 let processedCount = 0;
 let skippedCount = 0;

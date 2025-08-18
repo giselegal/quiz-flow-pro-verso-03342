@@ -1,8 +1,7 @@
 // @ts-nocheck
-import React from "react";
-import { cn } from "@/lib/utils";
-import { Star, Quote } from "lucide-react";
-import type { BlockComponentProps } from "../../../types/blocks";
+import { cn } from '@/lib/utils';
+import { Star, Quote } from 'lucide-react';
+import type { BlockComponentProps } from '@/types/blocks';
 
 interface SocialProofBlockProps extends BlockComponentProps {
   disabled?: boolean;
@@ -10,11 +9,11 @@ interface SocialProofBlockProps extends BlockComponentProps {
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -71,9 +70,9 @@ const SocialProofBlock: React.FC<SocialProofBlockProps> = ({
   }
 
   // Debug das propriedades recebidas
-  console.log("🔍 [SocialProofBlock] Propriedades recebidas:", block.properties);
+  console.log('🔍 [SocialProofBlock] Propriedades recebidas:', block.properties);
 
-  const { title = "Depoimentos Reais de Quem Transformou o Guarda-Roupa", showTitle = true } =
+  const { title = 'Depoimentos Reais de Quem Transformou o Guarda-Roupa', showTitle = true } =
     block?.properties || {};
 
   const handlePropertyChange = (key: string, value: any) => {
@@ -84,22 +83,22 @@ const SocialProofBlock: React.FC<SocialProofBlockProps> = ({
   // Dados reais dos depoimentos do funil
   const testimonials = [
     {
-      name: "Ana Paula, 34 anos",
-      text: "Nunca imaginei que descobrir meu estilo seria tão transformador. Agora me visto com confiança e recebo elogios todos os dias!",
-      style: "Elegante",
-      image: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744921750/depoimento1.webp",
+      name: 'Ana Paula, 34 anos',
+      text: 'Nunca imaginei que descobrir meu estilo seria tão transformador. Agora me visto com confiança e recebo elogios todos os dias!',
+      style: 'Elegante',
+      image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744921750/depoimento1.webp',
     },
     {
-      name: "Carla Santos, 28 anos",
-      text: "O guia me ensinou a montar looks incríveis com peças que já tinha no armário. Economizei muito e ainda melhoro minha imagem!",
-      style: "Contemporâneo",
-      image: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744921750/depoimento2.webp",
+      name: 'Carla Santos, 28 anos',
+      text: 'O guia me ensinou a montar looks incríveis com peças que já tinha no armário. Economizei muito e ainda melhoro minha imagem!',
+      style: 'Contemporâneo',
+      image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744921750/depoimento2.webp',
     },
     {
-      name: "Fernanda Lima, 42 anos",
-      text: "Finalmente entendi qual estilo combina comigo. Minha autoestima subiu muito e me sinto mais eu mesma a cada dia.",
-      style: "Natural",
-      image: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744921750/depoimento3.webp",
+      name: 'Fernanda Lima, 42 anos',
+      text: 'Finalmente entendi qual estilo combina comigo. Minha autoestima subiu muito e me sinto mais eu mesma a cada dia.',
+      style: 'Natural',
+      image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744921750/depoimento3.webp',
     },
   ];
   const renderStars = () => {
@@ -137,19 +136,19 @@ const SocialProofBlock: React.FC<SocialProofBlockProps> = ({
   return (
     <div
       className={cn(
-        "relative w-full p-4 rounded-lg border-2 border-dashed",
-        isSelected ? "border-[#B89B7A] bg-[#B89B7A]/10" : "border-gray-300 bg-white",
-        "cursor-pointer hover:border-gray-400 transition-colors",
+        'relative w-full p-4 rounded-lg border-2 border-dashed',
+        isSelected ? 'border-[#B89B7A] bg-[#B89B7A]/10' : 'border-gray-300 bg-white',
+        'cursor-pointer hover:border-gray-400 transition-colors',
         className,
         // Margens universais com controles deslizantes
-        getMarginClass(marginTop, "top"),
-        getMarginClass(marginBottom, "bottom"),
-        getMarginClass(marginLeft, "left"),
-        getMarginClass(marginRight, "right")
+        getMarginClass(marginTop, 'top'),
+        getMarginClass(marginBottom, 'bottom'),
+        getMarginClass(marginLeft, 'left'),
+        getMarginClass(marginRight, 'right')
       )}
       onClick={onClick}
     >
-      <div className={cn("py-12 bg-gradient-to-br from-[#faf8f5] to-[#f9f4ef]")}>
+      <div className={cn('py-12 bg-gradient-to-br from-[#faf8f5] to-[#f9f4ef]')}>
         <div className="max-w-7xl mx-auto px-6">
           {showTitle && (
             <div className="text-center mb-12">

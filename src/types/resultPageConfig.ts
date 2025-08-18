@@ -1,4 +1,4 @@
-import { Block } from "./editor";
+import { Block } from './editor';
 
 export interface StyleOptions {
   fontSize?: string;
@@ -13,7 +13,7 @@ export interface StyleOptions {
   width?: string;
   height?: string;
   borderRadius?: string | number;
-  textAlign?: "left" | "center" | "right" | "justify";
+  textAlign?: 'left' | 'center' | 'right' | 'justify';
   fontFamily?: string;
   lineHeight?: string;
   letterSpacing?: string;
@@ -26,7 +26,7 @@ export interface StyleOptions {
   borderWidth?: string;
   borderStyle?: string;
   borderColor?: string;
-  objectFit?: "cover" | "contain" | "fill" | "none" | "scale-down";
+  objectFit?: 'cover' | 'contain' | 'fill' | 'none' | 'scale-down';
   type?: string;
   buttonColor?: string;
 }
@@ -37,7 +37,7 @@ export interface ImageOptions {
   width?: string;
   height?: string;
   borderRadius?: string;
-  objectFit?: "cover" | "contain" | "fill" | "none" | "scale-down";
+  objectFit?: 'cover' | 'contain' | 'fill' | 'none' | 'scale-down';
 }
 
 export interface SectionContent {

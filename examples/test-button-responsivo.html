@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
       body {
-        font-family: "Inter", sans-serif;
+        font-family: 'Inter', sans-serif;
         background: linear-gradient(135deg, #faf9f7 0%, #f3e8e6 100%);
       }
       .test-card {
@@ -199,103 +199,103 @@
 
     <script>
       // Console de eventos
-      const eventConsole = document.getElementById("eventConsole");
+      const eventConsole = document.getElementById('eventConsole');
 
       function logEvent(message) {
-        const div = document.createElement("div");
+        const div = document.createElement('div');
         div.textContent = `${new Date().toLocaleTimeString()} - ${message}`;
         eventConsole.appendChild(div);
         eventConsole.scrollTop = eventConsole.scrollHeight;
       }
 
       // Teste 1: Validação Condicional
-      const nameInput = document.getElementById("nameInput1");
-      const conditionalButton = document.getElementById("conditionalButton");
+      const nameInput = document.getElementById('nameInput1');
+      const conditionalButton = document.getElementById('conditionalButton');
 
-      nameInput.addEventListener("input", e => {
+      nameInput.addEventListener('input', e => {
         const value = e.target.value.trim();
         const isValid = value.length >= 2;
 
         conditionalButton.disabled = !isValid;
-        conditionalButton.style.opacity = isValid ? "1" : "0.5";
-        conditionalButton.style.cursor = isValid ? "pointer" : "not-allowed";
+        conditionalButton.style.opacity = isValid ? '1' : '0.5';
+        conditionalButton.style.cursor = isValid ? 'pointer' : 'not-allowed';
 
         logEvent(`📝 Input mudou: "${value}" - Válido: ${isValid}`);
 
         // Simular evento customizado
         window.dispatchEvent(
-          new CustomEvent("quiz-input-change", {
-            detail: { blockId: "name-input", value, valid: isValid },
+          new CustomEvent('quiz-input-change', {
+            detail: { blockId: 'name-input', value, valid: isValid },
           })
         );
       });
 
-      conditionalButton.addEventListener("click", () => {
+      conditionalButton.addEventListener('click', () => {
         if (!conditionalButton.disabled) {
-          logEvent("🎯 Botão condicional clicado - Quiz pode prosseguir!");
-          alert("🎉 Botão funcionou! Navegando para próxima etapa...");
+          logEvent('🎯 Botão condicional clicado - Quiz pode prosseguir!');
+          alert('🎉 Botão funcionou! Navegando para próxima etapa...');
         }
       });
 
       // Teste 4: Diferentes Ações
-      document.getElementById("nextStepBtn").addEventListener("click", () => {
-        logEvent("🧭 Ação: Próxima Etapa");
+      document.getElementById('nextStepBtn').addEventListener('click', () => {
+        logEvent('🧭 Ação: Próxima Etapa');
         window.dispatchEvent(
-          new CustomEvent("quiz-navigate", {
-            detail: { step: "step-02", scrollToTop: true },
+          new CustomEvent('quiz-navigate', {
+            detail: { step: 'step-02', scrollToTop: true },
           })
         );
       });
 
-      document.getElementById("urlBtn").addEventListener("click", () => {
-        logEvent("🌐 Ação: Abrir URL");
-        window.open("https://github.com/giselegal/quiz-quest-challenge-verse", "_blank");
+      document.getElementById('urlBtn').addEventListener('click', () => {
+        logEvent('🌐 Ação: Abrir URL');
+        window.open('https://github.com/giselegal/quiz-quest-challenge-verse', '_blank');
       });
 
-      document.getElementById("submitBtn").addEventListener("click", () => {
-        logEvent("📤 Ação: Submit Form");
+      document.getElementById('submitBtn').addEventListener('click', () => {
+        logEvent('📤 Ação: Submit Form');
         window.dispatchEvent(
-          new CustomEvent("quiz-submit", {
-            detail: { buttonId: "submit-test", data: "test-data" },
+          new CustomEvent('quiz-submit', {
+            detail: { buttonId: 'submit-test', data: 'test-data' },
           })
         );
       });
 
       // Teste 5: Loading Button
-      const loadingBtn = document.getElementById("loadingBtn");
-      const spinner = document.getElementById("spinner");
+      const loadingBtn = document.getElementById('loadingBtn');
+      const spinner = document.getElementById('spinner');
 
-      loadingBtn.addEventListener("click", () => {
-        logEvent("⏳ Iniciando estado de loading...");
+      loadingBtn.addEventListener('click', () => {
+        logEvent('⏳ Iniciando estado de loading...');
 
         loadingBtn.disabled = true;
-        loadingBtn.style.opacity = "0.7";
-        spinner.classList.remove("hidden");
+        loadingBtn.style.opacity = '0.7';
+        spinner.classList.remove('hidden');
 
         setTimeout(() => {
           loadingBtn.disabled = false;
-          loadingBtn.style.opacity = "1";
-          spinner.classList.add("hidden");
-          logEvent("✅ Loading concluído!");
+          loadingBtn.style.opacity = '1';
+          spinner.classList.add('hidden');
+          logEvent('✅ Loading concluído!');
         }, 3000);
       });
 
       // Escutar eventos customizados
-      window.addEventListener("quiz-navigate", e => {
+      window.addEventListener('quiz-navigate', e => {
         logEvent(`🧭 Evento quiz-navigate: ${JSON.stringify(e.detail)}`);
       });
 
-      window.addEventListener("quiz-submit", e => {
+      window.addEventListener('quiz-submit', e => {
         logEvent(`📤 Evento quiz-submit: ${JSON.stringify(e.detail)}`);
       });
 
-      window.addEventListener("quiz-input-change", e => {
+      window.addEventListener('quiz-input-change', e => {
         logEvent(`📝 Evento quiz-input-change: ${JSON.stringify(e.detail)}`);
       });
 
       // Log inicial
-      logEvent("🚀 Sistema de testes carregado!");
-      logEvent("📝 Digite seu nome no primeiro campo para testar validação");
+      logEvent('🚀 Sistema de testes carregado!');
+      logEvent('📝 Digite seu nome no primeiro campo para testar validação');
     </script>
   </body>
 </html>

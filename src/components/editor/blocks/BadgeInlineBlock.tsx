@@ -1,13 +1,12 @@
-import { cn } from "@/lib/utils";
-import { Award, Check, Shield, Star } from "lucide-react";
-import React from "react";
+import { cn } from '@/lib/utils';
+import { Award, Check, Shield, Star } from 'lucide-react';
 
-type BadgeType = "security" | "guarantee" | "rating" | "achievement";
+type BadgeType = 'security' | 'guarantee' | 'rating' | 'achievement';
 
 interface BadgeInlineBlockProps {
   text?: string;
   type?: BadgeType;
-  variant?: "default" | "success" | "warning" | "info";
+  variant?: 'default' | 'success' | 'warning' | 'info';
   showIcon?: boolean;
   onClick?: () => void;
   className?: string;
@@ -23,13 +22,13 @@ interface BadgeInlineBlockProps {
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (
   value: number | string | undefined,
-  type: "top" | "bottom" | "left" | "right"
+  type: 'top' | 'bottom' | 'left' | 'right'
 ): string => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (!numValue || isNaN(numValue) || numValue === 0) return "";
+  if (!numValue || isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -69,13 +68,13 @@ const getMarginClass = (
 };
 
 const BadgeInlineBlock: React.FC<BadgeInlineBlockProps> = ({
-  text = "Compra Segura",
-  type = "security",
-  variant = "default",
+  text = 'Compra Segura',
+  type = 'security',
+  variant = 'default',
   showIcon = true,
   onClick,
   className,
-  onPropertyChange,
+  onPropertyChange: _onPropertyChange,
   disabled = false,
   // Sistema completo de margens com controles deslizantes
   marginTop = 0,
@@ -85,13 +84,13 @@ const BadgeInlineBlock: React.FC<BadgeInlineBlockProps> = ({
 }) => {
   const getIcon = () => {
     switch (type) {
-      case "security":
+      case 'security':
         return <Shield className="w-4 h-4" />;
-      case "guarantee":
+      case 'guarantee':
         return <Check className="w-4 h-4" />;
-      case "rating":
+      case 'rating':
         return <Star className="w-4 h-4" />;
-      case "achievement":
+      case 'achievement':
         return <Award className="w-4 h-4" />;
       default:
         return <Shield className="w-4 h-4" />;
@@ -100,31 +99,31 @@ const BadgeInlineBlock: React.FC<BadgeInlineBlockProps> = ({
 
   const getVariantStyles = () => {
     switch (variant) {
-      case "success":
-        return "bg-green-100 text-green-800 border-green-200";
-      case "warning":
-        return "bg-stone-100 text-stone-700 border-yellow-200";
-      case "info":
-        return "bg-[#B89B7A]/20 text-[#432818] border-[#B89B7A]/30";
+      case 'success':
+        return 'bg-green-100 text-green-800 border-green-200';
+      case 'warning':
+        return 'bg-stone-100 text-stone-700 border-yellow-200';
+      case 'info':
+        return 'bg-[#B89B7A]/20 text-[#432818] border-[#B89B7A]/30';
       default:
-        return "bg-[#fff7f3] text-[#aa6b5d] border-[#B89B7A]/20";
+        return 'bg-[#fff7f3] text-[#aa6b5d] border-[#B89B7A]/20';
     }
   };
 
   return (
     <div
       className={cn(
-        "inline-flex items-center gap-2 px-3 py-2 rounded-full border text-sm font-medium",
-        "transition-all duration-200 hover:shadow-md hover:scale-105 cursor-pointer",
-        "w-full",
+        'inline-flex items-center gap-2 px-3 py-2 rounded-full border text-sm font-medium',
+        'transition-all duration-200 hover:shadow-md hover:scale-105 cursor-pointer',
+        'w-full',
         getVariantStyles(),
-        disabled && "opacity-75 cursor-not-allowed",
+        disabled && 'opacity-75 cursor-not-allowed',
         className,
         // Margens universais com controles deslizantes
-        getMarginClass(marginTop, "top"),
-        getMarginClass(marginBottom, "bottom"),
-        getMarginClass(marginLeft, "left"),
-        getMarginClass(marginRight, "right")
+        getMarginClass(marginTop, 'top'),
+        getMarginClass(marginBottom, 'bottom'),
+        getMarginClass(marginLeft, 'left'),
+        getMarginClass(marginRight, 'right')
       )}
       onClick={!disabled ? onClick : undefined}
     >

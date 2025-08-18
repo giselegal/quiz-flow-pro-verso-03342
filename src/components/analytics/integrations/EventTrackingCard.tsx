@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   Card,
   CardContent,
@@ -6,13 +6,13 @@ import {
   CardHeader,
   CardTitle,
   CardFooter,
-} from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Badge } from "@/components/ui/badge";
-import { toast } from "@/components/ui/use-toast";
+} from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Badge } from '@/components/ui/badge';
+import { toast } from '@/components/ui/use-toast';
 
 interface EventTrackingCardProps {
   initialEnabled?: boolean;
@@ -21,8 +21,8 @@ interface EventTrackingCardProps {
 export const EventTrackingCard: React.FC<EventTrackingCardProps> = ({ initialEnabled = false }) => {
   const [trackingEnabled, setTrackingEnabled] = useState(() => {
     try {
-      const stored = localStorage.getItem("event_tracking_enabled");
-      return stored !== null ? stored === "true" : initialEnabled;
+      const stored = localStorage.getItem('event_tracking_enabled');
+      return stored !== null ? stored === 'true' : initialEnabled;
     } catch (e) {
       return initialEnabled;
     }
@@ -30,8 +30,8 @@ export const EventTrackingCard: React.FC<EventTrackingCardProps> = ({ initialEna
 
   const [trackButtons, setTrackButtons] = useState(() => {
     try {
-      const stored = localStorage.getItem("track_buttons");
-      return stored !== null ? stored === "true" : true;
+      const stored = localStorage.getItem('track_buttons');
+      return stored !== null ? stored === 'true' : true;
     } catch (e) {
       return true;
     }
@@ -39,8 +39,8 @@ export const EventTrackingCard: React.FC<EventTrackingCardProps> = ({ initialEna
 
   const [trackLinks, setTrackLinks] = useState(() => {
     try {
-      const stored = localStorage.getItem("track_links");
-      return stored !== null ? stored === "true" : true;
+      const stored = localStorage.getItem('track_links');
+      return stored !== null ? stored === 'true' : true;
     } catch (e) {
       return true;
     }
@@ -48,8 +48,8 @@ export const EventTrackingCard: React.FC<EventTrackingCardProps> = ({ initialEna
 
   const [trackImages, setTrackImages] = useState(() => {
     try {
-      const stored = localStorage.getItem("track_images");
-      return stored !== null ? stored === "true" : false;
+      const stored = localStorage.getItem('track_images');
+      return stored !== null ? stored === 'true' : false;
     } catch (e) {
       return false;
     }
@@ -58,37 +58,37 @@ export const EventTrackingCard: React.FC<EventTrackingCardProps> = ({ initialEna
   // Load settings from localStorage
   useEffect(() => {
     try {
-      const storedTrackingEnabled = localStorage.getItem("event_tracking_enabled");
-      const storedTrackButtons = localStorage.getItem("track_buttons");
-      const storedTrackLinks = localStorage.getItem("track_links");
-      const storedTrackImages = localStorage.getItem("track_images");
+      const storedTrackingEnabled = localStorage.getItem('event_tracking_enabled');
+      const storedTrackButtons = localStorage.getItem('track_buttons');
+      const storedTrackLinks = localStorage.getItem('track_links');
+      const storedTrackImages = localStorage.getItem('track_images');
 
-      if (storedTrackingEnabled !== null) setTrackingEnabled(storedTrackingEnabled === "true");
-      if (storedTrackButtons !== null) setTrackButtons(storedTrackButtons === "true");
-      if (storedTrackLinks !== null) setTrackLinks(storedTrackLinks === "true");
-      if (storedTrackImages !== null) setTrackImages(storedTrackImages === "true");
+      if (storedTrackingEnabled !== null) setTrackingEnabled(storedTrackingEnabled === 'true');
+      if (storedTrackButtons !== null) setTrackButtons(storedTrackButtons === 'true');
+      if (storedTrackLinks !== null) setTrackLinks(storedTrackLinks === 'true');
+      if (storedTrackImages !== null) setTrackImages(storedTrackImages === 'true');
     } catch (error) {
-      console.error("Error loading event tracking settings:", error);
+      console.error('Error loading event tracking settings:', error);
     }
   }, []);
 
   const handleSaveSettings = () => {
     try {
-      localStorage.setItem("event_tracking_enabled", String(trackingEnabled));
-      localStorage.setItem("track_buttons", String(trackButtons));
-      localStorage.setItem("track_links", String(trackLinks));
-      localStorage.setItem("track_images", String(trackImages));
+      localStorage.setItem('event_tracking_enabled', String(trackingEnabled));
+      localStorage.setItem('track_buttons', String(trackButtons));
+      localStorage.setItem('track_links', String(trackLinks));
+      localStorage.setItem('track_images', String(trackImages));
 
       toast({
-        title: "Configurações de rastreamento salvas",
-        description: "Suas configurações de rastreamento de eventos foram atualizadas.",
+        title: 'Configurações de rastreamento salvas',
+        description: 'Suas configurações de rastreamento de eventos foram atualizadas.',
         duration: 3000,
       });
     } catch (error) {
       toast({
-        title: "Erro ao salvar configurações",
-        description: "Ocorreu um erro ao salvar suas configurações.",
-        variant: "destructive",
+        title: 'Erro ao salvar configurações',
+        description: 'Ocorreu um erro ao salvar suas configurações.',
+        variant: 'destructive',
       });
     }
   };
@@ -103,8 +103,8 @@ export const EventTrackingCard: React.FC<EventTrackingCardProps> = ({ initialEna
               Configure os tipos de eventos que serão rastreados
             </CardDescription>
           </div>
-          <Badge variant={trackingEnabled ? "default" : "outline"} className="text-xs">
-            {trackingEnabled ? "Ativo" : "Inativo"}
+          <Badge variant={trackingEnabled ? 'default' : 'outline'} className="text-xs">
+            {trackingEnabled ? 'Ativo' : 'Inativo'}
           </Badge>
         </div>
       </CardHeader>
@@ -131,7 +131,7 @@ export const EventTrackingCard: React.FC<EventTrackingCardProps> = ({ initialEna
             />
             <Label
               htmlFor="track-buttons"
-              className={`text-sm ${!trackingEnabled ? "text-muted-foreground" : ""}`}
+              className={`text-sm ${!trackingEnabled ? 'text-muted-foreground' : ''}`}
             >
               Rastrear cliques em botões
             </Label>
@@ -146,7 +146,7 @@ export const EventTrackingCard: React.FC<EventTrackingCardProps> = ({ initialEna
             />
             <Label
               htmlFor="track-links"
-              className={`text-sm ${!trackingEnabled ? "text-muted-foreground" : ""}`}
+              className={`text-sm ${!trackingEnabled ? 'text-muted-foreground' : ''}`}
             >
               Rastrear cliques em links
             </Label>
@@ -161,7 +161,7 @@ export const EventTrackingCard: React.FC<EventTrackingCardProps> = ({ initialEna
             />
             <Label
               htmlFor="track-images"
-              className={`text-sm ${!trackingEnabled ? "text-muted-foreground" : ""}`}
+              className={`text-sm ${!trackingEnabled ? 'text-muted-foreground' : ''}`}
             >
               Rastrear cliques em imagens
             </Label>

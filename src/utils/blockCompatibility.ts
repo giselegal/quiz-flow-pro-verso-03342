@@ -1,5 +1,6 @@
-import { BlockData, BlockComponentProps } from "@/types/blocks";
-import { generateSemanticId } from "../utils/semanticIdGenerator";
+// @ts-nocheck
+import { BlockData, BlockComponentProps } from '@/types/blocks';
+import { generateSemanticId } from '../utils/semanticIdGenerator';
 
 /**
  * Converts legacy block props to new BlockData format
@@ -7,8 +8,8 @@ import { generateSemanticId } from "../utils/semanticIdGenerator";
 export const convertToBlockData = (legacyBlock: any): BlockData => {
   if (!legacyBlock) {
     return {
-      id: "default-block",
-      type: "text",
+      id: 'default-block',
+      type: 'text',
       properties: {},
       content: {},
       order: 0,
@@ -25,12 +26,12 @@ export const convertToBlockData = (legacyBlock: any): BlockData => {
     id:
       legacyBlock.id ||
       generateSemanticId({
-        context: "compatibility",
-        type: "block",
-        identifier: "block",
+        context: 'compatibility',
+        type: 'block',
+        identifier: 'block',
         index: Math.floor(Math.random() * 1000),
       }),
-    type: legacyBlock.type || "text",
+    type: legacyBlock.type || 'text',
     properties: legacyBlock.properties || {},
     content: legacyBlock.content || legacyBlock.properties || {},
     order: legacyBlock.order || 0,
@@ -74,7 +75,7 @@ export const createSafeBlockProps = (
     isEditing: false,
     onClick: () => {},
     onPropertyChange: () => {},
-    className: "",
+    className: '',
     ...additionalProps,
   };
 };

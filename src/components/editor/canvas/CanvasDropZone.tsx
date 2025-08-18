@@ -1,9 +1,11 @@
-import { cn } from "@/lib/utils";
-import { Block } from "@/types/editor";
-import { useDroppable } from "@dnd-kit/core";
-import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
-import React from "react";
-import { SortableBlockWrapper } from "./SortableBlockWrapper";
+import { Button } from '@/components/ui/button';
+import { usePreview } from '@/contexts/PreviewContext';
+import { cn } from '@/lib/utils';
+import { Block } from '@/types/editor';
+import { useDroppable } from '@dnd-kit/core';
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import React from 'react';
+import { SortableBlockWrapper } from './SortableBlockWrapper';
 
 // Componente para drop zone entre blocos
 const InterBlockDropZone: React.FC<{
@@ -13,8 +15,8 @@ const InterBlockDropZone: React.FC<{
   const { setNodeRef, isOver } = useDroppable({
     id: `drop-zone-${position}`,
     data: {
-      type: "canvas-drop-zone",
-      accepts: ["sidebar-component", "canvas-block"], // Aceita tanto componentes da sidebar quanto blocos do canvas
+      type: 'canvas-drop-zone',
+      accepts: ['sidebar-component', 'canvas-block'], // Aceita tanto componentes da sidebar quanto blocos do canvas
       position: position,
     },
   });
@@ -23,9 +25,9 @@ const InterBlockDropZone: React.FC<{
     <div
       ref={setNodeRef}
       className={cn(
-        "h-3 transition-all duration-200 relative",
-        isOver && "h-12 bg-brand/10 border-2 border-dashed border-brand/40 rounded-lg",
-        isActive && !isOver && "h-1 bg-brand/20 rounded-full opacity-50"
+        'h-3 transition-all duration-200 relative',
+        isOver && 'h-12 bg-brand/10 border-2 border-dashed border-brand/40 rounded-lg',
+        isActive && !isOver && 'h-1 bg-brand/20 rounded-full opacity-50'
       )}
     >
       {isOver && (
@@ -42,9 +44,6 @@ const InterBlockDropZone: React.FC<{
 interface CanvasDropZoneProps {
   blocks: Block[];
   selectedBlockId: string | null;
-  isPreviewing: boolean;
-  activeStageId: string;
-  stageCount: number;
   onSelectBlock: (id: string) => void;
   onUpdateBlock: (id: string, updates: any) => void;
   onDeleteBlock: (id: string) => void;
@@ -54,35 +53,34 @@ interface CanvasDropZoneProps {
 export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
   blocks,
   selectedBlockId,
-  isPreviewing,
-  activeStageId,
-  stageCount,
   onSelectBlock,
   onUpdateBlock,
   onDeleteBlock,
   className,
 }) => {
+  // Safe preview context usage with fallback
+  const { isPreviewing } = usePreview();
   const { setNodeRef, isOver, active } = useDroppable({
-    id: "canvas-drop-zone",
+    id: 'canvas-drop-zone',
     data: {
-      type: "canvas-drop-zone",
-      accepts: ["sidebar-component", "canvas-block"],
+      type: 'canvas-drop-zone',
+      accepts: ['sidebar-component', 'canvas-block'],
       position: blocks.length, // Posição no final
     },
   });
 
   // Verifica se qualquer item arrastável válido está ativo
   const isDraggingAnyValidComponent =
-    active?.data.current?.type === "sidebar-component" ||
-    active?.data.current?.type === "canvas-block";
+    active?.data.current?.type === 'sidebar-component' ||
+    active?.data.current?.type === 'canvas-block';
 
   // Debug do drop zone
   React.useEffect(() => {
-    console.log("🎯 CanvasDropZone: isOver =", isOver, "active =", active?.id);
-    if (active?.data.current?.type === "sidebar-component") {
-      console.log("📦 Arrastando componente da sidebar:", active?.data.current?.blockType);
-    } else if (active?.data.current?.type === "canvas-block") {
-      console.log("🔄 Reordenando bloco do canvas:", active?.id);
+    console.log('🎯 CanvasDropZone: isOver =', isOver, 'active =', active?.id);
+    if (active?.data.current?.type === 'sidebar-component') {
+      console.log('📦 Arrastando componente da sidebar:', active?.data.current?.blockType);
+    } else if (active?.data.current?.type === 'canvas-block') {
+      console.log('🔄 Reordenando bloco do canvas:', active?.id);
     }
   }, [isOver, active]);
 
@@ -90,24 +88,56 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
     <div
       ref={setNodeRef}
       className={cn(
-        "p-3 min-h-[400px] transition-all duration-200",
-        isOver && !isPreviewing && "bg-brand/5 ring-2 ring-brand/20 ring-dashed",
+        'p-3 min-h-[400px] transition-all duration-200',
+        isOver && !isPreviewing && 'bg-brand/5 ring-2 ring-brand/20 ring-dashed',
         className
       )}
     >
       {blocks.length === 0 ? (
         <div className="text-center py-12">
-          <h3 className="text-2xl font-semibold text-stone-700 mb-3 font-serif">
-            Etapa {activeStageId}
-          </h3>
           <p className="text-stone-500 text-lg mb-2">
             {isPreviewing
-              ? "Modo Preview - Nenhum componente nesta etapa"
-              : "Arraste componentes da sidebar para começar"}
+              ? 'Modo Preview - Nenhum componente nesta etapa'
+              : 'Canvas vazio - Arraste componentes da sidebar para começar'}
           </p>
-          <p className="text-xs text-stone-400 bg-stone-100/50 px-3 py-1 rounded-full inline-block">
-            Sistema integrado com {stageCount} etapas • Drag & Drop ativo
-          </p>
+
+          {/* Botão para recarregar template */}
+          {!isPreviewing && (
+            <div className="mt-4">
+              <Button
+                variant="outline"
+                className="mx-auto border-dashed"
+                onClick={async () => {
+                  try {
+                    // Extrair número da etapa atual
+                    const stepId =
+                      document
+                        .querySelector('.editor-stage-active')
+                        ?.getAttribute('data-stage-id') || 'step-1';
+                    const stepNumber = parseInt(stepId.replace('step-', ''), 10) || 1;
+
+                    // Importar dinamicamente o templateService
+                    const { templateService } = await import('@/services/templateService');
+                    const template = await templateService.getTemplateByStep(stepNumber);
+
+                    if (template && template.blocks && template.blocks.length > 0) {
+                      // Converter para formato do editor
+                      const editorBlocks = templateService.convertTemplateBlocksToEditorBlocks(
+                        template.blocks
+                      );
+                      // Atualizar os blocos no estado (via callback para acesso direto)
+                      onUpdateBlock('template-update', { blocks: editorBlocks });
+                    }
+                  } catch (error) {
+                    console.error('Erro ao recarregar template:', error);
+                  }
+                }}
+              >
+                🔄 Recarregar Template
+              </Button>
+            </div>
+          )}
+
           {isOver && !isPreviewing && (
             <div className="mt-4 p-4 border-2 border-dashed border-brand/30 rounded-lg bg-brand/5">
               <p className="text-brand font-medium">Solte o componente aqui</p>

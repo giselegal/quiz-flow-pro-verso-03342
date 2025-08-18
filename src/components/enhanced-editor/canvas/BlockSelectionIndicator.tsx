@@ -3,10 +3,9 @@
  * Melhora a experiência visual do painel de propriedades
  */
 
-import React from "react";
-import { motion } from "framer-motion";
-import { Edit3, Trash2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { motion } from 'framer-motion';
+import { Edit3, Trash2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 interface BlockSelectionIndicatorProps {
   isSelected: boolean;
@@ -26,7 +25,7 @@ export const BlockSelectionIndicator: React.FC<BlockSelectionIndicatorProps> = (
   return (
     <div className="relative group">
       {children}
-      
+
       {/* Indicador de seleção */}
       {isSelected && (
         <motion.div
@@ -36,7 +35,7 @@ export const BlockSelectionIndicator: React.FC<BlockSelectionIndicatorProps> = (
           style={{ backgroundColor: '#FAF9F7' }}
         />
       )}
-      
+
       {/* Toolbar de ações - aparece no hover ou quando selecionado */}
       {(isSelected || false) && (
         <motion.div
@@ -46,7 +45,7 @@ export const BlockSelectionIndicator: React.FC<BlockSelectionIndicatorProps> = (
           style={{ borderColor: '#E5DDD5' }}
         >
           <span style={{ color: '#6B4F43' }}>{blockType}</span>
-          
+
           {onEdit && (
             <Button
               size="sm"
@@ -57,7 +56,7 @@ export const BlockSelectionIndicator: React.FC<BlockSelectionIndicatorProps> = (
               <Edit3 style={{ color: '#B89B7A' }} />
             </Button>
           )}
-          
+
           {onDelete && (
             <Button
               size="sm"
@@ -70,7 +69,7 @@ export const BlockSelectionIndicator: React.FC<BlockSelectionIndicatorProps> = (
           )}
         </motion.div>
       )}
-      
+
       {/* Efeito hover sutil */}
       <div style={{ backgroundColor: '#E5DDD5' }} />
     </div>

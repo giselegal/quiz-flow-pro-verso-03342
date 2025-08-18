@@ -1,16 +1,16 @@
-const { createClient } = require("@supabase/supabase-js");
+const { createClient } = require('@supabase/supabase-js');
 
 // Configuração do Supabase com chave de serviço
-const SUPABASE_URL = "https://pwtjuuhchtbzttrzoutw.supabase.co";
+const SUPABASE_URL = 'https://pwtjuuhchtbzttrzoutw.supabase.co';
 const SUPABASE_SERVICE_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3dGp1dWhjaHRienR0cnpvdXR3Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1MjM0NDQ2MCwiZXhwIjoyMDY3OTIwNDYwfQ.jkXLyH0tJttuL_P-Kt7dGsIzyBuLWZRJ3NZi6F9trUI";
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3dGp1dWhjaHRienR0cnpvdXR3Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1MjM0NDQ2MCwiZXhwIjoyMDY3OTIwNDYwfQ.jkXLyH0tJttuL_P-Kt7dGsIzyBuLWZRJ3NZi6F9trUI';
 
 // Criar cliente Supabase com chave de serviço
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
 async function createTablesDirectly() {
   try {
-    console.log("🔧 Criando tabelas diretamente no Supabase...\n");
+    console.log('🔧 Criando tabelas diretamente no Supabase...\n');
 
     // SQL para criar as tabelas
     const createFunnelsTable = `
@@ -137,13 +137,13 @@ async function createTablesDirectly() {
 
     // Executar cada comando SQL
     const commands = [
-      { name: "Criando tabela funnels", sql: createFunnelsTable },
-      { name: "Criando tabela funnel_pages", sql: createFunnelPagesTable },
-      { name: "Criando índices", sql: createIndexes },
-      { name: "Criando função de trigger", sql: createTriggerFunction },
-      { name: "Criando triggers", sql: createTriggers },
-      { name: "Habilitando RLS", sql: enableRLS },
-      { name: "Criando políticas", sql: createPolicies },
+      { name: 'Criando tabela funnels', sql: createFunnelsTable },
+      { name: 'Criando tabela funnel_pages', sql: createFunnelPagesTable },
+      { name: 'Criando índices', sql: createIndexes },
+      { name: 'Criando função de trigger', sql: createTriggerFunction },
+      { name: 'Criando triggers', sql: createTriggers },
+      { name: 'Habilitando RLS', sql: enableRLS },
+      { name: 'Criando políticas', sql: createPolicies },
     ];
 
     for (const command of commands) {
@@ -152,9 +152,9 @@ async function createTablesDirectly() {
       try {
         // Usar a API REST do Supabase para executar SQL
         const response = await fetch(`${SUPABASE_URL}/rest/v1/rpc/exec_sql`, {
-          method: "POST",
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
             Authorization: `Bearer ${SUPABASE_SERVICE_KEY}`,
             apikey: SUPABASE_SERVICE_KEY,
           },
@@ -167,7 +167,7 @@ async function createTablesDirectly() {
 
           // Método alternativo: usar query direta
           const { data, error } = await supabase
-            .from("_supabase_sql_execute")
+            .from('_supabase_sql_execute')
             .insert({ query: command.sql });
 
           if (error) {
@@ -184,13 +184,13 @@ async function createTablesDirectly() {
     }
 
     // Verificar se as tabelas foram criadas
-    console.log("\n🔍 Verificando criação das tabelas...");
+    console.log('\n🔍 Verificando criação das tabelas...');
 
     try {
       // Verificar tabela funnels
       const { data: funnelsData, error: funnelsError } = await supabase
-        .from("funnels")
-        .select("*")
+        .from('funnels')
+        .select('*')
         .limit(1);
 
       if (funnelsError) {
@@ -201,8 +201,8 @@ async function createTablesDirectly() {
 
       // Verificar tabela funnel_pages
       const { data: pagesData, error: pagesError } = await supabase
-        .from("funnel_pages")
-        .select("*")
+        .from('funnel_pages')
+        .select('*')
         .limit(1);
 
       if (pagesError) {
@@ -212,16 +212,16 @@ async function createTablesDirectly() {
       }
 
       if (!funnelsError && !pagesError) {
-        console.log("\n🎉 Todas as tabelas foram criadas com sucesso!");
-        console.log("\n📝 Próximos passos:");
-        console.log("   1. Execute: node check-tables.cjs");
-        console.log("   2. Teste a criação de funnels no editor");
+        console.log('\n🎉 Todas as tabelas foram criadas com sucesso!');
+        console.log('\n📝 Próximos passos:');
+        console.log('   1. Execute: node check-tables.cjs');
+        console.log('   2. Teste a criação de funnels no editor');
       }
     } catch (err) {
       console.log(`❌ Erro na verificação: ${err.message}`);
     }
   } catch (error) {
-    console.error("❌ Erro geral:", error.message);
+    console.error('❌ Erro geral:', error.message);
   }
 }
 

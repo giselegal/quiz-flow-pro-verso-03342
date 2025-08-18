@@ -1,20 +1,20 @@
-import React, { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
-import { Badge } from "@/components/ui/badge";
+import React, { useState } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
+
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { useToast } from "@/hooks/use-toast";
-import { DomainSettings as DomainSettingsType } from "@/types/funnelSettings";
-import { Plus, Trash2, CheckCircle, XCircle, Globe, Shield } from "lucide-react";
+} from '@/components/ui/select';
+import { useToast } from '@/hooks/use-toast';
+import { DomainSettings as DomainSettingsType } from '@/types/funnelSettings';
+import { Plus, Trash2, CheckCircle, XCircle, Globe, Shield } from 'lucide-react';
 
 interface DomainSettingsProps {
   settings: DomainSettingsType;
@@ -24,7 +24,7 @@ interface DomainSettingsProps {
 export const DomainSettings: React.FC<DomainSettingsProps> = ({ settings, onUpdate }) => {
   const { toast } = useToast();
   const [verifyingDomain, setVerifyingDomain] = useState(false);
-  const [domainStatus, setDomainStatus] = useState<"pending" | "verified" | "error">("pending");
+  const [domainStatus, setDomainStatus] = useState<'pending' | 'verified' | 'error'>('pending');
 
   const verifyDomain = async () => {
     if (!settings.customDomain) return;
@@ -33,17 +33,17 @@ export const DomainSettings: React.FC<DomainSettingsProps> = ({ settings, onUpda
     try {
       // Simular verificação DNS
       await new Promise(resolve => setTimeout(resolve, 2000));
-      setDomainStatus("verified");
+      setDomainStatus('verified');
       toast({
-        title: "Domínio verificado",
-        description: "Seu domínio foi configurado com sucesso.",
+        title: 'Domínio verificado',
+        description: 'Seu domínio foi configurado com sucesso.',
       });
     } catch (error) {
-      setDomainStatus("error");
+      setDomainStatus('error');
       toast({
-        title: "Erro na verificação",
-        description: "Não foi possível verificar o domínio. Verifique as configurações DNS.",
-        variant: "destructive",
+        title: 'Erro na verificação',
+        description: 'Não foi possível verificar o domínio. Verifique as configurações DNS.',
+        variant: 'destructive',
       });
     } finally {
       setVerifyingDomain(false);
@@ -52,9 +52,9 @@ export const DomainSettings: React.FC<DomainSettingsProps> = ({ settings, onUpda
 
   const addRedirect = () => {
     const newRedirect = {
-      from: "",
-      to: "",
-      type: "301" as const,
+      from: '',
+      to: '',
+      type: '301' as const,
     };
     onUpdate({
       redirects: [...settings.redirects, newRedirect],
@@ -75,9 +75,9 @@ export const DomainSettings: React.FC<DomainSettingsProps> = ({ settings, onUpda
 
   const getDomainStatusIcon = () => {
     switch (domainStatus) {
-      case "verified":
+      case 'verified':
         return <CheckCircle className="w-5 h-5 text-green-500" />;
-      case "error":
+      case 'error':
         return <XCircle style={{ color: '#432818' }} />;
       default:
         return <Globe style={{ color: '#8B7355' }} />;
@@ -86,12 +86,12 @@ export const DomainSettings: React.FC<DomainSettingsProps> = ({ settings, onUpda
 
   const getDomainStatusText = () => {
     switch (domainStatus) {
-      case "verified":
-        return "Verificado";
-      case "error":
-        return "Erro";
+      case 'verified':
+        return 'Verificado';
+      case 'error':
+        return 'Erro';
       default:
-        return "Pendente";
+        return 'Pendente';
     }
   };
 
@@ -120,7 +120,7 @@ export const DomainSettings: React.FC<DomainSettingsProps> = ({ settings, onUpda
                 disabled={!settings.customDomain || verifyingDomain}
                 variant="outline"
               >
-                {verifyingDomain ? "Verificando..." : "Verificar"}
+                {verifyingDomain ? 'Verificando...' : 'Verificar'}
               </Button>
             </div>
             <div className="flex items-center space-x-2">
@@ -157,7 +157,7 @@ export const DomainSettings: React.FC<DomainSettingsProps> = ({ settings, onUpda
                     <div className="bg-white p-2 rounded border font-mono">
                       <strong>Tipo:</strong> CNAME
                       <br />
-                      <strong>Nome:</strong> {settings.subdomain.split(".")[0]}
+                      <strong>Nome:</strong> {settings.subdomain.split('.')[0]}
                       <br />
                       <strong>Valor:</strong> {settings.customDomain}
                     </div>

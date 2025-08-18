@@ -1,6 +1,5 @@
-import React, { Suspense, lazy, ComponentType } from "react";
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
-import { usePerformanceOptimization } from "@/hooks/usePerformanceOptimization";
+import React, { Suspense, lazy, ComponentType } from 'react';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 
 interface LazyComponentWrapperProps {
   fallback?: React.ReactNode;
@@ -33,7 +32,7 @@ class LazyErrorBoundary extends React.Component<
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error("[LazyComponent] Error loading component:", error, errorInfo);
+    console.error('[LazyComponent] Error loading component:', error, errorInfo);
   }
 
   render() {
@@ -71,13 +70,12 @@ export const createLazyComponent = <T extends ComponentType<any>>(
 
 // Hook para lazy loading com intersection observer
 export const useLazyLoad = (threshold = 0.1) => {
-  const { createIntersectionObserver } = usePerformanceOptimization();
   const [isVisible, setIsVisible] = React.useState(false);
   const ref = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
-    const observer = createIntersectionObserver(
-      entries => {
+    const observer = new IntersectionObserver(
+      (entries: IntersectionObserverEntry[]) => {
         const [entry] = entries;
         if (entry.isIntersecting) {
           setIsVisible(true);
@@ -92,7 +90,7 @@ export const useLazyLoad = (threshold = 0.1) => {
     }
 
     return () => observer.disconnect();
-  }, [createIntersectionObserver, threshold]);
+  }, [threshold]);
 
   return { ref, isVisible };
 };

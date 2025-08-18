@@ -1,9 +1,8 @@
-import React from "react";
-import { AddBlockButton } from "./AddBlockButton";
-import { EditorBlock } from "@/types/editor";
+import { AddBlockButton } from './AddBlockButton';
+import { EditorBlock } from '@/types/editor';
 
 interface EmptyEditorProps {
-  onAddBlock: (type: EditorBlock["type"]) => void;
+  onAddBlock: (type: EditorBlock['type']) => void;
 }
 
 export const EmptyEditor: React.FC<EmptyEditorProps> = ({ onAddBlock }) => {

@@ -1,23 +1,23 @@
 // Verificação de componentes Step01 na sidebar
 // src/test/sidebar-step01-verification.tsx
 
-import { generateBlockDefinitions } from "@/config/enhancedBlockRegistry";
-import { QUIZ_CONFIGURATION } from "@/config/quizConfiguration";
+import { AVAILABLE_COMPONENTS } from '@/components/editor/blocks/enhancedBlockRegistry';
+import { QUIZ_CONFIGURATION } from '@/config/quizConfiguration';
 
 // Função para gerar blocos do quiz (simulando o que está na sidebar)
 const generateQuizBlocks = () => {
   const headerBlock = {
-    type: "quiz-intro-header",
-    name: "Cabeçalho do Quiz",
-    description: "Cabeçalho configurável com logo e barra decorativa",
-    category: "Questões do Quiz",
+    type: 'quiz-intro-header',
+    name: 'Cabeçalho do Quiz',
+    description: 'Cabeçalho configurável com logo e barra decorativa',
+    category: 'Questões do Quiz',
   };
 
   const introBlock = {
-    type: "step01-intro",
-    name: "Introdução - Step 1",
-    description: "Componente de introdução para a primeira etapa do quiz",
-    category: "Questões do Quiz",
+    type: 'step01-intro',
+    name: 'Introdução - Step 1',
+    description: 'Componente de introdução para a primeira etapa do quiz',
+    category: 'Questões do Quiz',
   };
 
   // Blocos das etapas do quiz
@@ -25,7 +25,7 @@ const generateQuizBlocks = () => {
     type: `quiz-${step.type}`,
     name: `${step.title}`,
     description: step.description || `Etapa ${index + 1} do quiz de estilo pessoal`,
-    category: "Questões do Quiz",
+    category: 'Questões do Quiz',
   }));
 
   return [headerBlock, introBlock, ...stepBlocks];
@@ -34,13 +34,18 @@ const generateQuizBlocks = () => {
 // Componente de verificação
 export const SidebarStep01Verification = () => {
   const quizBlocks = generateQuizBlocks();
-  const regularBlocks = generateBlockDefinitions();
+  const regularBlocks = AVAILABLE_COMPONENTS.map(comp => ({
+    type: comp.type,
+    name: comp.label,
+    category: comp.category,
+    description: `Componente ${comp.label}`,
+  }));
   const allBlocks = [...quizBlocks, ...regularBlocks];
 
   // Agrupar por categoria
   const groupedBlocks = allBlocks.reduce(
     (groups, block) => {
-      const category = block.category || "Outros";
+      const category = block.category || 'Outros';
       if (!groups[category]) {
         groups[category] = [];
       }
@@ -51,7 +56,7 @@ export const SidebarStep01Verification = () => {
   );
 
   const step01Blocks = allBlocks.filter(
-    block => block.type.includes("step01") || block.type.includes("intro")
+    block => block.type.includes('step01') || block.type.includes('intro')
   );
 
   return (
@@ -91,13 +96,13 @@ export const SidebarStep01Verification = () => {
       <div>
         <h3 className="text-lg font-semibold mb-3">Componentes por Categoria</h3>
         <div className="space-y-4">
-          {Object.entries(groupedBlocks).map(([category, blocks]) => (
+          {Object.entries(groupedBlocks).map(([category, blocks]: [string, any[]]) => (
             <div key={category} className="border rounded-lg p-4">
               <h4 className="font-medium mb-2">
                 {category} ({blocks.length} componentes)
               </h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                {blocks.map((block, index) => (
+                {blocks.map((block: any, index: number) => (
                   <div key={index} className="text-sm p-2 bg-gray-50 rounded">
                     <div className="font-mono text-blue-600">{block.type}</div>
                     <div className="text-gray-700">{block.name}</div>

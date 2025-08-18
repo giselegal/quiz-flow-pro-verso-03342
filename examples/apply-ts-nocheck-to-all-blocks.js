@@ -9,26 +9,60 @@ console.log('🔧 Finding all .tsx files in blocks directory...');
 let blockFiles = [];
 try {
   // Use find command to get all .tsx files recursively
-  const findResult = execSync('find src/components/editor/blocks -name "*.tsx" 2>/dev/null || true', { encoding: 'utf8' });
+  const findResult = execSync(
+    'find src/components/editor/blocks -name "*.tsx" 2>/dev/null || true',
+    { encoding: 'utf8' }
+  );
   blockFiles = findResult.split('\n').filter(file => file.trim() && file.endsWith('.tsx'));
 } catch (error) {
   console.log('Find command failed, using fallback...');
   // Fallback: manually construct file paths based on common patterns
   const commonFiles = [
-    'LoaderInlineBlock.tsx', 'ModernResultPageBlock.tsx', 'ModernResultPageBlock_clean.tsx',
-    'NotificationInlineBlock.tsx', 'OptionsGridBlock.tsx', 'PricingInlineBlock.tsx',
-    'QuizOfferCountdownBlock.tsx', 'QuizOfferFAQBlock.tsx', 'QuizOfferFinalCTABlock.tsx',
-    'QuizOfferHeroBlock.tsx', 'QuizOfferPricingBlock.tsx', 'QuizOfferTestimonialsBlock.tsx',
-    'QuizResultHeaderBlock.tsx', 'QuizResultMainCardBlock.tsx', 'QuizResultSecondaryStylesBlock.tsx',
-    'QuizStartPageBlock.tsx', 'QuizStepBlock.tsx', 'QuizTitleBlock.tsx', 'QuizTransitionBlock.tsx',
-    'QuoteBlock.tsx', 'ResultDescriptionBlock.tsx', 'ResultHeaderBlock.tsx', 'ResultHeaderInlineBlock.tsx',
-    'ResultPageHeaderBlock.tsx', 'RichTextBlock.tsx', 'ScriptBlock.tsx', 'SectionBlock.tsx',
-    'SectionInlineBlock.tsx', 'SeparatorBlock.tsx', 'SeparatorInlineBlock.tsx', 'SpacerBlock.tsx',
-    'SpacerInlineBlock.tsx', 'SponsoredBlock.tsx', 'StyleResultsBlock.tsx', 'TestimonialsBlock.tsx',
-    'TestimonialsInlineBlock.tsx', 'ThankYouBlock.tsx', 'TimerBlock.tsx', 'TimerInlineBlock.tsx',
-    'TitleBlock.tsx', 'TitleInlineBlock.tsx', 'VideoBlock.tsx', 'VideoInlineBlock.tsx'
+    'LoaderInlineBlock.tsx',
+    'ModernResultPageBlock.tsx',
+    'ModernResultPageBlock_clean.tsx',
+    'NotificationInlineBlock.tsx',
+    'OptionsGridBlock.tsx',
+    'PricingInlineBlock.tsx',
+    'QuizOfferCountdownBlock.tsx',
+    'QuizOfferFAQBlock.tsx',
+    'QuizOfferFinalCTABlock.tsx',
+    'QuizOfferHeroBlock.tsx',
+    'QuizOfferPricingBlock.tsx',
+    'QuizOfferTestimonialsBlock.tsx',
+    'QuizResultHeaderBlock.tsx',
+    'QuizResultMainCardBlock.tsx',
+    'QuizResultSecondaryStylesBlock.tsx',
+    'QuizStartPageBlock.tsx',
+    'QuizStepBlock.tsx',
+    'QuizTitleBlock.tsx',
+    'QuizTransitionBlock.tsx',
+    'QuoteBlock.tsx',
+    'ResultDescriptionBlock.tsx',
+    'ResultHeaderBlock.tsx',
+    'ResultHeaderInlineBlock.tsx',
+    'ResultPageHeaderBlock.tsx',
+    'RichTextBlock.tsx',
+    'ScriptBlock.tsx',
+    'SectionBlock.tsx',
+    'SectionInlineBlock.tsx',
+    'SeparatorBlock.tsx',
+    'SeparatorInlineBlock.tsx',
+    'SpacerBlock.tsx',
+    'SpacerInlineBlock.tsx',
+    'SponsoredBlock.tsx',
+    'StyleResultsBlock.tsx',
+    'TestimonialsBlock.tsx',
+    'TestimonialsInlineBlock.tsx',
+    'ThankYouBlock.tsx',
+    'TimerBlock.tsx',
+    'TimerInlineBlock.tsx',
+    'TitleBlock.tsx',
+    'TitleInlineBlock.tsx',
+    'VideoBlock.tsx',
+    'VideoInlineBlock.tsx',
   ];
-  
+
   blockFiles = commonFiles.map(file => `src/components/editor/blocks/${file}`);
 }
 
@@ -42,7 +76,7 @@ blockFiles.forEach(filePath => {
   try {
     if (fs.existsSync(filePath)) {
       const content = fs.readFileSync(filePath, 'utf8');
-      
+
       // Check if @ts-nocheck is already at the beginning
       if (!content.trim().startsWith('// @ts-nocheck')) {
         const newContent = '// @ts-nocheck\n' + content;

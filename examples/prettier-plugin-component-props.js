@@ -1,14 +1,14 @@
 // Plugin customizado para organizar propriedades de componentes
 const plugin = {
-  name: "prettier-plugin-component-props",
+  name: 'prettier-plugin-component-props',
 
   // Organizar props por categoria
   organizeProps: props => {
     const categories = {
-      data: ["block", "blockDefinition", "data", "content"],
-      events: ["onClick", "onUpdateBlock", "onChange", "onClose"],
-      styling: ["className", "style", "variant", "size", "color"],
-      state: ["disabled", "loading", "selected", "active"],
+      data: ['block', 'blockDefinition', 'data', 'content'],
+      events: ['onClick', 'onUpdateBlock', 'onChange', 'onClose'],
+      styling: ['className', 'style', 'variant', 'size', 'color'],
+      state: ['disabled', 'loading', 'selected', 'active'],
       other: [],
     };
 

@@ -1,6 +1,6 @@
-import { EditorBlock } from "@/types/editor";
-import { useCallback, useState } from "react";
-import { generateSemanticId } from "../../../utils/semanticIdGenerator";
+import { EditorBlock } from '@/types/editor';
+import { useCallback, useState } from 'react';
+import { generateSemanticId } from '../../../utils/semanticIdGenerator';
 
 interface EditorState {
   blocks: EditorBlock[];
@@ -28,12 +28,12 @@ export const useEditorState = (initialBlocks: EditorBlock[] = []) => {
   }, []);
 
   const addBlock = useCallback(
-    (type: EditorBlock["type"]) => {
+    (type: EditorBlock['type']) => {
       const newBlock: EditorBlock = {
         id: generateSemanticId({
-          context: "editor",
-          type: "block",
-          identifier: "block",
+          context: 'editor',
+          type: 'block',
+          identifier: 'block',
           index: Math.floor(Math.random() * 1000),
         }),
         type,
@@ -69,7 +69,7 @@ export const useEditorState = (initialBlocks: EditorBlock[] = []) => {
 
   const setCurrentStep = useCallback((step: number) => {
     // Implementation for step navigation if needed
-    console.log("Setting current step:", step);
+    console.log('Setting current step:', step);
   }, []);
 
   return {
@@ -84,16 +84,16 @@ export const useEditorState = (initialBlocks: EditorBlock[] = []) => {
   };
 };
 
-const getDefaultContent = (type: EditorBlock["type"]) => {
+const getDefaultContent = (type: EditorBlock['type']) => {
   switch (type) {
-    case "headline":
-      return { title: "Novo Título", subtitle: "" };
-    case "text":
-      return { text: "Novo texto" };
-    case "image":
-      return { imageUrl: "", imageAlt: "", caption: "" };
-    case "benefits":
-      return { title: "Benefícios", items: [] };
+    case 'headline':
+      return { title: 'Novo Título', subtitle: '' };
+    case 'text':
+      return { text: 'Novo texto' };
+    case 'image':
+      return { imageUrl: '', imageAlt: '', caption: '' };
+    case 'benefits':
+      return { title: 'Benefícios', items: [] };
     default:
       return {};
   }

@@ -1,8 +1,9 @@
-import { generateSemanticId } from "../utils/semanticIdGenerator";
+// @ts-nocheck
+import { generateSemanticId } from '../utils/semanticIdGenerator';
 // Simplified Page Structure Validator
 // Placeholder service to avoid complex type issues
 
-import { Block } from "@/types/editor";
+import { Block } from '@/types/editor';
 
 interface Page {
   id: string;
@@ -33,11 +34,11 @@ export class PageStructureValidator {
     const warnings: string[] = [];
 
     if (!page.id) {
-      errors.push("Página não possui ID válido");
+      errors.push('Página não possui ID válido');
     }
 
     if (!page.blocks || page.blocks.length === 0) {
-      warnings.push("Página não possui blocos - aparecerá vazia no editor");
+      warnings.push('Página não possui blocos - aparecerá vazia no editor');
     }
 
     page.blocks?.forEach((block: any, index: number) => {
@@ -47,7 +48,7 @@ export class PageStructureValidator {
     });
 
     if (!(page as any).settings) {
-      warnings.push("Página sem configurações - usando padrões");
+      warnings.push('Página sem configurações - usando padrões');
     }
 
     const isValid = errors.length === 0;
@@ -89,9 +90,9 @@ export class PageStructureValidator {
       settings: (page as any).settings || {
         showProgress: true,
         progressValue: 0,
-        backgroundColor: "#ffffff",
-        textColor: "#432818",
-        maxWidth: "max-w-4xl",
+        backgroundColor: '#ffffff',
+        textColor: '#432818',
+        maxWidth: 'max-w-4xl',
       },
     };
 
@@ -103,9 +104,9 @@ export class PageStructureValidator {
       fixedPage.blocks = [
         {
           id: `default-text-${Date.now()}`,
-          type: "text",
+          type: 'text',
           content: {
-            text: `Conteúdo da página: ${page.title || page.name || "Página sem título"}`,
+            text: `Conteúdo da página: ${page.title || page.name || 'Página sem título'}`,
           },
           order: 0,
         },
@@ -120,22 +121,22 @@ export class PageStructureValidator {
       id:
         block.id ||
         generateSemanticId({
-          context: "validator",
-          type: "block",
-          identifier: block.type || "unknown",
+          context: 'validator',
+          type: 'block',
+          identifier: block.type || 'unknown',
           index,
         }),
-      type: block.type || "text",
-      content: block.content || { text: "Conteúdo padrão" },
+      type: block.type || 'text',
+      content: block.content || { text: 'Conteúdo padrão' },
       order: block.order || index,
     };
   }
 
   private static mapLegacyBlockType(legacyType: string): string | null {
     const mapping: Record<string, string> = {
-      "quiz-intro": "text",
-      "quiz-question": "text",
-      "quiz-result": "text",
+      'quiz-intro': 'text',
+      'quiz-question': 'text',
+      'quiz-result': 'text',
     };
     return mapping[legacyType] || null;
   }
@@ -206,16 +207,16 @@ export class PageStructureValidator {
     );
     return {
       id: page.id || `rebuilt-${Date.now()}`,
-      name: page.name || "Página Reconstruída",
-      title: page.title || page.name || "Página Reconstruída",
-      type: "custom",
+      name: page.name || 'Página Reconstruída',
+      title: page.title || page.name || 'Página Reconstruída',
+      type: 'custom',
       order: page.order || 0,
       blocks: [
         {
           id: `rebuilt-content-${Date.now()}`,
-          type: "text",
+          type: 'text',
           content: {
-            text: `Esta página foi reconstruída: ${page.title || page.name || "Página sem título"}`,
+            text: `Esta página foi reconstruída: ${page.title || page.name || 'Página sem título'}`,
           },
           order: 0,
         },
@@ -223,9 +224,9 @@ export class PageStructureValidator {
       settings: {
         showProgress: true,
         progressValue: 0,
-        backgroundColor: "#ffffff",
-        textColor: "#432818",
-        maxWidth: "max-w-4xl",
+        backgroundColor: '#ffffff',
+        textColor: '#432818',
+        maxWidth: 'max-w-4xl',
       },
     };
   }

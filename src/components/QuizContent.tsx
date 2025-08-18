@@ -1,8 +1,7 @@
-import React from "react";
-import QuizQuestion from "./QuizQuestion";
-import { UserResponse } from "@/types/quiz";
-import { QuizHeader } from "./quiz/QuizHeader";
-import { StrategicQuestions } from "./quiz/StrategicQuestions";
+import QuizQuestion from './QuizQuestion';
+import { UserResponse } from '@/types/quiz';
+import { QuizHeader } from './quiz/QuizHeader';
+import { StrategicQuestions } from './quiz/StrategicQuestions';
 
 interface QuizContentProps {
   user: any;
@@ -26,7 +25,7 @@ export const QuizContent: React.FC<QuizContentProps> = ({
   handleAnswerSubmit,
 }) => {
   // Get user name from localStorage if not provided in props
-  const userName = user?.userName || localStorage.getItem("userName") || "";
+  const userName = user?.userName || localStorage.getItem('userName') || '';
 
   // Create strategic answers object safely
   const strategicAnswers = showingStrategicQuestions

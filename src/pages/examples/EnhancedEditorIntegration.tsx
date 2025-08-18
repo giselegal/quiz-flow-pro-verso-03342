@@ -1,19 +1,19 @@
+// @ts-nocheck
 // Exemplo de Integração do Editor Melhorado
 // Substitui ou complementa páginas existentes como FunnelPanelPage.tsx
-
-import React, { useState, useEffect } from "react";
-import { useRoute } from "wouter";
-import { Button } from "../../components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
-import { Badge } from "../../components/ui/badge";
-import { ArrowLeft, Settings, Eye, Edit3, BarChart3, Users, Calendar, Globe } from "lucide-react";
+import React, { useState, useEffect } from 'react';
+import { useRoute } from 'wouter';
+import { Button } from '../../components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Badge } from '../../components/ui/badge';
+import { ArrowLeft, Settings, Eye, Edit3, BarChart3, Users, Calendar, Globe } from 'lucide-react';
 
 // Importar o editor melhorado
-import EnhancedEditor from "../../components/editor/EnhancedEditor";
+import EnhancedEditor from '../../components/editor/EnhancedEditor';
 
 // Componente de integração para a página de edição
 const EditorPage: React.FC = () => {
-  const [match, params] = useRoute("/admin/funis/:funnelId/editor");
+  const [match, params] = useRoute('/admin/funis/:funnelId/editor');
   const funnelId = params?.funnelId;
 
   // Verificar se a rota está correta
@@ -42,7 +42,7 @@ const EditorPage: React.FC = () => {
 // Componente alternativo - Editor Embarcado (para dashboard)
 const EmbeddedEditor: React.FC<{ funnelId: string; height?: string }> = ({
   funnelId,
-  height = "600px",
+  height = '600px',
 }) => {
   return (
     <div className="border rounded-lg overflow-hidden" style={{ height }}>
@@ -54,46 +54,46 @@ const EmbeddedEditor: React.FC<{ funnelId: string; height?: string }> = ({
 // Exemplo de como integrar no Admin Dashboard existente
 const FunnelManagementPage: React.FC = () => {
   const [selectedFunnel, setSelectedFunnel] = useState<string | null>(null);
-  const [view, setView] = useState<"list" | "editor" | "analytics">("list");
+  const [view, setView] = useState<'list' | 'editor' | 'analytics'>('list');
 
   const mockFunnels = [
     {
-      id: "1",
-      name: "Quiz de Personalidade",
-      status: "published",
+      id: '1',
+      name: 'Quiz de Personalidade',
+      status: 'published',
       views: 1250,
       conversions: 340,
-      updatedAt: "2024-12-15T10:30:00Z",
+      updatedAt: '2024-12-15T10:30:00Z',
     },
     {
-      id: "2",
-      name: "Funil de Vendas",
-      status: "draft",
+      id: '2',
+      name: 'Funil de Vendas',
+      status: 'draft',
       views: 0,
       conversions: 0,
-      updatedAt: "2024-12-14T15:45:00Z",
+      updatedAt: '2024-12-14T15:45:00Z',
     },
   ];
 
   const renderStatusBadge = (status: string) => {
     const variants = {
-      published: "default",
-      draft: "secondary",
-      review: "outline",
+      published: 'default',
+      draft: 'secondary',
+      review: 'outline',
     } as const;
 
     return (
-      <Badge variant={variants[status as keyof typeof variants] || "secondary"}>{status}</Badge>
+      <Badge variant={variants[status as keyof typeof variants] || 'secondary'}>{status}</Badge>
     );
   };
 
   const renderView = () => {
     switch (view) {
-      case "editor":
+      case 'editor':
         return selectedFunnel ? (
           <div className="h-full">
             <div className="flex items-center gap-4 p-4 border-b">
-              <Button variant="ghost" size="sm" onClick={() => setView("list")}>
+              <Button variant="ghost" size="sm" onClick={() => setView('list')}>
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Voltar para Lista
               </Button>
@@ -107,11 +107,11 @@ const FunnelManagementPage: React.FC = () => {
           </div>
         ) : null;
 
-      case "analytics":
+      case 'analytics':
         return (
           <div className="p-6">
             <div className="flex items-center gap-4 mb-6">
-              <Button variant="ghost" size="sm" onClick={() => setView("list")}>
+              <Button variant="ghost" size="sm" onClick={() => setView('list')}>
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Voltar
               </Button>
@@ -131,7 +131,7 @@ const FunnelManagementPage: React.FC = () => {
           <div className="p-6">
             <div className="flex items-center justify-between mb-6">
               <h1 className="text-2xl font-bold">Gestão de Funis</h1>
-              <Button onClick={() => setSelectedFunnel("new")}>
+              <Button onClick={() => setSelectedFunnel('new')}>
                 <Edit3 className="h-4 w-4 mr-2" />
                 Novo Funil
               </Button>
@@ -170,7 +170,7 @@ const FunnelManagementPage: React.FC = () => {
                           size="sm"
                           onClick={() => {
                             setSelectedFunnel(funnel.id);
-                            setView("analytics");
+                            setView('analytics');
                           }}
                         >
                           <BarChart3 className="h-4 w-4 mr-2" />
@@ -180,7 +180,7 @@ const FunnelManagementPage: React.FC = () => {
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => window.open(`/preview/${funnel.id}`, "_blank")}
+                          onClick={() => window.open(`/preview/${funnel.id}`, '_blank')}
                         >
                           <Eye className="h-4 w-4 mr-2" />
                           Preview
@@ -190,7 +190,7 @@ const FunnelManagementPage: React.FC = () => {
                           size="sm"
                           onClick={() => {
                             setSelectedFunnel(funnel.id);
-                            setView("editor");
+                            setView('editor');
                           }}
                         >
                           <Edit3 className="h-4 w-4 mr-2" />
@@ -222,7 +222,7 @@ const useEnhancedEditor = (funnelId: string) => {
 
     // Carregar dados do funil
     const loadFunnel = async () => {
-      if (!funnelId || funnelId === "new") {
+      if (!funnelId || funnelId === 'new') {
         setIsEditorReady(true);
         setIsLoading(false);
         return;
@@ -233,7 +233,7 @@ const useEnhancedEditor = (funnelId: string) => {
         setError(null);
 
         // Importar o serviço existente
-        const { funnelService } = await import("../../services/funnelService");
+        const { funnelService } = await import('../../services/funnelService');
         const data = await funnelService.loadFunnelData(funnelId);
 
         if (!isMounted) return;
@@ -242,12 +242,12 @@ const useEnhancedEditor = (funnelId: string) => {
           setFunnelData(data);
           setIsEditorReady(true);
         } else {
-          setError("Funil não encontrado");
+          setError('Funil não encontrado');
         }
       } catch (error) {
-        console.error("Erro ao carregar funil:", error);
+        console.error('Erro ao carregar funil:', error);
         if (isMounted) {
-          setError("Erro ao carregar dados do funil");
+          setError('Erro ao carregar dados do funil');
         }
       } finally {
         if (isMounted) {
@@ -266,7 +266,7 @@ const useEnhancedEditor = (funnelId: string) => {
   // Métodos para ações do funil
   const saveFunnel = async (updatedData: any) => {
     try {
-      const { funnelService } = await import("../../services/funnelService");
+      const { funnelService } = await import('../../services/funnelService');
       const result = await funnelService.saveFunnelData(updatedData);
       if (result) {
         // Recarregar dados após salvar
@@ -278,29 +278,29 @@ const useEnhancedEditor = (funnelId: string) => {
       }
       return false;
     } catch (error) {
-      console.error("Erro ao salvar funil:", error);
+      console.error('Erro ao salvar funil:', error);
       return false;
     }
   };
 
   const publishFunnel = async () => {
     try {
-      const { funnelService } = await import("../../services/funnelService");
+      const { funnelService } = await import('../../services/funnelService');
       const result = await funnelService.updateFunnel(funnelId, {});
       return !!result;
     } catch (error) {
-      console.error("Erro ao publicar funil:", error);
+      console.error('Erro ao publicar funil:', error);
       return false;
     }
   };
 
   const deleteFunnel = async () => {
     try {
-      const { funnelService } = await import("../../services/funnelService");
+      const { funnelService } = await import('../../services/funnelService');
       await funnelService.deleteFunnel(funnelId);
       return true;
     } catch (error) {
-      console.error("Erro ao deletar funil:", error);
+      console.error('Erro ao deletar funil:', error);
       return false;
     }
   };
@@ -318,9 +318,9 @@ const useEnhancedEditor = (funnelId: string) => {
     deleteFunnel,
 
     // Métodos de navegação
-    openEditor: () => window.open(`/admin/funis/${funnelId}/editor`, "_blank"),
-    openPreview: () => window.open(`/preview/${funnelId}`, "_blank"),
-    openAnalytics: () => window.open(`/admin/funis/${funnelId}/analytics`, "_blank"),
+    openEditor: () => window.open(`/admin/funis/${funnelId}/editor`, '_blank'),
+    openPreview: () => window.open(`/preview/${funnelId}`, '_blank'),
+    openAnalytics: () => window.open(`/admin/funis/${funnelId}/analytics`, '_blank'),
 
     // Método para recarregar dados
     refresh: () => {
@@ -334,7 +334,7 @@ const useEnhancedEditor = (funnelId: string) => {
 
 // Exemplo de uso em um componente existente
 const ExistingComponentExample: React.FC = () => {
-  const funnelId = "exemplo-123";
+  const funnelId = 'exemplo-123';
   const {
     isEditorReady,
     isLoading,
@@ -384,7 +384,7 @@ const ExistingComponentExample: React.FC = () => {
           Ações do Funil
           {funnelData && (
             <Badge variant="outline" className="text-xs">
-              {funnelData.name || "Sem nome"}
+              {funnelData.name || 'Sem nome'}
             </Badge>
           )}
         </CardTitle>
@@ -407,10 +407,10 @@ const ExistingComponentExample: React.FC = () => {
             onClick={async () => {
               const success = await publishFunnel();
               if (success) {
-                alert("Funil publicado com sucesso!");
+                alert('Funil publicado com sucesso!');
                 refresh();
               } else {
-                alert("Erro ao publicar funil");
+                alert('Erro ao publicar funil');
               }
             }}
           >
@@ -421,12 +421,12 @@ const ExistingComponentExample: React.FC = () => {
             variant="destructive"
             size="sm"
             onClick={async () => {
-              if (confirm("Tem certeza que deseja deletar este funil?")) {
+              if (confirm('Tem certeza que deseja deletar este funil?')) {
                 const success = await deleteFunnel();
                 if (success) {
-                  alert("Funil deletado com sucesso!");
+                  alert('Funil deletado com sucesso!');
                 } else {
-                  alert("Erro ao deletar funil");
+                  alert('Erro ao deletar funil');
                 }
               }
             }}

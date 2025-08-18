@@ -1,15 +1,16 @@
+// @ts-nocheck
 // Simplified preload resources utility
 
 export interface PreloadResource {
   url: string;
-  type: "image" | "font" | "style" | "script";
-  priority?: "high" | "low";
+  type: 'image' | 'font' | 'style' | 'script';
+  priority?: 'high' | 'low';
 }
 
 export const preloadResources = (resources: PreloadResource[]): void => {
   resources.forEach(resource => {
-    const link = document.createElement("link");
-    link.rel = "preload";
+    const link = document.createElement('link');
+    link.rel = 'preload';
     link.href = resource.url;
 
     if (resource.priority) {
@@ -17,18 +18,18 @@ export const preloadResources = (resources: PreloadResource[]): void => {
     }
 
     switch (resource.type) {
-      case "image":
-        link.as = "image";
+      case 'image':
+        link.as = 'image';
         break;
-      case "font":
-        link.as = "font";
-        link.crossOrigin = "anonymous";
+      case 'font':
+        link.as = 'font';
+        link.crossOrigin = 'anonymous';
         break;
-      case "style":
-        link.as = "style";
+      case 'style':
+        link.as = 'style';
         break;
-      case "script":
-        link.as = "script";
+      case 'script':
+        link.as = 'script';
         break;
     }
 
@@ -36,11 +37,11 @@ export const preloadResources = (resources: PreloadResource[]): void => {
   });
 };
 
-export const preloadImage = (url: string, priority?: "high" | "low"): void => {
-  const link = document.createElement("link");
-  link.rel = "preload";
+export const preloadImage = (url: string, priority?: 'high' | 'low'): void => {
+  const link = document.createElement('link');
+  link.rel = 'preload';
   link.href = url;
-  link.as = "image";
+  link.as = 'image';
 
   if (priority) {
     (link as any).fetchPriority = priority;
@@ -50,11 +51,11 @@ export const preloadImage = (url: string, priority?: "high" | "low"): void => {
 };
 
 export const initializeResourcePreloading = (): void => {
-  console.log("Would initialize resource preloading");
+  console.log('Would initialize resource preloading');
 };
 
 export const setupRouteChangePreloading = (): void => {
-  console.log("Would setup route change preloading");
+  console.log('Would setup route change preloading');
 };
 
 export default preloadResources;

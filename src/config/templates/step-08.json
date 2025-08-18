@@ -74,21 +74,33 @@
       "properties": {
         "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
         "logoAlt": "Logo Gisele Galvão",
-        "logoWidth": 96,
-        "logoHeight": 96,
-        "progressValue": 38,
-        "progressTotal": 100,
+        "logoWidth": 120,
+        "logoHeight": 50,
         "showProgress": true,
+        "progressValue": 8,
+        "progressMax": 21,
         "showBackButton": true,
         "containerWidth": "full",
-        "spacing": "small"
+        "spacing": "small",
+        "showLogo": true,
+        "progressBarColor": "#B89B7A",
+        "progressBarThickness": 6,
+        "backgroundColor": "#FFFFFF",
+        "textColor": "#432818",
+        "paddingTop": 16,
+        "paddingBottom": 16,
+        "paddingLeft": 24,
+        "paddingRight": 24,
+        "marginBottom": 24,
+        "progressTotal": 100,
+        "type": "quiz-intro-header"
       }
     },
     {
       "id": "step08-question-title",
       "type": "text-inline",
       "properties": {
-        "content": "QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?",
+        "content": "QUAL SUA CALÇA FAVORITA?",
         "fontSize": "text-2xl",
         "fontWeight": "font-bold",
         "textAlign": "text-center",
@@ -117,60 +129,60 @@
       "properties": {
         "options": [
           {
-            "id": "3a",
-            "text": "Visual leve, despojado e natural.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp",
+            "id": "7a",
+            "text": "Calça fluida acetinada bege",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735419/38_iilv0l.webp",
             "styleCategory": "Natural",
             "points": 1
           },
           {
-            "id": "3b",
-            "text": "Visual clássico e tradicional.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/3_asaunw.webp",
+            "id": "7b",
+            "text": "Calça de alfaiataria cinza",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735417/39_arsswu.webp",
             "styleCategory": "Clássico",
-            "points": 2
+            "points": 1
           },
           {
-            "id": "3c",
-            "text": "Visual casual com toque atual.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/13_uvbciq.webp",
+            "id": "7c",
+            "text": "Jeans reto e básico",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735419/40_beq52x.webp",
             "styleCategory": "Contemporâneo",
-            "points": 2
+            "points": 1
           },
           {
-            "id": "3d",
-            "text": "Visual refinado e imponente.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/5_dhrgpf.webp",
+            "id": "7d",
+            "text": "Calça reta bege de tecido",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735419/41_hconq4.webp",
             "styleCategory": "Elegante",
-            "points": 3
+            "points": 1
           },
           {
-            "id": "3e",
-            "text": "Visual romântico, feminino e delicado.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/6_gnoxfg.webp",
+            "id": "7e",
+            "text": "Calça ampla rosa alfaiatada",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735420/42_q8xws1.webp",
             "styleCategory": "Romântico",
-            "points": 2
+            "points": 1
           },
           {
-            "id": "3f",
-            "text": "Visual sensual, com saia justa e decote.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735327/7_ynez1z.webp",
+            "id": "7f",
+            "text": "Legging preta de couro",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735424/43_ljy7sh.webp",
             "styleCategory": "Sexy",
-            "points": 3
+            "points": 1
           },
           {
-            "id": "3g",
-            "text": "Visual marcante e urbano (jeans + jaqueta).",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/8_yqu3hw.webp",
+            "id": "7g",
+            "text": "Calça reta preta de couro",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735424/44_nqgvoq.webp",
             "styleCategory": "Dramático",
-            "points": 3
+            "points": 1
           },
           {
-            "id": "3h",
-            "text": "Visual criativo, colorido e ousado.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/9_x6so6a.webp",
+            "id": "7h",
+            "text": "Calça estampada floral leve e ampla",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735425/45_lp64m8.webp",
             "styleCategory": "Criativo",
-            "points": 4
+            "points": 1
           }
         ],
         "columns": 2,
@@ -267,5 +279,6 @@
       ]
     },
     "conditions": null
-  }
+  },
+  "updatedAt": "2025-08-17T19:06:10.216Z"
 }

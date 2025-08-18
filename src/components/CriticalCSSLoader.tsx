@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { injectCriticalCSS, removeCriticalCSS } from "@/utils/critical-css";
+import React, { useEffect } from 'react';
+import { injectCriticalCSS, removeCriticalCSS } from '@/utils/critical-css';
 
 interface CriticalCSSLoaderProps {
   cssContent: string;
@@ -14,7 +14,7 @@ interface CriticalCSSLoaderProps {
  */
 const CriticalCSSLoader: React.FC<CriticalCSSLoaderProps> = ({
   cssContent,
-  id = "critical-css",
+  id = 'critical-css',
   removeOnLoad = true,
   removeDelay = 1000,
 }) => {
@@ -32,11 +32,11 @@ const CriticalCSSLoader: React.FC<CriticalCSSLoaderProps> = ({
       };
 
       // Adicionar event listener para o evento 'load'
-      window.addEventListener("load", handleLoad);
+      window.addEventListener('load', handleLoad);
 
       // Cleanup
       return () => {
-        window.removeEventListener("load", handleLoad);
+        window.removeEventListener('load', handleLoad);
         removeCriticalCSS(id);
       };
     }

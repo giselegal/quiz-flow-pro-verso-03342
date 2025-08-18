@@ -114,36 +114,36 @@ Cole este código no console (F12 → Console):
 
 ```javascript
 // Script de teste rápido
-console.log("🧪 INICIANDO TESTES...");
+console.log('🧪 INICIANDO TESTES...');
 
 // Teste 1: Localização
-const isAdmin = window.location.pathname.includes("/admin");
-const isEditor = window.location.pathname.includes("/editor");
-console.log("✅ Localização:", window.location.pathname);
+const isAdmin = window.location.pathname.includes('/admin');
+const isEditor = window.location.pathname.includes('/editor');
+console.log('✅ Localização:', window.location.pathname);
 
 // Teste 2: Elementos principais
-const buttons = document.querySelectorAll("button").length;
+const buttons = document.querySelectorAll('button').length;
 const cards = document.querySelectorAll('[class*="Card"], .card').length;
 const sidebars = document.querySelectorAll('[class*="sidebar"], aside').length;
 
-console.log("✅ Botões encontrados:", buttons);
-console.log("✅ Cards encontrados:", cards);
-console.log("✅ Sidebars encontradas:", sidebars);
+console.log('✅ Botões encontrados:', buttons);
+console.log('✅ Cards encontrados:', cards);
+console.log('✅ Sidebars encontradas:', sidebars);
 
 // Teste 3: Funcionalidades específicas
 if (isAdmin) {
   const templates = document.querySelectorAll('[class*="template"]').length;
-  console.log("✅ Templates disponíveis:", templates);
+  console.log('✅ Templates disponíveis:', templates);
 }
 
 if (isEditor) {
   const components = document.querySelectorAll('[draggable="true"]').length;
   const tabs = document.querySelectorAll('[role="tab"]').length;
-  console.log("✅ Componentes arrastáveis:", components);
-  console.log("✅ Abas encontradas:", tabs);
+  console.log('✅ Componentes arrastáveis:', components);
+  console.log('✅ Abas encontradas:', tabs);
 }
 
-console.log("🎉 TESTE CONCLUÍDO!");
+console.log('🎉 TESTE CONCLUÍDO!');
 ```
 
 ## 🎯 **RESULTADO ESPERADO**

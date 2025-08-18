@@ -1,8 +1,7 @@
-import React from "react";
-import { QuizStage } from "@/types/quizBuilder";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Edit, Trash2 } from "lucide-react";
+import { QuizStage } from '@/types/quizBuilder';
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Edit, Trash2 } from 'lucide-react';
 
 interface StageSectionProps {
   stage: QuizStage;
@@ -22,7 +21,7 @@ const StageSection: React.FC<StageSectionProps> = ({
   return (
     <Card
       className={`p-3 cursor-pointer transition-colors ${
-        isActive ? "border-[#B89B7A] bg-[#FFFAF0]" : "border-[#B89B7A]/20 hover:bg-[#FFFAF0]/50"
+        isActive ? 'border-[#B89B7A] bg-[#FFFAF0]' : 'border-[#B89B7A]/20 hover:bg-[#FFFAF0]/50'
       }`}
       onClick={() => onSelect(stage.id)}
     >

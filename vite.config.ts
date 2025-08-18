@@ -13,98 +13,125 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',
     port: 8080,
-    // Vite automaticamente trata SPAs, não precisa de historyApiFallback
+    // Configurações para resolver problemas de CORS no Codespaces
+    cors: true,
+    strictPort: false,
+    // Middleware para servir templates da pasta /templates
+    middlewareMode: false,
+    fs: {
+      allow: ['..', 'templates', 'public', 'src'],
+    },
+    // Headers para resolver problemas de autenticação
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    },
   },
+  // Configuração para servir templates como assets estáticos
+  publicDir: 'public',
+  assetsInclude: ['**/*.json'],
   build: {
     outDir: 'dist',
     sourcemap: true,
     chunkSizeWarningLimit: 1000,
+    // Copiar templates para o build
+    copyPublicDir: true,
     rollupOptions: {
       output: {
-        manualChunks: (id) => {
+        manualChunks: id => {
           // Vendor libraries
           if (id.includes('node_modules')) {
             // React ecosystem
             if (id.includes('react') || id.includes('react-dom')) {
               return 'react-vendor';
             }
-            
+
             // UI libraries
             if (id.includes('lucide-react') || id.includes('radix') || id.includes('@radix-ui')) {
               return 'ui-vendor';
             }
-            
+
             // Router
             if (id.includes('wouter')) {
               return 'router-vendor';
             }
-            
+
             // Form libraries
             if (id.includes('react-hook-form') || id.includes('zod')) {
               return 'forms-vendor';
             }
-            
+
             // Animation libraries
             if (id.includes('framer-motion')) {
               return 'animation-vendor';
             }
-            
+
             // Other vendor packages
             return 'vendor';
           }
-          
+
           // Application chunks
           if (id.includes('src/pages/')) {
             // Editor pages
             if (id.includes('editor') || id.includes('Editor')) {
               return 'editor-pages';
             }
-            
+
             // Admin pages
             if (id.includes('admin') || id.includes('Admin')) {
               return 'admin-pages';
             }
-            
+
             // Quiz pages
             if (id.includes('quiz') || id.includes('Quiz')) {
               return 'quiz-pages';
             }
-            
+
             // Other pages
             return 'app-pages';
           }
-          
-          // Components
+
+          // Components (mais granular para reduzir tamanho dos chunks grandes)
           if (id.includes('src/components/')) {
-            // Editor components
-            if (id.includes('editor') || id.includes('Editor')) {
-              return 'editor-components';
+            // Editor blocks (normalmente muitos blocos pesados)
+            if (
+              id.includes('src/components/editor/blocks') ||
+              id.includes('/editor/blocks/') ||
+              id.includes('\\editor\\blocks\\')
+            ) {
+              return 'editor-components-blocks';
             }
-            
-            // UI components
-            if (id.includes('ui/')) {
+
+            // Editor UI (toolbars, panels, canvas controls)
+            if (id.includes('src/components/editor/') || id.includes('/editor/')) {
+              return 'editor-components-ui';
+            }
+
+            // UI components (design system)
+            if (id.includes('ui/') || id.includes('/ui/')) {
               return 'ui-components';
             }
-            
+
             // Auth components
             if (id.includes('auth') || id.includes('Auth')) {
               return 'auth-components';
             }
-            
+
             // Quiz components
             if (id.includes('quiz') || id.includes('Quiz')) {
               return 'quiz-components';
             }
-            
-            // Other components
+
+            // Fallback for outros componentes
             return 'app-components';
           }
-          
+
           // Context and hooks
           if (id.includes('src/context/') || id.includes('src/hooks/')) {
             return 'app-context';
           }
-          
+
           // Utils and configs
           if (id.includes('src/utils/') || id.includes('src/config/')) {
             return 'app-utils';
@@ -124,4 +151,4 @@ export default defineConfig({
   esbuild: {
     drop: process.env.NODE_ENV === 'production' ? ['console', 'debugger'] : [],
   },
-})
+});

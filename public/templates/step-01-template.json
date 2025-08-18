@@ -1,28 +1,34 @@
 {
-  "templateVersion": "2.0",
+  "templateVersion": "2.1",
+  "layout": {
+    "containerWidth": "full",
+    "spacing": "medium",
+    "backgroundColor": "#FAF9F7",
+    "responsive": true
+  },
+  "validation": {
+    "required": true,
+    "minAnswers": 1,
+    "validationMessage": "Digite seu nome para continuar"
+  },
+  "analytics": {
+    "events": ["page_view", "form_input", "button_click", "validation_error", "completion"],
+    "trackingId": "step-01-intro"
+  },
   "metadata": {
     "id": "quiz-step-01",
-    "name": "Introdução do Quiz",
-    "description": "Página inicial do quiz de estilo",
-    "category": "quiz-intro",
-    "type": "intro",
-    "tags": ["quiz", "intro", "gisele-galvao"],
-    "createdAt": "2025-08-10T03:45:03.511Z",
-    "updatedAt": "2025-08-10T03:45:03.511Z",
-    "author": "giselegal"
+    "name": "Introdução - Configuração Simplificada",
+    "description": "Página inicial do quiz com formulário integrado baseada no Step02Template para melhor consistência",
+    "category": "intro",
+    "tags": ["quiz", "style", "intro", "form", "name-input"],
+    "createdAt": "2025-08-12T00:00:00.000Z",
+    "updatedAt": "2025-08-12T00:00:00.000Z"
   },
   "design": {
     "primaryColor": "#B89B7A",
     "secondaryColor": "#432818",
-    "accentColor": "#aa6b5d",
     "backgroundColor": "#FAF9F7",
     "fontFamily": "'Playfair Display', 'Inter', serif"
-  },
-  "layout": {
-    "containerWidth": "full",
-    "spacing": "responsive",
-    "backgroundColor": "#FAF9F7",
-    "responsive": true
   },
   "blocks": [
     {
@@ -35,82 +41,116 @@
         "logoWidth": 96,
         "logoHeight": 96,
         "progressValue": 0,
-        "progressTotal": 100,
-        "showProgress": true,
+        "progressMax": 100,
+        "showProgress": false,
         "showBackButton": false,
         "containerWidth": "full",
         "spacing": "small"
       }
     },
     {
-      "id": "step01-title",
-      "type": "text-inline",
+      "id": "intro-decorative-bar",
+      "type": "decorative-bar-inline",
       "position": 1,
       "properties": {
-        "content": "Descubra Seu Estilo Pessoal",
-        "fontSize": "text-3xl",
-        "fontWeight": "font-bold",
-        "textAlign": "text-center",
-        "color": "#432818",
-        "fontFamily": "'Playfair Display', serif",
-        "containerWidth": "full",
-        "spacing": "small"
+        "width": "100%",
+        "height": 4,
+        "color": "#B89B7A",
+        "backgroundColor": "#B89B7A",
+        "marginTop": 0,
+        "marginBottom": 24,
+        "containerWidth": "full"
       }
     },
     {
-      "id": "step01-subtitle",
+      "id": "intro-main-title",
       "type": "text-inline",
       "position": 2,
       "properties": {
-        "content": "Um quiz completo para identificar seu estilo único",
-        "fontSize": "text-lg",
+        "content": "<span style=\"color: #B89B7A\">Chega</span> de um guarda-roupa lotado e da sensação de que nada combina com <span style=\"color: #B89B7A\">Você</span>.",
+        "fontSize": "text-2xl",
+        "fontWeight": "font-bold",
         "textAlign": "text-center",
-        "color": "#6B7280",
-        "marginBottom": 32,
+        "color": "#432818",
+        "marginBottom": 16,
         "containerWidth": "full",
         "spacing": "small"
       }
     },
     {
-      "id": "step01-start-button",
-      "type": "button-inline",
+      "id": "intro-image",
+      "type": "image-display-inline",
       "position": 3,
       "properties": {
-        "text": "Começar Quiz →",
-        "variant": "primary",
-        "size": "large",
-        "fullWidth": true,
-        "backgroundColor": "#B89B7A",
-        "backgroundGradient": "linear-gradient(90deg, #B89B7A, #aa6b5d)",
-        "textColor": "#ffffff",
-        "borderRadius": "10px",
-        "shadow": "0 4px 14px rgba(184, 155, 122, 0.15)",
-        "animation": "hover:scale-105, active:scale-95",
+        "src": "https://res.cloudinary.com/der8kogzu/image/upload/f_avif,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.avif",
+        "alt": "Descubra seu estilo predominante",
+        "width": 300,
+        "height": 204,
+        "containerPosition": "center",
+        "marginBottom": 16,
+        "containerWidth": "full"
+      }
+    },
+    {
+      "id": "intro-subtitle",
+      "type": "text-inline",
+      "position": 4,
+      "properties": {
+        "content": "Descubra seu <strong>ESTILO PREDOMINANTE</strong> em apenas alguns minutos!",
+        "fontSize": "text-lg",
+        "fontWeight": "font-medium",
+        "textAlign": "text-center",
+        "color": "#432818",
+        "marginBottom": 24,
         "containerWidth": "full",
-        "spacing": "small",
-        "marginTop": 24
+        "spacing": "small"
+      }
+    },
+    {
+      "id": "intro-lead-form",
+      "type": "lead-form",
+      "position": 5,
+      "properties": {
+        "showNameField": true,
+        "showEmailField": false,
+        "showPhoneField": false,
+        "nameLabel": "Como posso te chamar?",
+        "namePlaceholder": "Digite seu primeiro nome aqui...",
+        "submitText": "Quero Descobrir meu Estilo Agora!",
+        "loadingText": "Digite seu nome para continuar",
+        "successText": "Perfeito! Vamos descobrir seu estilo!",
+        "requiredFields": "name",
+        "backgroundColor": "#FFFFFF",
+        "borderColor": "#B89B7A",
+        "textColor": "#432818",
+        "primaryColor": "#B89B7A",
+        "marginTop": 0,
+        "marginBottom": 16,
+        "fieldSpacing": 6
       }
     }
   ],
-  "validation": {
-    "required": false
-  },
-  "analytics": {
-    "trackingId": "step-01-quiz-intro",
-    "events": ["page_view", "interaction", "completion"],
-    "utmParams": true,
-    "customEvents": []
-  },
   "logic": {
     "navigation": {
       "nextStep": "step-02",
       "prevStep": null,
       "allowBack": false,
-      "autoAdvance": false
+      "autoAdvance": false,
+      "requiresUserInput": true,
+      "inputValidation": {
+        "required": true,
+        "minLength": 2,
+        "fieldName": "userName"
+      }
     },
-    "scoring": {
-      "enabled": false
+    "formHandling": {
+      "collectUserName": true,
+      "validateBeforeNext": true,
+      "storageKey": "quizUserData"
     },
-    "conditions": null
+    "conditions": {
+      "showButtonWhen": "input_valid",
+      "disableButtonWhen": "input_empty"
+    }
   }
 }

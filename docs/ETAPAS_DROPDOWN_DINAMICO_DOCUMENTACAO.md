@@ -42,10 +42,10 @@ createProperty(
 #### ✅ Imports Atualizados:
 
 ```typescript
-import { useCallback, useEffect, useState } from "react";
-import { BRAND_COLORS } from "../config/brandColors";
-import { useEditor } from "../context/EditorContext";
-import type { FunnelStage } from "../types/editor";
+import { useCallback, useEffect, useState } from 'react';
+import { BRAND_COLORS } from '../config/brandColors';
+import { useEditor } from '../context/EditorContext';
+import type { FunnelStage } from '../types/editor';
 ```
 
 #### ✅ Acesso ao Contexto do Editor:
@@ -69,7 +69,7 @@ const getStageSelectOptions = () => {
     label: `${stage.name} (${stage.id})`,
   }));
 
-  return createSelectOptions([{ value: "", label: "Selecionar Etapa..." }, ...stageOptions]);
+  return createSelectOptions([{ value: '', label: 'Selecionar Etapa...' }, ...stageOptions]);
 };
 ```
 
@@ -134,9 +134,9 @@ Usuário seleciona a etapa de destino
 ### 3. **Execução da Navegação**
 
 ```typescript
-if (action === "next-step" && nextStepId) {
+if (action === 'next-step' && nextStepId) {
   window.dispatchEvent(
-    new CustomEvent("navigate-to-step", {
+    new CustomEvent('navigate-to-step', {
       detail: { stepId: nextStepId, source: `button-${block?.id}` },
     })
   );

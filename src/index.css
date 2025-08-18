@@ -1,10 +1,10 @@
 /* filepath: /workspaces/quiz-sell-genius-66/src/index.css */
-@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap");
-@import "./styles/spinner-optimized.css";
-@import "./styles/effects.css";
-@import "./styles/typography.css";
-@import "./styles/animations.css";
-@import "./styles/spinner.css";
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap');
+@import './styles/spinner-optimized.css';
+@import './styles/effects.css';
+@import './styles/typography.css';
+@import './styles/animations.css';
+@import './styles/spinner.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -208,7 +208,7 @@
 }
 
 .mobile-device-frame::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 15px;
   left: 50%;
@@ -385,7 +385,7 @@ img:hover,
   }
 
   .font-playfair {
-    font-family: "Playfair Display", serif;
+    font-family: 'Playfair Display', serif;
   }
 
   /* Questões só com texto – aumentar fonte */
@@ -454,12 +454,12 @@ img:hover,
 
 /* Configuração de fontes modernas */
 .font-playfair {
-  font-family: "Playfair Display", serif;
+  font-family: 'Playfair Display', serif;
 }
 
 .font-inter {
   font-family:
-    "Inter",
+    'Inter',
     system-ui,
     -apple-system,
     sans-serif;
@@ -467,14 +467,14 @@ img:hover,
 
 /* Classes para títulos elegantes */
 .elegant-title {
-  font-family: "Playfair Display", serif;
+  font-family: 'Playfair Display', serif;
   font-weight: 600;
   letter-spacing: -0.02em;
   line-height: 1.2;
 }
 
 .elegant-subtitle {
-  font-family: "Inter", sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 400;
   letter-spacing: -0.01em;
   line-height: 1.5;
@@ -534,7 +534,7 @@ img:hover,
 }
 
 .button-shine::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: -100%;

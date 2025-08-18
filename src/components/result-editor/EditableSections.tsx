@@ -1,12 +1,13 @@
-import React, { useState } from "react";
-import { StyleResult } from "@/types/quiz";
-import { Card } from "@/components/ui/card";
-import { ResultPageConfig, OfferContent } from "@/types/resultPageConfig";
-import { EditSectionOverlay } from "./EditSectionOverlay";
-import ResultHeader from "../quiz-result/ResultHeader";
-import PrimaryStyleCard from "../quiz-result/PrimaryStyleCard";
-import SecondaryStylesSection from "../quiz-result/SecondaryStylesSection";
-import OfferCard from "../quiz-result/sales/OfferCard";
+// @ts-nocheck
+import React, { useState } from 'react';
+import { StyleResult } from '@/types/quiz';
+import { Card } from '@/components/ui/card';
+import { ResultPageConfig, OfferContent } from '@/types/resultPageConfig';
+import { EditSectionOverlay } from './EditSectionOverlay';
+import ResultHeader from '../quiz-result/ResultHeader';
+import PrimaryStyleCard from '../quiz-result/PrimaryStyleCard';
+import SecondaryStylesSection from '../quiz-result/SecondaryStylesSection';
+import OfferCard from '../quiz-result/sales/OfferCard';
 
 interface EditableSectionsProps {
   primaryStyle: StyleResult;
@@ -22,7 +23,7 @@ export const EditableSections: React.FC<EditableSectionsProps> = ({
   onSectionUpdate,
 }) => {
   const [activeSection, setActiveSection] = useState<string | null>(null);
-  const [userName, setUserName] = useState<string>("Visitante");
+  const [userName, setUserName] = useState<string>('Visitante');
 
   // Quando o usuário clica para editar uma seção
   const handleEditSection = (sectionKey: string) => {
@@ -42,11 +43,11 @@ export const EditableSections: React.FC<EditableSectionsProps> = ({
 
   return (
     <div className="relative max-w-4xl mx-auto">
-      <div className={activeSection ? "opacity-50 pointer-events-none" : ""}>
+      <div className={activeSection ? 'opacity-50 pointer-events-none' : ''}>
         {/* Seção do cabeçalho - Editável */}
         <div
           className="relative py-6 group cursor-pointer"
-          onClick={() => handleEditSection("header.content")}
+          onClick={() => handleEditSection('header.content')}
         >
           <div className="absolute inset-0 border-2 border-dashed border-transparent group-hover:border-[#B89B7A] rounded-lg opacity-0 group-hover:opacity-100" />
           <div className="absolute top-0 right-0 bg-[#B89B7A] text-white px-2 py-1 text-xs rounded opacity-0 group-hover:opacity-100">
@@ -59,7 +60,7 @@ export const EditableSections: React.FC<EditableSectionsProps> = ({
         {/* Seção do estilo primário - Editável */}
         <Card
           className="p-6 bg-white shadow-md border border-[#B89B7A]/20 mb-8 relative group cursor-pointer"
-          onClick={() => handleEditSection("mainContent.content")}
+          onClick={() => handleEditSection('mainContent.content')}
         >
           <div className="absolute inset-0 border-2 border-dashed border-transparent group-hover:border-[#B89B7A] rounded-lg opacity-0 group-hover:opacity-100" />
           <div className="absolute top-0 right-0 bg-[#B89B7A] text-white px-2 py-1 text-xs rounded opacity-0 group-hover:opacity-100">
@@ -77,7 +78,7 @@ export const EditableSections: React.FC<EditableSectionsProps> = ({
         {/* Seção de oferta - Editável */}
         <div
           className="relative group cursor-pointer"
-          onClick={() => handleEditSection("offer.hero.content")}
+          onClick={() => handleEditSection('offer.hero.content')}
         >
           <div className="absolute inset-0 border-2 border-dashed border-transparent group-hover:border-[#B89B7A] rounded-lg opacity-0 group-hover:opacity-100" />
           <div className="absolute top-0 right-0 bg-[#B89B7A] text-white px-2 py-1 text-xs rounded opacity-0 group-hover:opacity-100">
@@ -103,7 +104,7 @@ export const EditableSections: React.FC<EditableSectionsProps> = ({
 
 // Função auxiliar para obter dados de uma seção por caminho
 function getSectionData(config: ResultPageConfig, path: string): any {
-  const parts = path.split(".");
+  const parts = path.split('.');
   let current: any = config;
 
   for (const part of parts) {

@@ -1,5 +1,4 @@
-import React from "react";
-import { Card } from "@/components/ui/card";
+import { Card } from '@/components/ui/card';
 const MentorSection: React.FC = () => {
   return (
     <Card className="p-6 mb-10 bg-white shadow-md border border-[#B89B7A]/20 card-elegant overflow-hidden">

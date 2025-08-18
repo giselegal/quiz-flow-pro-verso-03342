@@ -2,14 +2,15 @@
   "templateVersion": "2.0",
   "metadata": {
     "id": "quiz-step-21",
-    "name": "Resultado Final",
-    "description": "Apresentação do resultado e CTA",
-    "category": "result",
-    "type": "result",
+    "name": "Thank You Page - Confirmação",
+    "description": "Página de confirmação e próximos passos após conversão",
+    "category": "thank-you",
+    "type": "thankYou",
     "tags": [
       "quiz",
       "style",
-      "result",
+      "thank-you",
+      "confirmation",
       "gisele-galvao"
     ],
     "createdAt": "2025-08-10T03:45:03.520Z",
@@ -74,129 +75,92 @@
       "properties": {
         "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
         "logoAlt": "Logo Gisele Galvão",
-        "logoWidth": 96,
-        "logoHeight": 96,
-        "progressValue": 100,
-        "progressTotal": 100,
+        "logoWidth": 120,
+        "logoHeight": 50,
         "showProgress": true,
+        "progressValue": 21,
+        "progressMax": 21,
+        "showBackButton": true,
         "containerWidth": "full",
-        "spacing": "small"
+        "spacing": "small",
+        "showLogo": true,
+        "progressBarColor": "#B89B7A",
+        "progressBarThickness": 6,
+        "backgroundColor": "#FFFFFF",
+        "textColor": "#432818",
+        "paddingTop": 16,
+        "paddingBottom": 16,
+        "paddingLeft": 24,
+        "paddingRight": 24,
+        "marginBottom": 24,
+        "progressTotal": 100,
+        "type": "quiz-intro-header"
       }
     },
     {
-      "id": "step21-result-title",
+      "id": "step21-success-title",
       "type": "text-inline",
       "properties": {
-        "content": "🎉 SEU ESTILO PREDOMINANTE É:",
+        "content": "🎉 PARABÉNS! TUDO PRONTO!",
         "fontSize": "text-3xl",
         "fontWeight": "font-bold",
         "textAlign": "text-center",
-        "color": "#432818",
+        "color": "#B89B7A",
         "fontFamily": "'Playfair Display', serif",
         "containerWidth": "full",
         "spacing": "large"
       }
     },
     {
-      "id": "step21-result-card",
-      "type": "result-style-card",
+      "id": "step21-confirmation",
+      "type": "text-inline",
       "properties": {
-        "styles": {
-          "Natural": {
-            "name": "Natural",
-            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp",
-            "guideImage": "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071344/GUIA_NATURAL_fzp6fc.webp",
-            "description": "Você valoriza o conforto e a praticidade, com um visual descontraído e autêntico."
-          },
-          "Clássico": {
-            "name": "Clássico",
-            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-            "guideImage": "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071343/GUIA_CL%C3%81SSICO_ux1yhf.webp",
-            "description": "Você aprecia a elegância atemporal, com peças de qualidade e caimento perfeito."
-          },
-          "Contemporâneo": {
-            "name": "Contemporâneo",
-            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/13_uvbciq.webp",
-            "guideImage": "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071343/GUIA_CONTEMPOR%C3%82NEO_vcklxe.webp",
-            "description": "Você busca um equilíbrio entre o clássico e o moderno, com peças práticas e atuais."
-          },
-          "Elegante": {
-            "name": "Elegante",
-            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-            "guideImage": "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071342/GUIA_ELEGANTE_asez1q.webp",
-            "description": "Você tem um olhar refinado para detalhes sofisticados e peças de alta qualidade."
-          },
-          "Romântico": {
-            "name": "Romântico",
-            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/6_gnoxfg.webp",
-            "guideImage": "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071343/GUIA_ROM%C3%82NTICO_ci4hgk.webp",
-            "description": "Você valoriza a delicadeza e os detalhes femininos, com muita suavidade."
-          },
-          "Sexy": {
-            "name": "Sexy",
-            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735327/7_ynez1z.webp",
-            "guideImage": "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071349/GUIA_SEXY_t5x2ov.webp",
-            "description": "Você gosta de valorizar suas curvas e exibir sua sensualidade com confiança."
-          },
-          "Dramático": {
-            "name": "Dramático",
-            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/8_yqu3hw.webp",
-            "guideImage": "https://res.cloudinary.com/dqljyf76t/image/upload/v1745073346/GUIA_DRAM%C3%81TICO_mpn60d.webp",
-            "description": "Você tem personalidade forte e gosta de causar impacto com seu visual."
-          },
-          "Criativo": {
-            "name": "Criativo",
-            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/9_x6so6a.webp",
-            "guideImage": "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071342/GUIA_CRIATIVO_ntbzph.webp",
-            "description": "Você aprecia a originalidade e não tem medo de ousar em combinações únicas."
-          }
-        },
+        "content": "Seu guia personalizado está sendo preparado e chegará no seu e-mail em instantes!",
+        "fontSize": "text-lg",
+        "textAlign": "text-center",
+        "color": "#432818",
+        "containerWidth": "full",
+        "spacing": "medium"
+      }
+    },
+    {
+      "id": "step21-success-image",
+      "type": "image-display-inline",
+      "properties": {
+        "src": "https://res.cloudinary.com/dqljyf76t/image/upload/v1746838175/20250509_2156_Resultado_Final_simple_compose_01jtvtjm8wn0q6r9p3b7k2mvcl_hdz8kt.webp",
+        "alt": "Guia de estilo enviado com sucesso",
+        "width": 400,
+        "height": 300,
         "containerWidth": "full",
         "spacing": "large"
       }
     },
     {
-      "id": "step21-bonus-section",
-      "type": "bonus-showcase",
+      "id": "step21-next-steps-list",
+      "type": "text-inline",
       "properties": {
-        "title": "🎁 BÔNUS INCLUSOS:",
-        "bonuses": [
-          {
-            "title": "Peças-chave para seu estilo",
-            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911668/C%C3%B3pia_de_Passo_5_Pe%C3%A7as_chaves_Documento_A4_lxmekf.webp",
-            "description": "Guia completo das peças essenciais"
-          },
-          {
-            "title": "Visagismo facial",
-            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1745515076/C%C3%B3pia_de_MOCKUPS_10_-_Copia_bvoccn.webp",
-            "description": "Análise personalizada do seu rosto"
-          }
-        ],
-        "containerWidth": "full",
+        "content": "📋 Próximos Passos:\n\n📧 Verifique sua caixa de entrada (e spam também)\n📱 Salve nosso e-mail nos seus contatos\n💬 Aguarde convite para o grupo VIP do WhatsApp\n✨ Comece a transformar seu estilo hoje mesmo!",
+        "fontSize": "text-base",
+        "textAlign": "text-left",
+        "color": "#432818",
+        "backgroundColor": "#F9F9F7",
+        "borderColor": "#B89B7A",
+        "containerWidth": "large",
         "spacing": "large"
       }
     },
     {
-      "id": "step21-cta-button",
-      "type": "button-inline",
+      "id": "step21-final-message",
+      "type": "text-inline",
       "properties": {
-        "text": "🛍️ VER GUIA COMPLETO",
-        "textWhenDisabled": "Ver Guia Completo",
-        "variant": "primary",
-        "size": "extra-large",
-        "fullWidth": true,
-        "backgroundColor": "#B89B7A",
-        "backgroundGradient": "linear-gradient(to right, #B89B7A, #aa6b5d)",
-        "textColor": "#ffffff",
-        "borderRadius": "10px",
-        "shadow": "0 4px 14px rgba(184, 155, 122, 0.15)",
-        "fontSize": "text-xl",
-        "fontWeight": "font-bold",
-        "animation": "hover:scale-105, active:scale-95, pulse",
-        "href": "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
-        "containerWidth": "full",
-        "spacing": "large",
-        "marginTop": 32
+        "content": "💕 Obrigada por confiar em mim para te ajudar a descobrir seu estilo único!\n\nCom carinho, Gisele Galvão",
+        "fontSize": "text-base",
+        "fontStyle": "italic",
+        "textAlign": "text-center",
+        "color": "#432818",
+        "backgroundColor": "#FAF9F7",
+        "containerWidth": "large",
+        "spacing": "large"
       }
     }
   ],
@@ -204,33 +168,32 @@
     "required": false,
     "minAnswers": 0,
     "maxAnswers": 0,
-    "validationMessage": "Selecione uma opção para avançar."
+    "validationMessage": ""
   },
   "analytics": {
-    "trackingId": "step-21-result",
+    "trackingId": "step-21-thank-you",
     "events": [
       "page_view",
-      "interaction",
-      "validation_error",
       "completion"
     ],
     "utmParams": true,
     "customEvents": [
-      "conversion",
-      "cta_clicked"
+      "thank_you_viewed",
+      "quiz_completed"
     ]
   },
   "logic": {
     "navigation": {
       "nextStep": null,
-      "prevStep": "step-20",
-      "allowBack": true,
+      "prevStep": null,
+      "allowBack": false,
       "autoAdvance": false
     },
     "scoring": null,
     "conditions": {
-      "showResult": "calculated-from-scoring",
-      "personalizeContent": "based-on-strategic-answers"
+      "showUserName": "if-available",
+      "personalizeMessage": "based-on-purchase-status"
     }
-  }
+  },
+  "updatedAt": "2025-08-17T19:06:10.223Z"
 }

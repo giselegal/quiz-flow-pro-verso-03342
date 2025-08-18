@@ -1,25 +1,33 @@
-import React from "react";
-import { Button } from "@/components/ui/button";
+import TemplateImportExport from '@/components/enhanced-editor/TemplateImportExport';
+import { Button } from '@/components/ui/button';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { cn } from '@/lib/utils';
 import {
+  Activity,
   Eye,
+  FileText,
+  FolderOpen,
+  Maximize2,
+  Monitor,
   Save,
-  Download,
+  Settings,
   Smartphone,
   Tablet,
-  Monitor,
-  Maximize2,
-  Settings,
-} from "lucide-react";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
+} from 'lucide-react';
 
 interface EditorToolbarProps {
   isPreviewing: boolean;
-  viewportSize: "sm" | "md" | "lg" | "xl";
-  onViewportSizeChange: (size: "sm" | "md" | "lg" | "xl") => void;
+  viewportSize: 'sm' | 'md' | 'lg' | 'xl';
+  onViewportSizeChange: (size: 'sm' | 'md' | 'lg' | 'xl') => void;
   onTogglePreview: () => void;
   onSave: () => void;
+  onSaveAsTemplate?: () => void;
+  onOpenMyTemplates?: () => void;
   onShowFunnelSettings?: () => void;
+  onShowMonitoring?: () => void;
+  currentFunnelData?: any;
+  currentComponents?: any[];
+  onImportTemplate?: (template: any) => void;
 }
 
 export function EditorToolbar({
@@ -28,7 +36,13 @@ export function EditorToolbar({
   onViewportSizeChange,
   onTogglePreview,
   onSave,
+  onSaveAsTemplate,
+  onOpenMyTemplates,
   onShowFunnelSettings,
+  onShowMonitoring,
+  currentFunnelData,
+  currentComponents,
+  onImportTemplate,
 }: EditorToolbarProps) {
   return (
     <div className="border-b border-[#B89B7A]/20 p-4 bg-white flex items-center justify-between">
@@ -42,10 +56,10 @@ export function EditorToolbar({
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={() => onViewportSizeChange("sm")}
+                  onClick={() => onViewportSizeChange('sm')}
                   className={cn(
-                    "w-8 h-8 rounded-md",
-                    viewportSize === "sm" && "bg-white shadow-sm"
+                    'w-8 h-8 rounded-md',
+                    viewportSize === 'sm' && 'bg-white shadow-sm'
                   )}
                 >
                   <Smartphone className="w-4 h-4 text-[#8F7A6A]" />
@@ -59,10 +73,10 @@ export function EditorToolbar({
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={() => onViewportSizeChange("md")}
+                  onClick={() => onViewportSizeChange('md')}
                   className={cn(
-                    "w-8 h-8 rounded-md",
-                    viewportSize === "md" && "bg-white shadow-sm"
+                    'w-8 h-8 rounded-md',
+                    viewportSize === 'md' && 'bg-white shadow-sm'
                   )}
                 >
                   <Tablet className="w-4 h-4 text-[#8F7A6A]" />
@@ -76,10 +90,10 @@ export function EditorToolbar({
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={() => onViewportSizeChange("lg")}
+                  onClick={() => onViewportSizeChange('lg')}
                   className={cn(
-                    "w-8 h-8 rounded-md",
-                    viewportSize === "lg" && "bg-white shadow-sm"
+                    'w-8 h-8 rounded-md',
+                    viewportSize === 'lg' && 'bg-white shadow-sm'
                   )}
                 >
                   <Monitor className="w-4 h-4 text-[#8F7A6A]" />
@@ -93,10 +107,10 @@ export function EditorToolbar({
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={() => onViewportSizeChange("xl")}
+                  onClick={() => onViewportSizeChange('xl')}
                   className={cn(
-                    "w-8 h-8 rounded-md",
-                    viewportSize === "xl" && "bg-white shadow-sm"
+                    'w-8 h-8 rounded-md',
+                    viewportSize === 'xl' && 'bg-white shadow-sm'
                   )}
                 >
                   <Maximize2 className="w-4 h-4 text-[#8F7A6A]" />
@@ -109,6 +123,25 @@ export function EditorToolbar({
       </div>
 
       <div className="flex gap-2">
+        <TemplateImportExport
+          currentFunnelData={currentFunnelData}
+          currentComponents={currentComponents}
+          onImportTemplate={onImportTemplate}
+          className="mr-2"
+        />
+
+        {onShowMonitoring && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onShowMonitoring}
+            className="border-blue-500 text-blue-600 hover:bg-blue-50"
+          >
+            <Activity className="w-4 h-4 mr-2" />
+            Monitoramento
+          </Button>
+        )}
+
         {onShowFunnelSettings && (
           <Button
             variant="outline"
@@ -128,7 +161,7 @@ export function EditorToolbar({
           className="border-[#B89B7A] text-[#432818]"
         >
           <Eye className="w-4 h-4 mr-2" />
-          {isPreviewing ? "Editar" : "Visualizar"}
+          {isPreviewing ? 'Editar' : 'Visualizar'}
         </Button>
 
         <Button
@@ -140,6 +173,30 @@ export function EditorToolbar({
           <Save className="w-4 h-4 mr-2" />
           Salvar
         </Button>
+
+        {onSaveAsTemplate && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onSaveAsTemplate}
+            className="border-[#B89B7A] text-[#432818] hover:bg-[#B89B7A]/10"
+          >
+            <FileText className="w-4 h-4 mr-2" />
+            Salvar como Template
+          </Button>
+        )}
+
+        {onOpenMyTemplates && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onOpenMyTemplates}
+            className="border-[#B89B7A] text-[#432818] hover:bg-[#B89B7A]/10"
+          >
+            <FolderOpen className="w-4 h-4 mr-2" />
+            Meus Templates
+          </Button>
+        )}
       </div>
     </div>
   );

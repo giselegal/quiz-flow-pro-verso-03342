@@ -1,5 +1,5 @@
-import { useState, useCallback } from "react";
-import { QuizStage } from "@/types/quizBuilder";
+import { QuizStage } from '@/types/quizBuilder';
+import { useCallback, useState } from 'react';
 
 export const useQuizStages = () => {
   const [stages, setStages] = useState<QuizStage[]>([]);
@@ -14,18 +14,18 @@ export const useQuizStages = () => {
   }, []);
 
   const addStage = useCallback(
-    (type: QuizStage["type"]): string => {
+    (type: QuizStage['type']): string => {
       const stageNumber = stages.length + 1;
-      let stageTitle = "";
+      let stageTitle = '';
 
       switch (type) {
-        case "cover":
-          stageTitle = "Etapa 1: Capa do Quiz";
+        case 'cover':
+          stageTitle = 'Etapa 1: Capa do Quiz';
           break;
-        case "question":
-          stageTitle = `Etapa ${stageNumber}: Questão ${stages.filter(s => s.type === "question").length + 1}`;
+        case 'question':
+          stageTitle = `Etapa ${stageNumber}: Questão ${stages.filter(s => s.type === 'question').length + 1}`;
           break;
-        case "result":
+        case 'result':
           stageTitle = `Etapa ${stageNumber}: Página de Resultado`;
           break;
       }
@@ -58,7 +58,7 @@ export const useQuizStages = () => {
       });
 
       if (id === activeStageId) {
-        setActiveStageId(prev => {
+        setActiveStageId(_prev => {
           const remainingStages = stages.filter(stage => stage.id !== id);
           return remainingStages.length > 0 ? remainingStages[0].id : null;
         });
@@ -97,16 +97,16 @@ export const useQuizStages = () => {
       if (!stageToDuplicate) return null;
 
       const stageNumber = stages.length + 1;
-      let stageTitle = "";
+      let stageTitle = '';
 
       switch (stageToDuplicate.type) {
-        case "cover":
+        case 'cover':
           stageTitle = `Etapa ${stageNumber}: Capa do Quiz (Cópia)`;
           break;
-        case "question":
-          stageTitle = `Etapa ${stageNumber}: Questão ${stages.filter(s => s.type === "question").length + 1} (Cópia)`;
+        case 'question':
+          stageTitle = `Etapa ${stageNumber}: Questão ${stages.filter(s => s.type === 'question').length + 1} (Cópia)`;
           break;
-        case "result":
+        case 'result':
           stageTitle = `Etapa ${stageNumber}: Página de Resultado (Cópia)`;
           break;
       }

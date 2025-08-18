@@ -1,10 +1,9 @@
-import React from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 
 export const FacebookAdsTab = () => {
   // Exemplo de URL do quiz com parâmetros UTM
@@ -12,9 +11,9 @@ export const FacebookAdsTab = () => {
 
   // Exemplo de parâmetros UTM para diferentes tipos de anúncios
   const campaignExamples = {
-    awareness: "estilo_quiz_awareness",
-    consideration: "estilo_quiz_consideration",
-    conversion: "estilo_quiz_conversion",
+    awareness: 'estilo_quiz_awareness',
+    consideration: 'estilo_quiz_consideration',
+    conversion: 'estilo_quiz_conversion',
   };
 
   return (

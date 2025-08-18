@@ -5,7 +5,7 @@
  * para acelerar o desenvolvimento do seu projeto de quiz de estilo
  */
 
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 
 // ===== SNIPPETS PARA COMPONENTES DE QUIZ =====
 
@@ -45,7 +45,7 @@ export const QuizQuestionComponent = ({
           <button
             key={index}
             onClick={() => handleOptionClick(option)}
-            className={`option ${selectedAnswer === option ? "selected" : ""}`}
+            className={`option ${selectedAnswer === option ? 'selected' : ''}`}
             disabled={isAnswered}
           >
             {option}
@@ -111,13 +111,13 @@ export const QuizTimer = ({ duration, onTimeUp }: QuizTimerProps) => {
   const formattedTime = useMemo(() => {
     const minutes = Math.floor(timeLeft / 60);
     const seconds = timeLeft % 60;
-    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   }, [timeLeft]);
 
   return (
     <div className="quiz-timer">
       <span className="timer-label">Tempo restante:</span>
-      <span className={`timer-value ${timeLeft <= 30 ? "warning" : ""}`}>{formattedTime}</span>
+      <span className={`timer-value ${timeLeft <= 30 ? 'warning' : ''}`}>{formattedTime}</span>
     </div>
   );
 };
@@ -194,7 +194,7 @@ const useQuizProgress = (quizId: string) => {
       try {
         setProgress(JSON.parse(savedProgress));
       } catch (error) {
-        console.error("Erro ao carregar progresso:", error);
+        console.error('Erro ao carregar progresso:', error);
       }
     }
   }, [quizId]);
@@ -242,7 +242,7 @@ export const Quiz = ({ questions, onComplete }: QuizProps) => {
     questions.length
   );
 
-  const { saveProgress, clearProgress } = useQuizProgress("style-quiz");
+  const { saveProgress, clearProgress } = useQuizProgress('style-quiz');
 
   // Digite: useEffect + Tab
   useEffect(() => {
@@ -331,7 +331,7 @@ export const QuizResultComponent = ({ result, onRetake }: QuizResultProps) => {
   // Digite: useEffect + Tab
   useEffect(() => {
     // Scroll para o topo quando o resultado é mostrado
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
   return (
@@ -357,7 +357,7 @@ export const QuizResultComponent = ({ result, onRetake }: QuizResultProps) => {
 
       <div className="result-actions">
         <button onClick={toggleDetails} className="btn-secondary">
-          {showDetails ? "Ocultar Detalhes" : "Ver Detalhes"}
+          {showDetails ? 'Ocultar Detalhes' : 'Ver Detalhes'}
         </button>
         <button onClick={onRetake} className="btn-primary">
           Refazer Quiz
@@ -381,17 +381,17 @@ const useAnalytics = () => {
   // Digite: useCallback + Tab
   const trackEvent = useCallback((eventName: string, properties?: Record<string, any>) => {
     // Digite: clg + Tab
-    console.log("Tracking event:", eventName, properties);
+    console.log('Tracking event:', eventName, properties);
 
     // Aqui você pode integrar com Google Analytics, Hotjar, etc.
     if (window.gtag) {
-      window.gtag("event", eventName, properties);
+      window.gtag('event', eventName, properties);
     }
   }, []);
 
   // Digite: useCallback + Tab
   const trackQuizStart = useCallback(() => {
-    trackEvent("quiz_started", {
+    trackEvent('quiz_started', {
       timestamp: Date.now(),
       page: window.location.pathname,
     });
@@ -400,7 +400,7 @@ const useAnalytics = () => {
   // Digite: useCallback + Tab
   const trackQuizComplete = useCallback(
     (answers: Record<number, string>) => {
-      trackEvent("quiz_completed", {
+      trackEvent('quiz_completed', {
         answers,
         timestamp: Date.now(),
         total_questions: Object.keys(answers).length,
@@ -440,10 +440,10 @@ const QuizApplication = () => {
 
       // Simular cálculo do resultado
       const result: QuizResult = {
-        dominantStyle: "Elegante",
+        dominantStyle: 'Elegante',
         percentage: 85,
-        description: "Você tem um estilo elegante e sofisticado...",
-        recommendations: ["Invista em peças clássicas", "Prefira cores neutras"],
+        description: 'Você tem um estilo elegante e sofisticado...',
+        recommendations: ['Invista em peças clássicas', 'Prefira cores neutras'],
       };
 
       setQuizResult(result);
@@ -461,9 +461,9 @@ const QuizApplication = () => {
   const questions: Question[] = [
     {
       id: 1,
-      text: "Qual dessas peças você usaria para um evento importante?",
-      options: ["Vestido clássico", "Conjunto casual", "Look romântico", "Peça moderna"],
-      category: "formal",
+      text: 'Qual dessas peças você usaria para um evento importante?',
+      options: ['Vestido clássico', 'Conjunto casual', 'Look romântico', 'Peça moderna'],
+      category: 'formal',
     },
     // ... mais perguntas
   ];

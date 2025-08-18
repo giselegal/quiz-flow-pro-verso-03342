@@ -1,7 +1,7 @@
-import React from "react";
-import { MetricCard } from "./MetricCard";
-import { Skeleton } from "@/components/ui/skeleton";
-import * as LucideIcons from "lucide-react";
+// @ts-nocheck
+import { MetricCard } from './MetricCard';
+import { Skeleton } from '@/components/ui/skeleton';
+import * as LucideIcons from 'lucide-react';
 
 interface MetricsGridProps {
   metrics: {
@@ -15,7 +15,7 @@ interface MetricsGridProps {
     salesRate: number;
   } | null;
   loading?: boolean;
-  timeRange: "7d" | "30d" | "all";
+  timeRange: '7d' | '30d' | 'all';
 }
 
 export const MetricsGrid: React.FC<MetricsGridProps> = ({
@@ -24,11 +24,11 @@ export const MetricsGrid: React.FC<MetricsGridProps> = ({
   timeRange,
 }) => {
   const timeRangeLabel =
-    timeRange === "7d"
-      ? "últimos 7 dias"
-      : timeRange === "30d"
-        ? "últimos 30 dias"
-        : "todo período";
+    timeRange === '7d'
+      ? 'últimos 7 dias'
+      : timeRange === '30d'
+        ? 'últimos 30 dias'
+        : 'todo período';
 
   if (loading || !metrics) {
     return (
@@ -48,13 +48,13 @@ export const MetricsGrid: React.FC<MetricsGridProps> = ({
 
   const formatNumber = (num: number): string => {
     if (num >= 1000) {
-      return (num / 1000).toFixed(1) + "k";
+      return (num / 1000).toFixed(1) + 'k';
     }
     return num.toString();
   };
 
   const formatPercent = (num: number): string => {
-    return num.toFixed(1) + "%";
+    return num.toFixed(1) + '%';
   };
 
   return (

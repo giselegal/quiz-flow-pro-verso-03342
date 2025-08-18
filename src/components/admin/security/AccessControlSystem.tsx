@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState } from 'react';
 
 interface Permission {
   id: string;
@@ -48,7 +48,7 @@ export const PermissionsProvider: React.FC<{ children: React.ReactNode }> = ({ c
 export const usePermissions = () => {
   const context = useContext(PermissionsContext);
   if (!context) {
-    throw new Error("usePermissions must be used within a PermissionsProvider");
+    throw new Error('usePermissions must be used within a PermissionsProvider');
   }
   return context;
 };

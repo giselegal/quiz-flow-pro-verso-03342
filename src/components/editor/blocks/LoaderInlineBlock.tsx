@@ -1,7 +1,7 @@
 // @ts-nocheck
-import React, { useState, useEffect } from "react";
-import { cn } from "@/lib/utils";
-import { Edit3 } from "lucide-react";
+import React, { useState, useEffect } from 'react';
+import { cn } from '@/lib/utils';
+import { Edit3 } from 'lucide-react';
 
 interface LoaderInlineBlockProps {
   title?: string;
@@ -13,15 +13,19 @@ interface LoaderInlineBlockProps {
   className?: string;
   onPropertyChange?: (key: string, value: any) => void;
   disabled?: boolean;
+  marginTop?: number;
+  marginBottom?: number;
+  marginLeft?: number;
+  marginRight?: number;
 }
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -61,15 +65,19 @@ const getMarginClass = (value, type) => {
 };
 
 const LoaderInlineBlock: React.FC<LoaderInlineBlockProps> = ({
-  title = "Carregando...",
+  title = 'Carregando...',
   percentage = 60,
-  description = "Analisando seu estilo pessoal...",
+  description = 'Analisando seu estilo pessoal...',
   animated = true,
-  color = "#B89B7A",
+  color = '#B89B7A',
   onClick,
   className,
   onPropertyChange,
   disabled = false,
+  marginTop = 0,
+  marginBottom = 0,
+  marginLeft = 0,
+  marginRight = 0,
 }) => {
   const [currentProgress, setCurrentProgress] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
@@ -90,17 +98,17 @@ const LoaderInlineBlock: React.FC<LoaderInlineBlockProps> = ({
       role="button"
       tabIndex={0}
       className={cn(
-        "group/canvas-item inline-block w-full",
-        "min-h-[1.25rem] relative border-2 border-dashed rounded-md p-4",
-        "hover:border-2 hover:border-[#B89B7A] transition-all cursor-pointer",
-        isHovered ? "border-[#B89B7A]" : "border-gray-300",
-        disabled && "opacity-75 cursor-not-allowed",
+        'group/canvas-item inline-block w-full',
+        'min-h-[1.25rem] relative border-2 border-dashed rounded-md p-4',
+        'hover:border-2 hover:border-[#B89B7A] transition-all cursor-pointer',
+        isHovered ? 'border-[#B89B7A]' : 'border-gray-300',
+        disabled && 'opacity-75 cursor-not-allowed',
         className,
         // Margens universais com controles deslizantes
-        getMarginClass(marginTop, "top"),
-        getMarginClass(marginBottom, "bottom"),
-        getMarginClass(marginLeft, "left"),
-        getMarginClass(marginRight, "right")
+        getMarginClass(marginTop, 'top'),
+        getMarginClass(marginBottom, 'bottom'),
+        getMarginClass(marginLeft, 'left'),
+        getMarginClass(marginRight, 'right')
       )}
       onClick={!disabled ? onClick : undefined}
       onMouseEnter={() => setIsHovered(true)}

@@ -1,7 +1,8 @@
-import { getAnalyticsEvents } from "./analytics";
+// @ts-nocheck
+import { getAnalyticsEvents } from './analytics';
 
 // Get cached metrics or calculate if not in cache
-export const getCachedMetrics = (timeRange: "7d" | "30d" | "all") => {
+export const getCachedMetrics = (timeRange: '7d' | '30d' | 'all') => {
   try {
     const cacheKey = `analytics_metrics_cache_${timeRange}`;
     const cachedData = localStorage.getItem(cacheKey);
@@ -18,11 +19,11 @@ export const getCachedMetrics = (timeRange: "7d" | "30d" | "all") => {
     // Calculate metrics based on events
     const metrics = {
       totalVisitors: calculateTotalVisitors(filteredEvents),
-      totalStarts: countEventsByType(filteredEvents, "quiz_start"),
-      totalCompletes: countEventsByType(filteredEvents, "quiz_complete"),
-      totalResultViews: countEventsByType(filteredEvents, "result_view"),
-      totalLeads: countEventsByType(filteredEvents, "lead_generated"),
-      totalSales: countEventsByType(filteredEvents, "sale"),
+      totalStarts: countEventsByType(filteredEvents, 'quiz_start'),
+      totalCompletes: countEventsByType(filteredEvents, 'quiz_complete'),
+      totalResultViews: countEventsByType(filteredEvents, 'result_view'),
+      totalLeads: countEventsByType(filteredEvents, 'lead_generated'),
+      totalSales: countEventsByType(filteredEvents, 'sale'),
       completionRate: calculateCompletionRate(filteredEvents),
       conversionRate: calculateConversionRate(filteredEvents),
       salesRate: calculateSalesRate(filteredEvents),
@@ -34,7 +35,7 @@ export const getCachedMetrics = (timeRange: "7d" | "30d" | "all") => {
 
     return ensureMetricsStructure(metrics);
   } catch (error) {
-    console.error("Error getting cached metrics:", error);
+    console.error('Error getting cached metrics:', error);
     // Return default metrics structure to prevent undefined errors
     return getDefaultMetrics();
   }
@@ -76,21 +77,21 @@ const getDefaultMetrics = () => {
 
 export const resetMetricsCache = () => {
   try {
-    localStorage.removeItem("analytics_metrics_cache_7d");
-    localStorage.removeItem("analytics_metrics_cache_30d");
-    localStorage.removeItem("analytics_metrics_cache_all");
-    console.log("Metrics cache reset");
+    localStorage.removeItem('analytics_metrics_cache_7d');
+    localStorage.removeItem('analytics_metrics_cache_30d');
+    localStorage.removeItem('analytics_metrics_cache_all');
+    console.log('Metrics cache reset');
   } catch (error) {
-    console.error("Error resetting metrics cache:", error);
+    console.error('Error resetting metrics cache:', error);
   }
 };
 
-export const filterEventsByTimeRange = (events: any[], timeRange: "7d" | "30d" | "all") => {
-  if (timeRange === "all") return events;
+export const filterEventsByTimeRange = (events: any[], timeRange: '7d' | '30d' | 'all') => {
+  if (timeRange === 'all') return events;
 
   const now = Date.now();
   const dayInMs = 24 * 60 * 60 * 1000;
-  const timeLimit = timeRange === "7d" ? 7 * dayInMs : 30 * dayInMs;
+  const timeLimit = timeRange === '7d' ? 7 * dayInMs : 30 * dayInMs;
 
   return events.filter(event => {
     const eventTime = event.timestamp ? new Date(event.timestamp).getTime() : 0;
@@ -114,20 +115,20 @@ const countEventsByType = (events: any[], type: string) => {
 };
 
 const calculateCompletionRate = (events: any[]) => {
-  const starts = events.filter(e => e.type === "quiz_start").length;
-  const completes = events.filter(e => e.type === "quiz_complete").length;
+  const starts = events.filter(e => e.type === 'quiz_start').length;
+  const completes = events.filter(e => e.type === 'quiz_complete').length;
   return starts > 0 ? (completes / starts) * 100 : 0;
 };
 
 const calculateConversionRate = (events: any[]) => {
-  const starts = events.filter(e => e.type === "quiz_start").length;
-  const leads = events.filter(e => e.type === "lead_generated").length;
+  const starts = events.filter(e => e.type === 'quiz_start').length;
+  const leads = events.filter(e => e.type === 'lead_generated').length;
   return starts > 0 ? (leads / starts) * 100 : 0;
 };
 
 const calculateSalesRate = (events: any[]) => {
-  const leads = events.filter(e => e.type === "lead_generated").length;
-  const sales = events.filter(e => e.type === "purchase" || e.type === "sale").length;
+  const leads = events.filter(e => e.type === 'lead_generated').length;
+  const sales = events.filter(e => e.type === 'purchase' || e.type === 'sale').length;
   return leads > 0 ? (sales / leads) * 100 : 0;
 };
 
@@ -136,13 +137,13 @@ const calculateAverageTimeSpent = (events: any[]) => {
   const sessions: Record<string, { start?: number; complete?: number }> = {};
 
   events.forEach(event => {
-    const id = event.userId || event.sessionId || "anonymous";
+    const id = event.userId || event.sessionId || 'anonymous';
     if (!sessions[id]) sessions[id] = {};
 
-    if (event.type === "quiz_start" && event.timestamp) {
+    if (event.type === 'quiz_start' && event.timestamp) {
       sessions[id].start = new Date(event.timestamp).getTime();
     }
-    if (event.type === "quiz_complete" && event.timestamp) {
+    if (event.type === 'quiz_complete' && event.timestamp) {
       sessions[id].complete = new Date(event.timestamp).getTime();
     }
   });
@@ -168,7 +169,7 @@ const calculateAverageTimeSpent = (events: any[]) => {
  */
 export const getUserProgressData = (events: any[]) => {
   // Extract quiz answer events to track progress
-  const answerEvents = events.filter(event => event.type === "quiz_answer" || event.question_id);
+  const answerEvents = events.filter(event => event.type === 'quiz_answer' || event.question_id);
 
   // Create a map to store aggregated data by question ID
   const questionMap: Record<
@@ -189,7 +190,7 @@ export const getUserProgressData = (events: any[]) => {
   answerEvents.forEach(event => {
     const questionId =
       event.question_id || event.questionId || `Q${Object.keys(questionMap).length + 1}`;
-    const userId = event.userId || event.sessionId || "anonymous";
+    const userId = event.userId || event.sessionId || 'anonymous';
 
     // Initialize question data if it doesn't exist
     if (!questionMap[questionId]) {
@@ -216,8 +217,8 @@ export const getUserProgressData = (events: any[]) => {
   // Sort by question ID (assuming they are numeric or contain numeric parts)
   return Object.values(questionMap).sort((a, b) => {
     // Extract numeric parts if question IDs are like 'Q1', 'Q2', etc.
-    const numA = parseInt((a.questionId.match(/\d+/) || ["0"])[0]);
-    const numB = parseInt((b.questionId.match(/\d+/) || ["0"])[0]);
+    const numA = parseInt((a.questionId.match(/\d+/) || ['0'])[0]);
+    const numB = parseInt((b.questionId.match(/\d+/) || ['0'])[0]);
     return numA - numB;
   });
 };

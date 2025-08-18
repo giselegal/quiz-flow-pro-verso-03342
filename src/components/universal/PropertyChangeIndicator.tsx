@@ -3,22 +3,20 @@
  * Componente para mostrar indicações visuais quando propriedades são alteradas
  */
 
-import React, { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Check, Loader2 } from "lucide-react";
+import React, { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Check, Loader2 } from 'lucide-react';
 
 interface PropertyChangeIndicatorProps {
   isChanging?: boolean;
   hasChanged?: boolean;
   children: React.ReactNode;
-  debounceMs?: number;
 }
 
 export const PropertyChangeIndicator: React.FC<PropertyChangeIndicatorProps> = ({
   isChanging = false,
   hasChanged = false,
   children,
-  debounceMs = 300,
 }) => {
   const [showSaved, setShowSaved] = useState(false);
 
@@ -33,7 +31,7 @@ export const PropertyChangeIndicator: React.FC<PropertyChangeIndicatorProps> = (
   return (
     <div className="relative">
       {children}
-      
+
       <AnimatePresence>
         {isChanging && (
           <motion.div
@@ -45,7 +43,7 @@ export const PropertyChangeIndicator: React.FC<PropertyChangeIndicatorProps> = (
             <Loader2 className="w-3 h-3 text-white animate-spin" />
           </motion.div>
         )}
-        
+
         {showSaved && !isChanging && (
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}

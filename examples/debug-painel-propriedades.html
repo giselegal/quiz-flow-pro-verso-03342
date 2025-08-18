@@ -167,55 +167,55 @@
     </div>
 
     <script>
-      let debugLog = document.getElementById("debug-log");
+      let debugLog = document.getElementById('debug-log');
 
-      function log(message, type = "info") {
+      function log(message, type = 'info') {
         const timestamp = new Date().toLocaleTimeString();
         const className =
-          type === "error"
-            ? "error-log"
-            : type === "warning"
-              ? "warning-log"
-              : type === "success"
-                ? "success-log"
-                : "";
+          type === 'error'
+            ? 'error-log'
+            : type === 'warning'
+              ? 'warning-log'
+              : type === 'success'
+                ? 'success-log'
+                : '';
 
         debugLog.innerHTML += `\n[${timestamp}] ${message}`;
         if (className) {
-          const lines = debugLog.innerHTML.split("\n");
+          const lines = debugLog.innerHTML.split('\n');
           lines[lines.length - 1] = `<span class="${className}">${lines[lines.length - 1]}</span>`;
-          debugLog.innerHTML = lines.join("\n");
+          debugLog.innerHTML = lines.join('\n');
         }
         debugLog.scrollTop = debugLog.scrollHeight;
       }
 
       function testServerConnection() {
-        log("🌐 Testando conexão com servidor...", "info");
+        log('🌐 Testando conexão com servidor...', 'info');
 
-        fetch("http://localhost:8081")
+        fetch('http://localhost:8081')
           .then(response => {
             if (response.ok) {
-              log("✅ Servidor respondendo normalmente", "success");
-              document.getElementById("server-status").textContent = "Online ✅";
+              log('✅ Servidor respondendo normalmente', 'success');
+              document.getElementById('server-status').textContent = 'Online ✅';
             } else {
-              log(`❌ Servidor retornou status ${response.status}`, "error");
-              document.getElementById("server-status").textContent = "Erro ❌";
+              log(`❌ Servidor retornou status ${response.status}`, 'error');
+              document.getElementById('server-status').textContent = 'Erro ❌';
             }
           })
           .catch(error => {
-            log(`❌ Erro de conexão: ${error.message}`, "error");
-            document.getElementById("server-status").textContent = "Offline ❌";
+            log(`❌ Erro de conexão: ${error.message}`, 'error');
+            document.getElementById('server-status').textContent = 'Offline ❌';
           });
       }
 
       function openEditorInNewTab() {
-        log("📝 Abrindo editor em nova aba...", "info");
-        window.open("http://localhost:8081/editor", "_blank");
-        log("✅ Editor aberto (verifique a nova aba)", "success");
+        log('📝 Abrindo editor em nova aba...', 'info');
+        window.open('http://localhost:8081/editor', '_blank');
+        log('✅ Editor aberto (verifique a nova aba)', 'success');
       }
 
       function checkConsoleErrors() {
-        log("🔍 Verificando erros no console...", "info");
+        log('🔍 Verificando erros no console...', 'info');
 
         // Capturar erros do console
         const originalError = console.error;
@@ -226,40 +226,40 @@
 
         console.error = function (...args) {
           errorCount++;
-          log(`❌ CONSOLE ERROR: ${args.join(" ")}`, "error");
+          log(`❌ CONSOLE ERROR: ${args.join(' ')}`, 'error');
           originalError.apply(console, args);
         };
 
         console.warn = function (...args) {
           warnCount++;
-          log(`⚠️ CONSOLE WARNING: ${args.join(" ")}`, "warning");
+          log(`⚠️ CONSOLE WARNING: ${args.join(' ')}`, 'warning');
           originalWarn.apply(console, args);
         };
 
         setTimeout(() => {
           if (errorCount === 0 && warnCount === 0) {
-            log("✅ Nenhum erro ou warning detectado", "success");
+            log('✅ Nenhum erro ou warning detectado', 'success');
           } else {
-            log(`📊 Detectados ${errorCount} erros e ${warnCount} warnings`, "warning");
+            log(`📊 Detectados ${errorCount} erros e ${warnCount} warnings`, 'warning');
           }
         }, 2000);
       }
 
       function testPanelFunctionality() {
-        log("🎛️ Teste de funcionalidade do painel iniciado...", "info");
-        log("📋 Para testar completamente:", "info");
-        log('1. Abra o editor (botão "📝 Abrir Editor")', "info");
-        log("2. Adicione um componente (ex: Texto)", "info");
-        log("3. Clique no componente para selecioná-lo", "info");
-        log("4. Verifique se o painel aparece à direita", "info");
-        log("5. Teste editar propriedades nas abas", "info");
-        log("🎯 Resulte aqui os testes manuais!", "info");
+        log('🎛️ Teste de funcionalidade do painel iniciado...', 'info');
+        log('📋 Para testar completamente:', 'info');
+        log('1. Abra o editor (botão "📝 Abrir Editor")', 'info');
+        log('2. Adicione um componente (ex: Texto)', 'info');
+        log('3. Clique no componente para selecioná-lo', 'info');
+        log('4. Verifique se o painel aparece à direita', 'info');
+        log('5. Teste editar propriedades nas abas', 'info');
+        log('🎯 Resulte aqui os testes manuais!', 'info');
       }
 
       // Verificação automática inicial
       window.onload = function () {
-        log("🚀 Debug do Painel de Propriedades iniciado", "success");
-        log("📋 Sistema Quiz Quest - Verificação de funcionalidade", "info");
+        log('🚀 Debug do Painel de Propriedades iniciado', 'success');
+        log('📋 Sistema Quiz Quest - Verificação de funcionalidade', 'info');
 
         // Testar servidor automaticamente
         setTimeout(testServerConnection, 1000);

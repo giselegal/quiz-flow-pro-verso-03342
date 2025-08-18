@@ -5,6 +5,7 @@ Um sistema completo de criação e edição de quizzes interativos com drag & dr
 ## 🚀 Funcionalidades Principais
 
 ### Editor Visual Avançado
+
 - **Drag & Drop:** Sistema completo de arrastar e soltar componentes
 - **Layout Responsivo:** 4 colunas adaptáveis (Etapas, Componentes, Canvas, Propriedades)
 - **Preview Mode:** Visualização em tempo real
@@ -12,12 +13,14 @@ Um sistema completo de criação e edição de quizzes interativos com drag & dr
 - **Atalhos de Teclado:** Undo/Redo, Delete, etc.
 
 ### Sistema de Componentes
+
 - **50+ Componentes:** Blocos predefinidos para construção de funis
 - **Propriedades Universais:** Painel dinâmico de configuração
 - **Registry System:** Sistema de registro de componentes extensível
 - **Validação:** Validação em tempo real de propriedades
 
 ### Gestão de Funis
+
 - **Multi-etapas:** Sistema completo de stages/etapas
 - **Estado Persistente:** Context API para gerenciamento centralizado
 - **Auto-save:** Salvamento automático de alterações
@@ -42,6 +45,7 @@ src/
 ## 🎯 Componente Principal
 
 O editor principal está localizado em:
+
 - **Página:** `src/pages/editor-fixed.tsx`
 - **Implementação:** `src/pages/editor-fixed-dragdrop.tsx`
 
@@ -85,17 +89,20 @@ npm run build
 ## 🏆 Características Técnicas
 
 ### Performance
+
 - **Code Splitting:** Carregamento otimizado
 - **Lazy Loading:** Componentes sob demanda
 - **Memoização:** React.memo e useMemo estratégicos
 
 ### Qualidade de Código
+
 - **TypeScript:** Tipagem completa
 - **ESLint:** Linting automatizado
 - **Prettier:** Formatação consistente
 - **Estrutura Modular:** Separação clara de responsabilidades
 
 ### UX/UI
+
 - **Design System:** Componentes consistentes
 - **Responsividade:** Adaptação completa a devices
 - **Acessibilidade:** Suporte a screen readers

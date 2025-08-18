@@ -1,7 +1,7 @@
-import { TextCursorInput } from "lucide-react";
-import React, { useEffect, useState } from "react";
-import { userResponseService } from "../../../services/userResponseService";
-import type { BlockComponentProps } from "../../../types/blocks";
+import type { BlockComponentProps } from '@/types/blocks';
+import { TextCursorInput } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { userResponseService } from '../../../services/userResponseService';
 
 interface FormInputBlockProps extends BlockComponentProps {
   funnelId?: string;
@@ -11,13 +11,13 @@ interface FormInputBlockProps extends BlockComponentProps {
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (
   value: string | number,
-  type: "top" | "bottom" | "left" | "right"
+  type: 'top' | 'bottom' | 'left' | 'right'
 ): string => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -61,8 +61,8 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
   isSelected = false,
   onClick,
   onPropertyChange,
-  className = "",
-  funnelId = "default-quiz-funnel-21-steps",
+  className = '',
+  funnelId: _funnelId = 'default-quiz-funnel-21-steps',
   onValueChange,
 }) => {
   // Verificação de segurança para evitar erro de undefined
@@ -75,21 +75,21 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
   }
 
   const {
-    label = "Campo de Input",
-    placeholder = "Digite aqui...",
-    inputType = "text",
+    label = 'Campo de Input',
+    placeholder = 'Digite aqui...',
+    inputType = 'text',
     required = false,
     fullWidth = true,
-    name = "input",
+    name = 'input',
     // Configurações de estilo
-    backgroundColor = "#FFFFFF",
-    borderColor = "#B89B7A",
-    textColor = "#432818",
-    labelColor = "#432818",
-    fontSize = "16",
-    fontFamily = "inherit",
-    fontWeight = "400",
-    borderRadius = "8",
+    backgroundColor = '#FFFFFF',
+    borderColor = '#B89B7A',
+    textColor = '#432818',
+    labelColor = '#432818',
+    fontSize = '16',
+    fontFamily = 'inherit',
+    fontWeight = '400',
+    borderRadius = '8',
     // Sistema de margens
     marginTop = 8,
     marginBottom = 8,
@@ -97,12 +97,21 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
     marginRight = 0,
   } = (block?.properties as any) || {};
 
-  const [value, setValue] = useState<string>("");
+  const [value, setValue] = useState<string>('');
   const [isValid, setIsValid] = useState<boolean>(false);
+  const [sessionId] = useState<string>(() => {
+    // Get or create session ID
+    const existing = localStorage.getItem('quiz_session_id');
+    if (existing) return existing;
+
+    const newSessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    localStorage.setItem('quiz_session_id', newSessionId);
+    return newSessionId;
+  });
 
   // Carregar valor salvo se existir
   useEffect(() => {
-    const savedValue = userResponseService.getResponse(block?.id || "");
+    const savedValue = localStorage.getItem(`quiz_step_${block?.id}`);
     if (savedValue) {
       setValue(savedValue);
       setIsValid(true);
@@ -116,34 +125,72 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
 
     // ✅ Usar onPropertyChange para edição no painel de propriedades
     if (onPropertyChange) {
-      onPropertyChange("value", newValue);
+      onPropertyChange('value', newValue);
     }
 
     // Disparar evento customizado para outros componentes sempre
     window.dispatchEvent(
-      new CustomEvent("quiz-input-change", {
-        detail: { blockId: block?.id || "", value: newValue.trim(), valid },
+      new CustomEvent('quiz-input-change', {
+        detail: { blockId: block?.id || '', value: newValue.trim(), valid },
       })
     );
 
     // Salvar automaticamente se válido
     if (valid && newValue.trim()) {
       try {
-        // Salvar resposta específica
-        userResponseService.saveStepResponse(block?.id || "", newValue.trim());
+        // Salvar resposta específica localmente
+        userResponseService.saveStepResponse(block?.id || '', newValue.trim());
 
-        // Se for o campo de nome, salvar também como nome do usuário
-        if (name === "userName" || block?.id === "intro-name-input") {
-          userResponseService.saveUserName("userId", newValue.trim());
-          console.log("✅ Nome do usuário salvo:", newValue.trim());
+        // Se for o campo de nome, salvar no Supabase
+        if (
+          name === 'userName' ||
+          block?.id === 'step01-name-input' ||
+          block?.id === 'intro-form-input' ||
+          block?.id === 'intro-name-input'
+        ) {
+          // Save to Supabase
+          try {
+            await userResponseService.createQuizUser({
+              sessionId: sessionId,
+              name: newValue.trim(),
+            });
+
+            // Also save response data
+            await userResponseService.saveResponse({
+              userId: sessionId,
+              sessionId: sessionId,
+              step: 'step-01',
+              data: {
+                name: newValue.trim(),
+                fieldName: name,
+                componentId: block?.id || 'intro-name-input',
+              },
+              timestamp: new Date().toISOString(),
+            });
+
+            console.log('✅ [FormInputBlock] Nome salvo no Supabase:', newValue.trim());
+          } catch (error) {
+            console.error('❌ [FormInputBlock] Erro ao salvar no Supabase:', error);
+          }
+
+          // Also save locally as fallback
+          userResponseService.saveUserName(sessionId, newValue.trim());
         }
+
+        console.log('📝 [FormInputBlock] Input change processed:', {
+          blockId: block?.id,
+          sessionId: sessionId,
+          value: newValue.trim(),
+          valid,
+          isNameField: name === 'userName' || block?.id?.includes('name'),
+        });
 
         // Notificar componente pai
         if (onValueChange) {
           onValueChange(newValue.trim());
         }
       } catch (error) {
-        console.error("❌ Erro ao salvar resposta:", error);
+        console.error('❌ Erro ao salvar resposta:', error);
       }
     }
   };
@@ -154,20 +201,20 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
         p-4 rounded-lg transition-all duration-200
         ${
           isSelected
-            ? "border-2 border-[#B89B7A] bg-[#B89B7A]/10 cursor-pointer"
-            : "border-2 border-transparent hover:bg-[#FAF9F7]"
+            ? 'border-2 border-[#B89B7A] bg-[#B89B7A]/10 cursor-pointer'
+            : 'border-2 border-transparent hover:bg-[#FAF9F7]'
         }
         ${className}
-        ${getMarginClass(marginTop, "top")}
-        ${getMarginClass(marginBottom, "bottom")}
-        ${getMarginClass(marginLeft, "left")}
-        ${getMarginClass(marginRight, "right")}
+        ${getMarginClass(marginTop, 'top')}
+        ${getMarginClass(marginBottom, 'bottom')}
+        ${getMarginClass(marginLeft, 'left')}
+        ${getMarginClass(marginRight, 'right')}
       `}
       onClick={onClick}
       data-block-id={block?.id}
       data-block-type={block?.type}
     >
-      <div className={`space-y-3 ${fullWidth ? "w-full" : "w-auto"}`}>
+      <div className={`space-y-3 ${fullWidth ? 'w-full' : 'w-auto'}`}>
         <div className="flex items-center gap-2">
           <TextCursorInput className="w-4 h-4" style={{ color: borderColor }} />
           <label
@@ -207,10 +254,10 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
             transition-all outline-none placeholder-opacity-70
             ${
               isValid
-                ? "ring-2 ring-opacity-20"
+                ? 'ring-2 ring-opacity-20'
                 : value && !isValid
-                  ? "border-opacity-50"
-                  : "hover:border-opacity-80"
+                  ? 'border-opacity-50'
+                  : 'hover:border-opacity-80'
             }
           `}
         />

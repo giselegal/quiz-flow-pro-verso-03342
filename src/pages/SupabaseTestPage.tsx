@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { SupabaseTest } from "../components/test/SupabaseTest";
-import { FunnelsProvider } from "../context/FunnelsContext";
-import { Toaster } from "../components/ui/toaster";
+import React, { useEffect, useState } from 'react';
+import { SupabaseTest } from '../components/test/SupabaseTest';
+import { FunnelsProvider } from '../context/FunnelsContext';
+import { Toaster } from '../components/ui/toaster';
 
 /**
  * Componente para depurar conflitos no carregamento de etapas
  */
 const DebugLogger: React.FC = () => {
   useEffect(() => {
-    console.log("[DebugLogger] Componente montado");
-    return () => console.log("[DebugLogger] Componente desmontado");
+    console.log('[DebugLogger] Componente montado');
+    return () => console.log('[DebugLogger] Componente desmontado');
   }, []);
 
   return null;

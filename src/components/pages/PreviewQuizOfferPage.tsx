@@ -1,60 +1,58 @@
-import React, { useEffect, useState, StrictMode, useCallback } from "react";
 import {
-  ChevronRight,
-  Check,
-  Clock,
-  Star,
-  ShoppingBag,
-  Heart,
-  Users,
-  Award,
-  Shield,
   ArrowRight,
-  TrendingUp,
   BadgeCheck,
-  Lock,
+  Check,
+  ChevronRight,
+  Clock,
   Gift,
-} from "lucide-react";
+  Heart,
+  Lock,
+  Shield,
+  ShoppingBag,
+  TrendingUp,
+  Users,
+} from 'lucide-react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 // Configuração de URLs das imagens
 const HERO_IMAGE_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/q_auto,f_auto,w_240/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp";
+  'https://res.cloudinary.com/dqljyf76t/image/upload/q_auto,f_auto,w_240/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp';
 const HERO_COMPLEMENTARY_IMAGE_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/q_auto,f_auto,w_700/v1745193445/4fb35a75-02dd-40b9-adae-854e90228675_ibkrmt.webp";
+  'https://res.cloudinary.com/dqljyf76t/image/upload/q_auto,f_auto,w_700/v1745193445/4fb35a75-02dd-40b9-adae-854e90228675_ibkrmt.webp';
 const PROBLEM_IMAGE_ALT_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/q_auto,f_auto,w_500/v1746334754/ChatGPT_Image_4_de_mai._de_2025_00_30_44_naqom0.webp";
+  'https://res.cloudinary.com/dqljyf76t/image/upload/q_auto,f_auto,w_500/v1746334754/ChatGPT_Image_4_de_mai._de_2025_00_30_44_naqom0.webp';
 const SOLUTION_QUIZ_IMAGE_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/q_auto,f_auto,w_600/v1746650306/oie_1_gcozz9.webp";
+  'https://res.cloudinary.com/dqljyf76t/image/upload/q_auto,f_auto,w_600/v1746650306/oie_1_gcozz9.webp';
 const GUIDES_BENEFITS_IMAGE_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/q_auto,f_auto,w_500/v1745071347/MOCKUP_TABLETE_-_GUIA_DE_IMAGEM_E_ESTILO_ncctzi.webp";
+  'https://res.cloudinary.com/dqljyf76t/image/upload/q_auto,f_auto,w_500/v1745071347/MOCKUP_TABLETE_-_GUIA_DE_IMAGEM_E_ESTILO_ncctzi.webp';
 const GUIDES_BENEFITS_COMPLEMENTARY_IMAGE_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/q_auto,f_auto,w_600/v1744911682/C%C3%B3pia_de_MOCKUPS_14_oxegnd.webp";
+  'https://res.cloudinary.com/dqljyf76t/image/upload/q_auto,f_auto,w_600/v1744911682/C%C3%B3pia_de_MOCKUPS_14_oxegnd.webp';
 const BONUS_1_KEY_PIECES_IMAGE_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/q_auto,f_auto,w_500/v1744911687/C%C3%B3pia_de_MOCKUPS_12_w8fwrn.webp";
+  'https://res.cloudinary.com/dqljyf76t/image/upload/q_auto,f_auto,w_500/v1744911687/C%C3%B3pia_de_MOCKUPS_12_w8fwrn.webp';
 const BONUS_1_KEY_PIECES_COMPLEMENTARY_IMAGE_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/q_auto,f_auto,w_600/v1745515075/Espanhol_Portugu%C3%AAs_1_uru4r3.webp";
+  'https://res.cloudinary.com/dqljyf76t/image/upload/q_auto,f_auto,w_600/v1745515075/Espanhol_Portugu%C3%AAs_1_uru4r3.webp';
 const BONUS_2_VISAGISM_IMAGE_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/q_auto,f_auto,w_500/v1745515076/C%C3%B3pia_de_MOCKUPS_10_-_Copia_bvoccn.webp";
+  'https://res.cloudinary.com/dqljyf76t/image/upload/q_auto,f_auto,w_500/v1745515076/C%C3%B3pia_de_MOCKUPS_10_-_Copia_bvoccn.webp';
 const BONUS_2_VISAGISM_COMPLEMENTARY_IMAGE_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/q_auto,f_auto,w_600/v1744911666/C%C3%B3pia_de_Template_Dossi%C3%AA_Completo_2024_15_-_Copia_ssrhu3.webp";
+  'https://res.cloudinary.com/dqljyf76t/image/upload/q_auto,f_auto,w_600/v1744911666/C%C3%B3pia_de_Template_Dossi%C3%AA_Completo_2024_15_-_Copia_ssrhu3.webp';
 const MENTOR_GISELE_IMAGE_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/q_auto,f_auto,w_250,h_250,c_fill,g_face/v1744911667/WhatsApp_Image_2025-04-02_at_09.40.53_cv8p5y.webp";
+  'https://res.cloudinary.com/dqljyf76t/image/upload/q_auto,f_auto,w_250,h_250,c_fill,g_face/v1744911667/WhatsApp_Image_2025-04-02_at_09.40.53_cv8p5y.webp';
 const TESTIMONIALS_RESULTS_IMAGE_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/q_auto,f_auto,w_800/v1744916217/Mockups_p%C3%A1gina_de_venda_Guia_de_Estilo_1_vostj4.webp";
+  'https://res.cloudinary.com/dqljyf76t/image/upload/q_auto,f_auto,w_800/v1744916217/Mockups_p%C3%A1gina_de_venda_Guia_de_Estilo_1_vostj4.webp';
 const TESTIMONIALS_RESULTS_COMPLEMENTARY_IMAGE_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/q_auto,f_auto,w_700/v1745521117/Captura_de_tela_2025-03-31_034324_qxvdho.webp";
+  'https://res.cloudinary.com/dqljyf76t/image/upload/q_auto,f_auto,w_700/v1745521117/Captura_de_tela_2025-03-31_034324_qxvdho.webp';
 const BEFORE_AFTER_IMAGE_1_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/q_auto,f_auto,w_300,h_300,c_fill/v1746334756/ChatGPT_Image_4_de_mai._de_2025_01_42_42_jlugsc.webp";
+  'https://res.cloudinary.com/dqljyf76t/image/upload/q_auto,f_auto,w_300,h_300,c_fill/v1746334756/ChatGPT_Image_4_de_mai._de_2025_01_42_42_jlugsc.webp';
 const BEFORE_AFTER_IMAGE_2_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/q_auto,f_auto,w_300,h_300,c_fill/v1745193445/4fb35a75-02dd-40b9-adae-854e90228675_ibkrmt.webp";
+  'https://res.cloudinary.com/dqljyf76t/image/upload/q_auto,f_auto,w_300,h_300,c_fill/v1745193445/4fb35a75-02dd-40b9-adae-854e90228675_ibkrmt.webp';
 const BEFORE_AFTER_IMAGE_3_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/q_auto,f_auto,w_300,h_300,c_fill/v1746334753/ChatGPT_Image_4_de_mai._de_2025_01_30_01_vbiysd.webp";
+  'https://res.cloudinary.com/dqljyf76t/image/upload/q_auto,f_auto,w_300,h_300,c_fill/v1746334753/ChatGPT_Image_4_de_mai._de_2025_01_30_01_vbiysd.webp';
 const GUARANTEE_IMAGE_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/q_auto,f_auto,w_250/v1744916216/C%C3%B3pia_de_01._P%C3%A1gina_-_Produto_de_Entrada_2_hamaox.webp";
+  'https://res.cloudinary.com/dqljyf76t/image/upload/q_auto,f_auto,w_250/v1744916216/C%C3%B3pia_de_01._P%C3%A1gina_-_Produto_de_Entrada_2_hamaox.webp';
 const GUARANTEE_COMPLEMENTARY_IMAGE_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/q_auto,f_auto,w_600/v1744920983/Espanhol_Portugu%C3%AAs_8_cgrhuw.webp";
+  'https://res.cloudinary.com/dqljyf76t/image/upload/q_auto,f_auto,w_600/v1744920983/Espanhol_Portugu%C3%AAs_8_cgrhuw.webp';
 const FAQ_IMAGE_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/q_auto,f_auto,w_500/v1745515862/Sem_nome_1000_x_1000_px_1280_x_720_px_vmqk3j.webp";
+  'https://res.cloudinary.com/dqljyf76t/image/upload/q_auto,f_auto,w_500/v1745515862/Sem_nome_1000_x_1000_px_1280_x_720_px_vmqk3j.webp';
 
 // Componente de imagem melhorado
 interface FixedIntroImageProps {
@@ -70,13 +68,13 @@ interface FixedIntroImageProps {
 
 const FixedIntroImage: React.FC<FixedIntroImageProps> = ({
   src,
-  alt = "Imagem descritiva",
+  alt = 'Imagem descritiva',
   width,
   height,
-  className = "",
-  imgClassName = "",
+  className = '',
+  imgClassName = '',
   isCritical = false,
-  wrapperClassName = "",
+  wrapperClassName = '',
 }) => {
   const handleError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
     const target = e.target as HTMLImageElement;
@@ -93,22 +91,13 @@ const FixedIntroImage: React.FC<FixedIntroImageProps> = ({
         width={width}
         height={height}
         className={`w-full h-auto object-cover ${imgClassName} ${className}`}
-        loading={isCritical ? "eager" : "lazy"}
+        loading={isCritical ? 'eager' : 'lazy'}
         decoding="async"
         onError={handleError}
       />
     </div>
   );
 };
-
-// Componente de estrelas de avaliação
-const RatingStars: React.FC<{ rating: number }> = ({ rating }) => (
-  <div className="flex text-brand-accent">
-    {[...Array(5)].map((_, i) => (
-      <Star key={i} size={16} fill={i < rating ? "currentColor" : "none"} className="mr-0.5" />
-    ))}
-  </div>
-);
 
 // Indicador de usuários ativos
 const ActiveUsersIndicator: React.FC = () => {
@@ -148,7 +137,7 @@ const CountdownTimer: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const format = (n: number) => n.toString().padStart(2, "0");
+  const format = (n: number) => n.toString().padStart(2, '0');
 
   return (
     <div className="flex flex-col items-center my-5">
@@ -157,7 +146,7 @@ const CountdownTimer: React.FC = () => {
         Esta oferta expira em:
       </p>
       <div className="flex items-center justify-center gap-1.5 sm:gap-2.5">
-        {(["h", "m", "s"] as const).map((unit, i) => (
+        {(['h', 'm', 's'] as const).map((unit, i) => (
           <React.Fragment key={unit}>
             <div className="bg-brand-dark text-white px-3 py-2 sm:px-3.5 sm:py-2.5 rounded-lg text-base sm:text-lg font-mono font-bold shadow-md">
               {format(time[unit])}
@@ -206,36 +195,36 @@ const FaqSectionNew: React.FC = () => {
 
   const faqItems = [
     {
-      q: "Quanto tempo leva para fazer o quiz?",
-      a: "O quiz leva apenas alguns minutos para ser completado. São perguntas simples e objetivas sobre suas preferências e estilo de vida.",
+      q: 'Quanto tempo leva para fazer o quiz?',
+      a: 'O quiz leva apenas alguns minutos para ser completado. São perguntas simples e objetivas sobre suas preferências e estilo de vida.',
     },
     {
-      q: "Como recebo os materiais após a compra?",
-      a: "Imediatamente após a confirmação do pagamento, você receberá um e-mail com as instruções de acesso a todos os materiais.",
+      q: 'Como recebo os materiais após a compra?',
+      a: 'Imediatamente após a confirmação do pagamento, você receberá um e-mail com as instruções de acesso a todos os materiais.',
     },
     {
-      q: "Os guias servem para qualquer tipo físico?",
-      a: "Sim! Os guias foram desenvolvidos considerando a diversidade de tipos físicos. O mais importante é o seu estilo predominante, e as orientações são adaptáveis para valorizar seu corpo único.",
+      q: 'Os guias servem para qualquer tipo físico?',
+      a: 'Sim! Os guias foram desenvolvidos considerando a diversidade de tipos físicos. O mais importante é o seu estilo predominante, e as orientações são adaptáveis para valorizar seu corpo único.',
     },
     {
-      q: "Preciso ter conhecimento prévio sobre moda?",
-      a: "Não! Os guias foram criados justamente para quem quer aprender do zero ou aprimorar seus conhecimentos sobre estilo pessoal. Tudo é explicado de forma clara e didática.",
+      q: 'Preciso ter conhecimento prévio sobre moda?',
+      a: 'Não! Os guias foram criados justamente para quem quer aprender do zero ou aprimorar seus conhecimentos sobre estilo pessoal. Tudo é explicado de forma clara e didática.',
     },
     {
-      q: "Posso acessar os materiais pelo celular?",
-      a: "Sim! Todos os materiais são digitais e podem ser acessados por qualquer dispositivo: computador, tablet ou smartphone.",
+      q: 'Posso acessar os materiais pelo celular?',
+      a: 'Sim! Todos os materiais são digitais e podem ser acessados por qualquer dispositivo: computador, tablet ou smartphone.',
     },
     {
-      q: "E se eu não gostar do conteúdo?",
-      a: "Você tem 7 dias de garantia incondicional. Se não ficar satisfeita, basta solicitar o reembolso e devolveremos 100% do seu investimento.",
+      q: 'E se eu não gostar do conteúdo?',
+      a: 'Você tem 7 dias de garantia incondicional. Se não ficar satisfeita, basta solicitar o reembolso e devolveremos 100% do seu investimento.',
     },
     {
-      q: "Quanto tempo terei acesso aos materiais?",
-      a: "O acesso é vitalício! Você poderá consultar os guias sempre que precisar, sem prazo de expiração.",
+      q: 'Quanto tempo terei acesso aos materiais?',
+      a: 'O acesso é vitalício! Você poderá consultar os guias sempre que precisar, sem prazo de expiração.',
     },
     {
-      q: "Os guias funcionam para qualquer idade?",
-      a: "Absolutamente! Os princípios de estilo pessoal são atemporais e adaptáveis para mulheres de todas as idades. O importante é expressar sua essência, independente da sua fase de vida.",
+      q: 'Os guias funcionam para qualquer idade?',
+      a: 'Absolutamente! Os princípios de estilo pessoal são atemporais e adaptáveis para mulheres de todas as idades. O importante é expressar sua essência, independente da sua fase de vida.',
     },
   ];
 
@@ -255,14 +244,10 @@ const FaqSectionNew: React.FC = () => {
               <span className="font-semibold text-brand-dark text-base sm:text-lg">{item.q}</span>
               <ChevronRight
                 size={22}
-                className={`text-brand-accent transition-transform duration-300 ${openItem === index ? "transform rotate-90" : ""}`}
+                className={`text-brand-accent transition-transform duration-300 ${openItem === index ? 'transform rotate-90' : ''}`}
               />
             </button>
-            {openItem === index && (
-              <div style={{ borderColor: '#E5DDD5' }}>
-                {item.a}
-              </div>
-            )}
+            {openItem === index && <div style={{ borderColor: '#E5DDD5' }}>{item.a}</div>}
           </div>
         ))}
       </div>
@@ -280,8 +265,8 @@ interface SectionWrapperProps {
 
 const SectionWrapper: React.FC<SectionWrapperProps> = ({
   children,
-  className = "",
-  bgClassName = "bg-brand-lighter",
+  className = '',
+  bgClassName = 'bg-brand-lighter',
   id,
 }) => (
   <section
@@ -296,14 +281,14 @@ const SectionWrapper: React.FC<SectionWrapperProps> = ({
 const PreviewQuizOfferPage: React.FC = () => {
   // Função para rastreamento de cliques (mock)
   const trackButtonClick = useCallback((buttonId: string, action: string, page: string) => {
-    console.log("Rastreando clique (mock):", { buttonId, action, page });
+    console.log('Rastreando clique (mock):', { buttonId, action, page });
   }, []);
 
   // Função para lidar com cliques no CTA
   const handleCtaClick = useCallback(
-    (buttonId: string, action = "Comprar Agora") => {
-      trackButtonClick(buttonId, action, "quiz_offer_page");
-      window.open("https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912", "_blank");
+    (buttonId: string, action = 'Comprar Agora') => {
+      trackButtonClick(buttonId, action, 'quiz_offer_page');
+      window.open('https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912', '_blank');
     },
     [trackButtonClick]
   );
@@ -312,9 +297,9 @@ const PreviewQuizOfferPage: React.FC = () => {
   useEffect(() => {
     const preloadCriticalImages = (imageUrls: string[]) => {
       imageUrls.forEach(url => {
-        const link = document.createElement("link");
-        link.rel = "preload";
-        link.as = "image";
+        const link = document.createElement('link');
+        link.rel = 'preload';
+        link.as = 'image';
         link.href = url;
         document.head.appendChild(link);
       });
@@ -323,45 +308,45 @@ const PreviewQuizOfferPage: React.FC = () => {
     preloadCriticalImages([HERO_IMAGE_URL, HERO_COMPLEMENTARY_IMAGE_URL]);
   }, []);
 
-  const VALOR_PRODUTO = "47,00";
+  const VALOR_PRODUTO = '47,00';
 
   const benefitsList = [
     {
       icon: BadgeCheck,
-      title: "Autoconhecimento profundo:",
-      text: "Entenda como sua personalidade, valores e essência se refletem no seu estilo. Lembre-se: 55% da comunicação é visual!",
+      title: 'Autoconhecimento profundo:',
+      text: 'Entenda como sua personalidade, valores e essência se refletem no seu estilo. Lembre-se: 55% da comunicação é visual!',
     },
     {
       icon: BadgeCheck,
-      title: "Orientações práticas:",
-      text: "Descubra cores, tecidos, estampas e modelagens que valorizam seu tipo físico e estilo. Peças que combinam e multiplicam looks.",
+      title: 'Orientações práticas:',
+      text: 'Descubra cores, tecidos, estampas e modelagens que valorizam seu tipo físico e estilo. Peças que combinam e multiplicam looks.',
     },
     {
       icon: BadgeCheck,
-      title: "Estratégias de imagem:",
-      text: "Comunique visualmente quem você é. Use sua imagem para transmitir seus valores e personalidade em qualquer ambiente.",
+      title: 'Estratégias de imagem:',
+      text: 'Comunique visualmente quem você é. Use sua imagem para transmitir seus valores e personalidade em qualquer ambiente.',
     },
     {
       icon: BadgeCheck,
-      title: "Dicas de composição:",
-      text: "Monte looks versáteis e autênticos para diferentes ocasiões, mantendo sua essência.",
+      title: 'Dicas de composição:',
+      text: 'Monte looks versáteis e autênticos para diferentes ocasiões, mantendo sua essência.',
     },
   ];
 
   const bonus1Features = [
-    "As peças essenciais que toda mulher deveria ter, independente do estilo.",
-    "Como adaptar peças-chave ao seu estilo predominante para looks autênticos.",
-    "Estratégias para maximizar combinações e minimizar gastos.",
-    "Como montar um guarda-roupa cápsula funcional para sua rotina.",
-    "Dicas para valorizar seu tipo físico e criar uma imagem coerente.",
+    'As peças essenciais que toda mulher deveria ter, independente do estilo.',
+    'Como adaptar peças-chave ao seu estilo predominante para looks autênticos.',
+    'Estratégias para maximizar combinações e minimizar gastos.',
+    'Como montar um guarda-roupa cápsula funcional para sua rotina.',
+    'Dicas para valorizar seu tipo físico e criar uma imagem coerente.',
   ];
 
   const bonus2Features = [
-    "Como identificar o formato do seu rosto (oval, redondo, quadrado, etc.).",
-    "Quais cortes de cabelo valorizam seus traços e equilibram as proporções.",
-    "Como escolher brincos, colares e óculos que complementam seu formato facial.",
-    "Técnicas de maquiagem para realçar seus pontos fortes.",
-    "Dicas personalizadas para cada tipo de rosto e terços faciais.",
+    'Como identificar o formato do seu rosto (oval, redondo, quadrado, etc.).',
+    'Quais cortes de cabelo valorizam seus traços e equilibram as proporções.',
+    'Como escolher brincos, colares e óculos que complementam seu formato facial.',
+    'Técnicas de maquiagem para realçar seus pontos fortes.',
+    'Dicas personalizadas para cada tipo de rosto e terços faciais.',
   ];
 
   return (
@@ -393,7 +378,7 @@ const PreviewQuizOfferPage: React.FC = () => {
             </h1>
             <p className="text-brand-medium max-w-3xl mx-auto mb-7 sm:mb-12 leading-relaxed">
               Chega de um guarda-roupa lotado e da sensação de que nada combina com você. Descubra
-              seu estilo predominante e aprenda a montar looks que refletem sua essência, com{" "}
+              seu estilo predominante e aprenda a montar looks que refletem sua essência, com{' '}
               <strong>praticidade e confiança.</strong>
             </p>
             <div className="mb-8 sm:mb-12 max-w-md lg:max-w-lg mx-auto relative rounded-2xl overflow-hidden shadow-xl image-hover-effect">
@@ -410,7 +395,7 @@ const PreviewQuizOfferPage: React.FC = () => {
               <div className="absolute -bottom-2.5 -left-2.5 w-9 h-9 border-b-3 border-l-3 border-brand-accent rounded-bl-lg sm:-bottom-3.5 sm:-left-3.5 sm:w-11 sm:h-11 sm:border-b-4 sm:border-l-4 sm:rounded-bl-xl" />
             </div>
             <button
-              onClick={() => handleCtaClick("headline_cta", "Quero Descobrir Meu Estilo Agora!")}
+              onClick={() => handleCtaClick('headline_cta', 'Quero Descobrir Meu Estilo Agora!')}
               className="btn-primary-3d animate-pulse-gentle text-base sm:text-lg md:text-xl py-3.5 px-7 sm:py-4 sm:px-12"
             >
               <span className="flex items-center justify-center gap-2.5">
@@ -446,22 +431,22 @@ const PreviewQuizOfferPage: React.FC = () => {
             </div>
             <div className="space-y-5 sm:space-y-6 text-brand-medium leading-relaxed text-left md:text-justify">
               <p>
-                Você já se sentiu{" "}
-                <strong>frustrada ao abrir seu guarda-roupa cheio e não ter o que vestir?</strong>{" "}
+                Você já se sentiu{' '}
+                <strong>frustrada ao abrir seu guarda-roupa cheio e não ter o que vestir?</strong>{' '}
                 Ou comprou peças que pareciam perfeitas na loja, mas nunca combinaram com nada?
               </p>
               <p>
                 Ter um armário lotado não significa ter um guarda-roupa funcional. Muitas vezes,
-                isso só aumenta a ansiedade e o sentimento de que{" "}
+                isso só aumenta a ansiedade e o sentimento de que{' '}
                 <strong>"nada fica bom em mim"</strong>.
               </p>
               <p>
-                Quantas vezes você perdeu tempo tentando montar um look que te fizesse sentir{" "}
+                Quantas vezes você perdeu tempo tentando montar um look que te fizesse sentir{' '}
                 <strong>confiante</strong>? Ou gastou dinheiro em peças que raramente usou? Talvez
                 sinta que sua imagem não comunica quem você realmente é.
               </p>
               <p className="font-semibold text-brand-dark bg-brand-accent-highlight/60 p-4 sm:p-5 rounded-xl border-l-4 border-brand-accent shadow-inner mt-6">
-                Isso acontece porque você ainda não descobriu seu{" "}
+                Isso acontece porque você ainda não descobriu seu{' '}
                 <strong>estilo predominante</strong> - alinhado com sua personalidade, valores e
                 essência. Sem esse conhecimento, você continua comprando peças aleatórias que não
                 conversam entre si.
@@ -502,12 +487,12 @@ const PreviewQuizOfferPage: React.FC = () => {
               </p>
               <p>
                 Não é um teste genérico. É um <strong>método preciso</strong> que analisa suas
-                preferências e identifica seu estilo entre os <strong>7 estilos universais:</strong>{" "}
+                preferências e identifica seu estilo entre os <strong>7 estilos universais:</strong>{' '}
                 Clássico, Natural, Romântico, Dramático, Criativo, Elegante e Contemporâneo.
               </p>
               <p>
                 Descobrir seu estilo é o primeiro passo para um guarda-roupa funcional, economizar
-                tempo e dinheiro, expressar sua personalidade e sentir-se{" "}
+                tempo e dinheiro, expressar sua personalidade e sentir-se{' '}
                 <strong>confiante e autêntica todos os dias.</strong>
               </p>
               <p>
@@ -516,7 +501,7 @@ const PreviewQuizOfferPage: React.FC = () => {
               </p>
             </div>
             <button
-              onClick={() => handleCtaClick("solution_cta", "Fazer o Quiz e Descobrir Meu Estilo")}
+              onClick={() => handleCtaClick('solution_cta', 'Fazer o Quiz e Descobrir Meu Estilo')}
               className="btn-primary-3d animate-pulse-gentle text-base sm:text-lg md:text-xl py-3.5 px-7 sm:py-4 sm:px-12"
             >
               <span className="flex items-center justify-center gap-2.5">
@@ -538,11 +523,11 @@ const PreviewQuizOfferPage: React.FC = () => {
             <div className="grid md:grid-cols-2 gap-10 sm:gap-14 items-center mb-10 sm:mb-14">
               <div className="order-2 md:order-1 space-y-5">
                 <p className="text-brand-medium leading-relaxed">
-                  Descobrir seu estilo é só o começo. Para transformar sua imagem, você precisa de{" "}
+                  Descobrir seu estilo é só o começo. Para transformar sua imagem, você precisa de{' '}
                   <strong>orientação prática e estratégica.</strong>
                 </p>
                 <p className="text-lg sm:text-xl text-brand-dark font-bold leading-relaxed bg-brand-accent-highlight/60 p-4 rounded-xl border-l-4 border-brand-accent-darker shadow-inner">
-                  Por isso, ao fazer o quiz, você terá acesso ao{" "}
+                  Por isso, ao fazer o quiz, você terá acesso ao{' '}
                   <strong>
                     Guia de Imagem e Estilo específico para o seu estilo predominante!
                   </strong>
@@ -558,7 +543,7 @@ const PreviewQuizOfferPage: React.FC = () => {
                         className="text-brand-accent mr-3 mt-0.5 flex-shrink-0"
                       />
                       <div>
-                        <span className="font-semibold text-brand-dark">{item.title}</span>{" "}
+                        <span className="font-semibold text-brand-dark">{item.title}</span>{' '}
                         {item.text}
                       </div>
                     </li>
@@ -615,7 +600,7 @@ const PreviewQuizOfferPage: React.FC = () => {
               </div>
               <div className="space-y-4">
                 <p className="text-brand-medium leading-relaxed">
-                  Como bônus, você receberá o{" "}
+                  Como bônus, você receberá o{' '}
                   <strong>Guia das Peças-Chave do Guarda-Roupa de Sucesso</strong> - um manual para
                   construir um armário funcional, versátil e alinhado à sua identidade.
                 </p>
@@ -705,7 +690,7 @@ const PreviewQuizOfferPage: React.FC = () => {
               />
             </div>
             <p className="text-brand-medium text-center max-w-3xl mx-auto leading-relaxed">
-              Saber quais acessórios escolher para valorizar seu rosto vai{" "}
+              Saber quais acessórios escolher para valorizar seu rosto vai{' '}
               <strong>transformar como você se vê e como os outros te percebem.</strong>
             </p>
             <p className="text-lg sm:text-xl text-brand-dark font-bold text-center max-w-3xl mx-auto mt-7 leading-relaxed bg-brand-accent-highlight/60 p-4 sm:p-5 rounded-xl border-l-4 border-brand-accent-darker shadow-inner">
@@ -814,16 +799,16 @@ const PreviewQuizOfferPage: React.FC = () => {
               imagem pessoal.
             </p>
             <p className="text-lg sm:text-xl text-brand-dark font-bold mb-8 sm:mb-10 leading-relaxed p-5 bg-brand-light rounded-2xl border-l-4 border-brand-accent shadow-xl max-w-3xl mx-auto">
-              Você também pode ter essa transformação! Imagine se vestir com{" "}
-              <strong>confiança</strong>, com um guarda-roupa que reflete quem você é, economizando{" "}
+              Você também pode ter essa transformação! Imagine se vestir com{' '}
+              <strong>confiança</strong>, com um guarda-roupa que reflete quem você é, economizando{' '}
               <strong>tempo e dinheiro</strong>, e sentindo sua imagem alinhada com seu interior.
             </p>
             <button
-              onClick={() => handleCtaClick("testimonials_cta", "Sim, Quero Essa Transformação!")}
+              onClick={() => handleCtaClick('testimonials_cta', 'Sim, Quero Essa Transformação!')}
               className="btn-primary-3d animate-subtle-float text-base sm:text-lg md:text-xl py-3.5 px-7 sm:py-4 sm:px-12"
             >
               <span className="flex items-center justify-center gap-2.5">
-                Sim, Quero Essa Transformação!{" "}
+                Sim, Quero Essa Transformação!{' '}
                 <Heart
                   size={22}
                   strokeWidth={2.5}
@@ -874,19 +859,19 @@ const PreviewQuizOfferPage: React.FC = () => {
               <ul className="list-none text-left space-y-2.5 max-w-md mx-auto text-sm sm:text-base mb-7 sm:mb-9 pl-0">
                 {[
                   {
-                    text: "Quiz de Estilo para descobrir seu estilo predominante",
+                    text: 'Quiz de Estilo para descobrir seu estilo predominante',
                     bold: true,
                   },
                   {
-                    text: "Guia de Imagem e Estilo específico para seu resultado",
+                    text: 'Guia de Imagem e Estilo específico para seu resultado',
                     bold: true,
                   },
                   {
-                    text: "Bônus 1: Guia das Peças-Chave do Guarda-Roupa de Sucesso",
+                    text: 'Bônus 1: Guia das Peças-Chave do Guarda-Roupa de Sucesso',
                     boldExtra: true,
                   },
                   {
-                    text: "Bônus 2: Guia de Visagismo Facial",
+                    text: 'Bônus 2: Guia de Visagismo Facial',
                     boldExtra: true,
                   },
                 ].map((item, i) => (
@@ -894,7 +879,7 @@ const PreviewQuizOfferPage: React.FC = () => {
                     <Check size={20} className="text-green-500 mr-2.5 flex-shrink-0" />
                     <span
                       className={
-                        item.boldExtra ? "font-extrabold" : item.bold ? "font-semibold" : ""
+                        item.boldExtra ? 'font-extrabold' : item.bold ? 'font-semibold' : ''
                       }
                     >
                       {item.text}
@@ -921,7 +906,7 @@ const PreviewQuizOfferPage: React.FC = () => {
               </p>
             </div>
             <button
-              onClick={() => handleCtaClick("guarantee_cta", "Quero Descobrir Meu Estilo Agora!")}
+              onClick={() => handleCtaClick('guarantee_cta', 'Quero Descobrir Meu Estilo Agora!')}
               className="btn-primary-3d animate-pulse-gentle text-base sm:text-lg md:text-xl py-3.5 px-7 sm:py-4 sm:px-12"
             >
               <span className="flex items-center justify-center gap-2.5">
@@ -952,7 +937,7 @@ const PreviewQuizOfferPage: React.FC = () => {
             <FaqSectionNew />
             <div className="mt-12 sm:mt-16">
               <button
-                onClick={() => handleCtaClick("faq_cta", "Quero Transformar Minha Imagem Agora!")}
+                onClick={() => handleCtaClick('faq_cta', 'Quero Transformar Minha Imagem Agora!')}
                 className="btn-primary-3d text-base sm:text-lg py-3.5 px-7 sm:py-4 sm:px-10"
               >
                 <span className="flex items-center justify-center gap-2.5">

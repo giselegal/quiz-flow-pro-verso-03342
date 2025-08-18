@@ -75,14 +75,14 @@ const files = [
   'src/components/editor/blocks/ProductOfferBlock.tsx',
   'src/components/editor/blocks/ProgressBarStepBlock.tsx',
   'src/components/editor/blocks/ProgressInlineBlock.tsx',
-  'src/components/editor/blocks/ProsConsBlock.tsx'
+  'src/components/editor/blocks/ProsConsBlock.tsx',
 ];
 
 function addTsNocheck(filePath) {
   try {
     if (fs.existsSync(filePath)) {
       const content = fs.readFileSync(filePath, 'utf8');
-      
+
       // Verificar se já tem @ts-nocheck
       if (!content.startsWith('// @ts-nocheck')) {
         const newContent = '// @ts-nocheck\n' + content;

@@ -1,17 +1,17 @@
 // @ts-nocheck
-import React, { useState, useEffect } from "react";
-import { Crown, Star, Award } from "lucide-react";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { AnimatedWrapper } from "@/components/ui/animated-wrapper";
-import type { BlockComponentProps } from "@/types/blocks";
+import React, { useState, useEffect } from 'react';
+import { Crown, Star, Award } from 'lucide-react';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { AnimatedWrapper } from '@/components/ui/animated-wrapper';
+import type { BlockComponentProps } from '@/types/blocks';
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -56,14 +56,14 @@ const QuizResultSecondaryStylesBlock: React.FC<BlockComponentProps> = ({
   isEditing = false,
   onClick,
   onPropertyChange,
-  className = "",
+  className = '',
 }) => {
   const {
-    primaryStyle = "elegante",
-    title = "Seus Estilos Secundários",
-    subtitle = "Estes estilos complementam seu estilo predominante",
-    accentColor = "#B89B7A",
-    textColor = "#432818",
+    primaryStyle = 'elegante',
+    title = 'Seus Estilos Secundários',
+    subtitle = 'Estes estilos complementam seu estilo predominante',
+    accentColor = '#B89B7A',
+    textColor = '#432818',
     maxStyles = 3,
   } = block?.properties || {};
 
@@ -82,33 +82,33 @@ const QuizResultSecondaryStylesBlock: React.FC<BlockComponentProps> = ({
   // Configuração dos estilos
   const styleConfig = {
     elegante: {
-      name: "Elegante",
-      description: "Sofisticação e refinamento em cada detalhe.",
+      name: 'Elegante',
+      description: 'Sofisticação e refinamento em cada detalhe.',
       icon: Crown,
     },
     natural: {
-      name: "Natural",
-      description: "Conforto e autenticidade acima de tudo.",
+      name: 'Natural',
+      description: 'Conforto e autenticidade acima de tudo.',
       icon: Star,
     },
     contemporaneo: {
-      name: "Contemporâneo",
-      description: "Sempre em sintonia com as tendências atuais.",
+      name: 'Contemporâneo',
+      description: 'Sempre em sintonia com as tendências atuais.',
       icon: Award,
     },
     classico: {
-      name: "Clássico",
-      description: "Atemporalidade e elegância tradicional.",
+      name: 'Clássico',
+      description: 'Atemporalidade e elegância tradicional.',
       icon: Crown,
     },
     romantico: {
-      name: "Romântico",
-      description: "Feminilidade e delicadeza em cada look.",
+      name: 'Romântico',
+      description: 'Feminilidade e delicadeza em cada look.',
       icon: Star,
     },
     sexy: {
-      name: "Sexy",
-      description: "Sensualidade e confiança marcantes.",
+      name: 'Sexy',
+      description: 'Sensualidade e confiança marcantes.',
       icon: Award,
     },
   };
@@ -121,7 +121,7 @@ const QuizResultSecondaryStylesBlock: React.FC<BlockComponentProps> = ({
     <div
       className={`
         w-full py-8 px-4 transition-all duration-200
-        ${isSelected ? "ring-1 ring-gray-400/40 bg-gray-50/30" : "hover:shadow-sm"}
+        ${isSelected ? 'ring-1 ring-gray-400/40 bg-gray-50/30' : 'hover:shadow-sm'}
         ${className}
       `}
       onClick={onClick}

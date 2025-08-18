@@ -1,5 +1,4 @@
-import React from "react";
-import { OptimizedImage } from "./optimized-image";
+import { OptimizedImage } from './optimized-image';
 
 interface LogoProps {
   src?: string;
@@ -12,9 +11,9 @@ interface LogoProps {
 }
 
 const Logo: React.FC<LogoProps> = ({
-  src = "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-  alt = "Logo Gisele Galvão",
-  className = "h-10 mx-auto",
+  src = 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+  alt = 'Logo Gisele Galvão',
+  className = 'h-10 mx-auto',
   style,
   priority = true,
   width = 200,
@@ -26,7 +25,7 @@ const Logo: React.FC<LogoProps> = ({
         src={src}
         alt={alt}
         className={`${className} mx-auto`}
-        style={{ ...style, objectFit: "contain" }}
+        style={{ ...style, objectFit: 'contain' }}
         priority={priority}
         width={width}
         height={height}

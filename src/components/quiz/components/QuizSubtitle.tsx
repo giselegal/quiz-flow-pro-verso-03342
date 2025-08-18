@@ -1,10 +1,9 @@
-import React from "react";
-import quizStyles from "@/styles/quiz.module.css";
+import quizStyles from '@/styles/quiz.module.css';
 
 interface QuizSubtitleProps {
   text?: string;
   level?: 2 | 3 | 4 | 5 | 6;
-  alignment?: "left" | "center" | "right";
+  alignment?: 'left' | 'center' | 'right';
   color?: string;
   fontSize?: string;
   fontWeight?: string;
@@ -12,22 +11,22 @@ interface QuizSubtitleProps {
 }
 
 const QuizSubtitle: React.FC<QuizSubtitleProps> = ({
-  text = "",
+  text = '',
   level = 2,
-  alignment = "center",
-  color = "#6b4f43",
+  alignment = 'center',
+  color = '#6b4f43',
   fontSize,
-  fontWeight = "semibold",
-  className = "",
+  fontWeight = 'semibold',
+  className = '',
 }) => {
   const Tag = `h${level}` as keyof JSX.IntrinsicElements;
 
   const style: React.CSSProperties = {
     textAlign: alignment,
     color,
-    fontSize: fontSize || "1.5rem",
+    fontSize: fontSize || '1.5rem',
     fontWeight,
-    margin: "0 0 1rem 0",
+    margin: '0 0 1rem 0',
     lineHeight: 1.3,
   };
 

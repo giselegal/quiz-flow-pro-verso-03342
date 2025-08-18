@@ -11,9 +11,9 @@ O arquivo `server/index.ts` não existia, causando erro no build do ESBuild.
 Criado o arquivo `/workspaces/quiz-quest-challenge-verse/server/index.ts` com servidor Express básico:
 
 ```typescript
-import express from "express";
-import path from "path";
-import { fileURLToPath } from "url";
+import express from 'express';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -23,21 +23,21 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(express.json());
-app.use(express.static(path.join(__dirname, "../dist/public")));
+app.use(express.static(path.join(__dirname, '../dist/public')));
 
 // API Routes
-app.get("/api/health", (req, res) => {
-  res.json({ status: "OK", timestamp: new Date().toISOString() });
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'OK', timestamp: new Date().toISOString() });
 });
 
 // Serve React app for all other routes
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../dist/public/index.html"));
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dist/public/index.html'));
 });
 
 app.listen(PORT, () => {
   console.log(`🚀 Servidor rodando na porta ${PORT}`);
-  console.log(`📁 Servindo arquivos de: ${path.join(__dirname, "../dist/public")}`);
+  console.log(`📁 Servindo arquivos de: ${path.join(__dirname, '../dist/public')}`);
 });
 ```
 
@@ -151,8 +151,8 @@ Todos os chunks têm boa compressão GZIP (média 65-70% de redução).
 
 ```typescript
 // Implementar lazy loading nas rotas
-const EditorPage = lazy(() => import("./pages/EditorPage"));
-const QuizPage = lazy(() => import("./pages/QuizPage"));
+const EditorPage = lazy(() => import('./pages/EditorPage'));
+const QuizPage = lazy(() => import('./pages/QuizPage'));
 ```
 
 ### **2. Implementar Service Worker**

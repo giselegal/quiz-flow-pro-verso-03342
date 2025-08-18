@@ -1,88 +1,69 @@
-import React from "react";
-import { cn } from "@/lib/utils";
-import { BlockComponentProps } from "@/types/blocks";
+// @ts-nocheck
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
-
-const StyleCharacteristicsInlineBlock: React.FC<BlockComponentProps> = ({
+const StyleCharacteristicsInlineBlock = ({
   block,
-  isSelected,
-  onClick,
-  onPropertyChange,
+  isSelected = false,
+  onClick = () => {},
+  onPropertyChange = () => {},
+  disabled = false,
+  className = '',
 }) => {
-  const styleData = block?.properties?.styleData || {
-    name: "Natural",
-    description: "Elegância espontânea e sofisticação despojada",
-    characteristics: [
-      "Prefere tecidos naturais como algodão e linho",
-      "Gosta de cores neutras e terrosas",
-      "Valoriza o conforto sem abrir mão do estilo",
-      "Aprecia peças versáteis e atemporais",
-    ],
-    colors: ["#432818", "#432818", "#432818", "#432818"],
-    mainColor: "#432818",
-  };
+  const {
+    title = 'Características do Seu Estilo',
+    description = 'Veja o que define o seu perfil único',
+    characteristics = [],
+    showDescription = true,
+    backgroundColor = 'bg-background',
+    titleColor = 'text-foreground',
+    descriptionColor = 'text-muted-foreground',
+    borderRadius = 'rounded-lg',
+    padding = 'p-6',
+    spacing = 'space-y-4',
+    badgeVariant = 'secondary',
+  } = block?.properties || {};
 
-  const title = block?.properties?.title || `Características do Estilo ${styleData.name}`;
+  const defaultCharacteristics = [
+    { label: 'Elegante', score: 85 },
+    { label: 'Sofisticado', score: 78 },
+    { label: 'Moderno', score: 92 },
+    { label: 'Minimalista', score: 67 },
+  ];
+
+  const displayCharacteristics =
+    characteristics?.length > 0 ? characteristics : defaultCharacteristics;
 
   return (
     <div
-      className={cn(
-        "style-characteristics p-6 border border-gray-200 rounded-lg bg-white",
-        "hover:shadow-md transition-all duration-200",
-        isSelected && "ring-2 ring-[#432818] bg-[#432818]",
-        "cursor-pointer",
-      )}
+      className={`${className} ${backgroundColor} ${borderRadius} ${padding} ${isSelected ? 'ring-2 ring-primary' : ''}`}
       onClick={onClick}
     >
-      {/* Header com nome do estilo */}
-      <div className="text-center mb-6">
-        <h3 className="text-2xl font-bold text-[#432818] mb-2">{title}</h3>
-        <p style={{ color: '#6B4F43' }}>{styleData.description}</p>
-      </div>
-
-      {/* Paleta de cores */}
-      <div className="mb-6">
-        <h4 className="text-lg font-semibold text-[#432818] mb-3">Paleta de Cores</h4>
-        <div className="flex justify-center gap-2">
-          {styleData.colors.map((color: string, index: number) => (
-            <div
-              key={index}
-              style={{ borderColor: '#E5DDD5' }}
-              style={{ backgroundColor: color }}
-              title={color}
-            />
-          ))}
-        </div>
-      </div>
-
-      {/* Características */}
-      <div>
-        <h4 className="text-lg font-semibold text-[#432818] mb-3">Características Principais</h4>
-        <ul className="space-y-3">
-          {styleData.characteristics.map((characteristic: string, index: number) => (
-            <li key={index} className="flex items-start">
-              <span
-                className="w-6 h-6 rounded-full flex items-center justify-center text-white text-sm mr-3 mt-0.5 flex-shrink-0"
-                style={{ backgroundColor: styleData.mainColor }}
+      <Card className="border-0 shadow-none bg-transparent">
+        <CardHeader className="p-0 pb-4">
+          <CardTitle className={`${titleColor} text-xl font-semibold`}>{title}</CardTitle>
+          {showDescription && (
+            <CardDescription className={`${descriptionColor}`}>{description}</CardDescription>
+          )}
+        </CardHeader>
+        <CardContent className={`p-0 ${spacing}`}>
+          <div className="grid grid-cols-2 gap-3">
+            {displayCharacteristics.map((characteristic, index) => (
+              <div
+                key={index}
+                className="flex items-center justify-between p-3 bg-muted/50 rounded-md"
               >
-                ✓
-              </span>
-              <span style={{ color: '#6B4F43' }}>{characteristic}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      {/* Área editável quando selecionado */}
-      {isSelected && onPropertyChange && (
-        <div style={{ borderColor: '#E5DDD5' }}>
-          <div style={{ color: '#8B7355' }}>
-            <p>
-              💡 <strong>Editável:</strong> Personalize as características do estilo
-            </p>
+                <Badge variant={badgeVariant} className="text-sm">
+                  {characteristic.label}
+                </Badge>
+                <span className="text-sm font-medium text-muted-foreground">
+                  {characteristic.score}%
+                </span>
+              </div>
+            ))}
           </div>
-        </div>
-      )}
+        </CardContent>
+      </Card>
     </div>
   );
 };

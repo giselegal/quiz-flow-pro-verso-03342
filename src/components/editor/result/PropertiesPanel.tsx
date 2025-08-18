@@ -1,11 +1,10 @@
-import React from "react";
-import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import { EditableContent } from "@/types/editor";
-import { Trash2 } from "lucide-react";
+import { Card } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
+import { EditableContent } from '@/types/editor';
+import { Trash2 } from 'lucide-react';
 
 interface PropertiesPanelProps {
   selectedComponentId: string | null;
@@ -16,7 +15,7 @@ interface PropertiesPanelProps {
 
 export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
   selectedComponentId,
-  onClose,
+  onClose: _onClose,
   onUpdate,
   onDelete,
 }) => {

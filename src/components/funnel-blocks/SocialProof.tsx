@@ -1,7 +1,6 @@
-import { getOptimizedContainerClasses } from "@/config/containerConfig";
-import React from "react";
-import { Badge } from "@/components/ui/badge";
-import { BlockComponentProps, SocialStat, Alignment } from "./types";
+import { getOptimizedContainerClasses } from '@/config/containerConfig';
+import { Badge } from '@/components/ui/badge';
+import { BlockComponentProps, SocialStat, Alignment } from './types';
 
 /**
  * SocialProof - Componente de prova social configurável
@@ -32,7 +31,7 @@ export interface SocialProofProps extends BlockComponentProps {
   stats: SocialStat[];
 
   // Layout
-  layout?: "horizontal" | "vertical" | "grid";
+  layout?: 'horizontal' | 'vertical' | 'grid';
   alignment?: Alignment;
 
   // Elementos visuais
@@ -72,8 +71,8 @@ export const SocialProof: React.FC<SocialProofProps> = props => {
     stats,
 
     // Layout
-    layout = "horizontal",
-    alignment = "center",
+    layout = 'horizontal',
+    alignment = 'center',
 
     // Elementos visuais
     showLogos = false,
@@ -85,41 +84,41 @@ export const SocialProof: React.FC<SocialProofProps> = props => {
     showReviews = true,
     averageRating = 4.9,
     totalReviews = 1250,
-    reviewPlatforms = ["Google", "Facebook", "Trustpilot"],
+    reviewPlatforms = ['Google', 'Facebook', 'Trustpilot'],
 
     // Certificações
     showCertifications = false,
     certifications = [],
 
     // Estilo
-    backgroundColor = "#f8fafc",
-    textColor = "#1f2937",
-    accentColor = "#B89B7A",
+    backgroundColor = '#f8fafc',
+    textColor = '#1f2937',
+    accentColor = '#B89B7A',
 
     // Props base
-    deviceView = "desktop",
-    className = "",
+    deviceView = 'desktop',
+    className = '',
     style = {},
-    testId = "social-proof",
+    testId = 'social-proof',
   } = props;
 
   // Classes de alinhamento
   const alignmentClasses = {
-    left: "text-left",
-    center: "text-center",
-    right: "text-right",
+    left: 'text-left',
+    center: 'text-center',
+    right: 'text-right',
   };
 
   // Classes de layout para stats
   const statsLayoutClasses = {
-    horizontal: "flex flex-wrap justify-center gap-8 md:gap-12",
-    vertical: "flex flex-col space-y-2",
+    horizontal: 'flex flex-wrap justify-center gap-8 md:gap-12',
+    vertical: 'flex flex-col space-y-2',
     grid:
-      deviceView === "mobile"
-        ? "grid grid-cols-1 gap-6"
-        : deviceView === "tablet"
-          ? "grid grid-cols-2 gap-6"
-          : "grid grid-cols-3 gap-8",
+      deviceView === 'mobile'
+        ? 'grid grid-cols-1 gap-6'
+        : deviceView === 'tablet'
+          ? 'grid grid-cols-2 gap-6'
+          : 'grid grid-cols-3 gap-8',
   };
 
   // Renderizar estrelas
@@ -179,9 +178,9 @@ export const SocialProof: React.FC<SocialProofProps> = props => {
   };
 
   const containerClasses = getOptimizedContainerClasses(
-    deviceView || "desktop",
-    "tight",
-    "full",
+    deviceView || 'desktop',
+    'tight',
+    'full',
     className
   );
 
@@ -232,7 +231,7 @@ export const SocialProof: React.FC<SocialProofProps> = props => {
                 Baseado em {totalReviews.toLocaleString()} avaliações
               </div>
               {reviewPlatforms.length > 0 && (
-                <div className="text-xs opacity-60">{reviewPlatforms.join(" • ")}</div>
+                <div className="text-xs opacity-60">{reviewPlatforms.join(' • ')}</div>
               )}
             </div>
           </div>

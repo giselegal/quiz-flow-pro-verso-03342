@@ -1,80 +1,43 @@
 {
-  "templateVersion": "2.0",
-  "metadata": {
-    "id": "quiz-step-02",
-    "name": "Q1 - QUAL O SEU TIPO DE R",
-    "description": "Questão 1 de 13",
-    "category": "quiz-question",
-    "type": "question",
-    "tags": ["quiz", "style", "quiz-question", "gisele-galvao"],
-    "createdAt": "2025-08-10T03:45:03.511Z",
-    "updatedAt": "2025-08-10T03:45:03.511Z",
-    "author": "giselegal"
-  },
-  "design": {
-    "primaryColor": "#B89B7A",
-    "secondaryColor": "#432818",
-    "accentColor": "#aa6b5d",
-    "backgroundColor": "#FAF9F7",
-    "fontFamily": "'Playfair Display', 'Inter', serif",
-    "button": {
-      "background": "linear-gradient(90deg, #B89B7A, #aa6b5d)",
-      "textColor": "#fff",
-      "borderRadius": "10px",
-      "shadow": "0 4px 14px rgba(184, 155, 122, 0.15)"
-    },
-    "card": {
-      "background": "#fff",
-      "borderRadius": "16px",
-      "shadow": "0 4px 20px rgba(184, 155, 122, 0.10)"
-    },
-    "progressBar": {
-      "color": "#B89B7A",
-      "background": "#F3E8E6",
-      "height": "6px"
-    },
-    "animations": {
-      "questionTransition": "fade, scale",
-      "optionSelect": "glow, scale",
-      "button": "hover:scale-105, active:scale-95"
-    },
-    "imageOptionSize": {
-      "default": {
-        "width": 256,
-        "height": 256,
-        "aspect": "square"
-      },
-      "strategic": {
-        "width": 400,
-        "height": 256,
-        "aspect": "landscape"
-      }
-    }
-  },
+  "templateVersion": "1.0",
   "layout": {
     "containerWidth": "full",
-    "spacing": "responsive",
-    "backgroundColor": "#FAF9F7",
-    "responsive": true,
-    "animations": {
-      "questionTransition": "fade, scale",
-      "optionSelect": "glow, scale",
-      "button": "hover:scale-105, active:scale-95"
-    }
+    "spacing": "small",
+    "backgroundColor": "transparent",
+    "responsive": true
+  },
+  "validation": {
+    "required": true,
+    "minAnswers": 1,
+    "maxAnswers": 3,
+    "validationMessage": "Selecione pelo menos uma opção!"
+  },
+  "analytics": {
+    "events": ["page_view", "option_selected", "validation_error", "completion"],
+    "trackingId": "step-02-quiz-question"
+  },
+  "metadata": {
+    "id": "quiz-step-02",
+    "name": "Q1 - Roupa Favorita",
+    "description": "Primeira questão sobre estilo de roupa",
+    "category": "quiz-question",
+    "tags": ["quiz", "style", "quiz-question"],
+    "createdAt": "2025-08-11T01:02:19.340Z",
+    "updatedAt": "2025-08-11T01:02:19.340Z"
   },
   "blocks": [
     {
       "id": "step02-header",
       "type": "quiz-intro-header",
+      "position": 0,
       "properties": {
         "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
         "logoAlt": "Logo Gisele Galvão",
         "logoWidth": 96,
         "logoHeight": 96,
-        "progressValue": 5,
+        "progressValue": 10,
         "progressTotal": 100,
         "showProgress": true,
-        "showBackButton": true,
         "containerWidth": "full",
         "spacing": "small"
       }
@@ -82,13 +45,13 @@
     {
       "id": "step02-question-title",
       "type": "text-inline",
+      "position": 1,
       "properties": {
-        "content": "QUAL O SEU TIPO DE ROUPA FAVORITA?",
+        "content": "Q1 - ROUPA FAVORITA",
         "fontSize": "text-2xl",
         "fontWeight": "font-bold",
         "textAlign": "text-center",
         "color": "#432818",
-        "fontFamily": "'Playfair Display', serif",
         "containerWidth": "full",
         "spacing": "small"
       }
@@ -96,6 +59,7 @@
     {
       "id": "step02-question-counter",
       "type": "text-inline",
+      "position": 2,
       "properties": {
         "content": "Questão 1 de 13",
         "fontSize": "text-sm",
@@ -109,62 +73,79 @@
     {
       "id": "step02-options-grid",
       "type": "options-grid",
+      "position": 3,
       "properties": {
         "options": [
           {
             "id": "1a",
-            "text": "Conforto, leveza e praticidade no vestir.",
+            "text": "Natural & Confortável",
+            "description": "Amo roupas confortáveis e práticas para o dia a dia",
             "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-            "styleCategory": "Natural",
+            "value": "1a",
+            "category": "Natural",
             "points": 1
           },
           {
             "id": "1b",
-            "text": "Discrição, caimento clássico e sobriedade.",
+            "text": "Clássico & Elegante",
+            "description": "Prefiro peças atemporais e elegantes",
             "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-            "styleCategory": "Clássico",
+            "value": "1b",
+            "category": "Clássico",
             "points": 2
           },
           {
             "id": "1c",
-            "text": "Praticidade com um toque de estilo atual.",
+            "text": "Contemporâneo & Moderno",
+            "description": "Gosto de combinar moderno com clássico",
             "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-            "styleCategory": "Contemporâneo",
+            "value": "1c",
+            "category": "Contemporâneo",
             "points": 2
           },
           {
             "id": "1d",
-            "text": "Elegância refinada, moderna e sem exageros.",
+            "text": "Elegante & Sofisticado",
+            "description": "Valorizo sofisticação e refinamento",
             "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-            "styleCategory": "Elegante",
+            "value": "1d",
+            "category": "Elegante",
             "points": 3
           },
           {
             "id": "1e",
-            "text": "Delicadeza em tecidos suaves e fluidos.",
+            "text": "Romântico & Delicado",
+            "description": "Adoro looks delicados e femininos",
             "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/15_xezvcy.webp",
-            "styleCategory": "Romântico",
+            "value": "1e",
+            "category": "Romântico",
             "points": 2
           },
           {
             "id": "1f",
-            "text": "Sensualidade com destaque para o corpo.",
+            "text": "Sexy & Sedutor",
+            "description": "Prefiro roupas que valorizam minha silhueta",
             "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735316/16_mpqpew.webp",
-            "styleCategory": "Sexy",
+            "value": "1f",
+            "category": "Sexy",
             "points": 3
           },
           {
             "id": "1g",
-            "text": "Impacto visual com peças estruturadas e assimétricas.",
+            "text": "Dramático & Impactante",
+            "description": "Gosto de looks marcantes e impactantes",
             "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735319/17_m5ogub.webp",
-            "styleCategory": "Dramático",
+            "value": "1g",
+            "category": "Dramático",
             "points": 3
           },
           {
             "id": "1h",
-            "text": "Mix criativo com formas ousadas e originais.",
+            "text": "Criativo & Único",
+            "description": "Amo experimentar cores e estampas ousadas",
             "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/18_j8ipfb.webp",
-            "styleCategory": "Criativo",
+            "value": "1h",
+            "category": "Criativo",
             "points": 4
           }
         ],
@@ -172,90 +153,33 @@
         "imageSize": 256,
         "showImages": true,
         "multipleSelection": true,
-        "minSelections": 3,
+        "minSelections": 1,
         "maxSelections": 3,
         "borderColor": "#E5E7EB",
         "selectedBorderColor": "#B89B7A",
         "hoverColor": "#F3E8D3",
         "containerWidth": "full",
         "spacing": "small",
-        "marginBottom": 16,
-        "selectionStyle": "glow",
-        "animationType": "scale",
-        "validationMessage": "Selecione 3 opções para avançar.",
-        "scoring": {
-          "enabled": true,
-          "categories": [
-            "Natural",
-            "Clássico",
-            "Contemporâneo",
-            "Elegante",
-            "Romântico",
-            "Sexy",
-            "Dramático",
-            "Criativo"
-          ]
-        }
+        "marginBottom": 16
       }
     },
     {
       "id": "step02-continue-button",
       "type": "button-inline",
+      "position": 4,
       "properties": {
         "text": "Próxima Questão →",
-        "textWhenDisabled": "Selecione 3 opções para avançar",
+        "textWhenDisabled": "Selecione pelo menos 1 opção",
         "variant": "primary",
         "size": "large",
         "fullWidth": true,
         "backgroundColor": "#B89B7A",
-        "backgroundGradient": "linear-gradient(90deg, #B89B7A, #aa6b5d)",
         "textColor": "#ffffff",
-        "borderRadius": "10px",
-        "shadow": "0 4px 14px rgba(184, 155, 122, 0.15)",
-        "disabled": true,
-        "requiresValidInput": true,
         "enableOnSelection": true,
-        "minSelections": 3,
-        "animation": "hover:scale-105, active:scale-95",
         "containerWidth": "full",
         "spacing": "small",
         "marginTop": 24
       }
     }
-  ],
-  "validation": {
-    "required": true,
-    "minAnswers": 3,
-    "maxAnswers": 3,
-    "validationMessage": "Selecione 3 opções para avançar."
-  },
-  "analytics": {
-    "trackingId": "step-02-quiz-question",
-    "events": ["page_view", "interaction", "validation_error", "completion"],
-    "utmParams": true,
-    "customEvents": []
-  },
-  "logic": {
-    "navigation": {
-      "nextStep": "step-03",
-      "prevStep": "step-01",
-      "allowBack": true,
-      "autoAdvance": false
-    },
-    "scoring": {
-      "enabled": true,
-      "method": "category-points",
-      "categories": [
-        "Natural",
-        "Clássico",
-        "Contemporâneo",
-        "Elegante",
-        "Romântico",
-        "Sexy",
-        "Dramático",
-        "Criativo"
-      ]
-    },
-    "conditions": null
-  }
+  ]
 }

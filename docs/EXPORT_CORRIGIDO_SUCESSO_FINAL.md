@@ -68,8 +68,8 @@ export default EnhancedComponentsSidebar;
 
 ```tsx
 // Ambos funcionam agora:
-import { EnhancedComponentsSidebar } from "@/components/editor/EnhancedComponentsSidebar";
-import EnhancedComponentsSidebar from "@/components/editor/EnhancedComponentsSidebar";
+import { EnhancedComponentsSidebar } from '@/components/editor/EnhancedComponentsSidebar';
+import EnhancedComponentsSidebar from '@/components/editor/EnhancedComponentsSidebar';
 ```
 
 ## 🎪 **Teste Final**

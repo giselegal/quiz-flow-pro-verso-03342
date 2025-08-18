@@ -30,8 +30,8 @@ export interface FunnelTheme {
       base: string;
       lg: string;
       xl: string;
-      "2xl": string;
-      "3xl": string;
+      '2xl': string;
+      '3xl': string;
     };
   };
   spacing: {
@@ -55,148 +55,148 @@ export interface FunnelTheme {
 
 // 🌟 TEMA: ESTILO ELEGANTE (baseado no funil real)
 export const elegantTheme: FunnelTheme = {
-  id: "elegant",
-  name: "Elegante",
-  description: "Tema sofisticado para consultoria de estilo e moda",
+  id: 'elegant',
+  name: 'Elegante',
+  description: 'Tema sofisticado para consultoria de estilo e moda',
   colors: {
-    primary: "#B89B7A", // Cor da marca Gisele
-    secondary: "#432818", // Marrom escuro
-    background: "#FAF9F7", // Creme claro
-    surface: "#FFFFFF", // Branco puro
-    text: "#432818", // Marrom escuro para texto
-    textSecondary: "#8F7A6A", // Marrom médio
-    accent: "#D4C4B0", // Dourado claro
-    success: "#22c55e", // Verde sucesso
-    warning: "#f59e0b", // Amarelo aviso
-    error: "#ef4444", // Vermelho erro
+    primary: '#B89B7A', // Cor da marca Gisele
+    secondary: '#432818', // Marrom escuro
+    background: '#FAF9F7', // Creme claro
+    surface: '#FFFFFF', // Branco puro
+    text: '#432818', // Marrom escuro para texto
+    textSecondary: '#8F7A6A', // Marrom médio
+    accent: '#D4C4B0', // Dourado claro
+    success: '#22c55e', // Verde sucesso
+    warning: '#f59e0b', // Amarelo aviso
+    error: '#ef4444', // Vermelho erro
   },
   typography: {
-    fontFamily: "Inter, system-ui, sans-serif",
-    headingFont: "Playfair Display, serif",
+    fontFamily: 'Inter, system-ui, sans-serif',
+    headingFont: 'Playfair Display, serif',
     fontSize: {
-      xs: "0.75rem", // 12px
-      sm: "0.875rem", // 14px
-      base: "1rem", // 16px
-      lg: "1.125rem", // 18px
-      xl: "1.25rem", // 20px
-      "2xl": "1.5rem", // 24px
-      "3xl": "1.875rem", // 30px
+      xs: '0.75rem', // 12px
+      sm: '0.875rem', // 14px
+      base: '1rem', // 16px
+      lg: '1.125rem', // 18px
+      xl: '1.25rem', // 20px
+      '2xl': '1.5rem', // 24px
+      '3xl': '1.875rem', // 30px
     },
   },
   spacing: {
-    containerPadding: "1rem",
-    sectionGap: "4rem",
-    cardPadding: "1.5rem",
+    containerPadding: '1rem',
+    sectionGap: '4rem',
+    cardPadding: '1.5rem',
   },
   borderRadius: {
-    sm: "0.375rem", // 6px
-    md: "0.5rem", // 8px
-    lg: "0.75rem", // 12px
-    xl: "1rem", // 16px
+    sm: '0.375rem', // 6px
+    md: '0.5rem', // 8px
+    lg: '0.75rem', // 12px
+    xl: '1rem', // 16px
   },
   shadows: {
-    sm: "0 2px 8px rgba(184, 155, 122, 0.08)",
-    md: "0 4px 20px rgba(184, 155, 122, 0.12)",
-    lg: "0 8px 32px rgba(184, 155, 122, 0.16)",
-    brand: "0 8px 24px rgba(184, 155, 122, 0.4)",
+    sm: '0 2px 8px rgba(184, 155, 122, 0.08)',
+    md: '0 4px 20px rgba(184, 155, 122, 0.12)',
+    lg: '0 8px 32px rgba(184, 155, 122, 0.16)',
+    brand: '0 8px 24px rgba(184, 155, 122, 0.4)',
   },
 };
 
 // 💪 TEMA: FITNESS DINÂMICO
 export const fitnessTheme: FunnelTheme = {
-  id: "fitness",
-  name: "Fitness Dinâmico",
-  description: "Tema energético para programas de fitness e saúde",
+  id: 'fitness',
+  name: 'Fitness Dinâmico',
+  description: 'Tema energético para programas de fitness e saúde',
   colors: {
-    primary: "#22c55e", // Verde energia
-    secondary: "#16a34a", // Verde escuro
-    background: "#f8fafc", // Cinza muito claro
-    surface: "#ffffff", // Branco
-    text: "#1e293b", // Cinza escuro
-    textSecondary: "#64748b", // Cinza médio
-    accent: "#10b981", // Verde accent
-    success: "#059669", // Verde sucesso
-    warning: "#f59e0b", // Laranja
-    error: "#dc2626", // Vermelho
+    primary: '#22c55e', // Verde energia
+    secondary: '#16a34a', // Verde escuro
+    background: '#f8fafc', // Cinza muito claro
+    surface: '#ffffff', // Branco
+    text: '#1e293b', // Cinza escuro
+    textSecondary: '#64748b', // Cinza médio
+    accent: '#10b981', // Verde accent
+    success: '#059669', // Verde sucesso
+    warning: '#f59e0b', // Laranja
+    error: '#dc2626', // Vermelho
   },
   typography: {
-    fontFamily: "Inter, system-ui, sans-serif",
-    headingFont: "Inter, system-ui, sans-serif",
+    fontFamily: 'Inter, system-ui, sans-serif',
+    headingFont: 'Inter, system-ui, sans-serif',
     fontSize: {
-      xs: "0.75rem",
-      sm: "0.875rem",
-      base: "1rem",
-      lg: "1.125rem",
-      xl: "1.25rem",
-      "2xl": "1.5rem",
-      "3xl": "1.875rem",
+      xs: '0.75rem',
+      sm: '0.875rem',
+      base: '1rem',
+      lg: '1.125rem',
+      xl: '1.25rem',
+      '2xl': '1.5rem',
+      '3xl': '1.875rem',
     },
   },
   spacing: {
-    containerPadding: "1rem",
-    sectionGap: "3rem",
-    cardPadding: "1.5rem",
+    containerPadding: '1rem',
+    sectionGap: '3rem',
+    cardPadding: '1.5rem',
   },
   borderRadius: {
-    sm: "0.25rem",
-    md: "0.375rem",
-    lg: "0.5rem",
-    xl: "0.75rem",
+    sm: '0.25rem',
+    md: '0.375rem',
+    lg: '0.5rem',
+    xl: '0.75rem',
   },
   shadows: {
-    sm: "0 2px 8px rgba(34, 197, 94, 0.08)",
-    md: "0 4px 20px rgba(34, 197, 94, 0.12)",
-    lg: "0 8px 32px rgba(34, 197, 94, 0.16)",
-    brand: "0 8px 24px rgba(34, 197, 94, 0.4)",
+    sm: '0 2px 8px rgba(34, 197, 94, 0.08)',
+    md: '0 4px 20px rgba(34, 197, 94, 0.12)',
+    lg: '0 8px 32px rgba(34, 197, 94, 0.16)',
+    brand: '0 8px 24px rgba(34, 197, 94, 0.4)',
   },
 };
 
 // 💼 TEMA: CORPORATIVO PROFISSIONAL
 export const corporateTheme: FunnelTheme = {
-  id: "corporate",
-  name: "Corporativo",
-  description: "Tema profissional para consultoria empresarial",
+  id: 'corporate',
+  name: 'Corporativo',
+  description: 'Tema profissional para consultoria empresarial',
   colors: {
-    primary: "#3b82f6", // Azul corporativo
-    secondary: "#1e40af", // Azul escuro
-    background: "#ffffff", // Branco
-    surface: "#f8fafc", // Cinza claro
-    text: "#1e293b", // Cinza escuro
-    textSecondary: "#64748b", // Cinza médio
-    accent: "#60a5fa", // Azul claro
-    success: "#10b981", // Verde
-    warning: "#f59e0b", // Amarelo
-    error: "#ef4444", // Vermelho
+    primary: '#3b82f6', // Azul corporativo
+    secondary: '#1e40af', // Azul escuro
+    background: '#ffffff', // Branco
+    surface: '#f8fafc', // Cinza claro
+    text: '#1e293b', // Cinza escuro
+    textSecondary: '#64748b', // Cinza médio
+    accent: '#60a5fa', // Azul claro
+    success: '#10b981', // Verde
+    warning: '#f59e0b', // Amarelo
+    error: '#ef4444', // Vermelho
   },
   typography: {
-    fontFamily: "Source Sans Pro, system-ui, sans-serif",
-    headingFont: "Source Sans Pro, system-ui, sans-serif",
+    fontFamily: 'Source Sans Pro, system-ui, sans-serif',
+    headingFont: 'Source Sans Pro, system-ui, sans-serif',
     fontSize: {
-      xs: "0.75rem",
-      sm: "0.875rem",
-      base: "1rem",
-      lg: "1.125rem",
-      xl: "1.25rem",
-      "2xl": "1.5rem",
-      "3xl": "1.875rem",
+      xs: '0.75rem',
+      sm: '0.875rem',
+      base: '1rem',
+      lg: '1.125rem',
+      xl: '1.25rem',
+      '2xl': '1.5rem',
+      '3xl': '1.875rem',
     },
   },
   spacing: {
-    containerPadding: "1.5rem",
-    sectionGap: "4rem",
-    cardPadding: "2rem",
+    containerPadding: '1.5rem',
+    sectionGap: '4rem',
+    cardPadding: '2rem',
   },
   borderRadius: {
-    sm: "0.25rem",
-    md: "0.375rem",
-    lg: "0.5rem",
-    xl: "0.75rem",
+    sm: '0.25rem',
+    md: '0.375rem',
+    lg: '0.5rem',
+    xl: '0.75rem',
   },
   shadows: {
-    sm: "0 2px 8px rgba(59, 130, 246, 0.08)",
-    md: "0 4px 20px rgba(59, 130, 246, 0.12)",
-    lg: "0 8px 32px rgba(59, 130, 246, 0.16)",
-    brand: "0 8px 24px rgba(59, 130, 246, 0.4)",
+    sm: '0 2px 8px rgba(59, 130, 246, 0.08)',
+    md: '0 4px 20px rgba(59, 130, 246, 0.12)',
+    lg: '0 8px 32px rgba(59, 130, 246, 0.16)',
+    brand: '0 8px 24px rgba(59, 130, 246, 0.4)',
   },
 };
 
@@ -274,8 +274,8 @@ export const generateThemeCSS = (theme: FunnelTheme): string => {
       --theme-font-size-base: ${theme.typography.fontSize.base};
       --theme-font-size-lg: ${theme.typography.fontSize.lg};
       --theme-font-size-xl: ${theme.typography.fontSize.xl};
-      --theme-font-size-2xl: ${theme.typography.fontSize["2xl"]};
-      --theme-font-size-3xl: ${theme.typography.fontSize["3xl"]};
+      --theme-font-size-2xl: ${theme.typography.fontSize['2xl']};
+      --theme-font-size-3xl: ${theme.typography.fontSize['3xl']};
       
       /* Espaçamento */
       --theme-container-padding: ${theme.spacing.containerPadding};

@@ -1,22 +1,28 @@
-/**
- * ❌ DEPRECADO - Properties Components Index
- *
- * Este diretório contém componentes depreciados.
- * Use os componentes em /src/components/universal/ em vez destes.
- *
- * ⚠️ SERÁ REMOVIDO EM VERSÃO FUTURA
- */
+// Main components
+export { PropertiesPanel, default as PropertiesPanelDefault } from './PropertiesPanel';
 
-// ❌ DEPRECADO: Use EnhancedUniversalPropertiesPanel de /src/components/universal/
-export { BasicPropertiesPanel as DeprecatedBasicPropertiesPanel } from "./EnhancedUniversalPropertiesPanel";
+// Property editors
+export { HeaderPropertyEditor } from './editors/HeaderPropertyEditor';
 
-// Exportação padrão também é depreciada
-export { default as DeprecatedPropertiesPanel } from "./EnhancedUniversalPropertiesPanel";
+// UI components
+export { PropertyCheckbox } from './components/PropertyCheckbox';
+export { PropertyInput } from './components/PropertyInput';
+export { PropertySelect } from './components/PropertySelect';
+export { PropertyTextarea } from './components/PropertyTextarea';
 
-/**
- * 🎯 COMPONENTES RECOMENDADOS:
- *
- * import { EnhancedUniversalPropertiesPanel } from "@/components/universal";
- * ou
- * import EnhancedUniversalPropertiesPanel from "@/components/universal";
- */
+// Configuration and registry
+export {
+  PROPERTY_EDITOR_REGISTRY,
+  getBlockEditorConfig,
+  getBlockTypesByCategory,
+  getBlockTypesByPriority,
+} from './PropertyEditorRegistry';
+
+// Types and interfaces
+export type {
+  BlockEditorConfig,
+  PropertyConfig,
+  PropertyEditorProps,
+  PropertyEditorRegistry,
+  PropertyInputProps,
+} from './interfaces/PropertyEditor';

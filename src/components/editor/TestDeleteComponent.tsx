@@ -1,15 +1,14 @@
 // @ts-nocheck
-import React from "react";
-import { Trash2 } from "lucide-react";
+import { Trash2 } from 'lucide-react';
 
 // Componente de teste simples para verificar se a exclusão funciona
 export // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -50,7 +49,7 @@ const getMarginClass = (value, type) => {
 
 const TestDeleteComponent: React.FC<{ onDelete: () => void }> = ({ onDelete }) => {
   const handleClick = () => {
-    console.log("🗑️ Botão de exclusão clicado!");
+    console.log('🗑️ Botão de exclusão clicado!');
     onDelete();
   };
 
@@ -62,11 +61,7 @@ const TestDeleteComponent: React.FC<{ onDelete: () => void }> = ({ onDelete }) =
       </div>
 
       {/* Botão de exclusão sempre visível */}
-      <button
-        onClick={handleClick}
-        style={{ backgroundColor: '#FAF9F7' }}
-        type="button"
-      >
+      <button onClick={handleClick} style={{ backgroundColor: '#FAF9F7' }} type="button">
         <Trash2 className="w-4 h-4 mr-2" />
         Excluir Este Componente
       </button>

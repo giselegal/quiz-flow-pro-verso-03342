@@ -1,5 +1,5 @@
 // Arquivo de teste para Prettier
-const obj = { name: "Test", age: 25, active: true };
+const obj = { name: 'Test', age: 25, active: true };
 
 function test(param1: string, param2: number) {
   return { result: `${param1}-${param2}` };

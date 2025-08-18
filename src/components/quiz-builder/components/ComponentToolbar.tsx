@@ -1,7 +1,6 @@
-import React from "react";
-import { QuizStage, QuizComponentType } from "@/types/quizBuilder";
-import { Button } from "@/components/ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
+import { QuizStage, QuizComponentType } from '@/types/quizBuilder';
+import { Button } from '@/components/ui/button';
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
 import {
   Eye,
   EyeOff,
@@ -11,7 +10,7 @@ import {
   ListOrdered,
   CheckCircle,
   LayoutGrid,
-} from "lucide-react";
+} from 'lucide-react';
 
 interface ComponentToolbarProps {
   activeStage: QuizStage | null;
@@ -39,12 +38,12 @@ export const ComponentToolbar: React.FC<ComponentToolbarProps> = ({
     label: string;
     icon: React.ElementType;
   }[] = [
-    { type: "header", label: "Cabeçalho", icon: Heading },
-    { type: "text", label: "Texto", icon: Text },
-    { type: "image", label: "Imagem", icon: Image },
-    { type: "multipleChoice", label: "Múltipla Escolha", icon: ListOrdered },
-    { type: "singleChoice", label: "Escolha Única", icon: CheckCircle },
-    { type: "columns", label: "Colunas", icon: LayoutGrid },
+    { type: 'header', label: 'Cabeçalho', icon: Heading },
+    { type: 'text', label: 'Texto', icon: Text },
+    { type: 'image', label: 'Imagem', icon: Image },
+    { type: 'multipleChoice', label: 'Múltipla Escolha', icon: ListOrdered },
+    { type: 'singleChoice', label: 'Escolha Única', icon: CheckCircle },
+    { type: 'columns', label: 'Colunas', icon: LayoutGrid },
   ];
 
   return (

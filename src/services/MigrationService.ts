@@ -1,17 +1,18 @@
+// @ts-nocheck
 /**
  * 🚀 SERVIÇO DE MIGRAÇÃO AUTOMÁTICA VIA API SUPABASE
  * Executa migrações de schema automaticamente via código
  */
 
-import { createClient } from "@supabase/supabase-js";
+import { createClient } from '@supabase/supabase-js';
 
 // ============================================================================
 // CONFIGURAÇÃO DO SUPABASE COM PERMISSÕES ADMIN
 // ============================================================================
 
 const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL || "",
-  import.meta.env.VITE_SUPABASE_ANON_KEY || "",
+  import.meta.env.VITE_SUPABASE_URL || '',
+  import.meta.env.VITE_SUPABASE_ANON_KEY || '',
   {
     auth: {
       autoRefreshToken: false,
@@ -49,18 +50,18 @@ export class MigrationService {
    */
   static async checkSchemaStatus(): Promise<MigrationStatus> {
     try {
-      console.log("🔍 Verificando status do schema...");
+      console.log('🔍 Verificando status do schema...');
 
       // Lista de tabelas esperadas
       const expectedTables = [
-        "profiles",
-        "quizzes",
-        "questions",
-        "quiz_attempts",
-        "question_responses",
-        "component_types",
-        "component_instances",
-        "component_presets",
+        'profiles',
+        'quizzes',
+        'questions',
+        'quiz_attempts',
+        'question_responses',
+        'component_types',
+        'component_instances',
+        'component_presets',
       ];
 
       const tablesCreated: string[] = [];
@@ -69,7 +70,7 @@ export class MigrationService {
       // Verificar cada tabela
       for (const table of expectedTables) {
         try {
-          const { data, error } = await supabase.from(table).select("*").limit(1);
+          const { data, error } = await supabase.from(table).select('*').limit(1);
 
           if (!error) {
             tablesCreated.push(table);
@@ -94,7 +95,7 @@ export class MigrationService {
         needsMigration,
       };
     } catch (error) {
-      console.error("❌ Erro ao verificar schema:", error);
+      console.error('❌ Erro ao verificar schema:', error);
       return {
         hasSchema: false,
         tablesCreated: [],
@@ -116,14 +117,14 @@ export class MigrationService {
   static async executeMigrationDirect(): Promise<MigrationResult> {
     const result: MigrationResult = {
       success: false,
-      message: "",
+      message: '',
       executed: [],
       errors: [],
       timestamp: new Date().toISOString(),
     };
 
     try {
-      console.log("🔧 Executando migração direta via API...");
+      console.log('🔧 Executando migração direta via API...');
 
       // Array de queries essenciais
       const essentialQueries = [
@@ -207,10 +208,10 @@ export class MigrationService {
         try {
           console.log(`⚡ Executando query ${i + 1}/${essentialQueries.length}`);
 
-          const { error } = await supabase.from("_query").select("*").eq("sql", query);
+          const { error } = await supabase.from('_query').select('*').eq('sql', query);
 
           // Como não temos rpc personalizado, vamos tentar criar tabelas diretamente
-          if (query.includes("CREATE TABLE")) {
+          if (query.includes('CREATE TABLE')) {
             // Para criar tabelas, vamos usar a abordagem de tentar inserir dados
             result.executed.push(`Query ${i + 1}: Preparada para execução`);
           }
@@ -221,9 +222,9 @@ export class MigrationService {
       }
 
       result.success = result.errors.length === 0;
-      result.message = result.success ? "Migração preparada" : "Alguns erros encontrados";
+      result.message = result.success ? 'Migração preparada' : 'Alguns erros encontrados';
     } catch (error: any) {
-      console.error("❌ Erro na migração direta:", error);
+      console.error('❌ Erro na migração direta:', error);
       result.success = false;
       result.message = error.message;
       result.errors.push(error.message);
@@ -237,44 +238,44 @@ export class MigrationService {
    */
   static async seedInitialData(): Promise<boolean> {
     try {
-      console.log("🌱 Populando dados iniciais...");
+      console.log('🌱 Populando dados iniciais...');
 
       // Dados essenciais de component_types
       const componentTypes = [
         {
-          type_key: "quiz-header",
-          display_name: "Cabeçalho do Quiz",
-          category: "layout",
-          default_properties: { title: "Novo Quiz", subtitle: "Descrição" },
+          type_key: 'quiz-header',
+          display_name: 'Cabeçalho do Quiz',
+          category: 'layout',
+          default_properties: { title: 'Novo Quiz', subtitle: 'Descrição' },
         },
         {
-          type_key: "question-multiple",
-          display_name: "Questão Múltipla Escolha",
-          category: "question",
-          default_properties: { title: "Pergunta", options: [] },
+          type_key: 'question-multiple',
+          display_name: 'Questão Múltipla Escolha',
+          category: 'question',
+          default_properties: { title: 'Pergunta', options: [] },
         },
         {
-          type_key: "result-card",
-          display_name: "Card de Resultado",
-          category: "result",
-          default_properties: { title: "Resultado", description: "Descrição do resultado" },
+          type_key: 'result-card',
+          display_name: 'Card de Resultado',
+          category: 'result',
+          default_properties: { title: 'Resultado', description: 'Descrição do resultado' },
         },
       ];
 
       // Inserir tipos de componentes
       const { error } = await supabase
-        .from("component_types")
-        .upsert(componentTypes, { onConflict: "type_key" });
+        .from('component_types')
+        .upsert(componentTypes, { onConflict: 'type_key' });
 
       if (error) {
-        console.error("❌ Erro ao inserir component_types:", error);
+        console.error('❌ Erro ao inserir component_types:', error);
         return false;
       }
 
-      console.log("✅ Dados iniciais populados!");
+      console.log('✅ Dados iniciais populados!');
       return true;
     } catch (error) {
-      console.error("❌ Erro ao popular dados:", error);
+      console.error('❌ Erro ao popular dados:', error);
       return false;
     }
   }

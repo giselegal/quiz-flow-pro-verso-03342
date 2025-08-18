@@ -9,20 +9,20 @@ Este é o **arquivo central** que contém a configuração de todas as 21 etapas
 ```typescript
 export const FUNNEL_STEPS_CONFIG: FunnelStepConfig[] = [
   {
-    id: "step-1", // ✅ ID único da etapa
+    id: 'step-1', // ✅ ID único da etapa
     stepNumber: 1, // ✅ Número sequencial
-    stepType: "intro", // ✅ Tipo da etapa
-    title: "Introdução ao Quiz",
-    description: "Página inicial que apresenta o quiz",
+    stepType: 'intro', // ✅ Tipo da etapa
+    title: 'Introdução ao Quiz',
+    description: 'Página inicial que apresenta o quiz',
     defaultContent: {
       // ✅ CONTEÚDO PADRÃO
-      title: "Descubra Seu Estilo Pessoal",
-      subtitle: "Um quiz personalizado...",
-      buttonText: "Iniciar Quiz",
-      backgroundColor: "#faf8f5",
-      textColor: "#432818",
+      title: 'Descubra Seu Estilo Pessoal',
+      subtitle: 'Um quiz personalizado...',
+      buttonText: 'Iniciar Quiz',
+      backgroundColor: '#faf8f5',
+      textColor: '#432818',
     },
-    requiredFields: ["title", "buttonText"],
+    requiredFields: ['title', 'buttonText'],
   },
   // ... mais 20 etapas
 ];
@@ -76,16 +76,16 @@ As etapas são **inicializadas no contexto** com templates básicos:
 
 ```typescript
 const stageTemplates = [
-  { name: "Introdução", type: "intro", description: "Página de apresentação" },
+  { name: 'Introdução', type: 'intro', description: 'Página de apresentação' },
   {
-    name: "Q1 - Profissão",
-    type: "question",
-    description: "Qual é a sua profissão?",
+    name: 'Q1 - Profissão',
+    type: 'question',
+    description: 'Qual é a sua profissão?',
   },
   {
-    name: "Q2 - Experiência",
-    type: "question",
-    description: "Anos de experiência",
+    name: 'Q2 - Experiência',
+    type: 'question',
+    description: 'Anos de experiência',
   },
   // ... 18 etapas mais
 ];
@@ -171,8 +171,8 @@ Agora o sistema está configurado para usar os **templates específicos** de cad
 
 ```typescript
 // ✅ IMPORTA TODOS OS TEMPLATES
-import { getStep01Template } from "@/components/steps/Step01Template";
-import { getStep02Template } from "@/components/steps/Step02Template";
+import { getStep01Template } from '@/components/steps/Step01Template';
+import { getStep02Template } from '@/components/steps/Step02Template';
 // ... até Step21Template
 
 // ✅ MAPEAMENTO COMPLETO
@@ -180,14 +180,14 @@ export const STEP_TEMPLATES_MAPPING: Record<number, StepTemplate> = {
   1: {
     stepNumber: 1,
     templateFunction: getStep01Template,
-    name: "Introdução",
-    description: "Página inicial do quiz",
+    name: 'Introdução',
+    description: 'Página inicial do quiz',
   },
   2: {
     stepNumber: 2,
     templateFunction: getStep02Template,
-    name: "Q1 - Tipo de Roupa",
-    description: "Qual o seu tipo de roupa favorita?",
+    name: 'Q1 - Tipo de Roupa',
+    description: 'Qual o seu tipo de roupa favorita?',
   },
   // ... todas as 21 etapas
 };
@@ -228,7 +228,7 @@ const setActiveStage = useCallback(
 // ✅ FUNÇÃO DE CARREGAMENTO
 const loadStageTemplate = useCallback(
   (stageId: string) => {
-    const stepNumber = parseInt(stageId.replace("step-", ""));
+    const stepNumber = parseInt(stageId.replace('step-', ''));
     const templateBlocks = getStepTemplate(stepNumber); // ✅ USA TEMPLATE ESPECÍFICO
 
     // Converte para EditorBlocks e adiciona à etapa
@@ -246,7 +246,7 @@ export interface FunnelStage {
   id: string;
   name: string;
   order: number;
-  type: "intro" | "question" | "transition" | "processing" | "result" | "lead" | "offer" | "final";
+  type: 'intro' | 'question' | 'transition' | 'processing' | 'result' | 'lead' | 'offer' | 'final';
   description?: string;
   isActive?: boolean;
   metadata?: {
@@ -309,10 +309,10 @@ Exemplo para Step01:
 export const getStep01Template = () => {
   return [
     {
-      type: "quiz-intro-header",
+      type: 'quiz-intro-header',
       properties: {
-        logoUrl: "https://...",
-        title: "Seu Título Personalizado",
+        logoUrl: 'https://...',
+        title: 'Seu Título Personalizado',
         // ... outras propriedades
       },
     },

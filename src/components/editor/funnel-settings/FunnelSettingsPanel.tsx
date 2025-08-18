@@ -1,16 +1,16 @@
-import React, { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
-import { useFunnelSettingsHistory } from "@/hooks/editor/useFunnelSettingsHistory";
-import { SEOSettings } from "./sections/SEOSettings";
-import { AnalyticsSettings } from "./sections/AnalyticsSettings";
-import { WebhookSettings } from "./sections/WebhookSettings";
-import { DomainSettings } from "./sections/DomainSettings";
-import { FunnelSettings, defaultFunnelSettings } from "@/types/funnelSettings";
-import { FunnelSettingsService } from "@/services/funnelSettingsService";
-import { Save, Undo, Redo, RotateCcw } from "lucide-react";
+import React, { useState } from 'react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
+import { useFunnelSettingsHistory } from '@/hooks/editor/useFunnelSettingsHistory';
+import { SEOSettings } from './sections/SEOSettings';
+import { AnalyticsSettings } from './sections/AnalyticsSettings';
+import { WebhookSettings } from './sections/WebhookSettings';
+import { DomainSettings } from './sections/DomainSettings';
+import { FunnelSettings, defaultFunnelSettings } from '@/types/funnelSettings';
+import { FunnelSettingsService } from '@/services/funnelSettingsService';
+import { Save, Undo, Redo, RotateCcw } from 'lucide-react';
 
 interface FunnelSettingsPanelProps {
   funnelId: string;
@@ -24,7 +24,7 @@ export const FunnelSettingsPanel: React.FC<FunnelSettingsPanelProps> = ({
   onClose,
 }) => {
   const { toast } = useToast();
-  const [activeTab, setActiveTab] = useState("seo");
+  const [activeTab, setActiveTab] = useState('seo');
   const [isSaving, setIsSaving] = useState(false);
 
   // Inicializar com configurações padrão
@@ -37,15 +37,15 @@ export const FunnelSettingsPanel: React.FC<FunnelSettingsPanelProps> = ({
       await FunnelSettingsService.saveSettings(funnelId, settings);
       saveState(settings);
       toast({
-        title: "Configurações salvas",
-        description: "Todas as configurações foram salvas com sucesso.",
+        title: 'Configurações salvas',
+        description: 'Todas as configurações foram salvas com sucesso.',
       });
     } catch (error) {
-      console.error("Erro ao salvar configurações:", error);
+      console.error('Erro ao salvar configurações:', error);
       toast({
-        title: "Erro ao salvar",
-        description: "Não foi possível salvar as configurações.",
-        variant: "destructive",
+        title: 'Erro ao salvar',
+        description: 'Não foi possível salvar as configurações.',
+        variant: 'destructive',
       });
     } finally {
       setIsSaving(false);
@@ -56,8 +56,8 @@ export const FunnelSettingsPanel: React.FC<FunnelSettingsPanelProps> = ({
     const newSettings = undo();
     updateSettings(newSettings);
     toast({
-      title: "Ação desfeita",
-      description: "A última alteração foi desfeita.",
+      title: 'Ação desfeita',
+      description: 'A última alteração foi desfeita.',
     });
   };
 
@@ -65,23 +65,23 @@ export const FunnelSettingsPanel: React.FC<FunnelSettingsPanelProps> = ({
     const newSettings = redo();
     updateSettings(newSettings);
     toast({
-      title: "Ação refeita",
-      description: "A alteração foi refeita.",
+      title: 'Ação refeita',
+      description: 'A alteração foi refeita.',
     });
   };
 
   const handleReset = () => {
-    if (window.confirm("Tem certeza que deseja resetar todas as configurações?")) {
+    if (window.confirm('Tem certeza que deseja resetar todas as configurações?')) {
       reset();
       updateSettings(defaultFunnelSettings);
       toast({
-        title: "Configurações resetadas",
-        description: "Todas as configurações foram resetadas para os valores padrão.",
+        title: 'Configurações resetadas',
+        description: 'Todas as configurações foram resetadas para os valores padrão.',
       });
     }
   };
 
-  const updateSEOSettings = (seoSettings: Partial<FunnelSettings["seo"]>) => {
+  const updateSEOSettings = (seoSettings: Partial<FunnelSettings['seo']>) => {
     const newSettings = {
       ...settings,
       seo: { ...settings.seo, ...seoSettings },
@@ -89,7 +89,7 @@ export const FunnelSettingsPanel: React.FC<FunnelSettingsPanelProps> = ({
     updateSettings(newSettings);
   };
 
-  const updateAnalyticsSettings = (analyticsSettings: Partial<FunnelSettings["analytics"]>) => {
+  const updateAnalyticsSettings = (analyticsSettings: Partial<FunnelSettings['analytics']>) => {
     const newSettings = {
       ...settings,
       analytics: { ...settings.analytics, ...analyticsSettings },
@@ -97,7 +97,7 @@ export const FunnelSettingsPanel: React.FC<FunnelSettingsPanelProps> = ({
     updateSettings(newSettings);
   };
 
-  const updateWebhookSettings = (webhookSettings: Partial<FunnelSettings["webhooks"]>) => {
+  const updateWebhookSettings = (webhookSettings: Partial<FunnelSettings['webhooks']>) => {
     const newSettings = {
       ...settings,
       webhooks: { ...settings.webhooks, ...webhookSettings },
@@ -105,7 +105,7 @@ export const FunnelSettingsPanel: React.FC<FunnelSettingsPanelProps> = ({
     updateSettings(newSettings);
   };
 
-  const updateDomainSettings = (domainSettings: Partial<FunnelSettings["domain"]>) => {
+  const updateDomainSettings = (domainSettings: Partial<FunnelSettings['domain']>) => {
     const newSettings = {
       ...settings,
       domain: { ...settings.domain, ...domainSettings },
@@ -131,7 +131,7 @@ export const FunnelSettingsPanel: React.FC<FunnelSettingsPanelProps> = ({
               </Button>
               <Button onClick={handleSave} disabled={isSaving} size="sm">
                 <Save className="w-4 h-4 mr-2" />
-                {isSaving ? "Salvando..." : "Salvar"}
+                {isSaving ? 'Salvando...' : 'Salvar'}
               </Button>
             </div>
           </DialogTitle>

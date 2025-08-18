@@ -8,15 +8,15 @@ const templatesDir = 'src/components/steps';
 const problematicImports = [
   'import { useContainerProperties } from "@/hooks/useContainerProperties";',
   'import { useDebounce } from "@/hooks/useDebounce";',
-  'import { usePerformanceOptimization } from "@/hooks/usePerformanceOptimization";'
+  'import { usePerformanceOptimization } from "@/hooks/usePerformanceOptimization";',
 ];
 
 function fixTemplate(filePath) {
   console.log(`🔧 Corrigindo: ${filePath}`);
-  
+
   let content = fs.readFileSync(filePath, 'utf8');
   let fixed = false;
-  
+
   // Remover imports problemáticos
   problematicImports.forEach(importLine => {
     if (content.includes(importLine)) {
@@ -24,10 +24,10 @@ function fixTemplate(filePath) {
       fixed = true;
     }
   });
-  
+
   // Remover linhas vazias extras
   content = content.replace(/\n\n\n+/g, '\n\n');
-  
+
   if (fixed) {
     fs.writeFileSync(filePath, content, 'utf8');
     console.log(`✅ ${filePath} corrigido`);
@@ -40,7 +40,7 @@ function fixTemplate(filePath) {
 
 const templateFiles = [
   'Step04Template.tsx',
-  'Step05Template.tsx', 
+  'Step05Template.tsx',
   'Step07Template.tsx',
   'Step09Template.tsx',
   'Step10Template.tsx',
@@ -52,7 +52,7 @@ const templateFiles = [
   'Step16Template.tsx',
   'Step17Template.tsx',
   'Step20Template.tsx',
-  'Step21Template.tsx'
+  'Step21Template.tsx',
 ];
 
 console.log('🚀 Iniciando correção dos templates...\n');

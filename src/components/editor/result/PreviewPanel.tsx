@@ -1,21 +1,21 @@
-import React from "react";
-import { StyleResult } from "@/types/quiz";
-import { Monitor, Smartphone, Eye } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import React from 'react';
+import { StyleResult } from '@/types/quiz';
+import { Monitor, Smartphone, Eye } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 interface PreviewPanelProps {
   primaryStyle: StyleResult;
-  onSelectComponent: (id: string | null) => void;
-  selectedComponentId: string | null;
+  onSelectComponent?: (id: string | null) => void;
+  selectedComponentId?: string | null;
 }
 
 export const PreviewPanel: React.FC<PreviewPanelProps> = ({
   primaryStyle,
-  onSelectComponent,
-  selectedComponentId,
+  onSelectComponent: _onSelectComponent,
+  selectedComponentId: _selectedComponentId,
 }) => {
-  const [viewMode, setViewMode] = React.useState<"desktop" | "mobile">("desktop");
+  const [viewMode, setViewMode] = React.useState<'desktop' | 'mobile'>('desktop');
   const [isPreviewing, setIsPreviewing] = React.useState(false);
 
   return (
@@ -26,8 +26,8 @@ export const PreviewPanel: React.FC<PreviewPanelProps> = ({
           <Button
             variant="outline"
             size="sm"
-            onClick={() => setViewMode("desktop")}
-            className={viewMode === "desktop" ? "bg-[#FAF9F7]" : ""}
+            onClick={() => setViewMode('desktop')}
+            className={viewMode === 'desktop' ? 'bg-[#FAF9F7]' : ''}
           >
             <Monitor className="w-4 h-4 mr-2" />
             Desktop
@@ -35,8 +35,8 @@ export const PreviewPanel: React.FC<PreviewPanelProps> = ({
           <Button
             variant="outline"
             size="sm"
-            onClick={() => setViewMode("mobile")}
-            className={viewMode === "mobile" ? "bg-[#FAF9F7]" : ""}
+            onClick={() => setViewMode('mobile')}
+            className={viewMode === 'mobile' ? 'bg-[#FAF9F7]' : ''}
           >
             <Smartphone className="w-4 h-4 mr-2" />
             Mobile
@@ -45,12 +45,12 @@ export const PreviewPanel: React.FC<PreviewPanelProps> = ({
 
         <Button variant="outline" size="sm" onClick={() => setIsPreviewing(!isPreviewing)}>
           <Eye className="w-4 h-4 mr-2" />
-          {isPreviewing ? "Editar" : "Visualizar"}
+          {isPreviewing ? 'Editar' : 'Visualizar'}
         </Button>
       </div>
 
       {/* Preview Content */}
-      <div className={cn("flex-1 overflow-auto p-8", viewMode === "mobile" && "max-w-md mx-auto")}>
+      <div className={cn('flex-1 overflow-auto p-8', viewMode === 'mobile' && 'max-w-md mx-auto')}>
         <div className="min-h-full">
           <div className="text-center space-y-4">
             <h1 className="text-4xl font-playfair text-[#aa6b5d]">VOCÊ DESCOBRIU SEU ESTILO</h1>

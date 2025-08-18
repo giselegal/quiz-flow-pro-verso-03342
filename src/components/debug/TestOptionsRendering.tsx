@@ -4,18 +4,17 @@
  * Arquivo para debug de renderização das opções
  */
 
-import QuizOptionsGridBlock from "@/components/blocks/quiz/QuizOptionsGridBlock";
-import { getStep02Template } from "@/components/steps/Step02Template";
+import QuizOptionsGridBlock from '@/components/blocks/quiz/QuizOptionsGridBlock';
 
 const TestOptionsRendering = () => {
-  console.log("🔍 TESTE: Iniciando teste de renderização de opções");
+  console.log('🔍 TESTE: Iniciando teste de renderização de opções');
 
-  const step02Template = getStep02Template();
-  const optionsBlock = step02Template.find(block => block.type === "options-grid");
+  // TODO: Migrado para TemplateRenderer - remover se não necessário
+  const optionsBlock = step02Template.find(block => block.type === 'options-grid');
 
-  console.log("🔍 TESTE: Bloco de opções encontrado:", optionsBlock);
-  console.log("🔍 TESTE: Propriedades do bloco:", optionsBlock?.properties);
-  console.log("🔍 TESTE: Opções específicas:", optionsBlock?.properties?.options);
+  console.log('🔍 TESTE: Bloco de opções encontrado:', optionsBlock);
+  console.log('🔍 TESTE: Propriedades do bloco:', optionsBlock?.properties);
+  console.log('🔍 TESTE: Opções específicas:', optionsBlock?.properties?.options);
 
   if (!optionsBlock) {
     return (
@@ -62,7 +61,7 @@ const TestOptionsRendering = () => {
           id={optionsBlock.id}
           properties={optionsBlock.properties}
           onPropertyChange={(key, value) => {
-            console.log("🔍 TESTE: Propriedade alterada:", key, value);
+            console.log('🔍 TESTE: Propriedade alterada:', key, value);
           }}
         />
       </div>

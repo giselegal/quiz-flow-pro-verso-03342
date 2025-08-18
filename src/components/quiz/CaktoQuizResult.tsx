@@ -1,6 +1,5 @@
-import React from "react";
-import { QuizResult, StyleType } from "@/types/quiz";
-import { getStyleById } from "@/data/styles";
+import { QuizResult, StyleType } from '@/types/quiz';
+import { getStyleById } from '@/data/styles';
 
 interface CaktoQuizResultProps {
   result: QuizResult;

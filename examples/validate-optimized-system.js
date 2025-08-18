@@ -8,9 +8,9 @@
  * funcionando corretamente após a limpeza e configuração.
  */
 
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -20,38 +20,38 @@ const __dirname = path.dirname(__filename);
 // ====================================================================
 
 function validateCoreComponents() {
-  console.log("🔍 VALIDANDO COMPONENTES CORE...");
+  console.log('🔍 VALIDANDO COMPONENTES CORE...');
 
   const coreComponents = [
-    "quiz-intro-header",
-    "heading-inline",
-    "text-inline",
-    "decorative-bar-inline",
-    "form-input",
-    "button-inline",
-    "options-grid",
-    "quiz-progress",
-    "quiz-results",
-    "style-results",
-    "final-step",
-    "image-display-inline",
-    "legal-notice-inline",
+    'quiz-intro-header',
+    'heading-inline',
+    'text-inline',
+    'decorative-bar-inline',
+    'form-input',
+    'button-inline',
+    'options-grid',
+    'quiz-progress',
+    'quiz-results',
+    'style-results',
+    'final-step',
+    'image-display-inline',
+    'legal-notice-inline',
   ];
 
   const componentPaths = {
-    "quiz-intro-header": "src/components/blocks/QuizIntroHeader.tsx",
-    "heading-inline": "src/components/blocks/inline/HeadingInline.tsx",
-    "text-inline": "src/components/blocks/inline/TextInline.tsx",
-    "decorative-bar-inline": "src/components/blocks/inline/DecorativeBarInline.tsx",
-    "form-input": "src/components/blocks/FormInput.tsx",
-    "button-inline": "src/components/blocks/inline/ButtonInline.tsx",
-    "options-grid": "src/components/blocks/OptionsGrid.tsx",
-    "quiz-progress": "src/components/blocks/QuizProgress.tsx",
-    "quiz-results": "src/components/blocks/QuizResults.tsx",
-    "style-results": "src/components/blocks/StyleResults.tsx",
-    "final-step": "src/components/blocks/FinalStep.tsx",
-    "image-display-inline": "src/components/blocks/inline/ImageDisplayInline.tsx",
-    "legal-notice-inline": "src/components/blocks/inline/LegalNoticeInline.tsx",
+    'quiz-intro-header': 'src/components/blocks/QuizIntroHeader.tsx',
+    'heading-inline': 'src/components/blocks/inline/HeadingInline.tsx',
+    'text-inline': 'src/components/blocks/inline/TextInline.tsx',
+    'decorative-bar-inline': 'src/components/blocks/inline/DecorativeBarInline.tsx',
+    'form-input': 'src/components/blocks/FormInput.tsx',
+    'button-inline': 'src/components/blocks/inline/ButtonInline.tsx',
+    'options-grid': 'src/components/blocks/OptionsGrid.tsx',
+    'quiz-progress': 'src/components/blocks/QuizProgress.tsx',
+    'quiz-results': 'src/components/blocks/QuizResults.tsx',
+    'style-results': 'src/components/blocks/StyleResults.tsx',
+    'final-step': 'src/components/blocks/FinalStep.tsx',
+    'image-display-inline': 'src/components/blocks/inline/ImageDisplayInline.tsx',
+    'legal-notice-inline': 'src/components/blocks/inline/LegalNoticeInline.tsx',
   };
 
   const results = {
@@ -65,15 +65,15 @@ function validateCoreComponents() {
 
     if (fs.existsSync(componentPath)) {
       // Verificar se o arquivo tem conteúdo válido
-      const content = fs.readFileSync(componentPath, "utf8");
+      const content = fs.readFileSync(componentPath, 'utf8');
 
       if (
-        content.includes("export") &&
+        content.includes('export') &&
         content.includes(
           component
-            .split("-")
+            .split('-')
             .map(w => w.charAt(0).toUpperCase() + w.slice(1))
-            .join("")
+            .join('')
         )
       ) {
         results.existing.push(component);
@@ -92,13 +92,13 @@ function validateCoreComponents() {
 }
 
 function validateConfiguration() {
-  console.log("\n🔍 VALIDANDO CONFIGURAÇÃO...");
+  console.log('\n🔍 VALIDANDO CONFIGURAÇÃO...');
 
   const configFiles = [
-    "src/config/optimized21StepsFunnel.json",
-    "src/config/optimized21StepsFunnel.ts",
-    "src/config/blockDefinitions.ts",
-    "src/hooks/useUnifiedProperties.ts",
+    'src/config/optimized21StepsFunnel.json',
+    'src/config/optimized21StepsFunnel.ts',
+    'src/config/blockDefinitions.ts',
+    'src/hooks/useUnifiedProperties.ts',
   ];
 
   const results = {
@@ -122,27 +122,27 @@ function validateConfiguration() {
 }
 
 function validateOptimizedFunnel() {
-  console.log("\n🔍 VALIDANDO FUNIL OTIMIZADO...");
+  console.log('\n🔍 VALIDANDO FUNIL OTIMIZADO...');
 
   try {
-    const configPath = path.join(__dirname, "src/config/optimized21StepsFunnel.json");
+    const configPath = path.join(__dirname, 'src/config/optimized21StepsFunnel.json');
 
     if (!fs.existsSync(configPath)) {
-      console.log("  ❌ Arquivo de configuração não encontrado");
-      return { valid: false, reason: "missing-config" };
+      console.log('  ❌ Arquivo de configuração não encontrado');
+      return { valid: false, reason: 'missing-config' };
     }
 
-    const config = JSON.parse(fs.readFileSync(configPath, "utf8"));
+    const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
 
     // Validar estrutura básica
     if (!config.steps || !Array.isArray(config.steps)) {
-      console.log("  ❌ Configuração inválida: steps não encontrado");
-      return { valid: false, reason: "invalid-steps" };
+      console.log('  ❌ Configuração inválida: steps não encontrado');
+      return { valid: false, reason: 'invalid-steps' };
     }
 
     if (config.steps.length !== 21) {
       console.log(`  ❌ Número incorreto de etapas: ${config.steps.length}/21`);
-      return { valid: false, reason: "wrong-step-count" };
+      return { valid: false, reason: 'wrong-step-count' };
     }
 
     // Validar cada etapa
@@ -170,37 +170,37 @@ function validateOptimizedFunnel() {
     };
   } catch (error) {
     console.log(`  ❌ Erro ao validar: ${error.message}`);
-    return { valid: false, reason: "parse-error", error };
+    return { valid: false, reason: 'parse-error', error };
   }
 }
 
 function validateBlockDefinitions() {
-  console.log("\n🔍 VALIDANDO BLOCK DEFINITIONS...");
+  console.log('\n🔍 VALIDANDO BLOCK DEFINITIONS...');
 
   try {
-    const blockDefPath = path.join(__dirname, "src/config/blockDefinitions.ts");
+    const blockDefPath = path.join(__dirname, 'src/config/blockDefinitions.ts');
 
     if (!fs.existsSync(blockDefPath)) {
-      console.log("  ❌ blockDefinitions.ts não encontrado");
+      console.log('  ❌ blockDefinitions.ts não encontrado');
       return { valid: false };
     }
 
-    const content = fs.readFileSync(blockDefPath, "utf8");
+    const content = fs.readFileSync(blockDefPath, 'utf8');
 
     // Verificar se os componentes core estão definidos
     const coreComponents = [
-      "quiz-intro-header",
-      "heading-inline",
-      "text-inline",
-      "button-inline",
-      "options-grid",
-      "quiz-progress",
+      'quiz-intro-header',
+      'heading-inline',
+      'text-inline',
+      'button-inline',
+      'options-grid',
+      'quiz-progress',
     ];
 
     let definedComponents = 0;
 
     coreComponents.forEach(component => {
-      const componentKey = component.replace(/-/g, "");
+      const componentKey = component.replace(/-/g, '');
       if (content.includes(`'${component}'`) || content.includes(`"${component}"`)) {
         definedComponents++;
         console.log(`  ✅ ${component} definido`);
@@ -223,27 +223,27 @@ function validateBlockDefinitions() {
 }
 
 function validateUnifiedProperties() {
-  console.log("\n🔍 VALIDANDO UNIFIED PROPERTIES...");
+  console.log('\n🔍 VALIDANDO UNIFIED PROPERTIES...');
 
   try {
-    const hooksPath = path.join(__dirname, "src/hooks/useUnifiedProperties.ts");
+    const hooksPath = path.join(__dirname, 'src/hooks/useUnifiedProperties.ts');
 
     if (!fs.existsSync(hooksPath)) {
-      console.log("  ❌ useUnifiedProperties.ts não encontrado");
+      console.log('  ❌ useUnifiedProperties.ts não encontrado');
       return { valid: false };
     }
 
-    const content = fs.readFileSync(hooksPath, "utf8");
+    const content = fs.readFileSync(hooksPath, 'utf8');
 
     // Verificar estrutura básica do hook
     const checks = [
-      { name: "Export do hook", pattern: /export.*useUnifiedProperties/ },
+      { name: 'Export do hook', pattern: /export.*useUnifiedProperties/ },
       {
-        name: "Função principal",
+        name: 'Função principal',
         pattern: /function useUnifiedProperties|const useUnifiedProperties/,
       },
-      { name: "Return statement", pattern: /return\s*{/ },
-      { name: "Properties handling", pattern: /properties|setProperties/ },
+      { name: 'Return statement', pattern: /return\s*{/ },
+      { name: 'Properties handling', pattern: /properties|setProperties/ },
     ];
 
     let passedChecks = 0;
@@ -271,12 +271,12 @@ function validateUnifiedProperties() {
 }
 
 function validateEditorIntegration() {
-  console.log("\n🔍 VALIDANDO INTEGRAÇÃO COM EDITOR...");
+  console.log('\n🔍 VALIDANDO INTEGRAÇÃO COM EDITOR...');
 
   const editorFiles = [
-    "src/context/EditorContext.tsx",
-    "src/components/editor/funnel/FunnelStagesPanel.tsx",
-    "src/components/editor/properties/EnhancedUniversalPropertiesPanel.tsx",
+    'src/context/EditorContext.tsx',
+    'src/components/editor/funnel/FunnelStagesPanel.tsx',
+    'src/components/editor/properties/EnhancedUniversalPropertiesPanel.tsx',
   ];
 
   let existingFiles = 0;
@@ -302,10 +302,10 @@ function validateEditorIntegration() {
 }
 
 function runPerformanceAnalysis() {
-  console.log("\n🚀 ANÁLISE DE PERFORMANCE...");
+  console.log('\n🚀 ANÁLISE DE PERFORMANCE...');
 
   // Contar arquivos na pasta de components
-  const componentsDir = path.join(__dirname, "src/components");
+  const componentsDir = path.join(__dirname, 'src/components');
   let componentCount = 0;
 
   function countFiles(dir) {
@@ -320,7 +320,7 @@ function runPerformanceAnalysis() {
 
       if (stats.isDirectory()) {
         count += countFiles(fullPath);
-      } else if (file.endsWith(".tsx") || file.endsWith(".ts")) {
+      } else if (file.endsWith('.tsx') || file.endsWith('.ts')) {
         count++;
       }
     });
@@ -333,15 +333,15 @@ function runPerformanceAnalysis() {
   console.log(`  📊 Total de arquivos de componentes: ${componentCount}`);
   console.log(`  🎯 Meta pós-limpeza: ≤ 50 arquivos`);
   console.log(
-    `  ${componentCount <= 50 ? "✅" : "⚠️"} Performance: ${componentCount <= 50 ? "ÓTIMA" : "PODE MELHORAR"}`
+    `  ${componentCount <= 50 ? '✅' : '⚠️'} Performance: ${componentCount <= 50 ? 'ÓTIMA' : 'PODE MELHORAR'}`
   );
 
   return { componentCount, target: 50, optimal: componentCount <= 50 };
 }
 
 function generateValidationReport() {
-  console.log("\n📋 EXECUTANDO VALIDAÇÃO COMPLETA...");
-  console.log("=".repeat(60));
+  console.log('\n📋 EXECUTANDO VALIDAÇÃO COMPLETA...');
+  console.log('='.repeat(60));
 
   const results = {
     components: validateCoreComponents(),
@@ -367,33 +367,33 @@ function generateValidationReport() {
   const totalScore = scores.reduce((a, b) => a + b, 0) / scores.length;
   const percentage = Math.round(totalScore * 100);
 
-  console.log("\n🏆 RELATÓRIO FINAL");
-  console.log("=".repeat(60));
+  console.log('\n🏆 RELATÓRIO FINAL');
+  console.log('='.repeat(60));
   console.log(`📊 SCORE GERAL: ${percentage}%`);
   console.log(
-    `🎯 STATUS: ${percentage >= 80 ? "✅ EXCELENTE" : percentage >= 60 ? "⚠️ BOM" : "❌ PRECISA MELHORAR"}`
+    `🎯 STATUS: ${percentage >= 80 ? '✅ EXCELENTE' : percentage >= 60 ? '⚠️ BOM' : '❌ PRECISA MELHORAR'}`
   );
 
-  console.log("\n📋 DETALHES POR CATEGORIA:");
+  console.log('\n📋 DETALHES POR CATEGORIA:');
   console.log(`  • Componentes Core: ${results.components.existing.length}/13 ✅`);
   console.log(`  • Configuração: ${results.configuration.existing.length}/4 arquivos`);
-  console.log(`  • Funil Otimizado: ${results.funnel.valid ? "✅ VÁLIDO" : "❌ INVÁLIDO"}`);
-  console.log(`  • Block Definitions: ${results.blockDefinitions.valid ? "✅ OK" : "⚠️ REVISAR"}`);
+  console.log(`  • Funil Otimizado: ${results.funnel.valid ? '✅ VÁLIDO' : '❌ INVÁLIDO'}`);
+  console.log(`  • Block Definitions: ${results.blockDefinitions.valid ? '✅ OK' : '⚠️ REVISAR'}`);
   console.log(
-    `  • Unified Properties: ${results.unifiedProperties.valid ? "✅ OK" : "⚠️ REVISAR"}`
+    `  • Unified Properties: ${results.unifiedProperties.valid ? '✅ OK' : '⚠️ REVISAR'}`
   );
-  console.log(`  • Integração Editor: ${results.editorIntegration.valid ? "✅ OK" : "⚠️ REVISAR"}`);
-  console.log(`  • Performance: ${results.performance.optimal ? "✅ ÓTIMA" : "⚠️ BOA"}`);
+  console.log(`  • Integração Editor: ${results.editorIntegration.valid ? '✅ OK' : '⚠️ REVISAR'}`);
+  console.log(`  • Performance: ${results.performance.optimal ? '✅ ÓTIMA' : '⚠️ BOA'}`);
 
   if (percentage >= 80) {
-    console.log("\n🎉 SISTEMA TOTALMENTE VALIDADO!");
-    console.log("✅ Pronto para teste no editor: http://localhost:8081/editor-fixed");
+    console.log('\n🎉 SISTEMA TOTALMENTE VALIDADO!');
+    console.log('✅ Pronto para teste no editor: http://localhost:8081/editor-fixed');
   } else if (percentage >= 60) {
-    console.log("\n🔧 SISTEMA FUNCIONAL COM AJUSTES MENORES");
-    console.log("⚠️ Recomenda-se revisar itens marcados");
+    console.log('\n🔧 SISTEMA FUNCIONAL COM AJUSTES MENORES');
+    console.log('⚠️ Recomenda-se revisar itens marcados');
   } else {
-    console.log("\n⚠️ SISTEMA PRECISA DE REVISÃO");
-    console.log("❌ Vários componentes críticos ausentes");
+    console.log('\n⚠️ SISTEMA PRECISA DE REVISÃO');
+    console.log('❌ Vários componentes críticos ausentes');
   }
 
   return { results, score: percentage };
@@ -403,19 +403,19 @@ function generateValidationReport() {
 // 🚀 EXECUÇÃO PRINCIPAL
 // ====================================================================
 
-console.log("🔬 INICIANDO VALIDAÇÃO DO SISTEMA OTIMIZADO");
-console.log("=".repeat(80));
+console.log('🔬 INICIANDO VALIDAÇÃO DO SISTEMA OTIMIZADO');
+console.log('='.repeat(80));
 
 try {
   const validation = generateValidationReport();
 
   // Salvar relatório
-  const reportPath = path.join(__dirname, "validation-report.json");
+  const reportPath = path.join(__dirname, 'validation-report.json');
   fs.writeFileSync(reportPath, JSON.stringify(validation, null, 2));
 
   console.log(`\n💾 Relatório salvo em: ${reportPath}`);
-  console.log("\n✅ VALIDAÇÃO CONCLUÍDA!");
+  console.log('\n✅ VALIDAÇÃO CONCLUÍDA!');
 } catch (error) {
-  console.error("\n❌ ERRO NA VALIDAÇÃO:", error.message);
+  console.error('\n❌ ERRO NA VALIDAÇÃO:', error.message);
   process.exit(1);
 }

@@ -3,12 +3,13 @@
 ## 🎯 **Confirmação: As informações das etapas estão em formato JSON**
 
 ### 📁 **1. Arquivo JSON Principal - Todas as 21 Etapas**
+
 **Localização:** `/src/config/optimized21StepsFunnel.json`
 
 ```json
 {
   "id": "optimized-21-steps-funnel",
-  "name": "Quiz de Estilo - 21 Etapas Otimizadas", 
+  "name": "Quiz de Estilo - 21 Etapas Otimizadas",
   "metadata": {
     "totalSteps": 21,
     "coreComponents": 13,
@@ -31,12 +32,12 @@
             "logoAlt": "Logo Gisele Galvão",
             "progressValue": 0
           }
-        },
+        }
         // ... mais blocos
       ]
     },
     {
-      "id": "step-2", 
+      "id": "step-2",
       "name": "Q1 - Qual seu estilo de vida?",
       "type": "question",
       "questionData": {
@@ -57,17 +58,19 @@
 ```
 
 ### 📁 **2. Templates Individuais JSON (21 arquivos)**
+
 **Localização:** `/src/config/templates/`
 
 ```
 step-01.json ← Etapa 1 completa
-step-02.json ← Etapa 2 completa  
+step-02.json ← Etapa 2 completa
 step-03.json ← Etapa 3 completa
 ...
 step-21.json ← Etapa 21 completa
 ```
 
 **Estrutura de cada arquivo:**
+
 ```json
 {
   "templateVersion": "2.0",
@@ -102,6 +105,7 @@ step-21.json ← Etapa 21 completa
 ```
 
 ### 📁 **3. Exemplos JSON de Etapas**
+
 **Localização:** `/examples/`
 
 ```
@@ -111,11 +115,12 @@ etapa1-para-editor.json   ← Etapa 1 formatada para editor
 ```
 
 **Exemplo de estrutura:**
+
 ```json
 [
   {
     "id": "step01-header-logo",
-    "type": "quiz-intro-header", 
+    "type": "quiz-intro-header",
     "properties": {
       "logoUrl": "https://res.cloudinary.com/...",
       "logoWidth": 120,
@@ -140,6 +145,7 @@ etapa1-para-editor.json   ← Etapa 1 formatada para editor
 ## 🔧 **Como o JSON é Carregado no Código**
 
 ### **TemplateManager.ts** - Gerenciador de Templates JSON
+
 ```typescript
 // ✅ MAPEAMENTO DAS 21 ETAPAS PARA JSON
 const TEMPLATE_MAPPING = {
@@ -157,33 +163,34 @@ static async loadStepBlocks(stepId: string): Promise<Block[]> {
 ```
 
 ### **EditorContext.tsx** - Inicialização com Templates JSON
+
 ```typescript
 // ✅ AS ETAPAS SÃO INICIALIZADAS A PARTIR DOS TEMPLATES JSON
 const [stages, setStages] = useState<FunnelStage[]>(() => {
   const allStepTemplates = STEP_TEMPLATES; // ← Baseado nos JSONs
-  
-  const initialStages = allStepTemplates.map((stepTemplate) => ({
+
+  const initialStages = allStepTemplates.map(stepTemplate => ({
     id: `step-${stepTemplate.stepNumber}`,
     name: stepTemplate.name,
     // ✅ TEMPLATE CARREGADO DO JSON:
     metadata: {
-      templateBlocks: getTemplateByStep(stepTemplate.stepNumber)?.templateFunction() || []
-    }
+      templateBlocks: getTemplateByStep(stepTemplate.stepNumber)?.templateFunction() || [],
+    },
   }));
-  
+
   return initialStages;
 });
 ```
 
 ## 📊 **Estrutura Híbrida: JSON + TypeScript**
 
-| **Origem** | **Formato** | **Onde** | **O que Contém** |
-|------------|-------------|----------|------------------|
-| **JSON Principal** | `optimized21StepsFunnel.json` | `/src/config/` | ✅ Todas 21 etapas completas |
-| **Templates JSON** | `step-01.json` até `step-21.json` | `/src/config/templates/` | ✅ Cada etapa individual |
-| **Exemplos JSON** | `step01-blocks.json` etc | `/examples/` | ✅ Exemplos para desenvolvimento |
-| **TypeScript** | `EditorContext.tsx` | `/src/context/` | ✅ Estado e inicialização |
-| **TypeScript** | `stepTemplatesMapping.ts` | `/src/config/` | ✅ Mapeamento para JSONs |
+| **Origem**         | **Formato**                       | **Onde**                 | **O que Contém**                 |
+| ------------------ | --------------------------------- | ------------------------ | -------------------------------- |
+| **JSON Principal** | `optimized21StepsFunnel.json`     | `/src/config/`           | ✅ Todas 21 etapas completas     |
+| **Templates JSON** | `step-01.json` até `step-21.json` | `/src/config/templates/` | ✅ Cada etapa individual         |
+| **Exemplos JSON**  | `step01-blocks.json` etc          | `/examples/`             | ✅ Exemplos para desenvolvimento |
+| **TypeScript**     | `EditorContext.tsx`               | `/src/context/`          | ✅ Estado e inicialização        |
+| **TypeScript**     | `stepTemplatesMapping.ts`         | `/src/config/`           | ✅ Mapeamento para JSONs         |
 
 ## 🎯 **Fluxo Completo JSON → Etapas:**
 
@@ -191,7 +198,7 @@ const [stages, setStages] = useState<FunnelStage[]>(() => {
 1. TemplateManager.ts carrega step-XX.json
            ↓
 2. JSON é convertido para objetos Block[]
-           ↓  
+           ↓
 3. EditorContext inicializa FunnelStage[] com os blocos
            ↓
 4. FunnelStagesPanel renderiza as 21 etapas na UI
@@ -204,7 +211,7 @@ const [stages, setStages] = useState<FunnelStage[]>(() => {
 **SIM**, as informações das etapas estão em formato JSON:
 
 - 📁 **1 JSON Principal** com todas as 21 etapas (`optimized21StepsFunnel.json`)
-- 📁 **21 JSONs Individuais** com templates de cada etapa (`step-01.json` até `step-21.json`)  
+- 📁 **21 JSONs Individuais** com templates de cada etapa (`step-01.json` até `step-21.json`)
 - 📁 **JSONs de Exemplo** para desenvolvimento e testes
 - 🔧 **Sistema Híbrido** que carrega JSONs e converte para TypeScript no runtime
 

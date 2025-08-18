@@ -1,13 +1,10 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-br">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Descubra Seu Estilo com Gisele Galvão | Vista-se de Você!</title>
-    <meta
-      property="og:title"
-      content="Descubra Seu Estilo com Gisele Galvão | Vista-se de Você!"
-    />
+    <meta property="og:title" content="Descubra Seu Estilo com Gisele Galvão | Vista-se de Você!" />
     <meta
       property="og:description"
       content="Cansada do guarda-roupa lotado e nada combina? Faça o quiz da Gisele Galvão e descubra seu estilo com clareza e confiança. Resultado imediato!"
@@ -25,26 +22,19 @@
       !(function (f, b, e, v, n, t, s) {
         if (f.fbq) return;
         n = f.fbq = function () {
-          n.callMethod
-            ? n.callMethod.apply(n, arguments)
-            : n.queue.push(arguments);
+          n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
         };
         if (!f._fbq) f._fbq = n;
         n.push = n;
         n.loaded = !0;
-        n.version = "2.0";
+        n.version = '2.0';
         n.queue = [];
         t = b.createElement(e);
         t.async = !0;
         t.src = v;
         s = b.getElementsByTagName(e)[0];
         s.parentNode.insertBefore(t, s);
-      })(
-        window,
-        document,
-        "script",
-        "https://connect.facebook.net/en_US/fbevents.js"
-      );
+      })(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
       // Pixel ID será inicializado dinamicamente baseado na rota
     </script>
 
@@ -62,11 +52,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preconnect" href="https://connect.facebook.net" crossorigin />
-    <link
-      rel="preconnect"
-      href="https://www.googletagmanager.com"
-      crossorigin
-    />
+    <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin />
 
     <link rel="dns-prefetch" href="https://res.cloudinary.com" />
     <link rel="dns-prefetch" href="https://connect.facebook.net" />
@@ -107,7 +93,6 @@
     <meta name="theme-color" content="#B89B7A" />
     <meta http-equiv="Cache-Control" content="public, max-age=31536000" />
 
-
     <!-- Vite irá injetar os assets corretos no build -->
     <script type="module" src="/src/main.tsx"></script>
 
@@ -132,7 +117,7 @@
       body {
         margin: 0;
         padding: 0;
-        font-family: "Inter", sans-serif;
+        font-family: 'Inter', sans-serif;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
       }
@@ -164,10 +149,9 @@
         }
       }
       .font-playfair {
-        font-family: "Playfair Display", serif;
+        font-family: 'Playfair Display', serif;
       }
     </style>
-
   </head>
   <body>
     <noscript
@@ -180,14 +164,17 @@
     <div id="root"></div>
     <script>
       // Unregister any existing service workers to avoid caching/fetch conflicts
-      if ("serviceWorker" in navigator) {
+      if ('serviceWorker' in navigator) {
         navigator.serviceWorker.getRegistrations().then(regs => {
           for (const reg of regs) {
             reg.unregister().catch(() => {});
           }
         });
-        if (typeof caches !== "undefined") {
-          caches.keys().then(keys => keys.forEach(k => caches.delete(k))).catch(() => {});
+        if (typeof caches !== 'undefined') {
+          caches
+            .keys()
+            .then(keys => keys.forEach(k => caches.delete(k)))
+            .catch(() => {});
         }
       }
     </script>

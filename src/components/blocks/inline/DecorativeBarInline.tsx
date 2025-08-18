@@ -1,3 +1,5 @@
+import React from 'react';
+
 /**
  * 🎨 COMPONENTE BARRA DECORATIVA INLINE
  * =====================================
@@ -5,8 +7,6 @@
  * Componente para adicionar elementos visuais de separação
  * totalmente integrado com o sistema de propriedades unificado.
  */
-
-import React from "react";
 
 interface DecorativeBarInlineProps {
   height?: number;
@@ -23,14 +23,14 @@ interface DecorativeBarInlineProps {
 
 const DecorativeBarInline: React.FC<DecorativeBarInlineProps> = ({
   height = 4,
-  color = "#B89B7A",
+  color = '#B89B7A',
   marginTop = 20,
   marginBottom = 30,
-  width = "100%",
+  width = '100%',
   borderRadius = 2,
   opacity = 1,
   gradient = false,
-  className = "",
+  className = '',
   style = {},
   ...props
 }) => {
@@ -44,7 +44,7 @@ const DecorativeBarInline: React.FC<DecorativeBarInlineProps> = ({
     background: gradient
       ? `linear-gradient(90deg, ${color} 0%, ${color}80 50%, ${color} 100%)`
       : color,
-    transition: "all 0.3s ease",
+    transition: 'all 0.3s ease',
     ...style,
   };
 

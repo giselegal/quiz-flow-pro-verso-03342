@@ -6,26 +6,26 @@
 
 // Detectar preferências e dispositivos de baixo desempenho
 export const shouldDisableAnimations = () => {
-  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const isLowPerformance =
     navigator.hardwareConcurrency <= 4 ||
     /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
     window.innerWidth < 768;
-  const userReportedIssues = localStorage.getItem("prefer-reduced-animations") === "true";
+  const userReportedIssues = localStorage.getItem('prefer-reduced-animations') === 'true';
   return prefersReducedMotion || isLowPerformance || userReportedIssues;
 };
 
 // Desabilitar animações CSS
 export const disableCssAnimations = () => {
   if (shouldDisableAnimations()) {
-    const style = document.createElement("style");
+    const style = document.createElement('style');
     style.textContent = `
       * { animation: none !important; transition: none !important; transform: none !important; }
       @keyframes none { from {} to {} }
     `;
     document.head.appendChild(style);
-    document.documentElement.classList.add("reduced-animations");
-    console.log("🚫 Animações desativadas para melhorar desempenho");
+    document.documentElement.classList.add('reduced-animations');
+    console.log('🚫 Animações desativadas para melhorar desempenho');
     return true;
   }
   return false;
@@ -34,22 +34,22 @@ export const disableCssAnimations = () => {
 // Configurar animações essenciais
 export const configureEssentialAnimations = () => {
   const disabled = shouldDisableAnimations();
-  document.querySelectorAll(".loading-spinner, .progress-indicator").forEach(el => {
-    el.classList.add("essential-animation");
+  document.querySelectorAll('.loading-spinner, .progress-indicator').forEach(el => {
+    el.classList.add('essential-animation');
   });
   if (disabled) {
     document
-      .querySelectorAll(".animate-enhanced-pulse, .animate-bounce, .hover-scale")
+      .querySelectorAll('.animate-enhanced-pulse, .animate-bounce, .hover-scale')
       .forEach(el =>
-        el.classList.remove("animate-enhanced-pulse", "animate-bounce", "hover-scale")
+        el.classList.remove('animate-enhanced-pulse', 'animate-bounce', 'hover-scale')
       );
   }
 };
 
 // Inicializar otimização de animações
 export const initializeAnimationOptimization = () => {
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", () => {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
       disableCssAnimations();
       configureEssentialAnimations();
     });
@@ -57,10 +57,10 @@ export const initializeAnimationOptimization = () => {
     disableCssAnimations();
     configureEssentialAnimations();
   }
-  window.addEventListener("load", configureEssentialAnimations);
+  window.addEventListener('load', configureEssentialAnimations);
 };
 
 // Inicializa na carga
-if (typeof window !== "undefined") {
+if (typeof window !== 'undefined') {
   initializeAnimationOptimization();
 }

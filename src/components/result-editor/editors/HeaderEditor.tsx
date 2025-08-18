@@ -1,7 +1,6 @@
-import React from "react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 
 interface HeaderEditorProps {
   content: {
@@ -28,8 +27,8 @@ const HeaderEditor: React.FC<HeaderEditorProps> = ({ content, onUpdate }) => {
         <Label htmlFor="title">Título do Cabeçalho</Label>
         <Textarea
           id="title"
-          value={content.title || ""}
-          onChange={e => handleChange("title", e.target.value)}
+          value={content.title || ''}
+          onChange={e => handleChange('title', e.target.value)}
           placeholder="Olá, seu Estilo Predominante é:"
           rows={2}
         />
@@ -39,8 +38,8 @@ const HeaderEditor: React.FC<HeaderEditorProps> = ({ content, onUpdate }) => {
         <Label htmlFor="subtitle">Subtítulo (opcional)</Label>
         <Textarea
           id="subtitle"
-          value={content.subtitle || ""}
-          onChange={e => handleChange("subtitle", e.target.value)}
+          value={content.subtitle || ''}
+          onChange={e => handleChange('subtitle', e.target.value)}
           placeholder="Subtítulo personalizado"
           rows={2}
         />
@@ -50,8 +49,8 @@ const HeaderEditor: React.FC<HeaderEditorProps> = ({ content, onUpdate }) => {
         <Label htmlFor="logoUrl">URL do Logo</Label>
         <Input
           id="logoUrl"
-          value={content.logoUrl || ""}
-          onChange={e => handleChange("logoUrl", e.target.value)}
+          value={content.logoUrl || ''}
+          onChange={e => handleChange('logoUrl', e.target.value)}
           placeholder="https://exemplo.com/seu-logo.png"
         />
 
@@ -65,7 +64,7 @@ const HeaderEditor: React.FC<HeaderEditorProps> = ({ content, onUpdate }) => {
                 className="h-10 object-contain"
                 onError={e => {
                   (e.target as HTMLImageElement).src =
-                    "https://placehold.co/200x80?text=Logo+Inválido";
+                    'https://placehold.co/200x80?text=Logo+Inválido';
                 }}
               />
             </div>
@@ -77,8 +76,8 @@ const HeaderEditor: React.FC<HeaderEditorProps> = ({ content, onUpdate }) => {
         <Label htmlFor="userName">Nome Padrão (se o usuário não fornecer)</Label>
         <Input
           id="userName"
-          value={content.userName || ""}
-          onChange={e => handleChange("userName", e.target.value)}
+          value={content.userName || ''}
+          onChange={e => handleChange('userName', e.target.value)}
           placeholder="Visitante"
         />
       </div>

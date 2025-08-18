@@ -7,7 +7,9 @@ console.log('🔧 FINAL FIX: Adding @ts-nocheck to ALL block files with errors..
 // Find ALL .tsx files in blocks directory
 let blockFiles = [];
 try {
-  const findResult = execSync('find src/components/editor/blocks -name "*.tsx" -type f', { encoding: 'utf8' });
+  const findResult = execSync('find src/components/editor/blocks -name "*.tsx" -type f', {
+    encoding: 'utf8',
+  });
   blockFiles = findResult.split('\n').filter(file => file.trim());
   console.log(`📁 Found ${blockFiles.length} total block files`);
 } catch (error) {
@@ -24,7 +26,7 @@ blockFiles.forEach(filePath => {
   try {
     if (fs.existsSync(filePath)) {
       const content = fs.readFileSync(filePath, 'utf8');
-      
+
       // Check if @ts-nocheck is already at the beginning
       if (!content.trim().startsWith('// @ts-nocheck')) {
         const newContent = '// @ts-nocheck\n' + content;

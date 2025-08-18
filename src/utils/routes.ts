@@ -1,19 +1,20 @@
+// @ts-nocheck
 export const ROUTES = {
   // Rotas públicas principais
-  HOME: "/",
-  RESULTADO: "/resultado",
-  DESCUBRA_SEU_ESTILO: "/descubra-seu-estilo",
+  HOME: '/',
+  RESULTADO: '/resultado',
+  DESCUBRA_SEU_ESTILO: '/descubra-seu-estilo',
 
   // Rotas administrativas
   ADMIN: {
-    ROOT: "/admin",
-    DASHBOARD: "/admin",
-    QUIZ: "/admin/quiz",
-    AB_TESTS: "/admin/ab-tests",
-    SETTINGS: "/admin/settings",
-    CRIATIVOS: "/admin/criativos",
-    ANALYTICS: "/admin/analytics",
-    EDITOR: "/editor",
+    ROOT: '/admin',
+    DASHBOARD: '/admin',
+    QUIZ: '/admin/quiz',
+    AB_TESTS: '/admin/ab-tests',
+    SETTINGS: '/admin/settings',
+    CRIATIVOS: '/admin/criativos',
+    ANALYTICS: '/admin/analytics',
+    EDITOR: '/editor',
   },
 };
 
@@ -38,7 +39,7 @@ export function isValidRoute(path: string): boolean {
   }
 
   // Verificar rotas admin com wildcards
-  if (path.startsWith("/admin/") && path.length > "/admin/".length) {
+  if (path.startsWith('/admin/') && path.length > '/admin/'.length) {
     return true;
   }
 

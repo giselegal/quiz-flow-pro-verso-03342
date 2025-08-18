@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -6,81 +6,63 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
-import { useUtmParameters } from "@/hooks/useUtmParameters";
-import { CopyIcon, CheckCircleIcon, ArrowRightIcon } from "lucide-react";
-import { useToast } from "@/components/ui/use-toast";
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Separator } from '@/components/ui/separator';
+import { useToast } from '@/components/ui/use-toast';
+import { useUtmParameters } from '@/hooks/useUtmParameters';
+import { ArrowRightIcon, CheckCircleIcon, CopyIcon } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
 
 export const UtmSettingsTab: React.FC = () => {
-  const { domainBase, setBaseDomain, generateUtmLink } = useUtmParameters();
+  const { setBaseDomain, generateUtmLink } = useUtmParameters();
   const { toast } = useToast();
-  const [domain, setDomain] = useState(domainBase);
+  const [domainValue, setDomainValue] = useState('');
   const [exampleLinks, setExampleLinks] = useState({
-    facebook: "",
-    instagram: "",
-    email: "",
-    resultado: "",
+    facebook: '',
+    instagram: '',
+    email: '',
+    resultado: '',
   });
-
-  useEffect(() => {
-    // Generate example UTM links
-    updateExampleLinks(domain);
-  }, [domain]);
 
   const updateExampleLinks = (domain: string) => {
     const newLinks = {
-      facebook: generateUtmLink(
-        "https://giselegalvao.com.br/",
-        "facebook",
-        "social",
-        "brand",
-        "cta_button"
-      ),
-      instagram: generateUtmLink(
-        "https://giselegalvao.com.br/",
-        "instagram",
-        "social",
-        "feed",
-        "story"
-      ),
-      email: generateUtmLink(
-        "https://giselegalvao.com.br/",
-        "email",
-        "newsletter",
-        "weekly",
-        "footer"
-      ),
+      facebook: generateUtmLink(`https://${domain}/`, 'facebook', 'social', 'brand', 'cta_button'),
+      instagram: generateUtmLink(`https://${domain}/`, 'instagram', 'social', 'feed', 'story'),
+      email: generateUtmLink(`https://${domain}/`, 'email', 'newsletter', 'weekly', 'footer'),
       resultado: generateUtmLink(
-        "https://giselegalvao.com.br/resultado",
-        "facebook",
-        "social",
-        "retargeting",
-        "ad_1"
+        `https://${domain}/resultado`,
+        'facebook',
+        'social',
+        'retargeting',
+        'ad_1'
       ),
     };
 
-    // Set the links separately to match the type
     setExampleLinks(newLinks);
   };
 
+  useEffect(() => {
+    updateExampleLinks(domainValue || 'giselegalvao.com.br');
+  }, [domainValue, generateUtmLink]);
+
   const handleSaveDomain = () => {
-    setBaseDomain(domain);
-    toast({
-      title: "Domínio atualizado",
-      description: `O domínio base para UTMs foi atualizado para ${domain}.`,
-    });
-    updateExampleLinks(domain);
+    if (domainValue) {
+      setBaseDomain(domainValue);
+      toast({
+        title: 'Domínio salvo',
+        description: `O domínio base para UTMs foi atualizado para ${domainValue}.`,
+      });
+      updateExampleLinks(domainValue);
+    }
   };
 
   const handleCopyLink = (link: string) => {
     navigator.clipboard.writeText(link);
     toast({
-      title: "Link copiado",
-      description: "O link UTM foi copiado para a área de transferência.",
+      title: 'Link copiado',
+      description: 'O link UTM foi copiado para a área de transferência.',
     });
   };
 
@@ -100,8 +82,8 @@ export const UtmSettingsTab: React.FC = () => {
               <div className="flex gap-2">
                 <Input
                   id="domain"
-                  value={domain}
-                  onChange={e => setDomain(e.target.value)}
+                  value={domainValue}
+                  onChange={e => setDomainValue(e.target.value)}
                   placeholder="ex: giselegalvao.com.br"
                 />
                 <Button onClick={handleSaveDomain} size="sm">
@@ -198,7 +180,7 @@ export const UtmSettingsTab: React.FC = () => {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => window.open("/admin?tab=analytics", "_self")}
+            onClick={() => window.open('/admin?tab=analytics', '_self')}
           >
             Ver Analytics <ArrowRightIcon className="ml-1 h-4 w-4" />
           </Button>

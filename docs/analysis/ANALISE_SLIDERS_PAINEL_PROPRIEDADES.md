@@ -49,7 +49,7 @@ options: {
 
 ```typescript
 // ADICIONADO
-import QuizOptionsGridBlock from "@/components/blocks/quiz/QuizOptionsGridBlock";
+import QuizOptionsGridBlock from '@/components/blocks/quiz/QuizOptionsGridBlock';
 ```
 
 ## 🎛️ FUNCIONAMENTO DOS SLIDERS

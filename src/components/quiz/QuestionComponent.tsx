@@ -1,7 +1,7 @@
 // @ts-nocheck
-import React, { useState, useEffect } from "react";
-import { Button } from "../ui/button";
-import { toast } from "../ui/use-toast";
+import React, { useState, useEffect } from 'react';
+import { Button } from '../ui/button';
+import { toast } from '../ui/use-toast';
 
 interface QuestionProps {
   question: {
@@ -19,11 +19,11 @@ interface QuestionProps {
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -81,9 +81,9 @@ const QuestionComponent: React.FC<QuestionProps> = ({ question, onNext, onSelect
       // If already reached the limit of selections, show message and don't add
       if (prev.length >= requiredSelections) {
         toast({
-          title: "Limite de seleções atingido",
-          description: `Você só pode selecionar ${requiredSelections} ${requiredSelections === 1 ? "opção" : "opções"}`,
-          variant: "destructive",
+          title: 'Limite de seleções atingido',
+          description: `Você só pode selecionar ${requiredSelections} ${requiredSelections === 1 ? 'opção' : 'opções'}`,
+          variant: 'destructive',
         });
         return prev;
       }
@@ -97,8 +97,8 @@ const QuestionComponent: React.FC<QuestionProps> = ({ question, onNext, onSelect
       // If completed the required selections, show success message
       if (newSelections.length === requiredSelections) {
         toast({
-          title: "Seleções completas!",
-          description: "Agora você pode avançar para a próxima questão",
+          title: 'Seleções completas!',
+          description: 'Agora você pode avançar para a próxima questão',
         });
       }
 
@@ -109,9 +109,9 @@ const QuestionComponent: React.FC<QuestionProps> = ({ question, onNext, onSelect
   const handleNext = () => {
     if (selectedOptions.length !== requiredSelections) {
       toast({
-        title: "Seleção incompleta",
-        description: `Por favor, selecione ${requiredSelections} ${requiredSelections === 1 ? "opção" : "opções"} antes de avançar`,
-        variant: "destructive",
+        title: 'Seleção incompleta',
+        description: `Por favor, selecione ${requiredSelections} ${requiredSelections === 1 ? 'opção' : 'opções'} antes de avançar`,
+        variant: 'destructive',
       });
       return;
     }
@@ -133,10 +133,10 @@ const QuestionComponent: React.FC<QuestionProps> = ({ question, onNext, onSelect
             }
             className={`w-full p-4 text-left rounded-lg border transition-all ${
               selectedOptions.includes(option.id)
-                ? "border-[#B89B7A] bg-[#FAF9F7] text-[#432818]"
+                ? 'border-[#B89B7A] bg-[#FAF9F7] text-[#432818]'
                 : selectedOptions.length >= requiredSelections
-                  ? "border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed"
-                  : "border-gray-200 hover:border-[#B89B7A] text-[#8F7A6A]"
+                  ? 'border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed'
+                  : 'border-gray-200 hover:border-[#B89B7A] text-[#8F7A6A]'
             }`}
           >
             {option.text}
@@ -151,8 +151,8 @@ const QuestionComponent: React.FC<QuestionProps> = ({ question, onNext, onSelect
           </p>
           <p className="text-xs mt-1">
             {requiredSelections - selectedOptions.length > 0
-              ? `Faltam ${requiredSelections - selectedOptions.length} ${requiredSelections - selectedOptions.length === 1 ? "opção" : "opções"}`
-              : "Todas as opções necessárias foram selecionadas"}
+              ? `Faltam ${requiredSelections - selectedOptions.length} ${requiredSelections - selectedOptions.length === 1 ? 'opção' : 'opções'}`
+              : 'Todas as opções necessárias foram selecionadas'}
           </p>
         </div>
 
@@ -161,8 +161,8 @@ const QuestionComponent: React.FC<QuestionProps> = ({ question, onNext, onSelect
           disabled={selectedOptions.length !== requiredSelections}
           className={`px-6 py-2 ${
             selectedOptions.length === requiredSelections
-              ? "bg-[#B89B7A] hover:bg-[#A38A69] text-white"
-              : "bg-gray-200 text-gray-500 cursor-not-allowed"
+              ? 'bg-[#B89B7A] hover:bg-[#A38A69] text-white'
+              : 'bg-gray-200 text-gray-500 cursor-not-allowed'
           }`}
         >
           Avançar

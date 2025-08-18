@@ -17,12 +17,12 @@
  * Uso: node implement-margin-controls-batch.js
  */
 
-const fs = require("fs");
-const path = require("path");
-const { execSync } = require("child_process");
+const fs = require('fs');
+const path = require('path');
+const { execSync } = require('child_process');
 
 // 🎯 Configurações
-const BLOCKS_DIR = "./src/components/blocks";
+const BLOCKS_DIR = './src/components/blocks';
 const DRY_RUN = false; // Mude para true para apenas simular
 const VERBOSE = true;
 
@@ -102,7 +102,7 @@ class MarginControlsImplementer {
 
       if (stat.isDirectory()) {
         results = results.concat(this.findTsxFiles(filePath));
-      } else if (file.endsWith(".tsx") && !file.includes(".test.") && !file.includes(".spec.")) {
+      } else if (file.endsWith('.tsx') && !file.includes('.test.') && !file.includes('.spec.')) {
         results.push(filePath);
       }
     }
@@ -182,43 +182,43 @@ class MarginControlsImplementer {
             // Adiciona marginLeft/Right perto das margens existentes
             if (!analysis.hasMarginLeft) {
               updatedContent = updatedContent.replace(/marginTop\s*=\s*[^,\n}]+,?/, match =>
-                match.includes(",") ? match : match + ","
+                match.includes(',') ? match : match + ','
               );
 
               updatedContent = updatedContent.replace(
                 /(marginTop\s*=\s*[^,\n}]+,?)/,
-                "$1\n    marginLeft = 0,"
+                '$1\n    marginLeft = 0,'
               );
-              changes.push("Added marginLeft property");
+              changes.push('Added marginLeft property');
             }
 
             if (!analysis.hasMarginRight) {
               updatedContent = updatedContent.replace(
                 /margin(?:Bottom|Left)\s*=\s*[^,\n}]+,?/,
-                match => (match.includes(",") ? match : match + ",")
+                match => (match.includes(',') ? match : match + ',')
               );
 
               updatedContent = updatedContent.replace(
                 /(margin(?:Bottom|Left)\s*=\s*[^,\n}]+,?)/,
-                "$1\n    marginRight = 0,"
+                '$1\n    marginRight = 0,'
               );
-              changes.push("Added marginRight property");
+              changes.push('Added marginRight property');
             }
           } else {
             // Adiciona todas as margens se não existirem
-            const insertPosition = existingDestructuring.lastIndexOf("}");
+            const insertPosition = existingDestructuring.lastIndexOf('}');
             const beforeClosing = existingDestructuring.substring(0, insertPosition);
             const afterClosing = existingDestructuring.substring(insertPosition);
 
             const newDestructuring =
               beforeClosing +
-              (beforeClosing.trim().endsWith(",") ? "\n" : ",\n") +
+              (beforeClosing.trim().endsWith(',') ? '\n' : ',\n') +
               MARGIN_PROPERTIES_TEMPLATE +
-              "\n" +
+              '\n' +
               afterClosing;
 
             updatedContent = updatedContent.replace(existingDestructuring, newDestructuring);
-            changes.push("Added all margin properties");
+            changes.push('Added all margin properties');
           }
         }
       }
@@ -237,7 +237,7 @@ class MarginControlsImplementer {
         for (const pattern of insertPositions) {
           if (pattern.test(updatedContent)) {
             updatedContent = updatedContent.replace(pattern, `$1\n\n${MARGIN_FUNCTION_TEMPLATE}\n`);
-            changes.push("Added getMarginClass function");
+            changes.push('Added getMarginClass function');
             inserted = true;
             break;
           }
@@ -249,7 +249,7 @@ class MarginControlsImplementer {
             /(\n\s*\/\/.*container.*\n.*const\s+\w+.*cn\()/i,
             `\n${MARGIN_FUNCTION_TEMPLATE}\n\n$1`
           );
-          changes.push("Added getMarginClass function (fallback position)");
+          changes.push('Added getMarginClass function (fallback position)');
         }
       }
 
@@ -269,10 +269,10 @@ class MarginControlsImplementer {
           let updatedCnContent = cnContent;
 
           // Remove margens antigas se existirem
-          updatedCnContent = updatedCnContent.replace(/getMarginClass\([^)]+\),?\n?/g, "");
+          updatedCnContent = updatedCnContent.replace(/getMarginClass\([^)]+\),?\n?/g, '');
 
           // Adiciona as novas margens antes do className no final
-          if (updatedCnContent.includes("className")) {
+          if (updatedCnContent.includes('className')) {
             updatedCnContent = updatedCnContent.replace(
               /(\s*className[^,\n}]*)/m,
               `\n${marginCalls}\n$1`
@@ -285,12 +285,12 @@ class MarginControlsImplementer {
             cnCallMatch[0],
             cnCallMatch[0].replace(cnContent, updatedCnContent)
           );
-          changes.push("Updated className to include all margins");
+          changes.push('Updated className to include all margins');
         }
       }
 
       if (changes.length > 0) {
-        console.log(`✅ ${path.basename(filePath)}: ${changes.join(", ")}`);
+        console.log(`✅ ${path.basename(filePath)}: ${changes.join(', ')}`);
         return updatedContent;
       } else {
         console.log(`⏭️ ${path.basename(filePath)}: No changes needed`);
@@ -307,13 +307,13 @@ class MarginControlsImplementer {
   formatWithPrettier(content, filePath) {
     try {
       // Salva temporariamente o arquivo para usar Prettier
-      const tempFile = filePath + ".temp";
+      const tempFile = filePath + '.temp';
       fs.writeFileSync(tempFile, content);
 
       // Aplica Prettier
-      execSync(`npx prettier --write "${tempFile}"`, { stdio: "pipe" });
+      execSync(`npx prettier --write "${tempFile}"`, { stdio: 'pipe' });
 
-      const formattedContent = fs.readFileSync(tempFile, "utf8");
+      const formattedContent = fs.readFileSync(tempFile, 'utf8');
       fs.unlinkSync(tempFile);
 
       return formattedContent;
@@ -328,7 +328,7 @@ class MarginControlsImplementer {
     this.stats.total++;
 
     try {
-      const content = fs.readFileSync(filePath, "utf8");
+      const content = fs.readFileSync(filePath, 'utf8');
       const analysis = this.analyzeComponent(content, filePath);
 
       if (!analysis.needsUpdate) {
@@ -360,10 +360,10 @@ class MarginControlsImplementer {
 
   // 🚀 Executa o processo completo
   run() {
-    console.log("🚀 Iniciando implementação de controles de margem em lote...\n");
+    console.log('🚀 Iniciando implementação de controles de margem em lote...\n');
 
     if (DRY_RUN) {
-      console.log("🔍 MODO DRY RUN - Nenhum arquivo será modificado\n");
+      console.log('🔍 MODO DRY RUN - Nenhum arquivo será modificado\n');
     }
 
     const tsxFiles = this.findTsxFiles(BLOCKS_DIR);
@@ -375,38 +375,38 @@ class MarginControlsImplementer {
     }
 
     // Relatório final
-    console.log("\n" + "=".repeat(60));
-    console.log("📊 RELATÓRIO FINAL");
-    console.log("=".repeat(60));
+    console.log('\n' + '='.repeat(60));
+    console.log('📊 RELATÓRIO FINAL');
+    console.log('='.repeat(60));
     console.log(`📁 Total de arquivos: ${this.stats.total}`);
     console.log(`✅ Processados: ${this.stats.processed}`);
     console.log(`⏭️ Ignorados: ${this.stats.skipped}`);
     console.log(`❌ Erros: ${this.stats.errors}`);
 
     if (this.processedFiles.length > 0) {
-      console.log("\n🔧 Arquivos modificados:");
+      console.log('\n🔧 Arquivos modificados:');
       this.processedFiles.forEach(file => {
         console.log(`   • ${path.relative(process.cwd(), file)}`);
       });
     }
 
     if (this.errors.length > 0) {
-      console.log("\n❌ Erros encontrados:");
+      console.log('\n❌ Erros encontrados:');
       this.errors.forEach(({ file, error }) => {
         console.log(`   • ${path.basename(file)}: ${error}`);
       });
     }
 
-    console.log("\n🎉 Processo concluído!");
+    console.log('\n🎉 Processo concluído!');
 
     if (!DRY_RUN && this.stats.processed > 0) {
-      console.log("\n🔄 Executando verificação final com TypeScript...");
+      console.log('\n🔄 Executando verificação final com TypeScript...');
       try {
-        execSync("npx tsc --noEmit", { stdio: "inherit" });
-        console.log("✅ Verificação TypeScript passou!");
+        execSync('npx tsc --noEmit', { stdio: 'inherit' });
+        console.log('✅ Verificação TypeScript passou!');
       } catch (error) {
         console.log(
-          "⚠️ Verificação TypeScript encontrou problemas. Verifique os arquivos modificados."
+          '⚠️ Verificação TypeScript encontrou problemas. Verifique os arquivos modificados.'
         );
       }
     }

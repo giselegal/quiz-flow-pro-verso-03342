@@ -122,7 +122,7 @@ Após análise detalhada, o `Step01PropertiesPanel` foi considerado **inferior**
 **Para todos os casos de edição de propriedades**, use:
 
 ```typescript
-import EnhancedUniversalPropertiesPanel from "@/components/universal/EnhancedUniversalPropertiesPanel";
+import EnhancedUniversalPropertiesPanel from '@/components/universal/EnhancedUniversalPropertiesPanel';
 ```
 
 **Configuração padrão no editor:**

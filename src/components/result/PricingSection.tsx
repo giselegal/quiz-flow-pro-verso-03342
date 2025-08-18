@@ -1,6 +1,5 @@
-import React from "react";
-import { Button } from "@/components/ui/button";
-import { ShieldCheck } from "lucide-react";
+import { Button } from '@/components/ui/button';
+import { ShieldCheck } from 'lucide-react';
 
 interface PricingSectionProps {
   regularPrice: number;

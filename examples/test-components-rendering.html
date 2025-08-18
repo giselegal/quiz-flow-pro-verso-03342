@@ -68,75 +68,75 @@
 
     <script>
       // Configuração da data
-      document.getElementById("currentDate").textContent = new Date().toLocaleString("pt-BR");
+      document.getElementById('currentDate').textContent = new Date().toLocaleString('pt-BR');
 
       // Verificar status do servidor
-      fetch("/api/health")
+      fetch('/api/health')
         .then(() => {
-          document.getElementById("serverStatus").innerHTML =
+          document.getElementById('serverStatus').innerHTML =
             '<span class="status success">🟢 Online</span>';
         })
         .catch(() => {
-          document.getElementById("serverStatus").innerHTML =
+          document.getElementById('serverStatus').innerHTML =
             '<span class="status error">🔴 Offline</span>';
         });
 
       // Lista de componentes para testar
       const criticalComponents = [
-        "text-inline",
-        "quiz-start-page-inline",
-        "quiz-personal-info-inline",
-        "quiz-experience-inline",
-        "quiz-question-inline",
+        'text-inline',
+        'quiz-start-page-inline',
+        'quiz-personal-info-inline',
+        'quiz-experience-inline',
+        'quiz-question-inline',
       ];
 
       const allComponents = [
-        "text-inline",
-        "heading-inline",
-        "button-inline",
-        "image-display-inline",
-        "badge-inline",
-        "progress-inline",
-        "stat-inline",
-        "countdown-inline",
-        "style-card-inline",
-        "result-card-inline",
-        "pricing-card-inline",
-        "testimonial-card-inline",
-        "result-header-inline",
-        "testimonials-inline",
-        "before-after-inline",
-        "step-header-inline",
-        "quiz-offer-pricing-inline",
-        "quiz-offer-cta-inline",
-        "bonus-list-inline",
-        "quiz-intro-header",
-        "loading-animation",
-        "quiz-start-page-inline",
-        "quiz-personal-info-inline",
-        "quiz-experience-inline",
-        "quiz-question-inline",
-        "quiz-progress-inline",
-        "quiz-transition-inline",
-        "quiz-loading-inline",
-        "quiz-result-inline",
-        "quiz-analysis-inline",
-        "quiz-category-inline",
-        "quiz-recommendation-inline",
-        "quiz-metrics-inline",
-        "quiz-comparison-inline",
-        "quiz-certificate-inline",
-        "quiz-leaderboard-inline",
-        "quiz-badges-inline",
-        "quiz-evolution-inline",
-        "quiz-networking-inline",
-        "quiz-action-plan-inline",
-        "quiz-development-plan-inline",
-        "quiz-goals-dashboard-inline",
-        "quiz-final-results-inline",
-        "characteristics-list-inline",
-        "secondary-styles-inline",
-        "style-characteristics-inline",
+        'text-inline',
+        'heading-inline',
+        'button-inline',
+        'image-display-inline',
+        'badge-inline',
+        'progress-inline',
+        'stat-inline',
+        'countdown-inline',
+        'style-card-inline',
+        'result-card-inline',
+        'pricing-card-inline',
+        'testimonial-card-inline',
+        'result-header-inline',
+        'testimonials-inline',
+        'before-after-inline',
+        'step-header-inline',
+        'quiz-offer-pricing-inline',
+        'quiz-offer-cta-inline',
+        'bonus-list-inline',
+        'quiz-intro-header',
+        'loading-animation',
+        'quiz-start-page-inline',
+        'quiz-personal-info-inline',
+        'quiz-experience-inline',
+        'quiz-question-inline',
+        'quiz-progress-inline',
+        'quiz-transition-inline',
+        'quiz-loading-inline',
+        'quiz-result-inline',
+        'quiz-analysis-inline',
+        'quiz-category-inline',
+        'quiz-recommendation-inline',
+        'quiz-metrics-inline',
+        'quiz-comparison-inline',
+        'quiz-certificate-inline',
+        'quiz-leaderboard-inline',
+        'quiz-badges-inline',
+        'quiz-evolution-inline',
+        'quiz-networking-inline',
+        'quiz-action-plan-inline',
+        'quiz-development-plan-inline',
+        'quiz-goals-dashboard-inline',
+        'quiz-final-results-inline',
+        'characteristics-list-inline',
+        'secondary-styles-inline',
+        'style-characteristics-inline',
       ];
 
       // Função para testar renderização de componente
@@ -144,7 +144,7 @@
         return new Promise(resolve => {
           try {
             // Simular teste de renderização
-            const testElement = document.createElement("div");
+            const testElement = document.createElement('div');
             testElement.dataset.blockType = componentType;
             testElement.innerHTML = `<div>Teste: ${componentType}</div>`;
 
@@ -153,13 +153,13 @@
 
             resolve({
               component: componentType,
-              status: isSupported ? "success" : "error",
-              message: isSupported ? "Componente mapeado e funcional" : "Componente não encontrado",
+              status: isSupported ? 'success' : 'error',
+              message: isSupported ? 'Componente mapeado e funcional' : 'Componente não encontrado',
             });
           } catch (error) {
             resolve({
               component: componentType,
-              status: "error",
+              status: 'error',
               message: `Erro: ${error.message}`,
             });
           }
@@ -171,14 +171,14 @@
         const container = document.getElementById(containerId);
 
         Promise.all(components.map(comp => testComponentRendering(comp))).then(results => {
-          const successCount = results.filter(r => r.status === "success").length;
+          const successCount = results.filter(r => r.status === 'success').length;
           const totalCount = results.length;
 
           let html = `
                         <div class="component-test">
                             <h3>📊 Resumo: ${successCount}/${totalCount} componentes funcionais</h3>
-                            <div class="status ${successCount === totalCount ? "success" : "warning"}">
-                                ${successCount === totalCount ? "✅ Todos funcionando" : "⚠️ Alguns problemas detectados"}
+                            <div class="status ${successCount === totalCount ? 'success' : 'warning'}">
+                                ${successCount === totalCount ? '✅ Todos funcionando' : '⚠️ Alguns problemas detectados'}
                             </div>
                         </div>
                     `;
@@ -187,7 +187,7 @@
             html += `
                             <div class="component-test">
                                 <strong>${result.component}</strong>
-                                <span class="status ${result.status}">${result.status === "success" ? "✅" : "❌"}</span>
+                                <span class="status ${result.status}">${result.status === 'success' ? '✅' : '❌'}</span>
                                 <div>${result.message}</div>
                             </div>
                         `;
@@ -198,11 +198,11 @@
       }
 
       // Executar testes
-      renderTestResults(criticalComponents, "criticalComponents");
-      renderTestResults(allComponents, "allComponents");
+      renderTestResults(criticalComponents, 'criticalComponents');
+      renderTestResults(allComponents, 'allComponents');
 
       // Estatísticas gerais
-      document.getElementById("testResults").innerHTML = `
+      document.getElementById('testResults').innerHTML = `
             <div class="component-test">
                 <h3>📈 Estatísticas Gerais</h3>
                 <p><strong>Componentes físicos:</strong> 44</p>
@@ -213,9 +213,9 @@
             </div>
         `;
 
-      console.log("🧪 Teste de renderização iniciado");
-      console.log("📊 Componentes críticos:", criticalComponents);
-      console.log("📋 Todos os componentes:", allComponents.length);
+      console.log('🧪 Teste de renderização iniciado');
+      console.log('📊 Componentes críticos:', criticalComponents);
+      console.log('📋 Todos os componentes:', allComponents.length);
     </script>
   </body>
 </html>

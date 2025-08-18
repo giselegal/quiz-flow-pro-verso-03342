@@ -1,7 +1,6 @@
-import { cn } from "@/lib/utils";
-import type { BlockComponentProps } from "@/types/blocks";
-import { Check } from "lucide-react";
-import React from "react";
+import { cn } from '@/lib/utils';
+import type { BlockComponentProps } from '@/types/blocks';
+import { Check } from 'lucide-react';
 
 interface Props extends BlockComponentProps {
   title?: string;
@@ -15,11 +14,11 @@ interface Props extends BlockComponentProps {
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value: number | string | undefined, type: string): string => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (!numValue || isNaN(numValue) || numValue === 0) return "";
+  if (!numValue || isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -59,15 +58,15 @@ const getMarginClass = (value: number | string | undefined, type: string): strin
 };
 
 const BenefitsInlineBlock: React.FC<Props> = ({
-  title = "Principais Benefícios",
+  title = 'Principais Benefícios',
   benefits = [
-    "Resultados comprovados em até 7 dias",
-    "Método validado por especialistas",
-    "Suporte personalizado incluído",
+    'Resultados comprovados em até 7 dias',
+    'Método validado por especialistas',
+    'Suporte personalizado incluído',
   ],
-  iconColor = "#432818",
-  titleColor = "#432818",
-  textColor = "#432818",
+  iconColor = '#432818',
+  titleColor = '#432818',
+  textColor = '#432818',
   marginTop = 0,
   marginBottom = 0,
   marginLeft = 0,
@@ -78,13 +77,13 @@ const BenefitsInlineBlock: React.FC<Props> = ({
   return (
     <div
       className={cn(
-        "w-full py-6",
+        'w-full py-6',
         className,
         // Margens universais com controles deslizantes
-        getMarginClass(marginTop, "top"),
-        getMarginClass(marginBottom, "bottom"),
-        getMarginClass(marginLeft, "left"),
-        getMarginClass(marginRight, "right")
+        getMarginClass(marginTop, 'top'),
+        getMarginClass(marginBottom, 'bottom'),
+        getMarginClass(marginLeft, 'left'),
+        getMarginClass(marginRight, 'right')
       )}
       {...props}
     >

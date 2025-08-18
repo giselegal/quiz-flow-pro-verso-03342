@@ -18,7 +18,7 @@ App.tsx (Route) → EditorProvider → useEditor() → Componentes
 <Route path="/editor-fixed">
   <ErrorBoundary>
     <EditorProvider>
-      {" "}
+      {' '}
       {/* ← Provedor do contexto */}
       <ScrollSyncProvider>
         <EditorPage />
@@ -276,7 +276,7 @@ const currentBlocks = useMemo(() => stageBlocks[activeStageId] || [], [stageBloc
 
 ```typescript
 // Logs detalhados em cada componente
-console.log("🔥 EditorFixedPage: Dados do editor:", {
+console.log('🔥 EditorFixedPage: Dados do editor:', {
   stages: stages?.length || 0,
   activeStageId,
   selectedBlockId,

@@ -112,7 +112,7 @@ const sensors = useSensors(
 );
 
 // ✅ Debug aprimorado no handleDragStart
-console.log("🟢 DragStart INICIO:", {
+console.log('🟢 DragStart INICIO:', {
   id: active.id,
   type: active.data.current?.type,
   blockType: active.data.current?.blockType,
@@ -123,10 +123,10 @@ console.log("🟢 DragStart INICIO:", {
 
 // ✅ Verificações mais detalhadas
 if (!active.data.current) {
-  console.error("❌ DragStart: active.data.current está undefined!", {
+  console.error('❌ DragStart: active.data.current está undefined!', {
     activeId: active.id,
     activeKeys: Object.keys(active),
-    dataKeys: active.data ? Object.keys(active.data) : "data é undefined",
+    dataKeys: active.data ? Object.keys(active.data) : 'data é undefined',
   });
   return;
 }

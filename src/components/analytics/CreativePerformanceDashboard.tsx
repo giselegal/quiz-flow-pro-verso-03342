@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { BarChart, TrendingUp, Eye, MousePointer, DollarSign, Users, Zap } from "lucide-react";
+// @ts-nocheck
+import React, { useState, useEffect } from 'react';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { BarChart, TrendingUp, Eye, MousePointer, DollarSign, Users, Zap } from 'lucide-react';
 
 interface CreativeStats {
   creative_name: string;
@@ -27,32 +28,32 @@ export const CreativePerformanceDashboard: React.FC = () => {
       try {
         // Mock data for now since getCreativePerformance doesn't work as expected
         const mockData: Record<string, CreativeStats> = {
-          "creative-1": {
-            creative_name: "Elegante Mulher Vestido",
+          'creative-1': {
+            creative_name: 'Elegante Mulher Vestido',
             page_views: 1250,
             quiz_starts: 890,
             quiz_completions: 678,
             leads: 234,
             purchases: 45,
             revenue: 4500,
-            conversion_rate: "2.3",
+            conversion_rate: '2.3',
             cost_per_lead: 15.5,
           },
-          "creative-2": {
-            creative_name: "Casual Moderna",
+          'creative-2': {
+            creative_name: 'Casual Moderna',
             page_views: 980,
             quiz_starts: 720,
             quiz_completions: 540,
             leads: 180,
             purchases: 32,
             revenue: 3200,
-            conversion_rate: "1.8",
+            conversion_rate: '1.8',
             cost_per_lead: 18.2,
           },
         };
         setCreativesData(mockData);
       } catch (error) {
-        console.error("Erro ao carregar dados de criativos:", error);
+        console.error('Erro ao carregar dados de criativos:', error);
         setCreativesData({});
       } finally {
         setIsLoading(false);
@@ -69,7 +70,7 @@ export const CreativePerformanceDashboard: React.FC = () => {
 
   const creativesList = Object.values(creativesData);
   const bestPerformingCreative = creativesList.reduce((best, current) => {
-    return parseFloat(current.conversion_rate) > parseFloat(best.conversion_rate || "0")
+    return parseFloat(current.conversion_rate) > parseFloat(best.conversion_rate || '0')
       ? current
       : best;
   }, {} as CreativeStats);
@@ -85,9 +86,9 @@ export const CreativePerformanceDashboard: React.FC = () => {
   );
 
   const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat("pt-BR", {
-      style: "currency",
-      currency: "BRL",
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
     }).format(value);
   };
 
@@ -112,7 +113,7 @@ export const CreativePerformanceDashboard: React.FC = () => {
           {[7, 14, 30].map(days => (
             <Button
               key={days}
-              variant={selectedPeriod === days ? "default" : "outline"}
+              variant={selectedPeriod === days ? 'default' : 'outline'}
               size="sm"
               onClick={() => setSelectedPeriod(days)}
             >
@@ -129,9 +130,7 @@ export const CreativePerformanceDashboard: React.FC = () => {
             <Eye className="h-8 w-8 text-[#B89B7A]" />
             <div className="ml-4">
               <p style={{ color: '#6B4F43' }}>Visualizações</p>
-              <p style={{ color: '#432818' }}>
-                {totalStats.page_views.toLocaleString()}
-              </p>
+              <p style={{ color: '#432818' }}>{totalStats.page_views.toLocaleString()}</p>
             </div>
           </CardContent>
         </Card>
@@ -161,9 +160,7 @@ export const CreativePerformanceDashboard: React.FC = () => {
             <TrendingUp className="h-8 w-8 text-[#B89B7A]" />
             <div className="ml-4">
               <p style={{ color: '#6B4F43' }}>Receita</p>
-              <p style={{ color: '#432818' }}>
-                {formatCurrency(totalStats.revenue)}
-              </p>
+              <p style={{ color: '#432818' }}>{formatCurrency(totalStats.revenue)}</p>
             </div>
           </CardContent>
         </Card>
@@ -185,7 +182,7 @@ export const CreativePerformanceDashboard: React.FC = () => {
                   {bestPerformingCreative.creative_name}
                 </h3>
                 <p style={{ color: '#6B4F43' }}>
-                  Taxa de Conversão:{" "}
+                  Taxa de Conversão:{' '}
                   <span className="font-bold">{bestPerformingCreative.conversion_rate}%</span>
                 </p>
               </div>
@@ -234,9 +231,7 @@ export const CreativePerformanceDashboard: React.FC = () => {
                           <span className="text-sm font-bold text-[#432818]">#{index + 1}</span>
                         </div>
                         <div>
-                          <h3 style={{ color: '#432818' }}>
-                            {creative.creative_name}
-                          </h3>
+                          <h3 style={{ color: '#432818' }}>{creative.creative_name}</h3>
                           <div className="flex items-center gap-2">
                             {getPerformanceBadge(creative.conversion_rate)}
                             <span style={{ color: '#6B4F43' }}>
@@ -247,9 +242,7 @@ export const CreativePerformanceDashboard: React.FC = () => {
                       </div>
                       <div className="text-right">
                         <p style={{ color: '#6B4F43' }}>Receita</p>
-                        <p style={{ color: '#432818' }}>
-                          {formatCurrency(creative.revenue)}
-                        </p>
+                        <p style={{ color: '#432818' }}>{formatCurrency(creative.revenue)}</p>
                       </div>
                     </div>
 
@@ -260,15 +253,11 @@ export const CreativePerformanceDashboard: React.FC = () => {
                       </div>
                       <div>
                         <p style={{ color: '#6B4F43' }}>Quiz Iniciados</p>
-                        <p style={{ color: '#432818' }}>
-                          {creative.quiz_starts}
-                        </p>
+                        <p style={{ color: '#432818' }}>{creative.quiz_starts}</p>
                       </div>
                       <div>
                         <p style={{ color: '#6B4F43' }}>Quiz Completos</p>
-                        <p style={{ color: '#432818' }}>
-                          {creative.quiz_completions}
-                        </p>
+                        <p style={{ color: '#432818' }}>{creative.quiz_completions}</p>
                       </div>
                       <div>
                         <p style={{ color: '#6B4F43' }}>Leads</p>

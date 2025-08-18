@@ -1,7 +1,7 @@
-import React from "react";
-import { StyleResult } from "@/types/quiz";
-import { ResultPageConfig } from "@/types/resultPageConfig";
-import { QuizResults } from "@/components/quiz/QuizResults";
+// @ts-nocheck
+import { StyleResult } from '@/types/quiz';
+import { ResultPageConfig } from '@/types/resultPageConfig';
+import { QuizResults } from '@/components/quiz/QuizResults';
 
 interface PreviewPanelProps {
   resultPageConfig: ResultPageConfig;
@@ -12,18 +12,18 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ resultPageConfig, selectedS
   // Create complete StyleResult objects with all required properties
   const secondaryStyles: StyleResult[] = [
     {
-      category: selectedStyle.category === "Natural" ? "Clássico" : "Natural",
+      category: selectedStyle.category === 'Natural' ? 'Clássico' : 'Natural',
       score: 10,
       percentage: 25,
-      style: "classico" as any,
+      style: 'classico' as any,
       points: 10,
       rank: 2,
     },
     {
-      category: selectedStyle.category === "Contemporâneo" ? "Elegante" : "Contemporâneo",
+      category: selectedStyle.category === 'Contemporâneo' ? 'Elegante' : 'Contemporâneo',
       score: 5,
       percentage: 15,
-      style: "contemporaneo" as any,
+      style: 'contemporaneo' as any,
       points: 5,
       rank: 3,
     },

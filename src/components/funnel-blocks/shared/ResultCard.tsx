@@ -1,8 +1,7 @@
-import React from "react";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardFooter } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardFooter } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 
 interface ResultCardProps {
   title: string;
@@ -32,20 +31,20 @@ export const ResultCard: React.FC<ResultCardProps> = ({
   description,
   imageUrl,
   features = [],
-  buttonText = "Ver detalhes",
+  buttonText = 'Ver detalhes',
   buttonUrl,
   onButtonClick,
-  className = "",
+  className = '',
   style,
   isHighlighted = false,
   showBadge = false,
-  badgeText = "Destaque",
+  badgeText = 'Destaque',
 }) => {
   return (
     <Card
       className={cn(
-        "overflow-hidden transition-shadow duration-300 hover:shadow-lg",
-        isHighlighted ? "border-2 border-primary shadow-md" : "border border-gray-200",
+        'overflow-hidden transition-shadow duration-300 hover:shadow-lg',
+        isHighlighted ? 'border-2 border-primary shadow-md' : 'border border-gray-200',
         className
       )}
       style={style}
@@ -80,7 +79,7 @@ export const ResultCard: React.FC<ResultCardProps> = ({
         </CardHeader>
       )}
 
-      <CardContent className={imageUrl ? "pt-4" : ""}>
+      <CardContent className={imageUrl ? 'pt-4' : ''}>
         {imageUrl && <h3 className="text-lg font-bold mb-3">{title}</h3>}
 
         {description && <p style={{ color: '#6B4F43' }}>{description}</p>}
@@ -100,7 +99,7 @@ export const ResultCard: React.FC<ResultCardProps> = ({
       <CardFooter>
         <Button
           className="w-full"
-          variant={isHighlighted ? "default" : "outline"}
+          variant={isHighlighted ? 'default' : 'outline'}
           asChild={!!buttonUrl}
           onClick={!buttonUrl ? onButtonClick : undefined}
         >

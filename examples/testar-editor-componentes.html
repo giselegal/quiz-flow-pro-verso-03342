@@ -110,14 +110,14 @@
 
     <script>
       // Atualizar timestamp
-      document.getElementById("timestamp").textContent = new Date().toLocaleString("pt-BR");
+      document.getElementById('timestamp').textContent = new Date().toLocaleString('pt-BR');
 
       // Monitorar console do iframe (se possível)
-      window.addEventListener("message", function (event) {
-        if (event.data && event.data.type === "debug") {
-          const debugInfo = document.getElementById("debug-info");
-          const newLog = document.createElement("div");
-          newLog.className = "status " + (event.data.level || "info");
+      window.addEventListener('message', function (event) {
+        if (event.data && event.data.type === 'debug') {
+          const debugInfo = document.getElementById('debug-info');
+          const newLog = document.createElement('div');
+          newLog.className = 'status ' + (event.data.level || 'info');
           newLog.textContent = event.data.message;
           debugInfo.appendChild(newLog);
         }

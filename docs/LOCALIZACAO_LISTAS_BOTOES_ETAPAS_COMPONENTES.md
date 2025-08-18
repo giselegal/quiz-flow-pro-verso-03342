@@ -54,7 +54,7 @@
 ```tsx
 // Linha 74-83: Função que gerencia cliques
 const handleStageClick = (stageId: string, e?: React.MouseEvent) => {
-  console.log("🚨 EVENTO CLICK RECEBIDO - StageID:", stageId);
+  console.log('🚨 EVENTO CLICK RECEBIDO - StageID:', stageId);
 
   if (e) {
     e.preventDefault();
@@ -88,7 +88,7 @@ const handleStageClick = (stageId: string, e?: React.MouseEvent) => {
   {BLOCK_CATEGORIES.map(category => (
     <Button
       key={category}
-      variant={selectedCategory === category ? "default" : "outline"}
+      variant={selectedCategory === category ? 'default' : 'outline'}
       onClick={() => handleCategorySelect(category)}
     >
       <div className="text-left">
@@ -149,8 +149,8 @@ const handleSearch = (query: string) => {
 
 // Linha 34-37: Seleção de categoria
 const handleCategorySelect = (category: string) => {
-  setSelectedCategory(category === "All" ? null : category);
-  setSearchQuery("");
+  setSelectedCategory(category === 'All' ? null : category);
+  setSearchQuery('');
 };
 ```
 

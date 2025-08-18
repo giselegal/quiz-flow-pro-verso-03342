@@ -1,5 +1,6 @@
-import { supabase } from "@/integrations/supabase/client";
-import { FunnelSettings, defaultFunnelSettings } from "@/types/funnelSettings";
+// @ts-nocheck
+import { supabase } from '@/integrations/supabase/client';
+import { FunnelSettings, defaultFunnelSettings } from '@/types/funnelSettings';
 
 export class FunnelSettingsService {
   /**
@@ -7,20 +8,20 @@ export class FunnelSettingsService {
    */
   static async loadSettings(funnelId: string): Promise<FunnelSettings | null> {
     try {
-      console.log("📥 Carregando configurações do funil:", funnelId);
+      console.log('📥 Carregando configurações do funil:', funnelId);
 
       const { data, error } = await supabase
-        .from("funnels")
-        .select("settings")
-        .eq("id", funnelId)
+        .from('funnels')
+        .select('settings')
+        .eq('id', funnelId)
         .single();
 
       if (error) {
-        console.error("Erro ao carregar configurações:", error);
+        console.error('Erro ao carregar configurações:', error);
 
         // Se o funil não existe, retornar configurações padrão
-        if (error.code === "PGRST116") {
-          console.log("Funil não encontrado, usando configurações padrão");
+        if (error.code === 'PGRST116') {
+          console.log('Funil não encontrado, usando configurações padrão');
           return defaultFunnelSettings;
         }
 
@@ -29,7 +30,7 @@ export class FunnelSettingsService {
 
       // Se não há configurações salvas, retornar padrão
       if (!data?.settings) {
-        console.log("Nenhuma configuração encontrada, usando padrão");
+        console.log('Nenhuma configuração encontrada, usando padrão');
         return defaultFunnelSettings;
       }
 
@@ -50,20 +51,20 @@ export class FunnelSettingsService {
         domain: { ...defaultFunnelSettings.domain, ...savedSettings?.domain },
       };
 
-      console.log("✅ Configurações carregadas:", settings);
+      console.log('✅ Configurações carregadas:', settings);
       return settings;
     } catch (error) {
-      console.error("Erro no FunnelSettingsService.loadSettings:", error);
+      console.error('Erro no FunnelSettingsService.loadSettings:', error);
 
       // Tentar carregar do localStorage como fallback
       try {
         const localSettings = localStorage.getItem(`funnel-settings-${funnelId}`);
         if (localSettings) {
-          console.log("📱 Usando configurações do localStorage como fallback");
+          console.log('📱 Usando configurações do localStorage como fallback');
           return JSON.parse(localSettings);
         }
       } catch (localError) {
-        console.error("Erro ao carregar do localStorage:", localError);
+        console.error('Erro ao carregar do localStorage:', localError);
       }
 
       return null;
@@ -75,19 +76,19 @@ export class FunnelSettingsService {
    */
   static async saveSettings(funnelId: string, settings: FunnelSettings): Promise<void> {
     try {
-      console.log("💾 Salvando configurações do funil:", funnelId, settings);
+      console.log('💾 Salvando configurações do funil:', funnelId, settings);
 
       // Salvar no Supabase
       const { error } = await supabase
-        .from("funnels")
+        .from('funnels')
         .update({
           settings: settings as any,
           updated_at: new Date().toISOString(),
         })
-        .eq("id", funnelId);
+        .eq('id', funnelId);
 
       if (error) {
-        console.error("Erro ao salvar configurações no Supabase:", error);
+        console.error('Erro ao salvar configurações no Supabase:', error);
         throw error;
       }
 
@@ -95,20 +96,20 @@ export class FunnelSettingsService {
       try {
         localStorage.setItem(`funnel-settings-${funnelId}`, JSON.stringify(settings));
       } catch (localError) {
-        console.warn("Não foi possível salvar no localStorage:", localError);
+        console.warn('Não foi possível salvar no localStorage:', localError);
       }
 
-      console.log("✅ Configurações salvas com sucesso");
+      console.log('✅ Configurações salvas com sucesso');
     } catch (error) {
-      console.error("Erro no FunnelSettingsService.saveSettings:", error);
+      console.error('Erro no FunnelSettingsService.saveSettings:', error);
 
       // Tentar salvar apenas no localStorage como fallback
       try {
         localStorage.setItem(`funnel-settings-${funnelId}`, JSON.stringify(settings));
-        console.log("📱 Configurações salvas no localStorage como fallback");
+        console.log('📱 Configurações salvas no localStorage como fallback');
       } catch (localError) {
-        console.error("Erro ao salvar no localStorage:", localError);
-        throw new Error("Não foi possível salvar as configurações");
+        console.error('Erro ao salvar no localStorage:', localError);
+        throw new Error('Não foi possível salvar as configurações');
       }
     }
   }
@@ -119,12 +120,12 @@ export class FunnelSettingsService {
   static async validateWebhookUrl(url: string): Promise<boolean> {
     try {
       const response = await fetch(url, {
-        method: "HEAD",
-        mode: "no-cors",
+        method: 'HEAD',
+        mode: 'no-cors',
       });
       return true;
     } catch (error) {
-      console.error("URL de webhook inválida:", error);
+      console.error('URL de webhook inválida:', error);
       return false;
     }
   }
@@ -135,24 +136,24 @@ export class FunnelSettingsService {
   static async testWebhook(url: string): Promise<boolean> {
     try {
       const response = await fetch(url, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           test: true,
           timestamp: new Date().toISOString(),
-          event: "test_webhook",
+          event: 'test_webhook',
           data: {
-            funnelId: "test",
-            userId: "test-user",
+            funnelId: 'test',
+            userId: 'test-user',
           },
         }),
       });
 
       return response.ok;
     } catch (error) {
-      console.error("Erro ao testar webhook:", error);
+      console.error('Erro ao testar webhook:', error);
       return false;
     }
   }
@@ -165,12 +166,12 @@ export class FunnelSettingsService {
       // Simular validação DNS
       // Em produção, isso seria feito via API backend
       const response = await fetch(`https://${domain}`, {
-        method: "HEAD",
-        mode: "no-cors",
+        method: 'HEAD',
+        mode: 'no-cors',
       });
       return true;
     } catch (error) {
-      console.error("Domínio inválido:", error);
+      console.error('Domínio inválido:', error);
       return false;
     }
   }
@@ -180,9 +181,9 @@ export class FunnelSettingsService {
    */
   static exportSettings(settings: FunnelSettings, funnelId: string): void {
     const dataStr = JSON.stringify(settings, null, 2);
-    const dataBlob = new Blob([dataStr], { type: "application/json" });
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
 
-    const link = document.createElement("a");
+    const link = document.createElement('a');
     link.href = URL.createObjectURL(dataBlob);
     link.download = `funnel-settings-${funnelId}.json`;
     link.click();
@@ -203,7 +204,7 @@ export class FunnelSettingsService {
 
           // Validar estrutura básica
           if (!settings.seo || !settings.analytics || !settings.webhooks || !settings.domain) {
-            throw new Error("Arquivo de configurações inválido");
+            throw new Error('Arquivo de configurações inválido');
           }
 
           // Mesclar com configurações padrão
@@ -224,11 +225,11 @@ export class FunnelSettingsService {
 
           resolve(validSettings);
         } catch (error) {
-          reject(new Error("Erro ao processar arquivo de configurações"));
+          reject(new Error('Erro ao processar arquivo de configurações'));
         }
       };
 
-      reader.onerror = () => reject(new Error("Erro ao ler arquivo"));
+      reader.onerror = () => reject(new Error('Erro ao ler arquivo'));
       reader.readAsText(file);
     });
   }

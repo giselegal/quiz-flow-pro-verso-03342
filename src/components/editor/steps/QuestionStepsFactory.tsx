@@ -1,4 +1,4 @@
-import { generateRealQuestionTemplates } from "../../../data/realQuizTemplates";
+import { generateRealQuestionTemplates } from '../../../data/realQuizTemplates';
 
 /**
  * ETAPAS 2-11: QUESTÕES PRINCIPAIS (10 QUESTÕES)
@@ -17,7 +17,7 @@ export const createQuestionStep = (stepNumber: number) => {
   return {
     id: `etapa-${stepNumber}`,
     name: `Q${questionIndex + 1}`,
-    type: "question",
+    type: 'question',
     description: questionTemplate.title,
     multiSelect: questionTemplate.multiSelect || 3,
     blocks: questionTemplate.blocks,

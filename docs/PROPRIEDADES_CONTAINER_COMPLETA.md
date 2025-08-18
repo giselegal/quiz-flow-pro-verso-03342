@@ -66,65 +66,65 @@ Sistema completo de controle de largura e posicionamento de containers para todo
 ### 🎯 quiz-intro-header-step01
 
 ```javascript
-containerWidth: "full"; // Largura completa
-containerPosition: "center"; // Centralizado
-spacing: "normal"; // Padding padrão
+containerWidth: 'full'; // Largura completa
+containerPosition: 'center'; // Centralizado
+spacing: 'normal'; // Padding padrão
 ```
 
 ### 🎨 decorative-bar-step01
 
 ```javascript
-containerWidth: "full"; // Largura completa
-containerPosition: "center"; // Centralizado
-spacing: "normal"; // Padding padrão
+containerWidth: 'full'; // Largura completa
+containerPosition: 'center'; // Centralizado
+spacing: 'normal'; // Padding padrão
 ```
 
 ### 📝 main-title-step01
 
 ```javascript
-containerWidth: "large"; // Largura grande (1024px)
-containerPosition: "center"; // Centralizado
-spacing: "normal"; // Padding padrão
+containerWidth: 'large'; // Largura grande (1024px)
+containerPosition: 'center'; // Centralizado
+spacing: 'normal'; // Padding padrão
 ```
 
 ### 🖼️ hero-image-step01
 
 ```javascript
-containerWidth: "large"; // Largura grande (1024px)
-containerPosition: "center"; // Centralizado
-spacing: "normal"; // Padding padrão
+containerWidth: 'large'; // Largura grande (1024px)
+containerPosition: 'center'; // Centralizado
+spacing: 'normal'; // Padding padrão
 ```
 
 ### 💬 Textos Motivacionais (motivation, highlight, continuation)
 
 ```javascript
-containerWidth: "medium"; // Largura média (672px)
-containerPosition: "center"; // Centralizado
-spacing: "normal"; // Padding padrão
+containerWidth: 'medium'; // Largura média (672px)
+containerPosition: 'center'; // Centralizado
+spacing: 'normal'; // Padding padrão
 ```
 
 ### 📋 name-input-step01
 
 ```javascript
-containerWidth: "medium"; // Largura média (672px)
-containerPosition: "center"; // Centralizado
-spacing: "normal"; // Padding padrão
+containerWidth: 'medium'; // Largura média (672px)
+containerPosition: 'center'; // Centralizado
+spacing: 'normal'; // Padding padrão
 ```
 
 ### 🎯 cta-button-step01
 
 ```javascript
-containerWidth: "large"; // Largura grande (1024px)
-containerPosition: "center"; // Centralizado
-spacing: "normal"; // Padding padrão
+containerWidth: 'large'; // Largura grande (1024px)
+containerPosition: 'center'; // Centralizado
+spacing: 'normal'; // Padding padrão
 ```
 
 ### ⚖️ legal-notice-step01
 
 ```javascript
-containerWidth: "full"; // Largura completa
-containerPosition: "center"; // Centralizado
-spacing: "compact"; // Padding reduzido para footer
+containerWidth: 'full'; // Largura completa
+containerPosition: 'center'; // Centralizado
+spacing: 'compact'; // Padding reduzido para footer
 ```
 
 ## 🎨 COMO EDITAR VISUALMENTE

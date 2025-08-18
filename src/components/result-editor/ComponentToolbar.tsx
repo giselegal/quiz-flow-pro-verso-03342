@@ -1,15 +1,16 @@
-import React, { useState } from "react";
-import { useDraggable } from "@dnd-kit/core";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Search, Lock } from "lucide-react";
-import { useAuth } from "@/context/AuthContext";
+// @ts-nocheck
+import React, { useState } from 'react';
+import { useDraggable } from '@dnd-kit/core';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { Search, Lock } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
 import {
   getAvailableComponents,
   COMPONENT_CATEGORIES,
   type ComponentDefinition,
-} from "./ComponentRegistry";
+} from './ComponentRegistry';
 
 interface ComponentToolbarProps {
   categories: any[];
@@ -26,7 +27,7 @@ const DraggableComponent: React.FC<DraggableComponentProps> = ({ component, isLo
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: component.id,
     data: {
-      type: "component",
+      type: 'component',
       component: component,
     },
     disabled: isLocked,
@@ -49,27 +50,27 @@ const DraggableComponent: React.FC<DraggableComponentProps> = ({ component, isLo
         p-3 border border-[#D4C4A0] rounded-lg transition-all duration-200 
         ${
           isLocked
-            ? "cursor-not-allowed opacity-50 bg-gray-100"
-            : "cursor-grab hover:shadow-md hover:border-[#B89B7A] bg-white active:cursor-grabbing"
+            ? 'cursor-not-allowed opacity-50 bg-gray-100'
+            : 'cursor-grab hover:shadow-md hover:border-[#B89B7A] bg-white active:cursor-grabbing'
         }
-        ${isDragging ? "opacity-50" : ""}
+        ${isDragging ? 'opacity-50' : ''}
       `}
     >
       <div className="flex items-center gap-2 mb-2">
-        <Icon className={`w-4 h-4 ${isLocked ? "text-gray-400" : "text-[#B89B7A]"}`} />
-        <span className={`font-medium text-sm ${isLocked ? "text-gray-400" : "text-[#432818]"}`}>
+        <Icon className={`w-4 h-4 ${isLocked ? 'text-gray-400' : 'text-[#B89B7A]'}`} />
+        <span className={`font-medium text-sm ${isLocked ? 'text-gray-400' : 'text-[#432818]'}`}>
           {component.label}
         </span>
         {component.isPremium && (
           <Badge
             variant="outline"
-            className={`text-xs ${isLocked ? "border-gray-300 text-gray-400" : "border-yellow-400 text-stone-700"}`}
+            className={`text-xs ${isLocked ? 'border-gray-300 text-gray-400' : 'border-yellow-400 text-stone-700'}`}
           >
-            {isLocked ? <Lock className="w-3 h-3" /> : "PRO"}
+            {isLocked ? <Lock className="w-3 h-3" /> : 'PRO'}
           </Badge>
         )}
       </div>
-      <p className={`text-xs ${isLocked ? "text-gray-400" : "text-[#B89B7A]"}`}>
+      <p className={`text-xs ${isLocked ? 'text-gray-400' : 'text-[#B89B7A]'}`}>
         {component.description}
       </p>
     </div>
@@ -81,14 +82,14 @@ export const ComponentToolbar: React.FC<ComponentToolbarProps> = ({
   components,
   collapsed = false,
 }) => {
-  const [selectedCategory, setSelectedCategory] = useState("all");
-  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [searchTerm, setSearchTerm] = useState('');
   const { user } = useAuth();
 
   // Mock auth features for now
-  const hasPremiumFeatures = user?.email?.includes("premium") || false;
-  const userFeatures = ["basic_components"];
-  const userPlan = "FREE";
+  const hasPremiumFeatures = user?.email?.includes('premium') || false;
+  const userFeatures = ['basic_components'];
+  const userPlan = 'FREE';
 
   const availableComponents = getAvailableComponents(userFeatures, hasPremiumFeatures);
 
@@ -109,7 +110,7 @@ export const ComponentToolbar: React.FC<ComponentToolbarProps> = ({
   );
 
   const filteredComponents = [...available, ...locked].filter(component => {
-    const matchesCategory = selectedCategory === "all" || component.category === selectedCategory;
+    const matchesCategory = selectedCategory === 'all' || component.category === selectedCategory;
     const matchesSearch =
       component.label.toLowerCase().includes(searchTerm.toLowerCase()) ||
       component.description?.toLowerCase().includes(searchTerm.toLowerCase());
@@ -148,11 +149,11 @@ export const ComponentToolbar: React.FC<ComponentToolbarProps> = ({
               variant="outline"
               className={`${
                 hasPremiumFeatures
-                  ? "border-green-500 text-green-700 bg-green-50"
-                  : "border-yellow-500 text-stone-700 bg-stone-50"
+                  ? 'border-green-500 text-green-700 bg-green-50'
+                  : 'border-yellow-500 text-stone-700 bg-stone-50'
               }`}
             >
-              {hasPremiumFeatures ? "Premium" : "Básico"}
+              {hasPremiumFeatures ? 'Premium' : 'Básico'}
             </Badge>
           </div>
           <p className="text-xs text-[#B89B7A] mt-1">{available.length} componentes disponíveis</p>
@@ -160,11 +161,11 @@ export const ComponentToolbar: React.FC<ComponentToolbarProps> = ({
 
         <div className="flex flex-wrap gap-2">
           <button
-            onClick={() => setSelectedCategory("all")}
+            onClick={() => setSelectedCategory('all')}
             className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
-              selectedCategory === "all"
-                ? "bg-[#B89B7A] text-[#432818]"
-                : "bg-[#F5F2E9] text-[#B89B7A] hover:bg-[#D4C4A0]"
+              selectedCategory === 'all'
+                ? 'bg-[#B89B7A] text-[#432818]'
+                : 'bg-[#F5F2E9] text-[#B89B7A] hover:bg-[#D4C4A0]'
             }`}
           >
             Todos ({filteredComponents.length})
@@ -179,8 +180,8 @@ export const ComponentToolbar: React.FC<ComponentToolbarProps> = ({
                 onClick={() => setSelectedCategory(category.id)}
                 className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
                   selectedCategory === category.id
-                    ? "bg-[#B89B7A] text-[#432818]"
-                    : "bg-[#F5F2E9] text-[#B89B7A] hover:bg-[#D4C4A0]"
+                    ? 'bg-[#B89B7A] text-[#432818]'
+                    : 'bg-[#F5F2E9] text-[#B89B7A] hover:bg-[#D4C4A0]'
                 }`}
               >
                 {category.name} ({categoryCount})

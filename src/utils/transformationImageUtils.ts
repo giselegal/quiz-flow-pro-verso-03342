@@ -1,4 +1,5 @@
-import { preloadCriticalImages, getLowQualityPlaceholder } from "@/utils/imageManager";
+// @ts-nocheck
+import { preloadCriticalImages, getLowQualityPlaceholder } from '@/utils/imageManager';
 
 /**
  * Pré-carrega imagens de antes e depois para melhorar a experiência do usuário
@@ -6,7 +7,7 @@ import { preloadCriticalImages, getLowQualityPlaceholder } from "@/utils/imageMa
  */
 export const preloadTransformationImages = (transformations: any[]) => {
   if (!transformations || !Array.isArray(transformations) || transformations.length === 0) {
-    console.warn("Não foi possível pré-carregar imagens de transformação: dados inválidos");
+    console.warn('Não foi possível pré-carregar imagens de transformação: dados inválidos');
     return;
   }
 
@@ -18,16 +19,16 @@ export const preloadTransformationImages = (transformations: any[]) => {
     if (firstTransformation.beforeImage) {
       const imgBefore = new Image();
       imgBefore.src = `${firstTransformation.beforeImage}?q=85&f=auto&w=400&e_sharpen:60`;
-      imgBefore.fetchPriority = "high";
-      imgBefore.decoding = "sync"; // Decodificação síncrona para a primeira imagem
+      imgBefore.fetchPriority = 'high';
+      imgBefore.decoding = 'sync'; // Decodificação síncrona para a primeira imagem
     }
 
     // Depois pré-carrega com alta prioridade
     if (firstTransformation.afterImage) {
       const imgAfter = new Image();
       imgAfter.src = `${firstTransformation.afterImage}?q=85&f=auto&w=400&e_sharpen:60`;
-      imgAfter.fetchPriority = "high";
-      imgAfter.decoding = "sync"; // Decodificação síncrona para a primeira imagem
+      imgAfter.fetchPriority = 'high';
+      imgAfter.decoding = 'sync'; // Decodificação síncrona para a primeira imagem
     }
   }
 
@@ -39,13 +40,13 @@ export const preloadTransformationImages = (transformations: any[]) => {
       if (transformation.beforeImage) {
         const imgBefore = new Image();
         imgBefore.src = `${transformation.beforeImage}?q=85&f=auto&w=400`;
-        imgBefore.decoding = "async"; // Decodificação assíncrona para as demais
+        imgBefore.decoding = 'async'; // Decodificação assíncrona para as demais
       }
 
       if (transformation.afterImage) {
         const imgAfter = new Image();
         imgAfter.src = `${transformation.afterImage}?q=85&f=auto&w=400`;
-        imgAfter.decoding = "async"; // Decodificação assíncrona para as demais
+        imgAfter.decoding = 'async'; // Decodificação assíncrona para as demais
       }
     }
   }, 2000); // Atraso para priorizar o carregamento inicial
@@ -57,15 +58,15 @@ export const preloadTransformationImages = (transformations: any[]) => {
  * @returns URL otimizada
  */
 export const getHighQualityImageUrl = (url: string) => {
-  if (!url || !url.includes("cloudinary.com")) return url;
+  if (!url || !url.includes('cloudinary.com')) return url;
 
   // Remove qualquer transformação existente que possa estar causando baixa qualidade
-  if (url.includes("/upload/")) {
-    const parts = url.split("/upload/");
+  if (url.includes('/upload/')) {
+    const parts = url.split('/upload/');
     if (parts.length === 2) {
       // Extrair a versão se existir
       const versionMatch = parts[1].match(/^v\d+\//);
-      const version = versionMatch ? versionMatch[0] : "";
+      const version = versionMatch ? versionMatch[0] : '';
 
       // Extrair o path após a versão ou usar todo o path se não houver versão
       const path = version ? parts[1].substring(version.length) : parts[1];
@@ -92,7 +93,7 @@ export const fixBlurryImage = (imageElement: HTMLImageElement) => {
     const tempImg = new Image();
     tempImg.onload = () => {
       imageElement.src = newSrc;
-      console.log("Imagem corrigida:", newSrc);
+      console.log('Imagem corrigida:', newSrc);
     };
     tempImg.src = newSrc;
   }

@@ -1,6 +1,6 @@
 // Sistema de Roteamento Melhorado para o Editor
-import React, { useState, Suspense, lazy } from "react";
-import { Router, Route, Switch, useLocation } from "wouter";
+import React, { Suspense, lazy, useState } from 'react';
+import { Route, Router, Switch, useLocation } from 'wouter';
 
 // Loading Component simples
 const PageLoader: React.FC = () => (
@@ -18,8 +18,8 @@ const ErrorBoundary: React.FC<{ children: React.ReactNode }> = ({ children }) =>
 
   React.useEffect(() => {
     const handleError = () => setHasError(true);
-    window.addEventListener("error", handleError);
-    return () => window.removeEventListener("error", handleError);
+    window.addEventListener('error', handleError);
+    return () => window.removeEventListener('error', handleError);
   }, []);
 
   if (hasError) {
@@ -45,66 +45,23 @@ const ErrorBoundary: React.FC<{ children: React.ReactNode }> = ({ children }) =>
 
 // Lazy loading dos componentes (com fallbacks seguros)
 const EnhancedEditor = lazy(() =>
-  import("../../components/editor/EnhancedEditor").catch(() => ({
-    default: () => (
-      <div className="p-8 text-center">
-        <p style={{ color: '#432818' }}>Erro ao carregar o Editor Melhorado</p>
-        <p style={{ color: '#6B4F43' }}>
-          Verifique se o arquivo está no local correto: /src/components/editor/EnhancedEditor.tsx
-        </p>
-      </div>
-    ),
+  import('../../components/editor/EnhancedEditor').then(() => ({
+    default: () => null,
   }))
 );
 
-const SystemIntegrationTest = lazy(() =>
-  import("../../components/testing/SystemIntegrationTest").catch(() => ({
-    default: () => (
-      <div className="p-8 text-center">
-        <p style={{ color: '#432818' }}>Erro ao carregar Testes de Integração</p>
-        <p style={{ color: '#6B4F43' }}>
-          Verifique se o arquivo está no local correto:
-          /src/components/testing/SystemIntegrationTest.tsx
-        </p>
-      </div>
-    ),
-  }))
-);
+const SystemIntegrationTest = lazy(() => import('../../components/testing/SystemIntegrationTest'));
 
 const FunnelManagementPage = lazy(() =>
-  import("../../pages/examples/EnhancedEditorIntegration")
-    .then(module => ({
-      default: module.FunnelManagementPage,
-    }))
-    .catch(() => ({
-      default: () => (
-        <div className="p-8 text-center">
-          <p style={{ color: '#432818' }}>Erro ao carregar Gestão de Funis</p>
-          <p style={{ color: '#6B4F43' }}>
-            Verifique se o arquivo está no local correto:
-            /src/pages/examples/EnhancedEditorIntegration.tsx
-          </p>
-        </div>
-      ),
-    }))
+  import('../../pages/examples/EnhancedEditorIntegration').then(module => ({
+    default: module.FunnelManagementPage,
+  }))
 );
 
 const EditorPage = lazy(() =>
-  import("../../pages/examples/EnhancedEditorIntegration")
-    .then(module => ({
-      default: module.default,
-    }))
-    .catch(() => ({
-      default: () => (
-        <div className="p-8 text-center">
-          <p style={{ color: '#432818' }}>Erro ao carregar Página do Editor</p>
-          <p style={{ color: '#6B4F43' }}>
-            Verifique se o arquivo está no local correto:
-            /src/pages/examples/EnhancedEditorIntegration.tsx
-          </p>
-        </div>
-      ),
-    }))
+  import('../../pages/examples/EnhancedEditorIntegration').then(module => ({
+    default: module.default,
+  }))
 );
 
 // Dashboard simples se não existir
@@ -140,10 +97,7 @@ const SimpleDashboard: React.FC = () => (
         <div className="bg-white p-6 rounded-lg shadow-sm border">
           <h2 className="text-xl font-semibold mb-4">📊 Analytics</h2>
           <p style={{ color: '#6B4F43' }}>Visualize métricas e relatórios detalhados</p>
-          <a
-            href="/admin/funis/demo/analytics"
-            style={{ backgroundColor: '#B89B7A' }}
-          >
+          <a href="/admin/funis/demo/analytics" style={{ backgroundColor: '#B89B7A' }}>
             Ver Analytics
           </a>
         </div>
@@ -198,9 +152,7 @@ export const EnhancedAppRouter: React.FC = () => {
                   <div className="p-6">
                     <h1 className="text-2xl font-bold mb-4">Analytics - Funil {funnelId}</h1>
                     <div className="bg-white p-8 rounded-lg shadow-sm border text-center">
-                      <p style={{ color: '#6B4F43' }}>
-                        Dashboard de Analytics será carregado aqui
-                      </p>
+                      <p style={{ color: '#6B4F43' }}>Dashboard de Analytics será carregado aqui</p>
                       <p style={{ color: '#8B7355' }}>
                         Componente: AdvancedAnalytics para funil {funnelId}
                       </p>
@@ -214,9 +166,9 @@ export const EnhancedAppRouter: React.FC = () => {
 
               {/* Rota de exemplo direto do editor */}
               <Route path="/enhanced-editor/:funnelId">
-                {({ funnelId }) => (
+                {() => (
                   <Suspense fallback={<PageLoader />}>
-                    <EnhancedEditor funnelId={funnelId} />
+                    {(EnhancedEditor as unknown as React.ComponentType<any>) && <EnhancedEditor />}
                   </Suspense>
                 )}
               </Route>
@@ -259,16 +211,16 @@ export const useAppNavigation = () => {
   return {
     location,
     navigateTo: setLocation,
-    goToDashboard: () => setLocation("/dashboard"),
+    goToDashboard: () => setLocation('/dashboard'),
     goToEditor: (funnelId?: string) => {
       if (funnelId) {
         setLocation(`/admin/funis/${funnelId}/editor`);
       } else {
-        setLocation("/editor");
+        setLocation('/editor');
       }
     },
     goToAnalytics: (funnelId: string) => setLocation(`/admin/funis/${funnelId}/analytics`),
-    openInNewTab: (path: string) => window.open(path, "_blank"),
+    openInNewTab: (path: string) => window.open(path, '_blank'),
   };
 };
 

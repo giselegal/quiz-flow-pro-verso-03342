@@ -106,12 +106,12 @@ graph LR
 
 ```typescript
 // Ao invés de:
-import QuizQuestionBlock from "./quiz/QuizQuestionBlock";
-import QuizProgressBlock from "./quiz/QuizProgressBlock";
-import QuizResultBlock from "./quiz/QuizResultBlock";
+import QuizQuestionBlock from './quiz/QuizQuestionBlock';
+import QuizProgressBlock from './quiz/QuizProgressBlock';
+import QuizResultBlock from './quiz/QuizResultBlock';
 
 // Você pode:
-import { QuizQuestionBlock, QuizProgressBlock, QuizResultBlock } from "./quiz";
+import { QuizQuestionBlock, QuizProgressBlock, QuizResultBlock } from './quiz';
 ```
 
 ---
@@ -226,7 +226,7 @@ case 'quiz-question':
 
 ```typescript
 // Busca schema automaticamente:
-const schema = getBlockPropertiesSchema("quiz-question");
+const schema = getBlockPropertiesSchema('quiz-question');
 // Gera textarea automaticamente baseado no schema
 ```
 
@@ -363,15 +363,15 @@ const AdvancedPropertyPanel = ({
 
 ```typescript
 // src/components/blocks/quiz/index.ts
-export { default as QuizQuestionBlock } from "./QuizQuestionBlock";
-export { default as QuizProgressBlock } from "./QuizProgressBlock";
-export { default as QuizResultBlock } from "./QuizResultBlock";
+export { default as QuizQuestionBlock } from './QuizQuestionBlock';
+export { default as QuizProgressBlock } from './QuizProgressBlock';
+export { default as QuizResultBlock } from './QuizResultBlock';
 
 // Facilita importações:
-import { QuizQuestionBlock, QuizProgressBlock } from "./quiz";
+import { QuizQuestionBlock, QuizProgressBlock } from './quiz';
 // Ao invés de:
-import QuizQuestionBlock from "./quiz/QuizQuestionBlock";
-import QuizProgressBlock from "./quiz/QuizProgressBlock";
+import QuizQuestionBlock from './quiz/QuizQuestionBlock';
+import QuizProgressBlock from './quiz/QuizProgressBlock';
 ```
 
 **🎯 FUNÇÃO REAL:**

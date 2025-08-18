@@ -8,53 +8,53 @@ export interface Database {
     Tables: {
       profiles: {
         Row: Profile;
-        Insert: Omit<Profile, "id" | "created_at" | "updated_at">;
-        Update: Partial<Omit<Profile, "id" | "created_at" | "updated_at">>;
+        Insert: Omit<Profile, 'id' | 'created_at' | 'updated_at'>;
+        Update: Partial<Omit<Profile, 'id' | 'created_at' | 'updated_at'>>;
       };
       quizzes: {
         Row: Quiz;
-        Insert: Omit<Quiz, "id" | "created_at" | "updated_at" | "view_count" | "completion_count">;
-        Update: Partial<Omit<Quiz, "id" | "created_at" | "updated_at">>;
+        Insert: Omit<Quiz, 'id' | 'created_at' | 'updated_at' | 'view_count' | 'completion_count'>;
+        Update: Partial<Omit<Quiz, 'id' | 'created_at' | 'updated_at'>>;
       };
       questions: {
         Row: Question;
-        Insert: Omit<Question, "id" | "created_at">;
-        Update: Partial<Omit<Question, "id" | "created_at">>;
+        Insert: Omit<Question, 'id' | 'created_at'>;
+        Update: Partial<Omit<Question, 'id' | 'created_at'>>;
       };
       quiz_attempts: {
         Row: QuizAttempt;
-        Insert: Omit<QuizAttempt, "id" | "started_at">;
-        Update: Partial<Omit<QuizAttempt, "id" | "started_at">>;
+        Insert: Omit<QuizAttempt, 'id' | 'started_at'>;
+        Update: Partial<Omit<QuizAttempt, 'id' | 'started_at'>>;
       };
       question_responses: {
         Row: QuestionResponse;
-        Insert: Omit<QuestionResponse, "id" | "answered_at">;
-        Update: Partial<Omit<QuestionResponse, "id" | "answered_at">>;
+        Insert: Omit<QuestionResponse, 'id' | 'answered_at'>;
+        Update: Partial<Omit<QuestionResponse, 'id' | 'answered_at'>>;
       };
       quiz_templates: {
         Row: QuizTemplate;
-        Insert: Omit<QuizTemplate, "id" | "created_at" | "updated_at" | "usage_count">;
-        Update: Partial<Omit<QuizTemplate, "id" | "created_at" | "updated_at">>;
+        Insert: Omit<QuizTemplate, 'id' | 'created_at' | 'updated_at' | 'usage_count'>;
+        Update: Partial<Omit<QuizTemplate, 'id' | 'created_at' | 'updated_at'>>;
       };
       quiz_categories: {
         Row: QuizCategory;
-        Insert: Omit<QuizCategory, "id" | "created_at">;
-        Update: Partial<Omit<QuizCategory, "id" | "created_at">>;
+        Insert: Omit<QuizCategory, 'id' | 'created_at'>;
+        Update: Partial<Omit<QuizCategory, 'id' | 'created_at'>>;
       };
       quiz_tags: {
         Row: QuizTag;
-        Insert: Omit<QuizTag, "id" | "created_at">;
-        Update: Partial<Omit<QuizTag, "id" | "created_at">>;
+        Insert: Omit<QuizTag, 'id' | 'created_at'>;
+        Update: Partial<Omit<QuizTag, 'id' | 'created_at'>>;
       };
       quiz_analytics: {
         Row: QuizAnalytics;
-        Insert: Omit<QuizAnalytics, "id" | "created_at">;
+        Insert: Omit<QuizAnalytics, 'id' | 'created_at'>;
         Update: never;
       };
       quiz_feedback: {
         Row: QuizFeedback;
-        Insert: Omit<QuizFeedback, "id" | "created_at">;
-        Update: Partial<Omit<QuizFeedback, "id" | "created_at">>;
+        Insert: Omit<QuizFeedback, 'id' | 'created_at'>;
+        Update: Partial<Omit<QuizFeedback, 'id' | 'created_at'>>;
       };
     };
     Views: {
@@ -83,8 +83,8 @@ export interface Profile {
   email: string | null;
   full_name: string | null;
   avatar_url: string | null;
-  role: "user" | "admin" | "moderator";
-  plan: "free" | "pro" | "enterprise";
+  role: 'user' | 'admin' | 'moderator';
+  plan: 'free' | 'pro' | 'enterprise';
   created_at: string;
   updated_at: string;
 }
@@ -95,7 +95,7 @@ export interface Quiz {
   description: string | null;
   author_id: string;
   category: string;
-  difficulty: "easy" | "medium" | "hard";
+  difficulty: 'easy' | 'medium' | 'hard';
   time_limit: number | null;
   is_public: boolean;
   is_published: boolean;
@@ -133,28 +133,28 @@ export interface Question {
   explanation: string | null;
   hint: string | null;
   media_url: string | null;
-  media_type: "image" | "video" | "audio" | null;
+  media_type: 'image' | 'video' | 'audio' | null;
   order_index: number;
   tags: string[];
   created_at: string;
 }
 
 export type QuestionType =
-  | "multiple_choice"
-  | "multiple_answer"
-  | "true_false"
-  | "text"
-  | "ordering"
-  | "matching"
-  | "scale"
-  | "dropdown";
+  | 'multiple_choice'
+  | 'multiple_answer'
+  | 'true_false'
+  | 'text'
+  | 'ordering'
+  | 'matching'
+  | 'scale'
+  | 'dropdown';
 
 export interface EditorSettings {
   autosave: boolean;
   autosaveInterval: number;
   previewOnChange: boolean;
   darkMode: boolean;
-  layout: "two-panel" | "three-panel";
+  layout: 'two-panel' | 'three-panel';
 }
 
 export interface QuestionOption {
@@ -174,7 +174,7 @@ export interface QuizAttempt {
   max_score: number | null;
   percentage_score: number | null;
   time_taken: number | null;
-  status: "in_progress" | "completed" | "abandoned";
+  status: 'in_progress' | 'completed' | 'abandoned';
   passed: boolean | null;
   started_at: string;
   completed_at: string | null;
@@ -227,7 +227,7 @@ export interface QuizTag {
 export interface QuizAnalytics {
   id: string;
   quiz_id: string;
-  event_type: "view" | "start" | "complete" | "abandon" | "question_answered";
+  event_type: 'view' | 'start' | 'complete' | 'abandon' | 'question_answered';
   user_id: string | null;
   session_id: string | null;
   question_id: string | null;
@@ -283,12 +283,12 @@ export interface QuizLeaderboard {
 // TIPOS PARA O EDITOR
 // =============================================================================
 
-export interface EditorQuiz extends Omit<Quiz, "author_id" | "created_at" | "updated_at"> {
+export interface EditorQuiz extends Omit<Quiz, 'author_id' | 'created_at' | 'updated_at'> {
   questions: EditorQuestion[];
   author?: Profile;
 }
 
-export interface EditorQuestion extends Omit<Question, "quiz_id" | "created_at"> {
+export interface EditorQuestion extends Omit<Question, 'quiz_id' | 'created_at'> {
   tempId?: string; // Para perguntas ainda não salvas
 }
 
@@ -296,7 +296,7 @@ export interface CreateQuizData {
   title: string;
   description?: string;
   category?: string;
-  difficulty?: "easy" | "medium" | "hard";
+  difficulty?: 'easy' | 'medium' | 'hard';
   time_limit?: number;
   is_public?: boolean;
   tags?: string[];
@@ -315,7 +315,7 @@ export interface CreateQuestionData {
   explanation?: string;
   hint?: string;
   media_url?: string;
-  media_type?: "image" | "video" | "audio";
+  media_type?: 'image' | 'video' | 'audio';
   order_index: number;
   tags?: string[];
 }
@@ -333,7 +333,7 @@ export interface UpdateQuestionData extends Partial<CreateQuestionData> {
 // =============================================================================
 
 export interface AnalyticsEvent {
-  event_type: QuizAnalytics["event_type"];
+  event_type: QuizAnalytics['event_type'];
   quiz_id: string;
   question_id?: string;
   user_id?: string;
@@ -386,7 +386,7 @@ export interface AuthState {
 // =============================================================================
 
 export interface TemplateData {
-  quiz: Omit<CreateQuizData, "questions">;
+  quiz: Omit<CreateQuizData, 'questions'>;
   questions: CreateQuestionData[];
   metadata: {
     version: string;
@@ -402,13 +402,13 @@ export interface TemplateData {
 
 export interface QuizFilters {
   category?: string;
-  difficulty?: "easy" | "medium" | "hard";
+  difficulty?: 'easy' | 'medium' | 'hard';
   tags?: string[];
   is_public?: boolean;
   author_id?: string;
   search?: string;
-  sort_by?: "created_at" | "updated_at" | "title" | "view_count" | "completion_count";
-  sort_order?: "asc" | "desc";
+  sort_by?: 'created_at' | 'updated_at' | 'title' | 'view_count' | 'completion_count';
+  sort_order?: 'asc' | 'desc';
   limit?: number;
   offset?: number;
 }
@@ -425,7 +425,7 @@ export interface QuizSearchResult {
 
 export interface MediaUpload {
   file: File;
-  type: "image" | "video" | "audio";
+  type: 'image' | 'video' | 'audio';
   max_size?: number;
   allowed_formats?: string[];
 }
@@ -479,7 +479,7 @@ export const DEFAULT_EDITOR_CONFIG: EditorConfig = {
   default_question_points: 1,
   max_questions_per_quiz: 100,
   max_options_per_question: 10,
-  allowed_media_types: ["image/jpeg", "image/png", "image/gif", "video/mp4"],
+  allowed_media_types: ['image/jpeg', 'image/png', 'image/gif', 'video/mp4'],
   max_media_size: 10 * 1024 * 1024, // 10MB
   enable_analytics: true,
   enable_ai_suggestions: false,

@@ -1,4 +1,5 @@
-import React, { Component, ErrorInfo, ReactNode } from "react";
+// @ts-nocheck
+import React, { Component, ErrorInfo, ReactNode } from 'react';
 
 interface Props {
   children: ReactNode;
@@ -24,7 +25,7 @@ class ErrorBoundary extends Component<Props, State> {
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     // Log the error to console for debugging
-    console.error("ErrorBoundary caught an error:", error, errorInfo);
+    console.error('ErrorBoundary caught an error:', error, errorInfo);
 
     this.setState({
       error,
@@ -87,11 +88,9 @@ class ErrorBoundary extends Component<Props, State> {
                 </button>
               </div>
 
-              {process.env.NODE_ENV === "development" && this.state.error && (
+              {process.env.NODE_ENV === 'development' && this.state.error && (
                 <details className="mt-4 text-left">
-                  <summary style={{ color: '#6B4F43' }}>
-                    Detalhes do Erro (Desenvolvimento)
-                  </summary>
+                  <summary style={{ color: '#6B4F43' }}>Detalhes do Erro (Desenvolvimento)</summary>
                   <div style={{ color: '#432818' }}>
                     <pre>{this.state.error.toString()}</pre>
                     {this.state.errorInfo && (

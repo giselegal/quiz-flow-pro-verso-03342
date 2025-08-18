@@ -1,8 +1,7 @@
-import React from "react";
-import { StyleResult } from "@/types/quiz";
-import { Card } from "@/components/ui/card";
-import SecondaryStylesSection from "@/components/quiz-result/SecondaryStylesSection";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { StyleResult } from '@/types/quiz';
+import { Card } from '@/components/ui/card';
+import SecondaryStylesSection from '@/components/quiz-result/SecondaryStylesSection';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface StyleResultSectionProps {
   primaryStyle: StyleResult;

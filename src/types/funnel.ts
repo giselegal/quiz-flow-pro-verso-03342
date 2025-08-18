@@ -1,8 +1,8 @@
-import { EditorBlock } from "./editor";
+import { EditorBlock } from './editor';
 
 export interface FunnelStep {
   id: string;
-  type: "quiz-question" | "result-page" | "offer-page" | "form" | "content";
+  type: 'quiz-question' | 'result-page' | 'offer-page' | 'form' | 'content';
   title: string;
   blocks: EditorBlock[];
   settings?: {
@@ -61,14 +61,14 @@ export interface FunnelStepProps {
 }
 
 export type FunnelStepType =
-  | "intro"
-  | "name-collect"
-  | "quiz-intro"
-  | "question-multiple"
-  | "quiz-transition"
-  | "processing"
-  | "result-intro"
-  | "result-details"
-  | "result-guide"
-  | "offer-transition"
-  | "offer-page";
+  | 'intro'
+  | 'name-collect'
+  | 'quiz-intro'
+  | 'question-multiple'
+  | 'quiz-transition'
+  | 'processing'
+  | 'result-intro'
+  | 'result-details'
+  | 'result-guide'
+  | 'offer-transition'
+  | 'offer-page';

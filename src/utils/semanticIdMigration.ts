@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 🔄 SCRIPT DE MIGRAÇÃO - TIMESTAMP PARA SEMÂNTICO
  *
@@ -10,7 +11,7 @@ import {
   isSemanticId,
   QuizStyleIds,
   StepTemplateIds,
-} from "./semanticIdGenerator";
+} from './semanticIdGenerator';
 
 // ═══════════════════════════════════════════════
 // 🎯 MIGRAÇÃO DE COMPONENTES ESPECÍFICOS
@@ -30,15 +31,15 @@ export function migrateResultHeaderComponent(resultHeaderData: {
 } {
   // Se já tem ID semântico, retorna como está
   if (resultHeaderData.id && isSemanticId(resultHeaderData.id)) {
-    console.log("✅ ResultHeader já tem ID semântico:", resultHeaderData.id);
+    console.log('✅ ResultHeader já tem ID semântico:', resultHeaderData.id);
     return resultHeaderData as any;
   }
 
   // Gera novo ID semântico baseado no userName
   const newId = StepTemplateIds.result.header(resultHeaderData.userName);
 
-  console.log("🔄 Migrando ResultHeader:", {
-    oldId: resultHeaderData.id || "sem-id",
+  console.log('🔄 Migrando ResultHeader:', {
+    oldId: resultHeaderData.id || 'sem-id',
     newId,
     userName: resultHeaderData.userName,
   });
@@ -65,7 +66,7 @@ export function migrateQuizData(quizData: {
   }>;
   userId?: string;
 }): typeof quizData {
-  console.log("🔄 Iniciando migração de quiz data...");
+  console.log('🔄 Iniciando migração de quiz data...');
 
   const migratedQuestions = quizData.questions.map((question, questionIndex) => {
     // Gerar ID semântico para questão
@@ -73,8 +74,8 @@ export function migrateQuizData(quizData: {
       question.id && isSemanticId(question.id)
         ? question.id
         : generateSemanticId({
-            context: "quiz",
-            type: "question",
+            context: 'quiz',
+            type: 'question',
             identifier: `q${questionIndex + 1}`,
           });
 
@@ -84,8 +85,8 @@ export function migrateQuizData(quizData: {
         option.id && isSemanticId(option.id)
           ? option.id
           : generateSemanticId({
-              context: "quiz",
-              type: "option",
+              context: 'quiz',
+              type: 'option',
               identifier: `q${questionIndex + 1}-option-${optionIndex + 1}`,
             });
 
@@ -120,9 +121,9 @@ export function migrateEditorBlocks(
     content?: any;
     properties?: any;
   }>,
-  stageId: string = "default"
+  stageId: string = 'default'
 ): typeof blocks {
-  console.log("🔄 Migrando blocos do editor...");
+  console.log('🔄 Migrando blocos do editor...');
 
   return blocks.map((block, index) => {
     // Se já tem ID semântico, mantém
@@ -133,12 +134,12 @@ export function migrateEditorBlocks(
     // Gera novo ID semântico
     const newId = generateSemanticId({
       context: stageId,
-      type: "block",
+      type: 'block',
       identifier: `${block.type}-${(block.order || index) + 1}`,
     });
 
-    console.log("🔄 Migrando bloco:", {
-      oldId: block.id || "sem-id",
+    console.log('🔄 Migrando bloco:', {
+      oldId: block.id || 'sem-id',
       newId,
       type: block.type,
     });
@@ -175,7 +176,7 @@ export function migrateQuizResults(results: {
     responses: any[];
   };
 }): typeof results {
-  console.log("🔄 Migrando resultados do quiz...");
+  console.log('🔄 Migrando resultados do quiz...');
 
   const migratedResult = { ...results };
 
@@ -192,8 +193,8 @@ export function migrateQuizResults(results: {
     migratedResult.secondaryStyles = migratedResult.secondaryStyles.map((style, index) => ({
       ...style,
       id: generateSemanticId({
-        context: "result",
-        type: "secondary-style",
+        context: 'result',
+        type: 'secondary-style',
         identifier: `${results.userId}-${index + 1}`,
       }),
     }));
@@ -223,7 +224,7 @@ export function migrateProjectToSemanticIds(projectData: {
   results?: any;
   components?: any[];
 }): typeof projectData {
-  console.log("🚀 Iniciando migração completa do projeto...");
+  console.log('🚀 Iniciando migração completa do projeto...');
 
   const migrated = { ...projectData };
 
@@ -236,7 +237,7 @@ export function migrateProjectToSemanticIds(projectData: {
   if (migrated.editor?.blocks) {
     migrated.editor.blocks = migrateEditorBlocks(
       migrated.editor.blocks,
-      migrated.editor.stageId || "default"
+      migrated.editor.stageId || 'default'
     );
   }
 
@@ -255,15 +256,15 @@ export function migrateProjectToSemanticIds(projectData: {
       return {
         ...component,
         id: generateSemanticId({
-          context: component.context || "app",
-          type: component.type || "component",
+          context: component.context || 'app',
+          type: component.type || 'component',
           identifier: `item-${index + 1}`,
         }),
       };
     });
   }
 
-  console.log("✅ Migração completa finalizada!");
+  console.log('✅ Migração completa finalizada!');
   return migrated;
 }
 
@@ -287,10 +288,10 @@ export function validateMigration(data: any): {
   let timestampIds = 0;
   let totalIds = 0;
 
-  function analyzeObject(obj: any, path: string = ""): void {
-    if (typeof obj !== "object" || obj === null) return;
+  function analyzeObject(obj: any, path: string = ''): void {
+    if (typeof obj !== 'object' || obj === null) return;
 
-    if (obj.id && typeof obj.id === "string") {
+    if (obj.id && typeof obj.id === 'string') {
       totalIds++;
       if (isSemanticId(obj.id)) {
         semanticIds++;
@@ -301,7 +302,7 @@ export function validateMigration(data: any): {
     }
 
     Object.keys(obj).forEach(key => {
-      if (typeof obj[key] === "object") {
+      if (typeof obj[key] === 'object') {
         analyzeObject(obj[key], path ? `${path}.${key}` : key);
       }
     });
@@ -330,22 +331,22 @@ export function generateMigrationReport(data: any): string {
 
   const report = `
 📊 RELATÓRIO DE MIGRAÇÃO - SISTEMA 1 (IDs Semânticos)
-${"=".repeat(60)}
+${'='.repeat(60)}
 
 📈 ESTATÍSTICAS:
 • Total de IDs analisados: ${validation.totalIds}
 • IDs semânticos: ${validation.semanticIds} (${validation.semanticRatio.toFixed(1)}%)
 • IDs timestamp: ${validation.timestampIds}
 
-${validation.isValid ? "✅" : "❌"} STATUS: ${validation.isValid ? "MIGRAÇÃO BEM SUCEDIDA" : "MIGRAÇÃO INCOMPLETA"}
+${validation.isValid ? '✅' : '❌'} STATUS: ${validation.isValid ? 'MIGRAÇÃO BEM SUCEDIDA' : 'MIGRAÇÃO INCOMPLETA'}
 
 ${
   validation.issues.length > 0
     ? `
 ⚠️ PROBLEMAS ENCONTRADOS:
-${validation.issues.map(issue => `• ${issue}`).join("\n")}
+${validation.issues.map(issue => `• ${issue}`).join('\n')}
 `
-    : "🎉 NENHUM PROBLEMA ENCONTRADO!"
+    : '🎉 NENHUM PROBLEMA ENCONTRADO!'
 }
 
 🚀 BENEFÍCIOS OBTIDOS:

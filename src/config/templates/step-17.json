@@ -2,10 +2,10 @@
   "templateVersion": "2.0",
   "metadata": {
     "id": "quiz-step-17",
-    "name": "Estratégica 2 - Qual é o maior desafio que voc...",
-    "description": "Questão estratégica 2 de 5",
-    "category": "strategic-question",
-    "type": "strategicQuestion",
+    "name": "Qual desses resultados você mais gostaria de alcançar?",
+    "description": "Questão estratégica 6 - Objetivo desejado",
+    "category": "quiz-strategic",
+    "type": "strategic-question",
     "tags": [
       "quiz",
       "style",
@@ -74,14 +74,26 @@
       "properties": {
         "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
         "logoAlt": "Logo Gisele Galvão",
-        "logoWidth": 96,
-        "logoHeight": 96,
-        "progressValue": 78,
-        "progressTotal": 100,
+        "logoWidth": 120,
+        "logoHeight": 50,
         "showProgress": true,
+        "progressValue": 17,
+        "progressMax": 21,
         "showBackButton": true,
         "containerWidth": "full",
-        "spacing": "small"
+        "spacing": "small",
+        "showLogo": true,
+        "progressBarColor": "#B89B7A",
+        "progressBarThickness": 6,
+        "backgroundColor": "#FFFFFF",
+        "textColor": "#432818",
+        "paddingTop": 16,
+        "paddingBottom": 16,
+        "paddingLeft": 24,
+        "paddingRight": 24,
+        "marginBottom": 24,
+        "progressTotal": 100,
+        "type": "quiz-intro-header"
       }
     },
     {
@@ -102,7 +114,7 @@
       "id": "step17-question-title",
       "type": "text-inline",
       "properties": {
-        "content": "Qual é o maior desafio que você enfrenta ao se vestir?",
+        "content": "Qual desses resultados você mais gostaria de alcançar com os Guias de Estilo e Imagem?",
         "fontSize": "text-2xl",
         "fontWeight": "font-bold",
         "textAlign": "text-center",
@@ -118,20 +130,34 @@
       "properties": {
         "options": [
           {
-            "id": "strategic-2-1",
-            "text": "Nunca sei o que combina com o quê"
+            "id": "17a",
+            "text": "Montar looks com mais facilidade e confiança",
+            "value": "facilidade_confianca",
+            "points": 4
           },
           {
-            "id": "strategic-2-2",
-            "text": "Tenho muitas roupas, mas sempre sinto que não tenho nada para vestir"
+            "id": "17b",
+            "text": "Usar o que já tenho e me sentir estilosa",
+            "value": "usar_bem",
+            "points": 3
           },
           {
-            "id": "strategic-2-3",
-            "text": "Não consigo criar looks diferentes com as peças que tenho"
+            "id": "17c",
+            "text": "Comprar com mais consciência e sem culpa",
+            "value": "comprar_consciencia",
+            "points": 2
           },
           {
-            "id": "strategic-2-4",
-            "text": "Compro peças por impulso que depois não uso"
+            "id": "17d",
+            "text": "Ser admirada pela imagem que transmito",
+            "value": "ser_admirada",
+            "points": 4
+          },
+          {
+            "id": "17e",
+            "text": "Resgatar peças esquecidas e criar novos looks com estilo",
+            "value": "resgatar_pecas",
+            "points": 3
           }
         ],
         "columns": 1,
@@ -202,5 +228,6 @@
     },
     "scoring": null,
     "conditions": null
-  }
+  },
+  "updatedAt": "2025-08-17T19:06:10.221Z"
 }

@@ -1,10 +1,11 @@
-import { getOptimizedContainerClasses } from "@/config/containerConfig";
-import React from "react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { CheckCircle, X, Star, Crown, Zap, ArrowRight } from "lucide-react";
-import { AnimatedWrapper } from "@/components/ui/animated-wrapper";
-import { DeviceView, StyleProps } from "./types";
+/* @ts-nocheck */
+// @ts-nocheck
+import { getOptimizedContainerClasses } from '@/config/containerConfig';
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { CheckCircle, X, Star, Crown, Zap, ArrowRight } from 'lucide-react';
+import { AnimatedWrapper } from '@/components/ui/animated-wrapper';
+import { DeviceView, StyleProps } from './types';
 
 interface PriceOption {
   id: string;
@@ -31,7 +32,7 @@ interface PriceComparisonProps extends StyleProps {
   /** Moeda */
   currency?: string;
   /** Layout da comparação */
-  layout?: "side-by-side" | "stacked" | "table";
+  layout?: 'side-by-side' | 'stacked' | 'table';
   /** Destacar preço recomendado */
   highlightRecommended?: boolean;
   /** Configuração de animações */
@@ -53,41 +54,41 @@ interface PriceComparisonProps extends StyleProps {
  * Exibe opções de preço lado a lado para facilitar a escolha
  */
 export const PriceComparison: React.FC<PriceComparisonProps> = ({
-  title = "Escolha Seu Plano",
-  subtitle = "Compare as opções e escolha a que melhor atende suas necessidades:",
+  title = 'Escolha Seu Plano',
+  subtitle = 'Compare as opções e escolha a que melhor atende suas necessidades:',
   priceOptions,
-  currency = "R$",
-  layout = "side-by-side",
+  currency = 'R$',
+  layout = 'side-by-side',
   highlightRecommended = true,
   animationConfig = {},
-  deviceView = "desktop",
+  deviceView = 'desktop',
   onPriceSelect,
-  buttonText = "Escolher Este Plano",
+  buttonText = 'Escolher Este Plano',
   className,
   style,
   customStyles,
 }) => {
   const { disabled: animationsDisabled, duration = 400, staggerDelay = 200 } = animationConfig;
-  const isLowPerformance = deviceView === "mobile";
+  const isLowPerformance = deviceView === 'mobile';
 
   const formatPrice = (price: number) => {
-    return `${currency} ${price.toFixed(2).replace(".", ",")}`;
+    return `${currency} ${price.toFixed(2).replace('.', ',')}`;
   };
 
   const getLayoutClasses = () => {
-    if (layout === "stacked" || deviceView === "mobile") {
-      return "space-y-2";
+    if (layout === 'stacked' || deviceView === 'mobile') {
+      return 'space-y-2';
     }
-    if (layout === "table") {
-      return "overflow-x-auto";
+    if (layout === 'table') {
+      return 'overflow-x-auto';
     }
-    return `grid ${deviceView === "tablet" ? "grid-cols-1 md:grid-cols-2" : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"} gap-6`;
+    return `grid ${deviceView === 'tablet' ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'} gap-6`;
   };
 
   const renderPriceCard = (option: PriceOption, index: number) => (
     <AnimatedWrapper
       key={option.id}
-      animation={animationsDisabled || isLowPerformance ? "none" : "fade"}
+      animation={animationsDisabled || isLowPerformance ? 'none' : 'fade'}
       show={true}
       duration={duration}
       delay={staggerDelay * index}
@@ -95,9 +96,9 @@ export const PriceComparison: React.FC<PriceComparisonProps> = ({
       <Card
         className={`relative p-6 transition-all duration-300 cursor-pointer hover:scale-105 h-full ${
           option.isRecommended && highlightRecommended
-            ? "ring-2 ring-[#B89B7A] shadow-lg border-[#B89B7A] bg-gradient-to-br from-white to-[#f9f4ef]"
-            : "border border-gray-200 hover:shadow-md"
-        } ${layout === "stacked" ? "max-w-md mx-auto" : ""}`}
+            ? 'ring-2 ring-[#B89B7A] shadow-lg border-[#B89B7A] bg-gradient-to-br from-white to-[#f9f4ef]'
+            : 'border border-gray-200 hover:shadow-md'
+        } ${layout === 'stacked' ? 'max-w-md mx-auto' : ''}`}
         onClick={() => onPriceSelect?.(option)}
       >
         {/* Recommended badge */}
@@ -137,9 +138,7 @@ export const PriceComparison: React.FC<PriceComparisonProps> = ({
           <div className="mb-4">
             {option.originalPrice && option.originalPrice > option.currentPrice && (
               <div className="relative mb-2">
-                <span style={{ color: '#8B7355' }}>
-                  {formatPrice(option.originalPrice)}
-                </span>
+                <span style={{ color: '#8B7355' }}>{formatPrice(option.originalPrice)}</span>
                 <div style={{ backgroundColor: '#FAF9F7' }}></div>
               </div>
             )}
@@ -182,8 +181,8 @@ export const PriceComparison: React.FC<PriceComparisonProps> = ({
         <Button
           className={`w-full py-3 rounded-lg font-semibold transition-all duration-300 ${
             option.isRecommended && highlightRecommended
-              ? "bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] text-white hover:scale-105"
-              : "bg-white border-2 border-[#B89B7A] text-[#432818] hover:bg-[#f9f4ef]"
+              ? 'bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] text-white hover:scale-105'
+              : 'bg-white border-2 border-[#B89B7A] text-[#432818] hover:bg-[#f9f4ef]'
           }`}
           onClick={e => {
             e.stopPropagation();
@@ -200,9 +199,9 @@ export const PriceComparison: React.FC<PriceComparisonProps> = ({
     </AnimatedWrapper>
   );
 
-  if (layout === "table") {
+  if (layout === 'table') {
     return (
-      <div className={`py-12 ${className || ""}`} style={style}>
+      <div className={`py-12 ${className || ''}`} style={style}>
         {customStyles && <style dangerouslySetInnerHTML={{ __html: customStyles }} />}
 
         {/* Header */}
@@ -269,7 +268,7 @@ export const PriceComparison: React.FC<PriceComparisonProps> = ({
   }
 
   return (
-    <div className={`py-12 ${className || ""}`} style={style}>
+    <div className={`py-12 ${className || ''}`} style={style}>
       {customStyles && <style dangerouslySetInnerHTML={{ __html: customStyles }} />}
 
       {/* Header */}

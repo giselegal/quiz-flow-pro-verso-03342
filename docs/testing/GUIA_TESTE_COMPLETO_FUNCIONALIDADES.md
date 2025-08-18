@@ -221,16 +221,16 @@
 
 ```javascript
 // Verificar estado do funil
-console.log("Estado atual:", localStorage.getItem("schema-driven-funnel"));
+console.log('Estado atual:', localStorage.getItem('schema-driven-funnel'));
 
 // Verificar componentes carregados
-console.log("Componentes no canvas:", document.querySelectorAll("[data-block-id]").length);
+console.log('Componentes no canvas:', document.querySelectorAll('[data-block-id]').length);
 
 // Forçar salvamento
 if (window.forceSave) window.forceSave();
 
 // Verificar conectividade
-fetch("/api/health").then(r => console.log("API Status:", r.status));
+fetch('/api/health').then(r => console.log('API Status:', r.status));
 ```
 
 ### **Logs Úteis:**

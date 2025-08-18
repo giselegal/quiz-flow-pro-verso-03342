@@ -1,6 +1,5 @@
-import React from "react";
-import { ComponentProps } from "@/interfaces/quiz";
-import styles from "@/styles/quiz.module.css";
+import { ComponentProps } from '@/interfaces/quiz';
+import styles from '@/styles/quiz.module.css';
 
 interface QuizTestimonialProps extends ComponentProps {
   text?: string;
@@ -11,10 +10,10 @@ interface QuizTestimonialProps extends ComponentProps {
 }
 
 const QuizTestimonial: React.FC<QuizTestimonialProps> = ({
-  text = "Este produto mudou minha vida! Recomendo para todos.",
-  author = "Maria Silva",
-  role = "Cliente satisfeita",
-  avatar = "https://via.placeholder.com/64x64",
+  text = 'Este produto mudou minha vida! Recomendo para todos.',
+  author = 'Maria Silva',
+  role = 'Cliente satisfeita',
+  avatar = 'https://via.placeholder.com/64x64',
   rating = 5,
   isSelected,
   onClick,
@@ -34,7 +33,7 @@ const QuizTestimonial: React.FC<QuizTestimonialProps> = ({
 
   return (
     <div
-      className={`${styles.quizComponent} ${styles.testimonial} ${isSelected ? styles.selected : ""}`}
+      className={`${styles.quizComponent} ${styles.testimonial} ${isSelected ? styles.selected : ''}`}
       onClick={handleClick}
     >
       <div className={styles.testimonialCard}>
@@ -49,7 +48,7 @@ const QuizTestimonial: React.FC<QuizTestimonialProps> = ({
             className={styles.testimonialAvatar}
             onError={e => {
               const target = e.target as HTMLImageElement;
-              target.src = "https://via.placeholder.com/64x64/e5e7eb/9ca3af?text=👤";
+              target.src = 'https://via.placeholder.com/64x64/e5e7eb/9ca3af?text=👤';
             }}
           />
           <div className={styles.testimonialInfo}>

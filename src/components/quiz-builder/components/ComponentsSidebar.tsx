@@ -1,7 +1,6 @@
-import React from "react";
-import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { QuizComponentType, QuizStage } from "@/types/quizBuilder";
+import { Button } from '@/components/ui/button';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { QuizComponentType, QuizStage } from '@/types/quizBuilder';
 import {
   Type,
   Image as ImageIcon,
@@ -9,7 +8,7 @@ import {
   ListChecks,
   CheckSquare,
   FileQuestion,
-} from "lucide-react";
+} from 'lucide-react';
 
 interface ComponentsSidebarProps {
   onComponentSelect: (type: QuizComponentType) => void;
@@ -31,91 +30,91 @@ export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({
   // Define components based on stage type
   const getComponentsForStageType = () => {
     switch (activeStage.type) {
-      case "cover":
+      case 'cover':
         return [
           {
-            type: "text",
+            type: 'text',
             icon: <FileText className="h-4 w-4 mr-2" />,
-            label: "Texto",
+            label: 'Texto',
           },
           {
-            type: "headline",
+            type: 'headline',
             icon: <Type className="h-4 w-4 mr-2" />,
-            label: "Título",
+            label: 'Título',
           },
           {
-            type: "image",
+            type: 'image',
             icon: <ImageIcon className="h-4 w-4 mr-2" />,
-            label: "Imagem",
+            label: 'Imagem',
           },
         ];
-      case "question":
+      case 'question':
         return [
           {
-            type: "stageQuestion",
+            type: 'stageQuestion',
             icon: <FileQuestion className="h-4 w-4 mr-2" />,
-            label: "Pergunta",
+            label: 'Pergunta',
           },
           {
-            type: "text",
+            type: 'text',
             icon: <FileText className="h-4 w-4 mr-2" />,
-            label: "Texto",
+            label: 'Texto',
           },
           {
-            type: "multipleChoice",
+            type: 'multipleChoice',
             icon: <ListChecks className="h-4 w-4 mr-2" />,
-            label: "Múltipla Escolha",
+            label: 'Múltipla Escolha',
           },
           {
-            type: "singleChoice",
+            type: 'singleChoice',
             icon: <CheckSquare className="h-4 w-4 mr-2" />,
-            label: "Escolha Única",
+            label: 'Escolha Única',
           },
           {
-            type: "image",
+            type: 'image',
             icon: <ImageIcon className="h-4 w-4 mr-2" />,
-            label: "Imagem",
+            label: 'Imagem',
           },
         ];
-      case "result":
+      case 'result':
         return [
           {
-            type: "quizResult",
+            type: 'quizResult',
             icon: <ListChecks className="h-4 w-4 mr-2" />,
-            label: "Resultado",
+            label: 'Resultado',
           },
           {
-            type: "text",
+            type: 'text',
             icon: <FileText className="h-4 w-4 mr-2" />,
-            label: "Texto",
+            label: 'Texto',
           },
           {
-            type: "headline",
+            type: 'headline',
             icon: <Type className="h-4 w-4 mr-2" />,
-            label: "Título",
+            label: 'Título',
           },
           {
-            type: "image",
+            type: 'image',
             icon: <ImageIcon className="h-4 w-4 mr-2" />,
-            label: "Imagem",
+            label: 'Imagem',
           },
         ];
       default:
         return [
           {
-            type: "text",
+            type: 'text',
             icon: <FileText className="h-4 w-4 mr-2" />,
-            label: "Texto",
+            label: 'Texto',
           },
           {
-            type: "headline",
+            type: 'headline',
             icon: <Type className="h-4 w-4 mr-2" />,
-            label: "Título",
+            label: 'Título',
           },
           {
-            type: "image",
+            type: 'image',
             icon: <ImageIcon className="h-4 w-4 mr-2" />,
-            label: "Imagem",
+            label: 'Imagem',
           },
         ];
     }

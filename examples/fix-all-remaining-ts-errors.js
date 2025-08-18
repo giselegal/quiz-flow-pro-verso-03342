@@ -39,7 +39,7 @@ const filesToFix = [
   'src/components/editor/blocks/QuizResultHeaderBlock_new.tsx',
   'src/components/editor/blocks/QuizResultMainCardBlock.tsx',
   'src/components/editor/blocks/QuizResultSecondaryStylesBlock.tsx',
-  'src/components/editor/blocks/QuizStartPageBlock.tsx'
+  'src/components/editor/blocks/QuizStartPageBlock.tsx',
 ];
 
 console.log('🔧 Applying @ts-nocheck to all remaining files with TypeScript errors...');
@@ -51,7 +51,7 @@ filesToFix.forEach(filePath => {
   try {
     if (fs.existsSync(filePath)) {
       const content = fs.readFileSync(filePath, 'utf8');
-      
+
       if (!content.startsWith('// @ts-nocheck')) {
         const newContent = '// @ts-nocheck\n' + content;
         fs.writeFileSync(filePath, newContent);

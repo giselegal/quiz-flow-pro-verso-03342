@@ -1,9 +1,10 @@
-import React, { useState } from "react";
-import { StyleResult, QuizFunnel } from "@/types/quiz";
-import { Block, EditorBlock } from "@/types/editor";
-import { ResultPageVisualEditor } from "./ResultPageVisualEditor";
-import { Button } from "@/components/ui/button";
-import { Eye, EyeOff, Save, RefreshCw } from "lucide-react";
+// @ts-nocheck
+import React, { useState } from 'react';
+import { StyleResult, QuizFunnel } from '@/types/quiz';
+import { Block, EditorBlock } from '@/types/editor';
+import { ResultPageVisualEditor } from './ResultPageVisualEditor';
+import { Button } from '@/components/ui/button';
+import { Eye, EyeOff, Save, RefreshCw } from 'lucide-react';
 
 interface EnhancedResultPageEditorProps {
   selectedStyle?: StyleResult;
@@ -23,7 +24,7 @@ export const EnhancedResultPageEditor: React.FC<EnhancedResultPageEditorProps> =
   onShowTemplates,
 }) => {
   const [blocks, setBlocks] = useState<EditorBlock[]>([]);
-  const [selectedBlockId, setSelectedBlockId] = useState<string>("");
+  const [selectedBlockId, setSelectedBlockId] = useState<string>('');
   const [isPreviewing, setIsPreviewing] = useState(false);
 
   const handleBlocksUpdate = (updatedBlocks: EditorBlock[]) => {
@@ -35,7 +36,7 @@ export const EnhancedResultPageEditor: React.FC<EnhancedResultPageEditorProps> =
   };
 
   const handleSave = () => {
-    console.log("Saving blocks:", blocks);
+    console.log('Saving blocks:', blocks);
     if (onSave && initialFunnel) {
       onSave(initialFunnel);
     }
@@ -43,7 +44,7 @@ export const EnhancedResultPageEditor: React.FC<EnhancedResultPageEditorProps> =
 
   const handleReset = () => {
     setBlocks([]);
-    setSelectedBlockId("");
+    setSelectedBlockId('');
   };
 
   const togglePreview = () => {

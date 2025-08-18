@@ -1,0 +1,159 @@
+{
+  "templateVersion": "1.0",
+  "layout": {
+    "containerWidth": "full",
+    "spacing": "small",
+    "backgroundColor": "transparent",
+    "responsive": true
+  },
+  "validation": {
+    "required": true,
+    "minAnswers": 3,
+    "maxAnswers": 3,
+    "validationMessage": "Selecione 3 opções para continuar"
+  },
+  "analytics": {
+    "events": [
+      "page_view",
+      "option_selected",
+      "validation_error",
+      "completion"
+    ],
+    "trackingId": "step-03-quiz-question"
+  },
+  "metadata": {
+    "id": "quiz-step-03",
+    "name": "Q2 - Nome Pessoal",
+    "description": "Coleta do nome do usuário",
+    "category": "quiz-question",
+    "tags": [
+      "quiz",
+      "style",
+      "quiz-question"
+    ],
+    "createdAt": "2025-08-11T01:02:19.340Z",
+    "updatedAt": "2025-08-11T01:02:19.340Z"
+  },
+  "blocks": [
+    {
+      "id": "step03-header",
+      "type": "quiz-intro-header",
+      "position": 0,
+      "properties": {
+        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        "logoAlt": "Logo Gisele Galvão",
+        "logoWidth": 96,
+        "logoHeight": 96,
+        "progressValue": 14,
+        "progressTotal": 100,
+        "showProgress": true,
+        "containerWidth": "full",
+        "spacing": "small"
+      }
+    },
+    {
+      "id": "step03-question-title",
+      "type": "text-inline",
+      "position": 1,
+      "properties": {
+        "content": "Q2 - NOME PESSOAL",
+        "fontSize": "text-2xl",
+        "fontWeight": "font-bold",
+        "textAlign": "text-center",
+        "color": "#432818",
+        "containerWidth": "full",
+        "spacing": "small"
+      }
+    },
+    {
+      "id": "step03-question-counter",
+      "type": "text-inline",
+      "position": 2,
+      "properties": {
+        "content": "Questão 2 de 13",
+        "fontSize": "text-sm",
+        "textAlign": "text-center",
+        "color": "#6B7280",
+        "marginBottom": 24,
+        "containerWidth": "full",
+        "spacing": "small"
+      }
+    },
+    {
+      "id": "step03-options-grid",
+      "type": "options-grid",
+      "position": 3,
+      "properties": {
+        "options": [
+          {
+            "id": "3a",
+            "text": "Opção A - Descrição personalizada",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
+            "value": "3a",
+            "category": "Natural",
+            "points": 1
+          },
+          {
+            "id": "3b",
+            "text": "Opção B - Descrição personalizada",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
+            "value": "3b",
+            "category": "Clássico",
+            "points": 2
+          },
+          {
+            "id": "3c",
+            "text": "Opção C - Descrição personalizada",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
+            "value": "3c",
+            "category": "Contemporâneo",
+            "points": 2
+          },
+          {
+            "id": "3d",
+            "text": "Opção D - Descrição personalizada",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
+            "value": "3d",
+            "category": "Elegante",
+            "points": 3
+          }
+        ],
+        "columns": 2,
+        "imageSize": 256,
+        "showImages": true,
+        "multipleSelection": true,
+        "minSelections": 3,
+        "maxSelections": 3,
+        "borderColor": "#E5E7EB",
+        "selectedBorderColor": "#B89B7A",
+        "hoverColor": "#F3E8D3",
+        "containerWidth": "full",
+        "spacing": "small",
+        "marginBottom": 16,
+        "validationMessage": "Selecione 3 opções para continuar",
+        "autoAdvance": true,
+        "autoAdvanceOnComplete": true,
+        "autoAdvanceDelay": 1500
+      }
+    },
+    {
+      "id": "step03-continue-button",
+      "type": "button-inline",
+      "position": 4,
+      "properties": {
+        "text": "Próxima Questão →",
+        "textWhenDisabled": "Selecione 3 opções para continuar",
+        "variant": "primary",
+        "size": "large",
+        "fullWidth": true,
+        "backgroundColor": "#B89B7A",
+        "textColor": "#ffffff",
+        "enableOnSelection": true,
+        "containerWidth": "full",
+        "spacing": "small",
+        "marginTop": 24,
+        "requiresValidSelection": true
+      }
+    }
+  ]
+}

@@ -1,22 +1,12 @@
-import React from "react";
-import { Card } from "@/components/ui/card";
-import { StyleResult } from "@/types/quiz";
-import { styleConfig } from "@/config/styleConfig";
-import OptimizedImage from "@/components/ui/optimized-image";
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { Card } from '@/components/ui/card';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { StyleResult } from '@/types/quiz';
 
 interface ResultSkeletonProps {
   primaryStyle?: StyleResult;
 }
 
-const ResultSkeleton: React.FC<ResultSkeletonProps> = ({ primaryStyle }) => {
-  const mainImageSrc = primaryStyle && styleConfig[primaryStyle.category]?.image;
-
-  // Constantes para garantir proporções consistentes em todos os breakpoints
-  const IMAGE_ASPECT_RATIO = 4 / 5; // Proporção altura/largura (4:5)
-  const BASE_WIDTH = 256; // w-64 em pixels
-  const BASE_HEIGHT = Math.round(BASE_WIDTH / IMAGE_ASPECT_RATIO);
-
+const ResultSkeleton: React.FC<ResultSkeletonProps> = () => {
   return (
     <div className="min-h-screen bg-[#fffaf7] p-4 md:p-6" aria-busy="true" role="status">
       <div className="container mx-auto max-w-4xl">
@@ -80,7 +70,7 @@ const ResultSkeleton: React.FC<ResultSkeletonProps> = ({ primaryStyle }) => {
               {[1, 2, 3].map(i => (
                 <div
                   key={i}
-                  className={`w-1.5 sm:w-2 h-1.5 sm:h-2 rounded-full ${i === 1 ? "bg-[#aa6b5d]/50" : "bg-gray-200"}`}
+                  className={`w-1.5 sm:w-2 h-1.5 sm:h-2 rounded-full ${i === 1 ? 'bg-[#aa6b5d]/50' : 'bg-gray-200'}`}
                 />
               ))}
             </div>

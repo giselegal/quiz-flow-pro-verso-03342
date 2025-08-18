@@ -1,7 +1,6 @@
-import React from "react";
-import { cn } from "@/lib/utils";
-import { FunnelStepProps } from "@/types/funnel";
-import { Button } from "@/components/ui/button";
+import { cn } from '@/lib/utils';
+import { FunnelStepProps } from '@/types/funnel';
+import { Button } from '@/components/ui/button';
 
 /**
  * QuizIntroStep - Etapa 3: Introdução às perguntas do quiz
@@ -11,7 +10,7 @@ import { Button } from "@/components/ui/button";
  */
 export const QuizIntroStep: React.FC<FunnelStepProps> = ({
   id,
-  className = "",
+  className = '',
   isEditable = false,
   onNext,
   stepNumber,
@@ -20,20 +19,20 @@ export const QuizIntroStep: React.FC<FunnelStepProps> = ({
   onEdit,
 }) => {
   const {
-    title = "Descubra seu estilo ideal",
-    description = "Responda as próximas perguntas com sinceridade para obtermos um resultado preciso e personalizado para você.",
-    buttonText = "Iniciar questionário",
+    title = 'Descubra seu estilo ideal',
+    description = 'Responda as próximas perguntas com sinceridade para obtermos um resultado preciso e personalizado para você.',
+    buttonText = 'Iniciar questionário',
     imageUrl,
     bullets = [
-      "São apenas 10 perguntas rápidas",
-      "Leva menos de 3 minutos",
-      "Resultado personalizado imediato",
+      'São apenas 10 perguntas rápidas',
+      'Leva menos de 3 minutos',
+      'Resultado personalizado imediato',
     ],
   } = data;
 
   return (
     <div
-      className={cn("relative flex flex-col bg-white rounded-xl shadow-md p-6", className)}
+      className={cn('relative flex flex-col bg-white rounded-xl shadow-md p-6', className)}
       onClick={isEditable ? onEdit : undefined}
       data-funnel-step-id={id}
     >

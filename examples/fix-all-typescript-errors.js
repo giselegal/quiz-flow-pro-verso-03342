@@ -1,9 +1,9 @@
 /**
  * FINAL TYPESCRIPT ERROR RESOLUTION
- * 
+ *
  * This JavaScript file can be run with Node.js to automatically apply @ts-nocheck
  * to ALL remaining block files that still have TypeScript errors.
- * 
+ *
  * Usage: node fix-all-typescript-errors.js
  */
 
@@ -49,14 +49,14 @@ const remainingFiles = [
   'src/components/editor/blocks/ModernResultPageBlock_clean.tsx',
   'src/components/editor/blocks/NotificationInlineBlock.tsx',
   'src/components/editor/blocks/OptionsGridBlock.tsx',
-  'src/components/editor/blocks/PainPointsGridBlock.tsx'
+  'src/components/editor/blocks/PainPointsGridBlock.tsx',
 ];
 
 function addTsNocheck(filePath) {
   try {
     if (fs.existsSync(filePath)) {
       const content = fs.readFileSync(filePath, 'utf8');
-      
+
       if (!content.startsWith('// @ts-nocheck')) {
         const newContent = '// @ts-nocheck\n' + content;
         fs.writeFileSync(filePath, newContent);
@@ -76,7 +76,9 @@ function addTsNocheck(filePath) {
   }
 }
 
-console.log('🔧 FINAL TypeScript Error Resolution - Adding @ts-nocheck to all remaining files...\n');
+console.log(
+  '🔧 FINAL TypeScript Error Resolution - Adding @ts-nocheck to all remaining files...\n'
+);
 
 let processedCount = 0;
 let skippedCount = 0;

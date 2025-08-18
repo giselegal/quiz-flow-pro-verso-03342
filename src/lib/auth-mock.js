@@ -3,7 +3,7 @@
 
 export const authConfig = {
   pages: {
-    signIn: "/login",
+    signIn: '/login',
   },
   callbacks: {
     authorized({ auth, request }) {
@@ -18,9 +18,9 @@ export function auth() {
   return {
     auth: {
       user: {
-        name: "Build User",
-        email: "build@example.com",
-        role: "admin",
+        name: 'Build User',
+        email: 'build@example.com',
+        role: 'admin',
       },
       expires: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
     },
@@ -32,13 +32,13 @@ export function useSession() {
   return {
     data: {
       user: {
-        name: "Build User",
-        email: "build@example.com",
-        role: "admin",
+        name: 'Build User',
+        email: 'build@example.com',
+        role: 'admin',
       },
       expires: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
     },
-    status: "authenticated",
+    status: 'authenticated',
     update: () => Promise.resolve(true),
   };
 }

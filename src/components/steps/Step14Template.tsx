@@ -1,96 +1,19 @@
-// 🎯 TEMPLATE DE BLOCOS DA ETAPA 14
-import React from "react";
+import React from 'react';
+import { TemplateRenderer } from '../templates/TemplateRenderer';
 
-export const getStep14Template = () => {
-  return [
-    // 🎯 CABEÇALHO COM PROGRESSO
-    {
-      id: "progress-header-step14",
-      type: "quiz-header",
-      properties: {
-        logoUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        logoAlt: "Logo Gisele Galvão",
-        logoWidth: 80,
-        logoHeight: 80,
-        progressValue: 70,
-        progressMax: 100,
-        showBackButton: false,
-        showProgress: true,
-        stepNumber: "14 de 21",
-        spacing: "small",
-        marginTop: 0,
-        marginBottom: 0,
-      },
-    },
-
-    // 🎨 BARRA DECORATIVA
-    {
-      id: "decorative-bar-step14",
-      type: "decorative-bar-inline",
-      properties: {
-        width: "100%",
-        height: 4,
-        color: "#B89B7A",
-        gradientColors: ["#B89B7A", "#D4C2A8", "#B89B7A"],
-        borderRadius: 3,
-        marginTop: 0,
-        marginBottom: 32,
-        showShadow: true,
-        spacing: "small",
-      },
-    },
-
-    // 📱 TÍTULO DA TRANSIÇÃO
-    {
-      id: "transition-title-step14",
-      type: "text-inline",
-      properties: {
-        content: "undefined",
-        fontSize: "text-3xl",
-        fontWeight: "font-bold",
-        fontFamily: "Playfair Display, serif",
-        textAlign: "text-center",
-        color: "#432818",
-        marginBottom: 24,
-        lineHeight: "1.2",
-        spacing: "small",
-        marginTop: 0,
-      },
-    },
-
-    // 🖼️ IMAGEM DE LOADING/TRANSIÇÃO
-    {
-      id: "transition-image-step14",
-      type: "image-display-inline",
-      properties: {
-        src: "https://res.cloudinary.com/dqljyf76t/image/upload/v1746838157/20250509_2150_Idade_e_Experi%C3%AAncia_simple_compose_01jtvtdbkfcj3g9f8tmexn5chm_wppuxb.webp",
-        alt: "undefined",
-        width: 500,
-        height: 350,
-        className: "object-cover w-full max-w-lg h-72 rounded-xl mx-auto shadow-lg",
-        textAlign: "text-center",
-        marginBottom: 32,
-        spacing: "small",
-        marginTop: 0,
-      },
-    },
-
-    // 💭 TEXTO DESCRITIVO
-    {
-      id: "transition-description-step14",
-      type: "text-inline",
-      properties: {
-        content: "undefined",
-        fontSize: "text-lg",
-        textAlign: "text-center",
-        color: "#432818",
-        marginBottom: 40,
-        lineHeight: "1.6",
-        spacing: "small",
-        marginTop: 0,
-      },
-    },
-  ];
+/**
+ * 📋 STEP 14 - Quiz Template Component
+ * 
+ * Este componente usa o TemplateRenderer para carregar o template
+ * consolidado da step-14.json que inclui o header otimizado.
+ */
+export const Step14Template: React.FC = () => {
+  return (
+    <TemplateRenderer 
+      templateId="step-14"
+      fallbackStep={14}
+    />
+  );
 };
 
+export default Step14Template;

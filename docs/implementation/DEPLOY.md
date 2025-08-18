@@ -102,8 +102,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "18"
-          cache: "npm"
+          node-version: '18'
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm install
@@ -217,7 +217,7 @@ RewriteRule . /index.html [L]
 
 ```typescript
 // Configuração de performance
-import { getCLS, getFID, getFCP, getLCP, getTTFB } from "web-vitals";
+import { getCLS, getFID, getFCP, getLCP, getTTFB } from 'web-vitals';
 
 getCLS(console.log);
 getFID(console.log);
@@ -247,9 +247,9 @@ Sentry.init({
 
 ```typescript
 // GA4 integration
-import { gtag } from "ga-gtag";
+import { gtag } from 'ga-gtag';
 
-gtag("config", "GA_MEASUREMENT_ID", {
+gtag('config', 'GA_MEASUREMENT_ID', {
   page_title: document.title,
   page_location: window.location.href,
 });
@@ -262,12 +262,12 @@ gtag("config", "GA_MEASUREMENT_ID", {
 ```typescript
 // Configuração no servidor
 const securityHeaders = {
-  "Content-Security-Policy":
+  'Content-Security-Policy':
     "default-src 'self'; img-src 'self' data: https:; script-src 'self' 'unsafe-inline'",
-  "X-Frame-Options": "DENY",
-  "X-Content-Type-Options": "nosniff",
-  "Referrer-Policy": "strict-origin-when-cross-origin",
-  "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
+  'X-Frame-Options': 'DENY',
+  'X-Content-Type-Options': 'nosniff',
+  'Referrer-Policy': 'strict-origin-when-cross-origin',
+  'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
 };
 ```
 
@@ -344,10 +344,10 @@ const assetUrl = (path: string) => `${cdnUrl}${path}`;
 
 // Cache strategies
 const cacheStrategies = {
-  images: "1 year",
-  js: "1 year",
-  css: "1 year",
-  html: "1 day",
+  images: '1 year',
+  js: '1 year',
+  css: '1 year',
+  html: '1 day',
 };
 ```
 
@@ -372,8 +372,8 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: "18"
-          cache: "npm"
+          node-version: '18'
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
@@ -392,8 +392,8 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: "18"
-          cache: "npm"
+          node-version: '18'
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
@@ -426,7 +426,7 @@ jobs:
         uses: amondnet/vercel-action@v20
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-args: "--prod"
+          vercel-args: '--prod'
           working-directory: ./
 ```
 

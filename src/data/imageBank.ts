@@ -1,4 +1,4 @@
-import { BankImage, ImageBank } from "./imageBank.d";
+import { BankImage, ImageBank } from './imageBank.d';
 
 // Imagens do banco
 const images: BankImage[] = [];
@@ -59,7 +59,7 @@ export const imageBank: ImageBank = {
   getAllImages,
   getImageById,
   getImagesByCategory,
-  preloadCategory: async (category: string) => {
+  preloadCategory: async (_category: string) => {
     // Implementação simples de preload
     return Promise.resolve(true);
   },

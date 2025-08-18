@@ -1,8 +1,8 @@
-import { useEffect, useCallback } from "react";
-import { useScrollSync } from "@/context/ScrollSyncContext";
+import { useEffect, useCallback, useRef } from 'react';
+import { useScrollSync } from '@/context/ScrollSyncContext';
 
 interface UseSyncedScrollOptions {
-  source: "canvas" | "components" | "properties";
+  source: 'canvas' | 'components' | 'properties';
   enabled?: boolean;
 }
 
@@ -12,11 +12,11 @@ export const useSyncedScroll = ({ source, enabled = true }: UseSyncedScrollOptio
 
   const getScrollRef = () => {
     switch (source) {
-      case "canvas":
+      case 'canvas':
         return canvasScrollRef;
-      case "components":
+      case 'components':
         return componentsScrollRef;
-      case "properties":
+      case 'properties':
         return propertiesScrollRef;
       default:
         return canvasScrollRef;
@@ -28,21 +28,34 @@ export const useSyncedScroll = ({ source, enabled = true }: UseSyncedScrollOptio
       if (!enabled || isScrolling) return;
 
       const target = event.target as HTMLDivElement;
-      syncScroll(source, target.scrollTop);
+      // Guardar o último scrollTop e agendar via RAF para suavizar
+      lastScrollTop.current = target.scrollTop;
+
+      if (rafId.current !== null) return;
+      rafId.current = requestAnimationFrame(() => {
+        rafId.current = null;
+        syncScroll(source, lastScrollTop.current);
+      });
     },
     [enabled, isScrolling, source, syncScroll]
   );
 
   const scrollRef = getScrollRef();
+  const rafId = useRef<number | null>(null);
+  const lastScrollTop = useRef(0);
 
   useEffect(() => {
     const element = scrollRef.current;
     if (!element || !enabled) return;
 
-    element.addEventListener("scroll", handleScroll, { passive: true });
+    element.addEventListener('scroll', handleScroll, { passive: true });
 
     return () => {
-      element.removeEventListener("scroll", handleScroll);
+      element.removeEventListener('scroll', handleScroll);
+      if (rafId.current !== null) {
+        cancelAnimationFrame(rafId.current);
+        rafId.current = null;
+      }
     };
   }, [handleScroll, enabled, scrollRef]);
 

@@ -1,7 +1,6 @@
-import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { TrendingUp, Users, Target, Eye, Clock } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { TrendingUp, Users, Target, Eye, Clock } from 'lucide-react';
 
 const AnalyticsPage: React.FC = () => {
   return (
@@ -10,7 +9,7 @@ const AnalyticsPage: React.FC = () => {
       <div>
         <h1
           className="text-3xl font-bold text-[#432818]"
-          style={{ fontFamily: "Playfair Display, serif" }}
+          style={{ fontFamily: 'Playfair Display, serif' }}
         >
           Analytics & Métricas
         </h1>

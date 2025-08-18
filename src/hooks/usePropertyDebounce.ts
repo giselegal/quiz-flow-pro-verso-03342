@@ -3,7 +3,7 @@
  * Gerencia atualizações de propriedades com debounce inteligente
  */
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 interface UsePropertyDebounceOptions {
   debounceMs?: number;
@@ -16,36 +16,39 @@ export const usePropertyDebounce = <T = any>(
   options: UsePropertyDebounceOptions = {}
 ) => {
   const { debounceMs = 300, onUpdate, immediate = false } = options;
-  
+
   const [value, setValue] = useState<T>(initialValue);
   const [debouncedValue, setDebouncedValue] = useState<T>(initialValue);
   const [isChanging, setIsChanging] = useState(false);
   const [hasChanged, setHasChanged] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout>();
 
-  const updateValue = useCallback((newValue: T, forceImmediate = false) => {
-    setValue(newValue);
-    setIsChanging(true);
-    setHasChanged(false);
+  const updateValue = useCallback(
+    (newValue: T, forceImmediate = false) => {
+      setValue(newValue);
+      setIsChanging(true);
+      setHasChanged(false);
 
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
 
-    if (immediate || forceImmediate) {
-      setDebouncedValue(newValue);
-      setIsChanging(false);
-      setHasChanged(true);
-      onUpdate?.(newValue);
-    } else {
-      timeoutRef.current = setTimeout(() => {
+      if (immediate || forceImmediate) {
         setDebouncedValue(newValue);
         setIsChanging(false);
         setHasChanged(true);
         onUpdate?.(newValue);
-      }, debounceMs);
-    }
-  }, [debounceMs, onUpdate, immediate]);
+      } else {
+        timeoutRef.current = setTimeout(() => {
+          setDebouncedValue(newValue);
+          setIsChanging(false);
+          setHasChanged(true);
+          onUpdate?.(newValue);
+        }, debounceMs);
+      }
+    },
+    [debounceMs, onUpdate, immediate]
+  );
 
   const resetValue = useCallback(() => {
     setValue(initialValue);

@@ -1,36 +1,35 @@
-"use client";
+'use client';
 
-import React, { lazy, Suspense, useState, useEffect } from "react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from "@/components/ui/carousel";
+} from '@/components/ui/carousel';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { useToast } from '@/components/ui/use-toast';
+import { trackButtonClick } from '@/utils/analytics';
 import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import {
-  ShoppingCart,
-  Heart,
   Award,
   CheckCircle,
+  Clock,
+  Gift,
+  Shield,
+  ShoppingCart,
   Star,
   XCircle,
-  Clock,
-  Shield,
-  Gift,
   Zap,
-} from "lucide-react";
-import { trackButtonClick } from "@/utils/analytics";
+} from 'lucide-react';
+import React, { lazy, Suspense, useEffect, useState } from 'react';
 
 // Types
 interface StyleResult {
@@ -42,29 +41,29 @@ interface StyleResult {
 // Helper function to get style descriptions
 const getStyleDescription = (styleType: string): string => {
   switch (styleType) {
-    case "Natural":
-      return "Você valoriza o conforto e a praticidade. Seu estilo é descontraído e casual, com peças fáceis de usar no dia a dia.";
-    case "Clássico":
-      return "Você aprecia roupas atemporais e elegantes. Seu estilo é refinado e tradicional, com peças de qualidade que nunca saem de moda.";
-    case "Contemporâneo":
-      return "Você gosta de estar atualizado e seguir as tendências. Seu estilo é moderno e versátil, combinando o clássico com o atual.";
-    case "Elegante":
-      return "Você valoriza a sofisticação e o requinte. Seu estilo é polido e imponente, com peças de alta qualidade e acabamento impecável.";
-    case "Romântico":
-      return "Você aprecia detalhes delicados e femininos. Seu estilo é suave e gracioso, com elementos como rendas, babados e estampas florais.";
-    case "Sexy":
-      return "Você gosta de valorizar suas curvas. Seu estilo é sensual e marcante, com peças que destacam seu corpo e sua confiança.";
-    case "Dramático":
-      return "Você busca impactar e chamar atenção. Seu estilo é arrojado e marcante, com peças estruturadas e de design diferenciado.";
-    case "Criativo":
-      return "Você adora expressar sua individualidade. Seu estilo é único e original, combinando cores, texturas e elementos de forma não convencional.";
+    case 'Natural':
+      return 'Você valoriza o conforto e a praticidade. Seu estilo é descontraído e casual, com peças fáceis de usar no dia a dia.';
+    case 'Clássico':
+      return 'Você aprecia roupas atemporais e elegantes. Seu estilo é refinado e tradicional, com peças de qualidade que nunca saem de moda.';
+    case 'Contemporâneo':
+      return 'Você gosta de estar atualizado e seguir as tendências. Seu estilo é moderno e versátil, combinando o clássico com o atual.';
+    case 'Elegante':
+      return 'Você valoriza a sofisticação e o requinte. Seu estilo é polido e imponente, com peças de alta qualidade e acabamento impecável.';
+    case 'Romântico':
+      return 'Você aprecia detalhes delicados e femininos. Seu estilo é suave e gracioso, com elementos como rendas, babados e estampas florais.';
+    case 'Sexy':
+      return 'Você gosta de valorizar suas curvas. Seu estilo é sensual e marcante, com peças que destacam seu corpo e sua confiança.';
+    case 'Dramático':
+      return 'Você busca impactar e chamar atenção. Seu estilo é arrojado e marcante, com peças estruturadas e de design diferenciado.';
+    case 'Criativo':
+      return 'Você adora expressar sua individualidade. Seu estilo é único e original, combinando cores, texturas e elementos de forma não convencional.';
     default:
-      return "Seu estilo pessoal reflete sua personalidade e preferências únicas.";
+      return 'Seu estilo pessoal reflete sua personalidade e preferências únicas.';
   }
 };
 
 // Lazy load componentes menos críticos
-const Testimonials = lazy(() => import("@/components/quiz-result/sales/Testimonials"));
+const Testimonials = lazy(() => import('@/components/quiz-result/sales/Testimonials'));
 
 interface ImprovedQuizResultSalesPageProps {
   primaryStyle: StyleResult;
@@ -75,17 +74,16 @@ interface ImprovedQuizResultSalesPageProps {
 const ImprovedQuizResultSalesPage: React.FC<ImprovedQuizResultSalesPageProps> = ({
   primaryStyle,
   secondaryStyles,
-  userName = "Visitante",
+  userName = 'Visitante',
 }) => {
   const { toast } = useToast();
-  const [imagesLoaded, setImagesLoaded] = useState(false);
   const [criticalImagesLoaded, setCriticalImagesLoaded] = useState(false);
-  const [activePaymentTab, setActivePaymentTab] = useState<"parcelado" | "avista">("parcelado");
+  const [activePaymentTab, setActivePaymentTab] = useState<'parcelado' | 'avista'>('parcelado');
 
   // Pré-carregar imagens críticas
   useEffect(() => {
     const criticalImages = [
-      "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911667/WhatsApp_Image_2025-04-02_at_09.40.53_cv8p5y.jpg",
+      'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911667/WhatsApp_Image_2025-04-02_at_09.40.53_cv8p5y.jpg',
     ];
 
     let loadedCount = 0;
@@ -115,15 +113,15 @@ const ImprovedQuizResultSalesPage: React.FC<ImprovedQuizResultSalesPageProps> = 
 
   const handleBuyNow = () => {
     // Rastrear evento de clique no botão
-    trackButtonClick("buy_now_button", "Quero Comprar", "result_page_main_cta");
+    trackButtonClick('buy_now_button', 'Quero Comprar', 'result_page_main_cta');
 
     toast({
-      title: "Redirecionando para o checkout",
-      description: "Você será redirecionado para a página de pagamento.",
+      title: 'Redirecionando para o checkout',
+      description: 'Você será redirecionado para a página de pagamento.',
     });
 
     // URL do checkout
-    window.location.href = "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912";
+    window.location.href = 'https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912';
   };
 
   // Loading state quando imagens críticas estão carregando
@@ -269,22 +267,22 @@ const ImprovedQuizResultSalesPage: React.FC<ImprovedQuizResultSalesPageProps> = 
                   <div className="space-y-4">
                     {[
                       {
-                        item: "Guia Completo de Estilo Personalizado",
-                        description: "Manual exclusivo baseado no seu perfil único",
-                        value: "R$ 97,00",
-                        badge: "PRINCIPAL",
+                        item: 'Guia Completo de Estilo Personalizado',
+                        description: 'Manual exclusivo baseado no seu perfil único',
+                        value: 'R$ 97,00',
+                        badge: 'PRINCIPAL',
                       },
                       {
-                        item: "Bônus: Manual de Peças Estratégicas",
-                        description: "Descubra as peças-chave do seu guarda-roupa",
-                        value: "R$ 47,00",
-                        badge: "BÔNUS",
+                        item: 'Bônus: Manual de Peças Estratégicas',
+                        description: 'Descubra as peças-chave do seu guarda-roupa',
+                        value: 'R$ 47,00',
+                        badge: 'BÔNUS',
                       },
                       {
-                        item: "Bônus: Guia de Visagismo Facial",
-                        description: "Cortes e acessórios ideais para seu rosto",
-                        value: "R$ 31,00",
-                        badge: "BÔNUS",
+                        item: 'Bônus: Guia de Visagismo Facial',
+                        description: 'Cortes e acessórios ideais para seu rosto',
+                        value: 'R$ 31,00',
+                        badge: 'BÔNUS',
                       },
                     ].map((product, index) => (
                       <div
@@ -300,7 +298,7 @@ const ImprovedQuizResultSalesPage: React.FC<ImprovedQuizResultSalesPageProps> = 
                               </h4>
                               <span
                                 className={`px-2 py-1 text-xs font-bold rounded-full text-white w-fit ${
-                                  product.badge === "PRINCIPAL" ? "bg-[#B89B7A]" : "bg-[#aa6b5d]"
+                                  product.badge === 'PRINCIPAL' ? 'bg-[#B89B7A]' : 'bg-[#aa6b5d]'
                                 }`}
                               >
                                 {product.badge}
@@ -340,16 +338,16 @@ const ImprovedQuizResultSalesPage: React.FC<ImprovedQuizResultSalesPageProps> = 
                   <div className="flex justify-center mb-8">
                     <div className="flex bg-[#f9f4ef] rounded-full p-1 border border-[#B89B7A]/20">
                       {[
-                        { key: "parcelado", label: "Parcelado" },
-                        { key: "avista", label: "À Vista" },
+                        { key: 'parcelado', label: 'Parcelado' },
+                        { key: 'avista', label: 'À Vista' },
                       ].map(tab => (
                         <button
                           key={tab.key}
-                          onClick={() => setActivePaymentTab(tab.key as "avista" | "parcelado")}
+                          onClick={() => setActivePaymentTab(tab.key as 'avista' | 'parcelado')}
                           className={`px-4 sm:px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
                             activePaymentTab === tab.key
-                              ? "bg-white text-[#432818] shadow-sm border border-[#B89B7A]/20"
-                              : "text-[#8F7A6A] hover:text-[#432818]"
+                              ? 'bg-white text-[#432818] shadow-sm border border-[#B89B7A]/20'
+                              : 'text-[#8F7A6A] hover:text-[#432818]'
                           }`}
                         >
                           {tab.label}
@@ -359,7 +357,7 @@ const ImprovedQuizResultSalesPage: React.FC<ImprovedQuizResultSalesPageProps> = 
                   </div>
 
                   {/* Preço Dinâmico */}
-                  {activePaymentTab === "parcelado" ? (
+                  {activePaymentTab === 'parcelado' ? (
                     <div className="mb-6">
                       <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 mb-4">
                         <div className="text-center">
@@ -435,23 +433,23 @@ const ImprovedQuizResultSalesPage: React.FC<ImprovedQuizResultSalesPageProps> = 
                     {[
                       {
                         icon: <Shield className="w-4 h-4" />,
-                        text: "Pagamento 100% Seguro",
-                        color: "text-[#4CAF50]",
+                        text: 'Pagamento 100% Seguro',
+                        color: 'text-[#4CAF50]',
                       },
                       {
                         icon: <Award className="w-4 h-4" />,
-                        text: "Garantia de 7 dias",
-                        color: "text-[#aa6b5d]",
+                        text: 'Garantia de 7 dias',
+                        color: 'text-[#aa6b5d]',
                       },
                       {
                         icon: <Zap className="w-4 h-4" />,
-                        text: "Acesso Imediato",
-                        color: "text-[#B89B7A]",
+                        text: 'Acesso Imediato',
+                        color: 'text-[#B89B7A]',
                       },
                       {
                         icon: <Star className="w-4 h-4" />,
-                        text: "Avaliação 5 estrelas",
-                        color: "text-[#aa6b5d]",
+                        text: 'Avaliação 5 estrelas',
+                        color: 'text-[#aa6b5d]',
                       },
                     ].map((item, index) => (
                       <div
@@ -489,15 +487,13 @@ const ImprovedQuizResultSalesPage: React.FC<ImprovedQuizResultSalesPageProps> = 
           <div className="grid md:grid-cols-2 gap-8">
             {/* Antes */}
             <div style={{ borderColor: '#E5DDD5' }}>
-              <h3 style={{ color: '#432818' }}>
-                ❌ Quando você não conhece seu estilo...
-              </h3>
+              <h3 style={{ color: '#432818' }}>❌ Quando você não conhece seu estilo...</h3>
               <ul className="space-y-3">
                 {[
-                  "Compra peças por impulso que não combinam entre si",
+                  'Compra peças por impulso que não combinam entre si',
                   "Sente que tem um guarda-roupa cheio, mas 'nada para vestir'",
-                  "Investe em tendências que não valorizam sua imagem",
-                  "Tem dificuldade em criar uma imagem coerente e autêntica",
+                  'Investe em tendências que não valorizam sua imagem',
+                  'Tem dificuldade em criar uma imagem coerente e autêntica',
                 ].map((item, index) => (
                   <li key={index} className="flex items-start gap-3">
                     <XCircle style={{ color: '#432818' }} />
@@ -514,10 +510,10 @@ const ImprovedQuizResultSalesPage: React.FC<ImprovedQuizResultSalesPageProps> = 
               </h3>
               <ul className="space-y-3">
                 {[
-                  "Economiza tempo e dinheiro em compras conscientes",
-                  "Projeta a imagem que realmente representa você",
-                  "Aumenta sua confiança em qualquer ambiente",
-                  "Cria looks harmoniosos com menos peças",
+                  'Economiza tempo e dinheiro em compras conscientes',
+                  'Projeta a imagem que realmente representa você',
+                  'Aumenta sua confiança em qualquer ambiente',
+                  'Cria looks harmoniosos com menos peças',
                 ].map((item, index) => (
                   <li key={index} className="flex items-start gap-3">
                     <CheckCircle className="w-5 h-5 text-[#4CAF50] mt-0.5 flex-shrink-0" />
@@ -539,19 +535,19 @@ const ImprovedQuizResultSalesPage: React.FC<ImprovedQuizResultSalesPageProps> = 
             <CarouselContent>
               {[
                 {
-                  title: "Guia de Maquiagem por Estilo",
-                  description: "Descubra as maquiagens que mais combinam com seu estilo",
-                  img: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911677/C%C3%B3pia_de_MOCKUPS_15_-_Copia_grstwl.webp",
+                  title: 'Guia de Maquiagem por Estilo',
+                  description: 'Descubra as maquiagens que mais combinam com seu estilo',
+                  img: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911677/C%C3%B3pia_de_MOCKUPS_15_-_Copia_grstwl.webp',
                 },
                 {
-                  title: "Manual de Acessórios Estratégicos",
-                  description: "Aprenda a usar acessórios para potencializar seus looks",
-                  img: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911666/C%C3%B3pia_de_Template_Dossi%C3%AA_Completo_2024_15_-_Copia_ssrhu3.webp",
+                  title: 'Manual de Acessórios Estratégicos',
+                  description: 'Aprenda a usar acessórios para potencializar seus looks',
+                  img: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911666/C%C3%B3pia_de_Template_Dossi%C3%AA_Completo_2024_15_-_Copia_ssrhu3.webp',
                 },
                 {
-                  title: "Checklist de Compras Inteligentes",
-                  description: "Nunca mais compre por impulso com este guia prático",
-                  img: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911682/C%C3%B3pia_de_MOCKUPS_13_znzbks.webp",
+                  title: 'Checklist de Compras Inteligentes',
+                  description: 'Nunca mais compre por impulso com este guia prático',
+                  img: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911682/C%C3%B3pia_de_MOCKUPS_13_znzbks.webp',
                 },
               ].map((bonus, index) => (
                 <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
@@ -629,24 +625,24 @@ const ImprovedQuizResultSalesPage: React.FC<ImprovedQuizResultSalesPageProps> = 
           <Accordion type="single" collapsible className="max-w-3xl mx-auto">
             {[
               {
-                question: "Como funciona o acesso ao material?",
+                question: 'Como funciona o acesso ao material?',
                 answer:
-                  "Após a confirmação do pagamento, você receberá um e-mail com o link para download do seu guia personalizado. O acesso é vitalício e você pode baixar quantas vezes quiser.",
+                  'Após a confirmação do pagamento, você receberá um e-mail com o link para download do seu guia personalizado. O acesso é vitalício e você pode baixar quantas vezes quiser.',
               },
               {
-                question: "O guia é realmente personalizado para mim?",
+                question: 'O guia é realmente personalizado para mim?',
                 answer:
-                  "Sim! Com base nas suas respostas no quiz, criamos um guia específico para seu estilo predominante, incluindo paleta de cores, tipos de peças e dicas de combinação.",
+                  'Sim! Com base nas suas respostas no quiz, criamos um guia específico para seu estilo predominante, incluindo paleta de cores, tipos de peças e dicas de combinação.',
               },
               {
-                question: "Posso trocar ou devolver se não gostar?",
+                question: 'Posso trocar ou devolver se não gostar?',
                 answer:
-                  "Oferecemos garantia incondicional de 7 dias. Se por qualquer motivo você não ficar satisfeita, devolvemos 100% do seu investimento.",
+                  'Oferecemos garantia incondicional de 7 dias. Se por qualquer motivo você não ficar satisfeita, devolvemos 100% do seu investimento.',
               },
               {
-                question: "Os bônus estão inclusos no valor?",
+                question: 'Os bônus estão inclusos no valor?',
                 answer:
-                  "Sim! Todos os bônus mencionados estão inclusos no valor único de R$ 39,90. Não há taxas extras ou custos adicionais.",
+                  'Sim! Todos os bônus mencionados estão inclusos no valor único de R$ 39,90. Não há taxas extras ou custos adicionais.',
               },
             ].map((faq, index) => (
               <AccordionItem key={index} value={`item-${index + 1}`}>

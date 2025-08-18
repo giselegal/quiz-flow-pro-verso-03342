@@ -1,8 +1,7 @@
 // @ts-nocheck
-import React from "react";
-import { cn } from "@/lib/utils";
-import { Award, Users, BookOpen } from "lucide-react";
-import type { BlockComponentProps } from "../../../types/blocks";
+import { cn } from '@/lib/utils';
+import { Award, Users, BookOpen } from 'lucide-react';
+import type { BlockComponentProps } from '@/types/blocks';
 
 interface MentorBlockProps extends BlockComponentProps {
   disabled?: boolean;
@@ -10,11 +9,11 @@ interface MentorBlockProps extends BlockComponentProps {
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -71,14 +70,14 @@ const MentorBlock: React.FC<MentorBlockProps> = ({
   }
 
   // Debug das propriedades recebidas
-  console.log("🔍 [MentorBlock] Propriedades recebidas:", block.properties);
+  console.log('🔍 [MentorBlock] Propriedades recebidas:', block.properties);
 
   const {
-    title = "Conheça Gisele Galvão",
+    title = 'Conheça Gisele Galvão',
     showCredentials = true,
     showImage = true,
-    mentorImage = "https://res.cloudinary.com/dqljyf76t/image/upload/v1746838118/20250509_2137_Desordem_e_Reflex%C3%A3o_simple_compose_01jtvszf8sfaytz493z9f16rf2_z1c2up.jpg",
-    mentorName = "Gisele Galvão - Consultora de Imagem",
+    mentorImage = 'https://res.cloudinary.com/dqljyf76t/image/upload/v1746838118/20250509_2137_Desordem_e_Reflex%C3%A3o_simple_compose_01jtvszf8sfaytz493z9f16rf2_z1c2up.jpg',
+    mentorName = 'Gisele Galvão - Consultora de Imagem',
   } = block?.properties || {};
 
   const handlePropertyChange = (key: string, value: any) => {
@@ -90,34 +89,34 @@ const MentorBlock: React.FC<MentorBlockProps> = ({
   const credentials = [
     {
       icon: <Award className="w-5 h-5" />,
-      text: "Consultora de Imagem certificada",
+      text: 'Consultora de Imagem certificada',
     },
     {
       icon: <Users className="w-5 h-5" />,
-      text: "Mais de 2.500 mulheres transformadas",
+      text: 'Mais de 2.500 mulheres transformadas',
     },
     {
       icon: <BookOpen className="w-5 h-5" />,
-      text: "15+ anos de experiência em estilo",
+      text: '15+ anos de experiência em estilo',
     },
   ];
 
   return (
     <div
       className={cn(
-        "relative w-full p-4 rounded-lg border-2 border-dashed",
-        isSelected ? "border-[#B89B7A] bg-[#B89B7A]/10" : "border-gray-300 bg-white",
-        "cursor-pointer hover:border-gray-400 transition-colors",
+        'relative w-full p-4 rounded-lg border-2 border-dashed',
+        isSelected ? 'border-[#B89B7A] bg-[#B89B7A]/10' : 'border-gray-300 bg-white',
+        'cursor-pointer hover:border-gray-400 transition-colors',
         className,
         // Margens universais com controles deslizantes
-        getMarginClass(marginTop, "top"),
-        getMarginClass(marginBottom, "bottom"),
-        getMarginClass(marginLeft, "left"),
-        getMarginClass(marginRight, "right")
+        getMarginClass(marginTop, 'top'),
+        getMarginClass(marginBottom, 'bottom'),
+        getMarginClass(marginLeft, 'left'),
+        getMarginClass(marginRight, 'right')
       )}
       onClick={onClick}
     >
-      <div className={cn("py-8")}>
+      <div className={cn('py-8')}>
         <div className="max-w-4xl mx-auto">
           <div className="bg-white p-8 rounded-xl shadow-md border border-[#B89B7A]/20">
             <div className="grid md:grid-cols-2 gap-8 items-center">

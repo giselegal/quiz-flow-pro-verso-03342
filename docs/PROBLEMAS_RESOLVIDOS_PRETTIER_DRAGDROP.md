@@ -95,11 +95,11 @@ if (!active.data.current?.type) return;
 
 // DEPOIS (robusta)
 if (!active.data.current) {
-  console.error("❌ active.data.current está undefined!");
+  console.error('❌ active.data.current está undefined!');
   return;
 }
 if (!active.data.current.type) {
-  console.error("❌ active.data.current.type está undefined!");
+  console.error('❌ active.data.current.type está undefined!');
   return;
 }
 ```
@@ -108,17 +108,17 @@ if (!active.data.current.type) {
 
 ```typescript
 // ANTES
-accepts: ["component"];
+accepts: ['component'];
 
 // DEPOIS (mais flexível)
-accepts: ["sidebar-component", "canvas-block"];
+accepts: ['sidebar-component', 'canvas-block'];
 ```
 
 #### **5. CSS Otimizado**:
 
 ```typescript
 // Adicionado para melhor controle mobile
-className = "... touch-none z-50";
+className = '... touch-none z-50';
 ```
 
 ---

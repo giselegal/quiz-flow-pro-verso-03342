@@ -49,9 +49,9 @@ import { DndProvider } from './dnd/DndProvider';
 
 ```tsx
 // ✅ NOVOS IMPORTS
-import EnhancedComponentsSidebar from "./EnhancedComponentsSidebar";
-import { CanvasDropZone } from "./canvas/CanvasDropZone";
-import { DndProvider } from "./dnd/DndProvider";
+import EnhancedComponentsSidebar from './EnhancedComponentsSidebar';
+import { CanvasDropZone } from './canvas/CanvasDropZone';
+import { DndProvider } from './dnd/DndProvider';
 
 // ❌ REMOVIDOS
 // import { ComponentsSidebar } from './sidebar/ComponentsSidebar';
@@ -68,7 +68,7 @@ import { DndProvider } from "./dnd/DndProvider";
     properties: block.properties || {},
   }))}
   onBlocksReorder={newBlocks => {
-    console.log("🔄 Reordenando blocos via schema editor:", newBlocks);
+    console.log('🔄 Reordenando blocos via schema editor:', newBlocks);
     // TODO: Implementar reordenação no EditorContext
   }}
   onBlockAdd={(blockType, position) => {

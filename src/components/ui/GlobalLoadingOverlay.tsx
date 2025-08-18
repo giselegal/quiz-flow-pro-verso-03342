@@ -1,7 +1,6 @@
-import React from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { useGlobalLoading } from "@/hooks/useGlobalLoading";
-import { LoadingSpinner } from "./loading-spinner";
+import { motion, AnimatePresence } from 'framer-motion';
+import { useGlobalLoading } from '@/hooks/useGlobalLoading';
+import { LoadingSpinner } from './loading-spinner';
 
 export const GlobalLoadingOverlay: React.FC = () => {
   const { state } = useGlobalLoading();
@@ -28,7 +27,7 @@ export const GlobalLoadingOverlay: React.FC = () => {
                 <p className="text-sm text-muted-foreground text-center">{state.message}</p>
               )}
 
-              {typeof state.progress === "number" && (
+              {typeof state.progress === 'number' && (
                 <div className="w-full">
                   <div className="flex justify-between text-xs text-muted-foreground mb-1">
                     <span>Progresso</span>

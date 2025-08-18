@@ -1,0 +1,177 @@
+{
+  "id": "etapa-02-estilo-pessoal-continuacao",
+  "name": "Etapa 2: Continuação do Estilo Pessoal",
+  "description": "Segunda pergunta sobre preferências de estilo para refinar o perfil",
+  "version": "1.0.0",
+  "type": "quiz-step",
+  "metadata": {
+    "author": "Quiz Quest",
+    "createdAt": "2024-01-20",
+    "category": "clothing",
+    "stepNumber": 2,
+    "totalSteps": 21,
+    "estimatedTime": "2 minutos"
+  },
+  "blocks": [
+    {
+      "id": "header-etapa-2",
+      "type": "QuizHeaderBlock",
+      "properties": {
+        "title": "Refinando Seu Estilo",
+        "subtitle": "Agora vamos aprofundar suas preferências",
+        "description": "Com base na sua resposta anterior, queremos entender melhor seu gosto pessoal.",
+        "showProgress": true
+      },
+      "config": {
+        "currentStep": 2,
+        "totalSteps": 21,
+        "quizType": "clothing"
+      }
+    },
+    {
+      "id": "question-clothing-2",
+      "type": "QuizContentIntegration",
+      "properties": {
+        "title": "Qual dessas roupas você escolheria para se sentir mais você?",
+        "subtitle": "Selecione até 3 opções que mais despertam seu interesse",
+        "multiSelect": true,
+        "maxSelections": 3,
+        "required": true
+      },
+      "config": {
+        "questionType": "clothing",
+        "questionId": "clothing_preferences_2",
+        "validationRequired": true
+      },
+      "data": {
+        "options": [
+          {
+            "id": "natural",
+            "label": "Natural & Confortável",
+            "description": "Jeans, t-shirts, tênis, peças práticas para o dia a dia",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1/quiz-styles/natural-daily",
+            "value": "natural",
+            "styleCategory": "Natural",
+            "points": 1
+          },
+          {
+            "id": "classico",
+            "label": "Clássico & Elegante",
+            "description": "Blazers, camisas de botão, peças estruturadas e atemporais",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1/quiz-styles/classic-pieces",
+            "value": "classico",
+            "styleCategory": "Clássico",
+            "points": 1
+          },
+          {
+            "id": "contemporaneo",
+            "label": "Contemporâneo & Moderno",
+            "description": "Peças com cortes modernos, tendências atuais e detalhes únicos",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1/quiz-styles/contemporary-pieces",
+            "value": "contemporaneo",
+            "styleCategory": "Contemporâneo",
+            "points": 1
+          },
+          {
+            "id": "elegante",
+            "label": "Elegante & Sofisticado",
+            "description": "Vestidos longos, ternos refinados, acessórios luxuosos",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1/quiz-styles/elegant-pieces",
+            "value": "elegante",
+            "styleCategory": "Elegante",
+            "points": 1
+          },
+          {
+            "id": "romantico",
+            "label": "Romântico & Delicado",
+            "description": "Vestidos fluidos, estampas florais, cores suaves e pastéis",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1/quiz-styles/romantic-pieces",
+            "value": "romantico",
+            "styleCategory": "Romântico",
+            "points": 1
+          },
+          {
+            "id": "sexy",
+            "label": "Sexy & Sedutor",
+            "description": "Decotes, roupas justas, salto alto, peças que valorizam o corpo",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1/quiz-styles/sexy-pieces",
+            "value": "sexy",
+            "styleCategory": "Sexy",
+            "points": 1
+          },
+          {
+            "id": "dramatico",
+            "label": "Dramático & Impactante",
+            "description": "Cores fortes, oversized, peças statement que chamam atenção",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1/quiz-styles/dramatic-pieces",
+            "value": "dramatico",
+            "styleCategory": "Dramático",
+            "points": 1
+          },
+          {
+            "id": "criativo",
+            "label": "Criativo & Único",
+            "description": "Mix de estampas, vintage, peças autorais e experimentais",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1/quiz-styles/creative-pieces",
+            "value": "criativo",
+            "styleCategory": "Criativo",
+            "points": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "navigation-etapa-2",
+      "type": "QuizNavigationIntegration",
+      "properties": {
+        "showPrevious": true,
+        "showNext": true,
+        "nextButtonText": "Próxima pergunta"
+      },
+      "config": {
+        "isLastQuestion": false,
+        "isStrategic": false
+      }
+    }
+  ],
+  "settings": {
+    "analytics": {
+      "trackingEnabled": true,
+      "events": ["question_viewed", "option_selected", "step_completed"]
+    },
+    "validation": {
+      "requireMinSelections": true,
+      "minSelections": 1,
+      "maxSelections": 3,
+      "showValidationErrors": true
+    },
+    "navigation": {
+      "allowSkip": false,
+      "showProgress": true,
+      "autoAdvance": false
+    },
+    "styling": {
+      "theme": "default",
+      "colorScheme": {
+        "primary": "#B89B7A",
+        "secondary": "#432818",
+        "accent": "#F3E8E6",
+        "text": "#5A453A"
+      }
+    }
+  },
+  "integration": {
+    "nextStep": "etapa-03-transicao-personalidade",
+    "dataCollection": {
+      "storeSelections": true,
+      "updateUserProfile": true,
+      "fieldMapping": {
+        "clothing_preferences_2": "user.quiz.clothing.style_preferences_2"
+      }
+    },
+    "conditionalLogic": {
+      "rules": [],
+      "defaultNextStep": "etapa-03-transicao-personalidade"
+    }
+  }
+}

@@ -1,8 +1,7 @@
-import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Plus, Play, Pause, TrendingUp } from "lucide-react";
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Pause, Plus, TrendingUp } from 'lucide-react';
 
 const ABTestPage: React.FC = () => {
   return (
@@ -12,7 +11,7 @@ const ABTestPage: React.FC = () => {
         <div>
           <h1
             className="text-3xl font-bold text-[#432818]"
-            style={{ fontFamily: "Playfair Display, serif" }}
+            style={{ fontFamily: 'Playfair Display, serif' }}
           >
             Testes A/B
           </h1>
@@ -43,9 +42,7 @@ const ABTestPage: React.FC = () => {
                 <div className="grid grid-cols-2 gap-4">
                   <div style={{ backgroundColor: '#FAF9F7' }}>
                     <div style={{ color: '#6B4F43' }}>Variante A</div>
-                    <div style={{ color: '#6B4F43' }}>
-                      43.2% conversão (234 visitantes)
-                    </div>
+                    <div style={{ color: '#6B4F43' }}>43.2% conversão (234 visitantes)</div>
                   </div>
                   <div className="p-3 bg-[#B89B7A]/10 rounded">
                     <div className="text-sm font-medium text-[#A38A69]">Variante B</div>

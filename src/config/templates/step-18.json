@@ -2,10 +2,10 @@
   "templateVersion": "2.0",
   "metadata": {
     "id": "quiz-step-18",
-    "name": "Estratégica 3 - Você já considerou investir em...",
-    "description": "Questão estratégica 3 de 5",
-    "category": "strategic-question",
-    "type": "strategicQuestion",
+    "name": "Etapa Transição 2: mensagem antes do resultado",
+    "description": "Transição final antes dos resultados",
+    "category": "quiz-transition",
+    "type": "transition",
     "tags": [
       "quiz",
       "style",
@@ -74,21 +74,33 @@
       "properties": {
         "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
         "logoAlt": "Logo Gisele Galvão",
-        "logoWidth": 96,
-        "logoHeight": 96,
-        "progressValue": 82,
-        "progressTotal": 100,
+        "logoWidth": 120,
+        "logoHeight": 50,
         "showProgress": true,
+        "progressValue": 18,
+        "progressMax": 21,
         "showBackButton": true,
         "containerWidth": "full",
-        "spacing": "small"
+        "spacing": "small",
+        "showLogo": true,
+        "progressBarColor": "#B89B7A",
+        "progressBarThickness": 6,
+        "backgroundColor": "#FFFFFF",
+        "textColor": "#432818",
+        "paddingTop": 16,
+        "paddingBottom": 16,
+        "paddingLeft": 24,
+        "paddingRight": 24,
+        "marginBottom": 24,
+        "progressTotal": 100,
+        "type": "quiz-intro-header"
       }
     },
     {
       "id": "step18-question-title",
       "type": "text-inline",
       "properties": {
-        "content": "Você já considerou investir em algum guia ou consultoria de estilo no passado?",
+        "content": "✨ Obrigada por compartilhar suas respostas!",
         "fontSize": "text-2xl",
         "fontWeight": "font-bold",
         "textAlign": "text-center",
@@ -99,82 +111,57 @@
       }
     },
     {
-      "id": "step18-options-grid",
-      "type": "options-grid",
+      "id": "step18-transition-message",
+      "type": "text-inline",
       "properties": {
-        "options": [
-          {
-            "id": "strategic-3-1",
-            "text": "Sim, já pesquisei mas não cheguei a comprar"
-          },
-          {
-            "id": "strategic-3-2",
-            "text": "Sim, já investi em algum curso/guia/consultoria"
-          },
-          {
-            "id": "strategic-3-3",
-            "text": "Não, esta é a primeira vez que considero isso"
-          },
-          {
-            "id": "strategic-3-4",
-            "text": "Prefiro não responder"
-          }
-        ],
-        "columns": 1,
-        "imageSize": 0,
-        "showImages": false,
-        "multipleSelection": false,
-        "minSelections": 1,
-        "maxSelections": 1,
-        "borderColor": "#E5E7EB",
-        "selectedBorderColor": "#B89B7A",
-        "hoverColor": "#F3E8D3",
+        "content": "Agora vou analisar suas respostas e preparar um resultado personalizado especialmente para você. Este processo pode levar alguns segundos...",
+        "fontSize": "text-lg",
+        "textAlign": "text-center",
+        "color": "#6B7280",
+        "marginBottom": 32,
         "containerWidth": "full",
-        "spacing": "medium",
-        "marginBottom": 16,
-        "selectionStyle": "highlight",
-        "allowDeselection": false,
-        "validationMessage": "Selecione uma opção para avançar."
+        "spacing": "medium"
       }
     },
     {
-      "id": "step18-continue-button",
-      "type": "button-inline",
+      "id": "step18-navigation",
+      "type": "navigation",
       "properties": {
-        "text": "Próxima Pergunta →",
-        "textWhenDisabled": "Selecione uma opção para avançar",
-        "variant": "primary",
-        "size": "large",
-        "fullWidth": true,
-        "backgroundColor": "#B89B7A",
-        "backgroundGradient": "linear-gradient(90deg, #B89B7A, #aa6b5d)",
-        "textColor": "#ffffff",
-        "borderRadius": "10px",
-        "shadow": "0 4px 14px rgba(184, 155, 122, 0.15)",
-        "disabled": true,
-        "requiresValidInput": true,
-        "enableOnSelection": true,
-        "minSelections": 1,
-        "animation": "hover:scale-105, active:scale-95",
-        "containerWidth": "full",
-        "spacing": "medium",
-        "marginTop": 24
+        "buttons": [
+          {
+            "id": "step18-see-result",
+            "label": "🎯 Ver meu resultado personalizado",
+            "action": "next",
+            "variant": "primary",
+            "style": {
+              "backgroundColor": "#B89B7A",
+              "color": "white",
+              "borderColor": "#B89B7A",
+              "hoverColor": "#aa6b5d",
+              "width": "full",
+              "padding": "py-4 px-8",
+              "borderRadius": "rounded-lg",
+              "fontSize": "text-lg",
+              "fontWeight": "font-semibold",
+              "transition": "all 0.3s ease",
+              "marginTop": 24,
+              "shadow": "0 4px 14px rgba(184, 155, 122, 0.15)",
+              "animation": "hover:scale-105, active:scale-95"
+            }
+          }
+        ]
       }
     }
   ],
   "validation": {
-    "required": true,
-    "minAnswers": 1,
-    "maxAnswers": 1,
-    "validationMessage": "Selecione uma opção para avançar."
+    "required": false,
+    "type": "transition"
   },
   "analytics": {
-    "trackingId": "step-18-strategic-question",
+    "trackingId": "step-18-transition-page",
     "events": [
       "page_view",
-      "interaction",
-      "validation_error",
-      "completion"
+      "transition_continue"
     ],
     "utmParams": true,
     "customEvents": []
@@ -188,5 +175,6 @@
     },
     "scoring": null,
     "conditions": null
-  }
+  },
+  "updatedAt": "2025-08-17T19:06:10.221Z"
 }

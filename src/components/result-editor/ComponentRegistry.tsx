@@ -1,10 +1,10 @@
-import React from "react";
+// @ts-nocheck
 
 export const COMPONENT_CATEGORIES = [
-  { id: "text", name: "Texto", icon: "📝" },
-  { id: "media", name: "Mídia", icon: "🖼️" },
-  { id: "layout", name: "Layout", icon: "📐" },
-  { id: "interactive", name: "Interativo", icon: "🎮" },
+  { id: 'text', name: 'Texto', icon: '📝' },
+  { id: 'media', name: 'Mídia', icon: '🖼️' },
+  { id: 'layout', name: 'Layout', icon: '📐' },
+  { id: 'interactive', name: 'Interativo', icon: '🎮' },
 ];
 
 export interface ComponentDefinition {

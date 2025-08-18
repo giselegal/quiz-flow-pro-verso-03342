@@ -1,0 +1,153 @@
+{
+  "id": "etapa-08-estrategica-motivacao",
+  "name": "Etapa 8: Motivação Estratégica",
+  "description": "Questões sobre a motivação principal para buscar um novo estilo",
+  "version": "1.0.0",
+  "type": "quiz-strategic",
+  "metadata": {
+    "author": "Quiz Quest",
+    "createdAt": "2024-01-20",
+    "category": "strategic",
+    "stepNumber": 8,
+    "totalSteps": 21,
+    "estimatedTime": "1 minuto"
+  },
+  "blocks": [
+    {
+      "id": "header-estrategica-motivacao",
+      "type": "QuizHeaderBlock",
+      "properties": {
+        "title": "Sua Motivação",
+        "subtitle": "O que te motiva a buscar um novo estilo?",
+        "description": "Entender sua motivação nos ajuda a personalizar melhor as recomendações.",
+        "showProgress": true
+      },
+      "config": {
+        "currentStep": 8,
+        "totalSteps": 21,
+        "quizType": "strategic"
+      }
+    },
+    {
+      "id": "content-estrategica-motivacao",
+      "type": "QuizContentIntegration",
+      "properties": {
+        "question": "Qual é sua principal motivação para buscar um novo estilo?",
+        "description": "Escolha a opção que mais se relaciona com seu momento atual.",
+        "questionType": "strategicQuestions",
+        "multiSelect": false,
+        "required": true,
+        "options": [
+          {
+            "id": "motivacao-confianca",
+            "text": "Quero aumentar minha confiança e autoestima",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1713476980/quiz-assets/strategic/motivacao-confianca.jpg",
+            "points": 5,
+            "strategicCategory": "confidence",
+            "motivationType": "internal"
+          },
+          {
+            "id": "motivacao-carreira",
+            "text": "Preciso de um visual mais profissional para minha carreira",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1713476980/quiz-assets/strategic/motivacao-carreira.jpg",
+            "points": 5,
+            "strategicCategory": "career",
+            "motivationType": "external"
+          },
+          {
+            "id": "motivacao-vida-pessoal",
+            "text": "Estou em uma nova fase da vida pessoal",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1713476980/quiz-assets/strategic/motivacao-vida-pessoal.jpg",
+            "points": 5,
+            "strategicCategory": "lifestyle",
+            "motivationType": "transition"
+          },
+          {
+            "id": "motivacao-cansada",
+            "text": "Estou cansada do meu visual atual e quero mudar",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1713476980/quiz-assets/strategic/motivacao-cansada.jpg",
+            "points": 5,
+            "strategicCategory": "refresh",
+            "motivationType": "change"
+          },
+          {
+            "id": "motivacao-autoconhecimento",
+            "text": "Quero me conhecer melhor e expressar quem realmente sou",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1713476980/quiz-assets/strategic/motivacao-autoconhecimento.jpg",
+            "points": 5,
+            "strategicCategory": "identity",
+            "motivationType": "discovery"
+          },
+          {
+            "id": "motivacao-praticidade",
+            "text": "Busco mais praticidade no dia a dia com um guarda-roupa funcional",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1713476980/quiz-assets/strategic/motivacao-praticidade.jpg",
+            "points": 5,
+            "strategicCategory": "practical",
+            "motivationType": "efficiency"
+          }
+        ]
+      },
+      "config": {
+        "maxSelections": 1,
+        "minSelections": 1,
+        "showImages": true,
+        "imageLayout": "grid",
+        "imageSize": "medium"
+      }
+    },
+    {
+      "id": "navigation-estrategica-motivacao",
+      "type": "QuizNavigationIntegration",
+      "properties": {
+        "showPrevious": true,
+        "showNext": true,
+        "nextButtonText": "Continuar"
+      },
+      "config": {
+        "isLastQuestion": false,
+        "isStrategic": true
+      }
+    }
+  ],
+  "settings": {
+    "analytics": {
+      "trackingEnabled": true,
+      "events": ["question_viewed", "option_selected", "question_completed"]
+    },
+    "validation": {
+      "requireMinSelections": true,
+      "showValidationErrors": true,
+      "validationErrorMessage": "Por favor, selecione uma opção para continuar."
+    },
+    "navigation": {
+      "allowSkip": false,
+      "showProgress": true,
+      "autoAdvance": true
+    },
+    "styling": {
+      "theme": "strategic",
+      "colorScheme": {
+        "primary": "#B89B7A",
+        "secondary": "#432818",
+        "accent": "#F3E8E6",
+        "text": "#5A453A"
+      }
+    }
+  },
+  "integration": {
+    "nextStep": "etapa-09-estrategica-desafios",
+    "dataCollection": {
+      "storeSelections": true,
+      "updateUserProfile": true,
+      "fieldMapping": {
+        "motivationType": "user.strategy.motivation",
+        "strategicCategory": "user.strategy.category"
+      }
+    },
+    "conditionalLogic": {
+      "rules": [],
+      "defaultNextStep": "etapa-09-estrategica-desafios"
+    }
+  }
+}

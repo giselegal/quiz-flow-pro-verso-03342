@@ -1,6 +1,5 @@
 // @ts-nocheck
-import React from "react";
-import { BlockComponentProps } from "@/types/blocks";
+import { BlockComponentProps } from '@/types/blocks';
 
 interface VideoPlayerBlockProps extends BlockComponentProps {
   videoUrl?: string;
@@ -11,11 +10,11 @@ interface VideoPlayerBlockProps extends BlockComponentProps {
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -59,15 +58,15 @@ const VideoPlayerBlock: React.FC<VideoPlayerBlockProps> = ({
   isSelected,
   onClick,
   onPropertyChange,
-  className = "",
+  className = '',
 }) => {
-  const videoUrl = block.properties?.videoUrl || "";
-  const title = block.properties?.title || "Vídeo";
+  const videoUrl = block.properties?.videoUrl || '';
+  const title = block.properties?.title || 'Vídeo';
 
   return (
     <div
       className={`p-4 border-2 border-dashed border-gray-300 rounded-lg ${
-        isSelected ? "border-[#B89B7A] bg-[#B89B7A]/10" : "hover:border-gray-400"
+        isSelected ? 'border-[#B89B7A] bg-[#B89B7A]/10' : 'hover:border-gray-400'
       } ${className}`}
       onClick={onClick}
     >

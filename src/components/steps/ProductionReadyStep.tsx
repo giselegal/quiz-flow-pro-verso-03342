@@ -7,11 +7,11 @@
  * Pode ser aplicado em todas as etapas do /editor-fixed
  */
 
-import { useIsMobile } from "@/hooks/use-mobile";
-import { useContainerProperties } from "@/hooks/useContainerProperties";
-import { useDebounce } from "@/hooks/useDebounce";
-import { usePerformanceOptimization } from "@/hooks/usePerformanceOptimization";
-import React, { useCallback, useMemo } from "react";
+import { useIsMobile } from '@/hooks/use-mobile';
+import { useContainerProperties } from '@/hooks/useContainerProperties';
+import { useDebounce } from '@/hooks/useDebounce';
+import { usePerformanceOptimization } from '@/hooks/usePerformanceOptimization';
+import React, { useCallback, useMemo } from 'react';
 
 interface ProductionReadyStepProps {
   stepId: number;
@@ -41,10 +41,10 @@ export const ProductionReadyStep: React.FC<ProductionReadyStepProps> = ({
   // 🏗️ Container properties otimizadas
   const containerProps = useMemo(
     () => ({
-      containerWidth: isMobile ? "medium" : "large",
-      containerPosition: "center" as const,
-      spacing: isMobile ? "compact" : ("comfortable" as const),
-      backgroundColor: "white" as const,
+      containerWidth: isMobile ? 'medium' : 'large',
+      containerPosition: 'center' as const,
+      spacing: isMobile ? 'compact' : ('comfortable' as const),
+      backgroundColor: 'white' as const,
       scale: isMobile ? 95 : 100, // Menor no mobile
     }),
     [isMobile]
@@ -69,22 +69,22 @@ export const ProductionReadyStep: React.FC<ProductionReadyStepProps> = ({
 
     // Adicionar classes de performance
     if (isMobile) {
-      classes.push("transition-none"); // Sem transições no mobile
+      classes.push('transition-none'); // Sem transições no mobile
     } else {
-      classes.push("transition-all duration-300 ease-in-out");
+      classes.push('transition-all duration-300 ease-in-out');
     }
 
     // Performance optimizations
     if (performance) {
-      classes.push("transform-gpu"); // GPU acceleration
+      classes.push('transform-gpu'); // GPU acceleration
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }, [containerClasses, isMobile, performance]);
 
   // 🔧 Stats em tempo real (desenvolvimento)
   const devStats = useMemo(() => {
-    if (process.env.NODE_ENV !== "development") return null;
+    if (process.env.NODE_ENV !== 'development') return null;
 
     return {
       stepId,
@@ -111,15 +111,15 @@ export const ProductionReadyStep: React.FC<ProductionReadyStepProps> = ({
             <summary className="font-medium cursor-pointer">🔧 Hook Stats (DEV)</summary>
             <div className="mt-2 space-y-1 text-xs">
               <div>
-                📱 Mobile:{" "}
-                <span className={isMobile ? "text-orange-600" : "text-green-600"}>
-                  {isMobile ? "Sim" : "Não"}
+                📱 Mobile:{' '}
+                <span className={isMobile ? 'text-orange-600' : 'text-green-600'}>
+                  {isMobile ? 'Sim' : 'Não'}
                 </span>
               </div>
               <div>🔄 Debounce: {devStats.debounceTime}ms</div>
               <div>📦 Container: {devStats.containerWidth}</div>
-              <div>💬 Tem Resposta: {devStats.hasAnswer ? "✅" : "❌"}</div>
-              <div>⚡ Performance: {devStats.performanceEnabled ? "✅" : "❌"}</div>
+              <div>💬 Tem Resposta: {devStats.hasAnswer ? '✅' : '❌'}</div>
+              <div>⚡ Performance: {devStats.performanceEnabled ? '✅' : '❌'}</div>
             </div>
           </details>
         </div>
@@ -127,8 +127,8 @@ export const ProductionReadyStep: React.FC<ProductionReadyStepProps> = ({
 
       {/* 🏷️ Cabeçalho responsivo */}
       <div className="mb-6">
-        <h2 className={`font-bold text-center mb-2 ${isMobile ? "text-xl" : "text-2xl"}`}>
-          Step {stepId} {isMobile && "📱"}
+        <h2 className={`font-bold text-center mb-2 ${isMobile ? 'text-xl' : 'text-2xl'}`}>
+          Step {stepId} {isMobile && '📱'}
         </h2>
 
         {/* Indicador de debounce ativo */}
@@ -147,15 +147,15 @@ export const ProductionReadyStep: React.FC<ProductionReadyStepProps> = ({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
               <div className="flex items-center space-x-2">
                 <span className="font-medium">Device:</span>
-                <span className={isMobile ? "text-orange-600" : "text-green-600"}>
-                  {isMobile ? "📱 Mobile" : "💻 Desktop"}
+                <span className={isMobile ? 'text-orange-600' : 'text-green-600'}>
+                  {isMobile ? '📱 Mobile' : '💻 Desktop'}
                 </span>
               </div>
 
               <div className="flex items-center space-x-2">
                 <span className="font-medium">Resposta:</span>
-                <span className={debouncedAnswer ? "text-green-600" : "text-gray-400"}>
-                  {debouncedAnswer ? "✅ Salva" : "⏳ Aguardando"}
+                <span className={debouncedAnswer ? 'text-green-600' : 'text-gray-400'}>
+                  {debouncedAnswer ? '✅ Salva' : '⏳ Aguardando'}
                 </span>
               </div>
             </div>
@@ -166,16 +166,14 @@ export const ProductionReadyStep: React.FC<ProductionReadyStepProps> = ({
       {/* 🎛️ Controles otimizados */}
       <div className="mt-8">
         <div className="flex justify-between items-center">
-          <div style={{ color: '#8B7355' }}>
-            Otimizado para {isMobile ? "Mobile" : "Desktop"}
-          </div>
+          <div style={{ color: '#8B7355' }}>Otimizado para {isMobile ? 'Mobile' : 'Desktop'}</div>
 
           <button
             onClick={handleNext}
             className={`px-6 py-3 rounded-lg font-medium transition-all ${
               isMobile
-                ? "text-base" // Maior no mobile
-                : "text-sm hover:transform hover:scale-105" // Hover effect apenas desktop
+                ? 'text-base' // Maior no mobile
+                : 'text-sm hover:transform hover:scale-105' // Hover effect apenas desktop
             } bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50`}
           >
             ➡️ Continuar
@@ -196,24 +194,21 @@ export const QuickOptimizedStep: React.FC<ProductionReadyStepProps> = ({
 }) => {
   const isMobile = useIsMobile();
   const { containerClasses, inlineStyles } = useContainerProperties({
-    containerWidth: isMobile ? "medium" : "large",
-    spacing: isMobile ? "compact" : "normal",
-    containerPosition: "center",
+    containerWidth: isMobile ? 'medium' : 'large',
+    spacing: isMobile ? 'compact' : 'normal',
+    containerPosition: 'center',
   });
 
   return (
     <div className={containerClasses} style={inlineStyles}>
-      <h2 className={`font-bold mb-6 ${isMobile ? "text-xl text-center" : "text-2xl"}`}>
+      <h2 className={`font-bold mb-6 ${isMobile ? 'text-xl text-center' : 'text-2xl'}`}>
         Step {stepId}
       </h2>
 
       {children}
 
       <div className="mt-8 text-center">
-        <button
-          onClick={onNext}
-          style={{ backgroundColor: '#B89B7A' }}
-        >
+        <button onClick={onNext} style={{ backgroundColor: '#B89B7A' }}>
           Continuar
         </button>
       </div>

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { getOptimizedImageUrl, getLowQualityPlaceholder } from "@/utils/imageManager";
+import React, { useState, useEffect } from 'react';
+import { getOptimizedImageUrl, getLowQualityPlaceholder } from '@/utils/imageManager';
 
 interface OptimizedImageProps {
   src: string;
@@ -10,7 +10,7 @@ interface OptimizedImageProps {
   quality?: number;
   priority?: boolean;
   placeholderColor?: string;
-  objectFit?: "cover" | "contain" | "fill" | "none" | "scale-down";
+  objectFit?: 'cover' | 'contain' | 'fill' | 'none' | 'scale-down';
   onLoad?: () => void;
   lazy?: boolean;
 }
@@ -20,11 +20,11 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
   alt,
   width,
   height,
-  className = "",
+  className = '',
   quality = 80,
   priority = false,
-  placeholderColor = "#f8f5f2",
-  objectFit = "cover",
+  placeholderColor = '#f8f5f2',
+  objectFit = 'cover',
   onLoad,
   lazy = !priority,
 }) => {
@@ -32,8 +32,8 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
   const [error, setError] = useState(false);
 
   // Get optimized image URLs
-  const optimizedSrc = src ? getOptimizedImageUrl(src, { width, height, quality }) : "";
-  const placeholderSrc = src ? getLowQualityPlaceholder(src) : "";
+  const optimizedSrc = src ? getOptimizedImageUrl(src, { width, height, quality }) : '';
+  const placeholderSrc = src ? getLowQualityPlaceholder(src) : '';
 
   // Handle image loading completion
   const handleImageLoaded = () => {
@@ -43,7 +43,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
 
   // Report load error
   const handleImageError = () => {
-    console.error("Error loading image:", optimizedSrc);
+    console.error('Error loading image:', optimizedSrc);
     setError(true);
   };
 
@@ -82,14 +82,14 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
           alt={alt}
           width={width}
           height={height}
-          loading={lazy ? "lazy" : "eager"}
-          fetchPriority={priority ? "high" : "auto"}
+          loading={lazy ? 'lazy' : 'eager'}
+          fetchPriority={priority ? 'high' : 'auto'}
           onLoad={handleImageLoaded}
           onError={handleImageError}
           className={`absolute inset-0 w-full h-full object-${objectFit} transition-opacity duration-300 ${
-            loaded ? "opacity-100" : "opacity-0"
+            loaded ? 'opacity-100' : 'opacity-0'
           }`}
-          style={{ width: "100%", height: "100%" }}
+          style={{ width: '100%', height: '100%' }}
         />
       ) : (
         <div style={{ backgroundColor: '#E5DDD5' }}>

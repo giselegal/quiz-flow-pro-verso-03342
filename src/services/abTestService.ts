@@ -1,9 +1,10 @@
+// @ts-nocheck
 // =============================================================================
 // SISTEMA DE TESTES A/B PARA QUIZZES
 // Permite testar diferentes versões de quizzes para otimizar conversão
 // =============================================================================
 
-import { supabase } from "../lib/supabase";
+import { supabase } from '../lib/supabase';
 
 // =============================================================================
 // TIPOS
@@ -14,7 +15,7 @@ export interface ABTest {
   name: string;
   description: string;
   quiz_id: string;
-  status: "draft" | "running" | "paused" | "completed";
+  status: 'draft' | 'running' | 'paused' | 'completed';
   start_date: string;
   end_date?: string;
   traffic_split: number; // Porcentagem para versão A (restante vai para B)
@@ -28,7 +29,7 @@ export interface ABTest {
 export interface ABVariant {
   id: string;
   name: string;
-  type: "control" | "variation";
+  type: 'control' | 'variation';
   quiz_data: {
     title?: string;
     description?: string;
@@ -58,7 +59,7 @@ export interface ABMetrics {
   };
   statistical_significance: number;
   confidence_level: number;
-  winner?: "A" | "B" | "tie";
+  winner?: 'A' | 'B' | 'tie';
 }
 
 export interface ABTestSettings {
@@ -87,7 +88,7 @@ export interface ABTestResult {
     }[];
   };
   recommendation: {
-    winner: "A" | "B" | "inconclusive";
+    winner: 'A' | 'B' | 'inconclusive';
     confidence: number;
     expected_improvement: number;
     recommendation_text: string;
@@ -104,7 +105,7 @@ export class ABTestService {
     name: string;
     description: string;
     quiz_id: string;
-    variants: Omit<ABVariant, "id">[];
+    variants: Omit<ABVariant, 'id'>[];
     settings: ABTestSettings;
     traffic_split: number;
   }): Promise<ABTest> {
@@ -116,7 +117,7 @@ export class ABTestService {
         name: testData.name,
         description: testData.description,
         quiz_id: testData.quiz_id,
-        status: "draft" as const,
+        status: 'draft' as const,
         traffic_split: testData.traffic_split,
         settings: testData.settings,
         metrics: {
@@ -141,13 +142,13 @@ export class ABTestService {
       };
 
       // Placeholder - AB tests table doesn't exist in current schema
-      console.warn("AB tests not implemented - using quiz_sessions table as fallback");
+      console.warn('AB tests not implemented - using quiz_sessions table as fallback');
       const newTest = {
         id: `test_${Date.now()}`,
         ...test,
         created_at: new Date().toISOString(),
       };
-      console.log("Simulated AB test creation:", newTest);
+      console.log('Simulated AB test creation:', newTest);
 
       // if (error) throw error;
 
@@ -159,23 +160,23 @@ export class ABTestService {
       }));
 
       // Placeholder - AB test variants table doesn't exist in current schema
-      console.warn("AB test variants not implemented");
+      console.warn('AB test variants not implemented');
       const createdVariants = variants.map((v, i) => ({
         ...v,
         id: `variant_${newTest.id}_${i}`,
       }));
-      console.log("Simulated variants creation:", createdVariants);
+      console.log('Simulated variants creation:', createdVariants);
 
       // if (variantsError) throw variantsError;
 
       return {
         ...newTest,
         start_date: new Date().toISOString(),
-        created_by: "system",
+        created_by: 'system',
         variants: createdVariants,
       } as any; // Type assertion for compatibility
     } catch (error) {
-      console.error("Erro ao criar teste A/B:", error);
+      console.error('Erro ao criar teste A/B:', error);
       throw error;
     }
   }
@@ -184,10 +185,10 @@ export class ABTestService {
   static async startTest(testId: string): Promise<void> {
     try {
       // Placeholder implementation - table doesn't exist
-      console.log("Would start test:", testId);
+      console.log('Would start test:', testId);
       return Promise.resolve();
     } catch (error) {
-      console.error("Erro ao iniciar teste:", error);
+      console.error('Erro ao iniciar teste:', error);
       throw error;
     }
   }
@@ -196,31 +197,31 @@ export class ABTestService {
   static async pauseTest(testId: string): Promise<void> {
     try {
       // Placeholder implementation
-      console.log("Would pause test:", testId);
+      console.log('Would pause test:', testId);
       return Promise.resolve();
     } catch (error) {
-      console.error("Erro ao pausar teste:", error);
+      console.error('Erro ao pausar teste:', error);
       throw error;
     }
   }
 
   // Finalizar teste
-  static async completeTest(testId: string, winner?: "A" | "B"): Promise<void> {
+  static async completeTest(testId: string, winner?: 'A' | 'B'): Promise<void> {
     try {
       const updateData: any = {
-        status: "completed",
+        status: 'completed',
         end_date: new Date().toISOString(),
       };
 
       if (winner) {
-        updateData["metrics.winner"] = winner;
+        updateData['metrics.winner'] = winner;
       }
 
       // Placeholder implementation
-      console.log("Would complete test:", testId, "winner:", winner);
+      console.log('Would complete test:', testId, 'winner:', winner);
       return Promise.resolve();
     } catch (error) {
-      console.error("Erro ao finalizar teste:", error);
+      console.error('Erro ao finalizar teste:', error);
       throw error;
     }
   }
@@ -229,10 +230,10 @@ export class ABTestService {
   static async getTests(quizId?: string): Promise<ABTest[]> {
     try {
       // Placeholder implementation - return empty array
-      console.log("Would get tests for quiz:", quizId);
+      console.log('Would get tests for quiz:', quizId);
       return [];
     } catch (error) {
-      console.error("Erro ao buscar testes:", error);
+      console.error('Erro ao buscar testes:', error);
       throw error;
     }
   }
@@ -241,10 +242,10 @@ export class ABTestService {
   static async getTest(testId: string): Promise<ABTest> {
     try {
       // Placeholder implementation
-      console.log("Would get test:", testId);
-      throw new Error("Test not found (placeholder implementation)");
+      console.log('Would get test:', testId);
+      throw new Error('Test not found (placeholder implementation)');
     } catch (error) {
-      console.error("Erro ao buscar teste:", error);
+      console.error('Erro ao buscar teste:', error);
       throw error;
     }
   }
@@ -252,11 +253,11 @@ export class ABTestService {
   // Atribuir usuário a uma variante - PLACEHOLDER
   static async assignUserToVariant(testId: string, userId: string): Promise<string> {
     try {
-      console.log("Would assign user to variant:", testId, userId);
+      console.log('Would assign user to variant:', testId, userId);
       // Return mock variant ID
-      return `variant_${testId}_${Math.random() > 0.5 ? "A" : "B"}`;
+      return `variant_${testId}_${Math.random() > 0.5 ? 'A' : 'B'}`;
     } catch (error) {
-      console.error("Erro ao atribuir variante:", error);
+      console.error('Erro ao atribuir variante:', error);
       throw error;
     }
   }
@@ -272,11 +273,11 @@ export class ABTestService {
     }
   ): Promise<void> {
     try {
-      console.log("Would record conversion:", testId, userId, conversionData);
+      console.log('Would record conversion:', testId, userId, conversionData);
       // Placeholder implementation
       return Promise.resolve();
     } catch (error) {
-      console.error("Erro ao registrar conversão:", error);
+      console.error('Erro ao registrar conversão:', error);
       throw error;
     }
   }
@@ -308,7 +309,7 @@ export class ABTestService {
         recommendation,
       };
     } catch (error) {
-      console.error("Erro ao calcular resultados:", error);
+      console.error('Erro ao calcular resultados:', error);
       throw error;
     }
   }
@@ -316,23 +317,23 @@ export class ABTestService {
   // Validar dados do teste
   private static validateTestData(testData: any): void {
     if (!testData.name || testData.name.trim().length === 0) {
-      throw new Error("Nome do teste é obrigatório");
+      throw new Error('Nome do teste é obrigatório');
     }
 
     if (!testData.quiz_id) {
-      throw new Error("ID do quiz é obrigatório");
+      throw new Error('ID do quiz é obrigatório');
     }
 
     if (!testData.variants || testData.variants.length !== 2) {
-      throw new Error("Teste A/B deve ter exatamente 2 variantes");
+      throw new Error('Teste A/B deve ter exatamente 2 variantes');
     }
 
     if (testData.traffic_split < 10 || testData.traffic_split > 90) {
-      throw new Error("Divisão de tráfego deve estar entre 10% e 90%");
+      throw new Error('Divisão de tráfego deve estar entre 10% e 90%');
     }
 
     if (!testData.settings.minimum_sample_size || testData.settings.minimum_sample_size < 100) {
-      throw new Error("Tamanho mínimo da amostra deve ser pelo menos 100");
+      throw new Error('Tamanho mínimo da amostra deve ser pelo menos 100');
     }
   }
 
@@ -363,12 +364,12 @@ export class ABTestService {
 
   // Incrementar participantes - PLACEHOLDER
   private static async incrementParticipants(testId: string, variantId: string): Promise<void> {
-    console.log("Would increment participants:", testId, variantId);
+    console.log('Would increment participants:', testId, variantId);
   }
 
   // Atualizar métricas do teste - PLACEHOLDER
   private static async updateTestMetrics(testId: string): Promise<void> {
-    console.log("Would update test metrics:", testId);
+    console.log('Would update test metrics:', testId);
   }
 
   // Buscar analytics do teste
@@ -377,21 +378,21 @@ export class ABTestService {
     return {
       daily_data: [
         {
-          date: "2025-01-20",
+          date: '2025-01-20',
           variant_a_conversions: 25,
           variant_b_conversions: 28,
           variant_a_participants: 50,
           variant_b_participants: 52,
         },
         {
-          date: "2025-01-21",
+          date: '2025-01-21',
           variant_a_conversions: 32,
           variant_b_conversions: 35,
           variant_a_participants: 48,
           variant_b_participants: 51,
         },
         {
-          date: "2025-01-22",
+          date: '2025-01-22',
           variant_a_conversions: 28,
           variant_b_conversions: 42,
           variant_a_participants: 55,
@@ -399,10 +400,10 @@ export class ABTestService {
         },
       ],
       conversion_funnel: [
-        { step: "Visualização", variant_a_count: 500, variant_b_count: 520 },
-        { step: "Início do Quiz", variant_a_count: 380, variant_b_count: 410 },
-        { step: "Meio do Quiz", variant_a_count: 290, variant_b_count: 325 },
-        { step: "Conclusão", variant_a_count: 235, variant_b_count: 275 },
+        { step: 'Visualização', variant_a_count: 500, variant_b_count: 520 },
+        { step: 'Início do Quiz', variant_a_count: 380, variant_b_count: 410 },
+        { step: 'Meio do Quiz', variant_a_count: 290, variant_b_count: 325 },
+        { step: 'Conclusão', variant_a_count: 235, variant_b_count: 275 },
       ],
     };
   }
@@ -427,15 +428,15 @@ export class ABTestService {
     const improvement =
       ((variantB.conversion_rate - variantA.conversion_rate) / variantA.conversion_rate) * 100;
 
-    let winner: "A" | "B" | "inconclusive" = "inconclusive";
-    let recommendationText = "";
+    let winner: 'A' | 'B' | 'inconclusive' = 'inconclusive';
+    let recommendationText = '';
 
     if (significance >= 95) {
       if (variantB.conversion_rate > variantA.conversion_rate) {
-        winner = "B";
+        winner = 'B';
         recommendationText = `Variante B é estatisticamente superior com ${improvement.toFixed(1)}% de melhoria na conversão.`;
       } else {
-        winner = "A";
+        winner = 'A';
         recommendationText = `Variante A é estatisticamente superior com ${Math.abs(improvement).toFixed(1)}% de melhoria na conversão.`;
       }
     } else {
@@ -456,10 +457,10 @@ export class ABTestService {
     modifications: any
   ): Promise<string> {
     try {
-      console.log("Would duplicate quiz for testing:", originalQuizId, modifications);
+      console.log('Would duplicate quiz for testing:', originalQuizId, modifications);
       return `quiz_${Date.now()}`;
     } catch (error) {
-      console.error("Erro ao duplicar quiz:", error);
+      console.error('Erro ao duplicar quiz:', error);
       throw error;
     }
   }

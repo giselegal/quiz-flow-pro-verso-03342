@@ -1,6 +1,6 @@
 // Sistema de Feedback Visual Avançado
-import React, { useState, useEffect, useCallback } from "react";
-import { createPortal } from "react-dom";
+import React, { useState, useEffect, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import {
   CheckCircle,
   AlertCircle,
@@ -8,17 +8,14 @@ import {
   Info,
   X,
   Loader2,
-  Wifi,
   WifiOff,
   Save,
-  Undo,
-  Redo,
   Clock,
-} from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+} from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 // Tipos para o sistema de feedback
-export type FeedbackType = "success" | "error" | "warning" | "info" | "loading";
+export type FeedbackType = 'success' | 'error' | 'warning' | 'info' | 'loading';
 
 export interface ToastMessage {
   id: string;
@@ -40,7 +37,7 @@ export interface LoadingState {
 }
 
 export interface AutoSaveState {
-  status: "idle" | "saving" | "saved" | "error";
+  status: 'idle' | 'saving' | 'saved' | 'error';
   lastSaved?: Date;
   pendingChanges?: number;
 }
@@ -55,7 +52,7 @@ export interface ConnectionState {
 export const useToast = () => {
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
 
-  const addToast = useCallback((toast: Omit<ToastMessage, "id">) => {
+  const addToast = useCallback((toast: Omit<ToastMessage, 'id'>) => {
     const id = `toast-${Date.now()}-${Math.random()}`;
     const newToast: ToastMessage = {
       id,
@@ -125,7 +122,7 @@ export const useAutoSave = (
 ) => {
   const { interval = 3000, enabled = true } = options;
   const [autoSaveState, setAutoSaveState] = useState<AutoSaveState>({
-    status: "idle",
+    status: 'idle',
   });
 
   const [pendingChanges, setPendingChanges] = useState(0);
@@ -143,30 +140,30 @@ export const useAutoSave = (
     if (!enabled || pendingChanges === 0) return;
 
     const timer = setTimeout(async () => {
-      setAutoSaveState(prev => ({ ...prev, status: "saving" }));
+      setAutoSaveState(prev => ({ ...prev, status: 'saving' }));
 
       try {
         await saveFunction();
         setAutoSaveState({
-          status: "saved",
+          status: 'saved',
           lastSaved: new Date(),
           pendingChanges: 0,
         });
         setPendingChanges(0);
 
         addToast({
-          type: "success",
-          title: "Salvo automaticamente",
+          type: 'success',
+          title: 'Salvo automaticamente',
           duration: 2000,
         });
       } catch (error) {
-        setAutoSaveState(prev => ({ ...prev, status: "error" }));
+        setAutoSaveState(prev => ({ ...prev, status: 'error' }));
         addToast({
-          type: "error",
-          title: "Erro ao salvar",
-          description: "Suas alterações não foram salvas",
+          type: 'error',
+          title: 'Erro ao salvar',
+          description: 'Suas alterações não foram salvas',
           action: {
-            label: "Tentar novamente",
+            label: 'Tentar novamente',
             onClick: () => saveFunction(),
           },
         });
@@ -198,12 +195,12 @@ export const useConnectionState = () => {
       setConnectionState(prev => ({ ...prev, isOnline: false }));
     };
 
-    window.addEventListener("online", handleOnline);
-    window.addEventListener("offline", handleOffline);
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
 
     return () => {
-      window.removeEventListener("online", handleOnline);
-      window.removeEventListener("offline", handleOffline);
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
     };
   }, []);
 
@@ -217,31 +214,31 @@ const Toast: React.FC<{
 }> = ({ toast, onRemove }) => {
   const getIcon = () => {
     switch (toast.type) {
-      case "success":
+      case 'success':
         return <CheckCircle className="h-5 w-5 text-green-500" />;
-      case "error":
+      case 'error':
         return <AlertCircle style={{ color: '#432818' }} />;
-      case "warning":
+      case 'warning':
         return <AlertTriangle className="h-5 w-5 text-yellow-500" />;
-      case "info":
+      case 'info':
         return <Info className="h-5 w-5 text-[#B89B7A]" />;
-      case "loading":
+      case 'loading':
         return <Loader2 style={{ color: '#8B7355' }} />;
     }
   };
 
   const getBgColor = () => {
     switch (toast.type) {
-      case "success":
-        return "bg-green-50 border-green-200";
-      case "error":
-        return "bg-red-50 border-red-200";
-      case "warning":
-        return "bg-stone-50 border-yellow-200";
-      case "info":
-        return "bg-[#B89B7A]/10 border-[#B89B7A]/30";
-      case "loading":
-        return "bg-gray-50 border-gray-200";
+      case 'success':
+        return 'bg-green-50 border-green-200';
+      case 'error':
+        return 'bg-red-50 border-red-200';
+      case 'warning':
+        return 'bg-stone-50 border-yellow-200';
+      case 'info':
+        return 'bg-[#B89B7A]/10 border-[#B89B7A]/30';
+      case 'loading':
+        return 'bg-gray-50 border-gray-200';
     }
   };
 
@@ -269,10 +266,7 @@ const Toast: React.FC<{
           )}
         </div>
         <div className="ml-4 flex-shrink-0 flex">
-          <button
-            style={{ color: '#8B7355' }}
-            onClick={() => onRemove(toast.id)}
-          >
+          <button style={{ color: '#8B7355' }} onClick={() => onRemove(toast.id)}>
             <X className="h-5 w-5" />
           </button>
         </div>
@@ -304,11 +298,11 @@ export const AutoSaveIndicator: React.FC<{
 }> = ({ autoSaveState, pendingChanges }) => {
   const getStatusIcon = () => {
     switch (autoSaveState.status) {
-      case "saving":
+      case 'saving':
         return <Loader2 className="h-4 w-4 animate-spin text-[#B89B7A]" />;
-      case "saved":
+      case 'saved':
         return <CheckCircle className="h-4 w-4 text-green-500" />;
-      case "error":
+      case 'error':
         return <AlertCircle style={{ color: '#432818' }} />;
       default:
         return pendingChanges ? (
@@ -321,14 +315,14 @@ export const AutoSaveIndicator: React.FC<{
 
   const getStatusText = () => {
     switch (autoSaveState.status) {
-      case "saving":
-        return "Salvando...";
-      case "saved":
-        return `Salvo ${autoSaveState.lastSaved ? autoSaveState.lastSaved.toLocaleTimeString() : ""}`;
-      case "error":
-        return "Erro ao salvar";
+      case 'saving':
+        return 'Salvando...';
+      case 'saved':
+        return `Salvo ${autoSaveState.lastSaved ? autoSaveState.lastSaved.toLocaleTimeString() : ''}`;
+      case 'error':
+        return 'Erro ao salvar';
       default:
-        return pendingChanges ? "Alterações pendentes" : "Tudo salvo";
+        return pendingChanges ? 'Alterações pendentes' : 'Tudo salvo';
     }
   };
 
@@ -352,7 +346,7 @@ export const ConnectionIndicator: React.FC<{
     <div style={{ borderColor: '#E5DDD5' }}>
       <WifiOff style={{ color: '#432818' }} />
       <span style={{ color: '#432818' }}>
-        {!connectionState.isOnline ? "Sem conexão" : "Conectando..."}
+        {!connectionState.isOnline ? 'Sem conexão' : 'Conectando...'}
       </span>
     </div>
   );
@@ -362,13 +356,13 @@ export const ConnectionIndicator: React.FC<{
 export const SkeletonLoader: React.FC<{
   className?: string;
   lines?: number;
-}> = ({ className = "", lines = 3 }) => {
+}> = ({ className = '', lines = 3 }) => {
   return (
     <div className={`animate-pulse ${className}`}>
       {Array.from({ length: lines }).map((_, index) => (
         <div
           key={index}
-          className={`h-4 bg-gray-200 rounded mb-3 ${index === lines - 1 ? "w-3/4" : "w-full"}`}
+          className={`h-4 bg-gray-200 rounded mb-3 ${index === lines - 1 ? 'w-3/4' : 'w-full'}`}
         />
       ))}
     </div>
@@ -427,7 +421,7 @@ export const SuccessAnimation: React.FC<{
       <motion.div
         initial={{ scale: 0, rotate: -180 }}
         animate={{ scale: 1, rotate: 0 }}
-        transition={{ type: "spring", stiffness: 260, damping: 20 }}
+        transition={{ type: 'spring', stiffness: 260, damping: 20 }}
         className="bg-green-500 rounded-full p-4"
       >
         <CheckCircle className="h-12 w-12 text-white" />
@@ -448,13 +442,13 @@ export const useFeedbackSystem = () => {
     connectionState,
     // Métodos de conveniência
     showSuccess: (title: string, description?: string) =>
-      toast.addToast({ type: "success", title, description }),
+      toast.addToast({ type: 'success', title, description }),
     showError: (title: string, description?: string) =>
-      toast.addToast({ type: "error", title, description }),
+      toast.addToast({ type: 'error', title, description }),
     showWarning: (title: string, description?: string) =>
-      toast.addToast({ type: "warning", title, description }),
+      toast.addToast({ type: 'warning', title, description }),
     showInfo: (title: string, description?: string) =>
-      toast.addToast({ type: "info", title, description }),
+      toast.addToast({ type: 'info', title, description }),
   };
 };
 

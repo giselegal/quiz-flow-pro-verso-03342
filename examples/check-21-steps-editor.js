@@ -8,9 +8,9 @@
  * as 21 etapas otimizadas e corrige qualquer problema.
  */
 
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -20,27 +20,27 @@ const __dirname = path.dirname(__filename);
 // ====================================================================
 
 function checkEditorFixedIntegration() {
-  console.log("🔍 VERIFICANDO INTEGRAÇÃO DO EDITOR-FIXED...");
+  console.log('🔍 VERIFICANDO INTEGRAÇÃO DO EDITOR-FIXED...');
 
-  const editorFixedPath = path.join(__dirname, "src/pages/editor-fixed-dragdrop.tsx");
+  const editorFixedPath = path.join(__dirname, 'src/pages/editor-fixed-dragdrop.tsx');
 
   if (!fs.existsSync(editorFixedPath)) {
-    console.log("  ❌ editor-fixed-dragdrop.tsx não encontrado");
+    console.log('  ❌ editor-fixed-dragdrop.tsx não encontrado');
     return false;
   }
 
-  const content = fs.readFileSync(editorFixedPath, "utf8");
+  const content = fs.readFileSync(editorFixedPath, 'utf8');
 
   // Verificar integrações importantes
-  const hasOptimizedImport = content.includes("OPTIMIZED_FUNNEL_CONFIG");
-  const hasEditorContext = content.includes("useEditor");
-  const hasFunnelStagesPanel = content.includes("FunnelStagesPanel");
-  const hasCanvasDropZone = content.includes("CanvasDropZone");
+  const hasOptimizedImport = content.includes('OPTIMIZED_FUNNEL_CONFIG');
+  const hasEditorContext = content.includes('useEditor');
+  const hasFunnelStagesPanel = content.includes('FunnelStagesPanel');
+  const hasCanvasDropZone = content.includes('CanvasDropZone');
 
-  console.log(`  ${hasOptimizedImport ? "✅" : "❌"} Import da configuração otimizada`);
-  console.log(`  ${hasEditorContext ? "✅" : "❌"} Hook useEditor`);
-  console.log(`  ${hasFunnelStagesPanel ? "✅" : "❌"} FunnelStagesPanel`);
-  console.log(`  ${hasCanvasDropZone ? "✅" : "❌"} CanvasDropZone`);
+  console.log(`  ${hasOptimizedImport ? '✅' : '❌'} Import da configuração otimizada`);
+  console.log(`  ${hasEditorContext ? '✅' : '❌'} Hook useEditor`);
+  console.log(`  ${hasFunnelStagesPanel ? '✅' : '❌'} FunnelStagesPanel`);
+  console.log(`  ${hasCanvasDropZone ? '✅' : '❌'} CanvasDropZone`);
 
   return {
     hasOptimizedImport,
@@ -55,27 +55,27 @@ function checkEditorFixedIntegration() {
 }
 
 function checkEditorContextSteps() {
-  console.log("\n🔍 VERIFICANDO CARREGAMENTO DAS ETAPAS NO EDITORCONTEXT...");
+  console.log('\n🔍 VERIFICANDO CARREGAMENTO DAS ETAPAS NO EDITORCONTEXT...');
 
-  const contextPath = path.join(__dirname, "src/context/EditorContext.tsx");
+  const contextPath = path.join(__dirname, 'src/context/EditorContext.tsx');
 
   if (!fs.existsSync(contextPath)) {
-    console.log("  ❌ EditorContext.tsx não encontrado");
+    console.log('  ❌ EditorContext.tsx não encontrado');
     return false;
   }
 
-  const content = fs.readFileSync(contextPath, "utf8");
+  const content = fs.readFileSync(contextPath, 'utf8');
 
   // Verificar configuração das etapas
-  const hasOptimizedImport = content.includes("OPTIMIZED_FUNNEL_CONFIG");
-  const hasLoadOptimizedSteps = content.includes("loadOptimizedSteps");
-  const has21StepsInit = content.includes("for (let i = 1; i <= 21; i++)");
-  const hasStepMapping = content.includes("getAllSteps");
+  const hasOptimizedImport = content.includes('OPTIMIZED_FUNNEL_CONFIG');
+  const hasLoadOptimizedSteps = content.includes('loadOptimizedSteps');
+  const has21StepsInit = content.includes('for (let i = 1; i <= 21; i++)');
+  const hasStepMapping = content.includes('getAllSteps');
 
-  console.log(`  ${hasOptimizedImport ? "✅" : "❌"} Import da configuração otimizada`);
-  console.log(`  ${hasLoadOptimizedSteps ? "✅" : "❌"} Função loadOptimizedSteps`);
-  console.log(`  ${has21StepsInit ? "✅" : "❌"} Inicialização das 21 etapas`);
-  console.log(`  ${hasStepMapping ? "✅" : "❌"} Mapeamento de templates`);
+  console.log(`  ${hasOptimizedImport ? '✅' : '❌'} Import da configuração otimizada`);
+  console.log(`  ${hasLoadOptimizedSteps ? '✅' : '❌'} Função loadOptimizedSteps`);
+  console.log(`  ${has21StepsInit ? '✅' : '❌'} Inicialização das 21 etapas`);
+  console.log(`  ${hasStepMapping ? '✅' : '❌'} Mapeamento de templates`);
 
   return {
     hasOptimizedImport,
@@ -89,16 +89,16 @@ function checkEditorContextSteps() {
 }
 
 function checkOptimizedConfiguration() {
-  console.log("\n🔍 VERIFICANDO CONFIGURAÇÃO OTIMIZADA DAS 21 ETAPAS...");
+  console.log('\n🔍 VERIFICANDO CONFIGURAÇÃO OTIMIZADA DAS 21 ETAPAS...');
 
-  const configPath = path.join(__dirname, "src/config/optimized21StepsFunnel.ts");
+  const configPath = path.join(__dirname, 'src/config/optimized21StepsFunnel.ts');
 
   if (!fs.existsSync(configPath)) {
-    console.log("  ❌ optimized21StepsFunnel.ts não encontrado");
+    console.log('  ❌ optimized21StepsFunnel.ts não encontrado');
     return false;
   }
 
-  const content = fs.readFileSync(configPath, "utf8");
+  const content = fs.readFileSync(configPath, 'utf8');
 
   // Contar etapas
   const stepMatches = content.match(/"step-\d+"/g) || [];
@@ -106,22 +106,22 @@ function checkOptimizedConfiguration() {
   const hasCorrectStepCount = uniqueSteps.length >= 21;
 
   // Verificar estrutura
-  const hasQuizData = content.includes("quizData");
-  const hasStyles = content.includes("styles");
-  const hasCalculations = content.includes("calculations");
-  const hasConversion = content.includes("conversion");
+  const hasQuizData = content.includes('quizData');
+  const hasStyles = content.includes('styles');
+  const hasCalculations = content.includes('calculations');
+  const hasConversion = content.includes('conversion');
 
   console.log(
-    `  ${hasCorrectStepCount ? "✅" : "❌"} 21 etapas definidas (encontradas: ${uniqueSteps.length})`
+    `  ${hasCorrectStepCount ? '✅' : '❌'} 21 etapas definidas (encontradas: ${uniqueSteps.length})`
   );
-  console.log(`  ${hasQuizData ? "✅" : "❌"} Dados do quiz`);
-  console.log(`  ${hasStyles ? "✅" : "❌"} Definições de estilos`);
-  console.log(`  ${hasCalculations ? "✅" : "❌"} Sistema de cálculos`);
-  console.log(`  ${hasConversion ? "✅" : "❌"} Configuração de conversão`);
+  console.log(`  ${hasQuizData ? '✅' : '❌'} Dados do quiz`);
+  console.log(`  ${hasStyles ? '✅' : '❌'} Definições de estilos`);
+  console.log(`  ${hasCalculations ? '✅' : '❌'} Sistema de cálculos`);
+  console.log(`  ${hasConversion ? '✅' : '❌'} Configuração de conversão`);
 
   if (hasCorrectStepCount) {
     console.log(
-      `  📋 Etapas encontradas: ${uniqueSteps.slice(0, 5).join(", ")}... (total: ${uniqueSteps.length})`
+      `  📋 Etapas encontradas: ${uniqueSteps.slice(0, 5).join(', ')}... (total: ${uniqueSteps.length})`
     );
   }
 
@@ -139,26 +139,26 @@ function checkOptimizedConfiguration() {
 }
 
 function checkFunnelStagesPanel() {
-  console.log("\n🔍 VERIFICANDO FUNNELSTAGES PANEL...");
+  console.log('\n🔍 VERIFICANDO FUNNELSTAGES PANEL...');
 
-  const panelPath = path.join(__dirname, "src/components/editor/funnel/FunnelStagesPanel.tsx");
+  const panelPath = path.join(__dirname, 'src/components/editor/funnel/FunnelStagesPanel.tsx');
 
   if (!fs.existsSync(panelPath)) {
-    console.log("  ❌ FunnelStagesPanel.tsx não encontrado");
+    console.log('  ❌ FunnelStagesPanel.tsx não encontrado');
     return false;
   }
 
-  const content = fs.readFileSync(panelPath, "utf8");
+  const content = fs.readFileSync(panelPath, 'utf8');
 
-  const hasEditorContext = content.includes("useEditor");
-  const hasStagesMapping = content.includes("stages");
-  const hasActiveStage = content.includes("activeStageId");
-  const hasStageActions = content.includes("setActiveStage");
+  const hasEditorContext = content.includes('useEditor');
+  const hasStagesMapping = content.includes('stages');
+  const hasActiveStage = content.includes('activeStageId');
+  const hasStageActions = content.includes('setActiveStage');
 
-  console.log(`  ${hasEditorContext ? "✅" : "❌"} Hook useEditor`);
-  console.log(`  ${hasStagesMapping ? "✅" : "❌"} Mapeamento de stages`);
-  console.log(`  ${hasActiveStage ? "✅" : "❌"} ActiveStageId`);
-  console.log(`  ${hasStageActions ? "✅" : "❌"} Ações de stage`);
+  console.log(`  ${hasEditorContext ? '✅' : '❌'} Hook useEditor`);
+  console.log(`  ${hasStagesMapping ? '✅' : '❌'} Mapeamento de stages`);
+  console.log(`  ${hasActiveStage ? '✅' : '❌'} ActiveStageId`);
+  console.log(`  ${hasStageActions ? '✅' : '❌'} Ações de stage`);
 
   return {
     hasEditorContext,
@@ -176,30 +176,30 @@ function checkFunnelStagesPanel() {
 // ====================================================================
 
 function fixEditorContextIntegration() {
-  console.log("\n🛠️ CORRIGINDO INTEGRAÇÃO DO EDITORCONTEXT...");
+  console.log('\n🛠️ CORRIGINDO INTEGRAÇÃO DO EDITORCONTEXT...');
 
-  const contextPath = path.join(__dirname, "src/context/EditorContext.tsx");
+  const contextPath = path.join(__dirname, 'src/context/EditorContext.tsx');
 
   if (!fs.existsSync(contextPath)) {
-    console.log("  ❌ EditorContext.tsx não encontrado");
+    console.log('  ❌ EditorContext.tsx não encontrado');
     return false;
   }
 
-  let content = fs.readFileSync(contextPath, "utf8");
+  let content = fs.readFileSync(contextPath, 'utf8');
 
   // Adicionar import se não existir
-  if (!content.includes("OPTIMIZED_FUNNEL_CONFIG")) {
+  if (!content.includes('OPTIMIZED_FUNNEL_CONFIG')) {
     const importLine = `import { OPTIMIZED_FUNNEL_CONFIG } from '@/config/optimized21StepsFunnel';`;
 
-    const importIndex = content.indexOf("import React");
+    const importIndex = content.indexOf('import React');
     if (importIndex !== -1) {
-      content = content.slice(0, importIndex) + importLine + "\n" + content.slice(importIndex);
-      console.log("  ✅ Import da configuração otimizada adicionado");
+      content = content.slice(0, importIndex) + importLine + '\n' + content.slice(importIndex);
+      console.log('  ✅ Import da configuração otimizada adicionado');
     }
   }
 
   // Melhorar função loadOptimizedSteps se necessário
-  if (!content.includes("loadOptimizedSteps")) {
+  if (!content.includes('loadOptimizedSteps')) {
     const loadFunction = `
   /**
    * 🎯 Carrega etapas otimizadas do funil de 21 etapas
@@ -231,14 +231,14 @@ function fixEditorContextIntegration() {
   }, []);`;
 
     // Encontrar local para inserir
-    const contextProviderIndex = content.indexOf("const EditorProvider");
+    const contextProviderIndex = content.indexOf('const EditorProvider');
     if (contextProviderIndex !== -1) {
       content =
         content.slice(0, contextProviderIndex) +
         loadFunction +
-        "\n\n" +
+        '\n\n' +
         content.slice(contextProviderIndex);
-      console.log("  ✅ Função loadOptimizedSteps aprimorada");
+      console.log('  ✅ Função loadOptimizedSteps aprimorada');
     }
   }
 
@@ -296,19 +296,19 @@ function fixEditorContextIntegration() {
   });`;
 
     content = content.replace(stagesInitRegex, newStagesInit);
-    console.log("  ✅ Inicialização dos stages atualizada para usar configuração otimizada");
+    console.log('  ✅ Inicialização dos stages atualizada para usar configuração otimizada');
   }
 
   fs.writeFileSync(contextPath, content);
-  console.log("  ✅ EditorContext.tsx atualizado");
+  console.log('  ✅ EditorContext.tsx atualizado');
 
   return true;
 }
 
 function createOptimizedStepsLoader() {
-  console.log("\n🛠️ CRIANDO CARREGADOR DE ETAPAS OTIMIZADO...");
+  console.log('\n🛠️ CRIANDO CARREGADOR DE ETAPAS OTIMIZADO...');
 
-  const loaderPath = path.join(__dirname, "src/utils/optimizedStepsLoader.ts");
+  const loaderPath = path.join(__dirname, 'src/utils/optimizedStepsLoader.ts');
 
   const loaderContent = `/**
  * 🎯 CARREGADOR DE ETAPAS OTIMIZADO
@@ -456,16 +456,16 @@ export default {
 };`;
 
   fs.writeFileSync(loaderPath, loaderContent);
-  console.log("  ✅ Carregador de etapas otimizado criado");
+  console.log('  ✅ Carregador de etapas otimizado criado');
 
   return true;
 }
 
 function testEditorIntegration() {
-  console.log("\n🧪 TESTANDO INTEGRAÇÃO DO EDITOR...");
+  console.log('\n🧪 TESTANDO INTEGRAÇÃO DO EDITOR...');
 
   // Verificar se o servidor está rodando
-  console.log("  📡 Verificando servidor...");
+  console.log('  📡 Verificando servidor...');
 
   // Criar script de teste
   const testScript = `
@@ -508,25 +508,25 @@ const testEditorIntegration = () => {
 testEditorIntegration();
   `;
 
-  const testPath = path.join(__dirname, "test-editor-integration.js");
+  const testPath = path.join(__dirname, 'test-editor-integration.js');
   fs.writeFileSync(testPath, testScript);
 
-  console.log("  ✅ Script de teste criado");
-  console.log("  💡 Para testar no browser:");
-  console.log("    1. Vá para http://localhost:8081/editor-fixed");
-  console.log("    2. Abra o console (F12)");
-  console.log("    3. Cole e execute o conteúdo de test-editor-integration.js");
+  console.log('  ✅ Script de teste criado');
+  console.log('  💡 Para testar no browser:');
+  console.log('    1. Vá para http://localhost:8081/editor-fixed');
+  console.log('    2. Abra o console (F12)');
+  console.log('    3. Cole e execute o conteúdo de test-editor-integration.js');
 
   return true;
 }
 
 function generateFixReport(results) {
-  console.log("\n📋 RELATÓRIO DE VERIFICAÇÃO E CORREÇÃO");
-  console.log("=".repeat(80));
+  console.log('\n📋 RELATÓRIO DE VERIFICAÇÃO E CORREÇÃO');
+  console.log('='.repeat(80));
 
   const { editorFixed, editorContext, optimizedConfig, funnelStages } = results;
 
-  console.log("\n📊 SCORES POR COMPONENTE:");
+  console.log('\n📊 SCORES POR COMPONENTE:');
   console.log(`  🎯 Editor Fixed: ${editorFixed.score}%`);
   console.log(`  🔧 Editor Context: ${editorContext.score}%`);
   console.log(`  ⚙️ Configuração Otimizada: ${optimizedConfig.score}%`);
@@ -539,36 +539,36 @@ function generateFixReport(results) {
   console.log(`\n🏆 SCORE GERAL: ${overallScore}%`);
 
   if (overallScore >= 90) {
-    console.log("🌟 EXCELENTE! Sistema totalmente integrado");
+    console.log('🌟 EXCELENTE! Sistema totalmente integrado');
   } else if (overallScore >= 75) {
-    console.log("✅ BOM! Poucas correções necessárias");
+    console.log('✅ BOM! Poucas correções necessárias');
   } else if (overallScore >= 60) {
-    console.log("⚠️ ACEITÁVEL! Algumas correções aplicadas");
+    console.log('⚠️ ACEITÁVEL! Algumas correções aplicadas');
   } else {
-    console.log("🔧 PRECISA MELHORIAS! Várias correções aplicadas");
+    console.log('🔧 PRECISA MELHORIAS! Várias correções aplicadas');
   }
 
-  console.log("\n📋 DETALHES DAS ETAPAS:");
+  console.log('\n📋 DETALHES DAS ETAPAS:');
   if (optimizedConfig.stepCount >= 21) {
     console.log(`  ✅ ${optimizedConfig.stepCount} etapas configuradas`);
   } else {
     console.log(`  ⚠️ Apenas ${optimizedConfig.stepCount} etapas encontradas (esperado: 21)`);
   }
 
-  console.log("\n🔗 PRÓXIMOS PASSOS:");
-  console.log("  1. ✅ Verificar no browser: http://localhost:8081/editor-fixed");
-  console.log("  2. ✅ Testar navegação entre as 21 etapas");
-  console.log("  3. ✅ Verificar carregamento dos blocos");
-  console.log("  4. ✅ Testar painel de propriedades");
-  console.log("  5. ✅ Validar funcionalidades de drag & drop");
+  console.log('\n🔗 PRÓXIMOS PASSOS:');
+  console.log('  1. ✅ Verificar no browser: http://localhost:8081/editor-fixed');
+  console.log('  2. ✅ Testar navegação entre as 21 etapas');
+  console.log('  3. ✅ Verificar carregamento dos blocos');
+  console.log('  4. ✅ Testar painel de propriedades');
+  console.log('  5. ✅ Validar funcionalidades de drag & drop');
 }
 
 // ====================================================================
 // 🚀 EXECUÇÃO PRINCIPAL
 // ====================================================================
 
-console.log("🔍 INICIANDO VERIFICAÇÃO DAS 21 ETAPAS DO EDITOR");
-console.log("=".repeat(80));
+console.log('🔍 INICIANDO VERIFICAÇÃO DAS 21 ETAPAS DO EDITOR');
+console.log('='.repeat(80));
 
 try {
   // Executar verificações
@@ -593,9 +593,9 @@ try {
   // Gerar relatório
   generateFixReport(results);
 
-  console.log("\n✅ VERIFICAÇÃO E CORREÇÃO CONCLUÍDAS!");
+  console.log('\n✅ VERIFICAÇÃO E CORREÇÃO CONCLUÍDAS!');
 } catch (error) {
-  console.error("\n❌ ERRO NA VERIFICAÇÃO:", error.message);
+  console.error('\n❌ ERRO NA VERIFICAÇÃO:', error.message);
   console.error(error.stack);
   process.exit(1);
 }

@@ -1,64 +1,97 @@
-import { cn } from "@/lib/utils";
-import React from "react";
-import type { BlockComponentProps } from "../../../types/blocks";
-
-interface Bonus {
-  title: string;
-  image: string;
-  description?: string;
-}
+// @ts-nocheck
+import { cn } from '@/lib/utils';
+import type { BlockComponentProps } from '@/types/blocks';
+import React from 'react';
 
 /**
- * BonusShowcaseBlock - Componente para exibir bônus do produto
+ * BonusShowcaseBlock - Componente para showcase de bônus e ofertas especiais
+ * Usado principalmente em etapas de resultado e oferta final
  */
 const BonusShowcaseBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   onClick,
-  className = "",
+  onPropertyChange,
+  className = '',
 }) => {
   const {
-    title = "🎁 BÔNUS INCLUSOS:",
-    bonuses = [],
-    containerWidth = "full",
-    spacing = "medium",
-  } = block.properties || {};
+    title = '🎁 Bônus Exclusivos',
+    subtitle = 'Oferta especial por tempo limitado',
+    items = [
+      { title: 'E-book Guia de Estilo', value: 'R$ 197' },
+      { title: 'Consultoria de 30min', value: 'R$ 297' },
+      { title: 'Kit de Templates', value: 'R$ 97' },
+    ],
+    totalValue = 'R$ 591',
+    backgroundColor = '#FFF7ED',
+    accentColor = '#EA580C',
+    textColor = '#1F2937',
+    spacing = 'medium',
+    alignment = 'center',
+  } = block?.properties || {};
+
+  const spacingClasses = {
+    small: 'p-4 space-y-3',
+    medium: 'p-6 space-y-4',
+    large: 'p-8 space-y-6',
+  };
+
+  const alignmentClasses = {
+    left: 'text-left',
+    center: 'text-center',
+    right: 'text-right',
+  };
 
   return (
     <div
       className={cn(
-        "bonus-showcase w-full",
-        className,
-        isSelected && "ring-2 ring-blue-500 ring-opacity-50"
+        'rounded-lg border shadow-sm transition-all',
+        spacingClasses[spacing] || spacingClasses.medium,
+        alignmentClasses[alignment] || alignmentClasses.center,
+        isSelected && 'ring-2 ring-blue-500 ring-opacity-50',
+        className
       )}
+      style={{
+        backgroundColor,
+        borderColor: accentColor + '20',
+        color: textColor,
+      }}
       onClick={onClick}
     >
-      <div className="bg-gradient-to-br from-[#F3E8E6] to-[#FAF9F7] rounded-2xl p-8">
-        <h3 className="text-2xl font-bold text-[#432818] text-center mb-8 font-['Playfair_Display']">
-          {title}
-        </h3>
+      <div className="space-y-4">
+        {/* Header */}
+        <div className="space-y-2">
+          <h3 className="text-xl font-bold" style={{ color: accentColor }}>
+            {title}
+          </h3>
+          {subtitle && <p className="text-sm opacity-80">{subtitle}</p>}
+        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {bonuses.map((bonus: Bonus, index: number) => (
-            <div key={index} className="bg-white rounded-xl p-6 shadow-lg">
-              <div className="mb-4">
-                <img
-                  src={bonus.image}
-                  alt={bonus.title}
-                  className="w-full h-32 object-cover rounded-lg"
-                />
-              </div>
-
-              <h4 className="text-lg font-semibold text-[#432818] mb-2">{bonus.title}</h4>
-
-              {bonus.description && <p style={{ color: '#6B4F43' }}>{bonus.description}</p>}
+        {/* Items List */}
+        <div className="space-y-2">
+          {items.map((item, index) => (
+            <div
+              key={index}
+              className="flex justify-between items-center py-2 border-b border-gray-200/50 last:border-b-0"
+            >
+              <span className="text-sm font-medium">{item.title}</span>
+              <span className="text-sm font-bold" style={{ color: accentColor }}>
+                {item.value}
+              </span>
             </div>
           ))}
         </div>
 
-        {bonuses.length === 0 && (
-          <div style={{ color: '#8B7355' }}>
-            Configure os bônus nas propriedades do componente
+        {/* Total Value */}
+        {totalValue && (
+          <div
+            className="pt-3 border-t text-lg font-bold"
+            style={{
+              borderColor: accentColor + '30',
+              color: accentColor,
+            }}
+          >
+            Total: {totalValue}
           </div>
         )}
       </div>

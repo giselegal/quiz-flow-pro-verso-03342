@@ -1,36 +1,34 @@
-import React from "react";
-
 interface QuizImageProps {
   src?: string;
   alt: string;
   width?: string | number;
   height?: string | number;
   borderRadius?: string;
-  alignment?: "left" | "center" | "right";
+  alignment?: 'left' | 'center' | 'right';
   className?: string;
 }
 
 const QuizImage: React.FC<QuizImageProps> = ({
-  src = "",
+  src = '',
   alt,
-  width = "100%",
-  height = "auto",
-  borderRadius = "8px",
-  alignment = "center",
-  className = "",
+  width = '100%',
+  height = 'auto',
+  borderRadius = '8px',
+  alignment = 'center',
+  className = '',
 }) => {
   const containerStyle: React.CSSProperties = {
     textAlign: alignment,
-    margin: "1rem 0",
+    margin: '1rem 0',
   };
 
   const imageStyle: React.CSSProperties = {
     width,
     height,
     borderRadius,
-    maxWidth: "100%",
-    objectFit: "cover",
-    display: "inline-block",
+    maxWidth: '100%',
+    objectFit: 'cover',
+    display: 'inline-block',
   };
 
   return (

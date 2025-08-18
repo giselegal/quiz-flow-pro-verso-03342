@@ -1,5 +1,3 @@
-import React from "react";
-
 const MotivationSection = () => (
   <div className="bg-white p-6 rounded-xl shadow-md border border-[#B89B7A]/20 h-full">
     <h3 className="text-lg font-medium text-[#aa6b5d] mb-4">✨ Sua Transformação Começa Agora</h3>

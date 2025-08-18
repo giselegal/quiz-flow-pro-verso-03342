@@ -1,17 +1,23 @@
-import React, { Suspense, lazy } from "react";
-import { Route, Switch, useLocation } from "wouter";
-import { AdminSidebar } from "../../components/admin/AdminSidebar";
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import React, { Suspense, lazy } from 'react';
+import { Route, Switch } from 'wouter';
+import { AdminSidebar } from '../../components/admin/AdminSidebar';
 
 // Lazy loading das páginas do dashboard
-const DashboardOverview = lazy(() => import("./OverviewPage"));
-const QuizPage = lazy(() => import("./QuizPage"));
-const FunnelPanelPage = lazy(() => import("./FunnelPanelPage"));
-const ABTestPage = lazy(() => import("./ABTestPage"));
-const SettingsPage = lazy(() => import("./SettingsPage"));
-const CreativesPage = lazy(() => import("./CreativesPage"));
-const AnalyticsPage = lazy(() => import("./AnalyticsPage"));
-const EditorPage = lazy(() => import("./EditorPage"));
+const DashboardOverview = lazy(() => import('./OverviewPage'));
+const QuizPage = lazy(() => import('./QuizPage'));
+const FunnelPanelPage = lazy(() => import('./FunnelPanelPage'));
+const ABTestPage = lazy(() => import('./ABTestPage'));
+const SettingsPage = lazy(() => import('./SettingsPage'));
+const CreativesPage = lazy(() => import('./CreativesPage'));
+const AnalyticsPage = lazy(() => import('./AnalyticsPage'));
+const EditorPage = lazy(() => import('./EditorPage'));
+// Templates page is temporarily disabled - will be recreated later
+// const TemplatesPage = lazy(() => import('./TemplatesPage'));
+const TemplatePlaceholder = () => <div className="p-8">
+  <h1 className="text-2xl font-bold mb-4">Templates</h1>
+  <p className="text-muted-foreground">This section is under construction.</p>
+</div>;
 
 // Componente de loading
 const LoadingFallback = () => (
@@ -46,6 +52,7 @@ const DashboardPage: React.FC = () => {
               <Route path="/admin/criativos" component={CreativesPage} />
               <Route path="/admin/analytics" component={AnalyticsPage} />
               <Route path="/admin/editor" component={EditorPage} />
+              <Route path="/admin/templates" component={TemplatePlaceholder} />
             </Switch>
           </Suspense>
         </main>

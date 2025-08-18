@@ -1,12 +1,12 @@
 export type StyleType =
-  | "natural"
-  | "classico"
-  | "contemporâneo"
-  | "elegante"
-  | "romântico"
-  | "sexy"
-  | "dramático"
-  | "criativo";
+  | 'natural'
+  | 'classico'
+  | 'contemporâneo'
+  | 'elegante'
+  | 'romântico'
+  | 'sexy'
+  | 'dramático'
+  | 'criativo';
 
 export interface Style {
   id: StyleType;
@@ -99,6 +99,12 @@ export interface QuizResult {
   complementaryStyles?: string[];
   styleScores?: Record<string, number>;
   participantName?: string;
+  // ✅ NOVO: Dados personalizados do usuário
+  userData?: {
+    name?: string;
+    completionTime?: Date;
+    strategicAnswersCount?: number;
+  };
 }
 
 export interface QuizFunnel {
@@ -125,10 +131,10 @@ export interface User {
 
 // Add BlockType export
 export type BlockType =
-  | "headline"
-  | "text"
-  | "image"
-  | "button"
-  | "heading"
-  | "paragraph"
-  | "spacer";
+  | 'headline'
+  | 'text'
+  | 'image'
+  | 'button'
+  | 'heading'
+  | 'paragraph'
+  | 'spacer';

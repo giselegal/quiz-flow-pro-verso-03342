@@ -1,6 +1,5 @@
-import React from "react";
-import { QuizComponentData } from "@/types/quizBuilder";
-import ComponentRenderer from "./ComponentRenderer";
+import { QuizComponentData } from '@/types/quizBuilder';
+import ComponentRenderer from './ComponentRenderer';
 
 interface PreviewPanelProps {
   components: QuizComponentData[];

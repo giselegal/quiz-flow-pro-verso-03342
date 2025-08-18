@@ -1,13 +1,13 @@
-import { Block, BlockType } from "@/types/editor";
-import { useState } from "react";
+import { Block, BlockType } from '@/types/editor';
+import { useState } from 'react';
 
 export const useEditor = () => {
   const [blocks, setBlocks] = useState<Block[]>([]);
 
   const config = {
     blocks,
-    title: "Editor",
-    description: "",
+    title: 'Editor',
+    description: '',
   };
 
   const addBlock = (type: string) => {

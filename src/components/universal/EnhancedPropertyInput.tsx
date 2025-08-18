@@ -3,18 +3,17 @@
  * Combina debounce, feedback visual e validação
  */
 
-import React from "react";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { PropertyChangeIndicator } from "./PropertyChangeIndicator";
-import { usePropertyDebounce } from "@/hooks/usePropertyDebounce";
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import { PropertyChangeIndicator } from './PropertyChangeIndicator';
+import { usePropertyDebounce } from '@/hooks/usePropertyDebounce';
 
 interface EnhancedPropertyInputProps {
   label: string;
   value: string;
   placeholder?: string;
-  type?: "text" | "textarea" | "number" | "url" | "email";
+  type?: 'text' | 'textarea' | 'number' | 'url' | 'email';
   description?: string;
   onChange: (value: string) => void;
   debounceMs?: number;
@@ -26,11 +25,11 @@ export const EnhancedPropertyInput: React.FC<EnhancedPropertyInputProps> = ({
   label,
   value,
   placeholder,
-  type = "text",
+  type = 'text',
   description,
   onChange,
   debounceMs = 300,
-  className = "",
+  className = '',
   rows = 3,
 }) => {
   const {
@@ -55,12 +54,9 @@ export const EnhancedPropertyInput: React.FC<EnhancedPropertyInputProps> = ({
       <Label htmlFor={inputId} style={{ color: '#6B4F43' }}>
         {label}
       </Label>
-      
-      <PropertyChangeIndicator
-        isChanging={isChanging}
-        hasChanged={hasChanged}
-      >
-        {type === "textarea" ? (
+
+      <PropertyChangeIndicator isChanging={isChanging} hasChanged={hasChanged}>
+        {type === 'textarea' ? (
           <Textarea
             id={inputId}
             value={currentValue}
@@ -80,10 +76,8 @@ export const EnhancedPropertyInput: React.FC<EnhancedPropertyInputProps> = ({
           />
         )}
       </PropertyChangeIndicator>
-      
-      {description && (
-        <p style={{ color: '#8B7355' }}>{description}</p>
-      )}
+
+      {description && <p style={{ color: '#8B7355' }}>{description}</p>}
     </div>
   );
 };

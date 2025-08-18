@@ -5,9 +5,9 @@
  * ====================================================
  */
 
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -17,17 +17,17 @@ const __dirname = path.dirname(__filename);
 // ====================================================================
 
 function createMissingComponents() {
-  console.log("🔧 CRIANDO COMPONENTES CORE AUSENTES...");
+  console.log('🔧 CRIANDO COMPONENTES CORE AUSENTES...');
 
   // Criar diretório inline se não existir
-  const inlineDir = path.join(__dirname, "src/components/blocks/inline");
+  const inlineDir = path.join(__dirname, 'src/components/blocks/inline');
   if (!fs.existsSync(inlineDir)) {
     fs.mkdirSync(inlineDir, { recursive: true });
-    console.log("  📁 Criado diretório: src/components/blocks/inline");
+    console.log('  📁 Criado diretório: src/components/blocks/inline');
   }
 
   // HeadingInline
-  const headingPath = path.join(__dirname, "src/components/blocks/inline/HeadingInline.tsx");
+  const headingPath = path.join(__dirname, 'src/components/blocks/inline/HeadingInline.tsx');
   if (!fs.existsSync(headingPath)) {
     const headingContent = `import React from 'react';
 
@@ -70,11 +70,11 @@ export const HeadingInline: React.FC<HeadingInlineProps> = ({
 export default HeadingInline;`;
 
     fs.writeFileSync(headingPath, headingContent);
-    console.log("  ✅ Criado: HeadingInline");
+    console.log('  ✅ Criado: HeadingInline');
   }
 
   // TextInline
-  const textPath = path.join(__dirname, "src/components/blocks/inline/TextInline.tsx");
+  const textPath = path.join(__dirname, 'src/components/blocks/inline/TextInline.tsx');
   if (!fs.existsSync(textPath)) {
     const textContent = `import React from 'react';
 
@@ -117,11 +117,11 @@ export const TextInline: React.FC<TextInlineProps> = ({
 export default TextInline;`;
 
     fs.writeFileSync(textPath, textContent);
-    console.log("  ✅ Criado: TextInline");
+    console.log('  ✅ Criado: TextInline');
   }
 
   // ButtonInline
-  const buttonPath = path.join(__dirname, "src/components/blocks/inline/ButtonInline.tsx");
+  const buttonPath = path.join(__dirname, 'src/components/blocks/inline/ButtonInline.tsx');
   if (!fs.existsSync(buttonPath)) {
     const buttonContent = `import React from 'react';
 
@@ -175,19 +175,19 @@ export const ButtonInline: React.FC<ButtonInlineProps> = ({
 export default ButtonInline;`;
 
     fs.writeFileSync(buttonPath, buttonContent);
-    console.log("  ✅ Criado: ButtonInline");
+    console.log('  ✅ Criado: ButtonInline');
   }
 
-  console.log("✅ Componentes básicos criados");
+  console.log('✅ Componentes básicos criados');
 }
 
 function fixStepConfiguration() {
-  console.log("\n🔧 CORRIGINDO CONFIGURAÇÃO DAS ETAPAS...");
+  console.log('\n🔧 CORRIGINDO CONFIGURAÇÃO DAS ETAPAS...');
 
-  const configPath = path.join(__dirname, "src/config/optimized21StepsFunnel.json");
+  const configPath = path.join(__dirname, 'src/config/optimized21StepsFunnel.json');
 
   if (fs.existsSync(configPath)) {
-    const config = JSON.parse(fs.readFileSync(configPath, "utf8"));
+    const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
 
     console.log(`  📊 Etapas atuais: ${config.steps.length}`);
 
@@ -199,20 +199,20 @@ function fixStepConfiguration() {
       console.log(`  🔧 Gerando ${missing} etapas faltantes...`);
 
       for (let i = currentCount + 1; i <= 21; i++) {
-        let stepType = "question";
+        let stepType = 'question';
         let stepName = `Questão ${i - 1}`;
 
         if (i === 12 || i === 19) {
-          stepType = "transition";
-          stepName = "Transição";
+          stepType = 'transition';
+          stepName = 'Transição';
         } else if (i === 20) {
-          stepType = "result";
-          stepName = "Resultado";
+          stepType = 'result';
+          stepName = 'Resultado';
         } else if (i === 21) {
-          stepType = "offer";
-          stepName = "Oferta";
+          stepType = 'offer';
+          stepName = 'Oferta';
         } else if (i >= 13 && i <= 18) {
-          stepType = "strategic";
+          stepType = 'strategic';
           stepName = `Estratégica ${i - 12}`;
         }
 
@@ -224,22 +224,22 @@ function fixStepConfiguration() {
           type: stepType,
           blocks: [
             {
-              id: "simple-title",
-              type: "heading-inline",
+              id: 'simple-title',
+              type: 'heading-inline',
               properties: {
                 content: stepName,
-                level: "h2",
-                textAlign: "center",
-                color: "#432818",
+                level: 'h2',
+                textAlign: 'center',
+                color: '#432818',
               },
             },
             {
-              id: "simple-text",
-              type: "text-inline",
+              id: 'simple-text',
+              type: 'text-inline',
               properties: {
                 text: `Conteúdo da etapa ${i}`,
-                alignment: "center",
-                color: "#6B5B4E",
+                alignment: 'center',
+                color: '#6B5B4E',
               },
             },
           ],
@@ -256,17 +256,17 @@ function fixStepConfiguration() {
 }
 
 function createPropertiesPanel() {
-  console.log("\n🔧 CRIANDO PAINEL DE PROPRIEDADES...");
+  console.log('\n🔧 CRIANDO PAINEL DE PROPRIEDADES...');
 
   const panelPath = path.join(
     __dirname,
-    "src/components/editor/properties/EnhancedUniversalPropertiesPanel.tsx"
+    'src/components/editor/properties/EnhancedUniversalPropertiesPanel.tsx'
   );
   const panelDir = path.dirname(panelPath);
 
   if (!fs.existsSync(panelDir)) {
     fs.mkdirSync(panelDir, { recursive: true });
-    console.log("  📁 Criado diretório de propriedades");
+    console.log('  📁 Criado diretório de propriedades');
   }
 
   if (!fs.existsSync(panelPath)) {
@@ -374,38 +374,38 @@ export const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropert
 export default EnhancedUniversalPropertiesPanel;`;
 
     fs.writeFileSync(panelPath, panelContent);
-    console.log("  ✅ Painel de propriedades criado");
+    console.log('  ✅ Painel de propriedades criado');
   }
 }
 
 function generateSummary() {
-  console.log("\n🎉 CORREÇÃO SIMPLIFICADA CONCLUÍDA");
-  console.log("=".repeat(60));
+  console.log('\n🎉 CORREÇÃO SIMPLIFICADA CONCLUÍDA');
+  console.log('='.repeat(60));
 
-  console.log("\n✅ COMPONENTES CRIADOS:");
-  console.log("  • HeadingInline - Títulos editáveis");
-  console.log("  • TextInline - Texto formatado");
-  console.log("  • ButtonInline - Botões personalizáveis");
+  console.log('\n✅ COMPONENTES CRIADOS:');
+  console.log('  • HeadingInline - Títulos editáveis');
+  console.log('  • TextInline - Texto formatado');
+  console.log('  • ButtonInline - Botões personalizáveis');
 
-  console.log("\n✅ CONFIGURAÇÕES CORRIGIDAS:");
-  console.log("  • Funil de 21 etapas completo");
-  console.log("  • Painel de propriedades criado");
-  console.log("  • Sistema básico funcional");
+  console.log('\n✅ CONFIGURAÇÕES CORRIGIDAS:');
+  console.log('  • Funil de 21 etapas completo');
+  console.log('  • Painel de propriedades criado');
+  console.log('  • Sistema básico funcional');
 
-  console.log("\n🎯 PRÓXIMOS PASSOS:");
-  console.log("  1. Executar nova validação");
-  console.log("  2. Testar no editor");
-  console.log("  3. Verificar edição de propriedades");
+  console.log('\n🎯 PRÓXIMOS PASSOS:');
+  console.log('  1. Executar nova validação');
+  console.log('  2. Testar no editor');
+  console.log('  3. Verificar edição de propriedades');
 
-  console.log("\n🚀 SISTEMA BÁSICO OPERACIONAL!");
+  console.log('\n🚀 SISTEMA BÁSICO OPERACIONAL!');
 }
 
 // ====================================================================
 // 🚀 EXECUÇÃO PRINCIPAL
 // ====================================================================
 
-console.log("🔧 INICIANDO CORREÇÃO SIMPLIFICADA DO SISTEMA");
-console.log("=".repeat(80));
+console.log('🔧 INICIANDO CORREÇÃO SIMPLIFICADA DO SISTEMA');
+console.log('='.repeat(80));
 
 try {
   createMissingComponents();
@@ -413,9 +413,9 @@ try {
   createPropertiesPanel();
   generateSummary();
 
-  console.log("\n✅ CORREÇÃO SIMPLIFICADA CONCLUÍDA COM SUCESSO!");
+  console.log('\n✅ CORREÇÃO SIMPLIFICADA CONCLUÍDA COM SUCESSO!');
 } catch (error) {
-  console.error("\n❌ ERRO NA CORREÇÃO:", error.message);
+  console.error('\n❌ ERRO NA CORREÇÃO:', error.message);
   console.error(error.stack);
   process.exit(1);
 }

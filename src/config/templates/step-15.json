@@ -2,10 +2,10 @@
   "templateVersion": "2.0",
   "metadata": {
     "id": "quiz-step-15",
-    "name": "Transição para Perguntas Estratégicas",
-    "description": "Transição entre questões principais e estratégicas",
-    "category": "transition",
-    "type": "mainTransition",
+    "name": "Pense no quanto você já gastou com roupas que não usa...",
+    "description": "Questão estratégica 4 - Consciência do investimento em material",
+    "category": "quiz-strategic",
+    "type": "strategic-question",
     "tags": [
       "quiz",
       "style",
@@ -74,13 +74,26 @@
       "properties": {
         "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
         "logoAlt": "Logo Gisele Galvão",
-        "logoWidth": 96,
-        "logoHeight": 96,
-        "progressValue": 70,
-        "progressTotal": 100,
+        "logoWidth": 120,
+        "logoHeight": 50,
         "showProgress": true,
+        "progressValue": 15,
+        "progressMax": 21,
+        "showBackButton": true,
         "containerWidth": "full",
-        "spacing": "small"
+        "spacing": "small",
+        "showLogo": true,
+        "progressBarColor": "#B89B7A",
+        "progressBarThickness": 6,
+        "backgroundColor": "#FFFFFF",
+        "textColor": "#432818",
+        "paddingTop": 16,
+        "paddingBottom": 16,
+        "paddingLeft": 24,
+        "paddingRight": 24,
+        "marginBottom": 24,
+        "progressTotal": 100,
+        "type": "quiz-intro-header"
       }
     },
     {
@@ -100,7 +113,7 @@
       "id": "step15-title",
       "type": "text-inline",
       "properties": {
-        "content": "ANALISANDO SUAS RESPOSTAS...",
+        "content": "Pense no quanto você já gastou com roupas que não usa ou que não representam quem você é...",
         "fontSize": "text-3xl",
         "fontWeight": "font-bold",
         "textAlign": "text-center",
@@ -114,7 +127,7 @@
       "id": "step15-description",
       "type": "text-inline",
       "properties": {
-        "content": "Enquanto calculamos seu resultado, responda perguntas estratégicas para personalizar ainda mais sua experiência.",
+        "content": "Você acredita que ter acesso a um material estratégico, direto ao ponto, que te ensina a aplicar seu estilo com clareza, faria diferença?",
         "fontSize": "text-lg",
         "textAlign": "text-center",
         "color": "#6B7280",
@@ -123,23 +136,85 @@
       }
     },
     {
-      "id": "step15-loading-animation",
-      "type": "loading-animation",
+      "id": "step15-options-grid",
+      "type": "options-grid",
       "properties": {
-        "type": "progress",
-        "color": "#B89B7A",
-        "size": "large",
-        "autoAdvance": true,
-        "delay": 3000,
+        "options": [
+          {
+            "id": "15a",
+            "text": "Sim! Se existisse algo assim, eu quero",
+            "value": "quero_muito",
+            "points": 4
+          },
+          {
+            "id": "15b",
+            "text": "Sim, mas teria que ser no momento certo",
+            "value": "momento_certo",
+            "points": 3
+          },
+          {
+            "id": "15c",
+            "text": "Tenho dúvidas se funcionaria pra mim",
+            "value": "duvidas",
+            "points": 2
+          },
+          {
+            "id": "15d",
+            "text": "Não, prefiro continuar como estou",
+            "value": "nao_interessada",
+            "points": 1
+          }
+        ],
+        "columns": 1,
+        "imageSize": 0,
+        "showImages": false,
+        "multipleSelection": false,
+        "minSelections": 1,
+        "maxSelections": 1,
+        "borderColor": "#E5E7EB",
+        "selectedBorderColor": "#B89B7A",
+        "hoverColor": "#F3E8D3",
         "containerWidth": "full",
-        "spacing": "medium"
+        "spacing": "small",
+        "marginBottom": 16,
+        "selectionStyle": "glow",
+        "animationType": "scale",
+        "validationMessage": "Selecione uma opção para avançar.",
+        "scoring": {
+          "enabled": true,
+          "method": "strategic-points"
+        }
+      }
+    },
+    {
+      "id": "step15-continue-button",
+      "type": "button-inline",
+      "properties": {
+        "text": "Próxima Questão →",
+        "textWhenDisabled": "Selecione uma opção para avançar",
+        "variant": "primary",
+        "size": "large",
+        "fullWidth": true,
+        "backgroundColor": "#B89B7A",
+        "backgroundGradient": "linear-gradient(90deg, #B89B7A, #aa6b5d)",
+        "textColor": "#ffffff",
+        "borderRadius": "10px",
+        "shadow": "0 4px 14px rgba(184, 155, 122, 0.15)",
+        "disabled": true,
+        "requiresValidInput": true,
+        "enableOnSelection": true,
+        "minSelections": 1,
+        "animation": "hover:scale-105, active:scale-95",
+        "containerWidth": "full",
+        "spacing": "small",
+        "marginTop": 24
       }
     }
   ],
   "validation": {
-    "required": false,
-    "minAnswers": 0,
-    "maxAnswers": 0,
+    "required": true,
+    "minAnswers": 1,
+    "maxAnswers": 1,
     "validationMessage": "Selecione uma opção para avançar."
   },
   "analytics": {
@@ -158,9 +233,10 @@
       "nextStep": "step-16",
       "prevStep": "step-14",
       "allowBack": true,
-      "autoAdvance": true
+      "autoAdvance": false
     },
     "scoring": null,
     "conditions": null
-  }
+  },
+  "updatedAt": "2025-08-17T19:06:10.220Z"
 }

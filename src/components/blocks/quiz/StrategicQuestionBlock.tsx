@@ -1,6 +1,6 @@
 // @ts-nocheck
-import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
+import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
 
 /**
  * StrategicQuestionBlock - Componente para questões estratégicas (Etapas 13-18)
@@ -50,8 +50,8 @@ export interface StrategicQuestionBlockProps {
   // Visual
   backgroundColor?: string;
   textColor?: string;
-  optionStyle?: "cards" | "buttons" | "list";
-  alignment?: "left" | "center" | "right";
+  optionStyle?: 'cards' | 'buttons' | 'list';
+  alignment?: 'left' | 'center' | 'right';
 
   // Funcionalidade
   onAnswer?: (answer: string | string[]) => void;
@@ -62,11 +62,11 @@ export interface StrategicQuestionBlockProps {
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -106,37 +106,37 @@ const getMarginClass = (value, type) => {
 };
 
 const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
-  blockId = "strategic-question-block",
-  className = "",
+  blockId = 'strategic-question-block',
+  className = '',
   style = {},
 
-  question = "Como você gostaria de se sentir ao se vestir?",
+  question = 'Como você gostaria de se sentir ao se vestir?',
   description,
   options = [
-    "Confiante e poderosa",
-    "Feminina e delicada",
-    "Confortável e prática",
-    "Elegante e sofisticada",
+    'Confiante e poderosa',
+    'Feminina e delicada',
+    'Confortável e prática',
+    'Elegante e sofisticada',
   ],
-  category = "motivation",
-  placeholder = "Digite sua resposta...",
+  category = 'motivation',
+  placeholder = 'Digite sua resposta...',
 
   singleSelection = true,
   allowFreeText = false,
   required = true,
 
-  backgroundColor = "#ffffff",
-  textColor = "#432818",
-  optionStyle = "cards",
-  alignment = "center",
+  backgroundColor = '#ffffff',
+  textColor = '#432818',
+  optionStyle = 'cards',
+  alignment = 'center',
 
   onAnswer,
-  selectedAnswer = "",
+  selectedAnswer = '',
   disabled = false,
   onClick,
 }) => {
   const [currentAnswer, setCurrentAnswer] = useState<string | string[]>(selectedAnswer);
-  const [freeTextAnswer, setFreeTextAnswer] = useState("");
+  const [freeTextAnswer, setFreeTextAnswer] = useState('');
   const [showFreeText, setShowFreeText] = useState(false);
 
   const handleOptionSelect = (option: string) => {
@@ -180,29 +180,29 @@ const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
   };
 
   const getOptionClasses = (option: string) => {
-    const baseClasses = "w-full p-4 rounded-lg transition-all duration-200 border-2 cursor-pointer";
+    const baseClasses = 'w-full p-4 rounded-lg transition-all duration-200 border-2 cursor-pointer';
 
-    if (optionStyle === "cards") {
+    if (optionStyle === 'cards') {
       return `${baseClasses} ${
         isSelected(option)
-          ? "bg-[#B89B7A] text-white border-[#B89B7A] shadow-lg"
-          : "bg-white text-gray-700 border-gray-300 hover:border-[#B89B7A] hover:shadow-md"
+          ? 'bg-[#B89B7A] text-white border-[#B89B7A] shadow-lg'
+          : 'bg-white text-gray-700 border-gray-300 hover:border-[#B89B7A] hover:shadow-md'
       }`;
     }
 
-    if (optionStyle === "buttons") {
+    if (optionStyle === 'buttons') {
       return `${baseClasses} ${
         isSelected(option)
-          ? "bg-[#B89B7A] text-white border-[#B89B7A]"
-          : "bg-gray-50 text-gray-700 border-gray-300 hover:bg-gray-100"
+          ? 'bg-[#B89B7A] text-white border-[#B89B7A]'
+          : 'bg-gray-50 text-gray-700 border-gray-300 hover:bg-gray-100'
       }`;
     }
 
     // list style
     return `${baseClasses} ${
       isSelected(option)
-        ? "bg-[#B89B7A]/10 border-[#B89B7A]/40 text-[#432818]"
-        : "bg-white border-gray-200 hover:bg-gray-50"
+        ? 'bg-[#B89B7A]/10 border-[#B89B7A]/40 text-[#432818]'
+        : 'bg-white border-gray-200 hover:bg-gray-50'
     }`;
   };
 
@@ -231,7 +231,7 @@ const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
         <h2
           className="text-2xl md:text-3xl font-bold mb-6"
           style={{
-            fontFamily: "Playfair Display, serif",
+            fontFamily: 'Playfair Display, serif',
             color: textColor,
           }}
         >
@@ -280,7 +280,7 @@ const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
                   onClick={onClick}
                   title="Configure a área de texto no Painel de Propriedades"
                 >
-                  {freeTextAnswer || placeholder || "Área de texto configurável"}
+                  {freeTextAnswer || placeholder || 'Área de texto configurável'}
                 </div>
                 <div className="flex gap-2">
                   <Button

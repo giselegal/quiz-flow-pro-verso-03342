@@ -1,6 +1,6 @@
 // Error Boundary com analytics e recovery
-import React, { Component, ErrorInfo, ReactNode } from "react";
-import { Button } from "./button";
+import { Component, ErrorInfo, ReactNode } from 'react';
+import { Button } from './button';
 
 interface Props {
   children: ReactNode;
@@ -23,13 +23,13 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error("ErrorBoundary caught an error:", error, errorInfo);
+    console.error('ErrorBoundary caught an error:', error, errorInfo);
 
     this.setState({ error, errorInfo });
 
     // Track error in performance monitoring
-    if (typeof window !== "undefined" && (window as any).PerformanceMonitor) {
-      (window as any).PerformanceMonitor.getInstance().trackEvent("error", "error", {
+    if (typeof window !== 'undefined' && (window as any).PerformanceMonitor) {
+      (window as any).PerformanceMonitor.getInstance().trackEvent('error', 'error', {
         message: error.message,
         stack: error.stack,
         componentStack: errorInfo.componentStack,
@@ -77,7 +77,7 @@ export class ErrorBoundary extends Component<Props, State> {
               </p>
             </div>
 
-            {process.env.NODE_ENV === "development" && this.state.error && (
+            {process.env.NODE_ENV === 'development' && this.state.error && (
               <details className="text-left bg-muted p-4 rounded text-xs">
                 <summary className="cursor-pointer font-semibold mb-2">
                   Detalhes do erro (desenvolvimento)

@@ -1,13 +1,10 @@
-import ErrorBoundary from "./components/common/ErrorBoundary";
-import { Toaster } from "./components/ui/toaster";
-import { AdminAuthProvider } from "./context/AdminAuthContext";
-import { AuthProvider } from "./context/AuthContext";
-import { EditorProvider } from "./context/EditorContext";
-import { ScrollSyncProvider } from "./context/ScrollSyncContext";
-import { lazy, Suspense } from "react";
-import { Route, Router, Switch } from "wouter";
-import { ProtectedRoute } from "./components/auth/ProtectedRoute";
-import PixelInitializer from "./components/PixelInitializer";
+import { ThemeProvider } from '@/components/theme-provider';
+import { LoadingFallback } from '@/components/ui/loading-fallback';
+import { Toaster } from '@/components/ui/toaster';
+import { AuthProvider } from '@/context/AuthContext';
+import { EditorProvider } from '@/context/EditorContext';
+import { Suspense, lazy } from 'react';
+import { Route, Router, Switch } from 'wouter';
 
 // Lazy load das páginas principais para code splitting
 const Home = lazy(() => import("./pages/Home"));
@@ -40,128 +37,56 @@ const PageLoading = () => (
   </div>
 );
 
+/**
+ * 🎯 APLICAÇÃO PRINCIPAL - Quiz Quest
+ *
+ * Estrutura de roteamento unificada com:
+ * ✅ EditorWithPreview - Editor principal completo
+ * ✅ SchemaDrivenEditorResponsive - Editor alternativo
+ * ✅ Sistema de lazy loading
+ * ✅ Providers centralizados
+ */
 function App() {
-  console.log("🔧 DEBUG: App component iniciado");
   return (
-    <ErrorBoundary
-      onError={(error, errorInfo) => {
-        console.error("🚨 App Error:", error);
-        console.error("🔍 Error Info:", errorInfo);
-      }}
-    >
+    <ThemeProvider defaultTheme="light" storageKey="quiz-quest-theme">
       <AuthProvider>
-        <AdminAuthProvider>
           <Router>
             <div className="min-h-screen bg-background">
-              <PixelInitializer pageType="other" />
-              <Switch>
-                {/* Redirect /editor para /editor-fixed */}
-                <Route path="/editor">
-                  {() => {
-                    window.location.href = "/editor-fixed";
-                    return null;
-                  }}
-                </Route>
-                <Route path="/editor/:id">
-                  {() => {
-                    window.location.href = "/editor-fixed";
-                    return null;
-                  }}
-                </Route>
+              <Suspense fallback={<LoadingFallback />}>
+                <Switch>
+                  {/* 🏠 PÁGINA INICIAL */}
+                  <Route path="/" component={Home} />
 
-                {/* Editor Fixed Route - rota principal do editor */}
-                <Route path="/editor-fixed">
-                  {() => (
-                    <Suspense fallback={<PageLoading />}>
-                      <ErrorBoundary>
-                        <EditorProvider>
-                          <ScrollSyncProvider>
-                            <EditorPage />
-                          </ScrollSyncProvider>
-                        </EditorProvider>
-                      </ErrorBoundary>
-                    </Suspense>
-                  )}
-                </Route>
+                  {/* 📊 DASHBOARD ADMINISTRATIVO */}
+                  <Route path="/admin" component={DashboardPage} />
+                  <Route path="/dashboard" component={DashboardPage} />
 
-                {/* Templates IA Route */}
-                <Route path="/templatesia">
-                  {() => (
-                    <Suspense fallback={<PageLoading />}>
-                      <ErrorBoundary>
-                        <TemplatesIA />
-                      </ErrorBoundary>
-                    </Suspense>
-                  )}
-                </Route>
+                  {/* 🎯 EDITOR PRINCIPAL - SchemaDrivenEditor (FUNCIONAL) */}
+                  <Route path="/editor">
+                    <EditorProvider>
+                      <div className="h-screen w-full">
+                        <SchemaDrivenEditorResponsive />
+                      </div>
+                    </EditorProvider>
+                  </Route>
 
-                {/* Debug Editor Route */}
-                <Route path="/debug-editor">
-                  {() => (
-                    <Suspense fallback={<PageLoading />}>
-                      <ErrorBoundary>
-                        <EditorProvider>
-                          <DebugEditorContext />
-                        </EditorProvider>
-                      </ErrorBoundary>
-                    </Suspense>
-                  )}
-                </Route>
+                  {/* 🔧 EDITOR ALTERNATIVO - SchemaDrivenEditor */}
+                  <Route path="/editor-schema">
+                    <EditorProvider>
+                      <div className="h-screen w-full">
+                        <SchemaDrivenEditorResponsive />
+                      </div>
+                    </EditorProvider>
+                  </Route>
 
-                {/* Debug/Test Routes */}
-                <Route path="/debug/editor">
-                  {() => (
-                    <Suspense fallback={<PageLoading />}>
-                      <DebugEditorContext />
-                    </Suspense>
-                  )}
-                </Route>
-                <Route path="/test/properties">
-                  {() => (
-                    <Suspense fallback={<PageLoading />}>
-                      <TestPropertiesPanel />
-                    </Suspense>
-                  )}
-                </Route>
-                <Route path="/test/button">
-                  {() => (
-                    <Suspense fallback={<PageLoading />}>
-                      <TestButton />
-                    </Suspense>
-                  )}
-                </Route>
-                <Route path="/test/options">
-                  {() => (
-                    <Suspense fallback={<PageLoading />}>
-                      <TestOptionsRendering />
-                    </Suspense>
-                  )}
-                </Route>
-                <Route path="/debug/step02">
-                  {() => (
-                    <Suspense fallback={<PageLoading />}>
-                      <ErrorBoundary>
-                        <EditorProvider>
-                          <DebugStep02 />
-                        </EditorProvider>
-                      </ErrorBoundary>
-                    </Suspense>
-                  )}
-                </Route>
-                <Route path="/test/step02-direct">
-                  {() => (
-                    <Suspense fallback={<PageLoading />}>
-                      <TestStep02Direct />
-                    </Suspense>
-                  )}
-                </Route>
-                <Route path="/test/all-templates">
-                  {() => (
-                    <Suspense fallback={<PageLoading />}>
-                      <TestAllTemplates />
-                    </Suspense>
-                  )}
-                </Route>
+                  {/* 🏆 EDITOR FIXED */}
+                  <Route path="/editor-fixed">
+                    <EditorProvider>
+                      <Suspense fallback={<PageLoading />}>
+                        <EditorPage />
+                      </Suspense>
+                    </EditorProvider>
+                  </Route>
 
                 {/* Admin Routes */}
                 <Route path="/admin" nest>
@@ -214,30 +139,29 @@ function App() {
                   )}
                 </Route>
 
-                {/* Protected Routes */}
-                <ProtectedRoute 
-                  path="/admin/funis" 
-                  component={() => (
-                    <Suspense fallback={<PageLoading />}>
-                      <FunnelsPage />
-                    </Suspense>
-                  )}
-                />
-                <ProtectedRoute 
-                  path="/admin/resultados" 
-                  component={() => (
-                    <Suspense fallback={<PageLoading />}>
-                      <ResultConfigPage />
-                    </Suspense>
-                  )}
-                />
+                {/* 🚫 ROTA PADRÃO - 404 */}
+                <Route>
+                  <div className="min-h-screen flex items-center justify-center bg-background">
+                    <div className="text-center space-y-4">
+                      <h1 className="text-4xl font-bold text-[#6B4F43]">404</h1>
+                      <p className="text-xl text-[#8B7355]">Página não encontrada</p>
+                      <a
+                        href="/"
+                        className="inline-block px-6 py-3 bg-[#B89B7A] text-white rounded-lg hover:bg-[#A08968] transition-colors"
+                      >
+                        Voltar ao Início
+                      </a>
+                    </div>
+                  </div>
+                </Route>
               </Switch>
-              <Toaster />
-            </div>
-          </Router>
-        </AdminAuthProvider>
+            </Suspense>
+
+            <Toaster />
+          </div>
+        </Router>
       </AuthProvider>
-    </ErrorBoundary>
+    </ThemeProvider>
   );
 }
 

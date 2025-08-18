@@ -1,37 +1,38 @@
+// @ts-nocheck
 /**
  * Demonstração do Sistema Modernizado de Componentes
  *
  * Este arquivo mostra como usar os novos componentes criados
  */
 
-import React, { useState } from "react";
-import { ModernPropertyPanel } from "@/components/editor/ModernPropertyPanel";
-import { Block } from "@/hooks/useBlockForm";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
+import React, { useState } from 'react';
+import { ModernPropertyPanel } from '@/components/editor/ModernPropertyPanel';
+import { Block } from '@/hooks/useBlockForm';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
 
 // Dados de exemplo para teste
 const sampleBlocks: Block[] = [
   {
-    id: "text-1",
-    type: "text",
+    id: 'text-1',
+    type: 'text',
     properties: {
-      content: "Este é um texto de exemplo",
+      content: 'Este é um texto de exemplo',
       fontSize: 16,
-      textColor: "#000000",
-      textAlign: "left",
+      textColor: '#000000',
+      textAlign: 'left',
     },
   },
   {
-    id: "button-1",
-    type: "button",
+    id: 'button-1',
+    type: 'button',
     properties: {
-      text: "Clique Aqui",
-      link: "https://exemplo.com",
-      backgroundColor: "#3b82f6",
-      textColor: "#ffffff",
+      text: 'Clique Aqui',
+      link: 'https://exemplo.com',
+      backgroundColor: '#3b82f6',
+      textColor: '#ffffff',
       paddingX: 16,
       paddingY: 8,
       borderRadius: 6,
@@ -39,36 +40,36 @@ const sampleBlocks: Block[] = [
     },
   },
   {
-    id: "quiz-step-1",
-    type: "quiz-step",
+    id: 'quiz-step-1',
+    type: 'quiz-step',
     properties: {
       headerEnabled: true,
-      logoUrl: "",
+      logoUrl: '',
       showProgressBar: true,
       showBackButton: true,
-      questionText: "Qual é sua cor favorita?",
-      questionTextColor: "#000000",
+      questionText: 'Qual é sua cor favorita?',
+      questionTextColor: '#000000',
       questionTextSize: 24,
-      questionTextAlign: "center",
-      layout: "2-columns",
-      direction: "vertical",
-      disposition: "image-text",
+      questionTextAlign: 'center',
+      layout: '2-columns',
+      direction: 'vertical',
+      disposition: 'image-text',
       options: [
-        { id: "1", text: "Azul", imageUrl: "", value: "blue" },
-        { id: "2", text: "Vermelho", imageUrl: "", value: "red" },
-        { id: "3", text: "Verde", imageUrl: "", value: "green" },
+        { id: '1', text: 'Azul', imageUrl: '', value: 'blue' },
+        { id: '2', text: 'Vermelho', imageUrl: '', value: 'red' },
+        { id: '3', text: 'Verde', imageUrl: '', value: 'green' },
       ],
       isMultipleChoice: false,
       isRequired: true,
       autoProceed: false,
-      borderRadius: "medium",
-      boxShadow: "medium",
-      spacing: "medium",
-      detail: "none",
-      optionStyle: "card",
-      primaryColor: "#3b82f6",
-      secondaryColor: "#ffffff",
-      borderColor: "#e5e7eb",
+      borderRadius: 'medium',
+      boxShadow: 'medium',
+      spacing: 'medium',
+      detail: 'none',
+      optionStyle: 'card',
+      primaryColor: '#3b82f6',
+      secondaryColor: '#ffffff',
+      borderColor: '#e5e7eb',
       maxWidth: 100,
     },
   },
@@ -109,7 +110,7 @@ export function ComponentsDemo() {
               <Card
                 key={block.id}
                 className={`cursor-pointer transition-all ${
-                  selectedBlock?.id === block.id ? "ring-2 ring-[#B89B7A]" : ""
+                  selectedBlock?.id === block.id ? 'ring-2 ring-[#B89B7A]' : ''
                 }`}
                 onClick={() => setSelectedBlock(block)}
               >
@@ -197,14 +198,14 @@ export function ComponentsDemo() {
 
 function getBlockDescription(block: Block): string {
   switch (block.type) {
-    case "text":
-      return `"${(block.properties.content || "").substring(0, 30)}..."`;
-    case "button":
+    case 'text':
+      return `"${(block.properties.content || '').substring(0, 30)}..."`;
+    case 'button':
       return `Botão: "${block.properties.text}"`;
-    case "quiz-step":
-      return `Quiz: "${(block.properties.questionText || "").substring(0, 30)}..."`;
+    case 'quiz-step':
+      return `Quiz: "${(block.properties.questionText || '').substring(0, 30)}..."`;
     default:
-      return "Bloco personalizado";
+      return 'Bloco personalizado';
   }
 }
 

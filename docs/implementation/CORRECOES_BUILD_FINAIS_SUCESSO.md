@@ -19,21 +19,21 @@
 
 ```typescript
 // /server/index.ts
-import express from "express";
-import path from "path";
+import express from 'express';
+import path from 'path';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(express.json({ limit: "50mb" }));
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.json({ limit: '50mb' }));
+app.use(express.static(path.join(__dirname, 'public')));
 
-app.get("/api/health", (req, res) => {
-  res.json({ status: "OK", timestamp: new Date().toISOString() });
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'OK', timestamp: new Date().toISOString() });
 });
 
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "public/index.html"));
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public/index.html'));
 });
 
 app.listen(PORT, () => {
@@ -62,26 +62,26 @@ build: { ... } // Vite usa automaticamente a raiz do projeto
 ```typescript
 manualChunks: id => {
   // React ecosystem
-  if (id.includes("react") || id.includes("react-dom")) {
-    return "react-vendor";
+  if (id.includes('react') || id.includes('react-dom')) {
+    return 'react-vendor';
   }
 
   // Animation libraries
-  if (id.includes("framer-motion") || id.includes("@dnd-kit")) {
-    return "animation-vendor";
+  if (id.includes('framer-motion') || id.includes('@dnd-kit')) {
+    return 'animation-vendor';
   }
 
   // Editor específico
-  if (id.includes("SchemaDrivenEditor") || id.includes("useSchemaEditor")) {
-    return "editor-core";
+  if (id.includes('SchemaDrivenEditor') || id.includes('useSchemaEditor')) {
+    return 'editor-core';
   }
 
   // Páginas categorizadas
-  if (id.includes("pages/")) {
-    if (id.includes("Quiz") || id.includes("Result")) {
-      return "quiz-pages";
+  if (id.includes('pages/')) {
+    if (id.includes('Quiz') || id.includes('Result')) {
+      return 'quiz-pages';
     }
-    return "pages";
+    return 'pages';
   }
 
   // ... mais categorizações inteligentes

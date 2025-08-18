@@ -1,5 +1,4 @@
-import React from "react";
-import { Shield } from "lucide-react";
+import { Shield } from 'lucide-react';
 
 const GuaranteeSection = () => (
   <div className="bg-white p-6 rounded-xl shadow-md border border-[#B89B7A]/20 h-full">

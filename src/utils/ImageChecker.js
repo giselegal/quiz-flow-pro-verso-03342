@@ -5,16 +5,16 @@
  * Ajuda a diagnosticar problemas de performance e qualidade de imagem
  */
 
-import { imageCache } from "../utils/images/caching";
-import { getAllImages } from "../data/imageBank";
-import { optimizeCloudinaryUrl } from "../utils/images/optimization";
+import { imageCache } from '../utils/images/caching';
+import { getAllImages } from '../data/imageBank';
+import { optimizeCloudinaryUrl } from '../utils/images/optimization';
 
 /**
  * Verifica e apresenta ao console informações sobre as imagens carregadas
  * Útil para debug de problemas de carregamento e qualidade de imagem
  */
 export const checkImageStatus = () => {
-  console.group("📊 Status das Imagens");
+  console.group('📊 Status das Imagens');
 
   // Estatísticas do cache
   const cacheSize = imageCache.size;
@@ -29,9 +29,9 @@ export const checkImageStatus = () => {
 
   // Verificar cada entrada no cache
   imageCache.forEach((data, key) => {
-    if (data.loadStatus === "loaded") loaded++;
-    else if (data.loadStatus === "loading") loading++;
-    else if (data.loadStatus === "error") error++;
+    if (data.loadStatus === 'loaded') loaded++;
+    else if (data.loadStatus === 'loading') loading++;
+    else if (data.loadStatus === 'error') error++;
     else noStatus++;
 
     if (data.lowQualityUrl) withLowQuality++;
@@ -62,7 +62,7 @@ export const checkImageStatus = () => {
   const uncachedImages = bankImages.filter(img => {
     const optimizedUrl = optimizeCloudinaryUrl(img.src, {
       quality: 85,
-      format: "auto",
+      format: 'auto',
     });
     return !imageCache.has(optimizedUrl);
   });
@@ -71,7 +71,7 @@ export const checkImageStatus = () => {
     console.warn(`⚠️ ${uncachedImages.length} imagens no banco de dados não estão em cache.`);
     if (uncachedImages.length < 10) {
       console.log(
-        "Imagens não cacheadas:",
+        'Imagens não cacheadas:',
         uncachedImages.map(img => img.id)
       );
     }
@@ -94,10 +94,10 @@ export const checkImageStatus = () => {
  * Verifica a estrutura e qualidade das imagens na página de introdução
  */
 export const checkIntroImages = () => {
-  console.group("🖼️ Verificação de Imagens da Introdução");
+  console.group('🖼️ Verificação de Imagens da Introdução');
 
   // Encontrar elementos de imagem no DOM
-  const allImages = document.querySelectorAll("img");
+  const allImages = document.querySelectorAll('img');
   console.log(`🔍 Total de imagens no DOM: ${allImages.length}`);
 
   // Verificar cada imagem
@@ -114,9 +114,9 @@ export const checkIntroImages = () => {
 
     // Verificar otimização (apenas para Cloudinary)
     if (
-      img.src.includes("cloudinary.com") &&
-      !img.src.includes("f_auto") &&
-      !img.src.includes("q_auto")
+      img.src.includes('cloudinary.com') &&
+      !img.src.includes('f_auto') &&
+      !img.src.includes('q_auto')
     ) {
       notOptimized++;
       console.warn(`⚠️ Imagem Cloudinary não otimizada:`, img.src);
@@ -124,7 +124,7 @@ export const checkIntroImages = () => {
 
     // Verificar placeholders/blur
     const style = window.getComputedStyle(img);
-    if (style.filter && style.filter.includes("blur") && img.complete) {
+    if (style.filter && style.filter.includes('blur') && img.complete) {
       blurryImages++;
       console.warn(`⚠️ Imagem #${index} parece estar embaçada:`, img.src);
     }
@@ -137,7 +137,7 @@ export const checkIntroImages = () => {
   `);
 
   if (missingDimensions === 0 && notOptimized === 0 && blurryImages === 0) {
-    console.log("✅ Todas as imagens parecem estar configuradas corretamente!");
+    console.log('✅ Todas as imagens parecem estar configuradas corretamente!');
   }
 
   console.groupEnd();
@@ -159,17 +159,17 @@ export const analyzeImageUrl = url => {
   if (!url) {
     return {
       isValid: false,
-      error: "URL não fornecida",
+      error: 'URL não fornecida',
     };
   }
 
-  console.group("🔍 Análise de URL de Imagem");
+  console.group('🔍 Análise de URL de Imagem');
   console.log(`URL Original: ${url}`);
 
   // Verificar se é uma URL do Cloudinary
-  const isCloudinary = url.includes("cloudinary.com") || url.includes("res.cloudinary.com");
+  const isCloudinary = url.includes('cloudinary.com') || url.includes('res.cloudinary.com');
   if (!isCloudinary) {
-    console.warn("⚠️ Esta não é uma URL do Cloudinary. A análise pode ser limitada.");
+    console.warn('⚠️ Esta não é uma URL do Cloudinary. A análise pode ser limitada.');
   }
 
   // Informações básicas
@@ -178,10 +178,10 @@ export const analyzeImageUrl = url => {
     isCloudinary,
     originalUrl: url,
     hasOptimization: false,
-    format: "desconhecido",
-    quality: "desconhecido",
-    width: "não especificado",
-    height: "não especificado",
+    format: 'desconhecido',
+    quality: 'desconhecido',
+    width: 'não especificado',
+    height: 'não especificado',
     transformations: [],
     version: null,
     suggestions: [],
@@ -197,39 +197,39 @@ export const analyzeImageUrl = url => {
     // Verificar versões (v1234567890)
     const versionMatch = url.match(/\/v\d+\//);
     if (versionMatch) {
-      info.version = versionMatch[0].replace(/\//g, "");
+      info.version = versionMatch[0].replace(/\//g, '');
     }
 
     if (isCloudinary) {
       // Extrair parâmetros de transformação
-      const uploadIndex = url.indexOf("/upload/");
+      const uploadIndex = url.indexOf('/upload/');
       if (uploadIndex > 0) {
         const pathAfterUpload = url.substring(uploadIndex + 8);
-        const transformationPart = pathAfterUpload.substring(0, pathAfterUpload.indexOf("/"));
+        const transformationPart = pathAfterUpload.substring(0, pathAfterUpload.indexOf('/'));
 
         if (transformationPart) {
-          const params = transformationPart.split(",");
+          const params = transformationPart.split(',');
           info.transformations = params;
 
           // Analisar parâmetros específicos
           params.forEach(param => {
-            if (param.startsWith("f_")) {
+            if (param.startsWith('f_')) {
               info.format = param.substring(2);
               info.hasOptimization = true;
             }
-            if (param.startsWith("q_")) {
+            if (param.startsWith('q_')) {
               info.quality = param.substring(2);
               info.hasOptimization = true;
             }
-            if (param.startsWith("w_")) {
+            if (param.startsWith('w_')) {
               info.width = param.substring(2);
               info.hasOptimization = true;
             }
-            if (param.startsWith("h_")) {
+            if (param.startsWith('h_')) {
               info.height = param.substring(2);
               info.hasOptimization = true;
             }
-            if (param.startsWith("e_")) {
+            if (param.startsWith('e_')) {
               // Efeitos como blur
               info.transformations.push(param);
             }
@@ -241,29 +241,29 @@ export const analyzeImageUrl = url => {
     // Gerar sugestões
     if (isCloudinary) {
       if (!info.hasOptimization) {
-        info.suggestions.push("Adicionar parâmetros de otimização (f_auto,q_auto)");
+        info.suggestions.push('Adicionar parâmetros de otimização (f_auto,q_auto)');
       }
 
       if (!info.width && !info.height) {
         info.suggestions.push(
-          "Especificar largura e/ou altura para evitar servir imagens muito grandes"
+          'Especificar largura e/ou altura para evitar servir imagens muito grandes'
         );
       }
 
-      if (info.format === "png" && !url.includes("transparent")) {
+      if (info.format === 'png' && !url.includes('transparent')) {
         info.suggestions.push(
-          "Considerar usar formato WEBP ou AVIF em vez de PNG para melhor compressão"
+          'Considerar usar formato WEBP ou AVIF em vez de PNG para melhor compressão'
         );
       }
 
-      if (info.quality && parseInt(info.quality) > 85 && info.quality !== "auto") {
+      if (info.quality && parseInt(info.quality) > 85 && info.quality !== 'auto') {
         info.suggestions.push(
-          "Considerar reduzir a qualidade para 80-85 para melhorar o desempenho sem perda visual perceptível"
+          'Considerar reduzir a qualidade para 80-85 para melhorar o desempenho sem perda visual perceptível'
         );
       }
     }
   } catch (error) {
-    console.error("Erro ao analisar URL:", error);
+    console.error('Erro ao analisar URL:', error);
     info.error = error.message;
   }
 
@@ -271,12 +271,12 @@ export const analyzeImageUrl = url => {
   console.log(`📊 Análise Completa:`, info);
 
   if (info.suggestions.length > 0) {
-    console.log("💡 Sugestões de Otimização:");
+    console.log('💡 Sugestões de Otimização:');
     info.suggestions.forEach((sugestão, i) => {
       console.log(`  ${i + 1}. ${sugestão}`);
     });
   } else if (info.hasOptimization) {
-    console.log("✅ URL parece estar bem otimizada!");
+    console.log('✅ URL parece estar bem otimizada!');
   }
 
   console.groupEnd();

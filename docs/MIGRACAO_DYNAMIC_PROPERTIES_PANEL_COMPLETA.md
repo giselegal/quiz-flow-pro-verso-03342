@@ -123,7 +123,7 @@ interface DynamicPropertiesPanelProps {
 // Conversão de EditorBlock para BlockData
 const blockData = {
   id: selectedComponentId,
-  type: blocks.find(b => b.id === selectedComponentId)?.type || "",
+  type: blocks.find(b => b.id === selectedComponentId)?.type || '',
   properties: blocks.find(b => b.id === selectedComponentId)?.content || {},
 };
 ```

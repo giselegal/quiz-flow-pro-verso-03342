@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 // import { useRouter } from 'next/router'; // Comentado para React puro
-import { useFunnelConfig } from "../editor/FunnelConfigProvider";
+import { useFunnelConfig } from '../editor/FunnelConfigProvider';
 
 interface UseFunnelNavigationOptions {
   initialStep?: number;
@@ -17,11 +17,11 @@ interface UseFunnelNavigationOptions {
 export function useFunnelNavigation({
   initialStep = 0,
   persistState = true,
-  storageKey = "funnel-navigation-state",
+  storageKey = 'funnel-navigation-state',
   preventExit = true,
 }: UseFunnelNavigationOptions = {}) {
   // Acesso ao contexto global do funil
-  const { config, currentStepIndex, setCurrentStepIndex, userData, updateUserData, answers } =
+  const { config, currentStepIndex, setCurrentStepIndex, userData, updateUserData } =
     useFunnelConfig();
 
   // const router = useRouter(); // Removido para React puro
@@ -32,7 +32,7 @@ export function useFunnelNavigation({
 
   // Verificar localStorage ao iniciar
   useEffect(() => {
-    if (persistState && typeof window !== "undefined") {
+    if (persistState && typeof window !== 'undefined') {
       try {
         const savedState = localStorage.getItem(storageKey);
 
@@ -53,14 +53,14 @@ export function useFunnelNavigation({
           }
         }
       } catch (error) {
-        console.error("Erro ao carregar estado do funil:", error);
+        console.error('Erro ao carregar estado do funil:', error);
       }
     }
   }, []);
 
   // Salvar estado quando mudar
   useEffect(() => {
-    if (persistState && typeof window !== "undefined") {
+    if (persistState && typeof window !== 'undefined') {
       const stateToSave = {
         currentStep: currentStepIndex,
         userData,
@@ -73,17 +73,17 @@ export function useFunnelNavigation({
 
   // Prevenir saída acidental
   useEffect(() => {
-    if (preventExit && typeof window !== "undefined") {
+    if (preventExit && typeof window !== 'undefined') {
       const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-        const message = "Você tem progresso não salvo. Tem certeza que deseja sair?";
+        const message = 'Você tem progresso não salvo. Tem certeza que deseja sair?';
         e.returnValue = message;
         return message;
       };
 
-      window.addEventListener("beforeunload", handleBeforeUnload);
+      window.addEventListener('beforeunload', handleBeforeUnload);
 
       return () => {
-        window.removeEventListener("beforeunload", handleBeforeUnload);
+        window.removeEventListener('beforeunload', handleBeforeUnload);
       };
     }
   }, [preventExit]);
@@ -130,7 +130,7 @@ export function useFunnelNavigation({
     setNavigationHistory([initialStep]);
     setCompletedSteps(new Set());
 
-    if (persistState && typeof window !== "undefined") {
+    if (persistState && typeof window !== 'undefined') {
       localStorage.removeItem(storageKey);
     }
   };

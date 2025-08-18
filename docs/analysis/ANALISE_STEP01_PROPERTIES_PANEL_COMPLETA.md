@@ -55,11 +55,11 @@ interface Step01PropertiesPanelProps {
 #### **1. Categorização Automática**
 
 ```typescript
-const contentProps = getPropertiesByCategory("content");
-const styleProps = getPropertiesByCategory("style");
-const layoutProps = getPropertiesByCategory("layout");
-const behaviorProps = getPropertiesByCategory("behavior");
-const advancedProps = getPropertiesByCategory("advanced");
+const contentProps = getPropertiesByCategory('content');
+const styleProps = getPropertiesByCategory('style');
+const layoutProps = getPropertiesByCategory('layout');
+const behaviorProps = getPropertiesByCategory('behavior');
+const advancedProps = getPropertiesByCategory('advanced');
 ```
 
 **✅ Pontos Positivos:**
@@ -212,13 +212,13 @@ const [colorPickerOpen, setColorPickerOpen] = useState(false);
 
 ```typescript
 // ❌ PROBLEMA: Estado sem uso
-const [previewMode, setPreviewMode] = useState<"desktop" | "tablet" | "mobile">("desktop");
+const [previewMode, setPreviewMode] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
 
 // ✅ SOLUÇÃO: Aplicar responsividade real
 const containerClasses = {
-  desktop: "w-80",
-  tablet: "w-64",
-  mobile: "w-48",
+  desktop: 'w-80',
+  tablet: 'w-64',
+  mobile: 'w-48',
 }[previewMode];
 ```
 
@@ -295,9 +295,9 @@ const validateProperty = (key: string, value: unknown): ValidationResult => {
 ```typescript
 // Aplicar estilos responsivos baseados em previewMode
 const getResponsiveStyles = (mode: PreviewMode) => ({
-  desktop: { width: "320px", fontSize: "16px" },
-  tablet: { width: "256px", fontSize: "14px" },
-  mobile: { width: "192px", fontSize: "12px" },
+  desktop: { width: '320px', fontSize: '16px' },
+  tablet: { width: '256px', fontSize: '14px' },
+  mobile: { width: '192px', fontSize: '12px' },
 });
 ```
 

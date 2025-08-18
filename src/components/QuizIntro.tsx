@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { sharedStyles } from "@/styles/sharedStyles";
-import { ContentContainer } from "./shared/ContentContainer";
-import { Card, CardContent } from "@/components/ui/card";
-import { ArrowRight, Sparkles, Users, Award } from "lucide-react";
-import { cn } from "@/lib/utils";
+import React, { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { sharedStyles } from '@/styles/sharedStyles';
+import { ContentContainer } from './shared/ContentContainer';
+import { Card, CardContent } from '@/components/ui/card';
+import { ArrowRight, Sparkles, Users, Award } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface QuizIntroProps {
   onStart: (userName: string) => void;
@@ -13,7 +13,7 @@ interface QuizIntroProps {
 }
 
 const QuizIntro: React.FC<QuizIntroProps> = ({ onStart, globalStyles = {} }) => {
-  const [userName, setUserName] = useState("");
+  const [userName, setUserName] = useState('');
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
@@ -23,7 +23,7 @@ const QuizIntro: React.FC<QuizIntroProps> = ({ onStart, globalStyles = {} }) => 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (userName.trim()) {
-      localStorage.setItem("userName", userName.trim());
+      localStorage.setItem('userName', userName.trim());
       onStart(userName.trim());
     }
   };
@@ -39,8 +39,8 @@ const QuizIntro: React.FC<QuizIntroProps> = ({ onStart, globalStyles = {} }) => 
   return (
     <div
       className={cn(
-        "min-h-screen flex items-center justify-center p-4 transition-all duration-700",
-        isLoaded ? "opacity-100 scale-100" : "opacity-0 scale-95"
+        'min-h-screen flex items-center justify-center p-4 transition-all duration-700',
+        isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
       )}
       style={backgroundStyle}
     >
@@ -60,9 +60,9 @@ const QuizIntro: React.FC<QuizIntroProps> = ({ onStart, globalStyles = {} }) => 
                 fetchPriority="high"
                 decoding="async"
                 style={{
-                  objectFit: "contain",
-                  maxWidth: "120px",
-                  aspectRatio: "120 / 50",
+                  objectFit: 'contain',
+                  maxWidth: '120px',
+                  aspectRatio: '120 / 50',
                 }}
               />
             </div>
@@ -72,7 +72,7 @@ const QuizIntro: React.FC<QuizIntroProps> = ({ onStart, globalStyles = {} }) => 
               className="text-3xl md:text-5xl font-playfair font-bold leading-tight"
               style={textStyle}
             >
-              Descubra Seu{" "}
+              Descubra Seu{' '}
               <span className="bg-gradient-to-r from-[#B89B7A] to-[#D4B896] bg-clip-text text-transparent">
                 Estilo Pessoal
               </span>

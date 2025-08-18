@@ -27,12 +27,12 @@ SortableBlockWrapper → useContainerProperties → Component → Visual Update
 
 ```typescript
 // ✅ PASSO 1: Importar o componente
-import MyCustomBlock from "../components/editor/blocks/MyCustomBlock";
+import MyCustomBlock from '../components/editor/blocks/MyCustomBlock';
 
 // ✅ PASSO 2: Registrar no ENHANCED_BLOCK_REGISTRY
 export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> = {
   // ... outros componentes
-  "my-custom-block": MyCustomBlock, // 🎯 KEY = type usado no sistema
+  'my-custom-block': MyCustomBlock, // 🎯 KEY = type usado no sistema
 };
 ```
 
@@ -51,40 +51,40 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> =
 ```typescript
 // ✅ PASSO 3: Adicionar case no switch do useUnifiedProperties
 switch (blockType) {
-  case "my-custom-block":
+  case 'my-custom-block':
     return [
       ...baseProperties, // ✅ 7 propriedades universais (margens, escala, cores, etc.)
 
       // 🎯 PROPRIEDADES ESPECÍFICAS
       createProperty(
-        "title", // key
-        currentBlock?.properties?.title || "Título Padrão", // valor padrão
+        'title', // key
+        currentBlock?.properties?.title || 'Título Padrão', // valor padrão
         PropertyType.TEXT, // tipo do controle
-        "Título", // label no painel
+        'Título', // label no painel
         PropertyCategory.CONTENT, // categoria
         { required: true } // opções extras
       ),
 
       createProperty(
-        "size",
-        currentBlock?.properties?.size || "medium",
+        'size',
+        currentBlock?.properties?.size || 'medium',
         PropertyType.SELECT,
-        "Tamanho",
+        'Tamanho',
         PropertyCategory.STYLE,
         {
           options: createSelectOptions([
-            { value: "small", label: "Pequeno" },
-            { value: "medium", label: "Médio" },
-            { value: "large", label: "Grande" },
+            { value: 'small', label: 'Pequeno' },
+            { value: 'medium', label: 'Médio' },
+            { value: 'large', label: 'Grande' },
           ]),
         }
       ),
 
       createProperty(
-        "isVisible",
+        'isVisible',
         currentBlock?.properties?.isVisible !== false,
         PropertyType.SWITCH,
-        "Visível",
+        'Visível',
         PropertyCategory.LAYOUT
       ),
     ];
@@ -278,18 +278,18 @@ Para diagnosticar problemas, todos os pontos têm logs:
 
 ```typescript
 // 🔍 Logs automáticos já implementados:
-console.log("🔧 useUnifiedProperties - generateDefaultProperties chamado:", {
+console.log('🔧 useUnifiedProperties - generateDefaultProperties chamado:', {
   blockType,
   basePropertiesCount,
 });
-console.log("🔧 useUnifiedProperties - updateProperty chamado:", { key, value, blockId });
-console.log("🔧 EditorContext updateBlock chamado:", { blockId, updates });
-console.log("🔧 SortableBlockWrapper - processedProperties:", {
+console.log('🔧 useUnifiedProperties - updateProperty chamado:', { key, value, blockId });
+console.log('🔧 EditorContext updateBlock chamado:', { blockId, updates });
+console.log('🔧 SortableBlockWrapper - processedProperties:', {
   blockId,
   blockType,
   processedProperties,
 });
-console.log("🏗️ useContainerProperties chamado com:", properties);
+console.log('🏗️ useContainerProperties chamado com:', properties);
 ```
 
 ---

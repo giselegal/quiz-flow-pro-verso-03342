@@ -1,9 +1,8 @@
-import React from "react";
-import { Button } from "@/components/ui/button";
-import { useLocation } from "wouter";
+import { Button } from '@/components/ui/button';
+import { useLocation } from 'wouter';
 
 const ErrorState: React.FC = () => {
-  const [location, setLocation] = useLocation();
+  const [, setLocation] = useLocation();
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-6 bg-[#fff9f7]">
@@ -13,7 +12,7 @@ const ErrorState: React.FC = () => {
           Não conseguimos carregar seu resultado do quiz. Por favor, tente novamente.
         </p>
         <Button
-          onClick={() => setLocation("/quiz")}
+          onClick={() => setLocation('/quiz')}
           className="bg-[#aa6b5d] hover:bg-[#9a5b4d] text-white"
         >
           Refazer o Quiz

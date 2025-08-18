@@ -1,5 +1,3 @@
-import React from "react";
-
 const BonusSection = () => (
   <div className="bg-gradient-to-r from-[#fff8f4] to-[#faf5f0] p-8 rounded-xl border border-[#B89B7A]/20 shadow-md">
     <h3 className="text-xl md:text-2xl font-medium text-[#aa6b5d] mb-6 text-center">

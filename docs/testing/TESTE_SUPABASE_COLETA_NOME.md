@@ -39,10 +39,10 @@
 
 ```javascript
 // Verificar dados salvos
-localStorage.getItem("quiz-responses");
+localStorage.getItem('quiz-responses');
 
 // Verificar estado da sessão
-localStorage.getItem("quiz-session");
+localStorage.getItem('quiz-session');
 
 // Testar serviço diretamente (se disponível)
 userResponseService.getAllResponses();
