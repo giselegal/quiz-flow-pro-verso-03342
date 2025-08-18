@@ -52,10 +52,11 @@ app.get('*', (req, res) => {
   res.sendFile(indexPath);
 });
 
-const PORT = process.env.PORT || 3001;
+const PORT = Number(process.env.PORT) || 3001;
+const HOST = process.env.HOST || '0.0.0.0';
 
-server.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+server.listen(PORT, HOST, () => {
+  console.log(`🚀 Server running on ${HOST}:${PORT}`);
   console.log(`📁 Serving static files from: ${path.join(__dirname, '../dist')}`);
   console.log(`🔄 SPA fallback configured for client-side routing`);
 });
