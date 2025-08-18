@@ -78,13 +78,13 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
   // 🎯 INTEGRAÇÃO: FunnelsContext para dados das etapas
   let funnels;
   let steps: any[] = [];
-  
+
   try {
     funnels = useFunnels();
     steps = funnels.steps || [];
     console.log('✅ Quiz21StepsProvider: FunnelsContext obtido com sucesso:', {
       stepsLength: steps.length,
-      currentFunnelId: funnels.currentFunnelId
+      currentFunnelId: funnels.currentFunnelId,
     });
   } catch (error) {
     console.error('❌ Quiz21StepsProvider: Erro ao acessar FunnelsContext:', error);
@@ -95,7 +95,7 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
       setActiveStageId: () => {},
       currentFunnelId: 'fallback',
       loading: false,
-      error: String(error)
+      error: String(error),
     };
   }
 
