@@ -1,5 +1,6 @@
 import { useFunnels } from '@/context/FunnelsContext';
 import { useQuizLogic } from '@/hooks/useQuizLogic';
+import { useStepNavigationStore } from '@/stores/useStepNavigationStore';
 import React, { createContext, useCallback, useContext, useState } from 'react';
 
 interface Quiz21StepsContextType {
@@ -32,7 +33,11 @@ interface Quiz21StepsContextType {
   // Sistema
   getCurrentStageData: () => any;
   getProgress: () => number;
-  getStepRequirements: () => { requiredSelections: number; maxSelections: number; autoAdvance: boolean };
+  getStepRequirements: () => {
+    requiredSelections: number;
+    maxSelections: number;
+    autoAdvance: boolean;
+  };
 }
 
 const Quiz21StepsContext = createContext<Quiz21StepsContextType | undefined>(undefined);
@@ -90,6 +95,9 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
     userName: quizUserName,
   } = useQuizLogic();
 
+  // 🎯 NOVO: Integração com store de configurações NoCode
+  const { getStepConfig } = useStepNavigationStore();
+
   // Estado local
   const [currentStep, setCurrentStep] = useState(initialStep);
   const [isLoading, setIsLoading] = useState(false);
@@ -103,49 +111,38 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
   const canGoNext = currentStep < totalSteps;
   const canGoPrevious = currentStep > 1;
 
-  // Funções para determinar requisitos da etapa atual
+  // 🎯 ATUALIZADO: Requisitos baseados em configurações NoCode
   const getStepRequirements = useCallback(() => {
-    // Etapas 2-11: Questões principais (3 seleções, auto-advance)
-    if (currentStep >= 2 && currentStep <= 11) {
-      return {
-        requiredSelections: 3,
-        maxSelections: 3,
-        autoAdvance: true
-      };
-    }
-    
-    // Etapas 13-18: Questões estratégicas (1 seleção, auto-advance)
-    if (currentStep >= 13 && currentStep <= 18) {
-      return {
-        requiredSelections: 1,
-        maxSelections: 1,
-        autoAdvance: true
-      };
-    }
-    
-    // Outras etapas: Navegação manual
+    const stageId = `step-${currentStep}`;
+    const config = getStepConfig(stageId);
+
+    // Usar configurações NoCode quando disponíveis
     return {
-      requiredSelections: 0,
-      maxSelections: 0,
-      autoAdvance: false
+      requiredSelections: config.requiredSelections,
+      maxSelections: config.maxSelections,
+      autoAdvance: config.autoAdvanceOnComplete,
+      autoAdvanceDelay: config.autoAdvanceDelay,
+      enableButtonOnlyWhenValid: config.enableButtonOnlyWhenValid,
+      validationMessage: config.validationMessage,
+      progressMessage: config.progressMessage,
     };
-  }, [currentStep]);
+  }, [currentStep, getStepConfig]);
 
   // Verificar se a etapa atual está completa
   const isCurrentStepComplete = useCallback(() => {
     const requirements = getStepRequirements();
-    
+
     // Etapa 1: Verificar se o nome foi inserido
     if (currentStep === 1) {
       return Boolean(userName && userName.trim().length > 0);
     }
-    
+
     // Etapas com seleções: Verificar se o número necessário foi atingido
     if (requirements.requiredSelections > 0) {
       const selectionsCount = Object.keys(currentStepSelections).length;
       return selectionsCount >= requirements.requiredSelections;
     }
-    
+
     // Outras etapas: Sempre podem avançar manualmente
     return true;
   }, [currentStep, userName, currentStepSelections, getStepRequirements]);
@@ -222,8 +219,8 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
           questionId,
           optionId,
           value,
-          timestamp: Date.now()
-        }
+          timestamp: Date.now(),
+        },
       }));
 
       // Salvar em session data
@@ -246,7 +243,7 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
       setTimeout(() => {
         const requirements = getStepRequirements();
         const newSelectionsCount = Object.keys(currentStepSelections).length + 1;
-        
+
         if (requirements.autoAdvance && newSelectionsCount >= requirements.requiredSelections) {
           if (debug) {
             console.log('🚀 Quiz21Steps: Auto-avançando para próxima etapa');
@@ -255,16 +252,27 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
         }
       }, 1500); // Delay para permitir visualização da seleção
     },
-    [currentStep, answerQuestion, answerStrategicQuestion, debug, currentStepSelections, getStepRequirements, goToNextStep]
+    [
+      currentStep,
+      answerQuestion,
+      answerStrategicQuestion,
+      debug,
+      currentStepSelections,
+      getStepRequirements,
+      goToNextStep,
+    ]
   );
 
-  const updateStepSelections = useCallback((selections: Record<string, any>) => {
-    setCurrentStepSelections(selections);
-    
-    if (debug) {
-      console.log('🎯 Quiz21Steps: Seleções atualizadas:', selections);
-    }
-  }, [debug]);
+  const updateStepSelections = useCallback(
+    (selections: Record<string, any>) => {
+      setCurrentStepSelections(selections);
+
+      if (debug) {
+        console.log('🎯 Quiz21Steps: Seleções atualizadas:', selections);
+      }
+    },
+    [debug]
+  );
 
   const resetQuiz = useCallback(() => {
     setCurrentStep(1);

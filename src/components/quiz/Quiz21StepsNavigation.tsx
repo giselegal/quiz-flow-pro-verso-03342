@@ -56,12 +56,12 @@ export const Quiz21StepsNavigation: React.FC<Quiz21StepsNavigationProps> = ({
   // Determinar se o botão de avançar deve estar ativo
   const shouldHighlightNext = () => {
     if (!isCurrentStepComplete) return false;
-    
+
     // Etapas com auto-advance: destacar quando completo
     if (autoAdvanceEnabled) {
       return selectionsCount >= stepRequirements.requiredSelections;
     }
-    
+
     // Outras etapas: sempre destacar quando pode avançar
     return canGoNext;
   };
@@ -152,11 +152,13 @@ export const Quiz21StepsNavigation: React.FC<Quiz21StepsNavigationProps> = ({
                     {currentStep}/{totalSteps}
                   </span>
                   {getSelectionInfo() && (
-                    <span className={`text-xs px-2 py-1 rounded ${
-                      isCurrentStepComplete 
-                        ? 'bg-green-100 text-green-700' 
-                        : 'bg-orange-100 text-orange-700'
-                    }`}>
+                    <span
+                      className={`text-xs px-2 py-1 rounded ${
+                        isCurrentStepComplete
+                          ? 'bg-green-100 text-green-700'
+                          : 'bg-orange-100 text-orange-700'
+                      }`}
+                    >
                       {getSelectionInfo()}
                     </span>
                   )}
@@ -179,10 +181,9 @@ export const Quiz21StepsNavigation: React.FC<Quiz21StepsNavigationProps> = ({
               {/* Mensagem sobre auto-advance */}
               {autoAdvanceEnabled && stepRequirements.requiredSelections > 0 && (
                 <div className="text-xs text-center text-blue-600 mt-2 bg-blue-50 px-2 py-1 rounded">
-                  {isCurrentStepComplete 
-                    ? '✅ Avançará automaticamente em breve' 
-                    : `💡 Selecione ${stepRequirements.requiredSelections} opções para continuar`
-                  }
+                  {isCurrentStepComplete
+                    ? '✅ Avançará automaticamente em breve'
+                    : `💡 Selecione ${stepRequirements.requiredSelections} opções para continuar`}
                 </div>
               )}
             </div>
@@ -210,18 +211,19 @@ export const Quiz21StepsNavigation: React.FC<Quiz21StepsNavigationProps> = ({
               <Button
                 onClick={goToNextStep}
                 disabled={!canGoNext}
-                variant={nextButtonActive ? "default" : "outline"}
+                variant={nextButtonActive ? 'default' : 'outline'}
                 size="sm"
                 className={`h-9 px-3 ${
-                  nextButtonActive 
-                    ? 'bg-gradient-to-r from-blue-500 to-green-500 text-white shadow-lg animate-pulse' 
+                  nextButtonActive
+                    ? 'bg-gradient-to-r from-blue-500 to-green-500 text-white shadow-lg animate-pulse'
                     : ''
                 }`}
               >
-                {autoAdvanceEnabled && stepRequirements.requiredSelections > 0 && !isCurrentStepComplete
+                {autoAdvanceEnabled &&
+                stepRequirements.requiredSelections > 0 &&
+                !isCurrentStepComplete
                   ? `Selecione ${stepRequirements.requiredSelections - selectionsCount} mais`
-                  : 'Avançar'
-                }
+                  : 'Avançar'}
                 <ChevronRight className="h-4 w-4 ml-1" />
               </Button>
             </div>

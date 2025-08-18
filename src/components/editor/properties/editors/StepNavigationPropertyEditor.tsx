@@ -1,34 +1,40 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useQuiz21Steps } from '@/components/quiz/Quiz21StepsProvider';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
-import { Badge } from '@/components/ui/badge';
-import { useQuiz21Steps } from '@/components/quiz/Quiz21StepsProvider';
-import { Settings, Save, RotateCcw, Info } from 'lucide-react';
+import { Switch } from '@/components/ui/switch';
+import { Info, RotateCcw, Save, Settings } from 'lucide-react';
+import React, { useState } from 'react';
 
 interface StepNavigationConfig {
   // Configurações de Seleção
   requiredSelections: number;
   maxSelections: number;
   multipleSelection: boolean;
-  
+
   // Configurações de Navegação
   autoAdvanceOnComplete: boolean;
   autoAdvanceDelay: number;
   enableButtonOnlyWhenValid: boolean;
   showValidationFeedback: boolean;
-  
+
   // Configurações de UI
   showSelectionCount: boolean;
   showProgressMessage: boolean;
   validationMessage: string;
   progressMessage: string;
   nextButtonText: string;
-  
+
   // Configurações de Estilo
   selectionStyle: 'border' | 'background' | 'shadow';
   selectedColor: string;
@@ -44,7 +50,7 @@ interface StepNavigationPropertyEditorProps {
 
 /**
  * 🎯 EDITOR NOCODE PARA CONFIGURAÇÕES DE NAVEGAÇÃO DAS ETAPAS
- * 
+ *
  * Permite editar visualmente:
  * - Número de seleções obrigatórias
  * - Auto-advance e delay
@@ -60,25 +66,29 @@ export const StepNavigationPropertyEditor: React.FC<StepNavigationPropertyEditor
 }) => {
   const { currentStep, getStepRequirements } = useQuiz21Steps();
   const currentRequirements = getStepRequirements();
-  
+
   // Estado local do editor
   const [config, setConfig] = useState<StepNavigationConfig>({
     // Valores padrão baseados nos requisitos atuais
     requiredSelections: currentConfig?.requiredSelections ?? currentRequirements.requiredSelections,
     maxSelections: currentConfig?.maxSelections ?? currentRequirements.maxSelections,
-    multipleSelection: currentConfig?.multipleSelection ?? (currentRequirements.requiredSelections > 1),
-    
+    multipleSelection:
+      currentConfig?.multipleSelection ?? currentRequirements.requiredSelections > 1,
+
     autoAdvanceOnComplete: currentConfig?.autoAdvanceOnComplete ?? currentRequirements.autoAdvance,
     autoAdvanceDelay: currentConfig?.autoAdvanceDelay ?? 1500,
     enableButtonOnlyWhenValid: currentConfig?.enableButtonOnlyWhenValid ?? true,
     showValidationFeedback: currentConfig?.showValidationFeedback ?? true,
-    
+
     showSelectionCount: currentConfig?.showSelectionCount ?? true,
     showProgressMessage: currentConfig?.showProgressMessage ?? true,
-    validationMessage: currentConfig?.validationMessage ?? `Selecione ${currentRequirements.requiredSelections} opções para continuar`,
-    progressMessage: currentConfig?.progressMessage ?? 'Você selecionou {count} de {required} opções',
+    validationMessage:
+      currentConfig?.validationMessage ??
+      `Selecione ${currentRequirements.requiredSelections} opções para continuar`,
+    progressMessage:
+      currentConfig?.progressMessage ?? 'Você selecionou {count} de {required} opções',
     nextButtonText: currentConfig?.nextButtonText ?? 'Avançar',
-    
+
     selectionStyle: currentConfig?.selectionStyle ?? 'border',
     selectedColor: currentConfig?.selectedColor ?? '#3B82F6',
     hoverColor: currentConfig?.hoverColor ?? '#EBF5FF',
@@ -140,46 +150,46 @@ export const StepNavigationPropertyEditor: React.FC<StepNavigationPropertyEditor
   const getStepInfo = () => {
     switch (stepType) {
       case 'lead-collection':
-        return { 
-          icon: '👤', 
-          title: 'Coleta de Nome', 
-          description: 'Primeira etapa do funil - captura de lead' 
+        return {
+          icon: '👤',
+          title: 'Coleta de Nome',
+          description: 'Primeira etapa do funil - captura de lead',
         };
       case 'scored-question':
-        return { 
-          icon: '❓', 
-          title: `Questão ${stepNumber - 1} de 10`, 
-          description: 'Questão pontuada do quiz principal' 
+        return {
+          icon: '❓',
+          title: `Questão ${stepNumber - 1} de 10`,
+          description: 'Questão pontuada do quiz principal',
         };
       case 'transition':
-        return { 
-          icon: '⏳', 
-          title: 'Transição', 
-          description: 'Etapa de transição entre fases' 
+        return {
+          icon: '⏳',
+          title: 'Transição',
+          description: 'Etapa de transição entre fases',
         };
       case 'strategic-question':
-        return { 
-          icon: '🎯', 
-          title: `Pergunta Estratégica ${stepNumber - 12}`, 
-          description: 'Questão para qualificação e segmentação' 
+        return {
+          icon: '🎯',
+          title: `Pergunta Estratégica ${stepNumber - 12}`,
+          description: 'Questão para qualificação e segmentação',
         };
       case 'result':
-        return { 
-          icon: '📊', 
-          title: 'Resultado', 
-          description: 'Apresentação do resultado do quiz' 
+        return {
+          icon: '📊',
+          title: 'Resultado',
+          description: 'Apresentação do resultado do quiz',
         };
       case 'offer':
-        return { 
-          icon: '💎', 
-          title: 'Oferta', 
-          description: 'Página de conversão final' 
+        return {
+          icon: '💎',
+          title: 'Oferta',
+          description: 'Página de conversão final',
         };
       default:
-        return { 
-          icon: '⚙️', 
-          title: `Etapa ${stepNumber}`, 
-          description: 'Configuração personalizada' 
+        return {
+          icon: '⚙️',
+          title: `Etapa ${stepNumber}`,
+          description: 'Configuração personalizada',
         };
     }
   };
@@ -197,21 +207,26 @@ export const StepNavigationPropertyEditor: React.FC<StepNavigationPropertyEditor
               <p className="text-sm text-muted-foreground">{stepInfo.description}</p>
             </div>
           </div>
-          <Badge variant={stepType === 'scored-question' || stepType === 'strategic-question' ? 'default' : 'secondary'}>
+          <Badge
+            variant={
+              stepType === 'scored-question' || stepType === 'strategic-question'
+                ? 'default'
+                : 'secondary'
+            }
+          >
             {stepId}
           </Badge>
         </div>
       </CardHeader>
 
       <CardContent className="space-y-6">
-        
         {/* 🎯 SEÇÃO: CONFIGURAÇÕES DE SELEÇÃO */}
         <div className="space-y-4">
           <div className="flex items-center space-x-2">
             <Settings className="h-4 w-4" />
             <h3 className="font-semibold">Configurações de Seleção</h3>
           </div>
-          
+
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="requiredSelections">Seleções Obrigatórias</Label>
@@ -224,7 +239,7 @@ export const StepNavigationPropertyEditor: React.FC<StepNavigationPropertyEditor
                 onChange={e => updateConfig({ requiredSelections: parseInt(e.target.value) || 0 })}
               />
             </div>
-            
+
             <div className="space-y-2">
               <Label htmlFor="maxSelections">Seleções Máximas</Label>
               <Input
@@ -252,7 +267,7 @@ export const StepNavigationPropertyEditor: React.FC<StepNavigationPropertyEditor
         {/* 🚀 SEÇÃO: CONFIGURAÇÕES DE NAVEGAÇÃO */}
         <div className="space-y-4">
           <h3 className="font-semibold">Navegação e Auto-Advance</h3>
-          
+
           <div className="flex items-center space-x-2">
             <Switch
               checked={config.autoAdvanceOnComplete}
@@ -298,7 +313,7 @@ export const StepNavigationPropertyEditor: React.FC<StepNavigationPropertyEditor
         {/* 💬 SEÇÃO: MENSAGENS E TEXTOS */}
         <div className="space-y-4">
           <h3 className="font-semibold">Mensagens e Textos</h3>
-          
+
           <div className="space-y-2">
             <Label htmlFor="validationMessage">Mensagem de Validação</Label>
             <Input
@@ -353,10 +368,13 @@ export const StepNavigationPropertyEditor: React.FC<StepNavigationPropertyEditor
         {/* 🎨 SEÇÃO: ESTILOS VISUAIS */}
         <div className="space-y-4">
           <h3 className="font-semibold">Estilos Visuais</h3>
-          
+
           <div className="space-y-2">
             <Label htmlFor="selectionStyle">Estilo de Seleção</Label>
-            <Select value={config.selectionStyle} onValueChange={value => updateConfig({ selectionStyle: value as any })}>
+            <Select
+              value={config.selectionStyle}
+              onValueChange={value => updateConfig({ selectionStyle: value as any })}
+            >
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
@@ -378,7 +396,7 @@ export const StepNavigationPropertyEditor: React.FC<StepNavigationPropertyEditor
                 onChange={e => updateConfig({ selectedColor: e.target.value })}
               />
             </div>
-            
+
             <div className="space-y-2">
               <Label htmlFor="hoverColor">Cor de Hover</Label>
               <Input
@@ -401,25 +419,16 @@ export const StepNavigationPropertyEditor: React.FC<StepNavigationPropertyEditor
           </div>
 
           <div className="flex items-center space-x-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleReset}
-              disabled={!hasChanges}
-            >
+            <Button variant="outline" size="sm" onClick={handleReset} disabled={!hasChanges}>
               <RotateCcw className="h-4 w-4 mr-1" />
               Resetar
             </Button>
-            
-            <Button
-              size="sm"
-              onClick={handleSave}
-              disabled={!hasChanges}
-            >
+
+            <Button size="sm" onClick={handleSave} disabled={!hasChanges}>
               <Save className="h-4 w-4 mr-1" />
               Salvar
             </Button>
-            
+
             {onClose && (
               <Button variant="outline" size="sm" onClick={onClose}>
                 Fechar

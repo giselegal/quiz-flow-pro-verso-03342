@@ -6,20 +6,20 @@ interface StepNavigationConfig {
   requiredSelections: number;
   maxSelections: number;
   multipleSelection: boolean;
-  
+
   // Configurações de Navegação
   autoAdvanceOnComplete: boolean;
   autoAdvanceDelay: number;
   enableButtonOnlyWhenValid: boolean;
   showValidationFeedback: boolean;
-  
+
   // Configurações de UI
   showSelectionCount: boolean;
   showProgressMessage: boolean;
   validationMessage: string;
   progressMessage: string;
   nextButtonText: string;
-  
+
   // Configurações de Estilo
   selectionStyle: 'border' | 'background' | 'shadow';
   selectedColor: string;
@@ -29,17 +29,17 @@ interface StepNavigationConfig {
 interface StepNavigationStore {
   // Estado das configurações por etapa
   stepConfigs: Record<string, StepNavigationConfig>;
-  
+
   // Ações
   updateStepConfig: (stepId: string, config: Partial<StepNavigationConfig>) => void;
   getStepConfig: (stepId: string) => StepNavigationConfig;
   resetStepConfig: (stepId: string) => void;
   resetAllConfigs: () => void;
-  
+
   // Configurações globais
   globalDefaults: StepNavigationConfig;
   updateGlobalDefaults: (defaults: Partial<StepNavigationConfig>) => void;
-  
+
   // Import/Export
   exportConfigs: () => string;
   importConfigs: (configsJson: string) => void;
@@ -47,7 +47,7 @@ interface StepNavigationStore {
 
 /**
  * 🏪 STORE PARA CONFIGURAÇÕES DE NAVEGAÇÃO DAS ETAPAS
- * 
+ *
  * Persiste configurações NoCode para cada etapa:
  * - Requisitos de seleção
  * - Auto-advance e delays
@@ -58,7 +58,7 @@ interface StepNavigationStore {
 // Configuração padrão para uma etapa
 const getDefaultStepConfig = (stepId: string): StepNavigationConfig => {
   const stepNumber = parseInt(stepId.replace('step-', ''), 10);
-  
+
   // Configurações específicas por tipo de etapa
   if (stepNumber === 1) {
     // Lead Collection - Nome obrigatório
@@ -201,12 +201,16 @@ export const useStepNavigationStore = create<StepNavigationStore>()(
 
       exportConfigs: () => {
         const state = get();
-        return JSON.stringify({
-          stepConfigs: state.stepConfigs,
-          globalDefaults: state.globalDefaults,
-          exportDate: new Date().toISOString(),
-          version: '1.0.0',
-        }, null, 2);
+        return JSON.stringify(
+          {
+            stepConfigs: state.stepConfigs,
+            globalDefaults: state.globalDefaults,
+            exportDate: new Date().toISOString(),
+            version: '1.0.0',
+          },
+          null,
+          2
+        );
       },
 
       importConfigs: (configsJson: string) => {
@@ -235,11 +239,10 @@ export const useStepNavigationStore = create<StepNavigationStore>()(
  */
 export const useStepNavigationConfig = (stepId: string) => {
   const store = useStepNavigationStore();
-  
+
   return {
     config: store.getStepConfig(stepId),
-    updateConfig: (config: Partial<StepNavigationConfig>) => 
-      store.updateStepConfig(stepId, config),
+    updateConfig: (config: Partial<StepNavigationConfig>) => store.updateStepConfig(stepId, config),
     resetConfig: () => store.resetStepConfig(stepId),
     defaultConfig: getDefaultStepConfig(stepId),
   };
@@ -250,7 +253,7 @@ export const useStepNavigationConfig = (stepId: string) => {
  */
 export const useGlobalNavigationConfig = () => {
   const store = useStepNavigationStore();
-  
+
   return {
     globalDefaults: store.globalDefaults,
     updateGlobalDefaults: store.updateGlobalDefaults,
@@ -265,23 +268,24 @@ export const useGlobalNavigationConfig = () => {
  */
 export const useNavigationConfigStats = () => {
   const store = useStepNavigationStore();
-  
+
   const getStats = () => {
     const configs = store.stepConfigs;
     const totalSteps = Object.keys(configs).length;
-    
+
     const autoAdvanceSteps = Object.values(configs).filter(
       config => config.autoAdvanceOnComplete
     ).length;
-    
+
     const multipleSelectionSteps = Object.values(configs).filter(
       config => config.multipleSelection
     ).length;
-    
-    const avgDelay = Object.values(configs)
-      .filter(config => config.autoAdvanceOnComplete)
-      .reduce((sum, config) => sum + config.autoAdvanceDelay, 0) / autoAdvanceSteps || 0;
-    
+
+    const avgDelay =
+      Object.values(configs)
+        .filter(config => config.autoAdvanceOnComplete)
+        .reduce((sum, config) => sum + config.autoAdvanceDelay, 0) / autoAdvanceSteps || 0;
+
     return {
       totalSteps,
       autoAdvanceSteps,
@@ -291,7 +295,7 @@ export const useNavigationConfigStats = () => {
       defaultSteps: 21 - totalSteps,
     };
   };
-  
+
   return { getStats };
 };
 

@@ -1,13 +1,13 @@
+import { StepNavigationPropertyEditor } from '@/components/editor/properties/editors/StepNavigationPropertyEditor';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useEditor } from '@/context/EditorContext';
 import { useFunnels } from '@/context/FunnelsContext';
 import { cn } from '@/lib/utils';
-import { Copy, Eye, GripVertical, Plus, Settings, Trash2, Navigation } from 'lucide-react';
-import { useState } from 'react';
-import { StepNavigationPropertyEditor } from '@/components/editor/properties/editors/StepNavigationPropertyEditor';
 import { useStepNavigationStore } from '@/stores/useStepNavigationStore';
+import { Copy, Eye, GripVertical, Navigation, Plus, Settings, Trash2 } from 'lucide-react';
+import { useState } from 'react';
 
 interface FunnelStagesPanelProps {
   className?: string;
@@ -20,7 +20,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
 }) => {
   // Estado para o editor de navegação
   const [editingStepNavigation, setEditingStepNavigation] = useState<string | null>(null);
-  
+
   // Store de configurações de navegação
   const { updateStepConfig, getStepConfig } = useStepNavigationStore();
 
@@ -198,7 +198,8 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
                       {stage.blocksCount} componentes
                     </Badge>
                     {/* 🎯 NOVO: Indicador de configuração personalizada de navegação */}
-                    {getStepConfig(stage.id).requiredSelections !== getStepConfig(stage.id).requiredSelections && (
+                    {getStepConfig(stage.id).requiredSelections !==
+                      getStepConfig(stage.id).requiredSelections && (
                       <Badge variant="default" className="text-xs bg-blue-500">
                         ⚙️ Custom
                       </Badge>
