@@ -1,9 +1,9 @@
-import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { useQuiz21Steps } from './Quiz21StepsProvider';
-import { ChevronLeft, ChevronRight, RotateCcw, Home } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Home, RotateCcw } from 'lucide-react';
+import React from 'react';
 import { useLocation } from 'wouter';
+import { useQuiz21Steps } from './Quiz21StepsProvider';
 
 interface Quiz21StepsNavigationProps {
   position?: 'floating' | 'sticky' | 'static';
@@ -15,7 +15,7 @@ interface Quiz21StepsNavigationProps {
 
 /**
  * 🎯 COMPONENTE DE NAVEGAÇÃO PARA QUIZ 21 ETAPAS
- * 
+ *
  * Características:
  * - Navegação entre etapas
  * - Barra de progresso
@@ -31,7 +31,7 @@ export const Quiz21StepsNavigation: React.FC<Quiz21StepsNavigationProps> = ({
   className = '',
 }) => {
   const [, setLocation] = useLocation();
-  
+
   const {
     currentStep,
     totalSteps,
@@ -88,22 +88,31 @@ export const Quiz21StepsNavigation: React.FC<Quiz21StepsNavigationProps> = ({
   // Labels das fases
   const getPhaseLabel = () => {
     switch (phase) {
-      case 'inicio': return 'Bem-vindo';
-      case 'quiz': return `Questão ${currentStep - 1} de 10`;
-      case 'transicao1': return 'Preparando próxima fase';
-      case 'estrategicas': return `Pergunta estratégica ${currentStep - 12} de 6`;
-      case 'transicao2': return 'Calculando resultado';
-      case 'resultado': return 'Seu resultado';
-      case 'oferta': return 'Oferta especial';
-      default: return `Etapa ${currentStep}`;
+      case 'inicio':
+        return 'Bem-vindo';
+      case 'quiz':
+        return `Questão ${currentStep - 1} de 10`;
+      case 'transicao1':
+        return 'Preparando próxima fase';
+      case 'estrategicas':
+        return `Pergunta estratégica ${currentStep - 12} de 6`;
+      case 'transicao2':
+        return 'Calculando resultado';
+      case 'resultado':
+        return 'Seu resultado';
+      case 'oferta':
+        return 'Oferta especial';
+      default:
+        return `Etapa ${currentStep}`;
     }
   };
 
   return (
     <div className={`${getPositionClasses()} ${className}`}>
-      <Card className={`${getVariantClasses()} mx-auto shadow-lg bg-white/95 backdrop-blur-sm border-2 border-stone-200`}>
+      <Card
+        className={`${getVariantClasses()} mx-auto shadow-lg bg-white/95 backdrop-blur-sm border-2 border-stone-200`}
+      >
         <CardContent className="p-4">
-          
           {/* 📊 BARRA DE PROGRESSO */}
           {showProgress && (
             <div className="mb-4">
@@ -113,14 +122,14 @@ export const Quiz21StepsNavigation: React.FC<Quiz21StepsNavigationProps> = ({
                   {currentStep}/{totalSteps}
                 </span>
               </div>
-              
+
               <div className="w-full bg-stone-200 rounded-full h-2">
                 <div
                   className="bg-gradient-to-r from-blue-500 to-green-500 h-2 rounded-full transition-all duration-500 ease-out"
                   style={{ width: `${progress}%` }}
                 />
               </div>
-              
+
               <div className="flex justify-between text-xs text-stone-500 mt-1">
                 <span>0%</span>
                 <span className="font-medium">{progress}%</span>
@@ -131,7 +140,6 @@ export const Quiz21StepsNavigation: React.FC<Quiz21StepsNavigationProps> = ({
 
           {/* 🎮 CONTROLES DE NAVEGAÇÃO */}
           <div className="flex items-center justify-between">
-            
             {/* Navegação Anterior/Próximo */}
             <div className="flex items-center space-x-2">
               <Button
@@ -164,7 +172,6 @@ export const Quiz21StepsNavigation: React.FC<Quiz21StepsNavigationProps> = ({
             {/* Controles de Sessão */}
             {showControls && (
               <div className="flex items-center space-x-2">
-                
                 {/* Indicador de Dados */}
                 {(userName || answers.length > 0) && (
                   <div className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded flex items-center">
@@ -202,11 +209,11 @@ export const Quiz21StepsNavigation: React.FC<Quiz21StepsNavigationProps> = ({
           {variant === 'compact' && (userName || answers.length > 0) && (
             <div className="mt-3 text-xs text-stone-500 bg-stone-50 p-2 rounded">
               {userName && (
-                <div>👤 <span className="font-medium">{userName}</span></div>
+                <div>
+                  👤 <span className="font-medium">{userName}</span>
+                </div>
               )}
-              {answers.length > 0 && (
-                <div>📝 {answers.length} respostas coletadas</div>
-              )}
+              {answers.length > 0 && <div>📝 {answers.length} respostas coletadas</div>}
             </div>
           )}
         </CardContent>

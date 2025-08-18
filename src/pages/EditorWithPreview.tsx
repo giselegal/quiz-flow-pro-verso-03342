@@ -14,8 +14,8 @@ import { PreviewNavigation } from '@/components/preview/PreviewNavigation';
 import { PreviewToggleButton } from '@/components/preview/PreviewToggleButton';
 import { PreviewProvider } from '@/contexts/PreviewContext';
 // 🎯 QUIZ 21 STEPS SYSTEM
-import { Quiz21StepsProvider } from '@/components/quiz/Quiz21StepsProvider';
 import { Quiz21StepsNavigation } from '@/components/quiz/Quiz21StepsNavigation';
+import { Quiz21StepsProvider } from '@/components/quiz/Quiz21StepsProvider';
 // 🆕 NOVO PAINEL DE PROPRIEDADES (AGORA PADRÃO)
 import { PropertiesPanel } from '@/components/editor/properties/PropertiesPanel';
 
@@ -228,12 +228,12 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
               <>
                 {/* 📱 PREVIEW NAVIGATION - Sistema de Navegação do Preview */}
                 {isPreviewing && <PreviewNavigation />}
-                
+
                 {/* 🎯 QUIZ 21 STEPS NAVIGATION - Navegação das 21 Etapas (quando não estiver em preview) */}
                 {!isPreviewing && (
-                  <Quiz21StepsNavigation 
-                    position="sticky" 
-                    variant="full" 
+                  <Quiz21StepsNavigation
+                    position="sticky"
+                    variant="full"
                     showProgress={true}
                     showControls={true}
                   />
@@ -257,9 +257,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
                     </div>
 
                     {/* 🎮 PREVIEW TOGGLE - Botão flutuante para alternar preview */}
-                    <PreviewToggleButton
-                      onToggle={() => setIsPreviewing(!isPreviewing)}
-                    />
+                    <PreviewToggleButton onToggle={() => setIsPreviewing(!isPreviewing)} />
                   </div>
                 </div>
               </>

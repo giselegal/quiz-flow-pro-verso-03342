@@ -1,30 +1,30 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
 import { useFunnels } from '@/context/FunnelsContext';
 import { useQuizLogic } from '@/hooks/useQuizLogic';
+import React, { createContext, useCallback, useContext, useState } from 'react';
 
 interface Quiz21StepsContextType {
   // Estado
   currentStep: number;
   totalSteps: number;
   isLoading: boolean;
-  
+
   // Dados
   userName: string;
   answers: any[];
   sessionData: Record<string, any>;
-  
+
   // Navegação
   canGoNext: boolean;
   canGoPrevious: boolean;
   goToNextStep: () => void;
   goToPreviousStep: () => void;
   goToStep: (step: number) => void;
-  
+
   // Ações
   setUserName: (name: string) => void;
   saveAnswer: (questionId: string, optionId: string, value?: any) => void;
   resetQuiz: () => void;
-  
+
   // Sistema
   getCurrentStageData: () => any;
   getProgress: () => number;
@@ -48,7 +48,7 @@ interface Quiz21StepsProviderProps {
 
 /**
  * 🎯 PROVIDER PARA QUIZ DE 21 ETAPAS
- * 
+ *
  * Integra:
  * - FunnelsContext (dados das etapas)
  * - useQuizLogic (lógica de cálculo)
@@ -77,12 +77,12 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
   }, [initialStep, debug]);
 
   const { activeStageId, steps, setActiveStageId } = funnels;
-  const { 
-    answers, 
-    answerQuestion, 
-    answerStrategicQuestion, 
+  const {
+    answers,
+    answerQuestion,
+    answerStrategicQuestion,
     setUserNameFromInput,
-    userName: quizUserName 
+    userName: quizUserName,
   } = useQuizLogic();
 
   // Estado local
@@ -97,19 +97,22 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
   const canGoNext = currentStep < totalSteps;
   const canGoPrevious = currentStep > 1;
 
-  const goToStep = useCallback((step: number) => {
-    if (step >= 1 && step <= totalSteps) {
-      setCurrentStep(step);
-      
-      // Atualizar stage no FunnelsContext
-      const stageId = `step-${step}`;
-      setActiveStageId(stageId);
-      
-      if (debug) {
-        console.log('🎯 Quiz21Steps: Navegou para etapa', step, 'stageId:', stageId);
+  const goToStep = useCallback(
+    (step: number) => {
+      if (step >= 1 && step <= totalSteps) {
+        setCurrentStep(step);
+
+        // Atualizar stage no FunnelsContext
+        const stageId = `step-${step}`;
+        setActiveStageId(stageId);
+
+        if (debug) {
+          console.log('🎯 Quiz21Steps: Navegou para etapa', step, 'stageId:', stageId);
+        }
       }
-    }
-  }, [setActiveStageId, debug, totalSteps]);
+    },
+    [setActiveStageId, debug, totalSteps]
+  );
 
   const goToNextStep = useCallback(() => {
     if (canGoNext) {
@@ -124,55 +127,61 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
   }, [canGoPrevious, currentStep, goToStep]);
 
   // Ações
-  const setUserName = useCallback((name: string) => {
-    setUserNameState(name);
-    setUserNameFromInput(name);
-    
-    // Salvar em session data
-    setSessionData(prev => ({
-      ...prev,
-      userName: name,
-      startTime: Date.now()
-    }));
-    
-    if (debug) {
-      console.log('🎯 Quiz21Steps: Nome definido:', name);
-    }
-  }, [setUserNameFromInput, debug]);
+  const setUserName = useCallback(
+    (name: string) => {
+      setUserNameState(name);
+      setUserNameFromInput(name);
 
-  const saveAnswer = useCallback((questionId: string, optionId: string, value?: any) => {
-    // Detectar tipo de questão baseado no currentStep
-    if (currentStep >= 2 && currentStep <= 11) {
-      // Questões pontuadas (etapas 2-11)
-      answerQuestion(questionId, optionId);
-    } else if (currentStep >= 13 && currentStep <= 18) {
-      // Questões estratégicas (etapas 13-18)
-      answerStrategicQuestion(questionId, optionId, 'strategic', 'tracking');
-    }
+      // Salvar em session data
+      setSessionData(prev => ({
+        ...prev,
+        userName: name,
+        startTime: Date.now(),
+      }));
 
-    // Salvar em session data
-    setSessionData(prev => ({
-      ...prev,
-      [`q${currentStep}_${questionId}`]: {
-        questionId,
-        optionId,
-        value,
-        step: currentStep,
-        timestamp: Date.now()
+      if (debug) {
+        console.log('🎯 Quiz21Steps: Nome definido:', name);
       }
-    }));
+    },
+    [setUserNameFromInput, debug]
+  );
 
-    if (debug) {
-      console.log('🎯 Quiz21Steps: Resposta salva:', { questionId, optionId, step: currentStep });
-    }
-  }, [currentStep, answerQuestion, answerStrategicQuestion, debug]);
+  const saveAnswer = useCallback(
+    (questionId: string, optionId: string, value?: any) => {
+      // Detectar tipo de questão baseado no currentStep
+      if (currentStep >= 2 && currentStep <= 11) {
+        // Questões pontuadas (etapas 2-11)
+        answerQuestion(questionId, optionId);
+      } else if (currentStep >= 13 && currentStep <= 18) {
+        // Questões estratégicas (etapas 13-18)
+        answerStrategicQuestion(questionId, optionId, 'strategic', 'tracking');
+      }
+
+      // Salvar em session data
+      setSessionData(prev => ({
+        ...prev,
+        [`q${currentStep}_${questionId}`]: {
+          questionId,
+          optionId,
+          value,
+          step: currentStep,
+          timestamp: Date.now(),
+        },
+      }));
+
+      if (debug) {
+        console.log('🎯 Quiz21Steps: Resposta salva:', { questionId, optionId, step: currentStep });
+      }
+    },
+    [currentStep, answerQuestion, answerStrategicQuestion, debug]
+  );
 
   const resetQuiz = useCallback(() => {
     setCurrentStep(1);
     setUserNameState('');
     setSessionData({});
     setActiveStageId('step-1');
-    
+
     if (debug) {
       console.log('🎯 Quiz21Steps: Quiz resetado');
     }
@@ -197,7 +206,7 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
         userName,
         answersCount: answers.length,
         sessionDataKeys: Object.keys(sessionData),
-        stepsCount: steps.length
+        stepsCount: steps.length,
       });
     }
   }, [currentStep, activeStageId, userName, answers.length, sessionData, debug, steps.length]);
@@ -207,34 +216,30 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
     currentStep,
     totalSteps,
     isLoading,
-    
+
     // Dados
     userName: userName || quizUserName,
     answers,
     sessionData,
-    
+
     // Navegação
     canGoNext,
     canGoPrevious,
     goToNextStep,
     goToPreviousStep,
     goToStep,
-    
+
     // Ações
     setUserName,
     saveAnswer,
     resetQuiz,
-    
+
     // Sistema
     getCurrentStageData,
     getProgress,
   };
 
-  return (
-    <Quiz21StepsContext.Provider value={contextValue}>
-      {children}
-    </Quiz21StepsContext.Provider>
-  );
+  return <Quiz21StepsContext.Provider value={contextValue}>{children}</Quiz21StepsContext.Provider>;
 };
 
 export default Quiz21StepsProvider;
