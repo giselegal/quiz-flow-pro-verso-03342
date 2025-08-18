@@ -25,7 +25,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
   const { updateStepConfig, getStepConfig } = useStepNavigationStore();
 
   // Get stages from FunnelsContext (21 stages system)
-  const { steps: stages } = useFunnels();
+  const { steps: stages, loading, error, currentFunnelId } = useFunnels();
 
   // Get editor functionality for blocks and UI (optional properties)
   const editorContext = useEditor();
@@ -33,6 +33,16 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
   const setActiveStage =
     editorContext.stageActions?.setActiveStage ||
     (() => console.log('setActiveStage not available'));
+
+  // 🔍 DEBUG: Status das etapas no painel
+  console.log('🏗️ FunnelStagesPanel:', {
+    totalSteps: stages?.length || 0,
+    currentFunnelId,
+    activeStageId,
+    loading,
+    error,
+    hasSteps: !!stages && stages.length > 0
+  });
   const quizState = editorContext.quizState || {
     userName: '',
     answers: [],

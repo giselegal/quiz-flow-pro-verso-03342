@@ -14,7 +14,7 @@ import { PreviewToggleButton } from '@/components/preview/PreviewToggleButton';
 import { PreviewProvider } from '@/contexts/PreviewContext';
 // 🎯 QUIZ 21 STEPS SYSTEM
 import { Quiz21StepsNavigation } from '@/components/quiz/Quiz21StepsNavigation';
-import { Quiz21StepsProvider } from '@/components/quiz/Quiz21StepsProvider';
+import { Quiz21StepsProvider, useQuiz21Steps } from '@/components/quiz/Quiz21StepsProvider';
 // 🆕 NOVO PAINEL DE PROPRIEDADES (AGORA PADRÃO)
 import { PropertiesPanel } from '@/components/editor/properties/PropertiesPanel';
 
@@ -56,6 +56,28 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
     uiState: { isPreviewing, setIsPreviewing, viewportSize },
     computed: { currentBlocks, selectedBlock },
   } = useEditor();
+
+  // 🎯 QUIZ 21 STEPS CONTEXT - Acesso aos dados das 21 etapas
+  const {
+    currentStep,
+    totalSteps,
+    canGoNext,
+    canGoPrevious,
+    isLoading: stepsLoading
+  } = useQuiz21Steps();
+
+  // 🔍 DEBUG: Verificando estado das 21 etapas
+  console.log('🎯 EditorWithPreview DEBUG:', {
+    isPreviewing,
+    activeStageId,
+    currentBlocks: currentBlocks?.length || 0,
+    currentStep,
+    totalSteps,
+    stepsLoading,
+    canGoNext,
+    canGoPrevious,
+    timestamp: new Date().toISOString()
+  });
 
   // 🆕 AUTO-SAVE COM DEBOUNCE - Implementação do salvamento automático
   useAutoSaveWithDebounce({
@@ -140,12 +162,25 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
 
               {/* 🎯 QUIZ 21 STEPS NAVIGATION - Navegação das 21 Etapas (quando não estiver em preview) */}
               {!isPreviewing && (
-                <Quiz21StepsNavigation
-                  position="sticky"
-                  variant="full"
-                  showProgress={true}
-                  showControls={true}
-                />
+                <div className="mb-4">
+                  {/* 📊 DEBUG: Status das etapas */}
+                  {stepsLoading ? (
+                    <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-2 rounded mb-4">
+                      🔄 Carregando {totalSteps} etapas...
+                    </div>
+                  ) : (
+                    <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-2 rounded mb-4">
+                      ✅ {totalSteps} etapas carregadas | Etapa atual: {currentStep}
+                    </div>
+                  )}
+                  
+                  <Quiz21StepsNavigation
+                    position="sticky"
+                    variant="full"
+                    showProgress={true}
+                    showControls={true}
+                  />
+                </div>
               )}
 
               {/* 🎨 CANVAS PRINCIPAL - Sistema de Drop Zone */}
