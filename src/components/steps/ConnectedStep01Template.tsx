@@ -167,4 +167,44 @@ export const ConnectedStep01Template = () => {
   );
 };
 
+// 🔧 FUNÇÃO EXPORT PARA COMPATIBILIDADE COM STEP_TEMPLATES_MAPPING
+export const getConnectedStep01Template = () => {
+  // Retorna estrutura de blocos JSON compatível com o sistema
+  return [
+    {
+      id: 'step1-intro-header',
+      type: 'quiz-intro-header',
+      order: 0,
+      content: {
+        title: 'Descubra seu Estilo Predominante',
+        subtitle: 'Chega de um guarda-roupa lotado e da sensação de que nada combina com Você.',
+        description:
+          'Em poucos minutos, descubra seu Estilo Predominante — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.',
+        showLogo: true,
+        showProgress: false,
+        showNavigation: false,
+      },
+      properties: {
+        backgroundColor: '#F8F9FA',
+        textAlign: 'center',
+        showBackground: true,
+        padding: '24px',
+        borderRadius: '8px',
+        marginBottom: '16px',
+        boxShadow: 'sm',
+        animation: 'fadeIn',
+        animationDuration: '0.8s',
+        logoUrl:
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+        logoAlt: 'Logo Gisele Galvão',
+        showLogo: true,
+        enableProgressBar: false,
+        progressValue: 0,
+        progressMax: 100,
+        showBackButton: false,
+      },
+    },
+  ];
+};
+
 export default ConnectedStep01Template;
