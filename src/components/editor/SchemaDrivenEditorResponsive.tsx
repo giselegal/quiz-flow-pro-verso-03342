@@ -6,7 +6,7 @@ import { useFunnelNavigation } from '@/hooks/useFunnelNavigation';
 import { BlockType } from '@/types/editor';
 import { Eye, Redo, Save, Undo } from 'lucide-react';
 import { CanvasDropZone } from './canvas/CanvasDropZone';
-import { FunnelStagesPanel } from './funnel/FunnelStagesPanel';
+import FunnelStagesPanel from './funnel/FunnelStagesPanel.simple';
 import { PropertiesPanel } from './properties/PropertiesPanel';
 import ComponentsSidebar from './sidebar/ComponentsSidebar';
 
