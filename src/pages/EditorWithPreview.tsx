@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 // Editor Components
 import { CanvasDropZone } from '@/components/editor/canvas/CanvasDropZone';
 import CombinedComponentsPanel from '@/components/editor/CombinedComponentsPanel';
-import { DndProvider } from '@/components/editor/dnd/DndProvider';
 import { FunnelSettingsPanel } from '@/components/editor/funnel-settings/FunnelSettingsPanel';
 import { FunnelStagesPanel } from '@/components/editor/funnel/FunnelStagesPanel';
 import { FourColumnLayout } from '@/components/editor/layout/FourColumnLayout';
