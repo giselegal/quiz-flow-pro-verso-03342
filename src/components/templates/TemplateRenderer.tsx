@@ -1,11 +1,11 @@
+import { getStepInfo, STEP_TEMPLATES_MAPPING } from '@/config/stepTemplatesMapping';
 import { useEditor } from '@/context/EditorContext';
 import { useTemplateConfig } from '@/hooks/useTemplateConfig';
-import { getStepInfo, STEP_TEMPLATES_MAPPING } from '@/config/stepTemplatesMapping';
+import { runValidation } from '@/utils/validateDataSync';
+import { useState } from 'react';
 import ConnectedStep01Template from '../steps/ConnectedStep01Template';
 import { ConnectedStep13Template } from '../steps/Step13Template';
 import Step20Result from '../steps/Step20Result';
-import { useState } from 'react';
-import { runValidation } from '@/utils/validateDataSync';
 
 interface TemplateRendererProps {
   stepNumber?: number;
@@ -68,7 +68,7 @@ export function TemplateRenderer({
     try {
       // Obter blocos do template
       const blocks = stepTemplate.templateFunction(quizState);
-      
+
       if (blocks && blocks.length > 0) {
         // Renderizar usando o sistema de blocos JSON
         return (
@@ -95,7 +95,9 @@ export function TemplateRenderer({
                     {/* Aqui seria renderizado o bloco - por agora placeholder */}
                     <div className="p-4 border border-gray-200 rounded-lg bg-white">
                       <div className="text-sm text-gray-500 mb-2">Bloco: {block.type}</div>
-                      <div className="text-lg">{block.content || block.properties?.content || 'Conteúdo do bloco'}</div>
+                      <div className="text-lg">
+                        {block.content || block.properties?.content || 'Conteúdo do bloco'}
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -120,7 +122,7 @@ export function TemplateRenderer({
 
   if (LegacyTemplate) {
     console.log(`🔄 TemplateRenderer: Usando template React legado para step ${actualStepNumber}`);
-    
+
     if (actualStepNumber === 20) {
       return <LegacyTemplate sessionId={sessionId || 'demo'} onContinue={onContinue} />;
     }
@@ -191,7 +193,9 @@ export function TemplateRenderer({
                 {config?.metadata.name || `Etapa ${actualStepNumber}`}
               </h1>
               <div className="p-8 bg-white rounded-lg border border-gray-200">
-                <p className="text-gray-500">Template em desenvolvimento para step {actualStepNumber}</p>
+                <p className="text-gray-500">
+                  Template em desenvolvimento para step {actualStepNumber}
+                </p>
               </div>
             </div>
           )}
@@ -240,6 +244,6 @@ export function TemplateRenderer({
       )}
     </div>
   );
-};
+}
 
 export default TemplateRenderer;
