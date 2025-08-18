@@ -19,7 +19,7 @@ interface InteractiveBlockRendererProps {
   }) => void;
   selectedAnswers: string[];
   isLiveMode: boolean;
-  quizContext: QuizContext;
+  // quizContext: QuizContext; // removido temporariamente
 }
 
 /**
@@ -31,7 +31,7 @@ interface InteractiveBlockRendererProps {
  * - text/headline: Conteúdo estático com contexto
  */
 export const InteractiveBlockRenderer: React.FC<InteractiveBlockRendererProps> = memo(
-  ({ block, onAnswer, selectedAnswers, isLiveMode, quizContext }) => {
+  ({ block, onAnswer, selectedAnswers, isLiveMode }) => {
     console.log('🎨 Rendering interactive block:', {
       type: block.type,
       id: block.id,
@@ -100,9 +100,8 @@ export const InteractiveBlockRenderer: React.FC<InteractiveBlockRendererProps> =
                   questionId: block.properties?.questionId || block.id,
                   selectedOptions: [e.target.value],
                   validation: {
-                    isValid: e.target.value.trim().length > 0,
+                    success: e.target.value.trim().length > 0,
                     errors: [],
-                    warnings: [],
                   },
                 });
               }}

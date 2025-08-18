@@ -43,10 +43,10 @@ export const QuizNavigation: React.FC<QuizNavigationProps> = memo(
           <Progress value={progressPercentage} className="h-2" />
         </div>
 
-        {/* Validation Feedback */}
+                {/* Validation Feedback */}
         {validation && (
           <div className="mb-4">
-            {validation.isValid ? (
+            {validation.success ? (
               <div className="flex items-center gap-2 text-green-600 text-sm">
                 <CheckCircle className="w-4 h-4" />
                 <span>Pronto para avançar!</span>
@@ -54,7 +54,14 @@ export const QuizNavigation: React.FC<QuizNavigationProps> = memo(
             ) : (
               <div className="flex items-center gap-2 text-amber-600 text-sm">
                 <AlertCircle className="w-4 h-4" />
-                <span>{validation.errors[0] || 'Complete esta etapa para continuar'}</span>
+                <span>Responda antes de continuar</span>
+                {validation.errors && validation.errors.length > 0 && (
+                  <div className="text-xs">
+                    {validation.errors.map((error, index) => (
+                      <div key={index}>{error.message}</div>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
           </div>
