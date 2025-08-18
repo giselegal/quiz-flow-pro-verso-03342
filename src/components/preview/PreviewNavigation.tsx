@@ -5,7 +5,7 @@ import { ChevronLeft, ChevronRight, RotateCcw } from 'lucide-react';
 import React from 'react';
 
 interface PreviewNavigationProps {
-  position?: 'floating' | 'sticky';
+  position?: 'floating' | 'sticky' | 'static';
   className?: string;
 }
 
@@ -33,7 +33,9 @@ export const PreviewNavigation: React.FC<PreviewNavigationProps> = ({
   const positionClasses =
     position === 'floating'
       ? 'fixed top-4 left-1/2 transform -translate-x-1/2 z-40'
-      : 'sticky top-0 z-30';
+      : position === 'sticky'
+        ? 'sticky top-0 z-30'
+        : 'relative z-10'; // static position
 
   return (
     <div className={`${positionClasses} ${className}`}>

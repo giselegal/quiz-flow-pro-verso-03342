@@ -175,41 +175,47 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
           }
           componentsPanel={<CombinedComponentsPanel />}
           canvas={
-            <>
-              {/* 📱 PREVIEW NAVIGATION - Sistema de Navegação do Preview */}
-              {isPreviewing && <PreviewNavigation />}
-
-              {/* 🎯 QUIZ 21 STEPS NAVIGATION - Navegação das 21 Etapas (quando não estiver em preview) */}
-              {!isPreviewing && (
-                <div className="mb-4">
-                  {/* 📊 DEBUG: Status das etapas */}
-                  {stepsLoading ? (
-                    <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-2 rounded mb-4">
-                      🔄 Carregando {totalSteps} etapas...
-                    </div>
-                  ) : totalSteps === 0 ? (
-                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4">
-                      <div>🔴 PONTO CEGO: Nenhuma etapa carregada!</div>
-                      <small>Verifique se FunnelsProvider está configurado corretamente</small>
-                    </div>
-                  ) : (
-                    <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-2 rounded mb-4">
-                      <div>
-                        ✅ {totalSteps} etapas carregadas | Etapa atual: {currentStep}
+            <div className="h-full flex flex-col">
+              {/* 🎯 NAVEGAÇÃO SUPERIOR - Sempre visível, sem sobreposição */}
+              <div className="flex-shrink-0 bg-white border-b border-stone-200 shadow-sm">
+                {/* 📱 PREVIEW NAVIGATION - Sistema de Navegação do Preview */}
+                {isPreviewing ? (
+                  <div className="p-4">
+                    <PreviewNavigation position="static" />
+                  </div>
+                ) : (
+                  /* 🎯 QUIZ 21 STEPS NAVIGATION - Navegação das 21 Etapas */
+                  <div className="p-4">
+                    {/* 📊 DEBUG: Status das etapas */}
+                    {stepsLoading ? (
+                      <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-2 rounded mb-4">
+                        🔄 Carregando {totalSteps} etapas...
                       </div>
-                      {!canGoNext && !canGoPrevious && (
-                        <small>⚠️ Navegação bloqueada - verificar configurações</small>
-                      )}
-                    </div>
-                  )}{' '}
-                  <Quiz21StepsNavigation
-                    position="sticky"
-                    variant="full"
-                    showProgress={true}
-                    showControls={true}
-                  />
-                </div>
-              )}
+                    ) : totalSteps === 0 ? (
+                      <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4">
+                        <div>🔴 PONTO CEGO: Nenhuma etapa carregada!</div>
+                        <small>Verifique se FunnelsProvider está configurado corretamente</small>
+                      </div>
+                    ) : (
+                      <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-2 rounded mb-4">
+                        <div>
+                          ✅ {totalSteps} etapas carregadas | Etapa atual: {currentStep}
+                        </div>
+                        {!canGoNext && !canGoPrevious && (
+                          <small>⚠️ Navegação bloqueada - verificar configurações</small>
+                        )}
+                      </div>
+                    )}
+                    
+                    <Quiz21StepsNavigation
+                      position="static"
+                      variant="full"
+                      showProgress={true}
+                      showControls={true}
+                    />
+                  </div>
+                )}
+              </div>
 
               {/* 🎨 CANVAS PRINCIPAL - Sistema de Drop Zone */}
               <div className="flex-1 overflow-auto">
@@ -229,10 +235,12 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
                   </div>
 
                   {/* 🎮 PREVIEW TOGGLE - Botão flutuante para alternar preview */}
-                  <PreviewToggleButton />
+                  <div className="fixed bottom-4 right-4 z-50">
+                    <PreviewToggleButton variant="full" />
+                  </div>
                 </div>
               </div>
-            </>
+            </div>
           }
           propertiesPanel={
             <PropertiesPanel
