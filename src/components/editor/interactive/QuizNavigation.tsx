@@ -43,7 +43,7 @@ export const QuizNavigation: React.FC<QuizNavigationProps> = memo(
           <Progress value={progressPercentage} className="h-2" />
         </div>
 
-                {/* Validation Feedback */}
+        {/* Validation Feedback */}
         {validation && (
           <div className="mb-4">
             {validation.success ? (

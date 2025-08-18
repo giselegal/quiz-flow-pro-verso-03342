@@ -1,5 +1,5 @@
 import { ValidationResult } from '@/types/validation';
-import { beforeEach, fireEvent, render, screen } from '@testing-library/react';
+import { afterEach, fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { QuizNavigation } from '../QuizNavigation';
 
@@ -18,7 +18,7 @@ describe('QuizNavigation', () => {
     validation: mockValidation,
   };
 
-  beforeEach(() => {
+  afterEach(() => {
     vi.clearAllMocks();
   });
 

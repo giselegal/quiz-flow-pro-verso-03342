@@ -64,7 +64,7 @@ export const InteractiveQuizCanvas: React.FC<InteractiveQuizCanvasProps> = memo(
     }, [quizAnswers]);
 
     // Handler para resposta de pergunta
-    const handleQuizAnswer = useCallback(
+    // const handleQuizAnswer = useCallback(
       (answer: {
         questionId: string;
         selectedOptions: string[];
@@ -162,7 +162,7 @@ export const InteractiveQuizCanvas: React.FC<InteractiveQuizCanvasProps> = memo(
     }, [activeStageId]);
 
     // Obter respostas para uma pergunta específica
-    const getAnswersForQuestion = useCallback(
+    // const getAnswersForQuestion = useCallback(
       (questionId: string) => {
         const answer = quizAnswers.find(a => a.questionId === questionId);
         return answer?.selectedOptions || [];
