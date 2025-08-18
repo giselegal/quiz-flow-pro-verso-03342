@@ -278,7 +278,7 @@ const DynamicPropertiesPanel: React.FC<DynamicPropertiesPanelProps> = ({
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              {property.options?.map((option: any) => (
+              {property.options?.filter((option: any) => option.value && option.value !== '').map((option: any) => (
                 <SelectItem key={option.value} value={option.value}>
                   {option.label}
                 </SelectItem>

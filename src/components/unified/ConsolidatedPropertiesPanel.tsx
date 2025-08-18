@@ -127,7 +127,7 @@ const ConsolidatedPropertiesPanel: React.FC<ConsolidatedPropertiesPanelProps> = 
 
   // Renderizar controle baseado no tipo
   const renderPropertyControl = (property: any) => {
-    const { key, type, label, defaultValue, options, min, max, step } = property;
+    const { key, type, label, defaultValue, min, max, step } = property;
     const currentValue = blockProperties[key] ?? defaultValue;
 
     switch (type) {
@@ -196,7 +196,7 @@ const ConsolidatedPropertiesPanel: React.FC<ConsolidatedPropertiesPanelProps> = 
                 <SelectValue placeholder={`Selecione ${label.toLowerCase()}`} />
               </SelectTrigger>
               <SelectContent>
-                {options?.map((option: any) => (
+                {property.options?.filter((option: any) => option.value && option.value !== '').map((option: any) => (
                   <SelectItem key={option.value} value={option.value}>
                     {option.label}
                   </SelectItem>

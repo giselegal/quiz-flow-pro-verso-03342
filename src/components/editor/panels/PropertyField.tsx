@@ -130,7 +130,7 @@ export const PropertyField: React.FC<PropertyFieldProps> = ({
               <SelectValue placeholder={property.placeholder} />
             </SelectTrigger>
             <SelectContent>
-              {property.options?.map(option => (
+              {property.options?.filter(option => option.value && option.value !== '').map(option => (
                 <SelectItem key={option.value} value={option.value}>
                   {option.label}
                 </SelectItem>
