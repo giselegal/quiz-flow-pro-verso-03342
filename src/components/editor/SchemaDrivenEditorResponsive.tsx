@@ -1,14 +1,14 @@
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
 import { useEditor } from '@/context/EditorContext';
 import { useFunnelNavigation } from '@/hooks/useFunnelNavigation';
+import { BlockType } from '@/types/editor';
+import { Eye, Redo, Save, Undo } from 'lucide-react';
 import { CanvasDropZone } from './canvas/CanvasDropZone';
+import { FunnelStagesPanel } from './funnel/FunnelStagesPanel';
 import { PropertiesPanel } from './properties/PropertiesPanel';
 import ComponentsSidebar from './sidebar/ComponentsSidebar';
-import { FunnelStagesPanel } from './funnel/FunnelStagesPanel';
-import { BlockType } from '@/types/editor';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Eye, Save, Undo, Redo } from 'lucide-react';
 
 interface SchemaDrivenEditorResponsiveProps {
   funnelId?: string;
@@ -73,7 +73,11 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
             <Eye className="h-4 w-4" />
             Preview
           </Button>
-          <Button size="sm" onClick={funnelNavigation.handleSave} disabled={funnelNavigation.isSaving}>
+          <Button
+            size="sm"
+            onClick={funnelNavigation.handleSave}
+            disabled={funnelNavigation.isSaving}
+          >
             <Save className="h-4 w-4 mr-2" />
             {funnelNavigation.isSaving ? 'Salvando...' : 'Salvar'}
           </Button>
@@ -115,7 +119,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
             selectedBlock={selectedBlock || null}
             onUpdate={handleUpdateSelectedBlock}
             onClose={() => setSelectedBlockId(null)}
-            onDelete={(blockId) => deleteBlock(blockId)}
+            onDelete={blockId => deleteBlock(blockId)}
             isPreviewMode={false}
           />
         </ResizablePanel>

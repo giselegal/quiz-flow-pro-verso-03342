@@ -7,6 +7,7 @@
 O **EditorWithPreview** é o editor mais completo e robusto do projeto, contendo:
 
 #### 🏗️ **ARQUITETURA AVANÇADA**
+
 ```typescript
 EditorWithPreview
 ├── EditorFixedPageWithDragDrop (core)
@@ -89,6 +90,7 @@ src/
 ## 🚀 **STATUS ATUAL**
 
 ### ✅ **CONCLUÍDO**
+
 1. **EditorWithPreview** localizado e analisado
 2. **App.tsx** reorganizado e limpo
 3. **EditorToolbar** integrado com EditorContext

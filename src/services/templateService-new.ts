@@ -83,7 +83,7 @@ function convertStepTemplateToEditorBlocks(templateBlocks: any[]): Block[] {
 
 // ✅ CONVERTER ARRAY DE TEMPLATE BLOCKS PARA TEMPLATE DATA
 function convertStepTemplateToTemplateData(
-  stepNumber: number, 
+  stepNumber: number,
   templateBlocks: any[]
 ): TemplateData {
   return {
@@ -97,7 +97,7 @@ function convertStepTemplateToTemplateData(
       tags: ['quiz', 'step', `step-${stepNumber}`],
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      author: 'Quiz Quest System'
+      author: 'Quiz Quest System',
     },
     design: {
       primaryColor: '#6366f1',
@@ -109,34 +109,34 @@ function convertStepTemplateToTemplateData(
       card: {},
       progressBar: {},
       animations: {},
-      imageOptionSize: {}
+      imageOptionSize: {},
     },
     layout: {
       containerWidth: '100%',
       spacing: '1rem',
       backgroundColor: '#ffffff',
       responsive: true,
-      animations: {}
+      animations: {},
     },
     blocks: templateBlocks.map((block, index) => ({
       id: block.id || `block-${index + 1}`,
       type: block.type || 'text',
       properties: block.content || block.properties || {},
-      children: block.children || []
+      children: block.children || [],
     })),
     validation: {
       nameField: {
         required: true,
         minLength: 2,
-        maxLength: 50
+        maxLength: 50,
       },
-      requiredFields: []
+      requiredFields: [],
     },
     integrations: {
       analytics: true,
       marketing: false,
-      crm: false
-    }
+      crm: false,
+    },
   };
 }
 
@@ -147,23 +147,22 @@ class TemplateService {
    */
   async getTemplateByStep(step: number): Promise<TemplateData | null> {
     console.log(`🔍 TemplateService: Carregando template para etapa ${step}...`);
-    
+
     try {
       // ✅ USAR getStepTemplate do stepTemplatesMapping.ts
       const templateBlocks = await getStepTemplate(step);
-      
+
       if (!templateBlocks || !Array.isArray(templateBlocks)) {
         console.warn(`⚠️ Template para etapa ${step} não retornou blocos válidos:`, templateBlocks);
         return null;
       }
 
       console.log(`✅ Template etapa ${step} carregado: ${templateBlocks.length} blocos`);
-      
+
       // Converter para formato TemplateData
       const templateData = convertStepTemplateToTemplateData(step, templateBlocks);
-      
+
       return templateData;
-      
     } catch (error) {
       console.error(`❌ Erro ao carregar template etapa ${step}:`, error);
       return null;
@@ -187,11 +186,7 @@ class TemplateService {
    * ✅ VALIDAR se template tem conteúdo
    */
   validateTemplate(templateData: TemplateData): boolean {
-    return !!(
-      templateData &&
-      templateData.blocks &&
-      templateData.blocks.length > 0
-    );
+    return !!(templateData && templateData.blocks && templateData.blocks.length > 0);
   }
 
   /**
@@ -199,7 +194,7 @@ class TemplateService {
    */
   async getAllTemplates(): Promise<TemplateData[]> {
     const templates: TemplateData[] = [];
-    
+
     // Carregar templates das 21 etapas
     for (let step = 1; step <= 21; step++) {
       try {
@@ -211,7 +206,7 @@ class TemplateService {
         console.warn(`⚠️ Erro ao carregar template etapa ${step}:`, error);
       }
     }
-    
+
     return templates;
   }
 
@@ -220,9 +215,7 @@ class TemplateService {
    */
   async getTemplatesByCategory(category: string): Promise<TemplateData[]> {
     const allTemplates = await this.getAllTemplates();
-    return allTemplates.filter(template => 
-      template.metadata.category === category
-    );
+    return allTemplates.filter(template => template.metadata.category === category);
   }
 }
 

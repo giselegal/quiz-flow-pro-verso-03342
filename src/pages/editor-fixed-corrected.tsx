@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '../components/ui/resizable';
-import { Button } from '../components/ui/button';
+import { Eye, Image, Layout, Mouse, Redo, Save, Type, Undo } from 'lucide-react';
+import { useState } from 'react';
+import { BlockType, PropertiesPanel } from '../components/editor/properties/PropertiesPanel';
 import { Badge } from '../components/ui/badge';
+import { Button } from '../components/ui/button';
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '../components/ui/resizable';
 import { Separator } from '../components/ui/separator';
-import { Type, Mouse, Image, Layout, Eye, Save, Undo, Redo } from 'lucide-react';
-import { PropertiesPanel } from '../components/editor/properties/PropertiesPanel';
 import { useEditor } from '../contexts/EditorContext';
-import { BlockType } from '../components/editor/properties/PropertiesPanel';
 
 /**
  * 🏆 EDITOR PRINCIPAL: EditorFixedPageWithDragDrop

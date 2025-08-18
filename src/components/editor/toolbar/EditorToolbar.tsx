@@ -1,20 +1,11 @@
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import Logo from '@/components/ui/logo';
-import { motion } from 'framer-motion';
-import {
-  Save,
-  Eye,
-  EyeOff,
-  Smartphone,
-  Tablet,
-  Monitor,
-  LayoutGrid,
-  Settings,
-} from 'lucide-react';
-import { cn } from '@/lib/utils';
 import { useEditor } from '@/context/EditorContext';
 import { useFunnelNavigation } from '@/hooks/useFunnelNavigation';
+import { cn } from '@/lib/utils';
+import { motion } from 'framer-motion';
+import { Eye, EyeOff, LayoutGrid, Monitor, Save, Settings, Smartphone, Tablet } from 'lucide-react';
 
 interface EditorToolbarProps {
   className?: string;
@@ -22,16 +13,14 @@ interface EditorToolbarProps {
 
 /**
  * 🎨 TOOLBAR SUPERIOR UNIFICADA
- * 
+ *
  * Centraliza todos os controles principais do editor integrados com EditorContext:
  * - Informações do projeto
- * - Controles de viewport (Desktop/Tablet/Mobile) 
+ * - Controles de viewport (Desktop/Tablet/Mobile)
  * - Ações principais (Save, Preview, Undo/Redo)
  * - Configurações globais
  */
-export const EditorToolbar: React.FC<EditorToolbarProps> = ({
-  className = '',
-}) => {
+export const EditorToolbar: React.FC<EditorToolbarProps> = ({ className = '' }) => {
   const {
     isPreviewing,
     setIsPreviewing,
@@ -60,7 +49,7 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
   return (
     <div
       className={cn(
-        "border-b border-amber-700/30 p-3 flex items-center justify-between shadow-lg backdrop-blur-sm",
+        'border-b border-amber-700/30 p-3 flex items-center justify-between shadow-lg backdrop-blur-sm',
         className
       )}
       style={{ backgroundColor: '#d1b586' }}
@@ -90,7 +79,9 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
           <span>•</span>
           <span>{totalBlocks} blocos</span>
           <span>•</span>
-          <span>Etapa {funnelNavigation.currentStepNumber || 1} de {funnelNavigation.totalSteps || 21}</span>
+          <span>
+            Etapa {funnelNavigation.currentStepNumber || 1} de {funnelNavigation.totalSteps || 21}
+          </span>
         </div>
       </div>
 
@@ -142,10 +133,10 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
           Salvar
         </Button>
 
-        <Button 
-          variant="ghost" 
-          size="sm" 
-          className="text-white hover:bg-white/20 h-8 w-8 p-0" 
+        <Button
+          variant="ghost"
+          size="sm"
+          className="text-white hover:bg-white/20 h-8 w-8 p-0"
           title="Configurações"
         >
           <Settings className="w-4 h-4" />
