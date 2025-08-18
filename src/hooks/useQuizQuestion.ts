@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useQuiz21Steps } from '../quiz/Quiz21StepsProvider';
+import { useQuiz21Steps } from '../providers/Quiz21StepsProvider';
 
 interface UseQuizQuestionProps {
   questionId: string;
