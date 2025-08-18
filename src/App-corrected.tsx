@@ -1,17 +1,5 @@
 // @ts-nocheck
-import { ThemeProvider } fr                {/* 🎯 EDITOR CORRETO - Principal (Schema-Driven) */}
-                <Route path="/editor">
-                  <div className="h-screen w-full">
-                    <SchemaDrivenEditorResponsive />
-                  </div>
-                </Route>
-
-                {/* 🏆 EDITOR CORRETO - Rota alternativa (Schema-Driven) */}
-                <Route path="/editor-fixed">
-                  <div className="h-screen w-full">
-                    <SchemaDrivenEditorResponsive />
-                  </div>
-                </Route>nts/theme-provider';
+import { ThemeProvider } from '@/components/theme-provider';
 import { LoadingFallback } from '@/components/ui/loading-fallback';
 import { Toaster } from '@/components/ui/toaster';
 import { AuthProvider } from '@/context/AuthContext';
@@ -26,9 +14,7 @@ import Home from './pages/Home';
 import QuizFlowPage from './pages/QuizFlowPage';
 import ResultPage from './pages/ResultPage';
 
-// 🎨 EDITOR CORRETO - Único editor funcional
-// 🏆 EDITOR CORRETO: src/pages/editor-fixed.tsx → EditorFixedPageWithDragDrop
-const EditorFixedPageWithDragDrop = lazy(() => import('./pages/editor-fixed'));
+// 🎨 EDITOR MODERNO - Schema-Driven responsivo
 const SchemaDrivenEditorResponsive = lazy(
   () => import('./components/editor/SchemaDrivenEditorResponsive')
 );
@@ -52,27 +38,21 @@ const App = () => {
                 <Route path="/result" component={ResultPage} />
                 <Route path="/result-test" component={ResultPage} />
 
-                {/* � EDITOR CORRETO - Principal */}
+                {/* 🎯 EDITOR CORRETO - Principal (Schema-Driven com 21 etapas) */}
                 <Route path="/editor">
-                  <div className="h-screen w-full">
-                    <EditorFixedPageWithDragDrop />
-                  </div>
-                </Route>
-
-                {/* 🏆 EDITOR CORRETO - Rota alternativa */}
-                <Route path="/editor-fixed">
-                  <div className="h-screen w-full">
-                    <EditorFixedPageWithDragDrop />
-                  </div>
-                </Route>
-
-                {/* 🎨 EDITORES ALTERNATIVOS */}
-                <Route path="/editor-schema">
                   <div className="h-screen w-full">
                     <SchemaDrivenEditorResponsive />
                   </div>
                 </Route>
 
+                {/* 🏆 EDITOR CORRETO - Rota alternativa (Schema-Driven) */}
+                <Route path="/editor-fixed">
+                  <div className="h-screen w-full">
+                    <SchemaDrivenEditorResponsive />
+                  </div>
+                </Route>
+
+                {/* 🎨 EDITORES ALTERNATIVOS */}
                 <Route path="/editor-improved">
                   <div className="h-screen w-full">
                     <ImprovedEditor />
@@ -93,9 +73,8 @@ const App = () => {
                       <p className="text-gray-600">A página que você procura não existe.</p>
                       <div className="mt-4 text-sm text-gray-500">
                         <p>🎨 Editores disponíveis:</p>
-                        <p>/editor - 🏆 Editor correto (EditorFixedPageWithDragDrop)</p>
-                        <p>/editor-fixed - 🏆 Editor correto (mesmo editor)</p>
-                        <p>/editor-schema - Editor schema-driven</p>
+                        <p>/editor - 🏆 Editor moderno (SchemaDrivenEditorResponsive)</p>
+                        <p>/editor-fixed - 🏆 Editor moderno (mesmo editor)</p>
                         <p>/editor-improved - Editor melhorado</p>
                       </div>
                     </div>

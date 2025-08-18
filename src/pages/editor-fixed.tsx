@@ -34,20 +34,35 @@ const EditorFixedPageWithDragDrop = () => {
   } = useEditor();
 
   // Estado local para UI
+  const [currentStep, setCurrentStep] = useState(1);
   const [viewMode, setViewMode] = useState('desktop');
   const [showPreview, setShowPreview] = useState(false);
 
-  // 21 ETAPAS DO FUNIL - Baseadas no EditorContext
-  const currentStep = state?.currentStage || 1;
-  const funnelSteps = Array.from({ length: 21 }, (_, i) => ({
-    id: i + 1,
-    name: `Etapa ${i + 1}`,
-    active: currentStep === i + 1,
-    description: i === 0 ? 'Quiz Intro' : 
-                i === 20 ? 'Resultado Final' : 
-                i < 10 ? `Pergunta ${i}` : 
-                `Qualificação ${i - 9}`
-  }));
+  // 21 ETAPAS DO FUNIL
+  // Componentes disponíveis para arrastar
+  const components = [
+
+  // Componentes disponíveis para adicionar
+  const handleAddComponent = async (type: string) => {
+    try {
+      const blockId = await addBlock(type as BlockType);
+      if (blockId) {
+        setSelectedBlockId(blockId);
+      }
+    } catch (error) {
+      console.error('Erro ao adicionar componente:', error);
+    }
+  };
+
+  // Handler para atualizar propriedades
+  const handleUpdateBlock = (blockId: string, updates: Record<string, any>) => {
+    updateBlock(blockId, updates);
+  };
+
+  // Handler para deletar bloco
+  const handleDeleteBlock = (blockId: string) => {
+    deleteBlock(blockId);
+  };
 
   // Componentes disponíveis
   const components = [

@@ -4,9 +4,11 @@ import { useFunnelNavigation } from '@/hooks/useFunnelNavigation';
 import { CanvasDropZone } from './canvas/CanvasDropZone';
 import { EnhancedUniversalPropertiesPanel } from '@/components/universal/EnhancedUniversalPropertiesPanel';
 import ComponentsSidebar from './sidebar/ComponentsSidebar';
+import { FunnelStagesPanel } from './funnel/FunnelStagesPanel';
 import { BlockType } from '@/types/editor';
-// FunnelNavigation removido - componente não mais disponível
-// import { FunnelNavigation } from '../editor-fixed/FunnelNavigation';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Eye, Save, Undo, Redo } from 'lucide-react';
 
 interface SchemaDrivenEditorResponsiveProps {
   funnelId?: string;
@@ -50,48 +52,52 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
 
   return (
     <div className={`h-full w-full bg-gray-50 ${className}`}>
-      {/* Navigation Header */}
-      <div className="h-16 border-b bg-white flex items-center px-4">
-        {/* FunnelNavigation removido durante limpeza de conflitos */}
-        <div className="bg-gray-100 p-4 rounded-lg text-sm text-gray-600">
-          <div className="flex items-center justify-between">
-            <span>
-              Etapa {funnelNavigation.currentStepNumber} de {funnelNavigation.totalSteps}
-            </span>
-            <div className="flex gap-2">
-              <button
-                onClick={() =>
-                  funnelNavigation.navigateToStep(funnelNavigation.currentStepNumber - 1)
-                }
-                disabled={!funnelNavigation.canNavigatePrevious}
-                className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
-              >
-                Anterior
-              </button>
-              <button
-                onClick={() =>
-                  funnelNavigation.navigateToStep(funnelNavigation.currentStepNumber + 1)
-                }
-                disabled={!funnelNavigation.canNavigateNext}
-                className="px-3 py-1 bg-blue-500 text-white rounded disabled:opacity-50"
-              >
-                Próxima
-              </button>
-            </div>
-          </div>
+      {/* 🎨 TOOLBAR SUPERIOR */}
+      <div className="h-14 border-b border-border bg-card px-4 flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <h1 className="text-lg font-semibold">Editor Quiz Quest</h1>
+          <Badge variant="outline">Schema-Driven</Badge>
+          <Badge variant="secondary">
+            {funnelNavigation.currentStepNumber} de {funnelNavigation.totalSteps}
+          </Badge>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm">
+            <Undo className="h-4 w-4" />
+          </Button>
+          <Button variant="outline" size="sm">
+            <Redo className="h-4 w-4" />
+          </Button>
+          <Button variant="outline" size="sm" onClick={funnelNavigation.handlePreview}>
+            <Eye className="h-4 w-4" />
+            Preview
+          </Button>
+          <Button size="sm" onClick={funnelNavigation.handleSave} disabled={funnelNavigation.isSaving}>
+            <Save className="h-4 w-4 mr-2" />
+            {funnelNavigation.isSaving ? 'Salvando...' : 'Salvar'}
+          </Button>
         </div>
       </div>
 
-      <ResizablePanelGroup direction="horizontal" className="h-[calc(100%-4rem)]">
-        {/* Sidebar de componentes */}
-        <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
+      {/* 📐 LAYOUT DE 4 COLUNAS */}
+      <ResizablePanelGroup direction="horizontal" className="h-[calc(100%-56px)]">
+        {/* 📝 COLUNA 1: ETAPAS DO FUNIL (21) */}
+        <ResizablePanel defaultSize={18} minSize={15} maxSize={25}>
+          <FunnelStagesPanel />
+        </ResizablePanel>
+
+        <ResizableHandle withHandle />
+
+        {/* 🧩 COLUNA 2: BIBLIOTECA DE COMPONENTES */}
+        <ResizablePanel defaultSize={22} minSize={18} maxSize={30}>
           <ComponentsSidebar onComponentSelect={handleComponentSelect} />
         </ResizablePanel>
 
         <ResizableHandle withHandle />
 
-        {/* Canvas principal */}
-        <ResizablePanel defaultSize={55}>
+        {/* 🎨 COLUNA 3: CANVAS PRINCIPAL */}
+        <ResizablePanel defaultSize={40} minSize={30}>
           <CanvasDropZone
             blocks={currentBlocks}
             selectedBlockId={selectedBlockId}
@@ -103,8 +109,8 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
 
         <ResizableHandle withHandle />
 
-        {/* Painel de propriedades */}
-        <ResizablePanel defaultSize={25}>
+        {/* ⚙️ COLUNA 4: PAINEL DE PROPRIEDADES AVANÇADO */}
+        <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
           <EnhancedUniversalPropertiesPanel
             selectedBlock={selectedBlock || null}
             onUpdate={handleUpdateSelectedBlock}
