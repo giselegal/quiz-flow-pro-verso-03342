@@ -9,24 +9,34 @@ export function LovableClientProvider({ children }: LovableProviderProps) {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const isEditor =
-        window.location.pathname.includes('/admin') ||
-        window.location.pathname === '/' ||
-        window.location.pathname.startsWith('/dashboard') ||
-        window.location.pathname.startsWith('/resultado/') ||
-        window.location.search.includes('lovable=true');
+      try {
+        const isEditor =
+          window.location.pathname.includes('/admin') ||
+          window.location.pathname === '/' ||
+          window.location.pathname.startsWith('/dashboard') ||
+          window.location.pathname.startsWith('/editor') ||
+          window.location.pathname.startsWith('/resultado/') ||
+          window.location.search.includes('lovable=true');
 
-      setIsEditorMode(isEditor);
+        setIsEditorMode(isEditor);
 
-      if (isEditor) {
-        (window as any).LOVABLE_CONFIG = {
-          projectId: 'quiz-sell-genius',
-          apiBaseUrl: 'https://api.lovable.dev',
-        };
+        if (isEditor) {
+          (window as any).LOVABLE_CONFIG = {
+            projectId: '65efd17d-5178-405d-9721-909c97470c6d',
+            apiBaseUrl: 'https://api.lovable.dev',
+          };
 
-        return () => {
-          delete (window as any).LOVABLE_CONFIG;
-        };
+          return () => {
+            try {
+              delete (window as any).LOVABLE_CONFIG;
+            } catch (error) {
+              console.warn('Error cleaning up Lovable config:', error);
+            }
+          };
+        }
+      } catch (error) {
+        console.warn('Error setting up Lovable config:', error);
+        setIsEditorMode(false);
       }
     }
   }, []);

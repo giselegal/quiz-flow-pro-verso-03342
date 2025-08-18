@@ -14,7 +14,19 @@ export default defineConfig({
     host: '0.0.0.0',
     port: 8080,
     // Configurações para resolver problemas de CORS no Codespaces
-    cors: true,
+    cors: {
+      origin: [
+        'http://localhost:8080',
+        'https://lovable.dev',
+        'https://api.lovable.dev',
+        'https://lovable-api.com',
+        /^https:\/\/.*\.lovable\.app$/,
+        /^https:\/\/.*\.lovable\.dev$/,
+      ],
+      credentials: true,
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+      allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+    },
     strictPort: false,
     // Middleware para servir templates da pasta /templates
     middlewareMode: false,
@@ -25,7 +37,9 @@ export default defineConfig({
     headers: {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With',
+      'Cross-Origin-Embedder-Policy': 'unsafe-none',
+      'Cross-Origin-Opener-Policy': 'same-origin-allow-popups',
     },
   },
   // Configuração para servir templates como assets estáticos
@@ -39,103 +53,17 @@ export default defineConfig({
     copyPublicDir: true,
     rollupOptions: {
       output: {
-        manualChunks: id => {
-          // Vendor libraries
-          if (id.includes('node_modules')) {
-            // React ecosystem
-            if (id.includes('react') || id.includes('react-dom')) {
-              return 'react-vendor';
-            }
-
-            // UI libraries
-            if (id.includes('lucide-react') || id.includes('radix') || id.includes('@radix-ui')) {
-              return 'ui-vendor';
-            }
-
-            // Router
-            if (id.includes('wouter')) {
-              return 'router-vendor';
-            }
-
-            // Form libraries
-            if (id.includes('react-hook-form') || id.includes('zod')) {
-              return 'forms-vendor';
-            }
-
-            // Animation libraries
-            if (id.includes('framer-motion')) {
-              return 'animation-vendor';
-            }
-
-            // Other vendor packages
-            return 'vendor';
-          }
-
-          // Application chunks
-          if (id.includes('src/pages/')) {
-            // Editor pages
-            if (id.includes('editor') || id.includes('Editor')) {
-              return 'editor-pages';
-            }
-
-            // Admin pages
-            if (id.includes('admin') || id.includes('Admin')) {
-              return 'admin-pages';
-            }
-
-            // Quiz pages
-            if (id.includes('quiz') || id.includes('Quiz')) {
-              return 'quiz-pages';
-            }
-
-            // Other pages
-            return 'app-pages';
-          }
-
-          // Components (mais granular para reduzir tamanho dos chunks grandes)
-          if (id.includes('src/components/')) {
-            // Editor blocks (normalmente muitos blocos pesados)
-            if (
-              id.includes('src/components/editor/blocks') ||
-              id.includes('/editor/blocks/') ||
-              id.includes('\\editor\\blocks\\')
-            ) {
-              return 'editor-components-blocks';
-            }
-
-            // Editor UI (toolbars, panels, canvas controls)
-            if (id.includes('src/components/editor/') || id.includes('/editor/')) {
-              return 'editor-components-ui';
-            }
-
-            // UI components (design system)
-            if (id.includes('ui/') || id.includes('/ui/')) {
-              return 'ui-components';
-            }
-
-            // Auth components
-            if (id.includes('auth') || id.includes('Auth')) {
-              return 'auth-components';
-            }
-
-            // Quiz components
-            if (id.includes('quiz') || id.includes('Quiz')) {
-              return 'quiz-components';
-            }
-
-            // Fallback for outros componentes
-            return 'app-components';
-          }
-
-          // Context and hooks
-          if (id.includes('src/context/') || id.includes('src/hooks/')) {
-            return 'app-context';
-          }
-
-          // Utils and configs
-          if (id.includes('src/utils/') || id.includes('src/config/')) {
-            return 'app-utils';
-          }
+        manualChunks: {
+          // Manter React e React-DOM juntos para evitar problemas de createContext
+          'react-vendor': ['react', 'react-dom'],
+          // Router separado
+          'router-vendor': ['wouter'],
+          // UI libraries
+          'ui-vendor': ['lucide-react', '@radix-ui/react-slot', '@radix-ui/react-tooltip'],
+          // Form libraries
+          'forms-vendor': ['react-hook-form', 'zod'],
+          // Animation
+          'animation-vendor': ['framer-motion'],
         },
       },
     },
