@@ -175,6 +175,16 @@ export const Quiz21StepsNavigation: React.FC<Quiz21StepsNavigationProps> = ({
                 <span className="font-medium">{progress}%</span>
                 <span>100%</span>
               </div>
+
+              {/* Mensagem sobre auto-advance */}
+              {autoAdvanceEnabled && stepRequirements.requiredSelections > 0 && (
+                <div className="text-xs text-center text-blue-600 mt-2 bg-blue-50 px-2 py-1 rounded">
+                  {isCurrentStepComplete 
+                    ? '✅ Avançará automaticamente em breve' 
+                    : `💡 Selecione ${stepRequirements.requiredSelections} opções para continuar`
+                  }
+                </div>
+              )}
             </div>
           )}
 
