@@ -396,6 +396,20 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // 🔍 DEBUG CRÍTICO: Monitor de contexto
+  React.useEffect(() => {
+    if (debug) {
+      console.log('🔍 FUNNELS CONTEXT DEBUG:', {
+        currentFunnelId,
+        stepsLength: steps.length,
+        loading,
+        error,
+        stepsIds: steps.map(s => s.id),
+        stepsNames: steps.map(s => s.name),
+      });
+    }
+  }, [steps, currentFunnelId, loading, error, debug]);
+
   const getTemplate = useCallback((templateId: string) => {
     const template = FUNNEL_TEMPLATES[templateId as keyof typeof FUNNEL_TEMPLATES];
     if (!template) {
@@ -557,7 +571,13 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
 
 export const useFunnels = (): FunnelsContextType => {
   const context = useContext(FunnelsContext);
+  console.log('🔍 useFunnels called:', {
+    contextExists: !!context,
+    contextType: typeof context,
+    contextKeys: context ? Object.keys(context) : 'null'
+  });
   if (context === undefined) {
+    console.error('🔴 useFunnels: Context is undefined!');
     throw new Error('useFunnels must be used within a FunnelsProvider');
   }
   return context;
