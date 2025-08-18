@@ -64,7 +64,7 @@ export const StepNavigationPropertyEditor: React.FC<StepNavigationPropertyEditor
   onConfigChange,
   onClose,
 }) => {
-  const { currentStep, getStepRequirements } = useQuiz21Steps();
+  const { getStepRequirements } = useQuiz21Steps();
   const currentRequirements = getStepRequirements();
 
   // Estado local do editor

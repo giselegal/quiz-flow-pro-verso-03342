@@ -449,8 +449,9 @@ export const EditorProvider: React.FC<{
     removeStage: (id: string) => {
       console.log('Remove stage not implemented:', id);
     },
+    isLoadingStage, // ✅ Expor o estado de loading
   }),
-  [stages.length, dispatch, setIsLoadingStage] // ✅ Adicionar setIsLoadingStage às dependências
+  [stages.length, dispatch, setIsLoadingStage, isLoadingStage] // ✅ Adicionar isLoadingStage às dependências
 );
 
   // Block actions object

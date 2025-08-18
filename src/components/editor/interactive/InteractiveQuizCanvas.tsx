@@ -83,55 +83,15 @@ export const InteractiveQuizCanvas: React.FC<InteractiveQuizCanvasProps> = memo(
       [scores]
     );
 
-    // Handler para resposta de pergunta
-    const handleQuizAnswer = useCallback(
-      (answer: {
-        questionId: string;
-        selectedOptions: string[];
-        validation: ValidationResult;
-        scoreValues?: Record<string, number>;
-      }) => {
-        const { questionId, selectedOptions, validation, scoreValues } = answer;
-
-        console.log('🎯 Quiz Answer:', { questionId, selectedOptions, validation });
-
-        // Atualizar respostas
-        setQuizAnswers(prev => {
-          const existing = prev.findIndex(a => a.questionId === questionId);
-          const newAnswer: QuizAnswer = {
-            questionId,
-            selectedOptions,
-            timestamp: new Date(),
-            stepId: `step-${activeStageId}`,
-          };
-
-          if (existing >= 0) {
-            const updated = [...prev];
-            updated[existing] = newAnswer;
-            return updated;
-          } else {
-            return [...prev, newAnswer];
-          }
-        });
-
-        // Atualizar validação atual
-        setCurrentValidation(validation);
-
-        // Calcular e atualizar pontuação
-        if (scoreValues) {
-          calculateAndUpdateScores(selectedOptions, scoreValues);
+        // Estado de progresso
+    const hasAnsweredCurrentStep = useMemo(() => {
+      return currentBlocks.some(block => {
+        if (block.type === 'quiz-question-inline') {
+          return quizData.answers[block.id];
         }
-
-        // Atualizar estado global do quiz
-        quizState.answerStrategicQuestion?.(
-          questionId,
-          selectedOptions.join(','),
-          'quiz',
-          'interactive'
-        );
-      },
-      [activeStageId, quizState, calculateAndUpdateScores]
-    );
+        return true;
+      });
+    }, [currentBlocks, quizData.answers]);
 
     // Verificar se pode avançar para próxima etapa
     const canProceedToNext = useCallback(() => {

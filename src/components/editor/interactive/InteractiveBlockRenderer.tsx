@@ -2,13 +2,6 @@ import { Block } from '@/types/editor';
 import { ValidationResult } from '@/types/validation';
 import React, { memo } from 'react';
 
-interface QuizContext {
-  userName?: string;
-  currentStep: number;
-  scores: Record<string, number>;
-  totalAnswers: number;
-}
-
 interface InteractiveBlockRendererProps {
   block: Block;
   onAnswer: (answer: {
@@ -17,12 +10,12 @@ interface InteractiveBlockRendererProps {
     validation: ValidationResult;
     scoreValues?: Record<string, number>;
   }) => void;
-  selectedAnswers: string[];
-  isLiveMode: boolean;
+  selectedAnswers?: string[];
+  isLiveMode?: boolean;
 }
 
 export const InteractiveBlockRenderer: React.FC<InteractiveBlockRendererProps> = memo(
-  ({ block, onAnswer, selectedAnswers, isLiveMode }) => {
+  ({ block, onAnswer }) => {
     return (
       <div className="interactive-block p-4 border rounded-lg">
         <h3 className="font-semibold">{block.type}</h3>
