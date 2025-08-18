@@ -19,6 +19,7 @@ import { PropertiesPanel } from '@/components/editor/properties/PropertiesPanel'
 // Context & Hooks
 import { useEditor, EditorProvider } from '@/context/EditorContext';
 import { FunnelsProvider } from '@/context/FunnelsContext';
+import { EditorQuizProvider } from '@/context/EditorQuizContext';
 import { useAutoSaveWithDebounce } from '@/hooks/editor/useAutoSaveWithDebounce';
 import { toast } from '@/hooks/use-toast';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
@@ -26,7 +27,7 @@ import { usePropertyHistory } from '@/hooks/usePropertyHistory';
 import { useSyncedScroll } from '@/hooks/useSyncedScroll';
 import { BlockType } from '@/types/editor';
 import { useLocation } from 'wouter';
-// Adicione o import do saveEditor
+import { saveEditor } from '@/services/editorService';
 import { saveEditor } from '@/services/editorService';
 
 /**
