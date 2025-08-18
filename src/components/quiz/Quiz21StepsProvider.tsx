@@ -2,7 +2,10 @@ import { useFunnels } from '@/context/FunnelsContext';
 import { useQuizAnalytics } from '@/hooks/useQuizAnalytics';
 import { useQuizLogic } from '@/hooks/useQuizLogic';
 import { useSupabaseQuiz } from '@/hooks/useSupabaseQuiz'; // 🎯 NOVO: Integração Sup      // 🗄️ SUPABASE: Salvar resposta no banco
-      saveSupabaseAnswer(questionId, optionId);mport { useStepNavigationStore } from '@/stores/useStepNavigationStore';
+      saveSupabaseAnswer(questionId, optionId);
+
+      // 📊 ANALYTICS: Track user interaction
+      // trackUserInteraction seria ideal aqui, mas vamos usar trackEvent por enquantort { useStepNavigationStore } from '@/stores/useStepNavigationStore';
 import React, { createContext, useCallback, useContext, useState } from 'react';
 
 interface Quiz21StepsContextType {
