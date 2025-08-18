@@ -1,4 +1,4 @@
-import { SchemaDrivenEditorResponsive } from '@/components/editor/SchemaDrivenEditorResponsive';
+import SchemaDrivenEditorResponsive from '@/components/editor/SchemaDrivenEditorResponsive';
 import { EditorToolbar } from '@/components/editor/toolbar/EditorToolbar';
 import React from 'react';
 

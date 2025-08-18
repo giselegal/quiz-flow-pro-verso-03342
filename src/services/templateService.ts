@@ -139,60 +139,9 @@ function convertStepTemplateToTemplateData(
     }
   };
 }
-      minLength: number;
-      maxLength: number;
-      errorMessage: string;
-      realTimeValidation: boolean;
-    };
-    [key: string]: any;
-  };
-  analytics: {
-    trackingId: string;
-    events: string[];
-    utmParams: boolean;
-    customEvents: string[];
-  };
-  logic: {
-    navigation: {
-      nextStep: string | null;
-      prevStep: string | null;
-      allowBack: boolean;
-      autoAdvance: boolean;
-    };
-    formHandling: {
-      onSubmit: string;
-      validation: string;
-      errorHandling: string;
-    };
-    stateManagement: {
-      localState: string[];
-      globalState: string[];
-    };
-    scoring: any;
-    conditions: any;
-  };
-  performance: {
-    webVitals: {
-      markComponentMounted: boolean;
-      markLcpRendered: boolean;
-      markUserInteraction: boolean;
-    };
-    optimizations: {
-      preloadCriticalImages: boolean;
-      inlineStyles: boolean;
-      lazyLoadNonCritical: boolean;
-      useRequestAnimationFrame: boolean;
-    };
-  };
-  accessibility: {
-    skipLinks: boolean;
-    ariaLabels: boolean;
-    focusManagement: boolean;
-    keyboardNavigation: boolean;
-    screenReader: boolean;
-  };
-  step?: number;
-}
+
+// Mock STEP_TEMPLATES for type safety
+const STEP_TEMPLATES = {} as Record<number, TemplateData>;
 
 type StepNumber = keyof typeof STEP_TEMPLATES;
 type StepTemplate = (typeof STEP_TEMPLATES)[StepNumber];

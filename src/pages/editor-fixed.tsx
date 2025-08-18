@@ -40,8 +40,7 @@ const EditorFixedPageWithDragDrop = () => {
 
   // 21 ETAPAS DO FUNIL
   // Componentes disponíveis para arrastar
-  const components = [
-
+  
   // Componentes disponíveis para adicionar
   const handleAddComponent = async (type: string) => {
     try {

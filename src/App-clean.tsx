@@ -8,9 +8,7 @@ import { Route, Router, Switch } from 'wouter';
 
 // Lazy loading das páginas principais
 const Home = lazy(() => import('@/pages/Home'));
-const LandingPage = lazy(() => import('@/pages/LandingPage'));
 const DashboardPage = lazy(() => import('@/pages/admin/DashboardPage'));
-const EditorWithPreview = lazy(() => import('@/pages/EditorWithPreview'));
 const SchemaDrivenEditorResponsive = lazy(
   () => import('@/components/editor/SchemaDrivenEditorResponsive')
 );
@@ -40,10 +38,10 @@ function App() {
                   <Route path="/admin" component={DashboardPage} />
                   <Route path="/dashboard" component={DashboardPage} />
 
-                  {/* 🎯 EDITOR PRINCIPAL - EditorWithPreview (COMPLETO) */}
+                  {/* 🎯 EDITOR PRINCIPAL - SchemaDrivenEditor (FUNCIONAL) */}
                   <Route path="/editor">
                     <div className="h-screen w-full">
-                      <EditorWithPreview />
+                      <SchemaDrivenEditorResponsive />
                     </div>
                   </Route>
 
@@ -54,10 +52,10 @@ function App() {
                     </div>
                   </Route>
 
-                  {/* 🏆 EDITOR LEGACY - Redirecionamento */}
+                  {/* 🏆 EDITOR FIXED - SchemaDrivenEditor */}
                   <Route path="/editor-fixed">
                     <div className="h-screen w-full">
-                      <EditorWithPreview />
+                      <SchemaDrivenEditorResponsive />
                     </div>
                   </Route>
 
