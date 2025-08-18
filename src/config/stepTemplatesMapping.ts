@@ -135,10 +135,24 @@ const getDefaultTemplate = (stepNumber: number) => {
 // Templates específicos removidos para evitar duplicação
 
 // 📋 MAPEAMENTO DOS TEMPLATES TSX CONECTADOS COM NOMES CORRETOS
+// PROBLEMA: Recursão infinita
 export const STEP_TEMPLATES_MAPPING: Record<number, StepTemplate> = {
   1: {
     stepNumber: 1,
-    templateFunction: () => getStepTemplate(1), // Fixed: using getStepTemplate
+    templateFunction: () => [
+      {
+        id: 'step1-title',
+        type: 'heading',
+        content: 'Quiz de Estilo Pessoal',
+        styles: { fontSize: '2rem', textAlign: 'center' }
+      },
+      {
+        id: 'step1-description', 
+        type: 'text',
+        content: 'Descubra seu estilo único respondendo algumas perguntas',
+        styles: { textAlign: 'center' }
+      }
+    ],
     name: STEP_CONFIGS[0]?.name || 'Quiz de Estilo Pessoal',
     description: STEP_CONFIGS[0]?.description || 'Descubra seu estilo único',
   },
@@ -267,7 +281,20 @@ export const STEP_TEMPLATES_MAPPING: Record<number, StepTemplate> = {
   },
   21: {
     stepNumber: 21,
-    templateFunction: () => getStepTemplate(21), // Fixed: using getStepTemplate
+    templateFunction: () => [
+      {
+        id: 'step21-title',
+        type: 'heading', 
+        content: 'RECEBA SEU GUIA DE ESTILO COMPLETO',
+        styles: { fontSize: '2rem', textAlign: 'center' }
+      },
+      {
+        id: 'step21-cta',
+        type: 'button',
+        content: 'Baixar Guia Gratuito',
+        styles: { backgroundColor: '#007bff', color: 'white' }
+      }
+    ],
     name: STEP_CONFIGS[20]?.name || 'RECEBA SEU GUIA COMPLETO',
     description: STEP_CONFIGS[20]?.description || 'Página de conversão',
   },

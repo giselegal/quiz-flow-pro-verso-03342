@@ -408,50 +408,50 @@ export const EditorProvider: React.FC<{
     }));
   }, [realStages]);
 
+  // ✅ MOVER PARA FORA DO useMemo - no nível do componente
+  const [isLoadingStage, setIsLoadingStage] = useState(false);
+  
   // Stage actions with real template loading
   const stageActions = useMemo(
-    () => ({
-      setActiveStage: async (id: string) => {
-        console.log('🔄 Setting active stage:', id);
-        
-        // Update active stage
+  () => ({
+    setActiveStage: async (id: string) => {
+      setIsLoadingStage(true);
+      console.log('🔄 Setting active stage:', id);
+      
+      try {
         setActiveStageId(id);
         
-        // Extract step number from id (e.g., "step-5" -> 5)
         const stepNumber = parseInt(id.replace('step-', ''));
         
         if (stepNumber && stepNumber >= 1 && stepNumber <= 21) {
-          try {
-            // Import template service and load the step
-            const { templateService } = await import('../services/templateService');
-            const template = await templateService.getTemplateByStep(stepNumber);
-
-            if (template && template.blocks && template.blocks.length > 0) {
-              console.log(`✅ Loaded template for step ${stepNumber}: ${template.blocks.length} blocks`);
-              
-              // Convert template blocks to editor blocks
-              const editorBlocks = templateService.convertTemplateBlocksToEditorBlocks(template.blocks);
-              
-              // Update blocks in editor state
-              dispatch({ type: 'SET_BLOCKS', payload: editorBlocks });
-            } else {
-              console.warn(`⚠️ No blocks found for step ${stepNumber}`);
-            }
-          } catch (error) {
-            console.error(`❌ Error loading template for step ${stepNumber}:`, error);
+          const { templateService } = await import('../services/templateService');
+          const template = await templateService.getTemplateByStep(stepNumber);
+          
+          if (template && template.blocks && template.blocks.length > 0) {
+            const editorBlocks = templateService.convertTemplateBlocksToEditorBlocks(template.blocks);
+            dispatch({ type: 'SET_BLOCKS', payload: editorBlocks });
+            console.log(`✅ Loaded ${editorBlocks.length} blocks for step ${stepNumber}`);
+          } else {
+            console.warn(`⚠️ No blocks found for step ${stepNumber}`);
+            dispatch({ type: 'SET_BLOCKS', payload: [] });
           }
         }
-      },
-      addStage: () => {
-        console.log('Add stage not implemented yet');
-        return `step-${stages.length + 1}`;
-      },
-      removeStage: (id: string) => {
-        console.log('Remove stage not implemented:', id);
-      },
-    }),
-    [stages.length, dispatch]
-  );
+      } catch (error) {
+        console.error(`❌ Error loading template for step ${stepNumber}:`, error);
+      } finally {
+        setIsLoadingStage(false);
+      }
+    },
+    addStage: () => {
+      console.log('Add stage not implemented yet');
+      return `step-${stages.length + 1}`;
+    },
+    removeStage: (id: string) => {
+      console.log('Remove stage not implemented:', id);
+    },
+  }),
+  [stages.length, dispatch, setIsLoadingStage] // ✅ Adicionar setIsLoadingStage às dependências
+);
 
   // Block actions object
   const blockActions = useMemo(

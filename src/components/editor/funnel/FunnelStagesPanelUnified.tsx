@@ -20,9 +20,9 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
     stages,
     activeStageId,
     stageActions: { setActiveStage, addStage, removeStage },
-    computed: { stageCount },
+    computed: { stageCount, currentBlocks },
   } = useEditor();
-
+  
   // ✅ TIMESTAMP PARA DEBUG
   const timestamp = new Date().toLocaleTimeString();
   console.log(
@@ -45,23 +45,24 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
   // ✅ HANDLER PARA SELEÇÃO DE ETAPA (UNIFICADO)
   const handleStageClick = (stageId: string, e?: React.MouseEvent) => {
     console.log('🚨 EVENTO CLICK RECEBIDO - StageID:', stageId);
-    console.log('🚨 Current ActiveStageId:', activeStageId);
-
+    console.log('📊 Estado atual - ActiveStageId:', activeStageId);
+    console.log('🔢 Blocos atuais:', computed.currentBlocks.length);
+    
     if (e) {
       e.preventDefault();
       e.stopPropagation();
     }
-
-    // ✅ USAR EDITORCONTEXT UNIFICADO PARA MUDANÇA DE ETAPA
-    setActiveStage(stageId);
-
-    // ✅ CALLBACK OPCIONAL PARA SINCRONIZAÇÃO EXTERNA
+    
+    // Adicionar await para aguardar a atualização
+    setActiveStage(stageId).then(() => {
+      console.log('✅ Stage change completed:', stageId);
+    }).catch((error) => {
+      console.error('❌ Stage change failed:', error);
+    });
+    
     if (onStageSelect) {
-      console.log('🚨 Chamando onStageSelect para callback externo');
       onStageSelect(stageId);
     }
-
-    console.log('✅ Etapa ativada:', stageId);
   };
 
   // ✅ HANDLER PARA ACTIONS DOS BOTÕES

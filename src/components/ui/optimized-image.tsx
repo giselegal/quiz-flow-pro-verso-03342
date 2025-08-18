@@ -153,25 +153,29 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
       {/* Loading placeholder */}
       {!isLoaded && placeholder === 'empty' && <div style={{ backgroundColor: '#E5DDD5' }} />}
 
-      {/* Main image */}
+      {/* Main image - VERSÃO CORRIGIDA */}
       <img
         ref={imgRef}
-        src={getOptimizedSrc(src, width)}
+        src={shouldLoad ? src : undefined}
+        srcSet={shouldLoad ? generateSrcSet() : undefined}
+        sizes={sizes}
         alt={alt}
         width={width}
         height={height}
         loading={priority ? 'eager' : 'lazy'}
         decoding="async"
-        fetchPriority={priority ? 'high' : 'auto'}
-        srcSet={generateSrcSet()}
-        sizes={sizes}
-        onLoad={handleLoad}
-        onError={handleError}
         className={cn(
           'transition-opacity duration-300',
           fill ? 'absolute inset-0 w-full h-full object-cover' : 'w-full h-auto',
-          isLoaded ? 'opacity-100' : 'opacity-0'
+          isLoaded ? 'opacity-100' : 'opacity-0',
+          className
         )}
+        style={{
+          ...style,
+          ...(fill && { objectFit: 'cover', width: '100%', height: '100%' }),
+        }}
+        onLoad={handleLoad}
+        onError={handleError}
       />
     </div>
   );
