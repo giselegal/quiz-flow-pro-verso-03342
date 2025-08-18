@@ -179,6 +179,7 @@ export const EditorProvider: React.FC<{
   const [state, dispatch] = useReducer(editorReducer, initialState);
   const [currentFunnelId, setCurrentFunnelId] = useState<string>(initialFunnelId);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [activeStageId, setActiveStageId] = useState<string>('step-1');
 
   // Efeito para carregar o template inicial automaticamente
   useEffect(() => {
@@ -351,31 +352,105 @@ export const EditorProvider: React.FC<{
     showToasts: false, // Não mostrar toast no auto-save, apenas no save manual
   });
 
-  // Mock data for stages (21 stages)
+  // Real data for stages (21 stages) from stepTemplatesMapping
+  const [realStages, setRealStages] = useState<any[]>([]);
+  
+  // Load real stages from templates on mount
+  useEffect(() => {
+    const loadTemplates = async () => {
+      try {
+        const { getAllSteps } = await import('../config/stepTemplatesMapping');
+        const stepTemplates = getAllSteps();
+        
+        const mappedStages = stepTemplates.map(template => ({
+          id: `step-${template.stepNumber}`,
+          name: template.name,
+          description: template.description,
+          order: template.stepNumber,
+          blocksCount: 0,
+          metadata: { blocksCount: 0 },
+        }));
+        
+        console.log('✅ Loaded real stages from templates:', mappedStages.length);
+        setRealStages(mappedStages);
+      } catch (error) {
+        console.error('❌ Error loading step templates:', error);
+        // Fallback to basic 21 steps
+        const fallbackStages = Array.from({ length: 21 }, (_, i) => ({
+          id: `step-${i + 1}`,
+          name: `Etapa ${i + 1}`,
+          description: `Descrição da etapa ${i + 1}`,
+          order: i + 1,
+          blocksCount: 0,
+          metadata: { blocksCount: 0 },
+        }));
+        setRealStages(fallbackStages);
+      }
+    };
+
+    loadTemplates();
+  }, []);
+
+  // Use real stages or fallback
   const stages = useMemo(() => {
+    if (realStages.length > 0) {
+      return realStages;
+    }
+    
+    // Fallback to basic 21 steps while loading
     return Array.from({ length: 21 }, (_, i) => ({
       id: `step-${i + 1}`,
       name: `Etapa ${i + 1}`,
+      description: `Descrição da etapa ${i + 1}`,
       order: i + 1,
       blocksCount: 0,
       metadata: { blocksCount: 0 },
     }));
-  }, []);
+  }, [realStages]);
 
-  // Stage actions
+  // Stage actions with real template loading
   const stageActions = useMemo(
     () => ({
-      setActiveStage: (id: string) => {
-        console.log('Setting active stage:', id);
+      setActiveStage: async (id: string) => {
+        console.log('🔄 Setting active stage:', id);
+        
+        // Update active stage
+        setActiveStageId(id);
+        
+        // Extract step number from id (e.g., "step-5" -> 5)
+        const stepNumber = parseInt(id.replace('step-', ''));
+        
+        if (stepNumber && stepNumber >= 1 && stepNumber <= 21) {
+          try {
+            // Import template service and load the step
+            const { templateService } = await import('../services/templateService');
+            const template = await templateService.getTemplateByStep(stepNumber);
+
+            if (template && template.blocks && template.blocks.length > 0) {
+              console.log(`✅ Loaded template for step ${stepNumber}: ${template.blocks.length} blocks`);
+              
+              // Convert template blocks to editor blocks
+              const editorBlocks = templateService.convertTemplateBlocksToEditorBlocks(template.blocks);
+              
+              // Update blocks in editor state
+              dispatch({ type: 'SET_BLOCKS', payload: editorBlocks });
+            } else {
+              console.warn(`⚠️ No blocks found for step ${stepNumber}`);
+            }
+          } catch (error) {
+            console.error(`❌ Error loading template for step ${stepNumber}:`, error);
+          }
+        }
       },
       addStage: () => {
-        console.log('Add stage not implemented');
+        console.log('Add stage not implemented yet');
+        return `step-${stages.length + 1}`;
       },
       removeStage: (id: string) => {
         console.log('Remove stage not implemented:', id);
       },
     }),
-    []
+    [stages.length, dispatch]
   );
 
   // Block actions object
@@ -551,7 +626,7 @@ export const EditorProvider: React.FC<{
 
     // Stage management
     stages,
-    activeStageId: 'step-1',
+    activeStageId,
     stageActions,
 
     // Block actions object
