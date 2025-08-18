@@ -69,7 +69,7 @@ export const InteractiveBlockRenderer: React.FC<InteractiveBlockRendererProps> =
                       onAnswer({
                         questionId: block.properties?.questionId || block.id,
                         selectedOptions: newSelection,
-                        validation: { isValid: newSelection.length > 0, errors: [], warnings: [] },
+                        validation: { success: newSelection.length > 0, errors: [] },
                       });
                     }}
                   >
