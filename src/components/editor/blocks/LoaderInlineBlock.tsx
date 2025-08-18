@@ -13,6 +13,10 @@ interface LoaderInlineBlockProps {
   className?: string;
   onPropertyChange?: (key: string, value: any) => void;
   disabled?: boolean;
+  marginTop?: number;
+  marginBottom?: number;
+  marginLeft?: number;
+  marginRight?: number;
 }
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
@@ -70,6 +74,10 @@ const LoaderInlineBlock: React.FC<LoaderInlineBlockProps> = ({
   className,
   onPropertyChange,
   disabled = false,
+  marginTop = 0,
+  marginBottom = 0,
+  marginLeft = 0,
+  marginRight = 0,
 }) => {
   const [currentProgress, setCurrentProgress] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
