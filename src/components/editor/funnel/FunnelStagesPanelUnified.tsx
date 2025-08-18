@@ -270,3 +270,5 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
     </Card>
   );
 };
+
+export default FunnelStagesPanel;
