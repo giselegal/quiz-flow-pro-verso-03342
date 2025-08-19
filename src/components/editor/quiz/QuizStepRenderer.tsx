@@ -5,14 +5,12 @@
  * Suporta modo editor com edição ao vivo e preview idêntico à produção
  */
 
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
 import { DragDropContext, Draggable, Droppable } from '@hello-pangea/dnd';
 import { Edit3, Eye, GripVertical, Plus, Trash2 } from 'lucide-react';
-import React, { useCallback, useMemo } from 'react';
-
-// Importar componentes de blocos existentes
 import ButtonBlock from '@/components/editor/blocks/ButtonBlock';
 import FormContainerBlock from '@/components/editor/blocks/FormContainerBlock';
 import OptionsGridBlock from '@/components/editor/blocks/OptionsGridBlock';
@@ -39,26 +37,63 @@ interface QuizStepRendererConfig {
   };
 }
 
-interface QuizStepRendererProps {
-  blocks: Block[];
-  config: QuizStepRendererConfig;
+export interface QuizStepRendererProps {
+  stepData: {
+    id: string;
+    title: string;
+    blocks: Block[];
+    metadata?: {
+      description?: string;
+      category?: string;
+      difficulty?: number;
+    };
+  };
+  currentStep: number;
+  mode: 'editor' | 'preview' | 'production';
+  onDataChange: (data: Record<string, any>) => void;
+  theme?: {
+    primaryColor?: string;
+    secondaryColor?: string;
+  };
+  enableValidation?: boolean;
+  enableScoring?: boolean;
   className?: string;
-  onBlocksReorder?: (blocks: Block[]) => void;
-  onAddBlock?: (type: string) => void;
-  onDeleteBlock?: (blockId: string) => void;
 }
 
 export const QuizStepRenderer: React.FC<QuizStepRendererProps> = ({
-  blocks,
-  config,
-  className,
-  onBlocksReorder,
-  onAddBlock,
-  onDeleteBlock,
+  stepData,
+  currentStep,
+  mode,
+  onDataChange,
+  theme = { primaryColor: '#B89B7A', secondaryColor: '#8B7355' },
+  enableValidation = true,
+  enableScoring = true,
+  className = '',
 }) => {
-  const { mode, quizState, theme } = config;
-  const _dataManager = config.dataManager; // eslint-disable-line @typescript-eslint/no-unused-vars
-  const isEditorMode = mode === 'editor';
+  const [formData, setFormData] = useState<Record<string, any>>({});
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  // Atualizar dados quando mudarem
+  useEffect(() => {
+    onDataChange(formData);
+  }, [formData, onDataChange]);
+
+  // Handler para mudanças nos campos
+  const handleFieldChange = (blockId: string, value: any) => {
+    setFormData(prev => ({
+      ...prev,
+      [blockId]: value,
+    }));
+
+    // Limpar erro se houver
+    if (errors[blockId]) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[blockId];
+        return newErrors;
+      });
+    }
+  };
 
   // ========================================
   // Mapeamento de Componentes

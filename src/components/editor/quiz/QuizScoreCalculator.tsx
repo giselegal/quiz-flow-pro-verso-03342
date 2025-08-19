@@ -5,276 +5,276 @@
  * Sistema modular para cálculos em tempo real com resultados personalizados
  */
 
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-interface StyleScore {
-  natural: number;
-  classico: number;
-  contemporaneo: number;
-  elegante: number;
-  romantico: number;
-  sexy: number;
-  dramatico: number;
-  criativo: number;
-}
-
-interface QuizResult {
-  predominantStyle: string;
-  percentage: number;
-  secondaryStyles: Array<{
-    style: string;
-    percentage: number;
-  }>;
-  characteristics: {
-    personality: string[];
-    colors: string[];
-    fabrics: string[];
-    prints: string[];
-    accessories: string[];
-  };
-}
-
-interface QuizScoreCalculatorConfig {
+export interface QuizScoreCalculatorProps {
+  quizData: Record<string, any>;
+  currentStep: number;
+  template: any;
+  onScoreChange: (score: number) => void;
   mode: 'editor' | 'preview' | 'production';
-  quizState: {
-    currentStep: number;
-    userAnswers: Record<string, any>;
-    sessionData: Record<string, any>;
+  scoringRules?: {
+    pointsPerCorrectAnswer?: number;
+    pointsPerCompletedStep?: number;
+    bonusRules?: Array<{
+      condition: (data: Record<string, any>) => boolean;
+      points: number;
+      description: string;
+    }>;
   };
-  dataManager: {
-    onDataUpdate: (key: string, value: any) => void;
-  };
-}
-
-interface QuizScoreCalculatorProps {
-  config: QuizScoreCalculatorConfig;
-  enableRealTimeCalculation?: boolean;
-  recalculateOnAnswerChange?: boolean;
 }
 
 export const QuizScoreCalculator: React.FC<QuizScoreCalculatorProps> = ({
-  config,
-  enableRealTimeCalculation = true,
-  recalculateOnAnswerChange = true,
+  quizData,
+  currentStep,
+  template,
+  onScoreChange,
+  mode,
+  scoringRules = {
+    pointsPerCorrectAnswer: 10,
+    pointsPerCompletedStep: 5,
+    bonusRules: [],
+  },
 }) => {
-  const { mode, quizState, dataManager } = config;
-  const [scores, setScores] = useState<StyleScore>({
-    natural: 0,
-    classico: 0,
-    contemporaneo: 0,
-    elegante: 0,
-    romantico: 0,
-    sexy: 0,
-    dramatico: 0,
-    criativo: 0,
+  const [score, setScore] = useState(0);
+  const [scoreBreakdown, setScoreBreakdown] = useState<{
+    correctAnswers: number;
+    completedSteps: number;
+    bonusPoints: number;
+    details: Array<{
+      type: string;
+      description: string;
+      points: number;
+    }>;
+  }>({
+    correctAnswers: 0,
+    completedSteps: 0,
+    bonusPoints: 0,
+    details: [],
   });
-  const [result, setResult] = useState<QuizResult | null>(null);
 
-  // ========================================
-  // Definições de Estilos
-  // ========================================
-  const styleDefinitions = useMemo(
-    () => ({
-      natural: {
-        name: 'Natural',
-        personality: ['Informal', 'Espontânea', 'Alegre', 'Essencialista'],
-        colors: ['Tons terrosos', 'Neutros suaves', 'Verde musgo', 'Bege'],
-        fabrics: ['Algodão', 'Linho', 'Malha', 'Tecidos naturais'],
-        prints: ['Listras simples', 'Texturas naturais', 'Estampas orgânicas'],
-        accessories: ['Discretos', 'Funcionais', 'Minimalistas'],
-      },
-      classico: {
-        name: 'Clássico',
-        personality: ['Conservadora', 'Séria', 'Organizada', 'Tradicional'],
-        colors: ['Azul marinho', 'Branco', 'Cinza', 'Preto'],
-        fabrics: ['Alfaiataria', 'Tweed', 'Lã', 'Algodão estruturado'],
-        prints: ['Xadrez clássico', 'Listras tradicionais', 'Poá pequeno'],
-        accessories: ['Elegantes', 'Atemporais', 'Discretos'],
-      },
-      contemporaneo: {
-        name: 'Contemporâneo',
-        personality: ['Informada', 'Ativa', 'Prática', 'Moderna'],
-        colors: ['Tons neutros modernos', 'Toques de cor', 'Metálicos'],
-        fabrics: ['Tecidos técnicos', 'Misturas modernas', 'Performance'],
-        prints: ['Geométricas modernas', 'Abstratas', 'Minimalistas'],
-        accessories: ['Funcionais', 'Tecnológicos', 'Versáteis'],
-      },
-      elegante: {
-        name: 'Elegante',
-        personality: ['Exigente', 'Sofisticada', 'Seletiva', 'Refinada'],
-        colors: ['Tons luxuosos', 'Dourado', 'Burgundy', 'Prata'],
-        fabrics: ['Seda', 'Cashmere', 'Tecidos nobres', 'Cetim'],
-        prints: ['Estampas sofisticadas', 'Florais elegantes', 'Abstratas refinadas'],
-        accessories: ['Luxuosos', 'Statement', 'Sofisticados'],
-      },
-      romantico: {
-        name: 'Romântico',
-        personality: ['Feminina', 'Meiga', 'Delicada', 'Sensível'],
-        colors: ['Rosa', 'Lavanda', 'Tons pastéis', 'Soft'],
-        fabrics: ['Chiffon', 'Renda', 'Tule', 'Tecidos fluidos'],
-        prints: ['Florais', 'Borboletas', 'Corações', 'Poá delicado'],
-        accessories: ['Delicados', 'Femininos', 'Românticos'],
-      },
-      sexy: {
-        name: 'Sexy',
-        personality: ['Glamorosa', 'Vaidosa', 'Sensual', 'Confiante'],
-        colors: ['Vermelho', 'Preto', 'Animal print', 'Tons intensos'],
-        fabrics: ['Couro', 'Latex', 'Tecidos moldantes', 'Stretch'],
-        prints: ['Animal print', 'Leopardo', 'Zebra', 'Cobra'],
-        accessories: ['Marcantes', 'Sensuais', 'Statement'],
-      },
-      dramatico: {
-        name: 'Dramático',
-        personality: ['Cosmopolita', 'Moderna', 'Audaciosa', 'Forte'],
-        colors: ['Preto', 'Branco', 'Contrastes', 'Tons dramáticos'],
-        fabrics: ['Estruturados', 'Arquitetônicos', 'Texturizados'],
-        prints: ['Geométricas grandes', 'Abstratas', 'Assimétricas'],
-        accessories: ['Arquitetônicos', 'Escultórais', 'Marcantes'],
-      },
-      criativo: {
-        name: 'Criativo',
-        personality: ['Exótica', 'Aventureira', 'Livre', 'Original'],
-        colors: ['Cores vibrantes', 'Combinações inusitadas', 'Neon'],
-        fabrics: ['Texturas inusitadas', 'Materiais alternativos', 'Mix'],
-        prints: ['Étnicas', 'Psicodélicas', 'Artísticas', 'Únicas'],
-        accessories: ['Únicos', 'Artesanais', 'Étnicos', 'Criativos'],
-      },
-    }),
-    []
-  );
+  // Calcular pontuação
+  useEffect(() => {
+    const calculateScore = () => {
+      let totalScore = 0;
+      let correctAnswers = 0;
+      let completedSteps = 0;
+      let bonusPoints = 0;
+      const details: Array<{
+        type: string;
+        description: string;
+        points: number;
+      }> = [];
 
-  // ========================================
-  // Mapeamento de Respostas para Pontuação
-  // ========================================
-  const scoreMapping = useMemo(
-    () => ({
-      // Questão 1: Roupa favorita
-      natural_q1: { natural: 3, classico: 1, contemporaneo: 1 },
-      classico_q1: { classico: 3, natural: 1, elegante: 1 },
-      contemporaneo_q1: { contemporaneo: 3, elegante: 1, natural: 1 },
-      elegante_q1: { elegante: 3, classico: 1, dramatico: 1 },
-      romantico_q1: { romantico: 3, elegante: 1, natural: 1 },
-      sexy_q1: { sexy: 3, dramatico: 1, romantico: 1 },
-      dramatico_q1: { dramatico: 3, sexy: 1, contemporaneo: 1 },
-      criativo_q1: { criativo: 3, dramatico: 1, romantico: 1 },
+      // Analisar cada etapa com dados
+      Object.entries(quizData).forEach(([stepKey, stepData]) => {
+        if (!stepData || typeof stepData !== 'object') return;
 
-      // Questão 2: Personalidade
-      natural_q2: { natural: 3, contemporaneo: 1 },
-      classico_q2: { classico: 3, elegante: 1 },
-      contemporaneo_q2: { contemporaneo: 3, natural: 1 },
-      elegante_q2: { elegante: 3, classico: 1 },
-      romantico_q2: { romantico: 3, natural: 1 },
-      sexy_q2: { sexy: 3, dramatico: 1 },
-      dramatico_q2: { dramatico: 3, contemporaneo: 1 },
-      criativo_q2: { criativo: 3, natural: 1 },
+        const stepNumber = parseInt(stepKey.replace('step_', ''));
+        const stepTemplate = template?.stages?.[stepNumber - 1];
+        
+        if (!stepTemplate) return;
 
-      // Continue para todas as questões...
-      // Por brevidade, incluindo apenas algumas aqui
-    }),
-    []
-  );
+        // Marcar etapa como completa
+        completedSteps++;
+        const stepPoints = scoringRules.pointsPerCompletedStep || 5;
+        totalScore += stepPoints;
+        details.push({
+          type: 'completion',
+          description: `Etapa ${stepNumber} concluída`,
+          points: stepPoints,
+        });
 
-  // ========================================
-  // Calcular Pontuação
-  // ========================================
-  const calculateScores = useCallback(() => {
-    const newScores: StyleScore = {
-      natural: 0,
-      classico: 0,
-      contemporaneo: 0,
-      elegante: 0,
-      romantico: 0,
-      sexy: 0,
-      dramatico: 0,
-      criativo: 0,
-    };
-
-    // Iterar por todas as respostas
-    Object.entries(quizState.userAnswers).forEach(([answerId, value]) => {
-      if (value && scoreMapping[answerId as keyof typeof scoreMapping]) {
-        const points = scoreMapping[answerId as keyof typeof scoreMapping];
-        Object.entries(points).forEach(([style, score]) => {
-          if (style in newScores) {
-            newScores[style as keyof StyleScore] += score;
+        // Verificar respostas corretas
+        stepTemplate.blocks?.forEach((block: any) => {
+          if (block.type === 'quiz-question-block' && block.props?.correctAnswer) {
+            const userAnswer = stepData[block.id];
+            if (userAnswer === block.props.correctAnswer) {
+              correctAnswers++;
+              const answerPoints = scoringRules.pointsPerCorrectAnswer || 10;
+              totalScore += answerPoints;
+              details.push({
+                type: 'correct',
+                description: `Resposta correta: ${block.props.question?.substring(0, 30)}...`,
+                points: answerPoints,
+              });
+            }
           }
         });
-      }
-    });
+      });
 
-    setScores(newScores);
-    return newScores;
-  }, [quizState.userAnswers, scoreMapping]);
+      // Aplicar regras de bônus
+      scoringRules.bonusRules?.forEach(rule => {
+        if (rule.condition(quizData)) {
+          bonusPoints += rule.points;
+          totalScore += rule.points;
+          details.push({
+            type: 'bonus',
+            description: rule.description,
+            points: rule.points,
+          });
+        }
+      });
 
-  // ========================================
-  // Determinar Resultado
-  // ========================================
-  const calculateResult = useCallback(
-    (currentScores: StyleScore): QuizResult => {
-      // Encontrar estilo predominante
-      const sortedStyles = Object.entries(currentScores)
-        .sort(([, a], [, b]) => b - a)
-        .filter(([, score]) => score > 0);
+      // Atualizar estado
+      setScore(totalScore);
+      setScoreBreakdown({
+        correctAnswers,
+        completedSteps,
+        bonusPoints,
+        details,
+      });
 
-      if (sortedStyles.length === 0) {
-        // Caso padrão se não houver respostas
-        return {
-          predominantStyle: 'natural',
-          percentage: 0,
-          secondaryStyles: [],
-          characteristics: styleDefinitions.natural,
-        };
-      }
+      // Notificar mudança
+      onScoreChange(totalScore);
+    };
 
-      const [predominantStyleKey, predominantScore] = sortedStyles[0];
-      const totalScore = Object.values(currentScores).reduce((sum, score) => sum + score, 0);
-      const percentage = totalScore > 0 ? Math.round((predominantScore / totalScore) * 100) : 0;
+    calculateScore();
+  }, [quizData, template, scoringRules, onScoreChange]);
 
-      // Estilos secundários (até 2)
-      const secondaryStyles = sortedStyles
-        .slice(1, 3)
-        .map(([style, score]) => ({
-          style: styleDefinitions[style as keyof typeof styleDefinitions].name,
-          percentage: totalScore > 0 ? Math.round((score / totalScore) * 100) : 0,
-        }))
-        .filter(({ percentage }) => percentage >= 10); // Apenas se >= 10%
+  // Calcular estatísticas
+  const getStatistics = () => {
+    const totalQuestions = template?.stages?.reduce((total: number, stage: any) => {
+      return total + (stage.blocks?.filter((block: any) => 
+        block.type === 'quiz-question-block' && block.props?.correctAnswer
+      ).length || 0);
+    }, 0) || 0;
 
-      const styleData = styleDefinitions[predominantStyleKey as keyof typeof styleDefinitions];
+    const totalSteps = template?.stages?.length || 0;
+    const accuracyRate = totalQuestions > 0 ? (scoreBreakdown.correctAnswers / totalQuestions) * 100 : 0;
+    const completionRate = totalSteps > 0 ? (scoreBreakdown.completedSteps / totalSteps) * 100 : 0;
 
-      return {
-        predominantStyle: styleData.name,
-        percentage,
-        secondaryStyles,
-        characteristics: {
-          personality: styleData.personality,
-          colors: styleData.colors,
-          fabrics: styleData.fabrics,
-          prints: styleData.prints,
-          accessories: styleData.accessories,
-        },
-      };
-    },
-    [styleDefinitions]
+    return {
+      totalQuestions,
+      totalSteps,
+      accuracyRate: Math.round(accuracyRate),
+      completionRate: Math.round(completionRate),
+    };
+  };
+
+  const stats = getStatistics();
+
+  // Não renderizar no modo produção
+  if (mode === 'production') {
+    return null;
+  }
+
+  return (
+    <div className="quiz-score-calculator fixed top-4 left-4 z-50">
+      <div className="bg-white rounded-lg shadow-lg border border-gray-200 p-4 max-w-sm">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="text-sm font-semibold text-gray-800">
+            🏆 Pontuação
+          </h3>
+          <div className="text-lg font-bold text-blue-600">
+            {score} pts
+          </div>
+        </div>
+
+        {/* Estatísticas principais */}
+        <div className="grid grid-cols-2 gap-3 mb-4">
+          <div className="bg-green-50 p-3 rounded-lg text-center">
+            <div className="text-lg font-bold text-green-600">
+              {scoreBreakdown.correctAnswers}
+            </div>
+            <div className="text-xs text-green-700">
+              Respostas Corretas
+            </div>
+          </div>
+          
+          <div className="bg-blue-50 p-3 rounded-lg text-center">
+            <div className="text-lg font-bold text-blue-600">
+              {scoreBreakdown.completedSteps}
+            </div>
+            <div className="text-xs text-blue-700">
+              Etapas Completas
+            </div>
+          </div>
+        </div>
+
+        {/* Barras de progresso */}
+        <div className="space-y-2 mb-4">
+          <div>
+            <div className="flex justify-between text-xs text-gray-600 mb-1">
+              <span>Precisão</span>
+              <span>{stats.accuracyRate}%</span>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <div
+                className="h-2 bg-green-500 rounded-full transition-all duration-300"
+                style={{ width: `${stats.accuracyRate}%` }}
+              />
+            </div>
+          </div>
+          
+          <div>
+            <div className="flex justify-between text-xs text-gray-600 mb-1">
+              <span>Progresso</span>
+              <span>{stats.completionRate}%</span>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <div
+                className="h-2 bg-blue-500 rounded-full transition-all duration-300"
+                style={{ width: `${stats.completionRate}%` }}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Detalhamento da pontuação */}
+        <details className="text-xs">
+          <summary className="cursor-pointer text-gray-600 hover:text-gray-800 mb-2">
+            Detalhamento ({scoreBreakdown.details.length} itens)
+          </summary>
+          <div className="space-y-1 max-h-32 overflow-auto">
+            {scoreBreakdown.details.map((detail, index) => (
+              <div
+                key={index}
+                className={`flex justify-between p-2 rounded ${
+                  detail.type === 'correct' ? 'bg-green-50 text-green-700' :
+                  detail.type === 'bonus' ? 'bg-purple-50 text-purple-700' :
+                  'bg-blue-50 text-blue-700'
+                }`}
+              >
+                <span className="flex-1 truncate">{detail.description}</span>
+                <span className="font-semibold">+{detail.points}</span>
+              </div>
+            ))}
+          </div>
+        </details>
+
+        {/* Bônus atual */}
+        {scoreBreakdown.bonusPoints > 0 && (
+          <div className="mt-3 p-2 bg-purple-50 border border-purple-200 rounded">
+            <div className="text-xs text-purple-700">
+              🎉 Bônus: +{scoreBreakdown.bonusPoints} pontos
+            </div>
+          </div>
+        )}
+
+        {/* Debug mode */}
+        {mode === 'editor' && (
+          <details className="mt-3 text-xs">
+            <summary className="cursor-pointer text-gray-500 hover:text-gray-700">
+              Debug Score
+            </summary>
+            <pre className="mt-2 bg-gray-100 p-2 rounded text-xs overflow-auto max-h-24">
+              {JSON.stringify({ 
+                score, 
+                scoreBreakdown, 
+                stats, 
+                scoringRules 
+              }, null, 2)}
+            </pre>
+          </details>
+        )}
+      </div>
+    </div>
   );
+};
 
-  // ========================================
-  // Recálculo Automático
-  // ========================================
-  useEffect(() => {
-    if (enableRealTimeCalculation && recalculateOnAnswerChange) {
-      const newScores = calculateScores();
-      const newResult = calculateResult(newScores);
-      setResult(newResult);
-
-      // Atualizar dados da sessão com o resultado
-      dataManager.onDataUpdate('quizScores', newScores);
-      dataManager.onDataUpdate('quizResult', newResult);
-
-      // Log em modo editor
-      if (mode === 'editor') {
-        console.log('🧮 Quiz scores calculated:', {
-          scores: newScores,
-          result: newResult,
-          totalAnswers: Object.keys(quizState.userAnswers).length,
+export default QuizScoreCalculator;
         });
       }
     }

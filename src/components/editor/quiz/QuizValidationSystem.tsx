@@ -5,7 +5,7 @@
  * Sistema modular e extensível para diferentes tipos de validação
  */
 
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 interface ValidationRule {
   id: string;
@@ -40,6 +40,9 @@ interface QuizValidationSystemProps {
   customRules?: Record<number, StepValidationConfig>;
   enableRealTimeValidation?: boolean;
   showValidationMessages?: boolean;
+  stepData?: any;
+  formData?: Record<string, any>;
+  onValidationChange?: (results: Record<string, boolean>) => void;
 }
 
 export const QuizValidationSystem: React.FC<QuizValidationSystemProps> = ({
@@ -47,6 +50,9 @@ export const QuizValidationSystem: React.FC<QuizValidationSystemProps> = ({
   customRules,
   enableRealTimeValidation = true,
   showValidationMessages = true,
+  stepData,
+  formData,
+  onValidationChange,
 }) => {
   const { mode, quizState, validation } = config;
 
@@ -373,8 +379,199 @@ export const QuizValidationSystem: React.FC<QuizValidationSystemProps> = ({
     quizState.currentStep,
   ]);
 
-  // Este componente não renderiza nada visível
-  return null;
+  // Executar validação em tempo real para o sistema de formulário
+  useEffect(() => {
+    if (!stepData?.blocks) return;
+
+    const errors: Record<string, string> = {};
+    let hasErrors = false;
+
+    // Validar cada bloco que precisa de validação
+    stepData.blocks.forEach((block: any) => {
+      const value = formData?.[block.id];
+      const blockErrors = validateBlock(block, value, rules);
+      
+      if (blockErrors.length > 0) {
+        errors[block.id] = blockErrors[0]; // Primeiro erro apenas
+        hasErrors = true;
+      }
+    });
+
+    setValidationErrors(errors);
+    setIsValid(!hasErrors);
+    
+    // Notificar resultado da validação
+    if (onValidationChange) {
+      onValidationChange({ [`step_${stepData.id}`]: !hasErrors });
+    }
+
+  }, [stepData, formData, rules, onValidationChange]);
+
+  // Função para validar um bloco individual
+  const validateBlock = (block: any, value: any, validationRules: any): string[] => {
+    const errors: string[] = [];
+    const blockId = block.id;
+
+    // Pular validação para blocos que não precisam
+    if (!['quiz-question-block', 'form-input'].includes(block.type)) {
+      return errors;
+    }
+
+    // Validação de campo obrigatório
+    if (validationRules.required?.includes(blockId) || block.props?.required) {
+      if (!value || (typeof value === 'string' && value.trim() === '')) {
+        errors.push('Este campo é obrigatório');
+      }
+    }
+
+    // Validação de comprimento mínimo
+    if (value && validationRules.minLength?.[blockId]) {
+      const minLength = validationRules.minLength[blockId];
+      if (value.toString().length < minLength) {
+        errors.push(`Mínimo de ${minLength} caracteres`);
+      }
+    }
+
+    // Validação de padrão (regex)
+    if (value && validationRules.patterns?.[blockId]) {
+      const pattern = validationRules.patterns[blockId];
+      if (!pattern.test(value.toString())) {
+        errors.push('Formato inválido');
+      }
+    }
+
+    // Validação customizada
+    if (value && validationRules.custom?.[blockId]) {
+      const customValidator = validationRules.custom[blockId];
+      if (!customValidator(value)) {
+        errors.push('Valor inválido');
+      }
+    }
+
+    // Validações específicas por tipo de bloco
+    if (block.type === 'quiz-question-block') {
+      if (block.props?.type === 'multiple-choice' && block.props?.required && !value) {
+        errors.push('Selecione uma opção');
+      }
+      
+      if (block.props?.type === 'text-input' && value) {
+        // Validação de email se for campo de email
+        if (block.props?.inputType === 'email') {
+          const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailPattern.test(value)) {
+            errors.push('Email inválido');
+          }
+        }
+        
+        // Validação de telefone se for campo de telefone
+        if (block.props?.inputType === 'phone') {
+          const phonePattern = /^\(\d{2}\)\s\d{4,5}-\d{4}$/;
+          if (!phonePattern.test(value)) {
+            errors.push('Telefone inválido. Use o formato (11) 99999-9999');
+          }
+        }
+      }
+    }
+
+    return errors;
+  };
+
+  // Obter status de validação para exibição
+  const getValidationStatus = () => {
+    const totalFields = stepData?.blocks?.filter((block: any) => 
+      ['quiz-question-block', 'form-input'].includes(block.type)
+    ).length || 0;
+    
+    const errorCount = Object.keys(validationErrors).length;
+    const validCount = totalFields - errorCount;
+
+    return {
+      total: totalFields,
+      valid: validCount,
+      invalid: errorCount,
+      percentage: totalFields > 0 ? Math.round((validCount / totalFields) * 100) : 100,
+    };
+  };
+
+  const status = getValidationStatus();
+
+  // Não renderizar se não houver dados para validar
+  if (!stepData?.blocks || mode === 'production') {
+    return null;
+  }
+
+  return (
+    <div className="quiz-validation-system fixed top-4 right-4 z-50">
+      <div className="bg-white rounded-lg shadow-lg border border-gray-200 p-4 max-w-sm">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="text-sm font-semibold text-gray-800">
+            🔍 Validação
+          </h3>
+          <div className={`text-xs px-2 py-1 rounded ${
+            isValid ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+          }`}>
+            {isValid ? '✅ Válido' : '❌ Inválido'}
+          </div>
+        </div>
+
+        {/* Estatísticas */}
+        <div className="space-y-2 mb-4">
+          <div className="flex justify-between text-xs text-gray-600">
+            <span>Total de campos:</span>
+            <span>{status.total}</span>
+          </div>
+          <div className="flex justify-between text-xs text-gray-600">
+            <span>Válidos:</span>
+            <span className="text-green-600">{status.valid}</span>
+          </div>
+          <div className="flex justify-between text-xs text-gray-600">
+            <span>Com erro:</span>
+            <span className="text-red-600">{status.invalid}</span>
+          </div>
+          
+          {/* Barra de progresso */}
+          <div className="w-full bg-gray-200 rounded-full h-2">
+            <div
+              className={`h-2 rounded-full transition-all duration-300 ${
+                status.percentage === 100 ? 'bg-green-500' : 'bg-yellow-500'
+              }`}
+              style={{ width: `${status.percentage}%` }}
+            />
+          </div>
+          <div className="text-center text-xs text-gray-500">
+            {status.percentage}% válido
+          </div>
+        </div>
+
+        {/* Lista de erros */}
+        {Object.keys(validationErrors).length > 0 && (
+          <div className="space-y-2">
+            <h4 className="text-xs font-medium text-red-700">Erros encontrados:</h4>
+            <div className="space-y-1">
+              {Object.entries(validationErrors).map(([blockId, error]) => (
+                <div key={blockId} className="text-xs text-red-600 bg-red-50 p-2 rounded">
+                  <span className="font-medium">{blockId}:</span> {error}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Modo debug (apenas no editor) */}
+        {mode === 'editor' && (
+          <details className="mt-4 text-xs">
+            <summary className="cursor-pointer text-gray-500 hover:text-gray-700">
+              Debug
+            </summary>
+            <pre className="mt-2 bg-gray-100 p-2 rounded text-xs overflow-auto max-h-24">
+              {JSON.stringify({ formData, validationErrors, rules }, null, 2)}
+            </pre>
+          </details>
+        )}
+      </div>
+    </div>
+  );
 };
 
 export default QuizValidationSystem;

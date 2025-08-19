@@ -5,210 +5,210 @@
  * Componente invisível que coordena toda a persistência de dados
  */
 
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 
-interface QuizDataManagerConfig {
+export interface QuizDataManagerProps {
+  quizData: Record<string, any>;
+  currentStep: number;
   mode: 'editor' | 'preview' | 'production';
-  quizState: {
-    currentStep: number;
-    sessionData: Record<string, any>;
-    userAnswers: Record<string, any>;
-    stepValidation: Record<number, boolean>;
-  };
-  dataManager: {
-    onDataUpdate: (key: string, value: any) => void;
-    onAnswerUpdate: (questionId: string, answer: any) => void;
-  };
-  validation: {
-    onStepValidation: (stepNumber: number, isValid: boolean) => void;
-  };
-}
-
-interface QuizDataManagerProps {
-  config: QuizDataManagerConfig;
-  autoSave?: boolean;
-  debounceMs?: number;
+  onDataChange: (data: Record<string, any>) => void;
+  enableAutoSave?: boolean;
+  autoSaveInterval?: number;
   storageKey?: string;
 }
 
 export const QuizDataManager: React.FC<QuizDataManagerProps> = ({
-  config,
-  autoSave = true,
-  debounceMs = 1000,
-  storageKey = 'quiz-quest-session',
+  quizData,
+  currentStep,
+  mode,
+  onDataChange,
+  enableAutoSave = false,
+  autoSaveInterval = 5000,
+  storageKey = 'quiz_data',
 }) => {
-  const { mode, quizState, dataManager, validation } = config;
+  const lastSaveRef = useRef<number>(0);
   const saveTimeoutRef = useRef<NodeJS.Timeout>();
-  const lastSaveRef = useRef<string>('');
 
-  // ========================================
-  // Auto-save no localStorage
-  // ========================================
-  const saveToStorage = useCallback(() => {
-    if (mode === 'production' && autoSave) {
+  // Carregar dados salvos ao inicializar
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
       try {
-        const dataToSave = {
-          currentStep: quizState.currentStep,
-          sessionData: quizState.sessionData,
-          userAnswers: quizState.userAnswers,
-          timestamp: Date.now(),
-        };
-
-        const serialized = JSON.stringify(dataToSave);
-
-        // Evitar saves desnecessários
-        if (serialized !== lastSaveRef.current) {
-          localStorage.setItem(storageKey, serialized);
-          lastSaveRef.current = serialized;
-          console.log('📱 Quiz data saved to localStorage');
+        const savedData = localStorage.getItem(storageKey);
+        if (savedData) {
+          const parsedData = JSON.parse(savedData);
+          onDataChange(parsedData);
+          console.log('🔄 QuizDataManager: Dados carregados do localStorage');
         }
       } catch (error) {
-        console.warn('⚠️ Failed to save quiz data:', error);
+        console.warn('⚠️ QuizDataManager: Erro ao carregar dados:', error);
       }
     }
-  }, [mode, quizState, autoSave, storageKey]);
+  }, [storageKey, onDataChange]);
 
-  // ========================================
-  // Debounced Auto-save
-  // ========================================
+  // Auto-save com debounce
   useEffect(() => {
-    if (autoSave) {
-      // Limpar timeout anterior
-      if (saveTimeoutRef.current) {
-        clearTimeout(saveTimeoutRef.current);
-      }
+    if (!enableAutoSave || typeof window === 'undefined') return;
 
-      // Agendar novo save
-      saveTimeoutRef.current = setTimeout(saveToStorage, debounceMs);
+    // Limpar timeout anterior
+    if (saveTimeoutRef.current) {
+      clearTimeout(saveTimeoutRef.current);
     }
+
+    // Configurar novo save
+    saveTimeoutRef.current = setTimeout(() => {
+      try {
+        localStorage.setItem(storageKey, JSON.stringify(quizData));
+        lastSaveRef.current = Date.now();
+        console.log('💾 QuizDataManager: Auto-save realizado');
+      } catch (error) {
+        console.warn('⚠️ QuizDataManager: Erro no auto-save:', error);
+      }
+    }, autoSaveInterval);
 
     return () => {
       if (saveTimeoutRef.current) {
         clearTimeout(saveTimeoutRef.current);
       }
     };
-  }, [quizState, autoSave, debounceMs, saveToStorage]);
+  }, [quizData, enableAutoSave, autoSaveInterval, storageKey]);
 
-  // ========================================
-  // Carregar dados salvos na inicialização
-  // ========================================
-  useEffect(() => {
-    if (mode === 'production' && autoSave) {
-      try {
-        const saved = localStorage.getItem(storageKey);
-        if (saved) {
-          const data = JSON.parse(saved);
-
-          // Verificar se os dados não estão muito antigos (24h)
-          const maxAge = 24 * 60 * 60 * 1000; // 24 horas
-          if (Date.now() - data.timestamp < maxAge) {
-            // Restaurar dados salvos
-            if (data.sessionData) {
-              Object.entries(data.sessionData).forEach(([key, value]) => {
-                dataManager.onDataUpdate(key, value);
-              });
-            }
-
-            if (data.userAnswers) {
-              Object.entries(data.userAnswers).forEach(([questionId, answer]) => {
-                dataManager.onAnswerUpdate(questionId, answer);
-              });
-            }
-
-            console.log('📱 Quiz data restored from localStorage');
-          } else {
-            // Dados muito antigos, limpar
-            localStorage.removeItem(storageKey);
-            console.log('🧹 Old quiz data cleared');
-          }
-        }
-      } catch (error) {
-        console.warn('⚠️ Failed to restore quiz data:', error);
-        localStorage.removeItem(storageKey);
-      }
-    }
-  }, [mode, autoSave, storageKey, dataManager]);
-
-  // ========================================
-  // Validação de Etapas
-  // ========================================
-  useEffect(() => {
-    const validateCurrentStep = () => {
-      const { currentStep, sessionData, userAnswers } = quizState;
-      let isValid = false;
-
-      switch (currentStep) {
-        case 1:
-          // Etapa 1: Nome obrigatório
-          isValid = !!(sessionData.userName && sessionData.userName.trim().length > 0);
-          break;
-
-        case 2:
-        case 3:
-        case 4:
-        case 5:
-        case 6:
-        case 7:
-        case 8:
-        case 9:
-        case 10:
-        case 11:
-          // Etapas 2-11: 3 seleções obrigatórias
-          const questionKey = `q${currentStep - 1}_`;
-          const answers = Object.keys(userAnswers).filter(key => key.startsWith(questionKey));
-          isValid = answers.length >= 3;
-          break;
-
-        case 12:
-        case 19:
-          // Etapas de transição: sempre válidas
-          isValid = true;
-          break;
-
-        case 13:
-        case 14:
-        case 15:
-        case 16:
-        case 17:
-        case 18:
-          // Etapas estratégicas: 1 seleção obrigatória
-          const strategicKey = `qs${currentStep - 12}_`;
-          const strategicAnswers = Object.keys(userAnswers).filter(key =>
-            key.startsWith(strategicKey)
-          );
-          isValid = strategicAnswers.length >= 1;
-          break;
-
-        case 20:
-        case 21:
-          // Etapas de resultado: sempre válidas
-          isValid = true;
-          break;
-
-        default:
-          isValid = false;
-      }
-
-      validation.onStepValidation(currentStep, isValid);
+  // Exportar dados
+  const exportData = () => {
+    const dataToExport = {
+      quizData,
+      metadata: {
+        currentStep,
+        mode,
+        timestamp: new Date().toISOString(),
+        totalSteps: Object.keys(quizData).length,
+      },
     };
 
-    validateCurrentStep();
-  }, [quizState, validation]);
+    const blob = new Blob([JSON.stringify(dataToExport, null, 2)], {
+      type: 'application/json',
+    });
+    
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `quiz-data-${new Date().toISOString().split('T')[0]}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
 
-  // ========================================
-  // Analytics (apenas em produção)
-  // ========================================
-  useEffect(() => {
-    if (mode === 'production') {
-      // Registrar evento de mudança de etapa
-      const eventData = {
-        step: quizState.currentStep,
-        timestamp: Date.now(),
-        sessionId: quizState.sessionData.sessionId || 'anonymous',
-        hasAnswers: Object.keys(quizState.userAnswers).length > 0,
-      };
+  // Importar dados
+  const importData = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
 
-      // Aqui você pode integrar com Google Analytics, Mixpanel, etc.
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const importedData = JSON.parse(e.target?.result as string);
+        if (importedData.quizData) {
+          onDataChange(importedData.quizData);
+          console.log('📥 QuizDataManager: Dados importados com sucesso');
+        }
+      } catch (error) {
+        console.error('❌ QuizDataManager: Erro ao importar dados:', error);
+        alert('Erro ao importar dados. Verifique se o arquivo está no formato correto.');
+      }
+    };
+    reader.readAsText(file);
+  };
+
+  // Limpar todos os dados
+  const clearAllData = () => {
+    if (window.confirm('Tem certeza que deseja limpar todos os dados? Esta ação não pode ser desfeita.')) {
+      onDataChange({});
+      localStorage.removeItem(storageKey);
+      console.log('🗑️ QuizDataManager: Todos os dados foram limpos');
+    }
+  };
+
+  // Calcular estatísticas
+  const stats = {
+    totalSteps: Object.keys(quizData).length,
+    currentStepData: quizData[`step_${currentStep}`],
+    hasDataForCurrentStep: !!quizData[`step_${currentStep}`],
+    lastSave: lastSaveRef.current ? new Date(lastSaveRef.current).toLocaleTimeString() : 'Nunca',
+    dataSize: JSON.stringify(quizData).length,
+  };
+
+  // Apenas renderizar controles no modo editor
+  if (mode !== 'editor') {
+    return null;
+  }
+
+  return (
+    <div className="quiz-data-manager fixed bottom-4 left-4 z-50">
+      <details className="bg-white rounded-lg shadow-lg border border-gray-200">
+        <summary className="p-3 cursor-pointer hover:bg-gray-50 rounded-t-lg">
+          <span className="text-sm font-medium text-gray-700">
+            📊 Gerenciador de Dados
+          </span>
+          <span className="ml-2 text-xs text-gray-500">
+            ({stats.totalSteps} etapas)
+          </span>
+        </summary>
+
+        <div className="p-4 border-t border-gray-100 space-y-3">
+          {/* Estatísticas */}
+          <div className="text-xs text-gray-600 space-y-1">
+            <div>Total de etapas: {stats.totalSteps}</div>
+            <div>Etapa atual: {currentStep} {stats.hasDataForCurrentStep ? '✅' : '❌'}</div>
+            <div>Último save: {stats.lastSave}</div>
+            <div>Tamanho dos dados: {(stats.dataSize / 1024).toFixed(1)} KB</div>
+            <div>Auto-save: {enableAutoSave ? '✅ Ativo' : '❌ Inativo'}</div>
+          </div>
+
+          {/* Controles */}
+          <div className="space-y-2">
+            <button
+              onClick={exportData}
+              className="w-full px-3 py-2 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+            >
+              📥 Exportar Dados
+            </button>
+
+            <label className="block">
+              <input
+                type="file"
+                accept=".json"
+                onChange={importData}
+                className="hidden"
+              />
+              <div className="w-full px-3 py-2 text-sm bg-green-600 text-white rounded hover:bg-green-700 transition-colors cursor-pointer text-center">
+                📤 Importar Dados
+              </div>
+            </label>
+
+            <button
+              onClick={clearAllData}
+              className="w-full px-3 py-2 text-sm bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
+            >
+              🗑️ Limpar Tudo
+            </button>
+          </div>
+
+          {/* Dados da etapa atual (se houver) */}
+          {stats.currentStepData && (
+            <details className="text-xs">
+              <summary className="cursor-pointer text-gray-600 hover:text-gray-800">
+                Dados da etapa {currentStep}
+              </summary>
+              <pre className="mt-2 bg-gray-100 p-2 rounded text-xs overflow-auto max-h-32">
+                {JSON.stringify(stats.currentStepData, null, 2)}
+              </pre>
+            </details>
+          )}
+        </div>
+      </details>
+    </div>
+  );
+};
+
+export default QuizDataManager;
       console.log('📊 Step analytics:', eventData);
 
       // Exemplo com dataLayer do Google Analytics

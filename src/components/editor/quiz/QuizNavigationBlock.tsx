@@ -12,194 +12,194 @@ import { cn } from '@/lib/utils';
 import { ArrowLeft, ArrowRight, Home, RotateCcw } from 'lucide-react';
 import React, { useMemo } from 'react';
 
-interface QuizNavigationConfig {
+export interface QuizNavigationBlockProps {
+  currentStep: number;
+  totalSteps: number;
+  canGoNext: boolean;
+  canGoPrevious: boolean;
+  onNext: () => void;
+  onPrevious: () => void;
+  onGoToStep: (step: number) => void;
   mode: 'editor' | 'preview' | 'production';
-  quizState: {
-    currentStep: number;
-    totalSteps: number;
-    sessionData: Record<string, any>;
-    stepValidation: Record<number, boolean>;
+  theme?: {
+    primaryColor?: string;
+    secondaryColor?: string;
   };
-  navigation: {
-    onNext: () => void;
-    onPrevious: () => void;
-    onStepJump: (step: number) => void;
-    canGoNext: boolean;
-    canGoBack: boolean;
-  };
-  theme: {
-    primaryColor: string;
-    backgroundColor: string;
-    textColor: string;
-  };
-}
-
-interface QuizNavigationBlockProps {
-  config: QuizNavigationConfig;
-  showDebugInfo?: boolean;
+  validationResults?: Record<string, boolean>;
   className?: string;
-  variant?: 'full' | 'minimal' | 'stepper';
 }
 
 export const QuizNavigationBlock: React.FC<QuizNavigationBlockProps> = ({
-  config,
-  showDebugInfo = false,
-  className,
-  variant = 'full',
+  currentStep,
+  totalSteps,
+  canGoNext,
+  canGoPrevious,
+  onNext,
+  onPrevious,
+  onGoToStep,
+  mode,
+  theme = { primaryColor: '#B89B7A', secondaryColor: '#8B7355' },
+  validationResults = {},
+  className = '',
 }) => {
-  const { quizState, navigation, theme, mode } = config;
+  // Calcular progresso
+  const progress = (currentStep / totalSteps) * 100;
 
-  // ========================================
-  // Cálculos de Progresso
-  // ========================================
-  const progressData = useMemo(() => {
-    const percentage = (quizState.currentStep / quizState.totalSteps) * 100;
-    const completedSteps = Object.keys(quizState.stepValidation).filter(
-      step => quizState.stepValidation[parseInt(step)]
-    ).length;
+  // Gerar lista de etapas para navegação direta
+  const stepNumbers = Array.from({ length: totalSteps }, (_, i) => i + 1);
 
-    return {
-      percentage: Math.round(percentage),
-      completedSteps,
-      remainingSteps: quizState.totalSteps - quizState.currentStep,
-    };
-  }, [quizState.currentStep, quizState.totalSteps, quizState.stepValidation]);
-
-  // ========================================
-  // Informações da Etapa Atual
-  // ========================================
-  const stepInfo = useMemo(() => {
-    const stepType = getStepType(quizState.currentStep);
-    const stepTitle = getStepTitle(quizState.currentStep);
-
-    return {
-      type: stepType,
-      title: stepTitle,
-      description: getStepDescription(quizState.currentStep),
-      isTransition: [12, 19].includes(quizState.currentStep),
-      isResult: [20, 21].includes(quizState.currentStep),
-    };
-  }, [quizState.currentStep]);
-
-  // ========================================
-  // Handlers
-  // ========================================
-  const handleRestart = () => {
-    navigation.onStepJump(1);
+  // Verificar status de cada etapa
+  const getStepStatus = (step: number) => {
+    if (step === currentStep) return 'current';
+    if (step < currentStep) return 'completed';
+    return 'pending';
   };
 
-  const handleHome = () => {
-    if (mode === 'editor') {
-      // Em modo editor, volta para a dashboard
-      window.location.href = '/dashboard';
-    } else {
-      // Em modo preview/production, volta para o início
-      navigation.onStepJump(1);
+  // Obter ícone da etapa
+  const getStepIcon = (step: number) => {
+    const status = getStepStatus(step);
+    const hasValidation = validationResults[`step_${step}`];
+    
+    if (status === 'completed') {
+      return hasValidation === false ? '❌' : '✅';
     }
+    if (status === 'current') {
+      return '👉';
+    }
+    return step.toString();
   };
 
-  // ========================================
-  // Renderização Condicional por Variante
-  // ========================================
-  if (variant === 'minimal') {
-    return (
-      <div
-        className={cn('quiz-navigation-minimal flex items-center justify-between p-4', className)}
-      >
-        <div className="flex items-center gap-2">
-          <Badge variant="outline" style={{ borderColor: theme.primaryColor }}>
-            {quizState.currentStep}/{quizState.totalSteps}
-          </Badge>
-          <span className="text-sm text-gray-600">{stepInfo.title}</span>
-        </div>
+  // Classes CSS para os botões
+  const buttonBaseClass = `
+    px-4 py-2 rounded-lg font-medium transition-all duration-200
+    focus:outline-none focus:ring-2 focus:ring-offset-2
+  `;
 
-        <div className="flex items-center gap-2">
-          {navigation.canGoBack && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={navigation.onPrevious}
-              disabled={!navigation.canGoBack}
-            >
-              <ArrowLeft className="h-4 w-4" />
-            </Button>
-          )}
+  const primaryButtonClass = `
+    ${buttonBaseClass}
+    text-white shadow-md hover:shadow-lg transform hover:-translate-y-0.5
+  `;
 
-          <Button
-            size="sm"
-            onClick={navigation.onNext}
-            disabled={!navigation.canGoNext}
-            style={{ backgroundColor: theme.primaryColor }}
-          >
-            <ArrowRight className="h-4 w-4" />
-          </Button>
-        </div>
-      </div>
-    );
-  }
+  const secondaryButtonClass = `
+    ${buttonBaseClass}
+    bg-gray-100 text-gray-700 hover:bg-gray-200
+    border border-gray-300
+  `;
 
-  if (variant === 'stepper') {
-    return (
-      <div className={cn('quiz-navigation-stepper p-4', className)}>
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="font-semibold" style={{ color: theme.textColor }}>
-            {stepInfo.title}
-          </h3>
-
-          <Badge style={{ backgroundColor: theme.primaryColor, color: 'white' }}>
-            Etapa {quizState.currentStep}
-          </Badge>
-        </div>
-
-        <Progress
-          value={progressData.percentage}
-          className="mb-4"
-          style={
-            {
-              '--progress-foreground': theme.primaryColor,
-            } as React.CSSProperties
-          }
-        />
-
-        <div className="text-xs text-gray-500 text-center">
-          {progressData.completedSteps} de {quizState.totalSteps} etapas concluídas
-        </div>
-      </div>
-    );
-  }
-
-  // ========================================
-  // Variante Completa (Default)
-  // ========================================
   return (
-    <div
-      className={cn(
-        'quiz-navigation-full bg-white border-b shadow-sm',
-        mode === 'editor' && 'bg-gray-50',
-        className
-      )}
-    >
-      <div className="container mx-auto px-4 py-3">
-        {/* Header Row */}
-        <div className="flex items-center justify-between mb-3">
-          {/* Logo/Brand */}
-          <div className="flex items-center gap-3">
-            {mode === 'editor' && (
-              <Button variant="ghost" size="sm" onClick={handleHome} className="text-gray-600">
-                <Home className="h-4 w-4 mr-2" />
-                Editor
-              </Button>
-            )}
+    <div className={`quiz-navigation-block bg-white border-b border-gray-200 p-4 ${className}`}>
+      {/* Barra de progresso */}
+      <div className="mb-4">
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-sm font-medium text-gray-700">
+            Progresso: {currentStep} de {totalSteps}
+          </span>
+          <span className="text-sm text-gray-500">
+            {Math.round(progress)}% concluído
+          </span>
+        </div>
+        
+        <div className="w-full bg-gray-200 rounded-full h-2">
+          <div
+            className="h-2 rounded-full transition-all duration-500 ease-out"
+            style={{
+              width: `${progress}%`,
+              backgroundColor: theme.primaryColor,
+            }}
+          />
+        </div>
+      </div>
 
-            <div className="flex items-center gap-2">
-              <Badge
-                variant={stepInfo.isResult ? 'default' : 'outline'}
-                style={{
-                  backgroundColor: stepInfo.isResult ? theme.primaryColor : 'transparent',
-                  borderColor: theme.primaryColor,
-                  color: stepInfo.isResult ? 'white' : theme.primaryColor,
-                }}
-              >
+      {/* Navegação principal */}
+      <div className="flex items-center justify-between mb-4">
+        {/* Botão Anterior */}
+        <button
+          onClick={onPrevious}
+          disabled={!canGoPrevious}
+          className={`
+            ${canGoPrevious ? secondaryButtonClass : 'px-4 py-2 text-gray-400 cursor-not-allowed'}
+          `}
+        >
+          ← Anterior
+        </button>
+
+        {/* Informação da etapa atual */}
+        <div className="text-center">
+          <div className="text-lg font-semibold text-gray-800">
+            Etapa {currentStep}
+          </div>
+          {mode === 'editor' && (
+            <div className="text-xs text-gray-500">
+              Modo: {mode}
+            </div>
+          )}
+        </div>
+
+        {/* Botão Próximo */}
+        <button
+          onClick={onNext}
+          disabled={!canGoNext}
+          className={`
+            ${canGoNext ? primaryButtonClass : 'px-4 py-2 text-gray-400 cursor-not-allowed'}
+          `}
+          style={{
+            backgroundColor: canGoNext ? theme.primaryColor : undefined,
+          }}
+        >
+          Próximo →
+        </button>
+      </div>
+
+      {/* Navegação por etapas (apenas no modo editor) */}
+      {mode === 'editor' && (
+        <div className="border-t border-gray-100 pt-4">
+          <div className="text-xs text-gray-600 mb-2">Navegação direta:</div>
+          <div className="flex flex-wrap gap-1">
+            {stepNumbers.map(step => {
+              const status = getStepStatus(step);
+              const isAccessible = step <= currentStep || mode === 'editor';
+              
+              return (
+                <button
+                  key={step}
+                  onClick={() => isAccessible && onGoToStep(step)}
+                  disabled={!isAccessible}
+                  className={`
+                    w-8 h-8 text-xs rounded-full transition-all duration-200
+                    ${status === 'current' 
+                      ? 'text-white shadow-md' 
+                      : status === 'completed'
+                        ? 'bg-green-100 text-green-700 hover:bg-green-200'
+                        : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+                    }
+                    ${!isAccessible ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}
+                  `}
+                  style={{
+                    backgroundColor: status === 'current' ? theme.primaryColor : undefined,
+                  }}
+                  title={`Etapa ${step} - ${status}`}
+                >
+                  {getStepIcon(step)}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Informações de validação (apenas quando há erros) */}
+      {Object.values(validationResults).some(result => result === false) && (
+        <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+          <div className="text-sm text-red-700">
+            ⚠️ Algumas etapas possuem erros de validação. Verifique os campos destacados.
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default QuizNavigationBlock;
                 {stepInfo.type}
               </Badge>
 
