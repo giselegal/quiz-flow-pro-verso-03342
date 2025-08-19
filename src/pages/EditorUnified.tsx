@@ -26,10 +26,16 @@ import type { Block } from '@/types/editor';
 import { FunnelSettingsPanel } from '@/components/editor/funnel-settings/FunnelSettingsPanel';
 import { SaveTemplateModal } from '@/components/editor/SaveTemplateModal';
 
+// 🎨 ÍCONES E COMPONENTES DE UI PROFISSIONAIS
+import { BrandLogo } from '@/components/ui/brand-logo';
+import { Separator } from '@/components/ui/separator';
+
 /**
- * 🎨 EDITOR UNIFICADO - Versão Completa Integrada
+ * 🎨 EDITOR UNIFICADO - Design Profissional
  *
- * Editor de funil com sistema unificado completo:
+ * Editor de funil com sistema unificado e identidade visual consistente:
+ * - Design profissional com cores da marca
+ * - Identidade visual coesa e moderna  
  * - UnifiedPreviewEngine: Preview 100% idêntico à produção
  * - EditorStageManager: Gerenciamento completo das 21 etapas
  * - EditorControlsManager: Controles unificados do editor
@@ -185,61 +191,138 @@ const EditorUnified: React.FC = () => {
 
   return (
     <PreviewProvider>
-      <div className="min-h-screen bg-gradient-to-br from-[#FAF9F7] via-[#F5F2E9] to-[#EEEBE1]">
-        {/* 🎮 CONTROLS MANAGER - Barra superior unificada */}
-        <EditorControlsManager
-          state={controlsState}
-          actions={controlsActions}
-          mode={editorMode === 'edit' ? 'full' : 'minimal'}
-          className="border-b border-stone-200/50 bg-white/80 backdrop-blur-sm"
-        />
-
-        {/* 🎯 LAYOUT PRINCIPAL UNIFICADO */}
-        <div className="flex h-[calc(100vh-60px)]">
-          {/* 🎪 STAGE MANAGER - Navegação de etapas */}
-          <div className="w-80 border-r border-stone-200/50 bg-white/90 backdrop-blur-sm">
-            <EditorStageManager
-              mode={editorMode}
-              initialStep={currentStep}
-              onStepSelect={handleStepSelect}
-              onModeChange={handleModeChange}
-              className="h-full"
-            />
-          </div>
-
-          {/* 🎨 UNIFIED PREVIEW ENGINE - Canvas principal */}
-          <div className="flex-1 relative overflow-hidden">
-            <div ref={scrollRef} className="h-full p-6 overflow-auto">
-              <UnifiedPreviewEngine
-                blocks={currentBlocks}
-                selectedBlockId={selectedBlockId}
-                isPreviewing={editorMode === 'preview' || editorMode === 'test'}
-                viewportSize={controlsState.viewportSize}
-                onBlockSelect={handleBlockSelect}
-                onBlockUpdate={handleBlockUpdate}
-                mode={editorMode === 'edit' ? 'editor' : 'preview'}
-                className="mx-auto"
+      {/* 🎨 CONTAINER PRINCIPAL COM DESIGN PROFISSIONAL */}
+      <div className="min-h-screen bg-gradient-to-br from-brand-light/10 via-white to-brand-primary/5">
+        
+        {/* 🏢 HEADER PROFISSIONAL */}
+        <header className="bg-white/95 backdrop-blur-xl border-b border-brand-light/30 shadow-sm">
+          <div className="px-6 py-3">
+            <div className="flex items-center justify-between">
+              {/* Logo profissional */}
+              <BrandLogo 
+                size="md" 
+                variant="full" 
+                showSubtitle={true}
+                className="flex items-center space-x-3"
               />
+
+              {/* Status e Info */}
+              <div className="flex items-center space-x-4">
+                <div className="hidden md:flex items-center space-x-2 text-xs text-brand-text/70">
+                  <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
+                  <span>Auto-save ativo</span>
+                </div>
+                <Separator orientation="vertical" className="h-4 hidden md:block" />
+                <div className="text-xs text-brand-text/70">
+                  Etapa {currentStep} de 21
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* 📝 PROPERTIES PANEL - Painel de propriedades unificado */}
-          <div className="w-80 border-l border-stone-200/50 bg-white/90 backdrop-blur-sm">
-            <EditorPropertiesPanel
-              selectedBlock={currentSelectedBlock}
-              onBlockUpdate={handleBlockUpdate}
-              onBlockDuplicate={handleBlockDuplicate}
-              onBlockDelete={handleBlockDelete}
-              previewMode={editorMode === 'preview'}
-              onPreviewToggle={enabled => {
-                setEditorMode(enabled ? 'preview' : 'edit');
-              }}
-              className="h-full"
+          {/* 🎮 CONTROLS MANAGER - Barra de controles integrada */}
+          <div className="border-t border-brand-light/20 bg-brand-light/5">
+            <EditorControlsManager
+              state={controlsState}
+              actions={controlsActions}
+              mode={editorMode === 'edit' ? 'full' : 'minimal'}
+              className="px-6 py-2"
             />
           </div>
+        </header>
+
+        {/* 🎯 LAYOUT PRINCIPAL PROFISSIONAL */}
+        <div className="flex h-[calc(100vh-120px)]">
+          
+          {/* 🎪 STAGE MANAGER - Painel lateral esquerdo */}
+          <aside className="w-80 bg-white/90 backdrop-blur-sm border-r border-brand-light/30 shadow-sm">
+            <div className="h-full flex flex-col">
+              {/* Header do painel */}
+              <div className="px-4 py-3 bg-brand-light/10 border-b border-brand-light/30">
+                <h2 className="text-sm font-medium text-brand-text flex items-center gap-2">
+                  <div className="w-4 h-4 bg-brand-primary rounded-sm flex items-center justify-center">
+                    <span className="text-white text-xs font-bold">21</span>
+                  </div>
+                  Etapas do Quiz
+                </h2>
+                <p className="text-xs text-brand-text/60 mt-1">
+                  Navegue pelas etapas do funil
+                </p>
+              </div>
+              
+              {/* Conteúdo do Stage Manager */}
+              <div className="flex-1 overflow-hidden">
+                <EditorStageManager
+                  mode={editorMode}
+                  initialStep={currentStep}
+                  onStepSelect={handleStepSelect}
+                  onModeChange={handleModeChange}
+                  className="h-full"
+                />
+              </div>
+            </div>
+          </aside>
+
+          {/* 🎨 CANVAS PRINCIPAL - Área central com design premium */}
+          <main className="flex-1 relative overflow-hidden bg-gradient-to-b from-slate-50/50 to-white">
+            {/* Background pattern sutil */}
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(184,155,122,0.03)_0%,transparent_50%)]"></div>
+            
+            <div 
+              ref={scrollRef} 
+              className="relative h-full p-8 overflow-auto"
+            >
+              {/* Container do preview com sombra profissional */}
+              <div className="mx-auto max-w-5xl">
+                <UnifiedPreviewEngine
+                  blocks={currentBlocks}
+                  selectedBlockId={selectedBlockId}
+                  isPreviewing={editorMode === 'preview' || editorMode === 'test'}
+                  viewportSize={controlsState.viewportSize}
+                  onBlockSelect={handleBlockSelect}
+                  onBlockUpdate={handleBlockUpdate}
+                  mode={editorMode === 'edit' ? 'editor' : 'preview'}
+                  className="shadow-2xl shadow-brand-primary/10 rounded-2xl overflow-hidden border border-brand-light/20 bg-white"
+                />
+              </div>
+            </div>
+          </main>
+
+          {/* 📝 PROPERTIES PANEL - Painel lateral direito */}
+          <aside className="w-80 bg-white/90 backdrop-blur-sm border-l border-brand-light/30 shadow-sm">
+            <div className="h-full flex flex-col">
+              {/* Header do painel */}
+              <div className="px-4 py-3 bg-brand-light/10 border-b border-brand-light/30">
+                <h2 className="text-sm font-medium text-brand-text flex items-center gap-2">
+                  <div className="w-4 h-4 bg-brand-dark rounded-sm flex items-center justify-center">
+                    <span className="text-white text-xs">⚙</span>
+                  </div>
+                  Propriedades
+                </h2>
+                <p className="text-xs text-brand-text/60 mt-1">
+                  {currentSelectedBlock ? 'Configurar elemento selecionado' : 'Selecione um elemento para editar'}
+                </p>
+              </div>
+              
+              {/* Conteúdo do Properties Panel */}
+              <div className="flex-1 overflow-hidden">
+                <EditorPropertiesPanel
+                  selectedBlock={currentSelectedBlock}
+                  onBlockUpdate={handleBlockUpdate}
+                  onBlockDuplicate={handleBlockDuplicate}
+                  onBlockDelete={handleBlockDelete}
+                  previewMode={editorMode === 'preview'}
+                  onPreviewToggle={enabled => {
+                    setEditorMode(enabled ? 'preview' : 'edit');
+                  }}
+                  className="h-full"
+                />
+              </div>
+            </div>
+          </aside>
         </div>
 
-        {/* MODAIS LEGADOS (mantidos para compatibilidade) */}
+        {/* MODAIS COM DESIGN APRIMORADO */}
         {showFunnelSettings && (
           <FunnelSettingsPanel
             funnelId="quiz-estilo-completo"
