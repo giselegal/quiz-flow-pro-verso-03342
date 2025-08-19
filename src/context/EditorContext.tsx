@@ -254,37 +254,48 @@ export const EditorProvider: React.FC<{
 
   // ✅ NOVO: Carregar templates automaticamente quando muda de etapa
   useEffect(() => {
-    if (!activeStageId || activeStageId === 'step-1') return; // Skip initial load
+    if (!activeStageId) return;
 
     const loadStepTemplate = async () => {
       try {
-        console.log(`🔄 Carregando template automático para etapa: ${activeStageId}`);
+        console.log(`🔄 AUTO-LOAD: Iniciando carregamento para etapa: ${activeStageId}`);
 
         // Carregar via templateService diretamente
         try {
           const templateService = (await import('../services/templateService')).default;
           const stepNumber = parseInt(activeStageId.replace('step-', ''));
+
+          console.log(`🔍 AUTO-LOAD: Processando etapa número: ${stepNumber}`);
+
           const template = await templateService.getTemplateByStep(stepNumber);
 
           if (template && template.blocks && template.blocks.length > 0) {
-            console.log(
-              `✅ Template da etapa ${stepNumber} carregado: ${template.blocks.length} blocos`
-            );
+            console.log(`✅ AUTO-LOAD: Template da etapa ${stepNumber} carregado com sucesso!`);
+            console.log(`📊 AUTO-LOAD: ${template.blocks.length} blocos encontrados`);
+
+            // Log dos tipos de blocos para debug
+            const blockTypes = template.blocks.map(block => block.type);
+            console.log(`🧩 AUTO-LOAD: Tipos de blocos: ${blockTypes.join(', ')}`);
 
             const editorBlocks = templateService.convertTemplateBlocksToEditorBlocks(
               template.blocks
             );
+
+            console.log(`🔄 AUTO-LOAD: Convertidos ${editorBlocks.length} blocos para o editor`);
             dispatch({ type: 'SET_BLOCKS', payload: editorBlocks });
+
+            console.log(`✅ AUTO-LOAD: Blocos carregados no estado do editor!`);
           } else {
-            console.warn(`⚠️ Template vazio para etapa ${stepNumber}`);
+            console.warn(`⚠️ AUTO-LOAD: Template vazio para etapa ${stepNumber}`);
+            console.warn(`🔍 AUTO-LOAD: Template response:`, template);
             dispatch({ type: 'SET_BLOCKS', payload: [] });
           }
         } catch (error) {
-          console.warn('⚠️ Erro ao carregar template via service:', error);
+          console.error('❌ AUTO-LOAD: Erro ao carregar template via service:', error);
           dispatch({ type: 'SET_BLOCKS', payload: [] });
         }
       } catch (error) {
-        console.error('❌ Erro ao carregar template da etapa:', error);
+        console.error('❌ AUTO-LOAD: Erro geral ao carregar template da etapa:', error);
       }
     };
 
