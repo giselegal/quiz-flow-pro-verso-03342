@@ -40,7 +40,7 @@ import { SaveTemplateModal } from '@/components/editor/SaveTemplateModal';
  */
 const EditorUnified: React.FC = () => {
   // 🎪 HOOK PRINCIPAL UNIFICADO
-  const { quizState, actions } = useQuizFlow({
+  const { actions } = useQuizFlow({
     mode: 'editor',
     onStepChange: step => {
       console.log('🎯 Editor: Mudança de etapa:', step);
@@ -56,15 +56,26 @@ const EditorUnified: React.FC = () => {
   const [editorMode, setEditorMode] = useState<'edit' | 'preview' | 'test'>('edit');
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
-  const [viewportSize, setViewportSize] = useState<'mobile' | 'tablet' | 'desktop'>('desktop');
   const [showFunnelSettings, setShowFunnelSettings] = useState(false);
   const [showSaveTemplateModal, setShowSaveTemplateModal] = useState(false);
+
+  // Estados para EditorControlsManager
+  const [controlsState, setControlsState] = useState({
+    isPreviewing: editorMode === 'preview',
+    viewportSize: 'desktop' as 'mobile' | 'tablet' | 'desktop',
+    showGrid: false,
+    showLayers: false,
+    autoSave: true,
+    canUndo: false,
+    canRedo: false,
+    isSaving: false,
+  });
 
   // Editor Context - Estado centralizado do editor
   const {
     activeStageId,
     blockActions: { deleteBlock, updateBlock },
-    uiState: { isPreviewing, setIsPreviewing },
+    uiState: { setIsPreviewing },
     computed: { currentBlocks },
   } = useEditor();
 
@@ -102,6 +113,29 @@ const EditorUnified: React.FC = () => {
     console.log('🔄 Editor Unificado: Modo alterado:', mode);
     setEditorMode(mode);
     setIsPreviewing(mode === 'preview' || mode === 'test');
+    setControlsState(prev => ({ ...prev, isPreviewing: mode === 'preview' || mode === 'test' }));
+  };
+
+  const handleViewportChange = (size: 'mobile' | 'tablet' | 'desktop') => {
+    setControlsState(prev => ({ ...prev, viewportSize: size }));
+  };
+
+  // Actions para EditorControlsManager
+  const controlsActions = {
+    togglePreview: () => handleModeChange(editorMode === 'preview' ? 'edit' : 'preview'),
+    setViewportSize: handleViewportChange,
+    toggleGrid: () => setControlsState(prev => ({ ...prev, showGrid: !prev.showGrid })),
+    toggleLayers: () => setControlsState(prev => ({ ...prev, showLayers: !prev.showLayers })),
+    save: () => {
+      console.log('💾 Salvamento manual acionado');
+      setControlsState(prev => ({ ...prev, isSaving: true }));
+      // TODO: Implementar save manual
+      setTimeout(() => setControlsState(prev => ({ ...prev, isSaving: false })), 1000);
+    },
+    undo: () => console.log('↶ Undo'),
+    redo: () => console.log('↷ Redo'),
+    exportTemplate: () => console.log('📤 Export'),
+    importTemplate: () => console.log('📥 Import'),
   };
 
   const handleBlockUpdate = (blockId: string, updates: Partial<Block>) => {
@@ -154,18 +188,9 @@ const EditorUnified: React.FC = () => {
       <div className="min-h-screen bg-gradient-to-br from-[#FAF9F7] via-[#F5F2E9] to-[#EEEBE1]">
         {/* 🎮 CONTROLS MANAGER - Barra superior unificada */}
         <EditorControlsManager
+          state={controlsState}
+          actions={controlsActions}
           mode={editorMode === 'edit' ? 'full' : 'minimal'}
-          viewportSize={viewportSize}
-          isPreviewing={isPreviewing}
-          onModeChange={handleModeChange}
-          onViewportChange={setViewportSize}
-          onPreviewToggle={setIsPreviewing}
-          onSave={() => {
-            console.log('💾 Salvamento manual acionado');
-            // TODO: Implementar save manual
-          }}
-          onUndo={() => console.log('↶ Undo')}
-          onRedo={() => console.log('↷ Redo')}
           className="border-b border-stone-200/50 bg-white/80 backdrop-blur-sm"
         />
 
@@ -174,7 +199,7 @@ const EditorUnified: React.FC = () => {
           {/* 🎪 STAGE MANAGER - Navegação de etapas */}
           <div className="w-80 border-r border-stone-200/50 bg-white/90 backdrop-blur-sm">
             <EditorStageManager
-              mode={editorMode === 'edit' ? 'full' : 'minimal'}
+              mode={editorMode}
               initialStep={currentStep}
               onStepSelect={handleStepSelect}
               onModeChange={handleModeChange}
@@ -189,7 +214,7 @@ const EditorUnified: React.FC = () => {
                 blocks={currentBlocks}
                 selectedBlockId={selectedBlockId}
                 isPreviewing={editorMode === 'preview' || editorMode === 'test'}
-                viewportSize={viewportSize}
+                viewportSize={controlsState.viewportSize}
                 onBlockSelect={handleBlockSelect}
                 onBlockUpdate={handleBlockUpdate}
                 mode={editorMode === 'edit' ? 'editor' : 'preview'}
