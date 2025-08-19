@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 // Editor Components
 import { CanvasDropZone } from '@/components/editor/canvas/CanvasDropZone';
@@ -106,9 +106,42 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
     }
   };
 
-  const handleStageSelect = (_stageId: string) => {
-    // O EditorContext já gerencia internamente
+  const handleStageSelect = (stageId: string) => {
+    console.log('🎯 Stage selecionada:', stageId);
+    
+    // Ativar preview automaticamente quando uma etapa for selecionada
+    setIsPreviewing(true);
+    setPropertiesPanelPreview(true);
+    
+    // O EditorContext já gerencia internamente a mudança de stage
   };
+
+  // 🎯 ATIVAR PREVIEW QUANDO ETAPA MUDAR
+  useEffect(() => {
+    console.log('🔄 Stage ativa mudou:', activeStageId);
+    
+    // Ativar preview automaticamente quando a etapa ativa mudar
+    if (activeStageId) {
+      // Ativar preview global também
+      setIsPreviewing(true);
+      setPropertiesPanelPreview(true);
+      console.log('✅ Preview ativado automaticamente para stage:', activeStageId);
+      
+      // Pequeno delay para garantir que os blocos foram carregados
+      setTimeout(() => {
+        console.log('🎯 Preview confirmado após carregamento da etapa');
+      }, 500);
+    }
+  }, [activeStageId, setIsPreviewing]);
+
+  // 🎯 GARANTIR QUE PREVIEW SEJA ATIVADO QUANDO HOUVER BLOCOS
+  useEffect(() => {
+    if (currentBlocks && currentBlocks.length > 0 && !propertiesPanelPreview) {
+      console.log('📦 Blocos carregados, ativando preview:', currentBlocks.length);
+      setIsPreviewing(true);
+      setPropertiesPanelPreview(true);
+    }
+  }, [currentBlocks, propertiesPanelPreview, setIsPreviewing]);
 
   // Configurar atalhos de teclado
   useKeyboardShortcuts({

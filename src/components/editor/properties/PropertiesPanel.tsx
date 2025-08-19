@@ -8,7 +8,7 @@
  * - Compatibilidade total com sistema existente
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 // UI Components
 import { Button } from '@/components/ui/button';
@@ -62,6 +62,20 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
   const [activeTab, setActiveTab] = useState<string>('properties');
   // Estado para preview interno do PropertiesPanel
   const [internalPreview, setInternalPreview] = useState<boolean>(false);
+
+  // 🎯 SINCRONIZAR PREVIEW INTERNO COM MODO EXTERNO
+  useEffect(() => {
+    // Se o preview externo estiver ativo e o interno não, sincronizar
+    if (isPreviewMode && !internalPreview) {
+      setInternalPreview(true);
+      console.log('✅ Preview interno sincronizado com preview externo (ativado)');
+    }
+    // Se o preview externo estiver inativo e o interno ativo, sincronizar
+    else if (!isPreviewMode && internalPreview) {
+      setInternalPreview(false);
+      console.log('✅ Preview interno sincronizado com preview externo (desativado)');
+    }
+  }, [isPreviewMode, internalPreview]);
 
   const handleUpdate = (updates: Record<string, any>) => {
     if (selectedBlock && onUpdate) {
