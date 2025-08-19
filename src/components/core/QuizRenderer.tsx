@@ -34,7 +34,7 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
   });
 
   const { currentStep, totalSteps, userName, progress, isLoading } = quizState;
-  const { nextStep, prevStep, getStepData } = actions;
+  const { prevStep, getStepData } = actions; // nextStep removido pois não é usado
 
   // Buscar dados da etapa atual
   const stepBlocks = getStepData();

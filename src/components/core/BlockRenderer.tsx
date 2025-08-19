@@ -19,7 +19,7 @@ export interface BlockRendererProps {
 export const BlockRenderer: React.FC<BlockRendererProps> = ({
   block,
   mode = 'production',
-  onBlockUpdate,
+  // onBlockUpdate, - removido pois não é usado
   onBlockSelect,
   isSelected = false,
   // quizState, - removido pois não é usado
@@ -32,13 +32,6 @@ export const BlockRenderer: React.FC<BlockRendererProps> = ({
       setIsEditing(true);
     }
   }, [mode, onBlockSelect, block.id]);
-
-  const _handleUpdate = useCallback(
-    (updates: Partial<Block>) => {
-      onBlockUpdate?.(block.id, updates);
-    },
-    [onBlockUpdate, block.id]
-  );
 
   // Estilos base do bloco
   const blockStyles = {
