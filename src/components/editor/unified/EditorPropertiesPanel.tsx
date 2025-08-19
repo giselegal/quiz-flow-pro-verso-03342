@@ -483,8 +483,8 @@ export const EditorPropertiesPanel: React.FC<EditorPropertiesPanelProps> = ({
   const hasUnsavedChanges = Object.keys(tempValues).length > 0;
 
   return (
-    <Card className={cn('h-full flex flex-col', className)}>
-      <CardHeader className="pb-3">
+    <Card className={cn('h-full flex flex-col overflow-hidden', className)}>
+      <CardHeader className="pb-3 flex-shrink-0">
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg flex items-center gap-2">
             <Settings className="h-5 w-5" />
@@ -518,36 +518,37 @@ export const EditorPropertiesPanel: React.FC<EditorPropertiesPanelProps> = ({
         )}
       </CardHeader>
 
-      <Separator />
+      <Separator className="flex-shrink-0" />
 
-      {/* Propriedades */}
-      <ScrollArea className="flex-1 p-4">
-        <div className="space-y-4">
-          {categorizedProperties.map(category => (
-            <div key={category.key}>
-              <Button
-                variant="ghost"
-                className="w-full justify-between p-2 h-auto"
-                onClick={() => toggleCategory(category.key)}
-              >
-                <div className="flex items-center gap-2">
-                  <category.icon className="h-4 w-4" />
-                  <span className="font-medium">{category.label}</span>
-                  <Badge variant="outline" className="text-xs">
-                    {category.properties.length}
-                  </Badge>
-                </div>
-                {category.expanded ? (
-                  <ChevronDown className="h-4 w-4" />
-                ) : (
-                  <ChevronRight className="h-4 w-4" />
-                )}
-              </Button>
+      {/* Propriedades com scroll otimizado */}
+      <div className="flex-1 flex flex-col min-h-0">
+        <ScrollArea className="flex-1">
+          <div className="p-4 space-y-4">
+            {categorizedProperties.map(category => (
+              <div key={category.key}>
+                <Button
+                  variant="ghost"
+                  className="w-full justify-between p-2 h-auto"
+                  onClick={() => toggleCategory(category.key)}
+                >
+                  <div className="flex items-center gap-2">
+                    <category.icon className="h-4 w-4" />
+                    <span className="font-medium">{category.label}</span>
+                    <Badge variant="outline" className="text-xs">
+                      {category.properties.length}
+                    </Badge>
+                  </div>
+                  {category.expanded ? (
+                    <ChevronDown className="h-4 w-4" />
+                  ) : (
+                    <ChevronRight className="h-4 w-4" />
+                  )}
+                </Button>
 
-              {category.expanded && (
-                <div className="mt-2 space-y-3 pl-4">
-                  {category.properties.map(property => (
-                    <div key={property.key} className="space-y-2">
+                {category.expanded && (
+                  <div className="mt-2 space-y-3 pl-4">
+                    {category.properties.map(property => (
+                      <div key={property.key} className="space-y-2">
                       <Label className="text-sm font-medium flex items-center gap-2">
                         {property.label}
                         {property.validation?.required && <span className="text-red-500">*</span>}

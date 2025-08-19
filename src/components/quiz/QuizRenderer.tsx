@@ -48,7 +48,7 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({ className = '', styl
 
   // Função para atualizar dados do quiz
   const handleUpdateQuizData = (componentType: string, data: any) => {
-    setQuizData(prev => ({
+    setQuizData((prev: any) => ({
       ...prev,
       [componentType]: data,
     }));
