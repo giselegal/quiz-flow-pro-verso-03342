@@ -9,6 +9,7 @@ export { EditorControlsManager } from './EditorControlsManager';
 export { EditorPropertiesPanel } from './EditorPropertiesPanel';
 export { EditorStageManager } from './EditorStageManager';
 export { UnifiedPreviewEngine } from './UnifiedPreviewEngine';
+export { UnifiedQuizStepLoader } from './UnifiedQuizStepLoader';
 
 // Types
 export type { EditorControlsManagerProps } from './EditorControlsManager';
@@ -19,13 +20,14 @@ export type { UnifiedPreviewEngineProps } from './UnifiedPreviewEngine';
 /**
  * 🎯 EDITOR UNIFICADO COMPLETO
  *
- * Todos os 5 componentes necessários para o sistema unificado:
+ * Todos os 6 componentes necessários para o sistema unificado:
  *
  * 1. ✅ UnifiedPreviewEngine - Engine de preview com fidelidade 100%
  * 2. ✅ EditorControlsManager - Sistema de controles unificado
  * 3. ✅ EditorStageManager - Gerenciador de etapas do quiz
  * 4. ✅ EditorPropertiesPanel - Painel de propriedades unificado
- * 5. ✅ Integração completa - Todos os componentes funcionando juntos
+ * 5. ✅ UnifiedQuizStepLoader - Carregador otimizado de etapas do quiz
+ * 6. ✅ Integração completa - Todos os componentes funcionando juntos
  *
  * Status: 🎉 IMPLEMENTAÇÃO COMPLETA
  */

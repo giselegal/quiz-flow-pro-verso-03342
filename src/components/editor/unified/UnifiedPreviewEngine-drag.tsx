@@ -1,7 +1,7 @@
 /**
- * 🎨 UNIFIED PREVIEW ENGINE - EDITOR UNIFICADO
+ * 🎨 UNIFIED PREVIEW ENGINE - EDITOR UNIFICADO COM DRAG & DROP
  *
- * Engine de preview 100% idêntico à produção
+ * Engine de preview 100% idêntico à produção com suporte a arrastar e soltar
  */
 
 import { useMonitoring } from '@/services/MonitoringService';
@@ -14,9 +14,6 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { DndContext, DragEndEvent, closestCenter } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { restrictToParentElement } from '@dnd-kit/modifiers';
-
-// Importação do componente sortable
-import { SortablePreviewBlockWrapper } from './SortablePreviewBlockWrapper';
 
 export interface UnifiedPreviewEngineProps {
   blocks: Block[];
@@ -44,9 +41,14 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
   primaryStyle,
   onBlockSelect,
   onBlockUpdate,
+  onBlocksReordered,
   mode = 'preview',
   className = '',
 }) => {
+  const { trackEvent } = useMonitoring();
+  const flags = useFeatureFlags();
+  const [previewErrors, setPreviewErrors] = useState<string[]>([]);
+
   // Extrair os IDs dos blocos para o SortableContext
   const blockIds = useMemo(() => blocks.map((block) => block.id), [blocks]);
 
@@ -82,7 +84,7 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
         showErrors: false,
       },
     };
-  }, [mode, flags]);
+  }, [flags]);
 
   // Tracking de preview events
   useEffect(() => {
@@ -124,6 +126,21 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
     if (onBlockUpdate) {
       onBlockUpdate(blockId, updates);
       trackEvent('block_updated_in_preview', { blockId, updates });
+    }
+  };
+
+  // Handler para o fim do drag and drop
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    
+    if (over && active.id !== over.id) {
+      const oldIndex = blocks.findIndex((block) => block.id === active.id);
+      const newIndex = blocks.findIndex((block) => block.id === over.id);
+      
+      if (oldIndex !== -1 && newIndex !== -1 && onBlocksReordered) {
+        onBlocksReordered(oldIndex, newIndex);
+        trackEvent('blocks_reordered_in_preview', { oldIndex, newIndex });
+      }
     }
   };
 
@@ -178,23 +195,36 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
 
       {/* Container Principal do Preview */}
       <div className="preview-container bg-white min-h-screen" style={containerStyle}>
-        {/* Renderização dos Blocos */}
+        {/* Renderização dos Blocos com DndContext e SortableContext */}
         <div className="blocks-container">
           {blocks.length === 0 ? (
             <EmptyPreviewState mode={mode} />
           ) : (
-            blocks.map(block => (
-              <PreviewBlockWrapper
-                key={block.id}
-                block={block}
-                isSelected={selectedBlockId === block.id}
-                isPreviewing={isPreviewing}
-                renderConfig={renderConfig[mode]}
-                primaryStyle={primaryStyle}
-                onClick={() => handleBlockClick(block.id)}
-                onUpdate={updates => handleBlockUpdate(block.id, updates)}
-              />
-            ))
+            <DndContext 
+              sensors={[]} // Serão adicionados pelo componente pai
+              collisionDetection={closestCenter}
+              onDragEnd={handleDragEnd}
+              modifiers={[restrictToParentElement]}
+              autoScroll={true}
+            >
+              <SortableContext 
+                items={blockIds} 
+                strategy={verticalListSortingStrategy}
+              >
+                {blocks.map(block => (
+                  <SortablePreviewBlockWrapper
+                    key={block.id}
+                    block={block}
+                    isSelected={selectedBlockId === block.id}
+                    isPreviewing={isPreviewing}
+                    renderConfig={renderConfig[mode]}
+                    primaryStyle={primaryStyle}
+                    onClick={() => handleBlockClick(block.id)}
+                    onUpdate={updates => handleBlockUpdate(block.id, updates)}
+                  />
+                ))}
+              </SortableContext>
+            </DndContext>
           )}
         </div>
       </div>
@@ -214,9 +244,9 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
 };
 
 /**
- * 🎯 Wrapper para cada bloco no preview
+ * 🎯 Wrapper para cada bloco no preview com funcionalidade de arrastar e soltar
  */
-interface PreviewBlockWrapperProps {
+interface SortablePreviewBlockWrapperProps {
   block: Block;
   isSelected: boolean;
   isPreviewing: boolean;
@@ -226,7 +256,7 @@ interface PreviewBlockWrapperProps {
   onUpdate: (updates: Partial<Block>) => void;
 }
 
-const PreviewBlockWrapper: React.FC<PreviewBlockWrapperProps> = ({
+const SortablePreviewBlockWrapper: React.FC<SortablePreviewBlockWrapperProps> = ({
   block,
   isSelected,
   isPreviewing,
@@ -236,6 +266,10 @@ const PreviewBlockWrapper: React.FC<PreviewBlockWrapperProps> = ({
   onUpdate,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
+
+  // Configuração do useSortable será adicionada aqui
+  // Para simplificar a implementação inicial, estamos usando uma versão básica
+  // que será aprimorada no próximo passo
 
   const wrapperClasses = [
     'preview-block-wrapper',
@@ -269,6 +303,15 @@ const PreviewBlockWrapper: React.FC<PreviewBlockWrapperProps> = ({
 
       {/* Renderização do bloco */}
       <div className="block-content p-4 border rounded">
+        {/* Alça para arrastar (visível apenas no modo editor e quando não está previsualizando) */}
+        {!isPreviewing && renderConfig.showOutlines && (
+          <div 
+            className="drag-handle absolute top-2 right-2 w-6 h-6 flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded cursor-move z-10"
+          >
+            ⋮⋮
+          </div>
+        )}
+        
         <div className="text-sm text-gray-600 mb-2">
           {block.type} - {block.id.slice(0, 8)}
         </div>

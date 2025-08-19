@@ -9,6 +9,7 @@ import {
   EditorPropertiesPanel,
   EditorStageManager,
   UnifiedPreviewEngine,
+  UnifiedQuizStepLoader,
 } from '@/components/editor/unified';
 
 // 🚀 PREVIEW SYSTEM
@@ -110,7 +111,7 @@ const EditorUnified: React.FC = () => {
       blocks: currentBlocks,
       activeStageId,
       currentStep,
-  funnelId: funnelIdRef.current,
+      funnelId: funnelIdRef.current,
       timestamp: Date.now(),
     },
     onSave: async data => {
@@ -128,12 +129,18 @@ const EditorUnified: React.FC = () => {
   });
 
   // Handlers do Editor Unificado
-  const handleStepSelect = (step: number) => {
+  const handleStepSelect = async (step: number) => {
     console.log('🎯 Editor Unificado: Step selecionado:', step);
+
+    // Atualiza o estado local primeiro
     setCurrentStep(step);
-  // Sincroniza navegação com hooks e carrega blocos reais da etapa
-  actions.goToStep(step);
-  stageActions.setActiveStage?.(`step-${step}`);
+
+    // Sincroniza navegação com useQuizFlow
+    actions.goToStep(step);
+
+    // Atualiza o activeStageId no contexto do editor
+    // (o UnifiedQuizStepLoader fará o carregamento dos blocos)
+    stageActions.setActiveStage?.(`step-${step}`);
   };
 
   const handleModeChange = (mode: 'edit' | 'preview' | 'test') => {
@@ -212,6 +219,22 @@ const EditorUnified: React.FC = () => {
 
   return (
     <PreviewProvider totalSteps={totalSteps} funnelId={funnelIdRef.current}>
+      {/* Carregador otimizado de etapas do quiz */}
+      <UnifiedQuizStepLoader
+        stepNumber={currentStep}
+        onStepLoaded={blockCount => {
+          console.log(
+            `✅ UnifiedQuizStepLoader: ${blockCount} blocos carregados para etapa ${currentStep}`
+          );
+        }}
+        onStepError={error => {
+          console.error(
+            `❌ UnifiedQuizStepLoader: Erro no carregamento da etapa ${currentStep}:`,
+            error.message
+          );
+        }}
+      />
+
       {/* 🎨 CONTAINER PRINCIPAL COM DESIGN PROFISSIONAL */}
       <div className="unified-editor-container min-h-screen bg-gradient-to-br from-brand-light/10 via-white to-brand-primary/5">
         {/* 🏢 HEADER PROFISSIONAL */}
@@ -236,7 +259,7 @@ const EditorUnified: React.FC = () => {
                 </div>
                 <Separator orientation="vertical" className="h-4 hidden md:block opacity-30" />
                 <div className="text-xs text-brand-text/70 font-medium">
-                    Etapa {currentStep} de {totalSteps}
+                  Etapa {currentStep} de {totalSteps}
                 </div>
               </div>
             </div>
@@ -305,6 +328,7 @@ const EditorUnified: React.FC = () => {
                     onBlockUpdate={handleBlockUpdate}
                     mode={editorMode === 'edit' ? 'editor' : 'preview'}
                     className=""
+                    key={`preview-step-${currentStep}`} // Força a recriação do componente quando a etapa muda
                   />
                 </div>
               </div>
