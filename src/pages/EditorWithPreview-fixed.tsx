@@ -70,7 +70,7 @@ const EditorUnifiedPageWithDragDrop: React.FC = () => {
     activeStageId,
     blockActions: { deleteBlock, updateBlock },
     uiState: { isPreviewing, setIsPreviewing },
-    computed: { currentBlocks, selectedBlock },
+    computed: { currentBlocks },
   } = useEditor();
 
   // 🆕 AUTO-SAVE COM DEBOUNCE - Implementação do salvamento automático
@@ -99,6 +99,7 @@ const EditorUnifiedPageWithDragDrop: React.FC = () => {
   // Handlers do Editor Unificado
   const handleStepSelect = (step: number) => {
     console.log('🎯 Editor Unificado: Step selecionado:', step);
+    console.log('🎪 Quiz State:', quizState.currentStep, '→', step);
     setCurrentStep(step);
     actions.getStepData(); // Carrega dados da etapa
   };
@@ -159,7 +160,7 @@ const EditorUnifiedPageWithDragDrop: React.FC = () => {
       <div className="min-h-screen bg-gradient-to-br from-[#FAF9F7] via-[#F5F2E9] to-[#EEEBE1]">
         {/* 🎮 CONTROLS MANAGER - Barra superior unificada */}
         <EditorControlsManager
-          mode={editorMode}
+          mode="full"
           viewportSize={viewportSize}
           isPreviewing={isPreviewing}
           onModeChange={handleModeChange}
@@ -179,7 +180,7 @@ const EditorUnifiedPageWithDragDrop: React.FC = () => {
           {/* � STAGE MANAGER - Navegação de etapas */}
           <div className="w-80 border-r border-stone-200/50 bg-white/90 backdrop-blur-sm">
             <EditorStageManager
-              mode={editorMode}
+              mode="full"
               initialStep={currentStep}
               onStepSelect={handleStepSelect}
               onModeChange={handleModeChange}
@@ -197,7 +198,7 @@ const EditorUnifiedPageWithDragDrop: React.FC = () => {
                 viewportSize={viewportSize}
                 onBlockSelect={handleBlockSelect}
                 onBlockUpdate={handleBlockUpdate}
-                mode={editorMode}
+                mode={editorMode === 'edit' ? 'editor' : editorMode === 'preview' ? 'preview' : 'production'}
                 className="mx-auto"
               />
             </div>
@@ -249,7 +250,7 @@ export const EditorWithPreview: React.FC = () => {
         <EditorQuizProvider>
           <PreviewProvider>
             <Quiz21StepsProvider debug={true}>
-              <EditorFixedPageWithDragDrop />
+              <EditorUnifiedPageWithDragDrop />
             </Quiz21StepsProvider>
           </PreviewProvider>
         </EditorQuizProvider>
