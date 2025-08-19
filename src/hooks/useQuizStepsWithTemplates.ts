@@ -146,12 +146,10 @@ export const useQuizStepsWithTemplates = (
         },
       }));
 
-      const template = await templateService.getTemplateByStep(step);
+      const result = await loadStepTemplate(step);
       
-      if (template && template.blocks && template.blocks.length > 0) {
-        const blocks = templateService.convertTemplateBlocksToEditorBlocks(template.blocks);
-        
-        console.log(`✅ Template carregado para etapa ${step}: ${blocks.length} blocos`);
+      if (result && result.blocks && result.blocks.length > 0) {
+        console.log(`✅ Template carregado para etapa ${step}: ${result.blocks.length} blocos`);
 
         // Atualizar dados da etapa
         setStepData(prev => ({
@@ -162,7 +160,7 @@ export const useQuizStepsWithTemplates = (
             isCompleted: prev[step]?.isCompleted || false,
             isValid: true,
             answers: prev[step]?.answers || {},
-            blocks,
+            blocks: result.blocks,
             isLoading: false,
             timestamp: Date.now(),
           },
@@ -170,10 +168,10 @@ export const useQuizStepsWithTemplates = (
 
         // Notificar mudança se for a etapa atual
         if (step === currentStep && onBlocksChange) {
-          onBlocksChange(step, blocks);
+          onBlocksChange(step, result.blocks);
         }
 
-        return blocks;
+        return result.blocks;
       } else {
         console.warn(`⚠️ Nenhum template encontrado para etapa ${step}`);
         
