@@ -5,24 +5,24 @@ import '@/styles/editor-unified.css';
 
 // Importações DnD
 import {
-  DndContext,
-  DragEndEvent,
-  KeyboardSensor,
-  PointerSensor,
-  closestCenter,
-  useSensor,
-  useSensors,
+    DndContext,
+    DragEndEvent,
+    KeyboardSensor,
+    PointerSensor,
+    closestCenter,
+    useSensor,
+    useSensors,
 } from '@dnd-kit/core';
 import { restrictToParentElement } from '@dnd-kit/modifiers';
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 
 // EDITOR UNIFICADO - Componentes principais
 import {
-  EditorControlsManager,
-  EditorPropertiesPanel,
-  EditorStageManager,
-  UnifiedPreviewEngine,
-  UnifiedQuizStepLoader,
+    EditorControlsManager,
+    EditorPropertiesPanel,
+    EditorStageManager,
+    UnifiedPreviewEngine,
+    UnifiedQuizStepLoader,
 } from '@/components/editor/unified';
 
 // 🚀 PREVIEW SYSTEM
@@ -186,9 +186,9 @@ const EditorUnified: React.FC = () => {
       // Encontrar os índices dos blocos (convertendo IDs para string se necessário)
       const activeId = String(active.id);
       const overId = String(over.id);
-
+      
       console.log('🔄 Drag End:', { activeId, overId });
-
+      
       const oldIndex = currentBlocks.findIndex(block => block.id === activeId);
       const newIndex = currentBlocks.findIndex(block => block.id === overId);
 
@@ -197,10 +197,8 @@ const EditorUnified: React.FC = () => {
         // Usar reorderBlocks do EditorContext
         reorderBlocks(oldIndex, newIndex);
       } else {
-        console.warn('⚠️ Não foi possível encontrar os índices dos blocos:', {
-          activeId,
-          overId,
-          found: currentBlocks.map(b => b.id),
+        console.warn('⚠️ Não foi possível encontrar os índices dos blocos:', { 
+          activeId, overId, found: currentBlocks.map(b => b.id) 
         });
       }
     }
@@ -280,7 +278,7 @@ const EditorUnified: React.FC = () => {
       sensors={sensors}
       collisionDetection={closestCenter}
       onDragEnd={handleDragEnd}
-      onDragStart={event => console.log('🔄 Drag Start:', event)}
+      onDragStart={(event) => console.log('🔄 Drag Start:', event)}
       modifiers={[restrictToParentElement]}
       autoScroll={true}
     >
