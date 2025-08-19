@@ -8,8 +8,8 @@
  */
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import type { Block } from '@/types/editor';
-import templateService from '@/services/templateService';
+import type { Block } from '../types/editor';
+import templateService from '../services/templateService';
 
 interface QuizStepWithTemplate {
   stepNumber: number;
