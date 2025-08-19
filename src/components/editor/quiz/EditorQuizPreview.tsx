@@ -12,7 +12,7 @@ import { QuizStepManagerModular } from './QuizStepManagerModular';
 import { QuizRenderEngineModular } from './QuizRenderEngineModular';
 import { QuizToolbarModular } from './QuizToolbarModular';
 import { QuizSidebarModular } from './QuizSidebarModular';
-import { EditorPropertiesPanel } from '@/components/editor/unified/EditorPropertiesPanel';
+import { QuizPropertiesPanelModular } from '@/components/editor/quiz/QuizPropertiesPanelModular';
 import { Block } from '@/types/editor';
 
 export const QuizFlowPageModular: React.FC = () => {
@@ -140,16 +140,13 @@ export const QuizFlowPageModular: React.FC = () => {
         {/* Properties Panel */}
         {propertiesOpen && mode === 'editor' && selectedBlockId && (
           <div className="fixed right-0 top-0 h-full w-80 border-l bg-background z-50">
-            <EditorPropertiesPanel
+            <QuizPropertiesPanelModular
               selectedBlock={null} // Será passado os dados do bloco quando disponível
-              onBlockUpdate={handleBlockUpdate}
-              onBlockDelete={(blockId) => {
-                console.log('Delete block:', blockId);
+              onClose={() => {
+                setPropertiesOpen(false);
+                setSelectedBlockId(null);
               }}
-              onBlockDuplicate={(blockId) => {
-                console.log('Duplicate block:', blockId);
-              }}
-              previewMode={false}
+              onUpdate={handleBlockUpdate}
             />
           </div>
         )}
