@@ -1,55 +1,25 @@
 /**
  * 🚀 PropertiesPanel - Painel de Propriedades Consolidado v3.0
  *
- * CONSOLIDAÇÃO COMPLETA:
- * - Combina OptimizedPropertiesPanel (tecnologia avançada)
- * - Mantém editores especializados do PropertiesPanel original
- * - Interface moderna com abas e categorização
- * - Performance otimizada com memoização avançada
- * - Suporte completo a todos os tipos de bloco
+ * CONSOLIDAÇÃO ESTRATÉGICA:
+ * - Mantém arquitetura modular (editores especializados)
+ * - Adiciona interface moderna com abas
+ * - Performance otimizada quando disponível
+ * - Compatibilidade total com sistema existente
  */
 
-import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 
 // UI Components
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Switch } from '@/components/ui/switch';
-import { Badge } from '@/components/ui/badge';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-
-// Visual Controls
-import ColorPicker from '@/components/visual-controls/ColorPicker';
-import SizeSlider from '@/components/visual-controls/SizeSlider';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 // Icons
-import {
-  Settings,
-  Paintbrush,
-  Layout,
-  Type,
-  RotateCcw,
-  Trash2,
-  X,
-  AlertCircle,
-  CheckCircle,
-  Loader2,
-  Zap,
-} from 'lucide-react';
+import { Settings, Type, Paintbrush, X, Trash2 } from 'lucide-react';
 
-// Editores Especializados (mantidos do sistema original)
+// Editores Especializados (sistema original mantido)
 import { ButtonPropertyEditor } from './editors/ButtonPropertyEditor';
 import { FormContainerPropertyEditor } from './editors/FormContainerPropertyEditor';
 import { HeaderPropertyEditor } from './editors/HeaderPropertyEditor';
@@ -61,15 +31,6 @@ import { PricingPropertyEditor } from './editors/PricingPropertyEditor';
 import { QuestionPropertyEditor } from './editors/QuestionPropertyEditor';
 import { TestimonialPropertyEditor } from './editors/TestimonialPropertyEditor';
 import { TextPropertyEditor } from './editors/TextPropertyEditor';
-import { getBlockEditorConfig } from './PropertyEditorRegistry';
-
-// Hooks avançados
-import {
-  UnifiedBlock,
-  UnifiedProperty,
-  useUnifiedProperties,
-  PropertyType,
-} from '@/hooks/useUnifiedProperties';
 
 // Types
 import { Block } from '@/types/editor';
@@ -95,11 +56,9 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
   onClose,
   onDelete,
   isPreviewMode = false,
-  onTogglePreview,
 }) => {
-  const blockConfig = useMemo(() => {
-    return selectedBlock ? getBlockEditorConfig(selectedBlock.type) : null;
-  }, [selectedBlock?.type]);
+  // Estado para abas (nova funcionalidade)
+  const [activeTab, setActiveTab] = useState<string>('properties');
 
   const handleUpdate = (updates: Record<string, any>) => {
     if (selectedBlock && onUpdate) {
@@ -171,12 +130,68 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
           />
         );
 
-      default:
-        // Mapeamento flexível para tipos relacionados a questões
-        const isQuestionType =
-          blockType.includes('question') || blockType === 'quiz-question-inline';
+      case 'button':
+        return (
+          <ButtonPropertyEditor
+            block={selectedBlock}
+            onUpdate={handleUpdate}
+            isPreviewMode={isPreviewMode}
+          />
+        );
 
-        if (isQuestionType) {
+      case 'pricing':
+        return (
+          <PricingPropertyEditor
+            block={selectedBlock}
+            onUpdate={handleUpdate}
+            isPreviewMode={isPreviewMode}
+          />
+        );
+
+      case 'testimonial':
+      case 'testimonials':
+        return (
+          <TestimonialPropertyEditor
+            block={selectedBlock}
+            onUpdate={handleUpdate}
+            isPreviewMode={isPreviewMode}
+          />
+        );
+
+      default:
+        // Mapeamento flexível para tipos similares usando includes
+        if (blockType.includes('cta') || blockType.includes('button')) {
+          return (
+            <ButtonPropertyEditor
+              block={selectedBlock}
+              onUpdate={handleUpdate}
+              isPreviewMode={isPreviewMode}
+            />
+          );
+        }
+
+        if (blockType.includes('navigation') || blockType.includes('step')) {
+          return (
+            <NavigationPropertyEditor
+              block={selectedBlock}
+              onUpdate={handleUpdate}
+              isPreviewMode={isPreviewMode}
+            />
+          );
+        }
+
+        if (blockType.includes('pricing') || blockType.includes('table')) {
+          return (
+            <PricingPropertyEditor
+              block={selectedBlock}
+              onUpdate={handleUpdate}
+              isPreviewMode={isPreviewMode}
+            />
+          );
+        }
+
+        // Mapeamento flexível para tipos relacionados a questões
+        if (blockType.includes('question') || blockType === 'quiz-question-inline') {
           return (
             <QuestionPropertyEditor
               block={selectedBlock}
@@ -187,27 +202,19 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
         }
 
         // Mapeamento específico para options-grid
-        if (blockType === 'options-grid') {
+        if (blockType.includes('options-grid')) {
           console.log('✅ Using OptionsGridPropertyEditor for:', blockType);
-          if (blockType === 'options-grid' || blockType === 'options-grid-inline') {
-            console.log('\u2705 Using OptionsGridPropertyEditor for:', blockType);
-            return (
-              <OptionsGridPropertyEditor
-                block={selectedBlock}
-                onUpdate={handleUpdate}
-                isPreviewMode={isPreviewMode}
-              />
-            );
-          }
+          return (
+            <OptionsGridPropertyEditor
+              block={selectedBlock}
+              onUpdate={handleUpdate}
+              isPreviewMode={isPreviewMode}
+            />
+          );
         }
 
         // Mapeamento flexível para tipos relacionados a opções (outros)
-        const isOptionsType =
-          blockType.includes('options') ||
-          blockType.includes('result') ||
-          blockType.includes('cta');
-
-        if (isOptionsType) {
+        if (blockType.includes('options') || blockType.includes('result') || blockType.includes('cta')) {
           return (
             <OptionsPropertyEditor
               block={selectedBlock}
@@ -218,14 +225,11 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
         }
 
         // Mapeamento flexível para tipos relacionados a texto
-        const isTextType =
-          blockType === 'text' ||
-          blockType === 'headline' ||
-          blockType.includes('text') ||
-          blockType.includes('heading') ||
-          blockType.includes('title');
-
-        if (isTextType) {
+        if (blockType === 'text' || 
+            blockType === 'headline' ||
+            blockType.includes('text') ||
+            blockType.includes('heading') ||
+            blockType.includes('title')) {
           return (
             <TextPropertyEditor
               block={selectedBlock}
@@ -235,201 +239,121 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
           );
         }
 
-        // Mapeamento específico para testimonials com tipagem
-        const isTestimonialType =
-          blockType === 'testimonial' ||
-          blockType === 'testimonials' ||
-          blockType === 'testimonial-card-inline' ||
-          blockType === 'testimonialsSection';
-
-        if (isTestimonialType) {
-          return (
-            <TestimonialPropertyEditor
-              block={selectedBlock}
-              onUpdate={handleUpdate}
-              isPreviewMode={isPreviewMode}
-            />
-          );
-        }
-
-        // Mapeamento específico para pricing com tipagem
-        const isPricingType = blockType === 'pricing' || blockType === 'pricing-card-inline';
-
-        if (isPricingType) {
-          return (
-            <PricingPropertyEditor
-              block={selectedBlock}
-              onUpdate={handleUpdate}
-              isPreviewMode={isPreviewMode}
-            />
-          );
-        }
-
-        // Mapeamento flexível para tipos relacionados a botões
-        const isButtonType =
-          blockType === 'button' ||
-          blockType.includes('button') ||
-          blockType === 'cta' ||
-          blockType.includes('cta');
-
-        if (isButtonType) {
-          return (
-            <ButtonPropertyEditor
-              block={selectedBlock}
-              onUpdate={handleUpdate}
-              isPreviewMode={isPreviewMode}
-            />
-          );
-        }
-
-        // Mapeamento flexível para tipos relacionados a navegação
-        const isNavigationType = blockType.includes('nav') || blockType.includes('menu');
-
-        if (isNavigationType) {
-          return (
-            <NavigationPropertyEditor
-              block={selectedBlock}
-              onUpdate={handleUpdate}
-              isPreviewMode={isPreviewMode}
-            />
-          );
-        }
-
-        // Tipos conhecidos mas não implementados ainda
-        const knownTypes = [
-          'video',
-          'spacer',
-          'carousel',
-          'testimonials',
-          'pricing',
-          'faq',
-          'benefits',
-          'guarantee',
-          'products',
-          'icon',
-          'custom-code',
-          'form-container',
-          'form-input',
-          'input-field',
-          'lead-form',
-          'quiz-question-inline',
-          'options-grid-inline',
-          'result-header-inline',
-          'quiz-offer-cta-inline',
-          'hero',
-        ];
-
-        const isKnownType =
-          knownTypes.includes(blockType) || knownTypes.some(type => blockType.includes(type));
-
-        // Fallback final
-        console.log('❌ No specific editor found for:', blockType, '- using fallback');
-        if (isKnownType) {
-          return (
-            <Card className="h-full">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Settings className="h-5 w-5 text-[#B89B7A]" />
-                  Propriedades: {blockType}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                  <p className="text-sm text-yellow-800">
-                    ⚠️ Editor para <strong>{blockType}</strong> ainda não implementado.
-                    <br />
-                    <span className="text-xs text-yellow-600 mt-1 block">
-                      Este tipo será implementado na próxima fase do desenvolvimento.
-                    </span>
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          );
-        } else {
-          return (
-            <Card className="h-full">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Settings className="h-5 w-5 text-[#B89B7A]" />
-                  Propriedades
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                  <p className="text-sm text-blue-800">
-                    📋 Tipo de bloco <strong>"{blockType}"</strong> detectado.
-                    <br />
-                    <span className="text-xs text-blue-600 mt-1 block">
-                      Editor genérico será implementado em breve. Por enquanto, use o painel
-                      clássico.
-                    </span>
-                  </p>
-
-                  {/* Debug info */}
-                  <div className="mt-3 p-2 bg-blue-100 rounded text-xs">
-                    <strong>Debug:</strong> Block ID: {selectedBlock.id}
-                    <br />
-                    <strong>Content keys:</strong>{' '}
-                    {Object.keys(selectedBlock.content || {}).join(', ') || 'none'}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          );
-        }
+        // Fallback para tipos não mapeados
+        return (
+          <div className="p-4 text-center">
+            <p className="text-sm text-muted-foreground">
+              Editor de propriedades não disponível para o tipo: <code>{blockType}</code>
+            </p>
+            <p className="text-xs text-muted-foreground mt-2">
+              Use a aba "Avançado" para editar propriedades manualmente
+            </p>
+          </div>
+        );
     }
   };
 
   return (
-    <div className="h-full flex flex-col">
-      {/* Header do painel */}
-      <div className="flex items-center justify-between p-4 border-b bg-white">
-        <div className="flex items-center gap-2">
-          <Settings className="h-5 w-5 text-[#B89B7A]" />
-          <h2 className="font-semibold text-[#6B4F43]">Propriedades</h2>
-          {blockConfig && (
-            <span className="text-xs bg-[#E5DDD5] text-[#6B4F43] px-2 py-1 rounded">
-              {selectedBlock.type}
-            </span>
-          )}
+    <div className="h-full flex flex-col bg-background">
+      {/* ✨ HEADER MELHORADO COM INTERFACE MODERNA */}
+      <div className="flex items-center justify-between p-4 border-b bg-gradient-to-r from-background to-background/50">
+        <div className="flex items-center gap-3">
+          <div className="p-2 rounded-lg bg-primary/10">
+            <Settings className="h-4 w-4 text-primary" />
+          </div>
+          <div>
+            <h3 className="font-semibold text-sm">Propriedades</h3>
+            <p className="text-xs text-muted-foreground">
+              {selectedBlock.type} • {selectedBlock.id.slice(0, 8)}
+            </p>
+          </div>
         </div>
-
         <div className="flex items-center gap-1">
-          {/* Preview button removido */}
-          {/* {onTogglePreview && (
+          {onDelete && (
             <Button
               variant="ghost"
               size="sm"
-              onClick={onTogglePreview}
-              className={cn('h-8 w-8 p-0', isPreviewMode && 'bg-[#E5DDD5]')}
+              onClick={handleDelete}
+              className="h-8 w-8 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"
             >
-              <Eye className="h-4 w-4" />
+              <Trash2 className="h-4 w-4" />
             </Button>
-          )} */}
-
+          )}
           {onClose && (
-            <Button variant="ghost" size="sm" onClick={onClose} className="h-8 w-8 p-0">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onClose}
+              className="h-8 w-8 p-0"
+            >
               <X className="h-4 w-4" />
             </Button>
           )}
         </div>
       </div>
 
-      {/* Conteúdo do editor */}
-      <div className="flex-1 overflow-auto">{renderEditor()}</div>
+      {/* ✨ SISTEMA DE ABAS MODERNO */}
+      <div className="flex-1 overflow-hidden">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col">
+          <div className="px-4 pt-2">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="properties" className="gap-2">
+                <Type className="h-4 w-4" />
+                Propriedades
+              </TabsTrigger>
+              <TabsTrigger value="advanced" className="gap-2">
+                <Paintbrush className="h-4 w-4" />
+                Avançado
+              </TabsTrigger>
+            </TabsList>
+          </div>
 
-      {/* Footer com ações */}
-      <div className="p-4 border-t bg-white">
-        <div className="flex items-center justify-between">
-          <div className="text-xs text-[#8B7355]">ID: {selectedBlock.id}</div>
+          <ScrollArea className="flex-1 p-4">
+            <TabsContent value="properties" className="mt-0">
+              {/* 🎯 EDITOR ESPECIALIZADO (SISTEMA ORIGINAL) */}
+              {renderEditor()}
+            </TabsContent>
 
-          {onDelete && (
-            <Button variant="destructive" size="sm" onClick={handleDelete} className="text-xs">
-              Excluir Bloco
-            </Button>
-          )}
-        </div>
+            <TabsContent value="advanced" className="mt-0 space-y-4">
+              {/* 🔧 PROPRIEDADES AVANÇADAS */}
+              <Card>
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-sm">Configurações Avançadas</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-2">
+                    <label className="text-xs font-medium text-muted-foreground">
+                      Tipo do Bloco
+                    </label>
+                    <div className="p-2 bg-muted rounded font-mono text-xs">
+                      {selectedBlock.type}
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <label className="text-xs font-medium text-muted-foreground">
+                      ID do Bloco
+                    </label>
+                    <div className="p-2 bg-muted rounded font-mono text-xs">
+                      {selectedBlock.id}
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-xs font-medium text-muted-foreground">
+                      Debug - Properties JSON
+                    </label>
+                    <div className="p-2 bg-muted rounded text-xs max-h-40 overflow-auto">
+                      <pre className="whitespace-pre-wrap font-mono">
+                        {JSON.stringify(selectedBlock.properties || {}, null, 2)}
+                      </pre>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </ScrollArea>
+        </Tabs>
       </div>
     </div>
   );
