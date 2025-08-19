@@ -12,6 +12,7 @@ const Home = lazy(() => import('./pages/Home'));
 const AuthPage = lazy(() => import('./pages/AuthPage'));
 const EditorWithPreview = lazy(() => import('./pages/EditorWithPreview'));
 const EditorWithPreviewFixed = lazy(() => import('./pages/EditorWithPreview-fixed'));
+const EditorModularPage = lazy(() => import('./pages/editor-modular'));
 const QuizPage = lazy(() => import('./pages/Quiz'));
 const QuizFlowPage = lazy(() => import('./pages/QuizFlowPage'));
 const QuizIntegratedPage = lazy(() => import('./pages/QuizIntegratedPage'));
@@ -84,6 +85,13 @@ function App() {
                       </Suspense>
                     </EditorProvider>
                   </FunnelsProvider>
+                </Route>
+
+                {/* 🎯 EDITOR MODULAR - Sistema modular das 21 etapas */}
+                <Route path="/editor-modular">
+                  <Suspense fallback={<PageLoading />}>
+                    <EditorModularPage />
+                  </Suspense>
                 </Route>
 
                 {/* 📊 DASHBOARD ADMINISTRATIVO */}

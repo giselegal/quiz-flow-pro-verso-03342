@@ -5,11 +5,12 @@ import React from "react";
 import { QuizRenderer } from "@/components/quiz/QuizRenderer";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 import { QUIZ_CONFIGURATION } from "@/config/quizConfiguration";
 
 const Quiz: React.FC = () => {
-  const navigate = useNavigate();
+  const handleGoHome = () => {
+    window.location.href = '/';
+  };
 
   return (
     <div 
@@ -26,7 +27,7 @@ const Quiz: React.FC = () => {
             {/* Botão Voltar */}
             <Button
               variant="outline"
-              onClick={() => navigate('/')}
+              onClick={handleGoHome}
               className="border-slate-300 text-slate-700 hover:bg-slate-50"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
