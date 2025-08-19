@@ -70,7 +70,7 @@ interface EditorContextType {
     updateBlock: (id: string, content: any) => Promise<void>;
     deleteBlock: (id: string) => Promise<void>;
     addBlockAtPosition: (type: BlockType, stageId?: string) => Promise<string>;
-  replaceBlocks: (blocks: Block[]) => void;
+    replaceBlocks: (blocks: Block[]) => void;
     reorderBlocks: (startIndex: number, endIndex: number) => void;
   };
 
@@ -336,7 +336,10 @@ export const EditorProvider: React.FC<{
   const replaceBlocks = useCallback((blocks: Block[]) => {
     const sorted = (blocks || []).slice().sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
     const normalized = sorted.map((b, i) => ({ ...b, order: i }));
-    console.log('🧩 replaceBlocks ->', normalized.map(b => ({ id: b.id, type: b.type, order: b.order })));
+    console.log(
+      '🧩 replaceBlocks ->',
+      normalized.map(b => ({ id: b.id, type: b.type, order: b.order }))
+    );
     dispatch({ type: 'SET_BLOCKS', payload: normalized });
   }, []);
 

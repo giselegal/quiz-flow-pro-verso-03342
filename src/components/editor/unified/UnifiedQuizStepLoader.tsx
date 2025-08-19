@@ -20,7 +20,7 @@ export const UnifiedQuizStepLoader: React.FC<UnifiedQuizStepLoaderProps> = ({
   onStepLoaded,
   onStepError,
 }) => {
-  const { dispatch } = useEditor();
+  const { blockActions } = useEditor();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
@@ -42,9 +42,9 @@ export const UnifiedQuizStepLoader: React.FC<UnifiedQuizStepLoaderProps> = ({
           `✅ UnifiedQuizStepLoader: Carregados ${stepBlocks.length} blocos para etapa ${stepNumber}`
         );
 
-        // Atualiza o EditorContext com os novos blocos
+        // Atualiza o EditorContext com os novos blocos usando a API unificada
         if (stepBlocks.length > 0 && isMounted) {
-          dispatch({ type: 'SET_BLOCKS', payload: stepBlocks });
+          blockActions.replaceBlocks(stepBlocks);
           onStepLoaded?.(stepBlocks.length);
         } else if (isMounted) {
           const error = new Error(`Nenhum bloco encontrado para etapa ${stepNumber}`);
@@ -69,7 +69,7 @@ export const UnifiedQuizStepLoader: React.FC<UnifiedQuizStepLoaderProps> = ({
     return () => {
       isMounted = false;
     };
-  }, [stepNumber, dispatch, onStepLoaded, onStepError]);
+  }, [stepNumber, blockActions, onStepLoaded, onStepError]);
 
   // Exibir informação de status
   return (
