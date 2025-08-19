@@ -22,7 +22,7 @@ import {
   Type,
 } from 'lucide-react';
 import React from 'react';
-import { DraggableComponent } from './dnd/DraggableComponent';
+import { DraggableComponentItem } from '../dnd/DraggableComponentItem';
 
 // ========================================
 // COMPONENTES DISPONÍVEIS
@@ -182,23 +182,14 @@ export const ModernSidebar: React.FC<ModernSidebarProps> = ({
                 isCollapsed && "flex flex-col items-center space-y-3"
               )}>
                 {category.components.map((component) => (
-                  <DraggableComponent
+                  <DraggableComponentItem
                     key={component.type}
-                    componentType={component.type}
-                    icon={component.icon}
-                    label={component.label}
+                    blockType={component.type}
+                    title={component.label}
                     description={isCollapsed ? undefined : component.description}
-                  >
-                    {isCollapsed ? (
-                      // Versão compacta para sidebar colapsada
-                      <div
-                        className="w-10 h-10 rounded-lg bg-brand-light/20 flex items-center justify-center group-hover:bg-brand-primary group-hover:text-white transition-colors"
-                        title={`${component.label}: ${component.description}`}
-                      >
-                        {component.icon}
-                      </div>
-                    ) : null}
-                  </DraggableComponent>
+                    icon={component.icon}
+                    category={category.label}
+                  />
                 ))}
               </div>
             </div>
