@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
 import { Block } from '@/types/editor';
 import { StyleResult } from '@/types/quiz';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import React, { useState } from 'react';
 
 interface SortablePreviewBlockWrapperProps {
   block: Block;
@@ -29,16 +29,9 @@ export const SortablePreviewBlockWrapper: React.FC<SortablePreviewBlockWrapperPr
   const [isHovered, setIsHovered] = useState(false);
 
   // Configuração do useSortable do dnd-kit
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ 
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: block.id,
-    disabled: isPreviewing
+    disabled: isPreviewing,
   });
 
   // Estilo do wrapper com transformação de arrastar e soltar
@@ -84,14 +77,14 @@ export const SortablePreviewBlockWrapper: React.FC<SortablePreviewBlockWrapperPr
       <div className="block-content p-4 border rounded">
         {/* Alça para arrastar (visível apenas no modo editor e quando não está previsualizando) */}
         {!isPreviewing && renderConfig.showOutlines && (
-          <div 
+          <div
             className="drag-handle absolute top-2 right-2 w-6 h-6 flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded cursor-move z-10"
             {...listeners}
           >
             ⋮⋮
           </div>
         )}
-        
+
         <div className="text-sm text-gray-600 mb-2">
           {block.type} - {block.id.slice(0, 8)}
         </div>

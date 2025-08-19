@@ -12,8 +12,8 @@ import React, { useEffect, useMemo, useState } from 'react';
 
 // Importações DnD
 import { DndContext, DragEndEvent, closestCenter } from '@dnd-kit/core';
-import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { restrictToParentElement } from '@dnd-kit/modifiers';
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 
 export interface UnifiedPreviewEngineProps {
   blocks: Block[];
@@ -50,7 +50,7 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
   const [previewErrors, setPreviewErrors] = useState<string[]>([]);
 
   // Extrair os IDs dos blocos para o SortableContext
-  const blockIds = useMemo(() => blocks.map((block) => block.id), [blocks]);
+  const blockIds = useMemo(() => blocks.map(block => block.id), [blocks]);
 
   // Configurações do viewport
   const viewportConfig = useMemo(() => {
@@ -132,11 +132,11 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
   // Handler para o fim do drag and drop
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
-    
+
     if (over && active.id !== over.id) {
-      const oldIndex = blocks.findIndex((block) => block.id === active.id);
-      const newIndex = blocks.findIndex((block) => block.id === over.id);
-      
+      const oldIndex = blocks.findIndex(block => block.id === active.id);
+      const newIndex = blocks.findIndex(block => block.id === over.id);
+
       if (oldIndex !== -1 && newIndex !== -1 && onBlocksReordered) {
         onBlocksReordered(oldIndex, newIndex);
         trackEvent('blocks_reordered_in_preview', { oldIndex, newIndex });
@@ -200,17 +200,14 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
           {blocks.length === 0 ? (
             <EmptyPreviewState mode={mode} />
           ) : (
-            <DndContext 
+            <DndContext
               sensors={[]} // Serão adicionados pelo componente pai
               collisionDetection={closestCenter}
               onDragEnd={handleDragEnd}
               modifiers={[restrictToParentElement]}
               autoScroll={true}
             >
-              <SortableContext 
-                items={blockIds} 
-                strategy={verticalListSortingStrategy}
-              >
+              <SortableContext items={blockIds} strategy={verticalListSortingStrategy}>
                 {blocks.map(block => (
                   <SortablePreviewBlockWrapper
                     key={block.id}
@@ -305,13 +302,11 @@ const SortablePreviewBlockWrapper: React.FC<SortablePreviewBlockWrapperProps> = 
       <div className="block-content p-4 border rounded">
         {/* Alça para arrastar (visível apenas no modo editor e quando não está previsualizando) */}
         {!isPreviewing && renderConfig.showOutlines && (
-          <div 
-            className="drag-handle absolute top-2 right-2 w-6 h-6 flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded cursor-move z-10"
-          >
+          <div className="drag-handle absolute top-2 right-2 w-6 h-6 flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded cursor-move z-10">
             ⋮⋮
           </div>
         )}
-        
+
         <div className="text-sm text-gray-600 mb-2">
           {block.type} - {block.id.slice(0, 8)}
         </div>

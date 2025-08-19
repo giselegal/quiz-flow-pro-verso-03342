@@ -8,6 +8,7 @@
 export { EditorControlsManager } from './EditorControlsManager';
 export { EditorPropertiesPanel } from './EditorPropertiesPanel';
 export { EditorStageManager } from './EditorStageManager';
+export { SortablePreviewBlockWrapper } from './SortablePreviewBlockWrapper';
 export { UnifiedPreviewEngine } from './UnifiedPreviewEngine';
 export { UnifiedQuizStepLoader } from './UnifiedQuizStepLoader';
 
@@ -28,6 +29,7 @@ export type { UnifiedPreviewEngineProps } from './UnifiedPreviewEngine';
  * 4. ✅ EditorPropertiesPanel - Painel de propriedades unificado
  * 5. ✅ UnifiedQuizStepLoader - Carregador otimizado de etapas do quiz
  * 6. ✅ Integração completa - Todos os componentes funcionando juntos
+ * 7. ✅ SortablePreviewBlockWrapper - Componente para arrastar e soltar
  *
  * Status: 🎉 IMPLEMENTAÇÃO COMPLETA
  */

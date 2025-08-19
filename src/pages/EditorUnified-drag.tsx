@@ -179,15 +179,15 @@ const EditorUnified: React.FC = () => {
   // Handler para arrastar e soltar (drag and drop)
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
-    
+
     if (over && active.id !== over.id) {
       // Encontrar os índices dos blocos
-      const oldIndex = currentBlocks.findIndex((block) => block.id === active.id);
-      const newIndex = currentBlocks.findIndex((block) => block.id === over.id);
-      
+      const oldIndex = currentBlocks.findIndex(block => block.id === active.id);
+      const newIndex = currentBlocks.findIndex(block => block.id === over.id);
+
       if (oldIndex !== -1 && newIndex !== -1) {
         console.log('🔄 Reordenando blocos:', { oldIndex, newIndex });
-        
+
         // Usar reorderBlocks do EditorContext
         reorderBlocks(oldIndex, newIndex);
       }

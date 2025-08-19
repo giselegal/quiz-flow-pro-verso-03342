@@ -11,17 +11,9 @@ import { useFeatureFlags } from '@/utils/FeatureFlagManager';
 import React, { useEffect, useMemo, useState } from 'react';
 
 // Importações DnD
-import { DragEndEvent, closestCenter } from '@dnd-kit/core';
-import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import { restrictToParentElement } from '@dnd-kit/modifiers';
-
-// Importação do componente sortable
-import { SortablePreviewBlockWrapper } from './SortablePreviewBlockWrapper';
-
-// Importações DnD
 import { DndContext, DragEndEvent, closestCenter } from '@dnd-kit/core';
-import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { restrictToParentElement } from '@dnd-kit/modifiers';
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 
 // Importação do componente sortable
 import { SortablePreviewBlockWrapper } from './SortablePreviewBlockWrapper';
@@ -52,11 +44,16 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
   primaryStyle,
   onBlockSelect,
   onBlockUpdate,
+  onBlocksReordered,
   mode = 'preview',
   className = '',
 }) => {
+  const { trackEvent } = useMonitoring();
+  const flags = useFeatureFlags();
+  const [previewErrors, setPreviewErrors] = useState<string[]>([]);
+
   // Extrair os IDs dos blocos para o SortableContext
-  const blockIds = useMemo(() => blocks.map((block) => block.id), [blocks]);
+  const blockIds = useMemo(() => blocks.map(block => block.id), [blocks]);
 
   // Configurações do viewport
   const viewportConfig = useMemo(() => {
@@ -135,6 +132,21 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
     }
   };
 
+  // Handler para o fim do drag and drop
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (over && active.id !== over.id) {
+      const oldIndex = blocks.findIndex(block => block.id === active.id);
+      const newIndex = blocks.findIndex(block => block.id === over.id);
+
+      if (oldIndex !== -1 && newIndex !== -1 && onBlocksReordered) {
+        onBlocksReordered(oldIndex, newIndex);
+        trackEvent('blocks_reordered_in_preview', { oldIndex, newIndex });
+      }
+    }
+  };
+
   // Estilo do container principal
   const containerStyle = {
     maxWidth: viewportConfig.maxWidth,
@@ -186,23 +198,33 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
 
       {/* Container Principal do Preview */}
       <div className="preview-container bg-white min-h-screen" style={containerStyle}>
-        {/* Renderização dos Blocos */}
+        {/* Renderização dos Blocos com DndContext e SortableContext */}
         <div className="blocks-container">
           {blocks.length === 0 ? (
             <EmptyPreviewState mode={mode} />
           ) : (
-            blocks.map(block => (
-              <PreviewBlockWrapper
-                key={block.id}
-                block={block}
-                isSelected={selectedBlockId === block.id}
-                isPreviewing={isPreviewing}
-                renderConfig={renderConfig[mode]}
-                primaryStyle={primaryStyle}
-                onClick={() => handleBlockClick(block.id)}
-                onUpdate={updates => handleBlockUpdate(block.id, updates)}
-              />
-            ))
+            <DndContext
+              sensors={[]} // Serão adicionados pelo componente pai
+              collisionDetection={closestCenter}
+              onDragEnd={handleDragEnd}
+              modifiers={[restrictToParentElement]}
+              autoScroll={true}
+            >
+              <SortableContext items={blockIds} strategy={verticalListSortingStrategy}>
+                {blocks.map(block => (
+                  <SortablePreviewBlockWrapper
+                    key={block.id}
+                    block={block}
+                    isSelected={selectedBlockId === block.id}
+                    isPreviewing={isPreviewing}
+                    renderConfig={renderConfig[mode]}
+                    primaryStyle={primaryStyle}
+                    onClick={() => handleBlockClick(block.id)}
+                    onUpdate={updates => handleBlockUpdate(block.id, updates)}
+                  />
+                ))}
+              </SortableContext>
+            </DndContext>
           )}
         </div>
       </div>
@@ -216,86 +238,6 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
           mode={mode}
           errors={previewErrors}
         />
-      )}
-    </div>
-  );
-};
-
-/**
- * 🎯 Wrapper para cada bloco no preview
- */
-interface PreviewBlockWrapperProps {
-  block: Block;
-  isSelected: boolean;
-  isPreviewing: boolean;
-  renderConfig: any;
-  primaryStyle?: StyleResult;
-  onClick: () => void;
-  onUpdate: (updates: Partial<Block>) => void;
-}
-
-const PreviewBlockWrapper: React.FC<PreviewBlockWrapperProps> = ({
-  block,
-  isSelected,
-  isPreviewing,
-  renderConfig,
-  primaryStyle,
-  onClick,
-  onUpdate,
-}) => {
-  const [isHovered, setIsHovered] = useState(false);
-
-  const wrapperClasses = [
-    'preview-block-wrapper',
-    `block-${block.type}`,
-    isSelected && 'is-selected',
-    isHovered && 'is-hovered',
-    isPreviewing && 'in-preview-mode',
-  ]
-    .filter(Boolean)
-    .join(' ');
-
-  const wrapperStyle = {
-    outline: renderConfig.showOutlines && isSelected ? '2px solid #3b82f6' : 'none',
-    position: 'relative' as const,
-  };
-
-  return (
-    <div
-      className={wrapperClasses}
-      style={wrapperStyle}
-      onClick={onClick}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      {/* ID do bloco (modo debug) */}
-      {renderConfig.showIds && (
-        <div className="absolute -top-6 left-0 text-xs bg-gray-800 text-white px-2 py-1 rounded z-10">
-          {block.id.slice(0, 8)}...
-        </div>
-      )}
-
-      {/* Renderização do bloco */}
-      <div className="block-content p-4 border rounded">
-        <div className="text-sm text-gray-600 mb-2">
-          {block.type} - {block.id.slice(0, 8)}
-        </div>
-        <div className="text-gray-800">{JSON.stringify((block as any).data || {}, null, 2)}</div>
-      </div>
-
-      {/* Indicadores visuais (modo editor) */}
-      {!isPreviewing && renderConfig.showOutlines && (
-        <div className="absolute inset-0 pointer-events-none">
-          {isSelected && (
-            <div className="absolute -top-8 left-0 bg-blue-500 text-white text-xs px-2 py-1 rounded">
-              ✏️ Editando
-            </div>
-          )}
-
-          {isHovered && !isSelected && (
-            <div className="absolute inset-0 bg-blue-100 bg-opacity-20 border-2 border-blue-300 border-dashed rounded"></div>
-          )}
-        </div>
       )}
     </div>
   );
