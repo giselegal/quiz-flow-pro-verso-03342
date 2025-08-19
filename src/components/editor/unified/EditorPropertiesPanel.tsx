@@ -563,12 +563,13 @@ export const EditorPropertiesPanel: React.FC<EditorPropertiesPanelProps> = ({
               )}
             </div>
           ))}
-        </div>
-      </ScrollArea>
+          </div>
+        </ScrollArea>
+      </div>
 
       {/* Ações */}
-      <Separator />
-      <div className="p-4 space-y-2">
+      <Separator className="flex-shrink-0" />
+      <div className="p-4 space-y-2 flex-shrink-0">
         {/* Salvar/Descartar alterações */}
         {hasUnsavedChanges && (
           <div className="flex gap-2">
