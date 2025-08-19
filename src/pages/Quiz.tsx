@@ -1,8 +1,8 @@
 // src/pages/Quiz.tsx
 // Página dedicada para o quiz usando a nova configuração modular
 
-import { QuizRenderer } from '@/components/quiz/QuizRenderer';
 import { QuizErrorBoundary } from '@/components/quiz/QuizErrorBoundary';
+import { QuizRenderer } from '@/components/quiz/QuizRenderer';
 import { Button } from '@/components/ui/button';
 import { QUIZ_CONFIGURATION } from '@/config/quizConfiguration';
 import { ArrowLeft } from 'lucide-react';

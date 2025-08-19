@@ -32,12 +32,12 @@ export const InteractiveQuizCanvas: React.FC<InteractiveQuizCanvasProps> = memo(
   ({ className = '', theme = 'default' }) => {
     // theme será usado quando os componentes estilizados forem implementados
     console.log('Quiz theme:', theme);
-    
+
     // Hook seguro para o Editor Context (pode não existir)
     let currentBlocks: any[] = [];
     let activeStageId: string = '1';
     let isPreviewing: boolean = false;
-    
+
     try {
       const editorContext = useEditor();
       currentBlocks = editorContext?.computed?.currentBlocks || [];

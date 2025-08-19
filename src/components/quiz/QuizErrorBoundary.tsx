@@ -29,9 +29,7 @@ export class QuizErrorBoundary extends Component<Props, State> {
       return (
         <div className="min-h-screen flex items-center justify-center bg-gray-50">
           <div className="max-w-md w-full p-6 bg-white rounded-lg shadow-lg text-center">
-            <h2 className="text-xl font-semibold text-red-600 mb-4">
-              Oops! Algo deu errado
-            </h2>
+            <h2 className="text-xl font-semibold text-red-600 mb-4">Oops! Algo deu errado</h2>
             <p className="text-gray-600 mb-6">
               Houve um problema ao carregar o quiz. Tente recarregar a página.
             </p>

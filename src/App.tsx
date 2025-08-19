@@ -13,9 +13,11 @@ const AuthPage = lazy(() => import('./pages/AuthPage'));
 const EditorWithPreview = lazy(() => import('./pages/EditorWithPreview'));
 const EditorWithPreviewFixed = lazy(() => import('./pages/EditorWithPreview-fixed'));
 const EditorModularPage = lazy(() => import('./pages/editor-modular'));
-const QuizPage = lazy(() => import('./pages/Quiz'));
 const QuizFlowPage = lazy(() => import('./pages/QuizFlowPage'));
 const QuizIntegratedPage = lazy(() => import('./pages/QuizIntegratedPage'));
+
+// Import direto para evitar problemas de lazy loading
+import QuizPage from './pages/Quiz';
 
 // Lazy load das páginas admin
 const DashboardPage = lazy(() => import('./pages/admin/DashboardPage'));
@@ -114,9 +116,7 @@ function App() {
 
                 {/* 🎮 QUIZ */}
                 <Route path="/quiz-modular">
-                  <Suspense fallback={<PageLoading />}>
-                    <QuizPage />
-                  </Suspense>
+                  <QuizPage />
                 </Route>
 
                 {/* 🎯 QUIZ 21 ETAPAS - PRODUÇÃO */}

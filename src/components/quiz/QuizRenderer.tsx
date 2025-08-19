@@ -56,15 +56,16 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({ className = '', styl
 
   // Renderizar componente baseado no tipo
   const renderComponent = (componentType: string) => {
-    const componentConfig = QUIZ_CONFIGURATION.components?.[componentType as keyof typeof QUIZ_CONFIGURATION.components];
+    const componentConfig =
+      QUIZ_CONFIGURATION.components?.[componentType as keyof typeof QUIZ_CONFIGURATION.components];
 
     switch (componentType) {
       case 'quiz-intro-header':
         return (
           <div className="text-center p-6 space-y-4">
-            <img 
+            <img
               src="https://res.cloudinary.com/dg3fsapzu/image/upload/v1723251877/LOGO_completa_white_clfcga.png"
-              alt="Logo" 
+              alt="Logo"
               className="mx-auto h-16 object-contain"
             />
             <div className="w-full h-1 bg-primary/20 rounded"></div>
@@ -92,7 +93,7 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({ className = '', styl
       case 'strategicQuestions':
         const stepIndex = componentType === 'questions' ? 1 : 11;
         const currentStep = QUIZ_CONFIGURATION.steps[stepIndex - 1];
-        
+
         return (
           <div className="space-y-6">
             <div className="text-center">
