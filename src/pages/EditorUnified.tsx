@@ -38,7 +38,7 @@ import { Separator } from '@/components/ui/separator';
  *
  * Editor de funil com sistema unificado e identidade visual consistente:
  * - Design profissional com cores da marca
- * - Identidade visual coesa e moderna  
+ * - Identidade visual coesa e moderna
  * - UnifiedPreviewEngine: Preview 100% idêntico à produção
  * - EditorStageManager: Gerenciamento completo das 21 etapas
  * - EditorControlsManager: Controles unificados do editor
@@ -196,15 +196,14 @@ const EditorUnified: React.FC = () => {
     <PreviewProvider>
       {/* 🎨 CONTAINER PRINCIPAL COM DESIGN PROFISSIONAL */}
       <div className="unified-editor-container min-h-screen bg-gradient-to-br from-brand-light/10 via-white to-brand-primary/5">
-        
         {/* 🏢 HEADER PROFISSIONAL */}
         <header className="unified-editor-header bg-white/95 backdrop-blur-xl border-b border-brand-light/30 shadow-sm animate-fade-in-up">
           <div className="px-6 py-3">
             <div className="flex items-center justify-between">
               {/* Logo profissional */}
-              <BrandLogo 
-                size="md" 
-                variant="full" 
+              <BrandLogo
+                size="md"
+                variant="full"
                 showSubtitle={true}
                 className="flex items-center space-x-3 animate-slide-in-left"
               />
@@ -238,7 +237,6 @@ const EditorUnified: React.FC = () => {
 
         {/* 🎯 LAYOUT PRINCIPAL PROFISSIONAL */}
         <div className="flex h-[calc(100vh-120px)]">
-          
           {/* 🎪 STAGE MANAGER - Painel lateral esquerdo */}
           <aside className="unified-editor-sidebar w-80 bg-white/90 backdrop-blur-sm border-r border-brand-light/30 shadow-sm animate-slide-in-left">
             <div className="h-full flex flex-col">
@@ -254,7 +252,7 @@ const EditorUnified: React.FC = () => {
                   Navegue pelas etapas do funil
                 </p>
               </div>
-              
+
               {/* Conteúdo do Stage Manager */}
               <div className="flex-1 overflow-hidden">
                 <EditorStageManager
@@ -272,9 +270,9 @@ const EditorUnified: React.FC = () => {
           <main className="unified-editor-canvas flex-1 relative overflow-hidden bg-gradient-to-b from-slate-50/50 to-white">
             {/* Background pattern sutil */}
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(184,155,122,0.03)_0%,transparent_50%)]"></div>
-            
-            <div 
-              ref={scrollRef} 
+
+            <div
+              ref={scrollRef}
               className="preview-container relative h-full p-8 overflow-auto animate-fade-in-up"
             >
               {/* Container do preview com sombra profissional */}
@@ -307,10 +305,12 @@ const EditorUnified: React.FC = () => {
                   Propriedades
                 </h2>
                 <p className="text-xs text-brand-text/60 mt-1 font-medium">
-                  {currentSelectedBlock ? 'Configurar elemento selecionado' : 'Selecione um elemento para editar'}
+                  {currentSelectedBlock
+                    ? 'Configurar elemento selecionado'
+                    : 'Selecione um elemento para editar'}
                 </p>
               </div>
-              
+
               {/* Conteúdo do Properties Panel */}
               <div className="flex-1 overflow-hidden">
                 <EditorPropertiesPanel

@@ -7,25 +7,34 @@
 /* ===== VARIÁVEIS CSS CUSTOMIZADAS ===== */
 :root {
   /* Cores da marca */
-  --brand-primary: #B89B7A;
-  --brand-light: #D4C2A8; 
-  --brand-dark: #A38A69;
+  --brand-primary: #b89b7a;
+  --brand-light: #d4c2a8;
+  --brand-dark: #a38a69;
   --brand-text: #432818;
-  
+
   /* Sombras profissionais */
   --shadow-soft: 0 2px 8px -2px rgba(184, 155, 122, 0.1);
   --shadow-medium: 0 4px 16px -4px rgba(184, 155, 122, 0.15);
   --shadow-large: 0 8px 32px -8px rgba(184, 155, 122, 0.2);
-  
+
   /* Gradientes suaves */
   --gradient-brand: linear-gradient(135deg, var(--brand-primary), var(--brand-dark));
   --gradient-light: linear-gradient(135deg, var(--brand-light), var(--brand-primary));
-  --gradient-background: linear-gradient(135deg, rgba(212, 194, 168, 0.05), rgba(255, 255, 255, 0.8));
+  --gradient-background: linear-gradient(
+    135deg,
+    rgba(212, 194, 168, 0.05),
+    rgba(255, 255, 255, 0.8)
+  );
 }
 
 /* ===== LAYOUT GERAL DO EDITOR UNIFICADO ===== */
 .unified-editor-container {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  font-family:
+    'Inter',
+    -apple-system,
+    BlinkMacSystemFont,
+    system-ui,
+    sans-serif;
   background: var(--gradient-background);
   min-height: 100vh;
 }
@@ -185,7 +194,8 @@
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {
@@ -232,11 +242,11 @@
   .unified-editor-container {
     padding: 0;
   }
-  
+
   .preview-container {
     padding: 1rem;
   }
-  
+
   .sidebar-mobile-hidden {
     display: none;
   }
@@ -247,17 +257,17 @@
   :root {
     --gradient-background: linear-gradient(135deg, rgba(67, 40, 24, 0.05), rgba(0, 0, 0, 0.8));
   }
-  
+
   .unified-editor-header {
     background: rgba(30, 30, 30, 0.95);
     border-bottom-color: rgba(184, 155, 122, 0.1);
   }
-  
+
   .unified-editor-sidebar {
     background: rgba(30, 30, 30, 0.9);
     border-color: rgba(184, 155, 122, 0.1);
   }
-  
+
   .preview-frame {
     background: rgb(24, 24, 27);
     border-color: rgba(184, 155, 122, 0.1);

@@ -9,7 +9,24 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
-import { DragDropContext, Draggable, Droppable } from '@hello-pangea/dnd';
+import { 
+  DndContext, 
+  closestCenter, 
+  DragEndEvent,
+  DragStartEvent,
+  DragOverlay,
+  useSensor,
+  useSensors,
+  PointerSensor,
+  KeyboardSensor
+} from '@dnd-kit/core';
+import { 
+  SortableContext, 
+  verticalListSortingStrategy,
+  useSortable,
+  sortableKeyboardCoordinates
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import { Edit3, Eye, GripVertical, Plus, Trash2 } from 'lucide-react';
 import ButtonBlock from '@/components/editor/blocks/ButtonBlock';
 import FormContainerBlock from '@/components/editor/blocks/FormContainerBlock';
@@ -60,6 +77,120 @@ export interface QuizStepRendererProps {
   className?: string;
 }
 
+// ========================================
+// Componente SortableBlock
+// ========================================
+interface SortableBlockProps {
+  block: Block;
+  index: number;
+}
+
+const SortableBlock: React.FC<SortableBlockProps> = ({ block, index }) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: block.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
+
+  // Buscar o componente apropriado
+  const Component = componentMap[block.type as keyof typeof componentMap];
+
+  if (!Component) {
+    return (
+      <div
+        ref={setNodeRef}
+        style={style}
+        className="p-4 border border-red-200 bg-red-50 rounded-lg"
+      >
+        <p className="text-red-600 text-sm">
+          Componente não encontrado: <code>{block.type}</code>
+        </p>
+      </div>
+    );
+  }
+
+  const blockProps = {
+    block,
+    config: {} as any, // Será fornecido pelo contexto
+    isEditing: true, // Será determinado pelo contexto
+    onUpdate: () => {}, // Será fornecido pelo contexto
+    className: cn('quiz-block', 'editor-block', block.properties?.className),
+    style: {
+      ...block.properties?.style,
+      order: block.order,
+    },
+  };
+
+  const renderedBlock = <Component {...blockProps} />;
+
+  // Em modo editor, adicionar controles
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={cn(
+        'editor-block-wrapper relative group',
+        isDragging && 'shadow-lg z-10'
+      )}
+    >
+      {/* Controles do Editor */}
+      <div className="absolute -top-2 -right-2 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-20">
+        <Button
+          size="sm"
+          variant="outline"
+          className="h-6 w-6 p-0 bg-white cursor-grab"
+          {...attributes}
+          {...listeners}
+        >
+          <GripVertical className="h-3 w-3" />
+        </Button>
+
+        <Button
+          size="sm"
+          variant="outline"
+          className="h-6 w-6 p-0 bg-white"
+          onClick={() => console.log('Editar bloco:', block.id)}
+        >
+          <Edit3 className="h-3 w-3" />
+        </Button>
+
+        <Button
+          size="sm"
+          variant="outline"
+          className="h-6 w-6 p-0 bg-white text-red-600"
+          onClick={() => console.log('Deletar bloco:', block.id)}
+        >
+          <Trash2 className="h-3 w-3" />
+        </Button>
+      </div>
+
+      {/* Overlay de Edição */}
+      <div
+        className={cn(
+          'relative',
+          'border-2 border-dashed border-transparent rounded-lg',
+          'group-hover:border-blue-300',
+          'transition-all duration-200'
+        )}
+      >
+        {renderedBlock}
+      </div>
+    </div>
+  );
+};
+
+// ========================================
+// Componente Principal - QuizStepRenderer
+// ========================================
 export const QuizStepRenderer: React.FC<QuizStepRendererProps> = ({
   stepData,
   currentStep,
@@ -72,6 +203,22 @@ export const QuizStepRenderer: React.FC<QuizStepRendererProps> = ({
 }) => {
   const [formData, setFormData] = useState<Record<string, any>>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [activeId, setActiveId] = useState<string | null>(null);
+
+  const isEditorMode = mode === 'editor';
+  const blocks = stepData.blocks || [];
+
+  // Configurar sensores para drag & drop
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
 
   // Atualizar dados quando mudarem
   useEffect(() => {
@@ -95,6 +242,46 @@ export const QuizStepRenderer: React.FC<QuizStepRendererProps> = ({
     }
   };
 
+  // Handler para atualização de blocos
+  const handleBlockUpdate = useCallback(
+    (blockId: string, updates: Partial<Block>) => {
+      // Implementação vazia - será conectada via props se necessário
+      console.log('Block update:', blockId, updates);
+    },
+    []
+  );
+
+  // Handler para drag end
+  const handleDragEnd = useCallback((event: DragEndEvent) => {
+    const { active, over } = event;
+    setActiveId(null);
+
+    if (over && active.id !== over.id) {
+      const oldIndex = blocks.findIndex(block => block.id === active.id);
+      const newIndex = blocks.findIndex(block => block.id === over.id);
+
+      if (oldIndex !== -1 && newIndex !== -1) {
+        const reorderedBlocks = [...blocks];
+        const [removed] = reorderedBlocks.splice(oldIndex, 1);
+        reorderedBlocks.splice(newIndex, 0, removed);
+
+        // Atualizar ordens
+        const updatedBlocks = reorderedBlocks.map((block, index) => ({
+          ...block,
+          order: index,
+        }));
+
+        console.log('Blocks reordered:', updatedBlocks);
+        // Implementar callback de reordenação se necessário
+      }
+    }
+  }, [blocks]);
+
+  // Handler para drag start
+  const handleDragStart = useCallback((event: DragStartEvent) => {
+    setActiveId(event.active.id as string);
+  }, []);
+
   // ========================================
   // Mapeamento de Componentes
   // ========================================
@@ -105,19 +292,129 @@ export const QuizStepRenderer: React.FC<QuizStepRendererProps> = ({
       'form-container': FormContainerRenderer,
       button: ButtonRenderer,
       text: TextRenderer,
-      'result-header-inline': ResultHeaderRenderer,
-      'style-card-inline': StyleCardRenderer,
+      'result-header': ResultHeaderRenderer,
+      'style-card': StyleCardRenderer,
       'secondary-styles': SecondaryStylesRenderer,
       hero: HeroRenderer,
       benefits: BenefitsRenderer,
-      testimonials: TestimonialsRenderer,
-      guarantee: GuaranteeRenderer,
-      'quiz-offer-cta-inline': OfferCTARenderer,
     }),
     []
   );
 
   // ========================================
+  // Componente SortableBlock para @dnd-kit
+  // ========================================
+  const SortableBlock: React.FC<{ block: Block; index: number }> = ({ block, index }) => {
+    const {
+      attributes,
+      listeners,
+      setNodeRef,
+      transform,
+      transition,
+      isDragging,
+    } = useSortable({ id: block.id });
+
+    const style = {
+      transform: CSS.Transform.toString(transform),
+      transition,
+      opacity: isDragging ? 0.5 : 1,
+    };
+
+    const Component = componentMap[block.type as keyof typeof componentMap];
+    if (!Component) {
+      return (
+        <div className="p-4 bg-red-50 border border-red-200 rounded text-red-600">
+          Componente não encontrado: {block.type}
+        </div>
+      );
+    }
+
+    const config = {
+      mode,
+      theme,
+      quizState: { currentStep, sessionData: formData, userAnswers: formData },
+      dataManager: { onDataUpdate: handleFieldChange, onAnswerUpdate: handleFieldChange },
+      editor: { onBlockUpdate: handleBlockUpdate },
+    };
+
+    const blockProps = {
+      block,
+      config,
+      isEditing: isEditorMode,
+      onUpdate: handleBlockUpdate,
+      className: cn('quiz-block', isEditorMode && 'editor-block', block.properties?.className),
+      style: {
+        ...block.properties?.style,
+        order: block.order,
+      },
+    };
+
+    const renderedBlock = <Component {...blockProps} />;
+
+    // Em modo editor, envolver com controles de edição
+    if (isEditorMode) {
+      return (
+        <div
+          ref={setNodeRef}
+          style={style}
+          className={cn(
+            'editor-block-wrapper relative group',
+            isDragging && 'shadow-lg z-10'
+          )}
+        >
+          {/* Controles do Editor */}
+          <div className="absolute -top-2 -right-2 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-20">
+            <Button
+              size="sm"
+              variant="outline"
+              className="h-6 w-6 p-0 bg-white cursor-grab"
+              {...listeners}
+              {...attributes}
+            >
+              <GripVertical className="h-3 w-3" />
+            </Button>
+
+            <Button
+              size="sm"
+              variant="outline"
+              className="h-6 w-6 p-0 bg-white"
+              onClick={() =>
+                handleBlockUpdate(block.id, {
+                  properties: { ...block.properties, isEditing: true },
+                })
+              }
+            >
+              <Edit3 className="h-3 w-3" />
+            </Button>
+
+            <Button
+              size="sm"
+              variant="outline"
+              className="h-6 w-6 p-0 bg-white text-red-600"
+              onClick={() => console.log('Delete block:', block.id)}
+            >
+              <Trash2 className="h-3 w-3" />
+            </Button>
+          </div>
+
+          {/* Overlay de Edição */}
+          <div
+            className={cn(
+              'relative',
+              'border-2 border-dashed border-transparent rounded-lg',
+              'group-hover:border-blue-300',
+              'transition-all duration-200'
+            )}
+          >
+            {renderedBlock}
+          </div>
+        </div>
+      );
+    }
+
+    // Modo preview/production
+    return <div key={block.id}>{renderedBlock}</div>;
+  };  // ========================================
   // Handlers
   // ========================================
   const handleBlockUpdate = useCallback(
@@ -149,112 +446,6 @@ export const QuizStepRenderer: React.FC<QuizStepRendererProps> = ({
   );
 
   // ========================================
-  // Renderizador de Bloco Individual
-  // ========================================
-  const renderBlock = useCallback(
-    (block: Block, index: number) => {
-      const Component = componentMap[block.type as keyof typeof componentMap];
-
-      if (!Component) {
-        return (
-          <div key={block.id} className="p-4 border border-red-200 bg-red-50 rounded-lg">
-            <p className="text-red-600 text-sm">
-              Componente não encontrado: <code>{block.type}</code>
-            </p>
-            {isEditorMode && (
-              <pre className="text-xs text-red-400 mt-2">{JSON.stringify(block, null, 2)}</pre>
-            )}
-          </div>
-        );
-      }
-
-      const blockProps = {
-        block,
-        config,
-        isEditing: isEditorMode,
-        onUpdate: handleBlockUpdate,
-        className: cn('quiz-block', isEditorMode && 'editor-block', block.properties?.className),
-        style: {
-          ...block.properties?.style,
-          order: block.order,
-        },
-      };
-
-      const renderedBlock = <Component {...blockProps} />;
-
-      // Em modo editor, envolver com controles de edição
-      if (isEditorMode) {
-        return (
-          <Draggable key={block.id} draggableId={block.id} index={index}>
-            {(provided, snapshot) => (
-              <div
-                ref={provided.innerRef}
-                {...provided.draggableProps}
-                className={cn(
-                  'editor-block-wrapper relative group',
-                  snapshot.isDragging && 'shadow-lg z-10'
-                )}
-              >
-                {/* Controles do Editor */}
-                <div className="absolute -top-2 -right-2 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-20">
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="h-6 w-6 p-0 bg-white"
-                    {...provided.dragHandleProps}
-                  >
-                    <GripVertical className="h-3 w-3" />
-                  </Button>
-
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="h-6 w-6 p-0 bg-white"
-                    onClick={() =>
-                      handleBlockUpdate(block.id, {
-                        properties: { ...block.properties, isEditing: true },
-                      })
-                    }
-                  >
-                    <Edit3 className="h-3 w-3" />
-                  </Button>
-
-                  {onDeleteBlock && (
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="h-6 w-6 p-0 bg-white text-red-600"
-                      onClick={() => onDeleteBlock(block.id)}
-                    >
-                      <Trash2 className="h-3 w-3" />
-                    </Button>
-                  )}
-                </div>
-
-                {/* Overlay de Edição */}
-                <div
-                  className={cn(
-                    'relative',
-                    'border-2 border-dashed border-transparent rounded-lg',
-                    'group-hover:border-blue-300',
-                    'transition-all duration-200'
-                  )}
-                >
-                  {renderedBlock}
-                </div>
-              </div>
-            )}
-          </Draggable>
-        );
-      }
-
-      // Modo preview/production
-      return <div key={block.id}>{renderedBlock}</div>;
-    },
-    [componentMap, isEditorMode, handleBlockUpdate, onDeleteBlock]
-  );
-
-  // ========================================
   // Render Principal
   // ========================================
   const content = (
@@ -273,7 +464,7 @@ export const QuizStepRenderer: React.FC<QuizStepRendererProps> = ({
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="font-semibold text-gray-900">
-                  Etapa {quizState.currentStep} - Editando
+                  Etapa {currentStep} - Editando
                 </h3>
                 <p className="text-sm text-gray-600">{blocks.length} bloco(s) nesta etapa</p>
               </div>
@@ -284,57 +475,67 @@ export const QuizStepRenderer: React.FC<QuizStepRendererProps> = ({
                   Preview
                 </Button>
 
-                {onAddBlock && (
-                  <Button
-                    size="sm"
-                    onClick={() => onAddBlock('text')}
-                    style={{ backgroundColor: theme.primaryColor }}
-                    className="flex items-center gap-2"
-                  >
-                    <Plus className="h-4 w-4" />
-                    Adicionar Bloco
-                  </Button>
-                )}
+                <Button
+                  size="sm"
+                  onClick={() => console.log('Adicionar bloco')}
+                  style={{ backgroundColor: theme.primaryColor }}
+                  className="flex items-center gap-2"
+                >
+                  <Plus className="h-4 w-4" />
+                  Adicionar Bloco
+                </Button>
               </div>
             </div>
           </div>
         )}
 
         {/* Blocos da Etapa */}
-        <div className="space-y-4">{blocks.map((block, index) => renderBlock(block, index))}</div>
+        <div className="space-y-4">
+          {blocks.map((block, index) => (
+            <SortableBlock key={block.id} block={block} index={index} />
+          ))}
+        </div>
 
         {/* Placeholder para etapa vazia */}
         {blocks.length === 0 && isEditorMode && (
           <div className="text-center py-12 bg-white rounded-lg border-2 border-dashed border-gray-300">
             <p className="text-gray-500 mb-4">Esta etapa está vazia</p>
-            {onAddBlock && (
-              <Button
-                onClick={() => onAddBlock('text')}
-                style={{ backgroundColor: theme.primaryColor }}
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                Adicionar Primeiro Bloco
-              </Button>
-            )}
+            <Button
+              onClick={() => console.log('Adicionar primeiro bloco')}
+              style={{ backgroundColor: theme.primaryColor }}
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              Adicionar Primeiro Bloco
+            </Button>
           </div>
         )}
       </div>
     </div>
   );
 
-  // Envolver com DragDropContext se for modo editor
-  if (isEditorMode && onBlocksReorder) {
+  // Blocos para ordenação
+  const blockIds = blocks.map(block => block.id);
+
+  // Envolver com DndContext se for modo editor
+  if (isEditorMode) {
     return (
-      <DragDropContext onDragEnd={handleDragEnd}>
-        <Droppable droppableId="quiz-blocks">
-          {provided => (
-            <div {...provided.droppableProps} ref={provided.innerRef}>
-              {content}
-              {provided.placeholder}
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+      >
+        <SortableContext items={blockIds} strategy={verticalListSortingStrategy}>
+          {content}
+        </SortableContext>
+        <DragOverlay>
+          {activeId ? (
+            <div className="opacity-50">
+              Arrastando bloco: {activeId}
             </div>
-          )}
-        </Droppable>
-      </DragDropContext>
+          ) : null}
+        </DragOverlay>
+      </DndContext>
     );
   }
 

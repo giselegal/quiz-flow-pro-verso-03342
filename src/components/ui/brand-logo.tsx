@@ -61,13 +61,24 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
         sizeClasses[size].icon
       )}
     >
-      <Sparkles className={cn('text-white', size === 'sm' ? 'h-3 w-3' : size === 'md' ? 'h-4 w-4' : 'h-6 w-6')} />
+      <Sparkles
+        className={cn(
+          'text-white',
+          size === 'sm' ? 'h-3 w-3' : size === 'md' ? 'h-4 w-4' : 'h-6 w-6'
+        )}
+      />
     </div>
   );
 
   const textElement = (
     <div className="flex flex-col">
-      <div className={cn('font-semibold flex items-center gap-2', themeClasses[theme].text, sizeClasses[size].text)}>
+      <div
+        className={cn(
+          'font-semibold flex items-center gap-2',
+          themeClasses[theme].text,
+          sizeClasses[size].text
+        )}
+      >
         QuizQuest
         <div className="flex items-center gap-1">
           <div
@@ -82,7 +93,9 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
         </div>
       </div>
       {showSubtitle && (
-        <p className={cn('leading-tight', themeClasses[theme].subtitle, sizeClasses[size].subtitle)}>
+        <p
+          className={cn('leading-tight', themeClasses[theme].subtitle, sizeClasses[size].subtitle)}
+        >
           Sistema integrado de criação de quizzes
         </p>
       )}
