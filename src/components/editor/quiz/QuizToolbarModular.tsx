@@ -7,7 +7,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { useQuizFlow } from './QuizFlowController';
+import { useQuizFlow } from '@/hooks/core/useQuizFlow';
 import { 
   Eye, 
   Edit3, 
@@ -26,21 +26,26 @@ interface QuizToolbarModularProps {
   onPropertiesToggle: () => void;
 }
 
-export const QuizToolbarModular: React.FC<QuizToolbarModularProps> = ({
-  mode,
-  onModeToggle,
-  onSidebarToggle,
-  onPropertiesToggle
+export const QuizToolbarModular: React.FC<QuizToolbarModularProps> = ({ 
+  mode = 'editor', 
+  onModeToggle = () => {},
+  onSidebarToggle = () => {},
+  onPropertiesToggle = () => {}
 }) => {
+  const { quizState, actions } = useQuizFlow();
   const {
-    currentStepNumber,
-    totalSteps,
-    nextStep,
-    previousStep,
-    canGoNext,
-    canGoPrevious,
-    currentStep
-  } = useQuizFlow();
+    currentStep: currentStepNumber,
+    totalSteps
+  } = quizState;
+  
+  // Buscar dados da etapa atual
+  const stepData = actions.getStepData();
+  const currentStep = stepData?.[0] || { type: 'content', title: `Etapa ${currentStepNumber}` };
+  
+  const nextStep = actions.nextStep;
+  const previousStep = actions.prevStep;
+  const canGoNext = currentStepNumber < totalSteps;
+  const canGoPrevious = currentStepNumber > 1;
 
   const getModeIcon = () => {
     switch (mode) {

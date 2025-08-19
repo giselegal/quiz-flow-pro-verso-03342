@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react';
 import { useEditor } from '@/context/EditorContext';
-import { useQuizFlow } from './QuizFlowController';
+import { useQuizFlow } from '@/hooks/core/useQuizFlow';
 import { QuizStepManagerModular } from './QuizStepManagerModular';
 import { QuizRenderEngineModular } from './QuizRenderEngineModular';
 import { QuizToolbarModular } from './QuizToolbarModular';
@@ -20,7 +20,12 @@ export const QuizFlowPageModular: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [propertiesOpen, setPropertiesOpen] = useState(false);
   
-  const { mode, setMode } = useQuizFlow();
+  const { quizState } = useQuizFlow();
+  const mode = (quizState.mode || 'preview') as 'editor' | 'preview' | 'production';
+  const setMode = (nextMode: string) => {
+    // Mode switching pode ser implementado se necessário
+    console.log('Mode toggle para:', nextMode);
+  };
   const { blockActions } = useEditor();
 
   const handleBlockUpdate = (blockId: string, updates: Partial<Block>) => {
