@@ -22,9 +22,7 @@ const EditorModularPage: React.FC = () => {
                   <h1 className="text-2xl font-bold text-[#6B4F43] mb-4">
                     Editor Modular - 21 Etapas
                   </h1>
-                  <p className="text-[#8B7355]">
-                    Sistema modular em desenvolvimento
-                  </p>
+                  <p className="text-[#8B7355]">Sistema modular em desenvolvimento</p>
                 </div>
               </div>
             </div>

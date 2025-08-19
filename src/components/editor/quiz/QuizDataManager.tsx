@@ -87,7 +87,7 @@ export const QuizDataManager: React.FC<QuizDataManagerProps> = ({
     const blob = new Blob([JSON.stringify(dataToExport, null, 2)], {
       type: 'application/json',
     });
-    
+
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -102,7 +102,7 @@ export const QuizDataManager: React.FC<QuizDataManagerProps> = ({
     if (!file) return;
 
     const reader = new FileReader();
-    reader.onload = (e) => {
+    reader.onload = e => {
       try {
         const importedData = JSON.parse(e.target?.result as string);
         if (importedData.quizData) {
@@ -119,7 +119,11 @@ export const QuizDataManager: React.FC<QuizDataManagerProps> = ({
 
   // Limpar todos os dados
   const clearAllData = () => {
-    if (window.confirm('Tem certeza que deseja limpar todos os dados? Esta ação não pode ser desfeita.')) {
+    if (
+      window.confirm(
+        'Tem certeza que deseja limpar todos os dados? Esta ação não pode ser desfeita.'
+      )
+    ) {
       onDataChange({});
       localStorage.removeItem(storageKey);
       console.log('🗑️ QuizDataManager: Todos os dados foram limpos');
@@ -144,19 +148,17 @@ export const QuizDataManager: React.FC<QuizDataManagerProps> = ({
     <div className="quiz-data-manager fixed bottom-4 left-4 z-50">
       <details className="bg-white rounded-lg shadow-lg border border-gray-200">
         <summary className="p-3 cursor-pointer hover:bg-gray-50 rounded-t-lg">
-          <span className="text-sm font-medium text-gray-700">
-            📊 Gerenciador de Dados
-          </span>
-          <span className="ml-2 text-xs text-gray-500">
-            ({stats.totalSteps} etapas)
-          </span>
+          <span className="text-sm font-medium text-gray-700">📊 Gerenciador de Dados</span>
+          <span className="ml-2 text-xs text-gray-500">({stats.totalSteps} etapas)</span>
         </summary>
 
         <div className="p-4 border-t border-gray-100 space-y-3">
           {/* Estatísticas */}
           <div className="text-xs text-gray-600 space-y-1">
             <div>Total de etapas: {stats.totalSteps}</div>
-            <div>Etapa atual: {currentStep} {stats.hasDataForCurrentStep ? '✅' : '❌'}</div>
+            <div>
+              Etapa atual: {currentStep} {stats.hasDataForCurrentStep ? '✅' : '❌'}
+            </div>
             <div>Último save: {stats.lastSave}</div>
             <div>Tamanho dos dados: {(stats.dataSize / 1024).toFixed(1)} KB</div>
             <div>Auto-save: {enableAutoSave ? '✅ Ativo' : '❌ Inativo'}</div>
@@ -172,12 +174,7 @@ export const QuizDataManager: React.FC<QuizDataManagerProps> = ({
             </button>
 
             <label className="block">
-              <input
-                type="file"
-                accept=".json"
-                onChange={importData}
-                className="hidden"
-              />
+              <input type="file" accept=".json" onChange={importData} className="hidden" />
               <div className="w-full px-3 py-2 text-sm bg-green-600 text-white rounded hover:bg-green-700 transition-colors cursor-pointer text-center">
                 📤 Importar Dados
               </div>
