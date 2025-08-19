@@ -1,6 +1,6 @@
+import { getEnhancedBlockComponent } from '@/components/editor/blocks/enhancedBlockRegistry';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { getEnhancedBlockComponent } from '@/components/editor/blocks/enhancedBlockRegistry';
 import { usePreview } from '@/contexts/PreviewContext';
 import { useContainerProperties } from '@/hooks/useContainerProperties';
 import { cn } from '@/lib/utils';
@@ -213,11 +213,44 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
         <div
           className="p-1" // 🎯 Apenas padding, sem bordas
           onClick={!isPreviewing ? onSelect : undefined} // Não executar onClick no modo preview
+          style={{
+            // 🎯 SINCRONIZAÇÃO COM PAINEL: Aplicar propriedades exatas via inline styles
+            padding:
+              block.properties?.paddingTop ||
+              block.properties?.paddingBottom ||
+              block.properties?.paddingLeft ||
+              block.properties?.paddingRight
+                ? `${block.properties.paddingTop || 0}px ${block.properties.paddingRight || 0}px ${block.properties.paddingBottom || 0}px ${block.properties.paddingLeft || 0}px`
+                : undefined,
+            margin:
+              marginTop || marginBottom || marginLeft || marginRight
+                ? `${marginTop || 0}px ${marginRight || 0}px ${marginBottom || 0}px ${marginLeft || 0}px`
+                : undefined,
+            backgroundColor:
+              block.properties?.backgroundColor &&
+              block.properties.backgroundColor !== 'transparent'
+                ? block.properties.backgroundColor
+                : undefined,
+            color: block.properties?.textColor || undefined,
+            transform:
+              block.properties?.containerScale && block.properties.containerScale !== 100
+                ? `scale(${block.properties.containerScale / 100})`
+                : undefined,
+            transformOrigin: 'center',
+          }}
         >
           {(() => {
-            // Props base para o componente - usar props originais do bloco para evitar conflitos
+            // 🎯 SINCRONIZAÇÃO: Props base para o componente - usar properties processadas
             const componentProps = {
-              block: block,
+              block: {
+                ...block,
+                // Garantir que as propriedades estão sincronizadas
+                properties: {
+                  ...block.properties,
+                  // Aplicar as mesmas transformações que o painel de propriedades
+                  ...processedProperties,
+                },
+              },
               isSelected: false,
               onClick: onSelect,
               onPropertyChange: handlePropertyChange,

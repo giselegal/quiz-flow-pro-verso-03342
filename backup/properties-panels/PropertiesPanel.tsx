@@ -1,55 +1,8 @@
-/**
- * 🚀 PropertiesPanel - Painel de Propriedades Consolidado v3.0
- *
- * CONSOLIDAÇÃO COMPLETA:
- * - Combina OptimizedPropertiesPanel (tecnologia avançada)
- * - Mantém editores especializados do PropertiesPanel original
- * - Interface moderna com abas e categorização
- * - Performance otimizada com memoização avançada
- * - Suporte completo a todos os tipos de bloco
- */
-
-import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react';
-
-// UI Components
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Switch } from '@/components/ui/switch';
-import { Badge } from '@/components/ui/badge';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-
-// Visual Controls
-import ColorPicker from '@/components/visual-controls/ColorPicker';
-import SizeSlider from '@/components/visual-controls/SizeSlider';
-
-// Icons
-import {
-  Settings,
-  Paintbrush,
-  Layout,
-  Type,
-  RotateCcw,
-  Trash2,
-  X,
-  AlertCircle,
-  CheckCircle,
-  Loader2,
-  Zap,
-} from 'lucide-react';
-
-// Editores Especializados (mantidos do sistema original)
+import { Block } from '@/types/editor';
+import { Settings, X } from 'lucide-react';
+import React, { useMemo } from 'react';
 import { ButtonPropertyEditor } from './editors/ButtonPropertyEditor';
 import { FormContainerPropertyEditor } from './editors/FormContainerPropertyEditor';
 import { HeaderPropertyEditor } from './editors/HeaderPropertyEditor';
@@ -62,17 +15,6 @@ import { QuestionPropertyEditor } from './editors/QuestionPropertyEditor';
 import { TestimonialPropertyEditor } from './editors/TestimonialPropertyEditor';
 import { TextPropertyEditor } from './editors/TextPropertyEditor';
 import { getBlockEditorConfig } from './PropertyEditorRegistry';
-
-// Hooks avançados
-import {
-  UnifiedBlock,
-  UnifiedProperty,
-  useUnifiedProperties,
-  PropertyType,
-} from '@/hooks/useUnifiedProperties';
-
-// Types
-import { Block } from '@/types/editor';
 
 interface PropertiesPanelProps {
   /** Bloco atualmente selecionado */
