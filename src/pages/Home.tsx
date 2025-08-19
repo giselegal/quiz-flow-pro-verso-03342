@@ -174,15 +174,27 @@ const Home = () => {
                 </Button>
 
                 {user && (
-                  <Button
-                    onClick={() => navigate('/quiz-editor')}
-                    size="lg"
-                    variant="outline"
-                    className="border-brand-primary text-brand-primary hover:bg-brand-primary/10 px-8 py-4 text-lg font-semibold"
-                  >
-                    <Target className="h-5 w-5 mr-2" />
-                    Editor de Quiz
-                  </Button>
+                  <>
+                    <Button
+                      onClick={() => navigate('/editor-unified')}
+                      size="lg"
+                      className="bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-700 hover:to-emerald-500 text-white shadow-xl px-8 py-4 text-lg"
+                    >
+                      <Sparkles className="h-5 w-5 mr-2" />
+                      Editor Unificado
+                      <Badge className="ml-2 bg-yellow-400 text-yellow-900 text-xs">NOVO</Badge>
+                    </Button>
+
+                    <Button
+                      onClick={() => navigate('/quiz-editor')}
+                      size="lg"
+                      variant="outline"
+                      className="border-brand-primary text-brand-primary hover:bg-brand-primary/10 px-8 py-4 text-lg font-semibold"
+                    >
+                      <Target className="h-5 w-5 mr-2" />
+                      Editor Clássico
+                    </Button>
+                  </>
                 )}
 
                 <Button

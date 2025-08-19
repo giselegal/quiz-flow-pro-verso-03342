@@ -9,25 +9,23 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
-import { useQuizFlow, QuizState, QuizActions } from '@/hooks/core/useQuizFlow';
-import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
-import { Block } from '@/types/editor';
+import { useQuizFlow } from '@/hooks/core/useQuizFlow';
 import { cn } from '@/lib/utils';
+import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import {
+  ArrowRight,
+  Calculator,
+  CheckCircle,
   ChevronLeft,
   ChevronRight,
+  Circle,
   Edit,
   Eye,
-  Play,
-  SkipForward,
-  Users,
-  Calculator,
-  Trophy,
   Gift,
-  CheckCircle,
-  Circle,
-  ArrowRight,
   Layers,
+  Play,
+  Trophy,
+  Users,
 } from 'lucide-react';
 import React, { useCallback, useMemo } from 'react';
 
@@ -60,7 +58,7 @@ interface StepMetadata {
 
 /**
  * 🎪 Gerenciador de Etapas do Editor
- * 
+ *
  * Permite navegar, editar e testar todas as 21 etapas do quiz
  */
 export const EditorStageManager: React.FC<EditorStageManagerProps> = ({
@@ -83,7 +81,7 @@ export const EditorStageManager: React.FC<EditorStageManagerProps> = ({
     const getStepMetadata = (step: number): StepMetadata => {
       const stepKey = `step-${step}`;
       const stepData = QUIZ_STYLE_21_STEPS_TEMPLATE[stepKey] || [];
-      
+
       // Categorizar etapas
       const getCategory = (step: number): StepMetadata['category'] => {
         if (step === 1) return 'intro';
@@ -109,13 +107,20 @@ export const EditorStageManager: React.FC<EditorStageManagerProps> = ({
       const getStepIcon = (step: number) => {
         const category = getCategory(step);
         switch (category) {
-          case 'intro': return Users;
-          case 'questions': return Circle;
-          case 'strategic': return Calculator;
-          case 'transitions': return ArrowRight;
-          case 'result': return Trophy;
-          case 'offer': return Gift;
-          default: return Circle;
+          case 'intro':
+            return Users;
+          case 'questions':
+            return Circle;
+          case 'strategic':
+            return Calculator;
+          case 'transitions':
+            return ArrowRight;
+          case 'result':
+            return Trophy;
+          case 'offer':
+            return Gift;
+          default:
+            return Circle;
         }
       };
 
@@ -144,7 +149,7 @@ export const EditorStageManager: React.FC<EditorStageManagerProps> = ({
       };
 
       const category = getCategory(step);
-      
+
       return {
         id: stepKey,
         title: getStepTitle(step),
@@ -162,33 +167,39 @@ export const EditorStageManager: React.FC<EditorStageManagerProps> = ({
   }, [quizState.currentStep]);
 
   // Navegar para uma etapa específica
-  const handleStepSelect = useCallback((step: number) => {
-    if (mode === 'edit') {
-      // No modo de edição, permite navegar para qualquer etapa
-      onStepSelect?.(step);
-    } else if (mode === 'test') {
-      // No modo de teste, usa a navegação natural do quiz
-      if (step === quizState.currentStep + 1) {
-        actions.nextStep();
-      } else if (step === quizState.currentStep - 1) {
-        actions.prevStep();
+  const handleStepSelect = useCallback(
+    (step: number) => {
+      if (mode === 'edit') {
+        // No modo de edição, permite navegar para qualquer etapa
+        onStepSelect?.(step);
+      } else if (mode === 'test') {
+        // No modo de teste, usa a navegação natural do quiz
+        if (step === quizState.currentStep + 1) {
+          actions.nextStep();
+        } else if (step === quizState.currentStep - 1) {
+          actions.prevStep();
+        }
       }
-    }
-  }, [mode, quizState.currentStep, actions, onStepSelect]);
+    },
+    [mode, quizState.currentStep, actions, onStepSelect]
+  );
 
   // Agrupar etapas por categoria
   const groupedSteps = useMemo(() => {
-    const groups = stepsMetadata.reduce((acc, step, index) => {
-      const stepNumber = index + 1;
-      const category = step.category;
-      
-      if (!acc[category]) {
-        acc[category] = [];
-      }
-      
-      acc[category].push({ ...step, stepNumber });
-      return acc;
-    }, {} as Record<string, Array<StepMetadata & { stepNumber: number }>>);
+    const groups = stepsMetadata.reduce(
+      (acc, step, index) => {
+        const stepNumber = index + 1;
+        const category = step.category;
+
+        if (!acc[category]) {
+          acc[category] = [];
+        }
+
+        acc[category].push({ ...step, stepNumber });
+        return acc;
+      },
+      {} as Record<string, Array<StepMetadata & { stepNumber: number }>>
+    );
 
     return groups;
   }, [stepsMetadata]);
@@ -198,7 +209,7 @@ export const EditorStageManager: React.FC<EditorStageManagerProps> = ({
     const totalSteps = stepsMetadata.length;
     const completedSteps = stepsMetadata.filter(s => s.isCompleted).length;
     const stepsWithData = stepsMetadata.filter(s => s.hasData).length;
-    
+
     return {
       total: totalSteps,
       completed: completedSteps,
@@ -210,9 +221,10 @@ export const EditorStageManager: React.FC<EditorStageManagerProps> = ({
   // Renderizar um item de etapa
   const renderStepItem = (step: StepMetadata & { stepNumber: number }) => {
     const isActive = step.stepNumber === quizState.currentStep;
-    const isClickable = mode === 'edit' || 
+    const isClickable =
+      mode === 'edit' ||
       (mode === 'test' && Math.abs(step.stepNumber - quizState.currentStep) <= 1);
-    
+
     const StepIcon = step.icon;
 
     return (
@@ -242,19 +254,17 @@ export const EditorStageManager: React.FC<EditorStageManagerProps> = ({
             {/* Conteúdo */}
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between">
-                <h4 className={cn(
-                  'text-sm font-medium truncate',
-                  isActive ? 'text-blue-900' : 'text-gray-900'
-                )}>
+                <h4
+                  className={cn(
+                    'text-sm font-medium truncate',
+                    isActive ? 'text-blue-900' : 'text-gray-900'
+                  )}
+                >
                   {step.stepNumber}. {step.title}
                 </h4>
-                <span className="text-xs text-gray-500 ml-2">
-                  {step.blockCount} blocos
-                </span>
+                <span className="text-xs text-gray-500 ml-2">{step.blockCount} blocos</span>
               </div>
-              <p className="text-xs text-gray-600 mt-1 truncate">
-                {step.description}
-              </p>
+              <p className="text-xs text-gray-600 mt-1 truncate">{step.description}</p>
             </div>
 
             {/* Indicador de modo */}
@@ -277,7 +287,7 @@ export const EditorStageManager: React.FC<EditorStageManagerProps> = ({
 
   // Renderizar grupo de etapas
   const renderStepGroup = (
-    categoryKey: string, 
+    categoryKey: string,
     steps: Array<StepMetadata & { stepNumber: number }>
   ) => {
     const categoryLabels = {
@@ -309,9 +319,7 @@ export const EditorStageManager: React.FC<EditorStageManagerProps> = ({
           </h3>
           <span className="text-xs text-gray-500">({steps.length})</span>
         </div>
-        <div className="space-y-1">
-          {steps.map(renderStepItem)}
-        </div>
+        <div className="space-y-1">{steps.map(renderStepItem)}</div>
       </div>
     );
   };
@@ -324,7 +332,7 @@ export const EditorStageManager: React.FC<EditorStageManagerProps> = ({
             <Layers className="h-5 w-5" />
             Gerenciador de Etapas
           </CardTitle>
-          
+
           {/* Controles de modo */}
           <div className="flex gap-1">
             <Button

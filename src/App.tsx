@@ -20,6 +20,7 @@ const AuthPage = lazy(() => import('./pages/AuthPage'));
 // const EditorWithPreview = lazy(() => import('./pages/EditorWithPreview')); // DESATIVADO
 const EditorWithPreviewFixed = lazy(() => import('./pages/EditorWithPreview-fixed'));
 const EditorModularPage = lazy(() => import('./pages/editor-modular'));
+const EditorUnified = lazy(() => import('./pages/EditorUnified')); // 🆕 EDITOR UNIFICADO
 const ProductionQuizPage = lazy(() => import('./pages/ProductionQuizPage'));
 const QuizIntegratedPage = lazy(() => import('./pages/QuizIntegratedPage'));
 
@@ -123,6 +124,17 @@ function App() {
                     <Suspense fallback={<PageLoading />}>
                       <EditorModularPage />
                     </Suspense>
+                  </Route>
+
+                  {/* 🚀 EDITOR UNIFICADO - Sistema completo unificado */}
+                  <Route path="/editor-unified">
+                    <FunnelsProvider>
+                      <EditorProvider>
+                        <Suspense fallback={<PageLoading />}>
+                          <EditorUnified />
+                        </Suspense>
+                      </EditorProvider>
+                    </FunnelsProvider>
                   </Route>
 
                   {/* 📊 DASHBOARD ADMINISTRATIVO */}

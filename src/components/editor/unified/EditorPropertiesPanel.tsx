@@ -11,30 +11,35 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
-import { Block } from '@/types/editor';
 import { cn } from '@/lib/utils';
+import { Block } from '@/types/editor';
 import {
-  Settings,
-  Eye,
-  Palette,
-  Layout,
-  Type,
-  Image,
-  MousePointer,
-  Code,
-  Save,
-  RotateCcw,
-  Copy,
-  Trash2,
-  Info,
   ChevronDown,
   ChevronRight,
+  Code,
+  Copy,
+  Eye,
+  Info,
+  Layout,
+  MousePointer,
+  Palette,
+  RotateCcw,
+  Save,
+  Settings,
+  Trash2,
+  Type,
 } from 'lucide-react';
-import React, { useCallback, useState, useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 
 export interface EditorPropertiesPanelProps {
   /** Bloco atualmente selecionado */
@@ -80,7 +85,7 @@ interface PropertyCategory {
 
 /**
  * 📝 Painel de Propriedades Unificado
- * 
+ *
  * Permite editar todas as propriedades de um bloco em tempo real
  */
 export const EditorPropertiesPanel: React.FC<EditorPropertiesPanelProps> = ({
@@ -291,25 +296,28 @@ export const EditorPropertiesPanel: React.FC<EditorPropertiesPanelProps> = ({
   }, [defaultProperties, expandedCategories]);
 
   // Obter valor atual de uma propriedade
-  const getPropertyValue = useCallback((property: PropertyConfig): any => {
-    if (!selectedBlock) return property.defaultValue;
+  const getPropertyValue = useCallback(
+    (property: PropertyConfig): any => {
+      if (!selectedBlock) return property.defaultValue;
 
-    // Verificar se há valor temporário
-    if (tempValues[property.key] !== undefined) {
-      return tempValues[property.key];
-    }
+      // Verificar se há valor temporário
+      if (tempValues[property.key] !== undefined) {
+        return tempValues[property.key];
+      }
 
-    // Obter valor do bloco usando notação de ponto
-    const keys = property.key.split('.');
-    let value = selectedBlock as any;
-    
-    for (const key of keys) {
-      value = value?.[key];
-      if (value === undefined) break;
-    }
+      // Obter valor do bloco usando notação de ponto
+      const keys = property.key.split('.');
+      let value = selectedBlock as any;
 
-    return value !== undefined ? value : property.defaultValue;
-  }, [selectedBlock, tempValues]);
+      for (const key of keys) {
+        value = value?.[key];
+        if (value === undefined) break;
+      }
+
+      return value !== undefined ? value : property.defaultValue;
+    },
+    [selectedBlock, tempValues]
+  );
 
   // Atualizar valor temporário
   const updateTempValue = useCallback((property: PropertyConfig, value: any) => {
@@ -324,19 +332,19 @@ export const EditorPropertiesPanel: React.FC<EditorPropertiesPanelProps> = ({
     if (!selectedBlock || Object.keys(tempValues).length === 0) return;
 
     const updates: any = {};
-    
+
     // Construir objeto de atualizações
     Object.entries(tempValues).forEach(([key, value]) => {
       const keys = key.split('.');
       let current = updates;
-      
+
       for (let i = 0; i < keys.length - 1; i++) {
         if (!(keys[i] in current)) {
           current[keys[i]] = {};
         }
         current = current[keys[i]];
       }
-      
+
       current[keys[keys.length - 1]] = value;
     });
 
@@ -376,7 +384,7 @@ export const EditorPropertiesPanel: React.FC<EditorPropertiesPanelProps> = ({
         return (
           <Input
             value={value || ''}
-            onChange={(e) => updateValue(e.target.value)}
+            onChange={e => updateValue(e.target.value)}
             placeholder={property.label}
             className={cn(hasChanges && 'border-blue-500')}
           />
@@ -386,7 +394,7 @@ export const EditorPropertiesPanel: React.FC<EditorPropertiesPanelProps> = ({
         return (
           <Textarea
             value={value || ''}
-            onChange={(e) => updateValue(e.target.value)}
+            onChange={e => updateValue(e.target.value)}
             placeholder={property.label}
             className={cn('min-h-[80px]', hasChanges && 'border-blue-500')}
           />
@@ -397,7 +405,7 @@ export const EditorPropertiesPanel: React.FC<EditorPropertiesPanelProps> = ({
           <Input
             type="number"
             value={value || ''}
-            onChange={(e) => updateValue(Number(e.target.value))}
+            onChange={e => updateValue(Number(e.target.value))}
             min={property.validation?.min}
             max={property.validation?.max}
             className={cn(hasChanges && 'border-blue-500')}
@@ -411,7 +419,7 @@ export const EditorPropertiesPanel: React.FC<EditorPropertiesPanelProps> = ({
               <SelectValue placeholder={`Selecione ${property.label}`} />
             </SelectTrigger>
             <SelectContent>
-              {property.options?.map((option) => (
+              {property.options?.map(option => (
                 <SelectItem key={option.value} value={option.value}>
                   {option.label}
                 </SelectItem>
@@ -421,12 +429,7 @@ export const EditorPropertiesPanel: React.FC<EditorPropertiesPanelProps> = ({
         );
 
       case 'boolean':
-        return (
-          <Switch
-            checked={value || false}
-            onCheckedChange={updateValue}
-          />
-        );
+        return <Switch checked={value || false} onCheckedChange={updateValue} />;
 
       case 'color':
         return (
@@ -434,12 +437,12 @@ export const EditorPropertiesPanel: React.FC<EditorPropertiesPanelProps> = ({
             <Input
               type="color"
               value={value || '#000000'}
-              onChange={(e) => updateValue(e.target.value)}
+              onChange={e => updateValue(e.target.value)}
               className="w-12 h-10 p-1"
             />
             <Input
               value={value || ''}
-              onChange={(e) => updateValue(e.target.value)}
+              onChange={e => updateValue(e.target.value)}
               placeholder="#000000"
               className={cn('flex-1', hasChanges && 'border-blue-500')}
             />
@@ -450,7 +453,7 @@ export const EditorPropertiesPanel: React.FC<EditorPropertiesPanelProps> = ({
         return (
           <Input
             value={value || ''}
-            onChange={(e) => updateValue(e.target.value)}
+            onChange={e => updateValue(e.target.value)}
             placeholder={property.label}
             className={cn(hasChanges && 'border-blue-500')}
           />
@@ -487,7 +490,7 @@ export const EditorPropertiesPanel: React.FC<EditorPropertiesPanelProps> = ({
             <Settings className="h-5 w-5" />
             Propriedades
           </CardTitle>
-          
+
           {/* Preview toggle */}
           <Button
             variant={previewMode ? 'default' : 'outline'}
@@ -501,9 +504,7 @@ export const EditorPropertiesPanel: React.FC<EditorPropertiesPanelProps> = ({
         {/* Info do bloco selecionado */}
         <div className="flex items-center gap-2">
           <Badge variant="secondary">{selectedBlock.type}</Badge>
-          <span className="text-sm text-gray-600 truncate">
-            {selectedBlock.id}
-          </span>
+          <span className="text-sm text-gray-600 truncate">{selectedBlock.id}</span>
         </div>
 
         {/* Status de alterações */}
@@ -522,7 +523,7 @@ export const EditorPropertiesPanel: React.FC<EditorPropertiesPanelProps> = ({
       {/* Propriedades */}
       <ScrollArea className="flex-1 p-4">
         <div className="space-y-4">
-          {categorizedProperties.map((category) => (
+          {categorizedProperties.map(category => (
             <div key={category.key}>
               <Button
                 variant="ghost"
@@ -545,19 +546,15 @@ export const EditorPropertiesPanel: React.FC<EditorPropertiesPanelProps> = ({
 
               {category.expanded && (
                 <div className="mt-2 space-y-3 pl-4">
-                  {category.properties.map((property) => (
+                  {category.properties.map(property => (
                     <div key={property.key} className="space-y-2">
                       <Label className="text-sm font-medium flex items-center gap-2">
                         {property.label}
-                        {property.validation?.required && (
-                          <span className="text-red-500">*</span>
-                        )}
+                        {property.validation?.required && <span className="text-red-500">*</span>}
                       </Label>
                       {renderPropertyField(property)}
                       {property.description && (
-                        <p className="text-xs text-gray-500">
-                          {property.description}
-                        </p>
+                        <p className="text-xs text-gray-500">{property.description}</p>
                       )}
                     </div>
                   ))}

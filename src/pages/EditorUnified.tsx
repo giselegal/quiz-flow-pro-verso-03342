@@ -8,28 +8,23 @@ import {
   UnifiedPreviewEngine,
 } from '@/components/editor/unified';
 
-// Editor Components (legacy - mantido para compatibilidade)
-import { FunnelSettingsPanel } from '@/components/editor/funnel-settings/FunnelSettingsPanel';
-import { SaveTemplateModal } from '@/components/editor/SaveTemplateModal';
-
 // 🚀 PREVIEW SYSTEM
 import { PreviewProvider } from '@/contexts/PreviewContext';
 
-// 🎯 QUIZ 21 STEPS SYSTEM
-import { Quiz21StepsProvider } from '@/components/quiz/Quiz21StepsProvider';
-
-// � HOOKS CORE UNIFICADO
+// 🎪 HOOKS CORE UNIFICADO
 import { useQuizFlow } from '@/hooks/core/useQuizFlow';
 
 // Context & Hooks
-import { EditorProvider, useEditor } from '@/context/EditorContext';
-import { EditorQuizProvider } from '@/context/EditorQuizContext';
-import { FunnelsProvider } from '@/context/FunnelsContext';
+import { useEditor } from '@/context/EditorContext';
 import { useAutoSaveWithDebounce } from '@/hooks/editor/useAutoSaveWithDebounce';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { useSyncedScroll } from '@/hooks/useSyncedScroll';
 import { saveEditor } from '@/services/editorService';
-import { Block } from '@/types/editor';
+import type { Block } from '@/types/editor';
+
+// 🔧 MODAIS (legados)
+import { FunnelSettingsPanel } from '@/components/editor/funnel-settings/FunnelSettingsPanel';
+import { SaveTemplateModal } from '@/components/editor/SaveTemplateModal';
 
 /**
  * 🎨 EDITOR UNIFICADO - Versão Completa Integrada
@@ -43,7 +38,7 @@ import { Block } from '@/types/editor';
  * - Sistema de auto-save e keyboard shortcuts
  * 🚀 EDITOR UNIFICADO INTEGRADO
  */
-const EditorUnifiedPageWithDragDrop: React.FC = () => {
+const EditorUnified: React.FC = () => {
   // 🎪 HOOK PRINCIPAL UNIFICADO
   const { quizState, actions } = useQuizFlow({
     mode: 'editor',
@@ -70,7 +65,7 @@ const EditorUnifiedPageWithDragDrop: React.FC = () => {
     activeStageId,
     blockActions: { deleteBlock, updateBlock },
     uiState: { isPreviewing, setIsPreviewing },
-    computed: { currentBlocks, selectedBlock },
+    computed: { currentBlocks },
   } = useEditor();
 
   // 🆕 AUTO-SAVE COM DEBOUNCE - Implementação do salvamento automático
@@ -159,7 +154,7 @@ const EditorUnifiedPageWithDragDrop: React.FC = () => {
       <div className="min-h-screen bg-gradient-to-br from-[#FAF9F7] via-[#F5F2E9] to-[#EEEBE1]">
         {/* 🎮 CONTROLS MANAGER - Barra superior unificada */}
         <EditorControlsManager
-          mode={editorMode}
+          mode={editorMode === 'edit' ? 'full' : 'minimal'}
           viewportSize={viewportSize}
           isPreviewing={isPreviewing}
           onModeChange={handleModeChange}
@@ -176,10 +171,10 @@ const EditorUnifiedPageWithDragDrop: React.FC = () => {
 
         {/* 🎯 LAYOUT PRINCIPAL UNIFICADO */}
         <div className="flex h-[calc(100vh-60px)]">
-          {/* � STAGE MANAGER - Navegação de etapas */}
+          {/* 🎪 STAGE MANAGER - Navegação de etapas */}
           <div className="w-80 border-r border-stone-200/50 bg-white/90 backdrop-blur-sm">
             <EditorStageManager
-              mode={editorMode}
+              mode={editorMode === 'edit' ? 'full' : 'minimal'}
               initialStep={currentStep}
               onStepSelect={handleStepSelect}
               onModeChange={handleModeChange}
@@ -197,7 +192,7 @@ const EditorUnifiedPageWithDragDrop: React.FC = () => {
                 viewportSize={viewportSize}
                 onBlockSelect={handleBlockSelect}
                 onBlockUpdate={handleBlockUpdate}
-                mode={editorMode}
+                mode={editorMode === 'edit' ? 'editor' : 'preview'}
                 className="mx-auto"
               />
             </div>
@@ -241,22 +236,4 @@ const EditorUnifiedPageWithDragDrop: React.FC = () => {
   );
 };
 
-//   EXPORT WRAPPER - Component com Preview System, FunnelsProvider e Quiz21StepsProvider
-export const EditorWithPreview: React.FC = () => {
-  return (
-    <FunnelsProvider debug={true}>
-      <EditorProvider>
-        <EditorQuizProvider>
-          <PreviewProvider>
-            <Quiz21StepsProvider debug={true}>
-              <EditorFixedPageWithDragDrop />
-            </Quiz21StepsProvider>
-          </PreviewProvider>
-        </EditorQuizProvider>
-      </EditorProvider>
-    </FunnelsProvider>
-  );
-};
-
-// ✅ EXPORT DEFAULT
-export default EditorWithPreview;
+export default EditorUnified;
