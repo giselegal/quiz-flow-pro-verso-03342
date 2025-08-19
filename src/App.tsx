@@ -3,6 +3,7 @@ import { LoadingFallback } from '@/components/ui/loading-fallback';
 import { Toaster } from '@/components/ui/toaster';
 import { AuthProvider } from '@/context/AuthContext';
 import { EditorProvider } from '@/context/EditorContext';
+import { FunnelsProvider } from '@/context/FunnelsContext';
 import { Suspense, lazy } from 'react';
 import { Route, Router, Switch } from 'wouter';
 
@@ -52,20 +53,24 @@ function App() {
 
                 {/* 🎯 EDITOR PRINCIPAL */}
                 <Route path="/editor">
-                  <EditorProvider>
-                    <Suspense fallback={<PageLoading />}>
-                      <EditorWithPreview />
-                    </Suspense>
-                  </EditorProvider>
+                  <FunnelsProvider>
+                    <EditorProvider>
+                      <Suspense fallback={<PageLoading />}>
+                        <EditorWithPreview />
+                      </Suspense>
+                    </EditorProvider>
+                  </FunnelsProvider>
                 </Route>
 
                 {/* 🏆 EDITOR FIXED */}
                 <Route path="/editor-fixed">
-                  <EditorProvider>
-                    <Suspense fallback={<PageLoading />}>
-                      <EditorWithPreview />
-                    </Suspense>
-                  </EditorProvider>
+                  <FunnelsProvider>
+                    <EditorProvider>
+                      <Suspense fallback={<PageLoading />}>
+                        <EditorWithPreview />
+                      </Suspense>
+                    </EditorProvider>
+                  </FunnelsProvider>
                 </Route>
 
                 {/* 📊 DASHBOARD ADMINISTRATIVO */}
