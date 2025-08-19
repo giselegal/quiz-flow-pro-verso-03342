@@ -72,37 +72,9 @@ export const InteractiveQuizCanvas: React.FC<InteractiveQuizCanvasProps> = memo(
       }
     }, [quizAnswers]);
 
-    // Calcular pontuação
-    const _calculateAndUpdateScores = useCallback(
-      // eslint-disable-line @typescript-eslint/no-unused-vars
-      (selectedOptions: string[], scoreValues: Record<string, number>) => {
-        const newScores = { ...scores };
+    // Calcular pontuação (removida função não utilizada)
 
-        selectedOptions.forEach(optionId => {
-          Object.entries(scoreValues).forEach(([category, points]) => {
-            const categoryKey = category.split('_')[0]; // ex: 'natural_q2' -> 'natural'
-            if (optionId.includes(categoryKey)) {
-              newScores[categoryKey] = (newScores[categoryKey] || 0) + points;
-            }
-          });
-        });
-
-        setScores(newScores);
-        console.log('📊 Updated Scores:', newScores);
-      },
-      [scores]
-    );
-
-    // Estado de progresso
-    const _hasAnsweredCurrentStep = useMemo(() => {
-      // eslint-disable-line @typescript-eslint/no-unused-vars
-      return currentBlocks.some(block => {
-        if (block.type === 'quiz-question-inline') {
-          return quizAnswers.find(answer => answer.questionId === block.id); // Usando questionId em vez de blockId
-        }
-        return true;
-      });
-    }, [currentBlocks, quizAnswers]); // Usando quizAnswers em vez de quizData.answers
+    // Estado de progresso (removida função não utilizada) // Usando quizAnswers em vez de quizData.answers
 
     // Verificar se pode avançar para próxima etapa
     const canProceedToNext = useCallback(() => {

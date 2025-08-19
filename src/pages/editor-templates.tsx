@@ -1,24 +1,24 @@
-import React from 'react';
+// import React from 'react'; - removido pois não é usado no modo atual
 import { EditorProvider } from '@/context/EditorContext';
 import { useTemplateLoader } from '@/hooks/useTemplateLoader';
 import { useEditor } from '@/context/EditorContext';
 
 const EditorTemplatesPage = () => {
   const {
-    loadTemplate,
+    // loadTemplate, - removido pois não é usado
     loadTemplateBlocks,
-    getTemplateMetadata,
+    // getTemplateMetadata, - removido pois não é usado
     isLoading,
     error,
     templatesMetadata,
-    cachedTemplates
+    // cachedTemplates - removido pois não é usado
   } = useTemplateLoader();
   
   const { stages, activeStageId, stageActions } = useEditor();
 
   const handleStageClick = async (stageId: string) => {
     // Usar o sistema templates.ts para carregar
-    const blocks = await loadTemplateBlocks(stageId);
+    await loadTemplateBlocks(stageId); // Carrega os blocos
     stageActions.setActiveStage(stageId);
   };
 
