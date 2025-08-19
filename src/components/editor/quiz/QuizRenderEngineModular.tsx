@@ -6,9 +6,9 @@
 
 import { Block } from '@/types/editor';
 import React from 'react';
-import { useQuizFlow } from './QuizFlowController';
+import { useQuizFlow } from '@/hooks/core/useQuizFlow';
 
-import { QuizNavigationBlock } from './QuizNavigationBlock';
+import { QuizNavigationBlock } from '@/components/editor/quiz/QuizNavigationBlock';
 
 interface QuizRenderEngineProps {
   blocks: Block[];
@@ -25,7 +25,11 @@ export const QuizRenderEngineModular: React.FC<QuizRenderEngineProps> = ({
   onBlockSelect,
   selectedBlockId,
 }) => {
-  const { setAnswer } = useQuizFlow();
+  const { quizState, actions } = useQuizFlow();
+  const setAnswer = (questionId: string, answer: any) => {
+    // Implementação usando ações do useQuizFlow
+    actions.answerScoredQuestion(questionId, answer);
+  };
 
   const renderBlock = (block: Block) => {
     const isSelected = selectedBlockId === block.id;
@@ -79,18 +83,12 @@ export const QuizRenderEngineModular: React.FC<QuizRenderEngineProps> = ({
       case 'quiz-navigation':
         return (
           <QuizNavigationBlock
-            config={{
-              mode: 'preview',
-              quizState: { currentStep: 1, totalSteps: 21, sessionData: {}, stepValidation: {} },
-              navigation: {
-                onNext: () => {},
-                onPrevious: () => {},
-                onStepJump: () => {},
-                canGoNext: true,
-                canGoBack: false,
-              },
-              theme: { primaryColor: '#B89B7A', textColor: '#432818', backgroundColor: '#FEFEFE' },
-            }}
+            currentStep={1}
+            totalSteps={21}
+            onNext={() => {}}
+            onPrevious={() => {}}
+            canGoNext={true}
+            canGoPrevious={false}
           />
         );
 
