@@ -1,6 +1,6 @@
 /**
  * 🧭 NAVEGAÇÃO DAS ETAPAS DO QUIZ
- * 
+ *
  * QuizStepsNavigation.tsx - Sistema de navegação seguindo o padrão do QuizNavigationBlock
  * Interface limpa e profissional para navegação entre as 21 etapas
  */
@@ -91,9 +91,7 @@ export const QuizStepsNavigation: React.FC<QuizStepsNavigationProps> = ({
   // ========================================
   if (variant === 'minimal') {
     return (
-      <div
-        className={cn('quiz-steps-minimal flex items-center justify-between p-4', className)}
-      >
+      <div className={cn('quiz-steps-minimal flex items-center justify-between p-4', className)}>
         <div className="flex items-center gap-2">
           <Badge variant="outline" style={{ borderColor: theme.primaryColor }}>
             {quizState.currentStep}/{quizState.totalSteps}

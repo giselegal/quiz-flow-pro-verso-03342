@@ -1,11 +1,11 @@
 /**
  * 🔄 HOOK PARA GERENCIAMENTO DAS ETAPAS DO QUIZ
- * 
+ *
  * useQuizSteps.ts - Sistema de navegação seguindo o padrão do QuizNavigationBlock
  * Gerencia estado, validação e navegação entre as 21 etapas
  */
 
-import { useState, useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 interface QuizStepData {
   stepNumber: number;
@@ -27,16 +27,16 @@ interface UseQuizStepsReturn {
   currentStep: number;
   totalSteps: number;
   isLoading: boolean;
-  
+
   // Dados das etapas
   stepData: Record<number, QuizStepData>;
   currentStepData: QuizStepData | null;
-  
+
   // Navegação
   canGoNext: boolean;
   canGoBack: boolean;
   canJumpTo: (step: number) => boolean;
-  
+
   // Ações
   goToNext: () => void;
   goToPrevious: () => void;
@@ -44,10 +44,10 @@ interface UseQuizStepsReturn {
   markStepCompleted: (step: number, answers?: Record<string, any>) => void;
   validateCurrentStep: () => boolean;
   restart: () => void;
-  
+
   // Dados para o QuizStepsNavigation
   getNavigationConfig: () => any;
-  
+
   // Progresso
   progress: {
     percentage: number;
@@ -58,12 +58,7 @@ interface UseQuizStepsReturn {
 }
 
 export const useQuizSteps = (config: UseQuizStepsConfig): UseQuizStepsReturn => {
-  const {
-    totalSteps = 21,
-    initialStep = 1,
-    enableValidation = true,
-    autoSave = true
-  } = config;
+  const { totalSteps = 21, initialStep = 1, enableValidation = true, autoSave = true } = config;
 
   // ========================================
   // Estados
@@ -83,7 +78,7 @@ export const useQuizSteps = (config: UseQuizStepsConfig): UseQuizStepsReturn => 
     const completedSteps = Object.keys(stepData).filter(
       step => stepData[parseInt(step)]?.isCompleted
     ).length;
-    
+
     const validSteps = Object.keys(stepData).filter(
       step => stepData[parseInt(step)]?.isValid
     ).length;
@@ -101,9 +96,9 @@ export const useQuizSteps = (config: UseQuizStepsConfig): UseQuizStepsReturn => 
   // ========================================
   const canGoNext = useMemo(() => {
     if (currentStep >= totalSteps) return false;
-    
+
     if (!enableValidation) return true;
-    
+
     // Verificar se a etapa atual está válida
     const current = stepData[currentStep];
     return current?.isValid !== false; // Permite avançar se não foi marcada como inválida
@@ -113,33 +108,36 @@ export const useQuizSteps = (config: UseQuizStepsConfig): UseQuizStepsReturn => 
     return currentStep > 1;
   }, [currentStep]);
 
-  const canJumpTo = useCallback((step: number): boolean => {
-    if (step < 1 || step > totalSteps) return false;
-    
-    if (!enableValidation) return true;
-    
-    // Só pode pular para etapas anteriores ou próxima se a atual estiver válida
-    if (step <= currentStep) return true;
-    if (step === currentStep + 1) return canGoNext;
-    
-    return false;
-  }, [currentStep, totalSteps, canGoNext, enableValidation]);
+  const canJumpTo = useCallback(
+    (step: number): boolean => {
+      if (step < 1 || step > totalSteps) return false;
+
+      if (!enableValidation) return true;
+
+      // Só pode pular para etapas anteriores ou próxima se a atual estiver válida
+      if (step <= currentStep) return true;
+      if (step === currentStep + 1) return canGoNext;
+
+      return false;
+    },
+    [currentStep, totalSteps, canGoNext, enableValidation]
+  );
 
   // ========================================
   // Ações de navegação
   // ========================================
   const goToNext = useCallback(async () => {
     if (!canGoNext) return;
-    
+
     setIsLoading(true);
-    
+
     try {
       // Simular async operation (validação, save, etc)
       await new Promise(resolve => setTimeout(resolve, 300));
-      
+
       const nextStep = Math.min(currentStep + 1, totalSteps);
       setCurrentStep(nextStep);
-      
+
       // Auto-save se habilitado
       if (autoSave) {
         console.log('📝 Auto-save: Etapa', currentStep, '→', nextStep);
@@ -151,12 +149,12 @@ export const useQuizSteps = (config: UseQuizStepsConfig): UseQuizStepsReturn => 
 
   const goToPrevious = useCallback(async () => {
     if (!canGoBack) return;
-    
+
     setIsLoading(true);
-    
+
     try {
       await new Promise(resolve => setTimeout(resolve, 200));
-      
+
       const prevStep = Math.max(currentStep - 1, 1);
       setCurrentStep(prevStep);
     } finally {
@@ -164,18 +162,21 @@ export const useQuizSteps = (config: UseQuizStepsConfig): UseQuizStepsReturn => 
     }
   }, [canGoBack, currentStep]);
 
-  const jumpToStep = useCallback(async (step: number) => {
-    if (!canJumpTo(step)) return;
-    
-    setIsLoading(true);
-    
-    try {
-      await new Promise(resolve => setTimeout(resolve, 200));
-      setCurrentStep(step);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [canJumpTo]);
+  const jumpToStep = useCallback(
+    async (step: number) => {
+      if (!canJumpTo(step)) return;
+
+      setIsLoading(true);
+
+      try {
+        await new Promise(resolve => setTimeout(resolve, 200));
+        setCurrentStep(step);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [canJumpTo]
+  );
 
   const markStepCompleted = useCallback((step: number, answers?: Record<string, any>) => {
     setStepData(prev => ({
@@ -186,7 +187,7 @@ export const useQuizSteps = (config: UseQuizStepsConfig): UseQuizStepsReturn => 
         isValid: true,
         answers: answers || {},
         timestamp: Date.now(),
-      }
+      },
     }));
   }, []);
 
@@ -210,7 +211,7 @@ export const useQuizSteps = (config: UseQuizStepsConfig): UseQuizStepsReturn => 
         isCompleted: prev[currentStep]?.isCompleted || false,
         isValid,
         answers: prev[currentStep]?.answers || {},
-      }
+      },
     }));
 
     return isValid;
@@ -226,10 +227,13 @@ export const useQuizSteps = (config: UseQuizStepsConfig): UseQuizStepsReturn => 
   // Configuração para QuizStepsNavigation
   // ========================================
   const getNavigationConfig = useCallback(() => {
-    const stepValidation = Object.keys(stepData).reduce((acc, step) => {
-      acc[parseInt(step)] = stepData[parseInt(step)]?.isValid || false;
-      return acc;
-    }, {} as Record<number, boolean>);
+    const stepValidation = Object.keys(stepData).reduce(
+      (acc, step) => {
+        acc[parseInt(step)] = stepData[parseInt(step)]?.isValid || false;
+        return acc;
+      },
+      {} as Record<number, boolean>
+    );
 
     return {
       mode: 'editor' as const,
@@ -269,16 +273,16 @@ export const useQuizSteps = (config: UseQuizStepsConfig): UseQuizStepsReturn => 
     currentStep,
     totalSteps,
     isLoading,
-    
+
     // Dados das etapas
     stepData,
     currentStepData,
-    
+
     // Navegação
     canGoNext,
     canGoBack,
     canJumpTo,
-    
+
     // Ações
     goToNext,
     goToPrevious,
@@ -286,10 +290,10 @@ export const useQuizSteps = (config: UseQuizStepsConfig): UseQuizStepsReturn => 
     markStepCompleted,
     validateCurrentStep,
     restart,
-    
+
     // Configuração
     getNavigationConfig,
-    
+
     // Progresso
     progress,
   };

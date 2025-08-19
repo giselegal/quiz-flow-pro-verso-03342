@@ -1,4 +1,4 @@
-import { getStepTemplate } from '../config/stepTemplatesMapping';
+import type { StepTemplate } from '../config/stepTemplatesMapping';
 import type { Block, BlockType } from '../types/editor';
 
 // Interfaces para corresponder à estrutura real dos templates
@@ -134,38 +134,10 @@ export const templateService = {
 
   // Nova função para obter template por número da etapa
   async getTemplateByStep(step: number): Promise<TemplateData | null> {
-    if (!isValidStep(step)) {
-      console.warn(`⚠️ Número da etapa inválido: ${step}`);
-      return null;
-    }
-
-    try {
-      console.log(`🔍 Step${step}: Usando template JSON consolidado`);
-      const template = await getStepTemplate(step);
-      console.log(`🔍 Template obtido para etapa ${step}:`, template);
-
-      if (!template) {
-        console.warn(`⚠️ Template não encontrado para etapa ${step}`);
-        return null;
-      }
-
-      // Verificar se há blocos no template
-      if (!template.blocks || !Array.isArray(template.blocks) || template.blocks.length === 0) {
-        console.warn(`⚠️ Template da etapa ${step} não contém blocos`);
-        return null;
-      }
-
-      // Retornar o template com blocos
-      return {
-        blocks: template.blocks,
-        templateVersion: '1.0',
-        metadata: {
-          id: `step-${step}`,
-          name: template.name,
-          description: template.description,
-          category: 'quiz-step',
-          type: 'step-template',
-          tags: ['quiz', 'step'],
+    // Função temporariamente desabilitada devido a dependências em refatoração
+    console.warn(`⚠️ getTemplateByStep(${step}): Função desabilitada temporariamente`);
+    return null;
+  },
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
           author: 'system',
