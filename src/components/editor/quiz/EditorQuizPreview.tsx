@@ -12,7 +12,7 @@ import { QuizStepManagerModular } from './QuizStepManagerModular';
 import { QuizRenderEngineModular } from './QuizRenderEngineModular';
 import { QuizToolbarModular } from './QuizToolbarModular';
 import { QuizSidebarModular } from './QuizSidebarModular';
-import { QuizPropertiesPanelModular } from './QuizPropertiesPanelModular';
+import { QuizPropertiesPanelModular } from '@/components/editor/quiz/QuizPropertiesPanelModular';
 import { Block } from '@/types/editor';
 
 export const QuizFlowPageModular: React.FC = () => {
