@@ -32,11 +32,21 @@ export const InteractiveQuizCanvas: React.FC<InteractiveQuizCanvasProps> = memo(
   ({ className = '', theme = 'default' }) => {
     // theme será usado quando os componentes estilizados forem implementados
     console.log('Quiz theme:', theme);
-    const {
-      computed: { currentBlocks },
-      activeStageId,
-      isPreviewing,
-    } = useEditor();
+    
+    // Hook seguro para o Editor Context (pode não existir)
+    let currentBlocks: any[] = [];
+    let activeStageId: string = '1';
+    let isPreviewing: boolean = false;
+    
+    try {
+      const editorContext = useEditor();
+      currentBlocks = editorContext?.computed?.currentBlocks || [];
+      activeStageId = editorContext?.activeStageId || '1';
+      isPreviewing = editorContext?.isPreviewing || false;
+    } catch (error) {
+      // Editor context não disponível - modo standalone
+      console.log('InteractiveQuizCanvas em modo standalone');
+    }
 
     // Estado local do quiz interativo
     const [quizAnswers, setQuizAnswers] = useState<QuizAnswer[]>([]);

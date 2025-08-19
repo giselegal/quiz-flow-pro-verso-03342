@@ -2,6 +2,7 @@
 // Página dedicada para o quiz usando a nova configuração modular
 
 import { QuizRenderer } from '@/components/quiz/QuizRenderer';
+import { QuizErrorBoundary } from '@/components/quiz/QuizErrorBoundary';
 import { Button } from '@/components/ui/button';
 import { QUIZ_CONFIGURATION } from '@/config/quizConfiguration';
 import { ArrowLeft } from 'lucide-react';
@@ -56,7 +57,9 @@ const Quiz: React.FC = () => {
       {/* Conteúdo Principal */}
       <main className="py-8">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <QuizRenderer />
+          <QuizErrorBoundary>
+            <QuizRenderer />
+          </QuizErrorBoundary>
         </div>
       </main>
 

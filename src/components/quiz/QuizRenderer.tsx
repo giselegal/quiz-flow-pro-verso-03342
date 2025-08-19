@@ -1,13 +1,13 @@
 // src/components/quiz/QuizRenderer.tsx
 // Renderizador principal do quiz seguindo a nova configuração modular
 
-import { QuizIntroHeaderBlock } from '@/components/editor/quiz/QuizIntroHeaderBlock';
-import QuizQuestionBlock from '@/components/editor/quiz/QuizQuestionBlock';
 import { QuizContainer } from '@/components/quiz/QuizContainer';
 import { IntroBlock } from '@/components/steps/step01/IntroBlock';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
 import { QUIZ_CONFIGURATION } from '@/config/quizConfiguration';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Circle } from 'lucide-react';
 import React, { useState } from 'react';
 
 interface QuizRendererProps {
@@ -56,58 +56,84 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({ className = '', styl
 
   // Renderizar componente baseado no tipo
   const renderComponent = (componentType: string) => {
-    const componentConfig = QUIZ_CONFIGURATION.components?.[componentType];
+    const componentConfig = QUIZ_CONFIGURATION.components?.[componentType as keyof typeof QUIZ_CONFIGURATION.components];
 
     switch (componentType) {
       case 'quiz-intro-header':
         return (
-          <QuizIntroHeaderBlock
-            id="quiz-intro-header"
-            properties={componentConfig?.props || {}}
-            isEditing={false}
-          />
+          <div className="text-center p-6 space-y-4">
+            <img 
+              src="https://res.cloudinary.com/dg3fsapzu/image/upload/v1723251877/LOGO_completa_white_clfcga.png"
+              alt="Logo" 
+              className="mx-auto h-16 object-contain"
+            />
+            <div className="w-full h-1 bg-primary/20 rounded"></div>
+          </div>
         );
 
       case 'intro':
         return (
           <IntroBlock
-            id="intro"
-            properties={{
-              ...componentConfig?.props,
-              onDataUpdate: (data: any) => handleUpdateQuizData('intro', data),
+            block={{
+              id: 'intro',
+              type: 'intro',
+              content: {},
+              order: 0,
+              properties: {
+                ...componentConfig?.props,
+                onDataUpdate: (data: any) => handleUpdateQuizData('intro', data),
+              },
             }}
             isEditing={false}
           />
         );
 
       case 'questions':
-        return (
-          <QuizQuestionBlock
-            id="questions"
-            properties={{
-              stepIndex: 1, // Primeira questão
-              showProgress: true,
-              columns: 2,
-              ...componentConfig?.props,
-            }}
-            isEditing={false}
-            onUpdate={(id, updates) => handleUpdateQuizData('questions', updates)}
-          />
-        );
-
       case 'strategicQuestions':
+        const stepIndex = componentType === 'questions' ? 1 : 11;
+        const currentStep = QUIZ_CONFIGURATION.steps[stepIndex - 1];
+        
         return (
-          <QuizQuestionBlock
-            id="strategicQuestions"
-            properties={{
-              stepIndex: 11, // Primeira questão estratégica
-              showProgress: true,
-              columns: 1,
-              ...componentConfig?.props,
-            }}
-            isEditing={false}
-            onUpdate={(id, updates) => handleUpdateQuizData('strategicQuestions', updates)}
-          />
+          <div className="space-y-6">
+            <div className="text-center">
+              <h2 className="text-lg font-semibold mb-2" style={{ color: '#432818' }}>
+                {currentStep?.title || 'Questão'}
+              </h2>
+              {currentStep?.description && (
+                <p className="text-sm" style={{ color: '#6B4F43' }}>
+                  {currentStep.description}
+                </p>
+              )}
+            </div>
+
+            {/* Progresso */}
+            <div className="space-y-2">
+              <div className="flex justify-between text-xs" style={{ color: '#6B4F43' }}>
+                <span>Progresso</span>
+                <span>{Math.round((currentStepIndex / (componentOrder.length - 1)) * 100)}%</span>
+              </div>
+              <Progress
+                value={(currentStepIndex / (componentOrder.length - 1)) * 100}
+                className="h-2"
+              />
+            </div>
+
+            {/* Opções simples */}
+            <div className="grid gap-3">
+              {['Opção 1', 'Opção 2', 'Opção 3'].map((option, index) => (
+                <Card key={index} className="cursor-pointer border-2 hover:shadow-sm">
+                  <CardContent className="p-3">
+                    <div className="flex items-center gap-3">
+                      <Circle className="h-4 w-4" style={{ color: '#E5DDD5' }} />
+                      <span className="text-sm font-medium" style={{ color: '#432818' }}>
+                        {option}
+                      </span>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
         );
 
       case 'mainTransition':
@@ -142,15 +168,34 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({ className = '', styl
 
       case 'result':
         return (
-          <QuizQuestionBlock
-            id="result"
-            properties={{
-              stepIndex: QUIZ_CONFIGURATION.steps.length - 1, // Último step (resultado)
-              showProgress: false,
-              ...componentConfig?.props,
-            }}
-            isEditing={false}
-          />
+          <div className="space-y-6">
+            <div className="text-center">
+              <h2 className="text-lg font-semibold mb-4" style={{ color: '#432818' }}>
+                Seu Estilo Pessoal
+              </h2>
+
+              <div className="grid gap-4 mb-6">
+                <Card className="border" style={{ borderColor: '#E5DDD5' }}>
+                  <CardContent className="p-4">
+                    <h3 className="font-semibold text-base mb-2" style={{ color: '#432818' }}>
+                      Estilo Natural
+                    </h3>
+                    <p className="text-sm" style={{ color: '#6B4F43' }}>
+                      Você prefere ambientes acolhedores e próximos à natureza.
+                    </p>
+                  </CardContent>
+                </Card>
+              </div>
+
+              <Button
+                size="lg"
+                className="w-full"
+                style={{ backgroundColor: '#B89B7A', color: '#FEFEFE' }}
+              >
+                Ver Resultado Completo
+              </Button>
+            </div>
+          </div>
         );
 
       default:

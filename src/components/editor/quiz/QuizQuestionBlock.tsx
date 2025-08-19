@@ -33,7 +33,16 @@ const QuizQuestionBlock: React.FC<QuizQuestionBlockProps> = ({
   isEditing = false,
   onUpdate,
 }: QuizQuestionBlockProps) => {
-  const { activeStageId } = useEditor();
+  // Hook seguro para o Editor Context (pode não existir)
+  let activeStageId: string | undefined;
+  try {
+    const editorContext = useEditor();
+    activeStageId = editorContext?.activeStageId;
+  } catch (error) {
+    // Editor context não disponível - modo standalone
+    activeStageId = undefined;
+  }
+
   const [selectedOptions, setSelectedOptions] = useState<string[]>(
     properties.selectedOptions || []
   );
