@@ -117,12 +117,12 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
                     const stepNumber = parseInt(stepId.replace('step-', ''), 10) || 1;
 
                     // Importar dinamicamente o templateService
-                    const { templateService } = await import('@/services/templateService');
-                    const template = await templateService.getTemplateByStep(stepNumber);
+                    const templateServiceModule = await import('@/services/templateService');
+                    const template = await templateServiceModule.default.getTemplateByStep(stepNumber);
 
                     if (template && template.blocks && template.blocks.length > 0) {
                       // Converter para formato do editor
-                      const editorBlocks = templateService.convertTemplateBlocksToEditorBlocks(
+                      const editorBlocks = templateServiceModule.default.convertTemplateBlocksToEditorBlocks(
                         template.blocks
                       );
                       // Atualizar os blocos no estado (via callback para acesso direto)
