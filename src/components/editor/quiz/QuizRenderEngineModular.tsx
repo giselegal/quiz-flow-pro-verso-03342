@@ -5,7 +5,6 @@
  * com suporte para editor, preview e produção
  */
 
-import { useQuizFlow } from '@/hooks/core/useQuizFlow';
 import { Block } from '@/types/editor';
 import React from 'react';
 import { cn } from '@/lib/utils';
@@ -28,8 +27,6 @@ export const QuizRenderEngineModular: React.FC<QuizRenderEngineProps> = ({
   onBlockSelect,
   selectedBlockId,
 }) => {
-  const { actions } = useQuizFlow();
-
   const handleBlockClick = (block: Block) => {
     if (mode === 'editor' && onBlockSelect) {
       onBlockSelect(block.id);

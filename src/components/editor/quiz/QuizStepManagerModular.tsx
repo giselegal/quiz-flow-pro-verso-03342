@@ -19,7 +19,7 @@ interface QuizStepManagerProps {
 }
 
 export const QuizStepManagerModular: React.FC<QuizStepManagerProps> = ({ children }) => {
-  const { quizState, actions } = useQuizFlow();
+  const { quizState } = useQuizFlow();
   const { currentStep: currentStepNumber, totalSteps } = quizState;
 
   // Carregar dados reais da etapa do template
@@ -34,7 +34,7 @@ export const QuizStepManagerModular: React.FC<QuizStepManagerProps> = ({ childre
 
     console.log(`✅ Carregando etapa ${stepKey} com ${templateBlocks.length} blocos`);
     
-    return templateBlocks.map((templateBlock, index) => ({
+    return templateBlocks.map((templateBlock) => ({
       id: templateBlock.id,
       type: templateBlock.type as any,
       order: templateBlock.order,
