@@ -70,6 +70,7 @@ interface EditorContextType {
     updateBlock: (id: string, content: any) => Promise<void>;
     deleteBlock: (id: string) => Promise<void>;
     addBlockAtPosition: (type: BlockType, stageId?: string) => Promise<string>;
+  replaceBlocks: (blocks: Block[]) => void;
     reorderBlocks: (startIndex: number, endIndex: number) => void;
   };
 
@@ -331,6 +332,14 @@ export const EditorProvider: React.FC<{
     dispatch({ type: 'DELETE_BLOCK', payload: id });
   }, []);
 
+  // Replace all blocks at once (useful when loading templates or switching steps)
+  const replaceBlocks = useCallback((blocks: Block[]) => {
+    const sorted = (blocks || []).slice().sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+    const normalized = sorted.map((b, i) => ({ ...b, order: i }));
+    console.log('🧩 replaceBlocks ->', normalized.map(b => ({ id: b.id, type: b.type, order: b.order })));
+    dispatch({ type: 'SET_BLOCKS', payload: normalized });
+  }, []);
+
   const reorderBlocks = useCallback(
     (startIndex: number, endIndex: number) => {
       console.log('🔄 EditorContext.reorderBlocks:', {
@@ -590,9 +599,10 @@ export const EditorProvider: React.FC<{
       addBlockAtPosition: async (type: BlockType, _stageId?: string) => {
         return await addBlock(type);
       },
+      replaceBlocks,
       reorderBlocks,
     }),
-    [setSelectedBlockId, addBlock, updateBlock, deleteBlock, reorderBlocks]
+    [setSelectedBlockId, addBlock, updateBlock, deleteBlock, replaceBlocks, reorderBlocks]
   );
 
   // Computed properties
