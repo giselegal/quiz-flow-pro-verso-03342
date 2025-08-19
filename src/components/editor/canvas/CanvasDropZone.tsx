@@ -121,10 +121,8 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
                     const template = await templateServiceModule.default.getTemplateByStep(stepNumber);
 
                     if (template && template.blocks && template.blocks.length > 0) {
-                      // Converter para formato do editor
-                      const editorBlocks = templateServiceModule.default.convertTemplateBlocksToEditorBlocks(
-                        template.blocks
-                      );
+                      // Converter para formato do editor (método simplificado)
+                      const editorBlocks = templateServiceModule.default.convertTemplateBlocksToEditorBlocks();
                       // Atualizar os blocos no estado (via callback para acesso direto)
                       onUpdateBlock('template-update', { blocks: editorBlocks });
                     }

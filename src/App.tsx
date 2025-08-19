@@ -11,6 +11,7 @@ import { Route, Router, Switch } from 'wouter';
 const Home = lazy(() => import('./pages/Home'));
 const AuthPage = lazy(() => import('./pages/AuthPage'));
 const EditorWithPreview = lazy(() => import('./pages/EditorWithPreview'));
+const EditorWithPreviewFixed = lazy(() => import('./pages/EditorWithPreview-fixed'));
 const QuizPage = lazy(() => import('./pages/Quiz'));
 const QuizFlowPage = lazy(() => import('./pages/QuizFlowPage'));
 const QuizIntegratedPage = lazy(() => import('./pages/QuizIntegratedPage'));
@@ -37,6 +38,7 @@ const PageLoading = () => (
  *
  * Estrutura de roteamento unificada com:
  * ✅ EditorWithPreview - Editor principal completo (/editor)
+ * ✅ EditorWithPreviewFixed - Versão com navegação limpa (/editor-fixed, /editor-clean)
  * ✅ Sistema de lazy loading
  * ✅ Providers centralizados
  */
@@ -62,12 +64,23 @@ function App() {
                   </FunnelsProvider>
                 </Route>
 
-                {/* 🏆 EDITOR FIXED */}
+                {/* 🏆 EDITOR FIXED - Versão com navegação limpa */}
                 <Route path="/editor-fixed">
                   <FunnelsProvider>
                     <EditorProvider>
                       <Suspense fallback={<PageLoading />}>
-                        <EditorWithPreview />
+                        <EditorWithPreviewFixed />
+                      </Suspense>
+                    </EditorProvider>
+                  </FunnelsProvider>
+                </Route>
+
+                {/* 🧪 EDITOR CLEAN - Versão experimental com sistema limpo */}
+                <Route path="/editor-clean">
+                  <FunnelsProvider>
+                    <EditorProvider>
+                      <Suspense fallback={<PageLoading />}>
+                        <EditorWithPreviewFixed />
                       </Suspense>
                     </EditorProvider>
                   </FunnelsProvider>
