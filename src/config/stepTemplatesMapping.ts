@@ -145,8 +145,8 @@ export const getAllSteps = (): StepTemplate[] => {
 export const getStepInfo = (stepNumber: number): StepTemplate | null => {
   return STEP_TEMPLATES_MAPPING[stepNumber] || null;
 };
-  templateFunction: (userData?: any) => any[];
-  name: string;
+
+export default STEP_TEMPLATES_MAPPING;
   description: string;
 }
 

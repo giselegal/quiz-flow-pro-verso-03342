@@ -1,11 +1,11 @@
 // src/config/stepTemplatesMapping.ts
 // ✅ SOLUÇÃO: Mapeamento simplificado SEM ciclo de dependência
 
-import { Block } from '../types/editor';
 import {
   QUIZ_QUESTIONS_COMPLETE,
   QUIZ_STYLE_21_STEPS_TEMPLATE,
 } from '@/templates/quiz21StepsComplete';
+import { Block } from '../types/editor';
 
 // Interface para o template de etapa
 export interface StepTemplate {
@@ -126,12 +126,12 @@ export const STEP_TEMPLATES_MAPPING: Record<number, StepTemplate> = {
 // ✅ FUNÇÃO getStepTemplate SIMPLIFICADA usando QUIZ_STYLE_21_STEPS_TEMPLATE
 export const getStepTemplate = (stepNumber: number): Block[] => {
   const stepId = `step-${stepNumber}`;
-  
+
   if (QUIZ_STYLE_21_STEPS_TEMPLATE[stepId]) {
     console.log(`✅ Template real carregado para step-${stepNumber}`);
     return QUIZ_STYLE_21_STEPS_TEMPLATE[stepId];
   }
-  
+
   console.warn(`⚠️ Template não encontrado para step-${stepNumber}`);
   return [];
 };
