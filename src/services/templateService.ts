@@ -142,20 +142,64 @@ export const templateService = {
     try {
       console.log(`🔍 Step${step}: Usando template JSON consolidado`);
       const template = await getStepTemplate(step);
+      console.log(`🔍 Template obtido para etapa ${step}:`, template);
 
       if (!template) {
         console.warn(`⚠️ Template não encontrado para etapa ${step}`);
         return null;
       }
 
-      // Check if template is valid
-      if (!Array.isArray(template) || template.length === 0) {
-        console.warn(`⚠️ Template da etapa ${step} está vazio`);
+      // Verificar se há blocos no template
+      if (!template.blocks || !Array.isArray(template.blocks) || template.blocks.length === 0) {
+        console.warn(`⚠️ Template da etapa ${step} não contém blocos`);
         return null;
       }
 
-      // Return template directly as it comes from getStepTemplate
-      return template as any;
+      // Retornar o template com blocos
+      return {
+        blocks: template.blocks,
+        templateVersion: '1.0',
+        metadata: {
+          id: `step-${step}`,
+          name: template.name,
+          description: template.description,
+          category: 'quiz-step',
+          type: 'step-template',
+          tags: ['quiz', 'step'],
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          author: 'system',
+        },
+        design: {
+          primaryColor: '#B89B7A',
+          secondaryColor: '#432818',
+          accentColor: '#8B5CF6',
+          backgroundColor: '#FEFEFE',
+          fontFamily: 'Inter',
+          button: {},
+          card: {},
+          progressBar: {},
+          animations: {},
+          imageOptionSize: {},
+        },
+        layout: {
+          containerWidth: '100%',
+          spacing: '1rem',
+          backgroundColor: '#FEFEFE',
+          responsive: true,
+          animations: {},
+        },
+        validation: {
+          requiredFields: [],
+        },
+        integrations: {
+          analytics: false,
+          marketing: false,
+          crm: false,
+        },
+        analytics: {},
+        logic: {},
+      };
     } catch (error) {
       console.error(`❌ Erro ao carregar template da etapa ${step}:`, error);
       return null;

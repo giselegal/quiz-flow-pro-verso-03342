@@ -203,7 +203,44 @@ export const EditorProvider: React.FC<{
           // Atualizar os blocos no estado do editor
           dispatch({ type: 'SET_BLOCKS', payload: editorBlocks });
         } else {
-          console.warn('⚠️ Template inicial não contém blocos');
+          console.warn('⚠️ Template inicial não contém blocos, carregando blocos padrão');
+
+          // Fallback: Carregar blocos básicos para a etapa 1
+          const fallbackBlocks = [
+            {
+              id: 'header-1',
+              type: 'quiz-intro-header' as any,
+              content: {
+                title: 'Descubra seu Estilo Perfeito',
+                subtitle: 'Responda algumas perguntas e descubra suas preferências',
+              },
+            },
+            {
+              id: 'text-1',
+              type: 'text' as any,
+              content: {
+                text: 'Vamos começar! Primeiro, me diga seu nome:',
+              },
+            },
+            {
+              id: 'input-1',
+              type: 'quiz-intro-name-input' as any,
+              content: {
+                placeholder: 'Digite seu nome...',
+                required: true,
+              },
+            },
+            {
+              id: 'button-1',
+              type: 'quiz-intro-button' as any,
+              content: {
+                text: 'Iniciar Quiz',
+                style: 'primary',
+              },
+            },
+          ];
+
+          dispatch({ type: 'SET_BLOCKS', payload: fallbackBlocks });
         }
       } catch (error) {
         console.error('❌ Erro ao carregar template inicial:', error);
