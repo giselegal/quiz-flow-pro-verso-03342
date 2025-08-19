@@ -4,22 +4,9 @@
  */
 
 import {
-  closestCenter,
-  DndContext,
-  DragEndEvent,
-  DragOverlay,
-  DragStartEvent,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from '@dnd-kit/core';
-import {
-  arrayMove,
   SortableContext,
-  sortableKeyboardCoordinates,
-  useSortable,
   verticalListSortingStrategy,
+  useSortable,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import React, { useCallback, useMemo, useState } from 'react';
@@ -216,15 +203,6 @@ export const QuizStepRenderer: React.FC<QuizStepRendererProps> = ({
   // ========================================
   // Estado e Hooks
   // ========================================
-  const [activeId, setActiveId] = useState<string | null>(null);
-
-  // Sensors para drag & drop
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
-  );
 
   // ========================================
   // Dados Derivados
@@ -243,27 +221,6 @@ export const QuizStepRenderer: React.FC<QuizStepRendererProps> = ({
     },
     [config.editor]
   );
-
-  const handleDragEnd = useCallback(
-    (event: DragEndEvent) => {
-      const { active, over } = event;
-
-      if (active.id !== over?.id) {
-        const oldIndex = blocks.findIndex(block => block.id === active.id);
-        const newIndex = blocks.findIndex(block => block.id === over?.id);
-
-        const reorderedBlocks = arrayMove(blocks, oldIndex, newIndex);
-        onBlocksReorder?.(reorderedBlocks);
-      }
-
-      setActiveId(null);
-    },
-    [blocks, onBlocksReorder]
-  );
-
-  const handleDragStart = useCallback((event: DragStartEvent) => {
-    setActiveId(event.active.id as string);
-  }, []);
 
   // ========================================
   // Component Map - Componentes Básicos
@@ -379,26 +336,12 @@ export const QuizStepRenderer: React.FC<QuizStepRendererProps> = ({
     </div>
   );
 
-  // Envolver com DndContext se for modo editor
+  // Envolver com SortableContext se for modo editor
   if (isEditorMode) {
     return (
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragStart={handleDragStart}
-        onDragEnd={handleDragEnd}
-      >
-        <SortableContext items={blockIds} strategy={verticalListSortingStrategy}>
-          {content}
-        </SortableContext>
-        <DragOverlay>
-          {activeId ? (
-            <div className="opacity-50 bg-white p-4 rounded-lg shadow-lg border">
-              Arrastando bloco: {activeId}
-            </div>
-          ) : null}
-        </DragOverlay>
-      </DndContext>
+      <SortableContext items={blockIds} strategy={verticalListSortingStrategy}>
+        {content}
+      </SortableContext>
     );
   }
 

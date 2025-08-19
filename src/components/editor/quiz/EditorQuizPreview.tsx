@@ -139,18 +139,17 @@ export const QuizFlowPageModular: React.FC = () => {
 
         {/* Properties Panel */}
         {propertiesOpen && mode === 'editor' && selectedBlockId && (
-          <div className="w-80 border-l bg-background">
+          <div className="fixed right-0 top-0 h-full w-80 border-l bg-background z-50">
             <EditorPropertiesPanel
-              selectedBlock={blocks.find(b => b.id === selectedBlockId)}
+              selectedBlock={null} // Será passado os dados do bloco quando disponível
               onBlockUpdate={handleBlockUpdate}
               onBlockDelete={(blockId) => {
-                // Implementar delete se necessário
                 console.log('Delete block:', blockId);
               }}
               onBlockDuplicate={(blockId) => {
-                // Implementar duplicate se necessário
                 console.log('Duplicate block:', blockId);
               }}
+              previewMode={false}
             />
           </div>
         )}
