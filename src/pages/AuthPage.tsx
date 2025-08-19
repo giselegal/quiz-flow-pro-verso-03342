@@ -20,6 +20,7 @@ import {
   Zap,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import QuizFlowProLogo from '@/components/ui/QuizFlowProLogo';
 
 const AuthPage = () => {
   const { login, signup, user } = useAuth();
@@ -158,8 +159,8 @@ const AuthPage = () => {
               <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center">
                 <Zap className="h-5 w-5 text-white" />
               </div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-600 bg-clip-text text-transparent">
-                QuizFlow
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-yellow-400 via-orange-500 to-yellow-600 bg-clip-text text-transparent">
+                QuizFlow Pro
               </h1>
             </div>
             <p className="text-slate-600">Bem-vindo de volta!</p>
@@ -333,8 +334,8 @@ const AuthPage = () => {
                 Suporte
               </a>
             </div>
-            <p className="text-xs text-slate-400">
-              © 2024 QuizFlow. Todos os direitos reservados.
+            <p className="text-sm text-muted-foreground text-center">
+              © 2024 QuizFlow Pro. Todos os direitos reservados.
             </p>
           </div>
         </div>

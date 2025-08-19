@@ -4,6 +4,7 @@ import { useAuth } from '@/context/AuthContext';
 import { ArrowRight, BarChart3, Layout, Target, TrendingUp, Users } from 'lucide-react';
 import React, { useEffect } from 'react';
 import { useLocation } from 'wouter';
+import QuizFlowProLogo from '@/components/ui/QuizFlowProLogo';
 
 const Home: React.FC = () => {
   const [, setLocation] = useLocation();
@@ -52,15 +53,10 @@ const Home: React.FC = () => {
       >
         <div className="container mx-auto flex justify-between items-center">
           <div className="flex items-center space-x-3">
-            <div
-              className="w-8 h-8 rounded-lg flex items-center justify-center"
-              style={{ backgroundColor: '#B89B7A' }}
-            >
-              <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: '#FEFEFE' }}></div>
-            </div>
+            <QuizFlowProLogo size="md" variant="icon" />
             <div>
               <h1 className="text-xl font-bold" style={{ color: '#432818' }}>
-                QuizFlow
+                QuizFlow Pro
               </h1>
             </div>
           </div>
@@ -85,7 +81,7 @@ const Home: React.FC = () => {
               className="text-5xl sm:text-6xl font-bold tracking-tight"
               style={{ color: '#432818' }}
             >
-              Quiz<span style={{ color: '#B89B7A' }}>Flow</span>
+              Quiz<span style={{ color: '#B89B7A' }}>Flow</span> <span className="bg-gradient-to-r from-yellow-400 via-orange-500 to-yellow-600 bg-clip-text text-transparent">Pro</span>
             </h1>
 
             <p
@@ -161,7 +157,7 @@ const Home: React.FC = () => {
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-3xl sm:text-4xl font-bold mb-4" style={{ color: '#432818' }}>
-              Por que QuizFlow é diferente?
+              Por que QuizFlow Pro é diferente?
             </h2>
             <p className="text-lg max-w-2xl mx-auto" style={{ color: '#6B4F43' }}>
               Nossa plataforma combina simplicidade visual com poder técnico para criar experiências
@@ -251,7 +247,7 @@ const Home: React.FC = () => {
             </h2>
             <p className="text-xl mb-8 leading-relaxed" style={{ color: '#FAF9F7' }}>
               Junte-se a milhares de empresas que já simplificaram seus funis e aumentaram suas
-              vendas com QuizFlow.
+              vendas com QuizFlow Pro.
             </p>
             <Button
               size="lg"
