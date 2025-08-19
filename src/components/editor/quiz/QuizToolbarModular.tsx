@@ -1,123 +1,199 @@
 /**
- * 🔧 TOOLBAR MODULAR DO QUIZ
+ * �️ TOOLBAR MODULAR DO QUIZ COM NAVEGAÇÃO DE ETAPAS
  *
- * Controles para modo, navegação e configurações
+ * Toolbar com controles de modo, navegação entre etapas e propriedades
  */
 
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { useQuizFlow } from '@/hooks/core/useQuizFlow';
-import {
-  ChevronLeft,
-  ChevronRight,
-  Edit3,
-  Eye,
-  PanelRight,
-  Play,
-  Settings,
-  Sidebar,
-} from 'lucide-react';
+import { getPreviousStep, getNextStep, isValidStep } from '@/utils/quiz21StepsRenderer';
+import { ChevronLeft, ChevronRight, Eye, Edit, Settings, Menu } from 'lucide-react';
 import React from 'react';
 
-interface QuizToolbarModularProps {
+interface QuizToolbarProps {
   mode: 'editor' | 'preview' | 'production';
   onModeToggle: () => void;
   onSidebarToggle: () => void;
   onPropertiesToggle: () => void;
 }
 
-export const QuizToolbarModular: React.FC<QuizToolbarModularProps> = ({
-  mode = 'editor',
-  onModeToggle = () => {},
-  onSidebarToggle = () => {},
-  onPropertiesToggle = () => {},
+export const QuizToolbarModular: React.FC<QuizToolbarProps> = ({
+  mode,
+  onModeToggle,
+  onSidebarToggle,
+  onPropertiesToggle,
 }) => {
   const { quizState, actions } = useQuizFlow();
-  const { currentStep: currentStepNumber, totalSteps } = quizState;
+  const { currentStep, totalSteps } = quizState;
 
-  // Buscar dados da etapa atual
-  const stepData = actions.getStepData();
-  const currentStep = stepData?.[0] || { type: 'content', title: `Etapa ${currentStepNumber}` };
+  const canGoPrevious = currentStep > 1;
+  const canGoNext = currentStep < totalSteps;
 
-  const nextStep = actions.nextStep;
-  const previousStep = actions.prevStep;
-  const canGoNext = currentStepNumber < totalSteps;
-  const canGoPrevious = currentStepNumber > 1;
+  const handlePreviousStep = () => {
+    if (canGoPrevious) {
+      const prevStep = getPreviousStep(currentStep);
+      actions.goToStep(prevStep);
+    }
+  };
+
+  const handleNextStep = () => {
+    if (canGoNext) {
+      const nextStep = getNextStep(currentStep);
+      actions.goToStep(nextStep);
+    }
+  };
+
+  const handleStepJump = (step: number) => {
+    if (isValidStep(step)) {
+      actions.goToStep(step);
+    }
+  };
 
   const getModeIcon = () => {
     switch (mode) {
       case 'editor':
-        return <Edit3 className="h-4 w-4" />;
+        return <Edit className="w-4 h-4" />;
       case 'preview':
-        return <Eye className="h-4 w-4" />;
-      case 'production':
-        return <Play className="h-4 w-4" />;
+        return <Eye className="w-4 h-4" />;
+      default:
+        return <Settings className="w-4 h-4" />;
     }
   };
 
-  const getModeColor = () => {
+  const getModeLabel = () => {
     switch (mode) {
       case 'editor':
-        return 'bg-blue-100 text-blue-800';
+        return 'Editor';
       case 'preview':
-        return 'bg-green-100 text-green-800';
-      case 'production':
-        return 'bg-purple-100 text-purple-800';
+        return 'Preview';
+      default:
+        return 'Produção';
     }
   };
 
   return (
-    <div className="h-14 border-b bg-background flex items-center justify-between px-4">
-      {/* Left Section - Mode and Step Info */}
-      <div className="flex items-center gap-4">
-        <Button variant="outline" size="sm" onClick={onModeToggle} className="gap-2">
+    <div className="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
+      {/* Left Section - Navigation */}
+      <div className="flex items-center space-x-4">
+        {/* Sidebar Toggle */}
+        <button
+          onClick={onSidebarToggle}
+          className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors"
+          title="Toggle Sidebar"
+        >
+          <Menu className="w-5 h-5" />
+        </button>
+
+        {/* Step Navigation */}
+        <div className="flex items-center space-x-2">
+          <button
+            onClick={handlePreviousStep}
+            disabled={!canGoPrevious}
+            className={`p-2 rounded-md transition-colors ${
+              canGoPrevious
+                ? 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                : 'text-gray-300 cursor-not-allowed'
+            }`}
+            title="Etapa anterior"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+
+          {/* Step Selector */}
+          <div className="flex items-center space-x-2">
+            <span className="text-sm text-gray-600">Etapa</span>
+            <select
+              value={currentStep}
+              onChange={(e) => handleStepJump(parseInt(e.target.value))}
+              className="px-3 py-1 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              {Array.from({ length: totalSteps }, (_, i) => i + 1).map((step) => (
+                <option key={step} value={step}>
+                  {step}
+                </option>
+              ))}
+            </select>
+            <span className="text-sm text-gray-600">de {totalSteps}</span>
+          </div>
+
+          <button
+            onClick={handleNextStep}
+            disabled={!canGoNext}
+            className={`p-2 rounded-md transition-colors ${
+              canGoNext
+                ? 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                : 'text-gray-300 cursor-not-allowed'
+            }`}
+            title="Próxima etapa"
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
+        </div>
+      </div>
+
+      {/* Center Section - Step Info */}
+      <div className="flex items-center space-x-4">
+        <div className="text-center">
+          <div className="text-sm font-medium text-gray-900">
+            {getStepTitle(currentStep)}
+          </div>
+          <div className="text-xs text-gray-500">
+            {getStepType(currentStep)}
+          </div>
+        </div>
+      </div>
+
+      {/* Right Section - Mode & Properties */}
+      <div className="flex items-center space-x-2">
+        {/* Mode Toggle */}
+        <button
+          onClick={onModeToggle}
+          className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+            mode === 'editor'
+              ? 'bg-blue-100 text-blue-700'
+              : mode === 'preview'
+              ? 'bg-green-100 text-green-700'
+              : 'bg-purple-100 text-purple-700'
+          }`}
+          title={`Modo: ${getModeLabel()}`}
+        >
           {getModeIcon()}
-          <span className="capitalize">{mode}</span>
-        </Button>
+          <span>{getModeLabel()}</span>
+        </button>
 
-        <div className="flex items-center gap-2">
-          <Badge variant="secondary">
-            Etapa {currentStepNumber}/{totalSteps}
-          </Badge>
-          <Badge variant="outline" className={getModeColor()}>
-            {currentStep.type}
-          </Badge>
-        </div>
-
-        <div className="text-sm text-muted-foreground">{currentStep.title}</div>
+        {/* Properties Toggle */}
+        {mode === 'editor' && (
+          <button
+            onClick={onPropertiesToggle}
+            className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors"
+            title="Toggle Properties Panel"
+          >
+            <Settings className="w-5 h-5" />
+          </button>
+        )}
       </div>
-
-      {/* Center Section - Navigation */}
-      <div className="flex items-center gap-2">
-        <Button variant="ghost" size="sm" onClick={previousStep} disabled={!canGoPrevious}>
-          <ChevronLeft className="h-4 w-4" />
-          Anterior
-        </Button>
-
-        <Button variant="ghost" size="sm" onClick={nextStep} disabled={!canGoNext}>
-          Próxima
-          <ChevronRight className="h-4 w-4" />
-        </Button>
-      </div>
-
-      {/* Right Section - Panel Controls */}
-      {mode === 'editor' && (
-        <div className="flex items-center gap-2">
-          <Button variant="ghost" size="sm" onClick={onSidebarToggle} className="gap-2">
-            <Sidebar className="h-4 w-4" />
-            Componentes
-          </Button>
-
-          <Button variant="ghost" size="sm" onClick={onPropertiesToggle} className="gap-2">
-            <PanelRight className="h-4 w-4" />
-            Propriedades
-          </Button>
-
-          <Button variant="ghost" size="sm">
-            <Settings className="h-4 w-4" />
-          </Button>
-        </div>
-      )}
     </div>
   );
 };
+
+// Função auxiliar para obter título da etapa
+function getStepTitle(stepNumber: number): string {
+  if (stepNumber === 1) return 'Coleta do Nome';
+  if (stepNumber >= 2 && stepNumber <= 11) return `Questão ${stepNumber - 1} de 10`;
+  if (stepNumber === 12) return 'Transição para Estratégicas';
+  if (stepNumber >= 13 && stepNumber <= 18) return `Estratégica ${stepNumber - 12} de 6`;
+  if (stepNumber === 19) return 'Preparação do Resultado';
+  if (stepNumber === 20) return 'Página de Resultado';
+  if (stepNumber === 21) return 'Página de Oferta';
+  return `Etapa ${stepNumber}`;
+}
+
+// Função auxiliar para obter tipo da etapa
+function getStepType(stepNumber: number): string {
+  if (stepNumber === 1) return 'Introdução';
+  if (stepNumber >= 2 && stepNumber <= 11) return 'Questão Pontuada';
+  if (stepNumber === 12 || stepNumber === 19) return 'Transição';
+  if (stepNumber >= 13 && stepNumber <= 18) return 'Questão Estratégica';
+  if (stepNumber === 20) return 'Resultado';
+  if (stepNumber === 21) return 'Oferta';
+  return 'Conteúdo';
+}

@@ -22,6 +22,7 @@ export interface QuizState {
 export interface QuizActions {
   nextStep: () => void;
   prevStep: () => void;
+  goToStep: (step: number) => void;
   saveName: (name: string) => void;
   answerScoredQuestion: (questionId: string, optionId: string) => void;
   answerStrategy: (questionId: string, optionId: string) => void;
@@ -69,6 +70,14 @@ export const useQuizFlow = ({
       onStepChange?.(newStep);
     }
   }, [currentStep, onStepChange]);
+
+  // Ir para etapa específica (para editor)
+  const goToStep = useCallback((step: number) => {
+    if (step >= 1 && step <= 21) {
+      setCurrentStep(step);
+      onStepChange?.(step);
+    }
+  }, [onStepChange]);
 
   // Salvar nome na etapa 1
   const saveName = useCallback(
@@ -133,6 +142,7 @@ export const useQuizFlow = ({
   const actions: QuizActions = {
     nextStep,
     prevStep,
+    goToStep,
     saveName,
     answerScoredQuestion,
     answerStrategy,
