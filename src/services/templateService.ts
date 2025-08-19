@@ -34,9 +34,9 @@ function getFallbackBlocksForStep(step: number): Block[] {
     {
       id: `${baseId}-text`,
       type: 'text' as BlockType,
-      content: { text: `Conteúdo da etapa ${step}`, alignment: 'left', fontSize: 16, color: '#666666' },
+      content: { text: `Conteúdo da etapa ${step}`, alignment: 'left', fontSize: '16px', color: '#666666' },
       order: 1,
-      properties: { text: `Conteúdo da etapa ${step}`, alignment: 'left', fontSize: 16, color: '#666666' },
+      properties: { text: `Conteúdo da etapa ${step}`, alignment: 'left', fontSize: '16px', color: '#666666' },
     },
     {
       id: `${baseId}-input`,
@@ -48,9 +48,9 @@ function getFallbackBlocksForStep(step: number): Block[] {
     {
       id: `${baseId}-button`,
       type: 'button' as BlockType,
-      content: { text: 'Continuar', style: 'primary', fullWidth: true, backgroundColor: '#B89B7A', textColor: '#FFFFFF' },
+      content: { text: 'Continuar', style: { variant: 'primary' }, fullWidth: true, backgroundColor: '#B89B7A', textColor: '#FFFFFF' },
       order: 3,
-      properties: { text: 'Continuar', style: 'primary', fullWidth: true, backgroundColor: '#B89B7A', textColor: '#FFFFFF' },
+      properties: { text: 'Continuar', style: { variant: 'primary' }, fullWidth: true, backgroundColor: '#B89B7A', textColor: '#FFFFFF' },
     },
   ];
 }
