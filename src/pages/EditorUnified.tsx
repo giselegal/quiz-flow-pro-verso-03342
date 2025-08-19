@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 
+// 🎨 ESTILOS PROFISSIONAIS
+import '@/styles/editor-unified.css';
+
 // 🎨 EDITOR UNIFICADO - Componentes principais
 import {
   EditorControlsManager,
@@ -192,10 +195,10 @@ const EditorUnified: React.FC = () => {
   return (
     <PreviewProvider>
       {/* 🎨 CONTAINER PRINCIPAL COM DESIGN PROFISSIONAL */}
-      <div className="min-h-screen bg-gradient-to-br from-brand-light/10 via-white to-brand-primary/5">
+      <div className="unified-editor-container min-h-screen bg-gradient-to-br from-brand-light/10 via-white to-brand-primary/5">
         
         {/* 🏢 HEADER PROFISSIONAL */}
-        <header className="bg-white/95 backdrop-blur-xl border-b border-brand-light/30 shadow-sm">
+        <header className="unified-editor-header bg-white/95 backdrop-blur-xl border-b border-brand-light/30 shadow-sm animate-fade-in-up">
           <div className="px-6 py-3">
             <div className="flex items-center justify-between">
               {/* Logo profissional */}
@@ -203,17 +206,19 @@ const EditorUnified: React.FC = () => {
                 size="md" 
                 variant="full" 
                 showSubtitle={true}
-                className="flex items-center space-x-3"
+                className="flex items-center space-x-3 animate-slide-in-left"
               />
 
               {/* Status e Info */}
-              <div className="flex items-center space-x-4">
-                <div className="hidden md:flex items-center space-x-2 text-xs text-brand-text/70">
-                  <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
-                  <span>Auto-save ativo</span>
+              <div className="flex items-center space-x-4 animate-slide-in-right">
+                <div className="hidden md:flex items-center space-x-2">
+                  <div className="status-indicator active">
+                    <div className="status-pulse bg-emerald-400"></div>
+                    <span>Auto-save ativo</span>
+                  </div>
                 </div>
-                <Separator orientation="vertical" className="h-4 hidden md:block" />
-                <div className="text-xs text-brand-text/70">
+                <Separator orientation="vertical" className="h-4 hidden md:block opacity-30" />
+                <div className="text-xs text-brand-text/70 font-medium">
                   Etapa {currentStep} de 21
                 </div>
               </div>
@@ -235,17 +240,17 @@ const EditorUnified: React.FC = () => {
         <div className="flex h-[calc(100vh-120px)]">
           
           {/* 🎪 STAGE MANAGER - Painel lateral esquerdo */}
-          <aside className="w-80 bg-white/90 backdrop-blur-sm border-r border-brand-light/30 shadow-sm">
+          <aside className="unified-editor-sidebar w-80 bg-white/90 backdrop-blur-sm border-r border-brand-light/30 shadow-sm animate-slide-in-left">
             <div className="h-full flex flex-col">
               {/* Header do painel */}
-              <div className="px-4 py-3 bg-brand-light/10 border-b border-brand-light/30">
-                <h2 className="text-sm font-medium text-brand-text flex items-center gap-2">
-                  <div className="w-4 h-4 bg-brand-primary rounded-sm flex items-center justify-center">
+              <div className="sidebar-header px-4 py-3 bg-brand-light/10 border-b border-brand-light/30">
+                <h2 className="text-sm font-semibold text-brand-text flex items-center gap-2">
+                  <div className="w-5 h-5 bg-gradient-to-r from-brand-primary to-brand-dark rounded-md flex items-center justify-center shadow-sm">
                     <span className="text-white text-xs font-bold">21</span>
                   </div>
                   Etapas do Quiz
                 </h2>
-                <p className="text-xs text-brand-text/60 mt-1">
+                <p className="text-xs text-brand-text/60 mt-1 font-medium">
                   Navegue pelas etapas do funil
                 </p>
               </div>
@@ -264,42 +269,44 @@ const EditorUnified: React.FC = () => {
           </aside>
 
           {/* 🎨 CANVAS PRINCIPAL - Área central com design premium */}
-          <main className="flex-1 relative overflow-hidden bg-gradient-to-b from-slate-50/50 to-white">
+          <main className="unified-editor-canvas flex-1 relative overflow-hidden bg-gradient-to-b from-slate-50/50 to-white">
             {/* Background pattern sutil */}
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(184,155,122,0.03)_0%,transparent_50%)]"></div>
             
             <div 
               ref={scrollRef} 
-              className="relative h-full p-8 overflow-auto"
+              className="preview-container relative h-full p-8 overflow-auto animate-fade-in-up"
             >
               {/* Container do preview com sombra profissional */}
               <div className="mx-auto max-w-5xl">
-                <UnifiedPreviewEngine
-                  blocks={currentBlocks}
-                  selectedBlockId={selectedBlockId}
-                  isPreviewing={editorMode === 'preview' || editorMode === 'test'}
-                  viewportSize={controlsState.viewportSize}
-                  onBlockSelect={handleBlockSelect}
-                  onBlockUpdate={handleBlockUpdate}
-                  mode={editorMode === 'edit' ? 'editor' : 'preview'}
-                  className="shadow-2xl shadow-brand-primary/10 rounded-2xl overflow-hidden border border-brand-light/20 bg-white"
-                />
+                <div className="preview-frame shadow-2xl shadow-brand-primary/10 rounded-2xl overflow-hidden border border-brand-light/20 bg-white">
+                  <UnifiedPreviewEngine
+                    blocks={currentBlocks}
+                    selectedBlockId={selectedBlockId}
+                    isPreviewing={editorMode === 'preview' || editorMode === 'test'}
+                    viewportSize={controlsState.viewportSize}
+                    onBlockSelect={handleBlockSelect}
+                    onBlockUpdate={handleBlockUpdate}
+                    mode={editorMode === 'edit' ? 'editor' : 'preview'}
+                    className=""
+                  />
+                </div>
               </div>
             </div>
           </main>
 
           {/* 📝 PROPERTIES PANEL - Painel lateral direito */}
-          <aside className="w-80 bg-white/90 backdrop-blur-sm border-l border-brand-light/30 shadow-sm">
+          <aside className="unified-editor-sidebar w-80 bg-white/90 backdrop-blur-sm border-l border-brand-light/30 shadow-sm animate-slide-in-right">
             <div className="h-full flex flex-col">
               {/* Header do painel */}
-              <div className="px-4 py-3 bg-brand-light/10 border-b border-brand-light/30">
-                <h2 className="text-sm font-medium text-brand-text flex items-center gap-2">
-                  <div className="w-4 h-4 bg-brand-dark rounded-sm flex items-center justify-center">
+              <div className="sidebar-header px-4 py-3 bg-brand-light/10 border-b border-brand-light/30">
+                <h2 className="text-sm font-semibold text-brand-text flex items-center gap-2">
+                  <div className="w-5 h-5 bg-gradient-to-r from-brand-dark to-brand-primary rounded-md flex items-center justify-center shadow-sm">
                     <span className="text-white text-xs">⚙</span>
                   </div>
                   Propriedades
                 </h2>
-                <p className="text-xs text-brand-text/60 mt-1">
+                <p className="text-xs text-brand-text/60 mt-1 font-medium">
                   {currentSelectedBlock ? 'Configurar elemento selecionado' : 'Selecione um elemento para editar'}
                 </p>
               </div>
