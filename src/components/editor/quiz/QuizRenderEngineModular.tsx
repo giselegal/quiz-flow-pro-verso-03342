@@ -1,14 +1,17 @@
 /**
- * 🎨 MOTOR DE RENDERIZAÇÃO MODULAR
+ * 🎨 MOTOR DE RENDERIZAÇÃO MODULAR - VERSÃO COMPLETA
  *
- * Renderiza blocos com suporte para editor, preview e produção
+ * Renderiza todos os tipos de blocos do quiz21StepsComplete.ts
+ * com suporte para editor, preview e produção
  */
 
+import { useQuizFlow } from '@/hooks/core/useQuizFlow';
 import { Block } from '@/types/editor';
 import React from 'react';
-import { useQuizFlow } from '@/hooks/core/useQuizFlow';
+import { cn } from '@/lib/utils';
 
-import { QuizNavigationBlock } from '@/components/editor/quiz/QuizNavigationBlock';
+// Import Universal Block Renderer
+import UniversalBlockRenderer from '@/components/editor/blocks/UniversalBlockRenderer';
 
 interface QuizRenderEngineProps {
   blocks: Block[];
@@ -26,93 +29,57 @@ export const QuizRenderEngineModular: React.FC<QuizRenderEngineProps> = ({
   selectedBlockId,
 }) => {
   const { actions } = useQuizFlow();
-  const setAnswer = (questionId: string, answer: any) => {
-    // Implementação usando ações do useQuizFlow
-    actions.answerScoredQuestion(questionId, answer);
+
+  const handleBlockClick = (block: Block) => {
+    if (mode === 'editor' && onBlockSelect) {
+      onBlockSelect(block.id);
+    }
+  };
+
+  const handlePropertyChange = (blockId: string, key: string, value: any) => {
+    if (onBlockUpdate) {
+      onBlockUpdate(blockId, {
+        properties: {
+          ...blocks.find(b => b.id === blockId)?.properties,
+          [key]: value,
+        },
+      });
+    }
   };
 
   const renderBlock = (block: Block) => {
     const isSelected = selectedBlockId === block.id;
     const isEditable = mode === 'editor';
 
-    const commonProps = {
-      key: block.id,
-      isSelected,
-      isEditing: isEditable,
-      onUpdate: onBlockUpdate
-        ? (updates: Partial<Block>) => onBlockUpdate(block.id, updates)
-        : undefined,
-      onClick: onBlockSelect ? () => onBlockSelect(block.id) : undefined,
-    };
-
-    switch (block.type) {
-      case 'headline':
-        return (
-          <div 
-            key={commonProps.key} 
-            className={`p-4 bg-card rounded-lg ${isSelected ? 'ring-2 ring-primary' : ''}`}
-            onClick={commonProps.onClick}
-          >
-            <h2 className="text-2xl font-bold">{block.content.title}</h2>
-            {block.content.subtitle && (
-              <p className="text-muted-foreground mt-2">{block.content.subtitle}</p>
-            )}
-          </div>
-        );
-
-      case 'text':
-        return (
-          <div key={block.id} className="p-4 bg-card rounded-lg">
-            <p>{block.content.text}</p>
-          </div>
-        );
-
-      case 'options-grid':
-        return (
-          <div key={block.id} className="p-4 bg-card rounded-lg">
-            <div className="grid grid-cols-2 gap-4">
-              {block.content.options?.map((option: any) => (
-                <button
-                  key={option.id}
-                  className="p-4 border rounded-lg hover:bg-accent"
-                  onClick={() => setAnswer(block.id, [option.id])}
-                >
-                  {option.text}
-                </button>
-              ))}
-            </div>
-          </div>
-        );
-
-      case 'quiz-navigation':
-        return (
-          <QuizNavigationBlock
-            currentStep={1}
-            totalSteps={21}
-            onNext={() => {}}
-            onPrevious={() => {}}
-            canGoNext={true}
-            canGoPrevious={false}
-          />
-        );
-
-      default:
-        return (
-          <div
-            key={block.id}
-            className="p-4 border-2 border-dashed border-muted-foreground/30 rounded-lg"
-          >
-            <p className="text-sm text-muted-foreground">
-              Block type "{block.type}" not implemented
-            </p>
-          </div>
-        );
-    }
+    return (
+      <div
+        key={block.id}
+        className={cn(
+          'quiz-block transition-all duration-200',
+          isEditable && 'editor-mode',
+          isSelected && 'selected'
+        )}
+      >
+        <UniversalBlockRenderer
+          block={block}
+          isSelected={isSelected}
+          onClick={() => handleBlockClick(block)}
+          onPropertyChange={(key, value) => handlePropertyChange(block.id, key, value)}
+        />
+      </div>
+    );
   };
 
   return (
-    <div className="quiz-render-engine space-y-6">
-      {blocks.sort((a, b) => a.order - b.order).map(renderBlock)}
+    <div className={cn(
+      'quiz-render-engine space-y-6',
+      mode === 'editor' && 'editor-container',
+      mode === 'preview' && 'preview-container',
+      mode === 'production' && 'production-container'
+    )}>
+      {blocks
+        .sort((a, b) => a.order - b.order)
+        .map(renderBlock)}
     </div>
   );
 };

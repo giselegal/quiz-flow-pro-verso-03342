@@ -1,25 +1,25 @@
 /**
  * 🎯 PÁGINA PRINCIPAL DO FLUXO MODULAR DO QUIZ
- * 
+ *
  * Orquestra todos os componentes modulares com suporte
  * para editor, preview e produção
  */
 
-import React, { useState } from 'react';
+import { QuizPropertiesPanelModular } from '@/components/editor/quiz/QuizPropertiesPanelModular';
 import { useEditor } from '@/context/EditorContext';
 import { useQuizFlow } from '@/hooks/core/useQuizFlow';
-import { QuizStepManagerModular } from './QuizStepManagerModular';
-import { QuizRenderEngineModular } from './QuizRenderEngineModular';
-import { QuizToolbarModular } from './QuizToolbarModular';
-import { QuizSidebarModular } from './QuizSidebarModular';
-import { QuizPropertiesPanelModular } from '@/components/editor/quiz/QuizPropertiesPanelModular';
 import { Block } from '@/types/editor';
+import React, { useState } from 'react';
+import { QuizRenderEngineModular } from './QuizRenderEngineModular';
+import { QuizSidebarModular } from './QuizSidebarModular';
+import { QuizStepManagerModular } from './QuizStepManagerModular';
+import { QuizToolbarModular } from './QuizToolbarModular';
 
 export const QuizFlowPageModular: React.FC = () => {
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [propertiesOpen, setPropertiesOpen] = useState(false);
-  
+
   const { quizState } = useQuizFlow();
   const mode = (quizState.mode || 'preview') as 'editor' | 'preview' | 'production';
   const setMode = (nextMode: string) => {
@@ -38,8 +38,7 @@ export const QuizFlowPageModular: React.FC = () => {
   };
 
   const toggleMode = () => {
-    const nextMode = mode === 'editor' ? 'preview' : 
-                     mode === 'preview' ? 'production' : 'editor';
+    const nextMode = mode === 'editor' ? 'preview' : mode === 'preview' ? 'production' : 'editor';
     setMode(nextMode);
   };
 
@@ -57,9 +56,7 @@ export const QuizFlowPageModular: React.FC = () => {
       <div className="flex-1 flex overflow-hidden">
         {/* Sidebar - Components */}
         {sidebarOpen && mode === 'editor' && (
-          <QuizSidebarModular
-            onClose={() => setSidebarOpen(false)}
-          />
+          <QuizSidebarModular onClose={() => setSidebarOpen(false)} />
         )}
 
         {/* Central Canvas */}
@@ -79,7 +76,7 @@ export const QuizFlowPageModular: React.FC = () => {
                       </span>
                     </div>
                     <div className="w-full bg-muted rounded-full h-2">
-                      <div 
+                      <div
                         className="bg-primary h-2 rounded-full transition-all duration-300"
                         style={{ width: `${progress}%` }}
                       />
@@ -100,9 +97,7 @@ export const QuizFlowPageModular: React.FC = () => {
                   {/* Step Info - Only in editor mode */}
                   {mode === 'editor' && (
                     <div className="bg-muted/30 rounded-lg p-4">
-                      <h3 className="font-semibold text-sm mb-2">
-                        Informações da Etapa
-                      </h3>
+                      <h3 className="font-semibold text-sm mb-2">Informações da Etapa</h3>
                       <div className="grid grid-cols-2 gap-4 text-sm">
                         <div>
                           <span className="text-muted-foreground">Tipo:</span>
@@ -110,9 +105,11 @@ export const QuizFlowPageModular: React.FC = () => {
                         </div>
                         <div>
                           <span className="text-muted-foreground">Válida:</span>
-                          <span className={`ml-2 font-medium ${
-                            isValid ? 'text-green-600' : 'text-red-600'
-                          }`}>
+                          <span
+                            className={`ml-2 font-medium ${
+                              isValid ? 'text-green-600' : 'text-red-600'
+                            }`}
+                          >
                             {isValid ? 'Sim' : 'Não'}
                           </span>
                         </div>

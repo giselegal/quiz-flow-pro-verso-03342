@@ -1,139 +1,203 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Teste Drag & Drop Quiz System</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        .test-container { max-width: 800px; margin: 0 auto; }
-        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
-        .test-status { padding: 10px; margin: 10px 0; border-radius: 4px; }
-        .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-        .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-        .warning { background-color: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
-        .info { background-color: #d1ecf1; color: #0c5460; border: 1px solid #b6d4fe; }
-        button { padding: 10px 20px; margin: 5px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
-        button:hover { background: #0056b3; }
-        .checklist { list-style: none; padding: 0; }
-        .checklist li { margin: 10px 0; padding: 10px; background: #f8f9fa; border-radius: 4px; }
-        .checklist li:before { content: "☐ "; margin-right: 10px; }
-        .checklist li.checked:before { content: "☑ "; color: green; }
-        #test-results { margin-top: 20px; }
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      .test-container {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      .test-section {
+        margin: 20px 0;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+      }
+      .test-status {
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 4px;
+      }
+      .success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+      .error {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
+      .warning {
+        background-color: #fff3cd;
+        color: #856404;
+        border: 1px solid #ffeaa7;
+      }
+      .info {
+        background-color: #d1ecf1;
+        color: #0c5460;
+        border: 1px solid #b6d4fe;
+      }
+      button {
+        padding: 10px 20px;
+        margin: 5px;
+        background: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      button:hover {
+        background: #0056b3;
+      }
+      .checklist {
+        list-style: none;
+        padding: 0;
+      }
+      .checklist li {
+        margin: 10px 0;
+        padding: 10px;
+        background: #f8f9fa;
+        border-radius: 4px;
+      }
+      .checklist li:before {
+        content: '☐ ';
+        margin-right: 10px;
+      }
+      .checklist li.checked:before {
+        content: '☑ ';
+        color: green;
+      }
+      #test-results {
+        margin-top: 20px;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="test-container">
-        <h1>🎯 Teste do Sistema Drag & Drop - Quiz Quest</h1>
-        
-        <div class="test-section">
-            <h2>🔧 Correções Implementadas</h2>
-            <div class="test-status success">
-                ✅ <strong>Problema 1:</strong> Painel de propriedades substituído por versão funcional com scroll
-            </div>
-            <div class="test-status success">
-                ✅ <strong>Problema 2:</strong> Conflitos DndContext removidos dos QuizStepRenderer components
-            </div>
-            <div class="test-status success">
-                ✅ <strong>Build Status:</strong> Compilação passando sem erros TypeScript
-            </div>
-        </div>
+      <h1>🎯 Teste do Sistema Drag & Drop - Quiz Quest</h1>
 
-        <div class="test-section">
-            <h2>🎪 Status dos Sistemas</h2>
-            <ul class="checklist">
-                <li class="checked">Sistema de build funcionando</li>
-                <li class="checked">Painel de propriedades com scroll implementado</li>
-                <li class="checked">Conflitos DndContext resolvidos</li>
-                <li>Teste de drag & drop entre componentes</li>
-                <li>Teste de reordenação de blocos</li>
-                <li>Validação do painel de propriedades</li>
+      <div class="test-section">
+        <h2>🔧 Correções Implementadas</h2>
+        <div class="test-status success">
+          ✅ <strong>Problema 1:</strong> Painel de propriedades substituído por versão funcional
+          com scroll
+        </div>
+        <div class="test-status success">
+          ✅ <strong>Problema 2:</strong> Conflitos DndContext removidos dos QuizStepRenderer
+          components
+        </div>
+        <div class="test-status success">
+          ✅ <strong>Build Status:</strong> Compilação passando sem erros TypeScript
+        </div>
+      </div>
+
+      <div class="test-section">
+        <h2>🎪 Status dos Sistemas</h2>
+        <ul class="checklist">
+          <li class="checked">Sistema de build funcionando</li>
+          <li class="checked">Painel de propriedades com scroll implementado</li>
+          <li class="checked">Conflitos DndContext resolvidos</li>
+          <li>Teste de drag & drop entre componentes</li>
+          <li>Teste de reordenação de blocos</li>
+          <li>Validação do painel de propriedades</li>
+        </ul>
+      </div>
+
+      <div class="test-section">
+        <h2>🎨 Próximos Passos de Teste</h2>
+        <button onclick="testEditor()">Abrir Editor Unificado</button>
+        <button onclick="testQuizEditor()">Abrir Editor Quiz</button>
+        <button onclick="checkDragDrop()">Verificar Drag & Drop</button>
+      </div>
+
+      <div id="test-results"></div>
+
+      <div class="test-section">
+        <h2>📋 Instruções de Teste Manual</h2>
+        <ol>
+          <li>
+            <strong>Abrir Editor:</strong> Clique em "Abrir Editor Unificado" ou navegue para
+            <code>/editor-unified</code>
+          </li>
+          <li>
+            <strong>Testar Drag & Drop:</strong>
+            <ul>
+              <li>Arraste componentes da sidebar para o canvas</li>
+              <li>Tente reordenar blocos existentes</li>
+              <li>Verifique se as drop zones aparecem durante o drag</li>
             </ul>
-        </div>
+          </li>
+          <li>
+            <strong>Testar Painel:</strong>
+            <ul>
+              <li>Selecione um bloco</li>
+              <li>Verifique se o painel de propriedades abre</li>
+              <li>Teste o scroll no painel</li>
+              <li>Edite algumas propriedades</li>
+            </ul>
+          </li>
+        </ol>
+      </div>
 
-        <div class="test-section">
-            <h2>🎨 Próximos Passos de Teste</h2>
-            <button onclick="testEditor()">Abrir Editor Unificado</button>
-            <button onclick="testQuizEditor()">Abrir Editor Quiz</button>
-            <button onclick="checkDragDrop()">Verificar Drag & Drop</button>
+      <div class="test-section">
+        <h2>🐛 Possíveis Problemas e Soluções</h2>
+        <div class="test-status warning">
+          <strong>Se drag & drop não funcionar:</strong><br />
+          • Verifique se há múltiplos DndContext na hierarquia<br />
+          • Confirme se SortableContext está configurado corretamente<br />
+          • Verifique logs do console para erros
         </div>
-
-        <div id="test-results"></div>
-
-        <div class="test-section">
-            <h2>📋 Instruções de Teste Manual</h2>
-            <ol>
-                <li><strong>Abrir Editor:</strong> Clique em "Abrir Editor Unificado" ou navegue para <code>/editor-unified</code></li>
-                <li><strong>Testar Drag & Drop:</strong>
-                    <ul>
-                        <li>Arraste componentes da sidebar para o canvas</li>
-                        <li>Tente reordenar blocos existentes</li>
-                        <li>Verifique se as drop zones aparecem durante o drag</li>
-                    </ul>
-                </li>
-                <li><strong>Testar Painel:</strong>
-                    <ul>
-                        <li>Selecione um bloco</li>
-                        <li>Verifique se o painel de propriedades abre</li>
-                        <li>Teste o scroll no painel</li>
-                        <li>Edite algumas propriedades</li>
-                    </ul>
-                </li>
-            </ol>
+        <div class="test-status info">
+          <strong>Se painel não aparecer:</strong><br />
+          • Confirme se o modo está em 'editor'<br />
+          • Verifique se um bloco está selecionado<br />
+          • Confirme se propertiesOpen está true
         </div>
-
-        <div class="test-section">
-            <h2>🐛 Possíveis Problemas e Soluções</h2>
-            <div class="test-status warning">
-                <strong>Se drag & drop não funcionar:</strong><br>
-                • Verifique se há múltiplos DndContext na hierarquia<br>
-                • Confirme se SortableContext está configurado corretamente<br>
-                • Verifique logs do console para erros
-            </div>
-            <div class="test-status info">
-                <strong>Se painel não aparecer:</strong><br>
-                • Confirme se o modo está em 'editor'<br>
-                • Verifique se um bloco está selecionado<br>
-                • Confirme se propertiesOpen está true
-            </div>
-        </div>
+      </div>
     </div>
 
     <script>
-        function testEditor() {
-            window.open('/editor-unified', '_blank');
-            addResult('Abrindo Editor Unificado...', 'info');
-        }
+      function testEditor() {
+        window.open('/editor-unified', '_blank');
+        addResult('Abrindo Editor Unificado...', 'info');
+      }
 
-        function testQuizEditor() {
-            window.open('/quiz-editor', '_blank');
-            addResult('Abrindo Editor Quiz...', 'info');
-        }
+      function testQuizEditor() {
+        window.open('/quiz-editor', '_blank');
+        addResult('Abrindo Editor Quiz...', 'info');
+      }
 
-        function checkDragDrop() {
-            addResult('Verificando implementação do Drag & Drop...', 'info');
-            
-            // Simular verificações
-            setTimeout(() => {
-                addResult('✅ DndContext: Conflitos removidos', 'success');
-                addResult('✅ SortableContext: Configurado nos componentes', 'success');
-                addResult('✅ Painel Propriedades: Scroll implementado', 'success');
-                addResult('⚠️ Teste manual necessário para funcionalidade completa', 'warning');
-            }, 1000);
-        }
+      function checkDragDrop() {
+        addResult('Verificando implementação do Drag & Drop...', 'info');
 
-        function addResult(message, type) {
-            const resultsDiv = document.getElementById('test-results');
-            const resultDiv = document.createElement('div');
-            resultDiv.className = `test-status ${type}`;
-            resultDiv.innerHTML = message;
-            resultsDiv.appendChild(resultDiv);
-        }
+        // Simular verificações
+        setTimeout(() => {
+          addResult('✅ DndContext: Conflitos removidos', 'success');
+          addResult('✅ SortableContext: Configurado nos componentes', 'success');
+          addResult('✅ Painel Propriedades: Scroll implementado', 'success');
+          addResult('⚠️ Teste manual necessário para funcionalidade completa', 'warning');
+        }, 1000);
+      }
 
-        // Auto-check no carregamento
-        window.onload = function() {
-            addResult('🚀 Sistema carregado e pronto para testes', 'success');
-        };
+      function addResult(message, type) {
+        const resultsDiv = document.getElementById('test-results');
+        const resultDiv = document.createElement('div');
+        resultDiv.className = `test-status ${type}`;
+        resultDiv.innerHTML = message;
+        resultsDiv.appendChild(resultDiv);
+      }
+
+      // Auto-check no carregamento
+      window.onload = function () {
+        addResult('🚀 Sistema carregado e pronto para testes', 'success');
+      };
     </script>
-</body>
+  </body>
 </html>
