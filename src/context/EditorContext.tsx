@@ -252,6 +252,48 @@ export const EditorProvider: React.FC<{
     loadInitialTemplate();
   }, []);
 
+  // ✅ NOVO: Carregar templates automaticamente quando muda de etapa
+  useEffect(() => {
+    if (!activeStageId || activeStageId === 'step-1') return; // Skip initial load
+
+    const loadStepTemplate = async () => {
+      try {
+        console.log(`🔄 Carregando template automático para etapa: ${activeStageId}`);
+        
+        // Tentar carregar via FunnelsContext primeiro
+        if (currentFunnelId && typeof window !== 'undefined') {
+          try {
+            // Importar o contexto de funnels dinamicamente
+            const funnelsModule = await import('../context/FunnelsContext');
+            
+            // NOTE: Aqui seria ideal ter uma função global para acessar o contexto
+            // Por agora, vamos tentar através do templateService
+            const { templateService } = await import('../services/templateService');
+            const stepNumber = parseInt(activeStageId.replace('step-', ''));
+            const template = await templateService.getTemplateByStep(stepNumber);
+
+            if (template && template.blocks && template.blocks.length > 0) {
+              console.log(`✅ Template da etapa ${stepNumber} carregado: ${template.blocks.length} blocos`);
+              
+              const editorBlocks = templateService.convertTemplateBlocksToEditorBlocks(template.blocks);
+              dispatch({ type: 'SET_BLOCKS', payload: editorBlocks });
+            } else {
+              console.warn(`⚠️ Template vazio para etapa ${stepNumber}`);
+              dispatch({ type: 'SET_BLOCKS', payload: [] });
+            }
+          } catch (error) {
+            console.warn('⚠️ Erro ao carregar template via service:', error);
+            dispatch({ type: 'SET_BLOCKS', payload: [] });
+          }
+        }
+      } catch (error) {
+        console.error('❌ Erro ao carregar template da etapa:', error);
+      }
+    };
+
+    loadStepTemplate();
+  }, [activeStageId, currentFunnelId]);
+
   // Block management functions
   const addBlock = useCallback(
     async (type: BlockType): Promise<string> => {
