@@ -138,8 +138,7 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({ className }) => {
   const {
     state: { blocks },
     computed: { selectedBlock },
-    blockActions: { deleteBlock, reorderBlocks },
-    dispatch,
+  blockActions: { deleteBlock, reorderBlocks, replaceBlocks },
     selectBlock,
   } = useEditor();
 
@@ -219,12 +218,10 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({ className }) => {
         order: block.order + 1,
       };
 
-      dispatch({
-        type: 'SET_BLOCKS',
-        payload: [...blocks, duplicatedBlock].map((b, idx) => ({ ...b, order: idx })),
-      });
+      const next = [...blocks, duplicatedBlock].map((b, idx) => ({ ...b, order: idx }));
+      replaceBlocks(next);
     },
-    [blocks, dispatch]
+    [blocks, replaceBlocks]
   );
 
   // Preparar dados para DndContext
