@@ -69,13 +69,19 @@ export const QuizStepsNavigation: React.FC<QuizStepsNavigationProps> = ({
   const stepInfo = useMemo(() => {
     const stepType = getStepType(quizState.currentStep);
     const stepTitle = getStepTitle(quizState.currentStep);
+    const stepRequirements = getStepRequirements(quizState.currentStep);
+    const stepCategory = getStepCategory(quizState.currentStep);
 
     return {
       type: stepType,
       title: stepTitle,
       description: getStepDescription(quizState.currentStep),
+      requirements: stepRequirements,
+      category: stepCategory,
       isTransition: [12, 19].includes(quizState.currentStep),
       isResult: [20, 21].includes(quizState.currentStep),
+      isStrategic: quizState.currentStep >= 13 && quizState.currentStep <= 18,
+      isMainQuiz: quizState.currentStep >= 2 && quizState.currentStep <= 11,
     };
   }, [quizState.currentStep]);
 
@@ -182,14 +188,28 @@ export const QuizStepsNavigation: React.FC<QuizStepsNavigationProps> = ({
                 {stepInfo.type}
               </Badge>
 
+              <Badge
+                variant="secondary"
+                className="text-xs"
+              >
+                {stepInfo.category}
+              </Badge>
+
               <span className="text-sm font-medium" style={{ color: theme.textColor }}>
                 {stepInfo.title}
               </span>
             </div>
           </div>
 
-          {/* Actions */}
+          {/* Actions & Requirements */}
           <div className="flex items-center gap-2">
+            {/* Informações de Requisitos */}
+            {stepInfo.requirements.selections > 1 && (
+              <div className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">
+                {stepInfo.requirements.selections} seleções
+              </div>
+            )}
+
             {mode !== 'production' && (
               <Button variant="ghost" size="sm" onClick={handleRestart} className="text-gray-600">
                 <RotateCcw className="h-4 w-4 mr-2" />
@@ -208,6 +228,13 @@ export const QuizStepsNavigation: React.FC<QuizStepsNavigationProps> = ({
             <span className="text-gray-500">{progressData.percentage}% concluído</span>
           </div>
 
+          {/* Descrição da Etapa */}
+          {stepInfo.description && (
+            <div className="text-xs text-gray-600 bg-gray-50 p-2 rounded">
+              {stepInfo.description}
+            </div>
+          )}
+
           <Progress
             value={progressData.percentage}
             className="h-2"
@@ -217,6 +244,21 @@ export const QuizStepsNavigation: React.FC<QuizStepsNavigationProps> = ({
               } as React.CSSProperties
             }
           />
+
+          {/* Indicadores Adicionais */}
+          <div className="flex items-center justify-between text-xs text-gray-500">
+            <span>
+              {stepInfo.isMainQuiz 
+                ? `Questão ${quizState.currentStep - 1} de 10`
+                : stepInfo.isStrategic 
+                ? `Estratégica ${quizState.currentStep - 12} de 6`
+                : stepInfo.category
+              }
+            </span>
+            <span>
+              {progressData.completedSteps} etapas concluídas
+            </span>
+          </div>
         </div>
 
         {/* Navigation Controls */}
@@ -232,9 +274,15 @@ export const QuizStepsNavigation: React.FC<QuizStepsNavigationProps> = ({
           </Button>
 
           <div className="flex items-center gap-2">
-            {stepInfo.description && (
-              <span className="text-xs text-gray-500 max-w-md text-center">
-                {stepInfo.description}
+            {/* Tipo de Requisito */}
+            {stepInfo.requirements.type !== 'unknown' && (
+              <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
+                {stepInfo.requirements.type === 'multiple-choice' ? 'Múltipla escolha' :
+                 stepInfo.requirements.type === 'single-choice' ? 'Escolha única' :
+                 stepInfo.requirements.type === 'text-input' ? 'Campo de texto' :
+                 stepInfo.requirements.type === 'transition' ? 'Transição' :
+                 stepInfo.requirements.type === 'result-offer' ? 'Resultado' :
+                 stepInfo.requirements.type}
               </span>
             )}
           </div>
@@ -245,7 +293,7 @@ export const QuizStepsNavigation: React.FC<QuizStepsNavigationProps> = ({
             style={{ backgroundColor: navigation.canGoNext ? theme.primaryColor : undefined }}
             className="flex items-center gap-2"
           >
-            {stepInfo.isResult ? 'Finalizar' : 'Próximo'}
+            {stepInfo.isResult ? 'Finalizar' : stepInfo.isTransition ? 'Continuar' : 'Próximo'}
             <ArrowRight className="h-4 w-4" />
           </Button>
         </div>
@@ -255,7 +303,7 @@ export const QuizStepsNavigation: React.FC<QuizStepsNavigationProps> = ({
 };
 
 // ========================================
-// Funções Helper - Exatamente como no QuizNavigationBlock
+// Funções Helper - Baseadas no quiz21StepsComplete.ts
 // ========================================
 function getStepType(step: number): string {
   if (step === 1) return 'Início';
@@ -269,41 +317,83 @@ function getStepType(step: number): string {
 }
 
 function getStepTitle(step: number): string {
+  // Títulos baseados no QUIZ_STYLE_21_STEPS_TEMPLATE
   const titles: Record<number, string> = {
-    1: 'Bem-vinda',
-    2: 'Roupa Favorita',
-    3: 'Personalidade',
-    4: 'Visual',
-    5: 'Detalhes',
-    6: 'Estampas',
-    7: 'Casaco',
-    8: 'Calça',
-    9: 'Sapatos',
-    10: 'Acessórios',
-    11: 'Tecidos',
-    12: 'Preparando...',
-    13: 'Autoavaliação',
-    14: 'Desafios',
-    15: 'Frequência',
-    16: 'Investimento',
-    17: 'Preço',
-    18: 'Objetivos',
-    19: 'Calculando...',
-    20: 'Seu Estilo',
-    21: 'Oferta Especial',
+    1: 'Descubra seu Estilo',
+    2: 'Questão 1 - Roupa Favorita', 
+    3: 'Questão 2 - Personalidade',
+    4: 'Questão 3 - Visual',
+    5: 'Questão 4 - Detalhes',
+    6: 'Questão 5 - Estampas',
+    7: 'Questão 6 - Casaco',
+    8: 'Questão 7 - Calça',
+    9: 'Questão 8 - Sapatos',
+    10: 'Questão 9 - Acessórios',
+    11: 'Questão 10 - Tecidos',
+    12: 'Preparando análise...',
+    13: 'Estratégica 1 - Autoavaliação',
+    14: 'Estratégica 2 - Desafios',
+    15: 'Estratégica 3 - Frequência',
+    16: 'Estratégica 4 - Investimento',
+    17: 'Estratégica 5 - Preço',
+    18: 'Estratégica 6 - Objetivos',
+    19: 'Calculando resultado...',
+    20: 'Seu Estilo Predominante',
+    21: 'Oferta Personalizada',
   };
   return titles[step] || `Etapa ${step}`;
 }
 
 function getStepDescription(step: number): string {
-  if (step === 1) return 'Vamos começar coletando algumas informações básicas';
-  if (step >= 2 && step <= 11) return 'Responda com honestidade para um resultado preciso';
-  if (step === 12) return 'Agora vamos fazer algumas perguntas estratégicas';
-  if (step >= 13 && step <= 18) return 'Estas perguntas nos ajudam a personalizar sua experiência';
-  if (step === 19) return 'Estamos processando suas respostas...';
-  if (step === 20) return 'Seu resultado personalizado está pronto!';
-  if (step === 21) return 'Uma oferta especial para transformar seu estilo';
-  return '';
+  // Descrições baseadas no template completo
+  const descriptions: Record<number, string> = {
+    1: 'Chega de um guarda-roupa lotado e da sensação de que nada combina com você',
+    2: 'QUAL O SEU TIPO DE ROUPA FAVORITA? (Selecione 3 opções)',
+    3: 'RESUMA A SUA PERSONALIDADE: (Selecione 3 opções)',
+    4: 'QUAL VISUAL VOCÊ MAIS SE IDENTIFICA? (Selecione 3 opções)',
+    5: 'QUAIS DETALHES VOCÊ GOSTA? (Selecione 3 opções)',
+    6: 'QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA? (Selecione 3 opções)',
+    7: 'QUAL CASACO É SEU FAVORITO? (Selecione 3 opções)',
+    8: 'QUAL SUA CALÇA FAVORITA? (Selecione 3 opções)',
+    9: 'QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA? (Selecione 3 opções)',
+    10: 'QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA? (Selecione 3 opções)',
+    11: 'VOCÊ ESCOLHE CERTOS TECIDOS, PRINCIPALMENTE PORQUE ELES... (Selecione 3 opções)',
+    12: 'Queremos te fazer algumas perguntas que vão tornar sua experiência ainda mais completa',
+    13: 'Quando você se olha no espelho, como se sente com sua imagem pessoal atualmente?',
+    14: 'O que mais te desafia na hora de se vestir?',
+    15: 'Com que frequência você se pega pensando: "Com que roupa eu vou?"',
+    16: 'Pense no quanto você já gastou com roupas que não usa...',
+    17: 'Se esse conteúdo completo custasse R$ 97,00 — você consideraria um bom investimento?',
+    18: 'Qual desses resultados você mais gostaria de alcançar?',
+    19: 'Estamos calculando seu estilo predominante e preparando recomendações exclusivas',
+    20: 'Com base nas suas respostas, identificamos seu estilo predominante',
+    21: 'Libere todo o potencial do seu estilo pessoal com nossa oferta especial',
+  };
+  return descriptions[step] || '';
+}
+
+// ========================================
+// Informações adicionais do template
+// ========================================
+function getStepRequirements(step: number): { selections: number; type: string } {
+  // Baseado nas propriedades do template
+  if (step === 1) return { selections: 1, type: 'text-input' };
+  if (step >= 2 && step <= 11) return { selections: 3, type: 'multiple-choice' };
+  if (step === 12 || step === 19) return { selections: 1, type: 'transition' };
+  if (step >= 13 && step <= 18) return { selections: 1, type: 'single-choice' };
+  if (step === 20 || step === 21) return { selections: 1, type: 'result-offer' };
+  return { selections: 1, type: 'unknown' };
+}
+
+function getStepCategory(step: number): string {
+  if (step === 1) return 'Introdução';
+  if (step >= 2 && step <= 11) return 'Quiz Principal';
+  if (step === 12) return 'Transição';
+  if (step >= 13 && step <= 18) return 'Análise Estratégica';
+  if (step === 19) return 'Processamento';
+  if (step === 20) return 'Resultado';
+  if (step === 21) return 'Conversão';
+  return 'Indefinido';
 }
 
 export default QuizStepsNavigation;

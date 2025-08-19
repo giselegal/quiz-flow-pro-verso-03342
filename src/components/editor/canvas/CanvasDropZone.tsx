@@ -136,6 +136,25 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
             </div>
           )}
 
+          {/* BOTÃO PARA MODO PREVIEW: Carregar templates */}
+          {isPreviewing && (
+            <div className="mt-4">
+              <Button
+                variant="outline"
+                className="mx-auto border-dashed bg-orange-50 border-orange-300 text-orange-700"
+                onClick={() => {
+                  alert('🔄 Recarregue a página (F5) para atualizar os templates das etapas');
+                  window.location.reload();
+                }}
+              >
+                🔄 Recarregar Página
+              </Button>
+              <p className="text-xs text-gray-500 mt-2 max-w-md mx-auto">
+                ⚠️ As etapas estão configuradas nos templates, mas pode ser necessário recarregar a página
+              </p>
+            </div>
+          )}
+
           {isOver && !isPreviewing && (
             <div className="mt-4 p-4 border-2 border-dashed border-brand/30 rounded-lg bg-brand/5">
               <p className="text-brand font-medium">Solte o componente aqui</p>
