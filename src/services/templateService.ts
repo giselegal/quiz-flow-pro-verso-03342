@@ -1,193 +1,86 @@
-import type { StepTemplate } from '../config/stepTemplatesMapping';
 import type { Block, BlockType } from '../types/editor';
 
-// Interfaces para corresponder à estrutura real dos templates
-export interface TemplateMetadata {
-  id: string;
-  name: string;
-  description: string;
-  category: string;
-  type: string;
-  tags: string[];
-  createdAt: string;
-  updatedAt: string;
-  author: string;
-}
-
-export interface TemplateBlock {
-  id: string;
-  type: string;
-  properties: Record<string, any>;
-  children?: TemplateBlock[];
-}
-
-export interface TemplateDesign {
-  primaryColor: string;
-  secondaryColor: string;
-  accentColor: string;
-  backgroundColor: string;
-  fontFamily: string;
-  button: Record<string, any>;
-  card: Record<string, any>;
-  progressBar: Record<string, any>;
-  animations: Record<string, any>;
-  imageOptionSize: Record<string, any>;
-}
-
 export interface TemplateData {
+  blocks: Block[];
   templateVersion: string;
-  metadata: TemplateMetadata;
-  design: TemplateDesign;
-  layout: {
-    containerWidth: string;
-    spacing: string;
-    backgroundColor: string;
-    responsive: boolean;
-    animations: Record<string, any>;
-  };
-  blocks: TemplateBlock[];
-  validation: {
-    nameField?: {
-      required: boolean;
-      minLength: number;
-      maxLength: number;
-      pattern?: string;
-      errorMessage?: string;
-    };
-    requiredFields?: string[];
-    customValidation?: (data: any) => { isValid: boolean; errors: string[] };
-  };
-  integrations: {
-    analytics?: boolean;
-    marketing?: boolean;
-    crm?: boolean;
-    customCode?: string;
-  };
-  analytics?: {
-    trackingId?: string;
-    events?: string[];
-    utmParams?: boolean;
-    customEvents?: string[];
-  };
-  logic?: {
-    navigation?: {
-      nextStep?: string | null;
-      prevStep?: string | null;
-      allowBack?: boolean;
-      autoAdvance?: boolean;
-    };
-    formHandling?: {
-      onSubmit?: string;
-      validation?: string;
-      errorHandling?: string;
-    };
-    stateManagement?: {
-      localState?: string[];
-      globalState?: string[];
-    };
-    scoring?: any;
-    conditions?: any;
-  };
-  performance?: {
-    webVitals?: {
-      markComponentMounted?: boolean;
-      markLcpRendered?: boolean;
-      markUserInteraction?: boolean;
-    };
-    optimizations?: {
-      preloadCriticalImages?: boolean;
-      inlineStyles?: boolean;
-      lazyLoadNonCritical?: boolean;
-      useRequestAnimationFrame?: boolean;
-    };
-  };
-  accessibility?: {
-    skipLinks?: boolean;
-    ariaLabels?: boolean;
-    focusManagement?: boolean;
-    keyboardNavigation?: boolean;
-    screenReader?: boolean;
-  };
-  step?: number;
 }
 
-// Helper function to validate step numbers
-function isValidStep(step: number): boolean {
-  return step >= 1 && step <= 21;
+export interface StepLoadResult {
+  blocks: Block[];
+  step: number;
+  metadata: {
+    name: string;
+    description: string;
+    step: number;
+    category: string;
+    tags: string[];
+    version: string;
+    createdAt: string;
+    updatedAt: string;
+  };
 }
 
-export const templateService = {
-  async getTemplates(): Promise<TemplateData[]> {
-    // Return empty array for now
-    return [];
-  },
+function getFallbackBlocksForStep(step: number): Block[] {
+  const baseId = `step-${step}`;
+  
+  return [
+    {
+      id: `${baseId}-header`,
+      type: 'header' as BlockType,
+      content: { text: `Etapa ${step}`, level: 1, alignment: 'center', color: '#432818' },
+      order: 0,
+      properties: { text: `Etapa ${step}`, level: 1, alignment: 'center', color: '#432818' },
+    },
+    {
+      id: `${baseId}-text`,
+      type: 'text' as BlockType,
+      content: { text: `Conteúdo da etapa ${step}`, alignment: 'left', fontSize: 16, color: '#666666' },
+      order: 1,
+      properties: { text: `Conteúdo da etapa ${step}`, alignment: 'left', fontSize: 16, color: '#666666' },
+    },
+    {
+      id: `${baseId}-input`,
+      type: 'input' as BlockType,
+      content: { placeholder: 'Digite sua resposta...', required: true, fieldType: 'text' },
+      order: 2,
+      properties: { placeholder: 'Digite sua resposta...', required: true, fieldType: 'text' },
+    },
+    {
+      id: `${baseId}-button`,
+      type: 'button' as BlockType,
+      content: { text: 'Continuar', style: 'primary', fullWidth: true, backgroundColor: '#B89B7A', textColor: '#FFFFFF' },
+      order: 3,
+      properties: { text: 'Continuar', style: 'primary', fullWidth: true, backgroundColor: '#B89B7A', textColor: '#FFFFFF' },
+    },
+  ];
+}
 
-  async getTemplate(_id: string): Promise<TemplateData | null> {
-    // Return null for now
-    return null;
-  },
-
-  async searchTemplates(_query: string): Promise<TemplateData[]> {
-    // Return empty array for now
-    return [];
-  },
-
-  // Nova função para obter template por número da etapa
-  async getTemplateByStep(step: number): Promise<TemplateData | null> {
-    // Função temporariamente desabilitada devido a dependências em refatoração
-    console.warn(`⚠️ getTemplateByStep(${step}): Função desabilitada temporariamente`);
-    return null;
-  },
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-          author: 'system',
-        },
-        design: {
-          primaryColor: '#B89B7A',
-          secondaryColor: '#432818',
-          accentColor: '#8B5CF6',
-          backgroundColor: '#FEFEFE',
-          fontFamily: 'Inter',
-          button: {},
-          card: {},
-          progressBar: {},
-          animations: {},
-          imageOptionSize: {},
-        },
-        layout: {
-          containerWidth: '100%',
-          spacing: '1rem',
-          backgroundColor: '#FEFEFE',
-          responsive: true,
-          animations: {},
-        },
-        validation: {
-          requiredFields: [],
-        },
-        integrations: {
-          analytics: false,
-          marketing: false,
-          crm: false,
-        },
-        analytics: {},
-        logic: {},
-      };
-    } catch (error) {
-      console.error(`❌ Erro ao carregar template da etapa ${step}:`, error);
-      return null;
-    }
-  },
-
-  // Nova função para converter blocos do template para blocos do editor
-  convertTemplateBlocksToEditorBlocks(templateBlocks: TemplateBlock[]): Block[] {
-    return templateBlocks.map((block, index) => ({
-      id: block.id,
-      type: block.type as BlockType,
-      content: block.properties || {},
-      order: index,
-      properties: block.properties || {}, // Manter properties também para compatibilidade
-    }));
-  },
+const templateService = {
+  async getTemplates(): Promise<TemplateData[]> { return []; },
+  async getTemplate(_id: string): Promise<TemplateData | null> { return null; },
+  async searchTemplates(_query: string): Promise<TemplateData[]> { return []; },
+  async getTemplateByStep(_step: number): Promise<TemplateData | null> { return null; },
+  convertTemplateBlocksToEditorBlocks(): Block[] { return []; },
 };
+
+export async function loadStepTemplate(step: number): Promise<StepLoadResult | null> {
+  if (step < 1 || step > 21) return null;
+
+  const fallbackBlocks = getFallbackBlocksForStep(step);
+  return {
+    blocks: fallbackBlocks,
+    step,
+    metadata: {
+      name: `Etapa ${step}`,
+      description: `Template padrão para etapa ${step}`,
+      step,
+      category: 'default',
+      tags: ['fallback'],
+      version: '1.0.0',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    },
+  };
+}
 
 export default templateService;
