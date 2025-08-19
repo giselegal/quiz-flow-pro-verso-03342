@@ -14,6 +14,7 @@ import {
   useSensors,
 } from '@dnd-kit/core';
 import { restrictToParentElement } from '@dnd-kit/modifiers';
+import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 
 // EDITOR UNIFICADO - Componentes principais
 import {
@@ -78,7 +79,9 @@ const EditorUnified: React.FC = () => {
         distance: 8, // 8px é a distância mínima para iniciar o drag
       },
     }),
-    useSensor(KeyboardSensor)
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
   );
 
   // Hooks para funcionalidades avançadas
@@ -180,14 +183,25 @@ const EditorUnified: React.FC = () => {
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     if (over && active.id !== over.id) {
-      // Encontrar os índices dos blocos
-      const oldIndex = currentBlocks.findIndex(block => block.id === active.id);
-      const newIndex = currentBlocks.findIndex(block => block.id === over.id);
+      // Encontrar os índices dos blocos (convertendo IDs para string se necessário)
+      const activeId = String(active.id);
+      const overId = String(over.id);
+
+      console.log('🔄 Drag End:', { activeId, overId });
+
+      const oldIndex = currentBlocks.findIndex(block => block.id === activeId);
+      const newIndex = currentBlocks.findIndex(block => block.id === overId);
 
       if (oldIndex !== -1 && newIndex !== -1) {
         console.log('🔄 Reordenando blocos:', { oldIndex, newIndex });
         // Usar reorderBlocks do EditorContext
         reorderBlocks(oldIndex, newIndex);
+      } else {
+        console.warn('⚠️ Não foi possível encontrar os índices dos blocos:', {
+          activeId,
+          overId,
+          found: currentBlocks.map(b => b.id),
+        });
       }
     }
   };
@@ -266,7 +280,9 @@ const EditorUnified: React.FC = () => {
       sensors={sensors}
       collisionDetection={closestCenter}
       onDragEnd={handleDragEnd}
+      onDragStart={event => console.log('🔄 Drag Start:', event)}
       modifiers={[restrictToParentElement]}
+      autoScroll={true}
     >
       <PreviewProvider totalSteps={totalSteps} funnelId={funnelIdRef.current}>
         {/* Carregador otimizado de etapas do quiz */}

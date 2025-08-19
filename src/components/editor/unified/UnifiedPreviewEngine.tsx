@@ -11,10 +11,7 @@ import { useFeatureFlags } from '@/utils/FeatureFlagManager';
 import React, { useEffect, useMemo, useState } from 'react';
 
 // Importações DnD
-import {
-  SortableContext,
-  verticalListSortingStrategy,
-} from '@dnd-kit/sortable';
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 
 // Importação do componente sortable
 import { SortablePreviewBlockWrapper } from './SortablePreviewBlockWrapper';
@@ -54,7 +51,12 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
   const [previewErrors, setPreviewErrors] = useState<string[]>([]);
 
   // Extrair os IDs dos blocos para o SortableContext
-  const blockIds = useMemo(() => blocks.map(block => block.id), [blocks]);
+  const blockIds = useMemo(() => {
+    // Garantimos que todos os IDs sejam strings
+    const ids = blocks.map(block => String(block.id));
+    console.log('🔄 BlockIds para SortableContext:', ids);
+    return ids;
+  }, [blocks]);
 
   // Configurações do viewport
   const viewportConfig = useMemo(() => {
@@ -135,7 +137,7 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
 
   // Handler para o fim do drag and drop
   // A função handleDragEnd foi movida para o componente pai EditorUnified
-  
+
   // Propagamos os eventos de reordenação para o componente pai
   useEffect(() => {
     if (onBlocksReordered) {

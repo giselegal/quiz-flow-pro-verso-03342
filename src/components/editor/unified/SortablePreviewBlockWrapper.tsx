@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
 import { Block } from '@/types/editor';
 import { StyleResult } from '@/types/quiz';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import React, { useState } from 'react';
 
 interface SortablePreviewBlockWrapperProps {
   block: Block;
@@ -32,6 +32,10 @@ export const SortablePreviewBlockWrapper: React.FC<SortablePreviewBlockWrapperPr
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: block.id,
     disabled: isPreviewing,
+    data: {
+      type: 'block',
+      block,
+    },
   });
 
   // Estilo do wrapper com transformação de arrastar e soltar

@@ -333,14 +333,51 @@ export const EditorProvider: React.FC<{
 
   const reorderBlocks = useCallback(
     (startIndex: number, endIndex: number) => {
-      const newBlocks = Array.from(state.blocks);
-      const [reorderedItem] = newBlocks.splice(startIndex, 1);
-      newBlocks.splice(endIndex, 0, reorderedItem);
+      console.log('🔄 EditorContext.reorderBlocks:', {
+        startIndex,
+        endIndex,
+        blocksCount: state.blocks.length,
+      });
 
+      if (startIndex === endIndex) {
+        console.log('⚠️ Índices iguais, nenhuma alteração necessária');
+        return;
+      }
+
+      if (
+        startIndex < 0 ||
+        startIndex >= state.blocks.length ||
+        endIndex < 0 ||
+        endIndex >= state.blocks.length
+      ) {
+        console.error('❌ Índices inválidos para reordenação:', {
+          startIndex,
+          endIndex,
+          blocksCount: state.blocks.length,
+        });
+        return;
+      }
+
+      // Cria uma cópia dos blocos existentes
+      const newBlocks = Array.from(state.blocks);
+
+      // Remove o item da posição antiga e o insere na nova posição
+      const [reorderedItem] = newBlocks.splice(startIndex, 1);
+      console.log('🔄 Item removido:', reorderedItem.id);
+
+      newBlocks.splice(endIndex, 0, reorderedItem);
+      console.log('🔄 Item inserido na nova posição:', endIndex);
+
+      // Atualiza as ordens dos blocos
       const reorderedBlocks = newBlocks.map((block, index) => ({
         ...block,
         order: index,
       }));
+
+      console.log(
+        '✅ Blocos reordenados com sucesso:',
+        reorderedBlocks.map(b => ({ id: b.id, order: b.order }))
+      );
 
       dispatch({ type: 'SET_BLOCKS', payload: reorderedBlocks });
     },
