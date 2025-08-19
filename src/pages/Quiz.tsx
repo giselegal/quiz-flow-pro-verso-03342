@@ -1,11 +1,11 @@
 // src/pages/Quiz.tsx
 // Página dedicada para o quiz usando a nova configuração modular
 
-import React from "react";
-import { QuizRenderer } from "@/components/quiz/QuizRenderer";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
-import { QUIZ_CONFIGURATION } from "@/config/quizConfiguration";
+import { QuizRenderer } from '@/components/quiz/QuizRenderer';
+import { Button } from '@/components/ui/button';
+import { QUIZ_CONFIGURATION } from '@/config/quizConfiguration';
+import { ArrowLeft } from 'lucide-react';
+import React from 'react';
 
 const Quiz: React.FC = () => {
   const handleGoHome = () => {
@@ -13,11 +13,11 @@ const Quiz: React.FC = () => {
   };
 
   return (
-    <div 
+    <div
       className="min-h-screen"
-      style={{ 
+      style={{
         backgroundColor: QUIZ_CONFIGURATION.design.backgroundColor,
-        fontFamily: QUIZ_CONFIGURATION.design.fontFamily 
+        fontFamily: QUIZ_CONFIGURATION.design.fontFamily,
       }}
     >
       {/* Header do Quiz */}
@@ -36,16 +36,13 @@ const Quiz: React.FC = () => {
 
             {/* Logo/Título do Quiz */}
             <div className="text-center">
-              <h1 
+              <h1
                 className="text-lg font-semibold"
                 style={{ color: QUIZ_CONFIGURATION.design.secondaryColor }}
               >
                 {QUIZ_CONFIGURATION.meta.name}
               </h1>
-              <p 
-                className="text-xs"
-                style={{ color: QUIZ_CONFIGURATION.design.primaryColor }}
-              >
+              <p className="text-xs" style={{ color: QUIZ_CONFIGURATION.design.primaryColor }}>
                 {QUIZ_CONFIGURATION.meta.description}
               </p>
             </div>
@@ -66,10 +63,7 @@ const Quiz: React.FC = () => {
       {/* Footer do Quiz */}
       <footer className="mt-16 py-8 border-t border-slate-200">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p 
-            className="text-sm"
-            style={{ color: QUIZ_CONFIGURATION.design.primaryColor }}
-          >
+          <p className="text-sm" style={{ color: QUIZ_CONFIGURATION.design.primaryColor }}>
             Versão {QUIZ_CONFIGURATION.meta.version} • Criado por {QUIZ_CONFIGURATION.meta.author}
           </p>
         </div>
