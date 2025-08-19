@@ -190,7 +190,7 @@ const EditorUnifiedPageWithDragDrop: React.FC = () => {
           {/* � STAGE MANAGER - Navegação de etapas */}
           <div className="w-80 border-r border-stone-200/50 bg-white/90 backdrop-blur-sm">
             <EditorStageManager
-              mode="full"
+              mode={editorMode}
               initialStep={currentStep}
               onStepSelect={handleStepSelect}
               onModeChange={handleModeChange}
