@@ -84,7 +84,7 @@ interface SortableBlockProps {
 
 const SortableBlock: React.FC<SortableBlockProps> = ({
   block,
-  index,
+  // index, - removido pois não é usado
   config,
   isEditorMode,
   onUpdate,

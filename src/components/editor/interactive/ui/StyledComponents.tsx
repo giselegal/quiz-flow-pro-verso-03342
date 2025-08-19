@@ -14,7 +14,7 @@ interface QuizAnimationWrapperProps {
 export const QuizAnimationWrapper: React.FC<QuizAnimationWrapperProps> = ({
   children,
   animation,
-  theme = 'default',
+  // theme = 'default', - removido pois não é usado
   className = '',
 }) => {
   const [isVisible, setIsVisible] = useState(false);

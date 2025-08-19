@@ -1,8 +1,8 @@
 import { EditorProvider } from '@/context/EditorContext';
-import { Block } from '@/types/editor';
+// import { Block } from '@/types/editor'; - removido pois não é usado
 import React, { useState } from 'react';
 import { InteractiveQuizCanvas } from '../InteractiveQuizCanvas';
-import { QUIZ_EXEMPLO_COMPLETO, calcularResultadoQuiz } from './QuizExemploCompleto';
+// import { calcularResultadoQuiz } from './QuizExemploCompleto'; - removido pois não é usado
 
 /**
  * 🎯 DEMONSTRAÇÃO COMPLETA DO QUIZ INTERATIVO
@@ -14,26 +14,22 @@ export const QuizDemo: React.FC = () => {
   const [quizCompleto, setQuizCompleto] = useState(false);
   const [resultados, setResultados] = useState<any>(null);
 
-  // Mock do contexto do editor com os blocos do quiz
-  const mockEditorContext = {
-    computed: {
-      currentBlocks: QUIZ_EXEMPLO_COMPLETO as Block[],
-      selectedBlock: null,
-    },
-    selectedBlockId: null,
-    blockActions: {
-      setSelectedBlockId: () => {},
-      addBlock: async () => 'mock-id',
-      updateBlock: async () => {},
-      deleteBlock: async () => {},
-    },
-  };
+  // Mock do contexto do editor com os blocos do quiz (não utilizado atualmente)
+  // const mockEditorContext = {
+  //   computed: {
+  //     currentBlocks: QUIZ_EXEMPLO_COMPLETO as Block[],
+  //     selectedBlock: null,
+  //   },
+  //   selectedBlockId: null,
+  //   blockActions: {
+  //     setSelectedBlockId: () => {},
+  //     addBlock: async () => 'mock-id',
+  //     updateBlock: async () => {},
+  //     deleteBlock: async () => {},
+  //   },
+  // };
 
-  const handleQuizComplete = (respostas: Record<string, any>) => {
-    const { resultado, pontuacoes } = calcularResultadoQuiz(respostas);
-    setResultados({ resultado, pontuacoes, respostas });
-    setQuizCompleto(true);
-  };
+  // };
 
   const resetQuiz = () => {
     setQuizCompleto(false);

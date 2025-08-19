@@ -1,6 +1,6 @@
 import { useEditor } from '@/context/EditorContext';
 import { ValidationResult } from '@/types/validation';
-import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { memo, useCallback, useEffect, useState } from 'react';
 // import { InteractiveBlockRenderer } from './InteractiveBlockRenderer';
 // import { QuizHeader } from './QuizHeader';
 import { QuizNavigation } from './QuizNavigation';
@@ -51,7 +51,7 @@ export const InteractiveQuizCanvas: React.FC<InteractiveQuizCanvasProps> = memo(
     // Estado local do quiz interativo
     const [quizAnswers, setQuizAnswers] = useState<QuizAnswer[]>([]);
     const [currentValidation, _setCurrentValidation] = useState<ValidationResult | null>(null); // eslint-disable-line @typescript-eslint/no-unused-vars
-    const [scores, setScores] = useState<Record<string, number>>({});
+    const [scores] = useState<Record<string, number>>({});
 
     // Carregar respostas do localStorage
     useEffect(() => {
@@ -103,16 +103,6 @@ export const InteractiveQuizCanvas: React.FC<InteractiveQuizCanvasProps> = memo(
 
       // stageActions.setActiveStage(prevStep.toString());
     }, [activeStageId]);
-
-    // Obter respostas para uma pergunta específica
-    const _getAnswersForQuestion = useCallback(
-      // eslint-disable-line @typescript-eslint/no-unused-vars
-      (questionId: string) => {
-        const answer = quizAnswers.find(a => a.questionId === questionId);
-        return answer?.selectedOptions || [];
-      },
-      [quizAnswers]
-    );
 
     // Se não está em modo preview, retornar canvas normal
     if (!isPreviewing) {
