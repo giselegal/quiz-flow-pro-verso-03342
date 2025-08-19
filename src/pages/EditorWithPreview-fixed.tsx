@@ -47,6 +47,8 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
   // Estado local
   const [showFunnelSettings, setShowFunnelSettings] = useState(false);
   const [showSaveTemplateModal, setShowSaveTemplateModal] = useState(false);
+  // Estado para preview interno do PropertiesPanel
+  const [propertiesPanelPreview, setPropertiesPanelPreview] = useState(false);
 
   // Editor Context - Estado centralizado do editor
   const {
@@ -162,6 +164,8 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
                       onSelectBlock={setSelectedBlockId}
                       onUpdateBlock={updateBlock}
                       onDeleteBlock={handleDeleteBlock}
+                      // Usar preview do PropertiesPanel em vez do preview global
+                      isPreviewing={propertiesPanelPreview}
                     />
                   </div>
 
@@ -178,7 +182,13 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
               onClose={() => setSelectedBlockId(null)}
               onDelete={handleDeleteBlock}
               isPreviewMode={isPreviewing}
-              onTogglePreview={() => setIsPreviewing(!isPreviewing)}
+              onTogglePreview={previewState => {
+                if (previewState !== undefined) {
+                  setPropertiesPanelPreview(previewState);
+                } else {
+                  setIsPreviewing(!isPreviewing);
+                }
+              }}
             />
           }
         />

@@ -8,16 +8,16 @@
  * - Compatibilidade total com sistema existente
  */
 
-import React, { useState, useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 
 // UI Components
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 // Icons
-import { Settings, Type, Paintbrush, X, Trash2 } from 'lucide-react';
+import { Paintbrush, Settings, Trash2, Type, X } from 'lucide-react';
 
 // Editores Especializados (sistema original mantido)
 import { ButtonPropertyEditor } from './editors/ButtonPropertyEditor';
@@ -278,12 +278,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
             </Button>
           )}
           {onClose && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onClose}
-              className="h-8 w-8 p-0"
-            >
+            <Button variant="ghost" size="sm" onClick={onClose} className="h-8 w-8 p-0">
               <X className="h-4 w-4" />
             </Button>
           )}
@@ -327,14 +322,10 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                       {selectedBlock.type}
                     </div>
                   </div>
-                  
+
                   <div className="space-y-2">
-                    <label className="text-xs font-medium text-muted-foreground">
-                      ID do Bloco
-                    </label>
-                    <div className="p-2 bg-muted rounded font-mono text-xs">
-                      {selectedBlock.id}
-                    </div>
+                    <label className="text-xs font-medium text-muted-foreground">ID do Bloco</label>
+                    <div className="p-2 bg-muted rounded font-mono text-xs">{selectedBlock.id}</div>
                   </div>
 
                   <div className="space-y-2">

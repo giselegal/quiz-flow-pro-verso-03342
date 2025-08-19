@@ -3,25 +3,29 @@
 ## ✅ Implementações Realizadas
 
 ### 1. **PropertiesPanel com Preview Interno**
+
 - ✅ Adicionado estado `internalPreview` para controle de preview próprio
 - ✅ Botão de preview integrado no header do painel
 - ✅ Indicador visual quando preview está ativo (background verde)
 - ✅ Preview funciona apenas quando bloco está selecionado no canvas
 
 ### 2. **Remoção do Preview Global do EditorWithPreview**
-- ✅ Removido `PreviewToggleButton` flutuante 
+
+- ✅ Removido `PreviewToggleButton` flutuante
 - ✅ Preview agora funciona apenas através do PropertiesPanel
 - ✅ Sistema mais focado e eficaz para edição de propriedades
 
 ### 3. **Funcionalidades do Sistema**
 
 **Preview Ativo:**
+
 - 🎨 Header do PropertiesPanel fica verde
 - 👁️ Ícone de olho no botão
 - 📝 Texto "Preview Ativo" no header
 - 🎯 Preview funciona apenas no canvas central
 
 **Preview Inativo:**
+
 - ⚙️ Header normal com ícone de configurações
 - 📝 Texto "Propriedades" no header
 - 🔧 Modo de edição normal
@@ -56,6 +60,7 @@ Para testar o sistema:
 ## 🎉 Resultado
 
 O sistema de preview agora é:
+
 - **Canvas-Only**: Funciona apenas no canvas central
 - **Contextual**: Ativado apenas quando necessário
 - **Eficaz**: Feedback visual imediato durante edição
@@ -63,4 +68,4 @@ O sistema de preview agora é:
 
 ---
 
-*Implementação concluída com sucesso! O sistema de preview do PropertiesPanel é agora mais eficaz que o preview anterior do EditorWithPreview.tsx*
+_Implementação concluída com sucesso! O sistema de preview do PropertiesPanel é agora mais eficaz que o preview anterior do EditorWithPreview.tsx_

@@ -48,6 +48,7 @@ interface CanvasDropZoneProps {
   onUpdateBlock: (id: string, updates: any) => void;
   onDeleteBlock: (id: string) => void;
   className?: string;
+  isPreviewing?: boolean; // Adicionado suporte a preview externo
 }
 
 export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
@@ -57,9 +58,13 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
   onUpdateBlock,
   onDeleteBlock,
   className,
+  isPreviewing: externalPreview,
 }) => {
   // Safe preview context usage with fallback
-  const { isPreviewing } = usePreview();
+  const { isPreviewing: contextPreview } = usePreview();
+
+  // Usar preview externo se fornecido, senão usar o contexto
+  const isPreviewing = externalPreview !== undefined ? externalPreview : contextPreview;
   const { setNodeRef, isOver, active } = useDroppable({
     id: 'canvas-drop-zone',
     data: {

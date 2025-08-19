@@ -13,11 +13,11 @@ import React, { useState } from 'react';
 // UI Components
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 // Icons
-import { Settings, Type, Paintbrush, X, Trash2, Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, Paintbrush, Settings, Trash2, Type, X } from 'lucide-react';
 
 // Editores Especializados (sistema original mantido)
 import { ButtonPropertyEditor } from './editors/ButtonPropertyEditor';
@@ -46,8 +46,8 @@ interface PropertiesPanelProps {
   onDelete?: (blockId: string) => void;
   /** Se está em modo preview */
   isPreviewMode?: boolean;
-  /** Callback para alternar preview */
-  onTogglePreview?: () => void;
+  /** Callback para alternar preview - agora aceita estado do preview */
+  onTogglePreview?: (previewState?: boolean) => void;
 }
 
 export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
@@ -56,6 +56,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
   onClose,
   onDelete,
   isPreviewMode = false,
+  onTogglePreview,
 }) => {
   // Estado para abas (nova funcionalidade)
   const [activeTab, setActiveTab] = useState<string>('properties');
@@ -71,6 +72,17 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
   const handleDelete = () => {
     if (selectedBlock && onDelete) {
       onDelete(selectedBlock.id);
+    }
+  };
+
+  // Função para alternar preview interno e comunicar ao pai
+  const handleToggleInternalPreview = () => {
+    const newPreviewState = !internalPreview;
+    setInternalPreview(newPreviewState);
+
+    // Comunicar mudança ao componente pai se disponível
+    if (onTogglePreview) {
+      onTogglePreview(newPreviewState);
     }
   };
 
@@ -219,7 +231,11 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
         }
 
         // Mapeamento flexível para tipos relacionados a opções (outros)
-        if (blockType.includes('options') || blockType.includes('result') || blockType.includes('cta')) {
+        if (
+          blockType.includes('options') ||
+          blockType.includes('result') ||
+          blockType.includes('cta')
+        ) {
           return (
             <OptionsPropertyEditor
               block={selectedBlock}
@@ -230,11 +246,13 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
         }
 
         // Mapeamento flexível para tipos relacionados a texto
-        if (blockType === 'text' || 
-            blockType === 'headline' ||
-            blockType.includes('text') ||
-            blockType.includes('heading') ||
-            blockType.includes('title')) {
+        if (
+          blockType === 'text' ||
+          blockType === 'headline' ||
+          blockType.includes('text') ||
+          blockType.includes('heading') ||
+          blockType.includes('title')
+        ) {
           return (
             <TextPropertyEditor
               block={selectedBlock}
@@ -261,7 +279,9 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
   return (
     <div className="h-full flex flex-col bg-background">
       {/* ✨ HEADER MELHORADO COM INTERFACE MODERNA */}
-      <div className={`flex items-center justify-between p-4 border-b ${internalPreview ? 'bg-gradient-to-r from-green-50 to-green-100 border-green-200' : 'bg-gradient-to-r from-background to-background/50'}`}>
+      <div
+        className={`flex items-center justify-between p-4 border-b ${internalPreview ? 'bg-gradient-to-r from-green-50 to-green-100 border-green-200' : 'bg-gradient-to-r from-background to-background/50'}`}
+      >
         <div className="flex items-center gap-3">
           <div className={`p-2 rounded-lg ${internalPreview ? 'bg-green-600' : 'bg-primary/10'}`}>
             {internalPreview ? (
@@ -283,11 +303,11 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
         <div className="flex items-center gap-1">
           {/* Botão de Preview Interno */}
           <Button
-            variant={internalPreview ? "default" : "ghost"}
+            variant={internalPreview ? 'default' : 'ghost'}
             size="sm"
-            onClick={() => setInternalPreview(!internalPreview)}
+            onClick={handleToggleInternalPreview}
             className={`h-8 px-2 ${internalPreview ? 'bg-green-600 hover:bg-green-700 text-white' : ''}`}
-            title={internalPreview ? "Desativar Preview" : "Ativar Preview"}
+            title={internalPreview ? 'Desativar Preview' : 'Ativar Preview'}
           >
             {internalPreview ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
           </Button>
@@ -302,12 +322,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
             </Button>
           )}
           {onClose && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onClose}
-              className="h-8 w-8 p-0"
-            >
+            <Button variant="ghost" size="sm" onClick={onClose} className="h-8 w-8 p-0">
               <X className="h-4 w-4" />
             </Button>
           )}
@@ -351,14 +366,10 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                       {selectedBlock.type}
                     </div>
                   </div>
-                  
+
                   <div className="space-y-2">
-                    <label className="text-xs font-medium text-muted-foreground">
-                      ID do Bloco
-                    </label>
-                    <div className="p-2 bg-muted rounded font-mono text-xs">
-                      {selectedBlock.id}
-                    </div>
+                    <label className="text-xs font-medium text-muted-foreground">ID do Bloco</label>
+                    <div className="p-2 bg-muted rounded font-mono text-xs">{selectedBlock.id}</div>
                   </div>
 
                   <div className="space-y-2">

@@ -10,7 +10,7 @@ import { Route, Router, Switch } from 'wouter';
 // Lazy load das páginas principais para code splitting
 const Home = lazy(() => import('./pages/Home'));
 const AuthPage = lazy(() => import('./pages/AuthPage'));
-const EditorWithPreview = lazy(() => import('./pages/EditorWithPreview'));
+// const EditorWithPreview = lazy(() => import('./pages/EditorWithPreview')); // DESATIVADO
 const EditorWithPreviewFixed = lazy(() => import('./pages/EditorWithPreview-fixed'));
 const EditorModularPage = lazy(() => import('./pages/editor-modular'));
 const QuizFlowPage = lazy(() => import('./pages/QuizFlowPage'));
@@ -56,12 +56,25 @@ function App() {
                 {/* 🏠 PÁGINA INICIAL */}
                 <Route path="/" component={Home} />
 
-                {/* 🎯 EDITOR PRINCIPAL */}
+                {/* 🎯 EDITOR PRINCIPAL - DESATIVADO */}
+                {/* 
                 <Route path="/editor">
                   <FunnelsProvider>
                     <EditorProvider>
                       <Suspense fallback={<PageLoading />}>
                         <EditorWithPreview />
+                      </Suspense>
+                    </EditorProvider>
+                  </FunnelsProvider>
+                </Route>
+                */}
+
+                {/* 🏆 EDITOR PRINCIPAL - VERSÃO FIXED AGORA É PADRÃO */}
+                <Route path="/editor">
+                  <FunnelsProvider>
+                    <EditorProvider>
+                      <Suspense fallback={<PageLoading />}>
+                        <EditorWithPreviewFixed />
                       </Suspense>
                     </EditorProvider>
                   </FunnelsProvider>
