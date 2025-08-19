@@ -10,7 +10,7 @@ import { SaveTemplateModal } from '@/components/editor/SaveTemplateModal';
 import { EditorToolbar } from '@/components/editor/toolbar/EditorToolbar';
 // 🚀 PREVIEW SYSTEM
 import { PreviewNavigation } from '@/components/preview/PreviewNavigation';
-import { PreviewToggleButton } from '@/components/preview/PreviewToggleButton';
+// import { PreviewToggleButton } from '@/components/preview/PreviewToggleButton';
 import { PreviewProvider } from '@/contexts/PreviewContext';
 // 🎯 QUIZ 21 STEPS SYSTEM
 import { Quiz21StepsNavigation } from '@/components/quiz/Quiz21StepsNavigation';
@@ -165,8 +165,8 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
                     />
                   </div>
 
-                  {/* 🎮 PREVIEW TOGGLE - Botão flutuante para alternar preview */}
-                  <PreviewToggleButton />
+                  {/* 🎮 PREVIEW TOGGLE - Botão flutuante removido */}
+                  {/* <PreviewToggleButton /> */}
                 </div>
               </div>
             </>

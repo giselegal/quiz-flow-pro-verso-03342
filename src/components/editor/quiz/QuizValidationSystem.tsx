@@ -90,7 +90,7 @@ export const QuizValidationSystem: React.FC<QuizValidationSystemProps> = ({
                 {
                   id: `${questionId}-min-selections`,
                   type: 'minSelections',
-                  message: 'Selecione 3 opções para continuar',
+                  message: '', // Removido: 'Selecione 3 opções para continuar'
                   value: 3,
                   customValidator: data => {
                     const answers = Object.keys(data.userAnswers || {}).filter(key =>
@@ -102,7 +102,7 @@ export const QuizValidationSystem: React.FC<QuizValidationSystemProps> = ({
                 {
                   id: `${questionId}-max-selections`,
                   type: 'maxSelections',
-                  message: 'Máximo de 3 opções permitidas',
+                  message: '', // Removido: 'Máximo de 3 opções permitidas'
                   value: 3,
                   customValidator: data => {
                     const answers = Object.keys(data.userAnswers || {}).filter(key =>

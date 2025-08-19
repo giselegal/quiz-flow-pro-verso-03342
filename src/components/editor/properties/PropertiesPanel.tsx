@@ -1,8 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
-import { Eye, Settings, X } from 'lucide-react';
+import { Settings, X } from 'lucide-react';
 import React, { useMemo } from 'react';
 import { ButtonPropertyEditor } from './editors/ButtonPropertyEditor';
 import { FormContainerPropertyEditor } from './editors/FormContainerPropertyEditor';
@@ -339,7 +338,8 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
         </div>
 
         <div className="flex items-center gap-1">
-          {onTogglePreview && (
+          {/* Preview button removido */}
+          {/* {onTogglePreview && (
             <Button
               variant="ghost"
               size="sm"
@@ -348,7 +348,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
             >
               <Eye className="h-4 w-4" />
             </Button>
-          )}
+          )} */}
 
           {onClose && (
             <Button variant="ghost" size="sm" onClick={onClose} className="h-8 w-8 p-0">
