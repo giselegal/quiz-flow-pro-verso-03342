@@ -200,21 +200,8 @@ export const QuizStepRenderer: React.FC<QuizStepRendererProps> = ({
     },
   },
   className,
-  onBlocksReorder,
+  onBlocksReorder, // unused - DndContext foi movido para componente pai
 }) => {
-  // ========================================
-  // Estado e Hooks
-  // ========================================
-  const [activeId, setActiveId] = useState<string | null>(null);
-
-  // Sensors para drag & drop
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
-  );
-
   // ========================================
   // Dados Derivados
   // ========================================
@@ -232,27 +219,6 @@ export const QuizStepRenderer: React.FC<QuizStepRendererProps> = ({
     },
     [config.editor]
   );
-
-  const handleDragEnd = useCallback(
-    (event: DragEndEvent) => {
-      const { active, over } = event;
-
-      if (active.id !== over?.id) {
-        const oldIndex = blocks.findIndex(block => block.id === active.id);
-        const newIndex = blocks.findIndex(block => block.id === over?.id);
-
-        const reorderedBlocks = arrayMove(blocks, oldIndex, newIndex);
-        onBlocksReorder?.(reorderedBlocks);
-      }
-
-      setActiveId(null);
-    },
-    [blocks, onBlocksReorder]
-  );
-
-  const handleDragStart = useCallback((event: DragStartEvent) => {
-    setActiveId(event.active.id as string);
-  }, []);
 
   // ========================================
   // Component Map - Componentes Básicos
