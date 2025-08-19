@@ -11,6 +11,14 @@ import { useFeatureFlags } from '@/utils/FeatureFlagManager';
 import React, { useEffect, useMemo, useState } from 'react';
 
 // Importações DnD
+import { DragEndEvent, closestCenter } from '@dnd-kit/core';
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { restrictToParentElement } from '@dnd-kit/modifiers';
+
+// Importação do componente sortable
+import { SortablePreviewBlockWrapper } from './SortablePreviewBlockWrapper';
+
+// Importações DnD
 import { DndContext, DragEndEvent, closestCenter } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { restrictToParentElement } from '@dnd-kit/modifiers';

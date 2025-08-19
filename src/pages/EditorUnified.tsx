@@ -3,6 +3,18 @@ import React, { useEffect, useRef, useState } from 'react';
 // 🎨 ESTILOS PROFISSIONAIS
 import '@/styles/editor-unified.css';
 
+// Importações DnD
+import {
+  DndContext,
+  DragEndEvent,
+  KeyboardSensor,
+  PointerSensor,
+  closestCenter,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import { restrictToParentElement } from '@dnd-kit/modifiers';
+
 // 🎨 EDITOR UNIFICADO - Componentes principais
 import {
   EditorControlsManager,
@@ -58,6 +70,16 @@ const EditorUnified: React.FC = () => {
     },
     initialStep: 1,
   });
+
+  // Configuração dos sensores para DndContext
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8, // 8px é a distância mínima para iniciar o drag
+      },
+    }),
+    useSensor(KeyboardSensor)
+  );
 
   // Hooks para funcionalidades avançadas
   const { scrollRef } = useSyncedScroll({ source: 'canvas' });
