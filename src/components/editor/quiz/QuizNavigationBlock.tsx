@@ -5,12 +5,7 @@
  * Gerencia progressão, validação e controles de navegação
  */
 
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
-import { cn } from '@/lib/utils';
-import { ArrowLeft, ArrowRight, Home, RotateCcw } from 'lucide-react';
-import React, { useMemo } from 'react';
+import React from 'react';
 
 export interface QuizNavigationBlockProps {
   currentStep: number;
@@ -71,7 +66,7 @@ export const QuizNavigationBlock: React.FC<QuizNavigationBlockProps> = ({
 
   // Classes CSS para os botões
   const buttonBaseClass = `
-    px-4 py-2 rounded-lg font-medium transition-all duration-200
+    px-6 py-3 rounded-lg font-medium transition-all duration-200
     focus:outline-none focus:ring-2 focus:ring-offset-2
   `;
 
@@ -87,52 +82,52 @@ export const QuizNavigationBlock: React.FC<QuizNavigationBlockProps> = ({
   `;
 
   return (
-    <div className={`quiz-navigation-block bg-white border-b border-gray-200 p-4 ${className}`}>
+    <div className={`quiz-navigation-block bg-white border-b border-gray-200 p-6 flex-shrink-0 ${className}`}>
       {/* Barra de progresso */}
-      <div className="mb-4">
-        <div className="flex items-center justify-between mb-2">
+      <div className="mb-6">
+        <div className="flex items-center justify-between mb-3">
           <span className="text-sm font-medium text-gray-700">
-            Progresso: {currentStep} de {totalSteps}
+            Progresso do Quiz: {currentStep} de {totalSteps}
           </span>
           <span className="text-sm text-gray-500">
             {Math.round(progress)}% concluído
           </span>
         </div>
         
-        <div className="w-full bg-gray-200 rounded-full h-2">
+        <div className="w-full bg-gray-200 rounded-full h-3">
           <div
-            className="h-2 rounded-full transition-all duration-500 ease-out"
+            className="h-3 rounded-full transition-all duration-500 ease-out relative overflow-hidden"
             style={{
               width: `${progress}%`,
               backgroundColor: theme.primaryColor,
             }}
-          />
+          >
+            <div className="absolute inset-0 bg-white opacity-20 animate-pulse"></div>
+          </div>
         </div>
       </div>
 
       {/* Navegação principal */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-6">
         {/* Botão Anterior */}
         <button
           onClick={onPrevious}
           disabled={!canGoPrevious}
           className={`
-            ${canGoPrevious ? secondaryButtonClass : 'px-4 py-2 text-gray-400 cursor-not-allowed'}
+            ${canGoPrevious ? secondaryButtonClass : 'px-6 py-3 text-gray-400 cursor-not-allowed rounded-lg'}
           `}
         >
-          ← Anterior
+          ← Etapa Anterior
         </button>
 
         {/* Informação da etapa atual */}
         <div className="text-center">
-          <div className="text-lg font-semibold text-gray-800">
+          <div className="text-2xl font-bold text-gray-800">
             Etapa {currentStep}
           </div>
-          {mode === 'editor' && (
-            <div className="text-xs text-gray-500">
-              Modo: {mode}
-            </div>
-          )}
+          <div className="text-sm text-gray-500 mt-1">
+            {mode === 'editor' ? 'Modo Editor' : mode === 'preview' ? 'Pré-visualização' : 'Produção'}
+          </div>
         </div>
 
         {/* Botão Próximo */}
@@ -140,21 +135,21 @@ export const QuizNavigationBlock: React.FC<QuizNavigationBlockProps> = ({
           onClick={onNext}
           disabled={!canGoNext}
           className={`
-            ${canGoNext ? primaryButtonClass : 'px-4 py-2 text-gray-400 cursor-not-allowed'}
+            ${canGoNext ? primaryButtonClass : 'px-6 py-3 text-gray-400 cursor-not-allowed rounded-lg'}
           `}
           style={{
             backgroundColor: canGoNext ? theme.primaryColor : undefined,
           }}
         >
-          Próximo →
+          Próxima Etapa →
         </button>
       </div>
 
-      {/* Navegação por etapas (apenas no modo editor) */}
-      {mode === 'editor' && (
+      {/* Navegação por etapas (modo editor e preview) */}
+      {(mode === 'editor' || mode === 'preview') && (
         <div className="border-t border-gray-100 pt-4">
-          <div className="text-xs text-gray-600 mb-2">Navegação direta:</div>
-          <div className="flex flex-wrap gap-1">
+          <div className="text-sm text-gray-600 mb-3 font-medium">Navegação Direta:</div>
+          <div className="flex flex-wrap gap-2">
             {stepNumbers.map(step => {
               const status = getStepStatus(step);
               const isAccessible = step <= currentStep || mode === 'editor';
@@ -165,21 +160,21 @@ export const QuizNavigationBlock: React.FC<QuizNavigationBlockProps> = ({
                   onClick={() => isAccessible && onGoToStep(step)}
                   disabled={!isAccessible}
                   className={`
-                    w-8 h-8 text-xs rounded-full transition-all duration-200
+                    w-10 h-10 text-sm rounded-full transition-all duration-200 font-medium
                     ${status === 'current' 
-                      ? 'text-white shadow-md' 
+                      ? 'text-white shadow-lg scale-110' 
                       : status === 'completed'
-                        ? 'bg-green-100 text-green-700 hover:bg-green-200'
+                        ? 'bg-green-100 text-green-700 hover:bg-green-200 hover:scale-105'
                         : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
                     }
-                    ${!isAccessible ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}
+                    ${!isAccessible ? 'cursor-not-allowed opacity-50' : 'cursor-pointer hover:shadow-md'}
                   `}
                   style={{
                     backgroundColor: status === 'current' ? theme.primaryColor : undefined,
                   }}
-                  title={`Etapa ${step} - ${status}`}
+                  title={`Etapa ${step} - ${status === 'current' ? 'Atual' : status === 'completed' ? 'Concluída' : 'Pendente'}`}
                 >
-                  {getStepIcon(step)}
+                  {step <= 9 ? step : '●'}
                 </button>
               );
             })}
@@ -187,11 +182,23 @@ export const QuizNavigationBlock: React.FC<QuizNavigationBlockProps> = ({
         </div>
       )}
 
-      {/* Informações de validação (apenas quando há erros) */}
+      {/* Resumo das validações (apenas quando há problemas) */}
       {Object.values(validationResults).some(result => result === false) && (
-        <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-          <div className="text-sm text-red-700">
-            ⚠️ Algumas etapas possuem erros de validação. Verifique os campos destacados.
+        <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+          <div className="flex items-center">
+            <div className="text-red-500 mr-2">⚠️</div>
+            <div className="text-sm text-red-700">
+              Algumas etapas possuem erros de validação. Verifique os campos destacados antes de continuar.
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Informações adicionais no modo editor */}
+      {mode === 'editor' && (
+        <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+          <div className="text-xs text-blue-700">
+            💡 <strong>Modo Editor:</strong> Você pode navegar livremente entre todas as etapas para edição e teste.
           </div>
         </div>
       )}
@@ -200,13 +207,6 @@ export const QuizNavigationBlock: React.FC<QuizNavigationBlockProps> = ({
 };
 
 export default QuizNavigationBlock;
-                {stepInfo.type}
-              </Badge>
-
-              <span className="text-sm font-medium" style={{ color: theme.textColor }}>
-                {stepInfo.title}
-              </span>
-            </div>
           </div>
 
           {/* Actions */}
