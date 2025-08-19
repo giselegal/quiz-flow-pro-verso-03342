@@ -72,12 +72,15 @@ export const useQuizFlow = ({
   }, [currentStep, onStepChange]);
 
   // Ir para etapa específica (para editor)
-  const goToStep = useCallback((step: number) => {
-    if (step >= 1 && step <= 21) {
-      setCurrentStep(step);
-      onStepChange?.(step);
-    }
-  }, [onStepChange]);
+  const goToStep = useCallback(
+    (step: number) => {
+      if (step >= 1 && step <= 21) {
+        setCurrentStep(step);
+        onStepChange?.(step);
+      }
+    },
+    [onStepChange]
+  );
 
   // Salvar nome na etapa 1
   const saveName = useCallback(

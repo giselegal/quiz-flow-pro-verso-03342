@@ -6,7 +6,7 @@
 
 import { useQuizFlow } from '@/hooks/core/useQuizFlow';
 import { Block } from '@/types/editor';
-import { loadStepBlocks, getStepInfo, isValidStep } from '@/utils/quiz21StepsRenderer';
+import { getStepInfo, isValidStep, loadStepBlocks } from '@/utils/quiz21StepsRenderer';
 import React, { useMemo } from 'react';
 
 interface QuizStepManagerProps {

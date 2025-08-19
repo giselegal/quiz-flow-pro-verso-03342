@@ -5,9 +5,9 @@
  * com suporte para editor, preview e produção
  */
 
+import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
 import React from 'react';
-import { cn } from '@/lib/utils';
 
 // Import Universal Block Renderer
 import UniversalBlockRenderer from '@/components/editor/blocks/UniversalBlockRenderer';
@@ -68,15 +68,15 @@ export const QuizRenderEngineModular: React.FC<QuizRenderEngineProps> = ({
   };
 
   return (
-    <div className={cn(
-      'quiz-render-engine space-y-6',
-      mode === 'editor' && 'editor-container',
-      mode === 'preview' && 'preview-container',
-      mode === 'production' && 'production-container'
-    )}>
-      {blocks
-        .sort((a, b) => a.order - b.order)
-        .map(renderBlock)}
+    <div
+      className={cn(
+        'quiz-render-engine space-y-6',
+        mode === 'editor' && 'editor-container',
+        mode === 'preview' && 'preview-container',
+        mode === 'production' && 'production-container'
+      )}
+    >
+      {blocks.sort((a, b) => a.order - b.order).map(renderBlock)}
     </div>
   );
 };

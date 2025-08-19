@@ -1,12 +1,12 @@
 /**
  * 🎯 RENDERIZADOR ESPECÍFICO PARA QUIZ 21 STEPS
- * 
- * Converte dados do quiz21StepsComplete.ts para formato 
+ *
+ * Converte dados do quiz21StepsComplete.ts para formato
  * compatível com o editor unificado
  */
 
-import { Block } from '@/types/editor';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
+import { Block } from '@/types/editor';
 
 /**
  * Carrega dados da etapa e converte para formato do editor
@@ -14,15 +14,15 @@ import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 export function loadStepBlocks(stepNumber: number): Block[] {
   const stepKey = `step-${stepNumber}`;
   const templateBlocks = QUIZ_STYLE_21_STEPS_TEMPLATE[stepKey];
-  
+
   if (!templateBlocks) {
     console.warn(`❌ Etapa ${stepKey} não encontrada no template`);
     return [];
   }
 
   console.log(`✅ Carregando etapa ${stepKey} com ${templateBlocks.length} blocos`);
-  
-  return templateBlocks.map((templateBlock) => {
+
+  return templateBlocks.map(templateBlock => {
     const block: Block = {
       id: templateBlock.id,
       type: mapBlockType(templateBlock.type),
@@ -43,15 +43,15 @@ function mapBlockType(templateType: string): any {
     'quiz-intro-header': 'quiz-intro-header',
     'form-container': 'form-input',
     'options-grid': 'options-grid',
-    'hero': 'hero',
-    'text': 'text-inline',
-    'button': 'button-inline',
+    hero: 'hero',
+    text: 'text-inline',
+    button: 'button-inline',
     'result-header-inline': 'result-card',
     'style-card-inline': 'style-card-inline',
     'secondary-styles': 'result-card',
-    'benefits': 'text-inline',
-    'testimonials': 'text-inline',
-    'guarantee': 'text-inline',
+    benefits: 'text-inline',
+    testimonials: 'text-inline',
+    guarantee: 'text-inline',
     'quiz-offer-cta-inline': 'button-inline',
   };
 
@@ -165,9 +165,11 @@ function getStepTitle(stepNumber: number): string {
 
 function getStepSubtitle(stepNumber: number): string {
   if (stepNumber === 1) return 'Digite seu nome para personalizar sua experiência';
-  if (stepNumber >= 2 && stepNumber <= 11) return 'Responda com honestidade para obter um resultado mais preciso';
+  if (stepNumber >= 2 && stepNumber <= 11)
+    return 'Responda com honestidade para obter um resultado mais preciso';
   if (stepNumber === 12) return 'Enquanto calculamos seu resultado...';
-  if (stepNumber >= 13 && stepNumber <= 18) return 'Algumas perguntas para personalizar sua experiência';
+  if (stepNumber >= 13 && stepNumber <= 18)
+    return 'Algumas perguntas para personalizar sua experiência';
   if (stepNumber === 19) return 'Seu resultado personalizado está quase pronto...';
   if (stepNumber === 20) return 'Descubra seu estilo predominante';
   if (stepNumber === 21) return 'Uma oportunidade única para transformar seu estilo';
@@ -192,9 +194,11 @@ function getMaxSelections(stepNumber: number): number {
 
 function getStepDescription(stepNumber: number): string {
   if (stepNumber === 1) return 'Página inicial para coleta do nome e início do quiz';
-  if (stepNumber >= 2 && stepNumber <= 11) return 'Questões pontuadas para descobrir o estilo predominante';
+  if (stepNumber >= 2 && stepNumber <= 11)
+    return 'Questões pontuadas para descobrir o estilo predominante';
   if (stepNumber === 12) return 'Página de transição enquanto calcula o resultado';
-  if (stepNumber >= 13 && stepNumber <= 18) return 'Questões estratégicas para segmentação e ofertas';
+  if (stepNumber >= 13 && stepNumber <= 18)
+    return 'Questões estratégicas para segmentação e ofertas';
   if (stepNumber === 19) return 'Página de preparação do resultado final';
   if (stepNumber === 20) return 'Exibição do resultado do quiz com estilo predominante';
   if (stepNumber === 21) return 'Página de oferta com call-to-action para conversão';

@@ -5,8 +5,8 @@
  */
 
 import { useQuizFlow } from '@/hooks/core/useQuizFlow';
-import { getPreviousStep, getNextStep, isValidStep } from '@/utils/quiz21StepsRenderer';
-import { ChevronLeft, ChevronRight, Eye, Edit, Settings, Menu } from 'lucide-react';
+import { getNextStep, getPreviousStep, isValidStep } from '@/utils/quiz21StepsRenderer';
+import { ChevronLeft, ChevronRight, Edit, Eye, Menu, Settings } from 'lucide-react';
 import React from 'react';
 
 interface QuizToolbarProps {
@@ -103,10 +103,10 @@ export const QuizToolbarModular: React.FC<QuizToolbarProps> = ({
             <span className="text-sm text-gray-600">Etapa</span>
             <select
               value={currentStep}
-              onChange={(e) => handleStepJump(parseInt(e.target.value))}
+              onChange={e => handleStepJump(parseInt(e.target.value))}
               className="px-3 py-1 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              {Array.from({ length: totalSteps }, (_, i) => i + 1).map((step) => (
+              {Array.from({ length: totalSteps }, (_, i) => i + 1).map(step => (
                 <option key={step} value={step}>
                   {step}
                 </option>
@@ -133,12 +133,8 @@ export const QuizToolbarModular: React.FC<QuizToolbarProps> = ({
       {/* Center Section - Step Info */}
       <div className="flex items-center space-x-4">
         <div className="text-center">
-          <div className="text-sm font-medium text-gray-900">
-            {getStepTitle(currentStep)}
-          </div>
-          <div className="text-xs text-gray-500">
-            {getStepType(currentStep)}
-          </div>
+          <div className="text-sm font-medium text-gray-900">{getStepTitle(currentStep)}</div>
+          <div className="text-xs text-gray-500">{getStepType(currentStep)}</div>
         </div>
       </div>
 
@@ -151,8 +147,8 @@ export const QuizToolbarModular: React.FC<QuizToolbarProps> = ({
             mode === 'editor'
               ? 'bg-blue-100 text-blue-700'
               : mode === 'preview'
-              ? 'bg-green-100 text-green-700'
-              : 'bg-purple-100 text-purple-700'
+                ? 'bg-green-100 text-green-700'
+                : 'bg-purple-100 text-purple-700'
           }`}
           title={`Modo: ${getModeLabel()}`}
         >
