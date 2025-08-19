@@ -189,7 +189,7 @@ export const EditorProvider: React.FC<{
         console.log('🚀 Carregando template inicial para etapa 1...');
 
         // Importar o serviço de template dinamicamente
-        const { templateService } = await import('../services/templateService');
+        const templateService = (await import('../services/templateService')).default;
 
         // Carregar o template da etapa 1
         const template = await templateService.getTemplateByStep(1);
@@ -268,7 +268,7 @@ export const EditorProvider: React.FC<{
             
             // NOTE: Aqui seria ideal ter uma função global para acessar o contexto
             // Por agora, vamos tentar através do templateService
-            const { templateService } = await import('../services/templateService');
+            const templateService = (await import('../services/templateService')).default;
             const stepNumber = parseInt(activeStageId.replace('step-', ''));
             const template = await templateService.getTemplateByStep(stepNumber);
 
