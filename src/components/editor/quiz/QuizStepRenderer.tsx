@@ -77,7 +77,6 @@ export interface QuizStepRendererProps {
 // ========================================
 interface SortableBlockProps {
   block: Block;
-  index: number;
   config: QuizStepRendererConfig;
   isEditorMode: boolean;
   onUpdate: (blockId: string, updates: Partial<Block>) => void;
@@ -86,7 +85,6 @@ interface SortableBlockProps {
 
 const SortableBlock: React.FC<SortableBlockProps> = ({
   block,
-  index,
   config,
   isEditorMode,
   onUpdate,
@@ -361,11 +359,10 @@ export const QuizStepRenderer: React.FC<QuizStepRendererProps> = ({
 
         {/* Blocos da Etapa */}
         <div className="space-y-4">
-          {blocks.map((block, index) => (
+          {blocks.map((block) => (
             <SortableBlock
               key={block.id}
               block={block}
-              index={index}
               config={config}
               isEditorMode={isEditorMode}
               onUpdate={handleBlockUpdate}
