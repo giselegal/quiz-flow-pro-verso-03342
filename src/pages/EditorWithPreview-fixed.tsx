@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 // Editor Components
 import { CanvasDropZone } from '@/components/editor/canvas/CanvasDropZone';
@@ -108,25 +108,25 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
 
   const handleStageSelect = (stageId: string) => {
     console.log('🎯 Stage selecionada:', stageId);
-    
+
     // Ativar preview automaticamente quando uma etapa for selecionada
     setIsPreviewing(true);
     setPropertiesPanelPreview(true);
-    
+
     // O EditorContext já gerencia internamente a mudança de stage
   };
 
   // 🎯 ATIVAR PREVIEW QUANDO ETAPA MUDAR
   useEffect(() => {
     console.log('🔄 Stage ativa mudou:', activeStageId);
-    
+
     // Ativar preview automaticamente quando a etapa ativa mudar
     if (activeStageId) {
       // Ativar preview global também
       setIsPreviewing(true);
       setPropertiesPanelPreview(true);
       console.log('✅ Preview ativado automaticamente para stage:', activeStageId);
-      
+
       // Pequeno delay para garantir que os blocos foram carregados
       setTimeout(() => {
         console.log('🎯 Preview confirmado após carregamento da etapa');

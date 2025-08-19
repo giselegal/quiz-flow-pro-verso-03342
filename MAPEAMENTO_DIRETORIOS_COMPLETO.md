@@ -5,7 +5,7 @@
 ```
 src/
 ├── 📄 pages/                                    # 🔥 PÁGINAS PRINCIPAIS
-│   ├── QuizFlowPage.tsx                        # ⭐ PRODUÇÃO PRINCIPAL 
+│   ├── QuizFlowPage.tsx                        # ⭐ PRODUÇÃO PRINCIPAL
 │   ├── EditorWithPreview-fixed.tsx             # 🎨 Editor Fixed
 │   ├── EditorWithPreview.tsx                   # 🎨 Editor Básico
 │   └── admin/
@@ -16,12 +16,12 @@ src/
 │   ├── QuizFlow.tsx                            # ❌ DUPLICATA 1
 │   │
 │   ├── 📁 quiz/                                # 🎯 Quiz Components
-│   │   ├── QuizFlow.tsx                        # ❌ DUPLICATA 2 
+│   │   ├── QuizFlow.tsx                        # ❌ DUPLICATA 2
 │   │   ├── CaktoQuizFlow.tsx                   # 🔧 Implementação Específica
 │   │   └── QuizRenderer.tsx                    # 🎨 Renderizador
 │   │
 │   ├── 📁 editor/                              # 🎨 Editor Components
-│   │   ├── 📁 quiz/                            
+│   │   ├── 📁 quiz/
 │   │   │   ├── QuizFlowController.tsx          # 🎛️ Controlador
 │   │   │   ├── QuizFlowPageModular.tsx         # 👁️ Preview Modular
 │   │   │   └── QuizBlockRegistry.tsx           # 📋 Registry
@@ -37,7 +37,7 @@ src/
 │   │
 │   └── 📁 steps/                               # 🚶 Templates dos Steps
 │       ├── ConnectedStep01Template.tsx         # ✅ Step 1 Conectado
-│       ├── ConnectedStep02Template.tsx         # ✅ Step 2 Conectado  
+│       ├── ConnectedStep02Template.tsx         # ✅ Step 2 Conectado
 │       ├── Step01Template.tsx                  # 🔄 Step 1 Legacy
 │       └── [19+ outros steps...]
 │
@@ -48,7 +48,7 @@ src/
 │
 ├── 🎣 hooks/                                    # 🔗 HOOKS (8-10 DUPLICADOS)
 │   ├── useQuizLogic.ts                         # ⭐ Hook Principal
-│   ├── useQuiz21Steps.ts                       # 🎯 Hook Especializado 
+│   ├── useQuiz21Steps.ts                       # 🎯 Hook Especializado
 │   ├── useQuizNavigation.ts                    # 🔄 Duplicado
 │   ├── useQuizState.ts                         # 🔄 Duplicado
 │   └── [15+ outros hooks...]
@@ -75,17 +75,19 @@ src/
 ## 🔥 **CONFUSÕES IDENTIFICADAS**
 
 ### **1. 📂 ARQUIVOS QUIZFLOW (6 SIMILARES)**
+
 ```
 ❌ CONFUSÃO TOTAL:
 ├── src/components/QuizFlow.tsx                 # Duplicata 1
 ├── src/components/quiz/QuizFlow.tsx            # Duplicata 2
 ├── src/components/quiz/CaktoQuizFlow.tsx       # Implementação específica
 ├── src/components/editor/quiz/QuizFlowController.tsx      # Controlador
-├── src/components/editor/quiz/QuizFlowPageModular.tsx     # Preview modular  
+├── src/components/editor/quiz/QuizFlowPageModular.tsx     # Preview modular
 └── src/pages/QuizFlowPage.tsx                  # ⭐ PÁGINA PRINCIPAL
 ```
 
 ### **2. ⚙️ PAINÉIS DE PROPRIEDADES (2 DIFERENTES)**
+
 ```
 ❌ DOIS SISTEMAS DIFERENTES:
 ├── /editor → PropertiesPanel.tsx              # 🔧 381 linhas (básico)
@@ -93,27 +95,30 @@ src/
 ```
 
 ### **3. 🧱 BLOCOS DO EDITOR (40+ DUPLICADOS)**
+
 ```
 ❌ SOBREPOSIÇÃO MASSIVA:
 ├── QuizQuestionBlock.tsx                       # Versão 1
-├── QuizQuestionBlockModular.tsx                # Versão 2  
+├── QuizQuestionBlockModular.tsx                # Versão 2
 ├── OptionsGridBlock.tsx                        # Versão 1
 ├── OptionsBlock.tsx                            # Versão 2
 └── [36+ outros blocos duplicados...]
 ```
 
 ### **4. 🎣 HOOKS FRAGMENTADOS (8-10 DUPLICADOS)**
+
 ```
 ❌ FUNCIONALIDADES REPETIDAS:
 ├── useQuizLogic.ts                             # ⭐ Principal
 ├── useQuiz21Steps.ts                           # ⭐ Especializado
 ├── useQuizNavigation.ts                        # 🔄 Duplicado
-├── useQuizState.ts                             # 🔄 Duplicado  
+├── useQuizState.ts                             # 🔄 Duplicado
 ├── useQuizData.ts                              # 🔄 Duplicado
 └── [5+ outros hooks duplicados...]
 ```
 
 ### **5. 📡 CONTEXTOS FRAGMENTADOS (6-8 ARQUIVOS)**
+
 ```
 ❌ ESTADO ESPALHADO:
 ├── EditorContext.tsx                           # Editor
@@ -125,10 +130,11 @@ src/
 ```
 
 ### **6. 📊 DATASETS MÚLTIPLOS (8-12 FONTES)**
+
 ```
 ❌ DADOS DESCONECTADOS:
 ├── caktoquizQuestions.ts                       # ✅ Perguntas reais
-├── correctQuizQuestions.ts                     # ✅ Perguntas corretas 
+├── correctQuizQuestions.ts                     # ✅ Perguntas corretas
 ├── completeQuizQuestions.ts                    # ✅ Perguntas completas
 ├── quizData.ts                                 # 🔄 Dados genéricos
 ├── quizTemplates.ts                            # 🔄 Templates
@@ -140,20 +146,23 @@ src/
 ## 🎯 **SISTEMAS REAIS EM USO**
 
 ### **🚀 PRODUÇÃO (O que funciona)**
+
 ```
 ROTA: /quiz-flow
 📄 QuizFlowPage.tsx → Renderização manual hardcoded → 21 etapas funcionais
 ```
 
-### **🎨 EDITOR BÁSICO (Limitado)**  
+### **🎨 EDITOR BÁSICO (Limitado)**
+
 ```
 ROTA: /editor
 📄 EditorWithPreview.tsx → PropertiesPanel (básico) → Canvas limitado
 ```
 
 ### **⚡ EDITOR AVANÇADO (Melhor)**
+
 ```
-ROTA: /editor-fixed  
+ROTA: /editor-fixed
 📄 EditorWithPreview-fixed.tsx → OptimizedPropertiesPanel → Canvas avançado
 ```
 
@@ -162,16 +171,18 @@ ROTA: /editor-fixed
 ## 🧹 **LIMPEZA NECESSÁRIA**
 
 ### **🔥 CRÍTICO - Eliminar duplicatas:**
+
 1. **QuizFlow**: 6 arquivos → 3 arquivos específicos
-2. **Propriedades**: 2 painéis → 1 painel unificado  
+2. **Propriedades**: 2 painéis → 1 painel unificado
 3. **Blocos**: 40+ → 25 blocos essenciais
 4. **Hooks**: 10+ → 5 hooks principais
 5. **Contextos**: 8 → 3 contextos unificados
 6. **Datasets**: 12 → 3 fontes principais
 
 ### **📊 IMPACTO DA LIMPEZA:**
+
 - **Arquivos**: 800+ → 400-500 (-40%)
-- **Código**: 50k+ → 30-35k linhas (-30%)  
+- **Código**: 50k+ → 30-35k linhas (-30%)
 - **Componentes**: 60+ → 25-30 (-50%)
 - **Manutenção**: +90% mais fácil
 
@@ -180,6 +191,7 @@ ROTA: /editor-fixed
 ## 🎯 **SOLUÇÃO PROPOSTA**
 
 ### **RENOMEAÇÃO CLARA:**
+
 ```bash
 # QuizFlow → Nomes específicos
 QuizFlowPage.tsx → ProductionQuizPage.tsx           # Produção
@@ -191,6 +203,7 @@ CaktoQuizFlow.tsx → CaktoQuizImplementation.tsx     # Implementação
 ```
 
 ### **UNIFICAÇÃO:**
+
 ```bash
 # Painéis → OptimizedPropertiesPanel como padrão
 # Hooks → useQuizLogic + useQuiz21Steps principais
@@ -198,6 +211,6 @@ CaktoQuizFlow.tsx → CaktoQuizImplementation.tsx     # Implementação
 # Datasets → quiz21StepsComplete.ts como fonte principal
 ```
 
-**Essa estrutura está clara agora?** 
+**Essa estrutura está clara agora?**
 
 A confusão é **real e massiva** - são literalmente centenas de arquivos duplicados e sobrepostos. A reorganização seria um grande benefício para o projeto.

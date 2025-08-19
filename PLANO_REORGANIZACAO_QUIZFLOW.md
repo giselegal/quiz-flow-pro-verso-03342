@@ -3,7 +3,8 @@
 ## 🔍 **SITUAÇÃO ATUAL - CONFUSÃO TOTAL**
 
 ### **📂 6 Arquivos com nomes similares:**
-1. `QuizFlow.tsx` - `/src/components/` 
+
+1. `QuizFlow.tsx` - `/src/components/`
 2. `QuizFlowPage.tsx` - `/src/pages/` ⭐ **PRODUÇÃO PRINCIPAL**
 3. `QuizFlowController.tsx` - `/src/components/editor/quiz/`
 4. `QuizFlowPageModular.tsx` - `/src/components/editor/quiz/`
@@ -16,20 +17,21 @@
 
 ### **✅ NOVOS NOMES ESPECÍFICOS:**
 
-| Arquivo Atual | Novo Nome | Localização | Responsabilidade |
-|---------------|-----------|-------------|------------------|
-| `QuizFlowPage.tsx` | **`ProductionQuizPage.tsx`** | `/src/pages/` | 🚀 Página principal das 21 etapas (PRODUÇÃO) |
-| `QuizFlowController.tsx` | **`QuizStateController.tsx`** | `/src/components/editor/quiz/` | 🎛️ Controlador de estado do quiz |
-| `QuizFlowPageModular.tsx` | **`EditorQuizPreview.tsx`** | `/src/components/editor/quiz/` | 👁️ Preview do quiz no editor |
-| `QuizFlow.tsx` (components) | **`QuizComponentBase.tsx`** | `/src/components/` | 🧩 Componente base |
-| `QuizFlow.tsx` (quiz) | **`QuizRenderer.tsx`** | `/src/components/quiz/` | 🎨 Renderizador de quiz |
-| `CaktoQuizFlow.tsx` | **`CaktoQuizImplementation.tsx`** | `/src/components/quiz/` | 🔧 Implementação específica |
+| Arquivo Atual               | Novo Nome                         | Localização                    | Responsabilidade                             |
+| --------------------------- | --------------------------------- | ------------------------------ | -------------------------------------------- |
+| `QuizFlowPage.tsx`          | **`ProductionQuizPage.tsx`**      | `/src/pages/`                  | 🚀 Página principal das 21 etapas (PRODUÇÃO) |
+| `QuizFlowController.tsx`    | **`QuizStateController.tsx`**     | `/src/components/editor/quiz/` | 🎛️ Controlador de estado do quiz             |
+| `QuizFlowPageModular.tsx`   | **`EditorQuizPreview.tsx`**       | `/src/components/editor/quiz/` | 👁️ Preview do quiz no editor                 |
+| `QuizFlow.tsx` (components) | **`QuizComponentBase.tsx`**       | `/src/components/`             | 🧩 Componente base                           |
+| `QuizFlow.tsx` (quiz)       | **`QuizRenderer.tsx`**            | `/src/components/quiz/`        | 🎨 Renderizador de quiz                      |
+| `CaktoQuizFlow.tsx`         | **`CaktoQuizImplementation.tsx`** | `/src/components/quiz/`        | 🔧 Implementação específica                  |
 
 ---
 
 ## 🚀 **IMPLEMENTAÇÃO DO PLANO**
 
 ### **Fase 1: Renomear arquivos principais**
+
 ```bash
 # 1. Página principal de produção
 mv src/pages/QuizFlowPage.tsx src/pages/ProductionQuizPage.tsx
@@ -51,6 +53,7 @@ mv src/components/quiz/CaktoQuizFlow.tsx src/components/quiz/CaktoQuizImplementa
 ```
 
 ### **Fase 2: Atualizar imports**
+
 ```bash
 # Buscar e substituir imports em todos os arquivos
 find src -name "*.tsx" -o -name "*.ts" | xargs sed -i 's/QuizFlowPage/ProductionQuizPage/g'
@@ -60,11 +63,12 @@ find src -name "*.tsx" -o -name "*.ts" | xargs sed -i 's/CaktoQuizFlow/CaktoQuiz
 ```
 
 ### **Fase 3: Atualizar App.tsx**
+
 ```tsx
 // Antes
 const QuizFlowPage = lazy(() => import('./pages/QuizFlowPage'));
 
-// Depois  
+// Depois
 const ProductionQuizPage = lazy(() => import('./pages/ProductionQuizPage'));
 ```
 
@@ -73,32 +77,38 @@ const ProductionQuizPage = lazy(() => import('./pages/ProductionQuizPage'));
 ## 📋 **DOCUMENTAÇÃO CLARA PÓS-REORGANIZAÇÃO**
 
 ### **🚀 ProductionQuizPage.tsx**
+
 - **Função**: Página principal das 21 etapas do quiz
 - **Uso**: Sistema de produção final
-- **Rota**: `/quiz-flow` 
+- **Rota**: `/quiz-flow`
 - **Sistema**: Renderização manual hardcoded
 
-### **👁️ EditorQuizPreview.tsx**  
+### **👁️ EditorQuizPreview.tsx**
+
 - **Função**: Preview do quiz no editor
 - **Uso**: Modo preview do editor
 - **Sistema**: Enhanced block components
 
 ### **🎛️ QuizStateController.tsx**
+
 - **Função**: Gerenciamento de estado centralizado
 - **Uso**: Controlador global do quiz
 - **Sistema**: Context provider
 
 ### **🎨 QuizRenderer.tsx**
+
 - **Função**: Renderizador genérico de quiz
 - **Uso**: Componente reutilizável
 - **Sistema**: Block renderer engine
 
 ### **🧩 QuizComponentBase.tsx**
+
 - **Função**: Componente base para quiz
 - **Uso**: Base para outros componentes
 - **Sistema**: Foundation component
 
 ### **🔧 CaktoQuizImplementation.tsx**
+
 - **Função**: Implementação específica do Cakto
 - **Uso**: Versão específica do projeto
 - **Sistema**: Custom implementation

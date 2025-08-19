@@ -8,7 +8,7 @@
  * - Compatibilidade total com sistema existente
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 // UI Components
 import { Button } from '@/components/ui/button';
