@@ -549,20 +549,20 @@ export const EditorPropertiesPanel: React.FC<EditorPropertiesPanelProps> = ({
                   <div className="mt-2 space-y-3 pl-4">
                     {category.properties.map(property => (
                       <div key={property.key} className="space-y-2">
-                      <Label className="text-sm font-medium flex items-center gap-2">
-                        {property.label}
-                        {property.validation?.required && <span className="text-red-500">*</span>}
-                      </Label>
-                      {renderPropertyField(property)}
-                      {property.description && (
-                        <p className="text-xs text-gray-500">{property.description}</p>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          ))}
+                        <Label className="text-sm font-medium flex items-center gap-2">
+                          {property.label}
+                          {property.validation?.required && <span className="text-red-500">*</span>}
+                        </Label>
+                        {renderPropertyField(property)}
+                        {property.description && (
+                          <p className="text-xs text-gray-500">{property.description}</p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
         </ScrollArea>
       </div>

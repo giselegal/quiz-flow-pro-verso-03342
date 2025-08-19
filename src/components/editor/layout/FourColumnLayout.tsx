@@ -24,9 +24,7 @@ export const FourColumnLayout: React.FC<FourColumnLayoutProps> = ({
           {/* Coluna 1: Etapas do Funil */}
           <ResizablePanel defaultSize={15} minSize={12} maxSize={25} className="min-w-[200px]">
             <div className="h-full flex flex-col border-r border-border/50 bg-card/50 overflow-hidden">
-              <div className="h-full overflow-y-auto">
-                {stagesPanel}
-              </div>
+              <div className="h-full overflow-y-auto">{stagesPanel}</div>
             </div>
           </ResizablePanel>
 
@@ -35,9 +33,7 @@ export const FourColumnLayout: React.FC<FourColumnLayoutProps> = ({
           {/* Coluna 2: Componentes */}
           <ResizablePanel defaultSize={20} minSize={15} maxSize={30} className="min-w-[250px]">
             <div className="h-full flex flex-col border-r border-border/50 bg-card/30 overflow-hidden">
-              <div className="h-full overflow-y-auto">
-                {componentsPanel}
-              </div>
+              <div className="h-full overflow-y-auto">{componentsPanel}</div>
             </div>
           </ResizablePanel>
 
@@ -53,9 +49,7 @@ export const FourColumnLayout: React.FC<FourColumnLayoutProps> = ({
           {/* Coluna 4: Painel de Propriedades */}
           <ResizablePanel defaultSize={25} minSize={20} maxSize={35} className="min-w-[300px]">
             <div className="h-full flex flex-col border-l border-border/50 bg-card/30 overflow-hidden">
-              <div className="h-full overflow-y-auto">
-                {propertiesPanel}
-              </div>
+              <div className="h-full overflow-y-auto">{propertiesPanel}</div>
             </div>
           </ResizablePanel>
         </ResizablePanelGroup>
