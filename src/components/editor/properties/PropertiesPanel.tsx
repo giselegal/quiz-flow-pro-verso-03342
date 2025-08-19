@@ -17,7 +17,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 // Icons
-import { Settings, Type, Paintbrush, X, Trash2 } from 'lucide-react';
+import { Settings, Type, Paintbrush, X, Trash2, Eye, EyeOff } from 'lucide-react';
 
 // Editores Especializados (sistema original mantido)
 import { ButtonPropertyEditor } from './editors/ButtonPropertyEditor';
@@ -59,6 +59,8 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
 }) => {
   // Estado para abas (nova funcionalidade)
   const [activeTab, setActiveTab] = useState<string>('properties');
+  // Estado para preview interno do PropertiesPanel
+  const [internalPreview, setInternalPreview] = useState<boolean>(false);
 
   const handleUpdate = (updates: Record<string, any>) => {
     if (selectedBlock && onUpdate) {
@@ -96,6 +98,9 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
     const blockType = selectedBlock.type;
     console.log('🔧 PropertiesPanel - Block type:', blockType);
 
+    // Usar preview interno se ativado, senão usar o preview global
+    const effectivePreview = internalPreview || isPreviewMode;
+
     // Editores já implementados - mapeamento direto
     switch (blockType) {
       case 'header':
@@ -105,7 +110,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
           <HeaderPropertyEditor
             block={selectedBlock}
             onUpdate={handleUpdate}
-            isPreviewMode={isPreviewMode}
+            isPreviewMode={effectivePreview}
           />
         );
 
@@ -116,7 +121,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
           <FormContainerPropertyEditor
             block={selectedBlock}
             onUpdate={handleUpdate}
-            isPreviewMode={isPreviewMode}
+            isPreviewMode={effectivePreview}
           />
         );
 
@@ -126,7 +131,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
           <ImagePropertyEditor
             block={selectedBlock}
             onUpdate={handleUpdate}
-            isPreviewMode={isPreviewMode}
+            isPreviewMode={effectivePreview}
           />
         );
 
@@ -135,7 +140,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
           <ButtonPropertyEditor
             block={selectedBlock}
             onUpdate={handleUpdate}
-            isPreviewMode={isPreviewMode}
+            isPreviewMode={effectivePreview}
           />
         );
 
@@ -144,7 +149,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
           <PricingPropertyEditor
             block={selectedBlock}
             onUpdate={handleUpdate}
-            isPreviewMode={isPreviewMode}
+            isPreviewMode={effectivePreview}
           />
         );
 
@@ -154,7 +159,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
           <TestimonialPropertyEditor
             block={selectedBlock}
             onUpdate={handleUpdate}
-            isPreviewMode={isPreviewMode}
+            isPreviewMode={effectivePreview}
           />
         );
 
@@ -165,7 +170,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
             <ButtonPropertyEditor
               block={selectedBlock}
               onUpdate={handleUpdate}
-              isPreviewMode={isPreviewMode}
+              isPreviewMode={effectivePreview}
             />
           );
         }
@@ -175,7 +180,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
             <NavigationPropertyEditor
               block={selectedBlock}
               onUpdate={handleUpdate}
-              isPreviewMode={isPreviewMode}
+              isPreviewMode={effectivePreview}
             />
           );
         }
@@ -185,7 +190,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
             <PricingPropertyEditor
               block={selectedBlock}
               onUpdate={handleUpdate}
-              isPreviewMode={isPreviewMode}
+              isPreviewMode={effectivePreview}
             />
           );
         }
@@ -196,7 +201,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
             <QuestionPropertyEditor
               block={selectedBlock}
               onUpdate={handleUpdate}
-              isPreviewMode={isPreviewMode}
+              isPreviewMode={effectivePreview}
             />
           );
         }
@@ -208,7 +213,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
             <OptionsGridPropertyEditor
               block={selectedBlock}
               onUpdate={handleUpdate}
-              isPreviewMode={isPreviewMode}
+              isPreviewMode={effectivePreview}
             />
           );
         }
@@ -219,7 +224,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
             <OptionsPropertyEditor
               block={selectedBlock}
               onUpdate={handleUpdate}
-              isPreviewMode={isPreviewMode}
+              isPreviewMode={effectivePreview}
             />
           );
         }
@@ -234,7 +239,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
             <TextPropertyEditor
               block={selectedBlock}
               onUpdate={handleUpdate}
-              isPreviewMode={isPreviewMode}
+              isPreviewMode={effectivePreview}
             />
           );
         }
@@ -256,19 +261,36 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
   return (
     <div className="h-full flex flex-col bg-background">
       {/* ✨ HEADER MELHORADO COM INTERFACE MODERNA */}
-      <div className="flex items-center justify-between p-4 border-b bg-gradient-to-r from-background to-background/50">
+      <div className={`flex items-center justify-between p-4 border-b ${internalPreview ? 'bg-gradient-to-r from-green-50 to-green-100 border-green-200' : 'bg-gradient-to-r from-background to-background/50'}`}>
         <div className="flex items-center gap-3">
-          <div className="p-2 rounded-lg bg-primary/10">
-            <Settings className="h-4 w-4 text-primary" />
+          <div className={`p-2 rounded-lg ${internalPreview ? 'bg-green-600' : 'bg-primary/10'}`}>
+            {internalPreview ? (
+              <Eye className="h-4 w-4 text-white" />
+            ) : (
+              <Settings className="h-4 w-4 text-primary" />
+            )}
           </div>
           <div>
-            <h3 className="font-semibold text-sm">Propriedades</h3>
+            <h3 className="font-semibold text-sm">
+              {internalPreview ? 'Preview Ativo' : 'Propriedades'}
+            </h3>
             <p className="text-xs text-muted-foreground">
               {selectedBlock.type} • {selectedBlock.id.slice(0, 8)}
+              {internalPreview && ' • Preview no Canvas'}
             </p>
           </div>
         </div>
         <div className="flex items-center gap-1">
+          {/* Botão de Preview Interno */}
+          <Button
+            variant={internalPreview ? "default" : "ghost"}
+            size="sm"
+            onClick={() => setInternalPreview(!internalPreview)}
+            className={`h-8 px-2 ${internalPreview ? 'bg-green-600 hover:bg-green-700 text-white' : ''}`}
+            title={internalPreview ? "Desativar Preview" : "Ativar Preview"}
+          >
+            {internalPreview ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+          </Button>
           {onDelete && (
             <Button
               variant="ghost"
