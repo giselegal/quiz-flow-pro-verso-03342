@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 // 🎨 ESTILOS PROFISSIONAIS
 import '@/styles/editor-unified.css';
@@ -83,10 +83,26 @@ const EditorUnified: React.FC = () => {
   // Editor Context - Estado centralizado do editor
   const {
     activeStageId,
+    funnelId,
+    setFunnelId,
     blockActions: { deleteBlock, updateBlock },
     uiState: { setIsPreviewing },
-    computed: { currentBlocks },
+    computed: { currentBlocks, stageCount },
+    stageActions,
   } = useEditor();
+
+  // Total de etapas dinâmico (fallback para 21 se ainda não carregou)
+  const totalSteps = stageCount || 21;
+
+  // funnelId estável por sessão do editor
+  const funnelIdRef = useRef<string>(`editor-unified-${Date.now()}`);
+  useEffect(() => {
+    // Sincroniza com o EditorContext (apenas uma vez)
+    if (funnelId !== funnelIdRef.current) {
+      setFunnelId(funnelIdRef.current);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // 🆕 AUTO-SAVE COM DEBOUNCE - Implementação do salvamento automático
   useAutoSaveWithDebounce({
@@ -94,7 +110,7 @@ const EditorUnified: React.FC = () => {
       blocks: currentBlocks,
       activeStageId,
       currentStep,
-      funnelId: `editor-unified-${Date.now()}`,
+  funnelId: funnelIdRef.current,
       timestamp: Date.now(),
     },
     onSave: async data => {
@@ -115,7 +131,9 @@ const EditorUnified: React.FC = () => {
   const handleStepSelect = (step: number) => {
     console.log('🎯 Editor Unificado: Step selecionado:', step);
     setCurrentStep(step);
-    actions.getStepData(); // Carrega dados da etapa
+  // Sincroniza navegação com hooks e carrega blocos reais da etapa
+  actions.goToStep(step);
+  stageActions.setActiveStage?.(`step-${step}`);
   };
 
   const handleModeChange = (mode: 'edit' | 'preview' | 'test') => {
@@ -193,7 +211,7 @@ const EditorUnified: React.FC = () => {
   });
 
   return (
-    <PreviewProvider>
+    <PreviewProvider totalSteps={totalSteps} funnelId={funnelIdRef.current}>
       {/* 🎨 CONTAINER PRINCIPAL COM DESIGN PROFISSIONAL */}
       <div className="unified-editor-container min-h-screen bg-gradient-to-br from-brand-light/10 via-white to-brand-primary/5">
         {/* 🏢 HEADER PROFISSIONAL */}
@@ -218,7 +236,7 @@ const EditorUnified: React.FC = () => {
                 </div>
                 <Separator orientation="vertical" className="h-4 hidden md:block opacity-30" />
                 <div className="text-xs text-brand-text/70 font-medium">
-                  Etapa {currentStep} de 21
+                    Etapa {currentStep} de {totalSteps}
                 </div>
               </div>
             </div>
@@ -244,7 +262,7 @@ const EditorUnified: React.FC = () => {
               <div className="sidebar-header px-4 py-3 bg-brand-light/10 border-b border-brand-light/30">
                 <h2 className="text-sm font-semibold text-brand-text flex items-center gap-2">
                   <div className="w-5 h-5 bg-gradient-to-r from-brand-primary to-brand-dark rounded-md flex items-center justify-center shadow-sm">
-                    <span className="text-white text-xs font-bold">21</span>
+                    <span className="text-white text-xs font-bold">{totalSteps}</span>
                   </div>
                   Etapas do Quiz
                 </h2>
@@ -312,7 +330,7 @@ const EditorUnified: React.FC = () => {
               </div>
 
               {/* Conteúdo do Properties Panel */}
-              <div className="flex-1 overflow-hidden">
+              <div className="flex-1 overflow-auto">
                 <EditorPropertiesPanel
                   selectedBlock={currentSelectedBlock}
                   onBlockUpdate={handleBlockUpdate}
@@ -332,7 +350,7 @@ const EditorUnified: React.FC = () => {
         {/* MODAIS COM DESIGN APRIMORADO */}
         {showFunnelSettings && (
           <FunnelSettingsPanel
-            funnelId="quiz-estilo-completo"
+            funnelId={funnelIdRef.current}
             isOpen={showFunnelSettings}
             onClose={() => setShowFunnelSettings(false)}
           />
@@ -343,7 +361,7 @@ const EditorUnified: React.FC = () => {
             isOpen={showSaveTemplateModal}
             onClose={() => setShowSaveTemplateModal(false)}
             currentBlocks={currentBlocks}
-            currentFunnelId="quiz-estilo-completo"
+            currentFunnelId={funnelIdRef.current}
           />
         )}
       </div>
