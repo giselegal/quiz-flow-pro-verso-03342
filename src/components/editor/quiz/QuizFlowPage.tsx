@@ -8,7 +8,7 @@
 import { cn } from '@/lib/utils';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import { Block } from '@/types/editor';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { QuizDataManager } from './QuizDataManager';
 import { QuizNavigationBlock } from './QuizNavigationBlock';
 import { QuizScoreCalculator } from './QuizScoreCalculator';
@@ -217,6 +217,15 @@ export const QuizFlowPage: React.FC<QuizFlowPageProps> = ({
   );
 
   // ========================================
+  // Efeito de Carregamento Inicial
+  // ========================================
+  useEffect(() => {
+    if (template?.stages?.[quizState.currentStep - 1]?.blocks && onBlocksChange) {
+      onBlocksChange(quizState.currentStep, template.stages[quizState.currentStep - 1].blocks);
+    }
+  }, [quizState.currentStep, template, onBlocksChange]);
+
+  // ========================================
   // Render
   // ========================================
   return (
@@ -228,11 +237,38 @@ export const QuizFlowPage: React.FC<QuizFlowPageProps> = ({
         mode === 'production' && 'bg-white'
       )}
     >
+      {/* Header com informações do quiz */}
+      <div className="quiz-flow-header bg-white border-b border-gray-200 p-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-xl font-semibold text-gray-800">
+              Quiz Interativo - {quizState.totalSteps} Etapas
+            </h2>
+            <p className="text-sm text-gray-600 mt-1">
+              Modo: {mode} | Etapa {quizState.currentStep} de {quizState.totalSteps}
+            </p>
+          </div>
+
+          {mode === 'editor' && (
+            <div className="flex items-center gap-2">
+              <div className="text-xs text-gray-500">
+                Validação: {customConfig.enableValidation ? '✅' : '❌'}
+              </div>
+              <div className="text-xs text-gray-500">
+                Pontuação: {customConfig.enableScoring ? '✅' : '❌'}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
       {/* Sistema de Navegação */}
       <QuizNavigationBlock config={contextConfig} showDebugInfo={mode === 'editor'} />
 
       {/* Renderizador da Etapa Atual */}
-      <QuizStepRenderer blocks={currentStepData} config={contextConfig} />
+      <div className="quiz-flow-content flex-1 overflow-auto">
+        <QuizStepRenderer blocks={currentStepData} config={contextConfig} />
+      </div>
 
       {/* Gerenciador de Dados (Invisível) */}
       <QuizDataManager config={contextConfig} />
