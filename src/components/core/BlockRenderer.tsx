@@ -22,9 +22,9 @@ export const BlockRenderer: React.FC<BlockRendererProps> = ({
   onBlockUpdate,
   onBlockSelect,
   isSelected = false,
-  quizState,
+  // quizState, - removido pois não é usado
 }) => {
-  const [isEditing, setIsEditing] = useState(false);
+  const [_isEditing, setIsEditing] = useState(false);
 
   const handleClick = useCallback(() => {
     if (mode === 'editor') {
@@ -33,7 +33,7 @@ export const BlockRenderer: React.FC<BlockRendererProps> = ({
     }
   }, [mode, onBlockSelect, block.id]);
 
-  const handleUpdate = useCallback(
+  const _handleUpdate = useCallback(
     (updates: Partial<Block>) => {
       onBlockUpdate?.(block.id, updates);
     },
