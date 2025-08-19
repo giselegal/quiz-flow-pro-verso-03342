@@ -30,32 +30,6 @@ export const QuizValidationSystem: React.FC<QuizValidationSystemProps> = ({
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
   const [isValid, setIsValid] = useState(true);
 
-  // Executar validação
-  useEffect(() => {
-    if (!stepData?.blocks) return;
-
-    const errors: Record<string, string> = {};
-    let hasErrors = false;
-
-    // Validar cada bloco que precisa de validação
-    stepData.blocks.forEach((block: any) => {
-      const value = formData[block.id];
-      const blockErrors = validateBlock(block, value, rules);
-      
-      if (blockErrors.length > 0) {
-        errors[block.id] = blockErrors[0]; // Primeiro erro apenas
-        hasErrors = true;
-      }
-    });
-
-    setValidationErrors(errors);
-    setIsValid(!hasErrors);
-    
-    // Notificar resultado da validação
-    onValidationChange({ [`step_${stepData.id}`]: !hasErrors });
-
-  }, [stepData, formData, rules, onValidationChange]);
-
   // Função para validar um bloco individual
   const validateBlock = (block: any, value: any, validationRules: any): string[] => {
     const errors: string[] = [];
@@ -124,6 +98,32 @@ export const QuizValidationSystem: React.FC<QuizValidationSystemProps> = ({
 
     return errors;
   };
+
+  // Executar validação em tempo real
+  useEffect(() => {
+    if (!stepData?.blocks) return;
+
+    const errors: Record<string, string> = {};
+    let hasErrors = false;
+
+    // Validar cada bloco que precisa de validação
+    stepData.blocks.forEach((block: any) => {
+      const value = formData[block.id];
+      const blockErrors = validateBlock(block, value, rules);
+      
+      if (blockErrors.length > 0) {
+        errors[block.id] = blockErrors[0]; // Primeiro erro apenas
+        hasErrors = true;
+      }
+    });
+
+    setValidationErrors(errors);
+    setIsValid(!hasErrors);
+    
+    // Notificar resultado da validação
+    onValidationChange({ [`step_${stepData.id}`]: !hasErrors });
+
+  }, [stepData, formData, rules, onValidationChange]);
 
   // Obter status de validação para exibição
   const getValidationStatus = () => {
