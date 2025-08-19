@@ -25,7 +25,7 @@ export const QuizRenderEngineModular: React.FC<QuizRenderEngineProps> = ({
   onBlockSelect,
   selectedBlockId,
 }) => {
-  const { quizState, actions } = useQuizFlow();
+  const { actions } = useQuizFlow();
   const setAnswer = (questionId: string, answer: any) => {
     // Implementação usando ações do useQuizFlow
     actions.answerScoredQuestion(questionId, answer);
@@ -48,7 +48,11 @@ export const QuizRenderEngineModular: React.FC<QuizRenderEngineProps> = ({
     switch (block.type) {
       case 'headline':
         return (
-          <div key={block.id} className="p-4 bg-card rounded-lg">
+          <div 
+            key={commonProps.key} 
+            className={`p-4 bg-card rounded-lg ${isSelected ? 'ring-2 ring-primary' : ''}`}
+            onClick={commonProps.onClick}
+          >
             <h2 className="text-2xl font-bold">{block.content.title}</h2>
             {block.content.subtitle && (
               <p className="text-muted-foreground mt-2">{block.content.subtitle}</p>
