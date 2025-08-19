@@ -54,7 +54,6 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
   const blockIds = useMemo(() => {
     // Garantimos que todos os IDs sejam strings
     const ids = blocks.map(block => String(block.id));
-    console.log('🔄 BlockIds para SortableContext:', ids);
     return ids;
   }, [blocks]);
 
@@ -135,16 +134,6 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
     }
   };
 
-  // Handler para o fim do drag and drop
-  // A função handleDragEnd foi movida para o componente pai EditorUnified
-
-  // Propagamos os eventos de reordenação para o componente pai
-  useEffect(() => {
-    if (onBlocksReordered) {
-      console.log('🔄 UnifiedPreviewEngine: Registrando handler para reordenação de blocos');
-    }
-  }, [onBlocksReordered]);
-
   // Estilo do container principal
   const containerStyle = {
     maxWidth: viewportConfig.maxWidth,
@@ -196,8 +185,8 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
 
       {/* Container Principal do Preview */}
       <div className="preview-container bg-white min-h-screen" style={containerStyle}>
-        {/* Renderização dos Blocos com DndContext e SortableContext */}
-        <div className="blocks-container">
+        {/* Renderização dos Blocos com SortableContext */}
+        <div className="blocks-container space-y-6 py-4">
           {blocks.length === 0 ? (
             <EmptyPreviewState mode={mode} />
           ) : (
@@ -237,7 +226,7 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
  * 🏜️ Estado vazio do preview
  */
 const EmptyPreviewState: React.FC<{ mode: string }> = ({ mode }) => (
-  <div className="empty-preview-state flex flex-col items-center justify-center h-64 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50">
+  <div className="empty-preview-state flex flex-col items-center justify-center h-64 border border-gray-200 rounded-lg bg-gray-50">
     <div className="text-4xl mb-4">📱</div>
     <h3 className="text-lg font-medium text-gray-700 mb-2">Preview Vazio</h3>
     <p className="text-gray-500 text-center max-w-md">

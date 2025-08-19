@@ -40,7 +40,7 @@ export const SortablePreviewBlockWrapper: React.FC<SortablePreviewBlockWrapperPr
 
   // Estilo do wrapper com transformação de arrastar e soltar
   const wrapperStyle = {
-    outline: renderConfig?.showOutlines && isSelected ? '2px solid #3b82f6' : 'none',
+    outline: isSelected ? '2px solid rgba(59, 130, 246, 0.5)' : 'none', // Cor azul semi-transparente apenas quando selecionado
     position: 'relative' as const,
     transform: CSS.Transform.toString(transform),
     transition,
@@ -78,11 +78,13 @@ export const SortablePreviewBlockWrapper: React.FC<SortablePreviewBlockWrapperPr
       )}
 
       {/* Renderização do bloco */}
-      <div className="block-content p-4 border rounded relative">
+      <div
+        className={`block-content p-4 relative ${isSelected ? 'bg-blue-50' : isHovered ? 'bg-gray-50' : 'bg-white'}`}
+      >
         {/* Alça para arrastar (visível apenas no modo editor e quando não está previsualizando) */}
-        {!isPreviewing && renderConfig?.showOutlines && (
+        {!isPreviewing && (
           <div
-            className="drag-handle absolute top-2 right-2 w-6 h-6 flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded cursor-move z-10"
+            className="drag-handle absolute top-2 right-2 w-6 h-6 flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded cursor-move z-10 opacity-50 hover:opacity-100"
             {...listeners}
           >
             ⋮⋮
@@ -96,16 +98,16 @@ export const SortablePreviewBlockWrapper: React.FC<SortablePreviewBlockWrapperPr
       </div>
 
       {/* Indicadores visuais (modo editor) */}
-      {!isPreviewing && renderConfig?.showOutlines && (
+      {!isPreviewing && (
         <div className="absolute inset-0 pointer-events-none">
           {isSelected && (
-            <div className="absolute -top-8 left-0 bg-blue-500 text-white text-xs px-2 py-1 rounded">
-              ✏️ Editando
+            <div className="absolute -top-6 left-0 bg-blue-400 text-white text-xs px-2 py-0.5 rounded-t opacity-80">
+              ✏️ Selecionado
             </div>
           )}
 
           {isHovered && !isSelected && !isDragging && (
-            <div className="absolute inset-0 bg-blue-100 bg-opacity-20 border-2 border-blue-300 border-dashed rounded"></div>
+            <div className="absolute inset-0 border border-gray-200 rounded"></div>
           )}
         </div>
       )}
