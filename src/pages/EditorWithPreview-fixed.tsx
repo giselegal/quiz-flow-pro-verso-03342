@@ -161,17 +161,27 @@ const EditorUnifiedPageWithDragDrop: React.FC = () => {
         {/* 🎮 CONTROLS MANAGER - Barra superior unificada */}
         <EditorControlsManager
           mode="full"
-          viewportSize={viewportSize}
-          isPreviewing={isPreviewing}
-          onModeChange={handleModeChange}
-          onViewportChange={setViewportSize}
-          onPreviewToggle={setIsPreviewing}
-          onSave={() => {
-            console.log('💾 Salvamento manual acionado');
-            // TODO: Implementar save manual
+          state={{
+            isPreviewing,
+            viewportSize,
+            showGrid: false,
+            showLayers: false,
+            autoSave: true,
+            canUndo: false,
+            canRedo: false,
+            isSaving: false,
           }}
-          onUndo={() => console.log('↶ Undo')}
-          onRedo={() => console.log('↷ Redo')}
+          actions={{
+            togglePreview: () => setIsPreviewing(!isPreviewing),
+            setViewportSize,
+            toggleGrid: () => console.log('Toggle Grid'),
+            toggleLayers: () => console.log('Toggle Layers'),
+            save: () => console.log('💾 Salvamento manual acionado'),
+            undo: () => console.log('↶ Undo'),
+            redo: () => console.log('↷ Redo'),
+            exportTemplate: () => console.log('📤 Export Template'),
+            importTemplate: () => console.log('📥 Import Template'),
+          }}
           className="border-b border-stone-200/50 bg-white/80 backdrop-blur-sm"
         />
 
