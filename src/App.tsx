@@ -8,7 +8,10 @@ import { Suspense, lazy } from 'react';
 import { Route, Router, Switch } from 'wouter';
 
 // 🆕 FASE 3 - COMPONENTES DE MONITORAMENTO E DEPLOY
-import { MonitoringDashboard, useDashboardControl } from '@/components/dashboard/MonitoringDashboard';
+import {
+  MonitoringDashboard,
+  useDashboardControl,
+} from '@/components/dashboard/MonitoringDashboard';
 import { ValidationMiddleware } from '@/middleware/ValidationMiddleware';
 
 // Lazy load das páginas principais para code splitting
@@ -66,11 +69,11 @@ function App() {
             <ValidationMiddleware>
               <Suspense fallback={<LoadingFallback />}>
                 <Switch>
-                {/* 🏠 PÁGINA INICIAL */}
-                <Route path="/" component={Home} />
+                  {/* 🏠 PÁGINA INICIAL */}
+                  <Route path="/" component={Home} />
 
-                {/* 🎯 EDITOR PRINCIPAL - DESATIVADO */}
-                {/* 
+                  {/* 🎯 EDITOR PRINCIPAL - DESATIVADO */}
+                  {/* 
                 <Route path="/editor">
                   <FunnelsProvider>
                     <EditorProvider>
@@ -82,111 +85,111 @@ function App() {
                 </Route>
                 */}
 
-                {/* 🏆 EDITOR PRINCIPAL - VERSÃO FIXED AGORA É PADRÃO */}
-                <Route path="/editor">
-                  <FunnelsProvider>
-                    <EditorProvider>
-                      <Suspense fallback={<PageLoading />}>
-                        <EditorWithPreviewFixed />
-                      </Suspense>
-                    </EditorProvider>
-                  </FunnelsProvider>
-                </Route>
+                  {/* 🏆 EDITOR PRINCIPAL - VERSÃO FIXED AGORA É PADRÃO */}
+                  <Route path="/editor">
+                    <FunnelsProvider>
+                      <EditorProvider>
+                        <Suspense fallback={<PageLoading />}>
+                          <EditorWithPreviewFixed />
+                        </Suspense>
+                      </EditorProvider>
+                    </FunnelsProvider>
+                  </Route>
 
-                {/* 🏆 EDITOR FIXED - Versão com navegação limpa */}
-                <Route path="/editor-fixed">
-                  <FunnelsProvider>
-                    <EditorProvider>
-                      <Suspense fallback={<PageLoading />}>
-                        <EditorWithPreviewFixed />
-                      </Suspense>
-                    </EditorProvider>
-                  </FunnelsProvider>
-                </Route>
+                  {/* 🏆 EDITOR FIXED - Versão com navegação limpa */}
+                  <Route path="/editor-fixed">
+                    <FunnelsProvider>
+                      <EditorProvider>
+                        <Suspense fallback={<PageLoading />}>
+                          <EditorWithPreviewFixed />
+                        </Suspense>
+                      </EditorProvider>
+                    </FunnelsProvider>
+                  </Route>
 
-                {/* 🧪 EDITOR CLEAN - Versão experimental com sistema limpo */}
-                <Route path="/editor-clean">
-                  <FunnelsProvider>
-                    <EditorProvider>
-                      <Suspense fallback={<PageLoading />}>
-                        <EditorWithPreviewFixed />
-                      </Suspense>
-                    </EditorProvider>
-                  </FunnelsProvider>
-                </Route>
+                  {/* 🧪 EDITOR CLEAN - Versão experimental com sistema limpo */}
+                  <Route path="/editor-clean">
+                    <FunnelsProvider>
+                      <EditorProvider>
+                        <Suspense fallback={<PageLoading />}>
+                          <EditorWithPreviewFixed />
+                        </Suspense>
+                      </EditorProvider>
+                    </FunnelsProvider>
+                  </Route>
 
-                {/* 🎯 EDITOR MODULAR - Sistema modular das 21 etapas */}
-                <Route path="/editor-modular">
-                  <Suspense fallback={<PageLoading />}>
-                    <EditorModularPage />
-                  </Suspense>
-                </Route>
+                  {/* 🎯 EDITOR MODULAR - Sistema modular das 21 etapas */}
+                  <Route path="/editor-modular">
+                    <Suspense fallback={<PageLoading />}>
+                      <EditorModularPage />
+                    </Suspense>
+                  </Route>
 
-                {/* 📊 DASHBOARD ADMINISTRATIVO */}
-                <Route path="/admin" component={DashboardPage} />
-                <Route path="/dashboard" component={DashboardPage} />
+                  {/* 📊 DASHBOARD ADMINISTRATIVO */}
+                  <Route path="/admin" component={DashboardPage} />
+                  <Route path="/dashboard" component={DashboardPage} />
 
-                {/* 🧪 TESTE DE SINCRONIZAÇÃO */}
-                <Route path="/test-sync">
-                  <Suspense fallback={<PageLoading />}>
-                    <SyncValidationTestPage />
-                  </Suspense>
-                </Route>
+                  {/* 🧪 TESTE DE SINCRONIZAÇÃO */}
+                  <Route path="/test-sync">
+                    <Suspense fallback={<PageLoading />}>
+                      <SyncValidationTestPage />
+                    </Suspense>
+                  </Route>
 
-                {/* 🔐 AUTENTICAÇÃO */}
-                <Route path="/auth">
-                  <Suspense fallback={<PageLoading />}>
-                    <AuthPage />
-                  </Suspense>
-                </Route>
+                  {/* 🔐 AUTENTICAÇÃO */}
+                  <Route path="/auth">
+                    <Suspense fallback={<PageLoading />}>
+                      <AuthPage />
+                    </Suspense>
+                  </Route>
 
-                {/* 🎮 QUIZ */}
-                <Route path="/quiz-modular">
-                  <QuizPage />
-                </Route>
+                  {/* 🎮 QUIZ */}
+                  <Route path="/quiz-modular">
+                    <QuizPage />
+                  </Route>
 
-                {/* 🎯 QUIZ 21 ETAPAS - ROTEAMENTO INTELIGENTE */}
-                <Route path="/quiz">
-                  <Suspense fallback={<PageLoading />}>
-                    <QuizRouteController />
-                  </Suspense>
-                </Route>
+                  {/* 🎯 QUIZ 21 ETAPAS - ROTEAMENTO INTELIGENTE */}
+                  <Route path="/quiz">
+                    <Suspense fallback={<PageLoading />}>
+                      <QuizRouteController />
+                    </Suspense>
+                  </Route>
 
-                {/* 🔗 QUIZ LEGADO - SISTEMA ORIGINAL (para testes) */}
-                <Route path="/quiz/legacy">
-                  <Suspense fallback={<PageLoading />}>
-                    <ProductionQuizPage />
-                  </Suspense>
-                </Route>
+                  {/* 🔗 QUIZ LEGADO - SISTEMA ORIGINAL (para testes) */}
+                  <Route path="/quiz/legacy">
+                    <Suspense fallback={<PageLoading />}>
+                      <ProductionQuizPage />
+                    </Suspense>
+                  </Route>
 
-                {/* 🎯 QUIZ INTEGRADO - SISTEMA TEMPLATE */}
-                <Route path="/quiz-integrado">
-                  <Suspense fallback={<PageLoading />}>
-                    <QuizIntegratedPage />
-                  </Suspense>
-                </Route>
+                  {/* 🎯 QUIZ INTEGRADO - SISTEMA TEMPLATE */}
+                  <Route path="/quiz-integrado">
+                    <Suspense fallback={<PageLoading />}>
+                      <QuizIntegratedPage />
+                    </Suspense>
+                  </Route>
 
-                {/* 🚫 ROTA PADRÃO - 404 */}
-                <Route>
-                  <div className="min-h-screen flex items-center justify-center bg-background">
-                    <div className="text-center space-y-4">
-                      <h1 className="text-4xl font-bold text-[#6B4F43]">404</h1>
-                      <p className="text-xl text-[#8B7355]">Página não encontrada</p>
-                      <a
-                        href="/"
-                        className="inline-block px-6 py-3 bg-[#B89B7A] text-white rounded-lg hover:bg-[#A08968] transition-colors"
-                      >
-                        Voltar ao Início
-                      </a>
+                  {/* 🚫 ROTA PADRÃO - 404 */}
+                  <Route>
+                    <div className="min-h-screen flex items-center justify-center bg-background">
+                      <div className="text-center space-y-4">
+                        <h1 className="text-4xl font-bold text-[#6B4F43]">404</h1>
+                        <p className="text-xl text-[#8B7355]">Página não encontrada</p>
+                        <a
+                          href="/"
+                          className="inline-block px-6 py-3 bg-[#B89B7A] text-white rounded-lg hover:bg-[#A08968] transition-colors"
+                        >
+                          Voltar ao Início
+                        </a>
+                      </div>
                     </div>
-                  </div>
-                </Route>
+                  </Route>
                 </Switch>
               </Suspense>
             </ValidationMiddleware>
 
             <Toaster />
-            
+
             {/* 📊 DASHBOARD DE MONITORAMENTO - FASE 3 */}
             <MonitoringDashboard isVisible={isVisible} onToggle={toggle} />
           </div>

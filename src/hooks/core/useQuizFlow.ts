@@ -2,14 +2,34 @@ import { useQuizLogic } from '@/hooks/useQuizLogic';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import { useCallback, useEffect, useState } from 'react';
 
-interface QuizFlowProps {
+export interface QuizFlowProps {
   mode?: 'production' | 'preview' | 'editor';
   onStepChange?: (step: number) => void;
   initialStep?: number;
 }
 
+export interface QuizState {
+  currentStep: number;
+  totalSteps: number;
+  userName: string;
+  answers: any;
+  quizResult: any;
+  isLoading: boolean;
+  mode: string;
+  progress: number;
+}
+
+export interface QuizActions {
+  nextStep: () => void;
+  prevStep: () => void;
+  saveName: (name: string) => void;
+  answerScoredQuestion: (questionId: string, optionId: string) => void;
+  answerStrategy: (questionId: string, optionId: string) => void;
+  getStepData: () => any;
+}
+
 /**
- * 🎯 ORQUESTRADOR PRINCIPAL DO QUIZ
+ * 🎯 HOOK PRINCIPAL DO QUIZ FLOW
  *
  * Controla fluxo das 21 etapas usando dados reais
  * Funciona tanto em produção quanto no editor
@@ -18,7 +38,7 @@ export const useQuizFlow = ({
   mode = 'production',
   onStepChange,
   initialStep = 1,
-}: QuizFlowProps) => {
+}: QuizFlowProps = {}) => {
   const [currentStep, setCurrentStep] = useState(initialStep);
   const [userName, setUserName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -98,7 +118,7 @@ export const useQuizFlow = ({
   }, [currentStep]);
 
   // Estado atual do quiz
-  const quizState = {
+  const quizState: QuizState = {
     currentStep,
     totalSteps: 21,
     userName,
@@ -110,7 +130,7 @@ export const useQuizFlow = ({
   };
 
   // Ações disponíveis
-  const actions = {
+  const actions: QuizActions = {
     nextStep,
     prevStep,
     saveName,

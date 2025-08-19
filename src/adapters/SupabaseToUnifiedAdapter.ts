@@ -5,7 +5,7 @@
  * Simula a interface do useSupabaseQuiz usando o novo sistema unificado
  */
 
-import { useQuizFlow } from '@/components/core/QuizFlow';
+import { useQuizFlow } from '@/hooks/core/useQuizFlow';
 import { QuizAnalyticsService } from '@/services/core/QuizAnalyticsService';
 import { QuizDataService } from '@/services/core/QuizDataService';
 

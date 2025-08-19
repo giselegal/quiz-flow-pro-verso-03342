@@ -1,6 +1,6 @@
+import { useQuizFlow } from '@/hooks/core/useQuizFlow';
 import { Block } from '@/types/editor';
 import React from 'react';
-import { useQuizFlow } from './QuizFlow';
 
 interface StepData {
   blocks: Block[];
@@ -102,7 +102,7 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
     // Renderizar blocos da etapa
     return (
       <div className="step-content space-y-6">
-        {stepBlocks.map((block, index) => (
+        {stepBlocks.map((block: any, index: number) => (
           <div key={block.id || index} className="block-container">
             {/* TODO: Implementar BlockRenderer universal */}
             <div className="p-4 border rounded">

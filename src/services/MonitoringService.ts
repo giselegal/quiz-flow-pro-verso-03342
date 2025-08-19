@@ -1,13 +1,13 @@
 /**
  * 📊 SERVIÇO DE MONITORAMENTO - FASE 3
- * 
+ *
  * Sistema de monitoramento em tempo real para tracking de performance,
  * compatibilidade e health do sistema quiz
  */
 
-import { useEffect, useState } from 'react';
-import { useFeatureFlags } from '@/utils/FeatureFlagManager';
 import { useSystemValidation } from '@/testing/SystemValidation';
+import { useFeatureFlags } from '@/utils/FeatureFlagManager';
+import { useEffect, useState } from 'react';
 
 export interface SystemMetrics {
   performance: {
@@ -61,10 +61,10 @@ export class MonitoringService {
   private startMonitoring() {
     // Monitorar performance
     this.trackPerformance();
-    
+
     // Monitorar sistema
     this.trackSystemHealth();
-    
+
     // Validação periódica (apenas em produção com flag ativa)
     const flags = useFeatureFlags();
     if (flags.shouldValidateCompatibility()) {
@@ -80,21 +80,21 @@ export class MonitoringService {
   private trackPerformance() {
     // Load time
     const loadTime = performance.now();
-    
+
     // Memory usage (se disponível)
     const memoryUsage = (performance as any).memory?.usedJSHeapSize || 0;
-    
+
     // Render time (aproximado)
-    const renderTime = performance.getEntriesByType('measure')
-      .find(entry => entry.name === 'React')?.duration || 0;
+    const renderTime =
+      performance.getEntriesByType('measure').find(entry => entry.name === 'React')?.duration || 0;
 
     this.updateMetrics({
       performance: {
         loadTime,
         renderTime,
         memoryUsage,
-        bundleSize: this.estimateBundleSize()
-      }
+        bundleSize: this.estimateBundleSize(),
+      },
     });
   }
 
@@ -110,8 +110,8 @@ export class MonitoringService {
         activeSystem: flags.shouldUseUnifiedSystem() ? 'unified' : 'legacy',
         uptime: Date.now() - startTime,
         errorCount: this.getErrorCount(),
-        warningCount: this.getWarningCount()
-      }
+        warningCount: this.getWarningCount(),
+      },
     });
   }
 
@@ -123,15 +123,13 @@ export class MonitoringService {
       try {
         const { runValidationSuite } = useSystemValidation();
         const report = await runValidationSuite();
-        
+
         this.updateMetrics({
           compatibility: {
             validationScore: report.compatibilityScore,
             lastValidation: new Date().toISOString(),
-            failedTests: report.results
-              .filter(r => !r.passed)
-              .map(r => r.testName)
-          }
+            failedTests: report.results.filter(r => !r.passed).map(r => r.testName),
+          },
         });
 
         // Auto-rollback se score muito baixo
@@ -156,7 +154,7 @@ export class MonitoringService {
    */
   private updateMetrics(newMetrics: Partial<SystemMetrics>) {
     this.metrics = { ...this.metrics, ...newMetrics };
-    
+
     // Notificar listeners
     this.listeners.forEach(listener => {
       listener(this.metrics as SystemMetrics);
@@ -173,13 +171,13 @@ export class MonitoringService {
    */
   private triggerAlert(type: string, data: any) {
     console.warn(`🚨 ALERTA ${type}:`, data);
-    
+
     // Enviar para serviço de monitoramento externo (se configurado)
     if (process.env.VITE_MONITORING_ENDPOINT) {
       fetch(process.env.VITE_MONITORING_ENDPOINT, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ type, data, timestamp: new Date().toISOString() })
+        body: JSON.stringify({ type, data, timestamp: new Date().toISOString() }),
       }).catch(console.error);
     }
   }
@@ -229,27 +227,27 @@ export class MonitoringService {
    */
   trackUserEvent(event: string, data?: any) {
     console.log(`👤 Evento do usuário: ${event}`, data);
-    
+
     // Atualizar métricas de usuário
     // Implementar tracking de jornada, abandono, etc.
   }
 
   trackError(error: Error, context?: any) {
     console.error('❌ Erro capturado:', error, context);
-    
+
     // Incrementar contador de erros
     (window as any).__errorCount = ((window as any).__errorCount || 0) + 1;
-    
-    this.triggerAlert('system_error', { 
-      message: error.message, 
+
+    this.triggerAlert('system_error', {
+      message: error.message,
       stack: error.stack,
-      context 
+      context,
     });
   }
 
   trackPerformanceMark(name: string, value: number) {
     console.log(`⚡ Performance ${name}:`, value);
-    
+
     // Atualizar métricas de performance específicas
   }
 }
@@ -290,26 +288,23 @@ export const useMonitoring = () => {
     metrics,
     trackEvent,
     trackError,
-    trackPerformance
+    trackPerformance,
   };
 };
-
-/**
- * 📱 Componente de dashboard de monitoramento (desenvolvimento)
- */
-import React, { useEffect, useState } from 'react';
 
 // Capturar erros globais
 if (typeof window !== 'undefined') {
   window.onerror = (message, source, lineno, colno, error) => {
     const monitoring = MonitoringService.getInstance();
     monitoring.trackError(error || new Error(String(message)), {
-      source, lineno, colno
+      source,
+      lineno,
+      colno,
     });
     return false;
   };
 
-  window.addEventListener('unhandledrejection', (event) => {
+  window.addEventListener('unhandledrejection', event => {
     const monitoring = MonitoringService.getInstance();
     monitoring.trackError(new Error(event.reason), { type: 'unhandledrejection' });
   });

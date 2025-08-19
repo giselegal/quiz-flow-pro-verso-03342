@@ -6,7 +6,7 @@
  */
 
 import { useSupabaseCompatibleQuiz } from '@/adapters/SupabaseToUnifiedAdapter';
-import { useQuizFlow } from '@/components/core/QuizFlow';
+import { useQuizFlow } from '@/hooks/core/useQuizFlow';
 import { QuizDataService } from '@/services/core/QuizDataService';
 import { useSystemValidation } from '@/testing/SystemValidation';
 import { useFeatureFlags } from '@/utils/FeatureFlagManager';
