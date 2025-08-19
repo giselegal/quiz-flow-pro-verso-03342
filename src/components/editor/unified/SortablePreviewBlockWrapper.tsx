@@ -1,8 +1,8 @@
-import { Block } from '@/types/editor';
-import { StyleResult } from '@/types/quiz';
+import React, { useState } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import React, { useState } from 'react';
+import { Block } from '@/types/editor';
+import { StyleResult } from '@/types/quiz';
 
 interface SortablePreviewBlockWrapperProps {
   block: Block;
@@ -36,7 +36,7 @@ export const SortablePreviewBlockWrapper: React.FC<SortablePreviewBlockWrapperPr
 
   // Estilo do wrapper com transformação de arrastar e soltar
   const wrapperStyle = {
-    outline: renderConfig.showOutlines && isSelected ? '2px solid #3b82f6' : 'none',
+    outline: renderConfig?.showOutlines && isSelected ? '2px solid #3b82f6' : 'none',
     position: 'relative' as const,
     transform: CSS.Transform.toString(transform),
     transition,
@@ -48,10 +48,10 @@ export const SortablePreviewBlockWrapper: React.FC<SortablePreviewBlockWrapperPr
   const wrapperClasses = [
     'preview-block-wrapper',
     `block-${block.type}`,
-    isSelected && 'is-selected',
-    isHovered && 'is-hovered',
-    isPreviewing && 'in-preview-mode',
-    isDragging && 'is-dragging',
+    isSelected ? 'is-selected' : '',
+    isHovered ? 'is-hovered' : '',
+    isPreviewing ? 'in-preview-mode' : '',
+    isDragging ? 'is-dragging' : '',
   ]
     .filter(Boolean)
     .join(' ');
@@ -67,16 +67,16 @@ export const SortablePreviewBlockWrapper: React.FC<SortablePreviewBlockWrapperPr
       {...attributes}
     >
       {/* ID do bloco (modo debug) */}
-      {renderConfig.showIds && (
+      {renderConfig?.showIds && (
         <div className="absolute -top-6 left-0 text-xs bg-gray-800 text-white px-2 py-1 rounded z-10">
           {block.id.slice(0, 8)}...
         </div>
       )}
 
       {/* Renderização do bloco */}
-      <div className="block-content p-4 border rounded">
+      <div className="block-content p-4 border rounded relative">
         {/* Alça para arrastar (visível apenas no modo editor e quando não está previsualizando) */}
-        {!isPreviewing && renderConfig.showOutlines && (
+        {!isPreviewing && renderConfig?.showOutlines && (
           <div
             className="drag-handle absolute top-2 right-2 w-6 h-6 flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded cursor-move z-10"
             {...listeners}
@@ -92,7 +92,7 @@ export const SortablePreviewBlockWrapper: React.FC<SortablePreviewBlockWrapperPr
       </div>
 
       {/* Indicadores visuais (modo editor) */}
-      {!isPreviewing && renderConfig.showOutlines && (
+      {!isPreviewing && renderConfig?.showOutlines && (
         <div className="absolute inset-0 pointer-events-none">
           {isSelected && (
             <div className="absolute -top-8 left-0 bg-blue-500 text-white text-xs px-2 py-1 rounded">
