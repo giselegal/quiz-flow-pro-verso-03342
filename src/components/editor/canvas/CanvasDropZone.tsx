@@ -118,11 +118,13 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
 
                     // Importar dinamicamente o templateService
                     const templateServiceModule = await import('@/services/templateService');
-                    const template = await templateServiceModule.default.getTemplateByStep(stepNumber);
+                    const template =
+                      await templateServiceModule.default.getTemplateByStep(stepNumber);
 
                     if (template && template.blocks && template.blocks.length > 0) {
                       // Converter para formato do editor (método simplificado)
-                      const editorBlocks = templateServiceModule.default.convertTemplateBlocksToEditorBlocks();
+                      const editorBlocks =
+                        templateServiceModule.default.convertTemplateBlocksToEditorBlocks();
                       // Atualizar os blocos no estado (via callback para acesso direto)
                       onUpdateBlock('template-update', { blocks: editorBlocks });
                     }
@@ -150,7 +152,8 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
                 🔄 Recarregar Página
               </Button>
               <p className="text-xs text-gray-500 mt-2 max-w-md mx-auto">
-                ⚠️ As etapas estão configuradas nos templates, mas pode ser necessário recarregar a página
+                ⚠️ As etapas estão configuradas nos templates, mas pode ser necessário recarregar a
+                página
               </p>
             </div>
           )}

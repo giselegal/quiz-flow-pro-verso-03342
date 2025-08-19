@@ -8,8 +8,8 @@
  */
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import type { Block } from '../types/editor';
 import { loadStepTemplate } from '../services/templateService';
+import type { Block } from '../types/editor';
 
 interface QuizStepWithTemplate {
   stepNumber: number;
@@ -55,7 +55,7 @@ interface UseQuizStepsWithTemplatesReturn {
 
   // Template management
   loadTemplateForStep: (step: number) => Promise<Block[]>;
-  
+
   // Configuração para QuizStepsNavigation
   getNavigationConfig: () => any;
 
@@ -123,59 +123,17 @@ export const useQuizStepsWithTemplates = (
   // ========================================
   // Template Loading
   // ========================================
-  const loadTemplateForStep = useCallback(async (step: number): Promise<Block[]> => {
-    if (step < 1 || step > totalSteps) {
-      console.warn(`⚠️ loadTemplateForStep(${step}): Etapa inválida`);
-      return [];
-    }
+  const loadTemplateForStep = useCallback(
+    async (step: number): Promise<Block[]> => {
+      if (step < 1 || step > totalSteps) {
+        console.warn(`⚠️ loadTemplateForStep(${step}): Etapa inválida`);
+        return [];
+      }
 
-    try {
-      console.log(`🔄 loadTemplateForStep(${step}): Carregando template...`);
+      try {
+        console.log(`🔄 loadTemplateForStep(${step}): Carregando template...`);
 
-      // Marcar etapa como carregando
-      setStepData(prev => ({
-        ...prev,
-        [step]: {
-          ...prev[step],
-          stepNumber: step,
-          isCompleted: prev[step]?.isCompleted || false,
-          isValid: prev[step]?.isValid || true,
-          answers: prev[step]?.answers || {},
-          blocks: prev[step]?.blocks || [],
-          isLoading: true,
-        },
-      }));
-
-      const result = await loadStepTemplate(step);
-      
-      if (result && result.blocks && result.blocks.length > 0) {
-        console.log(`✅ Template carregado para etapa ${step}: ${result.blocks.length} blocos`);
-
-        // Atualizar dados da etapa
-        setStepData(prev => ({
-          ...prev,
-          [step]: {
-            ...prev[step],
-            stepNumber: step,
-            isCompleted: prev[step]?.isCompleted || false,
-            isValid: true,
-            answers: prev[step]?.answers || {},
-            blocks: result.blocks,
-            isLoading: false,
-            timestamp: Date.now(),
-          },
-        }));
-
-        // Notificar mudança se for a etapa atual
-        if (step === currentStep && onBlocksChange) {
-          onBlocksChange(step, result.blocks);
-        }
-
-        return result.blocks;
-      } else {
-        console.warn(`⚠️ Nenhum template encontrado para etapa ${step}`);
-        
-        // Marcar como não carregando, mas sem blocos
+        // Marcar etapa como carregando
         setStepData(prev => ({
           ...prev,
           [step]: {
@@ -184,6 +142,68 @@ export const useQuizStepsWithTemplates = (
             isCompleted: prev[step]?.isCompleted || false,
             isValid: prev[step]?.isValid || true,
             answers: prev[step]?.answers || {},
+            blocks: prev[step]?.blocks || [],
+            isLoading: true,
+          },
+        }));
+
+        const result = await loadStepTemplate(step);
+
+        if (result && result.blocks && result.blocks.length > 0) {
+          console.log(`✅ Template carregado para etapa ${step}: ${result.blocks.length} blocos`);
+
+          // Atualizar dados da etapa
+          setStepData(prev => ({
+            ...prev,
+            [step]: {
+              ...prev[step],
+              stepNumber: step,
+              isCompleted: prev[step]?.isCompleted || false,
+              isValid: true,
+              answers: prev[step]?.answers || {},
+              blocks: result.blocks,
+              isLoading: false,
+              timestamp: Date.now(),
+            },
+          }));
+
+          // Notificar mudança se for a etapa atual
+          if (step === currentStep && onBlocksChange) {
+            onBlocksChange(step, result.blocks);
+          }
+
+          return result.blocks;
+        } else {
+          console.warn(`⚠️ Nenhum template encontrado para etapa ${step}`);
+
+          // Marcar como não carregando, mas sem blocos
+          setStepData(prev => ({
+            ...prev,
+            [step]: {
+              ...prev[step],
+              stepNumber: step,
+              isCompleted: prev[step]?.isCompleted || false,
+              isValid: prev[step]?.isValid || true,
+              answers: prev[step]?.answers || {},
+              blocks: [],
+              isLoading: false,
+            },
+          }));
+
+          return [];
+        }
+      } catch (error) {
+        console.error(`❌ Erro ao carregar template da etapa ${step}:`, error);
+
+        // Marcar erro
+        setStepData(prev => ({
+          ...prev,
+          [step]: {
+            ...prev[step],
+            stepNumber: step,
+            isCompleted: prev[step]?.isCompleted || false,
+            isValid: false,
+            answers: prev[step]?.answers || {},
             blocks: [],
             isLoading: false,
           },
@@ -191,32 +211,19 @@ export const useQuizStepsWithTemplates = (
 
         return [];
       }
-    } catch (error) {
-      console.error(`❌ Erro ao carregar template da etapa ${step}:`, error);
-      
-      // Marcar erro
-      setStepData(prev => ({
-        ...prev,
-        [step]: {
-          ...prev[step],
-          stepNumber: step,
-          isCompleted: prev[step]?.isCompleted || false,
-          isValid: false,
-          answers: prev[step]?.answers || {},
-          blocks: [],
-          isLoading: false,
-        },
-      }));
-      
-      return [];
-    }
-  }, [totalSteps, currentStep, onBlocksChange]);
+    },
+    [totalSteps, currentStep, onBlocksChange]
+  );
 
   // ========================================
   // Auto-load templates
   // ========================================
   useEffect(() => {
-    if (autoLoadTemplates && !stepData[currentStep]?.blocks.length && !stepData[currentStep]?.isLoading) {
+    if (
+      autoLoadTemplates &&
+      !stepData[currentStep]?.blocks.length &&
+      !stepData[currentStep]?.isLoading
+    ) {
       console.log(`🚀 Auto-carregando template para etapa ${currentStep}`);
       loadTemplateForStep(currentStep);
     }
@@ -261,7 +268,7 @@ export const useQuizStepsWithTemplates = (
     try {
       const nextStep = Math.min(currentStep + 1, totalSteps);
       console.log(`🧭 Navegando: ${currentStep} → ${nextStep}`);
-      
+
       setCurrentStep(nextStep);
 
       // Auto-carregar template da próxima etapa se não estiver carregado
@@ -281,7 +288,7 @@ export const useQuizStepsWithTemplates = (
     try {
       const prevStep = Math.max(currentStep - 1, 1);
       console.log(`🧭 Navegando: ${currentStep} → ${prevStep}`);
-      
+
       setCurrentStep(prevStep);
 
       // Auto-carregar template da etapa anterior se não estiver carregado

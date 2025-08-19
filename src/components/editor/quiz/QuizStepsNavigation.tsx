@@ -188,10 +188,7 @@ export const QuizStepsNavigation: React.FC<QuizStepsNavigationProps> = ({
                 {stepInfo.type}
               </Badge>
 
-              <Badge
-                variant="secondary"
-                className="text-xs"
-              >
+              <Badge variant="secondary" className="text-xs">
                 {stepInfo.category}
               </Badge>
 
@@ -248,16 +245,13 @@ export const QuizStepsNavigation: React.FC<QuizStepsNavigationProps> = ({
           {/* Indicadores Adicionais */}
           <div className="flex items-center justify-between text-xs text-gray-500">
             <span>
-              {stepInfo.isMainQuiz 
+              {stepInfo.isMainQuiz
                 ? `Questão ${quizState.currentStep - 1} de 10`
-                : stepInfo.isStrategic 
-                ? `Estratégica ${quizState.currentStep - 12} de 6`
-                : stepInfo.category
-              }
+                : stepInfo.isStrategic
+                  ? `Estratégica ${quizState.currentStep - 12} de 6`
+                  : stepInfo.category}
             </span>
-            <span>
-              {progressData.completedSteps} etapas concluídas
-            </span>
+            <span>{progressData.completedSteps} etapas concluídas</span>
           </div>
         </div>
 
@@ -277,12 +271,17 @@ export const QuizStepsNavigation: React.FC<QuizStepsNavigationProps> = ({
             {/* Tipo de Requisito */}
             {stepInfo.requirements.type !== 'unknown' && (
               <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
-                {stepInfo.requirements.type === 'multiple-choice' ? 'Múltipla escolha' :
-                 stepInfo.requirements.type === 'single-choice' ? 'Escolha única' :
-                 stepInfo.requirements.type === 'text-input' ? 'Campo de texto' :
-                 stepInfo.requirements.type === 'transition' ? 'Transição' :
-                 stepInfo.requirements.type === 'result-offer' ? 'Resultado' :
-                 stepInfo.requirements.type}
+                {stepInfo.requirements.type === 'multiple-choice'
+                  ? 'Múltipla escolha'
+                  : stepInfo.requirements.type === 'single-choice'
+                    ? 'Escolha única'
+                    : stepInfo.requirements.type === 'text-input'
+                      ? 'Campo de texto'
+                      : stepInfo.requirements.type === 'transition'
+                        ? 'Transição'
+                        : stepInfo.requirements.type === 'result-offer'
+                          ? 'Resultado'
+                          : stepInfo.requirements.type}
               </span>
             )}
           </div>
@@ -320,7 +319,7 @@ function getStepTitle(step: number): string {
   // Títulos baseados no QUIZ_STYLE_21_STEPS_TEMPLATE
   const titles: Record<number, string> = {
     1: 'Descubra seu Estilo',
-    2: 'Questão 1 - Roupa Favorita', 
+    2: 'Questão 1 - Roupa Favorita',
     3: 'Questão 2 - Personalidade',
     4: 'Questão 3 - Visual',
     5: 'Questão 4 - Detalhes',
