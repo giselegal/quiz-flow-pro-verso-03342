@@ -64,7 +64,7 @@ export const QuizScoreCalculator: React.FC<QuizScoreCalculatorProps> = ({
 
         const stepNumber = parseInt(stepKey.replace('step_', ''));
         const stepTemplate = template?.stages?.[stepNumber - 1];
-        
+
         if (!stepTemplate) return;
 
         // Marcar etapa como completa
@@ -126,14 +126,19 @@ export const QuizScoreCalculator: React.FC<QuizScoreCalculatorProps> = ({
 
   // Calcular estatísticas
   const getStatistics = () => {
-    const totalQuestions = template?.stages?.reduce((total: number, stage: any) => {
-      return total + (stage.blocks?.filter((block: any) => 
-        block.type === 'quiz-question-block' && block.props?.correctAnswer
-      ).length || 0);
-    }, 0) || 0;
+    const totalQuestions =
+      template?.stages?.reduce((total: number, stage: any) => {
+        return (
+          total +
+          (stage.blocks?.filter(
+            (block: any) => block.type === 'quiz-question-block' && block.props?.correctAnswer
+          ).length || 0)
+        );
+      }, 0) || 0;
 
     const totalSteps = template?.stages?.length || 0;
-    const accuracyRate = totalQuestions > 0 ? (scoreBreakdown.correctAnswers / totalQuestions) * 100 : 0;
+    const accuracyRate =
+      totalQuestions > 0 ? (scoreBreakdown.correctAnswers / totalQuestions) * 100 : 0;
     const completionRate = totalSteps > 0 ? (scoreBreakdown.completedSteps / totalSteps) * 100 : 0;
 
     return {
@@ -168,21 +173,13 @@ export const QuizScoreCalculator: React.FC<QuizScoreCalculatorProps> = ({
         {/* Estatísticas principais */}
         <div className="grid grid-cols-2 gap-3 mb-4">
           <div className="bg-green-50 p-3 rounded-lg text-center border border-green-200">
-            <div className="text-lg font-bold text-green-600">
-              {scoreBreakdown.correctAnswers}
-            </div>
-            <div className="text-xs text-green-700">
-              Respostas Corretas
-            </div>
+            <div className="text-lg font-bold text-green-600">{scoreBreakdown.correctAnswers}</div>
+            <div className="text-xs text-green-700">Respostas Corretas</div>
           </div>
-          
+
           <div className="bg-blue-50 p-3 rounded-lg text-center border border-blue-200">
-            <div className="text-lg font-bold text-blue-600">
-              {scoreBreakdown.completedSteps}
-            </div>
-            <div className="text-xs text-blue-700">
-              Etapas Completas
-            </div>
+            <div className="text-lg font-bold text-blue-600">{scoreBreakdown.completedSteps}</div>
+            <div className="text-xs text-blue-700">Etapas Completas</div>
           </div>
         </div>
 
@@ -200,7 +197,7 @@ export const QuizScoreCalculator: React.FC<QuizScoreCalculatorProps> = ({
               />
             </div>
           </div>
-          
+
           <div>
             <div className="flex justify-between text-xs text-gray-600 mb-1">
               <span>Progresso Geral</span>
@@ -221,16 +218,22 @@ export const QuizScoreCalculator: React.FC<QuizScoreCalculatorProps> = ({
           <div className="space-y-1 text-xs">
             <div className="flex justify-between">
               <span>Etapas concluídas:</span>
-              <span className="font-medium">+{scoreBreakdown.completedSteps * (scoringRules.pointsPerCompletedStep || 5)} pts</span>
+              <span className="font-medium">
+                +{scoreBreakdown.completedSteps * (scoringRules.pointsPerCompletedStep || 5)} pts
+              </span>
             </div>
             <div className="flex justify-between">
               <span>Respostas corretas:</span>
-              <span className="font-medium">+{scoreBreakdown.correctAnswers * (scoringRules.pointsPerCorrectAnswer || 10)} pts</span>
+              <span className="font-medium">
+                +{scoreBreakdown.correctAnswers * (scoringRules.pointsPerCorrectAnswer || 10)} pts
+              </span>
             </div>
             {scoreBreakdown.bonusPoints > 0 && (
               <div className="flex justify-between">
                 <span>Bônus especiais:</span>
-                <span className="font-medium text-purple-600">+{scoreBreakdown.bonusPoints} pts</span>
+                <span className="font-medium text-purple-600">
+                  +{scoreBreakdown.bonusPoints} pts
+                </span>
               </div>
             )}
             <div className="border-t border-gray-200 pt-1 mt-1 flex justify-between font-medium">
@@ -250,19 +253,25 @@ export const QuizScoreCalculator: React.FC<QuizScoreCalculatorProps> = ({
               <div
                 key={index}
                 className={`flex justify-between p-2 rounded text-xs ${
-                  detail.type === 'correct' ? 'bg-green-50 border border-green-200' :
-                  detail.type === 'bonus' ? 'bg-purple-50 border border-purple-200' :
-                  'bg-blue-50 border border-blue-200'
+                  detail.type === 'correct'
+                    ? 'bg-green-50 border border-green-200'
+                    : detail.type === 'bonus'
+                      ? 'bg-purple-50 border border-purple-200'
+                      : 'bg-blue-50 border border-blue-200'
                 }`}
               >
                 <span className="flex-1 truncate mr-2" title={detail.description}>
                   {detail.description}
                 </span>
-                <span className={`font-semibold ${
-                  detail.type === 'correct' ? 'text-green-700' :
-                  detail.type === 'bonus' ? 'text-purple-700' :
-                  'text-blue-700'
-                }`}>
+                <span
+                  className={`font-semibold ${
+                    detail.type === 'correct'
+                      ? 'text-green-700'
+                      : detail.type === 'bonus'
+                        ? 'text-purple-700'
+                        : 'text-blue-700'
+                  }`}
+                >
                   +{detail.points}
                 </span>
               </div>

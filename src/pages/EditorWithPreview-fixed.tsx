@@ -208,7 +208,13 @@ const EditorUnifiedPageWithDragDrop: React.FC = () => {
                 viewportSize={viewportSize}
                 onBlockSelect={handleBlockSelect}
                 onBlockUpdate={handleBlockUpdate}
-                mode={editorMode === 'edit' ? 'editor' : editorMode === 'preview' ? 'preview' : 'production'}
+                mode={
+                  editorMode === 'edit'
+                    ? 'editor'
+                    : editorMode === 'preview'
+                      ? 'preview'
+                      : 'production'
+                }
                 className="mx-auto"
               />
             </div>

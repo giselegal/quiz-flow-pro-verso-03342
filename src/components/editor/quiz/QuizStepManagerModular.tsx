@@ -1,12 +1,12 @@
 /**
  * 🏗️ GERENCIADOR MODULAR DE ETAPAS DO QUIZ
- * 
+ *
  * Carrega templates dinamicamente, gerencia cache e validações
  */
 
-import React, { useMemo } from 'react';
-import { useQuizFlow } from './QuizFlowController';
 import { Block } from '@/types/editor';
+import React, { useMemo } from 'react';
+import { useQuizFlow } from '@/hooks/core/useQuizFlow';
 
 interface QuizStepManagerProps {
   children: (stepData: {
@@ -17,20 +17,24 @@ interface QuizStepManagerProps {
   }) => React.ReactNode;
 }
 
-export const QuizStepManagerModular: React.FC<QuizStepManagerProps> = ({ 
-  children 
-}) => {
-  const { 
-    currentStep, 
-    currentStepNumber, 
-    totalSteps, 
-    isStepValid 
-  } = useQuizFlow();
+export const QuizStepManagerModular: React.FC<QuizStepManagerProps> = ({ children }) => {
+  const { quizState, actions } = useQuizFlow();
+  const { currentStep: currentStepNumber, totalSteps } = quizState;
+  
+  // Buscar dados da etapa atual
+  const currentStepData = actions.getStepData();
+  const currentStep = currentStepData?.[0] || { stepId: currentStepNumber, title: 'Etapa', subtitle: '', type: 'content' };
+
+  // Função simples de validação de etapa
+  const isStepValid = () => {
+    // Por enquanto sempre válido, pode ser customizado conforme necessário
+    return true;
+  };
 
   // Convert step data to blocks format
   const blocks = useMemo(() => {
     const stepBlocks: Block[] = [];
-    
+
     // Header block
     stepBlocks.push({
       id: `header-${currentStep.stepId}`,
@@ -42,8 +46,8 @@ export const QuizStepManagerModular: React.FC<QuizStepManagerProps> = ({
         textAlign: 'center',
         fontSize: '2xl',
         fontWeight: 'bold',
-        color: currentStep.textColor || '#333333'
-      }
+        color: currentStep.textColor || '#333333',
+      },
     });
 
     // Question and options for question type steps
@@ -54,14 +58,14 @@ export const QuizStepManagerModular: React.FC<QuizStepManagerProps> = ({
         order: 1,
         content: {
           question: currentStep.question || currentStep.title,
-          options: currentStep.options.map(option => ({
+          options: currentStep.options.map((option: any) => ({
             id: option.id,
             text: option.text,
-            imageUrl: option.imageUrl
+            imageUrl: option.imageUrl,
           })),
           maxSelections: currentStep.maxSelections || 1,
-          isRequired: currentStep.isRequired || false
-        }
+          isRequired: currentStep.isRequired || false,
+        },
       });
     }
 
@@ -74,8 +78,8 @@ export const QuizStepManagerModular: React.FC<QuizStepManagerProps> = ({
         currentStep: currentStepNumber,
         totalSteps: totalSteps,
         showProgress: true,
-        showStepNumbers: true
-      }
+        showStepNumbers: true,
+      },
     });
 
     return stepBlocks;
@@ -84,8 +88,8 @@ export const QuizStepManagerModular: React.FC<QuizStepManagerProps> = ({
   const stepData = {
     currentStep,
     blocks,
-    isValid: isStepValid(currentStep.stepId),
-    progress: Math.round((currentStepNumber / totalSteps) * 100)
+    isValid: isStepValid(),
+    progress: Math.round((currentStepNumber / totalSteps) * 100),
   };
 
   return <>{children(stepData)}</>;

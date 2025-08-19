@@ -132,16 +132,13 @@ interface ModernSidebarProps {
 // ========================================
 // COMPONENT
 // ========================================
-export const ModernSidebar: React.FC<ModernSidebarProps> = ({
-  className,
-  isCollapsed = false,
-}) => {
+export const ModernSidebar: React.FC<ModernSidebarProps> = ({ className, isCollapsed = false }) => {
   return (
     <div
       className={cn(
-        "flex flex-col h-full bg-white border-r border-gray-200",
-        "transition-all duration-300 ease-in-out",
-        isCollapsed ? "w-16" : "w-80",
+        'flex flex-col h-full bg-white border-r border-gray-200',
+        'transition-all duration-300 ease-in-out',
+        isCollapsed ? 'w-16' : 'w-80',
         className
       )}
     >
@@ -151,7 +148,7 @@ export const ModernSidebar: React.FC<ModernSidebarProps> = ({
           <div className="w-8 h-8 bg-brand-primary rounded-lg flex items-center justify-center">
             <Type size={18} className="text-white" />
           </div>
-          
+
           {!isCollapsed && (
             <div>
               <h2 className="font-semibold text-gray-900">Componentes</h2>
@@ -169,19 +166,16 @@ export const ModernSidebar: React.FC<ModernSidebarProps> = ({
               {/* Category Header */}
               {!isCollapsed && (
                 <div className="mb-3">
-                  <h3 className="text-sm font-medium text-gray-700 mb-2">
-                    {category.label}
-                  </h3>
+                  <h3 className="text-sm font-medium text-gray-700 mb-2">{category.label}</h3>
                   {categoryIndex > 0 && <Separator className="mb-3" />}
                 </div>
               )}
 
               {/* Components Grid */}
-              <div className={cn(
-                "space-y-2",
-                isCollapsed && "flex flex-col items-center space-y-3"
-              )}>
-                {category.components.map((component) => (
+              <div
+                className={cn('space-y-2', isCollapsed && 'flex flex-col items-center space-y-3')}
+              >
+                {category.components.map(component => (
                   <DraggableComponentItem
                     key={component.type}
                     blockType={component.type}
@@ -206,8 +200,8 @@ export const ModernSidebar: React.FC<ModernSidebarProps> = ({
               <span className="font-medium">Dica:</span>
             </div>
             <p className="leading-relaxed">
-              Arraste os componentes para o canvas para construir seu quiz interativo.
-              Use as alças de arrastar para reordenar.
+              Arraste os componentes para o canvas para construir seu quiz interativo. Use as alças
+              de arrastar para reordenar.
             </p>
           </div>
         </div>

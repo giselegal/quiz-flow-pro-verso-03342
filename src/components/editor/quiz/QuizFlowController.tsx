@@ -1,6 +1,6 @@
 /**
  * 🎮 QUIZ FLOW CONTROLLER - STUB
- * 
+ *
  * Arquivo temporário para resolver dependências de import
  * Deve ser implementado futuramente ou ter suas referências removidas
  */
