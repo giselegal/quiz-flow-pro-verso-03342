@@ -263,10 +263,6 @@ export const EditorProvider: React.FC<{
         // Tentar carregar via FunnelsContext primeiro
         if (currentFunnelId && typeof window !== 'undefined') {
           try {
-            // Importar o contexto de funnels dinamicamente
-            const funnelsModule = await import('../context/FunnelsContext');
-            
-            // NOTE: Aqui seria ideal ter uma função global para acessar o contexto
             // Por agora, vamos tentar através do templateService
             const templateService = (await import('../services/templateService')).default;
             const stepNumber = parseInt(activeStageId.replace('step-', ''));
@@ -503,7 +499,7 @@ export const EditorProvider: React.FC<{
           const stepNumber = parseInt(id.replace('step-', ''));
 
           if (stepNumber && stepNumber >= 1 && stepNumber <= 21) {
-            const { templateService } = await import('../services/templateService');
+            const templateService = (await import('../services/templateService')).default;
             const template = await templateService.getTemplateByStep(stepNumber);
 
             if (template && template.blocks && template.blocks.length > 0) {
@@ -611,7 +607,7 @@ export const EditorProvider: React.FC<{
         console.log('🔄 Loading template by step:', step);
         try {
           // Importar o serviço de template dinamicamente para evitar problemas de circular dependency
-          const { templateService } = await import('../services/templateService');
+          const templateService = (await import('../services/templateService')).default;
 
           // Carregar o template
           const template = await templateService.getTemplateByStep(step);
