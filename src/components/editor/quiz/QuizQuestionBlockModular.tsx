@@ -94,7 +94,7 @@ export const QuizQuestionBlockModular: React.FC<QuizQuestionBlockModularProps> =
   onSelectionChange,
   onQuestionComplete,
   isEditing = false,
-  isSelected = false,
+  isSelected: _isSelected = false, // Não utilizado, mas necessário para compatibilidade
   onUpdate,
   config = {
     mode: 'preview',
@@ -138,7 +138,7 @@ export const QuizQuestionBlockModular: React.FC<QuizQuestionBlockModularProps> =
 
     selectionStyle = 'border',
     selectedColor = theme.primaryColor,
-    hoverColor = '#EBF5FF',
+    hoverColor: _hoverColor = '#EBF5FF', // Não utilizado, mas necessário para compatibilidade
     gridGap = 16,
     responsiveColumns = true,
 

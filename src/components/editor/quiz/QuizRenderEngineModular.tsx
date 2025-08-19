@@ -1,11 +1,11 @@
 /**
  * 🎨 MOTOR DE RENDERIZAÇÃO MODULAR
- * 
+ *
  * Renderiza blocos com suporte para editor, preview e produção
  */
 
-import React from 'react';
 import { Block } from '@/types/editor';
+import React from 'react';
 import { useQuizFlow } from './QuizFlowController';
 
 import { QuizNavigationBlock } from './QuizNavigationBlock';
@@ -23,7 +23,7 @@ export const QuizRenderEngineModular: React.FC<QuizRenderEngineProps> = ({
   mode = 'editor',
   onBlockUpdate,
   onBlockSelect,
-  selectedBlockId
+  selectedBlockId,
 }) => {
   const { setAnswer } = useQuizFlow();
 
@@ -35,8 +35,10 @@ export const QuizRenderEngineModular: React.FC<QuizRenderEngineProps> = ({
       key: block.id,
       isSelected,
       isEditing: isEditable,
-      onUpdate: onBlockUpdate ? (updates: Partial<Block>) => onBlockUpdate(block.id, updates) : undefined,
-      onClick: onBlockSelect ? () => onBlockSelect(block.id) : undefined
+      onUpdate: onBlockUpdate
+        ? (updates: Partial<Block>) => onBlockUpdate(block.id, updates)
+        : undefined,
+      onClick: onBlockSelect ? () => onBlockSelect(block.id) : undefined,
     };
 
     switch (block.type) {
@@ -76,12 +78,25 @@ export const QuizRenderEngineModular: React.FC<QuizRenderEngineProps> = ({
 
       case 'quiz-navigation':
         return (
-          <QuizNavigationBlock config={{}} />
+          <QuizNavigationBlock
+            config={{
+              mode: 'preview',
+              quizState: { currentStep: 1, totalSteps: 21, sessionData: {}, stepValidation: {} },
+              navigation: {
+                onNext: () => {},
+                onPrevious: () => {},
+                onStepJump: () => {},
+                canGoNext: true,
+                canGoBack: false,
+              },
+              theme: { primaryColor: '#B89B7A', textColor: '#432818', backgroundColor: '#FEFEFE' },
+            }}
+          />
         );
 
       default:
         return (
-          <div 
+          <div
             key={block.id}
             className="p-4 border-2 border-dashed border-muted-foreground/30 rounded-lg"
           >
@@ -95,9 +110,7 @@ export const QuizRenderEngineModular: React.FC<QuizRenderEngineProps> = ({
 
   return (
     <div className="quiz-render-engine space-y-6">
-      {blocks
-        .sort((a, b) => a.order - b.order)
-        .map(renderBlock)}
+      {blocks.sort((a, b) => a.order - b.order).map(renderBlock)}
     </div>
   );
 };

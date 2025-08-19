@@ -56,7 +56,8 @@ export const QuizStepRenderer: React.FC<QuizStepRendererProps> = ({
   onAddBlock,
   onDeleteBlock,
 }) => {
-  const { mode, quizState, dataManager, theme } = config;
+  const { mode, quizState, theme } = config;
+  const _dataManager = config.dataManager; // eslint-disable-line @typescript-eslint/no-unused-vars
   const isEditorMode = mode === 'editor';
 
   // ========================================
@@ -174,7 +175,11 @@ export const QuizStepRenderer: React.FC<QuizStepRendererProps> = ({
                     size="sm"
                     variant="outline"
                     className="h-6 w-6 p-0 bg-white"
-                    onClick={() => handleBlockUpdate(block.id, { isEditing: true })}
+                    onClick={() =>
+                      handleBlockUpdate(block.id, {
+                        properties: { ...block.properties, isEditing: true },
+                      })
+                    }
                   >
                     <Edit3 className="h-3 w-3" />
                   </Button>
@@ -333,39 +338,30 @@ const QuizIntroHeaderRenderer: React.FC<any> = ({ block, config }) => {
 };
 
 // Options Grid
-const OptionsGridRenderer: React.FC<any> = ({ block, config }) => {
+const OptionsGridRenderer: React.FC<any> = ({ block }) => {
   return (
     <OptionsGridBlock
       block={block}
-      config={config}
       isSelected={false}
       onPropertyChange={() => {}}
+      properties={{}} // Adicionar propriedade obrigatória
     />
   );
 };
 
 // Form Container
-const FormContainerRenderer: React.FC<any> = ({ block, config }) => {
-  return (
-    <FormContainerBlock
-      block={block}
-      config={config}
-      isSelected={false}
-      onPropertyChange={() => {}}
-    />
-  );
+const FormContainerRenderer: React.FC<any> = ({ block }) => {
+  return <FormContainerBlock block={block} isSelected={false} onPropertyChange={() => {}} />;
 };
 
 // Button
-const ButtonRenderer: React.FC<any> = ({ block, config }) => {
-  return (
-    <ButtonBlock block={block} config={config} isSelected={false} onPropertyChange={() => {}} />
-  );
+const ButtonRenderer: React.FC<any> = ({ block }) => {
+  return <ButtonBlock block={block} isSelected={false} onPropertyChange={() => {}} />;
 };
 
 // Text
-const TextRenderer: React.FC<any> = ({ block, config }) => {
-  return <TextBlock block={block} config={config} isSelected={false} onPropertyChange={() => {}} />;
+const TextRenderer: React.FC<any> = ({ block }) => {
+  return <TextBlock content={block.content} isSelected={false} />;
 };
 
 // Placeholders para outros componentes

@@ -204,7 +204,7 @@ export const QuizDataManager: React.FC<QuizDataManagerProps> = ({
       const eventData = {
         step: quizState.currentStep,
         timestamp: Date.now(),
-        sessionId: sessionData.sessionId || 'anonymous',
+        sessionId: quizState.sessionData.sessionId || 'anonymous',
         hasAnswers: Object.keys(quizState.userAnswers).length > 0,
       };
 

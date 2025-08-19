@@ -11,7 +11,8 @@ interface QuizQuestionBlockProps {
 }
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
-const getMarginClass = (value, type) => {
+const getMarginClass = (value: string | number | undefined, type: string) => {
+  if (value === undefined) return '';
   const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
   if (isNaN(numValue) || numValue === 0) return '';
@@ -58,8 +59,8 @@ const getMarginClass = (value, type) => {
 const QuizQuestionBlock: React.FC<QuizQuestionBlockProps> = ({
   content = {},
   isSelected = false,
-  isEditing = false,
-  onUpdate,
+  isEditing: _isEditing = false, // Não utilizado, mas necessário para compatibilidade
+  onUpdate: _onUpdate, // Não utilizado, mas necessário para compatibilidade
   onSelect,
   className,
 }) => {
