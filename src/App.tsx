@@ -7,6 +7,10 @@ import { FunnelsProvider } from '@/context/FunnelsContext';
 import { Suspense, lazy } from 'react';
 import { Route, Router, Switch } from 'wouter';
 
+// 🆕 FASE 3 - COMPONENTES DE MONITORAMENTO E DEPLOY
+import { MonitoringDashboard, useDashboardControl } from '@/components/dashboard/MonitoringDashboard';
+import { ValidationMiddleware } from '@/middleware/ValidationMiddleware';
+
 // Lazy load das páginas principais para code splitting
 const Home = lazy(() => import('./pages/Home'));
 const AuthPage = lazy(() => import('./pages/AuthPage'));
@@ -15,6 +19,9 @@ const EditorWithPreviewFixed = lazy(() => import('./pages/EditorWithPreview-fixe
 const EditorModularPage = lazy(() => import('./pages/editor-modular'));
 const ProductionQuizPage = lazy(() => import('./pages/ProductionQuizPage'));
 const QuizIntegratedPage = lazy(() => import('./pages/QuizIntegratedPage'));
+
+// 🆕 SISTEMA UNIFICADO - FASE 3
+const QuizRouteController = lazy(() => import('./components/routing/QuizRouteController'));
 
 // Import direto para evitar problemas de lazy loading
 import QuizPage from './pages/Quiz';
@@ -44,15 +51,21 @@ const PageLoading = () => (
  * ✅ EditorWithPreviewFixed - Versão com navegação limpa (/editor-fixed, /editor-clean)
  * ✅ Sistema de lazy loading
  * ✅ Providers centralizados
+ * ✅ FASE 3: Dashboard de monitoramento e validação automática
  */
 function App() {
+  // Hook do dashboard de monitoramento
+  const { isVisible, toggle } = useDashboardControl();
+
   return (
     <ThemeProvider defaultTheme="light" storageKey="quiz-quest-theme">
       <AuthProvider>
         <Router>
           <div className="min-h-screen bg-background">
-            <Suspense fallback={<LoadingFallback />}>
-              <Switch>
+            {/* 🛡️ MIDDLEWARE DE VALIDAÇÃO - FASE 3 */}
+            <ValidationMiddleware>
+              <Suspense fallback={<LoadingFallback />}>
+                <Switch>
                 {/* 🏠 PÁGINA INICIAL */}
                 <Route path="/" component={Home} />
 
@@ -132,8 +145,15 @@ function App() {
                   <QuizPage />
                 </Route>
 
-                {/* 🎯 QUIZ 21 ETAPAS - PRODUÇÃO */}
+                {/* 🎯 QUIZ 21 ETAPAS - ROTEAMENTO INTELIGENTE */}
                 <Route path="/quiz">
+                  <Suspense fallback={<PageLoading />}>
+                    <QuizRouteController />
+                  </Suspense>
+                </Route>
+
+                {/* 🔗 QUIZ LEGADO - SISTEMA ORIGINAL (para testes) */}
+                <Route path="/quiz/legacy">
                   <Suspense fallback={<PageLoading />}>
                     <ProductionQuizPage />
                   </Suspense>
@@ -161,10 +181,14 @@ function App() {
                     </div>
                   </div>
                 </Route>
-              </Switch>
-            </Suspense>
+                </Switch>
+              </Suspense>
+            </ValidationMiddleware>
 
             <Toaster />
+            
+            {/* 📊 DASHBOARD DE MONITORAMENTO - FASE 3 */}
+            <MonitoringDashboard isVisible={isVisible} onToggle={toggle} />
           </div>
         </Router>
       </AuthProvider>
