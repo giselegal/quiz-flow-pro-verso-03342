@@ -50,6 +50,17 @@ import { IntroBlock } from "../components/steps/step01/IntroBlock";
 import QuizRenderer from "../components/quiz/QuizRenderer";
 import QuizQuestionBlock from "../components/editor/quiz/QuizQuestionBlock";
 
+// Componentes Adicionais do Template 21 Etapas
+import FormContainerBlock from "../components/editor/blocks/FormContainerBlock";
+import ResultHeaderInlineBlock from "../components/editor/blocks/ResultHeaderInlineBlock";
+import StyleCardInlineBlock from "../components/editor/blocks/StyleCardInlineBlock";
+import SecondaryStylesInlineBlock from "../components/blocks/inline/SecondaryStylesInlineBlock";
+import HeroSectionBlock from "../components/blocks/offer/HeroSectionBlock";
+import BenefitsInlineBlock from "../components/blocks/inline/BenefitsInlineBlock";
+import TestimonialsInlineBlock from "../components/blocks/inline/TestimonialsInlineBlock";
+import GuaranteeInlineBlock from "../components/editor/blocks/GuaranteeInlineBlock";
+import QuizOfferCTAInlineBlock from "../components/blocks/inline/QuizOfferCTAInlineBlock";
+
 // === REGISTRY PRINCIPAL - SEM DUPLICATAS ===
 
 export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> = {
@@ -65,6 +76,17 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> =
   "quiz-header": QuizIntroHeaderBlock, // Alias
   "step01-intro": IntroBlock,
   "form-input": FormInputBlock,
+
+  // ✅ NOVOS COMPONENTES DO TEMPLATE 21 ETAPAS
+  "form-container": FormContainerBlock,
+  "result-header-inline": ResultHeaderInlineBlock,
+  "style-card-inline": StyleCardInlineBlock,
+  "secondary-styles": SecondaryStylesInlineBlock,
+  "hero": HeroSectionBlock,
+  "benefits": BenefitsInlineBlock,
+  "testimonials": TestimonialsInlineBlock,
+  "guarantee": GuaranteeInlineBlock,
+  "quiz-offer-cta-inline": QuizOfferCTAInlineBlock,
 
   // Interactive Elements
   "button-inline": ButtonInlineFixed,
