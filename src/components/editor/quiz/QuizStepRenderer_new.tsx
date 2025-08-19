@@ -4,25 +4,12 @@
  */
 
 import {
-  closestCenter,
-  DndContext,
-  DragEndEvent,
-  DragOverlay,
-  DragStartEvent,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from '@dnd-kit/core';
-import {
-  arrayMove,
   SortableContext,
-  sortableKeyboardCoordinates,
-  useSortable,
   verticalListSortingStrategy,
+  useSortable,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo } from 'react';
 
 // UI Components
 import { Button } from '@/components/ui/button';
@@ -382,26 +369,12 @@ export const QuizStepRenderer: React.FC<QuizStepRendererProps> = ({
     </div>
   );
 
-  // Envolver com DndContext se for modo editor
+  // Envolver com SortableContext se for modo editor
   if (isEditorMode) {
     return (
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragStart={handleDragStart}
-        onDragEnd={handleDragEnd}
-      >
-        <SortableContext items={blockIds} strategy={verticalListSortingStrategy}>
-          {content}
-        </SortableContext>
-        <DragOverlay>
-          {activeId ? (
-            <div className="opacity-50 bg-white p-4 rounded-lg shadow-lg border">
-              Arrastando bloco: {activeId}
-            </div>
-          ) : null}
-        </DragOverlay>
-      </DndContext>
+      <SortableContext items={blockIds} strategy={verticalListSortingStrategy}>
+        {content}
+      </SortableContext>
     );
   }
 

@@ -9,7 +9,7 @@ import {
   useSortable,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo } from 'react';
 
 // UI Components
 import { Button } from '@/components/ui/button';
@@ -198,7 +198,7 @@ export const QuizStepRenderer: React.FC<QuizStepRendererProps> = ({
     },
   },
   className,
-  onBlocksReorder,
+  onBlocksReorder, // unused - DndContext foi movido para componente pai
 }) => {
   // ========================================
   // Estado e Hooks
