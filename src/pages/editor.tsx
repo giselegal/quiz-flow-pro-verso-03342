@@ -3,13 +3,14 @@ import { EditorProvider } from '@/context/EditorContext';
 import { FunnelsProvider } from '@/context/FunnelsContext';
 import { EditorQuizProvider } from '@/context/EditorQuizContext';
 import { Quiz21StepsProvider } from '@/components/quiz/Quiz21StepsProvider';
-import SchemaDrivenEditorResponsive from '@/components/editor/SchemaDrivenEditorResponsive';
+import { QuizFlowController } from '@/components/editor/quiz/QuizFlowController';
+import { QuizFlowPageModular } from '@/components/editor/quiz/QuizFlowPageModular';
 
 /**
- * 🎯 PÁGINA PRINCIPAL DO EDITOR
+ * 🎯 PÁGINA PRINCIPAL DO EDITOR - ARQUITETURA MODULAR
  * 
- * Integra todos os contextos necessários e o layout responsivo
- * com as 21 etapas do quiz de estilo pessoal
+ * Nova arquitetura modular completa para gerenciamento
+ * das 21 etapas do quiz com preview idêntico à produção
  */
 const EditorPage: React.FC = () => {
   return (
@@ -17,9 +18,14 @@ const EditorPage: React.FC = () => {
       <EditorProvider>
         <EditorQuizProvider>
           <Quiz21StepsProvider debug={true}>
-            <div className="h-screen w-full overflow-hidden bg-background">
-              <SchemaDrivenEditorResponsive />
-            </div>
+            <QuizFlowController 
+              initialStep={1}
+              mode="editor"
+            >
+              <div className="h-screen w-full overflow-hidden bg-background">
+                <QuizFlowPageModular />
+              </div>
+            </QuizFlowController>
           </Quiz21StepsProvider>
         </EditorQuizProvider>
       </EditorProvider>

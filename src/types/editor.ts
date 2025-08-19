@@ -93,6 +93,7 @@ export type BlockType =
 
   // Blocos de quiz
   | 'quiz-intro-header'
+  | 'quiz-navigation'
   | 'quiz-header'
   | 'quiz-start-page-inline'
   | 'quiz-question-inline'
