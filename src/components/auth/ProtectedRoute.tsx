@@ -1,15 +1,24 @@
+import React from 'react';
 import { useAuth } from '@/context/AuthContext';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { useLocation } from 'wouter';
 import { Route } from 'wouter';
 
 interface ProtectedRouteProps {
   path: string;
   component: React.ComponentType<any>;
+  requireAuth?: boolean;
 }
 
-export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ path, component: Component }) => {
+export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ 
+  path, 
+  component: Component,
+  requireAuth = true 
+}) => {
   console.log('🔒 ProtectedRoute: INICIANDO para path:', path);
 
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
+  const [, setLocation] = useLocation();
 
   // Allow access during development (multiple checks for robustness)
   const isDevelopment =
@@ -18,15 +27,14 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ path, component:
     process.env.NODE_ENV === 'development' ||
     window.location.hostname === 'localhost';
 
-  const shouldAllowAccess = user || isDevelopment;
-
   // Enhanced debug log
   console.log('🔒 ProtectedRoute Debug DETALHADO:', {
     path,
     user: !!user,
     userDetails: user ? 'Logado' : 'Não logado',
     isDevelopment,
-    shouldAllowAccess,
+    requireAuth,
+    loading,
     hostname: window.location.hostname,
     env: import.meta.env.MODE,
     devCheck: import.meta.env.DEV,
@@ -34,19 +42,39 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ path, component:
     componentName: Component.name || 'Unknown',
   });
 
-  if (!shouldAllowAccess) {
-    console.log('❌ ProtectedRoute: ACESSO NEGADO para', path);
-    return (
-      <Route path={path}>
-        <div>Acesso negado. Faça login.</div>
-      </Route>
-    );
-  }
-
-  console.log('✅ ProtectedRoute: ACESSO PERMITIDO para', path, '- Carregando componente');
   return (
     <Route path={path}>
-      <Component />
+      {() => {
+        // Show loading while checking authentication
+        if (requireAuth && loading) {
+          return (
+            <div className="min-h-screen flex items-center justify-center">
+              <div className="text-center">
+                <LoadingSpinner size="lg" color="#B89B7A" className="mx-auto" />
+                <p style={{ color: '#6B4F43' }} className="mt-4">
+                  Verificando autenticação...
+                </p>
+              </div>
+            </div>
+          );
+        }
+
+        // If authentication is required and user is not logged in (and not in dev)
+        if (requireAuth && !user && !isDevelopment) {
+          console.log('❌ ProtectedRoute: ACESSO NEGADO para', path, '- Redirecionando para /auth');
+          setLocation('/auth');
+          return (
+            <div className="min-h-screen flex items-center justify-center">
+              <div className="text-center">
+                <p style={{ color: '#6B4F43' }}>Redirecionando para login...</p>
+              </div>
+            </div>
+          );
+        }
+
+        console.log('✅ ProtectedRoute: ACESSO PERMITIDO para', path, '- Carregando componente');
+        return <Component />;
+      }}
     </Route>
   );
 };

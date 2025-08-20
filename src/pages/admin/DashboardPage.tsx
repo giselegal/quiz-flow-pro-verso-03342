@@ -11,6 +11,7 @@ const ABTestPage = lazy(() => import('./ABTestPage'));
 const SettingsPage = lazy(() => import('./SettingsPage'));
 const CreativesPage = lazy(() => import('./CreativesPage'));
 const AnalyticsPage = lazy(() => import('./AnalyticsPage'));
+const MetricsPage = lazy(() => import('./MetricsPage'));
 const EditorPage = lazy(() => import('./EditorPage'));
 // Templates page is temporarily disabled - will be recreated later
 // const TemplatesPage = lazy(() => import('./TemplatesPage'));
@@ -47,6 +48,7 @@ const DashboardPage: React.FC = () => {
               {/* Rotas do dashboard */}
               <Route path="/admin/quiz" component={QuizPage} />
               <Route path="/admin/funis" component={FunnelPanelPage} />
+              <Route path="/admin/metricas" component={MetricsPage} />
               <Route path="/admin/ab-tests" component={ABTestPage} />
               <Route path="/admin/settings" component={SettingsPage} />
               <Route path="/admin/criativos" component={CreativesPage} />

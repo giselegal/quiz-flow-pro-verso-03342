@@ -39,6 +39,12 @@ const sidebarItems = [
     description: 'Gerenciar funis de vendas',
   },
   {
+    title: 'Métricas',
+    href: '/admin/metricas',
+    icon: TrendingUp,
+    description: 'Análise de performance',
+  },
+  {
     title: 'Templates',
     href: '/admin/templates',
     icon: FileText,
@@ -64,7 +70,7 @@ const sidebarItems = [
   {
     title: 'Criativos',
     href: '/admin/criativos',
-    icon: TrendingUp,
+    icon: BarChart3,
   },
   {
     title: 'Analytics',
