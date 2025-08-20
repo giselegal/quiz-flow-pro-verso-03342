@@ -196,7 +196,7 @@ export const QuizStepRenderer: React.FC<QuizStepRendererProps> = ({
     },
   },
   className,
-  onBlocksReorder, // unused - DndContext foi movido para componente pai
+  // unused parameter
 }) => {
   // ========================================
   // Dados Derivados

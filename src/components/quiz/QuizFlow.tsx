@@ -28,15 +28,19 @@ export const QuizFlow: React.FC<QuizFlowProps> = ({ className = '', onComplete }
     nextStep,
     previousStep,
     // goToStep, // unused for now
-    canAdvance,
-    isFirstStep,
-    isLastStep,
+    canGoNext: canAdvance,
+    // canGoPrevious, // unused for now
+    navigationState,
   } = useQuizNavigation(state.currentStepNumber, state.totalSteps, stepNumber => {
     updateState({
       currentStepNumber: stepNumber,
       currentStepId: `step-${stepNumber}`,
     });
   });
+
+  // Derivar propriedades do navigationState
+  const isFirstStep = navigationState.currentStep === 1;
+  const isLastStep = navigationState.currentStep === state.totalSteps;
 
   const {
     // validateStep, // unused for now
@@ -240,7 +244,7 @@ export const QuizFlow: React.FC<QuizFlowProps> = ({ className = '', onComplete }
       )}
 
       {/* Debug Info (development only) */}
-      {process.env.NODE_ENV === 'development' && (
+      {import.meta.env.MODE === 'development' && (
         <div className="fixed top-4 right-4 bg-black text-white p-4 rounded text-xs max-w-sm">
           <h4 className="font-bold mb-2">Debug Info</h4>
           <p>Step: {state.currentStepId}</p>

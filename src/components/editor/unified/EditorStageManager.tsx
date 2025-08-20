@@ -64,7 +64,7 @@ interface StepMetadata {
 export const EditorStageManager: React.FC<EditorStageManagerProps> = ({
   mode,
   onStepSelect,
-  onStepDataUpdate,
+  // onStepDataUpdate, // unused parameter
   onModeChange,
   initialStep = 1,
   className,
