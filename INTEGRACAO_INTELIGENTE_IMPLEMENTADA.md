@@ -7,11 +7,13 @@ A **integração inteligente** entre `QuizStateController` e `EditorContext` foi
 ## ✅ Funcionalidades Implementadas
 
 ### 1. **useEditor Import Opcional**
+
 ```typescript
 const editor = useEditor(); // opcional, graceful degradation
 ```
 
 ### 2. **Interface QuizFlowContextType Estendida**
+
 ```typescript
 interface QuizFlowContextType {
   // ... propriedades existentes
@@ -22,22 +24,27 @@ interface QuizFlowContextType {
 ```
 
 ### 3. **Função loadStepIntoEditor**
+
 ```typescript
-const loadStepIntoEditor = useCallback((stepNumber: number) => {
-  if (!editor || !syncWithEditor) return;
-  
-  try {
-    const blocks = loadStepBlocks(stepNumber);
-    if (blocks.length > 0) {
-      editor.blockActions.replaceBlocks(blocks);
+const loadStepIntoEditor = useCallback(
+  (stepNumber: number) => {
+    if (!editor || !syncWithEditor) return;
+
+    try {
+      const blocks = loadStepBlocks(stepNumber);
+      if (blocks.length > 0) {
+        editor.blockActions.replaceBlocks(blocks);
+      }
+    } catch (error) {
+      console.warn('Erro ao carregar blocos da etapa:', error);
     }
-  } catch (error) {
-    console.warn('Erro ao carregar blocos da etapa:', error);
-  }
-}, [editor, syncWithEditor]);
+  },
+  [editor, syncWithEditor]
+);
 ```
 
 ### 4. **Auto-Sync Effect**
+
 ```typescript
 useEffect(() => {
   if (syncWithEditor && currentStepNumber) {
@@ -47,35 +54,46 @@ useEffect(() => {
 ```
 
 ### 5. **Context Value Atualizado**
+
 ```typescript
-const contextValue = useMemo(() => ({
-  // ... valores existentes
-  syncWithEditor,
-  setSyncWithEditor,
-  loadStepIntoEditor,
-}), [/* dependencies */]);
+const contextValue = useMemo(
+  () => ({
+    // ... valores existentes
+    syncWithEditor,
+    setSyncWithEditor,
+    loadStepIntoEditor,
+  }),
+  [
+    /* dependencies */
+  ]
+);
 ```
 
 ## 🎯 Benefícios da Integração
 
 ### **🔄 Auto-Sincronização**
+
 - Carregamento automático de blocos quando a etapa muda
 - Sincronização configurável (pode ser habilitada/desabilitada)
 
 ### **🛡️ Graceful Degradation**
+
 - Funciona mesmo sem `EditorContext` disponível
 - Não quebra quando `useEditor()` retorna `undefined`
 
 ### **⚡ Performance Otimizada**
+
 - `useCallback` para evitar re-renderizações desnecessárias
 - `useMemo` para context value
 - Sync opcional para controle de performance
 
 ### **🔧 API Consistente**
+
 - Usa `blockActions.replaceBlocks` (API consolidada)
 - Mantém compatibilidade com código existente
 
 ### **🎛️ Controle Inteligente**
+
 - `syncWithEditor` state para controle fino
 - Função `loadStepIntoEditor` para carregamento manual
 
@@ -95,20 +113,24 @@ const contextValue = useMemo(() => ({
 ## 🏗️ Estrutura da Solução
 
 ### **Arquivo Principal**
+
 - `src/components/editor/quiz/QuizStateController.tsx`
 
 ### **Dependências**
+
 - `src/context/EditorContext.tsx` (opcional)
 - `src/services/quiz21StepsRenderer.ts` (loadStepBlocks)
 - `src/templates/quiz21StepsComplete.ts` (QUIZ_21_STEPS_COMPLETE)
 
 ### **API Consolidada**
+
 - `blockActions.replaceBlocks()` (substituiu dispatch direto)
 - `reorderBlocks()` (para drag-and-drop)
 
 ## 🚀 Como Usar
 
 ### **No Modo Editor (com sync)**
+
 ```typescript
 const { syncWithEditor, setSyncWithEditor, loadStepIntoEditor } = useQuizFlow();
 
@@ -120,6 +142,7 @@ loadStepIntoEditor(5);
 ```
 
 ### **No Modo Standalone (sem editor)**
+
 ```typescript
 const { currentStepNumber, nextStep, previousStep } = useQuizFlow();
 // Funciona normalmente sem editor context
