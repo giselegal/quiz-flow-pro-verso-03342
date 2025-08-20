@@ -33,9 +33,6 @@ export const SortablePreviewBlockWrapper: React.FC<SortablePreviewBlockWrapperPr
 }) => {
   const [isHovered, setIsHovered] = useState(false);
 
-  // OVERRIDE: Forçar debug = false sempre
-  const forceDebugOff = false;
-
   // Configuração do useSortable do dnd-kit
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: block.id,
@@ -114,8 +111,19 @@ export const SortablePreviewBlockWrapper: React.FC<SortablePreviewBlockWrapperPr
           /* Modo normal - renderizar componente real */
           <div className="relative">
             <div className="absolute top-2 left-2 z-20 bg-green-500 text-white text-xs px-2 py-1 rounded">
-              Renderizando: {block.type}
+              🎯 VISUAL MODE: {block.type}
             </div>
+            {(() => {
+              console.log('🔥 SortablePreviewBlockWrapper - Renderizando componente:', {
+                blockType: block.type,
+                blockId: block.id,
+                debug: false,
+                isSelected,
+                blockContent: block.content,
+                blockProperties: block.properties
+              });
+              return null;
+            })()}
             <UniversalBlockRenderer
               block={block}
               isSelected={isSelected}

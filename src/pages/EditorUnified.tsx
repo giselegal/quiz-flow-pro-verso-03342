@@ -25,6 +25,9 @@ import {
     UnifiedQuizStepLoader,
 } from '@/components/editor/unified';
 
+// 🧩 COMPONENTES DE DRAG & DROP
+import { ComponentDragItem } from '@/components/editor/components/ComponentDragItem';
+
 // 🚀 PREVIEW SYSTEM
 import { PreviewProvider } from '@/contexts/PreviewContext';
 
@@ -182,19 +185,53 @@ const EditorUnified: React.FC = () => {
   // Handler para arrastar e soltar (drag and drop)
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
-    if (over && active.id !== over.id) {
-      // Encontrar os índices dos blocos (convertendo IDs para string se necessário)
+    
+    if (!over) return;
+
+    const activeData = active.data.current;
+    const overData = over.data.current;
+
+    console.log('🔄 Drag End:', { 
+      activeId: active.id, 
+      overId: over.id,
+      activeData,
+      overData 
+    });
+
+    // Caso 1: Arrastar componente do painel para o canvas
+    if (activeData?.type === 'component' && overData?.type === 'dropzone') {
+      const componentType = activeData.componentType;
+      const targetPosition = overData.position || currentBlocks.length;
+      
+      console.log('🧩 Adicionando novo componente:', { componentType, targetPosition });
+      
+      // Criar novo bloco com valores padrão
+      const newBlock: Block = {
+        id: `${componentType}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        type: componentType,
+        content: getDefaultContentForType(componentType),
+        properties: getDefaultPropertiesForType(componentType),
+        order: targetPosition,
+        stageId: currentStep,
+      };
+
+      // Adicionar bloco ao editor
+      addBlock(newBlock);
+      setSelectedBlockId(newBlock.id);
+      
+      return;
+    }
+
+    // Caso 2: Reordenação de blocos existentes
+    if (active.id !== over.id) {
       const activeId = String(active.id);
       const overId = String(over.id);
-      
-      console.log('🔄 Drag End:', { activeId, overId });
       
       const oldIndex = currentBlocks.findIndex(block => block.id === activeId);
       const newIndex = currentBlocks.findIndex(block => block.id === overId);
 
       if (oldIndex !== -1 && newIndex !== -1) {
         console.log('🔄 Reordenando blocos:', { oldIndex, newIndex });
-        // Usar reorderBlocks do EditorContext
         reorderBlocks(oldIndex, newIndex);
       } else {
         console.warn('⚠️ Não foi possível encontrar os índices dos blocos:', { 
@@ -202,6 +239,43 @@ const EditorUnified: React.FC = () => {
         });
       }
     }
+  };
+
+  // Função para obter conteúdo padrão por tipo de componente
+  const getDefaultContentForType = (type: string) => {
+    const defaults: Record<string, any> = {
+      'text-inline': { text: 'Clique para editar o texto' },
+      'heading-inline': { text: 'Novo Título', level: 'h2' },
+      'button-inline': { text: 'Botão', variant: 'primary' },
+      'image-display-inline': { src: '', alt: 'Nova imagem' },
+      'quiz-intro-header': { 
+        title: 'Título do Quiz', 
+        subtitle: 'Subtítulo',
+        description: 'Descrição do quiz' 
+      },
+      'form-input': { 
+        title: 'Campo', 
+        placeholder: 'Digite aqui...',
+        fieldType: 'text',
+        required: false 
+      },
+      'quiz-question': { 
+        question: 'Nova pergunta?',
+        options: ['Opção 1', 'Opção 2'] 
+      },
+    };
+    return defaults[type] || {};
+  };
+
+  // Função para obter propriedades padrão por tipo de componente
+  const getDefaultPropertiesForType = (type: string) => {
+    const defaults: Record<string, any> = {
+      'text-inline': { fontSize: 16, color: '#333333' },
+      'heading-inline': { fontSize: 24, fontWeight: 'bold', color: '#1a1a1a' },
+      'button-inline': { backgroundColor: '#007bff', color: '#ffffff', padding: 12 },
+      'image-display-inline': { width: 'auto', height: 'auto' },
+    };
+    return defaults[type] || {};
   };
 
   // Handler para reordenação direta (ex: via preview engine)
@@ -343,7 +417,7 @@ const EditorUnified: React.FC = () => {
           {/* 🎯 LAYOUT PRINCIPAL PROFISSIONAL */}
           <div className="flex h-[calc(100vh-120px)]">
             {/* 🎪 STAGE MANAGER - Painel lateral esquerdo */}
-            <aside className="unified-editor-sidebar w-80 bg-white/90 backdrop-blur-sm border-r border-brand-light/30 shadow-sm animate-slide-in-left">
+            <aside className="unified-editor-sidebar w-72 bg-white/90 backdrop-blur-sm border-r border-brand-light/30 shadow-sm animate-slide-in-left">
               <div className="h-full flex flex-col">
                 {/* Header do painel */}
                 <div className="sidebar-header px-4 py-3 bg-brand-light/10 border-b border-brand-light/30">
@@ -367,6 +441,68 @@ const EditorUnified: React.FC = () => {
                     onModeChange={handleModeChange}
                     className="h-full"
                   />
+                </div>
+              </div>
+            </aside>
+
+            {/* 🧩 NOVA COLUNA - Componentes Disponíveis */}
+            <aside className="components-sidebar w-80 bg-white/95 backdrop-blur-sm border-r border-brand-light/30 shadow-sm">
+              <div className="h-full flex flex-col">
+                {/* Header dos Componentes */}
+                <div className="sidebar-header px-4 py-3 bg-gradient-to-r from-blue-50 to-purple-50 border-b border-brand-light/30">
+                  <h2 className="text-sm font-semibold text-brand-text flex items-center gap-2">
+                    <div className="w-5 h-5 bg-gradient-to-r from-blue-500 to-purple-600 rounded-md flex items-center justify-center shadow-sm">
+                      <span className="text-white text-xs">🧩</span>
+                    </div>
+                    Componentes
+                  </h2>
+                  <p className="text-xs text-brand-text/60 mt-1 font-medium">
+                    Arraste para adicionar ao canvas
+                  </p>
+                </div>
+
+                {/* Lista de Componentes */}
+                <div className="flex-1 overflow-auto p-4 space-y-4">
+                  {/* Categorias de Componentes */}
+                  
+                  {/* Básicos */}
+                  <div>
+                    <h3 className="text-xs font-semibold text-gray-600 mb-3 uppercase tracking-wide flex items-center gap-2">
+                      📝 Básicos
+                    </h3>
+                    <div className="space-y-2">
+                      <ComponentDragItem type="text-inline" label="Texto" icon="📝" />
+                      <ComponentDragItem type="heading-inline" label="Título" icon="📰" />
+                      <ComponentDragItem type="button-inline" label="Botão" icon="🔘" />
+                      <ComponentDragItem type="image-display-inline" label="Imagem" icon="🖼️" />
+                    </div>
+                  </div>
+
+                  {/* Quiz */}
+                  <div>
+                    <h3 className="text-xs font-semibold text-gray-600 mb-3 uppercase tracking-wide flex items-center gap-2">
+                      🎯 Quiz
+                    </h3>
+                    <div className="space-y-2">
+                      <ComponentDragItem type="quiz-intro-header" label="Cabeçalho Quiz" icon="🎯" />
+                      <ComponentDragItem type="form-input" label="Campo Input" icon="✏️" />
+                      <ComponentDragItem type="quiz-question" label="Pergunta" icon="❓" />
+                      <ComponentDragItem type="quiz-options" label="Opções" icon="☑️" />
+                    </div>
+                  </div>
+
+                  {/* Design */}
+                  <div>
+                    <h3 className="text-xs font-semibold text-gray-600 mb-3 uppercase tracking-wide flex items-center gap-2">
+                      🎨 Design
+                    </h3>
+                    <div className="space-y-2">
+                      <ComponentDragItem type="style-card-inline" label="Card" icon="🎴" />
+                      <ComponentDragItem type="separator-inline" label="Divisor" icon="➖" />
+                      <ComponentDragItem type="spacer-inline" label="Espaço" icon="⬜" />
+                      <ComponentDragItem type="container-inline" label="Container" icon="📦" />
+                    </div>
+                  </div>
                 </div>
               </div>
             </aside>
