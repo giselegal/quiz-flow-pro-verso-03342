@@ -3,6 +3,7 @@ import { StyleResult } from '@/types/quiz';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import React, { useState } from 'react';
+import UniversalBlockRenderer from '../blocks/UniversalBlockRenderer';
 
 interface SortablePreviewBlockWrapperProps {
   block: Block;
@@ -12,6 +13,8 @@ interface SortablePreviewBlockWrapperProps {
   primaryStyle?: StyleResult;
   onClick: () => void;
   onUpdate: (updates: Partial<Block>) => void;
+  onSelect?: (blockId: string) => void;
+  debug?: boolean;
 }
 
 /**
@@ -25,6 +28,8 @@ export const SortablePreviewBlockWrapper: React.FC<SortablePreviewBlockWrapperPr
   // primaryStyle, // unused
   onClick,
   // onUpdate, // unused
+  onSelect,
+  debug = false,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
 
@@ -77,9 +82,9 @@ export const SortablePreviewBlockWrapper: React.FC<SortablePreviewBlockWrapperPr
         </div>
       )}
 
-      {/* Renderização do bloco */}
+      {/* Renderização do bloco usando UniversalBlockRenderer */}
       <div
-        className={`block-content p-4 relative ${isSelected ? 'bg-blue-50' : isHovered ? 'bg-gray-50' : 'bg-white'}`}
+        className={`block-content relative ${isSelected ? 'bg-blue-50' : isHovered ? 'bg-gray-50' : 'bg-white'}`}
       >
         {/* Alça para arrastar (visível apenas no modo editor e quando não está previsualizando) */}
         {!isPreviewing && (
@@ -91,10 +96,28 @@ export const SortablePreviewBlockWrapper: React.FC<SortablePreviewBlockWrapperPr
           </div>
         )}
 
-        <div className="text-sm text-gray-600 mb-2">
-          {block.type} - {block.id.slice(0, 8)}
-        </div>
-        <div className="text-gray-800">{JSON.stringify((block as any).data || {}, null, 2)}</div>
+        {/* Renderizar componente real usando UniversalBlockRenderer */}
+        {debug ? (
+          /* Modo debug - mostrar informações do bloco */
+          <div className="p-4">
+            <div className="text-sm text-gray-600 mb-2">
+              {block.type} - {block.id.slice(0, 8)}
+            </div>
+            <div className="text-gray-800 text-xs overflow-auto max-h-32">
+              {JSON.stringify(block.content || block.properties || {}, null, 2)}
+            </div>
+          </div>
+        ) : (
+          /* Modo normal - renderizar componente real */
+          <UniversalBlockRenderer
+            block={block}
+            isSelected={isSelected}
+            onClick={() => {
+              onClick();
+              onSelect?.(block.id);
+            }}
+          />
+        )}
       </div>
 
       {/* Indicadores visuais (modo editor) */}
