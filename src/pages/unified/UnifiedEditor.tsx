@@ -17,7 +17,6 @@ export const UnifiedEditor: React.FC<UnifiedEditorProps> = ({
   className = '',
 }) => {
   const [mode, setMode] = useState<'editor' | 'preview'>('editor');
-  const [selectedBlock, setSelectedBlock] = useState<string | null>(null);
 
   const toggleMode = () => {
     setMode(mode === 'editor' ? 'preview' : 'editor');
@@ -75,8 +74,8 @@ export const UnifiedEditor: React.FC<UnifiedEditorProps> = ({
                 ))}
               </div>
 
-              {/* Propriedades do bloco selecionado */}
-              {selectedBlock && (
+              {/* Propriedades do bloco selecionado - removido pois selectedBlock não existe */}
+              {false && ( // Comentado para evitar erro
                 <div className="mt-6">
                   <h3 className="font-semibold mb-4">Propriedades</h3>
                   <div className="space-y-3">

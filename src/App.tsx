@@ -16,19 +16,19 @@ import { ValidationMiddleware } from '@/middleware/ValidationMiddleware';
 
 // Lazy load das páginas principais para code splitting
 const Home = lazy(() => import('./pages/Home'));
-const AuthPage = lazy(() => import('./pages/AuthPage'));
+// const AuthPage = lazy(() => import('./pages/AuthPage')); // Removido - página não existe
 // const EditorWithPreview = lazy(() => import('./pages/EditorWithPreview')); // DESATIVADO
 const EditorWithPreviewFixed = lazy(() => import('./pages/EditorWithPreview-fixed'));
 const EditorModularPage = lazy(() => import('./pages/editor-modular'));
 const EditorUnified = lazy(() => import('./pages/EditorUnified')); // 🆕 EDITOR UNIFICADO
-const ProductionQuizPage = lazy(() => import('./pages/ProductionQuizPage'));
+// const ProductionQuizPage = lazy(() => import('./pages/ProductionQuizPage')); // Removido
 const QuizIntegratedPage = lazy(() => import('./pages/QuizIntegratedPage'));
 
 // 🆕 SISTEMA UNIFICADO - FASE 3
-const QuizRouteController = lazy(() => import('./components/routing/QuizRouteController'));
+// const QuizRouteController = lazy(() => import('./components/routing/QuizRouteController')); // Removido
 
 // Import direto para evitar problemas de lazy loading
-import QuizPage from './pages/Quiz';
+// import QuizPage from './pages/Quiz'; // Removido - página não existe mais
 
 // Lazy load das páginas admin
 const DashboardPage = lazy(() => import('./pages/admin/DashboardPage'));
@@ -148,31 +148,31 @@ function App() {
                     </Suspense>
                   </Route>
 
-                  {/* 🔐 AUTENTICAÇÃO */}
-                  <Route path="/auth">
+                  {/* 🔐 AUTENTICAÇÃO - removido pois página não existe */}
+                  {/* <Route path="/auth">
                     <Suspense fallback={<PageLoading />}>
                       <AuthPage />
                     </Suspense>
-                  </Route>
+                  </Route> */}
 
-                  {/* 🎮 QUIZ */}
-                  <Route path="/quiz-modular">
+                  {/* 🎮 QUIZ - removido pois página não existe mais */}
+                  {/* <Route path="/quiz-modular">
                     <QuizPage />
-                  </Route>
+                  </Route> */}
 
-                  {/* 🎯 QUIZ 21 ETAPAS - ROTEAMENTO INTELIGENTE */}
-                  <Route path="/quiz">
+                  {/* 🎯 QUIZ 21 ETAPAS - removido pois controlador não existe */}
+                  {/* <Route path="/quiz">
                     <Suspense fallback={<PageLoading />}>
                       <QuizRouteController />
                     </Suspense>
-                  </Route>
+                  </Route> */}
 
-                  {/* 🔗 QUIZ LEGADO - SISTEMA ORIGINAL (para testes) */}
-                  <Route path="/quiz/legacy">
+                  {/* 🔗 QUIZ LEGADO - removido pois página não existe */}
+                  {/* <Route path="/quiz/legacy">
                     <Suspense fallback={<PageLoading />}>
                       <ProductionQuizPage />
                     </Suspense>
-                  </Route>
+                  </Route> */}
 
                   {/* 🎯 QUIZ INTEGRADO - SISTEMA TEMPLATE */}
                   <Route path="/quiz-integrado">
