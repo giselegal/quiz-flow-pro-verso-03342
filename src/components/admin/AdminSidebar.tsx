@@ -45,6 +45,12 @@ const sidebarItems = [
     description: 'Análise de performance',
   },
   {
+    title: 'Configuração',
+    href: '/admin/configuracao',
+    icon: Settings,
+    description: 'SEO, Domínio, Pixel, UTM',
+  },
+  {
     title: 'Templates',
     href: '/admin/templates',
     icon: FileText,
@@ -65,7 +71,7 @@ const sidebarItems = [
     title: 'Configurações',
     href: '/admin/settings',
     icon: Settings,
-    description: 'Pixel, UTM, URL, Tokens API',
+    description: 'Configurações avançadas',
   },
   {
     title: 'Criativos',
