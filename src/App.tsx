@@ -4,6 +4,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { AuthProvider } from '@/context/AuthContext';
 import { EditorProvider } from '@/context/EditorContext';
 import { FunnelsProvider } from '@/context/FunnelsContext';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { Suspense, lazy } from 'react';
 import { Route, Router, Switch } from 'wouter';
 
@@ -16,7 +17,7 @@ import { ValidationMiddleware } from '@/middleware/ValidationMiddleware';
 
 // Lazy load das páginas principais para code splitting
 const Home = lazy(() => import('./pages/Home'));
-// const AuthPage = lazy(() => import('./pages/AuthPage')); // Removido - página não existe
+const AuthPage = lazy(() => import('./pages/AuthPage'));
 // const EditorWithPreview = lazy(() => import('./pages/EditorWithPreview')); // DESATIVADO
 const EditorWithPreviewFixed = lazy(() => import('./pages/EditorWithPreview-fixed'));
 const EditorModularPage = lazy(() => import('./pages/editor-modular'));
@@ -137,9 +138,16 @@ function App() {
                     </FunnelsProvider>
                   </Route>
 
-                  {/* 📊 DASHBOARD ADMINISTRATIVO */}
-                  <Route path="/admin" component={DashboardPage} />
-                  <Route path="/dashboard" component={DashboardPage} />
+                  {/* 📊 DASHBOARD ADMINISTRATIVO - PROTECTED */}
+                  <ProtectedRoute path="/admin" component={DashboardPage} requireAuth={true} />
+                  <ProtectedRoute path="/admin/:rest*" component={DashboardPage} requireAuth={true} />
+                  
+                  {/* Legacy dashboard route */}
+                  <Route path="/dashboard">
+                    <Suspense fallback={<PageLoading />}>
+                      <DashboardPage />
+                    </Suspense>
+                  </Route>
 
                   {/* 🧪 TESTE DE SINCRONIZAÇÃO */}
                   <Route path="/test-sync">
@@ -148,12 +156,12 @@ function App() {
                     </Suspense>
                   </Route>
 
-                  {/* 🔐 AUTENTICAÇÃO - removido pois página não existe */}
-                  {/* <Route path="/auth">
+                  {/* 🔐 AUTENTICAÇÃO */}
+                  <Route path="/auth">
                     <Suspense fallback={<PageLoading />}>
                       <AuthPage />
                     </Suspense>
-                  </Route> */}
+                  </Route>
 
                   {/* 🎮 QUIZ - removido pois página não existe mais */}
                   {/* <Route path="/quiz-modular">

@@ -39,6 +39,18 @@ const sidebarItems = [
     description: 'Gerenciar funis de vendas',
   },
   {
+    title: 'Métricas',
+    href: '/admin/metricas',
+    icon: TrendingUp,
+    description: 'Análise de performance',
+  },
+  {
+    title: 'Configuração',
+    href: '/admin/configuracao',
+    icon: Settings,
+    description: 'SEO, Domínio, Pixel, UTM',
+  },
+  {
     title: 'Templates',
     href: '/admin/templates',
     icon: FileText,
@@ -59,12 +71,12 @@ const sidebarItems = [
     title: 'Configurações',
     href: '/admin/settings',
     icon: Settings,
-    description: 'Pixel, UTM, URL, Tokens API',
+    description: 'Configurações avançadas',
   },
   {
     title: 'Criativos',
     href: '/admin/criativos',
-    icon: TrendingUp,
+    icon: BarChart3,
   },
   {
     title: 'Analytics',
