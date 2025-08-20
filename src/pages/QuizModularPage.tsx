@@ -185,46 +185,8 @@ const QuizModularPage: React.FC = () => {
   return (
     <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
       <div className="min-h-screen bg-gradient-to-br from-[#FAF9F7] via-[#F5F2E9] to-[#EEEBE1]">
-        {/* 🎯 NAVEGAÇÃO DAS 21 ETAPAS SIMPLES */}
-        <div className="bg-white/90 backdrop-blur-sm border-b border-stone-200/50 shadow-sm sticky top-0 z-40">
-          <div className="container mx-auto px-6 py-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <h2 className="text-lg font-semibold text-stone-800">Quiz Style Challenge</h2>
-                <div className="text-sm text-stone-600">Etapa {currentStep} de 21</div>
-              </div>
-
-              <div className="flex items-center gap-4">
-                <div className="w-48">
-                  <Progress value={progress} className="h-2" />
-                </div>
-                <div className="text-sm font-medium text-stone-700">{progress}%</div>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handlePrevious}
-                  disabled={currentStep === 1}
-                >
-                  ← Anterior
-                </Button>
-                <Button
-                  size="sm"
-                  onClick={handleNext}
-                  disabled={currentStep === 21}
-                  className="bg-gradient-to-r from-[#B89B7A] to-[#8B7355]"
-                >
-                  Próxima →
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* 🏗️ LAYOUT COM 3 COLUNAS */}
-        <div className="flex h-[calc(100vh-80px)]">
+        {/* ️ LAYOUT COM 3 COLUNAS */}
+        <div className="flex h-screen">
           {/* 📋 COLUNA ESQUERDA - ETAPAS (já existe na navegação superior, mas podemos adicionar detalhes) */}
           <div className="w-80 bg-white/90 backdrop-blur-sm border-r border-stone-200/50 shadow-sm">
             <div className="h-full flex flex-col">
@@ -337,6 +299,42 @@ const QuizModularPage: React.FC = () => {
           <div className="flex-1 overflow-auto">
             <div className="container mx-auto px-6 py-8">
               <div className="max-w-4xl mx-auto">
+                {/* 🎯 CABEÇALHO PRINCIPAL DO QUIZ */}
+                <div className="bg-white/90 backdrop-blur-sm border border-stone-200/50 shadow-sm rounded-lg mb-8 p-6">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <h2 className="text-lg font-semibold text-stone-800">Quiz Style Challenge</h2>
+                      <div className="text-sm text-stone-600">Etapa {currentStep} de 21</div>
+                    </div>
+
+                    <div className="flex items-center gap-4">
+                      <div className="w-48">
+                        <Progress value={progress} className="h-2" />
+                      </div>
+                      <div className="text-sm font-medium text-stone-700">{progress}%</div>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handlePrevious}
+                        disabled={currentStep === 1}
+                      >
+                        ← Anterior
+                      </Button>
+                      <Button
+                        size="sm"
+                        onClick={handleNext}
+                        disabled={currentStep === 21}
+                        className="bg-gradient-to-r from-[#B89B7A] to-[#8B7355]"
+                      >
+                        Próxima →
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+
                 {/* 📋 HEADER DA ETAPA */}
                 <div className="text-center mb-8">
                   <div className="flex items-center justify-center gap-4 mb-4">
