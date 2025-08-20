@@ -84,7 +84,7 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
 
   // Log para debug das propriedades de container (apenas em desenvolvimento)
   if (
-    process.env.NODE_ENV === 'development' &&
+    import.meta.env.DEV &&
     (block.properties?.containerWidth || block.properties?.containerPosition)
   ) {
     console.log(`🎯 Container properties for ${block.id}:`, {
