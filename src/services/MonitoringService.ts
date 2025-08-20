@@ -5,8 +5,6 @@
  * compatibilidade e health do sistema quiz
  */
 
-import { useSystemValidation } from '@/testing/SystemValidation';
-import { useFeatureFlags } from '@/utils/FeatureFlagManager';
 import { useEffect, useState } from 'react';
 
 export interface SystemMetrics {
@@ -62,14 +60,8 @@ export class MonitoringService {
     // Monitorar performance
     this.trackPerformance();
 
-    // Monitorar sistema
-    this.trackSystemHealth();
-
-    // Validação periódica (apenas em produção com flag ativa)
-    const flags = useFeatureFlags();
-    if (flags.shouldValidateCompatibility()) {
-      this.startPeriodicValidation();
-    }
+    // Monitorar sistema (without using hooks directly)
+    this.trackSystemHealthBasic();
 
     console.log('📊 Sistema de monitoramento inicializado');
   }
@@ -99,10 +91,25 @@ export class MonitoringService {
   }
 
   /**
-   * 🏥 Monitorar saúde do sistema
+   * 🏥 Monitorar saúde do sistema (versão básica)
    */
-  private trackSystemHealth() {
-    const flags = useFeatureFlags();
+  private trackSystemHealthBasic() {
+    const startTime = Date.now();
+
+    this.updateMetrics({
+      system: {
+        activeSystem: 'unified', // Default value, will be updated by hook
+        uptime: Date.now() - startTime,
+        errorCount: this.getErrorCount(),
+        warningCount: this.getWarningCount(),
+      },
+    });
+  }
+
+  /**
+   * 🏥 Monitorar saúde do sistema (com flags)
+   */
+  updateSystemHealth(flags: any) {
     const startTime = Date.now();
 
     this.updateMetrics({
@@ -118,17 +125,16 @@ export class MonitoringService {
   /**
    * 🧪 Validação periódica
    */
-  private startPeriodicValidation() {
+  startPeriodicValidation(runValidationSuite: () => Promise<any>) {
     const runValidation = async () => {
       try {
-        const { runValidationSuite } = useSystemValidation();
         const report = await runValidationSuite();
 
         this.updateMetrics({
           compatibility: {
             validationScore: report.compatibilityScore,
             lastValidation: new Date().toISOString(),
-            failedTests: report.results.filter(r => !r.passed).map(r => r.testName),
+            failedTests: report.results.filter((r: any) => !r.passed).map((r: any) => r.testName),
           },
         });
 
@@ -161,7 +167,7 @@ export class MonitoringService {
     });
 
     // Log em desenvolvimento
-    if (process.env.NODE_ENV === 'development') {
+    if (import.meta.env.DEV) {
       console.log('📊 Métricas atualizadas:', newMetrics);
     }
   }
@@ -173,8 +179,8 @@ export class MonitoringService {
     console.warn(`🚨 ALERTA ${type}:`, data);
 
     // Enviar para serviço de monitoramento externo (se configurado)
-    if (process.env.VITE_MONITORING_ENDPOINT) {
-      fetch(process.env.VITE_MONITORING_ENDPOINT, {
+    if (import.meta.env.VITE_MONITORING_ENDPOINT) {
+      fetch(import.meta.env.VITE_MONITORING_ENDPOINT, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ type, data, timestamp: new Date().toISOString() }),

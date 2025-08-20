@@ -36,6 +36,11 @@ export const ValidationMiddleware: React.FC<ValidationMiddlewareProps> = ({
   const { runValidationSuite } = useSystemValidation();
   const monitoring = MonitoringService.getInstance();
 
+  // Update system health with flags
+  React.useEffect(() => {
+    monitoring.updateSystemHealth(flags);
+  }, [flags, monitoring]);
+
   const [validationState, setValidationState] = React.useState<ValidationState>({
     isRunning: false,
     lastScore: 100,
@@ -240,7 +245,7 @@ export const ValidationMiddleware: React.FC<ValidationMiddlewareProps> = ({
   return (
     <>
       {children}
-      {flags.shouldLogCompatibility() && process.env.NODE_ENV === 'development' && (
+      {flags.shouldLogCompatibility() && import.meta.env.DEV && (
         <ValidationStatusIndicator state={validationState} />
       )}
     </>
