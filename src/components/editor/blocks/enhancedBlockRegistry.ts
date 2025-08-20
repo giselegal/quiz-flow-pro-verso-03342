@@ -12,9 +12,20 @@ export const ENHANCED_BLOCK_REGISTRY = {
   button: lazy(() => import('@/components/editor/blocks/ButtonInlineBlock')),
   'legal-notice': lazy(() => import('@/components/editor/blocks/LegalNoticeInlineBlock')),
 
+  // ✅ CRITICAL MISSING COMPONENTS - Template block types
+  'form-container': lazy(() => import('@/components/editor/blocks/FormContainerBlock')),
+  'options-grid': lazy(() => import('@/components/editor/blocks/OptionsGridBlock')),
+  hero: lazy(() => import('@/components/editor/blocks/QuizTransitionBlock')),
+  'result-header-inline': lazy(() => import('@/components/editor/blocks/ResultHeaderInlineBlock')),
+  'style-card-inline': lazy(() => import('@/components/editor/blocks/StyleCardInlineBlock')),
+  'secondary-styles': lazy(() => import('@/components/editor/blocks/QuizResultSecondaryStylesBlock')),
+  benefits: lazy(() => import('@/components/editor/blocks/BenefitsListBlock')),
+  testimonials: lazy(() => import('@/components/editor/blocks/TestimonialsBlock')),
+  guarantee: lazy(() => import('@/components/editor/blocks/GuaranteeBlock')),
+  'quiz-offer-cta-inline': lazy(() => import('@/components/editor/blocks/CTAInlineBlock')),
+
   // ✅ Componentes principais do quiz (com identidade visual da marca)
   'text-inline': lazy(() => import('@/components/editor/blocks/TextInlineBlock')),
-  'options-grid': lazy(() => import('@/components/editor/blocks/OptionsGridBlock')),
   'button-inline': lazy(() => import('@/components/editor/blocks/ButtonInlineBlock')),
   'lead-form': lazy(() => import('@/components/editor/blocks/LeadFormBlock')),
 
@@ -22,7 +33,7 @@ export const ENHANCED_BLOCK_REGISTRY = {
   'loading-animation': lazy(() => import('@/components/editor/blocks/LoaderInlineBlock')),
   'progress-bar': lazy(() => import('@/components/editor/blocks/ProgressInlineBlock')),
   'result-card': lazy(() => import('@/components/editor/blocks/StyleCardInlineBlock')),
-  'image-display-inline': lazy(() => import('@/components/blocks/inline/ImageDisplayInlineBlock')),
+  'image-display-inline': lazy(() => import('@/components/editor/blocks/ImageDisplayInline')),
 
   // ✅ COMPONENTES AVANÇADOS - Funcionalidades do Step01 para todos os steps
   'connected-template-wrapper': lazy(

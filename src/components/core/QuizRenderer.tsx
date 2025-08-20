@@ -1,5 +1,6 @@
 import { useQuizFlow } from '@/hooks/core/useQuizFlow';
 import { Block } from '@/types/editor';
+import UniversalBlockRenderer from '@/components/editor/blocks/UniversalBlockRenderer';
 import React from 'react';
 
 interface StepData {
@@ -99,24 +100,18 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
       );
     }
 
-    // Renderizar blocos da etapa
+    // Renderizar blocos da etapa usando UniversalBlockRenderer
     return (
       <div className="step-content space-y-6">
         {stepBlocks.map((block: any, index: number) => (
           <div key={block.id || index} className="block-container">
-            {/* TODO: Implementar BlockRenderer universal */}
-            <div className="p-4 border rounded">
-              <pre className="text-xs text-gray-500">
-                Block: {block.type} | Order: {block.order}
-              </pre>
-              {block.content && (
-                <div className="mt-2">
-                  {typeof block.content === 'object' && 'title' in block.content && (
-                    <h3 className="font-semibold">{block.content.title}</h3>
-                  )}
-                </div>
-              )}
-            </div>
+            <UniversalBlockRenderer
+              block={block}
+              isSelected={false}
+              onClick={() => {
+                console.log(`Quiz block clicked: ${block.type}`, block);
+              }}
+            />
           </div>
         ))}
       </div>
