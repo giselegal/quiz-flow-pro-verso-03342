@@ -35,16 +35,16 @@ export interface UnifiedPreviewEngineProps {
  * Renderiza blocos com fidelidade 100% à produção
  */
 export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
-  blocks,
+  blocks = [],
+  primaryStyle,
   selectedBlockId,
   isPreviewing,
   viewportSize,
-  primaryStyle,
   onBlockSelect,
   onBlockUpdate,
-  onBlocksReordered,
   mode = 'preview',
-  className = '',
+  className,
+  // onBlocksReordered, // unused - DndContext foi movido para componente pai
 }) => {
   const { trackEvent } = useMonitoring();
   const flags = useFeatureFlags();

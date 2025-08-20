@@ -138,7 +138,7 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({ className }) => {
   const {
     state: { blocks },
     computed: { selectedBlock },
-  blockActions: { deleteBlock, reorderBlocks, replaceBlocks },
+    blockActions: { deleteBlock, reorderBlocks, replaceBlocks },
     selectBlock,
   } = useEditor();
 

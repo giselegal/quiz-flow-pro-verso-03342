@@ -1,7 +1,13 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 // Minimal in-file helpers to simulate reorder/replace behavior
-interface Block { id: string; type: string; order?: number; content?: any; properties?: any }
+interface Block {
+  id: string;
+  type: string;
+  order?: number;
+  content?: any;
+  properties?: any;
+}
 
 function replaceBlocks(blocks: Block[]): Block[] {
   return blocks

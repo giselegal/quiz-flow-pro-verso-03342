@@ -5,13 +5,13 @@
  * e sincroniza com providers existentes.
  */
 
+import { useEditor } from '@/context/EditorContext';
 import {
   QUIZ_21_STEPS_COMPLETE,
   QuizStepData,
 } from '@/features/quiz/templates/templates/quiz21StepsComplete';
 import { useQuizNavigation } from '@/hooks/useQuizNavigation';
 import { useQuizState } from '@/hooks/useQuizState';
-import { useEditor } from '@/context/EditorContext';
 import { loadStepBlocks } from '@/utils/quiz21StepsRenderer';
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 
@@ -152,23 +152,26 @@ export const QuizFlowController: React.FC<QuizFlowControllerProps> = ({
   const scores = calculateScores();
 
   // ✨ Intelligent editor integration
-  const loadStepIntoEditor = useCallback((stepNumber: number) => {
-    if (!editorContext || !syncWithEditor) return;
-    
-    try {
-      console.log(`🔄 QuizStateController: Carregando etapa ${stepNumber} no editor...`);
-      const stepBlocks = loadStepBlocks(stepNumber);
-      
-      if (stepBlocks.length > 0) {
-        editorContext.blockActions.replaceBlocks(stepBlocks);
-        console.log(`✅ Etapa ${stepNumber} carregada: ${stepBlocks.length} blocos`);
-      } else {
-        console.warn(`⚠️ Nenhum bloco encontrado para etapa ${stepNumber}`);
+  const loadStepIntoEditor = useCallback(
+    (stepNumber: number) => {
+      if (!editorContext || !syncWithEditor) return;
+
+      try {
+        console.log(`🔄 QuizStateController: Carregando etapa ${stepNumber} no editor...`);
+        const stepBlocks = loadStepBlocks(stepNumber);
+
+        if (stepBlocks.length > 0) {
+          editorContext.blockActions.replaceBlocks(stepBlocks);
+          console.log(`✅ Etapa ${stepNumber} carregada: ${stepBlocks.length} blocos`);
+        } else {
+          console.warn(`⚠️ Nenhum bloco encontrado para etapa ${stepNumber}`);
+        }
+      } catch (error) {
+        console.error(`❌ Erro ao carregar etapa ${stepNumber}:`, error);
       }
-    } catch (error) {
-      console.error(`❌ Erro ao carregar etapa ${stepNumber}:`, error);
-    }
-  }, [editorContext, syncWithEditor]);
+    },
+    [editorContext, syncWithEditor]
+  );
 
   // Auto-sync quando a etapa muda (se habilitado)
   useEffect(() => {
