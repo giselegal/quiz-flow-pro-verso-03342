@@ -81,10 +81,10 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
   const renderConfig = useMemo(() => {
     return {
       editor: {
-        showOutlines: true,
-        showIds: flags.shouldLogCompatibility(),
+        showOutlines: false,
+        showIds: false,
         enableInteraction: true,
-        showErrors: true,
+        showErrors: false,
       },
       preview: {
         showOutlines: false,
