@@ -8,10 +8,12 @@ import { useMonitoring } from '@/services/MonitoringService';
 import { Block } from '@/types/editor';
 import { StyleResult } from '@/types/quiz';
 import { useFeatureFlags } from '@/utils/FeatureFlagManager';
+import { cn } from '@/lib/utils';
 import React, { useEffect, useMemo, useState } from 'react';
 
 // Importações DnD
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { useDroppable } from '@dnd-kit/core';
 
 // Importação do componente sortable
 import { SortablePreviewBlockWrapper } from './SortablePreviewBlockWrapper';
@@ -49,6 +51,15 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
   const { trackEvent } = useMonitoring();
   const flags = useFeatureFlags();
   const [previewErrors, setPreviewErrors] = useState<string[]>([]);
+
+  // Configurar como droppable para aceitar novos componentes
+  const { setNodeRef: setDroppableRef, isOver } = useDroppable({
+    id: 'canvas-dropzone',
+    data: {
+      type: 'dropzone',
+      position: blocks.length, // Adicionar no final por padrão
+    },
+  });
 
   // Extrair os IDs dos blocos para o SortableContext
   const blockIds = useMemo(() => {
@@ -184,9 +195,25 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
       )}
 
       {/* Container Principal do Preview */}
-      <div className="preview-container bg-white min-h-screen" style={containerStyle}>
+      <div 
+        ref={setDroppableRef}
+        className={cn(
+          "preview-container bg-white min-h-screen relative",
+          isOver && "bg-blue-50 border-2 border-dashed border-blue-300"
+        )} 
+        style={containerStyle}
+      >
+        {/* Visual feedback para drop */}
+        {isOver && (
+          <div className="absolute inset-4 border-2 border-dashed border-blue-400 rounded-lg bg-blue-50/50 flex items-center justify-center z-10">
+            <div className="text-blue-600 font-medium text-sm flex items-center gap-2">
+              🎯 Solte o componente aqui
+            </div>
+          </div>
+        )}
+
         {/* Renderização dos Blocos com SortableContext */}
-        <div className="blocks-container space-y-6 py-4">
+        <div className="blocks-container space-y-6 py-4 relative z-0">
           {blocks.length === 0 ? (
             <EmptyPreviewState mode={mode} />
           ) : (

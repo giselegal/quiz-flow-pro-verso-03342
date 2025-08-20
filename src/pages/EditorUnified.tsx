@@ -40,7 +40,7 @@ import { useAutoSaveWithDebounce } from '@/hooks/editor/useAutoSaveWithDebounce'
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { useSyncedScroll } from '@/hooks/useSyncedScroll';
 import { saveEditor } from '@/services/editorService';
-import type { Block } from '@/types/editor';
+import type { Block, BlockType } from '@/types/editor';
 
 // 🔧 MODAIS (legados)
 import { FunnelSettingsPanel } from '@/components/editor/funnel-settings/FunnelSettingsPanel';
@@ -114,7 +114,7 @@ const EditorUnified: React.FC = () => {
     activeStageId,
     funnelId,
     setFunnelId,
-    blockActions: { deleteBlock, updateBlock, reorderBlocks }, // ADICIONADO reorderBlocks
+    blockActions: { deleteBlock, updateBlock, reorderBlocks, addBlock }, // ADICIONADO addBlock
     uiState: { setIsPreviewing },
     computed: { currentBlocks, stageCount },
     stageActions,
@@ -200,24 +200,16 @@ const EditorUnified: React.FC = () => {
 
     // Caso 1: Arrastar componente do painel para o canvas
     if (activeData?.type === 'component' && overData?.type === 'dropzone') {
-      const componentType = activeData.componentType;
+      const componentType = activeData.componentType as BlockType;
       const targetPosition = overData.position || currentBlocks.length;
       
       console.log('🧩 Adicionando novo componente:', { componentType, targetPosition });
       
-      // Criar novo bloco com valores padrão
-      const newBlock: Block = {
-        id: `${componentType}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-        type: componentType,
-        content: getDefaultContentForType(componentType),
-        properties: getDefaultPropertiesForType(componentType),
-        order: targetPosition,
-        stageId: currentStep,
-      };
-
-      // Adicionar bloco ao editor
-      addBlock(newBlock);
-      setSelectedBlockId(newBlock.id);
+      // Usar addBlock do EditorContext que criará o bloco automaticamente
+      addBlock(componentType).then(blockId => {
+        setSelectedBlockId(blockId);
+        console.log('✅ Novo bloco criado:', blockId);
+      });
       
       return;
     }
@@ -239,43 +231,6 @@ const EditorUnified: React.FC = () => {
         });
       }
     }
-  };
-
-  // Função para obter conteúdo padrão por tipo de componente
-  const getDefaultContentForType = (type: string) => {
-    const defaults: Record<string, any> = {
-      'text-inline': { text: 'Clique para editar o texto' },
-      'heading-inline': { text: 'Novo Título', level: 'h2' },
-      'button-inline': { text: 'Botão', variant: 'primary' },
-      'image-display-inline': { src: '', alt: 'Nova imagem' },
-      'quiz-intro-header': { 
-        title: 'Título do Quiz', 
-        subtitle: 'Subtítulo',
-        description: 'Descrição do quiz' 
-      },
-      'form-input': { 
-        title: 'Campo', 
-        placeholder: 'Digite aqui...',
-        fieldType: 'text',
-        required: false 
-      },
-      'quiz-question': { 
-        question: 'Nova pergunta?',
-        options: ['Opção 1', 'Opção 2'] 
-      },
-    };
-    return defaults[type] || {};
-  };
-
-  // Função para obter propriedades padrão por tipo de componente
-  const getDefaultPropertiesForType = (type: string) => {
-    const defaults: Record<string, any> = {
-      'text-inline': { fontSize: 16, color: '#333333' },
-      'heading-inline': { fontSize: 24, fontWeight: 'bold', color: '#1a1a1a' },
-      'button-inline': { backgroundColor: '#007bff', color: '#ffffff', padding: 12 },
-      'image-display-inline': { width: 'auto', height: 'auto' },
-    };
-    return defaults[type] || {};
   };
 
   // Handler para reordenação direta (ex: via preview engine)
