@@ -100,7 +100,7 @@ export const SortablePreviewBlockWrapper: React.FC<SortablePreviewBlockWrapperPr
         )}
 
         {/* Renderizar componente real usando UniversalBlockRenderer */}
-        {debug ? (
+        {false ? ( // FORÇAR sempre false para debug
           /* Modo debug - mostrar informações do bloco */
           <div className="p-4">
             <div className="text-sm text-gray-600 mb-2">
