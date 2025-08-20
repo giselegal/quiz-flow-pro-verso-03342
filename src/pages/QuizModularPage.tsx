@@ -23,6 +23,12 @@ const QuizModularPage: React.FC = () => {
   const [blocks, setBlocks] = useState<Block[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  
+  // 🎯 ESTADO DO QUIZ - Validação e Respostas
+  const [quizAnswers, setQuizAnswers] = useState<Record<string, any>>({});
+  const [stepValidation, setStepValidation] = useState<Record<number, boolean>>({});
+  const [userSelections, setUserSelections] = useState<Record<string, string[]>>({});
+  const [autoAdvanceTimeouts, setAutoAdvanceTimeouts] = useState<Record<number, NodeJS.Timeout>>({});
 
   // Hook para gerenciar o fluxo do quiz
   const {
@@ -51,6 +57,12 @@ const QuizModularPage: React.FC = () => {
         );
 
         setBlocks(stepBlocks);
+        
+        // Validar se a etapa já está completa
+        setTimeout(() => {
+          const isValid = validateStep(stepBlocks);
+          setStepValidation(prev => ({ ...prev, [currentStep]: isValid }));
+        }, 100);
       } catch (err) {
         console.error(`❌ Erro ao carregar etapa ${currentStep}:`, err);
         setError(`Erro ao carregar etapa ${currentStep}`);
@@ -107,7 +119,109 @@ const QuizModularPage: React.FC = () => {
 
     loadCurrentStepBlocks();
   }, [currentStep]);
-  const progress = Math.round((currentStep / 21) * 100);
+    // 🎯 FUNÇÕES DE VALIDAÇÃO E AVANÇO
+  const validateStep = (currentBlocks: Block[]): boolean => {
+    const questionBlocks = currentBlocks.filter(block => 
+      block.type === 'options-grid' || block.type === 'form-container'
+    );
+    
+    if (questionBlocks.length === 0) return true; // Etapas sem perguntas são válidas
+    
+    return questionBlocks.every(block => {
+      const questionId = block.properties?.questionId || block.id;
+      const selections = userSelections[questionId] || [];
+      const minSelections = block.properties?.minSelections || block.properties?.requiredSelections || 1;
+      
+      if (block.type === 'form-container') {
+        const answer = quizAnswers[block.content?.dataKey || 'default'];
+        return block.content?.required ? !!answer && answer.trim().length > 0 : true;
+      }
+      
+      return selections.length >= minSelections;
+    });
+  };
+
+  const handleQuestionResponse = (questionId: string, optionId: string, blockConfig?: any) => {
+    setUserSelections(prev => {
+      const current = prev[questionId] || [];
+      const maxSelections = blockConfig?.maxSelections || 1;
+      
+      let newSelections;
+      if (current.includes(optionId)) {
+        // Remove seleção
+        newSelections = current.filter(id => id !== optionId);
+      } else {
+        // Adiciona seleção
+        if (maxSelections === 1) {
+          newSelections = [optionId];
+        } else {
+          newSelections = current.length >= maxSelections 
+            ? [...current.slice(1), optionId]
+            : [...current, optionId];
+        }
+      }
+      
+      const updated = { ...prev, [questionId]: newSelections };
+      
+      // Verificar se a etapa está completa
+      setTimeout(() => {
+        const isValid = validateStep(currentStep, blocks);
+        setStepValidation(prev => ({ ...prev, [currentStep]: isValid }));
+        
+        // Auto avanço se configurado
+        if (isValid && blockConfig?.autoAdvanceOnComplete) {
+          const delay = blockConfig?.autoAdvanceDelay || 1500;
+          const timeoutId = setTimeout(() => {
+            handleNext();
+          }, delay);
+          
+          setAutoAdvanceTimeouts(prev => ({
+            ...prev,
+            [currentStep]: timeoutId
+          }));
+        }
+      }, 100);
+      
+      return updated;
+    });
+  };
+
+  const handleFormInput = (dataKey: string, value: string, blockConfig?: any) => {
+    setQuizAnswers(prev => {
+      const updated = { ...prev, [dataKey]: value };
+      
+      setTimeout(() => {
+        const isValid = validateStep(currentStep, blocks);
+        setStepValidation(prev => ({ ...prev, [currentStep]: isValid }));
+        
+        // Auto avanço se configurado
+        if (isValid && blockConfig?.autoAdvanceOnComplete) {
+          const delay = blockConfig?.autoAdvanceDelay || 1500;
+          const timeoutId = setTimeout(() => {
+            handleNext();
+          }, delay);
+          
+          setAutoAdvanceTimeouts(prev => ({
+            ...prev,
+            [currentStep]: timeoutId
+          }));
+        }
+      }, 100);
+      
+      return updated;
+    });
+  };
+
+  // Limpar timeouts ao trocar de etapa
+  useEffect(() => {
+    return () => {
+      Object.values(autoAdvanceTimeouts).forEach(timeout => {
+        if (timeout) clearTimeout(timeout);
+      });
+    };
+  }, [currentStep]);
+
+  const progress = ((currentStep - 1) / 20) * 100;
 
   // Configuração do DnD
   const sensors = useSensors(
@@ -326,10 +440,16 @@ const QuizModularPage: React.FC = () => {
                       <Button
                         size="sm"
                         onClick={handleNext}
-                        disabled={currentStep === 21}
-                        className="bg-gradient-to-r from-[#B89B7A] to-[#8B7355]"
+                        disabled={currentStep === 21 || !stepValidation[currentStep]}
+                        className={cn(
+                          "transition-all",
+                          currentStep === 21 || !stepValidation[currentStep]
+                            ? "bg-stone-200 text-stone-400 cursor-not-allowed"
+                            : "bg-gradient-to-r from-[#B89B7A] to-[#8B7355]"
+                        )}
                       >
-                        Próxima →
+                        {currentStep === 21 ? 'Finalizado' : 
+                         !stepValidation[currentStep] ? 'Complete a etapa' : 'Próxima →'}
                       </Button>
                     </div>
                   </div>
@@ -417,7 +537,24 @@ const QuizModularPage: React.FC = () => {
                             )}
                           >
                             <UniversalBlockRenderer
-                              block={block}
+                              block={{
+                                ...block,
+                                // Adicionar callbacks para interação
+                                properties: {
+                                  ...block.properties,
+                                  onOptionSelect: (optionId: string) => {
+                                    const questionId = block.properties?.questionId || block.id;
+                                    handleQuestionResponse(questionId, optionId, block.properties);
+                                  },
+                                  onInputChange: (value: string) => {
+                                    const dataKey = block.content?.dataKey || 'default';
+                                    handleFormInput(dataKey, value, block.content);
+                                  },
+                                  selectedOptions: userSelections[block.properties?.questionId || block.id] || [],
+                                  inputValue: quizAnswers[block.content?.dataKey || 'default'] || '',
+                                  isValid: stepValidation[currentStep] || false,
+                                }
+                              }}
                               isSelected={false}
                               onClick={() => {}}
                             />
@@ -450,15 +587,16 @@ const QuizModularPage: React.FC = () => {
 
                   <button
                     onClick={handleNext}
-                    disabled={currentStep === 21}
+                    disabled={currentStep === 21 || !stepValidation[currentStep]}
                     className={cn(
                       'flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all',
-                      currentStep === 21
+                      currentStep === 21 || !stepValidation[currentStep]
                         ? 'bg-stone-100 text-stone-400 cursor-not-allowed'
                         : 'bg-gradient-to-r from-[#B89B7A] to-[#8B7355] text-white hover:from-[#A08966] hover:to-[#7A6B4D] shadow-md hover:shadow-lg'
                     )}
                   >
-                    {currentStep === 21 ? 'Finalizado' : 'Próxima →'}
+                    {currentStep === 21 ? 'Finalizado' : 
+                     !stepValidation[currentStep] ? 'Complete a etapa →' : 'Próxima →'}
                   </button>
                 </div>
 
