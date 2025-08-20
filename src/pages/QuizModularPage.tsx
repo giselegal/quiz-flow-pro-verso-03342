@@ -87,11 +87,6 @@ const QuizModularPage: React.FC = () => {
     }
   };
 
-  const handleStepChange = (step: number) => {
-    setCurrentStep(step);
-    goToStep(step);
-  };
-
   // Carregar blocos da etapa atual
   useEffect(() => {
     const loadCurrentStepBlocks = async () => {
@@ -455,6 +450,7 @@ const QuizModularPage: React.FC = () => {
         </div>
       </div>
     </DndContext>
+    </Quiz21StepsProvider>
   );
 };
 
