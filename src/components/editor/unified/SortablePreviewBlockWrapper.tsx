@@ -22,9 +22,9 @@ export const SortablePreviewBlockWrapper: React.FC<SortablePreviewBlockWrapperPr
   isSelected,
   isPreviewing,
   renderConfig,
-  primaryStyle,
+  // primaryStyle, // unused
   onClick,
-  onUpdate,
+  // onUpdate, // unused
 }) => {
   const [isHovered, setIsHovered] = useState(false);
 

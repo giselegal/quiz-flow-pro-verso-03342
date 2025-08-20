@@ -8,18 +8,27 @@ import { useState } from 'react';
 
 export interface QuizState {
   currentStep: number;
+  currentStepNumber: number;
+  currentStepId: string;
   totalSteps: number;
   answers: Record<string, any>;
+  userAnswers: any[];
   scores: Record<string, number>;
   isCompleted: boolean;
   progress: number;
+  userName?: string;
+  sessionData?: any;
+  result?: any;
 }
 
 export const useQuizState = (initialStep = 1) => {
   const [state, setState] = useState<QuizState>({
     currentStep: initialStep,
+    currentStepNumber: initialStep,
+    currentStepId: `step-${initialStep}`,
     totalSteps: 21,
     answers: {},
+    userAnswers: [],
     scores: {},
     isCompleted: false,
     progress: 0,

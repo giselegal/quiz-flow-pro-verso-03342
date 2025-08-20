@@ -11,6 +11,8 @@ import {
 } from '@/features/quiz/templates/templates/quiz21StepsComplete';
 import { useQuizNavigation } from '@/hooks/useQuizNavigation';
 import { useQuizState } from '@/hooks/useQuizState';
+import { useEditor } from '@/context/EditorContext';
+import { loadStepBlocks } from '@/utils/quiz21StepsRenderer';
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 
 interface QuizFlowContextType {
@@ -41,6 +43,11 @@ interface QuizFlowContextType {
   // Mode management
   mode: 'editor' | 'preview' | 'production';
   setMode: (mode: 'editor' | 'preview' | 'production') => void;
+
+  // ✨ Editor integration
+  syncWithEditor: boolean;
+  setSyncWithEditor: (sync: boolean) => void;
+  loadStepIntoEditor: (stepNumber: number) => void;
 }
 
 const QuizFlowContext = createContext<QuizFlowContextType | undefined>(undefined);
@@ -61,6 +68,16 @@ export const QuizFlowController: React.FC<QuizFlowControllerProps> = ({
   const [currentStepNumber, setCurrentStepNumber] = useState(initialStep);
   const [currentMode, setCurrentMode] = useState(mode);
   const [userAnswers, setUserAnswers] = useState<Record<string, string[]>>({});
+  const [syncWithEditor, setSyncWithEditor] = useState(mode === 'editor');
+
+  // ✨ Editor integration - apenas se disponível
+  const editorContext = React.useMemo(() => {
+    try {
+      return useEditor();
+    } catch {
+      return null; // Editor não disponível
+    }
+  }, []);
 
   const { updateState } = useQuizState();
   const {
@@ -134,6 +151,32 @@ export const QuizFlowController: React.FC<QuizFlowControllerProps> = ({
 
   const scores = calculateScores();
 
+  // ✨ Intelligent editor integration
+  const loadStepIntoEditor = useCallback((stepNumber: number) => {
+    if (!editorContext || !syncWithEditor) return;
+    
+    try {
+      console.log(`🔄 QuizStateController: Carregando etapa ${stepNumber} no editor...`);
+      const stepBlocks = loadStepBlocks(stepNumber);
+      
+      if (stepBlocks.length > 0) {
+        editorContext.blockActions.replaceBlocks(stepBlocks);
+        console.log(`✅ Etapa ${stepNumber} carregada: ${stepBlocks.length} blocos`);
+      } else {
+        console.warn(`⚠️ Nenhum bloco encontrado para etapa ${stepNumber}`);
+      }
+    } catch (error) {
+      console.error(`❌ Erro ao carregar etapa ${stepNumber}:`, error);
+    }
+  }, [editorContext, syncWithEditor]);
+
+  // Auto-sync quando a etapa muda (se habilitado)
+  useEffect(() => {
+    if (syncWithEditor && mode === 'editor') {
+      loadStepIntoEditor(currentStepNumber);
+    }
+  }, [currentStepNumber, syncWithEditor, mode, loadStepIntoEditor]);
+
   const nextStep = useCallback(() => {
     if (isStepValid(currentStep.stepId)) {
       navNext();
@@ -161,6 +204,10 @@ export const QuizFlowController: React.FC<QuizFlowControllerProps> = ({
     calculateScores,
     mode: currentMode,
     setMode: setCurrentMode,
+    // ✨ Editor integration
+    syncWithEditor,
+    setSyncWithEditor,
+    loadStepIntoEditor,
   };
 
   return <QuizFlowContext.Provider value={value}>{children}</QuizFlowContext.Provider>;
