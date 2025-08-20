@@ -1,13 +1,13 @@
 /**
  * 🧪 TESTE DE VALIDAÇÃO DOS GARGALOS CORRIGIDOS
- * 
+ *
  * Valida se as correções implementadas resolveram os problemas identificados
  */
 
-import { 
-  getEnhancedBlockComponent, 
+import {
+  getEnhancedBlockComponent,
+  getRegistryStats,
   normalizeBlockProperties,
-  getRegistryStats 
 } from '../src/components/editor/blocks/enhancedBlockRegistry.js';
 
 console.log('🧪 Iniciando teste de validação dos gargalos corrigidos...\n');
@@ -24,13 +24,13 @@ console.log('🧠 TESTE 2: Sistema de Fallback Inteligente');
 
 const problemComponents = [
   'quiz-start-page-inline',
-  'quiz-personal-info-inline', 
+  'quiz-personal-info-inline',
   'quiz-certificate-inline',
   'style-card-inline',
   'countdown-inline',
   'tipo-inexistente',
   'component-nao-mapeado',
-  'random-block-type'
+  'random-block-type',
 ];
 
 problemComponents.forEach(type => {
@@ -51,24 +51,24 @@ const testBlocks = [
   // Template format
   {
     type: 'quiz-intro-header',
-    content: { title: 'Título do Template', description: 'Descrição do Template' }
+    content: { title: 'Título do Template', description: 'Descrição do Template' },
   },
   // Editor format
   {
     type: 'text-inline',
-    properties: { title: 'Título do Editor', content: 'Conteúdo do Editor' }
+    properties: { title: 'Título do Editor', content: 'Conteúdo do Editor' },
   },
   // Mixed format
   {
     type: 'button-inline',
     content: { buttonText: 'Template Button' },
-    properties: { href: '/editor-link' }
+    properties: { href: '/editor-link' },
   },
   // Missing properties
   {
     type: 'image-inline',
     // Sem properties
-  }
+  },
 ];
 
 testBlocks.forEach((block, index) => {
@@ -97,19 +97,33 @@ console.log('🎯 TESTE 4: Cobertura das 21 Etapas');
 
 const stepComponents = [
   // Step 01
-  'quiz-intro-header', 'decorative-bar-inline', 'text-inline', 'form-input', 'button-inline',
-  // Steps 02-11 
-  'quiz-start-page-inline', 'quiz-personal-info-inline', 'options-grid',
+  'quiz-intro-header',
+  'decorative-bar-inline',
+  'text-inline',
+  'form-input',
+  'button-inline',
+  // Steps 02-11
+  'quiz-start-page-inline',
+  'quiz-personal-info-inline',
+  'options-grid',
   // Step 12
-  'hero', 'loading-animation',
+  'hero',
+  'loading-animation',
   // Steps 13-18
-  'style-card-inline', 'style-cards-grid',
+  'style-card-inline',
+  'style-cards-grid',
   // Step 19
-  'progress-inline', 'quiz-processing',
+  'progress-inline',
+  'quiz-processing',
   // Step 20
-  'result-header-inline', 'quiz-result-style', 'secondary-styles',
+  'result-header-inline',
+  'quiz-result-style',
+  'secondary-styles',
   // Step 21
-  'benefits', 'testimonials', 'guarantee', 'quiz-offer-cta-inline'
+  'benefits',
+  'testimonials',
+  'guarantee',
+  'quiz-offer-cta-inline',
 ];
 
 let resolvedCount = 0;
@@ -143,4 +157,6 @@ console.log('   ❌ Fallback inadequado → ✅ Sistema inteligente por categori
 console.log('   ❌ Propriedades inconsistentes → ✅ Normalização automática');
 console.log('   ❌ Mapeamento desatualizado → ✅ Registry completo e atualizado');
 
-console.log('\n✨ O UniversalBlockRenderer agora pode renderizar TODOS os tipos de bloco das 21 etapas!');
+console.log(
+  '\n✨ O UniversalBlockRenderer agora pode renderizar TODOS os tipos de bloco das 21 etapas!'
+);

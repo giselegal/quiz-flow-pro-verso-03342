@@ -6,7 +6,9 @@ export const ENHANCED_BLOCK_REGISTRY = {
   // ✅ STEP 01 - COMPONENTES BÁSICOS
   'quiz-intro-header': lazy(() => import('@/components/editor/blocks/QuizIntroHeaderBlock')),
   'decorative-bar': lazy(() => import('@/components/editor/blocks/DecorativeBarInlineBlock')),
-  'decorative-bar-inline': lazy(() => import('@/components/editor/blocks/DecorativeBarInlineBlock')),
+  'decorative-bar-inline': lazy(
+    () => import('@/components/editor/blocks/DecorativeBarInlineBlock')
+  ),
   text: lazy(() => import('@/components/editor/blocks/TextInlineBlock')),
   'text-inline': lazy(() => import('@/components/editor/blocks/TextInlineBlock')),
   image: lazy(() => import('@/components/editor/blocks/ImageInlineBlock')),
@@ -24,7 +26,7 @@ export const ENHANCED_BLOCK_REGISTRY = {
   'quiz-options-inline': lazy(() => import('@/components/editor/blocks/OptionsGridBlock')),
   'options-grid': lazy(() => import('@/components/editor/blocks/OptionsGridBlock')),
   'form-container': lazy(() => import('@/components/editor/blocks/FormContainerBlock')),
-  
+
   // ✅ STEP 12 - TRANSIÇÃO
   hero: lazy(() => import('@/components/editor/blocks/QuizTransitionBlock')),
   'quiz-transition': lazy(() => import('@/components/editor/blocks/QuizTransitionBlock')),
@@ -36,7 +38,7 @@ export const ENHANCED_BLOCK_REGISTRY = {
   'quiz-style-question': lazy(() => import('@/components/editor/blocks/StyleCardInlineBlock')),
   'style-card-inline': lazy(() => import('@/components/editor/blocks/StyleCardInlineBlock')),
   'style-cards-grid': lazy(() => import('@/components/editor/blocks/StyleCardsGridBlock')),
-  
+
   // ✅ STEP 19 - SEGUNDA TRANSIÇÃO
   'quiz-processing': lazy(() => import('@/components/editor/blocks/LoaderInlineBlock')),
   'progress-bar': lazy(() => import('@/components/editor/blocks/ProgressInlineBlock')),
@@ -63,7 +65,7 @@ export const ENHANCED_BLOCK_REGISTRY = {
   // ✅ COMPONENTES UNIVERSAIS
   heading: lazy(() => import('@/components/editor/blocks/HeadingInlineBlock')),
   'heading-inline': lazy(() => import('@/components/editor/blocks/HeadingInlineBlock')),
-  'image-display-inline': lazy(() => import('@/components/editor/blocks/ImageDisplayInlineBlock')),
+  'image-display-inline': lazy(() => import('@/components/editor/blocks/ImageDisplayInline')),
   'lead-form': lazy(() => import('@/components/editor/blocks/LeadFormBlock')),
   'connected-lead-form': lazy(() => import('@/components/editor/blocks/ConnectedLeadFormBlock')),
 
@@ -81,7 +83,7 @@ export const ENHANCED_BLOCK_REGISTRY = {
   'quiz-text': lazy(() => import('@/components/editor/blocks/TextInlineBlock')),
   'quiz-image': lazy(() => import('@/components/editor/blocks/ImageInlineBlock')),
   'quiz-progress': lazy(() => import('@/components/editor/blocks/ProgressInlineBlock')),
-  
+
   // ✅ FALLBACKS CATEGORIZADOS POR TIPO
   'form-*': lazy(() => import('@/components/editor/blocks/FormInputBlock')), // Fallback para formulários
   'button-*': lazy(() => import('@/components/editor/blocks/ButtonInlineBlock')), // Fallback para botões
@@ -94,7 +96,7 @@ export const ENHANCED_BLOCK_REGISTRY = {
 export const getEnhancedBlockComponent = (type: string) => {
   // 1. Buscar componente exato
   let component = ENHANCED_BLOCK_REGISTRY[type as keyof typeof ENHANCED_BLOCK_REGISTRY];
-  
+
   if (component) {
     console.log(`✅ Componente encontrado: ${type}`);
     return component;
@@ -102,33 +104,33 @@ export const getEnhancedBlockComponent = (type: string) => {
 
   // 2. Fallback inteligente baseado em categoria
   console.warn(`⚠️ Componente não encontrado: ${type}, aplicando fallback inteligente...`);
-  
+
   // Fallbacks categorizados
   if (type.includes('quiz-') || type.includes('question')) {
     console.log(`🎯 Fallback: ${type} → quiz-text (TextInlineBlock)`);
     return ENHANCED_BLOCK_REGISTRY['text-inline'];
   }
-  
+
   if (type.includes('form-') || type.includes('input')) {
     console.log(`📝 Fallback: ${type} → form-input (FormInputBlock)`);
     return ENHANCED_BLOCK_REGISTRY['form-input'];
   }
-  
+
   if (type.includes('button-') || type.includes('cta') || type.includes('action')) {
     console.log(`🔗 Fallback: ${type} → button-inline (ButtonInlineBlock)`);
     return ENHANCED_BLOCK_REGISTRY['button-inline'];
   }
-  
+
   if (type.includes('image-') || type.includes('photo') || type.includes('picture')) {
     console.log(`🖼️ Fallback: ${type} → image-inline (ImageInlineBlock)`);
     return ENHANCED_BLOCK_REGISTRY['image-inline'];
   }
-  
+
   if (type.includes('text-') || type.includes('paragraph') || type.includes('content')) {
     console.log(`📄 Fallback: ${type} → text-inline (TextInlineBlock)`);
     return ENHANCED_BLOCK_REGISTRY['text-inline'];
   }
-  
+
   if (type.includes('heading-') || type.includes('title') || type.includes('header')) {
     console.log(`📋 Fallback: ${type} → heading-inline (HeadingInlineBlock)`);
     return ENHANCED_BLOCK_REGISTRY['heading-inline'];
@@ -194,27 +196,38 @@ export const normalizeBlockProperties = (block: any) => {
   const normalizedProperties = {
     ...base.content, // Template properties (vem do template)
     ...base.properties, // Block properties (vem do editor)
-    
+
     // Propriedades garantidas com fallbacks inteligentes
     title: base.properties?.title || base.content?.title || base.title || 'Sem título',
-    content: base.properties?.content || base.content?.description || base.content?.text || base.description || 'Sem conteúdo',
+    content:
+      base.properties?.content ||
+      base.content?.description ||
+      base.content?.text ||
+      base.description ||
+      'Sem conteúdo',
     subtitle: base.properties?.subtitle || base.content?.subtitle || base.subtitle || '',
     text: base.properties?.text || base.content?.text || base.text || '',
-    description: base.properties?.description || base.content?.description || base.description || '',
-    
+    description:
+      base.properties?.description || base.content?.description || base.description || '',
+
     // Propriedades específicas de tipos
     ...(base.type?.includes('button') && {
-      buttonText: base.properties?.buttonText || base.content?.buttonText || base.buttonText || 'Clique aqui',
+      buttonText:
+        base.properties?.buttonText || base.content?.buttonText || base.buttonText || 'Clique aqui',
       href: base.properties?.href || base.content?.href || base.href || '#',
     }),
-    
+
     ...(base.type?.includes('image') && {
       src: base.properties?.src || base.content?.src || base.src || '/placeholder.jpg',
       alt: base.properties?.alt || base.content?.alt || base.alt || 'Imagem',
     }),
-    
+
     ...(base.type?.includes('form') && {
-      placeholder: base.properties?.placeholder || base.content?.placeholder || base.placeholder || 'Digite aqui...',
+      placeholder:
+        base.properties?.placeholder ||
+        base.content?.placeholder ||
+        base.placeholder ||
+        'Digite aqui...',
       required: base.properties?.required || base.content?.required || base.required || false,
     }),
   };
@@ -228,7 +241,7 @@ export const normalizeBlockProperties = (block: any) => {
 // 📊 ESTATÍSTICAS DO REGISTRY
 export const getRegistryStats = () => {
   const components = Object.keys(ENHANCED_BLOCK_REGISTRY);
-  
+
   const stats = {
     total: components.length,
     byCategory: {
@@ -238,12 +251,17 @@ export const getRegistryStats = () => {
       text: components.filter(k => k.includes('text-')).length,
       image: components.filter(k => k.includes('image-')).length,
       style: components.filter(k => k.includes('style-')).length,
-      other: components.filter(k => !['quiz-', 'form-', 'button-', 'text-', 'image-', 'style-'].some(prefix => k.includes(prefix))).length,
+      other: components.filter(
+        k =>
+          !['quiz-', 'form-', 'button-', 'text-', 'image-', 'style-'].some(prefix =>
+            k.includes(prefix)
+          )
+      ).length,
     },
     coverage: '150+ componentes mapeados',
     fallbackSystem: 'Sistema inteligente por categoria implementado',
   };
-  
+
   console.log('📊 Enhanced Block Registry Stats:', stats);
   return stats;
 };

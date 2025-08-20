@@ -1,8 +1,8 @@
-import React from 'react';
-import { getOptimizedBlockComponent, normalizeBlockProps } from '@/utils/optimizedRegistry';
 import { useContainerProperties } from '@/hooks/useContainerProperties';
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
+import { getOptimizedBlockComponent, normalizeBlockProps } from '@/utils/optimizedRegistry';
+import React from 'react';
 import { ProductionBlockBoundary, SimpleBlockFallback } from './ProductionBlockBoundary';
 
 export interface UniversalBlockRendererProps {
@@ -77,7 +77,7 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
 }) => {
   // ✅ Normalizar propriedades para compatibilidade template/editor
   const normalizedBlock = normalizeBlockProps(block);
-  
+
   // ✅ Buscar componente otimizado com fallback inteligente
   const Component = getOptimizedBlockComponent(normalizedBlock.type);
 
