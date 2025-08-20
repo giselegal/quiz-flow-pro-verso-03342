@@ -35,7 +35,7 @@ export const MonitoringDashboard: React.FC<DashboardProps> = ({ isVisible = fals
   }, []);
 
   // Não mostrar em produção se não for flagged
-  if (process.env.NODE_ENV === 'production' && !flags.shouldLogCompatibility()) {
+  if (import.meta.env.PROD && !flags.shouldLogCompatibility()) {
     return null;
   }
 
@@ -340,7 +340,7 @@ export const useDashboardControl = () => {
   const hide = () => setIsVisible(false);
 
   const shouldShow = () => {
-    return process.env.NODE_ENV === 'development' || flags.shouldLogCompatibility();
+    return import.meta.env.DEV || flags.shouldLogCompatibility();
   };
 
   return {
@@ -353,7 +353,7 @@ export const useDashboardControl = () => {
 };
 
 // Adicionar controles ao console para desenvolvimento
-if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
+if (typeof window !== 'undefined' && import.meta.env.DEV) {
   (window as any).quizDashboard = {
     show: () => {
       const event = new CustomEvent('show-dashboard');
