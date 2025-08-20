@@ -34,7 +34,7 @@ export const SortablePreviewBlockWrapper: React.FC<SortablePreviewBlockWrapperPr
   const [isHovered, setIsHovered] = useState(false);
 
   // Configuração do useSortable do dnd-kit
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+  const { attributes, setNodeRef, transform, transition, isDragging } = useSortable({
     id: block.id,
     disabled: isPreviewing,
     data: {
@@ -78,52 +78,23 @@ export const SortablePreviewBlockWrapper: React.FC<SortablePreviewBlockWrapperPr
       {/* IDs removidos para visual limpo */}
 
       {/* Renderização do bloco usando UniversalBlockRenderer */}
-      <div
-        className={`block-content relative ${isSelected ? 'bg-blue-50' : isHovered ? 'bg-gray-50' : 'bg-white'}`}
-      >
-        {/* Alça para arrastar (visível apenas no modo editor e quando não está previsualizando) */}
-        {!isPreviewing && (
-          <div
-            className="drag-handle absolute top-2 right-2 w-6 h-6 flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded cursor-move z-10 opacity-50 hover:opacity-100"
-            {...listeners}
-          >
-            ⋮⋮
-          </div>
-        )}
+      <div className="block-content relative">
+        {/* Visual totalmente limpo para produção */}
 
         {/* Renderizar componente real usando UniversalBlockRenderer */}
-        {false ? ( // FORÇAR sempre false para debug
-          /* Modo debug - mostrar informações do bloco */
-          <div className="p-4">
-            <div className="text-sm text-gray-600 mb-2">
-              {block.type} - {block.id.slice(0, 8)}
-            </div>
-            <div className="text-gray-800 text-xs overflow-auto max-h-32">
-              {JSON.stringify(block.content || block.properties || {}, null, 2)}
-            </div>
-          </div>
-        ) : (
-          /* Modo normal - renderizar componente real */
-          <UniversalBlockRenderer
-            block={block}
-            isSelected={isSelected}
-            onClick={() => {
-              onClick();
-              onSelect?.(block.id);
-            }}
-          />
-        )}
+        <UniversalBlockRenderer
+          block={block}
+          isSelected={isSelected}
+          onClick={() => {
+            onClick();
+            onSelect?.(block.id);
+          }}
+        />
       </div>
 
-      {/* Indicadores visuais (modo editor) */}
+      {/* Indicadores visuais removidos para visual limpo */}
       {!isPreviewing && (
         <div className="absolute inset-0 pointer-events-none">
-          {isSelected && (
-            <div className="absolute -top-6 left-0 bg-blue-400 text-white text-xs px-2 py-0.5 rounded-t opacity-80">
-              ✏️ Selecionado
-            </div>
-          )}
-
           {isHovered && !isSelected && !isDragging && (
             <div className="absolute inset-0 border border-gray-200 rounded"></div>
           )}

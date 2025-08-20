@@ -1,9 +1,11 @@
+import { ComponentDragItem } from '@/components/editor/components/ComponentDragItem';
 import { UniversalBlockRenderer } from '@/components/editor/blocks/UniversalBlockRenderer';
 import { Quiz21StepsNavigation } from '@/components/quiz/Quiz21StepsNavigation';
 import { useQuizFlow } from '@/hooks/core/useQuizFlow';
 import { cn } from '@/lib/utils';
-import { Block } from '@/types/editor';
+import { Block, BlockType } from '@/types/editor';
 import { loadStepBlocks } from '@/utils/quiz21StepsRenderer';
+import { DndContext, DragEndEvent, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import React, { useEffect, useState } from 'react';
 
 /**
@@ -88,157 +90,348 @@ const QuizModularPage: React.FC = () => {
 
   const progress = Math.round((currentStep / 21) * 100);
 
+  // Configuração do DnD
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    })
+  );
+
+  // Handler para drag and drop de componentes
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    
+    if (!over) return;
+
+    const activeData = active.data.current;
+    
+    // Se arrastar um componente para o canvas
+    if (activeData?.type === 'component') {
+      const componentType = activeData.componentType as BlockType;
+      
+      console.log('🧩 Adicionando componente:', componentType);
+      
+      // Criar novo bloco
+      const newBlock: Block = {
+        id: `${componentType}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        type: componentType,
+        content: getDefaultContentForType(componentType),
+        properties: getDefaultPropertiesForType(componentType),
+        order: blocks.length,
+      };
+
+      setBlocks(prev => [...prev, newBlock]);
+    }
+  };
+
+  // Função para obter conteúdo padrão por tipo
+  const getDefaultContentForType = (type: string) => {
+    const defaults: Record<string, any> = {
+      'text-inline': { text: 'Novo texto adicionado' },
+      'heading-inline': { text: 'Novo Título', level: 'h2' },
+      'button-inline': { text: 'Novo Botão', variant: 'primary' },
+      'image-display-inline': { src: '', alt: 'Nova imagem' },
+      'quiz-intro-header': { 
+        title: 'Novo Título do Quiz', 
+        subtitle: 'Novo Subtítulo',
+        description: 'Nova descrição do quiz' 
+      },
+      'form-input': { 
+        title: 'Novo Campo', 
+        placeholder: 'Digite aqui...',
+        fieldType: 'text',
+        required: false 
+      },
+      'quiz-question': { 
+        question: 'Nova pergunta?',
+        options: ['Nova Opção 1', 'Nova Opção 2'] 
+      },
+    };
+    return defaults[type] || {};
+  };
+
+  // Função para obter propriedades padrão por tipo
+  const getDefaultPropertiesForType = (type: string) => {
+    const defaults: Record<string, any> = {
+      'text-inline': { fontSize: 16, color: '#333333' },
+      'heading-inline': { fontSize: 24, fontWeight: 'bold', color: '#1a1a1a' },
+      'button-inline': { backgroundColor: '#B89B7A', color: '#ffffff', padding: 12 },
+      'image-display-inline': { width: 'auto', height: 'auto' },
+    };
+    return defaults[type] || {};
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#FAF9F7] via-[#F5F2E9] to-[#EEEBE1]">
-      {/* 🎯 NAVEGAÇÃO DAS 21 ETAPAS */}
-      <Quiz21StepsNavigation
-        position="sticky"
-        variant="full"
-        showProgress={true}
-        showControls={true}
-        currentStep={currentStep}
-        onStepChange={handleStepChange}
-      />
+    <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+      <div className="min-h-screen bg-gradient-to-br from-[#FAF9F7] via-[#F5F2E9] to-[#EEEBE1]">
+        {/* 🎯 NAVEGAÇÃO DAS 21 ETAPAS */}
+        <Quiz21StepsNavigation
+          position="sticky"
+          variant="full"
+          showProgress={true}
+          showControls={true}
+          onStepChange={handleStepChange}
+        />
 
-      {/* 🎨 CONTAINER PRINCIPAL */}
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto">
-          {/* 📋 HEADER DA ETAPA */}
-          <div className="text-center mb-8">
-            <div className="flex items-center justify-center gap-4 mb-4">
-              <div className="text-sm text-stone-500">Etapa {currentStep} de 21</div>
-              <div className="w-32 bg-stone-200 rounded-full h-2">
-                <div
-                  className="bg-gradient-to-r from-[#B89B7A] to-[#8B7355] h-2 rounded-full transition-all duration-500"
-                  style={{ width: `${progress}%` }}
-                />
+        {/* 🏗️ LAYOUT COM 3 COLUNAS */}
+        <div className="flex h-[calc(100vh-80px)]">
+          {/* 📋 COLUNA ESQUERDA - ETAPAS (já existe na navegação superior, mas podemos adicionar detalhes) */}
+          <div className="w-80 bg-white/90 backdrop-blur-sm border-r border-stone-200/50 shadow-sm">
+            <div className="h-full flex flex-col">
+              {/* Header das Etapas */}
+              <div className="p-4 border-b border-stone-200/50 bg-stone-50/50">
+                <h3 className="text-sm font-semibold text-stone-700 flex items-center gap-2">
+                  <div className="w-5 h-5 bg-gradient-to-r from-[#B89B7A] to-[#8B7355] rounded-md flex items-center justify-center">
+                    <span className="text-white text-xs font-bold">{currentStep}</span>
+                  </div>
+                  Etapa Atual
+                </h3>
+                <p className="text-xs text-stone-500 mt-1">
+                  {currentStep} de 21 etapas
+                </p>
               </div>
-              <div className="text-sm text-stone-600">{progress}%</div>
-            </div>
 
-            <h1 className="text-3xl font-bold text-stone-800 mb-4">
-              Descubra seu Estilo Predominante
-            </h1>
-            <p className="text-stone-600 max-w-2xl mx-auto">
-              Responda com sinceridade para descobrir seu estilo pessoal único e aprenda a criar
-              looks que realmente refletem sua essência.
-            </p>
-          </div>
+              {/* Conteúdo da etapa atual */}
+              <div className="flex-1 p-4 space-y-4">
+                <div className="bg-gradient-to-r from-[#B89B7A]/10 to-[#8B7355]/10 rounded-lg p-4">
+                  <h4 className="font-medium text-stone-800 mb-2">Progresso</h4>
+                  <div className="w-full bg-stone-200 rounded-full h-2 mb-2">
+                    <div
+                      className="bg-gradient-to-r from-[#B89B7A] to-[#8B7355] h-2 rounded-full transition-all duration-500"
+                      style={{ width: `${progress}%` }}
+                    />
+                  </div>
+                  <div className="text-sm text-stone-600">{progress}% concluído</div>
+                </div>
 
-          {/* 🎨 ÁREA DE RENDERIZAÇÃO DOS BLOCOS */}
-          <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl shadow-stone-200/40 border border-stone-200/30 ring-1 ring-stone-100/20 overflow-hidden">
-            {/* Estado de loading */}
-            {isLoading && (
-              <div className="min-h-[500px] flex items-center justify-center">
-                <div className="text-center">
-                  <div className="animate-spin w-8 h-8 border-2 border-[#B89B7A] border-t-transparent rounded-full mx-auto mb-4"></div>
-                  <p className="text-stone-600">Carregando etapa {currentStep}...</p>
+                <div className="space-y-3">
+                  <h4 className="font-medium text-stone-800">Informações da Etapa</h4>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-stone-600">Etapa:</span>
+                      <span className="font-medium">{currentStep}/21</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-stone-600">Blocos:</span>
+                      <span className="font-medium">{blocks.length}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-stone-600">Status:</span>
+                      <span className="font-medium text-green-600">
+                        {blocks.length > 0 ? 'Carregada' : 'Vazia'}
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </div>
-            )}
+            </div>
+          </div>
 
-            {/* Estado de erro */}
-            {error && (
-              <div className="min-h-[500px] flex items-center justify-center">
-                <div className="text-center p-8">
-                  <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span className="text-red-600 text-2xl">⚠️</span>
+          {/* 🧩 COLUNA CENTRO-ESQUERDA - COMPONENTES */}
+          <div className="w-80 bg-white/95 backdrop-blur-sm border-r border-stone-200/50 shadow-sm">
+            <div className="h-full flex flex-col">
+              {/* Header dos Componentes */}
+              <div className="p-4 border-b border-stone-200/50 bg-gradient-to-r from-blue-50 to-purple-50">
+                <h3 className="text-sm font-semibold text-stone-700 flex items-center gap-2">
+                  <div className="w-5 h-5 bg-gradient-to-r from-blue-500 to-purple-600 rounded-md flex items-center justify-center">
+                    <span className="text-white text-xs">🧩</span>
                   </div>
-                  <h3 className="text-lg font-semibold text-red-800 mb-2">Erro ao carregar</h3>
-                  <p className="text-red-600 mb-4">{error}</p>
+                  Componentes
+                </h3>
+                <p className="text-xs text-stone-500 mt-1">
+                  Arraste para adicionar ao quiz
+                </p>
+              </div>
+
+              {/* Lista de Componentes */}
+              <div className="flex-1 overflow-auto p-4 space-y-4">
+                {/* Básicos */}
+                <div>
+                  <h4 className="text-xs font-semibold text-stone-600 mb-3 uppercase tracking-wide flex items-center gap-2">
+                    📝 Básicos
+                  </h4>
+                  <div className="space-y-2">
+                    <ComponentDragItem type="text-inline" label="Texto" icon="📝" />
+                    <ComponentDragItem type="heading-inline" label="Título" icon="📰" />
+                    <ComponentDragItem type="button-inline" label="Botão" icon="🔘" />
+                    <ComponentDragItem type="image-display-inline" label="Imagem" icon="🖼️" />
+                  </div>
+                </div>
+
+                {/* Quiz */}
+                <div>
+                  <h4 className="text-xs font-semibold text-stone-600 mb-3 uppercase tracking-wide flex items-center gap-2">
+                    🎯 Quiz
+                  </h4>
+                  <div className="space-y-2">
+                    <ComponentDragItem type="quiz-intro-header" label="Cabeçalho Quiz" icon="🎯" />
+                    <ComponentDragItem type="form-input" label="Campo Input" icon="✏️" />
+                    <ComponentDragItem type="quiz-question" label="Pergunta" icon="❓" />
+                    <ComponentDragItem type="quiz-options" label="Opções" icon="☑️" />
+                  </div>
+                </div>
+
+                {/* Design */}
+                <div>
+                  <h4 className="text-xs font-semibold text-stone-600 mb-3 uppercase tracking-wide flex items-center gap-2">
+                    🎨 Design
+                  </h4>
+                  <div className="space-y-2">
+                    <ComponentDragItem type="style-card-inline" label="Card" icon="🎴" />
+                    <ComponentDragItem type="separator-inline" label="Divisor" icon="➖" />
+                    <ComponentDragItem type="spacer-inline" label="Espaço" icon="⬜" />
+                    <ComponentDragItem type="container-inline" label="Container" icon="📦" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 🎨 ÁREA PRINCIPAL - CENTRO-DIREITA */}
+          <div className="flex-1 overflow-auto">
+            <div className="container mx-auto px-6 py-8">
+              <div className="max-w-4xl mx-auto">
+                {/* 📋 HEADER DA ETAPA */}
+                <div className="text-center mb-8">
+                  <div className="flex items-center justify-center gap-4 mb-4">
+                    <div className="text-sm text-stone-500">Etapa {currentStep} de 21</div>
+                    <div className="w-32 bg-stone-200 rounded-full h-2">
+                      <div
+                        className="bg-gradient-to-r from-[#B89B7A] to-[#8B7355] h-2 rounded-full transition-all duration-500"
+                        style={{ width: `${progress}%` }}
+                      />
+                    </div>
+                    <div className="text-sm text-stone-600">{progress}%</div>
+                  </div>
+
+                  <h1 className="text-3xl font-bold text-stone-800 mb-4">
+                    Descubra seu Estilo Predominante
+                  </h1>
+                  <p className="text-stone-600 max-w-2xl mx-auto">
+                    Responda com sinceridade para descobrir seu estilo pessoal único e aprenda a criar
+                    looks que realmente refletem sua essência.
+                  </p>
+                </div>
+
+                {/* 🎨 ÁREA DE RENDERIZAÇÃO DOS BLOCOS */}
+                <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl shadow-stone-200/40 border border-stone-200/30 ring-1 ring-stone-100/20 overflow-hidden">
+                  {/* Estado de loading */}
+                  {isLoading && (
+                    <div className="min-h-[500px] flex items-center justify-center">
+                      <div className="text-center">
+                        <div className="animate-spin w-8 h-8 border-2 border-[#B89B7A] border-t-transparent rounded-full mx-auto mb-4"></div>
+                        <p className="text-stone-600">Carregando etapa {currentStep}...</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Estado de erro */}
+                  {error && (
+                    <div className="min-h-[500px] flex items-center justify-center">
+                      <div className="text-center p-8">
+                        <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                          <span className="text-red-600 text-2xl">⚠️</span>
+                        </div>
+                        <h3 className="text-lg font-semibold text-red-800 mb-2">Erro ao carregar</h3>
+                        <p className="text-red-600 mb-4">{error}</p>
+                        <button
+                          onClick={() => window.location.reload()}
+                          className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
+                        >
+                          Tentar novamente
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Renderização dos blocos */}
+                  {!isLoading && !error && (
+                    <div className="quiz-content p-8 space-y-6">
+                      {blocks.length === 0 ? (
+                        <div className="text-center py-12">
+                          <div className="w-16 h-16 bg-stone-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <span className="text-stone-400 text-2xl">📝</span>
+                          </div>
+                          <h3 className="text-lg font-medium text-stone-800 mb-2">Etapa em construção</h3>
+                          <p className="text-stone-600">
+                            Esta etapa ainda não possui conteúdo. Você pode continuar para a próxima
+                            etapa ou arrastar componentes da barra lateral.
+                          </p>
+                        </div>
+                      ) : (
+                        blocks.map((block, index) => (
+                          <div
+                            key={block.id}
+                            className={cn(
+                              'quiz-block',
+                              'transition-all duration-300',
+                              index === 0 && 'animate-fade-in-up'
+                            )}
+                          >
+                            <UniversalBlockRenderer block={block} isSelected={false} onClick={() => {}} />
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                {/* 🎮 CONTROLES DE NAVEGAÇÃO */}
+                <div className="flex justify-between items-center mt-8">
                   <button
-                    onClick={() => window.location.reload()}
-                    className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
+                    onClick={handlePrevious}
+                    disabled={currentStep === 1}
+                    className={cn(
+                      'flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all',
+                      currentStep === 1
+                        ? 'bg-stone-100 text-stone-400 cursor-not-allowed'
+                        : 'bg-white text-stone-700 hover:bg-stone-50 border border-stone-200 shadow-sm hover:shadow'
+                    )}
                   >
-                    Tentar novamente
+                    ← Anterior
+                  </button>
+
+                  <div className="text-center">
+                    <div className="text-sm text-stone-500 mb-1">Progresso</div>
+                    <div className="text-lg font-semibold text-stone-800">{currentStep} / 21</div>
+                  </div>
+
+                  <button
+                    onClick={handleNext}
+                    disabled={currentStep === 21}
+                    className={cn(
+                      'flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all',
+                      currentStep === 21
+                        ? 'bg-stone-100 text-stone-400 cursor-not-allowed'
+                        : 'bg-gradient-to-r from-[#B89B7A] to-[#8B7355] text-white hover:from-[#A08966] hover:to-[#7A6B4D] shadow-md hover:shadow-lg'
+                    )}
+                  >
+                    {currentStep === 21 ? 'Finalizado' : 'Próxima →'}
                   </button>
                 </div>
-              </div>
-            )}
 
-            {/* Renderização dos blocos */}
-            {!isLoading && !error && (
-              <div className="quiz-content p-8 space-y-6">
-                {blocks.length === 0 ? (
-                  <div className="text-center py-12">
-                    <div className="w-16 h-16 bg-stone-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <span className="text-stone-400 text-2xl">📝</span>
+                {/* 📊 FOOTER COM ESTATÍSTICAS */}
+                <div className="text-center mt-12 text-sm text-stone-500">
+                  <div className="flex justify-center items-center space-x-6">
+                    <div className="flex items-center gap-1">
+                      <span>🎯</span> Etapa: {currentStep}/21
                     </div>
-                    <h3 className="text-lg font-medium text-stone-800 mb-2">Etapa em construção</h3>
-                    <p className="text-stone-600">
-                      Esta etapa ainda não possui conteúdo. Você pode continuar para a próxima
-                      etapa.
-                    </p>
+                    <div className="flex items-center gap-1">
+                      <span>📊</span> Progresso: {progress}%
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <span>🎨</span> Blocos: {blocks.length}
+                    </div>
                   </div>
-                ) : (
-                  blocks.map((block, index) => (
-                    <div
-                      key={block.id}
-                      className={cn(
-                        'quiz-block',
-                        'transition-all duration-300',
-                        index === 0 && 'animate-fade-in-up'
-                      )}
-                    >
-                      <UniversalBlockRenderer block={block} isSelected={false} onClick={() => {}} />
-                    </div>
-                  ))
-                )}
-              </div>
-            )}
-          </div>
-
-          {/* 🎮 CONTROLES DE NAVEGAÇÃO */}
-          <div className="flex justify-between items-center mt-8">
-            <button
-              onClick={handlePrevious}
-              disabled={currentStep === 1}
-              className={cn(
-                'flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all',
-                currentStep === 1
-                  ? 'bg-stone-100 text-stone-400 cursor-not-allowed'
-                  : 'bg-white text-stone-700 hover:bg-stone-50 border border-stone-200 shadow-sm hover:shadow'
-              )}
-            >
-              ← Anterior
-            </button>
-
-            <div className="text-center">
-              <div className="text-sm text-stone-500 mb-1">Progresso</div>
-              <div className="text-lg font-semibold text-stone-800">{currentStep} / 21</div>
-            </div>
-
-            <button
-              onClick={handleNext}
-              disabled={currentStep === 21}
-              className={cn(
-                'flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all',
-                currentStep === 21
-                  ? 'bg-stone-100 text-stone-400 cursor-not-allowed'
-                  : 'bg-gradient-to-r from-[#B89B7A] to-[#8B7355] text-white hover:from-[#A08966] hover:to-[#7A6B4D] shadow-md hover:shadow-lg'
-              )}
-            >
-              {currentStep === 21 ? 'Finalizado' : 'Próxima →'}
-            </button>
-          </div>
-
-          {/* 📊 FOOTER COM ESTATÍSTICAS */}
-          <div className="text-center mt-12 text-sm text-stone-500">
-            <div className="flex justify-center items-center space-x-6">
-              <div className="flex items-center gap-1">
-                <span>🎯</span> Etapa: {currentStep}/21
-              </div>
-              <div className="flex items-center gap-1">
-                <span>📊</span> Progresso: {progress}%
-              </div>
-              <div className="flex items-center gap-1">
-                <span>🎨</span> Blocos: {blocks.length}
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </DndContext>
   );
 };
 
