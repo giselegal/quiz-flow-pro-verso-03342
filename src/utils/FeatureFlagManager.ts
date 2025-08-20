@@ -45,7 +45,7 @@ export class FeatureFlagManager {
    */
   private loadConfig(): FeatureFlagConfig {
     const environment =
-      (process.env.NODE_ENV as 'development' | 'staging' | 'production') || 'development';
+      (import.meta.env.MODE as 'development' | 'staging' | 'production') || 'development';
 
     return {
       environment,
@@ -72,18 +72,18 @@ export class FeatureFlagManager {
       case 'development':
         return {
           ...baseFlags,
-          useUnifiedQuizSystem: process.env.VITE_USE_UNIFIED_QUIZ === 'true',
+          useUnifiedQuizSystem: import.meta.env.VITE_USE_UNIFIED_QUIZ === 'true',
           enableSystemValidation: true,
           enableCompatibilityLogging: true,
           enablePerformanceComparison: true,
-          forceUnifiedInEditor: process.env.VITE_FORCE_UNIFIED_EDITOR === 'true',
+          forceUnifiedInEditor: import.meta.env.VITE_FORCE_UNIFIED_EDITOR === 'true',
           allowSystemFallback: true,
         };
 
       case 'staging':
         return {
           ...baseFlags,
-          useUnifiedQuizSystem: process.env.VITE_USE_UNIFIED_QUIZ === 'true',
+          useUnifiedQuizSystem: import.meta.env.VITE_USE_UNIFIED_QUIZ === 'true',
           enableSystemValidation: true,
           enableCompatibilityLogging: true,
           enablePerformanceComparison: false,
@@ -223,7 +223,7 @@ export const useFeatureFlags = () => {
 /**
  * 🎮 Console de debug para development
  */
-if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
+if (typeof window !== 'undefined' && import.meta.env.MODE === 'development') {
   (window as any).quizFlags = {
     get: () => FeatureFlagManager.getInstance().getAllFlags(),
     set: (flagName: keyof FeatureFlags, value: boolean) =>
