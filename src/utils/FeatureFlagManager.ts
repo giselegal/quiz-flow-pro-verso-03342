@@ -73,7 +73,7 @@ export class FeatureFlagManager {
         return {
           ...baseFlags,
           useUnifiedQuizSystem: import.meta.env.VITE_USE_UNIFIED_QUIZ === 'true',
-          enableSystemValidation: true,
+          enableSystemValidation: false, // Desabilita validação automática por padrão no DEV
           enableCompatibilityLogging: true,
           enablePerformanceComparison: true,
           forceUnifiedInEditor: import.meta.env.VITE_FORCE_UNIFIED_EDITOR === 'true',

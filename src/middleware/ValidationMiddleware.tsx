@@ -214,7 +214,8 @@ export const ValidationMiddleware: React.FC<ValidationMiddlewareProps> = ({
    * 🚀 Inicializar validação periódica
    */
   useEffect(() => {
-    if (!flags.shouldValidateCompatibility()) {
+    const validationEnabled = flags.shouldValidateCompatibility();
+    if (!validationEnabled) {
       return;
     }
 
@@ -237,7 +238,7 @@ export const ValidationMiddleware: React.FC<ValidationMiddlewareProps> = ({
         clearTimeout(timeoutRef.current);
       }
     };
-  }, [flags, runAutoValidation]);
+  }, [flags.shouldValidateCompatibility(), runAutoValidation]);
 
   /**
    * 🎯 Render com indicador de status
