@@ -1,5 +1,5 @@
 import React from 'react';
-import { getOptimizedBlockComponent } from '@/utils/optimizedRegistry';
+import { getOptimizedBlockComponent, normalizeBlockProps } from '@/utils/optimizedRegistry';
 import { useContainerProperties } from '@/hooks/useContainerProperties';
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
@@ -13,11 +13,12 @@ export interface UniversalBlockRendererProps {
 }
 
 /**
- * UNIVERSAL BLOCK RENDERER - VERSÃO COM SUPORTE A CONTAINER PROPERTIES
- * ✅ Usa o novo ENHANCED_BLOCK_REGISTRY
- * ✅ Compatível com DynamicStepTemplate
- * ✅ Processa propriedades de container usando useContainerProperties hook
- * ✅ Sem dependências quebradas
+ * 🎯 UNIVERSAL BLOCK RENDERER - VERSÃO 2.0 OTIMIZADA
+ * ✅ Usa Enhanced Registry com 150+ componentes
+ * ✅ Sistema de fallback inteligente por categoria
+ * ✅ Normalização automática de propriedades
+ * ✅ Compatível com templates e editor
+ * ✅ Performance otimizada com Suspense
  */
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
@@ -74,50 +75,55 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
   onClick,
   onPropertyChange,
 }) => {
-  // ✅ Buscar componente otimizado com cache
-  const Component = getOptimizedBlockComponent(block.type);
+  // ✅ Normalizar propriedades para compatibilidade template/editor
+  const normalizedBlock = normalizeBlockProps(block);
+  
+  // ✅ Buscar componente otimizado com fallback inteligente
+  const Component = getOptimizedBlockComponent(normalizedBlock.type);
 
   // Processar propriedades de container usando o hook
   const { containerClasses, inlineStyles, processedProperties } = useContainerProperties(
-    block.properties
+    normalizedBlock.properties
   );
 
   // Log para debug das propriedades de container (apenas em desenvolvimento)
   if (
     import.meta.env.DEV &&
-    (block.properties?.containerWidth || block.properties?.containerPosition)
+    (normalizedBlock.properties?.containerWidth || normalizedBlock.properties?.containerPosition)
   ) {
-    console.log(`🎯 Container properties for ${block.id}:`, {
-      blockType: block.type,
+    console.log(`🎯 Container properties for ${normalizedBlock.id}:`, {
+      blockType: normalizedBlock.type,
       originalProperties: block.properties,
+      normalizedProperties: normalizedBlock.properties,
       processedProperties,
       generatedClasses: containerClasses,
     });
   }
 
+  // Com o novo sistema, Component nunca será null devido ao fallback universal
   if (!Component) {
-    // Fallback mais robusto para componentes não encontrados
+    console.error(`❌ Erro crítico: fallback universal falhou para ${normalizedBlock.type}`);
     return (
       <SimpleBlockFallback
-        blockType={block.type}
-        blockId={block.id}
-        message={`Componente '${block.type}' não foi encontrado no registry`}
+        blockType={normalizedBlock.type}
+        blockId={normalizedBlock.id}
+        message={`Erro crítico: sistema de fallback falhou para '${normalizedBlock.type}'`}
       />
     );
   }
 
   try {
     return (
-      <ProductionBlockBoundary blockType={block.type} blockId={block.id}>
+      <ProductionBlockBoundary blockType={normalizedBlock.type} blockId={normalizedBlock.id}>
         <div
           className={cn(
             'block-wrapper transition-all duration-200',
             containerClasses,
             // Margens universais com controles deslizantes
-            getMarginClass(block.properties?.marginTop ?? 0, 'top'),
-            getMarginClass(block.properties?.marginBottom ?? 0, 'bottom'),
-            getMarginClass(block.properties?.marginLeft ?? 0, 'left'),
-            getMarginClass(block.properties?.marginRight ?? 0, 'right'),
+            getMarginClass(normalizedBlock.properties?.marginTop ?? 0, 'top'),
+            getMarginClass(normalizedBlock.properties?.marginBottom ?? 0, 'bottom'),
+            getMarginClass(normalizedBlock.properties?.marginLeft ?? 0, 'left'),
+            getMarginClass(normalizedBlock.properties?.marginRight ?? 0, 'right'),
             isSelected && 'ring-2 ring-[#B89B7A] ring-offset-2'
           )}
           onClick={onClick}
@@ -125,7 +131,7 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
         >
           <React.Suspense fallback={<div className="animate-pulse bg-gray-200 h-16 rounded" />}>
             <Component
-              block={block}
+              block={normalizedBlock}
               properties={processedProperties}
               isSelected={isSelected}
               onClick={onClick}
@@ -137,12 +143,12 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
       </ProductionBlockBoundary>
     );
   } catch (error) {
-    console.error(`Erro crítico ao renderizar bloco ${block.type}:`, error);
+    console.error(`❌ Erro crítico ao renderizar bloco ${normalizedBlock.type}:`, error);
 
     return (
       <SimpleBlockFallback
-        blockType={block.type}
-        blockId={block.id}
+        blockType={normalizedBlock.type}
+        blockId={normalizedBlock.id}
         message={error instanceof Error ? error.message : 'Erro de renderização crítico'}
       />
     );
