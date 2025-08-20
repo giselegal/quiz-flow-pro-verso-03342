@@ -1,5 +1,5 @@
 import { ComponentDragItem } from '@/components/editor/components/ComponentDragItem';
-import { UniversalBlockRenderer } from '@/components/editor/blocks/UniversalBlockRenderer';
+import UniversalBlockRenderer from '@/components/editor/blocks/UniversalBlockRenderer';
 import { Quiz21StepsNavigation } from '@/components/quiz/Quiz21StepsNavigation';
 import { useQuizFlow } from '@/hooks/core/useQuizFlow';
 import { cn } from '@/lib/utils';
@@ -25,10 +25,10 @@ const QuizModularPage: React.FC = () => {
 
   // Hook para gerenciar o fluxo do quiz
   const {
-    state: quizState,
-    actions: { goToStep, nextStep, previousStep },
+    quizState,
+    actions: { goToStep, nextStep },
   } = useQuizFlow({
-    totalSteps: 21,
+    mode: 'production',
     initialStep: currentStep,
   });
 
@@ -69,26 +69,48 @@ const QuizModularPage: React.FC = () => {
     }
   }, [quizState.currentStep, currentStep]);
 
-  // Handlers de navegação
-  const handleStepChange = (step: number) => {
-    console.log(`📍 Navegando para etapa ${step}`);
-    goToStep(step);
-    setCurrentStep(step);
-  };
-
+  // 🔄 HANDLERS DE NAVEGAÇÃO
   const handleNext = () => {
     if (currentStep < 21) {
+      const nextStepNum = currentStep + 1;
+      setCurrentStep(nextStepNum);
       nextStep();
     }
   };
 
   const handlePrevious = () => {
     if (currentStep > 1) {
-      previousStep();
+      const prevStepNum = currentStep - 1;
+      setCurrentStep(prevStepNum);
+      goToStep(prevStepNum);
     }
   };
 
-  const progress = Math.round((currentStep / 21) * 100);
+  const handleStepChange = (step: number) => {
+    setCurrentStep(step);
+    goToStep(step);
+  };
+
+  // Carregar blocos da etapa atual
+  useEffect(() => {
+    const loadCurrentStepBlocks = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        
+        const stepBlocks = await loadStepBlocks(currentStep);
+        setBlocks(stepBlocks);
+      } catch (err) {
+        console.error('Erro ao carregar blocos da etapa:', err);
+        setError(`Erro ao carregar etapa ${currentStep}`);
+        setBlocks([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadCurrentStepBlocks();
+  }, [currentStep]);  const progress = Math.round((currentStep / 21) * 100);
 
   // Configuração do DnD
   const sensors = useSensors(
@@ -172,7 +194,6 @@ const QuizModularPage: React.FC = () => {
           variant="full"
           showProgress={true}
           showControls={true}
-          onStepChange={handleStepChange}
         />
 
         {/* 🏗️ LAYOUT COM 3 COLUNAS */}
