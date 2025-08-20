@@ -1,10 +1,10 @@
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { ThemeProvider } from '@/components/theme-provider';
 import { LoadingFallback } from '@/components/ui/loading-fallback';
 import { Toaster } from '@/components/ui/toaster';
 import { AuthProvider } from '@/context/AuthContext';
 import { EditorProvider } from '@/context/EditorContext';
 import { FunnelsProvider } from '@/context/FunnelsContext';
-import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { Suspense, lazy } from 'react';
 import { Route, Router, Switch } from 'wouter';
 
@@ -18,6 +18,7 @@ import { ValidationMiddleware } from '@/middleware/ValidationMiddleware';
 // Lazy load das páginas principais para code splitting
 const Home = lazy(() => import('./pages/Home'));
 const AuthPage = lazy(() => import('./pages/AuthPage'));
+const QuizModularPage = lazy(() => import('./pages/QuizModularPage'));
 // const EditorWithPreview = lazy(() => import('./pages/EditorWithPreview')); // DESATIVADO
 const EditorWithPreviewFixed = lazy(() => import('./pages/EditorWithPreview-fixed'));
 const EditorModularPage = lazy(() => import('./pages/editor-modular'));
@@ -140,8 +141,12 @@ function App() {
 
                   {/* 📊 DASHBOARD ADMINISTRATIVO - PROTECTED */}
                   <ProtectedRoute path="/admin" component={DashboardPage} requireAuth={true} />
-                  <ProtectedRoute path="/admin/:rest*" component={DashboardPage} requireAuth={true} />
-                  
+                  <ProtectedRoute
+                    path="/admin/:rest*"
+                    component={DashboardPage}
+                    requireAuth={true}
+                  />
+
                   {/* Legacy dashboard route */}
                   <Route path="/dashboard">
                     <Suspense fallback={<PageLoading />}>
@@ -163,10 +168,12 @@ function App() {
                     </Suspense>
                   </Route>
 
-                  {/* 🎮 QUIZ - removido pois página não existe mais */}
-                  {/* <Route path="/quiz-modular">
-                    <QuizPage />
-                  </Route> */}
+                  {/* 🎮 QUIZ MODULAR - Quiz de produção com etapas do editor */}
+                  <Route path="/quiz-modular">
+                    <Suspense fallback={<PageLoading />}>
+                      <QuizModularPage />
+                    </Suspense>
+                  </Route>
 
                   {/* 🎯 QUIZ 21 ETAPAS - removido pois controlador não existe */}
                   {/* <Route path="/quiz">

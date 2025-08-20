@@ -24,7 +24,7 @@ export const SortablePreviewBlockWrapper: React.FC<SortablePreviewBlockWrapperPr
   block,
   isSelected,
   isPreviewing,
-  renderConfig,
+  // renderConfig, // removido - não usado mais
   // primaryStyle, // unused
   onClick,
   // onUpdate, // unused
@@ -75,12 +75,7 @@ export const SortablePreviewBlockWrapper: React.FC<SortablePreviewBlockWrapperPr
       onMouseLeave={() => setIsHovered(false)}
       {...attributes}
     >
-      {/* ID do bloco (modo debug) */}
-      {renderConfig?.showIds && (
-        <div className="absolute -top-6 left-0 text-xs bg-gray-800 text-white px-2 py-1 rounded z-10">
-          {block.id.slice(0, 8)}...
-        </div>
-      )}
+      {/* IDs removidos para visual limpo */}
 
       {/* Renderização do bloco usando UniversalBlockRenderer */}
       <div
@@ -109,30 +104,14 @@ export const SortablePreviewBlockWrapper: React.FC<SortablePreviewBlockWrapperPr
           </div>
         ) : (
           /* Modo normal - renderizar componente real */
-          <div className="relative">
-            <div className="absolute top-2 left-2 z-20 bg-green-500 text-white text-xs px-2 py-1 rounded">
-              🎯 VISUAL MODE: {block.type}
-            </div>
-            {(() => {
-              console.log('🔥 SortablePreviewBlockWrapper - Renderizando componente:', {
-                blockType: block.type,
-                blockId: block.id,
-                debug: false,
-                isSelected,
-                blockContent: block.content,
-                blockProperties: block.properties
-              });
-              return null;
-            })()}
-            <UniversalBlockRenderer
-              block={block}
-              isSelected={isSelected}
-              onClick={() => {
-                onClick();
-                onSelect?.(block.id);
-              }}
-            />
-          </div>
+          <UniversalBlockRenderer
+            block={block}
+            isSelected={isSelected}
+            onClick={() => {
+              onClick();
+              onSelect?.(block.id);
+            }}
+          />
         )}
       </div>
 

@@ -4,16 +4,16 @@
  * Engine de preview 100% idêntico à produção
  */
 
+import { cn } from '@/lib/utils';
 import { useMonitoring } from '@/services/MonitoringService';
 import { Block } from '@/types/editor';
 import { StyleResult } from '@/types/quiz';
 import { useFeatureFlags } from '@/utils/FeatureFlagManager';
-import { cn } from '@/lib/utils';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo } from 'react';
 
 // Importações DnD
-import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { useDroppable } from '@dnd-kit/core';
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 
 // Importação do componente sortable
 import { SortablePreviewBlockWrapper } from './SortablePreviewBlockWrapper';
@@ -50,7 +50,6 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
 }) => {
   const { trackEvent } = useMonitoring();
   const flags = useFeatureFlags();
-  const [previewErrors, setPreviewErrors] = useState<string[]>([]);
 
   // Configurar como droppable para aceitar novos componentes
   const { setNodeRef: setDroppableRef, isOver } = useDroppable({
@@ -122,8 +121,6 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
       if (!block.type) errors.push(`Block missing type: ${block.id}`);
     });
 
-    setPreviewErrors(errors);
-
     if (errors.length > 0 && mode === 'editor') {
       console.warn('Preview errors detected:', errors);
     }
@@ -166,45 +163,25 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
 
   return (
     <div className={containerClasses}>
-      {/* Header do Preview (modo editor) */}
-      {mode === 'editor' && (
-        <div className="preview-header mb-4 p-3 bg-gray-50 rounded-lg border">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <span className="text-sm font-medium text-gray-700">👁️ Preview Engine</span>
-              <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">
-                {viewportConfig.label}
-              </span>
-              <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">
-                {blocks.length} blocos
-              </span>
-            </div>
-
-            {previewErrors.length > 0 && (
-              <div className="text-xs text-red-600">⚠️ {previewErrors.length} erros</div>
-            )}
-          </div>
-
-          {flags.shouldLogCompatibility() && (
-            <div className="mt-2 text-xs text-gray-500">
-              Mode: {mode} | Preview: {isPreviewing ? 'ON' : 'OFF'} | Selected:{' '}
-              {selectedBlockId || 'none'}
-            </div>
-          )}
-        </div>
-      )}
+      {/* Header removido para visual limpo */}
 
       {/* Container Principal do Preview */}
-      <div 
+      <div
         ref={setDroppableRef}
         className={cn(
-          "preview-container bg-white min-h-screen relative",
-          isOver && "bg-blue-50 border-2 border-dashed border-blue-300"
-        )} 
-        style={containerStyle}
+          'preview-container relative',
+          // MODO PRODUÇÃO: Layout idêntico ao quiz real
+          mode === 'production' && 'min-h-screen bg-gradient-to-b from-white to-gray-50',
+          // MODO PREVIEW: Layout limpo sem elementos de edição
+          mode === 'preview' && 'min-h-screen bg-white',
+          // MODO EDITOR: Layout com indicadores visuais
+          mode === 'editor' && 'bg-white min-h-screen border rounded-xl shadow-lg',
+          isOver && mode === 'editor' && 'bg-blue-50 border-2 border-dashed border-blue-300'
+        )}
+        style={mode === 'production' || mode === 'preview' ? {} : containerStyle}
       >
-        {/* Visual feedback para drop */}
-        {isOver && (
+        {/* Visual feedback para drop - APENAS NO MODO EDITOR */}
+        {isOver && mode === 'editor' && (
           <div className="absolute inset-4 border-2 border-dashed border-blue-400 rounded-lg bg-blue-50/50 flex items-center justify-center z-10">
             <div className="text-blue-600 font-medium text-sm flex items-center gap-2">
               🎯 Solte o componente aqui
@@ -213,7 +190,15 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
         )}
 
         {/* Renderização dos Blocos com SortableContext */}
-        <div className="blocks-container space-y-6 py-4 relative z-0">
+        <div
+          className={cn(
+            'blocks-container relative z-0',
+            // PRODUÇÃO/PREVIEW: Layout sem espaçamento extra
+            (mode === 'production' || mode === 'preview') && 'space-y-0',
+            // EDITOR: Layout com espaçamento visual
+            mode === 'editor' && 'space-y-6 py-4'
+          )}
+        >
           {blocks.length === 0 ? (
             <EmptyPreviewState mode={mode} />
           ) : (
@@ -237,16 +222,7 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
         </div>
       </div>
 
-      {/* Debug Info (desenvolvimento) */}
-      {process.env.NODE_ENV === 'development' && flags.shouldLogCompatibility() && (
-        <PreviewDebugPanel
-          blocks={blocks}
-          selectedBlockId={selectedBlockId}
-          viewport={viewportSize}
-          mode={mode}
-          errors={previewErrors}
-        />
-      )}
+      {/* Debug Info removido para produção limpa */}
     </div>
   );
 };
@@ -264,55 +240,6 @@ const EmptyPreviewState: React.FC<{ mode: string }> = ({ mode }) => (
         : 'Nenhum conteúdo disponível para preview.'}
     </p>
   </div>
-);
-
-/**
- * 🐛 Painel de debug do preview
- */
-interface PreviewDebugPanelProps {
-  blocks: Block[];
-  selectedBlockId?: string | null;
-  viewport: string;
-  mode: string;
-  errors: string[];
-}
-
-const PreviewDebugPanel: React.FC<PreviewDebugPanelProps> = ({
-  blocks,
-  selectedBlockId,
-  viewport,
-  mode,
-  errors,
-}) => (
-  <details className="mt-4 text-xs bg-gray-100 p-3 rounded">
-    <summary className="cursor-pointer font-medium">🐛 Preview Debug Info</summary>
-    <div className="mt-2 space-y-1">
-      <div>
-        <strong>Blocks:</strong> {blocks.length}
-      </div>
-      <div>
-        <strong>Selected:</strong> {selectedBlockId || 'none'}
-      </div>
-      <div>
-        <strong>Viewport:</strong> {viewport}
-      </div>
-      <div>
-        <strong>Mode:</strong> {mode}
-      </div>
-      <div>
-        <strong>Errors:</strong> {errors.length}
-      </div>
-      {errors.length > 0 && (
-        <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded">
-          {errors.map((error, i) => (
-            <div key={i} className="text-red-700">
-              {error}
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  </details>
 );
 
 export default UnifiedPreviewEngine;

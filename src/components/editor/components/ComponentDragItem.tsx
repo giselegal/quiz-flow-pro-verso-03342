@@ -1,6 +1,6 @@
-import React from 'react';
-import { useDraggable } from '@dnd-kit/core';
 import { cn } from '@/lib/utils';
+import { useDraggable } from '@dnd-kit/core';
+import React from 'react';
 
 interface ComponentDragItemProps {
   type: string;
@@ -69,9 +69,6 @@ export const ComponentDragItem: React.FC<ComponentDragItemProps> = ({
             {description}
           </div>
         )}
-        <div className="component-type text-xs text-gray-400 mt-1 font-mono">
-          {type}
-        </div>
       </div>
 
       {/* Indicador de drag */}

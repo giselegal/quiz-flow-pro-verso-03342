@@ -5,24 +5,24 @@ import '@/styles/editor-unified.css';
 
 // Importações DnD
 import {
-    DndContext,
-    DragEndEvent,
-    KeyboardSensor,
-    PointerSensor,
-    closestCenter,
-    useSensor,
-    useSensors,
+  DndContext,
+  DragEndEvent,
+  KeyboardSensor,
+  PointerSensor,
+  closestCenter,
+  useSensor,
+  useSensors,
 } from '@dnd-kit/core';
 import { restrictToParentElement } from '@dnd-kit/modifiers';
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 
 // EDITOR UNIFICADO - Componentes principais
 import {
-    EditorControlsManager,
-    EditorPropertiesPanel,
-    EditorStageManager,
-    UnifiedPreviewEngine,
-    UnifiedQuizStepLoader,
+  EditorControlsManager,
+  EditorPropertiesPanel,
+  EditorStageManager,
+  UnifiedPreviewEngine,
+  UnifiedQuizStepLoader,
 } from '@/components/editor/unified';
 
 // 🧩 COMPONENTES DE DRAG & DROP
@@ -185,32 +185,32 @@ const EditorUnified: React.FC = () => {
   // Handler para arrastar e soltar (drag and drop)
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
-    
+
     if (!over) return;
 
     const activeData = active.data.current;
     const overData = over.data.current;
 
-    console.log('🔄 Drag End:', { 
-      activeId: active.id, 
+    console.log('🔄 Drag End:', {
+      activeId: active.id,
       overId: over.id,
       activeData,
-      overData 
+      overData,
     });
 
     // Caso 1: Arrastar componente do painel para o canvas
     if (activeData?.type === 'component' && overData?.type === 'dropzone') {
       const componentType = activeData.componentType as BlockType;
       const targetPosition = overData.position || currentBlocks.length;
-      
+
       console.log('🧩 Adicionando novo componente:', { componentType, targetPosition });
-      
+
       // Usar addBlock do EditorContext que criará o bloco automaticamente
       addBlock(componentType).then(blockId => {
         setSelectedBlockId(blockId);
         console.log('✅ Novo bloco criado:', blockId);
       });
-      
+
       return;
     }
 
@@ -218,7 +218,7 @@ const EditorUnified: React.FC = () => {
     if (active.id !== over.id) {
       const activeId = String(active.id);
       const overId = String(over.id);
-      
+
       const oldIndex = currentBlocks.findIndex(block => block.id === activeId);
       const newIndex = currentBlocks.findIndex(block => block.id === overId);
 
@@ -226,8 +226,10 @@ const EditorUnified: React.FC = () => {
         console.log('🔄 Reordenando blocos:', { oldIndex, newIndex });
         reorderBlocks(oldIndex, newIndex);
       } else {
-        console.warn('⚠️ Não foi possível encontrar os índices dos blocos:', { 
-          activeId, overId, found: currentBlocks.map(b => b.id) 
+        console.warn('⚠️ Não foi possível encontrar os índices dos blocos:', {
+          activeId,
+          overId,
+          found: currentBlocks.map(b => b.id),
         });
       }
     }
@@ -307,7 +309,7 @@ const EditorUnified: React.FC = () => {
       sensors={sensors}
       collisionDetection={closestCenter}
       onDragEnd={handleDragEnd}
-      onDragStart={(event) => console.log('🔄 Drag Start:', event)}
+      onDragStart={event => console.log('🔄 Drag Start:', event)}
       modifiers={[restrictToParentElement]}
       autoScroll={true}
     >
@@ -419,7 +421,7 @@ const EditorUnified: React.FC = () => {
                 {/* Lista de Componentes */}
                 <div className="flex-1 overflow-auto p-4 space-y-4">
                   {/* Categorias de Componentes */}
-                  
+
                   {/* Básicos */}
                   <div>
                     <h3 className="text-xs font-semibold text-gray-600 mb-3 uppercase tracking-wide flex items-center gap-2">
@@ -439,7 +441,11 @@ const EditorUnified: React.FC = () => {
                       🎯 Quiz
                     </h3>
                     <div className="space-y-2">
-                      <ComponentDragItem type="quiz-intro-header" label="Cabeçalho Quiz" icon="🎯" />
+                      <ComponentDragItem
+                        type="quiz-intro-header"
+                        label="Cabeçalho Quiz"
+                        icon="🎯"
+                      />
                       <ComponentDragItem type="form-input" label="Campo Input" icon="✏️" />
                       <ComponentDragItem type="quiz-question" label="Pergunta" icon="❓" />
                       <ComponentDragItem type="quiz-options" label="Opções" icon="☑️" />
