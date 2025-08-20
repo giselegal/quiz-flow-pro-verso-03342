@@ -1,6 +1,7 @@
 import { ComponentDragItem } from '@/components/editor/components/ComponentDragItem';
 import UniversalBlockRenderer from '@/components/editor/blocks/UniversalBlockRenderer';
 import { Quiz21StepsNavigation } from '@/components/quiz/Quiz21StepsNavigation';
+import { Quiz21StepsProvider } from '@/components/quiz/Quiz21StepsProvider';
 import { useQuizFlow } from '@/hooks/core/useQuizFlow';
 import { cn } from '@/lib/utils';
 import { Block, BlockType } from '@/types/editor';
@@ -42,7 +43,7 @@ const QuizModularPage: React.FC = () => {
         console.log(`🔄 Carregando blocos da etapa ${currentStep}...`);
 
         // Carregar blocos usando o mesmo sistema do editor
-        const stepBlocks = await loadStepBlocks(`step-${currentStep}`);
+        const stepBlocks = await loadStepBlocks(currentStep);
 
         console.log(
           `✅ ${stepBlocks.length} blocos carregados para etapa ${currentStep}:`,
@@ -186,15 +187,16 @@ const QuizModularPage: React.FC = () => {
   };
 
   return (
-    <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
-      <div className="min-h-screen bg-gradient-to-br from-[#FAF9F7] via-[#F5F2E9] to-[#EEEBE1]">
-        {/* 🎯 NAVEGAÇÃO DAS 21 ETAPAS */}
-        <Quiz21StepsNavigation
-          position="sticky"
-          variant="full"
-          showProgress={true}
-          showControls={true}
-        />
+    <Quiz21StepsProvider>
+      <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+        <div className="min-h-screen bg-gradient-to-br from-[#FAF9F7] via-[#F5F2E9] to-[#EEEBE1]">
+          {/* 🎯 NAVEGAÇÃO DAS 21 ETAPAS */}
+          <Quiz21StepsNavigation
+            position="sticky"
+            variant="full"
+            showProgress={true}
+            showControls={true}
+          />
 
         {/* 🏗️ LAYOUT COM 3 COLUNAS */}
         <div className="flex h-[calc(100vh-80px)]">
