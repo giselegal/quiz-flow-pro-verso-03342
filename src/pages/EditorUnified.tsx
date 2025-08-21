@@ -12,6 +12,7 @@ import {
   closestCenter,
   useSensor,
   useSensors,
+  useDroppable,
 } from '@dnd-kit/core';
 import { restrictToParentElement } from '@dnd-kit/modifiers';
 import {
@@ -53,6 +54,7 @@ import { SaveTemplateModal } from '@/components/editor/SaveTemplateModal';
 // 🎨 ÍCONES E COMPONENTES DE UI PROFISSIONAIS
 import { BrandLogo } from '@/components/ui/brand-logo';
 import { Separator } from '@/components/ui/separator';
+import { cn } from '@/lib/utils';
 
 /**
  * 🎨 EDITOR UNIFICADO - Design Profissional
@@ -144,6 +146,25 @@ const EditorUnified: React.FC = () => {
   const blockIds = useMemo(() => {
     return currentBlocks.map(block => String(block.id));
   }, [currentBlocks]);
+
+  // 🔧 DROPPABLE NO NÍVEL SUPERIOR - CORREÇÃO CRÍTICA
+  const { setNodeRef: setCanvasDroppableRef, isOver: isCanvasOver } = useDroppable({
+    id: 'canvas-dropzone',
+    data: {
+      type: 'dropzone',
+      position: currentBlocks.length,
+    },
+  });
+
+  // 🔧 DEBUG: Log do droppable no nível superior
+  useEffect(() => {
+    console.log('🎯 DROPPABLE CANVAS (nível superior):', {
+      id: 'canvas-dropzone',
+      isOver: isCanvasOver,
+      hasRef: !!setCanvasDroppableRef,
+      blocksLength: currentBlocks.length
+    });
+  }, [isCanvasOver, setCanvasDroppableRef, currentBlocks.length]);
 
   // funnelId estável por sessão do editor
   const funnelIdRef = useRef<string>(`editor-unified-${Date.now()}`);
@@ -522,32 +543,47 @@ const EditorUnified: React.FC = () => {
                 </div>
               </aside>
 
-              {/* 🎨 CANVAS PRINCIPAL - Área central com design premium */}
-              <main className="unified-editor-canvas flex-1 relative bg-gradient-to-b from-slate-50/50 to-white">
+              {/* 🎨 CANVAS PRINCIPAL - DROPPABLE NO NÍVEL SUPERIOR */}
+              <main 
+                ref={setCanvasDroppableRef}
+                className={cn(
+                  "unified-editor-canvas flex-1 relative bg-gradient-to-b from-slate-50/50 to-white",
+                  // 🔧 DEBUG: Feedback visual quando isOver
+                  isCanvasOver && "bg-blue-50 ring-2 ring-blue-300 ring-inset",
+                  // 🔧 DEBUG: Ring verde para mostrar área droppable sempre
+                  "ring-1 ring-green-200 ring-inset"
+                )}
+              >
+                {/* 🔧 DEBUG: Feedback visual para drop */}
+                {isCanvasOver && (
+                  <div className="absolute inset-4 border-2 border-dashed border-blue-400 rounded-lg bg-blue-50/50 flex items-center justify-center z-50">
+                    <div className="text-blue-600 font-medium text-lg flex items-center gap-2">
+                      🎯 SOLTE O COMPONENTE AQUI
+                    </div>
+                  </div>
+                )}
+
                 {/* Background pattern sutil */}
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(184,155,122,0.03)_0%,transparent_50%)]"></div>
 
                 <div
                   ref={scrollRef}
-                  className="preview-container relative h-full p-8 overflow-auto animate-fade-in-up"
+                  className="preview-container relative h-full p-4 overflow-visible animate-fade-in-up"
                 >
-                  {/* Container do preview com sombra profissional */}
-                  <div className="mx-auto max-w-5xl">
-                    <div className="preview-frame shadow-2xl shadow-brand-primary/10 rounded-2xl overflow-hidden border border-brand-light/20 bg-white">
-                      <UnifiedPreviewEngine
-                        blocks={currentBlocks}
-                        selectedBlockId={selectedBlockId}
-                        isPreviewing={editorMode === 'preview' || editorMode === 'test'}
-                        viewportSize={controlsState.viewportSize}
-                        onBlockSelect={handleBlockSelect}
-                        onBlockUpdate={handleBlockUpdate}
-                        onBlocksReordered={handleBlocksReordered}
-                        mode={editorMode === 'edit' ? 'editor' : 'preview'}
-                        className=""
-                        key={`preview-step-${currentStep}`} // Força a recriação do componente quando a etapa muda
-                      />
-                    </div>
-                  </div>
+                  {/* Estrutura simplificada - SEM containers extras */}
+                  <UnifiedPreviewEngine
+                    blocks={currentBlocks}
+                    selectedBlockId={selectedBlockId}
+                    isPreviewing={editorMode === 'preview' || editorMode === 'test'}
+                    viewportSize={controlsState.viewportSize}
+                    onBlockSelect={handleBlockSelect}
+                    onBlockUpdate={handleBlockUpdate}
+                    onBlocksReordered={handleBlocksReordered}
+                    mode={editorMode === 'edit' ? 'editor' : 'preview'}
+                    className=""
+                    key={`preview-step-${currentStep}`}
+                    // 🔧 NÃO PASSAR DROPPABLE - agora está no main
+                  />
                 </div>
               </main>
 

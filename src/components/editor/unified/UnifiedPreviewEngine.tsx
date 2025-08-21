@@ -50,24 +50,10 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
   const { trackEvent } = useMonitoring();
   const flags = useFeatureFlags();
 
-  // Configurar como droppable para aceitar novos componentes
-  const { setNodeRef: setDroppableRef, isOver } = useDroppable({
-    id: 'canvas-dropzone',
-    data: {
-      type: 'dropzone',
-      position: blocks.length, // Adicionar no final por padrão
-    },
-  });
+  // 🔧 DROPPABLE REMOVIDO - Agora está no EditorUnified (nível superior)
+  // const { setNodeRef: setDroppableRef, isOver } = useDroppable({ ... });
 
-  // 🔧 DEBUG: Log do useDroppable
-  useEffect(() => {
-    console.log('🎯 UnifiedPreviewEngine: useDroppable configurado', {
-      id: 'canvas-dropzone',
-      isOver,
-      hasRef: !!setDroppableRef,
-      blocksLength: blocks.length
-    });
-  }, [isOver, setDroppableRef, blocks.length]);
+  // 🔧 DEBUG: Log removido pois droppable está no nível superior
 
   // Configurações do viewport
   const viewportConfig = useMemo(() => {
