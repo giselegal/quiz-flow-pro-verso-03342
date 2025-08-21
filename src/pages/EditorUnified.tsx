@@ -14,7 +14,11 @@ import {
   useSensors,
 } from '@dnd-kit/core';
 import { restrictToParentElement } from '@dnd-kit/modifiers';
-import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
+import { 
+  SortableContext, 
+  sortableKeyboardCoordinates, 
+  verticalListSortingStrategy 
+} from '@dnd-kit/sortable';
 
 // EDITOR UNIFICADO - Componentes principais
 import {
@@ -182,33 +186,58 @@ const EditorUnified: React.FC = () => {
     setControlsState(prev => ({ ...prev, viewportSize: size }));
   };
 
+  // Handler para início do drag (debug)
+  const handleDragStart = (event: any) => {
+    console.log('🚀 === DRAG START ===');
+    console.log('🔸 Active:', {
+      id: event.active.id,
+      data: event.active.data.current,
+      type: event.active.data.current?.type
+    });
+  };
+
   // Handler para arrastar e soltar (drag and drop)
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
-    if (!over) return;
+    console.log('🎯 === DRAG END DEBUG ===');
+    console.log('🔸 Active:', {
+      id: active.id,
+      data: active.data.current,
+      type: active.data.current?.type
+    });
+    console.log('� Over:', {
+      id: over?.id,
+      data: over?.data.current,
+      type: over?.data.current?.type
+    });
+
+    if (!over) {
+      console.log('❌ Drag cancelado: nenhum target válido');
+      return;
+    }
 
     const activeData = active.data.current;
     const overData = over.data.current;
-
-    console.log('🔄 Drag End:', {
-      activeId: active.id,
-      overId: over.id,
-      activeData,
-      overData,
-    });
 
     // Caso 1: Arrastar componente do sidebar para o canvas
     if (activeData?.type === 'sidebar-component' && overData?.type === 'dropzone') {
       const componentType = activeData.blockType as BlockType;
       const targetPosition = overData.position || currentBlocks.length;
 
-      console.log('🧩 Adicionando novo componente do sidebar:', { componentType, targetPosition });
+      console.log('🧩 ✅ ADICIONANDO COMPONENTE:', { 
+        componentType, 
+        targetPosition,
+        activeId: active.id,
+        overId: over.id 
+      });
 
       // Usar addBlock do EditorContext que criará o bloco automaticamente
       addBlock(componentType).then(blockId => {
         setSelectedBlockId(blockId);
-        console.log('✅ Novo bloco criado:', blockId);
+        console.log('✅ Novo bloco criado com ID:', blockId);
+      }).catch(error => {
+        console.error('❌ Erro ao criar bloco:', error);
       });
 
       return;
@@ -222,17 +251,34 @@ const EditorUnified: React.FC = () => {
       const oldIndex = currentBlocks.findIndex(block => block.id === activeId);
       const newIndex = currentBlocks.findIndex(block => block.id === overId);
 
+      console.log('🔄 ✅ REORDENANDO BLOCOS:', { 
+        activeId, 
+        overId, 
+        oldIndex, 
+        newIndex,
+        totalBlocks: currentBlocks.length 
+      });
+
       if (oldIndex !== -1 && newIndex !== -1) {
-        console.log('🔄 Reordenando blocos:', { oldIndex, newIndex });
         reorderBlocks(oldIndex, newIndex);
       } else {
-        console.warn('⚠️ Não foi possível encontrar os índices dos blocos:', {
+        console.warn('⚠️ Índices não encontrados:', {
           activeId,
           overId,
-          found: currentBlocks.map(b => b.id),
+          found: currentBlocks.map(b => ({ id: b.id, type: b.type })),
         });
       }
+      return;
     }
+
+    // Caso 3: Log para casos não tratados
+    console.log('🟡 Drag não tratado:', {
+      activeType: activeData?.type,
+      overType: overData?.type,
+      activeId: active.id,
+      overId: over.id,
+      sameId: active.id === over.id
+    });
   };
 
   // Handler para reordenação direta (ex: via preview engine)
@@ -309,7 +355,7 @@ const EditorUnified: React.FC = () => {
       sensors={sensors}
       collisionDetection={closestCenter}
       onDragEnd={handleDragEnd}
-      onDragStart={event => console.log('🔄 Drag Start:', event)}
+      onDragStart={handleDragStart}
       modifiers={[restrictToParentElement]}
       autoScroll={true}
     >

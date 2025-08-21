@@ -74,7 +74,7 @@ export const SortablePreviewBlockWrapper: React.FC<SortablePreviewBlockWrapperPr
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       {...attributes}
-      {...listeners}
+      {...listeners} // ✅ CRUCIAL: Listeners para drag funcionarem
     >
       {/* IDs removidos para visual limpo */}
 
