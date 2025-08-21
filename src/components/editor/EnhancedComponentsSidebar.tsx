@@ -24,14 +24,17 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
   const { scrollRef } = useSyncedScroll({ source: 'components' });
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({
-    'Edição JSON': true,
-    'Componentes Modulares': true,
-    Quiz: true,
-    Interativo: true,
-    CTA: true,
-    Conteúdo: false,
-    Legal: false,
-    Estrutura: false,
+    step01: true,
+    content: true,
+    quiz: true,
+    action: true,
+    conversion: true,
+    ui: true,
+    interactive: false,
+    design: false,
+    structure: false,
+    advanced: false,
+    Outros: false,
   });
 
   console.log('🧩 AVAILABLE_COMPONENTS carregados:', AVAILABLE_COMPONENTS.length);

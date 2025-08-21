@@ -147,7 +147,7 @@ fi
 if [[ "$ISSUES" -eq 0 ]]; then
     echo "✅ ESTRUTURA PARECE CORRETA"
     echo "💡 Execute teste no browser para verificação completa:"
-    echo "   1. Acesse http://localhost:8082/editor-unified"
+    echo "   1. Acesse http://localhost:8083/editor-unified"
     echo "   2. Cole o script teste-camadas-canvas-containers.js no console"
 else
     echo "🔧 $ISSUES PROBLEMA(S) IDENTIFICADO(S)"
