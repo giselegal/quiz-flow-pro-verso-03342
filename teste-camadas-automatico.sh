@@ -48,7 +48,7 @@ SORTABLE_COUNT_ENGINE=$(grep -c "SortableContext" src/components/editor/unified/
 echo "SortableContext em EditorUnified.tsx: $SORTABLE_COUNT_EDITOR"
 echo "SortableContext em UnifiedPreviewEngine-drag.tsx: $SORTABLE_COUNT_ENGINE"
 
-if [ "$SORTABLE_COUNT_EDITOR" -gt 0 ] && [ "$SORTABLE_COUNT_ENGINE" -gt 0 ]; then
+if [[ "$SORTABLE_COUNT_EDITOR" -gt 0 ]] && [[ "$SORTABLE_COUNT_ENGINE" -gt 0 ]]; then
     echo "❌ PROBLEMA: SortableContext duplicado detectado"
 else
     echo "✅ SortableContext único"
@@ -129,7 +129,7 @@ echo "===================="
 
 ISSUES=0
 
-if [ "$SORTABLE_COUNT_EDITOR" -gt 0 ] && [ "$SORTABLE_COUNT_ENGINE" -gt 0 ]; then
+if [[ "$SORTABLE_COUNT_EDITOR" -gt 0 ]] && [[ "$SORTABLE_COUNT_ENGINE" -gt 0 ]]; then
     echo "❌ SortableContext duplicado"
     ((ISSUES++))
 fi
@@ -139,15 +139,15 @@ if ! grep -q "UnifiedPreviewEngine-drag" src/pages/EditorUnified.tsx; then
     ((ISSUES++))
 fi
 
-if [ "$DROPPABLE_COUNT" -eq 0 ]; then
+if [[ "$DROPPABLE_COUNT" -eq 0 ]]; then
     echo "❌ Droppable não configurado"
     ((ISSUES++))
 fi
 
-if [ "$ISSUES" -eq 0 ]; then
+if [[ "$ISSUES" -eq 0 ]]; then
     echo "✅ ESTRUTURA PARECE CORRETA"
     echo "💡 Execute teste no browser para verificação completa:"
-    echo "   1. Acesse http://localhost:8083/editor-unified"
+    echo "   1. Acesse http://localhost:8082/editor-unified"
     echo "   2. Cole o script teste-camadas-canvas-containers.js no console"
 else
     echo "🔧 $ISSUES PROBLEMA(S) IDENTIFICADO(S)"

@@ -1,5 +1,5 @@
 import UniversalBlockRenderer from '@/components/editor/blocks/UniversalBlockRenderer';
-import { ComponentDragItem } from '@/components/editor/components/ComponentDragItem';
+import EnhancedComponentsSidebar from '@/components/editor/EnhancedComponentsSidebar';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { useQuizFlow } from '@/hooks/core/useQuizFlow';
@@ -245,8 +245,8 @@ const QuizModularPage: React.FC = () => {
     const activeData = active.data.current;
 
     // Se arrastar um componente para o canvas
-    if (activeData?.type === 'component') {
-      const componentType = activeData.componentType as BlockType;
+    if (activeData?.type === 'sidebar-component') {
+      const componentType = activeData.blockType as BlockType;
 
       console.log('🧩 Adicionando componente:', componentType);
 
@@ -356,7 +356,7 @@ const QuizModularPage: React.FC = () => {
           </div>
 
           {/* 🧩 COLUNA CENTRO-ESQUERDA - COMPONENTES */}
-          <div className="w-80 bg-white/95 backdrop-blur-sm border-r border-stone-200/50 shadow-sm">
+          <aside className="w-80 bg-white/95 backdrop-blur-sm border-r border-stone-200/50 shadow-sm">
             <div className="h-full flex flex-col">
               {/* Header dos Componentes */}
               <div className="p-4 border-b border-stone-200/50 bg-gradient-to-r from-blue-50 to-purple-50">
@@ -368,50 +368,12 @@ const QuizModularPage: React.FC = () => {
                 </h3>
                 <p className="text-xs text-stone-500 mt-1">Arraste para adicionar ao quiz</p>
               </div>
-
-              {/* Lista de Componentes */}
-              <div className="flex-1 overflow-auto p-4 space-y-4">
-                {/* Básicos */}
-                <div>
-                  <h4 className="text-xs font-semibold text-stone-600 mb-3 uppercase tracking-wide flex items-center gap-2">
-                    📝 Básicos
-                  </h4>
-                  <div className="space-y-2">
-                    <ComponentDragItem type="text-inline" label="Texto" icon="📝" />
-                    <ComponentDragItem type="heading-inline" label="Título" icon="📰" />
-                    <ComponentDragItem type="button-inline" label="Botão" icon="🔘" />
-                    <ComponentDragItem type="image-display-inline" label="Imagem" icon="🖼️" />
-                  </div>
-                </div>
-
-                {/* Quiz */}
-                <div>
-                  <h4 className="text-xs font-semibold text-stone-600 mb-3 uppercase tracking-wide flex items-center gap-2">
-                    🎯 Quiz
-                  </h4>
-                  <div className="space-y-2">
-                    <ComponentDragItem type="quiz-intro-header" label="Cabeçalho Quiz" icon="🎯" />
-                    <ComponentDragItem type="form-input" label="Campo Input" icon="✏️" />
-                    <ComponentDragItem type="quiz-question" label="Pergunta" icon="❓" />
-                    <ComponentDragItem type="quiz-options" label="Opções" icon="☑️" />
-                  </div>
-                </div>
-
-                {/* Design */}
-                <div>
-                  <h4 className="text-xs font-semibold text-stone-600 mb-3 uppercase tracking-wide flex items-center gap-2">
-                    🎨 Design
-                  </h4>
-                  <div className="space-y-2">
-                    <ComponentDragItem type="style-card-inline" label="Card" icon="🎴" />
-                    <ComponentDragItem type="separator-inline" label="Divisor" icon="➖" />
-                    <ComponentDragItem type="spacer-inline" label="Espaço" icon="⬜" />
-                    <ComponentDragItem type="container-inline" label="Container" icon="📦" />
-                  </div>
-                </div>
+              {/* Sidebar Unificado */}
+              <div className="flex-1 overflow-hidden">
+                <EnhancedComponentsSidebar />
               </div>
             </div>
-          </div>
+          </aside>
 
           {/* 🎨 ÁREA PRINCIPAL - CENTRO-DIREITA */}
           <div className="flex-1 overflow-auto">
