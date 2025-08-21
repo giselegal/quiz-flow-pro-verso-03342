@@ -58,10 +58,10 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
   // Renderizar conteúdo vazio se não há blocos
   if (!blocks || blocks.length === 0) {
     return (
-      <div 
+      <div
         className={cn(
-          "flex items-center justify-center h-64 border-2 border-dashed border-gray-300 rounded-lg",
-          "text-gray-500 bg-gray-50",
+          'flex items-center justify-center h-64 border-2 border-dashed border-gray-300 rounded-lg',
+          'text-gray-500 bg-gray-50',
           className
         )}
         style={{ maxWidth: viewportConfig.maxWidth }}
@@ -75,15 +75,11 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
   }
 
   return (
-    <div 
-      className={cn(
-        "preview-container",
-        "transition-all duration-200",
-        className
-      )}
+    <div
+      className={cn('preview-container', 'transition-all duration-200', className)}
       style={{ maxWidth: viewportConfig.maxWidth }}
     >
-      {blocks.map((block) => (
+      {blocks.map(block => (
         <SortablePreviewBlockWrapper
           key={block.id}
           block={block}
@@ -91,7 +87,7 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
           isPreviewing={isPreviewing || false}
           primaryStyle={primaryStyle}
           onClick={() => onBlockSelect?.(block.id)}
-          onUpdate={onBlockUpdate ? (updates) => onBlockUpdate(block.id, updates) : () => {}}
+          onUpdate={onBlockUpdate ? updates => onBlockUpdate(block.id, updates) : () => {}}
           onSelect={onBlockSelect}
         />
       ))}
