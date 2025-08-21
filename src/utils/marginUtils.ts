@@ -6,8 +6,13 @@
 
 // Função universal com tipos corretos para usar em todos os blocos
 export const getMarginClass = (value: string | number | undefined, type: string): string => {
-  const numValue = typeof value === 'string' ? parseInt(value, 10) : value || 0;
-
+  // Adicionar validação de tipo
+  if (typeof value === 'object' && value !== null) {
+    console.warn('getMarginClass received object value:', value);
+    return '';
+  }
+  
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
   if (isNaN(numValue) || numValue === 0 || value === undefined) return '';
 
   const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
