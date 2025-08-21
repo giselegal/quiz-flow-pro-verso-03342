@@ -19,6 +19,8 @@ import React, { useState } from 'react';
 interface EnhancedComponentsSidebarProps {}
 
 const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () => {
+  console.log('🎯 EnhancedComponentsSidebar renderizando...');
+  
   const { scrollRef } = useSyncedScroll({ source: 'components' });
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({
@@ -31,6 +33,9 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
     Legal: false,
     Estrutura: false,
   });
+  
+  console.log('🧩 AVAILABLE_COMPONENTS carregados:', AVAILABLE_COMPONENTS.length);
+  console.log('📋 Primeiros 3 componentes:', AVAILABLE_COMPONENTS.slice(0, 3));
 
   // 🎯 Blocos principais do editor-fixed (limpos do EnhancedBlockRegistry)
   const allBlocks = AVAILABLE_COMPONENTS.map(comp => ({
@@ -83,6 +88,10 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
 
   // Ordena dinamicamente pelas categorias existentes
   const orderedCategories = Object.keys(groupedBlocks);
+  
+  console.log('📊 Categorias processadas:', orderedCategories);
+  console.log('🔍 Blocos filtrados:', filteredBlocks.length);
+  console.log('📋 Grupos criados:', Object.keys(groupedBlocks));
 
   return (
     <Card className="h-full flex flex-col">
