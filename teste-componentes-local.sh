@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# 🛠️ SCRIPT DE TESTE AUTOMATIZADO PARA COMPONENTES DRAG & DROP
+# Verifica estrutura e funcionalidade de drag & drop no ambiente local
+
+echo "🔍 Iniciando teste automatizado - componentes drag & drop"
+echo "=============================================="
+
 # Script para testar componentes no ambiente local
 echo "🔍 TESTE AUTOMATIZADO - COMPONENTES DRAG & DROP"
 echo "=============================================="
@@ -10,6 +16,8 @@ if curl -s http://localhost:8082 > /dev/null; then
     echo "✅ Servidor respondendo em localhost:8082"
 else
     echo "❌ Servidor não está respondendo"
+    exit 1
+fi
     exit 1
 fi
 
