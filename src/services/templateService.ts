@@ -1,9 +1,54 @@
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '../templates/quiz21StepsComplete';
+import { supabase } from '@/integrations/supabase/client';
 import type { Block, BlockType } from '../types/editor';
+
+// Tipos para Templates do Supabase (baseado no schema manual)
+interface QuizTemplate {
+  id: string;
+  name: string;
+  description: string | null;
+  category: string;
+  template_data: any;
+  thumbnail_url: string | null;
+  is_official: boolean;
+  creator_id: string | null;
+  usage_count: number;
+  created_at: string;
+  updated_at: string;
+}
+
+interface InsertQuizTemplate {
+  name: string;
+  description?: string;
+  category?: string;
+  template_data: any;
+  thumbnail_url?: string;
+  is_official?: boolean;
+  creator_id?: string;
+}
 
 export interface TemplateData {
   blocks: Block[];
   templateVersion: string;
+}
+
+// Interface para Template da UI
+export interface UITemplate {
+  id: string;
+  name: string;
+  description: string;
+  category: 'quiz' | 'funnel' | 'landing' | 'survey';
+  difficulty: 'beginner' | 'intermediate' | 'advanced';
+  isPremium: boolean;
+  rating: number;
+  downloads: number;
+  thumbnail: string;
+  components: number;
+  author: string;
+  tags: string[];
+  templateData?: any;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface StepLoadResult {

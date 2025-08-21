@@ -1,18 +1,10 @@
-import { EnhancedComponentsSidebar } from '@/components/editor/EnhancedComponentsSidebar';
-import { EditorAccessControl, UserPlanInfo } from '@/components/editor/EditorAccessControl';
 import { CollaborationStatus } from '@/components/editor/CollaborationStatus';
-import { DndContext, DragEndEvent, DragOverEvent, DragStartEvent } from '@dnd-kit/core';
-import { Button } from '@/components/ui/button';
+import { EditorAccessControl, UserPlanInfo } from '@/components/editor/EditorAccessControl';
+import { EnhancedComponentsSidebar } from '@/components/editor/EnhancedComponentsSidebar';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Save, 
-  Download, 
-  Eye, 
-  Settings, 
-  Users,
-  History,
-  Share
-} from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { DndContext, DragEndEvent, DragOverEvent, DragStartEvent } from '@dnd-kit/core';
+import { Download, Eye, History, Save, Settings, Share, Users } from 'lucide-react';
 import React, { useState } from 'react';
 
 interface EditorUnifiedProps {
@@ -34,7 +26,7 @@ export const EditorUnified: React.FC<EditorUnifiedProps> = () => {
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
-    
+
     if (!over) return;
 
     // Handle different drop scenarios
@@ -76,10 +68,10 @@ export const EditorUnified: React.FC<EditorUnifiedProps> = () => {
             <h1 className="text-lg font-semibold">Editor Visual</h1>
             <Badge variant="outline">Projeto Demo</Badge>
           </div>
-          
+
           <div className="flex items-center gap-2">
             <UserPlanInfo />
-            
+
             <div className="flex items-center gap-1 ml-4">
               <Button variant="outline" size="sm" onClick={handleSave}>
                 <Save className="h-4 w-4 mr-2" />
@@ -113,10 +105,7 @@ export const EditorUnified: React.FC<EditorUnifiedProps> = () => {
           <div className="flex-1 flex bg-background">
             {/* Sidebar de Componentes - 20% */}
             <div className="w-1/5 min-w-[280px] max-w-[350px] border-r">
-              <EnhancedComponentsSidebar 
-                searchTerm={searchTerm}
-                setSearchTerm={setSearchTerm}
-              />
+              <EnhancedComponentsSidebar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
             </div>
 
             {/* Painel de Colaboração - 15% */}
@@ -128,7 +117,7 @@ export const EditorUnified: React.FC<EditorUnifiedProps> = () => {
                     <h3 className="text-sm font-medium">Colaboração</h3>
                   </div>
                   <CollaborationStatus projectId={projectId} />
-                  
+
                   <div className="pt-4 border-t">
                     <div className="flex items-center gap-2 mb-2">
                       <History className="h-4 w-4" />
@@ -152,7 +141,7 @@ export const EditorUnified: React.FC<EditorUnifiedProps> = () => {
             {/* Canvas Central - 45% */}
             <div className="flex-1 min-w-[400px]">
               <div className="h-full bg-background p-4">
-                <div 
+                <div
                   id="canvas-droppable"
                   className="h-full border-2 border-dashed border-muted-foreground/20 rounded-lg flex items-center justify-center relative"
                 >
@@ -161,7 +150,10 @@ export const EditorUnified: React.FC<EditorUnifiedProps> = () => {
                     <div className="text-sm">Arraste componentes aqui</div>
                     <div className="text-xs mt-2">Canvas Elements: {canvasElements.length}</div>
                     {canvasElements.map((el, idx) => (
-                      <div key={idx} className="text-xs border border-border p-2 m-1 rounded bg-background">
+                      <div
+                        key={idx}
+                        className="text-xs border border-border p-2 m-1 rounded bg-background"
+                      >
                         {el.label}
                       </div>
                     ))}
@@ -181,7 +173,7 @@ export const EditorUnified: React.FC<EditorUnifiedProps> = () => {
                       Selecione um elemento no canvas para editar suas propriedades
                     </div>
                   </div>
-                  
+
                   <div className="p-3 bg-background rounded border">
                     <div className="text-sm font-medium mb-2">Configurações Gerais</div>
                     <div className="space-y-2">

@@ -1,17 +1,9 @@
-import { useAuth } from '@/contexts/AuthContext';
-import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { 
-  Users, 
-  Eye, 
-  Edit, 
-  Crown, 
-  UserPlus,
-  Wifi,
-  WifiOff
-} from 'lucide-react';
-import React, { useState, useEffect } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
+import { Crown, Edit, Eye, UserPlus, Users, Wifi, WifiOff } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
 
 interface Collaborator {
   id: string;
@@ -46,7 +38,7 @@ export const CollaborationStatus: React.FC<CollaborationStatusProps> = ({ projec
         role: 'editor',
         isOnline: true,
         lastSeen: new Date().toISOString(),
-        cursor: { x: 150, y: 200, color: '#3B82F6' }
+        cursor: { x: 150, y: 200, color: '#3B82F6' },
       },
       {
         id: '2',
@@ -55,7 +47,7 @@ export const CollaborationStatus: React.FC<CollaborationStatusProps> = ({ projec
         role: 'viewer',
         isOnline: true,
         lastSeen: new Date().toISOString(),
-        cursor: { x: 300, y: 150, color: '#EF4444' }
+        cursor: { x: 300, y: 150, color: '#EF4444' },
       },
       {
         id: '3',
@@ -63,22 +55,24 @@ export const CollaborationStatus: React.FC<CollaborationStatusProps> = ({ projec
         email: 'pedro@email.com',
         role: 'admin',
         isOnline: false,
-        lastSeen: new Date(Date.now() - 1000 * 60 * 15).toISOString() // 15 min ago
-      }
+        lastSeen: new Date(Date.now() - 1000 * 60 * 15).toISOString(), // 15 min ago
+      },
     ];
 
     setCollaborators(mockCollaborators);
 
     // Simular conexão em tempo real
     const interval = setInterval(() => {
-      setCollaborators(current => 
+      setCollaborators(current =>
         current.map(c => ({
           ...c,
-          cursor: c.isOnline ? {
-            ...c.cursor!,
-            x: Math.random() * 800,
-            y: Math.random() * 600
-          } : undefined
+          cursor: c.isOnline
+            ? {
+                ...c.cursor!,
+                x: Math.random() * 800,
+                y: Math.random() * 600,
+              }
+            : undefined,
         }))
       );
     }, 3000);
@@ -88,19 +82,27 @@ export const CollaborationStatus: React.FC<CollaborationStatusProps> = ({ projec
 
   const getRoleIcon = (role: string) => {
     switch (role) {
-      case 'admin': return <Crown className="h-3 w-3" />;
-      case 'editor': return <Edit className="h-3 w-3" />;
-      case 'viewer': return <Eye className="h-3 w-3" />;
-      default: return <Users className="h-3 w-3" />;
+      case 'admin':
+        return <Crown className="h-3 w-3" />;
+      case 'editor':
+        return <Edit className="h-3 w-3" />;
+      case 'viewer':
+        return <Eye className="h-3 w-3" />;
+      default:
+        return <Users className="h-3 w-3" />;
     }
   };
 
   const getRoleColor = (role: string) => {
     switch (role) {
-      case 'admin': return 'destructive';
-      case 'editor': return 'default';
-      case 'viewer': return 'secondary';
-      default: return 'secondary';
+      case 'admin':
+        return 'destructive';
+      case 'editor':
+        return 'default';
+      case 'viewer':
+        return 'secondary';
+      default:
+        return 'secondary';
     }
   };
 
@@ -144,9 +146,7 @@ export const CollaborationStatus: React.FC<CollaborationStatusProps> = ({ projec
               </AvatarFallback>
             </Avatar>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium truncate">
-                Você ({profile.name || profile.email})
-              </p>
+              <p className="text-sm font-medium truncate">Você ({profile.name || profile.email})</p>
             </div>
             <Badge variant="default" className="text-xs">
               {getRoleIcon(profile.role)}
@@ -156,9 +156,9 @@ export const CollaborationStatus: React.FC<CollaborationStatusProps> = ({ projec
         )}
 
         {/* Outros Colaboradores */}
-        {collaborators.map((collaborator) => (
-          <div 
-            key={collaborator.id} 
+        {collaborators.map(collaborator => (
+          <div
+            key={collaborator.id}
             className={`flex items-center gap-2 p-2 rounded-md ${
               collaborator.isOnline ? 'bg-green-50' : 'bg-muted/50'
             }`}
@@ -173,17 +173,16 @@ export const CollaborationStatus: React.FC<CollaborationStatusProps> = ({ projec
                 <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
               )}
             </div>
-            
+
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium truncate">{collaborator.name}</p>
               <p className="text-xs text-muted-foreground">
-                {collaborator.isOnline 
-                  ? 'Online agora' 
-                  : `Visto ${new Date(collaborator.lastSeen).toLocaleTimeString()}`
-                }
+                {collaborator.isOnline
+                  ? 'Online agora'
+                  : `Visto ${new Date(collaborator.lastSeen).toLocaleTimeString()}`}
               </p>
             </div>
-            
+
             <Badge variant={getRoleColor(collaborator.role) as any} className="text-xs">
               {getRoleIcon(collaborator.role)}
               <span className="ml-1">{collaborator.role}</span>
@@ -193,31 +192,32 @@ export const CollaborationStatus: React.FC<CollaborationStatusProps> = ({ projec
       </div>
 
       {/* Cursores dos Colaboradores (para mostrar no canvas) */}
-      {onlineCollaborators.map((collaborator) => 
-        collaborator.cursor && (
-          <div
-            key={`cursor-${collaborator.id}`}
-            className="absolute pointer-events-none z-50"
-            style={{
-              left: collaborator.cursor.x,
-              top: collaborator.cursor.y,
-              color: collaborator.cursor.color
-            }}
-          >
-            <div className="flex items-center gap-1">
-              <div 
-                className="w-3 h-3 rounded-full"
-                style={{ backgroundColor: collaborator.cursor.color }}
-              ></div>
-              <span 
-                className="text-xs font-medium px-2 py-1 rounded text-white"
-                style={{ backgroundColor: collaborator.cursor.color }}
-              >
-                {collaborator.name}
-              </span>
+      {onlineCollaborators.map(
+        collaborator =>
+          collaborator.cursor && (
+            <div
+              key={`cursor-${collaborator.id}`}
+              className="absolute pointer-events-none z-50"
+              style={{
+                left: collaborator.cursor.x,
+                top: collaborator.cursor.y,
+                color: collaborator.cursor.color,
+              }}
+            >
+              <div className="flex items-center gap-1">
+                <div
+                  className="w-3 h-3 rounded-full"
+                  style={{ backgroundColor: collaborator.cursor.color }}
+                ></div>
+                <span
+                  className="text-xs font-medium px-2 py-1 rounded text-white"
+                  style={{ backgroundColor: collaborator.cursor.color }}
+                >
+                  {collaborator.name}
+                </span>
+              </div>
             </div>
-          </div>
-        )
+          )
       )}
     </div>
   );

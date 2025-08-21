@@ -1,17 +1,8 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { 
-  Template, 
-  Search, 
-  Star, 
-  Download, 
-  Eye,
-  Filter,
-  Sparkles,
-  Crown
-} from 'lucide-react';
+import { Crown, Download, Eye, Filter, Search, Sparkles, Star, Template } from 'lucide-react';
 import React, { useState } from 'react';
 
 interface Template {
@@ -47,7 +38,7 @@ export const TemplateLibrary: React.FC = () => {
       thumbnail: 'https://via.placeholder.com/300x200',
       components: 15,
       author: 'Gisele Galvão',
-      tags: ['personalidade', 'carreira', 'autoconhecimento']
+      tags: ['personalidade', 'carreira', 'autoconhecimento'],
     },
     {
       id: '2',
@@ -61,7 +52,7 @@ export const TemplateLibrary: React.FC = () => {
       thumbnail: 'https://via.placeholder.com/300x200',
       components: 22,
       author: 'João Silva',
-      tags: ['vendas', 'b2b', 'captação']
+      tags: ['vendas', 'b2b', 'captação'],
     },
     {
       id: '3',
@@ -75,7 +66,7 @@ export const TemplateLibrary: React.FC = () => {
       thumbnail: 'https://via.placeholder.com/300x200',
       components: 8,
       author: 'Maria Santos',
-      tags: ['minimalista', 'produto', 'conversão']
+      tags: ['minimalista', 'produto', 'conversão'],
     },
     {
       id: '4',
@@ -89,34 +80,47 @@ export const TemplateLibrary: React.FC = () => {
       thumbnail: 'https://via.placeholder.com/300x200',
       components: 12,
       author: 'Pedro Costa',
-      tags: ['feedback', 'satisfação', 'nps']
-    }
+      tags: ['feedback', 'satisfação', 'nps'],
+    },
   ];
 
   const categories = [
     { id: 'all', name: 'Todos', count: templates.length },
     { id: 'quiz', name: 'Quiz', count: templates.filter(t => t.category === 'quiz').length },
     { id: 'funnel', name: 'Funil', count: templates.filter(t => t.category === 'funnel').length },
-    { id: 'landing', name: 'Landing', count: templates.filter(t => t.category === 'landing').length },
-    { id: 'survey', name: 'Pesquisa', count: templates.filter(t => t.category === 'survey').length }
+    {
+      id: 'landing',
+      name: 'Landing',
+      count: templates.filter(t => t.category === 'landing').length,
+    },
+    {
+      id: 'survey',
+      name: 'Pesquisa',
+      count: templates.filter(t => t.category === 'survey').length,
+    },
   ];
 
   const filteredTemplates = templates.filter(template => {
-    const matchesSearch = template.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         template.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         template.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
-    
+    const matchesSearch =
+      template.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      template.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      template.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
+
     const matchesCategory = selectedCategory === 'all' || template.category === selectedCategory;
-    
+
     return matchesSearch && matchesCategory;
   });
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
-      case 'beginner': return 'bg-green-100 text-green-800';
-      case 'intermediate': return 'bg-yellow-100 text-yellow-800';
-      case 'advanced': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'beginner':
+        return 'bg-green-100 text-green-800';
+      case 'intermediate':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'advanced':
+        return 'bg-red-100 text-red-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
@@ -153,7 +157,7 @@ export const TemplateLibrary: React.FC = () => {
           <Input
             placeholder="Buscar templates..."
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={e => setSearchTerm(e.target.value)}
             className="pl-10"
           />
         </div>
@@ -162,7 +166,7 @@ export const TemplateLibrary: React.FC = () => {
         <div className="flex items-center gap-2">
           <Filter className="h-4 w-4 text-muted-foreground" />
           <span className="text-sm font-medium">Categorias:</span>
-          {categories.map((category) => (
+          {categories.map(category => (
             <Button
               key={category.id}
               variant={selectedCategory === category.id ? 'default' : 'outline'}
@@ -180,7 +184,7 @@ export const TemplateLibrary: React.FC = () => {
 
       {/* Templates Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredTemplates.map((template) => (
+        {filteredTemplates.map(template => (
           <Card key={template.id} className="hover:shadow-lg transition-shadow">
             <div className="relative">
               <img
@@ -202,9 +206,7 @@ export const TemplateLibrary: React.FC = () => {
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <CardTitle className="text-lg">{template.name}</CardTitle>
-                  <p className="text-sm text-muted-foreground">
-                    por {template.author}
-                  </p>
+                  <p className="text-sm text-muted-foreground">por {template.author}</p>
                 </div>
                 <div className="flex items-center gap-1 text-sm">
                   <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
@@ -212,20 +214,16 @@ export const TemplateLibrary: React.FC = () => {
                 </div>
               </div>
             </CardHeader>
-            
+
             <CardContent className="space-y-4">
-              <p className="text-sm text-muted-foreground line-clamp-2">
-                {template.description}
-              </p>
-              
+              <p className="text-sm text-muted-foreground line-clamp-2">{template.description}</p>
+
               <div className="flex items-center gap-2 flex-wrap">
                 <Badge className={getDifficultyColor(template.difficulty)}>
                   {template.difficulty}
                 </Badge>
                 <Badge variant="outline">{template.category}</Badge>
-                <Badge variant="secondary">
-                  {template.components} componentes
-                </Badge>
+                <Badge variant="secondary">{template.components} componentes</Badge>
               </div>
 
               <div className="flex items-center justify-between text-sm text-muted-foreground">
@@ -234,7 +232,7 @@ export const TemplateLibrary: React.FC = () => {
                   <span>{template.downloads.toLocaleString()}</span>
                 </div>
                 <div className="flex gap-1">
-                  {template.tags.slice(0, 2).map((tag) => (
+                  {template.tags.slice(0, 2).map(tag => (
                     <Badge key={tag} variant="outline" className="text-xs">
                       #{tag}
                     </Badge>
@@ -243,11 +241,7 @@ export const TemplateLibrary: React.FC = () => {
               </div>
 
               <div className="flex gap-2 pt-2">
-                <Button 
-                  className="flex-1" 
-                  size="sm"
-                  onClick={() => handleUseTemplate(template)}
-                >
+                <Button className="flex-1" size="sm" onClick={() => handleUseTemplate(template)}>
                   Usar Template
                 </Button>
                 <Button variant="outline" size="sm">
@@ -263,13 +257,14 @@ export const TemplateLibrary: React.FC = () => {
         <div className="text-center py-12">
           <div className="text-6xl mb-4">🔍</div>
           <h3 className="text-lg font-medium mb-2">Nenhum template encontrado</h3>
-          <p className="text-muted-foreground mb-4">
-            Tente ajustar os filtros ou termo de busca
-          </p>
-          <Button variant="outline" onClick={() => {
-            setSearchTerm('');
-            setSelectedCategory('all');
-          }}>
+          <p className="text-muted-foreground mb-4">Tente ajustar os filtros ou termo de busca</p>
+          <Button
+            variant="outline"
+            onClick={() => {
+              setSearchTerm('');
+              setSelectedCategory('all');
+            }}
+          >
             Limpar Filtros
           </Button>
         </div>

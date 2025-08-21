@@ -1,18 +1,10 @@
-import { useAuth } from '@/contexts/AuthContext';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Plus, 
-  FolderOpen, 
-  Settings, 
-  Users, 
-  Calendar, 
-  MoreHorizontal,
-  Search
-} from 'lucide-react';
-import React, { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { useAuth } from '@/contexts/AuthContext';
+import { Calendar, FolderOpen, MoreHorizontal, Plus, Search, Settings, Users } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
 
 interface Project {
   id: string;
@@ -43,7 +35,7 @@ export const ProjectWorkspace: React.FC = () => {
 
   const loadUserProjects = async () => {
     if (!profile) return;
-    
+
     setLoading(true);
     try {
       // Simular carregamento de projetos do usuário
@@ -59,7 +51,7 @@ export const ProjectWorkspace: React.FC = () => {
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
           status: 'draft',
-          type: 'quiz'
+          type: 'quiz',
         },
         {
           id: '2',
@@ -69,15 +61,15 @@ export const ProjectWorkspace: React.FC = () => {
           owner_name: profile.name || 'Você',
           collaborators: [
             { id: '2', name: 'João Silva', role: 'editor' },
-            { id: '3', name: 'Maria Santos', role: 'viewer' }
+            { id: '3', name: 'Maria Santos', role: 'viewer' },
           ],
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
           status: 'published',
-          type: 'funnel'
-        }
+          type: 'funnel',
+        },
       ];
-      
+
       setProjects(mockProjects);
     } catch (error) {
       console.error('Erro ao carregar projetos:', error);
@@ -86,26 +78,35 @@ export const ProjectWorkspace: React.FC = () => {
     }
   };
 
-  const filteredProjects = projects.filter(project =>
-    project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    project.description?.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredProjects = projects.filter(
+    project =>
+      project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      project.description?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'draft': return 'secondary';
-      case 'published': return 'default';
-      case 'archived': return 'destructive';
-      default: return 'secondary';
+      case 'draft':
+        return 'secondary';
+      case 'published':
+        return 'default';
+      case 'archived':
+        return 'destructive';
+      default:
+        return 'secondary';
     }
   };
 
   const getTypeIcon = (type: string) => {
     switch (type) {
-      case 'quiz': return '🎯';
-      case 'funnel': return '🌊';
-      case 'landing': return '🚀';
-      default: return '📄';
+      case 'quiz':
+        return '🎯';
+      case 'funnel':
+        return '🌊';
+      case 'landing':
+        return '🚀';
+      default:
+        return '📄';
     }
   };
 
@@ -123,9 +124,7 @@ export const ProjectWorkspace: React.FC = () => {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">Meus Projetos</h1>
-          <p className="text-muted-foreground">
-            Gerencie seus quizzes, funis e landing pages
-          </p>
+          <p className="text-muted-foreground">Gerencie seus quizzes, funis e landing pages</p>
         </div>
         <Button>
           <Plus className="h-4 w-4 mr-2" />
@@ -139,14 +138,14 @@ export const ProjectWorkspace: React.FC = () => {
         <Input
           placeholder="Buscar projetos..."
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={e => setSearchTerm(e.target.value)}
           className="pl-10"
         />
       </div>
 
       {/* Projects Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredProjects.map((project) => (
+        {filteredProjects.map(project => (
           <Card key={project.id} className="hover:shadow-md transition-shadow">
             <CardHeader className="pb-3">
               <div className="flex items-start justify-between">
@@ -154,9 +153,7 @@ export const ProjectWorkspace: React.FC = () => {
                   <span className="text-2xl">{getTypeIcon(project.type)}</span>
                   <div>
                     <CardTitle className="text-lg">{project.name}</CardTitle>
-                    <p className="text-sm text-muted-foreground">
-                      por {project.owner_name}
-                    </p>
+                    <p className="text-sm text-muted-foreground">por {project.owner_name}</p>
                   </div>
                 </div>
                 <Button variant="ghost" size="sm">
@@ -164,18 +161,14 @@ export const ProjectWorkspace: React.FC = () => {
                 </Button>
               </div>
             </CardHeader>
-            
+
             <CardContent className="space-y-4">
               {project.description && (
-                <p className="text-sm text-muted-foreground line-clamp-2">
-                  {project.description}
-                </p>
+                <p className="text-sm text-muted-foreground line-clamp-2">{project.description}</p>
               )}
-              
+
               <div className="flex items-center gap-2">
-                <Badge variant={getStatusColor(project.status) as any}>
-                  {project.status}
-                </Badge>
+                <Badge variant={getStatusColor(project.status) as any}>{project.status}</Badge>
                 <Badge variant="outline">{project.type}</Badge>
               </div>
 
@@ -188,9 +181,7 @@ export const ProjectWorkspace: React.FC = () => {
 
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Calendar className="h-4 w-4" />
-                <span>
-                  Atualizado {new Date(project.updated_at).toLocaleDateString()}
-                </span>
+                <span>Atualizado {new Date(project.updated_at).toLocaleDateString()}</span>
               </div>
 
               <div className="flex gap-2 pt-2">

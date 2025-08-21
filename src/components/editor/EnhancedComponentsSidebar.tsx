@@ -3,14 +3,7 @@ import { DraggableComponentItem } from '@/components/editor/dnd/DraggableCompone
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import {
-  ChevronDown,
-  ChevronRight,
-  HelpCircle,
-  Layers,
-  Search,
-  Settings,
-} from 'lucide-react';
+import { ChevronDown, ChevronRight, HelpCircle, Layers, Search, Settings } from 'lucide-react';
 import React, { useState } from 'react';
 
 interface EnhancedComponentsSidebarProps {
@@ -64,17 +57,20 @@ export const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps>
     }
   };
 
-  const filteredComponents = AVAILABLE_COMPONENTS.reduce((acc, component) => {
-    const matches = component.label.toLowerCase().includes(searchTerm.toLowerCase());
-    if (matches) {
-      const category = getCategoryDisplayName(component.category);
-      if (!acc[category]) {
-        acc[category] = [];
+  const filteredComponents = AVAILABLE_COMPONENTS.reduce(
+    (acc, component) => {
+      const matches = component.label.toLowerCase().includes(searchTerm.toLowerCase());
+      if (matches) {
+        const category = getCategoryDisplayName(component.category);
+        if (!acc[category]) {
+          acc[category] = [];
+        }
+        acc[category].push(component);
       }
-      acc[category].push(component);
-    }
-    return acc;
-  }, {} as Record<string, typeof AVAILABLE_COMPONENTS>);
+      return acc;
+    },
+    {} as Record<string, typeof AVAILABLE_COMPONENTS>
+  );
 
   return (
     <div className="h-full flex flex-col bg-background border-r">
@@ -89,7 +85,7 @@ export const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps>
           <Input
             placeholder="Buscar componentes..."
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={e => setSearchTerm(e.target.value)}
             className="pl-10"
           />
         </div>
@@ -99,7 +95,7 @@ export const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps>
       <div className="flex-1 overflow-y-auto p-4 space-y-4" id="components-sidebar">
         {Object.entries(filteredComponents).map(([category, components]) => (
           <Card key={category} className="border-muted">
-            <CardHeader 
+            <CardHeader
               className="pb-2 cursor-pointer hover:bg-muted/50 transition-colors"
               onClick={() => toggleCategory(category)}
             >
@@ -118,7 +114,7 @@ export const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps>
                 )}
               </CardTitle>
             </CardHeader>
-            
+
             {expandedCategories[category] && (
               <CardContent className="pt-0 space-y-2">
                 {components.map((component, index) => (
@@ -136,7 +132,7 @@ export const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps>
             )}
           </Card>
         ))}
-        
+
         {Object.keys(filteredComponents).length === 0 && (
           <div className="text-center py-8 text-muted-foreground">
             <Search className="h-8 w-8 mx-auto mb-2 opacity-50" />
