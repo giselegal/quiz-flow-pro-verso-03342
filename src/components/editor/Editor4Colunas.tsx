@@ -1,4 +1,9 @@
-import React, { useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
+
+// 🎯 QUIZ 21 STEPS SYSTEM - Importações das 21 etapas
+import { Quiz21StepsProvider, useQuiz21Steps } from '@/components/quiz/Quiz21StepsProvider';
+import { Quiz21StepsNavigation } from '@/components/quiz/Quiz21StepsNavigation';
+import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 
 interface Question {
   id: string;
@@ -30,7 +35,7 @@ interface Quiz {
  * 3️⃣ PROPRIEDADES/CONFIGURAÇÕES
  * 4️⃣ PREVIEW EM TEMPO REAL
  */
-const Editor4Colunas: React.FC = () => {
+const Editor4Colunas = () => {
   const [quiz, setQuiz] = useState<Quiz>({
     id: 'quiz-' + Date.now(),
     title: 'Meu Quiz Profissional',
@@ -86,6 +91,62 @@ const Editor4Colunas: React.FC = () => {
     }));
     setSelectedQuestion(null);
   }, []);
+
+  return (
+    <Quiz21StepsProvider debug={true} initialStep={1}>
+      <Editor4ColunasContent 
+        quiz={quiz}
+        setQuiz={setQuiz}
+        selectedQuestion={selectedQuestion}
+        setSelectedQuestion={setSelectedQuestion}
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        addQuestion={addQuestion}
+        updateQuestion={updateQuestion}
+        deleteQuestion={deleteQuestion}
+      />
+    </Quiz21StepsProvider>
+  );
+};
+
+// 🎯 COMPONENTE INTERNO COM ACESSO ÀS 21 ETAPAS
+const Editor4ColunasContent = ({ 
+  quiz, 
+  setQuiz, 
+  selectedQuestion, 
+  setSelectedQuestion, 
+  activeTab, 
+  setActiveTab,
+  addQuestion,
+  updateQuestion,
+  deleteQuestion 
+}: {
+  quiz: Quiz;
+  setQuiz: React.Dispatch<React.SetStateAction<Quiz>>;
+  selectedQuestion: number | null;
+  setSelectedQuestion: React.Dispatch<React.SetStateAction<number | null>>;
+  activeTab: 'design' | 'settings' | 'analytics';
+  setActiveTab: React.Dispatch<React.SetStateAction<'design' | 'settings' | 'analytics'>>;
+  addQuestion: (type: Question['type']) => void;
+  updateQuestion: (index: number, updates: Partial<Question>) => void;
+  deleteQuestion: (index: number) => void;
+}) => {
+  // 🎯 ACESSO ÀS 21 ETAPAS
+  const {
+    currentStep,
+    totalSteps,
+    userName,
+    answers,
+    goToNextStep,
+    goToPreviousStep,
+    goToStep,
+    getProgress,
+    getCurrentStageData,
+  } = useQuiz21Steps();
+
+  // 🎯 DADOS DA ETAPA ATUAL
+  const currentStepData = getCurrentStageData();
+  const currentStepTemplate = QUIZ_STYLE_21_STEPS_TEMPLATE[`step-${currentStep}`] || [];
 
   return (
     <div
@@ -217,16 +278,63 @@ const Editor4Colunas: React.FC = () => {
             marginBottom: '20px',
           }}
         >
-          <h2
-            style={{
-              margin: '0',
-              fontSize: '20px',
-              fontWeight: '600',
-              color: '#1f2937',
-            }}
-          >
-            🎯 Editor Principal
-          </h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <h2
+              style={{
+                margin: '0',
+                fontSize: '20px',
+                fontWeight: '600',
+                color: '#1f2937',
+              }}
+            >
+              🎯 Editor Principal - Etapa {currentStep} de 21
+            </h2>
+            
+            {/* 🎯 NAVEGAÇÃO DAS 21 ETAPAS */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <button
+                onClick={goToPreviousStep}
+                style={{
+                  padding: '4px 8px',
+                  background: 'white',
+                  border: '1px solid #d1d5db',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  fontSize: '12px',
+                  opacity: currentStep > 1 ? 1 : 0.5,
+                }}
+                disabled={currentStep <= 1}
+              >
+                ← Anterior
+              </button>
+              
+              <div style={{ 
+                padding: '4px 8px', 
+                background: '#f3f4f6', 
+                borderRadius: '6px',
+                fontSize: '12px',
+                fontWeight: '500'
+              }}>
+                Progresso: {Math.round(getProgress())}%
+              </div>
+              
+              <button
+                onClick={goToNextStep}
+                style={{
+                  padding: '4px 8px',
+                  background: 'white',
+                  border: '1px solid #d1d5db',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  fontSize: '12px',
+                  opacity: currentStep < 21 ? 1 : 0.5,
+                }}
+                disabled={currentStep >= 21}
+              >
+                Próxima →
+              </button>
+            </div>
+          </div>
 
           {/* ABAS */}
           <div style={{ display: 'flex', gap: '8px' }}>
@@ -255,6 +363,51 @@ const Editor4Colunas: React.FC = () => {
               </button>
             ))}
           </div>
+        </div>
+
+        {/* 🎯 VISUALIZAÇÃO DA ETAPA ATUAL DAS 21 ETAPAS */}
+        <div
+          style={{
+            background: 'rgba(59, 130, 246, 0.1)',
+            border: '1px solid rgba(59, 130, 246, 0.3)',
+            borderRadius: '12px',
+            padding: '16px',
+            marginBottom: '20px',
+          }}
+        >
+          <h3 style={{ margin: '0 0 12px 0', fontSize: '16px', fontWeight: '600', color: '#3b82f6' }}>
+            📝 Etapa {currentStep}: {currentStepTemplate[0]?.content?.title || 'Configuração'}
+          </h3>
+          
+          <div style={{ fontSize: '14px', color: '#6b7280', marginBottom: '12px' }}>
+            {currentStepTemplate[0]?.content?.subtitle || 'Configure esta etapa do quiz'}
+          </div>
+
+          {currentStepTemplate.length > 0 && (
+            <div style={{ 
+              background: 'white', 
+              borderRadius: '8px', 
+              padding: '12px',
+              fontSize: '12px',
+              color: '#374151'
+            }}>
+              <strong>Blocos disponíveis:</strong> {currentStepTemplate.length} componente(s)
+              <div style={{ marginTop: '8px' }}>
+                {currentStepTemplate.map((block) => (
+                  <div key={block.id} style={{ 
+                    display: 'inline-block',
+                    background: '#f3f4f6',
+                    padding: '2px 6px',
+                    borderRadius: '4px',
+                    margin: '2px 4px 2px 0',
+                    fontSize: '11px'
+                  }}>
+                    {block.type}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* CONTEÚDO DA ABA ATIVA */}
