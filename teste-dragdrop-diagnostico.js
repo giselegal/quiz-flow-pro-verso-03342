@@ -14,9 +14,11 @@ console.log('🧩 Componentes arrastáveis encontrados:', draggables.length);
 
 if (draggables.length > 0) {
   console.log('📋 Primeiros 3 draggables:');
-  Array.from(draggables).slice(0, 3).forEach((el, i) => {
-    console.log(`   ${i + 1}. ID: ${el.getAttribute('data-dnd-kit-draggable-id')}`);
-  });
+  Array.from(draggables)
+    .slice(0, 3)
+    .forEach((el, i) => {
+      console.log(`   ${i + 1}. ID: ${el.getAttribute('data-dnd-kit-draggable-id')}`);
+    });
 }
 
 // 3. Verificar área droppable do canvas
@@ -39,12 +41,13 @@ console.log('Tentando adicionar listeners para debug...');
 
 // Listener para mouse events nos draggables
 draggables.forEach((el, i) => {
-  if (i < 3) { // Apenas os primeiros 3 para não poluir
+  if (i < 3) {
+    // Apenas os primeiros 3 para não poluir
     const id = el.getAttribute('data-dnd-kit-draggable-id');
-    el.addEventListener('mousedown', (e) => {
+    el.addEventListener('mousedown', e => {
       console.log(`🖱️ MouseDown no draggable: ${id}`, e.target);
     });
-    el.addEventListener('dragstart', (e) => {
+    el.addEventListener('dragstart', e => {
       console.log(`🎯 DragStart no draggable: ${id}`, e.dataTransfer);
     });
   }
@@ -57,7 +60,9 @@ console.log('🎭 Modo do editor:', modeIndicator?.getAttribute('data-mode') || 
 // 7. Verificar console logs existentes
 console.log('\n📝 PROCURANDO LOGS DO SISTEMA:');
 console.log('Verifique se há logs do EnhancedComponentsSidebar e DraggableComponentItem');
-console.log('Logs esperados: "🎯 EnhancedComponentsSidebar renderizando..." e "🧩 DraggableComponentItem renderizado:"');
+console.log(
+  'Logs esperados: "🎯 EnhancedComponentsSidebar renderizando..." e "🧩 DraggableComponentItem renderizado:"'
+);
 
 // 8. Teste manual
 console.log('\n🧪 TESTE MANUAL:');

@@ -8,15 +8,21 @@ const sidebar = document.querySelector('.components-sidebar');
 console.log('🧩 Sidebar encontrada:', !!sidebar);
 
 // 2. Verificar se há algum componente dentro
-const componentItems = document.querySelectorAll('.components-sidebar [class*="draggable"], .components-sidebar [class*="component"]');
+const componentItems = document.querySelectorAll(
+  '.components-sidebar [class*="draggable"], .components-sidebar [class*="component"]'
+);
 console.log('📦 Itens na sidebar:', componentItems.length);
 
 // 3. Verificar se há card
-const card = document.querySelector('.components-sidebar .card, .components-sidebar [class*="card"]');
+const card = document.querySelector(
+  '.components-sidebar .card, .components-sidebar [class*="card"]'
+);
 console.log('🃏 Card encontrado:', !!card);
 
 // 4. Verificar se há title
-const title = document.querySelector('.components-sidebar h2, .components-sidebar [class*="title"]');
+const title = document.querySelector(
+  '.components-sidebar h2, .components-sidebar [class*="title"]'
+);
 console.log('📝 Título encontrado:', !!title, title?.textContent);
 
 // 5. Verificar se há input de busca

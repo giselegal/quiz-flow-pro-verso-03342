@@ -548,6 +548,10 @@ const EditorUnified: React.FC = () => {
 
                 {/* Sidebar Aprimorado com Drag & Drop */}
                 <div className="flex-1 overflow-hidden">
+                  {/* TESTE: Componente simples */}
+                  <div style={{ padding: '20px', background: 'red', color: 'white' }}>
+                    TESTE: EnhancedComponentsSidebar deveria aparecer aqui
+                  </div>
                   <EnhancedComponentsSidebar />
                 </div>
               </div>
