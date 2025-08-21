@@ -16,9 +16,7 @@ import {
 } from '@dnd-kit/core';
 // ✅ REMOVIDO: restrictToParentElement (causava zoom)
 import {
-  SortableContext,
   sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 
 // EDITOR UNIFICADO - Componentes principais
@@ -153,11 +151,6 @@ const EditorUnified: React.FC = () => {
 
   // Total de etapas dinâmico (fallback para 21 se ainda não carregou)
   const totalSteps = stageCount || 21;
-
-  // Extrair os IDs dos blocos para o SortableContext
-  const blockIds = useMemo(() => {
-    return currentBlocks.map(block => String(block.id));
-  }, [currentBlocks]);
 
   // 🔧 DROPPABLE NO NÍVEL SUPERIOR - CORREÇÃO CRÍTICA
   const { setNodeRef: setCanvasDroppableRef, isOver: isCanvasOver } = useDroppable({
@@ -450,8 +443,7 @@ const EditorUnified: React.FC = () => {
       // ✅ CORRIGIDO: Removido restrictToParentElement que causa zoom
       autoScroll={true}
     >
-      <SortableContext items={blockIds} strategy={verticalListSortingStrategy}>
-        <PreviewProvider totalSteps={totalSteps} funnelId={funnelIdRef.current}>
+      <PreviewProvider totalSteps={totalSteps} funnelId={funnelIdRef.current}>
           {/* Carregador otimizado de etapas do quiz */}
           <UnifiedQuizStepLoader
             stepNumber={currentStep}
@@ -657,7 +649,6 @@ const EditorUnified: React.FC = () => {
             )}
           </div>
         </PreviewProvider>
-      </SortableContext>
     </DndContext>
   );
 };

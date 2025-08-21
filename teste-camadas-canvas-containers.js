@@ -5,8 +5,8 @@ console.log('🔍 ANÁLISE CAMADAS CANVAS & CONTAINERS');
 console.log('=====================================');
 
 // 1. Identificar modo atual
-const isPreviewMode = document.body.className.includes('preview') || 
-                     document.querySelector('.is-previewing') !== null;
+const isPreviewMode =
+  document.body.className.includes('preview') || document.querySelector('.is-previewing') !== null;
 
 console.log('🎭 MODO ATUAL:', isPreviewMode ? 'PREVIEW/PRODUÇÃO' : 'EDIÇÃO');
 
@@ -19,13 +19,16 @@ const containers = [
   { name: 'Canvas-Main', selector: '.unified-editor-canvas, main' },
   { name: 'Preview-Container', selector: '.preview-container' },
   { name: 'Blocks-Container', selector: '.blocks-container' },
-  { name: 'SortableContext-Interno', selector: '.blocks-container [data-dnd-kit-sortable-context]' },
+  {
+    name: 'SortableContext-Interno',
+    selector: '.blocks-container [data-dnd-kit-sortable-context]',
+  },
 ];
 
 containers.forEach(container => {
   const elements = document.querySelectorAll(container.selector);
   console.log(`${container.name}: ${elements.length} encontrado(s)`);
-  
+
   if (elements.length > 1) {
     console.log(`  ⚠️ DUPLICAÇÃO DETECTADA: ${elements.length} ${container.name}`);
   }
@@ -71,7 +74,10 @@ const previewHeader = document.querySelector('.preview-header');
 const debugPanel = document.querySelector('.preview-debug-panel, [class*="debug"]');
 const outlines = document.querySelectorAll('[style*="outline"], .show-outlines');
 
-console.log('Preview Header (deve aparecer só em edição):', previewHeader ? '✅ VISÍVEL' : '❌ OCULTO');
+console.log(
+  'Preview Header (deve aparecer só em edição):',
+  previewHeader ? '✅ VISÍVEL' : '❌ OCULTO'
+);
 console.log('Debug Panel (deve aparecer só em dev):', debugPanel ? '✅ VISÍVEL' : '❌ OCULTO');
 console.log('Outlines visíveis:', outlines.length);
 
@@ -80,10 +86,10 @@ console.log('\n📚 Z-INDEX E SOBREPOSIÇÕES:');
 
 const layeredElements = [
   '.unified-editor-canvas',
-  '.preview-container', 
+  '.preview-container',
   '.blocks-container',
   '[data-dnd-kit-droppable-id]',
-  '.absolute'
+  '.absolute',
 ];
 
 layeredElements.forEach(selector => {
@@ -97,10 +103,14 @@ layeredElements.forEach(selector => {
 // 8. DIAGNÓSTICO FINAL
 console.log('\n🎯 DIAGNÓSTICO FINAL:');
 
-const hasMultipleSortableContext = document.querySelectorAll('[data-dnd-kit-sortable-context]').length > 1;
-const hasCorrectDroppable = document.querySelector('[data-dnd-kit-droppable-id="canvas-dropzone"]') !== null;
-const hasBackgroundConflict = mainCanvas && previewContainer && 
-  getComputedStyle(mainCanvas).background !== 'none' && 
+const hasMultipleSortableContext =
+  document.querySelectorAll('[data-dnd-kit-sortable-context]').length > 1;
+const hasCorrectDroppable =
+  document.querySelector('[data-dnd-kit-droppable-id="canvas-dropzone"]') !== null;
+const hasBackgroundConflict =
+  mainCanvas &&
+  previewContainer &&
+  getComputedStyle(mainCanvas).background !== 'none' &&
   getComputedStyle(previewContainer).background !== 'none';
 
 if (hasMultipleSortableContext) {

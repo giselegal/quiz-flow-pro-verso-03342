@@ -7,7 +7,7 @@
 // POR:
 // import EnhancedComponentsSidebar from '@/components/editor/EnhancedComponentsSidebar';
 
-// 2. SUBSTITUIR HTML DA COLUNA DE COMPONENTES  
+// 2. SUBSTITUIR HTML DA COLUNA DE COMPONENTES
 // TROCAR todo o bloco de:
 // {/* 🧩 COLUNA CENTRO-ESQUERDA - COMPONENTES */}
 // <div className="w-80 bg-white/95 backdrop-blur-sm border-r border-stone-200/50 shadow-sm">
@@ -35,7 +35,7 @@
 //   </div>
 // </aside>
 
-// 3. VERIFICAR HANDLEDRAGEND 
+// 3. VERIFICAR HANDLEDRAGEND
 // Garantir que aceita tanto 'component' quanto 'sidebar-component'
 
 console.log('🔧 PATCH: Instruções para unificar componentes');
