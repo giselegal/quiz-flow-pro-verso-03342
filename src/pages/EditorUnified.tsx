@@ -14,11 +14,7 @@ import {
   useSensors,
 } from '@dnd-kit/core';
 import { restrictToParentElement } from '@dnd-kit/modifiers';
-import { 
-  SortableContext, 
-  sortableKeyboardCoordinates, 
-  verticalListSortingStrategy 
-} from '@dnd-kit/sortable';
+import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 
 // EDITOR UNIFICADO - Componentes principais
 import {
@@ -192,7 +188,7 @@ const EditorUnified: React.FC = () => {
     console.log('🔸 Active:', {
       id: event.active.id,
       data: event.active.data.current,
-      type: event.active.data.current?.type
+      type: event.active.data.current?.type,
     });
   };
 
@@ -204,12 +200,12 @@ const EditorUnified: React.FC = () => {
     console.log('🔸 Active:', {
       id: active.id,
       data: active.data.current,
-      type: active.data.current?.type
+      type: active.data.current?.type,
     });
     console.log('� Over:', {
       id: over?.id,
       data: over?.data.current,
-      type: over?.data.current?.type
+      type: over?.data.current?.type,
     });
 
     if (!over) {
@@ -225,20 +221,22 @@ const EditorUnified: React.FC = () => {
       const componentType = activeData.blockType as BlockType;
       const targetPosition = overData.position || currentBlocks.length;
 
-      console.log('🧩 ✅ ADICIONANDO COMPONENTE:', { 
-        componentType, 
+      console.log('🧩 ✅ ADICIONANDO COMPONENTE:', {
+        componentType,
         targetPosition,
         activeId: active.id,
-        overId: over.id 
+        overId: over.id,
       });
 
       // Usar addBlock do EditorContext que criará o bloco automaticamente
-      addBlock(componentType).then(blockId => {
-        setSelectedBlockId(blockId);
-        console.log('✅ Novo bloco criado com ID:', blockId);
-      }).catch(error => {
-        console.error('❌ Erro ao criar bloco:', error);
-      });
+      addBlock(componentType)
+        .then(blockId => {
+          setSelectedBlockId(blockId);
+          console.log('✅ Novo bloco criado com ID:', blockId);
+        })
+        .catch(error => {
+          console.error('❌ Erro ao criar bloco:', error);
+        });
 
       return;
     }
@@ -251,12 +249,12 @@ const EditorUnified: React.FC = () => {
       const oldIndex = currentBlocks.findIndex(block => block.id === activeId);
       const newIndex = currentBlocks.findIndex(block => block.id === overId);
 
-      console.log('🔄 ✅ REORDENANDO BLOCOS:', { 
-        activeId, 
-        overId, 
-        oldIndex, 
+      console.log('🔄 ✅ REORDENANDO BLOCOS:', {
+        activeId,
+        overId,
+        oldIndex,
         newIndex,
-        totalBlocks: currentBlocks.length 
+        totalBlocks: currentBlocks.length,
       });
 
       if (oldIndex !== -1 && newIndex !== -1) {
@@ -277,7 +275,7 @@ const EditorUnified: React.FC = () => {
       overType: overData?.type,
       activeId: active.id,
       overId: over.id,
-      sameId: active.id === over.id
+      sameId: active.id === over.id,
     });
   };
 
