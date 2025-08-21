@@ -1,27 +1,7 @@
-import React from 'react';
 import { Route, Router, Switch } from 'wouter';
 
-// Import direto (SEM lazy loading que está causando problema com Lovable)
-import EditorCompletoFuncional from './components/editor/EditorCompletoFuncional';
-import EditorSuperSimples from './components/editor/EditorSuperSimples';
-
-// Loading simples
-const Loading = () => (
-  <div
-    style={{
-      background: 'linear-gradient(45deg, #f093fb, #f5576c)',
-      minHeight: '100vh',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      fontSize: '24px',
-      color: 'white',
-      fontWeight: 'bold',
-    }}
-  >
-    🚀 Carregando...
-  </div>
-);
+// Import do MELHOR EDITOR 4 COLUNAS PROFISSIONAL
+import Editor4Colunas from './components/editor/Editor4Colunas';
 
 /**
  * 🚨 APP LIMPO - TESTE DE DUPLICAÇÃO
@@ -56,8 +36,15 @@ function App() {
                 <p style={{ margin: '0 0 30px 0', fontSize: '18px', opacity: 0.9 }}>
                   Sistema completo de criação de quizzes
                 </p>
-                
-                <div style={{ display: 'flex', gap: '15px', justifyContent: 'center', flexWrap: 'wrap' }}>
+
+                <div
+                  style={{
+                    display: 'flex',
+                    gap: '15px',
+                    justifyContent: 'center',
+                    flexWrap: 'wrap',
+                  }}
+                >
                   <a
                     href="/editor"
                     style={{
@@ -70,12 +57,12 @@ function App() {
                       border: '2px solid rgba(255,255,255,0.3)',
                       fontWeight: 'bold',
                       transition: 'all 0.3s',
-                      display: 'inline-block'
+                      display: 'inline-block',
                     }}
                   >
                     🚀 Editor Completo
                   </a>
-                  
+
                   <a
                     href="/editor-simples"
                     style={{
@@ -88,7 +75,7 @@ function App() {
                       border: '2px solid rgba(255,255,255,0.3)',
                       fontWeight: 'bold',
                       transition: 'all 0.3s',
-                      display: 'inline-block'
+                      display: 'inline-block',
                     }}
                   >
                     🧪 Editor Simples
@@ -100,15 +87,7 @@ function App() {
 
           {/* 🚀 EDITOR COMPLETO E FUNCIONAL */}
           <Route path="/editor">
-            <div
-              style={{
-                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                minHeight: '100vh',
-                padding: '0'
-              }}
-            >
-              <EditorCompletoFuncional />
-            </div>
+            <Editor4Colunas />
           </Route>
 
           {/* 🧪 EDITOR SIMPLES - PARA TESTES */}
@@ -138,7 +117,7 @@ function App() {
                 >
                   🎯 EDITOR SIMPLES
                 </h1>
-                <EditorSuperSimples />
+                <Editor4Colunas />
               </div>
             </div>
           </Route>
