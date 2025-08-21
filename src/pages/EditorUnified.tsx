@@ -25,7 +25,7 @@ import {
   UnifiedQuizStepLoader,
 } from '@/components/editor/unified';
 
-// 🧩 COMPONENTES DE DRAG & DROP  
+// 🧩 COMPONENTES DE DRAG & DROP
 import EnhancedComponentsSidebar from '@/components/editor/EnhancedComponentsSidebar';
 
 // 🚀 PREVIEW SYSTEM
