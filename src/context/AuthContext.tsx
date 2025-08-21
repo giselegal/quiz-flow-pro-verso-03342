@@ -8,13 +8,25 @@ interface User {
   name?: string;
 }
 
+interface UserProfile {
+  id: string;
+  email: string;
+  name?: string;
+  role: 'user' | 'editor' | 'admin';
+  plan: 'free' | 'pro' | 'enterprise';
+  avatar_url?: string;
+  created_at: string;
+}
+
 export interface AuthContextType {
   user: User | null;
+  profile: UserProfile | null;
   session: Session | null;
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   signup: (email: string, password: string, name?: string) => Promise<void>;
+  hasPermission: (action: string, resource?: string) => boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -34,6 +46,7 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   console.log('🔑 AuthProvider: INICIANDO');
   const [user, setUser] = useState<User | null>(null);
+  const [profile, setProfile] = useState<UserProfile | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -50,31 +63,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setSession(session);
 
       if (session?.user) {
-        // Buscar dados do profile se disponível - defer to avoid deadlock
-        setTimeout(async () => {
-          try {
-            const { data: profile } = await supabase
-              .from('profiles')
-              .select('*')
-              .eq('id', session.user.id)
-              .single();
-
-            setUser({
-              id: session.user.id,
-              email: session.user.email!,
-              name: profile?.name || session.user.user_metadata?.name,
-            });
-          } catch (error) {
-            // Fallback para dados básicos do usuário
-            setUser({
-              id: session.user.id,
-              email: session.user.email!,
-              name: session.user.user_metadata?.name,
-            });
-          }
-        }, 0);
+        // Definir usuário imediatamente
+        setUser({
+          id: session.user.id,
+          email: session.user.email!,
+          name: session.user.user_metadata?.name,
+        });
+        // Carregar profile em seguida
+        loadUserProfile(session.user.id);
       } else {
         setUser(null);
+        setProfile(null);
       }
 
       setLoading(false);
@@ -91,9 +90,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           email: session.user.email!,
           name: session.user.user_metadata?.name,
         });
+        loadUserProfile(session.user.id);
         console.log('🔑 AuthProvider: Usuário definido:', session.user.email);
       } else {
         console.log('🔑 AuthProvider: Nenhuma sessão ativa');
+        setProfile(null);
       }
       setLoading(false);
       console.log('🔑 AuthProvider: Loading concluído');
@@ -101,6 +102,77 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     return () => subscription.unsubscribe();
   }, []);
+
+  const loadUserProfile = async (userId: string) => {
+    try {
+      const { data, error } = await supabase.from('profiles').select('*').eq('id', userId).single();
+      
+      if (data && !error) {
+        const profileData: UserProfile = {
+          id: data.id,
+          email: data.email,
+          name: data.name || undefined,
+          role: 'user', // Padrão por enquanto
+          plan: 'free', // Padrão por enquanto
+          avatar_url: undefined,
+          created_at: data.created_at
+        };
+        setProfile(profileData);
+      } else {
+        // Se não existe profile, criar um padrão
+        const defaultProfile: UserProfile = {
+          id: userId,
+          email: user?.email || '',
+          role: 'user',
+          plan: 'free',
+          created_at: new Date().toISOString()
+        };
+        setProfile(defaultProfile);
+      }
+    } catch (error) {
+      console.error('Erro ao carregar profile:', error);
+      // Profile padrão em caso de erro
+      const defaultProfile: UserProfile = {
+        id: userId,
+        email: user?.email || '',
+        role: 'user',
+        plan: 'free',
+        created_at: new Date().toISOString()
+      };
+      setProfile(defaultProfile);
+    }
+  };
+
+  const hasPermission = (action: string, _resource?: string): boolean => {
+    if (!profile) return false;
+
+    // Permission matrix
+    const permissions: Record<string, Record<string, boolean>> = {
+      user: {
+        'quiz.take': true,
+        'quiz.view': true,
+        'profile.edit': true,
+      },
+      editor: {
+        'quiz.create': true,
+        'quiz.edit': true,
+        'quiz.delete': true,
+        'template.use': true,
+        'analytics.view': true,
+        'editor.use': true,
+      },
+      admin: {
+        'user.manage': true,
+        'template.manage': true,
+        'system.configure': true,
+        'analytics.full': true,
+        'editor.use': true,
+      },
+    };
+
+    const userPermissions = permissions[profile.role] || {};
+    return userPermissions[action] === true;
+  };
 
   const cleanupAuthState = () => {
     Object.keys(localStorage).forEach(key => {
@@ -171,11 +243,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const value = {
     user,
+    profile,
     session,
     loading,
     login,
     logout,
     signup,
+    hasPermission,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
