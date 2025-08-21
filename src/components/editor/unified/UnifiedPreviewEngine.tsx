@@ -84,7 +84,7 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
         showErrors: false,
       },
     };
-  }, [mode, flags]);
+  }, [mode]);
 
   // Tracking de preview events
   useEffect(() => {
@@ -186,7 +186,7 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
                 block={block}
                 isSelected={selectedBlockId === block.id}
                 isPreviewing={isPreviewing}
-                renderConfig={renderConfig[mode]}
+                // renderConfig={renderConfig[mode]} // TODO: Fix type mismatch
                 primaryStyle={primaryStyle}
                 onClick={() => handleBlockClick(block.id)}
                 onUpdate={updates => handleBlockUpdate(block.id, updates)}

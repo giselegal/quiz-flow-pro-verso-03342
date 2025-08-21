@@ -9,7 +9,7 @@ interface SortablePreviewBlockWrapperProps {
   block: Block;
   isSelected: boolean;
   isPreviewing: boolean;
-  renderConfig: {
+  renderConfig?: {
     showBorders: boolean;
     showLabels: boolean;
     enableHover: boolean;
