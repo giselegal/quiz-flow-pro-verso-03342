@@ -2514,7 +2514,12 @@ export const useUnifiedProperties = (
 
     switch (property.type) {
       case PropertyType.RANGE:
-        const numValue = Number(property.value);
+        const value = property.value;
+        if (typeof value === 'object' && value !== null) {
+          console.warn(`Property ${property.key} has object value, expected number:`, value);
+          return false;
+        }
+        const numValue = Number(value);
         return (
           !isNaN(numValue) &&
           (property.min === undefined || numValue >= property.min) &&
