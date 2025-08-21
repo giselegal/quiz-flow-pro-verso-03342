@@ -43,7 +43,6 @@ import { useQuizFlow } from '@/hooks/core/useQuizFlow';
 import { useEditor } from '@/context/EditorContext';
 import { useAutoSaveWithDebounce } from '@/hooks/editor/useAutoSaveWithDebounce';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
-import { useSyncedScroll } from '@/hooks/useSyncedScroll';
 import { saveEditor } from '@/services/editorService';
 import type { Block, BlockType } from '@/types/editor';
 
@@ -107,7 +106,7 @@ const EditorUnified: React.FC = () => {
   }, [sensors]);
 
   // Hooks para funcionalidades avançadas
-  const { scrollRef } = useSyncedScroll({ source: 'canvas' });
+  // useSyncedScroll removido - pode interferir com DnD
 
   // Estado local do Editor Unificado
   const [editorMode, setEditorMode] = useState<'edit' | 'preview' | 'test'>('edit');
@@ -574,25 +573,20 @@ const EditorUnified: React.FC = () => {
                 {/* Background pattern sutil */}
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(184,155,122,0.03)_0%,transparent_50%)]"></div>
 
-                <div
-                  ref={scrollRef}
-                  className="preview-container relative h-full p-4 overflow-visible animate-fade-in-up"
-                >
-                  {/* Estrutura simplificada - SEM containers extras */}
-                  <UnifiedPreviewEngine
-                    blocks={currentBlocks}
-                    selectedBlockId={selectedBlockId}
-                    isPreviewing={editorMode === 'preview' || editorMode === 'test'}
-                    viewportSize={controlsState.viewportSize}
-                    onBlockSelect={handleBlockSelect}
-                    onBlockUpdate={handleBlockUpdate}
-                    onBlocksReordered={handleBlocksReordered}
-                    mode={editorMode === 'edit' ? 'editor' : 'preview'}
-                    className=""
-                    key={`preview-step-${currentStep}`}
-                    // 🔧 NÃO PASSAR DROPPABLE - agora está no main
-                  />
-                </div>
+                {/* Estrutura simplificada - REMOVIDO container intermediário */}
+                <UnifiedPreviewEngine
+                  blocks={currentBlocks}
+                  selectedBlockId={selectedBlockId}
+                  isPreviewing={editorMode === 'preview' || editorMode === 'test'}
+                  viewportSize={controlsState.viewportSize}
+                  onBlockSelect={handleBlockSelect}
+                  onBlockUpdate={handleBlockUpdate}
+                  onBlocksReordered={handleBlocksReordered}
+                  mode={editorMode === 'edit' ? 'editor' : 'preview'}
+                  className="h-full p-4"
+                  key={`preview-step-${currentStep}`}
+                  // 🔧 NÃO PASSAR DROPPABLE - agora está no main
+                />
               </main>
 
               {/* 📝 PROPERTIES PANEL - Painel lateral direito */}

@@ -80,7 +80,7 @@
 .unified-editor-canvas {
   background: linear-gradient(135deg, rgba(248, 250, 252, 0.5), rgba(255, 255, 255, 0.8));
   position: relative;
-  overflow: hidden;
+  overflow: visible; /* ✅ CORRIGIDO: Permite drag-and-drop */
 }
 
 .unified-editor-canvas::before {
@@ -106,7 +106,7 @@
   border-radius: 16px;
   box-shadow: var(--shadow-large);
   border: 1px solid rgba(212, 194, 168, 0.15);
-  overflow: hidden;
+  overflow: visible; /* ✅ CORRIGIDO: Permite eventos de drag */
   transition: all 0.3s ease;
   transform: translateY(0);
 }
