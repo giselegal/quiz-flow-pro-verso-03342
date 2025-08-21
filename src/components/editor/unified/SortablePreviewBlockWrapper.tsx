@@ -31,6 +31,8 @@ export const SortablePreviewBlockWrapper: React.FC<SortablePreviewBlockWrapperPr
   onSelect,
   debug = false, // Forçar false para teste
 }) => {
+  console.log(`🔄 SortablePreviewBlockWrapper renderizado: ${block.id} (${block.type})`);
+  
   const [isHovered, setIsHovered] = useState(false);
 
   // Configuração do useSortable do dnd-kit
@@ -41,6 +43,14 @@ export const SortablePreviewBlockWrapper: React.FC<SortablePreviewBlockWrapperPr
       type: 'block',
       block,
     },
+  });
+
+  console.log(`🔧 useSortable config para ${block.id}:`, {
+    id: block.id,
+    disabled: isPreviewing,
+    hasListeners: !!listeners,
+    hasAttributes: !!attributes,
+    hasSetNodeRef: !!setNodeRef
   });
 
   // Estilo do wrapper com transformação de arrastar e soltar

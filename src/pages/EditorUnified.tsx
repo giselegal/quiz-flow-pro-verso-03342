@@ -65,6 +65,10 @@ import { Separator } from '@/components/ui/separator';
  * 🚀 EDITOR UNIFICADO INTEGRADO
  */
 const EditorUnified: React.FC = () => {
+  // 🚨 DEBUG: Log inicial
+  console.log('🎯 EditorUnified: Componente renderizado');
+  console.log('🔧 @dnd-kit/core versão:', typeof DndContext);
+
   // 🎪 HOOK PRINCIPAL UNIFICADO
   const { actions } = useQuizFlow({
     mode: 'editor',
@@ -75,11 +79,11 @@ const EditorUnified: React.FC = () => {
     initialStep: 1,
   });
 
-  // Configuração dos sensores para DndContext
+  // Configuração dos sensores para DndContext - SIMPLIFICADO PARA DEBUG
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 8, // 8px é a distância mínima para iniciar o drag
+        distance: 3, // Reduzido para 3px para facilitar debug
       },
     }),
     useSensor(KeyboardSensor, {
@@ -347,6 +351,11 @@ const EditorUnified: React.FC = () => {
     },
     hasSelectedBlock: !!selectedBlockId,
   });
+
+  // 🚨 DEBUG: Log antes do render
+  console.log('🎯 EditorUnified: Preparando render do DndContext');
+  console.log('🔧 Sensors configurados:', sensors);
+  console.log('🔧 currentBlocks:', currentBlocks.length);
 
   return (
     <DndContext
