@@ -1,3 +1,4 @@
+import { supabase } from '@/integrations/supabase/client';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '../templates/quiz21StepsComplete';
 import type { Block, BlockType } from '../types/editor';
 
@@ -477,17 +478,40 @@ export class SupabaseTemplateService {
    */
   async getTemplates(): Promise<UITemplate[]> {
     try {
-      // TODO: Implementar quando RPC functions estiverem criadas
       console.log('🔄 Buscando templates do Supabase...');
-      
-      // Por enquanto, retorna os fallbacks combinados com templates reais
+
+      // Primeiro tenta carregar via query direta
+      const { data, error } = await (supabase as any)
+        .from('quiz_templates')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.warn('⚠️ Erro ao carregar templates do Supabase:', error);
+        console.log('🔄 Usando templates fallback e reais...');
+        const fallbacks = this.getFallbackTemplates();
+        const realTemplates = this.getRealTemplates();
+        return [...realTemplates, ...fallbacks];
+      }
+
+      if (!data || data.length === 0) {
+        console.log('📝 Nenhum template encontrado no Supabase.');
+        const fallbacks = this.getFallbackTemplates();
+        const realTemplates = this.getRealTemplates();
+        return [...realTemplates, ...fallbacks];
+      }
+
+      console.log(`✅ ${data.length} templates carregados do Supabase`);
+      const supabaseTemplates = this.transformSupabaseToUI(data);
+      const realTemplates = this.getRealTemplates();
+
+      return [...supabaseTemplates, ...realTemplates];
+    } catch (error) {
+      console.error('💥 Erro na conexão com Supabase:', error);
+      console.log('🔄 Usando templates fallback...');
       const fallbacks = this.getFallbackTemplates();
       const realTemplates = this.getRealTemplates();
-      
       return [...realTemplates, ...fallbacks];
-    } catch (error) {
-      console.error('Erro na conexão com Supabase:', error);
-      return this.getFallbackTemplates();
     }
   }
 
@@ -511,7 +535,7 @@ export class SupabaseTemplateService {
     try {
       // TODO: Implementar quando tabela estiver configurada
       console.log('🔄 Criando template:', template.name);
-      
+
       // Por enquanto, simula criação local
       const newTemplate: UITemplate = {
         id: `template-${Date.now()}`,
@@ -544,12 +568,30 @@ export class SupabaseTemplateService {
   async incrementUsage(templateId: string): Promise<boolean> {
     try {
       console.log('🔄 Incrementando uso do template:', templateId);
-      // TODO: Implementar quando RPC function estiver criada
+
+      const { error } = await (supabase as any)
+        .from('quiz_templates')
+        .update({ usage_count: (supabase as any).raw('usage_count + 1') })
+        .eq('id', templateId);
+
+      if (error) {
+        console.warn('⚠️ Erro ao incrementar uso:', error);
+        return false;
+      }
+
+      console.log('✅ Uso incrementado com sucesso');
       return true;
     } catch (error) {
-      console.error('Erro na atualização de uso:', error);
+      console.error('💥 Erro na atualização de uso:', error);
       return false;
     }
+  }
+
+  /**
+   * Incrementa uso de template (nome alternativo)
+   */
+  async incrementTemplateUsage(templateId: string): Promise<boolean> {
+    return this.incrementUsage(templateId);
   }
 
   /**
@@ -558,11 +600,11 @@ export class SupabaseTemplateService {
   async getTemplatesByCategory(category: string): Promise<UITemplate[]> {
     try {
       const allTemplates = await this.getTemplates();
-      
+
       if (category === 'all') {
         return allTemplates;
       }
-      
+
       return allTemplates.filter(template => template.category === category);
     } catch (error) {
       console.error('Erro na busca por categoria:', error);
@@ -577,16 +619,71 @@ export class SupabaseTemplateService {
     try {
       const allTemplates = await this.getTemplates();
       const term = searchTerm.toLowerCase();
-      
-      return allTemplates.filter(template =>
-        template.name.toLowerCase().includes(term) ||
-        template.description.toLowerCase().includes(term) ||
-        template.tags.some(tag => tag.toLowerCase().includes(term))
+
+      return allTemplates.filter(
+        template =>
+          template.name.toLowerCase().includes(term) ||
+          template.description.toLowerCase().includes(term) ||
+          template.tags.some(tag => tag.toLowerCase().includes(term))
       );
     } catch (error) {
       console.error('Erro na busca:', error);
       return [];
     }
+  }
+
+  /**
+   * Transforma dados do Supabase para formato da UI
+   */
+  private transformSupabaseToUI(templates: any[]): UITemplate[] {
+    return templates.map(template => ({
+      id: template.id,
+      name: template.name,
+      description: template.description || '',
+      category: this.mapCategory(template.category),
+      difficulty: 'intermediate' as const,
+      isPremium: !template.is_public,
+      rating: template.is_public ? 4.8 : 4.2,
+      downloads: template.usage_count || 0,
+      usageCount: template.usage_count || 0,
+      componentCount: this.countComponents(template.template_data),
+      thumbnail: 'https://via.placeholder.com/300x200',
+      components: this.countComponents(template.template_data),
+      author: template.is_public ? 'Gisele Galvão' : 'Comunidade',
+      tags: template.tags || [template.category],
+      templateData: template.template_data,
+      createdAt: template.created_at,
+      updatedAt: template.updated_at,
+    }));
+  }
+
+  /**
+   * Mapeia categoria do DB para categoria da UI
+   */
+  private mapCategory(category: string): UITemplate['category'] {
+    switch (category) {
+      case 'quiz':
+      case 'funnel':
+      case 'landing':
+      case 'survey':
+        return category;
+      default:
+        return 'quiz';
+    }
+  }
+
+  /**
+   * Conta componentes no template data
+   */
+  private countComponents(templateData: any): number {
+    if (!templateData) return 0;
+    if (Array.isArray(templateData.blocks)) {
+      return templateData.blocks.length;
+    }
+    if (typeof templateData === 'object' && templateData.type === '21-steps-quiz') {
+      return 21;
+    }
+    return Object.keys(templateData).length || 1;
   }
 
   /**
@@ -603,7 +700,8 @@ export class SupabaseTemplateService {
         isPremium: false,
         rating: 4.9,
         downloads: 2500,
-        thumbnail: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911666/C%C3%B3pia_de_Template_Dossi%C3%AA_Completo_2024_15_-_Copia_ssrhu3.webp',
+        thumbnail:
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911666/C%C3%B3pia_de_Template_Dossi%C3%AA_Completo_2024_15_-_Copia_ssrhu3.webp',
         components: 21,
         author: 'Gisele Galvão',
         tags: ['personalidade', 'estilo', '21-etapas', 'profissional'],
