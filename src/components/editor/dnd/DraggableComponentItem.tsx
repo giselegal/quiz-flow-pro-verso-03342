@@ -27,7 +27,7 @@ export const DraggableComponentItem: React.FC<DraggableComponentItemProps> = ({
   className,
 }) => {
   console.log(`🧩 DraggableComponentItem renderizado: ${blockType}`);
-  
+
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: `sidebar-item-${blockType}`, // ID mais específico para evitar conflitos
     data: {
@@ -45,7 +45,7 @@ export const DraggableComponentItem: React.FC<DraggableComponentItemProps> = ({
     disabled,
     hasListeners: !!listeners,
     hasAttributes: !!attributes,
-    hasSetNodeRef: !!setNodeRef
+    hasSetNodeRef: !!setNodeRef,
   });
 
   // Debug: verificar se o draggable está sendo configurado
