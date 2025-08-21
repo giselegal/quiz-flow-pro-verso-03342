@@ -1,9 +1,8 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { Route, Router, Switch } from 'wouter';
 
-// Import direto (SEM lazy loading que está causando problema com Lovable)
-import EditorCompletoFuncional from './components/editor/EditorCompletoFuncional';
-import EditorSuperSimples from './components/editor/EditorSuperSimples';
+// Import do componente super simples
+const EditorSuperSimples = React.lazy(() => import('./components/editor/EditorSuperSimples'));
 
 // Loading simples
 const Loading = () => (
@@ -52,67 +51,23 @@ function App() {
               }}
             >
               <div>
-                <h1 style={{ margin: '0 0 20px 0' }}>🏠 Quiz Quest - Editor Atualizado!</h1>
-                <p style={{ margin: '0 0 30px 0', fontSize: '18px', opacity: 0.9 }}>
-                  Sistema completo de criação de quizzes
-                </p>
-                
-                <div style={{ display: 'flex', gap: '15px', justifyContent: 'center', flexWrap: 'wrap' }}>
-                  <a
-                    href="/editor"
-                    style={{
-                      background: 'rgba(255,255,255,0.2)',
-                      color: 'white',
-                      textDecoration: 'none',
-                      fontSize: '18px',
-                      padding: '15px 25px',
-                      borderRadius: '10px',
-                      border: '2px solid rgba(255,255,255,0.3)',
-                      fontWeight: 'bold',
-                      transition: 'all 0.3s',
-                      display: 'inline-block'
-                    }}
-                  >
-                    🚀 Editor Completo
-                  </a>
-                  
-                  <a
-                    href="/editor-simples"
-                    style={{
-                      background: 'rgba(255,255,255,0.2)',
-                      color: 'white',
-                      textDecoration: 'none',
-                      fontSize: '18px',
-                      padding: '15px 25px',
-                      borderRadius: '10px',
-                      border: '2px solid rgba(255,255,255,0.3)',
-                      fontWeight: 'bold',
-                      transition: 'all 0.3s',
-                      display: 'inline-block'
-                    }}
-                  >
-                    🧪 Editor Simples
-                  </a>
-                </div>
+                <h1 style={{ margin: '0 0 20px 0' }}>🏠 HOME FUNCIONANDO!</h1>
+                <a
+                  href="/editor"
+                  style={{
+                    color: 'white',
+                    textDecoration: 'underline',
+                    fontSize: '20px',
+                  }}
+                >
+                  ➡️ Ir para o Editor
+                </a>
               </div>
             </div>
           </Route>
 
-          {/* 🚀 EDITOR COMPLETO E FUNCIONAL */}
+          {/* 🚀 EDITOR - ROTA ÚNICA */}
           <Route path="/editor">
-            <div
-              style={{
-                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                minHeight: '100vh',
-                padding: '0'
-              }}
-            >
-              <EditorCompletoFuncional />
-            </div>
-          </Route>
-
-          {/* 🧪 EDITOR SIMPLES - PARA TESTES */}
-          <Route path="/editor-simples">
             <div
               style={{
                 background: 'linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1)',
@@ -136,9 +91,24 @@ function App() {
                     margin: '0 0 20px 0',
                   }}
                 >
-                  🎯 EDITOR SIMPLES
+                  🎯 ROTA ÚNICA - SEM DUPLICAÇÃO!
                 </h1>
-                <EditorSuperSimples />
+                <div
+                  style={{
+                    background: '#4CAF50',
+                    color: 'white',
+                    padding: '15px',
+                    borderRadius: '10px',
+                    margin: '20px 0',
+                    fontSize: '20px',
+                    fontWeight: 'bold',
+                  }}
+                >
+                  ✅ Se você vê isso, a rota está funcionando!
+                </div>
+                <Suspense fallback={<Loading />}>
+                  <EditorSuperSimples />
+                </Suspense>
               </div>
             </div>
           </Route>
