@@ -88,27 +88,15 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
           key={block.id}
           block={block}
           isSelected={selectedBlockId === block.id}
-          onSelect={onBlockSelect}
+          isPreviewing={isPreviewing || false}
+          primaryStyle={primaryStyle}
+          onClick={() => onBlockSelect?.(block.id)}
           onUpdate={onBlockUpdate ? (updates) => onBlockUpdate(block.id, updates) : () => {}}
+          onSelect={onBlockSelect}
         />
       ))}
     </div>
   );
 };
-
-/**
- * 🏜️ Estado vazio do preview
- */
-const EmptyPreviewState: React.FC<{ mode: string }> = ({ mode }) => (
-  <div className="empty-preview-state flex flex-col items-center justify-center h-64 border border-gray-200 rounded-lg bg-gray-50">
-    <div className="text-4xl mb-4">📱</div>
-    <h3 className="text-lg font-medium text-gray-700 mb-2">Preview Vazio</h3>
-    <p className="text-gray-500 text-center max-w-md">
-      {mode === 'editor'
-        ? 'Adicione blocos do painel de componentes para começar a construir sua página.'
-        : 'Nenhum conteúdo disponível para preview.'}
-    </p>
-  </div>
-);
 
 export default UnifiedPreviewEngine;
