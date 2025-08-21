@@ -3,6 +3,7 @@
 ## 🎯 ROTA `/editor-unified` - CÓDIGO ATUAL
 
 ### 📋 Configuração de Rota
+
 ```tsx
 // App.tsx - Linha 132-140
 <Route path="/editor-unified">
@@ -20,12 +21,14 @@
 
 **Tamanho:** 653 linhas
 **Tecnologias:**
+
 - React + TypeScript
 - @dnd-kit/core (Drag & Drop)
 - Hooks unificados: useQuizFlow, useEditor, useAutoSaveWithDebounce
 - CSS customizado: `@/styles/editor-unified.css`
 
 **Estrutura Principal:**
+
 ```tsx
 const EditorUnified: React.FC = () => {
   // 🎪 HOOK PRINCIPAL UNIFICADO
@@ -39,10 +42,10 @@ const EditorUnified: React.FC = () => {
   return (
     <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
       <div className="unified-editor-main">
-        <EditorStageManager />        // Coluna 1: Etapas
+        <EditorStageManager /> // Coluna 1: Etapas
         <EnhancedComponentsSidebar /> // Coluna 2: Componentes
-        <UnifiedPreviewEngine />      // Coluna 3: Canvas
-        <EditorPropertiesPanel />     // Coluna 4: Propriedades
+        <UnifiedPreviewEngine /> // Coluna 3: Canvas
+        <EditorPropertiesPanel /> // Coluna 4: Propriedades
       </div>
     </DndContext>
   );
@@ -52,16 +55,19 @@ const EditorUnified: React.FC = () => {
 ## 🔄 COMPARAÇÃO COM OUTROS EDITORES
 
 ### 1. EditorWithPreview-fixed.tsx (EDITOR PRINCIPAL ATUAL)
+
 **Rota:** `/editor-fixed` (e `/editor` principal)
 **Status:** ✅ ATIVO - Editor padrão do sistema
 
 **Características:**
+
 - Usa componentes unificados (`EditorStageManager`, `UnifiedPreviewEngine`)
 - Não possui DnD nativo implementado
 - Utiliza `useSyncedScroll` hook
 - 280 linhas (mais compacto)
 
 **Diferenças principais:**
+
 ```tsx
 // EditorWithPreview-fixed.tsx
 - Não possui DndContext wrapper
@@ -71,19 +77,23 @@ const EditorUnified: React.FC = () => {
 ```
 
 ### 2. EditorWithPreview.tsx (EDITOR LEGACY)
+
 **Rota:** ❌ DESATIVADO no App.tsx
 **Status:** 🔒 LEGACY - Comentado na configuração de rotas
 
 **Características:**
+
 - Componentes antigos: `CanvasDropZone`, `FourColumnLayout`, `PropertiesPanel`
 - Sistema de 21 etapas via `Quiz21StepsProvider`
 - Debug panel integrado
 
 ### 3. EditorUnified-drag.tsx (VERSÃO BACKUP)
+
 **Rota:** ❌ NÃO ROTEADO
 **Status:** 🔄 BACKUP/DEVELOPMENT
 
 **Características:**
+
 - Versão anterior do EditorUnified
 - Possui `useSyncedScroll` (removido da versão atual)
 - 444 linhas
@@ -92,6 +102,7 @@ const EditorUnified: React.FC = () => {
 ## ⚠️ CONFLITOS IDENTIFICADOS
 
 ### 1. **CONFLITO DE COMPONENTES UNIFICADOS**
+
 ```tsx
 // ❌ PROBLEMA: Múltiplos editores usando os mesmos componentes
 EditorUnified.tsx        → UnifiedPreviewEngine
@@ -101,19 +112,19 @@ EditorWithPreview-fixed  → UnifiedPreviewEngine
 **Impacto:** Podem haver conflitos de estado entre instâncias
 
 ### 2. **CONFLITO DE CONTEXTOS**
+
 ```tsx
 // ❌ PROBLEMA: Múltiplos wrappers de contexto
 // Todos os editores ativos usam:
 <FunnelsProvider>
-  <EditorProvider>
-    // Componente
-  </EditorProvider>
+  <EditorProvider>// Componente</EditorProvider>
 </FunnelsProvider>
 ```
 
 **Impacto:** Estado compartilhado entre editores pode gerar inconsistências
 
 ### 3. **CONFLITO DE HOOKS**
+
 ```tsx
 // ❌ EditorUnified usa:
 const { actions } = useQuizFlow({ mode: 'editor' });
@@ -125,15 +136,21 @@ const { quizState, actions } = useQuizFlow({ mode: 'editor' });
 **Impacto:** Diferentes assinaturas do mesmo hook
 
 ### 4. **CONFLITO DE ESTILOS CSS**
+
 ```css
 /* editor-unified.css - Específico para EditorUnified */
-.unified-editor-main { /* styles */ }
-.unified-editor-canvas { overflow: visible; }
+.unified-editor-main {
+  /* styles */
+}
+.unified-editor-canvas {
+  overflow: visible;
+}
 
 /* Outros editores podem usar estilos globais que conflitam */
 ```
 
 ### 5. **CONFLITO DE FUNCIONALIDADES DND**
+
 ```tsx
 // ✅ EditorUnified: DnD nativo com @dnd-kit
 <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
@@ -145,32 +162,36 @@ const { quizState, actions } = useQuizFlow({ mode: 'editor' });
 ## 🎯 COMPONENTES COMPARTILHADOS
 
 ### ✅ Componentes Unificados (Sem Conflito)
+
 ```tsx
 import {
-  EditorControlsManager,     // ✅ Stateless - Sem conflito
-  EditorPropertiesPanel,     // ✅ Usa contexto isolado
-  EditorStageManager,        // ✅ Baseado em props
-  UnifiedPreviewEngine,      // ⚠️ ATENÇÃO: Estado compartilhado
+  EditorControlsManager, // ✅ Stateless - Sem conflito
+  EditorPropertiesPanel, // ✅ Usa contexto isolado
+  EditorStageManager, // ✅ Baseado em props
+  UnifiedPreviewEngine, // ⚠️ ATENÇÃO: Estado compartilhado
 } from '@/components/editor/unified';
 ```
 
 ### ⚠️ Componentes com Potencial Conflito
+
 ```tsx
 // UnifiedPreviewEngine.tsx
 // Usa: selectedBlockId, blocks[] - pode conflitar entre editores
 ```
 
 ### ✅ Hooks Compartilhados (Isolados)
+
 ```tsx
-useAutoSaveWithDebounce  // ✅ Isolado por instância
-useKeyboardShortcuts     // ✅ Global, mas sem conflito
-useEditor               // ⚠️ Contexto compartilhado
-useQuizFlow            // ⚠️ Estado global - CONFLITO POTENCIAL
+useAutoSaveWithDebounce; // ✅ Isolado por instância
+useKeyboardShortcuts; // ✅ Global, mas sem conflito
+useEditor; // ⚠️ Contexto compartilhado
+useQuizFlow; // ⚠️ Estado global - CONFLITO POTENCIAL
 ```
 
 ## 🔧 RECOMENDAÇÕES DE CORREÇÃO
 
 ### 1. **Isolamento de Contexto**
+
 ```tsx
 // ✅ SOLUÇÃO: Context único por editor
 const EditorUnifiedWrapper = () => (
@@ -183,6 +204,7 @@ const EditorUnifiedWrapper = () => (
 ```
 
 ### 2. **Hooks com Chaves Únicas**
+
 ```tsx
 // ✅ SOLUÇÃO: useQuizFlow com namespace
 const { actions } = useQuizFlow({
@@ -193,30 +215,30 @@ const { actions } = useQuizFlow({
 ```
 
 ### 3. **CSS Scoped**
+
 ```css
 /* ✅ SOLUÇÃO: Prefixo específico para cada editor */
-.editor-unified .preview-canvas { }
-.editor-fixed .preview-canvas { }
+.editor-unified .preview-canvas {
+}
+.editor-fixed .preview-canvas {
+}
 ```
 
 ### 4. **Componente State Management**
+
 ```tsx
 // ✅ SOLUÇÃO: Props isoladas para UnifiedPreviewEngine
-<UnifiedPreviewEngine
-  editorId="unified"
-  isolatedState={true}
-  blocks={localBlocks}
-/>
+<UnifiedPreviewEngine editorId="unified" isolatedState={true} blocks={localBlocks} />
 ```
 
 ## 📊 SUMMARY DE CONFLITOS
 
-| Editor | Status | DnD | Contexto | Hooks | CSS |
-|--------|--------|-----|----------|-------|-----|
-| EditorUnified | ✅ ATIVO | ✅ @dnd-kit | ⚠️ Compartilhado | ⚠️ Conflito | ✅ Isolado |
-| EditorWithPreview-fixed | ✅ PRINCIPAL | ❌ Sem DnD | ⚠️ Compartilhado | ⚠️ Conflito | ⚠️ Global |
-| EditorWithPreview | ❌ DESATIVO | ❌ Legacy | - | - | - |
-| EditorUnified-drag | ❌ BACKUP | ✅ @dnd-kit | - | - | - |
+| Editor                  | Status       | DnD         | Contexto         | Hooks       | CSS        |
+| ----------------------- | ------------ | ----------- | ---------------- | ----------- | ---------- |
+| EditorUnified           | ✅ ATIVO     | ✅ @dnd-kit | ⚠️ Compartilhado | ⚠️ Conflito | ✅ Isolado |
+| EditorWithPreview-fixed | ✅ PRINCIPAL | ❌ Sem DnD  | ⚠️ Compartilhado | ⚠️ Conflito | ⚠️ Global  |
+| EditorWithPreview       | ❌ DESATIVO  | ❌ Legacy   | -                | -           | -          |
+| EditorUnified-drag      | ❌ BACKUP    | ✅ @dnd-kit | -                | -           | -          |
 
 ## 🚨 PROBLEMAS CRÍTICOS IDENTIFICADOS
 
@@ -234,5 +256,6 @@ const { actions } = useQuizFlow({
 5. **Implementar CSS modules ou styled-components para isolamento**
 
 ---
-*Análise gerada em: 21/08/2025*
-*Contexto: Sessão de debug do sistema drag-and-drop*
+
+_Análise gerada em: 21/08/2025_
+_Contexto: Sessão de debug do sistema drag-and-drop_
