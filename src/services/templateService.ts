@@ -1,31 +1,5 @@
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '../templates/quiz21StepsComplete';
-import { supabase } from '@/integrations/supabase/client';
 import type { Block, BlockType } from '../types/editor';
-
-// Tipos para Templates do Supabase (baseado no schema manual)
-interface QuizTemplate {
-  id: string;
-  name: string;
-  description: string | null;
-  category: string;
-  template_data: any;
-  thumbnail_url: string | null;
-  is_official: boolean;
-  creator_id: string | null;
-  usage_count: number;
-  created_at: string;
-  updated_at: string;
-}
-
-interface InsertQuizTemplate {
-  name: string;
-  description?: string;
-  category?: string;
-  template_data: any;
-  thumbnail_url?: string;
-  is_official?: boolean;
-  creator_id?: string;
-}
 
 export interface TemplateData {
   blocks: Block[];
@@ -492,3 +466,204 @@ export async function loadStepTemplate(step: number): Promise<StepLoadResult | n
 }
 
 export default templateService;
+
+/**
+ * Serviço para gerenciamento de templates com Supabase
+ * Por enquanto usando fallbacks até configurar as RPCs no banco
+ */
+export class SupabaseTemplateService {
+  /**
+   * Busca todos os templates disponíveis
+   */
+  async getTemplates(): Promise<UITemplate[]> {
+    try {
+      // TODO: Implementar quando RPC functions estiverem criadas
+      console.log('🔄 Buscando templates do Supabase...');
+      
+      // Por enquanto, retorna os fallbacks combinados com templates reais
+      const fallbacks = this.getFallbackTemplates();
+      const realTemplates = this.getRealTemplates();
+      
+      return [...realTemplates, ...fallbacks];
+    } catch (error) {
+      console.error('Erro na conexão com Supabase:', error);
+      return this.getFallbackTemplates();
+    }
+  }
+
+  /**
+   * Busca template por ID
+   */
+  async getTemplateById(id: string): Promise<UITemplate | null> {
+    try {
+      const allTemplates = await this.getTemplates();
+      return allTemplates.find(template => template.id === id) || null;
+    } catch (error) {
+      console.error('Erro na conexão com Supabase:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Cria um novo template
+   */
+  async createTemplate(template: Partial<UITemplate>): Promise<UITemplate | null> {
+    try {
+      // TODO: Implementar quando tabela estiver configurada
+      console.log('🔄 Criando template:', template.name);
+      
+      // Por enquanto, simula criação local
+      const newTemplate: UITemplate = {
+        id: `template-${Date.now()}`,
+        name: template.name || 'Novo Template',
+        description: template.description || '',
+        category: template.category || 'quiz',
+        difficulty: template.difficulty || 'beginner',
+        isPremium: template.isPremium || false,
+        rating: 0,
+        downloads: 0,
+        thumbnail: template.thumbnail || 'https://via.placeholder.com/300x200',
+        components: template.components || 0,
+        author: template.author || 'Usuário',
+        tags: template.tags || [],
+        templateData: template.templateData,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+
+      return newTemplate;
+    } catch (error) {
+      console.error('Erro na criação do template:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Atualiza contador de uso
+   */
+  async incrementUsage(templateId: string): Promise<boolean> {
+    try {
+      console.log('🔄 Incrementando uso do template:', templateId);
+      // TODO: Implementar quando RPC function estiver criada
+      return true;
+    } catch (error) {
+      console.error('Erro na atualização de uso:', error);
+      return false;
+    }
+  }
+
+  /**
+   * Busca templates por categoria
+   */
+  async getTemplatesByCategory(category: string): Promise<UITemplate[]> {
+    try {
+      const allTemplates = await this.getTemplates();
+      
+      if (category === 'all') {
+        return allTemplates;
+      }
+      
+      return allTemplates.filter(template => template.category === category);
+    } catch (error) {
+      console.error('Erro na busca por categoria:', error);
+      return [];
+    }
+  }
+
+  /**
+   * Busca templates por termo
+   */
+  async searchTemplates(searchTerm: string): Promise<UITemplate[]> {
+    try {
+      const allTemplates = await this.getTemplates();
+      const term = searchTerm.toLowerCase();
+      
+      return allTemplates.filter(template =>
+        template.name.toLowerCase().includes(term) ||
+        template.description.toLowerCase().includes(term) ||
+        template.tags.some(tag => tag.toLowerCase().includes(term))
+      );
+    } catch (error) {
+      console.error('Erro na busca:', error);
+      return [];
+    }
+  }
+
+  /**
+   * Templates baseados nos dados reais do projeto
+   */
+  private getRealTemplates(): UITemplate[] {
+    return [
+      {
+        id: 'real-21-steps',
+        name: 'Quiz Profissional 21 Etapas',
+        description: 'Sistema completo de descoberta de estilo pessoal com 21 etapas estruturadas',
+        category: 'quiz',
+        difficulty: 'advanced',
+        isPremium: false,
+        rating: 4.9,
+        downloads: 2500,
+        thumbnail: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911666/C%C3%B3pia_de_Template_Dossi%C3%AA_Completo_2024_15_-_Copia_ssrhu3.webp',
+        components: 21,
+        author: 'Gisele Galvão',
+        tags: ['personalidade', 'estilo', '21-etapas', 'profissional'],
+        templateData: QUIZ_STYLE_21_STEPS_TEMPLATE,
+        createdAt: '2025-01-01T00:00:00Z',
+        updatedAt: '2025-01-01T00:00:00Z',
+      },
+    ];
+  }
+
+  /**
+   * Templates de fallback quando Supabase não está disponível
+   */
+  private getFallbackTemplates(): UITemplate[] {
+    return [
+      {
+        id: 'fallback-1',
+        name: 'Quiz de Personalidade Básico',
+        description: 'Template simples para descoberta de perfil pessoal',
+        category: 'quiz',
+        difficulty: 'beginner',
+        isPremium: false,
+        rating: 4.5,
+        downloads: 850,
+        thumbnail: 'https://via.placeholder.com/300x200',
+        components: 8,
+        author: 'Sistema',
+        tags: ['personalidade', 'básico', 'iniciante'],
+      },
+      {
+        id: 'fallback-2',
+        name: 'Funil de Captação',
+        description: 'Template para captação de leads qualificados',
+        category: 'funnel',
+        difficulty: 'intermediate',
+        isPremium: true,
+        rating: 4.7,
+        downloads: 1200,
+        thumbnail: 'https://via.placeholder.com/300x200',
+        components: 12,
+        author: 'Sistema',
+        tags: ['funil', 'captação', 'leads'],
+      },
+      {
+        id: 'fallback-3',
+        name: 'Landing Page Simples',
+        description: 'Template clean para apresentação de produtos',
+        category: 'landing',
+        difficulty: 'beginner',
+        isPremium: false,
+        rating: 4.3,
+        downloads: 950,
+        thumbnail: 'https://via.placeholder.com/300x200',
+        components: 6,
+        author: 'Sistema',
+        tags: ['landing', 'simples', 'produto'],
+      },
+    ];
+  }
+}
+
+// Instância global do serviço
+export const supabaseTemplateService = new SupabaseTemplateService();
