@@ -4,9 +4,10 @@
 console.log('🔍 === MAPEAMENTO REVERSO DO DRAG & DROP ===');
 
 // 1. Verificar se DndContext está presente
-const dndContextElement = document.querySelector('[data-dnd-context]') || 
-                         document.querySelector('[role="application"]') ||
-                         document.querySelector('.unified-editor-container');
+const dndContextElement =
+  document.querySelector('[data-dnd-context]') ||
+  document.querySelector('[role="application"]') ||
+  document.querySelector('.unified-editor-container');
 
 console.log('📍 1. DndContext detectado:', !!dndContextElement);
 if (dndContextElement) {
@@ -21,7 +22,7 @@ draggableItems.forEach((item, index) => {
     id: item.getAttribute('data-dnd-kit-draggable-id') || item.id,
     draggable: item.draggable,
     element: item.tagName,
-    classes: item.className
+    classes: item.className,
   });
 });
 
@@ -32,12 +33,14 @@ droppableAreas.forEach((area, index) => {
   console.log(`   └── Área ${index}:`, {
     id: area.getAttribute('data-dnd-kit-droppable-id'),
     element: area.tagName,
-    classes: area.className
+    classes: area.className,
   });
 });
 
 // 4. Verificar se componentes da sidebar têm event listeners
-const sidebarComponents = document.querySelectorAll('.components-sidebar [draggable], .components-sidebar button');
+const sidebarComponents = document.querySelectorAll(
+  '.components-sidebar [draggable], .components-sidebar button'
+);
 console.log('📍 4. Componentes da sidebar:', sidebarComponents.length);
 sidebarComponents.forEach((comp, index) => {
   const hasMouseDown = comp.onmousedown || comp.getAttribute('onmousedown');
@@ -46,7 +49,7 @@ sidebarComponents.forEach((comp, index) => {
     hasMouseDown: !!hasMouseDown,
     pointerEvents: hasPointerEvents,
     cursor: window.getComputedStyle(comp).cursor,
-    draggable: comp.draggable
+    draggable: comp.draggable,
   });
 });
 
@@ -54,11 +57,14 @@ sidebarComponents.forEach((comp, index) => {
 const problemElements = [];
 document.querySelectorAll('*').forEach(el => {
   const style = window.getComputedStyle(el);
-  if (style.pointerEvents === 'none' && el.contains(document.querySelector('.components-sidebar'))) {
-    problemElements.push({element: el, issue: 'pointer-events: none'});
+  if (
+    style.pointerEvents === 'none' &&
+    el.contains(document.querySelector('.components-sidebar'))
+  ) {
+    problemElements.push({ element: el, issue: 'pointer-events: none' });
   }
   if (style.userSelect === 'none' && el.contains(document.querySelector('.components-sidebar'))) {
-    problemElements.push({element: el, issue: 'user-select: none'});
+    problemElements.push({ element: el, issue: 'user-select: none' });
   }
 });
 
@@ -72,37 +78,37 @@ const testDrag = () => {
   const firstDraggable = document.querySelector('[data-dnd-kit-draggable-id]');
   if (firstDraggable) {
     console.log('📍 6. Testando evento manual no primeiro draggable...');
-    
+
     // Simular mousedown
     const mouseDownEvent = new MouseEvent('mousedown', {
       bubbles: true,
       cancelable: true,
       clientX: 100,
-      clientY: 100
+      clientY: 100,
     });
-    
+
     firstDraggable.dispatchEvent(mouseDownEvent);
     console.log('   └── MouseDown disparado');
-    
+
     // Simular mousemove após 100ms
     setTimeout(() => {
       const mouseMoveEvent = new MouseEvent('mousemove', {
         bubbles: true,
         cancelable: true,
         clientX: 200,
-        clientY: 200
+        clientY: 200,
       });
       document.dispatchEvent(mouseMoveEvent);
       console.log('   └── MouseMove disparado');
     }, 100);
-    
+
     // Simular mouseup após 200ms
     setTimeout(() => {
       const mouseUpEvent = new MouseEvent('mouseup', {
         bubbles: true,
         cancelable: true,
         clientX: 300,
-        clientY: 300
+        clientY: 300,
       });
       document.dispatchEvent(mouseUpEvent);
       console.log('   └── MouseUp disparado');

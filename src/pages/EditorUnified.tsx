@@ -206,7 +206,8 @@ const EditorUnified: React.FC = () => {
   };
 
   // Handler para arrastar e soltar (drag and drop)
-  const handleDragEnd = async (event: DragEndEvent) => {  // ✅ ASYNC ADICIONADO
+  const handleDragEnd = async (event: DragEndEvent) => {
+    // ✅ ASYNC ADICIONADO
     const { active, over } = event;
 
     console.log('🎯 === DRAG END DEBUG ===');

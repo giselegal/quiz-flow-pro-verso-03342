@@ -8,7 +8,7 @@
 // EditorUnified.tsx - LINHA ~220
 const handleDragEnd = (event: DragEndEvent) => {
   const { active, over } = event;
-  
+
   // ❌ PROBLEMA: addBlock retorna Promise<string> mas não está sendo aguardado
   addBlock(componentType)
     .then(blockId => {
@@ -18,7 +18,7 @@ const handleDragEnd = (event: DragEndEvent) => {
     .catch(error => {
       console.error('❌ Erro ao criar bloco:', error);
     });
-}
+};
 ```
 
 ### ❌ **PONTO CEGO #2: PROBLEMA NA ESTRUTURA DE DADOS**
@@ -27,7 +27,7 @@ const handleDragEnd = (event: DragEndEvent) => {
 // DraggableComponentItem.tsx - ESTRUTURA DE DADOS
 data: {
   type: 'sidebar-component',     // ✅ Correto
-  blockType: blockType,          // ✅ Correto  
+  blockType: blockType,          // ✅ Correto
   title: title,                  // ✅ Correto
 }
 
@@ -44,8 +44,8 @@ if (activeData?.type === 'sidebar-component' && overData?.type === 'dropzone') {
 const { setNodeRef: setDroppableRef, isOver } = useDroppable({
   id: 'canvas-dropzone',
   data: {
-    type: 'dropzone',           // ✅ Tipo correto
-    position: blocks.length,    // ✅ Posição correta
+    type: 'dropzone', // ✅ Tipo correto
+    position: blocks.length, // ✅ Posição correta
   },
 });
 
@@ -64,7 +64,7 @@ window.dragEndCalled = false;
 
 // Interceptar handleDragEnd
 const originalHandleDragEnd = window.handleDragEnd;
-window.handleDragEnd = function(event) {
+window.handleDragEnd = function (event) {
   console.log('🎯 INTERCEPTADO: handleDragEnd chamado', event);
   window.dragEndCalled = true;
   return originalHandleDragEnd?.call(this, event);
@@ -91,7 +91,7 @@ if (sidebar) {
   console.log('🎨 CSS da Sidebar:', {
     pointerEvents: style.pointerEvents,
     userSelect: style.userSelect,
-    touchAction: style.touchAction
+    touchAction: style.touchAction,
   });
 }
 ```
@@ -106,7 +106,7 @@ if (sidebar) {
 // EditorUnified.tsx - handleDragEnd (CORREÇÃO)
 if (activeData?.type === 'sidebar-component' && overData?.type === 'dropzone') {
   const componentType = activeData.blockType as BlockType;
-  
+
   try {
     const blockId = await addBlock(componentType); // ✅ AGUARDAR Promise
     setSelectedBlockId(blockId);
@@ -114,7 +114,7 @@ if (activeData?.type === 'sidebar-component' && overData?.type === 'dropzone') {
   } catch (error) {
     console.error('❌ Erro ao criar bloco:', error);
   }
-  
+
   return;
 }
 ```
@@ -141,7 +141,7 @@ console.log('🧩 DraggableComponentItem renderizado:', {
   id: `sidebar-item-${blockType}`,
   hasListeners: !!listeners,
   hasRef: !!setNodeRef,
-  disabled
+  disabled,
 });
 ```
 
@@ -153,36 +153,45 @@ console.log('🧩 DraggableComponentItem renderizado:', {
 
 ```javascript
 // 1. Verificar se DndContext está ativo
-console.log('🔍 DndContext ativo:', !!document.querySelector('[data-rfd-droppable-context-id], [data-dnd-kit-context]'));
+console.log(
+  '🔍 DndContext ativo:',
+  !!document.querySelector('[data-rfd-droppable-context-id], [data-dnd-kit-context]')
+);
 
 // 2. Testar evento manual
 const firstDraggable = document.querySelector('[data-dnd-kit-draggable-id]');
 if (firstDraggable) {
   console.log('🎯 Testando drag manual...');
-  
+
   // Simular mousedown
-  firstDraggable.dispatchEvent(new MouseEvent('mousedown', {
-    bubbles: true,
-    clientX: 100,
-    clientY: 100
-  }));
-  
+  firstDraggable.dispatchEvent(
+    new MouseEvent('mousedown', {
+      bubbles: true,
+      clientX: 100,
+      clientY: 100,
+    })
+  );
+
   // Simular mousemove
   setTimeout(() => {
-    document.dispatchEvent(new MouseEvent('mousemove', {
-      bubbles: true,
-      clientX: 300,
-      clientY: 300
-    }));
+    document.dispatchEvent(
+      new MouseEvent('mousemove', {
+        bubbles: true,
+        clientX: 300,
+        clientY: 300,
+      })
+    );
   }, 50);
-  
+
   // Simular mouseup
   setTimeout(() => {
-    document.dispatchEvent(new MouseEvent('mouseup', {
-      bubbles: true,
-      clientX: 400,
-      clientY: 400
-    }));
+    document.dispatchEvent(
+      new MouseEvent('mouseup', {
+        bubbles: true,
+        clientX: 400,
+        clientY: 400,
+      })
+    );
   }, 100);
 } else {
   console.log('❌ Nenhum elemento draggável encontrado');
@@ -199,8 +208,11 @@ setTimeout(() => {
 ## 🚀 **AÇÕES IMEDIATAS**
 
 ### **1. Aplicar correção do await no addBlock**
-### **2. Verificar se setDroppableRef está sendo aplicado** 
+
+### **2. Verificar se setDroppableRef está sendo aplicado**
+
 ### **3. Executar script de debug no console**
+
 ### **4. Verificar se eventos estão sendo detectados**
 
 **O problema principal parece estar na Promise não aguardada do addBlock ou na ref do droppable não aplicada corretamente.** 🎯
