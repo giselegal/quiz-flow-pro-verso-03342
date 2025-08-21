@@ -4,26 +4,15 @@
  * Engine de preview 100% idêntico à produção
  */
 
+import React, { useMemo, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { useMonitoring } from '@/services/MonitoringService';
 import { Block } from '@/types/editor';
 import { StyleResult } from '@/types/quiz';
 import { useFeatureFlags } from '@/utils/FeatureFlagManager';
-import React, { useMemo } from 'react';
-
-// Importações DnD removidas - agora no EditorUnified
-// import { useState, useEffect } from 'react';
-import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import { cn } from '@/lib/utils';
-import { TemplateBlock } from '@/types/template';
-import { SortablePreviewBlockWrapper } from './sortable/SortablePreviewBlockWrapper';
-import { renderPreviewBlock } from './preview/renderPreviewBlock';
-import { previewModeService } from '@/services/preview/previewModeService';
+import { SortablePreviewBlockWrapper } from './SortablePreviewBlockWrapper';
 
 // 🏗️ TIPOS
-
-// Importação do componente sortable
-import { SortablePreviewBlockWrapper } from './SortablePreviewBlockWrapper';
 
 export interface UnifiedPreviewEngineProps {
   blocks: Block[];
