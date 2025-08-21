@@ -44,6 +44,9 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
     category: comp.category,
     description: `Componente ${comp.label}`,
   }));
+  
+  console.log('🔄 allBlocks mapeados:', allBlocks.length);
+  console.log('📊 Primeiros allBlocks:', allBlocks.slice(0, 2));
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
@@ -92,6 +95,14 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
   console.log('📊 Categorias processadas:', orderedCategories);
   console.log('🔍 Blocos filtrados:', filteredBlocks.length);
   console.log('📋 Grupos criados:', Object.keys(groupedBlocks));
+  console.log('🎭 Estados expandidos:', expandedCategories);
+  
+  // DEBUG: Verificar se cada categoria tem blocos
+  orderedCategories.forEach(cat => {
+    console.log(`📂 Categoria "${cat}": ${groupedBlocks[cat].length} blocos, expandida: ${expandedCategories[cat]}`);
+  });
+  console.log('🎯 Expanded categories:', expandedCategories);
+  console.log('📝 Search query:', searchQuery);
 
   return (
     <Card className="h-full flex flex-col">
@@ -114,45 +125,51 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
           className="h-full overflow-y-auto [scrollbar-gutter:stable] overflow-x-hidden"
         >
           <div className="space-y-1 p-0">
-            {orderedCategories.map(category => (
-              <div key={category} className="space-y-1">
-                <div
-                  className="flex items-center justify-between p-2 bg-muted/30 rounded-md cursor-pointer hover:bg-muted/50 transition-colors"
-                  onClick={() => toggleCategory(category)}
-                >
-                  <div className="flex items-center space-x-2">
-                    {expandedCategories[category] ? (
-                      <ChevronDown className="h-4 w-4" />
-                    ) : (
-                      <ChevronRight className="h-4 w-4" />
-                    )}
-                    {React.createElement(categoryIcons[category] || GripVertical, {
-                      className: 'h-4 w-4 text-primary',
-                    })}
-                    <span className="text-sm font-medium">{category}</span>
+            {orderedCategories.map(category => {
+              console.log(`🏷️ Categoria: ${category}, Expandida: ${expandedCategories[category]}, Items: ${groupedBlocks[category].length}`);
+              return (
+                <div key={category} className="space-y-1">
+                  <div
+                    className="flex items-center justify-between p-2 bg-muted/30 rounded-md cursor-pointer hover:bg-muted/50 transition-colors"
+                    onClick={() => toggleCategory(category)}
+                  >
+                    <div className="flex items-center space-x-2">
+                      {expandedCategories[category] ? (
+                        <ChevronDown className="h-4 w-4" />
+                      ) : (
+                        <ChevronRight className="h-4 w-4" />
+                      )}
+                      {React.createElement(categoryIcons[category] || GripVertical, {
+                        className: 'h-4 w-4 text-primary',
+                      })}
+                      <span className="text-sm font-medium">{category}</span>
+                    </div>
+                    <Badge variant="secondary" className="text-xs">
+                      {groupedBlocks[category].length}
+                    </Badge>
                   </div>
-                  <Badge variant="secondary" className="text-xs">
-                    {groupedBlocks[category].length}
-                  </Badge>
-                </div>
 
-                {expandedCategories[category] && (
-                  <div className="pl-4 space-y-1">
-                    {groupedBlocks[category].map((block: any) => (
-                      <DraggableComponentItem
-                        key={block.type}
-                        blockType={block.type}
-                        title={block.name}
-                        description={block.description}
-                        icon={<GripVertical className="h-4 w-4" />}
-                        category={category}
-                        className="w-full"
-                      />
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
+                  {expandedCategories[category] && (
+                    <div className="pl-4 space-y-1">
+                      {groupedBlocks[category].map((block: any) => {
+                        console.log(`🎯 Renderizando DraggableComponentItem: ${block.type}`);
+                        return (
+                          <DraggableComponentItem
+                            key={block.type}
+                            blockType={block.type}
+                            title={block.name}
+                            description={block.description}
+                            icon={<GripVertical className="h-4 w-4" />}
+                            category={category}
+                            className="w-full"
+                          />
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
       </CardContent>

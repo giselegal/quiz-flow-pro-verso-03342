@@ -26,9 +26,11 @@ import {
   EditorControlsManager,
   EditorPropertiesPanel,
   EditorStageManager,
-  UnifiedPreviewEngine,
   UnifiedQuizStepLoader,
 } from '@/components/editor/unified';
+
+// 🎯 IMPORTAÇÃO CORRETA: Engine com suporte a Drag & Drop
+import { UnifiedPreviewEngine } from '@/components/editor/unified/UnifiedPreviewEngine-drag';
 
 // 🧩 COMPONENTES DE DRAG & DROP
 import EnhancedComponentsSidebar from '@/components/editor/EnhancedComponentsSidebar';
