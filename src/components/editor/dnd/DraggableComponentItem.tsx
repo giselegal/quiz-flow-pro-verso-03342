@@ -51,7 +51,7 @@ export const DraggableComponentItem: React.FC<DraggableComponentItemProps> = ({
   // Debug: verificar se o draggable está sendo configurado
   React.useEffect(() => {
     console.log('🔧 Item configurado:', blockType, 'disabled:', disabled);
-    
+
     // 🔧 DEBUG: Verificar se ref foi aplicada
     console.log('✅ setNodeRef disponível para', blockType);
   }, [blockType, disabled]);

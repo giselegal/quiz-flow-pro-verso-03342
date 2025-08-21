@@ -10,9 +10,9 @@ import {
   KeyboardSensor,
   PointerSensor,
   closestCenter,
+  useDroppable,
   useSensor,
   useSensors,
-  useDroppable,
 } from '@dnd-kit/core';
 import { restrictToParentElement } from '@dnd-kit/modifiers';
 import {
@@ -102,7 +102,7 @@ const EditorUnified: React.FC = () => {
     console.log('🔧 Sensors configurados:', {
       pointerSensor: 'distance: 1px',
       keyboardSensor: 'ativo',
-      totalSensors: sensors.length
+      totalSensors: sensors.length,
     });
   }, [sensors]);
 
@@ -162,7 +162,7 @@ const EditorUnified: React.FC = () => {
       id: 'canvas-dropzone',
       isOver: isCanvasOver,
       hasRef: !!setCanvasDroppableRef,
-      blocksLength: currentBlocks.length
+      blocksLength: currentBlocks.length,
     });
   }, [isCanvasOver, setCanvasDroppableRef, currentBlocks.length]);
 
@@ -233,16 +233,20 @@ const EditorUnified: React.FC = () => {
       data: event.active.data.current,
       type: event.active.data.current?.type,
     });
-    
+
     // 🔧 DEBUG: Marcar elementos visualmente
-    const activeElement = document.querySelector(`[data-dnd-kit-draggable-id="${event.active.id}"]`) as HTMLElement;
-    const canvasElement = document.querySelector('[data-dnd-kit-droppable-id="canvas-dropzone"]') as HTMLElement;
-    
+    const activeElement = document.querySelector(
+      `[data-dnd-kit-draggable-id="${event.active.id}"]`
+    ) as HTMLElement;
+    const canvasElement = document.querySelector(
+      '[data-dnd-kit-droppable-id="canvas-dropzone"]'
+    ) as HTMLElement;
+
     if (activeElement) {
       activeElement.style.outline = '3px solid green';
       console.log('✅ Elemento draggable destacado em verde');
     }
-    
+
     if (canvasElement) {
       canvasElement.style.outline = '3px solid red';
       console.log('✅ Canvas droppable destacado em vermelho');
@@ -334,11 +338,15 @@ const EditorUnified: React.FC = () => {
       overId: over.id,
       sameId: active.id === over.id,
     });
-    
+
     // 🔧 DEBUG: Limpar outlines visuais
-    const activeElement = document.querySelector(`[data-dnd-kit-draggable-id="${active.id}"]`) as HTMLElement;
-    const canvasElement = document.querySelector('[data-dnd-kit-droppable-id="canvas-dropzone"]') as HTMLElement;
-    
+    const activeElement = document.querySelector(
+      `[data-dnd-kit-draggable-id="${active.id}"]`
+    ) as HTMLElement;
+    const canvasElement = document.querySelector(
+      '[data-dnd-kit-droppable-id="canvas-dropzone"]'
+    ) as HTMLElement;
+
     if (activeElement) {
       activeElement.style.outline = '';
     }
@@ -544,14 +552,14 @@ const EditorUnified: React.FC = () => {
               </aside>
 
               {/* 🎨 CANVAS PRINCIPAL - DROPPABLE NO NÍVEL SUPERIOR */}
-              <main 
+              <main
                 ref={setCanvasDroppableRef}
                 className={cn(
-                  "unified-editor-canvas flex-1 relative bg-gradient-to-b from-slate-50/50 to-white",
+                  'unified-editor-canvas flex-1 relative bg-gradient-to-b from-slate-50/50 to-white',
                   // 🔧 DEBUG: Feedback visual quando isOver
-                  isCanvasOver && "bg-blue-50 ring-2 ring-blue-300 ring-inset",
+                  isCanvasOver && 'bg-blue-50 ring-2 ring-blue-300 ring-inset',
                   // 🔧 DEBUG: Ring verde para mostrar área droppable sempre
-                  "ring-1 ring-green-200 ring-inset"
+                  'ring-1 ring-green-200 ring-inset'
                 )}
               >
                 {/* 🔧 DEBUG: Feedback visual para drop */}

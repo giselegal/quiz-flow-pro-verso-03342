@@ -46,7 +46,7 @@ O `overflow-auto` pode estar **interceptando eventos de drag** antes de chegarem
 // Padding no container principal
 <div className="p-8">  // 32px de padding
 
-// Margin automática para centralização  
+// Margin automática para centralização
 <div className="mx-auto max-w-5xl">  // Centralização limita área
 
 // Container visual com bordas
@@ -62,7 +62,7 @@ O `overflow-auto` pode estar **interceptando eventos de drag** antes de chegarem
 // Feedback visual
 <div className="z-10">  // z-index: 10
 
-// Blocks container  
+// Blocks container
 <div className="z-0">   // z-index: 0
 ```
 
@@ -84,7 +84,7 @@ O `overflow-auto` pode estar **interceptando eventos de drag** antes de chegarem
 
 ```tsx
 // ✅ CORRIGIDO (SUGERIDO):
-<main 
+<main
   ref={setDroppableRef}          // DROPPABLE NO NÍVEL SUPERIOR
   className="unified-editor-canvas"
 >
@@ -109,7 +109,7 @@ O `overflow-auto` pode estar **interceptando eventos de drag** antes de chegarem
 // ❌ ATUAL (4 CONTAINERS):
 <main>
   <div>      // preview-container
-    <div>    // mx-auto max-w-5xl  
+    <div>    // mx-auto max-w-5xl
       <div>  // preview-frame
         <div ref={setDroppableRef}>  // droppable
 
@@ -125,12 +125,14 @@ O `overflow-auto` pode estar **interceptando eventos de drag** antes de chegarem
 ### **Modificar EditorUnified.tsx:**
 
 ```tsx
-{/* CANVAS PRINCIPAL - DROPPABLE NO NÍVEL SUPERIOR */}
-<main 
-  ref={setDroppableRef}  // MOVER PARA CÁ
+{
+  /* CANVAS PRINCIPAL - DROPPABLE NO NÍVEL SUPERIOR */
+}
+<main
+  ref={setDroppableRef} // MOVER PARA CÁ
   className={cn(
-    "unified-editor-canvas flex-1 relative bg-gradient-to-b from-slate-50/50 to-white",
-    isOver && "bg-blue-50 ring-2 ring-blue-300"  // Feedback visual
+    'unified-editor-canvas flex-1 relative bg-gradient-to-b from-slate-50/50 to-white',
+    isOver && 'bg-blue-50 ring-2 ring-blue-300' // Feedback visual
   )}
 >
   {/* Simplificar estrutura interna */}
@@ -141,7 +143,7 @@ O `overflow-auto` pode estar **interceptando eventos de drag** antes de chegarem
       // REMOVER setDroppableRef daqui
     />
   </div>
-</main>
+</main>;
 ```
 
 ### **Modificar UnifiedPreviewEngine.tsx:**

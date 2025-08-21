@@ -4,12 +4,12 @@
  * Engine de preview 100% idêntico à produção
  */
 
-import React, { useMemo, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { useMonitoring } from '@/services/MonitoringService';
 import { Block } from '@/types/editor';
 import { StyleResult } from '@/types/quiz';
 import { useFeatureFlags } from '@/utils/FeatureFlagManager';
+import React, { useEffect, useMemo } from 'react';
 import { SortablePreviewBlockWrapper } from './SortablePreviewBlockWrapper';
 
 // 🏗️ TIPOS

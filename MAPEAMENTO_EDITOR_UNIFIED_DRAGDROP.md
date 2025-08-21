@@ -28,29 +28,30 @@ EditorUnified.tsx
 As colunas estão **FISICAMENTE SEPARADAS** mas **LOGICAMENTE CONECTADAS** apenas pelo DndContext:
 
 ```tsx
-{/* LAYOUT COM 4 COLUNAS SEPARADAS */}
+{
+  /* LAYOUT COM 4 COLUNAS SEPARADAS */
+}
 <div className="flex h-[calc(100vh-120px)]">
-  
   {/* COLUNA 1: EditorStageManager - NÃO PARTICIPA DO DnD */}
   <aside className="w-72">
-    <EditorStageManager />  ❌ Não tem DnD
+    <EditorStageManager /> ❌ Não tem DnD
   </aside>
-  
+
   {/* COLUNA 2: EnhancedComponentsSidebar - FONTE DO DRAG */}
   <aside className="components-sidebar w-80">
-    <EnhancedComponentsSidebar />  ✅ Tem useDraggable
+    <EnhancedComponentsSidebar /> ✅ Tem useDraggable
   </aside>
-  
+
   {/* COLUNA 3: UnifiedPreviewEngine - DESTINO DO DROP */}
   <main className="flex-1">
-    <UnifiedPreviewEngine />  ✅ Tem useDroppable
+    <UnifiedPreviewEngine /> ✅ Tem useDroppable
   </main>
-  
+
   {/* COLUNA 4: EditorPropertiesPanel - NÃO PARTICIPA DO DnD */}
   <aside className="w-80">
-    <EditorPropertiesPanel />  ❌ Não tem DnD
+    <EditorPropertiesPanel /> ❌ Não tem DnD
   </aside>
-</div>
+</div>;
 ```
 
 ### ❌ **PROBLEMA #2: POSSÍVEL INTERFERÊNCIA CSS**
@@ -122,8 +123,8 @@ console.log('Draggables encontrados:', draggables.length);
 console.log('Droppables encontrados:', droppables.length);
 
 // Verificar se estão dentro do DndContext
-const dndContext = document.querySelector('[data-dnd-kit-context]') || 
-                  sidebar?.closest('.unified-editor-container');
+const dndContext =
+  document.querySelector('[data-dnd-kit-context]') || sidebar?.closest('.unified-editor-container');
 console.log('DndContext comum:', !!dndContext);
 console.log('Sidebar dentro do contexto:', dndContext?.contains(sidebar));
 console.log('Canvas dentro do contexto:', dndContext?.contains(canvas));
@@ -135,9 +136,9 @@ console.log('Canvas dentro do contexto:', dndContext?.contains(canvas));
 // Execute no Console:
 const elementsToCheck = [
   '.components-sidebar',
-  '.unified-editor-canvas', 
+  '.unified-editor-canvas',
   '.preview-container',
-  '.preview-frame'
+  '.preview-frame',
 ];
 
 elementsToCheck.forEach(selector => {
@@ -149,7 +150,7 @@ elementsToCheck.forEach(selector => {
       overflow: style.overflow,
       position: style.position,
       zIndex: style.zIndex,
-      transform: style.transform
+      transform: style.transform,
     });
   }
 });
@@ -161,33 +162,33 @@ elementsToCheck.forEach(selector => {
 // Execute no Console:
 window.testCommunication = () => {
   console.log('🔗 === TESTE DE COMUNICAÇÃO ===');
-  
+
   // Encontrar primeiro draggable
   const draggable = document.querySelector('[data-dnd-kit-draggable-id]');
   const droppable = document.querySelector('[data-dnd-kit-droppable-id]');
-  
+
   if (!draggable || !droppable) {
     console.log('❌ Elementos não encontrados');
     return;
   }
-  
+
   console.log('✅ Elementos encontrados:');
   console.log('   Draggable:', draggable.getAttribute('data-dnd-kit-draggable-id'));
   console.log('   Droppable:', droppable.getAttribute('data-dnd-kit-droppable-id'));
-  
+
   // Verificar distância entre elementos
   const dragRect = draggable.getBoundingClientRect();
   const dropRect = droppable.getBoundingClientRect();
-  
+
   console.log('📏 Posições:');
-  console.log('   Draggable:', {x: dragRect.left, y: dragRect.top});
-  console.log('   Droppable:', {x: dropRect.left, y: dropRect.top});
-  console.log('   Distância:', Math.sqrt(
-    Math.pow(dropRect.left - dragRect.left, 2) + 
-    Math.pow(dropRect.top - dragRect.top, 2)
-  ));
-  
-  return {draggable, droppable, dragRect, dropRect};
+  console.log('   Draggable:', { x: dragRect.left, y: dragRect.top });
+  console.log('   Droppable:', { x: dropRect.left, y: dropRect.top });
+  console.log(
+    '   Distância:',
+    Math.sqrt(Math.pow(dropRect.left - dragRect.left, 2) + Math.pow(dropRect.top - dragRect.top, 2))
+  );
+
+  return { draggable, droppable, dragRect, dropRect };
 };
 ```
 
@@ -196,23 +197,28 @@ window.testCommunication = () => {
 ## 🎯 HIPÓTESES SOBRE O PROBLEMA
 
 ### **HIPÓTESE #1: OVERFLOW HIDDEN**
+
 ```css
 .unified-editor-canvas {
-  overflow: hidden;  /* Pode estar cortando a área de drop */
+  overflow: hidden; /* Pode estar cortando a área de drop */
 }
 ```
 
 ### **HIPÓTESE #2: ANINHAMENTO PROFUNDO**
+
 O drag precisa "viajar" através de muitas camadas:
+
 ```
 DRAG: sidebar > div > div > EnhancedComponentsSidebar
 DROP: main > div > div > div > UnifiedPreviewEngine
 ```
 
 ### **HIPÓTESE #3: Z-INDEX CONFLICTS**
+
 Diferentes camadas podem ter z-index conflitantes
 
 ### **HIPÓTESE #4: EVENT BUBBLING**
+
 Eventos podem estar sendo interceptados por elementos intermediários
 
 ---
@@ -220,6 +226,7 @@ Eventos podem estar sendo interceptados por elementos intermediários
 ## 🔧 CORREÇÕES PROPOSTAS
 
 ### **CORREÇÃO #1: SIMPLIFICAR ESTRUTURA**
+
 ```tsx
 // Mover DndContext mais próximo dos elementos
 <div className="flex">
@@ -237,20 +244,22 @@ Eventos podem estar sendo interceptados por elementos intermediários
 ```
 
 ### **CORREÇÃO #2: REMOVER OVERFLOW HIDDEN**
+
 ```css
 .unified-editor-canvas {
-  /* overflow: hidden; */  /* REMOVER */
-  overflow: visible;       /* ADICIONAR */
+  /* overflow: hidden; */ /* REMOVER */
+  overflow: visible; /* ADICIONAR */
 }
 ```
 
 ### **CORREÇÃO #3: DEBUG VISUAL**
+
 ```tsx
 // Adicionar outline visual para debug
-<UnifiedPreviewEngine 
+<UnifiedPreviewEngine
   style={{
-    outline: '2px solid red',  // Debug: área droppable
-    minHeight: '500px'
+    outline: '2px solid red', // Debug: área droppable
+    minHeight: '500px',
   }}
 />
 ```
@@ -260,7 +269,7 @@ Eventos podem estar sendo interceptados por elementos intermediários
 ## 🎮 **PRÓXIMAS AÇÕES**
 
 1. **Execute os scripts de diagnóstico** no console
-2. **Verifique se elementos são encontrados** 
+2. **Verifique se elementos são encontrados**
 3. **Teste comunicação direta** entre colunas
 4. **Aplique correções propostas** uma por vez
 5. **Monitore console** para logs de drag/drop
