@@ -125,7 +125,10 @@ const Editor4ColunasUltraSafe = () => {
   };
 
   // 🎯 DADOS DA ETAPA ATUAL
-  const currentStepInfo = stepsData[currentStep as keyof typeof stepsData] || { title: 'Etapa', description: 'Configuração' };
+  const currentStepInfo = stepsData[currentStep as keyof typeof stepsData] || {
+    title: 'Etapa',
+    description: 'Configuração',
+  };
 
   return (
     <div
@@ -210,15 +213,24 @@ const Editor4ColunasUltraSafe = () => {
         </div>
 
         {/* CONTROLES DAS 21 ETAPAS */}
-        <div style={{ marginTop: '30px', padding: '16px', background: 'rgba(255,255,255,0.9)', borderRadius: '12px' }}>
-          <h3 style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: '600', color: '#1f2937' }}>
+        <div
+          style={{
+            marginTop: '30px',
+            padding: '16px',
+            background: 'rgba(255,255,255,0.9)',
+            borderRadius: '12px',
+          }}
+        >
+          <h3
+            style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: '600', color: '#1f2937' }}
+          >
             🎯 Sistema 21 Etapas
           </h3>
-          
+
           <div style={{ fontSize: '12px', color: '#6b7280', marginBottom: '12px' }}>
             Etapa {currentStep} de 21
           </div>
-          
+
           <div style={{ display: 'flex', gap: '8px', marginBottom: '12px' }}>
             <button
               onClick={goToPreviousStep}
@@ -236,7 +248,7 @@ const Editor4ColunasUltraSafe = () => {
             >
               ← Ant
             </button>
-            
+
             <button
               onClick={goToNextStep}
               disabled={currentStep >= 21}
@@ -254,28 +266,34 @@ const Editor4ColunasUltraSafe = () => {
               Prox →
             </button>
           </div>
-          
-          <div style={{ 
-            width: '100%', 
-            height: '4px', 
-            background: '#e5e7eb', 
-            borderRadius: '2px',
-            overflow: 'hidden'
-          }}>
-            <div style={{ 
-              width: `${getProgress()}%`, 
-              height: '100%', 
-              background: '#3b82f6',
-              transition: 'width 0.3s ease'
-            }} />
+
+          <div
+            style={{
+              width: '100%',
+              height: '4px',
+              background: '#e5e7eb',
+              borderRadius: '2px',
+              overflow: 'hidden',
+            }}
+          >
+            <div
+              style={{
+                width: `${getProgress()}%`,
+                height: '100%',
+                background: '#3b82f6',
+                transition: 'width 0.3s ease',
+              }}
+            />
           </div>
-          
-          <div style={{ 
-            fontSize: '10px', 
-            color: '#6b7280', 
-            textAlign: 'center',
-            marginTop: '6px'
-          }}>
+
+          <div
+            style={{
+              fontSize: '10px',
+              color: '#6b7280',
+              textAlign: 'center',
+              marginTop: '6px',
+            }}
+          >
             {Math.round(getProgress())}% concluído
           </div>
         </div>
@@ -681,14 +699,16 @@ const Editor4ColunasUltraSafe = () => {
             {currentStepInfo.description}
           </p>
 
-          <div style={{ 
-            background: '#f3f4f6', 
-            padding: '12px', 
-            borderRadius: '8px',
-            marginBottom: '16px',
-            fontSize: '12px',
-            color: '#374151'
-          }}>
+          <div
+            style={{
+              background: '#f3f4f6',
+              padding: '12px',
+              borderRadius: '8px',
+              marginBottom: '16px',
+              fontSize: '12px',
+              color: '#374151',
+            }}
+          >
             <strong>Etapa {currentStep} de 21</strong> • Progresso: {Math.round(getProgress())}%
           </div>
 
