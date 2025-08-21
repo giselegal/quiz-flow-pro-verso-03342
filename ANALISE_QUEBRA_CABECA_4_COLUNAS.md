@@ -26,10 +26,12 @@
 ## 🔍 **ANÁLISE DETALHADA POR COLUNA**
 
 ### 📋 **COLUNA 1: STAGE MANAGER (Etapas)**
+
 **Largura:** `w-72` (288px)  
 **Arquivo:** `EditorStageManager.tsx` (445 linhas)
 
 #### ✅ **PEÇAS CORRETAS:**
+
 ```tsx
 // ✅ Props bem definidas
 interface EditorStageManagerProps {
@@ -55,6 +57,7 @@ const handleStepSelect = async (step: number) => {
 ```
 
 #### 🎯 **FUNCIONALIDADES IMPLEMENTADAS:**
+
 - ✅ Navegação entre 21 etapas
 - ✅ Integração com useQuizFlow
 - ✅ Estados visuais (ativo, completo, vazio)
@@ -62,6 +65,7 @@ const handleStepSelect = async (step: number) => {
 - ✅ ScrollArea para muitas etapas
 
 #### ⚠️ **PROBLEMAS IDENTIFICADOS:**
+
 ```tsx
 // 🚨 PROBLEMA: useSyncedScroll pode interferir com DnD
 const { scrollRef } = useSyncedScroll({ source: 'stages' });
@@ -73,10 +77,12 @@ const stepMetadata = QUIZ_STYLE_21_STEPS_TEMPLATE[step] || fallback;
 ---
 
 ### 🧩 **COLUNA 2: COMPONENTS SIDEBAR (Componentes)**
+
 **Largura:** `w-80` (320px)  
 **Arquivo:** `EnhancedComponentsSidebar.tsx` (155 linhas)
 
 #### ✅ **PEÇAS CORRETAS:**
+
 ```tsx
 // ✅ Componentes bem categorizados
 const allBlocks = AVAILABLE_COMPONENTS.map(comp => ({
@@ -88,8 +94,7 @@ const allBlocks = AVAILABLE_COMPONENTS.map(comp => ({
 
 // ✅ Sistema de busca funcional
 const filteredBlocks = allBlocks.filter(block => {
-  return !searchQuery || 
-    block.name.toLowerCase().includes(searchQuery.toLowerCase());
+  return !searchQuery || block.name.toLowerCase().includes(searchQuery.toLowerCase());
 });
 
 // ✅ DraggableComponentItem configurado
@@ -101,10 +106,11 @@ const filteredBlocks = allBlocks.filter(block => {
   icon={<GripVertical className="h-4 w-4" />}
   category={category}
   className="w-full"
-/>
+/>;
 ```
 
 #### 🎯 **FUNCIONALIDADES IMPLEMENTADAS:**
+
 - ✅ 50+ componentes categorizados
 - ✅ Sistema de busca em tempo real
 - ✅ Categorias colapsáveis/expansíveis
@@ -112,13 +118,14 @@ const filteredBlocks = allBlocks.filter(block => {
 - ✅ Visual feedback durante drag
 
 #### ⚠️ **PROBLEMAS IDENTIFICADOS:**
+
 ```tsx
 // 🚨 PROBLEMA: useSyncedScroll desnecessário
 const { scrollRef } = useSyncedScroll({ source: 'components' });
 
 // 🚨 PROBLEMA: Categorias hard-coded
 const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({
-  'Edição JSON': true,   // ← Hard-coded
+  'Edição JSON': true, // ← Hard-coded
   'Componentes Modulares': true,
   // ...
 });
@@ -127,10 +134,12 @@ const [expandedCategories, setExpandedCategories] = useState<Record<string, bool
 ---
 
 ### 🎨 **COLUNA 3: CANVAS (Preview Engine)**
+
 **Largura:** `flex-1` (restante do espaço)  
 **Arquivo:** `UnifiedPreviewEngine.tsx` (221 linhas)
 
 #### ✅ **PEÇAS CORRETAS:**
+
 ```tsx
 // ✅ Props bem estruturadas
 interface UnifiedPreviewEngineProps {
@@ -160,6 +169,7 @@ interface UnifiedPreviewEngineProps {
 ```
 
 #### 🎯 **FUNCIONALIDADES IMPLEMENTADAS:**
+
 - ✅ Renderização fiel à produção
 - ✅ Droppable zone no nível superior
 - ✅ SortablePreviewBlockWrapper para reordenação
@@ -169,6 +179,7 @@ interface UnifiedPreviewEngineProps {
 - ✅ EmptyPreviewState quando vazio
 
 #### ✅ **ARQUITETURA CORRETA:**
+
 ```tsx
 // ✅ CORRETO: Droppable no main, não no UnifiedPreviewEngine
 const { setNodeRef: setCanvasDroppableRef, isOver: isCanvasOver } = useDroppable({
@@ -183,10 +194,12 @@ const { setNodeRef: setCanvasDroppableRef, isOver: isCanvasOver } = useDroppable
 ---
 
 ### ⚙️ **COLUNA 4: PROPERTIES PANEL (Propriedades)**
+
 **Largura:** `w-80` (320px)  
 **Arquivo:** `EditorPropertiesPanel.tsx` (612 linhas)
 
 #### ✅ **PEÇAS CORRETAS:**
+
 ```tsx
 // ✅ Props bem definidas
 interface EditorPropertiesPanelProps {
@@ -209,6 +222,7 @@ const handleBlockUpdate = (blockId: string, updates: Partial<Block>) => {
 ```
 
 #### 🎯 **FUNCIONALIDADES IMPLEMENTADAS:**
+
 - ✅ Edição de propriedades em tempo real
 - ✅ Diferentes painéis por tipo de bloco
 - ✅ Ações: duplicar, deletar, resetar
@@ -221,6 +235,7 @@ const handleBlockUpdate = (blockId: string, updates: Partial<Block>) => {
 ## 🔄 **ANÁLISE DO FLUXO DE DADOS**
 
 ### 1. **Estado Global (useEditor Context)**
+
 ```tsx
 // ✅ CORRETO: Estado centralizado
 const {
@@ -233,6 +248,7 @@ const {
 ```
 
 ### 2. **Comunicação Entre Colunas**
+
 ```tsx
 // ✅ FLUXO CORRETO:
 // StageManager → handleStepSelect → currentStep → UnifiedPreviewEngine
@@ -242,9 +258,10 @@ const {
 ```
 
 ### 3. **Drag & Drop Pipeline**
+
 ```tsx
 // ✅ PIPELINE CORRETO:
-DraggableComponentItem (useDraggable) 
+DraggableComponentItem (useDraggable)
   ↓
 DndContext (sensors, onDragEnd)
   ↓
@@ -260,6 +277,7 @@ UnifiedPreviewEngine (re-render)
 ## 🚨 **PROBLEMAS CRÍTICOS IDENTIFICADOS**
 
 ### 1. **useSyncedScroll Conflitos**
+
 ```tsx
 // ❌ PROBLEMA: Múltiplos useSyncedScroll podem interferir com DnD
 // StageManager.tsx:
@@ -270,6 +288,7 @@ const { scrollRef } = useSyncedScroll({ source: 'components' });
 ```
 
 ### 2. **Estado de Step Duplicado**
+
 ```tsx
 // ❌ PROBLEMA: currentStep gerenciado em múltiplos lugares
 // EditorUnified.tsx:
@@ -282,6 +301,7 @@ const { quizState } = useQuizFlow({ initialStep: 1 });
 ```
 
 ### 3. **Props Drilling**
+
 ```tsx
 // ⚠️ PROBLEMA: Muitas props passadas manualmente
 <EditorStageManager
@@ -294,18 +314,19 @@ const { quizState } = useQuizFlow({ initialStep: 1 });
 
 ## 🎯 **SCORE DO QUEBRA-CABEÇA**
 
-| Coluna | Estrutura | Funcionalidade | Integração | Score |
-|--------|-----------|----------------|------------|-------|
-| **📋 StageManager** | ✅ 9/10 | ✅ 9/10 | ⚠️ 7/10 | **85%** |
-| **🧩 ComponentsSidebar** | ✅ 10/10 | ✅ 10/10 | ✅ 9/10 | **95%** |
-| **🎨 Canvas** | ✅ 10/10 | ✅ 10/10 | ✅ 10/10 | **100%** |
-| **⚙️ PropertiesPanel** | ✅ 9/10 | ✅ 9/10 | ✅ 9/10 | **90%** |
+| Coluna                   | Estrutura | Funcionalidade | Integração | Score    |
+| ------------------------ | --------- | -------------- | ---------- | -------- |
+| **📋 StageManager**      | ✅ 9/10   | ✅ 9/10        | ⚠️ 7/10    | **85%**  |
+| **🧩 ComponentsSidebar** | ✅ 10/10  | ✅ 10/10       | ✅ 9/10    | **95%**  |
+| **🎨 Canvas**            | ✅ 10/10  | ✅ 10/10       | ✅ 10/10   | **100%** |
+| **⚙️ PropertiesPanel**   | ✅ 9/10   | ✅ 9/10        | ✅ 9/10    | **90%**  |
 
 ## 🏆 **VEREDICTO FINAL**
 
 ### **✅ QUEBRA-CABEÇA 92% MONTADO CORRETAMENTE**
 
 **🎯 PEÇAS QUE ESTÃO PERFEITAS:**
+
 - ✅ Arquitetura DnD (DndContext → SortableContext)
 - ✅ Canvas com droppable no nível correto
 - ✅ Componentes sidebar com draggable
@@ -314,6 +335,7 @@ const { quizState } = useQuizFlow({ initialStep: 1 });
 - ✅ Visual feedback completo
 
 **🚧 PEÇAS QUE PRECISAM AJUSTE:**
+
 - ⚠️ useSyncedScroll pode interferir com DnD
 - ⚠️ Estado de currentStep duplicado
 - ⚠️ Categorias hard-coded
