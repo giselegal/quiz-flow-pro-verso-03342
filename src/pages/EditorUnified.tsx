@@ -206,7 +206,7 @@ const EditorUnified: React.FC = () => {
   };
 
   // Handler para arrastar e soltar (drag and drop)
-  const handleDragEnd = (event: DragEndEvent) => {
+  const handleDragEnd = async (event: DragEndEvent) => {  // ✅ ASYNC ADICIONADO
     const { active, over } = event;
 
     console.log('🎯 === DRAG END DEBUG ===');
@@ -215,7 +215,7 @@ const EditorUnified: React.FC = () => {
       data: active.data.current,
       type: active.data.current?.type,
     });
-    console.log('� Over:', {
+    console.log('🔸 Over:', {
       id: over?.id,
       data: over?.data.current,
       type: over?.data.current?.type,
@@ -241,15 +241,14 @@ const EditorUnified: React.FC = () => {
         overId: over.id,
       });
 
-      // Usar addBlock do EditorContext que criará o bloco automaticamente
-      addBlock(componentType)
-        .then(blockId => {
-          setSelectedBlockId(blockId);
-          console.log('✅ Novo bloco criado com ID:', blockId);
-        })
-        .catch(error => {
-          console.error('❌ Erro ao criar bloco:', error);
-        });
+      try {
+        // ✅ AGUARDAR Promise corretamente
+        const blockId = await addBlock(componentType);
+        setSelectedBlockId(blockId);
+        console.log('✅ Novo bloco criado com ID:', blockId);
+      } catch (error) {
+        console.error('❌ Erro ao criar bloco:', error);
+      }
 
       return;
     }
