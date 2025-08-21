@@ -25,8 +25,8 @@ import {
   UnifiedQuizStepLoader,
 } from '@/components/editor/unified';
 
-// 🧩 COMPONENTES DE DRAG & DROP
-import { ComponentDragItem } from '@/components/editor/components/ComponentDragItem';
+// 🧩 COMPONENTES DE DRAG & DROP  
+import EnhancedComponentsSidebar from '@/components/editor/EnhancedComponentsSidebar';
 
 // 🚀 PREVIEW SYSTEM
 import { PreviewProvider } from '@/contexts/PreviewContext';
@@ -198,12 +198,12 @@ const EditorUnified: React.FC = () => {
       overData,
     });
 
-    // Caso 1: Arrastar componente do painel para o canvas
-    if (activeData?.type === 'component' && overData?.type === 'dropzone') {
-      const componentType = activeData.componentType as BlockType;
+    // Caso 1: Arrastar componente do sidebar para o canvas
+    if (activeData?.type === 'sidebar-component' && overData?.type === 'dropzone') {
+      const componentType = activeData.blockType as BlockType;
       const targetPosition = overData.position || currentBlocks.length;
 
-      console.log('🧩 Adicionando novo componente:', { componentType, targetPosition });
+      console.log('🧩 Adicionando novo componente do sidebar:', { componentType, targetPosition });
 
       // Usar addBlock do EditorContext que criará o bloco automaticamente
       addBlock(componentType).then(blockId => {
@@ -215,7 +215,7 @@ const EditorUnified: React.FC = () => {
     }
 
     // Caso 2: Reordenação de blocos existentes
-    if (active.id !== over.id) {
+    if (active.id !== over.id && activeData?.type === 'block') {
       const activeId = String(active.id);
       const overId = String(over.id);
 
@@ -418,52 +418,9 @@ const EditorUnified: React.FC = () => {
                   </p>
                 </div>
 
-                {/* Lista de Componentes */}
-                <div className="flex-1 overflow-auto p-4 space-y-4">
-                  {/* Categorias de Componentes */}
-
-                  {/* Básicos */}
-                  <div>
-                    <h3 className="text-xs font-semibold text-gray-600 mb-3 uppercase tracking-wide flex items-center gap-2">
-                      📝 Básicos
-                    </h3>
-                    <div className="space-y-2">
-                      <ComponentDragItem type="text-inline" label="Texto" icon="📝" />
-                      <ComponentDragItem type="heading-inline" label="Título" icon="📰" />
-                      <ComponentDragItem type="button-inline" label="Botão" icon="🔘" />
-                      <ComponentDragItem type="image-display-inline" label="Imagem" icon="🖼️" />
-                    </div>
-                  </div>
-
-                  {/* Quiz */}
-                  <div>
-                    <h3 className="text-xs font-semibold text-gray-600 mb-3 uppercase tracking-wide flex items-center gap-2">
-                      🎯 Quiz
-                    </h3>
-                    <div className="space-y-2">
-                      <ComponentDragItem
-                        type="quiz-intro-header"
-                        label="Cabeçalho Quiz"
-                        icon="🎯"
-                      />
-                      <ComponentDragItem type="form-input" label="Campo Input" icon="✏️" />
-                      <ComponentDragItem type="quiz-question" label="Pergunta" icon="❓" />
-                      <ComponentDragItem type="quiz-options" label="Opções" icon="☑️" />
-                    </div>
-                  </div>
-
-                  {/* Design */}
-                  <div>
-                    <h3 className="text-xs font-semibold text-gray-600 mb-3 uppercase tracking-wide flex items-center gap-2">
-                      🎨 Design
-                    </h3>
-                    <div className="space-y-2">
-                      <ComponentDragItem type="style-card-inline" label="Card" icon="🎴" />
-                      <ComponentDragItem type="separator-inline" label="Divisor" icon="➖" />
-                      <ComponentDragItem type="spacer-inline" label="Espaço" icon="⬜" />
-                      <ComponentDragItem type="container-inline" label="Container" icon="📦" />
-                    </div>
-                  </div>
+                {/* Sidebar Aprimorado com Drag & Drop */}
+                <div className="flex-1 overflow-hidden">
+                  <EnhancedComponentsSidebar />
                 </div>
               </div>
             </aside>

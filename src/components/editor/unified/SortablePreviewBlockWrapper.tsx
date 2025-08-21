@@ -34,7 +34,7 @@ export const SortablePreviewBlockWrapper: React.FC<SortablePreviewBlockWrapperPr
   const [isHovered, setIsHovered] = useState(false);
 
   // Configuração do useSortable do dnd-kit
-  const { attributes, setNodeRef, transform, transition, isDragging } = useSortable({
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: block.id,
     disabled: isPreviewing,
     data: {
@@ -74,6 +74,7 @@ export const SortablePreviewBlockWrapper: React.FC<SortablePreviewBlockWrapperPr
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       {...attributes}
+      {...listeners}
     >
       {/* IDs removidos para visual limpo */}
 
