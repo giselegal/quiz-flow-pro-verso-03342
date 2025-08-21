@@ -1,244 +1,47 @@
-<<<<<<< HEAD
-=======
-import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
-import { ThemeProvider } from '@/components/theme-provider';
-import { LoadingFallback } from '@/components/ui/loading-fallback';
-import { Toaster } from '@/components/ui/toaster';
-import { AuthProvider } from '@/context/AuthContext';
-import { EditorProvider } from '@/context/EditorContext';
-import { FunnelsProvider } from '@/context/FunnelsContext';
-import { Suspense, lazy } from 'react';
-import { Route, Router, Switch } from 'wouter';
+import { Route, Router } from 'wouter';
+import Editor4ColunasUltraSafe from './components/editor/Editor4ColunasUltraSafe';
 
-// 🆕 FASE 3 - COMPONENTES DE MONITORAMENTO E DEPLOY
-import {
-  MonitoringDashboard,
-  useDashboardControl,
-} from '@/components/dashboard/MonitoringDashboard';
-import { ValidationMiddleware } from '@/middleware/ValidationMiddleware';
-
-// Lazy load das páginas principais para code splitting
-const Home = lazy(() => import('./pages/Home'));
-const AuthPage = lazy(() => import('./pages/AuthPage'));
-const QuizModularPage = lazy(() => import('./pages/QuizModularPage'));
-// const EditorWithPreview = lazy(() => import('./pages/EditorWithPreview')); // DESATIVADO
-const EditorWithPreviewFixed = lazy(() => import('./pages/EditorWithPreview-fixed'));
-const EditorModularPage = lazy(() => import('./pages/editor-modular'));
-const EditorUnified = lazy(() => import('./pages/EditorUnified')); // 🆕 EDITOR UNIFICADO
-const EditorUnifiedV2 = lazy(() => import('./pages/EditorUnifiedV2')); // 🚀 PRIORIDADE 2 - EDITOR UNIFICADO V2
-// const ProductionQuizPage = lazy(() => import('./pages/ProductionQuizPage')); // Removido
-const QuizIntegratedPage = lazy(() => import('./pages/QuizIntegratedPage'));
-
-// 🆕 SISTEMA UNIFICADO - FASE 3
-// const QuizRouteController = lazy(() => import('./components/routing/QuizRouteController')); // Removido
-
-// Import direto para evitar problemas de lazy loading
-// import QuizPage from './pages/Quiz'; // Removido - página não existe mais
-
-// Lazy load das páginas admin
-const DashboardPage = lazy(() => import('./pages/admin/DashboardPage'));
-
-// Página de teste de sincronização
-const SyncValidationTestPage = lazy(() =>
-  import('./components/test/SyncValidationTestPage').then(module => ({
-    default: module.SyncValidationTestPage,
-  }))
-);
-
-// Loading component
-const PageLoading = () => (
-  <div className="min-h-screen flex items-center justify-center">
-    <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
-  </div>
-);
-
-/**
- * 🎯 APLICAÇÃO PRINCIPAL - Quiz Quest
- *
- * Estrutura de roteamento unificada com:
- * ✅ EditorWithPreview - Editor principal completo (/editor)
- * ✅ EditorWithPreviewFixed - Versão com navegação limpa (/editor-fixed, /editor-clean)
- * ✅ Sistema de lazy loading
- * ✅ Providers centralizados
- * ✅ FASE 3: Dashboard de monitoramento e validação automática
- */
 function App() {
-  // Hook do dashboard de monitoramento
-  const { isVisible, toggle } = useDashboardControl();
-
   return (
-    <ThemeProvider defaultTheme="light" storageKey="quiz-quest-theme">
-      <AuthProvider>
-        <Router>
-          <div className="min-h-screen bg-background">
-            {/* 🛡️ MIDDLEWARE DE VALIDAÇÃO - FASE 3 */}
-            <ValidationMiddleware>
-              <Suspense fallback={<LoadingFallback />}>
-                <Switch>
-                  {/* 🏠 PÁGINA INICIAL */}
-                  <Route path="/" component={Home} />
-
-                  {/* 🎯 EDITOR PRINCIPAL - DESATIVADO */}
-                  {/* 
-                <Route path="/editor">
-                  <FunnelsProvider>
-                    <EditorProvider>
-                      <Suspense fallback={<PageLoading />}>
-                        <EditorWithPreview />
-                      </Suspense>
-                    </EditorProvider>
-                  </FunnelsProvider>
-                </Route>
-                */}
-
-                  {/* 🏆 EDITOR PRINCIPAL - VERSÃO FIXED AGORA É PADRÃO */}
-                  <Route path="/editor">
-                    <FunnelsProvider>
-                      <EditorProvider>
-                        <Suspense fallback={<PageLoading />}>
-                          <EditorWithPreviewFixed />
-                        </Suspense>
-                      </EditorProvider>
-                    </FunnelsProvider>
-                  </Route>
-
-                  {/* 🏆 EDITOR FIXED - Versão com navegação limpa */}
-                  <Route path="/editor-fixed">
-                    <FunnelsProvider>
-                      <EditorProvider>
-                        <Suspense fallback={<PageLoading />}>
-                          <EditorWithPreviewFixed />
-                        </Suspense>
-                      </EditorProvider>
-                    </FunnelsProvider>
-                  </Route>
-
-                  {/* 🧪 EDITOR CLEAN - Versão experimental com sistema limpo */}
-                  <Route path="/editor-clean">
-                    <FunnelsProvider>
-                      <EditorProvider>
-                        <Suspense fallback={<PageLoading />}>
-                          <EditorWithPreviewFixed />
-                        </Suspense>
-                      </EditorProvider>
-                    </FunnelsProvider>
-                  </Route>
-
-                  {/* 🎯 EDITOR MODULAR - Sistema modular das 21 etapas */}
-                  <Route path="/editor-modular">
-                    <Suspense fallback={<PageLoading />}>
-                      <EditorModularPage />
-                    </Suspense>
-                  </Route>
-
-                  {/* 🚀 EDITOR UNIFICADO - Sistema completo unificado */}
-                  <Route path="/editor-unified">
-                    <FunnelsProvider>
-                      <EditorProvider>
-                        <Suspense fallback={<PageLoading />}>
-                          <EditorUnified />
-                        </Suspense>
-                      </EditorProvider>
-                    </FunnelsProvider>
-                  </Route>
-
-                  {/* 🎨 EDITOR UNIFICADO V2 - PRIORIDADE 2 - Sistema consolidado final */}
-                  <Route path="/editor-v2">
-                    <FunnelsProvider>
-                      <EditorProvider>
-                        <Suspense fallback={<PageLoading />}>
-                          <EditorUnifiedV2 />
-                        </Suspense>
-                      </EditorProvider>
-                    </FunnelsProvider>
-                  </Route>
-
-                  {/* 📊 DASHBOARD ADMINISTRATIVO - PROTECTED */}
-                  <ProtectedRoute path="/admin" component={DashboardPage} requireAuth={true} />
-                  <ProtectedRoute
-                    path="/admin/:rest*"
-                    component={DashboardPage}
-                    requireAuth={true}
-                  />
-
-                  {/* Legacy dashboard route */}
-                  <Route path="/dashboard">
-                    <Suspense fallback={<PageLoading />}>
-                      <DashboardPage />
-                    </Suspense>
-                  </Route>
-
-                  {/* 🧪 TESTE DE SINCRONIZAÇÃO */}
-                  <Route path="/test-sync">
-                    <Suspense fallback={<PageLoading />}>
-                      <SyncValidationTestPage />
-                    </Suspense>
-                  </Route>
-
-                  {/* 🔐 AUTENTICAÇÃO */}
-                  <Route path="/auth">
-                    <Suspense fallback={<PageLoading />}>
-                      <AuthPage />
-                    </Suspense>
-                  </Route>
-
-                  {/* 🎮 QUIZ MODULAR - Quiz de produção com etapas do editor */}
-                  <Route path="/quiz-modular">
-                    <Suspense fallback={<PageLoading />}>
-                      <QuizModularPage />
-                    </Suspense>
-                  </Route>
-
-                  {/* 🎯 QUIZ 21 ETAPAS - removido pois controlador não existe */}
-                  {/* <Route path="/quiz">
-                    <Suspense fallback={<PageLoading />}>
-                      <QuizRouteController />
-                    </Suspense>
-                  </Route> */}
-
-                  {/* 🔗 QUIZ LEGADO - removido pois página não existe */}
-                  {/* <Route path="/quiz/legacy">
-                    <Suspense fallback={<PageLoading />}>
-                      <ProductionQuizPage />
-                    </Suspense>
-                  </Route> */}
-
-                  {/* 🎯 QUIZ INTEGRADO - SISTEMA TEMPLATE */}
-                  <Route path="/quiz-integrado">
-                    <Suspense fallback={<PageLoading />}>
-                      <QuizIntegratedPage />
-                    </Suspense>
-                  </Route>
-
-                  {/* 🚫 ROTA PADRÃO - 404 */}
-                  <Route>
-                    <div className="min-h-screen flex items-center justify-center bg-background">
-                      <div className="text-center space-y-4">
-                        <h1 className="text-4xl font-bold text-[#6B4F43]">404</h1>
-                        <p className="text-xl text-[#8B7355]">Página não encontrada</p>
-                        <a
-                          href="/"
-                          className="inline-block px-6 py-3 bg-[#B89B7A] text-white rounded-lg hover:bg-[#A08968] transition-colors"
-                        >
-                          Voltar ao Início
-                        </a>
-                      </div>
-                    </div>
-                  </Route>
-                </Switch>
-              </Suspense>
-            </ValidationMiddleware>
-
-            <Toaster />
-
-            {/* 📊 DASHBOARD DE MONITORAMENTO - FASE 3 */}
-            <MonitoringDashboard isVisible={isVisible} onToggle={toggle} />
+    <Router>
+      {/* Página inicial */}
+      <Route path="/">
+        <div className="min-h-screen bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+          <div className="bg-white rounded-lg shadow-xl p-8 text-center">
+            <h1 className="text-4xl font-bold text-gray-800 mb-4">
+              🎯 Quiz Quest Challenge
+            </h1>
+            <p className="text-gray-600 mb-6">
+              Crie quizzes incríveis com nosso editor visual
+            </p>
+            <a 
+              href="/editor"
+              className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg text-lg font-semibold transition-colors"
+            >
+              Começar a Criar Quiz
+            </a>
           </div>
-        </Router>
-      </AuthProvider>
-    </ThemeProvider>
+        </div>
+      </Route>
+
+      {/* Editor principal */}
+      <Route path="/editor">
+        <Editor4ColunasUltraSafe />
+      </Route>
+
+      {/* 404 */}
+      <Route>
+        <div className="min-h-screen bg-red-500 flex items-center justify-center">
+          <div className="bg-white rounded-lg p-8 text-center">
+            <h1 className="text-2xl font-bold text-red-600">404 - Página não encontrada</h1>
+            <a href="/" className="text-blue-500 hover:underline mt-4 block">
+              Voltar ao início
+            </a>
+          </div>
+        </div>
+      </Route>
+    </Router>
   );
 }
 
 export default App;
->>>>>>> 7131464e0ccd455cb1b92fd538ddb89711e16d17
