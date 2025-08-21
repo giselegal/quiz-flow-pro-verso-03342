@@ -1,7 +1,7 @@
 import { Route, Router, Switch } from 'wouter';
 
-// Import do EDITOR ULTRA SAFE - SEM QUALQUER DEPENDÊNCIA PROBLEMÁTICA
-import Editor4ColunasUltraSafe from './components/editor/Editor4ColunasUltraSafe';
+// Import do MELHOR EDITOR 4 COLUNAS PROFISSIONAL
+import Editor4Colunas from './components/editor/Editor4Colunas';
 
 /**
  * 🚨 APP LIMPO - TESTE DE DUPLICAÇÃO
@@ -87,7 +87,7 @@ function App() {
 
           {/* 🚀 EDITOR COMPLETO E FUNCIONAL */}
           <Route path="/editor">
-            <Editor4ColunasSafe />
+            <Editor4Colunas />
           </Route>
 
           {/* 🧪 EDITOR SIMPLES - PARA TESTES */}
@@ -117,7 +117,7 @@ function App() {
                 >
                   🎯 EDITOR SIMPLES
                 </h1>
-                <Editor4ColunasSafe />
+                <Editor4Colunas />
               </div>
             </div>
           </Route>
