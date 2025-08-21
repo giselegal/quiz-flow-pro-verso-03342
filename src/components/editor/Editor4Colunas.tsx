@@ -2,7 +2,6 @@ import { useCallback, useState } from 'react';
 
 // 🎯 QUIZ 21 STEPS SYSTEM - Importações das 21 etapas
 import { Quiz21StepsProvider, useQuiz21Steps } from '@/components/quiz/Quiz21StepsProvider';
-import { Quiz21StepsNavigation } from '@/components/quiz/Quiz21StepsNavigation';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 
 interface Question {
@@ -134,18 +133,12 @@ const Editor4ColunasContent = ({
   // 🎯 ACESSO ÀS 21 ETAPAS
   const {
     currentStep,
-    totalSteps,
-    userName,
-    answers,
     goToNextStep,
     goToPreviousStep,
-    goToStep,
     getProgress,
-    getCurrentStageData,
   } = useQuiz21Steps();
 
   // 🎯 DADOS DA ETAPA ATUAL
-  const currentStepData = getCurrentStageData();
   const currentStepTemplate = QUIZ_STYLE_21_STEPS_TEMPLATE[`step-${currentStep}`] || [];
 
   return (
