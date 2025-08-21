@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 // 🎨 ESTILOS PROFISSIONAIS
 import '@/styles/editor-unified.css';
@@ -14,7 +14,11 @@ import {
   useSensors,
 } from '@dnd-kit/core';
 import { restrictToParentElement } from '@dnd-kit/modifiers';
-import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
+import { 
+  SortableContext,
+  sortableKeyboardCoordinates, 
+  verticalListSortingStrategy 
+} from '@dnd-kit/sortable';
 
 // EDITOR UNIFICADO - Componentes principais
 import {
@@ -126,6 +130,11 @@ const EditorUnified: React.FC = () => {
 
   // Total de etapas dinâmico (fallback para 21 se ainda não carregou)
   const totalSteps = stageCount || 21;
+
+  // Extrair os IDs dos blocos para o SortableContext
+  const blockIds = useMemo(() => {
+    return currentBlocks.map(block => String(block.id));
+  }, [currentBlocks]);
 
   // funnelId estável por sessão do editor
   const funnelIdRef = useRef<string>(`editor-unified-${Date.now()}`);
@@ -366,7 +375,8 @@ const EditorUnified: React.FC = () => {
       modifiers={[restrictToParentElement]}
       autoScroll={true}
     >
-      <PreviewProvider totalSteps={totalSteps} funnelId={funnelIdRef.current}>
+      <SortableContext items={blockIds} strategy={verticalListSortingStrategy}>
+        <PreviewProvider totalSteps={totalSteps} funnelId={funnelIdRef.current}>
         {/* Carregador otimizado de etapas do quiz */}
         <UnifiedQuizStepLoader
           stepNumber={currentStep}
@@ -561,7 +571,8 @@ const EditorUnified: React.FC = () => {
             />
           )}
         </div>
-      </PreviewProvider>
+        </PreviewProvider>
+      </SortableContext>
     </DndContext>
   );
 };

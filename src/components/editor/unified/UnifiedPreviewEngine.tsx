@@ -13,7 +13,6 @@ import React, { useEffect, useMemo } from 'react';
 
 // Importações DnD
 import { useDroppable } from '@dnd-kit/core';
-import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 
 // Importação do componente sortable
 import { SortablePreviewBlockWrapper } from './SortablePreviewBlockWrapper';
@@ -59,13 +58,6 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
       position: blocks.length, // Adicionar no final por padrão
     },
   });
-
-  // Extrair os IDs dos blocos para o SortableContext
-  const blockIds = useMemo(() => {
-    // Garantimos que todos os IDs sejam strings
-    const ids = blocks.map(block => String(block.id));
-    return ids;
-  }, [blocks]);
 
   // Configurações do viewport
   const viewportConfig = useMemo(() => {
@@ -202,22 +194,21 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
           {blocks.length === 0 ? (
             <EmptyPreviewState mode={mode} />
           ) : (
-            <SortableContext items={blockIds} strategy={verticalListSortingStrategy}>
-              {blocks.map(block => (
-                <SortablePreviewBlockWrapper
-                  key={block.id}
-                  block={block}
-                  isSelected={selectedBlockId === block.id}
-                  isPreviewing={isPreviewing}
-                  renderConfig={renderConfig[mode]}
-                  primaryStyle={primaryStyle}
-                  onClick={() => handleBlockClick(block.id)}
-                  onUpdate={updates => handleBlockUpdate(block.id, updates)}
-                  onSelect={onBlockSelect}
-                  debug={false}
-                />
-              ))}
-            </SortableContext>
+            // SortableContext removido - agora está no nível superior (EditorUnified)
+            blocks.map(block => (
+              <SortablePreviewBlockWrapper
+                key={block.id}
+                block={block}
+                isSelected={selectedBlockId === block.id}
+                isPreviewing={isPreviewing}
+                renderConfig={renderConfig[mode]}
+                primaryStyle={primaryStyle}
+                onClick={() => handleBlockClick(block.id)}
+                onUpdate={updates => handleBlockUpdate(block.id, updates)}
+                onSelect={onBlockSelect}
+                debug={false}
+              />
+            ))
           )}
         </div>
       </div>
