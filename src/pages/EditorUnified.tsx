@@ -138,6 +138,17 @@ const EditorUnified: React.FC = () => {
     stageActions,
   } = useEditor();
 
+  // 🚨 DEBUG: Verificar se currentBlocks está vazio por erro Firestore
+  React.useEffect(() => {
+    console.log('🔍 EDITOR STATE DEBUG:', {
+      currentBlocks: currentBlocks?.length || 0,
+      stageCount,
+      activeStageId,
+      funnelId,
+      error: currentBlocks?.length === 0 ? 'POSSÍVEL ERRO FIRESTORE' : 'OK'
+    });
+  }, [currentBlocks, stageCount, activeStageId, funnelId]);
+
   // Total de etapas dinâmico (fallback para 21 se ainda não carregou)
   const totalSteps = stageCount || 21;
 
