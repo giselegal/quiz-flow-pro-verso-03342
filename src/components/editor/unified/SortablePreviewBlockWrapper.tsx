@@ -9,12 +9,17 @@ interface SortablePreviewBlockWrapperProps {
   block: Block;
   isSelected: boolean;
   isPreviewing: boolean;
-  renderConfig: any;
+  renderConfig: {
+    showBorders: boolean;
+    showLabels: boolean;
+    enableHover: boolean;
+    enableSelection: boolean;
+  };
   primaryStyle?: StyleResult;
   onClick: () => void;
   onUpdate: (updates: Partial<Block>) => void;
   onSelect?: (blockId: string) => void;
-  debug?: boolean;
+  // debug removido - não utilizado
 }
 
 /**
@@ -29,7 +34,7 @@ export const SortablePreviewBlockWrapper: React.FC<SortablePreviewBlockWrapperPr
   onClick,
   // onUpdate, // unused
   onSelect,
-  debug = false, // Forçar false para teste
+  // debug removido - não utilizado
 }) => {
   console.log(`🔄 SortablePreviewBlockWrapper renderizado: ${block.id} (${block.type})`);
 

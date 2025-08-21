@@ -191,7 +191,6 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
                 onClick={() => handleBlockClick(block.id)}
                 onUpdate={updates => handleBlockUpdate(block.id, updates)}
                 onSelect={onBlockSelect}
-                debug={false}
               />
             ))
           )}
