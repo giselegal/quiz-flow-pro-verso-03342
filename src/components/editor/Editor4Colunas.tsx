@@ -93,6 +93,43 @@ const Editor4Colunas = () => {
   }, []);
 
   return (
+    <Editor4ColunasWrapper
+      quiz={quiz}
+      setQuiz={setQuiz}
+      selectedQuestion={selectedQuestion}
+      setSelectedQuestion={setSelectedQuestion}
+      activeTab={activeTab}
+      setActiveTab={setActiveTab}
+      addQuestion={addQuestion}
+      updateQuestion={updateQuestion}
+      deleteQuestion={deleteQuestion}
+    />
+  );
+};
+
+// 🎯 WRAPPER COM PROVIDERS CORRETOS
+const Editor4ColunasWrapper = ({
+  quiz,
+  setQuiz,
+  selectedQuestion,
+  setSelectedQuestion,
+  activeTab,
+  setActiveTab,
+  addQuestion,
+  updateQuestion,
+  deleteQuestion,
+}: {
+  quiz: Quiz;
+  setQuiz: React.Dispatch<React.SetStateAction<Quiz>>;
+  selectedQuestion: number | null;
+  setSelectedQuestion: React.Dispatch<React.SetStateAction<number | null>>;
+  activeTab: 'design' | 'settings' | 'analytics';
+  setActiveTab: React.Dispatch<React.SetStateAction<'design' | 'settings' | 'analytics'>>;
+  addQuestion: (type: Question['type']) => void;
+  updateQuestion: (index: number, updates: Partial<Question>) => void;
+  deleteQuestion: (index: number) => void;
+}) => {
+  return (
     <FunnelsProvider debug={true}>
       <Quiz21StepsProvider debug={true} initialStep={1}>
         <Editor4ColunasContent
