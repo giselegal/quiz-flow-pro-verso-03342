@@ -3,99 +3,83 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Crown, Download, Eye, Filter, Search, Sparkles, Star, Template } from 'lucide-react';
-import React, { useState } from 'react';
-
-interface Template {
-  id: string;
-  name: string;
-  description: string;
-  category: 'quiz' | 'funnel' | 'landing' | 'survey';
-  difficulty: 'beginner' | 'intermediate' | 'advanced';
-  isPremium: boolean;
-  rating: number;
-  downloads: number;
-  thumbnail: string;
-  components: number;
-  author: string;
-  tags: string[];
-}
+import React, { useState, useEffect } from 'react';
+import { supabaseTemplateService, UITemplate } from '@/services/templateService';
 
 export const TemplateLibrary: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [templates, setTemplates] = useState<UITemplate[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // Templates de exemplo (em produção, vem da API)
-  const templates: Template[] = [
-    {
-      id: '1',
-      name: 'Quiz de Personalidade Profissional',
-      description: 'Template completo para descoberta de perfil profissional com 21 etapas',
-      category: 'quiz',
-      difficulty: 'intermediate',
-      isPremium: false,
-      rating: 4.8,
-      downloads: 1250,
-      thumbnail: 'https://via.placeholder.com/300x200',
-      components: 15,
-      author: 'Gisele Galvão',
-      tags: ['personalidade', 'carreira', 'autoconhecimento'],
-    },
-    {
-      id: '2',
-      name: 'Funil de Vendas B2B',
-      description: 'Funil otimizado para captação de leads empresariais',
-      category: 'funnel',
-      difficulty: 'advanced',
-      isPremium: true,
-      rating: 4.9,
-      downloads: 890,
-      thumbnail: 'https://via.placeholder.com/300x200',
-      components: 22,
-      author: 'João Silva',
-      tags: ['vendas', 'b2b', 'captação'],
-    },
-    {
-      id: '3',
-      name: 'Landing Page Minimalista',
-      description: 'Design clean e moderno para apresentação de produtos',
-      category: 'landing',
-      difficulty: 'beginner',
-      isPremium: false,
-      rating: 4.6,
-      downloads: 2100,
-      thumbnail: 'https://via.placeholder.com/300x200',
-      components: 8,
-      author: 'Maria Santos',
-      tags: ['minimalista', 'produto', 'conversão'],
-    },
-    {
-      id: '4',
-      name: 'Pesquisa de Satisfação',
-      description: 'Template para coleta de feedback de clientes',
-      category: 'survey',
-      difficulty: 'beginner',
-      isPremium: true,
-      rating: 4.7,
-      downloads: 650,
-      thumbnail: 'https://via.placeholder.com/300x200',
-      components: 12,
-      author: 'Pedro Costa',
-      tags: ['feedback', 'satisfação', 'nps'],
-    },
-  ];
+  // Carregar templates ao montar o componente
+  useEffect(() => {
+    loadTemplates();
+  }, []);
+
+  const loadTemplates = async () => {
+    try {
+      setLoading(true);
+      const data = await supabaseTemplateService.getTemplates();
+      setTemplates(data);
+    } catch (error) {
+      console.error('Erro ao carregar templates:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Filtrar templates
+  const filteredTemplates = templates.filter(template => {
+    const matchesSearch = searchTerm === '' || 
+      template.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      template.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      template.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
+    
+    const matchesCategory = selectedCategory === 'all' || template.category === selectedCategory;
+    
+    return matchesSearch && matchesCategory;
+  });
 
   const categories = [
-    { id: 'all', name: 'Todos', count: templates.length },
-    { id: 'quiz', name: 'Quiz', count: templates.filter(t => t.category === 'quiz').length },
-    { id: 'funnel', name: 'Funil', count: templates.filter(t => t.category === 'funnel').length },
+    { id: 'all', name: 'Todos', count: filteredTemplates.length },
+    { id: 'quiz', name: 'Quiz', count: filteredTemplates.filter(t => t.category === 'quiz').length },
+    { id: 'funnel', name: 'Funil', count: filteredTemplates.filter(t => t.category === 'funnel').length },
     {
       id: 'landing',
       name: 'Landing',
-      count: templates.filter(t => t.category === 'landing').length,
+      count: filteredTemplates.filter(t => t.category === 'landing').length,
     },
     {
       id: 'survey',
       name: 'Pesquisa',
+      count: filteredTemplates.filter(t => t.category === 'survey').length,
+    },
+  ];
+
+  const handleUseTemplate = async (template: UITemplate) => {
+    try {
+      // Incrementar contador de uso
+      await supabaseTemplateService.incrementUsage(template.id);
+      
+      // TODO: Implementar carregamento do template no editor
+      console.log('🎯 Carregando template:', template.name);
+      console.log('📋 Template data:', template.templateData);
+    } catch (error) {
+      console.error('Erro ao usar template:', error);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="h-full flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Carregando templates...</p>
+        </div>
+      </div>
+    );
+  }
       count: templates.filter(t => t.category === 'survey').length,
     },
   ];
