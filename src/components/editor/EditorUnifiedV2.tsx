@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useState, useCallback } from 'react';
 
 // 🎨 CORE EDITOR COMPONENTS
 import { EditorAccessControl } from '@/components/editor/EditorAccessControl';
@@ -15,23 +15,23 @@ import { PreviewProvider } from '@/context/PreviewContext';
 import { DndContext, DragEndEvent, DragOverEvent, DragStartEvent } from '@dnd-kit/core';
 
 // 🎨 UI COMPONENTS
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 // 🎯 ICONS
-import {
-  Download,
-  Eye,
-  History,
+import { 
+  Save, 
+  Eye, 
+  History, 
+  Settings, 
+  Share, 
+  Download, 
+  Users,
   Layout,
   Palette,
-  Save,
-  Settings,
-  Share,
-  Users,
-  Zap,
+  Zap
 } from 'lucide-react';
 
 interface SimpleEditorElement {
@@ -48,22 +48,22 @@ interface EditorUnifiedV2Props {
 
 /**
  * 🎨 EDITOR UNIFICADO V2 - PRIORIDADE 2
- *
+ * 
  * Combina as melhores funcionalidades de todos os editores:
  * ✅ Quiz 21 Steps System (EditorWithPreview-fixed)
  * ✅ Advanced DnD System (EditorUnified)
  * ✅ Access Control & Collaboration
  * ✅ Performance Optimized
  */
-export const EditorUnifiedV2: React.FC<EditorUnifiedV2Props> = ({ quizId }) => {
-  console.log('🎨 EditorUnifiedV2: Starting render...');
-
+export const EditorUnifiedV2: React.FC<EditorUnifiedV2Props> = ({ 
+  quizId 
+}) => {
   // 🎪 QUIZ FLOW STATE (Sistema 21 Etapas)
   const { quizState } = useQuizFlow({
     mode: 'editor',
-    onStepChange: step => {
+    onStepChange: (step) => {
       console.log('🎯 Step changed:', step);
-    },
+    }
   });
 
   // 🎛️ EDITOR LOCAL STATE
@@ -95,7 +95,7 @@ export const EditorUnifiedV2: React.FC<EditorUnifiedV2Props> = ({ quizId }) => {
           id: `${active.id}-${Date.now()}`,
           type: active.data.current.component.type,
           label: active.data.current.component.label,
-          properties: { ...active.data.current.component.defaultProps },
+          properties: { ...active.data.current.component.defaultProps }
         };
         setCanvasElements(prev => [...prev, newElement]);
       }
@@ -141,9 +141,9 @@ export const EditorUnifiedV2: React.FC<EditorUnifiedV2Props> = ({ quizId }) => {
               <div className="w-80 border-r border-border bg-card">
                 <div className="p-4 border-b border-border">
                   <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-lg font-semibold">Editor Unificado V2</h2>
+                    <h2 className="text-lg font-semibold">Editor Unificado</h2>
                     <Badge variant="outline" className="text-xs">
-                      v2.0 - Teste
+                      v2.0
                     </Badge>
                   </div>
                   <Tabs value={activeTab} onValueChange={setActiveTab}>
@@ -197,7 +197,12 @@ export const EditorUnifiedV2: React.FC<EditorUnifiedV2Props> = ({ quizId }) => {
                 {/* 🎛️ TOOLBAR */}
                 <div className="h-14 border-b border-border bg-card px-4 flex items-center justify-between">
                   <div className="flex items-center space-x-2">
-                    <Button variant="outline" size="sm" onClick={handleSave} disabled={isSaving}>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleSave}
+                      disabled={isSaving}
+                    >
                       <Save className="w-4 h-4 mr-1" />
                       {isSaving ? 'Salvando...' : 'Salvar'}
                     </Button>
@@ -239,7 +244,9 @@ export const EditorUnifiedV2: React.FC<EditorUnifiedV2Props> = ({ quizId }) => {
                       <div className="h-full bg-white rounded-lg border p-8 flex items-center justify-center">
                         <div className="text-center">
                           <Eye className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
-                          <h3 className="text-lg font-semibold mb-2">Preview Mode</h3>
+                          <h3 className="text-lg font-semibold mb-2">
+                            Preview Mode
+                          </h3>
                           <p className="text-muted-foreground">
                             Visualização do quiz será exibida aqui
                           </p>
@@ -250,13 +257,18 @@ export const EditorUnifiedV2: React.FC<EditorUnifiedV2Props> = ({ quizId }) => {
                       </div>
                     </div>
                   ) : (
-                    <div id="canvas-droppable" className="h-full p-4 bg-muted/20">
+                    <div 
+                      id="canvas-droppable"
+                      className="h-full p-4 bg-muted/20"
+                    >
                       <div className="h-full bg-white rounded-lg border-2 border-dashed border-border p-8">
                         {canvasElements.length === 0 ? (
                           <div className="flex items-center justify-center h-full text-center">
                             <div>
                               <Zap className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
-                              <h3 className="text-lg font-semibold mb-2">Canvas Vazio</h3>
+                              <h3 className="text-lg font-semibold mb-2">
+                                Canvas Vazio
+                              </h3>
                               <p className="text-muted-foreground">
                                 Arraste componentes da barra lateral para começar
                               </p>
@@ -264,15 +276,14 @@ export const EditorUnifiedV2: React.FC<EditorUnifiedV2Props> = ({ quizId }) => {
                           </div>
                         ) : (
                           <div className="space-y-4">
-                            {canvasElements.map(element => (
+                            {canvasElements.map((element) => (
                               <div
                                 key={element.id}
                                 className={`
                                   p-4 border rounded-lg cursor-pointer transition-all
-                                  ${
-                                    selectedElement === element.id
-                                      ? 'border-primary ring-2 ring-primary/20'
-                                      : 'border-border hover:border-primary/50'
+                                  ${selectedElement === element.id 
+                                    ? 'border-primary ring-2 ring-primary/20' 
+                                    : 'border-border hover:border-primary/50'
                                   }
                                 `}
                                 onClick={() => handleElementSelect(element.id)}
