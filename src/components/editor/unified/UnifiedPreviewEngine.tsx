@@ -9,10 +9,18 @@ import { useMonitoring } from '@/services/MonitoringService';
 import { Block } from '@/types/editor';
 import { StyleResult } from '@/types/quiz';
 import { useFeatureFlags } from '@/utils/FeatureFlagManager';
-import React, { useEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 
-// Importações DnD
-import { useDroppable } from '@dnd-kit/core';
+// Importações DnD removidas - agora no EditorUnified
+// import { useState, useEffect } from 'react';
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { cn } from '@/lib/utils';
+import { TemplateBlock } from '@/types/template';
+import { SortablePreviewBlockWrapper } from './sortable/SortablePreviewBlockWrapper';
+import { renderPreviewBlock } from './preview/renderPreviewBlock';
+import { previewModeService } from '@/services/preview/previewModeService';
+
+// 🏗️ TIPOS
 
 // Importação do componente sortable
 import { SortablePreviewBlockWrapper } from './SortablePreviewBlockWrapper';
@@ -153,9 +161,8 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
     <div className={containerClasses}>
       {/* Header removido para visual limpo */}
 
-      {/* Container Principal do Preview */}
+      {/* Container Principal do Preview - SEM REF (agora no EditorUnified) */}
       <div
-        ref={setDroppableRef}
         className={cn(
           'preview-container relative',
           // MODO PRODUÇÃO: Layout idêntico ao quiz real
@@ -163,24 +170,14 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
           // MODO PREVIEW: Layout limpo sem elementos de edição
           mode === 'preview' && 'min-h-screen bg-white',
           // MODO EDITOR: Layout com indicadores visuais
-          mode === 'editor' && 'bg-white min-h-screen border rounded-xl shadow-lg',
-          // 🔧 DEBUG: Destaque visual quando isOver
-          isOver && mode === 'editor' && 'bg-blue-50 border-2 border-dashed border-blue-300',
-          // 🔧 DEBUG: Sempre mostrar área droppable no modo editor
-          mode === 'editor' && 'ring-1 ring-green-200'
+          mode === 'editor' && 'bg-white min-h-screen border rounded-xl shadow-lg'
+          // 🔧 DEBUG: Feedback visual removido - agora no main
         )}
         style={mode === 'production' || mode === 'preview' ? {} : containerStyle}
       >
-        {/* Visual feedback para drop - APENAS NO MODO EDITOR */}
-        {isOver && mode === 'editor' && (
-          <div className="absolute inset-4 border-2 border-dashed border-blue-400 rounded-lg bg-blue-50/50 flex items-center justify-center z-10">
-            <div className="text-blue-600 font-medium text-sm flex items-center gap-2">
-              🎯 Solte o componente aqui
-            </div>
-          </div>
-        )}
+        {/* Feedback visual removido - agora está no main */}
 
-        {/* Renderização dos Blocos com SortableContext */}
+        {/* Renderização dos Blocos */}
         <div
           className={cn(
             'blocks-container relative z-0',
