@@ -23,6 +23,7 @@ const QuizModularPage = lazy(() => import('./pages/QuizModularPage'));
 const EditorWithPreviewFixed = lazy(() => import('./pages/EditorWithPreview-fixed'));
 const EditorModularPage = lazy(() => import('./pages/editor-modular'));
 const EditorUnified = lazy(() => import('./pages/EditorUnified')); // 🆕 EDITOR UNIFICADO
+const EditorUnifiedV2 = lazy(() => import('./pages/EditorUnifiedV2')); // 🚀 PRIORIDADE 2 - EDITOR UNIFICADO V2
 // const ProductionQuizPage = lazy(() => import('./pages/ProductionQuizPage')); // Removido
 const QuizIntegratedPage = lazy(() => import('./pages/QuizIntegratedPage'));
 
@@ -134,6 +135,17 @@ function App() {
                       <EditorProvider>
                         <Suspense fallback={<PageLoading />}>
                           <EditorUnified />
+                        </Suspense>
+                      </EditorProvider>
+                    </FunnelsProvider>
+                  </Route>
+
+                  {/* 🎨 EDITOR UNIFICADO V2 - PRIORIDADE 2 - Sistema consolidado final */}
+                  <Route path="/editor-v2">
+                    <FunnelsProvider>
+                      <EditorProvider>
+                        <Suspense fallback={<PageLoading />}>
+                          <EditorUnifiedV2 />
                         </Suspense>
                       </EditorProvider>
                     </FunnelsProvider>
