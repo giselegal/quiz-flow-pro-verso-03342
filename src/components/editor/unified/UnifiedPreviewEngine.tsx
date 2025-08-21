@@ -59,6 +59,16 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
     },
   });
 
+  // 🔧 DEBUG: Log do useDroppable
+  useEffect(() => {
+    console.log('🎯 UnifiedPreviewEngine: useDroppable configurado', {
+      id: 'canvas-dropzone',
+      isOver,
+      hasRef: !!setDroppableRef,
+      blocksLength: blocks.length
+    });
+  }, [isOver, setDroppableRef, blocks.length]);
+
   // Configurações do viewport
   const viewportConfig = useMemo(() => {
     const configs = {
@@ -168,7 +178,10 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
           mode === 'preview' && 'min-h-screen bg-white',
           // MODO EDITOR: Layout com indicadores visuais
           mode === 'editor' && 'bg-white min-h-screen border rounded-xl shadow-lg',
-          isOver && mode === 'editor' && 'bg-blue-50 border-2 border-dashed border-blue-300'
+          // 🔧 DEBUG: Destaque visual quando isOver
+          isOver && mode === 'editor' && 'bg-blue-50 border-2 border-dashed border-blue-300',
+          // 🔧 DEBUG: Sempre mostrar área droppable no modo editor
+          mode === 'editor' && 'ring-1 ring-green-200'
         )}
         style={mode === 'production' || mode === 'preview' ? {} : containerStyle}
       >
