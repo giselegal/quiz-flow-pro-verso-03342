@@ -5,6 +5,7 @@
 ### ✅ **Problema Identificado e Corrigido:**
 
 **❌ ESTRUTURA ANTERIOR (INCORRETA):**
+
 ```
 DndContext
 ├── PreviewProvider
@@ -14,6 +15,7 @@ DndContext
 ```
 
 **✅ NOVA ESTRUTURA (CORRETA):**
+
 ```
 DndContext
 ├── SortableContext ✅ NÍVEL SUPERIOR
@@ -26,12 +28,14 @@ DndContext
 ### 🎯 **ALTERAÇÕES IMPLEMENTADAS:**
 
 #### 1. **EditorUnified.tsx**
+
 - ✅ Adicionado `SortableContext` como filho direto de `DndContext`
 - ✅ Importado `SortableContext` e `verticalListSortingStrategy`
 - ✅ Definido `blockIds` usando `useMemo`
 - ✅ Envolvido todo layout com `SortableContext`
 
 #### 2. **UnifiedPreviewEngine.tsx**
+
 - ✅ Removido `SortableContext` duplicado
 - ✅ Removido import desnecessário
 - ✅ Removido `blockIds` não utilizado
@@ -42,12 +46,14 @@ DndContext
 ### **URL**: http://localhost:8082/editor-unified
 
 ### **Como Testar:**
+
 1. ✅ **Abrir Console do Browser** (F12)
 2. ✅ **Tentar arrastar** componente da sidebar para canvas
 3. ✅ **Verificar logs** no console
 4. ✅ **Tentar reordenar** blocks no canvas
 
 ### **Logs Esperados:**
+
 ```
 🧩 DraggableComponentItem renderizado: [type]
 🔧 useDraggable config para [type]
@@ -62,19 +68,24 @@ DndContext
 Se ainda não funcionar, os próximos pontos a verificar:
 
 ### 1. **Eventos chegando no handleDragEnd?**
+
 - Verificar se `🎯 === DRAG END DEBUG ===` aparece no console
 
 ### 2. **Tipos de dados corretos?**
+
 - `activeData?.type === 'sidebar-component'`
 - `overData?.type === 'dropzone'`
 
 ### 3. **addBlock funcionando?**
+
 - Verificar se `EditorContext.addBlock` está disponível
 
 ### 4. **CSS interferindo?**
+
 - Verificar se não há `pointer-events: none` interferindo
 
 ## 🚀 **STATUS**
+
 - ✅ **Estrutura corrigida**
 - ✅ **Servidor rodando**: http://localhost:8082
 - ✅ **Debug ativo**: Logs detalhados no console
