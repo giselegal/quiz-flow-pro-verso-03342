@@ -8,7 +8,10 @@ console.log('=================================================');
 console.log('🌐 AMBIENTE:');
 console.log('URL:', window.location.href);
 console.log('Host:', window.location.host);
-console.log('É Lovable:', window.location.host.includes('lovable.app') ? '✅ PRODUÇÃO' : '❌ LOCAL');
+console.log(
+  'É Lovable:',
+  window.location.host.includes('lovable.app') ? '✅ PRODUÇÃO' : '❌ LOCAL'
+);
 
 // 2. Verificar se módulos estão carregados
 console.log('\n📦 VERIFICANDO MÓDULOS:');
@@ -21,39 +24,35 @@ console.log('\n🧩 TESTANDO AVAILABLE_COMPONENTS:');
 try {
   // Verificar se o componente consegue mapear os dados
   console.log('Tentando simular allBlocks mapping...');
-  
+
   // Simular AVAILABLE_COMPONENTS (mesmo se estiver vazio)
   const testComponents = [
     { type: 'test-1', label: 'Teste 1', category: 'test' },
-    { type: 'test-2', label: 'Teste 2', category: 'test' }
+    { type: 'test-2', label: 'Teste 2', category: 'test' },
   ];
-  
+
   console.log('Teste com dados mock:', testComponents.length);
-  
+
   const testBlocks = testComponents.map(comp => ({
     type: comp.type,
     name: comp.label,
     category: comp.category,
     description: `Componente ${comp.label}`,
   }));
-  
+
   console.log('Mapping funcionou:', testBlocks.length);
-  
+
   // Testar grouping
-  const testGrouped = testBlocks.reduce(
-    (groups, block) => {
-      const category = block.category || 'Outros';
-      if (!groups[category]) {
-        groups[category] = [];
-      }
-      groups[category].push(block);
-      return groups;
-    },
-    {}
-  );
-  
+  const testGrouped = testBlocks.reduce((groups, block) => {
+    const category = block.category || 'Outros';
+    if (!groups[category]) {
+      groups[category] = [];
+    }
+    groups[category].push(block);
+    return groups;
+  }, {});
+
   console.log('Grouping funcionou:', Object.keys(testGrouped));
-  
 } catch (error) {
   console.log('❌ ERRO no processamento:', error);
 }
@@ -67,7 +66,7 @@ const elementsToFind = [
   '[class*="Card"]',
   '[class*="badge"]',
   '.space-y-1',
-  '.cursor-pointer'
+  '.cursor-pointer',
 ];
 
 elementsToFind.forEach(selector => {
@@ -94,15 +93,15 @@ if (sidebarInput) {
   const sidebarContainer = sidebarInput.closest('[class*="Card"], .card, .sidebar');
   if (sidebarContainer) {
     console.log('Container da sidebar encontrado');
-    
+
     // Contar elementos filhos
     const allChildren = sidebarContainer.querySelectorAll('*');
     console.log(`Total de elementos na sidebar: ${allChildren.length}`);
-    
+
     // Verificar se há elementos com texto específico
     const textContent = sidebarContainer.textContent || '';
     console.log('Primeiro texto da sidebar:', textContent.substring(0, 200));
-    
+
     // Verificar categorias específicas
     const categoryTexts = ['step01', 'content', 'quiz', 'action', 'conversion'];
     categoryTexts.forEach(cat => {
@@ -126,7 +125,7 @@ const hasCategories = badges.length > 0;
 if (isProduction && hasInput && !hasCategories) {
   console.log('❌ PROBLEMA IDENTIFICADO: Ambiente Produção');
   console.log('   - Sidebar renderiza ✅');
-  console.log('   - Input de busca existe ✅'); 
+  console.log('   - Input de busca existe ✅');
   console.log('   - Categorias/badges ausentes ❌');
   console.log('   - CAUSA PROVÁVEL: Build/lazy loading');
 } else if (!isProduction) {

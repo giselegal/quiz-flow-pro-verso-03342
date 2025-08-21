@@ -8,13 +8,13 @@ console.log('=====================================');
 const sidebarElements = [
   // Possíveis seletores para a sidebar
   '[class*="sidebar"]',
-  '[class*="components"]', 
+  '[class*="components"]',
   'div[role="complementary"]',
   '.w-80', // Classe da coluna 2
   'div:contains("Quiz Builder")', // CardTitle
   'input[placeholder*="Buscar"]', // Input de busca
   '[data-testid*="sidebar"]',
-  '[data-testid*="component"]'
+  '[data-testid*="component"]',
 ];
 
 let sidebarFound = false;
@@ -43,23 +43,29 @@ try {
   // Procurar por qualquer texto que indique componentes
   const componentTexts = [
     'Cabeçalho Quiz',
-    'Barra Decorativa', 
+    'Barra Decorativa',
     'Texto',
     'Imagem',
     'Botão',
-    'Quiz Builder'
+    'Quiz Builder',
   ];
-  
+
   let componentFound = false;
   componentTexts.forEach(text => {
     const xpath = `//*[contains(text(), "${text}")]`;
-    const result = document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
+    const result = document.evaluate(
+      xpath,
+      document,
+      null,
+      XPathResult.FIRST_ORDERED_NODE_TYPE,
+      null
+    );
     if (result.singleNodeValue) {
       console.log(`✅ Texto encontrado: "${text}"`);
       componentFound = true;
     }
   });
-  
+
   if (!componentFound) {
     console.log('❌ NENHUM TEXTO DE COMPONENTE ENCONTRADO');
   }
@@ -85,15 +91,23 @@ console.log('Body display:', getComputedStyle(body).display);
 
 // 6. Verificar se há elementos React na página
 console.log('\n⚛️ VERIFICANDO REACT:');
-const reactElements = document.querySelectorAll('[data-reactroot], [data-react*=""], #root, [id*="react"]');
+const reactElements = document.querySelectorAll(
+  '[data-reactroot], [data-react*=""], #root, [id*="react"]'
+);
 console.log(`Elementos React encontrados: ${reactElements.length}`);
 
 // 7. Tentar encontrar qualquer input de busca (seria da sidebar)
 console.log('\n🔍 VERIFICANDO INPUT DE BUSCA:');
-const searchInputs = document.querySelectorAll('input[placeholder*="Buscar"], input[placeholder*="buscar"], input[placeholder*="Search"], input[placeholder*="search"]');
+const searchInputs = document.querySelectorAll(
+  'input[placeholder*="Buscar"], input[placeholder*="buscar"], input[placeholder*="Search"], input[placeholder*="search"]'
+);
 console.log(`Inputs de busca encontrados: ${searchInputs.length}`);
 searchInputs.forEach((input, i) => {
-  console.log(`   Input ${i}:`, input.placeholder, input.closest('div')?.textContent?.substring(0, 50));
+  console.log(
+    `   Input ${i}:`,
+    input.placeholder,
+    input.closest('div')?.textContent?.substring(0, 50)
+  );
 });
 
 // 8. DIAGNÓSTICO FINAL

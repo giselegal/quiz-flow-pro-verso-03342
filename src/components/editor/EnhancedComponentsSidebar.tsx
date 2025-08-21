@@ -1,8 +1,8 @@
+import { AVAILABLE_COMPONENTS } from '@/components/editor/blocks/enhancedBlockRegistry';
 import { DraggableComponentItem } from '@/components/editor/dnd/DraggableComponentItem';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { AVAILABLE_COMPONENTS } from '@/components/editor/blocks/enhancedBlockRegistry';
 import { useSyncedScroll } from '@/hooks/useSyncedScroll';
 
 import {
@@ -20,7 +20,7 @@ interface EnhancedComponentsSidebarProps {}
 
 const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () => {
   console.log('🎯 EnhancedComponentsSidebar renderizando...');
-  
+
   const { scrollRef } = useSyncedScroll({ source: 'components' });
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({
@@ -33,7 +33,7 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
     Legal: false,
     Estrutura: false,
   });
-  
+
   console.log('🧩 AVAILABLE_COMPONENTS carregados:', AVAILABLE_COMPONENTS.length);
   console.log('📋 Primeiros 3 componentes:', AVAILABLE_COMPONENTS.slice(0, 3));
 
@@ -44,7 +44,7 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
     category: comp.category,
     description: `Componente ${comp.label}`,
   }));
-  
+
   console.log('🔄 allBlocks mapeados:', allBlocks.length);
   console.log('📊 Primeiros allBlocks:', allBlocks.slice(0, 2));
 
@@ -91,15 +91,17 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
 
   // Ordena dinamicamente pelas categorias existentes
   const orderedCategories = Object.keys(groupedBlocks);
-  
+
   console.log('📊 Categorias processadas:', orderedCategories);
   console.log('🔍 Blocos filtrados:', filteredBlocks.length);
   console.log('📋 Grupos criados:', Object.keys(groupedBlocks));
   console.log('🎭 Estados expandidos:', expandedCategories);
-  
+
   // DEBUG: Verificar se cada categoria tem blocos
   orderedCategories.forEach(cat => {
-    console.log(`📂 Categoria "${cat}": ${groupedBlocks[cat].length} blocos, expandida: ${expandedCategories[cat]}`);
+    console.log(
+      `📂 Categoria "${cat}": ${groupedBlocks[cat].length} blocos, expandida: ${expandedCategories[cat]}`
+    );
   });
   console.log('🎯 Expanded categories:', expandedCategories);
   console.log('📝 Search query:', searchQuery);
@@ -126,7 +128,9 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
         >
           <div className="space-y-1 p-0">
             {orderedCategories.map(category => {
-              console.log(`🏷️ Categoria: ${category}, Expandida: ${expandedCategories[category]}, Items: ${groupedBlocks[category].length}`);
+              console.log(
+                `🏷️ Categoria: ${category}, Expandida: ${expandedCategories[category]}, Items: ${groupedBlocks[category].length}`
+              );
               return (
                 <div key={category} className="space-y-1">
                   <div

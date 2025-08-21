@@ -7,12 +7,22 @@ console.log('============================================');
 // 1. Identificar ambiente
 const isLovable = window.location.host.includes('lovable.app');
 const isLocal = window.location.host.includes('localhost');
-const isCodespaces = window.location.host.includes('github.dev') || window.location.host.includes('githubpreview.dev');
+const isCodespaces =
+  window.location.host.includes('github.dev') || window.location.host.includes('githubpreview.dev');
 
 console.log('🌐 AMBIENTE DETECTADO:');
 console.log('URL:', window.location.href);
 console.log('Host:', window.location.host);
-console.log('Tipo:', isLovable ? '🌍 PRODUÇÃO LOVABLE' : isLocal ? '🏠 LOCAL' : isCodespaces ? '📦 CODESPACES' : '❓ DESCONHECIDO');
+console.log(
+  'Tipo:',
+  isLovable
+    ? '🌍 PRODUÇÃO LOVABLE'
+    : isLocal
+      ? '🏠 LOCAL'
+      : isCodespaces
+        ? '📦 CODESPACES'
+        : '❓ DESCONHECIDO'
+);
 
 // 2. Verificar React e componentes básicos
 console.log('\n⚛️ REACT STATUS:');
@@ -23,12 +33,12 @@ console.log('ReactDOM:', typeof ReactDOM !== 'undefined' ? '✅' : '❌');
 console.log('\n🧩 SIDEBAR STATUS:');
 const searchInput = document.querySelector('input[placeholder*="Buscar"]');
 const sidebarCard = document.querySelector('[class*="Card"]:has(input[placeholder*="Buscar"])');
-const quizBuilderTitle = Array.from(document.querySelectorAll('*')).find(el => 
-  el.textContent && el.textContent.includes('Quiz Builder')
+const quizBuilderTitle = Array.from(document.querySelectorAll('*')).find(
+  el => el.textContent && el.textContent.includes('Quiz Builder')
 );
 
 console.log('Input busca:', searchInput ? '✅' : '❌');
-console.log('Card container:', sidebarCard ? '✅' : '❌'); 
+console.log('Card container:', sidebarCard ? '✅' : '❌');
 console.log('Título "Quiz Builder":', quizBuilderTitle ? '✅' : '❌');
 
 // 4. Verificar componentes draggable
@@ -87,7 +97,6 @@ if (isLovable) {
   } else {
     console.log('✅ LOVABLE OK: Componentes renderizados corretamente');
   }
-  
 } else if (isLocal) {
   // Ambiente Local
   if (searchInput && draggableElements.length > 0) {
@@ -108,7 +117,9 @@ console.log(`Ambiente: ${isLovable ? 'LOVABLE' : 'LOCAL'}`);
 console.log(`Sidebar: ${searchInput ? 'EXISTE' : 'AUSENTE'}`);
 console.log(`Draggables: ${draggableElements.length}`);
 console.log(`Badges: ${badges.length}`);
-console.log(`Status: ${searchInput && draggableElements.length > 0 ? '✅ FUNCIONANDO' : '❌ COM PROBLEMA'}`);
+console.log(
+  `Status: ${searchInput && draggableElements.length > 0 ? '✅ FUNCIONANDO' : '❌ COM PROBLEMA'}`
+);
 
 console.log('\n💡 PRÓXIMA AÇÃO:');
 if (isLovable && draggableElements.length === 0) {

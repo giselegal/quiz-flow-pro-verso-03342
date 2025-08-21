@@ -27,13 +27,19 @@ const possibleSidebars = [
   'Quiz Builder',
   'Buscar componentes',
   'components-sidebar',
-  'w-80'
+  'w-80',
 ];
 
 let sidebarContent = null;
 possibleSidebars.forEach(term => {
   const xpath = `//*[contains(text(), "${term}") or contains(@class, "${term}")]`;
-  const result = document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
+  const result = document.evaluate(
+    xpath,
+    document,
+    null,
+    XPathResult.FIRST_ORDERED_NODE_TYPE,
+    null
+  );
   if (result.singleNodeValue) {
     console.log(`✅ Encontrado: "${term}"`);
     sidebarContent = result.singleNodeValue;
@@ -47,15 +53,18 @@ if (sidebarContent) {
   console.log('\n📋 ANALISANDO CONTEÚDO DA SIDEBAR:');
   const sidebarText = sidebarContent.textContent || '';
   console.log('Texto da sidebar (primeiros 200 chars):', sidebarText.substring(0, 200));
-  
+
   // Verificar se há botões ou items draggable
-  const draggableItems = sidebarContent.querySelectorAll('[draggable="true"], [data-draggable="true"], [class*="draggable"]');
+  const draggableItems = sidebarContent.querySelectorAll(
+    '[draggable="true"], [data-draggable="true"], [class*="draggable"]'
+  );
   console.log(`Items draggable encontrados: ${draggableItems.length}`);
-  
+
   // Verificar se há elementos com classes específicas do dnd-kit
-  const dndElements = sidebarContent.querySelectorAll('[data-dnd-kit*=""], [class*="dnd-kit"], [class*="sortable"]');
+  const dndElements = sidebarContent.querySelectorAll(
+    '[data-dnd-kit*=""], [class*="dnd-kit"], [class*="sortable"]'
+  );
   console.log(`Elementos DND-Kit encontrados: ${dndElements.length}`);
-  
 } else {
   console.log('\n❌ SIDEBAR NÃO ENCONTRADA!');
 }
@@ -87,9 +96,16 @@ Array.from(allElements).forEach(el => {
   const style = getComputedStyle(el);
   if (style.display === 'none' || style.visibility === 'hidden') {
     hiddenCount++;
-    if (el.textContent && el.textContent.includes('Quiz') || 
-        el.textContent && el.textContent.includes('Componente')) {
-      console.log('Elemento oculto relevante:', el.tagName, el.className, el.textContent.substring(0, 50));
+    if (
+      (el.textContent && el.textContent.includes('Quiz')) ||
+      (el.textContent && el.textContent.includes('Componente'))
+    ) {
+      console.log(
+        'Elemento oculto relevante:',
+        el.tagName,
+        el.className,
+        el.textContent.substring(0, 50)
+      );
     }
   }
 });
@@ -104,7 +120,9 @@ if (mainContainer) {
   const children = Array.from(mainContainer.children);
   console.log(`Children do main: ${children.length}`);
   children.forEach((child, i) => {
-    console.log(`  [${i}]: ${child.tagName} - ${child.className} - ${child.textContent ? child.textContent.substring(0, 30) + '...' : 'sem texto'}`);
+    console.log(
+      `  [${i}]: ${child.tagName} - ${child.className} - ${child.textContent ? child.textContent.substring(0, 30) + '...' : 'sem texto'}`
+    );
   });
 }
 

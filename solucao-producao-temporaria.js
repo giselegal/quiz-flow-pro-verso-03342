@@ -12,10 +12,10 @@ console.log(`Draggables atuais: ${currentDraggables.length}`);
 // 2. Aguardar um momento para o React renderizar
 setTimeout(() => {
   console.log('\n⏰ Após 2 segundos - verificando novamente...');
-  
+
   const newDraggables = document.querySelectorAll('[draggable="true"], [data-draggable]');
   console.log(`Draggables após delay: ${newDraggables.length}`);
-  
+
   if (newDraggables.length === 0) {
     console.log('\n🚨 CONFIRMADO: Problema de ambiente produção');
     console.log('💡 SOLUÇÕES POSSÍVEIS:');
@@ -23,14 +23,14 @@ setTimeout(() => {
     console.log('2. Limpar cache do browser');
     console.log('3. Verificar network tab para erros 404');
     console.log('4. Comparar com localhost:8083');
-    
+
     // Tentar encontrar logs de erro específicos
     console.log('\n🔍 PROCURANDO LOGS DE DEBUG:');
     console.log('Procure por estes logs no console:');
     console.log('- "🎯 EnhancedComponentsSidebar renderizando"');
     console.log('- "🧩 AVAILABLE_COMPONENTS carregados: X"');
     console.log('- "📊 Categorias processadas: [...]"');
-    
+
     if (!window.console.logs || window.console.logs.length === 0) {
       console.log('\n❌ LOGS DE DEBUG NÃO ENCONTRADOS');
       console.log('CAUSA PROVÁVEL: Componente não está executando completamente');
@@ -54,12 +54,12 @@ console.log('\n🔄 TENTANDO FORÇAR RE-RENDER:');
 const searchInput = document.querySelector('input[placeholder*="Buscar"]');
 if (searchInput) {
   console.log('Input de busca encontrado, tentando trigger...');
-  
+
   // Simular interação para forçar re-render
   searchInput.focus();
   searchInput.value = 'test';
   searchInput.dispatchEvent(new Event('input', { bubbles: true }));
-  
+
   setTimeout(() => {
     searchInput.value = '';
     searchInput.dispatchEvent(new Event('input', { bubbles: true }));

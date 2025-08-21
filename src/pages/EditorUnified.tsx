@@ -147,7 +147,7 @@ const EditorUnified: React.FC = () => {
       stageCount,
       activeStageId,
       funnelId,
-      error: currentBlocks?.length === 0 ? 'POSSÍVEL ERRO FIRESTORE' : 'OK'
+      error: currentBlocks?.length === 0 ? 'POSSÍVEL ERRO FIRESTORE' : 'OK',
     });
   }, [currentBlocks, stageCount, activeStageId, funnelId]);
 
