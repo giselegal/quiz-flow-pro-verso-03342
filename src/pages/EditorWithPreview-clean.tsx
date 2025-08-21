@@ -11,7 +11,7 @@ import { EditorToolbar } from '@/components/editor/toolbar/EditorToolbar';
 // 🚀 PREVIEW SYSTEM
 import { PreviewNavigation } from '@/components/preview/PreviewNavigation';
 import { PreviewToggleButton } from '@/components/preview/PreviewToggleButton';
-import { PreviewProvider } from '@/contexts/PreviewContext';
+import { PreviewProvider } from '@/context/PreviewContext';
 // 🎯 QUIZ 21 STEPS SYSTEM
 import { Quiz21StepsNavigation } from '@/components/quiz/Quiz21StepsNavigation';
 import { Quiz21StepsProvider } from '@/components/quiz/Quiz21StepsProvider';

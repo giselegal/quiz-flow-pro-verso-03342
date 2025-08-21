@@ -13,7 +13,7 @@ import { FunnelSettingsPanel } from '@/components/editor/funnel-settings/FunnelS
 import { SaveTemplateModal } from '@/components/editor/SaveTemplateModal';
 
 // 🚀 PREVIEW SYSTEM
-import { PreviewProvider } from '@/contexts/PreviewContext';
+import { PreviewProvider } from '@/context/PreviewContext';
 
 // 🎯 QUIZ 21 STEPS SYSTEM
 import { Quiz21StepsProvider } from '@/components/quiz/Quiz21StepsProvider';

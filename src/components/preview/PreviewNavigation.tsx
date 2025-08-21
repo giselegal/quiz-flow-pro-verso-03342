@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { usePreview } from '@/contexts/PreviewContext';
+import { usePreview } from '@/context/PreviewContext';
 import { ChevronLeft, ChevronRight, RotateCcw } from 'lucide-react';
 import React from 'react';
 

@@ -25,7 +25,7 @@ import {
 } from '@/components/editor/unified';
 
 // 🚀 PREVIEW SYSTEM
-import { PreviewProvider } from '@/contexts/PreviewContext';
+import { PreviewProvider } from '@/context/PreviewContext';
 
 // 🎪 HOOKS CORE UNIFICADO
 import { useQuizFlow } from '@/hooks/core/useQuizFlow';

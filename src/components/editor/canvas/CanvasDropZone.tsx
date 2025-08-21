@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { usePreview } from '@/contexts/PreviewContext';
+import { usePreview } from '@/context/PreviewContext';
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
 import { useDroppable } from '@dnd-kit/core';
