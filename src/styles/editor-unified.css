@@ -37,6 +37,22 @@
     sans-serif;
   background: var(--gradient-background);
   min-height: 100vh;
+  /* ✅ CORRIGIDO: Evitar zoom indesejado durante DnD */
+  transform: none !important;
+  will-change: auto;
+}
+
+/* ===== CORREÇÕES DRAG & DROP ===== */
+.draggable-item {
+  /* ✅ Evitar transformações CSS conflitantes */
+  transform-origin: center center;
+  will-change: transform;
+}
+
+.draggable-item.is-dragging {
+  /* ✅ Transformação controlada durante drag */
+  transform-origin: center center;
+  pointer-events: none;
 }
 
 /* ===== HEADER PROFISSIONAL ===== */

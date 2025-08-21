@@ -14,7 +14,7 @@ import {
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
-import { restrictToParentElement } from '@dnd-kit/modifiers';
+// ✅ REMOVIDO: restrictToParentElement (causava zoom)
 import {
   SortableContext,
   sortableKeyboardCoordinates,
@@ -84,11 +84,11 @@ const EditorUnified: React.FC = () => {
     initialStep: 1,
   });
 
-  // Configuração dos sensores para DndContext - OTIMIZADA PARA DEBUG
+  // Configuração dos sensores para DndContext - CORRIGIDA
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 1, // Reduzido para 1px para facilitar debug
+        distance: 8, // ✅ CORRIGIDO: 8px padrão para evitar zoom
       },
     }),
     useSensor(KeyboardSensor, {
@@ -434,7 +434,7 @@ const EditorUnified: React.FC = () => {
       collisionDetection={closestCenter}
       onDragEnd={handleDragEnd}
       onDragStart={handleDragStart}
-      modifiers={[restrictToParentElement]}
+      // ✅ CORRIGIDO: Removido restrictToParentElement que causa zoom
       autoScroll={true}
     >
       <SortableContext items={blockIds} strategy={verticalListSortingStrategy}>

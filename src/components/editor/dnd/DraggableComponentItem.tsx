@@ -67,10 +67,11 @@ export const DraggableComponentItem: React.FC<DraggableComponentItemProps> = ({
     });
   };
 
-  // Usar CSS Transform do @dnd-kit/utilities para melhor performance
+  // ✅ CORRIGIDO: CSS Transform sem zoom indesejado
   const style = transform
     ? {
         transform: CSS.Transform.toString(transform),
+        zIndex: isDragging ? 999 : 'auto',
       }
     : undefined;
 
@@ -79,12 +80,12 @@ export const DraggableComponentItem: React.FC<DraggableComponentItemProps> = ({
       ref={setNodeRef}
       className={cn(
         'w-full h-auto p-3 flex flex-col items-start gap-2 text-left transition-all duration-200 border border-stone-200 rounded-lg bg-white',
-        // 🔧 DEBUG: Visual feedback para draggable
+        // ✅ CORRIGIDO: Visual feedback sem scale
         'cursor-grab hover:bg-stone-50 hover:border-blue-300',
-        isDragging && 'opacity-50 scale-95',
+        // ✅ CORRIGIDO: Removido scale-95 que causava zoom
+        isDragging && 'opacity-60 cursor-grabbing shadow-xl',
         // 🔧 DEBUG: Ring verde para identificar draggables
         'ring-1 ring-green-100 hover:ring-green-300',
-        isDragging && 'opacity-50 cursor-grabbing shadow-lg',
         disabled && 'opacity-50 cursor-not-allowed',
         className
       )}
