@@ -84,7 +84,7 @@ export const ConnectedTemplateWrapper: React.FC<ConnectedTemplateWrapperProps> =
 
           // ✅ SALVAR NO SUPABASE
           supabaseQuiz
-            .saveAnswer(questionId, optionId)
+            .saveAnswer({ questionId, optionId })
             .then(() => {
               console.log('💾 Resposta salva no Supabase:', { questionId, optionId });
             })

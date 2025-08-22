@@ -1,8 +1,8 @@
 // Hook de integração com Supabase para o Quiz - ATUALIZADO para Quiz21StepsProvider
 import { useToast } from '@/components/ui/use-toast';
-import { calculateQuizResult } from '@/lib/quizEngine';
 import { quizSupabaseService } from '@/services/quizSupabaseService';
 import { QuizAnswer, QuizQuestion, QuizResult } from '@/types/quiz';
+import { computeResults } from '@/utils/quizResults';
 import { useCallback, useEffect, useState } from 'react';
 
 // Interface para a sessão integrada com Quiz21StepsProvider
@@ -145,45 +145,49 @@ export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
     [questions.length, session, toast]
   );
 
-  // Salvar resposta e avançar
+  // Salvar resposta - nova assinatura para suportar weights
   const saveAnswer = useCallback(
-    async (questionId: string, optionId: string) => {
+    async (answer: { questionId: string; optionId: string; weights?: Record<string, number> }) => {
       if (!session.id) {
         setError('Sessão do quiz não iniciada');
         return false;
       }
 
-      setIsLoading(true);
-
       try {
         // Encontrar a pergunta e opção
-        const question = questions.find(q => q.id === questionId);
-        const option = question?.options.find(o => o.id === optionId);
+        const question = questions.find(q => q.id === answer.questionId);
+        const option = question?.options.find(o => o.id === answer.optionId);
 
         if (!question || !option) {
           throw new Error('Pergunta ou opção não encontrada');
         }
 
-        // Salvar resposta no Supabase
-        await quizSupabaseService.saveQuizResponse({
-          sessionId: session.id,
-          stepNumber: session.currentStep + 1,
-          questionId,
-          questionText: question.text || question.question,
-          answerValue: optionId,
-          answerText: option.text,
-          scoreEarned: option.weight || 1,
-          responseTimeMs: 0, // Poderia implementar medição de tempo
-        });
+        // Salvar resposta no Supabase (se sessionId existe)
+        if (session.id) {
+          await quizSupabaseService.saveQuizResponse({
+            sessionId: session.id,
+            stepNumber: session.currentStep + 1,
+            questionId: answer.questionId,
+            questionText: question.text || question.question,
+            answerValue: answer.optionId,
+            answerText: option.text,
+            scoreEarned: option.weight || 1,
+            responseTimeMs: 0,
+          });
 
-        // Atualizar sessão
-        await quizSupabaseService.updateQuizSession(session.id, {
-          currentStep: session.currentStep + 1,
-          status: 'in_progress',
-        });
+          // Atualizar sessão
+          await quizSupabaseService.updateQuizSession(session.id, {
+            currentStep: session.currentStep + 1,
+            status: 'in_progress',
+          });
+        }
 
-        // Atualizar estado local
-        const newAnswer: QuizAnswer = { questionId, optionId };
+        // Atualizar estado local com weights se fornecidos
+        const newAnswer: QuizAnswer = { 
+          questionId: answer.questionId, 
+          optionId: answer.optionId,
+          weights: answer.weights
+        };
         const newResponses = [...session.responses, newAnswer];
 
         setSession({
@@ -205,8 +209,6 @@ export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
         });
 
         return false;
-      } finally {
-        setIsLoading(false);
       }
     },
     [session, questions, toast]
@@ -214,7 +216,7 @@ export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
 
   // Calcular e salvar resultado final
   const completeQuiz = useCallback(async () => {
-    if (!session.id || session.responses.length === 0) {
+    if (!session.responses.length) {
       setError('Não há respostas para calcular o resultado');
       return null;
     }
@@ -222,46 +224,61 @@ export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
     setIsLoading(true);
 
     try {
-      // Calcular resultado
-      const result = calculateQuizResult(session.responses, questions);
+      // Usar computeResults com as respostas atuais
+      const result = computeResults(session.responses);
+      result.version = 'v1';
 
-      // Atualizar sessão no Supabase
-      await quizSupabaseService.updateQuizSession(session.id, {
-        status: 'completed',
-        score: result.primaryStyle.score,
-        completedAt: new Date(),
-      });
+      // Atualizar sessão no Supabase se há sessionId
+      if (session.id) {
+        await quizSupabaseService.updateQuizSession(session.id, {
+          status: 'completed',
+          score: result.primaryStyle.score,
+          completedAt: new Date(),
+        });
 
-      // Salvar resultado detalhado
-      const resultId = await quizSupabaseService.saveQuizResult({
-        sessionId: session.id,
-        resultType: result.primaryStyle.style,
-        resultTitle: result.primaryStyle.category,
-        resultDescription: `Seu estilo predominante é ${result.primaryStyle.category} com ${result.primaryStyle.percentage}% de compatibilidade.`,
-        resultData: {
-          primaryStyle: result.primaryStyle,
-          secondaryStyles: result.secondaryStyles,
-          scores: result.scores,
-          totalQuestions: questions.length,
-        },
-      });
+        // Salvar resultado detalhado no Supabase
+        const resultId = await quizSupabaseService.saveQuizResult({
+          sessionId: session.id,
+          resultType: result.primaryStyle.style,
+          resultTitle: result.primaryStyle.category,
+          resultDescription: `Seu estilo predominante é ${result.primaryStyle.category} com ${result.primaryStyle.percentage}% de compatibilidade.`,
+          resultData: {
+            ...result,
+            sessionId: session.id,
+            userId: session.userId,
+          },
+        });
 
-      // Atualizar estado local
-      setSession({
-        ...session,
-        status: 'completed',
-        result,
-        isCompleted: true,
-      });
+        // Atualizar estado local
+        setSession({
+          ...session,
+          status: 'completed',
+          result: result as any, // Type assertion needed for compatibility
+          isCompleted: true,
+        });
 
-      // Salvar no localStorage para referência futura
-      localStorage.setItem('quizResult', JSON.stringify(result));
+        return {
+          success: true,
+          resultId,
+          result,
+        };
+      } else {
+        // Modo local - apenas atualizar estado
+        setSession({
+          ...session,
+          status: 'completed',
+          result: result as any,
+          isCompleted: true,
+        });
 
-      return {
-        success: true,
-        resultId,
-        result,
-      };
+        // Salvar no localStorage para referência futura
+        localStorage.setItem('quizResult', JSON.stringify(result));
+
+        return {
+          success: true,
+          result,
+        };
+      }
     } catch (error) {
       console.error('Erro ao completar o quiz:', error);
       setError('Erro ao calcular resultado. Tente novamente.');
@@ -276,7 +293,7 @@ export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
     } finally {
       setIsLoading(false);
     }
-  }, [session, questions, toast]);
+  }, [session, toast]);
 
   // Registrar conversão (quando o usuário adquire um produto)
   const recordConversion = useCallback(
