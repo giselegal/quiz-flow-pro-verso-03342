@@ -3,7 +3,26 @@ import EnhancedUniversalPropertiesPanelFixed from '@/components/universal/Enhanc
 import { cn } from '@/lib/utils';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import { Block } from '@/types/editor';
-import { DndContext, DragEndEvent, DragStartEvent } from '@dnd-kit/core';
+import { 
+  DndContext, 
+  DragEndEvent, 
+  DragStartEvent, 
+  DragOverlay,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragOverEvent
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+  useSortable
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import React, { useCallback, useState } from 'react';
 
 interface QuizEditorProProps {
@@ -24,10 +43,32 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
   const [draggedComponent, setDraggedComponent] = useState<any>(null);
   const [mode, setMode] = useState<'edit' | 'preview'>('edit');
+  
+  // Estado mutável para os blocos de cada etapa
+  const [stepBlocks, setStepBlocks] = useState<Record<string, Block[]>>(() => {
+    // Inicializar com dados do template
+    const initialBlocks: Record<string, Block[]> = {};
+    Object.entries(QUIZ_STYLE_21_STEPS_TEMPLATE).forEach(([stepKey, blocks]) => {
+      initialBlocks[stepKey] = Array.isArray(blocks) ? [...blocks] : [];
+    });
+    return initialBlocks;
+  });
 
-  // Template data
-  const templateData = QUIZ_STYLE_21_STEPS_TEMPLATE;
-  const currentStepData = templateData[`step-${currentStep}`] || [];
+  // Configuração dos sensores para drag & drop
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  // Dados da etapa atual
+  const currentStepKey = `step-${currentStep}`;
+  const currentStepData = stepBlocks[currentStepKey] || [];
   const selectedBlock = currentStepData.find((block: Block) => block.id === selectedBlockId);
 
   // Tipos de componentes disponíveis
@@ -130,7 +171,59 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
     return { type: '❓', label: 'Indefinida', desc: 'Não mapeada' };
   };
 
-  // Handlers
+  // Handlers para operações de bloco
+  const addBlockToStep = useCallback((stepKey: string, newBlock: Block) => {
+    setStepBlocks(prev => ({
+      ...prev,
+      [stepKey]: [...(prev[stepKey] || []), newBlock]
+    }));
+  }, []);
+
+  const removeBlockFromStep = useCallback((stepKey: string, blockId: string) => {
+    setStepBlocks(prev => ({
+      ...prev,
+      [stepKey]: (prev[stepKey] || []).filter(block => block.id !== blockId)
+    }));
+  }, []);
+
+  const reorderBlocksInStep = useCallback((stepKey: string, oldIndex: number, newIndex: number) => {
+    setStepBlocks(prev => {
+      const blocks = [...(prev[stepKey] || [])];
+      const reorderedBlocks = arrayMove(blocks, oldIndex, newIndex);
+      return {
+        ...prev,
+        [stepKey]: reorderedBlocks
+      };
+    });
+  }, []);
+
+  const updateBlockInStep = useCallback((stepKey: string, blockId: string, updates: Record<string, any>) => {
+    setStepBlocks(prev => ({
+      ...prev,
+      [stepKey]: (prev[stepKey] || []).map(block => 
+        block.id === blockId ? { ...block, ...updates } : block
+      )
+    }));
+  }, []);
+
+  // Função para criar um novo bloco a partir de um componente
+  const createBlockFromComponent = useCallback((componentType: string): Block => {
+    const timestamp = Date.now();
+    const blockId = `block-${componentType}-${timestamp}`;
+    
+    return {
+      id: blockId,
+      type: componentType,
+      order: currentStepData.length + 1,
+      content: {
+        title: `Novo ${componentType}`,
+        description: 'Bloco criado através de drag & drop'
+      },
+      properties: {}
+    };
+  }, [currentStepData.length]);
+
+  // Handlers principais
   const handleStepSelect = useCallback((step: number) => {
     setCurrentStep(step);
     setSelectedBlockId(null);
@@ -141,15 +234,27 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
   }, []);
 
   const handleBlockUpdate = useCallback((blockId: string, updates: Record<string, any>) => {
-    console.log('Atualizando bloco:', blockId, updates);
-    // TODO: Implementar atualização real do bloco
-  }, []);
+    updateBlockInStep(currentStepKey, blockId, updates);
+  }, [currentStepKey, updateBlockInStep]);
 
   const handleBlockDelete = useCallback((blockId: string) => {
-    console.log('Removendo bloco:', blockId);
+    removeBlockFromStep(currentStepKey, blockId);
     setSelectedBlockId(null);
-    // TODO: Implementar remoção real do bloco
-  }, []);
+  }, [currentStepKey, removeBlockFromStep]);
+
+  const handleBlockMoveUp = useCallback((blockId: string) => {
+    const currentIndex = currentStepData.findIndex(block => block.id === blockId);
+    if (currentIndex > 0) {
+      reorderBlocksInStep(currentStepKey, currentIndex, currentIndex - 1);
+    }
+  }, [currentStepData, currentStepKey, reorderBlocksInStep]);
+
+  const handleBlockMoveDown = useCallback((blockId: string) => {
+    const currentIndex = currentStepData.findIndex(block => block.id === blockId);
+    if (currentIndex < currentStepData.length - 1) {
+      reorderBlocksInStep(currentStepKey, currentIndex, currentIndex + 1);
+    }
+  }, [currentStepData, currentStepKey, reorderBlocksInStep]);
 
   const handleClosePropertiesPanel = useCallback(() => {
     setSelectedBlockId(null);
@@ -335,12 +440,12 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
                   )}
                 >
                   <div>
-                    <strong>✏️ Modo Edição:</strong> Clique nos blocos para editar suas propriedades
+                    <strong>✏️ Modo Edição Visual:</strong> Conteúdo real com overlays de seleção interativos
                   </div>
                   <div className="text-blue-700">
                     {selectedBlockId
                       ? `Editando: ${selectedBlockId}`
-                      : `${currentStepData.length} blocos disponíveis`}
+                      : `${currentStepData.length} blocos disponíveis - Clique para editar`}
                   </div>
                 </div>
               ) : (
@@ -351,7 +456,7 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
                   )}
                 >
                   <div>
-                    <strong>👁️ Modo Preview:</strong> Visualização idêntica à produção
+                    <strong>👁️ Modo Preview:</strong> Visualização idêntica à produção final
                   </div>
                   <div className="text-green-700">Navegação e interações funcionais</div>
                 </div>
@@ -362,123 +467,176 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
           {/* Área do Canvas */}
           <div className="flex-1 p-6 overflow-auto" id="canvas-drop-zone">
             <div className="max-w-4xl mx-auto">
-              {mode === 'preview' ? (
-                /* 👁️ MODO PREVIEW - Idêntico à produção */
-                <div className="bg-white rounded-lg shadow-sm">
-                  <QuizRenderer
-                    mode="preview"
-                    onStepChange={handleStepSelect}
-                    initialStep={currentStep}
-                  />
-                </div>
-              ) : (
-                /* ✏️ MODO EDIÇÃO - Canvas com blocos editáveis */
-                <div className="bg-white rounded-lg shadow-sm min-h-[600px] p-6">
-                  <div className="space-y-4">
-                    {currentStepData.map((block: Block, index: number) => (
-                      <div
-                        key={block.id || index}
-                        onClick={() => handleBlockSelect(block.id || `block-${index}`)}
-                        className={cn(
-                          'border-2 border-dashed rounded-lg p-4 cursor-pointer transition-all duration-200',
-                          selectedBlockId === (block.id || `block-${index}`)
-                            ? 'border-blue-500 bg-blue-50 shadow-md'
-                            : 'border-gray-300 hover:border-blue-400 hover:bg-gray-50'
-                        )}
-                      >
-                        <div className="flex items-center justify-between mb-3">
-                          <div className="flex items-center gap-2">
-                            <span className="text-xs bg-gray-100 px-2 py-1 rounded-full font-mono">
-                              {block.type}
-                            </span>
-                            <span className="text-xs text-gray-500">
-                              Ordem: {block.order || index + 1}
-                            </span>
+              {/* ✏️ MODO EDIÇÃO E PREVIEW - Conteúdo real com overlays de seleção */}
+              <div className="relative bg-white rounded-lg shadow-sm">
+                {/* Renderização do conteúdo real */}
+                <QuizRenderer
+                  mode={mode === 'preview' ? 'preview' : 'editor'}
+                  onStepChange={handleStepSelect}
+                  initialStep={currentStep}
+                />
+
+                {/* Overlays de seleção apenas no modo de edição */}
+                {mode === 'edit' && (
+                  <div className="absolute inset-0 pointer-events-none z-50">
+                    {currentStepData.map((block: Block, index: number) => {
+                      const blockId = block.id || `block-${index}`;
+                      const isSelected = selectedBlockId === blockId;
+                      
+                      // Calcular posição baseada no tipo de bloco e ordem
+                      let topOffset = 0;
+                      let height = 80;
+                      
+                      // Ajustar posição baseado no tipo de bloco
+                      switch (block.type) {
+                        case 'quiz-intro-header':
+                          topOffset = 20;
+                          height = 120;
+                          break;
+                        case 'options-grid':
+                          topOffset = 150 + (index * 200);
+                          height = 300;
+                          break;
+                        case 'form-container':
+                          topOffset = 200 + (index * 150);
+                          height = 120;
+                          break;
+                        case 'button':
+                          topOffset = 400 + (index * 100);
+                          height = 60;
+                          break;
+                        default:
+                          topOffset = 60 + (index * 100);
+                          height = 80;
+                      }
+                      
+                      return (
+                        <div
+                          key={blockId}
+                          className={cn(
+                            'absolute left-4 right-4 pointer-events-auto cursor-pointer transition-all duration-300',
+                            'rounded-lg border-2 border-dashed',
+                            isSelected
+                              ? 'border-blue-500 bg-blue-500 bg-opacity-10 shadow-lg'
+                              : 'border-transparent hover:border-blue-400 hover:bg-blue-400 hover:bg-opacity-5'
+                          )}
+                          style={{
+                            top: `${topOffset}px`,
+                            height: `${height}px`,
+                            zIndex: isSelected ? 60 : 50,
+                          }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleBlockSelect(blockId);
+                          }}
+                        >
+                          {/* Badge de identificação sempre visível no hover ou seleção */}
+                          <div className={cn(
+                            'absolute -top-10 left-0 text-xs px-3 py-1 rounded-t-lg font-medium shadow-lg transition-all duration-200',
+                            isSelected 
+                              ? 'bg-blue-600 text-white opacity-100' 
+                              : 'bg-gray-800 text-white opacity-0 group-hover:opacity-100'
+                          )}>
+                            {isSelected ? '✏️' : '🖱️'} {block.type}
+                            {isSelected && ` - ${blockId}`}
                           </div>
-                          <div className="text-xs text-gray-400">
-                            #{block.id || `block-${index}`}
-                          </div>
+                          
+                          {/* Controles de ação (apenas quando selecionado) */}
+                          {isSelected && (
+                            <div className="absolute -top-10 right-0 flex gap-1">
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  console.log('Mover para cima:', blockId);
+                                }}
+                                className="bg-blue-600 text-white p-1 rounded text-xs hover:bg-blue-700 transition-colors"
+                                title="Mover para cima"
+                              >
+                                ⬆️
+                              </button>
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  console.log('Mover para baixo:', blockId);
+                                }}
+                                className="bg-blue-600 text-white p-1 rounded text-xs hover:bg-blue-700 transition-colors"
+                                title="Mover para baixo"
+                              >
+                                ⬇️
+                              </button>
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  console.log('Duplicar bloco:', blockId);
+                                }}
+                                className="bg-green-600 text-white p-1 rounded text-xs hover:bg-green-700 transition-colors"
+                                title="Duplicar bloco"
+                              >
+                                📋
+                              </button>
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleBlockDelete(blockId);
+                                }}
+                                className="bg-red-600 text-white p-1 rounded text-xs hover:bg-red-700 transition-colors"
+                                title="Remover bloco"
+                              >
+                                🗑️
+                              </button>
+                            </div>
+                          )}
+                          
+                          {/* Indicador de edição ativa */}
+                          {isSelected && (
+                            <div className="absolute bottom-0 right-0 bg-blue-600 text-white text-xs px-2 py-1 rounded-tl-lg font-medium animate-pulse">
+                              Editando →
+                            </div>
+                          )}
+                          
+                          {/* Indicador de hover para blocos não selecionados */}
+                          {!isSelected && (
+                            <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-200">
+                              <div className="bg-gray-800 bg-opacity-90 text-white text-xs px-3 py-1 rounded-lg font-medium shadow-lg">
+                                🖱️ Clique para editar
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Outline animado para o bloco selecionado */}
+                          {isSelected && (
+                            <div className="absolute inset-0 border-2 border-blue-500 rounded-lg animate-pulse"></div>
+                          )}
                         </div>
-
-                        {/* Preview do conteúdo do bloco */}
-                        <div className="space-y-2">
-                          {block.content?.title && (
-                            <div className="font-semibold text-gray-900 text-sm">
-                              📝 {block.content.title}
-                            </div>
-                          )}
-
-                          {block.content?.question && (
-                            <div className="font-medium text-gray-800 text-sm">
-                              ❓ {block.content.question}
-                            </div>
-                          )}
-
-                          {block.content?.description && (
-                            <div className="text-gray-600 text-xs">
-                              📄 {block.content.description}
-                            </div>
-                          )}
-
-                          {block.content?.options && (
-                            <div className="text-xs text-blue-600">
-                              🎯 {block.content.options.length} opções configuradas
-                            </div>
-                          )}
-
-                          {block.content?.buttonText && (
-                            <div className="text-xs text-green-600">
-                              🔘 Botão: "{block.content.buttonText}"
-                            </div>
-                          )}
-
-                          {block.content?.testimonials && (
-                            <div className="text-xs text-purple-600">
-                              💬 {block.content.testimonials.length} depoimentos
-                            </div>
-                          )}
-
-                          {/* Propriedades importantes */}
-                          {block.properties && Object.keys(block.properties).length > 0 && (
-                            <div className="text-xs text-gray-500 pt-2 border-t border-gray-200">
-                              ⚙️ {Object.keys(block.properties).length} propriedades configuradas
-                            </div>
-                          )}
-                        </div>
-
-                        {/* Indicador de seleção */}
-                        {selectedBlockId === (block.id || `block-${index}`) && (
-                          <div className="mt-3 text-xs text-blue-600 font-medium">
-                            ✏️ Bloco selecionado - Edite no painel de propriedades →
-                          </div>
-                        )}
-                      </div>
-                    ))}
-
-                    {/* Estado vazio */}
-                    {currentStepData.length === 0 && (
-                      <div className="text-center py-16 text-gray-500 border-2 border-dashed border-gray-300 rounded-lg">
-                        <div className="text-3xl mb-4">📝</div>
-                        <div className="text-lg font-medium mb-2">Nenhum bloco configurado</div>
-                        <div className="text-sm mb-4">
-                          Esta etapa ainda não possui componentes configurados
-                        </div>
-                        <div className="text-xs text-gray-400">
-                          Arraste componentes da biblioteca para começar a editar
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Área de drop para novos componentes */}
-                    {currentStepData.length > 0 && (
-                      <div className="border-2 border-dashed border-gray-200 rounded-lg p-8 text-center text-gray-400 hover:border-blue-300 hover:text-blue-500 transition-colors">
-                        <div className="text-lg mb-2">➕</div>
-                        <div className="text-sm">Arraste um componente aqui para adicionar</div>
-                      </div>
-                    )}
+                      );
+                    })}
                   </div>
-                </div>
-              )}
+                )}
+
+                {/* Área de drop para novos componentes (apenas modo edição) */}
+                {mode === 'edit' && currentStepData.length > 0 && (
+                  <div className="absolute bottom-0 left-4 right-4 border-2 border-dashed border-blue-300 rounded-lg p-6 text-center text-blue-500 bg-blue-50 bg-opacity-50 hover:border-blue-500 hover:bg-opacity-80 transition-all duration-200">
+                    <div className="text-lg mb-2">➕</div>
+                    <div className="text-sm font-medium">Arraste um componente aqui para adicionar</div>
+                  </div>
+                )}
+
+                {/* Estado vazio (apenas modo edição) */}
+                {mode === 'edit' && currentStepData.length === 0 && (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="text-center py-16 text-gray-500 border-2 border-dashed border-gray-300 rounded-lg bg-white bg-opacity-90 max-w-md">
+                      <div className="text-3xl mb-4">📝</div>
+                      <div className="text-lg font-medium mb-2">Nenhum bloco configurado</div>
+                      <div className="text-sm mb-4">
+                        Esta etapa ainda não possui componentes configurados
+                      </div>
+                      <div className="text-xs text-gray-400">
+                        Arraste componentes da biblioteca para começar a editar
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
