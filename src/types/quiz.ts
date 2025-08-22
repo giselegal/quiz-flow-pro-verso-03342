@@ -85,8 +85,16 @@ export interface StyleResult {
   score: number;
   percentage: number;
   style: string;
-  points: number;
-  rank: number;
+  points?: number;
+  rank?: number;
+}
+
+export interface ComputedResult {
+  primaryStyle: StyleResult;
+  secondaryStyles: StyleResult[];
+  scores: Record<string, number>;
+  totalQuestions: number;
+  version: string;
 }
 
 export interface QuizResult {
