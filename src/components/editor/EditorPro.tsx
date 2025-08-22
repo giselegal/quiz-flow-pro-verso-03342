@@ -107,6 +107,9 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   // 🚀 MELHORIA P2: Auto-scroll durante drag
   const [isDragging, setIsDragging] = useState(false);
   const canvasRef = useRef<HTMLDivElement>(null);
+  
+  // 🚀 MELHORIA P2: Cross-step drops
+  const [dropTargetStep, setDropTargetStep] = useState<number | null>(null);
 
   const safeCurrentStep = state.currentStep || 1;
   const currentStepKey = `step-${safeCurrentStep}`;
@@ -136,6 +139,40 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   }, [currentStepData]);
 
   const selectedBlock = currentStepData.find((block: Block) => block.id === state.selectedBlockId);
+
+  // 🚀 MELHORIA P2: Haptic feedback para mobile
+  const triggerHapticFeedback = useCallback((intensity: 'light' | 'medium' | 'heavy' = 'light') => {
+    // Vibração para dispositivos móveis
+    if ('vibrate' in navigator) {
+      const patterns = {
+        light: 50,
+        medium: 100,
+        heavy: 200,
+      };
+      navigator.vibrate(patterns[intensity]);
+    }
+    
+    // Audio feedback (opcional)
+    if ('AudioContext' in window) {
+      try {
+        const audioContext = new AudioContext();
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+        gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+        
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.1);
+      } catch (e) {
+        // Silently fail if audio context is not available
+      }
+    }
+  }, []);
 
   // 🚀 MELHORIA P2: Auto-scroll durante drag próximo às bordas
   React.useEffect(() => {
@@ -368,10 +405,16 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       id: active.id,
       data: dragData,
     });
+    
+    // 🚀 P2: Ativa auto-scroll
+    setIsDragging(true);
+    
+    // 🚀 P2: Haptic feedback ao iniciar drag
+    triggerHapticFeedback('light');
 
     logDragEvent('start', active);
     if (process.env.NODE_ENV === 'development') devLog('Drag start', dragData);
-  }, []);
+  }, [triggerHapticFeedback]);
 
   // 🚀 NOVO: Handler para DragOver (placeholder visual)
   const handleDragOver = useCallback(
@@ -409,6 +452,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       // 🚀 LIMPEZA: Reset estados do DnD
       setActiveDrag(null);
       setPlaceholderIndex(null);
+      setIsDragging(false); // 🚀 P2: Desativa auto-scroll
 
       const { active, over } = event;
       if (!over) {
@@ -444,6 +488,8 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               actions.addBlock(currentStepKey, newBlock);
               actions.setSelectedBlockId(newBlock.id);
               notification?.success?.(`Componente ${dragData.blockType} adicionado!`);
+              // 🚀 P2: Haptic feedback para adição bem-sucedida
+              triggerHapticFeedback('medium');
             }
             break;
           case 'reorder':
@@ -455,6 +501,8 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               if (activeIndex !== -1 && overIndex !== undefined && activeIndex !== overIndex) {
                 actions.reorderBlocks(currentStepKey, activeIndex, overIndex);
                 notification?.info?.('Blocos reordenados');
+                // 🚀 P2: Haptic feedback para reordenamento bem-sucedido
+                triggerHapticFeedback('light');
               }
             }
             break;
@@ -467,7 +515,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         notification?.error?.('Erro ao processar drag & drop');
       }
     },
-    [actions, currentStepData, currentStepKey, notification, idIndexMap]
+    [actions, currentStepData, currentStepKey, notification, idIndexMap, triggerHapticFeedback]
   );
 
   /* -------------------------
@@ -563,7 +611,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   );
 
   const CanvasArea: React.FC = () => (
-    <div className="flex-1 flex flex-col bg-gray-100">
+    <div className="flex-1 flex flex-col bg-gray-100" ref={canvasRef}>
       <div className="bg-white border-b border-gray-200 p-4">
         <div className="flex items-center justify-between">
           <div>
@@ -755,11 +803,20 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
                 const blockId = block.id || `block-${index}`;
                 const isSelected = state.selectedBlockId === blockId;
 
-                // 🚀 MELHORIA DND: Placeholder visual antes do bloco
+                // 🚀 MELHORIA DND: Placeholder visual melhorado
                 const showPlaceholderBefore = placeholderIndex === index;
                 const showPlaceholderAfter =
                   placeholderIndex === currentStepData.length &&
                   index === currentStepData.length - 1;
+
+                // 🚀 P2: Componente Placeholder Visual
+                const PlaceholderLine = () => (
+                  <div className="absolute left-4 right-4 flex items-center z-60">
+                    <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
+                    <div className="flex-1 h-1 bg-gradient-to-r from-blue-500 via-blue-400 to-blue-500 rounded-full mx-2 animate-pulse"></div>
+                    <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
+                  </div>
+                );
 
                 // topOffset/height heurístico (pode ser substituído por medidas reais)
                 let topOffset = 60 + index * 100;
