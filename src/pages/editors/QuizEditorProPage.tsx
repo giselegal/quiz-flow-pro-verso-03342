@@ -1,12 +1,15 @@
 import React from 'react';
 import { EditorProvider } from '@/components/editor/EditorProvider';
 import { QuizEditorPro } from '@/components/editor/QuizEditorPro';
+import { EditorErrorBoundary } from '@/components/error/EditorErrorBoundary';
 
 const QuizEditorProPage: React.FC = () => {
   return (
-    <EditorProvider>
-      <QuizEditorPro />
-    </EditorProvider>
+    <EditorErrorBoundary>
+      <EditorProvider>
+        <QuizEditorPro />
+      </EditorProvider>
+    </EditorErrorBoundary>
   );
 };
 

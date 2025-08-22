@@ -19,7 +19,7 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useContext } from 'react';
 import { SortableBlock } from './SortableBlock';
 import { useEditor } from './EditorProvider';
 
@@ -37,7 +37,34 @@ interface QuizEditorProProps {
  * └─────────────────┴─────────────────────┴─────────────────┴─────────────────────┘
  */
 export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) => {
-  const { state, actions } = useEditor();
+  // Verificação de contexto com fallback
+  let editorContext;
+  try {
+    editorContext = useEditor();
+  } catch (error) {
+    console.error('QuizEditorPro: EditorProvider context not found:', error);
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-6 text-center">
+          <div className="text-red-500 text-4xl mb-4">⚠️</div>
+          <h2 className="text-xl font-bold text-gray-900 mb-2">
+            Erro de Contexto do Editor
+          </h2>
+          <p className="text-gray-600 mb-4">
+            O QuizEditorPro não foi carregado corretamente. Verifique se está sendo usado dentro do EditorProvider.
+          </p>
+          <button
+            onClick={() => window.location.reload()}
+            className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            🔄 Recarregar
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  const { state, actions } = editorContext;
   const [mode, setMode] = useState<'edit' | 'preview'>('edit');
 
   // Get current step data from editor state
