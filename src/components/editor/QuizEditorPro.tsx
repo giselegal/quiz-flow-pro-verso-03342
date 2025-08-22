@@ -79,13 +79,35 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
   const notification = useNotification();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // 🛠️ FUNÇÃO RESILIENTE: Busca blocos com diferentes formatos de chave
+  // Resolve inconsistências entre state.stepBlocks (ex.: "step-1", "1", 1, "step1")
+  const getBlocksForStep = useCallback((step: number): Block[] => {
+    const stepBlocks = state.stepBlocks || {};
+    const tryKeys = [
+      `step-${step}`,  // Formato padrão: "step-1"
+      `step${step}`,   // Formato alternativo: "step1"  
+      String(step),    // String: "1"
+      Number(step),    // Número: 1
+    ];
+    
+    for (const key of tryKeys) {
+      if (key in stepBlocks && Array.isArray(stepBlocks[key])) {
+        devLog(`Found blocks for step ${step} using key:`, key, stepBlocks[key]);
+        return stepBlocks[key];
+      }
+    }
+    
+    devLog(`No blocks found for step ${step}. Available keys:`, Object.keys(stepBlocks));
+    return [];
+  }, [state.stepBlocks]);
+
   // Uso consistente de safeCurrentStep em todo o componente
   const safeCurrentStep = state.currentStep || 1;
   const currentStepKey = `step-${safeCurrentStep}`;
-  const currentStepData = state.stepBlocks[currentStepKey] || [];
+  const currentStepData = getBlocksForStep(safeCurrentStep); // 🔧 USO DA FUNÇÃO RESILIENTE
   const selectedBlock = currentStepData.find((block: Block) => block.id === state.selectedBlockId);
 
-  // Debug condicional apenas em desenvolvimento
+  // 🔍 DIAGNÓSTICO AVANÇADO: Logs detalhados para debugging de etapas
   devLog('QuizEditorPro render:', {
     originalCurrentStep: state.currentStep,
     safeCurrentStep,
@@ -94,6 +116,14 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
     availableSteps: Object.keys(state.stepBlocks),
     blockIds: currentStepData.map(b => b.id),
   });
+
+  // 🚨 DIAGNÓSTICO EM 3 PASSOS (conforme problema relatado)
+  devLog('=== DIAGNÓSTICO DE ETAPAS ===');
+  devLog('1. currentStep:', state.currentStep);
+  devLog('2. stepBlocks keys:', Object.keys(state.stepBlocks));
+  devLog('3. currentStepData (computed):', currentStepData);
+  devLog('4. Blocks found with resilient function:', currentStepData.length > 0 ? '✅ SUCCESS' : '❌ EMPTY');
+  devLog('===============================');
 
   // Configuration for drag & drop sensors
   const sensors = useSensors(
@@ -370,7 +400,7 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
                 {Array.from({ length: 21 }, (_, i) => i + 1).map(step => {
                   const analysis = getStepAnalysis(step);
                   const isActive = step === safeCurrentStep;
-                  const hasBlocks = state.stepBlocks[`step-${step}`]?.length > 0;
+                  const hasBlocks = getBlocksForStep(step).length > 0; // 🔧 USO DA FUNÇÃO RESILIENTE
 
                   return (
                     <button
