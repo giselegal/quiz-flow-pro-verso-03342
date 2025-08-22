@@ -99,9 +99,18 @@ export class SupabaseIntegrationService {
   private calculationEngine: CalculationEngine;
   private isInitialized: boolean = false;
 
-  constructor() {
-    if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-      throw new Error('Supabase configuration is missing. Please check your environment variables.');
+      const missingVars = [];
+      if (!SUPABASE_URL) missingVars.push('VITE_SUPABASE_URL');
+      if (!SUPABASE_ANON_KEY) missingVars.push('VITE_SUPABASE_ANON_KEY');
+      throw new Error(
+        `Supabase configuration error: Missing environment variable(s): ${missingVars.join(', ')}.\n` +
+        `Please set the required variable(s) in your .env file or build tool configuration:\n` +
+        `  VITE_SUPABASE_URL=<your-supabase-url>\n` +
+        `  VITE_SUPABASE_ANON_KEY=<your-supabase-anon-key>\n` +
+        `Current values:\n` +
+        `  VITE_SUPABASE_URL: ${SUPABASE_URL ?? 'undefined'}\n` +
+        `  VITE_SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY ?? 'undefined'}`
+      );
     }
 
     this.supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
