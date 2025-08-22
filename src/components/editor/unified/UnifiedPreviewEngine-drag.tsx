@@ -63,29 +63,29 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
     return configs[viewportSize] || configs.desktop;
   }, [viewportSize]);
 
-  // Configurações de rendering por modo
-  const renderConfig = useMemo(() => {
-    return {
-      editor: {
-        showOutlines: true,
-        showIds: flags.shouldLogCompatibility(),
-        enableInteraction: true,
-        showErrors: true,
-      },
-      preview: {
-        showOutlines: false,
-        showIds: false,
-        enableInteraction: true,
-        showErrors: false,
-      },
-      production: {
-        showOutlines: false,
-        showIds: false,
-        enableInteraction: true,
-        showErrors: false,
-      },
-    };
-  }, [flags]);
+  // Configurações de rendering por modo (removidas pois não utilizadas)
+  // const renderConfig = useMemo(() => {
+  //   return {
+  //     editor: {
+  //       showOutlines: true,
+  //       showIds: flags.shouldLogCompatibility(),
+  //       enableInteraction: true,
+  //       showErrors: true,
+  //     },
+  //     preview: {
+  //       showOutlines: false,
+  //       showIds: false,
+  //       enableInteraction: true,
+  //       showErrors: false,
+  //     },
+  //     production: {
+  //       showOutlines: false,
+  //       showIds: false,
+  //       enableInteraction: true,
+  //       showErrors: false,
+  //     },
+  //   };
+  // }, [flags]);
 
   // Tracking de preview events
   useEffect(() => {
@@ -200,7 +200,6 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
                   block={block}
                   isSelected={selectedBlockId === block.id}
                   isPreviewing={isPreviewing}
-                  renderConfig={renderConfig[mode]}
                   primaryStyle={primaryStyle}
                   onClick={() => handleBlockClick(block.id)}
                   onUpdate={updates => handleBlockUpdate(block.id, updates)}

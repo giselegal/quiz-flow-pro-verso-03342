@@ -26,7 +26,7 @@ interface CollaborationStatusProps {
 export const CollaborationStatus: React.FC<CollaborationStatusProps> = ({ projectId }) => {
   const { profile } = useAuth();
   const [collaborators, setCollaborators] = useState<Collaborator[]>([]);
-  const [isConnected, setIsConnected] = useState(true);
+  const [isConnected] = useState(true);
 
   useEffect(() => {
     // Simular colaboradores online (na implementação real, usar WebSocket/Supabase Realtime)

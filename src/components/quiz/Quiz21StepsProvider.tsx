@@ -107,6 +107,13 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
       steps: [],
       setActiveStageId: () => {},
       currentFunnelId: 'fallback',
+      setCurrentFunnelId: () => {},
+      setSteps: () => {},
+      getTemplate: () => ({}),
+      getTemplateBlocks: () => [],
+      updateFunnelStep: () => {},
+      addStepBlock: () => {},
+      saveFunnelToDatabase: async () => {},
       loading: false,
       error: String(error),
     };

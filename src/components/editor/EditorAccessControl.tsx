@@ -14,7 +14,7 @@ interface EditorAccessControlProps {
 
 export const EditorAccessControl: React.FC<EditorAccessControlProps> = ({
   children,
-  requiredRole = 'user',
+  requiredRole: _requiredRole = 'user',
   requiredPlan = 'free',
   feature = 'editor',
 }) => {

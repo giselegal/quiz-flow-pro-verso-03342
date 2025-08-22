@@ -7,14 +7,17 @@ import { ChevronDown, ChevronRight, HelpCircle, Layers, Search, Settings } from 
 import React, { useState } from 'react';
 
 interface EnhancedComponentsSidebarProps {
-  searchTerm: string;
-  setSearchTerm: (term: string) => void;
+  searchTerm?: string;
+  setSearchTerm?: (term: string) => void;
 }
 
 export const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = ({
-  searchTerm,
-  setSearchTerm,
+  searchTerm: initialSearchTerm = '',
+  setSearchTerm: externalSetSearchTerm,
 }) => {
+  const [internalSearchTerm, setInternalSearchTerm] = useState(initialSearchTerm);
+  const searchTerm = externalSetSearchTerm ? initialSearchTerm : internalSearchTerm;
+  const setSearchTerm = externalSetSearchTerm || setInternalSearchTerm;
   const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({
     'Passos do Quiz': true,
     'Componentes de Conteúdo': true,

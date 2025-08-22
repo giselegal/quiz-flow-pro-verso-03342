@@ -38,7 +38,7 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
   viewportSize,
   onBlockSelect,
   onBlockUpdate,
-  mode = 'preview',
+  mode: _mode = 'preview',
   className,
   // onBlocksReordered, // unused - DndContext foi movido para componente pai
 }) => {

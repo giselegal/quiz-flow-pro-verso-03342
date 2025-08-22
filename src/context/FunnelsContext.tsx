@@ -25,6 +25,7 @@ interface FunnelsContextType {
   updateFunnelStep: (stepId: string, updates: any) => void;
   addStepBlock: (stepId: string, blockData: any) => void;
   saveFunnelToDatabase: (funnelData: any) => Promise<void>;
+  setActiveStageId?: (id: string) => void;
   loading: boolean;
   error: string | null;
 }

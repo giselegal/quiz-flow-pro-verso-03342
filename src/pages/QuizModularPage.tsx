@@ -368,7 +368,7 @@ const QuizModularPage: React.FC = () => {
                 </h3>
                 <p className="text-xs text-stone-500 mt-1">Arraste para adicionar ao quiz</p>
               </div>
-              {/* Sidebar Unificado */}
+              {/* Sidebar Unificada */}
               <div className="flex-1 overflow-hidden">
                 <EnhancedComponentsSidebar />
               </div>
