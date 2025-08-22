@@ -30,6 +30,7 @@ import {
   rectIntersection,
   useSensor,
   useSensors,
+  useDroppable,
 } from '@dnd-kit/core';
 import { restrictToParentElement, restrictToVerticalAxis } from '@dnd-kit/modifiers';
 import {
@@ -432,7 +433,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       // 🚀 P2: Cross-step drops - detectar se está sobre um step diferente
       const overStepData = typeof over.id === 'string' && over.id.startsWith('step-');
       if (overStepData) {
-        const stepNumber = parseInt(over.id.replace('step-', ''), 10);
+        const stepNumber = parseInt(String(over.id).replace('step-', ''), 10);
         if (stepNumber !== state.currentStep && dragData?.type === 'canvas-block') {
           setDropTargetStep(stepNumber);
           setPlaceholderIndex(0); // Placeholder no início do step target
@@ -470,6 +471,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
 
       const { active, over } = event;
       if (!over) {
+        setDropTargetStep(null);
         const dragData = extractDragData(active);
         const feedback = getDragFeedback(dragData, {
           isValid: false,
@@ -478,6 +480,39 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         notification?.warning?.(feedback.message);
         return;
       }
+
+      // 🚀 P2: Cross-step drops - processar drag entre steps diferentes
+      if (dropTargetStep !== null && dropTargetStep !== state.currentStep) {
+        const dragData = extractDragData(active);
+        
+        if (dragData?.type === 'canvas-block' && typeof active.id === 'string') {
+          const sourceIndex = idIndexMap[active.id];
+          
+          if (sourceIndex !== undefined) {
+            // Move bloco para outro step
+            const sourceStepKey = `step${state.currentStep}`;
+            const targetStepKey = `step${dropTargetStep}`;
+            const blockToMove = currentStepData[sourceIndex];
+            
+            if (blockToMove) {
+              // Remove do step origem
+              actions.removeBlock(sourceStepKey, blockToMove.id);
+              // Adiciona ao step destino
+              actions.addBlock(targetStepKey, blockToMove);
+              // Muda para o step destino
+              actions.setCurrentStep(dropTargetStep);
+              notification?.success?.(`Bloco movido para etapa ${dropTargetStep}!`);
+              // 🚀 P2: Haptic feedback para cross-step bem-sucedido
+              triggerHapticFeedback('medium');
+            }
+          }
+        }
+        
+        setDropTargetStep(null);
+        return;
+      }
+
+      setDropTargetStep(null);
 
       const validation = validateDrop(active, over, currentStepData);
       logDragEvent('end', active, over, validation);
@@ -529,12 +564,55 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         notification?.error?.('Erro ao processar drag & drop');
       }
     },
-    [actions, currentStepData, currentStepKey, notification, idIndexMap, triggerHapticFeedback]
+    [actions, currentStepData, currentStepKey, notification, idIndexMap, triggerHapticFeedback, dropTargetStep, state.currentStep]
   );
 
   /* -------------------------
      Sub-componentes locais
      ------------------------- */
+
+  // 🚀 P2: Step button com droppable para cross-step drops
+  const DroppableStepButton: React.FC<{ 
+    step: number; 
+    isActive: boolean; 
+    hasBlocks: boolean; 
+    analysis: any; 
+    onClick: () => void; 
+  }> = ({ step, isActive, hasBlocks, analysis, onClick }) => {
+    const { setNodeRef, isOver } = useDroppable({
+      id: `step-${step}`,
+    });
+
+    return (
+      <button
+        ref={setNodeRef}
+        type="button"
+        onClick={onClick}
+        className={cn(
+          'w-full text-left p-2 rounded-md text-xs transition-colors',
+          isActive
+            ? 'bg-blue-100 border-blue-300 text-blue-900'
+            : 'hover:bg-gray-50 text-gray-700',
+          // 🚀 P2: Visual feedback para cross-step drop target
+          isOver && 'ring-2 ring-blue-400 bg-blue-50'
+        )}
+      >
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="text-sm">{analysis.type}</span>
+            <span className="font-medium">Etapa {step}</span>
+            {/* 🚀 P2: Indicador visual de cross-step drop */}
+            {isOver && <span className="text-blue-600">📁</span>}
+          </div>
+          {hasBlocks && <span className="w-2 h-2 bg-green-500 rounded-full" />}
+        </div>
+        <div className="text-gray-600 mt-1">
+          <div className="font-medium">{analysis.label}</div>
+          <div className="text-xs">{analysis.desc}</div>
+        </div>
+      </button>
+    );
+  };
 
   const StepSidebar: React.FC = () => (
     <div className="w-[200px] bg-white border-r border-gray-200 flex flex-col">
@@ -551,29 +629,14 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
             const hasBlocks = stepHasBlocks[step];
 
             return (
-              <button
+              <DroppableStepButton
                 key={step}
-                type="button"
+                step={step}
+                isActive={isActive}
+                hasBlocks={hasBlocks}
+                analysis={analysis}
                 onClick={() => handleStepSelect(step)}
-                className={cn(
-                  'w-full text-left p-2 rounded-md text-xs transition-colors',
-                  isActive
-                    ? 'bg-blue-100 border-blue-300 text-blue-900'
-                    : 'hover:bg-gray-50 text-gray-700'
-                )}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm">{analysis.type}</span>
-                    <span className="font-medium">Etapa {step}</span>
-                  </div>
-                  {hasBlocks && <span className="w-2 h-2 bg-green-500 rounded-full" />}
-                </div>
-                <div className="text-gray-600 mt-1">
-                  <div className="font-medium">{analysis.label}</div>
-                  <div className="text-xs">{analysis.desc}</div>
-                </div>
-              </button>
+              />
             );
           })}
         </div>
