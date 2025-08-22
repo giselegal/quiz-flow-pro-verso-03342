@@ -3,6 +3,7 @@
 ## 🚀 O que foi implementado
 
 ### ✅ Sistema Completo de Melhorias
+
 1. **🎯 Drag & Drop Robusto** - Validação completa, feedback visual
 2. **🔔 Sistema de Notificações** - Substitui alerts por toasts elegantes
 3. **🛡️ Validações Robustas** - JSON, estruturas, error boundaries
@@ -13,6 +14,7 @@
 ## 🌐 Como Acessar
 
 ### 1. Servidor Local
+
 ```bash
 # O servidor está rodando em:
 http://localhost:8080
@@ -22,6 +24,7 @@ http://localhost:8080/showcase
 ```
 
 ### 2. Navegação
+
 - **Home** → `/` (com botão do showcase para usuários logados)
 - **Showcase** → `/showcase` (demonstração interativa)
 - **Editor Pro** → `/editor-pro` (editor melhorado)
@@ -54,6 +57,7 @@ http://localhost:8080/showcase
 ## 📊 Benefícios Implementados
 
 ### Antes ❌
+
 - IDs conflitantes
 - Drag & drop sem validação
 - Alerts intrusivos
@@ -63,6 +67,7 @@ http://localhost:8080/showcase
 - UX desconexa
 
 ### Depois ✅
+
 - IDs únicos garantidos (nanoid)
 - Drag & drop com validação robusta
 - Notificações elegantes e não-intrusivas
@@ -81,6 +86,7 @@ http://localhost:8080/showcase
 ## 🎯 Próximos Passos
 
 O sistema está agora **production-ready** com:
+
 - Arquitetura sólida e escalável
 - Validações robustas em todas operações
 - UX elegante com feedback visual

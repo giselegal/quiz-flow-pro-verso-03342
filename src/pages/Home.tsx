@@ -30,7 +30,7 @@ const Home = () => {
 
   // SEO básico
   useEffect(() => {
-    document.title = 'CaktoQuiz – Quizzes elegantes que convertem';
+    document.title = 'QuizFlow Pro – Quizzes elegantes que convertem';
     const ensureTag = <T extends HTMLElement>(selector: string, create: () => T): T => {
       const found = document.querySelector(selector) as T | null;
       if (found) return found;
@@ -44,7 +44,7 @@ const Home = () => {
     );
     metaDesc.setAttribute(
       'content',
-      'CaktoQuiz: quizzes interativos com design elegante e moderno para captar leads e aumentar conversões.'
+      'QuizFlow Pro: quizzes interativos com design elegante e moderno para captar leads e aumentar conversões.'
     );
 
     const linkCanonical = ensureTag<HTMLLinkElement>('link[rel="canonical"]', () =>
@@ -58,7 +58,7 @@ const Home = () => {
       <div className="min-h-screen bg-gradient-to-br from-brand-light/20 via-background to-brand-primary/10 flex items-center justify-center">
         <div className="flex items-center space-x-2">
           <div className="w-8 h-8 bg-gradient-to-r from-brand-primary to-brand-dark rounded-lg animate-pulse"></div>
-          <span className="text-xl font-semibold text-brand-text">CaktoQuiz</span>
+          <span className="text-xl font-semibold text-brand-text">QuizFlow Pro</span>
         </div>
       </div>
     );
@@ -76,7 +76,7 @@ const Home = () => {
                 <Zap className="h-5 w-5 text-white" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-brand-text">CaktoQuiz</h1>
+                <h1 className="text-xl font-bold text-brand-text">QuizFlow Pro</h1>
                 <p className="text-xs text-brand-text/70 -mt-1">Interactive Marketing</p>
               </div>
             </div>
@@ -355,7 +355,7 @@ const Home = () => {
               <div className="w-8 h-8 bg-gradient-to-r from-brand-primary to-brand-dark rounded-lg flex items-center justify-center">
                 <Zap className="h-4 w-4 text-white" />
               </div>
-              <span className="text-xl font-bold">CaktoQuiz</span>
+              <span className="text-xl font-bold">QuizFlow Pro</span>
             </div>
 
             <nav className="flex items-center space-x-6 text-sm text-white/80">
@@ -375,7 +375,7 @@ const Home = () => {
           </div>
 
           <div className="border-t border-white/20 mt-8 pt-8 text-center text-sm text-white/80">
-            <p>&copy; 2025 CaktoQuiz. Todos os direitos reservados.</p>
+            <p>&copy; 2025 QuizFlow Pro. Todos os direitos reservados.</p>
           </div>
         </div>
       </footer>
