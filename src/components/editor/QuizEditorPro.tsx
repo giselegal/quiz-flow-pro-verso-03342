@@ -2,8 +2,16 @@ import { QuizRenderer } from '@/components/core/QuizRenderer';
 import CanvasDropZone from '@/components/editor/canvas/CanvasDropZone';
 import { DraggableComponentItem } from '@/components/editor/dnd/DraggableComponentItem';
 import EnhancedUniversalPropertiesPanelFixed from '@/components/universal/EnhancedUniversalPropertiesPanelFixed';
+import { useNotification } from '@/components/ui/Notification';
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
+import {
+  createBlockFromComponent,
+  duplicateBlock,
+  copyToClipboard,
+  devLog,
+  validateEditorJSON,
+} from '@/utils/editorUtils';
 import {
   closestCenter,
   DndContext,
@@ -19,7 +27,7 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useMemo, useRef } from 'react';
 import { useEditor } from './EditorProvider';
 import { SortableBlock } from './SortableBlock';
 
@@ -37,20 +45,17 @@ interface QuizEditorProProps {
  * └─────────────────┴─────────────────────┴─────────────────┴─────────────────────┘
  */
 export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) => {
-  // Verificação de contexto com fallback
-  let editorContext;
-  try {
-    editorContext = useEditor();
-  } catch (error) {
-    console.error('QuizEditorPro: EditorProvider context not found:', error);
+  // Verificação melhorada de contexto
+  const editorContext = useEditor();
+  
+  if (!editorContext) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-6 text-center">
           <div className="text-red-500 text-4xl mb-4">⚠️</div>
           <h2 className="text-xl font-bold text-gray-900 mb-2">Erro de Contexto do Editor</h2>
           <p className="text-gray-600 mb-4">
-            O QuizEditorPro não foi carregado corretamente. Verifique se está sendo usado dentro do
-            EditorProvider.
+            O QuizEditorPro deve ser usado dentro de um EditorProvider.
           </p>
           <button
             onClick={() => window.location.reload()}
@@ -65,15 +70,17 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
 
   const { state, actions } = editorContext;
   const [mode, setMode] = useState<'edit' | 'preview'>('edit');
+  const notification = useNotification();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Get current step data from editor state with safety check
-  const safeCurrentStep = state.currentStep || 1; // Default to step 1 if undefined
+  // Uso consistente de safeCurrentStep em todo o componente
+  const safeCurrentStep = state.currentStep || 1;
   const currentStepKey = `step-${safeCurrentStep}`;
   const currentStepData = state.stepBlocks[currentStepKey] || [];
   const selectedBlock = currentStepData.find((block: Block) => block.id === state.selectedBlockId);
 
-  // Debug logs
-  console.log('🎯 QuizEditorPro render:', {
+  // Debug condicional apenas em desenvolvimento
+  devLog('QuizEditorPro render:', {
     originalCurrentStep: state.currentStep,
     safeCurrentStep,
     currentStepKey,
@@ -93,8 +100,8 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
-  // Available component types
-  const availableComponents = [
+  // Memoizar componentes disponíveis para evitar recriação a cada render
+  const availableComponents = useMemo(() => [
     {
       type: 'quiz-intro-header',
       name: 'Header Quiz',
@@ -165,10 +172,10 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
       category: 'Confiança',
       description: 'Selo de garantia',
     },
-  ];
+  ], []);
 
-  // Agrupar componentes por categoria
-  const groupedComponents = availableComponents.reduce(
+  // Memoizar agrupamento por categoria
+  const groupedComponents = useMemo(() => availableComponents.reduce(
     (acc, component) => {
       if (!acc[component.category]) {
         acc[component.category] = [];
@@ -177,7 +184,7 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
       return acc;
     },
     {} as Record<string, typeof availableComponents>
-  );
+  ), [availableComponents]);
 
   // Step analysis helper
   const getStepAnalysis = (step: number) => {
@@ -193,25 +200,7 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
     return { type: '❓', label: 'Indefinida', desc: 'Não mapeada' };
   };
 
-  // Function to create a new block from a component
-  const createBlockFromComponent = useCallback(
-    (componentType: string): Block => {
-      const timestamp = Date.now();
-      const blockId = `block-${componentType}-${timestamp}`;
-
-      return {
-        id: blockId,
-        type: componentType as any,
-        order: currentStepData.length + 1,
-        content: {
-          title: `Novo ${componentType}`,
-          description: 'Bloco criado através de drag & drop',
-        },
-        properties: {},
-      };
-    },
-    [currentStepData.length]
-  );
+  // Remover função local - usar utilitária em vez disso
 
   // Handlers using editor actions
   const handleStepSelect = useCallback(
@@ -270,11 +259,7 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
     (blockId: string) => {
       const blockToDuplicate = currentStepData.find(block => block.id === blockId);
       if (blockToDuplicate) {
-        const newBlock = {
-          ...blockToDuplicate,
-          id: `${blockToDuplicate.type}-${Date.now()}-copy`,
-          order: currentStepData.length,
-        };
+        const newBlock = duplicateBlock(blockToDuplicate, currentStepData);
         actions.addBlock(currentStepKey, newBlock);
         actions.setSelectedBlockId(newBlock.id);
       }
@@ -307,7 +292,7 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
       // Case 1: Drag component from sidebar to canvas
       if (activeData?.type === 'sidebar-component') {
         const componentType = activeData.blockType;
-        const newBlock = createBlockFromComponent(componentType);
+        const newBlock = createBlockFromComponent(componentType, currentStepData);
         actions.addBlock(currentStepKey, newBlock);
         actions.setSelectedBlockId(newBlock.id);
         console.log('✅ Componente adicionado:', newBlock.id);
@@ -325,16 +310,17 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
         }
       }
     },
-    [createBlockFromComponent, actions, currentStepKey, currentStepData]
+    [actions, currentStepKey, currentStepData]
   );
 
   return (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={closestCenter}
-      onDragStart={handleDragStart}
-      onDragEnd={handleDragEnd}
-    >
+    <>
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+      >
       <div className={`quiz-editor-pro h-screen bg-gray-50 flex ${className}`}>
         {/* 📋 COLUNA 1: ETAPAS (200px) */}
         <div className="w-[200px] bg-white border-r border-gray-200 flex flex-col">
@@ -347,7 +333,7 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
             <div className="p-2 space-y-1">
               {Array.from({ length: 21 }, (_, i) => i + 1).map(step => {
                 const analysis = getStepAnalysis(step);
-                const isActive = step === state.currentStep;
+                const isActive = step === safeCurrentStep;
                 const hasBlocks = state.stepBlocks[`step-${step}`]?.length > 0;
 
                 return (
@@ -381,7 +367,7 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
           <div className="p-3 border-t border-gray-200 text-xs text-gray-500">
             <div className="flex items-center justify-between">
               <span>Etapa atual:</span>
-              <span className="font-medium">{state.currentStep}/21</span>
+              <span className="font-medium">{safeCurrentStep}/21</span>
             </div>
           </div>
         </div>
@@ -429,11 +415,11 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
               <div>
                 <h3 className="font-semibold text-gray-900 flex items-center gap-2">
                   {mode === 'edit' ? '✏️' : '👁️'}
-                  {mode === 'edit' ? 'Editor' : 'Preview'} - Etapa {state.currentStep}
+                  {mode === 'edit' ? 'Editor' : 'Preview'} - Etapa {safeCurrentStep}
                 </h3>
                 <p className="text-sm text-gray-600">
-                  {getStepAnalysis(state.currentStep).label}:{' '}
-                  {getStepAnalysis(state.currentStep).desc}
+                  {getStepAnalysis(safeCurrentStep).label}:{' '}
+                  {getStepAnalysis(safeCurrentStep).desc}
                 </p>
               </div>
 
@@ -473,14 +459,23 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
                 {/* Import/Export Controls */}
                 <div className="flex items-center gap-1">
                   <button
-                    onClick={() => {
-                      const json = actions.exportJSON();
-                      navigator.clipboard.writeText(json);
-                      alert('JSON exportado para a área de transferência!');
+                    onClick={async () => {
+                      try {
+                        const json = actions.exportJSON();
+                        const success = await copyToClipboard(json);
+                        if (success) {
+                          notification.success('JSON exportado para a área de transferência!');
+                        } else {
+                          notification.error('Erro ao copiar para área de transferência');
+                        }
+                      } catch (error) {
+                        notification.error('Erro ao exportar JSON');
+                      }
                     }}
                     data-testid="btn-export-json"
                     className="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
                     title="Exportar como JSON"
+                    aria-label="Exportar estado atual como JSON"
                   >
                     📤 Export
                   </button>
@@ -494,10 +489,17 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
                         reader.onload = event => {
                           try {
                             const json = event.target?.result as string;
+                            const validation = validateEditorJSON(json);
+                            
+                            if (!validation.valid) {
+                              notification.error(`Erro de validação: ${validation.error}`);
+                              return;
+                            }
+                            
                             actions.importJSON(json);
-                            alert('JSON importado com sucesso!');
+                            notification.success('JSON importado com sucesso!');
                           } catch (error) {
-                            alert('Erro ao importar JSON: ' + error);
+                            notification.error('Erro ao importar JSON: ' + (error as Error).message);
                           }
                         };
                         reader.readAsText(file);
@@ -505,13 +507,15 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
                       e.target.value = '';
                     }}
                     style={{ display: 'none' }}
+                    ref={fileInputRef}
                     id="import-json"
                   />
                   <button
-                    onClick={() => document.getElementById('import-json')?.click()}
+                    onClick={() => fileInputRef.current?.click()}
                     data-testid="btn-import-json"
                     className="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
                     title="Importar JSON"
+                    aria-label="Importar estado do editor via JSON"
                   >
                     📥 Import
                   </button>
@@ -594,7 +598,7 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
             <QuizRenderer
               mode={mode === 'preview' ? 'preview' : 'editor'}
               onStepChange={handleStepSelect}
-              initialStep={state.currentStep}
+              initialStep={safeCurrentStep}
             />
 
             {/* Overlays de seleção apenas no modo de edição */}
@@ -690,7 +694,7 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
                 {/* Estatísticas da etapa */}
                 <div className="mt-6 p-4 bg-gray-50 rounded-lg text-left">
                   <h4 className="text-sm font-medium text-gray-900 mb-3">
-                    Estatísticas da Etapa {state.currentStep}
+                    Estatísticas da Etapa {safeCurrentStep}
                   </h4>
                   <div className="space-y-2 text-xs">
                     <div className="flex justify-between">
@@ -700,12 +704,12 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
                     <div className="flex justify-between">
                       <span>Tipo da etapa:</span>
                       <span className="font-medium">
-                        {getStepAnalysis(state.currentStep).label}
+                        {getStepAnalysis(safeCurrentStep).label}
                       </span>
                     </div>
                     <div className="flex justify-between">
                       <span>Função:</span>
-                      <span className="font-medium">{getStepAnalysis(state.currentStep).desc}</span>
+                      <span className="font-medium">{getStepAnalysis(safeCurrentStep).desc}</span>
                     </div>
                   </div>
                 </div>
@@ -714,7 +718,11 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
           </div>
         </div>
       </div>
-    </DndContext>
+      </DndContext>
+      
+      {/* Container de notificações */}
+      <notification.NotificationContainer />
+    </>
   );
 };
 
