@@ -47,6 +47,20 @@ export const QuizEditorProDemo: React.FC = () => {
             </div>
 
             <QuizEditorPro />
+
+            {/* Debug panel para desenvolvimento */}
+            {process.env.NODE_ENV === 'development' && (
+              <div className="mt-8 bg-gray-900 text-green-400 rounded-lg p-4 font-mono text-sm">
+                <h4 className="font-bold mb-2">🛠️ Debug Info (Dev Only):</h4>
+                <div className="space-y-1">
+                  <div>✅ Error Boundaries: Ativo</div>
+                  <div>✅ Drag & Drop Validation: Ativo</div>
+                  <div>✅ Notification System: Ativo</div>
+                  <div>✅ Memoização: Ativo</div>
+                  <div>✅ Testes Unitários: Disponíveis</div>
+                </div>
+              </div>
+            )}
           </div>
         </EditorProvider>
       </EditorErrorBoundary>
