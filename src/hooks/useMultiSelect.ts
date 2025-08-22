@@ -1,4 +1,4 @@
-import { useCallback, useState, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 export interface MultiSelectState {
   selectedBlocks: Set<string>;
@@ -35,73 +35,71 @@ export const useMultiSelect = (
   blocksRef.current = blocks;
 
   // 🎯 Selecionar bloco
-  const selectBlock = useCallback((
-    blockId: string,
-    index: number,
-    ctrlKey = false,
-    shiftKey = false
-  ) => {
-    setState(prev => {
-      const newSelectedBlocks = new Set(prev.selectedBlocks);
-      
-      // Shift+Click: Seleção em range
-      if (shiftKey && prev.lastSelectedIndex !== null) {
-        const fromIndex = Math.min(prev.lastSelectedIndex, index);
-        const toIndex = Math.max(prev.lastSelectedIndex, index);
-        
-        // Adicionar todos os blocos no range
-        for (let i = fromIndex; i <= toIndex; i++) {
-          const block = blocksRef.current[i];
-          if (block?.id) {
-            newSelectedBlocks.add(block.id);
+  const selectBlock = useCallback(
+    (blockId: string, index: number, ctrlKey = false, shiftKey = false) => {
+      setState(prev => {
+        const newSelectedBlocks = new Set(prev.selectedBlocks);
+
+        // Shift+Click: Seleção em range
+        if (shiftKey && prev.lastSelectedIndex !== null) {
+          const fromIndex = Math.min(prev.lastSelectedIndex, index);
+          const toIndex = Math.max(prev.lastSelectedIndex, index);
+
+          // Adicionar todos os blocos no range
+          for (let i = fromIndex; i <= toIndex; i++) {
+            const block = blocksRef.current[i];
+            if (block?.id) {
+              newSelectedBlocks.add(block.id);
+            }
           }
+
+          return {
+            ...prev,
+            selectedBlocks: newSelectedBlocks,
+            selectionMode: 'multi',
+            isSelecting: true,
+          };
         }
-        
-        return {
-          ...prev,
-          selectedBlocks: newSelectedBlocks,
-          selectionMode: 'multi',
-          isSelecting: true,
-        };
-      }
-      
-      // Ctrl+Click: Toggle seleção
-      if (ctrlKey) {
-        if (newSelectedBlocks.has(blockId)) {
-          newSelectedBlocks.delete(blockId);
-        } else {
-          newSelectedBlocks.add(blockId);
+
+        // Ctrl+Click: Toggle seleção
+        if (ctrlKey) {
+          if (newSelectedBlocks.has(blockId)) {
+            newSelectedBlocks.delete(blockId);
+          } else {
+            newSelectedBlocks.add(blockId);
+          }
+
+          return {
+            ...prev,
+            selectedBlocks: newSelectedBlocks,
+            lastSelectedIndex: index,
+            selectionMode: newSelectedBlocks.size > 1 ? 'multi' : 'single',
+            isSelecting: newSelectedBlocks.size > 0,
+          };
         }
-        
+
+        // Click normal: Seleção única
+        newSelectedBlocks.clear();
+        newSelectedBlocks.add(blockId);
+
         return {
           ...prev,
           selectedBlocks: newSelectedBlocks,
           lastSelectedIndex: index,
-          selectionMode: newSelectedBlocks.size > 1 ? 'multi' : 'single',
-          isSelecting: newSelectedBlocks.size > 0,
+          selectionMode: 'single',
+          isSelecting: true,
         };
-      }
-      
-      // Click normal: Seleção única
-      newSelectedBlocks.clear();
-      newSelectedBlocks.add(blockId);
-      
-      return {
-        ...prev,
-        selectedBlocks: newSelectedBlocks,
-        lastSelectedIndex: index,
-        selectionMode: 'single',
-        isSelecting: true,
-      };
-    });
-  }, []);
+      });
+    },
+    []
+  );
 
   // ❌ Desselecionar bloco específico
   const deselectBlock = useCallback((blockId: string) => {
     setState(prev => {
       const newSelectedBlocks = new Set(prev.selectedBlocks);
       newSelectedBlocks.delete(blockId);
-      
+
       return {
         ...prev,
         selectedBlocks: newSelectedBlocks,
@@ -120,7 +118,7 @@ export const useMultiSelect = (
           newSelectedBlocks.add(block.id);
         }
       });
-      
+
       return {
         ...prev,
         selectedBlocks: newSelectedBlocks,
@@ -148,14 +146,14 @@ export const useMultiSelect = (
       const newSelectedBlocks = new Set<string>();
       const start = Math.min(fromIndex, toIndex);
       const end = Math.max(fromIndex, toIndex);
-      
+
       for (let i = start; i <= end; i++) {
         const block = blocksRef.current[i];
         if (block?.id) {
           newSelectedBlocks.add(block.id);
         }
       }
-      
+
       return {
         ...prev,
         selectedBlocks: newSelectedBlocks,
@@ -170,13 +168,13 @@ export const useMultiSelect = (
   const toggleBlock = useCallback((blockId: string, index: number) => {
     setState(prev => {
       const newSelectedBlocks = new Set(prev.selectedBlocks);
-      
+
       if (newSelectedBlocks.has(blockId)) {
         newSelectedBlocks.delete(blockId);
       } else {
         newSelectedBlocks.add(blockId);
       }
-      
+
       return {
         ...prev,
         selectedBlocks: newSelectedBlocks,
@@ -188,9 +186,12 @@ export const useMultiSelect = (
   }, []);
 
   // ✅ Verificar se bloco está selecionado
-  const isSelected = useCallback((blockId: string) => {
-    return state.selectedBlocks.has(blockId);
-  }, [state.selectedBlocks]);
+  const isSelected = useCallback(
+    (blockId: string) => {
+      return state.selectedBlocks.has(blockId);
+    },
+    [state.selectedBlocks]
+  );
 
   // 📊 Obter contagem de selecionados
   const getSelectedCount = useCallback(() => {
@@ -228,7 +229,7 @@ export const useMultiSelect = (
         deselectAll();
         return;
       }
-      
+
       // Ctrl+A: Selecionar todos
       if (event.ctrlKey && event.key === 'a') {
         event.preventDefault();

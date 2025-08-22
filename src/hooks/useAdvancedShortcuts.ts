@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 export interface ShortcutConfig {
   key: string;
@@ -29,56 +29,61 @@ export const useAdvancedShortcuts = ({
   const shortcutsRef = useRef(shortcuts);
   shortcutsRef.current = shortcuts;
 
-  const handleKeyDown = useCallback((event: KeyboardEvent) => {
-    if (!enabled) return;
+  const handleKeyDown = useCallback(
+    (event: Event) => {
+      if (!enabled) return;
 
-    // Ignorar se estiver em input/textarea
-    const activeElement = document.activeElement;
-    if (
-      activeElement &&
-      (activeElement.tagName === 'INPUT' ||
-        activeElement.tagName === 'TEXTAREA' ||
-        activeElement.getAttribute('contenteditable') === 'true')
-    ) {
-      return;
-    }
+      const keyEvent = event as KeyboardEvent;
 
-    // Procurar shortcut correspondente
-    for (const [name, config] of Object.entries(shortcutsRef.current)) {
-      const {
-        key,
-        ctrlKey = false,
-        shiftKey = false,
-        altKey = false,
-        metaKey = false,
-        preventDefault = true,
-        stopPropagation = true,
-        handler,
-      } = config;
-
-      // Verificar se as teclas modificadoras correspondem
-      const modifiersMatch =
-        event.ctrlKey === ctrlKey &&
-        event.shiftKey === shiftKey &&
-        event.altKey === altKey &&
-        event.metaKey === metaKey;
-
-      // Verificar se a tecla principal corresponde
-      const keyMatches = event.key.toLowerCase() === key.toLowerCase();
-
-      if (modifiersMatch && keyMatches) {
-        if (preventDefault) event.preventDefault();
-        if (stopPropagation) event.stopPropagation();
-        
-        try {
-          handler(event);
-        } catch (error) {
-          console.error(`Erro ao executar shortcut "${name}":`, error);
-        }
-        break;
+      // Ignorar se estiver em input/textarea
+      const activeElement = document.activeElement;
+      if (
+        activeElement &&
+        (activeElement.tagName === 'INPUT' ||
+          activeElement.tagName === 'TEXTAREA' ||
+          activeElement.getAttribute('contenteditable') === 'true')
+      ) {
+        return;
       }
-    }
-  }, [enabled]);
+
+      // Procurar shortcut correspondente
+      for (const [name, config] of Object.entries(shortcutsRef.current)) {
+        const {
+          key,
+          ctrlKey = false,
+          shiftKey = false,
+          altKey = false,
+          metaKey = false,
+          preventDefault = true,
+          stopPropagation = true,
+          handler,
+        } = config;
+
+        // Verificar se as teclas modificadoras correspondem
+        const modifiersMatch =
+          keyEvent.ctrlKey === ctrlKey &&
+          keyEvent.shiftKey === shiftKey &&
+          keyEvent.altKey === altKey &&
+          keyEvent.metaKey === metaKey;
+
+        // Verificar se a tecla principal corresponde
+        const keyMatches = keyEvent.key.toLowerCase() === key.toLowerCase();
+
+        if (modifiersMatch && keyMatches) {
+          if (preventDefault) keyEvent.preventDefault();
+          if (stopPropagation) keyEvent.stopPropagation();
+
+          try {
+            handler(keyEvent);
+          } catch (error) {
+            console.error(`Erro ao executar shortcut "${name}":`, error);
+          }
+          break;
+        }
+      }
+    },
+    [enabled]
+  );
 
   useEffect(() => {
     const targetElement = target as HTMLElement | Document;
@@ -100,14 +105,14 @@ export const useAdvancedShortcuts = ({
   // 🔍 Obter descrição formatada do shortcut
   const formatShortcut = useCallback((config: ShortcutConfig) => {
     const parts: string[] = [];
-    
+
     if (config.ctrlKey) parts.push('Ctrl');
     if (config.shiftKey) parts.push('Shift');
     if (config.altKey) parts.push('Alt');
     if (config.metaKey) parts.push('Cmd');
-    
+
     parts.push(config.key.toUpperCase());
-    
+
     return parts.join(' + ');
   }, []);
 

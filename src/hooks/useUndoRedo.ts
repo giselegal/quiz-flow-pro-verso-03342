@@ -36,30 +36,33 @@ export const useUndoRedo = (maxHistorySize: number = 50) => {
   const isRedoing = useRef(false);
 
   // 🚀 Adicionar ação ao histórico
-  const addAction = useCallback((action: Omit<EditorAction, 'timestamp'>) => {
-    if (isUndoing.current || isRedoing.current) return;
+  const addAction = useCallback(
+    (action: Omit<EditorAction, 'timestamp'>) => {
+      if (isUndoing.current || isRedoing.current) return;
 
-    setState(prev => {
-      const newHistory = prev.history.slice(0, prev.currentIndex + 1);
-      const newAction: EditorAction = {
-        ...action,
-        timestamp: Date.now(),
-      };
+      setState(prev => {
+        const newHistory = prev.history.slice(0, prev.currentIndex + 1);
+        const newAction: EditorAction = {
+          ...action,
+          timestamp: Date.now(),
+        };
 
-      newHistory.push(newAction);
+        newHistory.push(newAction);
 
-      // Limitar tamanho do histórico
-      if (newHistory.length > maxHistorySize) {
-        newHistory.shift();
-      }
+        // Limitar tamanho do histórico
+        if (newHistory.length > maxHistorySize) {
+          newHistory.shift();
+        }
 
-      return {
-        ...prev,
-        history: newHistory,
-        currentIndex: newHistory.length - 1,
-      };
-    });
-  }, [maxHistorySize]);
+        return {
+          ...prev,
+          history: newHistory,
+          currentIndex: newHistory.length - 1,
+        };
+      });
+    },
+    [maxHistorySize]
+  );
 
   // 🔄 Desfazer última ação
   const undo = useCallback(() => {
@@ -128,9 +131,9 @@ export const useUndoRedo = (maxHistorySize: number = 50) => {
       case 'add':
         return `Adicionar bloco`;
       case 'delete':
-        return `Excluir bloco${action.data.blockIds?.length > 1 ? 's' : ''}`;
+        return `Excluir bloco${action.data.blockIds && action.data.blockIds.length > 1 ? 's' : ''}`;
       case 'move':
-        return `Mover bloco${action.data.blockIds?.length > 1 ? 's' : ''}`;
+        return `Mover bloco${action.data.blockIds && action.data.blockIds.length > 1 ? 's' : ''}`;
       case 'edit':
         return `Editar bloco`;
       case 'bulk':
@@ -144,7 +147,7 @@ export const useUndoRedo = (maxHistorySize: number = 50) => {
   const getNextActionDescription = useCallback(() => {
     const nextIndex = state.currentIndex + 1;
     if (nextIndex >= state.history.length) return null;
-    
+
     const action = state.history[nextIndex];
     if (!action) return null;
 
@@ -152,9 +155,9 @@ export const useUndoRedo = (maxHistorySize: number = 50) => {
       case 'add':
         return `Refazer: Adicionar bloco`;
       case 'delete':
-        return `Refazer: Excluir bloco${action.data.blockIds?.length > 1 ? 's' : ''}`;
+        return `Refazer: Excluir bloco${action.data.blockIds && action.data.blockIds.length > 1 ? 's' : ''}`;
       case 'move':
-        return `Refazer: Mover bloco${action.data.blockIds?.length > 1 ? 's' : ''}`;
+        return `Refazer: Mover bloco${action.data.blockIds && action.data.blockIds.length > 1 ? 's' : ''}`;
       case 'edit':
         return `Refazer: Editar bloco`;
       case 'bulk':
@@ -170,17 +173,17 @@ export const useUndoRedo = (maxHistorySize: number = 50) => {
     undo,
     redo,
     clearHistory,
-    
+
     // State
     canUndo,
     canRedo,
     historySize,
     currentIndex: state.currentIndex,
-    
+
     // Descriptions
     getLastActionDescription,
     getNextActionDescription,
-    
+
     // Debug
     history: state.history,
   };
