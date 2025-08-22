@@ -126,6 +126,18 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
     [safeCurrentStep, state.stepBlocks]
   );
 
+  // DEBUG: log de mode e contagem de blocos em dev
+  if (process.env.NODE_ENV === 'development') {
+    devLog('EditorPro render:', {
+      mode,
+      currentStep: state.currentStep,
+      safeCurrentStep,
+      currentStepKey,
+      totalBlocks: currentStepData.length,
+      hasStepBlocks: Object.keys(state.stepBlocks || {}).length > 0,
+    });
+  }
+
   const stepHasBlocks = useMemo(() => {
     const map: Record<number, boolean> = {};
     for (let i = 1; i <= 21; i++) {
@@ -288,12 +300,15 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
 
   // 🚀 MELHORIA DND: Detecção de colisão condicional
   const collisionDetectionStrategy = useCallback((args: any) => {
-    const activeType = extractDragData(args.active)?.type;
-    // Para sidebar->canvas use rectIntersection para melhor precisão
-    if (activeType === 'sidebar-component') {
-      return rectIntersection(args);
+    try {
+      const activeType = extractDragData(args.active)?.type;
+      if (activeType === 'sidebar-component') {
+        return rectIntersection(args);
+      }
+    } catch (err) {
+      // fallback silencioso para evitar quebrar DnD
+      console.warn('DnD collision detection fallback:', err);
     }
-    // Para reordenamento canvas mantém closestCenter
     return closestCenter(args);
   }, []);
 
@@ -626,8 +641,8 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
 
           if (sourceIndex !== undefined) {
             // Move bloco para outro step
-            const sourceStepKey = `step${state.currentStep}`;
-            const targetStepKey = `step${dropTargetStep}`;
+            const sourceStepKey = `step-${state.currentStep}`;
+            const targetStepKey = `step-${dropTargetStep}`;
             const blockToMove = currentStepData[sourceIndex];
 
             if (blockToMove) {
@@ -1038,7 +1053,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       </div>
 
       <CanvasDropZone
-        isEmpty={currentStepData.length === 0 && mode === 'edit'}
+        isEmpty={currentStepData.length === 0}
         data-testid="canvas-dropzone"
       >
         {mode === 'preview' ? (
@@ -1051,8 +1066,8 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         ) : (
           // Edit: Container com fundo neutro + SortableBlocks
           <div className="relative min-h-[600px] bg-gray-50">
-            {/* Fundo neutro para evitar confusão visual */}
-            <div className="absolute inset-0 bg-white/80 backdrop-blur-sm"></div>
+            {/* Fundo decorativo - não bloqueia interações */}
+            <div className="pointer-events-none absolute inset-0 bg-white/10 backdrop-blur-sm z-0"></div>
 
             <SortableContext
               items={currentStepData.map(b => b.id || `block-${currentStepData.indexOf(b)}`)}
@@ -1065,6 +1080,15 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
                     <div className="w-2 h-2 bg-blue-500 rounded-full animate-ping"></div>
                     <div className="flex-1 h-0.5 bg-gradient-to-r from-blue-300 via-blue-500 to-blue-300 rounded-full mx-2 animate-pulse"></div>
                     <div className="w-2 h-2 bg-blue-500 rounded-full animate-ping"></div>
+                  </div>
+                )}
+
+                {currentStepData.length === 0 && (
+                  <div className="text-center py-8 text-red-500 border-2 border-red-300 rounded-lg bg-red-50">
+                    <p className="font-bold">⚠️ DEBUG: currentStepData vazio</p>
+                    <p>safeCurrentStep: {safeCurrentStep}</p>
+                    <p>stepBlocks keys: {Object.keys(state.stepBlocks || {}).join(', ')}</p>
+                    <p>Total blocks em step-1: {(state.stepBlocks?.['step-1'] || []).length}</p>
                   </div>
                 )}
 

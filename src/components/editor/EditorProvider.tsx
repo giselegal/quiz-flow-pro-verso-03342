@@ -229,25 +229,19 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
 
   // Initialize step 1 automatically on mount and when template data is available
   useEffect(() => {
-    // Check if we have template data but no step blocks
-    const hasTemplateData = Object.keys(QUIZ_STYLE_21_STEPS_TEMPLATE).length > 0;
-    const hasStepBlocks = Object.keys(rawState.stepBlocks || {}).length > 0;
-
-    if (hasTemplateData && !hasStepBlocks) {
-      // Force reinitialize from template
-      const normalizedBlocks = normalizeStepBlocks(QUIZ_STYLE_21_STEPS_TEMPLATE);
-      setState({
-        ...rawState,
-        stepBlocks: normalizedBlocks,
-        currentStep: 1,
-      });
-    }
-
+    // Always force template reload on mount
+    const normalizedBlocks = normalizeStepBlocks(QUIZ_STYLE_21_STEPS_TEMPLATE);
+    console.log('🔧 FORCE RELOAD TEMPLATE:', { normalizedBlocks, keys: Object.keys(normalizedBlocks) });
+    
+    setState({
+      ...rawState,
+      stepBlocks: normalizedBlocks,
+      currentStep: 1,
+    });
+    
     // Ensure step 1 is loaded on initialization
-    ensureStepLoaded(1);
-  }, [ensureStepLoaded, rawState, setState]);
-
-  // Ensure step is loaded when currentStep changes
+    setTimeout(() => ensureStepLoaded(1), 100);
+  }, []); // Empty dependency array - run only once on mount  // Ensure step is loaded when currentStep changes
   useEffect(() => {
     if (rawState.currentStep) {
       ensureStepLoaded(rawState.currentStep);
