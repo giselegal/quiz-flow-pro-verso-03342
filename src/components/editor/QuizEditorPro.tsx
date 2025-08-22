@@ -71,6 +71,15 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
   const currentStepData = state.stepBlocks[currentStepKey] || [];
   const selectedBlock = currentStepData.find((block: Block) => block.id === state.selectedBlockId);
 
+  // Debug logs
+  console.log('🎯 QuizEditorPro render:', {
+    currentStep: state.currentStep,
+    currentStepKey,
+    totalBlocks: currentStepData.length,
+    availableSteps: Object.keys(state.stepBlocks),
+    blockIds: currentStepData.map(b => b.id)
+  });
+
   // Configuration for drag & drop sensors
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -594,7 +603,7 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
                 )}
                 strategy={verticalListSortingStrategy}
               >
-                <div className="absolute inset-0 pointer-events-none z-50">
+                <div className="absolute inset-0 pointer-events-auto z-50">
                   {currentStepData.map((block: Block, index: number) => {
                     const blockId = block.id || `block-${index}`;
                     const isSelected = state.selectedBlockId === blockId;

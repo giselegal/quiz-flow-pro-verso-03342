@@ -103,6 +103,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
   }, [state, setState]);
 
   const addBlock = useCallback((stepKey: string, block: Block) => {
+    console.log('🔧 EditorProvider.addBlock:', { stepKey, blockId: block.id, blockType: block.type });
     setState({
       ...state,
       stepBlocks: {
@@ -110,6 +111,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
         [stepKey]: [...(state.stepBlocks[stepKey] || []), block],
       },
     });
+    console.log('✅ Block added to step:', stepKey, 'Total blocks in step:', (state.stepBlocks[stepKey] || []).length + 1);
   }, [state, setState]);
 
   const removeBlock = useCallback((stepKey: string, blockId: string) => {
