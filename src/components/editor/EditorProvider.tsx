@@ -74,7 +74,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
   };
 
   const {
-    present: state,
+    present: rawState,
     setPresent: setState,
     undo,
     redo,
@@ -85,6 +85,12 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     storageKey,
     enablePersistence: true,
   });
+
+  // Ensure state integrity - fix corrupted currentStep
+  const state = {
+    ...rawState,
+    currentStep: rawState.currentStep || 1, // Default to step 1 if undefined
+  };
 
   // Actions
   const setCurrentStep = useCallback(

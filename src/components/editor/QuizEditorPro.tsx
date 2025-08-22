@@ -66,14 +66,16 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
   const { state, actions } = editorContext;
   const [mode, setMode] = useState<'edit' | 'preview'>('edit');
 
-  // Get current step data from editor state
-  const currentStepKey = `step-${state.currentStep}`;
+  // Get current step data from editor state with safety check
+  const safeCurrentStep = state.currentStep || 1; // Default to step 1 if undefined
+  const currentStepKey = `step-${safeCurrentStep}`;
   const currentStepData = state.stepBlocks[currentStepKey] || [];
   const selectedBlock = currentStepData.find((block: Block) => block.id === state.selectedBlockId);
 
   // Debug logs
   console.log('🎯 QuizEditorPro render:', {
-    currentStep: state.currentStep,
+    originalCurrentStep: state.currentStep,
+    safeCurrentStep,
     currentStepKey,
     totalBlocks: currentStepData.length,
     availableSteps: Object.keys(state.stepBlocks),
