@@ -1,5 +1,5 @@
 import { EditorProvider } from '@/components/editor/EditorProvider';
-import { EditorErrorBoundary } from '@/components/editor/ErrorBoundary';
+import { ErrorBoundary } from '@/components/editor/ErrorBoundary';
 import { QuizEditorPro } from '@/components/editor/QuizEditorPro';
 import React from 'react';
 
@@ -16,7 +16,7 @@ import React from 'react';
 export const QuizEditorProDemo: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50">
-      <EditorErrorBoundary>
+      <ErrorBoundary>
         <EditorProvider
           enableSupabase={false} // Começar em modo local para demo
           storageKey="quiz-editor-demo"
@@ -71,7 +71,7 @@ export const QuizEditorProDemo: React.FC = () => {
             )}
           </div>
         </EditorProvider>
-      </EditorErrorBoundary>
+      </ErrorBoundary>
     </div>
   );
 };

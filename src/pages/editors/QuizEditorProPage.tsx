@@ -1,15 +1,15 @@
 import { EditorProvider } from '@/components/editor/EditorProvider';
 import { QuizEditorPro } from '@/components/editor/QuizEditorPro';
-import { EditorErrorBoundary } from '@/components/error/EditorErrorBoundary';
+import { ErrorBoundary } from '@/components/editor/ErrorBoundary';
 import React from 'react';
 
 const QuizEditorProPage: React.FC = () => {
   return (
-    <EditorErrorBoundary>
+    <ErrorBoundary>
       <EditorProvider>
         <QuizEditorPro />
       </EditorProvider>
-    </EditorErrorBoundary>
+    </ErrorBoundary>
   );
 };
 
