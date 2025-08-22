@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
+import React, { useEffect, useState } from 'react';
 
 interface NotificationProps {
   message: string;
@@ -110,13 +110,9 @@ export const useNotification = () => {
   return {
     addNotification,
     NotificationContainer,
-    success: (message: string, duration?: number) =>
-      addNotification(message, 'success', duration),
-    error: (message: string, duration?: number) =>
-      addNotification(message, 'error', duration),
-    warning: (message: string, duration?: number) =>
-      addNotification(message, 'warning', duration),
-    info: (message: string, duration?: number) =>
-      addNotification(message, 'info', duration),
+    success: (message: string, duration?: number) => addNotification(message, 'success', duration),
+    error: (message: string, duration?: number) => addNotification(message, 'error', duration),
+    warning: (message: string, duration?: number) => addNotification(message, 'warning', duration),
+    info: (message: string, duration?: number) => addNotification(message, 'info', duration),
   };
 };

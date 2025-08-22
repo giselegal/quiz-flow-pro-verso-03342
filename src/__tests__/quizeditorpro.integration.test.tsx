@@ -1,10 +1,9 @@
-import React from 'react';
-import { screen, fireEvent, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { renderWithProviders } from '@/test/utils/renderWithProviders';
-import { QuizEditorPro } from '@/components/editor/QuizEditorPro';
 import { EditorProvider } from '@/components/editor/EditorProvider';
+import { QuizEditorPro } from '@/components/editor/QuizEditorPro';
+import { renderWithProviders } from '@/test/utils/renderWithProviders';
+import { screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Helper component that wraps QuizEditorPro with EditorProvider
 const QuizEditorProWithProvider = () => (
@@ -56,7 +55,7 @@ describe('QuizEditorPro Integration Tests', () => {
   describe('History State Management', () => {
     it('should enable undo after state changes', async () => {
       const user = userEvent.setup();
-      
+
       renderWithProviders(<QuizEditorProWithProvider />, {
         initialState: {
           stepBlocks: {},
@@ -77,7 +76,7 @@ describe('QuizEditorPro Integration Tests', () => {
   describe('Export Functionality', () => {
     it('should call export when export button clicked', async () => {
       const user = userEvent.setup();
-      
+
       // Mock clipboard and alert
       const writeTextMock = vi.fn().mockResolvedValue(undefined);
       Object.defineProperty(navigator, 'clipboard', {

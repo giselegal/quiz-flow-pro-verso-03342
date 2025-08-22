@@ -1,5 +1,5 @@
-import { nanoid } from 'nanoid';
 import { Block, BlockType } from '@/types/editor';
+import { nanoid } from 'nanoid';
 
 /**
  * 🔧 Utilitários para geração de IDs e manipulação de blocos
@@ -38,10 +38,7 @@ export const createBlockFromComponent = (
 /**
  * Duplica um bloco existente com novo ID e ordem
  */
-export const duplicateBlock = (
-  blockToDuplicate: Block,
-  existingBlocks: Block[] = []
-): Block => {
+export const duplicateBlock = (blockToDuplicate: Block, existingBlocks: Block[] = []): Block => {
   return {
     ...blockToDuplicate,
     id: generateBlockId(`${blockToDuplicate.type}-copy`),
@@ -67,7 +64,7 @@ export const copyToClipboard = async (text: string): Promise<boolean> => {
       document.body.appendChild(textArea);
       textArea.focus();
       textArea.select();
-      
+
       const success = document.execCommand('copy');
       document.body.removeChild(textArea);
       return success;
@@ -93,20 +90,20 @@ export const devLog = (message: string, ...args: any[]): void => {
 export const validateEditorJSON = (jsonString: string): { valid: boolean; error?: string } => {
   try {
     const parsed = JSON.parse(jsonString);
-    
+
     // Verificações básicas de estrutura
     if (!parsed || typeof parsed !== 'object') {
       return { valid: false, error: 'JSON deve ser um objeto' };
     }
-    
+
     if (!parsed.stepBlocks || typeof parsed.stepBlocks !== 'object') {
       return { valid: false, error: 'JSON deve conter stepBlocks' };
     }
-    
+
     if (typeof parsed.currentStep !== 'number' || parsed.currentStep < 1) {
       return { valid: false, error: 'currentStep deve ser um número positivo' };
     }
-    
+
     return { valid: true };
   } catch (err) {
     return { valid: false, error: 'JSON inválido: ' + (err as Error).message };
