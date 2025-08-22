@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 
+// Utility functions
+import { cn } from '@/lib/utils';
+
 // Editor Components
 import { CanvasDropZone } from '@/components/editor/canvas/CanvasDropZone';
 import CombinedComponentsPanel from '@/components/editor/CombinedComponentsPanel';
@@ -238,13 +241,30 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
                   style={{ backgroundColor: 'transparent' }}
                 >
                   <div className={getCanvasClassName()}>
-                    <CanvasDropZone
-                      blocks={currentBlocks}
-                      selectedBlockId={selectedBlockId}
-                      onSelectBlock={setSelectedBlockId}
-                      onUpdateBlock={updateBlock}
-                      onDeleteBlock={handleDeleteBlock}
-                    />
+                    <CanvasDropZone isEmpty={currentBlocks.length === 0}>
+                      {currentBlocks.map(block => (
+                        <div 
+                          key={block.id}
+                          className={cn(
+                            'block-wrapper p-2 border rounded',
+                            selectedBlockId === block.id && 'border-blue-500 bg-blue-50'
+                          )}
+                          onClick={() => setSelectedBlockId(block.id)}
+                        >
+                          <div className="block-type text-xs text-gray-500 mb-1">
+                            {block.type}
+                          </div>
+                          <div className="block-content">
+                            {block.content?.text && (
+                              <div>{block.content.text}</div>
+                            )}
+                            {block.content?.title && (
+                              <h3>{block.content.title}</h3>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </CanvasDropZone>
                   </div>
 
                   {/* 🎮 PREVIEW TOGGLE - Botão flutuante para alternar preview */}

@@ -31,7 +31,7 @@ const QuizEditorProPageTemp = lazy(() => import('./pages/editors/QuizEditorProPa
 const QuizIntegratedPage = lazy(() => import('./pages/QuizIntegratedPage'));
 const QuizEditorShowcase = lazy(() => import('./pages/QuizEditorShowcase')); // 🎪 SHOWCASE COMPLETO
 const EditorProTestPage = lazy(() => import('./pages/EditorProTestPage')); // 🧪 EDITOR PRO MODULARIZADO
-const EditorProSimpleTest = lazy(() => import('./pages/EditorProSimpleTest')); // 🧪 TESTE SIMPLES
+// const EditorProSimpleTest = lazy(() => import('./pages/EditorProSimpleTest')); // 🧪 TESTE SIMPLES - Temporarily disabled
 
 // 🆕 SISTEMA UNIFICADO - FASE 3
 // const QuizRouteController = lazy(() => import('./components/routing/QuizRouteController')); // Removido

@@ -87,7 +87,7 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
           isPreviewing={isPreviewing || false}
           primaryStyle={primaryStyle}
           onClick={() => onBlockSelect?.(block.id)}
-          onUpdate={onBlockUpdate ? updates => onBlockUpdate(block.id, updates) : () => {}}
+          onUpdate={onBlockUpdate ? (updates: any) => onBlockUpdate(block.id, updates) : () => {}}
           onSelect={onBlockSelect}
         />
       ))}

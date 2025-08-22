@@ -57,10 +57,10 @@ describe('Quiz Refactoring Integration', () => {
       
       // Simulate real quiz answers with weights
       const quizAnswers = [
-        { questionId: 'q2', optionId: 'classic-dress', weights: { 'Clássico': 4, 'Elegante': 2 } },
-        { questionId: 'q3', optionId: 'neutral-colors', weights: { 'Natural': 3, 'Clássico': 1 } },
-        { questionId: 'q4', optionId: 'minimal-accessories', weights: { 'Natural': 2, 'Clássico': 3 } },
-        { questionId: 'q5', optionId: 'office-occasion', weights: { 'Clássico': 3, 'Elegante': 1 } },
+        { questionId: 'q2', optionId: 'classic-dress', weights: { 'Clássico': 4, 'Elegante': 2 } as Record<string, number> },
+        { questionId: 'q3', optionId: 'neutral-colors', weights: { 'Natural': 3, 'Clássico': 1 } as Record<string, number> },
+        { questionId: 'q4', optionId: 'minimal-accessories', weights: { 'Natural': 2, 'Clássico': 3 } as Record<string, number> },
+        { questionId: 'q5', optionId: 'office-occasion', weights: { 'Clássico': 3, 'Elegante': 1 } as Record<string, number> },
       ];
 
       const result = computeResults(quizAnswers, knownStyles);

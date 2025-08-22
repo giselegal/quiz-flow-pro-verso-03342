@@ -73,3 +73,4 @@ const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
 };
 
 export default CanvasDropZone;
+export { CanvasDropZone };

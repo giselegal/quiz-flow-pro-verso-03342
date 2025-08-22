@@ -5,9 +5,9 @@ describe('quizResults', () => {
   describe('computeResults', () => {
     it('should calculate correct scores when answers have weights', () => {
       const answers = [
-        { questionId: 'q1', optionId: 'o1', weights: { 'Clássico': 3, 'Romântico': 1 } },
-        { questionId: 'q2', optionId: 'o2', weights: { 'Clássico': 2, 'Dramático': 2 } },
-        { questionId: 'q3', optionId: 'o3', weights: { 'Romântico': 3, 'Natural': 1 } },
+        { questionId: 'q1', optionId: 'o1', weights: { 'Clássico': 3, 'Romântico': 1 } as Record<string, number> },
+        { questionId: 'q2', optionId: 'o2', weights: { 'Clássico': 2, 'Dramático': 2 } as Record<string, number> },
+        { questionId: 'q3', optionId: 'o3', weights: { 'Romântico': 3, 'Natural': 1 } as Record<string, number> },
       ];
 
       const result = computeResults(answers);
