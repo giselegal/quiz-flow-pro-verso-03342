@@ -3,6 +3,7 @@ import { useHistoryState } from '@/hooks/useHistoryState';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import { Block } from '@/types/editor';
 import { extractStepNumberFromKey } from '@/utils/supabaseMapper';
+import { normalizeStepBlocks, getBlocksForStep, mergeStepBlocks } from '@/config/quizStepsComplete';
 import { arrayMove } from '@dnd-kit/sortable';
 import React, { createContext, ReactNode, useCallback, useContext, useEffect } from 'react';
 
@@ -26,6 +27,9 @@ export interface EditorActions {
   removeBlock: (stepKey: string, blockId: string) => Promise<void>;
   reorderBlocks: (stepKey: string, oldIndex: number, newIndex: number) => Promise<void>;
   updateBlock: (stepKey: string, blockId: string, updates: Record<string, any>) => Promise<void>;
+
+  // Step loading
+  ensureStepLoaded: (step: number | string) => Promise<void>;
 
   // History operations
   undo: () => void;
@@ -94,7 +98,9 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
   // Build initial state from template
   const getInitialState = (): EditorState => {
     const initialBlocks: Record<string, Block[]> = {};
-    Object.entries(QUIZ_STYLE_21_STEPS_TEMPLATE).forEach(([stepKey, blocks]) => {
+    // Normalize step blocks from template using our new utility
+    const normalizedBlocks = normalizeStepBlocks(QUIZ_STYLE_21_STEPS_TEMPLATE);
+    Object.entries(normalizedBlocks).forEach(([stepKey, blocks]) => {
       initialBlocks[stepKey] = Array.isArray(blocks) ? [...blocks] : [];
     });
 
@@ -149,11 +155,13 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       const components = Array.isArray(comps) ? comps : (supabaseIntegration.components ?? []);
       if (components && components.length > 0) {
         const grouped = groupByStepKey(components);
+        // Normalize incoming data before merging
+        const normalizedIncoming = normalizeStepBlocks(grouped);
         setState({
           ...rawState,
           stepBlocks: {
             ...rawState.stepBlocks,
-            ...grouped,
+            ...normalizedIncoming,
           },
         });
       }
@@ -169,6 +177,59 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [enableSupabase, funnelId, quizId]);
 
+  // Ensure step is loaded - check if step exists, if not fetch and merge
+  const ensureStepLoaded = useCallback(
+    async (step: number | string) => {
+      const existingBlocks = getBlocksForStep(step, rawState.stepBlocks);
+      if (existingBlocks && existingBlocks.length > 0) {
+        return; // Step already loaded
+      }
+
+      try {
+        // First try to fetch from Supabase if enabled
+        if (state.isSupabaseEnabled && supabaseIntegration?.loadSupabaseComponents) {
+          const comps = await supabaseIntegration.loadSupabaseComponents();
+          const components = Array.isArray(comps) ? comps : (supabaseIntegration.components ?? []);
+          if (components && components.length > 0) {
+            const grouped = groupByStepKey(components);
+            const merged = mergeStepBlocks(rawState.stepBlocks, grouped);
+            setState({
+              ...rawState,
+              stepBlocks: merged,
+            });
+            return;
+          }
+        }
+
+        // Fallback: Try to load from template service or use default templates
+        const stepNum = typeof step === 'number' ? step : parseInt(String(step), 10);
+        if (stepNum && QUIZ_STYLE_21_STEPS_TEMPLATE) {
+          const stepKey = `step-${stepNum}`;
+          const defaultBlocks = (QUIZ_STYLE_21_STEPS_TEMPLATE as any)[stepKey] || [];
+          if (defaultBlocks.length > 0) {
+            setState({
+              ...rawState,
+              stepBlocks: {
+                ...rawState.stepBlocks,
+                [stepKey]: defaultBlocks,
+              },
+            });
+          }
+        }
+      } catch (error) {
+        console.error('Failed to ensure step loaded:', error);
+      }
+    },
+    [rawState, setState, state.isSupabaseEnabled, supabaseIntegration]
+  );
+
+  // Ensure step is loaded when currentStep changes
+  useEffect(() => {
+    if (rawState.currentStep) {
+      ensureStepLoaded(rawState.currentStep);
+    }
+  }, [rawState.currentStep, ensureStepLoaded]);
+
   // Actions (use functional setState to avoid races)
   const setCurrentStep = useCallback(
     (step: number) => {
@@ -177,8 +238,10 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
         currentStep: step,
         selectedBlockId: null,
       });
+      // Ensure the new step is loaded
+      ensureStepLoaded(step);
     },
-    [setState, rawState]
+    [setState, rawState, ensureStepLoaded]
   );
 
   const setSelectedBlockId = useCallback(
@@ -359,6 +422,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     removeBlock,
     reorderBlocks,
     updateBlock,
+    ensureStepLoaded,
     undo,
     redo,
     canUndo,

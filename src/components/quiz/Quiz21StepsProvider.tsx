@@ -317,7 +317,7 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
       }
 
       // 🗄️ SUPABASE: Salvar resposta no banco
-      saveSupabaseAnswer(questionId, optionId);
+      saveSupabaseAnswer({ questionId, optionId });
 
       // Atualizar seleções da etapa atual
       setCurrentStepSelections(prev => ({

@@ -56,6 +56,7 @@ export interface QuizComponentStyle {
 export interface QuizAnswer {
   questionId: string;
   optionId: string;
+  weights?: Record<string, number>;
 }
 
 export interface UserResponse {
