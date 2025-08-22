@@ -92,9 +92,20 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
       ];
 
       for (const key of tryKeys) {
-        if (key in stepBlocks && Array.isArray(stepBlocks[key])) {
-          devLog(`Found blocks for step ${step} using key:`, key, stepBlocks[key]);
-          return stepBlocks[key];
+        if (key in stepBlocks) {
+          const value = stepBlocks[key];
+          
+          // Caso 1: Array direto
+          if (Array.isArray(value)) {
+            devLog(`Found blocks for step ${step} using key:`, key, value);
+            return value;
+          }
+          
+          // Caso 2: Objeto com propriedade .blocks
+          if (value && typeof value === 'object' && Array.isArray(value.blocks)) {
+            devLog(`Found blocks for step ${step} using key ${key} with .blocks:`, value.blocks);
+            return value.blocks;
+          }
         }
       }
 
