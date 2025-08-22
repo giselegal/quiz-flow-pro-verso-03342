@@ -5,7 +5,7 @@ import React from 'react';
 
 /**
  * QuizEditorProPage com integração Supabase habilitada
- * 
+ *
  * Para testar:
  * 1. Certifique-se de que tem funnelId ou quizId válidos
  * 2. Abra /editor-pro-supabase
@@ -30,21 +30,15 @@ const QuizEditorProPageWithSupabase: React.FC = () => {
           {/* Header com informações de debug */}
           <div className="bg-blue-50 border-b border-blue-200 px-4 py-2 text-sm">
             <div className="flex items-center gap-4">
-              <span className="font-medium text-blue-800">
-                🔄 Modo Supabase Ativo
-              </span>
-              <span className="text-blue-600">
-                Funnel ID: {funnelId || 'N/A'}
-              </span>
-              <span className="text-blue-600">
-                Quiz ID: {quizId || 'N/A'}
-              </span>
+              <span className="font-medium text-blue-800">🔄 Modo Supabase Ativo</span>
+              <span className="text-blue-600">Funnel ID: {funnelId || 'N/A'}</span>
+              <span className="text-blue-600">Quiz ID: {quizId || 'N/A'}</span>
               <span className="text-blue-500 text-xs">
                 Verifique console para logs de sincronização
               </span>
             </div>
           </div>
-          
+
           <QuizEditorPro />
         </div>
       </EditorProvider>

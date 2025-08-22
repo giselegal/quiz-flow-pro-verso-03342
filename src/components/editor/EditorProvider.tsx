@@ -1,14 +1,15 @@
-import { useHistoryState } from '@/hooks/useHistoryState';
 import { useEditorSupabase } from '@/hooks/useEditorSupabase';
+import { useHistoryState } from '@/hooks/useHistoryState';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import { Block } from '@/types/editor';
+import {
+  extractStepNumberFromKey,
+  groupSupabaseComponentsByStep,
+  mapBlockToSupabaseComponent,
+  createTempBlock,
+} from '@/utils/supabaseMapper';
 import { arrayMove } from '@dnd-kit/sortable';
 import React, { createContext, ReactNode, useCallback, useContext, useEffect } from 'react';
-import { 
-  groupSupabaseComponentsByStep, 
-  mapBlockToSupabaseComponent, 
-  extractStepNumberFromKey 
-} from '@/utils/supabaseMapper';
 
 export interface EditorState {
   stepBlocks: Record<string, Block[]>;
@@ -124,23 +125,23 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
   // Supabase functions
   const loadSupabaseComponents = useCallback(async () => {
     if (!enableSupabase || !editorSupabase) return;
-    
+
     try {
       setState({
         ...state,
         isLoading: true,
       });
       await editorSupabase.loadComponents();
-      
+
       // Convert Supabase components to stepBlocks format
       const groupedBlocks = groupSupabaseComponentsByStep(editorSupabase.components);
-      
+
       setState({
         ...state,
         stepBlocks: { ...state.stepBlocks, ...groupedBlocks },
         isLoading: false,
       });
-      
+
       console.log('✅ Components loaded from Supabase:', editorSupabase.components.length);
     } catch (error) {
       console.error('❌ Error loading Supabase components:', error);
@@ -196,7 +197,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
         try {
           const stepNumber = extractStepNumberFromKey(stepKey);
           const supabaseData = mapBlockToSupabaseComponent(block, stepNumber, funnelId, quizId);
-          
+
           // Add to Supabase with optimistic update
           const supabaseComponent = await editorSupabase.addComponent(
             supabaseData.component_type_key!,
