@@ -11,7 +11,10 @@ interface EditorErrorBoundaryProps {
   fallback?: ReactNode;
 }
 
-export class EditorErrorBoundary extends Component<EditorErrorBoundaryProps, EditorErrorBoundaryState> {
+export class EditorErrorBoundary extends Component<
+  EditorErrorBoundaryProps,
+  EditorErrorBoundaryState
+> {
   constructor(props: EditorErrorBoundaryProps) {
     super(props);
     this.state = { hasError: false };
@@ -34,11 +37,10 @@ export class EditorErrorBoundary extends Component<EditorErrorBoundaryProps, Edi
             <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-6">
               <div className="text-center">
                 <div className="text-red-500 text-6xl mb-4">⚠️</div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                  Erro no Editor
-                </h2>
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">Erro no Editor</h2>
                 <p className="text-gray-600 mb-4">
-                  Ocorreu um erro inesperado no editor. Isso pode ser causado por um problema de contexto.
+                  Ocorreu um erro inesperado no editor. Isso pode ser causado por um problema de
+                  contexto.
                 </p>
                 <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
                   <p className="text-sm text-red-700 font-medium">
@@ -53,7 +55,7 @@ export class EditorErrorBoundary extends Component<EditorErrorBoundaryProps, Edi
                     🔄 Recarregar Página
                   </button>
                   <button
-                    onClick={() => window.location.href = '/'}
+                    onClick={() => (window.location.href = '/')}
                     className="w-full bg-gray-600 text-white py-2 px-4 rounded-lg hover:bg-gray-700 transition-colors"
                   >
                     🏠 Voltar ao Início

@@ -12,7 +12,10 @@ Apesar das correções anteriores, o erro `useEditor must be used within an Edit
 
 ```tsx
 // src/components/error/EditorErrorBoundary.tsx
-export class EditorErrorBoundary extends Component<EditorErrorBoundaryProps, EditorErrorBoundaryState> {
+export class EditorErrorBoundary extends Component<
+  EditorErrorBoundaryProps,
+  EditorErrorBoundaryState
+> {
   // Captura e trata erros específicos do editor
   // Fornece UI de fallback com opções de recuperação
   // Inclui diagnósticos e instruções para o usuário
@@ -20,6 +23,7 @@ export class EditorErrorBoundary extends Component<EditorErrorBoundaryProps, Edi
 ```
 
 **Características:**
+
 - ✅ Captura erros de contexto React
 - ✅ Interface amigável de recuperação
 - ✅ Botões para reload e navegação
@@ -37,13 +41,14 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
     console.error('QuizEditorPro: EditorProvider context not found:', error);
     return <EditorContextErrorFallback />;
   }
-  
+
   const { state, actions } = editorContext;
   // ...resto do componente
 };
 ```
 
 **Características:**
+
 - ✅ Verificação de contexto antes do uso
 - ✅ Fallback específico para erro de contexto
 - ✅ Log detalhado do erro
@@ -65,6 +70,7 @@ const QuizEditorProPage: React.FC = () => {
 ```
 
 **Características:**
+
 - ✅ Dupla proteção: ErrorBoundary + EditorProvider
 - ✅ Isolamento de erros
 - ✅ Recuperação automática
@@ -106,6 +112,7 @@ const QuizEditorProPage: React.FC = () => {
 #### 🔧 **Ferramentas de Diagnóstico**
 
 1. **Console Logging**
+
    ```tsx
    console.error('QuizEditorPro: EditorProvider context not found:', error);
    ```
@@ -131,12 +138,12 @@ const QuizEditorProPage: React.FC = () => {
 
 #### 📊 **Métricas de Robustez**
 
-| Cenário | Proteção | Status |
-|---------|----------|--------|
-| Context Missing | Try-Catch + Fallback | ✅ Protegido |
-| Component Crash | ErrorBoundary | ✅ Protegido |
-| HMR Issues | Server Restart | ✅ Documentado |
-| Cache Problems | Hard Refresh | ✅ Instruções |
+| Cenário         | Proteção             | Status         |
+| --------------- | -------------------- | -------------- |
+| Context Missing | Try-Catch + Fallback | ✅ Protegido   |
+| Component Crash | ErrorBoundary        | ✅ Protegido   |
+| HMR Issues      | Server Restart       | ✅ Documentado |
+| Cache Problems  | Hard Refresh         | ✅ Instruções  |
 
 ### 🏆 **RESULTADO FINAL**
 

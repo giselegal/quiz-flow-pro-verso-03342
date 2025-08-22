@@ -1,6 +1,6 @@
-import { DraggableComponentItem } from '@/components/editor/dnd/DraggableComponentItem';
-import CanvasDropZone from '@/components/editor/canvas/CanvasDropZone';
 import { QuizRenderer } from '@/components/core/QuizRenderer';
+import CanvasDropZone from '@/components/editor/canvas/CanvasDropZone';
+import { DraggableComponentItem } from '@/components/editor/dnd/DraggableComponentItem';
 import EnhancedUniversalPropertiesPanelFixed from '@/components/universal/EnhancedUniversalPropertiesPanelFixed';
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
@@ -19,9 +19,9 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import React, { useCallback, useState, useContext } from 'react';
-import { SortableBlock } from './SortableBlock';
+import React, { useCallback, useState } from 'react';
 import { useEditor } from './EditorProvider';
+import { SortableBlock } from './SortableBlock';
 
 interface QuizEditorProProps {
   className?: string;
@@ -47,11 +47,10 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-6 text-center">
           <div className="text-red-500 text-4xl mb-4">⚠️</div>
-          <h2 className="text-xl font-bold text-gray-900 mb-2">
-            Erro de Contexto do Editor
-          </h2>
+          <h2 className="text-xl font-bold text-gray-900 mb-2">Erro de Contexto do Editor</h2>
           <p className="text-gray-600 mb-4">
-            O QuizEditorPro não foi carregado corretamente. Verifique se está sendo usado dentro do EditorProvider.
+            O QuizEditorPro não foi carregado corretamente. Verifique se está sendo usado dentro do
+            EditorProvider.
           </p>
           <button
             onClick={() => window.location.reload()}
@@ -204,13 +203,19 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
   );
 
   // Handlers using editor actions
-  const handleStepSelect = useCallback((step: number) => {
-    actions.setCurrentStep(step);
-  }, [actions]);
+  const handleStepSelect = useCallback(
+    (step: number) => {
+      actions.setCurrentStep(step);
+    },
+    [actions]
+  );
 
-  const handleBlockSelect = useCallback((blockId: string) => {
-    actions.setSelectedBlockId(blockId);
-  }, [actions]);
+  const handleBlockSelect = useCallback(
+    (blockId: string) => {
+      actions.setSelectedBlockId(blockId);
+    },
+    [actions]
+  );
 
   const handleBlockUpdate = useCallback(
     (blockId: string, updates: Record<string, any>) => {
@@ -267,13 +272,10 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
   );
 
   // Drag & Drop handlers
-  const handleDragStart = useCallback(
-    (event: DragStartEvent) => {
-      const { active } = event;
-      console.log('🔄 Drag iniciado:', active.id, active.data?.current);
-    },
-    []
-  );
+  const handleDragStart = useCallback((event: DragStartEvent) => {
+    const { active } = event;
+    console.log('🔄 Drag iniciado:', active.id, active.data?.current);
+  }, []);
 
   const handleDragEnd = useCallback(
     (event: DragEndEvent) => {
@@ -419,7 +421,8 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
                   {mode === 'edit' ? 'Editor' : 'Preview'} - Etapa {state.currentStep}
                 </h3>
                 <p className="text-sm text-gray-600">
-                  {getStepAnalysis(state.currentStep).label}: {getStepAnalysis(state.currentStep).desc}
+                  {getStepAnalysis(state.currentStep).label}:{' '}
+                  {getStepAnalysis(state.currentStep).desc}
                 </p>
               </div>
 
@@ -473,11 +476,11 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
                   <input
                     type="file"
                     accept=".json"
-                    onChange={(e) => {
+                    onChange={e => {
                       const file = e.target.files?.[0];
                       if (file) {
                         const reader = new FileReader();
-                        reader.onload = (event) => {
+                        reader.onload = event => {
                           try {
                             const json = event.target?.result as string;
                             actions.importJSON(json);
@@ -572,7 +575,7 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
           </div>
 
           {/* Área do Canvas com DropZone */}
-          <CanvasDropZone 
+          <CanvasDropZone
             isEmpty={currentStepData.length === 0 && mode === 'edit'}
             data-testid="canvas-dropzone"
           >
@@ -685,7 +688,9 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
                     </div>
                     <div className="flex justify-between">
                       <span>Tipo da etapa:</span>
-                      <span className="font-medium">{getStepAnalysis(state.currentStep).label}</span>
+                      <span className="font-medium">
+                        {getStepAnalysis(state.currentStep).label}
+                      </span>
                     </div>
                     <div className="flex justify-between">
                       <span>Função:</span>
