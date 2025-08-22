@@ -65,3 +65,6 @@ jspm_packages/
 # Database
 *.sqlite
 *.db
+
+# Temporary files and audit reports
+tmp/
