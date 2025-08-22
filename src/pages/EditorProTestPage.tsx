@@ -1,28 +1,26 @@
+import { EditorPro } from '@/components/editor/EditorPro';
 import { EditorProvider } from '@/components/editor/EditorProvider';
 import { ErrorBoundary } from '@/components/editor/ErrorBoundary';
-import { EditorPro } from '@/components/editor/EditorPro';
 import React from 'react';
 
 /**
  * 🧪 Página de teste para o EditorPro Modularizado
- * 
+ *
  * Compara performance e funcionalidades com QuizEditorPro original
  */
 const EditorProTestPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <ErrorBoundary>
-        <EditorProvider
-          enableSupabase={false}
-          storageKey="editor-pro-test"
-        >
+        <EditorProvider enableSupabase={false} storageKey="editor-pro-test">
           <div className="container mx-auto py-8">
             <div className="mb-8 text-center">
               <h1 className="text-4xl font-bold text-gray-900 mb-4">
                 🧪 EditorPro - Versão Modularizada
               </h1>
               <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                Versão otimizada com lazy loading, componentes modulares e melhor organização do código.
+                Versão otimizada com lazy loading, componentes modulares e melhor organização do
+                código.
               </p>
             </div>
 
@@ -73,10 +71,18 @@ const EditorProTestPage: React.FC = () => {
             <div className="mb-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
               <h3 className="font-semibold text-yellow-900 mb-2">🧪 Como testar as melhorias:</h3>
               <ul className="text-sm text-yellow-800 space-y-1">
-                <li>• <strong>Loading:</strong> Observe o carregamento do painel de propriedades</li>
-                <li>• <strong>Performance:</strong> Compare responsividade vs. versão original</li>
-                <li>• <strong>Funcionalidade:</strong> Teste todas as operações DnD</li>
-                <li>• <strong>DevTools:</strong> Inspecione bundle size e network requests</li>
+                <li>
+                  • <strong>Loading:</strong> Observe o carregamento do painel de propriedades
+                </li>
+                <li>
+                  • <strong>Performance:</strong> Compare responsividade vs. versão original
+                </li>
+                <li>
+                  • <strong>Funcionalidade:</strong> Teste todas as operações DnD
+                </li>
+                <li>
+                  • <strong>DevTools:</strong> Inspecione bundle size e network requests
+                </li>
               </ul>
             </div>
 
