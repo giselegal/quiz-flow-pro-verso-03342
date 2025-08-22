@@ -1,12 +1,9 @@
-import React, { useCallback, useMemo, useRef, useState, Suspense } from 'react';
-import { DndContext, DragEndEvent, DragStartEvent, PointerSensor, KeyboardSensor, useSensor, useSensors, closestCenter } from '@dnd-kit/core';
-import { SortableContext, verticalListSortingStrategy, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
+import { QuizRenderer } from '@/components/core/QuizRenderer';
 import CanvasDropZone from '@/components/editor/canvas/CanvasDropZone';
 import { DraggableComponentItem } from '@/components/editor/dnd/DraggableComponentItem';
-import { QuizRenderer } from '@/components/core/QuizRenderer';
 import { useNotification } from '@/components/ui/Notification';
-import { cn } from '@/lib/utils';
 import { getBlocksForStep } from '@/config/quizStepsComplete';
+import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
 import {
   extractDragData,
@@ -21,6 +18,22 @@ import {
   duplicateBlock,
   validateEditorJSON,
 } from '@/utils/editorUtils';
+import {
+  closestCenter,
+  DndContext,
+  DragEndEvent,
+  DragStartEvent,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import {
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import React, { Suspense, useCallback, useMemo, useRef, useState } from 'react';
 import { useEditor } from './EditorProvider';
 import { SortableBlock } from './SortableBlock';
 
@@ -119,38 +132,121 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   // componentes disponíveis - ideal extrair para config
   const availableComponents = useMemo(
     () => [
-      { type: 'quiz-intro-header', name: 'Header Quiz', icon: '📝', category: 'Estrutura', description: 'Cabeçalho com título e descrição' },
-      { type: 'options-grid', name: 'Grade Opções', icon: '⚡', category: 'Interação', description: 'Grid de opções para questões' },
-      { type: 'form-container', name: 'Formulário', icon: '📝', category: 'Captura', description: 'Campo de entrada de dados' },
-      { type: 'text', name: 'Texto', icon: '📄', category: 'Conteúdo', description: 'Bloco de texto simples' },
-      { type: 'button', name: 'Botão', icon: '🔘', category: 'Interação', description: 'Botão de ação' },
-      { type: 'result-header-inline', name: 'Header Resultado', icon: '🎯', category: 'Resultado', description: 'Cabeçalho personalizado de resultado' },
-      { type: 'style-card-inline', name: 'Card Estilo', icon: '🎨', category: 'Resultado', description: 'Card com características do estilo' },
-      { type: 'secondary-styles', name: 'Estilos Secundários', icon: '📊', category: 'Resultado', description: 'Lista de estilos complementares' },
-      { type: 'testimonials', name: 'Depoimentos', icon: '💬', category: 'Social Proof', description: 'Lista de depoimentos' },
-      { type: 'guarantee', name: 'Garantia', icon: '🛡️', category: 'Confiança', description: 'Selo de garantia' },
-      { type: 'hero', name: 'Hero Section', icon: '🚀', category: 'Layout', description: 'Seção hero para transições e ofertas' },
-      { type: 'benefits', name: 'Benefícios', icon: '✨', category: 'Vendas', description: 'Lista de benefícios do produto' },
-      { type: 'quiz-offer-cta-inline', name: 'CTA Oferta', icon: '💰', category: 'Conversão', description: 'Call-to-action para ofertas especiais' },
+      {
+        type: 'quiz-intro-header',
+        name: 'Header Quiz',
+        icon: '📝',
+        category: 'Estrutura',
+        description: 'Cabeçalho com título e descrição',
+      },
+      {
+        type: 'options-grid',
+        name: 'Grade Opções',
+        icon: '⚡',
+        category: 'Interação',
+        description: 'Grid de opções para questões',
+      },
+      {
+        type: 'form-container',
+        name: 'Formulário',
+        icon: '📝',
+        category: 'Captura',
+        description: 'Campo de entrada de dados',
+      },
+      {
+        type: 'text',
+        name: 'Texto',
+        icon: '📄',
+        category: 'Conteúdo',
+        description: 'Bloco de texto simples',
+      },
+      {
+        type: 'button',
+        name: 'Botão',
+        icon: '🔘',
+        category: 'Interação',
+        description: 'Botão de ação',
+      },
+      {
+        type: 'result-header-inline',
+        name: 'Header Resultado',
+        icon: '🎯',
+        category: 'Resultado',
+        description: 'Cabeçalho personalizado de resultado',
+      },
+      {
+        type: 'style-card-inline',
+        name: 'Card Estilo',
+        icon: '🎨',
+        category: 'Resultado',
+        description: 'Card com características do estilo',
+      },
+      {
+        type: 'secondary-styles',
+        name: 'Estilos Secundários',
+        icon: '📊',
+        category: 'Resultado',
+        description: 'Lista de estilos complementares',
+      },
+      {
+        type: 'testimonials',
+        name: 'Depoimentos',
+        icon: '💬',
+        category: 'Social Proof',
+        description: 'Lista de depoimentos',
+      },
+      {
+        type: 'guarantee',
+        name: 'Garantia',
+        icon: '🛡️',
+        category: 'Confiança',
+        description: 'Selo de garantia',
+      },
+      {
+        type: 'hero',
+        name: 'Hero Section',
+        icon: '🚀',
+        category: 'Layout',
+        description: 'Seção hero para transições e ofertas',
+      },
+      {
+        type: 'benefits',
+        name: 'Benefícios',
+        icon: '✨',
+        category: 'Vendas',
+        description: 'Lista de benefícios do produto',
+      },
+      {
+        type: 'quiz-offer-cta-inline',
+        name: 'CTA Oferta',
+        icon: '💰',
+        category: 'Conversão',
+        description: 'Call-to-action para ofertas especiais',
+      },
     ],
     []
   );
 
   const groupedComponents = useMemo(
     () =>
-      availableComponents.reduce((acc, c) => {
-        if (!acc[c.category]) acc[c.category] = [];
-        acc[c.category].push(c);
-        return acc;
-      }, {} as Record<string, typeof availableComponents>),
+      availableComponents.reduce(
+        (acc, c) => {
+          if (!acc[c.category]) acc[c.category] = [];
+          acc[c.category].push(c);
+          return acc;
+        },
+        {} as Record<string, typeof availableComponents>
+      ),
     [availableComponents]
   );
 
   const getStepAnalysis = (step: number) => {
     if (step === 1) return { type: '📝', label: 'Captura', desc: 'Nome do usuário' };
-    if (step >= 2 && step <= 11) return { type: '🎯', label: 'Questão', desc: 'Pontuação de estilo' };
+    if (step >= 2 && step <= 11)
+      return { type: '🎯', label: 'Questão', desc: 'Pontuação de estilo' };
     if (step === 12) return { type: '🔄', label: 'Transição', desc: 'Para estratégicas' };
-    if (step >= 13 && step <= 18) return { type: '📊', label: 'Estratégica', desc: 'Tracking sem pontuação' };
+    if (step >= 13 && step <= 18)
+      return { type: '📊', label: 'Estratégica', desc: 'Tracking sem pontuação' };
     if (step === 19) return { type: '⏳', label: 'Calculando', desc: 'Processamento' };
     if (step === 20) return { type: '🎉', label: 'Resultado', desc: 'Estilo personalizado' };
     if (step === 21) return { type: '💰', label: 'Oferta', desc: 'CTA de conversão' };
@@ -159,17 +255,30 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
 
   // Handlers básicos
   const handleStepSelect = useCallback((step: number) => actions.setCurrentStep(step), [actions]);
-  const handleBlockSelect = useCallback((blockId: string) => actions.setSelectedBlockId(blockId), [actions]);
-  const handleBlockUpdate = useCallback((blockId: string, updates: Record<string, any>) => actions.updateBlock(currentStepKey, blockId, updates), [currentStepKey, actions]);
-  const handleBlockDelete = useCallback((blockId: string) => actions.removeBlock(currentStepKey, blockId), [currentStepKey, actions]);
+  const handleBlockSelect = useCallback(
+    (blockId: string) => actions.setSelectedBlockId(blockId),
+    [actions]
+  );
+  const handleBlockUpdate = useCallback(
+    (blockId: string, updates: Record<string, any>) =>
+      actions.updateBlock(currentStepKey, blockId, updates),
+    [currentStepKey, actions]
+  );
+  const handleBlockDelete = useCallback(
+    (blockId: string) => actions.removeBlock(currentStepKey, blockId),
+    [currentStepKey, actions]
+  );
 
-  const handleBlockDuplicate = useCallback((blockId: string) => {
-    const blockToDuplicate = currentStepData.find(b => b.id === blockId);
-    if (!blockToDuplicate) return;
-    const newBlock = duplicateBlock(blockToDuplicate, currentStepData);
-    actions.addBlock(currentStepKey, newBlock);
-    actions.setSelectedBlockId(newBlock.id);
-  }, [currentStepData, currentStepKey, actions]);
+  const handleBlockDuplicate = useCallback(
+    (blockId: string) => {
+      const blockToDuplicate = currentStepData.find(b => b.id === blockId);
+      if (!blockToDuplicate) return;
+      const newBlock = duplicateBlock(blockToDuplicate, currentStepData);
+      actions.addBlock(currentStepKey, newBlock);
+      actions.setSelectedBlockId(newBlock.id);
+    },
+    [currentStepData, currentStepKey, actions]
+  );
 
   // Drag handlers (reutilizam utilitários)
   const handleDragStart = useCallback((event: DragStartEvent) => {
@@ -179,58 +288,65 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
     if (process.env.NODE_ENV === 'development') devLog('Drag start', dragData);
   }, []);
 
-  const handleDragEnd = useCallback((event: DragEndEvent) => {
-    const { active, over } = event;
-    if (!over) {
-      const dragData = extractDragData(active);
-      const feedback = getDragFeedback(dragData, { isValid: false, message: 'Sem alvo de drop' } as any);
-      notification?.warning?.(feedback.message);
-      return;
-    }
-
-    const validation = validateDrop(active, over, currentStepData);
-    logDragEvent('end', active, over, validation);
-
-    if (!validation.isValid) {
-      const feedback = getDragFeedback(extractDragData(active), validation);
-      notification?.warning?.(feedback.message);
-      return;
-    }
-
-    const dragData = extractDragData(active);
-    if (!dragData) {
-      notification?.error?.('Dados de drag corrompidos');
-      return;
-    }
-
-    try {
-      switch (validation.action) {
-        case 'add':
-          if (dragData.type === 'sidebar-component' && dragData.blockType) {
-            const newBlock = createBlockFromComponent(dragData.blockType as any, currentStepData);
-            actions.addBlock(currentStepKey, newBlock);
-            actions.setSelectedBlockId(newBlock.id);
-            notification?.success?.(`Componente ${dragData.blockType} adicionado!`);
-          }
-          break;
-        case 'reorder':
-          if (dragData.type === 'canvas-block' && typeof over.id === 'string') {
-            const activeIndex = currentStepData.findIndex(block => block.id === active.id);
-            const overIndex = currentStepData.findIndex(block => block.id === over.id);
-            if (activeIndex !== -1 && overIndex !== -1 && activeIndex !== overIndex) {
-              actions.reorderBlocks(currentStepKey, activeIndex, overIndex);
-              notification?.info?.('Blocos reordenados');
-            }
-          }
-          break;
-        default:
-          if (process.env.NODE_ENV === 'development') devLog('Ação de drop não implementada:', validation.action);
+  const handleDragEnd = useCallback(
+    (event: DragEndEvent) => {
+      const { active, over } = event;
+      if (!over) {
+        const dragData = extractDragData(active);
+        const feedback = getDragFeedback(dragData, {
+          isValid: false,
+          message: 'Sem alvo de drop',
+        } as any);
+        notification?.warning?.(feedback.message);
+        return;
       }
-    } catch (error) {
-      console.error('Erro durante drag & drop:', error);
-      notification?.error?.('Erro ao processar drag & drop');
-    }
-  }, [actions, currentStepData, currentStepKey, notification]);
+
+      const validation = validateDrop(active, over, currentStepData);
+      logDragEvent('end', active, over, validation);
+
+      if (!validation.isValid) {
+        const feedback = getDragFeedback(extractDragData(active), validation);
+        notification?.warning?.(feedback.message);
+        return;
+      }
+
+      const dragData = extractDragData(active);
+      if (!dragData) {
+        notification?.error?.('Dados de drag corrompidos');
+        return;
+      }
+
+      try {
+        switch (validation.action) {
+          case 'add':
+            if (dragData.type === 'sidebar-component' && dragData.blockType) {
+              const newBlock = createBlockFromComponent(dragData.blockType as any, currentStepData);
+              actions.addBlock(currentStepKey, newBlock);
+              actions.setSelectedBlockId(newBlock.id);
+              notification?.success?.(`Componente ${dragData.blockType} adicionado!`);
+            }
+            break;
+          case 'reorder':
+            if (dragData.type === 'canvas-block' && typeof over.id === 'string') {
+              const activeIndex = currentStepData.findIndex(block => block.id === active.id);
+              const overIndex = currentStepData.findIndex(block => block.id === over.id);
+              if (activeIndex !== -1 && overIndex !== -1 && activeIndex !== overIndex) {
+                actions.reorderBlocks(currentStepKey, activeIndex, overIndex);
+                notification?.info?.('Blocos reordenados');
+              }
+            }
+            break;
+          default:
+            if (process.env.NODE_ENV === 'development')
+              devLog('Ação de drop não implementada:', validation.action);
+        }
+      } catch (error) {
+        console.error('Erro durante drag & drop:', error);
+        notification?.error?.('Erro ao processar drag & drop');
+      }
+    },
+    [actions, currentStepData, currentStepKey, notification]
+  );
 
   /* -------------------------
      Sub-componentes locais
@@ -257,7 +373,9 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
                 onClick={() => handleStepSelect(step)}
                 className={cn(
                   'w-full text-left p-2 rounded-md text-xs transition-colors',
-                  isActive ? 'bg-blue-100 border-blue-300 text-blue-900' : 'hover:bg-gray-50 text-gray-700'
+                  isActive
+                    ? 'bg-blue-100 border-blue-300 text-blue-900'
+                    : 'hover:bg-gray-50 text-gray-700'
                 )}
               >
                 <div className="flex items-center justify-between">
@@ -290,14 +408,18 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
     <div className="w-[280px] bg-white border-r border-gray-200 flex flex-col">
       <div className="p-4 border-b border-gray-200">
         <h3 className="font-semibold text-sm text-gray-900">Biblioteca de Componentes</h3>
-        <p className="text-xs text-gray-500 mt-1">{availableComponents.length} componentes disponíveis</p>
+        <p className="text-xs text-gray-500 mt-1">
+          {availableComponents.length} componentes disponíveis
+        </p>
       </div>
 
       <div className="flex-1 overflow-y-auto">
         <div className="p-3">
           {Object.entries(groupedComponents).map(([category, components]) => (
             <div key={category} className="mb-4">
-              <h4 className="text-xs font-semibold text-gray-700 mb-2 uppercase tracking-wide">{category}</h4>
+              <h4 className="text-xs font-semibold text-gray-700 mb-2 uppercase tracking-wide">
+                {category}
+              </h4>
               <div className="space-y-2">
                 {components.map(component => (
                   <DraggableComponentItem
@@ -337,7 +459,12 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
                 type="button"
                 onClick={actions.undo}
                 disabled={!actions.canUndo}
-                className={cn('px-3 py-2 text-sm rounded-md transition-all duration-200', actions.canUndo ? 'text-gray-700 hover:bg-white hover:shadow-sm' : 'text-gray-400 cursor-not-allowed')}
+                className={cn(
+                  'px-3 py-2 text-sm rounded-md transition-all duration-200',
+                  actions.canUndo
+                    ? 'text-gray-700 hover:bg-white hover:shadow-sm'
+                    : 'text-gray-400 cursor-not-allowed'
+                )}
                 title="Desfazer (Ctrl+Z)"
               >
                 ↶ Undo
@@ -346,7 +473,12 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
                 type="button"
                 onClick={actions.redo}
                 disabled={!actions.canRedo}
-                className={cn('px-3 py-2 text-sm rounded-md transition-all duration-200', actions.canRedo ? 'text-gray-700 hover:bg-white hover:shadow-sm' : 'text-gray-400 cursor-not-allowed')}
+                className={cn(
+                  'px-3 py-2 text-sm rounded-md transition-all duration-200',
+                  actions.canRedo
+                    ? 'text-gray-700 hover:bg-white hover:shadow-sm'
+                    : 'text-gray-400 cursor-not-allowed'
+                )}
                 title="Refazer (Ctrl+Y)"
               >
                 ↷ Redo
@@ -360,7 +492,8 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
                   try {
                     const json = actions.exportJSON();
                     const success = await copyToClipboard(json);
-                    if (success) notification?.success?.('JSON exportado para a área de transferência!');
+                    if (success)
+                      notification?.success?.('JSON exportado para a área de transferência!');
                     else notification?.error?.('Erro ao copiar para área de transferência');
                   } catch {
                     notification?.error?.('Erro ao exportar JSON');
@@ -417,43 +550,84 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               <button
                 type="button"
                 onClick={() => setMode('edit')}
-                className={cn('px-4 py-2 text-sm rounded-md transition-all duration-200 font-medium', mode === 'edit' ? 'bg-white text-gray-900 shadow-sm border border-gray-200' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50')}
+                className={cn(
+                  'px-4 py-2 text-sm rounded-md transition-all duration-200 font-medium',
+                  mode === 'edit'
+                    ? 'bg-white text-gray-900 shadow-sm border border-gray-200'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                )}
               >
                 ✏️ Editar
               </button>
               <button
                 type="button"
                 onClick={() => setMode('preview')}
-                className={cn('px-4 py-2 text-sm rounded-md transition-all duration-200 font-medium', mode === 'preview' ? 'bg-white text-gray-900 shadow-sm border border-gray-200' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50')}
+                className={cn(
+                  'px-4 py-2 text-sm rounded-md transition-all duration-200 font-medium',
+                  mode === 'preview'
+                    ? 'bg-white text-gray-900 shadow-sm border border-gray-200'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                )}
               >
                 👁️ Preview
               </button>
             </div>
 
-            <button className="px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition-colors">💾 Salvar</button>
+            <button className="px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition-colors">
+              💾 Salvar
+            </button>
           </div>
         </div>
 
         <div className="mt-3 p-3 rounded-lg border">
           {mode === 'edit' ? (
-            <div className={cn('flex items-center justify-between text-sm', 'bg-blue-50 border-blue-200 text-blue-900')}>
-              <div><strong>✏️ Modo Edição Visual:</strong> Conteúdo real com overlays de seleção interativos</div>
-              <div className="text-blue-700">{state.selectedBlockId ? `Editando: ${state.selectedBlockId}` : `${currentStepData.length} blocos disponíveis - Clique para editar`}</div>
+            <div
+              className={cn(
+                'flex items-center justify-between text-sm',
+                'bg-blue-50 border-blue-200 text-blue-900'
+              )}
+            >
+              <div>
+                <strong>✏️ Modo Edição Visual:</strong> Conteúdo real com overlays de seleção
+                interativos
+              </div>
+              <div className="text-blue-700">
+                {state.selectedBlockId
+                  ? `Editando: ${state.selectedBlockId}`
+                  : `${currentStepData.length} blocos disponíveis - Clique para editar`}
+              </div>
             </div>
           ) : (
-            <div className={cn('flex items-center justify-between text-sm', 'bg-green-50 border-green-200 text-green-900')}>
-              <div><strong>👁️ Modo Preview:</strong> Visualização idêntica à produção final</div>
+            <div
+              className={cn(
+                'flex items-center justify-between text-sm',
+                'bg-green-50 border-green-200 text-green-900'
+              )}
+            >
+              <div>
+                <strong>👁️ Modo Preview:</strong> Visualização idêntica à produção final
+              </div>
               <div className="text-green-700">Navegação e interações funcionais</div>
             </div>
           )}
         </div>
       </div>
 
-      <CanvasDropZone isEmpty={currentStepData.length === 0 && mode === 'edit'} data-testid="canvas-dropzone">
-        <QuizRenderer mode={mode === 'preview' ? 'preview' : 'editor'} onStepChange={handleStepSelect} initialStep={safeCurrentStep} />
+      <CanvasDropZone
+        isEmpty={currentStepData.length === 0 && mode === 'edit'}
+        data-testid="canvas-dropzone"
+      >
+        <QuizRenderer
+          mode={mode === 'preview' ? 'preview' : 'editor'}
+          onStepChange={handleStepSelect}
+          initialStep={safeCurrentStep}
+        />
 
         {mode === 'edit' && (
-          <SortableContext items={currentStepData.map(b => b.id || `block-${currentStepData.indexOf(b)}`)} strategy={verticalListSortingStrategy}>
+          <SortableContext
+            items={currentStepData.map(b => b.id || `block-${currentStepData.indexOf(b)}`)}
+            strategy={verticalListSortingStrategy}
+          >
             <div className="absolute inset-0 pointer-events-auto z-50">
               {currentStepData.map((block: Block, index: number) => {
                 const blockId = block.id || `block-${index}`;
@@ -463,10 +637,22 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
                 let topOffset = 60 + index * 100;
                 let height = 80;
                 switch (block.type) {
-                  case 'quiz-intro-header': topOffset = 20; height = 120; break;
-                  case 'options-grid': topOffset = 150 + index * 200; height = 300; break;
-                  case 'form-container': topOffset = 200 + index * 150; height = 120; break;
-                  case 'button': topOffset = 400 + index * 100; height = 60; break;
+                  case 'quiz-intro-header':
+                    topOffset = 20;
+                    height = 120;
+                    break;
+                  case 'options-grid':
+                    topOffset = 150 + index * 200;
+                    height = 300;
+                    break;
+                  case 'form-container':
+                    topOffset = 200 + index * 150;
+                    height = 120;
+                    break;
+                  case 'button':
+                    topOffset = 400 + index * 100;
+                    height = 60;
+                    break;
                 }
 
                 return (
@@ -480,11 +666,13 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
                     onSelect={handleBlockSelect}
                     onMoveUp={() => {
                       const currentIndex = currentStepData.findIndex(b => b.id === blockId);
-                      if (currentIndex > 0) actions.reorderBlocks(currentStepKey, currentIndex, currentIndex - 1);
+                      if (currentIndex > 0)
+                        actions.reorderBlocks(currentStepKey, currentIndex, currentIndex - 1);
                     }}
                     onMoveDown={() => {
                       const currentIndex = currentStepData.findIndex(b => b.id === blockId);
-                      if (currentIndex < currentStepData.length - 1) actions.reorderBlocks(currentStepKey, currentIndex, currentIndex + 1);
+                      if (currentIndex < currentStepData.length - 1)
+                        actions.reorderBlocks(currentStepKey, currentIndex, currentIndex + 1);
                     }}
                     onDuplicate={() => handleBlockDuplicate(blockId)}
                     onDelete={() => handleBlockDelete(blockId)}
@@ -503,7 +691,11 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
     <div className="w-[380px] bg-white border-l border-gray-200 flex flex-col">
       <div className="p-4 border-b border-gray-200">
         <h3 className="font-semibold text-sm text-gray-900">Painel de Propriedades</h3>
-        {selectedBlock ? <p className="text-xs text-gray-500 mt-1">Editando: {selectedBlock.type}</p> : <p className="text-xs text-gray-500 mt-1">Selecione um bloco para editar</p>}
+        {selectedBlock ? (
+          <p className="text-xs text-gray-500 mt-1">Editando: {selectedBlock.type}</p>
+        ) : (
+          <p className="text-xs text-gray-500 mt-1">Selecione um bloco para editar</p>
+        )}
       </div>
 
       <div className="flex-1 overflow-y-auto">
@@ -523,11 +715,22 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
             <div className="text-xs">Clique em um bloco no canvas para ver suas propriedades</div>
 
             <div className="mt-6 p-4 bg-gray-50 rounded-lg text-left">
-              <h4 className="text-sm font-medium text-gray-900 mb-3">Estatísticas da Etapa {safeCurrentStep}</h4>
+              <h4 className="text-sm font-medium text-gray-900 mb-3">
+                Estatísticas da Etapa {safeCurrentStep}
+              </h4>
               <div className="space-y-2 text-xs">
-                <div className="flex justify-between"><span>Blocos configurados:</span><span className="font-medium">{currentStepData.length}</span></div>
-                <div className="flex justify-between"><span>Tipo da etapa:</span><span className="font-medium">{getStepAnalysis(safeCurrentStep).label}</span></div>
-                <div className="flex justify-between"><span>Função:</span><span className="font-medium">{getStepAnalysis(safeCurrentStep).desc}</span></div>
+                <div className="flex justify-between">
+                  <span>Blocos configurados:</span>
+                  <span className="font-medium">{currentStepData.length}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Tipo da etapa:</span>
+                  <span className="font-medium">{getStepAnalysis(safeCurrentStep).label}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Função:</span>
+                  <span className="font-medium">{getStepAnalysis(safeCurrentStep).desc}</span>
+                </div>
               </div>
             </div>
           </div>
@@ -541,7 +744,12 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
      ------------------------- */
   return (
     <>
-      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+      >
         <div className={`editor-pro h-screen bg-gray-50 flex ${className}`}>
           <StepSidebar />
           <ComponentsSidebar />
