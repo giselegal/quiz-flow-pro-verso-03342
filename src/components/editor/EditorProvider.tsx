@@ -1,13 +1,23 @@
 import { useHistoryState } from '@/hooks/useHistoryState';
+import { useEditorSupabase } from '@/hooks/useEditorSupabase';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import { Block } from '@/types/editor';
 import { arrayMove } from '@dnd-kit/sortable';
-import React, { createContext, ReactNode, useCallback, useContext } from 'react';
+import React, { createContext, ReactNode, useCallback, useContext, useEffect, useState } from 'react';
+import { 
+  groupSupabaseComponentsByStep, 
+  mapBlockToSupabaseComponent, 
+  extractStepNumberFromKey 
+} from '@/utils/supabaseMapper';
 
 export interface EditorState {
   stepBlocks: Record<string, Block[]>;
   currentStep: number;
   selectedBlockId: string | null;
+  // Supabase integration state
+  isSupabaseEnabled: boolean;
+  databaseMode: 'local' | 'supabase';
+  isLoading: boolean;
 }
 
 export interface EditorActions {
@@ -16,7 +26,7 @@ export interface EditorActions {
   setSelectedBlockId: (blockId: string | null) => void;
 
   // Block operations
-  addBlock: (stepKey: string, block: Block) => void;
+  addBlock: (stepKey: string, block: Block) => Promise<void>;
   removeBlock: (stepKey: string, blockId: string) => void;
   reorderBlocks: (stepKey: string, oldIndex: number, newIndex: number) => void;
   updateBlock: (stepKey: string, blockId: string, updates: Record<string, any>) => void;
@@ -30,6 +40,9 @@ export interface EditorActions {
   // Import/Export
   exportJSON: () => string;
   importJSON: (json: string) => void;
+
+  // Supabase operations
+  loadSupabaseComponents?: () => Promise<void>;
 }
 
 export interface EditorContextValue {
@@ -51,12 +64,19 @@ export interface EditorProviderProps {
   children: ReactNode;
   initial?: Partial<EditorState>;
   storageKey?: string;
+  // Supabase configuration
+  funnelId?: string;
+  quizId?: string;
+  enableSupabase?: boolean;
 }
 
 export const EditorProvider: React.FC<EditorProviderProps> = ({
   children,
   initial,
   storageKey = 'quiz-editor-state',
+  funnelId,
+  quizId,
+  enableSupabase = false,
 }) => {
   // Initialize state with template data
   const getInitialState = (): EditorState => {
@@ -69,6 +89,9 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       stepBlocks: initialBlocks,
       currentStep: 1,
       selectedBlockId: null,
+      isSupabaseEnabled: enableSupabase,
+      databaseMode: enableSupabase ? 'supabase' : 'local',
+      isLoading: false,
       ...initial,
     };
   };
@@ -86,11 +109,55 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     enablePersistence: true,
   });
 
+  // Initialize Supabase integration if enabled
+  const editorSupabase = useEditorSupabase(
+    enableSupabase ? funnelId : undefined,
+    enableSupabase ? quizId : undefined
+  );
+
+  // Load components from Supabase on mount if enabled
+  useEffect(() => {
+    if (enableSupabase && (funnelId || quizId)) {
+      console.log('🔄 Loading components from Supabase...');
+      // Will be implemented after state definition
+    }
+  }, [enableSupabase, funnelId, quizId]);
+
   // Ensure state integrity - fix corrupted currentStep
   const state = {
     ...rawState,
     currentStep: rawState.currentStep || 1, // Default to step 1 if undefined
   };
+
+  // Supabase functions
+  const loadSupabaseComponents = useCallback(async () => {
+    if (!enableSupabase || !editorSupabase) return;
+    
+    try {
+      setState({
+        ...state,
+        isLoading: true,
+      });
+      await editorSupabase.loadComponents();
+      
+      // Convert Supabase components to stepBlocks format
+      const groupedBlocks = groupSupabaseComponentsByStep(editorSupabase.components);
+      
+      setState({
+        ...state,
+        stepBlocks: { ...state.stepBlocks, ...groupedBlocks },
+        isLoading: false,
+      });
+      
+      console.log('✅ Components loaded from Supabase:', editorSupabase.components.length);
+    } catch (error) {
+      console.error('❌ Error loading Supabase components:', error);
+      setState({
+        ...state,
+        isLoading: false,
+      });
+    }
+  }, [enableSupabase, editorSupabase, state, setState]);
 
   // Actions
   const setCurrentStep = useCallback(
@@ -115,19 +182,63 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
   );
 
   const addBlock = useCallback(
-    (stepKey: string, block: Block) => {
+    async (stepKey: string, block: Block) => {
       console.log('🔧 EditorProvider.addBlock:', {
         stepKey,
         blockId: block.id,
         blockType: block.type,
+        databaseMode: state.databaseMode,
+        isSupabaseEnabled: state.isSupabaseEnabled,
       });
-      setState({
-        ...state,
-        stepBlocks: {
-          ...state.stepBlocks,
-          [stepKey]: [...(state.stepBlocks[stepKey] || []), block],
-        },
-      });
+
+      // If Supabase is enabled, sync with database
+      if (state.isSupabaseEnabled && editorSupabase) {
+        try {
+          const stepNumber = extractStepNumberFromKey(stepKey);
+          const supabaseData = mapBlockToSupabaseComponent(block, stepNumber, funnelId, quizId);
+          
+          // Add to Supabase with optimistic update
+          const supabaseComponent = await editorSupabase.addComponent(
+            supabaseData.component_type_key!,
+            supabaseData.step_number!,
+            supabaseData.properties,
+            supabaseData.order_index
+          );
+
+          if (supabaseComponent) {
+            // Update local state with server-generated data
+            const updatedBlock = { ...block, id: supabaseComponent.id };
+            setState({
+              ...state,
+              stepBlocks: {
+                ...state.stepBlocks,
+                [stepKey]: [...(state.stepBlocks[stepKey] || []), updatedBlock],
+              },
+              isLoading: false,
+            });
+            console.log('✅ Block synced with Supabase:', supabaseComponent.id);
+          }
+        } catch (error) {
+          console.error('❌ Error syncing block with Supabase:', error);
+          // Fallback to local-only update on error
+          setState({
+            ...state,
+            stepBlocks: {
+              ...state.stepBlocks,
+              [stepKey]: [...(state.stepBlocks[stepKey] || []), block],
+            },
+          });
+        }
+      } else {
+        // Local-only mode
+        setState({
+          ...state,
+          stepBlocks: {
+            ...state.stepBlocks,
+            [stepKey]: [...(state.stepBlocks[stepKey] || []), block],
+          },
+        });
+      }
       console.log(
         '✅ Block added to step:',
         stepKey,
@@ -135,7 +246,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
         (state.stepBlocks[stepKey] || []).length + 1
       );
     },
-    [state, setState]
+    [state, setState, editorSupabase, funnelId, quizId]
   );
 
   const removeBlock = useCallback(
