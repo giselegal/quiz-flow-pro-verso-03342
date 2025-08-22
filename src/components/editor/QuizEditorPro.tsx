@@ -1,3 +1,5 @@
+import { DraggableComponentItem } from '@/components/editor/dnd/DraggableComponentItem';
+import CanvasDropZone from '@/components/editor/canvas/CanvasDropZone';
 import { QuizRenderer } from '@/components/core/QuizRenderer';
 import EnhancedUniversalPropertiesPanelFixed from '@/components/universal/EnhancedUniversalPropertiesPanelFixed';
 import { cn } from '@/lib/utils';
@@ -274,55 +276,65 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
     setSelectedBlockId(null);
   }, []);
 
+  const handleBlockDuplicate = useCallback(
+    (blockId: string) => {
+      const blockToDuplicate = currentStepData.find(block => block.id === blockId);
+      if (blockToDuplicate) {
+        const newBlock = {
+          ...blockToDuplicate,
+          id: `${blockToDuplicate.type}-${Date.now()}-copy`,
+          order: currentStepData.length,
+        };
+        addBlockToStep(currentStepKey, newBlock);
+        setSelectedBlockId(newBlock.id);
+      }
+    },
+    [currentStepData, currentStepKey, addBlockToStep]
+  );
+
   // Drag & Drop handlers
   const handleDragStart = useCallback(
     (event: DragStartEvent) => {
       const { active } = event;
-
-      // Se é um componente da biblioteca
-      if (typeof active.id === 'string' && active.id.includes('component-')) {
-        // Componente sendo arrastado da biblioteca
-      }
-
-      // Se é um bloco existente
-      if (typeof active.id === 'string' && active.id.includes('block-')) {
-        // Bloco sendo reordenado
-      }
+      console.log('🔄 Drag iniciado:', active.id, active.data?.current);
     },
-    [availableComponents, currentStepData]
+    []
   );
 
   const handleDragEnd = useCallback(
     (event: DragEndEvent) => {
       const { active, over } = event;
 
-      if (!over) return;
-
-      // Arrastar componente da biblioteca para o canvas
-      if (
-        typeof active.id === 'string' &&
-        active.id.includes('component-') &&
-        over.id === 'canvas-drop-zone'
-      ) {
-        const componentType = active.id.replace('component-', '');
-        const newBlock = createBlockFromComponent(componentType);
-        addBlockToStep(currentStepKey, newBlock);
-        setSelectedBlockId(newBlock.id);
+      if (!over) {
+        console.log('🔄 Drag finalizado sem drop zone válido');
         return;
       }
 
-      // Reordenar blocos existentes
-      if (
-        typeof active.id === 'string' &&
-        typeof over.id === 'string' &&
-        active.id.includes('block-') &&
-        over.id.includes('block-')
-      ) {
+      const activeData = active.data.current;
+      console.log('🔄 Drag finalizado:', {
+        activeId: active.id,
+        overId: over.id,
+        activeData,
+      });
+
+      // Caso 1: Arrastar componente da sidebar para o canvas
+      if (activeData?.type === 'sidebar-component') {
+        const componentType = activeData.blockType;
+        const newBlock = createBlockFromComponent(componentType);
+        addBlockToStep(currentStepKey, newBlock);
+        setSelectedBlockId(newBlock.id);
+        console.log('✅ Componente adicionado:', newBlock.id);
+        return;
+      }
+
+      // Caso 2: Reordenar blocos existentes no canvas
+      if (typeof active.id === 'string' && typeof over.id === 'string') {
         const activeIndex = currentStepData.findIndex(block => block.id === active.id);
         const overIndex = currentStepData.findIndex(block => block.id === over.id);
 
         if (activeIndex !== -1 && overIndex !== -1 && activeIndex !== overIndex) {
           reorderBlocksInStep(currentStepKey, activeIndex, overIndex);
+          console.log('✅ Blocos reordenados:', { from: activeIndex, to: overIndex });
         }
       }
     },
@@ -403,37 +415,17 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
                   <h4 className="text-xs font-semibold text-gray-700 mb-2 uppercase tracking-wide">
                     {category}
                   </h4>
-                  <div className="space-y-1">
+                  <div className="space-y-2">
                     {components.map(component => (
-                      <div
+                      <DraggableComponentItem
                         key={component.type}
-                        draggable
-                        className="p-3 bg-gray-50 rounded-lg border border-gray-200 hover:border-blue-300 cursor-grab active:cursor-grabbing transition-colors group"
-                        onDragStart={e => {
-                          e.dataTransfer.setData('component-type', component.type);
-                          handleDragStart({
-                            active: { id: `component-${component.type}` },
-                          } as DragStartEvent);
-                        }}
-                        onDragEnd={() => {
-                          // Drag finalizado
-                        }}
-                      >
-                        <div className="flex items-start gap-3">
-                          <span className="text-lg flex-shrink-0">{component.icon}</span>
-                          <div className="flex-1 min-w-0">
-                            <div className="font-medium text-sm text-gray-900">
-                              {component.name}
-                            </div>
-                            <div className="text-xs text-gray-600 mt-1">
-                              {component.description}
-                            </div>
-                            <div className="text-xs text-blue-600 mt-1 font-mono">
-                              {component.type}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+                        blockType={component.type}
+                        title={component.name}
+                        description={component.description}
+                        icon={<span className="text-lg">{component.icon}</span>}
+                        category={component.category}
+                        className="bg-gray-50 hover:bg-gray-100 border border-gray-200 hover:border-blue-300"
+                      />
                     ))}
                   </div>
                 </div>
@@ -526,161 +518,75 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
             </div>
           </div>
 
-          {/* Área do Canvas */}
-          <div className="flex-1 p-6 overflow-auto" id="canvas-drop-zone">
-            <div className="max-w-4xl mx-auto">
-              {/* ✏️ MODO EDIÇÃO E PREVIEW - Conteúdo real com overlays de seleção */}
-              <div className="relative bg-white rounded-lg shadow-sm">
-                {/* Renderização do conteúdo real */}
-                <QuizRenderer
-                  mode={mode === 'preview' ? 'preview' : 'editor'}
-                  onStepChange={handleStepSelect}
-                  initialStep={currentStep}
-                />
+          {/* Área do Canvas com DropZone */}
+          <CanvasDropZone isEmpty={currentStepData.length === 0 && mode === 'edit'}>
+            {/* Renderização do conteúdo real */}
+            <QuizRenderer
+              mode={mode === 'preview' ? 'preview' : 'editor'}
+              onStepChange={handleStepSelect}
+              initialStep={currentStep}
+            />
 
-                {/* Overlays de seleção apenas no modo de edição */}
-                {mode === 'edit' && (
-                  <SortableContext
-                    items={currentStepData.map(
-                      block => block.id || `block-${currentStepData.indexOf(block)}`
-                    )}
-                    strategy={verticalListSortingStrategy}
-                  >
-                    <div className="absolute inset-0 pointer-events-none z-50">
-                      {currentStepData.map((block: Block, index: number) => {
-                        const blockId = block.id || `block-${index}`;
-                        const isSelected = selectedBlockId === blockId;
-
-                        // Calcular posição baseada no tipo de bloco e ordem
-                        let topOffset = 0;
-                        let height = 80;
-
-                        // Ajustar posição baseado no tipo de bloco
-                        switch (block.type) {
-                          case 'quiz-intro-header':
-                            topOffset = 20;
-                            height = 120;
-                            break;
-                          case 'options-grid':
-                            topOffset = 150 + index * 200;
-                            height = 300;
-                            break;
-                          case 'form-container':
-                            topOffset = 200 + index * 150;
-                            height = 120;
-                            break;
-                          case 'button':
-                            topOffset = 400 + index * 100;
-                            height = 60;
-                            break;
-                          default:
-                            topOffset = 60 + index * 100;
-                            height = 80;
-                        }
-
-                        return (
-                          <SortableBlock
-                            key={blockId}
-                            id={blockId}
-                            block={block}
-                            isSelected={isSelected}
-                            topOffset={topOffset}
-                            height={height}
-                            onSelect={handleBlockSelect}
-                            onMoveUp={handleBlockMoveUp}
-                            onMoveDown={handleBlockMoveDown}
-                            onDuplicate={() => {
-                              const newBlock = createBlockFromComponent(block.type);
-                              addBlockToStep(currentStepKey, newBlock);
-                            }}
-                            onDelete={handleBlockDelete}
-                          />
-                        );
-                      })}
-                    </div>
-                  </SortableContext>
+            {/* Overlays de seleção apenas no modo de edição */}
+            {mode === 'edit' && (
+              <SortableContext
+                items={currentStepData.map(
+                  block => block.id || `block-${currentStepData.indexOf(block)}`
                 )}
+                strategy={verticalListSortingStrategy}
+              >
+                <div className="absolute inset-0 pointer-events-none z-50">
+                  {currentStepData.map((block: Block, index: number) => {
+                    const blockId = block.id || `block-${index}`;
+                    const isSelected = selectedBlockId === blockId;
 
-                {/* Área de drop para novos componentes (apenas modo edição) */}
-                {mode === 'edit' && currentStepData.length > 0 && (
-                  <div
-                    className="absolute bottom-0 left-4 right-4 border-2 border-dashed border-blue-300 rounded-lg p-6 text-center text-blue-500 bg-blue-50 bg-opacity-50 hover:border-blue-500 hover:bg-opacity-80 transition-all duration-200"
-                    onDragOver={e => {
-                      e.preventDefault();
-                      e.currentTarget.classList.add('border-blue-600', 'bg-blue-100');
-                    }}
-                    onDragLeave={e => {
-                      e.currentTarget.classList.remove('border-blue-600', 'bg-blue-100');
-                    }}
-                    onDrop={e => {
-                      e.preventDefault();
-                      e.currentTarget.classList.remove('border-blue-600', 'bg-blue-100');
+                    // Calcular posição baseada no tipo de bloco e ordem
+                    let topOffset = 0;
+                    let height = 80;
 
-                      const componentType = e.dataTransfer.getData('component-type');
-                      if (componentType) {
-                        const newBlock = createBlockFromComponent(componentType);
-                        addBlockToStep(currentStepKey, newBlock);
-                        setSelectedBlockId(newBlock.id);
-                      }
-                    }}
-                  >
-                    <div className="text-lg mb-2">➕</div>
-                    <div className="text-sm font-medium">
-                      Arraste um componente aqui para adicionar
-                    </div>
-                  </div>
-                )}
+                    // Ajustar posição baseado no tipo de bloco
+                    switch (block.type) {
+                      case 'quiz-intro-header':
+                        topOffset = 20;
+                        height = 120;
+                        break;
+                      case 'options-grid':
+                        topOffset = 150 + index * 200;
+                        height = 300;
+                        break;
+                      case 'form-container':
+                        topOffset = 200 + index * 150;
+                        height = 120;
+                        break;
+                      case 'button':
+                        topOffset = 400 + index * 100;
+                        height = 60;
+                        break;
+                      default:
+                        topOffset = 60 + index * 100;
+                        height = 80;
+                    }
 
-                {/* Estado vazio (apenas modo edição) */}
-                {mode === 'edit' && currentStepData.length === 0 && (
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div
-                      className="text-center py-16 text-gray-500 border-2 border-dashed border-gray-300 rounded-lg bg-white bg-opacity-90 max-w-md transition-all duration-200 hover:border-blue-400 hover:bg-blue-50"
-                      onDragOver={e => {
-                        e.preventDefault();
-                        e.currentTarget.classList.add(
-                          'border-blue-500',
-                          'bg-blue-100',
-                          'text-blue-600'
-                        );
-                      }}
-                      onDragLeave={e => {
-                        e.currentTarget.classList.remove(
-                          'border-blue-500',
-                          'bg-blue-100',
-                          'text-blue-600'
-                        );
-                      }}
-                      onDrop={e => {
-                        e.preventDefault();
-                        e.currentTarget.classList.remove(
-                          'border-blue-500',
-                          'bg-blue-100',
-                          'text-blue-600'
-                        );
-
-                        const componentType = e.dataTransfer.getData('component-type');
-                        if (componentType) {
-                          const newBlock = createBlockFromComponent(componentType);
-                          addBlockToStep(currentStepKey, newBlock);
-                          setSelectedBlockId(newBlock.id);
-                        }
-                      }}
-                    >
-                      <div className="text-3xl mb-4">📝</div>
-                      <div className="text-lg font-medium mb-2">Nenhum bloco configurado</div>
-                      <div className="text-sm mb-4">
-                        Esta etapa ainda não possui componentes configurados
-                      </div>
-                      <div className="text-xs text-gray-400">
-                        Arraste componentes da biblioteca para começar a editar
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
+                    return (
+                      <SortableBlock
+                        key={blockId}
+                        id={blockId}
+                        block={block}
+                        isSelected={isSelected}
+                        topOffset={topOffset}
+                        height={height}
+                        onSelect={handleBlockSelect}
+                        onMoveUp={handleBlockMoveUp}
+                        onMoveDown={handleBlockMoveDown}
+                        onDuplicate={() => handleBlockDuplicate(blockId)}
+                        onDelete={handleBlockDelete}
+                      />
+                    );
+                  })}
+                </div>
+              </SortableContext>
+            )}
+          </CanvasDropZone>
         </div>
 
         {/* ⚙️ COLUNA 4: PROPRIEDADES (380px) */}

@@ -1,210 +1,72 @@
-import { Button } from '@/components/ui/button';
-import { usePreview } from '@/context/PreviewContext';
 import { cn } from '@/lib/utils';
-import { Block } from '@/types/editor';
 import { useDroppable } from '@dnd-kit/core';
-import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import React from 'react';
-import { SortableBlockWrapper } from './SortableBlockWrapper';
-
-// Componente para drop zone entre blocos
-const InterBlockDropZone: React.FC<{
-  position: number;
-  isActive: boolean;
-}> = ({ position, isActive }) => {
-  const { setNodeRef, isOver } = useDroppable({
-    id: `drop-zone-${position}`,
-    data: {
-      type: 'canvas-drop-zone',
-      accepts: ['sidebar-component', 'canvas-block'], // Aceita tanto componentes da sidebar quanto blocos do canvas
-      position: position,
-    },
-  });
-
-  return (
-    <div
-      ref={setNodeRef}
-      className={cn(
-        'h-3 transition-all duration-200 relative',
-        isOver && 'h-12 bg-brand/10 border-2 border-dashed border-brand/40 rounded-lg',
-        isActive && !isOver && 'h-1 bg-brand/20 rounded-full opacity-50'
-      )}
-    >
-      {isOver && (
-        <div className="absolute inset-0 flex items-center justify-center">
-          <p className="text-brand font-medium text-sm bg-white/80 px-2 py-1 rounded">
-            Inserir aqui (posição {position})
-          </p>
-        </div>
-      )}
-    </div>
-  );
-};
 
 interface CanvasDropZoneProps {
-  blocks: Block[];
-  selectedBlockId: string | null;
-  onSelectBlock: (id: string) => void;
-  onUpdateBlock: (id: string, updates: any) => void;
-  onDeleteBlock: (id: string) => void;
+  children: React.ReactNode;
+  isEmpty: boolean;
   className?: string;
-  isPreviewing?: boolean; // Adicionado suporte a preview externo
 }
 
-export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
-  blocks,
-  selectedBlockId,
-  onSelectBlock,
-  onUpdateBlock,
-  onDeleteBlock,
+const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
+  children,
+  isEmpty,
   className,
-  isPreviewing: externalPreview,
 }) => {
-  // Safe preview context usage with fallback
-  const { isPreviewing: contextPreview } = usePreview();
-
-  // Usar preview externo se fornecido, senão usar o contexto
-  const isPreviewing = externalPreview !== undefined ? externalPreview : contextPreview;
-  const { setNodeRef, isOver, active } = useDroppable({
+  const { setNodeRef, isOver } = useDroppable({
     id: 'canvas-drop-zone',
     data: {
-      type: 'canvas-drop-zone',
-      accepts: ['sidebar-component', 'canvas-block'],
-      position: blocks.length, // Posição no final
+      type: 'canvas',
+      accepts: ['sidebar-component'],
     },
   });
-
-  // Verifica se qualquer item arrastável válido está ativo
-  const isDraggingAnyValidComponent =
-    active?.data.current?.type === 'sidebar-component' ||
-    active?.data.current?.type === 'canvas-block';
-
-  // Debug do drop zone
-  React.useEffect(() => {
-    console.log('🎯 CanvasDropZone: isOver =', isOver, 'active =', active?.id);
-    if (active?.data.current?.type === 'sidebar-component') {
-      console.log('📦 Arrastando componente da sidebar:', active?.data.current?.blockType);
-    } else if (active?.data.current?.type === 'canvas-block') {
-      console.log('🔄 Reordenando bloco do canvas:', active?.id);
-    }
-  }, [isOver, active]);
 
   return (
     <div
       ref={setNodeRef}
       className={cn(
-        'p-3 min-h-[400px] transition-all duration-200',
-        isOver && !isPreviewing && 'bg-brand/5 ring-2 ring-brand/20 ring-dashed',
+        'flex-1 p-6 overflow-auto transition-all duration-200',
+        isOver && 'bg-blue-50',
         className
       )}
     >
-      {blocks.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="text-stone-500 text-lg mb-2">
-            {isPreviewing
-              ? 'Modo Preview - Nenhum componente nesta etapa'
-              : 'Canvas vazio - Arraste componentes da sidebar para começar'}
-          </p>
+      <div className="max-w-4xl mx-auto">
+        <div
+          className={cn(
+            'relative bg-white rounded-lg shadow-sm min-h-[600px]',
+            isOver && 'ring-2 ring-blue-300 ring-opacity-50'
+          )}
+        >
+          {children}
 
-          {/* Botão para recarregar template */}
-          {!isPreviewing && (
-            <div className="mt-4">
-              <Button
-                variant="outline"
-                className="mx-auto border-dashed"
-                onClick={async () => {
-                  try {
-                    // Extrair número da etapa atual
-                    const stepId =
-                      document
-                        .querySelector('.editor-stage-active')
-                        ?.getAttribute('data-stage-id') || 'step-1';
-                    const stepNumber = parseInt(stepId.replace('step-', ''), 10) || 1;
-
-                    // Importar dinamicamente o templateService
-                    const templateServiceModule = await import('@/services/templateService');
-                    const template =
-                      await templateServiceModule.default.getTemplateByStep(stepNumber);
-
-                    if (template && template.blocks && template.blocks.length > 0) {
-                      // Converter para formato do editor (método simplificado)
-                      const editorBlocks =
-                        templateServiceModule.default.convertTemplateBlocksToEditorBlocks();
-                      // Atualizar os blocos no estado (via callback para acesso direto)
-                      onUpdateBlock('template-update', { blocks: editorBlocks });
-                    }
-                  } catch (error) {
-                    console.error('Erro ao recarregar template:', error);
-                  }
-                }}
-              >
-                🔄 Recarregar Template
-              </Button>
+          {/* Drop indicator overlay */}
+          {isOver && (
+            <div className="absolute inset-0 bg-blue-100 bg-opacity-20 rounded-lg border-2 border-dashed border-blue-300 flex items-center justify-center z-40">
+              <div className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg font-medium text-sm">
+                ✨ Solte aqui o componente
+              </div>
             </div>
           )}
 
-          {/* BOTÃO PARA MODO PREVIEW: Carregar templates */}
-          {isPreviewing && (
-            <div className="mt-4">
-              <Button
-                variant="outline"
-                className="mx-auto border-dashed bg-orange-50 border-orange-300 text-orange-700"
-                onClick={() => {
-                  alert('🔄 Recarregue a página (F5) para atualizar os templates das etapas');
-                  window.location.reload();
-                }}
-              >
-                🔄 Recarregar Página
-              </Button>
-              <p className="text-xs text-gray-500 mt-2 max-w-md mx-auto">
-                ⚠️ As etapas estão configuradas nos templates, mas pode ser necessário recarregar a
-                página
-              </p>
-            </div>
-          )}
-
-          {isOver && !isPreviewing && (
-            <div className="mt-4 p-4 border-2 border-dashed border-brand/30 rounded-lg bg-brand/5">
-              <p className="text-brand font-medium">Solte o componente aqui</p>
+          {/* Empty state overlay */}
+          {isEmpty && !isOver && (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="text-center py-16 text-gray-500 max-w-md">
+                <div className="text-3xl mb-4">📝</div>
+                <div className="text-lg font-medium mb-2">Nenhum bloco configurado</div>
+                <div className="text-sm mb-4">
+                  Esta etapa ainda não possui componentes configurados
+                </div>
+                <div className="text-xs text-gray-400">
+                  Arraste componentes da biblioteca para começar a editar
+                </div>
+              </div>
             </div>
           )}
         </div>
-      ) : (
-        <SortableContext
-          items={blocks.map(block => block.id)}
-          strategy={verticalListSortingStrategy}
-        >
-          <div className="space-y-0">
-            {/* Drop zone no início - agora aparece para QUALQUER item válido */}
-            {isDraggingAnyValidComponent && <InterBlockDropZone position={0} isActive={true} />}
-
-            {blocks.map((block, index) => (
-              <React.Fragment key={block.id}>
-                <SortableBlockWrapper
-                  block={block}
-                  isSelected={!isPreviewing && selectedBlockId === block.id}
-                  onSelect={() => !isPreviewing && onSelectBlock(block.id)}
-                  onUpdate={updates => {
-                    if (!isPreviewing) {
-                      onUpdateBlock(block.id, updates);
-                    }
-                  }}
-                  onDelete={() => {
-                    if (!isPreviewing) {
-                      onDeleteBlock(block.id);
-                    }
-                  }}
-                />
-
-                {/* Drop zone entre blocos - agora aparece para QUALQUER item válido */}
-                {isDraggingAnyValidComponent && (
-                  <InterBlockDropZone position={index + 1} isActive={true} />
-                )}
-              </React.Fragment>
-            ))}
-          </div>
-        </SortableContext>
-      )}
+      </div>
     </div>
   );
 };
+
+export default CanvasDropZone;
