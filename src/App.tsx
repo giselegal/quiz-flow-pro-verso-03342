@@ -24,6 +24,8 @@ const EditorWithPreviewFixed = lazy(() => import('./pages/EditorWithPreview-fixe
 const EditorModularPage = lazy(() => import('./pages/editor-modular'));
 const EditorUnified = lazy(() => import('./pages/EditorUnified')); // 🆕 EDITOR UNIFICADO
 const EditorUnifiedV2 = lazy(() => import('./pages/EditorUnifiedV2')); // 🚀 PRIORIDADE 2 - EDITOR UNIFICADO V2
+const QuizEditorComplete = lazy(() => import('./pages/editors/QuizEditorComplete')); // 🎯 EDITOR COMPLETO
+const QuizEditorPro = lazy(() => import('./components/editor/QuizEditorPro')); // 🏆 EDITOR PROFISSIONAL 4 COLUNAS
 // const ProductionQuizPage = lazy(() => import('./pages/ProductionQuizPage')); // Removido
 const QuizIntegratedPage = lazy(() => import('./pages/QuizIntegratedPage'));
 
@@ -149,6 +151,20 @@ function App() {
                         </Suspense>
                       </EditorProvider>
                     </FunnelsProvider>
+                  </Route>
+
+                  {/* 🎯 EDITOR COMPLETO - Template 21 etapas com lógica de cálculo */}
+                  <Route path="/editor-complete">
+                    <Suspense fallback={<PageLoading />}>
+                      <QuizEditorComplete />
+                    </Suspense>
+                  </Route>
+
+                  {/* 🏆 EDITOR PROFISSIONAL - Layout 4 colunas com DnD */}
+                  <Route path="/editor-pro">
+                    <Suspense fallback={<PageLoading />}>
+                      <QuizEditorPro />
+                    </Suspense>
                   </Route>
 
                   {/* 📊 DASHBOARD ADMINISTRATIVO - PROTECTED */}
