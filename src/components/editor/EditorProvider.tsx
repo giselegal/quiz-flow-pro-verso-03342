@@ -441,7 +441,75 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
   );
 
   const exportJSON = useCallback(() => {
-    return JSON.stringify(state, null, 2);
+    // Normalize step keys to canonical format step-<n>
+    const normalizedStepBlocks: Record<string, Block[]> = {};
+    Object.entries(state.stepBlocks).forEach(([key, blocks]) => {
+      const match = key.match(/(\d+)/);
+      if (match) {
+        const stepNumber = match[1];
+        const normalizedKey = `step-${stepNumber}`;
+        normalizedStepBlocks[normalizedKey] = blocks;
+      } else {
+        normalizedStepBlocks[key] = blocks;
+      }
+    });
+
+    // Validate Question components and ResultBlock outcomes
+    const warnings: string[] = [];
+    Object.entries(normalizedStepBlocks).forEach(([stepKey, blocks]) => {
+      blocks.forEach((block) => {
+        // Validate Question components have required props
+        if (block.type === 'Question' || block.type === 'options-grid') {
+          const options = block.props?.options;
+          if (!Array.isArray(options) || options.length === 0) {
+            warnings.push(`${stepKey}: Question component missing options array`);
+          } else {
+            options.forEach((option: any, index: number) => {
+              if (!option.value) {
+                warnings.push(`${stepKey}: Question option ${index} missing value property`);
+              }
+            });
+          }
+        }
+        
+        // Validate ResultBlock outcomeMapping references
+        if (block.type === 'ResultBlock' || block.type === 'result-header-inline') {
+          const outcomeMapping = block.props?.outcomeMapping;
+          if (outcomeMapping && typeof outcomeMapping === 'object') {
+            Object.values(outcomeMapping).forEach((outcomeId: any) => {
+              // Check if outcome exists in schema_json (basic validation)
+              const outcomeExists = Object.values(normalizedStepBlocks).some(stepBlocks =>
+                stepBlocks.some(b => b.id === outcomeId || b.props?.outcomeId === outcomeId)
+              );
+              if (!outcomeExists) {
+                warnings.push(`${stepKey}: ResultBlock references undefined outcome: ${outcomeId}`);
+              }
+            });
+          }
+        }
+      });
+    });
+
+    // Log warnings if any (non-blocking)
+    if (warnings.length > 0) {
+      console.warn('Export validation warnings:', warnings);
+    }
+
+    // Create simple hash for schema consistency
+    const schemaHash = JSON.stringify(normalizedStepBlocks).length.toString(36);
+    
+    const exportData = {
+      ...state,
+      stepBlocks: normalizedStepBlocks,
+      metadata: {
+        engineVersion: '1.0.0',
+        schemaHash,
+        exportDate: new Date().toISOString(),
+        validationWarnings: warnings
+      }
+    };
+
+    return JSON.stringify(exportData, null, 2);
   }, [state]);
 
   const importJSON = useCallback(
