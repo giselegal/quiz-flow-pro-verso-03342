@@ -28,9 +28,9 @@ import {
   KeyboardSensor,
   PointerSensor,
   rectIntersection,
+  useDroppable,
   useSensor,
   useSensors,
-  useDroppable,
 } from '@dnd-kit/core';
 import { restrictToParentElement, restrictToVerticalAxis } from '@dnd-kit/modifiers';
 import {
@@ -104,11 +104,11 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   // 🚀 MELHORIAS DND: Estados para DragOverlay e Placeholder
   const [activeDrag, setActiveDrag] = useState<any>(null);
   const [placeholderIndex, setPlaceholderIndex] = useState<number | null>(null);
-  
+
   // 🚀 MELHORIA P2: Auto-scroll durante drag
   const [isDragging, setIsDragging] = useState(false);
   const canvasRef = useRef<HTMLDivElement>(null);
-  
+
   // 🚀 MELHORIA P2: Cross-step drops
   const [dropTargetStep, setDropTargetStep] = useState<number | null>(null);
 
@@ -152,21 +152,21 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       };
       navigator.vibrate(patterns[intensity]);
     }
-    
+
     // Audio feedback (opcional)
     if ('AudioContext' in window) {
       try {
         const audioContext = new AudioContext();
         const oscillator = audioContext.createOscillator();
         const gainNode = audioContext.createGain();
-        
+
         oscillator.connect(gainNode);
         gainNode.connect(audioContext.destination);
-        
+
         oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
         gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
         gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
-        
+
         oscillator.start(audioContext.currentTime);
         oscillator.stop(audioContext.currentTime + 0.1);
       } catch (e) {
@@ -212,7 +212,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
     };
 
     document.addEventListener('pointermove', scheduleAutoScroll);
-    
+
     return () => {
       document.removeEventListener('pointermove', scheduleAutoScroll);
       cancelAnimationFrame(animationId);
@@ -397,25 +397,28 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   );
 
   // 🚀 MELHORIAS DND: Handlers atualizados
-  const handleDragStart = useCallback((event: DragStartEvent) => {
-    const { active } = event;
-    const dragData = extractDragData(active);
+  const handleDragStart = useCallback(
+    (event: DragStartEvent) => {
+      const { active } = event;
+      const dragData = extractDragData(active);
 
-    // Guarda informações do item ativo para DragOverlay
-    setActiveDrag({
-      id: active.id,
-      data: dragData,
-    });
-    
-    // 🚀 P2: Ativa auto-scroll
-    setIsDragging(true);
-    
-    // 🚀 P2: Haptic feedback ao iniciar drag
-    triggerHapticFeedback('light');
+      // Guarda informações do item ativo para DragOverlay
+      setActiveDrag({
+        id: active.id,
+        data: dragData,
+      });
 
-    logDragEvent('start', active);
-    if (process.env.NODE_ENV === 'development') devLog('Drag start', dragData);
-  }, [triggerHapticFeedback]);
+      // 🚀 P2: Ativa auto-scroll
+      setIsDragging(true);
+
+      // 🚀 P2: Haptic feedback ao iniciar drag
+      triggerHapticFeedback('light');
+
+      logDragEvent('start', active);
+      if (process.env.NODE_ENV === 'development') devLog('Drag start', dragData);
+    },
+    [triggerHapticFeedback]
+  );
 
   // 🚀 NOVO: Handler para DragOver (placeholder visual)
   const handleDragOver = useCallback(
@@ -484,16 +487,16 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       // 🚀 P2: Cross-step drops - processar drag entre steps diferentes
       if (dropTargetStep !== null && dropTargetStep !== state.currentStep) {
         const dragData = extractDragData(active);
-        
+
         if (dragData?.type === 'canvas-block' && typeof active.id === 'string') {
           const sourceIndex = idIndexMap[active.id];
-          
+
           if (sourceIndex !== undefined) {
             // Move bloco para outro step
             const sourceStepKey = `step${state.currentStep}`;
             const targetStepKey = `step${dropTargetStep}`;
             const blockToMove = currentStepData[sourceIndex];
-            
+
             if (blockToMove) {
               // Remove do step origem
               actions.removeBlock(sourceStepKey, blockToMove.id);
@@ -507,7 +510,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
             }
           }
         }
-        
+
         setDropTargetStep(null);
         return;
       }
@@ -564,7 +567,16 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         notification?.error?.('Erro ao processar drag & drop');
       }
     },
-    [actions, currentStepData, currentStepKey, notification, idIndexMap, triggerHapticFeedback, dropTargetStep, state.currentStep]
+    [
+      actions,
+      currentStepData,
+      currentStepKey,
+      notification,
+      idIndexMap,
+      triggerHapticFeedback,
+      dropTargetStep,
+      state.currentStep,
+    ]
   );
 
   /* -------------------------
@@ -572,12 +584,12 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
      ------------------------- */
 
   // 🚀 P2: Step button com droppable para cross-step drops
-  const DroppableStepButton: React.FC<{ 
-    step: number; 
-    isActive: boolean; 
-    hasBlocks: boolean; 
-    analysis: any; 
-    onClick: () => void; 
+  const DroppableStepButton: React.FC<{
+    step: number;
+    isActive: boolean;
+    hasBlocks: boolean;
+    analysis: any;
+    onClick: () => void;
   }> = ({ step, isActive, hasBlocks, analysis, onClick }) => {
     const { setNodeRef, isOver } = useDroppable({
       id: `step-${step}`,
@@ -590,9 +602,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         onClick={onClick}
         className={cn(
           'w-full text-left p-2 rounded-md text-xs transition-colors',
-          isActive
-            ? 'bg-blue-100 border-blue-300 text-blue-900'
-            : 'hover:bg-gray-50 text-gray-700',
+          isActive ? 'bg-blue-100 border-blue-300 text-blue-900' : 'hover:bg-gray-50 text-gray-700',
           // 🚀 P2: Visual feedback para cross-step drop target
           isOver && 'ring-2 ring-blue-400 bg-blue-50'
         )}
@@ -887,8 +897,14 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
                   index === currentStepData.length - 1;
 
                 // 🚀 P2: Componente Placeholder Visual Avançado
-                const PlaceholderLine = ({ style, className }: { style?: React.CSSProperties; className?: string }) => (
-                  <div className={cn("flex items-center z-60", className)} style={style}>
+                const PlaceholderLine = ({
+                  style,
+                  className,
+                }: {
+                  style?: React.CSSProperties;
+                  className?: string;
+                }) => (
+                  <div className={cn('flex items-center z-60', className)} style={style}>
                     <div className="w-3 h-3 bg-blue-500 rounded-full animate-ping"></div>
                     <div className="flex-1 h-1 bg-gradient-to-r from-blue-300 via-blue-500 to-blue-300 rounded-full mx-2 animate-pulse"></div>
                     <div className="w-3 h-3 bg-blue-500 rounded-full animate-ping"></div>

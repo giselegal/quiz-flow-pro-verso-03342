@@ -3,6 +3,7 @@
 ## 🚀 Status de Implementação
 
 ### ✅ P1 - Funcionalidades Core (Completo)
+
 - ✅ **DragOverlay**: Preview visual durante drag
 - ✅ **Placeholder Visual**: Indicadores de posição
 - ✅ **Collision Detection**: Detecção inteligente baseada em contexto
@@ -11,8 +12,9 @@
 ### ✅ P2 - Melhorias Avançadas (Implementado)
 
 #### 1. ✅ Auto-scroll Inteligente
+
 - **Sistema**: Detecção de posição do mouse nos limites do container
-- **Zona de Scroll**: 100px das bordas superior/inferior 
+- **Zona de Scroll**: 100px das bordas superior/inferior
 - **Velocidade**: 5px por frame para suavidade
 - **Ativação**: Automática durante drag operations
 - **Performance**: requestAnimationFrame otimizado
@@ -21,7 +23,7 @@
 // Auto-scroll quando mouse próximo às bordas
 useEffect(() => {
   if (!isDragging || !canvasRef.current) return;
-  
+
   const scroll = () => {
     const { scrollTop, scrollHeight, clientHeight } = canvasRef.current!;
     if (mousePosition.y < 100 && scrollTop > 0) {
@@ -30,13 +32,14 @@ useEffect(() => {
       canvasRef.current!.scrollTop += 5;
     }
   };
-  
+
   const frameId = requestAnimationFrame(scroll);
   return () => cancelAnimationFrame(frameId);
 }, [isDragging, mousePosition]);
 ```
 
 #### 2. ✅ Haptic Feedback Mobile
+
 - **Navigator.vibrate()**: Feedback tátil nativo
 - **AudioContext**: Feedback sonoro para desktop
 - **Intensidades**: `light` (50ms), `medium` (100ms), `heavy` (200ms)
@@ -46,12 +49,12 @@ useEffect(() => {
 ```tsx
 const triggerHapticFeedback = (intensity: 'light' | 'medium' | 'heavy') => {
   const patterns = { light: 50, medium: 100, heavy: 200 };
-  
+
   // Vibração móvel
   if ('vibrate' in navigator) {
     navigator.vibrate(patterns[intensity]);
   }
-  
+
   // Audio feedback desktop
   const audioContext = new AudioContext();
   const oscillator = audioContext.createOscillator();
@@ -63,6 +66,7 @@ const triggerHapticFeedback = (intensity: 'light' | 'medium' | 'heavy') => {
 ```
 
 #### 3. ✅ Cross-step Drops
+
 - **Detecção**: Steps como alvos de drop com IDs `step-{number}`
 - **Visual**: Highlight blue ring + ícone 📁 nos steps
 - **Funcionalidade**: Move blocos entre diferentes etapas
@@ -82,14 +86,21 @@ if (overStepData) {
 ```
 
 #### 4. ✅ PlaceholderLine Avançado
+
 - **Gradiente**: from-blue-300 via-blue-500 to-blue-300
 - **Animações**: animate-ping nos círculos, animate-pulse na linha
 - **Elementos**: Círculos nas extremidades + centro
 - **Responsivo**: Props de style e className configuráveis
 
 ```tsx
-const PlaceholderLine = ({ style, className }: { style?: React.CSSProperties; className?: string }) => (
-  <div className={cn("flex items-center z-60", className)} style={style}>
+const PlaceholderLine = ({
+  style,
+  className,
+}: {
+  style?: React.CSSProperties;
+  className?: string;
+}) => (
+  <div className={cn('flex items-center z-60', className)} style={style}>
     <div className="w-3 h-3 bg-blue-500 rounded-full animate-ping"></div>
     <div className="flex-1 h-1 bg-gradient-to-r from-blue-300 via-blue-500 to-blue-300 rounded-full mx-2 animate-pulse"></div>
     <div className="w-3 h-3 bg-blue-500 rounded-full animate-ping"></div>
@@ -98,6 +109,7 @@ const PlaceholderLine = ({ style, className }: { style?: React.CSSProperties; cl
 ```
 
 #### 5. ✅ DroppableStepButton
+
 - **useDroppable**: Hook nativo do DnD Kit
 - **Visual Feedback**: ring-2 ring-blue-400 bg-blue-50 quando isOver
 - **Ícone**: 📁 durante hover/drop
@@ -106,12 +118,14 @@ const PlaceholderLine = ({ style, className }: { style?: React.CSSProperties; cl
 ## 🎯 Resultados Alcançados
 
 ### UX Profissional
+
 - ✅ **Mobile First**: Auto-scroll + haptic feedback otimizado
 - ✅ **Visual Polish**: Placeholders animados com gradientes
 - ✅ **Workflow Avançado**: Cross-step drops para reorganização complexa
 - ✅ **Performance**: Zero findIndex() operations, mapeamento pré-calculado
 
 ### Comparação com Cakto
+
 - ✅ **DragOverlay**: ✓ Nível Cakto
 - ✅ **Auto-scroll**: ✓ Superior (zone-based)
 - ✅ **Haptic**: ✓ Diferencial mobile
@@ -121,16 +135,19 @@ const PlaceholderLine = ({ style, className }: { style?: React.CSSProperties; cl
 ## 📱 Funcionalidades Mobile
 
 ### Auto-scroll Inteligente
+
 - Zona de 100px nas bordas superior/inferior
 - Ativação automática durante drag
 - Velocidade controlada (5px/frame)
 
 ### Haptic Feedback
+
 - Vibração nativa em dispositivos compatíveis
 - Fallback sonoro para desktop
 - Intensidades diferenciadas por ação
 
 ### Touch Optimized
+
 - Placeholders visuais maiores (3px circles)
 - Feedback visual imediato
 - Cross-step drops com highlight
@@ -147,8 +164,9 @@ const PlaceholderLine = ({ style, className }: { style?: React.CSSProperties; cl
 - Cross-platform: ✅ Desktop + Mobile
 
 ### Próximos Passos Opcionais (P3)
+
 - [ ] Undo/Redo system
-- [ ] Multi-select operations  
+- [ ] Multi-select operations
 - [ ] Advanced animations (spring physics)
 - [ ] Keyboard shortcuts
 - [ ] Accessibility enhancements
