@@ -12,7 +12,7 @@ const EditorProTestPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <ErrorBoundary>
-        <EditorProvider enableSupabase={false} storageKey="editor-pro-test">
+        <EditorProvider enableSupabase={false} storageKey="editor-pro-test-debug" initial={{ stepBlocks: {}, currentStep: 1 }}>
           <div className="container mx-auto py-8">
             <div className="mb-8 text-center">
               <h1 className="text-4xl font-bold text-gray-900 mb-4">

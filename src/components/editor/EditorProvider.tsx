@@ -100,11 +100,12 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     const initialBlocks: Record<string, Block[]> = {};
     // Normalize step blocks from template using our new utility
     const normalizedBlocks = normalizeStepBlocks(QUIZ_STYLE_21_STEPS_TEMPLATE);
+    
     Object.entries(normalizedBlocks).forEach(([stepKey, blocks]) => {
       initialBlocks[stepKey] = Array.isArray(blocks) ? [...blocks] : [];
     });
 
-    return {
+    const state: EditorState = {
       stepBlocks: initialBlocks,
       currentStep: 1,
       selectedBlockId: null,
@@ -113,6 +114,8 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       isLoading: false,
       ...initial,
     };
+    
+    return state;
   };
 
   const {
@@ -181,6 +184,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
   const ensureStepLoaded = useCallback(
     async (step: number | string) => {
       const existingBlocks = getBlocksForStep(step, rawState.stepBlocks);
+      
       if (existingBlocks && existingBlocks.length > 0) {
         return; // Step already loaded
       }
@@ -222,6 +226,12 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     },
     [rawState, setState, state.isSupabaseEnabled, supabaseIntegration]
   );
+
+  // Initialize step 1 automatically on mount
+  useEffect(() => {
+    // Ensure step 1 is loaded on initialization
+    ensureStepLoaded(1);
+  }, [ensureStepLoaded]);
 
   // Ensure step is loaded when currentStep changes
   useEffect(() => {
