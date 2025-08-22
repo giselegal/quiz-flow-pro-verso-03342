@@ -42,11 +42,11 @@ import React, { Suspense, useCallback, useMemo, useRef, useState } from 'react';
 import { useEditor } from './EditorProvider';
 import { SortableBlock } from './SortableBlock';
 // P3 Imports - Advanced Features
-import { useUndoRedo } from '@/hooks/useUndoRedo';
-import { useMultiSelect } from '@/hooks/useMultiSelect';
-import { useAdvancedShortcuts } from '@/hooks/useAdvancedShortcuts';
-import { UndoRedoToolbar } from '@/components/editor/UndoRedoToolbar';
 import { MultiSelectOverlay } from '@/components/editor/MultiSelectOverlay';
+import { UndoRedoToolbar } from '@/components/editor/UndoRedoToolbar';
+import { useAdvancedShortcuts } from '@/hooks/useAdvancedShortcuts';
+import { useMultiSelect } from '@/hooks/useMultiSelect';
+import { useUndoRedo } from '@/hooks/useUndoRedo';
 
 /**
  * EditorPro - versão modularizada / otimizada do QuizEditorPro
@@ -148,50 +148,41 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   const selectedBlock = currentStepData.find((block: Block) => block.id === state.selectedBlockId);
 
   // 🚀 MELHORIA P2: Haptic feedback para mobile
-  
+
   // 🚀 P3 HOOKS: Advanced Features
   const undoRedo = useUndoRedo(50); // Stack de 50 ações
-  
-  const multiSelect = useMultiSelect(
-    currentStepData,
-    (selectedBlocks: string[]) => {
-      devLog('P3', 'Multi-select changed:', selectedBlocks);
-    }
-  );
-  
+
+  const multiSelect = useMultiSelect(currentStepData, (selectedBlocks: string[]) => {
+    devLog('P3', 'Multi-select changed:', selectedBlocks);
+  });
+
   const shortcuts = useAdvancedShortcuts({
     shortcuts: {
       'ctrl+z': {
         key: 'z',
         ctrlKey: true,
         handler: () => undoRedo.undo(),
-        description: 'Desfazer última ação'
+        description: 'Desfazer última ação',
       },
       'ctrl+y': {
         key: 'y',
         ctrlKey: true,
         handler: () => undoRedo.redo(),
-        description: 'Refazer ação'
+        description: 'Refazer ação',
       },
       'ctrl+shift+z': {
         key: 'z',
         ctrlKey: true,
         shiftKey: true,
         handler: () => undoRedo.redo(),
-        description: 'Refazer ação (alternativo)'
+        description: 'Refazer ação (alternativo)',
       },
-      'ctrl+a': {
-        key: 'a',
-        ctrlKey: true,
-        handler: () => multiSelect.selectAll(),
-        description: 'Selecionar todos'
-      },
-      'escape': {
+      escape: {
         key: 'Escape',
         handler: () => multiSelect.deselectAll(),
-        description: 'Limpar seleção'
+        description: 'Limpar seleção',
       },
-      'delete': {
+      delete: {
         key: 'Delete',
         handler: () => {
           const selectedBlocks = multiSelect.getSelectedBlocks();
@@ -199,9 +190,9 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
             handleBulkDelete(selectedBlocks);
           }
         },
-        description: 'Excluir selecionados'
-      }
-    }
+        description: 'Excluir selecionados',
+      },
+    },
   });
   const triggerHapticFeedback = useCallback((intensity: 'light' | 'medium' | 'heavy' = 'light') => {
     // Vibração para dispositivos móveis
@@ -440,9 +431,9 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       // Integração P3: Multi-select com Ctrl+Click e Shift+Click
       if (event) {
         multiSelect.selectBlock(
-          blockId, 
-          blockIndex, 
-          event.ctrlKey || event.metaKey, 
+          blockId,
+          blockIndex,
+          event.ctrlKey || event.metaKey,
           event.shiftKey
         );
       } else {
@@ -471,14 +462,14 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         data: {
           stepKey: currentStepKey,
           blockId: blockId,
-          blocks: [blockToDelete]
+          blocks: [blockToDelete],
         },
         undo: () => {
           actions.addBlock(currentStepKey, blockToDelete);
         },
         redo: () => {
           actions.removeBlock(currentStepKey, blockId);
-        }
+        },
       });
 
       actions.removeBlock(currentStepKey, blockId);
@@ -490,7 +481,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   const handleBulkDelete = useCallback(
     (blockIds: string[]) => {
       if (blockIds.length === 0) return;
-      
+
       // Adicionar ação ao histórico de undo/redo
       const blocksToDelete = currentStepData.filter(block => blockIds.includes(block.id));
       undoRedo.addAction({
@@ -498,7 +489,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         data: {
           stepKey: currentStepKey,
           blockIds: blockIds,
-          blocks: blocksToDelete
+          blocks: blocksToDelete,
         },
         undo: () => {
           // Restaurar blocos
@@ -511,7 +502,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
           blockIds.forEach(blockId => {
             actions.removeBlock(currentStepKey, blockId);
           });
-        }
+        },
       });
 
       // Executar deleção
@@ -521,7 +512,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
 
       // Limpar seleção
       multiSelect.deselectAll();
-      
+
       devLog('P3', `Bulk deleted ${blockIds.length} blocks:`, blockIds);
     },
     [currentStepKey, actions, currentStepData, undoRedo, multiSelect]
@@ -679,21 +670,21 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
           case 'add':
             if (dragData.type === 'sidebar-component' && dragData.blockType) {
               const newBlock = createBlockFromComponent(dragData.blockType as any, currentStepData);
-              
+
               // Adicionar ao histórico de undo/redo
               undoRedo.addAction({
                 type: 'add',
                 data: {
                   stepKey: currentStepKey,
                   blockId: newBlock.id,
-                  blocks: [newBlock]
+                  blocks: [newBlock],
                 },
                 undo: () => {
                   actions.removeBlock(currentStepKey, newBlock.id);
                 },
                 redo: () => {
                   actions.addBlock(currentStepKey, newBlock);
-                }
+                },
               });
 
               actions.addBlock(currentStepKey, newBlock);
@@ -717,14 +708,14 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
                     stepKey: currentStepKey,
                     blockId: active.id as string,
                     fromIndex: activeIndex,
-                    toIndex: overIndex
+                    toIndex: overIndex,
                   },
                   undo: () => {
                     actions.reorderBlocks(currentStepKey, overIndex, activeIndex);
                   },
                   redo: () => {
                     actions.reorderBlocks(currentStepKey, activeIndex, overIndex);
-                  }
+                  },
                 });
 
                 actions.reorderBlocks(currentStepKey, activeIndex, overIndex);
