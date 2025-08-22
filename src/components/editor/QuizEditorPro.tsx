@@ -81,25 +81,28 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
 
   // 🛠️ FUNÇÃO RESILIENTE: Busca blocos com diferentes formatos de chave
   // Resolve inconsistências entre state.stepBlocks (ex.: "step-1", "1", 1, "step1")
-  const getBlocksForStep = useCallback((step: number): Block[] => {
-    const stepBlocks = state.stepBlocks || {};
-    const tryKeys = [
-      `step-${step}`,  // Formato padrão: "step-1"
-      `step${step}`,   // Formato alternativo: "step1"  
-      String(step),    // String: "1"
-      Number(step),    // Número: 1
-    ];
-    
-    for (const key of tryKeys) {
-      if (key in stepBlocks && Array.isArray(stepBlocks[key])) {
-        devLog(`Found blocks for step ${step} using key:`, key, stepBlocks[key]);
-        return stepBlocks[key];
+  const getBlocksForStep = useCallback(
+    (step: number): Block[] => {
+      const stepBlocks = state.stepBlocks || {};
+      const tryKeys = [
+        `step-${step}`, // Formato padrão: "step-1"
+        `step${step}`, // Formato alternativo: "step1"
+        String(step), // String: "1"
+        Number(step), // Número: 1
+      ];
+
+      for (const key of tryKeys) {
+        if (key in stepBlocks && Array.isArray(stepBlocks[key])) {
+          devLog(`Found blocks for step ${step} using key:`, key, stepBlocks[key]);
+          return stepBlocks[key];
+        }
       }
-    }
-    
-    devLog(`No blocks found for step ${step}. Available keys:`, Object.keys(stepBlocks));
-    return [];
-  }, [state.stepBlocks]);
+
+      devLog(`No blocks found for step ${step}. Available keys:`, Object.keys(stepBlocks));
+      return [];
+    },
+    [state.stepBlocks]
+  );
 
   // Uso consistente de safeCurrentStep em todo o componente
   const safeCurrentStep = state.currentStep || 1;
@@ -122,7 +125,10 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
   devLog('1. currentStep:', state.currentStep);
   devLog('2. stepBlocks keys:', Object.keys(state.stepBlocks));
   devLog('3. currentStepData (computed):', currentStepData);
-  devLog('4. Blocks found with resilient function:', currentStepData.length > 0 ? '✅ SUCCESS' : '❌ EMPTY');
+  devLog(
+    '4. Blocks found with resilient function:',
+    currentStepData.length > 0 ? '✅ SUCCESS' : '❌ EMPTY'
+  );
   devLog('===============================');
 
   // Configuration for drag & drop sensors
