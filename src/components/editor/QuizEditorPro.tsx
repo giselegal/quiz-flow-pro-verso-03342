@@ -3,17 +3,15 @@ import EnhancedUniversalPropertiesPanelFixed from '@/components/universal/Enhanc
 import { cn } from '@/lib/utils';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import { Block } from '@/types/editor';
-import { 
-  DndContext, 
-  DragEndEvent, 
-  DragStartEvent, 
-  DragOverlay,
+import {
   closestCenter,
+  DndContext,
+  DragEndEvent,
+  DragStartEvent,
   KeyboardSensor,
   PointerSensor,
   useSensor,
   useSensors,
-  DragOverEvent
 } from '@dnd-kit/core';
 import {
   arrayMove,
@@ -43,7 +41,7 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
   const [draggedComponent, setDraggedComponent] = useState<any>(null);
   const [mode, setMode] = useState<'edit' | 'preview'>('edit');
-  
+
   // Estado mutável para os blocos de cada etapa
   const [stepBlocks, setStepBlocks] = useState<Record<string, Block[]>>(() => {
     // Inicializar com dados do template
@@ -175,14 +173,14 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
   const addBlockToStep = useCallback((stepKey: string, newBlock: Block) => {
     setStepBlocks(prev => ({
       ...prev,
-      [stepKey]: [...(prev[stepKey] || []), newBlock]
+      [stepKey]: [...(prev[stepKey] || []), newBlock],
     }));
   }, []);
 
   const removeBlockFromStep = useCallback((stepKey: string, blockId: string) => {
     setStepBlocks(prev => ({
       ...prev,
-      [stepKey]: (prev[stepKey] || []).filter(block => block.id !== blockId)
+      [stepKey]: (prev[stepKey] || []).filter(block => block.id !== blockId),
     }));
   }, []);
 
@@ -192,36 +190,42 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
       const reorderedBlocks = arrayMove(blocks, oldIndex, newIndex);
       return {
         ...prev,
-        [stepKey]: reorderedBlocks
+        [stepKey]: reorderedBlocks,
       };
     });
   }, []);
 
-  const updateBlockInStep = useCallback((stepKey: string, blockId: string, updates: Record<string, any>) => {
-    setStepBlocks(prev => ({
-      ...prev,
-      [stepKey]: (prev[stepKey] || []).map(block => 
-        block.id === blockId ? { ...block, ...updates } : block
-      )
-    }));
-  }, []);
+  const updateBlockInStep = useCallback(
+    (stepKey: string, blockId: string, updates: Record<string, any>) => {
+      setStepBlocks(prev => ({
+        ...prev,
+        [stepKey]: (prev[stepKey] || []).map(block =>
+          block.id === blockId ? { ...block, ...updates } : block
+        ),
+      }));
+    },
+    []
+  );
 
   // Função para criar um novo bloco a partir de um componente
-  const createBlockFromComponent = useCallback((componentType: string): Block => {
-    const timestamp = Date.now();
-    const blockId = `block-${componentType}-${timestamp}`;
-    
-    return {
-      id: blockId,
-      type: componentType,
-      order: currentStepData.length + 1,
-      content: {
-        title: `Novo ${componentType}`,
-        description: 'Bloco criado através de drag & drop'
-      },
-      properties: {}
-    };
-  }, [currentStepData.length]);
+  const createBlockFromComponent = useCallback(
+    (componentType: string): Block => {
+      const timestamp = Date.now();
+      const blockId = `block-${componentType}-${timestamp}`;
+
+      return {
+        id: blockId,
+        type: componentType,
+        order: currentStepData.length + 1,
+        content: {
+          title: `Novo ${componentType}`,
+          description: 'Bloco criado através de drag & drop',
+        },
+        properties: {},
+      };
+    },
+    [currentStepData.length]
+  );
 
   // Handlers principais
   const handleStepSelect = useCallback((step: number) => {
@@ -233,28 +237,40 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
     setSelectedBlockId(blockId);
   }, []);
 
-  const handleBlockUpdate = useCallback((blockId: string, updates: Record<string, any>) => {
-    updateBlockInStep(currentStepKey, blockId, updates);
-  }, [currentStepKey, updateBlockInStep]);
+  const handleBlockUpdate = useCallback(
+    (blockId: string, updates: Record<string, any>) => {
+      updateBlockInStep(currentStepKey, blockId, updates);
+    },
+    [currentStepKey, updateBlockInStep]
+  );
 
-  const handleBlockDelete = useCallback((blockId: string) => {
-    removeBlockFromStep(currentStepKey, blockId);
-    setSelectedBlockId(null);
-  }, [currentStepKey, removeBlockFromStep]);
+  const handleBlockDelete = useCallback(
+    (blockId: string) => {
+      removeBlockFromStep(currentStepKey, blockId);
+      setSelectedBlockId(null);
+    },
+    [currentStepKey, removeBlockFromStep]
+  );
 
-  const handleBlockMoveUp = useCallback((blockId: string) => {
-    const currentIndex = currentStepData.findIndex(block => block.id === blockId);
-    if (currentIndex > 0) {
-      reorderBlocksInStep(currentStepKey, currentIndex, currentIndex - 1);
-    }
-  }, [currentStepData, currentStepKey, reorderBlocksInStep]);
+  const handleBlockMoveUp = useCallback(
+    (blockId: string) => {
+      const currentIndex = currentStepData.findIndex(block => block.id === blockId);
+      if (currentIndex > 0) {
+        reorderBlocksInStep(currentStepKey, currentIndex, currentIndex - 1);
+      }
+    },
+    [currentStepData, currentStepKey, reorderBlocksInStep]
+  );
 
-  const handleBlockMoveDown = useCallback((blockId: string) => {
-    const currentIndex = currentStepData.findIndex(block => block.id === blockId);
-    if (currentIndex < currentStepData.length - 1) {
-      reorderBlocksInStep(currentStepKey, currentIndex, currentIndex + 1);
-    }
-  }, [currentStepData, currentStepKey, reorderBlocksInStep]);
+  const handleBlockMoveDown = useCallback(
+    (blockId: string) => {
+      const currentIndex = currentStepData.findIndex(block => block.id === blockId);
+      if (currentIndex < currentStepData.length - 1) {
+        reorderBlocksInStep(currentStepKey, currentIndex, currentIndex + 1);
+      }
+    },
+    [currentStepData, currentStepKey, reorderBlocksInStep]
+  );
 
   const handleClosePropertiesPanel = useCallback(() => {
     setSelectedBlockId(null);
@@ -263,24 +279,69 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
   // Drag & Drop handlers
   const handleDragStart = useCallback(
     (event: DragStartEvent) => {
-      const component = availableComponents.find(c => c.type === event.active.id);
-      setDraggedComponent(component);
+      const { active } = event;
+
+      // Se é um componente da biblioteca
+      if (typeof active.id === 'string' && active.id.includes('component-')) {
+        const componentType = active.id.replace('component-', '');
+        const component = availableComponents.find(c => c.type === componentType);
+        setDraggedComponent(component);
+      }
+
+      // Se é um bloco existente
+      if (typeof active.id === 'string' && active.id.includes('block-')) {
+        const block = currentStepData.find(b => b.id === active.id);
+        setDraggedComponent(block);
+      }
     },
-    [availableComponents]
+    [availableComponents, currentStepData]
   );
 
-  const handleDragEnd = useCallback((event: DragEndEvent) => {
-    setDraggedComponent(null);
+  const handleDragEnd = useCallback(
+    (event: DragEndEvent) => {
+      const { active, over } = event;
+      setDraggedComponent(null);
 
-    if (event.over && event.over.id === 'canvas-drop-zone') {
-      const componentType = event.active.id;
-      console.log('Adicionando componente ao canvas:', componentType);
-      // TODO: Implementar adição de componente ao canvas
-    }
-  }, []);
+      if (!over) return;
+
+      // Arrastar componente da biblioteca para o canvas
+      if (
+        typeof active.id === 'string' &&
+        active.id.includes('component-') &&
+        over.id === 'canvas-drop-zone'
+      ) {
+        const componentType = active.id.replace('component-', '');
+        const newBlock = createBlockFromComponent(componentType);
+        addBlockToStep(currentStepKey, newBlock);
+        setSelectedBlockId(newBlock.id);
+        return;
+      }
+
+      // Reordenar blocos existentes
+      if (
+        typeof active.id === 'string' &&
+        typeof over.id === 'string' &&
+        active.id.includes('block-') &&
+        over.id.includes('block-')
+      ) {
+        const activeIndex = currentStepData.findIndex(block => block.id === active.id);
+        const overIndex = currentStepData.findIndex(block => block.id === over.id);
+
+        if (activeIndex !== -1 && overIndex !== -1 && activeIndex !== overIndex) {
+          reorderBlocksInStep(currentStepKey, activeIndex, overIndex);
+        }
+      }
+    },
+    [createBlockFromComponent, addBlockToStep, currentStepKey, currentStepData, reorderBlocksInStep]
+  );
 
   return (
-    <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
+    >
       <div className={`quiz-editor-pro h-screen bg-gray-50 flex ${className}`}>
         {/* 📋 COLUNA 1: ETAPAS (200px) */}
         <div className="w-[200px] bg-white border-r border-gray-200 flex flex-col">
@@ -294,7 +355,7 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
               {Array.from({ length: 21 }, (_, i) => i + 1).map(step => {
                 const analysis = getStepAnalysis(step);
                 const isActive = step === currentStep;
-                const hasBlocks = templateData[`step-${step}`]?.length > 0;
+                const hasBlocks = stepBlocks[`step-${step}`]?.length > 0;
 
                 return (
                   <button
@@ -356,6 +417,12 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
                         className="p-3 bg-gray-50 rounded-lg border border-gray-200 hover:border-blue-300 cursor-grab active:cursor-grabbing transition-colors group"
                         onDragStart={e => {
                           e.dataTransfer.setData('component-type', component.type);
+                          handleDragStart({
+                            active: { id: `component-${component.type}` },
+                          } as DragStartEvent);
+                        }}
+                        onDragEnd={() => {
+                          setDraggedComponent(null);
                         }}
                       >
                         <div className="flex items-start gap-3">
@@ -440,7 +507,8 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
                   )}
                 >
                   <div>
-                    <strong>✏️ Modo Edição Visual:</strong> Conteúdo real com overlays de seleção interativos
+                    <strong>✏️ Modo Edição Visual:</strong> Conteúdo real com overlays de seleção
+                    interativos
                   </div>
                   <div className="text-blue-700">
                     {selectedBlockId
@@ -478,146 +546,74 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
 
                 {/* Overlays de seleção apenas no modo de edição */}
                 {mode === 'edit' && (
-                  <div className="absolute inset-0 pointer-events-none z-50">
-                    {currentStepData.map((block: Block, index: number) => {
-                      const blockId = block.id || `block-${index}`;
-                      const isSelected = selectedBlockId === blockId;
-                      
-                      // Calcular posição baseada no tipo de bloco e ordem
-                      let topOffset = 0;
-                      let height = 80;
-                      
-                      // Ajustar posição baseado no tipo de bloco
-                      switch (block.type) {
-                        case 'quiz-intro-header':
-                          topOffset = 20;
-                          height = 120;
-                          break;
-                        case 'options-grid':
-                          topOffset = 150 + (index * 200);
-                          height = 300;
-                          break;
-                        case 'form-container':
-                          topOffset = 200 + (index * 150);
-                          height = 120;
-                          break;
-                        case 'button':
-                          topOffset = 400 + (index * 100);
-                          height = 60;
-                          break;
-                        default:
-                          topOffset = 60 + (index * 100);
-                          height = 80;
-                      }
-                      
-                      return (
-                        <div
-                          key={blockId}
-                          className={cn(
-                            'absolute left-4 right-4 pointer-events-auto cursor-pointer transition-all duration-300',
-                            'rounded-lg border-2 border-dashed',
-                            isSelected
-                              ? 'border-blue-500 bg-blue-500 bg-opacity-10 shadow-lg'
-                              : 'border-transparent hover:border-blue-400 hover:bg-blue-400 hover:bg-opacity-5'
-                          )}
-                          style={{
-                            top: `${topOffset}px`,
-                            height: `${height}px`,
-                            zIndex: isSelected ? 60 : 50,
-                          }}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleBlockSelect(blockId);
-                          }}
-                        >
-                          {/* Badge de identificação sempre visível no hover ou seleção */}
-                          <div className={cn(
-                            'absolute -top-10 left-0 text-xs px-3 py-1 rounded-t-lg font-medium shadow-lg transition-all duration-200',
-                            isSelected 
-                              ? 'bg-blue-600 text-white opacity-100' 
-                              : 'bg-gray-800 text-white opacity-0 group-hover:opacity-100'
-                          )}>
-                            {isSelected ? '✏️' : '🖱️'} {block.type}
-                            {isSelected && ` - ${blockId}`}
-                          </div>
-                          
-                          {/* Controles de ação (apenas quando selecionado) */}
-                          {isSelected && (
-                            <div className="absolute -top-10 right-0 flex gap-1">
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  console.log('Mover para cima:', blockId);
-                                }}
-                                className="bg-blue-600 text-white p-1 rounded text-xs hover:bg-blue-700 transition-colors"
-                                title="Mover para cima"
-                              >
-                                ⬆️
-                              </button>
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  console.log('Mover para baixo:', blockId);
-                                }}
-                                className="bg-blue-600 text-white p-1 rounded text-xs hover:bg-blue-700 transition-colors"
-                                title="Mover para baixo"
-                              >
-                                ⬇️
-                              </button>
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  console.log('Duplicar bloco:', blockId);
-                                }}
-                                className="bg-green-600 text-white p-1 rounded text-xs hover:bg-green-700 transition-colors"
-                                title="Duplicar bloco"
-                              >
-                                📋
-                              </button>
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleBlockDelete(blockId);
-                                }}
-                                className="bg-red-600 text-white p-1 rounded text-xs hover:bg-red-700 transition-colors"
-                                title="Remover bloco"
-                              >
-                                🗑️
-                              </button>
-                            </div>
-                          )}
-                          
-                          {/* Indicador de edição ativa */}
-                          {isSelected && (
-                            <div className="absolute bottom-0 right-0 bg-blue-600 text-white text-xs px-2 py-1 rounded-tl-lg font-medium animate-pulse">
-                              Editando →
-                            </div>
-                          )}
-                          
-                          {/* Indicador de hover para blocos não selecionados */}
-                          {!isSelected && (
-                            <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-200">
-                              <div className="bg-gray-800 bg-opacity-90 text-white text-xs px-3 py-1 rounded-lg font-medium shadow-lg">
-                                🖱️ Clique para editar
-                              </div>
-                            </div>
-                          )}
+                  <SortableContext
+                    items={currentStepData.map(
+                      block => block.id || `block-${currentStepData.indexOf(block)}`
+                    )}
+                    strategy={verticalListSortingStrategy}
+                  >
+                    <div className="absolute inset-0 pointer-events-none z-50">
+                      {currentStepData.map((block: Block, index: number) => {
+                        const blockId = block.id || `block-${index}`;
+                        const isSelected = selectedBlockId === blockId;
 
-                          {/* Outline animado para o bloco selecionado */}
-                          {isSelected && (
-                            <div className="absolute inset-0 border-2 border-blue-500 rounded-lg animate-pulse"></div>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
+                        // Calcular posição baseada no tipo de bloco e ordem
+                        let topOffset = 0;
+                        let height = 80;
+
+                        // Ajustar posição baseado no tipo de bloco
+                        switch (block.type) {
+                          case 'quiz-intro-header':
+                            topOffset = 20;
+                            height = 120;
+                            break;
+                          case 'options-grid':
+                            topOffset = 150 + index * 200;
+                            height = 300;
+                            break;
+                          case 'form-container':
+                            topOffset = 200 + index * 150;
+                            height = 120;
+                            break;
+                          case 'button':
+                            topOffset = 400 + index * 100;
+                            height = 60;
+                            break;
+                          default:
+                            topOffset = 60 + index * 100;
+                            height = 80;
+                        }
+
+                        return (
+                          <SortableBlock
+                            key={blockId}
+                            id={blockId}
+                            block={block}
+                            isSelected={isSelected}
+                            topOffset={topOffset}
+                            height={height}
+                            onSelect={handleBlockSelect}
+                            onMoveUp={handleBlockMoveUp}
+                            onMoveDown={handleBlockMoveDown}
+                            onDuplicate={() => {
+                              const newBlock = createBlockFromComponent(block.type);
+                              addBlockToStep(currentStepKey, newBlock);
+                            }}
+                            onDelete={handleBlockDelete}
+                          />
+                        );
+                      })}
+                    </div>
+                  </SortableContext>
                 )}
 
                 {/* Área de drop para novos componentes (apenas modo edição) */}
                 {mode === 'edit' && currentStepData.length > 0 && (
                   <div className="absolute bottom-0 left-4 right-4 border-2 border-dashed border-blue-300 rounded-lg p-6 text-center text-blue-500 bg-blue-50 bg-opacity-50 hover:border-blue-500 hover:bg-opacity-80 transition-all duration-200">
                     <div className="text-lg mb-2">➕</div>
-                    <div className="text-sm font-medium">Arraste um componente aqui para adicionar</div>
+                    <div className="text-sm font-medium">
+                      Arraste um componente aqui para adicionar
+                    </div>
                   </div>
                 )}
 
