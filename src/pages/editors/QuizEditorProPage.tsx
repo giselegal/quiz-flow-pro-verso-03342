@@ -1,6 +1,6 @@
 import { EditorProvider } from '@/components/editor/EditorProvider';
-import { QuizEditorPro } from '@/components/editor/QuizEditorPro';
 import { ErrorBoundary } from '@/components/editor/ErrorBoundary';
+import { QuizEditorPro } from '@/components/editor/QuizEditorPro';
 import React from 'react';
 
 const QuizEditorProPage: React.FC = () => {

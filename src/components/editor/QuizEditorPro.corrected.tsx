@@ -210,27 +210,6 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
         category: 'Confiança',
         description: 'Selo de garantia',
       },
-      {
-        type: 'hero',
-        name: 'Hero Section',
-        icon: '🚀',
-        category: 'Layout',
-        description: 'Seção hero para transições e ofertas',
-      },
-      {
-        type: 'benefits',
-        name: 'Benefícios',
-        icon: '✨',
-        category: 'Vendas',
-        description: 'Lista de benefícios do produto',
-      },
-      {
-        type: 'quiz-offer-cta-inline',
-        name: 'CTA Oferta',
-        icon: '💰',
-        category: 'Conversão',
-        description: 'Call-to-action para ofertas especiais',
-      },
     ],
     []
   );
