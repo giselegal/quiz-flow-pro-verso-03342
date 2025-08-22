@@ -77,7 +77,7 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
     currentStepKey,
     totalBlocks: currentStepData.length,
     availableSteps: Object.keys(state.stepBlocks),
-    blockIds: currentStepData.map(b => b.id)
+    blockIds: currentStepData.map(b => b.id),
   });
 
   // Configuration for drag & drop sensors

@@ -1,8 +1,8 @@
-import React, { createContext, useContext, useCallback, ReactNode } from 'react';
-import { Block } from '@/types/editor';
 import { useHistoryState } from '@/hooks/useHistoryState';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
+import { Block } from '@/types/editor';
 import { arrayMove } from '@dnd-kit/sortable';
+import React, { createContext, ReactNode, useCallback, useContext } from 'react';
 
 export interface EditorState {
   stepBlocks: Record<string, Block[]>;
@@ -14,19 +14,19 @@ export interface EditorActions {
   // State management
   setCurrentStep: (step: number) => void;
   setSelectedBlockId: (blockId: string | null) => void;
-  
+
   // Block operations
   addBlock: (stepKey: string, block: Block) => void;
   removeBlock: (stepKey: string, blockId: string) => void;
   reorderBlocks: (stepKey: string, oldIndex: number, newIndex: number) => void;
   updateBlock: (stepKey: string, blockId: string, updates: Record<string, any>) => void;
-  
+
   // History operations
   undo: () => void;
   redo: () => void;
   canUndo: boolean;
   canRedo: boolean;
-  
+
   // Import/Export
   exportJSON: () => string;
   importJSON: (json: string) => void;
@@ -87,82 +87,112 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
   });
 
   // Actions
-  const setCurrentStep = useCallback((step: number) => {
-    setState({
-      ...state,
-      currentStep: step,
-      selectedBlockId: null, // Reset selection when changing steps
-    });
-  }, [state, setState]);
+  const setCurrentStep = useCallback(
+    (step: number) => {
+      setState({
+        ...state,
+        currentStep: step,
+        selectedBlockId: null, // Reset selection when changing steps
+      });
+    },
+    [state, setState]
+  );
 
-  const setSelectedBlockId = useCallback((blockId: string | null) => {
-    setState({
-      ...state,
-      selectedBlockId: blockId,
-    });
-  }, [state, setState]);
+  const setSelectedBlockId = useCallback(
+    (blockId: string | null) => {
+      setState({
+        ...state,
+        selectedBlockId: blockId,
+      });
+    },
+    [state, setState]
+  );
 
-  const addBlock = useCallback((stepKey: string, block: Block) => {
-    console.log('🔧 EditorProvider.addBlock:', { stepKey, blockId: block.id, blockType: block.type });
-    setState({
-      ...state,
-      stepBlocks: {
-        ...state.stepBlocks,
-        [stepKey]: [...(state.stepBlocks[stepKey] || []), block],
-      },
-    });
-    console.log('✅ Block added to step:', stepKey, 'Total blocks in step:', (state.stepBlocks[stepKey] || []).length + 1);
-  }, [state, setState]);
+  const addBlock = useCallback(
+    (stepKey: string, block: Block) => {
+      console.log('🔧 EditorProvider.addBlock:', {
+        stepKey,
+        blockId: block.id,
+        blockType: block.type,
+      });
+      setState({
+        ...state,
+        stepBlocks: {
+          ...state.stepBlocks,
+          [stepKey]: [...(state.stepBlocks[stepKey] || []), block],
+        },
+      });
+      console.log(
+        '✅ Block added to step:',
+        stepKey,
+        'Total blocks in step:',
+        (state.stepBlocks[stepKey] || []).length + 1
+      );
+    },
+    [state, setState]
+  );
 
-  const removeBlock = useCallback((stepKey: string, blockId: string) => {
-    setState({
-      ...state,
-      stepBlocks: {
-        ...state.stepBlocks,
-        [stepKey]: (state.stepBlocks[stepKey] || []).filter(block => block.id !== blockId),
-      },
-      selectedBlockId: state.selectedBlockId === blockId ? null : state.selectedBlockId,
-    });
-  }, [state, setState]);
+  const removeBlock = useCallback(
+    (stepKey: string, blockId: string) => {
+      setState({
+        ...state,
+        stepBlocks: {
+          ...state.stepBlocks,
+          [stepKey]: (state.stepBlocks[stepKey] || []).filter(block => block.id !== blockId),
+        },
+        selectedBlockId: state.selectedBlockId === blockId ? null : state.selectedBlockId,
+      });
+    },
+    [state, setState]
+  );
 
-  const reorderBlocks = useCallback((stepKey: string, oldIndex: number, newIndex: number) => {
-    const blocks = [...(state.stepBlocks[stepKey] || [])];
-    const reorderedBlocks = arrayMove(blocks, oldIndex, newIndex);
-    
-    setState({
-      ...state,
-      stepBlocks: {
-        ...state.stepBlocks,
-        [stepKey]: reorderedBlocks,
-      },
-    });
-  }, [state, setState]);
+  const reorderBlocks = useCallback(
+    (stepKey: string, oldIndex: number, newIndex: number) => {
+      const blocks = [...(state.stepBlocks[stepKey] || [])];
+      const reorderedBlocks = arrayMove(blocks, oldIndex, newIndex);
 
-  const updateBlock = useCallback((stepKey: string, blockId: string, updates: Record<string, any>) => {
-    setState({
-      ...state,
-      stepBlocks: {
-        ...state.stepBlocks,
-        [stepKey]: (state.stepBlocks[stepKey] || []).map(block =>
-          block.id === blockId ? { ...block, ...updates } : block
-        ),
-      },
-    });
-  }, [state, setState]);
+      setState({
+        ...state,
+        stepBlocks: {
+          ...state.stepBlocks,
+          [stepKey]: reorderedBlocks,
+        },
+      });
+    },
+    [state, setState]
+  );
+
+  const updateBlock = useCallback(
+    (stepKey: string, blockId: string, updates: Record<string, any>) => {
+      setState({
+        ...state,
+        stepBlocks: {
+          ...state.stepBlocks,
+          [stepKey]: (state.stepBlocks[stepKey] || []).map(block =>
+            block.id === blockId ? { ...block, ...updates } : block
+          ),
+        },
+      });
+    },
+    [state, setState]
+  );
 
   const exportJSON = useCallback(() => {
     return JSON.stringify(state, null, 2);
   }, [state]);
 
-  const importJSON = useCallback((json: string) => {
-    try {
-      const importedState = JSON.parse(json) as EditorState;
-      setState(importedState);
-    } catch (error) {
-      console.error('Failed to import JSON:', error);
-      throw new Error('Invalid JSON format');
-    }
-  }, [setState]);
+  const importJSON = useCallback(
+    (json: string) => {
+      try {
+        const importedState = JSON.parse(json) as EditorState;
+        setState(importedState);
+      } catch (error) {
+        console.error('Failed to import JSON:', error);
+        throw new Error('Invalid JSON format');
+      }
+    },
+    [setState]
+  );
 
   const actions: EditorActions = {
     setCurrentStep,
@@ -184,9 +214,5 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     actions,
   };
 
-  return (
-    <EditorContext.Provider value={contextValue}>
-      {children}
-    </EditorContext.Provider>
-  );
+  return <EditorContext.Provider value={contextValue}>{children}</EditorContext.Provider>;
 };
