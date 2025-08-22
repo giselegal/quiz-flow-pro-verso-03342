@@ -22,12 +22,16 @@ import {
   closestCenter,
   DndContext,
   DragEndEvent,
+  DragOverEvent,
+  DragOverlay,
   DragStartEvent,
   KeyboardSensor,
   PointerSensor,
+  rectIntersection,
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
+import { restrictToParentElement, restrictToVerticalAxis } from '@dnd-kit/modifiers';
 import {
   SortableContext,
   sortableKeyboardCoordinates,
@@ -96,6 +100,10 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   const NotificationContainer = (notification as any)?.NotificationContainer ?? null;
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
+  // 🚀 MELHORIAS DND: Estados para DragOverlay e Placeholder
+  const [activeDrag, setActiveDrag] = useState<any>(null);
+  const [placeholderIndex, setPlaceholderIndex] = useState<number | null>(null);
+
   const safeCurrentStep = state.currentStep || 1;
   const currentStepKey = `step-${safeCurrentStep}`;
 
@@ -111,6 +119,17 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
     }
     return map;
   }, [state.stepBlocks]);
+
+  // 🚀 MELHORIA DND: Mapeamento otimizado id->index para evitar findIndex repetido
+  const idIndexMap = useMemo(() => {
+    const map: Record<string, number> = {};
+    currentStepData.forEach((block, index) => {
+      if (block.id) {
+        map[block.id] = index;
+      }
+    });
+    return map;
+  }, [currentStepData]);
 
   const selectedBlock = currentStepData.find((block: Block) => block.id === state.selectedBlockId);
 
@@ -128,6 +147,17 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
+
+  // 🚀 MELHORIA DND: Detecção de colisão condicional
+  const collisionDetectionStrategy = useCallback((args: any) => {
+    const activeType = extractDragData(args.active)?.type;
+    // Para sidebar->canvas use rectIntersection para melhor precisão
+    if (activeType === 'sidebar-component') {
+      return rectIntersection(args);
+    }
+    // Para reordenamento canvas mantém closestCenter
+    return closestCenter(args);
+  }, []);
 
   // componentes disponíveis - ideal extrair para config
   const availableComponents = useMemo(
@@ -280,16 +310,58 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
     [currentStepData, currentStepKey, actions]
   );
 
-  // Drag handlers (reutilizam utilitários)
+  // 🚀 MELHORIAS DND: Handlers atualizados
   const handleDragStart = useCallback((event: DragStartEvent) => {
     const { active } = event;
     const dragData = extractDragData(active);
+
+    // Guarda informações do item ativo para DragOverlay
+    setActiveDrag({
+      id: active.id,
+      data: dragData,
+    });
+
     logDragEvent('start', active);
     if (process.env.NODE_ENV === 'development') devLog('Drag start', dragData);
   }, []);
 
+  // 🚀 NOVO: Handler para DragOver (placeholder visual)
+  const handleDragOver = useCallback(
+    (event: DragOverEvent) => {
+      const { active, over } = event;
+
+      if (!over) {
+        setPlaceholderIndex(null);
+        return;
+      }
+
+      const dragData = extractDragData(active);
+
+      // Para reordenamento de blocos no canvas
+      if (dragData?.type === 'canvas-block' && typeof over.id === 'string') {
+        const overIndex = idIndexMap[over.id];
+        if (overIndex !== undefined) {
+          setPlaceholderIndex(overIndex);
+        }
+      }
+      // Para adição de novos componentes
+      else if (dragData?.type === 'sidebar-component') {
+        // Calcular posição baseada na posição do over
+        const overIndex = typeof over.id === 'string' ? idIndexMap[over.id] : null;
+        setPlaceholderIndex(
+          overIndex !== null && overIndex !== undefined ? overIndex + 1 : currentStepData.length
+        );
+      }
+    },
+    [idIndexMap, currentStepData.length]
+  );
+
   const handleDragEnd = useCallback(
     (event: DragEndEvent) => {
+      // 🚀 LIMPEZA: Reset estados do DnD
+      setActiveDrag(null);
+      setPlaceholderIndex(null);
+
       const { active, over } = event;
       if (!over) {
         const dragData = extractDragData(active);
@@ -328,9 +400,11 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
             break;
           case 'reorder':
             if (dragData.type === 'canvas-block' && typeof over.id === 'string') {
-              const activeIndex = currentStepData.findIndex(block => block.id === active.id);
-              const overIndex = currentStepData.findIndex(block => block.id === over.id);
-              if (activeIndex !== -1 && overIndex !== -1 && activeIndex !== overIndex) {
+              // 🚀 OTIMIZAÇÃO: Usa mapeamento pré-calculado em vez de findIndex
+              const activeIndex = typeof active.id === 'string' ? idIndexMap[active.id] : -1;
+              const overIndex = idIndexMap[over.id];
+
+              if (activeIndex !== -1 && overIndex !== undefined && activeIndex !== overIndex) {
                 actions.reorderBlocks(currentStepKey, activeIndex, overIndex);
                 notification?.info?.('Blocos reordenados');
               }
@@ -345,7 +419,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         notification?.error?.('Erro ao processar drag & drop');
       }
     },
-    [actions, currentStepData, currentStepKey, notification]
+    [actions, currentStepData, currentStepKey, notification, idIndexMap]
   );
 
   /* -------------------------
@@ -633,6 +707,12 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
                 const blockId = block.id || `block-${index}`;
                 const isSelected = state.selectedBlockId === blockId;
 
+                // 🚀 MELHORIA DND: Placeholder visual antes do bloco
+                const showPlaceholderBefore = placeholderIndex === index;
+                const showPlaceholderAfter =
+                  placeholderIndex === currentStepData.length &&
+                  index === currentStepData.length - 1;
+
                 // topOffset/height heurístico (pode ser substituído por medidas reais)
                 let topOffset = 60 + index * 100;
                 let height = 80;
@@ -656,30 +736,64 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
                 }
 
                 return (
-                  <SortableBlock
-                    key={blockId}
-                    id={blockId}
-                    block={block}
-                    isSelected={isSelected}
-                    topOffset={topOffset}
-                    height={height}
-                    onSelect={handleBlockSelect}
-                    onMoveUp={() => {
-                      const currentIndex = currentStepData.findIndex(b => b.id === blockId);
-                      if (currentIndex > 0)
-                        actions.reorderBlocks(currentStepKey, currentIndex, currentIndex - 1);
-                    }}
-                    onMoveDown={() => {
-                      const currentIndex = currentStepData.findIndex(b => b.id === blockId);
-                      if (currentIndex < currentStepData.length - 1)
-                        actions.reorderBlocks(currentStepKey, currentIndex, currentIndex + 1);
-                    }}
-                    onDuplicate={() => handleBlockDuplicate(blockId)}
-                    onDelete={() => handleBlockDelete(blockId)}
-                    data-testid={`editor-block-${blockId}`}
-                  />
+                  <React.Fragment key={blockId}>
+                    {/* 🚀 Placeholder visual antes do bloco */}
+                    {showPlaceholderBefore && (
+                      <div
+                        className="absolute left-4 right-4 h-1 bg-blue-400 rounded-full animate-pulse z-60"
+                        style={{ top: topOffset - 8 }}
+                      >
+                        <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-3 h-3 bg-blue-500 rounded-full -ml-1"></div>
+                        <div className="absolute right-0 top-1/2 transform -translate-y-1/2 w-3 h-3 bg-blue-500 rounded-full -mr-1"></div>
+                      </div>
+                    )}
+
+                    <SortableBlock
+                      key={blockId}
+                      id={blockId}
+                      block={block}
+                      isSelected={isSelected}
+                      topOffset={topOffset}
+                      height={height}
+                      onSelect={handleBlockSelect}
+                      onMoveUp={() => {
+                        // 🚀 OTIMIZAÇÃO: Usa idIndexMap em vez de findIndex
+                        const currentIndex = idIndexMap[blockId];
+                        if (currentIndex !== undefined && currentIndex > 0)
+                          actions.reorderBlocks(currentStepKey, currentIndex, currentIndex - 1);
+                      }}
+                      onMoveDown={() => {
+                        // 🚀 OTIMIZAÇÃO: Usa idIndexMap em vez de findIndex
+                        const currentIndex = idIndexMap[blockId];
+                        if (currentIndex !== undefined && currentIndex < currentStepData.length - 1)
+                          actions.reorderBlocks(currentStepKey, currentIndex, currentIndex + 1);
+                      }}
+                      onDuplicate={() => handleBlockDuplicate(blockId)}
+                      onDelete={() => handleBlockDelete(blockId)}
+                      data-testid={`editor-block-${blockId}`}
+                    />
+
+                    {/* 🚀 Placeholder visual após o último bloco */}
+                    {showPlaceholderAfter && (
+                      <div
+                        className="absolute left-4 right-4 h-1 bg-blue-400 rounded-full animate-pulse z-60"
+                        style={{ top: topOffset + height + 8 }}
+                      >
+                        <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-3 h-3 bg-blue-500 rounded-full -ml-1"></div>
+                        <div className="absolute right-0 top-1/2 transform -translate-y-1/2 w-3 h-3 bg-blue-500 rounded-full -mr-1"></div>
+                      </div>
+                    )}
+                  </React.Fragment>
                 );
               })}
+
+              {/* 🚀 Placeholder para lista vazia */}
+              {currentStepData.length === 0 && placeholderIndex === 0 && (
+                <div className="absolute left-4 right-4 top-20 h-1 bg-blue-400 rounded-full animate-pulse z-60">
+                  <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-3 h-3 bg-blue-500 rounded-full -ml-1"></div>
+                  <div className="absolute right-0 top-1/2 transform -translate-y-1/2 w-3 h-3 bg-blue-500 rounded-full -mr-1"></div>
+                </div>
+              )}
             </div>
           </SortableContext>
         )}
@@ -746,8 +860,10 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
     <>
       <DndContext
         sensors={sensors}
-        collisionDetection={closestCenter}
+        collisionDetection={collisionDetectionStrategy}
+        modifiers={[restrictToVerticalAxis, restrictToParentElement]}
         onDragStart={handleDragStart}
+        onDragOver={handleDragOver}
         onDragEnd={handleDragEnd}
       >
         <div className={`editor-pro h-screen bg-gray-50 flex ${className}`}>
@@ -756,6 +872,33 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
           <CanvasArea />
           <PropertiesColumn />
         </div>
+
+        {/* 🚀 MELHORIA DND: DragOverlay para preview visual */}
+        <DragOverlay>
+          {activeDrag ? (
+            activeDrag.data?.type === 'sidebar-component' ? (
+              <div className="bg-white p-3 rounded-lg shadow-lg border-2 border-blue-300 text-sm font-medium opacity-90">
+                <div className="flex items-center gap-2">
+                  <span className="text-lg">
+                    {availableComponents.find(c => c.type === activeDrag.data.blockType)?.icon ||
+                      '📦'}
+                  </span>
+                  <span>
+                    {availableComponents.find(c => c.type === activeDrag.data.blockType)?.name ||
+                      'Componente'}
+                  </span>
+                </div>
+              </div>
+            ) : (
+              <div className="bg-white p-3 rounded-lg shadow-lg border-2 border-green-300 text-sm font-medium opacity-90">
+                <div className="flex items-center gap-2">
+                  <span className="text-lg">🔄</span>
+                  <span>Reordenando bloco</span>
+                </div>
+              </div>
+            )
+          ) : null}
+        </DragOverlay>
       </DndContext>
 
       {NotificationContainer ? <NotificationContainer /> : null}
