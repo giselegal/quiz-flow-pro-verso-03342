@@ -1,4 +1,4 @@
-import { CanvasDropZone } from '@/components/editor/canvas/CanvasDropZone';
+import { CanvasDropZone } from '@/components/editor/canvas/CanvasDropZone.simple';
 import { Quiz21StepsNavigation } from '@/components/quiz/Quiz21StepsNavigation';
 import { Quiz21StepsProvider, useQuiz21Steps } from '@/components/quiz/Quiz21StepsProvider';
 import { EditorProvider, useEditor } from '@/context/EditorContext';
@@ -82,7 +82,7 @@ const QuizIntegratedRenderer: React.FC = () => {
           <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl shadow-stone-200/40 border border-stone-200/30 ring-1 ring-stone-100/20 min-h-[600px] p-8">
             <CanvasDropZone
               blocks={currentBlocks}
-              onSelectBlock={id => setSelectedBlockId(id)}
+              onSelectBlock={(id: string) => setSelectedBlockId(id)}
               selectedBlockId={null}
               onUpdateBlock={updateBlock}
               onDeleteBlock={handleDeleteBlock}

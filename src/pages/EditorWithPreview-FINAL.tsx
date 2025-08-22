@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 // Editor Components
-import { CanvasDropZone } from '@/components/editor/canvas/CanvasDropZone';
+import { CanvasDropZone } from '@/components/editor/canvas/CanvasDropZone.simple';
 import CombinedComponentsPanel from '@/components/editor/CombinedComponentsPanel';
 import { FunnelSettingsPanel } from '@/components/editor/funnel-settings/FunnelSettingsPanel';
 import { FunnelStagesPanel } from '@/components/editor/funnel/FunnelStagesPanel';

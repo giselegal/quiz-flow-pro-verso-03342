@@ -1,7 +1,7 @@
 import { useEditor } from '@/context/EditorContext';
 import { BlockType } from '@/types/editor';
 import { QuizMainDemo } from './QuizMainDemo';
-import { CanvasDropZone } from './canvas/CanvasDropZone';
+import { CanvasDropZone } from './canvas/CanvasDropZone.simple';
 import ComponentsSidebar from './components/ComponentsSidebar';
 import FunnelStagesPanel from './funnel/FunnelStagesPanelUnified';
 import './interactive/styles/quiz-animations.css';
