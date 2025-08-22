@@ -1,9 +1,9 @@
+import { getBlocksForStep, mergeStepBlocks, normalizeStepBlocks } from '@/config/quizStepsComplete';
 import { useEditorSupabaseIntegration } from '@/hooks/useEditorSupabaseIntegration';
 import { useHistoryState } from '@/hooks/useHistoryState';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import { Block } from '@/types/editor';
 import { extractStepNumberFromKey } from '@/utils/supabaseMapper';
-import { normalizeStepBlocks, getBlocksForStep, mergeStepBlocks } from '@/config/quizStepsComplete';
 import { arrayMove } from '@dnd-kit/sortable';
 import React, { createContext, ReactNode, useCallback, useContext, useEffect } from 'react';
 
@@ -100,7 +100,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     const initialBlocks: Record<string, Block[]> = {};
     // Normalize step blocks from template using our new utility
     const normalizedBlocks = normalizeStepBlocks(QUIZ_STYLE_21_STEPS_TEMPLATE);
-    
+
     Object.entries(normalizedBlocks).forEach(([stepKey, blocks]) => {
       initialBlocks[stepKey] = Array.isArray(blocks) ? [...blocks] : [];
     });
@@ -114,7 +114,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       isLoading: false,
       ...initial,
     };
-    
+
     return state;
   };
 
@@ -184,7 +184,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
   const ensureStepLoaded = useCallback(
     async (step: number | string) => {
       const existingBlocks = getBlocksForStep(step, rawState.stepBlocks);
-      
+
       if (existingBlocks && existingBlocks.length > 0) {
         return; // Step already loaded
       }
@@ -227,11 +227,25 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     [rawState, setState, state.isSupabaseEnabled, supabaseIntegration]
   );
 
-  // Initialize step 1 automatically on mount
+  // Initialize step 1 automatically on mount and when template data is available
   useEffect(() => {
+    // Check if we have template data but no step blocks
+    const hasTemplateData = Object.keys(QUIZ_STYLE_21_STEPS_TEMPLATE).length > 0;
+    const hasStepBlocks = Object.keys(rawState.stepBlocks || {}).length > 0;
+
+    if (hasTemplateData && !hasStepBlocks) {
+      // Force reinitialize from template
+      const normalizedBlocks = normalizeStepBlocks(QUIZ_STYLE_21_STEPS_TEMPLATE);
+      setState({
+        ...rawState,
+        stepBlocks: normalizedBlocks,
+        currentStep: 1,
+      });
+    }
+
     // Ensure step 1 is loaded on initialization
     ensureStepLoaded(1);
-  }, [ensureStepLoaded]);
+  }, [ensureStepLoaded, rawState, setState]);
 
   // Ensure step is loaded when currentStep changes
   useEffect(() => {
