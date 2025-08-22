@@ -423,16 +423,29 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
 
       if (!over) {
         setPlaceholderIndex(null);
+        setDropTargetStep(null);
         return;
       }
 
       const dragData = extractDragData(active);
+
+      // 🚀 P2: Cross-step drops - detectar se está sobre um step diferente
+      const overStepData = typeof over.id === 'string' && over.id.startsWith('step-');
+      if (overStepData) {
+        const stepNumber = parseInt(over.id.replace('step-', ''), 10);
+        if (stepNumber !== state.currentStep && dragData?.type === 'canvas-block') {
+          setDropTargetStep(stepNumber);
+          setPlaceholderIndex(0); // Placeholder no início do step target
+          return;
+        }
+      }
 
       // Para reordenamento de blocos no canvas
       if (dragData?.type === 'canvas-block' && typeof over.id === 'string') {
         const overIndex = idIndexMap[over.id];
         if (overIndex !== undefined) {
           setPlaceholderIndex(overIndex);
+          setDropTargetStep(null);
         }
       }
       // Para adição de novos componentes
@@ -442,9 +455,10 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         setPlaceholderIndex(
           overIndex !== null && overIndex !== undefined ? overIndex + 1 : currentStepData.length
         );
+        setDropTargetStep(null);
       }
     },
-    [idIndexMap, currentStepData.length]
+    [idIndexMap, currentStepData.length, state.currentStep]
   );
 
   const handleDragEnd = useCallback(
@@ -809,12 +823,12 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
                   placeholderIndex === currentStepData.length &&
                   index === currentStepData.length - 1;
 
-                // 🚀 P2: Componente Placeholder Visual
-                const PlaceholderLine = () => (
-                  <div className="absolute left-4 right-4 flex items-center z-60">
-                    <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
-                    <div className="flex-1 h-1 bg-gradient-to-r from-blue-500 via-blue-400 to-blue-500 rounded-full mx-2 animate-pulse"></div>
-                    <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
+                // 🚀 P2: Componente Placeholder Visual Avançado
+                const PlaceholderLine = ({ style, className }: { style?: React.CSSProperties; className?: string }) => (
+                  <div className={cn("flex items-center z-60", className)} style={style}>
+                    <div className="w-3 h-3 bg-blue-500 rounded-full animate-ping"></div>
+                    <div className="flex-1 h-1 bg-gradient-to-r from-blue-300 via-blue-500 to-blue-300 rounded-full mx-2 animate-pulse"></div>
+                    <div className="w-3 h-3 bg-blue-500 rounded-full animate-ping"></div>
                   </div>
                 );
 
@@ -842,15 +856,12 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
 
                 return (
                   <React.Fragment key={blockId}>
-                    {/* 🚀 Placeholder visual antes do bloco */}
+                    {/* 🚀 Placeholder visual avançado antes do bloco */}
                     {showPlaceholderBefore && (
-                      <div
-                        className="absolute left-4 right-4 h-1 bg-blue-400 rounded-full animate-pulse z-60"
+                      <PlaceholderLine
                         style={{ top: topOffset - 8 }}
-                      >
-                        <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-3 h-3 bg-blue-500 rounded-full -ml-1"></div>
-                        <div className="absolute right-0 top-1/2 transform -translate-y-1/2 w-3 h-3 bg-blue-500 rounded-full -mr-1"></div>
-                      </div>
+                        className="absolute left-4 right-4 z-60"
+                      />
                     )}
 
                     <SortableBlock
@@ -878,15 +889,12 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
                       data-testid={`editor-block-${blockId}`}
                     />
 
-                    {/* 🚀 Placeholder visual após o último bloco */}
+                    {/* 🚀 Placeholder visual avançado após o último bloco */}
                     {showPlaceholderAfter && (
-                      <div
-                        className="absolute left-4 right-4 h-1 bg-blue-400 rounded-full animate-pulse z-60"
+                      <PlaceholderLine
                         style={{ top: topOffset + height + 8 }}
-                      >
-                        <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-3 h-3 bg-blue-500 rounded-full -ml-1"></div>
-                        <div className="absolute right-0 top-1/2 transform -translate-y-1/2 w-3 h-3 bg-blue-500 rounded-full -mr-1"></div>
-                      </div>
+                        className="absolute left-4 right-4 z-60"
+                      />
                     )}
                   </React.Fragment>
                 );
