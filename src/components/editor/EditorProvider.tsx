@@ -3,7 +3,7 @@ import { useEditorSupabase } from '@/hooks/useEditorSupabase';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import { Block } from '@/types/editor';
 import { arrayMove } from '@dnd-kit/sortable';
-import React, { createContext, ReactNode, useCallback, useContext, useEffect, useState } from 'react';
+import React, { createContext, ReactNode, useCallback, useContext, useEffect } from 'react';
 import { 
   groupSupabaseComponentsByStep, 
   mapBlockToSupabaseComponent, 
@@ -115,14 +115,6 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     enableSupabase ? quizId : undefined
   );
 
-  // Load components from Supabase on mount if enabled
-  useEffect(() => {
-    if (enableSupabase && (funnelId || quizId)) {
-      console.log('🔄 Loading components from Supabase...');
-      // Will be implemented after state definition
-    }
-  }, [enableSupabase, funnelId, quizId]);
-
   // Ensure state integrity - fix corrupted currentStep
   const state = {
     ...rawState,
@@ -158,6 +150,14 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       });
     }
   }, [enableSupabase, editorSupabase, state, setState]);
+
+  // Load components from Supabase on mount if enabled
+  useEffect(() => {
+    if (enableSupabase && (funnelId || quizId)) {
+      console.log('🔄 Loading components from Supabase...');
+      loadSupabaseComponents();
+    }
+  }, [enableSupabase, funnelId, quizId, loadSupabaseComponents]);
 
   // Actions
   const setCurrentStep = useCallback(
@@ -324,6 +324,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     canRedo,
     exportJSON,
     importJSON,
+    loadSupabaseComponents,
   };
 
   const contextValue: EditorContextValue = {
