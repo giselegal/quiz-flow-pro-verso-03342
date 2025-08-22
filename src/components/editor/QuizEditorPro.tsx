@@ -102,9 +102,9 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
           }
           
           // Caso 2: Objeto com propriedade .blocks
-          if (value && typeof value === 'object' && Array.isArray(value.blocks)) {
-            devLog(`Found blocks for step ${step} using key ${key} with .blocks:`, value.blocks);
-            return value.blocks;
+          if (value && typeof value === 'object' && 'blocks' in value && Array.isArray((value as any).blocks)) {
+            devLog(`Found blocks for step ${step} using key ${key} with .blocks:`, (value as any).blocks);
+            return (value as any).blocks;
           }
         }
       }
