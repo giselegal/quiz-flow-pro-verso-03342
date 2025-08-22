@@ -181,7 +181,7 @@ function App() {
                   {/* 🚀 EDITOR PRO MODULARIZADO - Versão Otimizada */}
                   <Route path="/editor-pro-modular">
                     <Suspense fallback={<PageLoading />}>
-                      <EditorProSimpleTest />
+                      <EditorProTestPage />
                     </Suspense>
                   </Route>
 
