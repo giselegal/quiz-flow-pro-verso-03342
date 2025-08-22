@@ -1052,10 +1052,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         </div>
       </div>
 
-      <CanvasDropZone
-        isEmpty={currentStepData.length === 0}
-        data-testid="canvas-dropzone"
-      >
+      <CanvasDropZone isEmpty={currentStepData.length === 0} data-testid="canvas-dropzone">
         {mode === 'preview' ? (
           // Preview: Apenas QuizRenderer sem overlay de edição
           <QuizRenderer

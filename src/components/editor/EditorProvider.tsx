@@ -231,14 +231,17 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
   useEffect(() => {
     // Always force template reload on mount
     const normalizedBlocks = normalizeStepBlocks(QUIZ_STYLE_21_STEPS_TEMPLATE);
-    console.log('🔧 FORCE RELOAD TEMPLATE:', { normalizedBlocks, keys: Object.keys(normalizedBlocks) });
-    
+    console.log('🔧 FORCE RELOAD TEMPLATE:', {
+      normalizedBlocks,
+      keys: Object.keys(normalizedBlocks),
+    });
+
     setState({
       ...rawState,
       stepBlocks: normalizedBlocks,
       currentStep: 1,
     });
-    
+
     // Ensure step 1 is loaded on initialization
     setTimeout(() => ensureStepLoaded(1), 100);
   }, []); // Empty dependency array - run only once on mount  // Ensure step is loaded when currentStep changes
