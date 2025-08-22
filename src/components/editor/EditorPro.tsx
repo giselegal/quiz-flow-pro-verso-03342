@@ -1041,120 +1041,95 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         isEmpty={currentStepData.length === 0 && mode === 'edit'}
         data-testid="canvas-dropzone"
       >
-        <QuizRenderer
-          mode={mode === 'preview' ? 'preview' : 'editor'}
-          onStepChange={handleStepSelect}
-          initialStep={safeCurrentStep}
-        />
+        {mode === 'preview' ? (
+          // Preview: Apenas QuizRenderer sem overlay de edição
+          <QuizRenderer
+            mode="preview"
+            onStepChange={handleStepSelect}
+            initialStep={safeCurrentStep}
+          />
+        ) : (
+          // Edit: Container com fundo neutro + SortableBlocks
+          <div className="relative min-h-[600px] bg-gray-50">
+            {/* Fundo neutro para evitar confusão visual */}
+            <div className="absolute inset-0 bg-white/80 backdrop-blur-sm"></div>
 
-        {mode === 'edit' && (
-          <SortableContext
-            items={currentStepData.map(b => b.id || `block-${currentStepData.indexOf(b)}`)}
-            strategy={verticalListSortingStrategy}
-          >
-            <div className="absolute inset-0 pointer-events-auto z-50">
-              {currentStepData.map((block: Block, index: number) => {
-                const blockId = block.id || `block-${index}`;
-                const isSelected = state.selectedBlockId === blockId;
-
-                // 🚀 MELHORIA DND: Placeholder visual melhorado
-                const showPlaceholderBefore = placeholderIndex === index;
-                const showPlaceholderAfter =
-                  placeholderIndex === currentStepData.length &&
-                  index === currentStepData.length - 1;
-
-                // 🚀 P2: Componente Placeholder Visual Avançado
-                const PlaceholderLine = ({
-                  style,
-                  className,
-                }: {
-                  style?: React.CSSProperties;
-                  className?: string;
-                }) => (
-                  <div className={cn('flex items-center z-60', className)} style={style}>
-                    <div className="w-3 h-3 bg-blue-500 rounded-full animate-ping"></div>
-                    <div className="flex-1 h-1 bg-gradient-to-r from-blue-300 via-blue-500 to-blue-300 rounded-full mx-2 animate-pulse"></div>
-                    <div className="w-3 h-3 bg-blue-500 rounded-full animate-ping"></div>
+            <SortableContext
+              items={currentStepData.map(b => b.id || `block-${currentStepData.indexOf(b)}`)}
+              strategy={verticalListSortingStrategy}
+            >
+              <div className="relative z-10 min-h-[600px] p-4">
+                {/* Placeholder para lista vazia */}
+                {currentStepData.length === 0 && placeholderIndex === 0 && (
+                  <div className="flex items-center my-2">
+                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-ping"></div>
+                    <div className="flex-1 h-0.5 bg-gradient-to-r from-blue-300 via-blue-500 to-blue-300 rounded-full mx-2 animate-pulse"></div>
+                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-ping"></div>
                   </div>
-                );
+                )}
 
-                // topOffset/height heurístico (pode ser substituído por medidas reais)
-                let topOffset = 60 + index * 100;
-                let height = 80;
-                switch (block.type) {
-                  case 'quiz-intro-header':
-                    topOffset = 20;
-                    height = 120;
-                    break;
-                  case 'options-grid':
-                    topOffset = 150 + index * 200;
-                    height = 300;
-                    break;
-                  case 'form-container':
-                    topOffset = 200 + index * 150;
-                    height = 120;
-                    break;
-                  case 'button':
-                    topOffset = 400 + index * 100;
-                    height = 60;
-                    break;
-                }
+                {currentStepData.map((block: Block, index: number) => {
+                  const blockId = block.id || `block-${index}`;
+                  const isSelected = state.selectedBlockId === blockId;
 
-                return (
-                  <React.Fragment key={blockId}>
-                    {/* 🚀 Placeholder visual avançado antes do bloco */}
-                    {showPlaceholderBefore && (
-                      <PlaceholderLine
-                        style={{ top: topOffset - 8 }}
-                        className="absolute left-4 right-4 z-60"
-                      />
-                    )}
+                  // Placeholder visual para indicar posição de drop
+                  const showPlaceholderBefore = placeholderIndex === index;
+                  const showPlaceholderAfter =
+                    placeholderIndex === currentStepData.length &&
+                    index === currentStepData.length - 1;
 
-                    <SortableBlock
-                      key={blockId}
-                      id={blockId}
-                      block={block}
-                      isSelected={isSelected || multiSelect.isSelected(blockId)}
-                      topOffset={topOffset}
-                      height={height}
-                      onSelect={handleBlockSelect}
-                      onMoveUp={() => {
-                        // 🚀 OTIMIZAÇÃO: Usa idIndexMap em vez de findIndex
-                        const currentIndex = idIndexMap[blockId];
-                        if (currentIndex !== undefined && currentIndex > 0)
-                          actions.reorderBlocks(currentStepKey, currentIndex, currentIndex - 1);
-                      }}
-                      onMoveDown={() => {
-                        // 🚀 OTIMIZAÇÃO: Usa idIndexMap em vez de findIndex
-                        const currentIndex = idIndexMap[blockId];
-                        if (currentIndex !== undefined && currentIndex < currentStepData.length - 1)
-                          actions.reorderBlocks(currentStepKey, currentIndex, currentIndex + 1);
-                      }}
-                      onDuplicate={() => handleBlockDuplicate(blockId)}
-                      onDelete={() => handleBlockDelete(blockId)}
-                      data-testid={`editor-block-${blockId}`}
-                    />
+                  // 🚀 P2: Componente Placeholder Visual Simplificado
+                  const PlaceholderLine = ({ className }: { className?: string }) => (
+                    <div className={cn('flex items-center my-2', className)}>
+                      <div className="w-2 h-2 bg-blue-500 rounded-full animate-ping"></div>
+                      <div className="flex-1 h-0.5 bg-gradient-to-r from-blue-300 via-blue-500 to-blue-300 rounded-full mx-2 animate-pulse"></div>
+                      <div className="w-2 h-2 bg-blue-500 rounded-full animate-ping"></div>
+                    </div>
+                  );
 
-                    {/* 🚀 Placeholder visual avançado após o último bloco */}
-                    {showPlaceholderAfter && (
-                      <PlaceholderLine
-                        style={{ top: topOffset + height + 8 }}
-                        className="absolute left-4 right-4 z-60"
-                      />
-                    )}
-                  </React.Fragment>
-                );
-              })}
+                  return (
+                    <React.Fragment key={blockId}>
+                      {/* 🚀 Placeholder visual antes do bloco */}
+                      {showPlaceholderBefore && <PlaceholderLine />}
 
-              {/* 🚀 Placeholder para lista vazia */}
-              {currentStepData.length === 0 && placeholderIndex === 0 && (
-                <div className="absolute left-4 right-4 top-20 h-1 bg-blue-400 rounded-full animate-pulse z-60">
-                  <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-3 h-3 bg-blue-500 rounded-full -ml-1"></div>
-                  <div className="absolute right-0 top-1/2 transform -translate-y-1/2 w-3 h-3 bg-blue-500 rounded-full -mr-1"></div>
-                </div>
-              )}
-            </div>
-          </SortableContext>
+                      <div className="mb-4">
+                        <SortableBlock
+                          key={blockId}
+                          id={blockId}
+                          block={block}
+                          isSelected={isSelected || multiSelect.isSelected(blockId)}
+                          topOffset={0}
+                          height={0}
+                          onSelect={handleBlockSelect}
+                          onMoveUp={() => {
+                            // 🚀 OTIMIZAÇÃO: Usa idIndexMap em vez de findIndex
+                            const currentIndex = idIndexMap[blockId];
+                            if (currentIndex !== undefined && currentIndex > 0)
+                              actions.reorderBlocks(currentStepKey, currentIndex, currentIndex - 1);
+                          }}
+                          onMoveDown={() => {
+                            // 🚀 OTIMIZAÇÃO: Usa idIndexMap em vez de findIndex
+                            const currentIndex = idIndexMap[blockId];
+                            if (
+                              currentIndex !== undefined &&
+                              currentIndex < currentStepData.length - 1
+                            )
+                              actions.reorderBlocks(currentStepKey, currentIndex, currentIndex + 1);
+                          }}
+                          onDuplicate={() => handleBlockDuplicate(blockId)}
+                          onDelete={() => handleBlockDelete(blockId)}
+                          data-testid={`editor-block-${blockId}`}
+                        />
+                      </div>
+
+                      {/* 🚀 Placeholder visual após o último bloco */}
+                      {showPlaceholderAfter && <PlaceholderLine />}
+                    </React.Fragment>
+                  );
+                })}
+              </div>
+            </SortableContext>
+          </div>
         )}
       </CanvasDropZone>
     </div>
