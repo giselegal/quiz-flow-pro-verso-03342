@@ -38,7 +38,7 @@ export const validateDrop = (
 
   // Validação para componente da sidebar
   if (activeData.type === 'sidebar-component') {
-    if (over.id !== 'canvas' && !over.id.toString().startsWith('canvas-')) {
+    if (over.id !== 'canvas' && over.id !== 'canvas-drop-zone' && !over.id.toString().startsWith('canvas-')) {
       return { isValid: false, reason: 'Componente deve ser solto no canvas' };
     }
 
