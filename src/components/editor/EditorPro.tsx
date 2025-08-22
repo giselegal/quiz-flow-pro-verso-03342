@@ -103,6 +103,10 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   // 🚀 MELHORIAS DND: Estados para DragOverlay e Placeholder
   const [activeDrag, setActiveDrag] = useState<any>(null);
   const [placeholderIndex, setPlaceholderIndex] = useState<number | null>(null);
+  
+  // 🚀 MELHORIA P2: Auto-scroll durante drag
+  const [isDragging, setIsDragging] = useState(false);
+  const canvasRef = useRef<HTMLDivElement>(null);
 
   const safeCurrentStep = state.currentStep || 1;
   const currentStepKey = `step-${safeCurrentStep}`;
@@ -132,6 +136,50 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   }, [currentStepData]);
 
   const selectedBlock = currentStepData.find((block: Block) => block.id === state.selectedBlockId);
+
+  // 🚀 MELHORIA P2: Auto-scroll durante drag próximo às bordas
+  React.useEffect(() => {
+    if (!isDragging) return;
+
+    let animationId: number;
+    const scrollSpeed = 5;
+    const scrollZone = 100; // pixels da borda para ativar scroll
+
+    const handleAutoScroll = (e: PointerEvent) => {
+      const container = canvasRef.current;
+      if (!container) return;
+
+      const rect = container.getBoundingClientRect();
+      const y = e.clientY - rect.top;
+      const containerHeight = rect.height;
+
+      // Scroll para cima quando próximo ao topo
+      if (y < scrollZone && container.scrollTop > 0) {
+        const intensity = (scrollZone - y) / scrollZone;
+        container.scrollBy({ top: -scrollSpeed * intensity, behavior: 'auto' });
+      }
+      // Scroll para baixo quando próximo ao fundo
+      else if (y > containerHeight - scrollZone) {
+        const intensity = (y - (containerHeight - scrollZone)) / scrollZone;
+        const maxScroll = container.scrollHeight - container.clientHeight;
+        if (container.scrollTop < maxScroll) {
+          container.scrollBy({ top: scrollSpeed * intensity, behavior: 'auto' });
+        }
+      }
+    };
+
+    const scheduleAutoScroll = (e: PointerEvent) => {
+      cancelAnimationFrame(animationId);
+      animationId = requestAnimationFrame(() => handleAutoScroll(e));
+    };
+
+    document.addEventListener('pointermove', scheduleAutoScroll);
+    
+    return () => {
+      document.removeEventListener('pointermove', scheduleAutoScroll);
+      cancelAnimationFrame(animationId);
+    };
+  }, [isDragging]);
 
   if (process.env.NODE_ENV === 'development') {
     devLog('EditorPro render:', {
