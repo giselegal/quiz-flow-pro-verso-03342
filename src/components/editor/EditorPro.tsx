@@ -41,6 +41,12 @@ import {
 import React, { Suspense, useCallback, useMemo, useRef, useState } from 'react';
 import { useEditor } from './EditorProvider';
 import { SortableBlock } from './SortableBlock';
+// P3 Imports - Advanced Features
+import { useUndoRedo } from '@/hooks/useUndoRedo';
+import { useMultiSelect } from '@/hooks/useMultiSelect';
+import { useAdvancedShortcuts } from '@/hooks/useAdvancedShortcuts';
+import { UndoRedoToolbar } from '@/components/editor/UndoRedoToolbar';
+import { MultiSelectOverlay } from '@/components/editor/MultiSelectOverlay';
 
 /**
  * EditorPro - versão modularizada / otimizada do QuizEditorPro
@@ -142,6 +148,61 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   const selectedBlock = currentStepData.find((block: Block) => block.id === state.selectedBlockId);
 
   // 🚀 MELHORIA P2: Haptic feedback para mobile
+  
+  // 🚀 P3 HOOKS: Advanced Features
+  const undoRedo = useUndoRedo(50); // Stack de 50 ações
+  
+  const multiSelect = useMultiSelect(
+    currentStepData,
+    (selectedBlocks: string[]) => {
+      devLog('P3', 'Multi-select changed:', selectedBlocks);
+    }
+  );
+  
+  const shortcuts = useAdvancedShortcuts({
+    shortcuts: {
+      'ctrl+z': {
+        key: 'z',
+        ctrlKey: true,
+        handler: () => undoRedo.undo(),
+        description: 'Desfazer última ação'
+      },
+      'ctrl+y': {
+        key: 'y',
+        ctrlKey: true,
+        handler: () => undoRedo.redo(),
+        description: 'Refazer ação'
+      },
+      'ctrl+shift+z': {
+        key: 'z',
+        ctrlKey: true,
+        shiftKey: true,
+        handler: () => undoRedo.redo(),
+        description: 'Refazer ação (alternativo)'
+      },
+      'ctrl+a': {
+        key: 'a',
+        ctrlKey: true,
+        handler: () => multiSelect.selectAll(),
+        description: 'Selecionar todos'
+      },
+      'escape': {
+        key: 'Escape',
+        handler: () => multiSelect.deselectAll(),
+        description: 'Limpar seleção'
+      },
+      'delete': {
+        key: 'Delete',
+        handler: () => {
+          const selectedBlocks = multiSelect.getSelectedBlocks();
+          if (selectedBlocks.length > 0) {
+            handleBulkDelete(selectedBlocks);
+          }
+        },
+        description: 'Excluir selecionados'
+      }
+    }
+  });
   const triggerHapticFeedback = useCallback((intensity: 'light' | 'medium' | 'heavy' = 'light') => {
     // Vibração para dispositivos móveis
     if ('vibrate' in navigator) {
@@ -372,8 +433,27 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   // Handlers básicos
   const handleStepSelect = useCallback((step: number) => actions.setCurrentStep(step), [actions]);
   const handleBlockSelect = useCallback(
-    (blockId: string) => actions.setSelectedBlockId(blockId),
-    [actions]
+    (blockId: string, event?: React.MouseEvent) => {
+      const blockIndex = idIndexMap[blockId];
+      if (blockIndex === undefined) return;
+
+      // Integração P3: Multi-select com Ctrl+Click e Shift+Click
+      if (event) {
+        multiSelect.selectBlock(
+          blockId, 
+          blockIndex, 
+          event.ctrlKey || event.metaKey, 
+          event.shiftKey
+        );
+      } else {
+        // Seleção simples sem teclas modificadoras
+        multiSelect.selectBlock(blockId, blockIndex, false, false);
+      }
+
+      // Manter compatibilidade com sistema de seleção existente
+      actions.setSelectedBlockId(blockId);
+    },
+    [actions, idIndexMap, multiSelect]
   );
   const handleBlockUpdate = useCallback(
     (blockId: string, updates: Record<string, any>) =>
@@ -381,8 +461,70 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
     [currentStepKey, actions]
   );
   const handleBlockDelete = useCallback(
-    (blockId: string) => actions.removeBlock(currentStepKey, blockId),
-    [currentStepKey, actions]
+    (blockId: string) => {
+      const blockToDelete = currentStepData.find(b => b.id === blockId);
+      if (!blockToDelete) return;
+
+      // Adicionar ao histórico de undo/redo
+      undoRedo.addAction({
+        type: 'delete',
+        data: {
+          stepKey: currentStepKey,
+          blockId: blockId,
+          blocks: [blockToDelete]
+        },
+        undo: () => {
+          actions.addBlock(currentStepKey, blockToDelete);
+        },
+        redo: () => {
+          actions.removeBlock(currentStepKey, blockId);
+        }
+      });
+
+      actions.removeBlock(currentStepKey, blockId);
+    },
+    [currentStepKey, actions, currentStepData, undoRedo]
+  );
+
+  // 🚀 P3: Bulk delete para multi-select
+  const handleBulkDelete = useCallback(
+    (blockIds: string[]) => {
+      if (blockIds.length === 0) return;
+      
+      // Adicionar ação ao histórico de undo/redo
+      const blocksToDelete = currentStepData.filter(block => blockIds.includes(block.id));
+      undoRedo.addAction({
+        type: 'delete',
+        data: {
+          stepKey: currentStepKey,
+          blockIds: blockIds,
+          blocks: blocksToDelete
+        },
+        undo: () => {
+          // Restaurar blocos
+          blocksToDelete.forEach(block => {
+            actions.addBlock(currentStepKey, block);
+          });
+        },
+        redo: () => {
+          // Re-deletar blocos
+          blockIds.forEach(blockId => {
+            actions.removeBlock(currentStepKey, blockId);
+          });
+        }
+      });
+
+      // Executar deleção
+      blockIds.forEach(blockId => {
+        actions.removeBlock(currentStepKey, blockId);
+      });
+
+      // Limpar seleção
+      multiSelect.deselectAll();
+      
+      devLog('P3', `Bulk deleted ${blockIds.length} blocks:`, blockIds);
+    },
+    [currentStepKey, actions, currentStepData, undoRedo, multiSelect]
   );
 
   const handleBlockDuplicate = useCallback(
@@ -537,6 +679,23 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
           case 'add':
             if (dragData.type === 'sidebar-component' && dragData.blockType) {
               const newBlock = createBlockFromComponent(dragData.blockType as any, currentStepData);
+              
+              // Adicionar ao histórico de undo/redo
+              undoRedo.addAction({
+                type: 'add',
+                data: {
+                  stepKey: currentStepKey,
+                  blockId: newBlock.id,
+                  blocks: [newBlock]
+                },
+                undo: () => {
+                  actions.removeBlock(currentStepKey, newBlock.id);
+                },
+                redo: () => {
+                  actions.addBlock(currentStepKey, newBlock);
+                }
+              });
+
               actions.addBlock(currentStepKey, newBlock);
               actions.setSelectedBlockId(newBlock.id);
               notification?.success?.(`Componente ${dragData.blockType} adicionado!`);
@@ -551,6 +710,23 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               const overIndex = idIndexMap[over.id];
 
               if (activeIndex !== -1 && overIndex !== undefined && activeIndex !== overIndex) {
+                // Adicionar ao histórico de undo/redo
+                undoRedo.addAction({
+                  type: 'move',
+                  data: {
+                    stepKey: currentStepKey,
+                    blockId: active.id as string,
+                    fromIndex: activeIndex,
+                    toIndex: overIndex
+                  },
+                  undo: () => {
+                    actions.reorderBlocks(currentStepKey, overIndex, activeIndex);
+                  },
+                  redo: () => {
+                    actions.reorderBlocks(currentStepKey, activeIndex, overIndex);
+                  }
+                });
+
                 actions.reorderBlocks(currentStepKey, activeIndex, overIndex);
                 notification?.info?.('Blocos reordenados');
                 // 🚀 P2: Haptic feedback para reordenamento bem-sucedido
@@ -947,7 +1123,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
                       key={blockId}
                       id={blockId}
                       block={block}
-                      isSelected={isSelected}
+                      isSelected={isSelected || multiSelect.isSelected(blockId)}
                       topOffset={topOffset}
                       height={height}
                       onSelect={handleBlockSelect}
@@ -1092,6 +1268,33 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
           ) : null}
         </DragOverlay>
       </DndContext>
+
+      {/* 🚀 P3 Components: Advanced Features */}
+      <UndoRedoToolbar
+        canUndo={undoRedo.canUndo}
+        canRedo={undoRedo.canRedo}
+        onUndo={undoRedo.undo}
+        onRedo={undoRedo.redo}
+        lastActionDescription={undoRedo.getLastActionDescription()}
+        nextActionDescription={undoRedo.getNextActionDescription()}
+        className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50"
+      />
+
+      {multiSelect.getSelectedCount() > 0 && (
+        <MultiSelectOverlay
+          selectedBlocks={multiSelect.getSelectedBlocks()}
+          blocks={currentStepData}
+          isSelecting={multiSelect.isSelecting}
+          selectionMode={multiSelect.getSelectedCount() > 1 ? 'multi' : 'single'}
+          onBulkDelete={() => handleBulkDelete(multiSelect.getSelectedBlocks())}
+          onBulkDuplicate={() => {
+            // TODO: Implementar duplicação em lote
+            devLog('P3', 'Bulk duplicate not implemented yet');
+          }}
+          onDeselectAll={multiSelect.deselectAll}
+          className="fixed bottom-4 right-4 z-50"
+        />
+      )}
 
       {NotificationContainer ? <NotificationContainer /> : null}
     </>

@@ -10,7 +10,7 @@ interface SortableBlockProps {
   isSelected: boolean;
   topOffset: number;
   height: number;
-  onSelect: (id: string) => void;
+  onSelect: (id: string, event?: React.MouseEvent) => void;
   onMoveUp: (id: string) => void;
   onMoveDown: (id: string) => void;
   onDuplicate: () => void;
@@ -59,7 +59,7 @@ export const SortableBlock: React.FC<SortableBlockProps> = ({
       )}
       onClick={e => {
         e.stopPropagation();
-        onSelect(id);
+        onSelect(id, e);
       }}
       data-testid={dataTestId}
     >
