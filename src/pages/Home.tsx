@@ -186,6 +186,17 @@ const Home = () => {
                     </Button>
 
                     <Button
+                      onClick={() => navigate('/showcase')}
+                      size="lg"
+                      className="bg-gradient-to-r from-purple-500 to-purple-700 hover:from-purple-700 hover:to-purple-500 text-white shadow-xl px-8 py-4 text-lg"
+                    >
+                      🎪 Showcase
+                      <Badge className="ml-2 bg-orange-400 text-orange-900 text-xs">
+                        MELHORIAS
+                      </Badge>
+                    </Button>
+
+                    <Button
                       onClick={() => navigate('/quiz-editor')}
                       size="lg"
                       variant="outline"

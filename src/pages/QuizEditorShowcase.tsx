@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
 import { EditorProvider } from '@/components/editor/EditorProvider';
+import { ErrorBoundary } from '@/components/editor/ErrorBoundary';
 import { QuizEditorPro } from '@/components/editor/QuizEditorPro';
-import { EditorErrorBoundary } from '@/components/editor/ErrorBoundary';
 import { useNotification } from '@/components/ui/Notification';
 import { validateEditorJSON } from '@/utils/editorUtils';
+import React, { useState } from 'react';
 
 /**
  * 🎪 Showcase completo das melhorias implementadas
@@ -42,15 +42,15 @@ export const QuizEditorShowcase: React.FC = () => {
 
   const testNotifications = () => {
     notification.success('✅ Operação realizada com sucesso!');
-    
+
     setTimeout(() => {
       notification.info('ℹ️ Informação importante para você');
     }, 1000);
-    
+
     setTimeout(() => {
       notification.warning('⚠️ Atenção: verifique esta configuração');
     }, 2000);
-    
+
     setTimeout(() => {
       notification.error('❌ Erro simulado para demonstração');
     }, 3000);
@@ -60,11 +60,11 @@ export const QuizEditorShowcase: React.FC = () => {
     // Teste com JSON inválido
     const invalidJSON = '{ invalid json structure';
     const result = validateEditorJSON(invalidJSON);
-    
+
     if (!result.valid) {
       notification.error(`Validação falhou: ${result.error}`);
     }
-    
+
     // Teste com JSON válido
     setTimeout(() => {
       const validJSON = JSON.stringify({
@@ -72,7 +72,7 @@ export const QuizEditorShowcase: React.FC = () => {
         currentStep: 1,
         selectedBlockId: null,
       });
-      
+
       const validResult = validateEditorJSON(validJSON);
       if (validResult.valid) {
         notification.success('✅ JSON válido detectado!');
@@ -88,13 +88,11 @@ export const QuizEditorShowcase: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       <notification.NotificationContainer />
-      
+
       {/* Header */}
       <div className="bg-white shadow-lg">
         <div className="container mx-auto px-6 py-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">
-            🎪 QuizEditorPro Showcase
-          </h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-2">🎪 QuizEditorPro Showcase</h1>
           <p className="text-lg text-gray-600">
             Demonstração completa de todas as melhorias implementadas
           </p>
@@ -108,7 +106,7 @@ export const QuizEditorShowcase: React.FC = () => {
             <div className="bg-white rounded-lg shadow-md p-6 sticky top-8">
               <h3 className="font-bold text-gray-900 mb-4">🧭 Demonstrações</h3>
               <nav className="space-y-2">
-                {demos.map((demo) => (
+                {demos.map(demo => (
                   <button
                     key={demo.id}
                     onClick={() => setActiveDemo(demo.id)}
@@ -127,29 +125,29 @@ export const QuizEditorShowcase: React.FC = () => {
               {/* Controles de teste */}
               <div className="mt-8 space-y-3">
                 <h4 className="font-semibold text-gray-900">🧪 Testes Rápidos</h4>
-                
+
                 <button
                   onClick={testNotifications}
                   className="w-full px-3 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors text-sm"
                 >
                   🔔 Testar Notificações
                 </button>
-                
+
                 <button
                   onClick={testValidation}
                   className="w-full px-3 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors text-sm"
                 >
                   🛡️ Testar Validação
                 </button>
-                
-                <EditorErrorBoundary>
+
+                <ErrorBoundary>
                   <button
                     onClick={triggerError}
                     className="w-full px-3 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors text-sm"
                   >
                     💥 Testar Error Boundary
                   </button>
-                </EditorErrorBoundary>
+                </ErrorBoundary>
               </div>
             </div>
           </div>
@@ -162,7 +160,7 @@ export const QuizEditorShowcase: React.FC = () => {
                   <h2 className="text-2xl font-bold text-gray-900 mb-4">
                     📋 Visão Geral das Melhorias
                   </h2>
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-4">
                       <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
@@ -176,7 +174,7 @@ export const QuizEditorShowcase: React.FC = () => {
                           <li>• Prevenção de ações inválidas</li>
                         </ul>
                       </div>
-                      
+
                       <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
                         <h3 className="font-semibold text-blue-900 mb-2">
                           🔔 Sistema de Notificações
@@ -189,7 +187,7 @@ export const QuizEditorShowcase: React.FC = () => {
                         </ul>
                       </div>
                     </div>
-                    
+
                     <div className="space-y-4">
                       <div className="p-4 bg-purple-50 border border-purple-200 rounded-lg">
                         <h3 className="font-semibold text-purple-900 mb-2">
@@ -202,11 +200,9 @@ export const QuizEditorShowcase: React.FC = () => {
                           <li>• Error boundaries</li>
                         </ul>
                       </div>
-                      
+
                       <div className="p-4 bg-orange-50 border border-orange-200 rounded-lg">
-                        <h3 className="font-semibold text-orange-900 mb-2">
-                          ⚡ Performance
-                        </h3>
+                        <h3 className="font-semibold text-orange-900 mb-2">⚡ Performance</h3>
                         <ul className="text-sm text-orange-800 space-y-1">
                           <li>• Memoização de componentes</li>
                           <li>• Logging condicional</li>
@@ -220,30 +216,23 @@ export const QuizEditorShowcase: React.FC = () => {
 
                 {/* Editor em ação */}
                 <div className="bg-white rounded-lg shadow-md p-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-4">
-                    🎨 Editor em Ação
-                  </h3>
-                  <EditorErrorBoundary>
-                    <EditorProvider
-                      enableSupabase={false}
-                      storageKey="showcase-editor"
-                    >
+                  <h3 className="text-xl font-bold text-gray-900 mb-4">🎨 Editor em Ação</h3>
+                  <ErrorBoundary>
+                    <EditorProvider enableSupabase={false} storageKey="showcase-editor">
                       <QuizEditorPro />
                     </EditorProvider>
-                  </EditorErrorBoundary>
+                  </ErrorBoundary>
                 </div>
               </div>
             )}
 
             {activeDemo === 'dragdrop' && (
               <div className="bg-white rounded-lg shadow-md p-6">
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                  🎯 Sistema de Drag & Drop
-                </h2>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">🎯 Sistema de Drag & Drop</h2>
                 <p className="text-gray-600 mb-6">
                   Sistema completamente reescrito com validação robusta e feedback visual.
                 </p>
-                
+
                 <div className="space-y-4">
                   <div className="p-4 bg-gray-50 rounded-lg">
                     <h4 className="font-semibold mb-2">📝 Como testar:</h4>
@@ -260,10 +249,8 @@ export const QuizEditorShowcase: React.FC = () => {
 
             {activeDemo === 'testing' && (
               <div className="bg-white rounded-lg shadow-md p-6">
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                  🧪 Cobertura de Testes
-                </h2>
-                
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">🧪 Cobertura de Testes</h2>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <h4 className="font-semibold mb-3">✅ Testado</h4>
@@ -290,7 +277,7 @@ export const QuizEditorShowcase: React.FC = () => {
                       </li>
                     </ul>
                   </div>
-                  
+
                   <div className="p-4 bg-gray-50 rounded-lg">
                     <h4 className="font-semibold mb-2">📊 Estatísticas</h4>
                     <div className="space-y-2 text-sm">

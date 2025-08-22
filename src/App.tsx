@@ -29,6 +29,7 @@ const QuizEditorProPage = lazy(() => import('./pages/editors/QuizEditorProPage')
 const QuizEditorProPageTemp = lazy(() => import('./pages/editors/QuizEditorProPageTemp')); // 🧪 TESTE DE CACHE
 // const ProductionQuizPage = lazy(() => import('./pages/ProductionQuizPage')); // Removido
 const QuizIntegratedPage = lazy(() => import('./pages/QuizIntegratedPage'));
+const QuizEditorShowcase = lazy(() => import('./pages/QuizEditorShowcase')); // 🎪 SHOWCASE COMPLETO
 
 // 🆕 SISTEMA UNIFICADO - FASE 3
 // const QuizRouteController = lazy(() => import('./components/routing/QuizRouteController')); // Removido
@@ -229,6 +230,13 @@ function App() {
                   <Route path="/quiz-integrado">
                     <Suspense fallback={<PageLoading />}>
                       <QuizIntegratedPage />
+                    </Suspense>
+                  </Route>
+
+                  {/* 🎪 SHOWCASE COMPLETO - Demonstração de todas as melhorias */}
+                  <Route path="/showcase">
+                    <Suspense fallback={<PageLoading />}>
+                      <QuizEditorShowcase />
                     </Suspense>
                   </Route>
 
