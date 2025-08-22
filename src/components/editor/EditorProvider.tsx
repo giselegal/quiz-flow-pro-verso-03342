@@ -289,16 +289,14 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
 
   const reorderBlocks = useCallback(
     async (stepKey: string, oldIndex: number, newIndex: number) => {
-      setState((prev: EditorState) => {
-        const blocks = [...(prev.stepBlocks[stepKey] || [])];
-        const reordered = arrayMove(blocks, oldIndex, newIndex);
-        return {
-          ...prev,
-          stepBlocks: {
-            ...prev.stepBlocks,
-            [stepKey]: reordered,
-          },
-        };
+      const blocks = [...(rawState.stepBlocks[stepKey] || [])];
+      const reordered = arrayMove(blocks, oldIndex, newIndex);
+      setState({
+        ...rawState,
+        stepBlocks: {
+          ...rawState.stepBlocks,
+          [stepKey]: reordered,
+        },
       });
 
       // Persist order to Supabase if enabled (delegate if available)
@@ -311,20 +309,20 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
         }
       }
     },
-    [setState, state.isSupabaseEnabled, supabaseIntegration]
+    [setState, state.isSupabaseEnabled, supabaseIntegration, rawState]
   );
 
   const updateBlock = useCallback(
     async (stepKey: string, blockId: string, updates: Record<string, any>) => {
-      setState((prev: EditorState) => ({
-        ...prev,
+      setState({
+        ...rawState,
         stepBlocks: {
-          ...prev.stepBlocks,
-          [stepKey]: (prev.stepBlocks[stepKey] || []).map(b =>
+          ...rawState.stepBlocks,
+          [stepKey]: (rawState.stepBlocks[stepKey] || []).map(b =>
             b.id === blockId ? { ...b, ...updates } : b
           ),
         },
-      }));
+      });
 
       if (state.isSupabaseEnabled && supabaseIntegration?.updateBlockById) {
         try {
@@ -334,7 +332,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
         }
       }
     },
-    [setState, state.isSupabaseEnabled, supabaseIntegration]
+    [setState, state.isSupabaseEnabled, supabaseIntegration, rawState]
   );
 
   const exportJSON = useCallback(() => {
