@@ -17,8 +17,8 @@ import {
   arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
+  useSortable,
   verticalListSortingStrategy,
-  useSortable
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import React, { useCallback, useState } from 'react';
@@ -39,7 +39,6 @@ interface QuizEditorProProps {
 export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
-  const [draggedComponent, setDraggedComponent] = useState<any>(null);
   const [mode, setMode] = useState<'edit' | 'preview'>('edit');
 
   // Estado mutável para os blocos de cada etapa
@@ -283,15 +282,12 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
 
       // Se é um componente da biblioteca
       if (typeof active.id === 'string' && active.id.includes('component-')) {
-        const componentType = active.id.replace('component-', '');
-        const component = availableComponents.find(c => c.type === componentType);
-        setDraggedComponent(component);
+        // Componente sendo arrastado da biblioteca
       }
 
       // Se é um bloco existente
       if (typeof active.id === 'string' && active.id.includes('block-')) {
-        const block = currentStepData.find(b => b.id === active.id);
-        setDraggedComponent(block);
+        // Bloco sendo reordenado
       }
     },
     [availableComponents, currentStepData]
@@ -300,7 +296,6 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
   const handleDragEnd = useCallback(
     (event: DragEndEvent) => {
       const { active, over } = event;
-      setDraggedComponent(null);
 
       if (!over) return;
 
@@ -422,7 +417,7 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
                           } as DragStartEvent);
                         }}
                         onDragEnd={() => {
-                          setDraggedComponent(null);
+                          // Drag finalizado
                         }}
                       >
                         <div className="flex items-start gap-3">
@@ -609,7 +604,27 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
 
                 {/* Área de drop para novos componentes (apenas modo edição) */}
                 {mode === 'edit' && currentStepData.length > 0 && (
-                  <div className="absolute bottom-0 left-4 right-4 border-2 border-dashed border-blue-300 rounded-lg p-6 text-center text-blue-500 bg-blue-50 bg-opacity-50 hover:border-blue-500 hover:bg-opacity-80 transition-all duration-200">
+                  <div
+                    className="absolute bottom-0 left-4 right-4 border-2 border-dashed border-blue-300 rounded-lg p-6 text-center text-blue-500 bg-blue-50 bg-opacity-50 hover:border-blue-500 hover:bg-opacity-80 transition-all duration-200"
+                    onDragOver={e => {
+                      e.preventDefault();
+                      e.currentTarget.classList.add('border-blue-600', 'bg-blue-100');
+                    }}
+                    onDragLeave={e => {
+                      e.currentTarget.classList.remove('border-blue-600', 'bg-blue-100');
+                    }}
+                    onDrop={e => {
+                      e.preventDefault();
+                      e.currentTarget.classList.remove('border-blue-600', 'bg-blue-100');
+
+                      const componentType = e.dataTransfer.getData('component-type');
+                      if (componentType) {
+                        const newBlock = createBlockFromComponent(componentType);
+                        addBlockToStep(currentStepKey, newBlock);
+                        setSelectedBlockId(newBlock.id);
+                      }
+                    }}
+                  >
                     <div className="text-lg mb-2">➕</div>
                     <div className="text-sm font-medium">
                       Arraste um componente aqui para adicionar
@@ -620,7 +635,39 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
                 {/* Estado vazio (apenas modo edição) */}
                 {mode === 'edit' && currentStepData.length === 0 && (
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="text-center py-16 text-gray-500 border-2 border-dashed border-gray-300 rounded-lg bg-white bg-opacity-90 max-w-md">
+                    <div
+                      className="text-center py-16 text-gray-500 border-2 border-dashed border-gray-300 rounded-lg bg-white bg-opacity-90 max-w-md transition-all duration-200 hover:border-blue-400 hover:bg-blue-50"
+                      onDragOver={e => {
+                        e.preventDefault();
+                        e.currentTarget.classList.add(
+                          'border-blue-500',
+                          'bg-blue-100',
+                          'text-blue-600'
+                        );
+                      }}
+                      onDragLeave={e => {
+                        e.currentTarget.classList.remove(
+                          'border-blue-500',
+                          'bg-blue-100',
+                          'text-blue-600'
+                        );
+                      }}
+                      onDrop={e => {
+                        e.preventDefault();
+                        e.currentTarget.classList.remove(
+                          'border-blue-500',
+                          'bg-blue-100',
+                          'text-blue-600'
+                        );
+
+                        const componentType = e.dataTransfer.getData('component-type');
+                        if (componentType) {
+                          const newBlock = createBlockFromComponent(componentType);
+                          addBlockToStep(currentStepKey, newBlock);
+                          setSelectedBlockId(newBlock.id);
+                        }
+                      }}
+                    >
                       <div className="text-3xl mb-4">📝</div>
                       <div className="text-lg font-medium mb-2">Nenhum bloco configurado</div>
                       <div className="text-sm mb-4">
@@ -719,14 +766,9 @@ const SortableBlock: React.FC<SortableBlockProps> = ({
   onDuplicate,
   onDelete,
 }) => {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id });
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id,
+  });
 
   const style = {
     top: `${topOffset}px`,
@@ -750,7 +792,7 @@ const SortableBlock: React.FC<SortableBlockProps> = ({
           ? 'border-blue-500 bg-blue-500 bg-opacity-10 shadow-lg'
           : 'border-transparent hover:border-blue-400 hover:bg-blue-400 hover:bg-opacity-5'
       )}
-      onClick={(e) => {
+      onClick={e => {
         e.stopPropagation();
         onSelect(id);
       }}
@@ -772,7 +814,7 @@ const SortableBlock: React.FC<SortableBlockProps> = ({
       {isSelected && (
         <div className="absolute -top-10 right-0 flex gap-1">
           <button
-            onClick={(e) => {
+            onClick={e => {
               e.stopPropagation();
               onMoveUp(id);
             }}
@@ -782,7 +824,7 @@ const SortableBlock: React.FC<SortableBlockProps> = ({
             ⬆️
           </button>
           <button
-            onClick={(e) => {
+            onClick={e => {
               e.stopPropagation();
               onMoveDown(id);
             }}
@@ -792,7 +834,7 @@ const SortableBlock: React.FC<SortableBlockProps> = ({
             ⬇️
           </button>
           <button
-            onClick={(e) => {
+            onClick={e => {
               e.stopPropagation();
               onDuplicate();
             }}
@@ -802,7 +844,7 @@ const SortableBlock: React.FC<SortableBlockProps> = ({
             📋
           </button>
           <button
-            onClick={(e) => {
+            onClick={e => {
               e.stopPropagation();
               onDelete(id);
             }}
