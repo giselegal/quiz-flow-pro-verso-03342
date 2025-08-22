@@ -3,6 +3,7 @@ import CanvasDropZone from '@/components/editor/canvas/CanvasDropZone';
 import { DraggableComponentItem } from '@/components/editor/dnd/DraggableComponentItem';
 import { useNotification } from '@/components/ui/Notification';
 import EnhancedUniversalPropertiesPanelFixed from '@/components/universal/EnhancedUniversalPropertiesPanelFixed';
+import { getBlocksForStep } from '@/config/quizStepsComplete';
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
 import {
@@ -79,46 +80,10 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
   const notification = useNotification();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // 🛠️ FUNÇÃO RESILIENTE: Busca blocos com diferentes formatos de chave
-  // Resolve inconsistências entre state.stepBlocks (ex.: "step-1", "1", 1, "step1")
-  const getBlocksForStep = useCallback(
-    (step: number): Block[] => {
-      const stepBlocks = state.stepBlocks || {};
-      const tryKeys = [
-        `step-${step}`, // Formato padrão: "step-1"
-        `step${step}`, // Formato alternativo: "step1"
-        String(step), // String: "1"
-        Number(step), // Número: 1
-      ];
-
-      for (const key of tryKeys) {
-        if (key in stepBlocks) {
-          const value = stepBlocks[key];
-          
-          // Caso 1: Array direto
-          if (Array.isArray(value)) {
-            devLog(`Found blocks for step ${step} using key:`, key, value);
-            return value;
-          }
-          
-          // Caso 2: Objeto com propriedade .blocks
-          if (value && typeof value === 'object' && 'blocks' in value && Array.isArray((value as any).blocks)) {
-            devLog(`Found blocks for step ${step} using key ${key} with .blocks:`, (value as any).blocks);
-            return (value as any).blocks;
-          }
-        }
-      }
-
-      devLog(`No blocks found for step ${step}. Available keys:`, Object.keys(stepBlocks));
-      return [];
-    },
-    [state.stepBlocks]
-  );
-
   // Uso consistente de safeCurrentStep em todo o componente
   const safeCurrentStep = state.currentStep || 1;
   const currentStepKey = `step-${safeCurrentStep}`;
-  const currentStepData = getBlocksForStep(safeCurrentStep); // 🔧 USO DA FUNÇÃO RESILIENTE
+  const currentStepData = getBlocksForStep(safeCurrentStep, state.stepBlocks) || []; // 🔧 USO DA FUNÇÃO UTILITÁRIA
   const selectedBlock = currentStepData.find((block: Block) => block.id === state.selectedBlockId);
 
   // 🔍 DIAGNÓSTICO AVANÇADO: Logs detalhados para debugging de etapas
@@ -417,7 +382,7 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
                 {Array.from({ length: 21 }, (_, i) => i + 1).map(step => {
                   const analysis = getStepAnalysis(step);
                   const isActive = step === safeCurrentStep;
-                  const hasBlocks = getBlocksForStep(step).length > 0; // 🔧 USO DA FUNÇÃO RESILIENTE
+                  const hasBlocks = (getBlocksForStep(step, state.stepBlocks) || []).length > 0; // 🔧 USO DA FUNÇÃO UTILITÁRIA
 
                   return (
                     <button
