@@ -121,19 +121,26 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     currentStep: rawState.currentStep || 1, // Default to step 1 if undefined
   };
 
-    // Ensure state integrity - fix corrupted currentStep
+      // Initialize Supabase integration if enabled
+  const supabaseIntegration = useEditorSupabaseIntegration(
+    setState,
+    rawState,
+    enableSupabase ? funnelId : undefined,
+    enableSupabase ? quizId : undefined
+  );
+
+  // Use effect to load components from Supabase automatically when enabled
+  useEffect(() => {
+    supabaseIntegration.loadSupabaseComponents();
+  }, [enableSupabase, funnelId, quizId]);
+
+  // Ensure state integrity - fix corrupted currentStep
   const state = {
     ...rawState,
     currentStep: rawState.currentStep || 1, // Default to step 1 if undefined
     isSupabaseEnabled: supabaseIntegration.isSupabaseEnabled,
     databaseMode: supabaseIntegration.isSupabaseEnabled ? 'supabase' : 'local',
-  };  // Load components from Supabase on mount if enabled
-  useEffect(() => {
-    if (enableSupabase && (funnelId || quizId)) {
-      console.log('🔄 Loading components from Supabase...');
-      loadSupabaseComponents();
-    }
-  }, [enableSupabase, funnelId, quizId, loadSupabaseComponents]);
+  };
 
   // Actions
   const setCurrentStep = useCallback(
