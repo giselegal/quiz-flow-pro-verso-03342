@@ -66,14 +66,8 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
         {/* Toolbar com botão para voltar ao editor */}
         <div className="h-14 border-b bg-white flex items-center justify-between px-4">
           <div className="flex items-center gap-4">
-            <h1 className="text-lg font-semibold text-gray-800">
-              🎯 Quiz Interativo
-            </h1>
-            {userName && (
-              <span className="text-sm text-gray-600">
-                Olá, {userName}!
-              </span>
-            )}
+            <h1 className="text-lg font-semibold text-gray-800">🎯 Quiz Interativo</h1>
+            {userName && <span className="text-sm text-gray-600">Olá, {userName}!</span>}
           </div>
           <div className="flex items-center gap-2">
             <button
@@ -98,7 +92,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
       {/* 🎨 TOOLBAR SUPERIOR */}
       <div className="h-14 border-b bg-white flex items-center justify-between px-4">
         <EditorToolbar />
-        
+
         {/* Botão para Modo Interativo */}
         <div className="flex items-center gap-2">
           <button
