@@ -1,15 +1,12 @@
-import { useEditorSupabase } from '@/hooks/useEditorSupabase';
+import { useEditorSupabaseIntegration } from '@/hooks/useEditorSupabaseIntegration';
 import { useHistoryState } from '@/hooks/useHistoryState';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import { Block } from '@/types/editor';
 import {
   extractStepNumberFromKey,
-  groupSupabaseComponentsByStep,
-  mapBlockToSupabaseComponent,
-  createTempBlock,
 } from '@/utils/supabaseMapper';
 import { arrayMove } from '@dnd-kit/sortable';
-import React, { createContext, ReactNode, useCallback, useContext, useEffect } from 'react';
+import React, { createContext, ReactNode, useCallback, useContext } from 'react';
 
 export interface EditorState {
   stepBlocks: Record<string, Block[]>;
@@ -111,7 +108,9 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
   });
 
   // Initialize Supabase integration if enabled
-  const editorSupabase = useEditorSupabase(
+  const supabaseIntegration = useEditorSupabaseIntegration(
+    setState,
+    rawState,
     enableSupabase ? funnelId : undefined,
     enableSupabase ? quizId : undefined
   );
@@ -122,37 +121,13 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     currentStep: rawState.currentStep || 1, // Default to step 1 if undefined
   };
 
-  // Supabase functions
-  const loadSupabaseComponents = useCallback(async () => {
-    if (!enableSupabase || !editorSupabase) return;
-
-    try {
-      setState({
-        ...state,
-        isLoading: true,
-      });
-      await editorSupabase.loadComponents();
-
-      // Convert Supabase components to stepBlocks format
-      const groupedBlocks = groupSupabaseComponentsByStep(editorSupabase.components);
-
-      setState({
-        ...state,
-        stepBlocks: { ...state.stepBlocks, ...groupedBlocks },
-        isLoading: false,
-      });
-
-      console.log('✅ Components loaded from Supabase:', editorSupabase.components.length);
-    } catch (error) {
-      console.error('❌ Error loading Supabase components:', error);
-      setState({
-        ...state,
-        isLoading: false,
-      });
-    }
-  }, [enableSupabase, editorSupabase, state, setState]);
-
-  // Load components from Supabase on mount if enabled
+    // Ensure state integrity - fix corrupted currentStep
+  const state = {
+    ...rawState,
+    currentStep: rawState.currentStep || 1, // Default to step 1 if undefined
+    isSupabaseEnabled: supabaseIntegration.isSupabaseEnabled,
+    databaseMode: supabaseIntegration.isSupabaseEnabled ? 'supabase' : 'local',
+  };  // Load components from Supabase on mount if enabled
   useEffect(() => {
     if (enableSupabase && (funnelId || quizId)) {
       console.log('🔄 Loading components from Supabase...');
@@ -164,22 +139,22 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
   const setCurrentStep = useCallback(
     (step: number) => {
       setState({
-        ...state,
+        ...rawState,
         currentStep: step,
         selectedBlockId: null, // Reset selection when changing steps
       });
     },
-    [state, setState]
+    [rawState, setState]
   );
 
   const setSelectedBlockId = useCallback(
     (blockId: string | null) => {
       setState({
-        ...state,
+        ...rawState,
         selectedBlockId: blockId,
       });
     },
-    [state, setState]
+    [rawState, setState]
   );
 
   const addBlock = useCallback(
@@ -192,13 +167,26 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
         isSupabaseEnabled: state.isSupabaseEnabled,
       });
 
-      // If Supabase is enabled, sync with database
+      // If Supabase is enabled, use optimistic update pattern
       if (state.isSupabaseEnabled && editorSupabase) {
+        const tempId = `temp-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+        const tempBlock = { ...block, id: tempId };
+        
+        // 1. Optimistic update - Add immediately to UI
+        setState({
+          ...rawState,
+          stepBlocks: {
+            ...rawState.stepBlocks,
+            [stepKey]: [...(rawState.stepBlocks[stepKey] || []), tempBlock],
+          },
+          isLoading: true,
+        });
+
         try {
           const stepNumber = extractStepNumberFromKey(stepKey);
           const supabaseData = mapBlockToSupabaseComponent(block, stepNumber, funnelId, quizId);
-
-          // Add to Supabase with optimistic update
+          
+          // 2. Persist to Supabase
           const supabaseComponent = await editorSupabase.addComponent(
             supabaseData.component_type_key!,
             supabaseData.step_number!,
@@ -207,61 +195,73 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
           );
 
           if (supabaseComponent) {
-            // Update local state with server-generated data
-            const updatedBlock = { ...block, id: supabaseComponent.id };
+            // 3. Replace temp block with real data from server
+            const realBlock = { ...block, id: supabaseComponent.id };
+            const currentBlocks = rawState.stepBlocks[stepKey] || [];
             setState({
-              ...state,
+              ...rawState,
               stepBlocks: {
-                ...state.stepBlocks,
-                [stepKey]: [...(state.stepBlocks[stepKey] || []), updatedBlock],
+                ...rawState.stepBlocks,
+                [stepKey]: currentBlocks.map(b => 
+                  b.id === tempId ? realBlock : b
+                ),
               },
               isLoading: false,
             });
             console.log('✅ Block synced with Supabase:', supabaseComponent.id);
+          } else {
+            throw new Error('Supabase addComponent returned null');
           }
         } catch (error) {
-          console.error('❌ Error syncing block with Supabase:', error);
-          // Fallback to local-only update on error
+          console.error('❌ Error syncing block with Supabase, rolling back:', error);
+          
+          // 4. Rollback optimistic update on error
+          const currentBlocks = rawState.stepBlocks[stepKey] || [];
           setState({
-            ...state,
+            ...rawState,
             stepBlocks: {
-              ...state.stepBlocks,
-              [stepKey]: [...(state.stepBlocks[stepKey] || []), block],
+              ...rawState.stepBlocks,
+              [stepKey]: currentBlocks.filter(b => b.id !== tempId),
             },
+            isLoading: false,
           });
+          
+          // Show error feedback but don't throw to prevent UI crashes
+          console.error('Block addition failed, rolled back optimistic update');
         }
       } else {
-        // Local-only mode
+        // Local-only mode - simple append
         setState({
-          ...state,
+          ...rawState,
           stepBlocks: {
-            ...state.stepBlocks,
-            [stepKey]: [...(state.stepBlocks[stepKey] || []), block],
+            ...rawState.stepBlocks,
+            [stepKey]: [...(rawState.stepBlocks[stepKey] || []), block],
           },
         });
       }
+      
       console.log(
         '✅ Block added to step:',
         stepKey,
-        'Total blocks in step:',
-        (state.stepBlocks[stepKey] || []).length + 1
+        'New total blocks in step:',
+        (rawState.stepBlocks[stepKey] || []).length + 1
       );
     },
-    [state, setState, editorSupabase, funnelId, quizId]
+    [rawState, setState, editorSupabase, funnelId, quizId, state.databaseMode, state.isSupabaseEnabled]
   );
 
   const removeBlock = useCallback(
     (stepKey: string, blockId: string) => {
       setState({
-        ...state,
+        ...rawState,
         stepBlocks: {
-          ...state.stepBlocks,
-          [stepKey]: (state.stepBlocks[stepKey] || []).filter(block => block.id !== blockId),
+          ...rawState.stepBlocks,
+          [stepKey]: (rawState.stepBlocks[stepKey] || []).filter(block => block.id !== blockId),
         },
-        selectedBlockId: state.selectedBlockId === blockId ? null : state.selectedBlockId,
+        selectedBlockId: rawState.selectedBlockId === blockId ? null : rawState.selectedBlockId,
       });
     },
-    [state, setState]
+    [rawState, setState]
   );
 
   const reorderBlocks = useCallback(
