@@ -25,7 +25,7 @@ const EditorModularPage = lazy(() => import('./pages/editor-modular'));
 const EditorUnified = lazy(() => import('./pages/EditorUnified')); // 🆕 EDITOR UNIFICADO
 const EditorUnifiedV2 = lazy(() => import('./pages/EditorUnifiedV2')); // 🚀 PRIORIDADE 2 - EDITOR UNIFICADO V2
 const QuizEditorComplete = lazy(() => import('./pages/editors/QuizEditorComplete')); // 🎯 EDITOR COMPLETO
-const QuizEditorPro = lazy(() => import('./components/editor/QuizEditorPro')); // 🏆 EDITOR PROFISSIONAL 4 COLUNAS
+const QuizEditorProPage = lazy(() => import('./pages/editors/QuizEditorProPage')); // 🏆 EDITOR PROFISSIONAL 4 COLUNAS WITH PROVIDER
 // const ProductionQuizPage = lazy(() => import('./pages/ProductionQuizPage')); // Removido
 const QuizIntegratedPage = lazy(() => import('./pages/QuizIntegratedPage'));
 
@@ -163,7 +163,7 @@ function App() {
                   {/* 🏆 EDITOR PROFISSIONAL - Layout 4 colunas com DnD */}
                   <Route path="/editor-pro">
                     <Suspense fallback={<PageLoading />}>
-                      <QuizEditorPro />
+                      <QuizEditorProPage />
                     </Suspense>
                   </Route>
 

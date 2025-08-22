@@ -15,6 +15,7 @@ interface SortableBlockProps {
   onMoveDown: (id: string) => void;
   onDuplicate: () => void;
   onDelete: (id: string) => void;
+  'data-testid'?: string;
 }
 
 export const SortableBlock: React.FC<SortableBlockProps> = ({
@@ -28,6 +29,7 @@ export const SortableBlock: React.FC<SortableBlockProps> = ({
   onMoveDown,
   onDuplicate,
   onDelete,
+  'data-testid': dataTestId,
 }) => {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id,
@@ -59,6 +61,7 @@ export const SortableBlock: React.FC<SortableBlockProps> = ({
         e.stopPropagation();
         onSelect(id);
       }}
+      data-testid={dataTestId}
     >
       {/* Badge de identificação sempre visível no hover ou seleção */}
       <div
@@ -68,6 +71,7 @@ export const SortableBlock: React.FC<SortableBlockProps> = ({
             ? 'bg-blue-600 text-white opacity-100'
             : 'bg-gray-800 text-white opacity-0 group-hover:opacity-100'
         )}
+        data-testid={`editor-block-title-${id}`}
       >
         {isSelected ? '✏️' : '🖱️'} {block.type}
         {isSelected && ` - ${id}`}

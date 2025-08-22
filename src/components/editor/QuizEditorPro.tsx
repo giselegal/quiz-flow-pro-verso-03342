@@ -3,7 +3,6 @@ import CanvasDropZone from '@/components/editor/canvas/CanvasDropZone';
 import { QuizRenderer } from '@/components/core/QuizRenderer';
 import EnhancedUniversalPropertiesPanelFixed from '@/components/universal/EnhancedUniversalPropertiesPanelFixed';
 import { cn } from '@/lib/utils';
-import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import { Block } from '@/types/editor';
 import {
   closestCenter,
@@ -16,13 +15,13 @@ import {
   useSensors,
 } from '@dnd-kit/core';
 import {
-  arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import React, { useCallback, useState } from 'react';
 import { SortableBlock } from './SortableBlock';
+import { useEditor } from './EditorProvider';
 
 interface QuizEditorProProps {
   className?: string;
@@ -38,21 +37,15 @@ interface QuizEditorProProps {
  * └─────────────────┴─────────────────────┴─────────────────┴─────────────────────┘
  */
 export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) => {
-  const [currentStep, setCurrentStep] = useState(1);
-  const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
+  const { state, actions } = useEditor();
   const [mode, setMode] = useState<'edit' | 'preview'>('edit');
 
-  // Estado mutável para os blocos de cada etapa
-  const [stepBlocks, setStepBlocks] = useState<Record<string, Block[]>>(() => {
-    // Inicializar com dados do template
-    const initialBlocks: Record<string, Block[]> = {};
-    Object.entries(QUIZ_STYLE_21_STEPS_TEMPLATE).forEach(([stepKey, blocks]) => {
-      initialBlocks[stepKey] = Array.isArray(blocks) ? [...blocks] : [];
-    });
-    return initialBlocks;
-  });
+  // Get current step data from editor state
+  const currentStepKey = `step-${state.currentStep}`;
+  const currentStepData = state.stepBlocks[currentStepKey] || [];
+  const selectedBlock = currentStepData.find((block: Block) => block.id === state.selectedBlockId);
 
-  // Configuração dos sensores para drag & drop
+  // Configuration for drag & drop sensors
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -63,13 +56,7 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
-
-  // Dados da etapa atual
-  const currentStepKey = `step-${currentStep}`;
-  const currentStepData = stepBlocks[currentStepKey] || [];
-  const selectedBlock = currentStepData.find((block: Block) => block.id === selectedBlockId);
-
-  // Tipos de componentes disponíveis
+  // Available component types
   const availableComponents = [
     {
       type: 'quiz-intro-header',
@@ -155,7 +142,7 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
     {} as Record<string, typeof availableComponents>
   );
 
-  // Análise das etapas
+  // Step analysis helper
   const getStepAnalysis = (step: number) => {
     if (step === 1) return { type: '📝', label: 'Captura', desc: 'Nome do usuário' };
     if (step >= 2 && step <= 11)
@@ -169,45 +156,7 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
     return { type: '❓', label: 'Indefinida', desc: 'Não mapeada' };
   };
 
-  // Handlers para operações de bloco
-  const addBlockToStep = useCallback((stepKey: string, newBlock: Block) => {
-    setStepBlocks(prev => ({
-      ...prev,
-      [stepKey]: [...(prev[stepKey] || []), newBlock],
-    }));
-  }, []);
-
-  const removeBlockFromStep = useCallback((stepKey: string, blockId: string) => {
-    setStepBlocks(prev => ({
-      ...prev,
-      [stepKey]: (prev[stepKey] || []).filter(block => block.id !== blockId),
-    }));
-  }, []);
-
-  const reorderBlocksInStep = useCallback((stepKey: string, oldIndex: number, newIndex: number) => {
-    setStepBlocks(prev => {
-      const blocks = [...(prev[stepKey] || [])];
-      const reorderedBlocks = arrayMove(blocks, oldIndex, newIndex);
-      return {
-        ...prev,
-        [stepKey]: reorderedBlocks,
-      };
-    });
-  }, []);
-
-  const updateBlockInStep = useCallback(
-    (stepKey: string, blockId: string, updates: Record<string, any>) => {
-      setStepBlocks(prev => ({
-        ...prev,
-        [stepKey]: (prev[stepKey] || []).map(block =>
-          block.id === blockId ? { ...block, ...updates } : block
-        ),
-      }));
-    },
-    []
-  );
-
-  // Função para criar um novo bloco a partir de um componente
+  // Function to create a new block from a component
   const createBlockFromComponent = useCallback(
     (componentType: string): Block => {
       const timestamp = Date.now();
@@ -215,7 +164,7 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
 
       return {
         id: blockId,
-        type: componentType as any, // Type assertion para resolver erro de tipo
+        type: componentType as any,
         order: currentStepData.length + 1,
         content: {
           title: `Novo ${componentType}`,
@@ -227,54 +176,52 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
     [currentStepData.length]
   );
 
-  // Handlers principais
+  // Handlers using editor actions
   const handleStepSelect = useCallback((step: number) => {
-    setCurrentStep(step);
-    setSelectedBlockId(null);
-  }, []);
+    actions.setCurrentStep(step);
+  }, [actions]);
 
   const handleBlockSelect = useCallback((blockId: string) => {
-    setSelectedBlockId(blockId);
-  }, []);
+    actions.setSelectedBlockId(blockId);
+  }, [actions]);
 
   const handleBlockUpdate = useCallback(
     (blockId: string, updates: Record<string, any>) => {
-      updateBlockInStep(currentStepKey, blockId, updates);
+      actions.updateBlock(currentStepKey, blockId, updates);
     },
-    [currentStepKey, updateBlockInStep]
+    [currentStepKey, actions]
   );
 
   const handleBlockDelete = useCallback(
     (blockId: string) => {
-      removeBlockFromStep(currentStepKey, blockId);
-      setSelectedBlockId(null);
+      actions.removeBlock(currentStepKey, blockId);
     },
-    [currentStepKey, removeBlockFromStep]
+    [currentStepKey, actions]
   );
 
   const handleBlockMoveUp = useCallback(
     (blockId: string) => {
       const currentIndex = currentStepData.findIndex(block => block.id === blockId);
       if (currentIndex > 0) {
-        reorderBlocksInStep(currentStepKey, currentIndex, currentIndex - 1);
+        actions.reorderBlocks(currentStepKey, currentIndex, currentIndex - 1);
       }
     },
-    [currentStepData, currentStepKey, reorderBlocksInStep]
+    [currentStepData, currentStepKey, actions]
   );
 
   const handleBlockMoveDown = useCallback(
     (blockId: string) => {
       const currentIndex = currentStepData.findIndex(block => block.id === blockId);
       if (currentIndex < currentStepData.length - 1) {
-        reorderBlocksInStep(currentStepKey, currentIndex, currentIndex + 1);
+        actions.reorderBlocks(currentStepKey, currentIndex, currentIndex + 1);
       }
     },
-    [currentStepData, currentStepKey, reorderBlocksInStep]
+    [currentStepData, currentStepKey, actions]
   );
 
   const handleClosePropertiesPanel = useCallback(() => {
-    setSelectedBlockId(null);
-  }, []);
+    actions.setSelectedBlockId(null);
+  }, [actions]);
 
   const handleBlockDuplicate = useCallback(
     (blockId: string) => {
@@ -285,11 +232,11 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
           id: `${blockToDuplicate.type}-${Date.now()}-copy`,
           order: currentStepData.length,
         };
-        addBlockToStep(currentStepKey, newBlock);
-        setSelectedBlockId(newBlock.id);
+        actions.addBlock(currentStepKey, newBlock);
+        actions.setSelectedBlockId(newBlock.id);
       }
     },
-    [currentStepData, currentStepKey, addBlockToStep]
+    [currentStepData, currentStepKey, actions]
   );
 
   // Drag & Drop handlers
@@ -317,28 +264,28 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
         activeData,
       });
 
-      // Caso 1: Arrastar componente da sidebar para o canvas
+      // Case 1: Drag component from sidebar to canvas
       if (activeData?.type === 'sidebar-component') {
         const componentType = activeData.blockType;
         const newBlock = createBlockFromComponent(componentType);
-        addBlockToStep(currentStepKey, newBlock);
-        setSelectedBlockId(newBlock.id);
+        actions.addBlock(currentStepKey, newBlock);
+        actions.setSelectedBlockId(newBlock.id);
         console.log('✅ Componente adicionado:', newBlock.id);
         return;
       }
 
-      // Caso 2: Reordenar blocos existentes no canvas
+      // Case 2: Reorder existing blocks on canvas
       if (typeof active.id === 'string' && typeof over.id === 'string') {
         const activeIndex = currentStepData.findIndex(block => block.id === active.id);
         const overIndex = currentStepData.findIndex(block => block.id === over.id);
 
         if (activeIndex !== -1 && overIndex !== -1 && activeIndex !== overIndex) {
-          reorderBlocksInStep(currentStepKey, activeIndex, overIndex);
+          actions.reorderBlocks(currentStepKey, activeIndex, overIndex);
           console.log('✅ Blocos reordenados:', { from: activeIndex, to: overIndex });
         }
       }
     },
-    [createBlockFromComponent, addBlockToStep, currentStepKey, currentStepData, reorderBlocksInStep]
+    [createBlockFromComponent, actions, currentStepKey, currentStepData]
   );
 
   return (
@@ -360,8 +307,8 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
             <div className="p-2 space-y-1">
               {Array.from({ length: 21 }, (_, i) => i + 1).map(step => {
                 const analysis = getStepAnalysis(step);
-                const isActive = step === currentStep;
-                const hasBlocks = stepBlocks[`step-${step}`]?.length > 0;
+                const isActive = step === state.currentStep;
+                const hasBlocks = state.stepBlocks[`step-${step}`]?.length > 0;
 
                 return (
                   <button
@@ -394,7 +341,7 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
           <div className="p-3 border-t border-gray-200 text-xs text-gray-500">
             <div className="flex items-center justify-between">
               <span>Etapa atual:</span>
-              <span className="font-medium">{currentStep}/21</span>
+              <span className="font-medium">{state.currentStep}/21</span>
             </div>
           </div>
         </div>
@@ -442,15 +389,94 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
               <div>
                 <h3 className="font-semibold text-gray-900 flex items-center gap-2">
                   {mode === 'edit' ? '✏️' : '👁️'}
-                  {mode === 'edit' ? 'Editor' : 'Preview'} - Etapa {currentStep}
+                  {mode === 'edit' ? 'Editor' : 'Preview'} - Etapa {state.currentStep}
                 </h3>
                 <p className="text-sm text-gray-600">
-                  {getStepAnalysis(currentStep).label}: {getStepAnalysis(currentStep).desc}
+                  {getStepAnalysis(state.currentStep).label}: {getStepAnalysis(state.currentStep).desc}
                 </p>
               </div>
 
               <div className="flex items-center gap-3">
-                {/* Toggle de modo com visual melhorado */}
+                {/* History Controls */}
+                <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-1">
+                  <button
+                    onClick={actions.undo}
+                    disabled={!actions.canUndo}
+                    data-testid="btn-undo"
+                    className={cn(
+                      'px-3 py-2 text-sm rounded-md transition-all duration-200',
+                      actions.canUndo
+                        ? 'text-gray-700 hover:bg-white hover:shadow-sm'
+                        : 'text-gray-400 cursor-not-allowed'
+                    )}
+                    title="Desfazer (Ctrl+Z)"
+                  >
+                    ↶ Undo
+                  </button>
+                  <button
+                    onClick={actions.redo}
+                    disabled={!actions.canRedo}
+                    data-testid="btn-redo"
+                    className={cn(
+                      'px-3 py-2 text-sm rounded-md transition-all duration-200',
+                      actions.canRedo
+                        ? 'text-gray-700 hover:bg-white hover:shadow-sm'
+                        : 'text-gray-400 cursor-not-allowed'
+                    )}
+                    title="Refazer (Ctrl+Y)"
+                  >
+                    ↷ Redo
+                  </button>
+                </div>
+
+                {/* Import/Export Controls */}
+                <div className="flex items-center gap-1">
+                  <button
+                    onClick={() => {
+                      const json = actions.exportJSON();
+                      navigator.clipboard.writeText(json);
+                      alert('JSON exportado para a área de transferência!');
+                    }}
+                    data-testid="btn-export-json"
+                    className="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
+                    title="Exportar como JSON"
+                  >
+                    📤 Export
+                  </button>
+                  <input
+                    type="file"
+                    accept=".json"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (event) => {
+                          try {
+                            const json = event.target?.result as string;
+                            actions.importJSON(json);
+                            alert('JSON importado com sucesso!');
+                          } catch (error) {
+                            alert('Erro ao importar JSON: ' + error);
+                          }
+                        };
+                        reader.readAsText(file);
+                      }
+                      e.target.value = '';
+                    }}
+                    style={{ display: 'none' }}
+                    id="import-json"
+                  />
+                  <button
+                    onClick={() => document.getElementById('import-json')?.click()}
+                    data-testid="btn-import-json"
+                    className="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
+                    title="Importar JSON"
+                  >
+                    📥 Import
+                  </button>
+                </div>
+
+                {/* Mode Toggle */}
                 <div className="flex bg-gray-100 rounded-lg p-1">
                   <button
                     onClick={() => setMode('edit')}
@@ -476,7 +502,7 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
                   </button>
                 </div>
 
-                {/* Controles */}
+                {/* Save Button */}
                 <button className="px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition-colors">
                   💾 Salvar
                 </button>
@@ -497,8 +523,8 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
                     interativos
                   </div>
                   <div className="text-blue-700">
-                    {selectedBlockId
-                      ? `Editando: ${selectedBlockId}`
+                    {state.selectedBlockId
+                      ? `Editando: ${state.selectedBlockId}`
                       : `${currentStepData.length} blocos disponíveis - Clique para editar`}
                   </div>
                 </div>
@@ -519,12 +545,15 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
           </div>
 
           {/* Área do Canvas com DropZone */}
-          <CanvasDropZone isEmpty={currentStepData.length === 0 && mode === 'edit'}>
+          <CanvasDropZone 
+            isEmpty={currentStepData.length === 0 && mode === 'edit'}
+            data-testid="canvas-dropzone"
+          >
             {/* Renderização do conteúdo real */}
             <QuizRenderer
               mode={mode === 'preview' ? 'preview' : 'editor'}
               onStepChange={handleStepSelect}
-              initialStep={currentStep}
+              initialStep={state.currentStep}
             />
 
             {/* Overlays de seleção apenas no modo de edição */}
@@ -538,7 +567,7 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
                 <div className="absolute inset-0 pointer-events-none z-50">
                   {currentStepData.map((block: Block, index: number) => {
                     const blockId = block.id || `block-${index}`;
-                    const isSelected = selectedBlockId === blockId;
+                    const isSelected = state.selectedBlockId === blockId;
 
                     // Calcular posição baseada no tipo de bloco e ordem
                     let topOffset = 0;
@@ -580,6 +609,7 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
                         onMoveDown={handleBlockMoveDown}
                         onDuplicate={() => handleBlockDuplicate(blockId)}
                         onDelete={handleBlockDelete}
+                        data-testid={`editor-block-${blockId}`}
                       />
                     );
                   })}
@@ -619,7 +649,7 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
                 {/* Estatísticas da etapa */}
                 <div className="mt-6 p-4 bg-gray-50 rounded-lg text-left">
                   <h4 className="text-sm font-medium text-gray-900 mb-3">
-                    Estatísticas da Etapa {currentStep}
+                    Estatísticas da Etapa {state.currentStep}
                   </h4>
                   <div className="space-y-2 text-xs">
                     <div className="flex justify-between">
@@ -628,11 +658,11 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
                     </div>
                     <div className="flex justify-between">
                       <span>Tipo da etapa:</span>
-                      <span className="font-medium">{getStepAnalysis(currentStep).label}</span>
+                      <span className="font-medium">{getStepAnalysis(state.currentStep).label}</span>
                     </div>
                     <div className="flex justify-between">
                       <span>Função:</span>
-                      <span className="font-medium">{getStepAnalysis(currentStep).desc}</span>
+                      <span className="font-medium">{getStepAnalysis(state.currentStep).desc}</span>
                     </div>
                   </div>
                 </div>

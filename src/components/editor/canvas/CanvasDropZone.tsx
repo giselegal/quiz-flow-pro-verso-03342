@@ -6,12 +6,14 @@ interface CanvasDropZoneProps {
   children: React.ReactNode;
   isEmpty: boolean;
   className?: string;
+  'data-testid'?: string;
 }
 
 const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
   children,
   isEmpty,
   className,
+  'data-testid': dataTestId,
 }) => {
   const { setNodeRef, isOver } = useDroppable({
     id: 'canvas-drop-zone',
@@ -29,6 +31,7 @@ const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
         isOver && 'bg-blue-50',
         className
       )}
+      data-testid={dataTestId}
     >
       <div className="max-w-4xl mx-auto">
         <div
