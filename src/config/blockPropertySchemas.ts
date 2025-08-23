@@ -18,6 +18,11 @@ export interface BlockFieldSchema {
   max?: number;
   step?: number;
   group?: string; // categoria/aba sugerida
+  defaultValue?: any;
+  required?: boolean;
+  hidden?: boolean;
+  showIf?: string; // expressão simples, ex: "showDescription === true"
+  description?: string;
 }
 
 export interface BlockSchema {
