@@ -67,12 +67,13 @@
 }
 
 /* Estilos para o cabeçalho do editor */
+/* Removido sticky do header dentro do Lovable para não interferir no editor */
 .lovable-preview-container .bg-white.border-b {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  backdrop-filter: blur(10px);
-  background: rgba(255, 255, 255, 0.95);
+  position: static;
+  top: auto;
+  z-index: auto;
+  backdrop-filter: none;
+  background: rgba(255, 255, 255, 1);
 }
 
 /* Otimizações para badges de status */

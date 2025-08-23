@@ -17,6 +17,8 @@ interface QuizRendererProps {
   // Overrides para uso no editor: renderizar blocos reais do EditorProvider e sincronizar etapa
   blocksOverride?: Block[];
   currentStepOverride?: number;
+  // Callback opcional para seleção de bloco no modo editor
+  onBlockClick?: (blockId: string) => void;
 }
 
 /**
@@ -32,6 +34,7 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
   className = '',
   blocksOverride,
   currentStepOverride,
+  onBlockClick,
 }) => {
   const { quizState, actions } = useQuizFlow({
     mode,
@@ -110,12 +113,22 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
     return (
       <div className="step-content space-y-6">
         {stepBlocks.map((block: any, index: number) => (
-          <div key={block.id || index} className="block-container">
+          <div
+            key={block.id || index}
+            className="block-container"
+            onClick={() => {
+              if (mode === 'editor' && block.id && onBlockClick) {
+                onBlockClick(String(block.id));
+              }
+            }}
+          >
             <UniversalBlockRenderer
               block={block}
               isSelected={false}
               onClick={() => {
-                console.log(`Quiz block clicked: ${block.type}`, block);
+                if (mode === 'editor' && block.id && onBlockClick) {
+                  onBlockClick(String(block.id));
+                }
               }}
             />
           </div>

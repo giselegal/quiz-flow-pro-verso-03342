@@ -681,14 +681,18 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         isEmpty={currentStepData.length === 0 && mode === 'edit'}
         data-testid="canvas-dropzone"
       >
-        {/* Em modo edição, impedir que o conteúdo real capture eventos de ponteiro */}
-        <div className={mode === 'edit' ? 'pointer-events-none select-none' : ''}>
+        {/* Permitir interação direta com conteúdo para seleção/edição dos blocos */}
+        <div>
           <QuizRenderer
             mode={mode === 'preview' ? 'preview' : 'editor'}
             onStepChange={handleStepSelect}
             initialStep={safeCurrentStep}
             blocksOverride={currentStepData}
             currentStepOverride={safeCurrentStep}
+            // Encaminha seleção quando um bloco do conteúdo é clicado
+            onBlockClick={(blockId: string) => {
+              actions.setSelectedBlockId(blockId);
+            }}
           />
         </div>
 
