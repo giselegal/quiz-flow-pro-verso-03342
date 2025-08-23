@@ -1,5 +1,6 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback } from 'react';
 import { cn } from '../../lib/utils';
+import { useUnifiedEditor } from './UnifiedEditorProvider';
 
 // Types
 interface EditorUnifiedProps {
@@ -17,21 +18,6 @@ interface EditorConfig {
   showProperties?: boolean;
   enableAnalytics?: boolean;
   enableAutoSave?: boolean;
-}
-
-interface EditorState {
-  currentStep: number;
-  selectedBlockId: string | null;
-  blocks: Record<string, Block[]>;
-  mode: 'edit' | 'preview' | 'interactive';
-  isLoading: boolean;
-}
-
-interface Block {
-  id: string;
-  type: string;
-  properties: Record<string, any>;
-  order: number;
 }
 
 /**
@@ -53,7 +39,6 @@ interface Block {
 const EditorUnified: React.FC<EditorUnifiedProps> = ({
   funnelId,
   className = '',
-  displayMode = 'edit',
   userName,
   config = {
     showToolbar: true,
@@ -64,125 +49,77 @@ const EditorUnified: React.FC<EditorUnifiedProps> = ({
     enableAutoSave: true,
   },
 }) => {
-  // Estado local
-  const [editorState, setEditorState] = useState<EditorState>({
-    currentStep: 1,
-    selectedBlockId: null,
-    blocks: {},
-    mode: displayMode,
-    isLoading: false,
-  });
+  // Usar o hook do provider unificado
+  const { state: editorState, actions, computed } = useUnifiedEditor();
 
-  // Valores computados
-  const safeCurrentStep = useMemo(
-    () => Math.max(1, Math.min(editorState.currentStep || 1, 21)),
-    [editorState.currentStep]
-  );
-
-  const currentStepKey = useMemo(() => `step_${safeCurrentStep}`, [safeCurrentStep]);
-
-  const currentStepBlocks = useMemo(
-    () => editorState.blocks[currentStepKey] || [],
-    [editorState.blocks, currentStepKey]
-  );
-
-  const selectedBlock = useMemo(
-    () =>
-      editorState.selectedBlockId
-        ? currentStepBlocks.find(block => block.id === editorState.selectedBlockId)
-        : null,
-    [currentStepBlocks, editorState.selectedBlockId]
-  );
+  // Valores computados usando o computed do provider
+  const safeCurrentStep = computed.currentStep;
+  const currentStepBlocks = computed.currentStepBlocks;
+  const selectedBlock = computed.selectedBlock;
 
   /* -------------------------
      Event Handlers
      ------------------------- */
 
-  const handleModeChange = useCallback((mode: 'edit' | 'preview' | 'interactive') => {
-    setEditorState(prev => ({ ...prev, mode }));
-    console.log('🔄 Modo alterado para:', mode);
-  }, []);
+  const handleModeChange = useCallback(
+    (mode: 'edit' | 'preview' | 'interactive') => {
+      actions.setMode(mode);
+      console.log('🔄 Modo alterado para:', mode);
+    },
+    [actions]
+  );
 
-  const handleStepChange = useCallback((step: number) => {
-    setEditorState(prev => ({ ...prev, currentStep: step }));
-    console.log('📍 Etapa alterada para:', step);
-  }, []);
+  const handleStepChange = useCallback(
+    (step: number) => {
+      actions.setCurrentStep(step);
+      console.log('📍 Etapa alterada para:', step);
+    },
+    [actions]
+  );
 
   const handleBlockAdd = useCallback(
     async (type: string) => {
       try {
-        setEditorState(prev => ({ ...prev, isLoading: true }));
-
-        const newBlock: Block = {
-          id: `block_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-          type,
-          properties: {},
-          order: currentStepBlocks.length,
-        };
-
-        setEditorState(prev => ({
-          ...prev,
-          blocks: {
-            ...prev.blocks,
-            [currentStepKey]: [...currentStepBlocks, newBlock],
-          },
-          selectedBlockId: newBlock.id,
-          isLoading: false,
-        }));
-
-        console.log(`➕ Bloco ${type} adicionado:`, newBlock.id);
+        const blockId = await actions.addBlock(type as any);
+        actions.selectBlock(blockId);
+        console.log(`➕ Bloco ${type} adicionado:`, blockId);
       } catch (error) {
         console.error('❌ Erro ao adicionar bloco:', error);
-        setEditorState(prev => ({ ...prev, isLoading: false }));
       }
     },
-    [currentStepBlocks, currentStepKey]
+    [actions]
   );
 
   const handleBlockUpdate = useCallback(
-    async (blockId: string, updates: Partial<Block>) => {
+    async (blockId: string, updates: any) => {
       try {
-        setEditorState(prev => ({
-          ...prev,
-          blocks: {
-            ...prev.blocks,
-            [currentStepKey]: currentStepBlocks.map(block =>
-              block.id === blockId ? { ...block, ...updates } : block
-            ),
-          },
-        }));
-
+        await actions.updateBlock(blockId, updates);
         console.log('✅ Bloco atualizado:', blockId);
       } catch (error) {
         console.error('❌ Erro ao atualizar bloco:', error);
       }
     },
-    [currentStepBlocks, currentStepKey]
+    [actions]
   );
 
   const handleBlockDelete = useCallback(
     async (blockId: string) => {
       try {
-        setEditorState(prev => ({
-          ...prev,
-          blocks: {
-            ...prev.blocks,
-            [currentStepKey]: currentStepBlocks.filter(block => block.id !== blockId),
-          },
-          selectedBlockId: prev.selectedBlockId === blockId ? null : prev.selectedBlockId,
-        }));
-
+        await actions.deleteBlock(blockId);
         console.log('🗑️ Bloco removido:', blockId);
       } catch (error) {
         console.error('❌ Erro ao remover bloco:', error);
       }
     },
-    [currentStepBlocks, currentStepKey]
+    [actions]
   );
 
-  const handleBlockSelect = useCallback((blockId: string | null) => {
-    setEditorState(prev => ({ ...prev, selectedBlockId: blockId }));
-  }, []);
+  const handleBlockSelect = useCallback(
+    (blockId: string | null) => {
+      actions.selectBlock(blockId);
+    },
+    [actions]
+  );
 
   /* -------------------------
      Render Components
