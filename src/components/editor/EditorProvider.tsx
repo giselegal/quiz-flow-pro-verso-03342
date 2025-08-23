@@ -1,9 +1,9 @@
-import { getBlocksForStep, mergeStepBlocks, normalizeStepBlocks } from '../../config/quizStepsComplete';
-import { useEditorSupabaseIntegration } from '../../hooks/useEditorSupabaseIntegration';
-import { useHistoryState } from '../../hooks/useHistoryState';
-import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '../../templates/quiz21StepsComplete';
-import { Block } from '../../types/editor';
-import { extractStepNumberFromKey } from '../../utils/supabaseMapper';
+import { getBlocksForStep, mergeStepBlocks, normalizeStepBlocks } from '@/config/quizStepsComplete';
+import { useEditorSupabaseIntegration } from '@/hooks/useEditorSupabaseIntegration';
+import { useHistoryState } from '@/hooks/useHistoryState';
+import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
+import { Block } from '@/types/editor';
+import { extractStepNumberFromKey } from '@/utils/supabaseMapper';
 import { arrayMove } from '@dnd-kit/sortable';
 import React, { createContext, ReactNode, useCallback, useContext, useEffect } from 'react';
 

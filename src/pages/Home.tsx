@@ -1,4 +1,3 @@
-import UnifiedSystemSection from '@/components/sections/UnifiedSystemSection';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/context/AuthContext';
@@ -103,7 +102,7 @@ const Home = () => {
                     Dashboard
                   </Button>
                   <Button
-                    onClick={() => navigate('/editor')}
+                    onClick={() => navigate('/quiz-editor')}
                     variant="outline"
                     className="border-brand-primary text-brand-primary hover:bg-brand-primary/10"
                   >
@@ -177,23 +176,13 @@ const Home = () => {
                 {user && (
                   <>
                     <Button
-                      onClick={() => navigate('/test-unified')}
+                      onClick={() => navigate('/editor-unified')}
                       size="lg"
                       className="bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-700 hover:to-emerald-500 text-white shadow-xl px-8 py-4 text-lg"
                     >
                       <Sparkles className="h-5 w-5 mr-2" />
-                      Sistema Unificado
+                      Editor Unificado
                       <Badge className="ml-2 bg-yellow-400 text-yellow-900 text-xs">NOVO</Badge>
-                    </Button>
-
-                    <Button
-                      onClick={() => navigate('/editor')}
-                      size="lg"
-                      className="bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-700 hover:to-blue-500 text-white shadow-xl px-8 py-4 text-lg"
-                    >
-                      <Target className="h-5 w-5 mr-2" />
-                      Editor Unificado (Produção)
-                      <Badge className="ml-2 bg-green-400 text-green-900 text-xs">ATIVO</Badge>
                     </Button>
 
                     <Button
@@ -211,10 +200,10 @@ const Home = () => {
                       onClick={() => navigate('/quiz-editor')}
                       size="lg"
                       variant="outline"
-                      className="border-brand-primary text-brand-primary hover:bg-brand-primary/10 px-8 py-4 text-lg font-semibold opacity-60"
+                      className="border-brand-primary text-brand-primary hover:bg-brand-primary/10 px-8 py-4 text-lg font-semibold"
                     >
                       <Target className="h-5 w-5 mr-2" />
-                      Editor Clássico (Legacy)
+                      Editor Clássico
                     </Button>
                   </>
                 )}
@@ -334,9 +323,6 @@ const Home = () => {
             </div>
           </div>
         </section>
-
-        {/* Sistema Unificado Section */}
-        <UnifiedSystemSection />
 
         {/* CTA Final */}
         <section className="py-20 bg-gradient-to-r from-brand-primary to-brand-dark">

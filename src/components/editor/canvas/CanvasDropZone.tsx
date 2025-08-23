@@ -1,4 +1,4 @@
-import { cn } from '../../../lib/utils';
+import { cn } from '@/lib/utils';
 import { useDroppable } from '@dnd-kit/core';
 import React from 'react';
 
