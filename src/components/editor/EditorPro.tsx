@@ -670,19 +670,18 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         isEmpty={currentStepData.length === 0 && mode === 'edit'}
         data-testid="canvas-dropzone"
       >
-        {mode === 'preview' ? (
-          <QuizRenderer
-            mode="preview"
-            onStepChange={handleStepSelect}
-            initialStep={safeCurrentStep}
-          />
-        ) : (
-          // MODO EDIT: Mostrar apenas os SortableBlocks, não o QuizRenderer
+        <QuizRenderer
+          mode={mode === 'preview' ? 'preview' : 'editor'}
+          onStepChange={handleStepSelect}
+          initialStep={safeCurrentStep}
+        />
+
+        {mode === 'edit' && (
           <SortableContext
             items={currentStepData.map(b => b.id || `block-${currentStepData.indexOf(b)}`)}
             strategy={verticalListSortingStrategy}
           >
-            <div className="relative min-h-[600px] w-full">
+            <div className="absolute inset-0 pointer-events-auto z-50">
               {currentStepData.map((block: Block, index: number) => {
                 const blockId = block.id || `block-${index}`;
                 const isSelected = state.selectedBlockId === blockId;
