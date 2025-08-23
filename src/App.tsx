@@ -1,10 +1,10 @@
-import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
-import { ThemeProvider } from '@/components/theme-provider';
-import { LoadingFallback } from '@/components/ui/loading-fallback';
-import { Toaster } from '@/components/ui/toaster';
-import { AuthProvider } from '@/context/AuthContext';
 import { Suspense, lazy } from 'react';
 import { Route, Router, Switch } from 'wouter';
+import { ProtectedRoute } from './components/auth/ProtectedRoute';
+import { ThemeProvider } from './components/theme-provider';
+import { LoadingFallback } from './components/ui/loading-fallback';
+import { Toaster } from './components/ui/toaster';
+import { AuthProvider } from './context/AuthContext';
 
 // 🎯 PÁGINAS ESSENCIAIS - SEM CONFLITOS
 const Home = lazy(() => import('./pages/Home'));

@@ -1,23 +1,23 @@
-import { QuizRenderer } from '@/components/core/QuizRenderer';
-import CanvasDropZone from '@/components/editor/canvas/CanvasDropZone';
-import { DraggableComponentItem } from '@/components/editor/dnd/DraggableComponentItem';
-import { useNotification } from '@/components/ui/Notification';
-import { getBlocksForStep } from '@/config/quizStepsComplete';
-import { cn } from '@/lib/utils';
-import { Block } from '@/types/editor';
+import { QuizRenderer } from '../core/QuizRenderer';
+import CanvasDropZone from './canvas/CanvasDropZone';
+import { DraggableComponentItem } from './dnd/DraggableComponentItem';
+import { useNotification } from '../ui/Notification';
+import { getBlocksForStep } from '../../config/quizStepsComplete';
+import { cn } from '../../lib/utils';
+import { Block } from '../../types/editor';
 import {
   extractDragData,
   getDragFeedback,
   logDragEvent,
   validateDrop,
-} from '@/utils/dragDropUtils';
+} from '../../utils/dragDropUtils';
 import {
   copyToClipboard,
   createBlockFromComponent,
   devLog,
   duplicateBlock,
   validateEditorJSON,
-} from '@/utils/editorUtils';
+} from '../../utils/editorUtils';
 import {
   closestCenter,
   DndContext,
@@ -681,7 +681,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
             items={currentStepData.map(b => b.id || `block-${currentStepData.indexOf(b)}`)}
             strategy={verticalListSortingStrategy}
           >
-            <div className="absolute inset-0 pointer-events-auto z-50">
+            <div className="relative min-h-[600px] w-full">
               {currentStepData.map((block: Block, index: number) => {
                 const blockId = block.id || `block-${index}`;
                 const isSelected = state.selectedBlockId === blockId;
