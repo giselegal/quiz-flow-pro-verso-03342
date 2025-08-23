@@ -10,7 +10,6 @@ export interface UniversalBlockRendererProps {
   isSelected?: boolean;
   onClick?: () => void;
   onPropertyChange?: (key: string, value: any) => void;
-  mode?: 'production' | 'preview' | 'editor';
 }
 
 /**
@@ -75,7 +74,6 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
   isSelected = false,
   onClick,
   onPropertyChange,
-  mode = 'production',
 }) => {
   // ✅ Normalizar propriedades para compatibilidade template/editor
   const normalizedBlock = normalizeBlockProps(block);
@@ -138,7 +136,6 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
               isSelected={isSelected}
               onClick={onClick}
               onPropertyChange={onPropertyChange}
-              mode={mode}
               {...processedProperties}
             />
           </React.Suspense>

@@ -1,3 +1,23 @@
+import { QuizRenderer } from '../core/QuizRenderer';
+import CanvasDropZone from './canvas/CanvasDropZone';
+import { DraggableComponentItem } from './dnd/DraggableComponentItem';
+import { useNotification } from '../ui/Notification';
+import { getBlocksForStep } from '../../config/quizStepsComplete';
+import { cn } from '../../lib/utils';
+import { Block } from '../../types/editor';
+import {
+  extractDragData,
+  getDragFeedback,
+  logDragEvent,
+  validateDrop,
+} from '../../utils/dragDropUtils';
+import {
+  copyToClipboard,
+  createBlockFromComponent,
+  devLog,
+  duplicateBlock,
+  validateEditorJSON,
+} from '../../utils/editorUtils';
 import {
   closestCenter,
   DndContext,
@@ -15,26 +35,6 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import React, { Suspense, useCallback, useMemo, useRef, useState } from 'react';
-import { getBlocksForStep } from '../../config/quizStepsComplete';
-import { cn } from '../../lib/utils';
-import { Block } from '../../types/editor';
-import {
-  extractDragData,
-  getDragFeedback,
-  logDragEvent,
-  validateDrop,
-} from '../../utils/dragDropUtils';
-import {
-  copyToClipboard,
-  createBlockFromComponent,
-  devLog,
-  duplicateBlock,
-  validateEditorJSON,
-} from '../../utils/editorUtils';
-import { QuizRenderer } from '../core/QuizRenderer';
-import { useNotification } from '../ui/Notification';
-import CanvasDropZone from './canvas/CanvasDropZone';
-import { DraggableComponentItem } from './dnd/DraggableComponentItem';
 import { useEditor } from './EditorProvider';
 import { SortableBlock } from './SortableBlock';
 
@@ -362,23 +362,12 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
             }
             break;
           case 'reorder':
-            if (dragData.type === 'canvas-block') {
-              const activeIndex = currentStepData.findIndex(
-                block => block.id === String(active.id)
-              );
-              // Se soltar no canvas-drop-zone, mover para o fim
-              if (over.id === 'canvas-drop-zone') {
-                const targetIndex = currentStepData.length - 1;
-                if (activeIndex !== -1 && targetIndex !== -1 && activeIndex !== targetIndex) {
-                  actions.reorderBlocks(currentStepKey, activeIndex, targetIndex);
-                  notification?.info?.('Bloco movido para o final');
-                }
-              } else if (typeof over.id === 'string') {
-                const overIndex = currentStepData.findIndex(block => block.id === over.id);
-                if (activeIndex !== -1 && overIndex !== -1 && activeIndex !== overIndex) {
-                  actions.reorderBlocks(currentStepKey, activeIndex, overIndex);
-                  notification?.info?.('Blocos reordenados');
-                }
+            if (dragData.type === 'canvas-block' && typeof over.id === 'string') {
+              const activeIndex = currentStepData.findIndex(block => block.id === active.id);
+              const overIndex = currentStepData.findIndex(block => block.id === over.id);
+              if (activeIndex !== -1 && overIndex !== -1 && activeIndex !== overIndex) {
+                actions.reorderBlocks(currentStepKey, activeIndex, overIndex);
+                notification?.info?.('Blocos reordenados');
               }
             }
             break;
@@ -681,27 +670,18 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         isEmpty={currentStepData.length === 0 && mode === 'edit'}
         data-testid="canvas-dropzone"
       >
-        {/* Permitir interação direta com conteúdo para seleção/edição dos blocos */}
-        <div>
-          <QuizRenderer
-            mode={mode === 'preview' ? 'preview' : 'editor'}
-            onStepChange={handleStepSelect}
-            initialStep={safeCurrentStep}
-            blocksOverride={currentStepData}
-            currentStepOverride={safeCurrentStep}
-            // Encaminha seleção quando um bloco do conteúdo é clicado
-            onBlockClick={(blockId: string) => {
-              actions.setSelectedBlockId(blockId);
-            }}
-          />
-        </div>
+        <QuizRenderer
+          mode={mode === 'preview' ? 'preview' : 'editor'}
+          onStepChange={handleStepSelect}
+          initialStep={safeCurrentStep}
+        />
 
         {mode === 'edit' && (
           <SortableContext
-            items={currentStepData.map((b, i) => b.id || `block-${i}`)}
+            items={currentStepData.map(b => b.id || `block-${currentStepData.indexOf(b)}`)}
             strategy={verticalListSortingStrategy}
           >
-            <div className="relative min-h-[600px] w-full z-50">
+            <div className="relative min-h-[600px] w-full">
               {currentStepData.map((block: Block, index: number) => {
                 const blockId = block.id || `block-${index}`;
                 const isSelected = state.selectedBlockId === blockId;
@@ -736,7 +716,6 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
                     isSelected={isSelected}
                     topOffset={topOffset}
                     height={height}
-                    sourceStepKey={currentStepKey}
                     onSelect={handleBlockSelect}
                     onMoveUp={() => {
                       const currentIndex = currentStepData.findIndex(b => b.id === blockId);
