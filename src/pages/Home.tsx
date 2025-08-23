@@ -103,7 +103,7 @@ const Home = () => {
                     Dashboard
                   </Button>
                   <Button
-                    onClick={() => navigate('/quiz-editor')}
+                    onClick={() => navigate('/editor')}
                     variant="outline"
                     className="border-brand-primary text-brand-primary hover:bg-brand-primary/10"
                   >
