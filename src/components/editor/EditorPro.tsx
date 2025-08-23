@@ -338,9 +338,24 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
           case 'add':
             if (dragData.type === 'sidebar-component' && dragData.blockType) {
               const newBlock = createBlockFromComponent(dragData.blockType as any, currentStepData);
-              actions.addBlock(currentStepKey, newBlock);
+              // Inserção precisa por posição quando drop-zone-<n>
+              let targetIndex = currentStepData.length;
+              if (typeof over.id === 'string') {
+                const m = over.id.match(/^drop-zone-(\d+)$/);
+                if (m)
+                  targetIndex = Math.max(0, Math.min(parseInt(m[1], 10), currentStepData.length));
+                else if (over.id === 'canvas-drop-zone') targetIndex = currentStepData.length;
+                else {
+                  // Se soltou sobre um bloco, inserir antes dele
+                  const overIndex = currentStepData.findIndex(b => b.id === over.id);
+                  if (overIndex >= 0) targetIndex = overIndex;
+                }
+              }
+              actions.addBlockAtIndex(currentStepKey, newBlock, targetIndex);
               actions.setSelectedBlockId(newBlock.id);
-              notification?.success?.(`Componente ${dragData.blockType} adicionado!`);
+              notification?.success?.(
+                `Componente ${dragData.blockType} adicionado na posição ${targetIndex}!`
+              );
             }
             break;
           case 'reorder':
@@ -348,19 +363,27 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               const activeIndex = currentStepData.findIndex(
                 block => block.id === String(active.id)
               );
-              // Se soltar no canvas-drop-zone, mover para o fim
+              if (activeIndex === -1) break;
+
+              let targetIndex = activeIndex;
               if (over.id === 'canvas-drop-zone') {
-                const targetIndex = currentStepData.length - 1;
-                if (activeIndex !== -1 && targetIndex !== -1 && activeIndex !== targetIndex) {
-                  actions.reorderBlocks(currentStepKey, activeIndex, targetIndex);
-                  notification?.info?.('Bloco movido para o final');
-                }
+                targetIndex = currentStepData.length - 1;
               } else if (typeof over.id === 'string') {
-                const overIndex = currentStepData.findIndex(block => block.id === over.id);
-                if (activeIndex !== -1 && overIndex !== -1 && activeIndex !== overIndex) {
-                  actions.reorderBlocks(currentStepKey, activeIndex, overIndex);
-                  notification?.info?.('Blocos reordenados');
+                const m = over.id.match(/^drop-zone-(\d+)$/);
+                if (m) {
+                  targetIndex = Math.max(
+                    0,
+                    Math.min(parseInt(m[1], 10), currentStepData.length - 1)
+                  );
+                } else {
+                  const overIndex = currentStepData.findIndex(block => block.id === over.id);
+                  if (overIndex !== -1) targetIndex = overIndex;
                 }
+              }
+
+              if (activeIndex !== targetIndex) {
+                actions.reorderBlocks(currentStepKey, activeIndex, targetIndex);
+                notification?.info?.(`Bloco movido para a posição ${targetIndex}`);
               }
             }
             break;
