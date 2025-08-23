@@ -24,6 +24,7 @@ const EditorWithPreviewFixed = lazy(() => import('./pages/EditorWithPreview-fixe
 const EditorModularPage = lazy(() => import('./pages/editor-modular'));
 const EditorUnified = lazy(() => import('./pages/EditorUnified')); // 🆕 EDITOR UNIFICADO
 const EditorUnifiedV2 = lazy(() => import('./pages/EditorUnifiedV2')); // 🚀 PRIORIDADE 2 - EDITOR UNIFICADO V2
+const EditorTeste = lazy(() => import('./pages/EditorTeste')); // 🧪 EDITOR TESTE SIMPLES
 const QuizEditorComplete = lazy(() => import('./pages/editors/QuizEditorComplete')); // 🎯 EDITOR COMPLETO
 const QuizEditorProPage = lazy(() => import('./pages/editors/QuizEditorProPage')); // 🏆 EDITOR PROFISSIONAL 4 COLUNAS WITH PROVIDER
 const QuizEditorProPageTemp = lazy(() => import('./pages/editors/QuizEditorProPageTemp')); // 🧪 TESTE DE CACHE
@@ -81,6 +82,31 @@ function App() {
                 <Switch>
                   {/* 🏠 PÁGINA INICIAL */}
                   <Route path="/" component={Home} />
+
+                  {/* 🚀 EDITOR FUNCIONAL - ACESSO DIRETO */}
+                  <Route path="/editor-funcional">
+                    <FunnelsProvider>
+                      <EditorProvider>
+                        <Suspense fallback={<PageLoading />}>
+                          <EditorWithPreviewFixed />
+                        </Suspense>
+                      </EditorProvider>
+                    </FunnelsProvider>
+                  </Route>
+
+                  {/* 🧪 EDITOR SIMPLES - SEM PROVIDERS */}
+                  <Route path="/editor-simples">
+                    <Suspense fallback={<PageLoading />}>
+                      <EditorUnifiedV2 />
+                    </Suspense>
+                  </Route>
+
+                  {/* 🎯 EDITOR TESTE - GARANTIDO FUNCIONAR */}
+                  <Route path="/editor-teste">
+                    <Suspense fallback={<PageLoading />}>
+                      <EditorTeste />
+                    </Suspense>
+                  </Route>
 
                   {/* 🎯 EDITOR PRINCIPAL - DESATIVADO */}
                   {/* 
