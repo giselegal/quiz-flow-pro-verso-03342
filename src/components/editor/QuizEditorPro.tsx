@@ -87,10 +87,25 @@ export const QuizEditorPro: React.FC<QuizEditorProProps> = ({ className = '' }) 
   const safeCurrentStep = state.currentStep || 1;
   const currentStepKey = `step-${safeCurrentStep}`;
 
-  const currentStepData = useMemo(
-    () => getBlocksForStep(safeCurrentStep, state.stepBlocks) || [],
-    [safeCurrentStep, state.stepBlocks]
-  );
+  const currentStepData = useMemo(() => {
+    const blocks = getBlocksForStep(safeCurrentStep, state.stepBlocks) || [];
+
+    // 🚨 CORREÇÃO CRÍTICA: Se não há blocos, força reload do template
+    if (blocks.length === 0) {
+      console.log('🚨 QuizEditorPro: EMPTY STEP DETECTED', {
+        step: safeCurrentStep,
+        stepKey: currentStepKey,
+        availableSteps: Object.keys(state.stepBlocks),
+      });
+
+      // Força reload do template usando actions se disponível
+      if (actions.ensureStepLoaded) {
+        actions.ensureStepLoaded(safeCurrentStep);
+      }
+    }
+
+    return blocks;
+  }, [safeCurrentStep, state.stepBlocks, currentStepKey, actions]);
 
   // Pré-calcular se cada etapa tem blocos para evitar múltiplas chamadas durante render
   const stepHasBlocks = useMemo(() => {

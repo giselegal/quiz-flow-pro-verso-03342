@@ -229,25 +229,46 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
 
   // Initialize step 1 automatically on mount and when template data is available
   useEffect(() => {
-    // Always force template reload on mount
+    // 🚨 CORREÇÃO CRÍTICA: Always force template reload on mount
     const normalizedBlocks = normalizeStepBlocks(QUIZ_STYLE_21_STEPS_TEMPLATE);
     console.log('🔧 FORCE RELOAD TEMPLATE:', {
       normalizedBlocks,
       keys: Object.keys(normalizedBlocks),
+      totalSteps: Object.keys(normalizedBlocks).length,
     });
 
+    // 🚨 FORÇA CARREGAMENTO: Sempre aplicar template normalizado
     setState({
       ...rawState,
       stepBlocks: normalizedBlocks,
       currentStep: 1,
     });
 
-    // Ensure step 1 is loaded on initialization
-    setTimeout(() => ensureStepLoaded(1), 100);
-  }, []); // Empty dependency array - run only once on mount  // Ensure step is loaded when currentStep changes
+    // 🚨 GARANTIA DUPLA: Ensure step 1 is loaded on initialization
+    setTimeout(() => {
+      ensureStepLoaded(1);
+      // Force verify all steps loaded
+      for (let i = 1; i <= 21; i++) {
+        ensureStepLoaded(i);
+      }
+    }, 100);
+  }, []); // Empty dependency array - run only once on mount
+
+  // 🚨 CORREÇÃO: Ensure step is loaded when currentStep changes
   useEffect(() => {
     if (rawState.currentStep) {
       ensureStepLoaded(rawState.currentStep);
+
+      // 🚨 FORÇA VERIFICAÇÃO: If step blocks are empty, force reload template
+      const currentStepBlocks = getBlocksForStep(rawState.currentStep, rawState.stepBlocks);
+      if (!currentStepBlocks || currentStepBlocks.length === 0) {
+        console.log('🚨 EMPTY STEP DETECTED - FORCE RELOAD:', rawState.currentStep);
+        const normalizedBlocks = normalizeStepBlocks(QUIZ_STYLE_21_STEPS_TEMPLATE);
+        setState({
+          ...rawState,
+          stepBlocks: normalizedBlocks,
+        });
+      }
     }
   }, [rawState.currentStep, ensureStepLoaded]);
 

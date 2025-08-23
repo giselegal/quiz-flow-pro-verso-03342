@@ -19,7 +19,7 @@ const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
     id: 'canvas-drop-zone',
     data: {
       type: 'canvas',
-      accepts: ['sidebar-component'],
+      accepts: ['sidebar-component', 'canvas-element'],
     },
   });
 
@@ -27,11 +27,13 @@ const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
     <div
       ref={setNodeRef}
       className={cn(
-        'flex-1 p-6 overflow-auto transition-all duration-200',
+        'flex-1 p-6 transition-all duration-200',
+        'overflow-visible', // 🚨 CORREÇÃO: Permitir eventos de drag
         isOver && 'bg-blue-50',
         className
       )}
       data-testid={dataTestId}
+      style={{ minHeight: '600px' }} // 🚨 CORREÇÃO: Garantir área mínima
     >
       <div className="max-w-4xl mx-auto">
         <div

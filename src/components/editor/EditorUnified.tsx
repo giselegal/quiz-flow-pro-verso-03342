@@ -143,21 +143,36 @@ export const EditorUnified: React.FC<EditorUnifiedProps> = () => {
               <div className="h-full bg-background p-4">
                 <div
                   id="canvas-droppable"
-                  className="h-full border-2 border-dashed border-muted-foreground/20 rounded-lg flex items-center justify-center relative"
+                  className="h-full border-2 border-dashed border-muted-foreground/20 rounded-lg relative overflow-visible"
+                  style={{ minHeight: '600px' }}
                 >
-                  <div className="text-center text-muted-foreground">
-                    <div className="text-lg font-medium mb-2">EDITOR RENDERIZANDO</div>
-                    <div className="text-sm">Arraste componentes aqui</div>
-                    <div className="text-xs mt-2">Canvas Elements: {canvasElements.length}</div>
-                    {canvasElements.map((el, idx) => (
-                      <div
-                        key={idx}
-                        className="text-xs border border-border p-2 m-1 rounded bg-background"
-                      >
-                        {el.label}
+                  {canvasElements.length === 0 ? (
+                    <div className="flex items-center justify-center h-full text-center">
+                      <div className="text-muted-foreground">
+                        <div className="text-lg font-medium mb-2">Canvas Vazio</div>
+                        <div className="text-sm">
+                          Arraste componentes da barra lateral para começar
+                        </div>
+                        <div className="text-xs mt-2">Elementos: {canvasElements.length}</div>
                       </div>
-                    ))}
-                  </div>
+                    </div>
+                  ) : (
+                    <div className="p-4 space-y-4">
+                      {canvasElements.map((el, idx) => (
+                        <div
+                          key={idx}
+                          className="p-4 border border-border rounded-lg bg-background shadow-sm hover:shadow-md transition-shadow"
+                        >
+                          <div className="flex items-center justify-between">
+                            <span className="font-medium">{el.label}</span>
+                            <span className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded">
+                              {el.type}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
