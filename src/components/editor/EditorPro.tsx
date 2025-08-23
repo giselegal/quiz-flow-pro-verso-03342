@@ -470,16 +470,16 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               <input
                 type="text"
                 value={customTitle}
-                onChange={(e) => setCustomTitle(e.target.value)}
+                onChange={e => setCustomTitle(e.target.value)}
                 onBlur={() => setIsEditingTitle(false)}
-                onKeyDown={(e) => {
+                onKeyDown={e => {
                   if (e.key === 'Enter') setIsEditingTitle(false);
                 }}
                 className="font-semibold text-gray-900 bg-transparent border-b-2 border-blue-500 outline-none text-lg"
                 autoFocus
               />
             ) : (
-              <h3 
+              <h3
                 className="font-semibold text-gray-900 flex items-center gap-2 cursor-pointer hover:text-blue-600 transition-colors"
                 onClick={() => setIsEditingTitle(true)}
                 title="Clique para editar o título"
