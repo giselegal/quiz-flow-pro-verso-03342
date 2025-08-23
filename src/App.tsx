@@ -7,7 +7,7 @@ import { Toaster } from './components/ui/toaster';
 import { AuthProvider } from './context/AuthContext';
 
 // 🎯 SISTEMA UNIFICADO - NOVA ARQUITETURA
-import { UnifiedEditorProvider, EditorUnified } from './unified/editor';
+import { EditorUnified, UnifiedEditorProvider } from './unified/editor';
 
 // 🎯 PÁGINAS ESSENCIAIS - SEM CONFLITOS
 const Home = lazy(() => import('./pages/Home'));

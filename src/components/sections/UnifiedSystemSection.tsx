@@ -1,12 +1,12 @@
-import React from 'react';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ArrowRight, Zap, Sparkles } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { ArrowRight, Sparkles, Zap } from 'lucide-react';
+import React from 'react';
 
 /**
  * 🎯 UnifiedSystemSection - Seção para destacar o sistema unificado
- * 
+ *
  * Esta seção deve ser adicionada à página Home para promover as
  * novas rotas do sistema unificado.
  */
@@ -45,7 +45,7 @@ const UnifiedSystemSection: React.FC = () => {
             <p className="text-indigo-700/70 mb-6">
               Experimente o novo editor consolidado com sistema modular, auto-save e drag & drop.
             </p>
-            <Button 
+            <Button
               onClick={() => navigate('/editor')}
               className="w-full bg-indigo-600 hover:bg-indigo-700 text-white"
             >
@@ -68,7 +68,7 @@ const UnifiedSystemSection: React.FC = () => {
             <p className="text-indigo-700/70 mb-6">
               Quiz integrado com engine unificada, 21 etapas e cálculos de perfil de personalidade.
             </p>
-            <Button 
+            <Button
               onClick={() => navigate('/quiz-unified')}
               className="w-full bg-indigo-600 hover:bg-indigo-700 text-white"
             >
@@ -86,7 +86,7 @@ const UnifiedSystemSection: React.FC = () => {
             <p className="text-indigo-700/70 mb-6">
               Testes do sistema unificado com ambiente controlado e logs de desenvolvimento.
             </p>
-            <Button 
+            <Button
               onClick={() => navigate('/test-unified')}
               className="w-full bg-indigo-600 hover:bg-indigo-700 text-white"
             >
@@ -98,8 +98,8 @@ const UnifiedSystemSection: React.FC = () => {
 
         <div className="mt-16 text-center">
           <p className="text-indigo-700/80 mb-6 max-w-2xl mx-auto">
-            O sistema unificado oferece uma experiência consistente, performance otimizada
-            e integração simplificada com todo o ecossistema.
+            O sistema unificado oferece uma experiência consistente, performance otimizada e
+            integração simplificada com todo o ecossistema.
           </p>
           <Button
             onClick={() => navigate('/editor')}

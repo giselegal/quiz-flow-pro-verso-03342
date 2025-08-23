@@ -1,7 +1,7 @@
+import UnifiedSystemSection from '@/components/sections/UnifiedSystemSection';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/context/AuthContext';
-import UnifiedSystemSection from '@/components/sections/UnifiedSystemSection';
 import {
   ArrowRight,
   Eye,

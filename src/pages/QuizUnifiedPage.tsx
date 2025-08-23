@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  UnifiedEditorProvider, 
-  EditorUnified,
-  createCalculationEngine,
-  DEFAULT_UNIFIED_CONFIG
-} from '@/unified/editor';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 import { useToast } from '@/components/ui/use-toast';
 import { useAuth } from '@/context/AuthContext';
+import {
+  createCalculationEngine,
+  DEFAULT_UNIFIED_CONFIG,
+  EditorUnified,
+  UnifiedEditorProvider,
+} from '@/unified/editor';
 import { ArrowLeft, Save, Sparkles, Zap } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
 
 /**
  * 🎯 QuizUnifiedPage - Página integrada com sistema unificado
- * 
+ *
  * Esta página demonstra a integração completa do sistema unificado,
  * incluindo carregamento de dados, auto-save, cálculos, e analytics.
  */
@@ -35,7 +35,7 @@ const QuizUnifiedPage: React.FC = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-      
+
       // Dados iniciais de exemplo
       const initialData = {
         currentStep: 1,
@@ -50,61 +50,62 @@ const QuizUnifiedPage: React.FC = () => {
                   fontSize: '24px',
                   fontWeight: 'bold',
                   textAlign: 'center',
-                  color: '#3366ff'
-                }
+                  color: '#3366ff',
+                },
               },
               order: 0,
               metadata: {
                 createdAt: new Date(),
                 updatedAt: new Date(),
-                version: 1
-              }
+                version: 1,
+              },
             },
             {
               id: 'intro_block',
               type: 'paragraph',
               properties: {
-                content: 'Este quiz utiliza o novo sistema unificado com provider centralizado, estado global, e engine de cálculo integrada.',
+                content:
+                  'Este quiz utiliza o novo sistema unificado com provider centralizado, estado global, e engine de cálculo integrada.',
                 style: {
                   fontSize: '16px',
                   textAlign: 'center',
                   marginTop: '10px',
-                  color: '#555555'
-                }
+                  color: '#555555',
+                },
               },
               order: 1,
               metadata: {
                 createdAt: new Date(),
                 updatedAt: new Date(),
-                version: 1
-              }
-            }
-          ]
+                version: 1,
+              },
+            },
+          ],
         },
         mode: 'edit',
         isLoading: false,
         hasUnsavedChanges: false,
-        lastSaved: new Date()
+        lastSaved: new Date(),
       };
-      
+
       setSavedData(initialData);
     }, 1200);
-    
+
     return () => clearTimeout(timer);
   }, []);
 
   // Handler para salvar dados
   const handleSave = async (data: any) => {
     console.log('🎯 Salvando dados unificados:', data);
-    
+
     // Simula salvar no banco de dados
-    return new Promise<void>((resolve) => {
+    return new Promise<void>(resolve => {
       setTimeout(() => {
         setSavedData(data);
         toast({
-          title: "Dados salvos com sucesso!",
+          title: 'Dados salvos com sucesso!',
           description: `Salvos ${Object.values(data.blocks).flat().length} blocos no total.`,
-          variant: "success",
+          variant: 'success',
         });
         resolve();
       }, 800);
@@ -114,7 +115,7 @@ const QuizUnifiedPage: React.FC = () => {
   // Handler para calcular resultados
   const handleCalculate = async (answers: any[]) => {
     console.log('🧮 Calculando resultados:', answers);
-    
+
     // Usa a engine de cálculo unificada
     try {
       // Se não houver respostas suficientes, cria algumas para testes
@@ -162,23 +163,23 @@ const QuizUnifiedPage: React.FC = () => {
           },
         ];
       }
-      
+
       const results = await calculationEngine.calculate(answers);
-      
+
       setCalculationResults(results);
       toast({
-        title: "Cálculo concluído!",
+        title: 'Cálculo concluído!',
         description: `Perfil principal: ${results.styleProfile.primaryStyle.style} (${Math.round(results.styleProfile.primaryStyle.percentage * 100)}%)`,
-        variant: "success",
+        variant: 'success',
       });
-      
+
       return results;
     } catch (error) {
       console.error('Erro no cálculo:', error);
       toast({
-        title: "Erro no cálculo",
-        description: error instanceof Error ? error.message : "Erro desconhecido",
-        variant: "error",
+        title: 'Erro no cálculo',
+        description: error instanceof Error ? error.message : 'Erro desconhecido',
+        variant: 'error',
       });
       throw error;
     }
@@ -187,7 +188,7 @@ const QuizUnifiedPage: React.FC = () => {
   // Handler para analytics
   const handleAnalytics = async (event: any) => {
     console.log('📊 Evento de Analytics:', event);
-    
+
     // Simula envio para serviço de analytics
     return Promise.resolve();
   };
@@ -210,12 +211,8 @@ const QuizUnifiedPage: React.FC = () => {
       <div className="h-screen w-full flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <Spinner size="lg" className="mb-4" />
-          <h2 className="text-xl font-semibold text-gray-700">
-            Carregando sistema unificado...
-          </h2>
-          <p className="text-gray-500 mt-2">
-            Inicializando componentes e serviços
-          </p>
+          <h2 className="text-xl font-semibold text-gray-700">Carregando sistema unificado...</h2>
+          <p className="text-gray-500 mt-2">Inicializando componentes e serviços</p>
         </div>
       </div>
     );
@@ -227,10 +224,10 @@ const QuizUnifiedPage: React.FC = () => {
       <header className="bg-white shadow-md p-4">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center space-x-4">
-            <Button 
-              variant="ghost" 
-              className="flex items-center" 
-              onClick={() => window.location.href = '/'}
+            <Button
+              variant="ghost"
+              className="flex items-center"
+              onClick={() => (window.location.href = '/')}
             >
               <ArrowLeft className="mr-2 h-4 w-4" />
               Voltar
@@ -240,16 +237,14 @@ const QuizUnifiedPage: React.FC = () => {
               Quiz Unificado
             </h1>
           </div>
-          
+
           <div className="flex items-center space-x-3">
-            <div className="text-sm text-gray-600">
-              {user?.email || 'Usuário de teste'}
-            </div>
+            <div className="text-sm text-gray-600">{user?.email || 'Usuário de teste'}</div>
             <Button variant="outline" size="sm" onClick={() => window.location.reload()}>
               Reiniciar
             </Button>
-            <Button 
-              size="sm" 
+            <Button
+              size="sm"
               className="bg-indigo-600 hover:bg-indigo-700 text-white"
               onClick={() => {
                 if (savedData) {
@@ -276,9 +271,7 @@ const QuizUnifiedPage: React.FC = () => {
             onCalculate={handleCalculate}
             onAnalytics={handleAnalytics}
           >
-            <EditorUnified 
-              className="h-[calc(100vh-12rem)]"
-            />
+            <EditorUnified className="h-[calc(100vh-12rem)]" />
           </UnifiedEditorProvider>
         </div>
 
@@ -289,7 +282,7 @@ const QuizUnifiedPage: React.FC = () => {
               <Zap className="mr-2 h-5 w-5 text-yellow-500" />
               Resultados do Cálculo
             </h2>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {/* Perfil Principal */}
               <div className="bg-indigo-50 p-4 rounded-lg">
@@ -301,7 +294,7 @@ const QuizUnifiedPage: React.FC = () => {
                   {Math.round(calculationResults.styleProfile.primaryStyle.percentage * 100)}%
                 </div>
               </div>
-              
+
               {/* Confiança */}
               <div className="bg-green-50 p-4 rounded-lg">
                 <h3 className="font-semibold text-green-800 mb-2">Confiança</h3>
@@ -312,34 +305,39 @@ const QuizUnifiedPage: React.FC = () => {
                   {calculationResults.confidence?.factors.dataQuality}
                 </div>
               </div>
-              
+
               {/* Insights */}
               <div className="bg-amber-50 p-4 rounded-lg">
                 <h3 className="font-semibold text-amber-800 mb-2">Insights</h3>
                 <ul className="text-sm text-amber-800">
                   {calculationResults.insights?.map((insight: string, index: number) => (
-                    <li key={index} className="mb-1">• {insight}</li>
+                    <li key={index} className="mb-1">
+                      • {insight}
+                    </li>
                   ))}
                 </ul>
               </div>
             </div>
-            
+
             {/* Distribuição */}
             <div className="mt-6">
               <h3 className="font-semibold text-gray-700 mb-3">Distribuição de Estilos</h3>
               <div className="flex flex-wrap gap-2">
-                {calculationResults.distributions && Object.entries(calculationResults.distributions).map(([style, percentage]: [string, any]) => (
-                  <div 
-                    key={style}
-                    className="bg-white border border-gray-200 rounded-full px-3 py-1 text-sm"
-                    style={{
-                      opacity: 0.3 + (percentage as number) * 0.7,
-                      fontWeight: (percentage as number) > 0.25 ? 'bold' : 'normal'
-                    }}
-                  >
-                    {style}: {Math.round((percentage as number) * 100)}%
-                  </div>
-                ))}
+                {calculationResults.distributions &&
+                  Object.entries(calculationResults.distributions).map(
+                    ([style, percentage]: [string, any]) => (
+                      <div
+                        key={style}
+                        className="bg-white border border-gray-200 rounded-full px-3 py-1 text-sm"
+                        style={{
+                          opacity: 0.3 + (percentage as number) * 0.7,
+                          fontWeight: (percentage as number) > 0.25 ? 'bold' : 'normal',
+                        }}
+                      >
+                        {style}: {Math.round((percentage as number) * 100)}%
+                      </div>
+                    )
+                  )}
               </div>
             </div>
           </div>
