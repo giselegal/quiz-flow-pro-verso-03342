@@ -126,9 +126,11 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
     });
   }
 
-  // DnD sensors (mantém ativação por distância e suporte teclado)
+  // DnD sensors - configuração mais permissiva para debug
   const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
+    useSensor(PointerSensor, { 
+      activationConstraint: { distance: 3 } // Reduzido de 8 para 3
+    }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
 
@@ -305,6 +307,11 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   const handleDragStart = useCallback((event: DragStartEvent) => {
     const { active } = event;
     const dragData = extractDragData(active);
+    console.log('🚀 DRAG START CAPTURADO!', {
+      activeId: active.id,
+      dragData,
+      activeDataCurrent: active.data.current
+    });
     logDragEvent('start', active);
     if (process.env.NODE_ENV === 'development') devLog('Drag start', dragData);
   }, []);
@@ -312,7 +319,14 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   const handleDragEnd = useCallback(
     (event: DragEndEvent) => {
       const { active, over } = event;
+      console.log('🎯 DRAG END CAPTURADO!', {
+        activeId: active.id,
+        overId: over?.id,
+        overData: over?.data?.current
+      });
+      
       if (!over) {
+        console.log('❌ Drop cancelado - sem alvo');
         const dragData = extractDragData(active);
         const feedback = getDragFeedback(dragData, {
           isValid: false,

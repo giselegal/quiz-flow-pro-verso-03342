@@ -23,6 +23,15 @@ const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
     },
   });
 
+  // 🔧 DEBUG: Log quando componente monta
+  React.useEffect(() => {
+    console.log('🎯 CanvasDropZone montado!', {
+      id: 'canvas-drop-zone',
+      isEmpty,
+      isOver
+    });
+  }, [isEmpty, isOver]);
+
   return (
     <div
       ref={setNodeRef}

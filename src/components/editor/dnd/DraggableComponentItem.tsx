@@ -80,13 +80,13 @@ export const DraggableComponentItem: React.FC<DraggableComponentItemProps> = ({
       ref={setNodeRef}
       className={cn(
         'w-full h-auto p-3 flex flex-col items-start gap-2 text-left transition-all duration-200 border border-stone-200 rounded-lg bg-white',
-        // ✅ CORRIGIDO: Visual feedback sem scale
-        'cursor-grab hover:bg-stone-50 hover:border-blue-300',
-        // ✅ CORRIGIDO: Removido scale-95 que causava zoom
-        isDragging && 'opacity-60 cursor-grabbing shadow-xl',
-        // 🔧 DEBUG: Ring verde para identificar draggables
-        'ring-1 ring-green-100 hover:ring-green-300',
-        disabled && 'opacity-50 cursor-not-allowed',
+        // ✅ CURSOR: Indicação visual clara de que é draggable
+        'cursor-grab hover:bg-blue-50 hover:border-blue-400',
+        // ✅ FEEDBACK: Estados visuais distintos  
+        isDragging && 'opacity-50 cursor-grabbing shadow-2xl bg-blue-100 border-blue-500',
+        // 🔧 DEBUG: Ring azul forte para identificar draggables
+        'ring-2 ring-blue-200 hover:ring-blue-400',
+        disabled && 'opacity-30 cursor-not-allowed bg-gray-100',
         className
       )}
       style={style}
