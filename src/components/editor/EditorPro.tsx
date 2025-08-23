@@ -88,6 +88,19 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
 
   const { state, actions } = editorContext;
   const [mode, setMode] = useState<'edit' | 'preview'>('edit');
+  const [viewport, setViewport] = useState<'full' | 'sm' | 'md' | 'lg'>('full');
+  const viewportWidth = useMemo(() => {
+    switch (viewport) {
+      case 'sm':
+        return 375;
+      case 'md':
+        return 768;
+      case 'lg':
+        return 1024;
+      default:
+        return '100%';
+    }
+  }, [viewport]);
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [customTitle, setCustomTitle] = useState('Quiz Quest - Editor Principal');
   const notification = useNotification();
@@ -642,6 +655,62 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               </button>
             </div>
 
+            {/* Seletor de viewport responsivo */}
+            <div className="flex bg-gray-100 rounded-lg p-1">
+              <button
+                type="button"
+                onClick={() => setViewport('sm')}
+                className={cn(
+                  'px-3 py-2 text-sm rounded-md transition-all duration-200 font-medium',
+                  viewport === 'sm'
+                    ? 'bg-white text-gray-900 shadow-sm border border-gray-200'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                )}
+                title="Mobile (375px)"
+              >
+                📱 375
+              </button>
+              <button
+                type="button"
+                onClick={() => setViewport('md')}
+                className={cn(
+                  'px-3 py-2 text-sm rounded-md transition-all duration-200 font-medium',
+                  viewport === 'md'
+                    ? 'bg-white text-gray-900 shadow-sm border border-gray-200'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                )}
+                title="Tablet (768px)"
+              >
+                📟 768
+              </button>
+              <button
+                type="button"
+                onClick={() => setViewport('lg')}
+                className={cn(
+                  'px-3 py-2 text-sm rounded-md transition-all duration-200 font-medium',
+                  viewport === 'lg'
+                    ? 'bg-white text-gray-900 shadow-sm border border-gray-200'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                )}
+                title="Desktop (1024px)"
+              >
+                🖥️ 1024
+              </button>
+              <button
+                type="button"
+                onClick={() => setViewport('full')}
+                className={cn(
+                  'px-3 py-2 text-sm rounded-md transition-all duration-200 font-medium',
+                  viewport === 'full'
+                    ? 'bg-white text-gray-900 shadow-sm border border-gray-200'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                )}
+                title="Largura total"
+              >
+                🧭 Full
+              </button>
+            </div>
+
             <button className="px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition-colors">
               💾 Salvar
             </button>
@@ -682,27 +751,36 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         </div>
       </div>
 
-      {mode === 'edit' ? (
-        <SimpleCanvasDropZone
-          blocks={currentStepData}
-          selectedBlockId={state.selectedBlockId}
-          onSelectBlock={(id: string) => actions.setSelectedBlockId(id)}
-          onUpdateBlock={(blockId: string, updates: Record<string, any>) =>
-            actions.updateBlock(currentStepKey, blockId, updates)
-          }
-          onDeleteBlock={(blockId: string) => handleBlockDelete(blockId)}
-        />
-      ) : (
-        <div>
-          <QuizRenderer
-            mode="preview"
-            onStepChange={handleStepSelect}
-            initialStep={safeCurrentStep}
-            blocksOverride={currentStepData}
-            currentStepOverride={safeCurrentStep}
-          />
+      <div className="w-full">
+        <div
+          className="mx-auto transition-all"
+          style={{ width: viewportWidth as number | string, maxWidth: '100%' }}
+        >
+          <div className={cn('rounded-xl shadow-sm', viewport !== 'full' && 'border bg-white')}>
+            {mode === 'edit' ? (
+              <SimpleCanvasDropZone
+                blocks={currentStepData}
+                selectedBlockId={state.selectedBlockId}
+                onSelectBlock={(id: string) => actions.setSelectedBlockId(id)}
+                onUpdateBlock={(blockId: string, updates: Record<string, any>) =>
+                  actions.updateBlock(currentStepKey, blockId, updates)
+                }
+                onDeleteBlock={(blockId: string) => handleBlockDelete(blockId)}
+              />
+            ) : (
+              <div>
+                <QuizRenderer
+                  mode="preview"
+                  onStepChange={handleStepSelect}
+                  initialStep={safeCurrentStep}
+                  blocksOverride={currentStepData}
+                  currentStepOverride={safeCurrentStep}
+                />
+              </div>
+            )}
+          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 
