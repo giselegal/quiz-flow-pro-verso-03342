@@ -172,10 +172,19 @@ export const UnifiedEditorProvider: React.FC<UnifiedEditorProviderProps> = ({
   onCalculate,
   onAnalytics,
 }) => {
+  // Log para debug
+  console.log('🔧 UnifiedEditorProvider inicializando com:', {
+    funnelId,
+    initialData,
+    hasInitialBlocks: !!initialData.blocks,
+  });
+
   const [state, dispatch] = useReducer(editorReducer, {
     ...initialState,
     ...initialData,
   });
+
+  console.log('📊 Estado inicial do provider:', state);
 
   const config: EditorConfig = {
     showToolbar: true,

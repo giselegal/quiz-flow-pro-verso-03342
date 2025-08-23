@@ -63,6 +63,13 @@ function App() {
                         enablePreview: true,
                       }}
                       funnelId="quiz-personalidade-editor"
+                      initialData={{
+                        currentStep: 1,
+                        blocks: {},
+                        mode: 'edit',
+                        isLoading: false,
+                        hasUnsavedChanges: false,
+                      }}
                       onSave={async data => {
                         console.log('✅ Auto-save unificado:', data);
                         // TODO: Integrar com Supabase
@@ -106,6 +113,13 @@ function App() {
                               enablePreview: true,
                             }}
                             funnelId="test-unified-system"
+                            initialData={{
+                              currentStep: 1,
+                              blocks: {},
+                              mode: 'edit',
+                              isLoading: false,
+                              hasUnsavedChanges: false,
+                            }}
                             onSave={async data => {
                               console.log('✅ Teste auto-save:', data);
                               alert('Sistema de auto-save funcionando!');

@@ -49,8 +49,19 @@ const EditorUnified: React.FC<EditorUnifiedProps> = ({
     enableAutoSave: true,
   },
 }) => {
-  // Usar o hook do provider unificado
-  const { state: editorState, actions, computed } = useUnifiedEditor();
+    // Usar o hook do provider unificado
+  const {
+    state: editorState,
+    actions,
+    computed,
+  } = useUnifiedEditor();
+
+  // Log para debug
+  console.log('🔧 EditorUnified estado:', {
+    currentStep: editorState.currentStep,
+    blocksKeys: Object.keys(editorState.blocks),
+    currentStepBlocks: computed.currentStepBlocks.length,
+  });
 
   // Valores computados usando o computed do provider
   const safeCurrentStep = computed.currentStep;
