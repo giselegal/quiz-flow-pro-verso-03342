@@ -1,5 +1,6 @@
-import { Button } from '@/components/ui/button';
 import { useEditor } from '@/components/editor/EditorProvider';
+import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import React, { useRef, useState } from 'react';
 
@@ -21,7 +22,12 @@ const getStepAnalysis = (step: number) => {
     3: { label: 'Pergunta 2', desc: 'Segunda pergunta do quiz' },
     // ... adicione mais conforme necessário
   };
-  return stepData[step as keyof typeof stepData] || { label: `Etapa ${step}`, desc: 'Configuração da etapa' };
+  return (
+    stepData[step as keyof typeof stepData] || {
+      label: `Etapa ${step}`,
+      desc: 'Configuração da etapa',
+    }
+  );
 };
 
 // Função helper para copiar para clipboard
@@ -56,7 +62,7 @@ interface EditableEditorHeaderProps {
 
 /**
  * 🎯 CABEÇALHO EDITÁVEL DO EDITOR
- * 
+ *
  * Componente reutilizável que combina os melhores recursos dos editores:
  * - Informações da etapa atual
  * - Controles de Undo/Redo
@@ -76,7 +82,7 @@ export const EditableEditorHeader: React.FC<EditableEditorHeaderProps> = ({
 }) => {
   const { state, actions } = useEditor();
   const [mode, setMode] = useState<'edit' | 'preview'>('edit');
-  const notification = useNotification();
+  const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const safeCurrentStep = state.currentStep || 1;
@@ -87,12 +93,16 @@ export const EditableEditorHeader: React.FC<EditableEditorHeaderProps> = ({
       const json = actions.exportJSON();
       const success = await copyToClipboard(json);
       if (success) {
-        notification?.success?.('JSON exportado para a área de transferência!');
+        toast({ title: 'Sucesso', description: 'JSON exportado para a área de transferência!' });
       } else {
-        notification?.error?.('Erro ao copiar para área de transferência');
+        toast({
+          title: 'Erro',
+          description: 'Erro ao copiar para área de transferência',
+          variant: 'destructive',
+        });
       }
     } catch {
-      notification?.error?.('Erro ao exportar JSON');
+      toast({ title: 'Erro', description: 'Erro ao exportar JSON', variant: 'destructive' });
     }
   };
 
@@ -100,18 +110,26 @@ export const EditableEditorHeader: React.FC<EditableEditorHeaderProps> = ({
     const file = event.target.files?.[0];
     if (file) {
       const reader = new FileReader();
-      reader.onload = (e) => {
+      reader.onload = e => {
         try {
           const json = e.target?.result as string;
           const validation = validateEditorJSON(json);
           if (!validation.valid) {
-            notification?.error?.(`Erro de validação: ${validation.error}`);
+            toast({
+              title: 'Erro',
+              description: `Erro de validação: ${validation.error}`,
+              variant: 'destructive',
+            });
             return;
           }
           actions.importJSON(json);
-          notification?.success?.('JSON importado com sucesso!');
+          toast({ title: 'Sucesso', description: 'JSON importado com sucesso!' });
         } catch (error) {
-          notification?.error?.('Erro ao importar JSON: ' + (error as Error).message);
+          toast({
+            title: 'Erro',
+            description: 'Erro ao importar JSON: ' + (error as Error).message,
+            variant: 'destructive',
+          });
         }
       };
       reader.readAsText(file);
@@ -123,7 +141,7 @@ export const EditableEditorHeader: React.FC<EditableEditorHeaderProps> = ({
     if (onSave) {
       onSave();
     } else {
-      notification?.success?.('Projeto salvo!');
+      toast({ title: 'Sucesso', description: 'Projeto salvo!' });
     }
   };
 
@@ -140,7 +158,7 @@ export const EditableEditorHeader: React.FC<EditableEditorHeaderProps> = ({
               </>
             )}
           </h3>
-          
+
           {showStepInfo && (
             <p className="text-sm text-gray-600">
               {stepAnalysis.label}: {stepAnalysis.desc}
@@ -257,12 +275,15 @@ export const EditableEditorHeader: React.FC<EditableEditorHeaderProps> = ({
       {/* Linha de informações do modo */}
       <div className="mt-3 p-3 rounded-lg border">
         {mode === 'edit' ? (
-          <div className={cn(
-            'flex items-center justify-between text-sm',
-            'bg-blue-50 border-blue-200 text-blue-900'
-          )}>
+          <div
+            className={cn(
+              'flex items-center justify-between text-sm',
+              'bg-blue-50 border-blue-200 text-blue-900'
+            )}
+          >
             <div>
-              <strong>✏️ Modo Edição Visual:</strong> Conteúdo real com overlays de seleção interativos
+              <strong>✏️ Modo Edição Visual:</strong> Conteúdo real com overlays de seleção
+              interativos
             </div>
             <div className="text-blue-700">
               {state.selectedBlockId
@@ -271,10 +292,12 @@ export const EditableEditorHeader: React.FC<EditableEditorHeaderProps> = ({
             </div>
           </div>
         ) : (
-          <div className={cn(
-            'flex items-center justify-between text-sm',
-            'bg-green-50 border-green-200 text-green-900'
-          )}>
+          <div
+            className={cn(
+              'flex items-center justify-between text-sm',
+              'bg-green-50 border-green-200 text-green-900'
+            )}
+          >
             <div>
               <strong>👁️ Modo Preview:</strong> Visualização idêntica à produção final
             </div>

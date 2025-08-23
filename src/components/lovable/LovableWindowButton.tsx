@@ -54,29 +54,34 @@ export const LovableWindowButton: React.FC = () => {
       ];
 
       forceEvents.forEach(eventName => {
-        window.dispatchEvent(new CustomEvent(eventName, {
-          detail: {
-            source: 'button-force',
-            timestamp: Date.now(),
-            action: 'force-open-window',
-            projectId: '65efd17d-5178-405d-9721-909c97470c6d',
-            forced: true,
-          },
-          bubbles: true,
-          cancelable: false,
-        }));
+        window.dispatchEvent(
+          new CustomEvent(eventName, {
+            detail: {
+              source: 'button-force',
+              timestamp: Date.now(),
+              action: 'force-open-window',
+              projectId: '65efd17d-5178-405d-9721-909c97470c6d',
+              forced: true,
+            },
+            bubbles: true,
+            cancelable: false,
+          })
+        );
       });
 
       // Força com PostMessage
-      window.postMessage({
-        type: 'lovable-force-open',
-        data: {
-          projectId: '65efd17d-5178-405d-9721-909c97470c6d',
-          action: 'open-preview-window',
-          timestamp: Date.now(),
-          forced: true,
-        }
-      }, '*');
+      window.postMessage(
+        {
+          type: 'lovable-force-open',
+          data: {
+            projectId: '65efd17d-5178-405d-9721-909c97470c6d',
+            action: 'open-preview-window',
+            timestamp: Date.now(),
+            forced: true,
+          },
+        },
+        '*'
+      );
 
       console.log('🎯 BOTÃO LOVABLE ACIONADO - Janela deve abrir!');
     }

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 
 /**
  * 🎯 COMPONENTE PARA FORÇAR ATIVAÇÃO DA JANELA LOVABLE
- * 
+ *
  * Este componente força especificamente a abertura e ativação
  * da janela de preview do Lovable
  */
@@ -59,14 +59,16 @@ export const LovableWindowActivator: React.FC = () => {
         ];
 
         windowEvents.forEach(eventName => {
-          window.dispatchEvent(new CustomEvent(eventName, {
-            detail: {
-              source: 'quiz-quest-window-activator',
-              timestamp: Date.now(),
-              action: 'force-open-window',
-              projectId: '65efd17d-5178-405d-9721-909c97470c6d',
-            }
-          }));
+          window.dispatchEvent(
+            new CustomEvent(eventName, {
+              detail: {
+                source: 'quiz-quest-window-activator',
+                timestamp: Date.now(),
+                action: 'force-open-window',
+                projectId: '65efd17d-5178-405d-9721-909c97470c6d',
+              },
+            })
+          );
         });
 
         // 6. Variáveis globais específicas
@@ -81,27 +83,32 @@ export const LovableWindowActivator: React.FC = () => {
 
         // 8. Força abertura com delay
         setTimeout(() => {
-          window.dispatchEvent(new CustomEvent('lovable:force:window:now', {
-            detail: { 
-              forced: true,
-              timestamp: Date.now(),
-              action: 'immediate-open'
-            }
-          }));
+          window.dispatchEvent(
+            new CustomEvent('lovable:force:window:now', {
+              detail: {
+                forced: true,
+                timestamp: Date.now(),
+                action: 'immediate-open',
+              },
+            })
+          );
         }, 100);
 
         // 9. Adiciona listener para mensagens do Lovable
         const handleLovableMessage = (event: MessageEvent) => {
           if (event.data?.type === 'lovable-preview-request') {
-            window.postMessage({
-              type: 'lovable-preview-response',
-              data: {
-                projectId: '65efd17d-5178-405d-9721-909c97470c6d',
-                status: 'active',
-                windowMode: 'preview',
-                timestamp: Date.now(),
-              }
-            }, '*');
+            window.postMessage(
+              {
+                type: 'lovable-preview-response',
+                data: {
+                  projectId: '65efd17d-5178-405d-9721-909c97470c6d',
+                  status: 'active',
+                  windowMode: 'preview',
+                  timestamp: Date.now(),
+                },
+              },
+              '*'
+            );
           }
         };
 
@@ -144,12 +151,14 @@ export const LovableWindowActivator: React.FC = () => {
     // Força reativação a cada 5 segundos
     const interval = setInterval(() => {
       if (typeof window !== 'undefined') {
-        window.dispatchEvent(new CustomEvent('lovable:window:reactivate', {
-          detail: { 
-            timestamp: Date.now(),
-            action: 'periodic-reactivation'
-          }
-        }));
+        window.dispatchEvent(
+          new CustomEvent('lovable:window:reactivate', {
+            detail: {
+              timestamp: Date.now(),
+              action: 'periodic-reactivation',
+            },
+          })
+        );
       }
     }, 5000);
 
@@ -160,17 +169,20 @@ export const LovableWindowActivator: React.FC = () => {
   }, []);
 
   return (
-    <div className="lovable-window-activator" style={{
-      position: 'fixed',
-      top: 0,
-      right: 0,
-      width: '2px',
-      height: '100vh',
-      background: 'linear-gradient(180deg, #10b981, #3b82f6, #8b5cf6)',
-      zIndex: 9999,
-      pointerEvents: 'none',
-      opacity: 0.9,
-    }}>
+    <div
+      className="lovable-window-activator"
+      style={{
+        position: 'fixed',
+        top: 0,
+        right: 0,
+        width: '2px',
+        height: '100vh',
+        background: 'linear-gradient(180deg, #10b981, #3b82f6, #8b5cf6)',
+        zIndex: 9999,
+        pointerEvents: 'none',
+        opacity: 0.9,
+      }}
+    >
       {/* Indicador visual de que o ativador está funcionando */}
     </div>
   );
