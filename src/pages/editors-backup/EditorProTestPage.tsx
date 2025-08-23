@@ -15,7 +15,8 @@ const EditorProTestPage: React.FC = () => {
         <EditorProvider
           enableSupabase={false}
           storageKey="editor-pro-test-debug"
-          initial={{ stepBlocks: {}, currentStep: 1 }}
+          // 🚨 CORREÇÃO: Removido initial={{ stepBlocks: {}, currentStep: 1 }}
+          // para permitir carregamento automático do template
         >
           <div className="container mx-auto py-8">
             <div className="mb-8 text-center">
