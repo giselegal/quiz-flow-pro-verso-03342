@@ -687,6 +687,8 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
             mode={mode === 'preview' ? 'preview' : 'editor'}
             onStepChange={handleStepSelect}
             initialStep={safeCurrentStep}
+            blocksOverride={currentStepData}
+            currentStepOverride={safeCurrentStep}
           />
         </div>
 
