@@ -460,19 +460,28 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
 
   const updateBlock = useCallback(
     async (stepKey: string, blockId: string, updates: Record<string, any>) => {
-      setState({
+      // Sempre mesclar alterações em properties por padrão.
+      // Se o payload já vier com { properties }, respeitar e mesclar também.
+      const nextBlocks = (rawState.stepBlocks[stepKey] || []).map(b => {
+        if (b.id !== blockId) return b;
+        const incomingProps = updates.properties ?? updates;
+        const mergedProps = { ...(b.properties || {}), ...(incomingProps || {}) };
+        return { ...b, properties: mergedProps };
+      });
+
+      const nextState = {
         ...rawState,
         stepBlocks: {
           ...rawState.stepBlocks,
-          [stepKey]: (rawState.stepBlocks[stepKey] || []).map(b =>
-            b.id === blockId ? { ...b, ...updates } : b
-          ),
+          [stepKey]: nextBlocks,
         },
-      });
+      };
+      setState(nextState);
 
       if (state.isSupabaseEnabled && supabaseIntegration?.updateBlockById) {
         try {
-          await supabaseIntegration.updateBlockById(blockId, updates);
+          const updated = nextBlocks.find(b => b.id === blockId);
+          await supabaseIntegration.updateBlockById(blockId, { properties: updated?.properties });
         } catch (err) {
           console.error('Failed to update block in supabase', err);
         }
