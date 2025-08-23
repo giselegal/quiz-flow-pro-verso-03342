@@ -18,6 +18,8 @@ import {
   duplicateBlock,
   validateEditorJSON,
 } from '../../utils/editorUtils';
+import { DndProvider } from './DndProvider';
+import { EnhancedComponentsSidebar } from './EnhancedComponentsSidebar';
 import {
   closestCenter,
   DndContext,
@@ -677,64 +679,59 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         />
 
         {mode === 'edit' && (
-          <SortableContext
-            items={currentStepData.map(b => b.id || `block-${currentStepData.indexOf(b)}`)}
-            strategy={verticalListSortingStrategy}
-          >
-            <div className="relative min-h-[600px] w-full">
-              {currentStepData.map((block: Block, index: number) => {
-                const blockId = block.id || `block-${index}`;
-                const isSelected = state.selectedBlockId === blockId;
+          <div className="relative min-h-[600px] w-full">
+            {currentStepData.map((block: Block, index: number) => {
+              const blockId = block.id || `block-${index}`;
+              const isSelected = state.selectedBlockId === blockId;
 
-                // topOffset/height heurístico (pode ser substituído por medidas reais)
-                let topOffset = 60 + index * 100;
-                let height = 80;
-                switch (block.type) {
-                  case 'quiz-intro-header':
-                    topOffset = 20;
-                    height = 120;
-                    break;
-                  case 'options-grid':
-                    topOffset = 150 + index * 200;
-                    height = 300;
-                    break;
-                  case 'form-container':
-                    topOffset = 200 + index * 150;
-                    height = 120;
-                    break;
-                  case 'button':
-                    topOffset = 400 + index * 100;
-                    height = 60;
-                    break;
-                }
+              // topOffset/height heurístico (pode ser substituído por medidas reais)
+              let topOffset = 60 + index * 100;
+              let height = 80;
+              switch (block.type) {
+                case 'quiz-intro-header':
+                  topOffset = 20;
+                  height = 120;
+                  break;
+                case 'options-grid':
+                  topOffset = 150 + index * 200;
+                  height = 300;
+                  break;
+                case 'form-container':
+                  topOffset = 200 + index * 150;
+                  height = 120;
+                  break;
+                case 'button':
+                  topOffset = 400 + index * 100;
+                  height = 60;
+                  break;
+              }
 
-                return (
-                  <SortableBlock
-                    key={blockId}
-                    id={blockId}
-                    block={block}
-                    isSelected={isSelected}
-                    topOffset={topOffset}
-                    height={height}
-                    onSelect={handleBlockSelect}
-                    onMoveUp={() => {
-                      const currentIndex = currentStepData.findIndex(b => b.id === blockId);
-                      if (currentIndex > 0)
-                        actions.reorderBlocks(currentStepKey, currentIndex, currentIndex - 1);
-                    }}
-                    onMoveDown={() => {
-                      const currentIndex = currentStepData.findIndex(b => b.id === blockId);
-                      if (currentIndex < currentStepData.length - 1)
-                        actions.reorderBlocks(currentStepKey, currentIndex, currentIndex + 1);
-                    }}
-                    onDuplicate={() => handleBlockDuplicate(blockId)}
-                    onDelete={() => handleBlockDelete(blockId)}
-                    data-testid={`editor-block-${blockId}`}
-                  />
-                );
-              })}
-            </div>
-          </SortableContext>
+              return (
+                <SortableBlock
+                  key={blockId}
+                  id={blockId}
+                  block={block}
+                  isSelected={isSelected}
+                  topOffset={topOffset}
+                  height={height}
+                  onSelect={handleBlockSelect}
+                  onMoveUp={() => {
+                    const currentIndex = currentStepData.findIndex(b => b.id === blockId);
+                    if (currentIndex > 0)
+                      actions.reorderBlocks(currentStepKey, currentIndex, currentIndex - 1);
+                  }}
+                  onMoveDown={() => {
+                    const currentIndex = currentStepData.findIndex(b => b.id === blockId);
+                    if (currentIndex < currentStepData.length - 1)
+                      actions.reorderBlocks(currentStepKey, currentIndex, currentIndex + 1);
+                  }}
+                  onDuplicate={() => handleBlockDuplicate(blockId)}
+                  onDelete={() => handleBlockDelete(blockId)}
+                  data-testid={`editor-block-${blockId}`}
+                />
+              );
+            })}
+          </div>
         )}
       </CanvasDropZone>
     </div>
@@ -793,23 +790,21 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   );
 
   /* -------------------------
-     Render principal
+     Render principal com estrutura DnD correta
      ------------------------- */
   return (
     <>
-      <DndContext
-        sensors={sensors}
-        collisionDetection={collisionDetectionStrategy}
-        onDragStart={handleDragStart}
-        onDragEnd={handleDragEnd}
+      <DndProvider 
+        currentStepData={currentStepData}
+        currentStepKey={currentStepKey}
       >
         <div className={`editor-pro h-screen bg-gray-50 flex ${className}`}>
           <StepSidebar />
-          <ComponentsSidebar />
+          <EnhancedComponentsSidebar />
           <CanvasArea />
           <PropertiesColumn />
         </div>
-      </DndContext>
+      </DndProvider>
 
       {NotificationContainer ? <NotificationContainer /> : null}
     </>

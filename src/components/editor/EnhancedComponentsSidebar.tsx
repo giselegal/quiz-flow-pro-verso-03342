@@ -1,8 +1,8 @@
-import { AVAILABLE_COMPONENTS } from '@/components/editor/blocks/enhancedBlockRegistry';
-import { DraggableComponentItem } from '@/components/editor/dnd/DraggableComponentItem';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
+import { AVAILABLE_COMPONENTS } from './blocks/enhancedBlockRegistry';
+import { DraggableComponentItem } from './dnd/DraggableComponentItem';
+import { Badge } from '../ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Input } from '../ui/input';
 import { ChevronDown, ChevronRight, HelpCircle, Layers, Search, Settings } from 'lucide-react';
 import React, { useState } from 'react';
 
