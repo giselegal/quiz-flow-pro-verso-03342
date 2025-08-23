@@ -1,31 +1,28 @@
-import { EditorPro } from '../components/editor/EditorPro';
+import React from 'react';
 import { EditorProvider } from '../components/editor/EditorProvider';
 import { ErrorBoundary } from '../components/editor/ErrorBoundary';
-// import { LovablePreviewPanel } from '@/components/lovable/LovablePreviewPanel'; // 🔧 DESABILITADO TEMPORARIAMENTE
-import React from 'react';
+import SchemaDrivenEditorResponsive from '../components/editor/SchemaDrivenEditorResponsive';
 
 /**
- * 🎯 EDITOR PRINCIPAL - ÚNICO E LIMPO
+ * 🎯 EDITOR PRINCIPAL CONSOLIDADO
  *
- * Editor consolidado sem aninhamento excessivo
- * - Drag & drop funcional
- * - 21 etapas carregando automaticamente
- * - Interface limpa e responsiva
- * - Sem conflitos entre múltiplos editores
- * - Preview integrado no painel do Lovable ✅
- * - Cabeçalho editável DENTRO do EditorPro ✅
+ * Usando SchemaDrivenEditorResponsive que é comprovadamente funcional:
+ * ✅ Layout 4 colunas responsivo
+ * ✅ Drag & drop com @dnd-kit
+ * ✅ Canvas CanvasDropZone.simple
+ * ✅ EditorContext integrado
+ * ✅ Biblioteca de componentes
+ * ✅ Painel de propriedades
  */
 const MainEditor: React.FC = () => {
   return (
-    <div>
-      {/* 🔧 LOVABLE PREVIEW DESABILITADO TEMPORARIAMENTE PARA TESTAR DRAG & DROP */}
-      <ErrorBoundary>
-        <EditorProvider enableSupabase={false} storageKey="main-editor-state">
-          {/* 🎯 EDITOR PRINCIPAL COM CABEÇALHO EDITÁVEL */}
-          <EditorPro />
-        </EditorProvider>
-      </ErrorBoundary>
-    </div>
+    <ErrorBoundary>
+      <EditorProvider enableSupabase={false} storageKey="main-editor-state">
+        <div className="h-screen w-full overflow-hidden bg-gray-50">
+          <SchemaDrivenEditorResponsive mode="editor" className="h-full" />
+        </div>
+      </EditorProvider>
+    </ErrorBoundary>
   );
 };
 

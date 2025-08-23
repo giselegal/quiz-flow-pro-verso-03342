@@ -1,4 +1,3 @@
-import * as React from 'react';
 import {
   DndContext,
   DragEndEvent,
@@ -15,6 +14,7 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import * as React from 'react';
 
 interface DraggableItemProps {
   id: string;
@@ -22,14 +22,9 @@ interface DraggableItemProps {
 }
 
 function DraggableItem({ id, children }: DraggableItemProps) {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id });
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id,
+  });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -71,7 +66,7 @@ export function TestDragDrop() {
     const { active, over } = event;
 
     if (active.id !== over?.id) {
-      setItems((items) => {
+      setItems(items => {
         const oldIndex = items.indexOf(active.id as string);
         const newIndex = items.indexOf(over?.id as string);
 
@@ -87,14 +82,10 @@ export function TestDragDrop() {
   return (
     <div className="max-w-md mx-auto p-6">
       <h2 className="text-xl font-bold mb-4">🧪 Teste Drag & Drop</h2>
-      
-      <DndContext
-        sensors={sensors}
-        onDragStart={handleDragStart}
-        onDragEnd={handleDragEnd}
-      >
+
+      <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
         <SortableContext items={items} strategy={verticalListSortingStrategy}>
-          {items.map((id) => (
+          {items.map(id => (
             <DraggableItem key={id} id={id}>
               <div className="flex items-center">
                 <span className="mr-2">📋</span>
