@@ -1,7 +1,7 @@
 import { EditorPro } from '@/components/editor/EditorPro';
 import { EditorProvider } from '@/components/editor/EditorProvider';
 import { ErrorBoundary } from '@/components/editor/ErrorBoundary';
-import { LovablePreviewPanel } from '@/components/lovable/LovablePreviewPanel';
+// import { LovablePreviewPanel } from '@/components/lovable/LovablePreviewPanel'; // 🔧 DESABILITADO TEMPORARIAMENTE
 import React from 'react';
 
 /**
@@ -17,14 +17,15 @@ import React from 'react';
  */
 const MainEditor: React.FC = () => {
   return (
-    <LovablePreviewPanel>
+    <div>
+      {/* 🔧 LOVABLE PREVIEW DESABILITADO TEMPORARIAMENTE PARA TESTAR DRAG & DROP */}
       <ErrorBoundary>
         <EditorProvider enableSupabase={false} storageKey="main-editor-state">
           {/* 🎯 EDITOR PRINCIPAL COM CABEÇALHO EDITÁVEL */}
           <EditorPro />
         </EditorProvider>
       </ErrorBoundary>
-    </LovablePreviewPanel>
+    </div>
   );
 };
 
