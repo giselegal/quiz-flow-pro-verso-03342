@@ -1695,10 +1695,30 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         marginBottom: 24,
       },
     },
+    // Urgência no topo (variante A)
+    {
+      id: 'step20-urgency-top',
+      type: 'urgency-timer-inline',
+      order: 1,
+      content: {
+        title: 'Oferta especial liberada por tempo limitado',
+        urgencyMessage: 'Aproveite antes que acabe!'
+      },
+      properties: {
+        initialMinutes: 15,
+        backgroundColor: '#dc2626',
+        textColor: '#ffffff',
+        pulseColor: '#fbbf24',
+        showAlert: true,
+        spacing: 'md',
+        marginTop: 8,
+        marginBottom: 16
+      }
+    },
     {
       id: 'step20-style-card',
       type: 'style-card-inline',
-      order: 1,
+      order: 2,
       content: {
         title: 'Características do seu estilo',
         description: 'O estilo {resultStyle} se caracteriza por:',
@@ -1725,7 +1745,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
     {
       id: 'step20-secondary-styles',
       type: 'secondary-styles',
-      order: 2,
+  order: 3,
       content: {
         title: 'Seus estilos complementares',
         subtitle: 'Você também apresenta elementos destes estilos:',
@@ -1751,10 +1771,127 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         marginBottom: 24,
       },
     },
+    // Antes e Depois (transformação)
+    {
+      id: 'step20-before-after',
+      type: 'before-after-inline',
+      order: 4,
+      content: {
+        title: 'Sua transformação é possível',
+        subtitle: 'Veja o impacto de aplicar seu estilo no dia a dia',
+        beforeLabel: 'ANTES',
+        afterLabel: 'DEPOIS'
+      },
+      properties: {
+        layoutStyle: 'side-by-side',
+        showComparison: true,
+        marginTop: 12,
+        marginBottom: 20
+      }
+    },
+    // Bônus (lista/grids)
+    {
+      id: 'step20-bonuses',
+      type: 'bonus',
+      order: 5,
+      content: {
+        title: 'Bônus de transformação inclusos'
+      },
+      properties: {
+        showImages: true,
+        marginTop: 8,
+        marginBottom: 16
+      }
+    },
+    // Depoimentos (prova social)
+    {
+      id: 'step20-testimonials',
+      type: 'testimonials',
+      order: 6,
+      content: {
+        title: 'Resultados reais de alunas'
+      },
+      properties: {
+        layout: 'grid',
+        showQuotes: true,
+        backgroundColor: '#F0F9FF',
+        borderRadius: 16,
+        padding: 24,
+        marginBottom: 24
+      }
+    },
+    // Ancoragem de valor (comparativo de valores)
+    {
+      id: 'step20-value-anchoring',
+      type: 'value-anchoring',
+      order: 7,
+      content: {
+        title: 'Tudo o que você recebe hoje'
+      },
+      properties: {
+        showPricing: true,
+        marginTop: 8,
+        marginBottom: 16
+      }
+    },
+    // Compra segura
+    {
+      id: 'step20-secure-purchase',
+      type: 'secure-purchase',
+      order: 8,
+      content: {
+        title: 'Compra 100% segura e protegida'
+      },
+      properties: {
+        showFeatures: true,
+        marginTop: 8,
+        marginBottom: 16
+      }
+    },
+    // Garantia
+    {
+      id: 'step20-guarantee',
+      type: 'guarantee',
+      order: 9,
+      content: {
+        title: 'Garantia incondicional de 7 dias',
+        description:
+          'Se por qualquer motivo você não ficar satisfeita, devolvemos 100% do seu dinheiro.',
+        imageUrl:
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735378/guarantee_seal_klsjda.webp'
+      },
+      properties: {
+        backgroundColor: '#FFFFFF',
+        textAlign: 'center',
+        imageWidth: 150,
+        imageHeight: 150,
+        borderRadius: 16,
+        boxShadow: 'sm',
+        padding: 24,
+        marginBottom: 24,
+        borderColor: '#3B82F6',
+        borderWidth: '2px',
+        borderStyle: 'dashed'
+      }
+    },
+    // Mentora
+    {
+      id: 'step20-mentor',
+      type: 'mentor-section-inline',
+      order: 10,
+      content: {
+        mentorName: 'Gisele Galvão',
+        mentorTitle: 'Consultora de Imagem e Estilo'
+      },
+      properties: {
+        marginTop: 8,
+        marginBottom: 16
+      }
+    },
     {
       id: 'step20-cta',
       type: 'button-inline',
-      order: 3,
+      order: 11,
       content: {},
       properties: {
         text: 'Quero saber mais sobre meu estilo',
@@ -1775,6 +1912,26 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         hoverOpacity: 92,
       },
     },
+    // Contador adicional (variante B) próximo ao CTA
+    {
+      id: 'step20-urgency-bottom',
+      type: 'urgency-timer-inline',
+      order: 12,
+      content: {
+        title: 'Essa condição especial termina em:',
+        urgencyMessage: 'Garanta agora enquanto está disponível.'
+      },
+      properties: {
+        initialMinutes: 12,
+        backgroundColor: '#7c2d12',
+        textColor: '#ffffff',
+        pulseColor: '#f59e0b',
+        showAlert: true,
+        spacing: 'sm',
+        marginTop: 8,
+        marginBottom: 8
+      }
+    }
   ],
 
   // 🎯 ETAPA 21: PÁGINA DE OFERTA (Teste B)

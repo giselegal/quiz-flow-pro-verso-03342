@@ -52,6 +52,21 @@ export const ENHANCED_BLOCK_REGISTRY = {
   'quiz-result-secondary': lazy(() => import('@/components/editor/blocks/StyleCardsGridBlock')),
   'result-card': lazy(() => import('@/components/editor/blocks/StyleCardInlineBlock')),
 
+  // ✅ STEP 20 - RESULTADO (BLOCOS DE CONVERSÃO)
+  'urgency-timer-inline': lazy(
+    () => import('@/components/editor/blocks/UrgencyTimerInlineBlock')
+  ),
+  'before-after-inline': lazy(
+    () => import('@/components/editor/blocks/BeforeAfterInlineBlock')
+  ),
+  bonus: lazy(() => import('@/components/editor/blocks/BonusBlock')),
+  'bonus-inline': lazy(() => import('@/components/editor/blocks/BonusInlineBlock')),
+  'secure-purchase': lazy(() => import('@/components/editor/blocks/SecurePurchaseBlock')),
+  'value-anchoring': lazy(() => import('@/components/editor/blocks/ValueAnchoringBlock')),
+  'mentor-section-inline': lazy(
+    () => import('@/components/editor/blocks/MentorSectionInlineBlock')
+  ),
+
   // ✅ STEP 21 - OFERTA
   benefits: lazy(() => import('@/components/editor/blocks/BenefitsListBlock')),
   'benefits-list': lazy(() => import('@/components/editor/blocks/BenefitsListBlock')),
