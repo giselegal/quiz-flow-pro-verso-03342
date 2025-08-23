@@ -1,23 +1,23 @@
-import { QuizRenderer } from '@/components/core/QuizRenderer';
-import CanvasDropZone from '@/components/editor/canvas/CanvasDropZone';
-import { DraggableComponentItem } from '@/components/editor/dnd/DraggableComponentItem';
-import { useNotification } from '@/components/ui/Notification';
-import { getBlocksForStep } from '@/config/quizStepsComplete';
-import { cn } from '@/lib/utils';
-import { Block } from '@/types/editor';
+import { QuizRenderer } from '../core/QuizRenderer';
+import CanvasDropZone from './canvas/CanvasDropZone';
+import { DraggableComponentItem } from './dnd/DraggableComponentItem';
+import { useNotification } from '../ui/Notification';
+import { getBlocksForStep } from '../../config/quizStepsComplete';
+import { cn } from '../../lib/utils';
+import { Block } from '../../types/editor';
 import {
   extractDragData,
   getDragFeedback,
   logDragEvent,
   validateDrop,
-} from '@/utils/dragDropUtils';
+} from '../../utils/dragDropUtils';
 import {
   copyToClipboard,
   createBlockFromComponent,
   devLog,
   duplicateBlock,
   validateEditorJSON,
-} from '@/utils/editorUtils';
+} from '../../utils/editorUtils';
 import {
   closestCenter,
   DndContext,
@@ -670,14 +670,13 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         isEmpty={currentStepData.length === 0 && mode === 'edit'}
         data-testid="canvas-dropzone"
       >
-        {mode === 'preview' ? (
-          <QuizRenderer
-            mode="preview"
-            onStepChange={handleStepSelect}
-            initialStep={safeCurrentStep}
-          />
-        ) : (
-          // MODO EDIT: Mostrar apenas os SortableBlocks, não o QuizRenderer
+        <QuizRenderer
+          mode={mode === 'preview' ? 'preview' : 'editor'}
+          onStepChange={handleStepSelect}
+          initialStep={safeCurrentStep}
+        />
+
+        {mode === 'edit' && (
           <SortableContext
             items={currentStepData.map(b => b.id || `block-${currentStepData.indexOf(b)}`)}
             strategy={verticalListSortingStrategy}

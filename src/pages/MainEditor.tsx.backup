@@ -1,6 +1,6 @@
-import { EditorPro } from '../components/editor/EditorPro';
-import { EditorProvider } from '../components/editor/EditorProvider';
-import { ErrorBoundary } from '../components/editor/ErrorBoundary';
+import { EditorPro } from '@/components/editor/EditorPro';
+import { EditorProvider } from '@/components/editor/EditorProvider';
+import { ErrorBoundary } from '@/components/editor/ErrorBoundary';
 // import { LovablePreviewPanel } from '@/components/lovable/LovablePreviewPanel'; // 🔧 DESABILITADO TEMPORARIAMENTE
 import React from 'react';
 
