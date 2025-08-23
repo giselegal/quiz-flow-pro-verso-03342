@@ -39,11 +39,11 @@ const FunnelPanelPage: React.FC = () => {
 
   const handleUseTemplate = (templateId: string) => {
     // Navigate to editor with the template ID
-    setLocation(`/editor-fixed?template=${templateId}`);
+  setLocation(`/editor?template=${templateId}`);
   };
 
   const handleCreateCustom = () => {
-    setLocation('/editor-fixed');
+  setLocation('/editor');
   };
 
   return (

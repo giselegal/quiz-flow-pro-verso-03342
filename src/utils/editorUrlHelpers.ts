@@ -1,6 +1,6 @@
 /**
  * 🌐 EDITOR URL HELPERS
- * Funções para construir e gerenciar URLs do editor-fixed
+ * Funções para construir e gerenciar URLs do editor
  */
 
 export interface EditorUrlParams {
@@ -15,7 +15,7 @@ export interface EditorUrlParams {
  * Constrói URL completa para o editor-fixed
  */
 export const buildEditorUrl = (baseUrl: string, params: EditorUrlParams = {}): string => {
-  const url = new URL(`${baseUrl}/editor-fixed`);
+  const url = new URL(`${baseUrl}/editor`);
 
   if (params.funnelId) url.searchParams.set('funnelId', params.funnelId);
   if (params.template) url.searchParams.set('template', params.template);
@@ -68,31 +68,31 @@ export const updateEditorUrl = (params: EditorUrlParams): void => {
 export const EDITOR_URL_EXAMPLES = {
   // Desenvolvimento local
   local: {
-    basic: 'http://localhost:8080/editor-fixed',
-    withFunnel: 'http://localhost:8080/editor-fixed?funnelId=quiz-estilo-2024',
-    withTemplate: 'http://localhost:8080/editor-fixed?template=quiz-personalidade',
+  basic: 'http://localhost:8080/editor',
+  withFunnel: 'http://localhost:8080/editor?funnelId=quiz-estilo-2024',
+  withTemplate: 'http://localhost:8080/editor?template=quiz-personalidade',
     fullConfig:
-      'http://localhost:8080/editor-fixed?funnelId=test&template=quiz-estilo&stage=step-5&preview=true&viewport=mobile',
+  'http://localhost:8080/editor?funnelId=test&template=quiz-estilo&stage=step-5&preview=true&viewport=mobile',
   },
 
   // Produção
   production: {
-    basic: 'https://quiz-quest-challenge-verse.vercel.app/editor-fixed',
-    withFunnel: 'https://quiz-quest-challenge-verse.vercel.app/editor-fixed?funnelId=cliente-123',
+    basic: 'https://quiz-quest-challenge-verse.vercel.app/editor',
+    withFunnel: 'https://quiz-quest-challenge-verse.vercel.app/editor?funnelId=cliente-123',
     withTemplate:
-      'https://quiz-quest-challenge-verse.vercel.app/editor-fixed?template=funil-21-etapas',
+      'https://quiz-quest-challenge-verse.vercel.app/editor?template=funil-21-etapas',
   },
 
   // Casos específicos
   useCases: {
     newQuizStyleFunnel: (userId: string) =>
-      `http://localhost:8080/editor-fixed?funnelId=user-${userId}-quiz-estilo&template=quiz-estilo`,
+  `http://localhost:8080/editor?funnelId=user-${userId}-quiz-estilo&template=quiz-estilo`,
 
     editSpecificStage: (funnelId: string, stage: number) =>
-      `http://localhost:8080/editor-fixed?funnelId=${funnelId}&stage=step-${stage}`,
+  `http://localhost:8080/editor?funnelId=${funnelId}&stage=step-${stage}`,
 
     mobilePreview: (funnelId: string) =>
-      `http://localhost:8080/editor-fixed?funnelId=${funnelId}&preview=true&viewport=sm`,
+  `http://localhost:8080/editor?funnelId=${funnelId}&preview=true&viewport=sm`,
   },
 };
 

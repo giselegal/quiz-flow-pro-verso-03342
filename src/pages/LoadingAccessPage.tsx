@@ -7,7 +7,7 @@ interface LoadingAccessPageProps {
 const LoadingAccessPage: React.FC<LoadingAccessPageProps> = ({ route }) => {
   // Definir as rotas disponíveis e seus redirecionamentos
   const routeMap: Record<string, string> = {
-    editor: '/editor-fixed',
+    editor: '/editor',
     admin: '/admin',
     dashboard: '/admin/dashboard',
     'unified-editor': '/admin/unified-editor',

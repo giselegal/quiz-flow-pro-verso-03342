@@ -747,7 +747,7 @@ const DescubraSeuEstilo: React.FC = () => {
 
               <div className="flex justify-center md:justify-start">
                 <Button
-                  onClick={() => (window.location.href = '/editor-fixed')}
+                  onClick={() => (window.location.href = '/editor')}
                   size="lg"
                   className="bg-[#B89B7A] hover:bg-[#A68A6A] text-white px-8 py-4 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
                 >

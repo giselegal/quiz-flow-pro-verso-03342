@@ -27,10 +27,10 @@ const sidebarItems = [
     icon: Palette,
   },
   {
-    title: 'Editor de Quiz',
-    href: '/admin/quiz-editor',
-    icon: BookOpen,
-    description: 'Editor integrado de quizzes',
+    title: 'Editor (novo)',
+    href: '/editor',
+    icon: Code,
+    description: 'Editor unificado',
   },
   {
     title: 'Funis',
@@ -82,11 +82,6 @@ const sidebarItems = [
     title: 'Analytics',
     href: '/admin/analytics',
     icon: BarChart3,
-  },
-  {
-    title: 'Editor',
-    href: '/editor-fixed',
-    icon: Code,
   },
 ];
 
