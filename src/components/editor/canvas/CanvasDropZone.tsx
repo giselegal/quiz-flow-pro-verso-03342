@@ -1,6 +1,6 @@
-import { cn } from '../../../lib/utils';
 import { useDroppable } from '@dnd-kit/core';
 import React from 'react';
+import { cn } from '../../../lib/utils';
 
 interface CanvasDropZoneProps {
   children: React.ReactNode;
@@ -55,7 +55,7 @@ const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
 
           {/* Drop indicator overlay */}
           {isOver && (
-            <div className="absolute inset-0 bg-blue-100 bg-opacity-20 rounded-lg border-2 border-dashed border-blue-300 flex items-center justify-center z-40">
+            <div className="absolute inset-0 bg-blue-100 bg-opacity-20 rounded-lg border-2 border-dashed border-blue-300 flex items-center justify-center z-40 pointer-events-none">
               <div className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg font-medium text-sm">
                 ✨ Solte aqui o componente
               </div>
