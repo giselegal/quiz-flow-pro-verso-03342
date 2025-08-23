@@ -79,7 +79,7 @@ export const DraggableComponentItem: React.FC<DraggableComponentItemProps> = ({
     <div
       ref={setNodeRef}
       className={cn(
-        'w-full h-auto p-3 flex flex-col items-start gap-2 text-left transition-all duration-200 border border-stone-200 rounded-lg bg-white',
+        'ToolbarButton w-full h-auto p-3 flex flex-col items-start gap-2 text-left transition-all duration-200 border border-stone-200 rounded-lg bg-white group',
         // ✅ CURSOR: Indicação visual clara de que é draggable
         'cursor-grab hover:bg-blue-50 hover:border-blue-400',
         // ✅ FEEDBACK: Estados visuais distintos

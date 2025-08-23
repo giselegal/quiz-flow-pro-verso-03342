@@ -41,6 +41,9 @@ const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
         isOver && 'bg-blue-50',
         className
       )}
+      role="button"
+      aria-roledescription="sortable"
+      aria-describedby="DndDescribedBy-2"
       data-testid={dataTestId}
       style={{ minHeight: '600px' }} // 🚨 CORREÇÃO: Garantir área mínima
     >
