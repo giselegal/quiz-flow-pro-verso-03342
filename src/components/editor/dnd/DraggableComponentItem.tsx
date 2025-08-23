@@ -82,7 +82,7 @@ export const DraggableComponentItem: React.FC<DraggableComponentItemProps> = ({
         'w-full h-auto p-3 flex flex-col items-start gap-2 text-left transition-all duration-200 border border-stone-200 rounded-lg bg-white',
         // ✅ CURSOR: Indicação visual clara de que é draggable
         'cursor-grab hover:bg-blue-50 hover:border-blue-400',
-        // ✅ FEEDBACK: Estados visuais distintos  
+        // ✅ FEEDBACK: Estados visuais distintos
         isDragging && 'opacity-50 cursor-grabbing shadow-2xl bg-blue-100 border-blue-500',
         // 🔧 DEBUG: Ring azul forte para identificar draggables
         'ring-2 ring-blue-200 hover:ring-blue-400',

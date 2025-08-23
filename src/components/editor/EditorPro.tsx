@@ -128,8 +128,8 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
 
   // DnD sensors - configuração mais permissiva para debug
   const sensors = useSensors(
-    useSensor(PointerSensor, { 
-      activationConstraint: { distance: 3 } // Reduzido de 8 para 3
+    useSensor(PointerSensor, {
+      activationConstraint: { distance: 3 }, // Reduzido de 8 para 3
     }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
@@ -310,7 +310,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
     console.log('🚀 DRAG START CAPTURADO!', {
       activeId: active.id,
       dragData,
-      activeDataCurrent: active.data.current
+      activeDataCurrent: active.data.current,
     });
     logDragEvent('start', active);
     if (process.env.NODE_ENV === 'development') devLog('Drag start', dragData);
@@ -322,9 +322,9 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       console.log('🎯 DRAG END CAPTURADO!', {
         activeId: active.id,
         overId: over?.id,
-        overData: over?.data?.current
+        overData: over?.data?.current,
       });
-      
+
       if (!over) {
         console.log('❌ Drop cancelado - sem alvo');
         const dragData = extractDragData(active);

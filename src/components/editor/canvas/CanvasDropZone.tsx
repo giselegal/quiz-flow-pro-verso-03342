@@ -28,7 +28,7 @@ const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
     console.log('🎯 CanvasDropZone montado!', {
       id: 'canvas-drop-zone',
       isEmpty,
-      isOver
+      isOver,
     });
   }, [isEmpty, isOver]);
 
