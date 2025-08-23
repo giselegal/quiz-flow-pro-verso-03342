@@ -1,8 +1,8 @@
+import { LovablePreviewPanel } from '@/components/lovable/LovablePreviewPanel';
+import React from 'react';
 import { EditorPro } from '../components/editor/EditorPro';
 import { EditorProvider } from '../components/editor/EditorProvider';
 import { ErrorBoundary } from '../components/editor/ErrorBoundary';
-// import { LovablePreviewPanel } from '@/components/lovable/LovablePreviewPanel'; // 🔧 DESABILITADO TEMPORARIAMENTE
-import React from 'react';
 
 /**
  * 🎯 EDITOR PRINCIPAL - ÚNICO E LIMPO
@@ -18,12 +18,13 @@ import React from 'react';
 const MainEditor: React.FC = () => {
   return (
     <div>
-      {/* 🔧 LOVABLE PREVIEW DESABILITADO TEMPORARIAMENTE PARA TESTAR DRAG & DROP */}
       <ErrorBoundary>
-        <EditorProvider enableSupabase={false} storageKey="main-editor-state">
-          {/* 🎯 EDITOR PRINCIPAL COM CABEÇALHO EDITÁVEL */}
-          <EditorPro />
-        </EditorProvider>
+        <LovablePreviewPanel>
+          <EditorProvider enableSupabase={false} storageKey="main-editor-state">
+            {/* 🎯 EDITOR PRINCIPAL COM CABEÇALHO EDITÁVEL */}
+            <EditorPro />
+          </EditorProvider>
+        </LovablePreviewPanel>
       </ErrorBoundary>
     </div>
   );

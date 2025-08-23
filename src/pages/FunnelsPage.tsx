@@ -1,7 +1,7 @@
-import { useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
-import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { useEffect, useState } from 'react';
+import { useLocation } from 'wouter';
 
 interface Funnel {
   id: string;
@@ -45,7 +45,7 @@ const FunnelsPage: React.FC = () => {
           <h1 style={{ color: '#432818' }} className="text-3xl font-bold">
             Meus Funis
           </h1>
-          <Button onClick={() => setLocation('/editor-fixed')}>Criar Novo Funil</Button>
+          <Button onClick={() => setLocation('/editor')}>Criar Novo Funil</Button>
         </div>
 
         <div className="bg-white rounded-lg shadow-md p-6">
@@ -62,7 +62,7 @@ const FunnelsPage: React.FC = () => {
               <p style={{ color: '#6B4F43' }} className="mb-6">
                 Comece criando seu primeiro funil de conversão
               </p>
-              <Button onClick={() => setLocation('/editor-fixed')}>Criar Primeiro Funil</Button>
+              <Button onClick={() => setLocation('/editor')}>Criar Primeiro Funil</Button>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -90,7 +90,7 @@ const FunnelsPage: React.FC = () => {
                     <Button
                       size="sm"
                       variant="outline"
-                      onClick={() => setLocation(`/editor-fixed?funnel=${funnel.id}`)}
+                      onClick={() => setLocation(`/editor?funnel=${funnel.id}`)}
                     >
                       Editar
                     </Button>

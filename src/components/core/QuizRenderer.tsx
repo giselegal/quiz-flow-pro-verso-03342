@@ -1,6 +1,6 @@
+import UniversalBlockRenderer from '@/components/editor/blocks/UniversalBlockRenderer';
 import { useQuizFlow } from '@/hooks/core/useQuizFlow';
 import { Block } from '@/types/editor';
-import UniversalBlockRenderer from '@/components/editor/blocks/UniversalBlockRenderer';
 import React from 'react';
 
 interface StepData {
@@ -14,6 +14,11 @@ interface QuizRendererProps {
   onStepChange?: (step: number) => void;
   initialStep?: number;
   className?: string;
+  // Overrides para uso no editor: renderizar blocos reais do EditorProvider e sincronizar etapa
+  blocksOverride?: Block[];
+  currentStepOverride?: number;
+  // Callback opcional para seleção de bloco no modo editor
+  onBlockClick?: (blockId: string) => void;
 }
 
 /**
@@ -27,6 +32,9 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
   onStepChange,
   initialStep = 1,
   className = '',
+  blocksOverride,
+  currentStepOverride,
+  onBlockClick,
 }) => {
   const { quizState, actions } = useQuizFlow({
     mode,
@@ -38,7 +46,8 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
   const { prevStep, getStepData } = actions; // nextStep removido pois não é usado
 
   // Buscar dados da etapa atual
-  const stepBlocks = getStepData();
+  const stepBlocks =
+    mode === 'editor' && Array.isArray(blocksOverride) ? blocksOverride : getStepData();
 
   // Determinar tipo da etapa
   const getStepType = (step: number): StepData['stepType'] => {
@@ -53,7 +62,7 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
 
   const stepData: StepData = {
     blocks: stepBlocks,
-    stepNumber: currentStep,
+    stepNumber: currentStepOverride ?? currentStep,
     stepType: getStepType(currentStep),
   };
 
@@ -62,7 +71,7 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
     <div className="quiz-header mb-6">
       <div className="flex justify-between items-center mb-4">
         <span className="text-sm text-gray-600">
-          Etapa {currentStep} de {totalSteps}
+          Etapa {currentStepOverride ?? currentStep} de {totalSteps}
         </span>
         {mode !== 'preview' && (
           <div className="flex gap-2">
@@ -104,12 +113,23 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
     return (
       <div className="step-content space-y-6">
         {stepBlocks.map((block: any, index: number) => (
-          <div key={block.id || index} className="block-container">
+          <div
+            key={block.id || index}
+            className="block-container"
+            onClick={() => {
+              if (mode === 'editor' && block.id && onBlockClick) {
+                onBlockClick(String(block.id));
+              }
+            }}
+          >
             <UniversalBlockRenderer
               block={block}
               isSelected={false}
+              mode={mode}
               onClick={() => {
-                console.log(`Quiz block clicked: ${block.type}`, block);
+                if (mode === 'editor' && block.id && onBlockClick) {
+                  onBlockClick(String(block.id));
+                }
               }}
             />
           </div>

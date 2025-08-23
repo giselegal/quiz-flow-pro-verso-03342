@@ -1,6 +1,6 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Plus, Eye, Edit, BarChart3, Play, Zap, Sparkles } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { BarChart3, Edit, Eye, Play, Plus, Sparkles, Zap } from 'lucide-react';
 import { useLocation } from 'wouter';
 
 // Template data for funnel models
@@ -9,29 +9,47 @@ const funnelTemplates = [
     id: 'default-quiz-funnel-21-steps',
     name: 'Quiz Completo: Descoberta de Estilo Pessoal (21 Etapas)',
     description: 'Funil completo com 21 etapas para descoberta de estilo pessoal',
-    image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
-    features: ['21 Etapas Otimizadas', 'Quiz Interativo', 'Resultado Personalizado', 'Oferta Integrada'],
+    image:
+      'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+    features: [
+      '21 Etapas Otimizadas',
+      'Quiz Interativo',
+      'Resultado Personalizado',
+      'Oferta Integrada',
+    ],
     conversionRate: '87%',
-    category: 'Estilo Pessoal'
+    category: 'Estilo Pessoal',
   },
   {
     id: 'com-que-roupa-eu-vou',
     name: 'Com que Roupa Eu Vou?',
     description: 'Quiz especializado em combinações de looks com IA',
-    image: 'https://res.cloudinary.com/dqljyf76t/image/upload/c_fill,w_400,h_300/v1744911572/LOOKS_COMBINACOES.webp',
-    features: ['IA Integrada', 'Looks Personalizados', 'Análise de Cores', 'Sugestões Inteligentes'],
+    image:
+      'https://res.cloudinary.com/dqljyf76t/image/upload/c_fill,w_400,h_300/v1744911572/LOOKS_COMBINACOES.webp',
+    features: [
+      'IA Integrada',
+      'Looks Personalizados',
+      'Análise de Cores',
+      'Sugestões Inteligentes',
+    ],
     conversionRate: '92%',
-    category: 'Looks & Combinações'
+    category: 'Looks & Combinações',
   },
   {
     id: 'personal-branding-quiz',
     name: 'Personal Branding Quiz',
     description: 'Descubra seu estilo de marca pessoal',
-    image: 'https://res.cloudinary.com/dqljyf76t/image/upload/c_fill,w_400,h_300/v1744911572/PERSONAL_BRANDING.webp',
-    features: ['Análise de Personalidade', 'Estilo de Marca', 'Cores Estratégicas', 'Guia Completo'],
+    image:
+      'https://res.cloudinary.com/dqljyf76t/image/upload/c_fill,w_400,h_300/v1744911572/PERSONAL_BRANDING.webp',
+    features: [
+      'Análise de Personalidade',
+      'Estilo de Marca',
+      'Cores Estratégicas',
+      'Guia Completo',
+    ],
     conversionRate: '78%',
-    category: 'Personal Branding'
-  }
+    category: 'Personal Branding',
+  },
 ];
 
 const FunnelPanelPage: React.FC = () => {
@@ -39,11 +57,11 @@ const FunnelPanelPage: React.FC = () => {
 
   const handleUseTemplate = (templateId: string) => {
     // Navigate to editor with the template ID
-    setLocation(`/editor-fixed?template=${templateId}`);
+    setLocation(`/editor?template=${templateId}`);
   };
 
   const handleCreateCustom = () => {
-    setLocation('/editor-fixed');
+    setLocation('/editor');
   };
 
   return (
@@ -57,11 +75,9 @@ const FunnelPanelPage: React.FC = () => {
           >
             Modelos de Funis
           </h1>
-          <p className="text-[#8F7A6A] mt-2 text-lg">
-            Escolha um modelo otimizado ou crie do zero
-          </p>
+          <p className="text-[#8F7A6A] mt-2 text-lg">Escolha um modelo otimizado ou crie do zero</p>
         </div>
-        <Button 
+        <Button
           onClick={handleCreateCustom}
           className="bg-[#B89B7A] hover:bg-[#A0895B] text-white px-6 py-3"
         >
@@ -72,13 +88,13 @@ const FunnelPanelPage: React.FC = () => {
 
       {/* Template Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {funnelTemplates.map((template) => (
-          <Card 
-            key={template.id} 
+        {funnelTemplates.map(template => (
+          <Card
+            key={template.id}
             className="group hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border-0"
-            style={{ 
+            style={{
               backgroundColor: '#FFFFFF',
-              boxShadow: '0 10px 30px rgba(184, 155, 122, 0.1)'
+              boxShadow: '0 10px 30px rgba(184, 155, 122, 0.1)',
             }}
           >
             <CardHeader className="p-0">
@@ -89,7 +105,7 @@ const FunnelPanelPage: React.FC = () => {
                   className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
                 />
                 <div className="absolute top-4 right-4">
-                  <div 
+                  <div
                     className="px-3 py-1 rounded-full text-xs font-semibold text-white"
                     style={{ backgroundColor: '#B89B7A' }}
                   >
@@ -97,7 +113,7 @@ const FunnelPanelPage: React.FC = () => {
                   </div>
                 </div>
                 <div className="absolute top-4 left-4">
-                  <div 
+                  <div
                     className="px-3 py-1 rounded-full text-xs font-medium"
                     style={{ backgroundColor: 'rgba(255, 255, 255, 0.9)', color: '#432818' }}
                   >
@@ -106,15 +122,13 @@ const FunnelPanelPage: React.FC = () => {
                 </div>
               </div>
             </CardHeader>
-            
+
             <CardContent className="p-6 space-y-4">
               <div>
                 <h3 className="text-xl font-bold text-[#432818] mb-2 line-clamp-2">
                   {template.name}
                 </h3>
-                <p className="text-[#6B4F43] text-sm leading-relaxed">
-                  {template.description}
-                </p>
+                <p className="text-[#6B4F43] text-sm leading-relaxed">{template.description}</p>
               </div>
 
               {/* Features */}
@@ -125,7 +139,7 @@ const FunnelPanelPage: React.FC = () => {
                 </h4>
                 <div className="grid grid-cols-2 gap-2">
                   {template.features.map((feature, index) => (
-                    <div 
+                    <div
                       key={index}
                       className="text-xs px-2 py-1 rounded-md"
                       style={{ backgroundColor: '#FAF9F7', color: '#6B4F43' }}
@@ -162,7 +176,7 @@ const FunnelPanelPage: React.FC = () => {
       {/* Active Funnels Section */}
       <div className="space-y-6">
         <h2 className="text-2xl font-bold text-[#432818]">Meus Funis Ativos</h2>
-        
+
         <Card style={{ backgroundColor: '#FFFFFF' }}>
           <CardHeader>
             <CardTitle className="text-[#432818] flex items-center">

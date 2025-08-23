@@ -38,11 +38,7 @@ export const validateDrop = (
 
   // Validação para componente da sidebar
   if (activeData.type === 'sidebar-component') {
-    if (
-      over.id !== 'canvas' &&
-      over.id !== 'canvas-drop-zone' &&
-      !over.id.toString().startsWith('canvas-')
-    ) {
+    if (over.id !== 'canvas-drop-zone' && !over.id.toString().startsWith('canvas-')) {
       return { isValid: false, reason: 'Componente deve ser solto no canvas' };
     }
 
@@ -62,7 +58,11 @@ export const validateDrop = (
     }
 
     // Reordenação dentro do mesmo step
-    if (over.id !== 'canvas' && typeof over.id === 'string') {
+    if (over.id === 'canvas-drop-zone') {
+      // Permitir soltar no canvas para mover ao final
+      return { isValid: true, action: 'reorder' };
+    }
+    if (typeof over.id === 'string') {
       const overBlockExists = currentStepBlocks.some(block => block.id === over.id);
 
       if (overBlockExists) {
