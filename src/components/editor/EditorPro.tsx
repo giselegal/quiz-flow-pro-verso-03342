@@ -366,8 +366,8 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               const activeIndex = currentStepData.findIndex(
                 block => block.id === String(active.id)
               );
-              // Se soltar no canvas/canvas-drop-zone, mover para o fim
-              if (over.id === 'canvas' || over.id === 'canvas-drop-zone') {
+              // Se soltar no canvas-drop-zone, mover para o fim
+              if (over.id === 'canvas-drop-zone') {
                 const targetIndex = currentStepData.length - 1;
                 if (activeIndex !== -1 && targetIndex !== -1 && activeIndex !== targetIndex) {
                   actions.reorderBlocks(currentStepKey, activeIndex, targetIndex);
