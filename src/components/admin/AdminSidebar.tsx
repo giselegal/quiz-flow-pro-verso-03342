@@ -2,7 +2,6 @@
 import { cn } from '@/lib/utils';
 import {
   BarChart3,
-  BookOpen,
   Code,
   Eye,
   FileText,

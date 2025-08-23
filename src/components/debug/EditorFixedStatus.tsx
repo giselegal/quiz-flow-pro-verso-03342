@@ -1,7 +1,7 @@
-qimport React from 'react';
-import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import { CheckCircle, Zap } from 'lucide-react';
+import React from 'react';
 
 /**
  * Sistema Editor Fixed - Status Page

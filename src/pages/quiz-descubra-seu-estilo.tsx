@@ -1,20 +1,24 @@
-import React, { useEffect, useState } from 'react';
 import { preloadCriticalImages } from '@/utils/images/preloading';
+import React, { useEffect, useState } from 'react';
 // import FixedIntroImage from "@/components/ui/FixedIntroImage";
+import MentorSection from '@/components/result/MentorSection';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import MentorSection from '@/components/result/MentorSection';
+import { trackButtonClick } from '@/utils/analytics';
+import { storeUserForHotmart } from '@/utils/hotmartWebhook';
 import {
-  ChevronRight,
+  ArrowRight,
   Check,
+  ChevronRight,
   Clock,
-  Star,
-  ShoppingBag,
+  Crown,
   Heart,
   // Users,
   // Award,
   Shield,
-  ArrowRight,
+  ShoppingBag,
+  Sparkles,
+  Star,
   // TrendingUp,
   // BadgeCheck,
   // Lock,
@@ -25,13 +29,7 @@ import {
   // Hourglass,
   // Zap,
   Target,
-  Sparkles,
-  Crown,
-  // Flame,
-  // Eye,
 } from 'lucide-react';
-import { trackButtonClick } from '@/utils/analytics';
-import { storeUserForHotmart } from '@/utils/hotmartWebhook';
 
 // CSS aprimorado para versão B - mais persuasivo e dinâmico
 const customStyles = `

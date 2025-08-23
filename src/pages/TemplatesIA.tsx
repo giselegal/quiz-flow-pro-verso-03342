@@ -558,7 +558,7 @@ const TemplatesIA: React.FC = () => {
 
   const handleEditInEditor = () => {
     if (generatedFunnelId) {
-  setLocation(`/editor?template=${generatedFunnelId}`);
+      setLocation(`/editor?template=${generatedFunnelId}`);
     }
   };
 

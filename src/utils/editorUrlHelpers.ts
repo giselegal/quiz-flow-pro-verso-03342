@@ -68,31 +68,30 @@ export const updateEditorUrl = (params: EditorUrlParams): void => {
 export const EDITOR_URL_EXAMPLES = {
   // Desenvolvimento local
   local: {
-  basic: 'http://localhost:8080/editor',
-  withFunnel: 'http://localhost:8080/editor?funnelId=quiz-estilo-2024',
-  withTemplate: 'http://localhost:8080/editor?template=quiz-personalidade',
+    basic: 'http://localhost:8080/editor',
+    withFunnel: 'http://localhost:8080/editor?funnelId=quiz-estilo-2024',
+    withTemplate: 'http://localhost:8080/editor?template=quiz-personalidade',
     fullConfig:
-  'http://localhost:8080/editor?funnelId=test&template=quiz-estilo&stage=step-5&preview=true&viewport=mobile',
+      'http://localhost:8080/editor?funnelId=test&template=quiz-estilo&stage=step-5&preview=true&viewport=mobile',
   },
 
   // Produção
   production: {
     basic: 'https://quiz-quest-challenge-verse.vercel.app/editor',
     withFunnel: 'https://quiz-quest-challenge-verse.vercel.app/editor?funnelId=cliente-123',
-    withTemplate:
-      'https://quiz-quest-challenge-verse.vercel.app/editor?template=funil-21-etapas',
+    withTemplate: 'https://quiz-quest-challenge-verse.vercel.app/editor?template=funil-21-etapas',
   },
 
   // Casos específicos
   useCases: {
     newQuizStyleFunnel: (userId: string) =>
-  `http://localhost:8080/editor?funnelId=user-${userId}-quiz-estilo&template=quiz-estilo`,
+      `http://localhost:8080/editor?funnelId=user-${userId}-quiz-estilo&template=quiz-estilo`,
 
     editSpecificStage: (funnelId: string, stage: number) =>
-  `http://localhost:8080/editor?funnelId=${funnelId}&stage=step-${stage}`,
+      `http://localhost:8080/editor?funnelId=${funnelId}&stage=step-${stage}`,
 
     mobilePreview: (funnelId: string) =>
-  `http://localhost:8080/editor?funnelId=${funnelId}&preview=true&viewport=sm`,
+      `http://localhost:8080/editor?funnelId=${funnelId}&preview=true&viewport=sm`,
   },
 };
 

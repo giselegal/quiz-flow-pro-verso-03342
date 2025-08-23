@@ -1,7 +1,7 @@
-import { useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
-import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { useEffect, useState } from 'react';
+import { useLocation } from 'wouter';
 
 interface Funnel {
   id: string;
