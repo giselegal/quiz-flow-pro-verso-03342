@@ -6,9 +6,10 @@ import {
   createCalculationEngine,
   DEFAULT_UNIFIED_CONFIG,
   EditorUnified,
+  load21StepsTemplate,
   UnifiedEditorProvider,
 } from '@/unified/editor';
-import { ArrowLeft, Save, Sparkles, Zap } from 'lucide-react';
+import { ArrowLeft, FileDown, Save, Sparkles, Zap } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 
 /**
@@ -170,7 +171,6 @@ const QuizUnifiedPage: React.FC = () => {
       toast({
         title: 'Cálculo concluído!',
         description: `Perfil principal: ${results.styleProfile.primaryStyle.style} (${Math.round(results.styleProfile.primaryStyle.percentage * 100)}%)`,
-        variant: 'success',
       });
 
       return results;
@@ -179,7 +179,7 @@ const QuizUnifiedPage: React.FC = () => {
       toast({
         title: 'Erro no cálculo',
         description: error instanceof Error ? error.message : 'Erro desconhecido',
-        variant: 'error',
+        variant: 'destructive',
       });
       throw error;
     }
@@ -210,7 +210,7 @@ const QuizUnifiedPage: React.FC = () => {
     return (
       <div className="h-screen w-full flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <Spinner size="lg" className="mb-4" />
+          <Spinner className="mb-4" />
           <h2 className="text-xl font-semibold text-gray-700">Carregando sistema unificado...</h2>
           <p className="text-gray-500 mt-2">Inicializando componentes e serviços</p>
         </div>
@@ -242,6 +242,22 @@ const QuizUnifiedPage: React.FC = () => {
             <div className="text-sm text-gray-600">{user?.email || 'Usuário de teste'}</div>
             <Button variant="outline" size="sm" onClick={() => window.location.reload()}>
               Reiniciar
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-green-600 text-green-700 hover:bg-green-50"
+              onClick={() => {
+                const templateData = load21StepsTemplate();
+                setSavedData(templateData);
+                toast({
+                  title: 'Template carregado!',
+                  description: 'Template de 21 etapas carregado com sucesso.',
+                });
+              }}
+            >
+              <FileDown className="mr-1 h-4 w-4" />
+              Carregar Template
             </Button>
             <Button
               size="sm"

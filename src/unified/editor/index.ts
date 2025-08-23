@@ -17,6 +17,10 @@ export { EditorContext, UnifiedEditorProvider, useUnifiedEditor } from './Unifie
 
 export { createCalculationEngine, UnifiedCalculationEngine } from './UnifiedCalculationEngine';
 
+// ===== ADAPTADORES DE TEMPLATE =====
+
+export { DefaultTemplateAdapter, load21StepsTemplate } from './TemplateAdapter';
+
 // ===== TIPOS CONSOLIDADOS =====
 
 export type {

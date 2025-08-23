@@ -94,6 +94,32 @@ export interface BlockMetadata {
   description?: string;
 }
 
+// ===== TEMPLATE ADAPTER TYPES =====
+
+/**
+ * Adaptador para converter o formato legacy de template para o formato do sistema unificado
+ * @param legacyTemplate Template no formato legacy (Record<string, Block[]>)
+ * @returns Template no formato do sistema unificado (Record<string, Block[]>)
+ */
+export interface TemplateAdapter {
+  convertToUnifiedFormat(legacyTemplate: Record<string, any[]>): Record<string, Block[]>;
+  convertFromUnifiedFormat(unifiedTemplate: Record<string, Block[]>): Record<string, any[]>;
+}
+
+export interface LegacyTemplateBlock {
+  id: string;
+  type: string;
+  order: number;
+  content?: any;
+  properties?: any;
+}
+
+export interface IntegrationAdapter {
+  importTemplate(source: string, template: any): Promise<EditorState>;
+  exportTemplate(state: EditorState, format: string): Promise<any>;
+  validateTemplate(template: any): boolean;
+}
+
 // ===== QUIZ TYPES =====
 
 export interface QuizQuestion {
