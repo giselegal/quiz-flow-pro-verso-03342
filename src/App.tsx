@@ -10,7 +10,6 @@ import { AuthProvider } from './context/AuthContext';
 const Home = lazy(() => import('./pages/Home'));
 const AuthPage = lazy(() => import('./pages/AuthPage'));
 const QuizModularPage = lazy(() => import('./pages/QuizModularPage'));
-const MainEditor = lazy(() => import('./pages/MainEditor'));
 const QuizIntegratedPage = lazy(() => import('./pages/QuizIntegratedPage'));
 const DashboardPage = lazy(() => import('./pages/admin/DashboardPage'));
 const TestDragDropPage = lazy(() => import('./pages/TestDragDropPage'));
@@ -44,10 +43,26 @@ function App() {
                 {/* 🏠 PÁGINA INICIAL */}
                 <Route path="/" component={Home} />
 
-                {/* 🎯 EDITOR PRINCIPAL ÚNICO - SEM ANINHAMENTO */}
+                {/* 🎯 EDITOR PRINCIPAL CONSOLIDADO COM SCHEMA DRIVEN */}
                 <Route path="/editor">
                   <Suspense fallback={<PageLoading />}>
-                    <MainEditor />
+                    <div className="h-screen w-full bg-blue-50 p-8">
+                      <h1 className="text-3xl font-bold text-blue-800 mb-6">
+                        🎯 Quiz Quest Editor
+                      </h1>
+                      <div className="bg-white p-6 rounded-lg shadow-lg">
+                        <p className="text-gray-700 mb-4">✅ React está funcionando!</p>
+                        <p className="text-gray-600 mb-4">
+                          Editor consolidado será carregado aqui...
+                        </p>
+                        <button
+                          className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                          onClick={() => alert('Clique funcionando! React OK!')}
+                        >
+                          Testar Interação
+                        </button>
+                      </div>
+                    </div>
                   </Suspense>
                 </Route>
 

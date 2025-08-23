@@ -28,6 +28,8 @@
     "templates:standardize": "node scripts/standardize-templates.js",
     "templates:convert": "node scripts/convert-to-modular.js",
     "templates:cleanup": "node scripts/template-cleanup.js",
+    "unify:phase1": "bash scripts/unify-phase1.sh",
+    "unify:phase1-auto": "bash scripts/unify-phase1.sh --auto-continue",
     "templates:format": "prettier --write \"src/components/steps/**/*.{ts,tsx}\"",
     "test": "vitest",
     "test:ui": "vitest --ui",
