@@ -1,7 +1,6 @@
 import { EditorPro } from '@/components/editor/EditorPro';
 import { EditorProvider } from '@/components/editor/EditorProvider';
 import { ErrorBoundary } from '@/components/editor/ErrorBoundary';
-import { EditableEditorHeader } from '@/components/editor/header/EditableEditorHeader';
 import { LovablePreviewPanel } from '@/components/lovable/LovablePreviewPanel';
 import React from 'react';
 
@@ -14,27 +13,15 @@ import React from 'react';
  * - Interface limpa e responsiva
  * - Sem conflitos entre múltiplos editores
  * - Preview integrado no painel do Lovable ✅
- * - Cabeçalho editável e funcional ✅
+ * - Cabeçalho editável DENTRO do EditorPro ✅
  */
 const MainEditor: React.FC = () => {
   return (
     <LovablePreviewPanel>
       <ErrorBoundary>
         <EditorProvider enableSupabase={false} storageKey="main-editor-state">
-          <div className="min-h-screen bg-gray-50">
-            {/* 🎯 CABEÇALHO EDITÁVEL FUNCIONAL */}
-            <EditableEditorHeader
-              customTitle="🎯 Quiz Quest - Editor Principal"
-              showStepInfo={true}
-              showModeSwitch={true}
-              showActions={true}
-              showUndoRedo={true}
-              onSave={() => console.log('Salvando projeto...')}
-            />
-
-            {/* 🎯 EDITOR PRINCIPAL */}
-            <EditorPro />
-          </div>
+          {/* 🎯 EDITOR PRINCIPAL COM CABEÇALHO EDITÁVEL */}
+          <EditorPro />
         </EditorProvider>
       </ErrorBoundary>
     </LovablePreviewPanel>

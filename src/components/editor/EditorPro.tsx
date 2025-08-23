@@ -93,6 +93,8 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
 
   const { state, actions } = editorContext;
   const [mode, setMode] = useState<'edit' | 'preview'>('edit');
+  const [isEditingTitle, setIsEditingTitle] = useState(false);
+  const [customTitle, setCustomTitle] = useState('Quiz Quest - Editor Principal');
   const notification = useNotification();
   const NotificationContainer = (notification as any)?.NotificationContainer ?? null;
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -464,9 +466,27 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       <div className="bg-white border-b border-gray-200 p-4">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="font-semibold text-gray-900 flex items-center gap-2">
-              {mode === 'edit' ? '✏️ Editor' : '👁️ Preview'} - Etapa {safeCurrentStep}
-            </h3>
+            {isEditingTitle ? (
+              <input
+                type="text"
+                value={customTitle}
+                onChange={(e) => setCustomTitle(e.target.value)}
+                onBlur={() => setIsEditingTitle(false)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') setIsEditingTitle(false);
+                }}
+                className="font-semibold text-gray-900 bg-transparent border-b-2 border-blue-500 outline-none text-lg"
+                autoFocus
+              />
+            ) : (
+              <h3 
+                className="font-semibold text-gray-900 flex items-center gap-2 cursor-pointer hover:text-blue-600 transition-colors"
+                onClick={() => setIsEditingTitle(true)}
+                title="Clique para editar o título"
+              >
+                🎯 {customTitle} - Etapa {safeCurrentStep}
+              </h3>
+            )}
             <p className="text-sm text-gray-600">
               {getStepAnalysis(safeCurrentStep).label}: {getStepAnalysis(safeCurrentStep).desc}
             </p>
