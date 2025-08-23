@@ -48,7 +48,7 @@ function App() {
                 <Route path="/" component={Home} />
 
                 {/* 🎯 EDITOR PRINCIPAL UNIFICADO - NOVA ARQUITETURA */}
-                <Route path="/editor">
+                <Route path="/editor-unified">
                   <Suspense fallback={<PageLoading />}>
                     <UnifiedEditorProvider
                       config={{
@@ -140,6 +140,13 @@ function App() {
                 <Route path="/test-dragdrop">
                   <Suspense fallback={<PageLoading />}>
                     <TestDragDropPage />
+                  </Suspense>
+                </Route>
+
+                {/* 🎯 EDITOR PRINCIPAL - ROTA CORRETA */}
+                <Route path="/editor">
+                  <Suspense fallback={<PageLoading />}>
+                    <QuizUnifiedPage />
                   </Suspense>
                 </Route>
 
