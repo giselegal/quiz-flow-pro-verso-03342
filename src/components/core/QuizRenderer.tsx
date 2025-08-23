@@ -125,6 +125,7 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
             <UniversalBlockRenderer
               block={block}
               isSelected={false}
+              mode={mode}
               onClick={() => {
                 if (mode === 'editor' && block.id && onBlockClick) {
                   onBlockClick(String(block.id));
