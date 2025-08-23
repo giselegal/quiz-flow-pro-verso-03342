@@ -681,11 +681,14 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         isEmpty={currentStepData.length === 0 && mode === 'edit'}
         data-testid="canvas-dropzone"
       >
-        <QuizRenderer
-          mode={mode === 'preview' ? 'preview' : 'editor'}
-          onStepChange={handleStepSelect}
-          initialStep={safeCurrentStep}
-        />
+        {/* Em modo edição, impedir que o conteúdo real capture eventos de ponteiro */}
+        <div className={mode === 'edit' ? 'pointer-events-none select-none' : ''}>
+          <QuizRenderer
+            mode={mode === 'preview' ? 'preview' : 'editor'}
+            onStepChange={handleStepSelect}
+            initialStep={safeCurrentStep}
+          />
+        </div>
 
         {mode === 'edit' && (
           <SortableContext
