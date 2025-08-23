@@ -1702,7 +1702,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       order: 1,
       content: {
         title: 'Oferta especial liberada por tempo limitado',
-        urgencyMessage: 'Aproveite antes que acabe!'
+        urgencyMessage: 'Aproveite antes que acabe!',
       },
       properties: {
         initialMinutes: 15,
@@ -1712,8 +1712,8 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         showAlert: true,
         spacing: 'md',
         marginTop: 8,
-        marginBottom: 16
-      }
+        marginBottom: 16,
+      },
     },
     {
       id: 'step20-style-card',
@@ -1745,7 +1745,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
     {
       id: 'step20-secondary-styles',
       type: 'secondary-styles',
-  order: 3,
+      order: 3,
       content: {
         title: 'Seus estilos complementares',
         subtitle: 'Você também apresenta elementos destes estilos:',
@@ -1780,14 +1780,14 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         title: 'Sua transformação é possível',
         subtitle: 'Veja o impacto de aplicar seu estilo no dia a dia',
         beforeLabel: 'ANTES',
-        afterLabel: 'DEPOIS'
+        afterLabel: 'DEPOIS',
       },
       properties: {
         layoutStyle: 'side-by-side',
         showComparison: true,
         marginTop: 12,
-        marginBottom: 20
-      }
+        marginBottom: 20,
+      },
     },
     // Bônus (lista/grids)
     {
@@ -1795,13 +1795,13 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       type: 'bonus',
       order: 5,
       content: {
-        title: 'Bônus de transformação inclusos'
+        title: 'Bônus de transformação inclusos',
       },
       properties: {
         showImages: true,
         marginTop: 8,
-        marginBottom: 16
-      }
+        marginBottom: 16,
+      },
     },
     // Depoimentos (prova social)
     {
@@ -1809,7 +1809,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       type: 'testimonials',
       order: 6,
       content: {
-        title: 'Resultados reais de alunas'
+        title: 'Resultados reais de alunas',
       },
       properties: {
         layout: 'grid',
@@ -1817,8 +1817,8 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         backgroundColor: '#F0F9FF',
         borderRadius: 16,
         padding: 24,
-        marginBottom: 24
-      }
+        marginBottom: 24,
+      },
     },
     // Ancoragem de valor (comparativo de valores)
     {
@@ -1826,13 +1826,13 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       type: 'value-anchoring',
       order: 7,
       content: {
-        title: 'Tudo o que você recebe hoje'
+        title: 'Tudo o que você recebe hoje',
       },
       properties: {
         showPricing: true,
         marginTop: 8,
-        marginBottom: 16
-      }
+        marginBottom: 16,
+      },
     },
     // Compra segura
     {
@@ -1840,13 +1840,13 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       type: 'secure-purchase',
       order: 8,
       content: {
-        title: 'Compra 100% segura e protegida'
+        title: 'Compra 100% segura e protegida',
       },
       properties: {
         showFeatures: true,
         marginTop: 8,
-        marginBottom: 16
-      }
+        marginBottom: 16,
+      },
     },
     // Garantia
     {
@@ -1858,7 +1858,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         description:
           'Se por qualquer motivo você não ficar satisfeita, devolvemos 100% do seu dinheiro.',
         imageUrl:
-          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735378/guarantee_seal_klsjda.webp'
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735378/guarantee_seal_klsjda.webp',
       },
       properties: {
         backgroundColor: '#FFFFFF',
@@ -1871,8 +1871,8 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         marginBottom: 24,
         borderColor: '#3B82F6',
         borderWidth: '2px',
-        borderStyle: 'dashed'
-      }
+        borderStyle: 'dashed',
+      },
     },
     // Mentora
     {
@@ -1881,12 +1881,12 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       order: 10,
       content: {
         mentorName: 'Gisele Galvão',
-        mentorTitle: 'Consultora de Imagem e Estilo'
+        mentorTitle: 'Consultora de Imagem e Estilo',
       },
       properties: {
         marginTop: 8,
-        marginBottom: 16
-      }
+        marginBottom: 16,
+      },
     },
     {
       id: 'step20-cta',
@@ -1919,7 +1919,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       order: 12,
       content: {
         title: 'Essa condição especial termina em:',
-        urgencyMessage: 'Garanta agora enquanto está disponível.'
+        urgencyMessage: 'Garanta agora enquanto está disponível.',
       },
       properties: {
         initialMinutes: 12,
@@ -1929,9 +1929,9 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         showAlert: true,
         spacing: 'sm',
         marginTop: 8,
-        marginBottom: 8
-      }
-    }
+        marginBottom: 8,
+      },
+    },
   ],
 
   // 🎯 ETAPA 21: PÁGINA DE OFERTA (Teste B)

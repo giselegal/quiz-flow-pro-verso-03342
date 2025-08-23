@@ -53,12 +53,8 @@ export const ENHANCED_BLOCK_REGISTRY = {
   'result-card': lazy(() => import('@/components/editor/blocks/StyleCardInlineBlock')),
 
   // ✅ STEP 20 - RESULTADO (BLOCOS DE CONVERSÃO)
-  'urgency-timer-inline': lazy(
-    () => import('@/components/editor/blocks/UrgencyTimerInlineBlock')
-  ),
-  'before-after-inline': lazy(
-    () => import('@/components/editor/blocks/BeforeAfterInlineBlock')
-  ),
+  'urgency-timer-inline': lazy(() => import('@/components/editor/blocks/UrgencyTimerInlineBlock')),
+  'before-after-inline': lazy(() => import('@/components/editor/blocks/BeforeAfterInlineBlock')),
   bonus: lazy(() => import('@/components/editor/blocks/BonusBlock')),
   'bonus-inline': lazy(() => import('@/components/editor/blocks/BonusInlineBlock')),
   'secure-purchase': lazy(() => import('@/components/editor/blocks/SecurePurchaseBlock')),
@@ -198,6 +194,15 @@ export const AVAILABLE_COMPONENTS = [
   { type: 'quiz-navigation', label: 'Navegação Premium', category: 'advanced' },
   { type: 'style-cards-grid', label: 'Grid de Estilos', category: 'advanced' },
   { type: 'gradient-animation', label: 'Gradiente Animado', category: 'advanced' },
+
+  // Result/Offer Components (Step20)
+  { type: 'urgency-timer-inline', label: 'Timer de Urgência', category: 'result' },
+  { type: 'before-after-inline', label: 'Antes e Depois', category: 'result' },
+  { type: 'bonus', label: 'Bônus (Seção)', category: 'result' },
+  { type: 'testimonials', label: 'Depoimentos', category: 'result' },
+  { type: 'value-anchoring', label: 'Ancoragem de Valor', category: 'result' },
+  { type: 'secure-purchase', label: 'Compra Segura', category: 'result' },
+  { type: 'mentor-section-inline', label: 'Seção da Mentora', category: 'result' },
 ];
 
 // 🔧 NORMALIZAÇÃO DE PROPRIEDADES PARA COMPATIBILIDADE
