@@ -53,11 +53,11 @@ export const ENHANCED_BLOCK_REGISTRY = {
   'result-card': lazy(() => import('@/components/editor/blocks/StyleCardInlineBlock')),
 
   // ✅ STEP 21 - OFERTA
-  benefits: lazy(() => import('@/components/editor/blocks/TextInlineBlock')), // Fallback inteligente
-  'benefits-list': lazy(() => import('@/components/editor/blocks/TextInlineBlock')),
-  testimonials: lazy(() => import('@/components/editor/blocks/TextInlineBlock')), // Fallback inteligente
-  'testimonials-grid': lazy(() => import('@/components/editor/blocks/TextInlineBlock')),
-  guarantee: lazy(() => import('@/components/editor/blocks/TextInlineBlock')), // Fallback inteligente
+  benefits: lazy(() => import('@/components/editor/blocks/BenefitsListBlock')),
+  'benefits-list': lazy(() => import('@/components/editor/blocks/BenefitsListBlock')),
+  testimonials: lazy(() => import('@/components/editor/blocks/TestimonialsBlock')),
+  'testimonials-grid': lazy(() => import('@/components/editor/blocks/TestimonialsBlock')),
+  guarantee: lazy(() => import('@/components/editor/blocks/GuaranteeBlock')),
   'guarantee-badge': lazy(() => import('@/components/editor/blocks/ImageInlineBlock')),
   'quiz-offer-cta-inline': lazy(() => import('@/components/editor/blocks/ButtonInlineBlock')),
   'cta-inline': lazy(() => import('@/components/editor/blocks/ButtonInlineBlock')),
