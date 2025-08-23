@@ -31,11 +31,11 @@ const MainEditor: React.FC = () => {
                   🎯 Quiz Quest - Editor Principal
                 </h1>
                 <div className="flex items-center gap-4">
-                  <div className={`px-3 py-1 rounded-full text-sm font-medium ${
-                    isPreviewActive 
-                      ? 'bg-green-100 text-green-800' 
-                      : 'bg-gray-100 text-gray-800'
-                  }`}>
+                  <div
+                    className={`px-3 py-1 rounded-full text-sm font-medium ${
+                      isPreviewActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                    }`}
+                  >
                     {isPreviewActive ? '✅ Painel Lovable Ativo' : '⏳ Carregando Preview'}
                   </div>
                   <div className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">

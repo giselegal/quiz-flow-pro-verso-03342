@@ -1,0 +1,93 @@
+/* 🎯 ESTILOS ESPECÍFICOS PARA PAINEL LOVABLE */
+
+/* Container principal do preview */
+.lovable-preview-container {
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Otimizações para o painel de preview */
+[data-lovable-preview='active'] {
+  /* Força modo preview ativo */
+  --lovable-preview-mode: active;
+}
+
+[data-editor-mode='live-preview'] {
+  /* Otimizações para live preview */
+  --editor-mode: live-preview;
+}
+
+/* Estilos específicos para o editor no Lovable */
+.lovable-preview-container .min-h-screen {
+  min-height: 100vh;
+  height: 100vh;
+}
+
+/* Otimizações de performance para preview */
+.lovable-preview-container * {
+  will-change: auto;
+  transform: translateZ(0);
+}
+
+/* Estilos responsivos para painel lateral */
+@media (max-width: 1200px) {
+  .lovable-preview-container {
+    overflow-x: auto;
+  }
+}
+
+/* Indicadores visuais para modo preview */
+.lovable-preview-container::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 4px;
+  height: 100vh;
+  background: linear-gradient(180deg, #10b981 0%, #3b82f6 50%, #8b5cf6 100%);
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+/* Animação para indicar preview ativo */
+@keyframes lovable-preview-pulse {
+  0%,
+  100% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.lovable-preview-container::before {
+  animation: lovable-preview-pulse 2s ease-in-out infinite;
+}
+
+/* Estilos para o cabeçalho do editor */
+.lovable-preview-container .bg-white.border-b {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.95);
+}
+
+/* Otimizações para badges de status */
+.lovable-preview-container .rounded-full {
+  transition: all 0.3s ease;
+}
+
+.lovable-preview-container .rounded-full:hover {
+  transform: scale(1.05);
+}
+
+/* Força atualização do DOM para Lovable */
+.lovable-preview-container[data-timestamp]::after {
+  content: attr(data-timestamp);
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
