@@ -176,13 +176,23 @@ const Home = () => {
                 {user && (
                   <>
                     <Button
-                      onClick={() => navigate('/editor-unified')}
+                      onClick={() => navigate('/test-unified')}
                       size="lg"
                       className="bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-700 hover:to-emerald-500 text-white shadow-xl px-8 py-4 text-lg"
                     >
                       <Sparkles className="h-5 w-5 mr-2" />
-                      Editor Unificado
+                      Sistema Unificado
                       <Badge className="ml-2 bg-yellow-400 text-yellow-900 text-xs">NOVO</Badge>
+                    </Button>
+
+                    <Button
+                      onClick={() => navigate('/editor')}
+                      size="lg"
+                      className="bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-700 hover:to-blue-500 text-white shadow-xl px-8 py-4 text-lg"
+                    >
+                      <Target className="h-5 w-5 mr-2" />
+                      Editor Unificado (Produção)
+                      <Badge className="ml-2 bg-green-400 text-green-900 text-xs">ATIVO</Badge>
                     </Button>
 
                     <Button
@@ -200,10 +210,10 @@ const Home = () => {
                       onClick={() => navigate('/quiz-editor')}
                       size="lg"
                       variant="outline"
-                      className="border-brand-primary text-brand-primary hover:bg-brand-primary/10 px-8 py-4 text-lg font-semibold"
+                      className="border-brand-primary text-brand-primary hover:bg-brand-primary/10 px-8 py-4 text-lg font-semibold opacity-60"
                     >
                       <Target className="h-5 w-5 mr-2" />
-                      Editor Clássico
+                      Editor Clássico (Legacy)
                     </Button>
                   </>
                 )}
