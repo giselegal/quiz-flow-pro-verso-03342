@@ -1,5 +1,6 @@
+import { BlockFieldSchema, blockPropertySchemas } from '@/config/blockPropertySchemas';
+import { getBlockDefinition } from '@/config/funnelBlockDefinitions';
 import React from 'react';
-import { blockPropertySchemas, BlockFieldSchema } from '@/config/blockPropertySchemas';
 
 interface PanelProps {
   selectedBlock: any;
@@ -248,6 +249,22 @@ function PropertyField({
           />
         </FieldWrapper>
       );
+    case 'range':
+      return (
+        <FieldWrapper>
+          <Label>{field.label}</Label>
+          <input
+            type="range"
+            min={field.min ?? 0}
+            max={field.max ?? 100}
+            step={field.step ?? 1}
+            value={Number(value ?? field.min ?? 0)}
+            onChange={e => onChange(Number(e.target.value))}
+            className="w-full"
+          />
+          <div className="text-xs text-muted-foreground">{String(value ?? '')}</div>
+        </FieldWrapper>
+      );
     case 'boolean':
       return (
         <FieldWrapper>
@@ -326,7 +343,25 @@ const EnhancedUniversalPropertiesPanelFixed: React.FC<PanelProps> = ({
 }) => {
   if (!selectedBlock) return null;
 
-  const schema = blockPropertySchemas[selectedBlock.type];
+  const schema =
+    blockPropertySchemas[selectedBlock.type] ||
+    ((): { label: string; fields: any[] } | null => {
+      const def = getBlockDefinition(selectedBlock.type);
+      if (!def || !Array.isArray(def.propertiesSchema)) return null;
+      // Adaptar legacy PropertySchema para BlockFieldSchema simples
+      const fields: BlockFieldSchema[] = def.propertiesSchema
+        .filter((f: any) => !!f && !!f.key && !!f.label && !!f.type)
+        .map((f: any) => ({
+          key: f.key,
+          label: f.label,
+          type: (f.type === 'boolean' ? 'boolean' : f.type === 'slider' ? 'range' : f.type) as any,
+          options: f.options,
+          min: f.min,
+          max: f.max,
+          group: f.group,
+        }));
+      return { label: def.label || selectedBlock.type, fields };
+    })();
 
   if (!schema) {
     return (

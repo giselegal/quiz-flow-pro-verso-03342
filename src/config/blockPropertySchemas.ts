@@ -2,6 +2,7 @@ export type FieldType =
   | 'text'
   | 'textarea'
   | 'number'
+  | 'range'
   | 'boolean'
   | 'color'
   | 'options-list'
@@ -13,6 +14,10 @@ export interface BlockFieldSchema {
   label: string;
   type: FieldType;
   options?: Array<{ label: string; value: string | number }>; // para selects
+  min?: number;
+  max?: number;
+  step?: number;
+  group?: string; // categoria/aba sugerida
 }
 
 export interface BlockSchema {
