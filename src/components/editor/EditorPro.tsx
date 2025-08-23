@@ -362,12 +362,23 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
             }
             break;
           case 'reorder':
-            if (dragData.type === 'canvas-block' && typeof over.id === 'string') {
-              const activeIndex = currentStepData.findIndex(block => block.id === active.id);
-              const overIndex = currentStepData.findIndex(block => block.id === over.id);
-              if (activeIndex !== -1 && overIndex !== -1 && activeIndex !== overIndex) {
-                actions.reorderBlocks(currentStepKey, activeIndex, overIndex);
-                notification?.info?.('Blocos reordenados');
+            if (dragData.type === 'canvas-block') {
+              const activeIndex = currentStepData.findIndex(
+                block => block.id === String(active.id)
+              );
+              // Se soltar no canvas/canvas-drop-zone, mover para o fim
+              if (over.id === 'canvas' || over.id === 'canvas-drop-zone') {
+                const targetIndex = currentStepData.length - 1;
+                if (activeIndex !== -1 && targetIndex !== -1 && activeIndex !== targetIndex) {
+                  actions.reorderBlocks(currentStepKey, activeIndex, targetIndex);
+                  notification?.info?.('Bloco movido para o final');
+                }
+              } else if (typeof over.id === 'string') {
+                const overIndex = currentStepData.findIndex(block => block.id === over.id);
+                if (activeIndex !== -1 && overIndex !== -1 && activeIndex !== overIndex) {
+                  actions.reorderBlocks(currentStepKey, activeIndex, overIndex);
+                  notification?.info?.('Blocos reordenados');
+                }
               }
             }
             break;
@@ -678,7 +689,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
 
         {mode === 'edit' && (
           <SortableContext
-            items={currentStepData.map(b => b.id || `block-${currentStepData.indexOf(b)}`)}
+            items={currentStepData.map((b, i) => b.id || `block-${i}`)}
             strategy={verticalListSortingStrategy}
           >
             <div className="relative min-h-[600px] w-full">
