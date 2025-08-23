@@ -189,4 +189,4 @@ const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   );
 };
 
-export default EditorPro;
+export { EditorPro };
