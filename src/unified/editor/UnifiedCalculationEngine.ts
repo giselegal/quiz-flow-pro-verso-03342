@@ -240,7 +240,7 @@ export class UnifiedCalculationEngine {
       primaryStyle: primary,
       secondaryStyles: secondary,
       totalScore: personaEntries.reduce((sum, entry) => sum + entry.score, 0),
-      distribution: distributions as Record<StyleCategory, number>,
+      distribution: distributions as unknown as Record<StyleCategory, number>,
       confidence: 0, // Will be calculated separately
       metadata: {
         algorithm: 'unified',
@@ -374,7 +374,7 @@ export class UnifiedCalculationEngine {
       answers,
       primaryStyle: profile.primaryStyle.style,
       secondaryStyle: profile.secondaryStyles.length > 0 ? profile.secondaryStyles[0].style : null,
-      styleScores: profile.distribution as StyleDistribution,
+      styleScores: profile.distribution as unknown as StyleDistribution,
       confidence: profile.confidence,
       insights,
       completedAt: new Date(),
@@ -390,11 +390,11 @@ export class UnifiedCalculationEngine {
 
   private createRawScores(distributions: StyleDistribution): Record<StyleCategory, number> {
     // Map persona styles to style categories
-    return distributions as Record<StyleCategory, number>;
+    return distributions as unknown as Record<StyleCategory, number>;
   }
 
   private createNormalizedScores(distributions: StyleDistribution): Record<StyleCategory, number> {
-    return distributions as Record<StyleCategory, number>;
+    return distributions as unknown as Record<StyleCategory, number>;
   }
 
   private createQualityMetrics(
