@@ -98,10 +98,6 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   const notification = useNotification();
   const NotificationContainer = (notification as any)?.NotificationContainer ?? null;
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const canvasContentRef = useRef<HTMLDivElement | null>(null);
-  const [measuredLayouts, setMeasuredLayouts] = useState<
-    Array<{ id: string; top: number; left: number; width: number; height: number }>
-  >([]);
 
   const safeCurrentStep = state.currentStep || 1;
   const currentStepKey = `step-${safeCurrentStep}`;
@@ -684,7 +680,6 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       <CanvasDropZone
         isEmpty={currentStepData.length === 0 && mode === 'edit'}
         data-testid="canvas-dropzone"
-        containerRef={canvasContentRef}
       >
         {/* Em modo edição, impedir que o conteúdo real capture eventos de ponteiro */}
         <div className={mode === 'edit' ? 'pointer-events-none select-none' : ''}>
@@ -694,9 +689,6 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
             initialStep={safeCurrentStep}
             blocksOverride={currentStepData}
             currentStepOverride={safeCurrentStep}
-            onBlocksLayout={(layouts) => {
-              setMeasuredLayouts(layouts);
-            }}
           />
         </div>
 
@@ -705,14 +697,32 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
             items={currentStepData.map((b, i) => b.id || `block-${i}`)}
             strategy={verticalListSortingStrategy}
           >
-      <div className="relative min-h-[600px] w-full z-50">
+            <div className="relative min-h-[600px] w-full z-50">
               {currentStepData.map((block: Block, index: number) => {
                 const blockId = block.id || `block-${index}`;
                 const isSelected = state.selectedBlockId === blockId;
-        // Usar medidas reais fornecidas pelo QuizRenderer; fallback para heurística leve
-        const measured = measuredLayouts.find(m => m.id === blockId);
-        let topOffset = measured ? measured.top : 60 + index * 100;
-        let height = measured ? measured.height : 100;
+
+                // topOffset/height heurístico (pode ser substituído por medidas reais)
+                let topOffset = 60 + index * 100;
+                let height = 80;
+                switch (block.type) {
+                  case 'quiz-intro-header':
+                    topOffset = 20;
+                    height = 120;
+                    break;
+                  case 'options-grid':
+                    topOffset = 150 + index * 200;
+                    height = 300;
+                    break;
+                  case 'form-container':
+                    topOffset = 200 + index * 150;
+                    height = 120;
+                    break;
+                  case 'button':
+                    topOffset = 400 + index * 100;
+                    height = 60;
+                    break;
+                }
 
                 return (
                   <SortableBlock

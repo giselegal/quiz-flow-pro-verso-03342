@@ -1,8 +1,8 @@
+import { LovablePreviewPanel } from '@/components/lovable/LovablePreviewPanel';
+import React from 'react';
 import { EditorPro } from '../components/editor/EditorPro';
 import { EditorProvider } from '../components/editor/EditorProvider';
 import { ErrorBoundary } from '../components/editor/ErrorBoundary';
-import { LovablePreviewPanel } from '@/components/lovable/LovablePreviewPanel';
-import React from 'react';
 
 /**
  * 🎯 EDITOR PRINCIPAL - ÚNICO E LIMPO

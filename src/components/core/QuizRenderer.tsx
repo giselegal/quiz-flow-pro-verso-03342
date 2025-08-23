@@ -1,7 +1,7 @@
 import UniversalBlockRenderer from '@/components/editor/blocks/UniversalBlockRenderer';
 import { useQuizFlow } from '@/hooks/core/useQuizFlow';
 import { Block } from '@/types/editor';
-import React, { useEffect, useLayoutEffect, useRef } from 'react';
+import React from 'react';
 
 interface StepData {
   blocks: Block[];
@@ -17,17 +17,6 @@ interface QuizRendererProps {
   // Overrides para uso no editor: renderizar blocos reais do EditorProvider e sincronizar etapa
   blocksOverride?: Block[];
   currentStepOverride?: number;
-  // Callback opcional: reporta layout real dos blocos (posições e tamanhos) relativos ao container de conteúdo
-  onBlocksLayout?: (
-    layouts: Array<{
-      id: string;
-      top: number;
-      left: number;
-      width: number;
-      height: number;
-    }>,
-    meta: { contentTopViewport: number; contentLeftViewport: number }
-  ) => void;
 }
 
 /**
@@ -43,7 +32,6 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
   className = '',
   blocksOverride,
   currentStepOverride,
-  onBlocksLayout,
 }) => {
   const { quizState, actions } = useQuizFlow({
     mode,
@@ -105,62 +93,6 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
     </div>
   );
 
-  // Infra de medição de layout para editor: coleta refs dos blocos e reporta posições/tamanhos reais
-  const contentRef = useRef<HTMLDivElement | null>(null);
-  const blockRefs = useRef<Record<string, HTMLElement | null>>({});
-
-  const setBlockRef = (id: string) => (el: HTMLElement | null) => {
-    blockRefs.current[id] = el;
-  };
-
-  const measureAndReport = () => {
-    if (!onBlocksLayout) return;
-    const container = contentRef.current;
-    if (!container) return;
-    const containerRect = container.getBoundingClientRect();
-    const layouts = (stepBlocks || []).map((block: any, index: number) => {
-      const id = block.id || `block-${index}`;
-      const el = blockRefs.current[id];
-      const rect = el?.getBoundingClientRect();
-      return {
-        id,
-        top: rect ? rect.top - containerRect.top : 0,
-        left: rect ? rect.left - containerRect.left : 0,
-        width: rect?.width || 0,
-        height: rect?.height || 0,
-      };
-    });
-    onBlocksLayout(layouts, {
-      contentTopViewport: containerRect.top,
-      contentLeftViewport: containerRect.left,
-    });
-  };
-
-  useLayoutEffect(() => {
-    // mede após render
-    measureAndReport();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [stepBlocks, mode, currentStepOverride]);
-
-  useEffect(() => {
-    if (!onBlocksLayout) return;
-    const container = contentRef.current;
-    if (!container) return;
-    // Observa mudanças de tamanho para re-medida
-    const ro = new ResizeObserver(() => {
-      measureAndReport();
-    });
-    ro.observe(container);
-    // Window resize
-    const onResize = () => measureAndReport();
-    window.addEventListener('resize', onResize);
-    return () => {
-      ro.disconnect();
-      window.removeEventListener('resize', onResize);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [onBlocksLayout]);
-
   // Renderizar conteúdo da etapa
   const renderStepContent = () => {
     // Loading state
@@ -176,26 +108,18 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
 
     // Renderizar blocos da etapa usando UniversalBlockRenderer
     return (
-      <div ref={contentRef} className="step-content space-y-6">
-        {stepBlocks.map((block: any, index: number) => {
-          const id = block.id || `block-${index}`;
-          return (
-            <div
-              key={id}
-              ref={setBlockRef(id)}
-              data-block-id={id}
-              className="block-container"
-            >
-              <UniversalBlockRenderer
-                block={block}
-                isSelected={false}
-                onClick={() => {
-                  console.log(`Quiz block clicked: ${block.type}`, block);
-                }}
-              />
-            </div>
-          );
-        })}
+      <div className="step-content space-y-6">
+        {stepBlocks.map((block: any, index: number) => (
+          <div key={block.id || index} className="block-container">
+            <UniversalBlockRenderer
+              block={block}
+              isSelected={false}
+              onClick={() => {
+                console.log(`Quiz block clicked: ${block.type}`, block);
+              }}
+            />
+          </div>
+        ))}
       </div>
     );
   };

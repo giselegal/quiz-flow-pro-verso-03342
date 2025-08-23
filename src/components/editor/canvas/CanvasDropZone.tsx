@@ -7,8 +7,6 @@ interface CanvasDropZoneProps {
   isEmpty: boolean;
   className?: string;
   'data-testid'?: string;
-  // Ref opcional para o container interno relativo (onde os overlays ficam absolutos)
-  containerRef?: React.Ref<HTMLDivElement>;
 }
 
 const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
@@ -16,7 +14,6 @@ const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
   isEmpty,
   className,
   'data-testid': dataTestId,
-  containerRef,
 }) => {
   const { setNodeRef, isOver } = useDroppable({
     id: 'canvas-drop-zone',
@@ -49,7 +46,6 @@ const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
     >
       <div className="max-w-4xl mx-auto">
         <div
-          ref={containerRef}
           className={cn(
             'relative bg-white rounded-lg shadow-sm min-h-[600px]',
             isOver && 'ring-2 ring-blue-300 ring-opacity-50'
