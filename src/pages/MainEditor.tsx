@@ -2,6 +2,8 @@ import { EditorPro } from '@/components/editor/EditorPro';
 import { EditorProvider } from '@/components/editor/EditorProvider';
 import { ErrorBoundary } from '@/components/editor/ErrorBoundary';
 import { LovablePreviewPanel } from '@/components/lovable/LovablePreviewPanel';
+import { LovableWindowActivator } from '@/components/lovable/LovableWindowActivator';
+import { LovableWindowButton } from '@/components/lovable/LovableWindowButton';
 import { useLovablePreview } from '@/hooks/useLovablePreview';
 import React from 'react';
 
@@ -21,6 +23,7 @@ const MainEditor: React.FC = () => {
 
   return (
     <LovablePreviewPanel>
+      <LovableWindowActivator />
       <ErrorBoundary>
         <EditorProvider enableSupabase={false} storageKey="main-editor-state">
           <div className="min-h-screen bg-gray-50">
@@ -31,6 +34,7 @@ const MainEditor: React.FC = () => {
                   🎯 Quiz Quest - Editor Principal
                 </h1>
                 <div className="flex items-center gap-4">
+                  <LovableWindowButton />
                   <div
                     className={`px-3 py-1 rounded-full text-sm font-medium ${
                       isPreviewActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
