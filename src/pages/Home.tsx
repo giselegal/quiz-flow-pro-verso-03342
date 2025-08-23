@@ -1,6 +1,7 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/context/AuthContext';
+import UnifiedSystemSection from '@/components/sections/UnifiedSystemSection';
 import {
   ArrowRight,
   Eye,
@@ -333,6 +334,9 @@ const Home = () => {
             </div>
           </div>
         </section>
+
+        {/* Sistema Unificado Section */}
+        <UnifiedSystemSection />
 
         {/* CTA Final */}
         <section className="py-20 bg-gradient-to-r from-brand-primary to-brand-dark">
