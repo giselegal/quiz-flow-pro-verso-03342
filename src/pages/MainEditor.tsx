@@ -1,6 +1,7 @@
 import { EditorPro } from '@/components/editor/EditorPro';
 import { EditorProvider } from '@/components/editor/EditorProvider';
 import { ErrorBoundary } from '@/components/editor/ErrorBoundary';
+import { LovablePreviewPanel } from '@/components/lovable/LovablePreviewPanel';
 import React from 'react';
 
 /**
@@ -11,14 +12,40 @@ import React from 'react';
  * - 21 etapas carregando automaticamente
  * - Interface limpa e responsiva
  * - Sem conflitos entre múltiplos editores
+ * - Preview integrado no painel do Lovable
  */
 const MainEditor: React.FC = () => {
   return (
-    <ErrorBoundary>
-      <EditorProvider enableSupabase={false} storageKey="main-editor-state">
-        <EditorPro />
-      </EditorProvider>
-    </ErrorBoundary>
+    <LovablePreviewPanel>
+      <ErrorBoundary>
+        <EditorProvider enableSupabase={false} storageKey="main-editor-state">
+          <div className="min-h-screen bg-gray-50">
+            {/* 🎯 CABEÇALHO PRINCIPAL */}
+            <div className="bg-white border-b border-gray-200 px-6 py-4">
+              <div className="flex items-center justify-between">
+                <h1 className="text-2xl font-bold text-gray-900">
+                  🎯 Quiz Quest - Editor Principal
+                </h1>
+                <div className="flex items-center gap-4">
+                  <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
+                    ✅ Painel Lovable Ativo
+                  </div>
+                  <div className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
+                    👁️ Preview Integrado
+                  </div>
+                  <div className="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-medium">
+                    🚀 Live Preview ON
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* 🎯 EDITOR COM PREVIEW INTEGRADO */}
+            <EditorPro />
+          </div>
+        </EditorProvider>
+      </ErrorBoundary>
+    </LovablePreviewPanel>
   );
 };
 
