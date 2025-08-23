@@ -1,23 +1,3 @@
-import { QuizRenderer } from '../core/QuizRenderer';
-import CanvasDropZone from './canvas/CanvasDropZone';
-import { DraggableComponentItem } from './dnd/DraggableComponentItem';
-import { useNotification } from '../ui/Notification';
-import { getBlocksForStep } from '../../config/quizStepsComplete';
-import { cn } from '../../lib/utils';
-import { Block } from '../../types/editor';
-import {
-  extractDragData,
-  getDragFeedback,
-  logDragEvent,
-  validateDrop,
-} from '../../utils/dragDropUtils';
-import {
-  copyToClipboard,
-  createBlockFromComponent,
-  devLog,
-  duplicateBlock,
-  validateEditorJSON,
-} from '../../utils/editorUtils';
 import {
   closestCenter,
   DndContext,
@@ -35,6 +15,26 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import React, { Suspense, useCallback, useMemo, useRef, useState } from 'react';
+import { getBlocksForStep } from '../../config/quizStepsComplete';
+import { cn } from '../../lib/utils';
+import { Block } from '../../types/editor';
+import {
+  extractDragData,
+  getDragFeedback,
+  logDragEvent,
+  validateDrop,
+} from '../../utils/dragDropUtils';
+import {
+  copyToClipboard,
+  createBlockFromComponent,
+  devLog,
+  duplicateBlock,
+  validateEditorJSON,
+} from '../../utils/editorUtils';
+import { QuizRenderer } from '../core/QuizRenderer';
+import { useNotification } from '../ui/Notification';
+import CanvasDropZone from './canvas/CanvasDropZone';
+import { DraggableComponentItem } from './dnd/DraggableComponentItem';
 import { useEditor } from './EditorProvider';
 import { SortableBlock } from './SortableBlock';
 
@@ -716,6 +716,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
                     isSelected={isSelected}
                     topOffset={topOffset}
                     height={height}
+                    sourceStepKey={currentStepKey}
                     onSelect={handleBlockSelect}
                     onMoveUp={() => {
                       const currentIndex = currentStepData.findIndex(b => b.id === blockId);

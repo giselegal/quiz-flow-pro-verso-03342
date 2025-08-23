@@ -10,6 +10,8 @@ interface SortableBlockProps {
   isSelected: boolean;
   topOffset: number;
   height: number;
+  // Passo/step de origem para identificar contexto no DnD
+  sourceStepKey?: string;
   onSelect: (id: string, event?: React.MouseEvent) => void;
   onMoveUp: (id: string) => void;
   onMoveDown: (id: string) => void;
@@ -24,6 +26,7 @@ export const SortableBlock: React.FC<SortableBlockProps> = ({
   isSelected,
   topOffset,
   height,
+  sourceStepKey,
   onSelect,
   onMoveUp,
   onMoveDown,
@@ -33,6 +36,12 @@ export const SortableBlock: React.FC<SortableBlockProps> = ({
 }) => {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id,
+    // Dados necessários para validação/ação no onDragEnd
+    data: {
+      type: 'canvas-block',
+      blockId: id,
+      sourceStepKey: sourceStepKey,
+    },
   });
 
   const style = {
