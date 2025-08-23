@@ -1,7 +1,15 @@
-import { QuizRenderer } from '../core/QuizRenderer';
-import CanvasDropZone from './canvas/CanvasDropZone';
-import { DraggableComponentItem } from './dnd/DraggableComponentItem';
-import { useNotification } from '../ui/Notification';
+import {
+  closestCenter,
+  DragEndEvent,
+  DragStartEvent,
+  KeyboardSensor,
+  PointerSensor,
+  rectIntersection,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
+import React, { Suspense, useCallback, useMemo, useRef, useState } from 'react';
 import { getBlocksForStep } from '../../config/quizStepsComplete';
 import { cn } from '../../lib/utils';
 import { Block } from '../../types/editor';
@@ -18,26 +26,13 @@ import {
   duplicateBlock,
   validateEditorJSON,
 } from '../../utils/editorUtils';
+import { QuizRenderer } from '../core/QuizRenderer';
+import { useNotification } from '../ui/Notification';
+import CanvasDropZone from './canvas/CanvasDropZone';
+import { DraggableComponentItem } from './dnd/DraggableComponentItem';
 import { DndProvider } from './DndProvider';
-import { EnhancedComponentsSidebar } from './EnhancedComponentsSidebar';
-import {
-  closestCenter,
-  DndContext,
-  DragEndEvent,
-  DragStartEvent,
-  KeyboardSensor,
-  PointerSensor,
-  rectIntersection,
-  useSensor,
-  useSensors,
-} from '@dnd-kit/core';
-import {
-  SortableContext,
-  sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
-} from '@dnd-kit/sortable';
-import React, { Suspense, useCallback, useMemo, useRef, useState } from 'react';
 import { useEditor } from './EditorProvider';
+import { EnhancedComponentsSidebar } from './EnhancedComponentsSidebar';
 import { SortableBlock } from './SortableBlock';
 
 /**
@@ -794,10 +789,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
      ------------------------- */
   return (
     <>
-      <DndProvider 
-        currentStepData={currentStepData}
-        currentStepKey={currentStepKey}
-      >
+      <DndProvider currentStepData={currentStepData} currentStepKey={currentStepKey}>
         <div className={`editor-pro h-screen bg-gray-50 flex ${className}`}>
           <StepSidebar />
           <EnhancedComponentsSidebar />

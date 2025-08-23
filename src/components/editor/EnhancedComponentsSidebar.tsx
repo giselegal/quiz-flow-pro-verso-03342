@@ -1,10 +1,10 @@
-import { AVAILABLE_COMPONENTS } from './blocks/enhancedBlockRegistry';
-import { DraggableComponentItem } from './dnd/DraggableComponentItem';
+import { ChevronDown, ChevronRight, HelpCircle, Layers, Search, Settings } from 'lucide-react';
+import React, { useState } from 'react';
 import { Badge } from '../ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Input } from '../ui/input';
-import { ChevronDown, ChevronRight, HelpCircle, Layers, Search, Settings } from 'lucide-react';
-import React, { useState } from 'react';
+import { AVAILABLE_COMPONENTS } from './blocks/enhancedBlockRegistry';
+import { DraggableComponentItem } from './dnd/DraggableComponentItem';
 
 interface EnhancedComponentsSidebarProps {
   searchTerm?: string;

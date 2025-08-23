@@ -1,21 +1,21 @@
-import React from 'react';
 import {
-  DndContext,
   closestCenter,
+  CollisionDetection,
+  DndContext,
+  DragEndEvent,
+  DragOverEvent,
+  DragStartEvent,
   KeyboardSensor,
   PointerSensor,
   useSensor,
   useSensors,
-  DragEndEvent,
-  DragStartEvent,
-  DragOverEvent,
-  CollisionDetection,
 } from '@dnd-kit/core';
 import {
   SortableContext,
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
+import React from 'react';
 import { Block } from '../../types/editor';
 import { useEditor } from './EditorProvider';
 
@@ -45,11 +45,11 @@ export const DndProvider: React.FC<DndProviderProps> = ({
   );
 
   // Estratégia de detecção de colisão
-  const collisionDetectionStrategy: CollisionDetection = (args) => {
+  const collisionDetectionStrategy: CollisionDetection = args => {
     try {
       return closestCenter(args);
     } catch (err) {
-      console.debug("collisionDetectionStrategy error, fallback to closestCenter:", err);
+      console.debug('collisionDetectionStrategy error, fallback to closestCenter:', err);
       return closestCenter(args);
     }
   };
@@ -71,7 +71,7 @@ export const DndProvider: React.FC<DndProviderProps> = ({
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
-    
+
     if (!over) {
       console.log('🎯 Drag finalizado sem drop válido');
       return;
@@ -85,13 +85,10 @@ export const DndProvider: React.FC<DndProviderProps> = ({
     });
 
     // Se for componente da sidebar sendo dropado no canvas
-    if (
-      active.data.current?.type === 'sidebar-component' &&
-      over.id === 'canvas-drop-zone'
-    ) {
+    if (active.data.current?.type === 'sidebar-component' && over.id === 'canvas-drop-zone') {
       const componentType = active.data.current.componentType;
       console.log('🎯 Adicionando componente ao canvas:', componentType);
-      
+
       // Criar novo bloco
       const newBlock: Block = {
         id: `block-${Date.now()}`,
@@ -106,10 +103,7 @@ export const DndProvider: React.FC<DndProviderProps> = ({
     }
 
     // Se for reordenação de blocos dentro do canvas
-    if (
-      active.data.current?.sortable &&
-      over.data.current?.sortable
-    ) {
+    if (active.data.current?.sortable && over.data.current?.sortable) {
       const activeIndex = currentStepData.findIndex(block => block.id === active.id);
       const overIndex = currentStepData.findIndex(block => block.id === over.id);
 
