@@ -13,6 +13,8 @@ const QuizModularPage = lazy(() => import('./pages/QuizModularPage'));
 const MainEditor = lazy(() => import('./pages/MainEditor'));
 const QuizIntegratedPage = lazy(() => import('./pages/QuizIntegratedPage'));
 const DashboardPage = lazy(() => import('./pages/admin/DashboardPage'));
+const TestDragDropPage = lazy(() => import('./pages/TestDragDropPage'));
+const SimpleTest = lazy(() => import('./pages/SimpleTest'));
 
 // Loading component
 const PageLoading = () => (
@@ -46,6 +48,20 @@ function App() {
                 <Route path="/editor">
                   <Suspense fallback={<PageLoading />}>
                     <MainEditor />
+                  </Suspense>
+                </Route>
+
+                {/* 🧪 TESTE DRAG & DROP */}
+                <Route path="/test-dragdrop">
+                  <Suspense fallback={<PageLoading />}>
+                    <TestDragDropPage />
+                  </Suspense>
+                </Route>
+
+                {/* 🧪 TESTE SIMPLES */}
+                <Route path="/test-simple">
+                  <Suspense fallback={<PageLoading />}>
+                    <SimpleTest />
                   </Suspense>
                 </Route>
 
