@@ -9,11 +9,7 @@ import {
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
-import {
-  SortableContext,
-  sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
-} from '@dnd-kit/sortable';
+import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import React, { Suspense, useCallback, useMemo, useRef, useState } from 'react';
 import { getBlocksForStep } from '../../config/quizStepsComplete';
 import { cn } from '../../lib/utils';
@@ -28,15 +24,14 @@ import {
   copyToClipboard,
   createBlockFromComponent,
   devLog,
-  duplicateBlock,
   validateEditorJSON,
 } from '../../utils/editorUtils';
 import { QuizRenderer } from '../core/QuizRenderer';
 import { useNotification } from '../ui/Notification';
-import CanvasDropZone from './canvas/CanvasDropZone';
+import SimpleCanvasDropZone from './canvas/CanvasDropZone.simple';
 import { DraggableComponentItem } from './dnd/DraggableComponentItem';
 import { useEditor } from './EditorProvider';
-import { SortableBlock } from './SortableBlock';
+// import { SortableBlock } from './SortableBlock';
 
 /**
  * EditorPro - versão modularizada / otimizada do QuizEditorPro
@@ -278,10 +273,6 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
 
   // Handlers básicos
   const handleStepSelect = useCallback((step: number) => actions.setCurrentStep(step), [actions]);
-  const handleBlockSelect = useCallback(
-    (blockId: string) => actions.setSelectedBlockId(blockId),
-    [actions]
-  );
   const handleBlockUpdate = useCallback(
     (blockId: string, updates: Record<string, any>) =>
       actions.updateBlock(currentStepKey, blockId, updates),
@@ -292,16 +283,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
     [currentStepKey, actions]
   );
 
-  const handleBlockDuplicate = useCallback(
-    (blockId: string) => {
-      const blockToDuplicate = currentStepData.find(b => b.id === blockId);
-      if (!blockToDuplicate) return;
-      const newBlock = duplicateBlock(blockToDuplicate, currentStepData);
-      actions.addBlock(currentStepKey, newBlock);
-      actions.setSelectedBlockId(newBlock.id);
-    },
-    [currentStepData, currentStepKey, actions]
-  );
+  // Duplicação inline é gerenciada no wrapper simples quando necessário
 
   // Drag handlers (reutilizam utilitários)
   const handleDragStart = useCallback((event: DragStartEvent) => {
@@ -677,87 +659,27 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         </div>
       </div>
 
-      <CanvasDropZone
-        isEmpty={currentStepData.length === 0 && mode === 'edit'}
-        data-testid="canvas-dropzone"
-      >
-        {/* Permitir interação direta com conteúdo para seleção/edição dos blocos */}
+      {mode === 'edit' ? (
+        <SimpleCanvasDropZone
+          blocks={currentStepData}
+          selectedBlockId={state.selectedBlockId}
+          onSelectBlock={(id: string) => actions.setSelectedBlockId(id)}
+          onUpdateBlock={(blockId: string, updates: Record<string, any>) =>
+            actions.updateBlock(currentStepKey, blockId, updates)
+          }
+          onDeleteBlock={(blockId: string) => handleBlockDelete(blockId)}
+        />
+      ) : (
         <div>
           <QuizRenderer
-            mode={mode === 'preview' ? 'preview' : 'editor'}
+            mode="preview"
             onStepChange={handleStepSelect}
             initialStep={safeCurrentStep}
             blocksOverride={currentStepData}
             currentStepOverride={safeCurrentStep}
-            // Encaminha seleção quando um bloco do conteúdo é clicado
-            onBlockClick={(blockId: string) => {
-              actions.setSelectedBlockId(blockId);
-            }}
           />
         </div>
-
-        {mode === 'edit' && (
-          <SortableContext
-            items={currentStepData.map((b, i) => b.id || `block-${i}`)}
-            strategy={verticalListSortingStrategy}
-          >
-            <div className="relative min-h-[600px] w-full z-50">
-              {currentStepData.map((block: Block, index: number) => {
-                const blockId = block.id || `block-${index}`;
-                const isSelected = state.selectedBlockId === blockId;
-
-                // topOffset/height heurístico (pode ser substituído por medidas reais)
-                let topOffset = 60 + index * 100;
-                let height = 80;
-                switch (block.type) {
-                  case 'quiz-intro-header':
-                    topOffset = 20;
-                    height = 120;
-                    break;
-                  case 'options-grid':
-                    topOffset = 150 + index * 200;
-                    height = 300;
-                    break;
-                  case 'form-container':
-                    topOffset = 200 + index * 150;
-                    height = 120;
-                    break;
-                  case 'button':
-                    topOffset = 400 + index * 100;
-                    height = 60;
-                    break;
-                }
-
-                return (
-                  <SortableBlock
-                    key={blockId}
-                    id={blockId}
-                    block={block}
-                    isSelected={isSelected}
-                    topOffset={topOffset}
-                    height={height}
-                    sourceStepKey={currentStepKey}
-                    onSelect={handleBlockSelect}
-                    onMoveUp={() => {
-                      const currentIndex = currentStepData.findIndex(b => b.id === blockId);
-                      if (currentIndex > 0)
-                        actions.reorderBlocks(currentStepKey, currentIndex, currentIndex - 1);
-                    }}
-                    onMoveDown={() => {
-                      const currentIndex = currentStepData.findIndex(b => b.id === blockId);
-                      if (currentIndex < currentStepData.length - 1)
-                        actions.reorderBlocks(currentStepKey, currentIndex, currentIndex + 1);
-                    }}
-                    onDuplicate={() => handleBlockDuplicate(blockId)}
-                    onDelete={() => handleBlockDelete(blockId)}
-                    data-testid={`editor-block-${blockId}`}
-                  />
-                );
-              })}
-            </div>
-          </SortableContext>
-        )}
-      </CanvasDropZone>
+      )}
     </div>
   );
 

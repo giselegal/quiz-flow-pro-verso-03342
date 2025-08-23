@@ -38,7 +38,12 @@ export const validateDrop = (
 
   // Validação para componente da sidebar
   if (activeData.type === 'sidebar-component') {
-    if (over.id !== 'canvas-drop-zone' && !over.id.toString().startsWith('canvas-')) {
+    const overId = over.id.toString();
+    if (
+      overId !== 'canvas-drop-zone' &&
+      !overId.startsWith('canvas-') &&
+      !overId.startsWith('drop-zone-')
+    ) {
       return { isValid: false, reason: 'Componente deve ser solto no canvas' };
     }
 
@@ -63,11 +68,10 @@ export const validateDrop = (
       return { isValid: true, action: 'reorder' };
     }
     if (typeof over.id === 'string') {
-      const overBlockExists = currentStepBlocks.some(block => block.id === over.id);
-
-      if (overBlockExists) {
-        return { isValid: true, action: 'reorder' };
-      }
+      const overId = over.id as string;
+      const overBlockExists = currentStepBlocks.some(block => block.id === overId);
+      if (overBlockExists) return { isValid: true, action: 'reorder' };
+      if (overId.startsWith('drop-zone-')) return { isValid: true, action: 'reorder' };
     }
 
     return { isValid: false, reason: 'Posição de drop inválida para reordenação' };
