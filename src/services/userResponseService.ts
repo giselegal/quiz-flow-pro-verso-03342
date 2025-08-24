@@ -165,11 +165,17 @@ export const userResponseService = {
         timestamp: response.timestamp,
         created_at: new Date(),
       };
-
-      localStorage.setItem(
-        `quiz_response_${fallbackResponse.id}`,
-        JSON.stringify(fallbackResponse)
-      );
+      // Salvar indexado pelo id gerado (debug) e pelo componentId/fieldName para leitura por getResponse
+      try {
+        localStorage.setItem(
+          `quiz_response_${fallbackResponse.id}`,
+          JSON.stringify(fallbackResponse)
+        );
+        const componentKey = (response.data && (response.data.componentId || response.data.fieldName)) || undefined;
+        if (componentKey) {
+          localStorage.setItem(`quiz_response_${componentKey}`, JSON.stringify(fallbackResponse));
+        }
+      } catch {}
       console.log('📦 Saved response to localStorage as fallback');
       return fallbackResponse;
     }

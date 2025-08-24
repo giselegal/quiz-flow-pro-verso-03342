@@ -397,7 +397,33 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
         }}
         onClick={async e => {
           e.stopPropagation();
-          if (!isButtonDisabled) {
+          // Validação robusta: se exigir input válido, checar DOM e storage em tempo real
+          let allowProceed = true;
+          if (requiresValidInput) {
+            // 1) Tentar pegar diretamente do DOM (campo de nome)
+            const nameInputEl = document.querySelector(
+              'input[name="userName"]'
+            ) as HTMLInputElement | null;
+            const domValue = nameInputEl?.value?.trim() || '';
+
+            // 2) Fallback: ler resposta salva (local/offline ou Supabase)
+            let storedValue = '';
+            try {
+              storedValue = (await userResponseService.getResponse('intro-name-input'))?.trim() || '';
+            } catch {}
+
+            const effectiveName = domValue || storedValue;
+            allowProceed = !!effectiveName && effectiveName.length > 0;
+          }
+
+          if (isButtonDisabled && !allowProceed) {
+            return;
+          }
+          if (!allowProceed) {
+            return;
+          }
+
+          if (true) {
             // Handle URL navigation
             if (action === 'url' && (href || url)) {
               const targetUrl = url || href;
