@@ -255,7 +255,7 @@ const QuizModularPage: React.FC = () => {
     };
   }, [currentStep]);
 
-  const progress = ((currentStep - 1) / 20) * 100;
+  // Progress bar removida; cálculo de progresso não é mais necessário
 
   // Debounce opcional para exibição de loading (reduz flicker em trocas rápidas)
   const [showLoading, setShowLoading] = useState(false);
@@ -410,13 +410,8 @@ const QuizModularPage: React.FC = () => {
             ) : (
               <div className="quiz-content p-8 space-y-6">
                 {blocks.length === 0 ? (
-                  <div className="text-center py-12">
-                    <div className="w-16 h-16 bg-stone-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <span className="text-stone-400 text-2xl">📝</span>
-                    </div>
-                    <h3 className="text-lg font-medium text-stone-800 mb-2">Etapa em construção</h3>
-                    <p className="text-stone-600">Esta etapa ainda não possui conteúdo.</p>
-                  </div>
+                  // Etapa sem conteúdo: nenhum texto exibido para manter a interface limpa
+                  <div className="py-12" aria-hidden="true" />
                 ) : (
                   blocks.map((block, index) => (
                     <div
@@ -494,20 +489,7 @@ const QuizModularPage: React.FC = () => {
             </button>
           </div>
 
-          {/* 📊 FOOTER COM ESTATÍSTICAS */}
-          <div className="text-center mt-12 text-sm text-stone-500">
-            <div className="flex justify-center items-center space-x-6">
-              <div className="flex items-center gap-1">
-                <span>🎯</span> Etapa: {currentStep}/21
-              </div>
-              <div className="flex items-center gap-1">
-                <span>📊</span> Progresso: {progress}%
-              </div>
-              <div className="flex items-center gap-1">
-                <span>🎨</span> Blocos: {blocks.length}
-              </div>
-            </div>
-          </div>
+          {/* Footer de estatísticas removido para interface mais clean */}
         </div>
       </div>
     </div>
