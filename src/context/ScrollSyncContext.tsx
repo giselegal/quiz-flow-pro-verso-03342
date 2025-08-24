@@ -37,9 +37,12 @@ export const ScrollSyncProvider: React.FC<ScrollSyncProviderProps> = ({ children
   const [isScrolling, setIsScrolling] = useState(false);
   const isSyncingRef = useRef(false);
   const rafRef = useRef<number | null>(null);
+  // Permitir desativar sincronização globalmente quando atrapalhar a edição
+  const isDisabled = typeof window !== 'undefined' && (window as any).__DISABLE_SCROLL_SYNC === true;
 
   const syncScroll = useCallback(
     (source: 'canvas' | 'components' | 'properties', scrollTop: number) => {
+  if (isDisabled) return;
       if (isSyncingRef.current) return;
       isSyncingRef.current = true;
       setIsScrolling(true);
@@ -91,7 +94,7 @@ export const ScrollSyncProvider: React.FC<ScrollSyncProviderProps> = ({ children
         setIsScrolling(false);
       });
     },
-    []
+  [isDisabled]
   );
 
   const value = {
