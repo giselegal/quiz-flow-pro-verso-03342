@@ -1,31 +1,41 @@
 // Enhanced Block Registry - Componentes específicos do quiz com identidade visual
 import { lazy } from 'react';
+// Importações estáticas essenciais para renderização imediata dos blocos principais
+import ButtonInlineBlock from '@/components/editor/blocks/ButtonInlineBlock';
+import FormContainerBlock from '@/components/editor/blocks/FormContainerBlock';
+import FormInputBlock from '@/components/editor/blocks/FormInputBlock';
+import ImageInlineBlock from '@/components/editor/blocks/ImageInlineBlock';
+import LegalNoticeInlineBlock from '@/components/editor/blocks/LegalNoticeInlineBlock';
+import OptionsGridBlock from '@/components/editor/blocks/OptionsGridBlock';
+import QuizIntroHeaderBlock from '@/components/editor/blocks/QuizIntroHeaderBlock';
+import TextInlineBlock from '@/components/editor/blocks/TextInlineBlock';
 
 // 🎯 REGISTRY COMPLETO - 150+ COMPONENTES MAPEADOS
 export const ENHANCED_BLOCK_REGISTRY = {
   // ✅ STEP 01 - COMPONENTES BÁSICOS
-  'quiz-intro-header': lazy(() => import('@/components/editor/blocks/QuizIntroHeaderBlock')),
+  // Preferir versões estáticas para tipos críticos usados no template
+  'quiz-intro-header': QuizIntroHeaderBlock,
   'decorative-bar': lazy(() => import('@/components/editor/blocks/DecorativeBarInlineBlock')),
   'decorative-bar-inline': lazy(
     () => import('@/components/editor/blocks/DecorativeBarInlineBlock')
   ),
-  text: lazy(() => import('@/components/editor/blocks/TextInlineBlock')),
-  'text-inline': lazy(() => import('@/components/editor/blocks/TextInlineBlock')),
-  image: lazy(() => import('@/components/editor/blocks/ImageInlineBlock')),
-  'image-inline': lazy(() => import('@/components/editor/blocks/ImageInlineBlock')),
-  'form-input': lazy(() => import('@/components/editor/blocks/FormInputBlock')),
-  button: lazy(() => import('@/components/editor/blocks/ButtonInlineBlock')),
-  'button-inline': lazy(() => import('@/components/editor/blocks/ButtonInlineBlock')),
-  'legal-notice': lazy(() => import('@/components/editor/blocks/LegalNoticeInlineBlock')),
-  'legal-notice-inline': lazy(() => import('@/components/editor/blocks/LegalNoticeInlineBlock')),
+  text: TextInlineBlock,
+  'text-inline': TextInlineBlock,
+  image: ImageInlineBlock,
+  'image-inline': ImageInlineBlock,
+  'form-input': FormInputBlock,
+  button: ButtonInlineBlock,
+  'button-inline': ButtonInlineBlock,
+  'legal-notice': LegalNoticeInlineBlock,
+  'legal-notice-inline': LegalNoticeInlineBlock,
 
   // ✅ STEPS 02-11 - PERGUNTAS DO QUIZ
   'quiz-start-page-inline': lazy(() => import('@/components/editor/blocks/QuizIntroHeaderBlock')),
   'quiz-personal-info-inline': lazy(() => import('@/components/editor/blocks/FormInputBlock')),
   'quiz-question-inline': lazy(() => import('@/components/editor/blocks/TextInlineBlock')),
-  'quiz-options-inline': lazy(() => import('@/components/editor/blocks/OptionsGridBlock')),
-  'options-grid': lazy(() => import('@/components/editor/blocks/OptionsGridBlock')),
-  'form-container': lazy(() => import('@/components/editor/blocks/FormContainerBlock')),
+  'quiz-options-inline': OptionsGridBlock,
+  'options-grid': OptionsGridBlock,
+  'form-container': FormContainerBlock,
 
   // ✅ STEP 12 - TRANSIÇÃO
   hero: lazy(() => import('@/components/editor/blocks/QuizTransitionBlock')),
@@ -45,8 +55,8 @@ export const ENHANCED_BLOCK_REGISTRY = {
   'progress-inline': lazy(() => import('@/components/editor/blocks/ProgressInlineBlock')),
 
   // ✅ STEP 20 - RESULTADO
-  'result-header-inline': lazy(() => import('@/components/editor/blocks/QuizIntroHeaderBlock')),
-  'quiz-result-header': lazy(() => import('@/components/editor/blocks/QuizIntroHeaderBlock')),
+  'result-header-inline': QuizIntroHeaderBlock,
+  'quiz-result-header': QuizIntroHeaderBlock,
   'quiz-result-style': lazy(() => import('@/components/editor/blocks/StyleCardInlineBlock')),
   'secondary-styles': lazy(() => import('@/components/editor/blocks/StyleCardsGridBlock')),
   'quiz-result-secondary': lazy(() => import('@/components/editor/blocks/StyleCardsGridBlock')),
