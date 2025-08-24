@@ -147,7 +147,50 @@ export const useQuizFlow = ({
   }, [currentStep]);
 
   // Helpers derivados
-  const stepInfo = useMemo(() => coreGetStepInfo(currentStep), [currentStep]);
+  const stepInfo = useMemo(() => {
+    const base = coreGetStepInfo(currentStep);
+    const step = currentStep;
+
+    const category = (() => {
+      if (step === 1) return 'Introdução';
+      if (step >= 2 && step <= 11) return 'Quiz Principal';
+      if (step === 12) return 'Transição';
+      if (step >= 13 && step <= 18) return 'Análise Estratégica';
+      if (step === 19) return 'Processamento';
+      if (step === 20) return 'Resultado';
+      if (step === 21) return 'Conversão';
+      return 'Indefinido';
+    })();
+
+    const requirements = (() => {
+      if (step === 1) return { selections: 1, type: 'text-input' as const };
+      if (step >= 2 && step <= 11) return { selections: 3, type: 'multiple-choice' as const };
+      if (step === 12 || step === 19) return { selections: 1, type: 'transition' as const };
+      if (step >= 13 && step <= 18) return { selections: 1, type: 'single-choice' as const };
+      if (step === 20 || step === 21) return { selections: 1, type: 'result-offer' as const };
+      return { selections: 1, type: 'unknown' as const };
+    })();
+
+    const flags = {
+      isTransition: step === 12 || step === 19,
+      isResult: step === 20 || step === 21,
+      isStrategic: step >= 13 && step <= 18,
+      isMainQuiz: step >= 2 && step <= 11,
+    };
+
+    const displayType = (() => {
+      if (step === 1) return 'Início';
+      if (step >= 2 && step <= 11) return 'Questões';
+      if (step === 12) return 'Transição';
+      if (step >= 13 && step <= 18) return 'Estratégicas';
+      if (step === 19) return 'Análise';
+      if (step === 20) return 'Resultado';
+      if (step === 21) return 'Oferta';
+      return 'Desconhecido';
+    })();
+
+    return { ...base, category, requirements, ...flags, displayType };
+  }, [currentStep]);
 
   const setStepValid = useCallback((step: number, valid: boolean) => {
     setStepValidation(prev => ({ ...prev, [step]: valid }));
