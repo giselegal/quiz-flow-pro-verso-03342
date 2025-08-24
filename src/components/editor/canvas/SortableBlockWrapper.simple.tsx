@@ -1,8 +1,7 @@
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { getOptimizedBlockComponent } from '@/utils/optimizedRegistry';
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
+import { getOptimizedBlockComponent } from '@/utils/optimizedRegistry';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { GripVertical, Trash2 } from 'lucide-react';
@@ -50,7 +49,7 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
   if (!Component) {
     return (
       <div ref={setNodeRef} style={style} className="my-1">
-        <Card className="border-dashed border-gray-300">
+        <div className="border border-dashed border-gray-300 rounded">
           <div className="p-4 text-center text-gray-600">
             <p className="font-medium">Componente não encontrado: {block.type}</p>
             <p className="text-xs mt-1">Verifique se o tipo está registrado</p>
@@ -58,23 +57,18 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
               {JSON.stringify(block, null, 2)}
             </pre>
           </div>
-        </Card>
+        </div>
       </div>
     );
   }
 
   return (
-    <div ref={setNodeRef} style={style} className="my-1">
-      <Card
+    <div ref={setNodeRef} style={style} className="my-0">
+      <div
         className={cn(
           'relative group transition-all duration-200',
-          isSelected &&
-            'ring-2 ring-blue-500 ring-offset-1 border-blue-300 bg-blue-50/30 shadow-lg',
-          !isSelected && 'border-stone-200 hover:border-stone-300'
+          isSelected ? 'ring-2 ring-blue-500 ring-offset-1' : ''
         )}
-        style={{
-          borderColor: isSelected ? '#3b82f6' : '#E5DDD5',
-        }}
       >
         {/* Drag handle and controls */}
         <div className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity z-10 flex items-center gap-1">
@@ -102,7 +96,7 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
         </div>
 
         {/* Component content */}
-        <div className="p-4" onClick={onSelect}>
+        <div onClick={onSelect}>
           <React.Suspense
             fallback={
               <div className="animate-pulse bg-gray-200 h-16 rounded flex items-center justify-center">
@@ -121,7 +115,7 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
             />
           </React.Suspense>
         </div>
-      </Card>
+      </div>
     </div>
   );
 };

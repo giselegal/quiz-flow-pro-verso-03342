@@ -753,20 +753,22 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
 
       <div className="w-full">
         <div
-          className="mx-auto transition-all"
+          className="mx-auto transition-all editor-pro-canvas"
           style={{ width: viewportWidth as number | string, maxWidth: '100%' }}
         >
           <div className={cn('rounded-xl shadow-sm', viewport !== 'full' && 'border bg-white')}>
             {mode === 'edit' ? (
-              <SimpleCanvasDropZone
-                blocks={currentStepData}
-                selectedBlockId={state.selectedBlockId}
-                onSelectBlock={(id: string) => actions.setSelectedBlockId(id)}
-                onUpdateBlock={(blockId: string, updates: Record<string, any>) =>
-                  actions.updateBlock(currentStepKey, blockId, updates)
-                }
-                onDeleteBlock={(blockId: string) => handleBlockDelete(blockId)}
-              />
+              <div className="max-w-4xl mx-auto p-6">
+                <SimpleCanvasDropZone
+                  blocks={currentStepData}
+                  selectedBlockId={state.selectedBlockId}
+                  onSelectBlock={(id: string) => actions.setSelectedBlockId(id)}
+                  onUpdateBlock={(blockId: string, updates: Record<string, any>) =>
+                    actions.updateBlock(currentStepKey, blockId, updates)
+                  }
+                  onDeleteBlock={(blockId: string) => handleBlockDelete(blockId)}
+                />
+              </div>
             ) : (
               <div>
                 <QuizRenderer
