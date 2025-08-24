@@ -396,16 +396,27 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       let newSelections: string[];
       if (multipleSelection) {
         const currentSelections = selectedOptions || [];
-        newSelections = currentSelections.includes(optionId)
-          ? currentSelections.filter((id: string) => id !== optionId)
-          : [...currentSelections, optionId];
+        if (currentSelections.includes(optionId)) {
+          newSelections = currentSelections.filter((id: string) => id !== optionId);
+        } else {
+          // Respeitar limite máximo de seleções
+          if (currentSelections.length >= (maxSelections || 1)) {
+            newSelections = currentSelections; // não adicionar além do limite
+          } else {
+            newSelections = [...currentSelections, optionId];
+          }
+        }
         onPropertyChange?.('selectedOptions', newSelections);
       } else {
         newSelections = [optionId];
         onPropertyChange?.('selectedOption', optionId);
       }
-      // Calcula regras por etapa
-      const step = Number(currentStepFromEditor ?? NaN);
+      // Calcula regras por etapa (com fallback para produção via window.__quizCurrentStep)
+      const globalStep = (window as any)?.__quizCurrentStep;
+      const stepCandidate = Number.isFinite(Number(currentStepFromEditor))
+        ? Number(currentStepFromEditor)
+        : Number(globalStep);
+      const step = Number.isFinite(stepCandidate) && stepCandidate > 0 ? stepCandidate : NaN;
       const isValidStep = Number.isFinite(step);
       const isScoringPhase = isValidStep && step >= 2 && step <= 11; // 3 seleções obrigatórias + autoavanço
       const isStrategicPhase = isValidStep && step >= 13 && step <= 18; // 1 seleção obrigatória, sem autoavanço
