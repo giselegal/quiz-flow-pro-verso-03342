@@ -77,7 +77,49 @@ export function normalizeStepBlocks(raw?: RawStepBlocks | null): StepBlocks {
 
 export function mergeStepBlocks(base: StepBlocks, incoming: RawStepBlocks): StepBlocks {
   const normalizedIncoming = normalizeStepBlocks(incoming);
-  return { ...base, ...normalizedIncoming };
+  const result: StepBlocks = { ...base };
+
+  for (const [stepKey, incomingBlocks] of Object.entries(normalizedIncoming)) {
+    const existing = result[stepKey] ?? [];
+
+    // Índice por ID para merge estável
+    const byId = new Map<string, any>();
+    existing.forEach(b => byId.set(String((b as any)?.id ?? ''), b));
+
+    const merged: any[] = [...existing];
+
+    for (const inc of incomingBlocks as any[]) {
+      const incId = String(inc?.id ?? '');
+      if (incId && byId.has(incId)) {
+        // Merge profundo e estável (properties/content)
+        const prev = byId.get(incId);
+        const mergedBlock = {
+          ...prev,
+          ...inc,
+          properties: { ...(prev?.properties || {}), ...(inc?.properties || {}) },
+          content: { ...(prev?.content || {}), ...(inc?.content || {}) },
+        };
+        const idx = merged.findIndex(b => String(b?.id ?? '') === incId);
+        if (idx >= 0) merged[idx] = mergedBlock;
+        byId.set(incId, mergedBlock);
+      } else {
+        // Acrescentar sem remover existentes do template
+        merged.push(inc);
+        if (incId) byId.set(incId, inc);
+      }
+    }
+
+    // Ordenar por campo 'order' se existir
+    merged.sort((a, b) => {
+      const ao = (a as any)?.order ?? 0;
+      const bo = (b as any)?.order ?? 0;
+      return ao - bo;
+    });
+
+    result[stepKey] = merged as any[];
+  }
+
+  return result;
 }
 
 export default { parseStepKey, candidateKeysForStep, getBlocksForStep, normalizeStepBlocks, mergeStepBlocks };

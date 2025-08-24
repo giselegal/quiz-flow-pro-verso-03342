@@ -159,14 +159,11 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       const components = Array.isArray(comps) ? comps : (supabaseIntegration.components ?? []);
       if (components && components.length > 0) {
         const grouped = groupByStepKey(components);
-        // Normalize incoming data before merging
-        const normalizedIncoming = normalizeStepBlocks(grouped);
+        // Normaliza e faz merge não-destrutivo por ID
+        const merged = mergeStepBlocks(rawState.stepBlocks, grouped);
         setState({
           ...rawState,
-          stepBlocks: {
-            ...rawState.stepBlocks,
-            ...normalizedIncoming,
-          },
+          stepBlocks: merged,
         });
       }
     } catch (err) {
@@ -238,10 +235,10 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       totalSteps: Object.keys(normalizedBlocks).length,
     });
 
-    // 🚨 FORÇA CARREGAMENTO: Sempre aplicar template normalizado
+    // 🚨 FORÇA CARREGAMENTO: Aplicar template normalizado por merge não-destrutivo
     setState({
       ...rawState,
-      stepBlocks: normalizedBlocks,
+      stepBlocks: mergeStepBlocks(rawState.stepBlocks, normalizedBlocks),
       currentStep: 1,
     });
 
@@ -267,7 +264,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
         const normalizedBlocks = normalizeStepBlocks(QUIZ_STYLE_21_STEPS_TEMPLATE);
         setState({
           ...rawState,
-          stepBlocks: normalizedBlocks,
+          stepBlocks: mergeStepBlocks(rawState.stepBlocks, normalizedBlocks),
         });
       }
     }
