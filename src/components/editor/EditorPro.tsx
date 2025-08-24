@@ -87,6 +87,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   }
 
   const { state, actions } = editorContext;
+  const [editorStepValidation, setEditorStepValidation] = useState<Record<number, boolean>>({});
   const [viewport, setViewport] = useState<'full' | 'sm' | 'md' | 'lg'>('full');
   const viewportWidth = useMemo(() => {
     switch (viewport) {
@@ -200,6 +201,35 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
     try {
       (window as any).__quizCurrentStep = safeCurrentStep;
     } catch {}
+  }, [safeCurrentStep]);
+
+  // Definir validação inicial da etapa no editor (paridade com /quiz)
+  useEffect(() => {
+    const hasQuestion = currentStepData.some(
+      (b: Block) => b.type === 'options-grid' || b.type === 'form-container'
+    );
+    setEditorStepValidation(prev => ({ ...prev, [safeCurrentStep]: !hasQuestion }));
+  }, [safeCurrentStep, currentStepData]);
+
+  // Escutar eventos dos blocos para refletir validação no editor
+  useEffect(() => {
+    const handleSelectionChange = (ev: Event) => {
+      const e = ev as CustomEvent<{ valid?: boolean }>; // demais campos são irrelevantes aqui
+      const valid = !!e.detail?.valid;
+      setEditorStepValidation(prev => ({ ...prev, [safeCurrentStep]: valid }));
+    };
+    const handleInputChange = (ev: Event) => {
+      const e = ev as CustomEvent<{ value?: string; valid?: boolean }>;
+      const ok =
+        typeof e.detail?.value === 'string' ? e.detail.value.trim().length > 0 : !!e.detail?.valid;
+      setEditorStepValidation(prev => ({ ...prev, [safeCurrentStep]: ok }));
+    };
+    window.addEventListener('quiz-selection-change', handleSelectionChange as EventListener);
+    window.addEventListener('quiz-input-change', handleInputChange as EventListener);
+    return () => {
+      window.removeEventListener('quiz-selection-change', handleSelectionChange as EventListener);
+      window.removeEventListener('quiz-input-change', handleInputChange as EventListener);
+    };
   }, [safeCurrentStep]);
 
   // componentes disponíveis - ideal extrair para config
@@ -744,14 +774,9 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               showHeader={true}
               navPosition="bottom"
               canGoPrev={safeCurrentStep > 1}
-              canGoNext={(() => {
-                // Usa o mesmo contrato do runner: etapa 1 é livre, 2–11 e 13–18 dependem de validação
-                // No editor, refletimos via eventos 'quiz-selection-change' emitidos pelos blocos.
-                // Como o EditorContext ainda não guarda stepValidation global, permitimos avançar sempre,
-                // exceto quando os blocos sinalizam inválido; para simplicidade, consideramos válido por padrão.
-                // TODO: Integrar stepValidation ao EditorContext para paridade total.
-                return true;
-              })()}
+              canGoNext={!!editorStepValidation[safeCurrentStep]}
+              onPrev={() => actions.setCurrentStep(Math.max(1, safeCurrentStep - 1))}
+              onNext={() => actions.setCurrentStep(Math.min(21, safeCurrentStep + 1))}
             >
               <div className="quiz-content p-8 space-y-6">
                 <CanvasDropZone
