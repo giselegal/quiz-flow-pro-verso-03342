@@ -1,3 +1,4 @@
+import { localPublishStore } from '@/services/localPublishStore';
 import {
   closestCenter,
   DndContext,
@@ -27,7 +28,6 @@ import {
   validateEditorJSON,
 } from '../../utils/editorUtils';
 import { useNotification } from '../ui/Notification';
-import { localPublishStore } from '@/services/localPublishStore';
 import { CanvasDropZone } from './canvas/CanvasDropZone.simple';
 import { DraggableComponentItem } from './dnd/DraggableComponentItem';
 import { useEditor } from './EditorProvider';

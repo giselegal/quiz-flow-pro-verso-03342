@@ -1,6 +1,6 @@
+import { localPublishStore } from '@/services/localPublishStore';
 import type { Block } from '@/types/editor';
 import { TemplateManager } from '@/utils/TemplateManager';
-import { localPublishStore } from '@/services/localPublishStore';
 import { useCallback, useEffect, useState } from 'react';
 
 interface UseJsonTemplateOptions {
@@ -47,9 +47,10 @@ export const useJsonTemplate = (
         console.log(`🔄 useJsonTemplate: Carregando ${stepId}...`);
         // Fast-path: checar publicação local primeiro
         const published = localPublishStore.getBlocks(stepId);
-        const stepBlocks = published && published.length > 0
-          ? published
-          : await TemplateManager.loadStepBlocks(stepId);
+        const stepBlocks =
+          published && published.length > 0
+            ? published
+            : await TemplateManager.loadStepBlocks(stepId);
 
         setBlocks(stepBlocks);
         onLoad?.(stepId, stepBlocks);
@@ -92,7 +93,15 @@ export const useJsonTemplate = (
         console.warn('⚠️ Falha no pre-carregamento:', err);
       });
     }
-  }, [initialStepId, preload, loadStep]);
+    // Quando houver publicação, recarregar o passo atual
+    const onPublished = () => {
+      if (currentStepId) loadStep(currentStepId);
+    };
+    window.addEventListener('quiz-published', onPublished);
+    return () => {
+      window.removeEventListener('quiz-published', onPublished);
+    };
+  }, [initialStepId, preload, loadStep, currentStepId]);
 
   return {
     blocks,

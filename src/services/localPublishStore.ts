@@ -51,6 +51,17 @@ export const localPublishStore = {
         version,
       };
       ls.setItem(META_KEY, JSON.stringify(meta));
+
+      // Notify listeners that a new publication is available
+      try {
+        if (typeof window !== 'undefined' && typeof window.dispatchEvent === 'function') {
+          window.dispatchEvent(
+            new CustomEvent('quiz-published', { detail: { steps: meta.steps, version } })
+          );
+        }
+      } catch (_e) {
+        // ignore
+      }
       return true;
     } catch (e) {
       console.warn('localPublishStore.saveAll failed:', e);

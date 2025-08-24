@@ -1,7 +1,7 @@
 // @ts-nocheck
 // Importações
-import { templateService } from '../services/templateService';
 import { localPublishStore } from '@/services/localPublishStore';
+import { templateService } from '../services/templateService';
 import type { Block } from '../types/editor';
 
 /**
@@ -40,7 +40,7 @@ export class TemplateManager {
       }
 
       const stepNumber = parseInt(stepId.replace('step-', ''));
-  console.log(`🔄 Carregando template para etapa ${stepNumber}`);
+      console.log(`🔄 Carregando template para etapa ${stepNumber}`);
 
       // ===== SISTEMA INTEGRADO: JSON + TYPESCRIPT =====
 
@@ -50,7 +50,7 @@ export class TemplateManager {
         console.log(`🔧 Step${stepNumber}: Sistema TypeScript tradicional`);
       }
 
-  // Usar o templateService que já integra JSON para Step01
+      // Usar o templateService que já integra JSON para Step01
       let template = null;
       const maxRetries = 3;
 
