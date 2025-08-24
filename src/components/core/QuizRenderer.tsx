@@ -128,9 +128,7 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
               key={block.id || index}
               className={
                 'block-container relative transition-all ' +
-                (isSelected
-                  ? 'ring-2 ring-blue-500 ring-offset-2 rounded-lg'
-                  : '')
+                (isSelected ? 'ring-2 ring-blue-500 ring-offset-2 rounded-lg' : '')
               }
               onClick={() => {
                 if (isSelectable && block.id && onBlockClick) {

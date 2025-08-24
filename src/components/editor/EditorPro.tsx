@@ -681,7 +681,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
           </div>
         </div>
 
-  {/* Banner de modo removido */}
+        {/* Banner de modo removido */}
       </div>
 
       {/* Área scrollável do canvas */}
@@ -737,7 +737,9 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   const PropertiesColumn: React.FC = () => (
     <div className="w-[360px] min-w-[300px] bg-white border-l border-gray-200 flex flex-col">
       {selectedBlock ? (
-        <Suspense fallback={<div className="p-4 text-sm text-gray-600">Carregando propriedades…</div>}>
+        <Suspense
+          fallback={<div className="p-4 text-sm text-gray-600">Carregando propriedades…</div>}
+        >
           <EnhancedUniversalPropertiesPanelFixed
             selectedBlock={selectedBlock as any}
             onUpdate={(blockId: string, updates: Record<string, any>) =>
