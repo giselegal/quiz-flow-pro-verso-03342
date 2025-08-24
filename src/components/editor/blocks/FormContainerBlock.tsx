@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
-import type { BlockComponentProps, BlockData } from '@/types/blocks';
 import { getEnhancedBlockComponent } from '@/components/editor/blocks/enhancedBlockRegistry';
+import type { BlockComponentProps, BlockData } from '@/types/blocks';
+import React, { useEffect } from 'react';
 
 /**
  * FormContainerBlock
@@ -83,7 +83,20 @@ const FormContainerBlock: React.FC<BlockComponentProps> = ({ block }) => {
     };
 
     window.addEventListener('step01-button-state-change', handler as EventListener);
-    return () => window.removeEventListener('step01-button-state-change', handler as EventListener);
+
+    // Integração direta com mudanças do input (Etapa 1)
+    const onQuizInput = (e: Event) => {
+      const detail = (e as CustomEvent).detail as { value?: string; valid?: boolean };
+      const ok =
+        typeof detail?.value === 'string' ? detail.value.trim().length > 0 : !!detail?.valid;
+      applyDisabled(!ok);
+    };
+    window.addEventListener('quiz-input-change', onQuizInput as EventListener);
+
+    return () => {
+      window.removeEventListener('step01-button-state-change', handler as EventListener);
+      window.removeEventListener('quiz-input-change', onQuizInput as EventListener);
+    };
   }, [properties]);
 
   return (

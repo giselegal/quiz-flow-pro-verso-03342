@@ -1,8 +1,8 @@
 import { cn } from '@/lib/utils';
+import type { BlockComponentProps } from '@/types/blocks';
 import { ArrowRight, Download, Edit3, MousePointer2, Play, Star } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { userResponseService } from '../../../services/userResponseService';
-import type { BlockComponentProps } from '@/types/blocks';
 import { trackQuizStart } from '../../../utils/analytics';
 
 /**
@@ -149,11 +149,20 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
 
     if (requiresValidInput) {
       window.addEventListener('quiz-selection-change', handleQuizSelectionChange as EventListener);
+      // Também reagir a mudanças no input de nome (Step 1)
+      const handleQuizInputChange = (event: CustomEvent) => {
+        const { value, valid } = event.detail || {};
+        // Considerar válido se houver string não vazia
+        const ok = typeof value === 'string' ? value.trim().length > 0 : !!valid;
+        setIsValidated(ok);
+      };
+      window.addEventListener('quiz-input-change', handleQuizInputChange as EventListener);
       return () => {
         window.removeEventListener(
           'quiz-selection-change',
           handleQuizSelectionChange as EventListener
         );
+        window.removeEventListener('quiz-input-change', handleQuizInputChange as EventListener);
       };
     }
   }, [requiresValidInput]);
@@ -374,6 +383,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
       {/* Botão principal */}
       <button
         type="button"
+        id={block?.id}
         disabled={isButtonDisabled}
         aria-disabled={isButtonDisabled}
         className={getResponsiveClasses()}
