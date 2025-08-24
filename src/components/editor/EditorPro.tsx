@@ -505,7 +505,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   );
 
   const CanvasArea: React.FC = () => (
-    <div className="flex-1 flex flex-col bg-gray-100">
+    <div className="flex-1 flex flex-col bg-gray-100 min-h-0">
       <div className="bg-white border-b border-gray-200 p-4">
         <div className="flex items-center justify-between">
           <div>
@@ -751,37 +751,40 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         </div>
       </div>
 
-      <div className="w-full">
-        <div
-          className="mx-auto transition-all editor-pro-canvas"
-          style={{ width: viewportWidth as number | string, maxWidth: '100%' }}
-        >
-          <div className={cn('rounded-xl shadow-sm', viewport !== 'full' && 'border bg-white')}>
-            {mode === 'edit' ? (
-              <div className="max-w-4xl mx-auto p-6">
-                <SimpleCanvasDropZone
-                  blocks={currentStepData}
-                  selectedBlockId={state.selectedBlockId}
-                  onSelectBlock={(id: string) => actions.setSelectedBlockId(id)}
-                  onUpdateBlock={(blockId: string, updates: Record<string, any>) =>
-                    actions.updateBlock(currentStepKey, blockId, updates)
-                  }
-                  onDeleteBlock={(blockId: string) => handleBlockDelete(blockId)}
-                />
-              </div>
-            ) : (
-              <div>
-                <QuizRenderer
-                  mode="preview"
-                  onStepChange={handleStepSelect}
-                  initialStep={safeCurrentStep}
-                  blocksOverride={currentStepData}
-                  currentStepOverride={safeCurrentStep}
-                  previewEditable
-                  onBlockClick={(id: string) => actions.setSelectedBlockId(id)}
-                />
-              </div>
-            )}
+      {/* Área scrollável do canvas */}
+      <div className="flex-1 overflow-y-auto">
+        <div className="w-full">
+          <div
+            className="mx-auto transition-all editor-pro-canvas"
+            style={{ width: viewportWidth as number | string, maxWidth: '100%' }}
+          >
+            <div className={cn('rounded-xl shadow-sm', viewport !== 'full' && 'border bg-white')}>
+              {mode === 'edit' ? (
+                <div className="max-w-4xl mx-auto p-6">
+                  <SimpleCanvasDropZone
+                    blocks={currentStepData}
+                    selectedBlockId={state.selectedBlockId}
+                    onSelectBlock={(id: string) => actions.setSelectedBlockId(id)}
+                    onUpdateBlock={(blockId: string, updates: Record<string, any>) =>
+                      actions.updateBlock(currentStepKey, blockId, updates)
+                    }
+                    onDeleteBlock={(blockId: string) => handleBlockDelete(blockId)}
+                  />
+                </div>
+              ) : (
+                <div>
+                  <QuizRenderer
+                    mode="preview"
+                    onStepChange={handleStepSelect}
+                    initialStep={safeCurrentStep}
+                    blocksOverride={currentStepData}
+                    currentStepOverride={safeCurrentStep}
+                    previewEditable
+                    onBlockClick={(id: string) => actions.setSelectedBlockId(id)}
+                  />
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
