@@ -75,7 +75,9 @@ const DecorativeBarInlineBlock: React.FC<BlockComponentProps> = ({
     showShadow = true,
   } = (block?.properties as any) || {};
 
-  const resolveWidth = (value: string | number): { className?: string; style?: React.CSSProperties } => {
+  const resolveWidth = (
+    value: string | number
+  ): { className?: string; style?: React.CSSProperties } => {
     if (typeof value === 'number') return { style: { width: `${value}px` } };
     if (/^\d+(px|rem|em|%)$/.test(value) || value.includes('min(') || value.includes('max(')) {
       return { style: { width: value } };

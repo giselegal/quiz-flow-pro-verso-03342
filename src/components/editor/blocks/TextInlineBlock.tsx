@@ -345,10 +345,7 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
   }, [isEditing, editContent, autoResizeTextarea]);
 
   // Helper: resolve font size classes allowing raw Tailwind classes
-  const resolveFontSizeClass = (
-    size: string | undefined,
-    fallback: string
-  ): string => {
+  const resolveFontSizeClass = (size: string | undefined, fallback: string): string => {
     if (!size) return fallback;
     const mapped = fontSizeClasses[size as keyof typeof fontSizeClasses];
     return mapped ?? (typeof size === 'string' ? size : fallback);

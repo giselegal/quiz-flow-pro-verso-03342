@@ -120,7 +120,9 @@ const ImageInlineBlock: React.FC<BlockComponentProps> = ({
     full: 'max-w-full',
   } as const;
 
-  const resolveMaxWidth = (value: string | number | undefined): { className?: string; style?: React.CSSProperties } => {
+  const resolveMaxWidth = (
+    value: string | number | undefined
+  ): { className?: string; style?: React.CSSProperties } => {
     if (value === undefined || value === null) return { className: undefined, style: undefined };
     if (typeof value === 'number') return { style: { maxWidth: value } };
     const mapped = maxWidthClasses[value as keyof typeof maxWidthClasses];

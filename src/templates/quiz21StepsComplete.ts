@@ -54,18 +54,17 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       type: 'text',
       order: 1,
       content: {
-        text:
-          '<span style="color: #B89B7A; font-weight: 700; font-family: \'Playfair Display\', serif;">Chega</span> <span style="font-family: \'Playfair Display\', serif;">de um guarda-roupa lotado e da sensação de que</span> <span style="color: #B89B7A; font-weight: 700; font-family: \'Playfair Display\', serif;">nada combina com você.</span>',
+        text: '<span style="color: #B89B7A; font-weight: 700; font-family: \'Playfair Display\', serif;">Chega</span> <span style="font-family: \'Playfair Display\', serif;">de um guarda-roupa lotado e da sensação de que</span> <span style="color: #B89B7A; font-weight: 700; font-family: \'Playfair Display\', serif;">nada combina com você.</span>',
       },
       properties: {
-        fontSize: 'text-2xl',
+        fontSize: 'text-3xl md:text-4xl',
         fontWeight: 'font-bold',
         textAlign: 'center',
         color: '#432818',
-        lineHeight: 'leading-snug',
+        lineHeight: 'leading-tight',
         maxWidth: '640px',
-        marginTop: 8,
-        marginBottom: 8,
+        marginTop: 12,
+        marginBottom: 10,
       },
     },
     {
@@ -73,17 +72,16 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       type: 'text',
       order: 2,
       content: {
-        text:
-          'Em poucos minutos, descubra seu Estilo Predominante — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.',
+        text: 'Em poucos minutos, descubra seu Estilo Predominante — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.',
       },
       properties: {
-        fontSize: 'text-base',
+        fontSize: 'text-lg md:text-xl',
         fontWeight: 'font-normal',
         textAlign: 'center',
         color: '#432818',
         lineHeight: 'leading-relaxed',
         maxWidth: '640px',
-        marginTop: 4,
+        marginTop: 6,
         marginBottom: 16,
       },
     },
@@ -292,7 +290,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
     {
       id: 'step2-question',
       type: 'options-grid',
-  order: 4,
+      order: 4,
       content: {
         question: 'QUAL O SEU TIPO DE ROUPA FAVORITA?',
         options: [
@@ -1804,7 +1802,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
     {
       id: 'step20-style-card',
       type: 'style-card-inline',
-  order: 5,
+      order: 5,
       content: {
         title: 'Características do seu estilo',
         description: 'O estilo {resultStyle} se caracteriza por:',
@@ -1831,7 +1829,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
     {
       id: 'step20-secondary-styles',
       type: 'secondary-styles',
-  order: 6,
+      order: 6,
       content: {
         title: 'Seus estilos complementares',
         subtitle: 'Você também apresenta elementos destes estilos:',
@@ -1861,7 +1859,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
     {
       id: 'step20-before-after',
       type: 'before-after-inline',
-  order: 7,
+      order: 7,
       content: {
         title: 'Sua transformação é possível',
         subtitle: 'Veja o impacto de aplicar seu estilo no dia a dia',
@@ -1879,7 +1877,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
     {
       id: 'step20-bonuses',
       type: 'bonus',
-  order: 8,
+      order: 8,
       content: {
         title: 'Bônus de transformação inclusos',
       },
