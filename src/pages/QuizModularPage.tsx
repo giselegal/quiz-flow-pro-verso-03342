@@ -67,10 +67,8 @@ const QuizModularPage: React.FC = () => {
     }
   }, [templateBlocks, templateLoading, templateError, currentStep]);
 
-  // Recarregar quando currentStep mudar
-  useEffect(() => {
-    loadStep(`step-${currentStep}`);
-  }, [currentStep, loadStep]);
+  // Removido: o próprio hook useJsonTemplate já recarrega ao mudar o stepId inicial
+  // (evita chamadas duplas de loadStep que causavam piscadas)
 
   // Sincronizar step com hook do quiz
   useEffect(() => {
@@ -262,6 +260,20 @@ const QuizModularPage: React.FC = () => {
   }, [currentStep]);
 
   const progress = ((currentStep - 1) / 20) * 100;
+
+  // Debounce opcional para exibição de loading (reduz flicker em trocas rápidas)
+  const [showLoading, setShowLoading] = useState(false);
+  useEffect(() => {
+    let t: ReturnType<typeof setTimeout> | undefined;
+    if (isLoading) {
+      t = setTimeout(() => setShowLoading(true), 120);
+    } else {
+      setShowLoading(false);
+    }
+    return () => {
+      if (t) clearTimeout(t);
+    };
+  }, [isLoading]);
 
   // Configuração do DnD
   const sensors = useSensors(
@@ -477,7 +489,7 @@ const QuizModularPage: React.FC = () => {
                 {/* 🎨 ÁREA DE RENDERIZAÇÃO DOS BLOCOS */}
                 <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl shadow-stone-200/40 border border-stone-200/30 ring-1 ring-stone-100/20 overflow-hidden">
                   {/* Estado de loading */}
-                  {isLoading && (
+                  {showLoading && (
                     <div className="min-h-[500px] flex items-center justify-center">
                       <div className="text-center">
                         <div className="animate-spin w-8 h-8 border-2 border-[#B89B7A] border-t-transparent rounded-full mx-auto mb-4"></div>
@@ -508,7 +520,7 @@ const QuizModularPage: React.FC = () => {
                   )}
 
                   {/* Renderização dos blocos */}
-                  {!isLoading && !error && (
+                  {!showLoading && !error && (
                     <div className="quiz-content p-8 space-y-6">
                       {blocks.length === 0 ? (
                         <div className="text-center py-12">
