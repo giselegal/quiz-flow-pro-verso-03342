@@ -26,7 +26,7 @@ import {
   devLog,
   validateEditorJSON,
 } from '../../utils/editorUtils';
-import { QuizRenderer } from '../core/QuizRenderer';
+import { CanvasDropZone } from './canvas/CanvasDropZone.simple';
 import { useNotification } from '../ui/Notification';
 import { DraggableComponentItem } from './dnd/DraggableComponentItem';
 import { useEditor } from './EditorProvider';
@@ -693,15 +693,13 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
           >
             <div className={cn('rounded-xl shadow-sm', viewport !== 'full' && 'border bg-white')}>
               <div>
-                <QuizRenderer
-                  mode="preview"
-                  onStepChange={handleStepSelect}
-                  initialStep={safeCurrentStep}
-                  blocksOverride={currentStepData}
-                  currentStepOverride={safeCurrentStep}
-                  previewEditable
+                <CanvasDropZone
+                  blocks={currentStepData}
                   selectedBlockId={state.selectedBlockId}
-                  onBlockClick={(id: string) => actions.setSelectedBlockId(id)}
+                  onSelectBlock={(id: string) => actions.setSelectedBlockId(id)}
+                  onUpdateBlock={(id: string, updates: any) => actions.updateBlock(currentStepKey, id, updates)}
+                  onDeleteBlock={(id: string) => actions.removeBlock(currentStepKey, id)}
+                  className="min-h-[400px] p-4"
                 />
               </div>
             </div>
