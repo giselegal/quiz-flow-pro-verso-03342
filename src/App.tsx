@@ -14,6 +14,7 @@ const AuthPage = lazy(() => import('./pages/AuthPage'));
 // Import estático para evitar falhas de dynamic import em alguns ambientes (ex.: Lovable)
 import MainEditor from './pages/MainEditor';
 const DashboardPage = lazy(() => import('./pages/admin/DashboardPage'));
+const QuizModularPage = lazy(() => import('./pages/QuizModularPage'));
 
 // Loading component
 const PageLoading = () => (
@@ -56,7 +57,12 @@ function App() {
                   </Suspense>
                 </Route>
 
-                {/* Rotas de quiz desativadas temporariamente para evitar conflitos de DnD */}
+                {/* 🎯 QUIZ MODULAR (produção-like com blocos do editor) */}
+                <Route path="/quiz-modular">
+                  <Suspense fallback={<PageLoading />}>
+                    <QuizModularPage />
+                  </Suspense>
+                </Route>
 
                 {/* 📊 DASHBOARD ADMINISTRATIVO */}
                 <ProtectedRoute path="/admin" component={DashboardPage} requireAuth={true} />
