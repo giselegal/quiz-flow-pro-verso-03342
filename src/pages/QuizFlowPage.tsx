@@ -117,6 +117,9 @@ const QuizFlowPage: React.FC = () => {
       progress={progress}
       onNext={nextStep}
       onPrev={prevStep}
+  navPosition="bottom"
+  canGoNext={quizState.stepValidation?.[currentStep] ?? currentStep === 1 ? false : true}
+  canGoPrev={currentStep > 1}
     >
       {isLoading && (
         <div className="min-h-[480px] flex items-center justify-center">

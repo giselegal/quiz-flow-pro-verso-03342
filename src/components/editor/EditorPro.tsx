@@ -742,6 +742,16 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               progress={Math.round((safeCurrentStep / 21) * 100)}
               variant="embedded"
               showHeader={true}
+              navPosition="bottom"
+              canGoPrev={safeCurrentStep > 1}
+              canGoNext={(() => {
+                // Usa o mesmo contrato do runner: etapa 1 é livre, 2–11 e 13–18 dependem de validação
+                // No editor, refletimos via eventos 'quiz-selection-change' emitidos pelos blocos.
+                // Como o EditorContext ainda não guarda stepValidation global, permitimos avançar sempre,
+                // exceto quando os blocos sinalizam inválido; para simplicidade, consideramos válido por padrão.
+                // TODO: Integrar stepValidation ao EditorContext para paridade total.
+                return true;
+              })()}
             >
               <div className="quiz-content p-8 space-y-6">
                 <CanvasDropZone
