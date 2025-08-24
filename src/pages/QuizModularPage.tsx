@@ -358,8 +358,7 @@ const QuizModularPage: React.FC = () => {
           termsText: (legal?.properties as any)?.termsText || step1Config.legal.termsText,
           privacyLinkUrl:
             (legal?.properties as any)?.privacyLinkUrl || step1Config.legal.privacyLinkUrl,
-          termsLinkUrl:
-            (legal?.properties as any)?.termsLinkUrl || step1Config.legal.termsLinkUrl,
+          termsLinkUrl: (legal?.properties as any)?.termsLinkUrl || step1Config.legal.termsLinkUrl,
         },
         footerText: (footer as any)?.content?.text || step1Config.footerText,
       };
@@ -391,9 +390,9 @@ const QuizModularPage: React.FC = () => {
     return (
       <section aria-labelledby="quiz-title" className="p-6">
         {/* Header do quiz-intro-header */}
-    <div className="max-w-2xl mx-auto bg-[#F8F9FA] text-center p-6 rounded-lg shadow-sm mb-4">
+        <div className="max-w-2xl mx-auto bg-[#F8F9FA] text-center p-6 rounded-lg shadow-sm mb-4">
           <img
-      src={derived.logoUrl}
+            src={derived.logoUrl}
             alt="Logo Gisele Galvão"
             width={96}
             height={96}
@@ -529,11 +528,7 @@ const QuizModularPage: React.FC = () => {
               {derived.legal.privacyText}
             </a>{' '}
             e{' '}
-            <a
-              href={derived.legal.termsLinkUrl}
-              className="underline"
-              style={{ color: '#B89B7A' }}
-            >
+            <a href={derived.legal.termsLinkUrl} className="underline" style={{ color: '#B89B7A' }}>
               {derived.legal.termsText}
             </a>
             .
