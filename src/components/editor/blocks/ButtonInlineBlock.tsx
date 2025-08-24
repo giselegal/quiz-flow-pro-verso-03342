@@ -475,6 +475,8 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
                   },
                   Number(autoAdvanceDelay) || 0
                 );
+              } else {
+                // Auto-advance desativado: não navega automaticamente após tracking; aguarda clique padrão acima
               }
             }
           }
