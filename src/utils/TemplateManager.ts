@@ -1,6 +1,5 @@
 // @ts-nocheck
 // Importações
-import { localPublishStore } from '@/services/localPublishStore';
 import { templateService } from '../services/templateService';
 import type { Block } from '../types/editor';
 
@@ -15,18 +14,6 @@ export class TemplateManager {
    */
   static async loadStepBlocks(stepId: string): Promise<Block[]> {
     try {
-      // 0) Preferir versão PUBLICADA local (se existir)
-      try {
-        const published = localPublishStore.getBlocks(stepId);
-        if (published && published.length > 0) {
-          console.log(`📣 Using PUBLISHED blocks for ${stepId} (${published.length})`);
-          this.cache.set(stepId, published);
-          return published;
-        }
-      } catch (e) {
-        console.warn('TemplateManager: published read failed, will fallback.', e);
-      }
-
       // Verifica cache primeiro - APENAS se tiver blocos válidos
       if (this.cache.has(stepId)) {
         const cachedBlocks = this.cache.get(stepId)!;

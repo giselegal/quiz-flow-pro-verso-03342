@@ -1,252 +1,13 @@
 import UniversalBlockRenderer from '@/components/editor/blocks/UniversalBlockRenderer';
-// Removed header UI components for a cleaner production page
+import EnhancedComponentsSidebar from '@/components/editor/EnhancedComponentsSidebar';
+import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
 import { useQuizFlow } from '@/hooks/core/useQuizFlow';
-import { useJsonTemplate } from '@/hooks/useJsonTemplate';
 import { cn } from '@/lib/utils';
-import { Block } from '@/types/editor';
-import React, { useEffect, useMemo, useState } from 'react';
-
-// Hoisted StaticStep1 to avoid remounts that reset input state on each parent render
-type StaticStep1Props = {
-  blocks: Block[];
-  step1Config: {
-    logoUrl: string;
-    introImageUrl: string;
-    ctaText: string;
-    requiredMessage: string;
-    legal: {
-      text: string;
-      privacyText: string;
-      termsText: string;
-      privacyLinkUrl: string;
-      termsLinkUrl: string;
-    };
-    footerText: string;
-  };
-  setStepValidation: React.Dispatch<React.SetStateAction<Record<number, boolean>>>;
-  setStepValid?: (step: number, isValid: boolean) => void;
-  setQuizAnswers: React.Dispatch<React.SetStateAction<Record<string, any>>>;
-  handleNext: () => void;
-};
-
-const StaticStep1: React.FC<StaticStep1Props> = ({
-  blocks,
-  step1Config,
-  setStepValidation,
-  setStepValid,
-  setQuizAnswers,
-  handleNext,
-}) => {
-  const [name, setName] = useState('');
-  const isValid = name.trim().length > 0;
-
-  // Derivar conteúdos da etapa 1 a partir dos blocos carregados, para refletir edições do editor
-  const derived = useMemo(() => {
-    const find = (t: string) => blocks.find(b => b.type === t);
-    const findById = (id: string) => blocks.find(b => b.id === id);
-    const header = find('quiz-intro-header');
-    const titleTextBlock = findById('step1-title') || blocks.find(b => b.type === 'text');
-    const imageBlock = find('image');
-    const formContainer = find('form-container');
-    const legal = find('legal-notice');
-    const footer = findById('step1-footer');
-
-    const children = (formContainer?.properties as any)?.children || [];
-    const inputChild = children.find((c: any) => c.type === 'form-input');
-    const buttonChild = children.find((c: any) => c.type === 'button-inline');
-
-    return {
-      logoUrl: (header?.properties as any)?.logoUrl || step1Config.logoUrl,
-      titleHtml: (titleTextBlock as any)?.content?.text as string | undefined,
-      introImageUrl: (imageBlock?.properties as any)?.src || step1Config.introImageUrl,
-      labelText: (inputChild?.properties as any)?.label || 'NOME',
-      placeholder:
-        (inputChild?.properties as any)?.placeholder || 'Digite seu primeiro nome aqui...',
-      buttonText: (buttonChild?.properties as any)?.text || step1Config.ctaText,
-      requiredMessage:
-        (formContainer as any)?.content?.validationMessage || step1Config.requiredMessage,
-      legal: {
-        text: (legal?.properties as any)?.copyrightText || step1Config.legal.text,
-        privacyText: (legal?.properties as any)?.privacyText || step1Config.legal.privacyText,
-        termsText: (legal?.properties as any)?.termsText || step1Config.legal.termsText,
-        privacyLinkUrl:
-          (legal?.properties as any)?.privacyLinkUrl || step1Config.legal.privacyLinkUrl,
-        termsLinkUrl: (legal?.properties as any)?.termsLinkUrl || step1Config.legal.termsLinkUrl,
-      },
-      footerText: (footer as any)?.content?.text || step1Config.footerText,
-    };
-  }, [blocks, step1Config]);
-
-  useEffect(() => {
-    // Emitir eventos esperados e sincronizar validação superior
-    const detail = { value: name, valid: isValid } as any;
-    window.dispatchEvent(new CustomEvent('quiz-input-change', { detail }));
-    window.dispatchEvent(
-      new CustomEvent('step01-button-state-change', {
-        detail: { buttonId: 'intro-cta-button', enabled: isValid, disabled: !isValid },
-      })
-    );
-    setStepValidation(prev => ({ ...prev, 1: isValid }));
-    setStepValid?.(1, isValid);
-    setQuizAnswers(prev => ({ ...prev, userName: name }));
-  }, [name, isValid, setQuizAnswers, setStepValid, setStepValidation]);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!isValid) return;
-    const detail = { stepId: 'step-2', source: 'static-step1' } as any;
-    window.dispatchEvent(new CustomEvent('navigate-to-step', { detail }));
-    window.dispatchEvent(new CustomEvent('quiz-navigate-to-step', { detail }));
-    handleNext();
-  };
-
-  return (
-    <section aria-labelledby="quiz-title" className="p-6">
-      {/* Header do quiz-intro-header */}
-      <div className="max-w-2xl mx-auto bg-[#F8F9FA] text-center p-6 rounded-lg shadow-sm mb-4">
-        <img
-          src={derived.logoUrl}
-          alt="Logo Gisele Galvão"
-          width={96}
-          height={96}
-          className="mx-auto mb-3"
-          loading="eager"
-          decoding="async"
-        />
-      </div>
-
-      {/* Título estilizado (text block) */}
-      <div className="max-w-2xl mx-auto text-center mb-2">
-        {derived.titleHtml ? (
-          <h1
-            id="quiz-title"
-            className="text-3xl md:text-4xl font-bold leading-tight"
-            style={{ color: '#432818' }}
-            dangerouslySetInnerHTML={{ __html: derived.titleHtml }}
-          />
-        ) : (
-          <h1
-            id="quiz-title"
-            className="text-3xl md:text-4xl font-bold leading-tight"
-            style={{ color: '#432818' }}
-          >
-            Quiz de Estilo Pessoal
-          </h1>
-        )}
-      </div>
-
-      {/* Imagem de introdução */}
-      <div className="max-w-2xl mx-auto flex justify-center mb-3">
-        <img
-          src={derived.introImageUrl}
-          alt=""
-          className="object-cover rounded-xl"
-          loading="lazy"
-          decoding="async"
-          style={{ maxWidth: '300px', height: 'auto' }}
-        />
-      </div>
-
-      {/* Barra decorativa */}
-      <div className="max-w-2xl mx-auto flex justify-center mb-6">
-        <div
-          aria-hidden="true"
-          style={{
-            width: 'min(640px, 100%)',
-            height: 4,
-            borderRadius: 3,
-            background: 'linear-gradient(90deg, #B89B7A 0%, #D4C2A8 50%, #B89B7A 100%)',
-            boxShadow: '0 1px 2px rgba(0,0,0,0.12)',
-          }}
-        />
-      </div>
-
-      {/* Formulário (form-container + form-input + button-inline) */}
-      <form
-        className="max-w-2xl mx-auto"
-        onSubmit={handleSubmit}
-        noValidate
-        onMouseDown={e => e.stopPropagation()}
-        onClick={e => e.stopPropagation()}
-        onKeyDown={e => e.stopPropagation()}
-        onTouchStart={e => e.stopPropagation()}
-      >
-        <div className="bg-white rounded-lg p-4 pointer-events-auto">
-          <label
-            htmlFor="user-name"
-            className="block text-sm font-medium mb-1"
-            style={{ color: '#432818' }}
-          >
-            {derived.labelText || 'NOME'}
-          </label>
-          <input
-            id="user-name"
-            name="userName"
-            type="text"
-            autoComplete="given-name"
-            autoFocus
-            placeholder={derived.placeholder}
-            className="w-full rounded-md px-4 py-3 focus:outline-none focus:ring-2"
-            style={{
-              backgroundColor: '#FFFFFF',
-              border: '2px solid #B89B7A',
-              color: '#432818',
-              borderRadius: 8,
-              fontSize: 16,
-            }}
-            value={name}
-            onChange={e => setName(e.target.value)}
-            aria-invalid={!isValid}
-            aria-describedby={!isValid ? 'name-help' : undefined}
-            required
-          />
-          {!isValid && (
-            <p id="name-help" className="text-sm mt-2" style={{ color: '#9CA3AF' }}>
-              {derived.requiredMessage}
-            </p>
-          )}
-
-          <button
-            id="intro-cta-button"
-            type="submit"
-            disabled={!isValid}
-            className={cn('mt-4 w-full px-4 py-3 rounded-md font-medium transition-opacity')}
-            style={{
-              backgroundColor: isValid ? '#B89B7A' : '#E7E5E4',
-              color: isValid ? '#FFFFFF' : '#A8A29E',
-              border: '1px solid #B89B7A',
-              borderRadius: 8,
-            }}
-          >
-            {derived.buttonText}
-          </button>
-        </div>
-
-        <noscript>
-          <p className="text-xs mt-2" style={{ color: '#9CA3AF' }}>
-            Ative o JavaScript para continuar o quiz.
-          </p>
-        </noscript>
-      </form>
-
-      {/* Aviso legal */}
-      <div className="max-w-2xl mx-auto text-center mt-6" style={{ color: '#9CA3AF' }}>
-        <p className="text-xs">
-          {derived.legal.text}{' '}
-          <a href={derived.legal.privacyLinkUrl} className="underline" style={{ color: '#B89B7A' }}>
-            {derived.legal.privacyText}
-          </a>{' '}
-          e{' '}
-          <a href={derived.legal.termsLinkUrl} className="underline" style={{ color: '#B89B7A' }}>
-            {derived.legal.termsText}
-          </a>
-          .
-        </p>
-        <p className="text-xs mt-2">{derived.footerText}</p>
-      </div>
-    </section>
-  );
-};
+import { Block, BlockType } from '@/types/editor';
+import { loadStepBlocks } from '@/utils/quiz21StepsRenderer';
+import { DndContext, DragEndEvent, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
+import React, { useEffect, useState } from 'react';
 
 /**
  * 🎯 QUIZ MODULAR - VERSÃO PRODUÇÃO COM ETAPAS DO EDITOR
@@ -285,28 +46,36 @@ const QuizModularPage: React.FC = () => {
     preloadTemplates?.();
   }, [preloadTemplates]);
 
-  // (Carregamento movido para useJsonTemplate)
-  const {
-    blocks: templateBlocks,
-    loading: templateLoading,
-    error: templateError,
-  } = useJsonTemplate(`step-${currentStep}`, { preload: true });
-
-  // Sincronizar blocos/estado com o hook de template
+  // Carregar blocos da etapa atual
   useEffect(() => {
-    setIsLoading(templateLoading);
-    setError(templateError ? `Erro ao carregar etapa ${currentStep}` : null);
-    setBlocks(templateBlocks || []);
+    const loadCurrentStepBlocks = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
 
-    if (!templateLoading && !templateError) {
-      const isValid = validateStep(templateBlocks || []);
-      setStepValidation(prev => ({ ...prev, [currentStep]: isValid }));
-      setStepValid?.(currentStep, isValid);
-    }
-  }, [templateBlocks, templateLoading, templateError, currentStep]);
+        console.log(`🔄 Carregando blocos da etapa ${currentStep}...`);
 
-  // Removido: o próprio hook useJsonTemplate já recarrega ao mudar o stepId inicial
-  // (evita chamadas duplas de loadStep que causavam piscadas)
+        // Carregar blocos usando o mesmo sistema do editor
+        const stepBlocks = await loadStepBlocks(currentStep);
+        setBlocks(stepBlocks);
+
+        // Validar se a etapa já está completa
+        setTimeout(() => {
+          const isValid = validateStep(stepBlocks);
+          setStepValidation(prev => ({ ...prev, [currentStep]: isValid }));
+          setStepValid?.(currentStep, isValid);
+        }, 100);
+      } catch (err) {
+        console.error(`❌ Erro ao carregar etapa ${currentStep}:`, err);
+        setError(`Erro ao carregar etapa ${currentStep}`);
+        setBlocks([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadCurrentStepBlocks();
+  }, [currentStep]);
 
   // Sincronizar step com hook do quiz
   useEffect(() => {
@@ -315,7 +84,7 @@ const QuizModularPage: React.FC = () => {
     }
   }, [quizState.currentStep, currentStep]);
 
-  // Escutar eventos de navegação e validação disparados pelos blocos
+  // Escutar eventos de navegação disparados pelos blocos (ex.: botão step 1, auto-advance)
   useEffect(() => {
     const parseStepNumber = (stepId: any): number | null => {
       if (typeof stepId === 'number') return stepId;
@@ -346,44 +115,18 @@ const QuizModularPage: React.FC = () => {
 
     window.addEventListener('navigate-to-step', handleNavigate as EventListener);
     window.addEventListener('quiz-navigate-to-step', handleNavigate as EventListener);
-
+    
     // Sincronizar validação visual/funcional via eventos globais dos blocos
     const handleSelectionChange = (ev: Event) => {
-      const e = ev as CustomEvent<{ selectionCount?: number; isValid?: boolean; valid?: boolean }>;
-      const count = e.detail?.selectionCount ?? 0;
-      // Regras globais: etapas 2–11 exigem 3 seleções; 13–18 exigem 1; demais
-      const isScoringPhase = currentStep >= 2 && currentStep <= 11;
-      const isStrategicPhase = currentStep >= 13 && currentStep <= 18;
-      const required = isScoringPhase ? 3 : isStrategicPhase ? 1 : 1;
-
-      const eventSaysValid =
-        typeof e.detail?.valid === 'boolean'
-          ? e.detail.valid
-          : typeof e.detail?.isValid === 'boolean'
-            ? e.detail.isValid
-            : undefined;
-
-      const computedValid = count >= required;
-      const finalValid =
-        eventSaysValid === undefined ? computedValid : eventSaysValid && computedValid;
-
-      setStepValidation(prev => ({ ...prev, [currentStep]: finalValid }));
-      setStepValid?.(currentStep, finalValid);
-
-      // Auto-avanço nas etapas 2–11 ao atingir requisito
-      if (isScoringPhase && computedValid) {
-        const delay = 600;
-        const timeoutId = setTimeout(() => {
-          handleNext();
-        }, delay);
-        setAutoAdvanceTimeouts(prev => ({ ...prev, [currentStep]: timeoutId }) as any);
-      }
+      const e = ev as CustomEvent<{ selectionCount?: number; isValid?: boolean }>; 
+      const valid = !!e.detail?.isValid;
+      setStepValidation(prev => ({ ...prev, [currentStep]: valid }));
+      setStepValid?.(currentStep, valid);
     };
 
     const handleInputChange = (ev: Event) => {
-      const e = ev as CustomEvent<{ value?: string; valid?: boolean }>;
-      const ok =
-        typeof e.detail?.value === 'string' ? e.detail.value.trim().length > 0 : !!e.detail?.valid;
+      const e = ev as CustomEvent<{ value?: string; valid?: boolean }>; 
+      const ok = typeof e.detail?.value === 'string' ? e.detail.value.trim().length > 0 : !!e.detail?.valid;
       setStepValidation(prev => ({ ...prev, [currentStep]: ok }));
       setStepValid?.(currentStep, ok);
     };
@@ -396,12 +139,7 @@ const QuizModularPage: React.FC = () => {
       window.removeEventListener('quiz-selection-change', handleSelectionChange as EventListener);
       window.removeEventListener('quiz-input-change', handleInputChange as EventListener);
     };
-  }, [goToStep, currentStep, setStepValid]);
-
-  // Expor etapa atual globalmente para compatibilidade com blocos que leem window.__quizCurrentStep
-  useEffect(() => {
-    (window as any).__quizCurrentStep = currentStep;
-  }, [currentStep]);
+  }, [goToStep]);
 
   // 🔄 HANDLERS DE NAVEGAÇÃO
   const handleNext = () => {
@@ -467,24 +205,6 @@ const QuizModularPage: React.FC = () => {
 
       const updated = { ...prev, [questionId]: newSelections };
 
-      // Disparar evento global com a contagem real após toggle
-      try {
-        const step = currentStep;
-        const isScoringPhase = step >= 2 && step <= 11;
-        const isStrategicPhase = step >= 13 && step <= 18;
-        const required = isScoringPhase ? 3 : isStrategicPhase ? 1 : 1;
-        const validNow = newSelections.length >= required;
-        window.dispatchEvent(
-          new CustomEvent('quiz-selection-change', {
-            detail: {
-              questionId,
-              selectionCount: newSelections.length,
-              valid: validNow,
-            },
-          })
-        );
-      } catch {}
-
       // Verificar se a etapa está completa
       setTimeout(() => {
         const isValid = validateStep(blocks);
@@ -545,172 +265,367 @@ const QuizModularPage: React.FC = () => {
     };
   }, [currentStep]);
 
-  // Progress bar removida; cálculo de progresso não é mais necessário
+  const progress = ((currentStep - 1) / 20) * 100;
 
-  // Debounce opcional para exibição de loading (reduz flicker em trocas rápidas)
-  const [showLoading, setShowLoading] = useState(false);
-  useEffect(() => {
-    let t: ReturnType<typeof setTimeout> | undefined;
-    if (isLoading) {
-      t = setTimeout(() => setShowLoading(true), 120);
-    } else {
-      setShowLoading(false);
-    }
-    return () => {
-      if (t) clearTimeout(t);
-    };
-  }, [isLoading]);
-
-  // Página final: remover DnD/sidebars e usar HTML estático otimizado na Etapa 1
-  const renderStaticStep1 = true;
-  const step1Config = useMemo(
-    () => ({
-      logoUrl:
-        'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
-      introImageUrl:
-        'https://res.cloudinary.com/der8kogzu/image/upload/f_avif,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.avif',
-      ctaText: 'Quero Descobrir meu Estilo Agora!',
-      requiredMessage: 'Digite seu nome para continuar',
-      legal: {
-        text: 'Suas informações são seguras. Ao continuar, você concorda com nossa Política de Privacidade e Termos.',
-        privacyText: 'Política de Privacidade',
-        termsText: 'Termos de Uso',
-        privacyLinkUrl: '/privacy',
-        termsLinkUrl: '/terms',
+  // Configuração do DnD
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
       },
-      footerText: '2025 - Gisele Galvão - Todos os direitos reservados',
-    }),
-    []
+    })
   );
 
-  // StaticStep1 moved to top-level
+  // Handler para drag and drop de componentes
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (!over) return;
+
+    const activeData = active.data.current;
+
+    // Se arrastar um componente para o canvas
+    if (activeData?.type === 'sidebar-component') {
+      const componentType = activeData.blockType as BlockType;
+
+      console.log('🧩 Adicionando componente:', componentType);
+
+      // Criar novo bloco
+      const newBlock: Block = {
+        id: `${componentType}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        type: componentType,
+        content: getDefaultContentForType(componentType),
+        properties: getDefaultPropertiesForType(componentType),
+        order: blocks.length,
+      };
+
+      setBlocks(prev => [...prev, newBlock]);
+    }
+  };
+
+  // Função para obter conteúdo padrão por tipo
+  const getDefaultContentForType = (type: string) => {
+    const defaults: Record<string, any> = {
+      'text-inline': { text: 'Novo texto adicionado' },
+      'heading-inline': { text: 'Novo Título', level: 'h2' },
+      'button-inline': { text: 'Novo Botão', variant: 'primary' },
+      'image-display-inline': { src: '', alt: 'Nova imagem' },
+      'quiz-intro-header': {
+        title: 'Novo Título do Quiz',
+        subtitle: 'Novo Subtítulo',
+        description: 'Nova descrição do quiz',
+      },
+      'form-input': {
+        title: 'Novo Campo',
+        placeholder: 'Digite aqui...',
+        fieldType: 'text',
+        required: false,
+      },
+      'quiz-question': {
+        question: 'Nova pergunta?',
+        options: ['Nova Opção 1', 'Nova Opção 2'],
+      },
+    };
+    return defaults[type] || {};
+  };
+
+  // Função para obter propriedades padrão por tipo
+  const getDefaultPropertiesForType = (type: string) => {
+    const defaults: Record<string, any> = {
+      'text-inline': { fontSize: 16, color: '#333333' },
+      'heading-inline': { fontSize: 24, fontWeight: 'bold', color: '#1a1a1a' },
+      'button-inline': { backgroundColor: '#B89B7A', color: '#ffffff', padding: 12 },
+      'image-display-inline': { width: 'auto', height: 'auto' },
+    };
+    return defaults[type] || {};
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#FAF9F7] via-[#F5F2E9] to-[#EEEBE1]">
-      <div className="container mx-auto px-6 py-8">
-        <div className="max-w-4xl mx-auto">
-          {/* Cabeçalhos removidos para interface mais limpa na versão de produção */}
-
-          {/* 🎨 ÁREA DE RENDERIZAÇÃO DOS BLOCOS */}
-          <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl shadow-stone-200/40 border border-stone-200/30 ring-1 ring-stone-100/20 overflow-hidden">
-            {currentStep === 1 && renderStaticStep1 ? (
-              <StaticStep1
-                blocks={blocks}
-                step1Config={step1Config}
-                setStepValidation={setStepValidation}
-                setStepValid={setStepValid}
-                setQuizAnswers={setQuizAnswers}
-                handleNext={handleNext}
-              />
-            ) : showLoading ? (
-              <div className="min-h-[500px] flex items-center justify-center">
-                <div className="text-center">
-                  <div className="animate-spin w-8 h-8 border-2 border-[#B89B7A] border-t-transparent rounded-full mx-auto mb-4"></div>
-                  <p className="text-stone-600">Carregando etapa {currentStep}...</p>
-                </div>
-              </div>
-            ) : error ? (
-              <div className="min-h-[500px] flex items-center justify-center">
-                <div className="text-center p-8">
-                  <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span className="text-red-600 text-2xl">⚠️</span>
+    <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+      <div className="min-h-screen bg-gradient-to-br from-[#FAF9F7] via-[#F5F2E9] to-[#EEEBE1]">
+        {/* ️ LAYOUT COM 3 COLUNAS */}
+        <div className="flex h-screen">
+          {/* 📋 COLUNA ESQUERDA - ETAPAS (já existe na navegação superior, mas podemos adicionar detalhes) */}
+          <div className="w-80 bg-white/90 backdrop-blur-sm border-r border-stone-200/50 shadow-sm">
+            <div className="h-full flex flex-col">
+              {/* Header das Etapas */}
+              <div className="p-4 border-b border-stone-200/50 bg-stone-50/50">
+                <h3 className="text-sm font-semibold text-stone-700 flex items-center gap-2">
+                  <div className="w-5 h-5 bg-gradient-to-r from-[#B89B7A] to-[#8B7355] rounded-md flex items-center justify-center">
+                    <span className="text-white text-xs font-bold">{currentStep}</span>
                   </div>
-                  <h3 className="text-lg font-semibold text-red-800 mb-2">Erro ao carregar</h3>
-                  <p className="text-red-600 mb-4">{error}</p>
-                  <button
-                    onClick={() => window.location.reload()}
-                    className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
-                  >
-                    Tentar novamente
-                  </button>
+                  Etapa Atual
+                </h3>
+                <p className="text-xs text-stone-500 mt-1">{currentStep} de 21 etapas</p>
+              </div>
+
+              {/* Conteúdo da etapa atual */}
+              <div className="flex-1 p-4 space-y-4">
+                <div className="bg-gradient-to-r from-[#B89B7A]/10 to-[#8B7355]/10 rounded-lg p-4">
+                  <h4 className="font-medium text-stone-800 mb-2">Progresso</h4>
+                  <div className="w-full bg-stone-200 rounded-full h-2 mb-2">
+                    <div
+                      className="bg-gradient-to-r from-[#B89B7A] to-[#8B7355] h-2 rounded-full transition-all duration-500"
+                      style={{ width: `${progress}%` }}
+                    />
+                  </div>
+                  <div className="text-sm text-stone-600">{progress}% concluído</div>
+                </div>
+
+                <div className="space-y-3">
+                  <h4 className="font-medium text-stone-800">Informações da Etapa</h4>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-stone-600">Etapa:</span>
+                      <span className="font-medium">{currentStep}/21</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-stone-600">Blocos:</span>
+                      <span className="font-medium">{blocks.length}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-stone-600">Status:</span>
+                      <span className="font-medium text-green-600">
+                        {blocks.length > 0 ? 'Carregada' : 'Vazia'}
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </div>
-            ) : (
-              <div className="quiz-content p-8 space-y-6">
-                {blocks.length === 0 ? (
-                  // Etapa sem conteúdo: nenhum texto exibido para manter a interface limpa
-                  <div className="py-12" aria-hidden="true" />
-                ) : (
-                  blocks.map((block, index) => (
-                    <div
-                      key={block.id}
-                      className={cn(
-                        'quiz-block',
-                        'transition-all duration-300',
-                        index === 0 && 'animate-fade-in-up'
-                      )}
-                    >
-                      <UniversalBlockRenderer
-                        block={{
-                          ...block,
-                          properties: {
-                            ...block.properties,
-                            onOptionSelect: (optionId: string) => {
-                              const questionId = block.properties?.questionId || block.id;
-                              handleQuestionResponse(questionId, optionId, block.properties);
-                            },
-                            onInputChange: (value: string) => {
-                              const dataKey = block.content?.dataKey || 'default';
-                              handleFormInput(dataKey, value, block.content);
-                            },
-                            selectedOptions:
-                              userSelections[block.properties?.questionId || block.id] || [],
-                            inputValue: quizAnswers[block.content?.dataKey || 'default'] || '',
-                            isValid: stepValidation[currentStep] || false,
-                          },
-                        }}
-                        isSelected={false}
-                        onClick={() => {}}
+            </div>
+          </div>
+
+          {/* 🧩 COLUNA CENTRO-ESQUERDA - COMPONENTES */}
+          <aside className="w-80 bg-white/95 backdrop-blur-sm border-r border-stone-200/50 shadow-sm">
+            <div className="h-full flex flex-col">
+              {/* Header dos Componentes */}
+              <div className="p-4 border-b border-stone-200/50 bg-gradient-to-r from-blue-50 to-purple-50">
+                <h3 className="text-sm font-semibold text-stone-700 flex items-center gap-2">
+                  <div className="w-5 h-5 bg-gradient-to-r from-blue-500 to-purple-600 rounded-md flex items-center justify-center">
+                    <span className="text-white text-xs">🧩</span>
+                  </div>
+                  Componentes
+                </h3>
+                <p className="text-xs text-stone-500 mt-1">Arraste para adicionar ao quiz</p>
+              </div>
+              {/* Sidebar Unificada */}
+              <div className="flex-1 overflow-hidden">
+                <EnhancedComponentsSidebar />
+              </div>
+            </div>
+          </aside>
+
+          {/* 🎨 ÁREA PRINCIPAL - CENTRO-DIREITA */}
+          <div className="flex-1 overflow-auto">
+            <div className="container mx-auto px-6 py-8">
+              <div className="max-w-4xl mx-auto">
+                {/* 🎯 CABEÇALHO PRINCIPAL DO QUIZ */}
+                <div className="bg-white/90 backdrop-blur-sm border border-stone-200/50 shadow-sm rounded-lg mb-8 p-6">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <h2 className="text-lg font-semibold text-stone-800">Quiz Style Challenge</h2>
+                      <div className="text-sm text-stone-600">Etapa {currentStep} de 21</div>
+                    </div>
+
+                    <div className="flex items-center gap-4">
+                      <div className="w-48">
+                        <Progress value={progress} className="h-2" />
+                      </div>
+                      <div className="text-sm font-medium text-stone-700">{progress}%</div>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handlePrevious}
+                        disabled={currentStep === 1}
+                      >
+                        ← Anterior
+                      </Button>
+                      <Button
+                        size="sm"
+                        onClick={handleNext}
+                        disabled={currentStep === 21 || !stepValidation[currentStep]}
+                        className={cn(
+                          'transition-all',
+                          currentStep === 21 || !stepValidation[currentStep]
+                            ? 'bg-stone-200 text-stone-400 cursor-not-allowed'
+                            : 'bg-gradient-to-r from-[#B89B7A] to-[#8B7355]'
+                        )}
+                      >
+                        {currentStep === 21
+                          ? 'Finalizado'
+                          : !stepValidation[currentStep]
+                            ? 'Complete a etapa'
+                            : 'Próxima →'}
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 📋 HEADER DA ETAPA (limpo: sem textos promocionais fixos) */}
+                <div className="text-center mb-8">
+                  <div className="flex items-center justify-center gap-4 mb-4">
+                    <div className="text-sm text-stone-500">Etapa {currentStep} de 21</div>
+                    <div className="w-32 bg-stone-200 rounded-full h-2">
+                      <div
+                        className="bg-gradient-to-r from-[#B89B7A] to-[#8B7355] h-2 rounded-full transition-all duration-500"
+                        style={{ width: `${progress}%` }}
                       />
                     </div>
-                  ))
-                )}
+                    <div className="text-sm text-stone-600">{progress}%</div>
+                  </div>
+                </div>
+
+                {/* 🎨 ÁREA DE RENDERIZAÇÃO DOS BLOCOS */}
+                <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl shadow-stone-200/40 border border-stone-200/30 ring-1 ring-stone-100/20 overflow-hidden">
+                  {/* Estado de loading */}
+                  {isLoading && (
+                    <div className="min-h-[500px] flex items-center justify-center">
+                      <div className="text-center">
+                        <div className="animate-spin w-8 h-8 border-2 border-[#B89B7A] border-t-transparent rounded-full mx-auto mb-4"></div>
+                        <p className="text-stone-600">Carregando etapa {currentStep}...</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Estado de erro */}
+                  {error && (
+                    <div className="min-h-[500px] flex items-center justify-center">
+                      <div className="text-center p-8">
+                        <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                          <span className="text-red-600 text-2xl">⚠️</span>
+                        </div>
+                        <h3 className="text-lg font-semibold text-red-800 mb-2">
+                          Erro ao carregar
+                        </h3>
+                        <p className="text-red-600 mb-4">{error}</p>
+                        <button
+                          onClick={() => window.location.reload()}
+                          className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
+                        >
+                          Tentar novamente
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Renderização dos blocos */}
+                  {!isLoading && !error && (
+                    <div className="quiz-content p-8 space-y-6">
+                      {blocks.length === 0 ? (
+                        <div className="text-center py-12">
+                          <div className="w-16 h-16 bg-stone-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <span className="text-stone-400 text-2xl">📝</span>
+                          </div>
+                          <h3 className="text-lg font-medium text-stone-800 mb-2">
+                            Etapa em construção
+                          </h3>
+                          <p className="text-stone-600">
+                            Esta etapa ainda não possui conteúdo. Você pode continuar para a próxima
+                            etapa ou arrastar componentes da barra lateral.
+                          </p>
+                        </div>
+                      ) : (
+                        blocks.map((block, index) => (
+                          <div
+                            key={block.id}
+                            className={cn(
+                              'quiz-block',
+                              'transition-all duration-300',
+                              index === 0 && 'animate-fade-in-up'
+                            )}
+                          >
+                            <UniversalBlockRenderer
+                              block={{
+                                ...block,
+                                // Adicionar callbacks para interação
+                                properties: {
+                                  ...block.properties,
+                                  onOptionSelect: (optionId: string) => {
+                                    const questionId = block.properties?.questionId || block.id;
+                                    handleQuestionResponse(questionId, optionId, block.properties);
+                                  },
+                                  onInputChange: (value: string) => {
+                                    const dataKey = block.content?.dataKey || 'default';
+                                    handleFormInput(dataKey, value, block.content);
+                                  },
+                                  selectedOptions:
+                                    userSelections[block.properties?.questionId || block.id] || [],
+                                  inputValue:
+                                    quizAnswers[block.content?.dataKey || 'default'] || '',
+                                  isValid: stepValidation[currentStep] || false,
+                                },
+                              }}
+                              isSelected={false}
+                              onClick={() => {}}
+                            />
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                {/* 🎮 CONTROLES DE NAVEGAÇÃO */}
+                <div className="flex justify-between items-center mt-8">
+                  <button
+                    onClick={handlePrevious}
+                    disabled={currentStep === 1}
+                    className={cn(
+                      'flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all',
+                      currentStep === 1
+                        ? 'bg-stone-100 text-stone-400 cursor-not-allowed'
+                        : 'bg-white text-stone-700 hover:bg-stone-50 border border-stone-200 shadow-sm hover:shadow'
+                    )}
+                  >
+                    ← Anterior
+                  </button>
+
+                  <div className="text-center">
+                    <div className="text-sm text-stone-500 mb-1">Progresso</div>
+                    <div className="text-lg font-semibold text-stone-800">{currentStep} / 21</div>
+                  </div>
+
+                  <button
+                    onClick={handleNext}
+                    disabled={currentStep === 21 || !stepValidation[currentStep]}
+                    className={cn(
+                      'flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all',
+                      currentStep === 21 || !stepValidation[currentStep]
+                        ? 'bg-stone-100 text-stone-400 cursor-not-allowed'
+                        : 'bg-gradient-to-r from-[#B89B7A] to-[#8B7355] text-white hover:from-[#A08966] hover:to-[#7A6B4D] shadow-md hover:shadow-lg'
+                    )}
+                  >
+                    {currentStep === 21
+                      ? 'Finalizado'
+                      : !stepValidation[currentStep]
+                        ? 'Complete a etapa →'
+                        : 'Próxima →'}
+                  </button>
+                </div>
+
+                {/* 📊 FOOTER COM ESTATÍSTICAS */}
+                <div className="text-center mt-12 text-sm text-stone-500">
+                  <div className="flex justify-center items-center space-x-6">
+                    <div className="flex items-center gap-1">
+                      <span>🎯</span> Etapa: {currentStep}/21
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <span>📊</span> Progresso: {progress}%
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <span>🎨</span> Blocos: {blocks.length}
+                    </div>
+                  </div>
+                </div>
               </div>
-            )}
-          </div>
-
-          {/* 🎮 CONTROLES DE NAVEGAÇÃO */}
-          <div className="flex justify-between items-center mt-8">
-            <button
-              onClick={handlePrevious}
-              disabled={currentStep === 1}
-              className={cn(
-                'flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all',
-                currentStep === 1
-                  ? 'bg-stone-100 text-stone-400 cursor-not-allowed'
-                  : 'bg-white text-stone-700 hover:bg-stone-50 border border-stone-200 shadow-sm hover:shadow'
-              )}
-            >
-              ← Anterior
-            </button>
-
-            <div className="text-center">
-              <div className="text-sm text-stone-500 mb-1">Progresso</div>
-              <div className="text-lg font-semibold text-stone-800">{currentStep} / 21</div>
             </div>
-
-            <button
-              onClick={handleNext}
-              disabled={currentStep === 21 || !stepValidation[currentStep]}
-              className={cn(
-                'flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all',
-                currentStep === 21 || !stepValidation[currentStep]
-                  ? 'bg-stone-100 text-stone-400 cursor-not-allowed'
-                  : 'bg-gradient-to-r from-[#B89B7A] to-[#8B7355] text-white hover:from-[#A08966] hover:to-[#7A6B4D] shadow-md hover:shadow-lg'
-              )}
-            >
-              {currentStep === 21
-                ? 'Finalizado'
-                : !stepValidation[currentStep]
-                  ? 'Complete a etapa →'
-                  : 'Próxima →'}
-            </button>
           </div>
-
-          {/* Footer de estatísticas removido para interface mais clean */}
         </div>
       </div>
-    </div>
+    </DndContext>
   );
 };
 

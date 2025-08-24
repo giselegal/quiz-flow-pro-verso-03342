@@ -134,8 +134,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         showValidationFeedback: true,
         fieldType: 'text',
         required: true,
-        // Avanço manual no Step 1: botão clica para ir à próxima etapa
-        autoAdvanceOnComplete: false,
+        autoAdvanceOnComplete: true,
         dataKey: 'userName',
         backgroundColor: '#FFFFFF',
         borderColor: '#B89B7A',
@@ -156,8 +155,8 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         // ID opcional para integração com o container
         elementId: 'step1-form-container',
         targetButtonId: 'intro-cta-button',
-        // Auto-advance desativado para exigir clique no botão
-        autoAdvanceOnComplete: false,
+        // Auto-advance diretamente no container (ou no botão filho)
+        autoAdvanceOnComplete: true,
         autoAdvanceDelay: 600,
         // Aparência do container
         backgroundColor: '#FFFFFF',
@@ -197,8 +196,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
               requiresValidInput: true,
               action: 'next-step',
               nextStepId: 'step-2',
-              // Não avançar automaticamente; aguardar clique do usuário
-              autoAdvanceOnComplete: false,
+              autoAdvanceOnComplete: true,
               autoAdvanceDelay: 600,
               // Estilo do botão alinhado ao template
               backgroundColor: '#B89B7A',

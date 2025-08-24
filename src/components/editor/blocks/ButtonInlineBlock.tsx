@@ -122,8 +122,6 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
   } = (block?.properties as any) || {};
 
   const [isValidated, setIsValidated] = useState(false);
-  // Sinal externo do container (FormContainerBlock) para habilitar/desabilitar o botão no Step 1
-  const [externalEnabled, setExternalEnabled] = useState<boolean | null>(null);
 
   // Efeito para verificar validação quando necessário
   useEffect(() => {
@@ -159,45 +157,20 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
         // Considerar válido se houver string não vazia
         const ok = typeof value === 'string' ? value.trim().length > 0 : !!valid;
         setIsValidated(ok);
-        // Quando o input mudar, resetar sinal externo (evita travar estado)
-        setExternalEnabled(ok ? true : null);
       };
       window.addEventListener('quiz-input-change', handleQuizInputChange as EventListener);
-
-      // Paridade com produção: ouvir sinal direto do container (step01-button-state-change)
-      const handleStep01ButtonState = (event: CustomEvent) => {
-        const detail = event.detail as { buttonId?: string; enabled?: boolean; disabled?: boolean };
-        if (!detail) return;
-        // Ativar somente se o evento for direcionado a este botão
-        if (detail.buttonId && detail.buttonId !== block?.id) return;
-        if (typeof detail.enabled === 'boolean') {
-          setExternalEnabled(detail.enabled);
-        } else if (typeof detail.disabled === 'boolean') {
-          setExternalEnabled(!detail.disabled);
-        }
-      };
-      window.addEventListener(
-        'step01-button-state-change',
-        handleStep01ButtonState as EventListener
-      );
       return () => {
         window.removeEventListener(
           'quiz-selection-change',
           handleQuizSelectionChange as EventListener
         );
         window.removeEventListener('quiz-input-change', handleQuizInputChange as EventListener);
-        window.removeEventListener(
-          'step01-button-state-change',
-          handleStep01ButtonState as EventListener
-        );
       };
     }
   }, [requiresValidInput]);
 
   // Determinar se o botão deve estar desabilitado
-  // Se houver sinal externo explícito, ele prevalece; caso contrário, usar validação interna
-  const computedValidated = externalEnabled === null ? isValidated : externalEnabled;
-  const isButtonDisabled = disabled || (requiresValidInput && !computedValidated);
+  const isButtonDisabled = disabled || (requiresValidInput && !isValidated);
   // 🚀 Função para inicializar quiz no Supabase
   const initializeQuizWithSupabase = async (userName: string) => {
     try {
@@ -502,8 +475,6 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
                   },
                   Number(autoAdvanceDelay) || 0
                 );
-              } else {
-                // Auto-advance desativado: não navega automaticamente após tracking; aguarda clique padrão acima
               }
             }
           }

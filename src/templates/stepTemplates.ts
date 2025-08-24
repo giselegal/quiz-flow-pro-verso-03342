@@ -117,7 +117,6 @@ export const introTemplate = [
           watchInputId: 'intro-form-input',
           nextStepUrl: '/quiz/step-2',
           nextStepId: 'step-2',
-          autoAdvanceOnComplete: false,
           disabledText: 'Digite seu nome para continuar',
           showDisabledState: true,
           disabledOpacity: 0.6,

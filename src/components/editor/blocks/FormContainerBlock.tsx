@@ -99,10 +99,7 @@ const FormContainerBlock: React.FC<BlockComponentProps> = ({ block }) => {
         ? (childrenList as any[]).find(c => c?.type === 'button-inline')
         : undefined;
       const childAuto = btnChild?.properties?.autoAdvanceOnComplete ?? false;
-      // Forçar modo manual no Step 1 (editor): não auto-avançar após validar nome
-      const stepNumber = Number((window as any)?.__quizCurrentStep ?? NaN);
-      const forceManualOnStep1 = Number.isFinite(stepNumber) && stepNumber === 1;
-      const shouldAuto = !forceManualOnStep1 && !!(containerAuto || childAuto);
+      const shouldAuto = !!(containerAuto || childAuto);
       if (ok && shouldAuto && !autoAdvanceRef.current) {
         autoAdvanceRef.current = true;
         const nextStepId =
