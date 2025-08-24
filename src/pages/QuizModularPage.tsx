@@ -469,7 +469,7 @@ const QuizModularPage: React.FC = () => {
                   </div>
                 </div>
 
-                {/* 📋 HEADER DA ETAPA */}
+                {/* 📋 HEADER DA ETAPA (limpo: sem textos promocionais fixos) */}
                 <div className="text-center mb-8">
                   <div className="flex items-center justify-center gap-4 mb-4">
                     <div className="text-sm text-stone-500">Etapa {currentStep} de 21</div>
@@ -481,14 +481,6 @@ const QuizModularPage: React.FC = () => {
                     </div>
                     <div className="text-sm text-stone-600">{progress}%</div>
                   </div>
-
-                  <h1 className="text-3xl font-bold text-stone-800 mb-4">
-                    Descubra seu Estilo Predominante
-                  </h1>
-                  <p className="text-stone-600 max-w-2xl mx-auto">
-                    Responda com sinceridade para descobrir seu estilo pessoal único e aprenda a
-                    criar looks que realmente refletem sua essência.
-                  </p>
                 </div>
 
                 {/* 🎨 ÁREA DE RENDERIZAÇÃO DOS BLOCOS */}

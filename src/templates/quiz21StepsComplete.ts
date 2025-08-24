@@ -72,7 +72,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       type: 'text',
       order: 2,
       content: {
-        text: 'Em poucos minutos, descubra seu Estilo Predominante — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.',
+        text: '',
       },
       properties: {
         fontSize: 'text-lg md:text-xl',
@@ -92,7 +92,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       content: {},
       properties: {
         src: 'https://res.cloudinary.com/der8kogzu/image/upload/f_avif,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.avif',
-        alt: 'Descubra seu estilo predominante',
+        alt: '',
         width: 'auto',
         height: 'auto',
         maxWidth: 'lg',
@@ -263,7 +263,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       order: 0,
       content: {
         title: 'Questão 1 de 10',
-        subtitle: 'Descubra seu Estilo Predominante',
+        subtitle: '',
         description: 'Responda com honestidade para obter um resultado mais preciso.',
         showLogo: true,
         showProgress: true,
@@ -389,7 +389,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       order: 0,
       content: {
         title: 'Questão 2 de 10',
-        subtitle: 'Descubra seu Estilo Predominante',
+        subtitle: '',
         description: 'Responda com honestidade para obter um resultado mais preciso.',
         showLogo: true,
         showProgress: true,
@@ -496,7 +496,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       order: 0,
       content: {
         title: 'Questão 3 de 10',
-        subtitle: 'Descubra seu Estilo Predominante',
+        subtitle: '',
         description: 'Responda com honestidade para obter um resultado mais preciso.',
         showLogo: true,
         showProgress: true,
@@ -615,7 +615,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       order: 0,
       content: {
         title: 'Questão 4 de 10',
-        subtitle: 'Descubra seu Estilo Predominante',
+        subtitle: '',
         description: 'Responda com honestidade para obter um resultado mais preciso.',
         showLogo: true,
         showProgress: true,
@@ -722,7 +722,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       order: 0,
       content: {
         title: 'Questão 5 de 10',
-        subtitle: 'Descubra seu Estilo Predominante',
+        subtitle: '',
         description: 'Responda com honestidade para obter um resultado mais preciso.',
         showLogo: true,
         showProgress: true,
@@ -848,7 +848,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       order: 0,
       content: {
         title: 'Questão 6 de 10',
-        subtitle: 'Descubra seu Estilo Predominante',
+        subtitle: '',
         description: 'Responda com honestidade para obter um resultado mais preciso.',
         showLogo: true,
         showProgress: true,
@@ -974,7 +974,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       order: 0,
       content: {
         title: 'Questão 7 de 10',
-        subtitle: 'Descubra seu Estilo Predominante',
+        subtitle: '',
         description: 'Responda com honestidade para obter um resultado mais preciso.',
         showLogo: true,
         showProgress: true,
@@ -1100,7 +1100,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       order: 0,
       content: {
         title: 'Questão 8 de 10',
-        subtitle: 'Descubra seu Estilo Predominante',
+        subtitle: '',
         description: 'Responda com honestidade para obter um resultado mais preciso.',
         showLogo: true,
         showProgress: true,
@@ -1226,7 +1226,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       order: 0,
       content: {
         title: 'Questão 9 de 10',
-        subtitle: 'Descubra seu Estilo Predominante',
+        subtitle: '',
         description: 'Responda com honestidade para obter um resultado mais preciso.',
         showLogo: true,
         showProgress: true,
@@ -1459,8 +1459,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       content: {
         title: 'Enquanto calculamos o seu resultado...',
         subtitle: 'Só mais alguns passos para personalizar ainda mais sua experiência',
-        description:
-          'Queremos te fazer algumas perguntas que vão tornar sua experiência ainda mais completa. Responda com sinceridade. Isso é só entre você e a sua nova versão.',
+        description: '',
         imageUrl:
           'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735378/transition_analysis_dkqmpw.webp',
       },

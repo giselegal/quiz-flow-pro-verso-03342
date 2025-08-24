@@ -165,13 +165,11 @@ function getStepTitle(stepNumber: number): string {
 
 function getStepSubtitle(stepNumber: number): string {
   if (stepNumber === 1) return 'Digite seu nome para personalizar sua experiência';
-  if (stepNumber >= 2 && stepNumber <= 11)
-    return 'Responda com honestidade para obter um resultado mais preciso';
+  if (stepNumber >= 2 && stepNumber <= 11) return '';
   if (stepNumber === 12) return 'Enquanto calculamos seu resultado...';
-  if (stepNumber >= 13 && stepNumber <= 18)
-    return 'Algumas perguntas para personalizar sua experiência';
+  if (stepNumber >= 13 && stepNumber <= 18) return '';
   if (stepNumber === 19) return 'Seu resultado personalizado está quase pronto...';
-  if (stepNumber === 20) return 'Descubra seu estilo predominante';
+  if (stepNumber === 20) return '';
   if (stepNumber === 21) return 'Uma oportunidade única para transformar seu estilo';
   return '';
 }
