@@ -35,11 +35,16 @@ const QuizModularPage: React.FC = () => {
   // Hook para gerenciar o fluxo do quiz
   const {
     quizState,
-    actions: { goToStep, nextStep },
+    actions: { goToStep, nextStep, preloadTemplates, setStepValid },
   } = useQuizFlow({
     mode: 'production',
     initialStep: currentStep,
   });
+
+  // Pré-carregar templates para suavizar transições
+  useEffect(() => {
+    preloadTemplates?.();
+  }, [preloadTemplates]);
 
   // Carregar blocos da etapa atual
   useEffect(() => {
@@ -64,6 +69,7 @@ const QuizModularPage: React.FC = () => {
         setTimeout(() => {
           const isValid = validateStep(stepBlocks);
           setStepValidation(prev => ({ ...prev, [currentStep]: isValid }));
+          setStepValid?.(currentStep, isValid);
         }, 100);
       } catch (err) {
         console.error(`❌ Erro ao carregar etapa ${currentStep}:`, err);
@@ -208,6 +214,7 @@ const QuizModularPage: React.FC = () => {
       setTimeout(() => {
         const isValid = validateStep(blocks);
         setStepValidation(prev => ({ ...prev, [currentStep]: isValid }));
+        setStepValid?.(currentStep, isValid);
 
         // Auto avanço se configurado
         if (isValid && blockConfig?.autoAdvanceOnComplete) {
@@ -234,6 +241,7 @@ const QuizModularPage: React.FC = () => {
       setTimeout(() => {
         const isValid = validateStep(blocks);
         setStepValidation(prev => ({ ...prev, [currentStep]: isValid }));
+        setStepValid?.(currentStep, isValid);
 
         // Auto avanço se configurado
         if (isValid && blockConfig?.autoAdvanceOnComplete) {

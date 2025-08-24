@@ -27,7 +27,7 @@ import {
   Trophy,
   Users,
 } from 'lucide-react';
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 
 export interface EditorStageManagerProps {
   /** Modo atual do editor */
@@ -75,6 +75,11 @@ export const EditorStageManager: React.FC<EditorStageManagerProps> = ({
     onStepChange: onStepSelect,
     initialStep,
   });
+
+  // Pré-carregar templates para melhorar a navegação no editor
+  useEffect(() => {
+    actions.preloadTemplates?.();
+  }, [actions]);
 
   // Metadados das etapas
   const stepsMetadata = useMemo((): StepMetadata[] => {

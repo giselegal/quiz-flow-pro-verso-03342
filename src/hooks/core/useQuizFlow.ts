@@ -1,9 +1,9 @@
 import { useQuizLogic } from '@/hooks/useQuizLogic';
-import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { getStepInfo as coreGetStepInfo } from '@/utils/quiz21StepsRenderer';
 import { QuizDataService } from '@/services/core/QuizDataService';
+import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
+import { getStepInfo as coreGetStepInfo } from '@/utils/quiz21StepsRenderer';
 import { TemplateManager } from '@/utils/TemplateManager';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 export interface QuizFlowProps {
   mode?: 'production' | 'preview' | 'editor';
@@ -99,8 +99,8 @@ export const useQuizFlow = ({
     (name: string) => {
       setUserName(name);
       setUserNameFromInput(name);
-  // Validar etapa 1 quando nome preenchido
-  setStepValidation(prev => ({ ...prev, 1: !!name?.trim() }));
+      // Validar etapa 1 quando nome preenchido
+      setStepValidation(prev => ({ ...prev, 1: !!name?.trim() }));
       nextStep();
     },
     [nextStep, setUserNameFromInput]
@@ -181,8 +181,8 @@ export const useQuizFlow = ({
     isLoading,
     mode,
     progress: Math.round((currentStep / 21) * 100),
-  stepValidation,
-  stepInfo,
+    stepValidation,
+    stepInfo,
   };
 
   // Ações disponíveis
@@ -194,10 +194,10 @@ export const useQuizFlow = ({
     answerScoredQuestion,
     answerStrategy,
     getStepData,
-  setStepValid,
-  getStepInfo,
-  getStepConfig,
-  preloadTemplates,
+    setStepValid,
+    getStepInfo,
+    getStepConfig,
+    preloadTemplates,
   };
 
   return { quizState, actions };
