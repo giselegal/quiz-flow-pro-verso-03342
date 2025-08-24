@@ -3,6 +3,7 @@ import EnhancedComponentsSidebar from '@/components/editor/EnhancedComponentsSid
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { useQuizFlow } from '@/hooks/core/useQuizFlow';
+import { useStep01Validation } from '@/hooks/useStep01Validation';
 import { cn } from '@/lib/utils';
 import { Block, BlockType } from '@/types/editor';
 import { loadStepBlocks } from '@/utils/quiz21StepsRenderer';
@@ -39,6 +40,16 @@ const QuizModularPage: React.FC = () => {
   } = useQuizFlow({
     mode: 'production',
     initialStep: currentStep,
+  });
+
+  // Unificar validação do Step 1 via hook (habilita botão e marca etapa válida)
+  useStep01Validation({
+    buttonId: 'intro-cta-button',
+    inputId: 'intro-name-input',
+    onNameValid: isValid => {
+      setStepValidation(prev => ({ ...prev, 1: isValid }));
+      setStepValid?.(1, isValid);
+    },
   });
 
   // Pré-carregar templates para suavizar transições
@@ -83,6 +94,11 @@ const QuizModularPage: React.FC = () => {
       setCurrentStep(quizState.currentStep);
     }
   }, [quizState.currentStep, currentStep]);
+
+  // Expor etapa atual globalmente para blocos/efeitos que dependem disso
+  useEffect(() => {
+    (window as any).__quizCurrentStep = `step-${currentStep}`;
+  }, [currentStep]);
 
   // Escutar eventos de navegação disparados pelos blocos (ex.: botão step 1, auto-advance)
   useEffect(() => {
