@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useRef, useCallback, useState } from 'react';
+import React, { createContext, useCallback, useContext, useRef, useState } from 'react';
 
 interface ScrollSyncContextType {
   canvasScrollRef: React.RefObject<HTMLDivElement>;
@@ -38,11 +38,12 @@ export const ScrollSyncProvider: React.FC<ScrollSyncProviderProps> = ({ children
   const isSyncingRef = useRef(false);
   const rafRef = useRef<number | null>(null);
   // Permitir desativar sincronização globalmente quando atrapalhar a edição
-  const isDisabled = typeof window !== 'undefined' && (window as any).__DISABLE_SCROLL_SYNC === true;
+  const isDisabled =
+    typeof window !== 'undefined' && (window as any).__DISABLE_SCROLL_SYNC === true;
 
   const syncScroll = useCallback(
     (source: 'canvas' | 'components' | 'properties', scrollTop: number) => {
-  if (isDisabled) return;
+      if (isDisabled) return;
       if (isSyncingRef.current) return;
       isSyncingRef.current = true;
       setIsScrolling(true);
@@ -94,7 +95,7 @@ export const ScrollSyncProvider: React.FC<ScrollSyncProviderProps> = ({ children
         setIsScrolling(false);
       });
     },
-  [isDisabled]
+    [isDisabled]
   );
 
   const value = {
