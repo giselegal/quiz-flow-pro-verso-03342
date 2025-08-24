@@ -75,6 +75,15 @@ const DecorativeBarInlineBlock: React.FC<BlockComponentProps> = ({
     showShadow = true,
   } = (block?.properties as any) || {};
 
+  const resolveWidth = (value: string | number): { className?: string; style?: React.CSSProperties } => {
+    if (typeof value === 'number') return { style: { width: `${value}px` } };
+    if (/^\d+(px|rem|em|%)$/.test(value) || value.includes('min(') || value.includes('max(')) {
+      return { style: { width: value } };
+    }
+    // Assume classe Tailwind custom, p.ex. max-w-[640px]
+    return { className: value };
+  };
+
   return (
     <div
       className={cn(
@@ -97,9 +106,9 @@ const DecorativeBarInlineBlock: React.FC<BlockComponentProps> = ({
       onClick={onClick}
     >
       <div
-        className="block"
+        className={cn('block', resolveWidth(width).className)}
         style={{
-          width: width,
+          ...resolveWidth(width).style,
           height: `${height}px`,
           background:
             gradientColors.length > 1

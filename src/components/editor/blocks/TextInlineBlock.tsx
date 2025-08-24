@@ -344,6 +344,16 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
     }
   }, [isEditing, editContent, autoResizeTextarea]);
 
+  // Helper: resolve font size classes allowing raw Tailwind classes
+  const resolveFontSizeClass = (
+    size: string | undefined,
+    fallback: string
+  ): string => {
+    if (!size) return fallback;
+    const mapped = fontSizeClasses[size as keyof typeof fontSizeClasses];
+    return mapped ?? (typeof size === 'string' ? size : fallback);
+  };
+
   return (
     <div
       className={cn(
@@ -392,7 +402,7 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
             onBlur={handleSave}
             className={cn(
               'w-full bg-transparent border-none resize-none outline-none',
-              fontSizeClasses[fontSize as keyof typeof fontSizeClasses] ?? fontSizeClasses.medium,
+              resolveFontSizeClass(fontSize as string, fontSizeClasses.medium),
               fontWeightClasses[fontWeight as keyof typeof fontWeightClasses] ??
                 fontWeightClasses.normal,
               textAlignClasses[textAlign as keyof typeof textAlignClasses] ?? textAlignClasses.left,
@@ -422,7 +432,7 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
         <div
           className={cn(
             // ES7+ Computed properties com fallbacks
-            fontSizeClasses[fontSize as keyof typeof fontSizeClasses] ?? fontSizeClasses.medium,
+            resolveFontSizeClass(fontSize as string, fontSizeClasses.medium),
             fontWeightClasses[fontWeight as keyof typeof fontWeightClasses] ??
               fontWeightClasses.normal,
             textAlignClasses[textAlign as keyof typeof textAlignClasses] ?? textAlignClasses.left,
