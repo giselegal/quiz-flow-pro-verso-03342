@@ -271,6 +271,35 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
     }
   })();
 
+  // 📊 Cálculo de progresso/validação para renderização (contador e feedback)
+  const globalStep = (window as any)?.__quizCurrentStep;
+  const stepCandidate = Number.isFinite(Number(currentStepFromEditor))
+    ? Number(currentStepFromEditor)
+    : Number(globalStep);
+  const stepNum = Number.isFinite(stepCandidate) && stepCandidate > 0 ? stepCandidate : NaN;
+  const stepValidForRules = Number.isFinite(stepNum);
+  const isScoringPhaseRender = stepValidForRules && stepNum >= 2 && stepNum <= 11;
+  const isStrategicPhaseRender = stepValidForRules && stepNum >= 13 && stepNum <= 18;
+  const effectiveRequiredSelectionsRender = isScoringPhaseRender
+    ? 3
+    : isStrategicPhaseRender
+      ? 1
+      : requiredSelections || minSelections || 1;
+  const currentSelectionCount = isPreviewMode
+    ? previewSelections.length
+    : (selectedOptions || []).length;
+  const hasRequiredSelectionsRender =
+    currentSelectionCount >= (effectiveRequiredSelectionsRender || 1);
+  const isAdvancingNow = isPreviewMode
+    ? previewAutoAdvanceRef.current
+    : autoAdvanceScheduledRef.current;
+
+  // Flags de UI (derivadas das propriedades do bloco)
+  const showSelectionCountRender = Boolean((block?.properties as any)?.showSelectionCount);
+  const showValidationFeedbackRender = Boolean((block?.properties as any)?.showValidationFeedback);
+  const customValidationMessage: string | undefined = (block?.properties as any)
+    ?.validationMessage as string | undefined;
+
   const handleOptionSelect = (optionId: string) => {
     if (isPreviewMode) {
       // Preview mode: Handle selection with real behavior
@@ -566,6 +595,30 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
           );
         })}
       </div>
+
+      {(showSelectionCountRender || showValidationFeedbackRender) &&
+        (isScoringPhaseRender || isStrategicPhaseRender) && (
+          <div className="mt-4 text-center text-sm text-stone-600">
+            {showSelectionCountRender && (
+              <span>
+                {currentSelectionCount}/{effectiveRequiredSelectionsRender} selecionadas
+                {isScoringPhaseRender && hasRequiredSelectionsRender && isAdvancingNow
+                  ? ' — avançando…'
+                  : ''}
+              </span>
+            )}
+            {showValidationFeedbackRender && !hasRequiredSelectionsRender && (
+              <div className="mt-1 text-rose-600">
+                {typeof customValidationMessage === 'string'
+                  ? (customValidationMessage as string).replace(
+                      '{required}',
+                      String(effectiveRequiredSelectionsRender)
+                    )
+                  : `Selecione ${effectiveRequiredSelectionsRender} opção(ões)`}
+              </div>
+            )}
+          </div>
+        )}
     </div>
   );
 };
