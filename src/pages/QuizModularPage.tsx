@@ -3,9 +3,9 @@ import EnhancedComponentsSidebar from '@/components/editor/EnhancedComponentsSid
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { useQuizFlow } from '@/hooks/core/useQuizFlow';
+import { useJsonTemplate } from '@/hooks/useJsonTemplate';
 import { cn } from '@/lib/utils';
 import { Block, BlockType } from '@/types/editor';
-import { loadStepBlocks } from '@/utils/quiz21StepsRenderer';
 import { DndContext, DragEndEvent, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import React, { useEffect, useState } from 'react';
 
@@ -46,42 +46,27 @@ const QuizModularPage: React.FC = () => {
     preloadTemplates?.();
   }, [preloadTemplates]);
 
-  // Carregar blocos da etapa atual
+  // (Carregamento movido para useJsonTemplate)
+  const { blocks: templateBlocks, loading: templateLoading, error: templateError, loadStep } =
+    useJsonTemplate(`step-${currentStep}`, { preload: true });
+
+  // Sincronizar blocos/estado com o hook de template
   useEffect(() => {
-    const loadCurrentStepBlocks = async () => {
-      try {
-        setIsLoading(true);
-        setError(null);
+    setIsLoading(templateLoading);
+    setError(templateError ? `Erro ao carregar etapa ${currentStep}` : null);
+    setBlocks(templateBlocks || []);
 
-        console.log(`🔄 Carregando blocos da etapa ${currentStep}...`);
+    if (!templateLoading && !templateError) {
+      const isValid = validateStep(templateBlocks || []);
+      setStepValidation(prev => ({ ...prev, [currentStep]: isValid }));
+      setStepValid?.(currentStep, isValid);
+    }
+  }, [templateBlocks, templateLoading, templateError, currentStep]);
 
-        // Carregar blocos usando o mesmo sistema do editor
-        const stepBlocks = await loadStepBlocks(currentStep);
-
-        console.log(
-          `✅ ${stepBlocks.length} blocos carregados para etapa ${currentStep}:`,
-          stepBlocks
-        );
-
-        setBlocks(stepBlocks);
-
-        // Validar se a etapa já está completa
-        setTimeout(() => {
-          const isValid = validateStep(stepBlocks);
-          setStepValidation(prev => ({ ...prev, [currentStep]: isValid }));
-          setStepValid?.(currentStep, isValid);
-        }, 100);
-      } catch (err) {
-        console.error(`❌ Erro ao carregar etapa ${currentStep}:`, err);
-        setError(`Erro ao carregar etapa ${currentStep}`);
-        setBlocks([]);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadCurrentStepBlocks();
-  }, [currentStep]);
+  // Recarregar quando currentStep mudar
+  useEffect(() => {
+    loadStep(`step-${currentStep}`);
+  }, [currentStep, loadStep]);
 
   // Sincronizar step com hook do quiz
   useEffect(() => {
@@ -121,9 +106,29 @@ const QuizModularPage: React.FC = () => {
 
     window.addEventListener('navigate-to-step', handleNavigate as EventListener);
     window.addEventListener('quiz-navigate-to-step', handleNavigate as EventListener);
+    
+    // Sincronizar validação visual/funcional via eventos globais dos blocos
+    const handleSelectionChange = (ev: Event) => {
+      const e = ev as CustomEvent<{ selectionCount?: number; isValid?: boolean }>; 
+      const valid = !!e.detail?.isValid;
+      setStepValidation(prev => ({ ...prev, [currentStep]: valid }));
+      setStepValid?.(currentStep, valid);
+    };
+
+    const handleInputChange = (ev: Event) => {
+      const e = ev as CustomEvent<{ value?: string; valid?: boolean }>; 
+      const ok = typeof e.detail?.value === 'string' ? e.detail.value.trim().length > 0 : !!e.detail?.valid;
+      setStepValidation(prev => ({ ...prev, [currentStep]: ok }));
+      setStepValid?.(currentStep, ok);
+    };
+
+    window.addEventListener('quiz-selection-change', handleSelectionChange as EventListener);
+    window.addEventListener('quiz-input-change', handleInputChange as EventListener);
     return () => {
       window.removeEventListener('navigate-to-step', handleNavigate as EventListener);
       window.removeEventListener('quiz-navigate-to-step', handleNavigate as EventListener);
+      window.removeEventListener('quiz-selection-change', handleSelectionChange as EventListener);
+      window.removeEventListener('quiz-input-change', handleInputChange as EventListener);
     };
   }, [goToStep]);
 
@@ -144,26 +149,7 @@ const QuizModularPage: React.FC = () => {
     }
   };
 
-  // Carregar blocos da etapa atual
-  useEffect(() => {
-    const loadCurrentStepBlocks = async () => {
-      try {
-        setIsLoading(true);
-        setError(null);
-
-        const stepBlocks = await loadStepBlocks(currentStep);
-        setBlocks(stepBlocks);
-      } catch (err) {
-        console.error('Erro ao carregar blocos da etapa:', err);
-        setError(`Erro ao carregar etapa ${currentStep}`);
-        setBlocks([]);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadCurrentStepBlocks();
-  }, [currentStep]);
+  // (remoção de duplicidade: efeito acima já cuida do carregamento)
   // 🎯 FUNÇÕES DE VALIDAÇÃO E AVANÇO
   const validateStep = (currentBlocks: Block[]): boolean => {
     const questionBlocks = currentBlocks.filter(

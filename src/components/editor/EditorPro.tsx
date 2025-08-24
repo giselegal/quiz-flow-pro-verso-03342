@@ -46,9 +46,9 @@ import { useEditor } from './EditorProvider';
  * - Extrair availableComponents para um arquivo de config
  */
 
-// lazy-load do painel de propriedades (reduz custo de bundle inicial)
-const EnhancedUniversalPropertiesPanelFixed = React.lazy(
-  () => import('@/components/universal/EnhancedUniversalPropertiesPanelFixed')
+// lazy-load do painel de propriedades (usar versão unificada mais completa)
+const EnhancedUniversalPropertiesPanel = React.lazy(
+  () => import('@/components/universal/EnhancedUniversalPropertiesPanel')
 );
 
 interface EditorProProps {
@@ -782,7 +782,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         <Suspense
           fallback={<div className="p-4 text-sm text-gray-600">Carregando propriedades…</div>}
         >
-          <EnhancedUniversalPropertiesPanelFixed
+          <EnhancedUniversalPropertiesPanel
             selectedBlock={selectedBlock as any}
             onUpdate={(blockId: string, updates: Record<string, any>) =>
               actions.updateBlock(currentStepKey, blockId, updates)
