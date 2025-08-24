@@ -28,7 +28,6 @@ import {
 } from '../../utils/editorUtils';
 import { QuizRenderer } from '../core/QuizRenderer';
 import { useNotification } from '../ui/Notification';
-import SimpleCanvasDropZone from './canvas/CanvasDropZone.simple';
 import { DraggableComponentItem } from './dnd/DraggableComponentItem';
 import { useEditor } from './EditorProvider';
 // import { SortableBlock } from './SortableBlock';
@@ -629,32 +628,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               </button>
             </div>
 
-            <div className="flex bg-gray-100 rounded-lg p-1">
-              <button
-                type="button"
-                onClick={() => setMode('edit')}
-                className={cn(
-                  'px-4 py-2 text-sm rounded-md transition-all duration-200 font-medium',
-                  mode === 'edit'
-                    ? 'bg-white text-gray-900 shadow-sm border border-gray-200'
-                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                )}
-              >
-                ✏️ Editar
-              </button>
-              <button
-                type="button"
-                onClick={() => setMode('preview')}
-                className={cn(
-                  'px-4 py-2 text-sm rounded-md transition-all duration-200 font-medium',
-                  mode === 'preview'
-                    ? 'bg-white text-gray-900 shadow-sm border border-gray-200'
-                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                )}
-              >
-                👁️ Preview
-              </button>
-            </div>
+            {/* Alternância de modo removida: somente preview */}
 
             {/* Seletor de viewport responsivo */}
             <div className="flex bg-gray-100 rounded-lg p-1">
@@ -718,38 +692,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
           </div>
         </div>
 
-        <div className="mt-3 p-3 rounded-lg border">
-          {mode === 'edit' ? (
-            <div
-              className={cn(
-                'flex items-center justify-between text-sm',
-                'bg-blue-50 border-blue-200 text-blue-900'
-              )}
-            >
-              <div>
-                <strong>✏️ Modo Edição Visual:</strong> Conteúdo real com overlays de seleção
-                interativos
-              </div>
-              <div className="text-blue-700">
-                {state.selectedBlockId
-                  ? `Editando: ${state.selectedBlockId}`
-                  : `${currentStepData.length} blocos disponíveis - Clique para editar`}
-              </div>
-            </div>
-          ) : (
-            <div
-              className={cn(
-                'flex items-center justify-between text-sm',
-                'bg-green-50 border-green-200 text-green-900'
-              )}
-            >
-              <div>
-                <strong>👁️ Modo Preview:</strong> Visualização idêntica à produção final
-              </div>
-              <div className="text-green-700">Navegação e interações funcionais</div>
-            </div>
-          )}
-        </div>
+  {/* Banner de modo removido */}
       </div>
 
       {/* Área scrollável do canvas */}
