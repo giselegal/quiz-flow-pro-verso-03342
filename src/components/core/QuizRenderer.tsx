@@ -49,7 +49,7 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
   });
 
   const { currentStep, totalSteps, userName, progress, isLoading } = quizState;
-  const { prevStep, getStepData } = actions; // nextStep removido pois não é usado
+  const { prevStep, getStepData } = actions; // Em preview editável, usaremos onStepChange direto
 
   // Buscar dados da etapa atual
   const canUseOverrides =
@@ -81,7 +81,8 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
         <span className="text-sm text-gray-600">
           Etapa {currentStepOverride ?? currentStep} de {totalSteps}
         </span>
-        {mode !== 'preview' && (
+        {/* Navegação no header: mostrar em modos não-preview, e também em preview quando previewEditable */}
+        {mode !== 'preview' ? (
           <div className="flex gap-2">
             <button
               onClick={prevStep}
@@ -91,7 +92,32 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
               ← Voltar
             </button>
           </div>
-        )}
+        ) : previewEditable ? (
+          <div className="flex gap-2">
+            <button
+              onClick={() => {
+                const step = currentStepOverride ?? currentStep;
+                const target = Math.max(1, step - 1);
+                onStepChange?.(target);
+              }}
+              disabled={(currentStepOverride ?? currentStep) === 1}
+              className="px-3 py-1 text-sm border rounded disabled:opacity-50"
+            >
+              ← Voltar
+            </button>
+            <button
+              onClick={() => {
+                const step = currentStepOverride ?? currentStep;
+                const target = Math.min(totalSteps, step + 1);
+                onStepChange?.(target);
+              }}
+              disabled={(currentStepOverride ?? currentStep) >= totalSteps}
+              className="px-3 py-1 text-sm border rounded disabled:opacity-50"
+            >
+              Avançar →
+            </button>
+          </div>
+        ) : null}
       </div>
 
       {/* Barra de progresso */}
