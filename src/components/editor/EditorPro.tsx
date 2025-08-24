@@ -291,11 +291,21 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   const handleDragStart = useCallback((event: DragStartEvent) => {
     const { active } = event;
     const dragData = extractDragData(active);
+    
     console.log('🚀 DRAG START CAPTURADO!', {
       activeId: active.id,
       dragData,
       activeDataCurrent: active.data.current,
     });
+    
+    // Debug adicional para componentes da sidebar
+    if (active.id.toString().startsWith('sidebar-item-')) {
+      console.log('🧩 DRAG START de componente da sidebar detectado!', {
+        itemId: active.id,
+        data: active.data.current
+      });
+    }
+    
     logDragEvent('start', active);
     if (process.env.NODE_ENV === 'development') devLog('Drag start', dragData);
   }, []);
@@ -308,6 +318,15 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         overId: over?.id,
         overData: over?.data?.current,
       });
+      
+      // Debug adicional para componentes da sidebar
+      if (active.id.toString().startsWith('sidebar-item-')) {
+        console.log('🧩 DRAG END de componente da sidebar!', {
+          itemId: active.id,
+          dropZone: over?.id,
+          dropData: over?.data?.current
+        });
+      }
 
       if (!over) {
         console.log('❌ Drop cancelado - sem alvo');
