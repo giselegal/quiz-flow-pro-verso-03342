@@ -409,7 +409,8 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
             // 2) Fallback: ler resposta salva (local/offline ou Supabase)
             let storedValue = '';
             try {
-              storedValue = (await userResponseService.getResponse('intro-name-input'))?.trim() || '';
+              storedValue =
+                (await userResponseService.getResponse('intro-name-input'))?.trim() || '';
             } catch {}
 
             const effectiveName = domValue || storedValue;
@@ -433,11 +434,9 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
 
             // Handle step navigation
             if (action === 'next-step' && nextStepId) {
-              window.dispatchEvent(
-                new CustomEvent('navigate-to-step', {
-                  detail: { stepId: nextStepId, source: `button-${block?.id}` },
-                })
-              );
+              const detail = { stepId: nextStepId, source: `button-${block?.id}` };
+              window.dispatchEvent(new CustomEvent('navigate-to-step', { detail }));
+              window.dispatchEvent(new CustomEvent('quiz-navigate-to-step', { detail }));
               return;
             }
 
@@ -470,11 +469,9 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
               if (autoAdvanceOnComplete) {
                 setTimeout(
                   () => {
-                    window.dispatchEvent(
-                      new CustomEvent('navigate-to-step', {
-                        detail: { stepId: targetStep, source: 'step1-button' },
-                      })
-                    );
+                    const detail = { stepId: targetStep, source: 'step1-button' };
+                    window.dispatchEvent(new CustomEvent('navigate-to-step', { detail }));
+                    window.dispatchEvent(new CustomEvent('quiz-navigate-to-step', { detail }));
                   },
                   Number(autoAdvanceDelay) || 0
                 );

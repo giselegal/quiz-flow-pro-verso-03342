@@ -350,18 +350,32 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
         });
       }
     } else {
-      // Editor mode: Use the property change handler
-      if (onPropertyChange) {
-        if (multipleSelection) {
-          const currentSelections = selectedOptions || [];
-          const newSelections = currentSelections.includes(optionId)
-            ? currentSelections.filter((id: string) => id !== optionId)
-            : [...currentSelections, optionId];
-          onPropertyChange('selectedOptions', newSelections);
-        } else {
-          onPropertyChange('selectedOption', optionId);
-        }
+      // Editor mode: Update properties and emit validation event for editor UX
+      let newSelections: string[];
+      if (multipleSelection) {
+        const currentSelections = selectedOptions || [];
+        newSelections = currentSelections.includes(optionId)
+          ? currentSelections.filter((id: string) => id !== optionId)
+          : [...currentSelections, optionId];
+        onPropertyChange?.('selectedOptions', newSelections);
+      } else {
+        newSelections = [optionId];
+        onPropertyChange?.('selectedOption', optionId);
       }
+
+      const hasRequiredSelections =
+        newSelections.length >= (requiredSelections || minSelections || 1);
+
+      // Emitir evento global para que o EditorStageManager possa refletir validação visual
+      window.dispatchEvent(
+        new CustomEvent('quiz-selection-change', {
+          detail: {
+            questionId: (block?.properties as any)?.questionId || block?.id,
+            selectionCount: newSelections.length,
+            valid: hasRequiredSelections,
+          },
+        })
+      );
     }
   };
 

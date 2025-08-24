@@ -108,11 +108,9 @@ const FormContainerBlock: React.FC<BlockComponentProps> = ({ block }) => {
           (properties as any)?.autoAdvanceDelay ?? btnChild?.properties?.autoAdvanceDelay ?? 600;
         window.setTimeout(
           () => {
-            window.dispatchEvent(
-              new CustomEvent('navigate-to-step', {
-                detail: { stepId: nextStepId, source: 'form-container-auto-advance' },
-              })
-            );
+            const detail = { stepId: nextStepId, source: 'form-container-auto-advance' };
+            window.dispatchEvent(new CustomEvent('navigate-to-step', { detail }));
+            window.dispatchEvent(new CustomEvent('quiz-navigate-to-step', { detail }));
           },
           Number(delay) || 0
         );
