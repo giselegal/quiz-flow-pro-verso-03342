@@ -121,6 +121,30 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
     disabledOpacity = 50,
   } = (block?.properties as any) || {};
 
+  // Suporte a controle externo de estado (eventos globais)
+  const buttonId =
+    (block?.id as string) || (block?.properties as any)?.buttonId || 'cta-button-modular';
+  const [externalDisabled, setExternalDisabled] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const onButtonState = (e: Event) => {
+      const evt = e as CustomEvent<{ buttonId?: string; enabled?: boolean; disabled?: boolean }>;
+      const detail = evt.detail || {};
+      if (detail.buttonId && detail.buttonId !== buttonId) return;
+      if (typeof detail.enabled === 'boolean') {
+        setExternalDisabled(!detail.enabled);
+      } else if (typeof detail.disabled === 'boolean') {
+        setExternalDisabled(!!detail.disabled);
+      }
+    };
+    window.addEventListener('quiz-button-state-change', onButtonState as EventListener);
+    window.addEventListener('step01-button-state-change', onButtonState as EventListener);
+    return () => {
+      window.removeEventListener('quiz-button-state-change', onButtonState as EventListener);
+      window.removeEventListener('step01-button-state-change', onButtonState as EventListener);
+    };
+  }, [buttonId]);
+
   const [isValidated, setIsValidated] = useState(false);
 
   // Efeito para verificar validação quando necessário
@@ -170,7 +194,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
   }, [requiresValidInput]);
 
   // Determinar se o botão deve estar desabilitado
-  const isButtonDisabled = disabled || (requiresValidInput && !isValidated);
+  const isButtonDisabled = externalDisabled ?? (disabled || (requiresValidInput && !isValidated));
   // 🚀 Função para inicializar quiz no Supabase
   const initializeQuizWithSupabase = async (userName: string) => {
     try {

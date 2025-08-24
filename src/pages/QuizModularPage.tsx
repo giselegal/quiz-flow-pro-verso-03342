@@ -115,18 +115,19 @@ const QuizModularPage: React.FC = () => {
 
     window.addEventListener('navigate-to-step', handleNavigate as EventListener);
     window.addEventListener('quiz-navigate-to-step', handleNavigate as EventListener);
-    
+
     // Sincronizar validação visual/funcional via eventos globais dos blocos
     const handleSelectionChange = (ev: Event) => {
-      const e = ev as CustomEvent<{ selectionCount?: number; isValid?: boolean }>; 
+      const e = ev as CustomEvent<{ selectionCount?: number; isValid?: boolean }>;
       const valid = !!e.detail?.isValid;
       setStepValidation(prev => ({ ...prev, [currentStep]: valid }));
       setStepValid?.(currentStep, valid);
     };
 
     const handleInputChange = (ev: Event) => {
-      const e = ev as CustomEvent<{ value?: string; valid?: boolean }>; 
-      const ok = typeof e.detail?.value === 'string' ? e.detail.value.trim().length > 0 : !!e.detail?.valid;
+      const e = ev as CustomEvent<{ value?: string; valid?: boolean }>;
+      const ok =
+        typeof e.detail?.value === 'string' ? e.detail.value.trim().length > 0 : !!e.detail?.valid;
       setStepValidation(prev => ({ ...prev, [currentStep]: ok }));
       setStepValid?.(currentStep, ok);
     };

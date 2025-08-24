@@ -84,6 +84,7 @@ const FormContainerBlock: React.FC<BlockComponentProps> = ({ block }) => {
     };
 
     window.addEventListener('step01-button-state-change', handler as EventListener);
+    window.addEventListener('quiz-button-state-change', handler as EventListener);
 
     // Integração direta com mudanças do input (Etapa 1)
     const onQuizInput = (e: Event) => {
@@ -120,6 +121,7 @@ const FormContainerBlock: React.FC<BlockComponentProps> = ({ block }) => {
 
     return () => {
       window.removeEventListener('step01-button-state-change', handler as EventListener);
+      window.removeEventListener('quiz-button-state-change', handler as EventListener);
       window.removeEventListener('quiz-input-change', onQuizInput as EventListener);
     };
   }, [properties]);
