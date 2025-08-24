@@ -57,7 +57,7 @@ const QuizFlowPage: React.FC = () => {
 
   // Expor etapa atual globalmente (usado por alguns blocos)
   useEffect(() => {
-    (window as any).__quizCurrentStep = `step-${currentStep}`;
+    (window as any).__quizCurrentStep = currentStep;
   }, [currentStep]);
 
   // Listeners globais para navegação/validação vindas dos blocos
