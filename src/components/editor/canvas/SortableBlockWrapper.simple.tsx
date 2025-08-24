@@ -122,8 +122,8 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
           </Button>
         </div>
 
-  {/* Component content */}
-  <div>
+        {/* Component content */}
+        <div>
           <React.Suspense
             fallback={
               <div className="animate-pulse bg-gray-200 h-16 rounded flex items-center justify-center">

@@ -21,8 +21,9 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       type: 'quiz-intro-header',
       order: 0,
       content: {
-        title: 'Descubra seu Estilo Predominante',
-        subtitle: 'Chega de um guarda-roupa lotado e da sensação de que nada combina com Você.',
+        title:
+          '<span style="color: #B89B7A; font-weight: 700; font-family: \'Playfair Display\', serif;">Chega</span> <span style="font-family: \'Playfair Display\', serif;">de um guarda-roupa lotado e da sensação de que</span> <span style="color: #B89B7A; font-weight: 700; font-family: \'Playfair Display\', serif;">nada combina com você.</span>',
+        subtitle: 'Descubra seu Estilo Predominante em poucos minutos',
         description:
           'Em poucos minutos, descubra seu Estilo Predominante — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.',
         showLogo: true,
@@ -47,6 +48,12 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         progressValue: 0,
         progressMax: 100,
         showBackButton: false,
+        // Imagem de introdução (opcional)
+        introImageUrl:
+          'https://res.cloudinary.com/der8kogzu/image/upload/f_avif,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.avif',
+        introImageAlt: 'Descubra seu estilo predominante',
+        introImageWidth: 300,
+        introImageHeight: 204,
       },
     },
     {
@@ -84,6 +91,9 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         // ID opcional para integração com o container
         elementId: 'step1-form-container',
         targetButtonId: 'intro-cta-button',
+        // Auto-advance diretamente no container (ou no botão filho)
+        autoAdvanceOnComplete: true,
+        autoAdvanceDelay: 600,
         // Aparência do container
         backgroundColor: '#FFFFFF',
         paddingTop: 16,
@@ -97,7 +107,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
             type: 'form-input',
             properties: {
               label: 'NOME',
-              placeholder: 'Digite seu nome',
+              placeholder: 'Digite seu primeiro nome aqui...',
               name: 'userName',
               inputType: 'text',
               required: true,
@@ -122,6 +132,8 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
               requiresValidInput: true,
               action: 'next-step',
               nextStepId: 'step-2',
+              autoAdvanceOnComplete: true,
+              autoAdvanceDelay: 600,
               // Estilo do botão alinhado ao template
               backgroundColor: '#B89B7A',
               textColor: '#FFFFFF',
@@ -134,7 +146,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
               effectType: 'none',
               shadowType: 'none',
               showDisabledState: true,
-              disabledText: 'Preencha seu nome para continuar',
+              disabledText: 'Digite seu nome para continuar',
               disabledOpacity: 60,
             },
           },

@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils';
+import type { BlockComponentProps } from '@/types/blocks';
 import { ArrowLeft } from 'lucide-react';
 import React from 'react';
-import type { BlockComponentProps } from '@/types/blocks';
 
 import { HeaderProperties } from '@/config/headerPropertiesMapping';
 
@@ -14,7 +14,7 @@ interface QuizIntroHeaderBlockProps extends BlockComponentProps {
 
 const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
   block,
-  onClick,
+  onClick: _onClick,
   onPropertyChange: _onPropertyChange,
   disabled: _disabled = false,
   className,
@@ -60,12 +60,26 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
     marginBottom,
   } = (block?.properties as HeaderProperties) || {};
 
+  // Conteúdo textual (suporta HTML no título/subtítulo)
+  const title = (block as any)?.content?.title || (block as any)?.properties?.title || '';
+  const subtitle = (block as any)?.content?.subtitle || (block as any)?.properties?.subtitle || '';
+  const description =
+    (block as any)?.content?.description || (block as any)?.properties?.description || '';
+
+  // Imagem de introdução opcional
+  const introImageUrl =
+    (block as any)?.properties?.introImageUrl || (block as any)?.content?.introImageUrl || '';
+  const introImageAlt =
+    (block as any)?.properties?.introImageAlt || (block as any)?.content?.introImageAlt || 'Intro';
+  const introImageWidth = (block as any)?.properties?.introImageWidth || 300;
+  const introImageHeight = (block as any)?.properties?.introImageHeight || 200;
+
   return (
     <div
       className={cn(
-        'relative w-full p-4',
+        'relative w-full p-6',
         isSticky ? 'sticky top-0 z-50' : '',
-        'cursor-pointer hover:bg-gray-50/50 transition-colors',
+        'transition-colors',
         className
       )}
       style={{
@@ -73,10 +87,9 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
         marginTop: marginTop || 0,
         marginBottom: marginBottom || 0,
       }}
-      onClick={onClick}
     >
       {/* Header Content */}
-      <div className="relative w-full min-h-[120px] flex items-center justify-center">
+      <div className="relative w-full min-h-[80px] flex items-center justify-center">
         {showBackButton && (
           <button
             className="absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full hover:bg-gray-100/50 transition-colors"
@@ -102,6 +115,43 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
           />
         </div>
       </div>
+
+      {/* Título / Subtítulo / Descrição */}
+      {(title || subtitle || description) && (
+        <div className="mt-4 text-center space-y-3">
+          {title && (
+            <h1
+              className="text-2xl md:text-3xl font-bold leading-snug"
+              style={{ color: '#432818', fontFamily: 'Playfair Display, serif' }}
+              dangerouslySetInnerHTML={{ __html: title }}
+            />
+          )}
+          {subtitle && (
+            <div
+              className="text-base md:text-lg"
+              style={{ color: '#432818' }}
+              dangerouslySetInnerHTML={{ __html: subtitle }}
+            />
+          )}
+          {description && <p className="text-sm md:text-base text-gray-700">{description}</p>}
+        </div>
+      )}
+
+      {/* Imagem de Introdução (opcional) */}
+      {introImageUrl && (
+        <div className="mt-6 flex justify-center">
+          <img
+            src={introImageUrl}
+            alt={introImageAlt}
+            width={introImageWidth}
+            height={introImageHeight}
+            className="object-cover w-full max-w-lg h-auto rounded-xl shadow"
+            onError={e => {
+              e.currentTarget.src = 'https://via.placeholder.com/300x200?text=Imagem';
+            }}
+          />
+        </div>
+      )}
 
       {/* Progress Bar */}
       {showProgress && (

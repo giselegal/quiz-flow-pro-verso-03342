@@ -106,13 +106,16 @@ const FormContainerBlock: React.FC<BlockComponentProps> = ({ block }) => {
           btnChild?.properties?.nextStepId || btnChild?.content?.nextStepId || 'step-2';
         const delay =
           (properties as any)?.autoAdvanceDelay ?? btnChild?.properties?.autoAdvanceDelay ?? 600;
-        window.setTimeout(() => {
-          window.dispatchEvent(
-            new CustomEvent('navigate-to-step', {
-              detail: { stepId: nextStepId, source: 'form-container-auto-advance' },
-            })
-          );
-        }, Number(delay) || 0);
+        window.setTimeout(
+          () => {
+            window.dispatchEvent(
+              new CustomEvent('navigate-to-step', {
+                detail: { stepId: nextStepId, source: 'form-container-auto-advance' },
+              })
+            );
+          },
+          Number(delay) || 0
+        );
       }
     };
     window.addEventListener('quiz-input-change', onQuizInput as EventListener);
