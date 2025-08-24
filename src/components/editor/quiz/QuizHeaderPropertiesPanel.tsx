@@ -6,7 +6,9 @@ export interface QuizHeaderPropertiesPanelProps {
   onUpdate?: (blockId: string, updates: Record<string, any>) => void;
 }
 
-export const QuizHeaderPropertiesPanel: React.FC<QuizHeaderPropertiesPanelProps> = ({ selectedBlock }) => {
+export const QuizHeaderPropertiesPanel: React.FC<QuizHeaderPropertiesPanelProps> = ({
+  selectedBlock,
+}) => {
   if (!selectedBlock) return null;
   return (
     <div className="p-3 border rounded bg-white text-xs text-gray-600">

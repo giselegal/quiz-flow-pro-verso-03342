@@ -6,7 +6,9 @@ export interface OptionsGridPropertiesPanelProps {
   onUpdate?: (blockId: string, updates: Record<string, any>) => void;
 }
 
-export const OptionsGridPropertiesPanel: React.FC<OptionsGridPropertiesPanelProps> = ({ selectedBlock }) => {
+export const OptionsGridPropertiesPanel: React.FC<OptionsGridPropertiesPanelProps> = ({
+  selectedBlock,
+}) => {
   if (!selectedBlock) return null;
   return (
     <div className="p-3 border rounded bg-white text-xs text-gray-600">
