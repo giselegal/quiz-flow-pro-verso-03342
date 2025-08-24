@@ -26,8 +26,8 @@ import {
   devLog,
   validateEditorJSON,
 } from '../../utils/editorUtils';
-import { QuizRenderer } from '../core/QuizRenderer';
 import { useNotification } from '../ui/Notification';
+import { CanvasDropZone } from './canvas/CanvasDropZone.simple';
 import { DraggableComponentItem } from './dnd/DraggableComponentItem';
 import { useEditor } from './EditorProvider';
 // import { SortableBlock } from './SortableBlock';
@@ -691,19 +691,18 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
             className="mx-auto transition-all editor-pro-canvas"
             style={{ width: viewportWidth as number | string, maxWidth: '100%' }}
           >
-            <div className={cn('rounded-xl shadow-sm', viewport !== 'full' && 'border bg-white')}>
-              <div>
-                <QuizRenderer
-                  mode="preview"
-                  onStepChange={handleStepSelect}
-                  initialStep={safeCurrentStep}
-                  blocksOverride={currentStepData}
-                  currentStepOverride={safeCurrentStep}
-                  previewEditable
-                  selectedBlockId={state.selectedBlockId}
-                  onBlockClick={(id: string) => actions.setSelectedBlockId(id)}
-                />
-              </div>
+            <div
+              className={cn('rounded-xl shadow-sm', viewport !== 'full' && 'border bg-white p-4')}
+            >
+              <CanvasDropZone
+                blocks={currentStepData}
+                selectedBlockId={state.selectedBlockId}
+                onSelectBlock={(id: string) => actions.setSelectedBlockId(id)}
+                onUpdateBlock={(id: string, updates: any) =>
+                  actions.updateBlock(currentStepKey, id, updates)
+                }
+                onDeleteBlock={(id: string) => actions.removeBlock(currentStepKey, id)}
+              />
             </div>
             <div className="text-xs mt-2 px-2">
               Clique em um bloco no canvas para ver suas propriedades
