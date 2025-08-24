@@ -1,3 +1,4 @@
+import QuizRunnerShell from '@/components/quiz/QuizRunnerShell';
 import {
   closestCenter,
   DndContext,
@@ -734,19 +735,27 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
             className="mx-auto transition-all editor-pro-canvas"
             style={{ width: viewportWidth as number | string, maxWidth: '100%' }}
           >
-            <div
-              className={cn('rounded-xl shadow-sm', viewport !== 'full' && 'border bg-white p-4')}
+            {/* Shell do runner, variante embed para manter o mesmo layout visual */}
+            <QuizRunnerShell
+              currentStep={safeCurrentStep}
+              totalSteps={21}
+              progress={Math.round((safeCurrentStep / 21) * 100)}
+              variant="embedded"
+              showHeader={true}
             >
-              <CanvasDropZone
-                blocks={currentStepData}
-                selectedBlockId={state.selectedBlockId}
-                onSelectBlock={(id: string) => actions.setSelectedBlockId(id)}
-                onUpdateBlock={(id: string, updates: any) =>
-                  actions.updateBlock(currentStepKey, id, updates)
-                }
-                onDeleteBlock={(id: string) => actions.removeBlock(currentStepKey, id)}
-              />
-            </div>
+              <div className="quiz-content p-8 space-y-6">
+                <CanvasDropZone
+                  blocks={currentStepData}
+                  selectedBlockId={state.selectedBlockId}
+                  onSelectBlock={(id: string) => actions.setSelectedBlockId(id)}
+                  onUpdateBlock={(id: string, updates: any) =>
+                    actions.updateBlock(currentStepKey, id, updates)
+                  }
+                  onDeleteBlock={(id: string) => actions.removeBlock(currentStepKey, id)}
+                />
+              </div>
+            </QuizRunnerShell>
+
             <div className="text-xs mt-2 px-2">
               Clique em um bloco no canvas para ver suas propriedades
             </div>

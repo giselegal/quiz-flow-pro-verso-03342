@@ -525,28 +525,32 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
           return (
             <div
               key={opt.id}
-              className={`rounded-lg border bg-white p-4 transition-all duration-200 cursor-pointer ${cardLayoutClass} ` +
+              className={
+                `rounded-lg border bg-white p-4 transition-all duration-200 cursor-pointer ${cardLayoutClass} ` +
                 (isSelected
                   ? 'border-amber-400 shadow-[0_10px_25px_rgba(184,155,122,0.35)] translate-y-[-1px]'
-                  : 'border-neutral-200 hover:shadow-md')}
+                  : 'border-neutral-200 hover:shadow-md')
+              }
               onClick={() => handleOptionSelect(opt.id)}
               data-selected={isSelected ? 'true' : 'false'}
             >
-            {opt.imageUrl && showImages && (
-              <img
-                src={opt.imageUrl}
-                alt={opt.text || 'opção'}
-                className={`object-cover rounded-md flex-shrink-0 ${imageOrderClass}`}
-                width={imgW}
-                height={imgH}
-                style={{ width: `${imgW}px`, height: `${imgH}px` }}
-                loading="lazy"
-                decoding="async"
-              />
-            )}
-            <p className={`${imageLayout === 'horizontal' ? 'flex-1' : 'text-center'} font-medium`}>
-              {opt.text}
-            </p>
+              {opt.imageUrl && showImages && (
+                <img
+                  src={opt.imageUrl}
+                  alt={opt.text || 'opção'}
+                  className={`object-cover rounded-md flex-shrink-0 ${imageOrderClass}`}
+                  width={imgW}
+                  height={imgH}
+                  style={{ width: `${imgW}px`, height: `${imgH}px` }}
+                  loading="lazy"
+                  decoding="async"
+                />
+              )}
+              <p
+                className={`${imageLayout === 'horizontal' ? 'flex-1' : 'text-center'} font-medium`}
+              >
+                {opt.text}
+              </p>
             </div>
           );
         })}
