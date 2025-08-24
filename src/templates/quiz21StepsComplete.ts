@@ -48,6 +48,9 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         progressValue: 0,
         progressMax: 100,
         showBackButton: false,
+        // Layout refinado
+        contentMaxWidth: 640,
+        progressHeight: 8,
         // Imagem de introdução (opcional)
         introImageUrl:
           'https://res.cloudinary.com/der8kogzu/image/upload/f_avif,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.avif',
@@ -62,12 +65,13 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       order: 1,
       content: {},
       properties: {
-        width: '100%',
+        // Centralizada e limitada à largura do conteúdo
+        width: 'min(640px, 100%)',
         height: 4,
         color: '#B89B7A',
         gradientColors: ['#B89B7A', '#D4C2A8', '#B89B7A'],
         borderRadius: 3,
-        marginTop: 8,
+        marginTop: 12,
         marginBottom: 24,
         showShadow: true,
         backgroundColor: '#B89B7A',
@@ -78,16 +82,18 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       type: 'text',
       order: 2,
       content: {
-        text: 'Descubra seu <strong>ESTILO PREDOMINANTE</strong> em apenas alguns minutos!',
+        text: 'Descubra seu <strong>ESTILO PREDOMINANTE</strong> em poucos minutos',
       },
       properties: {
-        fontSize: 'text-lg',
-        fontWeight: 'font-medium',
-        textAlign: 'text-center',
+        // Tipografia refinada
+        fontSize: 'text-xl',
+        fontWeight: 'font-semibold',
+        textAlign: 'center',
         color: '#432818',
-        marginTop: 0,
-        marginBottom: 40,
-        lineHeight: '1.6',
+        lineHeight: 'leading-relaxed',
+        maxWidth: '640px',
+        marginTop: 8,
+        marginBottom: 32,
       },
     },
     {
