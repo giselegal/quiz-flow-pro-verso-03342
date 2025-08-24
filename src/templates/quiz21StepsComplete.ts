@@ -21,11 +21,6 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       type: 'quiz-intro-header',
       order: 0,
       content: {
-        title:
-          '<span style="color: #B89B7A; font-weight: 700; font-family: \'Playfair Display\', serif;">Chega</span> <span style="font-family: \'Playfair Display\', serif;">de um guarda-roupa lotado e da sensação de que</span> <span style="color: #B89B7A; font-weight: 700; font-family: \'Playfair Display\', serif;">nada combina com você.</span>',
-        subtitle: 'Descubra seu Estilo Predominante em poucos minutos',
-        description:
-          'Em poucos minutos, descubra seu Estilo Predominante — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.',
         showLogo: true,
         showProgress: false,
         showNavigation: false,
@@ -51,18 +46,67 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         // Layout refinado
         contentMaxWidth: 640,
         progressHeight: 8,
-        // Imagem de introdução (opcional)
-        introImageUrl:
-          'https://res.cloudinary.com/der8kogzu/image/upload/f_avif,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.avif',
-        introImageAlt: 'Descubra seu estilo predominante',
-        introImageWidth: 300,
-        introImageHeight: 204,
+      },
+    },
+    {
+      id: 'step1-title',
+      type: 'text',
+      order: 1,
+      content: {
+        text:
+          '<span style="color: #B89B7A; font-weight: 700; font-family: \'Playfair Display\', serif;">Chega</span> <span style="font-family: \'Playfair Display\', serif;">de um guarda-roupa lotado e da sensação de que</span> <span style="color: #B89B7A; font-weight: 700; font-family: \'Playfair Display\', serif;">nada combina com você.</span>',
+      },
+      properties: {
+        fontSize: 'text-2xl',
+        fontWeight: 'font-bold',
+        textAlign: 'center',
+        color: '#432818',
+        lineHeight: 'leading-snug',
+        maxWidth: '640px',
+        marginTop: 8,
+        marginBottom: 8,
+      },
+    },
+    {
+      id: 'step1-subtitle',
+      type: 'text',
+      order: 2,
+      content: {
+        text:
+          'Em poucos minutos, descubra seu Estilo Predominante — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.',
+      },
+      properties: {
+        fontSize: 'text-base',
+        fontWeight: 'font-normal',
+        textAlign: 'center',
+        color: '#432818',
+        lineHeight: 'leading-relaxed',
+        maxWidth: '640px',
+        marginTop: 4,
+        marginBottom: 12,
+      },
+    },
+    {
+      id: 'step1-intro-image',
+      type: 'image',
+      order: 3,
+      content: {},
+      properties: {
+        src: 'https://res.cloudinary.com/der8kogzu/image/upload/f_avif,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.avif',
+        alt: 'Descubra seu estilo predominante',
+        width: '300px',
+        height: 'auto',
+        maxWidth: 'lg',
+        alignment: 'center',
+        borderRadius: 'large',
+        marginTop: 8,
+        marginBottom: 16,
       },
     },
     {
       id: 'step1-decorative-bar',
       type: 'decorative-bar',
-      order: 1,
+  order: 4,
       content: {},
       properties: {
         // Centralizada e limitada à largura do conteúdo
@@ -77,29 +121,11 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         backgroundColor: '#B89B7A',
       },
     },
-    {
-      id: 'step1-motivation-text',
-      type: 'text',
-      order: 2,
-      content: {
-        text: 'Descubra seu <strong>ESTILO PREDOMINANTE</strong> em poucos minutos',
-      },
-      properties: {
-        // Tipografia refinada
-        fontSize: 'text-xl',
-        fontWeight: 'font-semibold',
-        textAlign: 'center',
-        color: '#432818',
-        lineHeight: 'leading-relaxed',
-        maxWidth: '640px',
-        marginTop: 8,
-        marginBottom: 32,
-      },
-    },
+    
     {
       id: 'step1-lead-form',
       type: 'form-container',
-      order: 3,
+  order: 5,
       content: {
         title: 'NOME',
         placeholder: 'Digite seu nome',
@@ -196,7 +222,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
     {
       id: 'step1-legal-notice',
       type: 'legal-notice',
-      order: 4,
+  order: 6,
       content: {},
       properties: {
         // Texto principal e links legais
@@ -218,7 +244,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
     {
       id: 'step1-footer',
       type: 'text',
-      order: 5,
+  order: 7,
       content: {
         text: '2025 - Gisele Galvão - Todos os direitos reservados',
       },
