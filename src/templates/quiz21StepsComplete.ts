@@ -197,17 +197,19 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       id: 'step1-legal-notice',
       type: 'legal-notice',
       order: 4,
-      content: {
-        text: 'Suas informações são seguras. Ao continuar, você concorda com nossa Política de Privacidade e Termos.',
-      },
+      content: {},
       properties: {
-        fontSize: 'text-xs',
-        textAlign: 'text-center',
-        color: '#9CA3AF',
-        showPrivacyLink: true,
+        // Texto principal e links legais
+        copyrightText:
+          'Suas informações são seguras. Ao continuar, você concorda com nossa Política de Privacidade e Termos.',
+        privacyText: 'Política de Privacidade',
+        termsText: 'Termos de Uso',
         privacyLinkUrl: '/privacy',
-        showTermsLink: true,
         termsLinkUrl: '/terms',
+        // Estilo
+        fontSize: '12',
+        textAlign: 'center',
+        textColor: '#9CA3AF',
         linkColor: '#B89B7A',
         marginTop: 24,
         marginBottom: 0,
