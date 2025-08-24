@@ -21,6 +21,8 @@ interface QuizRendererProps {
   onBlockClick?: (blockId: string) => void;
   // Permitir seleção e uso de overrides também em preview (sem mudar o visual)
   previewEditable?: boolean;
+  // Id do bloco selecionado (para destacar com moldura no preview editável)
+  selectedBlockId?: string | null;
 }
 
 /**
@@ -38,6 +40,7 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
   currentStepOverride,
   onBlockClick,
   previewEditable = false,
+  selectedBlockId = null,
 }) => {
   const { quizState, actions } = useQuizFlow({
     mode,
@@ -117,36 +120,37 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
     // Renderizar blocos da etapa usando UniversalBlockRenderer
     return (
       <div className="step-content space-y-6">
-        {stepBlocks.map((block: any, index: number) => (
-          <div
-            key={block.id || index}
-            className="block-container"
-            onClick={() => {
-              if (
-                (mode === 'editor' || (mode === 'preview' && previewEditable)) &&
-                block.id &&
-                onBlockClick
-              ) {
-                onBlockClick(String(block.id));
+        {stepBlocks.map((block: any, index: number) => {
+          const isSelectable = mode === 'editor' || (mode === 'preview' && previewEditable);
+          const isSelected = isSelectable && selectedBlockId === block.id;
+          return (
+            <div
+              key={block.id || index}
+              className={
+                'block-container relative transition-all ' +
+                (isSelected
+                  ? 'ring-2 ring-blue-500 ring-offset-2 rounded-lg'
+                  : '')
               }
-            }}
-          >
-            <UniversalBlockRenderer
-              block={block}
-              isSelected={false}
-              mode={mode}
               onClick={() => {
-                if (
-                  (mode === 'editor' || (mode === 'preview' && previewEditable)) &&
-                  block.id &&
-                  onBlockClick
-                ) {
+                if (isSelectable && block.id && onBlockClick) {
                   onBlockClick(String(block.id));
                 }
               }}
-            />
-          </div>
-        ))}
+            >
+              <UniversalBlockRenderer
+                block={block}
+                isSelected={isSelected}
+                mode={mode}
+                onClick={() => {
+                  if (isSelectable && block.id && onBlockClick) {
+                    onBlockClick(String(block.id));
+                  }
+                }}
+              />
+            </div>
+          );
+        })}
       </div>
     );
   };

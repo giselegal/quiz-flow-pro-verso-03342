@@ -87,7 +87,8 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   }
 
   const { state, actions } = editorContext;
-  const [mode, setMode] = useState<'edit' | 'preview'>('edit');
+  // Modo edição desativado: manter apenas preview editável
+  const mode: 'preview' = 'preview';
   const [viewport, setViewport] = useState<'full' | 'sm' | 'md' | 'lg'>('full');
   const viewportWidth = useMemo(() => {
     switch (viewport) {
@@ -786,36 +787,19 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               )}
             </div>
           </div>
-        </div>
-      </div>
-    </div>
-  );
-
-  const PropertiesColumn: React.FC = () => (
-    <div className="w-[380px] bg-white border-l border-gray-200 flex flex-col">
-      <div className="p-4 border-b border-gray-200">
-        <h3 className="font-semibold text-sm text-gray-900">Painel de Propriedades</h3>
-        {selectedBlock ? (
-          <p className="text-xs text-gray-500 mt-1">Editando: {selectedBlock.type}</p>
-        ) : (
-          <p className="text-xs text-gray-500 mt-1">Selecione um bloco para editar</p>
-        )}
-      </div>
-
-      <div className="flex-1 overflow-y-auto">
-        {selectedBlock ? (
-          <Suspense fallback={<div className="p-6">Carregando painel de propriedades...</div>}>
-            <EnhancedUniversalPropertiesPanelFixed
-              selectedBlock={selectedBlock}
-              onUpdate={handleBlockUpdate}
-              onClose={() => actions.setSelectedBlockId(null)}
-              onDelete={handleBlockDelete}
-            />
-          </Suspense>
-        ) : (
-          <div className="p-6 text-center text-gray-500">
-            <div className="text-2xl mb-3">⚙️</div>
-            <div className="text-sm font-medium mb-2">Nenhum bloco selecionado</div>
+                    {/* Banner de modo removido (somente preview) */}
+                    <div>
+                      <QuizRenderer
+                        mode="preview"
+                        onStepChange={handleStepSelect}
+                        initialStep={safeCurrentStep}
+                        blocksOverride={currentStepData}
+                        currentStepOverride={safeCurrentStep}
+                        previewEditable
+                        selectedBlockId={state.selectedBlockId}
+                        onBlockClick={(id: string) => actions.setSelectedBlockId(id)}
+                      />
+                    </div>
             <div className="text-xs">Clique em um bloco no canvas para ver suas propriedades</div>
 
             <div className="mt-6 p-4 bg-gray-50 rounded-lg text-left">
