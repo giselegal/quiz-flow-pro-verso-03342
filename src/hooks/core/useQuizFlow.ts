@@ -1,6 +1,9 @@
 import { useQuizLogic } from '@/hooks/useQuizLogic';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { getStepInfo as coreGetStepInfo } from '@/utils/quiz21StepsRenderer';
+import { QuizDataService } from '@/services/core/QuizDataService';
+import { TemplateManager } from '@/utils/TemplateManager';
 
 export interface QuizFlowProps {
   mode?: 'production' | 'preview' | 'editor';
@@ -17,6 +20,9 @@ export interface QuizState {
   isLoading: boolean;
   mode: string;
   progress: number;
+  // Extras para navegação/UX
+  stepValidation?: Record<number, boolean>;
+  stepInfo?: ReturnType<typeof coreGetStepInfo>;
 }
 
 export interface QuizActions {
@@ -27,6 +33,11 @@ export interface QuizActions {
   answerScoredQuestion: (questionId: string, optionId: string) => void;
   answerStrategy: (questionId: string, optionId: string) => void;
   getStepData: () => any;
+  // Novos helpers
+  setStepValid: (step: number, valid: boolean) => void;
+  getStepInfo: (step?: number) => ReturnType<typeof coreGetStepInfo>;
+  getStepConfig: (step?: number) => ReturnType<typeof QuizDataService.getStepConfig>;
+  preloadTemplates: () => Promise<void>;
 }
 
 /**
@@ -43,6 +54,7 @@ export const useQuizFlow = ({
   const [currentStep, setCurrentStep] = useState(initialStep);
   const [userName, setUserName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [stepValidation, setStepValidation] = useState<Record<number, boolean>>({});
 
   const {
     answers,
@@ -87,6 +99,8 @@ export const useQuizFlow = ({
     (name: string) => {
       setUserName(name);
       setUserNameFromInput(name);
+  // Validar etapa 1 quando nome preenchido
+  setStepValidation(prev => ({ ...prev, 1: !!name?.trim() }));
       nextStep();
     },
     [nextStep, setUserNameFromInput]
@@ -96,18 +110,21 @@ export const useQuizFlow = ({
   const answerScoredQuestion = useCallback(
     (questionId: string, optionId: string) => {
       answerQuestion(questionId, optionId);
+      // Marca etapa atual como válida
+      setStepValidation(prev => ({ ...prev, [currentStep]: true }));
       setTimeout(nextStep, 500); // UX delay
     },
-    [answerQuestion, nextStep]
+    [answerQuestion, nextStep, currentStep]
   );
 
   // Responder pergunta estratégica
   const answerStrategy = useCallback(
     (questionId: string, optionId: string) => {
       answerStrategicQuestion(questionId, optionId, 'strategic', 'tracking');
+      setStepValidation(prev => ({ ...prev, [currentStep]: true }));
       setTimeout(nextStep, 500);
     },
-    [answerStrategicQuestion, nextStep]
+    [answerStrategicQuestion, nextStep, currentStep]
   );
 
   // Auto-avançar na etapa 19 (calculando)
@@ -129,6 +146,31 @@ export const useQuizFlow = ({
     return QUIZ_STYLE_21_STEPS_TEMPLATE[stepKey] || [];
   }, [currentStep]);
 
+  // Helpers derivados
+  const stepInfo = useMemo(() => coreGetStepInfo(currentStep), [currentStep]);
+
+  const setStepValid = useCallback((step: number, valid: boolean) => {
+    setStepValidation(prev => ({ ...prev, [step]: valid }));
+  }, []);
+
+  const getStepInfo = useCallback(
+    (step?: number) => coreGetStepInfo(step ?? currentStep),
+    [currentStep]
+  );
+
+  const getStepConfig = useCallback(
+    (step?: number) => QuizDataService.getStepConfig(step ?? currentStep),
+    [currentStep]
+  );
+
+  const preloadTemplates = useCallback(async () => {
+    try {
+      await TemplateManager.preloadCommonTemplates();
+    } catch (e) {
+      console.warn('Falha ao pré-carregar templates:', e);
+    }
+  }, []);
+
   // Estado atual do quiz
   const quizState: QuizState = {
     currentStep,
@@ -139,6 +181,8 @@ export const useQuizFlow = ({
     isLoading,
     mode,
     progress: Math.round((currentStep / 21) * 100),
+  stepValidation,
+  stepInfo,
   };
 
   // Ações disponíveis
@@ -150,6 +194,10 @@ export const useQuizFlow = ({
     answerScoredQuestion,
     answerStrategy,
     getStepData,
+  setStepValid,
+  getStepInfo,
+  getStepConfig,
+  preloadTemplates,
   };
 
   return { quizState, actions };
