@@ -39,11 +39,19 @@ export const validateDrop = (
   // Validação para componente da sidebar
   if (activeData.type === 'sidebar-component') {
     const overId = over.id.toString();
-    if (
-      overId !== 'canvas-drop-zone' &&
-      !overId.startsWith('canvas-') &&
-      !overId.startsWith('drop-zone-')
-    ) {
+
+    // ✅ Aceitar soltar diretamente sobre um bloco existente (insere antes dele)
+    const isOverExistingBlock = currentStepBlocks.some(
+      (block) => block.id === overId || `dnd-block-${block.id}` === overId
+    );
+
+    // ✅ Aceitar soltar no canvas e nas drop-zones intermediárias
+    const isOverCanvasArea =
+      overId === 'canvas-drop-zone' ||
+      overId.startsWith('canvas-') ||
+      overId.startsWith('drop-zone-');
+
+    if (!isOverCanvasArea && !isOverExistingBlock) {
       return { isValid: false, reason: 'Componente deve ser solto no canvas' };
     }
 
