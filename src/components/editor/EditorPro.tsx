@@ -26,7 +26,7 @@ import {
   devLog,
   validateEditorJSON,
 } from '../../utils/editorUtils';
-import { CanvasDropZone } from './canvas/CanvasDropZone.simple';
+import { QuizRenderer } from '../core/QuizRenderer';
 import { useNotification } from '../ui/Notification';
 import { DraggableComponentItem } from './dnd/DraggableComponentItem';
 import { useEditor } from './EditorProvider';
@@ -291,21 +291,11 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   const handleDragStart = useCallback((event: DragStartEvent) => {
     const { active } = event;
     const dragData = extractDragData(active);
-    
     console.log('🚀 DRAG START CAPTURADO!', {
       activeId: active.id,
       dragData,
       activeDataCurrent: active.data.current,
     });
-    
-    // Debug adicional para componentes da sidebar
-    if (active.id.toString().startsWith('sidebar-item-')) {
-      console.log('🧩 DRAG START de componente da sidebar detectado!', {
-        itemId: active.id,
-        data: active.data.current
-      });
-    }
-    
     logDragEvent('start', active);
     if (process.env.NODE_ENV === 'development') devLog('Drag start', dragData);
   }, []);
@@ -318,15 +308,6 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         overId: over?.id,
         overData: over?.data?.current,
       });
-      
-      // Debug adicional para componentes da sidebar
-      if (active.id.toString().startsWith('sidebar-item-')) {
-        console.log('🧩 DRAG END de componente da sidebar!', {
-          itemId: active.id,
-          dropZone: over?.id,
-          dropData: over?.data?.current
-        });
-      }
 
       if (!over) {
         console.log('❌ Drop cancelado - sem alvo');
@@ -712,13 +693,15 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
           >
             <div className={cn('rounded-xl shadow-sm', viewport !== 'full' && 'border bg-white')}>
               <div>
-                <CanvasDropZone
-                  blocks={currentStepData}
+                <QuizRenderer
+                  mode="preview"
+                  onStepChange={handleStepSelect}
+                  initialStep={safeCurrentStep}
+                  blocksOverride={currentStepData}
+                  currentStepOverride={safeCurrentStep}
+                  previewEditable
                   selectedBlockId={state.selectedBlockId}
-                  onSelectBlock={(id: string) => actions.setSelectedBlockId(id)}
-                  onUpdateBlock={(id: string, updates: any) => actions.updateBlock(currentStepKey, id, updates)}
-                  onDeleteBlock={(id: string) => actions.removeBlock(currentStepKey, id)}
-                  className="min-h-[400px] p-4"
+                  onBlockClick={(id: string) => actions.setSelectedBlockId(id)}
                 />
               </div>
             </div>

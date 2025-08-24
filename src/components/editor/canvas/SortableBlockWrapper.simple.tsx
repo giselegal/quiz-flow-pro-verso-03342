@@ -25,12 +25,6 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
   // Buscar componente no registry simplificado
   const Component = getOptimizedBlockComponent(block.type);
 
-  console.log(`🔍 SortableBlockWrapper: Renderizando bloco ${block.type}`, {
-    blockId: block.id,
-    componentFound: !!Component,
-    blockData: block
-  });
-
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: block.id,
     data: {
