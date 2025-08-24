@@ -21,6 +21,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       type: 'quiz-intro-header',
       order: 0,
       content: {
+        // Wrapper do cabeçalho (sem título/subtítulo/descrição)
         showLogo: true,
         showProgress: false,
         showNavigation: false,
@@ -83,7 +84,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         lineHeight: 'leading-relaxed',
         maxWidth: '640px',
         marginTop: 4,
-        marginBottom: 12,
+        marginBottom: 16,
       },
     },
     {
@@ -94,19 +95,19 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       properties: {
         src: 'https://res.cloudinary.com/der8kogzu/image/upload/f_avif,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.avif',
         alt: 'Descubra seu estilo predominante',
-        width: '300px',
+        width: 'auto',
         height: 'auto',
         maxWidth: 'lg',
         alignment: 'center',
         borderRadius: 'large',
         marginTop: 8,
-        marginBottom: 16,
+        marginBottom: 12,
       },
     },
     {
       id: 'step1-decorative-bar',
       type: 'decorative-bar',
-  order: 4,
+      order: 4,
       content: {},
       properties: {
         // Centralizada e limitada à largura do conteúdo
@@ -121,11 +122,10 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         backgroundColor: '#B89B7A',
       },
     },
-    
     {
       id: 'step1-lead-form',
       type: 'form-container',
-  order: 5,
+      order: 5,
       content: {
         title: 'NOME',
         placeholder: 'Digite seu nome',
@@ -222,7 +222,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
     {
       id: 'step1-legal-notice',
       type: 'legal-notice',
-  order: 6,
+      order: 6,
       content: {},
       properties: {
         // Texto principal e links legais
@@ -244,7 +244,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
     {
       id: 'step1-footer',
       type: 'text',
-  order: 7,
+      order: 7,
       content: {
         text: '2025 - Gisele Galvão - Todos os direitos reservados',
       },
@@ -292,7 +292,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
     {
       id: 'step2-question',
       type: 'options-grid',
-      order: 1,
+  order: 4,
       content: {
         question: 'QUAL O SEU TIPO DE ROUPA FAVORITA?',
         options: [
@@ -1804,7 +1804,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
     {
       id: 'step20-style-card',
       type: 'style-card-inline',
-      order: 2,
+  order: 5,
       content: {
         title: 'Características do seu estilo',
         description: 'O estilo {resultStyle} se caracteriza por:',
@@ -1831,7 +1831,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
     {
       id: 'step20-secondary-styles',
       type: 'secondary-styles',
-      order: 3,
+  order: 6,
       content: {
         title: 'Seus estilos complementares',
         subtitle: 'Você também apresenta elementos destes estilos:',
@@ -1861,7 +1861,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
     {
       id: 'step20-before-after',
       type: 'before-after-inline',
-      order: 4,
+  order: 7,
       content: {
         title: 'Sua transformação é possível',
         subtitle: 'Veja o impacto de aplicar seu estilo no dia a dia',
@@ -1879,7 +1879,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
     {
       id: 'step20-bonuses',
       type: 'bonus',
-      order: 5,
+  order: 8,
       content: {
         title: 'Bônus de transformação inclusos',
       },

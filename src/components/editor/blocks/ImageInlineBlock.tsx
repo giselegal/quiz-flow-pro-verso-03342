@@ -1,8 +1,8 @@
 // @ts-nocheck
-import React from 'react';
 import { cn } from '@/lib/utils';
-import { Image as ImageIcon, Edit3 } from 'lucide-react';
 import type { BlockComponentProps } from '@/types/blocks';
+import { Edit3, Image as ImageIcon } from 'lucide-react';
+import React from 'react';
 
 /**
  * ImageInlineBlock - Componente modular inline horizontal
@@ -169,7 +169,7 @@ const ImageInlineBlock: React.FC<BlockComponentProps> = ({
               src={src}
               alt={alt}
               className={cn(
-                'w-full h-full transition-transform duration-200 hover:scale-105',
+                'w-full h-full transition-transform duration-200 hover:scale-105 block',
                 objectFitClasses[objectFit as keyof typeof objectFitClasses]
               )}
               style={{

@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { BlockComponentProps } from '@/types/blocks';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 /**
  * TextInlineBlock - Componente modular inline horizontal
@@ -405,7 +405,12 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
             style={{
               color,
               ...(fontFamily !== 'inherit' && { fontFamily }),
-              ...(maxWidth !== 'auto' && { maxWidth }),
+              ...(maxWidth !== 'auto' && {
+                maxWidth,
+                marginLeft: 'auto',
+                marginRight: 'auto',
+                display: 'block',
+              }),
               minHeight: '1.5em',
             }}
             placeholder="Digite seu texto..."
@@ -438,7 +443,12 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
           style={{
             color,
             ...(fontFamily !== 'inherit' && { fontFamily }),
-            ...(maxWidth !== 'auto' && { maxWidth }),
+            ...(maxWidth !== 'auto' && {
+              maxWidth,
+              marginLeft: 'auto',
+              marginRight: 'auto',
+              display: 'block',
+            }),
           }}
           title={onPropertyChange ? 'Duplo clique para editar' : undefined}
         >
