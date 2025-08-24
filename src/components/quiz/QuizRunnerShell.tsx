@@ -19,6 +19,11 @@ interface QuizRunnerShellProps {
    */
   showHeader?: boolean;
   /**
+   * Quando embedded, aplica layout visual semelhante ao "full" (container central + fundo gradiente contido)
+   * Mantém impacto de performance mínimo (sem min-h-screen), útil para prévia idêntica no editor
+   */
+  matchFullStyle?: boolean;
+  /**
    * Posição dos botões de navegação: topo (header), rodapé (abaixo do conteúdo) ou ambos
    */
   navPosition?: 'top' | 'bottom' | 'both';
@@ -42,6 +47,7 @@ const QuizRunnerShell: React.FC<QuizRunnerShellProps> = ({
   navPosition = 'top',
   canGoNext = true,
   canGoPrev = true,
+  matchFullStyle = false,
 }) => {
   const Header = (
     <div className="bg-white/90 backdrop-blur-sm border border-stone-200/50 shadow-sm rounded-lg mb-8 p-6">
@@ -124,6 +130,19 @@ const QuizRunnerShell: React.FC<QuizRunnerShellProps> = ({
   );
 
   if (variant === 'embedded') {
+    if (matchFullStyle) {
+      return (
+        <div className="w-full bg-gradient-to-br from-[#FAF9F7] via-[#F5F2E9] to-[#EEEBE1] rounded-2xl">
+          <div className="container mx-auto px-4 py-8">
+            <div className="max-w-4xl mx-auto">
+              {showHeader && (navPosition === 'top' || navPosition === 'both') ? Header : null}
+              {ContentCard}
+              {navPosition === 'bottom' || navPosition === 'both' ? FooterNav : null}
+            </div>
+          </div>
+        </div>
+      );
+    }
     return (
       <div className="w-full">
         {showHeader && (navPosition === 'top' || navPosition === 'both') ? Header : null}

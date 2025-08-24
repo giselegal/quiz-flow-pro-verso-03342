@@ -771,6 +771,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               totalSteps={21}
               progress={Math.round((safeCurrentStep / 21) * 100)}
               variant="embedded"
+              matchFullStyle={true}
               showHeader={true}
               navPosition="bottom"
               canGoPrev={safeCurrentStep > 1}
