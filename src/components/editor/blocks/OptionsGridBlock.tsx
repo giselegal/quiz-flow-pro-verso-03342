@@ -515,12 +515,23 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
         className={`grid ${gridColsClass} ${blockClassName || ''}`}
         style={{ gap: `${gridGap}px` }}
       >
-        {(options || []).map((opt: any) => (
-          <div
-            key={opt.id}
-            className={`rounded-lg border border-neutral-200 bg-white p-4 hover:shadow-md transition-all duration-200 cursor-pointer ${cardLayoutClass}`}
-            onClick={() => handleOptionSelect(opt.id)}
-          >
+        {(options || []).map((opt: any) => {
+          const isSelectedPreview = isPreviewMode ? previewSelections.includes(opt.id) : false;
+          const isSelectedEditor = !isPreviewMode
+            ? (selectedOptions || []).includes?.(opt.id)
+            : false;
+          const isSelected = isPreviewMode ? isSelectedPreview : isSelectedEditor;
+
+          return (
+            <div
+              key={opt.id}
+              className={`rounded-lg border bg-white p-4 transition-all duration-200 cursor-pointer ${cardLayoutClass} ` +
+                (isSelected
+                  ? 'border-amber-400 shadow-[0_10px_25px_rgba(184,155,122,0.35)] translate-y-[-1px]'
+                  : 'border-neutral-200 hover:shadow-md')}
+              onClick={() => handleOptionSelect(opt.id)}
+              data-selected={isSelected ? 'true' : 'false'}
+            >
             {opt.imageUrl && showImages && (
               <img
                 src={opt.imageUrl}
@@ -536,8 +547,9 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
             <p className={`${imageLayout === 'horizontal' ? 'flex-1' : 'text-center'} font-medium`}>
               {opt.text}
             </p>
-          </div>
-        ))}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
