@@ -775,6 +775,8 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
                   initialStep={safeCurrentStep}
                   blocksOverride={currentStepData}
                   currentStepOverride={safeCurrentStep}
+                  previewEditable
+                  onBlockClick={(id: string) => actions.setSelectedBlockId(id)}
                 />
               </div>
             )}

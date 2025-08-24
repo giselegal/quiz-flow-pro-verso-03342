@@ -19,6 +19,8 @@ interface QuizRendererProps {
   currentStepOverride?: number;
   // Callback opcional para seleção de bloco no modo editor
   onBlockClick?: (blockId: string) => void;
+  // Permitir seleção e uso de overrides também em preview (sem mudar o visual)
+  previewEditable?: boolean;
 }
 
 /**
@@ -35,6 +37,7 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
   blocksOverride,
   currentStepOverride,
   onBlockClick,
+  previewEditable = false,
 }) => {
   const { quizState, actions } = useQuizFlow({
     mode,
@@ -46,8 +49,10 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
   const { prevStep, getStepData } = actions; // nextStep removido pois não é usado
 
   // Buscar dados da etapa atual
-  const stepBlocks =
-    mode === 'editor' && Array.isArray(blocksOverride) ? blocksOverride : getStepData();
+  const canUseOverrides =
+    (mode === 'editor' || (mode === 'preview' && previewEditable)) && Array.isArray(blocksOverride);
+
+  const stepBlocks = canUseOverrides ? (blocksOverride as Block[]) : getStepData();
 
   // Determinar tipo da etapa
   const getStepType = (step: number): StepData['stepType'] => {
@@ -117,7 +122,11 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
             key={block.id || index}
             className="block-container"
             onClick={() => {
-              if (mode === 'editor' && block.id && onBlockClick) {
+              if (
+                (mode === 'editor' || (mode === 'preview' && previewEditable)) &&
+                block.id &&
+                onBlockClick
+              ) {
                 onBlockClick(String(block.id));
               }
             }}
@@ -127,7 +136,11 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
               isSelected={false}
               mode={mode}
               onClick={() => {
-                if (mode === 'editor' && block.id && onBlockClick) {
+                if (
+                  (mode === 'editor' || (mode === 'preview' && previewEditable)) &&
+                  block.id &&
+                  onBlockClick
+                ) {
                   onBlockClick(String(block.id));
                 }
               }}
