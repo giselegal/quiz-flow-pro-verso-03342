@@ -28,6 +28,7 @@ const FormContainerBlock: React.FC<BlockComponentProps> = ({ block }) => {
   const combinedClassName = className ? `w-full ${className}` : 'w-full';
 
   // 🔒 Regra: habilitar botão somente após nome válido (configurável no painel)
+  const autoAdvanceRef = React.useRef(false);
   useEffect(() => {
     // ✅ Lista de IDs de botão possíveis no Step-01
     const possibleButtonIds = [
@@ -90,6 +91,29 @@ const FormContainerBlock: React.FC<BlockComponentProps> = ({ block }) => {
       const ok =
         typeof detail?.value === 'string' ? detail.value.trim().length > 0 : !!detail?.valid;
       applyDisabled(!ok);
+
+      // Auto-advance opcional: se válido e ativado
+      const containerAuto = (properties as any)?.autoAdvanceOnComplete ?? false;
+      // Buscar config nos filhos (prioriza botão-inline)
+      const btnChild = Array.isArray(childrenList)
+        ? (childrenList as any[]).find(c => c?.type === 'button-inline')
+        : undefined;
+      const childAuto = btnChild?.properties?.autoAdvanceOnComplete ?? false;
+      const shouldAuto = !!(containerAuto || childAuto);
+      if (ok && shouldAuto && !autoAdvanceRef.current) {
+        autoAdvanceRef.current = true;
+        const nextStepId =
+          btnChild?.properties?.nextStepId || btnChild?.content?.nextStepId || 'step-2';
+        const delay =
+          (properties as any)?.autoAdvanceDelay ?? btnChild?.properties?.autoAdvanceDelay ?? 600;
+        window.setTimeout(() => {
+          window.dispatchEvent(
+            new CustomEvent('navigate-to-step', {
+              detail: { stepId: nextStepId, source: 'form-container-auto-advance' },
+            })
+          );
+        }, Number(delay) || 0);
+      }
     };
     window.addEventListener('quiz-input-change', onQuizInput as EventListener);
 

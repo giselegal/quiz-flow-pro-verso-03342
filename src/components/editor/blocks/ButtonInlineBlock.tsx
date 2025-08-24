@@ -99,9 +99,11 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
     fontSize = '16',
     fontFamily = 'inherit',
     fontWeight = '500',
-    // Configurações de navegação/fluxo
+  // Configurações de navegação/fluxo
     action = 'none', // "next-step", "url", "none"
     nextStepId = '', // ID da próxima etapa
+  autoAdvanceOnComplete = false,
+  autoAdvanceDelay = 600,
     // Sistema completo de margens com controles deslizantes
     marginTop = 8,
     marginBottom = 8,
@@ -393,7 +395,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
             ? { opacity: Math.max(0, Math.min(100, Number(disabledOpacity))) / 100 }
             : {}),
         }}
-        onClick={async e => {
+  onClick={async e => {
           e.stopPropagation();
           if (!isButtonDisabled) {
             // Handle URL navigation
@@ -437,12 +439,17 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
                 })
               );
 
-              // Navigate to first question
-              window.dispatchEvent(
-                new CustomEvent('navigate-to-step', {
-                  detail: { stepId: 'etapa-2', source: 'step1-button' },
-                })
-              );
+              // Navegação: se configurado para auto-advance, usa nextStepId do próprio botão
+              const targetStep = nextStepId || 'step-2';
+              if (autoAdvanceOnComplete) {
+                setTimeout(() => {
+                  window.dispatchEvent(
+                    new CustomEvent('navigate-to-step', {
+                      detail: { stepId: targetStep, source: 'step1-button' },
+                    })
+                  );
+                }, Number(autoAdvanceDelay) || 0);
+              }
             }
           }
         }}
