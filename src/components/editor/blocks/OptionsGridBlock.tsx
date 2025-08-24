@@ -421,7 +421,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
         }
       }
     } else {
-      // Editor mode: Update properties and emit validation event for editor UX
+      // Editor mode: Update properties, emit events AND reflect selection visually
       let newSelections: string[];
       if (multipleSelection) {
         const currentSelections = selectedOptions || [];
@@ -437,8 +437,16 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
         }
         onPropertyChange?.('selectedOptions', newSelections);
       } else {
-        newSelections = [optionId];
-        onPropertyChange?.('selectedOption', optionId);
+        const currentSelection = selectedOptions?.[0] || null;
+        if (currentSelection === optionId && allowDeselection) {
+          newSelections = [];
+          onPropertyChange?.('selectedOption', null);
+          onPropertyChange?.('selectedOptions', []);
+        } else {
+          newSelections = [optionId];
+          onPropertyChange?.('selectedOption', optionId);
+          onPropertyChange?.('selectedOptions', [optionId]);
+        }
       }
       // Calcula regras por etapa (com fallback para produção via window.__quizCurrentStep)
       const globalStep = (window as any)?.__quizCurrentStep;
