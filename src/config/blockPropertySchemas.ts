@@ -44,6 +44,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         step: 1,
         group: 'transform',
         defaultValue: 100,
+        description:
+          'Tamanho uniforme do bloco. 100% = tamanho natural. Use os presets para ajustes rápidos.',
       },
       {
         key: 'scaleX',
@@ -53,6 +55,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         max: 3,
         step: 0.01,
         group: 'transform',
+        description:
+          'Fator de escala apenas no eixo X (largura). Deixe vazio para usar a escala uniforme.',
       },
       {
         key: 'scaleY',
@@ -62,6 +66,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         max: 3,
         step: 0.01,
         group: 'transform',
+        description:
+          'Fator de escala apenas no eixo Y (altura). Deixe vazio para usar a escala uniforme.',
       },
       {
         key: 'scaleOrigin',
@@ -123,6 +129,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         step: 1,
         group: 'transform',
         defaultValue: 100,
+        description: 'Ajuste fino do tamanho do cabeçalho. 100% = padrão.',
       },
       {
         key: 'scaleOrigin',
@@ -155,6 +162,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         step: 1,
         group: 'transform',
         defaultValue: 100,
+        description: 'Escala a barra como um todo sem distorcer proporções.',
       },
       {
         key: 'scaleOrigin',
@@ -188,6 +196,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         step: 1,
         group: 'transform',
         defaultValue: 100,
+        description: 'Ajusta a escala do bloco de texto (não altera o font-size diretamente).',
       },
       {
         key: 'scaleOrigin',
@@ -219,6 +228,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         max: 300,
         step: 1,
         group: 'transform',
+        description: 'Ajuste o tamanho visual da imagem. 100% = tamanho base do bloco.',
       },
       {
         key: 'scaleOrigin',
@@ -448,6 +458,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         min: 50,
         max: 200,
         step: 1,
+        description: 'Zoom do componente de grid como um todo. 100% = padrão.',
       },
     ],
   },

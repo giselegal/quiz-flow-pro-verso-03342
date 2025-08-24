@@ -84,6 +84,36 @@ const QuizModularPage: React.FC = () => {
     }
   }, [quizState.currentStep, currentStep]);
 
+  // Escutar eventos de navegação disparados pelos blocos (ex.: botão step 1, auto-advance)
+  useEffect(() => {
+    const parseStepNumber = (stepId: any): number | null => {
+      if (typeof stepId === 'number') return stepId;
+      if (typeof stepId !== 'string') return null;
+      // Suporta formatos: 'step-2', 'step-02', '2'
+      const digits = stepId.replace(/[^0-9]/g, '');
+      const num = parseInt(digits || stepId, 10);
+      return Number.isFinite(num) ? num : null;
+    };
+
+    const handleNavigate = (ev: Event) => {
+      const e = ev as CustomEvent<{ stepId?: string | number; source?: string }>;
+      const target = parseStepNumber(e.detail?.stepId);
+      if (!target) return;
+      if (target < 1 || target > 21) return;
+
+      setCurrentStep(target);
+      goToStep(target);
+      console.log('➡️ Navegação por evento:', e.detail?.stepId, '->', target, 'origem:', e.detail?.source);
+    };
+
+    window.addEventListener('navigate-to-step', handleNavigate as EventListener);
+    window.addEventListener('quiz-navigate-to-step', handleNavigate as EventListener);
+    return () => {
+      window.removeEventListener('navigate-to-step', handleNavigate as EventListener);
+      window.removeEventListener('quiz-navigate-to-step', handleNavigate as EventListener);
+    };
+  }, [goToStep]);
+
   // 🔄 HANDLERS DE NAVEGAÇÃO
   const handleNext = () => {
     if (currentStep < 21) {

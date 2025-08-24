@@ -250,7 +250,13 @@ function PropertyField({
           />
         </FieldWrapper>
       );
-    case 'range':
+    case 'range': {
+      // Unidades auxiliares para escala (%) ou fator (×)
+      const isPercent = /Escala \(\%\)|Escala do Componente \(\%\)/i.test(field.label);
+      const isFactor = /\(fator\)/i.test(field.label);
+      const suffix = isPercent ? '%' : isFactor ? '×' : '';
+      const displayVal =
+        effectiveValue !== '' && effectiveValue !== undefined ? `${effectiveValue}${suffix}` : '';
       return (
         <FieldWrapper>
           <Label>{field.label}</Label>
@@ -262,10 +268,12 @@ function PropertyField({
             value={Number(effectiveValue ?? field.min ?? 0)}
             onChange={e => onChange(Number(e.target.value))}
             className="w-full"
+            title={field.description || displayVal}
           />
-          <div className="text-xs text-muted-foreground">{String(effectiveValue ?? '')}</div>
+          <div className="text-xs text-muted-foreground">{displayVal}</div>
         </FieldWrapper>
       );
+    }
     case 'boolean':
       return (
         <FieldWrapper>
@@ -470,7 +478,7 @@ const EnhancedUniversalPropertiesPanelFixed: React.FC<PanelProps> = ({
         {/* Ações rápidas */}
         <section className="pt-2 border-t">
           <h4 className="text-sm font-semibold mb-2">Ações Rápidas</h4>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2 items-center">
             <button
               type="button"
               className="px-3 py-1.5 rounded-md border text-xs hover:bg-muted"
@@ -486,6 +494,24 @@ const EnhancedUniversalPropertiesPanelFixed: React.FC<PanelProps> = ({
             >
               Resetar escala
             </button>
+
+            {/* Presets rápidos para escala (%) */}
+            <div className="flex items-center gap-1">
+              <span className="text-xs text-muted-foreground">Presets:</span>
+              {[90, 95, 100, 105, 110].map(preset => (
+                <button
+                  key={preset}
+                  type="button"
+                  className={`px-2 py-1 rounded border text-xs hover:bg-muted ${
+                    selectedBlock.properties?.scale === preset ? 'bg-muted' : ''
+                  }`}
+                  title={`${preset}%`}
+                  onClick={() => onUpdate(selectedBlock.id, { scale: preset })}
+                >
+                  {preset}%
+                </button>
+              ))}
+            </div>
           </div>
         </section>
 
