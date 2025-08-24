@@ -50,11 +50,6 @@ function App() {
                   <MainEditor />
                 </Route>
 
-                {/* � ALIAS PRÁTICO PARA O EDITOR ("/edito") */}
-                <Route path="/edito">
-                  <MainEditor />
-                </Route>
-
                 {/* �🔐 AUTENTICAÇÃO */}
                 <Route path="/auth">
                   <Suspense fallback={<PageLoading />}>
