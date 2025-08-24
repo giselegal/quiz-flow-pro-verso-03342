@@ -73,7 +73,7 @@ const QuizModularPage: React.FC = () => {
     }
   }, [quizState.currentStep, currentStep]);
 
-  // Escutar eventos de navegação disparados pelos blocos (ex.: botão step 1, auto-advance)
+  // Escutar eventos de navegação e validação disparados pelos blocos
   useEffect(() => {
     const parseStepNumber = (stepId: any): number | null => {
       if (typeof stepId === 'number') return stepId;
@@ -107,10 +107,35 @@ const QuizModularPage: React.FC = () => {
 
     // Sincronizar validação visual/funcional via eventos globais dos blocos
     const handleSelectionChange = (ev: Event) => {
-      const e = ev as CustomEvent<{ selectionCount?: number; isValid?: boolean }>;
-      const valid = !!e.detail?.isValid;
-      setStepValidation(prev => ({ ...prev, [currentStep]: valid }));
-      setStepValid?.(currentStep, valid);
+      const e = ev as CustomEvent<{ selectionCount?: number; isValid?: boolean; valid?: boolean }>;
+      const count = e.detail?.selectionCount ?? 0;
+      // Regras globais: etapas 2–11 exigem 3 seleções; 13–18 exigem 1; demais
+      const isScoringPhase = currentStep >= 2 && currentStep <= 11;
+      const isStrategicPhase = currentStep >= 13 && currentStep <= 18;
+      const required = isScoringPhase ? 3 : isStrategicPhase ? 1 : 1;
+
+      const eventSaysValid =
+        typeof e.detail?.valid === 'boolean'
+          ? e.detail.valid
+          : typeof e.detail?.isValid === 'boolean'
+            ? e.detail.isValid
+            : undefined;
+
+      const computedValid = count >= required;
+      const finalValid =
+        eventSaysValid === undefined ? computedValid : eventSaysValid && computedValid;
+
+      setStepValidation(prev => ({ ...prev, [currentStep]: finalValid }));
+      setStepValid?.(currentStep, finalValid);
+
+      // Auto-avanço nas etapas 2–11 ao atingir requisito
+      if (isScoringPhase && computedValid) {
+        const delay = 600;
+        const timeoutId = setTimeout(() => {
+          handleNext();
+        }, delay);
+        setAutoAdvanceTimeouts(prev => ({ ...prev, [currentStep]: timeoutId }) as any);
+      }
     };
 
     const handleInputChange = (ev: Event) => {
@@ -129,7 +154,12 @@ const QuizModularPage: React.FC = () => {
       window.removeEventListener('quiz-selection-change', handleSelectionChange as EventListener);
       window.removeEventListener('quiz-input-change', handleInputChange as EventListener);
     };
-  }, [goToStep]);
+  }, [goToStep, currentStep, setStepValid]);
+
+  // Expor etapa atual globalmente para compatibilidade com blocos que leem window.__quizCurrentStep
+  useEffect(() => {
+    (window as any).__quizCurrentStep = currentStep;
+  }, [currentStep]);
 
   // 🔄 HANDLERS DE NAVEGAÇÃO
   const handleNext = () => {

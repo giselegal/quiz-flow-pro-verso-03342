@@ -129,9 +129,18 @@ export const EditorStageManager: React.FC<EditorStageManagerProps> = ({
     };
 
     const handleSelectionChange = (ev: Event) => {
-      const e = ev as CustomEvent<{ valid?: boolean; selectionCount?: number } | undefined>;
-      const ok = (e.detail as any)?.valid ?? ((e.detail as any)?.selectionCount ?? 0) > 0;
-      actions.setStepValid?.(quizState.currentStep, !!ok);
+      const e = ev as CustomEvent<
+        { valid?: boolean; isValid?: boolean; selectionCount?: number } | undefined
+      >;
+      const count = (e.detail as any)?.selectionCount ?? 0;
+      const isScoringPhase = quizState.currentStep >= 2 && quizState.currentStep <= 11; // 3 obrigatórias
+      const isStrategicPhase = quizState.currentStep >= 13 && quizState.currentStep <= 18; // 1 obrigatória
+      const required = isScoringPhase ? 3 : isStrategicPhase ? 1 : 1;
+
+      const eventValid = (e.detail as any)?.valid ?? (e.detail as any)?.isValid ?? undefined;
+      const computed = count >= required;
+      const finalValid = eventValid === undefined ? computed : Boolean(eventValid) && computed;
+      actions.setStepValid?.(quizState.currentStep, finalValid);
     };
 
     window.addEventListener('quiz-input-change', handleInputChange as EventListener);
@@ -141,6 +150,11 @@ export const EditorStageManager: React.FC<EditorStageManagerProps> = ({
       window.removeEventListener('quiz-selection-change', handleSelectionChange as EventListener);
     };
   }, [actions, quizState.currentStep]);
+
+  // Expor etapa atual globalmente para componentes que usam window.__quizCurrentStep
+  useEffect(() => {
+    (window as any).__quizCurrentStep = quizState.currentStep;
+  }, [quizState.currentStep]);
 
   // Metadados das etapas
   const stepsMetadata = useMemo((): StepMetadata[] => {
