@@ -6,6 +6,247 @@ import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
 import React, { useEffect, useMemo, useState } from 'react';
 
+// Hoisted StaticStep1 to avoid remounts that reset input state on each parent render
+type StaticStep1Props = {
+  blocks: Block[];
+  step1Config: {
+    logoUrl: string;
+    introImageUrl: string;
+    ctaText: string;
+    requiredMessage: string;
+    legal: {
+      text: string;
+      privacyText: string;
+      termsText: string;
+      privacyLinkUrl: string;
+      termsLinkUrl: string;
+    };
+    footerText: string;
+  };
+  setStepValidation: React.Dispatch<React.SetStateAction<Record<number, boolean>>>;
+  setStepValid?: (step: number, isValid: boolean) => void;
+  setQuizAnswers: React.Dispatch<React.SetStateAction<Record<string, any>>>;
+  handleNext: () => void;
+};
+
+const StaticStep1: React.FC<StaticStep1Props> = ({
+  blocks,
+  step1Config,
+  setStepValidation,
+  setStepValid,
+  setQuizAnswers,
+  handleNext,
+}) => {
+  const [name, setName] = useState('');
+  const isValid = name.trim().length > 0;
+
+  // Derivar conteúdos da etapa 1 a partir dos blocos carregados, para refletir edições do editor
+  const derived = useMemo(() => {
+    const find = (t: string) => blocks.find(b => b.type === t);
+    const findById = (id: string) => blocks.find(b => b.id === id);
+    const header = find('quiz-intro-header');
+    const titleTextBlock = findById('step1-title') || blocks.find(b => b.type === 'text');
+    const imageBlock = find('image');
+    const formContainer = find('form-container');
+    const legal = find('legal-notice');
+    const footer = findById('step1-footer');
+
+    const children = (formContainer?.properties as any)?.children || [];
+    const inputChild = children.find((c: any) => c.type === 'form-input');
+    const buttonChild = children.find((c: any) => c.type === 'button-inline');
+
+    return {
+      logoUrl: (header?.properties as any)?.logoUrl || step1Config.logoUrl,
+      titleHtml: (titleTextBlock as any)?.content?.text as string | undefined,
+      introImageUrl: (imageBlock?.properties as any)?.src || step1Config.introImageUrl,
+      labelText: (inputChild?.properties as any)?.label || 'NOME',
+      placeholder: (inputChild?.properties as any)?.placeholder || 'Digite seu primeiro nome aqui...',
+      buttonText: (buttonChild?.properties as any)?.text || step1Config.ctaText,
+      requiredMessage:
+        (formContainer as any)?.content?.validationMessage || step1Config.requiredMessage,
+      legal: {
+        text: (legal?.properties as any)?.copyrightText || step1Config.legal.text,
+        privacyText: (legal?.properties as any)?.privacyText || step1Config.legal.privacyText,
+        termsText: (legal?.properties as any)?.termsText || step1Config.legal.termsText,
+        privacyLinkUrl:
+          (legal?.properties as any)?.privacyLinkUrl || step1Config.legal.privacyLinkUrl,
+        termsLinkUrl: (legal?.properties as any)?.termsLinkUrl || step1Config.legal.termsLinkUrl,
+      },
+      footerText: (footer as any)?.content?.text || step1Config.footerText,
+    };
+  }, [blocks, step1Config]);
+
+  useEffect(() => {
+    // Emitir eventos esperados e sincronizar validação superior
+    const detail = { value: name, valid: isValid } as any;
+    window.dispatchEvent(new CustomEvent('quiz-input-change', { detail }));
+    window.dispatchEvent(
+      new CustomEvent('step01-button-state-change', {
+        detail: { buttonId: 'intro-cta-button', enabled: isValid, disabled: !isValid },
+      })
+    );
+    setStepValidation(prev => ({ ...prev, 1: isValid }));
+    setStepValid?.(1, isValid);
+    setQuizAnswers(prev => ({ ...prev, userName: name }));
+  }, [name, isValid, setQuizAnswers, setStepValid, setStepValidation]);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!isValid) return;
+    const detail = { stepId: 'step-2', source: 'static-step1' } as any;
+    window.dispatchEvent(new CustomEvent('navigate-to-step', { detail }));
+    window.dispatchEvent(new CustomEvent('quiz-navigate-to-step', { detail }));
+    handleNext();
+  };
+
+  return (
+    <section aria-labelledby="quiz-title" className="p-6">
+      {/* Header do quiz-intro-header */}
+      <div className="max-w-2xl mx-auto bg-[#F8F9FA] text-center p-6 rounded-lg shadow-sm mb-4">
+        <img
+          src={derived.logoUrl}
+          alt="Logo Gisele Galvão"
+          width={96}
+          height={96}
+          className="mx-auto mb-3"
+          loading="eager"
+          decoding="async"
+        />
+      </div>
+
+      {/* Título estilizado (text block) */}
+      <div className="max-w-2xl mx-auto text-center mb-2">
+        {derived.titleHtml ? (
+          <h1
+            id="quiz-title"
+            className="text-3xl md:text-4xl font-bold leading-tight"
+            style={{ color: '#432818' }}
+            dangerouslySetInnerHTML={{ __html: derived.titleHtml }}
+          />
+        ) : (
+          <h1
+            id="quiz-title"
+            className="text-3xl md:text-4xl font-bold leading-tight"
+            style={{ color: '#432818' }}
+          >
+            Quiz de Estilo Pessoal
+          </h1>
+        )}
+      </div>
+
+      {/* Imagem de introdução */}
+      <div className="max-w-2xl mx-auto flex justify-center mb-3">
+        <img
+          src={derived.introImageUrl}
+          alt=""
+          className="object-cover rounded-xl"
+          loading="lazy"
+          decoding="async"
+          style={{ maxWidth: '300px', height: 'auto' }}
+        />
+      </div>
+
+      {/* Barra decorativa */}
+      <div className="max-w-2xl mx-auto flex justify-center mb-6">
+        <div
+          aria-hidden="true"
+          style={{
+            width: 'min(640px, 100%)',
+            height: 4,
+            borderRadius: 3,
+            background: 'linear-gradient(90deg, #B89B7A 0%, #D4C2A8 50%, #B89B7A 100%)',
+            boxShadow: '0 1px 2px rgba(0,0,0,0.12)',
+          }}
+        />
+      </div>
+
+      {/* Formulário (form-container + form-input + button-inline) */}
+      <form
+        className="max-w-2xl mx-auto"
+        onSubmit={handleSubmit}
+        noValidate
+        onMouseDown={e => e.stopPropagation()}
+        onClick={e => e.stopPropagation()}
+        onKeyDown={e => e.stopPropagation()}
+        onTouchStart={e => e.stopPropagation()}
+      >
+        <div className="bg-white rounded-lg p-4 pointer-events-auto">
+          <label
+            htmlFor="user-name"
+            className="block text-sm font-medium mb-1"
+            style={{ color: '#432818' }}
+          >
+            {derived.labelText || 'NOME'}
+          </label>
+          <input
+            id="user-name"
+            name="userName"
+            type="text"
+            autoComplete="given-name"
+            autoFocus
+            placeholder={derived.placeholder}
+            className="w-full rounded-md px-4 py-3 focus:outline-none focus:ring-2"
+            style={{
+              backgroundColor: '#FFFFFF',
+              border: '2px solid #B89B7A',
+              color: '#432818',
+              borderRadius: 8,
+              fontSize: 16,
+            }}
+            value={name}
+            onChange={e => setName(e.target.value)}
+            aria-invalid={!isValid}
+            aria-describedby={!isValid ? 'name-help' : undefined}
+            required
+          />
+          {!isValid && (
+            <p id="name-help" className="text-sm mt-2" style={{ color: '#9CA3AF' }}>
+              {derived.requiredMessage}
+            </p>
+          )}
+
+          <button
+            id="intro-cta-button"
+            type="submit"
+            disabled={!isValid}
+            className={cn('mt-4 w-full px-4 py-3 rounded-md font-medium transition-opacity')}
+            style={{
+              backgroundColor: isValid ? '#B89B7A' : '#E7E5E4',
+              color: isValid ? '#FFFFFF' : '#A8A29E',
+              border: '1px solid #B89B7A',
+              borderRadius: 8,
+            }}
+          >
+            {derived.buttonText}
+          </button>
+        </div>
+
+        <noscript>
+          <p className="text-xs mt-2" style={{ color: '#9CA3AF' }}>
+            Ative o JavaScript para continuar o quiz.
+          </p>
+        </noscript>
+      </form>
+
+      {/* Aviso legal */}
+      <div className="max-w-2xl mx-auto text-center mt-6" style={{ color: '#9CA3AF' }}>
+        <p className="text-xs">
+          {derived.legal.text}{' '}
+          <a href={derived.legal.privacyLinkUrl} className="underline" style={{ color: '#B89B7A' }}>
+            {derived.legal.privacyText}
+          </a>{' '}
+          e{' '}
+          <a href={derived.legal.termsLinkUrl} className="underline" style={{ color: '#B89B7A' }}>
+            {derived.legal.termsText}
+          </a>
+          .
+        </p>
+        <p className="text-xs mt-2">{derived.footerText}</p>
+      </div>
+    </section>
+  );
+};
+
 /**
  * 🎯 QUIZ MODULAR - VERSÃO PRODUÇÃO COM ETAPAS DO EDITOR
  *
@@ -323,221 +564,7 @@ const QuizModularPage: React.FC = () => {
     []
   );
 
-  const StaticStep1: React.FC = () => {
-    const [name, setName] = useState('');
-    const isValid = name.trim().length > 0;
-
-    // Derivar conteúdos da etapa 1 a partir dos blocos carregados, para refletir edições do editor
-    const derived = useMemo(() => {
-      const find = (t: string) => blocks.find(b => b.type === t);
-      const findById = (id: string) => blocks.find(b => b.id === id);
-      const header = find('quiz-intro-header');
-      const titleTextBlock = findById('step1-title') || blocks.find(b => b.type === 'text');
-      const imageBlock = find('image');
-      const formContainer = find('form-container');
-      const legal = find('legal-notice');
-      const footer = findById('step1-footer');
-
-      const children = (formContainer?.properties as any)?.children || [];
-      const inputChild = children.find((c: any) => c.type === 'form-input');
-      const buttonChild = children.find((c: any) => c.type === 'button-inline');
-
-      return {
-        logoUrl: (header?.properties as any)?.logoUrl || step1Config.logoUrl,
-        titleHtml: (titleTextBlock as any)?.content?.text as string | undefined,
-        introImageUrl: (imageBlock?.properties as any)?.src || step1Config.introImageUrl,
-        labelText: (inputChild?.properties as any)?.label || 'NOME',
-        placeholder:
-          (inputChild?.properties as any)?.placeholder || 'Digite seu primeiro nome aqui...',
-        buttonText: (buttonChild?.properties as any)?.text || step1Config.ctaText,
-        requiredMessage:
-          (formContainer as any)?.content?.validationMessage || step1Config.requiredMessage,
-        legal: {
-          text: (legal?.properties as any)?.copyrightText || step1Config.legal.text,
-          privacyText: (legal?.properties as any)?.privacyText || step1Config.legal.privacyText,
-          termsText: (legal?.properties as any)?.termsText || step1Config.legal.termsText,
-          privacyLinkUrl:
-            (legal?.properties as any)?.privacyLinkUrl || step1Config.legal.privacyLinkUrl,
-          termsLinkUrl: (legal?.properties as any)?.termsLinkUrl || step1Config.legal.termsLinkUrl,
-        },
-        footerText: (footer as any)?.content?.text || step1Config.footerText,
-      };
-    }, [blocks, step1Config]);
-
-    useEffect(() => {
-      // Emitir eventos esperados e sincronizar validação superior
-      const detail = { value: name, valid: isValid } as any;
-      window.dispatchEvent(new CustomEvent('quiz-input-change', { detail }));
-      window.dispatchEvent(
-        new CustomEvent('step01-button-state-change', {
-          detail: { buttonId: 'intro-cta-button', enabled: isValid, disabled: !isValid },
-        })
-      );
-      setStepValidation(prev => ({ ...prev, 1: isValid }));
-      setStepValid?.(1, isValid);
-      setQuizAnswers(prev => ({ ...prev, userName: name }));
-    }, [name]);
-
-    const handleSubmit = (e: React.FormEvent) => {
-      e.preventDefault();
-      if (!isValid) return;
-      const detail = { stepId: 'step-2', source: 'static-step1' } as any;
-      window.dispatchEvent(new CustomEvent('navigate-to-step', { detail }));
-      window.dispatchEvent(new CustomEvent('quiz-navigate-to-step', { detail }));
-      handleNext();
-    };
-
-    return (
-      <section aria-labelledby="quiz-title" className="p-6">
-        {/* Header do quiz-intro-header */}
-        <div className="max-w-2xl mx-auto bg-[#F8F9FA] text-center p-6 rounded-lg shadow-sm mb-4">
-          <img
-            src={derived.logoUrl}
-            alt="Logo Gisele Galvão"
-            width={96}
-            height={96}
-            className="mx-auto mb-3"
-            loading="eager"
-            decoding="async"
-          />
-        </div>
-
-        {/* Título estilizado (text block) */}
-        <div className="max-w-2xl mx-auto text-center mb-2">
-          {derived.titleHtml ? (
-            <h1
-              id="quiz-title"
-              className="text-3xl md:text-4xl font-bold leading-tight"
-              style={{ color: '#432818' }}
-              dangerouslySetInnerHTML={{ __html: derived.titleHtml }}
-            />
-          ) : (
-            <h1
-              id="quiz-title"
-              className="text-3xl md:text-4xl font-bold leading-tight"
-              style={{ color: '#432818' }}
-            >
-              Quiz de Estilo Pessoal
-            </h1>
-          )}
-        </div>
-
-        {/* Imagem de introdução */}
-        <div className="max-w-2xl mx-auto flex justify-center mb-3">
-          <img
-            src={derived.introImageUrl}
-            alt=""
-            className="object-cover rounded-xl"
-            loading="lazy"
-            decoding="async"
-            style={{ maxWidth: '300px', height: 'auto' }}
-          />
-        </div>
-
-        {/* Barra decorativa */}
-        <div className="max-w-2xl mx-auto flex justify-center mb-6">
-          <div
-            aria-hidden="true"
-            style={{
-              width: 'min(640px, 100%)',
-              height: 4,
-              borderRadius: 3,
-              background: 'linear-gradient(90deg, #B89B7A 0%, #D4C2A8 50%, #B89B7A 100%)',
-              boxShadow: '0 1px 2px rgba(0,0,0,0.12)',
-            }}
-          />
-        </div>
-
-        {/* Formulário (form-container + form-input + button-inline) */}
-        <form
-          className="max-w-2xl mx-auto"
-          onSubmit={handleSubmit}
-          noValidate
-          onMouseDown={e => e.stopPropagation()}
-          onClick={e => e.stopPropagation()}
-          onKeyDown={e => e.stopPropagation()}
-          onTouchStart={e => e.stopPropagation()}
-        >
-          <div className="bg-white rounded-lg p-4 pointer-events-auto">
-            <label
-              htmlFor="user-name"
-              className="block text-sm font-medium mb-1"
-              style={{ color: '#432818' }}
-            >
-              {derived.labelText || 'NOME'}
-            </label>
-            <input
-              id="user-name"
-              name="userName"
-              type="text"
-              autoComplete="given-name"
-              autoFocus
-              placeholder={derived.placeholder}
-              className="w-full rounded-md px-4 py-3 focus:outline-none focus:ring-2"
-              style={{
-                backgroundColor: '#FFFFFF',
-                border: '2px solid #B89B7A',
-                color: '#432818',
-                borderRadius: 8,
-                fontSize: 16,
-              }}
-              value={name}
-              onChange={e => setName(e.target.value)}
-              aria-invalid={!isValid}
-              aria-describedby={!isValid ? 'name-help' : undefined}
-              required
-            />
-            {!isValid && (
-              <p id="name-help" className="text-sm mt-2" style={{ color: '#9CA3AF' }}>
-                {derived.requiredMessage}
-              </p>
-            )}
-
-            <button
-              id="intro-cta-button"
-              type="submit"
-              disabled={!isValid}
-              className={cn('mt-4 w-full px-4 py-3 rounded-md font-medium transition-opacity')}
-              style={{
-                backgroundColor: isValid ? '#B89B7A' : '#E7E5E4',
-                color: isValid ? '#FFFFFF' : '#A8A29E',
-                border: '1px solid #B89B7A',
-                borderRadius: 8,
-              }}
-            >
-              {derived.buttonText}
-            </button>
-          </div>
-
-          <noscript>
-            <p className="text-xs mt-2" style={{ color: '#9CA3AF' }}>
-              Ative o JavaScript para continuar o quiz.
-            </p>
-          </noscript>
-        </form>
-
-        {/* Aviso legal */}
-        <div className="max-w-2xl mx-auto text-center mt-6" style={{ color: '#9CA3AF' }}>
-          <p className="text-xs">
-            {derived.legal.text}{' '}
-            <a
-              href={derived.legal.privacyLinkUrl}
-              className="underline"
-              style={{ color: '#B89B7A' }}
-            >
-              {derived.legal.privacyText}
-            </a>{' '}
-            e{' '}
-            <a href={derived.legal.termsLinkUrl} className="underline" style={{ color: '#B89B7A' }}>
-              {derived.legal.termsText}
-            </a>
-            .
-          </p>
-          <p className="text-xs mt-2">{derived.footerText}</p>
-        </div>
-      </section>
-    );
-  };
+  // StaticStep1 moved to top-level
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#FAF9F7] via-[#F5F2E9] to-[#EEEBE1]">
@@ -548,7 +575,14 @@ const QuizModularPage: React.FC = () => {
           {/* 🎨 ÁREA DE RENDERIZAÇÃO DOS BLOCOS */}
           <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl shadow-stone-200/40 border border-stone-200/30 ring-1 ring-stone-100/20 overflow-hidden">
             {currentStep === 1 && renderStaticStep1 ? (
-              <StaticStep1 />
+              <StaticStep1
+                blocks={blocks}
+                step1Config={step1Config}
+                setStepValidation={setStepValidation}
+                setStepValid={setStepValid}
+                setQuizAnswers={setQuizAnswers}
+                handleNext={handleNext}
+              />
             ) : showLoading ? (
               <div className="min-h-[500px] flex items-center justify-center">
                 <div className="text-center">
