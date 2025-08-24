@@ -14,7 +14,10 @@ const AuthPage = lazy(() => import('./pages/AuthPage'));
 // Import estático para evitar falhas de dynamic import em alguns ambientes (ex.: Lovable)
 import MainEditor from './pages/MainEditor';
 const DashboardPage = lazy(() => import('./pages/admin/DashboardPage'));
-const QuizModularPage = lazy(() => import('./pages/QuizModularPage'));
+// 🔄 Página modular com colunas (ambiente de desenvolvimento)
+const QuizModularDevPage = lazy(() => import('./pages/QuizModularPage'));
+// ✅ Página de publicação com HTML configurado (cliente final)
+const PublishedQuizPage = lazy(() => import('./pages/quiz-descubra-seu-estilo'));
 
 // Loading component
 const PageLoading = () => (
@@ -57,10 +60,17 @@ function App() {
                   </Suspense>
                 </Route>
 
-                {/* 🎯 QUIZ MODULAR (produção-like com blocos do editor) */}
+                {/* ✅ QUIZ MODULAR (página publicada para cliente final - HTML configurado) */}
                 <Route path="/quiz-modular">
                   <Suspense fallback={<PageLoading />}>
-                    <QuizModularPage />
+                    <PublishedQuizPage />
+                  </Suspense>
+                </Route>
+
+                {/* 🧪 Versão modular com colunas de edição (somente dev) */}
+                <Route path="/quiz-modular-dev">
+                  <Suspense fallback={<PageLoading />}>
+                    <QuizModularDevPage />
                   </Suspense>
                 </Route>
 
