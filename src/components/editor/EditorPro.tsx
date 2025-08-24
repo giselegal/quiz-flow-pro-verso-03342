@@ -86,8 +86,6 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   }
 
   const { state, actions } = editorContext;
-  // Modo edição desativado: manter apenas preview editável
-  const mode: 'preview' = 'preview';
   const [viewport, setViewport] = useState<'full' | 'sm' | 'md' | 'lg'>('full');
   const viewportWidth = useMemo(() => {
     switch (viewport) {
@@ -286,15 +284,6 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
 
   // Handlers básicos
   const handleStepSelect = useCallback((step: number) => actions.setCurrentStep(step), [actions]);
-  const handleBlockUpdate = useCallback(
-    (blockId: string, updates: Record<string, any>) =>
-      actions.updateBlock(currentStepKey, blockId, updates),
-    [currentStepKey, actions]
-  );
-  const handleBlockDelete = useCallback(
-    (blockId: string) => actions.removeBlock(currentStepKey, blockId),
-    [currentStepKey, actions]
-  );
 
   // Duplicação inline é gerenciada no wrapper simples quando necessário
 
@@ -703,48 +692,22 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
             style={{ width: viewportWidth as number | string, maxWidth: '100%' }}
           >
             <div className={cn('rounded-xl shadow-sm', viewport !== 'full' && 'border bg-white')}>
-              {mode === 'edit' ? (
-                <div className="max-w-4xl mx-auto p-6">
-                  <SimpleCanvasDropZone
-                    blocks={currentStepData}
-                    selectedBlockId={state.selectedBlockId}
-                    onSelectBlock={(id: string) => actions.setSelectedBlockId(id)}
-                    onUpdateBlock={(blockId: string, updates: Record<string, any>) =>
-                      actions.updateBlock(currentStepKey, blockId, updates)
-                    }
-                    onDeleteBlock={(blockId: string) => handleBlockDelete(blockId)}
-                  />
-                </div>
-              ) : (
-                <div>
-                  <QuizRenderer
-                    mode="preview"
-                    onStepChange={handleStepSelect}
-                    initialStep={safeCurrentStep}
-                    blocksOverride={currentStepData}
-                    currentStepOverride={safeCurrentStep}
-                    previewEditable
-                    onBlockClick={(id: string) => actions.setSelectedBlockId(id)}
-                  />
-                </div>
-              )}
+              <div>
+                <QuizRenderer
+                  mode="preview"
+                  onStepChange={handleStepSelect}
+                  initialStep={safeCurrentStep}
+                  blocksOverride={currentStepData}
+                  currentStepOverride={safeCurrentStep}
+                  previewEditable
+                  selectedBlockId={state.selectedBlockId}
+                  onBlockClick={(id: string) => actions.setSelectedBlockId(id)}
+                />
+              </div>
             </div>
-          </div>
-                    {/* Banner de modo removido (somente preview) */}
-                    <div>
-                      <QuizRenderer
-                        mode="preview"
-                        onStepChange={handleStepSelect}
-                        initialStep={safeCurrentStep}
-                        blocksOverride={currentStepData}
-                        currentStepOverride={safeCurrentStep}
-                        previewEditable
-                        selectedBlockId={state.selectedBlockId}
-                        onBlockClick={(id: string) => actions.setSelectedBlockId(id)}
-                      />
-                    </div>
-            <div className="text-xs">Clique em um bloco no canvas para ver suas propriedades</div>
-
+            <div className="text-xs mt-2 px-2">
+              Clique em um bloco no canvas para ver suas propriedades
+            </div>
             <div className="mt-6 p-4 bg-gray-50 rounded-lg text-left">
               <h4 className="text-sm font-medium text-gray-900 mb-3">
                 Estatísticas da Etapa {safeCurrentStep}
@@ -765,8 +728,30 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               </div>
             </div>
           </div>
-        )}
+        </div>
       </div>
+    </div>
+  );
+
+  // Coluna de propriedades (direita)
+  const PropertiesColumn: React.FC = () => (
+    <div className="w-[360px] min-w-[300px] bg-white border-l border-gray-200 flex flex-col">
+      {selectedBlock ? (
+        <Suspense fallback={<div className="p-4 text-sm text-gray-600">Carregando propriedades…</div>}>
+          <EnhancedUniversalPropertiesPanelFixed
+            selectedBlock={selectedBlock as any}
+            onUpdate={(blockId: string, updates: Record<string, any>) =>
+              actions.updateBlock(currentStepKey, blockId, updates)
+            }
+            onClose={() => actions.setSelectedBlockId(null)}
+            onDelete={(blockId: string) => actions.removeBlock(currentStepKey, blockId)}
+          />
+        </Suspense>
+      ) : (
+        <div className="h-full p-6 text-sm text-gray-600">
+          Selecione um bloco no canvas para editar suas propriedades.
+        </div>
+      )}
     </div>
   );
 
