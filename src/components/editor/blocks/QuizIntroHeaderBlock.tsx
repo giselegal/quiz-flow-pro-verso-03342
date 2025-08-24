@@ -74,6 +74,16 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
   const introImageWidth = (block as any)?.properties?.introImageWidth || 300;
   const introImageHeight = (block as any)?.properties?.introImageHeight || 200;
 
+  // Layout sugerido e responsividade
+  const contentMaxWidth = (block as any)?.properties?.contentMaxWidth || 640; // px
+  const progressHeight = (block as any)?.properties?.progressHeight || 8; // px
+  const backSafePadding = showBackButton ? 48 : 0; // px (equivale a pl-12)
+  const contentWrapperStyle: React.CSSProperties = {
+    maxWidth: contentMaxWidth,
+    margin: '0 auto',
+    paddingLeft: backSafePadding,
+  };
+
   return (
     <div
       className={cn(
@@ -89,11 +99,15 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
       }}
     >
       {/* Header Content */}
-      <div className="relative w-full min-h-[80px] flex items-center justify-center">
+      <div
+        className="relative w-full min-h-[80px] flex items-center justify-center"
+        style={contentWrapperStyle}
+      >
         {showBackButton && (
           <button
             className="absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full hover:bg-gray-100/50 transition-colors"
             style={{ backgroundColor: backgroundColor ? `${backgroundColor}dd` : '#E5DDD5' }}
+            aria-label="Voltar"
           >
             <ArrowLeft className="w-6 h-6" style={{ color: '#6B4F43' }} />
           </button>
@@ -104,10 +118,7 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
           <img
             src={logoUrl}
             alt={logoAlt}
-            style={{
-              width: `${logoWidth}px`,
-              height: `${logoHeight}px`,
-            }}
+            style={{ width: `${logoWidth}px`, height: `${logoHeight}px` }}
             className="object-contain"
             onError={e => {
               e.currentTarget.src = 'https://via.placeholder.com/96x96?text=Logo';
@@ -118,7 +129,7 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
 
       {/* Título / Subtítulo / Descrição */}
       {(title || subtitle || description) && (
-        <div className="mt-4 text-center space-y-3">
+        <div className="mt-4 text-center space-y-3" style={contentWrapperStyle}>
           {title && (
             <h1
               className="text-2xl md:text-3xl font-bold leading-snug"
@@ -139,7 +150,7 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
 
       {/* Imagem de Introdução (opcional) */}
       {introImageUrl && (
-        <div className="mt-6 flex justify-center">
+        <div className="mt-6 flex justify-center" style={contentWrapperStyle}>
           <img
             src={introImageUrl}
             alt={introImageAlt}
@@ -155,13 +166,20 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
 
       {/* Progress Bar */}
       {showProgress && (
-        <div className="mt-4">
+        <div className="mt-4" style={contentWrapperStyle}>
           <div
-            className="h-2 rounded-full"
-            style={{ backgroundColor: backgroundColor ? `${backgroundColor}dd` : '#E5DDD5' }}
+            role="progressbar"
+            aria-valuemin={0}
+            aria-valuemax={progressMax || 100}
+            aria-valuenow={Math.min(progressValue || 0, progressMax || 100)}
+            className="relative w-full overflow-hidden rounded-full"
+            style={{
+              backgroundColor: backgroundColor ? `${backgroundColor}dd` : '#E5DDD5',
+              height: progressHeight,
+            }}
           >
             <div
-              className="h-2 rounded-full transition-all duration-300"
+              className="h-full flex-1 transition-all"
               style={{
                 width: `${Math.min(progressValue || 0, progressMax || 100)}%`,
                 backgroundColor: '#B89B7A',
