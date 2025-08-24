@@ -60,7 +60,8 @@ const StaticStep1: React.FC<StaticStep1Props> = ({
       titleHtml: (titleTextBlock as any)?.content?.text as string | undefined,
       introImageUrl: (imageBlock?.properties as any)?.src || step1Config.introImageUrl,
       labelText: (inputChild?.properties as any)?.label || 'NOME',
-      placeholder: (inputChild?.properties as any)?.placeholder || 'Digite seu primeiro nome aqui...',
+      placeholder:
+        (inputChild?.properties as any)?.placeholder || 'Digite seu primeiro nome aqui...',
       buttonText: (buttonChild?.properties as any)?.text || step1Config.ctaText,
       requiredMessage:
         (formContainer as any)?.content?.validationMessage || step1Config.requiredMessage,
@@ -465,6 +466,24 @@ const QuizModularPage: React.FC = () => {
       }
 
       const updated = { ...prev, [questionId]: newSelections };
+
+      // Disparar evento global com a contagem real após toggle
+      try {
+        const step = currentStep;
+        const isScoringPhase = step >= 2 && step <= 11;
+        const isStrategicPhase = step >= 13 && step <= 18;
+        const required = isScoringPhase ? 3 : isStrategicPhase ? 1 : 1;
+        const validNow = newSelections.length >= required;
+        window.dispatchEvent(
+          new CustomEvent('quiz-selection-change', {
+            detail: {
+              questionId,
+              selectionCount: newSelections.length,
+              valid: validNow,
+            },
+          })
+        );
+      } catch {}
 
       // Verificar se a etapa está completa
       setTimeout(() => {

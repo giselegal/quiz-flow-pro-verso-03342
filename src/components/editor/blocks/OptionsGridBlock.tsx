@@ -180,8 +180,9 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
   } = (block?.properties as any) || {};
 
   // Callback externo (produção) para persistir seleção no pai
-  const onOptionSelectExternal: ((optionId: string) => void) | undefined =
-    (block?.properties as any)?.onOptionSelect;
+  const onOptionSelectExternal: ((optionId: string) => void) | undefined = (
+    block?.properties as any
+  )?.onOptionSelect;
 
   // Fallbacks a partir de content (compatibilidade com template)
   const question = (questionProp ?? (block as any)?.content?.question) as string | undefined;
