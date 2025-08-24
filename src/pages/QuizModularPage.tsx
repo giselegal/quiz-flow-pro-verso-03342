@@ -327,6 +327,44 @@ const QuizModularPage: React.FC = () => {
     const [name, setName] = useState('');
     const isValid = name.trim().length > 0;
 
+    // Derivar conteúdos da etapa 1 a partir dos blocos carregados, para refletir edições do editor
+    const derived = useMemo(() => {
+      const find = (t: string) => blocks.find(b => b.type === t);
+      const findById = (id: string) => blocks.find(b => b.id === id);
+      const header = find('quiz-intro-header');
+      const titleTextBlock = findById('step1-title') || blocks.find(b => b.type === 'text');
+      const imageBlock = find('image');
+      const formContainer = find('form-container');
+      const legal = find('legal-notice');
+      const footer = findById('step1-footer');
+
+      const children = (formContainer?.properties as any)?.children || [];
+      const inputChild = children.find((c: any) => c.type === 'form-input');
+      const buttonChild = children.find((c: any) => c.type === 'button-inline');
+
+      return {
+        logoUrl: (header?.properties as any)?.logoUrl || step1Config.logoUrl,
+        titleHtml: (titleTextBlock as any)?.content?.text as string | undefined,
+        introImageUrl: (imageBlock?.properties as any)?.src || step1Config.introImageUrl,
+        labelText: (inputChild?.properties as any)?.label || 'NOME',
+        placeholder:
+          (inputChild?.properties as any)?.placeholder || 'Digite seu primeiro nome aqui...',
+        buttonText: (buttonChild?.properties as any)?.text || step1Config.ctaText,
+        requiredMessage:
+          (formContainer as any)?.content?.validationMessage || step1Config.requiredMessage,
+        legal: {
+          text: (legal?.properties as any)?.copyrightText || step1Config.legal.text,
+          privacyText: (legal?.properties as any)?.privacyText || step1Config.legal.privacyText,
+          termsText: (legal?.properties as any)?.termsText || step1Config.legal.termsText,
+          privacyLinkUrl:
+            (legal?.properties as any)?.privacyLinkUrl || step1Config.legal.privacyLinkUrl,
+          termsLinkUrl:
+            (legal?.properties as any)?.termsLinkUrl || step1Config.legal.termsLinkUrl,
+        },
+        footerText: (footer as any)?.content?.text || step1Config.footerText,
+      };
+    }, [blocks, step1Config]);
+
     useEffect(() => {
       // Emitir eventos esperados e sincronizar validação superior
       const detail = { value: name, valid: isValid } as any;
@@ -353,9 +391,9 @@ const QuizModularPage: React.FC = () => {
     return (
       <section aria-labelledby="quiz-title" className="p-6">
         {/* Header do quiz-intro-header */}
-        <div className="max-w-2xl mx-auto bg-[#F8F9FA] text-center p-6 rounded-lg shadow-sm mb-4">
+    <div className="max-w-2xl mx-auto bg-[#F8F9FA] text-center p-6 rounded-lg shadow-sm mb-4">
           <img
-            src={step1Config.logoUrl}
+      src={derived.logoUrl}
             alt="Logo Gisele Galvão"
             width={96}
             height={96}
@@ -367,31 +405,28 @@ const QuizModularPage: React.FC = () => {
 
         {/* Título estilizado (text block) */}
         <div className="max-w-2xl mx-auto text-center mb-2">
-          <h1
-            id="quiz-title"
-            className="text-3xl md:text-4xl font-bold leading-tight"
-            style={{ color: '#432818' }}
-          >
-            <span
-              style={{ color: '#B89B7A', fontWeight: 700, fontFamily: 'Playfair Display, serif' }}
+          {derived.titleHtml ? (
+            <h1
+              id="quiz-title"
+              className="text-3xl md:text-4xl font-bold leading-tight"
+              style={{ color: '#432818' }}
+              dangerouslySetInnerHTML={{ __html: derived.titleHtml }}
+            />
+          ) : (
+            <h1
+              id="quiz-title"
+              className="text-3xl md:text-4xl font-bold leading-tight"
+              style={{ color: '#432818' }}
             >
-              Chega
-            </span>{' '}
-            <span style={{ fontFamily: 'Playfair Display, serif' }}>
-              de um guarda-roupa lotado e da sensação de que
-            </span>{' '}
-            <span
-              style={{ color: '#B89B7A', fontWeight: 700, fontFamily: 'Playfair Display, serif' }}
-            >
-              nada combina com você.
-            </span>
-          </h1>
+              Quiz de Estilo Pessoal
+            </h1>
+          )}
         </div>
 
         {/* Imagem de introdução */}
         <div className="max-w-2xl mx-auto flex justify-center mb-3">
           <img
-            src={step1Config.introImageUrl}
+            src={derived.introImageUrl}
             alt=""
             className="object-cover rounded-xl"
             loading="lazy"
@@ -415,21 +450,30 @@ const QuizModularPage: React.FC = () => {
         </div>
 
         {/* Formulário (form-container + form-input + button-inline) */}
-        <form className="max-w-2xl mx-auto" onSubmit={handleSubmit} noValidate>
-          <div className="bg-white rounded-lg p-4">
+        <form
+          className="max-w-2xl mx-auto"
+          onSubmit={handleSubmit}
+          noValidate
+          onMouseDown={e => e.stopPropagation()}
+          onClick={e => e.stopPropagation()}
+          onKeyDown={e => e.stopPropagation()}
+          onTouchStart={e => e.stopPropagation()}
+        >
+          <div className="bg-white rounded-lg p-4 pointer-events-auto">
             <label
               htmlFor="user-name"
               className="block text-sm font-medium mb-1"
               style={{ color: '#432818' }}
             >
-              NOME
+              {derived.labelText || 'NOME'}
             </label>
             <input
               id="user-name"
               name="userName"
               type="text"
               autoComplete="given-name"
-              placeholder="Digite seu primeiro nome aqui..."
+              autoFocus
+              placeholder={derived.placeholder}
               className="w-full rounded-md px-4 py-3 focus:outline-none focus:ring-2"
               style={{
                 backgroundColor: '#FFFFFF',
@@ -446,7 +490,7 @@ const QuizModularPage: React.FC = () => {
             />
             {!isValid && (
               <p id="name-help" className="text-sm mt-2" style={{ color: '#9CA3AF' }}>
-                {step1Config.requiredMessage}
+                {derived.requiredMessage}
               </p>
             )}
 
@@ -462,7 +506,7 @@ const QuizModularPage: React.FC = () => {
                 borderRadius: 8,
               }}
             >
-              {step1Config.ctaText}
+              {derived.buttonText}
             </button>
           </div>
 
@@ -476,25 +520,25 @@ const QuizModularPage: React.FC = () => {
         {/* Aviso legal */}
         <div className="max-w-2xl mx-auto text-center mt-6" style={{ color: '#9CA3AF' }}>
           <p className="text-xs">
-            {step1Config.legal.text}{' '}
+            {derived.legal.text}{' '}
             <a
-              href={step1Config.legal.privacyLinkUrl}
+              href={derived.legal.privacyLinkUrl}
               className="underline"
               style={{ color: '#B89B7A' }}
             >
-              {step1Config.legal.privacyText}
+              {derived.legal.privacyText}
             </a>{' '}
             e{' '}
             <a
-              href={step1Config.legal.termsLinkUrl}
+              href={derived.legal.termsLinkUrl}
               className="underline"
               style={{ color: '#B89B7A' }}
             >
-              {step1Config.legal.termsText}
+              {derived.legal.termsText}
             </a>
             .
           </p>
-          <p className="text-xs mt-2">{step1Config.footerText}</p>
+          <p className="text-xs mt-2">{derived.footerText}</p>
         </div>
       </section>
     );
