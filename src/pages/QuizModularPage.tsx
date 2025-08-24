@@ -103,7 +103,14 @@ const QuizModularPage: React.FC = () => {
 
       setCurrentStep(target);
       goToStep(target);
-      console.log('➡️ Navegação por evento:', e.detail?.stepId, '->', target, 'origem:', e.detail?.source);
+      console.log(
+        '➡️ Navegação por evento:',
+        e.detail?.stepId,
+        '->',
+        target,
+        'origem:',
+        e.detail?.source
+      );
     };
 
     window.addEventListener('navigate-to-step', handleNavigate as EventListener);
