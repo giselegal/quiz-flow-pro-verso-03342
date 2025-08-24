@@ -27,6 +27,7 @@ import {
   validateEditorJSON,
 } from '../../utils/editorUtils';
 import { useNotification } from '../ui/Notification';
+import { localPublishStore } from '@/services/localPublishStore';
 import { CanvasDropZone } from './canvas/CanvasDropZone.simple';
 import { DraggableComponentItem } from './dnd/DraggableComponentItem';
 import { useEditor } from './EditorProvider';
@@ -104,6 +105,20 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   const notification = useNotification();
   const NotificationContainer = (notification as any)?.NotificationContainer ?? null;
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const handlePublish = useCallback(() => {
+    try {
+      // Persistir todos os blocos por etapa
+      const ok = localPublishStore.saveAll(state.stepBlocks, 'editor-pro');
+      if (ok) {
+        notification?.success?.('Publicado localmente! Abra /quiz-modular para ver.');
+      } else {
+        notification?.warning?.('Não foi possível salvar no localStorage.');
+      }
+    } catch (e) {
+      notification?.error?.(`Falha ao publicar: ${String(e)}`);
+    }
+  }, [state.stepBlocks, notification]);
 
   const safeCurrentStep = state.currentStep || 1;
   const currentStepKey = `step-${safeCurrentStep}`;
@@ -718,9 +733,18 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               </button>
             </div>
 
-            <button className="px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition-colors">
-              💾 Salvar
-            </button>
+            <div className="flex gap-2">
+              <button className="px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition-colors">
+                💾 Salvar
+              </button>
+              <button
+                type="button"
+                onClick={handlePublish}
+                className="px-4 py-2 bg-emerald-600 text-white text-sm rounded-md hover:bg-emerald-700 transition-colors"
+              >
+                ☁️ Publicar
+              </button>
+            </div>
           </div>
         </div>
 

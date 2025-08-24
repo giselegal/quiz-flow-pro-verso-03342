@@ -1,5 +1,6 @@
 import type { Block } from '@/types/editor';
 import { TemplateManager } from '@/utils/TemplateManager';
+import { localPublishStore } from '@/services/localPublishStore';
 import { useCallback, useEffect, useState } from 'react';
 
 interface UseJsonTemplateOptions {
@@ -44,7 +45,11 @@ export const useJsonTemplate = (
 
       try {
         console.log(`🔄 useJsonTemplate: Carregando ${stepId}...`);
-        const stepBlocks = await TemplateManager.loadStepBlocks(stepId);
+        // Fast-path: checar publicação local primeiro
+        const published = localPublishStore.getBlocks(stepId);
+        const stepBlocks = published && published.length > 0
+          ? published
+          : await TemplateManager.loadStepBlocks(stepId);
 
         setBlocks(stepBlocks);
         onLoad?.(stepId, stepBlocks);
