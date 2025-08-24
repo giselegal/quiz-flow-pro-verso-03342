@@ -98,9 +98,14 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
   } = (normalizedBlock.properties as any) || {};
 
   // Normalizar valores de escala
-  const parsedScale = typeof rawScale === 'string' ? parseFloat(rawScale) : rawScale;
+  let parsedScale = typeof rawScale === 'string' ? parseFloat(rawScale) : rawScale;
   const parsedScaleX = typeof rawScaleX === 'string' ? parseFloat(rawScaleX) : rawScaleX;
   const parsedScaleY = typeof rawScaleY === 'string' ? parseFloat(rawScaleY) : rawScaleY;
+
+  // Compatibilidade: se vier em porcentagem (ex.: 100, 75), converter para fator
+  if (typeof parsedScale === 'number' && parsedScale > 2) {
+    parsedScale = parsedScale / 100;
+  }
 
   const sx = parsedScaleX ?? parsedScale ?? 1;
   const sy = parsedScaleY ?? parsedScale ?? 1;

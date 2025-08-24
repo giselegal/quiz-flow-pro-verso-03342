@@ -31,6 +31,66 @@ export interface BlockSchema {
 }
 
 export const blockPropertySchemas: Record<string, BlockSchema> = {
+  // Schema universal aplicável a qualquer bloco (usado como extensão/aditivo)
+  'universal-default': {
+    label: 'Propriedades Universais',
+    fields: [
+      {
+        key: 'scale',
+        label: 'Escala (%)',
+        type: 'range',
+        min: 10,
+        max: 300,
+        step: 1,
+        group: 'transform',
+        defaultValue: 100,
+      },
+      {
+        key: 'scaleX',
+        label: 'Escala X (fator)',
+        type: 'range',
+        min: 0.1,
+        max: 3,
+        step: 0.01,
+        group: 'transform',
+      },
+      {
+        key: 'scaleY',
+        label: 'Escala Y (fator)',
+        type: 'range',
+        min: 0.1,
+        max: 3,
+        step: 0.01,
+        group: 'transform',
+      },
+      {
+        key: 'scaleOrigin',
+        label: 'Origem da Escala',
+        type: 'select',
+        options: [
+          { label: 'Centro', value: 'center' },
+          { label: 'Topo', value: 'top' },
+          { label: 'Topo Centro', value: 'top center' },
+          { label: 'Topo Esquerda', value: 'top left' },
+          { label: 'Topo Direita', value: 'top right' },
+          { label: 'Centro Esquerda', value: 'center left' },
+          { label: 'Centro Direita', value: 'center right' },
+          { label: 'Base', value: 'bottom' },
+          { label: 'Base Centro', value: 'bottom center' },
+          { label: 'Base Esquerda', value: 'bottom left' },
+          { label: 'Base Direita', value: 'bottom right' },
+        ],
+        group: 'transform',
+      },
+      {
+        key: 'scaleClass',
+        label: 'Classe Tailwind de Escala',
+        type: 'text',
+        group: 'transform',
+        description: 'Opcional: ex. scale-95 md:scale-100',
+      },
+    ],
+  },
   'quiz-intro-header': {
     label: 'Cabeçalho do Quiz',
     fields: [
@@ -53,6 +113,28 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color' },
       { key: 'marginTop', label: 'Margem Superior', type: 'number' },
       { key: 'marginBottom', label: 'Margem Inferior', type: 'number' },
+      // Transformação universal
+      {
+        key: 'scale',
+        label: 'Escala (%)',
+        type: 'range',
+        min: 10,
+        max: 300,
+        step: 1,
+        group: 'transform',
+        defaultValue: 100,
+      },
+      {
+        key: 'scaleOrigin',
+        label: 'Origem da Escala',
+        type: 'select',
+        group: 'transform',
+        options: [
+          { label: 'Centro', value: 'center' },
+          { label: 'Topo Centro', value: 'top center' },
+          { label: 'Base Centro', value: 'bottom center' },
+        ],
+      },
     ],
   },
   'decorative-bar-inline': {
@@ -64,6 +146,27 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color' },
       { key: 'marginTop', label: 'Margem Superior', type: 'number' },
       { key: 'marginBottom', label: 'Margem Inferior', type: 'number' },
+      {
+        key: 'scale',
+        label: 'Escala (%)',
+        type: 'range',
+        min: 10,
+        max: 300,
+        step: 1,
+        group: 'transform',
+        defaultValue: 100,
+      },
+      {
+        key: 'scaleOrigin',
+        label: 'Origem da Escala',
+        type: 'select',
+        group: 'transform',
+        options: [
+          { label: 'Centro', value: 'center' },
+          { label: 'Topo Centro', value: 'top center' },
+          { label: 'Base Centro', value: 'bottom center' },
+        ],
+      },
     ],
   },
   'text-inline': {
@@ -76,6 +179,27 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'color', label: 'Cor', type: 'color' },
       { key: 'marginBottom', label: 'Margem Inferior', type: 'number' },
       { key: 'marginTop', label: 'Margem Superior', type: 'number' },
+      {
+        key: 'scale',
+        label: 'Escala (%)',
+        type: 'range',
+        min: 10,
+        max: 300,
+        step: 1,
+        group: 'transform',
+        defaultValue: 100,
+      },
+      {
+        key: 'scaleOrigin',
+        label: 'Origem da Escala',
+        type: 'select',
+        group: 'transform',
+        options: [
+          { label: 'Centro', value: 'center' },
+          { label: 'Topo Centro', value: 'top center' },
+          { label: 'Base Centro', value: 'bottom center' },
+        ],
+      },
     ],
   },
   'image-display-inline': {
@@ -87,6 +211,26 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'height', label: 'Altura', type: 'number' },
       { key: 'containerPosition', label: 'Posição', type: 'text' },
       { key: 'marginBottom', label: 'Margem Inferior', type: 'number' },
+      {
+        key: 'scale',
+        label: 'Escala (%)',
+        type: 'range',
+        min: 10,
+        max: 300,
+        step: 1,
+        group: 'transform',
+      },
+      {
+        key: 'scaleOrigin',
+        label: 'Origem da Escala',
+        type: 'select',
+        group: 'transform',
+        options: [
+          { label: 'Centro', value: 'center' },
+          { label: 'Topo Centro', value: 'top center' },
+          { label: 'Base Centro', value: 'bottom center' },
+        ],
+      },
     ],
   },
   'form-container': {
@@ -297,7 +441,14 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'showBorders', label: 'Mostrar Bordas', type: 'boolean' },
       { key: 'showShadows', label: 'Mostrar Sombras', type: 'boolean' },
       { key: 'responsiveColumns', label: 'Colunas Responsivas', type: 'boolean' },
-      { key: 'scale', label: 'Escala do Componente (%)', type: 'number' },
+      {
+        key: 'scale',
+        label: 'Escala do Componente (%)',
+        type: 'range',
+        min: 50,
+        max: 200,
+        step: 1,
+      },
     ],
   },
   // ==========================

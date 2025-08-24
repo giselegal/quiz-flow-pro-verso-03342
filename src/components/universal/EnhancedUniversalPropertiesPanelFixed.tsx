@@ -383,6 +383,14 @@ const EnhancedUniversalPropertiesPanelFixed: React.FC<PanelProps> = ({
     );
   }
 
+  // Misturar campos universais de transformação/escala
+  const universal = blockPropertySchemas['universal-default'];
+  const mergedFields = [
+    ...(schema?.fields || []),
+    // Evitar duplicatas por chave
+    ...universal.fields.filter(uf => !(schema?.fields || []).some(sf => sf.key === uf.key)),
+  ];
+
   return (
     <aside className="h-full w-full overflow-y-auto p-4 space-y-4">
       <header className="space-y-1">
@@ -398,7 +406,7 @@ const EnhancedUniversalPropertiesPanelFixed: React.FC<PanelProps> = ({
         className="space-y-4"
       >
         {Object.entries(
-          schema.fields
+          mergedFields
             .filter(f => {
               // ocultar condicionais de seleção múltipla
               if (
@@ -458,6 +466,28 @@ const EnhancedUniversalPropertiesPanelFixed: React.FC<PanelProps> = ({
             ))}
           </section>
         ))}
+
+        {/* Ações rápidas */}
+        <section className="pt-2 border-t">
+          <h4 className="text-sm font-semibold mb-2">Ações Rápidas</h4>
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              className="px-3 py-1.5 rounded-md border text-xs hover:bg-muted"
+              onClick={() =>
+                onUpdate(selectedBlock.id, {
+                  scale: 100,
+                  scaleX: undefined,
+                  scaleY: undefined,
+                  scaleOrigin: 'center',
+                  scaleClass: undefined,
+                })
+              }
+            >
+              Resetar escala
+            </button>
+          </div>
+        </section>
 
         <div className="pt-2 flex gap-2">
           <button type="submit" className="px-3 py-2 rounded-md border text-sm">

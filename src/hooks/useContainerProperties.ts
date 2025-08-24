@@ -250,13 +250,7 @@ export const useContainerProperties = (properties: ContainerProperties = {}) => 
   const getInlineStyles = (): React.CSSProperties => {
     const styles: React.CSSProperties = {};
 
-    // 🎯 Aplicar escala que afeta realmente o layout flow
-    if (scale && scale !== 100) {
-      const scaleFactor = scale / 100;
-      styles.transform = `scale(${scaleFactor})`;
-      styles.transformOrigin = 'top center';
-      // Removido ajuste agressivo de height/margin que causava desproporção
-    }
+    // Escala é aplicada no UniversalBlockRenderer para unificação e evitar sobreposição
 
     // Adicionar estilos específicos se necessário
     if (
