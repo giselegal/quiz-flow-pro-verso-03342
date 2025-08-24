@@ -42,7 +42,7 @@ export const validateDrop = (
 
     // ✅ Aceitar soltar diretamente sobre um bloco existente (insere antes dele)
     const isOverExistingBlock = currentStepBlocks.some(
-      (block) => block.id === overId || `dnd-block-${block.id}` === overId
+      block => block.id === overId || `dnd-block-${block.id}` === overId
     );
 
     // ✅ Aceitar soltar no canvas e nas drop-zones intermediárias
