@@ -545,6 +545,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       onClick={onClick}
       data-block-id={block.id}
       data-block-type={block.type}
+  data-component="OptionsGridBlock"
     >
       {/* Título interno opcional: só renderiza se existir e for permitido */}
       {question && showQuestionTitle && (
