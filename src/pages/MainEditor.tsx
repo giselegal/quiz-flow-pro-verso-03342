@@ -16,15 +16,23 @@ import { ErrorBoundary } from '../components/editor/ErrorBoundary';
  * - Cabeçalho editável DENTRO do EditorPro ✅
  */
 const MainEditor: React.FC = () => {
+  const enableLovablePreview = (import.meta as any)?.env?.VITE_LOVABLE_PREVIEW === 'true';
   return (
     <div>
       <ErrorBoundary>
-        <LovablePreviewPanel>
+        {enableLovablePreview ? (
+          <LovablePreviewPanel>
+            <EditorProvider enableSupabase={false} storageKey="main-editor-state">
+              {/* 🎯 EDITOR PRINCIPAL COM CABEÇALHO EDITÁVEL */}
+              <EditorPro />
+            </EditorProvider>
+          </LovablePreviewPanel>
+        ) : (
           <EditorProvider enableSupabase={false} storageKey="main-editor-state">
             {/* 🎯 EDITOR PRINCIPAL COM CABEÇALHO EDITÁVEL */}
             <EditorPro />
           </EditorProvider>
-        </LovablePreviewPanel>
+        )}
       </ErrorBoundary>
     </div>
   );
