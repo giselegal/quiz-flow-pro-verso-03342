@@ -6,7 +6,7 @@ import { useQuizFlow } from '@/hooks/core/useQuizFlow';
 import { useStep01Validation } from '@/hooks/useStep01Validation';
 import { cn } from '@/lib/utils';
 import { Block, BlockType } from '@/types/editor';
-import { loadStepBlocks } from '@/utils/quiz21StepsRenderer';
+import { TemplateManager } from '@/utils/TemplateManager';
 import { DndContext, DragEndEvent, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import React, { useEffect, useState } from 'react';
 
@@ -57,7 +57,7 @@ const QuizModularPage: React.FC = () => {
     preloadTemplates?.();
   }, [preloadTemplates]);
 
-  // Carregar blocos da etapa atual
+  // Carregar blocos da etapa atual (via TemplateManager para refletir atualizações do editor)
   useEffect(() => {
     const loadCurrentStepBlocks = async () => {
       try {
@@ -66,8 +66,9 @@ const QuizModularPage: React.FC = () => {
 
         console.log(`🔄 Carregando blocos da etapa ${currentStep}...`);
 
-        // Carregar blocos usando o mesmo sistema do editor
-        const stepBlocks = await loadStepBlocks(currentStep);
+        // Carregar blocos usando TemplateManager (integra JSON/Editor)
+        const stepId = `step-${currentStep}`;
+        const stepBlocks = await TemplateManager.loadStepBlocks(stepId);
         setBlocks(stepBlocks);
 
         // Validar se a etapa já está completa

@@ -16,8 +16,6 @@ import MainEditor from './pages/MainEditor';
 const DashboardPage = lazy(() => import('./pages/admin/DashboardPage'));
 // 🔄 Página modular com colunas (ambiente de desenvolvimento)
 const QuizModularDevPage = lazy(() => import('./pages/QuizModularPage'));
-// ✅ Página de publicação com HTML configurado (cliente final)
-const PublishedQuizPage = lazy(() => import('./pages/quiz-descubra-seu-estilo'));
 
 // Loading component
 const PageLoading = () => (
@@ -60,11 +58,10 @@ function App() {
                   </Suspense>
                 </Route>
 
-                {/* ✅ QUIZ MODULAR (página publicada para cliente final - HTML configurado) */}
+                {/* ✅ QUIZ MODULAR - deve usar o mesmo fluxo do /editor */}
                 <Route path="/quiz-modular">
-                  <Suspense fallback={<PageLoading />}>
-                    <PublishedQuizPage />
-                  </Suspense>
+                  {/* Usar exatamente o mesmo fluxo do /editor */}
+                  <MainEditor />
                 </Route>
 
                 {/* 🧪 Versão modular com colunas de edição (somente dev) */}
