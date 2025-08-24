@@ -1,5 +1,5 @@
-import React from 'react';
 import type { BlockComponentProps } from '@/types/blocks';
+import React from 'react';
 
 interface Option {
   id: string;
@@ -125,9 +125,9 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
   onStepComplete,
 }) => {
   const {
-    question,
+    question: questionProp,
     // questionId, // unused
-    options = [],
+    options: optionsProp = [],
     columns = 2,
     // selectedOption, // unused for now
     selectedOptions = [],
@@ -164,6 +164,12 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
     className: blockClassName,
     showQuestionTitle = true,
   } = (block?.properties as any) || {};
+
+  // Fallbacks a partir de content (compatibilidade com template)
+  const question = (questionProp ?? (block as any)?.content?.question) as string | undefined;
+  const options = ((block?.properties as any)?.options ??
+    (block as any)?.content?.options ??
+    optionsProp) as Option[];
 
   // State for preview mode selections
   const [previewSelections, setPreviewSelections] = React.useState<string[]>([]);

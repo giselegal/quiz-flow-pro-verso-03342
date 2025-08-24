@@ -44,7 +44,7 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
   };
 
   const handlePropertyChange = (key: string, value: any) => {
-  onUpdate({ [key]: value });
+    onUpdate({ [key]: value });
   };
 
   // Fallback se componente não for encontrado
@@ -106,7 +106,7 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
               </div>
             }
           >
-              <Component
+            <Component
               block={normalizedBlock}
               isSelected={false} // Evita bordas duplas
               onClick={onSelect}
