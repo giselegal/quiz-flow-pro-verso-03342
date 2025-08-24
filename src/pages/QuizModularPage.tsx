@@ -307,10 +307,18 @@ const QuizModularPage: React.FC = () => {
     () => ({
       logoUrl:
         'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
-      title: 'Quiz de Estilo Pessoal',
-      subtitle: '',
+      introImageUrl:
+        'https://res.cloudinary.com/der8kogzu/image/upload/f_avif,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.avif',
       ctaText: 'Quero Descobrir meu Estilo Agora!',
       requiredMessage: 'Digite seu nome para continuar',
+      legal: {
+        text: 'Suas informações são seguras. Ao continuar, você concorda com nossa Política de Privacidade e Termos.',
+        privacyText: 'Política de Privacidade',
+        termsText: 'Termos de Uso',
+        privacyLinkUrl: '/privacy',
+        termsLinkUrl: '/terms',
+      },
+      footerText: '2025 - Gisele Galvão - Todos os direitos reservados',
     }),
     []
   );
@@ -344,62 +352,150 @@ const QuizModularPage: React.FC = () => {
 
     return (
       <section aria-labelledby="quiz-title" className="p-6">
-        <header className="text-center mb-6">
+        {/* Header do quiz-intro-header */}
+        <div className="max-w-2xl mx-auto bg-[#F8F9FA] text-center p-6 rounded-lg shadow-sm mb-4">
           <img
             src={step1Config.logoUrl}
-            alt="Logo"
+            alt="Logo Gisele Galvão"
             width={96}
             height={96}
             className="mx-auto mb-3"
             loading="eager"
             decoding="async"
           />
-          <h1 id="quiz-title" className="text-2xl md:text-3xl font-semibold text-stone-800">
-            {step1Config.title}
-          </h1>
-          {step1Config.subtitle && <p className="text-stone-600 mt-1">{step1Config.subtitle}</p>}
-        </header>
+        </div>
 
-        <form className="max-w-md mx-auto" onSubmit={handleSubmit} noValidate>
-          <label htmlFor="user-name" className="block text-sm font-medium text-stone-700 mb-1">
-            Seu nome
-          </label>
-          <input
-            id="user-name"
-            name="userName"
-            type="text"
-            autoComplete="given-name"
-            placeholder="Digite seu primeiro nome"
-            className="w-full border-2 border-[#B89B7A] rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#B89B7A]/40"
-            value={name}
-            onChange={e => setName(e.target.value)}
-            aria-invalid={!isValid}
-            aria-describedby={!isValid ? 'name-help' : undefined}
-          />
-          {!isValid && (
-            <p id="name-help" className="text-sm text-stone-500 mt-2">
-              {step1Config.requiredMessage}
-            </p>
-          )}
-
-          <button
-            id="intro-cta-button"
-            type="submit"
-            disabled={!isValid}
-            className={cn(
-              'mt-4 w-full px-4 py-3 rounded-md font-medium transition-colors',
-              isValid
-                ? 'bg-gradient-to-r from-[#B89B7A] to-[#8B7355] text-white'
-                : 'bg-stone-200 text-stone-400 cursor-not-allowed'
-            )}
+        {/* Título estilizado (text block) */}
+        <div className="max-w-2xl mx-auto text-center mb-2">
+          <h1
+            id="quiz-title"
+            className="text-3xl md:text-4xl font-bold leading-tight"
+            style={{ color: '#432818' }}
           >
-            {step1Config.ctaText}
-          </button>
+            <span
+              style={{ color: '#B89B7A', fontWeight: 700, fontFamily: 'Playfair Display, serif' }}
+            >
+              Chega
+            </span>{' '}
+            <span style={{ fontFamily: 'Playfair Display, serif' }}>
+              de um guarda-roupa lotado e da sensação de que
+            </span>{' '}
+            <span
+              style={{ color: '#B89B7A', fontWeight: 700, fontFamily: 'Playfair Display, serif' }}
+            >
+              nada combina com você.
+            </span>
+          </h1>
+        </div>
+
+        {/* Imagem de introdução */}
+        <div className="max-w-2xl mx-auto flex justify-center mb-3">
+          <img
+            src={step1Config.introImageUrl}
+            alt=""
+            className="object-cover rounded-xl"
+            loading="lazy"
+            decoding="async"
+            style={{ maxWidth: '300px', height: 'auto' }}
+          />
+        </div>
+
+        {/* Barra decorativa */}
+        <div className="max-w-2xl mx-auto flex justify-center mb-6">
+          <div
+            aria-hidden="true"
+            style={{
+              width: 'min(640px, 100%)',
+              height: 4,
+              borderRadius: 3,
+              background: 'linear-gradient(90deg, #B89B7A 0%, #D4C2A8 50%, #B89B7A 100%)',
+              boxShadow: '0 1px 2px rgba(0,0,0,0.12)',
+            }}
+          />
+        </div>
+
+        {/* Formulário (form-container + form-input + button-inline) */}
+        <form className="max-w-2xl mx-auto" onSubmit={handleSubmit} noValidate>
+          <div className="bg-white rounded-lg p-4">
+            <label
+              htmlFor="user-name"
+              className="block text-sm font-medium mb-1"
+              style={{ color: '#432818' }}
+            >
+              NOME
+            </label>
+            <input
+              id="user-name"
+              name="userName"
+              type="text"
+              autoComplete="given-name"
+              placeholder="Digite seu primeiro nome aqui..."
+              className="w-full rounded-md px-4 py-3 focus:outline-none focus:ring-2"
+              style={{
+                backgroundColor: '#FFFFFF',
+                border: '2px solid #B89B7A',
+                color: '#432818',
+                borderRadius: 8,
+                fontSize: 16,
+              }}
+              value={name}
+              onChange={e => setName(e.target.value)}
+              aria-invalid={!isValid}
+              aria-describedby={!isValid ? 'name-help' : undefined}
+              required
+            />
+            {!isValid && (
+              <p id="name-help" className="text-sm mt-2" style={{ color: '#9CA3AF' }}>
+                {step1Config.requiredMessage}
+              </p>
+            )}
+
+            <button
+              id="intro-cta-button"
+              type="submit"
+              disabled={!isValid}
+              className={cn('mt-4 w-full px-4 py-3 rounded-md font-medium transition-opacity')}
+              style={{
+                backgroundColor: isValid ? '#B89B7A' : '#E7E5E4',
+                color: isValid ? '#FFFFFF' : '#A8A29E',
+                border: '1px solid #B89B7A',
+                borderRadius: 8,
+              }}
+            >
+              {step1Config.ctaText}
+            </button>
+          </div>
 
           <noscript>
-            <p className="text-xs text-stone-500 mt-2">Ative o JavaScript para continuar o quiz.</p>
+            <p className="text-xs mt-2" style={{ color: '#9CA3AF' }}>
+              Ative o JavaScript para continuar o quiz.
+            </p>
           </noscript>
         </form>
+
+        {/* Aviso legal */}
+        <div className="max-w-2xl mx-auto text-center mt-6" style={{ color: '#9CA3AF' }}>
+          <p className="text-xs">
+            {step1Config.legal.text}{' '}
+            <a
+              href={step1Config.legal.privacyLinkUrl}
+              className="underline"
+              style={{ color: '#B89B7A' }}
+            >
+              {step1Config.legal.privacyText}
+            </a>{' '}
+            e{' '}
+            <a
+              href={step1Config.legal.termsLinkUrl}
+              className="underline"
+              style={{ color: '#B89B7A' }}
+            >
+              {step1Config.legal.termsText}
+            </a>
+            .
+          </p>
+          <p className="text-xs mt-2">{step1Config.footerText}</p>
+        </div>
       </section>
     );
   };
