@@ -194,6 +194,13 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
     };
   }, [actions]);
 
+  // Expor etapa atual globalmente para unificar comportamento de blocos (produção/edição)
+  useEffect(() => {
+    try {
+      (window as any).__quizCurrentStep = safeCurrentStep;
+    } catch {}
+  }, [safeCurrentStep]);
+
   // componentes disponíveis - ideal extrair para config
   const availableComponents = useMemo(
     () => [
