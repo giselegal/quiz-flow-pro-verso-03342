@@ -143,9 +143,23 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
 
   // Collision detection strategy com assinatura correta
   const collisionDetectionStrategy = useCallback((args: any) => {
-    // Primeiro tente uma interseção retangular direta (melhor para detectar drop zones
-    // e listas verticais). Se não houver colisões, tente pointerWithin (cursor dentro)
-    // e por fim fallback para closestCenter.
+    // Para itens da sidebar, priorize pointerWithin para "enxergar" o canvas e zonas grandes
+    try {
+      const activeType = extractDragData(args?.active)?.type;
+      if (activeType === 'sidebar-component') {
+        const pointerCollisions = pointerWithin(args);
+        if (pointerCollisions && pointerCollisions.length > 0) return pointerCollisions;
+        // fallback seguro
+        return closestCenter(args);
+      }
+    } catch (err) {
+      if (process.env.NODE_ENV === 'development') {
+        // eslint-disable-next-line no-console
+        console.debug('collisionDetection (sidebar) erro:', err);
+      }
+    }
+
+    // Para reordenação de blocos do canvas, mantenha estratégia mais precisa
     try {
       const collisions = rectIntersection(args);
       if (collisions && collisions.length > 0) return collisions;
