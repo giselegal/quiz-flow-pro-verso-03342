@@ -138,35 +138,6 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
   const autoAdvanceScheduledRef = React.useRef(false);
   const autoAdvanceTimerRef = React.useRef<number | null>(null);
 
-  // Cleanup timers on unmount to avoid dangling auto-advance after navigation
-  React.useEffect(() => {
-    // Add global listener so other components (EditorProvider, navigation handlers)
-    // can dispatch 'cancel-auto-advance' to ensure all pending timers are cleared.
-    const handleCancel = () => {
-      if (autoAdvanceTimerRef.current) {
-        try {
-          window.clearTimeout(autoAdvanceTimerRef.current);
-        } catch {}
-        autoAdvanceTimerRef.current = null;
-      }
-      if (previewAutoAdvanceTimerRef.current) {
-        try {
-          window.clearTimeout(previewAutoAdvanceTimerRef.current);
-        } catch {}
-        previewAutoAdvanceTimerRef.current = null;
-      }
-      autoAdvanceScheduledRef.current = false;
-      previewAutoAdvanceRef.current = false;
-    };
-
-    window.addEventListener('cancel-auto-advance', handleCancel as EventListener);
-
-    return () => {
-      handleCancel();
-      window.removeEventListener('cancel-auto-advance', handleCancel as EventListener);
-    };
-  }, []);
-
   const {
     question: questionProp,
     // questionId, // unused
@@ -300,41 +271,6 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
     }
   })();
 
-  // 📊 Cálculo de progresso/validação para renderização (contador e feedback)
-  const globalStep = (window as any)?.__quizCurrentStep;
-  const stepCandidate = Number.isFinite(Number(currentStepFromEditor))
-    ? Number(currentStepFromEditor)
-    : Number(globalStep);
-  const stepNum = Number.isFinite(stepCandidate) && stepCandidate > 0 ? stepCandidate : NaN;
-  const stepValidForRules = Number.isFinite(stepNum);
-  // Allow per-block phase configuration via properties.phaseConfig for NOCODE overrides
-  const phaseConfig = (block?.properties as any)?.phaseConfig || {};
-  const scoringConfig = phaseConfig.scoring || {};
-  const strategicConfig = phaseConfig.strategic || {};
-
-  const isScoringPhaseRender = stepValidForRules && stepNum >= 2 && stepNum <= 11;
-  const isStrategicPhaseRender = stepValidForRules && stepNum >= 13 && stepNum <= 18;
-
-  const effectiveRequiredSelectionsRender = isScoringPhaseRender
-    ? (scoringConfig.requiredSelections ?? 3)
-    : isStrategicPhaseRender
-      ? (strategicConfig.requiredSelections ?? 1)
-      : requiredSelections || minSelections || 1;
-  const currentSelectionCount = isPreviewMode
-    ? previewSelections.length
-    : (selectedOptions || []).length;
-  const hasRequiredSelectionsRender =
-    currentSelectionCount >= (effectiveRequiredSelectionsRender || 1);
-  const isAdvancingNow = isPreviewMode
-    ? previewAutoAdvanceRef.current
-    : autoAdvanceScheduledRef.current;
-
-  // Flags de UI (derivadas das propriedades do bloco)
-  const showSelectionCountRender = Boolean((block?.properties as any)?.showSelectionCount);
-  const showValidationFeedbackRender = Boolean((block?.properties as any)?.showValidationFeedback);
-  const customValidationMessage: string | undefined = (block?.properties as any)
-    ?.validationMessage as string | undefined;
-
   const handleOptionSelect = (optionId: string) => {
     if (isPreviewMode) {
       // Preview mode: Handle selection with real behavior
@@ -391,16 +327,11 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       const isValidStep = Number.isFinite(Number(step));
       const isScoringPhase = isValidStep && Number(step) >= 2 && Number(step) <= 11; // 3 obrigatórias
       const isStrategicPhase = isValidStep && Number(step) >= 13 && Number(step) <= 18; // 1 obrigatória
-      // runtime phase config overrides
-      const runtimeScoringCfg = (block?.properties as any)?.phaseConfig?.scoring || {};
-      const runtimeStrategicCfg = (block?.properties as any)?.phaseConfig?.strategic || {};
       const effectiveRequiredSelections = isScoringPhase
-        ? (runtimeScoringCfg.requiredSelections ?? 3)
+        ? 3
         : isStrategicPhase
-          ? (runtimeStrategicCfg.requiredSelections ?? 1)
+          ? 1
           : requiredSelections || minSelections || 1;
-
-      const scoringAutoAdvance = isScoringPhase ? (runtimeScoringCfg.autoAdvance ?? true) : false;
 
       const hasMinSelections = newSelections.length >= (minSelections || 1);
       const hasRequiredSelections = newSelections.length >= effectiveRequiredSelections;
@@ -417,7 +348,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
         };
       });
 
-      if (isScoringPhase && hasRequiredSelections && onNext && scoringAutoAdvance) {
+      if (isScoringPhase && hasRequiredSelections && onNext) {
         console.log('🚀 OptionsGrid (preview): Auto-advancing after selection', newSelections);
 
         if (onStepComplete) {
@@ -461,56 +392,32 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
         }
       }
     } else {
-      // Editor mode: Update properties, emit events AND reflect selection visually
+      // Editor mode: Update properties and emit validation event for editor UX
       let newSelections: string[];
       if (multipleSelection) {
         const currentSelections = selectedOptions || [];
-        if (currentSelections.includes(optionId)) {
-          newSelections = currentSelections.filter((id: string) => id !== optionId);
-        } else {
-          // Respeitar limite máximo de seleções
-          if (currentSelections.length >= (maxSelections || 1)) {
-            newSelections = currentSelections; // não adicionar além do limite
-          } else {
-            newSelections = [...currentSelections, optionId];
-          }
-        }
+        newSelections = currentSelections.includes(optionId)
+          ? currentSelections.filter((id: string) => id !== optionId)
+          : [...currentSelections, optionId];
         onPropertyChange?.('selectedOptions', newSelections);
       } else {
-        const currentSelection = selectedOptions?.[0] || null;
-        if (currentSelection === optionId && allowDeselection) {
-          newSelections = [];
-          onPropertyChange?.('selectedOption', null);
-          onPropertyChange?.('selectedOptions', []);
-        } else {
-          newSelections = [optionId];
-          onPropertyChange?.('selectedOption', optionId);
-          onPropertyChange?.('selectedOptions', [optionId]);
-        }
+        newSelections = [optionId];
+        onPropertyChange?.('selectedOption', optionId);
       }
-      // Calcula regras por etapa (com fallback para produção via window.__quizCurrentStep)
-      const globalStep = (window as any)?.__quizCurrentStep;
-      const stepCandidate = Number.isFinite(Number(currentStepFromEditor))
-        ? Number(currentStepFromEditor)
-        : Number(globalStep);
-      const step = Number.isFinite(stepCandidate) && stepCandidate > 0 ? stepCandidate : NaN;
+      // Calcula regras por etapa
+      const step = Number(currentStepFromEditor ?? NaN);
       const isValidStep = Number.isFinite(step);
       const isScoringPhase = isValidStep && step >= 2 && step <= 11; // 3 seleções obrigatórias + autoavanço
       const isStrategicPhase = isValidStep && step >= 13 && step <= 18; // 1 seleção obrigatória, sem autoavanço
 
-      // runtime overrides from block properties
-      const runtimeScoringCfgEditor = (block?.properties as any)?.phaseConfig?.scoring || {};
-      const runtimeStrategicCfgEditor = (block?.properties as any)?.phaseConfig?.strategic || {};
+      // Seleções obrigatórias efetivas por fase
       const effectiveRequiredSelections = isScoringPhase
-        ? (runtimeScoringCfgEditor.requiredSelections ?? 3)
+        ? 3
         : isStrategicPhase
-          ? (runtimeStrategicCfgEditor.requiredSelections ?? 1)
+          ? 1
           : requiredSelections || minSelections || 1;
 
       const hasRequiredSelections = newSelections.length >= effectiveRequiredSelections;
-      const scoringAutoAdvanceEditor = isScoringPhase
-        ? (runtimeScoringCfgEditor.autoAdvance ?? true)
-        : false;
 
       // Emitir evento global para que o EditorStageManager possa refletir validação visual
       window.dispatchEvent(
@@ -526,7 +433,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       // Autoavanço somente nas etapas 2–11, ao atingir a última seleção obrigatória
       if (isScoringPhase) {
         // Evitar múltiplos disparos se usuário clicar rapidamente
-        if (hasRequiredSelections && !autoAdvanceScheduledRef.current && scoringAutoAdvanceEditor) {
+        if (hasRequiredSelections && !autoAdvanceScheduledRef.current) {
           autoAdvanceScheduledRef.current = true;
 
           // Ativa visualmente e funcionalmente o botão "Avançar" via evento acima,
@@ -598,7 +505,6 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       onClick={onClick}
       data-block-id={block.id}
       data-block-type={block.type}
-      data-component="OptionsGridBlock"
     >
       {/* Título interno opcional: só renderiza se existir e for permitido */}
       {question && showQuestionTitle && (
@@ -609,70 +515,30 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
         className={`grid ${gridColsClass} ${blockClassName || ''}`}
         style={{ gap: `${gridGap}px` }}
       >
-        {(options || []).map((opt: any) => {
-          const isSelectedPreview = isPreviewMode ? previewSelections.includes(opt.id) : false;
-          const isSelectedEditor = !isPreviewMode
-            ? (selectedOptions || []).includes?.(opt.id)
-            : false;
-          const isSelected = isPreviewMode ? isSelectedPreview : isSelectedEditor;
-
-          return (
-            <div
-              key={opt.id}
-              className={
-                `rounded-lg border bg-white p-4 transition-all duration-200 cursor-pointer ${cardLayoutClass} ` +
-                (isSelected
-                  ? 'border-amber-400 shadow-[0_10px_25px_rgba(184,155,122,0.35)] translate-y-[-1px]'
-                  : 'border-neutral-200 hover:shadow-md')
-              }
-              onClick={() => handleOptionSelect(opt.id)}
-              data-selected={isSelected ? 'true' : 'false'}
-            >
-              {opt.imageUrl && showImages && (
-                <img
-                  src={opt.imageUrl}
-                  alt={opt.text || 'opção'}
-                  className={`object-cover rounded-md flex-shrink-0 ${imageOrderClass}`}
-                  width={imgW}
-                  height={imgH}
-                  style={{ width: `${imgW}px`, height: `${imgH}px` }}
-                  loading="lazy"
-                  decoding="async"
-                />
-              )}
-              <p
-                className={`${imageLayout === 'horizontal' ? 'flex-1' : 'text-center'} font-medium`}
-              >
-                {opt.text}
-              </p>
-            </div>
-          );
-        })}
-      </div>
-
-      {(showSelectionCountRender || showValidationFeedbackRender) &&
-        (isScoringPhaseRender || isStrategicPhaseRender) && (
-          <div className="mt-4 text-center text-sm text-stone-600">
-            {showSelectionCountRender && (
-              <span>
-                {currentSelectionCount}/{effectiveRequiredSelectionsRender} selecionadas
-                {isScoringPhaseRender && hasRequiredSelectionsRender && isAdvancingNow
-                  ? ' — avançando…'
-                  : ''}
-              </span>
+        {(options || []).map((opt: any) => (
+          <div
+            key={opt.id}
+            className={`rounded-lg border border-neutral-200 bg-white p-4 hover:shadow-md transition-all duration-200 cursor-pointer ${cardLayoutClass}`}
+            onClick={() => handleOptionSelect(opt.id)}
+          >
+            {opt.imageUrl && showImages && (
+              <img
+                src={opt.imageUrl}
+                alt={opt.text || 'opção'}
+                className={`object-cover rounded-md flex-shrink-0 ${imageOrderClass}`}
+                width={imgW}
+                height={imgH}
+                style={{ width: `${imgW}px`, height: `${imgH}px` }}
+                loading="lazy"
+                decoding="async"
+              />
             )}
-            {showValidationFeedbackRender && !hasRequiredSelectionsRender && (
-              <div className="mt-1 text-rose-600">
-                {typeof customValidationMessage === 'string'
-                  ? (customValidationMessage as string).replace(
-                      '{required}',
-                      String(effectiveRequiredSelectionsRender)
-                    )
-                  : `Selecione ${effectiveRequiredSelectionsRender} opção(ões)`}
-              </div>
-            )}
+            <p className={`${imageLayout === 'horizontal' ? 'flex-1' : 'text-center'} font-medium`}>
+              {opt.text}
+            </p>
           </div>
-        )}
+        ))}
+      </div>
     </div>
   );
 };

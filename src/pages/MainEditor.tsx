@@ -17,15 +17,6 @@ import { ErrorBoundary } from '../components/editor/ErrorBoundary';
  */
 const MainEditor: React.FC = () => {
   const enableLovablePreview = (import.meta as any)?.env?.VITE_LOVABLE_PREVIEW === 'true';
-  // Desabilita qualquer auto-scroll/sync no editor
-  React.useEffect(() => {
-    (window as any).__DISABLE_AUTO_SCROLL = true;
-    (window as any).__DISABLE_SCROLL_SYNC = true;
-    return () => {
-      (window as any).__DISABLE_AUTO_SCROLL = false;
-      (window as any).__DISABLE_SCROLL_SYNC = false;
-    };
-  }, []);
   return (
     <div>
       <ErrorBoundary>
