@@ -3,6 +3,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { EditorProvider } from '@/context/EditorContext';
 import { useResultPageConfig } from '@/hooks/useResultPageConfig';
 import React, { useState } from 'react';
+import ComponentsSidebar from '../components/ComponentsSidebar';
+import PropertiesPanel from '../properties/PropertiesPanel';
 // EditorCanvas module removed in refactor; provide a lightweight placeholder
 const EditorCanvas: React.FC<any> = () => {
   return (
@@ -11,8 +13,6 @@ const EditorCanvas: React.FC<any> = () => {
     </div>
   );
 };
-import PropertiesPanel from '../properties/PropertiesPanel';
-import ComponentsSidebar from '../components/ComponentsSidebar';
 
 interface UnifiedEditorLayoutProps {
   className?: string;

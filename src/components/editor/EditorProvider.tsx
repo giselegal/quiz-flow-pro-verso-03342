@@ -563,7 +563,8 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     (json: string) => {
       try {
         const importedState = JSON.parse(json) as EditorState;
-        setState(importedState);
+  // Use functional updater form to avoid stale closures and be consistent
+  setState(() => importedState);
       } catch (error) {
         console.error('Failed to import JSON:', error);
         throw new Error('Invalid JSON format');

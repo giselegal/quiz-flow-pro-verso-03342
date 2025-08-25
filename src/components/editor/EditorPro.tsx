@@ -1,3 +1,4 @@
+import EnhancedUniversalPropertiesPanelFixed from '@/components/universal/EnhancedUniversalPropertiesPanelFixed';
 import {
   closestCenter,
   DndContext,
@@ -11,7 +12,6 @@ import {
 } from '@dnd-kit/core';
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import React, { Suspense, useCallback, useEffect, useMemo, useState } from 'react';
-import EditorCanvasArea from './EditorCanvasArea';
 import { getBlocksForStep } from '../../config/quizStepsComplete';
 import { cn } from '../../lib/utils';
 import { Block } from '../../types/editor';
@@ -23,8 +23,8 @@ import {
 } from '../../utils/dragDropUtils';
 import { createBlockFromComponent, devLog } from '../../utils/editorUtils';
 import { useNotification } from '../ui/Notification';
-import EnhancedUniversalPropertiesPanelFixed from '@/components/universal/EnhancedUniversalPropertiesPanelFixed';
 import { DraggableComponentItem } from './dnd/DraggableComponentItem';
+import EditorCanvasArea from './EditorCanvasArea';
 import { useEditor } from './EditorProvider';
 
 export const EditorPro: React.FC<{ className?: string }> = ({ className = '' }) => {
@@ -36,10 +36,10 @@ export const EditorPro: React.FC<{ className?: string }> = ({ className = '' }) 
 
   const safeCurrentStep = state.currentStep || 1;
   const currentStepKey = `step-${safeCurrentStep}`;
-  const currentStepData = useMemo(() => getBlocksForStep(safeCurrentStep, state.stepBlocks) || [], [
-    safeCurrentStep,
-    state.stepBlocks,
-  ]);
+  const currentStepData = useMemo(
+    () => getBlocksForStep(safeCurrentStep, state.stepBlocks) || [],
+    [safeCurrentStep, state.stepBlocks]
+  );
 
   const stepHasBlocks = useMemo(() => {
     const map: Record<number, boolean> = {};
@@ -118,7 +118,9 @@ export const EditorPro: React.FC<{ className?: string }> = ({ className = '' }) 
 
   // Definir validação inicial da etapa no editor (paridade com /quiz)
   useEffect(() => {
-    const hasQuestion = currentStepData.some((b: Block) => b.type === 'options-grid' || b.type === 'form-container');
+    const hasQuestion = currentStepData.some(
+      (b: Block) => b.type === 'options-grid' || b.type === 'form-container'
+    );
     setEditorStepValidation(prev => ({ ...prev, [safeCurrentStep]: !hasQuestion }));
   }, [safeCurrentStep, currentStepData]);
 
@@ -131,7 +133,8 @@ export const EditorPro: React.FC<{ className?: string }> = ({ className = '' }) 
     };
     const handleInputChange = (ev: Event) => {
       const e = ev as CustomEvent<{ value?: string; valid?: boolean }>;
-      const ok = typeof e.detail?.value === 'string' ? e.detail.value.trim().length > 0 : !!e.detail?.valid;
+      const ok =
+        typeof e.detail?.value === 'string' ? e.detail.value.trim().length > 0 : !!e.detail?.valid;
       setEditorStepValidation(prev => ({ ...prev, [safeCurrentStep]: ok }));
     };
     window.addEventListener('quiz-selection-change', handleSelectionChange as EventListener);
@@ -242,19 +245,24 @@ export const EditorPro: React.FC<{ className?: string }> = ({ className = '' }) 
 
   const groupedComponents = useMemo(
     () =>
-      availableComponents.reduce((acc, c) => {
-        if (!acc[c.category]) acc[c.category] = [];
-        acc[c.category].push(c);
-        return acc;
-      }, {} as Record<string, typeof availableComponents>),
+      availableComponents.reduce(
+        (acc, c) => {
+          if (!acc[c.category]) acc[c.category] = [];
+          acc[c.category].push(c);
+          return acc;
+        },
+        {} as Record<string, typeof availableComponents>
+      ),
     [availableComponents]
   );
 
   const getStepAnalysis = (step: number) => {
     if (step === 1) return { type: '📝', label: 'Captura', desc: 'Nome do usuário' };
-    if (step >= 2 && step <= 11) return { type: '🎯', label: 'Questão', desc: 'Pontuação de estilo' };
+    if (step >= 2 && step <= 11)
+      return { type: '🎯', label: 'Questão', desc: 'Pontuação de estilo' };
     if (step === 12) return { type: '🔄', label: 'Transição', desc: 'Para estratégicas' };
-    if (step >= 13 && step <= 18) return { type: '📊', label: 'Estratégica', desc: 'Tracking sem pontuação' };
+    if (step >= 13 && step <= 18)
+      return { type: '📊', label: 'Estratégica', desc: 'Tracking sem pontuação' };
     if (step === 19) return { type: '⏳', label: 'Calculando', desc: 'Processamento' };
     if (step === 20) return { type: '🎉', label: 'Resultado', desc: 'Estilo personalizado' };
     if (step === 21) return { type: '💰', label: 'Oferta', desc: 'CTA de conversão' };
@@ -279,7 +287,8 @@ export const EditorPro: React.FC<{ className?: string }> = ({ className = '' }) 
     if (process.env.NODE_ENV === 'development') devLog('Drag start', dragData);
   }, []);
 
-  const handleDragEnd = useCallback((event: DragEndEvent) => {
+  const handleDragEnd = useCallback(
+    (event: DragEndEvent) => {
       const { active, over } = event;
       console.log('🎯 DRAG END CAPTURADO!', {
         activeId: active.id,
@@ -290,7 +299,10 @@ export const EditorPro: React.FC<{ className?: string }> = ({ className = '' }) 
       if (!over) {
         console.log('❌ Drop cancelado - sem alvo');
         const dragData = extractDragData(active);
-        const feedback = getDragFeedback(dragData, { isValid: false, message: 'Sem alvo de drop' } as any);
+        const feedback = getDragFeedback(dragData, {
+          isValid: false,
+          message: 'Sem alvo de drop',
+        } as any);
         notification?.warning?.(feedback.message);
         return;
       }
@@ -319,7 +331,8 @@ export const EditorPro: React.FC<{ className?: string }> = ({ className = '' }) 
               let targetIndex = currentStepData.length;
               if (typeof over.id === 'string') {
                 const m = over.id.match(/^drop-zone-(\d+)$/);
-                if (m) targetIndex = Math.max(0, Math.min(parseInt(m[1], 10), currentStepData.length));
+                if (m)
+                  targetIndex = Math.max(0, Math.min(parseInt(m[1], 10), currentStepData.length));
                 else if (over.id === 'canvas-drop-zone') targetIndex = currentStepData.length;
                 else {
                   const overIndex = currentStepData.findIndex(b => b.id === over.id);
@@ -328,12 +341,16 @@ export const EditorPro: React.FC<{ className?: string }> = ({ className = '' }) 
               }
               actions.addBlockAtIndex(currentStepKey, newBlock, targetIndex);
               actions.setSelectedBlockId(newBlock.id);
-              notification?.success?.(`Componente ${dragData.blockType} adicionado na posição ${targetIndex}!`);
+              notification?.success?.(
+                `Componente ${dragData.blockType} adicionado na posição ${targetIndex}!`
+              );
             }
             break;
           case 'reorder':
             if (dragData.type === 'canvas-block') {
-              const activeIndex = currentStepData.findIndex(block => block.id === String(active.id));
+              const activeIndex = currentStepData.findIndex(
+                block => block.id === String(active.id)
+              );
               if (activeIndex === -1) break;
 
               let targetIndex = activeIndex;
@@ -342,7 +359,10 @@ export const EditorPro: React.FC<{ className?: string }> = ({ className = '' }) 
               } else if (typeof over.id === 'string') {
                 const m = over.id.match(/^drop-zone-(\d+)$/);
                 if (m) {
-                  targetIndex = Math.max(0, Math.min(parseInt(m[1], 10), currentStepData.length - 1));
+                  targetIndex = Math.max(
+                    0,
+                    Math.min(parseInt(m[1], 10), currentStepData.length - 1)
+                  );
                 } else {
                   const overIndex = currentStepData.findIndex(block => block.id === over.id);
                   if (overIndex !== -1) targetIndex = overIndex;
@@ -356,129 +376,163 @@ export const EditorPro: React.FC<{ className?: string }> = ({ className = '' }) 
             }
             break;
           default:
-            if (process.env.NODE_ENV === 'development') devLog('Ação de drop não implementada:', validation.action);
+            if (process.env.NODE_ENV === 'development')
+              devLog('Ação de drop não implementada:', validation.action);
         }
       } catch (error) {
         console.error('Erro durante drag & drop:', error);
         notification?.error?.('Erro ao processar drag & drop');
       }
-    }, [actions, currentStepData, currentStepKey, notification]);
+    },
+    [actions, currentStepData, currentStepKey, notification]
+  );
 
-    /* -------------------------
+  /* -------------------------
        Sub-componentes locais
        ------------------------- */
 
-    const StepSidebar: React.FC = () => (
-      <div className="w-[200px] bg-white border-r border-gray-200 flex flex-col">
-        <div className="p-4 border-b border-gray-200">
-          <h3 className="font-semibold text-sm text-gray-900">Etapas do Quiz</h3>
-          <p className="text-xs text-gray-500 mt-1">21 etapas configuradas</p>
-        </div>
-
-        <div className="flex-1 overflow-y-auto">
-          <div className="p-2 space-y-1">
-            {Array.from({ length: 21 }, (_, i) => i + 1).map(step => {
-              const analysis = getStepAnalysis(step);
-              const isActive = step === safeCurrentStep;
-              const hasBlocks = stepHasBlocks[step];
-
-              return (
-                <button
-                  key={step}
-                  type="button"
-                  onClick={() => handleStepSelect(step)}
-                  className={cn('w-full text-left p-2 rounded-md text-xs transition-colors', isActive ? 'bg-blue-100 border-blue-300 text-blue-900' : 'hover:bg-gray-50 text-gray-700')}
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm">{analysis.type}</span>
-                      <span className="font-medium">Etapa {step}</span>
-                    </div>
-                    {hasBlocks && <span className="w-2 h-2 bg-green-500 rounded-full" />}
-                  </div>
-                  <div className="text-gray-600 mt-1">
-                    <div className="font-medium">{analysis.label}</div>
-                    <div className="text-xs">{analysis.desc}</div>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        <div className="p-3 border-t border-gray-200 text-xs text-gray-500">
-          <div className="flex items-center justify-between">
-            <span>Etapa atual:</span>
-            <span className="font-medium">{safeCurrentStep}/21</span>
-          </div>
-        </div>
+  const StepSidebar: React.FC = () => (
+    <div className="w-[200px] bg-white border-r border-gray-200 flex flex-col">
+      <div className="p-4 border-b border-gray-200">
+        <h3 className="font-semibold text-sm text-gray-900">Etapas do Quiz</h3>
+        <p className="text-xs text-gray-500 mt-1">21 etapas configuradas</p>
       </div>
-    );
 
-    const ComponentsSidebar: React.FC = () => (
-      <div className="w-[280px] bg-white border-r border-gray-200 flex flex-col">
-        <div className="p-4 border-b border-gray-200">
-          <h3 className="font-semibold text-sm text-gray-900">Biblioteca de Componentes</h3>
-          <p className="text-xs text-gray-500 mt-1">{availableComponents.length} componentes disponíveis</p>
-        </div>
+      <div className="flex-1 overflow-y-auto">
+        <div className="p-2 space-y-1">
+          {Array.from({ length: 21 }, (_, i) => i + 1).map(step => {
+            const analysis = getStepAnalysis(step);
+            const isActive = step === safeCurrentStep;
+            const hasBlocks = stepHasBlocks[step];
 
-        <div className="flex-1 overflow-y-auto">
-          <div className="p-3">
-            {Object.entries(groupedComponents).map(([category, components]) => (
-              <div key={category} className="mb-4">
-                <h4 className="text-xs font-semibold text-gray-700 mb-2 uppercase tracking-wide">{category}</h4>
-                <div className="space-y-2">
-                  {components.map(component => (
-                    <DraggableComponentItem
-                      key={component.type}
-                      blockType={component.type}
-                      title={component.name}
-                      description={component.description}
-                      icon={<span className="text-lg">{component.icon}</span>}
-                      category={component.category}
-                      className="bg-gray-50 hover:bg-gray-100 border border-gray-200 hover:border-blue-300"
-                    />
-                  ))}
+            return (
+              <button
+                key={step}
+                type="button"
+                onClick={() => handleStepSelect(step)}
+                className={cn(
+                  'w-full text-left p-2 rounded-md text-xs transition-colors',
+                  isActive
+                    ? 'bg-blue-100 border-blue-300 text-blue-900'
+                    : 'hover:bg-gray-50 text-gray-700'
+                )}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm">{analysis.type}</span>
+                    <span className="font-medium">Etapa {step}</span>
+                  </div>
+                  {hasBlocks && <span className="w-2 h-2 bg-green-500 rounded-full" />}
                 </div>
-              </div>
-            ))}
-          </div>
+                <div className="text-gray-600 mt-1">
+                  <div className="font-medium">{analysis.label}</div>
+                  <div className="text-xs">{analysis.desc}</div>
+                </div>
+              </button>
+            );
+          })}
         </div>
       </div>
-    );
 
-    
-
-    // Coluna de propriedades (direita)
-    const PropertiesColumn: React.FC = () => (
-      <div className="w-[360px] min-w-[300px] bg-white border-l border-gray-200 flex flex-col">
-        {selectedBlock ? (
-          <Suspense fallback={<div className="p-4 text-sm text-gray-600">Carregando propriedades…</div>}>
-            <EnhancedUniversalPropertiesPanelFixed selectedBlock={selectedBlock as any} onUpdate={(blockId: string, updates: Record<string, any>) => actions.updateBlock(currentStepKey, blockId, updates)} onClose={() => actions.setSelectedBlockId(null)} onDelete={(blockId: string) => actions.removeBlock(currentStepKey, blockId)} />
-          </Suspense>
-        ) : (
-          <div className="h-full p-6 text-sm text-gray-600">Seelecione um bloco no canvas para editar suas propriedades.</div>
-        )}
+      <div className="p-3 border-t border-gray-200 text-xs text-gray-500">
+        <div className="flex items-center justify-between">
+          <span>Etapa atual:</span>
+          <span className="font-medium">{safeCurrentStep}/21</span>
+        </div>
       </div>
-    );
+    </div>
+  );
 
-    /* -------------------------
+  const ComponentsSidebar: React.FC = () => (
+    <div className="w-[280px] bg-white border-r border-gray-200 flex flex-col">
+      <div className="p-4 border-b border-gray-200">
+        <h3 className="font-semibold text-sm text-gray-900">Biblioteca de Componentes</h3>
+        <p className="text-xs text-gray-500 mt-1">
+          {availableComponents.length} componentes disponíveis
+        </p>
+      </div>
+
+      <div className="flex-1 overflow-y-auto">
+        <div className="p-3">
+          {Object.entries(groupedComponents).map(([category, components]) => (
+            <div key={category} className="mb-4">
+              <h4 className="text-xs font-semibold text-gray-700 mb-2 uppercase tracking-wide">
+                {category}
+              </h4>
+              <div className="space-y-2">
+                {components.map(component => (
+                  <DraggableComponentItem
+                    key={component.type}
+                    blockType={component.type}
+                    title={component.name}
+                    description={component.description}
+                    icon={<span className="text-lg">{component.icon}</span>}
+                    category={component.category}
+                    className="bg-gray-50 hover:bg-gray-100 border border-gray-200 hover:border-blue-300"
+                  />
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+
+  // Coluna de propriedades (direita)
+  const PropertiesColumn: React.FC = () => (
+    <div className="w-[360px] min-w-[300px] bg-white border-l border-gray-200 flex flex-col">
+      {selectedBlock ? (
+        <Suspense
+          fallback={<div className="p-4 text-sm text-gray-600">Carregando propriedades…</div>}
+        >
+          <EnhancedUniversalPropertiesPanelFixed
+            selectedBlock={selectedBlock as any}
+            onUpdate={(blockId: string, updates: Record<string, any>) =>
+              actions.updateBlock(currentStepKey, blockId, updates)
+            }
+            onClose={() => actions.setSelectedBlockId(null)}
+            onDelete={(blockId: string) => actions.removeBlock(currentStepKey, blockId)}
+          />
+        </Suspense>
+      ) : (
+        <div className="h-full p-6 text-sm text-gray-600">
+          Seelecione um bloco no canvas para editar suas propriedades.
+        </div>
+      )}
+    </div>
+  );
+
+  /* -------------------------
        Render principal
        ------------------------- */
-    return (
-      <>
-        <DndContext sensors={sensors} collisionDetection={collisionDetectionStrategy} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-          <div className={`editor-pro h-screen bg-gray-50 flex ${className}`}>
-            <StepSidebar />
-            <ComponentsSidebar />
-            <EditorCanvasArea safeCurrentStep={safeCurrentStep} viewportWidth={viewportWidth} editorStepValidation={editorStepValidation} currentStepData={currentStepData} state={state} actions={actions} getStepAnalysis={getStepAnalysis} />
-            <PropertiesColumn />
-          </div>
-        </DndContext>
+  return (
+    <>
+      <DndContext
+        sensors={sensors}
+        collisionDetection={collisionDetectionStrategy}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+      >
+        <div className={`editor-pro h-screen bg-gray-50 flex ${className}`}>
+          <StepSidebar />
+          <ComponentsSidebar />
+          <EditorCanvasArea
+            safeCurrentStep={safeCurrentStep}
+            viewportWidth={viewportWidth}
+            editorStepValidation={editorStepValidation}
+            currentStepData={currentStepData}
+            state={state}
+            actions={actions}
+            getStepAnalysis={getStepAnalysis}
+          />
+          <PropertiesColumn />
+        </div>
+      </DndContext>
 
-        {NotificationContainer ? <NotificationContainer /> : null}
-      </>
-    );
-    };
+      {NotificationContainer ? <NotificationContainer /> : null}
+    </>
+  );
+};
 
-    export default EditorPro;
+export default EditorPro;
