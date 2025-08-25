@@ -22,6 +22,11 @@ const isUuid = (v: unknown) =>
   typeof v === 'string' &&
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(v as string);
 
+// Check if a string looks like a block ID (either UUID or nanoid format)
+const isValidBlockId = (v: unknown) =>
+  typeof v === 'string' &&
+  (isUuid(v) || /^block-[\w-]+-[A-Za-z0-9_-]{8}$/.test(v as string));
+
 /**
  * Valida se um drop é válido
  */
@@ -54,7 +59,7 @@ export const validateDrop = (
       overId.startsWith('canvas-');
 
     if (!activeData.blockType) return { isValid: false, reason: 'Componente sem blockType' };
-    if (isOverCanvasArea || isOverExistingBlock || isUuid(overId)) {
+    if (isOverCanvasArea || isOverExistingBlock || isValidBlockId(overId)) {
       return { isValid: true, action: 'add' };
     }
     return { isValid: false, reason: 'Alvo de drop inválido para adicionar' };
@@ -70,7 +75,7 @@ export const validateDrop = (
     const overId = String(over.id);
     const overIsDropZone = overId === 'canvas-drop-zone' || overId.startsWith('drop-zone-');
     const overIsBlock = currentStepBlocks.some(block => String(block.id) === overId);
-    if (overIsDropZone || overIsBlock || isUuid(overId)) {
+    if (overIsDropZone || overIsBlock || isValidBlockId(overId)) {
       return { isValid: true, action: 'reorder' };
     }
     return { isValid: false, reason: 'Posição de drop inválida para reordenação' };

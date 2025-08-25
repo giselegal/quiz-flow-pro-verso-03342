@@ -33,7 +33,7 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
     id: String(block.id),
     data: {
       type: 'canvas-block',
-      blockId: String(block.id),
+      blockId: String(block.id), // Required by validateDrop
       block: block,
     },
   });
