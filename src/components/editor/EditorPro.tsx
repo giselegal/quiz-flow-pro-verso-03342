@@ -1,4 +1,3 @@
-import QuizRunnerShell from '@/components/quiz/QuizRunnerShell';
 import {
   closestCenter,
   DndContext,
@@ -11,7 +10,7 @@ import {
   useSensors,
 } from '@dnd-kit/core';
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
-import React, { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { Suspense, useCallback, useEffect, useMemo, useState } from 'react';
 import EditorCanvasArea from './EditorCanvasArea';
 import { getBlocksForStep } from '../../config/quizStepsComplete';
 import { cn } from '../../lib/utils';
@@ -22,27 +21,73 @@ import {
   logDragEvent,
   validateDrop,
 } from '../../utils/dragDropUtils';
-import {
-  copyToClipboard,
-  createBlockFromComponent,
-  devLog,
-  validateEditorJSON,
-} from '../../utils/editorUtils';
+import { createBlockFromComponent, devLog } from '../../utils/editorUtils';
 import { useNotification } from '../ui/Notification';
-import { CanvasDropZone } from './canvas/CanvasDropZone.simple';
+import EnhancedUniversalPropertiesPanelFixed from '@/components/universal/EnhancedUniversalPropertiesPanelFixed';
 import { DraggableComponentItem } from './dnd/DraggableComponentItem';
 import { useEditor } from './EditorProvider';
-  
+
+const EditorPro: React.FC<{ className?: string }> = ({ className = '' }) => {
+  const { state, actions } = useEditor();
+  const notification = useNotification();
+  const NotificationContainer = (notification as any)?.NotificationContainer ?? null;
+
+  const viewportWidth = '100%';
+
+  const safeCurrentStep = state.currentStep || 1;
+  const currentStepKey = `step-${safeCurrentStep}`;
+  const currentStepData = useMemo(() => getBlocksForStep(safeCurrentStep, state.stepBlocks) || [], [
+    safeCurrentStep,
+    state.stepBlocks,
+  ]);
+
+  const stepHasBlocks = useMemo(() => {
+    const map: Record<number, boolean> = {};
+    for (let i = 1; i <= 21; i++) {
+      map[i] = (getBlocksForStep(i, state.stepBlocks) || []).length > 0;
+    }
+    return map;
+  }, [state.stepBlocks]);
+
+  const selectedBlock = useMemo(() => {
+    const blocks = currentStepData || [];
+    return blocks.find(b => b.id === state.selectedBlockId) || null;
+  }, [currentStepData, state.selectedBlockId]);
+
+  const [editorStepValidation, setEditorStepValidation] = useState<Record<number, boolean>>({});
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+  );
+
+  const collisionDetectionStrategy = useCallback((args: any) => {
+    try {
+      // prefer rectIntersection for neat behaviour, fallback to closestCenter
+      return rectIntersection(args);
+    } catch (err) {
+      return closestCenter(args);
+    }
+  }, []);
+
+  useEffect(() => {
+    const parseStepNumber = (stepId: unknown): number | null => {
+      if (typeof stepId === 'number') return stepId;
+      if (typeof stepId !== 'string') return null;
+      const digits = (stepId as string).replace(/[^0-9]/g, '');
+      const num = parseInt(digits || String(stepId), 10);
+      return Number.isFinite(num) ? num : null;
+    };
 
     const handleNavigate = (ev: Event) => {
       const e = ev as CustomEvent<{ stepId?: string | number; source?: string }>;
       const target = parseStepNumber(e.detail?.stepId);
       if (!target || target < 1 || target > 21) return;
-        // Cancel any pending auto-advance timers before changing step
-        try {
-          window.dispatchEvent(new Event('cancel-auto-advance'));
-        } catch {}
-        actions.setCurrentStep(target);
+      // Cancel any pending auto-advance timers before changing step
+      try {
+        window.dispatchEvent(new Event('cancel-auto-advance'));
+      } catch {}
+      actions.setCurrentStep(target);
       if (process.env.NODE_ENV === 'development') {
         // eslint-disable-next-line no-console
         console.log(
@@ -73,9 +118,7 @@ import { useEditor } from './EditorProvider';
 
   // Definir validação inicial da etapa no editor (paridade com /quiz)
   useEffect(() => {
-    const hasQuestion = currentStepData.some(
-      (b: Block) => b.type === 'options-grid' || b.type === 'form-container'
-    );
+    const hasQuestion = currentStepData.some((b: Block) => b.type === 'options-grid' || b.type === 'form-container');
     setEditorStepValidation(prev => ({ ...prev, [safeCurrentStep]: !hasQuestion }));
   }, [safeCurrentStep, currentStepData]);
 
@@ -88,8 +131,7 @@ import { useEditor } from './EditorProvider';
     };
     const handleInputChange = (ev: Event) => {
       const e = ev as CustomEvent<{ value?: string; valid?: boolean }>;
-      const ok =
-        typeof e.detail?.value === 'string' ? e.detail.value.trim().length > 0 : !!e.detail?.valid;
+      const ok = typeof e.detail?.value === 'string' ? e.detail.value.trim().length > 0 : !!e.detail?.valid;
       setEditorStepValidation(prev => ({ ...prev, [safeCurrentStep]: ok }));
     };
     window.addEventListener('quiz-selection-change', handleSelectionChange as EventListener);
@@ -200,24 +242,19 @@ import { useEditor } from './EditorProvider';
 
   const groupedComponents = useMemo(
     () =>
-      availableComponents.reduce(
-        (acc, c) => {
-          if (!acc[c.category]) acc[c.category] = [];
-          acc[c.category].push(c);
-          return acc;
-        },
-        {} as Record<string, typeof availableComponents>
-      ),
+      availableComponents.reduce((acc, c) => {
+        if (!acc[c.category]) acc[c.category] = [];
+        acc[c.category].push(c);
+        return acc;
+      }, {} as Record<string, typeof availableComponents>),
     [availableComponents]
   );
 
   const getStepAnalysis = (step: number) => {
     if (step === 1) return { type: '📝', label: 'Captura', desc: 'Nome do usuário' };
-    if (step >= 2 && step <= 11)
-      return { type: '🎯', label: 'Questão', desc: 'Pontuação de estilo' };
+    if (step >= 2 && step <= 11) return { type: '🎯', label: 'Questão', desc: 'Pontuação de estilo' };
     if (step === 12) return { type: '🔄', label: 'Transição', desc: 'Para estratégicas' };
-    if (step >= 13 && step <= 18)
-      return { type: '📊', label: 'Estratégica', desc: 'Tracking sem pontuação' };
+    if (step >= 13 && step <= 18) return { type: '📊', label: 'Estratégica', desc: 'Tracking sem pontuação' };
     if (step === 19) return { type: '⏳', label: 'Calculando', desc: 'Processamento' };
     if (step === 20) return { type: '🎉', label: 'Resultado', desc: 'Estilo personalizado' };
     if (step === 21) return { type: '💰', label: 'Oferta', desc: 'CTA de conversão' };
@@ -242,8 +279,7 @@ import { useEditor } from './EditorProvider';
     if (process.env.NODE_ENV === 'development') devLog('Drag start', dragData);
   }, []);
 
-  const handleDragEnd = useCallback(
-    (event: DragEndEvent) => {
+  const handleDragEnd = useCallback((event: DragEndEvent) => {
       const { active, over } = event;
       console.log('🎯 DRAG END CAPTURADO!', {
         activeId: active.id,
@@ -254,10 +290,7 @@ import { useEditor } from './EditorProvider';
       if (!over) {
         console.log('❌ Drop cancelado - sem alvo');
         const dragData = extractDragData(active);
-        const feedback = getDragFeedback(dragData, {
-          isValid: false,
-          message: 'Sem alvo de drop',
-        } as any);
+        const feedback = getDragFeedback(dragData, { isValid: false, message: 'Sem alvo de drop' } as any);
         notification?.warning?.(feedback.message);
         return;
       }
@@ -286,27 +319,21 @@ import { useEditor } from './EditorProvider';
               let targetIndex = currentStepData.length;
               if (typeof over.id === 'string') {
                 const m = over.id.match(/^drop-zone-(\d+)$/);
-                if (m)
-                  targetIndex = Math.max(0, Math.min(parseInt(m[1], 10), currentStepData.length));
+                if (m) targetIndex = Math.max(0, Math.min(parseInt(m[1], 10), currentStepData.length));
                 else if (over.id === 'canvas-drop-zone') targetIndex = currentStepData.length;
                 else {
-                  // Se soltou sobre um bloco, inserir antes dele
                   const overIndex = currentStepData.findIndex(b => b.id === over.id);
                   if (overIndex >= 0) targetIndex = overIndex;
                 }
               }
               actions.addBlockAtIndex(currentStepKey, newBlock, targetIndex);
               actions.setSelectedBlockId(newBlock.id);
-              notification?.success?.(
-                `Componente ${dragData.blockType} adicionado na posição ${targetIndex}!`
-              );
+              notification?.success?.(`Componente ${dragData.blockType} adicionado na posição ${targetIndex}!`);
             }
             break;
           case 'reorder':
             if (dragData.type === 'canvas-block') {
-              const activeIndex = currentStepData.findIndex(
-                block => block.id === String(active.id)
-              );
+              const activeIndex = currentStepData.findIndex(block => block.id === String(active.id));
               if (activeIndex === -1) break;
 
               let targetIndex = activeIndex;
@@ -315,10 +342,7 @@ import { useEditor } from './EditorProvider';
               } else if (typeof over.id === 'string') {
                 const m = over.id.match(/^drop-zone-(\d+)$/);
                 if (m) {
-                  targetIndex = Math.max(
-                    0,
-                    Math.min(parseInt(m[1], 10), currentStepData.length - 1)
-                  );
+                  targetIndex = Math.max(0, Math.min(parseInt(m[1], 10), currentStepData.length - 1));
                 } else {
                   const overIndex = currentStepData.findIndex(block => block.id === over.id);
                   if (overIndex !== -1) targetIndex = overIndex;
@@ -332,426 +356,129 @@ import { useEditor } from './EditorProvider';
             }
             break;
           default:
-            if (process.env.NODE_ENV === 'development')
-              devLog('Ação de drop não implementada:', validation.action);
+            if (process.env.NODE_ENV === 'development') devLog('Ação de drop não implementada:', validation.action);
         }
       } catch (error) {
         console.error('Erro durante drag & drop:', error);
         notification?.error?.('Erro ao processar drag & drop');
       }
-    },
-    [actions, currentStepData, currentStepKey, notification]
-  );
+    }, [actions, currentStepData, currentStepKey, notification]);
 
-  /* -------------------------
-     Sub-componentes locais
-     ------------------------- */
+    /* -------------------------
+       Sub-componentes locais
+       ------------------------- */
 
-  const StepSidebar: React.FC = () => (
-    <div className="w-[200px] bg-white border-r border-gray-200 flex flex-col">
-      <div className="p-4 border-b border-gray-200">
-        <h3 className="font-semibold text-sm text-gray-900">Etapas do Quiz</h3>
-        <p className="text-xs text-gray-500 mt-1">21 etapas configuradas</p>
-      </div>
+    const StepSidebar: React.FC = () => (
+      <div className="w-[200px] bg-white border-r border-gray-200 flex flex-col">
+        <div className="p-4 border-b border-gray-200">
+          <h3 className="font-semibold text-sm text-gray-900">Etapas do Quiz</h3>
+          <p className="text-xs text-gray-500 mt-1">21 etapas configuradas</p>
+        </div>
 
-      <div className="flex-1 overflow-y-auto">
-        <div className="p-2 space-y-1">
-          {Array.from({ length: 21 }, (_, i) => i + 1).map(step => {
-            const analysis = getStepAnalysis(step);
-            const isActive = step === safeCurrentStep;
-            const hasBlocks = stepHasBlocks[step];
+        <div className="flex-1 overflow-y-auto">
+          <div className="p-2 space-y-1">
+            {Array.from({ length: 21 }, (_, i) => i + 1).map(step => {
+              const analysis = getStepAnalysis(step);
+              const isActive = step === safeCurrentStep;
+              const hasBlocks = stepHasBlocks[step];
 
-            return (
-              <button
-                key={step}
-                type="button"
-                onClick={() => handleStepSelect(step)}
-                className={cn(
-                  'w-full text-left p-2 rounded-md text-xs transition-colors',
-                  isActive
-                    ? 'bg-blue-100 border-blue-300 text-blue-900'
-                    : 'hover:bg-gray-50 text-gray-700'
-                )}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm">{analysis.type}</span>
-                    <span className="font-medium">Etapa {step}</span>
+              return (
+                <button
+                  key={step}
+                  type="button"
+                  onClick={() => handleStepSelect(step)}
+                  className={cn('w-full text-left p-2 rounded-md text-xs transition-colors', isActive ? 'bg-blue-100 border-blue-300 text-blue-900' : 'hover:bg-gray-50 text-gray-700')}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm">{analysis.type}</span>
+                      <span className="font-medium">Etapa {step}</span>
+                    </div>
+                    {hasBlocks && <span className="w-2 h-2 bg-green-500 rounded-full" />}
                   </div>
-                  {hasBlocks && <span className="w-2 h-2 bg-green-500 rounded-full" />}
-                </div>
-                <div className="text-gray-600 mt-1">
-                  <div className="font-medium">{analysis.label}</div>
-                  <div className="text-xs">{analysis.desc}</div>
-                </div>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      <div className="p-3 border-t border-gray-200 text-xs text-gray-500">
-        <div className="flex items-center justify-between">
-          <span>Etapa atual:</span>
-          <span className="font-medium">{safeCurrentStep}/21</span>
-        </div>
-      </div>
-    </div>
-  );
-
-  const ComponentsSidebar: React.FC = () => (
-    <div className="w-[280px] bg-white border-r border-gray-200 flex flex-col">
-      <div className="p-4 border-b border-gray-200">
-        <h3 className="font-semibold text-sm text-gray-900">Biblioteca de Componentes</h3>
-        <p className="text-xs text-gray-500 mt-1">
-          {availableComponents.length} componentes disponíveis
-        </p>
-      </div>
-
-      <div className="flex-1 overflow-y-auto">
-        <div className="p-3">
-          {Object.entries(groupedComponents).map(([category, components]) => (
-            <div key={category} className="mb-4">
-              <h4 className="text-xs font-semibold text-gray-700 mb-2 uppercase tracking-wide">
-                {category}
-              </h4>
-              <div className="space-y-2">
-                {components.map(component => (
-                  <DraggableComponentItem
-                    key={component.type}
-                    blockType={component.type}
-                    title={component.name}
-                    description={component.description}
-                    icon={<span className="text-lg">{component.icon}</span>}
-                    category={component.category}
-                    className="bg-gray-50 hover:bg-gray-100 border border-gray-200 hover:border-blue-300"
-                  />
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-
-  const CanvasArea: React.FC = () => (
-    <div className="flex-1 flex flex-col bg-gray-100 min-h-0">
-      <div className="bg-white border-b border-gray-200 p-4">
-        <div className="flex items-center justify-between">
-          <div>
-            {isEditingTitle ? (
-              <input
-                type="text"
-                value={customTitle}
-                onChange={e => setCustomTitle(e.target.value)}
-                onBlur={() => setIsEditingTitle(false)}
-                onKeyDown={e => {
-                  if (e.key === 'Enter') setIsEditingTitle(false);
-                }}
-                className="font-semibold text-gray-900 bg-transparent border-b-2 border-blue-500 outline-none text-lg"
-                autoFocus
-              />
-            ) : (
-              <h3
-                className="font-semibold text-gray-900 flex items-center gap-2 cursor-pointer hover:text-blue-600 transition-colors"
-                onClick={() => setIsEditingTitle(true)}
-                title="Clique para editar o título"
-              >
-                🎯 {customTitle} - Etapa {safeCurrentStep}
-              </h3>
-            )}
-            <p className="text-sm text-gray-600">
-              {getStepAnalysis(safeCurrentStep).label}: {getStepAnalysis(safeCurrentStep).desc}
-            </p>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-1">
-              <button
-                type="button"
-                onClick={actions.undo}
-                disabled={!actions.canUndo}
-                className={cn(
-                  'px-3 py-2 text-sm rounded-md transition-all duration-200',
-                  actions.canUndo
-                    ? 'text-gray-700 hover:bg-white hover:shadow-sm'
-                    : 'text-gray-400 cursor-not-allowed'
-                )}
-                title="Desfazer (Ctrl+Z)"
-              >
-                ↶ Undo
-              </button>
-              <button
-                type="button"
-                onClick={actions.redo}
-                disabled={!actions.canRedo}
-                className={cn(
-                  'px-3 py-2 text-sm rounded-md transition-all duration-200',
-                  actions.canRedo
-                    ? 'text-gray-700 hover:bg-white hover:shadow-sm'
-                    : 'text-gray-400 cursor-not-allowed'
-                )}
-                title="Refazer (Ctrl+Y)"
-              >
-                ↷ Redo
-              </button>
-            </div>
-
-            <div className="flex items-center gap-1">
-              <button
-                type="button"
-                onClick={async () => {
-                  try {
-                    const json = actions.exportJSON();
-                    const success = await copyToClipboard(json);
-                    if (success)
-                      notification?.success?.('JSON exportado para a área de transferência!');
-                    else notification?.error?.('Erro ao copiar para área de transferência');
-                  } catch {
-                    notification?.error?.('Erro ao exportar JSON');
-                  }
-                }}
-                className="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
-                title="Exportar como JSON"
-                aria-label="Exportar estado atual como JSON"
-              >
-                📤 Export
-              </button>
-
-              <input
-                type="file"
-                accept=".json"
-                onChange={e => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    const reader = new FileReader();
-                    reader.onload = event => {
-                      try {
-                        const json = event.target?.result as string;
-                        const validation = validateEditorJSON(json);
-                        if (!validation.valid) {
-                          notification?.error?.(`Erro de validação: ${validation.error}`);
-                          return;
-                        }
-                        actions.importJSON(json);
-                        notification?.success?.('JSON importado com sucesso!');
-                      } catch (error) {
-                        notification?.error?.('Erro ao importar JSON: ' + (error as Error).message);
-                      }
-                    };
-                    reader.readAsText(file);
-                  }
-                  e.currentTarget.value = '';
-                }}
-                style={{ display: 'none' }}
-                ref={fileInputRef}
-                id="import-json"
-              />
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                className="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
-                title="Importar JSON"
-                aria-label="Importar estado do editor via JSON"
-              >
-                📥 Import
-              </button>
-            </div>
-
-            {/* Alternância de modo removida: somente preview */}
-
-            {/* Seletor de viewport responsivo */}
-            <div className="flex bg-gray-100 rounded-lg p-1">
-              <button
-                type="button"
-                onClick={() => setViewport('sm')}
-                className={cn(
-                  'px-3 py-2 text-sm rounded-md transition-all duration-200 font-medium',
-                  viewport === 'sm'
-                    ? 'bg-white text-gray-900 shadow-sm border border-gray-200'
-                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                )}
-                title="Mobile (375px)"
-              >
-                📱 375
-              </button>
-              <button
-                type="button"
-                onClick={() => setViewport('md')}
-                className={cn(
-                  'px-3 py-2 text-sm rounded-md transition-all duration-200 font-medium',
-                  viewport === 'md'
-                    ? 'bg-white text-gray-900 shadow-sm border border-gray-200'
-                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                )}
-                title="Tablet (768px)"
-              >
-                📟 768
-              </button>
-              <button
-                type="button"
-                onClick={() => setViewport('lg')}
-                className={cn(
-                  'px-3 py-2 text-sm rounded-md transition-all duration-200 font-medium',
-                  viewport === 'lg'
-                    ? 'bg-white text-gray-900 shadow-sm border border-gray-200'
-                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                )}
-                title="Desktop (1024px)"
-              >
-                🖥️ 1024
-              </button>
-              <button
-                type="button"
-                onClick={() => setViewport('full')}
-                className={cn(
-                  'px-3 py-2 text-sm rounded-md transition-all duration-200 font-medium',
-                  viewport === 'full'
-                    ? 'bg-white text-gray-900 shadow-sm border border-gray-200'
-                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                )}
-                title="Largura total"
-              >
-                🧭 Full
-              </button>
-            </div>
-
-            <button className="px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition-colors">
-              💾 Salvar
-            </button>
+                  <div className="text-gray-600 mt-1">
+                    <div className="font-medium">{analysis.label}</div>
+                    <div className="text-xs">{analysis.desc}</div>
+                  </div>
+                </button>
+              );
+            })}
           </div>
         </div>
 
-        {/* Banner de modo removido */}
-      </div>
-
-      {/* Área scrollável do canvas */}
-      <div className="flex-1 overflow-y-auto">
-        <div className="w-full">
-          <div
-            className="mx-auto transition-all editor-pro-canvas"
-            style={{ width: viewportWidth as number | string, maxWidth: '100%' }}
-          >
-            {/* Shell do runner, variante embed para manter o mesmo layout visual */}
-            <QuizRunnerShell
-              currentStep={safeCurrentStep}
-              totalSteps={21}
-              progress={Math.round((safeCurrentStep / 21) * 100)}
-              variant="embedded"
-              matchFullStyle={true}
-              showHeader={true}
-              navPosition="bottom"
-              canGoPrev={safeCurrentStep > 1}
-              canGoNext={!!editorStepValidation[safeCurrentStep]}
-              onPrev={() => {
-                try {
-                  window.dispatchEvent(new Event('cancel-auto-advance'));
-                } catch {}
-                actions.setCurrentStep(Math.max(1, safeCurrentStep - 1));
-              }}
-              onNext={() => {
-                try {
-                  window.dispatchEvent(new Event('cancel-auto-advance'));
-                } catch {}
-                actions.setCurrentStep(Math.min(21, safeCurrentStep + 1));
-              }}
-            >
-              <div className="quiz-content p-8 space-y-6">
-                <CanvasDropZone
-                  blocks={currentStepData}
-                  selectedBlockId={state.selectedBlockId}
-                  onSelectBlock={(id: string) => actions.setSelectedBlockId(id)}
-                  onUpdateBlock={(id: string, updates: any) =>
-                    actions.updateBlock(currentStepKey, id, updates)
-                  }
-                  onDeleteBlock={(id: string) => actions.removeBlock(currentStepKey, id)}
-                />
-              </div>
-            </QuizRunnerShell>
-
-            <div className="text-xs mt-2 px-2">
-              Clique em um bloco no canvas para ver suas propriedades
-            </div>
-            <div className="mt-6 p-4 bg-gray-50 rounded-lg text-left">
-              <h4 className="text-sm font-medium text-gray-900 mb-3">
-                Estatísticas da Etapa {safeCurrentStep}
-              </h4>
-              <div className="space-y-2 text-xs">
-                <div className="flex justify-between">
-                  <span>Blocos configurados:</span>
-                  <span className="font-medium">{currentStepData.length}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Tipo da etapa:</span>
-                  <span className="font-medium">{getStepAnalysis(safeCurrentStep).label}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Função:</span>
-                  <span className="font-medium">{getStepAnalysis(safeCurrentStep).desc}</span>
-                </div>
-              </div>
-            </div>
+        <div className="p-3 border-t border-gray-200 text-xs text-gray-500">
+          <div className="flex items-center justify-between">
+            <span>Etapa atual:</span>
+            <span className="font-medium">{safeCurrentStep}/21</span>
           </div>
         </div>
       </div>
-    </div>
-  );
+    );
 
-  // Coluna de propriedades (direita)
-  const PropertiesColumn: React.FC = () => (
-    <div className="w-[360px] min-w-[300px] bg-white border-l border-gray-200 flex flex-col">
-      {selectedBlock ? (
-        <Suspense
-          fallback={<div className="p-4 text-sm text-gray-600">Carregando propriedades…</div>}
-        >
-          <EnhancedUniversalPropertiesPanelFixed
-            selectedBlock={selectedBlock as any}
-            onUpdate={(blockId: string, updates: Record<string, any>) =>
-              actions.updateBlock(currentStepKey, blockId, updates)
-            }
-            onClose={() => actions.setSelectedBlockId(null)}
-            onDelete={(blockId: string) => actions.removeBlock(currentStepKey, blockId)}
-          />
-        </Suspense>
-      ) : (
-        <div className="h-full p-6 text-sm text-gray-600">
-          Selecione um bloco no canvas para editar suas propriedades.
+    const ComponentsSidebar: React.FC = () => (
+      <div className="w-[280px] bg-white border-r border-gray-200 flex flex-col">
+        <div className="p-4 border-b border-gray-200">
+          <h3 className="font-semibold text-sm text-gray-900">Biblioteca de Componentes</h3>
+          <p className="text-xs text-gray-500 mt-1">{availableComponents.length} componentes disponíveis</p>
         </div>
-      )}
-    </div>
-  );
 
-  /* -------------------------
-     Render principal
-     ------------------------- */
-  return (
-    <>
-      <DndContext
-        sensors={sensors}
-        collisionDetection={collisionDetectionStrategy}
-        onDragStart={handleDragStart}
-        onDragEnd={handleDragEnd}
-      >
-        <div className={`editor-pro h-screen bg-gray-50 flex ${className}`}>
-          <StepSidebar />
-          <ComponentsSidebar />
-          <EditorCanvasArea
-            safeCurrentStep={safeCurrentStep}
-            viewportWidth={viewportWidth}
-            editorStepValidation={editorStepValidation}
-            currentStepData={currentStepData}
-            state={state}
-            actions={actions}
-            getStepAnalysis={getStepAnalysis}
-          />
-          <PropertiesColumn />
+        <div className="flex-1 overflow-y-auto">
+          <div className="p-3">
+            {Object.entries(groupedComponents).map(([category, components]) => (
+              <div key={category} className="mb-4">
+                <h4 className="text-xs font-semibold text-gray-700 mb-2 uppercase tracking-wide">{category}</h4>
+                <div className="space-y-2">
+                  {components.map(component => (
+                    <DraggableComponentItem
+                      key={component.type}
+                      blockType={component.type}
+                      title={component.name}
+                      description={component.description}
+                      icon={<span className="text-lg">{component.icon}</span>}
+                      category={component.category}
+                      className="bg-gray-50 hover:bg-gray-100 border border-gray-200 hover:border-blue-300"
+                    />
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-      </DndContext>
+      </div>
+    );
 
-      {NotificationContainer ? <NotificationContainer /> : null}
-    </>
-  );
-};
+    
 
-export default EditorPro;
+    // Coluna de propriedades (direita)
+    const PropertiesColumn: React.FC = () => (
+      <div className="w-[360px] min-w-[300px] bg-white border-l border-gray-200 flex flex-col">
+        {selectedBlock ? (
+          <Suspense fallback={<div className="p-4 text-sm text-gray-600">Carregando propriedades…</div>}>
+            <EnhancedUniversalPropertiesPanelFixed selectedBlock={selectedBlock as any} onUpdate={(blockId: string, updates: Record<string, any>) => actions.updateBlock(currentStepKey, blockId, updates)} onClose={() => actions.setSelectedBlockId(null)} onDelete={(blockId: string) => actions.removeBlock(currentStepKey, blockId)} />
+          </Suspense>
+        ) : (
+          <div className="h-full p-6 text-sm text-gray-600">Seelecione um bloco no canvas para editar suas propriedades.</div>
+        )}
+      </div>
+    );
+
+    /* -------------------------
+       Render principal
+       ------------------------- */
+    return (
+      <>
+        <DndContext sensors={sensors} collisionDetection={collisionDetectionStrategy} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+          <div className={`editor-pro h-screen bg-gray-50 flex ${className}`}>
+            <StepSidebar />
+            <ComponentsSidebar />
+            <EditorCanvasArea safeCurrentStep={safeCurrentStep} viewportWidth={viewportWidth} editorStepValidation={editorStepValidation} currentStepData={currentStepData} state={state} actions={actions} getStepAnalysis={getStepAnalysis} />
+            <PropertiesColumn />
+          </div>
+        </DndContext>
+
+        {NotificationContainer ? <NotificationContainer /> : null}
+      </>
+    );
+    };
+
+    export default EditorPro;
