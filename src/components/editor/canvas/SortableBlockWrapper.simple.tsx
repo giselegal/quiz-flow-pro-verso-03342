@@ -42,7 +42,8 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
   const { setNodeRef: setDropRef, isOver } = useDroppable({
     id: String(block.id), // Same ID as draggable - this allows dropping ON the block
     data: {
-      type: 'canvas-block-target',
+      type: 'canvas-drop-zone', // Use the same type that validateDrop expects
+      accepts: ['sidebar-component', 'canvas-block'],
       blockId: String(block.id),
       position: 'before', // Indicates this will insert before this block
     },
