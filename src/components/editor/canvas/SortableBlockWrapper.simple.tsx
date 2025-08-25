@@ -49,12 +49,6 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
     },
   });
 
-  // Combine the refs for both dragging and dropping
-  const combinedRef = (node: HTMLElement | null) => {
-    setNodeRef(node);
-    setDropRef(node);
-  };
-
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
@@ -69,8 +63,8 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
   // Fallback se componente não for encontrado
   if (!Component) {
     return (
-      <div ref={combinedRef} style={style} className="my-1">
-        <div className="border border-dashed border-gray-300 rounded">
+      <div ref={setDropRef} className="my-1">
+        <div ref={setNodeRef} style={style} className="border border-dashed border-gray-300 rounded">
           <div className="p-4 text-center text-gray-600">
             <p className="font-medium">Componente não encontrado: {block.type}</p>
             <p className="text-xs mt-1">Verifique se o tipo está registrado</p>
@@ -107,8 +101,10 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
   };
 
   return (
-    <div ref={combinedRef} style={style} className="my-0">
+    <div ref={setDropRef} className="my-0">
       <div
+        ref={setNodeRef}
+        style={style}
         className={cn(
           'relative group transition-all duration-200',
           isSelected ? 'ring-2 ring-blue-500 ring-offset-1' : '',
