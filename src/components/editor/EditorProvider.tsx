@@ -370,11 +370,14 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
           const created = await supabaseIntegration.addBlockToStep(block, stepNumber);
           if (created) {
             const realBlock = mapSupabaseRecordToBlock(created);
+            // Replace the optimistic block (by id) in-place to preserve position
+            const currentList = optimisticState.stepBlocks[stepKey] || [];
+            const replaced = currentList.map(b => (b.id === block.id ? realBlock : b));
             setState({
               ...optimisticState,
               stepBlocks: {
                 ...optimisticState.stepBlocks,
-                [stepKey]: (optimisticState.stepBlocks[stepKey] || []).concat([realBlock]),
+                [stepKey]: replaced,
               },
             });
           } else {
