@@ -58,7 +58,21 @@ function App() {
                   </Suspense>
                 </Route>
 
-                {/* 🔀 Compat: Redirecionar /quiz-modular para a versão publicada (/quiz) para evitar duplicidade com /editor */}
+                {/* � Compat: Redirecionar acessos legados para manter apenas /editor */}
+                <Route path="/MainEditor">
+                  {() => {
+                    if (typeof window !== 'undefined') window.location.replace('/editor');
+                    return null;
+                  }}
+                </Route>
+                <Route path="/main-editor">
+                  {() => {
+                    if (typeof window !== 'undefined') window.location.replace('/editor');
+                    return null;
+                  }}
+                </Route>
+
+                {/* �🔀 Compat: Redirecionar /quiz-modular para a versão publicada (/quiz) para evitar duplicidade com /editor */}
                 <Route path="/quiz-modular">
                   {() => {
                     if (typeof window !== 'undefined') window.location.replace('/quiz');
