@@ -1,4 +1,3 @@
-import { LovablePreviewPanel } from '@/components/lovable/LovablePreviewPanel';
 import React from 'react';
 import { EditorPro } from '../components/editor/EditorPro';
 import { EditorProvider } from '../components/editor/EditorProvider';
@@ -12,27 +11,17 @@ import { ErrorBoundary } from '../components/editor/ErrorBoundary';
  * - 21 etapas carregando automaticamente
  * - Interface limpa e responsiva
  * - Sem conflitos entre múltiplos editores
- * - Preview integrado no painel do Lovable ✅
+ * - Preview Lovable removido para evitar interferência no DnD
  * - Cabeçalho editável DENTRO do EditorPro ✅
  */
 const MainEditor: React.FC = () => {
-  const enableLovablePreview = (import.meta as any)?.env?.VITE_LOVABLE_PREVIEW === 'true';
   return (
     <div>
       <ErrorBoundary>
-        {enableLovablePreview ? (
-          <LovablePreviewPanel>
-            <EditorProvider enableSupabase={false} storageKey="main-editor-state">
-              {/* 🎯 EDITOR PRINCIPAL COM CABEÇALHO EDITÁVEL */}
-              <EditorPro />
-            </EditorProvider>
-          </LovablePreviewPanel>
-        ) : (
-          <EditorProvider enableSupabase={false} storageKey="main-editor-state">
-            {/* 🎯 EDITOR PRINCIPAL COM CABEÇALHO EDITÁVEL */}
-            <EditorPro />
-          </EditorProvider>
-        )}
+        <EditorProvider enableSupabase={false} storageKey="main-editor-state">
+          {/* 🎯 EDITOR PRINCIPAL COM CABEÇALHO EDITÁVEL */}
+          <EditorPro />
+        </EditorProvider>
       </ErrorBoundary>
     </div>
   );
