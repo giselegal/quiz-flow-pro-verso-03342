@@ -29,13 +29,14 @@ export const DraggableComponentItem: React.FC<DraggableComponentItemProps> = ({
   console.log(`🧩 DraggableComponentItem renderizado: ${blockType}`);
 
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
-    id: `sidebar-item-${blockType}`, // ID mais específico para evitar conflitos
+    id: `sidebar-item-${blockType}`,
     data: {
-      type: 'sidebar-component', // TIPO CRUCIAL que o DndProvider espera
-      blockType: blockType,
+      type: 'sidebar-component',
+      blockType: String(blockType),
       title: title,
       description: description,
       category: category || 'default',
+      source: 'sidebar',
     },
     disabled,
   });

@@ -424,6 +424,9 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
                   const overIndex = currentStepData.findIndex(b => String(b.id) === overIdStr);
                   if (overIndex >= 0) targetIndex = overIndex;
                 }
+              } else if (currentStepData.length === 0) {
+                // Canvas vazio: inserir no índice 0
+                targetIndex = 0;
               }
               actions.addBlockAtIndex(currentStepKey, newBlock, targetIndex);
               actions.setSelectedBlockId(newBlock.id);

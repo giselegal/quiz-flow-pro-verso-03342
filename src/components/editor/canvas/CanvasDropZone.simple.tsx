@@ -66,9 +66,11 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
   });
 
   // Verifica se qualquer item arrastável válido está ativo
-  const isDraggingAnyValidComponent =
-    active?.data.current?.type === 'sidebar-component' ||
-    active?.data.current?.type === 'canvas-block';
+  const isDraggingAnyValidComponent = React.useMemo(() => {
+    const t = active?.data.current?.type;
+    const overId = active?.id ? String(active?.id) : '';
+    return t === 'sidebar-component' || t === 'canvas-block' || overId.startsWith('sidebar-item-');
+  }, [active]);
 
   // Debug do drop zone
   React.useEffect(() => {
@@ -99,7 +101,7 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
               ? 'Modo Preview - Nenhum componente nesta etapa'
               : 'Canvas vazio - Arraste componentes da sidebar para começar'}
           </p>
-          {isOver && !isPreviewing && (
+          {(isOver || isDraggingAnyValidComponent) && !isPreviewing && (
             <div className="mt-4 p-4 border-2 border-dashed border-brand/30 rounded-lg bg-brand/5">
               <p className="text-brand font-medium">Solte o componente aqui</p>
             </div>

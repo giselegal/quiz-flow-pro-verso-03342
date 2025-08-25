@@ -38,12 +38,13 @@ export const validateDrop = (
 
   // Validação para componente da sidebar
   if (activeData.type === 'sidebar-component') {
-    const overId = over.id.toString();
+    const overId = String(over.id);
 
     // ✅ Aceitar soltar diretamente sobre um bloco existente (insere antes dele)
-    const isOverExistingBlock = currentStepBlocks.some(
-      block => block.id === overId || `dnd-block-${block.id}` === overId
-    );
+    const isOverExistingBlock = currentStepBlocks.some(block => {
+      const bid = String(block.id);
+      return bid === overId || `dnd-block-${bid}` === overId;
+    });
 
     // ✅ Aceitar soltar no canvas e nas drop-zones intermediárias
     const isOverCanvasArea =
@@ -64,7 +65,9 @@ export const validateDrop = (
 
   // Validação para bloco do canvas
   if (activeData.type === 'canvas-block') {
-    const activeBlockExists = currentStepBlocks.some(block => block.id === activeData.blockId);
+    const activeBlockExists = currentStepBlocks.some(
+      block => String(block.id) === String(activeData.blockId)
+    );
 
     if (!activeBlockExists) {
       return { isValid: false, reason: 'Bloco de origem não encontrado' };
@@ -77,7 +80,7 @@ export const validateDrop = (
     }
     if (typeof over.id === 'string') {
       const overId = over.id as string;
-      const overBlockExists = currentStepBlocks.some(block => block.id === overId);
+      const overBlockExists = currentStepBlocks.some(block => String(block.id) === overId);
       if (overBlockExists) return { isValid: true, action: 'reorder' };
       if (overId.startsWith('drop-zone-')) return { isValid: true, action: 'reorder' };
     }
