@@ -212,6 +212,21 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
     } catch {}
   }, [safeCurrentStep]);
 
+  // Desabilitar auto-scroll e sincronização de scroll enquanto o editor estiver montado
+  useEffect(() => {
+    try {
+      (window as any).__DISABLE_AUTO_SCROLL = true;
+      (window as any).__DISABLE_SCROLL_SYNC = true;
+    } catch {}
+
+    return () => {
+      try {
+        (window as any).__DISABLE_AUTO_SCROLL = false;
+        (window as any).__DISABLE_SCROLL_SYNC = false;
+      } catch {}
+    };
+  }, []);
+
   // componentes disponíveis - ideal extrair para config
   const availableComponents = useMemo(
     () => [
