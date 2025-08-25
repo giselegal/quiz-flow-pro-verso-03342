@@ -18,8 +18,9 @@ const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
   const { setNodeRef, isOver } = useDroppable({
     id: 'canvas-drop-zone',
     data: {
-      type: 'canvas',
-      accepts: ['sidebar-component', 'canvas-element'],
+      type: 'dropzone',
+      accepts: ['sidebar-component', 'canvas-block'],
+      position: 0, // Position for insertion
     },
   });
 
