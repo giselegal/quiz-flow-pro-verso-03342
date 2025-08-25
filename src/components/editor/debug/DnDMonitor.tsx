@@ -29,7 +29,7 @@ export const DnDMonitor: React.FC = () => {
     updateStats(); // Primeira execução
 
     // Monitorar eventos globais de DnD
-    const handleDragStart = (e: any) => {
+    const handleDragStart = () => {
       setStats(prev => ({
         ...prev,
         events: [
@@ -39,7 +39,7 @@ export const DnDMonitor: React.FC = () => {
       }));
     };
 
-    const handleDragEnd = (e: any) => {
+    const handleDragEnd = () => {
       setStats(prev => ({
         ...prev,
         events: [
