@@ -140,7 +140,9 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
 
   // Cleanup timers on unmount to avoid dangling auto-advance after navigation
   React.useEffect(() => {
-    return () => {
+    // Add global listener so other components (EditorProvider, navigation handlers)
+    // can dispatch 'cancel-auto-advance' to ensure all pending timers are cleared.
+    const handleCancel = () => {
       if (autoAdvanceTimerRef.current) {
         try {
           window.clearTimeout(autoAdvanceTimerRef.current);
@@ -153,6 +155,15 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
         } catch {}
         previewAutoAdvanceTimerRef.current = null;
       }
+      autoAdvanceScheduledRef.current = false;
+      previewAutoAdvanceRef.current = false;
+    };
+
+    window.addEventListener('cancel-auto-advance', handleCancel as EventListener);
+
+    return () => {
+      handleCancel();
+      window.removeEventListener('cancel-auto-advance', handleCancel as EventListener);
     };
   }, []);
 

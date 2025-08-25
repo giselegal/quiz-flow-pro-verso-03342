@@ -38,7 +38,11 @@ import { useEditor } from './EditorProvider';
       const e = ev as CustomEvent<{ stepId?: string | number; source?: string }>;
       const target = parseStepNumber(e.detail?.stepId);
       if (!target || target < 1 || target > 21) return;
-      actions.setCurrentStep(target);
+        // Cancel any pending auto-advance timers before changing step
+        try {
+          window.dispatchEvent(new Event('cancel-auto-advance'));
+        } catch {}
+        actions.setCurrentStep(target);
       if (process.env.NODE_ENV === 'development') {
         // eslint-disable-next-line no-console
         console.log(
@@ -640,8 +644,18 @@ import { useEditor } from './EditorProvider';
               navPosition="bottom"
               canGoPrev={safeCurrentStep > 1}
               canGoNext={!!editorStepValidation[safeCurrentStep]}
-              onPrev={() => actions.setCurrentStep(Math.max(1, safeCurrentStep - 1))}
-              onNext={() => actions.setCurrentStep(Math.min(21, safeCurrentStep + 1))}
+              onPrev={() => {
+                try {
+                  window.dispatchEvent(new Event('cancel-auto-advance'));
+                } catch {}
+                actions.setCurrentStep(Math.max(1, safeCurrentStep - 1));
+              }}
+              onNext={() => {
+                try {
+                  window.dispatchEvent(new Event('cancel-auto-advance'));
+                } catch {}
+                actions.setCurrentStep(Math.min(21, safeCurrentStep + 1));
+              }}
             >
               <div className="quiz-content p-8 space-y-6">
                 <CanvasDropZone

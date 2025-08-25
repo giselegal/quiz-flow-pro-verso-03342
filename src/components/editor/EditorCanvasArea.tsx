@@ -1,7 +1,7 @@
-import React, { memo } from 'react';
 import QuizRunnerShell from '@/components/quiz/QuizRunnerShell';
-import { CanvasDropZone } from './canvas/CanvasDropZone.simple';
 import type { Block } from '@/types/editor';
+import React, { memo } from 'react';
+import { CanvasDropZone } from './canvas/CanvasDropZone.simple';
 
 interface EditorCanvasAreaProps {
   safeCurrentStep: number;
@@ -57,9 +57,13 @@ const EditorCanvasArea: React.FC<EditorCanvasAreaProps> = ({
             </div>
           </QuizRunnerShell>
 
-          <div className="text-xs mt-2 px-2">Clique em um bloco no canvas para ver suas propriedades</div>
+          <div className="text-xs mt-2 px-2">
+            Clique em um bloco no canvas para ver suas propriedades
+          </div>
           <div className="mt-6 p-4 bg-gray-50 rounded-lg text-left">
-            <h4 className="text-sm font-medium text-gray-900 mb-3">Estatísticas da Etapa {safeCurrentStep}</h4>
+            <h4 className="text-sm font-medium text-gray-900 mb-3">
+              Estatísticas da Etapa {safeCurrentStep}
+            </h4>
             <div className="space-y-2 text-xs">
               <div className="flex justify-between">
                 <span>Blocos configurados:</span>
