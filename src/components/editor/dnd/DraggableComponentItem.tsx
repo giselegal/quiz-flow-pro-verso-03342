@@ -26,7 +26,21 @@ export const DraggableComponentItem: React.FC<DraggableComponentItemProps> = ({
   disabled = false,
   className,
 }) => {
-  console.log(`🧩 DraggableComponentItem renderizado: ${blockType}`);
+  const isDebug = () => {
+    try {
+      return (
+        ((import.meta as any)?.env?.DEV ?? false) ||
+        (typeof process !== 'undefined' && (process as any)?.env?.NODE_ENV === 'development') ||
+        (typeof window !== 'undefined' && (window as any).__DND_DEBUG === true)
+      );
+    } catch {
+      return false;
+    }
+  };
+  if (isDebug()) {
+    // eslint-disable-next-line no-console
+    console.log(`🧩 DraggableComponentItem renderizado: ${blockType}`);
+  }
 
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: `sidebar-item-${blockType}`,
@@ -41,24 +55,30 @@ export const DraggableComponentItem: React.FC<DraggableComponentItemProps> = ({
     disabled,
   });
 
-  console.log(`🔧 useDraggable config para ${blockType}:`, {
-    id: `sidebar-item-${blockType}`,
-    disabled,
-    hasListeners: !!listeners,
-    hasAttributes: !!attributes,
-    hasSetNodeRef: !!setNodeRef,
-  });
+  if (isDebug()) {
+    // eslint-disable-next-line no-console
+    console.log(`🔧 useDraggable config para ${blockType}:`, {
+      id: `sidebar-item-${blockType}`,
+      disabled,
+      hasListeners: !!listeners,
+      hasAttributes: !!attributes,
+      hasSetNodeRef: !!setNodeRef,
+    });
+  }
 
   // Debug: verificar se o draggable está sendo configurado
   React.useEffect(() => {
+    if (!isDebug()) return;
+    // eslint-disable-next-line no-console
     console.log('🔧 Item configurado:', blockType, 'disabled:', disabled);
-
-    // 🔧 DEBUG: Verificar se ref foi aplicada
+    // eslint-disable-next-line no-console
     console.log('✅ setNodeRef disponível para', blockType);
   }, [blockType, disabled]);
 
   // Debug simples para mouse events
   const handleMouseDown = (e: React.MouseEvent) => {
+    if (!isDebug()) return;
+    // eslint-disable-next-line no-console
     console.log('🖱️ MouseDown no item:', {
       blockType,
       disabled,
