@@ -28,9 +28,9 @@ export const PageEditor: React.FC<PageEditorProps> = ({
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
-    if (over && active.id !== over.id) {
-      const activeIndex = blocks.findIndex(block => block.id === active.id);
-      const overIndex = blocks.findIndex(block => block.id === over.id);
+    if (over && String(active.id) !== String(over.id)) {
+      const activeIndex = blocks.findIndex(block => String(block.id) === String(active.id));
+      const overIndex = blocks.findIndex(block => String(block.id) === String(over.id));
 
       const newBlocks = arrayMove(blocks, activeIndex, overIndex).map((block, index) => ({
         ...block,
