@@ -38,8 +38,11 @@ export const CanvasDropZone: React.FC<Props> = ({ blocks, selectedBlockId, onSel
     });
 
     const style: React.CSSProperties = drag.transform
-      ? { transform: `translate3d(${drag.transform.x}px, ${drag.transform.y}px, 0)` }
-      : undefined;
+      ? { 
+          transform: `translate3d(${drag.transform.x}px, ${drag.transform.y}px, 0)`,
+          zIndex: drag.isDragging ? 1000 : 'auto',
+        }
+      : {};
 
     return (
       <>
@@ -53,9 +56,10 @@ export const CanvasDropZone: React.FC<Props> = ({ blocks, selectedBlockId, onSel
           {...drag.listeners}
           style={style}
           className={cn(
-            'w-full min-h-[48px] rounded-md border border-dashed p-2 bg-white',
+            'w-full min-h-[48px] rounded-md border border-dashed p-2 bg-white transition-colors',
             drop.isOver && 'border-blue-500 bg-blue-50',
-            selectedBlockId === block.id && 'ring-2 ring-blue-400'
+            selectedBlockId === block.id && 'ring-2 ring-blue-400',
+            drag.isDragging && 'opacity-50 cursor-grabbing'
           )}
           onClick={() => onSelectBlock(String(block.id))}
         >

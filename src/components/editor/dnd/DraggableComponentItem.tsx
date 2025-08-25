@@ -29,8 +29,9 @@ export const DraggableComponentItem: React.FC<Props> = ({
   const style: React.CSSProperties = transform
     ? {
         transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
+        zIndex: isDragging ? 1000 : 'auto',
       }
-    : undefined;
+    : {};
 
   return (
     <div
