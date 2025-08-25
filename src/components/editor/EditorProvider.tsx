@@ -157,15 +157,15 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       const comps = await supabaseIntegration.loadSupabaseComponents();
       // Accept either returned list or fallback to internal property
       const components = Array.isArray(comps) ? comps : (supabaseIntegration.components ?? []);
-        if (components && components.length > 0) {
-          const grouped = groupByStepKey(components);
-          // Normaliza e faz merge não-destrutivo por ID
-          const merged = mergeStepBlocks(rawState.stepBlocks, grouped);
-          setState(prev => ({
-            ...prev,
-            stepBlocks: merged,
-          }));
-        }
+      if (components && components.length > 0) {
+        const grouped = groupByStepKey(components);
+        // Normaliza e faz merge não-destrutivo por ID
+        const merged = mergeStepBlocks(rawState.stepBlocks, grouped);
+        setState(prev => ({
+          ...prev,
+          stepBlocks: merged,
+        }));
+      }
     } catch (err) {
       console.error('EditorProvider: failed to load supabase components', err);
     }
@@ -315,7 +315,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
           [stepKey]: [...prevBlocks, block],
         },
       };
-  setState(() => optimisticStateLocal);
+      setState(() => optimisticStateLocal);
 
       if (state.isSupabaseEnabled && supabaseIntegration?.addBlockToStep) {
         try {
@@ -363,7 +363,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
           [stepKey]: nextBlocks,
         },
       };
-  setState(() => optimisticState);
+      setState(() => optimisticState);
 
       if (state.isSupabaseEnabled && supabaseIntegration?.addBlockToStep) {
         try {
@@ -473,7 +473,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
           [stepKey]: nextBlocks,
         },
       };
-  setState(() => nextState);
+      setState(() => nextState);
 
       if (state.isSupabaseEnabled && supabaseIntegration?.updateBlockById) {
         try {

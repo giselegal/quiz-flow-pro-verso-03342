@@ -12,6 +12,7 @@ import {
 } from '@dnd-kit/core';
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import React, { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import EditorCanvasArea from './EditorCanvasArea';
 import { getBlocksForStep } from '../../config/quizStepsComplete';
 import { cn } from '../../lib/utils';
 import { Block } from '../../types/editor';
@@ -31,144 +32,7 @@ import { useNotification } from '../ui/Notification';
 import { CanvasDropZone } from './canvas/CanvasDropZone.simple';
 import { DraggableComponentItem } from './dnd/DraggableComponentItem';
 import { useEditor } from './EditorProvider';
-// import { SortableBlock } from './SortableBlock';
-
-/**
- * EditorPro - versão modularizada / otimizada do QuizEditorPro
- *
- * Principais mudanças:
- * - Modularização das colunas (facilita testes e lazy-loading)
- * - Lazy-load do painel de propriedades (reduz TTI/hidratação)
- * - Preserva DnD e lógica existente (reaproveite handlers)
- *
- * Observações de otimização sugeridas:
- * - Virtualizar a lista de etapas se houver muitas etapas
- * - Adiar carregamento de scripts externos (analytics/chat) se possível
- * - Extrair availableComponents para um arquivo de config
- */
-
-// lazy-load do painel de propriedades (reduz custo de bundle inicial)
-const EnhancedUniversalPropertiesPanelFixed = React.lazy(
-  () => import('@/components/universal/EnhancedUniversalPropertiesPanelFixed')
-);
-
-interface EditorProProps {
-  className?: string;
-}
-
-export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
-  // Segurança: useEditor pode lançar se não houver contexto — capturamos para renderizar fallback
-  let editorContext;
-  try {
-    editorContext = useEditor();
-  } catch (e) {
-    editorContext = undefined;
-  }
-
-  if (!editorContext) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-6 text-center">
-          <div className="text-red-500 text-4xl mb-4">⚠️</div>
-          <h2 className="text-xl font-bold text-gray-900 mb-2">Erro de Contexto do Editor</h2>
-          <p className="text-gray-600 mb-4">
-            O EditorPro deve ser usado dentro de um EditorProvider.
-          </p>
-          <button
-            type="button"
-            onClick={() => window.location.reload()}
-            className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            🔄 Recarregar
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  const { state, actions } = editorContext;
-  const [editorStepValidation, setEditorStepValidation] = useState<Record<number, boolean>>({});
-  const [viewport, setViewport] = useState<'full' | 'sm' | 'md' | 'lg'>('full');
-  const viewportWidth = useMemo(() => {
-    switch (viewport) {
-      case 'sm':
-        return 375;
-      case 'md':
-        return 768;
-      case 'lg':
-        return 1024;
-      default:
-        return '100%';
-    }
-  }, [viewport]);
-  const [isEditingTitle, setIsEditingTitle] = useState(false);
-  const [customTitle, setCustomTitle] = useState('Quiz Quest - Editor Principal');
-  const notification = useNotification();
-  const NotificationContainer = (notification as any)?.NotificationContainer ?? null;
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
-
-  const safeCurrentStep = state.currentStep || 1;
-  const currentStepKey = `step-${safeCurrentStep}`;
-
-  const currentStepData = useMemo(
-    () => getBlocksForStep(safeCurrentStep, state.stepBlocks) || [],
-    [safeCurrentStep, state.stepBlocks]
-  );
-
-  const stepHasBlocks = useMemo(() => {
-    const map: Record<number, boolean> = {};
-    for (let i = 1; i <= 21; i++) {
-      map[i] = (getBlocksForStep(i, state.stepBlocks) || []).length > 0;
-    }
-    return map;
-  }, [state.stepBlocks]);
-
-  const selectedBlock = currentStepData.find((block: Block) => block.id === state.selectedBlockId);
-
-  if (process.env.NODE_ENV === 'development') {
-    devLog('EditorPro render:', {
-      currentStep: state.currentStep,
-      safeCurrentStep,
-      currentStepKey,
-      totalBlocks: currentStepData.length,
-    });
-  }
-
-  // DnD sensors - configuração mais permissiva para debug
-  const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: { distance: 3 }, // Reduzido de 8 para 3
-    }),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
-  );
-
-  // Collision detection strategy com assinatura correta
-  const collisionDetectionStrategy = useCallback((args: any) => {
-    try {
-      const { active } = args;
-      const activeType = extractDragData(active)?.type;
-      if (activeType === 'sidebar-component') {
-        return rectIntersection(args);
-      }
-    } catch (err) {
-      // fallback silencioso para evitar quebrar o DnD
-      if (process.env.NODE_ENV === 'development') {
-        // eslint-disable-next-line no-console
-        console.debug('collisionDetectionStrategy error, fallback to closestCenter:', err);
-      }
-    }
-    return closestCenter(args);
-  }, []);
-
-  // 🔗 Escutar eventos de navegação disparados pelos blocos (ex.: botão da etapa 1)
-  useEffect(() => {
-    const parseStepNumber = (stepId: unknown): number | null => {
-      if (typeof stepId === 'number') return stepId;
-      if (typeof stepId !== 'string') return null;
-      const digits = stepId.replace(/[^0-9]/g, '');
-      const num = parseInt(digits || stepId, 10);
-      return Number.isFinite(num) ? num : null;
-    };
+  
 
     const handleNavigate = (ev: Event) => {
       const e = ev as CustomEvent<{ stepId?: string | number; source?: string }>;
@@ -858,7 +722,15 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         <div className={`editor-pro h-screen bg-gray-50 flex ${className}`}>
           <StepSidebar />
           <ComponentsSidebar />
-          <CanvasArea />
+          <EditorCanvasArea
+            safeCurrentStep={safeCurrentStep}
+            viewportWidth={viewportWidth}
+            editorStepValidation={editorStepValidation}
+            currentStepData={currentStepData}
+            state={state}
+            actions={actions}
+            getStepAnalysis={getStepAnalysis}
+          />
           <PropertiesColumn />
         </div>
       </DndContext>
