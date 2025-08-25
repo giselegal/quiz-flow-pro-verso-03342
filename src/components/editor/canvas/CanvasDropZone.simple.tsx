@@ -107,7 +107,7 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
         </div>
       ) : (
         <SortableContext
-          items={blocks.map(block => block.id)}
+          items={blocks.map(block => String(block.id))}
           strategy={verticalListSortingStrategy}
         >
           <div className="space-y-6">
@@ -115,7 +115,7 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
             {isDraggingAnyValidComponent && <InterBlockDropZone position={0} isActive={true} />}
 
             {blocks.map((block, index) => (
-              <React.Fragment key={block.id}>
+              <React.Fragment key={String(block.id)}>
                 <SortableBlockWrapper
                   block={block}
                   isSelected={!isPreviewing && selectedBlockId === block.id}

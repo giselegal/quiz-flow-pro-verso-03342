@@ -5,6 +5,7 @@ import {
   DragStartEvent,
   KeyboardSensor,
   PointerSensor,
+  pointerWithin,
   rectIntersection,
   useSensor,
   useSensors,
@@ -142,19 +143,29 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
 
   // Collision detection strategy com assinatura correta
   const collisionDetectionStrategy = useCallback((args: any) => {
+    // Primeiro tente uma interseção retangular direta (melhor para detectar drop zones
+    // e listas verticais). Se não houver colisões, tente pointerWithin (cursor dentro)
+    // e por fim fallback para closestCenter.
     try {
-      const { active } = args;
-      const activeType = extractDragData(active)?.type;
-      if (activeType === 'sidebar-component') {
-        return rectIntersection(args);
-      }
+      const collisions = rectIntersection(args);
+      if (collisions && collisions.length > 0) return collisions;
     } catch (err) {
-      // fallback silencioso para evitar quebrar o DnD
       if (process.env.NODE_ENV === 'development') {
         // eslint-disable-next-line no-console
-        console.debug('collisionDetectionStrategy error, fallback to closestCenter:', err);
+        console.debug('rectIntersection erro:', err);
       }
     }
+
+    try {
+      const pointerCollisions = pointerWithin(args);
+      if (pointerCollisions && pointerCollisions.length > 0) return pointerCollisions;
+    } catch (err) {
+      if (process.env.NODE_ENV === 'development') {
+        // eslint-disable-next-line no-console
+        console.debug('pointerWithin erro:', err);
+      }
+    }
+
     return closestCenter(args);
   }, []);
 
@@ -346,9 +357,12 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   const handleDragEnd = useCallback(
     (event: DragEndEvent) => {
       const { active, over } = event;
+      const activeIdStr = active?.id != null ? String(active.id) : null;
+      const overIdStr = over?.id != null ? String(over.id) : null;
+
       console.log('🎯 DRAG END CAPTURADO!', {
-        activeId: active.id,
-        overId: over?.id,
+        activeId: activeIdStr,
+        overId: overIdStr,
         overData: over?.data?.current,
       });
 
@@ -385,14 +399,14 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               const newBlock = createBlockFromComponent(dragData.blockType as any, currentStepData);
               // Inserção precisa por posição quando drop-zone-<n>
               let targetIndex = currentStepData.length;
-              if (typeof over.id === 'string') {
-                const m = over.id.match(/^drop-zone-(\d+)$/);
+              if (overIdStr) {
+                const m = overIdStr.match(/^drop-zone-(\d+)$/);
                 if (m)
                   targetIndex = Math.max(0, Math.min(parseInt(m[1], 10), currentStepData.length));
-                else if (over.id === 'canvas-drop-zone') targetIndex = currentStepData.length;
+                else if (overIdStr === 'canvas-drop-zone') targetIndex = currentStepData.length;
                 else {
                   // Se soltou sobre um bloco, inserir antes dele
-                  const overIndex = currentStepData.findIndex(b => b.id === over.id);
+                  const overIndex = currentStepData.findIndex(b => String(b.id) === overIdStr);
                   if (overIndex >= 0) targetIndex = overIndex;
                 }
               }
@@ -406,22 +420,24 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
           case 'reorder':
             if (dragData.type === 'canvas-block') {
               const activeIndex = currentStepData.findIndex(
-                block => block.id === String(active.id)
+                block => String(block.id) === activeIdStr
               );
               if (activeIndex === -1) break;
 
               let targetIndex = activeIndex;
-              if (over.id === 'canvas-drop-zone') {
+              if (overIdStr === 'canvas-drop-zone') {
                 targetIndex = currentStepData.length - 1;
-              } else if (typeof over.id === 'string') {
-                const m = over.id.match(/^drop-zone-(\d+)$/);
+              } else if (overIdStr) {
+                const m = overIdStr.match(/^drop-zone-(\d+)$/);
                 if (m) {
                   targetIndex = Math.max(
                     0,
                     Math.min(parseInt(m[1], 10), currentStepData.length - 1)
                   );
                 } else {
-                  const overIndex = currentStepData.findIndex(block => block.id === over.id);
+                  const overIndex = currentStepData.findIndex(
+                    block => String(block.id) === overIdStr
+                  );
                   if (overIndex !== -1) targetIndex = overIndex;
                 }
               }

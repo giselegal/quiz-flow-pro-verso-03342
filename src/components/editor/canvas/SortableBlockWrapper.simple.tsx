@@ -28,10 +28,10 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
   const Component = getOptimizedBlockComponent(normalizedBlock.type);
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
-    id: block.id,
+    id: String(block.id),
     data: {
       type: 'canvas-block',
-      blockId: block.id,
+      blockId: String(block.id),
       block: block,
     },
   });
