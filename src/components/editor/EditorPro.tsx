@@ -484,12 +484,11 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
                 )
                   targetIndex = currentStepData.length;
                 else {
-                  // Se soltou sobre um bloco, inserir antes dele
+                  // Se soltou sobre um bloco, inserir depois dele (comportamento consistente)
                   const overIndex = currentStepData.findIndex(b => String(b.id) === overIdStr);
                   if (overIndex >= 0) {
-                    // Se é o último bloco, tratar como append (inserir depois)
-                    targetIndex =
-                      overIndex === currentStepData.length - 1 ? overIndex + 1 : overIndex;
+                    // Sempre inserir depois do bloco alvo (overIndex + 1)
+                    targetIndex = overIndex + 1;
                   }
                 }
               } else if (currentStepData.length === 0) {
@@ -512,21 +511,21 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
 
               let targetIndex = activeIndex;
               if (overIdStr === 'canvas-drop-zone') {
-                targetIndex = currentStepData.length - 1;
+                targetIndex = currentStepData.length;
               } else if (overIdStr) {
                 const m = overIdStr.match(/^drop-zone-(\d+)$/);
                 if (m) {
                   targetIndex = Math.max(
                     0,
-                    Math.min(parseInt(m[1], 10), currentStepData.length - 1)
+                    Math.min(parseInt(m[1], 10), currentStepData.length)
                   );
                 } else {
                   const overIndex = currentStepData.findIndex(
                     block => String(block.id) === overIdStr
                   );
                   if (overIndex !== -1) {
-                    // Se é o último bloco, mover para depois dele; caso contrário, antes do over
-                    targetIndex = overIndex === currentStepData.length - 1 ? overIndex + 1 : overIndex;
+                    // Para reordenação: inserir antes do bloco alvo (comportamento padrão)
+                    targetIndex = overIndex;
                   }
                 }
               }
