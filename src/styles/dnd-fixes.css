@@ -10,45 +10,40 @@
 
   /* Garantir que não haja overflow que interfira */
   position: relative;
+}
 
-  /* Durante o drag */
-  &[data-dragging='true'] {
-    cursor: grabbing !important;
-    z-index: 9999 !important;
-    opacity: 0.85;
-    /* Evitar que o item cresça por transform/scale */
-    transform: translate3d(var(--dnd-translate-x, 0), var(--dnd-translate-y, 0), 0) !important;
-    max-width: 100% !important;
-    max-height: 100% !important;
-  }
+/* Durante o drag */
+.dnd-draggable-item[data-dragging='true'] {
+  cursor: grabbing !important;
+  z-index: 9999 !important;
+  opacity: 0.85;
+  /* Evitar que o item cresça por transform/scale */
+  transform: translate3d(var(--dnd-translate-x, 0), var(--dnd-translate-y, 0), 0) !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
 }
 
 .dnd-droppable-zone {
   /* Garantir que a zona de drop seja ativa */
   pointer-events: auto !important;
   position: relative;
+}
 
-  /* Visual de feedback */
-  &[data-over='true'] {
-    background-color: rgba(59, 130, 246, 0.08) !important;
-    border: 2px dashed rgba(59, 130, 246, 0.45) !important;
-  }
+/* Visual de feedback */
+.dnd-droppable-zone[data-over='true'] {
+  background-color: rgba(59, 130, 246, 0.08) !important;
+  border: 2px dashed rgba(59, 130, 246, 0.45) !important;
 }
 
 /* Prevenir interferência de outros elementos */
-.editor-pro * {
-  /* Reset de pointer-events problemáticos */
-  &:not(.dnd-draggable-item):not(.dnd-droppable-zone) {
-    pointer-events: auto;
-  }
+.editor-pro *:not(.dnd-draggable-item):not(.dnd-droppable-zone) {
+  pointer-events: auto;
 }
 
 /* Garantir que containers de scroll não interfiram */
-.editor-pro .overflow-auto,
-.editor-pro .overflow-y-auto,
-.editor-pro .overflow-hidden {
+.editor-pro .overflow-auto:has(.dnd-draggable-item[data-dragging='true']),
+.editor-pro .overflow-y-auto:has(.dnd-draggable-item[data-dragging='true']),
+.editor-pro .overflow-hidden:has(.dnd-draggable-item[data-dragging='true']) {
   /* Durante drag, permitir overflow */
-  &:has(.dnd-draggable-item[data-dragging='true']) {
-    overflow: visible !important;
-  }
+  overflow: visible !important;
 }

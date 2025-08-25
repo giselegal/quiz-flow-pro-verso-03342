@@ -2,7 +2,6 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
 import { getOptimizedBlockComponent, normalizeBlockProps } from '@/utils/optimizedRegistry';
-import { useDroppable } from '@dnd-kit/core';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { GripVertical, Trash2 } from 'lucide-react';
@@ -38,21 +37,9 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
     },
   });
 
-  // Make block droppable so you can drop other items on top of it (insert before)
-  const { setNodeRef: setDropRef, isOver } = useDroppable({
-    id: String(block.id), // Same ID as draggable - this allows dropping ON the block
-    data: {
-      type: 'canvas-drop-zone', // Use the same type that validateDrop expects
-      accepts: ['sidebar-component', 'canvas-block'],
-      blockId: String(block.id),
-      position: 'before', // Indicates this will insert before this block
-    },
-  });
-
-  // Combine refs properly for both draggable and droppable functionality
+  // Combine refs (somente sortable; useSortable já registra droppable internamente na SortableContext)
   const setNodeRef = (node: HTMLElement | null) => {
     setSortableRef(node);
-    setDropRef(node);
   };
 
   const style = {
@@ -113,8 +100,7 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
         style={style}
         className={cn(
           'relative group transition-all duration-200',
-          isSelected ? 'ring-2 ring-blue-500 ring-offset-1' : '',
-          isOver ? 'ring-2 ring-green-500 ring-offset-1 bg-green-50' : '' // Visual feedback when dropping on block
+          isSelected ? 'ring-2 ring-blue-500 ring-offset-1' : ''
         )}
         onClick={handleContainerClick}
         onMouseDown={handleContainerMouseDown}
