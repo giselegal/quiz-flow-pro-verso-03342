@@ -74,10 +74,18 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
 
   // Debug do drop zone
   React.useEffect(() => {
+    const debug =
+      ((import.meta as any)?.env?.DEV ?? false) ||
+      (typeof process !== 'undefined' && (process as any)?.env?.NODE_ENV === 'development') ||
+      (typeof window !== 'undefined' && (window as any).__DND_DEBUG === true);
+    if (!debug) return;
+    // eslint-disable-next-line no-console
     console.log('🎯 CanvasDropZone: isOver =', isOver, 'active =', active?.id);
     if (active?.data.current?.type === 'sidebar-component') {
+      // eslint-disable-next-line no-console
       console.log('📦 Arrastando componente da sidebar:', active?.data.current?.blockType);
     } else if (active?.data.current?.type === 'canvas-block') {
+      // eslint-disable-next-line no-console
       console.log('🔄 Reordenando bloco do canvas:', active?.id);
     }
   }, [isOver, active]);

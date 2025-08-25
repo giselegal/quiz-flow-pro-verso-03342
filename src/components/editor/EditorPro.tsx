@@ -371,14 +371,30 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   // Duplicação inline é gerenciada no wrapper simples quando necessário
 
   // Drag handlers (reutilizam utilitários)
+  const isDebug = () => {
+    try {
+      // Vite: import.meta.env.DEV; fallback: NODE_ENV; override: window.__DND_DEBUG
+      return (
+        ((import.meta as any)?.env?.DEV ?? false) ||
+        (typeof process !== 'undefined' && (process as any)?.env?.NODE_ENV === 'development') ||
+        (typeof window !== 'undefined' && (window as any).__DND_DEBUG === true)
+      );
+    } catch {
+      return false;
+    }
+  };
+
   const handleDragStart = useCallback((event: DragStartEvent) => {
     const { active } = event;
     const dragData = extractDragData(active);
-    console.log('🚀 DRAG START CAPTURADO!', {
-      activeId: active.id,
-      dragData,
-      activeDataCurrent: active.data.current,
-    });
+    if (isDebug()) {
+      // eslint-disable-next-line no-console
+      console.log('🚀 DRAG START CAPTURADO!', {
+        activeId: active.id,
+        dragData,
+        activeDataCurrent: (active as any)?.data?.current,
+      });
+    }
     logDragEvent('start', active);
     if (process.env.NODE_ENV === 'development') devLog('Drag start', dragData);
   }, []);
@@ -390,11 +406,18 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       const overIdStr = over?.id != null ? String(over.id) : null;
       const activeData = (active as any)?.data?.current;
       const overData = (over as any)?.data?.current;
-      console.groupCollapsed('🎯 DRAG END DEBUG');
-      console.log('active.id:', activeIdStr);
-      console.log('active.data.current:', activeData);
-      console.log('over.id:', overIdStr);
-      console.log('over.data.current:', overData);
+      if (isDebug()) {
+        // eslint-disable-next-line no-console
+        console.groupCollapsed('🎯 DRAG END DEBUG');
+        // eslint-disable-next-line no-console
+        console.log('active.id:', activeIdStr);
+        // eslint-disable-next-line no-console
+        console.log('active.data.current:', activeData);
+        // eslint-disable-next-line no-console
+        console.log('over.id:', overIdStr);
+        // eslint-disable-next-line no-console
+        console.log('over.data.current:', overData);
+      }
 
       if (!over) {
         // Sem alvo: para drags da sidebar, permitir append ao final; para reorder, cancelar
@@ -405,27 +428,30 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
           actions.addBlockAtIndex(currentStepKey, newBlock, targetIndex);
           actions.setSelectedBlockId(newBlock.id);
           notification?.success?.(`Componente ${dragData.blockType} adicionado ao final!`);
-          console.groupEnd();
+          if (isDebug()) console.groupEnd();
           return;
         }
-        console.warn('❌ Drop cancelado - sem alvo');
+        if (isDebug()) console.warn('❌ Drop cancelado - sem alvo');
         const feedback = getDragFeedback(dragData, {
           isValid: false,
           message: 'Sem alvo de drop',
         } as any);
         notification?.warning?.(feedback.message);
-        console.groupEnd();
+        if (isDebug()) console.groupEnd();
         return;
       }
 
       const validation = validateDrop(active, over, currentStepData);
-      console.log('validateDrop →', validation);
+      if (isDebug()) {
+        // eslint-disable-next-line no-console
+        console.log('validateDrop →', validation);
+      }
       logDragEvent('end', active, over, validation);
 
       if (!validation.isValid) {
         const feedback = getDragFeedback(extractDragData(active), validation);
         notification?.warning?.(feedback.message);
-        console.groupEnd();
+        if (isDebug()) console.groupEnd();
         return;
       }
 
@@ -510,7 +536,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         console.error('Erro durante drag & drop:', error);
         notification?.error?.('Erro ao processar drag & drop');
       } finally {
-        console.groupEnd();
+        if (isDebug()) console.groupEnd();
       }
     },
     [actions, currentStepData, currentStepKey, notification]
