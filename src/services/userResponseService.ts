@@ -120,18 +120,30 @@ export const userResponseService = {
       // Mapear step para número
       const stepNumber = parseInt(response.step.replace(/\D/g, '')) || 1;
 
+      // Alinhar com o schema real da tabela quiz_step_responses:
+      // Campos disponíveis: session_id, step_number, question_id, question_text,
+      // answer_value, answer_text, score_earned, response_time_ms, metadata, responded_at
+      const questionId =
+        (response.data && (response.data.componentId || response.data.fieldName)) || 'unknown';
+      const answerValue =
+        (response.data && (response.data.value || response.data.name)) || undefined;
+      const answerText =
+        (typeof response.data === 'string' ? response.data : response.data?.text) || undefined;
+
       const { data, error } = await supabase
         .from('quiz_step_responses')
         .insert({
           session_id: response.sessionId,
           step_number: stepNumber,
-          component_id: response.data.componentId || response.data.fieldName || 'unknown',
-          component_type: response.data.componentType || 'form-input',
-          response_data: {
+          question_id: questionId,
+          question_text: (response.data && response.data.label) || undefined,
+          answer_value: typeof answerValue === 'string' ? answerValue : JSON.stringify(answerValue),
+          answer_text: answerText,
+          metadata: {
             originalData: response.data,
             timestamp: response.timestamp,
             step: response.step,
-          },
+          } as any,
         } as any)
         .select();
 
@@ -171,7 +183,8 @@ export const userResponseService = {
           `quiz_response_${fallbackResponse.id}`,
           JSON.stringify(fallbackResponse)
         );
-        const componentKey = (response.data && (response.data.componentId || response.data.fieldName)) || undefined;
+        const componentKey =
+          (response.data && (response.data.componentId || response.data.fieldName)) || undefined;
         if (componentKey) {
           localStorage.setItem(`quiz_response_${componentKey}`, JSON.stringify(fallbackResponse));
         }
@@ -196,7 +209,7 @@ export const userResponseService = {
         }
         return '';
       }
-      // Primeiro tentar buscar pela session_id ativa e component_id
+      // Primeiro tentar buscar pela session_id ativa e question_id (componentId mapeia para question_id)
       const sessionId = localStorage.getItem('quiz_session_id') || '';
 
       if (sessionId) {
@@ -204,16 +217,18 @@ export const userResponseService = {
           .from('quiz_step_responses')
           .select('*')
           .eq('session_id', sessionId)
-          .eq('component_id', componentId)
+          .eq('question_id', componentId)
           .order('responded_at', { ascending: false })
           .limit(1)
           .single();
 
         if (!error && data) {
           return (
-            (data as any)?.response_data?.originalData?.name ||
-            (data as any)?.response_data?.value ||
-            JSON.stringify((data as any)?.response_data) ||
+            (data as any)?.answer_value ||
+            (data as any)?.answer_text ||
+            (data as any)?.metadata?.originalData?.name ||
+            (data as any)?.metadata?.value ||
+            JSON.stringify((data as any)?.metadata) ||
             ''
           );
         }
@@ -261,7 +276,7 @@ export const userResponseService = {
         userId: userId,
         sessionId: (item as any).session_id,
         step: `step-${item.step_number}`,
-        data: (item as any).response_data || item.answer_text || item.answer_value || '',
+        data: (item as any).metadata || item.answer_text || item.answer_value || '',
         timestamp: item.responded_at,
         created_at: new Date(item.responded_at),
       }));
