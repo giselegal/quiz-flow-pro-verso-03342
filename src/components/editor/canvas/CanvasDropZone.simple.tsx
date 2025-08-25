@@ -1,7 +1,7 @@
-import React from 'react';
-import { useDroppable, useDraggable } from '@dnd-kit/core';
-import { Block } from '@/types/editor';
 import { cn } from '@/lib/utils';
+import { Block } from '@/types/editor';
+import { useDraggable, useDroppable } from '@dnd-kit/core';
+import React from 'react';
 
 type Props = {
   blocks: Block[];
@@ -38,7 +38,7 @@ export const CanvasDropZone: React.FC<Props> = ({ blocks, selectedBlockId, onSel
     });
 
     const style: React.CSSProperties = drag.transform
-      ? { 
+      ? {
           transform: `translate3d(${drag.transform.x}px, ${drag.transform.y}px, 0)`,
           zIndex: drag.isDragging ? 1000 : 'auto',
         }

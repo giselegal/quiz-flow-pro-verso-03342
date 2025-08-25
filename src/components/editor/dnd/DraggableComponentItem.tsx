@@ -1,6 +1,6 @@
-import React from 'react';
-import { useDraggable } from '@dnd-kit/core';
 import { cn } from '@/lib/utils';
+import { useDraggable } from '@dnd-kit/core';
+import React from 'react';
 
 type Props = {
   blockType: string;
