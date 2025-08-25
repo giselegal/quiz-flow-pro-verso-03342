@@ -5,17 +5,17 @@ import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import React from 'react';
 import { SortableBlockWrapper } from './SortableBlockWrapper.simple';
 
-// Componente para drop zone entre blocos
+// Componente para drop zone entre blocos (sempre presente para maximizar detecção)
 const InterBlockDropZone: React.FC<{
   position: number;
-  isActive: boolean;
-}> = ({ position, isActive }) => {
+  isActive?: boolean;
+}> = ({ position, isActive = true }) => {
   const { setNodeRef, isOver } = useDroppable({
     id: `drop-zone-${position}`,
     data: {
-      type: 'canvas-drop-zone',
-      accepts: ['sidebar-component', 'canvas-block'], // Aceita tanto componentes da sidebar quanto blocos do canvas
-      position: position,
+      type: 'dropzone',
+      accepts: ['sidebar-component', 'canvas-block'], // Aceita componentes da sidebar e blocos do canvas
+      position,
     },
   });
 
@@ -23,21 +23,24 @@ const InterBlockDropZone: React.FC<{
     <div
       ref={setNodeRef}
       className={cn(
-        'transition-all duration-200 relative pointer-events-auto flex items-center justify-center',
-        'h-8 min-h-[32px]', // Altura maior para facilitar drop
-        isOver && 'h-20 bg-brand/10 border-2 border-dashed border-brand/40 rounded-lg',
-        isActive && !isOver && 'h-4 bg-brand/20 rounded-full opacity-50'
+        'transition-all duration-150 relative pointer-events-auto flex items-center justify-center',
+        // Sempre renderizado: manter hit area mínima mesmo quando não estiver ativo
+        'min-h-[10px]',
+        // Ao arrastar sobre: ampliar e dar feedback visual
+        isOver && 'min-h-[48px] bg-brand/10 border-2 border-dashed border-brand/40 rounded-lg',
+        // Quando ativo (há drag em andamento) mas não está over: indicar posição sutil
+        isActive && !isOver && 'min-h-[18px] bg-brand/5 rounded-full'
       )}
+      data-dnd-dropzone-type="inter-block"
+      data-position={position}
     >
       {isOver && (
-        <div className="absolute inset-0 flex items-center justify-center z-10">
-          <p className="text-brand font-medium text-sm bg-white/90 px-3 py-2 rounded shadow-sm">
+        <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
+          <p className="text-brand font-medium text-xs sm:text-sm bg-white/90 px-2 sm:px-3 py-1.5 rounded shadow-sm">
             Inserir aqui (posição {position})
           </p>
         </div>
       )}
-      {/* Área invisível estendida para melhor hit detection */}
-      <div className="absolute inset-x-0 -inset-y-4 pointer-events-none" />
     </div>
   );
 };
@@ -62,7 +65,7 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
   const { setNodeRef, isOver } = useDroppable({
     id: 'canvas-drop-zone', // Padroniza id principal para facilitar validação
     data: {
-      type: 'canvas-drop-zone',
+      type: 'dropzone',
       accepts: ['sidebar-component', 'canvas-block'],
       position: blocks.length, // Posição no final
       debug: 'main-canvas-zone', // Para debug
@@ -101,6 +104,8 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
       ref={setNodeRef}
       className={cn(
         'min-h-[300px] transition-all duration-200 pointer-events-auto p-4',
+        // Evitar qualquer bloqueio de eventos no canvas
+        'z-0',
         isOver && !isPreviewing && 'bg-brand/5 ring-2 ring-brand/20 ring-dashed',
         'border border-dashed border-gray-200 rounded-lg',
         // ✅ CLASSE CSS DE FORÇA BRUTA
@@ -110,6 +115,7 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
       data-over={isOver}
       data-preview={isPreviewing}
       data-id="canvas-drop-zone"
+      data-dnd-dropzone-type="root"
     >
       {blocks.length === 0 ? (
         <div className="text-center py-12">
@@ -130,8 +136,8 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
           strategy={verticalListSortingStrategy}
         >
           <div className="space-y-6">
-            {/* Drop zone no início - agora aparece para QUALQUER item válido */}
-            {isDraggingAnyValidComponent && <InterBlockDropZone position={0} isActive={true} />}
+            {/* Drop zone no início - sempre presente (ativa durante drag) */}
+            <InterBlockDropZone position={0} isActive={isDraggingAnyValidComponent} />
 
             {blocks.map((block, index) => (
               <React.Fragment key={String(block.id)}>
@@ -151,10 +157,8 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
                   }}
                 />
 
-                {/* Drop zone entre blocos - agora aparece para QUALQUER item válido */}
-                {isDraggingAnyValidComponent && (
-                  <InterBlockDropZone position={index + 1} isActive={true} />
-                )}
+                {/* Drop zone entre blocos - sempre presente (ativa durante drag) */}
+                <InterBlockDropZone position={index + 1} isActive={isDraggingAnyValidComponent} />
               </React.Fragment>
             ))}
           </div>
