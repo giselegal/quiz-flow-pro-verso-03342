@@ -15,7 +15,11 @@
   &[data-dragging='true'] {
     cursor: grabbing !important;
     z-index: 9999 !important;
-    opacity: 0.8;
+    opacity: 0.85;
+    /* Evitar que o item cresça por transform/scale */
+    transform: translate3d(var(--dnd-translate-x, 0), var(--dnd-translate-y, 0), 0) !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
   }
 }
 
@@ -26,8 +30,8 @@
 
   /* Visual de feedback */
   &[data-over='true'] {
-    background-color: rgba(59, 130, 246, 0.1) !important;
-    border: 2px dashed rgba(59, 130, 246, 0.5) !important;
+    background-color: rgba(59, 130, 246, 0.08) !important;
+    border: 2px dashed rgba(59, 130, 246, 0.45) !important;
   }
 }
 

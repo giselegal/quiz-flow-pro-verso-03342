@@ -31,7 +31,6 @@ import {
 import { useNotification } from '../ui/Notification';
 import { CanvasDropZone } from './canvas/CanvasDropZone.simple';
 import { DnDMonitor } from './debug/DnDMonitor';
-import GlobalEventInterceptor from './debug/GlobalEventInterceptor';
 import { DraggableComponentItem } from './dnd/DraggableComponentItem';
 import { DraggableComponentItemForce } from './dnd/DraggableComponentItemForce';
 import { useEditor } from './EditorProvider';
@@ -405,10 +404,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       event: event,
     });
 
-    // Notificação visual também
-    if (typeof window !== 'undefined' && (window as any).alert) {
-      (window as any).alert('🚀 DRAG START CAPTURADO: ' + active.id);
-    }
+    // Removido alert intrusivo durante drag start
 
     if (isDebug()) {
       // eslint-disable-next-line no-console
@@ -492,7 +488,12 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
                 const m = overIdStr.match(/^drop-zone-(\d+)$/);
                 if (m)
                   targetIndex = Math.max(0, Math.min(parseInt(m[1], 10), currentStepData.length));
-                else if (overIdStr === 'canvas-drop-zone') targetIndex = currentStepData.length;
+                else if (
+                  overIdStr === 'canvas-drop-zone' ||
+                  overIdStr.startsWith('canvas-drop-zone') ||
+                  overIdStr.startsWith('canvas-')
+                )
+                  targetIndex = currentStepData.length;
                 else {
                   // Se soltou sobre um bloco, inserir antes dele
                   const overIndex = currentStepData.findIndex(b => String(b.id) === overIdStr);
@@ -1017,9 +1018,6 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
 
         {/* Monitor de debug em tempo real */}
         <DnDMonitor />
-
-        {/* Interceptador global para debugar eventos */}
-        <GlobalEventInterceptor />
       </DndContext>
 
       {NotificationContainer ? <NotificationContainer /> : null}

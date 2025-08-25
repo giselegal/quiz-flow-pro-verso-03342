@@ -132,7 +132,7 @@ export const DraggableComponentItem: React.FC<DraggableComponentItemProps> = ({
   // ✅ CORRIGIDO: CSS Transform + pointer-events garantidos
   const style = transform
     ? {
-        transform: CSS.Transform.toString(transform),
+        transform: CSS.Transform.toString({ ...transform, scaleX: 1, scaleY: 1 }), // evita crescimento
         zIndex: isDragging ? 999 : 'auto',
         pointerEvents: 'auto' as const,
       }
@@ -148,7 +148,7 @@ export const DraggableComponentItem: React.FC<DraggableComponentItemProps> = ({
         // ✅ CURSOR: Indicação visual clara de que é draggable
         'cursor-grab hover:bg-blue-50 hover:border-blue-400',
         // ✅ FEEDBACK: Estados visuais distintos
-        isDragging && 'opacity-50 cursor-grabbing shadow-2xl bg-blue-100 border-blue-500',
+        isDragging && 'opacity-70 cursor-grabbing bg-blue-50 border-blue-400',
         // 🔧 DEBUG: Ring azul forte para identificar draggables
         'ring-2 ring-blue-200 hover:ring-blue-400',
         // ✅ INTERATIVIDADE: Garantir que o elemento seja clicável

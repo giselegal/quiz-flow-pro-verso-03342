@@ -60,7 +60,7 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
   className,
 }) => {
   const { setNodeRef, isOver } = useDroppable({
-    id: 'canvas-drop-zone-main', // ID único e bem definido
+    id: 'canvas-drop-zone', // Padroniza id principal para facilitar validação
     data: {
       type: 'canvas-drop-zone',
       accepts: ['sidebar-component', 'canvas-block'],
@@ -109,6 +109,7 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
       )}
       data-over={isOver}
       data-preview={isPreviewing}
+      data-id="canvas-drop-zone"
     >
       {blocks.length === 0 ? (
         <div className="text-center py-12">
