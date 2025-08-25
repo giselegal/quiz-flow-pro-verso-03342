@@ -133,10 +133,14 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
     });
   }
 
-  // DnD sensors - configuração mais permissiva para debug
+  // DnD sensors - configuração ULTRA sensível para garantir funcionamento
   const sensors = useSensors(
     useSensor(PointerSensor, {
-      activationConstraint: { distance: 3 }, // Reduzido de 8 para 3
+      activationConstraint: {
+        distance: 0, // Imediato - qualquer movimento inicia drag
+        delay: 0,
+        tolerance: 0,
+      },
     }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
@@ -387,6 +391,16 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   const handleDragStart = useCallback((event: DragStartEvent) => {
     const { active } = event;
     const dragData = extractDragData(active);
+
+    // ✅ LOG CRÍTICO - Se isso não aparecer, o problema está na configuração do sensor
+    // eslint-disable-next-line no-console
+    console.log('🚀 DRAG START FUNCIONANDO!', {
+      activeId: active.id,
+      dragData,
+      activeDataCurrent: (active as any)?.data?.current,
+      timestamp: new Date().toISOString(),
+    });
+
     if (isDebug()) {
       // eslint-disable-next-line no-console
       console.log('🚀 DRAG START CAPTURADO!', {
