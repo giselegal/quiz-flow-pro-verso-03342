@@ -388,17 +388,27 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       const { active, over } = event;
       const activeIdStr = active?.id != null ? String(active.id) : null;
       const overIdStr = over?.id != null ? String(over.id) : null;
-  const activeData = (active as any)?.data?.current;
-  const overData = (over as any)?.data?.current;
-  console.groupCollapsed('🎯 DRAG END DEBUG');
-  console.log('active.id:', activeIdStr);
-  console.log('active.data.current:', activeData);
-  console.log('over.id:', overIdStr);
-  console.log('over.data.current:', overData);
+      const activeData = (active as any)?.data?.current;
+      const overData = (over as any)?.data?.current;
+      console.groupCollapsed('🎯 DRAG END DEBUG');
+      console.log('active.id:', activeIdStr);
+      console.log('active.data.current:', activeData);
+      console.log('over.id:', overIdStr);
+      console.log('over.data.current:', overData);
 
       if (!over) {
-        console.warn('❌ Drop cancelado - sem alvo');
+        // Sem alvo: para drags da sidebar, permitir append ao final; para reorder, cancelar
         const dragData = extractDragData(active);
+        if (dragData?.type === 'sidebar-component' && dragData.blockType) {
+          const newBlock = createBlockFromComponent(dragData.blockType as any, currentStepData);
+          const targetIndex = currentStepData.length;
+          actions.addBlockAtIndex(currentStepKey, newBlock, targetIndex);
+          actions.setSelectedBlockId(newBlock.id);
+          notification?.success?.(`Componente ${dragData.blockType} adicionado ao final!`);
+          console.groupEnd();
+          return;
+        }
+        console.warn('❌ Drop cancelado - sem alvo');
         const feedback = getDragFeedback(dragData, {
           isValid: false,
           message: 'Sem alvo de drop',
@@ -441,7 +451,11 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
                 else {
                   // Se soltou sobre um bloco, inserir antes dele
                   const overIndex = currentStepData.findIndex(b => String(b.id) === overIdStr);
-                  if (overIndex >= 0) targetIndex = overIndex;
+                  if (overIndex >= 0) {
+                    // Se é o último bloco, tratar como append (inserir depois)
+                    targetIndex =
+                      overIndex === currentStepData.length - 1 ? overIndex + 1 : overIndex;
+                  }
                 }
               } else if (currentStepData.length === 0) {
                 // Canvas vazio: inserir no índice 0
@@ -475,7 +489,10 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
                   const overIndex = currentStepData.findIndex(
                     block => String(block.id) === overIdStr
                   );
-                  if (overIndex !== -1) targetIndex = overIndex;
+                  if (overIndex !== -1) {
+                    // Se é o último bloco, mover para o final; caso contrário, antes do over
+                    targetIndex = overIndex === currentStepData.length - 1 ? overIndex : overIndex;
+                  }
                 }
               }
 
