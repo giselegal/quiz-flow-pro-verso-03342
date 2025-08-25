@@ -14,6 +14,7 @@ import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import React, { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { getBlocksForStep } from '../../config/quizStepsComplete';
 import { cn } from '../../lib/utils';
+import '../../styles/dnd-fixes.css'; // ✅ CSS de força bruta para DnD
 import { Block } from '../../types/editor';
 import {
   extractDragData,
@@ -29,7 +30,10 @@ import {
 } from '../../utils/editorUtils';
 import { useNotification } from '../ui/Notification';
 import { CanvasDropZone } from './canvas/CanvasDropZone.simple';
+import { DnDMonitor } from './debug/DnDMonitor';
+import GlobalEventInterceptor from './debug/GlobalEventInterceptor';
 import { DraggableComponentItem } from './dnd/DraggableComponentItem';
+import { DraggableComponentItemForce } from './dnd/DraggableComponentItemForce';
 import { useEditor } from './EditorProvider';
 // import { SortableBlock } from './SortableBlock';
 
@@ -392,27 +396,28 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
     const { active } = event;
     const dragData = extractDragData(active);
 
-    // ✅ LOG CRÍTICO - Se isso não aparecer, o problema está na configuração do sensor
-    // eslint-disable-next-line no-console
-    console.log('🚀 DRAG START FUNCIONANDO!', {
+    // ✅ LOG CRÍTICO SEMPRE VISÍVEL - Se isso não aparecer, o sensor não está funcionando
+    console.log('🚀🚀🚀 DRAG START FUNCIONANDO! 🚀🚀🚀', {
       activeId: active.id,
       dragData,
       activeDataCurrent: (active as any)?.data?.current,
       timestamp: new Date().toISOString(),
+      event: event,
     });
+
+    // Notificação visual também
+    if (typeof window !== 'undefined' && (window as any).alert) {
+      (window as any).alert('🚀 DRAG START CAPTURADO: ' + active.id);
+    }
 
     if (isDebug()) {
       // eslint-disable-next-line no-console
-      console.log('🚀 DRAG START CAPTURADO!', {
-        activeId: active.id,
-        dragData,
-        activeDataCurrent: (active as any)?.data?.current,
-      });
+      console.log('🎯 DragStart - dados completos:', event);
     }
+
     logDragEvent('start', active);
     if (process.env.NODE_ENV === 'development') devLog('Drag start', dragData);
   }, []);
-
   const handleDragEnd = useCallback(
     (event: DragEndEvent) => {
       const { active, over } = event;
@@ -623,6 +628,31 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
 
       <div className="flex-1 overflow-y-auto">
         <div className="p-3">
+          {/* ✅ SEÇÃO DE TESTE - Versão Force vs Normal */}
+          <div className="mb-6 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+            <h4 className="text-xs font-semibold text-yellow-800 mb-2 uppercase tracking-wide">
+              🧪 TESTE DnD - Force vs Normal
+            </h4>
+            <div className="space-y-2">
+              <DraggableComponentItemForce
+                blockType="test-force"
+                title="TESTE Force Wrapper"
+                description="Usa ForceDraggableWrapper"
+                icon={<span className="text-lg">🧪</span>}
+                category="Teste"
+                className="bg-yellow-100 border-yellow-300"
+              />
+              <DraggableComponentItem
+                blockType="test-normal"
+                title="TESTE Normal"
+                description="Usa implementação normal"
+                icon={<span className="text-lg">🔧</span>}
+                category="Teste"
+                className="bg-blue-100 border-blue-300"
+              />
+            </div>
+          </div>
+
           {Object.entries(groupedComponents).map(([category, components]) => (
             <div key={category} className="mb-4">
               <h4 className="text-xs font-semibold text-gray-700 mb-2 uppercase tracking-wide">
@@ -911,6 +941,48 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
     </div>
   );
 
+  // ✅ VERIFICAÇÃO CRÍTICA - Debug do DndContext
+  React.useEffect(() => {
+    if (isDebug()) {
+      // eslint-disable-next-line no-console
+      console.log('🎯 DndContext sendo montado no EditorPro');
+
+      // Verificar elementos DnD após renderização
+      setTimeout(() => {
+        const draggables = document.querySelectorAll('[data-dnd-kit-draggable-handle]');
+        const droppables = document.querySelectorAll('[data-dnd-kit-droppable]');
+        // eslint-disable-next-line no-console
+        console.log('🔍 CONTAGEM DnD após montagem:', {
+          draggables: draggables.length,
+          droppables: droppables.length,
+          draggableIds: Array.from(draggables).map(el => el.id),
+          droppableIds: Array.from(droppables).map(el => el.id),
+        });
+
+        if (draggables.length === 0) {
+          // eslint-disable-next-line no-console
+          console.error('❌ NENHUM ELEMENTO DRAGGABLE ENCONTRADO! Problema na renderização.');
+        } else {
+          // eslint-disable-next-line no-console
+          console.log('✅ Elementos draggable encontrados, testando eventos...');
+
+          // Testar eventos no primeiro draggable
+          const firstDraggable = draggables[0];
+          if (firstDraggable) {
+            firstDraggable.addEventListener(
+              'mousedown',
+              () => {
+                // eslint-disable-next-line no-console
+                console.log('🖱️ MouseDown funcionando no primeiro draggable!');
+              },
+              { once: true }
+            );
+          }
+        }
+      }, 1000);
+    }
+  }, []);
+
   /* -------------------------
      Render principal
      ------------------------- */
@@ -920,6 +992,20 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         sensors={sensors}
         collisionDetection={collisionDetectionStrategy}
         onDragStart={handleDragStart}
+        onDragOver={event => {
+          // ✅ CONFIRMAR que o drag está ativo
+          console.log('🎯 DRAG OVER DETECTADO:', {
+            overId: event.over?.id,
+            activeId: event.active?.id,
+            timestamp: new Date().toISOString(),
+          });
+
+          if (isDebug()) {
+            // eslint-disable-next-line no-console
+            console.log('🎯 DragOver', event);
+          }
+          // Sem logDragEvent para over pois não existe esse tipo
+        }}
         onDragEnd={handleDragEnd}
       >
         <div className={`editor-pro h-screen bg-gray-50 flex ${className}`}>
@@ -928,6 +1014,12 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
           <CanvasArea />
           <PropertiesColumn />
         </div>
+
+        {/* Monitor de debug em tempo real */}
+        <DnDMonitor />
+
+        {/* Interceptador global para debugar eventos */}
+        <GlobalEventInterceptor />
       </DndContext>
 
       {NotificationContainer ? <NotificationContainer /> : null}

@@ -1,0 +1,50 @@
+/* Estilos específicos para garantir funcionamento do DnD */
+.dnd-draggable-item {
+  /* Garantir que o elemento seja interativo */
+  pointer-events: auto !important;
+  user-select: none !important;
+  touch-action: none !important;
+
+  /* Cursor visual claro */
+  cursor: grab !important;
+
+  /* Garantir que não haja overflow que interfira */
+  position: relative;
+
+  /* Durante o drag */
+  &[data-dragging='true'] {
+    cursor: grabbing !important;
+    z-index: 9999 !important;
+    opacity: 0.8;
+  }
+}
+
+.dnd-droppable-zone {
+  /* Garantir que a zona de drop seja ativa */
+  pointer-events: auto !important;
+  position: relative;
+
+  /* Visual de feedback */
+  &[data-over='true'] {
+    background-color: rgba(59, 130, 246, 0.1) !important;
+    border: 2px dashed rgba(59, 130, 246, 0.5) !important;
+  }
+}
+
+/* Prevenir interferência de outros elementos */
+.editor-pro * {
+  /* Reset de pointer-events problemáticos */
+  &:not(.dnd-draggable-item):not(.dnd-droppable-zone) {
+    pointer-events: auto;
+  }
+}
+
+/* Garantir que containers de scroll não interfiram */
+.editor-pro .overflow-auto,
+.editor-pro .overflow-y-auto,
+.editor-pro .overflow-hidden {
+  /* Durante drag, permitir overflow */
+  &:has(.dnd-draggable-item[data-dragging='true']) {
+    overflow: visible !important;
+  }
+}

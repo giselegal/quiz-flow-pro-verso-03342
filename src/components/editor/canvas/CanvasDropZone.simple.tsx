@@ -103,8 +103,12 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
         'min-h-[300px] transition-all duration-200 pointer-events-auto p-4',
         isOver && !isPreviewing && 'bg-brand/5 ring-2 ring-brand/20 ring-dashed',
         'border border-dashed border-gray-200 rounded-lg',
+        // ✅ CLASSE CSS DE FORÇA BRUTA
+        'dnd-droppable-zone',
         className
       )}
+      data-over={isOver}
+      data-preview={isPreviewing}
     >
       {blocks.length === 0 ? (
         <div className="text-center py-12">

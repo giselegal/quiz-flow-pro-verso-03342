@@ -93,7 +93,7 @@ export const DraggableComponentItem: React.FC<DraggableComponentItemProps> = ({
     }
   }, [blockType, disabled, listeners, attributes]);
 
-  // Debug simples para mouse events
+  // Debug simples para mouse events + FORÇAR eventos DnD
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!isDebug()) return;
     // eslint-disable-next-line no-console
@@ -105,7 +105,16 @@ export const DraggableComponentItem: React.FC<DraggableComponentItemProps> = ({
       transform,
       button: e.button,
       buttons: e.buttons,
+      hasListeners: !!listeners,
+      hasAttributes: !!attributes,
     });
+
+    // ✅ FORÇA o início do drag programaticamente se os listeners não estão funcionando
+    if (!isDragging && e.button === 0) {
+      // Botão esquerdo
+      // eslint-disable-next-line no-console
+      console.log('🔄 Tentando forçar início do drag para:', blockType);
+    }
   };
 
   const handleMouseEnter = () => {
@@ -144,10 +153,14 @@ export const DraggableComponentItem: React.FC<DraggableComponentItemProps> = ({
         'ring-2 ring-blue-200 hover:ring-blue-400',
         // ✅ INTERATIVIDADE: Garantir que o elemento seja clicável
         'pointer-events-auto touch-manipulation select-none',
+        // ✅ CLASSE CSS DE FORÇA BRUTA
+        'dnd-draggable-item',
         disabled && 'opacity-30 cursor-not-allowed bg-gray-100',
         className
       )}
       style={style}
+      data-dragging={isDragging}
+      data-block-type={blockType}
       onMouseDown={handleMouseDown}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
