@@ -91,18 +91,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
 
   const { state, actions } = editorContext;
   const [viewport, setViewport] = useState<'full' | 'sm' | 'md' | 'lg'>('full');
-  const viewportWidth = useMemo(() => {
-    switch (viewport) {
-      case 'sm':
-        return 375;
-      case 'md':
-        return 768;
-      case 'lg':
-        return 1024;
-      default:
-        return '100%';
-    }
-  }, [viewport]);
+  // viewportWidth não está sendo usado diretamente; manter lógica simples só com state 'viewport'
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [customTitle, setCustomTitle] = useState('Quiz Quest - Editor Principal');
   const notification = useNotification();
@@ -917,6 +906,21 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       </div>
     </div>
   );
+
+  // Largura do canvas por viewport selecionado
+  const viewportWidth = React.useMemo(() => {
+    switch (viewport) {
+      case 'sm':
+        return 375;
+      case 'md':
+        return 768;
+      case 'lg':
+        return 1024;
+      case 'full':
+      default:
+        return '100%';
+    }
+  }, [viewport]);
 
   // Coluna de propriedades (direita)
   const PropertiesColumn: React.FC = () => (

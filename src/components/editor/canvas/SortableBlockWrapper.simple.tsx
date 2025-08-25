@@ -28,7 +28,14 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
   const Component = getOptimizedBlockComponent(normalizedBlock.type);
 
   // Make block draggable for reordering
-  const { attributes, listeners, setNodeRef: setSortableRef, transform, transition, isDragging } = useSortable({
+  const {
+    attributes,
+    listeners,
+    setNodeRef: setSortableRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
     id: String(block.id),
     data: {
       type: 'canvas-block',
@@ -57,7 +64,11 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
   if (!Component) {
     return (
       <div className="my-1">
-        <div ref={setNodeRef} style={style} className="border border-dashed border-gray-300 rounded">
+        <div
+          ref={setNodeRef}
+          style={style}
+          className="border border-dashed border-gray-300 rounded"
+        >
           <div className="p-4 text-center text-gray-600">
             <p className="font-medium">Componente não encontrado: {block.type}</p>
             <p className="text-xs mt-1">Verifique se o tipo está registrado</p>
