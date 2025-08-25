@@ -75,7 +75,10 @@ export const DnDMonitor: React.FC = () => {
   }, []);
 
   return (
-    <div className="fixed top-4 right-4 bg-black/90 text-white text-xs p-3 rounded-lg font-mono z-50 min-w-[200px]">
+    <div
+      className="fixed top-4 right-4 bg-black/90 text-white text-xs p-3 rounded-lg font-mono z-50 min-w-[200px]"
+      style={{ pointerEvents: 'none' }}
+    >
       <div className="font-bold text-green-400 mb-2">🔍 DnD Monitor</div>
       <div className="space-y-1">
         <div>
@@ -104,10 +107,11 @@ export const DnDMonitor: React.FC = () => {
         Clique para ativar console debug:
         <button
           onClick={() => {
-            window.__DND_DEBUG = true;
+            (window as any).__DND_DEBUG = true;
             console.log('🎯 Debug ativado!');
           }}
           className="ml-2 px-2 py-1 bg-blue-600 text-white rounded text-xs hover:bg-blue-700"
+          style={{ pointerEvents: 'auto' }}
         >
           Debug
         </button>
