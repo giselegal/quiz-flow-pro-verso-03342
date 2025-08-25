@@ -23,10 +23,11 @@ const InterBlockDropZone: React.FC<{
     <div
       ref={setNodeRef}
       className={cn(
-        'h-3 transition-all duration-200 relative',
-        isOver && 'h-12 bg-brand/10 border-2 border-dashed border-brand/40 rounded-lg',
-        isActive && !isOver && 'h-1 bg-brand/20 rounded-full opacity-50'
+        'h-4 transition-all duration-200 relative pointer-events-auto',
+        isOver && 'h-16 bg-brand/10 border-2 border-dashed border-brand/40 rounded-lg',
+        isActive && !isOver && 'h-2 bg-brand/20 rounded-full opacity-50'
       )}
+      style={{ minHeight: 12 }}
     >
       {isOver && (
         <div className="absolute inset-0 flex items-center justify-center">
@@ -97,7 +98,7 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
     <div
       ref={setNodeRef}
       className={cn(
-        'min-h-[200px] transition-all duration-200',
+  'min-h-[240px] transition-all duration-200 pointer-events-auto',
         isOver && !isPreviewing && 'bg-brand/5 ring-2 ring-brand/20 ring-dashed',
         className
       )}
