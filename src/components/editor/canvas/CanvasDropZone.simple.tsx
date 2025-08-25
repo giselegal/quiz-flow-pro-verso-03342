@@ -103,7 +103,7 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
     <div
       ref={setNodeRef}
       className={cn(
-        'min-h-[300px] transition-all duration-200 pointer-events-auto p-4',
+        'min-h-[300px] transition-all duration-200 pointer-events-auto p-4 overflow-visible',
         // Evitar qualquer bloqueio de eventos no canvas
         'z-0',
         isOver && !isPreviewing && 'bg-brand/5 ring-2 ring-brand/20 ring-dashed',

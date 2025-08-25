@@ -179,6 +179,42 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
     return closestCenter(args);
   }, []);
 
+  // Helper centralizado: calcula índice alvo com base no alvo de drop
+  function getTargetIndexFromOver(
+    overIdStrLocal: string | null,
+    overDataLocal: any,
+    mode: 'add' | 'reorder'
+  ): number {
+    // 1) Preferir posição explícita vinda da drop-zone
+    const pos = overDataLocal?.position;
+    if (typeof pos === 'number' && Number.isFinite(pos)) {
+      return Math.max(0, Math.min(pos, currentStepData.length));
+    }
+
+    // 2) Pela convenção do ID drop-zone-<n>
+    if (overIdStrLocal) {
+      const m = overIdStrLocal.match(/^drop-zone-(\d+)$/);
+      if (m) return Math.max(0, Math.min(parseInt(m[1], 10), currentStepData.length));
+    }
+
+    // 3) Canvas root → final
+    if (
+      overIdStrLocal === 'canvas-drop-zone' ||
+      (overIdStrLocal && (overIdStrLocal.startsWith('canvas-drop-zone') || overIdStrLocal.startsWith('canvas-')))
+    ) {
+      return currentStepData.length;
+    }
+
+    // 4) Alvo é um bloco existente
+    if (overIdStrLocal) {
+      const overIndex = currentStepData.findIndex(b => String(b.id) === overIdStrLocal);
+      if (overIndex >= 0) return mode === 'add' ? overIndex + 1 : overIndex;
+    }
+
+    // 5) Fallback → final
+    return currentStepData.length;
+  }
+
   // 🔗 Escutar eventos de navegação disparados pelos blocos (ex.: botão da etapa 1)
   useEffect(() => {
     const parseStepNumber = (stepId: unknown): number | null => {
@@ -468,33 +504,10 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
 
       try {
         switch (validation.action) {
-          case 'add':
+      case 'add':
             if (dragData.type === 'sidebar-component' && dragData.blockType) {
               const newBlock = createBlockFromComponent(dragData.blockType as any, currentStepData);
-              // Inserção precisa por posição quando drop-zone-<n>
-              let targetIndex = currentStepData.length;
-              if (overIdStr) {
-                const m = overIdStr.match(/^drop-zone-(\d+)$/);
-                if (m)
-                  targetIndex = Math.max(0, Math.min(parseInt(m[1], 10), currentStepData.length));
-                else if (
-                  overIdStr === 'canvas-drop-zone' ||
-                  overIdStr.startsWith('canvas-drop-zone') ||
-                  overIdStr.startsWith('canvas-')
-                )
-                  targetIndex = currentStepData.length;
-                else {
-                  // Se soltou sobre um bloco, inserir depois dele (comportamento consistente)
-                  const overIndex = currentStepData.findIndex(b => String(b.id) === overIdStr);
-                  if (overIndex >= 0) {
-                    // Sempre inserir depois do bloco alvo (overIndex + 1)
-                    targetIndex = overIndex + 1;
-                  }
-                }
-              } else if (currentStepData.length === 0) {
-                // Canvas vazio: inserir no índice 0
-                targetIndex = 0;
-              }
+        const targetIndex = getTargetIndexFromOver(overIdStr, overData, 'add');
               actions.addBlockAtIndex(currentStepKey, newBlock, targetIndex);
               actions.setSelectedBlockId(newBlock.id);
               notification?.success?.(
@@ -509,23 +522,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               );
               if (activeIndex === -1) break;
 
-              let targetIndex = activeIndex;
-              if (overIdStr === 'canvas-drop-zone') {
-                targetIndex = currentStepData.length;
-              } else if (overIdStr) {
-                const m = overIdStr.match(/^drop-zone-(\d+)$/);
-                if (m) {
-                  targetIndex = Math.max(0, Math.min(parseInt(m[1], 10), currentStepData.length));
-                } else {
-                  const overIndex = currentStepData.findIndex(
-                    block => String(block.id) === overIdStr
-                  );
-                  if (overIndex !== -1) {
-                    // Para reordenação: inserir antes do bloco alvo (comportamento padrão)
-                    targetIndex = overIndex;
-                  }
-                }
-              }
+        const targetIndex = getTargetIndexFromOver(overIdStr, overData, 'reorder');
 
               if (activeIndex !== targetIndex) {
                 actions.reorderBlocks(currentStepKey, activeIndex, targetIndex);
@@ -932,7 +929,9 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         });
 
         // Logs de camadas/estilos do canvas e dropzones
-        const canvasRoot = document.querySelector('[data-id="canvas-drop-zone"]') as HTMLElement | null;
+        const canvasRoot = document.querySelector(
+          '[data-id="canvas-drop-zone"]'
+        ) as HTMLElement | null;
         if (canvasRoot) {
           const cs = window.getComputedStyle(canvasRoot);
           console.log('🎨 Canvas styles:', {
@@ -951,12 +950,17 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         zones.forEach((z: Element) => {
           const el = z as HTMLElement;
           const cs = window.getComputedStyle(el);
-          console.log('🧩 DropZone:', el.getAttribute('data-dnd-dropzone-type'), el.getAttribute('data-position'), {
-            rect: el.getBoundingClientRect(),
-            pointerEvents: cs.pointerEvents,
-            zIndex: cs.zIndex,
-            visibility: cs.visibility,
-          });
+          console.log(
+            '🧩 DropZone:',
+            el.getAttribute('data-dnd-dropzone-type'),
+            el.getAttribute('data-position'),
+            {
+              rect: el.getBoundingClientRect(),
+              pointerEvents: cs.pointerEvents,
+              zIndex: cs.zIndex,
+              visibility: cs.visibility,
+            }
+          );
         });
 
         if (draggables.length === 0) {
