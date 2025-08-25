@@ -4,6 +4,14 @@ import { supabase } from '@/integrations/supabase/client';
 const OFFLINE = import.meta.env.VITE_DISABLE_SUPABASE === 'true';
 const isBrowser = typeof window !== 'undefined';
 
+// Utilitário simples para validar UUID v1-v5
+function isValidUUID(value: string | null | undefined): value is string {
+  if (!value) return false;
+  return /^(?:[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})$/i.test(
+    value
+  );
+}
+
 function saveLocal<T>(key: string, value: T) {
   if (!isBrowser) return;
   try {
@@ -114,6 +122,34 @@ export const userResponseService = {
       saveLocal(`quiz_response_${fallbackResponse.id}`, fallbackResponse);
       return fallbackResponse;
     }
+    // Se o sessionId não for um UUID válido (ex.: "session_..."), não tente salvar no Supabase
+    if (!isValidUUID(response.sessionId)) {
+      console.warn(
+        '⚠️ Supabase disabled for this response: session_id is not a valid UUID, using local fallback.',
+        response.sessionId
+      );
+      const fallbackResponse: UserResponse = {
+        id: `response_${Date.now()}`,
+        userId: response.userId,
+        sessionId: response.sessionId,
+        step: response.step,
+        data: response.data,
+        timestamp: response.timestamp,
+        created_at: new Date(),
+      };
+      try {
+        const componentKey =
+          (response.data && (response.data.componentId || response.data.fieldName)) || undefined;
+        if (componentKey) {
+          localStorage.setItem(`quiz_response_${componentKey}`, JSON.stringify(fallbackResponse));
+        }
+        localStorage.setItem(
+          `quiz_response_${fallbackResponse.id}`,
+          JSON.stringify(fallbackResponse)
+        );
+      } catch {}
+      return fallbackResponse;
+    }
     try {
       console.log('📝 Saving response to Supabase:', response);
 
@@ -212,7 +248,8 @@ export const userResponseService = {
       // Primeiro tentar buscar pela session_id ativa e question_id (componentId mapeia para question_id)
       const sessionId = localStorage.getItem('quiz_session_id') || '';
 
-      if (sessionId) {
+      // Evitar 400 no PostgREST: não filtrar por session_id se não for UUID válido
+      if (sessionId && isValidUUID(sessionId)) {
         const { data, error } = await supabase
           .from('quiz_step_responses')
           .select('*')
@@ -262,6 +299,11 @@ export const userResponseService = {
             } catch {}
           });
         return out;
+      }
+      // Evitar erro 400 por filtro inválido: se não for UUID, retornar vazio
+      if (!isValidUUID(userId)) {
+        console.warn('⚠️ Skipping Supabase getResponses: session_id is not a valid UUID');
+        return [];
       }
       const { data, error } = await supabase
         .from('quiz_step_responses')
