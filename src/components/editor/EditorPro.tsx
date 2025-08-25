@@ -903,6 +903,22 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       // eslint-disable-next-line no-console
       console.log('🎯 DndContext sendo montado no EditorPro');
 
+      // Injetar estilos de debug para visualizar droppables/handles
+      try {
+        const existing = document.getElementById('dnd-debug-styles');
+        if (!existing) {
+          const style = document.createElement('style');
+          style.id = 'dnd-debug-styles';
+          style.textContent = `
+            /* Highlight droppables e draggables em modo debug */
+            .editor-pro [data-dnd-kit-droppable] { outline: 1px dashed rgba(59,130,246,0.5); outline-offset: -2px; }
+            .editor-pro [data-dnd-dropzone-type] { outline: 1px dashed rgba(16,185,129,0.7); outline-offset: -2px; }
+            .editor-pro [data-dnd-kit-draggable-handle] { box-shadow: 0 0 0 2px rgba(99,102,241,0.5) inset; }
+          `;
+          document.head.appendChild(style);
+        }
+      } catch {}
+
       // Verificar elementos DnD após renderização
       setTimeout(() => {
         const draggables = document.querySelectorAll('[data-dnd-kit-draggable-handle]');
@@ -913,6 +929,34 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
           droppables: droppables.length,
           draggableIds: Array.from(draggables).map(el => el.id),
           droppableIds: Array.from(droppables).map(el => el.id),
+        });
+
+        // Logs de camadas/estilos do canvas e dropzones
+        const canvasRoot = document.querySelector('[data-id="canvas-drop-zone"]') as HTMLElement | null;
+        if (canvasRoot) {
+          const cs = window.getComputedStyle(canvasRoot);
+          console.log('🎨 Canvas styles:', {
+            pointerEvents: cs.pointerEvents,
+            overflow: cs.overflow,
+            overflowY: cs.overflowY,
+            position: cs.position,
+            zIndex: cs.zIndex,
+            rect: canvasRoot.getBoundingClientRect(),
+          });
+        } else {
+          console.warn('⚠️ Canvas root não encontrado (data-id=canvas-drop-zone)');
+        }
+
+        const zones = document.querySelectorAll('[data-dnd-dropzone-type]');
+        zones.forEach((z: Element) => {
+          const el = z as HTMLElement;
+          const cs = window.getComputedStyle(el);
+          console.log('🧩 DropZone:', el.getAttribute('data-dnd-dropzone-type'), el.getAttribute('data-position'), {
+            rect: el.getBoundingClientRect(),
+            pointerEvents: cs.pointerEvents,
+            zIndex: cs.zIndex,
+            visibility: cs.visibility,
+          });
         });
 
         if (draggables.length === 0) {
