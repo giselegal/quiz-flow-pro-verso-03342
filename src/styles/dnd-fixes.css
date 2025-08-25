@@ -47,3 +47,10 @@
   /* Durante drag, permitir overflow */
   overflow: visible !important;
 }
+
+/* Canvas container nunca deve recortar zonas de drop */
+[data-canvas-container] {
+  overflow: visible !important;
+  pointer-events: auto !important;
+  position: relative;
+}

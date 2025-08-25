@@ -200,7 +200,8 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
     // 3) Canvas root → final
     if (
       overIdStrLocal === 'canvas-drop-zone' ||
-      (overIdStrLocal && (overIdStrLocal.startsWith('canvas-drop-zone') || overIdStrLocal.startsWith('canvas-')))
+      (overIdStrLocal &&
+        (overIdStrLocal.startsWith('canvas-drop-zone') || overIdStrLocal.startsWith('canvas-')))
     ) {
       return currentStepData.length;
     }
@@ -504,10 +505,10 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
 
       try {
         switch (validation.action) {
-      case 'add':
+          case 'add':
             if (dragData.type === 'sidebar-component' && dragData.blockType) {
               const newBlock = createBlockFromComponent(dragData.blockType as any, currentStepData);
-        const targetIndex = getTargetIndexFromOver(overIdStr, overData, 'add');
+              const targetIndex = getTargetIndexFromOver(overIdStr, overData, 'add');
               actions.addBlockAtIndex(currentStepKey, newBlock, targetIndex);
               actions.setSelectedBlockId(newBlock.id);
               notification?.success?.(
@@ -522,7 +523,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               );
               if (activeIndex === -1) break;
 
-        const targetIndex = getTargetIndexFromOver(overIdStr, overData, 'reorder');
+              const targetIndex = getTargetIndexFromOver(overIdStr, overData, 'reorder');
 
               if (activeIndex !== targetIndex) {
                 actions.reorderBlocks(currentStepKey, activeIndex, targetIndex);
