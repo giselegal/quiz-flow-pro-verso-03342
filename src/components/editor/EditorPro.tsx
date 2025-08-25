@@ -859,68 +859,21 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         {/* Banner de modo removido */}
       </div>
 
-      {/* Área scrollável do canvas */}
-      <div className="flex-1 overflow-y-auto">
-        <div className="w-full">
-          <div
-            className="mx-auto transition-all editor-pro-canvas"
-            style={{ width: viewportWidth as number | string, maxWidth: '100%' }}
-          >
-            <div
-              className={cn('rounded-xl shadow-sm', viewport !== 'full' && 'border bg-white p-4')}
-            >
-              <CanvasDropZone
-                blocks={currentStepData}
-                selectedBlockId={state.selectedBlockId}
-                onSelectBlock={(id: string) => actions.setSelectedBlockId(id)}
-                onUpdateBlock={(id: string, updates: any) =>
-                  actions.updateBlock(currentStepKey, id, updates)
-                }
-                onDeleteBlock={(id: string) => actions.removeBlock(currentStepKey, id)}
-              />
-            </div>
-            <div className="text-xs mt-2 px-2">
-              Clique em um bloco no canvas para ver suas propriedades
-            </div>
-            <div className="mt-6 p-4 bg-gray-50 rounded-lg text-left">
-              <h4 className="text-sm font-medium text-gray-900 mb-3">
-                Estatísticas da Etapa {safeCurrentStep}
-              </h4>
-              <div className="space-y-2 text-xs">
-                <div className="flex justify-between">
-                  <span>Blocos configurados:</span>
-                  <span className="font-medium">{currentStepData.length}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Tipo da etapa:</span>
-                  <span className="font-medium">{getStepAnalysis(safeCurrentStep).label}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Função:</span>
-                  <span className="font-medium">{getStepAnalysis(safeCurrentStep).desc}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+      {/* Canvas principal com drag & drop */}
+      <div className="flex-1 overflow-y-auto p-4">
+        <CanvasDropZone
+          blocks={currentStepData}
+          selectedBlockId={state.selectedBlockId}
+          onSelectBlock={actions.setSelectedBlockId}
+          onUpdateBlock={(id: string, updates: any) => actions.updateBlock(currentStepKey, id, updates)}
+          onDeleteBlock={(id: string) => actions.removeBlock(currentStepKey, id)}
+          className="max-w-4xl mx-auto"
+        />
       </div>
     </div>
   );
 
-  // Largura do canvas por viewport selecionado
-  const viewportWidth = React.useMemo(() => {
-    switch (viewport) {
-      case 'sm':
-        return 375;
-      case 'md':
-        return 768;
-      case 'lg':
-        return 1024;
-      case 'full':
-      default:
-        return '100%';
-    }
-  }, [viewport]);
+  // (viewportWidth removido - não utilizado na versão atual do Canvas)
 
   // Coluna de propriedades (direita)
   const PropertiesColumn: React.FC = () => (

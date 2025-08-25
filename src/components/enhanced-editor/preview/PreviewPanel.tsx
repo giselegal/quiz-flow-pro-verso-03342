@@ -2,7 +2,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
 import { StyleResult } from '@/types/quiz';
-import { closestCenter, DndContext, DragEndEvent } from '@dnd-kit/core';
+import { DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { BlockPreviewRenderer } from './BlockPreviewRenderer';
 
@@ -59,31 +59,33 @@ export function PreviewPanel({
           >
             <ScrollArea className="h-full">
               <div className="p-4">
-                <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-                  <SortableContext
-                    items={blocks.map(block => String(block.id))}
-                    strategy={verticalListSortingStrategy}
-                  >
-                    {blocks.length === 0 ? (
-                      <div className="flex flex-col items-center justify-center h-64 border-2 border-dashed border-[#B89B7A]/30 rounded-lg p-6 text-center">
-                        <p className="text-[#8F7A6A]">
-                          Adicione componentes do painel esquerdo para começar
-                        </p>
-                      </div>
-                    ) : (
-                      blocks.map(block => (
-                        <BlockPreviewRenderer
-                          key={block.id}
-                          block={block}
-                          isSelected={block.id === selectedBlockId}
-                          isPreviewing={isPreviewing}
-                          onSelect={() => onSelectBlock(block.id)}
-                          primaryStyle={primaryStyle}
-                        />
-                      ))
-                    )}
-                  </SortableContext>
-                </DndContext>
+                {/* ✅ FIXED: Remove nested DndContext to prevent conflicts
+                    This component should only use SortableContext if there's 
+                    already a parent DndContext */}
+                <SortableContext
+                  items={blocks.map(block => String(block.id))}
+                  strategy={verticalListSortingStrategy}
+                >
+                  {blocks.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center h-64 border-2 border-dashed border-[#B89B7A]/30 rounded-lg p-6 text-center">
+                      <p className="text-[#8F7A6A]">
+                        Adicione componentes do painel esquerdo para começar
+                      </p>
+                    </div>
+                  ) : (
+                    blocks.map(block => (
+                      <BlockPreviewRenderer
+                        key={block.id}
+                        block={block}
+                        isSelected={block.id === selectedBlockId}
+                        isPreviewing={isPreviewing}
+                        onSelect={() => onSelectBlock(block.id)}
+                        primaryStyle={primaryStyle}
+                        onDragEnd={handleDragEnd}
+                      />
+                    ))
+                  )}
+                </SortableContext>
               </div>
             </ScrollArea>
           </div>
