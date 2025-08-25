@@ -4,8 +4,8 @@ import ClientLayout from './components/ClientLayout';
 import './index.css';
 // 🚀 SUPABASE: Inicialização do serviço de dados
 // 🧹 DEVELOPMENT: Sistema de limpeza de avisos do console
-import { cleanupConsoleWarnings } from './utils/development';
 import { initBrowserCleanup } from './utils/browserCleanup';
+import { cleanupConsoleWarnings } from './utils/development';
 // import "./utils/hotmartWebhookSimulator"; // Carregar simulador de webhook - temporariamente desabilitado
 
 // 🧹 DEVELOPMENT: Ativa limpeza de avisos apenas em desenvolvimento

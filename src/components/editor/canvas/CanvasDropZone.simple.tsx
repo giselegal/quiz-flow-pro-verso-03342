@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
-import { useDroppable } from '@dnd-kit/core';
+import { useDroppable, useDndContext } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import React from 'react';
 import { SortableBlockWrapper } from './SortableBlockWrapper.simple';
@@ -23,11 +23,11 @@ const InterBlockDropZone: React.FC<{
     <div
       ref={setNodeRef}
       className={cn(
-        'h-4 transition-all duration-200 relative pointer-events-auto',
+        'transition-all duration-200 relative pointer-events-auto flex items-center justify-center',
+        'h-6 min-h-[24px]', // Altura mínima mais generosa para facilitar drop
         isOver && 'h-16 bg-brand/10 border-2 border-dashed border-brand/40 rounded-lg',
-        isActive && !isOver && 'h-2 bg-brand/20 rounded-full opacity-50'
+        isActive && !isOver && 'h-3 bg-brand/20 rounded-full opacity-50'
       )}
-      style={{ minHeight: 12 }}
     >
       {isOver && (
         <div className="absolute inset-0 flex items-center justify-center">
@@ -36,6 +36,8 @@ const InterBlockDropZone: React.FC<{
           </p>
         </div>
       )}
+      {/* Área invisível para melhor hit detection */}
+      <div className="absolute inset-x-0 -inset-y-2 pointer-events-none" />
     </div>
   );
 };
@@ -57,7 +59,7 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
   onDeleteBlock,
   className,
 }) => {
-  const { setNodeRef, isOver, active } = useDroppable({
+  const { setNodeRef, isOver } = useDroppable({
     id: 'canvas-drop-zone',
     data: {
       type: 'canvas-drop-zone',
@@ -66,8 +68,12 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
     },
   });
 
+  // Usa useDndContext para obter active do contexto DnD
+  const { active } = useDndContext();
+
   // Verifica se qualquer item arrastável válido está ativo
   const isDraggingAnyValidComponent = React.useMemo(() => {
+    if (!active) return false;
     const t = active?.data.current?.type;
     const overId = active?.id ? String(active?.id) : '';
     return t === 'sidebar-component' || t === 'canvas-block' || overId.startsWith('sidebar-item-');
