@@ -388,36 +388,41 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       const { active, over } = event;
       const activeIdStr = active?.id != null ? String(active.id) : null;
       const overIdStr = over?.id != null ? String(over.id) : null;
-
-      console.log('🎯 DRAG END CAPTURADO!', {
-        activeId: activeIdStr,
-        overId: overIdStr,
-        overData: over?.data?.current,
-      });
+  const activeData = (active as any)?.data?.current;
+  const overData = (over as any)?.data?.current;
+  console.groupCollapsed('🎯 DRAG END DEBUG');
+  console.log('active.id:', activeIdStr);
+  console.log('active.data.current:', activeData);
+  console.log('over.id:', overIdStr);
+  console.log('over.data.current:', overData);
 
       if (!over) {
-        console.log('❌ Drop cancelado - sem alvo');
+        console.warn('❌ Drop cancelado - sem alvo');
         const dragData = extractDragData(active);
         const feedback = getDragFeedback(dragData, {
           isValid: false,
           message: 'Sem alvo de drop',
         } as any);
         notification?.warning?.(feedback.message);
+        console.groupEnd();
         return;
       }
 
       const validation = validateDrop(active, over, currentStepData);
+      console.log('validateDrop →', validation);
       logDragEvent('end', active, over, validation);
 
       if (!validation.isValid) {
         const feedback = getDragFeedback(extractDragData(active), validation);
         notification?.warning?.(feedback.message);
+        console.groupEnd();
         return;
       }
 
       const dragData = extractDragData(active);
       if (!dragData) {
         notification?.error?.('Dados de drag corrompidos');
+        console.groupEnd();
         return;
       }
 
@@ -487,6 +492,8 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       } catch (error) {
         console.error('Erro durante drag & drop:', error);
         notification?.error?.('Erro ao processar drag & drop');
+      } finally {
+        console.groupEnd();
       }
     },
     [actions, currentStepData, currentStepKey, notification]
