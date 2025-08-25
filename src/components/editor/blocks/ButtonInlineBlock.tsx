@@ -2,6 +2,7 @@ import { cn } from '@/lib/utils';
 import type { BlockComponentProps } from '@/types/blocks';
 import { ArrowRight, Download, Edit3, MousePointer2, Play, Star } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
+import { sessionService } from '../../../services/sessionService';
 import { userResponseService } from '../../../services/userResponseService';
 import { trackQuizStart } from '../../../utils/analytics';
 
@@ -198,13 +199,20 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
   // 🚀 Função para inicializar quiz no Supabase
   const initializeQuizWithSupabase = async (userName: string) => {
     try {
-      // Placeholder - Supabase integration will be implemented later
-      console.log('Supabase integration placeholder:', {
+      // Garante um sessionId local
+      sessionService.ensureLocalSessionId();
+      // Tenta iniciar sessão real (gera UUID) e persistir
+      const start = await sessionService.startQuizSession({
         name: userName,
-        utm_source: new URLSearchParams(window.location.search).get('utm_source') || undefined,
+        quizId: 'default-funnel',
       });
-
-      console.log('✅ Quiz inicializado no Supabase com sucesso');
+      if (start.success) {
+        console.log('✅ Sessão Supabase iniciada:', start.sessionId);
+        // Após obter UUID, tentar flush de respostas pendentes
+        await userResponseService.flushPending();
+      } else {
+        console.log('⚠️ Usando sessão local sem UUID, permaneceremos offline-first');
+      }
     } catch (error) {
       console.error('❌ Erro ao inicializar quiz no Supabase:', error);
     }

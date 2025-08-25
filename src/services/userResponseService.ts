@@ -1,5 +1,6 @@
 // Real Supabase User Response Service (com modo offline)
 import { supabase } from '@/integrations/supabase/client';
+import { sessionService } from '@/services/sessionService';
 
 const OFFLINE = import.meta.env.VITE_DISABLE_SUPABASE === 'true';
 const isBrowser = typeof window !== 'undefined';
@@ -48,12 +49,49 @@ export interface QuizUser {
 }
 
 export const userResponseService = {
+  // Empilha respostas quando não há UUID ou offline; será esvaziado por flush
+  enqueuePending(response: any) {
+    if (!isBrowser) return;
+    try {
+      const arr = JSON.parse(localStorage.getItem('quiz_pending_responses') || '[]');
+      arr.push(response);
+      localStorage.setItem('quiz_pending_responses', JSON.stringify(arr));
+    } catch {}
+  },
+
+  async flushPending(): Promise<{ success: boolean; sent: number; remaining: number }> {
+    if (OFFLINE) return { success: true, sent: 0, remaining: 0 };
+    const sessionId = sessionService.getSessionId();
+    if (!isValidUUID(sessionId || ''))
+      return {
+        success: false,
+        sent: 0,
+        remaining: (JSON.parse(localStorage.getItem('quiz_pending_responses') || '[]') as any[])
+          .length,
+      };
+
+    const pending: any[] = JSON.parse(localStorage.getItem('quiz_pending_responses') || '[]');
+    if (!pending.length) return { success: true, sent: 0, remaining: 0 };
+
+    let sent = 0;
+    const remaining: any[] = [];
+    for (const item of pending) {
+      try {
+        await this.saveResponse({ ...item, sessionId });
+        sent++;
+      } catch (e) {
+        remaining.push(item);
+      }
+    }
+    localStorage.setItem('quiz_pending_responses', JSON.stringify(remaining));
+    return { success: remaining.length === 0, sent, remaining: remaining.length };
+  },
   async createQuizUser(userData: {
     sessionId: string;
     name?: string;
     email?: string;
   }): Promise<QuizUser> {
-    if (OFFLINE) {
+    if (OFFLINE || !isValidUUID(userData.sessionId)) {
       const mock: QuizUser = {
         id: `local_user_${userData.sessionId}`,
         session_id: userData.sessionId,
@@ -147,6 +185,8 @@ export const userResponseService = {
           `quiz_response_${fallbackResponse.id}`,
           JSON.stringify(fallbackResponse)
         );
+        // Enfileirar para tentar enviar quando obtivermos uma sessão UUID
+        this.enqueuePending(response);
       } catch {}
       return fallbackResponse;
     }
@@ -246,7 +286,7 @@ export const userResponseService = {
         return '';
       }
       // Primeiro tentar buscar pela session_id ativa e question_id (componentId mapeia para question_id)
-      const sessionId = localStorage.getItem('quiz_session_id') || '';
+      const sessionId = sessionService.getSessionId() || '';
 
       // Evitar 400 no PostgREST: não filtrar por session_id se não for UUID válido
       if (sessionId && isValidUUID(sessionId)) {
@@ -360,3 +400,17 @@ export const userResponseService = {
 };
 
 export default userResponseService;
+
+// Auto-flush quando sessão UUID é iniciada ou quando voltar online
+if (typeof window !== 'undefined') {
+  window.addEventListener('quiz-session-started', () => {
+    setTimeout(() => {
+      userResponseService.flushPending().catch(() => {});
+    }, 0);
+  });
+  window.addEventListener('online', () => {
+    setTimeout(() => {
+      userResponseService.flushPending().catch(() => {});
+    }, 0);
+  });
+}
