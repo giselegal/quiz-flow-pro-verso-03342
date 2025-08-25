@@ -3,7 +3,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { EditorProvider } from '@/context/EditorContext';
 import { useResultPageConfig } from '@/hooks/useResultPageConfig';
 import React, { useState } from 'react';
-import { EditorCanvas } from '../canvas/EditorCanvas';
+// EditorCanvas module removed in refactor; provide a lightweight placeholder
+const EditorCanvas: React.FC<any> = () => {
+  return (
+    <div className="h-full w-full flex items-center justify-center bg-white border">
+      <div className="text-sm text-gray-600">EditorCanvas placeholder — módulo removido</div>
+    </div>
+  );
+};
 import PropertiesPanel from '../properties/PropertiesPanel';
 import ComponentsSidebar from '../components/ComponentsSidebar';
 

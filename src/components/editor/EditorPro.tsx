@@ -27,7 +27,7 @@ import EnhancedUniversalPropertiesPanelFixed from '@/components/universal/Enhanc
 import { DraggableComponentItem } from './dnd/DraggableComponentItem';
 import { useEditor } from './EditorProvider';
 
-const EditorPro: React.FC<{ className?: string }> = ({ className = '' }) => {
+export const EditorPro: React.FC<{ className?: string }> = ({ className = '' }) => {
   const { state, actions } = useEditor();
   const notification = useNotification();
   const NotificationContainer = (notification as any)?.NotificationContainer ?? null;
