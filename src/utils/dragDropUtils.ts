@@ -40,16 +40,17 @@ export const validateDrop = (
   const overIsCanvas = overId === 'canvas-drop-zone';
   const overIsDropZone = overIsCanvas || /^drop-zone-\d+$/.test(overId);
   const overIsBlockId =
-    typeof overId === 'string' && currentStepBlocks.some(block => String(block.id) === overId);
+    typeof overId === 'string' &&
+    currentStepBlocks.some(block => String(block.id) === overId);
 
   // Sidebar → adicionar
   if (data.type === 'sidebar-component') {
     if (!data.blockType) return { isValid: false, reason: 'Componente sem blockType' };
     if (overIsDropZone) return { isValid: true, action: 'add' };
     if (overIsBlockId || isUuid(overId)) return { isValid: true, action: 'add' };
-    return {
-      isValid: false,
-      reason: `Alvo de drop inválido para componente: ${overId}. Esperado: canvas-drop-zone, drop-zone-N ou ID de bloco válido.`,
+    return { 
+      isValid: false, 
+      reason: `Alvo de drop inválido para componente: ${overId}. Esperado: canvas-drop-zone, drop-zone-N ou ID de bloco válido.` 
     };
   }
 
