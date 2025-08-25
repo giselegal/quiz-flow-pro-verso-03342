@@ -30,6 +30,8 @@ import {
 } from '../../utils/editorUtils';
 import { useNotification } from '../ui/Notification';
 import { CanvasDropZone } from './canvas/CanvasDropZone.simple';
+import { OptimizedCanvasDropZone } from './canvas/OptimizedCanvasDropZone';
+import UniversalBlockRenderer from '@/components/editor/blocks/UniversalBlockRenderer';
 import { DnDMonitor } from './debug/DnDMonitor';
 import { DraggableComponentItem } from './dnd/DraggableComponentItem';
 import { DraggableComponentItemForce } from './dnd/DraggableComponentItemForce';
@@ -97,6 +99,19 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   const notification = useNotification();
   const NotificationContainer = (notification as any)?.NotificationContainer ?? null;
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  // A/B flag: usar canvas otimizado quando query ?abCanvas=optimized (ou localStorage 'abCanvas'='optimized')
+  const useOptimizedCanvas = useMemo(() => {
+    try {
+      const qs = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+      const fromQS = qs?.get('abCanvas');
+      const fromStorage = typeof window !== 'undefined' ? window.localStorage.getItem('abCanvas') : null;
+      const val = (fromQS || fromStorage || '').toLowerCase();
+      return val === 'optimized' || val === 'opt' || val === 'on' || val === '1';
+    } catch {
+      return false;
+    }
+  }, []);
 
   const safeCurrentStep = state.currentStep || 1;
   const currentStepKey = `step-${safeCurrentStep}`;
@@ -185,8 +200,13 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
     overDataLocal: any,
     mode: 'add' | 'reorder'
   ): number {
+    // 0) Compatibilidade com OptimizedCanvasDropZone: ids no formato dnd-block-<blockId>
+    let cleanedOverId: string | null = overIdStrLocal;
+    if (cleanedOverId && cleanedOverId.startsWith('dnd-block-')) {
+      cleanedOverId = cleanedOverId.replace(/^dnd-block-/, '');
+    }
     // 1) Preferir posição explícita vinda da drop-zone
-    const pos = overDataLocal?.position;
+  const pos = overDataLocal?.position;
     if (typeof pos === 'number' && Number.isFinite(pos)) {
       return Math.max(0, Math.min(pos, currentStepData.length));
     }
@@ -207,8 +227,8 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
     }
 
     // 4) Alvo é um bloco existente
-    if (overIdStrLocal) {
-      const overIndex = currentStepData.findIndex(b => String(b.id) === overIdStrLocal);
+    if (cleanedOverId) {
+      const overIndex = currentStepData.findIndex(b => String(b.id) === cleanedOverId);
       if (overIndex >= 0) return mode === 'add' ? overIndex + 1 : overIndex;
     }
 
@@ -385,6 +405,22 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
     [availableComponents]
   );
 
+  // Renderer usado pelo modo otimizado (usa UniversalBlockRenderer com callbacks do Editor)
+  const renderOptimizedBlock = useCallback(
+    (block: Block) => (
+      <UniversalBlockRenderer
+        block={block}
+        mode="editor"
+        isSelected={state.selectedBlockId === block.id}
+        onClick={() => actions.setSelectedBlockId(block.id)}
+        onPropertyChange={(key: string, value: any) =>
+          actions.updateBlock(currentStepKey, block.id, { [key]: value })
+        }
+      />
+    ),
+    [actions, currentStepKey, state.selectedBlockId]
+  );
+
   const getStepAnalysis = (step: number) => {
     if (step === 1) return { type: '📝', label: 'Captura', desc: 'Nome do usuário' };
     if (step >= 2 && step <= 11)
@@ -482,7 +518,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         return;
       }
 
-      const validation = validateDrop(active, over, currentStepData);
+  const validation = validateDrop(active, over, currentStepData);
       if (isDebug()) {
         // eslint-disable-next-line no-console
         console.log('validateDrop →', validation);
@@ -517,9 +553,13 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
             }
             break;
           case 'reorder':
-            if (dragData.type === 'canvas-block') {
+            if (dragData.type === 'canvas-block' || dragData.type === 'block') {
+              // Compat: Optimized usa id 'dnd-block-<blockId>'
+              const normalizedActiveId = activeIdStr?.startsWith('dnd-block-')
+                ? activeIdStr.replace(/^dnd-block-/, '')
+                : activeIdStr;
               const activeIndex = currentStepData.findIndex(
-                block => String(block.id) === activeIdStr
+                block => String(block.id) === normalizedActiveId
               );
               if (activeIndex === -1) break;
 
@@ -855,16 +895,42 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
 
       {/* Canvas principal com drag & drop */}
       <div className="flex-1 overflow-y-auto p-4" data-canvas-container>
-        <CanvasDropZone
-          blocks={currentStepData}
-          selectedBlockId={state.selectedBlockId}
-          onSelectBlock={actions.setSelectedBlockId}
-          onUpdateBlock={(id: string, updates: any) =>
-            actions.updateBlock(currentStepKey, id, updates)
-          }
-          onDeleteBlock={(id: string) => actions.removeBlock(currentStepKey, id)}
-          className="max-w-4xl mx-auto"
-        />
+        {useOptimizedCanvas ? (
+          <OptimizedCanvasDropZone
+            blocks={currentStepData}
+            selectedBlockId={state.selectedBlockId}
+            onSelectBlock={actions.setSelectedBlockId}
+            onDuplicateBlock={(id: string) => {
+              try {
+                const original = currentStepData.find(b => b.id === id);
+                if (!original) return;
+                // Duplicar e inserir logo após o original
+                const { duplicateBlock } = require('@/utils/editorUtils');
+                const dup = duplicateBlock(original, currentStepData);
+                const originalIndex = currentStepData.findIndex(b => b.id === id);
+                const insertIndex = Math.min(originalIndex + 1, currentStepData.length);
+                actions.addBlockAtIndex(currentStepKey, dup, insertIndex);
+                actions.setSelectedBlockId(dup.id);
+              } catch (e) {
+                console.error('Falha ao duplicar bloco:', e);
+              }
+            }}
+            onDeleteBlock={(id: string) => actions.removeBlock(currentStepKey, id)}
+            renderBlock={renderOptimizedBlock}
+            className="max-w-4xl mx-auto"
+          />
+        ) : (
+          <CanvasDropZone
+            blocks={currentStepData}
+            selectedBlockId={state.selectedBlockId}
+            onSelectBlock={actions.setSelectedBlockId}
+            onUpdateBlock={(id: string, updates: any) =>
+              actions.updateBlock(currentStepKey, id, updates)
+            }
+            onDeleteBlock={(id: string) => actions.removeBlock(currentStepKey, id)}
+            className="max-w-4xl mx-auto"
+          />
+        )}
       </div>
     </div>
   );

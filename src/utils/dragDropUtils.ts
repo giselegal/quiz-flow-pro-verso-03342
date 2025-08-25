@@ -6,7 +6,7 @@ import { Active, Over } from '@dnd-kit/core';
  */
 
 export interface DragData {
-  type: 'sidebar-component' | 'canvas-block';
+  type: 'sidebar-component' | 'canvas-block' | 'block';
   blockType?: string;
   blockId?: string;
   sourceStepKey?: string;
@@ -26,6 +26,12 @@ const isUuid = (v: unknown) =>
 const isValidBlockId = (v: unknown) =>
   typeof v === 'string' &&
   (isUuid(v) || /^block-[\w-]+-[A-Za-z0-9_-]{8}$/.test(v as string));
+
+// Compat: ids vindos do OptimizedSortableBlock usam prefixo 'dnd-block-'
+const normalizeOverId = (id: string | null | undefined): string | null => {
+  if (!id) return null;
+  return id.startsWith('dnd-block-') ? id.replace(/^dnd-block-/, '') : id;
+};
 
 /**
  * Valida se um drop é válido
@@ -66,13 +72,14 @@ export const validateDrop = (
   }
 
   // Validação para bloco do canvas
-  if (activeData.type === 'canvas-block') {
+  if (activeData.type === 'canvas-block' || activeData.type === 'block') {
     const activeBlockExists = currentStepBlocks.some(
       block => String(block.id) === String(activeData.blockId)
     );
     if (!activeBlockExists) return { isValid: false, reason: 'Bloco de origem não encontrado' };
 
-    const overId = String(over.id);
+    const rawOverId = String(over.id);
+    const overId = normalizeOverId(rawOverId) || rawOverId;
     const overIsDropZone = overId === 'canvas-drop-zone' || overId.startsWith('drop-zone-');
     const overIsBlock = currentStepBlocks.some(block => String(block.id) === overId);
     if (overIsDropZone || overIsBlock || isValidBlockId(overId)) {

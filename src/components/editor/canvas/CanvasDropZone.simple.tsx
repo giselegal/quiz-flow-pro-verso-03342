@@ -23,13 +23,14 @@ const InterBlockDropZone: React.FC<{
     <div
       ref={setNodeRef}
       className={cn(
-        'transition-all duration-150 relative pointer-events-auto flex items-center justify-center',
-        // Sempre renderizado: manter hit area mínima mesmo quando não estiver ativo
-        'min-h-[10px]',
+  'transition-all duration-150 relative pointer-events-auto flex items-center justify-center w-full',
+  'z-10',
+  // Sempre renderizado: manter hit area perceptível
+  'min-h-[16px]',
         // Ao arrastar sobre: ampliar e dar feedback visual
-        isOver && 'min-h-[48px] bg-brand/10 border-2 border-dashed border-brand/40 rounded-lg',
+  isOver && 'min-h-[56px] bg-brand/10 border-2 border-dashed border-brand/40 rounded-lg',
         // Quando ativo (há drag em andamento) mas não está over: indicar posição sutil
-        isActive && !isOver && 'min-h-[18px] bg-brand/5 rounded-full'
+  isActive && !isOver && 'min-h-[40px] bg-brand/5 rounded-full'
       )}
       data-dnd-dropzone-type="inter-block"
       data-position={position}
