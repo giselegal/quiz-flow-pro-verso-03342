@@ -525,8 +525,8 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
                     block => String(block.id) === overIdStr
                   );
                   if (overIndex !== -1) {
-                    // Se é o último bloco, mover para o final; caso contrário, antes do over
-                    targetIndex = overIndex === currentStepData.length - 1 ? overIndex : overIndex;
+                    // Se é o último bloco, mover para depois dele; caso contrário, antes do over
+                    targetIndex = overIndex === currentStepData.length - 1 ? overIndex + 1 : overIndex;
                   }
                 }
               }
