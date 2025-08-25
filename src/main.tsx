@@ -5,11 +5,16 @@ import './index.css';
 // 🚀 SUPABASE: Inicialização do serviço de dados
 // 🧹 DEVELOPMENT: Sistema de limpeza de avisos do console
 import { cleanupConsoleWarnings } from './utils/development';
+import { initBrowserCleanup } from './utils/browserCleanup';
 // import "./utils/hotmartWebhookSimulator"; // Carregar simulador de webhook - temporariamente desabilitado
 
 // 🧹 DEVELOPMENT: Ativa limpeza de avisos apenas em desenvolvimento
 if (import.meta.env.DEV) {
   cleanupConsoleWarnings();
+  // Limpeza de warnings comuns de navegador (Permissions-Policy, sandbox, preload não usado)
+  if (typeof window !== 'undefined') {
+    initBrowserCleanup();
+  }
 }
 
 // � Interceptor simples para bloquear logs externos em dev (Grafana/gpt-engineer)
