@@ -1,8 +1,8 @@
-import React from 'react';
-import { render, waitFor } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
 import { EditorProvider, useEditor } from '@/components/editor/EditorProvider';
 import type { Block } from '@/types/editor';
+import { render, waitFor } from '@testing-library/react';
+import React from 'react';
+import { describe, expect, it } from 'vitest';
 
 // Helper consumer to expose context actions/state to the test via refs
 const ConsumerBridge = ({ actionsRef, stateRef }: any) => {
@@ -31,8 +31,20 @@ describe('EditorProvider actions (unit)', () => {
       if (!actionsRef.current) throw new Error('actions not ready');
     });
 
-    const blockA: Block = { id: 'temp-a', type: 'text', properties: {}, order: 0, content: {} } as any;
-    const blockB: Block = { id: 'temp-b', type: 'text', properties: {}, order: 1, content: {} } as any;
+    const blockA: Block = {
+      id: 'temp-a',
+      type: 'text',
+      properties: {},
+      order: 0,
+      content: {},
+    } as any;
+    const blockB: Block = {
+      id: 'temp-b',
+      type: 'text',
+      properties: {},
+      order: 1,
+      content: {},
+    } as any;
 
     // Add A at position 0
     await actionsRef.current.addBlockAtIndex('step-1', blockA, 0);
