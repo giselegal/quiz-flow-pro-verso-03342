@@ -59,10 +59,16 @@ export const useHistoryState = <T>(
     }
   }, [history, storageKey, enablePersistence]);
 
-  const setPresent = useCallback((newState: T) => {
+  type Updater = (prev: T) => T;
+
+  const setPresent = useCallback((newState: T | Updater) => {
     setHistory(currentHistory => {
+      const resolvedNewState: T = typeof newState === 'function'
+        ? (newState as Updater)(currentHistory.present)
+        : newState;
+
       const newPast = [...currentHistory.past, currentHistory.present];
-      
+
       // Apply history limit
       if (newPast.length > historyLimit) {
         newPast.splice(0, newPast.length - historyLimit);
@@ -70,7 +76,7 @@ export const useHistoryState = <T>(
 
       return {
         past: newPast,
-        present: newState,
+        present: resolvedNewState,
         future: [],
       };
     });

@@ -157,15 +157,15 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       const comps = await supabaseIntegration.loadSupabaseComponents();
       // Accept either returned list or fallback to internal property
       const components = Array.isArray(comps) ? comps : (supabaseIntegration.components ?? []);
-      if (components && components.length > 0) {
-        const grouped = groupByStepKey(components);
-        // Normaliza e faz merge não-destrutivo por ID
-        const merged = mergeStepBlocks(rawState.stepBlocks, grouped);
-        setState({
-          ...rawState,
-          stepBlocks: merged,
-        });
-      }
+        if (components && components.length > 0) {
+          const grouped = groupByStepKey(components);
+          // Normaliza e faz merge não-destrutivo por ID
+          const merged = mergeStepBlocks(rawState.stepBlocks, grouped);
+          setState(prev => ({
+            ...prev,
+            stepBlocks: merged,
+          }));
+        }
     } catch (err) {
       console.error('EditorProvider: failed to load supabase components', err);
     }
@@ -195,10 +195,10 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
           if (components && components.length > 0) {
             const grouped = groupByStepKey(components);
             const merged = mergeStepBlocks(rawState.stepBlocks, grouped);
-            setState({
-              ...rawState,
+            setState(prev => ({
+              ...prev,
               stepBlocks: merged,
-            });
+            }));
             return;
           }
         }
@@ -209,13 +209,13 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
           const stepKey = `step-${stepNum}`;
           const defaultBlocks = (QUIZ_STYLE_21_STEPS_TEMPLATE as any)[stepKey] || [];
           if (defaultBlocks.length > 0) {
-            setState({
-              ...rawState,
+            setState(prev => ({
+              ...prev,
               stepBlocks: {
-                ...rawState.stepBlocks,
+                ...prev.stepBlocks,
                 [stepKey]: defaultBlocks,
               },
-            });
+            }));
           }
         }
       } catch (error) {
@@ -236,11 +236,11 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     });
 
     // 🚨 FORÇA CARREGAMENTO: Aplicar template normalizado por merge não-destrutivo
-    setState({
-      ...rawState,
-      stepBlocks: mergeStepBlocks(rawState.stepBlocks, normalizedBlocks),
+    setState(prev => ({
+      ...prev,
+      stepBlocks: mergeStepBlocks(prev.stepBlocks, normalizedBlocks),
       currentStep: 1,
-    });
+    }));
 
     // 🚨 GARANTIA DUPLA: Ensure step 1 is loaded on initialization
     setTimeout(() => {
@@ -262,10 +262,10 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       if (!currentStepBlocks || currentStepBlocks.length === 0) {
         console.log('🚨 EMPTY STEP DETECTED - FORCE RELOAD:', rawState.currentStep);
         const normalizedBlocks = normalizeStepBlocks(QUIZ_STYLE_21_STEPS_TEMPLATE);
-        setState({
-          ...rawState,
-          stepBlocks: mergeStepBlocks(rawState.stepBlocks, normalizedBlocks),
-        });
+        setState(prev => ({
+          ...prev,
+          stepBlocks: mergeStepBlocks(prev.stepBlocks, normalizedBlocks),
+        }));
       }
     }
   }, [rawState.currentStep, ensureStepLoaded]);
@@ -273,11 +273,11 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
   // Actions (use functional setState to avoid races)
   const setCurrentStep = useCallback(
     (step: number) => {
-      setState({
-        ...rawState,
+      setState(prev => ({
+        ...prev,
         currentStep: step,
         selectedBlockId: null,
-      });
+      }));
       // Ensure the new step is loaded
       ensureStepLoaded(step);
     },
@@ -286,10 +286,10 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
 
   const setSelectedBlockId = useCallback(
     (blockId: string | null) => {
-      setState({
-        ...rawState,
+      setState(prev => ({
+        ...prev,
         selectedBlockId: blockId,
-      });
+      }));
     },
     [setState, rawState]
   );
@@ -315,7 +315,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
           [stepKey]: [...prevBlocks, block],
         },
       };
-      setState(optimisticStateLocal);
+  setState(() => optimisticStateLocal);
 
       if (state.isSupabaseEnabled && supabaseIntegration?.addBlockToStep) {
         try {
@@ -323,22 +323,22 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
           // replace temp with real block returned by supabase (map shape to Block)
           if (created) {
             const realBlock = mapSupabaseRecordToBlock(created);
-            setState({
-              ...optimisticStateLocal,
+            setState(prev => ({
+              ...prev,
               stepBlocks: {
-                ...optimisticStateLocal.stepBlocks,
+                ...(prev.stepBlocks || {}),
                 [stepKey]: [...(optimisticStateLocal.stepBlocks[stepKey] || []), realBlock],
               },
-            });
+            }));
           } else {
             // If creation returned nothing, rollback
-            setState(optimisticStateLocal);
+            setState(() => optimisticStateLocal);
             throw new Error('Supabase integration returned no created component');
           }
         } catch (err) {
           console.error('❌ addBlock supabase failed, rolling back optimistic update', err);
-          // rollback to previous local state
-          setState(rawState);
+          // rollback to previous local state (snapshot captured)
+          setState(() => rawState);
           throw err;
         }
       } else {
@@ -363,43 +363,43 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
           [stepKey]: nextBlocks,
         },
       };
-      setState(optimisticState);
+  setState(() => optimisticState);
 
       if (state.isSupabaseEnabled && supabaseIntegration?.addBlockToStep) {
         try {
           const created = await supabaseIntegration.addBlockToStep(block, stepNumber);
           if (created) {
             const realBlock = mapSupabaseRecordToBlock(created);
-            setState({
-              ...optimisticState,
+            setState(prev => ({
+              ...prev,
               stepBlocks: {
-                ...optimisticState.stepBlocks,
+                ...(prev.stepBlocks || {}),
                 [stepKey]: (optimisticState.stepBlocks[stepKey] || []).concat([realBlock]),
               },
-            });
+            }));
           } else {
             // rollback if nothing returned
-            setState({
-              ...optimisticState,
+            setState(prev => ({
+              ...prev,
               stepBlocks: {
-                ...optimisticState.stepBlocks,
+                ...(prev.stepBlocks || {}),
                 [stepKey]: (optimisticState.stepBlocks[stepKey] || []).filter(
                   b => b.id !== block.id
                 ),
               },
-            });
+            }));
             throw new Error('Supabase integration returned no created component');
           }
         } catch (err) {
           console.error('❌ addBlockAtIndex supabase failed, rolling back optimistic update', err);
           // rollback optimistic insert
-          setState({
-            ...optimisticState,
+          setState(prev => ({
+            ...prev,
             stepBlocks: {
-              ...optimisticState.stepBlocks,
+              ...(prev.stepBlocks || {}),
               [stepKey]: (optimisticState.stepBlocks[stepKey] || []).filter(b => b.id !== block.id),
             },
-          });
+          }));
           throw err;
         }
       }
@@ -409,14 +409,14 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
 
   const removeBlock = useCallback(
     async (stepKey: string, blockId: string) => {
-      setState({
-        ...rawState,
+      setState(prev => ({
+        ...prev,
         stepBlocks: {
-          ...rawState.stepBlocks,
-          [stepKey]: (rawState.stepBlocks[stepKey] || []).filter(b => b.id !== blockId),
+          ...prev.stepBlocks,
+          [stepKey]: (prev.stepBlocks[stepKey] || []).filter(b => b.id !== blockId),
         },
-        selectedBlockId: rawState.selectedBlockId === blockId ? null : rawState.selectedBlockId,
-      });
+        selectedBlockId: prev.selectedBlockId === blockId ? null : prev.selectedBlockId,
+      }));
 
       // If supabase mode, delegate deletion
       if (state.isSupabaseEnabled && supabaseIntegration?.deleteBlockById) {
@@ -434,13 +434,13 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     async (stepKey: string, oldIndex: number, newIndex: number) => {
       const blocks = [...(rawState.stepBlocks[stepKey] || [])];
       const reordered = arrayMove(blocks, oldIndex, newIndex);
-      setState({
-        ...rawState,
+      setState(prev => ({
+        ...prev,
         stepBlocks: {
-          ...rawState.stepBlocks,
+          ...prev.stepBlocks,
           [stepKey]: reordered,
         },
-      });
+      }));
 
       // Persist order to Supabase if enabled (delegate if available)
       if (state.isSupabaseEnabled && supabaseIntegration?.reorderBlocksForStep) {
@@ -473,7 +473,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
           [stepKey]: nextBlocks,
         },
       };
-      setState(nextState);
+  setState(() => nextState);
 
       if (state.isSupabaseEnabled && supabaseIntegration?.updateBlockById) {
         try {

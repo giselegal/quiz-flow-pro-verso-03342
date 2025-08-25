@@ -138,6 +138,24 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
   const autoAdvanceScheduledRef = React.useRef(false);
   const autoAdvanceTimerRef = React.useRef<number | null>(null);
 
+  // Cleanup timers on unmount to avoid dangling auto-advance after navigation
+  React.useEffect(() => {
+    return () => {
+      if (autoAdvanceTimerRef.current) {
+        try {
+          window.clearTimeout(autoAdvanceTimerRef.current);
+        } catch {}
+        autoAdvanceTimerRef.current = null;
+      }
+      if (previewAutoAdvanceTimerRef.current) {
+        try {
+          window.clearTimeout(previewAutoAdvanceTimerRef.current);
+        } catch {}
+        previewAutoAdvanceTimerRef.current = null;
+      }
+    };
+  }, []);
+
   const {
     question: questionProp,
     // questionId, // unused
@@ -278,12 +296,18 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
     : Number(globalStep);
   const stepNum = Number.isFinite(stepCandidate) && stepCandidate > 0 ? stepCandidate : NaN;
   const stepValidForRules = Number.isFinite(stepNum);
+  // Allow per-block phase configuration via properties.phaseConfig for NOCODE overrides
+  const phaseConfig = (block?.properties as any)?.phaseConfig || {};
+  const scoringConfig = phaseConfig.scoring || {};
+  const strategicConfig = phaseConfig.strategic || {};
+
   const isScoringPhaseRender = stepValidForRules && stepNum >= 2 && stepNum <= 11;
   const isStrategicPhaseRender = stepValidForRules && stepNum >= 13 && stepNum <= 18;
+
   const effectiveRequiredSelectionsRender = isScoringPhaseRender
-    ? 3
+    ? scoringConfig.requiredSelections ?? 3
     : isStrategicPhaseRender
-      ? 1
+      ? strategicConfig.requiredSelections ?? 1
       : requiredSelections || minSelections || 1;
   const currentSelectionCount = isPreviewMode
     ? previewSelections.length
@@ -356,11 +380,16 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       const isValidStep = Number.isFinite(Number(step));
       const isScoringPhase = isValidStep && Number(step) >= 2 && Number(step) <= 11; // 3 obrigatórias
       const isStrategicPhase = isValidStep && Number(step) >= 13 && Number(step) <= 18; // 1 obrigatória
+      // runtime phase config overrides
+      const runtimeScoringCfg = (block?.properties as any)?.phaseConfig?.scoring || {};
+      const runtimeStrategicCfg = (block?.properties as any)?.phaseConfig?.strategic || {};
       const effectiveRequiredSelections = isScoringPhase
-        ? 3
+        ? runtimeScoringCfg.requiredSelections ?? 3
         : isStrategicPhase
-          ? 1
+          ? runtimeStrategicCfg.requiredSelections ?? 1
           : requiredSelections || minSelections || 1;
+
+      const scoringAutoAdvance = isScoringPhase ? runtimeScoringCfg.autoAdvance ?? true : false;
 
       const hasMinSelections = newSelections.length >= (minSelections || 1);
       const hasRequiredSelections = newSelections.length >= effectiveRequiredSelections;
@@ -377,7 +406,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
         };
       });
 
-      if (isScoringPhase && hasRequiredSelections && onNext) {
+  if (isScoringPhase && hasRequiredSelections && onNext && scoringAutoAdvance) {
         console.log('🚀 OptionsGrid (preview): Auto-advancing after selection', newSelections);
 
         if (onStepComplete) {
@@ -413,7 +442,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
         });
       }
 
-      if (!hasRequiredSelections) {
+  if (!hasRequiredSelections) {
         previewAutoAdvanceRef.current = false;
         if (previewAutoAdvanceTimerRef.current) {
           window.clearTimeout(previewAutoAdvanceTimerRef.current);
@@ -458,14 +487,17 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       const isScoringPhase = isValidStep && step >= 2 && step <= 11; // 3 seleções obrigatórias + autoavanço
       const isStrategicPhase = isValidStep && step >= 13 && step <= 18; // 1 seleção obrigatória, sem autoavanço
 
-      // Seleções obrigatórias efetivas por fase
+      // runtime overrides from block properties
+      const runtimeScoringCfgEditor = (block?.properties as any)?.phaseConfig?.scoring || {};
+      const runtimeStrategicCfgEditor = (block?.properties as any)?.phaseConfig?.strategic || {};
       const effectiveRequiredSelections = isScoringPhase
-        ? 3
+        ? runtimeScoringCfgEditor.requiredSelections ?? 3
         : isStrategicPhase
-          ? 1
+          ? runtimeStrategicCfgEditor.requiredSelections ?? 1
           : requiredSelections || minSelections || 1;
 
       const hasRequiredSelections = newSelections.length >= effectiveRequiredSelections;
+      const scoringAutoAdvanceEditor = isScoringPhase ? runtimeScoringCfgEditor.autoAdvance ?? true : false;
 
       // Emitir evento global para que o EditorStageManager possa refletir validação visual
       window.dispatchEvent(
@@ -481,7 +513,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       // Autoavanço somente nas etapas 2–11, ao atingir a última seleção obrigatória
       if (isScoringPhase) {
         // Evitar múltiplos disparos se usuário clicar rapidamente
-        if (hasRequiredSelections && !autoAdvanceScheduledRef.current) {
+        if (hasRequiredSelections && !autoAdvanceScheduledRef.current && scoringAutoAdvanceEditor) {
           autoAdvanceScheduledRef.current = true;
 
           // Ativa visualmente e funcionalmente o botão "Avançar" via evento acima,
