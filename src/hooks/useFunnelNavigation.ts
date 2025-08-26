@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 // Preferir o contexto moderno do EditorProvider; manter fallback para legacy se necessário
 import { useEditor as useEditorModern } from '@/components/editor/EditorProvider';
+import { useQuizFlow } from '@/context/QuizFlowProvider';
 import {
   calculateProgress,
   getNextStepNumber,
@@ -23,14 +24,15 @@ export const useFunnelNavigation = () => {
     modern = useEditorModern();
   } catch {}
 
-  // Mapear API mínima com base no EditorProvider moderno
-  const activeStageId = `step-${modern?.state?.currentStep ?? 1}`;
+  // Unificar via QuizFlowProvider
+  const { currentStep, totalSteps: flowTotal, goTo } = useQuizFlow();
+  const activeStageId = numberToStageId(currentStep || 1);
   const setActiveStage = (id: string) => {
     const digits = parseInt(String(id).replace(/\D/g, ''), 10) || 1;
-    modern?.actions?.setCurrentStep?.(digits);
+    goTo(digits);
   };
   const currentBlocks = modern?.state
-    ? modern.state.stepBlocks?.[makeStepKey(modern.state.currentStep || 1)] || []
+    ? modern.state.stepBlocks?.[makeStepKey(currentStep || 1)] || []
     : [];
   const loadTemplateByStep = async (step: number) => {
     await modern?.actions?.ensureStepLoaded?.(step);
@@ -41,8 +43,8 @@ export const useFunnelNavigation = () => {
   const [navigationHistory, setNavigationHistory] = useState<string[]>([]);
 
   // Estado atual da navegação
-  const currentStepNumber = stageIdToNumber(activeStageId);
-  const totalSteps = 21;
+  const currentStepNumber = currentStep || stageIdToNumber(activeStageId);
+  const totalSteps = flowTotal || 21;
   const progressValue = calculateProgress(currentStepNumber, totalSteps);
   const stepName = getStepName(currentStepNumber);
 
