@@ -6,7 +6,7 @@ import React from 'react';
 import { SortableBlockWrapper } from './SortableBlockWrapper.simple';
 
 // Componente para drop zone entre blocos (sempre presente para maximizar detecção)
-const InterBlockDropZone: React.FC<{
+const InterBlockDropZoneBase: React.FC<{
   position: number;
   isActive?: boolean;
 }> = ({ position, isActive = true }) => {
@@ -46,6 +46,8 @@ const InterBlockDropZone: React.FC<{
   );
 };
 
+const InterBlockDropZone = React.memo(InterBlockDropZoneBase);
+
 interface CanvasDropZoneProps {
   blocks: Block[];
   selectedBlockId: string | null;
@@ -56,7 +58,7 @@ interface CanvasDropZoneProps {
   isPreviewing?: boolean;
 }
 
-export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
+const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
   blocks,
   selectedBlockId,
   onSelectBlock,
@@ -93,8 +95,21 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
     return t === 'sidebar-component' || t === 'canvas-block' || overId.startsWith('sidebar-item-');
   }, [active]);
 
-  // Debug do drop zone - SEMPRE ATIVO para investigação
+  // Debug do drop zone - somente quando explicitamente habilitado
+  const isDebug = React.useCallback(() => {
+    try {
+      return (
+        ((import.meta as any)?.env?.DEV ?? false) ||
+        (typeof process !== 'undefined' && (process as any)?.env?.NODE_ENV === 'development') ||
+        (typeof window !== 'undefined' && (window as any).__DND_DEBUG === true)
+      );
+    } catch {
+      return false;
+    }
+  }, []);
+
   React.useEffect(() => {
+    if (!isDebug()) return;
     // eslint-disable-next-line no-console
     console.log('🎯 CanvasDropZone: isOver =', isOver, 'active =', active?.id);
     if (active?.data.current?.type === 'sidebar-component') {
@@ -104,7 +119,7 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
       // eslint-disable-next-line no-console
       console.log('🔄 Reordenando bloco do canvas:', active?.id);
     }
-  }, [isOver, active]);
+  }, [isOver, active, isDebug]);
 
   // Modo preview controlado por prop (default: false)
   const isPreviewing = !!isPreviewingProp;
@@ -177,5 +192,7 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
     </div>
   );
 };
+
+export const CanvasDropZone = React.memo(CanvasDropZoneBase);
 
 export default CanvasDropZone;
