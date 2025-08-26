@@ -55,17 +55,14 @@ interface PreviewProviderProps {
   funnelId?: string;
 }
 
-const PreviewProvider: React.FC<PreviewProviderProps> = ({
-  children,
-  totalSteps = 21,
-  funnelId,
-}) => {
+const PreviewProvider: React.FC<PreviewProviderProps> = ({ children, totalSteps = 21, funnelId }) => {
   const [isPreviewing, setIsPreviewing] = useState(false);
-  const [currentStep, setCurrentStepState] = useState(1);
   const [sessionData, setSessionData] = useState<Record<string, any>>({});
+  const { currentStep, totalSteps: flowTotal, next, previous, goTo } = useQuizFlow();
+  const effectiveTotal = flowTotal || totalSteps;
 
   // Calcular se pode navegar
-  const canGoNext = currentStep < totalSteps;
+  const canGoNext = currentStep < effectiveTotal;
   const canGoPrevious = currentStep > 1;
 
   const togglePreview = useCallback(() => {
@@ -78,7 +75,6 @@ const PreviewProvider: React.FC<PreviewProviderProps> = ({
       } else {
         console.log('🚀 Preview Mode: DESATIVADO');
       }
-  const { currentStep, totalSteps: flowTotal, next, previous, goTo } = useQuizFlow();
       return newValue;
     });
   }, []);
@@ -96,104 +92,51 @@ const PreviewProvider: React.FC<PreviewProviderProps> = ({
 
   const goToNextStep = useCallback(() => {
     if (canGoNext) {
-      const nextStep = currentStep + 1;
-      setCurrentStepState(nextStep);
-
-      // Se estiver em preview, simular navegação real
-      if (isPreviewing) {
-        // Dispatch event for editor to handle step change
-        window.dispatchEvent(
-          new CustomEvent('quiz-navigate-to-step', {
-            detail: {
-              stepId: `step-${nextStep.toString().padStart(2, '0')}`,
-              source: 'preview-navigation',
-            },
-          })
-        );
-
-        if (funnelId) {
-          const newUrl = `/dashboard/funnel/${funnelId}/step/${nextStep}`;
-          console.log('🚀 Preview: Navegando para etapa', nextStep, '-', newUrl);
-        }
+      next();
+      if (isPreviewing && funnelId) {
+        const newStep = currentStep + 1;
+        const newUrl = `/dashboard/funnel/${funnelId}/step/${newStep}`;
+        console.log('🚀 Preview: Navegando para etapa', newStep, '-', newUrl);
       }
-
-      console.log('🚀 Preview: Avançou para etapa', nextStep);
     }
-  }, [currentStep, canGoNext, isPreviewing, funnelId]);
+  }, [currentStep, canGoNext, next, isPreviewing, funnelId]);
 
   const goToPreviousStep = useCallback(() => {
     if (canGoPrevious) {
-      const previousStep = currentStep - 1;
-      setCurrentStepState(previousStep);
-
-      // Se estiver em preview, simular navegação real
-      if (isPreviewing) {
-        // Dispatch event for editor to handle step change
-        window.dispatchEvent(
-          new CustomEvent('quiz-navigate-to-step', {
-            detail: {
-              stepId: `step-${previousStep.toString().padStart(2, '0')}`,
-              source: 'preview-navigation',
-            },
-          })
-        );
-
-        if (funnelId) {
-          const newUrl = `/dashboard/funnel/${funnelId}/step/${previousStep}`;
-          console.log('🚀 Preview: Navegando para etapa', previousStep, '-', newUrl);
-        }
+      previous();
+      if (isPreviewing && funnelId) {
+        const prev = currentStep - 1;
+        const newUrl = `/dashboard/funnel/${funnelId}/step/${prev}`;
+        console.log('🚀 Preview: Navegando para etapa', prev, '-', newUrl);
       }
-
-      console.log('🚀 Preview: Voltou para etapa', previousStep);
     }
-  }, [currentStep, canGoPrevious, isPreviewing, funnelId]);
+  }, [currentStep, canGoPrevious, previous, isPreviewing, funnelId]);
 
   const navigateToStep = useCallback(
     (stepId: string) => {
-      // Convert stepId to step number
-      let stepNumber: number;
-      if (stepId.startsWith('step-')) {
-        stepNumber = parseInt(stepId.replace('step-', ''), 10);
-      } else if (stepId.startsWith('etapa-')) {
-        stepNumber = parseInt(stepId.replace('etapa-', ''), 10);
-      } else if (!isNaN(parseInt(stepId, 10))) {
-        stepNumber = parseInt(stepId, 10);
-      } else {
-        console.warn('🚨 Preview: StepId inválido:', stepId);
-        return;
+      let stepNumber: number | null = null;
+      if (typeof stepId === 'string') {
+        const digits = parseInt(stepId.replace(/\D/g, ''), 10);
+        if (!isNaN(digits)) stepNumber = digits;
       }
-
-      if (stepNumber >= 1 && stepNumber <= totalSteps) {
-        setCurrentStepState(stepNumber);
-
-        // Se estiver em preview, dispatch event for editor to handle
-        if (isPreviewing) {
-          window.dispatchEvent(
-            new CustomEvent('quiz-navigate-to-step', {
-              detail: {
-                stepId: `step-${stepNumber.toString().padStart(2, '0')}`,
-                source: 'preview-direct-navigation',
-              },
-            })
-          );
-        }
-
+      if (stepNumber && stepNumber >= 1 && stepNumber <= effectiveTotal) {
+        goTo(stepNumber);
         console.log('🚀 Preview: Navegou diretamente para etapa', stepNumber, 'via ID:', stepId);
       } else {
-        console.warn('🚨 Preview: Número de etapa inválido:', stepNumber);
+        console.warn('🚨 Preview: Número/ID de etapa inválido:', stepId);
       }
     },
-    [totalSteps, isPreviewing]
+    [effectiveTotal, goTo]
   );
 
   const setCurrentStep = useCallback(
     (step: number) => {
-      if (step >= 1 && step <= totalSteps) {
-        setCurrentStepState(step);
+      if (step >= 1 && step <= effectiveTotal) {
+        goTo(step);
         console.log('🚀 Preview: Definiu etapa atual para', step);
       }
     },
-    [totalSteps]
+    [effectiveTotal, goTo]
   );
 
   const updateSessionData = useCallback((key: string, value: any) => {
@@ -206,14 +149,14 @@ const PreviewProvider: React.FC<PreviewProviderProps> = ({
 
   const resetSession = useCallback(() => {
     setSessionData({});
-    setCurrentStepState(1);
+    goTo(1);
     console.log('🚀 Preview: Sessão resetada');
-  }, []);
+  }, [goTo]);
 
   const contextValue: PreviewContextType = {
     isPreviewing,
-    currentStep,
-    totalSteps,
+  currentStep,
+  totalSteps: effectiveTotal,
     canGoNext,
     canGoPrevious,
     sessionData,
@@ -232,9 +175,9 @@ const PreviewProvider: React.FC<PreviewProviderProps> = ({
   // Listen to navigation events from components in preview mode
   React.useEffect(() => {
     const handleNavigateToStep = (event: CustomEvent) => {
-      if (isPreviewing && event.detail?.stepId) {
-        navigateToStep(event.detail.stepId);
-      }
+      if (!isPreviewing) return;
+      if (event.detail?.stepId) navigateToStep(event.detail.stepId);
+      else if (typeof event.detail?.step === 'number') goTo(event.detail.step);
     };
 
     const handleQuizStart = (event: CustomEvent) => {
@@ -245,15 +188,17 @@ const PreviewProvider: React.FC<PreviewProviderProps> = ({
       }
     };
 
-    // Listen for navigation events
-    window.addEventListener('navigate-to-step', handleNavigateToStep as EventListener);
-    window.addEventListener('quiz-start', handleQuizStart as EventListener);
+  // Listen for navigation events (legacy and new)
+  window.addEventListener('navigate-to-step', handleNavigateToStep as EventListener);
+  window.addEventListener('quiz-navigate-to-step', handleNavigateToStep as EventListener);
+  window.addEventListener('quiz-start', handleQuizStart as EventListener);
 
     return () => {
       window.removeEventListener('navigate-to-step', handleNavigateToStep as EventListener);
+      window.removeEventListener('quiz-navigate-to-step', handleNavigateToStep as EventListener);
       window.removeEventListener('quiz-start', handleQuizStart as EventListener);
     };
-  }, [isPreviewing, navigateToStep, updateSessionData]);
+  }, [isPreviewing, navigateToStep, updateSessionData, goTo]);
 
   return <PreviewContext.Provider value={contextValue}>{children}</PreviewContext.Provider>;
 };
