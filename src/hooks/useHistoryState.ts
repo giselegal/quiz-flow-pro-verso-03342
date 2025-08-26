@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 export interface HistoryState<T> {
   past: T[];
@@ -12,15 +12,8 @@ export interface UseHistoryStateOptions {
   enablePersistence?: boolean;
 }
 
-export const useHistoryState = <T>(
-  initialState: T,
-  options: UseHistoryStateOptions = {}
-) => {
-  const {
-    historyLimit = 50,
-    storageKey,
-    enablePersistence = false,
-  } = options;
+export const useHistoryState = <T>(initialState: T, options: UseHistoryStateOptions = {}) => {
+  const { historyLimit = 50, storageKey, enablePersistence = false } = options;
 
   // Initialize state from localStorage if persistence is enabled
   const getInitialState = useCallback((): HistoryState<T> => {
@@ -59,22 +52,30 @@ export const useHistoryState = <T>(
     }
   }, [history, storageKey, enablePersistence]);
 
-  const setPresent = useCallback((newState: T) => {
-    setHistory(currentHistory => {
-      const newPast = [...currentHistory.past, currentHistory.present];
-      
-      // Apply history limit
-      if (newPast.length > historyLimit) {
-        newPast.splice(0, newPast.length - historyLimit);
-      }
+  const setPresent = useCallback(
+    (newStateOrUpdater: T | ((prev: T) => T)) => {
+      setHistory(currentHistory => {
+        const newPast = [...currentHistory.past, currentHistory.present];
 
-      return {
-        past: newPast,
-        present: newState,
-        future: [],
-      };
-    });
-  }, [historyLimit]);
+        // Apply history limit
+        if (newPast.length > historyLimit) {
+          newPast.splice(0, newPast.length - historyLimit);
+        }
+
+        const nextPresent =
+          typeof newStateOrUpdater === 'function'
+            ? (newStateOrUpdater as (prev: T) => T)(currentHistory.present)
+            : newStateOrUpdater;
+
+        return {
+          past: newPast,
+          present: nextPresent,
+          future: [],
+        };
+      });
+    },
+    [historyLimit]
+  );
 
   const undo = useCallback(() => {
     setHistory(currentHistory => {
