@@ -118,37 +118,6 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
     }
 
     // Renderizar blocos da etapa usando UniversalBlockRenderer
-    const handleBlockClick = (_e: React.MouseEvent, block: any) => {
-      const isSelectable = mode === 'editor' || (mode === 'preview' && previewEditable);
-      // 1) Seleção de bloco em preview/edit
-      if (isSelectable && block.id && onBlockClick) {
-        onBlockClick(String(block.id));
-      }
-
-      // 2) Bridge de navegação no preview editável para botões inline
-      if (mode === 'preview' && previewEditable) {
-        const action = block?.properties?.action || block?.content?.action;
-        if (block?.type === 'button-inline' && action) {
-          const step = currentStepOverride ?? currentStep;
-          let target = step;
-          if (action === 'next-step') {
-            target = Math.min(totalSteps, step + 1);
-          } else if (action === 'prev-step') {
-            target = Math.max(1, step - 1);
-          } else if (action === 'go-to-step') {
-            const nextId = block?.properties?.nextStepId || block?.content?.nextStepId;
-            if (typeof nextId === 'string') {
-              const match = nextId.match(/(\d+)/);
-              if (match) target = Math.max(1, Math.min(totalSteps, parseInt(match[1], 10)));
-            } else if (typeof nextId === 'number') {
-              target = Math.max(1, Math.min(totalSteps, nextId));
-            }
-          }
-          if (target !== step) onStepChange?.(target);
-        }
-      }
-    };
-
     return (
       <div className="step-content space-y-6">
         {stepBlocks.map((block: any, index: number) => {
@@ -161,14 +130,17 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
                 'block-container relative transition-all ' +
                 (isSelected ? 'ring-2 ring-blue-500 ring-offset-2 rounded-lg' : '')
               }
-              onClick={e => handleBlockClick(e, block)}
+              onClick={() => {
+                if (isSelectable && block.id && onBlockClick) {
+                  onBlockClick(String(block.id));
+                }
+              }}
             >
               <UniversalBlockRenderer
                 block={block}
                 isSelected={isSelected}
                 mode={mode}
                 onClick={() => {
-                  // Mantém seleção ao clicar no próprio componente
                   if (isSelectable && block.id && onBlockClick) {
                     onBlockClick(String(block.id));
                   }

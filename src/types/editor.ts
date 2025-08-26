@@ -126,7 +126,6 @@ export type BlockType =
   | 'container'
   | 'grid'
   | 'divider'
-  | 'decorative-bar'
   | 'decorative-bar-inline'
 
   // Blocos de acessibilidade
@@ -154,8 +153,7 @@ export type BlockType =
   | 'video'
   | 'icon'
   | 'faq'
-  | 'custom-code'
-  | 'legal-notice';
+  | 'custom-code';
 
 export interface FAQItem {
   id: string;

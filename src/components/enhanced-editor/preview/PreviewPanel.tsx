@@ -1,10 +1,10 @@
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
+import { cn } from '@/lib/utils';
 import { StyleResult } from '@/types/quiz';
-import { closestCenter, DndContext, DragEndEvent } from '@dnd-kit/core';
-import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { BlockPreviewRenderer } from './BlockPreviewRenderer';
+import { DndContext, closestCenter, DragEndEvent } from '@dnd-kit/core';
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 
 interface PreviewPanelProps {
   blocks: Block[];
@@ -35,10 +35,10 @@ export function PreviewPanel({
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
-    if (!over || String(active.id) === String(over.id)) return;
+    if (!over || active.id === over.id) return;
 
-    const oldIndex = blocks.findIndex(block => String(block.id) === String(active.id));
-    const newIndex = blocks.findIndex(block => String(block.id) === String(over.id));
+    const oldIndex = blocks.findIndex(block => block.id === active.id);
+    const newIndex = blocks.findIndex(block => block.id === over.id);
 
     onReorderBlocks(oldIndex, newIndex);
   };
@@ -61,7 +61,7 @@ export function PreviewPanel({
               <div className="p-4">
                 <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
                   <SortableContext
-                    items={blocks.map(block => String(block.id))}
+                    items={blocks.map(block => block.id)}
                     strategy={verticalListSortingStrategy}
                   >
                     {blocks.length === 0 ? (

@@ -11,11 +11,8 @@ const EditorTemplatesPage = lazy(() => import('./pages/editor-templates'));
 // 🎯 PÁGINAS ESSENCIAIS - SEM CONFLITOS
 const Home = lazy(() => import('./pages/Home'));
 const AuthPage = lazy(() => import('./pages/AuthPage'));
-// Import estático para evitar falhas de dynamic import em alguns ambientes (ex.: Lovable)
-import MainEditor from './pages/MainEditor';
+const MainEditor = lazy(() => import('./pages/MainEditor'));
 const DashboardPage = lazy(() => import('./pages/admin/DashboardPage'));
-// ✅ Página de publicação com HTML configurado (cliente final)
-const PublishedQuizPage = lazy(() => import('./pages/quiz-descubra-seu-estilo'));
 
 // Loading component
 const PageLoading = () => (
@@ -47,8 +44,9 @@ function App() {
 
                 {/* 🎯 EDITOR PRINCIPAL ÚNICO - SEM ANINHAMENTO */}
                 <Route path="/editor">
-                  {/* MainEditor importado estaticamente para maior estabilidade */}
-                  <MainEditor />
+                  <Suspense fallback={<PageLoading />}>
+                    <MainEditor />
+                  </Suspense>
                 </Route>
 
                 {/* 🔐 AUTENTICAÇÃO */}
@@ -58,20 +56,7 @@ function App() {
                   </Suspense>
                 </Route>
 
-                {/* 🔀 Compat: Redirecionar /quiz-modular para a versão publicada (/quiz) para evitar duplicidade com /editor */}
-                <Route path="/quiz-modular">
-                  {() => {
-                    if (typeof window !== 'undefined') window.location.replace('/quiz');
-                    return null;
-                  }}
-                </Route>
-
-                {/* 🌐 VERSÃO PUBLICADA SEM COLUNAS (HTML configurado) */}
-                <Route path="/quiz">
-                  <Suspense fallback={<PageLoading />}>
-                    <PublishedQuizPage />
-                  </Suspense>
-                </Route>
+                {/* Rotas de quiz desativadas temporariamente para evitar conflitos de DnD */}
 
                 {/* 📊 DASHBOARD ADMINISTRATIVO */}
                 <ProtectedRoute path="/admin" component={DashboardPage} requireAuth={true} />

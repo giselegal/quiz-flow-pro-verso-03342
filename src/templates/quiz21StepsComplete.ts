@@ -21,7 +21,10 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       type: 'quiz-intro-header',
       order: 0,
       content: {
-        // Wrapper do cabeçalho (sem título/subtítulo/descrição)
+        title: 'Descubra seu Estilo Predominante',
+        subtitle: 'Chega de um guarda-roupa lotado e da sensação de que nada combina com Você.',
+        description:
+          'Em poucos minutos, descubra seu Estilo Predominante — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.',
         showLogo: true,
         showProgress: false,
         showNavigation: false,
@@ -44,86 +47,12 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         progressValue: 0,
         progressMax: 100,
         showBackButton: false,
-        // Layout refinado
-        contentMaxWidth: 640,
-        progressHeight: 8,
-      },
-    },
-    {
-      id: 'step1-title',
-      type: 'text',
-      order: 1,
-      content: {
-        text: '<span style="color: #B89B7A; font-weight: 700; font-family: \'Playfair Display\', serif;">Chega</span> <span style="font-family: \'Playfair Display\', serif;">de um guarda-roupa lotado e da sensação de que</span> <span style="color: #B89B7A; font-weight: 700; font-family: \'Playfair Display\', serif;">nada combina com você.</span>',
-      },
-      properties: {
-        fontSize: 'text-3xl md:text-4xl',
-        fontWeight: 'font-bold',
-        textAlign: 'center',
-        color: '#432818',
-        lineHeight: 'leading-tight',
-        maxWidth: '640px',
-        marginTop: 12,
-        marginBottom: 10,
-      },
-    },
-    {
-      id: 'step1-subtitle',
-      type: 'text',
-      order: 2,
-      content: {
-        text: '',
-      },
-      properties: {
-        fontSize: 'text-lg md:text-xl',
-        fontWeight: 'font-normal',
-        textAlign: 'center',
-        color: '#432818',
-        lineHeight: 'leading-relaxed',
-        maxWidth: '640px',
-        marginTop: 6,
-        marginBottom: 16,
-      },
-    },
-    {
-      id: 'step1-intro-image',
-      type: 'image',
-      order: 3,
-      content: {},
-      properties: {
-        src: 'https://res.cloudinary.com/der8kogzu/image/upload/f_avif,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.avif',
-        alt: '',
-        width: 'auto',
-        height: 'auto',
-        maxWidth: 'lg',
-        alignment: 'center',
-        borderRadius: 'large',
-        marginTop: 8,
-        marginBottom: 12,
-      },
-    },
-    {
-      id: 'step1-decorative-bar',
-      type: 'decorative-bar',
-      order: 4,
-      content: {},
-      properties: {
-        // Centralizada e limitada à largura do conteúdo
-        width: 'min(640px, 100%)',
-        height: 4,
-        color: '#B89B7A',
-        gradientColors: ['#B89B7A', '#D4C2A8', '#B89B7A'],
-        borderRadius: 3,
-        marginTop: 12,
-        marginBottom: 24,
-        showShadow: true,
-        backgroundColor: '#B89B7A',
       },
     },
     {
       id: 'step1-lead-form',
       type: 'form-container',
-      order: 5,
+      order: 1,
       content: {
         title: 'NOME',
         placeholder: 'Digite seu nome',
@@ -155,9 +84,6 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         // ID opcional para integração com o container
         elementId: 'step1-form-container',
         targetButtonId: 'intro-cta-button',
-        // Auto-advance diretamente no container (ou no botão filho)
-        autoAdvanceOnComplete: true,
-        autoAdvanceDelay: 600,
         // Aparência do container
         backgroundColor: '#FFFFFF',
         paddingTop: 16,
@@ -171,7 +97,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
             type: 'form-input',
             properties: {
               label: 'NOME',
-              placeholder: 'Digite seu primeiro nome aqui...',
+              placeholder: 'Digite seu nome',
               name: 'userName',
               inputType: 'text',
               required: true,
@@ -196,8 +122,6 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
               requiresValidInput: true,
               action: 'next-step',
               nextStepId: 'step-2',
-              autoAdvanceOnComplete: true,
-              autoAdvanceDelay: 600,
               // Estilo do botão alinhado ao template
               backgroundColor: '#B89B7A',
               textColor: '#FFFFFF',
@@ -210,7 +134,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
               effectType: 'none',
               shadowType: 'none',
               showDisabledState: true,
-              disabledText: 'Digite seu nome para continuar',
+              disabledText: 'Preencha seu nome para continuar',
               disabledOpacity: 60,
             },
           },
@@ -218,31 +142,23 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       },
     },
     {
-      id: 'step1-legal-notice',
-      type: 'legal-notice',
-      order: 6,
-      content: {},
+      id: 'step1-privacy-text',
+      type: 'text',
+      order: 2,
+      content: {
+        text: 'Seu nome é necessário para personalizar sua experiência. Ao clicar, você concorda com nossa política de privacidade',
+      },
       properties: {
-        // Texto principal e links legais
-        copyrightText:
-          'Suas informações são seguras. Ao continuar, você concorda com nossa Política de Privacidade e Termos.',
-        privacyText: 'Política de Privacidade',
-        termsText: 'Termos de Uso',
-        privacyLinkUrl: '/privacy',
-        termsLinkUrl: '/terms',
-        // Estilo
-        fontSize: '12',
+        fontSize: '12px',
+        color: '#6B7280',
         textAlign: 'center',
-        textColor: '#9CA3AF',
-        linkColor: '#B89B7A',
-        marginTop: 24,
-        marginBottom: 0,
+        marginTop: 16,
       },
     },
     {
       id: 'step1-footer',
       type: 'text',
-      order: 7,
+      order: 3,
       content: {
         text: '2025 - Gisele Galvão - Todos os direitos reservados',
       },
@@ -263,7 +179,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       order: 0,
       content: {
         title: 'Questão 1 de 10',
-        subtitle: '',
+        subtitle: 'Descubra seu Estilo Predominante',
         description: 'Responda com honestidade para obter um resultado mais preciso.',
         showLogo: true,
         showProgress: true,
@@ -290,7 +206,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
     {
       id: 'step2-question',
       type: 'options-grid',
-      order: 4,
+      order: 1,
       content: {
         question: 'QUAL O SEU TIPO DE ROUPA FAVORITA?',
         options: [
@@ -389,7 +305,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       order: 0,
       content: {
         title: 'Questão 2 de 10',
-        subtitle: '',
+        subtitle: 'Descubra seu Estilo Predominante',
         description: 'Responda com honestidade para obter um resultado mais preciso.',
         showLogo: true,
         showProgress: true,
@@ -496,7 +412,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       order: 0,
       content: {
         title: 'Questão 3 de 10',
-        subtitle: '',
+        subtitle: 'Descubra seu Estilo Predominante',
         description: 'Responda com honestidade para obter um resultado mais preciso.',
         showLogo: true,
         showProgress: true,
@@ -615,7 +531,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       order: 0,
       content: {
         title: 'Questão 4 de 10',
-        subtitle: '',
+        subtitle: 'Descubra seu Estilo Predominante',
         description: 'Responda com honestidade para obter um resultado mais preciso.',
         showLogo: true,
         showProgress: true,
@@ -722,7 +638,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       order: 0,
       content: {
         title: 'Questão 5 de 10',
-        subtitle: '',
+        subtitle: 'Descubra seu Estilo Predominante',
         description: 'Responda com honestidade para obter um resultado mais preciso.',
         showLogo: true,
         showProgress: true,
@@ -848,7 +764,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       order: 0,
       content: {
         title: 'Questão 6 de 10',
-        subtitle: '',
+        subtitle: 'Descubra seu Estilo Predominante',
         description: 'Responda com honestidade para obter um resultado mais preciso.',
         showLogo: true,
         showProgress: true,
@@ -974,7 +890,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       order: 0,
       content: {
         title: 'Questão 7 de 10',
-        subtitle: '',
+        subtitle: 'Descubra seu Estilo Predominante',
         description: 'Responda com honestidade para obter um resultado mais preciso.',
         showLogo: true,
         showProgress: true,
@@ -1100,7 +1016,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       order: 0,
       content: {
         title: 'Questão 8 de 10',
-        subtitle: '',
+        subtitle: 'Descubra seu Estilo Predominante',
         description: 'Responda com honestidade para obter um resultado mais preciso.',
         showLogo: true,
         showProgress: true,
@@ -1226,7 +1142,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       order: 0,
       content: {
         title: 'Questão 9 de 10',
-        subtitle: '',
+        subtitle: 'Descubra seu Estilo Predominante',
         description: 'Responda com honestidade para obter um resultado mais preciso.',
         showLogo: true,
         showProgress: true,
@@ -1459,7 +1375,8 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       content: {
         title: 'Enquanto calculamos o seu resultado...',
         subtitle: 'Só mais alguns passos para personalizar ainda mais sua experiência',
-        description: '',
+        description:
+          'Queremos te fazer algumas perguntas que vão tornar sua experiência ainda mais completa. Responda com sinceridade. Isso é só entre você e a sua nova versão.',
         imageUrl:
           'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735378/transition_analysis_dkqmpw.webp',
       },
@@ -1801,7 +1718,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
     {
       id: 'step20-style-card',
       type: 'style-card-inline',
-      order: 5,
+      order: 2,
       content: {
         title: 'Características do seu estilo',
         description: 'O estilo {resultStyle} se caracteriza por:',
@@ -1828,7 +1745,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
     {
       id: 'step20-secondary-styles',
       type: 'secondary-styles',
-      order: 6,
+      order: 3,
       content: {
         title: 'Seus estilos complementares',
         subtitle: 'Você também apresenta elementos destes estilos:',
@@ -1858,7 +1775,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
     {
       id: 'step20-before-after',
       type: 'before-after-inline',
-      order: 7,
+      order: 4,
       content: {
         title: 'Sua transformação é possível',
         subtitle: 'Veja o impacto de aplicar seu estilo no dia a dia',
@@ -1876,7 +1793,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
     {
       id: 'step20-bonuses',
       type: 'bonus',
-      order: 8,
+      order: 5,
       content: {
         title: 'Bônus de transformação inclusos',
       },

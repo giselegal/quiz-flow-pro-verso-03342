@@ -32,7 +32,7 @@ export { useQuizValidation } from './useQuizValidation';
 export { useQuizAnalytics } from './useQuizAnalytics';
 
 // 🚧 DEPRECATED: Legacy editor hooks (use useUnifiedEditor instead)
-// Consolidation em andamento; exports não utilizados foram removidos
+// These are marked for consolidation and will show deprecation warnings
 export { useUnifiedProperties } from './useUnifiedProperties';
 export { useInlineEdit } from './useInlineEdit';
 export { useBlockForm } from './useBlockForm';

@@ -70,14 +70,14 @@ import { editorConfig } from '@/config/editorConfig';
 ## 📋 Exemplo de Uso
 
 ```typescript
-import { EditorProvider, CanvasDropZone, ComponentsSidebar, PropertiesPanel } from '@/components';
+import { EditorProvider, EditorCanvas, ComponentsSidebar, PropertiesPanel } from '@/components';
 
 export default function Editor() {
   return (
     <EditorProvider>
       <div className="editor-layout">
         <ComponentsSidebar />
-        <CanvasDropZone />
+        <EditorCanvas />
         <PropertiesPanel />
       </div>
     </EditorProvider>

@@ -26,17 +26,20 @@ import {
   DragStartEvent,
   KeyboardSensor,
   PointerSensor,
-  pointerWithin,
   rectIntersection,
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import React, { Suspense, useCallback, useMemo, useRef, useState } from 'react';
 import { useEditor } from './EditorProvider';
 =======
 import React, { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+=======
+import React, { Suspense, useCallback, useMemo, useRef, useState } from 'react';
+>>>>>>> 97b323592 (Reverted to commit 393d5ec5dcb2cbdca7166022e2feed9000a4d932)
 import { getBlocksForStep } from '../../config/quizStepsComplete';
 import { cn } from '../../lib/utils';
 import { Block } from '../../types/editor';
@@ -52,8 +55,8 @@ import {
   devLog,
   validateEditorJSON,
 } from '../../utils/editorUtils';
+import { QuizRenderer } from '../core/QuizRenderer';
 import { useNotification } from '../ui/Notification';
-import { CanvasDropZone } from './canvas/CanvasDropZone.simple';
 import { DraggableComponentItem } from './dnd/DraggableComponentItem';
 import { useEditor } from './EditorProvider';
 // import { SortableBlock } from './SortableBlock';
@@ -169,88 +172,20 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
 
   // Collision detection strategy com assinatura correta
   const collisionDetectionStrategy = useCallback((args: any) => {
-    // Primeiro tente uma interseção retangular direta (melhor para detectar drop zones
-    // e listas verticais). Se não houver colisões, tente pointerWithin (cursor dentro)
-    // e por fim fallback para closestCenter.
     try {
-      const collisions = rectIntersection(args);
-      if (collisions && collisions.length > 0) return collisions;
+      const { active } = args;
+      const activeType = extractDragData(active)?.type;
+      if (activeType === 'sidebar-component') {
+        return rectIntersection(args);
+      }
     } catch (err) {
+      // fallback silencioso para evitar quebrar o DnD
       if (process.env.NODE_ENV === 'development') {
         // eslint-disable-next-line no-console
-        console.debug('rectIntersection erro:', err);
+        console.debug('collisionDetectionStrategy error, fallback to closestCenter:', err);
       }
     }
-
-    try {
-      const pointerCollisions = pointerWithin(args);
-      if (pointerCollisions && pointerCollisions.length > 0) return pointerCollisions;
-    } catch (err) {
-      if (process.env.NODE_ENV === 'development') {
-        // eslint-disable-next-line no-console
-        console.debug('pointerWithin erro:', err);
-      }
-    }
-
     return closestCenter(args);
-  }, []);
-
-  // 🔗 Escutar eventos de navegação disparados pelos blocos (ex.: botão da etapa 1)
-  useEffect(() => {
-    const parseStepNumber = (stepId: unknown): number | null => {
-      if (typeof stepId === 'number') return stepId;
-      if (typeof stepId !== 'string') return null;
-      const digits = stepId.replace(/[^0-9]/g, '');
-      const num = parseInt(digits || stepId, 10);
-      return Number.isFinite(num) ? num : null;
-    };
-
-    const handleNavigate = (ev: Event) => {
-      const e = ev as CustomEvent<{ stepId?: string | number; source?: string }>;
-      const target = parseStepNumber(e.detail?.stepId);
-      if (!target || target < 1 || target > 21) return;
-      actions.setCurrentStep(target);
-      if (process.env.NODE_ENV === 'development') {
-        // eslint-disable-next-line no-console
-        console.log(
-          '➡️ EditorPro: navegação por evento',
-          e.detail?.stepId,
-          '→',
-          target,
-          'origem:',
-          e.detail?.source
-        );
-      }
-    };
-
-    window.addEventListener('navigate-to-step', handleNavigate as EventListener);
-    window.addEventListener('quiz-navigate-to-step', handleNavigate as EventListener);
-    return () => {
-      window.removeEventListener('navigate-to-step', handleNavigate as EventListener);
-      window.removeEventListener('quiz-navigate-to-step', handleNavigate as EventListener);
-    };
-  }, [actions]);
-
-  // Expor etapa atual globalmente para unificar comportamento de blocos (produção/edição)
-  useEffect(() => {
-    try {
-      (window as any).__quizCurrentStep = safeCurrentStep;
-    } catch {}
-  }, [safeCurrentStep]);
-
-  // Desabilitar auto-scroll e sincronização de scroll enquanto o editor estiver montado
-  useEffect(() => {
-    try {
-      (window as any).__DISABLE_AUTO_SCROLL = true;
-      (window as any).__DISABLE_SCROLL_SYNC = true;
-    } catch {}
-
-    return () => {
-      try {
-        (window as any).__DISABLE_AUTO_SCROLL = false;
-        (window as any).__DISABLE_SCROLL_SYNC = false;
-      } catch {}
-    };
   }, []);
 
   // componentes disponíveis - ideal extrair para config
@@ -402,12 +337,9 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   const handleDragEnd = useCallback(
     (event: DragEndEvent) => {
       const { active, over } = event;
-      const activeIdStr = active?.id != null ? String(active.id) : null;
-      const overIdStr = over?.id != null ? String(over.id) : null;
-
       console.log('🎯 DRAG END CAPTURADO!', {
-        activeId: activeIdStr,
-        overId: overIdStr,
+        activeId: active.id,
+        overId: over?.id,
         overData: over?.data?.current,
       });
 
@@ -444,14 +376,14 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               const newBlock = createBlockFromComponent(dragData.blockType as any, currentStepData);
               // Inserção precisa por posição quando drop-zone-<n>
               let targetIndex = currentStepData.length;
-              if (overIdStr) {
-                const m = overIdStr.match(/^drop-zone-(\d+)$/);
+              if (typeof over.id === 'string') {
+                const m = over.id.match(/^drop-zone-(\d+)$/);
                 if (m)
                   targetIndex = Math.max(0, Math.min(parseInt(m[1], 10), currentStepData.length));
-                else if (overIdStr === 'canvas-drop-zone') targetIndex = currentStepData.length;
+                else if (over.id === 'canvas-drop-zone') targetIndex = currentStepData.length;
                 else {
                   // Se soltou sobre um bloco, inserir antes dele
-                  const overIndex = currentStepData.findIndex(b => String(b.id) === overIdStr);
+                  const overIndex = currentStepData.findIndex(b => b.id === over.id);
                   if (overIndex >= 0) targetIndex = overIndex;
                 }
               }
@@ -465,24 +397,22 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
           case 'reorder':
             if (dragData.type === 'canvas-block') {
               const activeIndex = currentStepData.findIndex(
-                block => String(block.id) === activeIdStr
+                block => block.id === String(active.id)
               );
               if (activeIndex === -1) break;
 
               let targetIndex = activeIndex;
-              if (overIdStr === 'canvas-drop-zone') {
+              if (over.id === 'canvas-drop-zone') {
                 targetIndex = currentStepData.length - 1;
-              } else if (overIdStr) {
-                const m = overIdStr.match(/^drop-zone-(\d+)$/);
+              } else if (typeof over.id === 'string') {
+                const m = over.id.match(/^drop-zone-(\d+)$/);
                 if (m) {
                   targetIndex = Math.max(
                     0,
                     Math.min(parseInt(m[1], 10), currentStepData.length - 1)
                   );
                 } else {
-                  const overIndex = currentStepData.findIndex(
-                    block => String(block.id) === overIdStr
-                  );
+                  const overIndex = currentStepData.findIndex(block => block.id === over.id);
                   if (overIndex !== -1) targetIndex = overIndex;
                 }
               }
@@ -839,18 +769,19 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
             className="mx-auto transition-all editor-pro-canvas"
             style={{ width: viewportWidth as number | string, maxWidth: '100%' }}
           >
-            <div
-              className={cn('rounded-xl shadow-sm', viewport !== 'full' && 'border bg-white p-4')}
-            >
-              <CanvasDropZone
-                blocks={currentStepData}
-                selectedBlockId={state.selectedBlockId}
-                onSelectBlock={(id: string) => actions.setSelectedBlockId(id)}
-                onUpdateBlock={(id: string, updates: any) =>
-                  actions.updateBlock(currentStepKey, id, updates)
-                }
-                onDeleteBlock={(id: string) => actions.removeBlock(currentStepKey, id)}
-              />
+            <div className={cn('rounded-xl shadow-sm', viewport !== 'full' && 'border bg-white')}>
+              <div>
+                <QuizRenderer
+                  mode="preview"
+                  onStepChange={handleStepSelect}
+                  initialStep={safeCurrentStep}
+                  blocksOverride={currentStepData}
+                  currentStepOverride={safeCurrentStep}
+                  previewEditable
+                  selectedBlockId={state.selectedBlockId}
+                  onBlockClick={(id: string) => actions.setSelectedBlockId(id)}
+                />
+              </div>
             </div>
             <div className="text-xs mt-2 px-2">
               Clique em um bloco no canvas para ver suas propriedades

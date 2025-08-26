@@ -159,11 +159,14 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       const components = Array.isArray(comps) ? comps : (supabaseIntegration.components ?? []);
       if (components && components.length > 0) {
         const grouped = groupByStepKey(components);
-        // Normaliza e faz merge não-destrutivo por ID
-        const merged = mergeStepBlocks(rawState.stepBlocks, grouped);
+        // Normalize incoming data before merging
+        const normalizedIncoming = normalizeStepBlocks(grouped);
         setState({
           ...rawState,
-          stepBlocks: merged,
+          stepBlocks: {
+            ...rawState.stepBlocks,
+            ...normalizedIncoming,
+          },
         });
       }
     } catch (err) {
@@ -235,10 +238,10 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       totalSteps: Object.keys(normalizedBlocks).length,
     });
 
-    // 🚨 FORÇA CARREGAMENTO: Aplicar template normalizado por merge não-destrutivo
+    // 🚨 FORÇA CARREGAMENTO: Sempre aplicar template normalizado
     setState({
       ...rawState,
-      stepBlocks: mergeStepBlocks(rawState.stepBlocks, normalizedBlocks),
+      stepBlocks: normalizedBlocks,
       currentStep: 1,
     });
 
@@ -264,7 +267,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
         const normalizedBlocks = normalizeStepBlocks(QUIZ_STYLE_21_STEPS_TEMPLATE);
         setState({
           ...rawState,
-          stepBlocks: mergeStepBlocks(rawState.stepBlocks, normalizedBlocks),
+          stepBlocks: normalizedBlocks,
         });
       }
     }
@@ -370,14 +373,11 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
           const created = await supabaseIntegration.addBlockToStep(block, stepNumber);
           if (created) {
             const realBlock = mapSupabaseRecordToBlock(created);
-            // Replace the optimistic block (by id) in-place to preserve position
-            const currentList = optimisticState.stepBlocks[stepKey] || [];
-            const replaced = currentList.map(b => (b.id === block.id ? realBlock : b));
             setState({
               ...optimisticState,
               stepBlocks: {
                 ...optimisticState.stepBlocks,
-                [stepKey]: replaced,
+                [stepKey]: (optimisticState.stepBlocks[stepKey] || []).concat([realBlock]),
               },
             });
           } else {

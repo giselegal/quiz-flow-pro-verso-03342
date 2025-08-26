@@ -1,7 +1,0 @@
-const { expect } = require('vitest');
-
-global.window = {};
-
-test('hello world', () => {
-    expect('hello world').toBe('hello world');
-});

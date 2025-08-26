@@ -1,115 +1,98 @@
 /**
- * Validação do Step 01 (Nome) — Editor e Produção
- * - Habilita o botão via evento universal (com compatibilidade legacy)
- * - Atualiza validação global via useQuizFlow
+ * HOOK DE INTEGRAÇÃO PARA EVENTOS DE FORMULÁRIO COM STEP-01
+ * Específico para validação do campo nome no step inicial
  */
-import { useQuizFlow } from '@/hooks/core/useQuizFlow';
 import { useCallback, useEffect } from 'react';
 
 export interface Step01ValidationEvents {
-  buttonId?: string; // id do botão que será habilitado
-  inputId?: string; // id do input de nome
   onNameValid?: (isValid: boolean, value: string) => void;
   onFormComplete?: (formData: Record<string, string>) => void;
   onButtonStateChange?: (enabled: boolean) => void;
 }
 
 export const useStep01Validation = ({
-  buttonId = 'intro-cta-button',
-  inputId = 'intro-name-input',
   onNameValid,
   onFormComplete,
   onButtonStateChange,
 }: Step01ValidationEvents = {}) => {
-  const { quizState, actions } = useQuizFlow?.() || ({} as any);
+  // Handler para validação do campo nome no step-01
+  const handleNameValidation = useCallback(
+    (event: CustomEvent) => {
+      const { detail } = event;
+      const { value, valid } = detail;
 
-  const resolveCurrentStep = () => {
-    return quizState?.currentStep || (window as any)?.__quizCurrentStep || 'step-1';
-  };
+      console.log('📝 Step01 name validation:', { value, valid });
 
-  const validateName = useCallback((name: string): boolean => {
-    return (name ?? '').trim().length >= 2;
-  }, []);
+      if (onNameValid) {
+        onNameValid(valid, value);
+      }
 
-  const emitButtonState = useCallback(
-    (enabled: boolean) => {
-      // Evento universal
-      window.dispatchEvent(
-        new CustomEvent('quiz-button-state-change', {
-          detail: { buttonId, enabled, disabled: !enabled },
-        })
-      );
-      // Compatibilidade com implementação anterior
+      // Disparar evento de mudança de estado do botão
+      if (onButtonStateChange) {
+        onButtonStateChange(valid);
+      }
+
+      // Disparar evento nativo para o FormContainerBlock
       window.dispatchEvent(
         new CustomEvent('step01-button-state-change', {
-          detail: { buttonId, enabled, disabled: !enabled },
+          detail: {
+            buttonId: 'cta-button-modular',
+            enabled: valid,
+            disabled: !valid,
+          },
         })
       );
-      if (onButtonStateChange) onButtonStateChange(enabled);
     },
-    [buttonId, onButtonStateChange]
+    [onNameValid, onButtonStateChange]
   );
 
-  const handleNameValidation = useCallback(
-    (event: Event) => {
-      const e = event as CustomEvent<{
-        blockId?: string;
-        field?: string;
-        value?: string;
-        valid?: boolean;
-      }>;
-      const { blockId, field, value, valid: providedValid } = e.detail || {};
-      if (blockId !== inputId && field !== 'name') return;
-
-      const isValid =
-        typeof providedValid === 'boolean' ? providedValid : validateName(String(value || ''));
-
-      if (onNameValid) onNameValid(isValid, value || '');
-      emitButtonState(isValid);
-
-      const stepId = resolveCurrentStep();
-      if (actions?.setStepValid) actions.setStepValid(stepId, isValid);
-    },
-    [actions, emitButtonState, inputId, onNameValid, validateName]
-  );
-
+  // Handler para formulário completo no step-01
   const handleFormComplete = useCallback(
-    (event: Event) => {
-      const e = event as CustomEvent<{ formData?: Record<string, string> }>;
-      const formData = e.detail?.formData || {};
-      if (onFormComplete) onFormComplete(formData);
+    (event: CustomEvent) => {
+      const { detail } = event;
+      console.log('✅ Step01 form complete:', detail);
 
-      const name = formData?.name || '';
-      const isValid = validateName(name);
-      emitButtonState(isValid);
-      const stepId = resolveCurrentStep();
-      if (actions?.setStepValid) actions.setStepValid(stepId, isValid);
+      if (onFormComplete) {
+        onFormComplete(detail.formData || {});
+      }
     },
-    [actions, emitButtonState, onFormComplete, validateName]
+    [onFormComplete]
   );
 
+  // Registrar event listeners
   useEffect(() => {
     window.addEventListener('quiz-input-change', handleNameValidation as EventListener);
     window.addEventListener('quiz-form-complete', handleFormComplete as EventListener);
+
     return () => {
       window.removeEventListener('quiz-input-change', handleNameValidation as EventListener);
       window.removeEventListener('quiz-form-complete', handleFormComplete as EventListener);
     };
   }, [handleNameValidation, handleFormComplete]);
 
-  const dispatchNameValidation = useCallback(
-    (name: string) => {
-      const isValid = validateName(name);
-      window.dispatchEvent(
-        new CustomEvent('quiz-input-change', {
-          detail: { blockId: inputId, field: 'name', value: name, valid: isValid },
-        })
-      );
-    },
-    [inputId, validateName]
-  );
+  // Função para validar nome (compatível com step-01)
+  const validateName = useCallback((name: string): boolean => {
+    return name.trim().length >= 2;
+  }, []);
 
-  return { validateName, dispatchNameValidation };
+  // Função para disparar eventos manualmente
+  const dispatchNameValidation = useCallback((name: string, isValid: boolean) => {
+    window.dispatchEvent(
+      new CustomEvent('quiz-input-change', {
+        detail: {
+          blockId: 'intro-name-input',
+          value: name,
+          valid: isValid,
+          field: 'name',
+        },
+      })
+    );
+  }, []);
+
+  return {
+    validateName,
+    dispatchNameValidation,
+  };
 };
 
 export default useStep01Validation;

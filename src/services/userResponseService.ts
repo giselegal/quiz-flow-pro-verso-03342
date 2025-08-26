@@ -1,25 +1,5 @@
-// Real Supabase User Response Service (com modo offline)
+// Real Supabase User Response Service
 import { supabase } from '@/integrations/supabase/client';
-
-const OFFLINE = import.meta.env.VITE_DISABLE_SUPABASE === 'true';
-const isBrowser = typeof window !== 'undefined';
-
-function saveLocal<T>(key: string, value: T) {
-  if (!isBrowser) return;
-  try {
-    localStorage.setItem(key, JSON.stringify(value));
-  } catch {}
-}
-
-function readLocal<T = any>(key: string): T | null {
-  if (!isBrowser) return null;
-  try {
-    const v = localStorage.getItem(key);
-    return v ? (JSON.parse(v) as T) : null;
-  } catch {
-    return null;
-  }
-}
 
 export interface UserResponse {
   id: string;
@@ -45,17 +25,6 @@ export const userResponseService = {
     name?: string;
     email?: string;
   }): Promise<QuizUser> {
-    if (OFFLINE) {
-      const mock: QuizUser = {
-        id: `local_user_${userData.sessionId}`,
-        session_id: userData.sessionId,
-        name: userData.name,
-        email: userData.email,
-        created_at: new Date(),
-      };
-      saveLocal(`quiz_user_${userData.sessionId}`, mock);
-      return mock;
-    }
     try {
       console.log('📝 Creating quiz user in Supabase:', userData);
 
@@ -97,23 +66,6 @@ export const userResponseService = {
     data: any;
     timestamp: string;
   }): Promise<UserResponse> {
-    if (OFFLINE) {
-      const fallbackResponse: UserResponse = {
-        id: `response_${Date.now()}`,
-        userId: response.userId,
-        sessionId: response.sessionId,
-        step: response.step,
-        data: response.data,
-        timestamp: response.timestamp,
-        created_at: new Date(),
-      };
-      // Indexar também por componentId para leitura simples
-      const componentId =
-        (response.data && (response.data.componentId || response.data.fieldName)) || 'unknown';
-      saveLocal(`quiz_response_${componentId}`, fallbackResponse);
-      saveLocal(`quiz_response_${fallbackResponse.id}`, fallbackResponse);
-      return fallbackResponse;
-    }
     try {
       console.log('📝 Saving response to Supabase:', response);
 
@@ -165,17 +117,11 @@ export const userResponseService = {
         timestamp: response.timestamp,
         created_at: new Date(),
       };
-      // Salvar indexado pelo id gerado (debug) e pelo componentId/fieldName para leitura por getResponse
-      try {
-        localStorage.setItem(
-          `quiz_response_${fallbackResponse.id}`,
-          JSON.stringify(fallbackResponse)
-        );
-        const componentKey = (response.data && (response.data.componentId || response.data.fieldName)) || undefined;
-        if (componentKey) {
-          localStorage.setItem(`quiz_response_${componentKey}`, JSON.stringify(fallbackResponse));
-        }
-      } catch {}
+
+      localStorage.setItem(
+        `quiz_response_${fallbackResponse.id}`,
+        JSON.stringify(fallbackResponse)
+      );
       console.log('📦 Saved response to localStorage as fallback');
       return fallbackResponse;
     }
@@ -183,19 +129,6 @@ export const userResponseService = {
 
   async getResponse(componentId: string): Promise<string> {
     try {
-      if (OFFLINE) {
-        const stored = readLocal<any>(`quiz_response_${componentId}`);
-        if (stored) {
-          const data = stored.data || {};
-          return (
-            data?.name ||
-            data?.value ||
-            (typeof data === 'string' ? data : JSON.stringify(data)) ||
-            ''
-          );
-        }
-        return '';
-      }
       // Primeiro tentar buscar pela session_id ativa e component_id
       const sessionId = localStorage.getItem('quiz_session_id') || '';
 
@@ -232,22 +165,6 @@ export const userResponseService = {
 
   async getResponses(userId: string): Promise<UserResponse[]> {
     try {
-      if (OFFLINE) {
-        // Coletar todas respostas do usuário em localStorage
-        const out: UserResponse[] = [];
-        if (!isBrowser) return out;
-        Object.keys(localStorage)
-          .filter(k => k.startsWith('quiz_response_'))
-          .forEach(k => {
-            try {
-              const val = JSON.parse(localStorage.getItem(k) || 'null');
-              if (val && (val.sessionId === userId || val.userId === userId)) {
-                out.push(val);
-              }
-            } catch {}
-          });
-        return out;
-      }
       const { data, error } = await supabase
         .from('quiz_step_responses')
         .select('*')
@@ -283,13 +200,6 @@ export const userResponseService = {
 
   async deleteResponse(id: string): Promise<boolean> {
     try {
-      if (OFFLINE) {
-        if (isBrowser) {
-          // Remover tanto por id quanto por indexação de componentId (se existir)
-          localStorage.removeItem(`quiz_response_${id}`);
-        }
-        return true;
-      }
       const { error } = await supabase.from('quiz_step_responses').delete().eq('id', id);
 
       if (error) throw error;

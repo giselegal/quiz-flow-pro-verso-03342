@@ -2,7 +2,7 @@
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
-import { getOptimizedBlockComponent, normalizeBlockProps } from '@/utils/optimizedRegistry';
+import { getOptimizedBlockComponent } from '@/utils/optimizedRegistry';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { GripVertical, Trash2 } from 'lucide-react';
@@ -23,16 +23,14 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
   onUpdate,
   onDelete,
 }) => {
-  // Normalizar bloco para unificar content/properties (mesma lógica do UniversalBlockRenderer)
-  const normalizedBlock = normalizeBlockProps(block);
   // Buscar componente no registry simplificado
-  const Component = getOptimizedBlockComponent(normalizedBlock.type);
+  const Component = getOptimizedBlockComponent(block.type);
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
-    id: String(block.id),
+    id: block.id,
     data: {
       type: 'canvas-block',
-      blockId: String(block.id),
+      blockId: block.id,
       block: block,
     },
   });
@@ -65,29 +63,6 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
     );
   }
 
-  const isInteractive = (el: EventTarget | null) => {
-    if (!(el instanceof HTMLElement)) return false;
-    const tag = el.tagName.toLowerCase();
-    if (['input', 'textarea', 'select', 'button'].includes(tag)) return true;
-    if (el.getAttribute('contenteditable') === 'true') return true;
-    return false;
-  };
-
-  const handleContainerClick = (e: React.MouseEvent) => {
-    if (isInteractive(e.target)) {
-      e.stopPropagation();
-      return;
-    }
-    onSelect();
-  };
-
-  const handleContainerMouseDown = (e: React.MouseEvent) => {
-    if (isInteractive(e.target)) {
-      // Não roubar o foco de elementos interativos
-      e.stopPropagation();
-    }
-  };
-
   return (
     <div ref={setNodeRef} style={style} className="my-0">
       <div
@@ -95,8 +70,6 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
           'relative group transition-all duration-200',
           isSelected ? 'ring-2 ring-blue-500 ring-offset-1' : ''
         )}
-        onClick={handleContainerClick}
-        onMouseDown={handleContainerMouseDown}
       >
         {/* Drag handle and controls */}
         <div className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity z-10 flex items-center gap-1">
@@ -124,7 +97,7 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
         </div>
 
         {/* Component content */}
-        <div>
+        <div onClick={onSelect}>
           <React.Suspense
             fallback={
               <div className="animate-pulse bg-gray-200 h-16 rounded flex items-center justify-center">
@@ -133,13 +106,13 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
             }
           >
             <Component
-              block={normalizedBlock}
+              block={block}
               isSelected={false} // Evita bordas duplas
+              onClick={onSelect}
               onPropertyChange={handlePropertyChange}
               isPreviewMode={false}
               isPreviewing={false}
               previewMode="editor"
-              properties={(normalizedBlock as any)?.properties}
             />
           </React.Suspense>
         </div>

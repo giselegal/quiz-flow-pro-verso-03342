@@ -3,10 +3,9 @@ import EnhancedComponentsSidebar from '@/components/editor/EnhancedComponentsSid
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { useQuizFlow } from '@/hooks/core/useQuizFlow';
-import { useStep01Validation } from '@/hooks/useStep01Validation';
 import { cn } from '@/lib/utils';
 import { Block, BlockType } from '@/types/editor';
-import { TemplateManager } from '@/utils/TemplateManager';
+import { loadStepBlocks } from '@/utils/quiz21StepsRenderer';
 import { DndContext, DragEndEvent, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import React, { useEffect, useState } from 'react';
 
@@ -36,28 +35,13 @@ const QuizModularPage: React.FC = () => {
   // Hook para gerenciar o fluxo do quiz
   const {
     quizState,
-    actions: { goToStep, nextStep, preloadTemplates, setStepValid },
+    actions: { goToStep, nextStep },
   } = useQuizFlow({
     mode: 'production',
     initialStep: currentStep,
   });
 
-  // Unificar validação do Step 1 via hook (habilita botão e marca etapa válida)
-  useStep01Validation({
-    buttonId: 'intro-cta-button',
-    inputId: 'intro-name-input',
-    onNameValid: isValid => {
-      setStepValidation(prev => ({ ...prev, 1: isValid }));
-      setStepValid?.(1, isValid);
-    },
-  });
-
-  // Pré-carregar templates para suavizar transições
-  useEffect(() => {
-    preloadTemplates?.();
-  }, [preloadTemplates]);
-
-  // Carregar blocos da etapa atual (via TemplateManager para refletir atualizações do editor)
+  // Carregar blocos da etapa atual
   useEffect(() => {
     const loadCurrentStepBlocks = async () => {
       try {
@@ -66,16 +50,20 @@ const QuizModularPage: React.FC = () => {
 
         console.log(`🔄 Carregando blocos da etapa ${currentStep}...`);
 
-        // Carregar blocos usando TemplateManager (integra JSON/Editor)
-        const stepId = `step-${currentStep}`;
-        const stepBlocks = await TemplateManager.loadStepBlocks(stepId);
+        // Carregar blocos usando o mesmo sistema do editor
+        const stepBlocks = await loadStepBlocks(currentStep);
+
+        console.log(
+          `✅ ${stepBlocks.length} blocos carregados para etapa ${currentStep}:`,
+          stepBlocks
+        );
+
         setBlocks(stepBlocks);
 
         // Validar se a etapa já está completa
         setTimeout(() => {
           const isValid = validateStep(stepBlocks);
           setStepValidation(prev => ({ ...prev, [currentStep]: isValid }));
-          setStepValid?.(currentStep, isValid);
         }, 100);
       } catch (err) {
         console.error(`❌ Erro ao carregar etapa ${currentStep}:`, err);
@@ -96,69 +84,6 @@ const QuizModularPage: React.FC = () => {
     }
   }, [quizState.currentStep, currentStep]);
 
-  // Expor etapa atual globalmente para blocos/efeitos que dependem disso
-  useEffect(() => {
-    (window as any).__quizCurrentStep = `step-${currentStep}`;
-  }, [currentStep]);
-
-  // Escutar eventos de navegação disparados pelos blocos (ex.: botão step 1, auto-advance)
-  useEffect(() => {
-    const parseStepNumber = (stepId: any): number | null => {
-      if (typeof stepId === 'number') return stepId;
-      if (typeof stepId !== 'string') return null;
-      // Suporta formatos: 'step-2', 'step-02', '2'
-      const digits = stepId.replace(/[^0-9]/g, '');
-      const num = parseInt(digits || stepId, 10);
-      return Number.isFinite(num) ? num : null;
-    };
-
-    const handleNavigate = (ev: Event) => {
-      const e = ev as CustomEvent<{ stepId?: string | number; source?: string }>;
-      const target = parseStepNumber(e.detail?.stepId);
-      if (!target) return;
-      if (target < 1 || target > 21) return;
-
-      setCurrentStep(target);
-      goToStep(target);
-      console.log(
-        '➡️ Navegação por evento:',
-        e.detail?.stepId,
-        '->',
-        target,
-        'origem:',
-        e.detail?.source
-      );
-    };
-
-    window.addEventListener('navigate-to-step', handleNavigate as EventListener);
-    window.addEventListener('quiz-navigate-to-step', handleNavigate as EventListener);
-
-    // Sincronizar validação visual/funcional via eventos globais dos blocos
-    const handleSelectionChange = (ev: Event) => {
-      const e = ev as CustomEvent<{ selectionCount?: number; isValid?: boolean }>;
-      const valid = !!e.detail?.isValid;
-      setStepValidation(prev => ({ ...prev, [currentStep]: valid }));
-      setStepValid?.(currentStep, valid);
-    };
-
-    const handleInputChange = (ev: Event) => {
-      const e = ev as CustomEvent<{ value?: string; valid?: boolean }>;
-      const ok =
-        typeof e.detail?.value === 'string' ? e.detail.value.trim().length > 0 : !!e.detail?.valid;
-      setStepValidation(prev => ({ ...prev, [currentStep]: ok }));
-      setStepValid?.(currentStep, ok);
-    };
-
-    window.addEventListener('quiz-selection-change', handleSelectionChange as EventListener);
-    window.addEventListener('quiz-input-change', handleInputChange as EventListener);
-    return () => {
-      window.removeEventListener('navigate-to-step', handleNavigate as EventListener);
-      window.removeEventListener('quiz-navigate-to-step', handleNavigate as EventListener);
-      window.removeEventListener('quiz-selection-change', handleSelectionChange as EventListener);
-      window.removeEventListener('quiz-input-change', handleInputChange as EventListener);
-    };
-  }, [goToStep]);
-
   // 🔄 HANDLERS DE NAVEGAÇÃO
   const handleNext = () => {
     if (currentStep < 21) {
@@ -176,7 +101,26 @@ const QuizModularPage: React.FC = () => {
     }
   };
 
-  // (remoção de duplicidade: efeito acima já cuida do carregamento)
+  // Carregar blocos da etapa atual
+  useEffect(() => {
+    const loadCurrentStepBlocks = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+
+        const stepBlocks = await loadStepBlocks(currentStep);
+        setBlocks(stepBlocks);
+      } catch (err) {
+        console.error('Erro ao carregar blocos da etapa:', err);
+        setError(`Erro ao carregar etapa ${currentStep}`);
+        setBlocks([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadCurrentStepBlocks();
+  }, [currentStep]);
   // 🎯 FUNÇÕES DE VALIDAÇÃO E AVANÇO
   const validateStep = (currentBlocks: Block[]): boolean => {
     const questionBlocks = currentBlocks.filter(
@@ -227,7 +171,6 @@ const QuizModularPage: React.FC = () => {
       setTimeout(() => {
         const isValid = validateStep(blocks);
         setStepValidation(prev => ({ ...prev, [currentStep]: isValid }));
-        setStepValid?.(currentStep, isValid);
 
         // Auto avanço se configurado
         if (isValid && blockConfig?.autoAdvanceOnComplete) {
@@ -254,7 +197,6 @@ const QuizModularPage: React.FC = () => {
       setTimeout(() => {
         const isValid = validateStep(blocks);
         setStepValidation(prev => ({ ...prev, [currentStep]: isValid }));
-        setStepValid?.(currentStep, isValid);
 
         // Auto avanço se configurado
         if (isValid && blockConfig?.autoAdvanceOnComplete) {
@@ -482,7 +424,7 @@ const QuizModularPage: React.FC = () => {
                   </div>
                 </div>
 
-                {/* 📋 HEADER DA ETAPA (limpo: sem textos promocionais fixos) */}
+                {/* 📋 HEADER DA ETAPA */}
                 <div className="text-center mb-8">
                   <div className="flex items-center justify-center gap-4 mb-4">
                     <div className="text-sm text-stone-500">Etapa {currentStep} de 21</div>
@@ -494,6 +436,14 @@ const QuizModularPage: React.FC = () => {
                     </div>
                     <div className="text-sm text-stone-600">{progress}%</div>
                   </div>
+
+                  <h1 className="text-3xl font-bold text-stone-800 mb-4">
+                    Descubra seu Estilo Predominante
+                  </h1>
+                  <p className="text-stone-600 max-w-2xl mx-auto">
+                    Responda com sinceridade para descobrir seu estilo pessoal único e aprenda a
+                    criar looks que realmente refletem sua essência.
+                  </p>
                 </div>
 
                 {/* 🎨 ÁREA DE RENDERIZAÇÃO DOS BLOCOS */}

@@ -1,9 +1,6 @@
 import { useQuizLogic } from '@/hooks/useQuizLogic';
-import { QuizDataService } from '@/services/core/QuizDataService';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
-import { getStepInfo as coreGetStepInfo } from '@/utils/quiz21StepsRenderer';
-import { TemplateManager } from '@/utils/TemplateManager';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 export interface QuizFlowProps {
   mode?: 'production' | 'preview' | 'editor';
@@ -20,9 +17,6 @@ export interface QuizState {
   isLoading: boolean;
   mode: string;
   progress: number;
-  // Extras para navegação/UX
-  stepValidation?: Record<number, boolean>;
-  stepInfo?: ReturnType<typeof coreGetStepInfo>;
 }
 
 export interface QuizActions {
@@ -33,11 +27,6 @@ export interface QuizActions {
   answerScoredQuestion: (questionId: string, optionId: string) => void;
   answerStrategy: (questionId: string, optionId: string) => void;
   getStepData: () => any;
-  // Novos helpers
-  setStepValid: (step: number, valid: boolean) => void;
-  getStepInfo: (step?: number) => ReturnType<typeof coreGetStepInfo>;
-  getStepConfig: (step?: number) => ReturnType<typeof QuizDataService.getStepConfig>;
-  preloadTemplates: () => Promise<void>;
 }
 
 /**
@@ -54,7 +43,6 @@ export const useQuizFlow = ({
   const [currentStep, setCurrentStep] = useState(initialStep);
   const [userName, setUserName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [stepValidation, setStepValidation] = useState<Record<number, boolean>>({});
 
   const {
     answers,
@@ -99,8 +87,6 @@ export const useQuizFlow = ({
     (name: string) => {
       setUserName(name);
       setUserNameFromInput(name);
-      // Validar etapa 1 quando nome preenchido
-      setStepValidation(prev => ({ ...prev, 1: !!name?.trim() }));
       nextStep();
     },
     [nextStep, setUserNameFromInput]
@@ -110,21 +96,18 @@ export const useQuizFlow = ({
   const answerScoredQuestion = useCallback(
     (questionId: string, optionId: string) => {
       answerQuestion(questionId, optionId);
-      // Marca etapa atual como válida
-      setStepValidation(prev => ({ ...prev, [currentStep]: true }));
       setTimeout(nextStep, 500); // UX delay
     },
-    [answerQuestion, nextStep, currentStep]
+    [answerQuestion, nextStep]
   );
 
   // Responder pergunta estratégica
   const answerStrategy = useCallback(
     (questionId: string, optionId: string) => {
       answerStrategicQuestion(questionId, optionId, 'strategic', 'tracking');
-      setStepValidation(prev => ({ ...prev, [currentStep]: true }));
       setTimeout(nextStep, 500);
     },
-    [answerStrategicQuestion, nextStep, currentStep]
+    [answerStrategicQuestion, nextStep]
   );
 
   // Auto-avançar na etapa 19 (calculando)
@@ -146,74 +129,6 @@ export const useQuizFlow = ({
     return QUIZ_STYLE_21_STEPS_TEMPLATE[stepKey] || [];
   }, [currentStep]);
 
-  // Helpers derivados
-  const stepInfo = useMemo(() => {
-    const base = coreGetStepInfo(currentStep);
-    const step = currentStep;
-
-    const category = (() => {
-      if (step === 1) return 'Introdução';
-      if (step >= 2 && step <= 11) return 'Quiz Principal';
-      if (step === 12) return 'Transição';
-      if (step >= 13 && step <= 18) return 'Análise Estratégica';
-      if (step === 19) return 'Processamento';
-      if (step === 20) return 'Resultado';
-      if (step === 21) return 'Conversão';
-      return 'Indefinido';
-    })();
-
-    const requirements = (() => {
-      if (step === 1) return { selections: 1, type: 'text-input' as const };
-      if (step >= 2 && step <= 11) return { selections: 3, type: 'multiple-choice' as const };
-      if (step === 12 || step === 19) return { selections: 1, type: 'transition' as const };
-      if (step >= 13 && step <= 18) return { selections: 1, type: 'single-choice' as const };
-      if (step === 20 || step === 21) return { selections: 1, type: 'result-offer' as const };
-      return { selections: 1, type: 'unknown' as const };
-    })();
-
-    const flags = {
-      isTransition: step === 12 || step === 19,
-      isResult: step === 20 || step === 21,
-      isStrategic: step >= 13 && step <= 18,
-      isMainQuiz: step >= 2 && step <= 11,
-    };
-
-    const displayType = (() => {
-      if (step === 1) return 'Início';
-      if (step >= 2 && step <= 11) return 'Questões';
-      if (step === 12) return 'Transição';
-      if (step >= 13 && step <= 18) return 'Estratégicas';
-      if (step === 19) return 'Análise';
-      if (step === 20) return 'Resultado';
-      if (step === 21) return 'Oferta';
-      return 'Desconhecido';
-    })();
-
-    return { ...base, category, requirements, ...flags, displayType };
-  }, [currentStep]);
-
-  const setStepValid = useCallback((step: number, valid: boolean) => {
-    setStepValidation(prev => ({ ...prev, [step]: valid }));
-  }, []);
-
-  const getStepInfo = useCallback(
-    (step?: number) => coreGetStepInfo(step ?? currentStep),
-    [currentStep]
-  );
-
-  const getStepConfig = useCallback(
-    (step?: number) => QuizDataService.getStepConfig(step ?? currentStep),
-    [currentStep]
-  );
-
-  const preloadTemplates = useCallback(async () => {
-    try {
-      await TemplateManager.preloadCommonTemplates();
-    } catch (e) {
-      console.warn('Falha ao pré-carregar templates:', e);
-    }
-  }, []);
-
   // Estado atual do quiz
   const quizState: QuizState = {
     currentStep,
@@ -224,8 +139,6 @@ export const useQuizFlow = ({
     isLoading,
     mode,
     progress: Math.round((currentStep / 21) * 100),
-    stepValidation,
-    stepInfo,
   };
 
   // Ações disponíveis
@@ -237,10 +150,6 @@ export const useQuizFlow = ({
     answerScoredQuestion,
     answerStrategy,
     getStepData,
-    setStepValid,
-    getStepInfo,
-    getStepConfig,
-    preloadTemplates,
   };
 
   return { quizState, actions };
