@@ -1,3 +1,4 @@
+import '@/styles/lovable-preview.css';
 import React, { useEffect } from 'react';
 
 interface LovablePreviewPanelProps {
@@ -12,9 +13,6 @@ interface LovablePreviewPanelProps {
  */
 export const LovablePreviewPanel: React.FC<LovablePreviewPanelProps> = ({ children }) => {
   useEffect(() => {
-    // Carrega CSS apenas quando o painel é realmente utilizado
-    import('@/styles/lovable-preview.css').catch(() => {});
-
     // Configura o ambiente para o Lovable detectar como editor
     if (typeof window !== 'undefined') {
       // Força configuração do Lovable

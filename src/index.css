@@ -16,12 +16,6 @@
   --global-radius: 0.5rem; /* 8px */
 }
 
-/* Neutralizar sticky dentro do canvas do editor para evitar saltos/desproporção */
-.editor-pro-canvas .sticky {
-  position: static !important;
-  top: auto !important;
-}
-
 /* Estilos base para o editor canvas */
 .editor-canvas {
   width: 100%;

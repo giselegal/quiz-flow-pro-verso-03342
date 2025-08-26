@@ -1,9 +1,8 @@
 import { cn } from '@/lib/utils';
-import type { BlockComponentProps } from '@/types/blocks';
 import { ArrowRight, Download, Edit3, MousePointer2, Play, Star } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
-import { sessionService } from '../../../services/sessionService';
 import { userResponseService } from '../../../services/userResponseService';
+import type { BlockComponentProps } from '@/types/blocks';
 import { trackQuizStart } from '../../../utils/analytics';
 
 /**
@@ -103,8 +102,6 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
     // Configurações de navegação/fluxo
     action = 'none', // "next-step", "url", "none"
     nextStepId = '', // ID da próxima etapa
-    autoAdvanceOnComplete = false,
-    autoAdvanceDelay = 600,
     // Sistema completo de margens com controles deslizantes
     marginTop = 8,
     marginBottom = 8,
@@ -121,30 +118,6 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
     disabledText = '',
     disabledOpacity = 50,
   } = (block?.properties as any) || {};
-
-  // Suporte a controle externo de estado (eventos globais)
-  const buttonId =
-    (block?.id as string) || (block?.properties as any)?.buttonId || 'cta-button-modular';
-  const [externalDisabled, setExternalDisabled] = useState<boolean | null>(null);
-
-  useEffect(() => {
-    const onButtonState = (e: Event) => {
-      const evt = e as CustomEvent<{ buttonId?: string; enabled?: boolean; disabled?: boolean }>;
-      const detail = evt.detail || {};
-      if (detail.buttonId && detail.buttonId !== buttonId) return;
-      if (typeof detail.enabled === 'boolean') {
-        setExternalDisabled(!detail.enabled);
-      } else if (typeof detail.disabled === 'boolean') {
-        setExternalDisabled(!!detail.disabled);
-      }
-    };
-    window.addEventListener('quiz-button-state-change', onButtonState as EventListener);
-    window.addEventListener('step01-button-state-change', onButtonState as EventListener);
-    return () => {
-      window.removeEventListener('quiz-button-state-change', onButtonState as EventListener);
-      window.removeEventListener('step01-button-state-change', onButtonState as EventListener);
-    };
-  }, [buttonId]);
 
   const [isValidated, setIsValidated] = useState(false);
 
@@ -176,43 +149,27 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
 
     if (requiresValidInput) {
       window.addEventListener('quiz-selection-change', handleQuizSelectionChange as EventListener);
-      // Também reagir a mudanças no input de nome (Step 1)
-      const handleQuizInputChange = (event: CustomEvent) => {
-        const { value, valid } = event.detail || {};
-        // Considerar válido se houver string não vazia
-        const ok = typeof value === 'string' ? value.trim().length > 0 : !!valid;
-        setIsValidated(ok);
-      };
-      window.addEventListener('quiz-input-change', handleQuizInputChange as EventListener);
       return () => {
         window.removeEventListener(
           'quiz-selection-change',
           handleQuizSelectionChange as EventListener
         );
-        window.removeEventListener('quiz-input-change', handleQuizInputChange as EventListener);
       };
     }
   }, [requiresValidInput]);
 
   // Determinar se o botão deve estar desabilitado
-  const isButtonDisabled = externalDisabled ?? (disabled || (requiresValidInput && !isValidated));
+  const isButtonDisabled = disabled || (requiresValidInput && !isValidated);
   // 🚀 Função para inicializar quiz no Supabase
   const initializeQuizWithSupabase = async (userName: string) => {
     try {
-      // Garante um sessionId local
-      sessionService.ensureLocalSessionId();
-      // Tenta iniciar sessão real (gera UUID) e persistir
-      const start = await sessionService.startQuizSession({
+      // Placeholder - Supabase integration will be implemented later
+      console.log('Supabase integration placeholder:', {
         name: userName,
-        quizId: 'default-funnel',
+        utm_source: new URLSearchParams(window.location.search).get('utm_source') || undefined,
       });
-      if (start.success) {
-        console.log('✅ Sessão Supabase iniciada:', start.sessionId);
-        // Após obter UUID, tentar flush de respostas pendentes
-        await userResponseService.flushPending();
-      } else {
-        console.log('⚠️ Usando sessão local sem UUID, permaneceremos offline-first');
-      }
+
+      console.log('✅ Quiz inicializado no Supabase com sucesso');
     } catch (error) {
       console.error('❌ Erro ao inicializar quiz no Supabase:', error);
     }
@@ -417,7 +374,6 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
       {/* Botão principal */}
       <button
         type="button"
-        id={block?.id}
         disabled={isButtonDisabled}
         aria-disabled={isButtonDisabled}
         className={getResponsiveClasses()}
@@ -429,34 +385,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
         }}
         onClick={async e => {
           e.stopPropagation();
-          // Validação robusta: se exigir input válido, checar DOM e storage em tempo real
-          let allowProceed = true;
-          if (requiresValidInput) {
-            // 1) Tentar pegar diretamente do DOM (campo de nome)
-            const nameInputEl = document.querySelector(
-              'input[name="userName"]'
-            ) as HTMLInputElement | null;
-            const domValue = nameInputEl?.value?.trim() || '';
-
-            // 2) Fallback: ler resposta salva (local/offline ou Supabase)
-            let storedValue = '';
-            try {
-              storedValue =
-                (await userResponseService.getResponse('intro-name-input'))?.trim() || '';
-            } catch {}
-
-            const effectiveName = domValue || storedValue;
-            allowProceed = !!effectiveName && effectiveName.length > 0;
-          }
-
-          if (isButtonDisabled && !allowProceed) {
-            return;
-          }
-          if (!allowProceed) {
-            return;
-          }
-
-          if (true) {
+          if (!isButtonDisabled) {
             // Handle URL navigation
             if (action === 'url' && (href || url)) {
               const targetUrl = url || href;
@@ -466,9 +395,11 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
 
             // Handle step navigation
             if (action === 'next-step' && nextStepId) {
-              const detail = { stepId: nextStepId, source: `button-${block?.id}` };
-              window.dispatchEvent(new CustomEvent('navigate-to-step', { detail }));
-              window.dispatchEvent(new CustomEvent('quiz-navigate-to-step', { detail }));
+              window.dispatchEvent(
+                new CustomEvent('navigate-to-step', {
+                  detail: { stepId: nextStepId, source: `button-${block?.id}` },
+                })
+              );
               return;
             }
 
@@ -496,18 +427,12 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
                 })
               );
 
-              // Navegação: se configurado para auto-advance, usa nextStepId do próprio botão
-              const targetStep = nextStepId || 'step-2';
-              if (autoAdvanceOnComplete) {
-                setTimeout(
-                  () => {
-                    const detail = { stepId: targetStep, source: 'step1-button' };
-                    window.dispatchEvent(new CustomEvent('navigate-to-step', { detail }));
-                    window.dispatchEvent(new CustomEvent('quiz-navigate-to-step', { detail }));
-                  },
-                  Number(autoAdvanceDelay) || 0
-                );
-              }
+              // Navigate to first question
+              window.dispatchEvent(
+                new CustomEvent('navigate-to-step', {
+                  detail: { stepId: 'etapa-2', source: 'step1-button' },
+                })
+              );
             }
           }
         }}

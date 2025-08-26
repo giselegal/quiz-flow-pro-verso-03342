@@ -1,14 +1,13 @@
 import { useCallback, useEffect, useState } from 'react';
-// Preferir o contexto moderno do EditorProvider; manter fallback para legacy se necessário
-import { useEditor as useEditorModern } from '@/components/editor/EditorProvider';
+import { useEditor } from '@/context/EditorContext';
 import {
-  calculateProgress,
+  stageIdToNumber,
+  numberToStageId,
   getNextStepNumber,
   getPreviousStepNumber,
-  getStepName,
   isValidStepNumber,
-  numberToStageId,
-  stageIdToNumber,
+  calculateProgress,
+  getStepName,
 } from '@/utils/navigationHelpers';
 
 /**
@@ -16,25 +15,13 @@ import {
  * Centraliza toda lógica de navegação entre etapas
  */
 export const useFunnelNavigation = () => {
-  // Tentativa de usar o contexto moderno
-  let modern: any = null;
-  try {
-    modern = useEditorModern();
-  } catch {}
-
-  // Mapear API mínima com base no EditorProvider moderno
-  const activeStageId = `step-${modern?.state?.currentStep ?? 1}`;
-  const setActiveStage = (id: string) => {
-    const digits = parseInt(String(id).replace(/\D/g, ''), 10) || 1;
-    modern?.actions?.setCurrentStep?.(digits);
-  };
-  const currentBlocks = modern?.state
-    ? modern.state.stepBlocks?.[`step-${modern.state.currentStep || 1}`] || []
-    : [];
-  const loadTemplateByStep = async (step: number) => {
-    await modern?.actions?.ensureStepLoaded?.(step);
-  };
-  const isLoadingTemplate = modern?.state?.isLoading ?? false;
+  const {
+    activeStageId,
+    stages,
+    stageActions: { setActiveStage },
+    computed: { currentBlocks },
+    templateActions: { loadTemplateByStep, isLoadingTemplate },
+  } = useEditor();
 
   const [isSaving, setIsSaving] = useState(false);
   const [navigationHistory, setNavigationHistory] = useState<string[]>([]);
@@ -66,13 +53,11 @@ export const useFunnelNavigation = () => {
   // Validar conteúdo da etapa
   const validateStepContent = useCallback(
     (stepNumber: number): boolean => {
-      // Considera que conteúdo é válido se existirem blocos carregados para o step
-      const stepId = numberToStageId(stepNumber);
-      const digits = parseInt(stepId.replace(/\D/g, ''), 10) || 1;
-      const blocksForStep = modern?.state?.stepBlocks?.[`step-${digits}`] || [];
-      return Array.isArray(blocksForStep) && blocksForStep.length > 0;
+      const stageId = numberToStageId(stepNumber);
+      const stage = stages.find(s => s.id === stageId);
+      return !!(stage && (stage.metadata?.blocksCount || 0) > 0);
     },
-    [modern?.state?.stepBlocks]
+    [stages]
   );
 
   // Navegação para etapa específica

@@ -1,24 +1,20 @@
-import { preloadCriticalImages } from '@/utils/images/preloading';
 import React, { useEffect, useState } from 'react';
+import { preloadCriticalImages } from '@/utils/images/preloading';
 // import FixedIntroImage from "@/components/ui/FixedIntroImage";
-import MentorSection from '@/components/result/MentorSection';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { trackButtonClick } from '@/utils/analytics';
-import { storeUserForHotmart } from '@/utils/hotmartWebhook';
+import MentorSection from '@/components/result/MentorSection';
 import {
-  ArrowRight,
-  Check,
   ChevronRight,
+  Check,
   Clock,
-  Crown,
+  Star,
+  ShoppingBag,
   Heart,
   // Users,
   // Award,
   Shield,
-  ShoppingBag,
-  Sparkles,
-  Star,
+  ArrowRight,
   // TrendingUp,
   // BadgeCheck,
   // Lock,
@@ -29,7 +25,13 @@ import {
   // Hourglass,
   // Zap,
   Target,
+  Sparkles,
+  Crown,
+  // Flame,
+  // Eye,
 } from 'lucide-react';
+import { trackButtonClick } from '@/utils/analytics';
+import { storeUserForHotmart } from '@/utils/hotmartWebhook';
 
 // CSS aprimorado para versão B - mais persuasivo e dinâmico
 const customStyles = `
@@ -745,7 +747,7 @@ const DescubraSeuEstilo: React.FC = () => {
 
               <div className="flex justify-center md:justify-start">
                 <Button
-                  onClick={() => (window.location.href = '/editor')}
+                  onClick={() => (window.location.href = '/editor-fixed')}
                   size="lg"
                   className="bg-[#B89B7A] hover:bg-[#A68A6A] text-white px-8 py-4 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
                 >

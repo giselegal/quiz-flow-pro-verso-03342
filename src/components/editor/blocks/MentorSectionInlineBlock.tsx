@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { cn } from '@/lib/utils';
+import { Crown, Star, Quote, Award } from 'lucide-react';
 import type { BlockData } from '@/types/blocks';
-import { Award, Crown, Quote, Star } from 'lucide-react';
 
 interface MentorSectionInlineBlockProps {
   block: BlockData;
@@ -95,12 +95,6 @@ const MentorSectionInlineBlock: React.FC<MentorSectionInlineBlockProps> = ({
       onPropertyChange(field, value);
     }
   };
-
-  // Margens editáveis (padrões 0)
-  const marginTop = properties.marginTop ?? 0;
-  const marginBottom = properties.marginBottom ?? 0;
-  const marginLeft = properties.marginLeft ?? 0;
-  const marginRight = properties.marginRight ?? 0;
 
   return (
     <div

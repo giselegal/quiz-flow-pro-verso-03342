@@ -1,6 +1,7 @@
 // @ts-nocheck
+import type { BlockComponentProps } from '@/types/blocks';
 import { cn } from '@/lib/utils';
-import { CheckCircle, Shield } from 'lucide-react';
+import { Shield, CheckCircle } from 'lucide-react';
 
 interface GuaranteeBlockProps {
   title?: string;
@@ -54,21 +55,12 @@ const getMarginClass = (value, type) => {
   return `${prefix}-32`; // Máximo suportado
 };
 
-const GuaranteeBlock: React.FC<GuaranteeBlockProps & { block?: any }> = ({
-  title: _title = 'Garantia Incondicional',
-  guaranteePeriod: _guaranteePeriod = '7 dias',
-  showIcon: _showIcon = true,
+const GuaranteeBlock: React.FC<GuaranteeBlockProps> = ({
+  title = 'Garantia Incondicional',
+  guaranteePeriod = '7 dias',
+  showIcon = true,
   className,
-  block,
 }) => {
-  const properties = (block?.properties as any) || {};
-  const title = properties.title ?? _title;
-  const guaranteePeriod = properties.guaranteePeriod ?? _guaranteePeriod;
-  const showIcon = properties.showIcon ?? _showIcon;
-  const marginTop = properties.marginTop ?? 0;
-  const marginBottom = properties.marginBottom ?? 0;
-  const marginLeft = properties.marginLeft ?? 0;
-  const marginRight = properties.marginRight ?? 0;
   return (
     <div
       className={cn(

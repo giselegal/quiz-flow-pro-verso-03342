@@ -10,8 +10,6 @@ interface SortableBlockProps {
   isSelected: boolean;
   topOffset: number;
   height: number;
-  // Passo/step de origem para identificar contexto no DnD
-  sourceStepKey?: string;
   onSelect: (id: string, event?: React.MouseEvent) => void;
   onMoveUp: (id: string) => void;
   onMoveDown: (id: string) => void;
@@ -26,7 +24,6 @@ export const SortableBlock: React.FC<SortableBlockProps> = ({
   isSelected,
   topOffset,
   height,
-  sourceStepKey,
   onSelect,
   onMoveUp,
   onMoveDown,
@@ -36,12 +33,6 @@ export const SortableBlock: React.FC<SortableBlockProps> = ({
 }) => {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id,
-    // Dados necessários para validação/ação no onDragEnd
-    data: {
-      type: 'canvas-block',
-      blockId: id,
-      sourceStepKey: sourceStepKey,
-    },
   });
 
   const style = {
@@ -59,12 +50,12 @@ export const SortableBlock: React.FC<SortableBlockProps> = ({
       {...attributes}
       {...listeners}
       className={cn(
-        'absolute left-4 right-4 pointer-events-auto cursor-pointer transition-all duration-300 group/canvas-item',
-        'rounded-md border-2 border-dashed group-hover/canvas-item:border-2',
+        'absolute left-4 right-4 pointer-events-auto cursor-pointer transition-all duration-300',
+        'rounded-lg border-2 border-dashed',
         isDragging && 'opacity-50 scale-105',
         isSelected
           ? 'border-blue-500 bg-blue-500 bg-opacity-10 shadow-lg'
-          : 'border-transparent hover:border-2 hover:border-blue-500 hover:bg-blue-400 hover:bg-opacity-5'
+          : 'border-transparent hover:border-blue-400 hover:bg-blue-400 hover:bg-opacity-5'
       )}
       onClick={e => {
         e.stopPropagation();

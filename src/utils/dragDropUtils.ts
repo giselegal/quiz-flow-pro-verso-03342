@@ -6,7 +6,7 @@ import { Active, Over } from '@dnd-kit/core';
  */
 
 export interface DragData {
-  type: 'sidebar-component' | 'canvas-block' | 'block';
+  type: 'sidebar-component' | 'canvas-block';
   blockType?: string;
   blockId?: string;
   sourceStepKey?: string;
@@ -17,20 +17,6 @@ export interface DropValidationResult {
   reason?: string;
   action?: 'add' | 'reorder' | 'move';
 }
-
-const isUuid = (v: unknown) =>
-  typeof v === 'string' &&
-  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(v as string);
-
-// Check if a string looks like a block ID (either UUID or nanoid format)
-const isValidBlockId = (v: unknown) =>
-  typeof v === 'string' && (isUuid(v) || /^block-[\w-]+-[A-Za-z0-9_-]{8}$/.test(v as string));
-
-// Compat: ids vindos do OptimizedSortableBlock usam prefixo 'dnd-block-'
-const normalizeOverId = (id: string | null | undefined): string | null => {
-  if (!id) return null;
-  return id.startsWith('dnd-block-') ? id.replace(/^dnd-block-/, '') : id;
-};
 
 /**
  * Valida se um drop é válido
@@ -52,40 +38,38 @@ export const validateDrop = (
 
   // Validação para componente da sidebar
   if (activeData.type === 'sidebar-component') {
-    const rawOverId = String(over.id);
-    // Normaliza IDs vindos de wrappers otimizados (ex.: 'dnd-block-<id>')
-    const overId = normalizeOverId(rawOverId) || rawOverId;
-
-    // Aceitar soltar diretamente sobre bloco existente (insere antes dele)
-    const isOverExistingBlock = currentStepBlocks.some(block => String(block.id) === overId);
-
-    // Aceitar canvas e drop-zones padronizadas
-    const isOverCanvasArea =
-      overId === 'canvas-drop-zone' ||
-      overId.startsWith('drop-zone-') ||
-      overId.startsWith('canvas-');
-
-    if (!activeData.blockType) return { isValid: false, reason: 'Componente sem blockType' };
-    if (isOverCanvasArea || isOverExistingBlock || isValidBlockId(overId)) {
-      return { isValid: true, action: 'add' };
+    if (
+      over.id !== 'canvas' &&
+      over.id !== 'canvas-drop-zone' &&
+      !over.id.toString().startsWith('canvas-')
+    ) {
+      return { isValid: false, reason: 'Componente deve ser solto no canvas' };
     }
-    return { isValid: false, reason: 'Alvo de drop inválido para adicionar' };
+
+    if (!activeData.blockType) {
+      return { isValid: false, reason: 'Tipo de bloco não especificado' };
+    }
+
+    return { isValid: true, action: 'add' };
   }
 
   // Validação para bloco do canvas
-  if (activeData.type === 'canvas-block' || activeData.type === 'block') {
-    const activeBlockExists = currentStepBlocks.some(
-      block => String(block.id) === String(activeData.blockId)
-    );
-    if (!activeBlockExists) return { isValid: false, reason: 'Bloco de origem não encontrado' };
+  if (activeData.type === 'canvas-block') {
+    const activeBlockExists = currentStepBlocks.some(block => block.id === activeData.blockId);
 
-    const rawOverId = String(over.id);
-    const overId = normalizeOverId(rawOverId) || rawOverId;
-    const overIsDropZone = overId === 'canvas-drop-zone' || overId.startsWith('drop-zone-');
-    const overIsBlock = currentStepBlocks.some(block => String(block.id) === overId);
-    if (overIsDropZone || overIsBlock || isValidBlockId(overId)) {
-      return { isValid: true, action: 'reorder' };
+    if (!activeBlockExists) {
+      return { isValid: false, reason: 'Bloco de origem não encontrado' };
     }
+
+    // Reordenação dentro do mesmo step
+    if (over.id !== 'canvas' && typeof over.id === 'string') {
+      const overBlockExists = currentStepBlocks.some(block => block.id === over.id);
+
+      if (overBlockExists) {
+        return { isValid: true, action: 'reorder' };
+      }
+    }
+
     return { isValid: false, reason: 'Posição de drop inválida para reordenação' };
   }
 

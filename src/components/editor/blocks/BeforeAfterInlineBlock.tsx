@@ -1,8 +1,8 @@
 // @ts-nocheck
-import { cn } from '@/lib/utils';
-import type { BlockData } from '@/types/blocks';
-import { ArrowRightLeft, Eye, EyeOff } from 'lucide-react';
 import React, { useState } from 'react';
+import { cn } from '@/lib/utils';
+import { ArrowRightLeft, Eye, EyeOff } from 'lucide-react';
+import type { BlockData } from '@/types/blocks';
 
 interface BeforeAfterInlineBlockProps {
   block: BlockData;
@@ -84,12 +84,6 @@ const BeforeAfterInlineBlock: React.FC<BeforeAfterInlineBlockProps> = ({
   const layoutStyle = properties.layoutStyle || 'side-by-side';
 
   const [activeView, setActiveView] = useState<'before' | 'after'>('before');
-
-  // Margens editáveis (padrões 0)
-  const marginTop = properties.marginTop ?? 0;
-  const marginBottom = properties.marginBottom ?? 0;
-  const marginLeft = properties.marginLeft ?? 0;
-  const marginRight = properties.marginRight ?? 0;
 
   const handleEdit = (field: string, value: any) => {
     if (onPropertyChange && !disabled) {

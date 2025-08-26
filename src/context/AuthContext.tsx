@@ -1,7 +1,6 @@
 import { supabase } from '@/integrations/supabase/client';
 import type { Session } from '@supabase/supabase-js';
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
-const OFFLINE = import.meta.env.VITE_DISABLE_SUPABASE === 'true';
 
 interface User {
   id: string;
@@ -52,20 +51,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (OFFLINE) {
-      // Modo offline: não conectar no Supabase, criar perfil padrão
-      setUser(null);
-      setProfile({
-        id: 'offline-user',
-        email: '',
-        role: 'user',
-        plan: 'free',
-        created_at: new Date().toISOString(),
-      });
-      setSession(null);
-      setLoading(false);
-      return;
-    }
     console.log('🔑 AuthProvider: Configurando listeners de autenticação');
     // Configurar listener de auth PRIMEIRO
     const {
@@ -121,7 +106,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const loadUserProfile = async (userId: string) => {
     try {
       const { data, error } = await supabase.from('profiles').select('*').eq('id', userId).single();
-
+      
       if (data && !error) {
         const profileData: UserProfile = {
           id: data.id,
@@ -130,7 +115,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           role: 'user', // Padrão por enquanto
           plan: 'free', // Padrão por enquanto
           avatar_url: undefined,
-          created_at: data.created_at,
+          created_at: data.created_at
         };
         setProfile(profileData);
       } else {
@@ -140,7 +125,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           email: user?.email || '',
           role: 'user',
           plan: 'free',
-          created_at: new Date().toISOString(),
+          created_at: new Date().toISOString()
         };
         setProfile(defaultProfile);
       }
@@ -152,7 +137,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         email: user?.email || '',
         role: 'user',
         plan: 'free',
-        created_at: new Date().toISOString(),
+        created_at: new Date().toISOString()
       };
       setProfile(defaultProfile);
     }

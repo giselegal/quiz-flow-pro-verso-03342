@@ -6,29 +6,11 @@ import React, { useEffect } from 'react';
  * Este componente força especificamente a abertura e ativação
  * da janela de preview do Lovable
  */
-// Flags de ambiente (Vite)
-const DEV = import.meta.env?.DEV;
-const PROD = import.meta.env?.PROD;
-const DEBUG = import.meta.env?.VITE_DEBUG_LOVABLE === 'true';
-const ENABLED_FLAG = import.meta.env?.VITE_ENABLE_LOVABLE_WINDOW === 'true';
-const DISABLED_FLAG = import.meta.env?.VITE_DISABLE_LOVABLE_WINDOW === 'true';
-
-// Só ativa fora do /editor, fora de DEV e quando explicitamente habilitado
-const shouldActivateLovable = (): boolean => {
-  if (DISABLED_FLAG) return false;
-  if (DEV && !ENABLED_FLAG) return false; // Em dev, precisa habilitar manualmente
-  try {
-    const path = typeof window !== 'undefined' ? window.location.pathname : '';
-    if (/^\/?editor(\b|\/)/.test(path)) return false; // Não ativar no editor
-  } catch {}
-  return ENABLED_FLAG || (!!PROD && !DEV);
-};
-
 export const LovableWindowActivator: React.FC = () => {
   useEffect(() => {
     // Função para ativar a janela do Lovable
     const activateLovableWindow = () => {
-      if (typeof window !== 'undefined' && shouldActivateLovable()) {
+      if (typeof window !== 'undefined') {
         // 1. Configuração específica para janela do Lovable
         (window as any).LOVABLE_WINDOW_CONFIG = {
           projectId: '65efd17d-5178-405d-9721-909c97470c6d',
@@ -99,8 +81,8 @@ export const LovableWindowActivator: React.FC = () => {
         localStorage.setItem('lovable-auto-open', 'true');
         localStorage.setItem('lovable-last-activation', Date.now().toString());
 
-        // 8. Força abertura com menor impacto no main thread
-        const dispatchImmediateOpen = () => {
+        // 8. Força abertura com delay
+        setTimeout(() => {
           window.dispatchEvent(
             new CustomEvent('lovable:force:window:now', {
               detail: {
@@ -110,47 +92,32 @@ export const LovableWindowActivator: React.FC = () => {
               },
             })
           );
-        };
-        if (typeof (window as any).requestIdleCallback === 'function') {
-          (window as any).requestIdleCallback(dispatchImmediateOpen, { timeout: 250 });
-        } else {
-          setTimeout(dispatchImmediateOpen, 150);
-        }
+        }, 100);
 
         // 9. Adiciona listener para mensagens do Lovable
-        // Throttling para evitar spam de 'message' handler
-        let lastHandled = 0;
-        const MIN_INTERVAL_MS = 1000; // 1s
         const handleLovableMessage = (event: MessageEvent) => {
-          if (event?.data?.type !== 'lovable-preview-request') return;
-          const now = Date.now();
-          if (now - lastHandled < MIN_INTERVAL_MS) return;
-          lastHandled = now;
-          window.postMessage(
-            {
-              type: 'lovable-preview-response',
-              data: {
-                projectId: '65efd17d-5178-405d-9721-909c97470c6d',
-                status: 'active',
-                windowMode: 'preview',
-                timestamp: now,
+          if (event.data?.type === 'lovable-preview-request') {
+            window.postMessage(
+              {
+                type: 'lovable-preview-response',
+                data: {
+                  projectId: '65efd17d-5178-405d-9721-909c97470c6d',
+                  status: 'active',
+                  windowMode: 'preview',
+                  timestamp: Date.now(),
+                },
               },
-            },
-            '*'
-          );
+              '*'
+            );
+          }
         };
 
         window.addEventListener('message', handleLovableMessage);
 
         // 10. Console log para debug
-        if (DEBUG) {
-          // eslint-disable-next-line no-console
-          console.log('🎯 Lovable Window Activator - ATIVO');
-          // eslint-disable-next-line no-console
-          console.log('📊 Config:', (window as any).LOVABLE_WINDOW_CONFIG);
-          // eslint-disable-next-line no-console
-          console.log('🚀 Eventos disparados:', windowEvents.length);
-        }
+        console.log('🎯 Lovable Window Activator - ATIVO');
+        console.log('📊 Config:', (window as any).LOVABLE_WINDOW_CONFIG);
+        console.log('🚀 Eventos disparados:', windowEvents.length);
 
         // Cleanup
         return () => {
@@ -178,24 +145,22 @@ export const LovableWindowActivator: React.FC = () => {
       }
     };
 
-    // Ativa imediatamente (apenas quando permitido)
+    // Ativa imediatamente
     const cleanup = activateLovableWindow();
 
-    // Força reativação com menor frequência e respeitando visibilidade
-    const REACTIVATE_MS = Number(import.meta.env?.VITE_LOVABLE_REACTIVATE_MS) || 30000;
+    // Força reativação a cada 5 segundos
     const interval = setInterval(() => {
-      if (typeof window === 'undefined') return;
-      if (document.visibilityState !== 'visible') return;
-      if (!shouldActivateLovable()) return;
-      window.dispatchEvent(
-        new CustomEvent('lovable:window:reactivate', {
-          detail: {
-            timestamp: Date.now(),
-            action: 'periodic-reactivation',
-          },
-        })
-      );
-    }, REACTIVATE_MS);
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(
+          new CustomEvent('lovable:window:reactivate', {
+            detail: {
+              timestamp: Date.now(),
+              action: 'periodic-reactivation',
+            },
+          })
+        );
+      }
+    }, 5000);
 
     return () => {
       cleanup?.();
@@ -203,8 +168,7 @@ export const LovableWindowActivator: React.FC = () => {
     };
   }, []);
 
-  // Só mostrar indicador visual em modo debug
-  return DEBUG ? (
+  return (
     <div
       className="lovable-window-activator"
       style={{
@@ -218,8 +182,10 @@ export const LovableWindowActivator: React.FC = () => {
         pointerEvents: 'none',
         opacity: 0.9,
       }}
-    />
-  ) : null;
+    >
+      {/* Indicador visual de que o ativador está funcionando */}
+    </div>
+  );
 };
 
 export default LovableWindowActivator;

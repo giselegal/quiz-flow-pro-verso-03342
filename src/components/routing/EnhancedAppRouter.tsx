@@ -43,8 +43,12 @@ const ErrorBoundary: React.FC<{ children: React.ReactNode }> = ({ children }) =>
   return <>{children}</>;
 };
 
-// Componente placeholder (evita import ausente de EnhancedEditor)
-const EnhancedEditor: React.FC = () => null;
+// Lazy loading dos componentes (com fallbacks seguros)
+const EnhancedEditor = lazy(() =>
+  import('../../components/editor/EnhancedEditor').then(() => ({
+    default: () => null,
+  }))
+);
 
 const SystemIntegrationTest = lazy(() => import('../../components/testing/SystemIntegrationTest'));
 
@@ -72,7 +76,7 @@ const SimpleDashboard: React.FC = () => (
             Acesse o novo editor com todas as funcionalidades avançadas
           </p>
           <a
-            href="/editor"
+            href="/editor-fixed"
             className="inline-block px-4 py-2 bg-[#B89B7A]/100 text-white rounded hover:bg-[#B89B7A]"
           >
             Acessar Editor
@@ -183,7 +187,7 @@ export const EnhancedAppRouter: React.FC = () => {
                         Voltar ao Dashboard
                       </a>
                       <a
-                        href="/editor"
+                        href="/editor-fixed"
                         className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
                       >
                         Acessar Editor

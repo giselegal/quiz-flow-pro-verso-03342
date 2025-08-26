@@ -11,12 +11,6 @@ import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
 import { ArrowLeft, ArrowRight, RotateCcw } from 'lucide-react';
 import React, { useMemo } from 'react';
-// Tipagem leve para compatibilidade com hook unificado
-type StepInfoLite = {
-  type: string;
-  title: string;
-  description?: string;
-};
 
 interface QuizStepsConfig {
   mode: 'editor' | 'preview' | 'production';
@@ -73,28 +67,11 @@ export const QuizStepsNavigation: React.FC<QuizStepsNavigationProps> = ({
   // Informações da Etapa Atual
   // ========================================
   const stepInfo = useMemo(() => {
-    // Preferir metadados do hook unificado quando disponíveis
-    const infoFromHook = (quizState as any).stepInfo as StepInfoLite | undefined;
-
-    if (infoFromHook) {
-      return {
-        type: infoFromHook.type,
-        title: infoFromHook.title,
-        description: infoFromHook.description,
-        requirements: getStepRequirements(quizState.currentStep),
-        category: getStepCategory(quizState.currentStep),
-        isTransition: [12, 19].includes(quizState.currentStep),
-        isResult: [20, 21].includes(quizState.currentStep),
-        isStrategic: quizState.currentStep >= 13 && quizState.currentStep <= 18,
-        isMainQuiz: quizState.currentStep >= 2 && quizState.currentStep <= 11,
-      };
-    }
-
-    // Fallback para helpers locais
     const stepType = getStepType(quizState.currentStep);
     const stepTitle = getStepTitle(quizState.currentStep);
     const stepRequirements = getStepRequirements(quizState.currentStep);
     const stepCategory = getStepCategory(quizState.currentStep);
+
     return {
       type: stepType,
       title: stepTitle,

@@ -1,22 +1,20 @@
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import { ThemeProvider } from '@/components/theme-provider';
+import { LoadingFallback } from '@/components/ui/loading-fallback';
+import { Toaster } from '@/components/ui/toaster';
+import { AuthProvider } from '@/context/AuthContext';
 import { Suspense, lazy } from 'react';
 import { Route, Router, Switch } from 'wouter';
-import { ProtectedRoute } from './components/auth/ProtectedRoute';
-import { ThemeProvider } from './components/theme-provider';
-import { LoadingFallback } from './components/ui/loading-fallback';
-import { Toaster } from './components/ui/toaster';
-import { AuthProvider } from './context/AuthContext';
 
 const EditorTemplatesPage = lazy(() => import('./pages/editor-templates'));
 
 // 🎯 PÁGINAS ESSENCIAIS - SEM CONFLITOS
 const Home = lazy(() => import('./pages/Home'));
 const AuthPage = lazy(() => import('./pages/AuthPage'));
-// Import estático para evitar falhas de dynamic import em alguns ambientes (ex.: Lovable)
-import MainEditor from './pages/MainEditor';
+const QuizModularPage = lazy(() => import('./pages/QuizModularPage'));
+const MainEditor = lazy(() => import('./pages/MainEditor'));
+const QuizIntegratedPage = lazy(() => import('./pages/QuizIntegratedPage'));
 const DashboardPage = lazy(() => import('./pages/admin/DashboardPage'));
-const StepPage = lazy(() => import('./pages/StepPage'));
-// ✅ Página de publicação com HTML configurado (cliente final)
-const PublishedQuizPage = lazy(() => import('./pages/quiz-descubra-seu-estilo'));
 
 // Loading component
 const PageLoading = () => (
@@ -48,8 +46,9 @@ function App() {
 
                 {/* 🎯 EDITOR PRINCIPAL ÚNICO - SEM ANINHAMENTO */}
                 <Route path="/editor">
-                  {/* MainEditor importado estaticamente para maior estabilidade */}
-                  <MainEditor />
+                  <Suspense fallback={<PageLoading />}>
+                    <MainEditor />
+                  </Suspense>
                 </Route>
 
                 {/* 🔐 AUTENTICAÇÃO */}
@@ -59,39 +58,17 @@ function App() {
                   </Suspense>
                 </Route>
 
-                {/* � Compat: Redirecionar acessos legados para manter apenas /editor */}
-                <Route path="/MainEditor">
-                  {() => {
-                    if (typeof window !== 'undefined') window.location.replace('/editor');
-                    return null;
-                  }}
-                </Route>
-                <Route path="/main-editor">
-                  {() => {
-                    if (typeof window !== 'undefined') window.location.replace('/editor');
-                    return null;
-                  }}
-                </Route>
-
-                {/* �🔀 Compat: Redirecionar /quiz-modular para a versão publicada (/quiz) para evitar duplicidade com /editor */}
-                <Route path="/quiz-modular">
-                  {() => {
-                    if (typeof window !== 'undefined') window.location.replace('/quiz');
-                    return null;
-                  }}
-                </Route>
-
-                {/* 🌐 VERSÃO PUBLICADA SEM COLUNAS (HTML configurado) */}
+                {/* 🎮 QUIZ DE PRODUÇÃO */}
                 <Route path="/quiz">
                   <Suspense fallback={<PageLoading />}>
-                    <PublishedQuizPage />
+                    <QuizModularPage />
                   </Suspense>
                 </Route>
 
-                {/* 👁️ PREVIEW POR ETAPA DO EDITOR */}
-                <Route path="/step/:step">
+                {/* 🎯 QUIZ INTEGRADO */}
+                <Route path="/quiz-integrated">
                   <Suspense fallback={<PageLoading />}>
-                    <StepPage />
+                    <QuizIntegratedPage />
                   </Suspense>
                 </Route>
 

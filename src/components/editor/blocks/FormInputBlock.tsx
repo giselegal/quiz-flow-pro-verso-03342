@@ -135,16 +135,6 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
       })
     );
 
-    // Compatibilidade: ativar/desativar botão de próxima etapa explicitamente (Etapa 1)
-    const enableEvent = new CustomEvent('step01-button-state-change', {
-      detail: {
-        buttonId: 'intro-cta-button',
-        enabled: valid,
-        disabled: !valid,
-      },
-    });
-    window.dispatchEvent(enableEvent);
-
     // Salvar automaticamente se válido
     if (valid && newValue.trim()) {
       try {

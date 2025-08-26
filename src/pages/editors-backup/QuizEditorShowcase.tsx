@@ -1,5 +1,6 @@
+import { EditorProvider } from '@/components/editor/EditorProvider';
 import { ErrorBoundary } from '@/components/editor/ErrorBoundary';
-// import { QuizEditorPro } from '@/components/editor/QuizEditorPro'; // Component não encontrado
+import { QuizEditorPro } from '@/components/editor/QuizEditorPro';
 import { useNotification } from '@/components/ui/Notification';
 import { validateEditorJSON } from '@/utils/editorUtils';
 import React, { useState } from 'react';
@@ -217,9 +218,9 @@ export const QuizEditorShowcase: React.FC = () => {
                 <div className="bg-white rounded-lg shadow-md p-6">
                   <h3 className="text-xl font-bold text-gray-900 mb-4">🎨 Editor em Ação</h3>
                   <ErrorBoundary>
-                    <div className="p-4 text-center">
-                      <p>QuizEditorPro em manutenção - componente não encontrado</p>
-                    </div>
+                    <EditorProvider enableSupabase={false} storageKey="showcase-editor">
+                      <QuizEditorPro />
+                    </EditorProvider>
                   </ErrorBoundary>
                 </div>
               </div>

@@ -2,6 +2,7 @@
 import { useToast } from '@/components/ui/use-toast';
 import { quizSupabaseService } from '@/services/quizSupabaseService';
 import { QuizAnswer, QuizQuestion, QuizResult } from '@/types/quiz';
+import { computeResults } from '@/utils/quizResults';
 import { useCallback, useEffect, useState } from 'react';
 
 // Interface para a sessão integrada com Quiz21StepsProvider
@@ -182,10 +183,10 @@ export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
         }
 
         // Atualizar estado local com weights se fornecidos
-        const newAnswer: QuizAnswer = {
-          questionId: answer.questionId,
+        const newAnswer: QuizAnswer = { 
+          questionId: answer.questionId, 
           optionId: answer.optionId,
-          weights: answer.weights,
+          weights: answer.weights
         };
         const newResponses = [...session.responses, newAnswer];
 
@@ -223,82 +224,60 @@ export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
     setIsLoading(true);
 
     try {
-      // Padronizado: usar quizResultsService para cálculo completo
-      const { quizResultsService } = await import('@/services/quizResultsService');
+      // Usar computeResults com as respostas atuais
+      const result = computeResults(session.responses);
+      result.version = 'v1';
 
-      // Montar objeto de sessão compatível com o serviço
-      const sessionForCalculation = {
-        id: session.id || 'local-session',
-        session_id: session.id || 'local-session',
-        quiz_user_id: session.userId || undefined,
-        responses: session.responses || [],
-        current_step: session.currentStep,
-      } as any;
-
-      const fullResults = await quizResultsService.calculateResults(sessionForCalculation);
-
-      // Normalizar estrutura mínima esperada no estado local
-      const normalized = {
-        version: 'v1',
-        primaryStyle: {
-          style: fullResults.styleProfile.primaryStyle,
-          category: fullResults.styleProfile.primaryStyle,
-          percentage: Math.round((fullResults.metadata.answeredQuestions / 21) * 100),
-          score: fullResults.completionScore,
-        },
-        secondaryStyles: fullResults.styleProfile.secondaryStyle
-          ? [
-              {
-                style: fullResults.styleProfile.secondaryStyle,
-                category: fullResults.styleProfile.secondaryStyle,
-                percentage:
-                  Math.max(
-                    0,
-                    Math.min(100, Math.round(fullResults.styleProfile.confidence * 100))
-                  ) || 50,
-              },
-            ]
-          : [],
-        recommendations: fullResults.recommendations,
-        metadata: fullResults.metadata,
-      } as any;
-
+      // Atualizar sessão no Supabase se há sessionId
       if (session.id) {
         await quizSupabaseService.updateQuizSession(session.id, {
           status: 'completed',
-          score: fullResults.completionScore,
+          score: result.primaryStyle.score,
           completedAt: new Date(),
         });
 
+        // Salvar resultado detalhado no Supabase
         const resultId = await quizSupabaseService.saveQuizResult({
           sessionId: session.id,
-          resultType: normalized.primaryStyle.style,
-          resultTitle: normalized.primaryStyle.category,
-          resultDescription: `Seu estilo predominante é ${normalized.primaryStyle.category} (${normalized.primaryStyle.percentage}%).`,
+          resultType: result.primaryStyle.style,
+          resultTitle: result.primaryStyle.category,
+          resultDescription: `Seu estilo predominante é ${result.primaryStyle.category} com ${result.primaryStyle.percentage}% de compatibilidade.`,
           resultData: {
-            ...normalized,
+            ...result,
             sessionId: session.id,
             userId: session.userId,
           },
         });
 
+        // Atualizar estado local
         setSession({
           ...session,
           status: 'completed',
-          result: normalized,
+          result: result as any, // Type assertion needed for compatibility
           isCompleted: true,
         });
 
-        return { success: true, resultId, result: normalized };
+        return {
+          success: true,
+          resultId,
+          result,
+        };
       } else {
+        // Modo local - apenas atualizar estado
         setSession({
           ...session,
           status: 'completed',
-          result: normalized,
+          result: result as any,
           isCompleted: true,
         });
-        localStorage.setItem('quizResult', JSON.stringify(normalized));
-        return { success: true, result: normalized };
+
+        // Salvar no localStorage para referência futura
+        localStorage.setItem('quizResult', JSON.stringify(result));
+
+        return {
+          success: true,
+          result,
+        };
       }
     } catch (error) {
       console.error('Erro ao completar o quiz:', error);

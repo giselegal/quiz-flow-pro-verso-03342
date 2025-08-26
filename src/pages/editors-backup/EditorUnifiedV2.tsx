@@ -1,5 +1,5 @@
 import React from 'react';
-// import { EditorUnifiedV2 } from '@/components/editor/EditorUnifiedV2'; // Component não encontrado
+import { EditorUnifiedV2 } from '@/components/editor/EditorUnifiedV2';
 
 /**
  * 🎨 EDITOR UNIFICADO V2 - PÁGINA PRINCIPAL
@@ -11,11 +11,7 @@ import React from 'react';
  */
 const EditorUnifiedV2Page: React.FC = () => {
   console.log('🎨 EditorUnifiedV2Page: Loading...');
-  return (
-    <div className="p-4 text-center">
-      <p>Editor Unificado V2 em manutenção - componente não encontrado</p>
-    </div>
-  );
+  return <EditorUnifiedV2 />;
 };
 
 export default EditorUnifiedV2Page;

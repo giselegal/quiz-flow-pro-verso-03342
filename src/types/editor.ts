@@ -1,4 +1,3 @@
-
 import { LucideIcon } from 'lucide-react';
 
 // Import PropertyType and PropertySchema for internal use
@@ -85,9 +84,6 @@ export type BlockType =
   | 'progress-inline'
   | 'stat-inline'
   | 'countdown-inline'
-  | 'urgency-timer-inline'
-  | 'before-after-inline'
-  | 'mentor-section-inline'
   | 'spacer-inline'
   | 'heading-inline'
   | 'button-inline'
@@ -127,7 +123,6 @@ export type BlockType =
   | 'container'
   | 'grid'
   | 'divider'
-  | 'decorative-bar'
   | 'decorative-bar-inline'
 
   // Blocos de acessibilidade
@@ -142,9 +137,6 @@ export type BlockType =
   | 'testimonial'
   | 'testimonial-card-inline'
   | 'testimonialsSection'
-  | 'bonus'
-  | 'secure-purchase'
-  | 'value-anchoring'
   | 'pricing'
   | 'pricing-card-inline'
   | 'guarantee'
@@ -155,8 +147,7 @@ export type BlockType =
   | 'video'
   | 'icon'
   | 'faq'
-  | 'custom-code'
-  | 'legal-notice';
+  | 'custom-code';
 
 export interface FAQItem {
   id: string;
@@ -292,7 +283,6 @@ export type BlockContent =
   | EditableContent // Para tipos não especificados ainda
   | HeadlineContent
   | TextContent
-
   | TestimonialContent
   | PricingContent
   | VideoContent

@@ -21,12 +21,9 @@ export interface EditorActions {
   // State management
   setCurrentStep: (step: number) => void;
   setSelectedBlockId: (blockId: string | null) => void;
-  // Steps
-  addStep: () => void;
 
   // Block operations
   addBlock: (stepKey: string, block: Block) => Promise<void>;
-  addBlockAtIndex: (stepKey: string, block: Block, index: number) => Promise<void>;
   removeBlock: (stepKey: string, blockId: string) => Promise<void>;
   reorderBlocks: (stepKey: string, oldIndex: number, newIndex: number) => Promise<void>;
   updateBlock: (stepKey: string, blockId: string, updates: Record<string, any>) => Promise<void>;
@@ -161,11 +158,14 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       const components = Array.isArray(comps) ? comps : (supabaseIntegration.components ?? []);
       if (components && components.length > 0) {
         const grouped = groupByStepKey(components);
-        // Normaliza e faz merge não-destrutivo por ID
-        const merged = mergeStepBlocks(rawState.stepBlocks, grouped);
+        // Normalize incoming data before merging
+        const normalizedIncoming = normalizeStepBlocks(grouped);
         setState({
           ...rawState,
-          stepBlocks: merged,
+          stepBlocks: {
+            ...rawState.stepBlocks,
+            ...normalizedIncoming,
+          },
         });
       }
     } catch (err) {
@@ -237,25 +237,21 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       totalSteps: Object.keys(normalizedBlocks).length,
     });
 
-    // 🚨 FORÇA CARREGAMENTO: Aplicar template normalizado por merge não-destrutivo
+    // 🚨 FORÇA CARREGAMENTO: Sempre aplicar template normalizado
     setState({
       ...rawState,
-      stepBlocks: mergeStepBlocks(rawState.stepBlocks, normalizedBlocks),
+      stepBlocks: normalizedBlocks,
       currentStep: 1,
     });
 
-    // 🚨 GARANTIA DUPLA (ajustada): garantir apenas a etapa atual (1) e adiar para ocioso
-    const schedule = (cb: () => void) => {
-      if (typeof (window as any).requestIdleCallback === 'function') {
-        (window as any).requestIdleCallback(cb, { timeout: 500 });
-      } else {
-        setTimeout(cb, 120);
-      }
-    };
-
-    schedule(() => {
+    // 🚨 GARANTIA DUPLA: Ensure step 1 is loaded on initialization
+    setTimeout(() => {
       ensureStepLoaded(1);
-    });
+      // Force verify all steps loaded
+      for (let i = 1; i <= 21; i++) {
+        ensureStepLoaded(i);
+      }
+    }, 100);
   }, []); // Empty dependency array - run only once on mount
 
   // 🚨 CORREÇÃO: Ensure step is loaded when currentStep changes
@@ -270,7 +266,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
         const normalizedBlocks = normalizeStepBlocks(QUIZ_STYLE_21_STEPS_TEMPLATE);
         setState({
           ...rawState,
-          stepBlocks: mergeStepBlocks(rawState.stepBlocks, normalizedBlocks),
+          stepBlocks: normalizedBlocks,
         });
       }
     }
@@ -300,32 +296,6 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     [setState, rawState]
   );
 
-  // Adiciona uma nova etapa ao final (step-(max+1)) e seleciona
-  const addStep = useCallback(() => {
-    const keys = Object.keys(rawState.stepBlocks || {});
-    const nums = keys
-      .map(k => {
-        const m = k.match(/(\d+)/);
-        return m ? parseInt(m[1], 10) : 0;
-      })
-      .filter(n => Number.isFinite(n) && n > 0);
-    const max = nums.length > 0 ? Math.max(...nums) : 0;
-    const newStepNum = max + 1;
-    const newKey = `step-${newStepNum}`;
-
-    const nextState = {
-      ...rawState,
-      stepBlocks: {
-        ...rawState.stepBlocks,
-        [newKey]: [],
-      },
-      currentStep: newStepNum,
-      selectedBlockId: null,
-    } as EditorState;
-
-    setState(nextState);
-  }, [rawState, setState]);
-
   const addBlock = useCallback(
     async (stepKey: string, block: Block) => {
       const stepNumber = extractStepNumberFromKey(stepKey) || 0;
@@ -338,16 +308,21 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
         stepNumber,
         ')'
       );
-      // Local mode: insert with real id immediately (no temp)
+
+      // Optimistic update helper: insert temp block locally
+      const tempId = `temp-${Date.now()}`;
+      const optimisticBlock: Block = { ...block, id: tempId };
+
+      // Apply optimistic update
       const prevBlocks = rawState.stepBlocks[stepKey] ?? [];
-      const optimisticStateLocal = {
+      const optimisticState = {
         ...rawState,
         stepBlocks: {
           ...rawState.stepBlocks,
-          [stepKey]: [...prevBlocks, block],
+          [stepKey]: [...prevBlocks, optimisticBlock],
         },
       };
-      setState(optimisticStateLocal);
+      setState(optimisticState);
 
       if (state.isSupabaseEnabled && supabaseIntegration?.addBlockToStep) {
         try {
@@ -356,87 +331,39 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
           if (created) {
             const realBlock = mapSupabaseRecordToBlock(created);
             setState({
-              ...optimisticStateLocal,
+              ...optimisticState,
               stepBlocks: {
-                ...optimisticStateLocal.stepBlocks,
-                [stepKey]: [...(optimisticStateLocal.stepBlocks[stepKey] || []), realBlock],
+                ...optimisticState.stepBlocks,
+                [stepKey]: (optimisticState.stepBlocks[stepKey] || []).map(b =>
+                  b.id === tempId ? realBlock : b
+                ),
               },
             });
           } else {
             // If creation returned nothing, rollback
-            setState(optimisticStateLocal);
+            setState({
+              ...optimisticState,
+              stepBlocks: {
+                ...optimisticState.stepBlocks,
+                [stepKey]: (optimisticState.stepBlocks[stepKey] || []).filter(b => b.id !== tempId),
+              },
+            });
             throw new Error('Supabase integration returned no created component');
           }
         } catch (err) {
           console.error('❌ addBlock supabase failed, rolling back optimistic update', err);
-          // rollback to previous local state
-          setState(rawState);
-          throw err;
-        }
-      } else {
-        // Local mode already applied optimistic update — nothing else to do
-      }
-    },
-    [setState, state.isSupabaseEnabled, supabaseIntegration, rawState]
-  );
-
-  const addBlockAtIndex = useCallback(
-    async (stepKey: string, block: Block, index: number) => {
-      const stepNumber = extractStepNumberFromKey(stepKey) || 0;
-      const prevBlocks = rawState.stepBlocks[stepKey] ?? [];
-      const clampedIndex = Math.max(0, Math.min(index, prevBlocks.length));
-      const nextBlocks = [...prevBlocks];
-      nextBlocks.splice(clampedIndex, 0, block);
-
-      const optimisticState = {
-        ...rawState,
-        stepBlocks: {
-          ...rawState.stepBlocks,
-          [stepKey]: nextBlocks,
-        },
-      };
-      setState(optimisticState);
-
-      if (state.isSupabaseEnabled && supabaseIntegration?.addBlockToStep) {
-        try {
-          const created = await supabaseIntegration.addBlockToStep(block, stepNumber);
-          if (created) {
-            const realBlock = mapSupabaseRecordToBlock(created);
-            // Replace the optimistic block (by id) in-place to preserve position
-            const currentList = optimisticState.stepBlocks[stepKey] || [];
-            const replaced = currentList.map(b => (b.id === block.id ? realBlock : b));
-            setState({
-              ...optimisticState,
-              stepBlocks: {
-                ...optimisticState.stepBlocks,
-                [stepKey]: replaced,
-              },
-            });
-          } else {
-            // rollback if nothing returned
-            setState({
-              ...optimisticState,
-              stepBlocks: {
-                ...optimisticState.stepBlocks,
-                [stepKey]: (optimisticState.stepBlocks[stepKey] || []).filter(
-                  b => b.id !== block.id
-                ),
-              },
-            });
-            throw new Error('Supabase integration returned no created component');
-          }
-        } catch (err) {
-          console.error('❌ addBlockAtIndex supabase failed, rolling back optimistic update', err);
           // rollback optimistic insert
           setState({
             ...optimisticState,
             stepBlocks: {
               ...optimisticState.stepBlocks,
-              [stepKey]: (optimisticState.stepBlocks[stepKey] || []).filter(b => b.id !== block.id),
+              [stepKey]: (optimisticState.stepBlocks[stepKey] || []).filter(b => b.id !== tempId),
             },
           });
           throw err;
         }
+      } else {
+        // Local mode already applied optimistic update — nothing else to do
       }
     },
     [setState, state.isSupabaseEnabled, supabaseIntegration, rawState]
@@ -492,28 +419,19 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
 
   const updateBlock = useCallback(
     async (stepKey: string, blockId: string, updates: Record<string, any>) => {
-      // Sempre mesclar alterações em properties por padrão.
-      // Se o payload já vier com { properties }, respeitar e mesclar também.
-      const nextBlocks = (rawState.stepBlocks[stepKey] || []).map(b => {
-        if (b.id !== blockId) return b;
-        const incomingProps = updates.properties ?? updates;
-        const mergedProps = { ...(b.properties || {}), ...(incomingProps || {}) };
-        return { ...b, properties: mergedProps };
-      });
-
-      const nextState = {
+      setState({
         ...rawState,
         stepBlocks: {
           ...rawState.stepBlocks,
-          [stepKey]: nextBlocks,
+          [stepKey]: (rawState.stepBlocks[stepKey] || []).map(b =>
+            b.id === blockId ? { ...b, ...updates } : b
+          ),
         },
-      };
-      setState(nextState);
+      });
 
       if (state.isSupabaseEnabled && supabaseIntegration?.updateBlockById) {
         try {
-          const updated = nextBlocks.find(b => b.id === blockId);
-          await supabaseIntegration.updateBlockById(blockId, { properties: updated?.properties });
+          await supabaseIntegration.updateBlockById(blockId, updates);
         } catch (err) {
           console.error('Failed to update block in supabase', err);
         }
@@ -523,88 +441,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
   );
 
   const exportJSON = useCallback(() => {
-    // Normalize step keys to canonical format step-<n>
-    const normalizedStepBlocks: Record<string, Block[]> = {};
-    Object.entries(state.stepBlocks).forEach(([key, blocks]) => {
-      const match = key.match(/(\d+)/);
-      if (match) {
-        const stepNumber = match[1];
-        const normalizedKey = `step-${stepNumber}`;
-        normalizedStepBlocks[normalizedKey] = blocks;
-      } else {
-        normalizedStepBlocks[key] = blocks;
-      }
-    });
-
-    // Validate Question components and ResultBlock outcomes
-    const warnings: string[] = [];
-    Object.entries(normalizedStepBlocks).forEach(([stepKey, blocks]) => {
-      blocks.forEach(block => {
-        // Type-safe access to block properties
-        const blockContent = block.content || {};
-        const blockProperties = block.properties || {};
-
-        // Validate Question components have required props
-        if (block.type === 'quiz-question-inline' || block.type === 'options-grid') {
-          const options = (blockContent as any)?.options || (blockProperties as any)?.options;
-          if (!Array.isArray(options) || options.length === 0) {
-            warnings.push(`${stepKey}: Question component missing options array`);
-          } else {
-            options.forEach((option: any, index: number) => {
-              if (!option.value) {
-                warnings.push(`${stepKey}: Question option ${index} missing value property`);
-              }
-            });
-          }
-        }
-
-        // Validate ResultBlock outcomeMapping references
-        if (block.type === 'result-header-inline' || block.type === 'quiz-result-inline') {
-          const outcomeMapping =
-            (blockContent as any)?.outcomeMapping || (blockProperties as any)?.outcomeMapping;
-          if (outcomeMapping && typeof outcomeMapping === 'object') {
-            Object.values(outcomeMapping).forEach((outcomeId: any) => {
-              // Check if outcome exists in schema_json (basic validation)
-              const outcomeExists = Object.values(normalizedStepBlocks).some(stepBlocks =>
-                stepBlocks.some(b => {
-                  const bContent = b.content || {};
-                  const bProperties = b.properties || {};
-                  return (
-                    b.id === outcomeId ||
-                    (bContent as any)?.outcomeId === outcomeId ||
-                    (bProperties as any)?.outcomeId === outcomeId
-                  );
-                })
-              );
-              if (!outcomeExists) {
-                warnings.push(`${stepKey}: ResultBlock references undefined outcome: ${outcomeId}`);
-              }
-            });
-          }
-        }
-      });
-    });
-
-    // Log warnings if any (non-blocking)
-    if (warnings.length > 0) {
-      console.warn('Export validation warnings:', warnings);
-    }
-
-    // Create simple hash for schema consistency
-    const schemaHash = JSON.stringify(normalizedStepBlocks).length.toString(36);
-
-    const exportData = {
-      ...state,
-      stepBlocks: normalizedStepBlocks,
-      metadata: {
-        engineVersion: '1.0.0',
-        schemaHash,
-        exportDate: new Date().toISOString(),
-        validationWarnings: warnings,
-      },
-    };
-
-    return JSON.stringify(exportData, null, 2);
+    return JSON.stringify(state, null, 2);
   }, [state]);
 
   const importJSON = useCallback(
@@ -623,9 +460,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
   const actions: EditorActions = {
     setCurrentStep,
     setSelectedBlockId,
-    addStep,
     addBlock,
-    addBlockAtIndex,
     removeBlock,
     reorderBlocks,
     updateBlock,

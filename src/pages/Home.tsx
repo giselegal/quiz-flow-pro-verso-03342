@@ -102,7 +102,7 @@ const Home = () => {
                     Dashboard
                   </Button>
                   <Button
-                    onClick={() => navigate('/editor')}
+                    onClick={() => navigate('/quiz-editor')}
                     variant="outline"
                     className="border-brand-primary text-brand-primary hover:bg-brand-primary/10"
                   >
@@ -176,7 +176,7 @@ const Home = () => {
                 {user && (
                   <>
                     <Button
-                      onClick={() => navigate('/editor')}
+                      onClick={() => navigate('/editor-unified')}
                       size="lg"
                       className="bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-700 hover:to-emerald-500 text-white shadow-xl px-8 py-4 text-lg"
                     >
@@ -197,7 +197,7 @@ const Home = () => {
                     </Button>
 
                     <Button
-                      onClick={() => navigate('/editor')}
+                      onClick={() => navigate('/quiz-editor')}
                       size="lg"
                       variant="outline"
                       className="border-brand-primary text-brand-primary hover:bg-brand-primary/10 px-8 py-4 text-lg font-semibold"

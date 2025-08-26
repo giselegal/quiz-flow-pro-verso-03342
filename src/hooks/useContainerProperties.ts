@@ -250,7 +250,18 @@ export const useContainerProperties = (properties: ContainerProperties = {}) => 
   const getInlineStyles = (): React.CSSProperties => {
     const styles: React.CSSProperties = {};
 
-    // Escala é aplicada no UniversalBlockRenderer para unificação e evitar sobreposição
+    // 🎯 Aplicar escala que afeta realmente o layout flow
+    if (scale && scale !== 100) {
+      const scaleFactor = scale / 100;
+
+      // Usar transform com configuração que minimiza espaço vazio
+      styles.transform = `scale(${scaleFactor})`;
+      styles.transformOrigin = 'top center'; // Escalar do topo para baixo
+
+      // 🎯 CRUCIAL: Ajustar altura do container para eliminar espaço vazio
+      styles.height = `${scaleFactor * 100}%`;
+      styles.margin = `${(1 - scaleFactor) * -50}% 0`; // Compensar espaço vazio
+    }
 
     // Adicionar estilos específicos se necessário
     if (

@@ -1,9 +1,18 @@
+/**
+ * 🎮 QUIZ FLOW CONTROLLER - STUB
+ *
+ * Arquivo temporário para resolver dependências de import
+ * Deve ser implementado futuramente ou ter suas referências removidas
+ */
+
 import { useQuizFlow } from '@/hooks/core/useQuizFlow';
 
-// Re-exporta apenas o hook unificado
+// Re-export do hook principal
 export { useQuizFlow };
 
-// Compatibilidade mínima para imports antigos
-export const QuizFlowController = { useQuizFlow };
+// Stub para compatibilidade
+export const QuizFlowController = {
+  useQuizFlow,
+};
 
 export default QuizFlowController;
