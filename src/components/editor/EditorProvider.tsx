@@ -244,14 +244,18 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       currentStep: 1,
     });
 
-    // 🚨 GARANTIA DUPLA: Ensure step 1 is loaded on initialization
-    setTimeout(() => {
-      ensureStepLoaded(1);
-      // Force verify all steps loaded
-      for (let i = 1; i <= 21; i++) {
-        ensureStepLoaded(i);
+    // 🚨 GARANTIA DUPLA (ajustada): garantir apenas a etapa atual (1) e adiar para ocioso
+    const schedule = (cb: () => void) => {
+      if (typeof (window as any).requestIdleCallback === 'function') {
+        (window as any).requestIdleCallback(cb, { timeout: 500 });
+      } else {
+        setTimeout(cb, 120);
       }
-    }, 100);
+    };
+
+    schedule(() => {
+      ensureStepLoaded(1);
+    });
   }, []); // Empty dependency array - run only once on mount
 
   // 🚨 CORREÇÃO: Ensure step is loaded when currentStep changes

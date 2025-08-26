@@ -614,18 +614,24 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
     }
   };
 
+  // Throttle para logs de onDragOver em modo debug
+  const dragOverLogRef = React.useRef(0);
+
   const handleDragStart = useCallback((event: DragStartEvent) => {
     const { active } = event;
     const dragData = extractDragData(active);
 
-    // ✅ LOG CRÍTICO SEMPRE VISÍVEL - Se isso não aparecer, o sensor não está funcionando
-    console.log('🚀🚀🚀 DRAG START FUNCIONANDO! 🚀🚀🚀', {
-      activeId: active.id,
-      dragData,
-      activeDataCurrent: (active as any)?.data?.current,
-      timestamp: new Date().toISOString(),
-      event: event,
-    });
+    // ✅ Log apenas em modo debug para não poluir/perf impactar
+    if (isDebug()) {
+      // eslint-disable-next-line no-console
+      console.log('🚀🚀🚀 DRAG START FUNCIONANDO! 🚀🚀🚀', {
+        activeId: active.id,
+        dragData,
+        activeDataCurrent: (active as any)?.data?.current,
+        timestamp: new Date().toISOString(),
+        event: event,
+      });
+    }
 
     // Removido alert intrusivo durante drag start
 
@@ -1241,16 +1247,19 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         onDragStart={handleDragStart}
         onDragCancel={handleDragCancel}
         onDragOver={event => {
-          // ✅ CONFIRMAR que o drag está ativo
-          console.log('🎯 DRAG OVER DETECTADO:', {
-            overId: event.over?.id,
-            activeId: event.active?.id,
-            timestamp: new Date().toISOString(),
-          });
-
           if (isDebug()) {
-            // eslint-disable-next-line no-console
-            console.log('🎯 DragOver', event);
+            // Throttle leve: logar no máximo a cada ~200ms
+            const now = Date.now();
+            const last = dragOverLogRef.current || 0;
+            if (now - last > 200) {
+              // eslint-disable-next-line no-console
+              console.log('🎯 DragOver', {
+                overId: event.over?.id,
+                activeId: event.active?.id,
+                ts: new Date().toISOString(),
+              });
+              dragOverLogRef.current = now;
+            }
           }
           // Sem logDragEvent para over pois não existe esse tipo
         }}
@@ -1263,8 +1272,8 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
           <PropertiesColumn />
         </div>
 
-        {/* Monitor de debug em tempo real */}
-        <DnDMonitor />
+  {/* Monitor de debug em tempo real (apenas debug) */}
+  {isDebug() ? <DnDMonitor /> : null}
       </DndContext>
 
       {NotificationContainer ? <NotificationContainer /> : null}
