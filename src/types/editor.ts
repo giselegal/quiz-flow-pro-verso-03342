@@ -1,3 +1,4 @@
+
 import { LucideIcon } from 'lucide-react';
 
 // Import PropertyType and PropertySchema for internal use
@@ -291,6 +292,7 @@ export type BlockContent =
   | EditableContent // Para tipos não especificados ainda
   | HeadlineContent
   | TextContent
+
   | TestimonialContent
   | PricingContent
   | VideoContent
