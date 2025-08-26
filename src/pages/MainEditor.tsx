@@ -2,6 +2,7 @@ import React from 'react';
 import { EditorPro } from '../components/editor/EditorPro';
 import { EditorProvider } from '../components/editor/EditorProvider';
 import { ErrorBoundary } from '../components/editor/ErrorBoundary';
+import { QuizFlowProvider } from '@/context/QuizFlowProvider';
 
 /**
  * 🎯 EDITOR PRINCIPAL - ÚNICO E LIMPO
@@ -18,10 +19,12 @@ const MainEditor: React.FC = () => {
   return (
     <div>
       <ErrorBoundary>
-        <EditorProvider enableSupabase={false} storageKey="main-editor-state">
-          {/* 🎯 EDITOR PRINCIPAL COM CABEÇALHO EDITÁVEL */}
-          <EditorPro />
-        </EditorProvider>
+        <QuizFlowProvider>
+          <EditorProvider enableSupabase={false} storageKey="main-editor-state">
+            {/* 🎯 EDITOR PRINCIPAL COM CABEÇALHO EDITÁVEL */}
+            <EditorPro />
+          </EditorProvider>
+        </QuizFlowProvider>
       </ErrorBoundary>
     </div>
   );
