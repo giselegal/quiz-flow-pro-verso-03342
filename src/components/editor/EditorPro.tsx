@@ -1,3 +1,4 @@
+import UniversalBlockRenderer from '@/components/editor/blocks/UniversalBlockRenderer';
 import {
   closestCenter,
   DndContext,
@@ -31,7 +32,6 @@ import {
 import { useNotification } from '../ui/Notification';
 import { CanvasDropZone } from './canvas/CanvasDropZone.simple';
 import { OptimizedCanvasDropZone } from './canvas/OptimizedCanvasDropZone';
-import UniversalBlockRenderer from '@/components/editor/blocks/UniversalBlockRenderer';
 import { DnDMonitor } from './debug/DnDMonitor';
 import { DraggableComponentItem } from './dnd/DraggableComponentItem';
 import { DraggableComponentItemForce } from './dnd/DraggableComponentItemForce';
@@ -105,7 +105,8 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
     try {
       const qs = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
       const fromQS = qs?.get('abCanvas');
-      const fromStorage = typeof window !== 'undefined' ? window.localStorage.getItem('abCanvas') : null;
+      const fromStorage =
+        typeof window !== 'undefined' ? window.localStorage.getItem('abCanvas') : null;
       const val = (fromQS || fromStorage || '').toLowerCase();
       return val === 'optimized' || val === 'opt' || val === 'on' || val === '1';
     } catch {
@@ -206,7 +207,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       cleanedOverId = cleanedOverId.replace(/^dnd-block-/, '');
     }
     // 1) Preferir posição explícita vinda da drop-zone
-  const pos = overDataLocal?.position;
+    const pos = overDataLocal?.position;
     if (typeof pos === 'number' && Number.isFinite(pos)) {
       return Math.max(0, Math.min(pos, currentStepData.length));
     }
@@ -518,7 +519,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         return;
       }
 
-  const validation = validateDrop(active, over, currentStepData);
+      const validation = validateDrop(active, over, currentStepData);
       if (isDebug()) {
         // eslint-disable-next-line no-console
         console.log('validateDrop →', validation);

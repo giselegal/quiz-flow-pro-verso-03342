@@ -24,8 +24,7 @@ const isUuid = (v: unknown) =>
 
 // Check if a string looks like a block ID (either UUID or nanoid format)
 const isValidBlockId = (v: unknown) =>
-  typeof v === 'string' &&
-  (isUuid(v) || /^block-[\w-]+-[A-Za-z0-9_-]{8}$/.test(v as string));
+  typeof v === 'string' && (isUuid(v) || /^block-[\w-]+-[A-Za-z0-9_-]{8}$/.test(v as string));
 
 // Compat: ids vindos do OptimizedSortableBlock usam prefixo 'dnd-block-'
 const normalizeOverId = (id: string | null | undefined): string | null => {
