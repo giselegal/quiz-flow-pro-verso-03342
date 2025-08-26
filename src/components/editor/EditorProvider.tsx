@@ -508,9 +508,13 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     const warnings: string[] = [];
     Object.entries(normalizedStepBlocks).forEach(([stepKey, blocks]) => {
       blocks.forEach((block) => {
+        // Type-safe access to block properties
+        const blockContent = block.content || {};
+        const blockProperties = block.properties || {};
+        
         // Validate Question components have required props
         if (block.type === 'quiz-question-inline' || block.type === 'options-grid') {
-          const options = block.content?.options || block.properties?.options;
+          const options = (blockContent as any)?.options || (blockProperties as any)?.options;
           if (!Array.isArray(options) || options.length === 0) {
             warnings.push(`${stepKey}: Question component missing options array`);
           } else {
@@ -524,12 +528,16 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
         
         // Validate ResultBlock outcomeMapping references
         if (block.type === 'result-header-inline' || block.type === 'quiz-result-inline') {
-          const outcomeMapping = block.content?.outcomeMapping || block.properties?.outcomeMapping;
+          const outcomeMapping = (blockContent as any)?.outcomeMapping || (blockProperties as any)?.outcomeMapping;
           if (outcomeMapping && typeof outcomeMapping === 'object') {
             Object.values(outcomeMapping).forEach((outcomeId: any) => {
               // Check if outcome exists in schema_json (basic validation)
               const outcomeExists = Object.values(normalizedStepBlocks).some(stepBlocks =>
-                stepBlocks.some(b => b.id === outcomeId || b.content?.outcomeId === outcomeId || b.properties?.outcomeId === outcomeId)
+                stepBlocks.some(b => {
+                  const bContent = b.content || {};
+                  const bProperties = b.properties || {};
+                  return b.id === outcomeId || (bContent as any)?.outcomeId === outcomeId || (bProperties as any)?.outcomeId === outcomeId;
+                })
               );
               if (!outcomeExists) {
                 warnings.push(`${stepKey}: ResultBlock references undefined outcome: ${outcomeId}`);
