@@ -1272,8 +1272,8 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
           <PropertiesColumn />
         </div>
 
-  {/* Monitor de debug em tempo real (apenas debug) */}
-  {isDebug() ? <DnDMonitor /> : null}
+        {/* Monitor de debug em tempo real (apenas debug) */}
+        {isDebug() ? <DnDMonitor /> : null}
       </DndContext>
 
       {NotificationContainer ? <NotificationContainer /> : null}
