@@ -10,13 +10,13 @@ const InterBlockDropZone: React.FC<{
   position: number;
   isActive?: boolean;
 }> = ({ position, isActive = true }) => {
+  // Evitar recriar arrays/objetos a cada render (impede re-registro contínuo no dnd-kit)
+  const accepts = React.useMemo(() => ['sidebar-component', 'canvas-block'], []);
+  const data = React.useMemo(() => ({ type: 'dropzone', accepts, position }), [accepts, position]);
+
   const { setNodeRef, isOver } = useDroppable({
     id: `drop-zone-${position}`,
-    data: {
-      type: 'dropzone',
-      accepts: ['sidebar-component', 'canvas-block'], // Aceita componentes da sidebar e blocos do canvas
-      position,
-    },
+    data,
   });
 
   return (
@@ -63,14 +63,21 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
   onDeleteBlock,
   className,
 }) => {
-  const { setNodeRef, isOver } = useDroppable({
-    id: 'canvas-drop-zone', // Padroniza id principal para facilitar validação
-    data: {
+  // Evitar recriar arrays/objetos a cada render (impede re-registro contínuo no dnd-kit)
+  const rootAccepts = React.useMemo(() => ['sidebar-component', 'canvas-block'], []);
+  const rootData = React.useMemo(
+    () => ({
       type: 'dropzone',
-      accepts: ['sidebar-component', 'canvas-block'],
+      accepts: rootAccepts,
       position: blocks.length, // Posição no final
       debug: 'main-canvas-zone', // Para debug
-    },
+    }),
+    [rootAccepts, blocks.length]
+  );
+
+  const { setNodeRef, isOver } = useDroppable({
+    id: 'canvas-drop-zone', // Padroniza id principal para facilitar validação
+    data: rootData,
   });
 
   // Usa useDndContext para obter active do contexto DnD
