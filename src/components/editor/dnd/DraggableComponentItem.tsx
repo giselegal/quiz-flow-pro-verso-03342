@@ -169,6 +169,14 @@ export const DraggableComponentItem: React.FC<DraggableComponentItemProps> = ({
       onMouseDown={handleMouseDown}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      onDoubleClick={() => {
+        try {
+          const ev = new CustomEvent('editor-add-component', {
+            detail: { blockType, source: 'sidebar-double-click' },
+          });
+          window.dispatchEvent(ev);
+        } catch {}
+      }}
       {...attributes}
       {...listeners}
     >

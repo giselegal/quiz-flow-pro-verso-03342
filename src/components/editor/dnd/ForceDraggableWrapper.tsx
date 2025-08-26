@@ -12,7 +12,8 @@ export const ForceDraggableWrapper: React.FC<{
   children: React.ReactNode;
   disabled?: boolean;
   className?: string;
-}> = ({ id, data, children, disabled = false, className = '' }) => {
+  onDoubleClick?: () => void;
+}> = ({ id, data, children, disabled = false, className = '', onDoubleClick }) => {
   const elementRef = useRef<HTMLDivElement>(null);
 
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
@@ -82,6 +83,7 @@ export const ForceDraggableWrapper: React.FC<{
       style={style}
       data-force-draggable="true"
       data-dragging={isDragging}
+  onDoubleClick={onDoubleClick}
       {...attributes}
       {...listeners}
     >

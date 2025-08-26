@@ -52,6 +52,15 @@ export const DraggableComponentItemForce: React.FC<DraggableComponentItemProps> 
         disabled && 'opacity-30 cursor-not-allowed bg-gray-100',
         className
       )}
+      // Fallback: permitir adicionar por duplo clique
+      onDoubleClick={() => {
+        try {
+          const ev = new CustomEvent('editor-add-component', {
+            detail: { blockType, source: 'sidebar-double-click' },
+          });
+          window.dispatchEvent(ev);
+        } catch {}
+      }}
     >
       {/* Icon and Title */}
       <div className="flex items-center gap-2 w-full">
