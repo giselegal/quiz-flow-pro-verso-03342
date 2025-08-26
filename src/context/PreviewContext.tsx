@@ -1,5 +1,5 @@
-import React, { createContext, useCallback, useContext, useState } from 'react';
 import { useQuizFlow } from '@/context/QuizFlowProvider';
+import React, { createContext, useCallback, useContext, useState } from 'react';
 
 interface PreviewContextType {
   isPreviewing: boolean;
@@ -55,7 +55,11 @@ interface PreviewProviderProps {
   funnelId?: string;
 }
 
-const PreviewProvider: React.FC<PreviewProviderProps> = ({ children, totalSteps = 21, funnelId }) => {
+const PreviewProvider: React.FC<PreviewProviderProps> = ({
+  children,
+  totalSteps = 21,
+  funnelId,
+}) => {
   const [isPreviewing, setIsPreviewing] = useState(false);
   const [sessionData, setSessionData] = useState<Record<string, any>>({});
   const { currentStep, totalSteps: flowTotal, next, previous, goTo } = useQuizFlow();
@@ -155,8 +159,8 @@ const PreviewProvider: React.FC<PreviewProviderProps> = ({ children, totalSteps 
 
   const contextValue: PreviewContextType = {
     isPreviewing,
-  currentStep,
-  totalSteps: effectiveTotal,
+    currentStep,
+    totalSteps: effectiveTotal,
     canGoNext,
     canGoPrevious,
     sessionData,
@@ -188,10 +192,10 @@ const PreviewProvider: React.FC<PreviewProviderProps> = ({ children, totalSteps 
       }
     };
 
-  // Listen for navigation events (legacy and new)
-  window.addEventListener('navigate-to-step', handleNavigateToStep as EventListener);
-  window.addEventListener('quiz-navigate-to-step', handleNavigateToStep as EventListener);
-  window.addEventListener('quiz-start', handleQuizStart as EventListener);
+    // Listen for navigation events (legacy and new)
+    window.addEventListener('navigate-to-step', handleNavigateToStep as EventListener);
+    window.addEventListener('quiz-navigate-to-step', handleNavigateToStep as EventListener);
+    window.addEventListener('quiz-start', handleQuizStart as EventListener);
 
     return () => {
       window.removeEventListener('navigate-to-step', handleNavigateToStep as EventListener);
@@ -203,5 +207,5 @@ const PreviewProvider: React.FC<PreviewProviderProps> = ({ children, totalSteps 
   return <PreviewContext.Provider value={contextValue}>{children}</PreviewContext.Provider>;
 };
 
-export { PreviewProvider, usePreview, PreviewContext };
+export { PreviewContext, PreviewProvider, usePreview };
 export default PreviewProvider;

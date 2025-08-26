@@ -151,9 +151,9 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
     imageWidth,
     imageHeight,
     imagePosition = 'top',
-  imageLayout = 'vertical',
-  layout = 'grid', // 'grid' | 'list'
-  layoutOrientation, // compat: pode vir como alias de imageLayout
+    imageLayout = 'vertical',
+    layout = 'grid', // 'grid' | 'list'
+    layoutOrientation, // compat: pode vir como alias de imageLayout
     // 🎯 PROPRIEDADES DE LAYOUT
     gridGap = 16,
     responsiveColumns = true,
@@ -276,7 +276,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       // Preview mode: Handle selection with real behavior
       let newSelections: string[];
 
-    if (multipleSelection) {
+      if (multipleSelection) {
         if (previewSelections.includes(optionId)) {
           // Deselect if already selected
           if (allowDeselection) {
@@ -286,7 +286,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
           }
         } else {
           // Add selection if under max limit
-      if (previewSelections.length < maxSelections) {
+          if (previewSelections.length < maxSelections) {
             newSelections = [...previewSelections, optionId];
           } else {
             newSelections = previewSelections; // Don't exceed max selections
@@ -534,33 +534,33 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
           const showTextEffective = ct === 'image-only' ? false : true;
 
           return (
-          <div
-            key={opt.id}
-            className={`rounded-lg border border-neutral-200 bg-white p-4 hover:shadow-md transition-all duration-200 cursor-pointer ${cardLayoutClass}`}
-            onClick={() => handleOptionSelect(opt.id)}
-          >
-            {opt.imageUrl && showImageEffective && (
-              <img
-                src={opt.imageUrl}
-                alt={opt.text || 'opção'}
-                className={`object-cover rounded-md flex-shrink-0 ${imageOrderClass}`}
-                width={imgW}
-                height={imgH}
-                style={{ width: `${imgW}px`, height: `${imgH}px` }}
-                loading="lazy"
-                decoding="async"
-              />
-            )}
-            {showTextEffective && (
-              <p
-                className={`${
-                  effectiveImageLayout === 'horizontal' ? 'flex-1' : 'text-center'
-                } font-medium`}
-              >
-                {opt.text}
-              </p>
-            )}
-          </div>
+            <div
+              key={opt.id}
+              className={`rounded-lg border border-neutral-200 bg-white p-4 hover:shadow-md transition-all duration-200 cursor-pointer ${cardLayoutClass}`}
+              onClick={() => handleOptionSelect(opt.id)}
+            >
+              {opt.imageUrl && showImageEffective && (
+                <img
+                  src={opt.imageUrl}
+                  alt={opt.text || 'opção'}
+                  className={`object-cover rounded-md flex-shrink-0 ${imageOrderClass}`}
+                  width={imgW}
+                  height={imgH}
+                  style={{ width: `${imgW}px`, height: `${imgH}px` }}
+                  loading="lazy"
+                  decoding="async"
+                />
+              )}
+              {showTextEffective && (
+                <p
+                  className={`${
+                    effectiveImageLayout === 'horizontal' ? 'flex-1' : 'text-center'
+                  } font-medium`}
+                >
+                  {opt.text}
+                </p>
+              )}
+            </div>
           );
         })}
       </div>

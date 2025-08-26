@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { toast } from '@/components/ui/use-toast';
+import { useQuizFlow } from '@/context/QuizFlowProvider';
 import { quizSupabaseService } from '@/services/quizSupabaseService';
 import { templateService } from '@/services/templateService';
 import type { QuizSession } from '@/types/quiz';
@@ -37,6 +38,7 @@ export interface StepData {
 
 export const useStepNavigation = (initialStep: number = 1) => {
   const [, setLocation] = useLocation();
+  const { currentStep, totalSteps, next, previous, goTo, canProceed } = useQuizFlow();
   const [state, setState] = useState<StepNavigationState>({
     currentStep: initialStep,
     sessionId: null,
@@ -57,7 +59,7 @@ export const useStepNavigation = (initialStep: number = 1) => {
 
       // Criar ou recuperar sessão do quiz
       const newSession = await quizSupabaseService.createQuizSession({
-        current_step: state.currentStep,
+        current_step: currentStep,
         responses: {},
         is_completed: false,
         funnel_id: 'quiz-21-steps', // ID do funil das 21 etapas
@@ -83,7 +85,7 @@ export const useStepNavigation = (initialStep: number = 1) => {
         variant: 'destructive',
       });
     }
-  }, [state.currentStep]);
+  }, [currentStep]);
 
   // ===== CARREGAR DADOS DA ETAPA =====
   const loadStepData = useCallback(
@@ -145,15 +147,9 @@ export const useStepNavigation = (initialStep: number = 1) => {
         // Carregar dados da etapa
         await loadStepData(stepNumber);
 
-        // Atualizar estado
-        setState(prev => ({
-          ...prev,
-          currentStep: stepNumber,
-          canGoNext: stepNumber < 21,
-          canGoPrevious: stepNumber > 1,
-          progress: (stepNumber / 21) * 100,
-          isLoading: false,
-        }));
+        // Atualizar provedor unificado e encerrar loading local
+        goTo(stepNumber);
+        setState(prev => ({ ...prev, isLoading: false }));
 
         // Navegar na URL
         setLocation(`/step/${stepNumber}`);
@@ -177,22 +173,20 @@ export const useStepNavigation = (initialStep: number = 1) => {
         });
       }
     },
-    [session, loadStepData, setLocation]
+    [session, loadStepData, setLocation, goTo]
   );
 
   // ===== PRÓXIMA ETAPA =====
   const goNext = useCallback(async () => {
-    if (state.currentStep >= 21) return;
-
-    await goToStep(state.currentStep + 1);
-  }, [state.currentStep, goToStep]);
+    if (currentStep >= (totalSteps || 21)) return;
+    next();
+  }, [currentStep, totalSteps, next]);
 
   // ===== ETAPA ANTERIOR =====
   const goPrevious = useCallback(async () => {
-    if (state.currentStep <= 1) return;
-
-    await goToStep(state.currentStep - 1);
-  }, [state.currentStep, goToStep]);
+    if (currentStep <= 1) return;
+    previous();
+  }, [currentStep, previous]);
 
   // ===== SALVAR RESPOSTA =====
   const saveResponse = useCallback(
@@ -201,11 +195,11 @@ export const useStepNavigation = (initialStep: number = 1) => {
 
       try {
         const currentResponses = session.responses || {};
-        const stepResponses = currentResponses[state.currentStep] || {};
+        const stepResponses = currentResponses[currentStep] || {};
 
         const updatedResponses = {
           ...currentResponses,
-          [state.currentStep]: {
+          [currentStep]: {
             ...stepResponses,
             [questionId]: response,
           },
@@ -227,9 +221,9 @@ export const useStepNavigation = (initialStep: number = 1) => {
         );
 
         // Validar se pode avançar
-        const currentStepData = stepData.get(state.currentStep);
+        const currentStepData = stepData.get(currentStep);
         if (currentStepData?.isQuizStep) {
-          const hasRequiredAnswers = validateStepResponses(state.currentStep, updatedResponses);
+          const hasRequiredAnswers = validateStepResponses(currentStep, updatedResponses);
           setState(prev => ({
             ...prev,
             canGoNext: hasRequiredAnswers,
@@ -246,7 +240,7 @@ export const useStepNavigation = (initialStep: number = 1) => {
         });
       }
     },
-    [session, state.currentStep, stepData]
+    [session, currentStep, stepData]
   );
 
   // ===== VALIDAÇÃO DE RESPOSTAS =====
@@ -395,6 +389,19 @@ export const useStepNavigation = (initialStep: number = 1) => {
     initializeSession();
   }, [initializeSession]);
 
+  // Sincronizar estado básico com o provider unificado
+  useEffect(() => {
+    setState(prev => ({
+      ...prev,
+      currentStep,
+      totalSteps: totalSteps || 21,
+      canGoNext:
+        (canProceed && currentStep < (totalSteps || 21)) || currentStep < (totalSteps || 21),
+      canGoPrevious: currentStep > 1,
+      progress: (currentStep / (totalSteps || 21)) * 100,
+    }));
+  }, [currentStep, totalSteps, canProceed]);
+
   // ===== RETORNO DO HOOK =====
   return {
     // Estado
@@ -407,7 +414,7 @@ export const useStepNavigation = (initialStep: number = 1) => {
     goPrevious,
 
     // Dados
-    getCurrentStepData: () => stepData.get(state.currentStep),
+    getCurrentStepData: () => stepData.get(currentStep),
     getStepData: (step: number) => stepData.get(step),
 
     // Respostas
@@ -417,8 +424,8 @@ export const useStepNavigation = (initialStep: number = 1) => {
     completeQuiz,
 
     // Utilitários
-    isLastStep: state.currentStep === 21,
-    isFirstStep: state.currentStep === 1,
-    getProgressText: () => `${state.currentStep} de ${state.totalSteps}`,
+    isLastStep: currentStep === (totalSteps || 21),
+    isFirstStep: currentStep === 1,
+    getProgressText: () => `${currentStep} de ${totalSteps || state.totalSteps}`,
   };
 };

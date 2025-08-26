@@ -269,7 +269,16 @@ const OptionsListEditor: React.FC<{
           onClick={() =>
             onChange([
               ...(value || []),
-              { text: '', value: '', category: '', styleCategory: '', keyword: '', imageUrl: '', description: '', points: 0 },
+              {
+                text: '',
+                value: '',
+                category: '',
+                styleCategory: '',
+                keyword: '',
+                imageUrl: '',
+                description: '',
+                points: 0,
+              },
             ])
           }
         >

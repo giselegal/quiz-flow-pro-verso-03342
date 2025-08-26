@@ -4,8 +4,8 @@
  * Hook temporário para compatibilidade
  */
 
-import { useCallback } from 'react';
 import { useQuizFlow } from '@/context/QuizFlowProvider';
+import { useCallback } from 'react';
 
 export interface NavigationState {
   currentStep: number;

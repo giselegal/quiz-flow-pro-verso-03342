@@ -136,7 +136,7 @@ const StepContent: React.FC = () => {
 
   // Renderizar conteúdo da etapa usando sistema de blocos
   const renderStepContent = () => {
-  const sessionId = `session-${Date.now()}`;
+    const sessionId = `session-${Date.now()}`;
 
     // Loading state
     if (isLoadingTemplate) {

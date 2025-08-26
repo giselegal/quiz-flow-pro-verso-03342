@@ -1,4 +1,12 @@
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
 export interface QuizFlowState {
   currentStep: number;
@@ -35,7 +43,10 @@ export const QuizFlowProvider: React.FC<QuizFlowProviderProps> = ({
 }) => {
   const [currentStep, setCurrentStep] = useState<number>(initialStep);
   const [canProceed, setCanProceed] = useState<boolean>(false);
-  const progress = useMemo(() => Math.round((currentStep / (totalSteps || 1)) * 100), [currentStep, totalSteps]);
+  const progress = useMemo(
+    () => Math.round((currentStep / (totalSteps || 1)) * 100),
+    [currentStep, totalSteps]
+  );
 
   // manter sync quando initialStep muda (ex.: mudança de rota externa)
   const lastInitialRef = useRef<number>(initialStep);
@@ -63,7 +74,11 @@ export const QuizFlowProvider: React.FC<QuizFlowProviderProps> = ({
       try {
         window.dispatchEvent(
           new CustomEvent('quiz-navigate-to-step', {
-            detail: { step: clamped, stepId: `step-${String(clamped).padStart(2, '0')}`, source: 'quiz-flow-provider' },
+            detail: {
+              step: clamped,
+              stepId: `step-${String(clamped).padStart(2, '0')}`,
+              source: 'quiz-flow-provider',
+            },
           })
         );
       } catch {}

@@ -1,4 +1,5 @@
-import { useCallback, useState } from 'react';
+import { useQuizFlow } from '@/context/QuizFlowProvider';
+import { useCallback, useEffect, useState } from 'react';
 import { useLocation } from 'wouter';
 
 /**
@@ -17,6 +18,7 @@ export interface StepNavigationState {
 
 export const useStepNavigationOffline = (initialStep: number = 1) => {
   const [, setLocation] = useLocation();
+  const { currentStep, totalSteps, next, previous, goTo, canProceed } = useQuizFlow();
   const [state, setState] = useState<StepNavigationState>({
     currentStep: initialStep,
     sessionId: `offline-${Date.now()}`,
@@ -42,31 +44,24 @@ export const useStepNavigationOffline = (initialStep: number = 1) => {
         return;
       }
 
-      setState(prev => ({
-        ...prev,
-        currentStep: stepNumber,
-        canGoNext: stepNumber < 21,
-        canGoPrevious: stepNumber > 1,
-        progress: (stepNumber / 21) * 100,
-      }));
-
+      goTo(stepNumber);
       setLocation(`/step/${stepNumber}`);
       console.log(`🚀 Navegação offline para etapa ${stepNumber}`);
     },
-    [setLocation]
+    [setLocation, goTo]
   );
 
   // Próxima etapa
   const goNext = useCallback(async () => {
-    if (state.currentStep >= 21) return;
-    await goToStep(state.currentStep + 1);
-  }, [state.currentStep, goToStep]);
+    if (currentStep >= (totalSteps || 21)) return;
+    next();
+  }, [currentStep, totalSteps, next]);
 
   // Etapa anterior
   const goPrevious = useCallback(async () => {
-    if (state.currentStep <= 1) return;
-    await goToStep(state.currentStep - 1);
-  }, [state.currentStep, goToStep]);
+    if (currentStep <= 1) return;
+    previous();
+  }, [currentStep, previous]);
 
   // Salvar resposta (mock)
   const saveResponse = useCallback(async (questionId: string, response: any) => {
@@ -79,6 +74,19 @@ export const useStepNavigationOffline = (initialStep: number = 1) => {
     console.log('🎉 Quiz offline finalizado!');
     setLocation('/quiz/resultado-offline');
   }, [setLocation]);
+
+  // Sync estado derivado do provider
+  useEffect(() => {
+    setState(prev => ({
+      ...prev,
+      currentStep,
+      totalSteps: totalSteps || 21,
+      canGoNext:
+        (canProceed && currentStep < (totalSteps || 21)) || currentStep < (totalSteps || 21),
+      canGoPrevious: currentStep > 1,
+      progress: (currentStep / (totalSteps || 21)) * 100,
+    }));
+  }, [currentStep, totalSteps, canProceed]);
 
   return {
     // Estado
@@ -101,9 +109,9 @@ export const useStepNavigationOffline = (initialStep: number = 1) => {
     completeQuiz,
 
     // Utilitários
-    isLastStep: state.currentStep === 21,
-    isFirstStep: state.currentStep === 1,
-    getProgressText: () => `${state.currentStep} de ${state.totalSteps}`,
+    isLastStep: currentStep === (totalSteps || 21),
+    isFirstStep: currentStep === 1,
+    getProgressText: () => `${currentStep} de ${totalSteps || state.totalSteps}`,
   };
 };
 
