@@ -2,8 +2,6 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 
-// Modo offline/seguro para desenvolvimento: evita chamadas externas indesejadas
-const DISABLE = (import.meta as any)?.env?.VITE_DISABLE_SUPABASE === 'true';
 const supabaseUrl = (import.meta as any)?.env?.VITE_SUPABASE_URL as string | undefined;
 const supabaseAnonKey = (import.meta as any)?.env?.VITE_SUPABASE_ANON_KEY as string | undefined;
 
@@ -33,9 +31,10 @@ function createSupabaseStub() {
   } as unknown as ReturnType<typeof createClient<Database>>;
 }
 
-// Exporta cliente real somente quando configurado e habilitado
+// Exporta cliente real sempre que as credenciais existirem (mesmo com DISABLE),
+// e usamos o interceptor de fetch (em main.tsx) para bloquear chamadas em dev/offline.
 export const supabase =
-  !DISABLE && supabaseUrl && supabaseAnonKey
+  supabaseUrl && supabaseAnonKey
     ? createClient<Database>(supabaseUrl, supabaseAnonKey, {
         auth: {
           storage: localStorage,
