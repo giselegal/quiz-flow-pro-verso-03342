@@ -509,8 +509,8 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     Object.entries(normalizedStepBlocks).forEach(([stepKey, blocks]) => {
       blocks.forEach((block) => {
         // Validate Question components have required props
-        if (block.type === 'Question' || block.type === 'options-grid') {
-          const options = block.props?.options;
+        if (block.type === 'quiz-question-inline' || block.type === 'options-grid') {
+          const options = block.content?.options || block.properties?.options;
           if (!Array.isArray(options) || options.length === 0) {
             warnings.push(`${stepKey}: Question component missing options array`);
           } else {
@@ -523,13 +523,13 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
         }
         
         // Validate ResultBlock outcomeMapping references
-        if (block.type === 'ResultBlock' || block.type === 'result-header-inline') {
-          const outcomeMapping = block.props?.outcomeMapping;
+        if (block.type === 'result-header-inline' || block.type === 'quiz-result-inline') {
+          const outcomeMapping = block.content?.outcomeMapping || block.properties?.outcomeMapping;
           if (outcomeMapping && typeof outcomeMapping === 'object') {
             Object.values(outcomeMapping).forEach((outcomeId: any) => {
               // Check if outcome exists in schema_json (basic validation)
               const outcomeExists = Object.values(normalizedStepBlocks).some(stepBlocks =>
-                stepBlocks.some(b => b.id === outcomeId || b.props?.outcomeId === outcomeId)
+                stepBlocks.some(b => b.id === outcomeId || b.content?.outcomeId === outcomeId || b.properties?.outcomeId === outcomeId)
               );
               if (!outcomeExists) {
                 warnings.push(`${stepKey}: ResultBlock references undefined outcome: ${outcomeId}`);
