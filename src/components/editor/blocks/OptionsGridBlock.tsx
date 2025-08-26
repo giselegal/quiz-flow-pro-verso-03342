@@ -151,7 +151,9 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
     imageWidth,
     imageHeight,
     imagePosition = 'top',
-    imageLayout = 'vertical',
+  imageLayout = 'vertical',
+  layout = 'grid', // 'grid' | 'list'
+  layoutOrientation, // compat: pode vir como alias de imageLayout
     // 🎯 PROPRIEDADES DE LAYOUT
     gridGap = 16,
     responsiveColumns = true,
@@ -241,8 +243,9 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
 
   const { width: imgW, height: imgH } = getImageSize();
 
+  const effectiveImageLayout = (layoutOrientation as any) || imageLayout || 'vertical';
   const cardLayoutClass =
-    imageLayout === 'horizontal' && (imagePosition === 'left' || imagePosition === 'right')
+    effectiveImageLayout === 'horizontal' && (imagePosition === 'left' || imagePosition === 'right')
       ? 'flex items-center'
       : 'flex flex-col';
 
@@ -273,7 +276,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       // Preview mode: Handle selection with real behavior
       let newSelections: string[];
 
-      if (multipleSelection) {
+    if (multipleSelection) {
         if (previewSelections.includes(optionId)) {
           // Deselect if already selected
           if (allowDeselection) {
@@ -283,7 +286,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
           }
         } else {
           // Add selection if under max limit
-          if (previewSelections.length < maxSelections) {
+      if (previewSelections.length < maxSelections) {
             newSelections = [...previewSelections, optionId];
           } else {
             newSelections = previewSelections; // Don't exceed max selections
@@ -393,9 +396,18 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       let newSelections: string[];
       if (multipleSelection) {
         const currentSelections = selectedOptions || [];
-        newSelections = currentSelections.includes(optionId)
-          ? currentSelections.filter((id: string) => id !== optionId)
-          : [...currentSelections, optionId];
+        if (currentSelections.includes(optionId)) {
+          newSelections = allowDeselection
+            ? currentSelections.filter((id: string) => id !== optionId)
+            : currentSelections;
+        } else {
+          // Respeitar maxSelections também no editor
+          if ((currentSelections?.length || 0) < (maxSelections || 1)) {
+            newSelections = [...currentSelections, optionId];
+          } else {
+            newSelections = currentSelections;
+          }
+        }
         onPropertyChange?.('selectedOptions', newSelections);
       } else {
         newSelections = [optionId];
@@ -509,16 +521,25 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       )}
 
       <div
-        className={`grid ${gridColsClass} ${blockClassName || ''}`}
+        className={`${layout === 'list' ? 'flex flex-col' : `grid ${gridColsClass}`} ${
+          blockClassName || ''
+        }`}
         style={{ gap: `${gridGap}px` }}
       >
-        {(options || []).map((opt: any) => (
+        {(options || []).map((opt: any) => {
+          // contentType suporta: 'text-and-image' | 'image-only' | 'text-only'
+          const ct = (block?.properties as any)?.contentType as string | undefined;
+          const showImageEffective =
+            (ct === 'image-only' || ct === 'text-and-image' || ct == null) && showImages;
+          const showTextEffective = ct === 'image-only' ? false : true;
+
+          return (
           <div
             key={opt.id}
             className={`rounded-lg border border-neutral-200 bg-white p-4 hover:shadow-md transition-all duration-200 cursor-pointer ${cardLayoutClass}`}
             onClick={() => handleOptionSelect(opt.id)}
           >
-            {opt.imageUrl && showImages && (
+            {opt.imageUrl && showImageEffective && (
               <img
                 src={opt.imageUrl}
                 alt={opt.text || 'opção'}
@@ -530,11 +551,18 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
                 decoding="async"
               />
             )}
-            <p className={`${imageLayout === 'horizontal' ? 'flex-1' : 'text-center'} font-medium`}>
-              {opt.text}
-            </p>
+            {showTextEffective && (
+              <p
+                className={`${
+                  effectiveImageLayout === 'horizontal' ? 'flex-1' : 'text-center'
+                } font-medium`}
+              >
+                {opt.text}
+              </p>
+            )}
           </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
