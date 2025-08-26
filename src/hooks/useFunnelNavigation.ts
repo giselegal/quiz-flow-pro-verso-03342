@@ -2,13 +2,13 @@ import { useCallback, useEffect, useState } from 'react';
 // Preferir o contexto moderno do EditorProvider; manter fallback para legacy se necessário
 import { useEditor as useEditorModern } from '@/components/editor/EditorProvider';
 import {
-  stageIdToNumber,
-  numberToStageId,
+  calculateProgress,
   getNextStepNumber,
   getPreviousStepNumber,
-  isValidStepNumber,
-  calculateProgress,
   getStepName,
+  isValidStepNumber,
+  numberToStageId,
+  stageIdToNumber,
 } from '@/utils/navigationHelpers';
 
 /**
@@ -29,7 +29,7 @@ export const useFunnelNavigation = () => {
     modern?.actions?.setCurrentStep?.(digits);
   };
   const currentBlocks = modern?.state
-    ? (modern.state.stepBlocks?.[`step-${modern.state.currentStep || 1}`] || [])
+    ? modern.state.stepBlocks?.[`step-${modern.state.currentStep || 1}`] || []
     : [];
   const loadTemplateByStep = async (step: number) => {
     await modern?.actions?.ensureStepLoaded?.(step);

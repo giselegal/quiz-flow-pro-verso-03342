@@ -5,7 +5,7 @@ import QuizNavigation from '@/components/quiz/QuizNavigation';
 import { useStepNavigationOffline } from '@/hooks/useStepNavigationOffline';
 import { templateService } from '@/services/templateService';
 import { Block } from '@/types/editor';
-import React, { Suspense, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useParams } from 'wouter';
 
 // Removido Step20Result inexistente; usar blocos do templateService
@@ -186,7 +186,7 @@ const StepPage: React.FC = () => {
       // ✅ REMOVIDO: Caso especial Step01 - agora usa sistema de blocos
       // Step01 agora utiliza template JSON com lead-form como outros steps
 
-  // Step20Result removido; renderização segue via sistema de blocos
+      // Step20Result removido; renderização segue via sistema de blocos
 
       // 🚀 SISTEMA DE BLOCOS - RENDERIZAÇÃO COMO PREVIEW DO EDITOR
       return (

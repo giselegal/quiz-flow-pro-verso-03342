@@ -1,17 +1,19 @@
-import { describe, it, expect } from 'vitest';
-import { validateDrop } from '@/utils/dragDropUtils';
 import type { Block } from '@/types/editor';
+import { validateDrop } from '@/utils/dragDropUtils';
+import { describe, expect, it } from 'vitest';
 
 // Helpers para criar Active/Over mínimos aceitos pelo validateDrop
-const makeActive = (data: any) => ({
-  id: data?.id || 'active-id',
-  data: { current: data },
-} as any);
+const makeActive = (data: any) =>
+  ({
+    id: data?.id || 'active-id',
+    data: { current: data },
+  }) as any;
 
-const makeOver = (id: string, data?: any) => ({
-  id,
-  data: { current: data },
-} as any);
+const makeOver = (id: string, data?: any) =>
+  ({
+    id,
+    data: { current: data },
+  }) as any;
 
 describe('dragDropUtils.validateDrop', () => {
   const blocks: Block[] = [

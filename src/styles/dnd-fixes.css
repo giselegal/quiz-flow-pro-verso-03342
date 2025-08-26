@@ -51,8 +51,6 @@ body.dnd-dragging [data-state='open'][role='dialog'],
 body.dnd-dragging .DialogOverlay,
 body.dnd-dragging .SheetOverlay,
 body.dnd-dragging .SheetContent,
-body.dnd-dragging [data-portal]
-{
+body.dnd-dragging [data-portal] {
   pointer-events: none !important;
 }
-
