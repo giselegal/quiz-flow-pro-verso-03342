@@ -1,5 +1,6 @@
 // @ts-nocheck
-import { CanvasDropZone } from '@/components/editor/canvas/CanvasDropZone';
+// Usar a variante simples e padronizada do Canvas
+import { CanvasDropZone } from '@/components/editor/canvas/CanvasDropZone.simple';
 import QuizNavigation from '@/components/quiz/QuizNavigation';
 import { useStepNavigationOffline } from '@/hooks/useStepNavigationOffline';
 import { templateService } from '@/services/templateService';

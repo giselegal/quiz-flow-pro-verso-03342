@@ -636,6 +636,17 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
 
     logDragEvent('start', active);
     if (process.env.NODE_ENV === 'development') devLog('Drag start', dragData);
+
+    // ✅ Body-flag para desabilitar overlays/portais durante o drag
+    try {
+      document.body.classList.add('dnd-dragging');
+    } catch {}
+  }, []);
+
+  const handleDragCancel = useCallback(() => {
+    try {
+      document.body.classList.remove('dnd-dragging');
+    } catch {}
   }, []);
   const handleDragEnd = useCallback(
     (event: DragEndEvent) => {
@@ -751,6 +762,10 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         console.error('Erro durante drag & drop:', error);
         notification?.error?.('Erro ao processar drag & drop');
       } finally {
+        // ✅ Remover body-flag ao finalizar drag
+        try {
+          document.body.classList.remove('dnd-dragging');
+        } catch {}
         if (isDebug()) console.groupEnd();
       }
     },
@@ -1222,6 +1237,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         sensors={sensors}
         collisionDetection={collisionDetectionStrategy}
         onDragStart={handleDragStart}
+  onDragCancel={handleDragCancel}
         onDragOver={event => {
           // ✅ CONFIRMAR que o drag está ativo
           console.log('🎯 DRAG OVER DETECTADO:', {

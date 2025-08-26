@@ -36,5 +36,23 @@
 /* Root do canvas também não deve recortar zonas internas */
 [data-id='canvas-drop-zone'] {
   overflow: visible !important;
+  pointer-events: auto !important;
+  position: relative !important;
+  z-index: 0 !important;
+}
+
+/* Durante drag, desabilitar interações de overlays/portais comuns para não capturar ponteiros */
+body.dnd-dragging .tooltip-content,
+body.dnd-dragging .popover-content,
+body.dnd-dragging .radix-popover-content,
+body.dnd-dragging .radix-tooltip-content,
+body.dnd-dragging [data-radix-tooltip-content],
+body.dnd-dragging [data-state='open'][role='dialog'],
+body.dnd-dragging .DialogOverlay,
+body.dnd-dragging .SheetOverlay,
+body.dnd-dragging .SheetContent,
+body.dnd-dragging [data-portal]
+{
+  pointer-events: none !important;
 }
 

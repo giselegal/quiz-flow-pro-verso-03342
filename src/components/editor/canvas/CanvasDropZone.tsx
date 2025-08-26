@@ -39,12 +39,16 @@ const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
       className={cn(
         'flex-1 p-6 transition-all duration-200',
         'overflow-visible', // 🚨 CORREÇÃO: Permitir eventos de drag
+        // ✅ Garante que o root seja tratado como droppable principal nas correções globais
+        'dnd-droppable-zone',
         isOver && 'bg-blue-50',
         className
       )}
       role="button"
       aria-roledescription="sortable"
       aria-describedby="DndDescribedBy-2"
+      // ✅ Importante para aplicar correções CSS globais de DnD
+      data-id="canvas-drop-zone"
       data-testid={dataTestId}
       style={{ minHeight: '600px' }} // 🚨 CORREÇÃO: Garantir área mínima
     >
