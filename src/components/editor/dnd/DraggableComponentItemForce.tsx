@@ -14,6 +14,7 @@ interface DraggableComponentItemProps {
   category?: string;
   disabled?: boolean;
   className?: string;
+  idSuffix?: string;
 }
 
 export const DraggableComponentItemForce: React.FC<DraggableComponentItemProps> = ({
@@ -24,8 +25,10 @@ export const DraggableComponentItemForce: React.FC<DraggableComponentItemProps> 
   category,
   disabled = false,
   className,
+  idSuffix,
 }) => {
-  const id = `sidebar-item-${blockType}`;
+  const catSlug = (category || 'default').toLowerCase().replace(/[^a-z0-9]+/g, '-');
+  const id = `sidebar-item-${blockType}-${catSlug}${idSuffix ? `-${idSuffix}` : ''}`;
   const data = {
     type: 'sidebar-component',
     blockType: String(blockType),

@@ -52,7 +52,9 @@ export const validateDrop = (
 
   // Validação para componente da sidebar
   if (activeData.type === 'sidebar-component') {
-    const overId = String(over.id);
+    const rawOverId = String(over.id);
+    // Normaliza IDs vindos de wrappers otimizados (ex.: 'dnd-block-<id>')
+    const overId = normalizeOverId(rawOverId) || rawOverId;
 
     // Aceitar soltar diretamente sobre bloco existente (insere antes dele)
     const isOverExistingBlock = currentStepBlocks.some(block => String(block.id) === overId);

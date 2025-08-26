@@ -373,31 +373,169 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         category: 'Conversão',
         description: 'Call-to-action para ofertas especiais',
       },
-  // Extras de teste (catálogo ampliado)
-  { type: 'headline', name: 'Headline', icon: '📰', category: 'Extras', description: 'Título destacado' },
-  { type: 'image', name: 'Imagem', icon: '🖼️', category: 'Extras', description: 'Imagem simples' },
-  { type: 'video', name: 'Vídeo', icon: '🎬', category: 'Extras', description: 'Vídeo incorporado' },
-  { type: 'spacer', name: 'Espaçador', icon: '↕️', category: 'Extras', description: 'Espaço vertical' },
-  { type: 'divider', name: 'Divisor', icon: '➖', category: 'Extras', description: 'Linha divisória' },
-  { type: 'container', name: 'Container', icon: '📦', category: 'Extras', description: 'Container de layout' },
-  { type: 'grid', name: 'Grid', icon: '🔲', category: 'Extras', description: 'Layout em grid' },
-  { type: 'two-column', name: 'Duas Colunas', icon: '🧱', category: 'Extras', description: 'Layout 2 colunas' },
-  { type: 'lead-form', name: 'Form Lead', icon: '✍️', category: 'Extras', description: 'Formulário de lead' },
-  { type: 'quiz-header', name: 'Quiz Header', icon: '🏁', category: 'Extras', description: 'Cabeçalho do quiz' },
-  { type: 'quiz-navigation', name: 'Quiz Navegação', icon: '🧭', category: 'Extras', description: 'Barra de navegação' },
-  { type: 'quiz-result-inline', name: 'Resultado Inline', icon: '📈', category: 'Extras', description: 'Resultado do quiz' },
-  { type: 'step-header-inline', name: 'Header Etapa', icon: '🔖', category: 'Extras', description: 'Cabeçalho de etapa' },
-  { type: 'style-result', name: 'Resultado Estilo', icon: '🎨', category: 'Extras', description: 'Resumo do estilo' },
-  { type: 'result-display', name: 'Exibir Resultado', icon: '🏆', category: 'Extras', description: 'Bloco de resultado' },
-  { type: 'faq', name: 'FAQ', icon: '❓', category: 'Extras', description: 'Perguntas frequentes' },
-  { type: 'pricing', name: 'Pricing', icon: '💵', category: 'Extras', description: 'Tabela de preços' },
-  { type: 'cta', name: 'CTA', icon: '📣', category: 'Extras', description: 'Chamada para ação' },
-  { type: 'offer-cta', name: 'Oferta CTA', icon: '🏷️', category: 'Extras', description: 'Oferta com CTA' },
-  { type: 'benefits', name: 'Benefícios', icon: '✅', category: 'Extras', description: 'Lista de benefícios' },
-  { type: 'testimonials', name: 'Depoimentos', icon: '🗣️', category: 'Extras', description: 'Seção de depoimentos' },
-  { type: 'testimonial', name: 'Depoimento', icon: '💬', category: 'Extras', description: 'Depoimento individual' },
-  { type: 'pricing-card-inline', name: 'Card Pricing', icon: '💳', category: 'Extras', description: 'Card de preço' },
-  { type: 'testimonial-card-inline', name: 'Card Depoimento', icon: '📝', category: 'Extras', description: 'Card de depoimento' },
+      // Extras de teste (catálogo ampliado)
+      {
+        type: 'headline',
+        name: 'Headline',
+        icon: '📰',
+        category: 'Extras',
+        description: 'Título destacado',
+      },
+      {
+        type: 'image',
+        name: 'Imagem',
+        icon: '🖼️',
+        category: 'Extras',
+        description: 'Imagem simples',
+      },
+      {
+        type: 'video',
+        name: 'Vídeo',
+        icon: '🎬',
+        category: 'Extras',
+        description: 'Vídeo incorporado',
+      },
+      {
+        type: 'spacer',
+        name: 'Espaçador',
+        icon: '↕️',
+        category: 'Extras',
+        description: 'Espaço vertical',
+      },
+      {
+        type: 'divider',
+        name: 'Divisor',
+        icon: '➖',
+        category: 'Extras',
+        description: 'Linha divisória',
+      },
+      {
+        type: 'container',
+        name: 'Container',
+        icon: '📦',
+        category: 'Extras',
+        description: 'Container de layout',
+      },
+      { type: 'grid', name: 'Grid', icon: '🔲', category: 'Extras', description: 'Layout em grid' },
+      {
+        type: 'two-column',
+        name: 'Duas Colunas',
+        icon: '🧱',
+        category: 'Extras',
+        description: 'Layout 2 colunas',
+      },
+      {
+        type: 'lead-form',
+        name: 'Form Lead',
+        icon: '✍️',
+        category: 'Extras',
+        description: 'Formulário de lead',
+      },
+      {
+        type: 'quiz-header',
+        name: 'Quiz Header',
+        icon: '🏁',
+        category: 'Extras',
+        description: 'Cabeçalho do quiz',
+      },
+      {
+        type: 'quiz-navigation',
+        name: 'Quiz Navegação',
+        icon: '🧭',
+        category: 'Extras',
+        description: 'Barra de navegação',
+      },
+      {
+        type: 'quiz-result-inline',
+        name: 'Resultado Inline',
+        icon: '📈',
+        category: 'Extras',
+        description: 'Resultado do quiz',
+      },
+      {
+        type: 'step-header-inline',
+        name: 'Header Etapa',
+        icon: '🔖',
+        category: 'Extras',
+        description: 'Cabeçalho de etapa',
+      },
+      {
+        type: 'style-result',
+        name: 'Resultado Estilo',
+        icon: '🎨',
+        category: 'Extras',
+        description: 'Resumo do estilo',
+      },
+      {
+        type: 'result-display',
+        name: 'Exibir Resultado',
+        icon: '🏆',
+        category: 'Extras',
+        description: 'Bloco de resultado',
+      },
+      {
+        type: 'faq',
+        name: 'FAQ',
+        icon: '❓',
+        category: 'Extras',
+        description: 'Perguntas frequentes',
+      },
+      {
+        type: 'pricing',
+        name: 'Pricing',
+        icon: '💵',
+        category: 'Extras',
+        description: 'Tabela de preços',
+      },
+      {
+        type: 'cta',
+        name: 'CTA',
+        icon: '📣',
+        category: 'Extras',
+        description: 'Chamada para ação',
+      },
+      {
+        type: 'offer-cta',
+        name: 'Oferta CTA',
+        icon: '🏷️',
+        category: 'Extras',
+        description: 'Oferta com CTA',
+      },
+      {
+        type: 'benefits',
+        name: 'Benefícios',
+        icon: '✅',
+        category: 'Extras',
+        description: 'Lista de benefícios',
+      },
+      {
+        type: 'testimonials',
+        name: 'Depoimentos',
+        icon: '🗣️',
+        category: 'Extras',
+        description: 'Seção de depoimentos',
+      },
+      {
+        type: 'testimonial',
+        name: 'Depoimento',
+        icon: '💬',
+        category: 'Extras',
+        description: 'Depoimento individual',
+      },
+      {
+        type: 'pricing-card-inline',
+        name: 'Card Pricing',
+        icon: '💳',
+        category: 'Extras',
+        description: 'Card de preço',
+      },
+      {
+        type: 'testimonial-card-inline',
+        name: 'Card Depoimento',
+        icon: '📝',
+        category: 'Extras',
+        description: 'Card de depoimento',
+      },
     ],
     []
   );
@@ -430,6 +568,26 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
 
   // Handlers básicos
   const handleStepSelect = useCallback((step: number) => actions.setCurrentStep(step), [actions]);
+
+  // Handler seguro para adicionar nova etapa, com fallback caso actions.addStep não esteja tipado
+  const handleAddStep = useCallback(() => {
+    const maybeAddStep = (actions as any)?.addStep;
+    if (typeof maybeAddStep === 'function') {
+      maybeAddStep();
+      return;
+    }
+    // Fallback: calcula próximo índice e garante carregamento
+    const keys = Object.keys(state.stepBlocks || {});
+    const nums = keys
+      .map(k => {
+        const m = k.match(/(\d+)/);
+        return m ? parseInt(m[1], 10) : 0;
+      })
+      .filter(n => Number.isFinite(n) && n > 0);
+    const next = (nums.length > 0 ? Math.max(...nums) : 0) + 1;
+    actions.setCurrentStep(next);
+    actions.ensureStepLoaded(next);
+  }, [actions, state.stepBlocks]);
 
   // Duplicação inline é gerenciada no wrapper simples quando necessário
 
@@ -633,7 +791,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         </div>
         <button
           type="button"
-          onClick={actions.addStep}
+          onClick={handleAddStep}
           className="w-full text-center py-2 px-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 text-xs font-medium"
           title="Adicionar nova etapa"
         >
@@ -667,6 +825,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
                 icon={<span className="text-lg">🧪</span>}
                 category="Teste"
                 className="bg-yellow-100 border-yellow-300"
+                idSuffix={String(safeCurrentStep)}
               />
               <DraggableComponentItem
                 blockType="test-normal"
@@ -675,6 +834,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
                 icon={<span className="text-lg">🔧</span>}
                 category="Teste"
                 className="bg-blue-100 border-blue-300"
+                idSuffix={String(safeCurrentStep)}
               />
             </div>
           </div>
@@ -694,6 +854,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
                     icon={<span className="text-lg">{component.icon}</span>}
                     category={component.category}
                     className="bg-gray-50 hover:bg-gray-100 border border-gray-200 hover:border-blue-300"
+                    idSuffix={String(safeCurrentStep)}
                   />
                 ))}
               </div>
