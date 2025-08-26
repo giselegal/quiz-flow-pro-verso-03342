@@ -52,7 +52,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-  if (OFFLINE) {
+    if (OFFLINE) {
       // Modo offline: não conectar no Supabase, criar perfil padrão
       setUser(null);
       setProfile({
@@ -66,15 +66,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setLoading(false);
       return;
     }
-  if (import.meta.env.DEV) console.log('🔑 AuthProvider: Configurando listeners de autenticação');
+    if (import.meta.env.DEV) console.log('🔑 AuthProvider: Configurando listeners de autenticação');
     // Configurar listener de auth PRIMEIRO
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-  if (import.meta.env.DEV) console.log('🔑 AuthProvider: Estado de auth mudou:', {
-        event: _event,
-        hasSession: !!session,
-      });
+      if (import.meta.env.DEV)
+        console.log('🔑 AuthProvider: Estado de auth mudou:', {
+          event: _event,
+          hasSession: !!session,
+        });
       setSession(session);
 
       if (session?.user) {
@@ -97,7 +98,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     // DEPOIS verificar sessão existente
     if (import.meta.env.DEV) console.log('🔑 AuthProvider: Verificando sessão existente...');
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (import.meta.env.DEV) console.log('🔑 AuthProvider: Sessão obtida:', { hasSession: !!session });
+      if (import.meta.env.DEV)
+        console.log('🔑 AuthProvider: Sessão obtida:', { hasSession: !!session });
       setSession(session);
       if (session?.user) {
         setUser({
@@ -106,7 +108,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           name: session.user.user_metadata?.name,
         });
         loadUserProfile(session.user.id);
-        if (import.meta.env.DEV) console.log('🔑 AuthProvider: Usuário definido:', session.user.email);
+        if (import.meta.env.DEV)
+          console.log('🔑 AuthProvider: Usuário definido:', session.user.email);
       } else {
         if (import.meta.env.DEV) console.log('🔑 AuthProvider: Nenhuma sessão ativa');
         setProfile(null);

@@ -150,9 +150,10 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     ...rawState,
     currentStep: rawState.currentStep || 1,
     isSupabaseEnabled: supabaseIntegration?.isSupabaseEnabled ?? (!!enableSupabase && !ENV_DISABLE),
-    databaseMode: (supabaseIntegration?.isSupabaseEnabled || (!!enableSupabase && !ENV_DISABLE))
-      ? 'supabase'
-      : (rawState.databaseMode ?? ((enableSupabase && !ENV_DISABLE) ? 'supabase' : 'local')),
+    databaseMode:
+      supabaseIntegration?.isSupabaseEnabled || (!!enableSupabase && !ENV_DISABLE)
+        ? 'supabase'
+        : (rawState.databaseMode ?? (enableSupabase && !ENV_DISABLE ? 'supabase' : 'local')),
   };
 
   // Load components from Supabase when integration becomes available / config changes
@@ -177,7 +178,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
   }, [supabaseIntegration, setState, rawState]);
 
   useEffect(() => {
-  if (enableSupabase && !ENV_DISABLE) {
+    if (enableSupabase && !ENV_DISABLE) {
       loadSupabaseComponents();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -83,7 +83,7 @@ export const ForceDraggableWrapper: React.FC<{
       style={style}
       data-force-draggable="true"
       data-dragging={isDragging}
-  onDoubleClick={onDoubleClick}
+      onDoubleClick={onDoubleClick}
       {...attributes}
       {...listeners}
     >

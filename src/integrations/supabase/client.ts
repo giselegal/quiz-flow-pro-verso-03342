@@ -9,7 +9,10 @@ const supabaseAnonKey = (import.meta as any)?.env?.VITE_SUPABASE_ANON_KEY as str
 
 // Stub mínimo compatível com a API usada no app quando Supabase estiver desabilitado
 function createSupabaseStub() {
-  const ok = { data: null, error: { message: 'Supabase disabled', status: 0, details: null, hint: null } } as any;
+  const ok = {
+    data: null,
+    error: { message: 'Supabase disabled', status: 0, details: null, hint: null },
+  } as any;
   const okNoError = { data: null, error: null } as any;
   const sub = { unsubscribe: () => {} };
   return {
@@ -31,12 +34,13 @@ function createSupabaseStub() {
 }
 
 // Exporta cliente real somente quando configurado e habilitado
-export const supabase = !DISABLE && supabaseUrl && supabaseAnonKey
-  ? createClient<Database>(supabaseUrl, supabaseAnonKey, {
-      auth: {
-        storage: localStorage,
-        persistSession: true,
-        autoRefreshToken: true,
-      },
-    })
-  : createSupabaseStub();
+export const supabase =
+  !DISABLE && supabaseUrl && supabaseAnonKey
+    ? createClient<Database>(supabaseUrl, supabaseAnonKey, {
+        auth: {
+          storage: localStorage,
+          persistSession: true,
+          autoRefreshToken: true,
+        },
+      })
+    : createSupabaseStub();
