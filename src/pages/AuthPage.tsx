@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useAuth } from '@/context/AuthContext';
+import { AlertCircle, Chrome, Lock, Mail } from 'lucide-react';
+import React, { useState } from 'react';
 import { useLocation } from 'wouter';
-import { AlertCircle, Mail, Lock, Chrome } from 'lucide-react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 
 const AuthPage: React.FC = () => {
   const [, setLocation] = useLocation();
@@ -33,7 +33,7 @@ const AuthPage: React.FC = () => {
           setError('As senhas não coincidem');
           return;
         }
-        
+
         await signup(email, password);
         setError('');
         // Show success message for email verification
@@ -129,9 +129,9 @@ const AuthPage: React.FC = () => {
           className="w-full mb-6 h-12"
           onClick={handleGoogleSignIn}
           disabled={false}
-          style={{ 
+          style={{
             borderColor: '#E5DDD5',
-            backgroundColor: '#FEFEFE'
+            backgroundColor: '#FEFEFE',
           }}
         >
           <Chrome className="w-5 h-5 mr-3" style={{ color: '#4285f4' }} />
@@ -141,57 +141,76 @@ const AuthPage: React.FC = () => {
         {/* Divider */}
         <div className="flex items-center justify-center mb-6">
           <div className="h-px flex-1" style={{ backgroundColor: '#E5DDD5' }}></div>
-          <span className="px-4 text-sm" style={{ color: '#8B7355' }}>ou</span>
+          <span className="px-4 text-sm" style={{ color: '#8B7355' }}>
+            ou
+          </span>
           <div className="h-px flex-1" style={{ backgroundColor: '#E5DDD5' }}></div>
         </div>
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="relative">
-            <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5" style={{ color: '#8B7355' }} />
+            <Mail
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5"
+              style={{ color: '#8B7355' }}
+            />
             <Input
               type="email"
               placeholder="seu@email.com"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={e => setEmail(e.target.value)}
               required
+              name="email"
+              autoComplete="email"
+              autoCapitalize="none"
+              spellCheck={false}
               className="pl-12 h-12"
-              style={{ 
+              style={{
                 borderColor: '#E5DDD5',
-                backgroundColor: '#FEFEFE'
+                backgroundColor: '#FEFEFE',
               }}
             />
           </div>
 
           <div className="relative">
-            <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5" style={{ color: '#8B7355' }} />
+            <Lock
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5"
+              style={{ color: '#8B7355' }}
+            />
             <Input
               type="password"
               placeholder="Sua senha"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={e => setPassword(e.target.value)}
               required
+              name="password"
+              autoComplete={isLogin ? 'current-password' : 'new-password'}
               className="pl-12 h-12"
-              style={{ 
+              style={{
                 borderColor: '#E5DDD5',
-                backgroundColor: '#FEFEFE'
+                backgroundColor: '#FEFEFE',
               }}
             />
           </div>
 
           {!isLogin && (
             <div className="relative">
-              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5" style={{ color: '#8B7355' }} />
+              <Lock
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5"
+                style={{ color: '#8B7355' }}
+              />
               <Input
                 type="password"
                 placeholder="Confirme sua senha"
                 value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                onChange={e => setConfirmPassword(e.target.value)}
                 required
+                name="confirm-password"
+                autoComplete="new-password"
                 className="pl-12 h-12"
-                style={{ 
+                style={{
                   borderColor: '#E5DDD5',
-                  backgroundColor: '#FEFEFE'
+                  backgroundColor: '#FEFEFE',
                 }}
               />
             </div>
