@@ -53,6 +53,7 @@ interface CanvasDropZoneProps {
   onUpdateBlock: (id: string, updates: any) => void;
   onDeleteBlock: (id: string) => void;
   className?: string;
+  isPreviewing?: boolean;
 }
 
 export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
@@ -62,6 +63,7 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
   onUpdateBlock,
   onDeleteBlock,
   className,
+  isPreviewing: isPreviewingProp = false,
 }) => {
   // Evitar recriar arrays/objetos a cada render (impede re-registro contínuo no dnd-kit)
   const rootAccepts = React.useMemo(() => ['sidebar-component', 'canvas-block'], []);
@@ -104,8 +106,8 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
     }
   }, [isOver, active]);
 
-  // Usando isPreviewing como false por padrão (modo de edição)
-  const isPreviewing = false;
+  // Modo preview controlado por prop (default: false)
+  const isPreviewing = !!isPreviewingProp;
 
   return (
     <div
