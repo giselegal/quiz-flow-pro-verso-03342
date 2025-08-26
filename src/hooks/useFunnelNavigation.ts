@@ -10,6 +10,7 @@ import {
   numberToStageId,
   stageIdToNumber,
 } from '@/utils/navigationHelpers';
+import { makeStepKey } from '@/utils/stepKey';
 
 /**
  * HOOK UNIFICADO DE NAVEGAÇÃO DO FUNIL
@@ -29,7 +30,7 @@ export const useFunnelNavigation = () => {
     modern?.actions?.setCurrentStep?.(digits);
   };
   const currentBlocks = modern?.state
-    ? modern.state.stepBlocks?.[`step-${modern.state.currentStep || 1}`] || []
+    ? modern.state.stepBlocks?.[makeStepKey(modern.state.currentStep || 1)] || []
     : [];
   const loadTemplateByStep = async (step: number) => {
     await modern?.actions?.ensureStepLoaded?.(step);
@@ -69,7 +70,7 @@ export const useFunnelNavigation = () => {
       // Considera que conteúdo é válido se existirem blocos carregados para o step
       const stepId = numberToStageId(stepNumber);
       const digits = parseInt(stepId.replace(/\D/g, ''), 10) || 1;
-      const blocksForStep = modern?.state?.stepBlocks?.[`step-${digits}`] || [];
+      const blocksForStep = modern?.state?.stepBlocks?.[makeStepKey(digits)] || [];
       return Array.isArray(blocksForStep) && blocksForStep.length > 0;
     },
     [modern?.state?.stepBlocks]
