@@ -314,13 +314,15 @@ function PropertyField({
           />
         </FieldWrapper>
       );
-    case 'options-list':
+    case 'options-list': {
+      const listValue = Array.isArray(effectiveValue) ? effectiveValue : [];
       return (
         <FieldWrapper>
           <Label>{field.label}</Label>
-          <OptionsListEditor value={effectiveValue} onChange={onChange} />
+          <OptionsListEditor value={listValue} onChange={onChange} />
         </FieldWrapper>
       );
+    }
     case 'json':
       return (
         <FieldWrapper>

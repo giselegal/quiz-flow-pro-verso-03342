@@ -273,6 +273,22 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'marginBottom', label: 'Margem Inferior', type: 'number' },
     ],
   },
+  // Alias avançado do lead-form com configuração JSON exportável
+  'connected-lead-form': {
+    label: 'Formulário Conectado',
+    fields: [
+      { key: 'className', label: 'Classe CSS', type: 'text' },
+      { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color' },
+      { key: 'padding', label: 'Padding (classes)', type: 'text' },
+      {
+        key: 'formConfig',
+        label: 'Configuração do Formulário (JSON)',
+        type: 'json',
+        description:
+          'Config avançada: enableValidation, realTimeValidation, requiredFields, submitButtonText, labelText, successMessage, errorMessage, nextStep, trackingEnabled',
+      },
+    ],
+  },
   'lead-form': {
     label: 'Formulário de Lead',
     fields: [
@@ -328,6 +344,33 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'marginTop', label: 'Margem Superior', type: 'number' },
       { key: 'marginBottom', label: 'Margem Inferior', type: 'number' },
       { key: 'fieldSpacing', label: 'Espaçamento entre Campos', type: 'number' },
+    ],
+  },
+  // Cartão de estilo único (usado em resultado/estilo)
+  'style-card-inline': {
+    label: 'Card de Estilo',
+    fields: [
+      { key: 'title', label: 'Título', type: 'text' },
+      { key: 'subtitle', label: 'Subtítulo', type: 'text' },
+      { key: 'description', label: 'Descrição', type: 'textarea' },
+      { key: 'imageUrl', label: 'Imagem', type: 'text' },
+      { key: 'buttonText', label: 'Texto do Botão', type: 'text' },
+      { key: 'link', label: 'Link', type: 'text' },
+      { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color' },
+      { key: 'textColor', label: 'Cor do Texto', type: 'color' },
+      { key: 'borderRadius', label: 'Raio da Borda (px)', type: 'number' },
+      { key: 'padding', label: 'Padding (px)', type: 'number' },
+    ],
+  },
+  // Grade de cards de estilo
+  'style-cards-grid': {
+    label: 'Grade de Cards de Estilo',
+    fields: [
+      { key: 'cards', label: 'Cards (lista)', type: 'options-list' },
+      { key: 'columns', label: 'Colunas', type: 'number' },
+      { key: 'gap', label: 'Espaçamento (px)', type: 'number' },
+      { key: 'showImages', label: 'Mostrar Imagens', type: 'boolean' },
+      { key: 'cardRadius', label: 'Arredondamento (px)', type: 'number' },
     ],
   },
   'button-inline': {

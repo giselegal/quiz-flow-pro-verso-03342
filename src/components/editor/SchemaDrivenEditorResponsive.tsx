@@ -1,3 +1,4 @@
+import EnhancedUniversalPropertiesPanelFixed from '@/components/universal/EnhancedUniversalPropertiesPanelFixed';
 import { useEditor } from '@/context/EditorContext';
 import { BlockType } from '@/types/editor';
 import { QuizMainDemo } from './QuizMainDemo';
@@ -6,7 +7,6 @@ import ComponentsSidebar from './components/ComponentsSidebar';
 import FunnelStagesPanel from './funnel/FunnelStagesPanelUnified';
 import './interactive/styles/quiz-animations.css';
 import { FourColumnLayout } from './layout/FourColumnLayout';
-import { PropertiesPanel } from './properties/PropertiesPanel';
 import { EditorToolbar } from './toolbar/EditorToolbar';
 
 import React, { useState } from 'react';
@@ -123,12 +123,11 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
             />
           }
           propertiesPanel={
-            <PropertiesPanel
+            <EnhancedUniversalPropertiesPanelFixed
               selectedBlock={selectedBlock || null}
               onUpdate={handleUpdateSelectedBlock}
               onClose={() => setSelectedBlockId(null)}
               onDelete={blockId => deleteBlock(blockId)}
-              isPreviewMode={false}
             />
           }
         />

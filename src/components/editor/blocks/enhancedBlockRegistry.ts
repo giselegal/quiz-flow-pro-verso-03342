@@ -203,6 +203,7 @@ export const AVAILABLE_COMPONENTS = [
   { type: 'connected-lead-form', label: 'Formulário Conectado', category: 'advanced' },
   { type: 'quiz-navigation', label: 'Navegação Premium', category: 'advanced' },
   { type: 'style-cards-grid', label: 'Grid de Estilos', category: 'advanced' },
+  { type: 'style-card-inline', label: 'Card de Estilo (Único)', category: 'advanced' },
   { type: 'gradient-animation', label: 'Gradiente Animado', category: 'advanced' },
 
   // Result/Offer Components (Step20)
