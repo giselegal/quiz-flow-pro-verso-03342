@@ -135,21 +135,24 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
   });
 
   // Wire supabase integration hook (it may return helpers and flags)
+  // Respeitar flag global para desabilitar Supabase (evita erros 400/403 em dev)
+  const ENV_DISABLE = (import.meta as any)?.env?.VITE_DISABLE_SUPABASE === 'true';
+
   const supabaseIntegration: any = useEditorSupabaseIntegration(
     setState,
     rawState,
-    enableSupabase ? funnelId : undefined,
-    enableSupabase ? quizId : undefined
+    enableSupabase && !ENV_DISABLE ? funnelId : undefined,
+    enableSupabase && !ENV_DISABLE ? quizId : undefined
   );
 
   // Compose derived state (ensure defaults)
   const state: EditorState = {
     ...rawState,
     currentStep: rawState.currentStep || 1,
-    isSupabaseEnabled: supabaseIntegration?.isSupabaseEnabled ?? !!enableSupabase,
-    databaseMode: supabaseIntegration?.isSupabaseEnabled
+    isSupabaseEnabled: supabaseIntegration?.isSupabaseEnabled ?? (!!enableSupabase && !ENV_DISABLE),
+    databaseMode: (supabaseIntegration?.isSupabaseEnabled || (!!enableSupabase && !ENV_DISABLE))
       ? 'supabase'
-      : (rawState.databaseMode ?? (enableSupabase ? 'supabase' : 'local')),
+      : (rawState.databaseMode ?? ((enableSupabase && !ENV_DISABLE) ? 'supabase' : 'local')),
   };
 
   // Load components from Supabase when integration becomes available / config changes
@@ -174,7 +177,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
   }, [supabaseIntegration, setState, rawState]);
 
   useEffect(() => {
-    if (enableSupabase) {
+  if (enableSupabase && !ENV_DISABLE) {
       loadSupabaseComponents();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

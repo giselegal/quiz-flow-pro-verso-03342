@@ -45,14 +45,14 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  console.log('🔑 AuthProvider: INICIANDO');
+  if (import.meta.env.DEV) console.log('🔑 AuthProvider: INICIANDO');
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (OFFLINE) {
+  if (OFFLINE) {
       // Modo offline: não conectar no Supabase, criar perfil padrão
       setUser(null);
       setProfile({
@@ -66,12 +66,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setLoading(false);
       return;
     }
-    console.log('🔑 AuthProvider: Configurando listeners de autenticação');
+  if (import.meta.env.DEV) console.log('🔑 AuthProvider: Configurando listeners de autenticação');
     // Configurar listener de auth PRIMEIRO
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      console.log('🔑 AuthProvider: Estado de auth mudou:', {
+  if (import.meta.env.DEV) console.log('🔑 AuthProvider: Estado de auth mudou:', {
         event: _event,
         hasSession: !!session,
       });
@@ -95,9 +95,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     });
 
     // DEPOIS verificar sessão existente
-    console.log('🔑 AuthProvider: Verificando sessão existente...');
+    if (import.meta.env.DEV) console.log('🔑 AuthProvider: Verificando sessão existente...');
     supabase.auth.getSession().then(({ data: { session } }) => {
-      console.log('🔑 AuthProvider: Sessão obtida:', { hasSession: !!session });
+      if (import.meta.env.DEV) console.log('🔑 AuthProvider: Sessão obtida:', { hasSession: !!session });
       setSession(session);
       if (session?.user) {
         setUser({
@@ -106,13 +106,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           name: session.user.user_metadata?.name,
         });
         loadUserProfile(session.user.id);
-        console.log('🔑 AuthProvider: Usuário definido:', session.user.email);
+        if (import.meta.env.DEV) console.log('🔑 AuthProvider: Usuário definido:', session.user.email);
       } else {
-        console.log('🔑 AuthProvider: Nenhuma sessão ativa');
+        if (import.meta.env.DEV) console.log('🔑 AuthProvider: Nenhuma sessão ativa');
         setProfile(null);
       }
       setLoading(false);
-      console.log('🔑 AuthProvider: Loading concluído');
+      if (import.meta.env.DEV) console.log('🔑 AuthProvider: Loading concluído');
     });
 
     return () => subscription.unsubscribe();

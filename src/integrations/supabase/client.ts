@@ -2,19 +2,41 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 
-// Usando as variáveis de ambiente corretas
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://pwtjuuhchtbzttrzoutw.supabase.co';
-const supabaseAnonKey =
-  import.meta.env.VITE_SUPABASE_ANON_KEY ||
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3dGp1dWhjaHRienR0cnpvdXR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIzNDQ0NjAsImV4cCI6MjA2NzkyMDQ2MH0.EP0qLHBZK8nyxcod0FEVRQln4R_yVSWEGQwuIbJfP_w';
+// Modo offline/seguro para desenvolvimento: evita chamadas externas indesejadas
+const DISABLE = (import.meta as any)?.env?.VITE_DISABLE_SUPABASE === 'true';
+const supabaseUrl = (import.meta as any)?.env?.VITE_SUPABASE_URL as string | undefined;
+const supabaseAnonKey = (import.meta as any)?.env?.VITE_SUPABASE_ANON_KEY as string | undefined;
 
-// Import the supabase client like this:
-// import { supabase } from "@/integrations/supabase/client";
+// Stub mínimo compatível com a API usada no app quando Supabase estiver desabilitado
+function createSupabaseStub() {
+  const ok = { data: null, error: { message: 'Supabase disabled', status: 0, details: null, hint: null } } as any;
+  const okNoError = { data: null, error: null } as any;
+  const sub = { unsubscribe: () => {} };
+  return {
+    auth: {
+      onAuthStateChange: (_cb: any) => ({ data: { subscription: sub } }),
+      getSession: async () => ({ data: { session: null }, error: null }),
+      signInWithPassword: async () => okNoError,
+      signOut: async () => okNoError,
+    },
+    from: () => ({
+      select: async () => ok,
+      insert: async () => ok,
+      upsert: async () => ok,
+      update: async () => ok,
+      delete: async () => ok,
+      eq: () => ({ select: async () => ok, update: async () => ok, delete: async () => ok }),
+    }),
+  } as unknown as ReturnType<typeof createClient<Database>>;
+}
 
-export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
-  auth: {
-    storage: localStorage,
-    persistSession: true,
-    autoRefreshToken: true,
-  },
-});
+// Exporta cliente real somente quando configurado e habilitado
+export const supabase = !DISABLE && supabaseUrl && supabaseAnonKey
+  ? createClient<Database>(supabaseUrl, supabaseAnonKey, {
+      auth: {
+        storage: localStorage,
+        persistSession: true,
+        autoRefreshToken: true,
+      },
+    })
+  : createSupabaseStub();
