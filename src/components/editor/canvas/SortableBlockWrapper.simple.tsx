@@ -36,7 +36,7 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
     transition,
     isDragging,
   } = useSortable({
-    id: String(block.id),
+  id: `dnd-block-${String(block.id)}`,
     data: {
       type: 'canvas-block',
       blockId: String(block.id), // Required by validateDrop

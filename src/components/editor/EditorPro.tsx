@@ -280,7 +280,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   }, []);
 
   // componentes disponíveis - ideal extrair para config
-  const availableComponents = useMemo(
+    const availableComponentsRaw = useMemo(
     () => [
       {
         type: 'quiz-intro-header',
@@ -540,6 +540,15 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
     []
   );
 
+  // Deduplicar por `type` para evitar draggables duplicados na sidebar
+  const availableComponents = useMemo(() => {
+    const seen = new Set<string>();
+    return availableComponentsRaw.filter(c => {
+      if (seen.has(c.type)) return false;
+      seen.add(c.type);
+      return true;
+    });
+  }, [availableComponentsRaw]);
   const groupedComponents = useMemo(
     () =>
       availableComponents.reduce(
@@ -670,7 +679,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         return;
       }
 
-      const validation = validateDrop(active, over, currentStepData);
+  const validation = validateDrop(active, over, currentStepData);
       if (isDebug()) {
         // eslint-disable-next-line no-console
         console.log('validateDrop →', validation);
@@ -678,6 +687,17 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       logDragEvent('end', active, over, validation);
 
       if (!validation.isValid) {
+        // 🔧 Fallback de curto prazo: se veio da sidebar, adiciona ao final para destravar o fluxo
+        const dragData = extractDragData(active);
+        if (dragData?.type === 'sidebar-component' && dragData.blockType) {
+          const newBlock = createBlockFromComponent(dragData.blockType as any, currentStepData);
+          const targetIndex = currentStepData.length;
+          actions.addBlockAtIndex(currentStepKey, newBlock, targetIndex);
+          actions.setSelectedBlockId(newBlock.id);
+          notification?.info?.(`(Fallback) Componente ${dragData.blockType} adicionado ao final.`);
+          if (isDebug()) console.groupEnd();
+          return;
+        }
         const feedback = getDragFeedback(extractDragData(active), validation);
         notification?.warning?.(feedback.message);
         if (isDebug()) console.groupEnd();
@@ -1121,7 +1141,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       } catch {}
 
       // Verificar elementos DnD após renderização
-      setTimeout(() => {
+  setTimeout(() => {
         const draggables = document.querySelectorAll('[data-dnd-kit-draggable-handle]');
         const droppables = document.querySelectorAll('[data-dnd-kit-droppable]');
         // eslint-disable-next-line no-console
@@ -1133,9 +1153,11 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         });
 
         // Logs de camadas/estilos do canvas e dropzones
-        const canvasRoot = document.querySelector(
-          '[data-id="canvas-drop-zone"]'
-        ) as HTMLElement | null;
+        const canvasRoots = document.querySelectorAll('[data-id="canvas-drop-zone"]');
+        if (canvasRoots.length > 1) {
+          console.warn(`⚠️ Há ${canvasRoots.length} canvas roots com data-id="canvas-drop-zone". Mantenha apenas um por tela.`);
+        }
+        const canvasRoot = (canvasRoots[0] as HTMLElement) || null;
         if (canvasRoot) {
           const cs = window.getComputedStyle(canvasRoot);
           console.log('🎨 Canvas styles:', {

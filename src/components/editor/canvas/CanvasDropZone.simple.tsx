@@ -140,7 +140,7 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
         </div>
       ) : (
         <SortableContext
-          items={blocks.map(block => String(block.id))}
+          items={blocks.map(block => `dnd-block-${String(block.id)}`)}
           strategy={verticalListSortingStrategy}
         >
           <div className="space-y-6">
