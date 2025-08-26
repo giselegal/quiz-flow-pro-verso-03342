@@ -1,0 +1,56 @@
+/* Estilos otimizados para DnD - sem conflitos */
+.dnd-draggable-item {
+  pointer-events: auto !important;
+  user-select: none !important;
+  touch-action: none !important;
+  cursor: grab !important;
+  position: relative;
+}
+
+.dnd-draggable-item[data-dragging='true'] {
+  cursor: grabbing !important;
+  z-index: 9999 !important;
+  opacity: 0.85;
+  transform: translate3d(var(--dnd-translate-x, 0), var(--dnd-translate-y, 0), 0) !important;
+}
+
+.dnd-droppable-zone {
+  pointer-events: auto !important;
+  position: relative;
+}
+
+.dnd-droppable-zone[data-over='true'] {
+  background-color: rgba(59, 130, 246, 0.08) !important;
+  border: 2px dashed rgba(59, 130, 246, 0.45) !important;
+}
+
+/* Canvas container nunca deve recortar zonas de drop */
+[data-canvas-container] {
+  overflow: visible !important;
+  overflow-x: visible !important;
+  overflow-y: visible !important;
+  pointer-events: auto !important;
+  position: relative;
+}
+
+/* Root do canvas também não deve recortar zonas internas */
+[data-id='canvas-drop-zone'] {
+  overflow: visible !important;
+  pointer-events: auto !important;
+  position: relative !important;
+  z-index: 0 !important;
+}
+
+/* Durante drag, desabilitar interações de overlays/portais comuns para não capturar ponteiros */
+body.dnd-dragging .tooltip-content,
+body.dnd-dragging .popover-content,
+body.dnd-dragging .radix-popover-content,
+body.dnd-dragging .radix-tooltip-content,
+body.dnd-dragging [data-radix-tooltip-content],
+body.dnd-dragging [data-state='open'][role='dialog'],
+body.dnd-dragging .DialogOverlay,
+body.dnd-dragging .SheetOverlay,
+body.dnd-dragging .SheetContent,
+body.dnd-dragging [data-portal] {
+  pointer-events: none !important;
+}

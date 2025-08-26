@@ -1,5 +1,34 @@
-// Real Supabase User Response Service
+// Real Supabase User Response Service (com modo offline)
 import { supabase } from '@/integrations/supabase/client';
+import { sessionService } from '@/services/sessionService';
+
+const OFFLINE = import.meta.env.VITE_DISABLE_SUPABASE === 'true';
+const isBrowser = typeof window !== 'undefined';
+
+// Utilitário simples para validar UUID v1-v5
+function isValidUUID(value: string | null | undefined): value is string {
+  if (!value) return false;
+  return /^(?:[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})$/i.test(
+    value
+  );
+}
+
+function saveLocal<T>(key: string, value: T) {
+  if (!isBrowser) return;
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch {}
+}
+
+function readLocal<T = any>(key: string): T | null {
+  if (!isBrowser) return null;
+  try {
+    const v = localStorage.getItem(key);
+    return v ? (JSON.parse(v) as T) : null;
+  } catch {
+    return null;
+  }
+}
 
 export interface UserResponse {
   id: string;
@@ -20,11 +49,59 @@ export interface QuizUser {
 }
 
 export const userResponseService = {
+  // Empilha respostas quando não há UUID ou offline; será esvaziado por flush
+  enqueuePending(response: any) {
+    if (!isBrowser) return;
+    try {
+      const arr = JSON.parse(localStorage.getItem('quiz_pending_responses') || '[]');
+      arr.push(response);
+      localStorage.setItem('quiz_pending_responses', JSON.stringify(arr));
+    } catch {}
+  },
+
+  async flushPending(): Promise<{ success: boolean; sent: number; remaining: number }> {
+    if (OFFLINE) return { success: true, sent: 0, remaining: 0 };
+    const sessionId = sessionService.getSessionId();
+    if (!isValidUUID(sessionId || ''))
+      return {
+        success: false,
+        sent: 0,
+        remaining: (JSON.parse(localStorage.getItem('quiz_pending_responses') || '[]') as any[])
+          .length,
+      };
+
+    const pending: any[] = JSON.parse(localStorage.getItem('quiz_pending_responses') || '[]');
+    if (!pending.length) return { success: true, sent: 0, remaining: 0 };
+
+    let sent = 0;
+    const remaining: any[] = [];
+    for (const item of pending) {
+      try {
+        await this.saveResponse({ ...item, sessionId });
+        sent++;
+      } catch (e) {
+        remaining.push(item);
+      }
+    }
+    localStorage.setItem('quiz_pending_responses', JSON.stringify(remaining));
+    return { success: remaining.length === 0, sent, remaining: remaining.length };
+  },
   async createQuizUser(userData: {
     sessionId: string;
     name?: string;
     email?: string;
   }): Promise<QuizUser> {
+    if (OFFLINE || !isValidUUID(userData.sessionId)) {
+      const mock: QuizUser = {
+        id: `local_user_${userData.sessionId}`,
+        session_id: userData.sessionId,
+        name: userData.name,
+        email: userData.email,
+        created_at: new Date(),
+      };
+      saveLocal(`quiz_user_${userData.sessionId}`, mock);
+      return mock;
+    }
     try {
       console.log('📝 Creating quiz user in Supabase:', userData);
 
@@ -66,24 +143,83 @@ export const userResponseService = {
     data: any;
     timestamp: string;
   }): Promise<UserResponse> {
+    if (OFFLINE) {
+      const fallbackResponse: UserResponse = {
+        id: `response_${Date.now()}`,
+        userId: response.userId,
+        sessionId: response.sessionId,
+        step: response.step,
+        data: response.data,
+        timestamp: response.timestamp,
+        created_at: new Date(),
+      };
+      // Indexar também por componentId para leitura simples
+      const componentId =
+        (response.data && (response.data.componentId || response.data.fieldName)) || 'unknown';
+      saveLocal(`quiz_response_${componentId}`, fallbackResponse);
+      saveLocal(`quiz_response_${fallbackResponse.id}`, fallbackResponse);
+      return fallbackResponse;
+    }
+    // Se o sessionId não for um UUID válido (ex.: "session_..."), não tente salvar no Supabase
+    if (!isValidUUID(response.sessionId)) {
+      console.warn(
+        '⚠️ Supabase disabled for this response: session_id is not a valid UUID, using local fallback.',
+        response.sessionId
+      );
+      const fallbackResponse: UserResponse = {
+        id: `response_${Date.now()}`,
+        userId: response.userId,
+        sessionId: response.sessionId,
+        step: response.step,
+        data: response.data,
+        timestamp: response.timestamp,
+        created_at: new Date(),
+      };
+      try {
+        const componentKey =
+          (response.data && (response.data.componentId || response.data.fieldName)) || undefined;
+        if (componentKey) {
+          localStorage.setItem(`quiz_response_${componentKey}`, JSON.stringify(fallbackResponse));
+        }
+        localStorage.setItem(
+          `quiz_response_${fallbackResponse.id}`,
+          JSON.stringify(fallbackResponse)
+        );
+        // Enfileirar para tentar enviar quando obtivermos uma sessão UUID
+        this.enqueuePending(response);
+      } catch {}
+      return fallbackResponse;
+    }
     try {
       console.log('📝 Saving response to Supabase:', response);
 
       // Mapear step para número
       const stepNumber = parseInt(response.step.replace(/\D/g, '')) || 1;
 
+      // Alinhar com o schema real da tabela quiz_step_responses:
+      // Campos disponíveis: session_id, step_number, question_id, question_text,
+      // answer_value, answer_text, score_earned, response_time_ms, metadata, responded_at
+      const questionId =
+        (response.data && (response.data.componentId || response.data.fieldName)) || 'unknown';
+      const answerValue =
+        (response.data && (response.data.value || response.data.name)) || undefined;
+      const answerText =
+        (typeof response.data === 'string' ? response.data : response.data?.text) || undefined;
+
       const { data, error } = await supabase
         .from('quiz_step_responses')
         .insert({
           session_id: response.sessionId,
           step_number: stepNumber,
-          component_id: response.data.componentId || response.data.fieldName || 'unknown',
-          component_type: response.data.componentType || 'form-input',
-          response_data: {
+          question_id: questionId,
+          question_text: (response.data && response.data.label) || undefined,
+          answer_value: typeof answerValue === 'string' ? answerValue : JSON.stringify(answerValue),
+          answer_text: answerText,
+          metadata: {
             originalData: response.data,
             timestamp: response.timestamp,
             step: response.step,
-          },
+          } as any,
         } as any)
         .select();
 
@@ -117,11 +253,18 @@ export const userResponseService = {
         timestamp: response.timestamp,
         created_at: new Date(),
       };
-
-      localStorage.setItem(
-        `quiz_response_${fallbackResponse.id}`,
-        JSON.stringify(fallbackResponse)
-      );
+      // Salvar indexado pelo id gerado (debug) e pelo componentId/fieldName para leitura por getResponse
+      try {
+        localStorage.setItem(
+          `quiz_response_${fallbackResponse.id}`,
+          JSON.stringify(fallbackResponse)
+        );
+        const componentKey =
+          (response.data && (response.data.componentId || response.data.fieldName)) || undefined;
+        if (componentKey) {
+          localStorage.setItem(`quiz_response_${componentKey}`, JSON.stringify(fallbackResponse));
+        }
+      } catch {}
       console.log('📦 Saved response to localStorage as fallback');
       return fallbackResponse;
     }
@@ -129,24 +272,40 @@ export const userResponseService = {
 
   async getResponse(componentId: string): Promise<string> {
     try {
-      // Primeiro tentar buscar pela session_id ativa e component_id
-      const sessionId = localStorage.getItem('quiz_session_id') || '';
+      if (OFFLINE) {
+        const stored = readLocal<any>(`quiz_response_${componentId}`);
+        if (stored) {
+          const data = stored.data || {};
+          return (
+            data?.name ||
+            data?.value ||
+            (typeof data === 'string' ? data : JSON.stringify(data)) ||
+            ''
+          );
+        }
+        return '';
+      }
+      // Primeiro tentar buscar pela session_id ativa e question_id (componentId mapeia para question_id)
+      const sessionId = sessionService.getSessionId() || '';
 
-      if (sessionId) {
+      // Evitar 400 no PostgREST: não filtrar por session_id se não for UUID válido
+      if (sessionId && isValidUUID(sessionId)) {
         const { data, error } = await supabase
           .from('quiz_step_responses')
           .select('*')
           .eq('session_id', sessionId)
-          .eq('component_id', componentId)
+          .eq('question_id', componentId)
           .order('responded_at', { ascending: false })
           .limit(1)
           .single();
 
         if (!error && data) {
           return (
-            (data as any)?.response_data?.originalData?.name ||
-            (data as any)?.response_data?.value ||
-            JSON.stringify((data as any)?.response_data) ||
+            (data as any)?.answer_value ||
+            (data as any)?.answer_text ||
+            (data as any)?.metadata?.originalData?.name ||
+            (data as any)?.metadata?.value ||
+            JSON.stringify((data as any)?.metadata) ||
             ''
           );
         }
@@ -165,6 +324,27 @@ export const userResponseService = {
 
   async getResponses(userId: string): Promise<UserResponse[]> {
     try {
+      if (OFFLINE) {
+        // Coletar todas respostas do usuário em localStorage
+        const out: UserResponse[] = [];
+        if (!isBrowser) return out;
+        Object.keys(localStorage)
+          .filter(k => k.startsWith('quiz_response_'))
+          .forEach(k => {
+            try {
+              const val = JSON.parse(localStorage.getItem(k) || 'null');
+              if (val && (val.sessionId === userId || val.userId === userId)) {
+                out.push(val);
+              }
+            } catch {}
+          });
+        return out;
+      }
+      // Evitar erro 400 por filtro inválido: se não for UUID, retornar vazio
+      if (!isValidUUID(userId)) {
+        console.warn('⚠️ Skipping Supabase getResponses: session_id is not a valid UUID');
+        return [];
+      }
       const { data, error } = await supabase
         .from('quiz_step_responses')
         .select('*')
@@ -178,7 +358,7 @@ export const userResponseService = {
         userId: userId,
         sessionId: (item as any).session_id,
         step: `step-${item.step_number}`,
-        data: (item as any).response_data || item.answer_text || item.answer_value || '',
+        data: (item as any).metadata || item.answer_text || item.answer_value || '',
         timestamp: item.responded_at,
         created_at: new Date(item.responded_at),
       }));
@@ -200,6 +380,13 @@ export const userResponseService = {
 
   async deleteResponse(id: string): Promise<boolean> {
     try {
+      if (OFFLINE) {
+        if (isBrowser) {
+          // Remover tanto por id quanto por indexação de componentId (se existir)
+          localStorage.removeItem(`quiz_response_${id}`);
+        }
+        return true;
+      }
       const { error } = await supabase.from('quiz_step_responses').delete().eq('id', id);
 
       if (error) throw error;
@@ -213,3 +400,17 @@ export const userResponseService = {
 };
 
 export default userResponseService;
+
+// Auto-flush quando sessão UUID é iniciada ou quando voltar online
+if (typeof window !== 'undefined') {
+  window.addEventListener('quiz-session-started', () => {
+    setTimeout(() => {
+      userResponseService.flushPending().catch(() => {});
+    }, 0);
+  });
+  window.addEventListener('online', () => {
+    setTimeout(() => {
+      userResponseService.flushPending().catch(() => {});
+    }, 0);
+  });
+}

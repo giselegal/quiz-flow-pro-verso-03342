@@ -3,7 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { EditorProvider } from '@/context/EditorContext';
 import { useResultPageConfig } from '@/hooks/useResultPageConfig';
 import React, { useState } from 'react';
-import { EditorCanvas } from '../canvas/EditorCanvas';
+import { CanvasDropZone } from '../canvas/CanvasDropZone.simple';
 import PropertiesPanel from '../properties/PropertiesPanel';
 import ComponentsSidebar from '../components/ComponentsSidebar';
 
@@ -14,7 +14,6 @@ interface UnifiedEditorLayoutProps {
 export const UnifiedEditorLayout: React.FC<UnifiedEditorLayoutProps> = ({ className = '' }) => {
   const [activeTab, setActiveTab] = useState<'quiz' | 'result' | 'sales'>('result');
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
-  const [isPreviewing] = useState(false);
 
   const { resultPageConfig } = useResultPageConfig('Natural');
 
@@ -33,10 +32,6 @@ export const UnifiedEditorLayout: React.FC<UnifiedEditorLayoutProps> = ({ classN
       console.log('Block deleted:', selectedBlockId);
       setSelectedBlockId(null);
     }
-  };
-
-  const handleReorderBlocks = (sourceIndex: number, destinationIndex: number) => {
-    console.log('Blocks reordered:', sourceIndex, destinationIndex);
   };
 
   // Create default config with all required properties
@@ -110,15 +105,12 @@ export const UnifiedEditorLayout: React.FC<UnifiedEditorLayoutProps> = ({ classN
               <ResizableHandle withHandle />
 
               <ResizablePanel defaultSize={55}>
-                <EditorCanvas
+                <CanvasDropZone
                   blocks={config.blocks || []}
                   selectedBlockId={selectedBlockId}
                   onSelectBlock={setSelectedBlockId}
                   onUpdateBlock={handleBlockUpdate}
                   onDeleteBlock={handleBlockDelete}
-                  onReorderBlocks={handleReorderBlocks}
-                  isPreviewing={isPreviewing}
-                  viewportSize="lg"
                 />
               </ResizablePanel>
 

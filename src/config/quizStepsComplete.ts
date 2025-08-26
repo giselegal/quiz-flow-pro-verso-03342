@@ -25,7 +25,10 @@ export function candidateKeysForStep(step: number | string) {
   return keys;
 }
 
-export function getBlocksForStep(step: number | string, stepBlocks?: RawStepBlocks | null): EditorBlock[] | undefined {
+export function getBlocksForStep(
+  step: number | string,
+  stepBlocks?: RawStepBlocks | null
+): EditorBlock[] | undefined {
   if (!stepBlocks) return undefined;
   const candidates = candidateKeysForStep(step);
   for (const key of candidates) {
@@ -40,8 +43,9 @@ export function getBlocksForStep(step: number | string, stepBlocks?: RawStepBloc
       try {
         const parsed = JSON.parse(raw);
         if (Array.isArray(parsed)) return parsed as EditorBlock[];
-        if (parsed && typeof parsed === 'object' && Array.isArray((parsed as any).blocks)) return (parsed as any).blocks;
-      } catch (e) { }
+        if (parsed && typeof parsed === 'object' && Array.isArray((parsed as any).blocks))
+          return (parsed as any).blocks;
+      } catch (e) {}
     }
     if (raw && typeof raw === 'object') {
       const vals = Object.values(raw);
@@ -59,13 +63,15 @@ export function normalizeStepBlocks(raw?: RawStepBlocks | null): StepBlocks {
     const targetKey = parsed !== null ? `step-${parsed}` : k;
     let blocks: EditorBlock[] | undefined;
     if (Array.isArray(v)) blocks = v as EditorBlock[];
-    else if (v && typeof v === 'object' && Array.isArray((v as any).blocks)) blocks = (v as any).blocks;
+    else if (v && typeof v === 'object' && Array.isArray((v as any).blocks))
+      blocks = (v as any).blocks;
     else if (typeof v === 'string') {
       try {
         const parsedJson = JSON.parse(v);
         if (Array.isArray(parsedJson)) blocks = parsedJson;
-        else if (parsedJson && typeof parsedJson === 'object' && Array.isArray(parsedJson.blocks)) blocks = parsedJson.blocks;
-      } catch (e) { }
+        else if (parsedJson && typeof parsedJson === 'object' && Array.isArray(parsedJson.blocks))
+          blocks = parsedJson.blocks;
+      } catch (e) {}
     } else if (v && typeof v === 'object') {
       const vals = Object.values(v);
       if (vals.length > 0 && vals.every(x => typeof x === 'object')) blocks = vals as EditorBlock[];
@@ -77,6 +83,7 @@ export function normalizeStepBlocks(raw?: RawStepBlocks | null): StepBlocks {
 
 export function mergeStepBlocks(base: StepBlocks, incoming: RawStepBlocks): StepBlocks {
   const normalizedIncoming = normalizeStepBlocks(incoming);
+<<<<<<< HEAD
 <<<<<<< HEAD
   const result: StepBlocks = { ...base };
 
@@ -104,6 +111,11 @@ export function mergeStepBlocks(base: StepBlocks, incoming: RawStepBlocks): Step
 
     mergedForStep.sort((a, b) => {
 =======
+=======
+  const result: StepBlocks = { ...base };
+
+  for (const [stepKey, incomingBlocks] of Object.entries(normalizedIncoming)) {
+>>>>>>> 2894df584 (Reverted to commit a6b023e2dffa3930c70bc9dffa2a96239757b246)
     const existing = result[stepKey] ?? [];
 
     // Índice por ID para merge estável
@@ -135,12 +147,16 @@ export function mergeStepBlocks(base: StepBlocks, incoming: RawStepBlocks): Step
 
     // Ordenar por campo 'order' se existir
     merged.sort((a, b) => {
+<<<<<<< HEAD
 >>>>>>> f488f691c (Reverted to commit cf7305e7b17ec218cffd49ea421f8f13ae2f2520)
+=======
+>>>>>>> 2894df584 (Reverted to commit a6b023e2dffa3930c70bc9dffa2a96239757b246)
       const ao = (a as any)?.order ?? 0;
       const bo = (b as any)?.order ?? 0;
       return ao - bo;
     });
 
+<<<<<<< HEAD
 <<<<<<< HEAD
     result[stepKey] = mergedForStep as any[];
 =======
@@ -152,6 +168,18 @@ export function mergeStepBlocks(base: StepBlocks, incoming: RawStepBlocks): Step
 =======
   return { ...base, ...normalizedIncoming };
 >>>>>>> 97b323592 (Reverted to commit 393d5ec5dcb2cbdca7166022e2feed9000a4d932)
+=======
+    result[stepKey] = merged as any[];
+  }
+
+  return result;
+>>>>>>> 2894df584 (Reverted to commit a6b023e2dffa3930c70bc9dffa2a96239757b246)
 }
 
-export default { parseStepKey, candidateKeysForStep, getBlocksForStep, normalizeStepBlocks, mergeStepBlocks };
+export default {
+  parseStepKey,
+  candidateKeysForStep,
+  getBlocksForStep,
+  normalizeStepBlocks,
+  mergeStepBlocks,
+};

@@ -88,6 +88,33 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
     normalizedBlock.properties
   );
 
+  // 🎚️ Controle de escala universal (aplicado a TODOS os componentes via wrapper)
+  const {
+    scale: rawScale,
+    scaleX: rawScaleX,
+    scaleY: rawScaleY,
+    scaleClass,
+    scaleOrigin = 'center',
+  } = (normalizedBlock.properties as any) || {};
+
+  // Normalizar valores de escala
+  let parsedScale = typeof rawScale === 'string' ? parseFloat(rawScale) : rawScale;
+  const parsedScaleX = typeof rawScaleX === 'string' ? parseFloat(rawScaleX) : rawScaleX;
+  const parsedScaleY = typeof rawScaleY === 'string' ? parseFloat(rawScaleY) : rawScaleY;
+
+  // Compatibilidade: se vier em porcentagem (ex.: 100, 75), converter para fator
+  if (typeof parsedScale === 'number' && parsedScale > 2) {
+    parsedScale = parsedScale / 100;
+  }
+
+  const sx = parsedScaleX ?? parsedScale ?? 1;
+  const sy = parsedScaleY ?? parsedScale ?? 1;
+
+  // Mesclar transform existente com a escala
+  const baseTransform = (inlineStyles as any)?.transform as string | undefined;
+  const scaleTransform = sx === 1 && sy === 1 ? undefined : `scale(${sx}, ${sy})`;
+  const mergedTransform = [baseTransform, scaleTransform].filter(Boolean).join(' ');
+
   // Log para debug das propriedades de container (apenas em desenvolvimento)
   if (
     import.meta.env.DEV &&
@@ -121,6 +148,8 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
           className={cn(
             'block-wrapper transition-all duration-200',
             containerClasses,
+            // Classe de escala opcional (Tailwind), ex.: 'scale-95 md:scale-100'
+            scaleClass,
             // Margens universais com controles deslizantes
             getMarginClass(normalizedBlock.properties?.marginTop ?? 0, 'top'),
             getMarginClass(normalizedBlock.properties?.marginBottom ?? 0, 'bottom'),
@@ -129,7 +158,11 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
             isSelected && 'ring-2 ring-[#B89B7A] ring-offset-2'
           )}
           onClick={onClick}
-          style={inlineStyles}
+          style={{
+            ...inlineStyles,
+            ...(mergedTransform && { transform: mergedTransform }),
+            ...(scaleTransform && { transformOrigin: scaleOrigin, willChange: 'transform' }),
+          }}
         >
           <React.Suspense fallback={<div className="animate-pulse bg-gray-200 h-16 rounded" />}>
             <Component

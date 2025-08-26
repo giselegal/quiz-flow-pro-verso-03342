@@ -1,0 +1,7 @@
+const { describe, it, expect } = require('vitest');
+
+describe('hello world test', () => {
+  it('should return true', () => {
+    expect(true).toBe(true);
+  });
+});

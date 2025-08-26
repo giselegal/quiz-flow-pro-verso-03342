@@ -250,7 +250,13 @@ function PropertyField({
           />
         </FieldWrapper>
       );
-    case 'range':
+    case 'range': {
+      // Unidades auxiliares para escala (%) ou fator (×)
+      const isPercent = /Escala \(\%\)|Escala do Componente \(\%\)/i.test(field.label);
+      const isFactor = /\(fator\)/i.test(field.label);
+      const suffix = isPercent ? '%' : isFactor ? '×' : '';
+      const displayVal =
+        effectiveValue !== '' && effectiveValue !== undefined ? `${effectiveValue}${suffix}` : '';
       return (
         <FieldWrapper>
           <Label>{field.label}</Label>
@@ -262,10 +268,12 @@ function PropertyField({
             value={Number(effectiveValue ?? field.min ?? 0)}
             onChange={e => onChange(Number(e.target.value))}
             className="w-full"
+            title={field.description || displayVal}
           />
-          <div className="text-xs text-muted-foreground">{String(effectiveValue ?? '')}</div>
+          <div className="text-xs text-muted-foreground">{displayVal}</div>
         </FieldWrapper>
       );
+    }
     case 'boolean':
       return (
         <FieldWrapper>
@@ -383,6 +391,14 @@ const EnhancedUniversalPropertiesPanelFixed: React.FC<PanelProps> = ({
     );
   }
 
+  // Misturar campos universais de transformação/escala
+  const universal = blockPropertySchemas['universal-default'];
+  const mergedFields = [
+    ...(schema?.fields || []),
+    // Evitar duplicatas por chave
+    ...universal.fields.filter(uf => !(schema?.fields || []).some(sf => sf.key === uf.key)),
+  ];
+
   return (
     <aside className="h-full w-full overflow-y-auto p-4 space-y-4">
       <header className="space-y-1">
@@ -398,7 +414,7 @@ const EnhancedUniversalPropertiesPanelFixed: React.FC<PanelProps> = ({
         className="space-y-4"
       >
         {Object.entries(
-          schema.fields
+          mergedFields
             .filter(f => {
               // ocultar condicionais de seleção múltipla
               if (
@@ -458,6 +474,46 @@ const EnhancedUniversalPropertiesPanelFixed: React.FC<PanelProps> = ({
             ))}
           </section>
         ))}
+
+        {/* Ações rápidas */}
+        <section className="pt-2 border-t">
+          <h4 className="text-sm font-semibold mb-2">Ações Rápidas</h4>
+          <div className="flex flex-wrap gap-2 items-center">
+            <button
+              type="button"
+              className="px-3 py-1.5 rounded-md border text-xs hover:bg-muted"
+              onClick={() =>
+                onUpdate(selectedBlock.id, {
+                  scale: 100,
+                  scaleX: undefined,
+                  scaleY: undefined,
+                  scaleOrigin: 'center',
+                  scaleClass: undefined,
+                })
+              }
+            >
+              Resetar escala
+            </button>
+
+            {/* Presets rápidos para escala (%) */}
+            <div className="flex items-center gap-1">
+              <span className="text-xs text-muted-foreground">Presets:</span>
+              {[90, 95, 100, 105, 110].map(preset => (
+                <button
+                  key={preset}
+                  type="button"
+                  className={`px-2 py-1 rounded border text-xs hover:bg-muted ${
+                    selectedBlock.properties?.scale === preset ? 'bg-muted' : ''
+                  }`}
+                  title={`${preset}%`}
+                  onClick={() => onUpdate(selectedBlock.id, { scale: preset })}
+                >
+                  {preset}%
+                </button>
+              ))}
+            </div>
+          </div>
+        </section>
 
         <div className="pt-2 flex gap-2">
           <button type="submit" className="px-3 py-2 rounded-md border text-sm">

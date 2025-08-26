@@ -4,7 +4,8 @@
 .lovable-preview-container {
   width: 100%;
   height: 100vh;
-  overflow: hidden;
+  /* Evita clipe do elemento arrastado do dnd-kit */
+  overflow: visible;
 }
 
 /* Otimizações para o painel de preview */
@@ -25,9 +26,9 @@
 }
 
 /* Otimizações de performance para preview */
+/* Evita criar stacking contexts e problemas de hit-testing no DnD */
 .lovable-preview-container * {
   will-change: auto;
-  transform: translateZ(0);
 }
 
 /* Estilos responsivos para painel lateral */

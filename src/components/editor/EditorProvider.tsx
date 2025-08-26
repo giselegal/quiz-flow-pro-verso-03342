@@ -21,6 +21,8 @@ export interface EditorActions {
   // State management
   setCurrentStep: (step: number) => void;
   setSelectedBlockId: (blockId: string | null) => void;
+  // Steps
+  addStep: () => void;
 
   // Block operations
   addBlock: (stepKey: string, block: Block) => Promise<void>;
@@ -159,14 +161,11 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       const components = Array.isArray(comps) ? comps : (supabaseIntegration.components ?? []);
       if (components && components.length > 0) {
         const grouped = groupByStepKey(components);
-        // Normalize incoming data before merging
-        const normalizedIncoming = normalizeStepBlocks(grouped);
+        // Normaliza e faz merge não-destrutivo por ID
+        const merged = mergeStepBlocks(rawState.stepBlocks, grouped);
         setState({
           ...rawState,
-          stepBlocks: {
-            ...rawState.stepBlocks,
-            ...normalizedIncoming,
-          },
+          stepBlocks: merged,
         });
       }
     } catch (err) {
@@ -238,21 +237,25 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       totalSteps: Object.keys(normalizedBlocks).length,
     });
 
-    // 🚨 FORÇA CARREGAMENTO: Sempre aplicar template normalizado
+    // 🚨 FORÇA CARREGAMENTO: Aplicar template normalizado por merge não-destrutivo
     setState({
       ...rawState,
-      stepBlocks: normalizedBlocks,
+      stepBlocks: mergeStepBlocks(rawState.stepBlocks, normalizedBlocks),
       currentStep: 1,
     });
 
-    // 🚨 GARANTIA DUPLA: Ensure step 1 is loaded on initialization
-    setTimeout(() => {
-      ensureStepLoaded(1);
-      // Force verify all steps loaded
-      for (let i = 1; i <= 21; i++) {
-        ensureStepLoaded(i);
+    // 🚨 GARANTIA DUPLA (ajustada): garantir apenas a etapa atual (1) e adiar para ocioso
+    const schedule = (cb: () => void) => {
+      if (typeof (window as any).requestIdleCallback === 'function') {
+        (window as any).requestIdleCallback(cb, { timeout: 500 });
+      } else {
+        setTimeout(cb, 120);
       }
-    }, 100);
+    };
+
+    schedule(() => {
+      ensureStepLoaded(1);
+    });
   }, []); // Empty dependency array - run only once on mount
 
   // 🚨 CORREÇÃO: Ensure step is loaded when currentStep changes
@@ -267,7 +270,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
         const normalizedBlocks = normalizeStepBlocks(QUIZ_STYLE_21_STEPS_TEMPLATE);
         setState({
           ...rawState,
-          stepBlocks: normalizedBlocks,
+          stepBlocks: mergeStepBlocks(rawState.stepBlocks, normalizedBlocks),
         });
       }
     }
@@ -296,6 +299,32 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     },
     [setState, rawState]
   );
+
+  // Adiciona uma nova etapa ao final (step-(max+1)) e seleciona
+  const addStep = useCallback(() => {
+    const keys = Object.keys(rawState.stepBlocks || {});
+    const nums = keys
+      .map(k => {
+        const m = k.match(/(\d+)/);
+        return m ? parseInt(m[1], 10) : 0;
+      })
+      .filter(n => Number.isFinite(n) && n > 0);
+    const max = nums.length > 0 ? Math.max(...nums) : 0;
+    const newStepNum = max + 1;
+    const newKey = `step-${newStepNum}`;
+
+    const nextState = {
+      ...rawState,
+      stepBlocks: {
+        ...rawState.stepBlocks,
+        [newKey]: [],
+      },
+      currentStep: newStepNum,
+      selectedBlockId: null,
+    } as EditorState;
+
+    setState(nextState);
+  }, [rawState, setState]);
 
   const addBlock = useCallback(
     async (stepKey: string, block: Block) => {
@@ -373,11 +402,14 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
           const created = await supabaseIntegration.addBlockToStep(block, stepNumber);
           if (created) {
             const realBlock = mapSupabaseRecordToBlock(created);
+            // Replace the optimistic block (by id) in-place to preserve position
+            const currentList = optimisticState.stepBlocks[stepKey] || [];
+            const replaced = currentList.map(b => (b.id === block.id ? realBlock : b));
             setState({
               ...optimisticState,
               stepBlocks: {
                 ...optimisticState.stepBlocks,
-                [stepKey]: (optimisticState.stepBlocks[stepKey] || []).concat([realBlock]),
+                [stepKey]: replaced,
               },
             });
           } else {
@@ -491,7 +523,88 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
   );
 
   const exportJSON = useCallback(() => {
-    return JSON.stringify(state, null, 2);
+    // Normalize step keys to canonical format step-<n>
+    const normalizedStepBlocks: Record<string, Block[]> = {};
+    Object.entries(state.stepBlocks).forEach(([key, blocks]) => {
+      const match = key.match(/(\d+)/);
+      if (match) {
+        const stepNumber = match[1];
+        const normalizedKey = `step-${stepNumber}`;
+        normalizedStepBlocks[normalizedKey] = blocks;
+      } else {
+        normalizedStepBlocks[key] = blocks;
+      }
+    });
+
+    // Validate Question components and ResultBlock outcomes
+    const warnings: string[] = [];
+    Object.entries(normalizedStepBlocks).forEach(([stepKey, blocks]) => {
+      blocks.forEach(block => {
+        // Type-safe access to block properties
+        const blockContent = block.content || {};
+        const blockProperties = block.properties || {};
+
+        // Validate Question components have required props
+        if (block.type === 'quiz-question-inline' || block.type === 'options-grid') {
+          const options = (blockContent as any)?.options || (blockProperties as any)?.options;
+          if (!Array.isArray(options) || options.length === 0) {
+            warnings.push(`${stepKey}: Question component missing options array`);
+          } else {
+            options.forEach((option: any, index: number) => {
+              if (!option.value) {
+                warnings.push(`${stepKey}: Question option ${index} missing value property`);
+              }
+            });
+          }
+        }
+
+        // Validate ResultBlock outcomeMapping references
+        if (block.type === 'result-header-inline' || block.type === 'quiz-result-inline') {
+          const outcomeMapping =
+            (blockContent as any)?.outcomeMapping || (blockProperties as any)?.outcomeMapping;
+          if (outcomeMapping && typeof outcomeMapping === 'object') {
+            Object.values(outcomeMapping).forEach((outcomeId: any) => {
+              // Check if outcome exists in schema_json (basic validation)
+              const outcomeExists = Object.values(normalizedStepBlocks).some(stepBlocks =>
+                stepBlocks.some(b => {
+                  const bContent = b.content || {};
+                  const bProperties = b.properties || {};
+                  return (
+                    b.id === outcomeId ||
+                    (bContent as any)?.outcomeId === outcomeId ||
+                    (bProperties as any)?.outcomeId === outcomeId
+                  );
+                })
+              );
+              if (!outcomeExists) {
+                warnings.push(`${stepKey}: ResultBlock references undefined outcome: ${outcomeId}`);
+              }
+            });
+          }
+        }
+      });
+    });
+
+    // Log warnings if any (non-blocking)
+    if (warnings.length > 0) {
+      console.warn('Export validation warnings:', warnings);
+    }
+
+    // Create simple hash for schema consistency
+    const schemaHash = JSON.stringify(normalizedStepBlocks).length.toString(36);
+
+    const exportData = {
+      ...state,
+      stepBlocks: normalizedStepBlocks,
+      metadata: {
+        engineVersion: '1.0.0',
+        schemaHash,
+        exportDate: new Date().toISOString(),
+        validationWarnings: warnings,
+      },
+    };
+
+    return JSON.stringify(exportData, null, 2);
   }, [state]);
 
   const importJSON = useCallback(
@@ -510,6 +623,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
   const actions: EditorActions = {
     setCurrentStep,
     setSelectedBlockId,
+    addStep,
     addBlock,
     addBlockAtIndex,
     removeBlock,

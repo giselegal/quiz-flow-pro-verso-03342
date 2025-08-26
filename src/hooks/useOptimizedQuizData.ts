@@ -9,10 +9,10 @@
  * - Proper cleanup to prevent memory leaks
  */
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useUserData } from '../context/UserDataContext';
 import { supabase } from '../integrations/supabase/client';
-import { QuizSession, QuizUser } from '../types/unified-schema';
+import { QuizSession } from '../types/unified-schema';
 
 interface QuizAnswer {
   questionId: string;
@@ -254,22 +254,30 @@ export const useOptimizedQuizData = (): QuizDataHookReturn => {
       if (!currentSession) return;
 
       try {
-        // Save to quiz_step_responses table
+        // Save to quiz_step_responses table (alinhar com schema)
+        const stepNumber = parseInt(String(answer.questionId).replace(/\D/g, '')) || 0;
+        const answerValue = Array.isArray(answer.selectedOptions)
+          ? JSON.stringify(answer.selectedOptions)
+          : String(answer.selectedOptions ?? '');
         await supabase.from('quiz_step_responses').insert({
           id: `response_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
           session_id: currentSession.id,
-          step_number: answer.questionId,
-          response_data: {
-            selectedOptions: answer.selectedOptions,
+          step_number: stepNumber,
+          question_id: String(answer.questionId),
+          answer_value: answerValue,
+          answer_text: Array.isArray(answer.optionTexts)
+            ? answer.optionTexts.join(', ')
+            : (answer.optionTexts as any),
+          response_time_ms: (answer as any).responseTime ?? null,
+          metadata: {
             optionTexts: answer.optionTexts,
-            responseTime: answer.responseTime,
-            stylePoints: answer.stylePoints,
-          },
-        });
+            stylePoints: (answer as any).stylePoints,
+          } as any,
+        } as any);
 
         // Update session with debouncing
         debouncedSave(currentSession.id, {
-          current_step: parseInt(answer.questionId) + 1,
+          current_step: stepNumber + 1,
         });
       } catch (err) {
         console.error('Error saving answer:', err);

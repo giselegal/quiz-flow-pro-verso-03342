@@ -1,3 +1,4 @@
+
 import { LucideIcon } from 'lucide-react';
 
 // Import PropertyType and PropertySchema for internal use
@@ -126,6 +127,7 @@ export type BlockType =
   | 'container'
   | 'grid'
   | 'divider'
+  | 'decorative-bar'
   | 'decorative-bar-inline'
 
   // Blocos de acessibilidade
@@ -153,7 +155,8 @@ export type BlockType =
   | 'video'
   | 'icon'
   | 'faq'
-  | 'custom-code';
+  | 'custom-code'
+  | 'legal-notice';
 
 export interface FAQItem {
   id: string;
@@ -289,6 +292,7 @@ export type BlockContent =
   | EditableContent // Para tipos não especificados ainda
   | HeadlineContent
   | TextContent
+
   | TestimonialContent
   | PricingContent
   | VideoContent

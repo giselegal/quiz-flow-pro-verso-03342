@@ -1,8 +1,8 @@
 // @ts-nocheck
-import React from 'react';
 import { cn } from '@/lib/utils';
-import { Image as ImageIcon, Edit3 } from 'lucide-react';
 import type { BlockComponentProps } from '@/types/blocks';
+import { Edit3, Image as ImageIcon } from 'lucide-react';
+import React from 'react';
 
 /**
  * ImageInlineBlock - Componente modular inline horizontal
@@ -118,6 +118,18 @@ const ImageInlineBlock: React.FC<BlockComponentProps> = ({
     xl: 'max-w-xl',
     '2xl': 'max-w-2xl',
     full: 'max-w-full',
+  } as const;
+
+  const resolveMaxWidth = (
+    value: string | number | undefined
+  ): { className?: string; style?: React.CSSProperties } => {
+    if (value === undefined || value === null) return { className: undefined, style: undefined };
+    if (typeof value === 'number') return { style: { maxWidth: value } };
+    const mapped = maxWidthClasses[value as keyof typeof maxWidthClasses];
+    if (mapped) return { className: mapped };
+    if (/^\d+(px|rem|em|%)$/.test(value)) return { style: { maxWidth: value } };
+    // Assume raw Tailwind class string
+    return { className: value };
   };
 
   // Alignment classes
@@ -159,7 +171,7 @@ const ImageInlineBlock: React.FC<BlockComponentProps> = ({
               'relative overflow-hidden',
               borderRadiusClasses[borderRadius as keyof typeof borderRadiusClasses],
               aspectRatioClasses[aspectRatio as keyof typeof aspectRatioClasses],
-              maxWidthClasses[maxWidth as keyof typeof maxWidthClasses],
+              resolveMaxWidth(maxWidth).className,
               alignmentClasses[alignment as keyof typeof alignmentClasses],
               clickable && 'cursor-pointer'
             )}
@@ -169,12 +181,13 @@ const ImageInlineBlock: React.FC<BlockComponentProps> = ({
               src={src}
               alt={alt}
               className={cn(
-                'w-full h-full transition-transform duration-200 hover:scale-105',
+                'w-full h-full transition-transform duration-200 hover:scale-105 block',
                 objectFitClasses[objectFit as keyof typeof objectFitClasses]
               )}
               style={{
                 width: width === 'auto' ? undefined : width,
                 height: height === 'auto' ? undefined : height,
+                ...resolveMaxWidth(maxWidth).style,
               }}
             />
           </div>

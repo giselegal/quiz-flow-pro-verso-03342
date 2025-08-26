@@ -1,14 +1,14 @@
 // @ts-nocheck
-import { CanvasDropZone } from '@/components/editor/canvas/CanvasDropZone';
+// Usar a variante simples e padronizada do Canvas
+import { CanvasDropZone } from '@/components/editor/canvas/CanvasDropZone.simple';
 import QuizNavigation from '@/components/quiz/QuizNavigation';
 import { useStepNavigationOffline } from '@/hooks/useStepNavigationOffline';
 import { templateService } from '@/services/templateService';
 import { Block } from '@/types/editor';
-import React, { lazy, Suspense, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useParams } from 'wouter';
 
-// Lazy loading dos componentes de step
-const Step20Result = lazy(() => import('@/components/steps/Step20Result'));
+// Removido Step20Result inexistente; usar blocos do templateService
 
 /**
  * 🎯 Página genérica para todas as etapas do quiz de 21 passos
@@ -42,7 +42,7 @@ const STEPS_CONFIG = [
   { step: 17, name: 'Resultado Parcial', description: 'Primeiro resultado', component: 'generic' },
   { step: 18, name: 'Resultado Completo', description: 'Análise completa', component: 'generic' },
   { step: 19, name: 'Resultado Final', description: 'Apresentação final', component: 'generic' },
-  { step: 20, name: 'Lead Capture', description: 'Captura de contato', component: 'Step20Result' },
+  { step: 20, name: 'Lead Capture', description: 'Captura de contato', component: 'generic' },
   { step: 21, name: 'Oferta', description: 'Página de oferta final', component: 'generic' },
 ];
 
@@ -186,13 +186,7 @@ const StepPage: React.FC = () => {
       // ✅ REMOVIDO: Caso especial Step01 - agora usa sistema de blocos
       // Step01 agora utiliza template JSON com lead-form como outros steps
 
-      if (stepConfig.component === 'Step20Result') {
-        return (
-          <Suspense fallback={<LoadingSpinner />}>
-            <Step20Result sessionId={sessionId} onContinue={handleNext} />
-          </Suspense>
-        );
-      }
+      // Step20Result removido; renderização segue via sistema de blocos
 
       // 🚀 SISTEMA DE BLOCOS - RENDERIZAÇÃO COMO PREVIEW DO EDITOR
       return (

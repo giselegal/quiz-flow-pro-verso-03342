@@ -27,7 +27,7 @@ import {
   Trophy,
   Users,
 } from 'lucide-react';
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 
 export interface EditorStageManagerProps {
   /** Modo atual do editor */
@@ -75,6 +75,72 @@ export const EditorStageManager: React.FC<EditorStageManagerProps> = ({
     onStepChange: onStepSelect,
     initialStep,
   });
+
+  // Pré-carregar templates para melhorar a navegação no editor
+  useEffect(() => {
+    actions.preloadTemplates?.();
+  }, [actions]);
+
+  // Escutar eventos globais de navegação disparados pelos blocos (ex.: botões, auto-advance)
+  useEffect(() => {
+    const parseStepNumber = (stepId: unknown): number | null => {
+      if (typeof stepId === 'number') return stepId;
+      if (typeof stepId !== 'string') return null;
+      const digits = stepId.replace(/[^0-9]/g, '');
+      const num = parseInt(digits || stepId, 10);
+      return Number.isFinite(num) ? num : null;
+    };
+
+    const handleNavigate = (ev: Event) => {
+      const e = ev as CustomEvent<{ stepId?: string | number; source?: string }>;
+      const target = parseStepNumber(e.detail?.stepId);
+      if (!target || target < 1 || target > 21) return;
+      actions.goToStep(target);
+      // Propagar para o editor externo, se houver
+      onStepSelect?.(target);
+      if (import.meta.env.DEV) {
+        console.log(
+          '➡️ EditorStageManager: navegação por evento',
+          e.detail?.stepId,
+          '→',
+          target,
+          'origem:',
+          e.detail?.source
+        );
+      }
+    };
+
+    window.addEventListener('navigate-to-step', handleNavigate as EventListener);
+    window.addEventListener('quiz-navigate-to-step', handleNavigate as EventListener);
+    return () => {
+      window.removeEventListener('navigate-to-step', handleNavigate as EventListener);
+      window.removeEventListener('quiz-navigate-to-step', handleNavigate as EventListener);
+    };
+  }, [actions, onStepSelect]);
+
+  // Escutar eventos de validação (inputs e seleções) para refletir estado visual no editor
+  useEffect(() => {
+    const handleInputChange = (ev: Event) => {
+      const e = ev as CustomEvent<{ value?: any; valid?: boolean } | undefined>;
+      const val = (e.detail as any)?.value;
+      const explicitValid = (e.detail as any)?.valid;
+      const ok = typeof val === 'string' ? val.trim().length > 0 : (explicitValid ?? false);
+      actions.setStepValid?.(quizState.currentStep, !!ok);
+    };
+
+    const handleSelectionChange = (ev: Event) => {
+      const e = ev as CustomEvent<{ valid?: boolean; selectionCount?: number } | undefined>;
+      const ok = (e.detail as any)?.valid ?? ((e.detail as any)?.selectionCount ?? 0) > 0;
+      actions.setStepValid?.(quizState.currentStep, !!ok);
+    };
+
+    window.addEventListener('quiz-input-change', handleInputChange as EventListener);
+    window.addEventListener('quiz-selection-change', handleSelectionChange as EventListener);
+    return () => {
+      window.removeEventListener('quiz-input-change', handleInputChange as EventListener);
+      window.removeEventListener('quiz-selection-change', handleSelectionChange as EventListener);
+    };
+  }, [actions, quizState.currentStep]);
 
   // Metadados das etapas
   const stepsMetadata = useMemo((): StepMetadata[] => {
@@ -428,7 +494,11 @@ export const EditorStageManager: React.FC<EditorStageManagerProps> = ({
                 variant="outline"
                 size="sm"
                 onClick={actions.nextStep}
-                disabled={quizState.currentStep >= quizState.totalSteps}
+                disabled={
+                  quizState.currentStep >= quizState.totalSteps ||
+                  (quizState.stepValidation &&
+                    quizState.stepValidation[quizState.currentStep] === false)
+                }
               >
                 Próximo
                 <ChevronRight className="h-4 w-4 ml-1" />

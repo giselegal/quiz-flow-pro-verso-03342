@@ -81,6 +81,11 @@ const LegalNoticeInlineBlock: React.FC<BlockComponentProps> = ({
     linkColor = '#B89B7A',
     backgroundColor = 'transparent',
     lineHeight = '1.5',
+    // Links
+    privacyLinkUrl = '#privacy',
+    termsLinkUrl = '#terms',
+    // Layout
+    contentMaxWidth = 640,
     // Sistema de margens
     marginTop = 8,
     marginBottom = 8,
@@ -131,7 +136,7 @@ const LegalNoticeInlineBlock: React.FC<BlockComponentProps> = ({
       data-block-id={block?.id}
       data-block-type={block?.type}
     >
-      <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+      <div style={{ maxWidth: `${contentMaxWidth}px`, margin: '0 auto' }}>
         {/* Copyright */}
         <div style={textStyles} className="mb-2">
           {copyrightText}
@@ -149,7 +154,7 @@ const LegalNoticeInlineBlock: React.FC<BlockComponentProps> = ({
           }}
         >
           <a
-            href="#privacy"
+            href={privacyLinkUrl}
             style={linkStyles}
             className="hover:underline"
             onClick={e => e.stopPropagation()}
@@ -164,7 +169,7 @@ const LegalNoticeInlineBlock: React.FC<BlockComponentProps> = ({
           </a>
           <span style={textStyles}>•</span>
           <a
-            href="#terms"
+            href={termsLinkUrl}
             style={linkStyles}
             className="hover:underline"
             onClick={e => e.stopPropagation()}

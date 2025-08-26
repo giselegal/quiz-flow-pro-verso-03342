@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
-import type { BlockComponentProps, BlockData } from '@/types/blocks';
 import { getEnhancedBlockComponent } from '@/components/editor/blocks/enhancedBlockRegistry';
+import type { BlockComponentProps, BlockData } from '@/types/blocks';
+import React, { useEffect } from 'react';
 
 /**
  * FormContainerBlock
@@ -28,6 +28,7 @@ const FormContainerBlock: React.FC<BlockComponentProps> = ({ block }) => {
   const combinedClassName = className ? `w-full ${className}` : 'w-full';
 
   // 🔒 Regra: habilitar botão somente após nome válido (configurável no painel)
+  const autoAdvanceRef = React.useRef(false);
   useEffect(() => {
     // ✅ Lista de IDs de botão possíveis no Step-01
     const possibleButtonIds = [
@@ -83,7 +84,46 @@ const FormContainerBlock: React.FC<BlockComponentProps> = ({ block }) => {
     };
 
     window.addEventListener('step01-button-state-change', handler as EventListener);
-    return () => window.removeEventListener('step01-button-state-change', handler as EventListener);
+    window.addEventListener('quiz-button-state-change', handler as EventListener);
+
+    // Integração direta com mudanças do input (Etapa 1)
+    const onQuizInput = (e: Event) => {
+      const detail = (e as CustomEvent).detail as { value?: string; valid?: boolean };
+      const ok =
+        typeof detail?.value === 'string' ? detail.value.trim().length > 0 : !!detail?.valid;
+      applyDisabled(!ok);
+
+      // Auto-advance opcional: se válido e ativado
+      const containerAuto = (properties as any)?.autoAdvanceOnComplete ?? false;
+      // Buscar config nos filhos (prioriza botão-inline)
+      const btnChild = Array.isArray(childrenList)
+        ? (childrenList as any[]).find(c => c?.type === 'button-inline')
+        : undefined;
+      const childAuto = btnChild?.properties?.autoAdvanceOnComplete ?? false;
+      const shouldAuto = !!(containerAuto || childAuto);
+      if (ok && shouldAuto && !autoAdvanceRef.current) {
+        autoAdvanceRef.current = true;
+        const nextStepId =
+          btnChild?.properties?.nextStepId || btnChild?.content?.nextStepId || 'step-2';
+        const delay =
+          (properties as any)?.autoAdvanceDelay ?? btnChild?.properties?.autoAdvanceDelay ?? 600;
+        window.setTimeout(
+          () => {
+            const detail = { stepId: nextStepId, source: 'form-container-auto-advance' };
+            window.dispatchEvent(new CustomEvent('navigate-to-step', { detail }));
+            window.dispatchEvent(new CustomEvent('quiz-navigate-to-step', { detail }));
+          },
+          Number(delay) || 0
+        );
+      }
+    };
+    window.addEventListener('quiz-input-change', onQuizInput as EventListener);
+
+    return () => {
+      window.removeEventListener('step01-button-state-change', handler as EventListener);
+      window.removeEventListener('quiz-button-state-change', handler as EventListener);
+      window.removeEventListener('quiz-input-change', onQuizInput as EventListener);
+    };
   }, [properties]);
 
   return (

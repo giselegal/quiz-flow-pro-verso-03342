@@ -1,14 +1,6 @@
 import { QuizComponentData, QuizStage } from '@/types/quizBuilder';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
-import {
-  DndContext,
-  closestCenter,
-  DragEndEvent,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { DraggableComponent } from './DraggableComponent';
 import { Button } from '@/components/ui/button';
@@ -31,22 +23,6 @@ export const NewComponentPreviewPanel: React.FC<ComponentPreviewPanelProps> = ({
   activeStage,
   isPreviewing,
 }) => {
-  const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        distance: 8,
-      },
-    })
-  );
-
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-
-    if (over && active.id !== over.id) {
-      onMoveComponent(active.id.toString(), over.id.toString());
-    }
-  };
-
   if (!activeStage) {
     return (
       <div className="h-full flex items-center justify-center">
@@ -82,27 +58,21 @@ export const NewComponentPreviewPanel: React.FC<ComponentPreviewPanelProps> = ({
               </Button>
             </div>
           ) : (
-            <DndContext
-              sensors={sensors}
-              collisionDetection={closestCenter}
-              onDragEnd={handleDragEnd}
+            <SortableContext
+              items={sortedComponents.map(c => c.id)}
+              strategy={verticalListSortingStrategy}
             >
-              <SortableContext
-                items={sortedComponents.map(c => c.id)}
-                strategy={verticalListSortingStrategy}
-              >
-                {sortedComponents.map(component => (
-                  <DraggableComponent
-                    key={component.id}
-                    component={component}
-                    isSelected={component.id === selectedComponentId}
-                    onSelect={() => onSelectComponent(component.id)}
-                    onMove={onMoveComponent}
-                    isPreviewing={isPreviewing}
-                  />
-                ))}
-              </SortableContext>
-            </DndContext>
+              {sortedComponents.map(component => (
+                <DraggableComponent
+                  key={component.id}
+                  component={component}
+                  isSelected={component.id === selectedComponentId}
+                  onSelect={() => onSelectComponent(component.id)}
+                  onMove={onMoveComponent}
+                  isPreviewing={isPreviewing}
+                />
+              ))}
+            </SortableContext>
           )}
         </div>
       </ScrollArea>

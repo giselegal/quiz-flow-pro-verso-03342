@@ -1,23 +1,22 @@
 // @ts-nocheck
-import React, { useState } from 'react';
 import { Block } from '@/types/editor';
-import { SortableBlock } from './SortableBlock';
 import {
-  DndContext,
   closestCenter,
+  DndContext,
+  DragEndEvent,
   KeyboardSensor,
   PointerSensor,
   useSensor,
   useSensors,
-  DragEndEvent,
 } from '@dnd-kit/core';
+import { restrictToParentElement, restrictToVerticalAxis } from '@dnd-kit/modifiers';
 import {
   SortableContext,
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import { restrictToVerticalAxis, restrictToParentElement } from '@dnd-kit/modifiers';
-import { ResultPageBlock } from '@/types/quizResult';
+import React from 'react';
+import { SortableBlock } from './SortableBlock';
 
 interface DraggableBlockListProps {
   blocks: Block[];
@@ -52,9 +51,9 @@ export const DraggableBlockList: React.FC<DraggableBlockListProps> = ({
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
-    if (over && active.id !== over.id) {
-      const oldIndex = blocks.findIndex(block => block.id === active.id);
-      const newIndex = blocks.findIndex(block => block.id === over.id);
+    if (over && String(active.id) !== String(over.id)) {
+      const oldIndex = blocks.findIndex(block => String(block.id) === String(active.id));
+      const newIndex = blocks.findIndex(block => String(block.id) === String(over.id));
 
       if (oldIndex !== -1 && newIndex !== -1) {
         onReorderBlocks(oldIndex, newIndex);
@@ -69,7 +68,10 @@ export const DraggableBlockList: React.FC<DraggableBlockListProps> = ({
       onDragEnd={handleDragEnd}
       modifiers={[restrictToVerticalAxis, restrictToParentElement]}
     >
-      <SortableContext items={blocks.map(block => block.id)} strategy={verticalListSortingStrategy}>
+      <SortableContext
+        items={blocks.map(block => String(block.id))}
+        strategy={verticalListSortingStrategy}
+      >
         <div className="space-y-4 p-4">
           {blocks.map(block => (
             <SortableBlock
