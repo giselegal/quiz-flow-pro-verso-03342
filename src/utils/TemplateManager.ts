@@ -7,12 +7,85 @@ import type { Block } from '../types/editor';
  */
 export class TemplateManager {
   private static cache = new Map<string, Block[]>();
+  private static PUBLISH_PREFIX = 'quiz_published_blocks_';
+
+  /**
+   * Obtém blocos publicados localmente (localStorage) para uma etapa.
+   */
+  private static getPublishedBlocks(stepId: string): Block[] | null {
+    try {
+      const raw = localStorage.getItem(this.PUBLISH_PREFIX + stepId);
+      if (!raw) return null;
+      const parsed = JSON.parse(raw) as { blocks?: Block[]; updatedAt?: string } | Block[];
+      const blocks = Array.isArray(parsed) ? parsed : parsed?.blocks;
+      if (Array.isArray(blocks) && blocks.length > 0) {
+        return blocks as Block[];
+      }
+      return null;
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * Publica (salva) blocos de uma etapa localmente e invalida cache em memória.
+   * Dispara o evento global 'quiz-template-updated' para que UIs possam recarregar.
+   */
+  static publishStep(stepId: string, blocks: Block[]): void {
+    try {
+      const payload = { blocks, updatedAt: new Date().toISOString() };
+      localStorage.setItem(this.PUBLISH_PREFIX + stepId, JSON.stringify(payload));
+      // Atualiza cache imediatamente para refletir sem recarregar
+      if (Array.isArray(blocks) && blocks.length > 0) {
+        this.cache.set(stepId, blocks);
+      } else {
+        this.cache.delete(stepId);
+      }
+      // Notificar interessados
+      try {
+        window.dispatchEvent(
+          new CustomEvent('quiz-template-updated', { detail: { stepId } })
+        );
+      } catch {}
+      console.log(`💾 Etapa publicada localmente: ${stepId} (${blocks.length} blocos)`);
+    } catch (err) {
+      console.error('❌ Falha ao publicar etapa localmente:', err);
+    }
+  }
+
+  /**
+   * Remove publicação local da etapa e invalida cache.
+   */
+  static unpublishStep(stepId: string): void {
+    try {
+      localStorage.removeItem(this.PUBLISH_PREFIX + stepId);
+      this.cache.delete(stepId);
+      try {
+        window.dispatchEvent(
+          new CustomEvent('quiz-template-updated', { detail: { stepId } })
+        );
+      } catch {}
+      console.log(`🗑️ Publicação removida: ${stepId}`);
+    } catch (err) {
+      console.error('❌ Falha ao remover publicação local:', err);
+    }
+  }
 
   /**
    * Carrega blocos de uma etapa usando o templateService INTEGRADO com JSON Step01
    */
   static async loadStepBlocks(stepId: string): Promise<Block[]> {
     try {
+      // 0) Preferir blocos publicados localmente (se existirem)
+      const published = this.getPublishedBlocks(stepId);
+      if (published && published.length > 0) {
+        this.cache.set(stepId, published);
+        console.log(
+          `📦 Etapa ${stepId} carregada da PUBLICAÇÃO local (${published.length} blocos)`
+        );
+        return published;
+      }
+
       // Verifica cache primeiro - APENAS se tiver blocos válidos
       if (this.cache.has(stepId)) {
         const cachedBlocks = this.cache.get(stepId)!;
@@ -56,7 +129,7 @@ export class TemplateManager {
           // Se template está carregando ou vazio, retry
           if (
             template &&
-            (template.__loading || !template.blocks || template.blocks.length === 0)
+            (((template as any)?.__loading as boolean) || !template.blocks || template.blocks.length === 0)
           ) {
             console.log(
               `🔄 Template etapa ${stepNumber} ainda carregando, tentativa ${attempt}/${maxRetries}`
@@ -100,8 +173,8 @@ export class TemplateManager {
         return fallbackBlocks;
       }
 
-      // Converte os blocos do template para o formato Block
-      const blocks = templateService.convertTemplateBlocksToEditorBlocks(template.blocks);
+  // Converte os blocos do template para o formato Block
+  const blocks = templateService.convertTemplateBlocksToEditorBlocks(template.blocks);
 
       // APENAS cachear se tiver blocos válidos
       if (blocks.length > 0) {

@@ -83,6 +83,20 @@ const QuizModularPage: React.FC = () => {
     };
 
     loadCurrentStepBlocks();
+    // Escuta atualizações publicadas pelo editor
+    const onTemplateUpdated = (ev: Event) => {
+      const e = ev as CustomEvent<{ stepId?: string } | undefined>;
+      const stepId = e?.detail?.stepId;
+      const updatedStep = typeof stepId === 'string' ? parseInt(stepId.replace(/[^0-9]/g, ''), 10) : NaN;
+      if (!Number.isNaN(updatedStep) && updatedStep === currentStep) {
+        // Recarregar blocos da etapa corrente
+        TemplateManager.reloadTemplate(`step-${currentStep}`).then(setBlocks).catch(() => {});
+      }
+    };
+    window.addEventListener('quiz-template-updated', onTemplateUpdated as EventListener);
+    return () => {
+      window.removeEventListener('quiz-template-updated', onTemplateUpdated as EventListener);
+    };
   }, [currentStep]);
 
   // Sincronizar step com hook do quiz
