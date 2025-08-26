@@ -32,7 +32,7 @@ const InterBlockDropZoneBase: React.FC<{
         // Quando ativo (há drag em andamento) mas não está over: indicar posição sutil
         isActive && !isOver && 'min-h-[40px] bg-brand/5 rounded-full'
       )}
-      data-dnd-dropzone-type="inter-block"
+      data-dnd-dropzone-type="slot"
       data-position={position}
     >
       {isOver && (
@@ -126,6 +126,7 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
 
   return (
     <div
+      id="canvas-drop-zone"
       ref={setNodeRef}
       className={cn(
         'min-h-[300px] transition-all duration-200 pointer-events-auto p-4 overflow-visible',
@@ -140,7 +141,7 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
       data-over={isOver}
       data-preview={isPreviewing}
       data-id="canvas-drop-zone"
-      data-dnd-dropzone-type="root"
+      data-dnd-dropzone-type="raiz-da-tela"
     >
       {blocks.length === 0 ? (
         <div className="text-center py-12">

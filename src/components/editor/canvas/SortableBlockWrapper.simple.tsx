@@ -108,12 +108,14 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
   return (
     <div className="my-0">
       <div
+        id={`dnd-block-${String(block.id)}`}
         ref={setNodeRef}
         style={style}
         className={cn(
           'relative group transition-all duration-200',
           isSelected ? 'ring-2 ring-blue-500 ring-offset-1' : ''
         )}
+        data-dnd-dropzone-type="bloco"
         onClick={handleContainerClick}
         onMouseDown={handleContainerMouseDown}
       >
