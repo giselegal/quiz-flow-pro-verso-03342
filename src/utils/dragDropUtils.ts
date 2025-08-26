@@ -26,10 +26,13 @@ const isUuid = (v: unknown) =>
 const isValidBlockId = (v: unknown) =>
   typeof v === 'string' && (isUuid(v) || /^block-[\w-]+-[A-Za-z0-9_-]{8}$/.test(v as string));
 
-// Compat: ids vindos do OptimizedSortableBlock usam prefixo 'dnd-block-'
+// Compat: ids de wrappers podem usar prefixos como 'dnd-block-' ou 'block-'
 const normalizeOverId = (id: string | null | undefined): string | null => {
   if (!id) return null;
-  return id.startsWith('dnd-block-') ? id.replace(/^dnd-block-/, '') : id;
+  let out = id;
+  if (out.startsWith('dnd-block-')) out = out.replace(/^dnd-block-/, '');
+  if (out.startsWith('block-')) out = out.replace(/^block-/, '');
+  return out;
 };
 
 /**
