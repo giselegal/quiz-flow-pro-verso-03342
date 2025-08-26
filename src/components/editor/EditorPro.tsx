@@ -605,6 +605,19 @@ import {
     try {
       document.body.classList.add('dnd-dragging');
     } catch {}
+
+    // 🔔 Evento de debug para monitores externos
+    try {
+      window.dispatchEvent(
+        new CustomEvent('dnd-start', {
+          detail: {
+            activeId: active.id,
+            data: (active as any)?.data?.current,
+            ts: Date.now(),
+          },
+        })
+      );
+    } catch {}
   }, []);
 
   const handleDragCancel = useCallback(() => {
@@ -643,6 +656,21 @@ import {
           actions.setSelectedBlockId(newBlock.id);
           notification?.success?.(`Componente ${dragData.blockType} adicionado ao final!`);
           handled = true;
+          // 🔔 Debug: fim sem over (fallback add final)
+          try {
+            window.dispatchEvent(
+              new CustomEvent('dnd-end', {
+                detail: {
+                  activeId: activeIdStr,
+                  overId: null,
+                  validation: { isValid: false, reason: 'Sem alvo (over=null)' },
+                  action: 'fallback-add-final',
+                  targetIndex,
+                  ts: Date.now(),
+                },
+              })
+            );
+          } catch {}
           console.groupEnd();
           return;
         }
@@ -652,6 +680,20 @@ import {
           message: 'Sem alvo de drop',
         } as any);
         notification?.warning?.(feedback.message);
+        // 🔔 Debug: cancelado sem over
+        try {
+          window.dispatchEvent(
+            new CustomEvent('dnd-end', {
+              detail: {
+                activeId: activeIdStr,
+                overId: null,
+                validation: { isValid: false, reason: 'Sem alvo (over=null)' },
+                action: 'cancel',
+                ts: Date.now(),
+              },
+            })
+          );
+        } catch {}
         console.groupEnd();
         return;
       }
@@ -660,6 +702,20 @@ import {
       // eslint-disable-next-line no-console
       console.log('validateDrop →', validation);
       logDragEvent('end', active, over, validation);
+
+      // 🔔 Debug: validação calculada
+      try {
+        window.dispatchEvent(
+          new CustomEvent('dnd-end', {
+            detail: {
+              activeId: activeIdStr,
+              overId: overIdStr,
+              validation,
+              ts: Date.now(),
+            },
+          })
+        );
+      } catch {}
 
       if (!validation.isValid) {
         // 🔧 Fallback de curto prazo: se veio da sidebar, adiciona ao final para destravar o fluxo
