@@ -1,4 +1,5 @@
 import React, { createContext, useCallback, useContext, useState } from 'react';
+import { useQuizFlow } from '@/context/QuizFlowProvider';
 
 interface PreviewContextType {
   isPreviewing: boolean;
@@ -77,6 +78,7 @@ const PreviewProvider: React.FC<PreviewProviderProps> = ({
       } else {
         console.log('🚀 Preview Mode: DESATIVADO');
       }
+  const { currentStep, totalSteps: flowTotal, next, previous, goTo } = useQuizFlow();
       return newValue;
     });
   }, []);
