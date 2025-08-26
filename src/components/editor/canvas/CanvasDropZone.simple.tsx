@@ -1,8 +1,8 @@
-import React from 'react';
-import { useDroppable } from '@dnd-kit/core';
-import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
+import { useDroppable } from '@dnd-kit/core';
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import React from 'react';
 import { SortableBlockWrapper } from './SortableBlockWrapper.simple';
 
 // Componente para drop zone entre blocos
@@ -87,7 +87,7 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
     <div
       ref={setNodeRef}
       className={cn(
-        'p-3 min-h-[400px] transition-all duration-200',
+        'min-h-[200px] transition-all duration-200',
         isOver && !isPreviewing && 'bg-brand/5 ring-2 ring-brand/20 ring-dashed',
         className
       )}
@@ -107,15 +107,15 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
         </div>
       ) : (
         <SortableContext
-          items={blocks.map(block => block.id)}
+          items={blocks.map(block => String(block.id))}
           strategy={verticalListSortingStrategy}
         >
-          <div className="space-y-0">
+          <div className="space-y-6">
             {/* Drop zone no início - agora aparece para QUALQUER item válido */}
             {isDraggingAnyValidComponent && <InterBlockDropZone position={0} isActive={true} />}
 
             {blocks.map((block, index) => (
-              <React.Fragment key={block.id}>
+              <React.Fragment key={String(block.id)}>
                 <SortableBlockWrapper
                   block={block}
                   isSelected={!isPreviewing && selectedBlockId === block.id}

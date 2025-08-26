@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import { Shield, Lock, CreditCard, Clock } from 'lucide-react';
+import { Clock, CreditCard, Lock, Shield } from 'lucide-react';
 
 interface SecurePurchaseBlockProps {
   title?: string;
@@ -52,11 +52,19 @@ const getMarginClass = (value: string | number, type: string): string => {
   return `${prefix}-32`; // Máximo suportado
 };
 
-const SecurePurchaseBlock: React.FC<SecurePurchaseBlockProps> = ({
-  title = 'Compra 100% Segura e Protegida',
-  showFeatures = true,
+const SecurePurchaseBlock: React.FC<SecurePurchaseBlockProps & { block?: any }> = ({
+  title: _title = 'Compra 100% Segura e Protegida',
+  showFeatures: _showFeatures = true,
   className,
+  block,
 }) => {
+  const properties = (block?.properties as any) || {};
+  const title = properties.title ?? _title;
+  const showFeatures = properties.showFeatures ?? _showFeatures;
+  const marginTop = properties.marginTop ?? 0;
+  const marginBottom = properties.marginBottom ?? 0;
+  const marginLeft = properties.marginLeft ?? 0;
+  const marginRight = properties.marginRight ?? 0;
   const securityFeatures = [
     {
       icon: <Shield className="w-3 h-3 sm:w-4 sm:h-4" />,

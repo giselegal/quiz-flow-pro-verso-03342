@@ -84,6 +84,9 @@ export type BlockType =
   | 'progress-inline'
   | 'stat-inline'
   | 'countdown-inline'
+  | 'urgency-timer-inline'
+  | 'before-after-inline'
+  | 'mentor-section-inline'
   | 'spacer-inline'
   | 'heading-inline'
   | 'button-inline'
@@ -123,6 +126,7 @@ export type BlockType =
   | 'container'
   | 'grid'
   | 'divider'
+  | 'decorative-bar'
   | 'decorative-bar-inline'
 
   // Blocos de acessibilidade
@@ -137,6 +141,9 @@ export type BlockType =
   | 'testimonial'
   | 'testimonial-card-inline'
   | 'testimonialsSection'
+  | 'bonus'
+  | 'secure-purchase'
+  | 'value-anchoring'
   | 'pricing'
   | 'pricing-card-inline'
   | 'guarantee'
@@ -147,7 +154,8 @@ export type BlockType =
   | 'video'
   | 'icon'
   | 'faq'
-  | 'custom-code';
+  | 'custom-code'
+  | 'legal-notice';
 
 export interface FAQItem {
   id: string;

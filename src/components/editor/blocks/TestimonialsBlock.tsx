@@ -54,12 +54,21 @@ const getMarginClass = (value, type) => {
   return `${prefix}-32`; // Máximo suportado
 };
 
-const TestimonialsBlock: React.FC<TestimonialsBlockProps> = ({
-  title = 'Transformações Reais',
-  showRatings = true,
-  layout = 'grid',
+const TestimonialsBlock: React.FC<TestimonialsBlockProps & { block?: any }> = ({
+  title: _title = 'Transformações Reais',
+  showRatings: _showRatings = true,
+  layout: _layout = 'grid',
   className,
+  block,
 }) => {
+  const properties = (block?.properties as any) || {};
+  const title = properties.title ?? _title;
+  const showRatings = properties.showRatings ?? _showRatings;
+  const layout = properties.layout ?? _layout;
+  const marginTop = properties.marginTop ?? 0;
+  const marginBottom = properties.marginBottom ?? 0;
+  const marginLeft = properties.marginLeft ?? 0;
+  const marginRight = properties.marginRight ?? 0;
   // Dados reais dos depoimentos da ResultPage
   const testimonials = [
     {

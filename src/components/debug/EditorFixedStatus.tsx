@@ -1,7 +1,7 @@
-import React from 'react';
-import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import { CheckCircle, Zap } from 'lucide-react';
+import React from 'react';
 
 /**
  * Sistema Editor Fixed - Status Page
@@ -130,10 +130,10 @@ const EditorFixedStatus: React.FC = () => {
 
             <div className="flex justify-center gap-4">
               <Button
-                onClick={() => (window.location.href = '/editor-fixed')}
+                onClick={() => (window.location.href = '/editor')}
                 className="bg-green-600 hover:bg-green-700 text-white px-8 py-3"
               >
-                Acessar Editor Fixed
+                Acessar Editor
               </Button>
 
               <Button

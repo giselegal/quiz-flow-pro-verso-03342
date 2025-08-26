@@ -53,11 +53,19 @@ const getMarginClass = (value, type) => {
   return `${prefix}-32`; // Máximo suportado
 };
 
-const BonusBlock: React.FC<BonusBlockProps> = ({
-  title = 'Bônus Exclusivos para Você',
-  showImages = true,
+const BonusBlock: React.FC<BonusBlockProps & { block?: any }> = ({
+  title: _title = 'Bônus Exclusivos para Você',
+  showImages: _showImages = true,
   className,
+  block,
 }) => {
+  const properties = (block?.properties as any) || {};
+  const title = properties.title ?? _title;
+  const showImages = properties.showImages ?? _showImages;
+  const marginTop = properties.marginTop ?? 0;
+  const marginBottom = properties.marginBottom ?? 0;
+  const marginLeft = properties.marginLeft ?? 0;
+  const marginRight = properties.marginRight ?? 0;
   // Dados reais dos bônus da ResultPage
   const bonuses = [
     {

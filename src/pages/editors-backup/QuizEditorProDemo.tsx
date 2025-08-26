@@ -1,6 +1,6 @@
 import { EditorProvider } from '@/components/editor/EditorProvider';
 import { ErrorBoundary } from '@/components/editor/ErrorBoundary';
-import { QuizEditorPro } from '@/components/editor/QuizEditorPro';
+// import { QuizEditorPro } from '@/components/editor/QuizEditorPro'; // Component não encontrado
 import React from 'react';
 
 /**
@@ -54,7 +54,9 @@ export const QuizEditorProDemo: React.FC = () => {
               </ul>
             </div>
 
-            <QuizEditorPro />
+            <div className="p-4 text-center">
+              <p>QuizEditorPro em manutenção - componente não encontrado</p>
+            </div>
 
             {/* Debug panel para desenvolvimento */}
             {process.env.NODE_ENV === 'development' && (

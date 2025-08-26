@@ -467,6 +467,8 @@ export async function loadStepTemplate(step: number): Promise<StepLoadResult | n
 }
 
 export default templateService;
+// Também exporta como nomeado para compatibilidade com imports existentes
+export { templateService };
 
 /**
  * Serviço para gerenciamento de templates com Supabase

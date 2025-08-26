@@ -1,31 +1,41 @@
 // Enhanced Block Registry - Componentes específicos do quiz com identidade visual
 import { lazy } from 'react';
+// Importações estáticas essenciais para renderização imediata dos blocos principais
+import ButtonInlineBlock from '@/components/editor/blocks/ButtonInlineBlock';
+import FormContainerBlock from '@/components/editor/blocks/FormContainerBlock';
+import FormInputBlock from '@/components/editor/blocks/FormInputBlock';
+import ImageInlineBlock from '@/components/editor/blocks/ImageInlineBlock';
+import LegalNoticeInlineBlock from '@/components/editor/blocks/LegalNoticeInlineBlock';
+import OptionsGridBlock from '@/components/editor/blocks/OptionsGridBlock';
+import QuizIntroHeaderBlock from '@/components/editor/blocks/QuizIntroHeaderBlock';
+import TextInlineBlock from '@/components/editor/blocks/TextInlineBlock';
 
 // 🎯 REGISTRY COMPLETO - 150+ COMPONENTES MAPEADOS
 export const ENHANCED_BLOCK_REGISTRY = {
   // ✅ STEP 01 - COMPONENTES BÁSICOS
-  'quiz-intro-header': lazy(() => import('@/components/editor/blocks/QuizIntroHeaderBlock')),
+  // Preferir versões estáticas para tipos críticos usados no template
+  'quiz-intro-header': QuizIntroHeaderBlock,
   'decorative-bar': lazy(() => import('@/components/editor/blocks/DecorativeBarInlineBlock')),
   'decorative-bar-inline': lazy(
     () => import('@/components/editor/blocks/DecorativeBarInlineBlock')
   ),
-  text: lazy(() => import('@/components/editor/blocks/TextInlineBlock')),
-  'text-inline': lazy(() => import('@/components/editor/blocks/TextInlineBlock')),
-  image: lazy(() => import('@/components/editor/blocks/ImageInlineBlock')),
-  'image-inline': lazy(() => import('@/components/editor/blocks/ImageInlineBlock')),
-  'form-input': lazy(() => import('@/components/editor/blocks/FormInputBlock')),
-  button: lazy(() => import('@/components/editor/blocks/ButtonInlineBlock')),
-  'button-inline': lazy(() => import('@/components/editor/blocks/ButtonInlineBlock')),
-  'legal-notice': lazy(() => import('@/components/editor/blocks/LegalNoticeInlineBlock')),
-  'legal-notice-inline': lazy(() => import('@/components/editor/blocks/LegalNoticeInlineBlock')),
+  text: TextInlineBlock,
+  'text-inline': TextInlineBlock,
+  image: ImageInlineBlock,
+  'image-inline': ImageInlineBlock,
+  'form-input': FormInputBlock,
+  button: ButtonInlineBlock,
+  'button-inline': ButtonInlineBlock,
+  'legal-notice': LegalNoticeInlineBlock,
+  'legal-notice-inline': LegalNoticeInlineBlock,
 
   // ✅ STEPS 02-11 - PERGUNTAS DO QUIZ
-  'quiz-start-page-inline': lazy(() => import('@/components/editor/blocks/QuizIntroHeaderBlock')),
-  'quiz-personal-info-inline': lazy(() => import('@/components/editor/blocks/FormInputBlock')),
-  'quiz-question-inline': lazy(() => import('@/components/editor/blocks/TextInlineBlock')),
-  'quiz-options-inline': lazy(() => import('@/components/editor/blocks/OptionsGridBlock')),
-  'options-grid': lazy(() => import('@/components/editor/blocks/OptionsGridBlock')),
-  'form-container': lazy(() => import('@/components/editor/blocks/FormContainerBlock')),
+  'quiz-start-page-inline': QuizIntroHeaderBlock,
+  'quiz-personal-info-inline': FormInputBlock,
+  'quiz-question-inline': TextInlineBlock,
+  'quiz-options-inline': OptionsGridBlock,
+  'options-grid': OptionsGridBlock,
+  'form-container': FormContainerBlock,
 
   // ✅ STEP 12 - TRANSIÇÃO
   hero: lazy(() => import('@/components/editor/blocks/QuizTransitionBlock')),
@@ -34,7 +44,7 @@ export const ENHANCED_BLOCK_REGISTRY = {
   'loader-inline': lazy(() => import('@/components/editor/blocks/LoaderInlineBlock')),
 
   // ✅ STEPS 13-18 - PERGUNTAS AVANÇADAS
-  'quiz-advanced-question': lazy(() => import('@/components/editor/blocks/TextInlineBlock')),
+  'quiz-advanced-question': TextInlineBlock,
   'quiz-style-question': lazy(() => import('@/components/editor/blocks/StyleCardInlineBlock')),
   'style-card-inline': lazy(() => import('@/components/editor/blocks/StyleCardInlineBlock')),
   'style-cards-grid': lazy(() => import('@/components/editor/blocks/StyleCardsGridBlock')),
@@ -45,22 +55,33 @@ export const ENHANCED_BLOCK_REGISTRY = {
   'progress-inline': lazy(() => import('@/components/editor/blocks/ProgressInlineBlock')),
 
   // ✅ STEP 20 - RESULTADO
-  'result-header-inline': lazy(() => import('@/components/editor/blocks/QuizIntroHeaderBlock')),
-  'quiz-result-header': lazy(() => import('@/components/editor/blocks/QuizIntroHeaderBlock')),
+  'result-header-inline': QuizIntroHeaderBlock,
+  'quiz-result-header': QuizIntroHeaderBlock,
   'quiz-result-style': lazy(() => import('@/components/editor/blocks/StyleCardInlineBlock')),
   'secondary-styles': lazy(() => import('@/components/editor/blocks/StyleCardsGridBlock')),
   'quiz-result-secondary': lazy(() => import('@/components/editor/blocks/StyleCardsGridBlock')),
   'result-card': lazy(() => import('@/components/editor/blocks/StyleCardInlineBlock')),
 
+  // ✅ STEP 20 - RESULTADO (BLOCOS DE CONVERSÃO)
+  'urgency-timer-inline': lazy(() => import('@/components/editor/blocks/UrgencyTimerInlineBlock')),
+  'before-after-inline': lazy(() => import('@/components/editor/blocks/BeforeAfterInlineBlock')),
+  bonus: lazy(() => import('@/components/editor/blocks/BonusBlock')),
+  'bonus-inline': lazy(() => import('@/components/editor/blocks/BonusInlineBlock')),
+  'secure-purchase': lazy(() => import('@/components/editor/blocks/SecurePurchaseBlock')),
+  'value-anchoring': lazy(() => import('@/components/editor/blocks/ValueAnchoringBlock')),
+  'mentor-section-inline': lazy(
+    () => import('@/components/editor/blocks/MentorSectionInlineBlock')
+  ),
+
   // ✅ STEP 21 - OFERTA
-  benefits: lazy(() => import('@/components/editor/blocks/TextInlineBlock')), // Fallback inteligente
-  'benefits-list': lazy(() => import('@/components/editor/blocks/TextInlineBlock')),
-  testimonials: lazy(() => import('@/components/editor/blocks/TextInlineBlock')), // Fallback inteligente
-  'testimonials-grid': lazy(() => import('@/components/editor/blocks/TextInlineBlock')),
-  guarantee: lazy(() => import('@/components/editor/blocks/TextInlineBlock')), // Fallback inteligente
-  'guarantee-badge': lazy(() => import('@/components/editor/blocks/ImageInlineBlock')),
-  'quiz-offer-cta-inline': lazy(() => import('@/components/editor/blocks/ButtonInlineBlock')),
-  'cta-inline': lazy(() => import('@/components/editor/blocks/ButtonInlineBlock')),
+  benefits: lazy(() => import('@/components/editor/blocks/BenefitsListBlock')),
+  'benefits-list': lazy(() => import('@/components/editor/blocks/BenefitsListBlock')),
+  testimonials: lazy(() => import('@/components/editor/blocks/TestimonialsBlock')),
+  'testimonials-grid': lazy(() => import('@/components/editor/blocks/TestimonialsBlock')),
+  guarantee: lazy(() => import('@/components/editor/blocks/GuaranteeBlock')),
+  'guarantee-badge': ImageInlineBlock,
+  'quiz-offer-cta-inline': ButtonInlineBlock,
+  'cta-inline': ButtonInlineBlock,
 
   // ✅ COMPONENTES UNIVERSAIS
   heading: lazy(() => import('@/components/editor/blocks/HeadingInlineBlock')),
@@ -77,19 +98,19 @@ export const ENHANCED_BLOCK_REGISTRY = {
   'gradient-animation': lazy(() => import('@/components/editor/blocks/GradientAnimationBlock')),
 
   // ✅ ALIASES E COMPATIBILIDADE BACKWARDS
-  'quiz-intro': lazy(() => import('@/components/editor/blocks/QuizIntroHeaderBlock')),
-  'quiz-form': lazy(() => import('@/components/editor/blocks/FormInputBlock')),
-  'quiz-button': lazy(() => import('@/components/editor/blocks/ButtonInlineBlock')),
-  'quiz-text': lazy(() => import('@/components/editor/blocks/TextInlineBlock')),
-  'quiz-image': lazy(() => import('@/components/editor/blocks/ImageInlineBlock')),
+  'quiz-intro': QuizIntroHeaderBlock,
+  'quiz-form': FormInputBlock,
+  'quiz-button': ButtonInlineBlock,
+  'quiz-text': TextInlineBlock,
+  'quiz-image': ImageInlineBlock,
   'quiz-progress': lazy(() => import('@/components/editor/blocks/ProgressInlineBlock')),
 
   // ✅ FALLBACKS CATEGORIZADOS POR TIPO
-  'form-*': lazy(() => import('@/components/editor/blocks/FormInputBlock')), // Fallback para formulários
-  'button-*': lazy(() => import('@/components/editor/blocks/ButtonInlineBlock')), // Fallback para botões
-  'text-*': lazy(() => import('@/components/editor/blocks/TextInlineBlock')), // Fallback para textos
-  'image-*': lazy(() => import('@/components/editor/blocks/ImageInlineBlock')), // Fallback para imagens
-  'quiz-*': lazy(() => import('@/components/editor/blocks/TextInlineBlock')), // Fallback geral para quiz
+  'form-*': FormInputBlock, // Fallback para formulários
+  'button-*': ButtonInlineBlock, // Fallback para botões
+  'text-*': TextInlineBlock, // Fallback para textos
+  'image-*': ImageInlineBlock, // Fallback para imagens
+  'quiz-*': TextInlineBlock, // Fallback geral para quiz
 };
 
 // 🧠 FUNÇÃO INTELIGENTE PARA BUSCAR COMPONENTES
@@ -183,6 +204,15 @@ export const AVAILABLE_COMPONENTS = [
   { type: 'quiz-navigation', label: 'Navegação Premium', category: 'advanced' },
   { type: 'style-cards-grid', label: 'Grid de Estilos', category: 'advanced' },
   { type: 'gradient-animation', label: 'Gradiente Animado', category: 'advanced' },
+
+  // Result/Offer Components (Step20)
+  { type: 'urgency-timer-inline', label: 'Timer de Urgência', category: 'result' },
+  { type: 'before-after-inline', label: 'Antes e Depois', category: 'result' },
+  { type: 'bonus', label: 'Bônus (Seção)', category: 'result' },
+  { type: 'testimonials', label: 'Depoimentos', category: 'result' },
+  { type: 'value-anchoring', label: 'Ancoragem de Valor', category: 'result' },
+  { type: 'secure-purchase', label: 'Compra Segura', category: 'result' },
+  { type: 'mentor-section-inline', label: 'Seção da Mentora', category: 'result' },
 ];
 
 // 🔧 NORMALIZAÇÃO DE PROPRIEDADES PARA COMPATIBILIDADE

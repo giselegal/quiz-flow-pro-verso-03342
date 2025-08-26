@@ -1,9 +1,8 @@
 
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { getOptimizedBlockComponent } from '@/utils/optimizedRegistry';
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
+import { getOptimizedBlockComponent, normalizeBlockProps } from '@/utils/optimizedRegistry';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { GripVertical, Trash2 } from 'lucide-react';
@@ -24,14 +23,16 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
   onUpdate,
   onDelete,
 }) => {
+  // Normalizar bloco para unificar content/properties (mesma lógica do UniversalBlockRenderer)
+  const normalizedBlock = normalizeBlockProps(block);
   // Buscar componente no registry simplificado
-  const Component = getOptimizedBlockComponent(block.type);
+  const Component = getOptimizedBlockComponent(normalizedBlock.type);
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
-    id: block.id,
+    id: String(block.id),
     data: {
       type: 'canvas-block',
-      blockId: block.id,
+      blockId: String(block.id),
       block: block,
     },
   });
@@ -51,7 +52,7 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
   if (!Component) {
     return (
       <div ref={setNodeRef} style={style} className="my-1">
-        <Card className="border-dashed border-gray-300">
+        <div className="border border-dashed border-gray-300 rounded">
           <div className="p-4 text-center text-gray-600">
             <p className="font-medium">Componente não encontrado: {block.type}</p>
             <p className="text-xs mt-1">Verifique se o tipo está registrado</p>
@@ -59,23 +60,43 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
               {JSON.stringify(block, null, 2)}
             </pre>
           </div>
-        </Card>
+        </div>
       </div>
     );
   }
 
+  const isInteractive = (el: EventTarget | null) => {
+    if (!(el instanceof HTMLElement)) return false;
+    const tag = el.tagName.toLowerCase();
+    if (['input', 'textarea', 'select', 'button'].includes(tag)) return true;
+    if (el.getAttribute('contenteditable') === 'true') return true;
+    return false;
+  };
+
+  const handleContainerClick = (e: React.MouseEvent) => {
+    if (isInteractive(e.target)) {
+      e.stopPropagation();
+      return;
+    }
+    onSelect();
+  };
+
+  const handleContainerMouseDown = (e: React.MouseEvent) => {
+    if (isInteractive(e.target)) {
+      // Não roubar o foco de elementos interativos
+      e.stopPropagation();
+    }
+  };
+
   return (
-    <div ref={setNodeRef} style={style} className="my-1">
-      <Card
+    <div ref={setNodeRef} style={style} className="my-0">
+      <div
         className={cn(
           'relative group transition-all duration-200',
-          isSelected &&
-            'ring-2 ring-blue-500 ring-offset-1 border-blue-300 bg-blue-50/30 shadow-lg',
-          !isSelected && 'border-stone-200 hover:border-stone-300'
+          isSelected ? 'ring-2 ring-blue-500 ring-offset-1' : ''
         )}
-        style={{
-          borderColor: isSelected ? '#3b82f6' : '#E5DDD5',
-        }}
+        onClick={handleContainerClick}
+        onMouseDown={handleContainerMouseDown}
       >
         {/* Drag handle and controls */}
         <div className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity z-10 flex items-center gap-1">
@@ -103,7 +124,7 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
         </div>
 
         {/* Component content */}
-        <div className="p-4" onClick={onSelect}>
+        <div>
           <React.Suspense
             fallback={
               <div className="animate-pulse bg-gray-200 h-16 rounded flex items-center justify-center">
@@ -112,17 +133,17 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
             }
           >
             <Component
-              block={block}
+              block={normalizedBlock}
               isSelected={false} // Evita bordas duplas
-              onClick={onSelect}
               onPropertyChange={handlePropertyChange}
               isPreviewMode={false}
               isPreviewing={false}
               previewMode="editor"
+              properties={(normalizedBlock as any)?.properties}
             />
           </React.Suspense>
         </div>
-      </Card>
+      </div>
     </div>
   );
 };

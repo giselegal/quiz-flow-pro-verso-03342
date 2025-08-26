@@ -1,5 +1,6 @@
+import { BlockFieldSchema, blockPropertySchemas } from '@/config/blockPropertySchemas';
+import { getBlockDefinition } from '@/config/funnelBlockDefinitions';
 import React from 'react';
-import { blockPropertySchemas, BlockFieldSchema } from '@/config/blockPropertySchemas';
 
 interface PanelProps {
   selectedBlock: any;
@@ -222,19 +223,20 @@ function PropertyField({
   value: any;
   onChange: (val: any) => void;
 }) {
+  const effectiveValue = value ?? (field as any).defaultValue ?? '';
   switch (field.type) {
     case 'text':
       return (
         <FieldWrapper>
           <Label>{field.label}</Label>
-          <Input type="text" value={value ?? ''} onChange={e => onChange(e.target.value)} />
+          <Input type="text" value={effectiveValue} onChange={e => onChange(e.target.value)} />
         </FieldWrapper>
       );
     case 'textarea':
       return (
         <FieldWrapper>
           <Label>{field.label}</Label>
-          <Textarea value={value ?? ''} onChange={e => onChange(e.target.value)} />
+          <Textarea value={effectiveValue} onChange={e => onChange(e.target.value)} />
         </FieldWrapper>
       );
     case 'number':
@@ -243,22 +245,46 @@ function PropertyField({
           <Label>{field.label}</Label>
           <Input
             type="number"
-            value={value ?? 0}
+            value={Number(effectiveValue) || 0}
             onChange={e => onChange(Number(e.target.value))}
           />
         </FieldWrapper>
       );
+    case 'range': {
+      // Unidades auxiliares para escala (%) ou fator (×)
+      const isPercent = /Escala \(\%\)|Escala do Componente \(\%\)/i.test(field.label);
+      const isFactor = /\(fator\)/i.test(field.label);
+      const suffix = isPercent ? '%' : isFactor ? '×' : '';
+      const displayVal =
+        effectiveValue !== '' && effectiveValue !== undefined ? `${effectiveValue}${suffix}` : '';
+      return (
+        <FieldWrapper>
+          <Label>{field.label}</Label>
+          <input
+            type="range"
+            min={field.min ?? 0}
+            max={field.max ?? 100}
+            step={field.step ?? 1}
+            value={Number(effectiveValue ?? field.min ?? 0)}
+            onChange={e => onChange(Number(e.target.value))}
+            className="w-full"
+            title={field.description || displayVal}
+          />
+          <div className="text-xs text-muted-foreground">{displayVal}</div>
+        </FieldWrapper>
+      );
+    }
     case 'boolean':
       return (
         <FieldWrapper>
           <Label>{field.label}</Label>
-          <Switch checked={!!value} onChange={onChange} />
+          <Switch checked={!!effectiveValue} onChange={onChange} />
         </FieldWrapper>
       );
     case 'select': {
       const opts = field.options || [];
       const isNum = typeof opts[0]?.value === 'number';
-      const current = value ?? '';
+      const current = effectiveValue ?? '';
       return (
         <FieldWrapper>
           <Label>{field.label}</Label>
@@ -281,14 +307,18 @@ function PropertyField({
       return (
         <FieldWrapper>
           <Label>{field.label}</Label>
-          <Input type="color" value={value ?? '#ffffff'} onChange={e => onChange(e.target.value)} />
+          <Input
+            type="color"
+            value={effectiveValue || '#ffffff'}
+            onChange={e => onChange(e.target.value)}
+          />
         </FieldWrapper>
       );
     case 'options-list':
       return (
         <FieldWrapper>
           <Label>{field.label}</Label>
-          <OptionsListEditor value={value} onChange={onChange} />
+          <OptionsListEditor value={effectiveValue} onChange={onChange} />
         </FieldWrapper>
       );
     case 'json':
@@ -296,7 +326,7 @@ function PropertyField({
         <FieldWrapper>
           <Label>{field.label}</Label>
           <Textarea
-            value={JSON.stringify(value ?? {}, null, 2)}
+            value={JSON.stringify(effectiveValue ?? {}, null, 2)}
             onChange={e => {
               try {
                 const parsed = JSON.parse(e.target.value);
@@ -326,7 +356,25 @@ const EnhancedUniversalPropertiesPanelFixed: React.FC<PanelProps> = ({
 }) => {
   if (!selectedBlock) return null;
 
-  const schema = blockPropertySchemas[selectedBlock.type];
+  const schema =
+    blockPropertySchemas[selectedBlock.type] ||
+    ((): { label: string; fields: any[] } | null => {
+      const def = getBlockDefinition(selectedBlock.type);
+      if (!def || !Array.isArray(def.propertiesSchema)) return null;
+      // Adaptar legacy PropertySchema para BlockFieldSchema simples
+      const fields: BlockFieldSchema[] = def.propertiesSchema
+        .filter((f: any) => !!f && !!f.key && !!f.label && !!f.type)
+        .map((f: any) => ({
+          key: f.key,
+          label: f.label,
+          type: (f.type === 'boolean' ? 'boolean' : f.type === 'slider' ? 'range' : f.type) as any,
+          options: f.options,
+          min: f.min,
+          max: f.max,
+          group: f.group,
+        }));
+      return { label: def.label || selectedBlock.type, fields };
+    })();
 
   if (!schema) {
     return (
@@ -343,6 +391,14 @@ const EnhancedUniversalPropertiesPanelFixed: React.FC<PanelProps> = ({
     );
   }
 
+  // Misturar campos universais de transformação/escala
+  const universal = blockPropertySchemas['universal-default'];
+  const mergedFields = [
+    ...(schema?.fields || []),
+    // Evitar duplicatas por chave
+    ...universal.fields.filter(uf => !(schema?.fields || []).some(sf => sf.key === uf.key)),
+  ];
+
   return (
     <aside className="h-full w-full overflow-y-auto p-4 space-y-4">
       <header className="space-y-1">
@@ -357,25 +413,107 @@ const EnhancedUniversalPropertiesPanelFixed: React.FC<PanelProps> = ({
         }}
         className="space-y-4"
       >
-        {schema.fields
-          .filter(f => {
-            if (
-              (f.key === 'minSelections' || f.key === 'maxSelections') &&
-              !selectedBlock.properties?.multipleSelection
-            ) {
-              return false;
-            }
-            return true;
-          })
-          .map(field => (
-            <div key={field.key} className="space-y-1">
-              <PropertyField
-                field={field}
-                value={selectedBlock.properties?.[field.key]}
-                onChange={val => onUpdate(selectedBlock.id, { [field.key]: val })}
-              />
+        {Object.entries(
+          mergedFields
+            .filter(f => {
+              // ocultar condicionais de seleção múltipla
+              if (
+                (f.key === 'minSelections' || f.key === 'maxSelections') &&
+                !selectedBlock.properties?.multipleSelection
+              ) {
+                return false;
+              }
+              // ocultar hidden
+              if ((f as any).hidden) return false;
+              // showIf simples: formato "prop === value" ou "prop !== value"
+              const showIf = (f as any).showIf as string | undefined;
+              if (showIf) {
+                try {
+                  const [left, op, rawRight] = showIf.split(/\s+/);
+                  const right =
+                    rawRight === 'true'
+                      ? true
+                      : rawRight === 'false'
+                        ? false
+                        : rawRight
+                          ? rawRight.replace(/'/g, '')
+                          : rawRight;
+                  const leftVal = left
+                    ?.split('.')
+                    .reduce((acc: any, key: string) => acc?.[key], selectedBlock.properties || {});
+                  if (op === '===') return leftVal === right;
+                  if (op === '!==') return leftVal !== right;
+                } catch {}
+              }
+              return true;
+            })
+            .reduce((acc: Record<string, BlockFieldSchema[]>, f) => {
+              const group = f.group || 'default';
+              acc[group] = acc[group] || [];
+              acc[group].push(f);
+              return acc;
+            }, {})
+        ).map(([group, fields]) => (
+          <section key={group} className="space-y-2">
+            {group !== 'default' && (
+              <h4 className="text-sm font-semibold text-foreground/90 flex items-center gap-2">
+                {group}
+              </h4>
+            )}
+            {fields.map(field => (
+              <div key={field.key} className="space-y-1">
+                <PropertyField
+                  field={field}
+                  value={selectedBlock.properties?.[field.key]}
+                  onChange={val => onUpdate(selectedBlock.id, { [field.key]: val })}
+                />
+                {(field as any).description && (
+                  <p className="text-xs text-muted-foreground">{(field as any).description}</p>
+                )}
+              </div>
+            ))}
+          </section>
+        ))}
+
+        {/* Ações rápidas */}
+        <section className="pt-2 border-t">
+          <h4 className="text-sm font-semibold mb-2">Ações Rápidas</h4>
+          <div className="flex flex-wrap gap-2 items-center">
+            <button
+              type="button"
+              className="px-3 py-1.5 rounded-md border text-xs hover:bg-muted"
+              onClick={() =>
+                onUpdate(selectedBlock.id, {
+                  scale: 100,
+                  scaleX: undefined,
+                  scaleY: undefined,
+                  scaleOrigin: 'center',
+                  scaleClass: undefined,
+                })
+              }
+            >
+              Resetar escala
+            </button>
+
+            {/* Presets rápidos para escala (%) */}
+            <div className="flex items-center gap-1">
+              <span className="text-xs text-muted-foreground">Presets:</span>
+              {[90, 95, 100, 105, 110].map(preset => (
+                <button
+                  key={preset}
+                  type="button"
+                  className={`px-2 py-1 rounded border text-xs hover:bg-muted ${
+                    selectedBlock.properties?.scale === preset ? 'bg-muted' : ''
+                  }`}
+                  title={`${preset}%`}
+                  onClick={() => onUpdate(selectedBlock.id, { scale: preset })}
+                >
+                  {preset}%
+                </button>
+              ))}
             </div>
-          ))}
+          </div>
+        </section>
 
         <div className="pt-2 flex gap-2">
           <button type="submit" className="px-3 py-2 rounded-md border text-sm">

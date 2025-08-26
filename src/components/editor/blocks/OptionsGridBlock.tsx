@@ -1,5 +1,6 @@
-import React from 'react';
 import type { BlockComponentProps } from '@/types/blocks';
+import React from 'react';
+import { useEditor } from '../EditorProvider';
 
 interface Option {
   id: string;
@@ -124,10 +125,23 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
   sessionData = {},
   onStepComplete,
 }) => {
+  // Acessa etapa atual no modo editor
+  let currentStepFromEditor: number | null = null;
+  try {
+    const editor = useEditor();
+    currentStepFromEditor = editor?.state?.currentStep ?? null;
+  } catch (e) {
+    currentStepFromEditor = null;
+  }
+
+  // Evitar autoavanço duplicado
+  const autoAdvanceScheduledRef = React.useRef(false);
+  const autoAdvanceTimerRef = React.useRef<number | null>(null);
+
   const {
-    question,
+    question: questionProp,
     // questionId, // unused
-    options = [],
+    options: optionsProp = [],
     columns = 2,
     // selectedOption, // unused for now
     selectedOptions = [],
@@ -156,7 +170,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
     // progressMessage = '{selected} de {maxSelections} selecionados', // unused
     // enableButtonOnlyWhenValid = true, // unused
     // showValidationFeedback = true, // unused
-    autoAdvanceOnComplete = false,
+    // autoAdvanceOnComplete = false, // unificado via regras por etapa
     autoAdvanceDelay = 1500,
     // instantActivation = true, // unused
     // trackSelectionOrder = false, // unused
@@ -165,8 +179,16 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
     showQuestionTitle = true,
   } = (block?.properties as any) || {};
 
+  // Fallbacks a partir de content (compatibilidade com template)
+  const question = (questionProp ?? (block as any)?.content?.question) as string | undefined;
+  const options = ((block?.properties as any)?.options ??
+    (block as any)?.content?.options ??
+    optionsProp) as Option[];
+
   // State for preview mode selections
   const [previewSelections, setPreviewSelections] = React.useState<string[]>([]);
+  const previewAutoAdvanceRef = React.useRef(false);
+  const previewAutoAdvanceTimerRef = React.useRef<number | null>(null);
 
   React.useEffect(() => {
     // Initialize from session data in preview mode
@@ -300,10 +322,19 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
         onUpdateSessionData(`${sessionKey}_details`, selectedOptionDetails);
       }
 
-      // Check if we should auto-advance
+      // Check if we should auto-advance - REGRAS UNIFICADAS COM EDIÇÃO
+      const step = (window as any)?.__quizCurrentStep ?? null;
+      const isValidStep = Number.isFinite(Number(step));
+      const isScoringPhase = isValidStep && Number(step) >= 2 && Number(step) <= 11; // 3 obrigatórias
+      const isStrategicPhase = isValidStep && Number(step) >= 13 && Number(step) <= 18; // 1 obrigatória
+      const effectiveRequiredSelections = isScoringPhase
+        ? 3
+        : isStrategicPhase
+          ? 1
+          : requiredSelections || minSelections || 1;
+
       const hasMinSelections = newSelections.length >= (minSelections || 1);
-      const hasRequiredSelections =
-        newSelections.length >= (requiredSelections || minSelections || 1);
+      const hasRequiredSelections = newSelections.length >= effectiveRequiredSelections;
 
       // Calculate option details for completion events
       const selectedOptionDetails = newSelections.map(id => {
@@ -317,10 +348,9 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
         };
       });
 
-      if (autoAdvanceOnComplete && hasRequiredSelections && onNext) {
-        console.log('🚀 OptionsGrid: Auto-advancing after selection', newSelections);
+      if (isScoringPhase && hasRequiredSelections && onNext) {
+        console.log('🚀 OptionsGrid (preview): Auto-advancing after selection', newSelections);
 
-        // Trigger step completion event
         if (onStepComplete) {
           onStepComplete({
             stepId: block?.id,
@@ -330,10 +360,20 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
           });
         }
 
-        // Auto-advance with delay
-        setTimeout(() => {
-          onNext();
-        }, autoAdvanceDelay || 1500);
+        // Evitar múltiplos disparos
+        if (!previewAutoAdvanceRef.current) {
+          previewAutoAdvanceRef.current = true;
+          const delayMs = Math.max(200, Math.min(1200, autoAdvanceDelay || 600));
+          if (previewAutoAdvanceTimerRef.current) {
+            window.clearTimeout(previewAutoAdvanceTimerRef.current);
+            previewAutoAdvanceTimerRef.current = null;
+          }
+          previewAutoAdvanceTimerRef.current = window.setTimeout(() => {
+            onNext();
+            previewAutoAdvanceRef.current = false;
+            previewAutoAdvanceTimerRef.current = null;
+          }, delayMs) as unknown as number;
+        }
       } else if (onStepComplete && hasMinSelections) {
         // Just trigger completion without auto-advance
         onStepComplete({
@@ -343,17 +383,105 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
           autoAdvance: false,
         });
       }
+
+      if (!hasRequiredSelections) {
+        previewAutoAdvanceRef.current = false;
+        if (previewAutoAdvanceTimerRef.current) {
+          window.clearTimeout(previewAutoAdvanceTimerRef.current);
+          previewAutoAdvanceTimerRef.current = null;
+        }
+      }
     } else {
-      // Editor mode: Use the property change handler
-      if (onPropertyChange) {
-        if (multipleSelection) {
-          const currentSelections = selectedOptions || [];
-          const newSelections = currentSelections.includes(optionId)
-            ? currentSelections.filter((id: string) => id !== optionId)
-            : [...currentSelections, optionId];
-          onPropertyChange('selectedOptions', newSelections);
-        } else {
-          onPropertyChange('selectedOption', optionId);
+      // Editor mode: Update properties and emit validation event for editor UX
+      let newSelections: string[];
+      if (multipleSelection) {
+        const currentSelections = selectedOptions || [];
+        newSelections = currentSelections.includes(optionId)
+          ? currentSelections.filter((id: string) => id !== optionId)
+          : [...currentSelections, optionId];
+        onPropertyChange?.('selectedOptions', newSelections);
+      } else {
+        newSelections = [optionId];
+        onPropertyChange?.('selectedOption', optionId);
+      }
+      // Calcula regras por etapa
+      const step = Number(currentStepFromEditor ?? NaN);
+      const isValidStep = Number.isFinite(step);
+      const isScoringPhase = isValidStep && step >= 2 && step <= 11; // 3 seleções obrigatórias + autoavanço
+      const isStrategicPhase = isValidStep && step >= 13 && step <= 18; // 1 seleção obrigatória, sem autoavanço
+
+      // Seleções obrigatórias efetivas por fase
+      const effectiveRequiredSelections = isScoringPhase
+        ? 3
+        : isStrategicPhase
+          ? 1
+          : requiredSelections || minSelections || 1;
+
+      const hasRequiredSelections = newSelections.length >= effectiveRequiredSelections;
+
+      // Emitir evento global para que o EditorStageManager possa refletir validação visual
+      window.dispatchEvent(
+        new CustomEvent('quiz-selection-change', {
+          detail: {
+            questionId: (block?.properties as any)?.questionId || block?.id,
+            selectionCount: newSelections.length,
+            valid: hasRequiredSelections,
+          },
+        })
+      );
+
+      // Autoavanço somente nas etapas 2–11, ao atingir a última seleção obrigatória
+      if (isScoringPhase) {
+        // Evitar múltiplos disparos se usuário clicar rapidamente
+        if (hasRequiredSelections && !autoAdvanceScheduledRef.current) {
+          autoAdvanceScheduledRef.current = true;
+
+          // Ativa visualmente e funcionalmente o botão "Avançar" via evento acima,
+          // e após um pequeno delay, navega automaticamente.
+          const nextStep = Math.min(step + 1, 21);
+          const delayMs = Math.max(
+            200,
+            Math.min(1200, (block?.properties as any)?.autoAdvanceDelay ?? 600)
+          );
+
+          if (autoAdvanceTimerRef.current) {
+            window.clearTimeout(autoAdvanceTimerRef.current);
+            autoAdvanceTimerRef.current = null;
+          }
+
+          autoAdvanceTimerRef.current = window.setTimeout(() => {
+            // Dispara ambos eventos para máxima compatibilidade
+            window.dispatchEvent(
+              new CustomEvent('navigate-to-step', {
+                detail: { stepId: nextStep, source: 'options-grid-auto-advance' },
+              })
+            );
+            window.dispatchEvent(
+              new CustomEvent('quiz-navigate-to-step', {
+                detail: { stepId: nextStep, source: 'options-grid-auto-advance' },
+              })
+            );
+
+            // Libera para um próximo uso quando o usuário retornar/alterar
+            autoAdvanceScheduledRef.current = false;
+            autoAdvanceTimerRef.current = null;
+          }, delayMs) as unknown as number;
+        }
+
+        // Se caiu abaixo do requisito, libera nova tentativa
+        if (!hasRequiredSelections) {
+          autoAdvanceScheduledRef.current = false;
+          if (autoAdvanceTimerRef.current) {
+            window.clearTimeout(autoAdvanceTimerRef.current);
+            autoAdvanceTimerRef.current = null;
+          }
+        }
+      } else {
+        // Fases sem autoavanço (1 e 13–18): apenas ativação visual/funcional do botão "Avançar"
+        autoAdvanceScheduledRef.current = false;
+        if (autoAdvanceTimerRef.current) {
+          window.clearTimeout(autoAdvanceTimerRef.current);
+          autoAdvanceTimerRef.current = null;
         }
       }
     }

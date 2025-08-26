@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import CanvasDropZone from './canvas/CanvasDropZone.simple';
 import { DraggableComponentItem } from '@/components/editor/dnd/DraggableComponentItem';
 import { useNotification } from '@/components/ui/Notification';
@@ -16,6 +17,8 @@ import {
   devLog,
   validateEditorJSON,
 } from '@/utils/editorUtils';
+=======
+>>>>>>> f488f691c (Reverted to commit cf7305e7b17ec218cffd49ea421f8f13ae2f2520)
 import {
   closestCenter,
   DndContext,
@@ -23,13 +26,38 @@ import {
   DragStartEvent,
   KeyboardSensor,
   PointerSensor,
+  pointerWithin,
   rectIntersection,
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
+<<<<<<< HEAD
 import React, { Suspense, useCallback, useMemo, useRef, useState } from 'react';
 import { useEditor } from './EditorProvider';
+=======
+import React, { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { getBlocksForStep } from '../../config/quizStepsComplete';
+import { cn } from '../../lib/utils';
+import { Block } from '../../types/editor';
+import {
+  extractDragData,
+  getDragFeedback,
+  logDragEvent,
+  validateDrop,
+} from '../../utils/dragDropUtils';
+import {
+  copyToClipboard,
+  createBlockFromComponent,
+  devLog,
+  validateEditorJSON,
+} from '../../utils/editorUtils';
+import { useNotification } from '../ui/Notification';
+import { CanvasDropZone } from './canvas/CanvasDropZone.simple';
+import { DraggableComponentItem } from './dnd/DraggableComponentItem';
+import { useEditor } from './EditorProvider';
+// import { SortableBlock } from './SortableBlock';
+>>>>>>> f488f691c (Reverted to commit cf7305e7b17ec218cffd49ea421f8f13ae2f2520)
 
 /**
  * EditorPro - versão modularizada / otimizada do QuizEditorPro
@@ -85,7 +113,19 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   }
 
   const { state, actions } = editorContext;
-  const [mode, setMode] = useState<'edit' | 'preview'>('edit');
+  const [viewport, setViewport] = useState<'full' | 'sm' | 'md' | 'lg'>('full');
+  const viewportWidth = useMemo(() => {
+    switch (viewport) {
+      case 'sm':
+        return 375;
+      case 'md':
+        return 768;
+      case 'lg':
+        return 1024;
+      default:
+        return '100%';
+    }
+  }, [viewport]);
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [customTitle, setCustomTitle] = useState('Quiz Quest - Editor Principal');
   const notification = useNotification();
@@ -129,20 +169,88 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
 
   // Collision detection strategy com assinatura correta
   const collisionDetectionStrategy = useCallback((args: any) => {
+    // Primeiro tente uma interseção retangular direta (melhor para detectar drop zones
+    // e listas verticais). Se não houver colisões, tente pointerWithin (cursor dentro)
+    // e por fim fallback para closestCenter.
     try {
-      const { active } = args;
-      const activeType = extractDragData(active)?.type;
-      if (activeType === 'sidebar-component') {
-        return rectIntersection(args);
-      }
+      const collisions = rectIntersection(args);
+      if (collisions && collisions.length > 0) return collisions;
     } catch (err) {
-      // fallback silencioso para evitar quebrar o DnD
       if (process.env.NODE_ENV === 'development') {
         // eslint-disable-next-line no-console
-        console.debug('collisionDetectionStrategy error, fallback to closestCenter:', err);
+        console.debug('rectIntersection erro:', err);
       }
     }
+
+    try {
+      const pointerCollisions = pointerWithin(args);
+      if (pointerCollisions && pointerCollisions.length > 0) return pointerCollisions;
+    } catch (err) {
+      if (process.env.NODE_ENV === 'development') {
+        // eslint-disable-next-line no-console
+        console.debug('pointerWithin erro:', err);
+      }
+    }
+
     return closestCenter(args);
+  }, []);
+
+  // 🔗 Escutar eventos de navegação disparados pelos blocos (ex.: botão da etapa 1)
+  useEffect(() => {
+    const parseStepNumber = (stepId: unknown): number | null => {
+      if (typeof stepId === 'number') return stepId;
+      if (typeof stepId !== 'string') return null;
+      const digits = stepId.replace(/[^0-9]/g, '');
+      const num = parseInt(digits || stepId, 10);
+      return Number.isFinite(num) ? num : null;
+    };
+
+    const handleNavigate = (ev: Event) => {
+      const e = ev as CustomEvent<{ stepId?: string | number; source?: string }>;
+      const target = parseStepNumber(e.detail?.stepId);
+      if (!target || target < 1 || target > 21) return;
+      actions.setCurrentStep(target);
+      if (process.env.NODE_ENV === 'development') {
+        // eslint-disable-next-line no-console
+        console.log(
+          '➡️ EditorPro: navegação por evento',
+          e.detail?.stepId,
+          '→',
+          target,
+          'origem:',
+          e.detail?.source
+        );
+      }
+    };
+
+    window.addEventListener('navigate-to-step', handleNavigate as EventListener);
+    window.addEventListener('quiz-navigate-to-step', handleNavigate as EventListener);
+    return () => {
+      window.removeEventListener('navigate-to-step', handleNavigate as EventListener);
+      window.removeEventListener('quiz-navigate-to-step', handleNavigate as EventListener);
+    };
+  }, [actions]);
+
+  // Expor etapa atual globalmente para unificar comportamento de blocos (produção/edição)
+  useEffect(() => {
+    try {
+      (window as any).__quizCurrentStep = safeCurrentStep;
+    } catch {}
+  }, [safeCurrentStep]);
+
+  // Desabilitar auto-scroll e sincronização de scroll enquanto o editor estiver montado
+  useEffect(() => {
+    try {
+      (window as any).__DISABLE_AUTO_SCROLL = true;
+      (window as any).__DISABLE_SCROLL_SYNC = true;
+    } catch {}
+
+    return () => {
+      try {
+        (window as any).__DISABLE_AUTO_SCROLL = false;
+        (window as any).__DISABLE_SCROLL_SYNC = false;
+      } catch {}
+    };
   }, []);
 
   // componentes disponíveis - ideal extrair para config
@@ -271,7 +379,12 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
 
   // Handlers básicos
   const handleStepSelect = useCallback((step: number) => actions.setCurrentStep(step), [actions]);
+<<<<<<< HEAD
   // Handlers de bloco específicos não são necessários aqui; o CanvasDropZone lida com seleção/edição/remoção via actions diretos
+=======
+
+  // Duplicação inline é gerenciada no wrapper simples quando necessário
+>>>>>>> f488f691c (Reverted to commit cf7305e7b17ec218cffd49ea421f8f13ae2f2520)
 
   // Drag handlers (reutilizam utilitários)
   const handleDragStart = useCallback((event: DragStartEvent) => {
@@ -289,9 +402,12 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   const handleDragEnd = useCallback(
     (event: DragEndEvent) => {
       const { active, over } = event;
+      const activeIdStr = active?.id != null ? String(active.id) : null;
+      const overIdStr = over?.id != null ? String(over.id) : null;
+
       console.log('🎯 DRAG END CAPTURADO!', {
-        activeId: active.id,
-        overId: over?.id,
+        activeId: activeIdStr,
+        overId: overIdStr,
         overData: over?.data?.current,
       });
 
@@ -326,18 +442,54 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
           case 'add':
             if (dragData.type === 'sidebar-component' && dragData.blockType) {
               const newBlock = createBlockFromComponent(dragData.blockType as any, currentStepData);
-              actions.addBlock(currentStepKey, newBlock);
+              // Inserção precisa por posição quando drop-zone-<n>
+              let targetIndex = currentStepData.length;
+              if (overIdStr) {
+                const m = overIdStr.match(/^drop-zone-(\d+)$/);
+                if (m)
+                  targetIndex = Math.max(0, Math.min(parseInt(m[1], 10), currentStepData.length));
+                else if (overIdStr === 'canvas-drop-zone') targetIndex = currentStepData.length;
+                else {
+                  // Se soltou sobre um bloco, inserir antes dele
+                  const overIndex = currentStepData.findIndex(b => String(b.id) === overIdStr);
+                  if (overIndex >= 0) targetIndex = overIndex;
+                }
+              }
+              actions.addBlockAtIndex(currentStepKey, newBlock, targetIndex);
               actions.setSelectedBlockId(newBlock.id);
-              notification?.success?.(`Componente ${dragData.blockType} adicionado!`);
+              notification?.success?.(
+                `Componente ${dragData.blockType} adicionado na posição ${targetIndex}!`
+              );
             }
             break;
           case 'reorder':
-            if (dragData.type === 'canvas-block' && typeof over.id === 'string') {
-              const activeIndex = currentStepData.findIndex(block => block.id === active.id);
-              const overIndex = currentStepData.findIndex(block => block.id === over.id);
-              if (activeIndex !== -1 && overIndex !== -1 && activeIndex !== overIndex) {
-                actions.reorderBlocks(currentStepKey, activeIndex, overIndex);
-                notification?.info?.('Blocos reordenados');
+            if (dragData.type === 'canvas-block') {
+              const activeIndex = currentStepData.findIndex(
+                block => String(block.id) === activeIdStr
+              );
+              if (activeIndex === -1) break;
+
+              let targetIndex = activeIndex;
+              if (overIdStr === 'canvas-drop-zone') {
+                targetIndex = currentStepData.length - 1;
+              } else if (overIdStr) {
+                const m = overIdStr.match(/^drop-zone-(\d+)$/);
+                if (m) {
+                  targetIndex = Math.max(
+                    0,
+                    Math.min(parseInt(m[1], 10), currentStepData.length - 1)
+                  );
+                } else {
+                  const overIndex = currentStepData.findIndex(
+                    block => String(block.id) === overIdStr
+                  );
+                  if (overIndex !== -1) targetIndex = overIndex;
+                }
+              }
+
+              if (activeIndex !== targetIndex) {
+                actions.reorderBlocks(currentStepKey, activeIndex, targetIndex);
+                notification?.info?.(`Bloco movido para a posição ${targetIndex}`);
               }
             }
             break;
@@ -446,7 +598,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   );
 
   const CanvasArea: React.FC = () => (
-    <div className="flex-1 flex flex-col bg-gray-100">
+    <div className="flex-1 flex flex-col bg-gray-100 min-h-0">
       <div className="bg-white border-b border-gray-200 p-4">
         <div className="flex items-center justify-between">
           <div>
@@ -569,30 +721,61 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               </button>
             </div>
 
+            {/* Alternância de modo removida: somente preview */}
+
+            {/* Seletor de viewport responsivo */}
             <div className="flex bg-gray-100 rounded-lg p-1">
               <button
                 type="button"
-                onClick={() => setMode('edit')}
+                onClick={() => setViewport('sm')}
                 className={cn(
-                  'px-4 py-2 text-sm rounded-md transition-all duration-200 font-medium',
-                  mode === 'edit'
+                  'px-3 py-2 text-sm rounded-md transition-all duration-200 font-medium',
+                  viewport === 'sm'
                     ? 'bg-white text-gray-900 shadow-sm border border-gray-200'
                     : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                 )}
+                title="Mobile (375px)"
               >
-                ✏️ Editar
+                📱 375
               </button>
               <button
                 type="button"
-                onClick={() => setMode('preview')}
+                onClick={() => setViewport('md')}
                 className={cn(
-                  'px-4 py-2 text-sm rounded-md transition-all duration-200 font-medium',
-                  mode === 'preview'
+                  'px-3 py-2 text-sm rounded-md transition-all duration-200 font-medium',
+                  viewport === 'md'
                     ? 'bg-white text-gray-900 shadow-sm border border-gray-200'
                     : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                 )}
+                title="Tablet (768px)"
               >
-                👁️ Preview
+                📟 768
+              </button>
+              <button
+                type="button"
+                onClick={() => setViewport('lg')}
+                className={cn(
+                  'px-3 py-2 text-sm rounded-md transition-all duration-200 font-medium',
+                  viewport === 'lg'
+                    ? 'bg-white text-gray-900 shadow-sm border border-gray-200'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                )}
+                title="Desktop (1024px)"
+              >
+                🖥️ 1024
+              </button>
+              <button
+                type="button"
+                onClick={() => setViewport('full')}
+                className={cn(
+                  'px-3 py-2 text-sm rounded-md transition-all duration-200 font-medium',
+                  viewport === 'full'
+                    ? 'bg-white text-gray-900 shadow-sm border border-gray-200'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                )}
+                title="Largura total"
+              >
+                🧭 Full
               </button>
             </div>
 
@@ -601,6 +784,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
             </button>
           </div>
         </div>
+<<<<<<< HEAD
         {/* Banner de modo removido */}
       </div>
 
@@ -621,6 +805,81 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   );
 
   // (viewportWidth removido - não utilizado na versão atual do Canvas)
+
+  // Coluna de propriedades (direita)
+  const PropertiesColumn: React.FC = () => (
+    <div className="w-[360px] min-w-[300px] bg-white border-l border-gray-200 flex flex-col">
+      {selectedBlock ? (
+        <Suspense
+          fallback={<div className="p-4 text-sm text-gray-600">Carregando propriedades…</div>}
+        >
+          <EnhancedUniversalPropertiesPanelFixed
+            selectedBlock={selectedBlock as any}
+            onUpdate={(blockId: string, updates: Record<string, any>) =>
+              actions.updateBlock(currentStepKey, blockId, updates)
+            }
+            onClose={() => actions.setSelectedBlockId(null)}
+            onDelete={(blockId: string) => actions.removeBlock(currentStepKey, blockId)}
+          />
+        </Suspense>
+      ) : (
+        <div className="h-full p-6 text-sm text-gray-600">
+          Selecione um bloco no canvas para editar suas propriedades.
+        </div>
+      )}
+=======
+
+        {/* Banner de modo removido */}
+      </div>
+
+      {/* Área scrollável do canvas */}
+      <div className="flex-1 overflow-y-auto">
+        <div className="w-full">
+          <div
+            className="mx-auto transition-all editor-pro-canvas"
+            style={{ width: viewportWidth as number | string, maxWidth: '100%' }}
+          >
+            <div
+              className={cn('rounded-xl shadow-sm', viewport !== 'full' && 'border bg-white p-4')}
+            >
+              <CanvasDropZone
+                blocks={currentStepData}
+                selectedBlockId={state.selectedBlockId}
+                onSelectBlock={(id: string) => actions.setSelectedBlockId(id)}
+                onUpdateBlock={(id: string, updates: any) =>
+                  actions.updateBlock(currentStepKey, id, updates)
+                }
+                onDeleteBlock={(id: string) => actions.removeBlock(currentStepKey, id)}
+              />
+            </div>
+            <div className="text-xs mt-2 px-2">
+              Clique em um bloco no canvas para ver suas propriedades
+            </div>
+            <div className="mt-6 p-4 bg-gray-50 rounded-lg text-left">
+              <h4 className="text-sm font-medium text-gray-900 mb-3">
+                Estatísticas da Etapa {safeCurrentStep}
+              </h4>
+              <div className="space-y-2 text-xs">
+                <div className="flex justify-between">
+                  <span>Blocos configurados:</span>
+                  <span className="font-medium">{currentStepData.length}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Tipo da etapa:</span>
+                  <span className="font-medium">{getStepAnalysis(safeCurrentStep).label}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Função:</span>
+                  <span className="font-medium">{getStepAnalysis(safeCurrentStep).desc}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+>>>>>>> f488f691c (Reverted to commit cf7305e7b17ec218cffd49ea421f8f13ae2f2520)
+    </div>
+  );
 
   // Coluna de propriedades (direita)
   const PropertiesColumn: React.FC = () => (

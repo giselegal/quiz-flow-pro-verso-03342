@@ -74,10 +74,10 @@ const UrgencyTimerInlineBlock: React.FC<BlockComponentProps> = ({
     showAlert = true,
     spacing = 'md',
     // Sistema completo de margens com controles deslizantes
-    marginTop = 8,
-    marginBottom = 8,
-    marginLeft = 0,
-    marginRight = 0,
+    marginTop = properties.marginTop ?? 8,
+    marginBottom = properties.marginBottom ?? 8,
+    marginLeft = properties.marginLeft ?? 0,
+    marginRight = properties.marginRight ?? 0,
   } = properties;
 
   const [isLoaded, setIsLoaded] = useState(false);

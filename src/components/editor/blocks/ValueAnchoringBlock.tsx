@@ -1,6 +1,5 @@
 // @ts-nocheck
 import { cn } from '@/lib/utils';
-import { Check, ShoppingCart } from 'lucide-react';
 
 interface ValueAnchoringBlockProps {
   title?: string;
@@ -54,10 +53,19 @@ const getMarginClass = (value, type) => {
 };
 
 const ValueAnchoringBlock: React.FC<ValueAnchoringBlockProps> = ({
-  title = 'O Que Você Recebe Hoje',
-  showPricing = true,
+  title: _title = 'O Que Você Recebe Hoje',
+  showPricing: _showPricing = true,
   className,
+  // @ts-ignore permitir props soltas
+  block,
 }) => {
+  const properties = (block?.properties as any) || {};
+  const title = properties.title ?? _title;
+  const showPricing = properties.showPricing ?? _showPricing;
+  const marginTop = properties.marginTop ?? 0;
+  const marginBottom = properties.marginBottom ?? 0;
+  const marginLeft = properties.marginLeft ?? 0;
+  const marginRight = properties.marginRight ?? 0;
   // Dados reais da página de resultado do funil
   const valueItems = [
     { item: 'Guia Principal', value: 67 },

@@ -1,8 +1,8 @@
-import { EditorPro } from '@/components/editor/EditorPro';
-import { EditorProvider } from '@/components/editor/EditorProvider';
-import { ErrorBoundary } from '@/components/editor/ErrorBoundary';
-// import { LovablePreviewPanel } from '@/components/lovable/LovablePreviewPanel'; // 🔧 DESABILITADO TEMPORARIAMENTE
+import { LovablePreviewPanel } from '@/components/lovable/LovablePreviewPanel';
 import React from 'react';
+import { EditorPro } from '../components/editor/EditorPro';
+import { EditorProvider } from '../components/editor/EditorProvider';
+import { ErrorBoundary } from '../components/editor/ErrorBoundary';
 
 /**
  * 🎯 EDITOR PRINCIPAL - ÚNICO E LIMPO
@@ -16,14 +16,23 @@ import React from 'react';
  * - Cabeçalho editável DENTRO do EditorPro ✅
  */
 const MainEditor: React.FC = () => {
+  const enableLovablePreview = (import.meta as any)?.env?.VITE_LOVABLE_PREVIEW === 'true';
   return (
     <div>
-      {/* 🔧 LOVABLE PREVIEW DESABILITADO TEMPORARIAMENTE PARA TESTAR DRAG & DROP */}
       <ErrorBoundary>
-        <EditorProvider enableSupabase={false} storageKey="main-editor-state">
-          {/* 🎯 EDITOR PRINCIPAL COM CABEÇALHO EDITÁVEL */}
-          <EditorPro />
-        </EditorProvider>
+        {enableLovablePreview ? (
+          <LovablePreviewPanel>
+            <EditorProvider enableSupabase={false} storageKey="main-editor-state">
+              {/* 🎯 EDITOR PRINCIPAL COM CABEÇALHO EDITÁVEL */}
+              <EditorPro />
+            </EditorProvider>
+          </LovablePreviewPanel>
+        ) : (
+          <EditorProvider enableSupabase={false} storageKey="main-editor-state">
+            {/* 🎯 EDITOR PRINCIPAL COM CABEÇALHO EDITÁVEL */}
+            <EditorPro />
+          </EditorProvider>
+        )}
       </ErrorBoundary>
     </div>
   );

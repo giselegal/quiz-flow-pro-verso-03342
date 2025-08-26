@@ -1,8 +1,8 @@
 // @ts-nocheck
-import { lazy, ComponentType, ReactNode, Suspense, useState, useEffect } from 'react';
-import { Block } from '@/types/editor';
-import { SimpleBlockFallback } from './ProductionBlockBoundary';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Block } from '@/types/editor';
+import { ComponentType, lazy, ReactNode, Suspense, useEffect, useState } from 'react';
+import { SimpleBlockFallback } from './ProductionBlockBoundary';
 
 /**
  * 🚀 LAZY BLOCK LOADER - SISTEMA DE CARREGAMENTO OTIMIZADO
@@ -25,6 +25,14 @@ interface LazyBlockProps {
 // Cache de componentes carregados
 const componentCache = new Map<string, ComponentType<any>>();
 
+// Importações ESTÁTICAS para blocos críticos usados no template/base do editor
+// Evita conflito de "dynamic import + static import" no mesmo build
+import ButtonInlineBlock from '@/components/editor/blocks/ButtonInlineBlock';
+import FormInputBlock from '@/components/editor/blocks/FormInputBlock';
+import ImageInlineBlock from '@/components/editor/blocks/ImageInlineBlock';
+import QuizIntroHeaderBlock from '@/components/editor/blocks/QuizIntroHeaderBlock';
+import TextInlineBlock from '@/components/editor/blocks/TextInlineBlock';
+
 // Mapeamento de componentes para lazy loading
 const LAZY_COMPONENTS = {
   // ACTION COMPONENTS
@@ -32,7 +40,8 @@ const LAZY_COMPONENTS = {
   'advanced-cta-inline': () =>
     lazy(() => import('@/components/editor/blocks/AdvancedCTAInlineBlock')),
   button: () => lazy(() => import('@/components/editor/blocks/ButtonBlock')),
-  'button-inline': () => lazy(() => import('@/components/editor/blocks/ButtonInlineBlock')),
+  // Usar componente estático para evitar duplicidade com imports estáticos no registry
+  'button-inline': () => ButtonInlineBlock,
   'cta-inline': () => lazy(() => import('@/components/editor/blocks/CTAInlineBlock')),
   'cta-section-inline': () =>
     lazy(() => import('@/components/editor/blocks/CTASectionInlineBlock')),
@@ -46,15 +55,12 @@ const LAZY_COMPONENTS = {
   'heading-inline': () => lazy(() => import('@/components/editor/blocks/HeadingInlineBlock')),
   'rich-text': () => lazy(() => import('@/components/editor/blocks/RichTextBlock')),
   text: () => lazy(() => import('@/components/editor/blocks/TextBlock')),
-  'text-inline': () => lazy(() => import('@/components/editor/blocks/TextInlineBlock')),
+  // Usar componente estático para evitar duplicidade
+  'text-inline': () => TextInlineBlock,
 
   // QUIZ COMPONENTS
-  'quiz-intro-header': () =>
-    lazy(() =>
-      import('@/components/blocks/unified/UnifiedHeaderVariant').then(module => ({
-        default: module.QuizIntroHeaderBlock,
-      }))
-    ),
+  // Usar componente estático para evitar duplicidade
+  'quiz-intro-header': () => QuizIntroHeaderBlock,
   'quiz-question': () => lazy(() => import('@/components/editor/blocks/QuizQuestionBlock')),
   'quiz-option': () => lazy(() => import('@/components/editor/blocks/QuizOptionBlock')),
   'quiz-progress': () => lazy(() => import('@/components/editor/blocks/QuizProgressBlock')),
@@ -64,7 +70,8 @@ const LAZY_COMPONENTS = {
 
   // MEDIA COMPONENTS
   image: () => lazy(() => import('@/components/editor/blocks/ImageBlock')),
-  'image-inline': () => lazy(() => import('@/components/editor/blocks/ImageInlineBlock')),
+  // Usar componente estático para evitar duplicidade
+  'image-inline': () => ImageInlineBlock,
   video: () => lazy(() => import('@/components/editor/blocks/VideoBlock')),
   'video-player': () => lazy(() => import('@/components/editor/blocks/VideoPlayerBlock')),
 
@@ -96,7 +103,8 @@ const LAZY_COMPONENTS = {
   loader: () => lazy(() => import('@/components/editor/blocks/LoaderBlock')),
 
   // FORMS COMPONENTS
-  'form-input': () => lazy(() => import('@/components/editor/blocks/FormInputBlock')),
+  // Usar componente estático para evitar duplicidade
+  'form-input': () => FormInputBlock,
   'form-container': () => lazy(() => import('@/components/editor/blocks/FormContainerBlock')),
   'lead-form': () => lazy(() => import('@/components/editor/blocks/LeadFormBlock')),
 

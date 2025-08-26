@@ -1,5 +1,5 @@
 import { EditorProvider } from '@/components/editor/EditorProvider';
-import { QuizEditorPro } from '@/components/editor/QuizEditorPro';
+// import { QuizEditorPro } from '@/components/editor/QuizEditorPro'; // Component não encontrado
 import { EditorErrorBoundary } from '@/components/error/EditorErrorBoundary';
 import React from 'react';
 
@@ -39,7 +39,9 @@ const QuizEditorProPageWithSupabase: React.FC = () => {
             </div>
           </div>
 
-          <QuizEditorPro />
+          <div className="p-4 text-center">
+            <p>QuizEditorPro em manutenção - componente não encontrado</p>
+          </div>
         </div>
       </EditorProvider>
     </EditorErrorBoundary>

@@ -1,6 +1,6 @@
+import UniversalBlockRenderer from '@/components/editor/blocks/UniversalBlockRenderer';
 import { useQuizFlow } from '@/hooks/core/useQuizFlow';
 import { Block } from '@/types/editor';
-import UniversalBlockRenderer from '@/components/editor/blocks/UniversalBlockRenderer';
 import React from 'react';
 
 interface StepData {
@@ -14,6 +14,15 @@ interface QuizRendererProps {
   onStepChange?: (step: number) => void;
   initialStep?: number;
   className?: string;
+  // Overrides para uso no editor: renderizar blocos reais do EditorProvider e sincronizar etapa
+  blocksOverride?: Block[];
+  currentStepOverride?: number;
+  // Callback opcional para seleção de bloco no modo editor
+  onBlockClick?: (blockId: string) => void;
+  // Permitir seleção e uso de overrides também em preview (sem mudar o visual)
+  previewEditable?: boolean;
+  // Id do bloco selecionado (para destacar com moldura no preview editável)
+  selectedBlockId?: string | null;
 }
 
 /**
@@ -27,6 +36,11 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
   onStepChange,
   initialStep = 1,
   className = '',
+  blocksOverride,
+  currentStepOverride,
+  onBlockClick,
+  previewEditable = false,
+  selectedBlockId = null,
 }) => {
   const { quizState, actions } = useQuizFlow({
     mode,
@@ -38,7 +52,10 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
   const { prevStep, getStepData } = actions; // nextStep removido pois não é usado
 
   // Buscar dados da etapa atual
-  const stepBlocks = getStepData();
+  const canUseOverrides =
+    (mode === 'editor' || (mode === 'preview' && previewEditable)) && Array.isArray(blocksOverride);
+
+  const stepBlocks = canUseOverrides ? (blocksOverride as Block[]) : getStepData();
 
   // Determinar tipo da etapa
   const getStepType = (step: number): StepData['stepType'] => {
@@ -53,7 +70,7 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
 
   const stepData: StepData = {
     blocks: stepBlocks,
-    stepNumber: currentStep,
+    stepNumber: currentStepOverride ?? currentStep,
     stepType: getStepType(currentStep),
   };
 
@@ -62,7 +79,7 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
     <div className="quiz-header mb-6">
       <div className="flex justify-between items-center mb-4">
         <span className="text-sm text-gray-600">
-          Etapa {currentStep} de {totalSteps}
+          Etapa {currentStepOverride ?? currentStep} de {totalSteps}
         </span>
         {mode !== 'preview' && (
           <div className="flex gap-2">
@@ -101,19 +118,65 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
     }
 
     // Renderizar blocos da etapa usando UniversalBlockRenderer
+    const handleBlockClick = (_e: React.MouseEvent, block: any) => {
+      const isSelectable = mode === 'editor' || (mode === 'preview' && previewEditable);
+      // 1) Seleção de bloco em preview/edit
+      if (isSelectable && block.id && onBlockClick) {
+        onBlockClick(String(block.id));
+      }
+
+      // 2) Bridge de navegação no preview editável para botões inline
+      if (mode === 'preview' && previewEditable) {
+        const action = block?.properties?.action || block?.content?.action;
+        if (block?.type === 'button-inline' && action) {
+          const step = currentStepOverride ?? currentStep;
+          let target = step;
+          if (action === 'next-step') {
+            target = Math.min(totalSteps, step + 1);
+          } else if (action === 'prev-step') {
+            target = Math.max(1, step - 1);
+          } else if (action === 'go-to-step') {
+            const nextId = block?.properties?.nextStepId || block?.content?.nextStepId;
+            if (typeof nextId === 'string') {
+              const match = nextId.match(/(\d+)/);
+              if (match) target = Math.max(1, Math.min(totalSteps, parseInt(match[1], 10)));
+            } else if (typeof nextId === 'number') {
+              target = Math.max(1, Math.min(totalSteps, nextId));
+            }
+          }
+          if (target !== step) onStepChange?.(target);
+        }
+      }
+    };
+
     return (
       <div className="step-content space-y-6">
-        {stepBlocks.map((block: any, index: number) => (
-          <div key={block.id || index} className="block-container">
-            <UniversalBlockRenderer
-              block={block}
-              isSelected={false}
-              onClick={() => {
-                console.log(`Quiz block clicked: ${block.type}`, block);
-              }}
-            />
-          </div>
-        ))}
+        {stepBlocks.map((block: any, index: number) => {
+          const isSelectable = mode === 'editor' || (mode === 'preview' && previewEditable);
+          const isSelected = isSelectable && selectedBlockId === block.id;
+          return (
+            <div
+              key={block.id || index}
+              className={
+                'block-container relative transition-all ' +
+                (isSelected ? 'ring-2 ring-blue-500 ring-offset-2 rounded-lg' : '')
+              }
+              onClick={e => handleBlockClick(e, block)}
+            >
+              <UniversalBlockRenderer
+                block={block}
+                isSelected={isSelected}
+                mode={mode}
+                onClick={() => {
+                  // Mantém seleção ao clicar no próprio componente
+                  if (isSelectable && block.id && onBlockClick) {
+                    onBlockClick(String(block.id));
+                  }
+                }}
+              />
+            </div>
+          );
+        })}
       </div>
     );
   };
