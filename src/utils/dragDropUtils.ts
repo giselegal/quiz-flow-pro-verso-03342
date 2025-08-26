@@ -26,12 +26,12 @@ const isUuid = (v: unknown) =>
 const isValidBlockId = (v: unknown) =>
   typeof v === 'string' && (isUuid(v) || /^block-[\w-]+-[A-Za-z0-9_-]{8}$/.test(v as string));
 
-// Compat: ids de wrappers podem usar prefixos como 'dnd-block-' ou 'block-'
+// Compat: ids de wrappers podem usar prefixo como 'dnd-block-'.
+// Importante: não remover 'block-' do ID real, pois os block.id podem começar com 'block-'.
 const normalizeOverId = (id: string | null | undefined): string | null => {
   if (!id) return null;
   let out = id;
   if (out.startsWith('dnd-block-')) out = out.replace(/^dnd-block-/, '');
-  if (out.startsWith('block-')) out = out.replace(/^block-/, '');
   return out;
 };
 
