@@ -21,6 +21,8 @@ export interface EditorActions {
   // State management
   setCurrentStep: (step: number) => void;
   setSelectedBlockId: (blockId: string | null) => void;
+  // Steps
+  addStep: () => void;
 
   // Block operations
   addBlock: (stepKey: string, block: Block) => Promise<void>;
@@ -294,6 +296,32 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     [setState, rawState]
   );
 
+  // Adiciona uma nova etapa ao final (step-(max+1)) e seleciona
+  const addStep = useCallback(() => {
+    const keys = Object.keys(rawState.stepBlocks || {});
+    const nums = keys
+      .map(k => {
+        const m = k.match(/(\d+)/);
+        return m ? parseInt(m[1], 10) : 0;
+      })
+      .filter(n => Number.isFinite(n) && n > 0);
+    const max = nums.length > 0 ? Math.max(...nums) : 0;
+    const newStepNum = max + 1;
+    const newKey = `step-${newStepNum}`;
+
+    const nextState = {
+      ...rawState,
+      stepBlocks: {
+        ...rawState.stepBlocks,
+        [newKey]: [],
+      },
+      currentStep: newStepNum,
+      selectedBlockId: null,
+    } as EditorState;
+
+    setState(nextState);
+  }, [rawState, setState]);
+
   const addBlock = useCallback(
     async (stepKey: string, block: Block) => {
       const stepNumber = extractStepNumberFromKey(stepKey) || 0;
@@ -507,11 +535,11 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     // Validate Question components and ResultBlock outcomes
     const warnings: string[] = [];
     Object.entries(normalizedStepBlocks).forEach(([stepKey, blocks]) => {
-      blocks.forEach((block) => {
+      blocks.forEach(block => {
         // Type-safe access to block properties
         const blockContent = block.content || {};
         const blockProperties = block.properties || {};
-        
+
         // Validate Question components have required props
         if (block.type === 'quiz-question-inline' || block.type === 'options-grid') {
           const options = (blockContent as any)?.options || (blockProperties as any)?.options;
@@ -525,10 +553,11 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
             });
           }
         }
-        
+
         // Validate ResultBlock outcomeMapping references
         if (block.type === 'result-header-inline' || block.type === 'quiz-result-inline') {
-          const outcomeMapping = (blockContent as any)?.outcomeMapping || (blockProperties as any)?.outcomeMapping;
+          const outcomeMapping =
+            (blockContent as any)?.outcomeMapping || (blockProperties as any)?.outcomeMapping;
           if (outcomeMapping && typeof outcomeMapping === 'object') {
             Object.values(outcomeMapping).forEach((outcomeId: any) => {
               // Check if outcome exists in schema_json (basic validation)
@@ -536,7 +565,11 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
                 stepBlocks.some(b => {
                   const bContent = b.content || {};
                   const bProperties = b.properties || {};
-                  return b.id === outcomeId || (bContent as any)?.outcomeId === outcomeId || (bProperties as any)?.outcomeId === outcomeId;
+                  return (
+                    b.id === outcomeId ||
+                    (bContent as any)?.outcomeId === outcomeId ||
+                    (bProperties as any)?.outcomeId === outcomeId
+                  );
                 })
               );
               if (!outcomeExists) {
@@ -555,7 +588,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
 
     // Create simple hash for schema consistency
     const schemaHash = JSON.stringify(normalizedStepBlocks).length.toString(36);
-    
+
     const exportData = {
       ...state,
       stepBlocks: normalizedStepBlocks,
@@ -563,8 +596,8 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
         engineVersion: '1.0.0',
         schemaHash,
         exportDate: new Date().toISOString(),
-        validationWarnings: warnings
-      }
+        validationWarnings: warnings,
+      },
     };
 
     return JSON.stringify(exportData, null, 2);
@@ -586,6 +619,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
   const actions: EditorActions = {
     setCurrentStep,
     setSelectedBlockId,
+    addStep,
     addBlock,
     addBlockAtIndex,
     removeBlock,

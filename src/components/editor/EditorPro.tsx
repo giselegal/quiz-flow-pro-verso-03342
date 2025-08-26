@@ -559,15 +559,15 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
      ------------------------- */
 
   const StepSidebar: React.FC = () => (
-    <div className="w-[200px] bg-white border-r border-gray-200 flex flex-col">
+    <div className="w-[220px] bg-white border-r border-gray-200 flex flex-col">
       <div className="p-4 border-b border-gray-200">
         <h3 className="font-semibold text-sm text-gray-900">Etapas do Quiz</h3>
-        <p className="text-xs text-gray-500 mt-1">21 etapas configuradas</p>
+        <p className="text-xs text-gray-500 mt-1">Gerencie suas etapas</p>
       </div>
 
       <div className="flex-1 overflow-y-auto">
         <div className="p-2 space-y-1">
-          {Array.from({ length: 21 }, (_, i) => i + 1).map(step => {
+          {Array.from({ length: Math.max(21, safeCurrentStep, 1) }, (_, i) => i + 1).map(step => {
             const analysis = getStepAnalysis(step);
             const isActive = step === safeCurrentStep;
             const hasBlocks = stepHasBlocks[step];
@@ -601,11 +601,19 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         </div>
       </div>
 
-      <div className="p-3 border-t border-gray-200 text-xs text-gray-500">
+      <div className="p-3 border-t border-gray-200 text-xs text-gray-700 space-y-2">
         <div className="flex items-center justify-between">
           <span>Etapa atual:</span>
-          <span className="font-medium">{safeCurrentStep}/21</span>
+          <span className="font-medium">{safeCurrentStep}</span>
         </div>
+        <button
+          type="button"
+          onClick={actions.addStep}
+          className="w-full text-center py-2 px-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 text-xs font-medium"
+          title="Adicionar nova etapa"
+        >
+          + Nova etapa
+        </button>
       </div>
     </div>
   );
