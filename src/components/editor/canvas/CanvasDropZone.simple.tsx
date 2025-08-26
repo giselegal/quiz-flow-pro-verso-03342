@@ -3,6 +3,7 @@ import { Block } from '@/types/editor';
 import { useDndContext, useDroppable } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import React from 'react';
+import { CANVAS_ROOT_ID, SLOT_ID_PREFIX } from '../dnd/constants';
 import { SortableBlockWrapper } from './SortableBlockWrapper.simple';
 
 // Componente para drop zone entre blocos (sempre presente para maximizar detecção)
@@ -15,7 +16,7 @@ const InterBlockDropZoneBase: React.FC<{
   const data = React.useMemo(() => ({ type: 'dropzone', accepts, position }), [accepts, position]);
 
   const { setNodeRef, isOver } = useDroppable({
-    id: `drop-zone-${position}`,
+    id: `${SLOT_ID_PREFIX}${position}`,
     data,
   });
 
@@ -80,7 +81,7 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
   );
 
   const { setNodeRef, isOver } = useDroppable({
-    id: 'canvas-drop-zone', // Padroniza id principal para facilitar validação
+    id: CANVAS_ROOT_ID, // Padroniza id principal para facilitar validação
     data: rootData,
   });
 
@@ -126,7 +127,7 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
 
   return (
     <div
-      id="canvas-drop-zone"
+      id={CANVAS_ROOT_ID}
       ref={setNodeRef}
       className={cn(
         'min-h-[300px] transition-all duration-200 pointer-events-auto p-4 overflow-visible',
