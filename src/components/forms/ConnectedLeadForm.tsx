@@ -1,9 +1,18 @@
-import React, { useState, useCallback } from 'react';
 import { User } from 'lucide-react';
+import React, { useCallback, useState } from 'react';
 
 interface ConnectedLeadFormProps {
   onSubmit?: (data: { name: string }) => void;
   className?: string;
+  // Configuração opcional (vinda do Block -> formConfig)
+  enableValidation?: boolean;
+  realTimeValidation?: boolean;
+  requiredFields?: string[];
+  submitButtonText?: string; // usado quando válido
+  placeholderText?: string;
+  labelText?: string;
+  successMessage?: string;
+  errorMessage?: string;
 }
 
 /**
@@ -14,7 +23,18 @@ interface ConnectedLeadFormProps {
  * - Dispara evento 'quiz-form-complete' para integração com useQuizLogic
  * - Validação em tempo real
  */
-const ConnectedLeadForm: React.FC<ConnectedLeadFormProps> = ({ onSubmit, className = '' }) => {
+const ConnectedLeadForm: React.FC<ConnectedLeadFormProps> = ({
+  onSubmit,
+  className = '',
+  enableValidation = true,
+  realTimeValidation = true,
+  requiredFields = ['name'],
+  submitButtonText,
+  placeholderText = 'Digite seu nome',
+  labelText = 'NOME',
+  successMessage,
+  errorMessage,
+}) => {
   const [name, setName] = useState('');
   const [isValid, setIsValid] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -22,7 +42,7 @@ const ConnectedLeadForm: React.FC<ConnectedLeadFormProps> = ({ onSubmit, classNa
   // Validação em tempo real
   const validateName = useCallback((value: string) => {
     const trimmed = value.trim();
-    const valid = trimmed.length >= 2 && trimmed.length <= 50;
+    const valid = enableValidation ? trimmed.length >= 2 && trimmed.length <= 50 : true;
     setIsValid(valid);
 
     // Disparar evento de mudança para outros componentes
@@ -43,13 +63,19 @@ const ConnectedLeadForm: React.FC<ConnectedLeadFormProps> = ({ onSubmit, classNa
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setName(value);
-    validateName(value);
+    if (realTimeValidation) {
+      validateName(value);
+    } else {
+      // apenas atualiza estado, valida no submit
+      setIsValid(true);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!validateName(name)) {
+    // validação básica baseada em campos requeridos
+    if (requiredFields.includes('name') && !validateName(name)) {
       return;
     }
 
@@ -78,8 +104,14 @@ const ConnectedLeadForm: React.FC<ConnectedLeadFormProps> = ({ onSubmit, classNa
 
       // Feedback visual
       console.log('✅ Formulário enviado com sucesso');
+      if (successMessage) {
+        console.log(successMessage);
+      }
     } catch (error) {
       console.error('❌ Erro ao enviar formulário:', error);
+      if (errorMessage) {
+        console.log(errorMessage);
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -94,7 +126,7 @@ const ConnectedLeadForm: React.FC<ConnectedLeadFormProps> = ({ onSubmit, classNa
             htmlFor="quiz-name-input"
             className="block text-sm font-semibold text-[#432818] uppercase tracking-wide"
           >
-            NOME
+            {labelText}
           </label>
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -105,7 +137,7 @@ const ConnectedLeadForm: React.FC<ConnectedLeadFormProps> = ({ onSubmit, classNa
               type="text"
               value={name}
               onChange={handleNameChange}
-              placeholder="Digite seu nome"
+              placeholder={placeholderText}
               className={`
                 w-full pl-10 pr-4 py-3 border-2 rounded-lg text-[#432818] 
                 placeholder-gray-400 focus:outline-none focus:border-[#B89B7A] 
@@ -146,7 +178,7 @@ const ConnectedLeadForm: React.FC<ConnectedLeadFormProps> = ({ onSubmit, classNa
               Processando...
             </>
           ) : isValid ? (
-            'Quero Descobrir meu Estilo Agora!'
+            submitButtonText || 'Quero Descobrir meu Estilo Agora!'
           ) : (
             'Digite seu nome para continuar'
           )}

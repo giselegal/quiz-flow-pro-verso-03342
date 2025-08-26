@@ -247,13 +247,10 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       : 'flex flex-col';
 
   const gridColsClass = (() => {
-    const colNum = typeof columns === 'string' ? parseInt(columns, 10) : columns;
+    const raw = typeof columns === 'string' ? parseInt(columns, 10) : columns;
+    const colNum = isNaN(Number(raw)) ? 2 : Math.max(1, Math.min(Number(raw), 2));
     if (colNum === 1) return 'grid-cols-1';
-    if (colNum === 2) return responsiveColumns ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-2';
-    if (colNum === 3)
-      return responsiveColumns ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3' : 'grid-cols-3';
-    if (colNum === 4)
-      return responsiveColumns ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4' : 'grid-cols-4';
+    // colNum === 2 (máximo)
     return responsiveColumns ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-2';
   })();
 

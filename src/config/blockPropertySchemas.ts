@@ -367,7 +367,16 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
     label: 'Grade de Cards de Estilo',
     fields: [
       { key: 'cards', label: 'Cards (lista)', type: 'options-list' },
-      { key: 'columns', label: 'Colunas', type: 'number' },
+      {
+        key: 'columns',
+        label: 'Colunas',
+        type: 'select',
+        options: [
+          { label: '1 Coluna', value: 1 },
+          { label: '2 Colunas', value: 2 },
+        ],
+        defaultValue: 2,
+      },
       { key: 'gap', label: 'Espaçamento (px)', type: 'number' },
       { key: 'showImages', label: 'Mostrar Imagens', type: 'boolean' },
       { key: 'cardRadius', label: 'Arredondamento (px)', type: 'number' },

@@ -72,7 +72,7 @@ const StyleCardsGridBlock: React.FC<StyleCardsGridBlockProps> = ({
       { name: 'Criativo', color: '#A0522D', letter: 'H', description: 'Originalidade única' },
     ],
     layout: {
-      columns: 4,
+      columns: 2,
       gap: 'gap-6',
       cardSize: 'md' as const,
       showLetters: true,
@@ -136,18 +136,8 @@ const StyleCardsGridBlock: React.FC<StyleCardsGridBlockProps> = ({
   };
 
   const getColumnsClass = () => {
-    switch (config.layout.columns) {
-      case 2:
-        return 'grid-cols-2 md:grid-cols-2';
-      case 3:
-        return 'grid-cols-2 md:grid-cols-3';
-      case 4:
-        return 'grid-cols-2 md:grid-cols-4';
-      case 8:
-        return 'grid-cols-4 md:grid-cols-8';
-      default:
-        return 'grid-cols-2 md:grid-cols-4';
-    }
+    const cols = Math.max(1, Math.min(config.layout.columns ?? 2, 2));
+    return cols === 1 ? 'grid-cols-1' : 'grid-cols-2 md:grid-cols-2';
   };
 
   const getAnimationClass = () => {
