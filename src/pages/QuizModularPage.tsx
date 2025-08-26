@@ -1,13 +1,11 @@
 import UniversalBlockRenderer from '@/components/editor/blocks/UniversalBlockRenderer';
-import EnhancedComponentsSidebar from '@/components/editor/EnhancedComponentsSidebar';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { useQuizFlow } from '@/hooks/core/useQuizFlow';
 import { useStep01Validation } from '@/hooks/useStep01Validation';
 import { cn } from '@/lib/utils';
-import { Block, BlockType } from '@/types/editor';
+import { Block } from '@/types/editor';
 import { TemplateManager } from '@/utils/TemplateManager';
-import { DndContext, DragEndEvent, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import React, { useEffect, useState } from 'react';
 
 /**
@@ -29,9 +27,7 @@ const QuizModularPage: React.FC = () => {
   const [quizAnswers, setQuizAnswers] = useState<Record<string, any>>({});
   const [stepValidation, setStepValidation] = useState<Record<number, boolean>>({});
   const [userSelections, setUserSelections] = useState<Record<string, string[]>>({});
-  const [autoAdvanceTimeouts, setAutoAdvanceTimeouts] = useState<Record<number, NodeJS.Timeout>>(
-    {}
-  );
+  const [autoAdvanceTimeouts, setAutoAdvanceTimeouts] = useState<Record<number, NodeJS.Timeout>>({});
 
   // Hook para gerenciar o fluxo do quiz
   const {
@@ -285,158 +281,15 @@ const QuizModularPage: React.FC = () => {
 
   const progress = ((currentStep - 1) / 20) * 100;
 
-  // Configuração do DnD
-  const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        distance: 8,
-      },
-    })
-  );
-
-  // Handler para drag and drop de componentes
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-
-    if (!over) return;
-
-    const activeData = active.data.current;
-
-    // Se arrastar um componente para o canvas
-    if (activeData?.type === 'sidebar-component') {
-      const componentType = activeData.blockType as BlockType;
-
-      console.log('🧩 Adicionando componente:', componentType);
-
-      // Criar novo bloco
-      const newBlock: Block = {
-        id: `${componentType}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-        type: componentType,
-        content: getDefaultContentForType(componentType),
-        properties: getDefaultPropertiesForType(componentType),
-        order: blocks.length,
-      };
-
-      setBlocks(prev => [...prev, newBlock]);
-    }
-  };
-
-  // Função para obter conteúdo padrão por tipo
-  const getDefaultContentForType = (type: string) => {
-    const defaults: Record<string, any> = {
-      'text-inline': { text: 'Novo texto adicionado' },
-      'heading-inline': { text: 'Novo Título', level: 'h2' },
-      'button-inline': { text: 'Novo Botão', variant: 'primary' },
-      'image-display-inline': { src: '', alt: 'Nova imagem' },
-      'quiz-intro-header': {
-        title: 'Novo Título do Quiz',
-        subtitle: 'Novo Subtítulo',
-        description: 'Nova descrição do quiz',
-      },
-      'form-input': {
-        title: 'Novo Campo',
-        placeholder: 'Digite aqui...',
-        fieldType: 'text',
-        required: false,
-      },
-      'quiz-question': {
-        question: 'Nova pergunta?',
-        options: ['Nova Opção 1', 'Nova Opção 2'],
-      },
-    };
-    return defaults[type] || {};
-  };
-
-  // Função para obter propriedades padrão por tipo
-  const getDefaultPropertiesForType = (type: string) => {
-    const defaults: Record<string, any> = {
-      'text-inline': { fontSize: 16, color: '#333333' },
-      'heading-inline': { fontSize: 24, fontWeight: 'bold', color: '#1a1a1a' },
-      'button-inline': { backgroundColor: '#B89B7A', color: '#ffffff', padding: 12 },
-      'image-display-inline': { width: 'auto', height: 'auto' },
-    };
-    return defaults[type] || {};
-  };
+  // Página de produção: sem DnD nem sidebars de edição
 
   return (
-    <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
-      <div className="min-h-screen bg-gradient-to-br from-[#FAF9F7] via-[#F5F2E9] to-[#EEEBE1]">
-        {/* ️ LAYOUT COM 3 COLUNAS */}
-        <div className="flex h-screen">
-          {/* 📋 COLUNA ESQUERDA - ETAPAS (já existe na navegação superior, mas podemos adicionar detalhes) */}
-          <div className="w-80 bg-white/90 backdrop-blur-sm border-r border-stone-200/50 shadow-sm">
-            <div className="h-full flex flex-col">
-              {/* Header das Etapas */}
-              <div className="p-4 border-b border-stone-200/50 bg-stone-50/50">
-                <h3 className="text-sm font-semibold text-stone-700 flex items-center gap-2">
-                  <div className="w-5 h-5 bg-gradient-to-r from-[#B89B7A] to-[#8B7355] rounded-md flex items-center justify-center">
-                    <span className="text-white text-xs font-bold">{currentStep}</span>
-                  </div>
-                  Etapa Atual
-                </h3>
-                <p className="text-xs text-stone-500 mt-1">{currentStep} de 21 etapas</p>
-              </div>
-
-              {/* Conteúdo da etapa atual */}
-              <div className="flex-1 p-4 space-y-4">
-                <div className="bg-gradient-to-r from-[#B89B7A]/10 to-[#8B7355]/10 rounded-lg p-4">
-                  <h4 className="font-medium text-stone-800 mb-2">Progresso</h4>
-                  <div className="w-full bg-stone-200 rounded-full h-2 mb-2">
-                    <div
-                      className="bg-gradient-to-r from-[#B89B7A] to-[#8B7355] h-2 rounded-full transition-all duration-500"
-                      style={{ width: `${progress}%` }}
-                    />
-                  </div>
-                  <div className="text-sm text-stone-600">{progress}% concluído</div>
-                </div>
-
-                <div className="space-y-3">
-                  <h4 className="font-medium text-stone-800">Informações da Etapa</h4>
-                  <div className="space-y-2 text-sm">
-                    <div className="flex justify-between">
-                      <span className="text-stone-600">Etapa:</span>
-                      <span className="font-medium">{currentStep}/21</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-stone-600">Blocos:</span>
-                      <span className="font-medium">{blocks.length}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-stone-600">Status:</span>
-                      <span className="font-medium text-green-600">
-                        {blocks.length > 0 ? 'Carregada' : 'Vazia'}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* 🧩 COLUNA CENTRO-ESQUERDA - COMPONENTES */}
-          <aside className="w-80 bg-white/95 backdrop-blur-sm border-r border-stone-200/50 shadow-sm">
-            <div className="h-full flex flex-col">
-              {/* Header dos Componentes */}
-              <div className="p-4 border-b border-stone-200/50 bg-gradient-to-r from-blue-50 to-purple-50">
-                <h3 className="text-sm font-semibold text-stone-700 flex items-center gap-2">
-                  <div className="w-5 h-5 bg-gradient-to-r from-blue-500 to-purple-600 rounded-md flex items-center justify-center">
-                    <span className="text-white text-xs">🧩</span>
-                  </div>
-                  Componentes
-                </h3>
-                <p className="text-xs text-stone-500 mt-1">Arraste para adicionar ao quiz</p>
-              </div>
-              {/* Sidebar Unificada */}
-              <div className="flex-1 overflow-hidden">
-                <EnhancedComponentsSidebar />
-              </div>
-            </div>
-          </aside>
-
-          {/* 🎨 ÁREA PRINCIPAL - CENTRO-DIREITA */}
-          <div className="flex-1 overflow-auto">
-            <div className="container mx-auto px-6 py-8">
-              <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-[#FAF9F7] via-[#F5F2E9] to-[#EEEBE1]">
+      {/* CONTEÚDO CENTRAL PARA USUÁRIO FINAL */}
+      <div className="flex min-h-screen">
+        <div className="flex-1 overflow-auto">
+          <div className="container mx-auto px-6 py-8">
+            <div className="max-w-4xl mx-auto">
                 {/* 🎯 CABEÇALHO PRINCIPAL DO QUIZ */}
                 <div className="bg-white/90 backdrop-blur-sm border border-stone-200/50 shadow-sm rounded-lg mb-8 p-6">
                   <div className="flex items-center justify-between">
@@ -638,12 +491,11 @@ const QuizModularPage: React.FC = () => {
                     </div>
                   </div>
                 </div>
-              </div>
             </div>
           </div>
         </div>
       </div>
-    </DndContext>
+    </div>
   );
 };
 
