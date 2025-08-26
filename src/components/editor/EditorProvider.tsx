@@ -165,8 +165,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       const components = Array.isArray(comps) ? comps : (supabaseIntegration.components ?? []);
       if (components && components.length > 0) {
         const grouped = groupByStepKey(components);
-        // Normaliza e faz merge não-destrutivo por ID
-        const merged = mergeStepBlocks(rawState.stepBlocks, grouped);
+        // Normaliza e faz merge não-destrutivo por ID e aplica no estado
         setState(prev => ({
           ...prev,
           stepBlocks: mergeStepBlocks(prev.stepBlocks, grouped),
@@ -200,11 +199,10 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
           const components = Array.isArray(comps) ? comps : (supabaseIntegration.components ?? []);
           if (components && components.length > 0) {
             const grouped = groupByStepKey(components);
-            const merged = mergeStepBlocks(rawState.stepBlocks, grouped);
-            setState({
-              ...rawState,
-              stepBlocks: merged,
-            });
+            setState(prev => ({
+              ...prev,
+              stepBlocks: mergeStepBlocks(prev.stepBlocks, grouped),
+            }));
             return;
           }
         }
@@ -343,7 +341,6 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
         ')'
       );
       // Local mode: insert with real id immediately (no temp)
-      let optimisticSnapshot: EditorState | null = null;
       setState(prev => {
         const prevBlocks = prev.stepBlocks[stepKey] ?? [];
         const next: EditorState = {
@@ -353,7 +350,6 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
             [stepKey]: [...prevBlocks, block],
           },
         };
-        optimisticSnapshot = next;
         return next;
       });
 
@@ -391,11 +387,9 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
   const addBlockAtIndex = useCallback(
     async (stepKey: string, block: Block, index: number) => {
       const stepNumber = extractStepNumberFromKey(stepKey) || 0;
-      let insertedIndex = 0;
       setState(prev => {
         const prevBlocks = prev.stepBlocks[stepKey] ?? [];
         const clampedIndex = Math.max(0, Math.min(index, prevBlocks.length));
-        insertedIndex = clampedIndex;
         const nextBlocks = [...prevBlocks];
         nextBlocks.splice(clampedIndex, 0, block);
         return {
