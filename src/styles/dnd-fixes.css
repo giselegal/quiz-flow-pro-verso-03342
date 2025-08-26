@@ -27,6 +27,13 @@
 /* Canvas container nunca deve recortar zonas de drop */
 [data-canvas-container] {
   overflow: visible !important;
+  overflow-x: visible !important;
+  overflow-y: visible !important;
   pointer-events: auto !important;
   position: relative;
+}
+
+/* Root do canvas também não deve recortar zonas internas */
+[data-id='canvas-drop-zone'] {
+  overflow: visible !important;
 }
