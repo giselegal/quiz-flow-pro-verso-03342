@@ -1,4 +1,3 @@
-import UniversalBlockRenderer from '@/components/editor/blocks/UniversalBlockRenderer';
 import {
   closestCenter,
   DndContext,
@@ -31,7 +30,6 @@ import {
 } from '../../utils/editorUtils';
 import { useNotification } from '../ui/Notification';
 import { CanvasDropZone } from './canvas/CanvasDropZone.simple';
-import { OptimizedCanvasDropZone } from './canvas/OptimizedCanvasDropZone';
 import { DnDMonitor } from './debug/DnDMonitor';
 import { DraggableComponentItem } from './dnd/DraggableComponentItem';
 import { DraggableComponentItemForce } from './dnd/DraggableComponentItemForce';
@@ -100,20 +98,6 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   const NotificationContainer = (notification as any)?.NotificationContainer ?? null;
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  // A/B flag: usar canvas otimizado quando query ?abCanvas=optimized (ou localStorage 'abCanvas'='optimized')
-  const useOptimizedCanvas = useMemo(() => {
-    try {
-      const qs = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
-      const fromQS = qs?.get('abCanvas');
-      const fromStorage =
-        typeof window !== 'undefined' ? window.localStorage.getItem('abCanvas') : null;
-      const val = (fromQS || fromStorage || '').toLowerCase();
-      return val === 'optimized' || val === 'opt' || val === 'on' || val === '1';
-    } catch {
-      return false;
-    }
-  }, []);
-
   const safeCurrentStep = state.currentStep || 1;
   const currentStepKey = `step-${safeCurrentStep}`;
 
@@ -141,13 +125,13 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
     });
   }
 
-  // DnD sensors - configuração ULTRA sensível para garantir funcionamento
+  // DnD sensors - configuração balanceada para UX otimizada
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 0, // Imediato - qualquer movimento inicia drag
-        delay: 0,
-        tolerance: 0,
+        distance: 8, // 8px mínimo para evitar drag acidental
+        delay: 100, // 100ms delay para touch devices
+        tolerance: 5, // Tolerância para movements
       },
     }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
@@ -404,22 +388,6 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         {} as Record<string, typeof availableComponents>
       ),
     [availableComponents]
-  );
-
-  // Renderer usado pelo modo otimizado (usa UniversalBlockRenderer com callbacks do Editor)
-  const renderOptimizedBlock = useCallback(
-    (block: Block) => (
-      <UniversalBlockRenderer
-        block={block}
-        mode="editor"
-        isSelected={state.selectedBlockId === block.id}
-        onClick={() => actions.setSelectedBlockId(block.id)}
-        onPropertyChange={(key: string, value: any) =>
-          actions.updateBlock(currentStepKey, block.id, { [key]: value })
-        }
-      />
-    ),
-    [actions, currentStepKey, state.selectedBlockId]
   );
 
   const getStepAnalysis = (step: number) => {
@@ -894,44 +862,18 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         {/* Banner de modo removido */}
       </div>
 
-      {/* Canvas principal com drag & drop */}
-      <div className="flex-1 overflow-y-auto p-4" data-canvas-container>
-        {useOptimizedCanvas ? (
-          <OptimizedCanvasDropZone
-            blocks={currentStepData}
-            selectedBlockId={state.selectedBlockId}
-            onSelectBlock={actions.setSelectedBlockId}
-            onDuplicateBlock={(id: string) => {
-              try {
-                const original = currentStepData.find(b => b.id === id);
-                if (!original) return;
-                // Duplicar e inserir logo após o original
-                const { duplicateBlock } = require('@/utils/editorUtils');
-                const dup = duplicateBlock(original, currentStepData);
-                const originalIndex = currentStepData.findIndex(b => b.id === id);
-                const insertIndex = Math.min(originalIndex + 1, currentStepData.length);
-                actions.addBlockAtIndex(currentStepKey, dup, insertIndex);
-                actions.setSelectedBlockId(dup.id);
-              } catch (e) {
-                console.error('Falha ao duplicar bloco:', e);
-              }
-            }}
-            onDeleteBlock={(id: string) => actions.removeBlock(currentStepKey, id)}
-            renderBlock={renderOptimizedBlock}
-            className="max-w-4xl mx-auto"
-          />
-        ) : (
-          <CanvasDropZone
-            blocks={currentStepData}
-            selectedBlockId={state.selectedBlockId}
-            onSelectBlock={actions.setSelectedBlockId}
-            onUpdateBlock={(id: string, updates: any) =>
-              actions.updateBlock(currentStepKey, id, updates)
-            }
-            onDeleteBlock={(id: string) => actions.removeBlock(currentStepKey, id)}
-            className="max-w-4xl mx-auto"
-          />
-        )}
+      {/* Canvas principal com drag & drop - sistema unificado simples */}
+      <div className="flex-1 p-4" data-canvas-container>
+        <CanvasDropZone
+          blocks={currentStepData}
+          selectedBlockId={state.selectedBlockId}
+          onSelectBlock={actions.setSelectedBlockId}
+          onUpdateBlock={(id: string, updates: any) =>
+            actions.updateBlock(currentStepKey, id, updates)
+          }
+          onDeleteBlock={(id: string) => actions.removeBlock(currentStepKey, id)}
+          className="max-w-4xl mx-auto"
+        />
       </div>
     </div>
   );

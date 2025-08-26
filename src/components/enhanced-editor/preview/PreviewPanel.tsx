@@ -2,7 +2,6 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
 import { StyleResult } from '@/types/quiz';
-import { DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { BlockPreviewRenderer } from './BlockPreviewRenderer';
 
@@ -13,7 +12,6 @@ interface PreviewPanelProps {
   isPreviewing: boolean;
   viewportSize: 'sm' | 'md' | 'lg' | 'xl';
   primaryStyle?: StyleResult;
-  onReorderBlocks: (sourceIndex: number, destinationIndex: number) => void;
 }
 
 const viewportWidths = {
@@ -30,19 +28,7 @@ export function PreviewPanel({
   isPreviewing,
   viewportSize,
   primaryStyle,
-  onReorderBlocks,
 }: PreviewPanelProps) {
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-
-    if (!over || String(active.id) === String(over.id)) return;
-
-    const oldIndex = blocks.findIndex(block => String(block.id) === String(active.id));
-    const newIndex = blocks.findIndex(block => String(block.id) === String(over.id));
-
-    onReorderBlocks(oldIndex, newIndex);
-  };
-
   return (
     <div className="h-full flex flex-col bg-[#FAF9F7] overflow-hidden">
       <div className="flex-1 overflow-hidden p-4">
@@ -81,7 +67,6 @@ export function PreviewPanel({
                         isPreviewing={isPreviewing}
                         onSelect={() => onSelectBlock(block.id)}
                         primaryStyle={primaryStyle}
-                        onDragEnd={handleDragEnd}
                       />
                     ))
                   )}

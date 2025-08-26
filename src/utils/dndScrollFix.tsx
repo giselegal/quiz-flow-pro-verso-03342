@@ -6,15 +6,11 @@ import React, { useEffect } from 'react';
 export const useDnDScrollFix = () => {
   useEffect(() => {
     // Desabilitar scroll automático durante o drag
-    let isDragging = false;
-
     const handleDragStart = () => {
-      isDragging = true;
       document.body.style.overflow = 'hidden';
     };
 
     const handleDragEnd = () => {
-      isDragging = false;
       document.body.style.overflow = '';
     };
 

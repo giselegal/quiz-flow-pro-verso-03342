@@ -1,7 +1,6 @@
 import { QuizComponentData, QuizStage } from '@/types/quizBuilder';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
-import { DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { DraggableComponent } from './DraggableComponent';
 import { Button } from '@/components/ui/button';
@@ -24,14 +23,6 @@ export const NewComponentPreviewPanel: React.FC<ComponentPreviewPanelProps> = ({
   activeStage,
   isPreviewing,
 }) => {
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-
-    if (over && active.id !== over.id) {
-      onMoveComponent(active.id.toString(), over.id.toString());
-    }
-  };
-
   if (!activeStage) {
     return (
       <div className="h-full flex items-center justify-center">
@@ -67,9 +58,6 @@ export const NewComponentPreviewPanel: React.FC<ComponentPreviewPanelProps> = ({
               </Button>
             </div>
           ) : (
-            {/* ✅ FIXED: Remove nested DndContext to prevent conflicts
-                This component should only use SortableContext if there's 
-                already a parent DndContext */}
             <SortableContext
               items={sortedComponents.map(c => c.id)}
               strategy={verticalListSortingStrategy}
@@ -82,7 +70,6 @@ export const NewComponentPreviewPanel: React.FC<ComponentPreviewPanelProps> = ({
                   onSelect={() => onSelectComponent(component.id)}
                   onMove={onMoveComponent}
                   isPreviewing={isPreviewing}
-                  onDragEnd={handleDragEnd}
                 />
               ))}
             </SortableContext>
