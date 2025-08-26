@@ -22,9 +22,31 @@ if (import.meta.env.DEV && typeof window !== 'undefined') {
   const originalFetch = window.fetch.bind(window);
   window.fetch = (input: RequestInfo | URL, init?: RequestInit) => {
     const url = typeof input === 'string' ? input : input.toString();
+    const DISABLE_SUPABASE = (import.meta as any)?.env?.VITE_DISABLE_SUPABASE === 'true';
+    // Bloqueia logs externos em dev
     if (url.includes('cloudfunctions.net/pushLogsToGrafana')) {
       // Simula sucesso e evita 500 no console
       return Promise.resolve(new Response(null, { status: 204 }));
+    }
+    // Silencia chamadas REST do Supabase quando desabilitado (evita erros 400/403 durante QA)
+    if (DISABLE_SUPABASE && url.includes('.supabase.co/rest/v1/')) {
+      try {
+        console.warn('🛑 Interceptado (Supabase REST desabilitado em dev):', url);
+      } catch {}
+      // Responder com lista vazia ou sucesso sem corpo
+      const wantsJson =
+        (init?.headers &&
+          typeof (init.headers as any).get === 'function' &&
+          ((init.headers as any).get('accept') || '').includes('application/json')) ||
+        (typeof url === 'string' && url.includes('select='));
+      return Promise.resolve(
+        wantsJson
+          ? new Response('[]', {
+              status: 200,
+              headers: { 'Content-Type': 'application/json' },
+            })
+          : new Response(null, { status: 204 })
+      );
     }
     return originalFetch(input as any, init);
   };
