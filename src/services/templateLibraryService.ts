@@ -1,4 +1,4 @@
-import funnel21 from '@/templates/models/funnel-21-steps.json';
+import funnel21 from '@/templates/models/funnel-21-steps';
 
 export type FunnelTemplate = typeof funnel21;
 
