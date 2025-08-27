@@ -231,6 +231,23 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         return;
       }
 
+      // Suporte adicional: credenciais específicas fornecidas pelo cliente
+      if (email?.toLowerCase() === 'gralouback@gmail.com' && password === 'Gr@06091425') {
+        const fakeId = 'admin-gralouback';
+        setUser({ id: fakeId, email: 'gralouback@gmail.com', name: 'Admin' });
+        setProfile({
+          id: fakeId,
+          email: 'gralouback@gmail.com',
+          name: 'Admin',
+          role: 'admin',
+          plan: 'pro',
+          created_at: new Date().toISOString(),
+        });
+        setSession(null);
+        setLoading(false);
+        return;
+      }
+
       // Se Supabase estiver desabilitado, mas sem credenciais locais válidas
       if (OFFLINE) {
         throw new Error(

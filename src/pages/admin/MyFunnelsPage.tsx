@@ -1,35 +1,18 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Eye, Edit, Globe2, Plus } from 'lucide-react';
+import { funnelLocalStore } from '@/services/funnelLocalStore';
+import { Edit, Eye, Globe2, Plus } from 'lucide-react';
 import React from 'react';
 import { useLocation } from 'wouter';
 
-type Funnel = {
-  id: string;
-  name: string;
-  status: 'draft' | 'published';
-  url?: string;
-  updatedAt?: string;
-};
-
-function loadLocalFunnels(): Funnel[] {
-  try {
-    const raw = localStorage.getItem('qqcv_funnels');
-    if (!raw) return [];
-    const arr = JSON.parse(raw);
-    if (Array.isArray(arr)) return arr;
-    return [];
-  } catch {
-    return [];
-  }
-}
+type Funnel = ReturnType<typeof funnelLocalStore.list>[number];
 
 const MyFunnelsPage: React.FC = () => {
   const [, setLocation] = useLocation();
   const [funnels, setFunnels] = React.useState<Funnel[]>([]);
 
   React.useEffect(() => {
-    setFunnels(loadLocalFunnels());
+    setFunnels(funnelLocalStore.list());
   }, []);
 
   const goToEditor = (id?: string) => {
@@ -74,6 +57,13 @@ const MyFunnelsPage: React.FC = () => {
                   </Button>
                   <Button variant="outline" size="sm" onClick={() => goToEditor(f.id)}>
                     <Edit className="w-4 h-4 mr-1" /> Editar
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setLocation(`/admin/funnel-settings/${f.id}`)}
+                  >
+                    <Globe2 className="w-4 h-4 mr-1" /> Configurar
                   </Button>
                 </div>
               </CardContent>

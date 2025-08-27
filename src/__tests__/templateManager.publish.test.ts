@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock do templateService para evitar chamadas reais e controlar retornos
 vi.mock('../services/templateService', () => {
@@ -28,8 +28,8 @@ vi.mock('../services/templateService', () => {
   };
 });
 
-import { TemplateManager } from '@/utils/TemplateManager';
 import type { Block } from '@/types/editor';
+import { TemplateManager } from '@/utils/TemplateManager';
 
 describe('TemplateManager publish/unpublish flow', () => {
   const stepId = 'step-3';

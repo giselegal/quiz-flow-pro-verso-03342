@@ -3,10 +3,10 @@
 
 import type {
   Funnel,
-  InsertFunnel,
   FunnelPage,
-  InsertFunnelPage,
   FunnelVersion,
+  InsertFunnel,
+  InsertFunnelPage,
 } from '@/types/unified-schema';
 
 // Additional interfaces for backward compatibility
@@ -143,7 +143,16 @@ class FunnelService {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify({
+        funnel_id: (data as any).funnel_id ?? (data as any).funnelId ?? (data as any).funnel_id,
+        name: (data as any).name,
+        path: (data as any).path,
+        page_type: (data as any).page_type ?? (data as any).pageType,
+        page_order: (data as any).page_order ?? (data as any).pageOrder,
+        title: (data as any).title,
+        blocks: (data as any).blocks as any,
+        metadata: (data as any).metadata as any,
+      }),
     });
 
     if (!response.ok) {
@@ -500,27 +509,27 @@ class FunnelService {
 
       if (existingPage) {
         await this.updateFunnelPage(existingPage.id, {
-          pageType: pageData.type,
-          pageOrder: pageData.order,
+          page_type: pageData.type as any,
+          page_order: pageData.order as any,
           title: pageData.title || undefined,
-          blocks: pageData.blocks,
-          metadata: pageData.metadata || undefined,
-        });
+          blocks: pageData.blocks as unknown as any,
+          metadata: pageData.metadata as unknown as any,
+        } as any);
       } else {
         await this.createFunnelPage({
           funnel_id: funnel.id,
           name: pageData.title || `Page ${pageData.order}`,
           path: `/page-${pageData.order}`,
-          pageType: pageData.type,
-          pageOrder: pageData.order || 0,
+          page_type: pageData.type as any,
+          page_order: (pageData.order || 0) as any,
           title: pageData.title || undefined,
-          blocks: pageData.blocks,
-          metadata: pageData.metadata || undefined,
-        });
+          blocks: pageData.blocks as unknown as any,
+          metadata: pageData.metadata as unknown as any,
+        } as any);
       }
     }
 
-  // Versioning desabilitado por enquanto (alinhamento de tipos)
+    // Versioning desabilitado por enquanto (alinhamento de tipos)
 
     return funnel;
   }

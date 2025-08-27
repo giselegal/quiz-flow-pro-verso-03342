@@ -273,7 +273,11 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       Object.entries(incoming).forEach(([key, list]) => {
         list.forEach(b => {
           // inserir em sequência
-          actions.addBlockAtIndex(key, b as any, (getBlocksForStep(Number(key.replace('step-','')), state.stepBlocks) || []).length);
+          actions.addBlockAtIndex(
+            key,
+            b as any,
+            (getBlocksForStep(Number(key.replace('step-', '')), state.stepBlocks) || []).length
+          );
         });
       });
     };

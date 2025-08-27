@@ -1,7 +1,7 @@
 import { QuizFlowProvider } from '@/context/QuizFlowProvider';
+import { templateLibraryService } from '@/services/templateLibraryService';
 import React from 'react';
 import { useLocation } from 'wouter';
-import { templateLibraryService } from '@/services/templateLibraryService';
 // EditorPro será usado via require dinâmico no EditorInitializer para evitar ciclos
 import { EditorProvider } from '../components/editor/EditorProvider';
 import { ErrorBoundary } from '../components/editor/ErrorBoundary';
@@ -34,7 +34,10 @@ const MainEditor: React.FC = () => {
             storageKey="main-editor-state"
           >
             {/* 🎯 EDITOR PRINCIPAL COM CABEÇALHO EDITÁVEL */}
-            <EditorInitializer templateId={templateId || undefined} funnelId={funnelId || undefined} />
+            <EditorInitializer
+              templateId={templateId || undefined}
+              funnelId={funnelId || undefined}
+            />
           </EditorProvider>
         </QuizFlowProvider>
       </ErrorBoundary>
@@ -42,7 +45,9 @@ const MainEditor: React.FC = () => {
   );
 };
 
-const EditorInitializer: React.FC<{ templateId?: string; funnelId?: string }> = ({ templateId }) => {
+const EditorInitializer: React.FC<{ templateId?: string; funnelId?: string }> = ({
+  templateId,
+}) => {
   const editor = React.useRef<ReturnType<typeof requireEditor> | null>(null);
   function requireEditor() {
     // lazy access to avoid import cycles
@@ -62,7 +67,7 @@ const EditorInitializer: React.FC<{ templateId?: string; funnelId?: string }> = 
 
   React.useEffect(() => {
     if (!ready || !templateId) return;
-  // const { useEditor } = editor.current!; // reservado para futuras integrações
+    // const { useEditor } = editor.current!; // reservado para futuras integrações
     try {
       const tpl = templateLibraryService.getById(templateId);
       if (!tpl) return;
