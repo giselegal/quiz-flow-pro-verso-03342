@@ -188,14 +188,7 @@ const QuizNavigation: React.FC<QuizNavigationProps> = ({
                 {/* Navegação Anterior */}
                 <div className="flex items-center gap-2">
                   {onPrevious && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={onPrevious}
-                      className="gap-2"
-                      aria-label="Voltar para a etapa anterior"
-                      type="button"
-                    >
+                    <Button variant="outline" size="sm" onClick={onPrevious} className="gap-2">
                       <ChevronLeft className="h-4 w-4" />
                       Anterior
                     </Button>
@@ -243,17 +236,6 @@ const QuizNavigation: React.FC<QuizNavigationProps> = ({
                         ? 'bg-[#B89B7A] hover:bg-[#A68A6E] text-white'
                         : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                     } ${showActivationEffect ? 'scale-105 shadow-lg' : ''}`}
-                    aria-label={
-                      currentStep === totalSteps ? 'Finalizar quiz' : 'Ir para a próxima etapa'
-                    }
-                    type="button"
-                    onKeyDown={e => {
-                      if (!canProceed) return;
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        onNext();
-                      }
-                    }}
                   >
                     {currentStep === totalSteps ? 'Finalizar' : 'Próxima'}
                     {isLastQuestion ? (
@@ -273,11 +255,7 @@ const QuizNavigation: React.FC<QuizNavigationProps> = ({
                     {Math.round(progressPercentage)}%
                   </span>
                 </div>
-                <Progress
-                  value={progressPercentage}
-                  className="h-2 bg-gray-200"
-                  aria-label="Progresso do Quiz"
-                />
+                <Progress value={progressPercentage} className="h-2 bg-gray-200" />
               </div>
 
               {/* Helper Text */}
