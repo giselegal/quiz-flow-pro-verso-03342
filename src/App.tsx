@@ -1,10 +1,14 @@
 import { Suspense, lazy } from 'react';
 import { Route, Router, Switch } from 'wouter';
+<<<<<<< Updated upstream
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { ThemeProvider } from './components/theme-provider';
 import { LoadingFallback } from './components/ui/loading-fallback';
 import { Toaster } from './components/ui/toaster';
 import { AuthProvider } from './context/AuthContext';
+=======
+const EditorTemplatesPage = lazy(() => import('./pages/editor-templates'));
+>>>>>>> Stashed changes
 
 // 🎯 PÁGINAS ESSENCIAIS - SEM CONFLITOS
 const Home = lazy(() => import('./pages/Home'));
