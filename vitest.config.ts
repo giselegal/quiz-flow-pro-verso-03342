@@ -9,6 +9,18 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.ts'],
     css: true,
+    include: ['src/**/*.{test,spec}.{js,ts,jsx,tsx}', 'src/**/__tests__/**/*.{js,ts,jsx,tsx}'],
+    exclude: [
+      'node_modules/**',
+      'dist/**',
+      'build/**',
+      // Evita rodar testes/copias dentro de worktrees que podem carregar um React duplicado
+      'worktrees/**',
+      '**/worktrees/**',
+      // Ignora suites e2e/placeholders fora de src
+      'tests/**',
+      'src/tests/**',
+    ],
     coverage: {
       reporter: ['text', 'json', 'html'],
       exclude: ['node_modules/', 'src/test/', '**/*.d.ts', 'src/legacy/', 'dist/', 'build/'],
@@ -18,5 +30,7 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, './src'),
     },
+    // Garante uma única instância de React durante os testes
+    dedupe: ['react', 'react-dom'],
   },
 });
