@@ -1,14 +1,18 @@
 import react from '@vitejs/plugin-react';
 import path from 'path';
-import { defineConfig } from 'vite';
+import { defineConfig, splitVendorChunkPlugin } from 'vite';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  // Garante caminhos relativos corretos em ambientes hospedados (chunks dinâmicos)
+  base: './',
+  plugins: [react(), splitVendorChunkPlugin()],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
     },
+    // Evita múltiplas instâncias de React em pastas duplicadas (ex.: worktrees)
+    dedupe: ['react', 'react-dom'],
   },
   server: {
     host: '0.0.0.0',
@@ -31,7 +35,12 @@ export default defineConfig({
     // Middleware para servir templates da pasta /templates
     middlewareMode: false,
     fs: {
-      allow: ['..', 'templates', 'public', 'src'],
+      // Restringe acessos a pastas necessárias do projeto, evitando worktrees/externas
+      allow: ['templates', 'public', 'src'],
+    },
+    // Ignora watchers em cópias/espelhos (worktrees, examples, assets colados)
+    watch: {
+      ignored: ['**/worktrees/**', '**/examples/**', '**/attached_assets/**'],
     },
     // Headers para resolver problemas de autenticação
     headers: {
