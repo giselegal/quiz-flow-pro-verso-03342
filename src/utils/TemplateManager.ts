@@ -43,9 +43,7 @@ export class TemplateManager {
       }
       // Notificar interessados
       try {
-        window.dispatchEvent(
-          new CustomEvent('quiz-template-updated', { detail: { stepId } })
-        );
+        window.dispatchEvent(new CustomEvent('quiz-template-updated', { detail: { stepId } }));
       } catch {}
       console.log(`💾 Etapa publicada localmente: ${stepId} (${blocks.length} blocos)`);
     } catch (err) {
@@ -61,9 +59,7 @@ export class TemplateManager {
       localStorage.removeItem(this.PUBLISH_PREFIX + stepId);
       this.cache.delete(stepId);
       try {
-        window.dispatchEvent(
-          new CustomEvent('quiz-template-updated', { detail: { stepId } })
-        );
+        window.dispatchEvent(new CustomEvent('quiz-template-updated', { detail: { stepId } }));
       } catch {}
       console.log(`🗑️ Publicação removida: ${stepId}`);
     } catch (err) {
@@ -129,7 +125,9 @@ export class TemplateManager {
           // Se template está carregando ou vazio, retry
           if (
             template &&
-            (((template as any)?.__loading as boolean) || !template.blocks || template.blocks.length === 0)
+            (((template as any)?.__loading as boolean) ||
+              !template.blocks ||
+              template.blocks.length === 0)
           ) {
             console.log(
               `🔄 Template etapa ${stepNumber} ainda carregando, tentativa ${attempt}/${maxRetries}`
@@ -173,8 +171,8 @@ export class TemplateManager {
         return fallbackBlocks;
       }
 
-  // Converte os blocos do template para o formato Block
-  const blocks = templateService.convertTemplateBlocksToEditorBlocks(template.blocks);
+      // Converte os blocos do template para o formato Block
+      const blocks = templateService.convertTemplateBlocksToEditorBlocks(template.blocks);
 
       // APENAS cachear se tiver blocos válidos
       if (blocks.length > 0) {

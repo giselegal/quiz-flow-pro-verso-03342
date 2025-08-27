@@ -477,6 +477,18 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
           </div>
 
           <div className="flex items-center gap-3">
+            {/* Indicador de modo de dados */}
+            <div
+              className={cn(
+                'px-2 py-1 rounded text-xs font-medium border',
+                state.isSupabaseEnabled
+                  ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                  : 'bg-stone-100 text-stone-600 border-stone-200'
+              )}
+              title={state.isSupabaseEnabled ? 'Supabase habilitado' : 'Modo local'}
+            >
+              {state.isSupabaseEnabled ? 'Supabase' : 'Local'}
+            </div>
             <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-1">
               <button
                 type="button"
@@ -567,6 +579,16 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               >
                 📥 Import
               </button>
+              {state.isSupabaseEnabled && (actions as any)?.loadSupabaseComponents ? (
+                <button
+                  type="button"
+                  onClick={() => (actions as any).loadSupabaseComponents?.()}
+                  className="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
+                  title="Recarregar componentes do Supabase"
+                >
+                  🔄 Sync
+                </button>
+              ) : null}
             </div>
 
             <div className="flex bg-gray-100 rounded-lg p-1">
@@ -596,9 +618,102 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               </button>
             </div>
 
-            <button className="px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition-colors">
-              💾 Salvar
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                className="px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition-colors"
+                title="Publicar etapa atual"
+                onClick={() => {
+                  try {
+                    const stepId = currentStepKey;
+                    const blocks = currentStepData;
+                    // Tentar Supabase se disponível
+                    if (state.isSupabaseEnabled && (actions as any)?.publishStepToSupabase) {
+                      (actions as any)
+                        .publishStepToSupabase(stepId, blocks)
+                        .then((ok: boolean) => {
+                          if (ok) {
+                            // Também publica localmente para refletir em /quiz e disparar evento
+                            notification?.success?.('Etapa publicada (Supabase + local)!');
+                          } else {
+                            notification?.success?.('Etapa publicada localmente!');
+                          }
+                        })
+                        .catch(() => {
+                          notification?.success?.('Etapa publicada localmente!');
+                        });
+                    } else {
+                      notification?.success?.('Etapa publicada localmente!');
+                    }
+                  } catch (err) {
+                    console.error('Falha ao salvar/publicar etapa:', err);
+                    notification?.error?.('Erro ao salvar/publicar etapa');
+                  }
+                }}
+              >
+                💾 Salvar
+              </button>
+              <button
+                className="px-4 py-2 bg-white border border-gray-300 text-gray-700 text-sm rounded-md hover:bg-gray-50 transition-colors"
+                title="Remover publicação da etapa atual"
+                onClick={() => {
+                  try {
+                    if (state.isSupabaseEnabled && (actions as any)?.unpublishStepFromSupabase) {
+                      (actions as any)
+                        .unpublishStepFromSupabase(currentStepKey)
+                        .then(() => {
+                          notification?.info?.(
+                            'Publicação da etapa removida do Supabase e localmente.'
+                          );
+                        })
+                        .catch(() => {
+                          notification?.info?.('Publicação local da etapa removida.');
+                        });
+                    } else {
+                      notification?.info?.('Publicação local da etapa removida.');
+                    }
+                  } catch (err) {
+                    console.error('Falha ao despublicar etapa:', err);
+                    notification?.error?.('Erro ao despublicar etapa');
+                  }
+                }}
+              >
+                ⏏️ Despublicar
+              </button>
+              <button
+                className="px-4 py-2 bg-green-600 text-white text-sm rounded-md hover:bg-green-700 transition-colors"
+                title="Publicar todas as etapas com conteúdo"
+                onClick={() => {
+                  try {
+                    const entries = Object.entries(state.stepBlocks || {});
+                    let published = 0;
+                    const publishOne = (key: string, blocks: any[]) => {
+                      if (state.isSupabaseEnabled && (actions as any)?.publishStepToSupabase) {
+                        return (actions as any).publishStepToSupabase(key, blocks).then(() => {
+                          // Sempre publica localmente também para refletir no /quiz
+                        });
+                      } else {
+                        return Promise.resolve();
+                      }
+                    };
+                    const tasks: Promise<any>[] = [];
+                    for (const [key, blocks] of entries) {
+                      if (Array.isArray(blocks) && blocks.length > 0) {
+                        tasks.push(publishOne(key, blocks));
+                        published += 1;
+                      }
+                    }
+                    Promise.allSettled(tasks).then(() => {
+                      notification?.success?.(`Publicadas ${published} etapas com conteúdo.`);
+                    });
+                  } catch (err) {
+                    console.error('Falha ao publicar todas as etapas:', err);
+                    notification?.error?.('Erro ao publicar todas as etapas');
+                  }
+                }}
+              >
+                🚀 Publicar tudo
+              </button>
+            </div>
           </div>
         </div>
 

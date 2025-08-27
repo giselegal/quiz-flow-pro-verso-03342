@@ -46,6 +46,8 @@ export interface EditorActions {
 
   // Supabase operations
   loadSupabaseComponents?: () => Promise<void>;
+  publishStepToSupabase?: (stepKey: string, blocks: Block[]) => Promise<boolean>;
+  unpublishStepFromSupabase?: (stepKey: string) => Promise<boolean>;
 }
 
 export interface EditorContextValue {
@@ -640,6 +642,52 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     exportJSON,
     importJSON,
     loadSupabaseComponents,
+    publishStepToSupabase: async (stepKey: string, blocks: Block[]) => {
+      try {
+        if (!state.isSupabaseEnabled || !supabaseIntegration?.editorSupabase) return false;
+        const stepNumber = extractStepNumberFromKey(stepKey) || 0;
+        const editorSupabase = supabaseIntegration.editorSupabase;
+
+        // Remover componentes existentes da etapa
+        const existing = (editorSupabase.components || []).filter(
+          (c: any) => Number(c.step_number) === stepNumber
+        );
+        for (const comp of existing) {
+          await editorSupabase.deleteComponent(comp.id);
+        }
+
+        // Inserir novos componentes na ordem informada
+        for (let i = 0; i < blocks.length; i++) {
+          const b = blocks[i];
+          await editorSupabase.addComponent(b.type as any, stepNumber, b.properties || {}, i);
+        }
+
+        // Recarregar do Supabase para sincronizar estado local
+        await loadSupabaseComponents?.();
+        return true;
+      } catch (err) {
+        console.error('❌ publishStepToSupabase failed:', err);
+        return false;
+      }
+    },
+    unpublishStepFromSupabase: async (stepKey: string) => {
+      try {
+        if (!state.isSupabaseEnabled || !supabaseIntegration?.editorSupabase) return false;
+        const stepNumber = extractStepNumberFromKey(stepKey) || 0;
+        const editorSupabase = supabaseIntegration.editorSupabase;
+        const existing = (editorSupabase.components || []).filter(
+          (c: any) => Number(c.step_number) === stepNumber
+        );
+        for (const comp of existing) {
+          await editorSupabase.deleteComponent(comp.id);
+        }
+        await loadSupabaseComponents?.();
+        return true;
+      } catch (err) {
+        console.error('❌ unpublishStepFromSupabase failed:', err);
+        return false;
+      }
+    },
   };
 
   const contextValue: EditorContextValue = {

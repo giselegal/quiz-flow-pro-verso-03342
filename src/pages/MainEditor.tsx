@@ -1,8 +1,8 @@
+import { QuizFlowProvider } from '@/context/QuizFlowProvider';
 import React from 'react';
 import { EditorPro } from '../components/editor/EditorPro';
 import { EditorProvider } from '../components/editor/EditorProvider';
 import { ErrorBoundary } from '../components/editor/ErrorBoundary';
-import { QuizFlowProvider } from '@/context/QuizFlowProvider';
 
 /**
  * 🎯 EDITOR PRINCIPAL - ÚNICO E LIMPO
@@ -20,7 +20,12 @@ const MainEditor: React.FC = () => {
     <div>
       <ErrorBoundary>
         <QuizFlowProvider>
-          <EditorProvider enableSupabase={false} storageKey="main-editor-state">
+          <EditorProvider
+            enableSupabase={(import.meta as any)?.env?.VITE_ENABLE_SUPABASE === 'true'}
+            funnelId={(import.meta as any)?.env?.VITE_SUPABASE_FUNNEL_ID}
+            quizId={(import.meta as any)?.env?.VITE_SUPABASE_QUIZ_ID}
+            storageKey="main-editor-state"
+          >
             {/* 🎯 EDITOR PRINCIPAL COM CABEÇALHO EDITÁVEL */}
             <EditorPro />
           </EditorProvider>
