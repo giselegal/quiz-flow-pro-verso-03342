@@ -56,6 +56,16 @@ const FunnelPanelPage: React.FC = () => {
   const [, setLocation] = useLocation();
 
   const handleUseTemplate = (templateId: string) => {
+    // Criar instância local do funil em rascunho e navegar ao editor com template
+    try {
+      const now = new Date().toISOString();
+      const funnelsRaw = localStorage.getItem('qqcv_funnels');
+      const funnels = funnelsRaw ? JSON.parse(funnelsRaw) : [];
+      const newId = `${templateId}-${Date.now()}`;
+      const name = funnelTemplates.find(t => t.id === templateId)?.name || 'Funil';
+      funnels.push({ id: newId, name, status: 'draft', updatedAt: now });
+      localStorage.setItem('qqcv_funnels', JSON.stringify(funnels));
+    } catch {}
     // Navigate to editor with the template ID
     setLocation(`/editor?template=${templateId}`);
   };

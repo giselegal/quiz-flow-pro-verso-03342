@@ -145,6 +145,157 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
     return closestCenter(args);
   }, []);
 
+  // Helper centralizado: calcula índice alvo com base no alvo de drop
+  function getTargetIndexFromOver(
+    overIdStrLocal: string | null,
+    overDataLocal: any,
+    mode: 'add' | 'reorder'
+  ): number {
+    // 0) Compatibilidade com OptimizedCanvasDropZone: ids no formato dnd-block-<blockId>
+    let cleanedOverId: string | null = overIdStrLocal;
+    if (cleanedOverId && cleanedOverId.startsWith('dnd-block-')) {
+      cleanedOverId = cleanedOverId.replace(/^dnd-block-/, '');
+    }
+    if (cleanedOverId && cleanedOverId.startsWith('block-')) {
+      cleanedOverId = cleanedOverId.replace(/^block-/, '');
+    }
+    // 1) Preferir posição explícita vinda da drop-zone
+    const pos = overDataLocal?.position;
+    if (typeof pos === 'number' && Number.isFinite(pos)) {
+      return Math.max(0, Math.min(pos, currentStepData.length));
+    }
+
+    // 2) Pela convenção do ID drop-zone-<n>
+    if (overIdStrLocal) {
+      const m = overIdStrLocal.match(/^drop-zone-(\d+)$/);
+      if (m) return Math.max(0, Math.min(parseInt(m[1], 10), currentStepData.length));
+    }
+
+    // 3) Canvas root → final
+    if (
+      overIdStrLocal === 'canvas-drop-zone' ||
+      (overIdStrLocal &&
+        (overIdStrLocal.startsWith('canvas-drop-zone') || overIdStrLocal.startsWith('canvas-')))
+    ) {
+      return currentStepData.length;
+    }
+
+    // 4) Alvo é um bloco existente
+    if (cleanedOverId) {
+      const overIndex = currentStepData.findIndex(b => String(b.id) === cleanedOverId);
+      if (overIndex >= 0) return mode === 'add' ? overIndex + 1 : overIndex;
+    }
+
+    // 5) Fallback → final
+    return currentStepData.length;
+  }
+
+  // 🔗 Escutar eventos de navegação disparados pelos blocos (ex.: botão da etapa 1)
+  useEffect(() => {
+    const parseStepNumber = (stepId: unknown): number | null => {
+      if (typeof stepId === 'number') return stepId;
+      if (typeof stepId !== 'string') return null;
+      const digits = stepId.replace(/[^0-9]/g, '');
+      const num = parseInt(digits || stepId, 10);
+      return Number.isFinite(num) ? num : null;
+    };
+
+    const handleNavigate = (ev: Event) => {
+      const e = ev as CustomEvent<{ stepId?: string | number; source?: string }>;
+      const target = parseStepNumber(e.detail?.stepId);
+      if (!target || target < 1 || target > 21) return;
+      actions.setCurrentStep(target);
+      if (process.env.NODE_ENV === 'development') {
+        // eslint-disable-next-line no-console
+        console.log(
+          '➡️ EditorPro: navegação por evento',
+          e.detail?.stepId,
+          '→',
+          target,
+          'origem:',
+          e.detail?.source
+        );
+      }
+    };
+
+    window.addEventListener('navigate-to-step', handleNavigate as EventListener);
+    window.addEventListener('quiz-navigate-to-step', handleNavigate as EventListener);
+    return () => {
+      window.removeEventListener('navigate-to-step', handleNavigate as EventListener);
+      window.removeEventListener('quiz-navigate-to-step', handleNavigate as EventListener);
+    };
+  }, [actions]);
+
+  // 🔗 Fallback: inserir componente via evento (ex.: duplo clique na sidebar)
+  useEffect(() => {
+    const handleAddComponent = (ev: Event) => {
+      const e = ev as CustomEvent<{ blockType?: string; source?: string } | undefined>;
+      const blockType = e?.detail?.blockType;
+      if (!blockType) return;
+
+      try {
+        const newBlock = createBlockFromComponent(blockType as any, currentStepData);
+        actions.addBlockAtIndex(currentStepKey, newBlock, currentStepData.length);
+        actions.setSelectedBlockId(newBlock.id);
+        if (notification?.success) {
+          notification.success(`Componente ${blockType} adicionado (duplo clique).`);
+        }
+        if (process.env.NODE_ENV === 'development') {
+          // eslint-disable-next-line no-console
+          console.log('🧩 Fallback add via evento:', { blockType, step: safeCurrentStep });
+        }
+      } catch (err) {
+        console.error('Erro ao adicionar componente via evento:', err);
+        notification?.error?.('Falha ao adicionar componente');
+      }
+    };
+
+    window.addEventListener('editor-add-component', handleAddComponent as EventListener);
+    return () => {
+      window.removeEventListener('editor-add-component', handleAddComponent as EventListener);
+    };
+  }, [actions, currentStepData, currentStepKey, notification, safeCurrentStep]);
+
+  // Expor etapa atual globalmente para unificar comportamento de blocos (produção/edição)
+  useEffect(() => {
+    try {
+      (window as any).__quizCurrentStep = safeCurrentStep;
+    } catch {}
+  }, [safeCurrentStep]);
+
+  // Carregar stepBlocks de um template via evento externo (inicialização pelo Dashboard / modelos)
+  useEffect(() => {
+    const handler = (ev: Event) => {
+      const e = ev as CustomEvent<{ stepBlocks?: Record<string, Block[]> }>;
+      const incoming = e.detail?.stepBlocks;
+      if (!incoming) return;
+      // Merge não destrutivo mantendo IDs
+      Object.entries(incoming).forEach(([key, list]) => {
+        list.forEach(b => {
+          // inserir em sequência
+          actions.addBlockAtIndex(key, b as any, (getBlocksForStep(Number(key.replace('step-','')), state.stepBlocks) || []).length);
+        });
+      });
+    };
+    window.addEventListener('editor-load-template', handler as EventListener);
+    return () => window.removeEventListener('editor-load-template', handler as EventListener);
+  }, [actions, state.stepBlocks]);
+
+  // Desabilitar auto-scroll e sincronização de scroll enquanto o editor estiver montado
+  useEffect(() => {
+    try {
+      (window as any).__DISABLE_AUTO_SCROLL = true;
+      (window as any).__DISABLE_SCROLL_SYNC = true;
+    } catch {}
+
+    return () => {
+      try {
+        (window as any).__DISABLE_AUTO_SCROLL = false;
+        (window as any).__DISABLE_SCROLL_SYNC = false;
+      } catch {}
+    };
+  }, []);
+
   // componentes disponíveis - ideal extrair para config
   const availableComponents = useMemo(
     () => [
@@ -579,16 +730,6 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               >
                 📥 Import
               </button>
-              {state.isSupabaseEnabled && (actions as any)?.loadSupabaseComponents ? (
-                <button
-                  type="button"
-                  onClick={() => (actions as any).loadSupabaseComponents?.()}
-                  className="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
-                  title="Recarregar componentes do Supabase"
-                >
-                  🔄 Sync
-                </button>
-              ) : null}
             </div>
 
             <div className="flex bg-gray-100 rounded-lg p-1">
@@ -804,7 +945,9 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         <div className={`editor-pro h-screen bg-gray-50 flex ${className}`}>
           <StepSidebar />
           <ComponentsSidebar />
-          <CanvasArea />
+          <div className="flex-1 min-w-0 flex">
+            <CanvasArea />
+          </div>
           <PropertiesColumn />
         </div>
       </DndContext>

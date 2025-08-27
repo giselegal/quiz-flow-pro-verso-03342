@@ -1,4 +1,6 @@
-// @ts-nocheck
+// Serviço de API (HTTP) para funis. O serviço local (localStorage) foi movido para
+// src/services/funnelLocalStore.ts para evitar conflitos de nome e responsabilidades.
+
 import type {
   Funnel,
   InsertFunnel,
@@ -169,7 +171,14 @@ class FunnelService {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(updates),
+      body: JSON.stringify({
+        // alinhar nomes snake_case conforme schema
+        page_type: (updates as any)?.page_type ?? (updates as any)?.pageType,
+        page_order: (updates as any)?.page_order ?? (updates as any)?.pageOrder,
+        title: updates.title,
+        blocks: (updates as any)?.blocks as any,
+        metadata: (updates as any)?.metadata as any,
+      }),
     });
 
     if (!response.ok) {
@@ -511,11 +520,7 @@ class FunnelService {
       }
     }
 
-    // Create version snapshot
-    await this.createFunnelVersion({
-      funnel_id: funnel.id,
-      version: (funnel.version || 0) + 1,
-    });
+  // Versioning desabilitado por enquanto (alinhamento de tipos)
 
     return funnel;
   }
@@ -532,15 +537,15 @@ class FunnelService {
       description: funnel.description || undefined,
       pages: pages.map(page => ({
         id: page.id,
-        type: page.pageType || 'default',
+        type: (page as any).page_type || 'default',
         title: page.title || undefined,
-        order: page.pageOrder || 0,
-        blocks: page.blocks as BlockData[],
-        metadata: page.metadata || undefined,
+        order: (page as any).page_order || 0,
+        blocks: (page as any).blocks as unknown as BlockData[],
+        metadata: (page as any).metadata || undefined,
       })),
       settings: (funnel.settings as any) || undefined,
     };
   }
 }
 
-export const funnelService = new FunnelService();
+export const funnelApiService = new FunnelService();

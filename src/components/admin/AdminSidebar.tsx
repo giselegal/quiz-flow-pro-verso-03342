@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { cn } from '@/lib/utils';
 import {
   BarChart3,
@@ -50,16 +49,16 @@ const sidebarItems = [
     description: 'SEO, Domínio, Pixel, UTM',
   },
   {
-    title: 'Templates',
-    href: '/admin/templates',
-    icon: FileText,
-    description: 'Gerenciar templates salvos',
+  title: 'Modelos de Funis',
+  href: '/admin/funis',
+  icon: FileText,
+  description: 'Biblioteca de modelos prontos (21 etapas)',
   },
   {
-    title: 'Meus Templates',
-    href: '/meus-templates',
-    icon: Layers,
-    description: 'Templates pessoais salvos',
+  title: 'Meus Funis',
+  href: '/admin/meus-funis',
+  icon: Layers,
+  description: 'Funis em edição e publicados',
   },
   {
     title: 'Testes A/B',

@@ -1,0 +1,39 @@
+{
+  "id": "default-quiz-funnel-21-steps",
+  "name": "Funil Quiz 21 Etapas",
+  "version": 1,
+  "metadata": {
+    "collectUserName": true,
+    "seo": { "title": "Quiz de Estilo Pessoal", "description": "Descubra seu estilo" },
+    "pixel": {},
+    "utm": {},
+    "webhooks": {}
+  },
+  "steps": {
+    "step-1": [{ "type": "quiz-intro-header", "properties": { "title": "Bem-vinda" } }],
+    "step-2": [],
+    "step-3": [],
+    "step-4": [],
+    "step-5": [],
+    "step-6": [],
+    "step-7": [],
+    "step-8": [],
+    "step-9": [],
+    "step-10": [],
+    "step-11": [],
+    "step-12": [],
+    "step-13": [],
+    "step-14": [],
+    "step-15": [],
+    "step-16": [],
+    "step-17": [],
+    "step-18": [],
+    "step-19": [],
+    "step-20": [],
+    "step-21": []
+  },
+  "variables": [
+    { "key": "romantico", "label": "Romântico", "description": "", "scoringWeight": 1 },
+    { "key": "classico", "label": "Clássico", "description": "", "scoringWeight": 1 }
+  ]
+}

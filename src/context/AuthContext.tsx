@@ -203,6 +203,41 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const login = async (email: string, password: string) => {
     setLoading(true);
     try {
+      // Suporte a login local (sem Supabase) via variáveis de ambiente
+      const LOCAL_EMAIL = (import.meta as any)?.env?.VITE_LOCAL_ADMIN_EMAIL as string | undefined;
+      const LOCAL_PASSWORD = (import.meta as any)?.env?.VITE_LOCAL_ADMIN_PASSWORD as
+        | string
+        | undefined;
+
+      // Se credenciais locais estiverem definidas e baterem, autentica localmente
+      if (
+        LOCAL_EMAIL &&
+        LOCAL_PASSWORD &&
+        email?.toLowerCase() === LOCAL_EMAIL.toLowerCase() &&
+        password === LOCAL_PASSWORD
+      ) {
+        const fakeId = 'local-admin';
+        setUser({ id: fakeId, email: LOCAL_EMAIL, name: 'Admin Local' });
+        setProfile({
+          id: fakeId,
+          email: LOCAL_EMAIL,
+          name: 'Admin Local',
+          role: 'admin',
+          plan: 'pro',
+          created_at: new Date().toISOString(),
+        });
+        setSession(null);
+        setLoading(false);
+        return;
+      }
+
+      // Se Supabase estiver desabilitado, mas sem credenciais locais válidas
+      if (OFFLINE) {
+        throw new Error(
+          'Autenticação offline: defina VITE_LOCAL_ADMIN_EMAIL e VITE_LOCAL_ADMIN_PASSWORD para login local.'
+        );
+      }
+
       cleanupAuthState();
       try {
         await supabase.auth.signOut({ scope: 'global' });

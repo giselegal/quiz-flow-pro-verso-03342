@@ -7,6 +7,7 @@ import { AdminSidebar } from '../../components/admin/AdminSidebar';
 const DashboardOverview = lazy(() => import('./OverviewPage'));
 const QuizPage = lazy(() => import('./QuizPage'));
 const FunnelPanelPage = lazy(() => import('./FunnelPanelPage'));
+const MyFunnelsPage = lazy(() => import('./MyFunnelsPage'));
 const ABTestPage = lazy(() => import('./ABTestPage'));
 const SettingsPage = lazy(() => import('./SettingsPage'));
 const CreativesPage = lazy(() => import('./CreativesPage'));
@@ -49,6 +50,7 @@ const DashboardPage: React.FC = () => {
               {/* Rotas do dashboard */}
               <Route path="/admin/quiz" component={QuizPage} />
               <Route path="/admin/funis" component={FunnelPanelPage} />
+              <Route path="/admin/meus-funis" component={MyFunnelsPage} />
               <Route path="/admin/metricas" component={MetricsPage} />
               <Route path="/admin/configuracao" component={NoCodeConfigPage} />
               <Route path="/admin/ab-tests" component={ABTestPage} />
