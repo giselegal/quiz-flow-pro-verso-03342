@@ -48,25 +48,26 @@ const MainEditor: React.FC = () => {
 const EditorInitializer: React.FC<{ templateId?: string; funnelId?: string }> = ({
   templateId,
 }) => {
-  const editor = React.useRef<ReturnType<typeof requireEditor> | null>(null);
-  function requireEditor() {
-    // lazy access to avoid import cycles
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const mod = require('../components/editor/EditorProvider');
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const ui = require('../components/editor/EditorPro');
-    return { useEditor: mod.useEditor, EditorPro: ui.EditorPro } as any;
-  }
-
-  const [ready, setReady] = React.useState(false);
+  // Carregar EditorPro dinamicamente para evitar ciclos e manter ESM compatível
+  const [EditorProComp, setEditorProComp] = React.useState<React.ComponentType | null>(null);
 
   React.useEffect(() => {
-    editor.current = requireEditor();
-    setReady(true);
+    let cancelled = false;
+    (async () => {
+      try {
+        const mod = await import('../components/editor/EditorPro');
+        if (!cancelled) setEditorProComp(() => mod.EditorPro);
+      } catch (e) {
+        console.error('Falha ao carregar EditorPro dinamicamente:', e);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   React.useEffect(() => {
-    if (!ready || !templateId) return;
+    if (!EditorProComp || !templateId) return;
     // const { useEditor } = editor.current!; // reservado para futuras integrações
     try {
       const tpl = templateLibraryService.getById(templateId);
@@ -87,10 +88,10 @@ const EditorInitializer: React.FC<{ templateId?: string; funnelId?: string }> = 
     } catch (e) {
       console.warn('Falha ao aplicar template:', e);
     }
-  }, [ready, templateId]);
+  }, [EditorProComp, templateId]);
 
-  if (!ready) return null;
-  const { EditorPro } = editor.current!;
+  if (!EditorProComp) return null;
+  const EditorPro = EditorProComp as React.ComponentType;
   return <EditorPro />;
 };
 

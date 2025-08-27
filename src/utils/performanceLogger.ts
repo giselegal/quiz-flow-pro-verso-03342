@@ -5,10 +5,12 @@
  * ✅ Throttling de eventos para melhor performance
  */
 
+import { useCallback, type DependencyList } from 'react';
+
 type LogLevel = 'debug' | 'info' | 'warn' | 'error';
 
 class PerformanceLogger {
-  private isDevelopment = process.env.NODE_ENV === 'development';
+  private isDevelopment = Boolean((import.meta as any)?.env?.DEV);
   private debugMode =
     typeof window !== 'undefined' && window.location.search.includes('debug=true');
   private verboseMode =
@@ -108,12 +110,10 @@ export const perfLogger = new PerformanceLogger();
 // Hooks de otimização
 export const useOptimizedCallback = <T extends (...args: any[]) => void>(
   callback: T,
-  deps: React.DependencyList,
+  deps: DependencyList,
   debounceMs = 100
 ): T => {
-  const React = require('react');
-
-  return React.useCallback((...args: Parameters<T>) => {
+  return useCallback((...args: Parameters<T>) => {
     perfLogger.debounce(
       `callback-${callback.name || 'anonymous'}`,
       () => callback(...args),
