@@ -40,7 +40,7 @@ export const QuizNavigation: React.FC<QuizNavigationProps> = memo(
               {Math.round(progressPercentage)}% concluído
             </span>
           </div>
-          <Progress value={progressPercentage} className="h-2" />
+          <Progress value={progressPercentage} className="h-2" aria-label="Progresso do Quiz" />
         </div>
 
         {/* Validation Feedback */}
@@ -74,6 +74,8 @@ export const QuizNavigation: React.FC<QuizNavigationProps> = memo(
             onClick={onPrevious}
             disabled={isFirstStep}
             className="flex items-center gap-2"
+            type="button"
+            aria-label="Voltar para a etapa anterior"
           >
             <ChevronLeft className="w-4 h-4" />
             Anterior
@@ -128,10 +130,19 @@ export const QuizNavigation: React.FC<QuizNavigationProps> = memo(
             className={`flex items-center gap-2 ${
               canProceed ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gray-300 cursor-not-allowed'
             }`}
+            type="button"
+            aria-label={isLastStep ? 'Finalizar quiz' : 'Ir para a próxima etapa'}
+            onKeyDown={e => {
+              if (!canProceed) return;
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                onNext();
+              }
+            }}
           >
             {isLastStep ? (
               <>
-                Finalizar Quiz
+                Finalizar
                 <CheckCircle className="w-4 h-4" />
               </>
             ) : (

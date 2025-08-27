@@ -86,43 +86,33 @@ export function mergeStepBlocks(base: StepBlocks, incoming: RawStepBlocks): Step
   const result: StepBlocks = { ...base };
 
   for (const [stepKey, incomingBlocks] of Object.entries(normalizedIncoming)) {
-    const existing = result[stepKey] ?? [];
+    const existing = base[stepKey] ?? [];
 
-    // Índice por ID para merge estável
-    const byId = new Map<string, any>();
-    existing.forEach(b => byId.set(String((b as any)?.id ?? ''), b));
+    const existingById = new Map<string, any>();
+    existing.forEach(b => existingById.set(String((b as any)?.id ?? ''), b));
 
-    const merged: any[] = [...existing];
-
+    const mergedForStep: any[] = [];
     for (const inc of incomingBlocks as any[]) {
       const incId = String(inc?.id ?? '');
-      if (incId && byId.has(incId)) {
-        // Merge profundo e estável (properties/content)
-        const prev = byId.get(incId);
-        const mergedBlock = {
-          ...prev,
-          ...inc,
-          properties: { ...(prev?.properties || {}), ...(inc?.properties || {}) },
-          content: { ...(prev?.content || {}), ...(inc?.content || {}) },
-        };
-        const idx = merged.findIndex(b => String(b?.id ?? '') === incId);
-        if (idx >= 0) merged[idx] = mergedBlock;
-        byId.set(incId, mergedBlock);
-      } else {
-        // Acrescentar sem remover existentes do template
-        merged.push(inc);
-        if (incId) byId.set(incId, inc);
-      }
+      const prev = incId ? existingById.get(incId) : undefined;
+      const mergedBlock = prev
+        ? {
+            ...prev,
+            ...inc,
+            properties: { ...(prev?.properties || {}), ...(inc?.properties || {}) },
+            content: { ...(prev?.content || {}), ...(inc?.content || {}) },
+          }
+        : inc;
+      mergedForStep.push(mergedBlock);
     }
 
-    // Ordenar por campo 'order' se existir
-    merged.sort((a, b) => {
+    mergedForStep.sort((a, b) => {
       const ao = (a as any)?.order ?? 0;
       const bo = (b as any)?.order ?? 0;
       return ao - bo;
     });
 
-    result[stepKey] = merged as any[];
+    result[stepKey] = mergedForStep as any[];
   }
 
   return result;

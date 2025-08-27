@@ -1,6 +1,6 @@
 import { useAutoSaveWithDebounce } from '@/hooks/editor/useAutoSaveWithDebounce';
 import { toast } from '@/hooks/use-toast';
-import { useTemplateLoader } from '@/hooks/useTemplateLoader';
+import { getStepTemplate } from '@/config/templates/templates';
 // import { funnelPersistenceService } from '@/services/funnelPersistence';
 import { Block, BlockType, EditorConfig } from '@/types/editor';
 import { EditorAction, EditorState } from '@/types/editorTypes';
@@ -183,100 +183,55 @@ export const EditorProvider: React.FC<{
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [activeStageId, setActiveStageId] = useState<string>('step-1');
 
-  // 🔥 INTEGRAÇÃO COM TEMPLATES.TS - Usar useTemplateLoader
-  const templateLoader = useTemplateLoader();
+  // Integração com sistema de templates via função utilitária
 
-  // Efeito para carregar o template inicial automaticamente usando templates.ts
+  // Efeito para carregar o template inicial automaticamente
   useEffect(() => {
-    const loadInitialTemplateFromTemplatesTs = async () => {
+    let isCancelled = false;
+    const loadInitialTemplate = async () => {
       try {
+        if (isCancelled) return;
         setIsLoading(true);
-        console.log('🚀 Carregando template inicial para etapa 1 usando templates.ts...');
+        const template = await getStepTemplate(1);
+        const templateBlocks = template?.blocks || [];
 
-<<<<<<< Updated upstream
-        // Importar o serviço de template dinamicamente
-        const templateService = (await import('../services/templateService')).default;
-=======
-        // Usar templateLoader para carregar o template da etapa 1
-        const templateBlocks = await templateLoader.loadTemplateBlocks(1);
->>>>>>> Stashed changes
-
-        if (templateBlocks && templateBlocks.length > 0) {
-          console.log(`✅ Template inicial carregado: ${templateBlocks.length} blocos`);
-
-          // Converter os blocos do template para o formato do editor
+        if (templateBlocks.length > 0) {
           const editorBlocks = templateBlocks.map((block: any, index: number) => ({
             id: block.id || `block-${Date.now()}-${Math.random()}`,
             type: block.type || 'text',
             content: block.content || {},
             styles: block.styles || {},
             metadata: block.metadata || {},
-            properties: {
-              funnelId: currentFunnelId,
-              stageId: 'step-1',
-            },
+            properties: { funnelId: currentFunnelId, stageId: 'step-1' },
             order: index,
           }));
-
-          // Atualizar os blocos no estado do editor
-          dispatch({ type: 'SET_BLOCKS', payload: editorBlocks });
-        } else {
-          console.warn('⚠️ Template inicial não contém blocos, carregando blocos padrão');
-
-          // Fallback: Carregar blocos básicos para a etapa 1
-          const fallbackBlocks = [
-            {
-              id: 'header-1',
-              type: 'quiz-intro-header' as any,
-              content: {
-                title: 'Descubra seu Estilo Perfeito',
-                subtitle: 'Responda algumas perguntas e descubra suas preferências',
-              },
-            },
-            {
-              id: 'text-1',
-              type: 'text' as any,
-              content: {
-                text: 'Vamos começar! Primeiro, me diga seu nome:',
-              },
-            },
-            {
-              id: 'input-1',
-              type: 'quiz-intro-name-input' as any,
-              content: {
-                placeholder: 'Digite seu nome...',
-                required: true,
-              },
-            },
-            {
-              id: 'button-1',
-              type: 'quiz-intro-button' as any,
-              content: {
-                text: 'Iniciar Quiz',
-                style: 'primary',
-              },
-            },
-          ];
-
-          dispatch({ type: 'SET_BLOCKS', payload: fallbackBlocks });
+          if (!isCancelled) dispatch({ type: 'SET_BLOCKS', payload: editorBlocks });
         }
       } catch (error) {
         console.error('❌ Erro ao carregar template inicial:', error);
       } finally {
-        setIsLoading(false);
+        if (!isCancelled) setIsLoading(false);
       }
     };
-
-    loadInitialTemplateFromTemplatesTs();
-  }, [templateLoader, currentFunnelId]);
+    loadInitialTemplate();
+    return () => {
+      isCancelled = true;
+    };
+  }, [currentFunnelId]);
 
   // ✅ NOVO: Carregar templates automaticamente quando muda de etapa
   useEffect(() => {
+    let isCancelled = false;
     if (!activeStageId) return;
 
     const loadStepTemplate = async () => {
       try {
         console.log(`🔄 AUTO-LOAD: Iniciando carregamento para etapa: ${activeStageId}`);
+        if (typeof window === 'undefined') {
+          // Em ambiente de teste, evite efeitos com window
+          if (!isCancelled) dispatch({ type: 'SET_BLOCKS', payload: [] });
+          return;
+        }
 
         // Carregar via templateService diretamente
         try {
@@ -300,7 +255,7 @@ export const EditorProvider: React.FC<{
             );
 
             console.log(`🔄 AUTO-LOAD: Convertidos ${editorBlocks.length} blocos para o editor`);
-            dispatch({ type: 'SET_BLOCKS', payload: editorBlocks });
+            if (!isCancelled) dispatch({ type: 'SET_BLOCKS', payload: editorBlocks });
 
             console.log(`✅ AUTO-LOAD: Blocos carregados no estado do editor!`);
           } else {
@@ -310,7 +265,7 @@ export const EditorProvider: React.FC<{
           }
         } catch (error) {
           console.error('❌ AUTO-LOAD: Erro ao carregar template via service:', error);
-          dispatch({ type: 'SET_BLOCKS', payload: [] });
+          if (!isCancelled) dispatch({ type: 'SET_BLOCKS', payload: [] });
         }
       } catch (error) {
         console.error('❌ AUTO-LOAD: Erro geral ao carregar template da etapa:', error);
@@ -318,6 +273,9 @@ export const EditorProvider: React.FC<{
     };
 
     loadStepTemplate();
+    return () => {
+      isCancelled = true;
+    };
   }, [activeStageId]);
 
   // Block management functions
@@ -505,76 +463,31 @@ export const EditorProvider: React.FC<{
     showToasts: false, // Não mostrar toast no auto-save, apenas no save manual
   });
 
-  // Real data for stages (21 stages) from stepTemplatesMapping
+  // Construir metadados das 21 etapas
   const [realStages, setRealStages] = useState<any[]>([]);
-<<<<<<< Updated upstream
-
-  // Load real stages from templates on mount
-=======
-  
-  // Load real stages from templates.ts on mount
->>>>>>> Stashed changes
   useEffect(() => {
-    const loadTemplatesFromTemplatesTs = async () => {
+    const loadStages = async () => {
       try {
-<<<<<<< Updated upstream
-        const { getAllSteps } = await import('../config/stepTemplatesMapping');
-        const stepTemplates = getAllSteps();
-
-        const mappedStages = stepTemplates.map(template => ({
-          id: `step-${template.stepNumber}`,
-          name: template.name,
-          description: template.description,
-          order: template.stepNumber,
-          blocksCount: 0,
-          metadata: { blocksCount: 0 },
-        }));
-
-        console.log('✅ Loaded real stages from templates:', mappedStages.length);
-        setRealStages(mappedStages);
-=======
-        console.log('🔄 Carregando etapas usando templates.ts...');
-        
-        // Criar as 21 etapas usando o sistema templates.ts
-        const stagesFromTemplates = [];
-        
+        const stagesFromTemplates: any[] = [];
         for (let stepNumber = 1; stepNumber <= 21; stepNumber++) {
-          try {
-            // Usar templateLoader para obter metadados da etapa
-            const metadata = await templateLoader.loadTemplateMetadata(stepNumber);
-            
-            stagesFromTemplates.push({
-              id: `step-${stepNumber}`,
-              name: metadata?.name || `Etapa ${stepNumber}`,
-              description: metadata?.description || `Descrição da etapa ${stepNumber}`,
-              order: stepNumber,
-              blocksCount: metadata?.blocksCount || 0,
-              metadata: {
-                blocksCount: metadata?.blocksCount || 0,
-                templateId: metadata?.templateId,
-                version: metadata?.version,
-              },
-            });
-          } catch (error) {
-            console.warn(`⚠️ Erro ao carregar metadados da etapa ${stepNumber}:`, error);
-            // Fallback para etapa básica
-            stagesFromTemplates.push({
-              id: `step-${stepNumber}`,
-              name: `Etapa ${stepNumber}`,
-              description: `Descrição da etapa ${stepNumber}`,
-              order: stepNumber,
-              blocksCount: 0,
-              metadata: { blocksCount: 0 },
-            });
-          }
+          const template = await getStepTemplate(stepNumber);
+          const metadata = template?.metadata || {};
+          stagesFromTemplates.push({
+            id: `step-${stepNumber}`,
+            name: metadata.name || `Etapa ${stepNumber}`,
+            description: metadata.description || `Descrição da etapa ${stepNumber}`,
+            order: stepNumber,
+            blocksCount: (template?.blocks || []).length,
+            metadata: {
+              blocksCount: (template?.blocks || []).length,
+              templateId: metadata.templateId,
+              version: metadata.version,
+            },
+          });
         }
-        
-        console.log('✅ Etapas carregadas usando templates.ts:', stagesFromTemplates.length);
         setRealStages(stagesFromTemplates);
->>>>>>> Stashed changes
       } catch (error) {
-        console.error('❌ Erro ao carregar etapas usando templates.ts:', error);
-        // Fallback to basic 21 steps
+        console.error('❌ Erro ao carregar etapas:', error);
         const fallbackStages = Array.from({ length: 21 }, (_, i) => ({
           id: `step-${i + 1}`,
           name: `Etapa ${i + 1}`,
@@ -586,9 +499,8 @@ export const EditorProvider: React.FC<{
         setRealStages(fallbackStages);
       }
     };
-
-    loadTemplatesFromTemplatesTs();
-  }, [templateLoader]);
+    loadStages();
+  }, []);
 
   // Use real stages or fallback
   const stages = useMemo(() => {
@@ -609,110 +521,46 @@ export const EditorProvider: React.FC<{
 
   // ✅ MOVER PARA FORA DO useMemo - no nível do componente
   const [isLoadingStage, setIsLoadingStage] = useState(false);
-<<<<<<< Updated upstream
-
-  // Stage actions with real template loading
-=======
-  
   // Stage actions with templates.ts integration
->>>>>>> Stashed changes
   const stageActions = useMemo(
     () => ({
       setActiveStage: async (id: string) => {
-        setIsLoadingStage(true);
-<<<<<<< Updated upstream
-        console.log('🔄 Setting active stage:', id);
-
-        try {
-          setActiveStageId(id);
-
-          const stepNumber = parseInt(id.replace('step-', ''));
-
-          if (stepNumber && stepNumber >= 1 && stepNumber <= 21) {
-            const templateService = (await import('../services/templateService')).default;
-            const template = await templateService.getTemplateByStep(stepNumber);
-
-            if (template && template.blocks && template.blocks.length > 0) {
-              const editorBlocks = templateService.convertTemplateBlocksToEditorBlocks(
-                template.blocks
-              );
-              dispatch({ type: 'SET_BLOCKS', payload: editorBlocks });
-              console.log(`✅ Loaded ${editorBlocks.length} blocks for step ${stepNumber}`);
-            } else {
-              console.warn(`⚠️ No blocks found for step ${stepNumber}`);
-              dispatch({ type: 'SET_BLOCKS', payload: [] });
-            }
-          }
-        } catch (error) {
-          console.error(`❌ Error loading template for step ${id}:`, error);
-=======
-        console.log('🔄 Ativando etapa usando templates.ts:', id);
-        
-        try {
-          setActiveStageId(id);
-          
-          // Extrair número da etapa do ID (ex: "step-5" -> 5)
-          const stepMatch = id.match(/step-(\d+)/);
-          if (stepMatch) {
-            const stepNumber = parseInt(stepMatch[1], 10);
-            
-            if (stepNumber >= 1 && stepNumber <= 21) {
-              console.log(`🔄 Carregando blocos da etapa ${stepNumber} usando templates.ts...`);
-              
-              // Usar templateLoader para carregar os blocos da etapa
-              const templateBlocks = await templateLoader.loadTemplateBlocks(stepNumber);
-              
-              if (templateBlocks && templateBlocks.length > 0) {
-                console.log(`✅ Blocos carregados: ${templateBlocks.length} blocos`);
-                
-                // Converter blocos do template para formato do editor
+            setIsLoadingStage(true);
+            try {
+              setActiveStageId(id);
+              const stepMatch = id.match(/step-(\d+)/);
+              const stepNumber = stepMatch ? parseInt(stepMatch[1], 10) : NaN;
+              if (!isNaN(stepNumber)) {
+                const template = await getStepTemplate(stepNumber);
+                const templateBlocks = template?.blocks || [];
                 const editorBlocks = templateBlocks.map((block: any, index: number) => ({
                   id: block.id || `block-${Date.now()}-${Math.random()}`,
                   type: block.type || 'text',
                   content: block.content || {},
                   styles: block.styles || {},
                   metadata: block.metadata || {},
-                  properties: {
-                    funnelId: currentFunnelId,
-                    stageId: id,
-                  },
+                  properties: { funnelId: currentFunnelId, stageId: id },
                   order: index,
                 }));
-
-                // Atualizar os blocos no estado do editor
                 dispatch({ type: 'SET_BLOCKS', payload: editorBlocks });
-                console.log(`✅ Loaded ${editorBlocks.length} blocks for step ${stepNumber}`);
-              } else {
-                console.warn(`⚠️ Nenhum bloco encontrado para etapa ${stepNumber}`);
-                // Limpar blocos se não houver template
-                dispatch({ type: 'SET_BLOCKS', payload: [] });
               }
+            } catch (error) {
+              console.error('❌ Erro ao carregar blocos da etapa:', error);
+              dispatch({ type: 'SET_BLOCKS', payload: [] });
+            } finally {
+              setIsLoadingStage(false);
             }
-          }
-        } catch (error) {
-          console.error(`❌ Erro ao carregar blocos da etapa:`, error);
-          // Em caso de erro, limpar blocos
-          dispatch({ type: 'SET_BLOCKS', payload: [] });
->>>>>>> Stashed changes
-        } finally {
-          setIsLoadingStage(false);
-        }
-      },
+          },
       addStage: () => {
-        console.log('Add stage not implemented yet');
-        return `step-${stages.length + 1}`;
-      },
+            console.log('Add stage not implemented yet');
+            return `step-${stages.length + 1}`;
+          },
       removeStage: (id: string) => {
-        console.log('Remove stage not implemented:', id);
-      },
-<<<<<<< Updated upstream
-      isLoadingStage, // ✅ Expor o estado de loading
+            console.log('Remove stage not implemented:', id);
+          },
+      isLoadingStage,
     }),
-    [stages.length, dispatch, setIsLoadingStage, isLoadingStage] // ✅ Adicionar isLoadingStage às dependências
-=======
-    }),
-    [templateLoader, dispatch, setIsLoadingStage, stages.length, currentFunnelId]
->>>>>>> Stashed changes
+    [dispatch, setIsLoadingStage, stages.length, currentFunnelId, isLoadingStage]
   );
 
   // Block actions object
@@ -791,13 +639,9 @@ export const EditorProvider: React.FC<{
       loadTemplateByStep: async (step: number) => {
         console.log('🔄 Loading template by step usando templates.ts:', step);
         try {
-<<<<<<< Updated upstream
-          // Importar o serviço de template dinamicamente para evitar problemas de circular dependency
-          const templateService = (await import('../services/templateService')).default;
-=======
           const template = await getStepTemplate(step);
           const templateBlocks = template?.blocks || [];
->>>>>>> Stashed changes
+          
 
           if (templateBlocks.length > 0) {
             console.log(`✅ Template carregado com sucesso: ${templateBlocks.length} blocos`);
