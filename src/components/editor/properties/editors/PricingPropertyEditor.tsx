@@ -277,11 +277,13 @@ export const PricingPropertyEditor: React.FC<PricingPropertyEditorProps> = ({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {periodOptions.filter(option => option.value && option.value !== '').map(option => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
+                  {periodOptions
+                    .filter(option => option.value && option.value !== '')
+                    .map(option => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
                 </SelectContent>
               </Select>
             </div>

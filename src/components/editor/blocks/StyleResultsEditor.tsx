@@ -81,11 +81,13 @@ const StyleResultsEditor: React.FC<StyleResultsEditorProps> = ({
                     <SelectValue placeholder="Selecione um estilo" />
                   </SelectTrigger>
                   <SelectContent>
-                    {styleOptions.filter(style => style && style !== '').map(style => (
-                      <SelectItem key={style} value={style}>
-                        {style}
-                      </SelectItem>
-                    ))}
+                    {styleOptions
+                      .filter(style => style && style !== '')
+                      .map(style => (
+                        <SelectItem key={style} value={style}>
+                          {style}
+                        </SelectItem>
+                      ))}
                   </SelectContent>
                 </Select>
               </div>

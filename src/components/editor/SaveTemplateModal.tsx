@@ -289,11 +289,13 @@ export const SaveTemplateModal: React.FC<SaveTemplateModalProps> = ({
                       <SelectValue placeholder="Selecione uma categoria" />
                     </SelectTrigger>
                     <SelectContent>
-                      {Object.entries(TEMPLATE_CATEGORIES).filter(([key]) => key && key !== '').map(([key, label]) => (
-                        <SelectItem key={key} value={key}>
-                          {label}
-                        </SelectItem>
-                      ))}
+                      {Object.entries(TEMPLATE_CATEGORIES)
+                        .filter(([key]) => key && key !== '')
+                        .map(([key, label]) => (
+                          <SelectItem key={key} value={key}>
+                            {label}
+                          </SelectItem>
+                        ))}
                     </SelectContent>
                   </Select>
                 </div>

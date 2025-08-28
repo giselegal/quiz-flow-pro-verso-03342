@@ -39,17 +39,20 @@ export const FormContainerPropertyEditor: React.FC<FormContainerPropertyEditorPr
   const nameLabel = block.content?.nameLabel || 'NOME';
   const namePlaceholder = block.content?.namePlaceholder || 'Digite seu nome';
   const nameRequired = block.content?.nameRequired ?? true;
-  const nameRequiredMessage = block.content?.nameRequiredMessage || 'Por favor, digite seu nome para continuar';
+  const nameRequiredMessage =
+    block.content?.nameRequiredMessage || 'Por favor, digite seu nome para continuar';
 
   const emailLabel = block.content?.emailLabel || 'EMAIL';
   const emailPlaceholder = block.content?.emailPlaceholder || 'Digite seu email';
   const emailRequired = block.content?.emailRequired ?? false;
-  const emailRequiredMessage = block.content?.emailRequiredMessage || 'Por favor, digite seu email para continuar';
+  const emailRequiredMessage =
+    block.content?.emailRequiredMessage || 'Por favor, digite seu email para continuar';
 
   const phoneLabel = block.content?.phoneLabel || 'TELEFONE';
   const phonePlaceholder = block.content?.phonePlaceholder || 'Digite seu telefone';
   const phoneRequired = block.content?.phoneRequired ?? false;
-  const phoneRequiredMessage = block.content?.phoneRequiredMessage || 'Por favor, digite seu telefone para continuar';
+  const phoneRequiredMessage =
+    block.content?.phoneRequiredMessage || 'Por favor, digite seu telefone para continuar';
 
   // === BOTÃO ===
   const buttonText = block.content?.buttonText || 'Quero Descobrir meu Estilo Agora!';
@@ -382,18 +385,23 @@ export const FormContainerPropertyEditor: React.FC<FormContainerPropertyEditorPr
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
                   <Label>Ativar Apenas Quando Válido</Label>
-                  <p className="text-xs text-gray-500">Botão só fica ativo após preencher campos obrigatórios</p>
+                  <p className="text-xs text-gray-500">
+                    Botão só fica ativo após preencher campos obrigatórios
+                  </p>
                 </div>
                 <Switch
                   checked={enableButtonOnlyWhenValid}
-                  onCheckedChange={checked => handleContentUpdate('enableButtonOnlyWhenValid', checked)}
+                  onCheckedChange={checked =>
+                    handleContentUpdate('enableButtonOnlyWhenValid', checked)
+                  }
                 />
               </div>
 
               {enableButtonOnlyWhenValid && (
                 <div className="p-3 bg-blue-50 border border-blue-200 rounded">
                   <p className="text-xs text-blue-700">
-                    ⚠️ Validação ativa: O botão ficará desabilitado até que todos os campos obrigatórios sejam preenchidos.
+                    ⚠️ Validação ativa: O botão ficará desabilitado até que todos os campos
+                    obrigatórios sejam preenchidos.
                   </p>
                 </div>
               )}
@@ -432,11 +440,13 @@ export const FormContainerPropertyEditor: React.FC<FormContainerPropertyEditorPr
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {fontWeightOptions.filter(option => option.value && option.value !== '').map(option => (
-                      <SelectItem key={option.value} value={option.value}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
+                    {fontWeightOptions
+                      .filter(option => option.value && option.value !== '')
+                      .map(option => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
                   </SelectContent>
                 </Select>
               </div>
@@ -483,11 +493,13 @@ export const FormContainerPropertyEditor: React.FC<FormContainerPropertyEditorPr
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {shadowOptions.filter(option => option.value && option.value !== '').map(option => (
-                      <SelectItem key={option.value} value={option.value}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
+                    {shadowOptions
+                      .filter(option => option.value && option.value !== '')
+                      .map(option => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
                   </SelectContent>
                 </Select>
               </div>
@@ -560,7 +572,9 @@ export const FormContainerPropertyEditor: React.FC<FormContainerPropertyEditorPr
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
                   <Label>Avançar Automaticamente</Label>
-                  <p className="text-xs text-gray-500">Navega automaticamente após submissão bem-sucedida</p>
+                  <p className="text-xs text-gray-500">
+                    Navega automaticamente após submissão bem-sucedida
+                  </p>
                 </div>
                 <Switch
                   checked={autoAdvanceOnComplete}
@@ -571,8 +585,10 @@ export const FormContainerPropertyEditor: React.FC<FormContainerPropertyEditorPr
               <Separator />
 
               <div className="space-y-3">
-                <h4 className="text-sm font-medium text-[#6B4F43]">Integração com Banco de Dados</h4>
-                
+                <h4 className="text-sm font-medium text-[#6B4F43]">
+                  Integração com Banco de Dados
+                </h4>
+
                 <PropertyInput
                   label="Chave de Dados (Supabase)"
                   value={dataKey}
@@ -582,7 +598,8 @@ export const FormContainerPropertyEditor: React.FC<FormContainerPropertyEditorPr
 
                 <div className="p-3 bg-amber-50 border border-amber-200 rounded">
                   <p className="text-xs text-amber-700">
-                    💾 Os dados coletados serão salvos no Supabase usando a chave: <code className="bg-amber-100 px-1 rounded">{dataKey || 'userData'}</code>
+                    💾 Os dados coletados serão salvos no Supabase usando a chave:{' '}
+                    <code className="bg-amber-100 px-1 rounded">{dataKey || 'userData'}</code>
                   </p>
                 </div>
               </div>
@@ -620,8 +637,8 @@ export const FormContainerPropertyEditor: React.FC<FormContainerPropertyEditorPr
 
               <PropertySlider
                 label="Tamanho da Fonte dos Campos"
-                 value={Number(fontSize)}
-                 onChange={value => handleContentUpdate('fontSize', value)}
+                value={Number(fontSize)}
+                onChange={value => handleContentUpdate('fontSize', value)}
                 min={12}
                 max={24}
                 step={1}
@@ -630,8 +647,8 @@ export const FormContainerPropertyEditor: React.FC<FormContainerPropertyEditorPr
 
               <PropertySlider
                 label="Arredondamento dos Campos"
-                 value={Number(borderRadius)}
-                 onChange={value => handleContentUpdate('borderRadius', value)}
+                value={Number(borderRadius)}
+                onChange={value => handleContentUpdate('borderRadius', value)}
                 min={0}
                 max={20}
                 step={1}
@@ -649,29 +666,31 @@ export const FormContainerPropertyEditor: React.FC<FormContainerPropertyEditorPr
             <Settings className="h-4 w-4" />
             Resumo da Configuração:
           </h4>
-          
+
           <div className="space-y-2 text-xs">
             <div className="flex justify-between">
               <span>Campos ativos:</span>
               <span className="font-medium">
-                {[showNameField && 'Nome', showEmailField && 'Email', showPhoneField && 'Telefone'].filter(Boolean).join(', ') || 'Nenhum'}
+                {[showNameField && 'Nome', showEmailField && 'Email', showPhoneField && 'Telefone']
+                  .filter(Boolean)
+                  .join(', ') || 'Nenhum'}
               </span>
             </div>
-            
+
             <div className="flex justify-between">
               <span>Validação de botão:</span>
               <span className="font-medium">
                 {enableButtonOnlyWhenValid ? 'Ativada' : 'Desativada'}
               </span>
             </div>
-            
+
             <div className="flex justify-between">
               <span>Navegação:</span>
               <span className="font-medium">
-                {navigationMode === 'step' ? `Etapa ${nextStep}` : (nextUrl || 'Não configurada')}
+                {navigationMode === 'step' ? `Etapa ${nextStep}` : nextUrl || 'Não configurada'}
               </span>
             </div>
-            
+
             <div className="flex justify-between">
               <span>Banco de dados:</span>
               <span className="font-medium">{dataKey}</span>
@@ -682,4 +701,3 @@ export const FormContainerPropertyEditor: React.FC<FormContainerPropertyEditorPr
     </Card>
   );
 };
-   

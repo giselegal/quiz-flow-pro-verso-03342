@@ -56,12 +56,10 @@ export const OptimizedCanvasDropZone: React.FC<OptimizedCanvasDropZoneProps> = (
             )}
           >
             <div className="text-6xl">📱</div>
-            <h3 className="text-xl font-semibold text-foreground">
-              Canvas Vazio
-            </h3>
+            <h3 className="text-xl font-semibold text-foreground">Canvas Vazio</h3>
             <p className="text-sm text-muted-foreground max-w-md">
-              Arraste componentes da sidebar para começar a construir sua página.
-              Os blocos aparecerão aqui e você poderá reordená-los facilmente.
+              Arraste componentes da sidebar para começar a construir sua página. Os blocos
+              aparecerão aqui e você poderá reordená-los facilmente.
             </p>
             {isOver && (
               <div className="text-sm text-primary font-medium animate-pulse">
@@ -76,7 +74,7 @@ export const OptimizedCanvasDropZone: React.FC<OptimizedCanvasDropZoneProps> = (
       {blocks.length > 0 && (
         <SortableContext items={blockIds} strategy={verticalListSortingStrategy}>
           <div className="space-y-4">
-            {blocks.map((block) => (
+            {blocks.map(block => (
               <OptimizedSortableBlock
                 key={block.id}
                 block={block}

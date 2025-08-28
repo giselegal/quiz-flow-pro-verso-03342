@@ -317,14 +317,16 @@ export const NavigationPropertyEditor: React.FC<NavigationPropertyEditorProps> =
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          {iconOptions.filter(option => option.value && option.value !== '').map(option => (
-                            <SelectItem key={option.value} value={option.value}>
-                              <div className="flex items-center gap-2">
-                                {option.icon && <option.icon className="h-3 w-3" />}
-                                <span className="text-xs">{option.label}</span>
-                              </div>
-                            </SelectItem>
-                          ))}
+                          {iconOptions
+                            .filter(option => option.value && option.value !== '')
+                            .map(option => (
+                              <SelectItem key={option.value} value={option.value}>
+                                <div className="flex items-center gap-2">
+                                  {option.icon && <option.icon className="h-3 w-3" />}
+                                  <span className="text-xs">{option.label}</span>
+                                </div>
+                              </SelectItem>
+                            ))}
                         </SelectContent>
                       </Select>
                     </div>
@@ -420,11 +422,13 @@ export const NavigationPropertyEditor: React.FC<NavigationPropertyEditorProps> =
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {layoutOptions.filter(option => option.value && option.value !== '').map(option => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
+                  {layoutOptions
+                    .filter(option => option.value && option.value !== '')
+                    .map(option => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
                 </SelectContent>
               </Select>
             </div>
@@ -440,11 +444,13 @@ export const NavigationPropertyEditor: React.FC<NavigationPropertyEditorProps> =
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {alignmentOptions.filter(option => option.value && option.value !== '').map(option => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
+                  {alignmentOptions
+                    .filter(option => option.value && option.value !== '')
+                    .map(option => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
                 </SelectContent>
               </Select>
             </div>
@@ -461,11 +467,13 @@ export const NavigationPropertyEditor: React.FC<NavigationPropertyEditorProps> =
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {dropdownStyleOptions.filter(option => option.value && option.value !== '').map(option => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
+                  {dropdownStyleOptions
+                    .filter(option => option.value && option.value !== '')
+                    .map(option => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
                 </SelectContent>
               </Select>
             </div>

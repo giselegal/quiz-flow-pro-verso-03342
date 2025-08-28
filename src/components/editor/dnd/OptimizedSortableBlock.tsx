@@ -22,14 +22,7 @@ export const OptimizedSortableBlock: React.FC<OptimizedSortableBlockProps> = ({
   onDelete,
   children,
 }) => {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: `dnd-block-${block.id}`,
     data: {
       type: 'block',
@@ -48,15 +41,21 @@ export const OptimizedSortableBlock: React.FC<OptimizedSortableBlockProps> = ({
     onSelect(block.id);
   }, [block.id, onSelect]);
 
-  const handleDuplicate = React.useCallback((e: React.MouseEvent) => {
-    e.stopPropagation();
-    onDuplicate(block.id);
-  }, [block.id, onDuplicate]);
+  const handleDuplicate = React.useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation();
+      onDuplicate(block.id);
+    },
+    [block.id, onDuplicate]
+  );
 
-  const handleDelete = React.useCallback((e: React.MouseEvent) => {
-    e.stopPropagation();
-    onDelete(block.id);
-  }, [block.id, onDelete]);
+  const handleDelete = React.useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation();
+      onDelete(block.id);
+    },
+    [block.id, onDelete]
+  );
 
   return (
     <div
@@ -90,12 +89,8 @@ export const OptimizedSortableBlock: React.FC<OptimizedSortableBlockProps> = ({
           >
             <GripVertical className="h-4 w-4 text-muted-foreground" />
           </div>
-          <span className="text-sm font-medium text-foreground">
-            {block.type}
-          </span>
-          <span className="text-xs text-muted-foreground">
-            ID: {block.id.slice(-8)}
-          </span>
+          <span className="text-sm font-medium text-foreground">{block.type}</span>
+          <span className="text-xs text-muted-foreground">ID: {block.id.slice(-8)}</span>
         </div>
 
         {/* Ações do bloco */}
@@ -131,9 +126,7 @@ export const OptimizedSortableBlock: React.FC<OptimizedSortableBlockProps> = ({
       )}
 
       {/* Conteúdo do bloco */}
-      <div className="relative p-4">
-        {children}
-      </div>
+      <div className="relative p-4">{children}</div>
 
       {/* Indicador de drag */}
       {isDragging && (
