@@ -1074,7 +1074,10 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   );
 
   const PropertiesColumn: React.FC = () => (
-    <div className="w-[260px] sm:w-[280px] lg:w-[320px] min-w-[260px] sm:min-w-[280px] lg:min-w-[320px] max-w-[320px] bg-white border-l border-gray-200 flex flex-col editor-slide-in-right editor-fade-in">
+    <div className="w-[260px] sm:w-[280px] lg:w-[320px] xl:w-[320px] 2xl:w-[320px]
+                    min-w-[260px] sm:min-w-[280px] lg:min-w-[320px] xl:min-w-[320px] 2xl:min-w-[320px]
+                    max-w-[320px] flex-shrink-0 overflow-y-auto
+                    bg-white border-l border-gray-200 flex flex-col editor-slide-in-right editor-fade-in">
       {selectedBlock ? (
         <Suspense
           fallback={<div className="p-4 text-sm text-gray-600">Carregando propriedades…</div>}
