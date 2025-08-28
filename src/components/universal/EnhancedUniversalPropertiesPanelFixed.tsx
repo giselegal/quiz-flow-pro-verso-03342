@@ -486,133 +486,227 @@ const EnhancedUniversalPropertiesPanelFixed: React.FC<PanelProps> = ({
   ];
 
   return (
-    <aside className="h-full w-full overflow-y-auto p-4 space-y-4">
-      <header className="space-y-1">
-        <h2 className="text-lg font-semibold">{schema.label}</h2>
-        <p className="text-xs text-muted-foreground break-all">ID: {selectedBlock.id}</p>
-      </header>
-
-      <form
-        onSubmit={e => {
-          e.preventDefault();
-          onClose();
-        }}
-        className="space-y-4"
-      >
-        {Object.entries(
-          mergedFields
-            .filter(f => {
-              // ocultar condicionais de seleção múltipla
-              if (
-                (f.key === 'minSelections' || f.key === 'maxSelections') &&
-                !selectedBlock.properties?.multipleSelection
-              ) {
-                return false;
-              }
-              // ocultar hidden
-              if ((f as any).hidden) return false;
-              // showIf simples: formato "prop === value" ou "prop !== value"
-              const showIf = (f as any).showIf as string | undefined;
-              if (showIf) {
-                try {
-                  const [left, op, rawRight] = showIf.split(/\s+/);
-                  const right =
-                    rawRight === 'true'
-                      ? true
-                      : rawRight === 'false'
-                        ? false
-                        : rawRight
-                          ? rawRight.replace(/'/g, '')
-                          : rawRight;
-                  const leftVal = left
-                    ?.split('.')
-                    .reduce((acc: any, key: string) => acc?.[key], selectedBlock.properties || {});
-                  if (op === '===') return leftVal === right;
-                  if (op === '!==') return leftVal !== right;
-                } catch {}
-              }
-              return true;
-            })
-            .reduce((acc: Record<string, BlockFieldSchema[]>, f) => {
-              const group = f.group || 'default';
-              acc[group] = acc[group] || [];
-              acc[group].push(f);
-              return acc;
-            }, {})
-        ).map(([group, fields]) => (
-          <section key={group} className="space-y-2">
-            {group !== 'default' && (
-              <h4 className="text-sm font-semibold text-foreground/90 flex items-center gap-2">
-                {group}
-              </h4>
-            )}
-            {fields.map(field => (
-              <div key={field.key} className="space-y-1">
-                <PropertyField
-                  field={field}
-                  value={selectedBlock.properties?.[field.key]}
-                  onChange={val => onUpdate(selectedBlock.id, { [field.key]: val })}
-                />
-                {(field as any).description && (
-                  <p className="text-xs text-muted-foreground">{(field as any).description}</p>
-                )}
-              </div>
-            ))}
-          </section>
-        ))}
-
-        {/* Ações rápidas */}
-        <section className="pt-2 border-t">
-          <h4 className="text-sm font-semibold mb-2">Ações Rápidas</h4>
-          <div className="flex flex-wrap gap-2 items-center">
-            <button
-              type="button"
-              className="px-3 py-1.5 rounded-md border text-xs hover:bg-muted"
-              onClick={() =>
-                onUpdate(selectedBlock.id, {
-                  scale: 100,
-                  scaleX: undefined,
-                  scaleY: undefined,
-                  scaleOrigin: 'center',
-                  scaleClass: undefined,
-                })
-              }
-            >
-              Resetar escala
-            </button>
-
-            {/* Presets rápidos para escala (%) */}
-            <div className="flex items-center gap-1">
-              <span className="text-xs text-muted-foreground">Presets:</span>
-              {[90, 95, 100, 105, 110].map(preset => (
-                <button
-                  key={preset}
-                  type="button"
-                  className={`px-2 py-1 rounded border text-xs hover:bg-muted ${
-                    selectedBlock.properties?.scale === preset ? 'bg-muted' : ''
-                  }`}
-                  title={`${preset}%`}
-                  onClick={() => onUpdate(selectedBlock.id, { scale: preset })}
-                >
-                  {preset}%
-                </button>
-              ))}
+    <aside className="h-full w-full overflow-y-auto bg-gradient-to-b from-white to-gray-50/30">
+      {/* Header Moderno */}
+      <header className="sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-gray-200/60 p-6">
+        <div className="flex items-start justify-between mb-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4" />
+              </svg>
+            </div>
+            <div>
+              <h2 className="text-xl font-bold text-gray-900">{schema.label}</h2>
+              <p className="text-sm text-gray-500 font-mono bg-gray-100 px-2 py-1 rounded-md mt-1">
+                {selectedBlock.id.slice(0, 8)}...
+              </p>
             </div>
           </div>
-        </section>
+          <button
+            onClick={onClose}
+            className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200 group"
+            title="Fechar painel"
+          >
+            <svg className="w-5 h-5 text-gray-400 group-hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        
+        {/* Indicador de Status */}
+        <div className="flex items-center gap-2 text-sm">
+          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+          <span className="text-gray-600">Propriedades ativas</span>
+          <div className="flex-1 h-px bg-gradient-to-r from-gray-200 to-transparent" />
+          <span className="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded-full">
+            {mergedFields.length} campos
+          </span>
+        </div>
+      </header>
 
-        <div className="pt-2 flex gap-2">
-          <button type="submit" className="px-3 py-2 rounded-md border text-sm">
-            Fechar Painel
+      {/* Conteúdo Principal */}
+      <div className="px-6 pb-6">
+        <form
+          onSubmit={e => {
+            e.preventDefault();
+            onClose();
+          }}
+          className="space-y-6"
+        >
+          {Object.entries(
+            mergedFields
+              .filter(f => {
+                // ocultar condicionais de seleção múltipla
+                if (
+                  (f.key === 'minSelections' || f.key === 'maxSelections') &&
+                  !selectedBlock.properties?.multipleSelection
+                ) {
+                  return false;
+                }
+                // ocultar hidden
+                if ((f as any).hidden) return false;
+                // showIf simples: formato "prop === value" ou "prop !== value"
+                const showIf = (f as any).showIf as string | undefined;
+                if (showIf) {
+                  try {
+                    const [left, op, rawRight] = showIf.split(/\s+/);
+                    const right =
+                      rawRight === 'true'
+                        ? true
+                        : rawRight === 'false'
+                          ? false
+                          : rawRight
+                            ? rawRight.replace(/'/g, '')
+                            : rawRight;
+                    const leftVal = left
+                      ?.split('.')
+                      .reduce((acc: any, key: string) => acc?.[key], selectedBlock.properties || {});
+                    if (op === '===') return leftVal === right;
+                    if (op === '!==') return leftVal !== right;
+                  } catch {}
+                }
+                return true;
+              })
+              .reduce((acc: Record<string, BlockFieldSchema[]>, f) => {
+                const group = f.group || 'default';
+                acc[group] = acc[group] || [];
+                acc[group].push(f);
+                return acc;
+              }, {})
+          ).map(([group, fields]) => (
+            <section key={group} className="bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200/60 shadow-sm overflow-hidden">
+              {/* Header do Grupo */}
+              {group !== 'default' && (
+                <div className="bg-gradient-to-r from-gray-50 to-white border-b border-gray-200/60 px-4 py-3">
+                  <div className="flex items-center gap-2">
+                    <div className="w-1.5 h-4 bg-gradient-to-b from-blue-500 to-purple-600 rounded-full" />
+                    <h4 className="text-sm font-bold text-gray-800 uppercase tracking-wider">
+                      {group}
+                    </h4>
+                    <div className="flex-1 h-px bg-gradient-to-r from-gray-200 to-transparent" />
+                    <span className="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded-full">
+                      {fields.length}
+                    </span>
+                  </div>
+                </div>
+              )}
+              
+              {/* Campos do Grupo */}
+              <div className="p-4 space-y-4">
+                {fields.map(field => (
+                  <div key={field.key} className="group">
+                    <div className="bg-white/60 rounded-lg border border-gray-200/40 p-3 hover:border-blue-300/60 hover:shadow-sm transition-all duration-200">
+                      <PropertyField
+                        field={field}
+                        value={selectedBlock.properties?.[field.key]}
+                        onChange={val => onUpdate(selectedBlock.id, { [field.key]: val })}
+                      />
+                      {(field as any).description && (
+                        <p className="text-xs text-gray-500 mt-2 italic bg-gray-50/80 px-2 py-1 rounded border-l-2 border-blue-200">
+                          💡 {(field as any).description}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          ))}
+
+          {/* Ações Rápidas */}
+          <section className="bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200/60 shadow-sm overflow-hidden">
+            <div className="bg-gradient-to-r from-gray-50 to-white border-b border-gray-200/60 px-4 py-3">
+              <div className="flex items-center gap-2">
+                <div className="w-1.5 h-4 bg-gradient-to-b from-green-500 to-emerald-600 rounded-full" />
+                <h4 className="text-sm font-bold text-gray-800 uppercase tracking-wider">
+                  Ações Rápidas
+                </h4>
+                <div className="flex-1 h-px bg-gradient-to-r from-gray-200 to-transparent" />
+                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              </div>
+            </div>
+            
+            <div className="p-4 space-y-4">
+              {/* Reset de Escala */}
+              <div className="bg-white/60 rounded-lg border border-gray-200/40 p-3">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-sm font-medium text-gray-700">Controle de Escala</span>
+                  <button
+                    type="button"
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg text-xs font-medium transition-all duration-200 border border-blue-200"
+                    onClick={() =>
+                      onUpdate(selectedBlock.id, {
+                        scale: 100,
+                        scaleX: undefined,
+                        scaleY: undefined,
+                        scaleOrigin: 'center',
+                        scaleClass: undefined,
+                      })
+                    }
+                  >
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    Resetar
+                  </button>
+                </div>
+                
+                {/* Presets de Escala */}
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-gray-500 font-medium">Presets:</span>
+                  <div className="flex gap-1">
+                    {[90, 95, 100, 105, 110].map(preset => (
+                      <button
+                        key={preset}
+                        type="button"
+                        className={`px-2.5 py-1.5 rounded-md text-xs font-medium transition-all duration-200 ${
+                          selectedBlock.properties?.scale === preset
+                            ? 'bg-blue-500 text-white shadow-sm border border-blue-600'
+                            : 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-200'
+                        }`}
+                        title={`Escala ${preset}%`}
+                        onClick={() => onUpdate(selectedBlock.id, { scale: preset })}
+                      >
+                        {preset}%
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </form>
+      </div>
+      
+      {/* Footer com Ações Principais */}
+      <div className="sticky bottom-0 bg-white/95 backdrop-blur-sm border-t border-gray-200/60 p-4">
+        <div className="flex gap-3">
+          <button
+            type="button"
+            onClick={onClose}
+            className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-medium transition-all duration-200 border border-gray-200"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+            Fechar
           </button>
           <button
             type="button"
-            className="px-3 py-2 rounded-md border text-sm"
             onClick={() => onDelete(selectedBlock.id)}
+            className="flex items-center justify-center gap-2 px-4 py-3 bg-red-50 hover:bg-red-100 text-red-700 rounded-lg font-medium transition-all duration-200 border border-red-200 hover:border-red-300"
+            title="Excluir bloco permanentemente"
           >
-            Excluir bloco
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+            Excluir
           </button>
         </div>
+      </div>
       </form>
     </aside>
   );
