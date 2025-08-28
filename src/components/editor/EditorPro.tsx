@@ -193,6 +193,18 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   const safeCurrentStep = state.currentStep || 1;
   const currentStepKey = `step-${safeCurrentStep}`;
 
+  // Estados de animação/UX
+  const [isDragging, setIsDragging] = useState(false);
+  const [selectionPulse, setSelectionPulse] = useState(false);
+
+  useEffect(() => {
+    if (state.selectedBlockId) {
+      setSelectionPulse(true);
+      const t = setTimeout(() => setSelectionPulse(false), 700);
+      return () => clearTimeout(t);
+    }
+  }, [state.selectedBlockId]);
+
   const currentStepData = useMemo(
     () => getBlocksForStep(safeCurrentStep, state.stepBlocks) || [],
     [safeCurrentStep, state.stepBlocks]
@@ -536,6 +548,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       dragData,
       activeDataCurrent: active.data.current,
     });
+    setIsDragging(true);
     logDragEvent('start', active);
     if (process.env.NODE_ENV === 'development') devLog('Drag start', dragData);
   }, []);
@@ -548,6 +561,8 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         overId: over?.id,
         overData: over?.data?.current,
       });
+
+      setIsDragging(false);
 
       if (!over) {
         console.log('❌ Drop cancelado - sem alvo');
@@ -612,7 +627,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
      ------------------------- */
 
   const StepSidebar: React.FC = () => (
-    <div className="w-[200px] bg-white border-r border-gray-200 flex flex-col">
+    <div className="w-[200px] bg-white border-r border-gray-200 flex flex-col editor-slide-in-left editor-fade-in">
       <div className="p-4 border-b border-gray-200">
         <h3 className="font-semibold text-sm text-gray-900">Etapas do Quiz</h3>
         <p className="text-xs text-gray-500 mt-1">21 etapas configuradas</p>
@@ -631,7 +646,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
                 type="button"
                 onClick={() => handleStepSelect(step)}
                 className={cn(
-                  'w-full text-left p-2 rounded-md text-xs transition-colors',
+                  'w-full text-left p-2 rounded-md text-xs transition-colors editor-smooth-transition editor-hover-lift',
                   isActive
                     ? 'bg-blue-100 border-blue-300 text-blue-900'
                     : 'hover:bg-gray-50 text-gray-700'
@@ -721,7 +736,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
                     description={component.description}
                     icon={<span className="text-lg">{component.icon}</span>}
                     category={component.category}
-                    className="bg-white/80 hover:bg-white border border-gray-200/60 hover:border-blue-300 hover:shadow-md transition-all duration-200 rounded-lg backdrop-blur-sm group-hover:scale-[1.02] transform"
+                    className="bg-white/80 hover:bg-white border border-gray-200/60 hover:border-blue-300 hover:shadow-md transition-all duration-200 rounded-lg backdrop-blur-sm group-hover:scale-[1.02] transform editor-hover-lift editor-smooth-transition"
                   />
                 ))}
               </div>
@@ -743,7 +758,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   );
 
   const CanvasArea: React.FC = () => (
-    <div className="flex-1 flex flex-col bg-gradient-to-br from-gray-50 to-gray-100">
+    <div className="flex-1 flex flex-col bg-gradient-to-br from-gray-50 to-gray-100 editor-fade-in">
       <div className="bg-white/80 backdrop-blur-sm border-b border-gray-200/60 shadow-sm">
         {/* Header Principal */}
         <div className="px-6 py-4">
@@ -1095,7 +1110,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
                 <strong>✏️ Modo Edição Visual:</strong> Conteúdo real com overlays de seleção
                 interativos
               </div>
-              <div className="text-blue-700">
+              <div className="text-blue-700" >
                 {state.selectedBlockId
                   ? `Editando: ${state.selectedBlockId}`
                   : `${currentStepData.length} blocos disponíveis - Clique para editar`}
@@ -1118,7 +1133,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       </div>
 
       {/* Canvas principal com drag & drop - sistema unificado simples */}
-      <div className="flex-1 p-4" data-canvas-container>
+      <div className={cn('flex-1 p-4 editor-smooth-transition', isDragging && 'editor-drop-zone-active')} data-canvas-container>
         <CanvasDropZone
           blocks={currentStepData}
           selectedBlockId={state.selectedBlockId}
@@ -1134,7 +1149,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   );
 
   const PropertiesColumn: React.FC = () => (
-    <div className="w-[360px] min-w-[300px] bg-white border-l border-gray-200 flex flex-col">
+    <div className="w-[360px] min-w-[300px] bg-white border-l border-gray-200 flex flex-col editor-slide-in-right editor-fade-in">
       {selectedBlock ? (
         <Suspense
           fallback={<div className="p-4 text-sm text-gray-600">Carregando propriedades…</div>}
