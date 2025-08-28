@@ -1056,7 +1056,9 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       {/* Canvas principal com drag & drop - sistema unificado simples */}
       <div className={cn('flex-1 min-w-0 p-2 overflow-x-hidden editor-smooth-transition', isDragging && 'editor-drop-zone-active')} data-canvas-container>
         <div
-          className="customizable-width mx-auto w-full px-2 sm:px-4 sm:max-w-[560px] md:max-w-[720px] lg:max-w-[960px] xl:max-w-[1140px] 2xl:max-w-[1280px]"
+          className="customizable-width mx-auto w-full px-2 sm:px-4
+                     sm:max-w-[520px] md:max-w-[680px]
+                     lg:max-w-[820px] xl:max-w-[960px] 2xl:max-w-[1080px]"
         >
           <CanvasDropZone
             blocks={currentStepData}
