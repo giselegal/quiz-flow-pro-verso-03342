@@ -28,8 +28,7 @@
   },
   "include": ["src"],
   "exclude": [
-    "src/pages/editors-backup/**",
-    "src/pages/examples/**",
-    "examples/**"
+  "src/pages/examples/**",
+  "examples/**"
   ]
 }
