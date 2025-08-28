@@ -195,7 +195,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
 
   // Estados de animação/UX
   const [isDragging, setIsDragging] = useState(false);
-  const [selectionPulse, setSelectionPulse] = useState(false);
+  const [, setSelectionPulse] = useState(false);
 
   useEffect(() => {
     if (state.selectedBlockId) {
@@ -1030,9 +1030,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
                 </svg>
                 Salvar
               </button>
-            </div>
-          </div>
-        </div>
+            
               <button
                 className="px-4 py-2 bg-white border border-gray-300 text-gray-700 text-sm rounded-md hover:bg-gray-50 transition-colors"
                 title="Remover publicação da etapa atual"
@@ -1098,6 +1096,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
           </div>
         </div>
 
+        {/*
         <div className="mt-3 p-3 rounded-lg border">
           {mode === 'edit' ? (
             <div
@@ -1130,6 +1129,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
             </div>
           )}
         </div>
+        */}
       </div>
 
       {/* Canvas principal com drag & drop - sistema unificado simples */}

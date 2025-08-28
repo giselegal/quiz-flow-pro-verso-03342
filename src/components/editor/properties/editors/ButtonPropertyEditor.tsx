@@ -249,14 +249,16 @@ export const ButtonPropertyEditor: React.FC<ButtonPropertyEditorProps> = ({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {buttonTypeOptions.filter(option => option.value && option.value !== '').map(option => (
-                    <SelectItem key={option.value} value={option.value}>
-                      <div className="flex flex-col">
-                        <span>{option.label}</span>
-                        <span className="text-xs text-gray-500">{option.description}</span>
-                      </div>
-                    </SelectItem>
-                  ))}
+                  {buttonTypeOptions
+                    .filter(option => option.value && option.value !== '')
+                    .map(option => (
+                      <SelectItem key={option.value} value={option.value}>
+                        <div className="flex flex-col">
+                          <span>{option.label}</span>
+                          <span className="text-xs text-gray-500">{option.description}</span>
+                        </div>
+                      </SelectItem>
+                    ))}
                 </SelectContent>
               </Select>
             </div>
@@ -268,11 +270,13 @@ export const ButtonPropertyEditor: React.FC<ButtonPropertyEditorProps> = ({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {sizeOptions.filter(option => option.value && option.value !== '').map(option => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
+                  {sizeOptions
+                    .filter(option => option.value && option.value !== '')
+                    .map(option => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
                 </SelectContent>
               </Select>
             </div>
@@ -361,14 +365,16 @@ export const ButtonPropertyEditor: React.FC<ButtonPropertyEditorProps> = ({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {iconOptions.filter(option => option.value && option.value !== '').map(option => (
-                    <SelectItem key={option.value} value={option.value}>
-                      <div className="flex items-center gap-2">
-                        {option.icon && <option.icon className="h-4 w-4" />}
-                        {option.label}
-                      </div>
-                    </SelectItem>
-                  ))}
+                  {iconOptions
+                    .filter(option => option.value && option.value !== '')
+                    .map(option => (
+                      <SelectItem key={option.value} value={option.value}>
+                        <div className="flex items-center gap-2">
+                          {option.icon && <option.icon className="h-4 w-4" />}
+                          {option.label}
+                        </div>
+                      </SelectItem>
+                    ))}
                 </SelectContent>
               </Select>
             </div>
@@ -547,11 +553,13 @@ export const ButtonPropertyEditor: React.FC<ButtonPropertyEditorProps> = ({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {animationOptions.filter(option => option.value && option.value !== '').map(option => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
+                  {animationOptions
+                    .filter(option => option.value && option.value !== '')
+                    .map(option => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
                 </SelectContent>
               </Select>
             </div>

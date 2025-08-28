@@ -22,7 +22,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
     stageActions: { setActiveStage, addStage, removeStage },
     computed: { stageCount, currentBlocks },
   } = useEditor();
-  
+
   // ✅ TIMESTAMP PARA DEBUG
   const timestamp = new Date().toLocaleTimeString();
   console.log(
@@ -47,12 +47,12 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
     console.log('🚨 EVENTO CLICK RECEBIDO - StageID:', stageId);
     console.log('📊 Estado atual - ActiveStageId:', activeStageId);
     console.log('🔢 Blocos atuais:', currentBlocks.length);
-    
+
     if (e) {
       e.preventDefault();
       e.stopPropagation();
     }
-    
+
     try {
       // setActiveStage is async, so we await it properly
       await setActiveStage(stageId);
@@ -60,7 +60,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
     } catch (error) {
       console.error('❌ Stage change failed:', error);
     }
-    
+
     if (onStageSelect) {
       onStageSelect(stageId);
     }

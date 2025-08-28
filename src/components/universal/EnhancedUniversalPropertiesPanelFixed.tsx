@@ -707,8 +707,8 @@ const EnhancedUniversalPropertiesPanelFixed: React.FC<PanelProps> = ({
           </button>
         </div>
       </div>
-      </form>
-    </aside>
+    
+  </aside>
   );
 };
 

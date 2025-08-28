@@ -336,11 +336,17 @@ export const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> =
                   <SelectValue placeholder={`Selecione ${label.toLowerCase()}`} />
                 </SelectTrigger>
                 <SelectContent>
-                  {options?.filter(option => option.value && option.value !== '').map(option => (
-                    <SelectItem key={option.value} value={option.value} disabled={option.disabled}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
+                  {options
+                    ?.filter(option => option.value && option.value !== '')
+                    .map(option => (
+                      <SelectItem
+                        key={option.value}
+                        value={option.value}
+                        disabled={option.disabled}
+                      >
+                        {option.label}
+                      </SelectItem>
+                    ))}
                 </SelectContent>
               </Select>
             );

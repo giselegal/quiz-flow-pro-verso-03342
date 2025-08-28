@@ -9,7 +9,7 @@ type DemoMode = 'showcase' | 'themed-quiz' | 'complete-demo' | 'menu';
 
 /**
  * 🎮 APLICAÇÃO DEMO COMPLETA DOS COMPONENTES DE QUIZ
- * 
+ *
  * Demonstra todas as funcionalidades implementadas nos 4 passos
  */
 export const QuizDemoApp: React.FC = () => {
@@ -19,9 +19,7 @@ export const QuizDemoApp: React.FC = () => {
   const renderMode = () => {
     switch (currentMode) {
       case 'showcase':
-        return (
-          <QuizShowcase onClose={() => setCurrentMode('menu')} />
-        );
+        return <QuizShowcase onClose={() => setCurrentMode('menu')} />;
 
       case 'themed-quiz':
         return (
@@ -38,18 +36,13 @@ export const QuizDemoApp: React.FC = () => {
             <QuizAnimationWrapper animation="fadeIn">
               <QuizCard variant="glass" className="mb-6">
                 <div className="flex justify-between items-center">
-                  <h1 className="text-2xl font-bold">
-                    📱 Quiz Completo - Exemplo Prático
-                  </h1>
-                  <QuizButton
-                    variant="secondary"
-                    onClick={() => setCurrentMode('menu')}
-                  >
+                  <h1 className="text-2xl font-bold">📱 Quiz Completo - Exemplo Prático</h1>
+                  <QuizButton variant="secondary" onClick={() => setCurrentMode('menu')}>
                     ← Voltar ao Menu
                   </QuizButton>
                 </div>
               </QuizCard>
-              
+
               <QuizDemo />
             </QuizAnimationWrapper>
           </div>
@@ -72,12 +65,13 @@ export const QuizDemoApp: React.FC = () => {
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {/* Showcase de Componentes */}
                     <div className="group">
-                      <QuizCard variant="bordered" className="h-full hover-lift cursor-pointer transition-all duration-300">
+                      <QuizCard
+                        variant="bordered"
+                        className="h-full hover-lift cursor-pointer transition-all duration-300"
+                      >
                         <div className="text-center" onClick={() => setCurrentMode('showcase')}>
                           <div className="text-4xl mb-4 group-hover:animate-bounce">🎨</div>
-                          <h3 className="text-xl font-semibold mb-2">
-                            Showcase Visual
-                          </h3>
+                          <h3 className="text-xl font-semibold mb-2">Showcase Visual</h3>
                           <p className="text-sm text-gray-600 mb-4">
                             Explore todos os temas, componentes e estilos disponíveis
                           </p>
@@ -90,12 +84,13 @@ export const QuizDemoApp: React.FC = () => {
 
                     {/* Quiz Temático */}
                     <div className="group">
-                      <QuizCard variant="bordered" className="h-full hover-lift cursor-pointer transition-all duration-300">
+                      <QuizCard
+                        variant="bordered"
+                        className="h-full hover-lift cursor-pointer transition-all duration-300"
+                      >
                         <div className="text-center" onClick={() => setCurrentMode('themed-quiz')}>
                           <div className="text-4xl mb-4 group-hover:animate-pulse">🎭</div>
-                          <h3 className="text-xl font-semibold mb-2">
-                            Quiz Temático
-                          </h3>
+                          <h3 className="text-xl font-semibold mb-2">Quiz Temático</h3>
                           <p className="text-sm text-gray-600 mb-4">
                             Experimente o quiz interativo com diferentes temas visuais
                           </p>
@@ -108,12 +103,16 @@ export const QuizDemoApp: React.FC = () => {
 
                     {/* Exemplo Completo */}
                     <div className="group">
-                      <QuizCard variant="bordered" className="h-full hover-lift cursor-pointer transition-all duration-300">
-                        <div className="text-center" onClick={() => setCurrentMode('complete-demo')}>
+                      <QuizCard
+                        variant="bordered"
+                        className="h-full hover-lift cursor-pointer transition-all duration-300"
+                      >
+                        <div
+                          className="text-center"
+                          onClick={() => setCurrentMode('complete-demo')}
+                        >
                           <div className="text-4xl mb-4 group-hover:animate-glow">📱</div>
-                          <h3 className="text-xl font-semibold mb-2">
-                            Demo Completo
-                          </h3>
+                          <h3 className="text-xl font-semibold mb-2">Demo Completo</h3>
                           <p className="text-sm text-gray-600 mb-4">
                             Teste o exemplo completo com 21 perguntas e resultados
                           </p>
@@ -127,10 +126,8 @@ export const QuizDemoApp: React.FC = () => {
 
                   {/* Informações dos Passos Implementados */}
                   <div className="mt-12 p-6 bg-gray-50 rounded-xl">
-                    <h2 className="text-xl font-semibold mb-4">
-                      ✅ Funcionalidades Implementadas
-                    </h2>
-                    
+                    <h2 className="text-xl font-semibold mb-4">✅ Funcionalidades Implementadas</h2>
+
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
                       <div className="space-y-2">
                         <div className="flex items-center space-x-2">
@@ -142,7 +139,7 @@ export const QuizDemoApp: React.FC = () => {
                           <span className="text-sm">Testes Funcionais Completos</span>
                         </div>
                       </div>
-                      
+
                       <div className="space-y-2">
                         <div className="flex items-center space-x-2">
                           <span className="text-green-500">📱</span>
@@ -169,9 +166,5 @@ export const QuizDemoApp: React.FC = () => {
     }
   };
 
-  return (
-    <div className="min-h-screen">
-      {renderMode()}
-    </div>
-  );
+  return <div className="min-h-screen">{renderMode()}</div>;
 };

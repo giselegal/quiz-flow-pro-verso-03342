@@ -44,11 +44,13 @@ export const PropertySelect: React.FC<PropertySelectProps> = ({
           <SelectValue placeholder={placeholder || `Selecione ${label.toLowerCase()}...`} />
         </SelectTrigger>
         <SelectContent>
-          {options.filter(option => option && option !== '').map(option => (
-            <SelectItem key={option} value={option}>
-              {option}
-            </SelectItem>
-          ))}
+          {options
+            .filter(option => option && option !== '')
+            .map(option => (
+              <SelectItem key={option} value={option}>
+                {option}
+              </SelectItem>
+            ))}
         </SelectContent>
       </Select>
 
