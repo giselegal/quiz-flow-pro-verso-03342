@@ -26,7 +26,7 @@ const Input: React.FC<React.InputHTMLAttributes<HTMLInputElement>> = props => (
   <input
     {...props}
     className={
-      'w-full rounded-md border px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/60 ' +
+      'w-full rounded-md border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-3 py-2 text-sm text-gray-900 dark:text-gray-100 outline-none focus:ring-2 focus:ring-primary/60 transition-all duration-200 ' +
       (props.className || '')
     }
   />
@@ -36,7 +36,7 @@ const Textarea: React.FC<React.TextareaHTMLAttributes<HTMLTextAreaElement>> = pr
   <textarea
     {...props}
     className={
-      'w-full rounded-md border px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/60 min-h-[96px] ' +
+      'w-full rounded-md border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-3 py-2 text-sm text-gray-900 dark:text-gray-100 outline-none focus:ring-2 focus:ring-primary/60 min-h-[96px] transition-all duration-200 ' +
       (props.className || '')
     }
   />
@@ -49,14 +49,14 @@ const Switch: React.FC<{ checked: boolean; onChange: (val: boolean) => void }> =
   <button
     type="button"
     onClick={() => onChange(!checked)}
-    className={`inline-flex items-center h-6 rounded-full px-1 transition-colors duration-150 ${
-      checked ? 'bg-primary text-white' : 'bg-muted'
+    className={`relative inline-flex items-center h-6 rounded-full w-11 transition-colors duration-200 ${
+      checked ? 'bg-primary' : 'bg-gray-300 dark:bg-gray-600'
     }`}
     aria-pressed={checked}
   >
     <span
-      className={`inline-block w-4 h-4 bg-background rounded-full transform transition-transform duration-150 ${
-        checked ? 'translate-x-4' : ''
+      className={`inline-block w-4 h-4 bg-white rounded-full transform transition-transform duration-200 ${
+        checked ? 'translate-x-6' : 'translate-x-1'
       }`}
     />
   </button>
@@ -141,7 +141,7 @@ const OptionsListEditor: React.FC<{
                     className="w-full h-full object-cover rounded"
                   />
                 ) : (
-                  <span className="text-xs text-muted-foreground">📷</span>
+                  <span className="text-sm text-muted-foreground">📷</span>
                 )}
               </div>
               <Input
@@ -236,10 +236,10 @@ const OptionsListEditor: React.FC<{
             </div>
 
             {/* Ações */}
-            <div className="flex-shrink-0 flex gap-2">
+            <div className="flex-shrink-0 flex items-center gap-2 border-t border-gray-200 dark:border-gray-700 pt-3 mt-3">
               <button
                 type="button"
-                className="text-xs py-1 px-2 border rounded hover:bg-muted"
+                className="text-xs py-1.5 px-2.5 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors flex items-center gap-1"
                 title="Duplicar"
                 onClick={() => {
                   const arr = [...value];
@@ -247,25 +247,27 @@ const OptionsListEditor: React.FC<{
                   onChange(arr);
                 }}
               >
-                ⎘
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor"><path d="M7 9a2 2 0 012-2h6a2 2 0 012 2v6a2 2 0 01-2 2H9a2 2 0 01-2-2V9z" /><path d="M5 3a2 2 0 00-2 2v6a2 2 0 002 2h1V9a2 2 0 012-2h6V5a2 2 0 00-2-2H5z" /></svg>
+                Duplicar
               </button>
               <button
                 type="button"
-                className="text-xs py-1 px-2 border rounded hover:bg-destructive/10 text-destructive"
+                className="text-xs py-1.5 px-2.5 border border-red-300 dark:border-red-700/50 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-md hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors flex items-center gap-1"
                 onClick={() => onChange(value.filter((_, i) => i !== idx))}
                 title="Remover"
               >
-                🗑️
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm4 0a1 1 0 012 0v6a1 1 0 11-2 0V8z" clipRule="evenodd" /></svg>
+                Remover
               </button>
             </div>
           </div>
         ))}
       </div>
 
-      <div className="flex gap-2">
+      <div className="flex gap-3">
         <button
           type="button"
-          className="flex-1 text-sm py-2 px-3 border border-dashed rounded-lg hover:bg-muted transition-colors"
+          className="flex-1 text-sm py-2.5 px-4 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700/50 hover:border-primary transition-colors text-gray-600 dark:text-gray-400"
           onClick={() =>
             onChange([
               ...(value || []),
@@ -282,15 +284,15 @@ const OptionsListEditor: React.FC<{
             ])
           }
         >
-          + Adicionar opção
+          + Adicionar Opção
         </button>
         {value.length > 0 && (
           <button
             type="button"
-            className="text-sm py-2 px-3 border border-destructive/50 text-destructive rounded-lg hover:bg-destructive/10 transition-colors"
+            className="text-sm py-2.5 px-4 border border-red-300 dark:border-red-700/50 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors"
             onClick={() => onChange(value.slice(0, -1))}
           >
-            Remover última
+            Remover Última
           </button>
         )}
       </div>
@@ -331,6 +333,7 @@ function PropertyField({
             type="number"
             value={Number(effectiveValue) || 0}
             onChange={e => onChange(Number(e.target.value))}
+            placeholder={field.placeholder}
           />
         </FieldWrapper>
       );
@@ -351,10 +354,9 @@ function PropertyField({
             step={field.step ?? 1}
             value={Number(effectiveValue ?? field.min ?? 0)}
             onChange={e => onChange(Number(e.target.value))}
-            className="w-full"
+            className="w-full h-2 bg-gray-200 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer"
             title={field.description || displayVal}
           />
-          <div className="text-xs text-muted-foreground">{displayVal}</div>
         </FieldWrapper>
       );
     }
@@ -362,18 +364,8 @@ function PropertyField({
       return (
         <FieldWrapper>
           <Label>{field.label}</Label>
-          <Switch checked={!!effectiveValue} onChange={onChange} />
-        </FieldWrapper>
-      );
-    case 'select': {
-      const opts = field.options || [];
-      const isNum = typeof opts[0]?.value === 'number';
-      const current = effectiveValue ?? '';
-      return (
-        <FieldWrapper>
-          <Label>{field.label}</Label>
           <select
-            className="w-full rounded-md border px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/60"
+            className="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-sm text-gray-900 dark:text-gray-100 outline-none focus:ring-2 focus:ring-primary/60"
             value={current}
             onChange={e => onChange(isNum ? Number(e.target.value) : e.target.value)}
           >
@@ -386,7 +378,6 @@ function PropertyField({
           </select>
         </FieldWrapper>
       );
-    }
     case 'color':
       return (
         <FieldWrapper>
@@ -581,7 +572,7 @@ const EnhancedUniversalPropertiesPanelFixed: React.FC<PanelProps> = ({
                 <div className="bg-gradient-to-r from-gray-50 to-white border-b border-gray-200/60 px-4 py-3">
                   <div className="flex items-center gap-2">
                     <div className="w-1.5 h-4 bg-gradient-to-b from-blue-500 to-purple-600 rounded-full" />
-                    <h4 className="text-sm font-bold text-gray-800 uppercase tracking-wider">
+                    <h4 className="text-sm font-bold text-gray-800 dark:text-gray-200 uppercase tracking-wider">
                       {group}
                     </h4>
                     <div className="flex-1 h-px bg-gradient-to-r from-gray-200 to-transparent" />
@@ -619,7 +610,7 @@ const EnhancedUniversalPropertiesPanelFixed: React.FC<PanelProps> = ({
             <div className="bg-gradient-to-r from-gray-50 to-white border-b border-gray-200/60 px-4 py-3">
               <div className="flex items-center gap-2">
                 <div className="w-1.5 h-4 bg-gradient-to-b from-green-500 to-emerald-600 rounded-full" />
-                <h4 className="text-sm font-bold text-gray-800 uppercase tracking-wider">
+                <h4 className="text-sm font-bold text-gray-800 dark:text-gray-200 uppercase tracking-wider">
                   Ações Rápidas
                 </h4>
                 <div className="flex-1 h-px bg-gradient-to-r from-gray-200 to-transparent" />
@@ -657,14 +648,14 @@ const EnhancedUniversalPropertiesPanelFixed: React.FC<PanelProps> = ({
                 {/* Presets de Escala */}
                 <div className="flex items-center gap-2">
                   <span className="text-xs text-gray-500 font-medium">Presets:</span>
-                  <div className="flex gap-1">
+                  <div className="flex gap-1.5">
                     {[90, 95, 100, 105, 110].map(preset => (
                       <button
                         key={preset}
                         type="button"
                         className={`px-2.5 py-1.5 rounded-md text-xs font-medium transition-all duration-200 ${
                           selectedBlock.properties?.scale === preset
-                            ? 'bg-blue-500 text-white shadow-sm border border-blue-600'
+                            ? 'bg-blue-500 text-white shadow-md border border-blue-600'
                             : 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-200'
                         }`}
                         title={`Escala ${preset}%`}
@@ -682,14 +673,14 @@ const EnhancedUniversalPropertiesPanelFixed: React.FC<PanelProps> = ({
       </div>
       
       {/* Footer com Ações Principais */}
-      <div className="sticky bottom-0 bg-white/95 backdrop-blur-sm border-t border-gray-200/60 p-4">
+      <div className="sticky bottom-0 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-t border-gray-200 dark:border-gray-700 p-4">
         <div className="flex gap-3">
           <button
             type="button"
             onClick={onClose}
-            className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-medium transition-all duration-200 border border-gray-200"
+            className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 rounded-lg font-semibold transition-all duration-200 border border-gray-300 dark:border-gray-600"
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
             Fechar
@@ -700,7 +691,7 @@ const EnhancedUniversalPropertiesPanelFixed: React.FC<PanelProps> = ({
             className="flex items-center justify-center gap-2 px-4 py-3 bg-red-50 hover:bg-red-100 text-red-700 rounded-lg font-medium transition-all duration-200 border border-red-200 hover:border-red-300"
             title="Excluir bloco permanentemente"
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
             </svg>
             Excluir

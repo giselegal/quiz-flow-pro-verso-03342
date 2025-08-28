@@ -115,6 +115,38 @@ const animationStyles = `
     transform: scale(1.02);
     transition: all 0.2s ease-out;
   }
+
+  .editor-slide-up {
+    transform: translateY(20px);
+    opacity: 0;
+    animation: slideUp 0.3s ease-out forwards;
+  }
+
+  @keyframes slideUp {
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  .editor-bounce {
+    animation: bounce 0.5s cubic-bezier(0.36, 0, 0.66, -0.56) forwards;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+  }
+
+  .editor-rotate-hover:hover {
+    transform: rotate(5deg);
+    transition: transform 0.3s ease-out;
+  }
+
+  .editor-scale-click:active {
+    transform: scale(0.95);
+    transition: transform 0.1s ease-out;
+  }
 `;
 
 // Injetar estilos no documento
@@ -142,8 +174,8 @@ if (typeof document !== 'undefined') {
  */
 
 // lazy-load do painel de propriedades (reduz custo de bundle inicial)
-const EnhancedUniversalPropertiesPanelFixed = React.lazy(
-  () => import('@/components/universal/EnhancedUniversalPropertiesPanelFixed')
+const PropertiesPanel = React.lazy(
+  () => import('@/components/editor/properties/PropertiesPanel')
 );
 
 interface EditorProProps {
@@ -646,7 +678,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
                 type="button"
                 onClick={() => handleStepSelect(step)}
                 className={cn(
-                  'w-full text-left p-2 rounded-md text-xs transition-colors editor-smooth-transition editor-hover-lift',
+                  'w-full text-left p-2 rounded-md text-xs transition-colors editor-smooth-transition editor-hover-lift editor-scale-click',
                   isActive
                     ? 'bg-blue-100 border-blue-300 text-blue-900'
                     : 'hover:bg-gray-50 text-gray-700'
@@ -679,11 +711,11 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   );
 
   const ComponentsSidebar: React.FC = () => (
-    <div className="w-[320px] bg-gradient-to-b from-white to-gray-50/50 border-r border-gray-200/60 flex flex-col shadow-sm">
+    <div className="w-[320px] bg-gradient-to-b from-white to-gray-50/50 border-r border-gray-200/60 flex flex-col shadow-sm editor-slide-in-right editor-fade-in">
       {/* Header da Sidebar */}
       <div className="p-6 border-b border-gray-200/60 bg-white/80 backdrop-blur-sm">
-        <div className="flex items-center gap-3 mb-3">
-          <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-600 rounded-lg flex items-center justify-center shadow-lg">
+        <div className="flex items-center gap-3 mb-3 editor-bounce">
+          <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-600 rounded-lg flex items-center justify-center shadow-lg editor-rotate-hover">
             <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
             </svg>
@@ -736,7 +768,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
                     description={component.description}
                     icon={<span className="text-lg">{component.icon}</span>}
                     category={component.category}
-                    className="bg-white/80 hover:bg-white border border-gray-200/60 hover:border-blue-300 hover:shadow-md transition-all duration-200 rounded-lg backdrop-blur-sm group-hover:scale-[1.02] transform editor-hover-lift editor-smooth-transition"
+                    className="bg-white/80 hover:bg-white border border-gray-200/60 hover:border-blue-300 hover:shadow-md transition-all duration-200 rounded-lg backdrop-blur-sm group-hover:scale-[1.02] transform editor-hover-lift editor-smooth-transition editor-scale-click"
                   />
                 ))}
               </div>
@@ -811,7 +843,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
             {/* Seção de Controles */}
             <div className="flex items-center gap-4">
               {/* Indicador de Status */}
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 editor-fade-in">
                 <div
                   className={cn(
                     'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border shadow-sm',
@@ -830,13 +862,13 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               </div>
 
               {/* Controles de Histórico */}
-              <div className="flex items-center bg-white rounded-lg border border-gray-200 shadow-sm">
+              <div className="flex items-center bg-white rounded-lg border border-gray-200 shadow-sm editor-fade-in">
                 <button
                   type="button"
                   onClick={actions.undo}
                   disabled={!actions.canUndo}
                   className={cn(
-                    'flex items-center gap-1.5 px-3 py-2 text-sm font-medium rounded-l-lg transition-all duration-200',
+                    'flex items-center gap-1.5 px-3 py-2 text-sm font-medium rounded-l-lg transition-all duration-200 editor-scale-click',
                     actions.canUndo
                       ? 'text-gray-700 hover:bg-gray-50 hover:text-blue-600'
                       : 'text-gray-400 cursor-not-allowed bg-gray-50'
@@ -854,7 +886,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
                   onClick={actions.redo}
                   disabled={!actions.canRedo}
                   className={cn(
-                    'flex items-center gap-1.5 px-3 py-2 text-sm font-medium rounded-r-lg transition-all duration-200',
+                    'flex items-center gap-1.5 px-3 py-2 text-sm font-medium rounded-r-lg transition-all duration-200 editor-scale-click',
                     actions.canRedo
                       ? 'text-gray-700 hover:bg-gray-50 hover:text-blue-600'
                       : 'text-gray-400 cursor-not-allowed bg-gray-50'
@@ -869,7 +901,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               </div>
 
               {/* Controles de Import/Export */}
-              <div className="flex items-center bg-white rounded-lg border border-gray-200 shadow-sm">
+              <div className="flex items-center bg-white rounded-lg border border-gray-200 shadow-sm editor-fade-in">
                 <button
                   type="button"
                   onClick={async () => {
@@ -883,7 +915,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
                       notification?.error?.('Erro ao exportar JSON');
                     }
                   }}
-                  className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-blue-600 rounded-l-lg transition-all duration-200"
+                  className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-blue-600 rounded-l-lg transition-all duration-200 editor-scale-click"
                   title="Exportar como JSON"
                   aria-label="Exportar estado atual como JSON"
                 >
@@ -926,7 +958,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-blue-600 rounded-r-lg transition-all duration-200"
+                  className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-blue-600 rounded-r-lg transition-all duration-200 editor-scale-click"
                   title="Importar JSON"
                   aria-label="Importar estado do editor via JSON"
                 >
@@ -938,11 +970,11 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               </div>
 
               {/* Toggle de Tema */}
-              <div className="flex bg-gray-100 rounded-lg p-1 border border-gray-200 shadow-sm">
+              <div className="flex bg-gray-100 rounded-lg p-1 border border-gray-200 shadow-sm editor-fade-in">
                 <button
                   type="button"
                   onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                  className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-blue-600 rounded-lg transition-all duration-200"
+                  className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-blue-600 rounded-lg transition-all duration-200 editor-scale-click"
                   title={`Alternar para tema ${theme === 'dark' ? 'claro' : 'escuro'}`}
                 >
                   {theme === 'dark' ? (
@@ -959,7 +991,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               </div>
 
               {/* Toggle Edit/Preview */}
-              <div className="flex bg-gray-100 rounded-lg p-1 border border-gray-200 shadow-sm">
+              <div className="flex bg-gray-100 rounded-lg p-1 border border-gray-200 shadow-sm editor-fade-in">
                 <button
                   type="button"
                   onClick={() => setMode('edit')}
@@ -1032,7 +1064,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               </button>
             
               <button
-                className="px-4 py-2 bg-white border border-gray-300 text-gray-700 text-sm rounded-md hover:bg-gray-50 transition-colors"
+                className="px-4 py-2 bg-white border border-gray-300 text-gray-700 text-sm rounded-md hover:bg-gray-50 transition-colors editor-scale-click"
                 title="Remover publicação da etapa atual"
                 onClick={() => {
                   try {
@@ -1059,7 +1091,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
                 ⏏️ Despublicar
               </button>
               <button
-                className="px-4 py-2 bg-green-600 text-white text-sm rounded-md hover:bg-green-700 transition-colors"
+                className="px-4 py-2 bg-green-600 text-white text-sm rounded-md hover:bg-green-700 transition-colors editor-scale-click"
                 title="Publicar todas as etapas com conteúdo"
                 onClick={() => {
                   try {
@@ -1142,7 +1174,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
             actions.updateBlock(currentStepKey, id, updates)
           }
           onDeleteBlock={(id: string) => actions.removeBlock(currentStepKey, id)}
-          className="max-w-2xl mx-auto"
+          className="h-full w-full editor-pulse-highlight"
         />
       </div>
     </div>
@@ -1154,17 +1186,17 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         <Suspense
           fallback={<div className="p-4 text-sm text-gray-600">Carregando propriedades…</div>}
         >
-          <EnhancedUniversalPropertiesPanelFixed
+          <PropertiesPanel
             selectedBlock={selectedBlock as any}
-            onUpdate={(blockId: string, updates: Record<string, any>) =>
-              actions.updateBlock(currentStepKey, blockId, updates)
+            onUpdate={(updates: Record<string, any>) =>
+              actions.updateBlock(currentStepKey, selectedBlock.id, updates)
             }
             onClose={() => actions.setSelectedBlockId(null)}
-            onDelete={(blockId: string) => actions.removeBlock(currentStepKey, blockId)}
+            onDelete={() => actions.removeBlock(currentStepKey, selectedBlock.id)}
           />
         </Suspense>
       ) : (
-        <div className="h-full p-6 text-sm text-gray-600">
+        <div className="h-full p-6 text-sm text-gray-600 editor-fade-in editor-slide-up">
           Selecione um bloco no canvas para editar suas propriedades.
         </div>
       )}
@@ -1187,8 +1219,8 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
           <ComponentsSidebar />
           <div className="flex-1 min-w-0 flex">
             <CanvasArea />
+            {state.selectedBlockId && <PropertiesColumn />}
           </div>
-          <PropertiesColumn />
         </div>
       </DndContext>
 
