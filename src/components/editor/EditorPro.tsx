@@ -1112,7 +1112,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
           <ComponentsSidebar />
           <div className="flex-1 min-w-0 flex">
             <CanvasArea />
-            {state.selectedBlockId && <PropertiesColumn />}
+            <PropertiesColumn />
           </div>
         </div>
       </DndContext>
