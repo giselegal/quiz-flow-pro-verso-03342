@@ -548,7 +548,9 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
      ------------------------- */
 
   const StepSidebar: React.FC = () => (
-    <div className="w-[180px] min-w-[180px] flex-shrink-0 h-screen sticky top-0 bg-white border-r border-gray-200 flex flex-col editor-slide-in-left editor-fade-in">
+    <div className="w-[150px] lg:w-[160px] xl:w-[180px] 2xl:w-[200px]
+                    min-w-[150px] lg:min-w-[160px] xl:min-w-[180px] 2xl:min-w-[200px]
+                    flex-shrink-0 h-screen sticky top-0 bg-white border-r border-gray-200 flex flex-col editor-slide-in-left editor-fade-in">
       <div className="p-4 border-b border-gray-200">
         <h3 className="font-semibold text-sm text-gray-900">Etapas do Quiz</h3>
         <p className="text-xs text-gray-500 mt-1">21 etapas configuradas</p>
@@ -600,7 +602,9 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   );
 
   const ComponentsSidebar: React.FC = () => (
-    <div className="w-[280px] min-w-[280px] flex-shrink-0 h-screen sticky top-0 bg-gradient-to-b from-white to-gray-50/50 border-r border-gray-200/60 flex flex-col shadow-sm editor-slide-in-right editor-fade-in">
+    <div className="w-[220px] lg:w-[240px] xl:w-[260px] 2xl:w-[280px]
+                    min-w-[220px] lg:min-w-[240px] xl:min-w-[260px] 2xl:min-w-[280px]
+                    flex-shrink-0 h-screen sticky top-0 bg-gradient-to-b from-white to-gray-50/50 border-r border-gray-200/60 flex flex-col shadow-sm editor-slide-in-right editor-fade-in">
       {/* Header da Sidebar */}
       <div className="p-6 border-b border-gray-200/60 bg-white/80 backdrop-blur-sm">
         <div className="flex items-center gap-3 mb-3 editor-bounce">
@@ -1056,9 +1060,9 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       {/* Canvas principal com drag & drop - sistema unificado simples */}
       <div className={cn('flex-1 min-w-0 p-2 overflow-x-hidden editor-smooth-transition', isDragging && 'editor-drop-zone-active')} data-canvas-container>
         <div
-          className="customizable-width mx-auto w-full px-2 sm:px-4
-                     sm:max-w-[520px] md:max-w-[680px]
-                     lg:max-w-[820px] xl:max-w-[960px] 2xl:max-w-[1080px]"
+          className="customizable-width mx-auto w-full px-2 sm:px-3 md:px-4
+                     sm:max-w-[500px] md:max-w-[640px]
+                     lg:max-w-[760px] xl:max-w-[900px] 2xl:max-w-[1000px]"
         >
           <CanvasDropZone
             blocks={currentStepData}
@@ -1076,8 +1080,8 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   );
 
   const PropertiesColumn: React.FC = () => (
-    <div className="w-[260px] sm:w-[280px] lg:w-[320px] xl:w-[320px] 2xl:w-[320px]
-                    min-w-[260px] sm:min-w-[280px] lg:min-w-[320px] xl:min-w-[320px] 2xl:min-w-[320px]
+    <div className="w-[240px] sm:w-[260px] md:w-[280px] lg:w-[320px] xl:w-[320px] 2xl:w-[320px]
+                    min-w-[240px] sm:min-w-[260px] md:min-w-[280px] lg:min-w-[320px] xl:min-w-[320px] 2xl:min-w-[320px]
                     max-w-[320px] flex-shrink-0 h-screen sticky top-0 overflow-y-auto
                     bg-white border-l border-gray-200 flex flex-col editor-slide-in-right editor-fade-in">
       {selectedBlock ? (
