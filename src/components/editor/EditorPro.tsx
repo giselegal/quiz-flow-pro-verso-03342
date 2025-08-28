@@ -28,7 +28,7 @@ import {
   useSensors,
 } from '@dnd-kit/core';
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
-import React, { Suspense, useCallback, useMemo, useRef, useState } from 'react';
+import React, { Suspense, useCallback, useMemo, useRef, useState, useEffect } from 'react';
 import { useEditor } from './EditorProvider';
 
 /**
@@ -146,49 +146,50 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   }, []);
 
   // Helper centralizado: calcula índice alvo com base no alvo de drop
-  function getTargetIndexFromOver(
-    overIdStrLocal: string | null,
-    overDataLocal: any,
-    mode: 'add' | 'reorder'
-  ): number {
-    // 0) Compatibilidade com OptimizedCanvasDropZone: ids no formato dnd-block-<blockId>
-    let cleanedOverId: string | null = overIdStrLocal;
-    if (cleanedOverId && cleanedOverId.startsWith('dnd-block-')) {
-      cleanedOverId = cleanedOverId.replace(/^dnd-block-/, '');
-    }
-    if (cleanedOverId && cleanedOverId.startsWith('block-')) {
-      cleanedOverId = cleanedOverId.replace(/^block-/, '');
-    }
-    // 1) Preferir posição explícita vinda da drop-zone
-    const pos = overDataLocal?.position;
-    if (typeof pos === 'number' && Number.isFinite(pos)) {
-      return Math.max(0, Math.min(pos, currentStepData.length));
-    }
+  // Comentado temporariamente pois não está sendo usado
+  // function getTargetIndexFromOver(
+  //   overIdStrLocal: string | null,
+  //   overDataLocal: any,
+  //   mode: 'add' | 'reorder'
+  // ): number {
+  //   // 0) Compatibilidade com OptimizedCanvasDropZone: ids no formato dnd-block-<blockId>
+  //   let cleanedOverId: string | null = overIdStrLocal;
+  //   if (cleanedOverId && cleanedOverId.startsWith('dnd-block-')) {
+  //     cleanedOverId = cleanedOverId.replace(/^dnd-block-/, '');
+  //   }
+  //   if (cleanedOverId && cleanedOverId.startsWith('block-')) {
+  //     cleanedOverId = cleanedOverId.replace(/^block-/, '');
+  //   }
+  //   // 1) Preferir posição explícita vinda da drop-zone
+  //   const pos = overDataLocal?.position;
+  //   if (typeof pos === 'number' && Number.isFinite(pos)) {
+  //     return Math.max(0, Math.min(pos, currentStepData.length));
+  //   }
 
-    // 2) Pela convenção do ID drop-zone-<n>
-    if (overIdStrLocal) {
-      const m = overIdStrLocal.match(/^drop-zone-(\d+)$/);
-      if (m) return Math.max(0, Math.min(parseInt(m[1], 10), currentStepData.length));
-    }
+  //   // 2) Pela convenção do ID drop-zone-<n>
+  //   if (overIdStrLocal) {
+  //     const m = overIdStrLocal.match(/^drop-zone-(\d+)$/);
+  //     if (m) return Math.max(0, Math.min(parseInt(m[1], 10), currentStepData.length));
+  //   }
 
-    // 3) Canvas root → final
-    if (
-      overIdStrLocal === 'canvas-drop-zone' ||
-      (overIdStrLocal &&
-        (overIdStrLocal.startsWith('canvas-drop-zone') || overIdStrLocal.startsWith('canvas-')))
-    ) {
-      return currentStepData.length;
-    }
+  //   // 3) Canvas root → final
+  //   if (
+  //     overIdStrLocal === 'canvas-drop-zone' ||
+  //     (overIdStrLocal &&
+  //       (overIdStrLocal.startsWith('canvas-drop-zone') || overIdStrLocal.startsWith('canvas-')))
+  //   ) {
+  //     return currentStepData.length;
+  //   }
 
-    // 4) Alvo é um bloco existente
-    if (cleanedOverId) {
-      const overIndex = currentStepData.findIndex(b => String(b.id) === cleanedOverId);
-      if (overIndex >= 0) return mode === 'add' ? overIndex + 1 : overIndex;
-    }
+  //   // 4) Alvo é um bloco existente
+  //   if (cleanedOverId) {
+  //     const overIndex = currentStepData.findIndex(b => String(b.id) === cleanedOverId);
+  //     if (overIndex >= 0) return mode === 'add' ? overIndex + 1 : overIndex;
+  //   }
 
-    // 5) Fallback → final
-    return currentStepData.length;
-  }
+  //   // 5) Fallback → final
+  //   return currentStepData.length;
+  // }
 
   // 🔗 Escutar eventos de navegação disparados pelos blocos (ex.: botão da etapa 1)
   useEffect(() => {

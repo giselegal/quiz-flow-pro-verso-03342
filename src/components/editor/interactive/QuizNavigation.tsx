@@ -75,7 +75,6 @@ export const QuizNavigation: React.FC<QuizNavigationProps> = memo(
             onClick={onPrevious}
             disabled={isFirstStep}
             className="flex items-center gap-2"
-            type="button"
             aria-label="Voltar para a etapa anterior"
           >
             <ChevronLeft className="w-4 h-4" />
@@ -139,15 +138,7 @@ export const QuizNavigation: React.FC<QuizNavigationProps> = memo(
             className={`flex items-center gap-2 ${
               canProceed ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gray-300 cursor-not-allowed'
             }`}
-            type="button"
             aria-label={isLastStep ? 'Finalizar quiz' : 'Ir para a próxima etapa'}
-            onKeyDown={e => {
-              if (!canProceed) return;
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                onNext();
-              }
-            }}
           >
             {isLastStep ? (
               <>
