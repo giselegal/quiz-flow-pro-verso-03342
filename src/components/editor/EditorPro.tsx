@@ -1133,7 +1133,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       </div>
 
       {/* Canvas principal com drag & drop - sistema unificado simples */}
-      <div className={cn('flex-1 p-4 editor-smooth-transition', isDragging && 'editor-drop-zone-active')} data-canvas-container>
+      <div className={cn('flex-1 p-2 editor-smooth-transition', isDragging && 'editor-drop-zone-active')} data-canvas-container>
         <CanvasDropZone
           blocks={currentStepData}
           selectedBlockId={state.selectedBlockId}
@@ -1142,7 +1142,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
             actions.updateBlock(currentStepKey, id, updates)
           }
           onDeleteBlock={(id: string) => actions.removeBlock(currentStepKey, id)}
-          className="max-w-4xl mx-auto"
+          className="max-w-2xl mx-auto"
         />
       </div>
     </div>
