@@ -659,7 +659,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
      ------------------------- */
 
   const StepSidebar: React.FC = () => (
-    <div className="w-[200px] bg-white border-r border-gray-200 flex flex-col editor-slide-in-left editor-fade-in">
+    <div className="w-[180px] bg-white border-r border-gray-200 flex flex-col editor-slide-in-left editor-fade-in">
       <div className="p-4 border-b border-gray-200">
         <h3 className="font-semibold text-sm text-gray-900">Etapas do Quiz</h3>
         <p className="text-xs text-gray-500 mt-1">21 etapas configuradas</p>
@@ -711,7 +711,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   );
 
   const ComponentsSidebar: React.FC = () => (
-    <div className="w-[320px] bg-gradient-to-b from-white to-gray-50/50 border-r border-gray-200/60 flex flex-col shadow-sm editor-slide-in-right editor-fade-in">
+    <div className="w-[280px] bg-gradient-to-b from-white to-gray-50/50 border-r border-gray-200/60 flex flex-col shadow-sm editor-slide-in-right editor-fade-in">
       {/* Header da Sidebar */}
       <div className="p-6 border-b border-gray-200/60 bg-white/80 backdrop-blur-sm">
         <div className="flex items-center gap-3 mb-3 editor-bounce">
@@ -1165,23 +1165,25 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       </div>
 
       {/* Canvas principal com drag & drop - sistema unificado simples */}
-      <div className={cn('flex-1 p-2 editor-smooth-transition', isDragging && 'editor-drop-zone-active')} data-canvas-container>
-        <CanvasDropZone
-          blocks={currentStepData}
-          selectedBlockId={state.selectedBlockId}
-          onSelectBlock={actions.setSelectedBlockId}
-          onUpdateBlock={(id: string, updates: any) =>
-            actions.updateBlock(currentStepKey, id, updates)
-          }
-          onDeleteBlock={(id: string) => actions.removeBlock(currentStepKey, id)}
-          className="h-full w-full editor-pulse-highlight"
-        />
+      <div className={cn('flex-1 min-w-0 p-2 overflow-x-hidden editor-smooth-transition', isDragging && 'editor-drop-zone-active')} data-canvas-container>
+        <div className="customizable-width">
+          <CanvasDropZone
+            blocks={currentStepData}
+            selectedBlockId={state.selectedBlockId}
+            onSelectBlock={actions.setSelectedBlockId}
+            onUpdateBlock={(id: string, updates: any) =>
+              actions.updateBlock(currentStepKey, id, updates)
+            }
+            onDeleteBlock={(id: string) => actions.removeBlock(currentStepKey, id)}
+            className="h-full w-full editor-pulse-highlight"
+          />
+        </div>
       </div>
     </div>
   );
 
   const PropertiesColumn: React.FC = () => (
-    <div className="w-[360px] min-w-[300px] bg-white border-l border-gray-200 flex flex-col editor-slide-in-right editor-fade-in">
+    <div className="w-[280px] min-w-[280px] max-w-[280px] bg-white border-l border-gray-200 flex flex-col editor-slide-in-right editor-fade-in">
       {selectedBlock ? (
         <Suspense
           fallback={<div className="p-4 text-sm text-gray-600">Carregando propriedades…</div>}
@@ -1214,7 +1216,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
       >
-        <div className={`editor-pro h-screen bg-gray-50 flex ${className}`}>
+        <div className={`editor-pro h-screen bg-gray-50 flex overflow-x-hidden max-w-screen ${className}`}>
           <StepSidebar />
           <ComponentsSidebar />
           <div className="flex-1 min-w-0 flex">

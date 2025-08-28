@@ -9,6 +9,13 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Utilitário de largura consistente para coluna/canvas/componentes */
+@layer utilities {
+  .customizable-width {
+    @apply w-full max-w-3xl min-w-full mx-auto;
+  }
+}
+
 /* Variáveis Globais de Estilo para o Canvas */
 :root {
   --global-gap: 0.25rem; /* 4px */

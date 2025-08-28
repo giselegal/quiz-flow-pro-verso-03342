@@ -137,6 +137,7 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
         'border border-dashed border-gray-200 rounded-lg',
         // ✅ CLASSE CSS DE FORÇA BRUTA
         'dnd-droppable-zone',
+        'customizable-width',
         className
       )}
       data-over={isOver}
