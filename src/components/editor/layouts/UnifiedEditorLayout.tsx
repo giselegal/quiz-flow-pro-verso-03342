@@ -77,6 +77,7 @@ export const UnifiedEditorLayout: React.FC<UnifiedEditorLayoutProps> = ({ classN
     ? {
         ...selectedBlock,
         content: selectedBlock.content || {},
+        properties: selectedBlock.properties || {},
       }
     : null;
 

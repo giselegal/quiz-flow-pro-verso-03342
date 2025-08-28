@@ -325,7 +325,7 @@ function PropertyField({
           <Textarea value={effectiveValue} onChange={e => onChange(e.target.value)} />
         </FieldWrapper>
       );
-    case 'number':
+  case 'number':
       return (
         <FieldWrapper>
           <Label>{field.label}</Label>
@@ -333,7 +333,7 @@ function PropertyField({
             type="number"
             value={Number(effectiveValue) || 0}
             onChange={e => onChange(Number(e.target.value))}
-            placeholder={field.placeholder}
+      placeholder={(field as any).placeholder}
           />
         </FieldWrapper>
       );
@@ -360,24 +360,15 @@ function PropertyField({
         </FieldWrapper>
       );
     }
-    case 'boolean':
+    case 'boolean': {
+      const boolVal = Boolean(effectiveValue);
       return (
         <FieldWrapper>
           <Label>{field.label}</Label>
-          <select
-            className="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-sm text-gray-900 dark:text-gray-100 outline-none focus:ring-2 focus:ring-primary/60"
-            value={current}
-            onChange={e => onChange(isNum ? Number(e.target.value) : e.target.value)}
-          >
-            <option value="">Selecionar...</option>
-            {opts.map(opt => (
-              <option key={String(opt.value)} value={String(opt.value)}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
+          <Switch checked={boolVal} onChange={val => onChange(val)} />
         </FieldWrapper>
       );
+    }
     case 'color':
       return (
         <FieldWrapper>

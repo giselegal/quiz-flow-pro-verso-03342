@@ -4,29 +4,9 @@ import { useNotification } from '@/components/ui/Notification';
 import { getBlocksForStep } from '@/config/quizStepsComplete';
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
-import {
-  extractDragData,
-  getDragFeedback,
-  logDragEvent,
-  validateDrop,
-} from '@/utils/dragDropUtils';
-import {
-  copyToClipboard,
-  createBlockFromComponent,
-  devLog,
-  validateEditorJSON,
-} from '@/utils/editorUtils';
-import {
-  closestCenter,
-  DndContext,
-  DragEndEvent,
-  DragStartEvent,
-  KeyboardSensor,
-  PointerSensor,
-  rectIntersection,
-  useSensor,
-  useSensors,
-} from '@dnd-kit/core';
+import { extractDragData, getDragFeedback, logDragEvent, validateDrop } from '@/utils/dragDropUtils';
+import { copyToClipboard, createBlockFromComponent, devLog, validateEditorJSON } from '@/utils/editorUtils';
+import { closestCenter, DndContext, DragEndEvent, DragStartEvent, KeyboardSensor, PointerSensor, rectIntersection, useSensor, useSensors } from '@dnd-kit/core';
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import React, { Suspense, useCallback, useMemo, useRef, useState, useEffect } from 'react';
 import { useEditor } from './EditorProvider';
@@ -34,130 +14,39 @@ import { useTheme } from '@/components/theme-provider';
 
 // Estilos CSS para animações personalizadas
 const animationStyles = `
-  .editor-smooth-transition {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  
-  .editor-hover-lift {
-    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
-  }
-  
-  .editor-hover-lift:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-  }
-  
-  .editor-scale-hover {
-    transition: transform 0.2s ease-out;
-  }
-  
-  .editor-scale-hover:hover {
-    transform: scale(1.02);
-  }
-  
-  .editor-fade-in {
-    opacity: 0;
-    animation: fadeIn 0.3s ease-out forwards;
-  }
-  
-  @keyframes fadeIn {
-    to {
-      opacity: 1;
-    }
-  }
-  
-  .editor-slide-in-left {
-    transform: translateX(-20px);
-    opacity: 0;
-    animation: slideInLeft 0.3s ease-out forwards;
-  }
-  
-  @keyframes slideInLeft {
-    to {
-      transform: translateX(0);
-      opacity: 1;
-    }
-  }
-  
-  .editor-slide-in-right {
-    transform: translateX(20px);
-    opacity: 0;
-    animation: slideInRight 0.3s ease-out forwards;
-  }
-  
-  @keyframes slideInRight {
-    to {
-      transform: translateX(0);
-      opacity: 1;
-    }
-  }
-  
-  .editor-pulse-highlight {
-    animation: pulseHighlight 0.6s ease-out;
-  }
-  
-  @keyframes pulseHighlight {
-    0% { background-color: rgba(59, 130, 246, 0.1); }
-    50% { background-color: rgba(59, 130, 246, 0.2); }
-    100% { background-color: transparent; }
-  }
-  
-  .editor-drag-active {
-    transform: rotate(3deg) scale(1.05);
-    opacity: 0.8;
-    z-index: 1000;
-    transition: transform 0.2s ease-out;
-  }
-  
-  .editor-drop-zone-active {
-    border-color: #3b82f6;
-    background-color: rgba(59, 130, 246, 0.05);
-    transform: scale(1.02);
-    transition: all 0.2s ease-out;
-  }
-
-  .editor-slide-up {
-    transform: translateY(20px);
-    opacity: 0;
-    animation: slideUp 0.3s ease-out forwards;
-  }
-
-  @keyframes slideUp {
-    to {
-      transform: translateY(0);
-      opacity: 1;
-    }
-  }
-
-  .editor-bounce {
-    animation: bounce 0.5s cubic-bezier(0.36, 0, 0.66, -0.56) forwards;
-  }
-
-  @keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-5px); }
-  }
-
-  .editor-rotate-hover:hover {
-    transform: rotate(5deg);
-    transition: transform 0.3s ease-out;
-  }
-
-  .editor-scale-click:active {
-    transform: scale(0.95);
-    transition: transform 0.1s ease-out;
-  }
+  .editor-smooth-transition { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+  .editor-hover-lift { transition: transform 0.2s ease-out, box-shadow 0.2s ease-out; }
+  .editor-hover-lift:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.15); }
+  .editor-scale-hover { transition: transform 0.2s ease-out; }
+  .editor-scale-hover:hover { transform: scale(1.02); }
+  .editor-fade-in { opacity: 0; animation: fadeIn 0.3s ease-out forwards; }
+  @keyframes fadeIn { to { opacity: 1; } }
+  .editor-slide-in-left { transform: translateX(-20px); opacity: 0; animation: slideInLeft 0.3s ease-out forwards; }
+  @keyframes slideInLeft { to { transform: translateX(0); opacity: 1; } }
+  .editor-slide-in-right { transform: translateX(20px); opacity: 0; animation: slideInRight 0.3s ease-out forwards; }
+  @keyframes slideInRight { to { transform: translateX(0); opacity: 1; } }
+  .editor-pulse-highlight { animation: pulseHighlight 0.6s ease-out; }
+  @keyframes pulseHighlight { 0% { background-color: rgba(59,130,246,0.1);} 50% { background-color: rgba(59,130,246,0.2);} 100% { background-color: transparent; } }
+  .editor-drag-active { transform: rotate(3deg) scale(1.05); opacity: 0.8; z-index: 1000; transition: transform 0.2s ease-out; }
+  .editor-drop-zone-active { border-color: #3b82f6; background-color: rgba(59,130,246,0.05); transform: scale(1.02); transition: all 0.2s ease-out; }
+  .editor-slide-up { transform: translateY(20px); opacity: 0; animation: slideUp 0.3s ease-out forwards; }
+  @keyframes slideUp { to { transform: translateY(0); opacity: 1; } }
+  .editor-bounce { animation: bounce 0.5s cubic-bezier(0.36, 0, 0.66, -0.56) forwards; }
+  @keyframes bounce { 0%,100% { transform: translateY(0);} 50% { transform: translateY(-5px);} }
+  .editor-rotate-hover:hover { transform: rotate(5deg); transition: transform 0.3s ease-out; }
+  .editor-scale-click:active { transform: scale(0.95); transition: transform 0.1s ease-out; }
 `;
 
-// Injetar estilos no documento
+// Injetar estilos no documento (uma única vez)
 if (typeof document !== 'undefined') {
-  const styleElement = document.createElement('style');
-  styleElement.textContent = animationStyles;
   if (!document.head.querySelector('[data-editor-animations]')) {
+    const styleElement = document.createElement('style');
     styleElement.setAttribute('data-editor-animations', 'true');
+    styleElement.textContent = animationStyles;
     document.head.appendChild(styleElement);
   }
 }
+
 
 /**
  * EditorPro - versão modularizada / otimizada do QuizEditorPro
@@ -1166,7 +1055,9 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
 
       {/* Canvas principal com drag & drop - sistema unificado simples */}
       <div className={cn('flex-1 min-w-0 p-2 overflow-x-hidden editor-smooth-transition', isDragging && 'editor-drop-zone-active')} data-canvas-container>
-        <div className="customizable-width">
+        <div
+          className="customizable-width mx-auto w-full px-2 sm:px-4 sm:max-w-[560px] md:max-w-[720px] lg:max-w-[960px] xl:max-w-[1140px] 2xl:max-w-[1280px]"
+        >
           <CanvasDropZone
             blocks={currentStepData}
             selectedBlockId={state.selectedBlockId}
@@ -1183,7 +1074,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   );
 
   const PropertiesColumn: React.FC = () => (
-    <div className="w-[280px] min-w-[280px] max-w-[280px] bg-white border-l border-gray-200 flex flex-col editor-slide-in-right editor-fade-in">
+    <div className="w-[260px] sm:w-[280px] lg:w-[320px] min-w-[260px] sm:min-w-[280px] lg:min-w-[320px] max-w-[320px] bg-white border-l border-gray-200 flex flex-col editor-slide-in-right editor-fade-in">
       {selectedBlock ? (
         <Suspense
           fallback={<div className="p-4 text-sm text-gray-600">Carregando propriedades…</div>}

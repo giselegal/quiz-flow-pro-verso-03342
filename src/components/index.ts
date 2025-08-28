@@ -1,7 +1,7 @@
 // Core Editor Components
 export { ComponentsSidebar } from './editor/ComponentsSidebar';
 // EditorCanvas removido - usando CanvasDropZone
-export { PropertiesPanel } from './editor/properties/PropertiesPanel';
+export { default as PropertiesPanel } from './editor/properties/PropertiesPanel';
 
 // Block Components que realmente existem (usando default exports)
 export { default as ButtonBlock } from './blocks/ButtonBlock';
