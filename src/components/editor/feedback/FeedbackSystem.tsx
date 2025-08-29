@@ -405,10 +405,11 @@ export const SuccessAnimation: React.FC<{
   show: boolean;
   onComplete?: () => void;
 }> = ({ show, onComplete }) => {
+  const { schedule, cancel } = useOptimizedScheduler();
   useEffect(() => {
     if (show && onComplete) {
-      const timer = setTimeout(onComplete, 2000);
-      return () => clearTimeout(timer);
+      schedule('feedback-success-complete', onComplete, 2000, 'timeout');
+      return () => cancel('feedback-success-complete');
     }
   }, [show, onComplete]);
 

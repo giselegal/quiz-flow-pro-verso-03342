@@ -8,7 +8,8 @@
  * - Proper cleanup to prevent memory leaks
  */
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import useOptimizedScheduler from '@/hooks/useOptimizedScheduler';
 import { useUserData } from '../context/UserDataContext';
 import { supabase } from '../integrations/supabase/client';
 import { QuizSession } from '../types/unified-schema';
@@ -80,28 +81,21 @@ export const useOptimizedQuizData = (): QuizDataHookReturn => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [clickBuffer, setClickBuffer] = useState<ClickEvent[]>([]);
-
-  // Refs for cleanup
-  const saveTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const clickTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const { debounce, cancelAll } = useOptimizedScheduler();
 
   // Debounced save function to prevent excessive Supabase calls
   const debouncedSave = useCallback(
     (sessionId: string, updates: any) => {
-      if (saveTimerRef.current) {
-        clearTimeout(saveTimerRef.current);
-      }
-
-      saveTimerRef.current = setTimeout(async () => {
+      debounce('optimized-quiz-save', async () => {
         try {
           await updateSession(sessionId, updates);
         } catch (err) {
           console.error('Error saving session:', err);
           setError('Erro ao salvar sessão');
         }
-      }, 2000); // 2 second debounce
+      }, 2000);
     },
-    [updateSession]
+    [updateSession, debounce]
   );
 
   // Optimized click tracking with reduced localStorage usage
@@ -111,12 +105,7 @@ export const useOptimizedQuizData = (): QuizDataHookReturn => {
 
       // Only save to localStorage every 10 clicks or when buffer gets large
       if (newBuffer.length >= 10) {
-        if (clickTimerRef.current) {
-          clearTimeout(clickTimerRef.current);
-        }
-
-        clickTimerRef.current = setTimeout(() => {
-          // Only store recent clicks in localStorage (max 50)
+        debounce('optimized-click-flush', () => {
           const recentClicks = newBuffer.slice(-50);
           localStorage.setItem('recent_clicks', JSON.stringify(recentClicks));
           setClickBuffer([]);
@@ -311,14 +300,10 @@ export const useOptimizedQuizData = (): QuizDataHookReturn => {
   // Cleanup on unmount
   useEffect(() => {
     return () => {
-      if (saveTimerRef.current) {
-        clearTimeout(saveTimerRef.current);
-      }
-      if (clickTimerRef.current) {
-        clearTimeout(clickTimerRef.current);
-      }
+      // Cancela quaisquer tarefas agendadas via scheduler
+      cancelAll();
     };
-  }, []);
+  }, [cancelAll]);
 
   return {
     userName: currentUser?.name || '',

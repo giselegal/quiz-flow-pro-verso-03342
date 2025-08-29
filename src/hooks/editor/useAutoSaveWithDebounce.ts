@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef } from 'react';
+import useOptimizedScheduler from '@/hooks/useOptimizedScheduler';
 import { useToast } from '@/hooks/use-toast';
 
 interface UseAutoSaveWithDebounceOptions {
@@ -20,7 +21,7 @@ export const useAutoSaveWithDebounce = ({
   enabled = true,
   showToasts = false,
 }: UseAutoSaveWithDebounceOptions) => {
-  const timeoutRef = useRef<NodeJS.Timeout>();
+  const { debounce, cancel } = useOptimizedScheduler();
   const lastDataRef = useRef(data);
   const isSavingRef = useRef(false);
   const { toast } = useToast();
@@ -56,22 +57,16 @@ export const useAutoSaveWithDebounce = ({
   }, [data, onSave, showToasts, toast]);
 
   const debouncedSave = useCallback(() => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-
-    timeoutRef.current = setTimeout(() => {
+    debounce('editor-autosave-debounce', () => {
       save();
     }, delay);
-  }, [save, delay]);
+  }, [save, delay, debounce]);
 
   // Força salvamento manual (bypassa debounce)
   const forceSave = useCallback(() => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
+    cancel('editor-autosave-debounce');
     save();
-  }, [save]);
+  }, [save, cancel]);
 
   useEffect(() => {
     if (!enabled) return;
@@ -84,11 +79,7 @@ export const useAutoSaveWithDebounce = ({
       debouncedSave();
     }
 
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-    };
+  return () => cancel('editor-autosave-debounce');
   }, [data, enabled, debouncedSave]);
 
   return {
