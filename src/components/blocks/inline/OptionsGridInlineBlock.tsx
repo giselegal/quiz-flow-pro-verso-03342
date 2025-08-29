@@ -52,13 +52,15 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
 
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
 
-  // 🔍 DEBUG
-  console.log('🎯 OptionsGridInlineBlock DEBUG:', {
-    blockId: block.id,
-    optionsCount: options.length,
-    firstOption: options[0],
-    selectedCount: selectedOptions.length,
-  });
+  // Debug leve (somente em dev)
+  if (import.meta?.env?.DEV) {
+    // eslint-disable-next-line no-console
+    console.debug('OptionsGridInlineBlock:', {
+      blockId: block.id,
+      optionsCount: options.length,
+      selectedCount: selectedOptions.length,
+    });
+  }
 
   const handleOptionClick = (optionId: string) => {
     if (multipleSelection) {

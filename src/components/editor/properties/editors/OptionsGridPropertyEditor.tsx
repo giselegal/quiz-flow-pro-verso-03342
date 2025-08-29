@@ -52,6 +52,9 @@ export const OptionsGridPropertyEditor: React.FC<PropertyEditorProps> = ({
   const showImages = block.properties?.showImages !== false;
   const minSelections = block.properties?.minSelections || 3;
   const maxSelections = block.properties?.maxSelections || currentOptions.length;
+  const selectionStyle = block.properties?.selectionStyle || 'border';
+  const selectedColor = block.properties?.selectedColor || '#B89B7A';
+  const hoverColor = block.properties?.hoverColor || '#D4C2A8';
 
   return (
     <Card className="h-full">
@@ -289,6 +292,48 @@ export const OptionsGridPropertyEditor: React.FC<PropertyEditorProps> = ({
                     <SelectItem value="20">20px</SelectItem>
                   </SelectContent>
                 </Select>
+              </div>
+            </div>
+
+            {/* Estilo de Seleção */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label className="text-sm font-medium">Estilo de Seleção</Label>
+                <Select
+                  value={selectionStyle}
+                  onValueChange={value => handlePropertyChange('selectionStyle', value)}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="border">Borda</SelectItem>
+                    <SelectItem value="background">Fundo</SelectItem>
+                    <SelectItem value="shadow">Sombra</SelectItem>
+                    <SelectItem value="scale">Escala</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-sm font-medium">Cor Selecionado</Label>
+                  <input
+                    type="color"
+                    className="h-9 w-full rounded border border-border bg-background"
+                    value={selectedColor}
+                    onChange={e => handlePropertyChange('selectedColor', e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Label className="text-sm font-medium">Cor Hover</Label>
+                  <input
+                    type="color"
+                    className="h-9 w-full rounded border border-border bg-background"
+                    value={hoverColor}
+                    onChange={e => handlePropertyChange('hoverColor', e.target.value)}
+                  />
+                </div>
               </div>
             </div>
           </div>
