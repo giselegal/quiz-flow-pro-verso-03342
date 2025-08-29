@@ -1,52 +1,54 @@
-// @ts-nocheck
 import { InlineEditableText } from './InlineEditableText';
 import { Progress } from '@/components/ui/progress';
 import { Card } from '@/components/ui/card';
 import type { BlockComponentProps } from '@/types/blocks';
+import { useQuizResult } from '@/hooks/useQuizResult';
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
-const getMarginClass = (value, type) => {
-  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
-
-  if (isNaN(numValue) || numValue === 0) return '';
+const getMarginClass = (
+  value: number | string | null | undefined,
+  type: 'top' | 'bottom' | 'left' | 'right'
+): string => {
+  const parsed = typeof value === 'string' ? parseFloat(value) : value;
+  const numValue = typeof parsed === 'number' && !isNaN(parsed) ? parsed : 0;
+  if (numValue === 0) return '';
 
   const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
-  // Margens negativas
+  const mapPositive = (v: number) => {
+    if (v <= 4) return `${prefix}-1`;
+    if (v <= 8) return `${prefix}-2`;
+    if (v <= 12) return `${prefix}-3`;
+    if (v <= 16) return `${prefix}-4`;
+    if (v <= 20) return `${prefix}-5`;
+    if (v <= 24) return `${prefix}-6`;
+    if (v <= 28) return `${prefix}-7`;
+    if (v <= 32) return `${prefix}-8`;
+    if (v <= 36) return `${prefix}-9`;
+    if (v <= 40) return `${prefix}-10`;
+    if (v <= 44) return `${prefix}-11`;
+    if (v <= 48) return `${prefix}-12`;
+    if (v <= 56) return `${prefix}-14`;
+    if (v <= 64) return `${prefix}-16`;
+    if (v <= 80) return `${prefix}-20`;
+    if (v <= 96) return `${prefix}-24`;
+    if (v <= 112) return `${prefix}-28`;
+    return `${prefix}-32`;
+  };
+
   if (numValue < 0) {
-    const absValue = Math.abs(numValue);
-    if (absValue <= 4) return `-${prefix}-1`;
-    if (absValue <= 8) return `-${prefix}-2`;
-    if (absValue <= 12) return `-${prefix}-3`;
-    if (absValue <= 16) return `-${prefix}-4`;
-    if (absValue <= 20) return `-${prefix}-5`;
-    if (absValue <= 24) return `-${prefix}-6`;
-    if (absValue <= 28) return `-${prefix}-7`;
-    if (absValue <= 32) return `-${prefix}-8`;
-    if (absValue <= 36) return `-${prefix}-9`;
-    if (absValue <= 40) return `-${prefix}-10`;
-    return `-${prefix}-10`; // Máximo para negativas
+    const abs = Math.abs(numValue);
+    return `-${mapPositive(abs)}`;
   }
 
-  // Margens positivas (expandido para suportar até 100px)
-  if (numValue <= 4) return `${prefix}-1`;
-  if (numValue <= 8) return `${prefix}-2`;
-  if (numValue <= 12) return `${prefix}-3`;
-  if (numValue <= 16) return `${prefix}-4`;
-  if (numValue <= 20) return `${prefix}-5`;
-  if (numValue <= 24) return `${prefix}-6`;
-  if (numValue <= 28) return `${prefix}-7`;
-  if (numValue <= 32) return `${prefix}-8`;
-  if (numValue <= 36) return `${prefix}-9`;
-  if (numValue <= 40) return `${prefix}-10`;
-  if (numValue <= 44) return `${prefix}-11`;
-  if (numValue <= 48) return `${prefix}-12`;
-  if (numValue <= 56) return `${prefix}-14`;
-  if (numValue <= 64) return `${prefix}-16`;
-  if (numValue <= 80) return `${prefix}-20`;
-  if (numValue <= 96) return `${prefix}-24`;
-  if (numValue <= 112) return `${prefix}-28`;
-  return `${prefix}-32`; // Máximo suportado
+  return mapPositive(numValue);
+};
+
+const interpolate = (text: string, vars: Record<string, any>) => {
+  if (!text) return '';
+  return text
+    .replace(/\{userName\}/g, vars.userName || '')
+    .replace(/\{resultStyle\}/g, vars.resultStyle || '');
 };
 
 const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
@@ -55,6 +57,9 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
   onPropertyChange,
   className = '',
 }) => {
+  const { primaryStyle } = useQuizResult();
+  const storedName = (typeof window !== 'undefined' && localStorage.getItem('userName')) || '';
+
   const {
     title = 'Seu Estilo Predominante',
     percentage = 85,
@@ -64,6 +69,11 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
     progressColor = '#B89B7A',
     badgeText = 'Exclusivo',
   } = block?.properties || {};
+
+  const vars = {
+    userName: storedName || (block as any)?.properties?.userName || '',
+    resultStyle: primaryStyle?.style || primaryStyle?.category || 'Estilo',
+  };
 
   const handlePropertyChange = (key: string, value: any) => {
     if (onPropertyChange) {
@@ -90,7 +100,7 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
             <div className="flex justify-between items-center mb-2">
               <span className="text-sm text-[#8F7A6A]">
                 <InlineEditableText
-                  value={title}
+                  value={interpolate(title, vars)}
                   onChange={value => handlePropertyChange('title', value)}
                   placeholder="Título do resultado"
                   className="text-sm text-[#8F7A6A]"
@@ -114,11 +124,9 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
             <Progress
               value={percentage}
               className="h-2 bg-[#F3E8E6]"
-              style={
-                {
-                  '--progress-color': progressColor,
-                } as React.CSSProperties
-              }
+              style={{
+                '--progress-color': progressColor,
+              } as React.CSSProperties}
             />
           </div>
         </div>
@@ -127,7 +135,7 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
           <div className="space-y-4">
             <p className="text-[#432818] leading-relaxed">
               <InlineEditableText
-                value={description}
+                value={interpolate(description, vars)}
                 onChange={value => handlePropertyChange('description', value)}
                 placeholder="Descrição do estilo predominante..."
                 className="text-[#432818] leading-relaxed"

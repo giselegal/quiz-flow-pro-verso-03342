@@ -55,10 +55,10 @@ export const ENHANCED_BLOCK_REGISTRY = {
   'progress-inline': lazy(() => import('@/components/editor/blocks/ProgressInlineBlock')),
 
   // ✅ STEP 20 - RESULTADO
-  'result-header-inline': QuizIntroHeaderBlock,
+  'result-header-inline': lazy(() => import('@/components/editor/blocks/ResultHeaderInlineBlock')),
   'quiz-result-header': QuizIntroHeaderBlock,
   'quiz-result-style': lazy(() => import('@/components/editor/blocks/StyleCardInlineBlock')),
-  'secondary-styles': lazy(() => import('@/components/editor/blocks/StyleCardsGridBlock')),
+  'secondary-styles': lazy(() => import('@/components/editor/blocks/SecondaryStylesInlineBlock')),
   'quiz-result-secondary': lazy(() => import('@/components/editor/blocks/StyleCardsGridBlock')),
   'result-card': lazy(() => import('@/components/editor/blocks/StyleCardInlineBlock')),
 
