@@ -1,5 +1,6 @@
 // @ts-nocheck
 import React, { useState, useEffect } from 'react';
+import useOptimizedScheduler from '@/hooks/useOptimizedScheduler';
 import { GalleryHorizontalEnd } from 'lucide-react';
 import type { BlockComponentProps } from '@/types/blocks';
 
@@ -59,16 +60,22 @@ const CarouselBlock: React.FC<BlockComponentProps> = ({
   const { images = [], autoplay = true, interval = 5000 } = block?.properties || {};
 
   const [currentIndex, setCurrentIndex] = useState(0);
+  const { schedule, cancelAll } = useOptimizedScheduler();
 
   useEffect(() => {
     if (!autoplay || !images || images.length <= 1) return;
 
-    const timer = setInterval(() => {
-      setCurrentIndex(prevIndex => (prevIndex + 1) % images.length);
-    }, interval || 5000);
+    const tick = () => setCurrentIndex(prev => (prev + 1) % images.length);
+    const loop = () => {
+      schedule(`carousel:${block?.id || 'global'}`, () => {
+        tick();
+        loop();
+      }, Math.max(500, interval || 5000));
+    };
+    loop();
 
-    return () => clearInterval(timer);
-  }, [autoplay, images, interval]);
+    return () => cancelAll();
+  }, [autoplay, images, interval, schedule, cancelAll, block?.id]);
 
   if (!images || images.length === 0) {
     return (

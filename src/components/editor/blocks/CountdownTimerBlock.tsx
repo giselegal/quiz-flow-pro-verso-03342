@@ -4,6 +4,7 @@ import type { BlockComponentProps, CountdownTimerBlock } from '@/types/blocks';
 import { motion } from 'framer-motion';
 import { AlertTriangle, Clock, Flame, Timer } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
+import useOptimizedScheduler from '@/hooks/useOptimizedScheduler';
 import { InlineEditableText } from './InlineEditableText';
 
 interface CountdownTimerBlockProps extends BlockComponentProps {
@@ -108,6 +109,7 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
 
   const [isExpired, setIsExpired] = useState(false);
   const [initialTotal, setInitialTotal] = useState(0);
+  const { schedule, cancelAll } = useOptimizedScheduler();
 
   const handlePropertyChange = (key: string, value: any) => {
     if (onPropertyChange) {
@@ -126,13 +128,13 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
     }
   };
 
-  // Update countdown
+  // Update countdown com agendador otimizado (elimina setInterval)
   useEffect(() => {
     if (!autoStart || isEditing) return;
 
     const targetDate = getTargetDate();
 
-    // Set initial total for progress calculation
+    // Set initial total para cálculo do progresso (uma vez por ciclo)
     if (initialTotal === 0) {
       const now = new Date();
       const diff = targetDate.getTime() - now.getTime();
@@ -146,7 +148,7 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
       if (difference <= 0) {
         setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0, total: 0 });
         setIsExpired(true);
-        return;
+        return false; // parar
       }
 
       const total = Math.floor(difference / 1000);
@@ -157,13 +159,23 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
 
       setTimeLeft({ days, hours, minutes, seconds, total });
       setIsExpired(false);
+      return true; // continuar
     };
 
+    // Tick inicial e loop agendado
     updateCountdown();
-    const interval = setInterval(updateCountdown, 1000);
+    const loop = () => {
+      schedule(`countdown:${block.id}`, () => {
+        const cont = updateCountdown();
+        if (cont) loop();
+      }, 1000);
+    };
+    loop();
 
-    return () => clearInterval(interval);
-  }, [autoStart, isEditing, endDate, durationMinutes, initialTotal]);
+    return () => {
+      cancelAll();
+    };
+  }, [autoStart, isEditing, endDate, durationMinutes, initialTotal, schedule, cancelAll, block.id]);
 
   const getThemeClasses = () => {
     switch (theme) {

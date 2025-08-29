@@ -1,5 +1,6 @@
 // @ts-nocheck
 import React, { useState, useEffect } from 'react';
+import useOptimizedScheduler from '@/hooks/useOptimizedScheduler';
 import { Clock } from 'lucide-react';
 import { InlineEditableText } from './InlineEditableText';
 import type { BlockComponentProps } from '@/types/blocks';
@@ -67,6 +68,7 @@ const UrgencyTimerBlock: React.FC<BlockComponentProps> = ({
 
   const [timeLeft, setTimeLeft] = useState(duration * 60); // Convert to seconds
   const [isExpired, setIsExpired] = useState(false);
+  const { schedule, cancelAll } = useOptimizedScheduler();
 
   const handlePropertyChange = (key: string, value: any) => {
     if (onPropertyChange) {
@@ -80,7 +82,7 @@ const UrgencyTimerBlock: React.FC<BlockComponentProps> = ({
       return;
     }
 
-    const timer = setInterval(() => {
+    const tick = () => {
       setTimeLeft(prev => {
         if (prev <= 1) {
           setIsExpired(true);
@@ -88,10 +90,21 @@ const UrgencyTimerBlock: React.FC<BlockComponentProps> = ({
         }
         return prev - 1;
       });
-    }, 1000);
+    };
 
-    return () => clearInterval(timer);
-  }, [timeLeft]);
+    // loop com scheduler otimizado
+    const loop = () => {
+      schedule(`urgency:${block?.id || 'global'}`, () => {
+        tick();
+        if (!isExpired) loop();
+      }, 1000);
+    };
+    loop();
+
+    return () => {
+      cancelAll();
+    };
+  }, [timeLeft, schedule, cancelAll, isExpired, block?.id]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);

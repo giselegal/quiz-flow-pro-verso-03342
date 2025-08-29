@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
 import { TemplateManager } from '@/utils/TemplateManager';
 import React, { useEffect, useState } from 'react';
+import useOptimizedScheduler from '@/hooks/useOptimizedScheduler';
 
 /**
  * 🎯 QUIZ MODULAR - VERSÃO PRODUÇÃO COM ETAPAS DO EDITOR
@@ -27,9 +28,8 @@ const QuizModularPage: React.FC = () => {
   const [quizAnswers, setQuizAnswers] = useState<Record<string, any>>({});
   const [stepValidation, setStepValidation] = useState<Record<number, boolean>>({});
   const [userSelections, setUserSelections] = useState<Record<string, string[]>>({});
-  const [autoAdvanceTimeouts, setAutoAdvanceTimeouts] = useState<Record<number, NodeJS.Timeout>>(
-    {}
-  );
+  // Scheduler otimizado (substitui setTimeout dispersos)
+  const { schedule, debounce, cancelAll } = useOptimizedScheduler();
 
   // Hook para gerenciar o fluxo do quiz
   const {
@@ -69,12 +69,17 @@ const QuizModularPage: React.FC = () => {
         const stepBlocks = await TemplateManager.loadStepBlocks(stepId);
         setBlocks(stepBlocks);
 
-        // Validar se a etapa já está completa
-        setTimeout(() => {
-          const isValid = validateStep(stepBlocks);
-          setStepValidation(prev => ({ ...prev, [currentStep]: isValid }));
-          setStepValid?.(currentStep, isValid);
-        }, 100);
+        // Validar se a etapa já está completa (idle com timeout)
+        schedule(
+          `validate:step-${currentStep}`,
+          () => {
+            const isValid = validateStep(stepBlocks);
+            setStepValidation(prev => ({ ...prev, [currentStep]: isValid }));
+            setStepValid?.(currentStep, isValid);
+          },
+          100,
+          'idle'
+        );
       } catch (err) {
   // Log de erro reduzido
   if (import.meta?.env?.DEV) console.error(`Erro ao carregar etapa ${currentStep}:`, err);
@@ -236,7 +241,8 @@ const QuizModularPage: React.FC = () => {
       const updated = { ...prev, [questionId]: newSelections };
 
       // Verificar se a etapa está completa
-      setTimeout(() => {
+      // Debounce curto para validação
+      debounce(`validate:step-${currentStep}`, () => {
         const isValid = validateStep(blocks);
         setStepValidation(prev => ({ ...prev, [currentStep]: isValid }));
         setStepValid?.(currentStep, isValid);
@@ -244,16 +250,9 @@ const QuizModularPage: React.FC = () => {
         // Auto avanço se configurado
         if (isValid && blockConfig?.autoAdvanceOnComplete) {
           const delay = blockConfig?.autoAdvanceDelay || 1500;
-          const timeoutId = setTimeout(() => {
-            handleNext();
-          }, delay);
-
-          setAutoAdvanceTimeouts(prev => ({
-            ...prev,
-            [currentStep]: timeoutId,
-          }));
+          schedule(`auto-advance:step-${currentStep}`, () => handleNext(), delay);
         }
-      }, 100);
+      }, 120);
 
       return updated;
     });
@@ -263,37 +262,26 @@ const QuizModularPage: React.FC = () => {
     setQuizAnswers(prev => {
       const updated = { ...prev, [dataKey]: value };
 
-      setTimeout(() => {
+      // Debounce curto para validação
+      debounce(`validate:step-${currentStep}`, () => {
         const isValid = validateStep(blocks);
         setStepValidation(prev => ({ ...prev, [currentStep]: isValid }));
         setStepValid?.(currentStep, isValid);
 
-        // Auto avanço se configurado
         if (isValid && blockConfig?.autoAdvanceOnComplete) {
           const delay = blockConfig?.autoAdvanceDelay || 1500;
-          const timeoutId = setTimeout(() => {
-            handleNext();
-          }, delay);
-
-          setAutoAdvanceTimeouts(prev => ({
-            ...prev,
-            [currentStep]: timeoutId,
-          }));
+          schedule(`auto-advance:step-${currentStep}`, () => handleNext(), delay);
         }
-      }, 100);
+      }, 120);
 
       return updated;
     });
   };
 
-  // Limpar timeouts ao trocar de etapa
+  // Cancela tarefas pendentes ao trocar de etapa (evita cross-step)
   useEffect(() => {
-    return () => {
-      Object.values(autoAdvanceTimeouts).forEach(timeout => {
-        if (timeout) clearTimeout(timeout);
-      });
-    };
-  }, [currentStep]);
+    cancelAll();
+  }, [currentStep, cancelAll]);
 
   const progress = ((currentStep - 1) / 20) * 100;
 
@@ -412,7 +400,7 @@ const QuizModularPage: React.FC = () => {
                         </p>
                       </div>
                     ) : (
-          blocks.map((block, index) => (
+                      blocks.map(block => (
                         <div
                           key={block.id}
                           className={cn(
