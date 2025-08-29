@@ -163,8 +163,8 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
           items={blocks.map(block => `dnd-block-${String(block.id)}`)}
           strategy={verticalListSortingStrategy}
         >
-          {/* Wrapper interno para limitar largura dos componentes no canvas */}
-          <div className="w-full max-w-[32rem] mx-auto">
+          {/* Wrapper interno para limitar largura dos componentes no canvas (≈15% mais largo) */}
+          <div className="w-full max-w-[37rem] mx-auto">
             <div className="space-y-6">
               {/* Drop zone no início - sempre presente (ativa durante drag) */}
               <InterBlockDropZone position={0} isActive={isDraggingAnyValidComponent} />

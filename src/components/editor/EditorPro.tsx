@@ -824,7 +824,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   );
 
   const CanvasArea: React.FC = () => (
-    <div className="flex-1 flex flex-col bg-gray-50">
+  <div className="flex-1 flex flex-col bg-gray-50">
       <div className="bg-white border-b border-gray-200/60">
         {/* Header Principal */}
         <div className="px-6 py-4">
@@ -1202,9 +1202,9 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       </div>
 
       {/* Canvas principal com drag & drop - sistema unificado simples */}
-  <div className={cn('flex-1 min-w-0 p-2 overflow-x-auto', isDragging && 'editor-drop-zone-active')} data-canvas-container>
+      <div className={cn('flex-1 min-w-0 p-2 overflow-x-hidden', isDragging && 'editor-drop-zone-active')} data-canvas-container>
         <div
-  className="customizable-width mx-auto px-2 sm:px-3 md:px-4 w-full md:max-w-[40rem] lg:w-[40rem] lg:max-w-[40rem]"
+          className="customizable-width mx-auto px-2 sm:px-3 md:px-4 w-full max-w-[42rem]"
         >
           <CanvasDropZone
             blocks={currentStepData}
