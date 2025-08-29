@@ -1202,9 +1202,9 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       </div>
 
       {/* Canvas principal com drag & drop - sistema unificado simples */}
-      <div className={cn('flex-1 min-w-0 p-2 overflow-x-hidden', isDragging && 'editor-drop-zone-active')} data-canvas-container>
+    <div className={cn('flex-1 min-w-0 p-2 overflow-x-hidden', isDragging && 'editor-drop-zone-active')} data-canvas-container>
         <div
-          className="customizable-width mx-auto px-2 sm:px-3 md:px-4 w-full max-w-[42rem]"
+      className="customizable-width mx-auto px-2 sm:px-3 md:px-4 w-full max-w-[39rem]"
         >
           <CanvasDropZone
             blocks={currentStepData}
@@ -1256,7 +1256,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
       >
-  <div className={`editor-pro h-screen bg-gray-50 flex overflow-x-auto max-w-screen ${className}`}>
+  <div className={`editor-pro h-screen bg-gray-50 flex overflow-x-hidden max-w-screen ${className}`}>
           <StepSidebar />
           <ComponentsSidebar />
           <div className="flex-1 min-w-0 flex">
