@@ -462,9 +462,12 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
 
     window.addEventListener('quiz-input-change', handleInputChange as EventListener);
     window.addEventListener('quiz-selection-change', handleSelectionChange as EventListener);
+    // Compatibilidade: alguns blocos disparam evento alternativo
+    window.addEventListener('selection-change', handleSelectionChange as EventListener);
     return () => {
       window.removeEventListener('quiz-input-change', handleInputChange as EventListener);
       window.removeEventListener('quiz-selection-change', handleSelectionChange as EventListener);
+      window.removeEventListener('selection-change', handleSelectionChange as EventListener);
     };
   }, [actions, state.currentStep]);
 
@@ -1103,17 +1106,12 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         )}
         data-canvas-container
       >
-        <div className={cn(
-          'customizable-width mx-auto w-full',
-          mode === 'preview' ? 'px-6 max-w-4xl' : 'px-2 sm:px-3 md:px-4 max-w-[39rem]'
-        )}>
+        <div className={cn('customizable-width mx-auto w-full', 'px-6 max-w-4xl')}>
           {mode === 'preview' ? (
             <QuizRenderer
               mode="preview"
-              // Usa os blocos reais do editor nesta etapa
               blocksOverride={currentStepData as any}
               currentStepOverride={safeCurrentStep}
-              // Preview editável: permite selecionar blocos e navegar
               previewEditable
               selectedBlockId={state.selectedBlockId}
               onBlockClick={(blockId: string) => actions.setSelectedBlockId(blockId)}
@@ -1121,15 +1119,23 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               className="h-full w-full"
             />
           ) : (
-            <CanvasDropZone
-              blocks={currentStepData}
-              selectedBlockId={state.selectedBlockId}
-              onSelectBlock={actions.setSelectedBlockId}
-              onUpdateBlock={(id: string, updates: any) =>
-                actions.updateBlock(currentStepKey, id, updates)
+            <QuizRenderer
+              mode="editor"
+              currentStepOverride={safeCurrentStep}
+              className="h-full w-full"
+              // Reaproveita o shell e gating de /quiz e injeta o Canvas dentro dele
+              contentOverride={
+                <CanvasDropZone
+                  blocks={currentStepData}
+                  selectedBlockId={state.selectedBlockId}
+                  onSelectBlock={actions.setSelectedBlockId}
+                  onUpdateBlock={(id: string, updates: any) =>
+                    actions.updateBlock(currentStepKey, id, updates)
+                  }
+                  onDeleteBlock={(id: string) => actions.removeBlock(currentStepKey, id)}
+                  className="h-full w-full editor-pulse-highlight"
+                />
               }
-              onDeleteBlock={(id: string) => actions.removeBlock(currentStepKey, id)}
-              className="h-full w-full editor-pulse-highlight"
             />
           )}
         </div>

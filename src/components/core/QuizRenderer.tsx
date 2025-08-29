@@ -19,6 +19,8 @@ interface QuizRendererProps {
   previewEditable?: boolean;
   // Id do bloco selecionado (para destacar com moldura no preview editável)
   selectedBlockId?: string | null;
+  // Conteúdo customizado para substituir a renderização dos blocos (ex.: Canvas do editor)
+  contentOverride?: React.ReactNode;
 }
 
 /**
@@ -37,6 +39,7 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
   onBlockClick,
   previewEditable = false,
   selectedBlockId = null,
+  contentOverride,
 }) => {
   const { quizState, actions } = useQuizFlow({
     mode,
@@ -195,6 +198,15 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4" />
           <h2 className="text-xl font-semibold mb-2">Calculando seus resultados...</h2>
           <p className="text-gray-600">Analisando suas respostas...</p>
+        </div>
+      );
+    }
+
+    // Se conteúdo customizado foi passado (modo edição), usar ele dentro do mesmo wrapper
+    if (contentOverride) {
+      return (
+        <div className="step-content p-8 space-y-6 bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl shadow-stone-200/40 border border-stone-200/30 ring-1 ring-stone-100/20 overflow-hidden">
+          {contentOverride}
         </div>
       );
     }
