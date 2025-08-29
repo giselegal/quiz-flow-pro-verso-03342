@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import useOptimizedScheduler from '@/hooks/useOptimizedScheduler';
 
 interface QuizData {
   answers: any[];
@@ -188,35 +189,20 @@ export const useStorage = (quizId: string, options: StorageOptions = {}) => {
   }, [loadFromSession, loadFromLocal, lastSaved, isSaving, saveError]);
 
   // Auto-save com debounce
-  const [autoSaveTimeout, setAutoSaveTimeout] = useState<NodeJS.Timeout | null>(null);
+  const { debounce, cancel } = useOptimizedScheduler();
 
   const scheduleAutoSave = useCallback(
     (data: QuizData) => {
       if (!autoSave) return;
-
-      // Cancelar save anterior
-      if (autoSaveTimeout) {
-        clearTimeout(autoSaveTimeout);
-      }
-
-      // Agendar novo save
-      const timeout = setTimeout(() => {
-        saveData(data);
-      }, saveInterval);
-
-      setAutoSaveTimeout(timeout);
+      debounce(`storage:${quizId}:autosave`, () => saveData(data), saveInterval);
     },
-    [autoSave, autoSaveTimeout, saveData, saveInterval]
+    [autoSave, debounce, quizId, saveData, saveInterval]
   );
 
   // Cleanup do timeout
   useEffect(() => {
-    return () => {
-      if (autoSaveTimeout) {
-        clearTimeout(autoSaveTimeout);
-      }
-    };
-  }, [autoSaveTimeout]);
+    return () => cancel(`storage:${quizId}:autosave`);
+  }, [cancel, quizId]);
 
   // Backup para servidor (placeholder)
   const backupToServer = useCallback(async (data: QuizData) => {

@@ -4,6 +4,7 @@
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import useOptimizedScheduler from '@/hooks/useOptimizedScheduler';
 
 interface UsePropertyDebounceOptions {
   debounceMs?: number;
@@ -21,7 +22,9 @@ export const usePropertyDebounce = <T = any>(
   const [debouncedValue, setDebouncedValue] = useState<T>(initialValue);
   const [isChanging, setIsChanging] = useState(false);
   const [hasChanged, setHasChanged] = useState(false);
-  const timeoutRef = useRef<NodeJS.Timeout>();
+  const { debounce, cancel } = useOptimizedScheduler();
+  const keyRef = useRef<string>(`prop-debounce-${Math.random().toString(36).slice(2)}`);
+  const key = keyRef.current;
 
   const updateValue = useCallback(
     (newValue: T, forceImmediate = false) => {
@@ -29,17 +32,13 @@ export const usePropertyDebounce = <T = any>(
       setIsChanging(true);
       setHasChanged(false);
 
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-
       if (immediate || forceImmediate) {
         setDebouncedValue(newValue);
         setIsChanging(false);
         setHasChanged(true);
         onUpdate?.(newValue);
       } else {
-        timeoutRef.current = setTimeout(() => {
+        debounce(`${key}:update`, () => {
           setDebouncedValue(newValue);
           setIsChanging(false);
           setHasChanged(true);
@@ -47,7 +46,7 @@ export const usePropertyDebounce = <T = any>(
         }, debounceMs);
       }
     },
-    [debounceMs, onUpdate, immediate]
+    [debounceMs, onUpdate, immediate, debounce, key]
   );
 
   const resetValue = useCallback(() => {
@@ -55,18 +54,12 @@ export const usePropertyDebounce = <T = any>(
     setDebouncedValue(initialValue);
     setIsChanging(false);
     setHasChanged(false);
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
+  cancel(`${key}:update`);
   }, [initialValue]);
 
   useEffect(() => {
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-    };
-  }, []);
+    return () => cancel(`${key}:update`);
+  }, [cancel, key]);
 
   useEffect(() => {
     if (initialValue !== value) {
