@@ -1,0 +1,220 @@
+{
+  "summary": {
+    "scannedDirs": [
+      "src",
+      "client",
+      "shared",
+      "templates"
+    ],
+    "filesScanned": 1690,
+    "duplicateGroups": 9,
+    "timeSeconds": 0.18
+  },
+  "groups": [
+    {
+      "hash": "b8837a8fb85ed87aef41a5c6bcc300c7e740227f",
+      "size": 19151,
+      "paths": [
+        "src/data/quiz21StepsComplete.ts",
+        "src/features/quiz/templates/templates/quiz21StepsComplete.ts"
+      ]
+    },
+    {
+      "hash": "9b0d1e4b055b2e9e3a0770f5a422617db76e796e",
+      "size": 18448,
+      "paths": [
+        "src/components/analytics/ABTestAlerts.tsx",
+        "src/components/analytics/ABTestAlerts_new.tsx"
+      ]
+    },
+    {
+      "hash": "a0ced42eaacadb951215753367921eec1f08c7ae",
+      "size": 17410,
+      "paths": [
+        "src/components/editor/properties/EnhancedPropertiesPanel.tsx",
+        "src/components/editor/properties/PropertiesPanel.tsx"
+      ]
+    },
+    {
+      "hash": "c169488ed8c2121042573b242462d955bbcacb2d",
+      "size": 5505,
+      "paths": [
+        "src/components/editor/EnhancedComponentsSidebar.tsx",
+        "src/components/editor/sidebar/EnhancedComponentsSidebar.tsx"
+      ]
+    },
+    {
+      "hash": "1c403675ac36a82dd65edf2fddd0df70f5407163",
+      "size": 3189,
+      "paths": [
+        "src/utils/supabaseMapper.ts",
+        "src/utils/supabaseMapperFixed.ts"
+      ]
+    },
+    {
+      "hash": "69771d53f6e0eb1f89a41d6148446068dbe0dbc8",
+      "size": 3049,
+      "paths": [
+        "src/components/preview/UnifiedPreviewEngine.tsx",
+        "src/components/editor/unified/UnifiedPreviewEngine.tsx"
+      ]
+    },
+    {
+      "hash": "58bd73b5c6bcce89ff3c27e8094ceaf7c24edba4",
+      "size": 2678,
+      "paths": [
+        "src/config/stepTemplatesMapping_clean.ts",
+        "src/config/stepTemplatesMapping.ts"
+      ]
+    },
+    {
+      "hash": "8a238329b100faa02ab45b4fd79f5fc317a8c2bf",
+      "size": 1850,
+      "paths": [
+        "src/components/editor/blocks/AdvancedGalleryBlock.tsx",
+        "src/components/editor/blocks/AdvancedPricingTableBlock.tsx",
+        "src/components/editor/blocks/AnimatedChartsBlock.tsx",
+        "src/components/editor/blocks/HeroOfferBlock.tsx",
+        "src/components/editor/blocks/InteractiveStatisticsBlock.tsx",
+        "src/components/editor/blocks/PainPointsGridBlock.tsx",
+        "src/components/editor/blocks/PricingSectionBlock.tsx",
+        "src/components/editor/blocks/ProductFeaturesGridBlock.tsx",
+        "src/components/editor/blocks/QuizFunnelStep1Block.tsx",
+        "src/components/editor/blocks/QuizQuestionBlockConfigurable.tsx",
+        "src/components/editor/blocks/StyleCharacteristicsBlock.tsx",
+        "src/components/editor/blocks/TestimonialsRealBlock.tsx",
+        "src/components/editor/blocks/TestimonialsCarouselBlock.tsx"
+      ]
+    },
+    {
+      "hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+      "size": 0,
+      "paths": [
+        "src/index.js",
+        "src/components/QuizBuilderIntegrated.tsx",
+        "src/components/QuizBuilderWrapper.tsx",
+        "src/components/QuizBuilderDemo.tsx",
+        "src/components/QuizEditorIntegration.tsx",
+        "src/components/QuizEditorIntegration_correct.tsx",
+        "src/components/TestIntegration.tsx",
+        "src/config/brandKit.ts",
+        "src/config/flags.ts",
+        "src/config/pixelConfig.ts",
+        "src/config/smartBlockRegistry.ts",
+        "src/context/EditorDndContext.tsx",
+        "src/data/completeQuizQuestions.ts",
+        "src/data/generateQuizPages.ts",
+        "src/data/mockStyles.ts",
+        "src/lib/validations.ts",
+        "src/hooks/useSmartProperties.ts",
+        "src/hooks/useStepTemplateIntegration.ts",
+        "src/hooks/useSupabase.ts",
+        "src/registry/quizComponentRegistry.ts",
+        "src/pages/EditorProSimpleTest.tsx",
+        "src/pages/EditorProTestFixed.tsx",
+        "src/pages/EditorProTestPage.tsx",
+        "src/pages/EditorWithPreview-clean.tsx",
+        "src/pages/EditorTeste.tsx",
+        "src/pages/EditorWithPreview-FINAL.tsx",
+        "src/pages/MainEditor-new.tsx",
+        "src/pages/QuizEditorProDemo.tsx",
+        "src/pages/Quiz.tsx",
+        "src/pages/QuizEditorShowcase.tsx",
+        "src/pages/ResultPage-new.tsx",
+        "src/pages/ResultPageWithBuilder.tsx",
+        "src/schemas/editorSchemas.ts",
+        "src/services/localPublishStore.ts",
+        "src/services/realFunnelIntegration.ts",
+        "src/services/supabaseIntegration.ts",
+        "src/styles/global-standards.css",
+        "src/styles/standard-design-system.css",
+        "src/styles/standardConfig.ts",
+        "src/templates/quiz21StepsTemplates.ts",
+        "src/templates/Quiz21StepsTemplate.ts",
+        "src/tests/IntegrationTests.test.ts",
+        "src/types/schema.ts",
+        "src/utils/analytics-simple.ts",
+        "src/utils/analytics.legacy.js",
+        "src/utils/blockMigration.ts",
+        "src/utils/builderConfig.ts",
+        "src/utils/builderTest.ts",
+        "src/utils/builderModelCreator.ts",
+        "src/utils/devPerformanceOptimizer.ts",
+        "src/utils/logger.ts",
+        "src/utils/optimizedIcons.ts",
+        "src/utils/pixelCore.ts",
+        "src/utils/previewConfig.ts",
+        "src/utils/prevent-network-loops.ts",
+        "src/utils/scriptFilter.ts",
+        "src/utils/styling.ts",
+        "src/app/test-quiz-builder/page.tsx",
+        "src/components/admin/BuilderPageSetup.tsx",
+        "src/components/core/QuizFlow.tsx",
+        "src/components/debug/BuilderDebugTest.tsx",
+        "src/components/debug/ComponentsStepByStepTest.tsx",
+        "src/components/debug/EditorContextTest.tsx",
+        "src/components/debug/EditorDebugInfo.tsx",
+        "src/components/debug/EnhancedComponentsSidebarTest.tsx",
+        "src/components/debug/FunnelStagesPanelTest.tsx",
+        "src/components/debug/SimpleEditorTest.tsx",
+        "src/components/editor-fixed/QuizEditorExamples.tsx",
+        "src/components/editor-fixed/QuizEditorIntegration.tsx",
+        "src/components/editor-fixed/QuizEditorWidget.ts",
+        "src/components/editor-fixed/index.ts",
+        "src/components/editor-fixed/TemplateAdapter.ts",
+        "src/components/editor-fixed/UnifiedTemplateManager.tsx",
+        "src/components/editor/EditorCanvasArea.tsx",
+        "src/components/editor/EditorPro-WORKING.tsx",
+        "src/components/editor/EditorWithQuizLogic.tsx",
+        "src/components/editor/EditorUnified.tsx",
+        "src/components/editor/QuizEditorPro.tsx",
+        "src/components/editor/QuizEditorPro.corrected.tsx",
+        "src/components/editor/QuizStepsPanel.tsx",
+        "src/components/editor/TemplateLibrary.new.tsx",
+        "src/components/editor/ValidationIndicator.tsx",
+        "src/components/performance/OptimizedImageLoader.tsx",
+        "src/components/quiz/QuizRenderer.tsx",
+        "src/components/router/UnifiedQuizRouter.tsx",
+        "src/components/result/BlockEditorModal.tsx",
+        "src/components/result/BlockRenderer.tsx",
+        "src/components/result/BlockSystemDemo.tsx",
+        "src/components/result/BlockSystemDebugPanel.tsx",
+        "src/components/result/BlockTemplateModal.tsx",
+        "src/components/result/DragDropContainer.tsx",
+        "src/components/routing/QuizRouteController.tsx",
+        "src/components/ui/ImageOptimizationOptions-é-definido.ts",
+        "src/components/ui/OptimizedLoading.tsx",
+        "src/components/ui/UltraOptimizedImage.tsx",
+        "src/integrations/supabase/client-enhanced.ts",
+        "src/hooks/core/useCalculations.tsx",
+        "src/hooks/editor/useKeyboardShortcuts.ts",
+        "src/quiz/context/QuizProvider.tsx",
+        "src/hooks/editor/useUndoRedo.ts",
+        "src/pages/editors/QuizEditorComplete.tsx",
+        "src/pages/editors/QuizEditorProPage.tsx",
+        "src/pages/editors/QuizEditorProPageTemp.tsx",
+        "src/pages/editors-backup/EditorWithPreview.tsx",
+        "src/pages/editors/QuizEditorProPageWithSupabase.tsx",
+        "src/components/editor/blocks/CaktoQuizOffer.tsx",
+        "src/components/editor/blocks/CaktoQuizIntro.tsx",
+        "src/components/editor/blocks/CaktoQuizResult.tsx",
+        "src/components/editor/blocks/CaktoQuizTransition.tsx",
+        "src/components/editor/funnel/FunnelProgressBar.tsx",
+        "src/components/editor/dnd/DragComponents.tsx",
+        "src/components/editor/layout/FiveColumnLayout.tsx",
+        "src/components/editor/properties/PropertiesPanel-Consolidated.tsx",
+        "src/components/editor/quiz/OptionsGridPropertiesPanel.tsx",
+        "src/components/editor/quiz/QuizHeaderPropertiesPanel.tsx",
+        "src/components/result-editor/block-editors/AntesDepoisTransformacaoBlockEditor.tsx",
+        "src/components/result-editor/block-previews/AntesDepoisTransformacaoBlockPreview.tsx",
+        "src/components/result/blocks/BonusBlock.tsx",
+        "src/components/result/blocks/GuaranteeBlock.tsx",
+        "src/components/result/blocks/MentorBlock.tsx",
+        "src/components/result/blocks/MotivationBlock.tsx",
+        "src/components/steps/step01/IntroPropertiesPanel.tsx",
+        "src/components/editor/panels/block-properties/PropertyInput.tsx",
+        "client/src/app/editor/page.tsx"
+      ]
+    }
+  ]
+}

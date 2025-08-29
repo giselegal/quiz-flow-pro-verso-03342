@@ -1,10 +1,9 @@
-// @ts-nocheck
 import { toast } from '@/components/ui/use-toast';
 import { useQuizFlow } from '@/context/QuizFlowProvider';
 import { quizSupabaseService } from '@/services/quizSupabaseService';
 import { templateService } from '@/services/templateService';
-import type { QuizSession } from '@/types/quiz';
 import { useCallback, useEffect, useState } from 'react';
+import { StorageService } from '@/services/core/StorageService';
 import { useLocation } from 'wouter';
 
 /**
@@ -49,7 +48,7 @@ export const useStepNavigation = (initialStep: number = 1) => {
     totalSteps: 21,
   });
 
-  const [session, setSession] = useState<QuizSession | null>(null);
+  const [session, setSession] = useState<any | null>(null);
   const [stepData, setStepData] = useState<Map<number, StepData>>(new Map());
 
   // ===== INICIALIZAÇÃO DA SESSÃO =====
@@ -57,12 +56,22 @@ export const useStepNavigation = (initialStep: number = 1) => {
     try {
       setState(prev => ({ ...prev, isLoading: true }));
 
-      // Criar ou recuperar sessão do quiz
+      // Criar usuário e sessão do quiz
+      const userName =
+        StorageService.safeGetString('userName') ||
+        StorageService.safeGetString('quizUserName') ||
+        '';
+
+      const user = await quizSupabaseService.createQuizUser({
+        name: userName || undefined,
+        userAgent: navigator.userAgent,
+      });
+
       const newSession = await quizSupabaseService.createQuizSession({
-        current_step: currentStep,
-        responses: {},
-        is_completed: false,
-        funnel_id: 'quiz-21-steps', // ID do funil das 21 etapas
+        funnelId: 'quiz-21-steps',
+        quizUserId: user.id,
+        totalSteps: 21,
+        maxScore: 100,
         metadata: {
           startTime: new Date().toISOString(),
           userAgent: navigator.userAgent,
@@ -115,7 +124,6 @@ export const useStepNavigation = (initialStep: number = 1) => {
         setStepData(prev => new Map(prev.set(stepNumber, data)));
 
         console.log(`✅ Dados da etapa ${stepNumber} carregados:`, {
-          templateId: template.metadata.id,
           isQuizStep,
           blocksCount: template.blocks?.length || 0,
         });
@@ -157,7 +165,7 @@ export const useStepNavigation = (initialStep: number = 1) => {
         // Atualizar sessão no banco
         if (session) {
           await quizSupabaseService.updateQuizSession(session.id, {
-            current_step: stepNumber,
+            currentStep: stepNumber,
           });
         }
 
@@ -207,11 +215,11 @@ export const useStepNavigation = (initialStep: number = 1) => {
 
         // Atualizar sessão no banco
         await quizSupabaseService.updateQuizSession(session.id, {
-          responses: updatedResponses,
+          metadata: { ...(session.metadata || {}), responses: updatedResponses },
         });
 
         // Atualizar estado local
-        setSession(prev =>
+  setSession((prev: any) =>
           prev
             ? {
                 ...prev,
@@ -271,9 +279,9 @@ export const useStepNavigation = (initialStep: number = 1) => {
 
       // Marcar como completado
       await quizSupabaseService.updateQuizSession(session.id, {
-        is_completed: true,
-        completed_at: new Date().toISOString(),
-        results,
+        status: 'completed',
+        completedAt: new Date(),
+        metadata: { ...(session.metadata || {}), results },
       });
 
       // Navegar para página de resultados
@@ -326,6 +334,45 @@ export const useStepNavigation = (initialStep: number = 1) => {
           completionScore: results.completionScore,
         });
 
+        // ✅ Normalizar e persistir no core para a Etapa 20 (consumo pelos blocos via useQuizResult)
+        try {
+          const scores = results.styleProfile.styleScores || {};
+          const total = Object.values(scores).reduce((a: number, b: number) => a + (b as number), 0) || 1;
+          const ordered = Object.entries(scores)
+            .map(([category, score]) => ({
+              style: category,
+              category,
+              score: Number(score) || 0,
+              percentage: Math.round(((Number(score) || 0) / total) * 100),
+            }))
+            .sort((a, b) => b.score - a.score);
+
+          const primary = ordered[0] || {
+            style: results.styleProfile.primaryStyle,
+            category: results.styleProfile.primaryStyle,
+            score: 0,
+            percentage: 0,
+          };
+          const secondary = ordered.slice(1);
+
+          const payload = {
+            version: 'v1',
+            primaryStyle: primary,
+            secondaryStyles: secondary,
+            scores,
+            totalQuestions: results.metadata?.answeredQuestions || total,
+            userData: { name: (results as any).userName || '' },
+          };
+
+          StorageService.safeSetJSON('quizResult', payload);
+          if ((results as any).userName) {
+            StorageService.safeSetString('userName', (results as any).userName);
+            StorageService.safeSetString('quizUserName', (results as any).userName);
+          }
+        } catch (e) {
+          console.warn('Não foi possível normalizar/persistir resultado no core:', e);
+        }
+
         return {
           totalAnswers: results.metadata.answeredQuestions,
           completionRate: results.completionScore,
@@ -349,6 +396,25 @@ export const useStepNavigation = (initialStep: number = 1) => {
         const totalAnswers = Object.keys(responses).length;
         const stylePreferences = extractStylePreferences(responses);
 
+        // 🔄 Persistir fallback mínimo para destravar etapa 20
+        try {
+          const primaryCategory = stylePreferences?.primaryStyle || 'Natural';
+          const payload = {
+            version: 'v1',
+            primaryStyle: {
+              style: primaryCategory,
+              category: primaryCategory,
+              score: totalAnswers,
+              percentage: Math.min(100, Math.round((totalAnswers / 21) * 100)),
+            },
+            secondaryStyles: [],
+            scores: { [primaryCategory]: totalAnswers },
+            totalQuestions: totalAnswers,
+            userData: { name: StorageService.safeGetString('userName') || StorageService.safeGetString('quizUserName') || '' },
+          };
+          StorageService.safeSetJSON('quizResult', payload);
+        } catch {}
+
         return {
           totalAnswers,
           completionRate: (totalAnswers / 21) * 100,
@@ -361,7 +427,7 @@ export const useStepNavigation = (initialStep: number = 1) => {
   );
 
   // ===== EXTRAIR PREFERÊNCIAS DE ESTILO =====
-  const extractStylePreferences = useCallback((responses: Record<string, any>) => {
+  const extractStylePreferences = useCallback((_responses: Record<string, any>) => {
     // Analisar respostas para determinar perfil de estilo
     // TODO: Implementar algoritmo de análise das respostas
 
@@ -374,7 +440,7 @@ export const useStepNavigation = (initialStep: number = 1) => {
   }, []);
 
   // ===== GERAR RECOMENDAÇÕES =====
-  const generateRecommendations = useCallback((styleProfile: any) => {
+  const generateRecommendations = useCallback((_styleProfile: any) => {
     // TODO: Implementar sistema de recomendações baseado no perfil
 
     return {

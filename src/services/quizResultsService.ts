@@ -1,6 +1,7 @@
 // @ts-nocheck
 import { styleConfig, type StyleConfig } from '@/config/styleConfig';
 import { supabase } from '@/integrations/supabase/client';
+import { StorageService } from '@/services/core/StorageService';
 
 /**
  * 🎯 Serviço para cálculo e armazenamento de resultados do quiz
@@ -231,20 +232,27 @@ class QuizResultsService {
           const name = formData.name.trim();
           if (name.length >= 2) {
             console.log('👤 Nome extraído do formulário:', name);
+            // Persistir em StorageService para consumo universal (core)
+            try {
+              StorageService.safeSetString('userName', name);
+              StorageService.safeSetString('quizUserName', name);
+            } catch {}
             return name;
           }
         }
       }
     }
 
-    // Fallback: verificar localStorage se disponível
-    if (typeof window !== 'undefined') {
-      const storedName = localStorage.getItem('quizUserName');
+    // Fallback: usar StorageService (core) com compatibilidade
+    try {
+      const storedName =
+        StorageService.safeGetString('userName') ||
+        StorageService.safeGetString('quizUserName');
       if (storedName && storedName.trim().length >= 2) {
-        console.log('👤 Nome recuperado do localStorage:', storedName);
+        console.log('👤 Nome recuperado do StorageService:', storedName);
         return storedName.trim();
       }
-    }
+    } catch {}
 
     console.log('⚠️ Nome do usuário não encontrado nas respostas');
     return '';
