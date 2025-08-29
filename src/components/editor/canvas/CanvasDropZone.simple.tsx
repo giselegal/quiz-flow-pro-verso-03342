@@ -131,6 +131,46 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
   // Modo preview controlado por prop (default: false)
   const isPreviewing = !!isPreviewingProp;
 
+  // Virtualização condicional (somente preview e listas muito grandes; nunca durante drag)
+  const VIRTUALIZE_THRESHOLD = 120;
+  const AVG_ITEM_HEIGHT = 120; // px (estimativa)
+  const OVERSCAN = 8; // itens
+  const enableVirtualization =
+    isPreviewing && !isDraggingAnyValidComponent && blocks.length > VIRTUALIZE_THRESHOLD;
+
+  const scrollRef = React.useRef<HTMLDivElement | null>(null);
+  const [scrollTop, setScrollTop] = React.useState(0);
+  const [containerHeight, setContainerHeight] = React.useState<number>(600);
+
+  // Observa altura do container
+  React.useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(() => setContainerHeight(el.clientHeight || 600));
+    ro.observe(el);
+    setContainerHeight(el.clientHeight || 600);
+    return () => ro.disconnect();
+  }, [scrollRef.current]);
+
+  const onScroll = React.useCallback(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    setScrollTop(el.scrollTop || 0);
+  }, []);
+
+  const visibleMeta = React.useMemo(() => {
+    const visibleCount = Math.max(1, Math.ceil(containerHeight / AVG_ITEM_HEIGHT));
+    let startIndex = Math.max(0, Math.floor(scrollTop / AVG_ITEM_HEIGHT) - OVERSCAN);
+    let endIndex = Math.min(blocks.length, startIndex + visibleCount + OVERSCAN * 2);
+    // Ajuste final caso end alcance o fim
+    if (endIndex - startIndex < visibleCount && endIndex === blocks.length) {
+      startIndex = Math.max(0, blocks.length - (visibleCount + OVERSCAN * 2));
+    }
+    const topPad = startIndex * AVG_ITEM_HEIGHT;
+    const bottomPad = Math.max(0, (blocks.length - endIndex) * AVG_ITEM_HEIGHT);
+    return { startIndex, endIndex, topPad, bottomPad };
+  }, [scrollTop, containerHeight, blocks.length]);
+
   return (
     <div
       id={CANVAS_ROOT_ID}
@@ -151,7 +191,7 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
       data-id="canvas-drop-zone"
       data-dnd-dropzone-type="raiz-da-tela"
     >
-      {blocks.length === 0 ? (
+  {blocks.length === 0 ? (
         <div className="text-center py-12">
           <p className="text-stone-500 text-lg mb-2">
             {isPreviewing
@@ -163,6 +203,38 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
               <p className="text-brand font-medium">Solte o componente aqui</p>
             </div>
           )}
+        </div>
+      ) : enableVirtualization ? (
+        // Virtualização leve em preview
+        <div
+          ref={scrollRef}
+          onScroll={onScroll}
+          className="w-full max-w-[37rem] mx-auto overflow-y-auto"
+          style={{ maxHeight: '70vh' }}
+        >
+          <div className="space-y-6">
+            <div style={{ height: visibleMeta.topPad }} />
+            {/* Drop zone no início absoluto do canvas (posição 0) quando no topo */}
+            {visibleMeta.startIndex === 0 && (
+              <InterBlockDropZone position={0} isActive={false} />
+            )}
+            {blocks.slice(visibleMeta.startIndex, visibleMeta.endIndex).map((block, i) => {
+              const realIndex = visibleMeta.startIndex + i;
+              return (
+                <React.Fragment key={String(block.id)}>
+                  <SortableBlockWrapper
+                    block={block}
+                    isSelected={false}
+                    onSelect={() => {}}
+                    onUpdate={() => {}}
+                    onDelete={() => {}}
+                  />
+                  <InterBlockDropZone position={realIndex + 1} isActive={false} />
+                </React.Fragment>
+              );
+            })}
+            <div style={{ height: visibleMeta.bottomPad }} />
+          </div>
         </div>
       ) : (
         <SortableContext
