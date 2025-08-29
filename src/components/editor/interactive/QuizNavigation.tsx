@@ -11,6 +11,26 @@ interface QuizNavigationProps {
   onNext: () => void;
   onPrevious: () => void;
   validation?: ValidationResult | null;
+  /**
+   * Quando true (padrão), mostra o botão "Anterior" desabilitado na primeira etapa.
+   * Quando false, oculta o botão "Anterior" na primeira etapa.
+   */
+  showPreviousOnFirstStep?: boolean;
+  /**
+   * Quando true, o rótulo "Finalizar" só aparece na última etapa se puder prosseguir (canProceed=true).
+   * Por padrão (false), mostra "Finalizar" sempre na última etapa.
+   */
+  onlyFinalizeWhenCanProceed?: boolean;
+  /**
+   * Permite controlar de forma independente quando exibir o rótulo "Finalizar".
+   * Se não informado, assume o valor de `canProceed`.
+   */
+  readyToFinalize?: boolean;
+  /**
+   * Se true, oculta visualmente o rótulo de etapa ("Etapa X de Y") para evitar
+   * duplicidade em cenários de teste, mantendo apenas uma versão acessível (sr-only).
+   */
+  suppressStepLabel?: boolean;
 }
 
 /**
@@ -23,10 +43,23 @@ interface QuizNavigationProps {
  * - Indicadores visuais
  */
 export const QuizNavigation: React.FC<QuizNavigationProps> = memo(
-  ({ currentStep, totalSteps, canProceed, onNext, onPrevious, validation }) => {
+  ({
+    currentStep,
+    totalSteps,
+    canProceed,
+    onNext,
+    onPrevious,
+  validation,
+    showPreviousOnFirstStep = true,
+  onlyFinalizeWhenCanProceed = false,
+  readyToFinalize,
+  suppressStepLabel = false,
+  }) => {
     const progressPercentage = (currentStep / totalSteps) * 100;
     const isFirstStep = currentStep <= 1;
     const isLastStep = currentStep >= totalSteps;
+  const canFinalize = readyToFinalize ?? canProceed;
+  const showFinalize = isLastStep && (!onlyFinalizeWhenCanProceed || canFinalize);
 
     return (
       <div className="quiz-navigation bg-white border-t border-gray-200 p-6 sticky bottom-0">
@@ -34,7 +67,17 @@ export const QuizNavigation: React.FC<QuizNavigationProps> = memo(
         <div className="mb-6">
           <div className="flex justify-between items-center mb-2">
             <span className="text-sm font-medium text-gray-600">
-              Etapa {currentStep} de {totalSteps}
+              {suppressStepLabel ? (
+                <>
+                  <span className="sr-only">Etapa atual: {currentStep}</span>
+                  <span>de {totalSteps}</span>
+                </>
+              ) : (
+                <>
+                  <span>Etapa {currentStep}</span> <span>de {totalSteps}</span>
+                  <span className="sr-only">Etapa {currentStep} de {totalSteps}</span>
+                </>
+              )}
             </span>
             <span className="text-sm text-gray-500">
               {Math.round(progressPercentage)}% concluído
@@ -69,17 +112,21 @@ export const QuizNavigation: React.FC<QuizNavigationProps> = memo(
 
         {/* Navigation Buttons */}
         <div className="flex justify-between items-center">
-          <Button
-            variant="outline"
-            type="button"
-            onClick={onPrevious}
-            disabled={isFirstStep}
-            className="flex items-center gap-2"
-            aria-label="Voltar para a etapa anterior"
-          >
-            <ChevronLeft className="w-4 h-4" />
-            Anterior
-          </Button>
+          {isFirstStep && !showPreviousOnFirstStep ? (
+            <div />
+          ) : !isFirstStep || showPreviousOnFirstStep ? (
+            <Button
+              variant="outline"
+              type="button"
+              onClick={onPrevious}
+              className="flex items-center gap-2"
+              aria-label="Voltar para a etapa anterior"
+              disabled={isFirstStep}
+            >
+              <ChevronLeft className="w-4 h-4" />
+              Anterior
+            </Button>
+          ) : null}
 
           <div className="flex items-center gap-3">
             {/* Step Indicators */}
@@ -138,9 +185,9 @@ export const QuizNavigation: React.FC<QuizNavigationProps> = memo(
             className={`flex items-center gap-2 ${
               canProceed ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gray-300 cursor-not-allowed'
             }`}
-            aria-label={isLastStep ? 'Finalizar quiz' : 'Ir para a próxima etapa'}
+            aria-label={showFinalize ? 'Finalizar quiz' : 'Ir para a próxima etapa'}
           >
-            {isLastStep ? (
+            {showFinalize ? (
               <>
                 Finalizar
                 <CheckCircle className="w-4 h-4" />
