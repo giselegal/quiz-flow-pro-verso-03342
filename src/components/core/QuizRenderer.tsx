@@ -1,13 +1,9 @@
 import UniversalBlockRenderer from '@/components/editor/blocks/UniversalBlockRenderer';
 import { useQuizFlow } from '@/hooks/core/useQuizFlow';
 import { Block } from '@/types/editor';
-import React from 'react';
-
-interface StepData {
-  blocks: Block[];
-  stepNumber: number;
-  stepType: 'form' | 'question' | 'transition' | 'result' | 'offer';
-}
+import React, { useEffect, useMemo, useState } from 'react';
+import { cn } from '@/lib/utils';
+import { computeSelectionValidity } from '@/lib/quiz/selectionRules';
 
 interface QuizRendererProps {
   mode?: 'production' | 'preview' | 'editor';
@@ -48,8 +44,8 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
     initialStep,
   });
 
-  const { currentStep, totalSteps, userName, progress, isLoading } = quizState;
-  const { prevStep, getStepData } = actions; // nextStep removido pois não é usado
+  const { currentStep, totalSteps, progress, isLoading } = quizState;
+  const { prevStep, nextStep, getStepData, setStepValid } = actions;
 
   // Buscar dados da etapa atual
   const canUseOverrides =
@@ -57,49 +53,135 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
 
   const stepBlocks = canUseOverrides ? (blocksOverride as Block[]) : getStepData();
 
-  // Determinar tipo da etapa
-  const getStepType = (step: number): StepData['stepType'] => {
-    if (step === 1) return 'form';
-    if (step >= 2 && step <= 11) return 'question';
-    if (step === 12 || step === 19) return 'transition';
-    if (step >= 13 && step <= 18) return 'question';
-    if (step === 20) return 'result';
-    if (step === 21) return 'offer';
-    return 'question';
-  };
+  // Metadata da etapa (se necessário futuramente)
+  // const stepData: StepData = {
+  //   blocks: stepBlocks,
+  //   stepNumber: currentStepOverride ?? currentStep,
+  //   stepType: ((): StepData['stepType'] => {
+  //     if (currentStep === 1) return 'form';
+  //     if (currentStep >= 2 && currentStep <= 11) return 'question';
+  //     if (currentStep === 12 || currentStep === 19) return 'transition';
+  //     if (currentStep >= 13 && currentStep <= 18) return 'question';
+  //     if (currentStep === 20) return 'result';
+  //     if (currentStep === 21) return 'offer';
+  //     return 'question';
+  //   })(),
+  // };
 
-  const stepData: StepData = {
-    blocks: stepBlocks,
-    stepNumber: currentStepOverride ?? currentStep,
-    stepType: getStepType(currentStep),
-  };
+  // 🎨 Fundo configurável por etapa (store NoCode)
+  const { stepConfig } = (() => {
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const store = require('@/stores/useStepNavigationStore');
+      const stepNum = currentStepOverride ?? currentStep;
+      const cfg = store.useStepNavigationStore.getState().getStepConfig(`step-${stepNum}`);
+      return { stepConfig: cfg } as any;
+    } catch {
+      return { stepConfig: undefined } as any;
+    }
+  })();
 
-  // Renderizar header com progresso
+  const bgStyle = useMemo(() => {
+    const from = stepConfig?.backgroundFrom || '#FAF9F7';
+    const via = stepConfig?.backgroundVia || '#F5F2E9';
+    const to = stepConfig?.backgroundTo || '#EEEBE1';
+    return { from, via, to };
+  }, [stepConfig?.backgroundFrom, stepConfig?.backgroundVia, stepConfig?.backgroundTo]);
+
+  // ✅ Validação e gating similares à produção
+  const [stepValidation, setLocalStepValidation] = useState<Record<number, boolean>>({});
+
+  // Escutar eventos globais de blocos
+  useEffect(() => {
+    const handleSelectionChange = (ev: Event) => {
+      const e = ev as CustomEvent<{ isValid?: boolean; valid?: boolean; selectionCount?: number }>;
+      const valid = (e.detail?.isValid ?? e.detail?.valid) ?? false;
+      setLocalStepValidation(prev => ({ ...prev, [currentStep]: valid }));
+      setStepValid?.(currentStep, valid);
+    };
+    const handleInputChange = (ev: Event) => {
+      const e = ev as CustomEvent<{ value?: string; valid?: boolean }>;
+      const ok = typeof e.detail?.value === 'string' ? (e.detail.value?.trim().length ?? 0) > 0 : !!e.detail?.valid;
+      setLocalStepValidation(prev => ({ ...prev, [currentStep]: ok }));
+      setStepValid?.(currentStep, ok);
+    };
+    window.addEventListener('quiz-selection-change', handleSelectionChange as EventListener);
+    window.addEventListener('quiz-input-change', handleInputChange as EventListener);
+    return () => {
+      window.removeEventListener('quiz-selection-change', handleSelectionChange as EventListener);
+      window.removeEventListener('quiz-input-change', handleInputChange as EventListener);
+    };
+  }, [currentStep, setStepValid]);
+
+  // Validação inicial ao mudar blocos
+  useEffect(() => {
+    const blocks = stepBlocks || [];
+    const questionBlocks = blocks.filter((b: any) => b.type === 'options-grid' || b.type === 'form-container');
+    if (questionBlocks.length === 0) {
+      setLocalStepValidation(prev => ({ ...prev, [currentStep]: true }));
+      setStepValid?.(currentStep, true);
+      return;
+    }
+    // Best effort: usa propriedades do bloco para inferir contagens; considera inválido por padrão
+    const inferredValid = questionBlocks.every((b: any) => {
+      if (b.type === 'form-container') {
+        return !(b.content?.required); // sem valor → assume inválido se required
+      }
+      const selCount = Array.isArray(b.properties?.selectedOptions) ? b.properties.selectedOptions.length : 0;
+      const { isValid } = computeSelectionValidity(currentStep, selCount, {
+        requiredSelections: b.properties?.requiredSelections as number | undefined,
+        minSelections: b.properties?.minSelections as number | undefined,
+      });
+      return isValid;
+    });
+    setLocalStepValidation(prev => ({ ...prev, [currentStep]: inferredValid }));
+    setStepValid?.(currentStep, inferredValid);
+  }, [currentStep, stepBlocks, setStepValid]);
+
+  const isStepValid = !!stepValidation[currentStep];
+  const mustBeValid = stepConfig?.enableButtonOnlyWhenValid !== false;
+  const nextDisabled = (currentStep === totalSteps) || (mustBeValid && !isStepValid);
+  const nextLabel = currentStep === totalSteps
+    ? 'Finalizado'
+    : (!isStepValid && mustBeValid ? 'Complete a etapa' : (stepConfig?.nextButtonText || 'Próxima →'));
+
+  // Header (alinhado ao /quiz)
   const renderHeader = () => (
-    <div className="quiz-header mb-6">
-      <div className="flex justify-between items-center mb-4">
-        <span className="text-sm text-gray-600">
-          Etapa {currentStepOverride ?? currentStep} de {totalSteps}
-        </span>
-        {mode !== 'preview' && (
-          <div className="flex gap-2">
-            <button
-              onClick={prevStep}
-              disabled={currentStep === 1}
-              className="px-3 py-1 text-sm border rounded disabled:opacity-50"
-            >
-              ← Voltar
-            </button>
-          </div>
-        )}
-      </div>
+    <div className="bg-white/90 backdrop-blur-sm border border-stone-200/50 shadow-sm rounded-lg mb-6 p-4">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <h2 className="text-lg font-semibold text-stone-800">Quiz Style Challenge</h2>
+          <div className="text-sm text-stone-600">Etapa {currentStep} de {totalSteps}</div>
+        </div>
 
-      {/* Barra de progresso */}
-      <div className="w-full bg-gray-200 rounded-full h-2">
-        <div
-          className="bg-gradient-to-r from-blue-600 to-green-600 h-2 rounded-full transition-all duration-500"
-          style={{ width: `${progress}%` }}
-        />
+        <div className="flex items-center gap-4">
+          <div className="w-48">
+            <div className="bg-stone-200 rounded-full h-2 w-full">
+              <div
+                className="bg-gradient-to-r from-[#B89B7A] to-[#8B7355] h-2 rounded-full"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+          </div>
+          <div className="text-sm font-medium text-stone-700">{progress}%</div>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <button
+            onClick={prevStep}
+            disabled={currentStep === 1}
+            className={cn('px-3 py-2 text-sm rounded border', currentStep === 1 ? 'bg-stone-100 text-stone-400' : 'bg-white text-stone-700 hover:bg-stone-50 border-stone-200')}
+          >
+            ← Anterior
+          </button>
+          <button
+            onClick={() => !nextDisabled && nextStep()}
+            disabled={nextDisabled}
+            className={cn('px-3 py-2 text-sm rounded', nextDisabled ? 'bg-stone-200 text-stone-400 cursor-not-allowed' : 'bg-gradient-to-r from-[#B89B7A] to-[#8B7355] text-white hover:from-[#A08966] hover:to-[#7A6B4D] shadow')}
+          >
+            {nextLabel}
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -150,7 +232,7 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
     };
 
     return (
-      <div className="step-content space-y-6">
+      <div className="step-content p-8 space-y-6 bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl shadow-stone-200/40 border border-stone-200/30 ring-1 ring-stone-100/20 overflow-hidden">
         {stepBlocks.map((block: any, index: number) => {
           const isSelectable = mode === 'editor' || (mode === 'preview' && previewEditable);
           const isSelected = isSelectable && selectedBlockId === block.id;
@@ -182,18 +264,25 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
   };
 
   return (
-    <div className={`quiz-renderer ${className}`}>
-      <div className="max-w-4xl mx-auto p-6">
+    <div
+      className={`quiz-renderer min-h-screen bg-gradient-to-br ${className}`}
+      style={{
+        backgroundImage: `linear-gradient(135deg, ${bgStyle.from}, ${bgStyle.via}, ${bgStyle.to})`,
+      }}
+    >
+      <div className="container mx-auto px-6 py-8 max-w-4xl">
         {renderHeader()}
-        {renderStepContent()}
-
-        {/* Debug info em modo preview */}
-        {mode === 'preview' && (
-          <div className="mt-8 p-4 bg-gray-100 rounded text-sm">
-            <strong>Debug:</strong> Step {currentStep} | Type: {stepData.stepType} | Blocks:{' '}
-            {stepBlocks.length} | User: {userName || 'None'}
+        {/* Header secundário de etapa */}
+        <div className="text-center mb-8">
+          <div className="flex items-center justify-center gap-4 mb-4">
+            <div className="text-sm text-stone-500">Etapa {currentStep} de {totalSteps}</div>
+            <div className="w-32 bg-stone-200 rounded-full h-2">
+              <div className="bg-gradient-to-r from-[#B89B7A] to-[#8B7355] h-2 rounded-full" style={{ width: `${progress}%` }} />
+            </div>
+            <div className="text-sm text-stone-600">{progress}%</div>
           </div>
-        )}
+        </div>
+        {renderStepContent()}
       </div>
     </div>
   );

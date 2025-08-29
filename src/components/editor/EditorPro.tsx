@@ -1103,7 +1103,10 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         )}
         data-canvas-container
       >
-        <div className="customizable-width mx-auto px-2 sm:px-3 md:px-4 w-full max-w-[39rem]">
+        <div className={cn(
+          'customizable-width mx-auto w-full',
+          mode === 'preview' ? 'px-6 max-w-4xl' : 'px-2 sm:px-3 md:px-4 max-w-[39rem]'
+        )}>
           {mode === 'preview' ? (
             <QuizRenderer
               mode="preview"
