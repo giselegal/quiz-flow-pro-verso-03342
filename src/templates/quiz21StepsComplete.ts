@@ -1452,30 +1452,136 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
   ],
   // 🎯 ETAPA 12: TRANSIÇÃO PARA QUESTÕES ESTRATÉGICAS
   'step-12': [
+    // Header compacto com progresso (mantém identidade e responsividade)
     {
-      id: 'step12-transition',
-      type: 'hero',
+      id: 'step12-header',
+      type: 'quiz-intro-header',
       order: 0,
       content: {
-        title: 'Enquanto calculamos o seu resultado...',
-        subtitle: 'Só mais alguns passos para personalizar ainda mais sua experiência',
-        description: '',
-        imageUrl:
-          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735378/transition_analysis_dkqmpw.webp',
+        logoUrl:
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+        logoAlt: 'Logo Gisele Galvão',
+        progressValue: 12,
       },
       properties: {
-        backgroundColor: '#F0F9FF',
-        textAlign: 'center',
-        imageWidth: 260,
-        imageHeight: 260,
-        showButton: true,
-        buttonText: 'Vamos lá?',
-        buttonColor: '#3B82F6',
-        buttonTextColor: '#FFFFFF',
-        autoAdvance: false,
-        borderRadius: 16,
-        boxShadow: 'md',
-        padding: 24,
+        showLogo: true,
+        logoWidth: 96,
+        logoHeight: 96,
+        showProgress: true,
+        progressValue: 12,
+        progressTotal: 100,
+        progressBarColor: '#B89B7A',
+        progressBarThickness: 6,
+        backgroundColor: '#FFFFFF',
+        textColor: '#432818',
+        containerWidth: 'full',
+        spacing: 'small',
+        marginBottom: 16,
+      },
+    },
+    // Título da transição
+    {
+      id: 'step12-transition-title',
+      type: 'text-inline',
+      order: 1,
+      content: {
+        content: '🕐 Enquanto calculamos o seu resultado...',
+      },
+      properties: {
+        content: '🕐 Enquanto calculamos o seu resultado...',
+        fontSize: 'text-2xl',
+        fontWeight: 'font-bold',
+        textAlign: 'text-center',
+        color: '#432818',
+        marginBottom: 8,
+      },
+    },
+    // Texto 1
+    {
+      id: 'step12-transition-text-1',
+      type: 'text-inline',
+      order: 2,
+      content: {
+        content:
+          'Queremos te fazer algumas perguntas que vão tornar sua experiência ainda mais completa.',
+      },
+      properties: {
+        content:
+          'Queremos te fazer algumas perguntas que vão tornar sua experiência ainda mais completa.',
+        fontSize: 'text-base',
+        textAlign: 'text-center',
+        color: '#1A1818',
+      },
+    },
+    // Texto 2
+    {
+      id: 'step12-transition-text-2',
+      type: 'text-inline',
+      order: 3,
+      content: {
+        content:
+          'A ideia é simples: te ajudar a enxergar com mais clareza onde você está agora — e para onde pode ir com mais intenção, leveza e autenticidade.',
+      },
+      properties: {
+        content:
+          'A ideia é simples: te ajudar a enxergar com mais clareza onde você está agora — e para onde pode ir com mais intenção, leveza e autenticidade.',
+        fontSize: 'text-base',
+        textAlign: 'text-center',
+        color: '#1A1818',
+        marginBottom: 16,
+      },
+    },
+    // Destaque
+    {
+      id: 'step12-transition-callout',
+      type: 'text-inline',
+      order: 4,
+      content: {
+        content: '💬 Responda com sinceridade. Isso é só entre você e a sua nova versão.',
+      },
+      properties: {
+        content: '💬 Responda com sinceridade. Isso é só entre você e a sua nova versão.',
+        fontSize: 'text-base',
+        textAlign: 'text-center',
+        color: '#432818',
+        backgroundColor: '#B89B7A1A',
+        borderRadius: 12,
+        padding: 16,
+        marginBottom: 16,
+      },
+    },
+    // Primeira questão estratégica (auto-avançar em 250ms)
+    {
+      id: 'step12-options-grid',
+      type: 'options-grid',
+      order: 5,
+      content: {
+        question:
+          'Quando você se olha no espelho, como se sente com sua imagem pessoal atualmente?',
+        options: [
+          { id: 'q12_opt1', text: 'Me sinto desconectada da mulher que sou hoje' },
+          { id: 'q12_opt2', text: 'Tenho dúvidas sobre o que realmente me valoriza' },
+          { id: 'q12_opt3', text: 'Às vezes acerto, às vezes erro' },
+          { id: 'q12_opt4', text: 'Me sinto segura, mas sei que posso evoluir' },
+        ],
+      },
+      properties: {
+        questionId: 'qs1_autoavaliacao',
+        showImages: false,
+        columns: 1,
+        requiredSelections: 1,
+        maxSelections: 1,
+        minSelections: 1,
+        multipleSelection: false,
+        selectionStyle: 'glow',
+        animationType: 'scale',
+        enableButtonOnlyWhenValid: true,
+        showValidationFeedback: true,
+        validationMessage: 'Selecione 1 opção para continuar',
+        gridGap: 12,
+        responsiveColumns: false,
+        autoAdvanceOnComplete: true,
+        autoAdvanceDelay: 250,
       },
     },
   ],
@@ -1722,30 +1828,102 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
   // 🎯 ETAPA 19: TRANSIÇÃO PARA RESULTADO
   'step-19': [
     {
-      id: 'step19-transition',
-      type: 'hero',
+      id: 'step19-wrapper',
+      type: 'connected-template-wrapper',
       order: 0,
-      content: {
-        title: 'Estamos quase lá!',
-        subtitle: 'Preparando seu resultado personalizado...',
-        description:
-          'Estamos calculando seu estilo predominante e preparando recomendações exclusivas. Isso levará apenas alguns segundos.',
-        imageUrl:
-          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735378/calculating_result_jksldq.webp',
-      },
+      content: {},
       properties: {
-        backgroundColor: '#F0F9FF',
-        textAlign: 'center',
-        imageWidth: 280,
-        imageHeight: 280,
-        showButton: true,
-        buttonText: 'Ver meu resultado',
-        buttonColor: '#3B82F6',
-        buttonTextColor: '#FFFFFF',
-        autoAdvance: false,
-        borderRadius: 16,
-        boxShadow: 'md',
-        padding: 24,
+        wrapperConfig: {
+          stepNumber: 19,
+          stepType: 'result',
+          sessionId: 'default-session',
+          enableHooks: true,
+          trackingEnabled: true,
+          validationEnabled: false,
+        },
+        className: 'w-full',
+        backgroundColor: 'transparent',
+        // Children renderizados dentro do wrapper conectado
+        children: [
+          {
+            id: 'step19-overlay',
+            type: 'form-container',
+            properties: {
+              elementId: 'step19-overlay',
+              className: 'fixed inset-0 bg-[#fffaf7] z-50 flex items-center justify-center p-4',
+              children: [
+                {
+                  id: 'step19-card',
+                  type: 'form-container',
+                  properties: {
+                    className: 'max-w-3xl w-full bg-white p-8 rounded-lg shadow-lg space-y-6',
+                    children: [
+                      {
+                        id: 'step19-title',
+                        type: 'text-inline',
+                        properties: {
+                          content: 'Obrigada por compartilhar.',
+                          fontSize: 'text-2xl md:text-3xl',
+                          fontWeight: 'font-bold',
+                          textAlign: 'center',
+                          color: '#432818',
+                        },
+                      },
+                      {
+                        id: 'step19-p1',
+                        type: 'text-inline',
+                        properties: {
+                          content:
+                            'Chegar até aqui já mostra que você está pronta para se olhar com mais **amor**, se vestir com mais **intenção** e deixar sua imagem comunicar quem você é de verdade — com **leveza**, **presença** e **propósito**.',
+                          fontSize: 'text-base md:text-lg',
+                          textAlign: 'left',
+                          color: '#3a3a3a',
+                        },
+                      },
+                      {
+                        id: 'step19-p2',
+                        type: 'text-inline',
+                        properties: {
+                          content:
+                            'Agora, é hora de revelar o seu **Estilo Predominante** — e os seus **Estilos Complementares**. E, mais do que isso, uma oportunidade real de aplicar o seu Estilo com **leveza** e **confiança** — todos os dias.',
+                          fontSize: 'text-base md:text-lg',
+                          textAlign: 'left',
+                          color: '#3a3a3a',
+                        },
+                      },
+                      {
+                        id: 'step19-p3',
+                        type: 'text-inline',
+                        properties: {
+                          content:
+                            'Ah, e lembra do valor que mencionamos? Prepare-se para uma **surpresa**: o que você vai receber vale muito mais do que imagina — e vai custar muito menos do que você esperava.',
+                          fontSize: 'text-base md:text-lg',
+                          textAlign: 'left',
+                          color: '#3a3a3a',
+                        },
+                      },
+                      {
+                        id: 'step19-cta',
+                        type: 'button-inline',
+                        properties: {
+                          text: 'Vamos ao resultado?',
+                          variant: 'custom',
+                          size: 'large',
+                          action: 'next-step',
+                          nextStepId: 'step-20',
+                          backgroundColor: '#B89B7A',
+                          textColor: '#FFFFFF',
+                          borderColor: '#B89B7A',
+                          className: 'max-w-sm mx-auto',
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
       },
     },
   ],

@@ -1,4 +1,6 @@
 import ConnectedTemplateWrapper from '@/components/quiz/ConnectedTemplateWrapper';
+import { getEnhancedBlockComponent } from '@/components/editor/blocks/enhancedBlockRegistry';
+import type { BlockData } from '@/types/blocks';
 import { cn } from '@/lib/utils';
 import React from 'react';
 
@@ -52,6 +54,9 @@ const ConnectedTemplateWrapperBlock: React.FC<ConnectedTemplateWrapperBlockProps
     wrapperConfig,
   } = properties;
 
+  // Fonte de verdade para filhos: suporta tanto React children quanto children declarados nas propriedades do bloco
+  const childrenList = (block as any)?.children || (properties as any)?.children || [];
+
   // Se tem configuração JSON, usar ela
   const config = wrapperConfig || {
     stepNumber,
@@ -75,11 +80,59 @@ const ConnectedTemplateWrapperBlock: React.FC<ConnectedTemplateWrapperBlockProps
           stepType={config.stepType as any}
           sessionId={config.sessionId}
         >
-          {children}
+          {/* Renderizar filhos declarados via template (properties.children) */}
+          {Array.isArray(childrenList) && childrenList.length > 0
+            ? childrenList.map((child: any, index: number) => {
+                const Component = getEnhancedBlockComponent(child.type);
+                if (!Component) return null;
+
+                const childBlock: BlockData = {
+                  id: child.id || `${block?.id}-child-${index}`,
+                  type: child.type,
+                  properties: child.properties || {},
+                  content: child.content || {},
+                  order: index,
+                };
+
+                return (
+                  <Component
+                    key={childBlock.id}
+                    block={childBlock}
+                    properties={childBlock.properties as any}
+                    {...childBlock.properties}
+                  />
+                );
+              })
+            : // Ou, se nenhum filho foi declarado nas propriedades, renderiza os filhos React passados
+              children}
         </ConnectedTemplateWrapper>
       ) : (
         // Fallback sem hooks para casos especiais
-        <div className="template-wrapper-fallback">{children}</div>
+        <div className="template-wrapper-fallback">
+          {Array.isArray(childrenList) && childrenList.length > 0
+            ? childrenList.map((child: any, index: number) => {
+                const Component = getEnhancedBlockComponent(child.type);
+                if (!Component) return null;
+
+                const childBlock: BlockData = {
+                  id: child.id || `${block?.id}-child-${index}`,
+                  type: child.type,
+                  properties: child.properties || {},
+                  content: child.content || {},
+                  order: index,
+                };
+
+                return (
+                  <Component
+                    key={childBlock.id}
+                    block={childBlock}
+                    properties={childBlock.properties as any}
+                    {...childBlock.properties}
+                  />
+                );
+              })
+            : children}
+        </div>
       )}
     </div>
   );

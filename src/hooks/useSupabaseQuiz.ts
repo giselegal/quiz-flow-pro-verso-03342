@@ -263,7 +263,7 @@ export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
         metadata: fullResults.metadata,
       } as any;
 
-      if (session.id) {
+  if (session.id) {
         await quizSupabaseService.updateQuizSession(session.id, {
           status: 'completed',
           score: fullResults.completionScore,
@@ -282,12 +282,20 @@ export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
           },
         });
 
+        // Atualizar estado local
         setSession({
           ...session,
           status: 'completed',
           result: normalized,
           isCompleted: true,
         });
+        // Persistir no localStorage para consumo imediato pelos componentes de resultado
+        try {
+          localStorage.setItem('quizResult', JSON.stringify(normalized));
+          if (typeof fullResults?.userName === 'string' && fullResults.userName.trim()) {
+            localStorage.setItem('userName', fullResults.userName.trim());
+          }
+        } catch {}
 
         return { success: true, resultId, result: normalized };
       } else {
@@ -297,7 +305,12 @@ export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
           result: normalized,
           isCompleted: true,
         });
-        localStorage.setItem('quizResult', JSON.stringify(normalized));
+        try {
+          localStorage.setItem('quizResult', JSON.stringify(normalized));
+          if (typeof fullResults?.userName === 'string' && fullResults.userName.trim()) {
+            localStorage.setItem('userName', fullResults.userName.trim());
+          }
+        } catch {}
         return { success: true, result: normalized };
       }
     } catch (error) {

@@ -129,6 +129,7 @@ export type BlockType =
   | 'divider'
   | 'decorative-bar'
   | 'decorative-bar-inline'
+  | 'connected-template-wrapper'
 
   // Blocos de acessibilidade
   | 'accessibility-skip-link'
