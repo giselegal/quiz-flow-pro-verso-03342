@@ -188,11 +188,11 @@ export const EditorProvider: React.FC<{
   // Efeito para carregar o template inicial automaticamente
   useEffect(() => {
     let isCancelled = false;
-    const loadInitialTemplate = async () => {
+  const loadInitialTemplate = async () => {
       try {
         if (isCancelled) return;
         setIsLoading(true);
-        const template = await getStepTemplate(1);
+    const template = await getStepTemplate(1);
         const templateBlocks = template?.blocks || [];
 
         if (templateBlocks.length > 0) {
@@ -227,11 +227,8 @@ export const EditorProvider: React.FC<{
     const loadStepTemplate = async () => {
       try {
         console.log(`🔄 AUTO-LOAD: Iniciando carregamento para etapa: ${activeStageId}`);
-        if (typeof window === 'undefined') {
-          // Em ambiente de teste, evite efeitos com window
-          if (!isCancelled) dispatch({ type: 'SET_BLOCKS', payload: [] });
-          return;
-        }
+  // Em ambiente de teste (node), ainda tentamos carregar via getStepTemplate
+  // acima. Se falhar, cairemos no catch e manteremos vazio.
 
         // Carregar via templateService diretamente
         try {
