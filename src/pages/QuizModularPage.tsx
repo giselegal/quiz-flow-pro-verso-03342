@@ -6,7 +6,7 @@ import { useStep01Validation } from '@/hooks/useStep01Validation';
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
 import { TemplateManager } from '@/utils/TemplateManager';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { computeSelectionValidity } from '@/lib/quiz/selectionRules';
 import useOptimizedScheduler from '@/hooks/useOptimizedScheduler';
 
@@ -228,7 +228,10 @@ const QuizModularPage: React.FC = () => {
   const handleQuestionResponse = (questionId: string, optionId: string, blockConfig?: any) => {
     setUserSelections(prev => {
       const current = prev[questionId] || [];
-      const maxSelections = blockConfig?.maxSelections || 1;
+      const maxSelections =
+        (blockConfig?.maxSelections as number | undefined) ??
+        (stepConfig?.maxSelections as number | undefined) ??
+        1;
 
       let newSelections;
       if (current.includes(optionId)) {
@@ -255,9 +258,17 @@ const QuizModularPage: React.FC = () => {
         setStepValidation(prev => ({ ...prev, [currentStep]: isValid }));
         setStepValid?.(currentStep, isValid);
 
-        // Auto avanço se configurado
-        if (isValid && blockConfig?.autoAdvanceOnComplete) {
-          const delay = blockConfig?.autoAdvanceDelay || 1500;
+        // Auto avanço se configurado (fallback para store)
+        const shouldAutoAdvance =
+          (blockConfig?.autoAdvanceOnComplete as boolean | undefined) ??
+          (stepConfig?.autoAdvanceOnComplete as boolean | undefined) ??
+          false;
+        const delay =
+          (blockConfig?.autoAdvanceDelay as number | undefined) ??
+          (stepConfig?.autoAdvanceDelay as number | undefined) ??
+          1500;
+
+        if (isValid && shouldAutoAdvance) {
           schedule(`auto-advance:step-${currentStep}`, () => handleNext(), delay);
         }
       }, 120);
@@ -276,8 +287,16 @@ const QuizModularPage: React.FC = () => {
         setStepValidation(prev => ({ ...prev, [currentStep]: isValid }));
         setStepValid?.(currentStep, isValid);
 
-        if (isValid && blockConfig?.autoAdvanceOnComplete) {
-          const delay = blockConfig?.autoAdvanceDelay || 1500;
+        const shouldAutoAdvance =
+          (blockConfig?.autoAdvanceOnComplete as boolean | undefined) ??
+          (stepConfig?.autoAdvanceOnComplete as boolean | undefined) ??
+          false;
+        const delay =
+          (blockConfig?.autoAdvanceDelay as number | undefined) ??
+          (stepConfig?.autoAdvanceDelay as number | undefined) ??
+          1500;
+
+        if (isValid && shouldAutoAdvance) {
           schedule(`auto-advance:step-${currentStep}`, () => handleNext(), delay);
         }
       }, 120);
@@ -293,10 +312,80 @@ const QuizModularPage: React.FC = () => {
 
   const progress = ((currentStep - 1) / 20) * 100;
 
+  // 🎨 Fundo configurável por etapa (store NoCode)
+  const { stepConfig } = (() => {
+    try {
+      // Importar leve dentro do componente para evitar ciclos
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const store = require('@/stores/useStepNavigationStore');
+      const cfg = store.useStepNavigationStore.getState().getStepConfig(`step-${currentStep}`);
+      return { stepConfig: cfg } as any;
+    } catch {
+      return { stepConfig: undefined } as any;
+    }
+  })();
+
+  const bgStyle = useMemo(() => {
+    const from = stepConfig?.backgroundFrom || '#FAF9F7';
+    const via = stepConfig?.backgroundVia || '#F5F2E9';
+    const to = stepConfig?.backgroundTo || '#EEEBE1';
+    return { from, via, to };
+  }, [stepConfig?.backgroundFrom, stepConfig?.backgroundVia, stepConfig?.backgroundTo]);
+
+  // 📈 Estatísticas/feedback por etapa (contagem de seleções e mensagens)
+  const selectedCount = useMemo(() => {
+    try {
+      return blocks.reduce((sum, block) => {
+        if (block.type === 'options-grid') {
+          const qid = (block as any).properties?.questionId || block.id;
+          return sum + ((userSelections[qid] || []).length);
+        }
+        if (block.type === 'form-container') {
+          const dataKey = (block as any).content?.dataKey || 'default';
+          const required = !!(block as any).content?.required;
+          const val = quizAnswers[dataKey];
+          const has = required && typeof val === 'string' && val.trim().length > 0;
+          return sum + (has ? 1 : 0);
+        }
+        return sum;
+      }, 0);
+    } catch {
+      return 0;
+    }
+  }, [blocks, userSelections, quizAnswers]);
+
+  const mustBeValid = stepConfig?.enableButtonOnlyWhenValid !== false;
+  const isStepValid = !!stepValidation[currentStep];
+  const nextDisabled = currentStep === 21 || (mustBeValid && !isStepValid);
+
+  const formatMessage = (tpl?: string) =>
+    (tpl || '')
+      .replace('{count}', String(selectedCount))
+      .replace('{required}', String(stepConfig?.requiredSelections ?? 0));
+
+  const validationText = stepConfig?.validationMessage
+    ? formatMessage(stepConfig.validationMessage)
+    : 'Complete a etapa';
+  const progressText = stepConfig?.progressMessage
+    ? formatMessage(stepConfig.progressMessage)
+    : undefined;
+
+  const nextLabel = currentStep === 21
+    ? 'Finalizado'
+    : (!isStepValid && mustBeValid
+        ? 'Complete a etapa'
+        : (stepConfig?.nextButtonText || 'Próxima →'));
+
   // Página de produção: sem DnD nem sidebars de edição
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#FAF9F7] via-[#F5F2E9] to-[#EEEBE1]">
+    <div
+      className={"min-h-screen bg-gradient-to-br"}
+      style={{
+        // Aplicar gradiente inline para refletir personalização por etapa
+        backgroundImage: `linear-gradient(135deg, ${bgStyle.from}, ${bgStyle.via}, ${bgStyle.to})`,
+      }}
+    >
       {/* CONTEÚDO CENTRAL PARA USUÁRIO FINAL */}
       <div className="flex min-h-screen">
         <div className="flex-1 overflow-auto">
@@ -329,19 +418,20 @@ const QuizModularPage: React.FC = () => {
                     <Button
                       size="sm"
                       onClick={handleNext}
-                      disabled={currentStep === 21 || !stepValidation[currentStep]}
+                      disabled={nextDisabled}
                       className={cn(
-                        currentStep === 21 || !stepValidation[currentStep]
+                        nextDisabled
                           ? 'bg-stone-200 text-stone-400 cursor-not-allowed'
                           : 'bg-gradient-to-r from-[#B89B7A] to-[#8B7355]'
                       )}
                     >
-                      {currentStep === 21
-                        ? 'Finalizado'
-                        : !stepValidation[currentStep]
-                          ? 'Complete a etapa'
-                          : 'Próxima →'}
+                      {nextLabel}
                     </Button>
+                    {stepConfig?.showValidationFeedback && mustBeValid && !isStepValid && (
+                      <div className="text-xs text-stone-500 ml-2">
+                        {validationText}
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -358,6 +448,13 @@ const QuizModularPage: React.FC = () => {
                   </div>
                   <div className="text-sm text-stone-600">{progress}%</div>
                 </div>
+                {(stepConfig?.showProgressMessage || stepConfig?.showSelectionCount) && (
+                  <div className="text-sm text-stone-600">
+                    {stepConfig?.showProgressMessage
+                      ? (progressText || '')
+                      : `Você selecionou ${selectedCount} de ${stepConfig?.requiredSelections ?? 0} opções`}
+                  </div>
+                )}
               </div>
 
               {/* 🎨 ÁREA DE RENDERIZAÇÃO DOS BLOCOS */}
@@ -448,7 +545,7 @@ const QuizModularPage: React.FC = () => {
 
               {/* 🎮 CONTROLES DE NAVEGAÇÃO */}
               <div className="flex justify-between items-center mt-8">
-        <button
+  <button
                   onClick={handlePrevious}
                   disabled={currentStep === 1}
                   className={cn(
@@ -466,22 +563,25 @@ const QuizModularPage: React.FC = () => {
                   <div className="text-lg font-semibold text-stone-800">{currentStep} / 21</div>
                 </div>
 
+        <div className="flex items-center gap-2">
         <button
                   onClick={handleNext}
-                  disabled={currentStep === 21 || !stepValidation[currentStep]}
+                  disabled={nextDisabled}
                   className={cn(
           'flex items-center gap-2 px-6 py-3 rounded-lg font-medium',
-                    currentStep === 21 || !stepValidation[currentStep]
+                    nextDisabled
                       ? 'bg-stone-100 text-stone-400 cursor-not-allowed'
                       : 'bg-gradient-to-r from-[#B89B7A] to-[#8B7355] text-white hover:from-[#A08966] hover:to-[#7A6B4D] shadow-md hover:shadow-lg'
                   )}
                 >
-                  {currentStep === 21
-                    ? 'Finalizado'
-                    : !stepValidation[currentStep]
-                      ? 'Complete a etapa →'
-                      : 'Próxima →'}
+                  {nextLabel}
                 </button>
+                {stepConfig?.showValidationFeedback && mustBeValid && !isStepValid && (
+                  <div className="text-xs text-stone-500">
+                    {validationText}
+                  </div>
+                )}
+        </div>
                 {/* Utilitário opcional de recarga */}
                 <button
                   onClick={() =>

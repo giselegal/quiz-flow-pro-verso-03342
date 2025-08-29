@@ -39,6 +39,9 @@ interface StepNavigationConfig {
   selectionStyle: 'border' | 'background' | 'shadow';
   selectedColor: string;
   hoverColor: string;
+  backgroundFrom?: string;
+  backgroundVia?: string;
+  backgroundTo?: string;
 }
 
 interface StepNavigationPropertyEditorProps {
@@ -92,6 +95,9 @@ export const StepNavigationPropertyEditor: React.FC<StepNavigationPropertyEditor
     selectionStyle: currentConfig?.selectionStyle ?? 'border',
     selectedColor: currentConfig?.selectedColor ?? '#3B82F6',
     hoverColor: currentConfig?.hoverColor ?? '#EBF5FF',
+  backgroundFrom: currentConfig?.backgroundFrom ?? '#FAF9F7',
+  backgroundVia: currentConfig?.backgroundVia ?? '#F5F2E9',
+  backgroundTo: currentConfig?.backgroundTo ?? '#EEEBE1',
   });
 
   const [hasChanges, setHasChanges] = useState(false);
@@ -126,6 +132,9 @@ export const StepNavigationPropertyEditor: React.FC<StepNavigationPropertyEditor
       selectionStyle: 'border',
       selectedColor: '#3B82F6',
       hoverColor: '#EBF5FF',
+  backgroundFrom: '#FAF9F7',
+  backgroundVia: '#F5F2E9',
+  backgroundTo: '#EEEBE1',
     });
     setHasChanges(true);
   };
@@ -404,6 +413,37 @@ export const StepNavigationPropertyEditor: React.FC<StepNavigationPropertyEditor
                 type="color"
                 value={config.hoverColor}
                 onChange={e => updateConfig({ hoverColor: e.target.value })}
+              />
+            </div>
+          </div>
+
+          {/* Fundo em gradiente da etapa */}
+          <div className="grid grid-cols-3 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="backgroundFrom">Fundo: From</Label>
+              <Input
+                id="backgroundFrom"
+                type="color"
+                value={config.backgroundFrom}
+                onChange={e => updateConfig({ backgroundFrom: e.target.value })}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="backgroundVia">Fundo: Via</Label>
+              <Input
+                id="backgroundVia"
+                type="color"
+                value={config.backgroundVia}
+                onChange={e => updateConfig({ backgroundVia: e.target.value })}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="backgroundTo">Fundo: To</Label>
+              <Input
+                id="backgroundTo"
+                type="color"
+                value={config.backgroundTo}
+                onChange={e => updateConfig({ backgroundTo: e.target.value })}
               />
             </div>
           </div>

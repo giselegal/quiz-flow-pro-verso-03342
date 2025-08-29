@@ -24,6 +24,10 @@ interface StepNavigationConfig {
   selectionStyle: 'border' | 'background' | 'shadow';
   selectedColor: string;
   hoverColor: string;
+  // Tema/fundo da etapa
+  backgroundFrom?: string;
+  backgroundVia?: string;
+  backgroundTo?: string;
 }
 
 interface StepNavigationStore {
@@ -78,6 +82,9 @@ const getDefaultStepConfig = (stepId: string): StepNavigationConfig => {
       selectionStyle: 'border',
       selectedColor: '#3B82F6',
       hoverColor: '#EBF5FF',
+  backgroundFrom: '#FAF9F7',
+  backgroundVia: '#F5F2E9',
+  backgroundTo: '#EEEBE1',
     };
   } else if (stepNumber >= 2 && stepNumber <= 11) {
     // Questões Pontuadas - 3 seleções obrigatórias
@@ -97,6 +104,9 @@ const getDefaultStepConfig = (stepId: string): StepNavigationConfig => {
       selectionStyle: 'border',
       selectedColor: '#3B82F6',
       hoverColor: '#EBF5FF',
+  backgroundFrom: '#FAF9F7',
+  backgroundVia: '#F5F2E9',
+  backgroundTo: '#EEEBE1',
     };
   } else if (stepNumber >= 13 && stepNumber <= 18) {
     // Questões Estratégicas - 1 seleção obrigatória
@@ -116,6 +126,9 @@ const getDefaultStepConfig = (stepId: string): StepNavigationConfig => {
       selectionStyle: 'border',
       selectedColor: '#10B981',
       hoverColor: '#ECFDF5',
+  backgroundFrom: '#FAF9F7',
+  backgroundVia: '#F5F2E9',
+  backgroundTo: '#EEEBE1',
     };
   } else {
     // Outras etapas (transições, resultado, oferta)
@@ -135,6 +148,9 @@ const getDefaultStepConfig = (stepId: string): StepNavigationConfig => {
       selectionStyle: 'border',
       selectedColor: '#3B82F6',
       hoverColor: '#EBF5FF',
+  backgroundFrom: '#FAF9F7',
+  backgroundVia: '#F5F2E9',
+  backgroundTo: '#EEEBE1',
     };
   }
 };
@@ -156,6 +172,9 @@ const DEFAULT_GLOBAL_CONFIG: StepNavigationConfig = {
   selectionStyle: 'border',
   selectedColor: '#3B82F6',
   hoverColor: '#EBF5FF',
+  backgroundFrom: '#FAF9F7',
+  backgroundVia: '#F5F2E9',
+  backgroundTo: '#EEEBE1',
 };
 
 export const useStepNavigationStore = create<StepNavigationStore>()(

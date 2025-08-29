@@ -1,4 +1,5 @@
 import CanvasDropZone from '@/components/editor/canvas/CanvasDropZone.simple';
+import { QuizRenderer } from '@/components/core/QuizRenderer';
 import { useNotification } from '@/components/ui/Notification';
 import { getBlocksForStep } from '@/config/quizStepsComplete';
 import { cn } from '@/lib/utils';
@@ -1094,21 +1095,40 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         */}
       </div>
 
-      {/* Canvas principal com drag & drop - sistema unificado simples */}
-    <div className={cn('flex-1 min-w-0 p-2 overflow-x-hidden', isDragging && 'editor-drop-zone-active')} data-canvas-container>
-        <div
-      className="customizable-width mx-auto px-2 sm:px-3 md:px-4 w-full max-w-[39rem]"
-        >
-          <CanvasDropZone
-            blocks={currentStepData}
-            selectedBlockId={state.selectedBlockId}
-            onSelectBlock={actions.setSelectedBlockId}
-            onUpdateBlock={(id: string, updates: any) =>
-              actions.updateBlock(currentStepKey, id, updates)
-            }
-            onDeleteBlock={(id: string) => actions.removeBlock(currentStepKey, id)}
-            className="h-full w-full editor-pulse-highlight"
-          />
+      {/* Canvas principal: edição (DnD) ou preview com renderização real de produção */}
+      <div
+        className={cn(
+          'flex-1 min-w-0 p-2 overflow-x-hidden',
+          isDragging && 'editor-drop-zone-active'
+        )}
+        data-canvas-container
+      >
+        <div className="customizable-width mx-auto px-2 sm:px-3 md:px-4 w-full max-w-[39rem]">
+          {mode === 'preview' ? (
+            <QuizRenderer
+              mode="preview"
+              // Usa os blocos reais do editor nesta etapa
+              blocksOverride={currentStepData as any}
+              currentStepOverride={safeCurrentStep}
+              // Preview editável: permite selecionar blocos e navegar
+              previewEditable
+              selectedBlockId={state.selectedBlockId}
+              onBlockClick={(blockId: string) => actions.setSelectedBlockId(blockId)}
+              onStepChange={(step: number) => actions.setCurrentStep(step)}
+              className="h-full w-full"
+            />
+          ) : (
+            <CanvasDropZone
+              blocks={currentStepData}
+              selectedBlockId={state.selectedBlockId}
+              onSelectBlock={actions.setSelectedBlockId}
+              onUpdateBlock={(id: string, updates: any) =>
+                actions.updateBlock(currentStepKey, id, updates)
+              }
+              onDeleteBlock={(id: string) => actions.removeBlock(currentStepKey, id)}
+              className="h-full w-full editor-pulse-highlight"
+            />
+          )}
         </div>
       </div>
     </div>
@@ -1116,7 +1136,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   const CanvasArea = React.memo(CanvasAreaBase);
 
   const MemoPropertiesColumn = React.memo(() => (
-    <PropertiesColumn
+  <PropertiesColumn
       selectedBlock={selectedBlock as any}
       onUpdate={(updates: Record<string, any>) =>
         selectedBlock ? actions.updateBlock(currentStepKey, selectedBlock.id, updates) : undefined

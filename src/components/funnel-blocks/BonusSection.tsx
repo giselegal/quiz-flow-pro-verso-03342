@@ -1,4 +1,3 @@
-import { getOptimizedContainerClasses } from '@/config/containerConfig';
 import { Card } from '@/components/ui/card';
 import { Gift, Star } from 'lucide-react';
 import { AnimatedWrapper } from '@/components/ui/animated-wrapper';
