@@ -1,6 +1,8 @@
 import { useAutoSaveWithDebounce } from '@/hooks/editor/useAutoSaveWithDebounce';
 import { toast } from '@/hooks/use-toast';
 import { getStepTemplate } from '@/config/templates/templates';
+// Padronização: preferir templateService para carregar e converter blocos
+// Import dinâmico mantido onde necessário para evitar carga desnecessária do módulo em rotas que não usam
 // import { funnelPersistenceService } from '@/services/funnelPersistence';
 import { Block, BlockType, EditorConfig } from '@/types/editor';
 import { EditorAction, EditorState } from '@/types/editorTypes';
@@ -192,20 +194,36 @@ export const EditorProvider: React.FC<{
       try {
         if (isCancelled) return;
         setIsLoading(true);
-    const template = await getStepTemplate(1);
-        const templateBlocks = template?.blocks || [];
-
-        if (templateBlocks.length > 0) {
-          const editorBlocks = templateBlocks.map((block: any, index: number) => ({
-            id: block.id || `block-${Date.now()}-${Math.random()}`,
-            type: block.type || 'text',
-            content: block.content || {},
-            styles: block.styles || {},
-            metadata: block.metadata || {},
-            properties: { funnelId: currentFunnelId, stageId: 'step-1' },
-            order: index,
-          }));
-          if (!isCancelled) dispatch({ type: 'SET_BLOCKS', payload: editorBlocks });
+        try {
+          const { default: templateService } = await import('../services/templateService');
+          const templateData = await templateService.getTemplateByStep(1);
+          const templateBlocks = templateData?.blocks || [];
+          if (templateBlocks.length > 0) {
+            const editorBlocks = templateService.convertTemplateBlocksToEditorBlocks(
+              templateBlocks
+            ).map((b: any, i: number) => ({
+              ...b,
+              properties: { ...(b.properties || {}), funnelId: currentFunnelId, stageId: 'step-1' },
+              order: i,
+            }));
+            if (!isCancelled) dispatch({ type: 'SET_BLOCKS', payload: editorBlocks });
+          }
+        } catch (err) {
+          // Fallback leve usando getStepTemplate se serviço falhar
+          const template = await getStepTemplate(1);
+          const templateBlocks = template?.blocks || [];
+          if (templateBlocks.length > 0) {
+            const editorBlocks = templateBlocks.map((block: any, index: number) => ({
+              id: block.id || `block-${Date.now()}-${Math.random()}`,
+              type: block.type || 'text',
+              content: block.content || {},
+              styles: block.styles || {},
+              metadata: block.metadata || {},
+              properties: { funnelId: currentFunnelId, stageId: 'step-1' },
+              order: index,
+            }));
+            if (!isCancelled) dispatch({ type: 'SET_BLOCKS', payload: editorBlocks });
+          }
         }
       } catch (error) {
         console.error('❌ Erro ao carregar template inicial:', error);
@@ -230,7 +248,7 @@ export const EditorProvider: React.FC<{
   // Em ambiente de teste (node), ainda tentamos carregar via getStepTemplate
   // acima. Se falhar, cairemos no catch e manteremos vazio.
 
-        // Carregar via templateService diretamente
+        // Carregar via templateService diretamente (preferencial)
         try {
           const templateService = (await import('../services/templateService')).default;
           const stepNumber = parseInt(activeStageId.replace('step-', ''));
@@ -247,9 +265,13 @@ export const EditorProvider: React.FC<{
             const blockTypes = template.blocks.map(block => block.type);
             console.log(`🧩 AUTO-LOAD: Tipos de blocos: ${blockTypes.join(', ')}`);
 
-            const editorBlocks = templateService.convertTemplateBlocksToEditorBlocks(
-              template.blocks
-            );
+            const editorBlocks = templateService
+              .convertTemplateBlocksToEditorBlocks(template.blocks)
+              .map((b: any, i: number) => ({
+                ...b,
+                properties: { ...(b.properties || {}), funnelId: currentFunnelId, stageId: activeStageId },
+                order: i,
+              }));
 
             console.log(`🔄 AUTO-LOAD: Convertidos ${editorBlocks.length} blocos para o editor`);
             if (!isCancelled) dispatch({ type: 'SET_BLOCKS', payload: editorBlocks });
@@ -634,27 +656,22 @@ export const EditorProvider: React.FC<{
         console.log('Saving template');
       },
       loadTemplateByStep: async (step: number) => {
-        console.log('🔄 Loading template by step usando templates.ts:', step);
+        console.log('🔄 Loading template by step via templateService:', step);
         try {
-          const template = await getStepTemplate(step);
-          const templateBlocks = template?.blocks || [];
-          
+          const { default: templateService } = await import('../services/templateService');
+          const templateData = await templateService.getTemplateByStep(step);
+          const templateBlocks = templateData?.blocks || [];
 
           if (templateBlocks.length > 0) {
             console.log(`✅ Template carregado com sucesso: ${templateBlocks.length} blocos`);
 
-            const editorBlocks = templateBlocks.map((block: any, index: number) => ({
-              id: block.id || `block-${Date.now()}-${Math.random()}`,
-              type: block.type || 'text',
-              content: block.content || {},
-              styles: block.styles || {},
-              metadata: block.metadata || {},
-              properties: {
-                funnelId: currentFunnelId,
-                stageId: `step-${step}`,
-              },
-              order: index,
-            }));
+            const editorBlocks = templateService
+              .convertTemplateBlocksToEditorBlocks(templateBlocks)
+              .map((b: any, i: number) => ({
+                ...b,
+                properties: { ...(b.properties || {}), funnelId: currentFunnelId, stageId: `step-${step}` },
+                order: i,
+              }));
 
             dispatch({ type: 'SET_BLOCKS', payload: editorBlocks });
             return true;
@@ -664,7 +681,24 @@ export const EditorProvider: React.FC<{
           }
         } catch (error) {
           console.error(`❌ Erro ao carregar template para etapa ${step}:`, error);
-          return false;
+          // fallback para getStepTemplate em caso de falha do serviço
+          try {
+            const template = await getStepTemplate(step);
+            const templateBlocks = template?.blocks || [];
+            const editorBlocks = (templateBlocks || []).map((block: any, index: number) => ({
+              id: block.id || `block-${Date.now()}-${Math.random()}`,
+              type: block.type || 'text',
+              content: block.content || {},
+              styles: block.styles || {},
+              metadata: block.metadata || {},
+              properties: { funnelId: currentFunnelId, stageId: `step-${step}` },
+              order: index,
+            }));
+            dispatch({ type: 'SET_BLOCKS', payload: editorBlocks });
+            return editorBlocks.length > 0;
+          } catch (e2) {
+            return false;
+          }
         }
       },
       isLoadingTemplate: isLoadingStage,
