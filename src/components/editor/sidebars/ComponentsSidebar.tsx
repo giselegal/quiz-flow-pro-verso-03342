@@ -17,7 +17,7 @@ export interface ComponentsSidebarProps {
 
 const ComponentsSidebarComponent: React.FC<ComponentsSidebarProps> = ({ groupedComponents, renderIcon, className = '' }) => {
   return (
-    <div className={`w-[8rem] min-w-[8rem] max-w-[8rem] flex-shrink-0 h-screen sticky top-0 bg-white border-r border-gray-200/60 flex flex-col ${className}`}>
+    <div className={`w-[7rem] min-w-[7rem] max-w-[7rem] flex-shrink-0 h-screen sticky top-0 bg-white border-r border-gray-200/60 flex flex-col ${className}`}>
       <div className="p-6 border-b border-gray-200/60 bg-white">
         <div className="flex items-center gap-3 mb-3">
           <div className="w-8 h-8 rounded-lg flex items-center justify-center">

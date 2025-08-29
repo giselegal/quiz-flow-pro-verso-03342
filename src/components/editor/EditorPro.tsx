@@ -1103,12 +1103,12 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       {/* Canvas principal: edição (DnD) ou preview com renderização real de produção */}
       <div
         className={cn(
-          'flex-1 min-w-0 p-2 overflow-x-hidden',
+          'basis-1/2 w-1/2 flex-none min-w-[520px] p-2 overflow-x-hidden',
           isDragging && 'editor-drop-zone-active'
         )}
         data-canvas-container
       >
-        <div className={cn('customizable-width mx-auto w-full', 'px-6 max-w-4xl')}>
+        <div className={cn('w-full mx-auto', 'px-4')}> 
           {mode === 'preview' ? (
             <QuizRenderer
               mode="preview"
