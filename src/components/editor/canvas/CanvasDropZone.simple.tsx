@@ -135,8 +135,19 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
   const VIRTUALIZE_THRESHOLD = 120;
   const AVG_ITEM_HEIGHT = 120; // px (estimativa)
   const OVERSCAN = 8; // itens
+  const disableVirtualization = React.useMemo(() => {
+    try {
+      const g: any = typeof globalThis !== 'undefined' ? (globalThis as any) : undefined;
+      return g?.__NO_CANVAS_VIRT__ === true;
+    } catch {
+      return false;
+    }
+  }, []);
   const enableVirtualization =
-    isPreviewing && !isDraggingAnyValidComponent && blocks.length > VIRTUALIZE_THRESHOLD;
+    isPreviewing &&
+    !isDraggingAnyValidComponent &&
+    !disableVirtualization &&
+    blocks.length > VIRTUALIZE_THRESHOLD;
 
   const scrollRef = React.useRef<HTMLDivElement | null>(null);
   const [scrollTop, setScrollTop] = React.useState(0);
@@ -175,7 +186,10 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
   const EDIT_PROGRESSIVE_THRESHOLD = 200;
   const EDIT_BATCH_SIZE = 100;
   const enableProgressiveEdit =
-    !isPreviewing && !isDraggingAnyValidComponent && blocks.length > EDIT_PROGRESSIVE_THRESHOLD;
+    !isPreviewing &&
+    !isDraggingAnyValidComponent &&
+    !disableVirtualization &&
+    blocks.length > EDIT_PROGRESSIVE_THRESHOLD;
   const [editRenderCount, setEditRenderCount] = React.useState<number>(
     enableProgressiveEdit ? Math.min(EDIT_BATCH_SIZE, blocks.length) : blocks.length
   );
@@ -212,10 +226,13 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
       if (!cancelled) schedule();
     };
     const schedule = () => {
-      if ('requestIdleCallback' in window) {
-        (window as any).requestIdleCallback(() => step());
+      const g: any = typeof globalThis !== 'undefined' ? (globalThis as any) : undefined;
+      if (g?.requestIdleCallback) {
+        g.requestIdleCallback(() => step());
+      } else if (g?.requestAnimationFrame) {
+        g.requestAnimationFrame(() => step());
       } else {
-        requestAnimationFrame(() => step());
+        setTimeout(step, 16);
       }
     };
     schedule();
