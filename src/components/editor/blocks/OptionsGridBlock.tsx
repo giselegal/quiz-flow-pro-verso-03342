@@ -1,6 +1,7 @@
 import type { BlockComponentProps } from '@/types/blocks';
 import React from 'react';
 import useOptimizedScheduler from '@/hooks/useOptimizedScheduler';
+import { computeSelectionValidity, getEffectiveRequiredSelections, isScoringPhase } from '@/lib/quiz/selectionRules';
 import { useEditor } from '../EditorProvider';
 
 interface Option {
@@ -311,6 +312,26 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
   // Propagar para host (produção/quiz) se disponível
   externalOnOptionSelect?.(optionId);
 
+      // Disparar evento global para validação (coerente com /quiz)
+      try {
+        const questionId = (block?.properties as any)?.questionId || block?.id;
+        const step = (window as any)?.__quizCurrentStep ?? null;
+        const { isValid: hasRequiredSelections } = computeSelectionValidity(step, newSelections.length, {
+          requiredSelections,
+          minSelections,
+        });
+        window.dispatchEvent(
+          new CustomEvent('quiz-selection-change', {
+            detail: {
+              questionId,
+              selectionCount: newSelections.length,
+              valid: hasRequiredSelections,
+              isValid: hasRequiredSelections,
+            },
+          })
+        );
+      } catch {}
+
       // Save to session data
       if (onUpdateSessionData) {
         const sessionKey = `step_selections_${block?.id}`;
@@ -332,15 +353,10 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
 
       // Check if we should auto-advance - REGRAS UNIFICADAS COM EDIÇÃO
       const step = (window as any)?.__quizCurrentStep ?? null;
-      const isValidStep = Number.isFinite(Number(step));
-      const isScoringPhase = isValidStep && Number(step) >= 2 && Number(step) <= 11; // 3 obrigatórias
-      const isStrategicPhase = isValidStep && Number(step) >= 13 && Number(step) <= 18; // 1 obrigatória
-      const effectiveRequiredSelections = isScoringPhase
-        ? 3
-        : isStrategicPhase
-          ? 1
-          : requiredSelections || minSelections || 1;
-
+      const effectiveRequiredSelections = getEffectiveRequiredSelections(step, {
+        requiredSelections,
+        minSelections,
+      });
       const hasMinSelections = newSelections.length >= (minSelections || 1);
       const hasRequiredSelections = newSelections.length >= effectiveRequiredSelections;
 
@@ -356,7 +372,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
         };
       });
 
-      if (isScoringPhase && hasRequiredSelections && onNext) {
+  if (isScoringPhase(step) && hasRequiredSelections && onNext) {
         console.log('🚀 OptionsGrid (preview): Auto-advancing after selection', newSelections);
 
         if (onStepComplete) {
@@ -424,18 +440,11 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
   externalOnOptionSelect?.(optionId);
       // Calcula regras por etapa
       const step = Number(currentStepFromEditor ?? NaN);
-      const isValidStep = Number.isFinite(step);
-      const isScoringPhase = isValidStep && step >= 2 && step <= 11; // 3 seleções obrigatórias + autoavanço
-      const isStrategicPhase = isValidStep && step >= 13 && step <= 18; // 1 seleção obrigatória, sem autoavanço
-
-      // Seleções obrigatórias efetivas por fase
-      const effectiveRequiredSelections = isScoringPhase
-        ? 3
-        : isStrategicPhase
-          ? 1
-          : requiredSelections || minSelections || 1;
-
-      const hasRequiredSelections = newSelections.length >= effectiveRequiredSelections;
+  const { isValid: hasRequiredSelections } = computeSelectionValidity(
+        step,
+        newSelections.length,
+        { requiredSelections, minSelections }
+      );
 
       // Emitir evento global para que o EditorStageManager possa refletir validação visual
       window.dispatchEvent(
@@ -449,7 +458,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       );
 
       // Autoavanço somente nas etapas 2–11, ao atingir a última seleção obrigatória
-      if (isScoringPhase) {
+  if (isScoringPhase(step)) {
         // Evitar múltiplos disparos se usuário clicar rapidamente
   if (hasRequiredSelections && !autoAdvanceScheduledRef.current) {
           autoAdvanceScheduledRef.current = true;
@@ -482,7 +491,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
         }
 
         // Se caiu abaixo do requisito, libera nova tentativa
-        if (!hasRequiredSelections) {
+    if (!hasRequiredSelections) {
           autoAdvanceScheduledRef.current = false;
           cancel('options-grid-editor-auto-advance');
         }

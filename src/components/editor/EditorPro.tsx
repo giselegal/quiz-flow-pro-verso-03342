@@ -443,6 +443,30 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
     } catch {}
   }, [safeCurrentStep]);
 
+  // Escutar eventos globais de validação (seleções e inputs) para refletir no editor
+  useEffect(() => {
+    const handleInputChange = (ev: Event) => {
+      const e = ev as CustomEvent<{ value?: any; valid?: boolean } | undefined>;
+      const val = (e.detail as any)?.value;
+      const explicitValid = (e.detail as any)?.valid;
+      const ok = typeof val === 'string' ? val.trim().length > 0 : (explicitValid ?? false);
+      actions.setStepValid?.(state.currentStep, !!ok);
+    };
+
+    const handleSelectionChange = (ev: Event) => {
+      const e = ev as CustomEvent<{ valid?: boolean; selectionCount?: number } | undefined>;
+      const ok = (e.detail as any)?.valid ?? ((e.detail as any)?.selectionCount ?? 0) > 0;
+      actions.setStepValid?.(state.currentStep, !!ok);
+    };
+
+    window.addEventListener('quiz-input-change', handleInputChange as EventListener);
+    window.addEventListener('quiz-selection-change', handleSelectionChange as EventListener);
+    return () => {
+      window.removeEventListener('quiz-input-change', handleInputChange as EventListener);
+      window.removeEventListener('quiz-selection-change', handleSelectionChange as EventListener);
+    };
+  }, [actions, state.currentStep]);
+
   // Carregar stepBlocks de um template via evento externo (inicialização pelo Dashboard / modelos)
   useEffect(() => {
     const handler = (ev: Event) => {

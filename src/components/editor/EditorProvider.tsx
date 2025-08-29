@@ -11,6 +11,8 @@ export interface EditorState {
   stepBlocks: Record<string, Block[]>;
   currentStep: number;
   selectedBlockId: string | null;
+  // Validation per step (editor-only visual/functional state)
+  stepValidation: Record<number, boolean>;
   // Supabase integration state
   isSupabaseEnabled: boolean;
   databaseMode: 'local' | 'supabase';
@@ -21,6 +23,8 @@ export interface EditorActions {
   // State management
   setCurrentStep: (step: number) => void;
   setSelectedBlockId: (blockId: string | null) => void;
+  // Validation management (used by EditorPro to reflect selections)
+  setStepValid: (step: number, isValid: boolean) => void;
 
   // Block operations
   addBlock: (stepKey: string, block: Block) => Promise<void>;
@@ -110,6 +114,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       stepBlocks: initialBlocks,
       currentStep: 1,
       selectedBlockId: null,
+  stepValidation: {},
       isSupabaseEnabled: enableSupabase,
       databaseMode: enableSupabase ? 'supabase' : 'local',
       isLoading: false,
@@ -289,6 +294,21 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       setState({
         ...rawState,
         selectedBlockId: blockId,
+      });
+    },
+    [setState, rawState]
+  );
+
+  // Reflect step validation for editor UX (navigation/buttons/indicators)
+  const setStepValid = useCallback(
+    (step: number, isValid: boolean) => {
+      if (!Number.isFinite(step) || step < 1) return;
+      setState({
+        ...rawState,
+        stepValidation: {
+          ...(rawState.stepValidation || {}),
+          [step]: !!isValid,
+        },
       });
     },
     [setState, rawState]
@@ -596,6 +616,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
   const actions: EditorActions = {
     setCurrentStep,
     setSelectedBlockId,
+  setStepValid,
     addBlock,
     addBlockAtIndex,
     removeBlock,
