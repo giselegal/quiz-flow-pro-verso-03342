@@ -12,6 +12,7 @@
  */
 
 import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react';
+import { useOptimizedScheduler } from '@/hooks/useOptimizedScheduler';
 
 // UI Components
 import { Button } from '@/components/ui/button';
@@ -70,6 +71,7 @@ const EnhancedArrayEditor: React.FC<{
   minItems?: number;
 }> = ({ items = [], onChange, addButtonText = 'Adicionar Item', maxItems = 10, minItems = 0 }) => {
   const [isAdding, setIsAdding] = useState(false);
+  const { schedule } = useOptimizedScheduler();
 
   const addItem = useCallback(async () => {
     if (items.length >= maxItems) return;
@@ -77,8 +79,8 @@ const EnhancedArrayEditor: React.FC<{
     setIsAdding(true);
     const newItem = typeof items[0] === 'string' ? '' : { text: '', value: '' };
 
-    // Simulated delay for smooth UX
-    setTimeout(() => {
+    // Simulated delay for smooth UX (via scheduler)
+    schedule('properties-array-add', () => {
       onChange([...items, newItem]);
       setIsAdding(false);
     }, 150);

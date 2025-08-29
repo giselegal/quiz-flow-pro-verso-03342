@@ -9,6 +9,7 @@ import { copyToClipboard, createBlockFromComponent, devLog, validateEditorJSON }
 import { closestCenter, DndContext, DragEndEvent, DragStartEvent, KeyboardSensor, PointerSensor, rectIntersection, useSensor, useSensors } from '@dnd-kit/core';
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import React, { Suspense, useCallback, useMemo, useRef, useState, useEffect } from 'react';
+import { useOptimizedScheduler } from '@/hooks/useOptimizedScheduler';
 import { useEditor } from './EditorProvider';
 import { useTheme } from '@/components/theme-provider';
 
@@ -261,14 +262,14 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   // Estados de animação/UX
   const [isDragging, setIsDragging] = useState(false);
   const [, setSelectionPulse] = useState(false);
+  const { schedule } = useOptimizedScheduler();
 
   useEffect(() => {
     if (state.selectedBlockId) {
       setSelectionPulse(true);
-      const t = setTimeout(() => setSelectionPulse(false), 700);
-      return () => clearTimeout(t);
+      return schedule('selection-pulse', () => setSelectionPulse(false), 700);
     }
-  }, [state.selectedBlockId]);
+  }, [schedule, state.selectedBlockId]);
 
   const currentStepData = useMemo(
     () => getBlocksForStep(safeCurrentStep, state.stepBlocks) || [],
