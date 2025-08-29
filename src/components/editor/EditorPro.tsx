@@ -1,5 +1,4 @@
 import CanvasDropZone from '@/components/editor/canvas/CanvasDropZone.simple';
-import { DraggableComponentItem } from '@/components/editor/dnd/DraggableComponentItem';
 import { useNotification } from '@/components/ui/Notification';
 import { getBlocksForStep } from '@/config/quizStepsComplete';
 import { cn } from '@/lib/utils';
@@ -12,6 +11,8 @@ import React, { Suspense, useCallback, useMemo, useRef, useState, useEffect } fr
 import { useOptimizedScheduler } from '@/hooks/useOptimizedScheduler';
 import { useEditor } from './EditorProvider';
 import { useTheme } from '@/components/theme-provider';
+import StepSidebar from '@/components/editor/sidebars/StepSidebar';
+import ComponentsSidebar from '@/components/editor/sidebars/ComponentsSidebar';
 
 // Removidos estilos de animação/transição globais do editor
 
@@ -686,143 +687,8 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   );
 
   /* -------------------------
-     Sub-componentes locais
+     Sub-componentes locais (somente Canvas/Propriedades)
      ------------------------- */
-
-  const StepSidebar: React.FC = () => (
-  <div className="w-[13rem] min-w-[13rem] max-w-[13rem]
-          flex-shrink-0 h-screen sticky top-0 bg-white border-r border-gray-200 flex flex-col">
-      <div className="p-4 border-b border-gray-200">
-        <h3 className="font-semibold text-sm text-gray-900">Etapas do Quiz</h3>
-        <p className="text-xs text-gray-500 mt-1">21 etapas configuradas</p>
-      </div>
-
-      <div className="flex-1 overflow-y-auto">
-        <div className="p-2 space-y-1">
-          {Array.from({ length: 21 }, (_, i) => i + 1).map(step => {
-            const analysis = getStepAnalysis(step);
-            const isActive = step === safeCurrentStep;
-            const hasBlocks = stepHasBlocks[step];
-
-            return (
-              <button
-                key={step}
-                type="button"
-                onClick={() => handleStepSelect(step)}
-                className={cn(
-                  'w-full text-left p-2 rounded-md text-xs',
-                  isActive
-                    ? 'bg-blue-100 border-blue-300 text-blue-900'
-                    : 'hover:bg-gray-50 text-gray-700'
-                )}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm">
-                      {renderIcon(analysis.icon, 'w-4 h-4 text-gray-600')}
-                    </span>
-                    <span className="font-medium">Etapa {step}</span>
-                  </div>
-                  {hasBlocks && <span className="w-2 h-2 bg-green-500 rounded-full" />}
-                </div>
-                <div className="text-gray-600 mt-1">
-                  <div className="font-medium">{analysis.label}</div>
-                  <div className="text-xs">{analysis.desc}</div>
-                </div>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      <div className="p-3 border-t border-gray-200 text-xs text-gray-500">
-        <div className="flex items-center justify-between">
-          <span>Etapa atual:</span>
-          <span className="font-medium">{safeCurrentStep}/21</span>
-        </div>
-      </div>
-    </div>
-  );
-
-  const ComponentsSidebar: React.FC = () => (
-  <div className="w-[8rem] min-w-[8rem] max-w-[8rem]
-          flex-shrink-0 h-screen sticky top-0 bg-white border-r border-gray-200/60 flex flex-col">
-      {/* Header da Sidebar */}
-      <div className="p-6 border-b border-gray-200/60 bg-white">
-        <div className="flex items-center gap-3 mb-3">
-          <div className="w-8 h-8 rounded-lg flex items-center justify-center">
-            <svg className="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-            </svg>
-          </div>
-          <div>
-            <h3 className="font-bold text-gray-900 text-base">Componentes</h3>
-            <p className="text-xs text-gray-500">
-              {availableComponents.length} blocos disponíveis
-            </p>
-          </div>
-        </div>
-        
-        {/* Search Bar */}
-        <div className="relative">
-          <svg className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
-          <input
-            type="text"
-            placeholder="Buscar componentes..."
-            className="w-full pl-10 pr-4 py-2.5 text-sm border border-gray-200 rounded-lg"
-          />
-        </div>
-      </div>
-
-      {/* Lista de Componentes */}
-      <div className="flex-1 overflow-y-auto">
-        <div className="p-4 space-y-6">
-          {Object.entries(groupedComponents).map(([category, components]) => (
-            <div key={category} className="group">
-              {/* Header da Categoria */}
-              <div className="flex items-center gap-2 mb-3 px-2">
-                <div className="w-1 h-4 bg-gray-300 rounded-full" />
-                <h4 className="text-xs font-bold text-gray-700 uppercase tracking-wider">
-                  {category}
-                </h4>
-                <div className="flex-1 h-px bg-gray-200" />
-                <span className="text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">
-                  {components.length}
-                </span>
-              </div>
-              
-      {/* Grid de Componentes */}
-      <div className="grid grid-cols-1 gap-1.5">
-                {components.map(component => (
-                  <DraggableComponentItem
-                    key={component.type}
-                    blockType={component.type}
-                    title={component.name}
-                    description={component.description}
-  icon={renderIcon(component.icon as any, 'w-3.5 h-3.5')}
-        category={component.category}
-  className="bg-white border border-gray-200/60 rounded-md px-2 py-1.5 text-[11px]"
-                  />
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-        
-        {/* Footer da Sidebar */}
-        <div className="p-4 border-t border-gray-200/60 bg-white">
-          <div className="flex items-center justify-center gap-2 text-xs text-gray-500">
-            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            Arraste os componentes para o canvas
-          </div>
-        </div>
-      </div>
-    </div>
-  );
 
   const CanvasArea: React.FC = () => (
   <div className="flex-1 flex flex-col bg-gray-50">
@@ -1258,8 +1124,18 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         onDragEnd={handleDragEnd}
       >
   <div className={`editor-pro h-screen bg-gray-50 flex overflow-x-hidden max-w-screen ${className}`}>
-          <StepSidebar />
-          <ComponentsSidebar />
+          <StepSidebar
+            currentStep={safeCurrentStep}
+            totalSteps={21}
+            stepHasBlocks={stepHasBlocks}
+            onSelectStep={handleStepSelect}
+            getStepAnalysis={getStepAnalysis as any}
+            renderIcon={renderIcon as any}
+          />
+          <ComponentsSidebar
+            groupedComponents={groupedComponents as any}
+            renderIcon={renderIcon as any}
+          />
           <div className="flex-1 min-w-0 flex">
             <CanvasArea />
             <PropertiesColumn />
