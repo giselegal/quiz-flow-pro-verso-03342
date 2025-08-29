@@ -221,6 +221,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   }
 
   const { theme, setTheme } = useTheme();
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
   // Desativa qualquer auto-scroll dentro do /editor (edição e preview)
   useEffect(() => {
@@ -248,6 +249,43 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       } catch {}
     };
   }, []);
+
+  // Atalhos de teclado: Undo/Redo (Ctrl/Cmd + Z/Y)
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      const isUndo = (e.ctrlKey || e.metaKey) && (e.key === 'z' || e.key === 'Z');
+      const isRedo = (e.ctrlKey || e.metaKey) && (e.key === 'y' || e.key === 'Y');
+      if (isUndo) {
+        e.preventDefault();
+        try { (editorContext as any)?.actions?.undo?.(); } catch {}
+        return;
+      }
+      if (isRedo) {
+        e.preventDefault();
+        try { (editorContext as any)?.actions?.redo?.(); } catch {}
+      }
+    };
+    window.addEventListener('keydown', onKeyDown, { capture: true });
+    return () => window.removeEventListener('keydown', onKeyDown, { capture: true } as any);
+  }, [editorContext]);
+
+  // Auto-scroll: ao mudar o bloco selecionado, rolar suavemente até ele no canvas
+  useEffect(() => {
+    const selId = (editorContext as any)?.state?.selectedBlockId as string | null;
+    if (!selId) return;
+    const root = containerRef.current || document.querySelector('[data-canvas-container]');
+    if (!root) return;
+    // Tenta padrões de id/data-attr usados nos renders
+    const target =
+      (root as HTMLElement).querySelector(`[data-block-id="${selId}"]`) ||
+      (root as HTMLElement).querySelector(`#dnd-block-${selId}`) ||
+      (root as HTMLElement).querySelector(`#${selId}`);
+    if (target && typeof (target as any).scrollIntoView === 'function') {
+      try {
+        (target as HTMLElement).scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } catch {}
+    }
+  }, [(editorContext as any)?.state?.selectedBlockId]);
 
   if (!editorContext) {
     return (
@@ -1134,6 +1172,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
           isDragging && 'editor-drop-zone-active'
         )}
         data-canvas-container
+        ref={containerRef}
       >
         <div
           className={cn(
