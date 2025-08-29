@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { StorageService } from '@/services/core/StorageService';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,23 +10,23 @@ import { toast } from '@/components/ui/use-toast';
 export const ApiIntegrationsTab: React.FC = () => {
   // Google Analytics states
   const [googleAnalyticsId, setGoogleAnalyticsId] = useState(() => {
-    return localStorage.getItem('ga_id') || '';
+    return StorageService.safeGetString('ga_id') || '';
   });
   const [googleAnalyticsEnabled, setGoogleAnalyticsEnabled] = useState(() => {
-    return localStorage.getItem('ga_enabled') !== 'false';
+    return StorageService.safeGetString('ga_enabled') !== 'false';
   });
 
   // Webhook states
   const [webhookUrl, setWebhookUrl] = useState(() => {
-    return localStorage.getItem('webhook_url') || '';
+    return StorageService.safeGetString('webhook_url') || '';
   });
   const [webhookEnabled, setWebhookEnabled] = useState(() => {
-    return localStorage.getItem('webhook_enabled') === 'true';
+    return StorageService.safeGetString('webhook_enabled') === 'true';
   });
 
   const handleSaveGoogleAnalytics = () => {
-    localStorage.setItem('ga_id', googleAnalyticsId);
-    localStorage.setItem('ga_enabled', String(googleAnalyticsEnabled));
+    StorageService.safeSetString('ga_id', googleAnalyticsId);
+    StorageService.safeSetString('ga_enabled', String(googleAnalyticsEnabled));
 
     toast({
       title: 'Settings saved',
@@ -34,8 +35,8 @@ export const ApiIntegrationsTab: React.FC = () => {
   };
 
   const handleSaveWebhook = () => {
-    localStorage.setItem('webhook_url', webhookUrl);
-    localStorage.setItem('webhook_enabled', String(webhookEnabled));
+    StorageService.safeSetString('webhook_url', webhookUrl);
+    StorageService.safeSetString('webhook_enabled', String(webhookEnabled));
 
     toast({
       title: 'Settings saved',

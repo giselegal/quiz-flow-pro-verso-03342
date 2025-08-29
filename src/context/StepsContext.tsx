@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
+import { StorageService } from '@/services/core/StorageService';
 
 // Interface simplificada para etapas
 export interface QuizStep {
@@ -245,10 +246,10 @@ export const StepsProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   // Recuperar estado salvo ou usar o padrão
   const getSavedSteps = () => {
     try {
-      const savedSteps = localStorage.getItem('quiz-steps');
-      return savedSteps ? JSON.parse(savedSteps) : initialQuiz21Steps;
+  const saved = StorageService.safeGetJSON<QuizStep[]>('quiz-steps');
+  return Array.isArray(saved) && saved.length ? saved : initialQuiz21Steps;
     } catch (error) {
-      console.error('Erro ao carregar etapas do localStorage:', error);
+  if (import.meta?.env?.DEV) console.error('Erro ao carregar etapas:', error);
       return initialQuiz21Steps;
     }
   };
@@ -256,9 +257,11 @@ export const StepsProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [steps, setSteps] = useState<QuizStep[]>(getSavedSteps);
   const [selectedStepId, setSelectedStepId] = useState<string | null>('etapa-1');
 
-  // Salvar etapas no localStorage quando mudarem
+  // Salvar etapas no StorageService quando mudarem
   useEffect(() => {
-    localStorage.setItem('quiz-steps', JSON.stringify(steps));
+    try {
+      StorageService.safeSetJSON('quiz-steps', steps);
+    } catch {}
   }, [steps]);
 
   // Adicionar nova etapa

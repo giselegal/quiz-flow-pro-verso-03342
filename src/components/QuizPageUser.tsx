@@ -6,8 +6,23 @@ const UserQuizPage: React.FC = () => {
   const { user } = useAuth();
   const { isLoading, setLoading } = useLoadingState({ initialState: false });
 
-  // Get userName safely from user object or localStorage
-  const userName = user?.name || user?.email || localStorage.getItem('userName') || '';
+  // Get userName via StorageService com fallback
+  let userName = user?.name || user?.email || '';
+  if (!userName) {
+    try {
+      const { StorageService } = require('@/services/core/StorageService');
+      userName =
+        StorageService.safeGetString('userName') ||
+        StorageService.safeGetString('quizUserName') ||
+        '';
+    } catch {
+      try {
+        userName = localStorage.getItem('userName') || '';
+      } catch {
+        userName = '';
+      }
+    }
+  }
 
   // Handle potential null values
   const safeUserName = userName || undefined;
