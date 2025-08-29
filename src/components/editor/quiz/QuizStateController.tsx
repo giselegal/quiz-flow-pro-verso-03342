@@ -6,15 +6,22 @@
  */
 
 import { useEditor } from '@/context/EditorContext';
-import { QUIZ_21_STEPS_COMPLETE, QuizStepData } from '@/templates/quiz21StepsComplete';
+import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import { useQuizNavigation } from '@/hooks/useQuizNavigation';
 import { useQuizState } from '@/hooks/useQuizState';
-import { loadStepBlocks } from '@/utils/quiz21StepsRenderer';
+import { loadStepBlocks, getStepInfo } from '@/utils/quiz21StepsRenderer';
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
+
+interface CurrentStepInfoShape {
+  stepId: string;
+  type: string;
+  isRequired: boolean;
+  maxSelections: number;
+}
 
 interface QuizFlowContextType {
   // Current state
-  currentStep: QuizStepData;
+  currentStep: CurrentStepInfoShape;
   currentStepNumber: number;
   totalSteps: number;
 
@@ -62,6 +69,7 @@ export const QuizFlowController: React.FC<QuizFlowControllerProps> = ({
   mode = 'editor',
   onStepChange,
 }) => {
+  const totalSteps = Object.keys(QUIZ_STYLE_21_STEPS_TEMPLATE).length || 21;
   const [currentStepNumber, setCurrentStepNumber] = useState(initialStep);
   const [currentMode, setCurrentMode] = useState(mode);
   const [userAnswers, setUserAnswers] = useState<Record<string, string[]>>({});
@@ -82,21 +90,28 @@ export const QuizFlowController: React.FC<QuizFlowControllerProps> = ({
     goToStep,
     nextStep: navNext,
     previousStep: navPrev,
-  } = useQuizNavigation(currentStepNumber, QUIZ_21_STEPS_COMPLETE.length, (step: number) => {
+  } = useQuizNavigation(currentStepNumber, totalSteps, (step: number) => {
     setCurrentStepNumber(step);
     onStepChange?.(step);
   });
 
-  const currentStep = QUIZ_21_STEPS_COMPLETE[currentStepNumber - 1];
+  const currentStepId = `step-${currentStepNumber}`;
+  const currentStepMeta = getStepInfo(currentStepNumber);
+  const currentStep: CurrentStepInfoShape = {
+    stepId: currentStepId,
+    type: currentStepMeta.type,
+    isRequired: !!currentStepMeta.isRequired,
+    maxSelections: currentStepMeta.maxSelections ?? 0,
+  };
 
   // Sync with quiz state
   useEffect(() => {
     updateState({
       currentStep: currentStepNumber,
-      progress: (currentStepNumber / QUIZ_21_STEPS_COMPLETE.length) * 100,
-      isCompleted: currentStepNumber >= QUIZ_21_STEPS_COMPLETE.length,
+    progress: (currentStepNumber / totalSteps) * 100,
+    isCompleted: currentStepNumber >= totalSteps,
     });
-  }, [currentStepNumber, userAnswers, currentStep, updateState]);
+  }, [currentStepNumber, userAnswers, currentStep, totalSteps, updateState]);
 
   const setAnswer = useCallback((stepId: string, optionIds: string[]) => {
     setUserAnswers(prev => ({
@@ -114,30 +129,42 @@ export const QuizFlowController: React.FC<QuizFlowControllerProps> = ({
 
   const isStepValid = useCallback(
     (stepId: string) => {
-      const step = QUIZ_21_STEPS_COMPLETE.find(s => s.stepId === stepId);
-      if (!step || step.type !== 'question') return true;
-
+      const match = stepId.match(/step-(\d+)/);
+      const stepNum = match ? parseInt(match[1], 10) : NaN;
+      if (!stepNum) return true;
+      const meta = getStepInfo(stepNum);
+      if (meta.type !== 'question' && meta.type !== 'strategic') return true;
       const answers = getAnswer(stepId);
-      if (step.isRequired && answers.length === 0) return false;
-      if (step.maxSelections && answers.length > step.maxSelections) return false;
-
+      if (meta.isRequired && answers.length === 0) return false;
+      if (meta.maxSelections && answers.length > meta.maxSelections) return false;
       return true;
     },
     [getAnswer]
   );
 
+  type TemplateOption = { id: string; text: string; imageUrl?: string } & { points?: Record<string, number> };
+
+  const getOptionsForStep = (stepNumber: number): TemplateOption[] => {
+    const blocks = QUIZ_STYLE_21_STEPS_TEMPLATE[`step-${stepNumber}`] || [];
+    const optionsGrid = blocks.find(b => b.type === 'options-grid');
+    // @ts-ignore - content shape varies por bloco
+    return (optionsGrid?.content?.options as TemplateOption[]) || [];
+  };
+
   const calculateScores = useCallback(() => {
     const scores: Record<string, number> = {};
 
     Object.entries(userAnswers).forEach(([stepId, optionIds]) => {
-      const step = QUIZ_21_STEPS_COMPLETE.find(s => s.stepId === stepId);
-      if (!step?.options) return;
-
+      const match = stepId.match(/step-(\d+)/);
+      const stepNum = match ? parseInt(match[1], 10) : NaN;
+      if (!stepNum) return;
+      const options = getOptionsForStep(stepNum);
       optionIds.forEach(optionId => {
-        const option = step.options?.find(o => o.id === optionId);
-        if (option?.points) {
-          Object.entries(option.points).forEach(([style, points]) => {
-            scores[style] = (scores[style] || 0) + points;
+        const option = options.find(o => (o as any).id === optionId || (o as any).value === optionId) as TemplateOption | undefined;
+        const pts = option?.points;
+        if (pts) {
+          Object.entries(pts).forEach(([style, p]) => {
+            scores[style] = (scores[style] || 0) + (p || 0);
           });
         }
       });
@@ -190,7 +217,7 @@ export const QuizFlowController: React.FC<QuizFlowControllerProps> = ({
   const value: QuizFlowContextType = {
     currentStep,
     currentStepNumber,
-    totalSteps: QUIZ_21_STEPS_COMPLETE.length,
+  totalSteps,
     goToStep,
     nextStep,
     previousStep,
