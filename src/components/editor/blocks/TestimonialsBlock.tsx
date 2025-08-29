@@ -1,6 +1,7 @@
 // @ts-nocheck
 import { cn } from '@/lib/utils';
 import { Quote, Star } from 'lucide-react';
+import { getMarginClass } from '@/utils/margins';
 
 interface TestimonialsBlockProps {
   title?: string;
@@ -9,50 +10,7 @@ interface TestimonialsBlockProps {
   className?: string;
 }
 
-// Função para converter valores de margem em classes Tailwind (Sistema Universal)
-const getMarginClass = (value, type) => {
-  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
-
-  if (isNaN(numValue) || numValue === 0) return '';
-
-  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
-
-  // Margens negativas
-  if (numValue < 0) {
-    const absValue = Math.abs(numValue);
-    if (absValue <= 4) return `-${prefix}-1`;
-    if (absValue <= 8) return `-${prefix}-2`;
-    if (absValue <= 12) return `-${prefix}-3`;
-    if (absValue <= 16) return `-${prefix}-4`;
-    if (absValue <= 20) return `-${prefix}-5`;
-    if (absValue <= 24) return `-${prefix}-6`;
-    if (absValue <= 28) return `-${prefix}-7`;
-    if (absValue <= 32) return `-${prefix}-8`;
-    if (absValue <= 36) return `-${prefix}-9`;
-    if (absValue <= 40) return `-${prefix}-10`;
-    return `-${prefix}-10`; // Máximo para negativas
-  }
-
-  // Margens positivas (expandido para suportar até 100px)
-  if (numValue <= 4) return `${prefix}-1`;
-  if (numValue <= 8) return `${prefix}-2`;
-  if (numValue <= 12) return `${prefix}-3`;
-  if (numValue <= 16) return `${prefix}-4`;
-  if (numValue <= 20) return `${prefix}-5`;
-  if (numValue <= 24) return `${prefix}-6`;
-  if (numValue <= 28) return `${prefix}-7`;
-  if (numValue <= 32) return `${prefix}-8`;
-  if (numValue <= 36) return `${prefix}-9`;
-  if (numValue <= 40) return `${prefix}-10`;
-  if (numValue <= 44) return `${prefix}-11`;
-  if (numValue <= 48) return `${prefix}-12`;
-  if (numValue <= 56) return `${prefix}-14`;
-  if (numValue <= 64) return `${prefix}-16`;
-  if (numValue <= 80) return `${prefix}-20`;
-  if (numValue <= 96) return `${prefix}-24`;
-  if (numValue <= 112) return `${prefix}-28`;
-  return `${prefix}-32`; // Máximo suportado
-};
+// Margens agora centralizadas em utils/margins
 
 const TestimonialsBlock: React.FC<TestimonialsBlockProps & { block?: any }> = ({
   title: _title = 'Transformações Reais',
@@ -69,8 +27,8 @@ const TestimonialsBlock: React.FC<TestimonialsBlockProps & { block?: any }> = ({
   const marginBottom = properties.marginBottom ?? 0;
   const marginLeft = properties.marginLeft ?? 0;
   const marginRight = properties.marginRight ?? 0;
-  // Dados reais dos depoimentos da ResultPage
-  const testimonials = [
+  // Permitir injectar depoimentos via properties.testimonials
+  const testimonials = properties.testimonials ?? [
     {
       name: 'Mariangela',
       role: 'Engenheira',
@@ -110,7 +68,7 @@ const TestimonialsBlock: React.FC<TestimonialsBlockProps & { block?: any }> = ({
 
   return (
     <div className={cn('py-10', className)}>
-      <div className="text-center mb-10">
+  <div className="text-center mb-10" aria-live="polite">
         <h3 className="text-2xl md:text-3xl font-bold text-[#B89B7A] mb-3">{title}</h3>
         <p className="text-center text-[#8F7A6A] mb-4 max-w-2xl mx-auto">
           O que mulheres como você estão dizendo sobre esta jornada de transformação
@@ -139,7 +97,7 @@ const TestimonialsBlock: React.FC<TestimonialsBlockProps & { block?: any }> = ({
             <div className="absolute bottom-2 right-2 w-10 h-10 border-b-2 border-r-2 border-[#B89B7A]/40 rounded-br-md" />
 
             {/* Quote icon */}
-            <div className="flex justify-center mb-4">
+            <div className="flex justify-center mb-4" aria-hidden>
               <Quote className="w-8 h-8 text-[#B89B7A] opacity-60" />
             </div>
 
