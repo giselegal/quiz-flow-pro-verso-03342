@@ -2,7 +2,7 @@ import { useEditor } from '@/components/editor/EditorProvider';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 interface EditableEditorHeaderProps {
   className?: string;
@@ -84,6 +84,7 @@ export const EditableEditorHeader: React.FC<EditableEditorHeaderProps> = ({
   const [mode, setMode] = useState<'edit' | 'preview'>('edit');
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [virtDisabled, setVirtDisabled] = useState<boolean>(false);
 
   const safeCurrentStep = state.currentStep || 1;
   const stepAnalysis = getStepAnalysis(safeCurrentStep);
@@ -143,6 +144,24 @@ export const EditableEditorHeader: React.FC<EditableEditorHeaderProps> = ({
     } else {
       toast({ title: 'Sucesso', description: 'Projeto salvo!' });
     }
+  };
+
+  // Sync toggle with global flag (diagnostic virtualização Canvas)
+  useEffect(() => {
+    const current = (globalThis as any).__NO_CANVAS_VIRT__;
+    setVirtDisabled(Boolean(current));
+  }, []);
+
+  const toggleVirtualization = () => {
+    const next = !virtDisabled;
+    (globalThis as any).__NO_CANVAS_VIRT__ = next;
+    setVirtDisabled(next);
+    toast({
+      title: next ? 'Virtualização desativada' : 'Virtualização ativada',
+      description: next
+        ? 'Renderização completa forçada (útil para depuração)'
+        : 'Renderização otimizada reativada',
+    });
   };
 
   return (
@@ -228,6 +247,25 @@ export const EditableEditorHeader: React.FC<EditableEditorHeaderProps> = ({
                 title="Importar JSON"
               >
                 📥 Import
+              </button>
+
+              {/* Toggle Virtualização Canvas (compacto) */}
+              <button
+                type="button"
+                onClick={toggleVirtualization}
+                className={cn(
+                  'px-2 py-2 text-xs rounded-md transition-colors',
+                  virtDisabled
+                    ? 'text-amber-700 bg-amber-100 hover:bg-amber-200'
+                    : 'text-gray-600 hover:bg-gray-100'
+                )}
+                title={
+                  virtDisabled
+                    ? 'Virtualização do Canvas: OFF (clicar para ativar)'
+                    : 'Virtualização do Canvas: ON (clicar para desativar)'
+                }
+              >
+                ⚙️ Virt {virtDisabled ? 'OFF' : 'ON'}
               </button>
             </div>
           )}
