@@ -2,6 +2,24 @@
 import { templateService } from '../services/templateService';
 import type { Block } from '../types/editor';
 
+// Logger leve: só em DEV
+const isDev = (() => {
+  try {
+    return Boolean((import.meta as any)?.env?.DEV);
+  } catch {
+    return false;
+  }
+})();
+const devLog = (...args: any[]) => {
+  if (isDev) console.log(...args);
+};
+const devWarn = (...args: any[]) => {
+  if (isDev) console.warn(...args);
+};
+const devError = (...args: any[]) => {
+  if (isDev) console.error(...args);
+};
+
 /**
  * Template Manager - Gerencia carregamento de templates JSON
  */
@@ -45,9 +63,9 @@ export class TemplateManager {
       try {
         window.dispatchEvent(new CustomEvent('quiz-template-updated', { detail: { stepId } }));
       } catch {}
-      console.log(`💾 Etapa publicada localmente: ${stepId} (${blocks.length} blocos)`);
+      devLog(`💾 Etapa publicada localmente: ${stepId} (${blocks.length} blocos)`);
     } catch (err) {
-      console.error('❌ Falha ao publicar etapa localmente:', err);
+      devError('Falha ao publicar etapa localmente:', err);
     }
   }
 
@@ -61,9 +79,9 @@ export class TemplateManager {
       try {
         window.dispatchEvent(new CustomEvent('quiz-template-updated', { detail: { stepId } }));
       } catch {}
-      console.log(`🗑️ Publicação removida: ${stepId}`);
+      devLog(`🗑️ Publicação removida: ${stepId}`);
     } catch (err) {
-      console.error('❌ Falha ao remover publicação local:', err);
+      devError('Falha ao remover publicação local:', err);
     }
   }
 
@@ -75,10 +93,8 @@ export class TemplateManager {
       // 0) Preferir blocos publicados localmente (se existirem)
       const published = this.getPublishedBlocks(stepId);
       if (published && published.length > 0) {
-        this.cache.set(stepId, published);
-        console.log(
-          `📦 Etapa ${stepId} carregada da PUBLICAÇÃO local (${published.length} blocos)`
-        );
+  this.cache.set(stepId, published);
+  devLog(`📦 Etapa ${stepId} carregada da PUBLICAÇÃO local (${published.length} blocos)`);
         return published;
       }
 
@@ -86,23 +102,23 @@ export class TemplateManager {
       if (this.cache.has(stepId)) {
         const cachedBlocks = this.cache.get(stepId)!;
         if (cachedBlocks.length > 0) {
-          console.log(`📦 Template ${stepId} carregado do cache (${cachedBlocks.length} blocos)`);
+          devLog(`📦 Template ${stepId} carregado do cache (${cachedBlocks.length} blocos)`);
           return cachedBlocks;
         }
         // Se cache tem array vazio, remove do cache
-        console.warn(`🗑️ Removendo cache vazio para ${stepId}`);
+        devWarn(`🗑️ Removendo cache vazio para ${stepId}`);
         this.cache.delete(stepId);
       }
 
       const stepNumber = parseInt(stepId.replace('step-', ''));
-      console.log(`🔄 Carregando template para etapa ${stepNumber}`);
+      devLog(`🔄 Carregando template para etapa ${stepNumber}`);
 
       // ===== SISTEMA INTEGRADO: JSON + TYPESCRIPT =====
 
       if (stepNumber === 1) {
-        console.log('🎯 Step01: Sistema JSON integrado ativo');
+        devLog('🎯 Step01: Sistema JSON integrado ativo');
       } else {
-        console.log(`🔧 Step${stepNumber}: Sistema TypeScript tradicional`);
+        devLog(`🔧 Step${stepNumber}: Sistema TypeScript tradicional`);
       }
 
       // Usar o templateService que já integra JSON para Step01
@@ -115,10 +131,8 @@ export class TemplateManager {
 
           // Se template válido com blocos, break
           if (template && template.blocks && template.blocks.length > 0) {
-            console.log(
-              `✅ Template carregado na tentativa ${attempt}: ${template.blocks.length} blocos`
-            );
-            console.log(`🎯 Sistema usado: ${stepNumber === 1 ? 'JSON Step01' : 'TypeScript'}`);
+            devLog(`✅ Template carregado na tentativa ${attempt}: ${template.blocks.length} blocos`);
+            devLog(`🎯 Sistema usado: ${stepNumber === 1 ? 'JSON Step01' : 'TypeScript'}`);
             break;
           }
 
@@ -129,9 +143,7 @@ export class TemplateManager {
               !template.blocks ||
               template.blocks.length === 0)
           ) {
-            console.log(
-              `🔄 Template etapa ${stepNumber} ainda carregando, tentativa ${attempt}/${maxRetries}`
-            );
+            devLog(`🔄 Template etapa ${stepNumber} ainda carregando, tentativa ${attempt}/${maxRetries}`);
             if (attempt < maxRetries) {
               // Backoff: 150ms, 300ms, 450ms
               await new Promise(resolve => setTimeout(resolve, 150 * attempt));
@@ -143,10 +155,7 @@ export class TemplateManager {
           template = null;
           break;
         } catch (error) {
-          console.warn(
-            `⚠️ Erro na tentativa ${attempt}/${maxRetries} para etapa ${stepNumber}:`,
-            error
-          );
+          devWarn(`⚠️ Erro na tentativa ${attempt}/${maxRetries} para etapa ${stepNumber}:`, error);
           if (attempt < maxRetries) {
             await new Promise(resolve => setTimeout(resolve, 150 * attempt));
             continue;
@@ -157,15 +166,13 @@ export class TemplateManager {
 
       // Se template não carregou após retries, usar fallback robusto
       if (!template || !template.blocks || template.blocks.length === 0) {
-        console.warn(
-          `⚠️ Template falhou após ${maxRetries} tentativas, usando fallback robusto para etapa ${stepNumber}`
-        );
+  devWarn(`⚠️ Template falhou após ${maxRetries} tentativas, usando fallback robusto para etapa ${stepNumber}`);
         const fallbackBlocks = await this.getEnhancedFallbackBlocks(stepId);
 
         // NUNCA cachear array vazio - só cachear se tiver blocos
         if (fallbackBlocks.length > 0) {
           this.cache.set(stepId, fallbackBlocks);
-          console.log(`🛡️ Fallback aplicado com ${fallbackBlocks.length} blocos (fonte: fallback)`);
+          devLog(`🛡️ Fallback aplicado com ${fallbackBlocks.length} blocos (fonte: fallback)`);
         }
 
         return fallbackBlocks;
@@ -176,17 +183,15 @@ export class TemplateManager {
 
       // APENAS cachear se tiver blocos válidos
       if (blocks.length > 0) {
-        this.cache.set(stepId, blocks);
-        console.log(
-          `✅ Template carregado com sucesso: ${blocks.length} blocos (fonte: public JSON)`
-        );
+  this.cache.set(stepId, blocks);
+  devLog(`✅ Template carregado com sucesso: ${blocks.length} blocos (fonte: public JSON)`);
       } else {
-        console.warn(`⚠️ Template convertido resultou em array vazio, não será cacheado`);
+  devWarn(`⚠️ Template convertido resultou em array vazio, não será cacheado`);
       }
 
       return blocks.length > 0 ? blocks : await this.getEnhancedFallbackBlocks(stepId);
     } catch (error) {
-      console.error(`❌ Erro crítico ao carregar template para ${stepId}:`, error);
+      devError(`Erro crítico ao carregar template para ${stepId}:`, error);
       return await this.getEnhancedFallbackBlocks(stepId);
     }
   }
@@ -202,7 +207,7 @@ export class TemplateManager {
       const { default: stepTemplateService } = await import('../services/stepTemplateService');
 
       if (stepTemplateService && typeof stepTemplateService.getStepTemplate === 'function') {
-        console.log(`🛡️ Usando stepTemplateService para fallback da etapa ${stepNumber}`);
+  devLog(`🛡️ Usando stepTemplateService para fallback da etapa ${stepNumber}`);
         const fixedTemplate = stepTemplateService.getStepTemplate(stepNumber);
 
         if (fixedTemplate && fixedTemplate.length > 0) {
@@ -214,14 +219,12 @@ export class TemplateManager {
             order: index,
           }));
 
-          console.log(
-            `✅ Fallback robusto aplicado: ${convertedBlocks.length} blocos (fonte: FixedTemplateService)`
-          );
+      devLog(`✅ Fallback robusto aplicado: ${convertedBlocks.length} blocos (fonte: FixedTemplateService)`);
           return convertedBlocks;
         }
       }
     } catch (error) {
-      console.warn(`⚠️ FixedTemplateService não disponível, usando fallback básico:`, error);
+    devWarn(`⚠️ FixedTemplateService não disponível, usando fallback básico:`, error);
     }
 
     // Fallback básico se FixedTemplateService não funcionar
@@ -326,9 +329,7 @@ export class TemplateManager {
       });
     }
 
-    console.log(
-      `🛡️ Fallback básico gerado: ${fallbackBlocks.length} blocos (fonte: básico garantido)`
-    );
+  devLog(`🛡️ Fallback básico gerado: ${fallbackBlocks.length} blocos (fonte: básico garantido)`);
     return fallbackBlocks;
   }
 
@@ -338,7 +339,7 @@ export class TemplateManager {
   static async preloadCommonTemplates(): Promise<void> {
     const steps = Array.from({ length: 21 }, (_, i) => i + 1);
 
-    console.log('🚀 Pre-carregando templates (ignorando arrays vazios)...');
+  devLog('🚀 Pre-carregando templates (ignorando arrays vazios)...');
 
     const promises = steps.map(async stepNumber => {
       const stepId = `step-${stepNumber}`;
@@ -347,19 +348,19 @@ export class TemplateManager {
 
         // Só considerar sucesso se tiver blocos válidos
         if (blocks.length > 0) {
-          console.log(`✅ Template ${stepId} pre-carregado: ${blocks.length} blocos`);
+          devLog(`✅ Template ${stepId} pre-carregado: ${blocks.length} blocos`);
         } else {
-          console.warn(`⚠️ Template ${stepId} resultou em array vazio - não cacheado`);
+          devWarn(`⚠️ Template ${stepId} resultou em array vazio - não cacheado`);
         }
       } catch (error) {
-        console.warn(`⚠️ Falha ao pre-carregar ${stepId}:`, error);
+        devWarn(`⚠️ Falha ao pre-carregar ${stepId}:`, error);
       }
     });
 
     await Promise.allSettled(promises);
 
     const loadedCount = this.cache.size;
-    console.log(`✅ Pre-carregamento concluído: ${loadedCount}/21 templates válidos em cache`);
+  devLog(`✅ Pre-carregamento concluído: ${loadedCount}/21 templates válidos em cache`);
   }
 
   /**
