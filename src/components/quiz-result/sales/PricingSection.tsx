@@ -20,7 +20,6 @@ const PricingSection: React.FC<PricingSectionProps> = ({
   ctaUrl = 'https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912',
 }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
   const { schedule } = useOptimizedScheduler();
 
   const handlePurchase = () => {
@@ -116,8 +115,6 @@ const PricingSection: React.FC<PricingSectionProps> = ({
             <Button
               className="w-full bg-[#aa6b5d] hover:bg-[#8f574a] text-white py-6 px-8 rounded-md text-lg leading-none md:leading-normal transition-colors duration-300 shadow-lg"
               onClick={handlePurchase}
-              onMouseEnter={() => setIsHovered(true)}
-              onMouseLeave={() => setIsHovered(false)}
               disabled={isLoading}
             >
               {isLoading ? (

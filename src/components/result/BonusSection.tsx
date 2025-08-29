@@ -2,7 +2,7 @@
 import { Card } from '@/components/ui/card';
 import { Gift, Star } from 'lucide-react';
 import { optimizeCloudinaryUrl } from '@/utils/imageUtils';
-import { motion } from 'framer-motion';
+// framer-motion removido para componentes fora do Canvas
 import ProgressiveImage from '@/components/ui/progressive-image';
 
 const BonusSection: React.FC = () => {
@@ -31,18 +31,8 @@ const BonusSection: React.FC = () => {
 
       <div className="max-w-4xl mx-auto">
         <div className="grid md:grid-cols-2 gap-6">
-          {/* Animated cards entrada */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{
-              type: 'spring',
-              stiffness: 300,
-              damping: 25,
-              delay: 0.2,
-            }}
-            className="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow transform-3d hover:scale-[1.01] border-0"
-          >
+          {/* Cartão 1 */}
+          <div className="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow transform-3d hover:scale-[1.01] border-0">
             <div className="flex justify-center mb-4">
               <picture>
                 <source
@@ -83,19 +73,9 @@ const BonusSection: React.FC = () => {
               </div>
               <span className="ml-2 text-xs text-[#3a3a3a]">Edição Premium</span>
             </div>
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{
-              type: 'spring',
-              stiffness: 300,
-              damping: 25,
-              delay: 0.4,
-            }}
-            className="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow transform-3d hover:scale-[1.01] border-0"
-          >
+          <div className="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow transform-3d hover:scale-[1.01] border-0">
             <div className="flex justify-center mb-4">
               <picture>
                 <source
@@ -136,7 +116,7 @@ const BonusSection: React.FC = () => {
               </div>
               <span className="ml-2 text-xs text-[#3a3a3a]">Edição Premium</span>
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
     </div>

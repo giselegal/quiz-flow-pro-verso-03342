@@ -4,6 +4,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
+import { useOptimizedScheduler } from '@/hooks/useOptimizedScheduler';
 import { Check, Loader2 } from 'lucide-react';
 
 interface PropertyChangeIndicatorProps {
@@ -18,14 +19,15 @@ export const PropertyChangeIndicator: React.FC<PropertyChangeIndicatorProps> = (
   children,
 }) => {
   const [showSaved, setShowSaved] = useState(false);
+  const { schedule, cancel } = useOptimizedScheduler();
 
   useEffect(() => {
     if (hasChanged && !isChanging) {
       setShowSaved(true);
-      const timer = setTimeout(() => setShowSaved(false), 2000);
-      return () => clearTimeout(timer);
+      schedule('propertyChangeIndicator:hide', () => setShowSaved(false), 2000);
+      return () => cancel('propertyChangeIndicator:hide');
     }
-  }, [hasChanged, isChanging]);
+  }, [hasChanged, isChanging, schedule, cancel]);
 
   return (
     <div className="relative">

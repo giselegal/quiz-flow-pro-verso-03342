@@ -1,5 +1,3 @@
-/* @ts-nocheck */
-// @ts-nocheck
 import { getOptimizedContainerClasses } from '@/config/containerConfig';
 import { Card } from '@/components/ui/card';
 import { Gift, Star } from 'lucide-react';

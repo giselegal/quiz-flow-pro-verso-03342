@@ -182,6 +182,11 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
     showQuestionTitle = true,
   } = (block?.properties as any) || {};
 
+  // Callback externo (produção/quiz) para propagar seleção ao host
+  const externalOnOptionSelect = (block?.properties as any)?.onOptionSelect as
+    | ((optionId: string) => void)
+    | undefined;
+
   // Fallbacks a partir de content (compatibilidade com template)
   const question = (questionProp ?? (block as any)?.content?.question) as string | undefined;
   const options = ((block?.properties as any)?.options ??
@@ -303,6 +308,9 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
 
       setPreviewSelections(newSelections);
 
+  // Propagar para host (produção/quiz) se disponível
+  externalOnOptionSelect?.(optionId);
+
       // Save to session data
       if (onUpdateSessionData) {
         const sessionKey = `step_selections_${block?.id}`;
@@ -411,6 +419,9 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
         newSelections = [optionId];
         onPropertyChange?.('selectedOption', optionId);
       }
+
+  // Propagar para host (ex.: produção usando mesmo componente via registry)
+  externalOnOptionSelect?.(optionId);
       // Calcula regras por etapa
       const step = Number(currentStepFromEditor ?? NaN);
       const isValidStep = Number.isFinite(step);
@@ -520,10 +531,29 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
             (ct === 'image-only' || ct === 'text-and-image' || ct == null) && showImages;
           const showTextEffective = ct === 'image-only' ? false : true;
 
+          // Estado de seleção visual (editor usa selectedOptions, preview usa previewSelections)
+          const isSelectedOption = isPreviewMode
+            ? previewSelections.includes(opt.id)
+            : (selectedOptions || []).includes(opt.id);
+
           return (
             <div
               key={opt.id}
-              className={`rounded-lg border border-neutral-200 bg-white p-4 hover:shadow-md transition-all duration-200 cursor-pointer ${cardLayoutClass}`}
+              role="button"
+              aria-pressed={isSelectedOption}
+              data-selected={isSelectedOption ? 'true' : 'false'}
+              tabIndex={0}
+              onKeyDown={e => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  handleOptionSelect(opt.id);
+                }
+              }}
+              className={`rounded-lg border p-4 hover:shadow-md transition-all duration-200 cursor-pointer ${
+                isSelectedOption
+                  ? 'border-[#B89B7A] ring-2 ring-[#B89B7A]/40 bg-[#FFFCF8]'
+                  : 'border-neutral-200 bg-white'
+              } ${cardLayoutClass}`}
               onClick={() => handleOptionSelect(opt.id)}
             >
               {opt.imageUrl && showImageEffective && (
