@@ -2,14 +2,12 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
-import { Slider } from '@/components/ui/slider';
-import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Textarea } from '@/components/ui/textarea';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import type { BlockData } from '@/types/blocks';
+import { withPropertyEditor } from './core/propertyEditors';
+import { useUnifiedProperties, PropertyCategory } from '@/hooks/useUnifiedProperties';
+import type { Block } from '@/types/editor';
 import {
   Copy,
   Eye,
@@ -26,8 +24,8 @@ import {
 import React, { useState } from 'react';
 
 interface EnhancedPropertiesPanelProps {
-  selectedBlock?: BlockData | null;
-  onUpdate?: (updates: Partial<BlockData>) => void;
+  selectedBlock?: Block | null;
+  onUpdate?: (updates: Record<string, any>) => void;
   onDelete?: () => void;
   onDuplicate?: () => void;
   onReset?: () => void;
@@ -35,98 +33,16 @@ interface EnhancedPropertiesPanelProps {
   previewMode?: 'desktop' | 'tablet' | 'mobile';
   onPreviewModeChange?: (mode: 'desktop' | 'tablet' | 'mobile') => void;
 }
-
-// Definições de propriedades por categoria
-const PROPERTY_CATEGORIES = {
-  visual: {
-    icon: Palette,
-    label: 'Visual',
-    description: 'Cores, tipografia e estilo',
-    properties: [
-      'backgroundColor',
-      'color',
-      'primaryColor',
-      'secondaryColor',
-      'accentColor',
-      'borderColor',
-      'borderWidth',
-      'borderRadius',
-      'shadow',
-      'gradient',
-    ],
-  },
-  content: {
-    icon: Type,
-    label: 'Conteúdo',
-    description: 'Texto, imagens e mídia',
-    properties: [
-      'content',
-      'text',
-      'title',
-      'description',
-      'imageUrl',
-      'logoUrl',
-      'placeholder',
-      'label',
-      'value',
-      'options',
-    ],
-  },
-  layout: {
-    icon: Settings,
-    label: 'Layout',
-    description: 'Tamanho, espaçamento e posição',
-    properties: [
-      'width',
-      'height',
-      'padding',
-      'margin',
-      'marginTop',
-      'marginBottom',
-      'marginLeft',
-      'marginRight',
-      'spacing',
-      'gap',
-      'columns',
-      'alignment',
-    ],
-  },
-  behavior: {
-    icon: Settings,
-    label: 'Comportamento',
-    description: 'Interatividade e funcionalidade',
-    properties: [
-      'onClick',
-      'href',
-      'target',
-      'validation',
-      'required',
-      'disabled',
-      'multiSelect',
-      'maxSelections',
-      'minSelections',
-      'animation',
-    ],
-  },
-};
-
-// Mapeamento de tipos de propriedades
-const getPropertyType = (key: string, value: any): string => {
-  if (typeof value === 'boolean') return 'boolean';
-  if (typeof value === 'number') return 'number';
-  if (key.toLowerCase().includes('color')) return 'color';
-  if (key.toLowerCase().includes('url') || key.toLowerCase().includes('href')) return 'url';
-  if (key === 'options' || Array.isArray(value)) return 'array';
-  if (key.toLowerCase().includes('margin') || key.toLowerCase().includes('padding'))
-    return 'spacing';
-  if (
-    key.toLowerCase().includes('size') ||
-    key.toLowerCase().includes('width') ||
-    key.toLowerCase().includes('height')
-  )
-    return 'size';
-  if (value && typeof value === 'string' && value.length > 50) return 'textarea';
-  return 'string';
+// Metadados de categorias do schema unificado → UI
+const CATEGORY_META: Record<string, { icon: any; label: string; description?: string }> = {
+  [PropertyCategory.CONTENT]: { icon: Type, label: 'Conteúdo', description: 'Texto e mídia' },
+  [PropertyCategory.STYLE]: { icon: Palette, label: 'Estilo', description: 'Cores e tipografia' },
+  [PropertyCategory.LAYOUT]: { icon: Settings, label: 'Layout', description: 'Tamanho e espaçamento' },
+  [PropertyCategory.BEHAVIOR]: { icon: Settings, label: 'Comportamento', description: 'Interações e regras' },
+  [PropertyCategory.ADVANCED]: { icon: Settings, label: 'Avançado', description: 'Configurações avançadas' },
+  [PropertyCategory.ANIMATION]: { icon: Settings, label: 'Animação', description: 'Transições e efeitos' },
+  [PropertyCategory.ACCESSIBILITY]: { icon: Settings, label: 'Acessibilidade' },
+  [PropertyCategory.SEO]: { icon: Settings, label: 'SEO' },
 };
 
 const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
@@ -139,7 +55,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
   previewMode = 'desktop',
   onPreviewModeChange,
 }) => {
-  const [activeTab, setActiveTab] = useState('visual');
+  const [activeTab, setActiveTab] = useState<string>('content');
   const [searchTerm, setSearchTerm] = useState('');
 
   if (!selectedBlock) {
@@ -155,265 +71,36 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
       </Card>
     );
   }
+  // Conectar ao schema unificado
+  const { properties, updateProperty, getPropertiesByCategory, validateProperties, applyBrandColors } = useUnifiedProperties(
+    selectedBlock.type,
+    selectedBlock.id,
+    selectedBlock as any,
+    (_blockId, updates) => onUpdate?.(updates as any)
+  );
 
-  const updateProperty = (key: string, value: any) => {
-    if (onUpdate) {
-      onUpdate({
-        properties: {
-          ...selectedBlock.properties,
-          [key]: value,
-        },
-      });
-    }
-  };
+  // Categorias disponíveis dinamicamente no schema
+  const categoryOrder: string[] = [
+    PropertyCategory.CONTENT,
+    PropertyCategory.STYLE,
+    PropertyCategory.LAYOUT,
+    PropertyCategory.BEHAVIOR,
+    PropertyCategory.ADVANCED,
+    PropertyCategory.ACCESSIBILITY,
+    PropertyCategory.ANIMATION,
+    PropertyCategory.SEO,
+  ];
+  const presentCategories = Array.from(new Set(properties.map(p => p.category)));
+  const categories = categoryOrder.filter(c => presentCategories.includes(c)).concat(
+    presentCategories.filter(c => !categoryOrder.includes(c as any))
+  );
 
-  // Organizar propriedades por categoria
-  const organizeProperties = () => {
-    const organized: Record<string, string[]> = {
-      visual: [],
-      content: [],
-      layout: [],
-      behavior: [],
-      other: [],
-    };
-
-    if (selectedBlock.properties) {
-      Object.keys(selectedBlock.properties).forEach(key => {
-        let categorized = false;
-        for (const [categoryKey, category] of Object.entries(PROPERTY_CATEGORIES)) {
-          if (category.properties.includes(key)) {
-            organized[categoryKey].push(key);
-            categorized = true;
-            break;
-          }
-        }
-        if (!categorized) {
-          organized.other.push(key);
-        }
-      });
-    }
-
-    return organized;
-  };
-
-  // Renderizar controle baseado no tipo da propriedade
-  const renderPropertyControl = (key: string, value: any) => {
-    const type = getPropertyType(key, value);
-    const label = key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1');
-
-    switch (type) {
-      case 'array': {
-        // Editor especializado para arrays de opções (options-grid, etc.)
-        if (key === 'options' && Array.isArray(value)) {
-          const options = (value as any[]).map((opt: any) => ({
-            label: opt?.label ?? opt?.text ?? '',
-            value: opt?.value ?? opt?.id ?? opt?.label ?? '',
-            points: typeof opt?.points === 'number' ? opt.points : 0,
-          }));
-
-          const updateOptions = (next: typeof options) => {
-            updateProperty(
-              key,
-              next.map(o => ({ label: o.label, value: o.value, points: o.points }))
-            );
-          };
-
-          return (
-            <div key={key} className="space-y-3">
-              <div className="flex items-center justify-between">
-                <Label className="text-sm font-medium text-[#432818]">{label}</Label>
-                <Button
-                  type="button"
-                  size="sm"
-                  variant="secondary"
-                  className="bg-[#B89B7A]/10 text-[#432818] hover:bg-[#B89B7A]/20"
-                  onClick={() => updateOptions([...options, { label: 'Nova opção', value: `opt_${options.length+1}`, points: 0 }])}
-                >
-                  + Adicionar
-                </Button>
-              </div>
-              <div className="space-y-3">
-                {options.length === 0 ? (
-                  <div className="text-sm text-[#6B4F43]">Nenhuma opção. Clique em "Adicionar".</div>
-                ) : (
-                  options.map((opt, idx) => (
-                    <div key={idx} className="grid grid-cols-12 gap-2 items-end">
-                      <div className="col-span-5">
-                        <Label className="text-xs text-[#6B4F43]">Label</Label>
-                        <Input
-                          value={opt.label}
-                          onChange={e => {
-                            const next = [...options];
-                            next[idx] = { ...opt, label: e.target.value };
-                            updateOptions(next);
-                          }}
-                          className="border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20"
-                        />
-                      </div>
-                      <div className="col-span-4">
-                        <Label className="text-xs text-[#6B4F43]">Valor</Label>
-                        <Input
-                          value={opt.value}
-                          onChange={e => {
-                            const next = [...options];
-                            next[idx] = { ...opt, value: e.target.value };
-                            updateOptions(next);
-                          }}
-                          className="border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20"
-                        />
-                      </div>
-                      <div className="col-span-2">
-                        <Label className="text-xs text-[#6B4F43]">Pts</Label>
-                        <Input
-                          type="number"
-                          value={opt.points}
-                          onChange={e => {
-                            const v = Number(e.target.value) || 0;
-                            const next = [...options];
-                            next[idx] = { ...opt, points: v };
-                            updateOptions(next);
-                          }}
-                          className="border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20"
-                        />
-                      </div>
-                      <div className="col-span-1 flex justify-end">
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => updateOptions(options.filter((_, i) => i !== idx))}
-                          title="Remover"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    </div>
-                  ))
-                )}
-              </div>
-            </div>
-          );
-        }
-
-        // Fallback genérico: edição via JSON
-        return (
-          <div key={key} className="space-y-2">
-            <Label className="text-sm font-medium text-[#432818]">{label} (JSON)</Label>
-            <Textarea
-              defaultValue={JSON.stringify(value ?? [], null, 2)}
-              onBlur={e => {
-                try {
-                  const parsed = JSON.parse(e.target.value || '[]');
-                  updateProperty(key, parsed);
-                } catch {
-                  // ignora parse inválido silenciosamente
-                }
-              }}
-              className="border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20 min-h-[120px] font-mono text-xs"
-            />
-          </div>
-        );
-      }
-      case 'boolean':
-        return (
-          <div key={key} className="flex items-center justify-between">
-            <Label htmlFor={key} className="text-sm font-medium text-[#432818]">
-              {label}
-            </Label>
-            <Switch
-              id={key}
-              checked={value || false}
-              onCheckedChange={checked => updateProperty(key, checked)}
-            />
-          </div>
-        );
-
-      case 'color':
-        return (
-          <div key={key} className="space-y-2">
-            <Label htmlFor={key} className="text-sm font-medium text-[#432818]">
-              {label}
-            </Label>
-            <div className="flex gap-2">
-              <Input
-                id={key}
-                type="color"
-                value={value || '#000000'}
-                onChange={e => updateProperty(key, e.target.value)}
-                className="w-12 h-10 border-[#B89B7A]/30 cursor-pointer"
-              />
-              <Input
-                value={value || '#000000'}
-                onChange={e => updateProperty(key, e.target.value)}
-                className="flex-1 border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20"
-                placeholder="#000000"
-              />
-            </div>
-          </div>
-        );
-
-      case 'number':
-      case 'spacing':
-      case 'size':
-        return (
-          <div key={key} className="space-y-2">
-            <div className="flex justify-between">
-              <Label htmlFor={key} className="text-sm font-medium text-[#432818]">
-                {label}
-              </Label>
-              <span className="text-[#B89B7A] text-sm font-mono">
-                {value || 0}
-                {type === 'spacing' || type === 'size' ? 'px' : ''}
-              </span>
-            </div>
-            <Slider
-              value={[value || 0]}
-              onValueChange={values => updateProperty(key, values[0])}
-              max={type === 'spacing' ? 100 : type === 'size' ? 500 : 1000}
-              step={1}
-              className="w-full"
-            />
-          </div>
-        );
-
-      case 'textarea':
-        return (
-          <div key={key} className="space-y-2">
-            <Label htmlFor={key} className="text-sm font-medium text-[#432818]">
-              {label}
-            </Label>
-            <Textarea
-              id={key}
-              value={value || ''}
-              onChange={e => updateProperty(key, e.target.value)}
-              className="border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20 min-h-[80px]"
-              placeholder={`Digite o ${label.toLowerCase()}...`}
-            />
-          </div>
-        );
-
-      default:
-        return (
-          <div key={key} className="space-y-2">
-            <Label htmlFor={key} className="text-sm font-medium text-[#432818]">
-              {label}
-            </Label>
-            <Input
-              id={key}
-              value={value || ''}
-              onChange={e => updateProperty(key, e.target.value)}
-              className="border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20"
-              placeholder={`Digite o ${label.toLowerCase()}...`}
-            />
-          </div>
-        );
-    }
-  };
-
-  const organizedProperties = organizeProperties();
-  const filteredProperties = searchTerm
-    ? Object.entries(selectedBlock.properties || {}).filter(([key]) =>
-        key.toLowerCase().includes(searchTerm.toLowerCase())
+  // Filtro de busca
+  const filteredProps = searchTerm
+    ? properties.filter(
+        p =>
+          p.label?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          p.key.toLowerCase().includes(searchTerm.toLowerCase())
       )
     : null;
 
@@ -435,12 +122,24 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
                   <p>ID: {selectedBlock.id}</p>
                 </TooltipContent>
               </Tooltip>
+              {/* Estado de validação */}
+              <Badge
+                variant={validateProperties() ? 'secondary' : 'destructive'}
+                className={validateProperties() ? 'bg-green-100 text-green-700' : ''}
+              >
+                {validateProperties() ? 'Válido' : 'Verifique valores'}
+              </Badge>
             </div>
-            {onClose && (
-              <Button variant="ghost" size="sm" onClick={onClose}>
-                ✕
+            <div className="flex items-center gap-1">
+              <Button variant="secondary" size="sm" onClick={() => applyBrandColors?.()}>
+                Cores da marca
               </Button>
-            )}
+              {onClose && (
+                <Button variant="ghost" size="sm" onClick={onClose}>
+                  ✕
+                </Button>
+              )}
+            </div>
           </div>
 
           <CardTitle className="text-lg text-[#432818]">Propriedades do Bloco</CardTitle>
@@ -550,24 +249,23 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
         </CardHeader>
 
         <CardContent className="flex-1 overflow-auto">
-          {filteredProperties ? (
-            // Modo de busca
+          {filteredProps ? (
             <div className="space-y-4">
-              <p style={{ color: '#6B4F43' }}>
-                {filteredProperties.length} propriedades encontradas
-              </p>
-              {filteredProperties.map(([key, value]) => renderPropertyControl(key, value))}
+              <p style={{ color: '#6B4F43' }}>{filteredProps.length} propriedades encontradas</p>
+              {filteredProps.map(prop => {
+                const Editor = withPropertyEditor(prop.type as unknown as string);
+                return <Editor key={prop.key} property={prop as any} onChange={updateProperty} />;
+              })}
             </div>
           ) : (
-            // Modo de categorias
             <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full">
               <TabsList className="grid w-full grid-cols-4 mb-4">
-                {Object.entries(PROPERTY_CATEGORIES).map(([key, category]) => {
-                  const Icon = category.icon;
-                  const count = organizedProperties[key]?.length || 0;
-
+                {categories.map(cat => {
+                  const meta = CATEGORY_META[cat] || { icon: Settings, label: String(cat) };
+                  const Icon = meta.icon;
+                  const count = getPropertiesByCategory(cat).length;
                   return (
-                    <TabsTrigger key={key} value={key} className="relative" disabled={count === 0}>
+                    <TabsTrigger key={String(cat)} value={String(cat)} className="relative" disabled={count === 0}>
                       <Icon className="w-4 h-4" />
                       {count > 0 && (
                         <span className="absolute -top-1 -right-1 bg-[#B89B7A] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
@@ -579,50 +277,40 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
                 })}
               </TabsList>
 
-              {Object.entries(PROPERTY_CATEGORIES).map(([key, category]) => (
-                <TabsContent key={key} value={key} className="space-y-4">
-                  <div className="mb-4">
-                    <h3 className="font-medium text-[#432818] flex items-center gap-2">
-                      <category.icon className="w-4 h-4" />
-                      {category.label}
-                    </h3>
-                    <p style={{ color: '#6B4F43' }}>{category.description}</p>
-                  </div>
-
-                  <Separator className="bg-[#B89B7A]/20" />
-
-                  {organizedProperties[key]?.length > 0 ? (
-                    <div className="space-y-4">
-                      {organizedProperties[key].map(propertyKey =>
-                        renderPropertyControl(propertyKey, selectedBlock.properties?.[propertyKey])
-                      )}
+              {categories.map(cat => {
+                const meta = CATEGORY_META[cat] || { icon: Settings, label: String(cat) };
+                const Icon = meta.icon;
+                const propsInCat = getPropertiesByCategory(cat);
+                return (
+                  <TabsContent key={String(cat)} value={String(cat)} className="space-y-4">
+                    <div className="mb-4">
+                      <h3 className="font-medium text-[#432818] flex items-center gap-2">
+                        <Icon className="w-4 h-4" />
+                        {meta.label}
+                      </h3>
+                      {meta.description ? (
+                        <p style={{ color: '#6B4F43' }}>{meta.description}</p>
+                      ) : null}
                     </div>
-                  ) : (
-                    <div style={{ color: '#8B7355' }}>
-                      <category.icon className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                      <p>Nenhuma propriedade {category.label.toLowerCase()}</p>
-                    </div>
-                  )}
-                </TabsContent>
-              ))}
-
-              {/* Tab para outras propriedades */}
-              {organizedProperties.other?.length > 0 && (
-                <TabsContent value="other" className="space-y-4">
-                  <div className="mb-4">
-                    <h3 className="font-medium text-[#432818]">Outras Propriedades</h3>
-                    <p style={{ color: '#6B4F43' }}>Propriedades específicas do componente</p>
-                  </div>
-
-                  <Separator className="bg-[#B89B7A]/20" />
-
-                  <div className="space-y-4">
-                    {organizedProperties.other.map(propertyKey =>
-                      renderPropertyControl(propertyKey, selectedBlock.properties?.[propertyKey])
+                    <Separator className="bg-[#B89B7A]/20" />
+                    {propsInCat.length ? (
+                      <div className="space-y-4">
+                        {propsInCat.map(prop => {
+                          const Editor = withPropertyEditor(prop.type as unknown as string);
+                          return (
+                            <Editor key={prop.key} property={prop as any} onChange={updateProperty} />
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      <div style={{ color: '#8B7355' }}>
+                        <Icon className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                        <p>Nenhuma propriedade nesta categoria</p>
+                      </div>
                     )}
-                  </div>
-                </TabsContent>
-              )}
+                  </TabsContent>
+                );
+              })}
             </Tabs>
           )}
         </CardContent>
