@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
+import { useOptimizedScheduler } from '@/hooks/useOptimizedScheduler';
 
 interface Block {
   id: string;
@@ -298,13 +299,14 @@ const OptionsGridBlock: React.FC<{
     setSelectedOptions(newSelections);
     onUserInput(responseKey, newSelections);
 
-    // Auto-advance logic
-    if (autoAdvance && newSelections.length === requiredSelections) {
-      setTimeout(() => {
-        console.log('Auto-advancing to next step...');
-        // Implement navigation logic here
-      }, 1500);
-    }
+      // Auto-advance logic
+      if (autoAdvance && newSelections.length === requiredSelections) {
+        const { schedule } = useOptimizedScheduler();
+        return schedule('auto-advance', () => {
+          console.log('Auto-advancing to next step...');
+          // Implement navigation logic here
+        }, 1500);
+      }
   };
 
   const isComplete = selectedOptions.length === requiredSelections;

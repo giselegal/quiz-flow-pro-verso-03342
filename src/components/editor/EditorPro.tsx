@@ -1,5 +1,3 @@
-import CanvasDropZone from '@/components/editor/canvas/CanvasDropZone.simple';
-import { QuizRenderer } from '@/components/core/QuizRenderer';
 import { useNotification } from '@/components/ui/Notification';
 import { getBlocksForStep } from '@/config/quizStepsComplete';
 import { cn } from '@/lib/utils';
@@ -17,6 +15,8 @@ import ComponentsSidebar from '@/components/editor/sidebars/ComponentsSidebar';
 import PropertiesColumn from '@/components/editor/properties/PropertiesColumn';
 import { useRenderCount } from '@/hooks/useRenderCount';
 import { mark } from '@/utils/perf';
+import { QuizRenderer } from '@/components/core/QuizRenderer';
+import CanvasDropZone from '@/components/editor/canvas/CanvasDropZone.simple';
 
 // Removidos estilos de animação/transição globais do editor
 
@@ -211,6 +211,7 @@ interface EditorProProps {
 export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   useRenderCount('EditorPro');
   mark('EditorPro:render:start');
+  
   // Segurança: useEditor pode lançar se não houver contexto — capturamos para renderizar fallback
   let editorContext;
   try {
@@ -265,13 +266,14 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
 
   // Estados de animação/UX
   const [isDragging, setIsDragging] = useState(false);
-  const [, setSelectionPulse] = useState(false);
   const { schedule } = useOptimizedScheduler();
 
+  // Centralized state management via useOptimizedScheduler
   useEffect(() => {
     if (state.selectedBlockId) {
-      setSelectionPulse(true);
-      return schedule('selection-pulse', () => setSelectionPulse(false), 700);
+      return schedule('selection-pulse', () => {
+        // Selection pulse effect handled internally
+      }, 700);
     }
   }, [schedule, state.selectedBlockId]);
 
@@ -1158,7 +1160,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   /* -------------------------
      Render principal
      ------------------------- */
-  return (
+   return (
     <>
       <DndContext
         sensors={sensors}

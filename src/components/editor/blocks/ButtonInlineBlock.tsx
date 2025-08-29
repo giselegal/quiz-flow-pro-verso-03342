@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { sessionService } from '../../../services/sessionService';
 import { userResponseService } from '../../../services/userResponseService';
 import { trackQuizStart } from '../../../utils/analytics';
+import { useOptimizedScheduler } from '@/hooks/useOptimizedScheduler';
 
 /**
  * ButtonInlineBlock - Componente modular inline horizontal
@@ -514,14 +515,12 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
               // Navegação: se configurado para auto-advance, usa nextStepId do próprio botão
               const targetStep = nextStepId || 'step-2';
               if (autoAdvanceOnComplete) {
-                setTimeout(
-                  () => {
-                    const detail = { stepId: targetStep, source: 'step1-button' };
-                    window.dispatchEvent(new CustomEvent('navigate-to-step', { detail }));
-                    window.dispatchEvent(new CustomEvent('quiz-navigate-to-step', { detail }));
-                  },
-                  Number(autoAdvanceDelay) || 0
-                );
+                const { schedule } = useOptimizedScheduler();
+                return schedule('button-auto-advance', () => {
+                  const detail = { stepId: targetStep, source: 'step1-button' };
+                  window.dispatchEvent(new CustomEvent('navigate-to-step', { detail }));
+                  window.dispatchEvent(new CustomEvent('quiz-navigate-to-step', { detail }));
+                }, Number(autoAdvanceDelay) || 0);
               }
             }
           }
