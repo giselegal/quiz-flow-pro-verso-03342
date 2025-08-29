@@ -1,4 +1,4 @@
-import EnhancedComponentsSidebar from '@/components/editor/EnhancedComponentsSidebar';
+import EnhancedComponentsSidebar from '@/components/editor/sidebar/EnhancedComponentsSidebar';
 import ReusableComponentsPanel from '@/components/editor/ReusableComponentsPanel';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Grid3X3, Package } from 'lucide-react';
