@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { useAuth } from '@/context/AuthContext';
 import { Crown, Edit, Eye, UserPlus, Users, Wifi, WifiOff } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
+import useOptimizedScheduler from '@/hooks/useOptimizedScheduler';
 
 interface Collaborator {
   id: string;
@@ -27,6 +28,7 @@ export const CollaborationStatus: React.FC<CollaborationStatusProps> = ({ projec
   const { profile } = useAuth();
   const [collaborators, setCollaborators] = useState<Collaborator[]>([]);
   const [isConnected] = useState(true);
+  const { schedule, cancelAll } = useOptimizedScheduler();
 
   useEffect(() => {
     // Simular colaboradores online (na implementação real, usar WebSocket/Supabase Realtime)
@@ -61,8 +63,10 @@ export const CollaborationStatus: React.FC<CollaborationStatusProps> = ({ projec
 
     setCollaborators(mockCollaborators);
 
-    // Simular conexão em tempo real
-    const interval = setInterval(() => {
+    // Simular conexão em tempo real com agendador otimizado
+    let mounted = true;
+    const tick = () => {
+      if (!mounted) return;
       setCollaborators(current =>
         current.map(c => ({
           ...c,
@@ -75,9 +79,14 @@ export const CollaborationStatus: React.FC<CollaborationStatusProps> = ({ projec
             : undefined,
         }))
       );
-    }, 3000);
+      schedule('collab-cursor-tick', tick, 3000, 'timeout');
+    };
+    schedule('collab-cursor-tick', tick, 3000, 'timeout');
 
-    return () => clearInterval(interval);
+    return () => {
+      mounted = false;
+      cancelAll();
+    };
   }, [projectId]);
 
   const getRoleIcon = (role: string) => {
