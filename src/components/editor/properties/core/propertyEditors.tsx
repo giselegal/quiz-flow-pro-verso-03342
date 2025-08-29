@@ -22,7 +22,8 @@ const TextEditor: React.FC<PropertyEditorProps> = ({ property, onChange }) => (
     <Input
       id={property.key}
       value={property.value || ''}
-      onChange={e => onChange(property.key, e.target.value)}
+  onChange={e => onChange(property.key, e.target.value)}
+  placeholder={(property as any).placeholder || ''}
     />
     {(property as any).description ? (
       <p className="text-xs text-muted-foreground">{(property as any).description}</p>
@@ -38,6 +39,7 @@ const TextareaEditor: React.FC<PropertyEditorProps> = ({ property, onChange }) =
       id={property.key}
       value={property.value || ''}
       onChange={e => onChange(property.key, e.target.value)}
+      placeholder={(property as any).placeholder || ''}
     />
     {(property as any).description ? (
       <p className="text-xs text-muted-foreground">{(property as any).description}</p>
@@ -60,19 +62,29 @@ const ColorEditor: React.FC<PropertyEditorProps> = ({ property, onChange }) => (
 );
 
 // Editor de número com slider
-const NumberEditor: React.FC<PropertyEditorProps> = ({ property, onChange }) => (
-  <div className="space-y-2">
-    <Label htmlFor={property.key}>{property.label}</Label>
-    <Slider
-      id={property.key}
-      value={[property.value || 0]}
-      onValueChange={([value]) => onChange(property.key, value)}
-      min={0}
-      max={100}
-      step={1}
-    />
-  </div>
-);
+const NumberEditor: React.FC<PropertyEditorProps> = ({ property, onChange }) => {
+  const min = (property as any).min ?? 0;
+  const max = (property as any).max ?? 100;
+  const step = (property as any).step ?? 1;
+  const unit = (property as any).unit ? ` ${(property as any).unit}` : '';
+  const val = Number(property.value ?? min);
+  return (
+    <div className="space-y-2">
+      <div className="flex items-center justify-between">
+        <Label htmlFor={property.key}>{property.label}</Label>
+        <span className="text-xs text-muted-foreground">{val}{unit}</span>
+      </div>
+      <Slider
+        id={property.key}
+        value={[val]}
+        onValueChange={([value]) => onChange(property.key, value)}
+        min={min}
+        max={max}
+        step={step}
+      />
+    </div>
+  );
+};
 
 // Editor de switch/toggle
 const SwitchEditor: React.FC<PropertyEditorProps> = ({ property, onChange }) => (
@@ -91,15 +103,17 @@ const RangeEditor: React.FC<PropertyEditorProps> = ({ property, onChange }) => {
   const min = (property as any).min ?? 0;
   const max = (property as any).max ?? 100;
   const step = (property as any).step ?? 1;
+  const unit = (property as any).unit ? ` ${(property as any).unit}` : '';
+  const current = Number(property.value ?? min);
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
         <Label htmlFor={property.key}>{property.label}</Label>
-        <span className="text-xs text-muted-foreground">{property.value ?? min}</span>
+        <span className="text-xs text-muted-foreground">{current}{unit}</span>
       </div>
       <Slider
         id={property.key}
-        value={[Number(property.value ?? min)]}
+        value={[current]}
         onValueChange={([value]) => onChange(property.key, value)}
         min={min}
         max={max}
@@ -146,7 +160,7 @@ const UrlEditor: React.FC<PropertyEditorProps> = ({ property, onChange }) => (
       type="url"
       value={property.value || ''}
       onChange={e => onChange(property.key, e.target.value)}
-      placeholder="https://..."
+  placeholder={(property as any).placeholder || 'https://...'}
     />
     {(property as any).description ? (
       <p className="text-xs text-muted-foreground">{(property as any).description}</p>
@@ -280,18 +294,42 @@ const ArrayEditor: React.FC<PropertyEditorProps> = props => {
 };
 
 // Editor de upload simples (URL ou arquivo -> por ora só URL para evitar dependências)
-const UploadEditor: React.FC<PropertyEditorProps> = ({ property, onChange }) => (
-  <div className="space-y-2">
-    <Label htmlFor={property.key}>{property.label}</Label>
-    <Input
-      id={property.key}
-      type="url"
-      value={property.value || ''}
-      onChange={e => onChange(property.key, e.target.value)}
-      placeholder="Cole a URL da mídia..."
-    />
-  </div>
-);
+const UploadEditor: React.FC<PropertyEditorProps> = ({ property, onChange }) => {
+  const url = String(property.value || '');
+  const isImage = /\.(png|jpe?g|gif|webp|svg)(\?.*)?$/i.test(url) || url.startsWith('data:image');
+  return (
+    <div className="space-y-2">
+      <Label htmlFor={property.key}>{property.label}</Label>
+      <Input
+        id={property.key}
+        type="url"
+        value={url}
+        onChange={e => onChange(property.key, e.target.value)}
+        placeholder="Cole a URL da mídia..."
+      />
+      {url ? (
+        <div className="rounded border p-2 bg-muted/30">
+          {isImage ? (
+            <img
+              src={url}
+              alt={property.label}
+              className="max-h-40 w-auto object-contain mx-auto"
+              onError={(e: any) => (e.currentTarget.style.display = 'none')}
+            />
+          ) : (
+            <a href={url} target="_blank" rel="noreferrer" className="text-xs underline">
+              Abrir mídia
+            </a>
+          )}
+        </div>
+      ) : null}
+      {(property as any).description ? (
+        <p className="text-xs text-muted-foreground">{(property as any).description}</p>
+      ) : null}
+      {/* TODO: integrar upload via Supabase Storage/Cloudinary com botão de upload e seleção */}
+    </div>
+  );
+};
 
 // Object/JSON/Rich editors simples
 const ObjectEditor: React.FC<PropertyEditorProps> = ({ property, onChange }) => (
@@ -310,6 +348,14 @@ const ObjectEditor: React.FC<PropertyEditorProps> = ({ property, onChange }) => 
     />
   </div>
 );
+
+// Dispatcher para objetos com editores compostos
+const ObjectEditorDispatcher: React.FC<PropertyEditorProps> = props => {
+  const key = props.property.key.toLowerCase();
+  if (key.includes('border')) return <BorderEditor {...props} />;
+  if (key.includes('background')) return <BackgroundEditor {...props} />;
+  return <ObjectEditor {...props} />;
+};
 
 const JsonEditor: React.FC<PropertyEditorProps> = ObjectEditor;
 
@@ -386,6 +432,119 @@ const CodeEditor: React.FC<PropertyEditorProps> = ({ property, onChange }) => (
   </div>
 );
 
+// Edior composto: Borda (espera objeto { width, color, radius, style })
+const BorderEditor: React.FC<PropertyEditorProps> = ({ property, onChange }) => {
+  const val = property.value || { width: 0, color: '#000000', radius: 0, style: 'solid' };
+  const update = (patch: any) => onChange(property.key, { ...val, ...patch });
+  return (
+    <div className="space-y-2">
+      <Label>{property.label}</Label>
+      <div className="grid grid-cols-12 gap-2 items-end">
+        <div className="col-span-3">
+          <Label className="text-xs">Largura</Label>
+          <Input type="number" value={Number(val.width ?? 0)} onChange={e => update({ width: Number(e.target.value) || 0 })} />
+        </div>
+        <div className="col-span-3">
+          <Label className="text-xs">Raio</Label>
+          <Input type="number" value={Number(val.radius ?? 0)} onChange={e => update({ radius: Number(e.target.value) || 0 })} />
+        </div>
+        <div className="col-span-3">
+          <Label className="text-xs">Estilo</Label>
+          <Select value={String(val.style ?? 'solid')} onValueChange={v => update({ style: v })}>
+            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="solid">Sólido</SelectItem>
+              <SelectItem value="dashed">Tracejado</SelectItem>
+              <SelectItem value="dotted">Pontilhado</SelectItem>
+              <SelectItem value="double">Duplo</SelectItem>
+              <SelectItem value="none">Nenhum</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="col-span-3">
+          <Label className="text-xs">Cor</Label>
+          <ColorPicker value={val.color || '#000000'} onChange={c => update({ color: c })} />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Editor composto: Background (espera objeto { type, color, gradientFrom, gradientTo, imageUrl, size, position })
+const BackgroundEditor: React.FC<PropertyEditorProps> = ({ property, onChange }) => {
+  const val =
+    property.value || ({ type: 'color', color: '#ffffff', gradientFrom: '#ffffff', gradientTo: '#ffffff', imageUrl: '', size: 'cover', position: 'center' } as any);
+  const update = (patch: any) => onChange(property.key, { ...val, ...patch });
+  return (
+    <div className="space-y-2">
+      <Label>{property.label}</Label>
+      <div className="grid grid-cols-12 gap-2 items-end">
+        <div className="col-span-3">
+          <Label className="text-xs">Tipo</Label>
+          <Select value={String(val.type ?? 'color')} onValueChange={v => update({ type: v })}>
+            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="color">Cor</SelectItem>
+              <SelectItem value="gradient">Gradiente</SelectItem>
+              <SelectItem value="image">Imagem</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        {val.type === 'color' && (
+          <div className="col-span-3">
+            <Label className="text-xs">Cor</Label>
+            <ColorPicker value={val.color || '#ffffff'} onChange={c => update({ color: c })} />
+          </div>
+        )}
+        {val.type === 'gradient' && (
+          <>
+            <div className="col-span-3">
+              <Label className="text-xs">De</Label>
+              <ColorPicker value={val.gradientFrom || '#ffffff'} onChange={c => update({ gradientFrom: c })} />
+            </div>
+            <div className="col-span-3">
+              <Label className="text-xs">Para</Label>
+              <ColorPicker value={val.gradientTo || '#ffffff'} onChange={c => update({ gradientTo: c })} />
+            </div>
+          </>
+        )}
+        {val.type === 'image' && (
+          <>
+            <div className="col-span-6">
+              <Label className="text-xs">Imagem</Label>
+              <Input value={val.imageUrl || ''} onChange={e => update({ imageUrl: e.target.value })} placeholder="URL da imagem" />
+            </div>
+            <div className="col-span-3">
+              <Label className="text-xs">Tamanho</Label>
+              <Select value={String(val.size ?? 'cover')} onValueChange={v => update({ size: v })}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="cover">Cover</SelectItem>
+                  <SelectItem value="contain">Contain</SelectItem>
+                  <SelectItem value="auto">Auto</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="col-span-3">
+              <Label className="text-xs">Posição</Label>
+              <Select value={String(val.position ?? 'center')} onValueChange={v => update({ position: v })}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="left">Esquerda</SelectItem>
+                  <SelectItem value="center">Centro</SelectItem>
+                  <SelectItem value="right">Direita</SelectItem>
+                  <SelectItem value="top">Topo</SelectItem>
+                  <SelectItem value="bottom">Base</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
+};
+
 // Registro de editores
 export const propertyEditors: PropertyEditorRegistry = {
   text: TextEditor,
@@ -398,7 +557,7 @@ export const propertyEditors: PropertyEditorRegistry = {
   url: UrlEditor,
   array: ArrayEditor,
   upload: UploadEditor,
-  object: ObjectEditor,
+  object: ObjectEditorDispatcher,
   json: JsonEditor,
   email: EmailEditor,
   phone: PhoneEditor,
@@ -408,6 +567,8 @@ export const propertyEditors: PropertyEditorRegistry = {
   rich_text: RichTextEditor,
   markdown: MarkdownEditor,
   code: CodeEditor,
+  border: BorderEditor,
+  background: BackgroundEditor,
 };
 
 // HOC para selecionar editor automaticamente
