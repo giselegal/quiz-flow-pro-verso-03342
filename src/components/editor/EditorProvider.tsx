@@ -6,7 +6,6 @@ import { Block } from '@/types/editor';
 import { extractStepNumberFromKey } from '@/utils/supabaseMapper';
 import { arrayMove } from '@dnd-kit/sortable';
 import React, { createContext, ReactNode, useCallback, useContext, useEffect } from 'react';
-import useOptimizedScheduler from '@/hooks/useOptimizedScheduler';
 
 export interface EditorState {
   stepBlocks: Record<string, Block[]>;
@@ -22,8 +21,6 @@ export interface EditorActions {
   // State management
   setCurrentStep: (step: number) => void;
   setSelectedBlockId: (blockId: string | null) => void;
-  // Steps
-  addStep: () => void;
 
   // Block operations
   addBlock: (stepKey: string, block: Block) => Promise<void>;
@@ -47,8 +44,6 @@ export interface EditorActions {
 
   // Supabase operations
   loadSupabaseComponents?: () => Promise<void>;
-  publishStepToSupabase?: (stepKey: string, blocks: Block[]) => Promise<boolean>;
-  unpublishStepFromSupabase?: (stepKey: string) => Promise<boolean>;
 }
 
 export interface EditorContextValue {
@@ -101,22 +96,15 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
   quizId,
   enableSupabase = false,
 }) => {
-  // Detecta ambiente de teste (Vitest)
-  const IS_TEST = typeof import.meta !== 'undefined' && (import.meta as any).vitest;
-  const { schedule } = useOptimizedScheduler();
   // Build initial state from template
   const getInitialState = (): EditorState => {
     const initialBlocks: Record<string, Block[]> = {};
-    if (!IS_TEST) {
-      // Normalize step blocks from template using our new utility nos ambientes normais
-      const normalizedBlocks = normalizeStepBlocks(QUIZ_STYLE_21_STEPS_TEMPLATE);
-      Object.entries(normalizedBlocks).forEach(([stepKey, blocks]) => {
-        initialBlocks[stepKey] = Array.isArray(blocks) ? [...blocks] : [];
-      });
-    } else {
-      // Em testes, começamos com etapas vazias para não interferir nasserções
-      initialBlocks['step-1'] = [];
-    }
+    // Normalize step blocks from template using our new utility
+    const normalizedBlocks = normalizeStepBlocks(QUIZ_STYLE_21_STEPS_TEMPLATE);
+
+    Object.entries(normalizedBlocks).forEach(([stepKey, blocks]) => {
+      initialBlocks[stepKey] = Array.isArray(blocks) ? [...blocks] : [];
+    });
 
     const state: EditorState = {
       stepBlocks: initialBlocks,
@@ -145,25 +133,21 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
   });
 
   // Wire supabase integration hook (it may return helpers and flags)
-  // Respeitar flag global para desabilitar Supabase (evita erros 400/403 em dev)
-  const ENV_DISABLE = (import.meta as any)?.env?.VITE_DISABLE_SUPABASE === 'true';
-
   const supabaseIntegration: any = useEditorSupabaseIntegration(
     setState,
     rawState,
-    enableSupabase && !ENV_DISABLE ? funnelId : undefined,
-    enableSupabase && !ENV_DISABLE ? quizId : undefined
+    enableSupabase ? funnelId : undefined,
+    enableSupabase ? quizId : undefined
   );
 
   // Compose derived state (ensure defaults)
   const state: EditorState = {
     ...rawState,
     currentStep: rawState.currentStep || 1,
-    isSupabaseEnabled: supabaseIntegration?.isSupabaseEnabled ?? (!!enableSupabase && !ENV_DISABLE),
-    databaseMode:
-      supabaseIntegration?.isSupabaseEnabled || (!!enableSupabase && !ENV_DISABLE)
-        ? 'supabase'
-        : (rawState.databaseMode ?? (enableSupabase && !ENV_DISABLE ? 'supabase' : 'local')),
+    isSupabaseEnabled: supabaseIntegration?.isSupabaseEnabled ?? !!enableSupabase,
+    databaseMode: supabaseIntegration?.isSupabaseEnabled
+      ? 'supabase'
+      : (rawState.databaseMode ?? (enableSupabase ? 'supabase' : 'local')),
   };
 
   // Load components from Supabase when integration becomes available / config changes
@@ -175,11 +159,12 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       const components = Array.isArray(comps) ? comps : (supabaseIntegration.components ?? []);
       if (components && components.length > 0) {
         const grouped = groupByStepKey(components);
-        // Normaliza e faz merge não-destrutivo por ID e aplica no estado
-        setState(prev => ({
-          ...prev,
-          stepBlocks: mergeStepBlocks(prev.stepBlocks, grouped),
-        }));
+        // Normaliza e faz merge não-destrutivo por ID
+        const merged = mergeStepBlocks(rawState.stepBlocks, grouped);
+        setState({
+          ...rawState,
+          stepBlocks: merged,
+        });
       }
     } catch (err) {
       console.error('EditorProvider: failed to load supabase components', err);
@@ -187,7 +172,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
   }, [supabaseIntegration, setState, rawState]);
 
   useEffect(() => {
-    if (enableSupabase && !ENV_DISABLE) {
+    if (enableSupabase) {
       loadSupabaseComponents();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -209,10 +194,11 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
           const components = Array.isArray(comps) ? comps : (supabaseIntegration.components ?? []);
           if (components && components.length > 0) {
             const grouped = groupByStepKey(components);
-            setState(prev => ({
-              ...prev,
-              stepBlocks: mergeStepBlocks(prev.stepBlocks, grouped),
-            }));
+            const merged = mergeStepBlocks(rawState.stepBlocks, grouped);
+            setState({
+              ...rawState,
+              stepBlocks: merged,
+            });
             return;
           }
         }
@@ -223,31 +209,13 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
           const stepKey = `step-${stepNum}`;
           const defaultBlocks = (QUIZ_STYLE_21_STEPS_TEMPLATE as any)[stepKey] || [];
           if (defaultBlocks.length > 0) {
-            try {
-              const { default: templateService } = await import('@/services/templateService');
-              const converted = templateService.convertToEditorBlocksWithStage(
-                defaultBlocks,
-                funnelId || 'default-funnel',
-                stepKey,
-                stepNum
-              );
-              setState({
-                ...rawState,
-                stepBlocks: {
-                  ...rawState.stepBlocks,
-                  [stepKey]: converted,
-                },
-              });
-            } catch {
-              // fallback para aplicar diretamente sem conversão (mantém comportamento anterior)
-              setState({
-                ...rawState,
-                stepBlocks: {
-                  ...rawState.stepBlocks,
-                  [stepKey]: defaultBlocks,
-                },
-              });
-            }
+            setState({
+              ...rawState,
+              stepBlocks: {
+                ...rawState.stepBlocks,
+                [stepKey]: defaultBlocks,
+              },
+            });
           }
         }
       } catch (error) {
@@ -259,46 +227,45 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
 
   // Initialize step 1 automatically on mount and when template data is available
   useEffect(() => {
-    if (!IS_TEST) {
-      // 🚨 CORREÇÃO CRÍTICA: Always force template reload on mount (somente fora de teste)
-      const normalizedBlocks = normalizeStepBlocks(QUIZ_STYLE_21_STEPS_TEMPLATE);
-      console.log('🔧 FORCE RELOAD TEMPLATE:', {
-        normalizedBlocks,
-        keys: Object.keys(normalizedBlocks),
-        totalSteps: Object.keys(normalizedBlocks).length,
-      });
+    // 🚨 CORREÇÃO CRÍTICA: Always force template reload on mount
+    const normalizedBlocks = normalizeStepBlocks(QUIZ_STYLE_21_STEPS_TEMPLATE);
+    console.log('🔧 FORCE RELOAD TEMPLATE:', {
+      normalizedBlocks,
+      keys: Object.keys(normalizedBlocks),
+      totalSteps: Object.keys(normalizedBlocks).length,
+    });
 
-      // 🚨 FORÇA CARREGAMENTO: Aplicar template normalizado por merge não-destrutivo
-      setState(prev => ({
-        ...prev,
-        stepBlocks: mergeStepBlocks(prev.stepBlocks, normalizedBlocks),
-        currentStep: 1,
-      }));
+    // 🚨 FORÇA CARREGAMENTO: Aplicar template normalizado por merge não-destrutivo
+    setState({
+      ...rawState,
+      stepBlocks: mergeStepBlocks(rawState.stepBlocks, normalizedBlocks),
+      currentStep: 1,
+    });
 
-      // 🚨 GARANTIA DUPLA (ajustada): garantir apenas a etapa atual (1) e adiar para ocioso
-      schedule('editor-init-ensure-step-1', () => {
-        ensureStepLoaded(1);
-      }, 500, 'idle');
-    }
-    return () => {};
+    // 🚨 GARANTIA DUPLA: Ensure step 1 is loaded on initialization
+    setTimeout(() => {
+      ensureStepLoaded(1);
+      // Force verify all steps loaded
+      for (let i = 1; i <= 21; i++) {
+        ensureStepLoaded(i);
+      }
+    }, 100);
   }, []); // Empty dependency array - run only once on mount
 
   // 🚨 CORREÇÃO: Ensure step is loaded when currentStep changes
   useEffect(() => {
     if (rawState.currentStep) {
-      if (!IS_TEST) {
-        ensureStepLoaded(rawState.currentStep);
+      ensureStepLoaded(rawState.currentStep);
 
-        // 🚨 FORÇA VERIFICAÇÃO: If step blocks are empty, force reload template
-        const currentStepBlocks = getBlocksForStep(rawState.currentStep, rawState.stepBlocks);
-        if (!currentStepBlocks || currentStepBlocks.length === 0) {
-          console.log('🚨 EMPTY STEP DETECTED - FORCE RELOAD:', rawState.currentStep);
-          const normalizedBlocks = normalizeStepBlocks(QUIZ_STYLE_21_STEPS_TEMPLATE);
-          setState(prev => ({
-            ...prev,
-            stepBlocks: mergeStepBlocks(prev.stepBlocks, normalizedBlocks),
-          }));
-        }
+      // 🚨 FORÇA VERIFICAÇÃO: If step blocks are empty, force reload template
+      const currentStepBlocks = getBlocksForStep(rawState.currentStep, rawState.stepBlocks);
+      if (!currentStepBlocks || currentStepBlocks.length === 0) {
+        console.log('🚨 EMPTY STEP DETECTED - FORCE RELOAD:', rawState.currentStep);
+        const normalizedBlocks = normalizeStepBlocks(QUIZ_STYLE_21_STEPS_TEMPLATE);
+        setState({
+          ...rawState,
+          stepBlocks: mergeStepBlocks(rawState.stepBlocks, normalizedBlocks),
+        });
       }
     }
   }, [rawState.currentStep, ensureStepLoaded]);
@@ -306,52 +273,26 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
   // Actions (use functional setState to avoid races)
   const setCurrentStep = useCallback(
     (step: number) => {
-      setState(prev => ({
-        ...prev,
+      setState({
+        ...rawState,
         currentStep: step,
         selectedBlockId: null,
-      }));
-  // Ensure the new step is loaded (fora de teste)
-  if (!IS_TEST) ensureStepLoaded(step);
+      });
+      // Ensure the new step is loaded
+      ensureStepLoaded(step);
     },
     [setState, rawState, ensureStepLoaded]
   );
 
   const setSelectedBlockId = useCallback(
     (blockId: string | null) => {
-      setState(prev => ({
-        ...prev,
+      setState({
+        ...rawState,
         selectedBlockId: blockId,
-      }));
+      });
     },
     [setState, rawState]
   );
-
-  // Adiciona uma nova etapa ao final (step-(max+1)) e seleciona
-  const addStep = useCallback(() => {
-    const keys = Object.keys(rawState.stepBlocks || {});
-    const nums = keys
-      .map(k => {
-        const m = k.match(/(\d+)/);
-        return m ? parseInt(m[1], 10) : 0;
-      })
-      .filter(n => Number.isFinite(n) && n > 0);
-    const max = nums.length > 0 ? Math.max(...nums) : 0;
-    const newStepNum = max + 1;
-    const newKey = `step-${newStepNum}`;
-
-    const nextState = {
-      ...rawState,
-      stepBlocks: {
-        ...rawState.stepBlocks,
-        [newKey]: [],
-      },
-      currentStep: newStepNum,
-      selectedBlockId: null,
-    } as EditorState;
-
-    setState(nextState);
-  }, [rawState, setState]);
 
   const addBlock = useCallback(
     async (stepKey: string, block: Block) => {
@@ -366,17 +307,15 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
         ')'
       );
       // Local mode: insert with real id immediately (no temp)
-      setState(prev => {
-        const prevBlocks = prev.stepBlocks[stepKey] ?? [];
-        const next: EditorState = {
-          ...prev,
-          stepBlocks: {
-            ...prev.stepBlocks,
-            [stepKey]: [...prevBlocks, block],
-          },
-        };
-        return next;
-      });
+      const prevBlocks = rawState.stepBlocks[stepKey] ?? [];
+      const optimisticStateLocal = {
+        ...rawState,
+        stepBlocks: {
+          ...rawState.stepBlocks,
+          [stepKey]: [...prevBlocks, block],
+        },
+      };
+      setState(optimisticStateLocal);
 
       if (state.isSupabaseEnabled && supabaseIntegration?.addBlockToStep) {
         try {
@@ -384,22 +323,22 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
           // replace temp with real block returned by supabase (map shape to Block)
           if (created) {
             const realBlock = mapSupabaseRecordToBlock(created);
-            setState(prev => ({
-              ...prev,
+            setState({
+              ...optimisticStateLocal,
               stepBlocks: {
-                ...prev.stepBlocks,
-                [stepKey]: [...(prev.stepBlocks[stepKey] || []), realBlock],
+                ...optimisticStateLocal.stepBlocks,
+                [stepKey]: [...(optimisticStateLocal.stepBlocks[stepKey] || []), realBlock],
               },
-            }));
+            });
           } else {
             // If creation returned nothing, rollback
-            setState(prev => prev);
+            setState(optimisticStateLocal);
             throw new Error('Supabase integration returned no created component');
           }
         } catch (err) {
           console.error('❌ addBlock supabase failed, rolling back optimistic update', err);
-          // rollback to previous local state (best-effort)
-          setState(prev => prev);
+          // rollback to previous local state
+          setState(rawState);
           throw err;
         }
       } else {
@@ -412,57 +351,58 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
   const addBlockAtIndex = useCallback(
     async (stepKey: string, block: Block, index: number) => {
       const stepNumber = extractStepNumberFromKey(stepKey) || 0;
-      setState(prev => {
-        const prevBlocks = prev.stepBlocks[stepKey] ?? [];
-        const clampedIndex = Math.max(0, Math.min(index, prevBlocks.length));
-        const nextBlocks = [...prevBlocks];
-        nextBlocks.splice(clampedIndex, 0, block);
-        return {
-          ...prev,
-          stepBlocks: {
-            ...prev.stepBlocks,
-            [stepKey]: nextBlocks,
-          },
-        };
-      });
+      const prevBlocks = rawState.stepBlocks[stepKey] ?? [];
+      const clampedIndex = Math.max(0, Math.min(index, prevBlocks.length));
+      const nextBlocks = [...prevBlocks];
+      nextBlocks.splice(clampedIndex, 0, block);
+
+      const optimisticState = {
+        ...rawState,
+        stepBlocks: {
+          ...rawState.stepBlocks,
+          [stepKey]: nextBlocks,
+        },
+      };
+      setState(optimisticState);
 
       if (state.isSupabaseEnabled && supabaseIntegration?.addBlockToStep) {
         try {
           const created = await supabaseIntegration.addBlockToStep(block, stepNumber);
           if (created) {
             const realBlock = mapSupabaseRecordToBlock(created);
-            setState(prev => {
-              const currentList = prev.stepBlocks[stepKey] || [];
-              const replaced = currentList.map(b => (b.id === block.id ? realBlock : b));
-              return {
-                ...prev,
-                stepBlocks: {
-                  ...prev.stepBlocks,
-                  [stepKey]: replaced,
-                },
-              };
+            // Replace the optimistic block (by id) in-place to preserve position
+            const currentList = optimisticState.stepBlocks[stepKey] || [];
+            const replaced = currentList.map(b => (b.id === block.id ? realBlock : b));
+            setState({
+              ...optimisticState,
+              stepBlocks: {
+                ...optimisticState.stepBlocks,
+                [stepKey]: replaced,
+              },
             });
           } else {
             // rollback if nothing returned
-            setState(prev => ({
-              ...prev,
+            setState({
+              ...optimisticState,
               stepBlocks: {
-                ...prev.stepBlocks,
-                [stepKey]: (prev.stepBlocks[stepKey] || []).filter(b => b.id !== block.id),
+                ...optimisticState.stepBlocks,
+                [stepKey]: (optimisticState.stepBlocks[stepKey] || []).filter(
+                  b => b.id !== block.id
+                ),
               },
-            }));
+            });
             throw new Error('Supabase integration returned no created component');
           }
         } catch (err) {
           console.error('❌ addBlockAtIndex supabase failed, rolling back optimistic update', err);
           // rollback optimistic insert
-          setState(prev => ({
-            ...prev,
+          setState({
+            ...optimisticState,
             stepBlocks: {
-              ...prev.stepBlocks,
-              [stepKey]: (prev.stepBlocks[stepKey] || []).filter(b => b.id !== block.id),
+              ...optimisticState.stepBlocks,
+              [stepKey]: (optimisticState.stepBlocks[stepKey] || []).filter(b => b.id !== block.id),
             },
-          }));
+          });
           throw err;
         }
       }
@@ -472,14 +412,14 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
 
   const removeBlock = useCallback(
     async (stepKey: string, blockId: string) => {
-      setState(prev => ({
-        ...prev,
+      setState({
+        ...rawState,
         stepBlocks: {
-          ...prev.stepBlocks,
-          [stepKey]: (prev.stepBlocks[stepKey] || []).filter(b => b.id !== blockId),
+          ...rawState.stepBlocks,
+          [stepKey]: (rawState.stepBlocks[stepKey] || []).filter(b => b.id !== blockId),
         },
-        selectedBlockId: prev.selectedBlockId === blockId ? null : prev.selectedBlockId,
-      }));
+        selectedBlockId: rawState.selectedBlockId === blockId ? null : rawState.selectedBlockId,
+      });
 
       // If supabase mode, delegate deletion
       if (state.isSupabaseEnabled && supabaseIntegration?.deleteBlockById) {
@@ -495,16 +435,14 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
 
   const reorderBlocks = useCallback(
     async (stepKey: string, oldIndex: number, newIndex: number) => {
-      setState(prev => {
-        const blocks = [...(prev.stepBlocks[stepKey] || [])];
-        const reordered = arrayMove(blocks, oldIndex, newIndex);
-        return {
-          ...prev,
-          stepBlocks: {
-            ...prev.stepBlocks,
-            [stepKey]: reordered,
-          },
-        };
+      const blocks = [...(rawState.stepBlocks[stepKey] || [])];
+      const reordered = arrayMove(blocks, oldIndex, newIndex);
+      setState({
+        ...rawState,
+        stepBlocks: {
+          ...rawState.stepBlocks,
+          [stepKey]: reordered,
+        },
       });
 
       // Persist order to Supabase if enabled (delegate if available)
@@ -522,51 +460,33 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
 
   const updateBlock = useCallback(
     async (stepKey: string, blockId: string, updates: Record<string, any>) => {
-      // Suporta merges em properties e content; mantém retrocompatibilidade para updates top-level
+      // Sempre mesclar alterações em properties por padrão.
+      // Se o payload já vier com { properties }, respeitar e mesclar também.
       const nextBlocks = (rawState.stepBlocks[stepKey] || []).map(b => {
         if (b.id !== blockId) return b;
-
-        const hasExplicitProps = Object.prototype.hasOwnProperty.call(updates, 'properties');
-        const hasExplicitContent = Object.prototype.hasOwnProperty.call(updates, 'content');
-
-        // Separe campos conhecidos
-        const explicitProps = (hasExplicitProps ? updates.properties : undefined) as
-          | Record<string, any>
-          | undefined;
-        const explicitContent = (hasExplicitContent ? updates.content : undefined) as
-          | Record<string, any>
-          | undefined;
-
-        // Quaisquer chaves top-level (exceto content/properties) vão para properties por compatibilidade
-        const topLevelToProps = Object.keys(updates).reduce<Record<string, any>>((acc, k) => {
-          if (k !== 'properties' && k !== 'content') acc[k] = (updates as any)[k];
-          return acc;
-        }, {});
-
+        const incomingProps = updates.properties ?? updates;
         const mergedProps = {
           ...(b.properties || {}),
-          ...(topLevelToProps || {}),
-          ...(explicitProps || {}),
+          ...(incomingProps || {}),
         };
-        const mergedContent = {
-          ...(b.content || {}),
-          ...(explicitContent || {}),
-        };
-
-        return { ...b, properties: mergedProps, content: mergedContent };
+        return { ...b, properties: mergedProps };
       });
-      setState(prev => ({
-        ...prev,
+
+      const nextState = {
+        ...rawState,
         stepBlocks: {
-          ...prev.stepBlocks,
+          ...rawState.stepBlocks,
           [stepKey]: nextBlocks,
         },
-      }));
+      };
+      setState(nextState);
 
       if (state.isSupabaseEnabled && supabaseIntegration?.updateBlockById) {
         try {
           const updated = nextBlocks.find(b => b.id === blockId);
-          await supabaseIntegration.updateBlockById(blockId, { properties: updated?.properties });
+          await supabaseIntegration.updateBlockById(blockId, {
+            properties: updated?.properties,
+          });
         } catch (err) {
           console.error('Failed to update block in supabase', err);
         }
@@ -676,7 +596,6 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
   const actions: EditorActions = {
     setCurrentStep,
     setSelectedBlockId,
-    addStep,
     addBlock,
     addBlockAtIndex,
     removeBlock,
@@ -690,52 +609,6 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     exportJSON,
     importJSON,
     loadSupabaseComponents,
-    publishStepToSupabase: async (stepKey: string, blocks: Block[]) => {
-      try {
-        if (!state.isSupabaseEnabled || !supabaseIntegration?.editorSupabase) return false;
-        const stepNumber = extractStepNumberFromKey(stepKey) || 0;
-        const editorSupabase = supabaseIntegration.editorSupabase;
-
-        // Remover componentes existentes da etapa
-        const existing = (editorSupabase.components || []).filter(
-          (c: any) => Number(c.step_number) === stepNumber
-        );
-        for (const comp of existing) {
-          await editorSupabase.deleteComponent(comp.id);
-        }
-
-        // Inserir novos componentes na ordem informada
-        for (let i = 0; i < blocks.length; i++) {
-          const b = blocks[i];
-          await editorSupabase.addComponent(b.type as any, stepNumber, b.properties || {}, i);
-        }
-
-        // Recarregar do Supabase para sincronizar estado local
-        await loadSupabaseComponents?.();
-        return true;
-      } catch (err) {
-        console.error('❌ publishStepToSupabase failed:', err);
-        return false;
-      }
-    },
-    unpublishStepFromSupabase: async (stepKey: string) => {
-      try {
-        if (!state.isSupabaseEnabled || !supabaseIntegration?.editorSupabase) return false;
-        const stepNumber = extractStepNumberFromKey(stepKey) || 0;
-        const editorSupabase = supabaseIntegration.editorSupabase;
-        const existing = (editorSupabase.components || []).filter(
-          (c: any) => Number(c.step_number) === stepNumber
-        );
-        for (const comp of existing) {
-          await editorSupabase.deleteComponent(comp.id);
-        }
-        await loadSupabaseComponents?.();
-        return true;
-      } catch (err) {
-        console.error('❌ unpublishStepFromSupabase failed:', err);
-        return false;
-      }
-    },
   };
 
   const contextValue: EditorContextValue = {
