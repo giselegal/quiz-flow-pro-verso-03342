@@ -6,6 +6,7 @@ import { Block } from '@/types/editor';
 import { extractStepNumberFromKey } from '@/utils/supabaseMapper';
 import { arrayMove } from '@dnd-kit/sortable';
 import React, { createContext, ReactNode, useCallback, useContext, useEffect } from 'react';
+import useOptimizedScheduler from '@/hooks/useOptimizedScheduler';
 
 export interface EditorState {
   stepBlocks: Record<string, Block[]>;
@@ -100,6 +101,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
   quizId,
   enableSupabase = false,
 }) => {
+  const { schedule, cancel } = useOptimizedScheduler();
   // Build initial state from template
   const getInitialState = (): EditorState => {
     const initialBlocks: Record<string, Block[]> = {};
@@ -249,17 +251,10 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     }));
 
     // 🚨 GARANTIA DUPLA (ajustada): garantir apenas a etapa atual (1) e adiar para ocioso
-    const schedule = (cb: () => void) => {
-      if (typeof (window as any).requestIdleCallback === 'function') {
-        (window as any).requestIdleCallback(cb, { timeout: 500 });
-      } else {
-        setTimeout(cb, 120);
-      }
-    };
-
-    schedule(() => {
+    // usar scheduler para adiar para ocioso com timeout seguro
+    schedule('editor-init-ensure-step-1', () => {
       ensureStepLoaded(1);
-    });
+    }, 500, 'idle');
   }, []); // Empty dependency array - run only once on mount
 
   // 🚨 CORREÇÃO: Ensure step is loaded when currentStep changes

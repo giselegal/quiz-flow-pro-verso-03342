@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils';
 import type { BlockData } from '@/types/blocks';
 import { AlertCircle, CheckCircle, Clock, History, Redo2, Save, Undo2 } from 'lucide-react';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import useOptimizedScheduler from '@/hooks/useOptimizedScheduler';
 
 interface EditorAction {
   type: 'add' | 'update' | 'delete' | 'move';
@@ -47,7 +48,7 @@ const EditorHistory: React.FC<EditorHistoryProps> = ({
   });
 
   const previousBlocksRef = useRef<BlockData[]>(blocks);
-  const autoSaveTimeoutRef = useRef<NodeJS.Timeout>();
+  const { debounce } = useOptimizedScheduler();
 
   // Validar blocos
   const validateBlocks = useCallback((blocksToValidate: BlockData[]): ValidationResult => {
@@ -172,12 +173,9 @@ const EditorHistory: React.FC<EditorHistoryProps> = ({
       // Validar após mudança
       setValidationResult(validateBlocks(currentBlocks));
 
-      // Auto-save
+      // Auto-save (debounced)
       if (autoSave) {
-        if (autoSaveTimeoutRef.current) {
-          clearTimeout(autoSaveTimeoutRef.current);
-        }
-        autoSaveTimeoutRef.current = setTimeout(() => {
+        debounce('editor-history-autosave', () => {
           handleSave();
         }, 2000);
       }

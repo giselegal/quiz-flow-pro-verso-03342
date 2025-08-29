@@ -13,6 +13,7 @@ import {
   Clock,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import useOptimizedScheduler from '@/hooks/useOptimizedScheduler';
 
 // Tipos para o sistema de feedback
 export type FeedbackType = 'success' | 'error' | 'warning' | 'info' | 'loading';
@@ -51,6 +52,7 @@ export interface ConnectionState {
 // Hook para gerenciar toasts
 export const useToast = () => {
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
+  const { schedule, cancel } = useOptimizedScheduler();
 
   const addToast = useCallback((toast: Omit<ToastMessage, 'id'>) => {
     const id = `toast-${Date.now()}-${Math.random()}`;
@@ -64,15 +66,15 @@ export const useToast = () => {
 
     // Auto remove se não for persistente
     if (!newToast.persistent && newToast.duration) {
-      setTimeout(() => {
-        removeToast(id);
-      }, newToast.duration);
+      cancel(`toast-${id}`);
+      schedule(`toast-${id}`, () => removeToast(id), newToast.duration, 'timeout');
     }
 
     return id;
   }, []);
 
   const removeToast = useCallback((id: string) => {
+    cancel(`toast-${id}`);
     setToasts(prev => prev.filter(toast => toast.id !== id));
   }, []);
 
@@ -127,6 +129,7 @@ export const useAutoSave = (
 
   const [pendingChanges, setPendingChanges] = useState(0);
   const { addToast } = useToast();
+  const { debounce } = useOptimizedScheduler();
 
   // Detectar mudanças
   useEffect(() => {
@@ -139,7 +142,7 @@ export const useAutoSave = (
   useEffect(() => {
     if (!enabled || pendingChanges === 0) return;
 
-    const timer = setTimeout(async () => {
+    const cancelDebounce = debounce('feedback-autosave', async () => {
       setAutoSaveState(prev => ({ ...prev, status: 'saving' }));
 
       try {
@@ -170,7 +173,7 @@ export const useAutoSave = (
       }
     }, interval);
 
-    return () => clearTimeout(timer);
+    return () => cancelDebounce();
   }, [pendingChanges, enabled, interval, saveFunction, addToast]);
 
   return {

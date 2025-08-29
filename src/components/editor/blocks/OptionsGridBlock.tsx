@@ -1,5 +1,6 @@
 import type { BlockComponentProps } from '@/types/blocks';
 import React from 'react';
+import useOptimizedScheduler from '@/hooks/useOptimizedScheduler';
 import { useEditor } from '../EditorProvider';
 
 interface Option {
@@ -136,7 +137,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
 
   // Evitar autoavanço duplicado
   const autoAdvanceScheduledRef = React.useRef(false);
-  const autoAdvanceTimerRef = React.useRef<number | null>(null);
+  const { schedule, cancel } = useOptimizedScheduler();
 
   const {
     question: questionProp,
@@ -190,7 +191,6 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
   // State for preview mode selections
   const [previewSelections, setPreviewSelections] = React.useState<string[]>([]);
   const previewAutoAdvanceRef = React.useRef(false);
-  const previewAutoAdvanceTimerRef = React.useRef<number | null>(null);
 
   React.useEffect(() => {
     // Initialize from session data in preview mode
@@ -364,15 +364,16 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
         if (!previewAutoAdvanceRef.current) {
           previewAutoAdvanceRef.current = true;
           const delayMs = Math.max(200, Math.min(1200, autoAdvanceDelay || 600));
-          if (previewAutoAdvanceTimerRef.current) {
-            window.clearTimeout(previewAutoAdvanceTimerRef.current);
-            previewAutoAdvanceTimerRef.current = null;
-          }
-          previewAutoAdvanceTimerRef.current = window.setTimeout(() => {
-            onNext();
-            previewAutoAdvanceRef.current = false;
-            previewAutoAdvanceTimerRef.current = null;
-          }, delayMs) as unknown as number;
+          cancel('options-grid-preview-auto-advance');
+          schedule(
+            'options-grid-preview-auto-advance',
+            () => {
+              onNext();
+              previewAutoAdvanceRef.current = false;
+            },
+            delayMs,
+            'timeout'
+          );
         }
       } else if (onStepComplete && hasMinSelections) {
         // Just trigger completion without auto-advance
@@ -385,11 +386,8 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       }
 
       if (!hasRequiredSelections) {
-        previewAutoAdvanceRef.current = false;
-        if (previewAutoAdvanceTimerRef.current) {
-          window.clearTimeout(previewAutoAdvanceTimerRef.current);
-          previewAutoAdvanceTimerRef.current = null;
-        }
+  previewAutoAdvanceRef.current = false;
+  cancel('options-grid-preview-auto-advance');
       }
     } else {
       // Editor mode: Update properties and emit validation event for editor UX
@@ -442,7 +440,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       // Autoavanço somente nas etapas 2–11, ao atingir a última seleção obrigatória
       if (isScoringPhase) {
         // Evitar múltiplos disparos se usuário clicar rapidamente
-        if (hasRequiredSelections && !autoAdvanceScheduledRef.current) {
+  if (hasRequiredSelections && !autoAdvanceScheduledRef.current) {
           autoAdvanceScheduledRef.current = true;
 
           // Ativa visualmente e funcionalmente o botão "Avançar" via evento acima,
@@ -453,12 +451,8 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
             Math.min(1200, (block?.properties as any)?.autoAdvanceDelay ?? 600)
           );
 
-          if (autoAdvanceTimerRef.current) {
-            window.clearTimeout(autoAdvanceTimerRef.current);
-            autoAdvanceTimerRef.current = null;
-          }
-
-          autoAdvanceTimerRef.current = window.setTimeout(() => {
+          cancel('options-grid-editor-auto-advance');
+          schedule('options-grid-editor-auto-advance', () => {
             // Dispara ambos eventos para máxima compatibilidade
             window.dispatchEvent(
               new CustomEvent('navigate-to-step', {
@@ -473,25 +467,18 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
 
             // Libera para um próximo uso quando o usuário retornar/alterar
             autoAdvanceScheduledRef.current = false;
-            autoAdvanceTimerRef.current = null;
-          }, delayMs) as unknown as number;
+          }, delayMs, 'timeout');
         }
 
         // Se caiu abaixo do requisito, libera nova tentativa
         if (!hasRequiredSelections) {
           autoAdvanceScheduledRef.current = false;
-          if (autoAdvanceTimerRef.current) {
-            window.clearTimeout(autoAdvanceTimerRef.current);
-            autoAdvanceTimerRef.current = null;
-          }
+          cancel('options-grid-editor-auto-advance');
         }
       } else {
         // Fases sem autoavanço (1 e 13–18): apenas ativação visual/funcional do botão "Avançar"
-        autoAdvanceScheduledRef.current = false;
-        if (autoAdvanceTimerRef.current) {
-          window.clearTimeout(autoAdvanceTimerRef.current);
-          autoAdvanceTimerRef.current = null;
-        }
+  autoAdvanceScheduledRef.current = false;
+  cancel('options-grid-editor-auto-advance');
       }
     }
   };
