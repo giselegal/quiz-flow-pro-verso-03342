@@ -13,6 +13,8 @@ import { useEditor } from './EditorProvider';
 import { useTheme } from '@/components/theme-provider';
 import StepSidebar from '@/components/editor/sidebars/StepSidebar';
 import ComponentsSidebar from '@/components/editor/sidebars/ComponentsSidebar';
+import { useRenderCount } from '@/hooks/useRenderCount';
+import { mark } from '@/utils/perf';
 
 // Removidos estilos de animação/transição globais do editor
 
@@ -208,6 +210,8 @@ interface EditorProProps {
 }
 
 export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
+  useRenderCount('EditorPro');
+  mark('EditorPro:render:start');
   // Segurança: useEditor pode lançar se não houver contexto — capturamos para renderizar fallback
   let editorContext;
   try {
@@ -690,7 +694,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
      Sub-componentes locais (somente Canvas/Propriedades)
      ------------------------- */
 
-  const CanvasArea: React.FC = () => (
+  const CanvasAreaBase: React.FC = () => (
   <div className="flex-1 flex flex-col bg-gray-50">
       <div className="bg-white border-b border-gray-200/60">
         {/* Header Principal */}
@@ -1087,8 +1091,9 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       </div>
     </div>
   );
+  const CanvasArea = React.memo(CanvasAreaBase);
 
-  const PropertiesColumn: React.FC = () => (
+  const PropertiesColumnBase: React.FC = () => (
   <div className="w-[24rem] min-w-[24rem] max-w-[24rem] flex-shrink-0 h-screen sticky top-0 overflow-y-auto
                     bg-white border-l border-gray-200 flex flex-col">
       {selectedBlock ? (
@@ -1111,6 +1116,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       )}
     </div>
   );
+  const PropertiesColumn = React.memo(PropertiesColumnBase);
 
   /* -------------------------
      Render principal
@@ -1144,6 +1150,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       </DndContext>
 
       {NotificationContainer ? <NotificationContainer /> : null}
+  {mark('EditorPro:render:end')}
     </>
   );
 };

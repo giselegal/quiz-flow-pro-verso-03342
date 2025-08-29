@@ -3,6 +3,7 @@ import { Block } from '@/types/editor';
 import { useDndContext, useDroppable } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import React from 'react';
+import { useRenderCount } from '@/hooks/useRenderCount';
 import { CANVAS_ROOT_ID, SLOT_ID_PREFIX } from '../dnd/constants';
 import { SortableBlockWrapper } from './SortableBlockWrapper.simple';
 
@@ -68,6 +69,7 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
   className,
   isPreviewing: isPreviewingProp = false,
 }) => {
+  useRenderCount('CanvasDropZone');
   // Evitar recriar arrays/objetos a cada render (impede re-registro contínuo no dnd-kit)
   const rootAccepts = React.useMemo(() => ['sidebar-component', 'canvas-block'], []);
   const rootData = React.useMemo(

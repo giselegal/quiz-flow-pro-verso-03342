@@ -101,7 +101,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
   quizId,
   enableSupabase = false,
 }) => {
-  const { schedule, cancel } = useOptimizedScheduler();
+  const { schedule } = useOptimizedScheduler();
   // Build initial state from template
   const getInitialState = (): EditorState => {
     const initialBlocks: Record<string, Block[]> = {};
@@ -255,6 +255,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     schedule('editor-init-ensure-step-1', () => {
       ensureStepLoaded(1);
     }, 500, 'idle');
+  return () => {};
   }, []); // Empty dependency array - run only once on mount
 
   // 🚨 CORREÇÃO: Ensure step is loaded when currentStep changes
