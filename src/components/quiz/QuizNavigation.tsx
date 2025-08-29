@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * 🚀 QUIZ NAVIGATION - Navegação Premium para as 21 Etapas em Produção
  *
