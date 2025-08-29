@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 
 // Utility functions
-import { cn } from '@/lib/utils';
+// import { cn } from '@/lib/utils';
 
 // Editor Components
 import { CanvasDropZone } from '@/components/editor/canvas/CanvasDropZone';
+import UniversalBlockRenderer from '@/components/editor/blocks/UniversalBlockRenderer';
 import CombinedComponentsPanel from '@/components/editor/CombinedComponentsPanel';
 import { FunnelSettingsPanel } from '@/components/editor/funnel-settings/FunnelSettingsPanel';
 import { FunnelStagesPanel } from '@/components/editor/funnel/FunnelStagesPanel';
@@ -15,6 +16,7 @@ import { EditorToolbar } from '@/components/editor/toolbar/EditorToolbar';
 import { PreviewNavigation } from '@/components/preview/PreviewNavigation';
 import { PreviewToggleButton } from '@/components/preview/PreviewToggleButton';
 import { PreviewProvider } from '@/context/PreviewContext';
+import { QuizFlowProvider } from '@/context/QuizFlowProvider';
 // 🎯 QUIZ 21 STEPS SYSTEM
 import { Quiz21StepsNavigation } from '@/components/quiz/Quiz21StepsNavigation';
 import { Quiz21StepsProvider, useQuiz21Steps } from '@/components/quiz/Quiz21StepsProvider';
@@ -242,28 +244,20 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
                 >
                   <div className={getCanvasClassName()}>
                     <CanvasDropZone isEmpty={currentBlocks.length === 0}>
-                      {currentBlocks.map(block => (
-                        <div 
-                          key={block.id}
-                          className={cn(
-                            'block-wrapper p-2 border rounded',
-                            selectedBlockId === block.id && 'border-blue-500 bg-blue-50'
-                          )}
-                          onClick={() => setSelectedBlockId(block.id)}
-                        >
-                          <div className="block-type text-xs text-gray-500 mb-1">
-                            {block.type}
+                      <div className="space-y-4">
+                        {currentBlocks.map(block => (
+                          <div key={block.id} onClick={() => setSelectedBlockId(block.id)}>
+                            <UniversalBlockRenderer
+                              block={block as any}
+                              isSelected={selectedBlockId === block.id}
+                              mode={isPreviewing ? 'preview' : 'editor'}
+                              onPropertyChange={(key, value) =>
+                                updateBlock(block.id, { [key]: value })
+                              }
+                            />
                           </div>
-                          <div className="block-content">
-                            {block.content?.text && (
-                              <div>{block.content.text}</div>
-                            )}
-                            {block.content?.title && (
-                              <h3>{block.content.title}</h3>
-                            )}
-                          </div>
-                        </div>
-                      ))}
+                        ))}
+                      </div>
                     </CanvasDropZone>
                   </div>
 
@@ -331,11 +325,13 @@ export const EditorWithPreview: React.FC = () => {
     <FunnelsProvider debug={true}>
       <EditorProvider funnelId="quiz-estilo-completo">
         <EditorQuizProvider>
-          <PreviewProvider>
-            <Quiz21StepsProvider debug={true} initialStep={1}>
-              <EditorFixedPageWithDragDrop />
-            </Quiz21StepsProvider>
-          </PreviewProvider>
+          <QuizFlowProvider>
+            <PreviewProvider>
+              <Quiz21StepsProvider debug={true} initialStep={1}>
+                <EditorFixedPageWithDragDrop />
+              </Quiz21StepsProvider>
+            </PreviewProvider>
+          </QuizFlowProvider>
         </EditorQuizProvider>
       </EditorProvider>
     </FunnelsProvider>

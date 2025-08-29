@@ -18,6 +18,7 @@ interface ButtonInlineProps {
   boxShadow?: string;
   hoverEffect?: boolean;
   requiresValidInput?: boolean;
+  requiresValidSelection?: boolean;
   disabled?: boolean;
   // Propriedades de layout
   textAlign?: string;
@@ -52,6 +53,7 @@ export function ButtonInline({
   boxShadow,
   hoverEffect = true,
   requiresValidInput = false,
+  requiresValidSelection = false,
   disabled = false,
   textAlign = 'text-center',
   justifyContent: _justifyContent = 'center',
@@ -158,6 +160,19 @@ export function ButtonInline({
     }
   };
 
+  const [isSelectionValid, setIsSelectionValid] = useState<boolean>(!requiresValidSelection);
+
+  React.useEffect(() => {
+    if (!requiresValidSelection) return;
+    const handler = (ev: Event) => {
+      const e = ev as CustomEvent<{ isValid?: boolean; valid?: boolean }>; 
+      const ok = typeof e.detail?.isValid === 'boolean' ? e.detail.isValid : !!e.detail?.valid;
+      setIsSelectionValid(ok);
+    };
+    window.addEventListener('quiz-selection-change', handler as EventListener);
+    return () => window.removeEventListener('quiz-selection-change', handler as EventListener);
+  }, [requiresValidSelection]);
+
   if (isEditing && isEditable) {
     return (
       <div className="inline-block relative">
@@ -201,7 +216,11 @@ export function ButtonInline({
   return (
     <button
       onClick={isEditable ? handleEditClick : onClick}
-      disabled={disabled || requiresValidInput}
+      disabled={
+        disabled ||
+        requiresValidInput ||
+        (requiresValidSelection && !isSelectionValid)
+      }
       className={cn(
         // Base styles
         'inline-flex items-center justify-center transition-all duration-300 border',
@@ -228,7 +247,7 @@ export function ButtonInline({
 
         // States
         disabled && 'opacity-50 cursor-not-allowed',
-        requiresValidInput && 'opacity-75 cursor-not-allowed',
+  (requiresValidInput || (requiresValidSelection && !isSelectionValid)) && 'opacity-75 cursor-not-allowed',
 
         // Margins
         getMarginClass(marginTop, 'top'),
@@ -270,7 +289,15 @@ export function ButtonInline({
           e.currentTarget.style.color = backgroundColor;
         }
       }}
-      title={isEditable ? 'Clique para editar texto do botão' : undefined}
+      title={
+        isEditable
+          ? 'Clique para editar texto do botão'
+          : (requiresValidSelection && !isSelectionValid)
+            ? 'Selecione as opções obrigatórias para continuar'
+            : requiresValidInput
+              ? 'Preencha os campos obrigatórios para continuar'
+              : undefined
+      }
     >
       {text}
       {isEditable && isSelected && <span className="ml-2 text-xs opacity-60">✎</span>}

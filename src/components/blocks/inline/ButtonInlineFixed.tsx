@@ -80,27 +80,25 @@ const ButtonInlineFixed: React.FC<ButtonInlineFixedProps> = ({
     }
 
     const handleGridSelectionChange = (e: Event) => {
-      const detail = (e as CustomEvent).detail as {
-        gridId: string;
-        selectedCount: number;
-        minRequired: number;
-        maxAllowed: number;
-        isValid: boolean;
-        selectedOptions: string[];
-      };
+      const detail = (e as CustomEvent).detail as any;
+      const gridId = detail.gridId || detail.questionId || detail.blockId;
+      const selectedCount = detail.selectedCount ?? detail.selectionCount ?? 0;
+      const minRequired = detail.minRequired ?? detail.requiredSelections ?? minRequiredSelections;
+      const valid =
+        typeof detail.isValid === 'boolean'
+          ? detail.isValid
+          : typeof detail.valid === 'boolean'
+            ? detail.valid
+            : selectedCount >= (minRequired || 0);
 
-      if (detail.gridId === watchGridId) {
-        // Usar minRequiredSelections se definido, senão usar minRequired do grid
-        const requiredCount = minRequiredSelections || detail.minRequired;
-        const isValid = detail.selectedCount >= requiredCount;
-
-        setGridSelectionValid(isValid);
+      if (gridId === watchGridId) {
+        setGridSelectionValid(!!valid);
         console.log('🔘 [ButtonInlineFixed] Grid validado:', {
           blockId: block?.id,
           gridId: watchGridId,
-          selectedCount: detail.selectedCount,
-          requiredCount: requiredCount,
-          valid: isValid,
+          selectedCount,
+          requiredCount: minRequired,
+          valid,
         });
       }
     };

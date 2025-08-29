@@ -1587,6 +1587,13 @@ export const useUnifiedProperties = (
             PropertyCategory.BEHAVIOR
           ),
           createProperty(
+            'requiresValidSelection',
+            currentBlock?.properties?.requiresValidSelection === true,
+            PropertyType.SWITCH,
+            'Ativar Apenas com Seleção Válida',
+            PropertyCategory.BEHAVIOR
+          ),
+          createProperty(
             'watchInputId',
             currentBlock?.properties?.watchInputId || '',
             PropertyType.TEXT,

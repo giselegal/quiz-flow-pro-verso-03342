@@ -5,6 +5,7 @@ export interface StepSidebarProps {
   currentStep: number;
   totalSteps?: number;
   stepHasBlocks: Record<number, boolean>;
+  stepValidation?: Record<number, boolean>;
   onSelectStep: (step: number) => void;
   getStepAnalysis: (step: number) => { icon: string; label: string; desc: string };
   renderIcon: (name: string, className?: string) => React.ReactNode;
@@ -15,6 +16,7 @@ const StepSidebarComponent: React.FC<StepSidebarProps> = ({
   currentStep,
   totalSteps = 21,
   stepHasBlocks,
+  stepValidation,
   onSelectStep,
   getStepAnalysis,
   renderIcon,
@@ -38,6 +40,7 @@ const StepSidebarComponent: React.FC<StepSidebarProps> = ({
             const analysis = getStepAnalysis(step);
             const isActive = step === currentStep;
             const hasBlocks = stepHasBlocks[step];
+            const isValid = stepValidation ? stepValidation[step] : undefined;
 
             return (
               <button
@@ -54,7 +57,19 @@ const StepSidebarComponent: React.FC<StepSidebarProps> = ({
                     <span className="text-sm">{renderIcon(analysis.icon, 'w-4 h-4 text-gray-600')}</span>
                     <span className="font-medium">Etapa {step}</span>
                   </div>
-                  {hasBlocks && <span className="w-2 h-2 bg-green-500 rounded-full" />}
+                  <div className="flex items-center gap-1">
+                    {typeof isValid === 'boolean' ? (
+                      <span
+                        className={cn(
+                          'w-2 h-2 rounded-full',
+                          isValid ? 'bg-green-500' : 'bg-red-400'
+                        )}
+                        title={isValid ? 'Válida' : 'Inválida'}
+                      />
+                    ) : hasBlocks ? (
+                      <span className="w-2 h-2 bg-gray-300 rounded-full" title="Com conteúdo" />
+                    ) : null}
+                  </div>
                 </div>
                 <div className="text-gray-600 mt-1">
                   <div className="font-medium">{analysis.label}</div>

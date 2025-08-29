@@ -62,11 +62,12 @@ const PreviewProvider: React.FC<PreviewProviderProps> = ({
 }) => {
   const [isPreviewing, setIsPreviewing] = useState(false);
   const [sessionData, setSessionData] = useState<Record<string, any>>({});
-  const { currentStep, totalSteps: flowTotal, next, previous, goTo } = useQuizFlow();
+  const { currentStep, totalSteps: flowTotal, next, previous, goTo, canProceed } = useQuizFlow();
   const effectiveTotal = flowTotal || totalSteps;
 
   // Calcular se pode navegar
-  const canGoNext = currentStep < effectiveTotal;
+  // Respeita validação da etapa atual via QuizFlowProvider (event-driven)
+  const canGoNext = currentStep < effectiveTotal && !!canProceed;
   const canGoPrevious = currentStep > 1;
 
   const togglePreview = useCallback(() => {
@@ -178,6 +179,12 @@ const PreviewProvider: React.FC<PreviewProviderProps> = ({
 
   // Listen to navigation events from components in preview mode
   React.useEffect(() => {
+    // Expor etapa atual globalmente para consumidores que dependem de window.__quizCurrentStep
+    try {
+      (window as any).__quizCurrentStep = currentStep;
+      (window as any).__quizTotalSteps = effectiveTotal;
+    } catch {}
+
     const handleNavigateToStep = (event: CustomEvent) => {
       if (!isPreviewing) return;
       if (event.detail?.stepId) navigateToStep(event.detail.stepId);
@@ -202,7 +209,7 @@ const PreviewProvider: React.FC<PreviewProviderProps> = ({
       window.removeEventListener('quiz-navigate-to-step', handleNavigateToStep as EventListener);
       window.removeEventListener('quiz-start', handleQuizStart as EventListener);
     };
-  }, [isPreviewing, navigateToStep, updateSessionData, goTo]);
+  }, [isPreviewing, navigateToStep, updateSessionData, goTo, currentStep, effectiveTotal]);
 
   return <PreviewContext.Provider value={contextValue}>{children}</PreviewContext.Provider>;
 };

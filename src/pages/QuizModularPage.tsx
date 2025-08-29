@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
 import { TemplateManager } from '@/utils/TemplateManager';
 import React, { useEffect, useState } from 'react';
+import { computeSelectionValidity } from '@/lib/quiz/selectionRules';
 import useOptimizedScheduler from '@/hooks/useOptimizedScheduler';
 
 /**
@@ -205,15 +206,22 @@ const QuizModularPage: React.FC = () => {
     return questionBlocks.every(block => {
       const questionId = block.properties?.questionId || block.id;
       const selections = userSelections[questionId] || [];
-      const minSelections =
-        block.properties?.minSelections || block.properties?.requiredSelections || 1;
 
       if (block.type === 'form-container') {
         const answer = quizAnswers[block.content?.dataKey || 'default'];
         return block.content?.required ? !!answer && answer.trim().length > 0 : true;
       }
 
-      return selections.length >= minSelections;
+      // options-grid: usar regra centralizada considerando a fase da etapa
+      const { isValid } = computeSelectionValidity(
+        currentStep,
+        selections.length,
+        {
+          requiredSelections: block.properties?.requiredSelections as number | undefined,
+          minSelections: block.properties?.minSelections as number | undefined,
+        }
+      );
+      return isValid;
     });
   };
 

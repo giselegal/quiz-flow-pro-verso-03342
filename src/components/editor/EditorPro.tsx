@@ -1142,6 +1142,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
             currentStep={safeCurrentStep}
             totalSteps={21}
             stepHasBlocks={stepHasBlocks}
+            stepValidation={(state as any)?.stepValidation || {}}
             onSelectStep={handleStepSelect}
             getStepAnalysis={getStepAnalysis as any}
             renderIcon={renderIcon as any}

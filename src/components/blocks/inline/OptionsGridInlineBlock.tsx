@@ -1,6 +1,7 @@
 import { cn } from '@/lib/utils';
 import React, { useState } from 'react';
 import type { BlockComponentProps } from '@/types/blocks';
+import { computeSelectionValidity } from '@/lib/quiz/selectionRules';
 
 interface OptionItem {
   id: string;
@@ -74,21 +75,25 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
           }
         }
 
-        // Reportar validao ao editor/painel
-        const isValid = newSelected.length >= minSelections;
-        if (onValidate) onValidate(isValid);
+        // Validação centralizada
+        const stepRef: any = (window as any).__quizCurrentStep || block.id || 'step-0';
+        const validity = computeSelectionValidity(stepRef, newSelected.length, { minSelections });
+        if (onValidate) onValidate(validity.isValid);
 
-        // Dispatch quiz selection change event
+        // Evento padronizado
         const stepNumber = parseInt(block.id?.match(/step-(\d+)/)?.[1] || '0');
-        const questionId = stepNumber > 1 ? `q${stepNumber - 1}` : `q1`; // Step 2 = q1, etc.
-
+        const questionId = stepNumber > 1 ? `q${stepNumber - 1}` : `q1`;
         window.dispatchEvent(
           new CustomEvent('quiz-selection-change', {
             detail: {
               blockId: block.id,
-              questionId, // ✅ NOVO: ID da questão para mapeamento no quiz
+              gridId: block.id,
+              questionId,
               selectedOptions: newSelected,
-              isValid,
+              selectionCount: newSelected.length,
+              requiredSelections: validity.effectiveRequiredSelections,
+              isValid: validity.isValid,
+              valid: validity.isValid,
               minSelections,
               maxSelections,
             },
@@ -109,20 +114,23 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
         }
       }
 
-      const isValid = newSelected.length >= minSelections;
-      if (onValidate) onValidate(isValid);
+      const stepRef: any = (window as any).__quizCurrentStep || block.id || 'step-0';
+      const validity = computeSelectionValidity(stepRef, newSelected.length, { minSelections });
+      if (onValidate) onValidate(validity.isValid);
 
-      // Dispatch quiz selection change event
       const stepNumber = parseInt(block.id?.match(/step-(\d+)/)?.[1] || '0');
-      const questionId = stepNumber > 1 ? `q${stepNumber - 1}` : `q1`; // Step 2 = q1, etc.
-
+      const questionId = stepNumber > 1 ? `q${stepNumber - 1}` : `q1`;
       window.dispatchEvent(
         new CustomEvent('quiz-selection-change', {
           detail: {
             blockId: block.id,
-            questionId, // ✅ NOVO: ID da questão para mapeamento no quiz
+            gridId: block.id,
+            questionId,
             selectedOptions: newSelected,
-            isValid,
+            selectionCount: newSelected.length,
+            requiredSelections: validity.effectiveRequiredSelections,
+            isValid: validity.isValid,
+            valid: validity.isValid,
             minSelections,
             maxSelections,
           },

@@ -92,6 +92,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
     disabled = false,
     customStyles: _customStyles = '',
     requiresValidInput = false,
+  requiresValidSelection = false,
     // Configurações de cores
     backgroundColor = '#B89B7A',
     textColor = '#FFFFFF',
@@ -147,8 +148,9 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
   }, [buttonId]);
 
   const [isValidated, setIsValidated] = useState(false);
+  const [isSelectionValid, setIsSelectionValid] = useState(!requiresValidSelection);
 
-  // Efeito para verificar validação quando necessário
+  // Efeito para verificar validação de input quando necessário
   useEffect(() => {
     if (requiresValidInput) {
       // Verificar se há input válido (exemplo: nome preenchido)
@@ -165,37 +167,47 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
     }
   }, [requiresValidInput]);
 
-  // Efeito para ouvir mudanças de seleção do quiz
+  // Efeito para ouvir mudanças de seleção do quiz (validação de seleção)
   useEffect(() => {
-    const handleQuizSelectionChange = (event: CustomEvent) => {
-      const { isValid } = event.detail;
-      if (requiresValidInput) {
-        setIsValidated(isValid);
-      }
+    const handleQuizSelectionChange = (event: Event) => {
+      const e = event as CustomEvent<any>;
+      const valid = typeof e.detail?.isValid === 'boolean' ? e.detail.isValid : !!e.detail?.valid;
+      if (requiresValidSelection) setIsSelectionValid(valid);
     };
 
-    if (requiresValidInput) {
+    const handleQuizInputChange = (event: Event) => {
+      if (!requiresValidInput) return;
+      const e = event as CustomEvent<any>;
+      const { value, valid } = e.detail || {};
+      const ok = typeof value === 'string' ? value.trim().length > 0 : !!valid;
+      setIsValidated(ok);
+    };
+
+    if (requiresValidSelection) {
       window.addEventListener('quiz-selection-change', handleQuizSelectionChange as EventListener);
-      // Também reagir a mudanças no input de nome (Step 1)
-      const handleQuizInputChange = (event: CustomEvent) => {
-        const { value, valid } = event.detail || {};
-        // Considerar válido se houver string não vazia
-        const ok = typeof value === 'string' ? value.trim().length > 0 : !!valid;
-        setIsValidated(ok);
-      };
+    }
+    if (requiresValidInput) {
       window.addEventListener('quiz-input-change', handleQuizInputChange as EventListener);
-      return () => {
+    }
+    return () => {
+      if (requiresValidSelection) {
         window.removeEventListener(
           'quiz-selection-change',
           handleQuizSelectionChange as EventListener
         );
+      }
+      if (requiresValidInput) {
         window.removeEventListener('quiz-input-change', handleQuizInputChange as EventListener);
-      };
-    }
-  }, [requiresValidInput]);
+      }
+    };
+  }, [requiresValidSelection, requiresValidInput]);
 
   // Determinar se o botão deve estar desabilitado
-  const isButtonDisabled = externalDisabled ?? (disabled || (requiresValidInput && !isValidated));
+  const isButtonDisabled =
+    externalDisabled ??
+    (disabled ||
+      (requiresValidInput && !isValidated) ||
+      (requiresValidSelection && !isSelectionValid));
   // 🚀 Função para inicializar quiz no Supabase
   const initializeQuizWithSupabase = async (userName: string) => {
     try {
@@ -453,6 +465,9 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
             return;
           }
           if (!allowProceed) {
+            return;
+          }
+          if (requiresValidSelection && !isSelectionValid) {
             return;
           }
 

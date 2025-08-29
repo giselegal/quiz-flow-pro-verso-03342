@@ -312,21 +312,24 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
   // Propagar para host (produção/quiz) se disponível
   externalOnOptionSelect?.(optionId);
 
-      // Disparar evento global para validação (coerente com /quiz)
+  // Disparar evento global para validação (coerente com /quiz)
       try {
         const questionId = (block?.properties as any)?.questionId || block?.id;
-        const step = (window as any)?.__quizCurrentStep ?? null;
-        const { isValid: hasRequiredSelections } = computeSelectionValidity(step, newSelections.length, {
+    const step = (window as any)?.__quizCurrentStep ?? null;
+    const validity = computeSelectionValidity(step, newSelections.length, {
           requiredSelections,
           minSelections,
         });
+    const effectiveRequiredSelections = getEffectiveRequiredSelections(step, { requiredSelections, minSelections });
         window.dispatchEvent(
           new CustomEvent('quiz-selection-change', {
             detail: {
-              questionId,
-              selectionCount: newSelections.length,
-              valid: hasRequiredSelections,
-              isValid: hasRequiredSelections,
+      questionId,
+      gridId: block?.id,
+      selectionCount: newSelections.length,
+      requiredSelections: effectiveRequiredSelections,
+      valid: validity.isValid,
+      isValid: validity.isValid,
             },
           })
         );
@@ -440,19 +443,26 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
   externalOnOptionSelect?.(optionId);
       // Calcula regras por etapa
       const step = Number(currentStepFromEditor ?? NaN);
-  const { isValid: hasRequiredSelections } = computeSelectionValidity(
-        step,
-        newSelections.length,
-        { requiredSelections, minSelections }
-      );
+      const validityEditor = computeSelectionValidity(step, newSelections.length, {
+        requiredSelections,
+        minSelections,
+      });
+      const hasRequiredSelections = validityEditor.isValid;
+      const effectiveRequiredSelectionsEditor = getEffectiveRequiredSelections(step, {
+        requiredSelections,
+        minSelections,
+      });
 
       // Emitir evento global para que o EditorStageManager possa refletir validação visual
       window.dispatchEvent(
         new CustomEvent('quiz-selection-change', {
           detail: {
             questionId: (block?.properties as any)?.questionId || block?.id,
+            gridId: block?.id,
             selectionCount: newSelections.length,
+            requiredSelections: effectiveRequiredSelectionsEditor,
             valid: hasRequiredSelections,
+            isValid: hasRequiredSelections,
           },
         })
       );
