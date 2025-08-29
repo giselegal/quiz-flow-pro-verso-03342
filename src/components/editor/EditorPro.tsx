@@ -222,6 +222,33 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
 
   const { theme, setTheme } = useTheme();
 
+  // Desativa qualquer auto-scroll dentro do /editor (edição e preview)
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const path = window.location?.pathname || '';
+    if (!path.includes('/editor')) return;
+
+    const g: any = window as any;
+    g.__DISABLE_AUTO_SCROLL = true;
+
+    const originalScrollTo = window.scrollTo?.bind(window);
+    const originalScrollIntoView = (Element.prototype as any).scrollIntoView?.bind(Element.prototype);
+
+    try {
+      // No-op para qualquer tentativa de scroll programático
+      window.scrollTo = ((..._args: any[]) => {}) as any;
+      (Element.prototype as any).scrollIntoView = ((..._args: any[]) => {}) as any;
+    } catch {}
+
+    return () => {
+      try {
+        g.__DISABLE_AUTO_SCROLL = false;
+        if (originalScrollTo) window.scrollTo = originalScrollTo as any;
+        if (originalScrollIntoView) (Element.prototype as any).scrollIntoView = originalScrollIntoView as any;
+      } catch {}
+    };
+  }, []);
+
   if (!editorContext) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -723,7 +750,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
      ------------------------- */
 
   const CanvasAreaBase: React.FC = () => (
-  <div className="flex-1 flex flex-col bg-gray-50">
+  <div className="!w-[55%] !min-w-0 !max-w-none flex-none flex flex-col bg-gray-50">
       <div className="bg-white border-b border-gray-200/60">
         {/* Header Principal */}
         <div className="px-6 py-4">
@@ -1103,12 +1130,12 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       {/* Canvas principal: edição (DnD) ou preview com renderização real de produção */}
       <div
         className={cn(
-          'basis-1/2 w-1/2 flex-none min-w-[520px] p-2 overflow-x-hidden',
+          'flex-1 min-w-0 p-2 overflow-x-hidden',
           isDragging && 'editor-drop-zone-active'
         )}
         data-canvas-container
       >
-        <div className={cn('w-full mx-auto', 'px-4')}> 
+        <div className={cn('max-w-3xl w-full mx-auto', 'px-4')}> 
           {mode === 'preview' ? (
             <QuizRenderer
               mode="preview"
@@ -1154,6 +1181,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       }
       onClose={() => actions.setSelectedBlockId(null)}
       onDelete={() => selectedBlock ? actions.removeBlock(currentStepKey, selectedBlock.id) : undefined}
+      className="!w-[20%] !min-w-0 !max-w-none"
     />
   ));
 
@@ -1169,6 +1197,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         onDragEnd={handleDragEnd}
       >
   <div className={`editor-pro h-screen bg-gray-50 flex overflow-x-hidden max-w-screen ${className}`}>
+          {/* 1) Etapas - 10% */}
           <StepSidebar
             currentStep={safeCurrentStep}
             totalSteps={21}
@@ -1177,15 +1206,18 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
             onSelectStep={handleStepSelect}
             getStepAnalysis={getStepAnalysis as any}
             renderIcon={renderIcon as any}
+            className="!w-[10%] !min-w-0 !max-w-none"
           />
+          {/* 2) Componentes - 15% */}
           <ComponentsSidebar
             groupedComponents={groupedComponents as any}
             renderIcon={renderIcon as any}
+            className="!w-[15%] !min-w-0 !max-w-none"
           />
-          <div className="flex-1 min-w-0 flex">
-            <CanvasArea />
-            <MemoPropertiesColumn />
-          </div>
+          {/* 3) Canvas - 55% (conteúdo centralizado internamente) */}
+          <CanvasArea />
+          {/* 4) Propriedades - 20% */}
+          <MemoPropertiesColumn />
         </div>
       </DndContext>
 
