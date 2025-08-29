@@ -7,12 +7,13 @@ import { extractDragData, getDragFeedback, logDragEvent, validateDrop } from '@/
 import { copyToClipboard, createBlockFromComponent, devLog, validateEditorJSON } from '@/utils/editorUtils';
 import { closestCenter, DndContext, DragEndEvent, DragStartEvent, KeyboardSensor, PointerSensor, rectIntersection, useSensor, useSensors } from '@dnd-kit/core';
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
-import React, { Suspense, useCallback, useMemo, useRef, useState, useEffect } from 'react';
+import React, { useCallback, useMemo, useRef, useState, useEffect } from 'react';
 import { useOptimizedScheduler } from '@/hooks/useOptimizedScheduler';
 import { useEditor } from './EditorProvider';
 import { useTheme } from '@/components/theme-provider';
 import StepSidebar from '@/components/editor/sidebars/StepSidebar';
 import ComponentsSidebar from '@/components/editor/sidebars/ComponentsSidebar';
+import PropertiesColumn from '@/components/editor/properties/PropertiesColumn';
 import { useRenderCount } from '@/hooks/useRenderCount';
 import { mark } from '@/utils/perf';
 
@@ -200,10 +201,7 @@ function renderIcon(name: IconName, className = 'w-4 h-4') {
  * - Extrair availableComponents para um arquivo de config
  */
 
-// lazy-load do painel de propriedades (reduz custo de bundle inicial)
-const PropertiesPanel = React.lazy(
-  () => import('@/components/editor/properties/PropertiesPanel')
-);
+// PropertiesPanel lazy está encapsulado em PropertiesColumn
 
 interface EditorProProps {
   className?: string;
@@ -1093,30 +1091,16 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   );
   const CanvasArea = React.memo(CanvasAreaBase);
 
-  const PropertiesColumnBase: React.FC = () => (
-  <div className="w-[24rem] min-w-[24rem] max-w-[24rem] flex-shrink-0 h-screen sticky top-0 overflow-y-auto
-                    bg-white border-l border-gray-200 flex flex-col">
-      {selectedBlock ? (
-        <Suspense
-          fallback={<div className="p-4 text-sm text-gray-600">Carregando propriedades…</div>}
-        >
-          <PropertiesPanel
-            selectedBlock={selectedBlock as any}
-            onUpdate={(updates: Record<string, any>) =>
-              actions.updateBlock(currentStepKey, selectedBlock.id, updates)
-            }
-            onClose={() => actions.setSelectedBlockId(null)}
-            onDelete={() => actions.removeBlock(currentStepKey, selectedBlock.id)}
-          />
-        </Suspense>
-      ) : (
-  <div className="h-full p-6 text-sm text-gray-600">
-          Selecione um bloco no canvas para editar suas propriedades.
-        </div>
-      )}
-    </div>
-  );
-  const PropertiesColumn = React.memo(PropertiesColumnBase);
+  const MemoPropertiesColumn = React.memo(() => (
+    <PropertiesColumn
+      selectedBlock={selectedBlock as any}
+      onUpdate={(updates: Record<string, any>) =>
+        selectedBlock ? actions.updateBlock(currentStepKey, selectedBlock.id, updates) : undefined
+      }
+      onClose={() => actions.setSelectedBlockId(null)}
+      onDelete={() => selectedBlock ? actions.removeBlock(currentStepKey, selectedBlock.id) : undefined}
+    />
+  ));
 
   /* -------------------------
      Render principal
@@ -1144,7 +1128,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
           />
           <div className="flex-1 min-w-0 flex">
             <CanvasArea />
-            <PropertiesColumn />
+            <MemoPropertiesColumn />
           </div>
         </div>
       </DndContext>
