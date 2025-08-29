@@ -149,16 +149,14 @@ export const DraggableComponentItem: React.FC<DraggableComponentItemProps> = ({
     <div
       ref={setNodeRef}
       className={cn(
-        'ToolbarButton w-full h-auto p-3 flex flex-col items-start gap-2 text-left transition-all duration-200 border border-stone-200 rounded-lg bg-white group',
-        // ✅ CURSOR: Indicação visual clara de que é draggable
-        'cursor-grab hover:bg-blue-50 hover:border-blue-400',
-        // ✅ FEEDBACK: Estados visuais distintos
+        'ToolbarButton w-full h-auto p-3 flex flex-col items-start gap-2 text-left border border-stone-200 rounded-lg bg-white',
+        // Cursor indicando draggable (sem animações)
+        'cursor-grab',
+        // Feedback de drag
         isDragging && 'opacity-70 cursor-grabbing bg-blue-50 border-blue-400',
-        // 🔧 DEBUG: Ring azul forte para identificar draggables
-        'ring-2 ring-blue-200 hover:ring-blue-400',
-        // ✅ INTERATIVIDADE: Garantir que o elemento seja clicável
+        // Interatividade básica
         'pointer-events-auto touch-manipulation select-none',
-        // ✅ CLASSE CSS DE FORÇA BRUTA
+        // Marcador
         'dnd-draggable-item',
         disabled && 'opacity-30 cursor-not-allowed bg-gray-100',
         className

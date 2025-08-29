@@ -106,7 +106,7 @@ const EnhancedArrayEditor: React.FC<{
       {items.map((item, index) => (
         <div
           key={index}
-          className="group flex gap-2 items-center p-2 rounded-lg border border-muted hover:border-primary/30 transition-colors"
+          className="group flex gap-2 items-center p-2 rounded-lg border border-muted"
         >
           <div className="flex-1 space-y-1">
             <Input
@@ -126,7 +126,7 @@ const EnhancedArrayEditor: React.FC<{
             size="sm"
             onClick={() => removeItem(index)}
             disabled={items.length <= minItems}
-            className="opacity-0 group-hover:opacity-100 transition-opacity h-8 w-8 p-0"
+            className="h-8 w-8 p-0"
           >
             <Trash2 className="h-3 w-3" />
           </Button>
@@ -139,7 +139,7 @@ const EnhancedArrayEditor: React.FC<{
         size="sm"
         onClick={addItem}
         disabled={items.length >= maxItems || isAdding}
-        className="w-full h-9 border-dashed border-primary/30 hover:border-primary"
+  className="w-full h-9 border-dashed border-primary/30"
       >
         {isAdding ? (
           <Loader2 className="h-4 w-4 animate-spin mr-2" />
@@ -252,7 +252,7 @@ export const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> =
       const errorMessage = errors[key];
 
       const baseClasses =
-        'transition-all duration-200 border-border/50 focus:border-primary focus:ring-2 focus:ring-primary/20';
+        'border-border/50 focus:border-primary focus:ring-2 focus:ring-primary/20';
       const errorClasses = hasError
         ? 'border-destructive focus:border-destructive focus:ring-destructive/20'
         : baseClasses;
@@ -353,7 +353,7 @@ export const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> =
 
           case PropertyType.SWITCH:
             return (
-              <div className="flex items-center justify-between p-3 border rounded-lg border-border/50 hover:border-border transition-colors">
+              <div className="flex items-center justify-between p-3 border rounded-lg border-border/50 hover:border-border">
                 <span className="text-sm text-muted-foreground">
                   {value ? 'Habilitado' : 'Desabilitado'}
                 </span>

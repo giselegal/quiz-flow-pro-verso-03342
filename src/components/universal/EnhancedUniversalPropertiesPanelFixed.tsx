@@ -585,8 +585,11 @@ const EnhancedUniversalPropertiesPanelFixed: React.FC<PanelProps> = ({
                         onChange={val => onUpdate(selectedBlock.id, { [field.key]: val })}
                       />
                       {(field as any).description && (
-                        <p className="text-xs text-gray-500 mt-2 italic bg-gray-50/80 px-2 py-1 rounded border-l-2 border-blue-200">
-                          💡 {(field as any).description}
+                        <p className="text-xs text-gray-600 mt-2 bg-gray-50/80 px-2 py-1 rounded border-l-2 border-blue-200 flex items-center gap-1.5">
+                          <svg className="w-3.5 h-3.5 text-blue-500 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 18h6m-5-2a7 7 0 117 0c0 1.657-1.343 3-3 3H11c-1.657 0-3-1.343-3-3zm2-7h.01M13 9h.01"/>
+                          </svg>
+                          <span className="italic">{(field as any).description}</span>
                         </p>
                       )}
                     </div>

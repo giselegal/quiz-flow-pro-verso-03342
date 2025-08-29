@@ -74,8 +74,8 @@ const ResponsivePreview: React.FC<ResponsivePreviewProps> = ({
       maxWidth: dimensions.maxWidth,
       minHeight: '400px',
       margin: '0 auto',
-      transition: 'all 0.3s ease-in-out',
-      transform: previewMode === 'mobile' ? 'scale(0.9)' : 'scale(1)',
+  // Sem animações/transform no preview externo ao Canvas
+  transform: 'none',
     };
   };
 
@@ -83,10 +83,7 @@ const ResponsivePreview: React.FC<ResponsivePreviewProps> = ({
     const frame = DEVICE_FRAMES[previewMode];
 
     return (
-      <div
-        className={cn(frame.className, 'transition-all duration-300')}
-        style={getPreviewStyles()}
-      >
+  <div className={cn(frame.className)} style={getPreviewStyles()}>
         {/* Device-specific decorations */}
         {previewMode === 'tablet' && (
           <>
@@ -116,10 +113,7 @@ const ResponsivePreview: React.FC<ResponsivePreviewProps> = ({
     return (
       <div
         key={block.id}
-        className={cn(
-          'relative transition-all duration-200 cursor-pointer group',
-          isSelected && 'ring-2 ring-[#B89B7A] ring-offset-2'
-        )}
+  className={cn('relative cursor-pointer group', isSelected && 'ring-2 ring-[#B89B7A] ring-offset-2')}
         onClick={() => onBlockSelect?.(block.id)}
       >
         {/* Preview do bloco */}
@@ -149,10 +143,7 @@ const ResponsivePreview: React.FC<ResponsivePreviewProps> = ({
 
         {/* Overlay de hover */}
         <div
-          className={cn(
-            'absolute inset-0 bg-[#B89B7A]/10 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg pointer-events-none',
-            isSelected && 'opacity-20'
-          )}
+          className={cn('absolute inset-0 bg-[#B89B7A]/10 rounded-lg pointer-events-none', isSelected && 'opacity-20')}
         />
       </div>
     );

@@ -163,32 +163,35 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
           items={blocks.map(block => `dnd-block-${String(block.id)}`)}
           strategy={verticalListSortingStrategy}
         >
-          <div className="space-y-6">
-            {/* Drop zone no início - sempre presente (ativa durante drag) */}
-            <InterBlockDropZone position={0} isActive={isDraggingAnyValidComponent} />
+          {/* Wrapper interno para limitar largura dos componentes no canvas */}
+          <div className="w-full max-w-[32rem] mx-auto">
+            <div className="space-y-6">
+              {/* Drop zone no início - sempre presente (ativa durante drag) */}
+              <InterBlockDropZone position={0} isActive={isDraggingAnyValidComponent} />
 
-            {blocks.map((block, index) => (
-              <React.Fragment key={String(block.id)}>
-                <SortableBlockWrapper
-                  block={block}
-                  isSelected={!isPreviewing && selectedBlockId === block.id}
-                  onSelect={() => !isPreviewing && onSelectBlock(block.id)}
-                  onUpdate={updates => {
-                    if (!isPreviewing) {
-                      onUpdateBlock(block.id, updates);
-                    }
-                  }}
-                  onDelete={() => {
-                    if (!isPreviewing) {
-                      onDeleteBlock(block.id);
-                    }
-                  }}
-                />
+              {blocks.map((block, index) => (
+                <React.Fragment key={String(block.id)}>
+                  <SortableBlockWrapper
+                    block={block}
+                    isSelected={!isPreviewing && selectedBlockId === block.id}
+                    onSelect={() => !isPreviewing && onSelectBlock(block.id)}
+                    onUpdate={updates => {
+                      if (!isPreviewing) {
+                        onUpdateBlock(block.id, updates);
+                      }
+                    }}
+                    onDelete={() => {
+                      if (!isPreviewing) {
+                        onDeleteBlock(block.id);
+                      }
+                    }}
+                  />
 
-                {/* Drop zone entre blocos - sempre presente (ativa durante drag) */}
-                <InterBlockDropZone position={index + 1} isActive={isDraggingAnyValidComponent} />
-              </React.Fragment>
-            ))}
+                  {/* Drop zone entre blocos - sempre presente (ativa durante drag) */}
+                  <InterBlockDropZone position={index + 1} isActive={isDraggingAnyValidComponent} />
+                </React.Fragment>
+              ))}
+            </div>
           </div>
         </SortableContext>
       )}

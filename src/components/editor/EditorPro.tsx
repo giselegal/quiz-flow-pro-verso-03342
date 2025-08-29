@@ -12,38 +12,172 @@ import React, { Suspense, useCallback, useMemo, useRef, useState, useEffect } fr
 import { useEditor } from './EditorProvider';
 import { useTheme } from '@/components/theme-provider';
 
-// Estilos CSS para animações personalizadas
-const animationStyles = `
-  .editor-smooth-transition { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-  .editor-hover-lift { transition: transform 0.2s ease-out, box-shadow 0.2s ease-out; }
-  .editor-hover-lift:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.15); }
-  .editor-scale-hover { transition: transform 0.2s ease-out; }
-  .editor-scale-hover:hover { transform: scale(1.02); }
-  .editor-fade-in { opacity: 0; animation: fadeIn 0.3s ease-out forwards; }
-  @keyframes fadeIn { to { opacity: 1; } }
-  .editor-slide-in-left { transform: translateX(-20px); opacity: 0; animation: slideInLeft 0.3s ease-out forwards; }
-  @keyframes slideInLeft { to { transform: translateX(0); opacity: 1; } }
-  .editor-slide-in-right { transform: translateX(20px); opacity: 0; animation: slideInRight 0.3s ease-out forwards; }
-  @keyframes slideInRight { to { transform: translateX(0); opacity: 1; } }
-  .editor-pulse-highlight { animation: pulseHighlight 0.6s ease-out; }
-  @keyframes pulseHighlight { 0% { background-color: rgba(59,130,246,0.1);} 50% { background-color: rgba(59,130,246,0.2);} 100% { background-color: transparent; } }
-  .editor-drag-active { transform: rotate(3deg) scale(1.05); opacity: 0.8; z-index: 1000; transition: transform 0.2s ease-out; }
-  .editor-drop-zone-active { border-color: #3b82f6; background-color: rgba(59,130,246,0.05); transform: scale(1.02); transition: all 0.2s ease-out; }
-  .editor-slide-up { transform: translateY(20px); opacity: 0; animation: slideUp 0.3s ease-out forwards; }
-  @keyframes slideUp { to { transform: translateY(0); opacity: 1; } }
-  .editor-bounce { animation: bounce 0.5s cubic-bezier(0.36, 0, 0.66, -0.56) forwards; }
-  @keyframes bounce { 0%,100% { transform: translateY(0);} 50% { transform: translateY(-5px);} }
-  .editor-rotate-hover:hover { transform: rotate(5deg); transition: transform 0.3s ease-out; }
-  .editor-scale-click:active { transform: scale(0.95); transition: transform 0.1s ease-out; }
-`;
+// Removidos estilos de animação/transição globais do editor
 
-// Injetar estilos no documento (uma única vez)
-if (typeof document !== 'undefined') {
-  if (!document.head.querySelector('[data-editor-animations]')) {
-    const styleElement = document.createElement('style');
-    styleElement.setAttribute('data-editor-animations', 'true');
-    styleElement.textContent = animationStyles;
-    document.head.appendChild(styleElement);
+// Tipos de ícones padronizados
+type IconName =
+  | 'note'
+  | 'flash'
+  | 'doc'
+  | 'button'
+  | 'target'
+  | 'palette'
+  | 'chart'
+  | 'chat'
+  | 'shield'
+  | 'rocket'
+  | 'sparkle'
+  | 'money'
+  | 'refresh'
+  | 'hourglass'
+  | 'confetti'
+  | 'question'
+  | 'info';
+
+interface ComponentDef {
+  type: string;
+  name: string;
+  icon: IconName;
+  category: string;
+  description: string;
+}
+
+interface StepAnalysis {
+  icon: IconName;
+  label: string;
+  desc: string;
+}
+
+// Helper central para renderizar ícones SVG minimalistas e consistentes
+function renderIcon(name: IconName, className = 'w-4 h-4') {
+  const common = {
+    className,
+    viewBox: '0 0 24 24',
+    fill: 'none',
+    stroke: 'currentColor',
+  } as const;
+
+  switch (name) {
+    case 'note':
+      return (
+        <svg {...common}>
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h9l5 5v7a2 2 0 01-2 2H4a2 2 0 01-2-2V8a2 2 0 012-2z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 6v5h5" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 13h6M7 17h10" />
+        </svg>
+      );
+    case 'flash':
+      return (
+        <svg {...common}>
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+      );
+    case 'doc':
+      return (
+        <svg {...common}>
+          <rect x="4" y="4" width="16" height="16" rx="2" ry="2" strokeWidth={2} />
+          <path strokeWidth={2} d="M8 9h8M8 13h8M8 17h8" />
+        </svg>
+      );
+    case 'button':
+      return (
+        <svg {...common}>
+          <rect x="5" y="8" width="14" height="8" rx="4" strokeWidth={2} />
+          <circle cx="12" cy="12" r="2" strokeWidth={2} />
+        </svg>
+      );
+    case 'target':
+      return (
+        <svg {...common}>
+          <circle cx="12" cy="12" r="9" strokeWidth={2} />
+          <circle cx="12" cy="12" r="3" strokeWidth={2} />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v3M21 12h-3M12 21v-3M3 12h3" />
+        </svg>
+      );
+    case 'palette':
+      return (
+        <svg {...common}>
+          <path strokeWidth={2} d="M12 4a8 8 0 100 16h1a3 3 0 003-3 2 2 0 00-2-2h-2a2 2 0 01-2-2 3 3 0 013-3h1a3 3 0 000-6h-2z" />
+          <circle cx="8" cy="9" r="1" strokeWidth={2} />
+          <circle cx="9" cy="13" r="1" strokeWidth={2} />
+          <circle cx="12" cy="9" r="1" strokeWidth={2} />
+          <circle cx="15" cy="11" r="1" strokeWidth={2} />
+        </svg>
+      );
+    case 'chart':
+      return (
+        <svg {...common}>
+          <path strokeWidth={2} d="M4 19h16M7 17V9M12 17V5M17 17v-7" />
+        </svg>
+      );
+    case 'chat':
+      return (
+        <svg {...common}>
+          <path strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" d="M8 10h8M8 14h5" />
+          <path strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" d="M7 20l3-3h7a3 3 0 003-3V7a3 3 0 00-3-3H7a3 3 0 00-3 3v7a3 3 0 003 3z" />
+        </svg>
+      );
+    case 'shield':
+      return (
+        <svg {...common}>
+          <path strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" d="M12 3l7 4v5c0 5-3.5 7.5-7 9-3.5-1.5-7-4-7-9V7l7-4z" />
+        </svg>
+      );
+    case 'rocket':
+      return (
+        <svg {...common}>
+          <path strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" d="M14 3l7 7-5 1-1 5-7-7 5-1 1-5z" />
+          <path strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" d="M5 19l3-3M4 16l4 4" />
+        </svg>
+      );
+    case 'sparkle':
+      return (
+        <svg {...common}>
+          <path strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" d="M12 3l2 5 5 2-5 2-2 5-2-5-5-2 5-2 2-5z" />
+        </svg>
+      );
+    case 'money':
+      return (
+        <svg {...common}>
+          <rect x="4" y="7" width="16" height="10" rx="2" strokeWidth={2} />
+          <circle cx="12" cy="12" r="2.5" strokeWidth={2} />
+        </svg>
+      );
+    case 'refresh':
+      return (
+        <svg {...common}>
+          <path strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" d="M4 4v6h6M20 20v-6h-6M5 19A9 9 0 1019 5" />
+        </svg>
+      );
+    case 'hourglass':
+      return (
+        <svg {...common}>
+          <path strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" d="M6 4h12M6 20h12M8 6h8l-3 4 3 4H8l3-4-3-4z" />
+        </svg>
+      );
+    case 'confetti':
+      return (
+        <svg {...common}>
+          <path strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" d="M3 20l5-14 6 6-14 8z" />
+          <path strokeWidth={2} d="M14 4l1 3M18 6l-2 2M20 10l-3 1" />
+        </svg>
+      );
+    case 'question':
+      return (
+        <svg {...common}>
+          <circle cx="12" cy="12" r="9" strokeWidth={2} />
+          <path strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" d="M9.5 9a2.5 2.5 0 115 0c0 2-2.5 2-2.5 4" />
+          <circle cx="12" cy="17" r=".75" fill="currentColor" />
+        </svg>
+      );
+    case 'info':
+    default:
+      return (
+        <svg {...common}>
+          <circle cx="12" cy="12" r="9" strokeWidth={2} />
+          <path strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0-8h.01" />
+        </svg>
+      );
   }
 }
 
@@ -86,7 +220,12 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-6 text-center">
-          <div className="text-red-500 text-4xl mb-4">⚠️</div>
+          <div className="text-red-500 mb-4 flex items-center justify-center">
+            <svg className="w-10 h-10" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v4m0 4h.01" />
+            </svg>
+          </div>
           <h2 className="text-xl font-bold text-gray-900 mb-2">Erro de Contexto do Editor</h2>
           <p className="text-gray-600 mb-4">
             O EditorPro deve ser usado dentro de um EditorProvider.
@@ -94,9 +233,14 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
           <button
             type="button"
             onClick={() => window.location.reload()}
-            className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors"
+            className="bg-blue-600 text-white py-2 px-4 rounded-lg"
           >
-            🔄 Recarregar
+            <span className="inline-flex items-center gap-2">
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v6h6M20 20v-6h-6M5 19A9 9 0 1019 5"/>
+              </svg>
+              Recarregar
+            </span>
           </button>
         </div>
       </div>
@@ -333,96 +477,96 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   }, []);
 
   // componentes disponíveis - ideal extrair para config
-  const availableComponents = useMemo(
+  const availableComponents = useMemo<ComponentDef[]>(
     () => [
       {
         type: 'quiz-intro-header',
         name: 'Header Quiz',
-        icon: '📝',
+        icon: 'note',
         category: 'Estrutura',
         description: 'Cabeçalho com título e descrição',
       },
       {
         type: 'options-grid',
         name: 'Grade Opções',
-        icon: '⚡',
+        icon: 'flash',
         category: 'Interação',
         description: 'Grid de opções para questões',
       },
       {
         type: 'form-container',
         name: 'Formulário',
-        icon: '📝',
+        icon: 'note',
         category: 'Captura',
         description: 'Campo de entrada de dados',
       },
       {
         type: 'text',
         name: 'Texto',
-        icon: '📄',
+        icon: 'doc',
         category: 'Conteúdo',
         description: 'Bloco de texto simples',
       },
       {
         type: 'button',
         name: 'Botão',
-        icon: '🔘',
+        icon: 'button',
         category: 'Interação',
         description: 'Botão de ação',
       },
       {
         type: 'result-header-inline',
         name: 'Header Resultado',
-        icon: '🎯',
+        icon: 'target',
         category: 'Resultado',
         description: 'Cabeçalho personalizado de resultado',
       },
       {
         type: 'style-card-inline',
         name: 'Card Estilo',
-        icon: '🎨',
+        icon: 'palette',
         category: 'Resultado',
         description: 'Card com características do estilo',
       },
       {
         type: 'secondary-styles',
         name: 'Estilos Secundários',
-        icon: '📊',
+        icon: 'chart',
         category: 'Resultado',
         description: 'Lista de estilos complementares',
       },
       {
         type: 'testimonials',
         name: 'Depoimentos',
-        icon: '💬',
+        icon: 'chat',
         category: 'Social Proof',
         description: 'Lista de depoimentos',
       },
       {
         type: 'guarantee',
         name: 'Garantia',
-        icon: '🛡️',
+        icon: 'shield',
         category: 'Confiança',
         description: 'Selo de garantia',
       },
       {
         type: 'hero',
         name: 'Hero Section',
-        icon: '🚀',
+        icon: 'rocket',
         category: 'Layout',
         description: 'Seção hero para transições e ofertas',
       },
       {
         type: 'benefits',
         name: 'Benefícios',
-        icon: '✨',
+        icon: 'sparkle',
         category: 'Vendas',
         description: 'Lista de benefícios do produto',
       },
       {
         type: 'quiz-offer-cta-inline',
         name: 'CTA Oferta',
-        icon: '💰',
+        icon: 'money',
         category: 'Conversão',
         description: 'Call-to-action para ofertas especiais',
       },
@@ -432,28 +576,25 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
 
   const groupedComponents = useMemo(
     () =>
-      availableComponents.reduce(
-        (acc, c) => {
-          if (!acc[c.category]) acc[c.category] = [];
-          acc[c.category].push(c);
-          return acc;
-        },
-        {} as Record<string, typeof availableComponents>
-      ),
+      availableComponents.reduce((acc, c) => {
+        if (!acc[c.category]) acc[c.category] = [] as ComponentDef[];
+        acc[c.category].push(c);
+        return acc;
+      }, {} as Record<string, ComponentDef[]>),
     [availableComponents]
   );
 
-  const getStepAnalysis = (step: number) => {
-    if (step === 1) return { type: '📝', label: 'Captura', desc: 'Nome do usuário' };
+  const getStepAnalysis = (step: number): StepAnalysis => {
+    if (step === 1) return { icon: 'note', label: 'Captura', desc: 'Nome do usuário' };
     if (step >= 2 && step <= 11)
-      return { type: '🎯', label: 'Questão', desc: 'Pontuação de estilo' };
-    if (step === 12) return { type: '🔄', label: 'Transição', desc: 'Para estratégicas' };
+      return { icon: 'target', label: 'Questão', desc: 'Pontuação de estilo' };
+    if (step === 12) return { icon: 'refresh', label: 'Transição', desc: 'Para estratégicas' };
     if (step >= 13 && step <= 18)
-      return { type: '📊', label: 'Estratégica', desc: 'Tracking sem pontuação' };
-    if (step === 19) return { type: '⏳', label: 'Calculando', desc: 'Processamento' };
-    if (step === 20) return { type: '🎉', label: 'Resultado', desc: 'Estilo personalizado' };
-    if (step === 21) return { type: '💰', label: 'Oferta', desc: 'CTA de conversão' };
-    return { type: '❓', label: 'Indefinida', desc: 'Não mapeada' };
+      return { icon: 'chart', label: 'Estratégica', desc: 'Tracking sem pontuação' };
+    if (step === 19) return { icon: 'hourglass', label: 'Calculando', desc: 'Processamento' };
+    if (step === 20) return { icon: 'confetti', label: 'Resultado', desc: 'Estilo personalizado' };
+    if (step === 21) return { icon: 'money', label: 'Oferta', desc: 'CTA de conversão' };
+    return { icon: 'question', label: 'Indefinida', desc: 'Não mapeada' };
   };
 
   // Handlers básicos
@@ -548,8 +689,8 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
      ------------------------- */
 
   const StepSidebar: React.FC = () => (
-  <div className="w-[13rem] min-w-[13rem]
-          flex-shrink-0 h-screen sticky top-0 bg-white border-r border-gray-200 flex flex-col editor-slide-in-left editor-fade-in">
+  <div className="w-[13rem] min-w-[13rem] max-w-[13rem]
+          flex-shrink-0 h-screen sticky top-0 bg-white border-r border-gray-200 flex flex-col">
       <div className="p-4 border-b border-gray-200">
         <h3 className="font-semibold text-sm text-gray-900">Etapas do Quiz</h3>
         <p className="text-xs text-gray-500 mt-1">21 etapas configuradas</p>
@@ -568,7 +709,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
                 type="button"
                 onClick={() => handleStepSelect(step)}
                 className={cn(
-                  'w-full text-left p-2 rounded-md text-xs transition-colors editor-smooth-transition editor-hover-lift editor-scale-click',
+                  'w-full text-left p-2 rounded-md text-xs',
                   isActive
                     ? 'bg-blue-100 border-blue-300 text-blue-900'
                     : 'hover:bg-gray-50 text-gray-700'
@@ -576,7 +717,9 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="text-sm">{analysis.type}</span>
+                    <span className="text-sm">
+                      {renderIcon(analysis.icon, 'w-4 h-4 text-gray-600')}
+                    </span>
                     <span className="font-medium">Etapa {step}</span>
                   </div>
                   {hasBlocks && <span className="w-2 h-2 bg-green-500 rounded-full" />}
@@ -601,13 +744,13 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   );
 
   const ComponentsSidebar: React.FC = () => (
-  <div className="w-[9.5rem] min-w-[9.5rem]
-          flex-shrink-0 h-screen sticky top-0 bg-gradient-to-b from-white to-gray-50/50 border-r border-gray-200/60 flex flex-col shadow-sm editor-slide-in-right editor-fade-in">
+  <div className="w-[8rem] min-w-[8rem] max-w-[8rem]
+          flex-shrink-0 h-screen sticky top-0 bg-white border-r border-gray-200/60 flex flex-col">
       {/* Header da Sidebar */}
-      <div className="p-6 border-b border-gray-200/60 bg-white/80 backdrop-blur-sm">
-        <div className="flex items-center gap-3 mb-3 editor-bounce">
-          <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-600 rounded-lg flex items-center justify-center shadow-lg editor-rotate-hover">
-            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div className="p-6 border-b border-gray-200/60 bg-white">
+        <div className="flex items-center gap-3 mb-3">
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center">
+            <svg className="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
             </svg>
           </div>
@@ -627,7 +770,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
           <input
             type="text"
             placeholder="Buscar componentes..."
-            className="w-full pl-10 pr-4 py-2.5 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white/80 backdrop-blur-sm transition-all duration-200"
+            className="w-full pl-10 pr-4 py-2.5 text-sm border border-gray-200 rounded-lg"
           />
         </div>
       </div>
@@ -639,27 +782,27 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
             <div key={category} className="group">
               {/* Header da Categoria */}
               <div className="flex items-center gap-2 mb-3 px-2">
-                <div className="w-1 h-4 bg-gradient-to-b from-blue-500 to-purple-600 rounded-full" />
+                <div className="w-1 h-4 bg-gray-300 rounded-full" />
                 <h4 className="text-xs font-bold text-gray-700 uppercase tracking-wider">
                   {category}
                 </h4>
-                <div className="flex-1 h-px bg-gradient-to-r from-gray-200 to-transparent" />
+                <div className="flex-1 h-px bg-gray-200" />
                 <span className="text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">
                   {components.length}
                 </span>
               </div>
               
-              {/* Grid de Componentes */}
-              <div className="grid grid-cols-1 gap-2">
+      {/* Grid de Componentes */}
+      <div className="grid grid-cols-1 gap-1.5">
                 {components.map(component => (
                   <DraggableComponentItem
                     key={component.type}
                     blockType={component.type}
                     title={component.name}
                     description={component.description}
-                    icon={<span className="text-lg">{component.icon}</span>}
-                    category={component.category}
-                    className="bg-white/80 hover:bg-white border border-gray-200/60 hover:border-blue-300 hover:shadow-md transition-all duration-200 rounded-lg backdrop-blur-sm group-hover:scale-[1.02] transform editor-hover-lift editor-smooth-transition editor-scale-click"
+  icon={renderIcon(component.icon as any, 'w-3.5 h-3.5')}
+        category={component.category}
+  className="bg-white border border-gray-200/60 rounded-md px-2 py-1.5 text-[11px]"
                   />
                 ))}
               </div>
@@ -668,7 +811,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         </div>
         
         {/* Footer da Sidebar */}
-        <div className="p-4 border-t border-gray-200/60 bg-white/50 backdrop-blur-sm">
+        <div className="p-4 border-t border-gray-200/60 bg-white">
           <div className="flex items-center justify-center gap-2 text-xs text-gray-500">
             <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -681,8 +824,8 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   );
 
   const CanvasArea: React.FC = () => (
-    <div className="flex-1 flex flex-col bg-gradient-to-br from-gray-50 to-gray-100 editor-fade-in">
-      <div className="bg-white/80 backdrop-blur-sm border-b border-gray-200/60 shadow-sm">
+    <div className="flex-1 flex flex-col bg-gray-50">
+      <div className="bg-white border-b border-gray-200/60">
         {/* Header Principal */}
         <div className="px-6 py-4">
           <div className="flex items-center justify-between">
@@ -690,8 +833,8 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
             <div className="flex-1 min-w-0">
               {isEditingTitle ? (
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center text-white text-lg font-bold shadow-lg">
-                    🎯
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center">
+                    {renderIcon('target', 'w-5 h-5 text-white')}
                   </div>
                   <input
                     type="text"
@@ -707,12 +850,12 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
                 </div>
               ) : (
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center text-white text-lg font-bold shadow-lg">
-                    🎯
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center">
+                    {renderIcon('target', 'w-5 h-5 text-white')}
                   </div>
                   <div className="flex-1 min-w-0">
                     <h1
-                      className="font-bold text-xl text-gray-900 cursor-pointer hover:text-blue-600 transition-all duration-200 truncate"
+                      className="font-bold text-xl text-gray-900 cursor-pointer hover:text-blue-600 truncate"
                       onClick={() => setIsEditingTitle(true)}
                       title="Clique para editar o título"
                     >
@@ -734,7 +877,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
             {/* Seção de Controles */}
             <div className="flex items-center gap-4">
               {/* Indicador de Status */}
-              <div className="flex items-center gap-2 editor-fade-in">
+              <div className="flex items-center gap-2">
                 <div
                   className={cn(
                     'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border shadow-sm',
@@ -753,15 +896,15 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               </div>
 
               {/* Controles de Histórico */}
-              <div className="flex items-center bg-white rounded-lg border border-gray-200 shadow-sm editor-fade-in">
+              <div className="flex items-center bg-white rounded-lg border border-gray-200">
                 <button
                   type="button"
                   onClick={actions.undo}
                   disabled={!actions.canUndo}
                   className={cn(
-                    'flex items-center gap-1.5 px-3 py-2 text-sm font-medium rounded-l-lg transition-all duration-200 editor-scale-click',
+                    'flex items-center gap-1.5 px-3 py-2 text-sm font-medium rounded-l-lg',
                     actions.canUndo
-                      ? 'text-gray-700 hover:bg-gray-50 hover:text-blue-600'
+                      ? 'text-gray-700'
                       : 'text-gray-400 cursor-not-allowed bg-gray-50'
                   )}
                   title="Desfazer (Ctrl+Z)"
@@ -777,9 +920,9 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
                   onClick={actions.redo}
                   disabled={!actions.canRedo}
                   className={cn(
-                    'flex items-center gap-1.5 px-3 py-2 text-sm font-medium rounded-r-lg transition-all duration-200 editor-scale-click',
+                    'flex items-center gap-1.5 px-3 py-2 text-sm font-medium rounded-r-lg',
                     actions.canRedo
-                      ? 'text-gray-700 hover:bg-gray-50 hover:text-blue-600'
+                      ? 'text-gray-700'
                       : 'text-gray-400 cursor-not-allowed bg-gray-50'
                   )}
                   title="Refazer (Ctrl+Y)"
@@ -792,7 +935,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               </div>
 
               {/* Controles de Import/Export */}
-              <div className="flex items-center bg-white rounded-lg border border-gray-200 shadow-sm editor-fade-in">
+              <div className="flex items-center bg-white rounded-lg border border-gray-200 shadow-sm">
                 <button
                   type="button"
                   onClick={async () => {
@@ -806,7 +949,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
                       notification?.error?.('Erro ao exportar JSON');
                     }
                   }}
-                  className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-blue-600 rounded-l-lg transition-all duration-200 editor-scale-click"
+                  className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-700 rounded-l-lg"
                   title="Exportar como JSON"
                   aria-label="Exportar estado atual como JSON"
                 >
@@ -849,7 +992,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-blue-600 rounded-r-lg transition-all duration-200 editor-scale-click"
+                  className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-blue-600 rounded-r-lg"
                   title="Importar JSON"
                   aria-label="Importar estado do editor via JSON"
                 >
@@ -861,11 +1004,11 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               </div>
 
               {/* Toggle de Tema */}
-              <div className="flex bg-gray-100 rounded-lg p-1 border border-gray-200 shadow-sm editor-fade-in">
+        <div className="flex bg-gray-100 rounded-lg p-1 border border-gray-200 shadow-sm">
                 <button
                   type="button"
                   onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                  className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-blue-600 rounded-lg transition-all duration-200 editor-scale-click"
+          className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-blue-600 rounded-lg"
                   title={`Alternar para tema ${theme === 'dark' ? 'claro' : 'escuro'}`}
                 >
                   {theme === 'dark' ? (
@@ -882,12 +1025,12 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               </div>
 
               {/* Toggle Edit/Preview */}
-              <div className="flex bg-gray-100 rounded-lg p-1 border border-gray-200 shadow-sm editor-fade-in">
+      <div className="flex bg-gray-100 rounded-lg p-1 border border-gray-200 shadow-sm">
                 <button
                   type="button"
                   onClick={() => setMode('edit')}
                   className={cn(
-                    'flex items-center gap-2 px-4 py-2 text-sm rounded-md transition-all duration-200 font-medium',
+        'flex items-center gap-2 px-4 py-2 text-sm rounded-md font-medium',
                     mode === 'edit'
                       ? 'bg-white text-blue-600 shadow-sm border border-blue-200'
                       : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
@@ -902,7 +1045,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
                   type="button"
                   onClick={() => setMode('preview')}
                   className={cn(
-                    'flex items-center gap-2 px-4 py-2 text-sm rounded-md transition-all duration-200 font-medium',
+                    'flex items-center gap-2 px-4 py-2 text-sm rounded-md font-medium',
                     mode === 'preview'
                       ? 'bg-white text-blue-600 shadow-sm border border-blue-200'
                       : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
@@ -918,7 +1061,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
 
               {/* Botão de Salvar */}
               <button
-                className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-sm font-semibold rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+                className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-sm font-semibold rounded-lg hover:from-blue-700 hover:to-blue-800 shadow-lg"
                 title="Salvar etapa atual"
                 onClick={() => {
                   try {
@@ -955,7 +1098,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               </button>
             
               <button
-                className="px-4 py-2 bg-white border border-gray-300 text-gray-700 text-sm rounded-md hover:bg-gray-50 transition-colors editor-scale-click"
+                className="px-4 py-2 bg-white border border-gray-300 text-gray-700 text-sm rounded-md hover:bg-gray-50"
                 title="Remover publicação da etapa atual"
                 onClick={() => {
                   try {
@@ -982,7 +1125,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
                 ⏏️ Despublicar
               </button>
               <button
-                className="px-4 py-2 bg-green-600 text-white text-sm rounded-md hover:bg-green-700 transition-colors editor-scale-click"
+                className="px-4 py-2 bg-green-600 text-white text-sm rounded-md hover:bg-green-700"
                 title="Publicar todas as etapas com conteúdo"
                 onClick={() => {
                   try {
@@ -1013,7 +1156,10 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
                   }
                 }}
               >
-                🚀 Publicar tudo
+                <span className="inline-flex items-center gap-2">
+                  {renderIcon('rocket', 'w-4 h-4')}
+                  Publicar tudo
+                </span>
               </button>
             </div>
           </div>
@@ -1056,9 +1202,9 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       </div>
 
       {/* Canvas principal com drag & drop - sistema unificado simples */}
-      <div className={cn('flex-1 min-w-0 p-2 overflow-x-hidden editor-smooth-transition', isDragging && 'editor-drop-zone-active')} data-canvas-container>
+  <div className={cn('flex-1 min-w-0 p-2 overflow-x-auto', isDragging && 'editor-drop-zone-active')} data-canvas-container>
         <div
-          className="customizable-width mx-auto w-full px-2 sm:px-3 md:px-4 max-w-[38rem]"
+  className="customizable-width mx-auto px-2 sm:px-3 md:px-4 w-full md:max-w-[40rem] lg:w-[40rem] lg:max-w-[40rem]"
         >
           <CanvasDropZone
             blocks={currentStepData}
@@ -1077,7 +1223,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
 
   const PropertiesColumn: React.FC = () => (
   <div className="w-[24rem] min-w-[24rem] max-w-[24rem] flex-shrink-0 h-screen sticky top-0 overflow-y-auto
-                    bg-white border-l border-gray-200 flex flex-col editor-slide-in-right editor-fade-in">
+                    bg-white border-l border-gray-200 flex flex-col">
       {selectedBlock ? (
         <Suspense
           fallback={<div className="p-4 text-sm text-gray-600">Carregando propriedades…</div>}
@@ -1092,7 +1238,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
           />
         </Suspense>
       ) : (
-        <div className="h-full p-6 text-sm text-gray-600 editor-fade-in editor-slide-up">
+  <div className="h-full p-6 text-sm text-gray-600">
           Selecione um bloco no canvas para editar suas propriedades.
         </div>
       )}
@@ -1110,7 +1256,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
       >
-        <div className={`editor-pro h-screen bg-gray-50 flex overflow-x-hidden max-w-screen ${className}`}>
+  <div className={`editor-pro h-screen bg-gray-50 flex overflow-x-auto max-w-screen ${className}`}>
           <StepSidebar />
           <ComponentsSidebar />
           <div className="flex-1 min-w-0 flex">
