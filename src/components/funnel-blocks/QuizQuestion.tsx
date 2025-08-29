@@ -29,6 +29,10 @@ interface CustomStyles {
   imageSize?: number;
   contentType?: 'text-only' | 'image-only' | 'text-and-image';
   scale?: number;
+  // Novos controles de seleção (paridade com renderizadores)
+  selectionStyle?: 'border' | 'background' | 'shadow' | 'scale';
+  selectedColor?: string;
+  hoverColor?: string;
 }
 
 /**
@@ -147,6 +151,17 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
   testId = 'quiz-question',
   ...props
 }) => {
+  // Util para converter HEX em RGBA
+  const hexToRgba = (hex: string, alpha: number) => {
+    if (!hex) return '';
+    const clean = hex.replace('#', '');
+    if (clean.length !== 6) return hex;
+    const r = parseInt(clean.substring(0, 2), 16);
+    const g = parseInt(clean.substring(2, 4), 16);
+    const b = parseInt(clean.substring(4, 6), 16);
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  };
+
   // LOG DE DEBUG - verificar se as opções estão chegando
   console.log('🔍 QuizQuestion DEBUG:', {
     question,
@@ -300,22 +315,18 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
 
     const baseClasses = 'transition-all duration-200 cursor-pointer';
 
-    let optionClasses = baseClasses;
+  let optionClasses = baseClasses;
     let contentClasses = '';
 
     switch (optionStyle) {
       case 'card':
         optionClasses += ` p-4 border-2 rounded-lg ${
-          isSelected
-            ? 'border-[#B89B7A] bg-[#B89B7A]/10'
-            : 'border-gray-200 hover:border-[#B89B7A]/50'
+          isSelected ? '' : 'border-gray-200'
         }`;
         contentClasses = 'flex items-center space-x-3';
         break;
       case 'button':
-        optionClasses += ` px-6 py-3 rounded-lg ${
-          isSelected ? 'bg-[#B89B7A] text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-800'
-        }`;
+        optionClasses += ` px-6 py-3 rounded-lg ${isSelected ? '' : 'bg-gray-100 text-gray-800'}`;
         contentClasses = 'text-center';
         break;
       case 'radio':
@@ -325,11 +336,42 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
         break;
     }
 
+    // Overrides dinâmicos conforme seleção e estilo desejado
+    const selectedColor = customStyles?.selectedColor || '#B89B7A';
+    const selectionStyle = customStyles?.selectionStyle || 'border';
+    const overrides: React.CSSProperties = {};
+
+    if (isSelected) {
+      // Borda destacada
+      overrides.borderColor = selectedColor;
+
+      // Estilo adicional
+      if (selectionStyle === 'background') {
+        overrides.backgroundColor = hexToRgba(selectedColor, 0.12);
+        overrides.color = undefined; // manter cores do tema
+      }
+
+      if (selectionStyle === 'shadow') {
+        overrides.boxShadow = `0 0 0 4px ${hexToRgba(selectedColor, 0.3)}`;
+      }
+
+      if (selectionStyle === 'scale') {
+        overrides.transform = 'scale(1.02)';
+        overrides.willChange = 'transform';
+      }
+
+      // Para botão, aplicar fundo direto
+      if (optionStyle === 'button') {
+        overrides.backgroundColor = selectedColor;
+        overrides.color = '#fff';
+      }
+    }
+
     return (
       <div
         key={option.id}
         className={optionClasses}
-        style={{ ...itemStyles, ...(customStyles?.optionStyles || {}) }}
+        style={{ ...itemStyles, ...(customStyles?.optionStyles || {}), ...overrides }}
         onClick={() => handleOptionSelect(option.id)}
         data-testid={`option-${option.id}`}
       >
@@ -391,8 +433,9 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
               {showLetters && optionStyle === 'card' && (
                 <div
                   className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${
-                    isSelected ? 'bg-[#B89B7A] text-white' : 'bg-gray-200 text-gray-600'
+                    isSelected ? 'text-white' : 'bg-gray-200 text-gray-600'
                   }`}
+                  style={isSelected ? { backgroundColor: selectedColor } : undefined}
                 >
                   {letter}
                 </div>

@@ -198,51 +198,42 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
   const maxSelections = properties?.maxSelections || options.length;
 
   // Callbacks para interações do usuário
-  const handleAnswer = (selectedOptions: any[]) => {
-    setSelectedOptions(selectedOptions);
+  const emitSelectionEvent = (opts: any[]) => {
+    setSelectedOptions(opts);
 
     // Determinar se a seleção está válida conforme regra centralizada (considera fase/etapa)
     const step = (window as any)?.__quizCurrentStep ?? null;
-    const { isValid } = computeSelectionValidity(step, selectedOptions.length, {
+    const { isValid } = computeSelectionValidity(step, opts.length, {
       minSelections: properties?.minSelections,
       requiredSelections: properties?.requiredSelections,
     });
-    const currentCount = selectedOptions.length;
+    const currentCount = opts.length;
 
-    // ✅ NOVO: Disparar evento customizado para validação de botão
+    // Evento padrão unificado
     try {
       const questionId = properties?.questionId || id;
       window.dispatchEvent(
         new CustomEvent('quiz-selection-change', {
           detail: {
-            // payload consistente com outros blocos
             questionId,
             selectionCount: currentCount,
             valid: isValid,
             isValid,
-            // compat legado (consumidores que olham estes campos)
             gridId: id,
             selectedCount: currentCount,
             minRequired: minSelections,
             maxAllowed: maxSelections,
-            selectedOptions: selectedOptions.map(opt => opt.id),
+            selectedOptions: opts.map(opt => opt.id),
           },
         })
       );
     } catch {}
 
-    console.log('🔘 [QuizOptionsGridBlock] Evento de seleção disparado:', {
-      gridId: id,
-      selectedCount: currentCount,
-      minRequired: minSelections,
-      isValid: isValid,
-    });
-
     // Notificar o editor que uma seleção foi feita
     if (onPropertyChange) {
       onPropertyChange(
         'selectedOptions',
-        selectedOptions.map(opt => opt.id)
+        opts.map(opt => opt.id)
       );
       onPropertyChange('hasCompleteSelection', isValid);
     }
@@ -294,6 +285,11 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
     gridGap = 8,
     responsiveColumns = true,
   } = properties || {};
+
+  // Seleção: estilo e cores (paridade com novos renderizadores)
+  const selectionStyle = properties?.selectionStyle || 'border';
+  const selectedColor = properties?.selectedColor || '#B89B7A';
+  const hoverColor = properties?.hoverColor || '#D4C2A8';
 
   // Calcular tamanho da imagem
   const finalImageWidth = imageWidth || imageSize;
@@ -352,7 +348,8 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
         autoAdvanceDelay={properties?.autoAdvanceDelay || 1000}
         showNextButton={true}
         nextButtonText={properties?.nextButtonText || 'Avançar'}
-        onAnswer={handleAnswer}
+        onSelectionChange={emitSelectionEvent}
+        onAnswer={emitSelectionEvent}
         onNext={handleNext}
         deviceView={props.deviceView || 'desktop'}
         // Passar propriedades customizadas via props
@@ -376,6 +373,10 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
           shadowOffsetY: shadowIntensity,
           imageSize,
           contentType,
+          // novo: estilo de seleção e cores
+          selectionStyle,
+          selectedColor,
+          hoverColor,
         }}
       />
     </div>
