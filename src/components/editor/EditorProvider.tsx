@@ -522,13 +522,38 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
 
   const updateBlock = useCallback(
     async (stepKey: string, blockId: string, updates: Record<string, any>) => {
-      // Sempre mesclar alterações em properties por padrão.
-      // Se o payload já vier com { properties }, respeitar e mesclar também.
+      // Suporta merges em properties e content; mantém retrocompatibilidade para updates top-level
       const nextBlocks = (rawState.stepBlocks[stepKey] || []).map(b => {
         if (b.id !== blockId) return b;
-        const incomingProps = updates.properties ?? updates;
-        const mergedProps = { ...(b.properties || {}), ...(incomingProps || {}) };
-        return { ...b, properties: mergedProps };
+
+        const hasExplicitProps = Object.prototype.hasOwnProperty.call(updates, 'properties');
+        const hasExplicitContent = Object.prototype.hasOwnProperty.call(updates, 'content');
+
+        // Separe campos conhecidos
+        const explicitProps = (hasExplicitProps ? updates.properties : undefined) as
+          | Record<string, any>
+          | undefined;
+        const explicitContent = (hasExplicitContent ? updates.content : undefined) as
+          | Record<string, any>
+          | undefined;
+
+        // Quaisquer chaves top-level (exceto content/properties) vão para properties por compatibilidade
+        const topLevelToProps = Object.keys(updates).reduce<Record<string, any>>((acc, k) => {
+          if (k !== 'properties' && k !== 'content') acc[k] = (updates as any)[k];
+          return acc;
+        }, {});
+
+        const mergedProps = {
+          ...(b.properties || {}),
+          ...(topLevelToProps || {}),
+          ...(explicitProps || {}),
+        };
+        const mergedContent = {
+          ...(b.content || {}),
+          ...(explicitContent || {}),
+        };
+
+        return { ...b, properties: mergedProps, content: mergedContent };
       });
       setState(prev => ({
         ...prev,

@@ -166,7 +166,10 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
         </div>
       ) : (
         <SortableContext
-          items={blocks.map(block => `dnd-block-${String(block.id)}`)}
+          items={React.useMemo(
+            () => blocks.map(block => `dnd-block-${String(block.id)}`),
+            [blocks]
+          )}
           strategy={verticalListSortingStrategy}
         >
           {/* Wrapper interno para limitar largura dos componentes no canvas (≈15% mais largo) */}
