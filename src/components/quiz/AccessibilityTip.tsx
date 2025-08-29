@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
 import { Info } from 'lucide-react';
 
 const AccessibilityTip: React.FC = () => {
@@ -8,13 +7,7 @@ const AccessibilityTip: React.FC = () => {
   return (
     <>
       {isVisible && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.5 }}
-          className="bg-[#F9F3EE] text-[#8F7A6A] p-3 rounded-lg text-xs flex items-start gap-2 shadow-sm mt-6 max-w-md mx-auto"
-        >
+        <div className="bg-[#F9F3EE] text-[#8F7A6A] p-3 rounded-lg text-xs flex items-start gap-2 shadow-sm mt-6 max-w-md mx-auto transition-all">
           <Info className="h-4 w-4 text-[#B89B7A] mt-0.5 flex-shrink-0" />
           <div>
             <p className="mb-1">
@@ -28,7 +21,7 @@ const AccessibilityTip: React.FC = () => {
               Entendi, não mostrar novamente
             </button>
           </div>
-        </motion.div>
+        </div>
       )}
     </>
   );

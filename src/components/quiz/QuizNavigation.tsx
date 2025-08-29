@@ -20,6 +20,7 @@ import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import { Card, CardContent } from '../ui/card';
 import { Progress } from '../ui/progress';
+import { useOptimizedScheduler } from '@/hooks/useOptimizedScheduler';
 
 interface QuizNavigationProps {
   canProceed: boolean;
@@ -55,7 +56,7 @@ const QuizNavigation: React.FC<QuizNavigationProps> = ({
   sessionId,
 }) => {
   const [showActivationEffect, setShowActivationEffect] = useState(false);
-  const [autoAdvanceTimer, setAutoAdvanceTimer] = useState<NodeJS.Timeout | null>(null);
+  const { schedule, cancel } = useOptimizedScheduler();
 
   const shouldAutoAdvance = useCallback((): boolean => {
     if (!canProceed) {
@@ -67,39 +68,31 @@ const QuizNavigation: React.FC<QuizNavigationProps> = ({
   }, [canProceed, currentQuestionType, selectedOptionsCount]);
 
   useEffect(() => {
-    if (autoAdvanceTimer) {
-      clearTimeout(autoAdvanceTimer);
-      setAutoAdvanceTimer(null);
-    }
+    // limpa qualquer tarefa anterior
+    cancel('quiz-nav:auto-advance');
+    cancel('quiz-nav:visual');
 
     if (canProceed) {
       // Efeito de ativação se puder prosseguir (normal ou estratégico)
       setShowActivationEffect(true);
-      const visualTimer = setTimeout(() => {
-        setShowActivationEffect(false);
-      }, 2000); // Duração do efeito visual
+      schedule('quiz-nav:visual', () => setShowActivationEffect(false), 2000);
 
-      // Auto-avanço apenas para questões normais
+      // Auto-avanç o apenas para questões normais
       if (currentQuestionType === 'normal' && shouldAutoAdvance()) {
-        console.log('Configurando avanço automático em 45ms');
-        const newTimer = setTimeout(() => {
-          console.log('Executando avanço automático agora');
+        schedule('quiz-nav:auto-advance', () => {
           onNext();
-        }, 45); // Tempo para auto-avanço
-        setAutoAdvanceTimer(newTimer);
+        }, 45);
       }
 
       return () => {
-        clearTimeout(visualTimer);
-        if (autoAdvanceTimer) {
-          clearTimeout(autoAdvanceTimer);
-        }
+        cancel('quiz-nav:visual');
+        cancel('quiz-nav:auto-advance');
       };
     } else {
       // Se não puder prosseguir
       setShowActivationEffect(false);
     }
-  }, [canProceed, onNext, shouldAutoAdvance, currentQuestionType]);
+  }, [canProceed, onNext, shouldAutoAdvance, currentQuestionType, cancel, schedule]);
 
   const getHelperText = useCallback((): string => {
     if (!canProceed) {

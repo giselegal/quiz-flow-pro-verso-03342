@@ -4,7 +4,6 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { Check, Loader2 } from 'lucide-react';
 
 interface PropertyChangeIndicatorProps {
@@ -32,29 +31,17 @@ export const PropertyChangeIndicator: React.FC<PropertyChangeIndicatorProps> = (
     <div className="relative">
       {children}
 
-      <AnimatePresence>
-        {isChanging && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            style={{ backgroundColor: '#FAF9F7' }}
-          >
-            <Loader2 className="w-3 h-3 text-white animate-spin" />
-          </motion.div>
-        )}
+      {isChanging && (
+        <div className="absolute -top-1 -right-1 bg-[#FAF9F7] rounded-full p-1 shadow-sm opacity-100 transition-opacity">
+          <Loader2 className="w-3 h-3 text-white animate-spin" />
+        </div>
+      )}
 
-        {showSaved && !isChanging && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            className="absolute -top-1 -right-1 bg-green-500 rounded-full p-1 shadow-lg"
-          >
-            <Check className="w-3 h-3 text-white" />
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {showSaved && !isChanging && (
+        <div className="absolute -top-1 -right-1 bg-green-500 rounded-full p-1 shadow-lg opacity-100 transition-transform">
+          <Check className="w-3 h-3 text-white" />
+        </div>
+      )}
     </div>
   );
 };

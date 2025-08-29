@@ -12,7 +12,7 @@ import {
   Save,
   Clock,
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+// framer-motion removido em áreas fora do Canvas
 import useOptimizedScheduler from '@/hooks/useOptimizedScheduler';
 
 // Tipos para o sistema de feedback
@@ -246,11 +246,8 @@ const Toast: React.FC<{
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 50, scale: 0.95 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: -50, scale: 0.95 }}
-      className={`max-w-sm w-full bg-white rounded-lg shadow-lg border ${getBgColor()} p-4`}
+    <div
+      className={`max-w-sm w-full bg-white rounded-lg shadow-lg border ${getBgColor()} p-4 transition-all duration-200`}
     >
       <div className="flex items-start">
         <div className="flex-shrink-0">{getIcon()}</div>
@@ -274,7 +271,7 @@ const Toast: React.FC<{
           </button>
         </div>
       </div>
-    </motion.div>
+  </div>
   );
 };
 
@@ -284,11 +281,9 @@ export const ToastContainer: React.FC = () => {
 
   return createPortal(
     <div className="fixed bottom-0 right-0 z-50 p-6 space-y-4">
-      <AnimatePresence>
-        {toasts.map(toast => (
-          <Toast key={toast.id} toast={toast} onRemove={removeToast} />
-        ))}
-      </AnimatePresence>
+      {toasts.map(toast => (
+        <Toast key={toast.id} toast={toast} onRemove={removeToast} />
+      ))}
     </div>,
     document.body
   );
@@ -416,21 +411,11 @@ export const SuccessAnimation: React.FC<{
   if (!show) return null;
 
   return (
-    <motion.div
-      initial={{ scale: 0 }}
-      animate={{ scale: 1 }}
-      exit={{ scale: 0 }}
-      className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none"
-    >
-      <motion.div
-        initial={{ scale: 0, rotate: -180 }}
-        animate={{ scale: 1, rotate: 0 }}
-        transition={{ type: 'spring', stiffness: 260, damping: 20 }}
-        className="bg-green-500 rounded-full p-4"
-      >
+    <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
+      <div className="bg-green-500 rounded-full p-4 transform transition-transform">
         <CheckCircle className="h-12 w-12 text-white" />
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 };
 

@@ -1,5 +1,6 @@
 import { cn } from '@/lib/utils';
 import React, { useEffect, useState } from 'react';
+import { useOptimizedScheduler } from '@/hooks/useOptimizedScheduler';
 
 interface NotificationProps {
   message: string;
@@ -15,15 +16,16 @@ export const Notification: React.FC<NotificationProps> = ({
   onClose,
 }) => {
   const [isVisible, setIsVisible] = useState(true);
+  const { schedule, cancel } = useOptimizedScheduler();
 
   useEffect(() => {
     if (duration > 0) {
-      const timer = setTimeout(() => {
+      schedule(`notification:${message}`, () => {
         setIsVisible(false);
         onClose?.();
       }, duration);
 
-      return () => clearTimeout(timer);
+      return () => cancel(`notification:${message}`);
     }
   }, [duration, onClose]);
 
