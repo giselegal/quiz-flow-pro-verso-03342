@@ -269,13 +269,16 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
     return () => window.removeEventListener('keydown', onKeyDown, { capture: true } as any);
   }, [editorContext]);
 
-  // Auto-scroll: ao mudar o bloco selecionado, rolar suavemente até ele no canvas
+  // Auto-scroll: desativado no Editor (edição e preview). Mantido apenas fora do editor (produção).
   useEffect(() => {
     const selId = (editorContext as any)?.state?.selectedBlockId as string | null;
     if (!selId) return;
+    if (typeof window !== 'undefined') {
+      const p = window.location?.pathname || '';
+      if (p.includes('/editor') || p.includes('/preview')) return; // não autoscroll no editor
+    }
     const root = containerRef.current || document.querySelector('[data-canvas-container]');
     if (!root) return;
-    // Tenta padrões de id/data-attr usados nos renders
     const target =
       (root as HTMLElement).querySelector(`[data-block-id="${selId}"]`) ||
       (root as HTMLElement).querySelector(`#dnd-block-${selId}`) ||
@@ -1166,9 +1169,9 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       </div>
 
       {/* Canvas principal: edição (DnD) ou preview com renderização real de produção */}
-      <div
+    <div
         className={cn(
-          'flex-1 min-w-0 p-2 overflow-x-hidden',
+      'flex-1 min-w-0 p-2 overflow-x-hidden overflow-y-auto',
           isDragging && 'editor-drop-zone-active'
         )}
         data-canvas-container
