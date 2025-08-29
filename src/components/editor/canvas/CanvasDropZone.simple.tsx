@@ -171,6 +171,59 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
     return { startIndex, endIndex, topPad, bottomPad };
   }, [scrollTop, containerHeight, blocks.length]);
 
+  // Renderização progressiva no modo edição para listas enormes (reduz pico de render)
+  const EDIT_PROGRESSIVE_THRESHOLD = 200;
+  const EDIT_BATCH_SIZE = 100;
+  const enableProgressiveEdit =
+    !isPreviewing && !isDraggingAnyValidComponent && blocks.length > EDIT_PROGRESSIVE_THRESHOLD;
+  const [editRenderCount, setEditRenderCount] = React.useState<number>(
+    enableProgressiveEdit ? Math.min(EDIT_BATCH_SIZE, blocks.length) : blocks.length
+  );
+
+  // Ajusta quando o tamanho muda ou quando entramos/saímos do modo progressivo
+  React.useEffect(() => {
+    if (enableProgressiveEdit) {
+      setEditRenderCount(prev => Math.min(Math.max(prev, EDIT_BATCH_SIZE), blocks.length));
+    } else {
+      setEditRenderCount(blocks.length);
+    }
+  }, [enableProgressiveEdit, blocks.length]);
+
+  // Se houver drag, garantir lista completa
+  React.useEffect(() => {
+    if (isDraggingAnyValidComponent) {
+      setEditRenderCount(blocks.length);
+    }
+  }, [isDraggingAnyValidComponent, blocks.length]);
+
+  // Loop de incremento em idle/rAF
+  React.useEffect(() => {
+    if (!enableProgressiveEdit) return;
+    if (editRenderCount >= blocks.length) return;
+
+    let cancelled = false;
+    const step = () => {
+      if (cancelled) return;
+      setEditRenderCount(prev => {
+        if (prev >= blocks.length) return prev;
+        const next = Math.min(blocks.length, prev + EDIT_BATCH_SIZE);
+        return next;
+      });
+      if (!cancelled) schedule();
+    };
+    const schedule = () => {
+      if ('requestIdleCallback' in window) {
+        (window as any).requestIdleCallback(() => step());
+      } else {
+        requestAnimationFrame(() => step());
+      }
+    };
+    schedule();
+    return () => {
+      cancelled = true;
+    };
+  }, [enableProgressiveEdit, editRenderCount, blocks.length]);
+
   return (
     <div
       id={CANVAS_ROOT_ID}
@@ -250,7 +303,7 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
               {/* Drop zone no início - sempre presente (ativa durante drag) */}
               <InterBlockDropZone position={0} isActive={isDraggingAnyValidComponent} />
 
-              {blocks.map((block, index) => (
+              {(enableProgressiveEdit ? blocks.slice(0, editRenderCount) : blocks).map((block, index) => (
                 <React.Fragment key={String(block.id)}>
                   <SortableBlockWrapper
                     block={block}
