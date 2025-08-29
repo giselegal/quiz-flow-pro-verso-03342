@@ -1174,6 +1174,27 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   );
   const CanvasArea = React.memo(CanvasAreaBase);
 
+  // Estado de modo de dispositivo para preview (reflete nos controles do PropertiesPanel)
+  const [previewDevice, setPreviewDevice] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
+
+  // Ações utilitárias do painel de propriedades
+  const handleDuplicateSelected = useCallback(() => {
+    if (!selectedBlock) return;
+    const clone: Block = {
+      ...selectedBlock,
+      id: `${selectedBlock.id}-copy-${Math.random().toString(36).slice(2, 7)}`,
+    };
+    // Insere logo após o original
+    const idx = currentStepData.findIndex(b => b.id === selectedBlock.id);
+    actions.addBlockAtIndex(currentStepKey, clone, idx + 1);
+  }, [selectedBlock, actions, currentStepKey, currentStepData]);
+
+  const handleResetSelected = useCallback(() => {
+    if (!selectedBlock) return;
+    // Reseta somente propriedades (mantém content/id/order/type)
+    actions.updateBlock(currentStepKey, selectedBlock.id, { properties: {} });
+  }, [selectedBlock, actions, currentStepKey]);
+
   const MemoPropertiesColumn = React.memo(() => (
   <PropertiesColumn
       selectedBlock={selectedBlock as any}
@@ -1182,6 +1203,10 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       }
       onClose={() => actions.setSelectedBlockId(null)}
       onDelete={() => selectedBlock ? actions.removeBlock(currentStepKey, selectedBlock.id) : undefined}
+      onDuplicate={handleDuplicateSelected}
+      onReset={handleResetSelected}
+      previewMode={previewDevice}
+      onPreviewModeChange={setPreviewDevice}
       className="!w-[20%] !min-w-0 !max-w-none"
     />
   ));
