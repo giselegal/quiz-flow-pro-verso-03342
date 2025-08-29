@@ -4,46 +4,6 @@ import { Card } from '@/components/ui/card';
 import type { BlockComponentProps } from '@/types/blocks';
 import { useQuizResult } from '@/hooks/useQuizResult';
 
-// Função para converter valores de margem em classes Tailwind (Sistema Universal)
-const getMarginClass = (
-  value: number | string | null | undefined,
-  type: 'top' | 'bottom' | 'left' | 'right'
-): string => {
-  const parsed = typeof value === 'string' ? parseFloat(value) : value;
-  const numValue = typeof parsed === 'number' && !isNaN(parsed) ? parsed : 0;
-  if (numValue === 0) return '';
-
-  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
-
-  const mapPositive = (v: number) => {
-    if (v <= 4) return `${prefix}-1`;
-    if (v <= 8) return `${prefix}-2`;
-    if (v <= 12) return `${prefix}-3`;
-    if (v <= 16) return `${prefix}-4`;
-    if (v <= 20) return `${prefix}-5`;
-    if (v <= 24) return `${prefix}-6`;
-    if (v <= 28) return `${prefix}-7`;
-    if (v <= 32) return `${prefix}-8`;
-    if (v <= 36) return `${prefix}-9`;
-    if (v <= 40) return `${prefix}-10`;
-    if (v <= 44) return `${prefix}-11`;
-    if (v <= 48) return `${prefix}-12`;
-    if (v <= 56) return `${prefix}-14`;
-    if (v <= 64) return `${prefix}-16`;
-    if (v <= 80) return `${prefix}-20`;
-    if (v <= 96) return `${prefix}-24`;
-    if (v <= 112) return `${prefix}-28`;
-    return `${prefix}-32`;
-  };
-
-  if (numValue < 0) {
-    const abs = Math.abs(numValue);
-    return `-${mapPositive(abs)}`;
-  }
-
-  return mapPositive(numValue);
-};
-
 const interpolate = (text: string, vars: Record<string, any>) => {
   if (!text) return '';
   return text

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -14,6 +13,12 @@ interface QuizTransitionBlockProps {
       icon?: string;
       backgroundColor?: string;
       textColor?: string;
+  // Propriedades opcionais de layout
+  marginTop?: number | string;
+  marginBottom?: number | string;
+  marginLeft?: number | string;
+  marginRight?: number | string;
+  showButton?: boolean;
     };
   };
   isSelected?: boolean;
@@ -23,7 +28,10 @@ interface QuizTransitionBlockProps {
 }
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
-const getMarginClass = (value, type) => {
+const getMarginClass = (
+  value: number | string,
+  type: 'top' | 'bottom' | 'left' | 'right'
+) => {
   const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
   if (isNaN(numValue) || numValue === 0) return '';
@@ -90,6 +98,13 @@ const QuizTransitionBlock: React.FC<QuizTransitionBlockProps> = ({
     icon = '🎯',
     backgroundColor = '#ffffff',
     textColor = '#432818',
+    // Margens universais (evita ReferenceError)
+    marginTop = 0,
+    marginBottom = 0,
+    marginLeft = 0,
+    marginRight = 0,
+    // Flags opcionais
+    showButton = true,
   } = block?.properties || {};
 
   return (
@@ -127,9 +142,15 @@ const QuizTransitionBlock: React.FC<QuizTransitionBlockProps> = ({
         </p>
 
         {/* CTA Button */}
-        <Button size="lg" className="px-8 py-3 bg-primary hover:bg-primary/90" disabled={disabled}>
-          {buttonText}
-        </Button>
+        {showButton && (
+          <Button
+            size="lg"
+            className="px-8 py-3 bg-primary hover:bg-primary/90"
+            disabled={disabled}
+          >
+            {buttonText}
+          </Button>
+        )}
       </div>
 
       {/* Selected indicator */}

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { cn } from '@/lib/utils';
 import { Type, Settings } from 'lucide-react';
 import type { BlockComponentProps } from '@/types/blocks';
@@ -10,7 +9,10 @@ import type { BlockComponentProps } from '@/types/blocks';
  */
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
-const getMarginClass = (value, type) => {
+const getMarginClass = (
+  value: number | string,
+  type: 'top' | 'bottom' | 'left' | 'right'
+) => {
   const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
   if (isNaN(numValue) || numValue === 0) return '';
@@ -58,7 +60,7 @@ const HeadingInlineBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   onClick,
-  onPropertyChange,
+  // onPropertyChange, // not used here
   className = '',
 }) => {
   const {
@@ -69,7 +71,7 @@ const HeadingInlineBlock: React.FC<BlockComponentProps> = ({
     backgroundColor = 'transparent',
     fontWeight = 'bold',
     maxWidth = 'full',
-    responsive = true,
+  // responsive = true, // not used
     // Fix: Extract margin properties from block
     marginTop = 0,
     marginBottom = 0,
