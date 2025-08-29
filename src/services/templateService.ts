@@ -41,6 +41,14 @@ export interface StepLoadResult {
   };
 }
 
+// Cache leve para templates por etapa (evita recomputar em navegações rápidas)
+const stepTemplateCache = new Map<number, TemplateData>();
+
+// Utilitário de clone raso dos blocos (evita refs compartilhadas entre etapas)
+function cloneBlocks(blocks: Block[]): Block[] {
+  return (blocks || []).map(b => ({ ...b, content: { ...(b.content || {}) }, properties: { ...(b.properties || {}) } }));
+}
+
 function getFallbackBlocksForStep(step: number): Block[] {
   // 🎯 PRIMEIRA TENTATIVA: Usar blocos do template completo
   const stepId = `step-${step}`;
@@ -377,30 +385,68 @@ const templateService = {
     console.log(`🔄 getTemplateByStep(${step}): Carregando template...`);
 
     try {
+      // Cache imediato
+      const cached = stepTemplateCache.get(step);
+      if (cached) return cached;
+
       const fallbackBlocks = getFallbackBlocksForStep(step);
 
       const templateData: TemplateData = {
         templateVersion: '1.0.0',
-        blocks: fallbackBlocks,
+        blocks: cloneBlocks(fallbackBlocks),
       };
 
       console.log(
         `✅ getTemplateByStep(${step}): Template gerado com ${fallbackBlocks.length} blocos`
       );
+      stepTemplateCache.set(step, templateData);
       return templateData;
     } catch (error) {
       console.error(`❌ Erro ao gerar template da etapa ${step}:`, error);
       return null;
     }
   },
-  convertTemplateBlocksToEditorBlocks(templateBlocks: Block[] = []): Block[] {
-    return templateBlocks.map((block, index) => ({
-      id: block.id,
+  convertTemplateBlocksToEditorBlocks(templateBlocks: Block[] = [], stepHint?: number): Block[] {
+    return (templateBlocks || []).map((block, index) => ({
+      id: block.id || `block-${stepHint ?? 'step'}-${index}`,
       type: block.type as BlockType,
       content: block.content || {},
       order: index,
       properties: block.properties || {},
     }));
+  },
+  /**
+   * Converte blocos de template para blocos do editor aplicando funnelId, stageId e order.
+   * Gera IDs estáveis quando ausentes e permite informar stepHint para estabilidade.
+   */
+  convertToEditorBlocksWithStage(
+    templateBlocks: Block[] = [],
+    funnelId: string,
+    stageId: string,
+    stepHint?: number
+  ): Block[] {
+    const converted = this.convertTemplateBlocksToEditorBlocks(templateBlocks, stepHint);
+    return converted.map((b, i) => ({
+      ...b,
+      order: i,
+      properties: { ...(b.properties || {}), funnelId, stageId },
+    }));
+  },
+  // Utilitários
+  clearCache(): void {
+    stepTemplateCache.clear();
+  },
+  isCached(step: number): boolean {
+    return stepTemplateCache.has(step);
+  },
+  getAllSteps(): Record<string, Block[]> {
+    const result: Record<string, Block[]> = {};
+    for (let i = 1; i <= 21; i++) {
+      const stepId = `step-${i}`;
+      const src = (QUIZ_STYLE_21_STEPS_TEMPLATE as any)[stepId] || [];
+      result[stepId] = cloneBlocks(src);
+    }
+    return result;
   },
 };
 

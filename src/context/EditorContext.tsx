@@ -199,13 +199,12 @@ export const EditorProvider: React.FC<{
           const templateData = await templateService.getTemplateByStep(1);
           const templateBlocks = templateData?.blocks || [];
           if (templateBlocks.length > 0) {
-            const editorBlocks = templateService.convertTemplateBlocksToEditorBlocks(
-              templateBlocks
-            ).map((b: any, i: number) => ({
-              ...b,
-              properties: { ...(b.properties || {}), funnelId: currentFunnelId, stageId: 'step-1' },
-              order: i,
-            }));
+            const editorBlocks = templateService.convertToEditorBlocksWithStage(
+              templateBlocks,
+              currentFunnelId,
+              'step-1',
+              1
+            );
             if (!isCancelled) dispatch({ type: 'SET_BLOCKS', payload: editorBlocks });
           }
         } catch (err) {
@@ -265,13 +264,12 @@ export const EditorProvider: React.FC<{
             const blockTypes = template.blocks.map(block => block.type);
             console.log(`🧩 AUTO-LOAD: Tipos de blocos: ${blockTypes.join(', ')}`);
 
-            const editorBlocks = templateService
-              .convertTemplateBlocksToEditorBlocks(template.blocks)
-              .map((b: any, i: number) => ({
-                ...b,
-                properties: { ...(b.properties || {}), funnelId: currentFunnelId, stageId: activeStageId },
-                order: i,
-              }));
+            const editorBlocks = templateService.convertToEditorBlocksWithStage(
+              template.blocks,
+              currentFunnelId,
+              activeStageId,
+              stepNumber
+            );
 
             console.log(`🔄 AUTO-LOAD: Convertidos ${editorBlocks.length} blocos para o editor`);
             if (!isCancelled) dispatch({ type: 'SET_BLOCKS', payload: editorBlocks });
@@ -665,13 +663,12 @@ export const EditorProvider: React.FC<{
           if (templateBlocks.length > 0) {
             console.log(`✅ Template carregado com sucesso: ${templateBlocks.length} blocos`);
 
-            const editorBlocks = templateService
-              .convertTemplateBlocksToEditorBlocks(templateBlocks)
-              .map((b: any, i: number) => ({
-                ...b,
-                properties: { ...(b.properties || {}), funnelId: currentFunnelId, stageId: `step-${step}` },
-                order: i,
-              }));
+            const editorBlocks = templateService.convertToEditorBlocksWithStage(
+              templateBlocks,
+              currentFunnelId,
+              `step-${step}`,
+              step
+            );
 
             dispatch({ type: 'SET_BLOCKS', payload: editorBlocks });
             return true;
@@ -685,15 +682,13 @@ export const EditorProvider: React.FC<{
           try {
             const template = await getStepTemplate(step);
             const templateBlocks = template?.blocks || [];
-            const editorBlocks = (templateBlocks || []).map((block: any, index: number) => ({
-              id: block.id || `block-${Date.now()}-${Math.random()}`,
-              type: block.type || 'text',
-              content: block.content || {},
-              styles: block.styles || {},
-              metadata: block.metadata || {},
-              properties: { funnelId: currentFunnelId, stageId: `step-${step}` },
-              order: index,
-            }));
+            const { default: templateService } = await import('../services/templateService');
+            const editorBlocks = templateService.convertToEditorBlocksWithStage(
+              templateBlocks,
+              currentFunnelId,
+              `step-${step}`,
+              step
+            );
             dispatch({ type: 'SET_BLOCKS', payload: editorBlocks });
             return editorBlocks.length > 0;
           } catch (e2) {

@@ -223,13 +223,31 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
           const stepKey = `step-${stepNum}`;
           const defaultBlocks = (QUIZ_STYLE_21_STEPS_TEMPLATE as any)[stepKey] || [];
           if (defaultBlocks.length > 0) {
-            setState({
-              ...rawState,
-              stepBlocks: {
-                ...rawState.stepBlocks,
-                [stepKey]: defaultBlocks,
-              },
-            });
+            try {
+              const { default: templateService } = await import('@/services/templateService');
+              const converted = templateService.convertToEditorBlocksWithStage(
+                defaultBlocks,
+                funnelId || 'default-funnel',
+                stepKey,
+                stepNum
+              );
+              setState({
+                ...rawState,
+                stepBlocks: {
+                  ...rawState.stepBlocks,
+                  [stepKey]: converted,
+                },
+              });
+            } catch {
+              // fallback para aplicar diretamente sem conversão (mantém comportamento anterior)
+              setState({
+                ...rawState,
+                stepBlocks: {
+                  ...rawState.stepBlocks,
+                  [stepKey]: defaultBlocks,
+                },
+              });
+            }
           }
         }
       } catch (error) {
