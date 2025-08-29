@@ -135,18 +135,36 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
   const VIRTUALIZE_THRESHOLD = 120;
   const AVG_ITEM_HEIGHT = 120; // px (estimativa)
   const OVERSCAN = 8; // itens
-  const disableVirtualization = React.useMemo(() => {
+  // Flag dinâmica para permitir alternância em tempo real (via header)
+  const [virtDisabledDynamic, setVirtDisabledDynamic] = React.useState<boolean>(() => {
     try {
       const g: any = typeof globalThis !== 'undefined' ? (globalThis as any) : undefined;
       return g?.__NO_CANVAS_VIRT__ === true;
     } catch {
       return false;
     }
+  });
+  React.useEffect(() => {
+    const handler = (e: Event) => {
+      try {
+        const g: any = typeof globalThis !== 'undefined' ? (globalThis as any) : undefined;
+        const detail: any = (e as any)?.detail;
+        const next = typeof detail?.disabled === 'boolean' ? detail.disabled : g?.__NO_CANVAS_VIRT__ === true;
+        setVirtDisabledDynamic(Boolean(next));
+      } catch {
+        // noop
+      }
+    };
+    if (typeof window !== 'undefined') {
+      window.addEventListener('canvas-virt-flag-changed', handler as EventListener);
+      return () => window.removeEventListener('canvas-virt-flag-changed', handler as EventListener);
+    }
+    return;
   }, []);
   const enableVirtualization =
     isPreviewing &&
     !isDraggingAnyValidComponent &&
-    !disableVirtualization &&
+    !virtDisabledDynamic &&
     blocks.length > VIRTUALIZE_THRESHOLD;
 
   const scrollRef = React.useRef<HTMLDivElement | null>(null);
@@ -188,7 +206,7 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
   const enableProgressiveEdit =
     !isPreviewing &&
     !isDraggingAnyValidComponent &&
-    !disableVirtualization &&
+    !virtDisabledDynamic &&
     blocks.length > EDIT_PROGRESSIVE_THRESHOLD;
   const [editRenderCount, setEditRenderCount] = React.useState<number>(
     enableProgressiveEdit ? Math.min(EDIT_BATCH_SIZE, blocks.length) : blocks.length

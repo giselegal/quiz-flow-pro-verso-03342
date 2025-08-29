@@ -156,6 +156,11 @@ export const EditableEditorHeader: React.FC<EditableEditorHeaderProps> = ({
     const next = !virtDisabled;
     (globalThis as any).__NO_CANVAS_VIRT__ = next;
     setVirtDisabled(next);
+    if (typeof window !== 'undefined' && typeof CustomEvent !== 'undefined') {
+      try {
+        window.dispatchEvent(new CustomEvent('canvas-virt-flag-changed', { detail: { disabled: next } }));
+      } catch {}
+    }
     toast({
       title: next ? 'Virtualização desativada' : 'Virtualização ativada',
       description: next
