@@ -2,6 +2,7 @@
 import QuizQuestion from '@/components/funnel-blocks/QuizQuestion';
 import React, { useState } from 'react';
 import { QuizBlockProps } from './types';
+import { computeSelectionValidity } from '@/lib/quiz/selectionRules';
 
 /**
  * QuizOptionsGridBlock - Componente de grid de opções para quiz
@@ -192,32 +193,43 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
     );
   }
 
-  // Determinar o número mínimo de seleções com base nas propriedades
-  // Por padrão são 3 opções obrigatórias conforme requisito
-  const minSelections = properties?.minSelections || 3;
+  // Determinar limites por propriedades (controle visual/UX do componente)
+  const minSelections = properties?.minSelections || 1;
   const maxSelections = properties?.maxSelections || options.length;
 
   // Callbacks para interações do usuário
   const handleAnswer = (selectedOptions: any[]) => {
     setSelectedOptions(selectedOptions);
 
-    // Determinar se a seleção está válida
-    const isValid = selectedOptions.length >= minSelections;
+    // Determinar se a seleção está válida conforme regra centralizada (considera fase/etapa)
+    const step = (window as any)?.__quizCurrentStep ?? null;
+    const { isValid } = computeSelectionValidity(step, selectedOptions.length, {
+      minSelections: properties?.minSelections,
+      requiredSelections: properties?.requiredSelections,
+    });
     const currentCount = selectedOptions.length;
 
     // ✅ NOVO: Disparar evento customizado para validação de botão
-    window.dispatchEvent(
-      new CustomEvent('quiz-selection-change', {
-        detail: {
-          gridId: id,
-          selectedCount: currentCount,
-          minRequired: minSelections,
-          maxAllowed: maxSelections,
-          isValid: isValid,
-          selectedOptions: selectedOptions.map(opt => opt.id),
-        },
-      })
-    );
+    try {
+      const questionId = properties?.questionId || id;
+      window.dispatchEvent(
+        new CustomEvent('quiz-selection-change', {
+          detail: {
+            // payload consistente com outros blocos
+            questionId,
+            selectionCount: currentCount,
+            valid: isValid,
+            isValid,
+            // compat legado (consumidores que olham estes campos)
+            gridId: id,
+            selectedCount: currentCount,
+            minRequired: minSelections,
+            maxAllowed: maxSelections,
+            selectedOptions: selectedOptions.map(opt => opt.id),
+          },
+        })
+      );
+    } catch {}
 
     console.log('🔘 [QuizOptionsGridBlock] Evento de seleção disparado:', {
       gridId: id,

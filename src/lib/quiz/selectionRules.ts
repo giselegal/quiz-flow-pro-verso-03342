@@ -1,14 +1,26 @@
 // Regras centralizadas de validação de seleções no quiz/editor
 // Mantém as mesmas faixas usadas anteriormente e permite futura configuração
 
-export const isFiniteStep = (step: unknown): step is number =>
-  typeof step === 'number' && Number.isFinite(step);
+const normalizeStepNumber = (step: unknown): number | null => {
+  if (typeof step === 'number' && Number.isFinite(step)) return step;
+  if (typeof step === 'string') {
+    const digits = parseInt(step.replace(/\D/g, ''), 10);
+    return Number.isFinite(digits) ? digits : null;
+  }
+  return null;
+};
 
-export const isScoringPhase = (step: unknown): boolean =>
-  isFiniteStep(step as number) && (step as number) >= 2 && (step as number) <= 11; // 3 obrigatórias
+export const isFiniteStep = (step: unknown): step is number => normalizeStepNumber(step) !== null;
 
-export const isStrategicPhase = (step: unknown): boolean =>
-  isFiniteStep(step as number) && (step as number) >= 13 && (step as number) <= 18; // 1 obrigatória
+export const isScoringPhase = (step: unknown): boolean => {
+  const n = normalizeStepNumber(step);
+  return n !== null && n >= 2 && n <= 11; // 3 obrigatórias
+};
+
+export const isStrategicPhase = (step: unknown): boolean => {
+  const n = normalizeStepNumber(step);
+  return n !== null && n >= 13 && n <= 18; // 1 obrigatória
+};
 
 export interface SelectionConfig {
   requiredSelections?: number;
