@@ -202,6 +202,118 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
     const label = key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1');
 
     switch (type) {
+      case 'array': {
+        // Editor especializado para arrays de opções (options-grid, etc.)
+        if (key === 'options' && Array.isArray(value)) {
+          const options = (value as any[]).map((opt: any) => ({
+            label: opt?.label ?? opt?.text ?? '',
+            value: opt?.value ?? opt?.id ?? opt?.label ?? '',
+            points: typeof opt?.points === 'number' ? opt.points : 0,
+          }));
+
+          const updateOptions = (next: typeof options) => {
+            updateProperty(
+              key,
+              next.map(o => ({ label: o.label, value: o.value, points: o.points }))
+            );
+          };
+
+          return (
+            <div key={key} className="space-y-3">
+              <div className="flex items-center justify-between">
+                <Label className="text-sm font-medium text-[#432818]">{label}</Label>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="secondary"
+                  className="bg-[#B89B7A]/10 text-[#432818] hover:bg-[#B89B7A]/20"
+                  onClick={() => updateOptions([...options, { label: 'Nova opção', value: `opt_${options.length+1}`, points: 0 }])}
+                >
+                  + Adicionar
+                </Button>
+              </div>
+              <div className="space-y-3">
+                {options.length === 0 ? (
+                  <div className="text-sm text-[#6B4F43]">Nenhuma opção. Clique em "Adicionar".</div>
+                ) : (
+                  options.map((opt, idx) => (
+                    <div key={idx} className="grid grid-cols-12 gap-2 items-end">
+                      <div className="col-span-5">
+                        <Label className="text-xs text-[#6B4F43]">Label</Label>
+                        <Input
+                          value={opt.label}
+                          onChange={e => {
+                            const next = [...options];
+                            next[idx] = { ...opt, label: e.target.value };
+                            updateOptions(next);
+                          }}
+                          className="border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20"
+                        />
+                      </div>
+                      <div className="col-span-4">
+                        <Label className="text-xs text-[#6B4F43]">Valor</Label>
+                        <Input
+                          value={opt.value}
+                          onChange={e => {
+                            const next = [...options];
+                            next[idx] = { ...opt, value: e.target.value };
+                            updateOptions(next);
+                          }}
+                          className="border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20"
+                        />
+                      </div>
+                      <div className="col-span-2">
+                        <Label className="text-xs text-[#6B4F43]">Pts</Label>
+                        <Input
+                          type="number"
+                          value={opt.points}
+                          onChange={e => {
+                            const v = Number(e.target.value) || 0;
+                            const next = [...options];
+                            next[idx] = { ...opt, points: v };
+                            updateOptions(next);
+                          }}
+                          className="border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20"
+                        />
+                      </div>
+                      <div className="col-span-1 flex justify-end">
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => updateOptions(options.filter((_, i) => i !== idx))}
+                          title="Remover"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          );
+        }
+
+        // Fallback genérico: edição via JSON
+        return (
+          <div key={key} className="space-y-2">
+            <Label className="text-sm font-medium text-[#432818]">{label} (JSON)</Label>
+            <Textarea
+              defaultValue={JSON.stringify(value ?? [], null, 2)}
+              onBlur={e => {
+                try {
+                  const parsed = JSON.parse(e.target.value || '[]');
+                  updateProperty(key, parsed);
+                } catch {
+                  // ignora parse inválido silenciosamente
+                }
+              }}
+              className="border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20 min-h-[120px] font-mono text-xs"
+            />
+          </div>
+        );
+      }
       case 'boolean':
         return (
           <div key={key} className="flex items-center justify-between">

@@ -1135,7 +1135,14 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         )}
         data-canvas-container
       >
-        <div className={cn('max-w-3xl w-full mx-auto', 'px-4')}> 
+        <div
+          className={cn(
+            'w-full mx-auto px-4',
+            previewDevice === 'mobile' && 'max-w-sm',
+            previewDevice === 'tablet' && 'max-w-2xl',
+            previewDevice === 'desktop' && 'max-w-3xl'
+          )}
+        > 
           {mode === 'preview' ? (
             <QuizRenderer
               mode="preview"
