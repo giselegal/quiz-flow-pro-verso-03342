@@ -4,6 +4,7 @@ import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import { getStepInfo as coreGetStepInfo } from '@/utils/quiz21StepsRenderer';
 import { TemplateManager } from '@/utils/TemplateManager';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import useOptimizedScheduler from '@/hooks/useOptimizedScheduler';
 
 export interface QuizFlowProps {
   mode?: 'production' | 'preview' | 'editor';
@@ -51,6 +52,7 @@ export const useQuizFlow = ({
   onStepChange,
   initialStep = 1,
 }: QuizFlowProps = {}) => {
+  const { schedule, cancel } = useOptimizedScheduler();
   const [currentStep, setCurrentStep] = useState(initialStep);
   const [userName, setUserName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -111,8 +113,9 @@ export const useQuizFlow = ({
     (questionId: string, optionId: string) => {
       answerQuestion(questionId, optionId);
       // Marca etapa atual como válida
-      setStepValidation(prev => ({ ...prev, [currentStep]: true }));
-      setTimeout(nextStep, 500); // UX delay
+  setStepValidation(prev => ({ ...prev, [currentStep]: true }));
+  cancel('quizflow-ux-next');
+  schedule('quizflow-ux-next', nextStep, 500, 'timeout'); // UX delay
     },
     [answerQuestion, nextStep, currentStep]
   );
@@ -121,8 +124,9 @@ export const useQuizFlow = ({
   const answerStrategy = useCallback(
     (questionId: string, optionId: string) => {
       answerStrategicQuestion(questionId, optionId, 'strategic', 'tracking');
-      setStepValidation(prev => ({ ...prev, [currentStep]: true }));
-      setTimeout(nextStep, 500);
+  setStepValidation(prev => ({ ...prev, [currentStep]: true }));
+  cancel('quizflow-ux-next');
+  schedule('quizflow-ux-next', nextStep, 500, 'timeout');
     },
     [answerStrategicQuestion, nextStep, currentStep]
   );
@@ -131,12 +135,13 @@ export const useQuizFlow = ({
   useEffect(() => {
     if (currentStep === 19) {
       setIsLoading(true);
-      const timer = setTimeout(() => {
+      cancel('quizflow-step19');
+      schedule('quizflow-step19', () => {
         completeQuiz();
         setIsLoading(false);
         nextStep();
-      }, 2000);
-      return () => clearTimeout(timer);
+      }, 2000, 'timeout');
+      return () => cancel('quizflow-step19');
     }
   }, [currentStep, completeQuiz, nextStep]);
 

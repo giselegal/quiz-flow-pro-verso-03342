@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import useOptimizedScheduler from '@/hooks/useOptimizedScheduler';
 
 interface StepNavigationProps {
   totalSteps: number;
@@ -32,6 +33,7 @@ export const useNavigation = ({
   autoAdvance = false,
   validationRequired = true,
 }: StepNavigationProps) => {
+  const { schedule, cancel } = useOptimizedScheduler();
   const [currentStep, setCurrentStep] = useState(initialStep);
   const [previousStep, setPreviousStep] = useState<number | null>(null);
   const [visitedSteps, setVisitedSteps] = useState(new Set([initialStep]));
@@ -62,8 +64,9 @@ export const useNavigation = ({
 
       onStepChange?.(newStep);
 
-      // Delay para transição suave
-      setTimeout(() => setIsTransitioning(false), 300);
+  // Delay para transição suave
+  cancel('nav-transition-finish');
+  schedule('nav-transition-finish', () => setIsTransitioning(false), 300, 'timeout');
     }
   }, [currentStep, totalSteps, navigationState.canGoNext, isTransitioning, onStepChange]);
 
@@ -78,7 +81,8 @@ export const useNavigation = ({
 
       onStepChange?.(newStep);
 
-      setTimeout(() => setIsTransitioning(false), 300);
+  cancel('nav-transition-finish');
+  schedule('nav-transition-finish', () => setIsTransitioning(false), 300, 'timeout');
     }
   }, [currentStep, isTransitioning, onStepChange]);
 
@@ -94,7 +98,8 @@ export const useNavigation = ({
 
         onStepChange?.(step);
 
-        setTimeout(() => setIsTransitioning(false), 300);
+  cancel('nav-transition-finish');
+  schedule('nav-transition-finish', () => setIsTransitioning(false), 300, 'timeout');
       }
     },
     [currentStep, totalSteps, isTransitioning, onStepChange]
@@ -110,7 +115,8 @@ export const useNavigation = ({
 
       // Auto-advance se configurado e válido
       if (autoAdvance && isValid && navigationState.canGoNext) {
-        setTimeout(nextStep, 1000);
+        cancel('nav-auto-advance');
+        schedule('nav-auto-advance', nextStep, 1000, 'timeout');
       }
     },
     [currentStep, autoAdvance, navigationState.canGoNext, nextStep]
@@ -192,6 +198,14 @@ export const useNavigation = ({
   useEffect(() => {
     onStepChange?.(currentStep);
   }, [currentStep, onStepChange]);
+
+  // Cleanup de timers quando hook desmontar
+  useEffect(() => {
+    return () => {
+      cancel('nav-transition-finish');
+      cancel('nav-auto-advance');
+    };
+  }, [cancel]);
 
   return {
     // Estado atual

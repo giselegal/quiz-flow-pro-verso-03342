@@ -8,7 +8,8 @@
 import { MonitoringService } from '@/services/MonitoringService';
 import { useSystemValidation } from '@/testing/SystemValidation';
 import { useFeatureFlags } from '@/utils/FeatureFlagManager';
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useEffect } from 'react';
+import useOptimizedScheduler from '@/hooks/useOptimizedScheduler';
 
 interface ValidationMiddlewareProps {
   children: React.ReactNode;
@@ -49,8 +50,8 @@ export const ValidationMiddleware: React.FC<ValidationMiddlewareProps> = ({
     status: 'healthy',
   });
 
-  const validationIntervalRef = useRef<number>();
-  const timeoutRef = useRef<number>();
+  // timers substituídos por scheduler
+  const { schedule, cancel } = useOptimizedScheduler();
 
   /**
    * 🧪 Executar validação automática
@@ -68,16 +69,13 @@ export const ValidationMiddleware: React.FC<ValidationMiddlewareProps> = ({
       // Timeout para validação (10 segundos máximo)
       const validationPromise = runValidationSuite();
       const timeoutPromise = new Promise((_, reject) => {
-        timeoutRef.current = window.setTimeout(() => {
-          reject(new Error('Validation timeout'));
-        }, 10000);
+        cancel('validation-timeout');
+        schedule('validation-timeout', () => reject(new Error('Validation timeout')), 10000, 'timeout');
       });
 
       const report = await Promise.race([validationPromise, timeoutPromise]);
 
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
+  cancel('validation-timeout');
 
       const now = new Date().toISOString();
       const newScore = (report as any).compatibilityScore || 0;
@@ -223,20 +221,19 @@ export const ValidationMiddleware: React.FC<ValidationMiddlewareProps> = ({
     runAutoValidation();
 
     // Configurar intervalo (a cada 5 minutos)
-    validationIntervalRef.current = window.setInterval(
-      () => {
+    cancel('validation-interval');
+    // usa schedule + recursivo para simular interval com cleanup confiável
+    const scheduleNext = () => {
+      schedule('validation-interval', () => {
         runAutoValidation();
-      },
-      5 * 60 * 1000
-    );
+        scheduleNext();
+      }, 5 * 60 * 1000, 'timeout');
+    };
+    scheduleNext();
 
     return () => {
-      if (validationIntervalRef.current) {
-        clearInterval(validationIntervalRef.current);
-      }
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
+  cancel('validation-interval');
+  cancel('validation-timeout');
     };
   }, [flags.shouldValidateCompatibility(), runAutoValidation]);
 
