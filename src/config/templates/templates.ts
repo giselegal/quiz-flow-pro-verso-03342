@@ -9,11 +9,11 @@ async function loadTemplate(stepNumber: number): Promise<any> {
   const stepId = stepNumber.toString().padStart(2, '0');
 
   try {
-    // ✅ STRATEGY: Usar fetch HTTP para evitar problemas de build
+    // ✅ STRATEGY: Usar fetch HTTP apenas no browser (evita erros no Node/Vitest)
     const templatePath = `/src/config/templates/step-${stepId}.json`;
 
-    // Durante desenvolvimento, usar fetch
-    if (import.meta.env.DEV) {
+    // Durante desenvolvimento, usar fetch somente quando window existir
+    if (import.meta.env.DEV && typeof window !== 'undefined') {
       try {
         const response = await fetch(templatePath);
         if (response.ok) {

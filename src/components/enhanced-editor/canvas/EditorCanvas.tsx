@@ -20,7 +20,7 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
 }) => {
   return (
     <div className="h-full bg-white p-4">
-      <div className="max-w-4xl mx-auto">
+  <div className="max-w-5xl mx-auto">
         <div style={{ color: '#8B7355' }}>
           Viewport: {viewportSize} | Preview: {isPreviewing ? 'On' : 'Off'}
         </div>
