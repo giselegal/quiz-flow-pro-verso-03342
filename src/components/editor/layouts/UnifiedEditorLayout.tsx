@@ -99,13 +99,13 @@ export const UnifiedEditorLayout: React.FC<UnifiedEditorLayoutProps> = ({ classN
 
           <TabsContent value="result" className="flex-1 mt-0">
             <ResizablePanelGroup direction="horizontal" className="h-full">
-              <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
+              <ResizablePanel defaultSize={15} minSize={12} maxSize={30}>
                 <ComponentsSidebar onComponentSelect={handleComponentSelect} />
               </ResizablePanel>
 
               <ResizableHandle withHandle />
 
-              <ResizablePanel defaultSize={55}>
+              <ResizablePanel defaultSize={70} minSize={60}>
                 <CanvasDropZone
                   blocks={config.blocks || []}
                   selectedBlockId={selectedBlockId}
@@ -117,7 +117,7 @@ export const UnifiedEditorLayout: React.FC<UnifiedEditorLayoutProps> = ({ classN
 
               <ResizableHandle withHandle />
 
-              <ResizablePanel defaultSize={25}>
+              <ResizablePanel defaultSize={15} minSize={12}>
                 <PropertiesPanel
                   selectedBlock={safeSelectedBlock}
                   onUpdate={handleBlockUpdate}

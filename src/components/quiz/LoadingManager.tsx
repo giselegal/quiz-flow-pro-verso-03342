@@ -1,5 +1,4 @@
 import { LoadingState } from '../ui/loading-state';
-import { motion } from 'framer-motion';
 
 interface LoadingManagerProps {
   isLoading: boolean;
@@ -17,17 +16,8 @@ const LoadingManager: React.FC<LoadingManagerProps> = ({
     return <LoadingState message={message} />;
   }
 
-  // When loaded, use framer-motion to smoothly fade in content
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.3, ease: 'easeInOut' }}
-    >
-      {children}
-    </motion.div>
-  );
+  // When loaded, render content with a simple CSS fade-in
+  return <div className="opacity-100 transition-opacity duration-300 ease-in-out">{children}</div>;
 };
 
 export default LoadingManager;

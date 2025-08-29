@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 
@@ -57,23 +56,14 @@ const AnimatedNameForm: React.FC<AnimatedNameFormProps> = ({ onSubmit }) => {
           inputMode="text"
           maxLength={32}
         />
-        <AnimatePresence>
-          {showError && (
-            <motion.p
-              id="name-error"
-              style={{ color: '#432818' }}
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              Por favor, digite seu nome para continuar
-            </motion.p>
-          )}
-        </AnimatePresence>
+        {showError && (
+          <p id="name-error" style={{ color: '#432818' }} className="text-sm transition-all">
+            Por favor, digite seu nome para continuar
+          </p>
+        )}
       </div>
 
-      <motion.button
+      <button
         type="submit"
         className={cn(
           'w-full py-3 px-4 text-base font-semibold rounded-md shadow-md transition-all duration-200',
@@ -82,20 +72,14 @@ const AnimatedNameForm: React.FC<AnimatedNameFormProps> = ({ onSubmit }) => {
           'disabled:opacity-70 disabled:cursor-not-allowed'
         )}
         disabled={formSubmitted && !isValid}
-        whileHover={{ scale: 1.03 }}
-        whileTap={{ scale: 0.97 }}
         onMouseEnter={() => setIsButtonHovered(true)}
         onMouseLeave={() => setIsButtonHovered(false)}
-        transition={{ type: 'spring', stiffness: 400, damping: 17 }}
       >
         <span className="flex items-center justify-center gap-2">
-          <motion.span
-            animate={isButtonHovered ? { y: [-1, 1, -1] } : {}}
-            transition={{ repeat: Infinity, duration: 1 }}
-          ></motion.span>
+          <span className={isButtonHovered ? 'relative top-px' : ''}></span>
           Quero Descobrir meu Estilo Agora!
         </span>
-      </motion.button>
+      </button>
 
       <p style={{ color: '#8B7355' }}>
         Ao clicar, você concorda com nossa{' '}
