@@ -500,10 +500,23 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
               // Track quiz start
               trackQuizStart(userName);
 
-              // Save start time and user data
-              localStorage.setItem('quiz_start_time', Date.now().toString());
-              localStorage.setItem('quiz_start_tracked', 'true');
-              localStorage.setItem('userName', userName);
+              // Save start time and user data (via StorageService com fallback)
+              try {
+                const { StorageService } = require('@/services/core/StorageService');
+                StorageService.safeSetString('quiz_start_time', Date.now().toString());
+                StorageService.safeSetString('quiz_start_tracked', 'true');
+                StorageService.safeSetString('userName', userName);
+                // Compatibilidade legada
+                StorageService.safeSetString('quizUserName', userName);
+              } catch {
+                // Fallback silencioso caso StorageService não esteja disponível
+                try {
+                  localStorage.setItem('quiz_start_time', Date.now().toString());
+                  localStorage.setItem('quiz_start_tracked', 'true');
+                  localStorage.setItem('userName', userName);
+                  localStorage.setItem('quizUserName', userName);
+                } catch {}
+              }
 
               // Dispatch quiz start event
               window.dispatchEvent(

@@ -49,6 +49,7 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
 
   const { currentStep, totalSteps, progress, isLoading } = quizState;
   const { prevStep, nextStep, getStepData, setStepValid } = actions;
+  const [previewSessionData, setPreviewSessionData] = useState<Record<string, any>>({});
 
   // Buscar dados da etapa atual
   const canUseOverrides =
@@ -248,6 +249,15 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
         {stepBlocks.map((block: any, index: number) => {
           const isSelectable = mode === 'editor' || (mode === 'preview' && previewEditable);
           const isSelected = isSelectable && selectedBlockId === block.id;
+          // Injeção de callbacks/session para preview com comportamento real
+          const injectedProps = (mode === 'preview')
+            ? {
+                onNext: () => nextStep(),
+                onUpdateSessionData: (key: string, value: any) =>
+                  setPreviewSessionData(prev => ({ ...prev, [key]: value })),
+                sessionData: previewSessionData,
+              }
+            : {};
           return (
             <div
               key={block.id || index}
@@ -258,7 +268,14 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
               onClick={e => handleBlockClick(e, block)}
             >
               <UniversalBlockRenderer
-                block={block}
+                block={{
+                  ...block,
+                  // Passar callbacks via properties para componentes que leem de lá
+                  properties: {
+                    ...(block.properties || {}),
+                    ...(injectedProps as any),
+                  },
+                }}
                 isSelected={isSelected}
                 mode={mode}
                 onClick={() => {

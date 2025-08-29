@@ -24,8 +24,23 @@ export const QuizContent: React.FC<QuizContentProps> = ({
   currentAnswers,
   handleAnswerSubmit,
 }) => {
-  // Get user name from localStorage if not provided in props
-  const userName = user?.userName || localStorage.getItem('userName') || '';
+  // Get user name via StorageService (fallback para legacy)
+  let userName = user?.userName || '';
+  if (!userName) {
+    try {
+      const { StorageService } = require('@/services/core/StorageService');
+      userName =
+        StorageService.safeGetString('userName') ||
+        StorageService.safeGetString('quizUserName') ||
+        '';
+    } catch {
+      try {
+        userName = localStorage.getItem('userName') || '';
+      } catch {
+        userName = '';
+      }
+    }
+  }
 
   // Create strategic answers object safely
   const strategicAnswers = showingStrategicQuestions

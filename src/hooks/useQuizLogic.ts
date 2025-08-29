@@ -1,6 +1,7 @@
 import caktoquizQuestions from '@/data/caktoquizQuestions';
 import { QuizAnswer, QuizQuestion, QuizResult, StyleResult } from '@/types/quiz';
 import { useCallback, useState } from 'react';
+import { StorageService } from '@/services/core/StorageService';
 
 // ✅ INTERFACE PARA QUESTÕES ESTRATÉGICAS
 interface StrategicAnswer {
@@ -19,7 +20,7 @@ export const useQuizLogic = () => {
   const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
   const [totalQuestions, setTotalQuestions] = useState(0);
   // ✅ NOVO: Estado para capturar nome do usuário na Etapa 1
-  const [userName, setUserName] = useState<string>('');
+  const [userName, setUserName] = useState<string>(StorageService.safeGetString('userName') || StorageService.safeGetString('quizUserName') || '');
 
   const initializeQuiz = (questions: QuizQuestion[]) => {
     setCurrentQuestionIndex(0);
@@ -42,9 +43,10 @@ export const useQuizLogic = () => {
       step: 1,
     });
 
-    // TODO: Salvar no localStorage ou contexto global
-    if (cleanName && typeof window !== 'undefined') {
-      localStorage.setItem('quizUserName', cleanName);
+    // Persistir em ambas as chaves por compatibilidade
+    if (cleanName) {
+      StorageService.safeSetString('userName', cleanName);
+      StorageService.safeSetString('quizUserName', cleanName);
     }
   }, []);
 
@@ -156,7 +158,7 @@ export const useQuizLogic = () => {
         .map(([category, score]) => createStyleResult(category, score));
 
       // ✅ PERSONALIZAÇÃO: Incluir nome do usuário no resultado
-      const currentUserName = userName || localStorage.getItem('quizUserName') || '';
+  const currentUserName = userName || StorageService.safeGetString('userName') || StorageService.safeGetString('quizUserName') || '';
 
       const result: QuizResult = {
         primaryStyle: primaryResult,

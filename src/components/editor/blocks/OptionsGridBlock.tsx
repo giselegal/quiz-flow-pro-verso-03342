@@ -127,6 +127,18 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
   sessionData = {},
   onStepComplete,
 }) => {
+  // Fallbacks: permitir injeção via block.properties (quando vem do QuizRenderer em preview)
+  const injectedOnNext = (block?.properties as any)?.onNext as undefined | (() => void);
+  const injectedOnUpdateSessionData = (block?.properties as any)?.onUpdateSessionData as
+    | undefined
+    | ((key: string, value: any) => void);
+  const injectedSessionData = (block?.properties as any)?.sessionData as
+    | Record<string, any>
+    | undefined;
+
+  const onNextCb = onNext || injectedOnNext;
+  const onUpdateSessionDataCb = onUpdateSessionData || injectedOnUpdateSessionData;
+  const sessionDataObj = Object.keys(sessionData || {}).length ? sessionData : injectedSessionData || {};
   // Acessa etapa atual no modo editor
   let currentStepFromEditor: number | null = null;
   try {
@@ -200,14 +212,14 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
 
   React.useEffect(() => {
     // Initialize from session data in preview mode
-    if (isPreviewMode && sessionData) {
+    if (isPreviewMode && sessionDataObj) {
       const sessionKey = `step_selections_${block?.id}`;
-      const savedSelections = sessionData[sessionKey];
+      const savedSelections = (sessionDataObj as any)[sessionKey];
       if (savedSelections && Array.isArray(savedSelections)) {
         setPreviewSelections(savedSelections);
       }
     }
-  }, [isPreviewMode, sessionData, block?.id]);
+  }, [isPreviewMode, sessionDataObj, block?.id]);
 
   // Helpers
   const toPxNumber = (val?: number | string): number | undefined => {
@@ -336,9 +348,9 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       } catch {}
 
       // Save to session data
-      if (onUpdateSessionData) {
+      if (onUpdateSessionDataCb) {
         const sessionKey = `step_selections_${block?.id}`;
-        onUpdateSessionData(sessionKey, newSelections);
+        onUpdateSessionDataCb(sessionKey, newSelections);
 
         // Save individual option details for analytics
         const selectedOptionDetails = newSelections.map(id => {
@@ -351,7 +363,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
             points: option?.points,
           };
         });
-        onUpdateSessionData(`${sessionKey}_details`, selectedOptionDetails);
+  onUpdateSessionDataCb(`${sessionKey}_details`, selectedOptionDetails);
       }
 
       // Check if we should auto-advance - REGRAS UNIFICADAS COM EDIÇÃO
@@ -375,7 +387,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
         };
       });
 
-  if (isScoringPhase(step) && hasRequiredSelections && onNext) {
+  if (isScoringPhase(step) && hasRequiredSelections && onNextCb) {
         console.log('🚀 OptionsGrid (preview): Auto-advancing after selection', newSelections);
 
         if (onStepComplete) {
@@ -392,10 +404,10 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
           previewAutoAdvanceRef.current = true;
           const delayMs = Math.max(200, Math.min(1200, autoAdvanceDelay || 600));
           cancel('options-grid-preview-auto-advance');
-          schedule(
+      schedule(
             'options-grid-preview-auto-advance',
             () => {
-              onNext();
+        onNextCb?.();
               previewAutoAdvanceRef.current = false;
             },
             delayMs,

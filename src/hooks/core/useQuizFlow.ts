@@ -4,6 +4,7 @@ import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import { getStepInfo as coreGetStepInfo } from '@/utils/quiz21StepsRenderer';
 import { TemplateManager } from '@/utils/TemplateManager';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { StorageService } from '@/services/core/StorageService';
 import useOptimizedScheduler from '@/hooks/useOptimizedScheduler';
 import { useStepNavigationStore } from '@/stores/useStepNavigationStore';
 
@@ -104,6 +105,7 @@ export const useQuizFlow = ({
     (name: string) => {
       setUserName(name);
       setUserNameFromInput(name);
+  try { StorageService.safeSetString('userName', name); } catch {}
       // Validar etapa 1 quando nome preenchido
       setStepValidation(prev => ({ ...prev, 1: !!name?.trim() }));
       nextStep();
@@ -154,6 +156,15 @@ export const useQuizFlow = ({
       return () => cancel('quizflow-step19');
     }
   }, [currentStep, completeQuiz, nextStep]);
+
+  // Persistir resultado calculado no core para consumo universal (blocos de resultado)
+  useEffect(() => {
+    if (quizResult) {
+      try {
+        StorageService.safeSetJSON('quizResult', quizResult);
+      } catch {}
+    }
+  }, [quizResult]);
 
   // Buscar dados da etapa atual
   const getStepData = useCallback(() => {

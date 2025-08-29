@@ -3,6 +3,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { quizSupabaseService } from '@/services/quizSupabaseService';
 import { QuizAnswer, QuizQuestion, QuizResult } from '@/types/quiz';
 import { useCallback, useEffect, useState } from 'react';
+import { StorageService } from '@/services/core/StorageService';
 
 // Interface para a sessão integrada com Quiz21StepsProvider
 interface Quiz21SupabaseSession {
@@ -291,9 +292,9 @@ export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
         });
         // Persistir no localStorage para consumo imediato pelos componentes de resultado
         try {
-          localStorage.setItem('quizResult', JSON.stringify(normalized));
+          StorageService.safeSetJSON('quizResult', normalized);
           if (typeof fullResults?.userName === 'string' && fullResults.userName.trim()) {
-            localStorage.setItem('userName', fullResults.userName.trim());
+            StorageService.safeSetString('userName', fullResults.userName.trim());
           }
         } catch {}
 
@@ -306,9 +307,9 @@ export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
           isCompleted: true,
         });
         try {
-          localStorage.setItem('quizResult', JSON.stringify(normalized));
+          StorageService.safeSetJSON('quizResult', normalized);
           if (typeof fullResults?.userName === 'string' && fullResults.userName.trim()) {
-            localStorage.setItem('userName', fullResults.userName.trim());
+            StorageService.safeSetString('userName', fullResults.userName.trim());
           }
         } catch {}
         return { success: true, result: normalized };
@@ -398,9 +399,8 @@ export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
   useEffect(() => {
     const loadSavedResult = () => {
       try {
-        const savedResult = localStorage.getItem('quizResult');
-        if (savedResult) {
-          const parsedResult = JSON.parse(savedResult);
+  const parsedResult = StorageService.safeGetJSON<any>('quizResult');
+  if (parsedResult) {
 
           // Verificar se o resultado tem o formato esperado
           if (parsedResult.primaryStyle && parsedResult.secondaryStyles) {
@@ -411,7 +411,7 @@ export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
               isCompleted: true,
             }));
           }
-        }
+  }
       } catch (error) {
         console.error('Erro ao carregar resultado salvo:', error);
       }

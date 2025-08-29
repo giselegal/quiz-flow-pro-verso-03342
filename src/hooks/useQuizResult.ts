@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { StyleResult } from '@/types/quiz';
+import { StorageService } from '@/services/core/StorageService';
 
 export const useQuizResult = () => {
   const [primaryStyle, setPrimaryStyle] = useState<StyleResult | null>(null);
@@ -7,9 +8,8 @@ export const useQuizResult = () => {
 
   useEffect(() => {
     try {
-      const savedResult = localStorage.getItem('quizResult');
-      if (savedResult) {
-        const parsedResult = JSON.parse(savedResult);
+      const parsedResult = StorageService.safeGetJSON<any>('quizResult');
+      if (parsedResult) {
         setPrimaryStyle(parsedResult.primaryStyle);
         setSecondaryStyles(parsedResult.secondaryStyles || []);
       }

@@ -7,7 +7,8 @@ import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
 import { TemplateManager } from '@/utils/TemplateManager';
 import React, { useEffect, useMemo, useState } from 'react';
-import { computeSelectionValidity } from '@/lib/quiz/selectionRules';
+import { ResultEngine } from '@/services/core/ResultEngine';
+import { SelectionRules, FlowCore } from '@/services/core/FlowCore';
 import useOptimizedScheduler from '@/hooks/useOptimizedScheduler';
 
 /**
@@ -221,7 +222,7 @@ const QuizModularPage: React.FC = () => {
       }
 
       // options-grid: usar regra centralizada considerando a fase da etapa
-      const { isValid } = computeSelectionValidity(
+  const { isValid } = SelectionRules.computeSelectionValidity(
         currentStep,
         selections.length,
         {
@@ -264,13 +265,7 @@ const QuizModularPage: React.FC = () => {
         const isAdding = !current.includes(optionId);
         if (isAdding) {
           // Mapear etapa atual → id da questão esperada pelo motor (q1..q10)
-          const mapStepToQuestionId = (stepNum: number) => {
-            // Etapas 2–11 pontuam (10 questões)
-            if (stepNum >= 2 && stepNum <= 11) return `q${stepNum - 1}`;
-            return null;
-          };
-
-          const mappedQuestionId = mapStepToQuestionId(currentStep);
+          const mappedQuestionId = FlowCore.mapStepToQuestionId(currentStep);
           if (mappedQuestionId) {
             // Resposta com pontuação (2–11)
             answerScoredQuestion?.(mappedQuestionId, optionId);
@@ -291,17 +286,9 @@ const QuizModularPage: React.FC = () => {
         setStepValid?.(currentStep, isValid);
 
         // Auto avanço se configurado (fallback para store)
-        const shouldAutoAdvance =
-          (blockConfig?.autoAdvanceOnComplete as boolean | undefined) ??
-          (stepConfig?.autoAdvanceOnComplete as boolean | undefined) ??
-          false;
-        const delay =
-          (blockConfig?.autoAdvanceDelay as number | undefined) ??
-          (stepConfig?.autoAdvanceDelay as number | undefined) ??
-          1500;
-
-        if (isValid && shouldAutoAdvance) {
-          schedule(`auto-advance:step-${currentStep}`, () => handleNext(), delay);
+        const auto = FlowCore.shouldAutoAdvance({ isValid, stepConfig, blockConfig });
+        if (auto.proceed) {
+          schedule(`auto-advance:step-${currentStep}`, () => handleNext(), auto.delay);
         }
       }, 120);
 
@@ -339,7 +326,12 @@ const QuizModularPage: React.FC = () => {
           if (typeof value === 'string' && value.trim().length > 0) {
             saveName?.(value.trim());
             // manter compat com outros blocos
-            try { localStorage.setItem('userName', value.trim()); } catch {}
+            try {
+              const v = value.trim();
+              const { StorageService } = require('@/services/core/StorageService');
+              StorageService.safeSetString('userName', v);
+              StorageService.safeSetString('quizUserName', v);
+            } catch {}
           }
         }
       } catch {}
@@ -375,66 +367,20 @@ const QuizModularPage: React.FC = () => {
     return { from, via, to };
   }, [stepConfig?.backgroundFrom, stepConfig?.backgroundVia, stepConfig?.backgroundTo]);
 
-  // ===== CÁLCULO E PERSISTÊNCIA DO RESULTADO (localStorage) =====
-  // Regras: usa seleções das etapas 2–11; mapeia prefixos dos optionId para estilos
+  // ===== CÁLCULO E PERSISTÊNCIA DO RESULTADO (core/ResultEngine) =====
   const computeAndPersistResult = React.useCallback(() => {
+    const { scores, total } = ResultEngine.computeScoresFromSelections(userSelections);
+    let userName = quizAnswers.userName || '';
     try {
-      const STYLE_MAP: Record<string, string> = {
-        natural: 'Natural',
-        classico: 'Clássico',
-        contemporaneo: 'Contemporâneo',
-        elegante: 'Elegante',
-        romantico: 'Romântico',
-        sexy: 'Sexy',
-        dramatico: 'Dramático',
-        criativo: 'Criativo',
-      };
-
-      const scores: Record<string, number> = {};
-      Object.values(STYLE_MAP).forEach(name => (scores[name] = 0));
-
-      // Considerar apenas seleções das etapas 2–11
-      const selectionEntries = Object.entries(userSelections);
-      selectionEntries.forEach(([qid, selection]) => {
-        // Heurística: question ids das etapas 2–11 começam com 'q' ou têm sufixos; usamos todos
-        (selection || []).forEach(optId => {
-          const key = String(optId).toLowerCase();
-          const foundPrefix = Object.keys(STYLE_MAP).find(prefix => key.startsWith(prefix + '_'));
-          if (foundPrefix) {
-            const styleName = STYLE_MAP[foundPrefix];
-            scores[styleName] = (scores[styleName] || 0) + 1;
-          }
-        });
-      });
-
-      const total = Object.values(scores).reduce((a, b) => a + b, 0) || 1;
-      const ordered = Object.entries(scores)
-        .map(([style, score]) => ({ style, category: style, score, percentage: Math.round((score / total) * 100) }))
-        .sort((a, b) => b.score - a.score);
-
-      const primary = ordered[0] || { style: 'Natural', category: 'Natural', score: 0, percentage: 0 };
-      const secondary = ordered.slice(1).map(s => ({
-        style: s.style,
-        category: s.category,
-        score: s.score,
-        percentage: s.percentage,
-      }));
-
-      const resultPayload = {
-        version: 'v1',
-        primaryStyle: primary,
-        secondaryStyles: secondary,
-        scores,
-        totalQuestions: total,
-        userData: { name: quizAnswers.userName || localStorage.getItem('userName') || '' },
-      };
-
-      localStorage.setItem('quizResult', JSON.stringify(resultPayload));
-      // Também manter compat com outros leitores
-      try { localStorage.setItem('quizUserName', resultPayload.userData?.name || ''); } catch {}
-    } catch (e) {
-      if (import.meta?.env?.DEV) console.warn('Falha ao persistir resultado:', e);
-    }
+      const { StorageService } = require('@/services/core/StorageService');
+      userName = userName || StorageService.safeGetString('userName') || StorageService.safeGetString('quizUserName') || '';
+    } catch {}
+    const payload = ResultEngine.toPayload(scores, total, userName);
+    ResultEngine.persist(payload);
+    try {
+      const { StorageService } = require('@/services/core/StorageService');
+      StorageService.safeSetString('quizUserName', userName);
+    } catch {}
   }, [userSelections, quizAnswers.userName]);
 
   // Disparar cálculo na etapa 19 (transição para resultado)

@@ -4,6 +4,7 @@ import { Card } from '@/components/ui/card';
 import type { BlockComponentProps } from '@/types/blocks';
 import { useQuizResult } from '@/hooks/useQuizResult';
 import { cn } from '@/lib/utils';
+import { StorageService } from '@/services/core/StorageService';
 
 const interpolate = (text: string, vars: Record<string, any>) => {
   if (!text) return '';
@@ -19,7 +20,7 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
   className = '',
 }) => {
   const { primaryStyle } = useQuizResult();
-  const storedName = (typeof window !== 'undefined' && localStorage.getItem('userName')) || '';
+  const storedName = StorageService.safeGetString('userName') || StorageService.safeGetString('quizUserName') || '';
 
   const {
     title = 'Seu Estilo Predominante',
