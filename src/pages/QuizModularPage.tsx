@@ -62,7 +62,7 @@ const QuizModularPage: React.FC = () => {
         setIsLoading(true);
         setError(null);
 
-        console.log(`🔄 Carregando blocos da etapa ${currentStep}...`);
+  // Carregando blocos da etapa (silencioso em produção)
 
         // Carregar blocos usando TemplateManager (integra JSON/Editor)
         const stepId = `step-${currentStep}`;
@@ -76,7 +76,8 @@ const QuizModularPage: React.FC = () => {
           setStepValid?.(currentStep, isValid);
         }, 100);
       } catch (err) {
-        console.error(`❌ Erro ao carregar etapa ${currentStep}:`, err);
+  // Log de erro reduzido
+  if (import.meta?.env?.DEV) console.error(`Erro ao carregar etapa ${currentStep}:`, err);
         setError(`Erro ao carregar etapa ${currentStep}`);
         setBlocks([]);
       } finally {
@@ -135,14 +136,10 @@ const QuizModularPage: React.FC = () => {
 
       setCurrentStep(target);
       goToStep(target);
-      console.log(
-        '➡️ Navegação por evento:',
-        e.detail?.stepId,
-        '->',
-        target,
-        'origem:',
-        e.detail?.source
-      );
+      if (import.meta?.env?.DEV) {
+        // Navegação por evento (somente em ambiente de desenvolvimento)
+        console.log('navigate-to-step:', e.detail?.stepId, '->', target, 'src:', e.detail?.source);
+      }
     };
 
     window.addEventListener('navigate-to-step', handleNavigate as EventListener);
@@ -338,7 +335,6 @@ const QuizModularPage: React.FC = () => {
                       onClick={handleNext}
                       disabled={currentStep === 21 || !stepValidation[currentStep]}
                       className={cn(
-                        'transition-all',
                         currentStep === 21 || !stepValidation[currentStep]
                           ? 'bg-stone-200 text-stone-400 cursor-not-allowed'
                           : 'bg-gradient-to-r from-[#B89B7A] to-[#8B7355]'
@@ -358,9 +354,9 @@ const QuizModularPage: React.FC = () => {
               <div className="text-center mb-8">
                 <div className="flex items-center justify-center gap-4 mb-4">
                   <div className="text-sm text-stone-500">Etapa {currentStep} de 21</div>
-                  <div className="w-32 bg-stone-200 rounded-full h-2">
+          <div className="w-32 bg-stone-200 rounded-full h-2">
                     <div
-                      className="bg-gradient-to-r from-[#B89B7A] to-[#8B7355] h-2 rounded-full transition-all duration-500"
+            className="bg-gradient-to-r from-[#B89B7A] to-[#8B7355] h-2 rounded-full"
                       style={{ width: `${progress}%` }}
                     />
                   </div>
@@ -371,10 +367,10 @@ const QuizModularPage: React.FC = () => {
               {/* 🎨 ÁREA DE RENDERIZAÇÃO DOS BLOCOS */}
               <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl shadow-stone-200/40 border border-stone-200/30 ring-1 ring-stone-100/20 overflow-hidden">
                 {/* Estado de loading */}
-                {isLoading && (
+        {isLoading && (
                   <div className="min-h-[500px] flex items-center justify-center">
                     <div className="text-center">
-                      <div className="animate-spin w-8 h-8 border-2 border-[#B89B7A] border-t-transparent rounded-full mx-auto mb-4"></div>
+          <div className="w-8 h-8 border-2 border-[#B89B7A] border-t-transparent rounded-full mx-auto mb-4"></div>
                       <p className="text-stone-600">Carregando etapa {currentStep}...</p>
                     </div>
                   </div>
@@ -391,7 +387,7 @@ const QuizModularPage: React.FC = () => {
                       <p className="text-red-600 mb-4">{error}</p>
                       <button
                         onClick={() => window.location.reload()}
-                        className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
+                        className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
                       >
                         Tentar novamente
                       </button>
@@ -416,13 +412,12 @@ const QuizModularPage: React.FC = () => {
                         </p>
                       </div>
                     ) : (
-                      blocks.map((block, index) => (
+          blocks.map((block, index) => (
                         <div
                           key={block.id}
                           className={cn(
                             'quiz-block',
-                            'transition-all duration-300',
-                            index === 0 && 'animate-fade-in-up'
+            // Sem animações/transições fora do Canvas
                           )}
                         >
                           <UniversalBlockRenderer
@@ -457,11 +452,11 @@ const QuizModularPage: React.FC = () => {
 
               {/* 🎮 CONTROLES DE NAVEGAÇÃO */}
               <div className="flex justify-between items-center mt-8">
-                <button
+        <button
                   onClick={handlePrevious}
                   disabled={currentStep === 1}
                   className={cn(
-                    'flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all',
+          'flex items-center gap-2 px-6 py-3 rounded-lg font-medium',
                     currentStep === 1
                       ? 'bg-stone-100 text-stone-400 cursor-not-allowed'
                       : 'bg-white text-stone-700 hover:bg-stone-50 border border-stone-200 shadow-sm hover:shadow'
@@ -475,11 +470,11 @@ const QuizModularPage: React.FC = () => {
                   <div className="text-lg font-semibold text-stone-800">{currentStep} / 21</div>
                 </div>
 
-                <button
+        <button
                   onClick={handleNext}
                   disabled={currentStep === 21 || !stepValidation[currentStep]}
                   className={cn(
-                    'flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all',
+          'flex items-center gap-2 px-6 py-3 rounded-lg font-medium',
                     currentStep === 21 || !stepValidation[currentStep]
                       ? 'bg-stone-100 text-stone-400 cursor-not-allowed'
                       : 'bg-gradient-to-r from-[#B89B7A] to-[#8B7355] text-white hover:from-[#A08966] hover:to-[#7A6B4D] shadow-md hover:shadow-lg'
@@ -498,7 +493,7 @@ const QuizModularPage: React.FC = () => {
                       .then(setBlocks)
                       .catch(() => {})
                   }
-                  className="ml-4 px-4 py-3 rounded-lg font-medium transition-all bg-white text-stone-700 hover:bg-stone-50 border border-stone-200 shadow-sm hover:shadow"
+                  className="ml-4 px-4 py-3 rounded-lg font-medium bg-white text-stone-700 hover:bg-stone-50 border border-stone-200 shadow-sm hover:shadow"
                   title="Recarregar blocos da etapa"
                 >
                   🔄 Recarregar etapa
