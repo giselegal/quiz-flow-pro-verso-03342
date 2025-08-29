@@ -6,10 +6,7 @@
  */
 
 import { useEditor } from '@/context/EditorContext';
-import {
-  QUIZ_21_STEPS_COMPLETE,
-  QuizStepData,
-} from '@/features/quiz/templates/templates/quiz21StepsComplete';
+import { QUIZ_21_STEPS_COMPLETE, QuizStepData } from '@/templates/quiz21StepsComplete';
 import { useQuizNavigation } from '@/hooks/useQuizNavigation';
 import { useQuizState } from '@/hooks/useQuizState';
 import { loadStepBlocks } from '@/utils/quiz21StepsRenderer';
