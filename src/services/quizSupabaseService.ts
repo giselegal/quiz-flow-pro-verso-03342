@@ -1,14 +1,6 @@
 import { supabase } from '@/integrations/supabase/client';
 import type { Database } from '@/integrations/supabase/types';
 
-// Type definitions
-type QuizUser = Database['public']['Tables']['quiz_users']['Row'];
-type QuizSession = Database['public']['Tables']['quiz_sessions']['Row'];
-type QuizStepResponse = Database['public']['Tables']['quiz_step_responses']['Row'];
-type QuizResult = Database['public']['Tables']['quiz_results']['Row'];
-type QuizAnalytics = Database['public']['Tables']['quiz_analytics']['Row'];
-type QuizConversion = Database['public']['Tables']['quiz_conversions']['Row'];
-
 type InsertQuizUser = Database['public']['Tables']['quiz_users']['Insert'];
 type InsertQuizSession = Database['public']['Tables']['quiz_sessions']['Insert'];
 type InsertQuizStepResponse = Database['public']['Tables']['quiz_step_responses']['Insert'];
