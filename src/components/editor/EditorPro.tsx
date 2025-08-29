@@ -1151,6 +1151,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
             <QuizRenderer
               mode="editor"
               currentStepOverride={safeCurrentStep}
+              onStepChange={(step: number) => actions.setCurrentStep(step)}
               className="h-full w-full"
               // Reaproveita o shell e gating de /quiz e injeta o Canvas dentro dele
               contentOverride={

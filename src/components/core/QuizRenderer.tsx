@@ -48,7 +48,7 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
   });
 
   const { currentStep, totalSteps, progress, isLoading } = quizState;
-  const { prevStep, nextStep, getStepData, setStepValid } = actions;
+  const { prevStep, nextStep, getStepData, setStepValid, goToStep } = actions;
   const [previewSessionData, setPreviewSessionData] = useState<Record<string, any>>({});
 
   // Buscar dados da etapa atual
@@ -56,6 +56,15 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
     (mode === 'editor' || (mode === 'preview' && previewEditable)) && Array.isArray(blocksOverride);
 
   const stepBlocks = canUseOverrides ? (blocksOverride as Block[]) : getStepData();
+
+  // 🔄 Sincronizar passo interno com o passo do Editor/Preview
+  useEffect(() => {
+    if (typeof currentStepOverride === 'number' && currentStepOverride !== currentStep) {
+      try {
+        goToStep?.(currentStepOverride);
+      } catch {}
+    }
+  }, [currentStepOverride, currentStep, goToStep]);
 
   // Metadata da etapa (se necessário futuramente)
   // const stepData: StepData = {
@@ -94,6 +103,14 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
 
   // ✅ Validação e gating similares à produção
   const [stepValidation, setLocalStepValidation] = useState<Record<number, boolean>>({});
+
+  // Expor etapa atual globalmente (editor/preview dependem de window.__quizCurrentStep)
+  useEffect(() => {
+    try {
+      const stepNum = currentStepOverride ?? currentStep;
+      (window as any).__quizCurrentStep = stepNum;
+    } catch {}
+  }, [currentStep, currentStepOverride]);
 
   // Escutar eventos globais de blocos
   useEffect(() => {
