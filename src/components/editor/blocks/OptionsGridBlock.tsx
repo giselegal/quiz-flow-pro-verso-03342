@@ -163,10 +163,10 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
     maxSelections = 1,
     minSelections = 1,
     requiredSelections = 1,
-    // 🎯 PROPRIEDADES DE ESTILO
-    // selectionStyle = 'border', // unused
-    // selectedColor = '#B89B7A', // unused
-    // hoverColor = '#D4C2A8', // unused
+  // 🎯 PROPRIEDADES DE ESTILO
+  selectionStyle = 'border',
+  selectedColor = '#B89B7A',
+  hoverColor = '#D4C2A8',
     // 🎯 PROPRIEDADES DE COMPORTAMENTO
     allowDeselection = true,
     // showSelectionCount = true, // unused
@@ -555,6 +555,30 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
             ? previewSelections.includes(opt.id)
             : (selectedOptions || []).includes(opt.id);
 
+          // Estilos dinâmicos por seleção
+          const selectedStyles: React.CSSProperties = (() => {
+            switch (selectionStyle) {
+              case 'background':
+                return isSelectedOption
+                  ? { backgroundColor: `${selectedColor}1A`, borderColor: selectedColor }
+                  : { backgroundColor: 'white' };
+              case 'shadow':
+                return isSelectedOption
+                  ? {
+                      boxShadow: `0 0 0 2px ${selectedColor}55, 0 8px 20px ${selectedColor}33`,
+                      borderColor: selectedColor,
+                    }
+                  : {};
+              default:
+                // border
+                return isSelectedOption
+                  ? { borderColor: selectedColor, boxShadow: `${selectedColor}55 0px 0px 0px 2px inset` }
+                  : {};
+            }
+          })();
+
+          const hoverStyles: React.CSSProperties = { boxShadow: `0 6px 14px ${hoverColor}33` };
+
           return (
             <div
               key={opt.id}
@@ -568,12 +592,17 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
                   handleOptionSelect(opt.id);
                 }
               }}
-              className={`rounded-lg border p-4 hover:shadow-md transition-all duration-200 cursor-pointer ${
-                isSelectedOption
-                  ? 'border-[#B89B7A] ring-2 ring-[#B89B7A]/40 bg-[#FFFCF8]'
-                  : 'border-neutral-200 bg-white'
+              className={`rounded-lg border p-4 transition-all duration-200 cursor-pointer ${
+                isSelectedOption ? '' : 'border-neutral-200 bg-white'
               } ${cardLayoutClass}`}
               onClick={() => handleOptionSelect(opt.id)}
+              onMouseEnter={e => {
+                (e.currentTarget.style as any).boxShadow = hoverStyles.boxShadow as string;
+              }}
+              onMouseLeave={e => {
+                (e.currentTarget.style as any).boxShadow = selectedStyles.boxShadow as any || '';
+              }}
+              style={{ ...selectedStyles }}
             >
               {opt.imageUrl && showImageEffective && (
                 <img

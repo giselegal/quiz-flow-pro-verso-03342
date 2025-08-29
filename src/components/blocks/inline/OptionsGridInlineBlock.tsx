@@ -45,6 +45,9 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
     imagePosition = 'top',
     gap = 16,
     cardRadius = 12,
+  selectionStyle = 'border',
+  selectedColor = '#B89B7A',
+  hoverColor = '#D4C2A8',
   } = block.properties || {};
 
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
@@ -166,21 +169,38 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
         {options.map((option: OptionItem) => {
           const isSelectedOption = selectedOptions.includes(option.id);
 
+          const selectedStyles: React.CSSProperties = (() => {
+            switch (selectionStyle) {
+              case 'background':
+                return isSelectedOption
+                  ? { backgroundColor: `${selectedColor}1A`, borderColor: selectedColor }
+                  : {};
+              case 'shadow':
+                return isSelectedOption
+                  ? {
+                      boxShadow: `0 0 0 2px ${selectedColor}55, 0 8px 20px ${selectedColor}33`,
+                      borderColor: selectedColor,
+                    }
+                  : {};
+              default:
+                return isSelectedOption ? { borderColor: selectedColor } : {};
+            }
+          })();
+
+          const hoverStyles: React.CSSProperties = { boxShadow: `0 6px 14px ${hoverColor}33` };
+
           return (
             <div
               key={option.id}
               className={cn(
                 'option-card p-4 border-2 cursor-pointer transition-all duration-200',
-                'hover:shadow-lg transform hover:-translate-y-1',
                 layoutOrientation === 'horizontal' && imagePosition === 'left'
                   ? 'flex items-center gap-4'
                   : '',
                 layoutOrientation === 'horizontal' && imagePosition === 'right'
                   ? 'flex items-center gap-4 flex-row-reverse'
                   : '',
-                isSelectedOption
-                  ? 'border-[var(--primary)] bg-[var(--primary)]/10 shadow-lg'
-                  : 'border-gray-200 hover:border-[var(--primary)] hover:bg-[var(--primary)]/5'
+                isSelectedOption ? '' : 'border-gray-200'
               )}
               onClick={e => {
                 e.stopPropagation();
@@ -188,6 +208,13 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
               }}
               style={{
                 borderRadius: `${cardRadius}px`,
+                ...selectedStyles,
+              }}
+              onMouseEnter={e => {
+                (e.currentTarget.style as any).boxShadow = hoverStyles.boxShadow as string;
+              }}
+              onMouseLeave={e => {
+                (e.currentTarget.style as any).boxShadow = selectedStyles.boxShadow as any || '';
               }}
             >
               {/* Imagem da opção */}

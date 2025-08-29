@@ -172,6 +172,7 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
               onClick={onClick}
               onPropertyChange={onPropertyChange}
               mode={mode}
+              isPreviewMode={mode === 'preview'}
               {...processedProperties}
             />
           </React.Suspense>
