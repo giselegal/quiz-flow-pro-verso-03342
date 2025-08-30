@@ -407,12 +407,14 @@ export const useUnifiedProperties = (
             PropertyType.SELECT,
             'Largura do Container',
             PropertyCategory.LAYOUT,
-            { options: [
-              { value: 'full', label: '100% (linha inteira)' },
-              { value: 'large', label: 'Largo (max-w-4xl)' },
-              { value: 'medium', label: 'Médio (max-w-2xl)' },
-              { value: 'small', label: 'Pequeno (max-w-md)' },
-            ]}
+            {
+              options: [
+                { value: 'full', label: '100% (linha inteira)' },
+                { value: 'large', label: 'Largo (max-w-4xl)' },
+                { value: 'medium', label: 'Médio (max-w-2xl)' },
+                { value: 'small', label: 'Pequeno (max-w-md)' },
+              ]
+            }
           ),
           createProperty(
             'containerPosition',
@@ -420,11 +422,13 @@ export const useUnifiedProperties = (
             PropertyType.SELECT,
             'Posição do Container',
             PropertyCategory.LAYOUT,
-            { options: [
-              { value: 'left', label: 'Esquerda' },
-              { value: 'center', label: 'Centro' },
-              { value: 'right', label: 'Direita' },
-            ]}
+            {
+              options: [
+                { value: 'left', label: 'Esquerda' },
+                { value: 'center', label: 'Centro' },
+                { value: 'right', label: 'Direita' },
+              ]
+            }
           ),
           createProperty(
             'spacing',
@@ -432,20 +436,22 @@ export const useUnifiedProperties = (
             PropertyType.SELECT,
             'Espaçamento Interno',
             PropertyCategory.STYLE,
-            { options: [
-              { value: 'none', label: 'Nenhum' },
-              { value: 'horizontal-only', label: 'Apenas horizontal' },
-              { value: 'small', label: 'Pequeno' },
-              { value: 'small-horizontal', label: 'Pequeno (horizontal)' },
-              { value: 'compact', label: 'Compacto' },
-              { value: 'compact-horizontal', label: 'Compacto (horizontal)' },
-              { value: 'normal', label: 'Normal' },
-              { value: 'normal-horizontal', label: 'Normal (horizontal)' },
-              { value: 'comfortable', label: 'Confortável' },
-              { value: 'comfortable-horizontal', label: 'Confortável (horizontal)' },
-              { value: 'spacious', label: 'Espaçoso' },
-              { value: 'spacious-horizontal', label: 'Espaçoso (horizontal)' },
-            ]}
+            {
+              options: [
+                { value: 'none', label: 'Nenhum' },
+                { value: 'horizontal-only', label: 'Apenas horizontal' },
+                { value: 'small', label: 'Pequeno' },
+                { value: 'small-horizontal', label: 'Pequeno (horizontal)' },
+                { value: 'compact', label: 'Compacto' },
+                { value: 'compact-horizontal', label: 'Compacto (horizontal)' },
+                { value: 'normal', label: 'Normal' },
+                { value: 'normal-horizontal', label: 'Normal (horizontal)' },
+                { value: 'comfortable', label: 'Confortável' },
+                { value: 'comfortable-horizontal', label: 'Confortável (horizontal)' },
+                { value: 'spacious', label: 'Espaçoso' },
+                { value: 'spacious-horizontal', label: 'Espaçoso (horizontal)' },
+              ]
+            }
           ),
           createProperty(
             'gridColumns',
@@ -453,11 +459,13 @@ export const useUnifiedProperties = (
             PropertyType.SELECT,
             'Largura do Bloco',
             PropertyCategory.LAYOUT,
-            { options: [
-              { value: 'full', label: '100% (linha inteira)' },
-              { value: 'half', label: '50% (duas colunas)' },
-              { value: 'auto', label: 'Automática' },
-            ]}
+            {
+              options: [
+                { value: 'full', label: '100% (linha inteira)' },
+                { value: 'half', label: '50% (duas colunas)' },
+                { value: 'auto', label: 'Automática' },
+              ]
+            }
           ),
           createProperty(
             'backgroundColor',
@@ -465,12 +473,14 @@ export const useUnifiedProperties = (
             PropertyType.SELECT,
             'Cor de Fundo do Container',
             PropertyCategory.STYLE,
-            { options: [
-              { value: 'transparent', label: 'Transparente' },
-              { value: 'white', label: 'Branco' },
-              { value: 'gray-50', label: 'Cinza 50' },
-              { value: 'brand-light', label: 'Marca (claro)' },
-            ]}
+            {
+              options: [
+                { value: 'transparent', label: 'Transparente' },
+                { value: 'white', label: 'Branco' },
+                { value: 'gray-50', label: 'Cinza 50' },
+                { value: 'brand-light', label: 'Marca (claro)' },
+              ]
+            }
           ),
           createProperty('marginTop', v.marginTop ?? 0, PropertyType.RANGE, 'Margem Superior', PropertyCategory.LAYOUT, { min: -40, max: 100, step: 2, unit: 'px' }),
           createProperty('marginBottom', v.marginBottom ?? 0, PropertyType.RANGE, 'Margem Inferior', PropertyCategory.LAYOUT, { min: -40, max: 100, step: 2, unit: 'px' }),
