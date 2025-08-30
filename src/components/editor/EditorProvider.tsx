@@ -322,7 +322,6 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
           currentStep: 1,
         };
       });
-      });
 
       // 🚨 GARANTIA DUPLA: Ensure step 1 is loaded on initialization
       setTimeout(() => {

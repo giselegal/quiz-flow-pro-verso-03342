@@ -117,18 +117,21 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
     }
   }, []);
 
+  const activeId = active?.id;
+  const activeType = active?.data.current?.type;
+  const activeBlockType = active?.data.current?.blockType;
   React.useEffect(() => {
     if (!isDebug()) return;
     // eslint-disable-next-line no-console
-    console.log('🎯 CanvasDropZone: isOver =', isOver, 'active =', active?.id);
-    if (active?.data.current?.type === 'sidebar-component') {
+    console.log('🎯 CanvasDropZone: isOver =', isOver, 'active =', activeId);
+    if (activeType === 'sidebar-component') {
       // eslint-disable-next-line no-console
-      console.log('📦 Arrastando componente da sidebar:', active?.data.current?.blockType);
-    } else if (active?.data.current?.type === 'canvas-block') {
+      console.log('📦 Arrastando componente da sidebar:', activeBlockType);
+    } else if (activeType === 'canvas-block') {
       // eslint-disable-next-line no-console
-      console.log('🔄 Reordenando bloco do canvas:', active?.id);
+      console.log('🔄 Reordenando bloco do canvas:', activeId);
     }
-  }, [isOver, active, isDebug]);
+  }, [isOver, activeId, activeType, activeBlockType, isDebug]);
 
   // Modo preview controlado por prop (default: false)
   const isPreviewing = !!isPreviewingProp;
@@ -181,7 +184,7 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
     ro.observe(el);
     setContainerHeight(el.clientHeight || 600);
     return () => ro.disconnect();
-  }, [scrollRef.current]);
+  }, []); // Empty dependency array - only runs once on mount
 
   const onScroll = React.useCallback(() => {
     const el = scrollRef.current;

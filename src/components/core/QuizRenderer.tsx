@@ -82,7 +82,7 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
   // };
 
   // 🎨 Fundo configurável por etapa (store NoCode)
-  const { stepConfig } = (() => {
+  const { stepConfig } = useMemo(() => {
     try {
       // eslint-disable-next-line @typescript-eslint/no-var-requires
       const store = require('@/stores/useStepNavigationStore');
@@ -92,7 +92,7 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
     } catch {
       return { stepConfig: undefined } as any;
     }
-  })();
+  }, [currentStep, currentStepOverride]);
 
   const bgStyle = useMemo(() => {
     const from = stepConfig?.backgroundFrom || '#FAF9F7';
@@ -132,11 +132,14 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
       window.removeEventListener('quiz-selection-change', handleSelectionChange as EventListener);
       window.removeEventListener('quiz-input-change', handleInputChange as EventListener);
     };
-  }, [currentStep, setStepValid]);
+  }, [currentStep]);
+
+  // Memoize stepBlocks to prevent infinite re-renders
+  const stableStepBlocks = useMemo(() => stepBlocks || [], [stepBlocks]);
 
   // Validação inicial ao mudar blocos
   useEffect(() => {
-    const blocks = stepBlocks || [];
+    const blocks = stableStepBlocks;
     const questionBlocks = blocks.filter((b: any) => b.type === 'options-grid' || b.type === 'form-container');
     if (questionBlocks.length === 0) {
       setLocalStepValidation(prev => ({ ...prev, [currentStep]: true }));
@@ -157,7 +160,7 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
     });
     setLocalStepValidation(prev => ({ ...prev, [currentStep]: inferredValid }));
     setStepValid?.(currentStep, inferredValid);
-  }, [currentStep, stepBlocks, setStepValid]);
+  }, [currentStep, stableStepBlocks]);
 
   const isStepValid = !!stepValidation[currentStep];
   const mustBeValid = stepConfig?.enableButtonOnlyWhenValid !== false;
