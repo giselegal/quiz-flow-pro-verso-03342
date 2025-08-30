@@ -125,7 +125,7 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
           isSelected ? 'ring-2 ring-blue-500 ring-offset-1' : ''
         )}
         data-dnd-dropzone-type="bloco"
-  onMouseDownCapture={handleMouseDownCapture}
+        onMouseDownCapture={handleMouseDownCapture}
         onClick={handleContainerClick}
         onMouseDown={handleContainerMouseDown}
       >

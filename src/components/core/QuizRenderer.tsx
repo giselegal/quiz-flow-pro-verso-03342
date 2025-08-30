@@ -62,7 +62,7 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
     if (typeof currentStepOverride === 'number' && currentStepOverride !== currentStep) {
       try {
         goToStep?.(currentStepOverride);
-      } catch {}
+      } catch { }
     }
   }, [currentStepOverride, currentStep, goToStep]);
 
@@ -109,7 +109,7 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
     try {
       const stepNum = currentStepOverride ?? currentStep;
       (window as any).__quizCurrentStep = stepNum;
-    } catch {}
+    } catch { }
   }, [currentStep, currentStepOverride]);
 
   // Escutar eventos globais de blocos
@@ -263,17 +263,17 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
 
     return (
       <div className="step-content p-8 space-y-6 bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl shadow-stone-200/40 border border-stone-200/30 ring-1 ring-stone-100/20 overflow-hidden">
-  {stepBlocks.map((block: any, index: number) => {
+        {stepBlocks.map((block: any, index: number) => {
           const isSelectable = mode === 'editor' || (mode === 'preview' && previewEditable);
           const isSelected = isSelectable && selectedBlockId === block.id;
           // Injeção de callbacks/session para preview com comportamento real
           const injectedProps = (mode === 'preview')
             ? {
-                onNext: () => nextStep(),
-                onUpdateSessionData: (key: string, value: any) =>
-                  setPreviewSessionData(prev => ({ ...prev, [key]: value })),
-                sessionData: previewSessionData,
-              }
+              onNext: () => nextStep(),
+              onUpdateSessionData: (key: string, value: any) =>
+                setPreviewSessionData(prev => ({ ...prev, [key]: value })),
+              sessionData: previewSessionData,
+            }
             : {};
           return (
             <div
