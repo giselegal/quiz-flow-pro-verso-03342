@@ -43,7 +43,14 @@ export const ScrollSyncProvider: React.FC<ScrollSyncProviderProps> = ({ children
 
   const syncScroll = useCallback(
     (source: 'canvas' | 'components' | 'properties', scrollTop: number) => {
-      if (isDisabled) return;
+      if (isDisabled) {
+        // Cancelar qualquer raf pendente quando desativado
+        if (rafRef.current !== null) {
+          cancelAnimationFrame(rafRef.current);
+          rafRef.current = null;
+        }
+        return;
+      }
       if (isSyncingRef.current) return;
       isSyncingRef.current = true;
       setIsScrolling(true);

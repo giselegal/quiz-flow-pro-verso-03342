@@ -26,14 +26,16 @@ const InterBlockDropZoneBase: React.FC<{
     <div
       ref={setNodeRef}
       className={cn(
-        'transition-all duration-150 relative pointer-events-auto flex items-center justify-center w-full',
+        'transition-all duration-150 relative flex items-center justify-center w-full',
         'z-10',
         // Sempre renderizado: manter hit area perceptível
         'min-h-[16px]',
         // Ao arrastar sobre: ampliar e dar feedback visual
         isOver && 'min-h-[56px] bg-brand/10 border-2 border-dashed border-brand/40 rounded-lg',
         // Quando ativo (há drag em andamento) mas não está over: indicar posição sutil
-        isActive && !isOver && 'min-h-[40px] bg-brand/5 rounded-full'
+        isActive && !isOver && 'min-h-[40px] bg-brand/5 rounded-full',
+        // Só permitir eventos quando há drag ativo
+        isActive ? 'pointer-events-auto' : 'pointer-events-none'
       )}
       data-dnd-dropzone-type="slot"
       data-position={position}
@@ -264,7 +266,7 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
       id={CANVAS_ROOT_ID}
       ref={setNodeRef}
       className={cn(
-        'min-h-[300px] transition-all duration-200 pointer-events-auto p-4 overflow-visible',
+  'min-h-[300px] transition-all duration-200 p-4 overflow-visible',
         // Evitar qualquer bloqueio de eventos no canvas
         'z-0',
         isOver && !isPreviewing && 'bg-brand/5 ring-2 ring-brand/20 ring-dashed',
