@@ -377,7 +377,8 @@ export const useUnifiedProperties = (
       const def = getBlockDefinition(blockType);
       if (def?.propsSchema?.length) {
         const values = currentBlock?.properties || {};
-        return def.propsSchema.map((s: any) =>
+        // Mapeia propriedades definidas no core registry
+        const coreProps = def.propsSchema.map((s: any) =>
           createProperty(
             s.key,
             values[s.key] ?? s.default,
@@ -396,6 +397,95 @@ export const useUnifiedProperties = (
             }
           )
         );
+
+        // Acrescenta propriedades universais de container/layout para editabilidade consistente
+        const v = currentBlock?.properties || {};
+        const containerProps: UnifiedProperty[] = [
+          createProperty(
+            'containerWidth',
+            v.containerWidth ?? 'full',
+            PropertyType.SELECT,
+            'Largura do Container',
+            PropertyCategory.LAYOUT,
+            { options: [
+              { value: 'full', label: '100% (linha inteira)' },
+              { value: 'large', label: 'Largo (max-w-4xl)' },
+              { value: 'medium', label: 'Médio (max-w-2xl)' },
+              { value: 'small', label: 'Pequeno (max-w-md)' },
+            ]}
+          ),
+          createProperty(
+            'containerPosition',
+            v.containerPosition ?? 'center',
+            PropertyType.SELECT,
+            'Posição do Container',
+            PropertyCategory.LAYOUT,
+            { options: [
+              { value: 'left', label: 'Esquerda' },
+              { value: 'center', label: 'Centro' },
+              { value: 'right', label: 'Direita' },
+            ]}
+          ),
+          createProperty(
+            'spacing',
+            v.spacing ?? 'small',
+            PropertyType.SELECT,
+            'Espaçamento Interno',
+            PropertyCategory.STYLE,
+            { options: [
+              { value: 'none', label: 'Nenhum' },
+              { value: 'horizontal-only', label: 'Apenas horizontal' },
+              { value: 'small', label: 'Pequeno' },
+              { value: 'small-horizontal', label: 'Pequeno (horizontal)' },
+              { value: 'compact', label: 'Compacto' },
+              { value: 'compact-horizontal', label: 'Compacto (horizontal)' },
+              { value: 'normal', label: 'Normal' },
+              { value: 'normal-horizontal', label: 'Normal (horizontal)' },
+              { value: 'comfortable', label: 'Confortável' },
+              { value: 'comfortable-horizontal', label: 'Confortável (horizontal)' },
+              { value: 'spacious', label: 'Espaçoso' },
+              { value: 'spacious-horizontal', label: 'Espaçoso (horizontal)' },
+            ]}
+          ),
+          createProperty(
+            'gridColumns',
+            v.gridColumns ?? 'full',
+            PropertyType.SELECT,
+            'Largura do Bloco',
+            PropertyCategory.LAYOUT,
+            { options: [
+              { value: 'full', label: '100% (linha inteira)' },
+              { value: 'half', label: '50% (duas colunas)' },
+              { value: 'auto', label: 'Automática' },
+            ]}
+          ),
+          createProperty(
+            'backgroundColor',
+            v.backgroundColor ?? 'transparent',
+            PropertyType.SELECT,
+            'Cor de Fundo do Container',
+            PropertyCategory.STYLE,
+            { options: [
+              { value: 'transparent', label: 'Transparente' },
+              { value: 'white', label: 'Branco' },
+              { value: 'gray-50', label: 'Cinza 50' },
+              { value: 'brand-light', label: 'Marca (claro)' },
+            ]}
+          ),
+          createProperty('marginTop', v.marginTop ?? 0, PropertyType.RANGE, 'Margem Superior', PropertyCategory.LAYOUT, { min: -40, max: 100, step: 2, unit: 'px' }),
+          createProperty('marginBottom', v.marginBottom ?? 0, PropertyType.RANGE, 'Margem Inferior', PropertyCategory.LAYOUT, { min: -40, max: 100, step: 2, unit: 'px' }),
+          createProperty('marginLeft', v.marginLeft ?? 0, PropertyType.RANGE, 'Margem Esquerda', PropertyCategory.LAYOUT, { min: -40, max: 100, step: 2, unit: 'px' }),
+          createProperty('marginRight', v.marginRight ?? 0, PropertyType.RANGE, 'Margem Direita', PropertyCategory.LAYOUT, { min: -40, max: 100, step: 2, unit: 'px' }),
+          createProperty('scale', v.scale ?? 100, PropertyType.RANGE, 'Escala', PropertyCategory.LAYOUT, { min: 50, max: 200, step: 5, unit: '%' }),
+        ];
+
+        // Evitar duplicar keys que já existam no coreProps
+        const existingKeys = new Set(coreProps.map(p => p.key));
+        const merged = [
+          ...coreProps,
+          ...containerProps.filter(p => !existingKeys.has(p.key)),
+        ];
+        return merged;
       }
     } catch { }
 

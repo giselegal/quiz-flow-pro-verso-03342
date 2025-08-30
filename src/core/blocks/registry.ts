@@ -110,7 +110,7 @@ export const blocksRegistry: Record<string, BlockDefinition> = {
             title: 'Fale com a gente',
             description: 'Preencha seus dados',
             submitText: 'Enviar',
-          },
+        },
         propsSchema: [
             prop({ key: 'title', kind: 'text', label: 'Título', category: 'content', default: 'Fale com a gente' }),
             prop({ key: 'description', kind: 'textarea', label: 'Descrição', category: 'content', default: 'Preencha seus dados' }),
