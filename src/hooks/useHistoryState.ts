@@ -10,10 +10,23 @@ export interface UseHistoryStateOptions {
   historyLimit?: number;
   storageKey?: string;
   enablePersistence?: boolean;
+  // Persist only the current present state (reduces payload drastically)
+  persistPresentOnly?: boolean;
+  // Debounce persistence to avoid excessive writes
+  persistDebounceMs?: number;
+  // Optional custom serializer to trim the present state
+  serialize?: (present: any) => any;
 }
 
 export const useHistoryState = <T>(initialState: T, options: UseHistoryStateOptions = {}) => {
-  const { historyLimit = 50, storageKey, enablePersistence = false } = options;
+  const {
+    historyLimit = 50,
+    storageKey,
+    enablePersistence = false,
+    persistPresentOnly = false,
+    persistDebounceMs = 0,
+    serialize,
+  } = options;
 
   // Initialize state from localStorage if persistence is enabled
   const getInitialState = useCallback((): HistoryState<T> => {
@@ -43,14 +56,41 @@ export const useHistoryState = <T>(initialState: T, options: UseHistoryStateOpti
 
   // Persist state to localStorage when it changes
   useEffect(() => {
-    if (enablePersistence && storageKey && typeof window !== 'undefined') {
+    if (!enablePersistence || !storageKey || typeof window === 'undefined') return;
+    // Allow runtime kill-switch
+    if ((window as any).__DISABLE_EDITOR_PERSISTENCE__ === true) return;
+
+    const toPersist = persistPresentOnly
+      ? { present: serialize ? serialize(history.present) : history.present }
+      : serialize
+      ? serialize(history as any)
+      : history;
+
+    let timer: number | null = null;
+    const save = () => {
       try {
-        localStorage.setItem(storageKey, JSON.stringify(history));
-      } catch (error) {
+        localStorage.setItem(storageKey, JSON.stringify(toPersist));
+      } catch (error: any) {
         console.warn('Failed to save history state to localStorage:', error);
+        // Disable further attempts to prevent spam
+        try {
+          (window as any).__DISABLE_EDITOR_PERSISTENCE__ = true;
+        } catch {}
       }
+    };
+
+    if (persistDebounceMs && persistDebounceMs > 0) {
+      timer = window.setTimeout(save, persistDebounceMs);
+    } else {
+      save();
     }
-  }, [history, storageKey, enablePersistence]);
+
+    return () => {
+      if (timer) {
+        clearTimeout(timer);
+      }
+    };
+  }, [history, storageKey, enablePersistence, persistPresentOnly, persistDebounceMs, serialize]);
 
   const setPresent = useCallback(
     (newStateOrUpdater: T | ((prev: T) => T)) => {

@@ -142,9 +142,28 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     canUndo,
     canRedo,
   } = useHistoryState<EditorState>(getInitialState(), {
-    historyLimit: 50,
+    historyLimit: 30,
     storageKey,
     enablePersistence: true,
+    persistPresentOnly: true,
+    persistDebounceMs: 250,
+    serialize: (present: EditorState) => {
+      // Persist only minimal fields to avoid quota issues
+      const minimal: any = {
+        currentStep: present.currentStep || 1,
+        selectedBlockId: present.selectedBlockId || null,
+        // Persist only ids/types to allow lightweight restore; full templates are reloaded on mount
+        stepBlocks: Object.fromEntries(
+          Object.entries(present.stepBlocks || {}).map(([k, arr]) => [
+            k,
+            (arr || []).map(b => ({ id: b.id, type: b.type, order: b.order || 0 })),
+          ])
+        ),
+        databaseMode: present.databaseMode,
+        isSupabaseEnabled: present.isSupabaseEnabled,
+      };
+      return minimal;
+    },
   });
 
   // Wire supabase integration hook (it may return helpers and flags)
@@ -263,6 +282,10 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     // 🚨 CORREÇÃO CRÍTICA: Always force template reload on mount
     const isTestEnv = process.env.NODE_ENV === 'test';
     if (!isTestEnv) {
+      // Detect minimal persisted state and rehydrate
+      const looksMinimal = Object.values(rawState.stepBlocks || {}).some((arr: any) =>
+        (arr || []).some((b: any) => b && b.id && b.type && (b.properties === undefined && b.content === undefined))
+      );
       const normalizedBlocks = normalizeStepBlocks(QUIZ_STYLE_21_STEPS_TEMPLATE);
       console.log('🔧 FORCE RELOAD TEMPLATE:', {
         normalizedBlocks,
@@ -271,7 +294,8 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       });
 
       // 🚨 FORÇA CARREGAMENTO: Aplicar template normalizado por merge não-destrutivo e computar validação
-      const mergedBlocks = mergeStepBlocks(rawState.stepBlocks, normalizedBlocks);
+      const sourceBlocks = looksMinimal ? {} as any : rawState.stepBlocks;
+      const mergedBlocks = mergeStepBlocks(sourceBlocks, normalizedBlocks);
       const initialValidation: Record<number, boolean> = {};
       for (let i = 1; i <= 21; i++) {
         const key = `step-${i}`;
