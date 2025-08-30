@@ -30,14 +30,10 @@ const LoadingFallback = () => (
 );
 
 interface EditorProProps {
-  initialBlocks?: Block[];
   onSave?: (blocks: Block[]) => void;
 }
 
-const EditorPro: React.FC<EditorProProps> = ({
-  initialBlocks = [],
-  onSave
-}) => {
+const EditorPro: React.FC<EditorProProps> = ({ onSave }) => {
   const { state, actions } = useEditor();
   const currentStep = state.currentStep;
   const selectedBlockId = state.selectedBlockId;
@@ -53,7 +49,7 @@ const EditorPro: React.FC<EditorProProps> = ({
   const [isSaving, setIsSaving] = useState(false);
 
   // Histórico para undo/redo
-  const [history, setHistory] = useState<Block[][]>([blocks]);
+  const [history] = useState<Block[][]>([blocks]);
   const [historyIndex, setHistoryIndex] = useState(0);
 
   // DnD Sensors
@@ -68,9 +64,11 @@ const EditorPro: React.FC<EditorProProps> = ({
   }, [actions]);
 
   const handleBlockUpdate = useCallback(
-    debounce((blockId: string, updates: Partial<Block>) => {
-      actions.updateBlock(currentStepKey, blockId, updates as any);
-    }, 300),
+    (blockId: string, updates: Partial<Block>) => {
+      debounce(`update:${blockId}`, () => {
+        actions.updateBlock(currentStepKey, blockId, updates as any);
+      }, 300);
+    },
     [actions, debounce, currentStepKey]
   );
 
@@ -147,7 +145,7 @@ const EditorPro: React.FC<EditorProProps> = ({
           <EditorLayout
             currentStep={currentStep}
             blocks={blocks}
-            selectedBlock={selectedBlock}
+            selectedBlock={blocks.find(b => b.id === selectedBlockId) || null}
             onStepChange={actions.setCurrentStep}
             onComponentSelect={handleComponentSelect}
             onBlockSelect={handleBlockSelect}
