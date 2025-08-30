@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useCallback, useMemo, useRef, useState, useEffect } from 'react';
+import React, { lazy, useCallback, useMemo, useRef, useState, useEffect } from 'react';
 import { DndContext, DragEndEvent, DragStartEvent, useSensor, useSensors, PointerSensor, KeyboardSensor, closestCenter, rectIntersection } from '@dnd-kit/core';
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import { useNotification } from '@/components/ui/Notification';
@@ -18,10 +18,7 @@ import StepSidebar from '@/components/editor/sidebars/StepSidebar';
 import ComponentsSidebar from '@/components/editor/sidebars/ComponentsSidebar';
 import PropertiesColumn from '@/components/editor/properties/PropertiesColumn';
 
-// Lazy loading dos componentes pesados
-const EditorLayout = lazy(() => import('./EditorPro/EditorLayout'));
-const EditorCanvas = lazy(() => import('./EditorPro/EditorCanvas'));
-const EditorToolbar = lazy(() => import('./EditorPro/EditorToolbar'));
+// Lazy loading dos componentes pesados (mantidos em arquivo modular index.tsx)
 
 // Removidos estilos de animação/transição globais do editor
 

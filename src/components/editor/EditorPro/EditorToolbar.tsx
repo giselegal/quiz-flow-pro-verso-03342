@@ -12,7 +12,6 @@ import {
   Monitor,
   Smartphone
 } from 'lucide-react';
-import { useOptimizedScheduler } from '@/hooks/useOptimizedScheduler';
 
 interface EditorToolbarProps {
   isPreviewMode: boolean;
@@ -39,8 +38,6 @@ const EditorToolbar: React.FC<EditorToolbarProps> = memo(({
   viewMode,
   onViewModeChange
 }) => {
-  const { debounce } = useOptimizedScheduler();
-
   // Debounce para ações que podem ser clicadas rapidamente
   const debouncedSave = useCallback(() => {
     onSave();

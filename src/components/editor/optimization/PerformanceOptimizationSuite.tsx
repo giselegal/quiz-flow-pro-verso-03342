@@ -4,7 +4,7 @@
  * Dashboard completo para monitorar e aplicar otimizações de performance
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
@@ -12,14 +12,8 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   Zap, 
-  Timer, 
   Database, 
-  Code, 
-  TrendingUp, 
-  AlertTriangle,
-  CheckCircle,
   RefreshCw,
-  BarChart3,
   Settings,
   Gauge
 } from 'lucide-react';
@@ -27,16 +21,12 @@ import TimerMigrationDashboard from './TimerMigrationDashboard';
 import { usePerformanceMonitor } from '@/hooks/usePerformanceMonitor';
 import { useOptimizedScheduler } from '@/hooks/useOptimizedScheduler';
 
-interface OptimizationSuiteProps {
-  onApplyOptimization?: (type: string) => Promise<void>;
-}
+interface OptimizationSuiteProps {}
 
-export const PerformanceOptimizationSuite: React.FC<OptimizationSuiteProps> = ({
-  onApplyOptimization
-}) => {
+export const PerformanceOptimizationSuite: React.FC<OptimizationSuiteProps> = () => {
   const [isOptimizing, setIsOptimizing] = useState(false);
   const [optimizationProgress, setOptimizationProgress] = useState(0);
-  const { metrics } = usePerformanceMonitor();
+  usePerformanceMonitor();
   const { schedule } = useOptimizedScheduler();
 
   // Dados simulados de performance
@@ -103,7 +93,7 @@ export const PerformanceOptimizationSuite: React.FC<OptimizationSuiteProps> = ({
 
     // Simular otimização progressiva
     for (let i = 0; i <= 100; i += 10) {
-      await new Promise(resolve => schedule('optimize-delay', resolve, 200));
+      await new Promise<void>(resolve => { schedule('optimize-delay', () => resolve(), 200); });
       setOptimizationProgress(i);
     }
 

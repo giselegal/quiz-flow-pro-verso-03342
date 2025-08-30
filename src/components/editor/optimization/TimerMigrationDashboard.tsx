@@ -9,18 +9,17 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
 import { 
   Timer, 
   CheckCircle, 
-  AlertCircle, 
+  AlertCircle,
   Clock, 
   Zap,
   RefreshCw,
   FileText,
   TrendingUp
 } from 'lucide-react';
-import { getMigrationStatus, generateMigrationReport, TIMER_MIGRATION_LIST } from '@/utils/timerMigration';
+import { getMigrationStatus, TIMER_MIGRATION_LIST } from '@/utils/timerMigration';
 import { useOptimizedScheduler } from '@/hooks/useOptimizedScheduler';
 
 interface TimerMigrationDashboardProps {
@@ -34,16 +33,19 @@ export const TimerMigrationDashboard: React.FC<TimerMigrationDashboardProps> = (
 }) => {
   const [migrationStatus, setMigrationStatus] = useState(getMigrationStatus());
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const { scheduleRecurring } = useOptimizedScheduler();
+  const { schedule, cancel } = useOptimizedScheduler();
 
   // Atualizar status a cada 5 segundos
   useEffect(() => {
-    const cleanup = scheduleRecurring(() => {
-      setMigrationStatus(getMigrationStatus());
-    }, 5000);
-
-    return cleanup;
-  }, [scheduleRecurring]);
+    const key = 'timer-migration:refresh';
+    const interval = setInterval(() => setMigrationStatus(getMigrationStatus()), 5000);
+    // também agenda uma atualização imediata para responsividade
+    schedule(key, () => setMigrationStatus(getMigrationStatus()), 0);
+    return () => {
+      clearInterval(interval);
+      cancel(key);
+    };
+  }, [schedule, cancel]);
 
   const handleAnalyze = async () => {
     setIsAnalyzing(true);

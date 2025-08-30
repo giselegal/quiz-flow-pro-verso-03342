@@ -4,7 +4,7 @@
  * Editor principal dividido em componentes modulares com lazy loading
  */
 
-import React, { Suspense, useCallback, useEffect, useState } from 'react';
+import React, { Suspense, useCallback, useState } from 'react';
 import { Block } from '@/types/editor';
 import { useEditor } from '../EditorProvider';
 import { useOptimizedScheduler } from '@/hooks/useOptimizedScheduler';
@@ -38,18 +38,14 @@ const EditorPro: React.FC<EditorProProps> = ({
   initialBlocks = [],
   onSave
 }) => {
-  const { 
-    blocks, 
-    currentStep, 
-    selectedBlock,
-    updateBlock,
-    deleteBlock,
-    selectBlock,
-    setCurrentStep
-  } = useEditor();
+  const { state, actions } = useEditor();
+  const currentStep = state.currentStep;
+  const selectedBlockId = state.selectedBlockId;
+  const currentStepKey = `step-${currentStep}`;
+  const blocks = state.stepBlocks[currentStepKey] || [];
   
   const { debounce } = useOptimizedScheduler();
-  const { showNotification } = useNotification();
+  const notification = useNotification();
   
   // Estado local para UI
   const [isPreviewMode, setIsPreviewMode] = useState(false);
@@ -67,36 +63,38 @@ const EditorPro: React.FC<EditorProProps> = ({
   );
 
   // Handlers otimizados
-  const handleBlockSelect = useCallback((block: Block) => {
-    selectBlock(block);
-  }, [selectBlock]);
+  const handleBlockSelect = useCallback((id: string) => {
+    actions.setSelectedBlockId(id);
+  }, [actions]);
 
   const handleBlockUpdate = useCallback(
     debounce((blockId: string, updates: Partial<Block>) => {
-      updateBlock(blockId, updates);
+      actions.updateBlock(currentStepKey, blockId, updates as any);
     }, 300),
-    [updateBlock, debounce]
+    [actions, debounce, currentStepKey]
   );
 
   const handleComponentSelect = useCallback((componentType: string) => {
-    const newBlock = createBlockFromComponent(componentType, currentStep);
+    const newBlock = createBlockFromComponent(componentType as any, blocks);
     if (newBlock) {
       // Adicionar bloco ao estado
-      console.log(`✅ Adicionando componente: ${componentType}`);
+      actions.addBlock(currentStepKey, newBlock);
+      actions.setSelectedBlockId(newBlock.id);
+      notification.success?.(`Componente ${componentType} adicionado`);
     }
-  }, [currentStep]);
+  }, [blocks, actions, currentStepKey, notification]);
 
   const handleSave = useCallback(async () => {
     setIsSaving(true);
     try {
-      await onSave?.(blocks);
-      showNotification('Projeto salvo com sucesso!', 'success');
+    await onSave?.(blocks);
+    notification.success?.('Projeto salvo com sucesso!');
     } catch (error) {
-      showNotification('Erro ao salvar projeto', 'error');
+    notification.error?.('Erro ao salvar projeto');
     } finally {
       setIsSaving(false);
     }
-  }, [blocks, onSave, showNotification]);
+  }, [blocks, onSave, notification]);
 
   const handleUndo = useCallback(() => {
     if (historyIndex > 0) {
@@ -150,18 +148,18 @@ const EditorPro: React.FC<EditorProProps> = ({
             currentStep={currentStep}
             blocks={blocks}
             selectedBlock={selectedBlock}
-            onStepChange={setCurrentStep}
+            onStepChange={actions.setCurrentStep}
             onComponentSelect={handleComponentSelect}
             onBlockSelect={handleBlockSelect}
           >
             {/* Canvas */}
             <EditorCanvas
               blocks={blocks}
-              selectedBlock={selectedBlock}
+              selectedBlock={blocks.find(b => b.id === selectedBlockId) || null}
               currentStep={currentStep}
               onSelectBlock={handleBlockSelect}
               onUpdateBlock={handleBlockUpdate}
-              onDeleteBlock={deleteBlock}
+              onDeleteBlock={(blockId) => actions.removeBlock(currentStepKey, blockId)}
               isPreviewMode={isPreviewMode}
             />
           </EditorLayout>
