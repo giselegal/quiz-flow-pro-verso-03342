@@ -9,11 +9,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Timer, 
-  CheckCircle, 
+import {
+  Timer,
+  CheckCircle,
   AlertCircle,
-  Clock, 
+  Clock,
   Zap,
   RefreshCw,
   FileText,
@@ -49,10 +49,10 @@ export const TimerMigrationDashboard: React.FC<TimerMigrationDashboardProps> = (
 
   const handleAnalyze = async () => {
     setIsAnalyzing(true);
-    
+
     // Simular análise
     await new Promise(resolve => setTimeout(resolve, 2000));
-    
+
     setMigrationStatus(getMigrationStatus());
     setIsAnalyzing(false);
   };
@@ -72,11 +72,11 @@ export const TimerMigrationDashboard: React.FC<TimerMigrationDashboardProps> = (
       'LoadingTransitionBlock.tsx',
       'QuizTransitionBlock.tsx'
     ];
-    
+
     if (criticalFiles.some(file => filePath.includes(file))) {
       return 'destructive';
     }
-    
+
     return 'secondary';
   };
 
@@ -86,7 +86,7 @@ export const TimerMigrationDashboard: React.FC<TimerMigrationDashboardProps> = (
       'src/components/editor/EditorProvider.tsx',
       'src/components/editor/blocks/ButtonInlineBlock.tsx'
     ];
-    
+
     return completed.includes(filePath) ? 'completed' : 'pending';
   };
 
@@ -105,7 +105,7 @@ export const TimerMigrationDashboard: React.FC<TimerMigrationDashboardProps> = (
             </p>
           </div>
         </div>
-        
+
         <div className="flex items-center gap-2">
           <Button
             variant="outline"
@@ -116,7 +116,7 @@ export const TimerMigrationDashboard: React.FC<TimerMigrationDashboardProps> = (
             <RefreshCw className={`h-4 w-4 ${isAnalyzing ? 'animate-spin' : ''}`} />
             {isAnalyzing ? 'Analisando...' : 'Atualizar'}
           </Button>
-          
+
           <Button
             onClick={onGenerateReport}
             className="flex items-center gap-2"
@@ -218,7 +218,7 @@ export const TimerMigrationDashboard: React.FC<TimerMigrationDashboardProps> = (
             {TIMER_MIGRATION_LIST.map((filePath, index) => {
               const status = getFileStatus(filePath);
               const fileName = filePath.split('/').pop() || filePath;
-              
+
               return (
                 <div key={filePath} className="flex items-center justify-between p-3 border rounded-lg">
                   <div className="flex items-center gap-3">
@@ -230,7 +230,7 @@ export const TimerMigrationDashboard: React.FC<TimerMigrationDashboardProps> = (
                       )}
                       <span className="font-medium">{fileName}</span>
                     </div>
-                    
+
                     <Badge
                       variant={getPriorityColor(filePath)}
                       className="text-xs"
@@ -277,17 +277,17 @@ export const TimerMigrationDashboard: React.FC<TimerMigrationDashboardProps> = (
               <div className="text-2xl font-bold text-green-600">0</div>
               <div className="text-sm text-green-600">Memory Leaks</div>
             </div>
-            
+
             <div className="text-center p-4 bg-blue-50 rounded-lg">
               <div className="text-2xl font-bold text-blue-600">+60%</div>
               <div className="text-sm text-blue-600">Performance</div>
             </div>
-            
+
             <div className="text-center p-4 bg-purple-50 rounded-lg">
               <div className="text-2xl font-bold text-purple-600">100%</div>
               <div className="text-sm text-purple-600">Auto Cleanup</div>
             </div>
-            
+
             <div className="text-center p-4 bg-orange-50 rounded-lg">
               <div className="text-2xl font-bold text-orange-600">-40%</div>
               <div className="text-sm text-orange-600">CPU Usage</div>

@@ -10,9 +10,9 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { 
-  Zap, 
-  Database, 
+import {
+  Zap,
+  Database,
   RefreshCw,
   Settings,
   Gauge
@@ -21,7 +21,7 @@ import TimerMigrationDashboard from './TimerMigrationDashboard';
 import { usePerformanceMonitor } from '@/hooks/usePerformanceMonitor';
 import { useOptimizedScheduler } from '@/hooks/useOptimizedScheduler';
 
-interface OptimizationSuiteProps {}
+interface OptimizationSuiteProps { }
 
 export const PerformanceOptimizationSuite: React.FC<OptimizationSuiteProps> = () => {
   const [isOptimizing, setIsOptimizing] = useState(false);
@@ -144,7 +144,7 @@ export const PerformanceOptimizationSuite: React.FC<OptimizationSuiteProps> = ()
             </p>
           </div>
         </div>
-        
+
         <Button
           onClick={handleOptimizeAll}
           disabled={isOptimizing}
@@ -276,7 +276,7 @@ export const PerformanceOptimizationSuite: React.FC<OptimizationSuiteProps> = ()
                         </div>
                       </div>
                     </div>
-                    
+
                     <div className="flex items-center gap-3">
                       <Progress value={task.progress} className="flex-1 h-2" />
                       <span className="text-sm font-medium">{task.progress}%</span>
@@ -316,7 +316,7 @@ export const PerformanceOptimizationSuite: React.FC<OptimizationSuiteProps> = ()
                     <div className="text-sm text-muted-foreground">Re-renders</div>
                   </div>
                 </div>
-                
+
                 <div className="p-4 bg-blue-50 rounded-lg">
                   <h4 className="font-medium mb-2">Próximos Passos:</h4>
                   <ul className="text-sm space-y-1 text-muted-foreground">

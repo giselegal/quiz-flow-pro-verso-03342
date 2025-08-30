@@ -2,12 +2,12 @@ import React, { memo, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Eye, 
-  Edit, 
-  Save, 
-  Undo2, 
-  Redo2, 
+import {
+  Eye,
+  Edit,
+  Save,
+  Undo2,
+  Redo2,
   Settings,
   Monitor,
   Smartphone

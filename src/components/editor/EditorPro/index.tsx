@@ -43,15 +43,15 @@ const EditorPro: React.FC<EditorProProps> = ({
   const selectedBlockId = state.selectedBlockId;
   const currentStepKey = `step-${currentStep}`;
   const blocks = state.stepBlocks[currentStepKey] || [];
-  
+
   const { debounce } = useOptimizedScheduler();
   const notification = useNotification();
-  
+
   // Estado local para UI
   const [isPreviewMode, setIsPreviewMode] = useState(false);
   const [viewMode, setViewMode] = useState<'desktop' | 'mobile'>('desktop');
   const [isSaving, setIsSaving] = useState(false);
-  
+
   // Histórico para undo/redo
   const [history, setHistory] = useState<Block[][]>([blocks]);
   const [historyIndex, setHistoryIndex] = useState(0);
@@ -87,10 +87,10 @@ const EditorPro: React.FC<EditorProProps> = ({
   const handleSave = useCallback(async () => {
     setIsSaving(true);
     try {
-    await onSave?.(blocks);
-    notification.success?.('Projeto salvo com sucesso!');
+      await onSave?.(blocks);
+      notification.success?.('Projeto salvo com sucesso!');
     } catch (error) {
-    notification.error?.('Erro ao salvar projeto');
+      notification.error?.('Erro ao salvar projeto');
     } finally {
       setIsSaving(false);
     }
@@ -114,7 +114,7 @@ const EditorPro: React.FC<EditorProProps> = ({
 
   const handleDragEnd = useCallback((event: DragEndEvent) => {
     const { active, over } = event;
-    
+
     if (over && active.id !== over.id) {
       // Lógica de drag and drop
       console.log('🔄 Reordenando blocos:', { from: active.id, to: over.id });

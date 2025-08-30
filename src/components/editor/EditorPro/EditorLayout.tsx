@@ -43,7 +43,7 @@ const EditorLayout: React.FC<EditorLayoutProps> = memo(({
     <div className="h-screen flex bg-background text-foreground overflow-hidden">
       {/* 📋 SIDEBAR ESQUERDA - ETAPAS */}
       <aside className="w-72 bg-card border-r border-border flex-shrink-0 overflow-hidden">
-        <StepSidebar 
+        <StepSidebar
           currentStep={currentStep}
           stepHasBlocks={stepHasBlocks}
           onSelectStep={onStepChange}
@@ -54,7 +54,7 @@ const EditorLayout: React.FC<EditorLayoutProps> = memo(({
 
       {/* 🧩 COLUNA CENTRO-ESQUERDA - COMPONENTES */}
       <aside className="w-80 bg-card/50 border-r border-border flex-shrink-0 overflow-hidden">
-  <ComponentsSidebar groupedComponents={groupedComponents} renderIcon={renderIcon} />
+        <ComponentsSidebar groupedComponents={groupedComponents} renderIcon={renderIcon} />
       </aside>
 
       {/* 🎨 ÁREA CENTRAL - CANVAS PRINCIPAL */}
@@ -64,7 +64,7 @@ const EditorLayout: React.FC<EditorLayoutProps> = memo(({
 
       {/* ⚙️ SIDEBAR DIREITA - PROPRIEDADES */}
       <aside className="w-80 bg-card border-l border-border flex-shrink-0 overflow-hidden">
-        <PropertiesColumn 
+        <PropertiesColumn
           selectedBlock={selectedBlock || undefined}
           onUpdate={(updates) => onUpdateSelectedBlock?.(updates)}
           onClose={() => onBlockSelect('')}

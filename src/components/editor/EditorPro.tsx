@@ -213,7 +213,7 @@ interface EditorProProps {
 export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   useRenderCount('EditorPro');
   mark('EditorPro:render:start');
-  
+
   // Segurança: useEditor pode lançar se não houver contexto — capturamos para renderizar fallback
   let editorContext;
   try {
@@ -239,16 +239,16 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
 
     try {
       // No-op para qualquer tentativa de scroll programático
-      window.scrollTo = ((..._args: any[]) => {}) as any;
-      (Element.prototype as any).scrollIntoView = ((..._args: any[]) => {}) as any;
-    } catch {}
+      window.scrollTo = ((..._args: any[]) => { }) as any;
+      (Element.prototype as any).scrollIntoView = ((..._args: any[]) => { }) as any;
+    } catch { }
 
     return () => {
       try {
         g.__DISABLE_AUTO_SCROLL = false;
         if (originalScrollTo) window.scrollTo = originalScrollTo as any;
         if (originalScrollIntoView) (Element.prototype as any).scrollIntoView = originalScrollIntoView as any;
-      } catch {}
+      } catch { }
     };
   }, []);
 
@@ -259,12 +259,12 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       const isRedo = (e.ctrlKey || e.metaKey) && (e.key === 'y' || e.key === 'Y');
       if (isUndo) {
         e.preventDefault();
-        try { (editorContext as any)?.actions?.undo?.(); } catch {}
+        try { (editorContext as any)?.actions?.undo?.(); } catch { }
         return;
       }
       if (isRedo) {
         e.preventDefault();
-        try { (editorContext as any)?.actions?.redo?.(); } catch {}
+        try { (editorContext as any)?.actions?.redo?.(); } catch { }
       }
     };
     window.addEventListener('keydown', onKeyDown, { capture: true });
@@ -288,7 +288,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
     if (target && typeof (target as any).scrollIntoView === 'function') {
       try {
         (target as HTMLElement).scrollIntoView({ behavior: 'smooth', block: 'center' });
-      } catch {}
+      } catch { }
     }
   }, [(editorContext as any)?.state?.selectedBlockId]);
 
@@ -313,7 +313,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
           >
             <span className="inline-flex items-center gap-2">
               <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v6h6M20 20v-6h-6M5 19A9 9 0 1019 5"/>
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v6h6M20 20v-6h-6M5 19A9 9 0 1019 5" />
               </svg>
               Recarregar
             </span>
@@ -513,7 +513,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   useEffect(() => {
     try {
       (window as any).__quizCurrentStep = safeCurrentStep;
-    } catch {}
+    } catch { }
   }, [safeCurrentStep]);
 
   // Escutar eventos globais de validação (seleções e inputs) para refletir no editor
@@ -570,13 +570,13 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
     try {
       (window as any).__DISABLE_AUTO_SCROLL = true;
       (window as any).__DISABLE_SCROLL_SYNC = true;
-    } catch {}
+    } catch { }
 
     return () => {
       try {
         (window as any).__DISABLE_AUTO_SCROLL = false;
         (window as any).__DISABLE_SCROLL_SYNC = false;
-      } catch {}
+      } catch { }
     };
   }, []);
 
@@ -793,7 +793,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
      ------------------------- */
 
   const CanvasAreaBase: React.FC = () => (
-  <div className="!w-[55%] !min-w-0 !max-w-none flex-none flex flex-col bg-gray-50">
+    <div className="!w-[55%] !min-w-0 !max-w-none flex-none flex flex-col bg-gray-50">
       <div className="bg-white border-b border-gray-200/60">
         {/* Header Principal */}
         <div className="px-6 py-4">
@@ -929,35 +929,35 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
                 </button>
                 <div className="w-px h-6 bg-gray-200" />
 
-              <input
-                type="file"
-                accept=".json"
-                onChange={e => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    const reader = new FileReader();
-                    reader.onload = event => {
-                      try {
-                        const json = event.target?.result as string;
-                        const validation = validateEditorJSON(json);
-                        if (!validation.valid) {
-                          notification?.error?.(`Erro de validação: ${validation.error}`);
-                          return;
+                <input
+                  type="file"
+                  accept=".json"
+                  onChange={e => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      const reader = new FileReader();
+                      reader.onload = event => {
+                        try {
+                          const json = event.target?.result as string;
+                          const validation = validateEditorJSON(json);
+                          if (!validation.valid) {
+                            notification?.error?.(`Erro de validação: ${validation.error}`);
+                            return;
+                          }
+                          actions.importJSON(json);
+                          notification?.success?.('JSON importado com sucesso!');
+                        } catch (error) {
+                          notification?.error?.('Erro ao importar JSON: ' + (error as Error).message);
                         }
-                        actions.importJSON(json);
-                        notification?.success?.('JSON importado com sucesso!');
-                      } catch (error) {
-                        notification?.error?.('Erro ao importar JSON: ' + (error as Error).message);
-                      }
-                    };
-                    reader.readAsText(file);
-                  }
-                  e.currentTarget.value = '';
-                }}
-                style={{ display: 'none' }}
-                ref={fileInputRef}
-                id="import-json"
-              />
+                      };
+                      reader.readAsText(file);
+                    }
+                    e.currentTarget.value = '';
+                  }}
+                  style={{ display: 'none' }}
+                  ref={fileInputRef}
+                  id="import-json"
+                />
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
@@ -973,11 +973,11 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               </div>
 
               {/* Toggle de Tema */}
-        <div className="flex bg-gray-100 rounded-lg p-1 border border-gray-200 shadow-sm">
+              <div className="flex bg-gray-100 rounded-lg p-1 border border-gray-200 shadow-sm">
                 <button
                   type="button"
                   onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-          className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-blue-600 rounded-lg"
+                  className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-blue-600 rounded-lg"
                   title={`Alternar para tema ${theme === 'dark' ? 'claro' : 'escuro'}`}
                 >
                   {theme === 'dark' ? (
@@ -994,12 +994,12 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               </div>
 
               {/* Toggle Edit/Preview */}
-      <div className="flex bg-gray-100 rounded-lg p-1 border border-gray-200 shadow-sm">
+              <div className="flex bg-gray-100 rounded-lg p-1 border border-gray-200 shadow-sm">
                 <button
                   type="button"
                   onClick={() => setMode('edit')}
                   className={cn(
-        'flex items-center gap-2 px-4 py-2 text-sm rounded-md font-medium',
+                    'flex items-center gap-2 px-4 py-2 text-sm rounded-md font-medium',
                     mode === 'edit'
                       ? 'bg-white text-blue-600 shadow-sm border border-blue-200'
                       : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
@@ -1065,7 +1065,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
                 </svg>
                 Salvar
               </button>
-            
+
               <button
                 className="px-4 py-2 bg-white border border-gray-300 text-gray-700 text-sm rounded-md hover:bg-gray-50"
                 title="Remover publicação da etapa atual"
@@ -1171,9 +1171,9 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       </div>
 
       {/* Canvas principal: edição (DnD) ou preview com renderização real de produção */}
-    <div
+      <div
         className={cn(
-      'flex-1 min-w-0 p-2 overflow-x-hidden overflow-y-auto',
+          'flex-1 min-w-0 p-2 overflow-x-hidden overflow-y-auto',
           isDragging && 'editor-drop-zone-active'
         )}
         data-canvas-container
@@ -1186,7 +1186,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
             previewDevice === 'tablet' && 'max-w-2xl',
             previewDevice === 'desktop' && 'max-w-3xl'
           )}
-        > 
+        >
           {mode === 'preview' ? (
             <QuizRenderer
               mode="preview"
@@ -1247,7 +1247,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   }, [selectedBlock, actions, currentStepKey]);
 
   const MemoPropertiesColumn = React.memo(() => (
-  <PropertiesColumn
+    <PropertiesColumn
       selectedBlock={selectedBlock as any}
       onUpdate={(updates: Record<string, any>) =>
         selectedBlock ? actions.updateBlock(currentStepKey, selectedBlock.id, updates) : undefined
@@ -1265,7 +1265,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   /* -------------------------
      Render principal
      ------------------------- */
-   return (
+  return (
     <>
       <DndContext
         sensors={sensors}
@@ -1273,7 +1273,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
       >
-  <div className={`editor-pro h-screen bg-gray-50 flex overflow-x-hidden max-w-screen ${className}`}>
+        <div className={`editor-pro h-screen bg-gray-50 flex overflow-x-hidden max-w-screen ${className}`}>
           {/* 1) Etapas - 10% */}
           <StepSidebar
             currentStep={safeCurrentStep}
@@ -1299,7 +1299,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       </DndContext>
 
       {NotificationContainer ? <NotificationContainer /> : null}
-  {mark('EditorPro:render:end')}
+      {mark('EditorPro:render:end')}
     </>
   );
 };
