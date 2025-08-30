@@ -19,6 +19,7 @@ interface EditorLayoutProps {
   groupedComponents?: ComponentsSidebarProps['groupedComponents'];
   renderIcon?: ComponentsSidebarProps['renderIcon'];
   getStepAnalysis?: (step: number) => { icon: string; label: string; desc: string };
+  stepValidation?: Record<number, boolean>;
 }
 
 const EditorLayout: React.FC<EditorLayoutProps> = memo(({
@@ -32,7 +33,8 @@ const EditorLayout: React.FC<EditorLayoutProps> = memo(({
   children,
   groupedComponents: groupedComponentsProp,
   renderIcon: renderIconProp,
-  getStepAnalysis: getStepAnalysisProp
+  getStepAnalysis: getStepAnalysisProp,
+  stepValidation
 }) => {
   // Derivados para Sidebars existentes
   const stepHasBlocks = useMemo(() => {
@@ -63,6 +65,7 @@ const EditorLayout: React.FC<EditorLayoutProps> = memo(({
           onSelectStep={onStepChange}
           getStepAnalysis={getStepAnalysis}
           renderIcon={renderIcon}
+          stepValidation={stepValidation}
         />
       </aside>
 

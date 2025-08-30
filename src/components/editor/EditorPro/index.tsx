@@ -88,7 +88,7 @@ const EditorPro: React.FC<EditorProProps> = ({ onSave }) => {
         const detail: any = (ev as any).detail || {};
         const type = detail.blockType as string;
         if (type) handleComponentSelect(type);
-      } catch {}
+      } catch { }
     };
     window.addEventListener('editor-add-component', onDoubleClickAdd as EventListener);
     return () => window.removeEventListener('editor-add-component', onDoubleClickAdd as EventListener);
@@ -229,6 +229,7 @@ const EditorPro: React.FC<EditorProProps> = ({ onSave }) => {
             groupedComponents={groupedComponents}
             renderIcon={renderIcon}
             getStepAnalysis={getStepAnalysis}
+            stepValidation={(state as any)?.stepValidation as Record<number, boolean>}
             onUpdateSelectedBlock={(updates: Partial<Block>) => {
               const id = selectedBlockId;
               if (id) actions.updateBlock(currentStepKey, id, updates as any);
