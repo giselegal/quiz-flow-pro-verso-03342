@@ -4,7 +4,7 @@
  * Editor principal dividido em componentes modulares com lazy loading
  */
 
-import React, { Suspense, useCallback, useState } from 'react';
+import React, { Suspense, useCallback, useEffect, useState } from 'react';
 import { Block } from '@/types/editor';
 import { useEditor } from '../EditorProvider';
 import { useOptimizedScheduler } from '@/hooks/useOptimizedScheduler';
@@ -13,6 +13,21 @@ import { createBlockFromComponent } from '@/utils/editorUtils';
 import { DndContext, DragEndEvent, useSensor, useSensors, PointerSensor, KeyboardSensor, closestCenter } from '@dnd-kit/core';
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import { CANVAS_ROOT_ID, SLOT_ID_PREFIX, BLOCK_ID_PREFIX } from '@/components/editor/dnd/constants';
+import {
+  Circle,
+  FileText,
+  Zap,
+  Type as TypeIcon,
+  Target,
+  Palette,
+  BarChart3,
+  MessageSquare,
+  Shield,
+  Rocket,
+  Sparkles,
+  DollarSign,
+  Info
+} from 'lucide-react';
 
 // Lazy loading dos componentes pesados
 const EditorLayout = React.lazy(() => import('./EditorLayout'));
@@ -140,13 +155,46 @@ const EditorPro: React.FC<EditorProProps> = ({ onSave }) => {
   }, [availableComponents]);
 
   const renderIcon = React.useCallback((_name: string, className = 'w-4 h-4') => {
-    // Ícones mínimos (stub visual consistente)
-    return (
-      <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor">
-        <circle cx="12" cy="12" r="9" strokeWidth="2" />
-        <path d="M8 12h8" strokeWidth="2" />
-      </svg>
-    );
+    const name = String(_name || '').toLowerCase();
+    const commonProps = { className } as { className?: string };
+    switch (name) {
+      case 'note':
+      case 'doc':
+      case 'text':
+        return <FileText {...commonProps} />;
+      case 'flash':
+      case 'zap':
+        return <Zap {...commonProps} />;
+      case 'type':
+        return <TypeIcon {...commonProps} />;
+      case 'button':
+      case 'pointer':
+        return <Circle {...commonProps} />; // fallback discreto
+      case 'target':
+        return <Target {...commonProps} />;
+      case 'palette':
+        return <Palette {...commonProps} />;
+      case 'chart':
+      case 'stats':
+        return <BarChart3 {...commonProps} />;
+      case 'chat':
+      case 'message':
+        return <MessageSquare {...commonProps} />;
+      case 'shield':
+        return <Shield {...commonProps} />;
+      case 'rocket':
+        return <Rocket {...commonProps} />;
+      case 'sparkle':
+      case 'sparkles':
+        return <Sparkles {...commonProps} />;
+      case 'money':
+      case 'dollar':
+        return <DollarSign {...commonProps} />;
+      case 'info':
+        return <Info {...commonProps} />;
+      default:
+        return <Circle {...commonProps} />;
+    }
   }, []);
 
   const getStepAnalysis = React.useCallback((step: number) => ({
@@ -154,6 +202,13 @@ const EditorPro: React.FC<EditorProProps> = ({ onSave }) => {
     label: `Etapa ${step}`,
     desc: blocks.length > 0 && state.currentStep === step ? `${blocks.length} blocos` : 'Configuração padrão',
   }), [blocks.length, state.currentStep]);
+
+  // Atualiza a validação da etapa atual com base na existência de blocos
+  useEffect(() => {
+    if ((actions as any)?.setStepValid) {
+      (actions as any).setStepValid(currentStep, blocks.length > 0);
+    }
+  }, [blocks.length, currentStep, actions]);
 
   const getIndexFromOver = useCallback((overId: string | null): number => {
     if (!overId) return blocks.length;
