@@ -105,6 +105,15 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
     }
   };
 
+  // Seleciona já no mouse down (fase de captura) para garantir seleção mesmo quando
+  // componentes internos cancelam o click/bubbling posteriormente
+  const handleMouseDownCapture = (e: React.MouseEvent) => {
+    // Apenas botão principal e sem modificadores
+    if (e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
+    if (isInteractive(e.target)) return;
+    onSelect();
+  };
+
   return (
     <div className="my-0">
       <div
@@ -116,6 +125,7 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
           isSelected ? 'ring-2 ring-blue-500 ring-offset-1' : ''
         )}
         data-dnd-dropzone-type="bloco"
+  onMouseDownCapture={handleMouseDownCapture}
         onClick={handleContainerClick}
         onMouseDown={handleContainerMouseDown}
       >

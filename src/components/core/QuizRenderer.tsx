@@ -263,7 +263,7 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
 
     return (
       <div className="step-content p-8 space-y-6 bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl shadow-stone-200/40 border border-stone-200/30 ring-1 ring-stone-100/20 overflow-hidden">
-        {stepBlocks.map((block: any, index: number) => {
+  {stepBlocks.map((block: any, index: number) => {
           const isSelectable = mode === 'editor' || (mode === 'preview' && previewEditable);
           const isSelected = isSelectable && selectedBlockId === block.id;
           // Injeção de callbacks/session para preview com comportamento real
@@ -282,6 +282,11 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
                 'block-container relative transition-all ' +
                 (isSelected ? 'ring-2 ring-blue-500 ring-offset-2 rounded-lg' : '')
               }
+              onMouseDown={() => {
+                if (isSelectable && block.id && onBlockClick) {
+                  onBlockClick(String(block.id));
+                }
+              }}
               onClick={e => handleBlockClick(e, block)}
             >
               <UniversalBlockRenderer

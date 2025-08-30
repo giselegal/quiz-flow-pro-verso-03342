@@ -63,19 +63,28 @@ export const useHistoryState = <T>(initialState: T, options: UseHistoryStateOpti
     const toPersist = persistPresentOnly
       ? { present: serialize ? serialize(history.present) : history.present }
       : serialize
-      ? serialize(history as any)
-      : history;
+        ? serialize(history as any)
+        : history;
 
     let timer: number | null = null;
     const save = () => {
       try {
-        localStorage.setItem(storageKey, JSON.stringify(toPersist));
+        const serialized = JSON.stringify(toPersist);
+        // Guardar: evita salvar estados grandes demais
+        if (serialized.length > 500_000) {
+          console.warn('History persistence skipped: payload too large (~', serialized.length, 'bytes)');
+          (window as any).__DISABLE_EDITOR_PERSISTENCE__ = true;
+          return;
+        }
+        localStorage.setItem(storageKey, serialized);
       } catch (error: any) {
         console.warn('Failed to save history state to localStorage:', error);
         // Disable further attempts to prevent spam
         try {
           (window as any).__DISABLE_EDITOR_PERSISTENCE__ = true;
-        } catch {}
+          // Limpa chave problemática para recuperar espaço
+          localStorage.removeItem(storageKey);
+        } catch { }
       }
     };
 
