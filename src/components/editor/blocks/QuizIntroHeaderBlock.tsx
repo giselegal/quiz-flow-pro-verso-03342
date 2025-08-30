@@ -53,7 +53,7 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
         showBackButton: block.properties.showBackButton,
       });
     }
-  // Dependências por valor para evitar disparos por identidade do objeto
+    // Dependências por valor para evitar disparos por identidade do objeto
   }, [
     block.id,
     (block.properties as any)?.logoUrl,
