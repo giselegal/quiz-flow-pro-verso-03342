@@ -192,28 +192,30 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       // Accept either returned list or fallback to internal property
       const components = Array.isArray(comps) ? comps : (supabaseIntegration.components ?? []);
       if (components && components.length > 0) {
-        const grouped = groupByStepKey(components);
-        // Normaliza e faz merge não-destrutivo por ID
-        const merged = mergeStepBlocks(rawState.stepBlocks, grouped);
-        // Atualiza validação para todas as etapas
-        const validationUpdate: Record<number, boolean> = {};
-        for (let i = 1; i <= 21; i++) {
-          const key = `step-${i}`;
-          validationUpdate[i] = Array.isArray((merged as any)[key]) && (merged as any)[key].length > 0;
-        }
-        setState({
-          ...rawState,
-          stepBlocks: merged,
-          stepValidation: {
-            ...(rawState.stepValidation || {}),
-            ...validationUpdate,
-          },
+        setState(prev => {
+          const grouped = groupByStepKey(components);
+          // Normaliza e faz merge não-destrutivo por ID
+          const merged = mergeStepBlocks(prev.stepBlocks, grouped);
+          // Atualiza validação para todas as etapas
+          const validationUpdate: Record<number, boolean> = {};
+          for (let i = 1; i <= 21; i++) {
+            const key = `step-${i}`;
+            validationUpdate[i] = Array.isArray((merged as any)[key]) && (merged as any)[key].length > 0;
+          }
+          return {
+            ...prev,
+            stepBlocks: merged,
+            stepValidation: {
+              ...(prev.stepValidation || {}),
+              ...validationUpdate,
+            },
+          };
         });
       }
     } catch (err) {
       console.error('EditorProvider: failed to load supabase components', err);
     }
-  }, [supabaseIntegration, setState, rawState]);
+  }, [supabaseIntegration, setState]);
 
   useEffect(() => {
     if (enableSupabase) {
@@ -223,13 +225,16 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
   }, [enableSupabase, funnelId, quizId]);
 
   // Ensure step is loaded - check if step exists, if not fetch and merge
+  const stateRef = React.useRef(rawState);
+  useEffect(() => { stateRef.current = rawState; }, [rawState]);
+
   const ensureStepLoaded = useCallback(
     async (step: number | string) => {
       // Em ambiente de teste, não auto-carregar templates para manter estado previsível
       if (process.env.NODE_ENV === 'test') {
         return;
       }
-      const existingBlocks = getBlocksForStep(step, rawState.stepBlocks);
+      const existingBlocks = getBlocksForStep(step, stateRef.current.stepBlocks);
 
       if (existingBlocks && existingBlocks.length > 0) {
         return; // Step already loaded
@@ -241,11 +246,13 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
           const comps = await supabaseIntegration.loadSupabaseComponents();
           const components = Array.isArray(comps) ? comps : (supabaseIntegration.components ?? []);
           if (components && components.length > 0) {
-            const grouped = groupByStepKey(components);
-            const merged = mergeStepBlocks(rawState.stepBlocks, grouped);
-            setState({
-              ...rawState,
-              stepBlocks: merged,
+            setState(prev => {
+              const grouped = groupByStepKey(components);
+              const merged = mergeStepBlocks(prev.stepBlocks, grouped);
+              return {
+                ...prev,
+                stepBlocks: merged,
+              };
             });
             return;
           }
@@ -257,25 +264,29 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
           const stepKey = `step-${stepNum}`;
           const defaultBlocks = (QUIZ_STYLE_21_STEPS_TEMPLATE as any)[stepKey] || [];
           if (defaultBlocks.length > 0) {
-            setState({
-              ...rawState,
+            setState(prev => ({
+              ...prev,
               stepBlocks: {
-                ...rawState.stepBlocks,
+                ...prev.stepBlocks,
                 [stepKey]: defaultBlocks,
               },
               stepValidation: {
-                ...(rawState.stepValidation || {}),
+                ...(prev.stepValidation || {}),
                 [stepNum]: defaultBlocks.length > 0,
               },
-            });
+            }));
           }
         }
       } catch (error) {
         console.error('Failed to ensure step loaded:', error);
       }
     },
-    [rawState, setState, state.isSupabaseEnabled, supabaseIntegration]
+    [setState, state.isSupabaseEnabled, supabaseIntegration]
   );
+
+  // Stable ref to ensureStepLoaded for effects that should not re-run on identity change
+  const ensureStepLoadedRef = React.useRef<EditorActions['ensureStepLoaded']>(ensureStepLoaded);
+  useEffect(() => { ensureStepLoadedRef.current = ensureStepLoaded; }, [ensureStepLoaded]);
 
   // Initialize step 1 automatically on mount and when template data is available
   useEffect(() => {
@@ -294,38 +305,40 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       });
 
       // 🚨 FORÇA CARREGAMENTO: Aplicar template normalizado por merge não-destrutivo e computar validação
-      const sourceBlocks = looksMinimal ? {} as any : rawState.stepBlocks;
-      const mergedBlocks = mergeStepBlocks(sourceBlocks, normalizedBlocks);
-      const initialValidation: Record<number, boolean> = {};
-      for (let i = 1; i <= 21; i++) {
-        const key = `step-${i}`;
-        initialValidation[i] = Array.isArray((mergedBlocks as any)[key]) && (mergedBlocks as any)[key].length > 0;
-      }
-      setState({
-        ...rawState,
-        stepBlocks: mergedBlocks,
-        stepValidation: {
-          ...(rawState.stepValidation || {}),
-          ...initialValidation,
-        },
-        currentStep: 1,
+      setState(prev => {
+        const mergedBlocks = mergeStepBlocks(prev.stepBlocks, normalizedBlocks);
+        const initialValidation: Record<number, boolean> = {};
+        for (let i = 1; i <= 21; i++) {
+          const key = `step-${i}`;
+          initialValidation[i] = Array.isArray((mergedBlocks as any)[key]) && (mergedBlocks as any)[key].length > 0;
+        }
+        return {
+          ...prev,
+          stepBlocks: mergedBlocks,
+          stepValidation: {
+            ...(prev.stepValidation || {}),
+            ...initialValidation,
+          },
+          currentStep: 1,
+        };
+      });
       });
 
       // 🚨 GARANTIA DUPLA: Ensure step 1 is loaded on initialization
       setTimeout(() => {
-        ensureStepLoaded(1);
+        ensureStepLoadedRef.current?.(1);
         // Force verify all steps loaded
         for (let i = 1; i <= 21; i++) {
-          ensureStepLoaded(i);
+          ensureStepLoadedRef.current?.(i);
         }
       }, 100);
     } else {
       // Em testes, não carregar templates automaticamente nem fazer merges
-      setState({
-        ...rawState,
+      setState(prev => ({
+        ...prev,
         currentStep: 1,
         // mantém stepBlocks como já inicializado vazio pelo getInitialState()
-      });
+      }));
     }
   }, []); // Empty dependency array - run only once on mount
 
@@ -334,7 +347,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     if (rawState.currentStep) {
       // Em testes, não auto-carregar templates ao mudar de etapa
       if (process.env.NODE_ENV !== 'test') {
-        ensureStepLoaded(rawState.currentStep);
+        ensureStepLoadedRef.current?.(rawState.currentStep);
       }
 
       // 🚨 FORÇA VERIFICAÇÃO: If step blocks are empty, force reload template
@@ -342,36 +355,37 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       if (process.env.NODE_ENV !== 'test' && (!currentStepBlocks || currentStepBlocks.length === 0)) {
         console.log('🚨 EMPTY STEP DETECTED - FORCE RELOAD:', rawState.currentStep);
         const normalizedBlocks = normalizeStepBlocks(QUIZ_STYLE_21_STEPS_TEMPLATE);
-        const mergedBlocks = mergeStepBlocks(rawState.stepBlocks, normalizedBlocks);
-        const validationUpdate: Record<number, boolean> = {};
-        for (let i = 1; i <= 21; i++) {
-          const key = `step-${i}`;
-          validationUpdate[i] = Array.isArray((mergedBlocks as any)[key]) && (mergedBlocks as any)[key].length > 0;
-        }
-        setState({
-          ...rawState,
-          stepBlocks: mergedBlocks,
-          stepValidation: {
-            ...(rawState.stepValidation || {}),
-            ...validationUpdate,
-          },
+        setState(prev => {
+          const mergedBlocks = mergeStepBlocks(prev.stepBlocks, normalizedBlocks);
+          const validationUpdate: Record<number, boolean> = {};
+          for (let i = 1; i <= 21; i++) {
+            const key = `step-${i}`;
+            validationUpdate[i] = Array.isArray((mergedBlocks as any)[key]) && (mergedBlocks as any)[key].length > 0;
+          }
+          return {
+            ...prev,
+            stepBlocks: mergedBlocks,
+            stepValidation: {
+              ...(prev.stepValidation || {}),
+              ...validationUpdate,
+            },
+          };
         });
       }
     }
-  }, [rawState.currentStep, ensureStepLoaded]);
+  }, [rawState.currentStep]);
 
   // Actions (use functional setState to avoid races)
   const setCurrentStep = useCallback(
     (step: number) => {
-      setState({
-        ...rawState,
+      setState(prev => ({
+        ...prev,
         currentStep: step,
         selectedBlockId: null,
-      });
-      // Ensure the new step is loaded
-      ensureStepLoaded(step);
+      }));
+      // Ensure the new step is loaded will be handled by the effect watching currentStep
     },
-    [setState, rawState, ensureStepLoaded]
+    [setState]
   );
 
   const setSelectedBlockId = useCallback(
@@ -388,15 +402,15 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
   const setStepValid = useCallback(
     (step: number, isValid: boolean) => {
       if (!Number.isFinite(step) || step < 1) return;
-      setState({
-        ...rawState,
+      setState(prev => ({
+        ...prev,
         stepValidation: {
-          ...(rawState.stepValidation || {}),
+          ...(prev.stepValidation || {}),
           [step]: !!isValid,
         },
-      });
+      }));
     },
-    [setState, rawState]
+    [setState]
   );
 
   const addBlock = useCallback(
