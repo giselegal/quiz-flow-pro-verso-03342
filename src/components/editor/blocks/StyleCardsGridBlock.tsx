@@ -72,7 +72,7 @@ const StyleCardsGridBlock: React.FC<StyleCardsGridBlockProps> = ({
     maxSelections,
     animationType,
     cardSize,
-  themePreset,
+    themePreset,
   } = properties as any;
   const { primaryStyle, secondaryStyles } = useQuizResult();
 

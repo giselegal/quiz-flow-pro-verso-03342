@@ -93,7 +93,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
     disabled = false,
     customStyles: _customStyles = '',
     requiresValidInput = false,
-  requiresValidSelection = false,
+    requiresValidSelection = false,
     // Configurações de cores
     backgroundColor = '#B89B7A',
     textColor = '#FFFFFF',
@@ -122,7 +122,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
     showDisabledState = false,
     disabledText = '',
     disabledOpacity = 50,
-  loading = false,
+    loading = false,
   } = (block?.properties as any) || {};
 
   // Suporte a controle externo de estado (eventos globais)
@@ -435,7 +435,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
         id={block?.id}
         disabled={isButtonDisabled}
         aria-disabled={isButtonDisabled}
-  className={getResponsiveClasses()}
+        className={getResponsiveClasses()}
         style={{
           ...getButtonStyles(),
           ...(isButtonDisabled && showDisabledState
@@ -458,7 +458,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
             try {
               storedValue =
                 (await userResponseService.getResponse('intro-name-input'))?.trim() || '';
-            } catch {}
+            } catch { }
 
             const effectiveName = domValue || storedValue;
             allowProceed = !!effectiveName && effectiveName.length > 0;
@@ -517,7 +517,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
                   localStorage.setItem('quiz_start_tracked', 'true');
                   localStorage.setItem('userName', userName);
                   localStorage.setItem('quizUserName', userName);
-                } catch {}
+                } catch { }
               }
 
               // Dispatch quiz start event
@@ -558,7 +558,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
           {loading
             ? 'Carregando...'
             : (isButtonDisabled && showDisabledState && disabledText ? disabledText : text) ||
-              'Clique aqui'}
+            'Clique aqui'}
         </span>
 
         {/* Ícone à direita */}

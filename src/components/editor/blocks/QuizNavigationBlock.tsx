@@ -100,7 +100,7 @@ const QuizNavigationBlock: React.FC<QuizNavigationBlockProps> = ({
         } else {
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-      } catch {}
+      } catch { }
     }
   };
 
