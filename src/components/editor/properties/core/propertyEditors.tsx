@@ -471,7 +471,8 @@ const BorderEditor: React.FC<PropertyEditorProps> = ({ property, onChange }) => 
 };
 
 // Editor composto: Background (espera objeto { type, color, gradientFrom, gradientTo, imageUrl, size, position })
-const BackgroundEditor: React.FC<PropertyEditorProps> = ({ property, onChange }) => {
+const 
+BackgroundEditor: React.FC<PropertyEditorProps> = ({ property, onChange }) => {
   const val =
     property.value || ({ type: 'color', color: '#ffffff', gradientFrom: '#ffffff', gradientTo: '#ffffff', imageUrl: '', size: 'cover', position: 'center' } as any);
   const update = (patch: any) => onChange(property.key, { ...val, ...patch });
@@ -575,4 +576,25 @@ export const propertyEditors: PropertyEditorRegistry = {
 export const withPropertyEditor = (propertyType: string) => {
   const Editor = propertyEditors[propertyType] || TextEditor;
   return Editor;
+};
+
+// Utilitário: escolhe o editor baseado no objeto da propriedade
+export const pickPropertyEditor = (property: any) => {
+  const type = String(property?.type ?? 'text');
+  const key = String(property?.key ?? '').toLowerCase();
+  // Arrays
+  if (type === 'array') {
+    if (key === 'options') return OptionsArrayEditor;
+    return ArrayJsonEditor;
+  }
+  // Objetos
+  if (type === 'object' || type === 'json') {
+    if (key.includes('border')) return BorderEditor;
+    if (key.includes('background')) return BackgroundEditor;
+    return type === 'json' ? JsonEditor : ObjectEditor;
+  }
+  // Upload
+  if (type === 'upload') return UploadEditor;
+  // Padrão pelo registro
+  return propertyEditors[type] || TextEditor;
 };

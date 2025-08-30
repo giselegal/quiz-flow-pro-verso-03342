@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { withPropertyEditor } from './core/propertyEditors';
+import { withPropertyEditor, pickPropertyEditor } from './core/propertyEditors';
 import { useUnifiedProperties, PropertyCategory } from '@/hooks/useUnifiedProperties';
 import type { Block } from '@/types/editor';
 import {
@@ -253,7 +253,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
             <div className="space-y-4">
               <p style={{ color: '#6B4F43' }}>{filteredProps.length} propriedades encontradas</p>
               {filteredProps.map(prop => {
-                const Editor = withPropertyEditor(prop.type as unknown as string);
+                const Editor = pickPropertyEditor(prop as any);
                 return <Editor key={prop.key} property={prop as any} onChange={updateProperty} />;
               })}
             </div>
@@ -296,10 +296,8 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
                     {propsInCat.length ? (
                       <div className="space-y-4">
                         {propsInCat.map(prop => {
-                          const Editor = withPropertyEditor(prop.type as unknown as string);
-                          return (
-                            <Editor key={prop.key} property={prop as any} onChange={updateProperty} />
-                          );
+                          const Editor = pickPropertyEditor(prop as any);
+                          return <Editor key={prop.key} property={prop as any} onChange={updateProperty} />;
                         })}
                       </div>
                     ) : (
