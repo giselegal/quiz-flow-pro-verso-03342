@@ -1,15 +1,19 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { funnelLocalStore } from '@/services/funnelLocalStore';
-import { Edit, Eye, Globe2, Plus } from 'lucide-react';
+import { Edit, Eye, Globe2, Plus, Upload } from 'lucide-react';
 import React from 'react';
 import { useLocation } from 'wouter';
+import { TemplateManager } from '@/utils/TemplateManager';
+import OPTIMIZED_FUNNEL_CONFIG from '@/config/optimized21StepsFunnel';
+import { publishFunnel } from '@/services/funnelPublishing';
 
 type Funnel = ReturnType<typeof funnelLocalStore.list>[number];
 
 const MyFunnelsPage: React.FC = () => {
   const [, setLocation] = useLocation();
   const [funnels, setFunnels] = React.useState<Funnel[]>([]);
+  const [publishingId, setPublishingId] = React.useState<string | null>(null);
 
   React.useEffect(() => {
     setFunnels(funnelLocalStore.list());
@@ -31,6 +35,46 @@ const MyFunnelsPage: React.FC = () => {
       setFunnels(list);
     } catch { }
     setLocation('/editor?template=optimized-21-steps-funnel');
+  };
+
+  const publishLocalFunnel = async (f: Funnel) => {
+    try {
+      setPublishingId(f.id);
+      // Carregar blocos de todas as 21 etapas
+      const steps = Array.from({ length: 21 }, (_, i) => i + 1);
+      const stages = await Promise.all(
+        steps.map(async (n) => {
+          const stepId = `step-${n}`;
+          const blocks = await TemplateManager.loadStepBlocks(stepId);
+          const cfgStep = (OPTIMIZED_FUNNEL_CONFIG as any).steps?.find((s: any) => s.id === stepId);
+          return {
+            id: stepId,
+            name: cfgStep?.name || `Etapa ${n}`,
+            order: n,
+            blocks,
+          };
+        })
+      );
+
+      const res = await publishFunnel({
+        id: f.id, // pode ser substituído por UUID no serviço caso não seja UUID
+        name: f.name,
+        description: 'Funil publicado a partir do editor local',
+        stages,
+        settings: { source: 'local', template: 'optimized-21-steps-funnel' },
+      });
+
+      if (res.success) {
+        alert(`Funil publicado! URL: ${res.publicUrl || ''}`);
+      } else {
+        alert(`Falha ao publicar: ${res.error || 'Erro desconhecido'}`);
+      }
+    } catch (e) {
+      console.error('Erro ao publicar funil:', e);
+      alert('Erro ao publicar funil. Verifique o console.');
+    } finally {
+      setPublishingId(null);
+    }
   };
 
   return (
@@ -88,6 +132,15 @@ const MyFunnelsPage: React.FC = () => {
                   </Button>
                   <Button variant="outline" size="sm" onClick={() => goToEditor(f.id)}>
                     <Edit className="w-4 h-4 mr-1" /> Editar
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => publishLocalFunnel(f)}
+                    disabled={publishingId === f.id}
+                    title="Publicar funil no Supabase"
+                  >
+                    <Upload className="w-4 h-4 mr-1" /> {publishingId === f.id ? 'Publicando...' : 'Publicar'}
                   </Button>
                   <Button
                     variant="outline"

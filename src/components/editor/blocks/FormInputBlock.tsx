@@ -62,9 +62,27 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
   onClick,
   onPropertyChange,
   className = '',
-  funnelId: _funnelId = 'default-quiz-funnel-21-steps',
+  funnelId: _funnelId,
   onValueChange,
 }) => {
+  // Determinar funnelId a partir do contexto/URL com fallback
+  const effectiveFunnelId = React.useMemo(() => {
+    try {
+      const search = typeof window !== 'undefined' ? window.location.search : '';
+      const urlParams = new URLSearchParams(search || '');
+      const fromUrl = urlParams.get('funnel') || urlParams.get('funnelId') || urlParams.get('quizId');
+      if (fromUrl) return fromUrl;
+    } catch {}
+    if (_funnelId) return _funnelId;
+    try {
+      // Tentar ler de um contexto central se exposto globalmente
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const ctx = require('@/context/EditorContext');
+      const id = ctx?.useEditor?.()?.currentFunnelId;
+      if (typeof id === 'string' && id) return id;
+    } catch {}
+    return 'optimized-21-steps-funnel';
+  }, [_funnelId]);
   // Verificação de segurança para evitar erro de undefined
   if (!block) {
     return (
@@ -149,7 +167,7 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
     if (valid && newValue.trim()) {
       try {
         // Salvar resposta específica localmente
-        userResponseService.saveStepResponse(block?.id || '', newValue.trim());
+  userResponseService.saveStepResponse(block?.id || '', newValue.trim());
 
         // Se for o campo de nome, salvar no Supabase
         if (
@@ -173,7 +191,8 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
               data: {
                 name: newValue.trim(),
                 fieldName: name,
-                componentId: block?.id || 'intro-name-input',
+    componentId: block?.id || 'intro-name-input',
+    funnelId: effectiveFunnelId,
               },
               timestamp: new Date().toISOString(),
             });
