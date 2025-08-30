@@ -1,5 +1,6 @@
 import { defaultHeaderProperties } from '@/config/headerPropertiesMapping';
 import { defaultOptionsGridProperties } from '@/config/optionsGridPropertiesMapping';
+import { getBlockDefinition } from '@/core/blocks/registry';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 /**
@@ -125,6 +126,38 @@ const createProperty = (
 });
 
 const createSelectOptions = (options: Array<{ value: string; label: string }>) => options;
+
+// Mapeia tipos do registry (core) para PropertyType unificado
+const mapRegistryKindToPropertyType = (kind: string): PropertyType => {
+  switch (kind) {
+    case 'text':
+      return PropertyType.TEXT;
+    case 'textarea':
+      return PropertyType.TEXTAREA;
+    case 'number':
+      return PropertyType.NUMBER;
+    case 'range':
+      return PropertyType.RANGE;
+    case 'color':
+      return PropertyType.COLOR;
+    case 'select':
+      return PropertyType.SELECT;
+    case 'switch':
+      return PropertyType.SWITCH;
+    case 'array':
+      return PropertyType.ARRAY;
+    case 'object':
+      return PropertyType.OBJECT;
+    case 'upload':
+      return PropertyType.UPLOAD;
+    case 'url':
+      return PropertyType.URL;
+    case 'json':
+      return PropertyType.JSON;
+    default:
+      return PropertyType.TEXT;
+  }
+};
 
 /**
  * 🌟 Funções de propriedades universais
@@ -339,6 +372,34 @@ export const useUnifiedProperties = (
   const generatedProperties = useMemo(() => {
     if (!blockType) return [];
 
+    // 1) Fonte primária: core registry (centralização)
+    try {
+      const def = getBlockDefinition(blockType);
+      if (def?.propsSchema?.length) {
+        const values = currentBlock?.properties || {};
+        return def.propsSchema.map((s: any) =>
+          createProperty(
+            s.key,
+            values[s.key] ?? s.default,
+            mapRegistryKindToPropertyType(String(s.kind)),
+            s.label,
+            (s.category as any) || (PropertyCategory.CONTENT as any),
+            {
+              description: s.description,
+              placeholder: s.placeholder,
+              required: s.required,
+              min: s.min,
+              max: s.max,
+              step: s.step,
+              unit: s.unit,
+              options: s.options,
+            }
+          )
+        );
+      }
+    } catch {}
+
+    // 2) Fallback: heurísticas e mapeamentos atuais
     switch (blockType) {
       case 'header':
       case 'quiz-intro-header':
