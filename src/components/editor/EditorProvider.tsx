@@ -176,9 +176,19 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
         const grouped = groupByStepKey(components);
         // Normaliza e faz merge não-destrutivo por ID
         const merged = mergeStepBlocks(rawState.stepBlocks, grouped);
+        // Atualiza validação para todas as etapas
+        const validationUpdate: Record<number, boolean> = {};
+        for (let i = 1; i <= 21; i++) {
+          const key = `step-${i}`;
+          validationUpdate[i] = Array.isArray((merged as any)[key]) && (merged as any)[key].length > 0;
+        }
         setState({
           ...rawState,
           stepBlocks: merged,
+          stepValidation: {
+            ...(rawState.stepValidation || {}),
+            ...validationUpdate,
+          },
         });
       }
     } catch (err) {
@@ -234,6 +244,10 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
                 ...rawState.stepBlocks,
                 [stepKey]: defaultBlocks,
               },
+              stepValidation: {
+                ...(rawState.stepValidation || {}),
+                [stepNum]: defaultBlocks.length > 0,
+              },
             });
           }
         }
@@ -256,10 +270,20 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
         totalSteps: Object.keys(normalizedBlocks).length,
       });
 
-      // 🚨 FORÇA CARREGAMENTO: Aplicar template normalizado por merge não-destrutivo
+      // 🚨 FORÇA CARREGAMENTO: Aplicar template normalizado por merge não-destrutivo e computar validação
+      const mergedBlocks = mergeStepBlocks(rawState.stepBlocks, normalizedBlocks);
+      const initialValidation: Record<number, boolean> = {};
+      for (let i = 1; i <= 21; i++) {
+        const key = `step-${i}`;
+        initialValidation[i] = Array.isArray((mergedBlocks as any)[key]) && (mergedBlocks as any)[key].length > 0;
+      }
       setState({
         ...rawState,
-        stepBlocks: mergeStepBlocks(rawState.stepBlocks, normalizedBlocks),
+        stepBlocks: mergedBlocks,
+        stepValidation: {
+          ...(rawState.stepValidation || {}),
+          ...initialValidation,
+        },
         currentStep: 1,
       });
 
@@ -294,9 +318,19 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       if (process.env.NODE_ENV !== 'test' && (!currentStepBlocks || currentStepBlocks.length === 0)) {
         console.log('🚨 EMPTY STEP DETECTED - FORCE RELOAD:', rawState.currentStep);
         const normalizedBlocks = normalizeStepBlocks(QUIZ_STYLE_21_STEPS_TEMPLATE);
+        const mergedBlocks = mergeStepBlocks(rawState.stepBlocks, normalizedBlocks);
+        const validationUpdate: Record<number, boolean> = {};
+        for (let i = 1; i <= 21; i++) {
+          const key = `step-${i}`;
+          validationUpdate[i] = Array.isArray((mergedBlocks as any)[key]) && (mergedBlocks as any)[key].length > 0;
+        }
         setState({
           ...rawState,
-          stepBlocks: mergeStepBlocks(rawState.stepBlocks, normalizedBlocks),
+          stepBlocks: mergedBlocks,
+          stepValidation: {
+            ...(rawState.stepValidation || {}),
+            ...validationUpdate,
+          },
         });
       }
     }
