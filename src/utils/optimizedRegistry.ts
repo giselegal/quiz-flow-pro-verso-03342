@@ -1,6 +1,6 @@
 import React from 'react';
-import { 
-  ENHANCED_BLOCK_REGISTRY, 
+import {
+  ENHANCED_BLOCK_REGISTRY,
   getEnhancedBlockComponent,
   normalizeBlockProperties,
   getRegistryStats
@@ -18,19 +18,26 @@ import VisualBlockFallback from '@/components/core/renderers/VisualBlockFallback
 /**
  * 🧠 Buscar componente otimizado com fallback inteligente
  */
+// Cache simples para manter identidade estável por tipo
+const COMPONENT_CACHE: Map<string, React.ComponentType<any>> = new Map();
+
 export const getOptimizedBlockComponent = (type: string): React.ComponentType<any> => {
+  // Retorna do cache se já resolvido
+  const cached = COMPONENT_CACHE.get(type);
+  if (cached) return cached;
+
   try {
     // Usar função inteligente do enhanced registry
     const component = getEnhancedBlockComponent(type);
-    
+
     if (component) {
-      console.log(`✅ Componente resolvido: ${type}`);
-      return component;
+      // Armazenar no cache para identidade estável entre renders
+      COMPONENT_CACHE.set(type, component as unknown as React.ComponentType<any>);
+      return component as unknown as React.ComponentType<any>;
     }
 
     // Este ponto nunca deveria ser alcançado devido ao fallback universal
     console.error(`❌ Erro crítico: nenhum componente encontrado para ${type}`);
-    
   } catch (error) {
     console.error(`❌ Erro ao buscar componente ${type}:`, error);
   }
@@ -46,6 +53,8 @@ export const getOptimizedBlockComponent = (type: string): React.ComponentType<an
     });
   };
 
+  // Também cacheia o fallback para não recriar função
+  COMPONENT_CACHE.set(type, EmergencyFallback);
   return EmergencyFallback;
 };
 
@@ -76,12 +85,12 @@ export const normalizeBlockProps = (block: any) => {
  */
 export const getOptimizedRegistryStats = () => {
   const stats = getRegistryStats();
-  
+
   return {
     ...stats,
     optimizedFeatures: [
       'Fallback inteligente por categoria',
-      'Normalização automática de propriedades', 
+      'Normalização automática de propriedades',
       'Sistema de busca aprimorado',
       'Cobertura de 150+ componentes'
     ],

@@ -293,10 +293,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     // 🚨 CORREÇÃO CRÍTICA: Always force template reload on mount
     const isTestEnv = process.env.NODE_ENV === 'test';
     if (!isTestEnv) {
-      // Detect minimal persisted state and rehydrate
-      const looksMinimal = Object.values(rawState.stepBlocks || {}).some((arr: any) =>
-        (arr || []).some((b: any) => b && b.id && b.type && (b.properties === undefined && b.content === undefined))
-      );
+      // Detect minimal persisted state and rehydrate (variável removida por não uso)
       const normalizedBlocks = normalizeStepBlocks(QUIZ_STYLE_21_STEPS_TEMPLATE);
       console.log('🔧 FORCE RELOAD TEMPLATE:', {
         normalizedBlocks,

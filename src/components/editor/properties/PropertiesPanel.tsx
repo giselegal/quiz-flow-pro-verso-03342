@@ -11,7 +11,6 @@ import type { Block } from '@/types/editor';
 import {
   Copy,
   Eye,
-  Info,
   Monitor,
   Palette,
   RotateCcw,
@@ -22,11 +21,10 @@ import {
   Type,
   Search,
   Sparkles,
-  ChevronDown,
   CheckCircle2,
   AlertCircle,
 } from 'lucide-react';
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 
 interface EnhancedPropertiesPanelProps {
   selectedBlock?: Block | null;
@@ -103,17 +101,17 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
   // Filtro de busca
   const filteredProps = searchTerm
     ? properties.filter(
-        p =>
-          p.label?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          p.key.toLowerCase().includes(searchTerm.toLowerCase())
-      )
+      p =>
+        p.label?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        p.key.toLowerCase().includes(searchTerm.toLowerCase())
+    )
     : null;
 
   return (
     <TooltipProvider>
       <Card className="h-full border-0 shadow-xl bg-gradient-to-br from-white to-gray-50 flex flex-col transition-all duration-300">
-          {/* Header modernizado */}
-          <CardHeader className="pb-4 border-b border-gray-100">
+        {/* Header modernizado */}
+        <CardHeader className="pb-4 border-b border-gray-100">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-gradient-to-br from-[#B89B7A]/20 to-[#B89B7A]/10 rounded-xl flex items-center justify-center">
@@ -195,9 +193,9 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
             <div className="flex items-center gap-1">
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
+                  <Button
+                    variant="ghost"
+                    size="sm"
                     onClick={() => applyBrandColors?.()}
                     className="h-8 px-2 rounded-md"
                   >
@@ -252,9 +250,9 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
               className="pl-10 border-gray-200 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20 rounded-lg"
             />
             {searchTerm && (
-              <Button 
-                variant="ghost" 
-                size="sm" 
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={() => setSearchTerm('')}
                 className="absolute right-2 top-1/2 -translate-y-1/2 h-6 px-2 text-xs"
               >
@@ -271,9 +269,9 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
                 <p className="text-sm font-medium text-gray-700">
                   {filteredProps.length} {filteredProps.length === 1 ? 'propriedade encontrada' : 'propriedades encontradas'}
                 </p>
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
+                <Button
+                  variant="ghost"
+                  size="sm"
                   onClick={() => setSearchTerm('')}
                   className="text-xs"
                 >
@@ -295,9 +293,9 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
                 <div className="text-center py-12">
                   <Search className="w-12 h-12 text-gray-300 mx-auto mb-3" />
                   <p className="text-gray-500 text-sm">Nenhuma propriedade encontrada</p>
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
+                  <Button
+                    variant="ghost"
+                    size="sm"
                     onClick={() => setSearchTerm('')}
                     className="mt-2 text-xs"
                   >
@@ -307,9 +305,9 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
               )}
             </div>
           ) : (
-            <Accordion 
-              type="multiple" 
-              value={expandedItems} 
+            <Accordion
+              type="multiple"
+              value={expandedItems}
               onValueChange={setExpandedItems}
               className="w-full"
             >
@@ -317,13 +315,13 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
                 const meta = CATEGORY_META[cat] || { icon: Settings, label: String(cat) };
                 const Icon = meta.icon;
                 const propsInCat = getPropertiesByCategory(cat);
-                
+
                 if (propsInCat.length === 0) return null;
 
                 return (
-                  <AccordionItem 
-                    key={String(cat)} 
-                    value={String(cat)} 
+                  <AccordionItem
+                    key={String(cat)}
+                    value={String(cat)}
                     className="border-b border-gray-100"
                   >
                     <AccordionTrigger className="px-4 py-3 hover:bg-gray-50 transition-colors">

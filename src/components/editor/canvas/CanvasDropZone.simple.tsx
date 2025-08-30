@@ -5,7 +5,7 @@ import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { mark } from '@/utils/perf';
 import React from 'react';
 import { useRenderCount } from '@/hooks/useRenderCount';
-import { CANVAS_ROOT_ID, SLOT_ID_PREFIX } from '../dnd/constants';
+import { CANVAS_ROOT_ID, SLOT_ID_PREFIX, BLOCK_ID_PREFIX } from '../dnd/constants';
 import { SortableBlockWrapper } from './SortableBlockWrapper.simple';
 
 // Componente para drop zone entre blocos (sempre presente para maximizar detecção)
@@ -61,6 +61,8 @@ interface CanvasDropZoneProps {
   onDeleteBlock: (id: string) => void;
   className?: string;
   isPreviewing?: boolean;
+  // Identificador de escopo (ex.: número da etapa) para garantir unicidade dos IDs do dnd-kit
+  scopeId?: string | number;
 }
 
 const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
@@ -71,6 +73,7 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
   onDeleteBlock,
   className,
   isPreviewing: isPreviewingProp = false,
+  scopeId,
 }) => {
   useRenderCount('CanvasDropZone');
   React.useEffect(() => {
@@ -321,6 +324,7 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
                     onSelect={() => { }}
                     onUpdate={() => { }}
                     onDelete={() => { }}
+                    scopeId={scopeId}
                   />
                   <InterBlockDropZone position={realIndex + 1} isActive={false} />
                 </React.Fragment>
@@ -332,8 +336,8 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
       ) : (
         <SortableContext
           items={React.useMemo(
-            () => blocks.map(block => `dnd-block-${String(block.id)}`),
-            [blocks]
+            () => blocks.map(block => `${BLOCK_ID_PREFIX}${String(scopeId ?? 'default')}-${String(block.id)}`),
+            [blocks, scopeId]
           )}
           strategy={verticalListSortingStrategy}
         >
@@ -359,6 +363,7 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
                         onDeleteBlock(block.id);
                       }
                     }}
+                    scopeId={scopeId}
                   />
 
                   {/* Drop zone entre blocos - sempre presente (ativa durante drag) */}

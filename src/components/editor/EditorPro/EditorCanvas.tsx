@@ -52,6 +52,7 @@ const EditorCanvas: React.FC<EditorCanvasProps> = memo(({
         onSelectBlock={handleBlockSelect}
         onUpdateBlock={handleBlockUpdate}
         onDeleteBlock={onDeleteBlock}
+        scopeId={currentStep}
       />
     </div>
   );

@@ -234,7 +234,10 @@ const EditorPro: React.FC<EditorProProps> = ({ onSave }) => {
     }
     if (id.startsWith(BLOCK_ID_PREFIX)) {
       const cleaned = id.replace(BLOCK_ID_PREFIX, '');
-      const idx = blocks.findIndex(b => String(b.id) === cleaned);
+      // Suporta formato escopado: `${scope}-${blockId}`
+      const cleanedParts = cleaned.split('-');
+      const maybeBlockId = cleanedParts.length > 1 ? cleanedParts.slice(1).join('-') : cleaned;
+      const idx = blocks.findIndex(b => String(b.id) === maybeBlockId);
       return idx >= 0 ? idx : blocks.length;
     }
     return blocks.length;
@@ -247,7 +250,10 @@ const EditorPro: React.FC<EditorProProps> = ({ onSave }) => {
 
     // Reorder de blocos existentes
     if (activeType === 'canvas-block') {
-      const activeId = String(active.id).replace(BLOCK_ID_PREFIX, '');
+      // Suporta formato escopado `${scope}-${blockId}`
+      const raw = String(active.id).replace(BLOCK_ID_PREFIX, '');
+      const parts = raw.split('-');
+      const activeId = parts.length > 1 ? parts.slice(1).join('-') : raw;
       const oldIndex = blocks.findIndex(b => String(b.id) === activeId);
       const newIndex = getIndexFromOver(String(over.id));
       if (isDev) console.log('[EditorPro] reorder', { oldIndex, newIndex, activeId, over: String(over.id) });

@@ -14,19 +14,25 @@ interface SortableBlockWrapperProps {
   onSelect: () => void;
   onUpdate: (updates: any) => void;
   onDelete: () => void;
+  // Escopo opcional para garantir unicidade de IDs entre etapas
+  scopeId?: string | number;
 }
 
-const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
+const SortableBlockWrapperBase: React.FC<SortableBlockWrapperProps> = ({
   block,
   isSelected,
   onSelect,
   onUpdate,
   onDelete,
+  scopeId,
 }) => {
   // Normalizar bloco para unificar content/properties (mesma lógica do UniversalBlockRenderer)
   const normalizedBlock = normalizeBlockProps(block);
   // Buscar componente no registry simplificado
-  const Component = getOptimizedBlockComponent(normalizedBlock.type);
+  const Component = React.useMemo(
+    () => getOptimizedBlockComponent(normalizedBlock.type),
+    [normalizedBlock.type]
+  );
 
   // Make block draggable for reordering
   const {
@@ -37,11 +43,12 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
     transition,
     isDragging,
   } = useSortable({
-    id: `${BLOCK_ID_PREFIX}${String(block.id)}`,
+    id: `${BLOCK_ID_PREFIX}${scopeId ?? 'default'}-${String(block.id)}`,
     data: {
       type: 'canvas-block',
       blockId: String(block.id), // Required by validateDrop
       block: block,
+      scopeId: scopeId ?? 'default',
     },
   });
 
@@ -117,7 +124,6 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
   return (
     <div className="my-0">
       <div
-        id={`${BLOCK_ID_PREFIX}${String(block.id)}`}
         ref={setNodeRef}
         style={style}
         className={cn(
@@ -125,6 +131,8 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
           isSelected ? 'ring-2 ring-blue-500 ring-offset-1' : ''
         )}
         data-dnd-dropzone-type="bloco"
+        data-block-id={String(block.id)}
+        data-scope-id={String(scopeId ?? 'default')}
         onMouseDownCapture={handleMouseDownCapture}
         onClick={handleContainerClick}
         onMouseDown={handleContainerMouseDown}
@@ -178,6 +186,8 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
     </div>
   );
 };
+
+const SortableBlockWrapper = React.memo(SortableBlockWrapperBase);
 
 export default SortableBlockWrapper;
 export { SortableBlockWrapper };

@@ -19,21 +19,52 @@ const MyFunnelsPage: React.FC = () => {
     setLocation(id ? `/editor?funnel=${encodeURIComponent(id)}` : '/editor');
   };
 
+  const createAndOpen21 = () => {
+    try {
+      const now = new Date().toISOString();
+      const templateId = 'default-quiz-funnel-21-steps';
+      const newId = `${templateId}-${Date.now()}`;
+      const name = 'Funil Quiz 21 Etapas';
+      const list = funnelLocalStore.list();
+      list.push({ id: newId, name, status: 'draft', updatedAt: now });
+      funnelLocalStore.saveList(list);
+      setFunnels(list);
+    } catch { }
+    setLocation('/editor?template=default-quiz-funnel-21-steps');
+  };
+
   return (
     <div className="p-6 space-y-6" style={{ backgroundColor: '#FAF9F7', minHeight: '100vh' }}>
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold" style={{ color: '#432818' }}>
           Meus Funis
         </h1>
-        <Button onClick={() => goToEditor()} className="bg-[#B89B7A] text-white">
-          <Plus className="w-4 h-4 mr-2" /> Novo Funil
-        </Button>
+        <div className="flex gap-3">
+          <Button
+            variant="outline"
+            onClick={createAndOpen21}
+            className="border-[#B89B7A] text-[#B89B7A]"
+          >
+            <Plus className="w-4 h-4 mr-2" /> Funil 21 Etapas
+          </Button>
+          <Button onClick={() => goToEditor()} className="bg-[#B89B7A] text-white">
+            <Plus className="w-4 h-4 mr-2" /> Novo Funil
+          </Button>
+        </div>
       </div>
 
       {funnels.length === 0 ? (
         <Card style={{ backgroundColor: '#FFFFFF' }}>
-          <CardContent className="p-8 text-center text-[#6B4F43]">
-            Você ainda não criou funis. Use um modelo em "Modelos de Funis" ou crie do zero.
+          <CardContent className="p-8 text-center text-[#6B4F43] space-y-4">
+            <div>Você ainda não criou funis. Use um modelo em "Modelos de Funis" ou crie do zero.</div>
+            <div className="flex items-center justify-center gap-3">
+              <Button variant="outline" onClick={createAndOpen21}>
+                Criar Funil 21 Etapas
+              </Button>
+              <Button onClick={() => goToEditor()} className="bg-[#B89B7A] text-white">
+                Criar Novo Funil
+              </Button>
+            </div>
           </CardContent>
         </Card>
       ) : (
@@ -48,7 +79,7 @@ const MyFunnelsPage: React.FC = () => {
                 {f.url && (
                   <div className="flex items-center text-sm text-[#6B4F43]">
                     <Globe2 className="w-4 h-4 mr-2" />
-                    {f.url}
+                    {f.url as any}
                   </div>
                 )}
                 <div className="flex gap-2 pt-2">
