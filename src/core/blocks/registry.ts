@@ -274,7 +274,19 @@ export const blocksRegistry: Record<string, BlockDefinition> = {
         title: 'Botão',
         category: 'Ação',
         icon: 'bolt',
-        defaultProps: { text: 'Continuar', action: 'next-step', nextStepId: '', backgroundColor: '#B89B7A', textColor: '#FFFFFF', disabled: false },
+        defaultProps: {
+            text: 'Continuar',
+            action: 'next-step',
+            nextStepId: '',
+            backgroundColor: '#B89B7A',
+            textColor: '#FFFFFF',
+            disabled: false,
+            // Novos defaults expostos no painel
+            size: 'medium',
+            icon: 'none',
+            iconPosition: 'right',
+            loading: false,
+        },
         propsSchema: [
             prop({ key: 'text', kind: 'text', label: 'Rótulo', category: 'content', default: 'Continuar' }),
             prop({ key: 'url', kind: 'url', label: 'URL (se for link)', category: 'content', default: '' }),
@@ -287,6 +299,23 @@ export const blocksRegistry: Record<string, BlockDefinition> = {
             ], { category: 'behavior', default: 'next-step' }),
             prop({ key: 'nextStepId', kind: 'text', label: 'ID da Próxima Etapa', category: 'behavior', default: '' }),
             prop({ key: 'autoAdvanceOnComplete', kind: 'switch', label: 'Auto Avançar', category: 'behavior', default: false }),
+            // Aparência
+            select('size', 'Tamanho', [
+                { value: 'small', label: 'Pequeno' },
+                { value: 'medium', label: 'Médio' },
+                { value: 'large', label: 'Grande' },
+            ], { category: 'layout', default: 'medium' }),
+            select('icon', 'Ícone', [
+                { value: 'none', label: 'Nenhum' },
+                { value: 'arrow-right', label: 'Seta Direita' },
+                { value: 'download', label: 'Download' },
+                { value: 'play', label: 'Play' },
+                { value: 'star', label: 'Estrela' },
+            ], { category: 'style', default: 'none' }),
+            select('iconPosition', 'Posição do Ícone', [
+                { value: 'left', label: 'Esquerda' },
+                { value: 'right', label: 'Direita' },
+            ], { category: 'layout', default: 'right' }),
             // Estilo
             prop({ key: 'backgroundColor', kind: 'color', label: 'Cor de Fundo', category: 'style', default: '#B89B7A' }),
             prop({ key: 'textColor', kind: 'color', label: 'Cor do Texto', category: 'style', default: '#FFFFFF' }),
@@ -295,6 +324,7 @@ export const blocksRegistry: Record<string, BlockDefinition> = {
             // Estados
             prop({ key: 'disabled', kind: 'switch', label: 'Desativado', category: 'behavior', default: false }),
             prop({ key: 'disabledText', kind: 'text', label: 'Texto Desativado', category: 'behavior', default: '' }),
+            prop({ key: 'loading', kind: 'switch', label: 'Carregando', category: 'behavior', default: false }),
         ],
     },
     'progress-inline': {
@@ -350,7 +380,17 @@ export const blocksRegistry: Record<string, BlockDefinition> = {
         title: 'Grade de Estilos',
         category: 'Resultado',
         icon: 'grid',
-        defaultProps: { columns: 2, showLetters: true, showDescriptions: false, interactive: true, selectable: false, animationType: 'hover', cardSize: 'md', gap: 'gap-6' },
+        defaultProps: {
+            columns: 2,
+            showLetters: true,
+            showDescriptions: false,
+            interactive: true,
+            selectable: false,
+            animationType: 'hover',
+            cardSize: 'md',
+            gap: 'gap-6',
+            themePreset: 'glass',
+        },
         propsSchema: [
             prop({ key: 'columns', kind: 'range', label: 'Colunas', category: 'layout', min: 1, max: 4, step: 1, default: 2 }),
             prop({ key: 'showLetters', kind: 'switch', label: 'Mostrar Letras', category: 'style', default: true }),
@@ -370,6 +410,11 @@ export const blocksRegistry: Record<string, BlockDefinition> = {
                 { value: 'pulse', label: 'Pulso' },
                 { value: 'glow', label: 'Brilho' },
             ], { category: 'animation', default: 'hover' }),
+            select('themePreset', 'Tema', [
+                { value: 'glass', label: 'Glass (Translúcido)' },
+                { value: 'light', label: 'Claro' },
+                { value: 'solid', label: 'Sólido' },
+            ], { category: 'style', default: 'glass' }),
         ],
     },
     'urgency-timer-inline': {
@@ -473,6 +518,7 @@ export const blocksRegistry: Record<string, BlockDefinition> = {
             prop({ key: 'showNext', kind: 'switch', label: 'Mostrar Próximo', category: 'behavior', default: true }),
             prop({ key: 'showPrev', kind: 'switch', label: 'Mostrar Anterior', category: 'behavior', default: true }),
             prop({ key: 'showIndicators', kind: 'switch', label: 'Mostrar Indicadores', category: 'behavior', default: true }),
+            prop({ key: 'scrollToNext', kind: 'switch', label: 'Rolar até o próximo ao avançar', category: 'behavior', default: true }),
         ],
     },
     'quiz-offer-cta-inline': {
