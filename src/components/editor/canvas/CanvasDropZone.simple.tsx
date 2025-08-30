@@ -266,7 +266,7 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
       id={CANVAS_ROOT_ID}
       ref={setNodeRef}
       className={cn(
-  'min-h-[300px] transition-all duration-200 p-4 overflow-visible',
+        'min-h-[300px] transition-all duration-200 p-4 overflow-visible',
         // Evitar qualquer bloqueio de eventos no canvas
         'z-0',
         isOver && !isPreviewing && 'bg-brand/5 ring-2 ring-brand/20 ring-dashed',
@@ -281,7 +281,7 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
       data-id="canvas-drop-zone"
       data-dnd-dropzone-type="raiz-da-tela"
     >
-  {blocks.length === 0 ? (
+      {blocks.length === 0 ? (
         <div className="text-center py-12">
           <p className="text-stone-500 text-lg mb-2">
             {isPreviewing
@@ -315,9 +315,9 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
                   <SortableBlockWrapper
                     block={block}
                     isSelected={false}
-                    onSelect={() => {}}
-                    onUpdate={() => {}}
-                    onDelete={() => {}}
+                    onSelect={() => { }}
+                    onUpdate={() => { }}
+                    onDelete={() => { }}
                   />
                   <InterBlockDropZone position={realIndex + 1} isActive={false} />
                 </React.Fragment>

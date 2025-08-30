@@ -19,7 +19,7 @@ export const useScrollSync = () => {
       canvasScrollRef: React.useRef<HTMLDivElement>(null),
       componentsScrollRef: React.useRef<HTMLDivElement>(null),
       propertiesScrollRef: React.useRef<HTMLDivElement>(null),
-      syncScroll: () => {},
+      syncScroll: () => { },
       isScrolling: false,
     };
   }

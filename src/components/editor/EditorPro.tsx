@@ -232,8 +232,8 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
 
     const g: any = window as any;
     g.__DISABLE_AUTO_SCROLL = true;
-  // Também desabilita sincronização de scroll entre colunas para evitar "puxões" no canvas
-  g.__DISABLE_SCROLL_SYNC = true;
+    // Também desabilita sincronização de scroll entre colunas para evitar "puxões" no canvas
+    g.__DISABLE_SCROLL_SYNC = true;
 
     const originalScrollTo = window.scrollTo?.bind(window);
     const originalScrollIntoView = (Element.prototype as any).scrollIntoView?.bind(Element.prototype);
@@ -247,7 +247,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
     return () => {
       try {
         g.__DISABLE_AUTO_SCROLL = false;
-  g.__DISABLE_SCROLL_SYNC = false;
+        g.__DISABLE_SCROLL_SYNC = false;
         if (originalScrollTo) window.scrollTo = originalScrollTo as any;
         if (originalScrollIntoView) (Element.prototype as any).scrollIntoView = originalScrollIntoView as any;
       } catch { }
@@ -1274,7 +1274,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       <DndContext
         sensors={sensors}
         collisionDetection={collisionDetectionStrategy}
-  autoScroll={false}
+        autoScroll={false}
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
       >

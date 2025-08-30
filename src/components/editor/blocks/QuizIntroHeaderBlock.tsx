@@ -28,22 +28,41 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
     );
   }
 
-  // Debug das propriedades recebidas
-  console.log('🔍 [QuizIntroHeaderBlock] Propriedades recebidas:', block.properties);
-  console.log('🔍 [QuizIntroHeaderBlock] Block ID:', block.id);
+  // Debug controlado (apenas dev e quando flag global ativa)
+  const isDev = typeof process !== 'undefined' ? process.env.NODE_ENV !== 'production' : true;
+  const verbose = typeof window !== 'undefined' && (window as any).__EDITOR_VERBOSE__ === true;
+  if (isDev && verbose) {
+    // Evitar logar em todo render: usa raf para coalescer
+    requestAnimationFrame(() => {
+      // eslint-disable-next-line no-console
+      console.log('🔍 [QuizIntroHeaderBlock] Propriedades recebidas:', block.properties, 'ID:', block.id);
+    });
+  }
 
   // ✅ USAR useEffect para detectar mudanças nas propriedades
   React.useEffect(() => {
-    console.log('🔄 [QuizIntroHeaderBlock] Propriedades atualizadas:', {
-      blockId: block.id,
-      logoUrl: block.properties.logoUrl,
-      logoWidth: block.properties.logoWidth,
-      logoHeight: block.properties.logoHeight,
-      progressValue: block.properties.progressValue,
-      showProgress: block.properties.showProgress,
-      showBackButton: block.properties.showBackButton,
-    });
-  }, [block.properties, block.id]);
+    if (isDev && verbose) {
+      // eslint-disable-next-line no-console
+      console.log('🔄 [QuizIntroHeaderBlock] Propriedades atualizadas:', {
+        blockId: block.id,
+        logoUrl: block.properties.logoUrl,
+        logoWidth: block.properties.logoWidth,
+        logoHeight: block.properties.logoHeight,
+        progressValue: block.properties.progressValue,
+        showProgress: block.properties.showProgress,
+        showBackButton: block.properties.showBackButton,
+      });
+    }
+  // Dependências por valor para evitar disparos por identidade do objeto
+  }, [
+    block.id,
+    (block.properties as any)?.logoUrl,
+    (block.properties as any)?.logoWidth,
+    (block.properties as any)?.logoHeight,
+    (block.properties as any)?.progressValue,
+    (block.properties as any)?.showProgress,
+    (block.properties as any)?.showBackButton,
+  ]);
 
   const {
     logoUrl,
@@ -192,4 +211,47 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
   );
 };
 
-export default QuizIntroHeaderBlock;
+// Memoização com comparação customizada para evitar re-render quando apenas handlers mudam
+function areEqual(
+  prev: Readonly<QuizIntroHeaderBlockProps>,
+  next: Readonly<QuizIntroHeaderBlockProps>
+) {
+  const pb = prev.block as any;
+  const nb = next.block as any;
+  if (!pb || !nb) return false;
+  if (pb.id !== nb.id) return false;
+  // Comparar os campos usados pelo componente
+  const pick = (b: any) => ({
+    logoUrl: b?.properties?.logoUrl,
+    logoWidth: b?.properties?.logoWidth,
+    logoHeight: b?.properties?.logoHeight,
+    progressValue: b?.properties?.progressValue,
+    progressMax: b?.properties?.progressMax,
+    showProgress: b?.properties?.showProgress,
+    showBackButton: b?.properties?.showBackButton,
+    backgroundColor: b?.properties?.backgroundColor,
+    isSticky: b?.properties?.isSticky,
+    marginTop: b?.properties?.marginTop,
+    marginBottom: b?.properties?.marginBottom,
+    title: b?.properties?.title || b?.content?.title,
+    subtitle: b?.properties?.subtitle || b?.content?.subtitle,
+    description: b?.properties?.description || b?.content?.description,
+    introImageUrl: b?.properties?.introImageUrl || b?.content?.introImageUrl,
+    introImageAlt: b?.properties?.introImageAlt || b?.content?.introImageAlt,
+    introImageWidth: b?.properties?.introImageWidth || b?.content?.introImageWidth,
+    introImageHeight: b?.properties?.introImageHeight || b?.content?.introImageHeight,
+    contentMaxWidth: b?.properties?.contentMaxWidth,
+    progressHeight: b?.properties?.progressHeight,
+  });
+  const a = pick(pb);
+  const b = pick(nb);
+  for (const k of Object.keys(a) as Array<keyof typeof a>) {
+    if (a[k] !== b[k]) return false;
+  }
+  // className/disabled raramente mudam; incluir
+  if ((prev as any).className !== (next as any).className) return false;
+  if ((prev as any).disabled !== (next as any).disabled) return false;
+  return true; // ignora mudanças de identidade de handlers
+}
+
+export default React.memo(QuizIntroHeaderBlock, areEqual);
