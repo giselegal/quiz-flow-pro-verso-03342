@@ -397,7 +397,7 @@ export const useUnifiedProperties = (
           )
         );
       }
-    } catch {}
+    } catch { }
 
     // 2) Fallback: heurísticas e mapeamentos atuais
     switch (blockType) {
@@ -417,8 +417,8 @@ export const useUnifiedProperties = (
           createProperty(
             'logoUrl',
             currentBlock?.properties?.logoUrl ||
-              currentBlock?.properties?.logo ||
-              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+            currentBlock?.properties?.logo ||
+            'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
             PropertyType.URL,
             'URL do Logo',
             PropertyCategory.CONTENT,
@@ -510,8 +510,8 @@ export const useUnifiedProperties = (
           createProperty(
             'title',
             currentBlock?.properties?.title ||
-              currentBlock?.properties?.customTitle ||
-              'Parabéns, {userName}!',
+            currentBlock?.properties?.customTitle ||
+            'Parabéns, {userName}!',
             PropertyType.TEXT,
             'Título',
             PropertyCategory.CONTENT,
@@ -752,8 +752,8 @@ export const useUnifiedProperties = (
           createProperty(
             'content',
             currentBlock?.properties?.content ??
-              currentBlock?.content?.text ??
-              'Digite seu texto aqui...',
+            currentBlock?.content?.text ??
+            'Digite seu texto aqui...',
             PropertyType.TEXTAREA,
             'Conteúdo',
             PropertyCategory.CONTENT,
@@ -991,7 +991,7 @@ export const useUnifiedProperties = (
           createProperty(
             'logoUrl',
             currentBlock?.properties?.logoUrl ||
-              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+            'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
             PropertyType.URL,
             'URL da Logo',
             PropertyCategory.CONTENT
@@ -1028,7 +1028,7 @@ export const useUnifiedProperties = (
           createProperty(
             'description',
             currentBlock?.properties?.description ||
-              'Em apenas alguns minutos, vamos revelar qual dos 8 estilos representa perfeitamente sua personalidade.',
+            'Em apenas alguns minutos, vamos revelar qual dos 8 estilos representa perfeitamente sua personalidade.',
             PropertyType.TEXTAREA,
             'Descrição',
             PropertyCategory.CONTENT,
@@ -1467,8 +1467,8 @@ export const useUnifiedProperties = (
           createProperty(
             'backgroundColor',
             currentBlock?.properties?.backgroundColor ??
-              currentBlock?.properties?.containerBackgroundColor ??
-              'transparent',
+            currentBlock?.properties?.containerBackgroundColor ??
+            'transparent',
             PropertyType.COLOR,
             'Cor de Fundo',
             PropertyCategory.STYLE
@@ -1973,7 +1973,7 @@ export const useUnifiedProperties = (
           createProperty(
             'logoUrl',
             currentBlock?.properties?.logoUrl ||
-              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+            'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
             PropertyType.URL,
             'URL da Logo',
             PropertyCategory.CONTENT

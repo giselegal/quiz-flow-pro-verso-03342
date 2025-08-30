@@ -1,5 +1,6 @@
 import { Block, BlockType } from '@/types/editor';
 import { nanoid } from 'nanoid';
+import { getBlockDefinition } from '@/core/blocks/registry';
 
 /**
  * 🔧 Utilitários para geração de IDs e manipulação de blocos
@@ -26,12 +27,14 @@ export const createBlockFromComponent = (
   componentType: BlockType,
   existingBlocks: Block[] = []
 ): Block => {
+  const def = getBlockDefinition(componentType as any);
+  const defaults = def?.defaultProps || {};
   return {
     id: generateBlockId(componentType),
     type: componentType,
     order: getNextBlockOrder(existingBlocks),
     content: {},
-    properties: {},
+    properties: { ...defaults },
   };
 };
 
