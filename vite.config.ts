@@ -61,19 +61,11 @@ export default defineConfig({
     // Copiar templates para o build
     copyPublicDir: true,
     rollupOptions: {
+      // Em ambientes de preview (ex.: lovable.app) alguns servidores retornam 404/HTML para chunks dinâmicos,
+      // causando "Failed to fetch dynamically imported module". Para garantir robustez, inlinamos imports dinâmicos
+      // e desativamos code-splitting neste build padrão.
       output: {
-        manualChunks: {
-          // Manter React e React-DOM juntos para evitar problemas de createContext
-          'react-vendor': ['react', 'react-dom'],
-          // Router separado
-          'router-vendor': ['wouter'],
-          // UI libraries
-          'ui-vendor': ['lucide-react', '@radix-ui/react-slot', '@radix-ui/react-tooltip'],
-          // Form libraries
-          'forms-vendor': ['react-hook-form', 'zod'],
-          // Animation
-          'animation-vendor': ['framer-motion'],
-        },
+        inlineDynamicImports: true,
       },
     },
   },

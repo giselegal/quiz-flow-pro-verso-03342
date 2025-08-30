@@ -72,7 +72,7 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
       const urlParams = new URLSearchParams(search || '');
       const fromUrl = urlParams.get('funnel') || urlParams.get('funnelId') || urlParams.get('quizId');
       if (fromUrl) return fromUrl;
-    } catch {}
+    } catch { }
     if (_funnelId) return _funnelId;
     try {
       // Tentar ler de um contexto central se exposto globalmente
@@ -80,7 +80,7 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
       const ctx = require('@/context/EditorContext');
       const id = ctx?.useEditor?.()?.currentFunnelId;
       if (typeof id === 'string' && id) return id;
-    } catch {}
+    } catch { }
     return 'optimized-21-steps-funnel';
   }, [_funnelId]);
   // Verificação de segurança para evitar erro de undefined
@@ -167,7 +167,7 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
     if (valid && newValue.trim()) {
       try {
         // Salvar resposta específica localmente
-  userResponseService.saveStepResponse(block?.id || '', newValue.trim());
+        userResponseService.saveStepResponse(block?.id || '', newValue.trim());
 
         // Se for o campo de nome, salvar no Supabase
         if (
@@ -191,8 +191,8 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
               data: {
                 name: newValue.trim(),
                 fieldName: name,
-    componentId: block?.id || 'intro-name-input',
-    funnelId: effectiveFunnelId,
+                componentId: block?.id || 'intro-name-input',
+                funnelId: effectiveFunnelId,
               },
               timestamp: new Date().toISOString(),
             });
@@ -228,10 +228,9 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
     <div
       className={`
         p-4 rounded-lg transition-all duration-200
-        ${
-          isSelected
-            ? 'border-2 border-[#B89B7A] bg-[#B89B7A]/10 cursor-pointer'
-            : 'border-2 border-transparent hover:bg-[#FAF9F7]'
+        ${isSelected
+          ? 'border-2 border-[#B89B7A] bg-[#B89B7A]/10 cursor-pointer'
+          : 'border-2 border-transparent hover:bg-[#FAF9F7]'
         }
         ${className}
         ${getMarginClass(marginTop, 'top')}
@@ -281,12 +280,11 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
             w-full px-4 py-3 border-2 
             focus:ring-2 focus:ring-opacity-50 
             transition-all outline-none placeholder-opacity-70
-            ${
-              isValid
-                ? 'ring-2 ring-opacity-20'
-                : value && !isValid
-                  ? 'border-opacity-50'
-                  : 'hover:border-opacity-80'
+            ${isValid
+              ? 'ring-2 ring-opacity-20'
+              : value && !isValid
+                ? 'border-opacity-50'
+                : 'hover:border-opacity-80'
             }
           `}
         />
