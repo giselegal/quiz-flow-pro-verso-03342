@@ -25,8 +25,7 @@ export const useSyncedScroll = ({ source, enabled = true }: UseSyncedScrollOptio
 
   const handleScroll = useCallback(
     (event: Event) => {
-      const g: any = typeof window !== 'undefined' ? (window as any) : {};
-      if (!enabled || isScrolling || g.__DISABLE_SCROLL_SYNC === true) return;
+      if (!enabled || isScrolling) return;
 
       const target = event.target as HTMLDivElement;
       // Guardar o último scrollTop e agendar via RAF para suavizar
@@ -47,8 +46,7 @@ export const useSyncedScroll = ({ source, enabled = true }: UseSyncedScrollOptio
 
   useEffect(() => {
     const element = scrollRef.current;
-    const g: any = typeof window !== 'undefined' ? (window as any) : {};
-    if (!element || !enabled || g.__DISABLE_SCROLL_SYNC === true) return;
+    if (!element || !enabled) return;
 
     element.addEventListener('scroll', handleScroll, { passive: true });
 
