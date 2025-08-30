@@ -145,59 +145,69 @@ export const useQuizCRUD = () => {
     setError(null);
 
     try {
-      // 1. Salvar ou atualizar quiz principal
-      const { data: quizData, error: quizError } = await supabase
-        .from('quizzes')
+      // 1) Criar funil no schema unificado
+      const { data: funnelData, error: funnelError } = await supabase
+        .from('funnels')
         .insert([
           {
-            title: metadata.title,
+            name: metadata.title,
             description: metadata.description,
-            category: metadata.category,
-            difficulty: metadata.difficulty,
-            time_limit: metadata.timeLimit,
-            is_public: metadata.isPublic,
-            author_id: user.id,
-            settings: metadata.settings,
+            user_id: user.id,
             is_published: false,
+            version: 1,
+            settings: {
+              ...metadata.settings,
+              category: metadata.category,
+              difficulty: metadata.difficulty,
+              timeLimit: metadata.timeLimit,
+              isPublic: metadata.isPublic,
+              showProgress: metadata.settings?.showProgress,
+            },
           },
         ])
         .select()
         .single();
 
-      if (quizError) throw quizError;
+      if (funnelError) throw funnelError;
+      const funnelId = funnelData.id;
 
-      const quizId = quizData.id;
-
-      // 2. Salvar perguntas
+      // 2) Criar páginas de pergunta no funil
       if (questions.length > 0) {
-        const questionsToInsert = questions.map((question, index) => ({
-          quiz_id: quizId,
-          question_text: question.title || question.question || question.text,
-          question_type: question.type === 'normal' ? 'multiple_choice' : question.type,
-          options: question.options || [],
-          correct_answers: question.options?.slice(0, question.multiSelect).map((_, i) => i) || [0],
-          points: question.points || 1,
-          order_index: index,
-          explanation: null,
-          media_url: null,
+        const pagesToInsert = questions.map((q, idx) => ({
+          funnel_id: funnelId,
+          page_type: 'question',
+          page_order: idx,
+          title: q.title || q.question || q.text || `Pergunta ${idx + 1}`,
+          blocks: [
+            {
+              id: q.id || `q_${idx + 1}`,
+              type: 'quiz-question',
+              properties: {
+                question: q.title || q.question || q.text,
+                questionType: q.type === 'normal' ? 'multiple_choice' : q.type,
+                options: q.options || [],
+                multiSelect: q.multiSelect || 1,
+                points: q.points || 1,
+              },
+              order: 0,
+            },
+          ],
+          metadata: {},
         }));
 
-        const { error: questionsError } = await supabase
-          .from('questions')
-          .insert(questionsToInsert);
-
-        if (questionsError) throw questionsError;
+        const { error: pagesError } = await supabase.from('funnel_pages').insert(pagesToInsert);
+        if (pagesError) throw pagesError;
       }
 
-      // 3. Recarregar lista
+      // 3) Recarregar lista de funis (formato compatível com quizzes)
       await loadUserQuizzes();
 
       toast({
         title: 'Sucesso!',
-        description: `Quiz "${metadata.title}" salvo com sucesso`,
+        description: `Quiz "${metadata.title}" salvo como funil com sucesso`,
       });
 
-      return quizId;
+      return funnelId;
     } catch (err) {
       console.error('Erro ao salvar quiz:', err);
       setError('Erro ao salvar quiz');
@@ -219,11 +229,24 @@ export const useQuizCRUD = () => {
 
     try {
       const { data, error } = await supabase
-        .from('quizzes')
+        .from('funnels')
         .select(
           `
-          *,
-          questions (*)
+          id,
+          name,
+          description,
+          user_id,
+          is_published,
+          settings,
+          created_at,
+          updated_at,
+          funnel_pages (
+            id,
+            page_type,
+            title,
+            blocks,
+            page_order
+          )
         `
         )
         .eq('id', quizId)
@@ -231,20 +254,39 @@ export const useQuizCRUD = () => {
 
       if (error) throw error;
 
-      // Converter formato
-      const formattedQuiz = {
-        ...data,
-        questions: data.questions.map((q: any) => ({
-          id: q.id,
-          title: q.question_text,
-          question: q.question_text,
-          text: q.question_text,
-          type: q.question_type === 'multiple_choice' ? 'normal' : q.question_type,
-          options: q.options || [],
-          multiSelect: q.correct_answers?.length || 1,
-          order: q.order_index,
-          points: q.points || 1,
-        })),
+      const questions: QuizQuestion[] = [];
+      data.funnel_pages?.forEach((page: any) => {
+        if (page.page_type === 'question' && page.blocks) {
+          const blocks = Array.isArray(page.blocks) ? page.blocks : [];
+          blocks.forEach((block: any) => {
+            if (block.type === 'quiz-question' || block.type === 'question') {
+              questions.push({
+                id: block.id || `q_${page.id}`,
+                title: block.properties?.question || page.title || '',
+                question: block.properties?.question || page.title || '',
+                text: block.properties?.question || page.title || '',
+                type: block.properties?.questionType || 'normal',
+                options: block.properties?.options || [],
+                multiSelect: block.properties?.multiSelect || 1,
+                order: page.page_order || 0,
+                points: block.properties?.points || 1,
+              });
+            }
+          });
+        }
+      });
+
+      const formattedQuiz: SavedQuiz = {
+        id: data.id,
+        name: data.name,
+        description: data.description || '',
+        user_id: data.user_id || '',
+        is_published: data.is_published || false,
+        version: data.version || 1,
+        settings: data.settings || {},
+        created_at: data.created_at || new Date().toISOString(),
+        updated_at: data.updated_at || new Date().toISOString(),
+        questions,
       };
 
       return formattedQuiz;
@@ -263,7 +305,9 @@ export const useQuizCRUD = () => {
     setError(null);
 
     try {
-      const { error } = await supabase.from('quizzes').delete().eq('id', quizId);
+      // Remover páginas do funil primeiro (caso não haja cascade)
+      await supabase.from('funnel_pages').delete().eq('funnel_id', quizId);
+      const { error } = await supabase.from('funnels').delete().eq('id', quizId);
 
       if (error) throw error;
 
@@ -272,7 +316,7 @@ export const useQuizCRUD = () => {
 
       toast({
         title: 'Sucesso',
-        description: 'Quiz excluído com sucesso',
+        description: 'Quiz/funil excluído com sucesso',
       });
 
       return true;
@@ -298,8 +342,8 @@ export const useQuizCRUD = () => {
     const metadata: QuizMetadata = {
       title: `${originalQuiz.title} (Cópia)`,
       description: originalQuiz.description,
-      category: originalQuiz.category,
-      difficulty: originalQuiz.difficulty,
+      category: (originalQuiz as any).category || originalQuiz.settings?.category || 'geral',
+      difficulty: (originalQuiz as any).difficulty || originalQuiz.settings?.difficulty || 'easy',
       timeLimit: undefined,
       isPublic: false,
       settings: originalQuiz.settings || {

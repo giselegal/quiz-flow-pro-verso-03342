@@ -80,7 +80,7 @@ const FunnelPanelPage: React.FC = () => {
       const list = funnelLocalStore.list();
       list.push({ id: newId, name, status: 'draft', updatedAt: now });
       funnelLocalStore.saveList(list);
-    } catch {}
+    } catch { }
     // Navigate to editor with the template ID
     setLocation(`/editor?template=${templateId}`);
   };

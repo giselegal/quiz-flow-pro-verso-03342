@@ -19,7 +19,7 @@ function loadCustomTemplates(): FunnelTemplate[] {
 function saveCustomTemplates(list: FunnelTemplate[]) {
   try {
     localStorage.setItem(LOCAL_KEY, JSON.stringify(list));
-  } catch {}
+  } catch { }
 }
 
 export const templateLibraryService = {
