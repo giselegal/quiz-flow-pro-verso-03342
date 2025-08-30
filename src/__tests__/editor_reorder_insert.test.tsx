@@ -47,7 +47,7 @@ const Harness: React.FC = () => {
     );
 };
 
-describe.only('EditorProvider actions: reorder and insert-at-index', () => {
+describe('EditorProvider actions: reorder and insert-at-index', () => {
     it('reorders blocks and inserts between existing ones', async () => {
         const { getByTestId } = render(
             <EditorProvider initial={{ currentStep: 1 }}>
