@@ -22,6 +22,21 @@ const funnelTemplates = [
     category: 'Estilo Pessoal',
   },
   {
+    id: 'optimized-21-steps-funnel',
+    name: 'Quiz 21 Etapas (Otimizado)',
+    description: 'Versão otimizada com blocos core, perguntas sincronizadas e pesos de pontuação',
+    image:
+      'https://res.cloudinary.com/dqljyf76t/image/upload/c_fill,w_400,h_300/v1744911572/LOOKS_COMBINACOES.webp',
+    features: [
+      'Perguntas sincronizadas',
+      'Pesos de pontuação',
+      'Componentes core',
+      'Resultado + Oferta',
+    ],
+    conversionRate: '90%',
+    category: 'Estilo Pessoal',
+  },
+  {
     id: 'com-que-roupa-eu-vou',
     name: 'Com que Roupa Eu Vou?',
     description: 'Quiz especializado em combinações de looks com IA',

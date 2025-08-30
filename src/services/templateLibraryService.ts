@@ -1,4 +1,5 @@
 import funnel21 from '@/templates/models/funnel-21-steps';
+import optimized21 from '@/templates/models/optimized-funnel-21-steps';
 
 export type FunnelTemplate = typeof funnel21;
 
@@ -23,7 +24,7 @@ function saveCustomTemplates(list: FunnelTemplate[]) {
 
 export const templateLibraryService = {
   listBuiltins(): FunnelTemplate[] {
-    return [funnel21 as FunnelTemplate];
+    return [funnel21 as FunnelTemplate, optimized21 as unknown as FunnelTemplate];
   },
   listAll(): FunnelTemplate[] {
     return [...this.listBuiltins(), ...loadCustomTemplates()];

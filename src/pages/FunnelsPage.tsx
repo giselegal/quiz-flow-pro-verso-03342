@@ -46,7 +46,7 @@ const FunnelsPage: React.FC = () => {
             Meus Funis
           </h1>
           <div className="flex gap-3">
-            <Button variant="outline" onClick={() => setLocation('/editor?template=default-quiz-funnel-21-steps')}>
+            <Button variant="outline" onClick={() => setLocation('/editor?template=optimized-21-steps-funnel')}>
               Criar Funil 21 Etapas
             </Button>
             <Button onClick={() => setLocation('/editor')}>Criar Novo Funil</Button>
@@ -68,7 +68,7 @@ const FunnelsPage: React.FC = () => {
                 Comece criando seu primeiro funil de conversão
               </p>
               <div className="flex items-center justify-center gap-3">
-                <Button variant="outline" onClick={() => setLocation('/editor?template=default-quiz-funnel-21-steps')}>
+                <Button variant="outline" onClick={() => setLocation('/editor?template=optimized-21-steps-funnel')}>
                   Criar Funil 21 Etapas
                 </Button>
                 <Button onClick={() => setLocation('/editor')}>Criar Primeiro Funil</Button>

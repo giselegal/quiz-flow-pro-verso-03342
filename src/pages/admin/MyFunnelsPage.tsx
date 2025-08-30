@@ -22,7 +22,7 @@ const MyFunnelsPage: React.FC = () => {
   const createAndOpen21 = () => {
     try {
       const now = new Date().toISOString();
-      const templateId = 'default-quiz-funnel-21-steps';
+  const templateId = 'optimized-21-steps-funnel';
       const newId = `${templateId}-${Date.now()}`;
       const name = 'Funil Quiz 21 Etapas';
       const list = funnelLocalStore.list();
@@ -30,7 +30,7 @@ const MyFunnelsPage: React.FC = () => {
       funnelLocalStore.saveList(list);
       setFunnels(list);
     } catch { }
-    setLocation('/editor?template=default-quiz-funnel-21-steps');
+  setLocation('/editor?template=optimized-21-steps-funnel');
   };
 
   return (
