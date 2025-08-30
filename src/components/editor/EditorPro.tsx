@@ -1,22 +1,27 @@
+import React, { lazy, Suspense, useCallback, useMemo, useRef, useState, useEffect } from 'react';
+import { DndContext, DragEndEvent, DragStartEvent, useSensor, useSensors, PointerSensor, KeyboardSensor, closestCenter, rectIntersection } from '@dnd-kit/core';
+import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import { useNotification } from '@/components/ui/Notification';
-import { getBlocksForStep } from '@/config/quizStepsComplete';
-import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
 import { extractDragData, getDragFeedback, logDragEvent, validateDrop } from '@/utils/dragDropUtils';
-import { copyToClipboard, createBlockFromComponent, devLog, validateEditorJSON } from '@/utils/editorUtils';
-import { closestCenter, DndContext, DragEndEvent, DragStartEvent, KeyboardSensor, PointerSensor, rectIntersection, useSensor, useSensors } from '@dnd-kit/core';
-import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
-import React, { useCallback, useMemo, useRef, useState, useEffect } from 'react';
-import { useOptimizedScheduler } from '@/hooks/useOptimizedScheduler';
+import { createBlockFromComponent, devLog, copyToClipboard, validateEditorJSON } from '@/utils/editorUtils';
+import { getBlocksForStep } from '@/config/quizStepsComplete';
+import { cn } from '@/lib/utils';
 import { useEditor } from './EditorProvider';
 import { useTheme } from '@/components/theme-provider';
-import StepSidebar from '@/components/editor/sidebars/StepSidebar';
-import ComponentsSidebar from '@/components/editor/sidebars/ComponentsSidebar';
-import PropertiesColumn from '@/components/editor/properties/PropertiesColumn';
+import { useOptimizedScheduler } from '@/hooks/useOptimizedScheduler';
 import { useRenderCount } from '@/hooks/useRenderCount';
 import { mark } from '@/utils/perf';
 import { QuizRenderer } from '@/components/core/QuizRenderer';
 import CanvasDropZone from '@/components/editor/canvas/CanvasDropZone.simple';
+import StepSidebar from '@/components/editor/sidebars/StepSidebar';
+import ComponentsSidebar from '@/components/editor/sidebars/ComponentsSidebar';
+import PropertiesColumn from '@/components/editor/properties/PropertiesColumn';
+
+// Lazy loading dos componentes pesados
+const EditorLayout = lazy(() => import('./EditorPro/EditorLayout'));
+const EditorCanvas = lazy(() => import('./EditorPro/EditorCanvas'));
+const EditorToolbar = lazy(() => import('./EditorPro/EditorToolbar'));
 
 // Removidos estilos de animação/transição globais do editor
 
