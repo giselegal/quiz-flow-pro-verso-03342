@@ -3,6 +3,16 @@ import { cn } from '@/lib/utils';
 import type { BlockComponentProps } from '@/types/blocks';
 import { isValidBlock, logBlockDebug, safeGetBlockProperties } from '@/utils/blockUtils';
 import { Award, TrendingUp } from 'lucide-react';
+import { useQuizResult } from '@/hooks/useQuizResult';
+import { StorageService } from '@/services/core/StorageService';
+import { getStyleConfig } from '@/config/styleConfig';
+
+const interpolate = (text: string, vars: Record<string, any>) => {
+  if (!text) return '';
+  return text
+    .replace(/\{userName\}/g, vars.userName || '')
+    .replace(/\{resultStyle\}/g, vars.resultStyle || '');
+};
 
 /**
  * ResultCardInlineBlock - Componente modular inline horizontal
@@ -28,9 +38,9 @@ const ResultCardInlineBlock: React.FC<BlockComponentProps> = ({
   const properties = safeGetBlockProperties(block);
 
   const {
-    styleName = 'Elegante',
-    percentage = 85,
-    description = 'Você valoriza sofisticação e refinamento',
+    styleName,
+    percentage,
+    description,
     showProgress = true,
     showIcon = true,
     cardVariant = 'elevated', // elevated, flat, outlined
@@ -38,6 +48,37 @@ const ResultCardInlineBlock: React.FC<BlockComponentProps> = ({
     backgroundColor = 'white',
     accentColor = '#432818',
   } = properties;
+
+  // 🔗 Dados reais do resultado
+  const { primaryStyle } = useQuizResult();
+  const storedName =
+    StorageService.safeGetString('userName') ||
+    StorageService.safeGetString('quizUserName') ||
+    '';
+
+  const vars = {
+    userName: storedName,
+    resultStyle: primaryStyle?.style || primaryStyle?.category || 'Estilo',
+  };
+
+  // Percentual calculado: prioriza prop explícita; senão usa resultado real
+  const displayPercentage =
+    typeof percentage === 'number' && !Number.isNaN(percentage)
+      ? percentage
+      : (typeof (primaryStyle as any)?.percentage === 'number'
+        ? (primaryStyle as any).percentage
+        : 0);
+
+  // Nome do estilo: prioriza prop; senão usa resultado
+  const displayStyleName = styleName || vars.resultStyle || 'Estilo';
+
+  // Descrição: prioriza prop não vazia; senão usa styleConfig do estilo calculado; fallback genérico
+  const fromConfig = getStyleConfig(displayStyleName);
+  const descriptionBase =
+    typeof description === 'string' && description.trim().length > 0
+      ? description
+      : fromConfig?.description || 'Você valoriza sofisticação e refinamento';
+  const displayDescription = interpolate(descriptionBase, vars);
 
   // Variantes de card
   const cardVariants = {
@@ -109,7 +150,7 @@ const ResultCardInlineBlock: React.FC<BlockComponentProps> = ({
               className={cn('font-bold', titleSizes[size as keyof typeof titleSizes])}
               style={{ color: accentColor }}
             >
-              {percentage}%
+              {displayPercentage}%
             </div>
             <div style={{ color: '#8B7355' }}>Compatibilidade</div>
           </div>
@@ -120,21 +161,21 @@ const ResultCardInlineBlock: React.FC<BlockComponentProps> = ({
       <h3
         className={cn('font-bold mb-3 text-gray-900', titleSizes[size as keyof typeof titleSizes])}
       >
-        Estilo {styleName}
+        Estilo {displayStyleName}
       </h3>
 
       {/* Descrição */}
-      <p style={{ color: '#6B4F43' }}>{description}</p>
+      <p style={{ color: '#6B4F43' }}>{displayDescription}</p>
 
       {/* Barra de progresso */}
       {showProgress && (
         <div className="space-y-2">
           <div style={{ color: '#8B7355' }}>
             <span>Compatibilidade</span>
-            <span>{percentage}%</span>
+            <span>{displayPercentage}%</span>
           </div>
           <Progress
-            value={percentage}
+            value={displayPercentage}
             className="h-2"
             style={{
               backgroundColor: `${accentColor}20`,

@@ -73,6 +73,25 @@ export const ENHANCED_BLOCK_REGISTRY = {
     () => import('@/components/editor/blocks/MentorSectionInlineBlock')
   ),
 
+  // 🔗 ALIASES PARA TIPOS USADOS EM JSONS
+  // Conteúdo de hook personalizado (título/subtítulo/CTA) → utilizar card de estilo como container textual
+  'personalized-hook-inline': lazy(
+    () => import('@/components/editor/blocks/StyleCardInlineBlock')
+  ),
+  // Proposta de valor final (preços/benefícios/CTA) → reaproveitar bloco de ancoragem de valor
+  'final-value-proposition-inline': lazy(
+    () => import('@/components/editor/blocks/ValueAnchoringBlock')
+  ),
+  // Navegação genérica → bloco de navegação premium do quiz
+  navigation: lazy(() => import('@/components/editor/blocks/QuizNavigationBlock')),
+  // Resultados agregados do quiz → grid dos estilos
+  'quiz-results': lazy(() => import('@/components/editor/blocks/StyleCardsGridBlock')),
+  // Resultado de estilo único → card de estilo
+  'style-results': lazy(() => import('@/components/editor/blocks/StyleCardInlineBlock')),
+  // Variações nominais
+  'options-grid-inline': OptionsGridBlock,
+  'button-inline-fixed': ButtonInlineBlock,
+
   // ✅ STEP 21 - OFERTA
   benefits: lazy(() => import('@/components/editor/blocks/BenefitsListBlock')),
   'benefits-list': lazy(() => import('@/components/editor/blocks/BenefitsListBlock')),

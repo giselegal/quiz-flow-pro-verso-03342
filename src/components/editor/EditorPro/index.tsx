@@ -138,6 +138,33 @@ const EditorPro: React.FC<EditorProProps> = ({ onSave }) => {
     (actions as any)?.redo?.();
   }, [actions, isDev]);
 
+  // Bloqueia auto-scroll programático durante a edição (inclui preview dentro do editor)
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const path = window.location?.pathname || '';
+    if (!path.includes('/editor')) return;
+
+    const g: any = window as any;
+    g.__DISABLE_AUTO_SCROLL = true;
+    g.__DISABLE_SCROLL_SYNC = true;
+
+    const originalScrollTo = window.scrollTo?.bind(window);
+    const originalScrollIntoView = (Element.prototype as any).scrollIntoView?.bind(Element.prototype);
+    try {
+      window.scrollTo = ((..._args: any[]) => { }) as any;
+      (Element.prototype as any).scrollIntoView = ((..._args: any[]) => { }) as any;
+    } catch { }
+
+    return () => {
+      try {
+        g.__DISABLE_AUTO_SCROLL = false;
+        g.__DISABLE_SCROLL_SYNC = false;
+        if (originalScrollTo) window.scrollTo = originalScrollTo as any;
+        if (originalScrollIntoView) (Element.prototype as any).scrollIntoView = originalScrollIntoView as any;
+      } catch { }
+    };
+  }, []);
+
   // Dados reais simples para ComponentsSidebar e StepSidebar
   const availableComponents = React.useMemo(() => ([
     { type: 'quiz-intro-header', name: 'Header Quiz', icon: 'note', category: 'Estrutura', description: 'Cabeçalho com título e descrição' },

@@ -56,7 +56,7 @@ const EditorLayout: React.FC<EditorLayoutProps> = memo(({
     [renderIconProp]
   );
   return (
-    <div className="h-screen flex bg-background text-foreground overflow-hidden">
+    <div className="flex-1 flex bg-background text-foreground overflow-hidden">
       {/* 📋 SIDEBAR ESQUERDA - ETAPAS */}
       <aside className="w-72 bg-card border-r border-border flex-shrink-0 overflow-hidden">
         <StepSidebar
@@ -75,7 +75,7 @@ const EditorLayout: React.FC<EditorLayoutProps> = memo(({
       </aside>
 
       {/* 🎨 ÁREA CENTRAL - CANVAS PRINCIPAL */}
-      <main className="flex-1 bg-muted/30 flex flex-col overflow-hidden">
+      <main className="flex-1 min-h-0 bg-muted/30 flex flex-col overflow-hidden">
         {children}
       </main>
 

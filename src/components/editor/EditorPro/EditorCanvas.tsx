@@ -33,7 +33,7 @@ const EditorCanvas: React.FC<EditorCanvasProps> = memo(({
 
   if (isPreviewMode) {
     return (
-      <div className="h-full overflow-auto">
+      <div className="flex-1 min-h-0 overflow-auto">
         <QuizRenderer
           mode="preview"
           currentStepOverride={currentStep}
@@ -46,7 +46,7 @@ const EditorCanvas: React.FC<EditorCanvasProps> = memo(({
 
   // Força remount ao trocar de etapa para resetar contexto DnD e refs internas
   return (
-    <div className="h-full relative" key={`editor-canvas-step-${currentStep}`}>
+    <div className="flex-1 min-h-0 relative overflow-auto" key={`editor-canvas-step-${currentStep}`}>
       <CanvasDropZone
         blocks={blocks}
         selectedBlockId={selectedBlock?.id || null}

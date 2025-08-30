@@ -116,7 +116,20 @@ class AnalisadorQuiz {
     if (!bloco.content.placeholder) {
       etapa.problemas.push(`Formulário ${bloco.id} sem placeholder`);
     }
-    if (!bloco.properties.dataKey) {
+    const props = bloco.properties || {};
+    const content = bloco.content || {};
+
+    // dataKey pode estar em content ou properties; também aceitar input filho com 'name'.
+    let hasDataKey = !!props.dataKey || !!content.dataKey;
+
+    if (!hasDataKey && Array.isArray(props.children)) {
+      const hasInputName = props.children.some(
+        child => child && child.type === 'form-input' && child.properties && child.properties.name
+      );
+      hasDataKey = hasInputName;
+    }
+
+    if (!hasDataKey) {
       etapa.problemas.push(`Formulário ${bloco.id} sem dataKey`);
     }
   }
@@ -177,12 +190,25 @@ class AnalisadorQuiz {
   analisarNavegacao(template) {
     console.log(chalk.yellow('Analisando navegação...'));
 
+    const hasNavigationDeep = bloco => {
+      if (!bloco) return false;
+      const props = bloco.properties || {};
+      const content = bloco.content || {};
+
+      const selfHas =
+        !!props.buttonText ||
+        !!content.buttonText ||
+        !!props.autoAdvanceOnComplete ||
+        (typeof bloco.type === 'string' && bloco.type.includes('button')) ||
+        !!props.action ||
+        !!props.nextStepId;
+
+      const children = Array.isArray(props.children) ? props.children : [];
+      return selfHas || children.some(child => hasNavigationDeep(child));
+    };
+
     Object.entries(template).forEach(([etapa, blocos]) => {
-      const temNavegacao = blocos.some(
-        bloco =>
-          (bloco.properties && bloco.properties.buttonText) ||
-          (bloco.properties && bloco.properties.autoAdvanceOnComplete)
-      );
+      const temNavegacao = blocos.some(bloco => hasNavigationDeep(bloco));
 
       if (!temNavegacao && etapa !== 'step-21') {
         this.relatorio.avisos.push(`Etapa ${etapa} sem navegação clara`);

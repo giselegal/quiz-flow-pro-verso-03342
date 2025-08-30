@@ -191,7 +191,7 @@ export const useEditor = (): Partial<ConsolidatedEditorReturn> => {
     return {
       blocks,
       config: { blocks, title: 'Editor', description: '' },
-  addBlock: async (_type: string) => {
+      addBlock: async (_type: string) => {
         console.warn('Fallback addBlock called');
         return `block-${Date.now()}`;
       },

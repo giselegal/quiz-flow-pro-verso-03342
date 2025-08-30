@@ -5,6 +5,7 @@ import type { BlockComponentProps } from '@/types/blocks';
 import { useQuizResult } from '@/hooks/useQuizResult';
 import { cn } from '@/lib/utils';
 import { StorageService } from '@/services/core/StorageService';
+import { getStyleConfig } from '@/config/styleConfig';
 
 const interpolate = (text: string, vars: Record<string, any>) => {
   if (!text) return '';
@@ -25,7 +26,7 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
   const {
     title = 'Seu Estilo Predominante',
     subtitle = '',
-    percentage = 85,
+    percentage: percentageProp,
     description = 'Descubra como aplicar seu estilo pessoal único na prática...',
     imageUrl: rawImageUrl = 'https://via.placeholder.com/238x320?text=Estilo',
     guideImageUrl: rawGuideImageUrl = 'https://via.placeholder.com/540x300?text=Guia+de+Estilo',
@@ -47,6 +48,22 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
     userName: storedName || (block as any)?.properties?.userName || '',
     resultStyle: primaryStyle?.style || primaryStyle?.category || 'Estilo',
   };
+
+  // Percentual exibido: usa o calculado (primaryStyle.percentage) se não houver override explícito na prop
+  const computedPercentage =
+    typeof percentageProp === 'number' && !Number.isNaN(percentageProp)
+      ? percentageProp
+      : (typeof (primaryStyle as any)?.percentage === 'number'
+        ? (primaryStyle as any).percentage
+        : 0);
+
+  // Defaults vindos do styleConfig, quando props do bloco estiverem ausentes
+  const styleInfo = getStyleConfig(vars.resultStyle);
+  const effectiveImageUrl = imageUrl || styleInfo?.image || 'https://via.placeholder.com/238x320?text=Estilo';
+  const effectiveGuideImageUrl = guideImageUrl || styleInfo?.guideImage || 'https://via.placeholder.com/540x300?text=Guia+de+Estilo';
+  const effectiveDescription = (block?.properties?.description && String(block.properties.description).trim().length > 0)
+    ? description
+    : (styleInfo?.description || description);
 
   const handlePropertyChange = (key: string, value: any) => {
     if (onPropertyChange) {
@@ -86,7 +103,7 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
               <span
                 className="text-[#aa6b5d] font-medium cursor-pointer"
                 onClick={() => {
-                  const newPercentage = prompt('Nova porcentagem (0-100):', percentage.toString());
+                  const newPercentage = prompt('Nova porcentagem (0-100):', String(computedPercentage));
                   if (newPercentage !== null && !isNaN(Number(newPercentage))) {
                     handlePropertyChange(
                       'percentage',
@@ -95,11 +112,11 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
                   }
                 }}
               >
-                {percentage}%
+                {computedPercentage}%
               </span>
             </div>
             <Progress
-              value={percentage}
+              value={computedPercentage}
               className="h-2 bg-[#F3E8E6]"
               style={{
                 '--progress-color': progressColor,
@@ -124,7 +141,7 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
           <div className="space-y-4">
             <p className="text-[#432818] leading-relaxed">
               <InlineEditableText
-                value={interpolate(description, vars)}
+                value={interpolate(effectiveDescription, vars)}
                 onChange={value => handlePropertyChange('description', value)}
                 placeholder="Descrição do estilo predominante..."
                 className="text-[#432818] leading-relaxed"
@@ -135,11 +152,11 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
 
           <div className="max-w-xs sm:max-w-sm mx-auto relative">
             <img
-              src={imageUrl}
+              src={effectiveImageUrl}
               alt="Estilo"
               className="w-full h-auto rounded-lg shadow-md hover:scale-105 transition-transform duration-300 cursor-pointer"
               onClick={() => {
-                const newUrl = prompt('Nova URL da imagem:', imageUrl);
+                const newUrl = prompt('Nova URL da imagem:', effectiveImageUrl);
                 if (newUrl !== null) handlePropertyChange('imageUrl', newUrl);
               }}
               style={{
@@ -156,11 +173,11 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
         {showBothImages && (
           <div className="mt-8 max-w-lg mx-auto relative">
             <img
-              src={guideImageUrl}
+              src={effectiveGuideImageUrl}
               alt="Guia de Estilo"
               className="w-full h-auto rounded-lg shadow-md hover:scale-105 transition-transform duration-300 cursor-pointer"
               onClick={() => {
-                const newUrl = prompt('Nova URL da imagem do guia:', guideImageUrl);
+                const newUrl = prompt('Nova URL da imagem do guia:', effectiveGuideImageUrl);
                 if (newUrl !== null) handlePropertyChange('guideImageUrl', newUrl);
               }}
             />

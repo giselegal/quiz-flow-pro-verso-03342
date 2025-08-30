@@ -1,6 +1,6 @@
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { EditorProvider } from '@/context/EditorContext';
+import { EditorProvider } from '../EditorProvider';
 import { useResultPageConfig } from '@/hooks/useResultPageConfig';
 import React, { useState } from 'react';
 import { CanvasDropZone } from '../canvas/CanvasDropZone.simple';
@@ -75,10 +75,10 @@ export const UnifiedEditorLayout: React.FC<UnifiedEditorLayoutProps> = ({ classN
 
   const safeSelectedBlock = selectedBlock
     ? {
-        ...selectedBlock,
-        content: selectedBlock.content || {},
-        properties: selectedBlock.properties || {},
-      }
+      ...selectedBlock,
+      content: selectedBlock.content || {},
+      properties: selectedBlock.properties || {},
+    }
     : null;
 
   return (

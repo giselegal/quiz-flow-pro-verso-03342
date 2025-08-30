@@ -2,6 +2,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import React from 'react';
+import { useQuizResult } from '@/hooks/useQuizResult';
 
 interface StyleCardsGridBlockProps {
   block?: {
@@ -58,6 +59,7 @@ const StyleCardsGridBlock: React.FC<StyleCardsGridBlockProps> = ({
 }) => {
   const properties = block?.properties || {};
   const { className = '', backgroundColor = 'transparent', styleCardsConfig } = properties;
+  const { primaryStyle, secondaryStyles } = useQuizResult();
 
   // Configuração padrão com os 8 estilos
   const config = styleCardsConfig || {
@@ -91,6 +93,21 @@ const StyleCardsGridBlock: React.FC<StyleCardsGridBlockProps> = ({
   };
 
   const [selectedStyles, setSelectedStyles] = React.useState<string[]>([]);
+
+  // Mapear porcentagens do resultado para destacar cards
+  const resultPercentages: Record<string, number> = React.useMemo(() => {
+    const map: Record<string, number> = {};
+    if (primaryStyle?.style) {
+      map[(primaryStyle.style || primaryStyle.category || '').toLowerCase()] =
+        (primaryStyle as any).percentage ?? 0;
+    }
+    secondaryStyles.forEach(s => {
+      if (s.style || (s as any).category) {
+        map[(s.style || (s as any).category || '').toLowerCase()] = (s as any).percentage ?? 0;
+      }
+    });
+    return map;
+  }, [primaryStyle, secondaryStyles]);
 
   const handleStyleClick = (style: (typeof config.styles)[0]) => {
     if (!config.interactive) return;
@@ -157,7 +174,9 @@ const StyleCardsGridBlock: React.FC<StyleCardsGridBlockProps> = ({
     <div className={cn('style-cards-grid-block', className)} style={{ backgroundColor }}>
       <div className={cn('grid', getColumnsClass(), config.layout.gap)}>
         {config.styles.map((style, index) => {
-          const isSelected = selectedStyles.includes(style.name.toLowerCase());
+          const key = style.name.toLowerCase();
+          const isSelected = selectedStyles.includes(key);
+          const resultPct = resultPercentages[key];
 
           return (
             <Card
@@ -166,7 +185,7 @@ const StyleCardsGridBlock: React.FC<StyleCardsGridBlockProps> = ({
                 'cursor-pointer transition-all duration-300',
                 config.theme.hoverEffect,
                 getAnimationClass(),
-                isSelected && 'ring-2 ring-offset-2',
+                (isSelected || typeof resultPct === 'number') && 'ring-2 ring-offset-2',
                 config.interactive ? 'hover:shadow-lg' : 'cursor-default'
               )}
               style={
@@ -202,13 +221,13 @@ const StyleCardsGridBlock: React.FC<StyleCardsGridBlockProps> = ({
                   <p className="text-xs text-gray-600 text-center">{style.description}</p>
                 )}
 
-                {isSelected && (
+                {(isSelected || typeof resultPct === 'number') && (
                   <Badge
                     variant="secondary"
                     className="mt-2 text-xs"
                     style={{ backgroundColor: style.color, color: 'white' }}
                   >
-                    Selecionado
+                    {typeof resultPct === 'number' ? `${Math.round(resultPct)}%` : 'Selecionado'}
                   </Badge>
                 )}
               </CardContent>

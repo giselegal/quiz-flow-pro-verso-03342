@@ -1,5 +1,5 @@
 import EnhancedUniversalPropertiesPanelFixed from '@/components/universal/EnhancedUniversalPropertiesPanelFixed';
-import { useEditor } from '@/context/EditorContext';
+import { useEditor } from './EditorProvider';
 import { BlockType } from '@/types/editor';
 import { QuizMainDemo } from './QuizMainDemo';
 import { CanvasDropZone } from './canvas/CanvasDropZone.simple';
@@ -10,6 +10,7 @@ import { FourColumnLayout } from './layout/FourColumnLayout';
 import { EditorToolbar } from './toolbar/EditorToolbar';
 
 import React, { useState } from 'react';
+import { createBlockFromComponent } from '@/utils/editorUtils';
 
 interface SchemaDrivenEditorResponsiveProps {
   funnelId?: string;
@@ -24,19 +25,23 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
   mode = 'editor',
   userName,
 }) => {
-  const {
-    computed: { currentBlocks, selectedBlock },
-    selectedBlockId,
-    blockActions: { setSelectedBlockId, addBlock, updateBlock, deleteBlock },
-  } = useEditor();
+  const { state, actions } = useEditor();
+
+  // Derivações com base no novo EditorProvider
+  const currentStepKey = `step-${state.currentStep}`;
+  const currentBlocks = state.stepBlocks[currentStepKey] || [];
+  const selectedBlockId = state.selectedBlockId;
+  const selectedBlock = currentBlocks.find(b => b.id === selectedBlockId) || null;
+  const setSelectedBlockId = actions.setSelectedBlockId;
 
   const [isInteractiveMode, setIsInteractiveMode] = useState(mode === 'interactive');
 
   const handleComponentSelect = async (type: string) => {
     try {
-      const blockId = await addBlock(type as BlockType);
-      if (blockId) {
-        setSelectedBlockId(blockId);
+      const newBlock = createBlockFromComponent(type as BlockType, currentBlocks);
+      if (newBlock) {
+        await actions.addBlock(currentStepKey, newBlock);
+        setSelectedBlockId(newBlock.id);
         console.log(`➕ Bloco ${type} adicionado via editor responsivo`);
       }
     } catch (error) {
@@ -47,7 +52,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
   const handleUpdateSelectedBlock = async (blockId: string, updates: any) => {
     if (blockId) {
       try {
-        await updateBlock(blockId, updates);
+        await actions.updateBlock(currentStepKey, blockId, updates);
         console.log('✅ Bloco atualizado via editor responsivo:', blockId);
       } catch (error) {
         console.error('❌ Erro ao atualizar bloco:', error);
@@ -97,11 +102,10 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
         <div className="flex items-center gap-2">
           <button
             onClick={handleModeToggle}
-            className={`px-3 py-2 text-sm rounded-lg transition-colors ${
-              isInteractiveMode
+            className={`px-3 py-2 text-sm rounded-lg transition-colors ${isInteractiveMode
                 ? 'bg-blue-600 text-white hover:bg-blue-700'
                 : 'bg-green-100 hover:bg-green-200 text-green-700'
-            }`}
+              }`}
           >
             {isInteractiveMode ? '✏️ Editor' : '🎮 Quiz Interativo'}
           </button>
@@ -118,8 +122,9 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
               blocks={currentBlocks}
               selectedBlockId={selectedBlockId}
               onSelectBlock={setSelectedBlockId}
-              onUpdateBlock={updateBlock}
-              onDeleteBlock={deleteBlock}
+              onUpdateBlock={(id, updates) => actions.updateBlock(currentStepKey, id, updates)}
+              onDeleteBlock={id => actions.removeBlock(currentStepKey, id)}
+              scopeId={state.currentStep}
             />
           }
           propertiesPanel={
@@ -127,7 +132,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
               selectedBlock={selectedBlock || null}
               onUpdate={handleUpdateSelectedBlock}
               onClose={() => setSelectedBlockId(null)}
-              onDelete={blockId => deleteBlock(blockId)}
+              onDelete={blockId => actions.removeBlock(currentStepKey, blockId)}
             />
           }
         />

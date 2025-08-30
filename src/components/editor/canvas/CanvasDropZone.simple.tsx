@@ -271,7 +271,7 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
 
   return (
     <div
-  id={CANVAS_ROOT_ID}
+      id={CANVAS_ROOT_ID}
       ref={setNodeRef}
       className={cn(
         'min-h-[300px] transition-all duration-200 p-4 overflow-visible',

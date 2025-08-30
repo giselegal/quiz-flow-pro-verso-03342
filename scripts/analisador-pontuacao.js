@@ -122,7 +122,7 @@ class AnalisadorPontuacao {
       }
     });
 
-    // Verificar placeholders de resultado
+    // Verificar placeholders de resultado no conjunto da etapa (não por bloco)
     const placeholdersNecessarios = [
       '{resultStyle}',
       '{resultPersonality}',
@@ -132,16 +132,16 @@ class AnalisadorPontuacao {
       '{resultAccessories}',
     ];
 
-    etapaResultado.forEach(bloco => {
-      if (bloco.content) {
-        const conteudo = JSON.stringify(bloco.content);
-        placeholdersNecessarios.forEach(placeholder => {
-          if (!conteudo.includes(placeholder)) {
-            this.relatorio.problemas.push(
-              `Placeholder ${placeholder} não encontrado nos resultados`
-            );
-          }
-        });
+    // Agregar conteúdo de todos os blocos para evitar falsos positivos
+    const conteudoAgregado = etapaResultado
+      .map(b => (b.content ? JSON.stringify(b.content) : ''))
+      .join('\n');
+
+    placeholdersNecessarios.forEach(placeholder => {
+      if (!conteudoAgregado.includes(placeholder)) {
+        this.relatorio.problemas.push(
+          `Placeholder ${placeholder} não encontrado nos resultados`
+        );
       }
     });
   }

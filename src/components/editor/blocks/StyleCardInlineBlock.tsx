@@ -1,20 +1,7 @@
 import { cn } from '@/lib/utils';
 import { Sparkles, Edit3 } from 'lucide-react';
-
-interface StyleCardInlineBlockProps {
-  title?: string;
-  subtitle?: string;
-  description?: string;
-  showIcon?: boolean;
-  onClick?: () => void;
-  className?: string;
-  onPropertyChange?: (key: string, value: any) => void;
-  disabled?: boolean;
-  marginTop?: number;
-  marginBottom?: number;
-  marginLeft?: number;
-  marginRight?: number;
-}
+import { useQuizResult } from '@/hooks/useQuizResult';
+import { getStyleConfig } from '@/config/styleConfig';
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value: string | number, type: string): string => {
@@ -61,7 +48,19 @@ const getMarginClass = (value: string | number, type: string): string => {
   return `${prefix}-32`; // Máximo suportado
 };
 
-const StyleCardInlineBlock: React.FC<StyleCardInlineBlockProps> = ({
+const interpolate = (text: string, vars: Record<string, any>) => {
+  if (!text) return '';
+  return text
+    .replace(/\{resultStyle\}/g, vars.resultStyle || '')
+    .replace(/\{resultPersonality\}/g, vars.resultPersonality || '')
+    .replace(/\{resultColors\}/g, vars.resultColors || '')
+    .replace(/\{resultFabrics\}/g, vars.resultFabrics || '')
+    .replace(/\{resultPrints\}/g, vars.resultPrints || '')
+    .replace(/\{resultAccessories\}/g, vars.resultAccessories || '');
+};
+
+const StyleCardInlineBlock: React.FC<any> = ({
+  block,
   title = 'Seu Estilo Único',
   subtitle = 'Descoberto através do quiz',
   description = 'Características principais do seu perfil de estilo pessoal',
@@ -75,6 +74,32 @@ const StyleCardInlineBlock: React.FC<StyleCardInlineBlockProps> = ({
   marginLeft = 0,
   marginRight = 0,
 }) => {
+  const { primaryStyle } = useQuizResult();
+
+  // Resolver dados do estilo a partir do resultado
+  const styleLabel = (primaryStyle?.style || primaryStyle?.category || '').trim();
+  const resolved = styleLabel ? getStyleConfig(styleLabel) : null;
+
+  // Montar variáveis de placeholders
+  const vars = {
+    resultStyle: styleLabel || 'Seu Estilo',
+    resultPersonality: resolved?.keywords?.slice(0, 3).join(', ') || 'Autêntica, confiante',
+    // styleConfig não contém cores hex agrupadas; usar keywords como proxy amigável
+    resultColors: (resolved?.keywords || []).slice(0, 2).join(', ') || 'Cores ideais do seu estilo',
+    resultFabrics: 'Tecidos recomendados do seu estilo',
+    resultPrints: 'Estampas recomendadas do seu estilo',
+    resultAccessories: 'Acessórios recomendados do seu estilo',
+  };
+
+  // Ler dados do bloco (properties tem precedência, depois content)
+  const blockProps = (block && block.properties) || {};
+  const blockContent = (block && block.content) || {};
+  const resolvedTitle = blockProps.title ?? blockContent.title ?? title;
+  const resolvedSubtitle = blockProps.subtitle ?? blockContent.subtitle ?? subtitle;
+  const resolvedDescription = blockProps.description ?? blockContent.description ?? description;
+  const rawFeatures = blockProps.features ?? blockContent.features ?? [];
+  const features: string[] = Array.isArray(rawFeatures) ? rawFeatures : [];
+
   return (
     <div
       className={cn(
@@ -105,38 +130,50 @@ const StyleCardInlineBlock: React.FC<StyleCardInlineBlockProps> = ({
           onClick={e => {
             e.stopPropagation();
             if (onPropertyChange && !disabled) {
-              const newTitle = prompt('Novo título:', title);
+              const newTitle = prompt('Novo título:', String(resolvedTitle));
               if (newTitle !== null) onPropertyChange('title', newTitle);
             }
           }}
         >
-          {title}
+          {interpolate(String(resolvedTitle), vars)}
         </h3>
         <p
           className="text-xs md:text-sm text-[#8F7A6A] truncate"
           onClick={e => {
             e.stopPropagation();
             if (onPropertyChange && !disabled) {
-              const newSubtitle = prompt('Novo subtítulo:', subtitle);
+              const newSubtitle = prompt('Novo subtítulo:', String(resolvedSubtitle));
               if (newSubtitle !== null) onPropertyChange('subtitle', newSubtitle);
             }
           }}
         >
-          {subtitle}
+          {interpolate(String(resolvedSubtitle), vars)}
         </p>
-        {description && (
+        {resolvedDescription && (
           <p
             className="text-xs text-[#8F7A6A] mt-1 line-clamp-2"
             onClick={e => {
               e.stopPropagation();
               if (onPropertyChange && !disabled) {
-                const newDescription = prompt('Nova descrição:', description);
+                const newDescription = prompt('Nova descrição:', String(resolvedDescription));
                 if (newDescription !== null) onPropertyChange('description', newDescription);
               }
             }}
           >
-            {description}
+            {interpolate(String(resolvedDescription), vars)}
           </p>
+        )}
+
+        {/* Lista de features do estilo (template step-20) */}
+        {features.length > 0 && (
+          <ul className="mt-2 space-y-1 text-[#432818] text-xs md:text-sm">
+            {features.map((f: string, idx: number) => (
+              <li key={idx} className="flex items-start gap-2">
+                <span className="mt-1 w-1.5 h-1.5 rounded-full bg-[#B89B7A]" />
+                <span>{interpolate(String(f), vars)}</span>
+              </li>
+            ))}
+          </ul>
         )}
       </div>
 
