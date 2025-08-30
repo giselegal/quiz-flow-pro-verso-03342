@@ -122,6 +122,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
     showDisabledState = false,
     disabledText = '',
     disabledOpacity = 50,
+  loading = false,
   } = (block?.properties as any) || {};
 
   // Suporte a controle externo de estado (eventos globais)
@@ -208,7 +209,8 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
     externalDisabled ??
     (disabled ||
       (requiresValidInput && !isValidated) ||
-      (requiresValidSelection && !isSelectionValid));
+      (requiresValidSelection && !isSelectionValid) ||
+      loading);
   // 🚀 Função para inicializar quiz no Supabase
   const initializeQuizWithSupabase = async (userName: string) => {
     try {
@@ -433,7 +435,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
         id={block?.id}
         disabled={isButtonDisabled}
         aria-disabled={isButtonDisabled}
-        className={getResponsiveClasses()}
+  className={getResponsiveClasses()}
         style={{
           ...getButtonStyles(),
           ...(isButtonDisabled && showDisabledState
@@ -553,8 +555,10 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
 
         {/* Texto do botão */}
         <span className="flex-1 text-center truncate relative z-10 font-medium">
-          {(isButtonDisabled && showDisabledState && disabledText ? disabledText : text) ||
-            'Clique aqui'}
+          {loading
+            ? 'Carregando...'
+            : (isButtonDisabled && showDisabledState && disabledText ? disabledText : text) ||
+              'Clique aqui'}
         </span>
 
         {/* Ícone à direita */}

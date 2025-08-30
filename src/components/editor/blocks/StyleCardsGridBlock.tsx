@@ -72,6 +72,7 @@ const StyleCardsGridBlock: React.FC<StyleCardsGridBlockProps> = ({
     maxSelections,
     animationType,
     cardSize,
+  themePreset,
   } = properties as any;
   const { primaryStyle, secondaryStyles } = useQuizResult();
 
@@ -95,13 +96,35 @@ const StyleCardsGridBlock: React.FC<StyleCardsGridBlockProps> = ({
       showDescriptions: typeof showDescriptions === 'boolean' ? showDescriptions : false,
       animationType: (animationType as 'none' | 'hover' | 'pulse' | 'glow') || ('hover' as const),
     },
-    theme: {
-      cardBackground: 'rgba(255, 255, 255, 0.6)',
-      cardBorder: 'rgba(255, 255, 255, 0.2)',
-      textColor: '#432818',
-      letterTextColor: '#ffffff',
-      hoverEffect: 'hover:shadow-lg hover:scale-105',
-    },
+    theme: (() => {
+      const preset = (themePreset as 'glass' | 'light' | 'solid') || 'glass';
+      if (preset === 'light') {
+        return {
+          cardBackground: '#ffffff',
+          cardBorder: 'rgba(0,0,0,0.06)',
+          textColor: '#432818',
+          letterTextColor: '#ffffff',
+          hoverEffect: 'hover:shadow-md hover:-translate-y-0.5 transition',
+        } as const;
+      }
+      if (preset === 'solid') {
+        return {
+          cardBackground: '#FAF9F7',
+          cardBorder: 'rgba(0,0,0,0.08)',
+          textColor: '#432818',
+          letterTextColor: '#ffffff',
+          hoverEffect: 'hover:shadow-lg hover:-translate-y-1 transition',
+        } as const;
+      }
+      // glass (default)
+      return {
+        cardBackground: 'rgba(255, 255, 255, 0.6)',
+        cardBorder: 'rgba(255, 255, 255, 0.2)',
+        textColor: '#432818',
+        letterTextColor: '#ffffff',
+        hoverEffect: 'hover:shadow-lg hover:scale-105',
+      } as const;
+    })(),
     interactive: typeof interactive === 'boolean' ? interactive : true,
     selectable: typeof selectable === 'boolean' ? selectable : false,
   };
