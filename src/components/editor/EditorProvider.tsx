@@ -124,7 +124,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       stepBlocks: initialBlocks,
       currentStep: 1,
       selectedBlockId: null,
-  stepValidation: {},
+      stepValidation: {},
       isSupabaseEnabled: enableSupabase,
       databaseMode: enableSupabase ? 'supabase' : 'local',
       isLoading: false,
@@ -580,7 +580,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       // Em modo local, garanta que o estado foi aplicado antes de retornar
       if (!state.isSupabaseEnabled) {
         await waitNextTick();
-  await waitNextTick(); // segundo tick para garantir que efeitos dos consumidores rodem
+        await waitNextTick(); // segundo tick para garantir que efeitos dos consumidores rodem
       }
 
       // Persist order to Supabase if enabled (delegate if available)
@@ -734,7 +734,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
   const actions: EditorActions = {
     setCurrentStep,
     setSelectedBlockId,
-  setStepValid,
+    setStepValid,
     addBlock,
     addBlockAtIndex,
     removeBlock,

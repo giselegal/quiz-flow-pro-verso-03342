@@ -58,6 +58,7 @@ const EditorPro: React.FC<EditorProProps> = ({ onSave }) => {
 
   const { debounce } = useOptimizedScheduler();
   const notification = useNotification();
+  const isDev = ((import.meta as any)?.env?.DEV ?? false) as boolean;
 
   // Estado local para UI
   const [isPreviewMode, setIsPreviewMode] = useState(false);
@@ -74,16 +75,18 @@ const EditorPro: React.FC<EditorProProps> = ({ onSave }) => {
 
   // Handlers otimizados
   const handleBlockSelect = useCallback((id: string) => {
+    if (isDev) console.log('[EditorPro] select block ->', id);
     actions.setSelectedBlockId(id);
-  }, [actions]);
+  }, [actions, isDev]);
 
   const handleBlockUpdate = useCallback(
     (blockId: string, updates: Partial<Block>) => {
+      if (isDev) console.log('[EditorPro] update block (debounced) ->', { blockId, updates });
       debounce(`update:${blockId}`, () => {
         actions.updateBlock(currentStepKey, blockId, updates as any);
       }, 300);
     },
-    [actions, debounce, currentStepKey]
+    [actions, debounce, currentStepKey, isDev]
   );
 
   const handleComponentSelect = useCallback((componentType: string) => {
@@ -93,8 +96,9 @@ const EditorPro: React.FC<EditorProProps> = ({ onSave }) => {
       actions.addBlock(currentStepKey, newBlock);
       actions.setSelectedBlockId(newBlock.id);
       notification.success?.(`Componente ${componentType} adicionado`);
+      if (isDev) console.log('[EditorPro] add component ->', { componentType, step: currentStep, newBlock });
     }
-  }, [blocks, actions, currentStepKey, notification]);
+  }, [blocks, actions, currentStepKey, notification, currentStep, isDev]);
 
   // Inserção por duplo clique na sidebar (evento global)
   React.useEffect(() => {
@@ -102,12 +106,15 @@ const EditorPro: React.FC<EditorProProps> = ({ onSave }) => {
       try {
         const detail: any = (ev as any).detail || {};
         const type = detail.blockType as string;
-        if (type) handleComponentSelect(type);
+        if (type) {
+          if (isDev) console.log('[EditorPro] double-click add ->', { type, detail });
+          handleComponentSelect(type);
+        }
       } catch { }
     };
     window.addEventListener('editor-add-component', onDoubleClickAdd as EventListener);
     return () => window.removeEventListener('editor-add-component', onDoubleClickAdd as EventListener);
-  }, [handleComponentSelect]);
+  }, [handleComponentSelect, isDev]);
 
   const handleSave = useCallback(async () => {
     setIsSaving(true);
@@ -122,12 +129,14 @@ const EditorPro: React.FC<EditorProProps> = ({ onSave }) => {
   }, [blocks, onSave, notification]);
 
   const handleUndo = useCallback(() => {
+    if (isDev) console.log('[EditorPro] undo');
     (actions as any)?.undo?.();
-  }, [actions]);
+  }, [actions, isDev]);
 
   const handleRedo = useCallback(() => {
+    if (isDev) console.log('[EditorPro] redo');
     (actions as any)?.redo?.();
-  }, [actions]);
+  }, [actions, isDev]);
 
   // Dados reais simples para ComponentsSidebar e StepSidebar
   const availableComponents = React.useMemo(() => ([
@@ -207,8 +216,13 @@ const EditorPro: React.FC<EditorProProps> = ({ onSave }) => {
   useEffect(() => {
     if ((actions as any)?.setStepValid) {
       (actions as any).setStepValid(currentStep, blocks.length > 0);
+      if (isDev) console.log('[EditorPro] stepValidation update', { step: currentStep, valid: blocks.length > 0, blocks: blocks.length });
     }
-  }, [blocks.length, currentStep, actions]);
+  }, [blocks.length, currentStep, actions, isDev]);
+
+  useEffect(() => {
+    if (isDev) console.log('[EditorPro] currentStep changed ->', currentStep);
+  }, [currentStep, isDev]);
 
   const getIndexFromOver = useCallback((overId: string | null): number => {
     if (!overId) return blocks.length;
@@ -236,6 +250,7 @@ const EditorPro: React.FC<EditorProProps> = ({ onSave }) => {
       const activeId = String(active.id).replace(BLOCK_ID_PREFIX, '');
       const oldIndex = blocks.findIndex(b => String(b.id) === activeId);
       const newIndex = getIndexFromOver(String(over.id));
+      if (isDev) console.log('[EditorPro] reorder', { oldIndex, newIndex, activeId, over: String(over.id) });
       if (oldIndex >= 0 && newIndex >= 0 && oldIndex !== newIndex) {
         (actions as any)?.reorderBlocks?.(currentStepKey, oldIndex, newIndex);
       }
@@ -246,6 +261,7 @@ const EditorPro: React.FC<EditorProProps> = ({ onSave }) => {
     if (activeType === 'sidebar-component') {
       const compType = (active.data.current as any)?.blockType as string;
       const insertIndex = getIndexFromOver(String(over.id));
+      if (isDev) console.log('[EditorPro] insert from sidebar', { compType, insertIndex });
       const newBlock = createBlockFromComponent(compType as any, blocks);
       if (newBlock) {
         (actions as any)?.addBlockAtIndex?.(currentStepKey, newBlock, insertIndex);
@@ -253,7 +269,7 @@ const EditorPro: React.FC<EditorProProps> = ({ onSave }) => {
         notification.success?.(`Componente ${compType} adicionado`);
       }
     }
-  }, [actions, blocks, currentStepKey, getIndexFromOver, notification]);
+  }, [actions, blocks, currentStepKey, getIndexFromOver, notification, isDev]);
 
   return (
     <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
