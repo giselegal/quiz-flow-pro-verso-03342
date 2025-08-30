@@ -81,6 +81,19 @@ const EditorPro: React.FC<EditorProProps> = ({ onSave }) => {
     }
   }, [blocks, actions, currentStepKey, notification]);
 
+  // Inserção por duplo clique na sidebar (evento global)
+  React.useEffect(() => {
+    const onDoubleClickAdd = (ev: Event) => {
+      try {
+        const detail: any = (ev as any).detail || {};
+        const type = detail.blockType as string;
+        if (type) handleComponentSelect(type);
+      } catch {}
+    };
+    window.addEventListener('editor-add-component', onDoubleClickAdd as EventListener);
+    return () => window.removeEventListener('editor-add-component', onDoubleClickAdd as EventListener);
+  }, [handleComponentSelect]);
+
   const handleSave = useCallback(async () => {
     setIsSaving(true);
     try {
@@ -100,6 +113,47 @@ const EditorPro: React.FC<EditorProProps> = ({ onSave }) => {
   const handleRedo = useCallback(() => {
     (actions as any)?.redo?.();
   }, [actions]);
+
+  // Dados reais simples para ComponentsSidebar e StepSidebar
+  const availableComponents = React.useMemo(() => ([
+    { type: 'quiz-intro-header', name: 'Header Quiz', icon: 'note', category: 'Estrutura', description: 'Cabeçalho com título e descrição' },
+    { type: 'options-grid', name: 'Grade Opções', icon: 'flash', category: 'Interação', description: 'Grid de opções para questões' },
+    { type: 'form-container', name: 'Formulário', icon: 'note', category: 'Captura', description: 'Campo de entrada de dados' },
+    { type: 'text', name: 'Texto', icon: 'doc', category: 'Conteúdo', description: 'Bloco de texto simples' },
+    { type: 'button', name: 'Botão', icon: 'button', category: 'Interação', description: 'Botão de ação' },
+    { type: 'result-header-inline', name: 'Header Resultado', icon: 'target', category: 'Resultado', description: 'Cabeçalho personalizado de resultado' },
+    { type: 'style-card-inline', name: 'Card Estilo', icon: 'palette', category: 'Resultado', description: 'Card com características do estilo' },
+    { type: 'secondary-styles', name: 'Estilos Secundários', icon: 'chart', category: 'Resultado', description: 'Lista de estilos complementares' },
+    { type: 'testimonials', name: 'Depoimentos', icon: 'chat', category: 'Social Proof', description: 'Lista de depoimentos' },
+    { type: 'guarantee', name: 'Garantia', icon: 'shield', category: 'Confiança', description: 'Selo de garantia' },
+    { type: 'hero', name: 'Hero Section', icon: 'rocket', category: 'Layout', description: 'Seção hero para transições e ofertas' },
+    { type: 'benefits', name: 'Benefícios', icon: 'sparkle', category: 'Vendas', description: 'Lista de benefícios do produto' },
+    { type: 'quiz-offer-cta-inline', name: 'CTA Oferta', icon: 'money', category: 'Conversão', description: 'Call-to-action para ofertas especiais' },
+  ]), []);
+
+  const groupedComponents = React.useMemo(() => {
+    return availableComponents.reduce((acc: Record<string, any[]>, c) => {
+      acc[c.category] = acc[c.category] || [];
+      acc[c.category].push(c);
+      return acc;
+    }, {});
+  }, [availableComponents]);
+
+  const renderIcon = React.useCallback((_name: string, className = 'w-4 h-4') => {
+    // Ícones mínimos (stub visual consistente)
+    return (
+      <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <circle cx="12" cy="12" r="9" strokeWidth="2" />
+        <path d="M8 12h8" strokeWidth="2" />
+      </svg>
+    );
+  }, []);
+
+  const getStepAnalysis = React.useCallback((step: number) => ({
+    icon: 'info',
+    label: `Etapa ${step}`,
+    desc: blocks.length > 0 && state.currentStep === step ? `${blocks.length} blocos` : 'Configuração padrão',
+  }), [blocks.length, state.currentStep]);
 
   const getIndexFromOver = useCallback((overId: string | null): number => {
     if (!overId) return blocks.length;
@@ -172,6 +226,9 @@ const EditorPro: React.FC<EditorProProps> = ({ onSave }) => {
             onStepChange={actions.setCurrentStep}
             onComponentSelect={handleComponentSelect}
             onBlockSelect={handleBlockSelect}
+            groupedComponents={groupedComponents}
+            renderIcon={renderIcon}
+            getStepAnalysis={getStepAnalysis}
             onUpdateSelectedBlock={(updates: Partial<Block>) => {
               const id = selectedBlockId;
               if (id) actions.updateBlock(currentStepKey, id, updates as any);

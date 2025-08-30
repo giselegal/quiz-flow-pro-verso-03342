@@ -3,6 +3,7 @@ import StepSidebar from '@/components/editor/sidebars/StepSidebar';
 import ComponentsSidebar from '@/components/editor/sidebars/ComponentsSidebar';
 import PropertiesColumn from '@/components/editor/properties/PropertiesColumn';
 import type { Block } from '@/types/editor';
+import type { ComponentsSidebarProps } from '@/components/editor/sidebars/ComponentsSidebar';
 
 interface EditorLayoutProps {
   currentStep: number;
@@ -14,6 +15,10 @@ interface EditorLayoutProps {
   onUpdateSelectedBlock?: (updates: Record<string, any>) => void;
   onDeleteSelectedBlock?: () => void;
   children: React.ReactNode;
+  // Dados opcionais para substituir stubs internos
+  groupedComponents?: ComponentsSidebarProps['groupedComponents'];
+  renderIcon?: ComponentsSidebarProps['renderIcon'];
+  getStepAnalysis?: (step: number) => { icon: string; label: string; desc: string };
 }
 
 const EditorLayout: React.FC<EditorLayoutProps> = memo(({
@@ -24,7 +29,10 @@ const EditorLayout: React.FC<EditorLayoutProps> = memo(({
   onBlockSelect,
   onUpdateSelectedBlock,
   onDeleteSelectedBlock,
-  children
+  children,
+  groupedComponents: groupedComponentsProp,
+  renderIcon: renderIconProp,
+  getStepAnalysis: getStepAnalysisProp
 }) => {
   // Derivados para Sidebars existentes
   const stepHasBlocks = useMemo(() => {
@@ -34,11 +42,17 @@ const EditorLayout: React.FC<EditorLayoutProps> = memo(({
   }, [blocks.length, currentStep]);
 
   const getStepAnalysis = useMemo(() => (
-    (step: number) => ({ icon: 'info', label: `Etapa ${step}`, desc: 'Configuração padrão' })
-  ), []);
+    getStepAnalysisProp || ((step: number) => ({ icon: 'info', label: `Etapa ${step}`, desc: 'Configuração padrão' }))
+  ), [getStepAnalysisProp]);
 
-  const groupedComponents = useMemo(() => ({ Geral: [] as any[] }), []);
-  const renderIcon = useMemo(() => ((_name: string) => null as any), []);
+  const groupedComponents = useMemo(
+    () => groupedComponentsProp || ({ Geral: [] as any[] }),
+    [groupedComponentsProp]
+  );
+  const renderIcon = useMemo(
+    () => renderIconProp || ((_name: string) => null as any),
+    [renderIconProp]
+  );
   return (
     <div className="h-screen flex bg-background text-foreground overflow-hidden">
       {/* 📋 SIDEBAR ESQUERDA - ETAPAS */}
