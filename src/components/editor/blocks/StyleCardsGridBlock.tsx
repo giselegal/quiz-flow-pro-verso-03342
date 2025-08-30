@@ -58,7 +58,21 @@ const StyleCardsGridBlock: React.FC<StyleCardsGridBlockProps> = ({
   onStyleSelect,
 }) => {
   const properties = block?.properties || {};
-  const { className = '', backgroundColor = 'transparent', styleCardsConfig } = properties;
+  const {
+    className = '',
+    backgroundColor = 'transparent',
+    styleCardsConfig,
+    // Propriedades NO-CODE planas vindas do core registry
+    columns,
+    gap,
+    showLetters,
+    showDescriptions,
+    interactive,
+    selectable,
+    maxSelections,
+    animationType,
+    cardSize,
+  } = properties as any;
   const { primaryStyle, secondaryStyles } = useQuizResult();
 
   // Configuração padrão com os 8 estilos
@@ -74,12 +88,12 @@ const StyleCardsGridBlock: React.FC<StyleCardsGridBlockProps> = ({
       { name: 'Criativo', color: '#A0522D', letter: 'H', description: 'Originalidade única' },
     ],
     layout: {
-      columns: 2,
-      gap: 'gap-6',
-      cardSize: 'md' as const,
-      showLetters: true,
-      showDescriptions: false,
-      animationType: 'hover' as const,
+      columns: typeof columns === 'number' ? columns : 2,
+      gap: typeof gap === 'string' ? gap : 'gap-6',
+      cardSize: (cardSize as 'sm' | 'md' | 'lg') || ('md' as const),
+      showLetters: typeof showLetters === 'boolean' ? showLetters : true,
+      showDescriptions: typeof showDescriptions === 'boolean' ? showDescriptions : false,
+      animationType: (animationType as 'none' | 'hover' | 'pulse' | 'glow') || ('hover' as const),
     },
     theme: {
       cardBackground: 'rgba(255, 255, 255, 0.6)',
@@ -88,8 +102,8 @@ const StyleCardsGridBlock: React.FC<StyleCardsGridBlockProps> = ({
       letterTextColor: '#ffffff',
       hoverEffect: 'hover:shadow-lg hover:scale-105',
     },
-    interactive: true,
-    selectable: false,
+    interactive: typeof interactive === 'boolean' ? interactive : true,
+    selectable: typeof selectable === 'boolean' ? selectable : false,
   };
 
   const [selectedStyles, setSelectedStyles] = React.useState<string[]>([]);
@@ -120,7 +134,7 @@ const StyleCardsGridBlock: React.FC<StyleCardsGridBlockProps> = ({
       if (selectedStyles.includes(styleId)) {
         newSelection = newSelection.filter(id => id !== styleId);
       } else {
-        if (config.maxSelections && newSelection.length >= config.maxSelections) {
+        if ((maxSelections ?? config.maxSelections) && newSelection.length >= (maxSelections ?? config.maxSelections)) {
           newSelection = [styleId]; // Substituir se atingir o máximo
         } else {
           newSelection.push(styleId);
@@ -173,7 +187,7 @@ const StyleCardsGridBlock: React.FC<StyleCardsGridBlockProps> = ({
   return (
     <div className={cn('style-cards-grid-block', className)} style={{ backgroundColor }}>
       <div className={cn('grid', getColumnsClass(), config.layout.gap)}>
-        {config.styles.map((style, index) => {
+        {config.styles.map((style: { name: string; color: string; letter: string; description?: string }, index: number) => {
           const key = style.name.toLowerCase();
           const isSelected = selectedStyles.includes(key);
           const resultPct = resultPercentages[key];

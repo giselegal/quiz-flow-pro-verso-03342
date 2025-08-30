@@ -350,7 +350,7 @@ export const blocksRegistry: Record<string, BlockDefinition> = {
         title: 'Grade de Estilos',
         category: 'Resultado',
         icon: 'grid',
-        defaultProps: { columns: 2, showLetters: true, showDescriptions: false, interactive: true, selectable: false },
+        defaultProps: { columns: 2, showLetters: true, showDescriptions: false, interactive: true, selectable: false, animationType: 'hover', cardSize: 'md', gap: 'gap-6' },
         propsSchema: [
             prop({ key: 'columns', kind: 'range', label: 'Colunas', category: 'layout', min: 1, max: 4, step: 1, default: 2 }),
             prop({ key: 'showLetters', kind: 'switch', label: 'Mostrar Letras', category: 'style', default: true }),
@@ -359,6 +359,17 @@ export const blocksRegistry: Record<string, BlockDefinition> = {
             prop({ key: 'selectable', kind: 'switch', label: 'Selecionável', category: 'behavior', default: false }),
             prop({ key: 'maxSelections', kind: 'number', label: 'Máximo de Seleções', category: 'behavior', default: 1 }),
             prop({ key: 'gap', kind: 'text', label: 'Classe de Gap', category: 'layout', default: 'gap-6' }),
+            select('cardSize', 'Tamanho do Card', [
+                { value: 'sm', label: 'Pequeno' },
+                { value: 'md', label: 'Médio' },
+                { value: 'lg', label: 'Grande' },
+            ], { category: 'layout', default: 'md' }),
+            select('animationType', 'Animação', [
+                { value: 'none', label: 'Nenhuma' },
+                { value: 'hover', label: 'Hover' },
+                { value: 'pulse', label: 'Pulso' },
+                { value: 'glow', label: 'Brilho' },
+            ], { category: 'animation', default: 'hover' }),
         ],
     },
     'urgency-timer-inline': {
