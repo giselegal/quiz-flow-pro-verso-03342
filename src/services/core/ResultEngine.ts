@@ -29,10 +29,15 @@ const STYLE_MAP: Record<string, string> = {
 export const ResultEngine = {
   // Calcula pontuação a partir de selections (por questão) usando prefixos de optionId
   computeScoresFromSelections(
-    selectionsByQuestion: Record<string, string[]>
+    selectionsByQuestion: Record<string, string[]>,
+    options?: { weightQuestions?: number }
   ): { scores: RawScores; total: number } {
     const scores: RawScores = {};
     Object.values(STYLE_MAP).forEach(name => (scores[name] = 0));
+
+    const weightQ = typeof options?.weightQuestions === 'number' && options.weightQuestions > 0
+      ? options.weightQuestions
+      : 1;
 
     const entries = Object.entries(selectionsByQuestion);
     for (const [, selection] of entries) {
@@ -41,7 +46,7 @@ export const ResultEngine = {
         const prefix = Object.keys(STYLE_MAP).find(p => key.startsWith(p + '_'));
         if (prefix) {
           const name = STYLE_MAP[prefix];
-          scores[name] = (scores[name] || 0) + 1;
+          scores[name] = (scores[name] || 0) + 1 * weightQ;
         }
       }
     }

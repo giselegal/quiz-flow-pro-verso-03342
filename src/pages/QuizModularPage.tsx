@@ -9,6 +9,7 @@ import { TemplateManager } from '@/utils/TemplateManager';
 import React, { useEffect, useMemo, useState } from 'react';
 import { ResultEngine } from '@/services/core/ResultEngine';
 import { SelectionRules, FlowCore } from '@/services/core/FlowCore';
+import OPTIMIZED_FUNNEL_CONFIG from '@/config/optimized21StepsFunnel';
 import useOptimizedScheduler from '@/hooks/useOptimizedScheduler';
 
 /**
@@ -72,7 +73,7 @@ const QuizModularPage: React.FC = () => {
         setIsLoading(true);
         setError(null);
 
-  // Carregando blocos da etapa (silencioso em produção)
+        // Carregando blocos da etapa (silencioso em produção)
 
         // Carregar blocos usando TemplateManager (integra JSON/Editor)
         const stepId = `step-${currentStep}`;
@@ -91,8 +92,8 @@ const QuizModularPage: React.FC = () => {
           'idle'
         );
       } catch (err) {
-  // Log de erro reduzido
-  if (import.meta?.env?.DEV) console.error(`Erro ao carregar etapa ${currentStep}:`, err);
+        // Log de erro reduzido
+        if (import.meta?.env?.DEV) console.error(`Erro ao carregar etapa ${currentStep}:`, err);
         setError(`Erro ao carregar etapa ${currentStep}`);
         setBlocks([]);
       } finally {
@@ -111,7 +112,7 @@ const QuizModularPage: React.FC = () => {
         // Recarregar blocos da etapa corrente
         TemplateManager.reloadTemplate(`step-${currentStep}`)
           .then(setBlocks)
-          .catch(() => {});
+          .catch(() => { });
       }
     };
     window.addEventListener('quiz-template-updated', onTemplateUpdated as EventListener);
@@ -222,7 +223,7 @@ const QuizModularPage: React.FC = () => {
       }
 
       // options-grid: usar regra centralizada considerando a fase da etapa
-  const { isValid } = SelectionRules.computeSelectionValidity(
+      const { isValid } = SelectionRules.computeSelectionValidity(
         currentStep,
         selections.length,
         {
@@ -331,10 +332,10 @@ const QuizModularPage: React.FC = () => {
               const { StorageService } = require('@/services/core/StorageService');
               StorageService.safeSetString('userName', v);
               StorageService.safeSetString('quizUserName', v);
-            } catch {}
+            } catch { }
           }
         }
-      } catch {}
+      } catch { }
 
       return updated;
     });
@@ -369,18 +370,26 @@ const QuizModularPage: React.FC = () => {
 
   // ===== CÁLCULO E PERSISTÊNCIA DO RESULTADO (core/ResultEngine) =====
   const computeAndPersistResult = React.useCallback(() => {
-    const { scores, total } = ResultEngine.computeScoresFromSelections(userSelections);
+    // Leitura opcional de pesos do funil otimizado (se usado)
+    const weightQuestions = (OPTIMIZED_FUNNEL_CONFIG as any)?.calculations?.scoreWeights?.questions;
+
+    const { scores, total } = ResultEngine.computeScoresFromSelections(
+      userSelections,
+      {
+        weightQuestions: typeof weightQuestions === 'number' ? weightQuestions : 1,
+      }
+    );
     let userName = quizAnswers.userName || '';
     try {
       const { StorageService } = require('@/services/core/StorageService');
       userName = userName || StorageService.safeGetString('userName') || StorageService.safeGetString('quizUserName') || '';
-    } catch {}
+    } catch { }
     const payload = ResultEngine.toPayload(scores, total, userName);
     ResultEngine.persist(payload);
     try {
       const { StorageService } = require('@/services/core/StorageService');
       StorageService.safeSetString('quizUserName', userName);
-    } catch {}
+    } catch { }
   }, [userSelections, quizAnswers.userName]);
 
   // Disparar cálculo na etapa 19 (transição para resultado)
@@ -431,8 +440,8 @@ const QuizModularPage: React.FC = () => {
   const nextLabel = currentStep === 21
     ? 'Finalizado'
     : (!isStepValid && mustBeValid
-        ? 'Complete a etapa'
-        : (stepConfig?.nextButtonText || 'Próxima →'));
+      ? 'Complete a etapa'
+      : (stepConfig?.nextButtonText || 'Próxima →'));
 
   // Página de produção: sem DnD nem sidebars de edição
 
@@ -498,9 +507,9 @@ const QuizModularPage: React.FC = () => {
               <div className="text-center mb-8">
                 <div className="flex items-center justify-center gap-4 mb-4">
                   <div className="text-sm text-stone-500">Etapa {currentStep} de 21</div>
-          <div className="w-32 bg-stone-200 rounded-full h-2">
+                  <div className="w-32 bg-stone-200 rounded-full h-2">
                     <div
-            className="bg-gradient-to-r from-[#B89B7A] to-[#8B7355] h-2 rounded-full"
+                      className="bg-gradient-to-r from-[#B89B7A] to-[#8B7355] h-2 rounded-full"
                       style={{ width: `${progress}%` }}
                     />
                   </div>
@@ -518,10 +527,10 @@ const QuizModularPage: React.FC = () => {
               {/* 🎨 ÁREA DE RENDERIZAÇÃO DOS BLOCOS */}
               <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl shadow-stone-200/40 border border-stone-200/30 ring-1 ring-stone-100/20 overflow-hidden">
                 {/* Estado de loading */}
-        {isLoading && (
+                {isLoading && (
                   <div className="min-h-[500px] flex items-center justify-center">
                     <div className="text-center">
-          <div className="w-8 h-8 border-2 border-[#B89B7A] border-t-transparent rounded-full mx-auto mb-4"></div>
+                      <div className="w-8 h-8 border-2 border-[#B89B7A] border-t-transparent rounded-full mx-auto mb-4"></div>
                       <p className="text-stone-600">Carregando etapa {currentStep}...</p>
                     </div>
                   </div>
@@ -568,7 +577,7 @@ const QuizModularPage: React.FC = () => {
                           key={block.id}
                           className={cn(
                             'quiz-block',
-            // Sem animações/transições fora do Canvas
+                            // Sem animações/transições fora do Canvas
                           )}
                         >
                           <UniversalBlockRenderer
@@ -592,7 +601,7 @@ const QuizModularPage: React.FC = () => {
                               },
                             }}
                             isSelected={false}
-                            onClick={() => {}}
+                            onClick={() => { }}
                           />
                         </div>
                       ))
@@ -603,11 +612,11 @@ const QuizModularPage: React.FC = () => {
 
               {/* 🎮 CONTROLES DE NAVEGAÇÃO */}
               <div className="flex justify-between items-center mt-8">
-  <button
+                <button
                   onClick={handlePrevious}
                   disabled={currentStep === 1}
                   className={cn(
-          'flex items-center gap-2 px-6 py-3 rounded-lg font-medium',
+                    'flex items-center gap-2 px-6 py-3 rounded-lg font-medium',
                     currentStep === 1
                       ? 'bg-stone-100 text-stone-400 cursor-not-allowed'
                       : 'bg-white text-stone-700 hover:bg-stone-50 border border-stone-200 shadow-sm hover:shadow'
@@ -621,31 +630,31 @@ const QuizModularPage: React.FC = () => {
                   <div className="text-lg font-semibold text-stone-800">{currentStep} / 21</div>
                 </div>
 
-        <div className="flex items-center gap-2">
-        <button
-                  onClick={handleNext}
-                  disabled={nextDisabled}
-                  className={cn(
-          'flex items-center gap-2 px-6 py-3 rounded-lg font-medium',
-                    nextDisabled
-                      ? 'bg-stone-100 text-stone-400 cursor-not-allowed'
-                      : 'bg-gradient-to-r from-[#B89B7A] to-[#8B7355] text-white hover:from-[#A08966] hover:to-[#7A6B4D] shadow-md hover:shadow-lg'
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={handleNext}
+                    disabled={nextDisabled}
+                    className={cn(
+                      'flex items-center gap-2 px-6 py-3 rounded-lg font-medium',
+                      nextDisabled
+                        ? 'bg-stone-100 text-stone-400 cursor-not-allowed'
+                        : 'bg-gradient-to-r from-[#B89B7A] to-[#8B7355] text-white hover:from-[#A08966] hover:to-[#7A6B4D] shadow-md hover:shadow-lg'
+                    )}
+                  >
+                    {nextLabel}
+                  </button>
+                  {stepConfig?.showValidationFeedback && mustBeValid && !isStepValid && (
+                    <div className="text-xs text-stone-500">
+                      {validationText}
+                    </div>
                   )}
-                >
-                  {nextLabel}
-                </button>
-                {stepConfig?.showValidationFeedback && mustBeValid && !isStepValid && (
-                  <div className="text-xs text-stone-500">
-                    {validationText}
-                  </div>
-                )}
-        </div>
+                </div>
                 {/* Utilitário opcional de recarga */}
                 <button
                   onClick={() =>
                     TemplateManager.reloadTemplate(`step-${currentStep}`)
                       .then(setBlocks)
-                      .catch(() => {})
+                      .catch(() => { })
                   }
                   className="ml-4 px-4 py-3 rounded-lg font-medium bg-white text-stone-700 hover:bg-stone-50 border border-stone-200 shadow-sm hover:shadow"
                   title="Recarregar blocos da etapa"

@@ -6,6 +6,8 @@
  * Contém toda a estrutura otimizada do funil.
  */
 
+import { QUIZ_QUESTIONS_COMPLETE } from '@/templates/quiz21StepsComplete';
+
 export const OPTIMIZED_FUNNEL_CONFIG = {
   id: 'optimized-21-steps-funnel',
   name: 'Quiz de Estilo - 21 Etapas Otimizadas',
@@ -2855,4 +2857,63 @@ export type OptimizedStepConfig = (typeof OPTIMIZED_FUNNEL_CONFIG.steps)[0];
 export type QuizDataConfig = typeof OPTIMIZED_FUNNEL_CONFIG.quizData;
 export type StyleConfig = typeof OPTIMIZED_FUNNEL_CONFIG.quizData.styles.natural;
 
-export default OPTIMIZED_FUNNEL_CONFIG;
+// Aplica os títulos/textos corretos das questões a partir do template canônico
+function applyQuestionsFromTemplate<T extends typeof OPTIMIZED_FUNNEL_CONFIG>(config: T): T {
+  try {
+    const cloned = JSON.parse(JSON.stringify(config)) as T;
+
+    const getStepNumber = (stepId?: string | number): number | null => {
+      if (typeof stepId === 'number') return stepId;
+      if (typeof stepId !== 'string') return null;
+      const n = parseInt(stepId.replace(/[^0-9]/g, ''), 10);
+      return Number.isFinite(n) ? n : null;
+    };
+
+    for (const step of (cloned as any).steps as Array<any>) {
+      const stepNum = getStepNumber(step?.id);
+      if (!stepNum) continue;
+
+      const qText = (QUIZ_QUESTIONS_COMPLETE as any)[stepNum];
+      if (!qText) continue;
+
+      // Atualiza nome/descrição das etapas de pergunta/estratégicas para refletir a questão canônica
+      if (step.type === 'question' || step.type === 'strategic') {
+        // name/description amigáveis
+        step.name = qText;
+        step.description = qText;
+
+        // questionData (title/text)
+        if (step.questionData) {
+          step.questionData.title = qText;
+          step.questionData.text = qText;
+        }
+
+        // Blocos visuais: título e enunciado do options-grid
+        if (Array.isArray(step.blocks)) {
+          for (const b of step.blocks) {
+            if (b?.type === 'heading-inline' && b?.properties) {
+              if (typeof b.properties.content === 'string') {
+                b.properties.content = qText;
+              }
+            }
+            if (b?.type === 'options-grid' && b?.properties) {
+              if (typeof b.properties.question === 'string') {
+                b.properties.question = qText;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    return cloned;
+  } catch {
+    // Em caso de qualquer erro durante o clone/patch, retorna config original
+    return config;
+  }
+}
+
+// Versão sincronizada usada por padrão no restante do app
+const OPTIMIZED_FUNNEL_CONFIG_SYNCED = applyQuestionsFromTemplate(OPTIMIZED_FUNNEL_CONFIG);
+
+export default OPTIMIZED_FUNNEL_CONFIG_SYNCED;
