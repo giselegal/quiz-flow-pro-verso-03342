@@ -227,14 +227,18 @@ const EditorPro: React.FC<EditorProProps> = ({ onSave }) => {
   const getIndexFromOver = useCallback((overId: string | null): number => {
     if (!overId) return blocks.length;
     const id = String(overId);
-    if (id === CANVAS_ROOT_ID) return blocks.length;
+    // Canvas raiz pode estar escopado: `canvas-drop-zone-<scope>`
+    if (id === CANVAS_ROOT_ID || id.startsWith(`${CANVAS_ROOT_ID}-`)) return blocks.length;
     if (id.startsWith(SLOT_ID_PREFIX)) {
-      const n = parseInt(id.replace(SLOT_ID_PREFIX, ''), 10);
+      // Slots agora são `drop-zone-<scope>-<pos>`; pegue o último segmento como posição
+      const parts = id.replace(SLOT_ID_PREFIX, '').split('-');
+      const last = parts[parts.length - 1];
+      const n = parseInt(last, 10);
       return Number.isFinite(n) ? Math.max(0, Math.min(n, blocks.length)) : blocks.length;
     }
     if (id.startsWith(BLOCK_ID_PREFIX)) {
       const cleaned = id.replace(BLOCK_ID_PREFIX, '');
-      // Suporta formato escopado: `${scope}-${blockId}`
+      // Formato escopado: `${scope}-${blockId}` → remova o primeiro segmento (scope)
       const cleanedParts = cleaned.split('-');
       const maybeBlockId = cleanedParts.length > 1 ? cleanedParts.slice(1).join('-') : cleaned;
       const idx = blocks.findIndex(b => String(b.id) === maybeBlockId);

@@ -44,8 +44,9 @@ const EditorCanvas: React.FC<EditorCanvasProps> = memo(({
     );
   }
 
+  // Força remount ao trocar de etapa para resetar contexto DnD e refs internas
   return (
-    <div className="h-full relative">
+    <div className="h-full relative" key={`editor-canvas-step-${currentStep}`}>
       <CanvasDropZone
         blocks={blocks}
         selectedBlockId={selectedBlock?.id || null}

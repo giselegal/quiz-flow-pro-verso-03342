@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * Consolidated Editor Hook - Replaces useEditor conflicts
  *
@@ -71,7 +70,7 @@ export const useUnifiedEditor = (): ConsolidatedEditorReturn => {
   // Convert EditorContext blocks to legacy Block format for compatibility
   const currentStage = stages.find(stage => stage.id === activeStageId);
   const blocks: Block[] =
-    currentStage?.blocks?.map(block => ({
+    currentStage?.blocks?.map((block: any) => ({
       id: block.id,
       type: block.type as BlockType,
       content: block.properties || {},
@@ -88,7 +87,8 @@ export const useUnifiedEditor = (): ConsolidatedEditorReturn => {
 
   // Legacy addBlock with automatic ordering
   const addBlock = async (type: string): Promise<string> => {
-    return await blockActions.addBlock(type, activeStageId);
+    // API do EditorContext: addBlock(type) sem stageId
+    return await blockActions.addBlock(type as BlockType);
   };
 
   // Legacy updateBlock
@@ -106,10 +106,8 @@ export const useUnifiedEditor = (): ConsolidatedEditorReturn => {
 
   // Legacy reorderBlocks (converts from index-based to ID-based)
   const reorderBlocks = async (startIndex: number, endIndex: number): Promise<void> => {
-    const blockIds = blocks.map(b => b.id);
-    const [movedId] = blockIds.splice(startIndex, 1);
-    blockIds.splice(endIndex, 0, movedId);
-    await blockActions.reorderBlocks(blockIds, activeStageId);
+    // API do EditorContext: reorderBlocks(startIndex, endIndex)
+    await blockActions.reorderBlocks(startIndex, endIndex);
   };
 
   // Legacy setAllBlocks - replaces all blocks in current stage
@@ -120,7 +118,14 @@ export const useUnifiedEditor = (): ConsolidatedEditorReturn => {
       if (existingBlock) {
         await updateBlock(block.id, block);
       } else {
-        await blockActions.addBlockAtPosition(block.type, index, activeStageId);
+        // Sem suporte garantido a inserção posicional na API; adiciona e depois reordena
+        const newId = await blockActions.addBlock(block.type as BlockType);
+        if (typeof index === 'number') {
+          const currentIndex = blocks.findIndex(b => b.id === newId);
+          if (currentIndex >= 0 && currentIndex !== index) {
+            await blockActions.reorderBlocks(currentIndex, index);
+          }
+        }
       }
     });
   };
@@ -151,8 +156,15 @@ export const useUnifiedEditor = (): ConsolidatedEditorReturn => {
     setSelectedBlock: blockActions.setSelectedBlockId,
 
     // Performance and persistence
-    isSaving: persistenceActions.isSaving,
-    saveFunnel: persistenceActions.saveFunnel,
+    isSaving: false,
+    saveFunnel: async () => {
+      try {
+        await persistenceActions.saveFunnel();
+        return { success: true } as const;
+      } catch (e: any) {
+        return { success: false, error: e?.message || String(e) } as const;
+      }
+    },
 
     // UI state
     isPreviewing: uiState.isPreviewing,
@@ -179,7 +191,7 @@ export const useEditor = (): Partial<ConsolidatedEditorReturn> => {
     return {
       blocks,
       config: { blocks, title: 'Editor', description: '' },
-      addBlock: async (type: string) => {
+  addBlock: async (_type: string) => {
         console.warn('Fallback addBlock called');
         return `block-${Date.now()}`;
       },

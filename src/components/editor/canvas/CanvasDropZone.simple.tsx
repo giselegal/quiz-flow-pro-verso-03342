@@ -12,14 +12,15 @@ import { SortableBlockWrapper } from './SortableBlockWrapper.simple';
 const InterBlockDropZoneBase: React.FC<{
   position: number;
   isActive?: boolean;
-}> = ({ position, isActive = true }) => {
+  scopeId?: string | number;
+}> = ({ position, isActive = true, scopeId }) => {
   // Evitar recriar arrays/objetos a cada render (impede re-registro contínuo no dnd-kit)
   const accepts = React.useMemo(() => ['sidebar-component', 'canvas-block'], []);
   const data = React.useMemo(() => ({ type: 'dropzone', accepts, position }), [accepts, position]);
 
   const { setNodeRef, isOver } = useDroppable({
-    id: `${SLOT_ID_PREFIX}${position}`,
-    data,
+    id: `${SLOT_ID_PREFIX}${String(scopeId ?? 'default')}-${position}`,
+    data: { ...data, scopeId: scopeId ?? 'default' },
   });
 
   return (
@@ -92,8 +93,9 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
   );
 
   const { setNodeRef, isOver } = useDroppable({
-    id: CANVAS_ROOT_ID, // Padroniza id principal para facilitar validação
-    data: rootData,
+    // Escopar o id do droppable raiz por etapa para evitar colisões entre etapas 2–21
+    id: `${CANVAS_ROOT_ID}-${String(scopeId ?? 'default')}`,
+    data: { ...rootData, scopeId: scopeId ?? 'default' },
   });
 
   // Usa useDndContext para obter active do contexto DnD
@@ -269,7 +271,7 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
 
   return (
     <div
-      id={CANVAS_ROOT_ID}
+  id={CANVAS_ROOT_ID}
       ref={setNodeRef}
       className={cn(
         'min-h-[300px] transition-all duration-200 p-4 overflow-visible',
@@ -312,7 +314,7 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
             <div style={{ height: visibleMeta.topPad }} />
             {/* Drop zone no início absoluto do canvas (posição 0) quando no topo */}
             {visibleMeta.startIndex === 0 && (
-              <InterBlockDropZone position={0} isActive={false} />
+              <InterBlockDropZone position={0} isActive={false} scopeId={scopeId} />
             )}
             {blocks.slice(visibleMeta.startIndex, visibleMeta.endIndex).map((block, i) => {
               const realIndex = visibleMeta.startIndex + i;
@@ -326,7 +328,7 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
                     onDelete={() => { }}
                     scopeId={scopeId}
                   />
-                  <InterBlockDropZone position={realIndex + 1} isActive={false} />
+                  <InterBlockDropZone position={realIndex + 1} isActive={false} scopeId={scopeId} />
                 </React.Fragment>
               );
             })}
@@ -345,7 +347,7 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
           <div className="w-full max-w-[37rem] mx-auto">
             <div className="space-y-6">
               {/* Drop zone no início - sempre presente (ativa durante drag) */}
-              <InterBlockDropZone position={0} isActive={isDraggingAnyValidComponent} />
+              <InterBlockDropZone position={0} isActive={isDraggingAnyValidComponent} scopeId={scopeId} />
 
               {(enableProgressiveEdit ? blocks.slice(0, editRenderCount) : blocks).map((block, index) => (
                 <React.Fragment key={String(block.id)}>
@@ -367,7 +369,7 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
                   />
 
                   {/* Drop zone entre blocos - sempre presente (ativa durante drag) */}
-                  <InterBlockDropZone position={index + 1} isActive={isDraggingAnyValidComponent} />
+                  <InterBlockDropZone position={index + 1} isActive={isDraggingAnyValidComponent} scopeId={scopeId} />
                 </React.Fragment>
               ))}
             </div>
