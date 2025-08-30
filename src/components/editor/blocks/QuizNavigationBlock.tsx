@@ -53,6 +53,7 @@ const QuizNavigationBlock: React.FC<QuizNavigationBlockProps> = ({
 }) => {
   const properties = block?.properties || {};
   const { className = '', backgroundColor = 'transparent', navigationConfig } = properties;
+  const scrollToNext: boolean = (properties as any)?.scrollToNext ?? true;
 
   // Configuração padrão ou do JSON
   const config = navigationConfig || {
@@ -87,6 +88,19 @@ const QuizNavigationBlock: React.FC<QuizNavigationBlockProps> = ({
     // Callback personalizado
     if (onNext) {
       onNext();
+    }
+
+    // Rolagem opcional até o topo/ próxima região ao avançar
+    if (scrollToNext) {
+      try {
+        // Tenta rolar container principal se existir
+        const container = document.querySelector('[data-scroll-container]') as HTMLElement | null;
+        if (container) {
+          container.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      } catch {}
     }
   };
 
