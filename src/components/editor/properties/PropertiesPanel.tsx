@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { withPropertyEditor, pickPropertyEditor } from './core/propertyEditors';
+import { pickPropertyEditor } from './core/propertyEditors';
 import { useUnifiedProperties, PropertyCategory } from '@/hooks/useUnifiedProperties';
 import type { Block } from '@/types/editor';
 import {

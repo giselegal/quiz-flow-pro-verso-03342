@@ -125,7 +125,7 @@ const QuizNavigation: React.FC<QuizNavigationProps> = ({
     return 'bg-[#B89B7A]'; // Padrão - cor principal da marca
   };
 
-  const nextButtonText = 'Avançar';
+  
 
   return (
     <>
