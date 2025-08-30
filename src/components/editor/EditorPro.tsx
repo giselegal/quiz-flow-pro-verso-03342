@@ -9,7 +9,6 @@ import { getBlocksForStep } from '@/config/quizStepsComplete';
 import { cn } from '@/lib/utils';
 import { useEditor } from './EditorProvider';
 import { useTheme } from '@/components/theme-provider';
-import { useOptimizedScheduler } from '@/hooks/useOptimizedScheduler';
 import { useRenderCount } from '@/hooks/useRenderCount';
 import { mark } from '@/utils/perf';
 import { QuizRenderer } from '@/components/core/QuizRenderer';
@@ -233,6 +232,8 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
 
     const g: any = window as any;
     g.__DISABLE_AUTO_SCROLL = true;
+  // Também desabilita sincronização de scroll entre colunas para evitar "puxões" no canvas
+  g.__DISABLE_SCROLL_SYNC = true;
 
     const originalScrollTo = window.scrollTo?.bind(window);
     const originalScrollIntoView = (Element.prototype as any).scrollIntoView?.bind(Element.prototype);
@@ -246,6 +247,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
     return () => {
       try {
         g.__DISABLE_AUTO_SCROLL = false;
+  g.__DISABLE_SCROLL_SYNC = false;
         if (originalScrollTo) window.scrollTo = originalScrollTo as any;
         if (originalScrollIntoView) (Element.prototype as any).scrollIntoView = originalScrollIntoView as any;
       } catch { }
@@ -336,16 +338,17 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
 
   // Estados de animação/UX
   const [isDragging, setIsDragging] = useState(false);
-  const { schedule } = useOptimizedScheduler();
+  // const { schedule } = useOptimizedScheduler(); // desativado com a remoção do efeito de pulse
 
   // Centralized state management via useOptimizedScheduler
-  useEffect(() => {
-    if (state.selectedBlockId) {
-      return schedule('selection-pulse', () => {
-        // Selection pulse effect handled internally
-      }, 700);
-    }
-  }, [schedule, state.selectedBlockId]);
+  // Removido: efeito de "pulse" na seleção que causava flicker visual
+  // useEffect(() => {
+  //   if (state.selectedBlockId) {
+  //     return schedule('selection-pulse', () => {
+  //       // Selection pulse effect handled internally
+  //     }, 700);
+  //   }
+  // }, [schedule, state.selectedBlockId]);
 
   const currentStepData = useMemo(
     () => getBlocksForStep(safeCurrentStep, state.stepBlocks) || [],
@@ -1173,7 +1176,8 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       {/* Canvas principal: edição (DnD) ou preview com renderização real de produção */}
       <div
         className={cn(
-          'flex-1 min-w-0 p-2 overflow-x-hidden overflow-y-auto',
+          // Área do canvas com rolagem vertical confiável
+          'flex-1 min-w-0 p-2 overflow-y-auto overflow-x-hidden',
           isDragging && 'editor-drop-zone-active'
         )}
         data-canvas-container
@@ -1214,7 +1218,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
                     actions.updateBlock(currentStepKey, id, updates)
                   }
                   onDeleteBlock={(id: string) => actions.removeBlock(currentStepKey, id)}
-                  className="h-full w-full editor-pulse-highlight"
+                  className="h-full w-full"
                 />
               }
             />
@@ -1270,6 +1274,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       <DndContext
         sensors={sensors}
         collisionDetection={collisionDetectionStrategy}
+  autoScroll={false}
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
       >
