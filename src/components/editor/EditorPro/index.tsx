@@ -12,6 +12,7 @@ import { useNotification } from '@/components/ui/Notification';
 import { createBlockFromComponent } from '@/utils/editorUtils';
 import { DndContext, DragEndEvent, useSensor, useSensors, PointerSensor, KeyboardSensor, closestCenter } from '@dnd-kit/core';
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
+import { CANVAS_ROOT_ID, SLOT_ID_PREFIX, BLOCK_ID_PREFIX } from '@/components/editor/dnd/constants';
 
 // Lazy loading dos componentes pesados
 const EditorLayout = React.lazy(() => import('./EditorLayout'));
@@ -47,10 +48,8 @@ const EditorPro: React.FC<EditorProProps> = ({ onSave }) => {
   const [isPreviewMode, setIsPreviewMode] = useState(false);
   const [viewMode, setViewMode] = useState<'desktop' | 'mobile'>('desktop');
   const [isSaving, setIsSaving] = useState(false);
-
-  // Histórico para undo/redo
-  const [history] = useState<Block[][]>([blocks]);
-  const [historyIndex, setHistoryIndex] = useState(0);
+  const canUndo = Boolean((actions as any)?.canUndo);
+  const canRedo = Boolean((actions as any)?.canRedo);
 
   // DnD Sensors
   const sensors = useSensors(
@@ -95,36 +94,60 @@ const EditorPro: React.FC<EditorProProps> = ({ onSave }) => {
   }, [blocks, onSave, notification]);
 
   const handleUndo = useCallback(() => {
-    if (historyIndex > 0) {
-      const newIndex = historyIndex - 1;
-      setHistoryIndex(newIndex);
-      // Aplicar estado do histórico
-    }
-  }, [historyIndex]);
+    (actions as any)?.undo?.();
+  }, [actions]);
 
   const handleRedo = useCallback(() => {
-    if (historyIndex < history.length - 1) {
-      const newIndex = historyIndex + 1;
-      setHistoryIndex(newIndex);
-      // Aplicar estado do histórico
+    (actions as any)?.redo?.();
+  }, [actions]);
+
+  const getIndexFromOver = useCallback((overId: string | null): number => {
+    if (!overId) return blocks.length;
+    const id = String(overId);
+    if (id === CANVAS_ROOT_ID) return blocks.length;
+    if (id.startsWith(SLOT_ID_PREFIX)) {
+      const n = parseInt(id.replace(SLOT_ID_PREFIX, ''), 10);
+      return Number.isFinite(n) ? Math.max(0, Math.min(n, blocks.length)) : blocks.length;
     }
-  }, [historyIndex, history.length]);
+    if (id.startsWith(BLOCK_ID_PREFIX)) {
+      const cleaned = id.replace(BLOCK_ID_PREFIX, '');
+      const idx = blocks.findIndex(b => String(b.id) === cleaned);
+      return idx >= 0 ? idx : blocks.length;
+    }
+    return blocks.length;
+  }, [blocks]);
 
   const handleDragEnd = useCallback((event: DragEndEvent) => {
     const { active, over } = event;
+    if (!over) return;
+    const activeType = (active.data.current as any)?.type;
 
-    if (over && active.id !== over.id) {
-      // Lógica de drag and drop
-      console.log('🔄 Reordenando blocos:', { from: active.id, to: over.id });
+    // Reorder de blocos existentes
+    if (activeType === 'canvas-block') {
+      const activeId = String(active.id).replace(BLOCK_ID_PREFIX, '');
+      const oldIndex = blocks.findIndex(b => String(b.id) === activeId);
+      const newIndex = getIndexFromOver(String(over.id));
+      if (oldIndex >= 0 && newIndex >= 0 && oldIndex !== newIndex) {
+        (actions as any)?.reorderBlocks?.(currentStepKey, oldIndex, newIndex);
+      }
+      return;
     }
-  }, []);
+
+    // Inserção a partir da sidebar
+    if (activeType === 'sidebar-component') {
+      const compType = (active.data.current as any)?.blockType as string;
+      const insertIndex = getIndexFromOver(String(over.id));
+      const newBlock = createBlockFromComponent(compType as any, blocks);
+      if (newBlock) {
+        (actions as any)?.addBlockAtIndex?.(currentStepKey, newBlock, insertIndex);
+        (actions as any)?.setSelectedBlockId?.(newBlock.id);
+        notification.success?.(`Componente ${compType} adicionado`);
+      }
+    }
+  }, [actions, blocks, currentStepKey, getIndexFromOver, notification]);
 
   return (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={closestCenter}
-      onDragEnd={handleDragEnd}
-    >
+    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
       <Suspense fallback={<LoadingFallback />}>
         <div className="h-screen flex flex-col overflow-hidden">
           {/* Toolbar */}
@@ -134,8 +157,8 @@ const EditorPro: React.FC<EditorProProps> = ({ onSave }) => {
             onSave={handleSave}
             onUndo={handleUndo}
             onRedo={handleRedo}
-            canUndo={historyIndex > 0}
-            canRedo={historyIndex < history.length - 1}
+            canUndo={canUndo}
+            canRedo={canRedo}
             isSaving={isSaving}
             viewMode={viewMode}
             onViewModeChange={setViewMode}
@@ -149,6 +172,14 @@ const EditorPro: React.FC<EditorProProps> = ({ onSave }) => {
             onStepChange={actions.setCurrentStep}
             onComponentSelect={handleComponentSelect}
             onBlockSelect={handleBlockSelect}
+            onUpdateSelectedBlock={(updates: Partial<Block>) => {
+              const id = selectedBlockId;
+              if (id) actions.updateBlock(currentStepKey, id, updates as any);
+            }}
+            onDeleteSelectedBlock={() => {
+              const id = selectedBlockId;
+              if (id) actions.removeBlock(currentStepKey, id);
+            }}
           >
             {/* Canvas */}
             <EditorCanvas
@@ -166,7 +197,6 @@ const EditorPro: React.FC<EditorProProps> = ({ onSave }) => {
     </DndContext>
   );
 };
-
 EditorPro.displayName = 'EditorPro';
 
 export default EditorPro;
