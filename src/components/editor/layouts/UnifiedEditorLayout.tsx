@@ -112,6 +112,7 @@ export const UnifiedEditorLayout: React.FC<UnifiedEditorLayoutProps> = ({ classN
                   onSelectBlock={setSelectedBlockId}
                   onUpdateBlock={handleBlockUpdate}
                   onDeleteBlock={handleBlockDelete}
+                  scopeId={'unified-layout'}
                 />
               </ResizablePanel>
 

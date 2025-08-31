@@ -25,9 +25,9 @@ const QuizIntegratedRenderer: React.FC = () => {
       return {
         computed: { currentBlocks: [] },
         blockActions: {
-          setSelectedBlockId: () => {},
+          setSelectedBlockId: () => { },
           updateBlock: () => Promise.resolve(),
-          deleteBlock: () => {},
+          deleteBlock: () => { },
         },
       };
     }
@@ -86,6 +86,7 @@ const QuizIntegratedRenderer: React.FC = () => {
               selectedBlockId={null}
               onUpdateBlock={updateBlock}
               onDeleteBlock={handleDeleteBlock}
+              scopeId={currentStep}
             />
           </div>
 

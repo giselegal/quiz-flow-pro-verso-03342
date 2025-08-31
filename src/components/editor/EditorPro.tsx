@@ -1219,6 +1219,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
                   }
                   onDeleteBlock={(id: string) => actions.removeBlock(currentStepKey, id)}
                   className="h-full w-full"
+                  scopeId={safeCurrentStep}
                 />
               }
             />

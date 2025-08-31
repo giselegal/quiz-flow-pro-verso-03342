@@ -210,6 +210,7 @@ const StepContent: React.FC = () => {
                     onUpdateBlock={handleUpdateBlock}
                     onDeleteBlock={handleDeleteBlock}
                     className="py-8"
+                    scopeId={currentStep}
                   />
                 </div>
               ) : (

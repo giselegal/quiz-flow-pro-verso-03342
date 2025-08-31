@@ -7,6 +7,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { GripVertical, Trash2 } from 'lucide-react';
 import React from 'react';
 import { generateUniqueId } from '@/utils/generateUniqueId';
+import { useStepSelection } from '@/hooks/useStepSelection';
 
 interface SortableBlockWrapperProps {
   block: Block;
@@ -43,10 +44,10 @@ const SortableBlockWrapperBase: React.FC<SortableBlockWrapperProps> = ({
     transition,
     isDragging,
   } = useSortable({
-    id: generateUniqueId({ 
-      stepNumber: scopeId ?? 'default', 
-      blockId: String(block.id), 
-      type: 'block' 
+    id: generateUniqueId({
+      stepNumber: scopeId ?? 'default',
+      blockId: String(block.id),
+      type: 'block'
     }),
     data: {
       type: 'canvas-block',
@@ -93,38 +94,21 @@ const SortableBlockWrapperBase: React.FC<SortableBlockWrapperProps> = ({
     );
   }
 
-  const isInteractive = (el: EventTarget | null) => {
-    if (!(el instanceof HTMLElement)) return false;
-    const tag = el.tagName.toLowerCase();
-    if (['input', 'textarea', 'select', 'button'].includes(tag)) return true;
-    if (el.getAttribute('contenteditable') === 'true') return true;
-    return false;
-  };
+  // Mantido para futura detecção de elementos interativos (não utilizado atualmente)
+  // Seleção centralizada com debounce por etapa
+  const numericStep = typeof scopeId === 'number' ? scopeId : Number(scopeId) || 0;
+  const { handleBlockSelection } = useStepSelection({
+    stepNumber: numericStep,
+    onSelectBlock: () => onSelect(),
+    debounceMs: 50,
+  });
 
-  const handleContainerClick = (e: React.MouseEvent) => {
-    if (isInteractive(e.target)) {
-      e.stopPropagation();
-      return;
-    }
-    onSelect();
-  };
-
-  const handleContainerMouseDown = (e: React.MouseEvent) => {
-    if (isInteractive(e.target)) {
-      // Não roubar o foco de elementos interativos
-      e.stopPropagation();
-    }
-  };
-
-  // Seleciona já no mouse down (fase de captura) para garantir seleção mesmo quando
-  // componentes internos cancelam o click/bubbling posteriormente
-  const handleMouseDownCapture = (e: React.MouseEvent) => {
-    // Apenas botão principal e sem modificadores
-  if (e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
-  // ⚠️ Importante: permitir seleção mesmo quando clicamos em elementos interativos.
-  // Muitos blocos (ex.: grids de opções) são 100% interativos e, sem isso,
-  // não é possível selecionar o wrapper nas etapas > 1.
-    onSelect();
+  // Um único handler no capture para garantir seleção estável
+  const handlePointerDownCapture = (e: React.PointerEvent) => {
+    // Só botão principal e sem modificadores
+    if (e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
+    // Selecionar sempre (inclusive em elementos interativos) sem impedir foco neles
+    handleBlockSelection(String(block.id));
   };
 
   return (
@@ -141,9 +125,7 @@ const SortableBlockWrapperBase: React.FC<SortableBlockWrapperProps> = ({
         data-dnd-dropzone-type="bloco"
         data-block-id={String(block.id)}
         data-scope-id={String(scopeId ?? 'default')}
-        onMouseDownCapture={handleMouseDownCapture}
-        onClick={handleContainerClick}
-        onMouseDown={handleContainerMouseDown}
+        onPointerDownCapture={handlePointerDownCapture}
       >
         {/* Drag handle and controls */}
         <div className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity z-10 flex items-center gap-1">

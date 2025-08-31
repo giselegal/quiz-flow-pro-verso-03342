@@ -56,7 +56,9 @@ const EditorInitializer: React.FC<{ templateId?: string; funnelId?: string }> = 
     (async () => {
       try {
         const mod = await import('../components/editor/EditorPro');
-        if (!cancelled) setEditorProComp(() => mod.EditorPro);
+        // Preferir default (ModularEditorPro). Manter fallback por segurança.
+        const Comp = (mod as any).default || (mod as any).ModularEditorPro || (mod as any).EditorPro;
+        if (!cancelled && Comp) setEditorProComp(() => Comp);
       } catch (e) {
         console.error('Falha ao carregar EditorPro dinamicamente:', e);
       }
