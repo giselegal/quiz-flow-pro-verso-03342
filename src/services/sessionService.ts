@@ -11,7 +11,7 @@ export const sessionService = {
   },
 
   isUUIDSession(): boolean {
-  return isUUID(this.getSessionId() || undefined);
+    return isUUID(this.getSessionId() || undefined);
   },
 
   ensureLocalSessionId(): string {
@@ -27,7 +27,7 @@ export const sessionService = {
   setUUIDSessionId(uuid: string) {
     if (!isBrowser) return;
     localStorage.setItem('quiz_session_id', uuid);
-  localStorage.setItem('quiz_session_is_uuid', String(isUUID(uuid)));
+    localStorage.setItem('quiz_session_is_uuid', String(isUUID(uuid)));
   },
 
   async startQuizSession(params: {
@@ -45,8 +45,8 @@ export const sessionService = {
 
     try {
       // Se quizId não for UUID, não tente criar sessão no Supabase para evitar FK inválida
-  const funnelId = params.quizId;
-  const quizIdIsUUID = isUUID(funnelId || undefined);
+      const funnelId = params.quizId;
+      const quizIdIsUUID = isUUID(funnelId || undefined);
 
       if (!quizIdIsUUID) {
         const localId = this.ensureLocalSessionId();

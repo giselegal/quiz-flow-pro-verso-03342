@@ -3,9 +3,9 @@ import { vi } from 'vitest';
 
 // Setup global test environment
 global.ResizeObserver = class ResizeObserver {
-  observe() {}
-  unobserve() {}
-  disconnect() {}
+  observe() { }
+  unobserve() { }
+  disconnect() { }
 };
 
 // Mock window.matchMedia
@@ -29,10 +29,10 @@ global.IntersectionObserver = class IntersectionObserver {
   rootMargin: string = '';
   thresholds: ReadonlyArray<number> = [];
 
-  constructor() {}
-  observe() {}
-  disconnect() {}
-  unobserve() {}
+  constructor() { }
+  observe() { }
+  disconnect() { }
+  unobserve() { }
   takeRecords(): IntersectionObserverEntry[] {
     return [];
   }
