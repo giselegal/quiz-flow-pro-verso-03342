@@ -1,12 +1,15 @@
 import { useDroppable } from '@dnd-kit/core';
 import React from 'react';
 import { cn } from '../../../lib/utils';
+import { generateUniqueId } from '@/utils/generateUniqueId';
 
 interface CanvasDropZoneProps {
   children: React.ReactNode;
   isEmpty: boolean;
   className?: string;
   'data-testid'?: string;
+  // Opcional: escopo/etapa para IDs únicos (evita colisões entre etapas)
+  scopeId?: number | string;
 }
 
 const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
@@ -14,24 +17,31 @@ const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
   isEmpty,
   className,
   'data-testid': dataTestId,
+  scopeId,
 }) => {
+  const droppableId = React.useMemo(
+    () => generateUniqueId({ stepNumber: scopeId ?? 'default', type: 'dropzone' }),
+    [scopeId]
+  );
+
   const { setNodeRef, isOver } = useDroppable({
-    id: 'canvas-drop-zone',
+    id: droppableId,
     data: {
       type: 'dropzone',
       accepts: ['sidebar-component', 'canvas-block'],
       position: 0, // Position for insertion
+      scopeId: scopeId ?? 'default',
     },
   });
 
   // 🔧 DEBUG: Log quando componente monta
   React.useEffect(() => {
     console.log('🎯 CanvasDropZone montado!', {
-      id: 'canvas-drop-zone',
+      id: droppableId,
       isEmpty,
       isOver,
     });
-  }, [isEmpty, isOver]);
+  }, [isEmpty, isOver, droppableId]);
 
   return (
     <div
@@ -48,7 +58,7 @@ const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
       aria-roledescription="sortable"
       aria-describedby="DndDescribedBy-2"
       // ✅ Importante para aplicar correções CSS globais de DnD
-      data-id="canvas-drop-zone"
+      data-id={droppableId}
       data-testid={dataTestId}
       style={{ minHeight: '600px' }} // 🚨 CORREÇÃO: Garantir área mínima
     >

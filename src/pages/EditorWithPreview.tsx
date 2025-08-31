@@ -243,7 +243,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
                   style={{ backgroundColor: 'transparent' }}
                 >
                   <div className={getCanvasClassName()}>
-                    <CanvasDropZone isEmpty={currentBlocks.length === 0}>
+                    <CanvasDropZone isEmpty={currentBlocks.length === 0} scopeId={currentStep}>
                       <div className="space-y-4">
                         {currentBlocks.map(block => (
                           <div key={block.id} onClick={() => setSelectedBlockId(block.id)}>
