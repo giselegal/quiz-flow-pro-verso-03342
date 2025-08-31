@@ -62,4 +62,20 @@ export const StorageService = {
       }
     }
   },
+
+  safeRemove(key: string): boolean {
+    try {
+      localStorage.removeItem(key);
+      return true;
+    } catch (e) {
+      try {
+        sessionStorage.removeItem(key);
+        return true;
+      } catch (e2) {
+        if ((import.meta as any)?.env?.DEV)
+          console.warn('[StorageService] remove falhou:', e, e2);
+        return false;
+      }
+    }
+  },
 };

@@ -1,6 +1,7 @@
 // Importações
 import { templateService } from '../services/templateService';
 import type { Block } from '../types/editor';
+import { StorageService } from '@/services/core/StorageService';
 
 // Logger leve: só em DEV
 const isDev = (() => {
@@ -32,9 +33,12 @@ export class TemplateManager {
    */
   private static getPublishedBlocks(stepId: string): Block[] | null {
     try {
-      const raw = localStorage.getItem(this.PUBLISH_PREFIX + stepId);
-      if (!raw) return null;
-      const parsed = JSON.parse(raw) as { blocks?: Block[]; updatedAt?: string } | Block[];
+      const key = this.PUBLISH_PREFIX + stepId;
+  // Usa StorageService para lidar com JSON/fallbacks
+  const parsed = StorageService.safeGetJSON(key) as
+        | { blocks?: Block[]; updatedAt?: string }
+        | Block[]
+        | null;
       const blocks = Array.isArray(parsed) ? parsed : parsed?.blocks;
       if (Array.isArray(blocks) && blocks.length > 0) {
         return blocks as Block[];
@@ -52,7 +56,7 @@ export class TemplateManager {
   static publishStep(stepId: string, blocks: Block[]): void {
     try {
       const payload = { blocks, updatedAt: new Date().toISOString() };
-      localStorage.setItem(this.PUBLISH_PREFIX + stepId, JSON.stringify(payload));
+      StorageService.safeSetJSON(this.PUBLISH_PREFIX + stepId, payload);
       // Atualiza cache imediatamente para refletir sem recarregar
       if (Array.isArray(blocks) && blocks.length > 0) {
         this.cache.set(stepId, blocks);
@@ -62,7 +66,7 @@ export class TemplateManager {
       // Notificar interessados
       try {
         window.dispatchEvent(new CustomEvent('quiz-template-updated', { detail: { stepId } }));
-      } catch {}
+      } catch { }
       devLog(`💾 Etapa publicada localmente: ${stepId} (${blocks.length} blocos)`);
     } catch (err) {
       devError('Falha ao publicar etapa localmente:', err);
@@ -74,11 +78,11 @@ export class TemplateManager {
    */
   static unpublishStep(stepId: string): void {
     try {
-      localStorage.removeItem(this.PUBLISH_PREFIX + stepId);
+      StorageService.safeRemove(this.PUBLISH_PREFIX + stepId);
       this.cache.delete(stepId);
       try {
         window.dispatchEvent(new CustomEvent('quiz-template-updated', { detail: { stepId } }));
-      } catch {}
+      } catch { }
       devLog(`🗑️ Publicação removida: ${stepId}`);
     } catch (err) {
       devError('Falha ao remover publicação local:', err);
@@ -93,8 +97,8 @@ export class TemplateManager {
       // 0) Preferir blocos publicados localmente (se existirem)
       const published = this.getPublishedBlocks(stepId);
       if (published && published.length > 0) {
-  this.cache.set(stepId, published);
-  devLog(`📦 Etapa ${stepId} carregada da PUBLICAÇÃO local (${published.length} blocos)`);
+        this.cache.set(stepId, published);
+        devLog(`📦 Etapa ${stepId} carregada da PUBLICAÇÃO local (${published.length} blocos)`);
         return published;
       }
 
@@ -166,7 +170,7 @@ export class TemplateManager {
 
       // Se template não carregou após retries, usar fallback robusto
       if (!template || !template.blocks || template.blocks.length === 0) {
-  devWarn(`⚠️ Template falhou após ${maxRetries} tentativas, usando fallback robusto para etapa ${stepNumber}`);
+        devWarn(`⚠️ Template falhou após ${maxRetries} tentativas, usando fallback robusto para etapa ${stepNumber}`);
         const fallbackBlocks = await this.getEnhancedFallbackBlocks(stepId);
 
         // NUNCA cachear array vazio - só cachear se tiver blocos
@@ -183,10 +187,10 @@ export class TemplateManager {
 
       // APENAS cachear se tiver blocos válidos
       if (blocks.length > 0) {
-  this.cache.set(stepId, blocks);
-  devLog(`✅ Template carregado com sucesso: ${blocks.length} blocos (fonte: public JSON)`);
+        this.cache.set(stepId, blocks);
+        devLog(`✅ Template carregado com sucesso: ${blocks.length} blocos (fonte: public JSON)`);
       } else {
-  devWarn(`⚠️ Template convertido resultou em array vazio, não será cacheado`);
+        devWarn(`⚠️ Template convertido resultou em array vazio, não será cacheado`);
       }
 
       return blocks.length > 0 ? blocks : await this.getEnhancedFallbackBlocks(stepId);
@@ -207,7 +211,7 @@ export class TemplateManager {
       const { default: stepTemplateService } = await import('../services/stepTemplateService');
 
       if (stepTemplateService && typeof stepTemplateService.getStepTemplate === 'function') {
-  devLog(`🛡️ Usando stepTemplateService para fallback da etapa ${stepNumber}`);
+        devLog(`🛡️ Usando stepTemplateService para fallback da etapa ${stepNumber}`);
         const fixedTemplate = stepTemplateService.getStepTemplate(stepNumber);
 
         if (fixedTemplate && fixedTemplate.length > 0) {
@@ -219,12 +223,12 @@ export class TemplateManager {
             order: index,
           }));
 
-      devLog(`✅ Fallback robusto aplicado: ${convertedBlocks.length} blocos (fonte: FixedTemplateService)`);
+          devLog(`✅ Fallback robusto aplicado: ${convertedBlocks.length} blocos (fonte: FixedTemplateService)`);
           return convertedBlocks;
         }
       }
     } catch (error) {
-    devWarn(`⚠️ FixedTemplateService não disponível, usando fallback básico:`, error);
+      devWarn(`⚠️ FixedTemplateService não disponível, usando fallback básico:`, error);
     }
 
     // Fallback básico se FixedTemplateService não funcionar
@@ -329,7 +333,7 @@ export class TemplateManager {
       });
     }
 
-  devLog(`🛡️ Fallback básico gerado: ${fallbackBlocks.length} blocos (fonte: básico garantido)`);
+    devLog(`🛡️ Fallback básico gerado: ${fallbackBlocks.length} blocos (fonte: básico garantido)`);
     return fallbackBlocks;
   }
 
@@ -339,7 +343,7 @@ export class TemplateManager {
   static async preloadCommonTemplates(): Promise<void> {
     const steps = Array.from({ length: 21 }, (_, i) => i + 1);
 
-  devLog('🚀 Pre-carregando templates (ignorando arrays vazios)...');
+    devLog('🚀 Pre-carregando templates (ignorando arrays vazios)...');
 
     const promises = steps.map(async stepNumber => {
       const stepId = `step-${stepNumber}`;
@@ -360,7 +364,7 @@ export class TemplateManager {
     await Promise.allSettled(promises);
 
     const loadedCount = this.cache.size;
-  devLog(`✅ Pre-carregamento concluído: ${loadedCount}/21 templates válidos em cache`);
+    devLog(`✅ Pre-carregamento concluído: ${loadedCount}/21 templates válidos em cache`);
   }
 
   /**

@@ -34,8 +34,8 @@ describe('ResultHeaderInlineBlock', () => {
             />
         );
 
-        // Mostra estilo principal (rótulo humano)
-        expect(screen.getByText(/Natural/i)).toBeTruthy();
+    // Mostra estilo principal (rótulo humano) – seleção exata do rótulo
+    expect(screen.getAllByText(/^Natural$/i)[0]).toBeTruthy();
         // Mostra nome ao lado como saudação compacta
         expect(screen.getByText(/Alice/)).toBeTruthy();
         // Mostra percentual formatado
