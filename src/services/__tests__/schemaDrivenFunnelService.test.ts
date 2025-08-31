@@ -4,7 +4,8 @@ import schemaDrivenFunnelService from '../schemaDrivenFunnelService';
 // Mock do supabase client usado pelo serviço
 vi.mock('@/integrations/supabase/client', () => {
     const rows: any[] = [];
-    const singleOk = { data: { id: '11111111-1111-1111-1111-111111111111', funnel_id: '22222222-2222-2222-2222-222222222222', page_type: 'question', page_order: 0, title: 'Nova Página', blocks: [], created_at: new Date().toISOString(), updated_at: new Date().toISOString(), user_id: '00000000-0000-0000-0000-000000000001' }, error: null };
+    // UUID v4 válido (versão 4 e variante 8)
+    const singleOk = { data: { id: '11111111-1111-4111-8111-111111111111', funnel_id: '22222222-2222-2222-2222-222222222222', page_type: 'question', page_order: 0, title: 'Nova Página', blocks: [], created_at: new Date().toISOString(), updated_at: new Date().toISOString(), user_id: '00000000-0000-0000-0000-000000000001' }, error: null };
     return {
         supabase: {
             auth: { getUser: vi.fn().mockResolvedValue({ data: { user: { id: '00000000-0000-0000-0000-000000000001' } } }) },
@@ -28,7 +29,8 @@ vi.mock('@/integrations/supabase/client', () => {
 
 describe('schemaDrivenFunnelService', () => {
     beforeEach(() => {
-        vi.restoreAllMocks();
+        // Apenas limpar chamadas, não restaurar mocks de módulo
+        vi.clearAllMocks();
     });
 
     it('createPage normaliza page_type inválido para QUESTION e garante UUID em id', async () => {

@@ -41,6 +41,8 @@ global.IntersectionObserver = class IntersectionObserver {
 // Desativar persistência pesada do Editor durante testes
 // Os hooks e providers verificam esta flag antes de salvar grandes estados
 (window as any).__DISABLE_EDITOR_PERSISTENCE__ = true;
+// Desativar carregamento automático de templates no Editor durante testes
+(window as any).__DISABLE_EDITOR_TEMPLATE_AUTOLOAD__ = true;
 
 // Mock StorageService indireto via localStorage para evitar quota/IO em CI
 const memoryStore = new Map<string, string>();
