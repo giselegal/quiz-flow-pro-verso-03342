@@ -45,9 +45,9 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
     imagePosition = 'top',
     gap = 16,
     cardRadius = 12,
-    selectionStyle = 'border',
-    selectedColor = '#B89B7A',
-    hoverColor = '#D4C2A8',
+  selectionStyle = 'border',
+  selectedColor = '#B89B7A',
+  hoverColor = '#D4C2A8',
   } = block.properties || {};
 
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
@@ -151,7 +151,7 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
       className={cn(
         'options-grid-inline-block w-full',
         className,
-        isSelected && 'ring-2 ring-[#B89B7A] ring-opacity-50'
+        isSelected && 'ring-2 ring-blue-500 ring-opacity-50'
       )}
       onClick={onClick}
     >
@@ -180,9 +180,9 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
               case 'shadow':
                 return isSelectedOption
                   ? {
-                    boxShadow: `0 0 0 2px ${selectedColor}55, 0 8px 20px ${selectedColor}33`,
-                    borderColor: selectedColor,
-                  }
+                      boxShadow: `0 0 0 2px ${selectedColor}55, 0 8px 20px ${selectedColor}33`,
+                      borderColor: selectedColor,
+                    }
                   : {};
               default:
                 return isSelectedOption ? { borderColor: selectedColor } : {};
@@ -226,11 +226,11 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
                     'option-image',
                     layoutOrientation === 'vertical' && imagePosition === 'top' && 'mb-3',
                     layoutOrientation === 'vertical' &&
-                    imagePosition === 'bottom' &&
-                    'order-2 mt-3',
+                      imagePosition === 'bottom' &&
+                      'order-2 mt-3',
                     layoutOrientation === 'horizontal' &&
-                    (imagePosition === 'left' || imagePosition === 'right') &&
-                    'flex-shrink-0'
+                      (imagePosition === 'left' || imagePosition === 'right') &&
+                      'flex-shrink-0'
                   )}
                 >
                   <img

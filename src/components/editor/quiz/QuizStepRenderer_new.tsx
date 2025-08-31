@@ -127,7 +127,7 @@ const SortableBlock: React.FC<SortableBlockProps> = ({
           <Button
             size="sm"
             variant="outline"
-            className="h-6 w-6 p-0 bg-white"
+            className="h-6 w-6 p-0 bg-white cursor-grab"
             {...attributes}
             {...listeners}
           >

@@ -76,7 +76,7 @@ const PersonalizedHookInlineBlock: React.FC<BlockComponentProps> = ({
       'text-center': textAlign === 'center',
       'text-right': textAlign === 'right',
     },
-    isSelected && 'ring-2 ring-[#B89B7A] ring-opacity-50 rounded-lg',
+    isSelected && 'ring-2 ring-blue-500 ring-opacity-50 rounded-lg',
     'rounded-lg border border-opacity-20',
     className
   );

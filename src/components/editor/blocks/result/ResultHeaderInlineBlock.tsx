@@ -60,7 +60,7 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
       'mb-6': marginBottom <= 24,
       'mb-8': marginBottom <= 32,
     },
-    isSelected && 'ring-2 ring-[#B89B7A] ring-opacity-50',
+    isSelected && 'ring-2 ring-blue-500 ring-opacity-50',
     className
   );
 

@@ -298,7 +298,7 @@ export const EditorStageManager: React.FC<EditorStageManagerProps> = ({
         key={step.id}
         className={cn(
           'cursor-pointer transition-all duration-200 hover:shadow-md',
-          isActive && 'ring-2 ring-[#B89B7A] bg-[#B89B7A]/10',
+          isActive && 'ring-2 ring-blue-500 bg-blue-50',
           !isClickable && 'opacity-50 cursor-not-allowed',
           step.isCompleted && 'border-green-200 bg-green-50'
         )}
@@ -311,7 +311,7 @@ export const EditorStageManager: React.FC<EditorStageManagerProps> = ({
               {step.isCompleted ? (
                 <CheckCircle className="h-5 w-5 text-green-600" />
               ) : isActive ? (
-                <StepIcon className="h-5 w-5 text-[#8B7355]" />
+                <StepIcon className="h-5 w-5 text-blue-600" />
               ) : (
                 <StepIcon className="h-5 w-5 text-gray-400" />
               )}
@@ -323,7 +323,7 @@ export const EditorStageManager: React.FC<EditorStageManagerProps> = ({
                 <h4
                   className={cn(
                     'text-sm font-medium truncate',
-                    isActive ? 'text-[#432818]' : 'text-gray-900'
+                    isActive ? 'text-blue-900' : 'text-gray-900'
                   )}
                 >
                   {step.stepNumber}. {step.title}
@@ -337,11 +337,11 @@ export const EditorStageManager: React.FC<EditorStageManagerProps> = ({
             {isActive && (
               <div className="flex-shrink-0">
                 {mode === 'edit' ? (
-                  <Edit className="h-4 w-4 text-[#8B7355]" />
+                  <Edit className="h-4 w-4 text-blue-600" />
                 ) : mode === 'preview' ? (
-                  <Eye className="h-4 w-4 text-[#8B7355]" />
+                  <Eye className="h-4 w-4 text-blue-600" />
                 ) : (
-                  <Play className="h-4 w-4 text-[#8B7355]" />
+                  <Play className="h-4 w-4 text-blue-600" />
                 )}
               </div>
             )}

@@ -165,7 +165,7 @@ const ButtonInlineFixed: React.FC<ButtonInlineFixedProps> = ({
     <div
       className={`
         transition-all duration-200 
-  ${isSelected ? 'ring-2 ring-[#B89B7A] ring-offset-1 rounded-lg p-1' : ''}
+        ${isSelected ? 'ring-2 ring-blue-500 ring-offset-1 rounded-lg p-1' : ''}
         ${fullWidth ? 'w-full' : 'w-auto'}
       `}
       onClick={onClick}
@@ -181,9 +181,10 @@ const ButtonInlineFixed: React.FC<ButtonInlineFixedProps> = ({
         className={`
           transition-all duration-200 font-semibold
           ${fullWidth ? 'w-full' : ''}
-          ${isButtonEnabled
-            ? 'hover:shadow-lg transform hover:scale-[1.02] active:scale-[0.98]'
-            : 'cursor-not-allowed'
+          ${
+            isButtonEnabled
+              ? 'hover:shadow-lg transform hover:scale-[1.02] active:scale-[0.98]'
+              : 'cursor-not-allowed'
           }
         `}
       >

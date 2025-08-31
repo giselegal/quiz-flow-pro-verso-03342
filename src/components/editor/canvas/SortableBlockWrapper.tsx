@@ -192,7 +192,7 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
           containerClasses,
           // 🎯 Destaque visual quando selecionado
           isSelected &&
-          'ring-2 ring-[#B89B7A] ring-offset-1 border-[#B89B7A]/60 bg-[#B89B7A]/10 shadow-lg',
+          'ring-2 ring-blue-500 ring-offset-1 border-blue-300 bg-blue-50/30 shadow-lg',
           !isSelected && 'border-stone-200 hover:border-stone-300',
           // Margens universais com controles deslizantes
           getMarginClass(marginTop, 'top'),
@@ -213,7 +213,7 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
             <Button
               variant="secondary"
               size="sm"
-              className="h-6 w-6 p-0 touch-none"
+              className="h-6 w-6 p-0 cursor-grab active:cursor-grabbing touch-none"
               style={{ touchAction: 'none' }} // Importante para dispositivos touch
               {...attributes}
               {...listeners}

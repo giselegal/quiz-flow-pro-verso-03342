@@ -1,11 +1,8 @@
 import { Badge } from '@/components/ui/badge';
-import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { useNavigationSafe } from '@/hooks/useNavigationSafe';
-import { DraftPersistence } from '@/services/editor/DraftPersistence';
-import { funnelLocalStore } from '@/services/funnelLocalStore';
 import {
   Activity,
   ArrowUpRight,
@@ -39,87 +36,7 @@ import {
 } from '@/components/dashboard/TemplateIcons';
 
 const OverviewPage: React.FC = () => {
-  const { navigateTo, navigateToEditor, navigateToStep21 } = useNavigationSafe();
-
-  // Estado para "Continuar de onde parei"
-  const [resumeInfo, setResumeInfo] = React.useState<
-    | { path: string; step: number; editedAgo: string }
-    | null
-  >(null);
-
-  React.useEffect(() => {
-    try {
-      // Coletar possíveis chaves (draftKey): ids dos funis locais + envs + fallback
-      const funnels = funnelLocalStore.list();
-      const funnelIds = new Set<string>(funnels.map(f => f.id));
-      const envQuizId = (import.meta as any)?.env?.VITE_SUPABASE_QUIZ_ID as string | undefined;
-      const envFunnelId = (import.meta as any)?.env?.VITE_SUPABASE_FUNNEL_ID as string | undefined;
-
-      const candidates = new Set<string>();
-      funnelIds.forEach(id => candidates.add(id));
-      if (envQuizId) candidates.add(envQuizId);
-      if (envFunnelId) candidates.add(envFunnelId);
-      candidates.add('local-funnel');
-
-      let bestKey: string | null = null;
-      let bestStepKey: string | null = null;
-      let bestTs = 0;
-
-      candidates.forEach(key => {
-        const idx = DraftPersistence.getIndex(key);
-        Object.values(idx).forEach(entry => {
-          if (entry.lastEditedAt > bestTs) {
-            bestKey = key;
-            bestStepKey = entry.stepKey;
-            bestTs = entry.lastEditedAt;
-          }
-        });
-      });
-
-      if (!bestKey || !bestStepKey) {
-        setResumeInfo(null);
-        return;
-      }
-
-      const stepNum = (() => {
-        const stepKeyStr = String(bestStepKey || '');
-        const m = stepKeyStr.match(/step-(\d+)/);
-        const n = m ? parseInt(m[1], 10) : NaN;
-        return Number.isFinite(n) ? Math.max(1, Math.min(21, n)) : 1;
-      })();
-
-      // Decidir rota de navegação de acordo com a chave onde foi salvo o rascunho
-      let path: string;
-      if (envQuizId && bestKey === envQuizId) {
-        // Rascunho global por quizId de env → abrir editor simples com step
-        path = `/editor?step=${stepNum}`;
-      } else if (funnelIds.has(bestKey) || (envFunnelId && bestKey === envFunnelId)) {
-        // Rascunho por funil → abrir com funnel + step
-        path = `/editor?funnel=${encodeURIComponent(bestKey)}&step=${stepNum}`;
-      } else if (bestKey === 'local-funnel') {
-        path = `/editor?step=${stepNum}`;
-      } else {
-        // Fallback seguro
-        path = `/editor?step=${stepNum}`;
-      }
-
-      const editedAgo = (() => {
-        const diff = Date.now() - bestTs;
-        const mins = Math.floor(diff / 60000);
-        if (mins < 1) return 'agora';
-        if (mins < 60) return `${mins} min atrás`;
-        const hrs = Math.floor(mins / 60);
-        if (hrs < 24) return `${hrs} h atrás`;
-        const days = Math.floor(hrs / 24);
-        return `${days} d atrás`;
-      })();
-
-      setResumeInfo({ path, step: stepNum, editedAgo });
-    } catch (e) {
-      console.warn('Falha ao computar último rascunho:', e);
-      setResumeInfo(null);
-    }
-  }, []);
+  const { navigateToEditor, navigateToStep21 } = useNavigationSafe();
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#FAF9F7] via-[#FEFEFE] to-[#F5F2E9] p-6 space-y-8">
       {/* Header Moderno */}
@@ -182,33 +99,6 @@ const OverviewPage: React.FC = () => {
         </div>
       </div>
       {/* Quick Actions */}
-      {resumeInfo && (
-        <Card
-          className="group hover:shadow-lg transition-all duration-300 border-0 shadow-md bg-gradient-to-br from-white to-[#FAF9F7] cursor-pointer"
-          onClick={() => navigateTo(resumeInfo.path)}
-        >
-          <CardContent className="p-5 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-r from-[#B89B7A] to-[#432818] rounded-lg flex items-center justify-center">
-                <Clock className="h-5 w-5 text-white" />
-              </div>
-              <div>
-                <p className="text-sm font-medium text-[#432818]">Continuar de onde parei</p>
-                <p className="text-xs text-[#6B4F43] mt-0.5">Etapa {resumeInfo.step} • {resumeInfo.editedAgo}</p>
-              </div>
-            </div>
-            <Button
-              size="sm"
-              variant="outline"
-              className="border-[#B89B7A]/40 text-[#432818] hover:bg-[#B89B7A]/10"
-              onClick={(e) => { e.stopPropagation(); navigateTo(resumeInfo.path); }}
-            >
-              Retomar
-              <ChevronRight className="h-4 w-4 ml-1" />
-            </Button>
-          </CardContent>
-        </Card>
-      )}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
         <Card
           className="group hover:shadow-lg transition-all duration-300 border-0 shadow-md bg-gradient-to-br from-white to-[#FAF9F7] cursor-pointer"

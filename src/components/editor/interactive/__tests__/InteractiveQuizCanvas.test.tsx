@@ -65,7 +65,7 @@ describe('InteractiveQuizCanvas', () => {
       fireEvent.click(opcaoAzul);
 
       await waitFor(() => {
-        expect(opcaoAzul.closest('button')).toHaveClass('ring-2', 'ring-[#B89B7A]');
+        expect(opcaoAzul.closest('button')).toHaveClass('ring-2', 'ring-blue-500');
       });
     });
 

@@ -22,7 +22,7 @@ const TextComponent: React.FC<TextComponentProps> = ({
 }) => {
   return (
     <div
-      className={cn('p-4', isSelected && 'outline-dashed outline-1 outline-[#B89B7A]')}
+      className={cn('p-4', isSelected && 'outline-dashed outline-1 outline-blue-400')}
       style={{
         backgroundColor: style?.backgroundColor || 'transparent',
         color: style?.textColor || 'inherit',

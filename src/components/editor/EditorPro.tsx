@@ -4,7 +4,6 @@ import { DragEndEvent, DragStartEvent } from '@dnd-kit/core';
 import { useNotification } from '@/components/ui/Notification';
 import { Block } from '@/types/editor';
 import { extractDragData, getDragFeedback, logDragEvent, validateDrop } from '@/utils/dragDropUtils';
-import { parseUniqueId } from '@/utils/generateUniqueId';
 import { createBlockFromComponent, devLog } from '@/utils/editorUtils';
 import { getBlocksForStep } from '@/config/quizStepsComplete';
 // import { cn } from '@/lib/utils';
@@ -592,64 +591,24 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
 
       try {
         switch (validation.action) {
-          case 'add': {
+          case 'add':
             if (dragData.type === 'sidebar-component' && dragData.blockType) {
               const newBlock = createBlockFromComponent(dragData.blockType as any, currentStepData);
-
-              // Calcular índice alvo com base na zona/over
-              const overData: any = over.data?.current ?? {};
-              let insertIndex = currentStepData.length; // padrão: fim da lista
-              if (overData?.type === 'dropzone' && typeof overData.position === 'number') {
-                insertIndex = Math.max(0, Math.min(overData.position, currentStepData.length));
-              } else if (typeof over.id === 'string') {
-                const parsed = parseUniqueId(String(over.id));
-                const overBlockId = parsed?.blockId || String(over.id).replace(/^dnd-block-[^-]+-/, '');
-                const overIdx = currentStepData.findIndex(b => String(b.id) === String(overBlockId));
-                if (overIdx >= 0) insertIndex = overIdx; // inserir antes do bloco alvo
-              }
-
-              actions
-                .addBlockAtIndex(currentStepKey, newBlock, insertIndex)
-                .then(() => {
-                  actions.setSelectedBlockId(newBlock.id);
-                  notification?.success?.(`Componente ${dragData.blockType} adicionado!`);
-                })
-                .catch(() => {
-                  notification?.error?.('Falha ao adicionar componente');
-                });
+              actions.addBlock(currentStepKey, newBlock);
+              actions.setSelectedBlockId(newBlock.id);
+              notification?.success?.(`Componente ${dragData.blockType} adicionado!`);
             }
             break;
-          }
-          case 'reorder': {
-            if (dragData.type === 'canvas-block') {
-              // Índice de origem via blockId do active.data
-              const fromIndex = currentStepData.findIndex(b => String(b.id) === String(dragData.blockId));
-              if (fromIndex < 0) break;
-
-              // Índice destino via over dropzone/over block
-              const overData: any = over.data?.current ?? {};
-              let toIndex = fromIndex;
-              if (overData?.type === 'dropzone' && typeof overData.position === 'number') {
-                // Slot representa posição entre blocos [0..length]
-                const pos = overData.position;
-                // Mapear para índice válido do arrayMove (0..len-1)
-                toIndex = Math.max(0, Math.min(pos, currentStepData.length - 1));
-              } else if (typeof over.id === 'string') {
-                const parsed = parseUniqueId(String(over.id));
-                const overBlockId = parsed?.blockId || String(over.id).replace(/^dnd-block-[^-]+-/, '');
-                const overIdx = currentStepData.findIndex(b => String(b.id) === String(overBlockId));
-                if (overIdx >= 0) toIndex = overIdx;
-              }
-
-              if (fromIndex !== toIndex) {
-                actions
-                  .reorderBlocks(currentStepKey, fromIndex, toIndex)
-                  .then(() => notification?.info?.('Blocos reordenados'))
-                  .catch(() => notification?.error?.('Falha ao reordenar blocos'));
+          case 'reorder':
+            if (dragData.type === 'canvas-block' && typeof over.id === 'string') {
+              const activeIndex = currentStepData.findIndex(block => block.id === active.id);
+              const overIndex = currentStepData.findIndex(block => block.id === over.id);
+              if (activeIndex !== -1 && overIndex !== -1 && activeIndex !== overIndex) {
+                actions.reorderBlocks(currentStepKey, activeIndex, overIndex);
+                notification?.info?.('Blocos reordenados');
               }
             }
             break;
-          }
           default:
             if (process.env.NODE_ENV === 'development')
               devLog('Ação de drop não implementada:', validation.action);

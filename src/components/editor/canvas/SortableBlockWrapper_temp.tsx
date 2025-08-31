@@ -152,7 +152,7 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
           <Button
             variant="secondary"
             size="sm"
-            className="h-6 w-6 p-0 touch-none"
+            className="h-6 w-6 p-0 cursor-grab active:cursor-grabbing touch-none"
             style={{ touchAction: 'none' }} // Importante para dispositivos touch
             {...attributes}
             {...listeners}

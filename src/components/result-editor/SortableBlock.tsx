@@ -81,7 +81,7 @@ export const SortableBlock: React.FC<SortableBlockProps> = ({
       onClick={onSelect}
     >
       <div
-        className="absolute left-0 top-0 bottom-0 px-1 flex items-center"
+        className="absolute left-0 top-0 bottom-0 px-1 flex items-center cursor-grab"
         {...attributes}
         {...listeners}
       >

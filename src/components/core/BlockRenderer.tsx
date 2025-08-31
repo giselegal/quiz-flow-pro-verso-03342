@@ -40,7 +40,7 @@ export const BlockRenderer: React.FC<BlockRendererProps> = ({
     padding: block.properties?.padding || 16,
     marginBottom: block.properties?.marginBottom || 16,
     backgroundColor: block.properties?.backgroundColor || 'transparent',
-    border: isSelected && mode === 'editor' ? '2px solid #B89B7A' : 'none',
+    border: isSelected && mode === 'editor' ? '2px solid #3B82F6' : 'none',
   };
 
   // Renderizar diferentes tipos de bloco

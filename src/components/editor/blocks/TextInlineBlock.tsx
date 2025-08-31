@@ -384,7 +384,7 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
         'cursor-pointer',
 
         // Estados de edição
-        isEditing && 'ring-2 ring-[#B89B7A] ring-offset-2',
+        isEditing && 'ring-2 ring-blue-500 ring-offset-2',
 
         // SPACING - ES7+ Computed property com fallback
         spacingClasses[spacing as keyof typeof spacingClasses] ?? spacingClasses.normal,

@@ -38,7 +38,7 @@ const LeadFormBlock: React.FC<LeadFormBlockProps> = ({ block, isSelected, onClic
 
   return (
     <Card
-      className={`max-w-md mx-auto ${isSelected ? 'ring-2 ring-[#B89B7A]' : ''}`}
+      className={`max-w-md mx-auto ${isSelected ? 'ring-2 ring-blue-500' : ''}`}
       onClick={onClick}
     >
       <CardContent className="p-6">

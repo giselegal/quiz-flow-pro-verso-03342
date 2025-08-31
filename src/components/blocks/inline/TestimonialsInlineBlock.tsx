@@ -24,7 +24,7 @@ const TestimonialsInlineBlock: React.FC<BlockComponentProps> = ({
     <div
       className={cn(
         'w-full p-4 rounded-lg transition-all duration-200',
-        isSelected && 'ring-2 ring-[#B89B7A]',
+        isSelected && 'ring-2 ring-blue-500',
         'cursor-pointer',
         className
       )}

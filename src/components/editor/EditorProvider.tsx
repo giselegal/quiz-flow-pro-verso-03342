@@ -488,7 +488,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
         // Persist draft for this step
         {
           const draftKey = quizId || funnelId || 'local-funnel';
-          try { DraftPersistence.saveStepDraft(draftKey, stepKey, nextState.stepBlocks[stepKey]); } catch { }
+          try { DraftPersistence.saveStepDraft(draftKey, stepKey, nextState.stepBlocks[stepKey]); } catch {}
         }
         return nextState;
       });
@@ -575,7 +575,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
         // Persist draft
         {
           const draftKey = quizId || funnelId || 'local-funnel';
-          try { DraftPersistence.saveStepDraft(draftKey, stepKey, nextBlocks); } catch { }
+          try { DraftPersistence.saveStepDraft(draftKey, stepKey, nextBlocks); } catch {}
         }
         return optimisticState!;
       });
@@ -653,7 +653,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       // Persist draft
       {
         const draftKey = quizId || funnelId || 'local-funnel';
-        try { DraftPersistence.saveStepDraft(draftKey, stepKey, nextBlocks); } catch { }
+        try { DraftPersistence.saveStepDraft(draftKey, stepKey, nextBlocks); } catch {}
       }
 
       // If supabase mode, delegate deletion
@@ -676,7 +676,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
         // Persist draft
         {
           const draftKey = quizId || funnelId || 'local-funnel';
-          try { DraftPersistence.saveStepDraft(draftKey, stepKey, reordered); } catch { }
+          try { DraftPersistence.saveStepDraft(draftKey, stepKey, reordered); } catch {}
         }
         return {
           ...prev,
@@ -732,7 +732,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       // Persist draft
       {
         const draftKey = quizId || funnelId || 'local-funnel';
-        try { DraftPersistence.saveStepDraft(draftKey, stepKey, nextBlocks); } catch { }
+        try { DraftPersistence.saveStepDraft(draftKey, stepKey, nextBlocks); } catch {}
       }
 
       if (state.isSupabaseEnabled && supabaseIntegration?.updateBlockById) {

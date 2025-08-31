@@ -33,40 +33,40 @@ export const InteractiveQuizCanvas: React.FC<InteractiveQuizCanvasProps> = memo(
     // theme será usado quando os componentes estilizados forem implementados
     console.log('Quiz theme:', theme);
 
-    // Hook seguro para o Editor Context (pode não existir)
-    const editorContext = useContext(EditorContext);
-    const currentBlocks: any[] = editorContext?.computed?.currentBlocks || [];
-    const activeStageId: string = editorContext?.activeStageId || 'step-1';
-    const isPreviewing: boolean = editorContext?.isPreviewing ?? true;
-    const funnelId: string | undefined = (editorContext as any)?.funnelId;
+  // Hook seguro para o Editor Context (pode não existir)
+  const editorContext = useContext(EditorContext);
+  const currentBlocks: any[] = editorContext?.computed?.currentBlocks || [];
+  const activeStageId: string = editorContext?.activeStageId || 'step-1';
+  const isPreviewing: boolean = editorContext?.isPreviewing ?? true;
+  const funnelId: string | undefined = (editorContext as any)?.funnelId;
 
     // Estado local do quiz interativo
-    const [quizAnswers, setQuizAnswers] = useState<QuizAnswer[]>([]);
-    const [currentValidation, setCurrentValidation] = useState<ValidationResult | null>(null);
-    const [scores] = useState<Record<string, number>>({});
-    const [testCurrentStep, setTestCurrentStep] = useState<number>(1);
-    const [loading, setLoading] = useState<boolean>(false);
-    const [selectedOption, setSelectedOption] = useState<string | null>(null);
-    const [nameInput, setNameInput] = useState<string>('');
-    const testTotalSteps = 2;
+  const [quizAnswers, setQuizAnswers] = useState<QuizAnswer[]>([]);
+  const [currentValidation, setCurrentValidation] = useState<ValidationResult | null>(null);
+  const [scores] = useState<Record<string, number>>({});
+  const [testCurrentStep, setTestCurrentStep] = useState<number>(1);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [nameInput, setNameInput] = useState<string>('');
+  const testTotalSteps = 2;
 
-    const isTestEnv = useMemo(() => process.env.NODE_ENV === 'test', []);
+  const isTestEnv = useMemo(() => process.env.NODE_ENV === 'test', []);
 
-    // Restaurar estado salvo esperado pelos testes (quiz-state)
-    useEffect(() => {
-      if (!isTestEnv) return;
-      try {
-        const saved = localStorage.getItem('quiz-state');
-        if (saved) {
-          const parsed = JSON.parse(saved);
-          if (Number(parsed?.currentStep)) setTestCurrentStep(Number(parsed.currentStep));
-          const ans = parsed?.answers?.['block-1'];
-          if (ans?.value) setSelectedOption(String(ans.value));
-        }
-      } catch {
-        // ignore
+  // Restaurar estado salvo esperado pelos testes (quiz-state)
+  useEffect(() => {
+    if (!isTestEnv) return;
+    try {
+      const saved = localStorage.getItem('quiz-state');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Number(parsed?.currentStep)) setTestCurrentStep(Number(parsed.currentStep));
+        const ans = parsed?.answers?.['block-1'];
+        if (ans?.value) setSelectedOption(String(ans.value));
       }
-    }, [isTestEnv]);
+    } catch {
+      // ignore
+    }
+  }, [isTestEnv]);
 
     // Carregar respostas do localStorage
     useEffect(() => {
@@ -151,8 +151,8 @@ export const InteractiveQuizCanvas: React.FC<InteractiveQuizCanvasProps> = memo(
       console.log('⬅️ Going back to step:', prevStep);
     }, [activeStageId, isTestEnv]);
 
-    // Se não está em modo preview, retornar canvas normal (exceto em testes)
-    if (!isPreviewing && process.env.NODE_ENV !== 'test') {
+  // Se não está em modo preview, retornar canvas normal (exceto em testes)
+  if (!isPreviewing && process.env.NODE_ENV !== 'test') {
       return null;
     }
 
@@ -201,10 +201,11 @@ export const InteractiveQuizCanvas: React.FC<InteractiveQuizCanvasProps> = memo(
                                   stepId: '1',
                                 };
                                 localStorage.setItem('quiz-state', JSON.stringify(base));
-                              } catch { }
+                              } catch {}
                             }}
-                            className={`px-3 py-2 border rounded ${selectedOption === opt.value ? 'ring-2 ring-[#B89B7A]' : ''
-                              }`}
+                            className={`px-3 py-2 border rounded ${
+                              selectedOption === opt.value ? 'ring-2 ring-blue-500' : ''
+                            }`}
                             type="button"
                           >
                             {opt.label}
@@ -230,7 +231,7 @@ export const InteractiveQuizCanvas: React.FC<InteractiveQuizCanvasProps> = memo(
                       <p>Descrição adicional</p>
                     </div>
                   )}
-                  {/* Mensagens de validação no conteúdo foram removidas em modo de teste
+          {/* Mensagens de validação no conteúdo foram removidas em modo de teste
             para evitar duplicidade com o painel de navegação */}
                   {loading && <div className="mt-3">Processando...</div>}
                 </>

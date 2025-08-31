@@ -30,7 +30,7 @@ const ResultStyleCardBlock: React.FC<BlockComponentProps> = ({
       className={cn(
         'result-style-card w-full',
         className,
-        isSelected && 'ring-2 ring-[#B89B7A] ring-opacity-50'
+        isSelected && 'ring-2 ring-blue-500 ring-opacity-50'
       )}
       onClick={onClick}
     >

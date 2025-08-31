@@ -48,7 +48,7 @@ const BonusShowcaseBlock: React.FC<BlockComponentProps> = ({
         'rounded-lg border shadow-sm transition-all',
         spacingClasses[spacing] || spacingClasses.medium,
         alignmentClasses[alignment] || alignmentClasses.center,
-        isSelected && 'ring-2 ring-[#B89B7A] ring-opacity-50',
+        isSelected && 'ring-2 ring-blue-500 ring-opacity-50',
         className
       )}
       style={{

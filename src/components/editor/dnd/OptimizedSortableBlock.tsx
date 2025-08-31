@@ -83,7 +83,7 @@ export const OptimizedSortableBlock: React.FC<OptimizedSortableBlockProps> = ({
         {/* Informações do bloco */}
         <div className="flex items-center gap-2">
           <div
-            className="flex items-center gap-1"
+            className="flex items-center gap-1 cursor-grab active:cursor-grabbing"
             {...attributes}
             {...listeners}
           >

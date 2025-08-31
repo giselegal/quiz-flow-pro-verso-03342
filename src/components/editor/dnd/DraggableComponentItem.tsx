@@ -137,26 +137,28 @@ export const DraggableComponentItem: React.FC<DraggableComponentItemProps> = ({
   // ✅ CORRIGIDO: CSS Transform + pointer-events garantidos
   const style = transform
     ? {
-      transform: CSS.Transform.toString({ ...transform, scaleX: 1, scaleY: 1 }), // evita crescimento
-      zIndex: isDragging ? 999 : 'auto',
-      pointerEvents: 'auto' as const,
-    }
+        transform: CSS.Transform.toString({ ...transform, scaleX: 1, scaleY: 1 }), // evita crescimento
+        zIndex: isDragging ? 999 : 'auto',
+        pointerEvents: 'auto' as const,
+      }
     : {
-      pointerEvents: 'auto' as const,
-    };
+        pointerEvents: 'auto' as const,
+      };
 
   return (
     <div
       ref={setNodeRef}
       className={cn(
         'ToolbarButton w-full h-auto p-3 flex flex-col items-start gap-2 text-left border border-stone-200 rounded-lg bg-white',
+        // Cursor indicando draggable (sem animações)
+        'cursor-grab',
         // Feedback de drag
-        isDragging && 'opacity-70 bg-blue-50 border-blue-400',
+        isDragging && 'opacity-70 cursor-grabbing bg-blue-50 border-blue-400',
         // Interatividade básica
         'pointer-events-auto touch-manipulation select-none',
         // Marcador
         'dnd-draggable-item',
-        disabled && 'opacity-30 bg-gray-100',
+        disabled && 'opacity-30 cursor-not-allowed bg-gray-100',
         className
       )}
       style={style}
@@ -171,7 +173,7 @@ export const DraggableComponentItem: React.FC<DraggableComponentItemProps> = ({
             detail: { blockType, source: 'sidebar-double-click' },
           });
           window.dispatchEvent(ev);
-        } catch { }
+        } catch {}
       }}
       {...attributes}
       {...listeners}

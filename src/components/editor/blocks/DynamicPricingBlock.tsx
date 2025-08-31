@@ -69,7 +69,7 @@ const DynamicPricingBlock: React.FC<BlockComponentProps> = ({
     <div
       className={`
         p-6 bg-white rounded-lg border cursor-pointer transition-all duration-200
-  ${isSelected ? 'border-[#B89B7A] ring-2 ring-[#B89B7A]/40' : 'border-gray-200 hover:border-gray-300'}
+        ${isSelected ? 'border-[#B89B7A] ring-2 ring-blue-200' : 'border-gray-200 hover:border-gray-300'}
         ${className}
       `}
       onClick={onClick}

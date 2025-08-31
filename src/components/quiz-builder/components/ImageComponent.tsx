@@ -27,7 +27,7 @@ const ImageComponent: React.FC<ImageComponentProps> = ({ data, style, isSelected
 
   return (
     <div
-      className={cn('p-4 text-center', isSelected && 'outline-dashed outline-1 outline-[#B89B7A]')}
+      className={cn('p-4 text-center', isSelected && 'outline-dashed outline-1 outline-blue-400')}
       style={{
         backgroundColor: style?.backgroundColor || 'transparent',
         color: style?.textColor || 'inherit',
