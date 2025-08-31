@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 import { describe, it, expect, beforeEach } from 'vitest';
 import { useQuizLogic } from '@/hooks/useQuizLogic';
 import { renderHook, act } from '@testing-library/react';
