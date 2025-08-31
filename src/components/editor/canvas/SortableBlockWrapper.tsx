@@ -192,7 +192,7 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
           containerClasses,
           // 🎯 Destaque visual quando selecionado
           isSelected &&
-          'ring-2 ring-blue-500 ring-offset-1 border-blue-300 bg-blue-50/30 shadow-lg',
+          'ring-2 ring-[#B89B7A] ring-offset-1 border-[#B89B7A]/50 bg-[#B89B7A]/10 shadow-lg',
           !isSelected && 'border-stone-200 hover:border-stone-300',
           // Margens universais com controles deslizantes
           getMarginClass(marginTop, 'top'),
@@ -204,7 +204,7 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
           ...contentStyles, // 🎯 Aplicar estilos inline (scale) apenas no Card, não nas margens
           backgroundColor:
             containerBackgroundColor === 'transparent' ? 'transparent' : containerBackgroundColor,
-          borderColor: isSelected ? '#3b82f6' : '#E5DDD5',
+          borderColor: isSelected ? '#B89B7A' : '#E5DDD5',
         }}
       >
         {/* Drag handle and controls - only show on hover and NOT in preview mode */}

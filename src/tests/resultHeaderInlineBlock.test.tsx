@@ -34,11 +34,15 @@ describe('ResultHeaderInlineBlock', () => {
       />
     );
 
-    // Mostra estilo principal (rótulo humano)
-    expect(screen.getByText(/Natural/i)).toBeTruthy();
+  // Mostra estilo principal (rótulo humano) - termo exato
+  expect(screen.getByText('Natural')).toBeTruthy();
     // Mostra nome ao lado como saudação compacta
     expect(screen.getByText(/Alice/)).toBeTruthy();
-    // Mostra percentual formatado
-    expect(screen.getByText('70%')).toBeTruthy();
+  // Valida percentual via progressbar (70% -> translateX(-30%))
+  const progressBars = screen.getAllByRole('progressbar');
+  expect(progressBars.length).toBeGreaterThan(0);
+  const fill = progressBars[0].querySelector('div');
+  expect(fill).toBeTruthy();
+  expect(fill!.getAttribute('style') || '').toContain('translateX(-30%');
   });
 });
