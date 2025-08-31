@@ -231,8 +231,8 @@ const Home = () => {
           </div>
         </TechBackground>
 
-        {/* Métricas */}
-        <section className="py-16 bg-gradient-to-r from-white via-gray-50 to-white">
+  {/* Métricas */}
+  <section className="py-16 bg-gradient-to-r from-white via-gray-50 to-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="text-center group hover:scale-105 transition-transform duration-300">
@@ -258,10 +258,10 @@ const Home = () => {
               </div>
             </div>
           </div>
-        </TechBackground>
+  </section>
 
-        {/* Features */}
-        <TechBackground variant="section" className="py-20 lg:py-32">
+  {/* Features */}
+  <TechBackground variant="section" className="py-20 lg:py-32">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <h3 className="text-3xl lg:text-4xl font-bold text-white mb-4 drop-shadow-lg">
@@ -316,7 +316,7 @@ const Home = () => {
               </article>
             </div>
           </div>
-        </section>
+  </TechBackground>
 
         {/* CTA Final */}
         <TechBackground variant="cta" className="py-20 lg:py-32">
