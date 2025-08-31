@@ -1,5 +1,5 @@
 import { ValidationResult } from '@/types/validation';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { QuizNavigation } from '../QuizNavigation';
 
@@ -9,6 +9,15 @@ const mockValidation: ValidationResult = {
 };
 
 describe('QuizNavigation', () => {
+  const getNextButton = (base: HTMLElement) => {
+    const list = within(base).getAllByRole('button', { name: 'Ir para a próxima etapa' });
+    return list[list.length - 1];
+  };
+  const getPrevButton = (base: HTMLElement) => {
+    const list = within(base).getAllByRole('button', { name: 'Voltar para a etapa anterior' });
+    return list[list.length - 1];
+  };
+
   const defaultProps = {
     currentStep: 5,
     totalSteps: 21,
@@ -24,56 +33,57 @@ describe('QuizNavigation', () => {
 
   describe('Renderização', () => {
     it('deve renderizar informações de progresso', () => {
-      render(<QuizNavigation {...defaultProps} />);
+      const { container } = render(<QuizNavigation {...defaultProps} />);
 
-      expect(screen.getByText('Etapa 5 de 21')).toBeInTheDocument();
+      const etapaTexts = within(container).getAllByText('Etapa 5 de 21');
+      expect(etapaTexts[etapaTexts.length - 1]).toBeInTheDocument();
 
       // Calcular progresso: (5/21) * 100 ≈ 24%
       const progress = Math.round((5 / 21) * 100);
-      expect(screen.getByText(`${progress}% concluído`)).toBeInTheDocument();
+      expect(within(container).getByText(`${progress}% concluído`)).toBeInTheDocument();
     });
 
     it('deve exibir barra de progresso correta', () => {
-      render(<QuizNavigation {...defaultProps} />);
+      const { container } = render(<QuizNavigation {...defaultProps} />);
 
-      const progressElement = screen.getByRole('progressbar');
-      expect(progressElement).toBeInTheDocument();
+      const progressBars = within(container).getAllByRole('progressbar');
+      expect(progressBars[progressBars.length - 1]).toBeInTheDocument();
     });
 
     it('deve mostrar botões de navegação', () => {
-      render(<QuizNavigation {...defaultProps} />);
+      const { container } = render(<QuizNavigation {...defaultProps} />);
 
-      expect(screen.getByText('Anterior')).toBeInTheDocument();
-      expect(screen.getByText('Próximo')).toBeInTheDocument();
+      expect(getPrevButton(container)).toBeInTheDocument();
+      expect(getNextButton(container)).toBeInTheDocument();
     });
   });
 
   describe('Estados de Navegação', () => {
     it('deve desabilitar botão anterior na primeira etapa', () => {
-      render(<QuizNavigation {...defaultProps} currentStep={1} />);
+  const { container } = render(<QuizNavigation {...defaultProps} currentStep={1} />);
 
-      const anteriorBtn = screen.getByText('Anterior');
+  const anteriorBtn = getPrevButton(container);
       expect(anteriorBtn).toBeDisabled();
     });
 
     it('deve habilitar botão anterior após primeira etapa', () => {
-      render(<QuizNavigation {...defaultProps} />);
+  const { container } = render(<QuizNavigation {...defaultProps} />);
 
-      const anteriorBtn = screen.getByText('Anterior');
+  const anteriorBtn = getPrevButton(container);
       expect(anteriorBtn).not.toBeDisabled();
     });
 
     it('deve desabilitar botão próximo quando canProceed=false', () => {
-      render(<QuizNavigation {...defaultProps} canProceed={false} />);
+  const { container } = render(<QuizNavigation {...defaultProps} canProceed={false} />);
 
-      const proximoBtn = screen.getByText('Próximo');
+  const proximoBtn = getNextButton(container);
       expect(proximoBtn).toBeDisabled();
     });
 
     it('deve habilitar botão próximo quando canProceed=true', () => {
-      render(<QuizNavigation {...defaultProps} />);
+  const { container } = render(<QuizNavigation {...defaultProps} />);
 
-      const proximoBtn = screen.getByText('Próximo');
+  const proximoBtn = getNextButton(container);
       expect(proximoBtn).not.toBeDisabled();
     });
   });
@@ -82,9 +92,9 @@ describe('QuizNavigation', () => {
     it('deve chamar onNext quando clicar em Próximo', () => {
       const onNext = vi.fn();
 
-      render(<QuizNavigation {...defaultProps} onNext={onNext} />);
+  const { container } = render(<QuizNavigation {...defaultProps} onNext={onNext} />);
 
-      const proximoBtn = screen.getByText('Próximo');
+  const proximoBtn = getNextButton(container);
       fireEvent.click(proximoBtn);
 
       expect(onNext).toHaveBeenCalledTimes(1);
@@ -93,9 +103,9 @@ describe('QuizNavigation', () => {
     it('deve chamar onPrevious quando clicar em Anterior', () => {
       const onPrevious = vi.fn();
 
-      render(<QuizNavigation {...defaultProps} onPrevious={onPrevious} />);
+  const { container } = render(<QuizNavigation {...defaultProps} onPrevious={onPrevious} />);
 
-      const anteriorBtn = screen.getByText('Anterior');
+  const anteriorBtn = getPrevButton(container);
       fireEvent.click(anteriorBtn);
 
       expect(onPrevious).toHaveBeenCalledTimes(1);
@@ -104,9 +114,9 @@ describe('QuizNavigation', () => {
     it('não deve chamar onNext quando botão estiver desabilitado', () => {
       const onNext = vi.fn();
 
-      render(<QuizNavigation {...defaultProps} canProceed={false} onNext={onNext} />);
+  const { container } = render(<QuizNavigation {...defaultProps} canProceed={false} onNext={onNext} />);
 
-      const proximoBtn = screen.getByText('Próximo');
+  const proximoBtn = getNextButton(container);
       fireEvent.click(proximoBtn);
 
       expect(onNext).not.toHaveBeenCalled();
@@ -147,24 +157,33 @@ describe('QuizNavigation', () => {
 
   describe('Diferentes Etapas', () => {
     it('deve mostrar primeira etapa corretamente', () => {
-      render(<QuizNavigation {...defaultProps} currentStep={1} />);
+  const { container } = render(<QuizNavigation {...defaultProps} currentStep={1} />);
 
-      expect(screen.getByText('Etapa 1 de 21')).toBeInTheDocument();
-      expect(screen.getByText('5% concluído')).toBeInTheDocument();
+  const etapaTexts = within(container).getAllByText('Etapa 1 de 21');
+  expect(etapaTexts[etapaTexts.length - 1]).toBeInTheDocument();
+  expect(within(container).getByText('5% concluído')).toBeInTheDocument();
     });
 
     it('deve mostrar última etapa corretamente', () => {
-      render(<QuizNavigation {...defaultProps} currentStep={21} totalSteps={21} />);
+  const { container } = render(
+        <QuizNavigation {...defaultProps} currentStep={21} totalSteps={21} />
+      );
 
-      expect(screen.getByText('Etapa 21 de 21')).toBeInTheDocument();
-      expect(screen.getByText('100% concluído')).toBeInTheDocument();
+  const etapaTexts = within(container).getAllByText('Etapa 21 de 21');
+  expect(etapaTexts[etapaTexts.length - 1]).toBeInTheDocument();
+  expect(within(container).getByText('100% concluído')).toBeInTheDocument();
     });
 
     it('deve mostrar "Finalizar" na última etapa', () => {
-      render(<QuizNavigation {...defaultProps} currentStep={21} totalSteps={21} />);
+  const { container } = render(
+        <QuizNavigation {...defaultProps} currentStep={21} totalSteps={21} />
+      );
 
-      expect(screen.getByText('Finalizar')).toBeInTheDocument();
-      expect(screen.queryByText('Próximo')).not.toBeInTheDocument();
+  const finalizarBtns = within(container).getAllByRole('button', { name: 'Finalizar quiz' });
+  expect(finalizarBtns[finalizarBtns.length - 1]).toBeInTheDocument();
+
+  const nextBtn = within(container).queryByRole('button', { name: 'Ir para a próxima etapa' });
+  expect(nextBtn).not.toBeInTheDocument();
     });
   });
 
@@ -178,11 +197,11 @@ describe('QuizNavigation', () => {
       ];
 
       testCases.forEach(({ current, total, expected }) => {
-        const { rerender } = render(
+        const { rerender, container } = render(
           <QuizNavigation {...defaultProps} currentStep={current} totalSteps={total} />
         );
 
-        expect(screen.getByText(`${expected}% concluído`)).toBeInTheDocument();
+        expect(within(container).getByText(`${expected}% concluído`)).toBeInTheDocument();
 
         rerender(<div />); // Limpar para próximo teste
       });
@@ -191,23 +210,24 @@ describe('QuizNavigation', () => {
 
   describe('Acessibilidade', () => {
     it('deve ter atributos ARIA corretos', () => {
-      render(<QuizNavigation {...defaultProps} />);
+  const { container } = render(<QuizNavigation {...defaultProps} />);
 
-      const progressBar = screen.getByRole('progressbar');
-      expect(progressBar).toHaveAttribute('aria-label');
+  const progressBars = within(container).getAllByRole('progressbar');
+  const progressBar = progressBars[progressBars.length - 1];
+  expect(progressBar).toHaveAttribute('aria-label');
 
       // Botões devem ter labels adequados
-      const anteriorBtn = screen.getByText('Anterior');
+  const anteriorBtn = getPrevButton(container);
       expect(anteriorBtn).toHaveAttribute('type', 'button');
 
-      const proximoBtn = screen.getByText('Próximo');
+  const proximoBtn = getNextButton(container);
       expect(proximoBtn).toHaveAttribute('type', 'button');
     });
 
     it('deve ter foco visível nos botões', () => {
-      render(<QuizNavigation {...defaultProps} />);
+  const { container } = render(<QuizNavigation {...defaultProps} />);
 
-      const proximoBtn = screen.getByText('Próximo');
+  const proximoBtn = getNextButton(container);
       proximoBtn.focus();
 
       expect(proximoBtn).toHaveFocus();
@@ -216,9 +236,9 @@ describe('QuizNavigation', () => {
     it('deve suportar navegação por teclado', () => {
       const onNext = vi.fn();
 
-      render(<QuizNavigation {...defaultProps} onNext={onNext} />);
+  const { container } = render(<QuizNavigation {...defaultProps} onNext={onNext} />);
 
-      const proximoBtn = screen.getByText('Próximo');
+  const proximoBtn = getNextButton(container);
 
       // Simular Enter
       fireEvent.keyDown(proximoBtn, { key: 'Enter', code: 'Enter' });
