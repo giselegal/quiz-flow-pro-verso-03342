@@ -55,29 +55,29 @@ const Home = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-brand-light/20 via-background to-brand-primary/10 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-brand-lightBlue/20 via-background to-brand-brightBlue/10 flex items-center justify-center">
         <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 bg-gradient-to-r from-brand-primary to-brand-dark rounded-lg animate-pulse"></div>
-          <span className="text-xl font-semibold text-brand-text">QuizFlow Pro</span>
+          <div className="w-8 h-8 bg-gradient-to-r from-brand-brightBlue to-brand-brightPink rounded-lg animate-pulse"></div>
+          <span className="text-xl font-semibold text-brand-darkBlue">QuizFlow Pro</span>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-brand-light/20 via-background to-brand-primary/10">
+    <div className="min-h-screen bg-gradient-to-br from-brand-lightBlue/20 via-background to-brand-brightBlue/10">
       {/* Header */}
       <header className="sticky top-0 z-50 backdrop-blur-xl bg-white/80 border-b border-brand-light/40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-r from-brand-primary to-brand-dark rounded-xl flex items-center justify-center shadow-lg">
+              <div className="w-10 h-10 bg-gradient-to-r from-brand-brightBlue to-brand-brightPink rounded-xl flex items-center justify-center shadow-lg">
                 <Zap className="h-5 w-5 text-white" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-brand-text">QuizFlow Pro</h1>
-                <p className="text-xs text-brand-text/70 -mt-1">Interactive Marketing</p>
+                <h1 className="text-xl font-bold text-brand-darkBlue">QuizFlow Pro</h1>
+                <p className="text-xs text-brand-darkBlue/70 -mt-1">Interactive Marketing</p>
               </div>
             </div>
 
@@ -85,26 +85,26 @@ const Home = () => {
             <div className="flex items-center space-x-4">
               {user ? (
                 <div className="flex items-center space-x-3">
-                  <div className="flex items-center space-x-2 px-3 py-2 bg-brand-light/20 rounded-lg">
-                    <div className="w-6 h-6 bg-gradient-to-r from-brand-primary to-brand-dark rounded-full flex items-center justify-center">
+                  <div className="flex items-center space-x-2 px-3 py-2 bg-brand-lightBlue/20 rounded-lg">
+                    <div className="w-6 h-6 bg-gradient-to-r from-brand-brightBlue to-brand-brightPink rounded-full flex items-center justify-center">
                       <span className="text-xs font-semibold text-white">
                         {user.name?.charAt(0) || user.email.charAt(0)}
                       </span>
                     </div>
-                    <span className="text-sm font-medium text-brand-text">
+                    <span className="text-sm font-medium text-brand-darkBlue">
                       {user.name || user.email}
                     </span>
                   </div>
                   <Button
                     onClick={() => navigate('/admin')}
-                    className="bg-gradient-to-r from-brand-primary to-brand-dark hover:from-brand-dark hover:to-brand-primary text-white shadow-lg"
+                    className="bg-gradient-to-r from-brand-brightBlue to-brand-brightPink hover:from-brand-brightPink hover:to-brand-brightBlue text-white shadow-lg"
                   >
                     Dashboard
                   </Button>
                   <Button
                     onClick={() => navigate('/editor')}
                     variant="outline"
-                    className="border-brand-primary text-brand-primary hover:bg-brand-primary/10"
+                    className="border-brand-brightBlue text-brand-brightBlue hover:bg-brand-brightBlue/10"
                   >
                     <Target className="h-4 w-4 mr-2" />
                     Quiz Editor
@@ -112,7 +112,7 @@ const Home = () => {
                   <Button
                     onClick={logout}
                     variant="outline"
-                    className="border-brand-light text-brand-text hover:bg-brand-light/10"
+                    className="border-brand-lightBlue text-brand-darkBlue hover:bg-brand-lightBlue/10"
                   >
                     Sair
                   </Button>
@@ -122,13 +122,13 @@ const Home = () => {
                   <Button
                     onClick={() => navigate('/auth')}
                     variant="outline"
-                    className="border-brand-light text-brand-text hover:bg-brand-light/10"
+                    className="border-brand-lightBlue text-brand-darkBlue hover:bg-brand-lightBlue/10"
                   >
                     Entrar
                   </Button>
                   <Button
                     onClick={() => navigate('/auth')}
-                    className="bg-gradient-to-r from-brand-primary to-brand-dark hover:from-brand-dark hover:to-brand-primary text-white shadow-lg"
+                    className="bg-gradient-to-r from-brand-brightBlue to-brand-brightPink hover:from-brand-brightPink hover:to-brand-brightBlue text-white shadow-lg"
                   >
                     Começar Grátis
                   </Button>
@@ -142,22 +142,22 @@ const Home = () => {
       <main>
         {/* Hero Section */}
         <section className="relative overflow-hidden py-20 lg:py-32">
-          <div className="absolute inset-0 bg-gradient-to-r from-brand-primary/5 to-brand-dark/5"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-brand-brightBlue/5 to-brand-brightPink/5"></div>
           <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center">
-              <Badge className="mb-6 bg-brand-light/40 text-brand-text border-0 px-4 py-2">
+              <Badge className="mb-6 bg-brand-lightBlue/40 text-brand-darkBlue border-0 px-4 py-2">
                 <Sparkles className="h-4 w-4 mr-2" />
                 Plataforma de Marketing Interativo
               </Badge>
 
-              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-brand-text mb-6 leading-tight">
+              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
                 Transforme Visitantes em
-                <span className="bg-gradient-to-r from-brand-primary to-brand-dark bg-clip-text text-transparent block">
+                <span className="bg-gradient-to-r from-brand-brightBlue to-brand-brightPink bg-clip-text text-transparent block">
                   Clientes Engajados
                 </span>
               </h2>
 
-              <p className="text-xl text-brand-text/80 mb-8 max-w-3xl mx-auto leading-relaxed">
+              <p className="text-xl text-white/90 mb-8 max-w-3xl mx-auto leading-relaxed">
                 Crie quizzes interativos, funnels de conversão e experiências personalizadas que
                 capturam leads qualificados e aumentam suas vendas.
               </p>
@@ -166,7 +166,7 @@ const Home = () => {
                 <Button
                   onClick={() => navigate(user ? '/admin' : '/auth')}
                   size="lg"
-                  className="bg-gradient-to-r from-brand-primary to-brand-dark hover:from-brand-dark hover:to-brand-primary text-white shadow-xl px-8 py-4 text-lg"
+                  className="bg-gradient-to-r from-brand-brightBlue to-brand-brightPink hover:from-brand-brightPink hover:to-brand-brightBlue text-white shadow-xl px-8 py-4 text-lg"
                 >
                   <Play className="h-5 w-5 mr-2" />
                   {user ? 'Ir para Dashboard' : 'Começar Agora'}
@@ -178,20 +178,20 @@ const Home = () => {
                     <Button
                       onClick={() => navigate('/editor')}
                       size="lg"
-                      className="bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-700 hover:to-emerald-500 text-white shadow-xl px-8 py-4 text-lg"
+                      className="bg-gradient-to-r from-brand-brightBlue to-brand-brightPink hover:from-brand-brightPink hover:to-brand-brightBlue text-white shadow-xl px-8 py-4 text-lg"
                     >
                       <Sparkles className="h-5 w-5 mr-2" />
                       Editor Unificado
-                      <Badge className="ml-2 bg-yellow-400 text-yellow-900 text-xs">NOVO</Badge>
+                      <Badge className="ml-2 bg-brand-lightBlue text-brand-darkBlue text-xs">NOVO</Badge>
                     </Button>
 
                     <Button
                       onClick={() => navigate('/showcase')}
                       size="lg"
-                      className="bg-gradient-to-r from-purple-500 to-purple-700 hover:from-purple-700 hover:to-purple-500 text-white shadow-xl px-8 py-4 text-lg"
+                      className="bg-gradient-to-r from-brand-mediumBlue to-brand-lightBlue hover:from-brand-lightBlue hover:to-brand-mediumBlue text-white shadow-xl px-8 py-4 text-lg"
                     >
                       🎪 Showcase
-                      <Badge className="ml-2 bg-orange-400 text-orange-900 text-xs">
+                      <Badge className="ml-2 bg-brand-lightBlue text-brand-darkBlue text-xs">
                         MELHORIAS
                       </Badge>
                     </Button>
@@ -267,10 +267,10 @@ const Home = () => {
         </section>
 
         {/* Features */}
-        <section className="py-20">
+        <section className="py-20 lg:py-32 bg-brand-mediumBlue">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
-              <h3 className="text-3xl lg:text-4xl font-bold text-brand-text mb-4">
+              <h3 className="text-3xl lg:text-4xl font-bold text-white mb-4">
                 Tudo que você precisa para
                 <span className="bg-gradient-to-r from-brand-primary to-brand-dark bg-clip-text text-transparent">
                   {' '}
@@ -286,11 +286,11 @@ const Home = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {/* Feature 1 */}
               <article className="bg-white rounded-2xl p-8 shadow-lg border border-brand-light/30 hover:shadow-xl transition-shadow">
-                <div className="w-12 h-12 bg-gradient-to-r from-brand-primary to-brand-dark rounded-xl flex items-center justify-center mb-6">
-                  <Zap className="h-6 w-6 text-white" />
+                <div className="w-12 h-12 bg-gradient-to-r from-brand-brightBlue to-brand-brightPink rounded-xl flex items-center justify-center mb-6">
+                  <Zap className="h-6 w-6 text-brand-brightBlue" />
                 </div>
-                <h4 className="text-xl font-semibold text-brand-text mb-3">Criação Rápida</h4>
-                <p className="text-brand-text/80 leading-relaxed">
+                <h4 className="text-xl font-semibold text-brand-darkBlue mb-3">Criação Rápida</h4>
+                <p className="text-brand-darkBlue/70 leading-relaxed">
                   Crie quizzes profissionais em minutos com nossos templates inteligentes e editor
                   visual.
                 </p>
@@ -298,13 +298,13 @@ const Home = () => {
 
               {/* Feature 2 */}
               <article className="bg-white rounded-2xl p-8 shadow-lg border border-brand-light/30 hover:shadow-xl transition-shadow">
-                <div className="w-12 h-12 bg-gradient-to-r from-brand-light to-brand-primary rounded-xl flex items-center justify-center mb-6">
-                  <Target className="h-6 w-6 text-white" />
+                <div className="w-12 h-12 bg-gradient-to-r from-brand-brightBlue to-brand-brightPink rounded-xl flex items-center justify-center mb-6">
+                  <Target className="h-6 w-6 text-brand-brightBlue" />
                 </div>
-                <h4 className="text-xl font-semibold text-brand-text mb-3">
+                <h4 className="text-xl font-semibold text-brand-darkBlue mb-3">
                   Segmentação Inteligente
                 </h4>
-                <p className="text-brand-text/80 leading-relaxed">
+                <p className="text-brand-darkBlue/70 leading-relaxed">
                   Qualifique leads automaticamente e direcione ofertas personalizadas baseadas nas
                   respostas.
                 </p>
@@ -312,11 +312,11 @@ const Home = () => {
 
               {/* Feature 3 */}
               <article className="bg-white rounded-2xl p-8 shadow-lg border border-brand-light/30 hover:shadow-xl transition-shadow">
-                <div className="w-12 h-12 bg-gradient-to-r from-brand-dark to-brand-primary rounded-xl flex items-center justify-center mb-6">
+                <div className="w-12 h-12 bg-gradient-to-r from-brand-brightBlue to-brand-brightPink rounded-xl flex items-center justify-center mb-6">
                   <TrendingUp className="h-6 w-6 text-white" />
                 </div>
-                <h4 className="text-xl font-semibold text-brand-text mb-3">Analytics Avançado</h4>
-                <p className="text-brand-text/80 leading-relaxed">
+                <h4 className="text-xl font-semibold text-brand-darkBlue mb-3">Analytics Avançado</h4>
+                <p className="text-brand-darkBlue/70 leading-relaxed">
                   Acompanhe métricas detalhadas e otimize suas campanhas com insights em tempo real.
                 </p>
               </article>
@@ -348,7 +348,7 @@ const Home = () => {
       </main>
 
       {/* Footer */}
-      <footer className="bg-brand-text text-white py-12">
+      <footer className="bg-brand-darkBlue py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center space-x-3 mb-4 md:mb-0">
@@ -374,7 +374,7 @@ const Home = () => {
             </nav>
           </div>
 
-          <div className="border-t border-white/20 mt-8 pt-8 text-center text-sm text-white/80">
+          <div className="border-t border-brand-lightBlue/20 mt-8 pt-8 text-center text-sm text-brand-lightBlue/70">
             <p>&copy; 2025 QuizFlow Pro. Todos os direitos reservados.</p>
           </div>
         </div>

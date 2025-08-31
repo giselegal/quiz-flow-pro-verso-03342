@@ -37,10 +37,11 @@ export default {
       colors: {
         // ✅ CORES DA MARCA
         brand: {
-          primary: '#B89B7A', // Dourado elegante
-          light: '#D4C2A8', // Bege claro
-          dark: '#A38A69', // Dourado escuro
-          text: '#432818', // Marrom escuro
+          darkBlue: '#1A0F3D',
+          mediumBlue: '#2E1A6B',
+          lightBlue: '#4A2E9F',
+          brightBlue: '#00BFFF',
+          brightPink: '#FF00FF',
         },
 
         background: 'hsl(var(--background))',

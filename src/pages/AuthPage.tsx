@@ -106,17 +106,17 @@ const AuthPage: React.FC = () => {
 
         {/* Error Alert */}
         {error && (
-          <Alert className="mb-6" style={{ borderColor: '#ef4444', backgroundColor: '#fef2f2' }}>
-            <AlertCircle className="h-4 w-4" style={{ color: '#ef4444' }} />
-            <AlertDescription style={{ color: '#dc2626' }}>{error}</AlertDescription>
+          <Alert className="mb-6 border-red-500 bg-red-50">
+            <AlertCircle className="h-4 w-4 text-red-500" />
+            <AlertDescription className="text-red-700">{error}</AlertDescription>
           </Alert>
         )}
 
         {/* Reset Email Sent */}
         {resetEmailSent && (
-          <Alert className="mb-6" style={{ borderColor: '#22c55e', backgroundColor: '#f0fdf4' }}>
-            <Mail className="h-4 w-4" style={{ color: '#22c55e' }} />
-            <AlertDescription style={{ color: '#15803d' }}>
+          <Alert className="mb-6 border-green-500 bg-green-50">
+            <Mail className="h-4 w-4 text-green-500" />
+            <AlertDescription className="text-green-700">
               Email de recuperação enviado! Verifique sua caixa de entrada.
             </AlertDescription>
           </Alert>
@@ -218,34 +218,32 @@ const AuthPage: React.FC = () => {
 
           <Button
             type="submit"
-            className="w-full h-12 text-white font-semibold"
+            className="w-full h-12 text-white font-semibold bg-brightPink hover:bg-brightBlue"
             disabled={isLoading}
-            style={{ backgroundColor: '#B89B7A' }}
+            style={{
+              boxShadow: '0 4px 10px rgba(255, 105, 180, 0.3)',
+            }}
           >
-            {isLoading ? 'Carregando...' : isLogin ? 'Entrar' : 'Criar Conta'}
+            {isLoading ? 'Carregando...' : isLogin ? 'Entrar' : 'Criar conta'}
           </Button>
         </form>
 
         {/* Footer Links */}
         <div className="mt-6 space-y-4 text-center">
-          {isLogin && (
-            <button
-              type="button"
-              onClick={handlePasswordReset}
-              className="text-sm hover:underline"
-              style={{ color: '#B89B7A' }}
-            >
-              Esqueceu sua senha?
-            </button>
-          )}
+          <button
+            type="button"
+            onClick={handlePasswordReset}
+            className="w-full text-sm mt-2 font-medium text-mediumBlue hover:text-brightPink"
+          >
+            Esqueceu sua senha?
+          </button>
 
           <button
             type="button"
             onClick={() => setIsLogin(!isLogin)}
-            className="block w-full text-sm hover:underline"
-            style={{ color: '#B89B7A' }}
+            className="w-full text-sm mt-4 font-medium text-mediumBlue hover:text-brightPink"
           >
-            {isLogin ? 'Não tem conta? Criar uma gratuita' : 'Já tem conta? Entrar agora'}
+            {isLogin ? 'Não tem uma conta? Crie uma' : 'Já tem uma conta? Faça login'}
           </button>
 
           <p className="text-xs pt-4" style={{ color: '#8B7355' }}>
