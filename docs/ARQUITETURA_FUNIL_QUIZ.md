@@ -5,9 +5,9 @@ Este documento descreve a estrutura, fluxo, responsabilidades e integrações do
 ## Visão geral
 
 - UI/Editor: EditorPro carrega templates e permite configurar blocos e etapas no modo NoCode.
-- Produção: Página `/quiz` renderiza as mesmas etapas com `UniversalBlockRenderer`.
-- Dados: Templates locais e publicados (Supabase), sessões/respostas/resultados no Supabase.
-- Lógica: FlowCore (regras de navegação/validação), ResultEngine (cálculo e payload de resultado).
+- Produção: Página `/quiz` usa `QuizModularPage` e renderiza as mesmas etapas com `UniversalBlockRenderer`.
+- Dados: Templates locais (TemplateManager) e publicados (Supabase). Em runtime atual, o resultado é persistido localmente (`StorageService.quizResult`); persistência em Supabase é opcional via serviços.
+- Lógica: `FlowCore` (regras de navegação/validação) e `ResultEngine` (cálculo e normalização do resultado) compõem o “core”.
 
 ## Mapa por requisitos (1–19)
 
@@ -19,7 +19,8 @@ Este documento descreve a estrutura, fluxo, responsabilidades e integrações do
 
 2) Roteamento e Entrada
 - Rotas principais: `src/App.tsx`
-  - `/editor` (EditorPro), `/quiz` (produção), `/admin/*` (dashboard), redireções legadas.
+  - `/editor` (EditorPro), `/quiz` (produção com `QuizModularPage`), `/admin/*` (dashboard), redireções legadas.
+  - `/step/:step` (preview por etapa, usa `StepPage`, útil para depurar templates/blocos).
 - Ponto de entrada: `src/main.tsx`.
 
 3) Banco de Dados (Supabase)
@@ -38,8 +39,8 @@ Este documento descreve a estrutura, fluxo, responsabilidades e integrações do
 - Publicação: `services/funnelPublishing.ts`.
 
 6) Configurações de Resultados
-- Pesos e outras regras: `config/optimized21StepsFunnel.ts` em `calculations.scoreWeights`.
-- Engine: `services/core/ResultEngine.ts` (suporta `weightQuestions`).
+- Pesos e outras regras: `config/optimized21StepsFunnel` (arquivo TS/JSON) em `calculations.scoreWeights`.
+- Engine: `services/core/ResultEngine.ts` (suporta `weightQuestions` e normaliza payload).
 
 7) Lógica de Resultados
 - Cálculo: `ResultEngine.computeScoresFromSelections`.
@@ -47,11 +48,11 @@ Este documento descreve a estrutura, fluxo, responsabilidades e integrações do
 
 8) Gerenciador de Fluxo
 - Core: `services/core/FlowCore.ts` (SelectionRules, mapear step→qId, auto-advance).
-- Hook: `useQuizFlow` (navegação, estado, ações).
+- Hook: `hooks/core/useQuizFlow` (navegação, estado, ações). Em `/quiz`, `QuizModularPage` integra este hook com `TemplateManager` e eventos dos blocos.
 
 9) Configuração das Questões
 - Fonte canônica: `templates/quiz21StepsComplete.ts`.
-- Config efetivo: `config/optimized21StepsFunnel.ts` (sincronizado com a fonte; inclui `questionData` e blocos por etapa).
+- Config efetivo: `config/optimized21StepsFunnel` (sincronizado com a fonte; define pesos, propriedades por etapa e ajuda o runtime).
 
 10) Conexão das Etapas (Modelos)
 - Modelos: `templates/models/*` e config otimizado.
@@ -70,12 +71,12 @@ Este documento descreve a estrutura, fluxo, responsabilidades e integrações do
 - Propriedades: componentes de propriedades no editor; blocos armazenam `properties`/`content`.
 
 14) Renderização (produção)
-- `pages/QuizModularPage.tsx`: carrega blocos por etapa via `TemplateManager`, renderiza com `UniversalBlockRenderer`, aplica regras do `FlowCore`.
+- `pages/QuizModularPage.tsx`: carrega blocos por etapa via `TemplateManager`, renderiza com `UniversalBlockRenderer`, aplica regras do `FlowCore` e dispara cálculo no step 19.
 
 15) Configurações “Core”
-- Etapas, perguntas, respostas, pontuação: `optimized21StepsFunnel` + FlowCore + ResultEngine.
-- Mensagens de resultado/telas: blocos e etapas no config.
-- Variáveis dinâmicas: nome via `StorageService` e `useQuizFlow.saveName`.
+- Etapas, perguntas, respostas, pontuação: `optimized21StepsFunnel` + `FlowCore` + `ResultEngine`.
+- Mensagens de resultado/telas: blocos e etapas no config/template.
+- Variáveis dinâmicas: nome via `StorageService` e `useQuizFlow.saveName` (Etapa 1).
 
 16) Salvar Alterações
 - Local: `TemplateManager` (localStorage + eventos `quiz-template-updated`).
@@ -89,7 +90,7 @@ Este documento descreve a estrutura, fluxo, responsabilidades e integrações do
 - UI: pode ser acionado por tela admin (botão pode ser adicionado em dashboard).
 
 19) Página Publicada
-- Rota `/quiz` usando o runtime modular. Cálculo na etapa 19 e persistência do resultado.
+- Rota `/quiz` usando o runtime modular. Cálculo na etapa 19 e persistência do resultado no `StorageService`. Persistência em banco pode ser adicionada via serviços (ex.: `quizSupabaseService`).
 
 ---
 
@@ -125,8 +126,8 @@ flowchart TD
   P --> RENDER[UniversalBlockRenderer]
   RENDER --> P
   FC --> P
-  RE -->|etapa 19| RES[(quiz_results/analytics)]
-  P --> SES[(quiz_sessions/step_responses)]
+  RE -->|etapa 19| RES[(StorageService.quizResult)]
+  P --> SES[(quiz_sessions/step_responses) opcional]
 ```
 
 ### Sequência de Cálculo de Resultado
@@ -142,7 +143,8 @@ sequenceDiagram
   UI->>RE: computeScoresFromSelections({ weightQuestions })
   RE-->>UI: { scores, total }
   UI->>RE: toPayload(scores, total, userName)
-  UI->>DB: Persist payload (results/analytics)
+  UI->>Storage: Persist payload (quizResult)
+  UI->>DB: Persist opcional (results/analytics) via serviço
 ```
 
 ---
@@ -195,6 +197,7 @@ sequenceDiagram
 
 1) Botão “Publicar Funil” no painel admin que chama `funnelPublishing.publishFunnel` para o funil ativo.
 2) Tornar o disparo do cálculo dirigido por tipo/flag de etapa, não por número fixo (19).
+2.1) Adicionar persistência em Supabase no fluxo `/quiz` (após escrever no Storage), usando serviço dedicado.
 3) Ajustar blocos que usam `funnelId` hardcoded para ler de contexto/URL.
 4) Cache leve no `TemplateManager` por step com TTL/etag local para reduzir IO em transições.
 5) Adicionar smoke tests e2e: navegação 1→21, cálculo e persistência de resultado.

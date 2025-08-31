@@ -21,7 +21,12 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
   className = '',
 }) => {
   const { primaryStyle } = useQuizResult();
-  const storedName = StorageService.safeGetString('userName') || StorageService.safeGetString('quizUserName') || '';
+  // Capturar nome de forma robusta
+  const storedName =
+    StorageService.safeGetString('userName') ||
+    StorageService.safeGetString('quizUserName') ||
+    (typeof window !== 'undefined' ? (window as any).__quizUserName : '') ||
+    '';
 
   const {
     title = 'Seu Estilo Predominante',
@@ -44,9 +49,12 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
   const guideImageUrl = rawStyleGuideImageUrl || rawGuideImageUrl;
   const imageUrl = rawImageUrl;
 
+  // Normalizar nome do estilo para exibição (preferir category legível)
+  const styleKey = (primaryStyle as any)?.style || (primaryStyle as any)?.category || '';
+  const styleLabel = (primaryStyle as any)?.category || styleKey || 'Estilo';
   const vars = {
     userName: storedName || (block as any)?.properties?.userName || '',
-    resultStyle: primaryStyle?.style || primaryStyle?.category || 'Estilo',
+    resultStyle: styleLabel,
   };
 
   // Percentual exibido: usa o calculado (primaryStyle.percentage) se não houver override explícito na prop
@@ -58,7 +66,7 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
         : 0);
 
   // Defaults vindos do styleConfig, quando props do bloco estiverem ausentes
-  const styleInfo = getStyleConfig(vars.resultStyle);
+  const styleInfo = getStyleConfig(styleKey || styleLabel);
   const effectiveImageUrl = imageUrl || styleInfo?.image || 'https://via.placeholder.com/238x320?text=Estilo';
   const effectiveGuideImageUrl = guideImageUrl || styleInfo?.guideImage || 'https://via.placeholder.com/540x300?text=Guia+de+Estilo';
   const effectiveDescription = (block?.properties?.description && String(block.properties.description).trim().length > 0)
@@ -115,6 +123,15 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
                 {computedPercentage}%
               </span>
             </div>
+            {/* Mostrar o nome do estilo atual quando disponível */}
+            {styleLabel && (
+              <div className="text-base font-semibold text-[#432818] mb-2">
+                {styleLabel}
+                {vars.userName ? (
+                  <span className="ml-1 text-[#6B4F43] font-normal">• {vars.userName}</span>
+                ) : null}
+              </div>
+            )}
             <Progress
               value={computedPercentage}
               className="h-2 bg-[#F3E8E6]"

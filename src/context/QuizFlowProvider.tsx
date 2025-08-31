@@ -172,6 +172,13 @@ export const QuizFlowProvider: React.FC<QuizFlowProviderProps> = ({
     setCanProceed,
   };
 
+  // Expor etapa atual globalmente para componentes que dependem (ex.: persistência de respostas)
+  useEffect(() => {
+    try {
+      (window as any).__quizCurrentStep = currentStep;
+    } catch { }
+  }, [currentStep]);
+
   // 🧠 Cálculo de resultado integrado para fluxo genérico (produção/StepPage)
   useEffect(() => {
     // Dispara cálculo quando alcançar etapa 19 (processamento) ou garantindo na 20
