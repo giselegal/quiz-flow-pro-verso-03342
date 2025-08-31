@@ -26,32 +26,9 @@ const PropertiesColumn = React.lazy(() => import('@/components/editor/properties
 // Removidos estilos de animação/transição globais do editor
 
 // Tipos de ícones padronizados
-type IconName =
-  | 'note'
-  | 'flash'
-  | 'doc'
-  | 'button'
-  | 'target'
-  | 'palette'
-  | 'chart'
-  | 'chat'
-  | 'shield'
-  | 'rocket'
-  | 'sparkle'
-  | 'money'
-  | 'refresh'
-  | 'hourglass'
-  | 'confetti'
-  | 'question'
-  | 'info';
+import { availableComponents as AVAILABLE_COMPONENTS_CONFIG, type IconName, type ComponentDef } from '@/components/editor/config/availableComponents';
 
-interface ComponentDef {
-  type: string;
-  name: string;
-  icon: IconName;
-  category: string;
-  description: string;
-}
+// Tipos de componentes disponíveis vêm da config
 
 interface StepAnalysis {
   icon: IconName;
@@ -587,111 +564,17 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
     };
   }, []);
 
-  // componentes disponíveis - ideal extrair para config
-  const availableComponents = useMemo<ComponentDef[]>(
-    () => [
-      {
-        type: 'quiz-intro-header',
-        name: 'Header Quiz',
-        icon: 'note',
-        category: 'Estrutura',
-        description: 'Cabeçalho com título e descrição',
-      },
-      {
-        type: 'options-grid',
-        name: 'Grade Opções',
-        icon: 'flash',
-        category: 'Interação',
-        description: 'Grid de opções para questões',
-      },
-      {
-        type: 'form-container',
-        name: 'Formulário',
-        icon: 'note',
-        category: 'Captura',
-        description: 'Campo de entrada de dados',
-      },
-      {
-        type: 'text',
-        name: 'Texto',
-        icon: 'doc',
-        category: 'Conteúdo',
-        description: 'Bloco de texto simples',
-      },
-      {
-        type: 'button',
-        name: 'Botão',
-        icon: 'button',
-        category: 'Interação',
-        description: 'Botão de ação',
-      },
-      {
-        type: 'result-header-inline',
-        name: 'Header Resultado',
-        icon: 'target',
-        category: 'Resultado',
-        description: 'Cabeçalho personalizado de resultado',
-      },
-      {
-        type: 'style-card-inline',
-        name: 'Card Estilo',
-        icon: 'palette',
-        category: 'Resultado',
-        description: 'Card com características do estilo',
-      },
-      {
-        type: 'secondary-styles',
-        name: 'Estilos Secundários',
-        icon: 'chart',
-        category: 'Resultado',
-        description: 'Lista de estilos complementares',
-      },
-      {
-        type: 'testimonials',
-        name: 'Depoimentos',
-        icon: 'chat',
-        category: 'Social Proof',
-        description: 'Lista de depoimentos',
-      },
-      {
-        type: 'guarantee',
-        name: 'Garantia',
-        icon: 'shield',
-        category: 'Confiança',
-        description: 'Selo de garantia',
-      },
-      {
-        type: 'hero',
-        name: 'Hero Section',
-        icon: 'rocket',
-        category: 'Layout',
-        description: 'Seção hero para transições e ofertas',
-      },
-      {
-        type: 'benefits',
-        name: 'Benefícios',
-        icon: 'sparkle',
-        category: 'Vendas',
-        description: 'Lista de benefícios do produto',
-      },
-      {
-        type: 'quiz-offer-cta-inline',
-        name: 'CTA Oferta',
-        icon: 'money',
-        category: 'Conversão',
-        description: 'Call-to-action para ofertas especiais',
-      },
-    ],
-    []
-  );
+  // componentes disponíveis - extraídos para config
+  const availableComponents = useMemo<ComponentDef[]>(() => AVAILABLE_COMPONENTS_CONFIG, []);
 
   const groupedComponents = useMemo(
     () =>
-      availableComponents.reduce((acc, c) => {
-        if (!acc[c.category]) acc[c.category] = [] as ComponentDef[];
-        acc[c.category].push(c);
+      availableComponents.reduce<Record<string, ComponentDef[]>>((acc, c) => {
+        const cat = (c as ComponentDef).category;
+        if (!acc[cat]) acc[cat] = [];
+        acc[cat].push(c as ComponentDef);
         return acc;
-      }, {} as Record<string, ComponentDef[]>),
+      }, {}),
     [availableComponents]
   );
 
@@ -1207,37 +1090,37 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
           {mode === 'preview' ? (
             <Suspense fallback={<div className="p-4 text-sm text-gray-600">Carregando preview…</div>}>
               <LazyQuizRenderer
-              mode="preview"
-              blocksOverride={currentStepData as any}
-              currentStepOverride={safeCurrentStep}
-              previewEditable
-              selectedBlockId={state.selectedBlockId}
-              onBlockClick={(blockId: string) => actions.setSelectedBlockId(blockId)}
-              onStepChange={(step: number) => actions.setCurrentStep(step)}
-              className="h-full w-full"
+                mode="preview"
+                blocksOverride={currentStepData as any}
+                currentStepOverride={safeCurrentStep}
+                previewEditable
+                selectedBlockId={state.selectedBlockId}
+                onBlockClick={(blockId: string) => actions.setSelectedBlockId(blockId)}
+                onStepChange={(step: number) => actions.setCurrentStep(step)}
+                className="h-full w-full"
               />
             </Suspense>
           ) : (
             <Suspense fallback={<div className="p-4 text-sm text-gray-600">Carregando editor…</div>}>
               <LazyQuizRenderer
-              mode="editor"
-              currentStepOverride={safeCurrentStep}
-              onStepChange={(step: number) => actions.setCurrentStep(step)}
-              className="h-full w-full"
-              // Reaproveita o shell e gating de /quiz e injeta o Canvas dentro dele
-              contentOverride={
-                <CanvasDropZone
-                  blocks={currentStepData}
-                  selectedBlockId={state.selectedBlockId}
-                  onSelectBlock={actions.setSelectedBlockId}
-                  onUpdateBlock={(id: string, updates: any) =>
-                    actions.updateBlock(currentStepKey, id, updates)
-                  }
-                  onDeleteBlock={(id: string) => actions.removeBlock(currentStepKey, id)}
-                  className="h-full w-full"
-                  scopeId={safeCurrentStep}
-                />
-              }
+                mode="editor"
+                currentStepOverride={safeCurrentStep}
+                onStepChange={(step: number) => actions.setCurrentStep(step)}
+                className="h-full w-full"
+                // Reaproveita o shell e gating de /quiz e injeta o Canvas dentro dele
+                contentOverride={
+                  <CanvasDropZone
+                    blocks={currentStepData}
+                    selectedBlockId={state.selectedBlockId}
+                    onSelectBlock={actions.setSelectedBlockId}
+                    onUpdateBlock={(id: string, updates: any) =>
+                      actions.updateBlock(currentStepKey, id, updates)
+                    }
+                    onDeleteBlock={(id: string) => actions.removeBlock(currentStepKey, id)}
+                    className="h-full w-full"
+                    scopeId={safeCurrentStep}
+                  />
+                }
               />
             </Suspense>
           )}
