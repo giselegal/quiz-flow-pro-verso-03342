@@ -138,7 +138,7 @@ const Home = () => {
               <div className="mb-8">
                 <QuizFlowLogo size="xl" variant="full" className="mx-auto" />
               </div>
-              
+
               <Badge className="mb-6 bg-brand-lightBlue/40 text-brand-darkBlue border-0 px-4 py-2">
                 <Sparkles className="h-4 w-4 mr-2" />
                 Plataforma de Marketing Interativo
@@ -227,8 +227,8 @@ const Home = () => {
                   <span className="font-medium">LGPD Compliant</span>
                 </div>
               </div>
-              </div>
             </div>
+          </div>
         </TechBackground>
 
         {/* Métricas */}
@@ -258,7 +258,7 @@ const Home = () => {
               </div>
             </div>
           </div>
-        </section>
+        </TechBackground>
 
         {/* Features */}
         <TechBackground variant="section" className="py-20 lg:py-32">
