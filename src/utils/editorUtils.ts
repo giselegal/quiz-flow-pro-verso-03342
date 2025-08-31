@@ -1,6 +1,14 @@
 import { Block, BlockType } from '@/types/editor';
 import { nanoid } from 'nanoid';
-import { getBlockDefinition } from '@/core/blocks/registry';
+let getBlockDefinition: ((type: string) => any) | undefined;
+try {
+  // Evita carregar registro pesado quando em testes para reduzir memória
+  if (process.env.NODE_ENV !== 'test') {
+    // dynamic import para não carregar logo no início
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    getBlockDefinition = require('@/core/blocks/registry').getBlockDefinition;
+  }
+} catch { }
 
 /**
  * 🔧 Utilitários para geração de IDs e manipulação de blocos
@@ -31,7 +39,7 @@ export const createBlockFromComponent = (
   // para manter compatibilidade com testes e fluxos que esperam properties vazio.
   // Caso defaults sejam necessários, eles devem ser aplicados pela UI/registry
   // no momento de renderização/edição.
-  getBlockDefinition(componentType as any);
+  try { getBlockDefinition?.(componentType as any); } catch { }
   return {
     id: generateBlockId(componentType),
     type: componentType,

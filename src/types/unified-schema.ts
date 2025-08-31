@@ -272,6 +272,24 @@ export const generateId = (): string => {
   return `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 };
 
+// Generates a RFC 4122 v4 UUID using the browser/node crypto when available
+export const generateUuid = (): string => {
+  // Prefer native crypto if available
+  const g: any = typeof globalThis !== 'undefined' ? (globalThis as any) : {};
+  const cryptoObj = g.crypto || g.msCrypto;
+  if (cryptoObj?.randomUUID) {
+    return cryptoObj.randomUUID();
+  }
+  // Fallback: pseudo-random UUID v4 (acceptable for local/dev usage)
+  // eslint-disable-next-line no-bitwise
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+    const r = (Math.random() * 16) | 0;
+    // eslint-disable-next-line no-bitwise
+    const v = c === 'x' ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+};
+
 // Enhanced validation functions with proper error handling
 export const validateFunnel = (
   data: unknown

@@ -1,5 +1,6 @@
 import { QuizFlowProvider } from '@/context/QuizFlowProvider';
 import { templateLibraryService } from '@/services/templateLibraryService';
+import { supabaseTemplateService } from '@/services/templateService';
 import React from 'react';
 import { useLocation } from 'wouter';
 // EditorPro será usado via require dinâmico no EditorInitializer para evitar ciclos
@@ -50,9 +51,7 @@ const MainEditor: React.FC = () => {
   );
 };
 
-const EditorInitializer: React.FC<{ templateId?: string; funnelId?: string }> = ({
-  templateId,
-}) => {
+const EditorInitializer: React.FC<{ templateId?: string; funnelId?: string }> = ({ templateId }) => {
   // Carregar EditorPro dinamicamente para evitar ciclos e manter ESM compatível
   const [EditorProComp, setEditorProComp] = React.useState<React.ComponentType | null>(null);
 
@@ -74,27 +73,63 @@ const EditorInitializer: React.FC<{ templateId?: string; funnelId?: string }> = 
   }, []);
 
   React.useEffect(() => {
-    if (!EditorProComp || !templateId) return;
-    // const { useEditor } = editor.current!; // reservado para futuras integrações
-    try {
-      const tpl = templateLibraryService.getById(templateId);
-      if (!tpl) return;
-      const stepBlocks: any = {};
-      Object.entries(tpl.steps).forEach(([k, arr]: any) => {
-        stepBlocks[k] = (arr || []).map((b: any, idx: number) => ({
-          id: `${k}-${b.type}-${idx}`,
-          type: b.type,
-          order: idx,
-          properties: b.properties || {},
-          content: b.properties || {},
-        }));
-      });
-      // apply into editor state
-      // Hook must be used inside component; instead, dispatch via window event and let EditorPro handle if needed
-      window.dispatchEvent(new CustomEvent('editor-load-template', { detail: { stepBlocks } }));
-    } catch (e) {
-      console.warn('Falha ao aplicar template:', e);
-    }
+    (async () => {
+      if (!EditorProComp || !templateId) return;
+      try {
+        // Caso 1: Template do Supabase (prefixo supa:)
+        if (templateId.startsWith('supa:')) {
+          const id = templateId.slice(5);
+          const tpl = await supabaseTemplateService.getTemplateById(id);
+          if (!tpl?.templateData) return;
+          const td = tpl.templateData as any;
+          const stepBlocks: any = {};
+          // Suporta formatos: { 'step-1': [...], ... } ou array stages
+          if (td && typeof td === 'object' && !Array.isArray(td)) {
+            Object.entries(td).forEach(([k, arr]: any) => {
+              if (!Array.isArray(arr)) return;
+              stepBlocks[k] = (arr || []).map((b: any, idx: number) => ({
+                id: `${k}-${b.type || b.id || 'block'}-${idx}`,
+                type: b.type,
+                order: typeof b.order === 'number' ? b.order : idx,
+                properties: b.properties || b.content || {},
+                content: b.content || b.properties || {},
+              }));
+            });
+          } else if (Array.isArray(td?.stages)) {
+            td.stages.forEach((stage: any) => {
+              const k = stage.id || `step-${stage.order}`;
+              const arr = stage.blocks || [];
+              stepBlocks[k] = arr.map((b: any, idx: number) => ({
+                id: `${k}-${b.type || b.id || 'block'}-${idx}`,
+                type: b.type,
+                order: typeof b.order === 'number' ? b.order : idx,
+                properties: b.properties || b.content || {},
+                content: b.content || b.properties || {},
+              }));
+            });
+          }
+          window.dispatchEvent(new CustomEvent('editor-load-template', { detail: { stepBlocks } }));
+          return;
+        }
+
+        // Caso 2: Template local builtin (biblioteca interna)
+        const tpl = templateLibraryService.getById(templateId);
+        if (!tpl) return;
+        const stepBlocks: any = {};
+        Object.entries(tpl.steps).forEach(([k, arr]: any) => {
+          stepBlocks[k] = (arr || []).map((b: any, idx: number) => ({
+            id: `${k}-${b.type}-${idx}`,
+            type: b.type,
+            order: idx,
+            properties: b.properties || {},
+            content: b.properties || {},
+          }));
+        });
+        window.dispatchEvent(new CustomEvent('editor-load-template', { detail: { stepBlocks } }));
+      } catch (e) {
+        console.warn('Falha ao aplicar template:', e);
+      }
+    })();
   }, [EditorProComp, templateId]);
 
   if (!EditorProComp) return null;

@@ -1,8 +1,6 @@
-import { getBlocksForStep, mergeStepBlocks, normalizeStepBlocks } from '@/config/quizStepsComplete';
 import { DraftPersistence } from '@/services/editor/DraftPersistence';
 import { useEditorSupabaseIntegration } from '@/hooks/useEditorSupabaseIntegration';
 import { useHistoryState } from '@/hooks/useHistoryState';
-import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import { Block } from '@/types/editor';
 import { extractStepNumberFromKey } from '@/utils/supabaseMapper';
 import { arrayMove } from '@dnd-kit/sortable';
@@ -96,6 +94,47 @@ const groupByStepKey = (components: any[]): Record<string, Block[]> =>
     return acc;
   }, {});
 
+// Helpers locais leves para evitar imports pesados em ambiente de teste
+const getBlocksForStepLocal = (
+  step: number | string,
+  stepBlocks: Record<string, Block[]>
+): Block[] => {
+  const key = typeof step === 'number' ? `step-${step}` : String(step);
+  return stepBlocks?.[key] || [];
+};
+
+const mergeStepBlocksLocal = (
+  prev: Record<string, Block[]>,
+  incoming: Record<string, Block[]>
+): Record<string, Block[]> => {
+  const result: Record<string, Block[]> = { ...(prev || {}) };
+  Object.entries(incoming || {}).forEach(([stepKey, blocks]) => {
+    const existing = result[stepKey] || [];
+    const byId = new Map<string, Block>(existing.map(b => [String(b.id), b]));
+    const merged: Block[] = [];
+    // Mantém ordem do incoming; atualiza se já existir por ID, senão adiciona
+    for (const b of blocks || []) {
+      const id = String(b.id);
+      if (byId.has(id)) {
+        const old = byId.get(id)!;
+        merged.push({
+          ...old,
+          ...b,
+          properties: { ...(old.properties || {}), ...(b.properties || {}) },
+          content: { ...(old.content || {}), ...(b.content || {}) },
+        });
+        byId.delete(id);
+      } else {
+        merged.push(b);
+      }
+    }
+    // Anexa quaisquer restantes que estavam no prev mas não vieram em incoming
+    for (const leftover of byId.values()) merged.push(leftover);
+    result[stepKey] = merged;
+  });
+  return result;
+};
+
 export const EditorProvider: React.FC<EditorProviderProps> = ({
   children,
   initial,
@@ -111,10 +150,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     const isTestEnv = process.env.NODE_ENV === 'test';
     if (!isTestEnv) {
       // Normalize step blocks from template using our new utility
-      const normalizedBlocks = normalizeStepBlocks(QUIZ_STYLE_21_STEPS_TEMPLATE);
-      Object.entries(normalizedBlocks).forEach(([stepKey, blocks]) => {
-        initialBlocks[stepKey] = Array.isArray(blocks) ? [...blocks] : [];
-      });
+      // Inicialização minimalista em produção será feita via lazy import mais adiante
     } else {
       // Garante pelo menos arrays vazios para as primeiras etapas usadas nos testes
       initialBlocks['step-1'] = [];
@@ -196,7 +232,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
         setState(prev => {
           const grouped = groupByStepKey(components);
           // Normaliza e faz merge não-destrutivo por ID
-          const merged = mergeStepBlocks(prev.stepBlocks, grouped);
+          const merged = mergeStepBlocksLocal(prev.stepBlocks, grouped);
           // Atualiza validação para todas as etapas
           const validationUpdate: Record<number, boolean> = {};
           for (let i = 1; i <= 21; i++) {
@@ -235,7 +271,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       if (process.env.NODE_ENV === 'test') {
         return;
       }
-      const existingBlocks = getBlocksForStep(step, stateRef.current.stepBlocks);
+      const existingBlocks = getBlocksForStepLocal(step, stateRef.current.stepBlocks);
 
       if (existingBlocks && existingBlocks.length > 0) {
         // Merge local draft over existing if draft is newer
@@ -277,7 +313,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
           if (components && components.length > 0) {
             setState(prev => {
               const grouped = groupByStepKey(components);
-              const merged = mergeStepBlocks(prev.stepBlocks, grouped);
+              const merged = mergeStepBlocksLocal(prev.stepBlocks, grouped);
               return {
                 ...prev,
                 stepBlocks: merged,
@@ -289,9 +325,13 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
 
         // Fallback: Try to load from template service or use default templates
         const stepNum = typeof step === 'number' ? step : parseInt(String(step), 10);
-        if (stepNum && QUIZ_STYLE_21_STEPS_TEMPLATE) {
+        if (stepNum) {
           const stepKey = `step-${stepNum}`;
-          const defaultBlocks = (QUIZ_STYLE_21_STEPS_TEMPLATE as any)[stepKey] || [];
+          let defaultBlocks: Block[] = [];
+          try {
+            const { QUIZ_STYLE_21_STEPS_TEMPLATE } = await import('@/templates/quiz21StepsComplete');
+            defaultBlocks = (QUIZ_STYLE_21_STEPS_TEMPLATE as any)[stepKey] || [];
+          } catch { }
           if (defaultBlocks.length > 0) {
             setState(prev => ({
               ...prev,
@@ -346,42 +386,42 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     // 🚨 CORREÇÃO CRÍTICA: Always force template reload on mount
     const isTestEnv = process.env.NODE_ENV === 'test';
     if (!isTestEnv) {
-      // Detect minimal persisted state and rehydrate (variável removida por não uso)
-      const normalizedBlocks = normalizeStepBlocks(QUIZ_STYLE_21_STEPS_TEMPLATE);
-      console.log('🔧 FORCE RELOAD TEMPLATE:', {
-        normalizedBlocks,
-        keys: Object.keys(normalizedBlocks),
-        totalSteps: Object.keys(normalizedBlocks).length,
-      });
+      (async () => {
+        try {
+          const { QUIZ_STYLE_21_STEPS_TEMPLATE } = await import('@/templates/quiz21StepsComplete');
+          const normalizedBlocks = QUIZ_STYLE_21_STEPS_TEMPLATE as unknown as Record<string, Block[]>;
+          // 🚨 FORÇA CARREGAMENTO: Aplicar template por merge não-destrutivo e computar validação
+          setState(prev => {
+            const mergedBlocks = mergeStepBlocksLocal(prev.stepBlocks, normalizedBlocks);
+            const initialValidation: Record<number, boolean> = {};
+            for (let i = 1; i <= 21; i++) {
+              const key = `step-${i}`;
+              initialValidation[i] = Array.isArray((mergedBlocks as any)[key]) && (mergedBlocks as any)[key].length > 0;
+            }
+            return {
+              ...prev,
+              stepBlocks: mergedBlocks,
+              stepValidation: {
+                ...(prev.stepValidation || {}),
+                ...initialValidation,
+              },
+              // Preserve any pre-set currentStep (e.g., from initial props or URL)
+              currentStep: prev.currentStep || 1,
+            };
+          });
 
-      // 🚨 FORÇA CARREGAMENTO: Aplicar template normalizado por merge não-destrutivo e computar validação
-      setState(prev => {
-        const mergedBlocks = mergeStepBlocks(prev.stepBlocks, normalizedBlocks);
-        const initialValidation: Record<number, boolean> = {};
-        for (let i = 1; i <= 21; i++) {
-          const key = `step-${i}`;
-          initialValidation[i] = Array.isArray((mergedBlocks as any)[key]) && (mergedBlocks as any)[key].length > 0;
+          // 🚨 GARANTIA DUPLA: Ensure step 1 é carregado e verificar demais
+          setTimeout(() => {
+            ensureStepLoadedRef.current?.(1);
+            for (let i = 1; i <= 21; i++) {
+              ensureStepLoadedRef.current?.(i);
+            }
+          }, 100);
+        } catch (e) {
+          console.error('Falha ao carregar templates de etapas (lazy):', e);
         }
-        return {
-          ...prev,
-          stepBlocks: mergedBlocks,
-          stepValidation: {
-            ...(prev.stepValidation || {}),
-            ...initialValidation,
-          },
-          // Preserve any pre-set currentStep (e.g., from initial props or URL)
-          currentStep: prev.currentStep || 1,
-        };
-      });
+      })();
 
-      // 🚨 GARANTIA DUPLA: Ensure step 1 is loaded on initialization
-      setTimeout(() => {
-        ensureStepLoadedRef.current?.(1);
-        // Force verify all steps loaded
-        for (let i = 1; i <= 21; i++) {
-          ensureStepLoadedRef.current?.(i);
-        }
-      }, 100);
     } else {
       // Em testes, não carregar templates automaticamente nem fazer merges
       setState(prev => ({
@@ -401,12 +441,11 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       }
 
       // 🚨 FORÇA VERIFICAÇÃO: If step blocks are empty, force reload template
-      const currentStepBlocks = getBlocksForStep(rawState.currentStep, rawState.stepBlocks);
+      const currentStepBlocks = getBlocksForStepLocal(rawState.currentStep, rawState.stepBlocks);
       if (process.env.NODE_ENV !== 'test' && (!currentStepBlocks || currentStepBlocks.length === 0)) {
         console.log('🚨 EMPTY STEP DETECTED - FORCE RELOAD:', rawState.currentStep);
-        const normalizedBlocks = normalizeStepBlocks(QUIZ_STYLE_21_STEPS_TEMPLATE);
         setState(prev => {
-          const mergedBlocks = mergeStepBlocks(prev.stepBlocks, normalizedBlocks);
+          const mergedBlocks = { ...prev.stepBlocks };
           const validationUpdate: Record<number, boolean> = {};
           for (let i = 1; i <= 21; i++) {
             const key = `step-${i}`;
@@ -488,7 +527,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
         // Persist draft for this step
         {
           const draftKey = quizId || funnelId || 'local-funnel';
-          try { DraftPersistence.saveStepDraft(draftKey, stepKey, nextState.stepBlocks[stepKey]); } catch {}
+          try { DraftPersistence.saveStepDraft(draftKey, stepKey, nextState.stepBlocks[stepKey]); } catch { }
         }
         return nextState;
       });
@@ -575,7 +614,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
         // Persist draft
         {
           const draftKey = quizId || funnelId || 'local-funnel';
-          try { DraftPersistence.saveStepDraft(draftKey, stepKey, nextBlocks); } catch {}
+          try { DraftPersistence.saveStepDraft(draftKey, stepKey, nextBlocks); } catch { }
         }
         return optimisticState!;
       });
@@ -653,7 +692,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       // Persist draft
       {
         const draftKey = quizId || funnelId || 'local-funnel';
-        try { DraftPersistence.saveStepDraft(draftKey, stepKey, nextBlocks); } catch {}
+        try { DraftPersistence.saveStepDraft(draftKey, stepKey, nextBlocks); } catch { }
       }
 
       // If supabase mode, delegate deletion
@@ -676,7 +715,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
         // Persist draft
         {
           const draftKey = quizId || funnelId || 'local-funnel';
-          try { DraftPersistence.saveStepDraft(draftKey, stepKey, reordered); } catch {}
+          try { DraftPersistence.saveStepDraft(draftKey, stepKey, reordered); } catch { }
         }
         return {
           ...prev,
@@ -732,7 +771,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       // Persist draft
       {
         const draftKey = quizId || funnelId || 'local-funnel';
-        try { DraftPersistence.saveStepDraft(draftKey, stepKey, nextBlocks); } catch {}
+        try { DraftPersistence.saveStepDraft(draftKey, stepKey, nextBlocks); } catch { }
       }
 
       if (state.isSupabaseEnabled && supabaseIntegration?.updateBlockById) {

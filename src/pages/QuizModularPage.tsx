@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
 import { TemplateManager } from '@/utils/TemplateManager';
 import React, { useEffect, useMemo, useState } from 'react';
-import { ResultEngine } from '@/services/core/ResultEngine';
+import ResultOrchestrator from '@/services/core/ResultOrchestrator';
 import { SelectionRules, FlowCore } from '@/services/core/FlowCore';
 import OPTIMIZED_FUNNEL_CONFIG from '@/config/optimized21StepsFunnel';
 import useOptimizedScheduler from '@/hooks/useOptimizedScheduler';
@@ -370,50 +370,15 @@ const QuizModularPage: React.FC = () => {
 
   // ===== CÁLCULO E PERSISTÊNCIA DO RESULTADO (core/ResultEngine) =====
   const computeAndPersistResult = React.useCallback(async () => {
-    // Leitura opcional de pesos do funil otimizado (se usado)
     const weightQuestions = (OPTIMIZED_FUNNEL_CONFIG as any)?.calculations?.scoreWeights?.questions;
-
-    const { scores, total } = ResultEngine.computeScoresFromSelections(
-      userSelections,
-      {
-        weightQuestions: typeof weightQuestions === 'number' ? weightQuestions : 1,
-      }
-    );
-    let userName = quizAnswers.userName || '';
-    try {
-      const { StorageService } = require('@/services/core/StorageService');
-      userName = userName || StorageService.safeGetString('userName') || StorageService.safeGetString('quizUserName') || '';
-    } catch { }
-    const payload = ResultEngine.toPayload(scores, total, userName);
-    ResultEngine.persist(payload);
-    try {
-      const { StorageService } = require('@/services/core/StorageService');
-      StorageService.safeSetString('quizUserName', userName);
-    } catch { }
-
-    // Persistência opcional no Supabase
-    try {
-      if (stepConfig?.persistResultToSupabase) {
-        const { sessionService } = require('@/services/sessionService');
-        const { quizSupabaseService } = require('@/services/quizSupabaseService');
-        const sessionId = sessionService.getSessionId?.();
-        const isUUID = sessionService.isUUIDSession?.();
-        if (sessionId && isUUID) {
-          await quizSupabaseService.saveQuizResult({
-            sessionId,
-            resultType: 'style-profile',
-            resultTitle: payload.primaryStyle?.style || 'Resultado',
-            resultDescription: `Perfil principal: ${payload.primaryStyle?.style}`,
-            resultData: payload,
-            recommendation: undefined,
-            nextSteps: [],
-          });
-        }
-      }
-    } catch (e) {
-      if (import.meta?.env?.DEV) console.warn('Falha ao salvar resultado no Supabase (ignorado):', e);
-    }
-  }, [userSelections, quizAnswers.userName]);
+    await ResultOrchestrator.run({
+      selectionsByQuestion: userSelections,
+      weightQuestions,
+      userName: quizAnswers.userName,
+      persistToSupabase: stepConfig?.persistResultToSupabase,
+      sessionId: (require('@/services/sessionService') as any).sessionService.getSessionId?.(),
+    });
+  }, [userSelections, quizAnswers.userName, stepConfig?.persistResultToSupabase]);
 
   // Disparar cálculo pela flag de configuração (ex: etapa 19 por padrão)
   useEffect(() => {

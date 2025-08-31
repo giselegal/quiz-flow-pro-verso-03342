@@ -5,7 +5,8 @@ import {
   type UpdateFunnel,
   type AutoSaveState,
   type FunnelVersion,
-  generateId,
+  generateUuid,
+  FUNNEL_PAGE_TYPES,
 } from '@/types/unified-schema';
 
 export interface SchemaDrivenFunnelData {
@@ -44,7 +45,7 @@ export const schemaDrivenFunnelService = {
       if (!user) throw new Error('Usuário não autenticado');
 
       const funnelData: InsertFunnel = {
-        id: generateId(),
+        // let DB generate UUID for funnels.id to comply with FK references
         name: funnel.name || 'Novo Funil',
         description: funnel.description || '',
         user_id: user.id,
@@ -62,14 +63,22 @@ export const schemaDrivenFunnelService = {
 
       // Criar páginas se existirem
       if (funnel.pages && funnel.pages.length > 0) {
-        const pagesData: InsertFunnelPage[] = funnel.pages.map((page, index) => ({
-          id: generateId(),
-          funnel_id: data.id,
-          page_type: (page as any).type || 'content',
-          page_order: index,
-          title: (page as any).title || (page as any).name || `Página ${index + 1}`,
-          blocks: (page as any).blocks || [],
-        }));
+        const pagesData: InsertFunnelPage[] = funnel.pages.map((page, index) => {
+          const type = (page as any).type as string | undefined;
+          const validTypes = Object.values(FUNNEL_PAGE_TYPES) as string[];
+          const normalizedType =
+            type && typeof type === 'string' && validTypes.includes(type)
+              ? (type as (typeof FUNNEL_PAGE_TYPES)[keyof typeof FUNNEL_PAGE_TYPES])
+              : FUNNEL_PAGE_TYPES.QUESTION; // default to a valid page_type
+          return {
+            id: generateUuid(),
+            funnel_id: data.id,
+            page_type: normalizedType,
+            page_order: index,
+            title: (page as any).title || (page as any).name || `Página ${index + 1}`,
+            blocks: Array.isArray((page as any).blocks) ? (page as any).blocks : [],
+          };
+        });
 
         await supabase.from('funnel_pages').insert(pagesData);
       }
@@ -314,13 +323,18 @@ export const schemaDrivenFunnelService = {
       } = await supabase.auth.getUser();
       if (!user) throw new Error('Usuário não autenticado');
 
+      const fallbackType = FUNNEL_PAGE_TYPES.QUESTION;
+      const selectedType =
+        page.type && Object.values(FUNNEL_PAGE_TYPES).includes(page.type as any)
+          ? (page.type as any)
+          : fallbackType;
       const pageData: InsertFunnelPage = {
-        id: generateId(),
+        id: generateUuid(),
         funnel_id: funnelId,
-        page_type: page.type || 'content',
-        page_order: page.order || 0,
+        page_type: selectedType,
+        page_order: page.order ?? 0,
         title: page.title || page.name || 'Nova Página',
-        blocks: page.blocks || [],
+        blocks: Array.isArray(page.blocks) ? page.blocks : [],
       };
 
       const { data, error } = await supabase

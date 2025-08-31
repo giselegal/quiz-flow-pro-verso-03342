@@ -83,3 +83,24 @@ Este documento descreve a arquitetura prática do funil/quiz de 21 etapas confor
 ---
 
 Esta arquitetura reflete o caminho de produção atual (`StepPage` + `QuizFlowProvider` + templates `quiz21StepsComplete.ts`) e a forma como os blocos de resultado consomem `quizResult`.
+
+## Centralizações no Core (Atualização)
+- IDs e UUIDs: `src/core/utils/id.ts` expõe `isUUID()` e `generateUuid()` para uso consistente. Evita duplicação de validações.
+- Eventos: `src/core/constants/events.ts` padroniza nomes como `QUIZ_RESULT_UPDATED` e `QUIZ_SESSION_STARTED`. Use as constantes, não literais.
+- Resultado (orquestração): `src/services/core/ResultOrchestrator.ts` unifica cálculo (`ResultEngine`), persistência no `StorageService` e persistência opcional no Supabase quando houver sessão UUID.
+
+## CRUD do Funil (Ajustes)
+- `schemaDrivenFunnelService.ts` alinhar ao schema do Supabase:
+  - Deixar o DB gerar `funnels.id` (UUID)
+  - Gerar `funnel_pages.id` com `generateUuid()`
+  - Normalizar `page_type` (intro|question|result|lead_form|transition)
+  - Garantir `blocks` como array JSON
+
+## Sessões (Regras)
+- `sessionService.startQuizSession()` só cria sessão no Supabase se o `quizId` (funnelId) for UUID válido (evita FK inválida). Caso contrário, opera em modo local.
+- Ao criar sessão Supabase, emite `QUIZ_SESSION_STARTED` e salva `sessionId` UUID no localStorage.
+
+## Próximos Passos
+- Mover eventuais duplicações de `isValidUUID` remanescentes para `core/utils/id.ts`.
+- Padronizar chaves de storage (`core/constants/storageKeys.ts`).
+- Adicionar testes unitários para normalização de pages no `schemaDrivenFunnelService` e para o `ResultOrchestrator` (happy path + persistência condicional).

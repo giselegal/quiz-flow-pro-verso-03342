@@ -50,6 +50,15 @@ export const sessionService = {
     }
 
     try {
+      // Se quizId não for UUID, não tente criar sessão no Supabase para evitar FK inválida
+      const funnelId = params.quizId;
+      const quizIdIsUUID = isValidUUID(funnelId || '');
+
+      if (!quizIdIsUUID) {
+        const localId = this.ensureLocalSessionId();
+        return { success: true, sessionId: localId, userId: 'local-user' } as const;
+      }
+
       // Criar usuário
       const user = await quizSupabaseService.createQuizUser({
         name: params.name,
@@ -68,7 +77,7 @@ export const sessionService = {
 
       // Criar sessão
       const session = await quizSupabaseService.createQuizSession({
-        funnelId: params.quizId || 'default-funnel',
+        funnelId: funnelId!,
         quizUserId: user.id,
         totalSteps: params.totalSteps,
         maxScore: params.maxScore,
@@ -79,11 +88,14 @@ export const sessionService = {
 
       // Evento global opcional
       if (isBrowser) {
-        window.dispatchEvent(
-          new CustomEvent('quiz-session-started', {
-            detail: { sessionId: session.id, userId: user.id },
-          })
-        );
+        try {
+          const EVENTS = (require('@/core/constants/events') as any).default;
+          window.dispatchEvent(
+            new CustomEvent(EVENTS.QUIZ_SESSION_STARTED, {
+              detail: { sessionId: session.id, userId: user.id },
+            })
+          );
+        } catch { }
       }
 
       return { success: true, sessionId: session.id, userId: user.id } as const;

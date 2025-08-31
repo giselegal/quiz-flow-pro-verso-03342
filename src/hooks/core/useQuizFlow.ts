@@ -172,7 +172,10 @@ export const useQuizFlow = ({
         StorageService.safeSetJSON('quizResult', quizResult);
         // Notificar listeners (blocos de resultado) que o resultado mudou
         try {
-          window.dispatchEvent(new Event('quiz-result-updated'));
+          try {
+            const EVENTS = (require('@/core/constants/events') as any).default;
+            window.dispatchEvent(new Event(EVENTS.QUIZ_RESULT_UPDATED));
+          } catch { }
         } catch { }
       } catch { }
     }
