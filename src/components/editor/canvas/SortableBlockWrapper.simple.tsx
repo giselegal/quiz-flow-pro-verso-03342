@@ -161,13 +161,9 @@ const SortableBlockWrapperBase: React.FC<SortableBlockWrapperProps> = ({
           'relative group transition-all duration-200',
           isSelected ? 'ring-2 ring-blue-500 ring-offset-1' : '',
           // Em etapas com conteúdo altamente interativo, facilitar hover/target do wrapper
-<<<<<<< HEAD
-          'hover:ring-1 hover:ring-blue-300/60 hover:ring-offset-1'
-=======
           'hover:ring-1 hover:ring-[#B89B7A]/40 hover:ring-offset-1',
           // Forçar ponteiro padrão no wrapper para evitar cursor de texto ao selecionar
           'cursor-default'
->>>>>>> 14f19d616 (chore(editor): sincroniza alterações (Dnd IDs, seleção dourada, autosave drafts por etapa, ajustes etapa 20))
         )}
         data-dnd-dropzone-type="bloco"
         data-block-id={String(block.id)}
