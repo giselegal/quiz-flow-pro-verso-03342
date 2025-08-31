@@ -196,10 +196,10 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
     // Se não há marcações de cor, retorna o texto com formatação
     return parts.length === 0
       ? [
-          <span key="0" style={{ color }}>
-            {parseFormattedText(text)}
-          </span>,
-        ]
+        <span key="0" style={{ color }}>
+          {parseFormattedText(text)}
+        </span>,
+      ]
       : parts;
   };
 
@@ -263,9 +263,8 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
       const debugEnabled = g?.__TEXT_INLINE_DEBUG === true;
       if (debugEnabled) {
         // Evitar logs repetitivos para o mesmo estado
-        const hash = `${block?.id}|${personalizedContent?.length}|${hasHtml ? 1 : 0}|${
-          hasSpanTag ? 1 : 0
-        }|${hasStrongTag ? 1 : 0}`;
+        const hash = `${block?.id}|${personalizedContent?.length}|${hasHtml ? 1 : 0}|${hasSpanTag ? 1 : 0
+          }|${hasStrongTag ? 1 : 0}`;
         g.__TEXT_INLINE_LOGS = g.__TEXT_INLINE_LOGS || new Set<string>();
         if (!g.__TEXT_INLINE_LOGS.has(hash)) {
           g.__TEXT_INLINE_LOGS.add(hash);
@@ -419,7 +418,7 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
               'w-full bg-transparent border-none resize-none outline-none',
               resolveFontSizeClass(fontSize as string, fontSizeClasses.medium),
               fontWeightClasses[fontWeight as keyof typeof fontWeightClasses] ??
-                fontWeightClasses.normal,
+              fontWeightClasses.normal,
               textAlignClasses[textAlign as keyof typeof textAlignClasses] ?? textAlignClasses.left,
               'break-words whitespace-pre-wrap',
               lineHeight || 'leading-normal',
@@ -449,7 +448,7 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
             // ES7+ Computed properties com fallbacks
             resolveFontSizeClass(fontSize as string, fontSizeClasses.medium),
             fontWeightClasses[fontWeight as keyof typeof fontWeightClasses] ??
-              fontWeightClasses.normal,
+            fontWeightClasses.normal,
             textAlignClasses[textAlign as keyof typeof textAlignClasses] ?? textAlignClasses.left,
 
             // Responsividade e quebra de texto
