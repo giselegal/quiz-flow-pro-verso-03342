@@ -1,6 +1,8 @@
 import { toast } from '@/components/ui/use-toast';
 import { useQuizFlow } from '@/context/QuizFlowProvider';
 import { quizSupabaseService } from '@/services/quizSupabaseService';
+import { sessionService } from '@/services/sessionService';
+import { isUUID } from '@/core/utils/id';
 import { templateService } from '@/services/templateService';
 import { useCallback, useEffect, useState } from 'react';
 import { StorageService } from '@/services/core/StorageService';
@@ -62,31 +64,44 @@ export const useStepNavigation = (initialStep: number = 1) => {
         StorageService.safeGetString('quizUserName') ||
         '';
 
+      // Garante uma sessão local e tenta promover para UUID apenas se funnelId for UUID
+      const funnelId = 'quiz-21-steps';
+      if (!isUUID(funnelId)) {
+        const local = sessionService.ensureLocalSessionId();
+        setSession({
+          id: local,
+          funnelId,
+          userId: 'local-user',
+          status: 'started',
+          currentStep: 0,
+          totalSteps: 21,
+          score: 0,
+          maxScore: 100,
+          startedAt: new Date(),
+          lastActivity: new Date(),
+          metadata: { startTime: new Date().toISOString(), userAgent: navigator.userAgent },
+        } as any);
+        setState(prev => ({ ...prev, sessionId: local, isLoading: false }));
+        console.log('⚠️ Sessão local iniciada (funnelId não-UUID).');
+        return;
+      }
+
+      // Caso seja UUID, usa o serviço padrão com criação de usuário e sessão remota
       const user = await quizSupabaseService.createQuizUser({
         name: userName || undefined,
         userAgent: navigator.userAgent,
       });
-
       const newSession = await quizSupabaseService.createQuizSession({
-        funnelId: 'quiz-21-steps',
+        funnelId,
         quizUserId: user.id,
         totalSteps: 21,
         maxScore: 100,
-        metadata: {
-          startTime: new Date().toISOString(),
-          userAgent: navigator.userAgent,
-        },
+        metadata: { startTime: new Date().toISOString(), userAgent: navigator.userAgent },
       });
-
       setSession(newSession);
-      setState(prev => ({
-        ...prev,
-        sessionId: newSession.id,
-        isLoading: false,
-      }));
-
+      setState(prev => ({ ...prev, sessionId: newSession.id, isLoading: false }));
       console.log('✅ Sessão do quiz inicializada:', newSession.id);
-    } catch (error) {
+  } catch (error) {
       console.error('❌ Erro ao inicializar sessão:', error);
       toast({
         title: 'Erro',

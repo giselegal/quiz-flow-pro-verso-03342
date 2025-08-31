@@ -1,4 +1,5 @@
 import { supabase } from '@/integrations/supabase/client';
+import { isUUID } from '@/core/utils/id';
 import type { Database } from '@/integrations/supabase/types';
 
 type InsertQuizUser = Database['public']['Tables']['quiz_users']['Insert'];
@@ -142,6 +143,12 @@ export const quizSupabaseService = {
     metadata?: any;
   }): Promise<QuizSessionData> {
     try {
+      // Garante alinhamento com o funil: não cria sessão no Supabase se funnelId não for UUID
+      if (!isUUID(sessionData.funnelId)) {
+        throw Object.assign(new Error('FUNNEL_ID_NOT_UUID'), {
+          code: 'FUNNEL_ID_NOT_UUID',
+        });
+      }
       const insertData: InsertQuizSession = {
         funnel_id: sessionData.funnelId,
         quiz_user_id: sessionData.quizUserId,
