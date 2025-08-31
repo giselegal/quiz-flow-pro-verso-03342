@@ -151,7 +151,7 @@ export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
         setIsLoading(false);
       }
     },
-  [questions.length, session, toast]
+    [questions.length, session, toast]
   );
 
   // Salvar resposta - nova assinatura para suportar weights
@@ -258,22 +258,22 @@ export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
         },
         secondaryStyles: fullResults.styleProfile.secondaryStyle
           ? [
-              {
-                style: fullResults.styleProfile.secondaryStyle,
-                category: fullResults.styleProfile.secondaryStyle,
-                percentage:
-                  Math.max(
-                    0,
-                    Math.min(100, Math.round(fullResults.styleProfile.confidence * 100))
-                  ) || 50,
-              },
-            ]
+            {
+              style: fullResults.styleProfile.secondaryStyle,
+              category: fullResults.styleProfile.secondaryStyle,
+              percentage:
+                Math.max(
+                  0,
+                  Math.min(100, Math.round(fullResults.styleProfile.confidence * 100))
+                ) || 50,
+            },
+          ]
           : [],
         recommendations: fullResults.recommendations,
         metadata: fullResults.metadata,
       } as any;
 
-  if (session.id) {
+      if (session.id) {
         await quizSupabaseService.updateQuizSession(session.id, {
           status: 'completed',
           score: fullResults.completionScore,
@@ -305,7 +305,7 @@ export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
           if (typeof fullResults?.userName === 'string' && fullResults.userName.trim()) {
             StorageService.safeSetString('userName', fullResults.userName.trim());
           }
-        } catch {}
+        } catch { }
 
         return { success: true, resultId, result: normalized };
       } else {
@@ -320,7 +320,7 @@ export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
           if (typeof fullResults?.userName === 'string' && fullResults.userName.trim()) {
             StorageService.safeSetString('userName', fullResults.userName.trim());
           }
-        } catch {}
+        } catch { }
         return { success: true, result: normalized };
       }
     } catch (error) {
@@ -408,8 +408,8 @@ export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
   useEffect(() => {
     const loadSavedResult = () => {
       try {
-  const parsedResult = StorageService.safeGetJSON<any>('quizResult');
-  if (parsedResult) {
+        const parsedResult = StorageService.safeGetJSON<any>('quizResult');
+        if (parsedResult) {
 
           // Verificar se o resultado tem o formato esperado
           if (parsedResult.primaryStyle && parsedResult.secondaryStyles) {
@@ -420,7 +420,7 @@ export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
               isCompleted: true,
             }));
           }
-  }
+        }
       } catch (error) {
         console.error('Erro ao carregar resultado salvo:', error);
       }

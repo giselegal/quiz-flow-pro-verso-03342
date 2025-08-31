@@ -101,7 +101,7 @@ export const useStepNavigation = (initialStep: number = 1) => {
       setSession(newSession);
       setState(prev => ({ ...prev, sessionId: newSession.id, isLoading: false }));
       console.log('✅ Sessão do quiz inicializada:', newSession.id);
-  } catch (error) {
+    } catch (error) {
       console.error('❌ Erro ao inicializar sessão:', error);
       toast({
         title: 'Erro',
@@ -234,12 +234,12 @@ export const useStepNavigation = (initialStep: number = 1) => {
         });
 
         // Atualizar estado local
-  setSession((prev: any) =>
+        setSession((prev: any) =>
           prev
             ? {
-                ...prev,
-                responses: updatedResponses,
-              }
+              ...prev,
+              responses: updatedResponses,
+            }
             : null
         );
 
@@ -428,7 +428,7 @@ export const useStepNavigation = (initialStep: number = 1) => {
             userData: { name: StorageService.safeGetString('userName') || StorageService.safeGetString('quizUserName') || '' },
           };
           StorageService.safeSetJSON('quizResult', payload);
-        } catch {}
+        } catch { }
 
         return {
           totalAnswers,
