@@ -64,7 +64,7 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
         'overflow-visible', // 🚨 CORREÇÃO: Permitir eventos de drag
         // ✅ Garante que o root seja tratado como droppable principal nas correções globais
         'dnd-droppable-zone',
-  isOver && 'bg-[#B89B7A]/10',
+        isOver && 'bg-[#B89B7A]/10',
         className
       )}
       role="button"
