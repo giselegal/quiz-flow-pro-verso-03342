@@ -90,7 +90,7 @@ export const ResultEngine = {
     try {
       window.dispatchEvent(new Event('quiz-result-updated'));
       window.dispatchEvent(new Event('quiz-result-refresh'));
-    } catch {}
+    } catch { }
     return ok;
   },
 };

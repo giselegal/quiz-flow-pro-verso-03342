@@ -409,7 +409,7 @@ const QuizModularPage: React.FC = () => {
           computeAndPersistResult();
         } else {
           // Notificar UI para reagir (caso exista mas não tenha disparado evento)
-          try { window.dispatchEvent(new Event('quiz-result-refresh')); } catch {}
+          try { window.dispatchEvent(new Event('quiz-result-refresh')); } catch { }
         }
       } catch { /* silencioso */ }
     }
