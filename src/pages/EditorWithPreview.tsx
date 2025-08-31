@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 
 // Editor Components
 import { CanvasDropZone } from '@/components/editor/canvas/CanvasDropZone';
+import { StepDndProvider } from '@/components/editor/dnd/StepDndProvider';
 import UniversalBlockRenderer from '@/components/editor/blocks/UniversalBlockRenderer';
 import CombinedComponentsPanel from '@/components/editor/CombinedComponentsPanel';
 import { FunnelSettingsPanel } from '@/components/editor/funnel-settings/FunnelSettingsPanel';
@@ -243,22 +244,24 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
                   style={{ backgroundColor: 'transparent' }}
                 >
                   <div className={getCanvasClassName()}>
-                    <CanvasDropZone isEmpty={currentBlocks.length === 0} scopeId={currentStep}>
-                      <div className="space-y-4">
-                        {currentBlocks.map(block => (
-                          <div key={block.id} onClick={() => setSelectedBlockId(block.id)}>
-                            <UniversalBlockRenderer
-                              block={block as any}
-                              isSelected={selectedBlockId === block.id}
-                              mode={isPreviewing ? 'preview' : 'editor'}
-                              onPropertyChange={(key, value) =>
-                                updateBlock(block.id, { [key]: value })
-                              }
-                            />
-                          </div>
-                        ))}
-                      </div>
-                    </CanvasDropZone>
+                    <StepDndProvider stepNumber={currentStep}>
+                      <CanvasDropZone isEmpty={currentBlocks.length === 0} scopeId={currentStep}>
+                        <div className="space-y-4">
+                          {currentBlocks.map(block => (
+                            <div key={block.id} onClick={() => setSelectedBlockId(block.id)}>
+                              <UniversalBlockRenderer
+                                block={block as any}
+                                isSelected={selectedBlockId === block.id}
+                                mode={isPreviewing ? 'preview' : 'editor'}
+                                onPropertyChange={(key, value) =>
+                                  updateBlock(block.id, { [key]: value })
+                                }
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      </CanvasDropZone>
+                    </StepDndProvider>
                   </div>
 
                   {/* 🎮 PREVIEW TOGGLE - Botão flutuante para alternar preview */}

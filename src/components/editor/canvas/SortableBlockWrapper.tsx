@@ -9,6 +9,9 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { GripVertical, Trash2 } from 'lucide-react';
 import React from 'react';
+import { useEditor } from '@/components/editor/EditorProvider';
+import { generateUniqueId } from '@/utils/generateUniqueId';
+import { useStepSelection } from '@/hooks/useStepSelection';
 
 interface SortableBlockWrapperProps {
   block: Block;
@@ -75,6 +78,9 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
 }) => {
   // 🚀 Usar contexto de preview em vez de prop
   const { isPreviewing } = usePreview();
+  const { state: editorState } = useEditor();
+  const stepNumberRaw = editorState?.currentStep ?? 'default';
+  const numericStep = typeof stepNumberRaw === 'number' ? stepNumberRaw : Number(stepNumberRaw) || 0;
 
   // 🔧 Integrar propriedades de container diretamente
   const { containerClasses, inlineStyles, processedProperties } = useContainerProperties(
@@ -101,12 +107,18 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
   // Buscar componente no registry (eliminando UniversalBlockRenderer)
   const Component = getEnhancedBlockComponent(block.type);
 
+  const uniqueId = React.useMemo(
+    () => generateUniqueId({ stepNumber: numericStep, blockId: String(block.id), type: 'block' }),
+    [numericStep, block.id]
+  );
+
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
-    id: block.id,
+    id: uniqueId,
     data: {
       type: 'canvas-block', // TIPO CRUCIAL que o DndProvider espera
-      blockId: block.id,
+      blockId: String(block.id),
       block: block,
+      scopeId: numericStep,
     },
   });
 
@@ -142,6 +154,19 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
     onUpdate({ [key]: value });
   };
 
+  // Seleção estável com debounce por etapa
+  const { handleBlockSelection } = useStepSelection({
+    stepNumber: numericStep,
+    onSelectBlock: () => onSelect(),
+    debounceMs: 50,
+  });
+
+  const handlePointerDownCapture = (e: React.PointerEvent) => {
+    // Só botão principal e sem modificadores
+    if (e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
+    handleBlockSelection(String(block.id));
+  };
+
   // Fallback se componente não for encontrado
   if (!Component) {
     return (
@@ -158,7 +183,7 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
   }
 
   return (
-    <div ref={setNodeRef} style={style} className="my-1">
+    <div ref={setNodeRef} style={style} className="my-1" onPointerDownCapture={handlePointerDownCapture}>
       {/* 🎯 Espaçamento FIXO de 4px (my-1 = 0.25rem = 4px) - SEMPRE IGUAL independente da escala */}
       <Card
         className={cn(
@@ -212,7 +237,6 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
         {/* 🎯 Container 2: Componente Individual sem bordas - apenas padding mínimo */}
         <div
           className="p-1" // 🎯 Apenas padding, sem bordas
-          onClick={!isPreviewing ? onSelect : undefined} // Não executar onClick no modo preview
           style={{
             // 🎯 SINCRONIZAÇÃO COM PAINEL: Aplicar propriedades exatas via inline styles
             padding:

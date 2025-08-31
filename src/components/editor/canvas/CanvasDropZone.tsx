@@ -12,7 +12,7 @@ interface CanvasDropZoneProps {
   scopeId?: number | string;
 }
 
-const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
+const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
   children,
   isEmpty,
   className,
@@ -101,5 +101,5 @@ const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
   );
 };
 
+export const CanvasDropZone = React.memo(CanvasDropZoneBase);
 export default CanvasDropZone;
-export { CanvasDropZone };
