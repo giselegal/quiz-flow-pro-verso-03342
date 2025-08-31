@@ -1,14 +1,8 @@
 import { quizSupabaseService } from '@/services/quizSupabaseService';
+import { isUUID } from '@/core/utils/id';
 
 const isBrowser = typeof window !== 'undefined';
 const OFFLINE = import.meta.env.VITE_DISABLE_SUPABASE === 'true';
-
-function isValidUUID(value: string | null | undefined): value is string {
-  if (!value) return false;
-  return /^(?:[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})$/i.test(
-    value
-  );
-}
 
 export const sessionService = {
   getSessionId(): string | null {
@@ -17,7 +11,7 @@ export const sessionService = {
   },
 
   isUUIDSession(): boolean {
-    return isValidUUID(this.getSessionId());
+  return isUUID(this.getSessionId() || undefined);
   },
 
   ensureLocalSessionId(): string {
@@ -33,7 +27,7 @@ export const sessionService = {
   setUUIDSessionId(uuid: string) {
     if (!isBrowser) return;
     localStorage.setItem('quiz_session_id', uuid);
-    localStorage.setItem('quiz_session_is_uuid', String(isValidUUID(uuid)));
+  localStorage.setItem('quiz_session_is_uuid', String(isUUID(uuid)));
   },
 
   async startQuizSession(params: {
@@ -51,8 +45,8 @@ export const sessionService = {
 
     try {
       // Se quizId não for UUID, não tente criar sessão no Supabase para evitar FK inválida
-      const funnelId = params.quizId;
-      const quizIdIsUUID = isValidUUID(funnelId || '');
+  const funnelId = params.quizId;
+  const quizIdIsUUID = isUUID(funnelId || undefined);
 
       if (!quizIdIsUUID) {
         const localId = this.ensureLocalSessionId();
