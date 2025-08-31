@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { cn } from '@/lib/utils';
 import { Quote, Star } from 'lucide-react';
 import { getMarginClass } from '@/utils/margins';

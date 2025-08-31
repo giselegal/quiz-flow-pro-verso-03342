@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { cn } from '@/lib/utils';
 import { getMarginClass } from '@/utils/margins';
 import type { BlockData } from '@/types/blocks';
