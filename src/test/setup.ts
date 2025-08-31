@@ -1,4 +1,6 @@
 import '@testing-library/jest-dom';
+import { afterEach } from 'vitest';
+import { cleanup } from '@testing-library/react';
 import { vi } from 'vitest';
 
 // Setup global test environment
@@ -72,3 +74,8 @@ vi.stubGlobal('sessionStorage', {
 });
 
 // Mantemos timers originais; evitar mocks que possam causar recursão em libs
+
+// Limpa o DOM entre os testes para evitar containers "soltos" de renders anteriores
+afterEach(() => {
+  cleanup();
+});
