@@ -35,7 +35,6 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
   mode,
   setMode,
   previewDevice,
-  setPreviewDevice,
   safeCurrentStep,
   currentStepKey,
   currentStepData,
@@ -58,7 +57,7 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
       let published = 0;
       const publishOne = (key: string, blocks: any[]) => {
         if (state.isSupabaseEnabled && (actions as any)?.publishStepToSupabase) {
-          return (actions as any).publishStepToSupabase(key, blocks).then(() => {});
+          return (actions as any).publishStepToSupabase(key, blocks).then(() => { });
         } else {
           return Promise.resolve();
         }
