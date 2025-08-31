@@ -107,7 +107,36 @@ const SortableBlockWrapperBase: React.FC<SortableBlockWrapperProps> = ({
   const handlePointerDownCapture = (e: React.PointerEvent) => {
     // Só botão principal e sem modificadores
     if (e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
+    try {
+      const g: any = typeof globalThis !== 'undefined' ? (globalThis as any) : undefined;
+      if (g?.__DND_DEBUG) {
+        // eslint-disable-next-line no-console
+        console.log('🖱️ onPointerDownCapture -> selecionar bloco', {
+          step: numericStep,
+          blockId: String(block.id),
+          scopeId,
+        });
+      }
+    } catch { }
     // Selecionar sempre (inclusive em elementos interativos) sem impedir foco neles
+    handleBlockSelection(String(block.id));
+  };
+
+  // Fallback adicional: garantir seleção também em onClick (debounce do hook evita duplicidade)
+  const handleClick = (e: React.MouseEvent) => {
+    // Ignorar cliques com modificadores ou se um drag explícito prevenir o default
+    if (e.ctrlKey || e.metaKey || e.shiftKey || e.altKey || e.defaultPrevented) return;
+    try {
+      const g: any = typeof globalThis !== 'undefined' ? (globalThis as any) : undefined;
+      if (g?.__DND_DEBUG) {
+        // eslint-disable-next-line no-console
+        console.log('🖱️ onClick -> selecionar bloco (fallback)', {
+          step: numericStep,
+          blockId: String(block.id),
+          scopeId,
+        });
+      }
+    } catch { }
     handleBlockSelection(String(block.id));
   };
 
@@ -126,6 +155,7 @@ const SortableBlockWrapperBase: React.FC<SortableBlockWrapperProps> = ({
         data-block-id={String(block.id)}
         data-scope-id={String(scopeId ?? 'default')}
         onPointerDownCapture={handlePointerDownCapture}
+        onClick={handleClick}
       >
         {/* Drag handle and controls */}
         <div className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity z-10 flex items-center gap-1">

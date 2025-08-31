@@ -7,13 +7,37 @@
 // Função para carregar template dinamicamente
 async function loadTemplate(stepNumber: number): Promise<any> {
   const stepId = stepNumber.toString().padStart(2, '0');
+  // Detecta ambiente de teste (Vitest/JSDOM) para evitar fetch HTTP
+  const isTestMode = (() => {
+    try {
+      const env = (import.meta as any)?.env ?? {};
+      const byMode = env?.MODE === 'test' || !!env?.TEST;
+      const byProc = typeof process !== 'undefined' && !!(process as any)?.env?.VITEST;
+      return Boolean(byMode || byProc);
+    } catch {
+      return false;
+    }
+  })();
+  // Evita tentar fetch repetidamente por etapa (dedup de warnings)
+  // (escopo de módulo)
+  // @ts-expect-error - anexar em globalThis para persistir por execução
+  const __TEMPLATE_FETCH_TRIED: Set<number> = (globalThis as any).__TEMPLATE_FETCH_TRIED || new Set<number>();
+  // @ts-expect-error - persistir a referência
+  (globalThis as any).__TEMPLATE_FETCH_TRIED = __TEMPLATE_FETCH_TRIED;
 
   try {
     // ✅ STRATEGY: Usar fetch HTTP apenas no browser (evita erros no Node/Vitest)
     const templatePath = `/src/config/templates/step-${stepId}.json`;
 
-    // Durante desenvolvimento, usar fetch somente quando window existir
-    if (import.meta.env.DEV && typeof window !== 'undefined') {
+    // Durante desenvolvimento, usar fetch somente quando for browser real (não test) e sem SSR
+    if (
+      import.meta.env.DEV &&
+      typeof window !== 'undefined' &&
+      // Evita JSDOM/Vitest
+      !isTestMode &&
+      // Evita repetir fetch para a mesma etapa (ruído)
+      !__TEMPLATE_FETCH_TRIED.has(stepNumber)
+    ) {
       try {
         const response = await fetch(templatePath);
         if (response.ok) {
@@ -24,7 +48,12 @@ async function loadTemplate(stepNumber: number): Promise<any> {
           }
         }
       } catch (fetchError) {
-        console.warn(`⚠️ Fetch falhou para template ${stepNumber}:`, fetchError);
+        // Garante aviso único por etapa
+        if (!__TEMPLATE_FETCH_TRIED.has(stepNumber)) {
+          console.warn(`⚠️ Fetch falhou para template ${stepNumber}:`, fetchError);
+        }
+      } finally {
+        __TEMPLATE_FETCH_TRIED.add(stepNumber);
       }
     }
 
