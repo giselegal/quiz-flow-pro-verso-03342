@@ -105,7 +105,7 @@ export const useQuizFlow = ({
     (name: string) => {
       setUserName(name);
       setUserNameFromInput(name);
-  try { StorageService.safeSetString('userName', name); } catch {}
+      try { StorageService.safeSetString('userName', name); } catch { }
       // Validar etapa 1 quando nome preenchido
       setStepValidation(prev => ({ ...prev, 1: !!name?.trim() }));
       nextStep();
@@ -162,7 +162,11 @@ export const useQuizFlow = ({
     if (quizResult) {
       try {
         StorageService.safeSetJSON('quizResult', quizResult);
-      } catch {}
+        // Notificar listeners (blocos de resultado) que o resultado mudou
+        try {
+          window.dispatchEvent(new Event('quiz-result-updated'));
+        } catch { }
+      } catch { }
     }
   }, [quizResult]);
 
@@ -252,7 +256,7 @@ export const useQuizFlow = ({
     progress: Math.round((currentStep / 21) * 100),
     stepValidation,
     stepInfo,
-  stepConfig: QuizDataService.getStepConfig(currentStep),
+    stepConfig: QuizDataService.getStepConfig(currentStep),
   };
 
   // Ações disponíveis

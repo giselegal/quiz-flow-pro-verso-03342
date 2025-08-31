@@ -23,7 +23,7 @@ const MentorSectionInlineBlock: React.FC<MentorSectionInlineBlockProps> = ({
   block,
   isSelected = false,
   onClick,
-  onPropertyChange,
+  onPropertyChange: _onPropertyChange,
   disabled = false,
   className,
 }) => {
@@ -47,11 +47,7 @@ const MentorSectionInlineBlock: React.FC<MentorSectionInlineBlockProps> = ({
     'Mentora de outros consultores',
   ];
 
-  const handleEdit = (field: string, value: any) => {
-    if (onPropertyChange && !disabled) {
-      onPropertyChange(field, value);
-    }
-  };
+  // Edição inline está desativada por padrão neste bloco
 
   // Margens editáveis (padrões 0)
   const marginTop = properties.marginTop ?? 0;
@@ -64,8 +60,8 @@ const MentorSectionInlineBlock: React.FC<MentorSectionInlineBlockProps> = ({
       className={cn(
         'w-full p-4 md:p-6 transition-all duration-200',
         'bg-gradient-to-br from-purple-50 to-indigo-50 rounded-lg',
-  isSelected && 'ring-2 ring-purple-400 bg-[#B89B7A]/10',
-  !disabled && 'cursor-pointer hover:bg-[#B89B7A]/80',
+        isSelected && 'ring-2 ring-purple-400 bg-[#B89B7A]/10',
+        !disabled && 'cursor-pointer hover:bg-[#B89B7A]/80',
         className,
         // Margens universais com controles deslizantes
         getMarginClass(marginTop, 'top'),

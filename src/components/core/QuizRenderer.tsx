@@ -101,6 +101,42 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
     return { from, via, to };
   }, [stepConfig?.backgroundFrom, stepConfig?.backgroundVia, stepConfig?.backgroundTo]);
 
+  // 🔄 Hidratação do resultado em modos editor/preview
+  useEffect(() => {
+    try {
+      const stepNum = currentStepOverride ?? currentStep;
+      const isResultStep = stepNum === 20 || stepNum === 21;
+      const isEditLike = mode === 'editor' || (mode === 'preview' && previewEditable);
+      if (!isResultStep || !isEditLike) return;
+
+      // Se não houver resultado persistido, cria um básico a partir do estado atual
+      const hasResult = (() => {
+        try {
+          const r = (require('@/services/core/StorageService') as any).StorageService.safeGetJSON('quizResult');
+          return !!r && !!r.primaryStyle;
+        } catch { return false; }
+      })();
+
+      if (!hasResult) {
+        try {
+          // Instanciar hook fora de React não é possível; em vez disso, tenta reaproveitar estado salvo
+          // Fallback: cria um resultado mínimo neutro para não quebrar renderização
+          const Storage = (require('@/services/core/StorageService') as any).StorageService;
+          const name = Storage.safeGetString('userName') || Storage.safeGetString('quizUserName') || '';
+          const minimal = {
+            primaryStyle: { category: 'Neutro', style: 'neutro', score: 0, points: 0, percentage: 0, rank: 1 },
+            secondaryStyles: [],
+            totalQuestions: 0,
+            completedAt: new Date(),
+            scores: {},
+            userData: { name, completionTime: new Date(), strategicAnswersCount: 0 },
+          };
+          Storage.safeSetJSON('quizResult', minimal);
+        } catch { }
+      }
+    } catch { }
+  }, [mode, previewEditable, currentStep, currentStepOverride]);
+
   // ✅ Validação e gating similares à produção
   const [stepValidation, setLocalStepValidation] = useState<Record<number, boolean>>({});
 

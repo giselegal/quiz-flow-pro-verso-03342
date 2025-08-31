@@ -67,7 +67,7 @@ const TestimonialsBlock: React.FC<TestimonialsBlockProps & { block?: any }> = ({
 
   return (
     <div className={cn('py-10', className)}>
-  <div className="text-center mb-10" aria-live="polite">
+      <div className="text-center mb-10" aria-live="polite">
         <h3 className="text-2xl md:text-3xl font-bold text-[#B89B7A] mb-3">{title}</h3>
         <p className="text-center text-[#8F7A6A] mb-4 max-w-2xl mx-auto">
           O que mulheres como você estão dizendo sobre esta jornada de transformação
@@ -83,7 +83,7 @@ const TestimonialsBlock: React.FC<TestimonialsBlockProps & { block?: any }> = ({
             : 'flex overflow-x-auto gap-6 pb-4 snap-x snap-mandatory'
         )}
       >
-        {testimonials.map((item, index) => (
+        {testimonials.map((item: any, index: number) => (
           <div
             key={index}
             className={cn(

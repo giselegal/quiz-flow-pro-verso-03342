@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useAuth } from '@/context/AuthContext';
 import { supabase } from '../integrations/supabase/client';
 import { QuizQuestion } from '@/types/quiz';

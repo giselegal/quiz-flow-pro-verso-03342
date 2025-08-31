@@ -133,10 +133,12 @@ export const useQuizLogic = () => {
     return styleScores;
   };
 
-  const createStyleResult = (category: string, score: number): StyleResult => ({
+  // Calcula o resultado por estilo usando a proporção de pontos daquele estilo
+  const createStyleResult = (category: string, score: number, totalPoints: number): StyleResult => ({
     category,
     score,
-    percentage: Math.round((score / totalQuestions) * 100),
+    // Usa proporção em relação ao total de pontos para evitar depender de totalQuestions
+    percentage: totalPoints > 0 ? Math.round((score / totalPoints) * 100) : 0,
     style: category.toLowerCase(),
     points: score,
     rank: 1,
@@ -151,14 +153,20 @@ export const useQuizLogic = () => {
       );
       const topStyle = sortedStyles[0]?.[0] || 'estilo-neutro';
 
-      const primaryResult = createStyleResult(topStyle, styleScores[topStyle] || 0);
+      // Total de pontos somando todos os estilos (considera multi-seleção por questão)
+      const totalPoints = Object.values(styleScores).reduce((acc, v) => acc + (v || 0), 0);
+
+      const primaryResult = createStyleResult(topStyle, styleScores[topStyle] || 0, totalPoints);
 
       const secondaryResults = sortedStyles
         .slice(1, 4)
-        .map(([category, score]) => createStyleResult(category, score));
+        .map(([category, score]) => createStyleResult(category, score, totalPoints));
 
       // ✅ PERSONALIZAÇÃO: Incluir nome do usuário no resultado
-  const currentUserName = userName || StorageService.safeGetString('userName') || StorageService.safeGetString('quizUserName') || '';
+      const currentUserName =
+        userName ||
+        StorageService.safeGetString('userName') ||
+        StorageService.safeGetString('quizUserName') || '';
 
       const result: QuizResult = {
         primaryStyle: primaryResult,
@@ -182,6 +190,8 @@ export const useQuizLogic = () => {
   const completeQuiz = useCallback(() => {
     const calculatedResult = calculateResults(answers);
     setQuizResult(calculatedResult);
+    // Persistir imediatamente para consumo por componentes de resultado
+    try { StorageService.safeSetJSON('quizResult', calculatedResult); } catch { }
     setQuizCompleted(true);
   }, [answers, calculateResults]);
 
@@ -201,5 +211,7 @@ export const useQuizLogic = () => {
     goToPreviousQuestion,
     restartQuiz,
     completeQuiz,
+    // Expor cálculo para hidratação em modos de edição/preview
+    calculateResults,
   };
 };
