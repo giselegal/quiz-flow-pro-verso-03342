@@ -192,7 +192,7 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
           containerClasses,
           // 🎯 Destaque visual quando selecionado
           isSelected &&
-            'ring-2 ring-blue-500 ring-offset-1 border-blue-300 bg-blue-50/30 shadow-lg',
+          'ring-2 ring-blue-500 ring-offset-1 border-blue-300 bg-blue-50/30 shadow-lg',
           !isSelected && 'border-stone-200 hover:border-stone-300',
           // Margens universais com controles deslizantes
           getMarginClass(marginTop, 'top'),
@@ -241,9 +241,9 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
             // 🎯 SINCRONIZAÇÃO COM PAINEL: Aplicar propriedades exatas via inline styles
             padding:
               block.properties?.paddingTop ||
-              block.properties?.paddingBottom ||
-              block.properties?.paddingLeft ||
-              block.properties?.paddingRight
+                block.properties?.paddingBottom ||
+                block.properties?.paddingLeft ||
+                block.properties?.paddingRight
                 ? `${block.properties.paddingTop || 0}px ${block.properties.paddingRight || 0}px ${block.properties.paddingBottom || 0}px ${block.properties.paddingLeft || 0}px`
                 : undefined,
             margin:
@@ -252,7 +252,7 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
                 : undefined,
             backgroundColor:
               block.properties?.backgroundColor &&
-              block.properties.backgroundColor !== 'transparent'
+                block.properties.backgroundColor !== 'transparent'
                 ? block.properties.backgroundColor
                 : undefined,
             color: block.properties?.textColor || undefined,

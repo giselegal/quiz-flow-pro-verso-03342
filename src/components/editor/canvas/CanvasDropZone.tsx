@@ -59,6 +59,7 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
       aria-describedby="DndDescribedBy-2"
       // ✅ Importante para aplicar correções CSS globais de DnD
       data-id={droppableId}
+      data-scope-id={String(scopeId ?? 'default')}
       data-testid={dataTestId}
       style={{ minHeight: '600px' }} // 🚨 CORREÇÃO: Garantir área mínima
     >
@@ -102,4 +103,5 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
 };
 
 export const CanvasDropZone = React.memo(CanvasDropZoneBase);
+CanvasDropZone.displayName = 'CanvasDropZone';
 export default CanvasDropZone;
