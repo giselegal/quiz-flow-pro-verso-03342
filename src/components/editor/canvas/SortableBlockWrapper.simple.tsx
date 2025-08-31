@@ -6,7 +6,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { GripVertical, Trash2 } from 'lucide-react';
 import React from 'react';
-import { BLOCK_ID_PREFIX } from '../dnd/constants';
+import { generateUniqueId } from '@/utils/generateUniqueId';
 
 interface SortableBlockWrapperProps {
   block: Block;
@@ -43,7 +43,11 @@ const SortableBlockWrapperBase: React.FC<SortableBlockWrapperProps> = ({
     transition,
     isDragging,
   } = useSortable({
-    id: `${BLOCK_ID_PREFIX}${scopeId ?? 'default'}-${String(block.id)}`,
+    id: generateUniqueId({ 
+      stepNumber: scopeId ?? 'default', 
+      blockId: String(block.id), 
+      type: 'block' 
+    }),
     data: {
       type: 'canvas-block',
       blockId: String(block.id), // Required by validateDrop

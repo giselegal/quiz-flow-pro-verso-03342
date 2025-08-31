@@ -5,7 +5,8 @@ import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { mark } from '@/utils/perf';
 import React from 'react';
 import { useRenderCount } from '@/hooks/useRenderCount';
-import { CANVAS_ROOT_ID, SLOT_ID_PREFIX, BLOCK_ID_PREFIX } from '../dnd/constants';
+import { CANVAS_ROOT_ID } from '../dnd/constants';
+import { generateUniqueId } from '@/utils/generateUniqueId';
 import { SortableBlockWrapper } from './SortableBlockWrapper.simple';
 
 // Componente para drop zone entre blocos (sempre presente para maximizar detecção)
@@ -19,7 +20,11 @@ const InterBlockDropZoneBase: React.FC<{
   const data = React.useMemo(() => ({ type: 'dropzone', accepts, position }), [accepts, position]);
 
   const { setNodeRef, isOver } = useDroppable({
-    id: `${SLOT_ID_PREFIX}${String(scopeId ?? 'default')}-${position}`,
+    id: generateUniqueId({ 
+      stepNumber: scopeId ?? 'default', 
+      position, 
+      type: 'slot' 
+    }),
     data: { ...data, scopeId: scopeId ?? 'default' },
   });
 
@@ -94,7 +99,10 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
 
   const { setNodeRef, isOver } = useDroppable({
     // Escopar o id do droppable raiz por etapa para evitar colisões entre etapas 2–21
-    id: `${CANVAS_ROOT_ID}-${String(scopeId ?? 'default')}`,
+    id: generateUniqueId({ 
+      stepNumber: scopeId ?? 'default', 
+      type: 'dropzone' 
+    }),
     data: { ...rootData, scopeId: scopeId ?? 'default' },
   });
 
@@ -338,7 +346,11 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
       ) : (
         <SortableContext
           items={React.useMemo(
-            () => blocks.map(block => `${BLOCK_ID_PREFIX}${String(scopeId ?? 'default')}-${String(block.id)}`),
+            () => blocks.map(block => generateUniqueId({ 
+              stepNumber: scopeId ?? 'default', 
+              blockId: String(block.id), 
+              type: 'block' 
+            })),
             [blocks, scopeId]
           )}
           strategy={verticalListSortingStrategy}
