@@ -85,6 +85,12 @@ export const ResultEngine = {
 
   // Persiste com fallback seguro
   persist(payload: QuizResultPayload): boolean {
-    return StorageService.safeSetJSON('quizResult', payload);
+    const ok = StorageService.safeSetJSON('quizResult', payload);
+    // Notificar UI para reagir (hooks escutam estes eventos)
+    try {
+      window.dispatchEvent(new Event('quiz-result-updated'));
+      window.dispatchEvent(new Event('quiz-result-refresh'));
+    } catch {}
+    return ok;
   },
 };

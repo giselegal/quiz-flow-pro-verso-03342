@@ -399,6 +399,22 @@ const QuizModularPage: React.FC = () => {
     }
   }, [currentStep, computeAndPersistResult]);
 
+  // Fallback: garantir resultado ao entrar na etapa 20 (caso 19 tenha sido pulada)
+  useEffect(() => {
+    if (currentStep === 20) {
+      try {
+        const { StorageService } = require('@/services/core/StorageService');
+        const existing = StorageService.safeGetJSON('quizResult');
+        if (!existing) {
+          computeAndPersistResult();
+        } else {
+          // Notificar UI para reagir (caso exista mas não tenha disparado evento)
+          try { window.dispatchEvent(new Event('quiz-result-refresh')); } catch {}
+        }
+      } catch { /* silencioso */ }
+    }
+  }, [currentStep, computeAndPersistResult]);
+
   // 📈 Estatísticas/feedback por etapa (contagem de seleções e mensagens)
   const selectedCount = useMemo(() => {
     try {
