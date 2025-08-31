@@ -20,9 +20,8 @@ async function loadTemplate(stepNumber: number): Promise<any> {
   })();
   // Evita tentar fetch repetidamente por etapa (dedup de warnings)
   // (escopo de módulo)
-  // @ts-expect-error - anexar em globalThis para persistir por execução
-  const __TEMPLATE_FETCH_TRIED: Set<number> = (globalThis as any).__TEMPLATE_FETCH_TRIED || new Set<number>();
-  // @ts-expect-error - persistir a referência
+  const __TEMPLATE_FETCH_TRIED: Set<number> =
+    (globalThis as any).__TEMPLATE_FETCH_TRIED || new Set<number>();
   (globalThis as any).__TEMPLATE_FETCH_TRIED = __TEMPLATE_FETCH_TRIED;
 
   try {

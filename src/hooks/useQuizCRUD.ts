@@ -1,7 +1,8 @@
 import { useAuth } from '@/context/AuthContext';
 import { supabase } from '../integrations/supabase/client';
 import { QuizQuestion } from '@/types/quiz';
-import { Funnel, FunnelPage } from '../types/unified-schema';
+import { Funnel } from '../types/unified-schema';
+import type { Json } from '@/integrations/supabase/types';
 import { useEffect, useState } from 'react';
 import { toast } from '@/hooks/use-toast';
 
@@ -95,7 +96,6 @@ export const useQuizCRUD = () => {
                   options: block.properties?.options || [],
                   multiSelect: block.properties?.multiSelect || 1,
                   order: page.page_order || 0,
-                  points: block.properties?.points || 1,
                 });
               }
             });
@@ -108,7 +108,7 @@ export const useQuizCRUD = () => {
           description: funnel.description || '',
           user_id: funnel.user_id || '',
           is_published: funnel.is_published || false,
-          version: funnel.version || 1,
+          version: (funnel as any).version || 1,
           settings: funnel.settings || {},
           created_at: funnel.created_at || new Date().toISOString(),
           updated_at: funnel.updated_at || new Date().toISOString(),
@@ -177,7 +177,7 @@ export const useQuizCRUD = () => {
           page_type: 'question',
           page_order: idx,
           title: q.title || q.question || q.text || `Pergunta ${idx + 1}`,
-          blocks: [
+          blocks: ([
             {
               id: q.id || `q_${idx + 1}`,
               type: 'quiz-question',
@@ -186,12 +186,13 @@ export const useQuizCRUD = () => {
                 questionType: q.type === 'normal' ? 'multiple_choice' : q.type,
                 options: q.options || [],
                 multiSelect: q.multiSelect || 1,
-                points: q.points || 1,
               },
               order: 0,
             },
-          ],
-          metadata: {},
+          ]) as unknown as Json,
+          metadata: ({} as unknown) as Json,
+          // Insert requires id per types
+          id: crypto.randomUUID(),
         }));
 
         const { error: pagesError } = await supabase.from('funnel_pages').insert(pagesToInsert);
@@ -268,7 +269,6 @@ export const useQuizCRUD = () => {
                 options: block.properties?.options || [],
                 multiSelect: block.properties?.multiSelect || 1,
                 order: page.page_order || 0,
-                points: block.properties?.points || 1,
               });
             }
           });
@@ -281,7 +281,7 @@ export const useQuizCRUD = () => {
         description: data.description || '',
         user_id: data.user_id || '',
         is_published: data.is_published || false,
-        version: data.version || 1,
+        version: (data as any).version || 1,
         settings: data.settings || {},
         created_at: data.created_at || new Date().toISOString(),
         updated_at: data.updated_at || new Date().toISOString(),
@@ -339,8 +339,8 @@ export const useQuizCRUD = () => {
     if (!originalQuiz) return null;
 
     const metadata: QuizMetadata = {
-      title: `${originalQuiz.title} (Cópia)`,
-      description: originalQuiz.description,
+      title: `${originalQuiz.name} (Cópia)`,
+      description: originalQuiz.description || '',
       category: (originalQuiz as any).category || originalQuiz.settings?.category || 'geral',
       difficulty: (originalQuiz as any).difficulty || originalQuiz.settings?.difficulty || 'easy',
       timeLimit: undefined,

@@ -1,8 +1,9 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { funnelLocalStore } from '@/services/funnelLocalStore';
-import { Edit, Eye, Globe2, Plus, Upload } from 'lucide-react';
+import { Edit, Eye, Globe2, Plus, Upload, Link as LinkIcon } from 'lucide-react';
 import React from 'react';
+import { Input } from '@/components/ui/input';
 import { useLocation } from 'wouter';
 import { TemplateManager } from '@/utils/TemplateManager';
 import OPTIMIZED_FUNNEL_CONFIG from '@/config/optimized21StepsFunnel';
@@ -14,6 +15,7 @@ const MyFunnelsPage: React.FC = () => {
   const [, setLocation] = useLocation();
   const [funnels, setFunnels] = React.useState<Funnel[]>([]);
   const [publishingId, setPublishingId] = React.useState<string | null>(null);
+  const [openId, setOpenId] = React.useState<string>('');
 
   React.useEffect(() => {
     setFunnels(funnelLocalStore.list());
@@ -83,7 +85,23 @@ const MyFunnelsPage: React.FC = () => {
         <h1 className="text-3xl font-bold" style={{ color: '#432818' }}>
           Meus Funis
         </h1>
-        <div className="flex gap-3">
+        <div className="flex gap-3 items-center">
+          <div className="flex items-center gap-2">
+            <Input
+              placeholder="Abrir por ID do funil"
+              value={openId}
+              onChange={e => setOpenId(e.target.value)}
+              className="w-64"
+            />
+            <Button
+              variant="outline"
+              onClick={() => openId && setLocation(`/editor?funnel=${encodeURIComponent(openId)}`)}
+              className="border-[#B89B7A] text-[#B89B7A]"
+              title="Abrir no editor pelo ID"
+            >
+              <LinkIcon className="w-4 h-4 mr-2" /> Abrir
+            </Button>
+          </div>
           <Button
             variant="outline"
             onClick={createAndOpen21}

@@ -45,14 +45,7 @@ const STEPS_CONFIG = [
   { step: 21, name: 'Oferta', description: 'Página de oferta final', component: 'generic' },
 ];
 
-const LoadingSpinner = () => (
-  <div className="min-h-screen bg-[#FAF9F7] flex items-center justify-center">
-    <div className="text-center space-y-4">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#B89B7A] mx-auto"></div>
-      <p className="text-[#6B4F43]">Carregando...</p>
-    </div>
-  </div>
-);
+// Removed unused LoadingSpinner to satisfy TS check
 
 const StepContent: React.FC = () => {
   const { step } = useParams<{ step: string }>();
@@ -121,15 +114,15 @@ const StepContent: React.FC = () => {
   const handlePrevious = () => previous();
 
   // Funções para sistema de blocos (modo preview)
-  const handleSelectBlock = (id: string) => {
+  const handleSelectBlock = (_id: string) => {
     // No modo preview/produção, não permitir seleção
   };
 
-  const handleUpdateBlock = (id: string, updates: any) => {
+  const handleUpdateBlock = (_id: string, _updates: any) => {
     // No modo preview/produção, não permitir edição
   };
 
-  const handleDeleteBlock = (id: string) => {
+  const handleDeleteBlock = (_id: string) => {
     // No modo preview/produção, não permitir exclusão
   };
 
@@ -269,9 +262,7 @@ const StepContent: React.FC = () => {
       {process.env.NODE_ENV === 'development' && (
         <div className="fixed bottom-4 right-4 bg-gray-800 text-white p-4 rounded-lg text-sm z-50">
           <div>Etapa: {stepNumber}</div>
-          <div>Sessão: {navigation.session?.id?.slice(0, 8) || 'N/A'}</div>
           <div>Componente: {stepConfig.component}</div>
-          <div>Loading: {navigation.isLoading ? '⏳' : '✅'}</div>
         </div>
       )}
     </>

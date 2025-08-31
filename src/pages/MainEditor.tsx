@@ -22,6 +22,8 @@ const MainEditor: React.FC = () => {
   const params = React.useMemo(() => new URLSearchParams(location.split('?')[1] || ''), [location]);
   const templateId = params.get('template');
   const funnelId = params.get('funnel');
+  const stepParam = params.get('step');
+  const initialStep = stepParam ? Math.max(1, Math.min(21, parseInt(stepParam))) : undefined;
 
   return (
     <div>
@@ -29,9 +31,12 @@ const MainEditor: React.FC = () => {
         <QuizFlowProvider>
           <EditorProvider
             enableSupabase={(import.meta as any)?.env?.VITE_ENABLE_SUPABASE === 'true'}
-            funnelId={(import.meta as any)?.env?.VITE_SUPABASE_FUNNEL_ID}
-            quizId={(import.meta as any)?.env?.VITE_SUPABASE_QUIZ_ID}
+            // Prefer ID vindo da URL; cai para env se ausente
+            funnelId={funnelId || (import.meta as any)?.env?.VITE_SUPABASE_FUNNEL_ID}
+            // Usar quizId do env, senão funnelId da URL como fallback para chaves locais (drafts)
+            quizId={(import.meta as any)?.env?.VITE_SUPABASE_QUIZ_ID || funnelId || 'local-funnel'}
             storageKey="main-editor-state"
+            initial={initialStep ? { currentStep: initialStep } : undefined}
           >
             {/* 🎯 EDITOR PRINCIPAL COM CABEÇALHO EDITÁVEL */}
             <EditorInitializer

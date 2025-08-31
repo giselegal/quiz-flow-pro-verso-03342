@@ -42,7 +42,7 @@ export const useNavigationSafe = () => {
   );
 
   const navigateToEditor = useCallback(() => {
-    navigateTo('/admin/editor');
+    navigateTo('/editor');
   }, [navigateTo]);
 
   const navigateToStep21 = useCallback(() => {

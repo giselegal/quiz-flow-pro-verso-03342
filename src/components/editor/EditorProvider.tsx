@@ -1,4 +1,5 @@
 import { getBlocksForStep, mergeStepBlocks, normalizeStepBlocks } from '@/config/quizStepsComplete';
+import { DraftPersistence } from '@/services/editor/DraftPersistence';
 import { useEditorSupabaseIntegration } from '@/hooks/useEditorSupabaseIntegration';
 import { useHistoryState } from '@/hooks/useHistoryState';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
@@ -237,6 +238,34 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       const existingBlocks = getBlocksForStep(step, stateRef.current.stepBlocks);
 
       if (existingBlocks && existingBlocks.length > 0) {
+        // Merge local draft over existing if draft is newer
+        try {
+          const stepNum = typeof step === 'number' ? step : parseInt(String(step), 10);
+          const stepKey = Number.isFinite(stepNum) ? `step-${stepNum}` : String(step);
+          const draftKey = quizId || funnelId || 'local-funnel';
+          if (draftKey) {
+            const draft = DraftPersistence.loadStepDraft(draftKey, stepKey);
+            if (draft && Array.isArray(draft.blocks) && draft.blocks.length > 0) {
+              setState(prev => {
+                const prevBlocks = prev.stepBlocks[stepKey] ?? [];
+                // Prefer draft by id but keep order from prev when possible
+                const byId = new Map<string, any>(prevBlocks.map(b => [String(b.id), b]));
+                const merged = draft.blocks.map(db => {
+                  const found = byId.get(String(db.id));
+                  return found
+                    ? {
+                      ...found,
+                      ...db,
+                      properties: { ...(found.properties || {}), ...(db.properties || {}) },
+                      content: { ...(found.content || {}), ...(db.content || {}) },
+                    }
+                    : db;
+                });
+                return { ...prev, stepBlocks: { ...prev.stepBlocks, [stepKey]: merged } };
+              });
+            }
+          }
+        } catch { }
         return; // Step already loaded
       }
 
@@ -275,13 +304,37 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
                 [stepNum]: defaultBlocks.length > 0,
               },
             }));
+
+            // After loading defaults, merge draft if exists
+            const draftKey = quizId || funnelId || 'local-funnel';
+            if (draftKey) {
+              const draft = DraftPersistence.loadStepDraft(draftKey, stepKey);
+              if (draft && Array.isArray(draft.blocks) && draft.blocks.length > 0) {
+                setState(prev => {
+                  const prevBlocks = prev.stepBlocks[stepKey] ?? [];
+                  const byId = new Map<string, any>(prevBlocks.map(b => [String(b.id), b]));
+                  const merged = draft.blocks.map(db => {
+                    const found = byId.get(String(db.id));
+                    return found
+                      ? {
+                        ...found,
+                        ...db,
+                        properties: { ...(found.properties || {}), ...(db.properties || {}) },
+                        content: { ...(found.content || {}), ...(db.content || {}) },
+                      }
+                      : db;
+                  });
+                  return { ...prev, stepBlocks: { ...prev.stepBlocks, [stepKey]: merged } };
+                });
+              }
+            }
           }
         }
       } catch (error) {
         console.error('Failed to ensure step loaded:', error);
       }
     },
-    [setState, state.isSupabaseEnabled, supabaseIntegration]
+    [setState, state.isSupabaseEnabled, supabaseIntegration, quizId]
   );
 
   // Stable ref to ensureStepLoaded for effects that should not re-run on identity change
@@ -316,7 +369,8 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
             ...(prev.stepValidation || {}),
             ...initialValidation,
           },
-          currentStep: 1,
+          // Preserve any pre-set currentStep (e.g., from initial props or URL)
+          currentStep: prev.currentStep || 1,
         };
       });
 
@@ -431,6 +485,11 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
             [stepKey]: [...prevBlocks, block],
           },
         };
+        // Persist draft for this step
+        {
+          const draftKey = quizId || funnelId || 'local-funnel';
+          try { DraftPersistence.saveStepDraft(draftKey, stepKey, nextState.stepBlocks[stepKey]); } catch {}
+        }
         return nextState;
       });
 
@@ -494,7 +553,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
         // Local mode already applied optimistic update — nothing else to do
       }
     },
-    [setState, state.isSupabaseEnabled, supabaseIntegration, rawState]
+    [setState, state.isSupabaseEnabled, supabaseIntegration, rawState, quizId]
   );
 
   const addBlockAtIndex = useCallback(
@@ -513,6 +572,11 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
             [stepKey]: nextBlocks,
           },
         };
+        // Persist draft
+        {
+          const draftKey = quizId || funnelId || 'local-funnel';
+          try { DraftPersistence.saveStepDraft(draftKey, stepKey, nextBlocks); } catch {}
+        }
         return optimisticState!;
       });
 
@@ -571,19 +635,26 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
         }
       }
     },
-    [setState, state.isSupabaseEnabled, supabaseIntegration, rawState]
+    [setState, state.isSupabaseEnabled, supabaseIntegration, rawState, quizId]
   );
 
   const removeBlock = useCallback(
     async (stepKey: string, blockId: string) => {
+      const nextBlocks = (rawState.stepBlocks[stepKey] || []).filter(b => b.id !== blockId);
       setState({
         ...rawState,
         stepBlocks: {
           ...rawState.stepBlocks,
-          [stepKey]: (rawState.stepBlocks[stepKey] || []).filter(b => b.id !== blockId),
+          [stepKey]: nextBlocks,
         },
         selectedBlockId: rawState.selectedBlockId === blockId ? null : rawState.selectedBlockId,
       });
+
+      // Persist draft
+      {
+        const draftKey = quizId || funnelId || 'local-funnel';
+        try { DraftPersistence.saveStepDraft(draftKey, stepKey, nextBlocks); } catch {}
+      }
 
       // If supabase mode, delegate deletion
       if (state.isSupabaseEnabled && supabaseIntegration?.deleteBlockById) {
@@ -594,7 +665,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
         }
       }
     },
-    [setState, state.isSupabaseEnabled, supabaseIntegration, rawState]
+    [setState, state.isSupabaseEnabled, supabaseIntegration, rawState, quizId]
   );
 
   const reorderBlocks = useCallback(
@@ -602,6 +673,11 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       setState(prev => {
         const blocks = [...(prev.stepBlocks[stepKey] || [])];
         const reordered = arrayMove(blocks, oldIndex, newIndex);
+        // Persist draft
+        {
+          const draftKey = quizId || funnelId || 'local-funnel';
+          try { DraftPersistence.saveStepDraft(draftKey, stepKey, reordered); } catch {}
+        }
         return {
           ...prev,
           stepBlocks: {
@@ -627,7 +703,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
         }
       }
     },
-    [setState, state.isSupabaseEnabled, supabaseIntegration, rawState]
+    [setState, state.isSupabaseEnabled, supabaseIntegration, rawState, quizId]
   );
 
   const updateBlock = useCallback(
@@ -653,6 +729,12 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       };
       setState(nextState);
 
+      // Persist draft
+      {
+        const draftKey = quizId || funnelId || 'local-funnel';
+        try { DraftPersistence.saveStepDraft(draftKey, stepKey, nextBlocks); } catch {}
+      }
+
       if (state.isSupabaseEnabled && supabaseIntegration?.updateBlockById) {
         try {
           const updated = nextBlocks.find(b => b.id === blockId);
@@ -664,7 +746,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
         }
       }
     },
-    [setState, state.isSupabaseEnabled, supabaseIntegration, rawState]
+    [setState, state.isSupabaseEnabled, supabaseIntegration, rawState, quizId]
   );
 
   const exportJSON = useCallback(() => {
