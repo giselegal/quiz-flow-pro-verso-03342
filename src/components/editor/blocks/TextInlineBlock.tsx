@@ -257,16 +257,34 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
     const hasSpanTag = personalizedContent?.includes('<span');
     const hasStrongTag = personalizedContent?.includes('<strong');
 
-    console.log('� TextInlineBlock DEBUG COMPLETO:', {
-      blockId: block?.id,
-      rawContent: personalizedContent,
-      contentLength: personalizedContent?.length,
-      hasHtml,
-      hasSpanTag,
-      hasStrongTag,
-      willRenderAsHTML: hasHtml || hasSpanTag || hasStrongTag,
-      contentPreview: personalizedContent?.substring(0, 200) + '...',
-    });
+    // Debug controlado e deduplicado: definir window.__TEXT_INLINE_DEBUG = true para ver logs
+    try {
+      const g: any = typeof window !== 'undefined' ? (window as any) : undefined;
+      const debugEnabled = g?.__TEXT_INLINE_DEBUG === true;
+      if (debugEnabled) {
+        // Evitar logs repetitivos para o mesmo estado
+        const hash = `${block?.id}|${personalizedContent?.length}|${hasHtml ? 1 : 0}|${
+          hasSpanTag ? 1 : 0
+        }|${hasStrongTag ? 1 : 0}`;
+        g.__TEXT_INLINE_LOGS = g.__TEXT_INLINE_LOGS || new Set<string>();
+        if (!g.__TEXT_INLINE_LOGS.has(hash)) {
+          g.__TEXT_INLINE_LOGS.add(hash);
+          // eslint-disable-next-line no-console
+          console.log('� TextInlineBlock DEBUG COMPLETO:', {
+            blockId: block?.id,
+            rawContent: personalizedContent,
+            contentLength: personalizedContent?.length,
+            hasHtml,
+            hasSpanTag,
+            hasStrongTag,
+            willRenderAsHTML: hasHtml || hasSpanTag || hasStrongTag,
+            contentPreview: personalizedContent?.substring(0, 200) + '...',
+          });
+        }
+      }
+    } catch {
+      // noop
+    }
 
     return hasHtml || hasSpanTag || hasStrongTag;
   }, [personalizedContent, block?.id]);
