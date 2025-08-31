@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useRef, useState, useEffect, Suspense } from 'react';
-import { DndContext, DragEndEvent, DragStartEvent, useSensor, useSensors, PointerSensor, KeyboardSensor, closestCenter, rectIntersection } from '@dnd-kit/core';
-import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
+import { DragEndEvent, DragStartEvent } from '@dnd-kit/core';
+// import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import { useNotification } from '@/components/ui/Notification';
 import { Block } from '@/types/editor';
 import { extractDragData, getDragFeedback, logDragEvent, validateDrop } from '@/utils/dragDropUtils';
@@ -12,6 +12,7 @@ import { useTheme } from '@/components/theme-provider';
 import { useRenderCount } from '@/hooks/useRenderCount';
 import { mark } from '@/utils/perf';
 import CanvasDropZone from '@/components/editor/canvas/CanvasDropZone.simple';
+import { StepDndProvider } from '@/components/editor/dnd/StepDndProvider';
 
 // Lazy modules para reduzir TTI do editor
 const LazyQuizRenderer = React.lazy(() =>
@@ -355,77 +356,13 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
     });
   }
 
-  // DnD sensors - configuração mais permissiva para debug
-  const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: { distance: 3 }, // Reduzido de 8 para 3
-    }),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
-  );
-
-  // Collision detection strategy com assinatura correta
-  const collisionDetectionStrategy = useCallback((args: any) => {
-    try {
-      const { active } = args;
-      const activeType = extractDragData(active)?.type;
-      if (activeType === 'sidebar-component') {
-        return rectIntersection(args);
-      }
-    } catch (err) {
-      // fallback silencioso para evitar quebrar o DnD
-      if (process.env.NODE_ENV === 'development') {
-        // eslint-disable-next-line no-console
-        console.debug('collisionDetectionStrategy error, fallback to closestCenter:', err);
-      }
-    }
-    return closestCenter(args);
-  }, []);
-
+  // DnD Context é fornecido pelo StepDndProvider com sensores e colisão otimizados por etapa
   // Helper centralizado: calcula índice alvo com base no alvo de drop
   // Comentado temporariamente pois não está sendo usado
   // function getTargetIndexFromOver(
   //   overIdStrLocal: string | null,
   //   overDataLocal: any,
   //   mode: 'add' | 'reorder'
-  // ): number {
-  //   // 0) Compatibilidade com OptimizedCanvasDropZone: ids no formato dnd-block-<blockId>
-  //   let cleanedOverId: string | null = overIdStrLocal;
-  //   if (cleanedOverId && cleanedOverId.startsWith('dnd-block-')) {
-  //     cleanedOverId = cleanedOverId.replace(/^dnd-block-/, '');
-  //   }
-  //   if (cleanedOverId && cleanedOverId.startsWith('block-')) {
-  //     cleanedOverId = cleanedOverId.replace(/^block-/, '');
-  //   }
-  //   // 1) Preferir posição explícita vinda da drop-zone
-  //   const pos = overDataLocal?.position;
-  //   if (typeof pos === 'number' && Number.isFinite(pos)) {
-  //     return Math.max(0, Math.min(pos, currentStepData.length));
-  //   }
-
-  //   // 2) Pela convenção do ID drop-zone-<n>
-  //   if (overIdStrLocal) {
-  //     const m = overIdStrLocal.match(/^drop-zone-(\d+)$/);
-  //     if (m) return Math.max(0, Math.min(parseInt(m[1], 10), currentStepData.length));
-  //   }
-
-  //   // 3) Canvas root → final
-  //   if (
-  //     overIdStrLocal === 'canvas-drop-zone' ||
-  //     (overIdStrLocal &&
-  //       (overIdStrLocal.startsWith('canvas-drop-zone') || overIdStrLocal.startsWith('canvas-')))
-  //   ) {
-  //     return currentStepData.length;
-  //   }
-
-  //   // 4) Alvo é um bloco existente
-  //   if (cleanedOverId) {
-  //     const overIndex = currentStepData.findIndex(b => String(b.id) === cleanedOverId);
-  //     if (overIndex >= 0) return mode === 'add' ? overIndex + 1 : overIndex;
-  //   }
-
-  //   // 5) Fallback → final
-  //   return currentStepData.length;
-  // }
 
   // 🔗 Escutar eventos de navegação disparados pelos blocos (ex.: botão da etapa 1)
   useEffect(() => {
@@ -1172,10 +1109,8 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
      ------------------------- */
   return (
     <>
-      <DndContext
-        sensors={sensors}
-        collisionDetection={collisionDetectionStrategy}
-        autoScroll={false}
+      <StepDndProvider
+        stepNumber={safeCurrentStep}
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
       >
@@ -1208,7 +1143,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
             <MemoPropertiesColumn />
           </Suspense>
         </div>
-      </DndContext>
+      </StepDndProvider>
 
       {NotificationContainer ? <NotificationContainer /> : null}
       {mark('EditorPro:render:end')}
