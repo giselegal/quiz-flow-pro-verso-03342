@@ -116,8 +116,10 @@ const SortableBlockWrapperBase: React.FC<SortableBlockWrapperProps> = ({
   // componentes internos cancelam o click/bubbling posteriormente
   const handleMouseDownCapture = (e: React.MouseEvent) => {
     // Apenas botão principal e sem modificadores
-    if (e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
-    if (isInteractive(e.target)) return;
+  if (e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
+  // ⚠️ Importante: permitir seleção mesmo quando clicamos em elementos interativos.
+  // Muitos blocos (ex.: grids de opções) são 100% interativos e, sem isso,
+  // não é possível selecionar o wrapper nas etapas > 1.
     onSelect();
   };
 
@@ -128,7 +130,9 @@ const SortableBlockWrapperBase: React.FC<SortableBlockWrapperProps> = ({
         style={style}
         className={cn(
           'relative group transition-all duration-200',
-          isSelected ? 'ring-2 ring-blue-500 ring-offset-1' : ''
+          isSelected ? 'ring-2 ring-blue-500 ring-offset-1' : '',
+          // Em etapas com conteúdo altamente interativo, facilitar hover/target do wrapper
+          'hover:ring-1 hover:ring-blue-300/60 hover:ring-offset-1'
         )}
         data-dnd-dropzone-type="bloco"
         data-block-id={String(block.id)}
