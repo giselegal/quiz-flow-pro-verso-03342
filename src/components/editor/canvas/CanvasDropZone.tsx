@@ -36,11 +36,24 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
 
   // 🔧 DEBUG: Log quando componente monta
   React.useEffect(() => {
-    console.log('🎯 CanvasDropZone montado!', {
-      id: droppableId,
-      isEmpty,
-      isOver,
-    });
+    try {
+      const g: any = typeof window !== 'undefined' ? (window as any) : undefined;
+      const debugEnabled = g?.__DND_DEBUG === true;
+      if (!debugEnabled) return;
+      // Deduplica logs por id para evitar spam por re-render
+      const key = `canvas-dropzone:${String(droppableId)}`;
+      g.__DND_LOGS = g.__DND_LOGS || new Set<string>();
+      if (g.__DND_LOGS.has(key)) return;
+      g.__DND_LOGS.add(key);
+      // eslint-disable-next-line no-console
+      console.log('🎯 CanvasDropZone montado!', {
+        id: droppableId,
+        isEmpty,
+        isOver,
+      });
+    } catch {
+      // noop
+    }
   }, [isEmpty, isOver, droppableId]);
 
   return (
