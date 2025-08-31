@@ -34,12 +34,12 @@
     "test:render": "vitest run -t render",
     "test:21steps": "vitest run -t steps",
     "test:ui": "vitest --ui",
-    "test:run": "cross-env NODE_OPTIONS=--max-old-space-size=3072 vitest run --maxWorkers=2",
-    "test:coverage": "cross-env NODE_OPTIONS=--max-old-space-size=3072 vitest --coverage --maxWorkers=2",
+    "test:run": "vitest run",
+    "test:coverage": "vitest --coverage",
     "audit:data": "tsx scripts/audit/dataAudit.ts",
     "migrate:data": "tsx scripts/migration/dataMigration.ts",
-    "migrate:dry-run": "tsx scripts/migration/dataMigration.ts --dry-run",
-    "audit:dupes": "node scripts/find-duplicates.mjs --md"
+  "migrate:dry-run": "tsx scripts/migration/dataMigration.ts --dry-run",
+  "audit:dupes": "node scripts/find-duplicates.mjs --md"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",

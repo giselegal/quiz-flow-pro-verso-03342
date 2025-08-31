@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * Unified Block Storage Service - TEMPORARILY DISABLED
  *
@@ -6,12 +5,9 @@
  */
 
 import { supabase } from '../integrations/supabase/client';
-import {
-  FunnelPage,
-  ComponentInstance,
-  InsertFunnelPage,
-  InsertComponentInstance,
-} from '../types/unified-schema';
+// Tipos detalhados do schema gerado pelo Supabase costumam exigir 'Json'.
+// Para evitar conflitos, usamos coerções locais onde necessário.
+// Removidos imports não utilizados de tipos que não agregavam checagem útil aqui.
 
 export interface BlockData {
   id: string;
@@ -53,6 +49,11 @@ interface UnifiedBlockStorageReturn {
 }
 
 export class UnifiedBlockStorageService implements UnifiedBlockStorageReturn {
+  // Helper para coerção leve ao tipo Json esperado pelo cliente do Supabase
+  private toJson<T = any>(value: T): any {
+    return value as unknown as any; // runtime já é serializável; apenas concilia tipos
+  }
+
   /**
    * Save blocks to funnel_pages.blocks (single source of truth)
    * Update component_instances only for metadata/configuration
@@ -68,7 +69,7 @@ export class UnifiedBlockStorageService implements UnifiedBlockStorageReturn {
       const { error: pageError } = await supabase
         .from('funnel_pages')
         .update({
-          blocks: blocks,
+          blocks: this.toJson(blocks),
           updated_at: new Date().toISOString(),
         })
         .eq('id', pageId)
@@ -89,7 +90,7 @@ export class UnifiedBlockStorageService implements UnifiedBlockStorageReturn {
           .eq('stage_id', pageId);
 
         // Insert new instances with metadata
-        const instances: InsertComponentInstance[] = blocks.map((block, index) => {
+        const instances = blocks.map((block, index) => {
           const meta = metadata[index] || ({} as BlockMetadata);
           return {
             id: `ci_${block.id}`,
@@ -99,14 +100,14 @@ export class UnifiedBlockStorageService implements UnifiedBlockStorageReturn {
             instance_key: block.id,
             step_number: Math.floor(index / 10), // Group blocks by steps
             order_index: block.order,
-            properties: {
+            properties: this.toJson({
               // Only metadata, not the actual block content
-              metadata: meta,
+              metadata: meta as any,
               block_reference: block.id,
-            },
+            }),
             is_active: meta.isActive ?? true,
             is_locked: meta.isLocked ?? false,
-            custom_styling: meta.customStyling || null,
+            custom_styling: this.toJson(meta.customStyling || null),
             created_by: meta.createdBy || null,
           };
         });
@@ -114,7 +115,7 @@ export class UnifiedBlockStorageService implements UnifiedBlockStorageReturn {
         if (instances.length > 0) {
           const { error: instanceError } = await supabase
             .from('component_instances')
-            .insert(instances);
+            .insert(instances as any);
 
           if (instanceError) {
             console.warn('Error saving metadata to component_instances:', instanceError);
@@ -152,7 +153,7 @@ export class UnifiedBlockStorageService implements UnifiedBlockStorageReturn {
         return null;
       }
 
-      const blocks = (page?.blocks as BlockData[]) || [];
+      const blocks = (page?.blocks as unknown as BlockData[]) || [];
 
       // 2. Load metadata from component_instances (optional)
       const { data: instances } = await supabase
@@ -163,21 +164,23 @@ export class UnifiedBlockStorageService implements UnifiedBlockStorageReturn {
         .order('order_index');
 
       const metadata: BlockMetadata[] = blocks.map(block => {
-        const instance = instances?.find(inst => inst.instance_key === block.id);
+        const instance = (instances as any[] | undefined)?.find(
+          (inst: any) => inst.instance_key === block.id
+        );
         if (instance) {
           return {
-            componentTypeKey: instance.component_type_key,
-            isActive: instance.is_active ?? true,
-            isLocked: instance.is_locked ?? false,
-            customStyling: instance.custom_styling,
-            createdBy: instance.created_by,
-          };
+            componentTypeKey: String(instance.component_type_key),
+            isActive: Boolean(instance.is_active ?? true),
+            isLocked: Boolean(instance.is_locked ?? false),
+            customStyling: (instance.custom_styling ?? undefined) as any,
+            createdBy: (instance.created_by ?? null) as any,
+          } as BlockMetadata;
         }
         return {
           componentTypeKey: block.type,
           isActive: true,
           isLocked: false,
-        };
+        } as BlockMetadata;
       });
 
       return { blocks, metadata };
@@ -283,19 +286,19 @@ export class UnifiedBlockStorageService implements UnifiedBlockStorageReturn {
             instances.length > 0 &&
             (!page.blocks || (Array.isArray(page.blocks) && page.blocks.length === 0))
           ) {
-            const blocks: BlockData[] = instances.map(instance => ({
-              id: instance.instance_key,
-              type: instance.component_type_key,
-              properties: instance.properties || {},
-              order: instance.order_index,
+            const blocks: BlockData[] = (instances as any[]).map((instance: any) => ({
+              id: String(instance.instance_key),
+              type: String(instance.component_type_key),
+              properties: (instance.properties as any) || ({} as Record<string, any>),
+              order: Number(instance.order_index) || 0,
             }));
 
-            const metadata: BlockMetadata[] = instances.map(instance => ({
-              componentTypeKey: instance.component_type_key,
-              isActive: instance.is_active ?? true,
-              isLocked: instance.is_locked ?? false,
-              customStyling: instance.custom_styling,
-              createdBy: instance.created_by,
+            const metadata: BlockMetadata[] = (instances as any[]).map((instance: any) => ({
+              componentTypeKey: String(instance.component_type_key),
+              isActive: Boolean(instance.is_active ?? true),
+              isLocked: Boolean(instance.is_locked ?? false),
+              customStyling: (instance.custom_styling ?? undefined) as any,
+              createdBy: (instance.created_by ?? null) as any,
             }));
 
             const success = await this.saveBlocks(funnelId, page.id, blocks, metadata);

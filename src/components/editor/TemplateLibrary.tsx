@@ -4,14 +4,10 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { supabaseTemplateService, UITemplate } from '@/services/templateService';
-import { funnelLocalStore } from '@/services/funnelLocalStore';
-import { generateUuid } from '@/core/utils/id';
-import { useLocation } from 'wouter';
 import { Crown, Download, Eye, Search, Sparkles, Star } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 
 export const TemplateLibrary: React.FC = () => {
-  const [, setLocation] = useLocation();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [templates, setTemplates] = useState<UITemplate[]>([]);
@@ -90,19 +86,12 @@ export const TemplateLibrary: React.FC = () => {
       // Incrementar contador de uso
       await supabaseTemplateService.incrementUsage(template.id);
 
-      // Criar um ID único para a personalização (prefixo evita confundir com UUID puro do DB)
-      const newId = `funnel-${generateUuid()}`;
-      const now = new Date().toISOString();
+      // TODO: Implementar carregamento do template no editor
+      console.log('🎯 Carregando template:', template.name);
+      console.log('📋 Template data:', template.templateData);
 
-      // Registrar no store local de funis para aparecer em "Meus Funis"
-      const list = funnelLocalStore.list();
-      const name = `${template.name} (personalizado)`;
-      list.push({ id: newId, name, status: 'draft', updatedAt: now });
-      funnelLocalStore.saveList(list);
-
-      // Abrir no Editor informando qual template Supabase aplicar
-      // O EditorInitializer detecta o prefixo "supa:" e busca o templateData para aplicar.
-      setLocation(`/editor?funnel=${encodeURIComponent(newId)}&template=${encodeURIComponent(`supa:${template.id}`)}`);
+      // Simular feedback para o usuário
+      alert(`Template "${template.name}" carregado com sucesso!`);
     } catch (error) {
       console.error('Erro ao usar template:', error);
     }
@@ -123,9 +112,9 @@ export const TemplateLibrary: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="h-full flex items-center justify-center">
+    <div className="h-full flex items-center justify-center">
         <div className="text-center">
-          <div className="rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+      <div className="rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
           <p className="text-gray-600">Carregando templates...</p>
         </div>
       </div>
@@ -286,7 +275,7 @@ export const TemplateLibrary: React.FC = () => {
                         variant="outline"
                         size="sm"
                         className="flex-1"
-                      // onClick={() => handlePreviewTemplate(template)}
+                        // onClick={() => handlePreviewTemplate(template)}
                       >
                         <Eye className="h-3 w-3 mr-1" />
                         Visualizar

@@ -184,29 +184,13 @@ export const EditorProvider: React.FC<{
   const [currentFunnelId, setCurrentFunnelId] = useState<string>(initialFunnelId);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [activeStageId, setActiveStageId] = useState<string>('step-1');
-  // Detectar ambiente de teste (Vitest via Vite)
-  const IS_TEST =
-    typeof import.meta !== 'undefined' &&
-    (import.meta as any).env &&
-    (import.meta as any).env.MODE === 'test';
-  // Flag global opcional para desabilitar autoload em testes pesados
-  const DISABLE_TEMPLATE_AUTOLOAD =
-    (typeof window !== 'undefined' && (window as any).__DISABLE_EDITOR_TEMPLATE_AUTOLOAD__) ||
-    IS_TEST;
 
   // Integração com sistema de templates via função utilitária
 
   // Efeito para carregar o template inicial automaticamente
   useEffect(() => {
     let isCancelled = false;
-    // Em ambiente de teste, evitamos autoload pesado para estabilizar suites
-    if (DISABLE_TEMPLATE_AUTOLOAD) {
-      setIsLoading(false);
-      return () => {
-        isCancelled = true;
-      };
-    }
-    const loadInitialTemplate = async () => {
+  const loadInitialTemplate = async () => {
       try {
         if (isCancelled) return;
         setIsLoading(true);
@@ -256,18 +240,12 @@ export const EditorProvider: React.FC<{
   useEffect(() => {
     let isCancelled = false;
     if (!activeStageId) return;
-    // Em ambiente de teste, não fazer autoload por etapa
-    if (DISABLE_TEMPLATE_AUTOLOAD) {
-      return () => {
-        isCancelled = true;
-      };
-    }
 
     const loadStepTemplate = async () => {
       try {
         console.log(`🔄 AUTO-LOAD: Iniciando carregamento para etapa: ${activeStageId}`);
-        // Em ambiente de teste (node), ainda tentamos carregar via getStepTemplate
-        // acima. Se falhar, cairemos no catch e manteremos vazio.
+  // Em ambiente de teste (node), ainda tentamos carregar via getStepTemplate
+  // acima. Se falhar, cairemos no catch e manteremos vazio.
 
         // Carregar via templateService diretamente (preferencial)
         try {
@@ -564,39 +542,39 @@ export const EditorProvider: React.FC<{
   const stageActions = useMemo(
     () => ({
       setActiveStage: async (id: string) => {
-        setIsLoadingStage(true);
-        try {
-          setActiveStageId(id);
-          const stepMatch = id.match(/step-(\d+)/);
-          const stepNumber = stepMatch ? parseInt(stepMatch[1], 10) : NaN;
-          if (!isNaN(stepNumber)) {
-            const template = await getStepTemplate(stepNumber);
-            const templateBlocks = template?.blocks || [];
-            const editorBlocks = templateBlocks.map((block: any, index: number) => ({
-              id: block.id || `block-${Date.now()}-${Math.random()}`,
-              type: block.type || 'text',
-              content: block.content || {},
-              styles: block.styles || {},
-              metadata: block.metadata || {},
-              properties: { funnelId: currentFunnelId, stageId: id },
-              order: index,
-            }));
-            dispatch({ type: 'SET_BLOCKS', payload: editorBlocks });
-          }
-        } catch (error) {
-          console.error('❌ Erro ao carregar blocos da etapa:', error);
-          dispatch({ type: 'SET_BLOCKS', payload: [] });
-        } finally {
-          setIsLoadingStage(false);
-        }
-      },
+            setIsLoadingStage(true);
+            try {
+              setActiveStageId(id);
+              const stepMatch = id.match(/step-(\d+)/);
+              const stepNumber = stepMatch ? parseInt(stepMatch[1], 10) : NaN;
+              if (!isNaN(stepNumber)) {
+                const template = await getStepTemplate(stepNumber);
+                const templateBlocks = template?.blocks || [];
+                const editorBlocks = templateBlocks.map((block: any, index: number) => ({
+                  id: block.id || `block-${Date.now()}-${Math.random()}`,
+                  type: block.type || 'text',
+                  content: block.content || {},
+                  styles: block.styles || {},
+                  metadata: block.metadata || {},
+                  properties: { funnelId: currentFunnelId, stageId: id },
+                  order: index,
+                }));
+                dispatch({ type: 'SET_BLOCKS', payload: editorBlocks });
+              }
+            } catch (error) {
+              console.error('❌ Erro ao carregar blocos da etapa:', error);
+              dispatch({ type: 'SET_BLOCKS', payload: [] });
+            } finally {
+              setIsLoadingStage(false);
+            }
+          },
       addStage: () => {
-        console.log('Add stage not implemented yet');
-        return `step-${stages.length + 1}`;
-      },
+            console.log('Add stage not implemented yet');
+            return `step-${stages.length + 1}`;
+          },
       removeStage: (id: string) => {
-        console.log('Remove stage not implemented:', id);
-      },
+            console.log('Remove stage not implemented:', id);
+          },
       isLoadingStage,
     }),
     [dispatch, setIsLoadingStage, stages.length, currentFunnelId, isLoadingStage]

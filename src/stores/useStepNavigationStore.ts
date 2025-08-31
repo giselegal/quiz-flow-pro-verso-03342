@@ -13,12 +13,6 @@ interface StepNavigationConfig {
   enableButtonOnlyWhenValid: boolean;
   showValidationFeedback: boolean;
 
-  // Flags de fluxo/resultados
-  /** Quando true nesta etapa, dispara o cálculo de resultado centralizado */
-  calculateResult?: boolean;
-  /** Quando true, tenta persistir o resultado no Supabase (se online e houver sessão UUID) */
-  persistResultToSupabase?: boolean;
-
   // Configurações de UI
   showSelectionCount: boolean;
   showProgressMessage: boolean;
@@ -88,9 +82,9 @@ const getDefaultStepConfig = (stepId: string): StepNavigationConfig => {
       selectionStyle: 'border',
       selectedColor: '#3B82F6',
       hoverColor: '#EBF5FF',
-      backgroundFrom: '#FAF9F7',
-      backgroundVia: '#F5F2E9',
-      backgroundTo: '#EEEBE1',
+  backgroundFrom: '#FAF9F7',
+  backgroundVia: '#F5F2E9',
+  backgroundTo: '#EEEBE1',
     };
   } else if (stepNumber >= 2 && stepNumber <= 11) {
     // Questões Pontuadas - 3 seleções obrigatórias
@@ -110,9 +104,9 @@ const getDefaultStepConfig = (stepId: string): StepNavigationConfig => {
       selectionStyle: 'border',
       selectedColor: '#3B82F6',
       hoverColor: '#EBF5FF',
-      backgroundFrom: '#FAF9F7',
-      backgroundVia: '#F5F2E9',
-      backgroundTo: '#EEEBE1',
+  backgroundFrom: '#FAF9F7',
+  backgroundVia: '#F5F2E9',
+  backgroundTo: '#EEEBE1',
     };
   } else if (stepNumber >= 13 && stepNumber <= 18) {
     // Questões Estratégicas - 1 seleção obrigatória
@@ -132,9 +126,9 @@ const getDefaultStepConfig = (stepId: string): StepNavigationConfig => {
       selectionStyle: 'border',
       selectedColor: '#10B981',
       hoverColor: '#ECFDF5',
-      backgroundFrom: '#FAF9F7',
-      backgroundVia: '#F5F2E9',
-      backgroundTo: '#EEEBE1',
+  backgroundFrom: '#FAF9F7',
+  backgroundVia: '#F5F2E9',
+  backgroundTo: '#EEEBE1',
     };
   } else {
     // Outras etapas (transições, resultado, oferta)
@@ -146,10 +140,6 @@ const getDefaultStepConfig = (stepId: string): StepNavigationConfig => {
       autoAdvanceDelay: 0,
       enableButtonOnlyWhenValid: false,
       showValidationFeedback: false,
-      // Etapa 19 é a transição de processamento → calcular resultados aqui por padrão
-      calculateResult: stepNumber === 19,
-      // Persistência no Supabase pode ser ligada conforme necessidade
-      persistResultToSupabase: stepNumber === 19,
       showSelectionCount: false,
       showProgressMessage: false,
       validationMessage: '',
@@ -158,9 +148,9 @@ const getDefaultStepConfig = (stepId: string): StepNavigationConfig => {
       selectionStyle: 'border',
       selectedColor: '#3B82F6',
       hoverColor: '#EBF5FF',
-      backgroundFrom: '#FAF9F7',
-      backgroundVia: '#F5F2E9',
-      backgroundTo: '#EEEBE1',
+  backgroundFrom: '#FAF9F7',
+  backgroundVia: '#F5F2E9',
+  backgroundTo: '#EEEBE1',
     };
   }
 };

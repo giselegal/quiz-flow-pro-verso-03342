@@ -143,27 +143,19 @@ export const useQuizFlow = ({
     [answerStrategicQuestion, nextStep, currentStep, stepNavStore, cancel, schedule]
   );
 
-  // Auto-processamento baseado em flag de configuração da etapa
+  // Auto-avançar na etapa 19 (calculando)
   useEffect(() => {
-    const cfg = stepNavStore.getStepConfig(`step-${currentStep}`);
-    if (cfg?.calculateResult) {
+    if (currentStep === 19) {
       setIsLoading(true);
-      const key = `quizflow-calc-step-${currentStep}`;
-      cancel(key);
-      const delay = typeof cfg.autoAdvanceDelay === 'number' ? cfg.autoAdvanceDelay : 2000;
-      schedule(
-        key,
-        () => {
-          completeQuiz();
-          setIsLoading(false);
-          nextStep();
-        },
-        delay,
-        'timeout'
-      );
-      return () => cancel(key);
+      cancel('quizflow-step19');
+      schedule('quizflow-step19', () => {
+        completeQuiz();
+        setIsLoading(false);
+        nextStep();
+      }, 2000, 'timeout');
+      return () => cancel('quizflow-step19');
     }
-  }, [currentStep, completeQuiz, nextStep, stepNavStore, schedule, cancel]);
+  }, [currentStep, completeQuiz, nextStep]);
 
   // Persistir resultado calculado no core para consumo universal (blocos de resultado)
   useEffect(() => {
@@ -172,10 +164,7 @@ export const useQuizFlow = ({
         StorageService.safeSetJSON('quizResult', quizResult);
         // Notificar listeners (blocos de resultado) que o resultado mudou
         try {
-          try {
-            const EVENTS = (require('@/core/constants/events') as any).default;
-            window.dispatchEvent(new Event(EVENTS.QUIZ_RESULT_UPDATED));
-          } catch { }
+          window.dispatchEvent(new Event('quiz-result-updated'));
         } catch { }
       } catch { }
     }

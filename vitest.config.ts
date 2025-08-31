@@ -25,13 +25,6 @@ export default defineConfig({
       reporter: ['text', 'json', 'html'],
       exclude: ['node_modules/', 'src/test/', '**/*.d.ts', 'src/legacy/', 'dist/', 'build/'],
     },
-    // Usa pool por forks para evitar problemas com tinypool (Channel closed) e reduzir OOM
-    pool: 'forks',
-    poolOptions: {
-      forks: {
-        singleFork: true,
-      },
-    },
   },
   resolve: {
     alias: {

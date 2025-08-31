@@ -1,5 +1,5 @@
-// @vitest-environment jsdom
 import { describe, it, expect, beforeEach } from 'vitest';
+import React from 'react';
 import { render, screen } from '@testing-library/react';
 import ResultHeaderInlineBlock from '@/components/editor/blocks/ResultHeaderInlineBlock';
 import { StorageService } from '@/services/core/StorageService';
@@ -34,12 +34,11 @@ describe('ResultHeaderInlineBlock', () => {
             />
         );
 
-        // Mostra estilo principal (rótulo humano) exatamente no header
-        const styleLabels = screen.getAllByText(/^Natural$/i);
-        expect(styleLabels.length).toBeGreaterThan(0);
+        // Mostra estilo principal (rótulo humano)
+        expect(screen.getByText(/Natural/i)).toBeTruthy();
         // Mostra nome ao lado como saudação compacta
         expect(screen.getByText(/Alice/)).toBeTruthy();
-        // Mostra percentual formatado (badge à direita)
-        expect(screen.getByText(/70\s*%/)).toBeTruthy();
+        // Mostra percentual formatado
+        expect(screen.getByText('70%')).toBeTruthy();
     });
 });

@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import schemaDrivenFunnelService from '@/services/schemaDrivenFunnelService';
+import { supabase } from '@/integrations/supabase/client';
 import { useEffect, useState } from 'react';
 import { useLocation } from 'wouter';
 
@@ -18,18 +18,18 @@ const FunnelsPage: React.FC = () => {
   useEffect(() => {
     const loadFunnels = async () => {
       try {
-        const list = await schemaDrivenFunnelService.listFunnels();
-        // map para o shape local
-        setFunnels(
-          (list || []).map(f => ({
-            id: f.id,
-            name: f.name,
-            is_published: !!f.isPublished,
-            created_at: f.createdAt ? f.createdAt.toISOString() : null,
-          }))
-        );
+        const { data, error } = await supabase
+          .from('funnels')
+          .select('id, name, is_published, created_at')
+          .order('created_at', { ascending: false });
+
+        if (error) {
+          console.error('Erro ao carregar funis:', error);
+        } else {
+          setFunnels(data || []);
+        }
       } catch (err) {
-        console.error('Erro ao carregar funis:', err);
+        console.error('Erro na conexão:', err);
       } finally {
         setLoading(false);
       }

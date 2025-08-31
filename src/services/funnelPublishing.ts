@@ -4,7 +4,6 @@
  */
 
 import { supabase } from '@/integrations/supabase/client';
-import { generateUuid, isUUID } from '@/core/utils/id';
 import { toast } from '@/components/ui/use-toast';
 
 export interface PublishFunnelData {
@@ -43,14 +42,11 @@ export const publishFunnel = async (funnelData: PublishFunnelData): Promise<Publ
       };
     }
 
-    // 2. Definir ID canônico no DB (UUID se o local não for UUID)
-    const dbFunnelId = isUUID(funnelData.id) ? funnelData.id : generateUuid();
-
-    // 3. Salvar funil principal
-    const { error: funnelError } = await supabase
+    // 2. Salvar funil principal
+    const { data: funnelResult, error: funnelError } = await supabase
       .from('funnels')
       .upsert({
-        id: dbFunnelId,
+        id: funnelData.id,
         name: funnelData.name,
         description: funnelData.description,
         is_published: true,
@@ -68,11 +64,10 @@ export const publishFunnel = async (funnelData: PublishFunnelData): Promise<Publ
       };
     }
 
-    // 4. Salvar páginas das etapas
+    // 3. Salvar páginas das etapas
     const pages = funnelData.stages.map(stage => ({
-      // Sempre usar UUID para páginas para evitar colisão e obedecer constraints
-      id: generateUuid(),
-      funnel_id: dbFunnelId,
+      id: `${funnelData.id}-page-${stage.order}`,
+      funnel_id: funnelData.id,
       page_type: getPageType(stage.order),
       title: stage.name,
       page_order: stage.order,
@@ -94,8 +89,8 @@ export const publishFunnel = async (funnelData: PublishFunnelData): Promise<Publ
       };
     }
 
-    // 5. Gerar URL pública
-    const publicUrl = generatePublicUrl(dbFunnelId);
+    // 4. Gerar URL pública
+    const publicUrl = generatePublicUrl(funnelData.id);
 
     console.log('✅ Funil publicado com sucesso!');
     toast({
@@ -106,7 +101,7 @@ export const publishFunnel = async (funnelData: PublishFunnelData): Promise<Publ
     return {
       success: true,
       publicUrl,
-      funnelId: dbFunnelId,
+      funnelId: funnelData.id,
     };
   } catch (error) {
     console.error('❌ Erro na publicação:', error);

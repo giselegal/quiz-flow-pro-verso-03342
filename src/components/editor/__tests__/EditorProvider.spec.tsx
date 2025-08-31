@@ -1,4 +1,3 @@
-// @vitest-environment jsdom
 import { EditorProvider, useEditor } from '@/components/editor/EditorProvider';
 import type { Block } from '@/types/editor';
 import { render, waitFor } from '@testing-library/react';

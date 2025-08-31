@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
 import { TemplateManager } from '@/utils/TemplateManager';
 import React, { useEffect, useMemo, useState } from 'react';
-import ResultOrchestrator from '@/services/core/ResultOrchestrator';
+import { ResultEngine } from '@/services/core/ResultEngine';
 import { SelectionRules, FlowCore } from '@/services/core/FlowCore';
 import OPTIMIZED_FUNNEL_CONFIG from '@/config/optimized21StepsFunnel';
 import useOptimizedScheduler from '@/hooks/useOptimizedScheduler';
@@ -369,23 +369,35 @@ const QuizModularPage: React.FC = () => {
   }, [stepConfig?.backgroundFrom, stepConfig?.backgroundVia, stepConfig?.backgroundTo]);
 
   // ===== CÁLCULO E PERSISTÊNCIA DO RESULTADO (core/ResultEngine) =====
-  const computeAndPersistResult = React.useCallback(async () => {
+  const computeAndPersistResult = React.useCallback(() => {
+    // Leitura opcional de pesos do funil otimizado (se usado)
     const weightQuestions = (OPTIMIZED_FUNNEL_CONFIG as any)?.calculations?.scoreWeights?.questions;
-    await ResultOrchestrator.run({
-      selectionsByQuestion: userSelections,
-      weightQuestions,
-      userName: quizAnswers.userName,
-      persistToSupabase: stepConfig?.persistResultToSupabase,
-      sessionId: (require('@/services/sessionService') as any).sessionService.getSessionId?.(),
-    });
-  }, [userSelections, quizAnswers.userName, stepConfig?.persistResultToSupabase]);
 
-  // Disparar cálculo pela flag de configuração (ex: etapa 19 por padrão)
+    const { scores, total } = ResultEngine.computeScoresFromSelections(
+      userSelections,
+      {
+        weightQuestions: typeof weightQuestions === 'number' ? weightQuestions : 1,
+      }
+    );
+    let userName = quizAnswers.userName || '';
+    try {
+      const { StorageService } = require('@/services/core/StorageService');
+      userName = userName || StorageService.safeGetString('userName') || StorageService.safeGetString('quizUserName') || '';
+    } catch { }
+    const payload = ResultEngine.toPayload(scores, total, userName);
+    ResultEngine.persist(payload);
+    try {
+      const { StorageService } = require('@/services/core/StorageService');
+      StorageService.safeSetString('quizUserName', userName);
+    } catch { }
+  }, [userSelections, quizAnswers.userName]);
+
+  // Disparar cálculo na etapa 19 (transição para resultado)
   useEffect(() => {
-    if (stepConfig?.calculateResult) {
+    if (currentStep === 19) {
       computeAndPersistResult();
     }
-  }, [currentStep, computeAndPersistResult, stepConfig?.calculateResult]);
+  }, [currentStep, computeAndPersistResult]);
 
   // 📈 Estatísticas/feedback por etapa (contagem de seleções e mensagens)
   const selectedCount = useMemo(() => {

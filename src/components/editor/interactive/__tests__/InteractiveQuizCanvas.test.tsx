@@ -77,7 +77,7 @@ describe('InteractiveQuizCanvas', () => {
       );
 
       // Tentar ir para próxima etapa sem responder
-      const proximoBtn = screen.getByRole('button', { name: 'Ir para a próxima etapa' });
+      const proximoBtn = screen.getByText('Próximo');
       fireEvent.click(proximoBtn);
 
       await waitFor(() => {
@@ -99,7 +99,7 @@ describe('InteractiveQuizCanvas', () => {
       fireEvent.click(opcaoAzul);
 
       // Ir para próxima etapa
-      const proximoBtn = screen.getByRole('button', { name: 'Ir para a próxima etapa' });
+      const proximoBtn = screen.getByText('Próximo');
       await waitFor(() => {
         expect(proximoBtn).not.toBeDisabled();
       });
@@ -182,7 +182,7 @@ describe('InteractiveQuizCanvas', () => {
       const opcaoAzul = screen.getByText('Azul');
       fireEvent.click(opcaoAzul);
 
-      const proximoBtn = screen.getByRole('button', { name: 'Ir para a próxima etapa' });
+      const proximoBtn = screen.getByText('Próximo');
       fireEvent.click(proximoBtn);
 
       await waitFor(() => {
@@ -190,7 +190,7 @@ describe('InteractiveQuizCanvas', () => {
       });
 
       // Voltar para etapa anterior
-      const anteriorBtn = screen.getByRole('button', { name: 'Voltar para a etapa anterior' });
+      const anteriorBtn = screen.getByText('Anterior');
       fireEvent.click(anteriorBtn);
 
       await waitFor(() => {
@@ -232,7 +232,7 @@ describe('InteractiveQuizCanvas', () => {
       const opcaoAzul = screen.getByText('Azul');
       fireEvent.click(opcaoAzul);
 
-      const proximoBtn = screen.getByRole('button', { name: 'Ir para a próxima etapa' });
+      const proximoBtn = screen.getByText('Próximo');
       fireEvent.click(proximoBtn);
 
       await waitFor(() => {
@@ -240,7 +240,7 @@ describe('InteractiveQuizCanvas', () => {
       });
 
       // Tentar continuar sem preencher campo obrigatório
-      const proximoBtn2 = screen.getByRole('button', { name: 'Ir para a próxima etapa' });
+      const proximoBtn2 = screen.getByText('Próximo');
       fireEvent.click(proximoBtn2);
 
       await waitFor(() => {
@@ -259,7 +259,7 @@ describe('InteractiveQuizCanvas', () => {
       const opcaoAzul = screen.getByText('Azul');
       fireEvent.click(opcaoAzul);
 
-      const proximoBtn = screen.getByRole('button', { name: 'Ir para a próxima etapa' });
+      const proximoBtn = screen.getByText('Próximo');
       fireEvent.click(proximoBtn);
 
       await waitFor(() => {
@@ -271,7 +271,7 @@ describe('InteractiveQuizCanvas', () => {
       fireEvent.change(inputNome, { target: { value: 'João Silva' } });
 
       await waitFor(() => {
-        const proximoBtn2 = screen.getByRole('button', { name: 'Finalizar quiz' });
+        const proximoBtn2 = screen.getByText('Finalizar');
         expect(proximoBtn2).not.toBeDisabled();
       });
     });
@@ -291,7 +291,7 @@ describe('InteractiveQuizCanvas', () => {
       const opcaoAzul = screen.getByText('Azul');
       fireEvent.click(opcaoAzul);
 
-      const proximoBtn = screen.getByRole('button', { name: 'Ir para a próxima etapa' });
+      const proximoBtn = screen.getByText('Próximo');
       fireEvent.click(proximoBtn);
 
       // Durante o processamento, deve mostrar loading
