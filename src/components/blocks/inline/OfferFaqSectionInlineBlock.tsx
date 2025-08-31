@@ -47,7 +47,7 @@ const OfferFaqSectionInlineBlock: React.FC<BlockComponentProps> = ({
       className={cn(
         'w-full bg-[#FFFBF7]',
         spacingClasses[spacing as keyof typeof spacingClasses] || spacingClasses.large,
-        isSelected && 'ring-2 ring-blue-500 ring-offset-2',
+        isSelected && 'ring-2 ring-[#B89B7A] ring-offset-2',
         'cursor-pointer',
         className
       )}

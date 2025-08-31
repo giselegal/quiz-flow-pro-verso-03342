@@ -33,8 +33,8 @@ export const ComponentDragItem: React.FC<ComponentDragItemProps> = ({
 
   const style = transform
     ? {
-        transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-      }
+      transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
+    }
     : undefined;
 
   return (
@@ -45,7 +45,7 @@ export const ComponentDragItem: React.FC<ComponentDragItemProps> = ({
       {...attributes}
       className={cn(
         'component-drag-item',
-        'group cursor-grab active:cursor-grabbing',
+        'group',
         'bg-white border border-gray-200 rounded-lg p-3',
         'hover:border-blue-300 hover:shadow-md hover:bg-blue-50/50',
         'transition-all duration-200',

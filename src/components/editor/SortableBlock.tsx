@@ -63,8 +63,8 @@ export const SortableBlock: React.FC<SortableBlockProps> = ({
         'rounded-md border-2 border-dashed group-hover/canvas-item:border-2',
         isDragging && 'opacity-50 scale-105',
         isSelected
-          ? 'border-blue-500 bg-blue-500 bg-opacity-10 shadow-lg'
-          : 'border-transparent hover:border-2 hover:border-blue-500 hover:bg-blue-400 hover:bg-opacity-5'
+          ? 'border-[#B89B7A] bg-[#B89B7A]/10 shadow-lg'
+          : 'border-transparent hover:border-2 hover:border-[#B89B7A] hover:bg-[#B89B7A]/10'
       )}
       onClick={e => {
         e.stopPropagation();
@@ -150,12 +150,12 @@ export const SortableBlock: React.FC<SortableBlockProps> = ({
 
       {/* Outline animado para o bloco selecionado */}
       {isSelected && (
-        <div className="absolute inset-0 border-2 border-blue-500 rounded-lg animate-pulse"></div>
+        <div className="absolute inset-0 border-2 border-[#B89B7A] rounded-lg animate-pulse"></div>
       )}
 
       {/* Indicador de drag handle */}
       {isSelected && (
-        <div className="absolute top-2 left-2 bg-blue-600 text-white p-1 rounded text-xs cursor-grab active:cursor-grabbing">
+        <div className="absolute top-2 left-2 bg-blue-600 text-white p-1 rounded text-xs">
           ⋮⋮
         </div>
       )}

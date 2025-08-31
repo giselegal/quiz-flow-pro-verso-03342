@@ -23,7 +23,7 @@ const ImageDisplayInlineBlockClean: React.FC<BlockComponentProps> = ({
 
   return (
     <div
-      className={cn('relative inline-block', isSelected && 'ring-2 ring-blue-500', className)}
+      className={cn('relative inline-block', isSelected && 'ring-2 ring-[#B89B7A]', className)}
       onClick={onClick}
     >
       <img

@@ -96,7 +96,7 @@ const HeadingBlock: React.FC<BlockComponentProps> = ({
         getAlignClass(),
         getMarginClass(),
         getFontFamilyClass(),
-        isSelected && 'ring-2 ring-blue-500 ring-opacity-50 rounded-md'
+        isSelected && 'ring-2 ring-[#B89B7A] ring-opacity-50 rounded-md'
       )}
       style={{
         color,

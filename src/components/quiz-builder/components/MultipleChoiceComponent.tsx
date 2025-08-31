@@ -28,7 +28,7 @@ const MultipleChoiceComponent: React.FC<MultipleChoiceComponentProps> = ({
 
   return (
     <div
-      className={cn('p-4', isSelected && 'outline-dashed outline-1 outline-blue-400')}
+      className={cn('p-4', isSelected && 'outline-dashed outline-1 outline-[#B89B7A]')}
       style={{
         backgroundColor: style?.backgroundColor || 'transparent',
         color: style?.textColor || 'inherit',

@@ -72,7 +72,7 @@ const MotivationSectionInlineBlock: React.FC<BlockComponentProps> = ({
       'text-right': textAlign === 'right',
     },
     'rounded-lg border border-opacity-10',
-    isSelected && 'ring-2 ring-blue-500 ring-opacity-50',
+    isSelected && 'ring-2 ring-[#B89B7A] ring-opacity-50',
     className
   );
 

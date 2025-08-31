@@ -3,12 +3,14 @@
   pointer-events: auto !important;
   user-select: none !important;
   touch-action: none !important;
-  cursor: grab !important;
+  /* Removido cursor forçado para evitar cursor grande no clique/drag */
+  cursor: auto !important;
   position: relative;
 }
 
 .dnd-draggable-item[data-dragging='true'] {
-  cursor: grabbing !important;
+  /* Evitar troca para 'grabbing' durante o arraste */
+  cursor: auto !important;
   z-index: 9999 !important;
   opacity: 0.85;
   transform: translate3d(var(--dnd-translate-x, 0), var(--dnd-translate-y, 0), 0) !important;

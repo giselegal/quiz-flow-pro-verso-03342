@@ -98,7 +98,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({ className = '', onPopula
                 onClick={() => setSelectedStepId(step.id)}
               >
                 {/* Drag Handle */}
-                <div className="flex-shrink-0 mr-2 cursor-grab hover:cursor-grabbing opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="flex-shrink-0 mr-2 opacity-0 group-hover:opacity-100 transition-opacity">
                   <GripVertical className="w-4 h-4 text-gray-400" />
                 </div>
 

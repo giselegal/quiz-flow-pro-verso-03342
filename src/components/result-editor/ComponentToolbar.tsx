@@ -35,8 +35,8 @@ const DraggableComponent: React.FC<DraggableComponentProps> = ({ component, isLo
 
   const style = transform
     ? {
-        transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-      }
+      transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
+    }
     : undefined;
 
   const Icon = component.icon;
@@ -48,10 +48,9 @@ const DraggableComponent: React.FC<DraggableComponentProps> = ({ component, isLo
       {...(isLocked ? {} : { ...listeners, ...attributes })}
       className={`
         p-3 border border-[#D4C4A0] rounded-lg transition-all duration-200 
-        ${
-          isLocked
-            ? 'cursor-not-allowed opacity-50 bg-gray-100'
-            : 'cursor-grab hover:shadow-md hover:border-[#B89B7A] bg-white active:cursor-grabbing'
+        ${isLocked
+          ? 'cursor-not-allowed opacity-50 bg-gray-100'
+          : 'hover:shadow-md hover:border-[#B89B7A] bg-white'
         }
         ${isDragging ? 'opacity-50' : ''}
       `}
@@ -147,11 +146,10 @@ export const ComponentToolbar: React.FC<ComponentToolbarProps> = ({
             <span className="text-sm font-medium text-[#432818]">Plano: {userPlan}</span>
             <Badge
               variant="outline"
-              className={`${
-                hasPremiumFeatures
+              className={`${hasPremiumFeatures
                   ? 'border-green-500 text-green-700 bg-green-50'
                   : 'border-yellow-500 text-stone-700 bg-stone-50'
-              }`}
+                }`}
             >
               {hasPremiumFeatures ? 'Premium' : 'Básico'}
             </Badge>
@@ -162,11 +160,10 @@ export const ComponentToolbar: React.FC<ComponentToolbarProps> = ({
         <div className="flex flex-wrap gap-2">
           <button
             onClick={() => setSelectedCategory('all')}
-            className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
-              selectedCategory === 'all'
+            className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${selectedCategory === 'all'
                 ? 'bg-[#B89B7A] text-[#432818]'
                 : 'bg-[#F5F2E9] text-[#B89B7A] hover:bg-[#D4C4A0]'
-            }`}
+              }`}
           >
             Todos ({filteredComponents.length})
           </button>
@@ -178,11 +175,10 @@ export const ComponentToolbar: React.FC<ComponentToolbarProps> = ({
               <button
                 key={category.id}
                 onClick={() => setSelectedCategory(category.id)}
-                className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
-                  selectedCategory === category.id
+                className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${selectedCategory === category.id
                     ? 'bg-[#B89B7A] text-[#432818]'
                     : 'bg-[#F5F2E9] text-[#B89B7A] hover:bg-[#D4C4A0]'
-                }`}
+                  }`}
               >
                 {category.name} ({categoryCount})
               </button>

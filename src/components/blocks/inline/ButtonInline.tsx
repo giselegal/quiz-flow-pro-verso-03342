@@ -165,7 +165,7 @@ export function ButtonInline({
   React.useEffect(() => {
     if (!requiresValidSelection) return;
     const handler = (ev: Event) => {
-      const e = ev as CustomEvent<{ isValid?: boolean; valid?: boolean }>; 
+      const e = ev as CustomEvent<{ isValid?: boolean; valid?: boolean }>;
       const ok = typeof e.detail?.isValid === 'boolean' ? e.detail.isValid : !!e.detail?.valid;
       setIsSelectionValid(ok);
     };
@@ -226,8 +226,8 @@ export function ButtonInline({
         'inline-flex items-center justify-center transition-all duration-300 border',
         'focus:outline-none focus:ring-4 focus:ring-opacity-50',
         // Editable styles
-        isEditable && isSelected && 'ring-2 ring-blue-400 ring-opacity-50',
-        isEditable && 'hover:ring-2 hover:ring-blue-300 hover:ring-opacity-30',
+        isEditable && isSelected && 'ring-2 ring-[#B89B7A] ring-opacity-50',
+        isEditable && 'hover:ring-2 hover:ring-[#B89B7A]/50 hover:ring-opacity-30',
 
         // Size
         padding || sizeClasses[size],
@@ -247,7 +247,7 @@ export function ButtonInline({
 
         // States
         disabled && 'opacity-50 cursor-not-allowed',
-  (requiresValidInput || (requiresValidSelection && !isSelectionValid)) && 'opacity-75 cursor-not-allowed',
+        (requiresValidInput || (requiresValidSelection && !isSelectionValid)) && 'opacity-75 cursor-not-allowed',
 
         // Margins
         getMarginClass(marginTop, 'top'),

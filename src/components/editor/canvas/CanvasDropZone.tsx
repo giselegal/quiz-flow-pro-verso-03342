@@ -80,14 +80,14 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
         <div
           className={cn(
             'relative bg-white rounded-lg shadow-sm min-h-[600px]',
-            isOver && 'ring-2 ring-blue-300 ring-opacity-50'
+            isOver && 'ring-2 ring-[#B89B7A]/50'
           )}
         >
           {children}
 
           {/* Drop indicator overlay */}
           {isOver && (
-            <div className="absolute inset-0 bg-blue-100 bg-opacity-20 rounded-lg border-2 border-dashed border-blue-300 flex items-center justify-center z-40 pointer-events-none">
+            <div className="absolute inset-0 bg-[#B89B7A]/10 rounded-lg border-2 border-dashed border-[#B89B7A]/50 flex items-center justify-center z-40 pointer-events-none">
               <div className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg font-medium text-sm">
                 ✨ Solte aqui o componente
               </div>

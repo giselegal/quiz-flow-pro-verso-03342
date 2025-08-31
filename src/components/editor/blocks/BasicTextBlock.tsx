@@ -64,7 +64,7 @@ const BasicTextBlock: React.FC<BlockComponentProps> = ({
       className={cn(
         'w-full p-3 rounded-lg border transition-all duration-200',
         'border-gray-200 bg-white hover:bg-gray-50',
-        isSelected && 'border-[#B89B7A] bg-[#B89B7A]/10 ring-2 ring-blue-200',
+        isSelected && 'border-[#B89B7A] bg-[#B89B7A]/10 ring-2 ring-[#B89B7A]/40',
         'cursor-pointer',
         className,
         // Margens universais com controles deslizantes

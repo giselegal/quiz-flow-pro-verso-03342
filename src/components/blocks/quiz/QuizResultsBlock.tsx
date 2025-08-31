@@ -113,7 +113,7 @@ const UniversalQuizResultsBlock: React.FC<UniversalQuizResultsBlockProps> = ({
 
   return (
     <div
-      className={`quiz-results-wrapper ${isSelected ? 'ring-2 ring-blue-500' : ''}`}
+      className={`quiz-results-wrapper ${isSelected ? 'ring-2 ring-[#B89B7A]' : ''}`}
       onClick={onClick}
     >
       <QuizResultsBlockCore

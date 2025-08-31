@@ -69,7 +69,7 @@ const StyleGuidesVisualInlineBlock: React.FC<BlockComponentProps> = ({
       'text-center': textAlign === 'center',
       'text-right': textAlign === 'right',
     },
-    isSelected && 'ring-2 ring-blue-500 ring-opacity-50 rounded-lg',
+    isSelected && 'ring-2 ring-[#B89B7A] ring-opacity-50 rounded-lg',
     'rounded-lg border border-opacity-10',
     className
   );
@@ -82,10 +82,10 @@ const StyleGuidesVisualInlineBlock: React.FC<BlockComponentProps> = ({
   // Process secondary styles for thumbnails
   const secondaryThumbnails = Array.isArray(secondaryStyles)
     ? secondaryStyles.slice(0, 2).map((style: any) => ({
-        src: style.guideImage || `https://via.placeholder.com/80x120?text=${style.category}`,
-        alt: `Guia de Estilo ${style.category}`,
-        category: style.category,
-      }))
+      src: style.guideImage || `https://via.placeholder.com/80x120?text=${style.category}`,
+      alt: `Guia de Estilo ${style.category}`,
+      category: style.category,
+    }))
     : [];
 
   return (

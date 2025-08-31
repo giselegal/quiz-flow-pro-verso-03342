@@ -1,5 +1,6 @@
 import { Block } from '@/types/editor';
 import { Active, Over } from '@dnd-kit/core';
+import { parseUniqueId } from '@/utils/generateUniqueId';
 
 /**
  * 🎯 Utilitários para Drag & Drop mais seguros
@@ -26,12 +27,23 @@ const isUuid = (v: unknown) =>
 const isValidBlockId = (v: unknown) =>
   typeof v === 'string' && (isUuid(v) || /^block-[\w-]+-[A-Za-z0-9_-]{8}$/.test(v as string));
 
-// Compat: ids de wrappers podem usar prefixo como 'dnd-block-'.
+// Compat: ids de wrappers podem usar prefixo como 'dnd-block-<step>-<blockId>'.
+// Normalizamos para o blockId puro (ex.: 'block-text-abc123') sempre que possível.
 // Importante: não remover 'block-' do ID real, pois os block.id podem começar com 'block-'.
 const normalizeOverId = (id: string | null | undefined): string | null => {
   if (!id) return null;
   let out = id;
-  if (out.startsWith('dnd-block-')) out = out.replace(/^dnd-block-/, '');
+  if (out.startsWith('dnd-block-')) {
+    // Tentar extrair via parseUniqueId para obter o blockId real
+    const parsed = parseUniqueId(out);
+    if (parsed?.blockId) return parsed.blockId;
+    // Fallback: remover prefixo dnd-block- e também o primeiro segmento (step)
+    out = out.replace(/^dnd-block-/, '');
+    const firstDash = out.indexOf('-');
+    if (firstDash > -1) {
+      out = out.slice(firstDash + 1); // remove '<step>-'
+    }
+  }
   return out;
 };
 

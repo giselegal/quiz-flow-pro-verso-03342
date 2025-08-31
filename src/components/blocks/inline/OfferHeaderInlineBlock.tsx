@@ -48,7 +48,7 @@ const OfferHeaderInlineBlock: React.FC<BlockComponentProps> = ({
         isSticky && 'sticky top-0 z-50',
         backdropBlur && 'backdrop-blur-sm',
         'border-b border-gray-100',
-        isSelected && 'ring-2 ring-blue-500 ring-offset-2',
+        isSelected && 'ring-2 ring-[#B89B7A] ring-offset-2',
         'cursor-pointer',
         className
       )}
@@ -61,7 +61,7 @@ const OfferHeaderInlineBlock: React.FC<BlockComponentProps> = ({
         className={cn(
           spacingClasses[spacing as keyof typeof spacingClasses] || spacingClasses.small,
           containerClasses[containerWidth as keyof typeof containerClasses] ||
-            containerClasses.container,
+          containerClasses.container,
           'flex justify-center'
         )}
       >

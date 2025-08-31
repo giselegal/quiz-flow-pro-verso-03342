@@ -24,9 +24,9 @@ export const ForceDraggableWrapper: React.FC<{
 
   const style = transform
     ? {
-        transform: CSS.Transform.toString(transform),
-        zIndex: isDragging ? 9999 : 'auto',
-      }
+      transform: CSS.Transform.toString(transform),
+      zIndex: isDragging ? 9999 : 'auto',
+    }
     : undefined;
 
   // Force override de eventos se necessário
@@ -63,7 +63,7 @@ export const ForceDraggableWrapper: React.FC<{
     element.style.pointerEvents = 'auto';
     element.style.userSelect = 'none';
     element.style.touchAction = 'none';
-    element.style.cursor = isDragging ? 'grabbing' : 'grab';
+    // Não forçar cursor customizado (evita cursor grande)
 
     return () => {
       element.removeEventListener('mousedown', handleMouseDown);

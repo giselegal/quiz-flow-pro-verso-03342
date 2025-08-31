@@ -17,7 +17,7 @@ interface HeaderComponentProps {
 const HeaderComponent: React.FC<HeaderComponentProps> = ({ data, style, isSelected }) => {
   return (
     <div
-      className={cn('p-4 text-center', isSelected && 'outline-dashed outline-1 outline-blue-400')}
+      className={cn('p-4 text-center', isSelected && 'outline-dashed outline-1 outline-[#B89B7A]')}
       style={{
         backgroundColor: style?.backgroundColor || 'transparent',
         color: style?.textColor || 'inherit',

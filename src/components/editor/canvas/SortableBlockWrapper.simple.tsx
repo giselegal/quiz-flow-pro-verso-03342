@@ -147,9 +147,9 @@ const SortableBlockWrapperBase: React.FC<SortableBlockWrapperProps> = ({
         style={style}
         className={cn(
           'relative group transition-all duration-200',
-          isSelected ? 'ring-2 ring-blue-500 ring-offset-1' : '',
+          isSelected ? 'ring-2 ring-[#B89B7A] ring-offset-1' : '',
           // Em etapas com conteúdo altamente interativo, facilitar hover/target do wrapper
-          'hover:ring-1 hover:ring-blue-300/60 hover:ring-offset-1'
+          'hover:ring-1 hover:ring-[#B89B7A]/40 hover:ring-offset-1'
         )}
         data-dnd-dropzone-type="bloco"
         data-block-id={String(block.id)}
@@ -162,7 +162,7 @@ const SortableBlockWrapperBase: React.FC<SortableBlockWrapperProps> = ({
           <Button
             variant="secondary"
             size="sm"
-            className="h-6 w-6 p-0 cursor-grab active:cursor-grabbing touch-none"
+            className="h-6 w-6 p-0 touch-none"
             style={{ touchAction: 'none' }}
             {...attributes}
             {...listeners}
