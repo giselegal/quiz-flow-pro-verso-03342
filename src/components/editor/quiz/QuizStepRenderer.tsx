@@ -6,6 +6,7 @@
 import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import React, { useCallback, useMemo } from 'react';
+import { generateUniqueId } from '@/utils/generateUniqueId';
 
 // UI Components
 import { Button } from '@/components/ui/button';
@@ -62,6 +63,8 @@ interface SortableBlockProps {
   isEditorMode: boolean;
   onUpdate: (blockId: string, updates: Partial<Block>) => void;
   componentMap: any;
+  // Escopo da etapa para garantir IDs únicos por etapa
+  scopeId: number | string;
 }
 
 const SortableBlock: React.FC<SortableBlockProps> = ({
@@ -70,9 +73,20 @@ const SortableBlock: React.FC<SortableBlockProps> = ({
   isEditorMode,
   onUpdate,
   componentMap,
+  scopeId,
 }) => {
+  const uniqueId = useMemo(
+    () => generateUniqueId({ stepNumber: scopeId ?? 'default', blockId: String(block.id), type: 'block' }),
+    [scopeId, block.id]
+  );
+
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
-    id: block.id,
+    id: uniqueId,
+    data: {
+      type: 'canvas-block',
+      blockId: String(block.id),
+      scopeId: scopeId ?? 'default',
+    },
   });
 
   const style = {
@@ -260,7 +274,10 @@ export const QuizStepRenderer: React.FC<QuizStepRendererProps> = ({
   // ========================================
   // Render Principal
   // ========================================
-  const blockIds = blocks.map(block => block.id);
+  const sortableIds = useMemo(
+    () => blocks.map(block => generateUniqueId({ stepNumber: currentStep ?? 'default', blockId: String(block.id), type: 'block' })),
+    [blocks, currentStep]
+  );
 
   const content = (
     <div
@@ -311,6 +328,7 @@ export const QuizStepRenderer: React.FC<QuizStepRendererProps> = ({
               isEditorMode={isEditorMode}
               onUpdate={handleBlockUpdate}
               componentMap={componentMap}
+              scopeId={currentStep}
             />
           ))}
         </div>
@@ -335,7 +353,7 @@ export const QuizStepRenderer: React.FC<QuizStepRendererProps> = ({
   // Envolver com SortableContext se for modo editor
   if (isEditorMode) {
     return (
-      <SortableContext items={blockIds} strategy={verticalListSortingStrategy}>
+      <SortableContext items={sortableIds} strategy={verticalListSortingStrategy}>
         {content}
       </SortableContext>
     );
