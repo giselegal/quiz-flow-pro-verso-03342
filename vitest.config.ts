@@ -25,12 +25,11 @@ export default defineConfig({
       reporter: ['text', 'json', 'html'],
       exclude: ['node_modules/', 'src/test/', '**/*.d.ts', 'src/legacy/', 'dist/', 'build/'],
     },
-    // Evita paralelismo excessivo que estoura memória em ambientes limitados
+    // Usa pool por forks para evitar problemas com tinypool (Channel closed) e reduzir OOM
+    pool: 'forks',
     poolOptions: {
-      threads: {
-        singleThread: true,
-        maxThreads: 1,
-        minThreads: 1,
+      forks: {
+        singleFork: true,
       },
     },
   },
