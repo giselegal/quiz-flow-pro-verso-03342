@@ -614,3 +614,35 @@ img:hover,
 .bg-gradient-brand:hover {
   background: linear-gradient(135deg, #c4a785, #9a7e5f);
 }
+
+/* Estilos para o componente de upload de imagem */
+.image-upload-container {
+  @apply relative border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors;
+}
+
+.image-upload-container.dragover {
+  @apply border-blue-500 bg-blue-50;
+}
+
+.image-upload-preview {
+  @apply mt-4 max-w-xs mx-auto;
+}
+
+.image-upload-preview img {
+  @apply w-full h-auto rounded-lg shadow-md;
+}
+
+/* Animações para TechBackground */
+@keyframes grid-move {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(50px, 50px); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}

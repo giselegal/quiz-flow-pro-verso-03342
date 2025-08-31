@@ -1,5 +1,7 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import QuizFlowLogo from '@/components/ui/QuizFlowLogo';
+import TechBackground from '@/components/ui/TechBackground';
 import { useAuth } from '@/context/AuthContext';
 import {
   ArrowRight,
@@ -55,31 +57,20 @@ const Home = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-brand-lightBlue/20 via-background to-brand-brightBlue/10 flex items-center justify-center">
-        <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 bg-gradient-to-r from-brand-brightBlue to-brand-brightPink rounded-lg animate-pulse"></div>
-          <span className="text-xl font-semibold text-brand-darkBlue">QuizFlow Pro</span>
-        </div>
-      </div>
+      <TechBackground variant="minimal" className="min-h-screen flex items-center justify-center">
+        <QuizFlowLogo size="lg" variant="full" className="animate-pulse" />
+      </TechBackground>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-brand-lightBlue/20 via-background to-brand-brightBlue/10">
+    <div className="min-h-screen">
       {/* Header */}
       <header className="sticky top-0 z-50 backdrop-blur-xl bg-white/80 border-b border-brand-light/40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-r from-brand-brightBlue to-brand-brightPink rounded-xl flex items-center justify-center shadow-lg">
-                <Zap className="h-5 w-5 text-white" />
-              </div>
-              <div>
-                <h1 className="text-xl font-bold text-brand-darkBlue">QuizFlow Pro</h1>
-                <p className="text-xs text-brand-darkBlue/70 -mt-1">Interactive Marketing</p>
-              </div>
-            </div>
+            <QuizFlowLogo size="sm" variant="full" />
 
             {/* User Actions */}
             <div className="flex items-center space-x-4">
@@ -141,23 +132,26 @@ const Home = () => {
 
       <main>
         {/* Hero Section */}
-        <section className="relative overflow-hidden py-20 lg:py-32">
-          <div className="absolute inset-0 bg-gradient-to-r from-brand-brightBlue/5 to-brand-brightPink/5"></div>
-          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <TechBackground variant="hero" className="py-20 lg:py-32">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center">
+              <div className="mb-8">
+                <QuizFlowLogo size="xl" variant="full" className="mx-auto" />
+              </div>
+              
               <Badge className="mb-6 bg-brand-lightBlue/40 text-brand-darkBlue border-0 px-4 py-2">
                 <Sparkles className="h-4 w-4 mr-2" />
                 Plataforma de Marketing Interativo
               </Badge>
 
-              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight drop-shadow-lg">
                 Transforme Visitantes em
-                <span className="bg-gradient-to-r from-brand-brightBlue to-brand-brightPink bg-clip-text text-transparent block">
+                <span className="bg-gradient-to-r from-brand-brightBlue via-white to-brand-brightPink bg-clip-text text-transparent block">
                   Clientes Engajados
                 </span>
               </h2>
 
-              <p className="text-xl text-white/90 mb-8 max-w-3xl mx-auto leading-relaxed">
+              <p className="text-xl text-white mb-8 max-w-3xl mx-auto leading-relaxed drop-shadow-md">
                 Crie quizzes interativos, funnels de conversão e experiências personalizadas que
                 capturam leads qualificados e aumentam suas vendas.
               </p>
@@ -219,65 +213,65 @@ const Home = () => {
               </div>
 
               {/* Social Proof */}
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-8 text-sm text-brand-text/70">
-                <div className="flex items-center space-x-2">
-                  <Users className="h-4 w-4" />
-                  <span>+10.000 empresas confiam</span>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-8 text-sm text-white/90">
+                <div className="flex items-center space-x-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full">
+                  <Users className="h-4 w-4 text-brand-brightBlue" />
+                  <span className="font-medium">+10.000 empresas confiam</span>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <TrendingUp className="h-4 w-4" />
-                  <span>+300% aumento em conversões</span>
+                <div className="flex items-center space-x-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full">
+                  <TrendingUp className="h-4 w-4 text-brand-brightPink" />
+                  <span className="font-medium">+300% aumento em conversões</span>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <Shield className="h-4 w-4" />
-                  <span>LGPD Compliant</span>
+                <div className="flex items-center space-x-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full">
+                  <Shield className="h-4 w-4 text-brand-lightBlue" />
+                  <span className="font-medium">LGPD Compliant</span>
                 </div>
+              </div>
               </div>
             </div>
-          </div>
-        </section>
+        </TechBackground>
 
         {/* Métricas */}
-        <section className="py-16 bg-white/50 backdrop-blur-sm">
+        <section className="py-16 bg-gradient-to-r from-white via-gray-50 to-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-r from-brand-primary to-brand-dark rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+              <div className="text-center group hover:scale-105 transition-transform duration-300">
+                <div className="w-16 h-16 bg-gradient-to-r from-brand-brightBlue to-brand-lightBlue rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:shadow-xl transition-shadow">
                   <Target className="h-8 w-8 text-white" />
                 </div>
-                <h3 className="text-3xl font-bold text-brand-text mb-2">85%</h3>
-                <p className="text-brand-text/80">Taxa de Conversão Média</p>
+                <h3 className="text-3xl font-bold text-brand-darkBlue mb-2">85%</h3>
+                <p className="text-brand-darkBlue/70 font-medium">Taxa de Conversão Média</p>
               </div>
-              <div className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-r from-brand-light to-brand-primary rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+              <div className="text-center group hover:scale-105 transition-transform duration-300">
+                <div className="w-16 h-16 bg-gradient-to-r from-brand-brightPink to-brand-lightBlue rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:shadow-xl transition-shadow">
                   <MousePointer className="h-8 w-8 text-white" />
                 </div>
-                <h3 className="text-3xl font-bold text-brand-text mb-2">12x</h3>
-                <p className="text-brand-text/80">Mais Engajamento</p>
+                <h3 className="text-3xl font-bold text-brand-darkBlue mb-2">12x</h3>
+                <p className="text-brand-darkBlue/70 font-medium">Mais Engajamento</p>
               </div>
-              <div className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-r from-brand-dark to-brand-primary rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+              <div className="text-center group hover:scale-105 transition-transform duration-300">
+                <div className="w-16 h-16 bg-gradient-to-r from-brand-lightBlue to-brand-brightBlue rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:shadow-xl transition-shadow">
                   <Rocket className="h-8 w-8 text-white" />
                 </div>
-                <h3 className="text-3xl font-bold text-brand-text mb-2">5min</h3>
-                <p className="text-brand-text/80">Para Criar seu Primeiro Quiz</p>
+                <h3 className="text-3xl font-bold text-brand-darkBlue mb-2">5min</h3>
+                <p className="text-brand-darkBlue/70 font-medium">Para Criar seu Primeiro Quiz</p>
               </div>
             </div>
           </div>
         </section>
 
         {/* Features */}
-        <section className="py-20 lg:py-32 bg-brand-mediumBlue">
+        <TechBackground variant="section" className="py-20 lg:py-32">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
-              <h3 className="text-3xl lg:text-4xl font-bold text-white mb-4">
+              <h3 className="text-3xl lg:text-4xl font-bold text-white mb-4 drop-shadow-lg">
                 Tudo que você precisa para
-                <span className="bg-gradient-to-r from-brand-primary to-brand-dark bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-brand-brightBlue via-white to-brand-brightPink bg-clip-text text-transparent">
                   {' '}
                   converter mais
                 </span>
               </h3>
-              <p className="text-xl text-brand-text/80 max-w-2xl mx-auto">
+              <p className="text-xl text-white max-w-2xl mx-auto drop-shadow-md">
                 Ferramentas poderosas e intuitivas para criar experiências que seus clientes vão
                 amar
               </p>
@@ -285,38 +279,38 @@ const Home = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {/* Feature 1 */}
-              <article className="bg-white rounded-2xl p-8 shadow-lg border border-brand-light/30 hover:shadow-xl transition-shadow">
-                <div className="w-12 h-12 bg-gradient-to-r from-brand-brightBlue to-brand-brightPink rounded-xl flex items-center justify-center mb-6">
-                  <Zap className="h-6 w-6 text-brand-brightBlue" />
+              <article className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300 hover:scale-105">
+                <div className="w-12 h-12 bg-gradient-to-r from-brand-brightBlue to-brand-lightBlue rounded-xl flex items-center justify-center mb-6 shadow-md">
+                  <Zap className="h-6 w-6 text-white" />
                 </div>
                 <h4 className="text-xl font-semibold text-brand-darkBlue mb-3">Criação Rápida</h4>
-                <p className="text-brand-darkBlue/70 leading-relaxed">
+                <p className="text-brand-darkBlue/80 leading-relaxed">
                   Crie quizzes profissionais em minutos com nossos templates inteligentes e editor
                   visual.
                 </p>
               </article>
 
               {/* Feature 2 */}
-              <article className="bg-white rounded-2xl p-8 shadow-lg border border-brand-light/30 hover:shadow-xl transition-shadow">
-                <div className="w-12 h-12 bg-gradient-to-r from-brand-brightBlue to-brand-brightPink rounded-xl flex items-center justify-center mb-6">
-                  <Target className="h-6 w-6 text-brand-brightBlue" />
+              <article className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300 hover:scale-105">
+                <div className="w-12 h-12 bg-gradient-to-r from-brand-brightPink to-brand-lightBlue rounded-xl flex items-center justify-center mb-6 shadow-md">
+                  <Target className="h-6 w-6 text-white" />
                 </div>
                 <h4 className="text-xl font-semibold text-brand-darkBlue mb-3">
                   Segmentação Inteligente
                 </h4>
-                <p className="text-brand-darkBlue/70 leading-relaxed">
+                <p className="text-brand-darkBlue/80 leading-relaxed">
                   Qualifique leads automaticamente e direcione ofertas personalizadas baseadas nas
                   respostas.
                 </p>
               </article>
 
               {/* Feature 3 */}
-              <article className="bg-white rounded-2xl p-8 shadow-lg border border-brand-light/30 hover:shadow-xl transition-shadow">
-                <div className="w-12 h-12 bg-gradient-to-r from-brand-brightBlue to-brand-brightPink rounded-xl flex items-center justify-center mb-6">
+              <article className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300 hover:scale-105">
+                <div className="w-12 h-12 bg-gradient-to-r from-brand-lightBlue to-brand-brightBlue rounded-xl flex items-center justify-center mb-6 shadow-md">
                   <TrendingUp className="h-6 w-6 text-white" />
                 </div>
                 <h4 className="text-xl font-semibold text-brand-darkBlue mb-3">Analytics Avançado</h4>
-                <p className="text-brand-darkBlue/70 leading-relaxed">
+                <p className="text-brand-darkBlue/80 leading-relaxed">
                   Acompanhe métricas detalhadas e otimize suas campanhas com insights em tempo real.
                 </p>
               </article>
@@ -325,26 +319,40 @@ const Home = () => {
         </section>
 
         {/* CTA Final */}
-        <section className="py-20 bg-gradient-to-r from-brand-primary to-brand-dark">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h4 className="text-3xl lg:text-4xl font-bold text-white mb-6">
-              Pronto para transformar seu marketing?
-            </h4>
-            <p className="text-xl text-white/80 mb-8 max-w-2xl mx-auto">
-              Junte-se a milhares de empresas que já aumentaram suas conversões com nossa
-              plataforma.
+        <TechBackground variant="cta" className="py-20 lg:py-32">
+          <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+            <h3 className="text-3xl lg:text-4xl font-bold text-white mb-6 drop-shadow-lg">
+              Pronto para{' '}
+              <span className="bg-gradient-to-r from-brand-brightBlue via-white to-brand-brightPink bg-clip-text text-transparent">
+                revolucionar
+              </span>{' '}
+              suas vendas?
+            </h3>
+            <p className="text-xl text-white mb-8 max-w-2xl mx-auto drop-shadow-md">
+              Junte-se a milhares de empreendedores que já transformaram seus negócios com o
+              QuizFlow Pro
             </p>
-            <Button
-              onClick={() => navigate(user ? '/admin' : '/auth')}
-              size="lg"
-              className="bg-white text-brand-text hover:bg-brand-light/20 shadow-xl px-8 py-4 text-lg font-semibold"
-            >
-              <Rocket className="h-5 w-5 mr-2" />
-              {user ? 'Acessar Dashboard' : 'Começar Gratuitamente'}
-              <ArrowRight className="h-5 w-5 ml-2" />
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button
+                onClick={() => navigate(user ? '/admin' : '/auth')}
+                size="lg"
+                className="bg-white/95 backdrop-blur-sm text-brand-darkBlue hover:bg-white hover:text-brand-darkBlue border-0 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 font-semibold px-8 py-4 text-lg"
+              >
+                <Rocket className="h-5 w-5 mr-2" />
+                {user ? 'Acessar Dashboard' : 'Começar Gratuitamente'}
+                <ArrowRight className="h-5 w-5 ml-2" />
+              </Button>
+              <Button
+                variant="outline"
+                size="lg"
+                className="border-white/80 text-white hover:bg-white/10 hover:text-white backdrop-blur-sm transition-all duration-300 font-medium px-8 py-4 text-lg"
+              >
+                Ver Demonstração
+                <Play className="ml-2 h-4 w-4" />
+              </Button>
+            </div>
           </div>
-        </section>
+        </TechBackground>
       </main>
 
       {/* Footer */}
@@ -352,13 +360,10 @@ const Home = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center space-x-3 mb-4 md:mb-0">
-              <div className="w-8 h-8 bg-gradient-to-r from-brand-primary to-brand-dark rounded-lg flex items-center justify-center">
-                <Zap className="h-4 w-4 text-white" />
-              </div>
-              <span className="text-xl font-bold">QuizFlow Pro</span>
+              <QuizFlowLogo size="sm" variant="full" className="text-white" />
             </div>
 
-            <nav className="flex items-center space-x-6 text-sm text-white/80">
+            <nav className="flex items-center space-x-6 text-sm text-white/90">
               <a href="#" className="hover:text-white transition-colors">
                 Privacidade
               </a>
@@ -374,7 +379,7 @@ const Home = () => {
             </nav>
           </div>
 
-          <div className="border-t border-brand-lightBlue/20 mt-8 pt-8 text-center text-sm text-brand-lightBlue/70">
+          <div className="border-t border-brand-lightBlue/20 mt-8 pt-8 text-center text-sm text-white/70">
             <p>&copy; 2025 QuizFlow Pro. Todos os direitos reservados.</p>
           </div>
         </div>
