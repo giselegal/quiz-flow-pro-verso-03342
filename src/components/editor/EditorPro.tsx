@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef, useState, useEffect } from 'react';
+import React, { useCallback, useMemo, useRef, useState, useEffect, Suspense } from 'react';
 import { DndContext, DragEndEvent, DragStartEvent, useSensor, useSensors, PointerSensor, KeyboardSensor, closestCenter, rectIntersection } from '@dnd-kit/core';
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import { useNotification } from '@/components/ui/Notification';
@@ -11,11 +11,15 @@ import { useEditor } from './EditorProvider';
 import { useTheme } from '@/components/theme-provider';
 import { useRenderCount } from '@/hooks/useRenderCount';
 import { mark } from '@/utils/perf';
-import { QuizRenderer } from '@/components/core/QuizRenderer';
 import CanvasDropZone from '@/components/editor/canvas/CanvasDropZone.simple';
-import StepSidebar from '@/components/editor/sidebars/StepSidebar';
-import ComponentsSidebar from '@/components/editor/sidebars/ComponentsSidebar';
-import PropertiesColumn from '@/components/editor/properties/PropertiesColumn';
+
+// Lazy modules para reduzir TTI do editor
+const LazyQuizRenderer = React.lazy(() =>
+  import('@/components/core/QuizRenderer').then(mod => ({ default: mod.QuizRenderer }))
+);
+const StepSidebar = React.lazy(() => import('@/components/editor/sidebars/StepSidebar'));
+const ComponentsSidebar = React.lazy(() => import('@/components/editor/sidebars/ComponentsSidebar'));
+const PropertiesColumn = React.lazy(() => import('@/components/editor/properties/PropertiesColumn'));
 
 // Lazy loading dos componentes pesados (mantidos em arquivo modular index.tsx)
 
@@ -691,7 +695,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
     [availableComponents]
   );
 
-  const getStepAnalysis = (step: number): StepAnalysis => {
+  const getStepAnalysis = useCallback((step: number): StepAnalysis => {
     if (step === 1) return { icon: 'note', label: 'Captura', desc: 'Nome do usuário' };
     if (step >= 2 && step <= 11)
       return { icon: 'target', label: 'Questão', desc: 'Pontuação de estilo' };
@@ -702,7 +706,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
     if (step === 20) return { icon: 'confetti', label: 'Resultado', desc: 'Estilo personalizado' };
     if (step === 21) return { icon: 'money', label: 'Oferta', desc: 'CTA de conversão' };
     return { icon: 'question', label: 'Indefinida', desc: 'Não mapeada' };
-  };
+  }, []);
 
   // Handlers básicos
   const handleStepSelect = useCallback((step: number) => actions.setCurrentStep(step), [actions]);
@@ -712,11 +716,14 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   const handleDragStart = useCallback((event: DragStartEvent) => {
     const { active } = event;
     const dragData = extractDragData(active);
-    console.log('🚀 DRAG START CAPTURADO!', {
-      activeId: active.id,
-      dragData,
-      activeDataCurrent: active.data.current,
-    });
+    if (process.env.NODE_ENV === 'development') {
+      // eslint-disable-next-line no-console
+      console.log('🚀 DRAG START CAPTURADO!', {
+        activeId: active.id,
+        dragData,
+        activeDataCurrent: active.data.current,
+      });
+    }
     setIsDragging(true);
     logDragEvent('start', active);
     if (process.env.NODE_ENV === 'development') devLog('Drag start', dragData);
@@ -725,16 +732,22 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   const handleDragEnd = useCallback(
     (event: DragEndEvent) => {
       const { active, over } = event;
-      console.log('🎯 DRAG END CAPTURADO!', {
-        activeId: active.id,
-        overId: over?.id,
-        overData: over?.data?.current,
-      });
+      if (process.env.NODE_ENV === 'development') {
+        // eslint-disable-next-line no-console
+        console.log('🎯 DRAG END CAPTURADO!', {
+          activeId: active.id,
+          overId: over?.id,
+          overData: over?.data?.current,
+        });
+      }
 
       setIsDragging(false);
 
       if (!over) {
-        console.log('❌ Drop cancelado - sem alvo');
+        if (process.env.NODE_ENV === 'development') {
+          // eslint-disable-next-line no-console
+          console.log('❌ Drop cancelado - sem alvo');
+        }
         const dragData = extractDragData(active);
         const feedback = getDragFeedback(dragData, {
           isValid: false,
@@ -1192,7 +1205,8 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
           )}
         >
           {mode === 'preview' ? (
-            <QuizRenderer
+            <Suspense fallback={<div className="p-4 text-sm text-gray-600">Carregando preview…</div>}>
+              <LazyQuizRenderer
               mode="preview"
               blocksOverride={currentStepData as any}
               currentStepOverride={safeCurrentStep}
@@ -1201,9 +1215,11 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               onBlockClick={(blockId: string) => actions.setSelectedBlockId(blockId)}
               onStepChange={(step: number) => actions.setCurrentStep(step)}
               className="h-full w-full"
-            />
+              />
+            </Suspense>
           ) : (
-            <QuizRenderer
+            <Suspense fallback={<div className="p-4 text-sm text-gray-600">Carregando editor…</div>}>
+              <LazyQuizRenderer
               mode="editor"
               currentStepOverride={safeCurrentStep}
               onStepChange={(step: number) => actions.setCurrentStep(step)}
@@ -1222,7 +1238,8 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
                   scopeId={safeCurrentStep}
                 />
               }
-            />
+              />
+            </Suspense>
           )}
         </div>
       </div>
@@ -1281,26 +1298,32 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       >
         <div className={`editor-pro h-screen bg-gray-50 flex overflow-x-hidden max-w-screen ${className}`}>
           {/* 1) Etapas - 10% */}
-          <StepSidebar
-            currentStep={safeCurrentStep}
-            totalSteps={21}
-            stepHasBlocks={stepHasBlocks}
-            stepValidation={(state as any)?.stepValidation || {}}
-            onSelectStep={handleStepSelect}
-            getStepAnalysis={getStepAnalysis as any}
-            renderIcon={renderIcon as any}
-            className="!w-[10%] !min-w-0 !max-w-none"
-          />
+          <Suspense fallback={<div className="w-[10%] min-w-0 max-w-none p-4">Carregando etapas…</div>}>
+            <StepSidebar
+              currentStep={safeCurrentStep}
+              totalSteps={21}
+              stepHasBlocks={stepHasBlocks}
+              stepValidation={(state as any)?.stepValidation || {}}
+              onSelectStep={handleStepSelect}
+              getStepAnalysis={getStepAnalysis as any}
+              renderIcon={renderIcon as any}
+              className="!w-[10%] !min-w-0 !max-w-none"
+            />
+          </Suspense>
           {/* 2) Componentes - 15% */}
-          <ComponentsSidebar
-            groupedComponents={groupedComponents as any}
-            renderIcon={renderIcon as any}
-            className="!w-[15%] !min-w-0 !max-w-none"
-          />
+          <Suspense fallback={<div className="w-[15%] min-w-0 max-w-none p-4">Carregando biblioteca…</div>}>
+            <ComponentsSidebar
+              groupedComponents={groupedComponents as any}
+              renderIcon={renderIcon as any}
+              className="!w-[15%] !min-w-0 !max-w-none"
+            />
+          </Suspense>
           {/* 3) Canvas - 55% (conteúdo centralizado internamente) */}
           <CanvasArea />
           {/* 4) Propriedades - 20% */}
-          <MemoPropertiesColumn />
+          <Suspense fallback={<div className="w-[20%] min-w-0 max-w-none p-4">Propriedades…</div>}>
+            <MemoPropertiesColumn />
+          </Suspense>
         </div>
       </DndContext>
 
