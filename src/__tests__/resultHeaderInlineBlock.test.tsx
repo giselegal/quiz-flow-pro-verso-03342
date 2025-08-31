@@ -33,12 +33,12 @@ describe('ResultHeaderInlineBlock', () => {
             />
         );
 
-    // Mostra estilo principal (rótulo humano) exatamente no header
-    const styleLabels = screen.getAllByText(/^Natural$/i);
-    expect(styleLabels.length).toBeGreaterThan(0);
-    // Mostra nome ao lado como saudação compacta
-    expect(screen.getByText(/Alice/)).toBeTruthy();
-    // Mostra percentual formatado (badge à direita)
-    expect(screen.getByText(/70\s*%/)).toBeTruthy();
+        // Mostra estilo principal (rótulo humano) exatamente no header
+        const styleLabels = screen.getAllByText(/^Natural$/i);
+        expect(styleLabels.length).toBeGreaterThan(0);
+        // Mostra nome ao lado como saudação compacta
+        expect(screen.getByText(/Alice/)).toBeTruthy();
+        // Mostra percentual formatado (badge à direita)
+        expect(screen.getByText(/70\s*%/)).toBeTruthy();
     });
 });

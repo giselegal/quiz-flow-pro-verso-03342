@@ -143,19 +143,27 @@ export const useQuizFlow = ({
     [answerStrategicQuestion, nextStep, currentStep, stepNavStore, cancel, schedule]
   );
 
-  // Auto-avançar na etapa 19 (calculando)
+  // Auto-processamento baseado em flag de configuração da etapa
   useEffect(() => {
-    if (currentStep === 19) {
+    const cfg = stepNavStore.getStepConfig(`step-${currentStep}`);
+    if (cfg?.calculateResult) {
       setIsLoading(true);
-      cancel('quizflow-step19');
-      schedule('quizflow-step19', () => {
-        completeQuiz();
-        setIsLoading(false);
-        nextStep();
-      }, 2000, 'timeout');
-      return () => cancel('quizflow-step19');
+      const key = `quizflow-calc-step-${currentStep}`;
+      cancel(key);
+      const delay = typeof cfg.autoAdvanceDelay === 'number' ? cfg.autoAdvanceDelay : 2000;
+      schedule(
+        key,
+        () => {
+          completeQuiz();
+          setIsLoading(false);
+          nextStep();
+        },
+        delay,
+        'timeout'
+      );
+      return () => cancel(key);
     }
-  }, [currentStep, completeQuiz, nextStep]);
+  }, [currentStep, completeQuiz, nextStep, stepNavStore, schedule, cancel]);
 
   // Persistir resultado calculado no core para consumo universal (blocos de resultado)
   useEffect(() => {

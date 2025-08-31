@@ -208,7 +208,7 @@ const SortableBlockWrapperBase: React.FC<SortableBlockWrapperProps> = ({
               onPropertyChange={(key: string, value: unknown) => {
                 try {
                   onUpdate({ [key]: value });
-                } catch {}
+                } catch { }
               }}
               isPreviewMode={false}
               isPreviewing={false}

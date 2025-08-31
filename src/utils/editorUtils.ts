@@ -27,14 +27,17 @@ export const createBlockFromComponent = (
   componentType: BlockType,
   existingBlocks: Block[] = []
 ): Block => {
-  const def = getBlockDefinition(componentType as any);
-  const defaults = def?.defaultProps || {};
+  // Busca definição apenas para validações futuras; não aplicamos defaults aqui
+  // para manter compatibilidade com testes e fluxos que esperam properties vazio.
+  // Caso defaults sejam necessários, eles devem ser aplicados pela UI/registry
+  // no momento de renderização/edição.
+  getBlockDefinition(componentType as any);
   return {
     id: generateBlockId(componentType),
     type: componentType,
     order: getNextBlockOrder(existingBlocks),
     content: {},
-    properties: { ...defaults },
+    properties: {},
   };
 };
 

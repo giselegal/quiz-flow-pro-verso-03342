@@ -369,7 +369,7 @@ const QuizModularPage: React.FC = () => {
   }, [stepConfig?.backgroundFrom, stepConfig?.backgroundVia, stepConfig?.backgroundTo]);
 
   // ===== CÁLCULO E PERSISTÊNCIA DO RESULTADO (core/ResultEngine) =====
-  const computeAndPersistResult = React.useCallback(() => {
+  const computeAndPersistResult = React.useCallback(async () => {
     // Leitura opcional de pesos do funil otimizado (se usado)
     const weightQuestions = (OPTIMIZED_FUNNEL_CONFIG as any)?.calculations?.scoreWeights?.questions;
 
@@ -390,14 +390,37 @@ const QuizModularPage: React.FC = () => {
       const { StorageService } = require('@/services/core/StorageService');
       StorageService.safeSetString('quizUserName', userName);
     } catch { }
+
+    // Persistência opcional no Supabase
+    try {
+      if (stepConfig?.persistResultToSupabase) {
+        const { sessionService } = require('@/services/sessionService');
+        const { quizSupabaseService } = require('@/services/quizSupabaseService');
+        const sessionId = sessionService.getSessionId?.();
+        const isUUID = sessionService.isUUIDSession?.();
+        if (sessionId && isUUID) {
+          await quizSupabaseService.saveQuizResult({
+            sessionId,
+            resultType: 'style-profile',
+            resultTitle: payload.primaryStyle?.style || 'Resultado',
+            resultDescription: `Perfil principal: ${payload.primaryStyle?.style}`,
+            resultData: payload,
+            recommendation: undefined,
+            nextSteps: [],
+          });
+        }
+      }
+    } catch (e) {
+      if (import.meta?.env?.DEV) console.warn('Falha ao salvar resultado no Supabase (ignorado):', e);
+    }
   }, [userSelections, quizAnswers.userName]);
 
-  // Disparar cálculo na etapa 19 (transição para resultado)
+  // Disparar cálculo pela flag de configuração (ex: etapa 19 por padrão)
   useEffect(() => {
-    if (currentStep === 19) {
+    if (stepConfig?.calculateResult) {
       computeAndPersistResult();
     }
-  }, [currentStep, computeAndPersistResult]);
+  }, [currentStep, computeAndPersistResult, stepConfig?.calculateResult]);
 
   // 📈 Estatísticas/feedback por etapa (contagem de seleções e mensagens)
   const selectedCount = useMemo(() => {
