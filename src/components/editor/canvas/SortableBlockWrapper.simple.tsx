@@ -159,7 +159,7 @@ const SortableBlockWrapperBase: React.FC<SortableBlockWrapperProps> = ({
         style={style}
         className={cn(
           'relative group transition-all duration-200',
-          isSelected ? 'ring-2 ring-blue-500 ring-offset-1' : '',
+          isSelected ? 'ring-2 ring-[#B89B7A] ring-offset-1' : '',
           // Em etapas com conteúdo altamente interativo, facilitar hover/target do wrapper
           'hover:ring-1 hover:ring-[#B89B7A]/40 hover:ring-offset-1',
           // Forçar ponteiro padrão no wrapper para evitar cursor de texto ao selecionar
