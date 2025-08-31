@@ -34,8 +34,8 @@ export class TemplateManager {
   private static getPublishedBlocks(stepId: string): Block[] | null {
     try {
       const key = this.PUBLISH_PREFIX + stepId;
-  // Usa StorageService para lidar com JSON/fallbacks
-  const parsed = StorageService.safeGetJSON(key) as
+      // Usa StorageService para lidar com JSON/fallbacks
+      const parsed = StorageService.safeGetJSON(key) as
         | { blocks?: Block[]; updatedAt?: string }
         | Block[]
         | null;

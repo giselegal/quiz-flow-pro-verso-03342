@@ -11,6 +11,7 @@ import { ResultEngine } from '@/services/core/ResultEngine';
 import { SelectionRules, FlowCore } from '@/services/core/FlowCore';
 import OPTIMIZED_FUNNEL_CONFIG from '@/config/optimized21StepsFunnel';
 import useOptimizedScheduler from '@/hooks/useOptimizedScheduler';
+import DevResultDebug from '@/components/dev/DevResultDebug';
 
 /**
  * 🎯 QUIZ MODULAR - VERSÃO PRODUÇÃO COM ETAPAS DO EDITOR
@@ -462,234 +463,236 @@ const QuizModularPage: React.FC = () => {
   // Página de produção: sem DnD nem sidebars de edição
 
   return (
-    <div
-      className={"min-h-screen bg-gradient-to-br"}
-      style={{
-        // Aplicar gradiente inline para refletir personalização por etapa
-        backgroundImage: `linear-gradient(135deg, ${bgStyle.from}, ${bgStyle.via}, ${bgStyle.to})`,
-      }}
-    >
-      {/* CONTEÚDO CENTRAL PARA USUÁRIO FINAL */}
-      <div className="flex min-h-screen">
-        <div className="flex-1 overflow-auto">
-          <div className="container mx-auto px-6 py-8">
-            <div className="max-w-4xl mx-auto">
-              {/* 🎯 CABEÇALHO PRINCIPAL DO QUIZ */}
-              <div className="bg-white/90 backdrop-blur-sm border border-stone-200/50 shadow-sm rounded-lg mb-8 p-6">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <h2 className="text-lg font-semibold text-stone-800">Quiz Style Challenge</h2>
-                    <div className="text-sm text-stone-600">Etapa {currentStep} de 21</div>
-                  </div>
-
-                  <div className="flex items-center gap-4">
-                    <div className="w-48">
-                      <Progress value={progress} className="h-2" />
+    <>
+      <div
+        className={"min-h-screen bg-gradient-to-br"}
+        style={{
+          // Aplicar gradiente inline para refletir personalização por etapa
+          backgroundImage: `linear-gradient(135deg, ${bgStyle.from}, ${bgStyle.via}, ${bgStyle.to})`,
+        }}
+      >
+        {/* CONTEÚDO CENTRAL PARA USUÁRIO FINAL */}
+        <div className="flex min-h-screen">
+          <div className="flex-1 overflow-auto">
+            <div className="container mx-auto px-6 py-8">
+              <div className="max-w-4xl mx-auto">
+                {/* 🎯 CABEÇALHO PRINCIPAL DO QUIZ */}
+                <div className="bg-white/90 backdrop-blur-sm border border-stone-200/50 shadow-sm rounded-lg mb-8 p-6">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <h2 className="text-lg font-semibold text-stone-800">Quiz Style Challenge</h2>
+                      <div className="text-sm text-stone-600">Etapa {currentStep} de 21</div>
                     </div>
-                    <div className="text-sm font-medium text-stone-700">{progress}%</div>
+
+                    <div className="flex items-center gap-4">
+                      <div className="w-48">
+                        <Progress value={progress} className="h-2" />
+                      </div>
+                      <div className="text-sm font-medium text-stone-700">{progress}%</div>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handlePrevious}
+                        disabled={currentStep === 1}
+                      >
+                        ← Anterior
+                      </Button>
+                      <Button
+                        size="sm"
+                        onClick={handleNext}
+                        disabled={nextDisabled}
+                        className={cn(
+                          nextDisabled
+                            ? 'bg-stone-200 text-stone-400 cursor-not-allowed'
+                            : 'bg-gradient-to-r from-[#B89B7A] to-[#8B7355]'
+                        )}
+                      >
+                        {nextLabel}
+                      </Button>
+                      {stepConfig?.showValidationFeedback && mustBeValid && !isStepValid && (
+                        <div className="text-xs text-stone-500 ml-2">
+                          {validationText}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* 📋 HEADER DA ETAPA (limpo: sem textos promocionais fixos) */}
+                <div className="text-center mb-8">
+                  <div className="flex items-center justify-center gap-4 mb-4">
+                    <div className="text-sm text-stone-500">Etapa {currentStep} de 21</div>
+                    <div className="w-32 bg-stone-200 rounded-full h-2">
+                      <div
+                        className="bg-gradient-to-r from-[#B89B7A] to-[#8B7355] h-2 rounded-full"
+                        style={{ width: `${progress}%` }}
+                      />
+                    </div>
+                    <div className="text-sm text-stone-600">{progress}%</div>
+                  </div>
+                  {(stepConfig?.showProgressMessage || stepConfig?.showSelectionCount) && (
+                    <div className="text-sm text-stone-600">
+                      {stepConfig?.showProgressMessage
+                        ? (progressText || '')
+                        : `Você selecionou ${selectedCount} de ${stepConfig?.requiredSelections ?? 0} opções`}
+                    </div>
+                  )}
+                </div>
+
+                {/* 🎨 ÁREA DE RENDERIZAÇÃO DOS BLOCOS */}
+                <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl shadow-stone-200/40 border border-stone-200/30 ring-1 ring-stone-100/20 overflow-hidden">
+                  {/* Estado de loading */}
+                  {isLoading && (
+                    <div className="min-h-[500px] flex items-center justify-center">
+                      <div className="text-center">
+                        <div className="w-8 h-8 border-2 border-[#B89B7A] border-t-transparent rounded-full mx-auto mb-4"></div>
+                        <p className="text-stone-600">Carregando etapa {currentStep}...</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Estado de erro */}
+                  {error && (
+                    <div className="min-h-[500px] flex items-center justify-center">
+                      <div className="text-center p-8">
+                        <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                          <span className="text-red-600 text-2xl">⚠️</span>
+                        </div>
+                        <h3 className="text-lg font-semibold text-red-800 mb-2">Erro ao carregar</h3>
+                        <p className="text-red-600 mb-4">{error}</p>
+                        <button
+                          onClick={() => window.location.reload()}
+                          className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
+                        >
+                          Tentar novamente
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Renderização dos blocos */}
+                  {!isLoading && !error && (
+                    <div className="quiz-content p-8 space-y-6">
+                      {blocks.length === 0 ? (
+                        <div className="text-center py-12">
+                          <div className="w-16 h-16 bg-stone-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <span className="text-stone-400 text-2xl">📝</span>
+                          </div>
+                          <h3 className="text-lg font-medium text-stone-800 mb-2">
+                            Etapa em construção
+                          </h3>
+                          <p className="text-stone-600">
+                            Esta etapa ainda não possui conteúdo. Você pode continuar para a próxima
+                            etapa ou arrastar componentes da barra lateral.
+                          </p>
+                        </div>
+                      ) : (
+                        blocks.map(block => (
+                          <div
+                            key={block.id}
+                            className={cn(
+                              'quiz-block',
+                              // Sem animações/transições fora do Canvas
+                            )}
+                          >
+                            <UniversalBlockRenderer
+                              block={{
+                                ...block,
+                                // Adicionar callbacks para interação
+                                properties: {
+                                  ...block.properties,
+                                  onOptionSelect: (optionId: string) => {
+                                    const questionId = block.properties?.questionId || block.id;
+                                    handleQuestionResponse(questionId, optionId, block.properties);
+                                  },
+                                  onInputChange: (value: string) => {
+                                    const dataKey = block.content?.dataKey || 'default';
+                                    handleFormInput(dataKey, value, block.content);
+                                  },
+                                  selectedOptions:
+                                    userSelections[block.properties?.questionId || block.id] || [],
+                                  inputValue: quizAnswers[block.content?.dataKey || 'default'] || '',
+                                  isValid: stepValidation[currentStep] || false,
+                                },
+                              }}
+                              isSelected={false}
+                              onClick={() => { }}
+                            />
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                {/* 🎮 CONTROLES DE NAVEGAÇÃO */}
+                <div className="flex justify-between items-center mt-8">
+                  <button
+                    onClick={handlePrevious}
+                    disabled={currentStep === 1}
+                    className={cn(
+                      'flex items-center gap-2 px-6 py-3 rounded-lg font-medium',
+                      currentStep === 1
+                        ? 'bg-stone-100 text-stone-400 cursor-not-allowed'
+                        : 'bg-white text-stone-700 hover:bg-stone-50 border border-stone-200 shadow-sm hover:shadow'
+                    )}
+                  >
+                    ← Anterior
+                  </button>
+
+                  <div className="text-center">
+                    <div className="text-sm text-stone-500 mb-1">Progresso</div>
+                    <div className="text-lg font-semibold text-stone-800">{currentStep} / 21</div>
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={handlePrevious}
-                      disabled={currentStep === 1}
-                    >
-                      ← Anterior
-                    </Button>
-                    <Button
-                      size="sm"
+                    <button
                       onClick={handleNext}
                       disabled={nextDisabled}
                       className={cn(
+                        'flex items-center gap-2 px-6 py-3 rounded-lg font-medium',
                         nextDisabled
-                          ? 'bg-stone-200 text-stone-400 cursor-not-allowed'
-                          : 'bg-gradient-to-r from-[#B89B7A] to-[#8B7355]'
+                          ? 'bg-stone-100 text-stone-400 cursor-not-allowed'
+                          : 'bg-gradient-to-r from-[#B89B7A] to-[#8B7355] text-white hover:from-[#A08966] hover:to-[#7A6B4D] shadow-md hover:shadow-lg'
                       )}
                     >
                       {nextLabel}
-                    </Button>
+                    </button>
                     {stepConfig?.showValidationFeedback && mustBeValid && !isStepValid && (
-                      <div className="text-xs text-stone-500 ml-2">
+                      <div className="text-xs text-stone-500">
                         {validationText}
                       </div>
                     )}
                   </div>
-                </div>
-              </div>
-
-              {/* 📋 HEADER DA ETAPA (limpo: sem textos promocionais fixos) */}
-              <div className="text-center mb-8">
-                <div className="flex items-center justify-center gap-4 mb-4">
-                  <div className="text-sm text-stone-500">Etapa {currentStep} de 21</div>
-                  <div className="w-32 bg-stone-200 rounded-full h-2">
-                    <div
-                      className="bg-gradient-to-r from-[#B89B7A] to-[#8B7355] h-2 rounded-full"
-                      style={{ width: `${progress}%` }}
-                    />
-                  </div>
-                  <div className="text-sm text-stone-600">{progress}%</div>
-                </div>
-                {(stepConfig?.showProgressMessage || stepConfig?.showSelectionCount) && (
-                  <div className="text-sm text-stone-600">
-                    {stepConfig?.showProgressMessage
-                      ? (progressText || '')
-                      : `Você selecionou ${selectedCount} de ${stepConfig?.requiredSelections ?? 0} opções`}
-                  </div>
-                )}
-              </div>
-
-              {/* 🎨 ÁREA DE RENDERIZAÇÃO DOS BLOCOS */}
-              <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl shadow-stone-200/40 border border-stone-200/30 ring-1 ring-stone-100/20 overflow-hidden">
-                {/* Estado de loading */}
-                {isLoading && (
-                  <div className="min-h-[500px] flex items-center justify-center">
-                    <div className="text-center">
-                      <div className="w-8 h-8 border-2 border-[#B89B7A] border-t-transparent rounded-full mx-auto mb-4"></div>
-                      <p className="text-stone-600">Carregando etapa {currentStep}...</p>
-                    </div>
-                  </div>
-                )}
-
-                {/* Estado de erro */}
-                {error && (
-                  <div className="min-h-[500px] flex items-center justify-center">
-                    <div className="text-center p-8">
-                      <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <span className="text-red-600 text-2xl">⚠️</span>
-                      </div>
-                      <h3 className="text-lg font-semibold text-red-800 mb-2">Erro ao carregar</h3>
-                      <p className="text-red-600 mb-4">{error}</p>
-                      <button
-                        onClick={() => window.location.reload()}
-                        className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
-                      >
-                        Tentar novamente
-                      </button>
-                    </div>
-                  </div>
-                )}
-
-                {/* Renderização dos blocos */}
-                {!isLoading && !error && (
-                  <div className="quiz-content p-8 space-y-6">
-                    {blocks.length === 0 ? (
-                      <div className="text-center py-12">
-                        <div className="w-16 h-16 bg-stone-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                          <span className="text-stone-400 text-2xl">📝</span>
-                        </div>
-                        <h3 className="text-lg font-medium text-stone-800 mb-2">
-                          Etapa em construção
-                        </h3>
-                        <p className="text-stone-600">
-                          Esta etapa ainda não possui conteúdo. Você pode continuar para a próxima
-                          etapa ou arrastar componentes da barra lateral.
-                        </p>
-                      </div>
-                    ) : (
-                      blocks.map(block => (
-                        <div
-                          key={block.id}
-                          className={cn(
-                            'quiz-block',
-                            // Sem animações/transições fora do Canvas
-                          )}
-                        >
-                          <UniversalBlockRenderer
-                            block={{
-                              ...block,
-                              // Adicionar callbacks para interação
-                              properties: {
-                                ...block.properties,
-                                onOptionSelect: (optionId: string) => {
-                                  const questionId = block.properties?.questionId || block.id;
-                                  handleQuestionResponse(questionId, optionId, block.properties);
-                                },
-                                onInputChange: (value: string) => {
-                                  const dataKey = block.content?.dataKey || 'default';
-                                  handleFormInput(dataKey, value, block.content);
-                                },
-                                selectedOptions:
-                                  userSelections[block.properties?.questionId || block.id] || [],
-                                inputValue: quizAnswers[block.content?.dataKey || 'default'] || '',
-                                isValid: stepValidation[currentStep] || false,
-                              },
-                            }}
-                            isSelected={false}
-                            onClick={() => { }}
-                          />
-                        </div>
-                      ))
-                    )}
-                  </div>
-                )}
-              </div>
-
-              {/* 🎮 CONTROLES DE NAVEGAÇÃO */}
-              <div className="flex justify-between items-center mt-8">
-                <button
-                  onClick={handlePrevious}
-                  disabled={currentStep === 1}
-                  className={cn(
-                    'flex items-center gap-2 px-6 py-3 rounded-lg font-medium',
-                    currentStep === 1
-                      ? 'bg-stone-100 text-stone-400 cursor-not-allowed'
-                      : 'bg-white text-stone-700 hover:bg-stone-50 border border-stone-200 shadow-sm hover:shadow'
-                  )}
-                >
-                  ← Anterior
-                </button>
-
-                <div className="text-center">
-                  <div className="text-sm text-stone-500 mb-1">Progresso</div>
-                  <div className="text-lg font-semibold text-stone-800">{currentStep} / 21</div>
-                </div>
-
-                <div className="flex items-center gap-2">
+                  {/* Utilitário opcional de recarga */}
                   <button
-                    onClick={handleNext}
-                    disabled={nextDisabled}
-                    className={cn(
-                      'flex items-center gap-2 px-6 py-3 rounded-lg font-medium',
-                      nextDisabled
-                        ? 'bg-stone-100 text-stone-400 cursor-not-allowed'
-                        : 'bg-gradient-to-r from-[#B89B7A] to-[#8B7355] text-white hover:from-[#A08966] hover:to-[#7A6B4D] shadow-md hover:shadow-lg'
-                    )}
+                    onClick={() =>
+                      TemplateManager.reloadTemplate(`step-${currentStep}`)
+                        .then(setBlocks)
+                        .catch(() => { })
+                    }
+                    className="ml-4 px-4 py-3 rounded-lg font-medium bg-white text-stone-700 hover:bg-stone-50 border border-stone-200 shadow-sm hover:shadow"
+                    title="Recarregar blocos da etapa"
                   >
-                    {nextLabel}
+                    🔄 Recarregar etapa
                   </button>
-                  {stepConfig?.showValidationFeedback && mustBeValid && !isStepValid && (
-                    <div className="text-xs text-stone-500">
-                      {validationText}
-                    </div>
-                  )}
                 </div>
-                {/* Utilitário opcional de recarga */}
-                <button
-                  onClick={() =>
-                    TemplateManager.reloadTemplate(`step-${currentStep}`)
-                      .then(setBlocks)
-                      .catch(() => { })
-                  }
-                  className="ml-4 px-4 py-3 rounded-lg font-medium bg-white text-stone-700 hover:bg-stone-50 border border-stone-200 shadow-sm hover:shadow"
-                  title="Recarregar blocos da etapa"
-                >
-                  🔄 Recarregar etapa
-                </button>
-              </div>
 
-              {/* 📊 FOOTER COM ESTATÍSTICAS */}
-              <div className="text-center mt-12 text-sm text-stone-500">
-                <div className="flex justify-center items-center space-x-6">
-                  <div className="flex items-center gap-1">
-                    <span>🎯</span> Etapa: {currentStep}/21
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <span>📊</span> Progresso: {progress}%
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <span>🎨</span> Blocos: {blocks.length}
+                {/* 📊 FOOTER COM ESTATÍSTICAS */}
+                <div className="text-center mt-12 text-sm text-stone-500">
+                  <div className="flex justify-center items-center space-x-6">
+                    <div className="flex items-center gap-1">
+                      <span>🎯</span> Etapa: {currentStep}/21
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <span>📊</span> Progresso: {progress}%
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <span>🎨</span> Blocos: {blocks.length}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -697,7 +700,9 @@ const QuizModularPage: React.FC = () => {
           </div>
         </div>
       </div>
-    </div>
+      {/* Dev-only result debug widget */}
+      <DevResultDebug />
+    </>
   );
 };
 
