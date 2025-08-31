@@ -3,6 +3,7 @@ import QuizQuestion from '@/components/funnel-blocks/QuizQuestion';
 import React, { useState } from 'react';
 import { QuizBlockProps } from './types';
 import { computeSelectionValidity } from '@/lib/quiz/selectionRules';
+import { StorageService } from '@/services/core/StorageService';
 
 /**
  * QuizOptionsGridBlock - Componente de grid de opções para quiz
@@ -15,15 +16,15 @@ export interface QuizOptionsGridBlockProps extends QuizBlockProps {
     question?: string;
     description?: string;
     options:
-      | Array<{
-          id: string;
-          text: string;
-          points?: number;
-          category?: string;
-          imageUrl?: string;
-          value?: string;
-        }>
-      | string;
+    | Array<{
+      id: string;
+      text: string;
+      points?: number;
+      category?: string;
+      imageUrl?: string;
+      value?: string;
+    }>
+    | string;
     requireOption?: boolean;
     autoAdvance?: boolean;
     autoAdvanceDelay?: number;
@@ -227,7 +228,7 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
           },
         })
       );
-    } catch {}
+    } catch { }
 
     // Notificar o editor que uma seleção foi feita
     if (onPropertyChange) {
@@ -237,6 +238,28 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
       );
       onPropertyChange('hasCompleteSelection', isValid);
     }
+
+    // 💾 Persistir respostas para cálculo de resultados em produção
+    try {
+      const step = (window as any)?.__quizCurrentStep ?? null;
+      if (step) {
+        const key = 'quizResponses';
+        const prev = (StorageService.safeGetJSON(key) as any) || {};
+        const questionId = properties?.questionId || id;
+        const entry = {
+          ids: opts.map(o => o.id),
+          texts: opts.map(o => o.text || ''),
+        };
+        const next = {
+          ...prev,
+          [String(step)]: {
+            ...(prev[String(step)] || {}),
+            [questionId]: entry,
+          },
+        };
+        StorageService.safeSetJSON(key, next);
+      }
+    } catch { }
   };
 
   const handleNext = () => {

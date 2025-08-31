@@ -107,6 +107,12 @@ const SortableBlockWrapperBase: React.FC<SortableBlockWrapperProps> = ({
   const handlePointerDownCapture = (e: React.PointerEvent) => {
     // Só botão principal e sem modificadores
     if (e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
+    const target = e.target as HTMLElement | null;
+    const isInteractive = !!target?.closest(
+      'input, textarea, select, button, [contenteditable="true"], [role="textbox"], [role="button"], .allow-text-selection'
+    );
+    const onDragHandle = !!target?.closest('[data-drag-handle]');
+
     try {
       const g: any = typeof globalThis !== 'undefined' ? (globalThis as any) : undefined;
       if (g?.__DND_DEBUG) {
@@ -115,10 +121,16 @@ const SortableBlockWrapperBase: React.FC<SortableBlockWrapperProps> = ({
           step: numericStep,
           blockId: String(block.id),
           scopeId,
+          isInteractive,
+          onDragHandle,
         });
       }
     } catch { }
-    // Selecionar sempre (inclusive em elementos interativos) sem impedir foco neles
+    // Evitar foco/caret em elementos não interativos ao apenas selecionar o bloco
+    if (!isInteractive && !onDragHandle) {
+      e.preventDefault();
+    }
+    // Selecionar sempre (inclusive quando clicar em áreas não interativas)
     handleBlockSelection(String(block.id));
   };
 
@@ -149,7 +161,13 @@ const SortableBlockWrapperBase: React.FC<SortableBlockWrapperProps> = ({
           'relative group transition-all duration-200',
           isSelected ? 'ring-2 ring-blue-500 ring-offset-1' : '',
           // Em etapas com conteúdo altamente interativo, facilitar hover/target do wrapper
+<<<<<<< HEAD
           'hover:ring-1 hover:ring-blue-300/60 hover:ring-offset-1'
+=======
+          'hover:ring-1 hover:ring-[#B89B7A]/40 hover:ring-offset-1',
+          // Forçar ponteiro padrão no wrapper para evitar cursor de texto ao selecionar
+          'cursor-default'
+>>>>>>> 14f19d616 (chore(editor): sincroniza alterações (Dnd IDs, seleção dourada, autosave drafts por etapa, ajustes etapa 20))
         )}
         data-dnd-dropzone-type="bloco"
         data-block-id={String(block.id)}
@@ -164,6 +182,7 @@ const SortableBlockWrapperBase: React.FC<SortableBlockWrapperProps> = ({
             size="sm"
             className="h-6 w-6 p-0 cursor-grab active:cursor-grabbing touch-none"
             style={{ touchAction: 'none' }}
+            data-drag-handle
             {...attributes}
             {...listeners}
           >
@@ -182,8 +201,8 @@ const SortableBlockWrapperBase: React.FC<SortableBlockWrapperProps> = ({
           </Button>
         </div>
 
-        {/* Component content */}
-        <div>
+        {/* Component content (canvas é somente visual; edição ocorre no painel de propriedades) */}
+        <div className="pointer-events-none select-none" aria-disabled>
           <React.Suspense
             fallback={
               <div className="animate-pulse bg-gray-200 h-16 rounded flex items-center justify-center">
@@ -194,7 +213,7 @@ const SortableBlockWrapperBase: React.FC<SortableBlockWrapperProps> = ({
             <Component
               block={normalizedBlock}
               isSelected={false} // Evita bordas duplas
-              onPropertyChange={handlePropertyChange}
+              onPropertyChange={() => { /* edição via painel de propriedades */ }}
               isPreviewMode={false}
               isPreviewing={false}
               previewMode="editor"

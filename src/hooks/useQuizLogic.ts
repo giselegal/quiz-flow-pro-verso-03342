@@ -190,8 +190,60 @@ export const useQuizLogic = () => {
   const completeQuiz = useCallback(() => {
     const calculatedResult = calculateResults(answers);
     setQuizResult(calculatedResult);
-    // Persistir imediatamente para consumo por componentes de resultado
-    try { StorageService.safeSetJSON('quizResult', calculatedResult); } catch { }
+
+    // Persistência e normalização ampliadas
+    try {
+      // Persistir resultado completo para consumo direto
+      StorageService.safeSetJSON('quizResult', calculatedResult);
+
+      // Tentar calcular via serviço central (se disponível) com respostas agregadas
+      try {
+        const central = (require('@/services/quizResultsService') as any).quizResultsService;
+        // Montar responses a partir do storage incremental das seleções
+        const incremental = (StorageService.safeGetJSON('quizResponses') as any) || {};
+        const sessionId = StorageService.safeGetString('quizSessionId') || `local-${Date.now()}`;
+        const session = {
+          id: sessionId,
+          session_id: sessionId,
+          responses: incremental,
+          current_step: 19,
+        };
+        if (central && typeof central.calculateResults === 'function') {
+          central.calculateResults(session).then((svcResult: any) => {
+            try {
+              // Normalizar payload mínimo esperado pelos blocos de resultado
+              const scores = (svcResult?.styleProfile?.styleScores as any) || {};
+              const total = Object.values(scores).reduce((a: number, b: any) => a + Number(b || 0), 0) || 1;
+              const ordered = Object.entries(scores)
+                .map(([category, score]) => ({
+                  category,
+                  style: category,
+                  score: Number(score) || 0,
+                  percentage: Math.round(((Number(score) || 0) / total) * 100),
+                }))
+                .sort((a, b) => b.score - a.score);
+              const primary = ordered[0] || calculatedResult.primaryStyle;
+              const secondary = ordered.slice(1);
+              const normalized = {
+                primaryStyle: primary,
+                secondaryStyles: secondary,
+                totalQuestions: calculatedResult.totalQuestions,
+                completedAt: new Date(),
+                scores,
+                userData: calculatedResult.userData || {},
+              };
+              StorageService.safeSetJSON('quizResult', normalized);
+              try { window.dispatchEvent(new Event('quiz-result-updated')); } catch { }
+            } catch { }
+          }).catch(() => {
+            // Fallback já persistido acima
+          });
+        }
+      } catch { }
+
+      try { window.dispatchEvent(new Event('quiz-result-updated')); } catch { }
+    } catch { }
+
     setQuizCompleted(true);
   }, [answers, calculateResults]);
 

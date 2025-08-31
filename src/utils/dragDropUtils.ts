@@ -53,6 +53,10 @@ export const validateDrop = (
     return { isValid: false, reason: 'Dados de drag inválidos' };
   }
 
+  // Dados adicionais do alvo
+  const overData: any = (over as any)?.data?.current ?? {};
+  const overIsDropZone = overData?.type === 'dropzone';
+
   // Validação para componente da sidebar
   if (activeData.type === 'sidebar-component') {
     const rawOverId = String(over.id);
@@ -64,6 +68,7 @@ export const validateDrop = (
 
     // Aceitar canvas e drop-zones padronizadas
     const isOverCanvasArea =
+      overIsDropZone ||
       overId === 'canvas-drop-zone' ||
       overId.startsWith('drop-zone-') ||
       overId.startsWith('canvas-');
@@ -84,7 +89,6 @@ export const validateDrop = (
 
     const rawOverId = String(over.id);
     const overId = normalizeOverId(rawOverId) || rawOverId;
-    const overIsDropZone = overId === 'canvas-drop-zone' || overId.startsWith('drop-zone-');
     const overIsBlock = currentStepBlocks.some(block => String(block.id) === overId);
     if (overIsDropZone || overIsBlock || isValidBlockId(overId)) {
       return { isValid: true, action: 'reorder' };
