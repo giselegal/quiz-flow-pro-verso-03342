@@ -27,7 +27,7 @@ import {
   Trophy,
   Users,
 } from 'lucide-react';
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 
 export interface EditorStageManagerProps {
   /** Modo atual do editor */
@@ -141,6 +141,81 @@ export const EditorStageManager: React.FC<EditorStageManagerProps> = ({
       window.removeEventListener('quiz-selection-change', handleSelectionChange as EventListener);
     };
   }, [actions, quizState.currentStep]);
+
+  // Garantir cálculo/persistência do resultado ao entrar nas etapas 19/20 no /editor
+  // Corrige cenários onde o motor de produção não está conectado no editor
+  const computedOnceRef = useRef(false);
+  useEffect(() => {
+    // Resetar flag quando sair da janela de cálculo
+    if (quizState.currentStep < 19) {
+      computedOnceRef.current = false;
+      return;
+    }
+
+    if (quizState.currentStep === 19 || quizState.currentStep === 20) {
+      try {
+        // Evitar recálculo se já existe resultado válido
+        const { StorageService } = require('@/services/core/StorageService');
+        const existing = StorageService.safeGetJSON('quizResult');
+        if (existing?.primaryStyle) {
+          try { window.dispatchEvent(new Event('quiz-result-updated')); } catch { }
+          return;
+        }
+
+        if (computedOnceRef.current) {
+          return;
+        }
+        computedOnceRef.current = true;
+
+        // Coletar respostas incrementais salvas no editor
+        const raw = (StorageService.safeGetJSON('quizResponses') as any) || {};
+        const selectionsByQuestion: Record<string, string[]> = {};
+        try {
+          Object.values(raw || {}).forEach((questions: any) => {
+            Object.entries(questions || {}).forEach(([qid, entry]: any) => {
+              if (Array.isArray(entry?.ids)) {
+                selectionsByQuestion[qid] = Array.from(new Set([...(selectionsByQuestion[qid] || []), ...entry.ids]));
+              } else if (Array.isArray(entry?.texts) && entry.texts.length > 0) {
+                // textos livres não pontuam diretamente; podem ser usados por IA futura
+                if (!selectionsByQuestion[qid]) selectionsByQuestion[qid] = [];
+              }
+            });
+          });
+        } catch { /* ignora transformação */ }
+
+        const name =
+          StorageService.safeGetString('userName') ||
+          StorageService.safeGetString('quizUserName') ||
+          '';
+        const sessionId = StorageService.safeGetString('quizSessionId') || null;
+
+        // Usar orquestrador central para calcular e persistir localmente
+        Promise.resolve()
+          .then(async () => {
+            const { ResultOrchestrator } = require('@/services/core/ResultOrchestrator');
+            await ResultOrchestrator.run({
+              selectionsByQuestion,
+              userName: name,
+              weightQuestions: 1,
+              persistToSupabase: false,
+              sessionId,
+            });
+          })
+          .catch(() => {
+            // fallback mínimo local em caso de erro inesperado
+            try {
+              const { ResultEngine } = require('@/services/core/ResultEngine');
+              const { scores, total } = ResultEngine.computeScoresFromSelections(selectionsByQuestion, { weightQuestions: 1 });
+              const payload = ResultEngine.toPayload(scores, total, name);
+              ResultEngine.persist(payload);
+              try { window.dispatchEvent(new Event('quiz-result-updated')); } catch { }
+            } catch { }
+          });
+      } catch {
+        // ignora em modo editor
+      }
+    }
+  }, [quizState.currentStep]);
 
   // Metadados das etapas
   const stepsMetadata = useMemo((): StepMetadata[] => {
