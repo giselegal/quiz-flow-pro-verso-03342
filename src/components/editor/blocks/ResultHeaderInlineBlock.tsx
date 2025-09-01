@@ -25,10 +25,10 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
   const { primaryStyle } = useQuizResult();
   const [imageError, setImageError] = useState(false);
   const [guideImageError, setGuideImageError] = useState(false);
-  
+
   // Adicione logs para depuração
   console.log('primaryStyle:', primaryStyle);
-  
+
   // Verifique se primaryStyle está definido
   if (!primaryStyle) {
     return (
@@ -38,7 +38,7 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
       </div>
     );
   }
-  
+
   // Capturar nome de forma robusta
   const storedName =
     StorageService.safeGetString('userName') ||
@@ -46,14 +46,14 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
     (typeof window !== 'undefined' ? (window as any).__quizUserName : '') ||
     (block as any)?.properties?.userName ||
     'Visitante'; // Fallback explícito
-    
+
   const {
     title = 'Seu Estilo Predominante',
     subtitle = '',
     percentage: percentageProp,
     description = 'Descubra como aplicar seu estilo pessoal único na prática...',
-  imageUrl: rawImageUrl,
-  guideImageUrl: rawGuideImageUrl,
+    imageUrl: rawImageUrl,
+    guideImageUrl: rawGuideImageUrl,
     styleGuideImageUrl: rawStyleGuideImageUrl,
     showBothImages = true,
     imageWidth,
@@ -63,20 +63,20 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
     backgroundColor,
     textAlign = 'center',
   } = block?.properties || {};
-  
+
   // Compatibilidade: aceitar styleGuideImageUrl do template
   const guideImageUrl = rawStyleGuideImageUrl || rawGuideImageUrl;
   const imageUrl = rawImageUrl;
-  
+
   // Normalizar nome do estilo para exibição (preferir category legível)
   const styleKey = (primaryStyle as any)?.style || (primaryStyle as any)?.category || '';
   const styleLabel = (primaryStyle as any)?.category || styleKey || 'Estilo';
-  
+
   const vars = {
     userName: storedName,
     resultStyle: styleLabel,
   };
-  
+
   // Percentual exibido: usa o calculado (primaryStyle.percentage) se não houver override explícito na prop
   const computedPercentage =
     typeof percentageProp === 'number' && !Number.isNaN(percentageProp)
@@ -84,7 +84,7 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
       : (typeof (primaryStyle as any)?.percentage === 'number'
         ? (primaryStyle as any).percentage
         : 0);
-  
+
   // Defaults vindos do styleConfig, quando props do bloco estiverem ausentes
   const styleInfo = getStyleConfig(styleKey || styleLabel) || {};
   const effectiveImageUrl = imageUrl || (styleInfo as any)?.image || safeStylePlaceholder(styleLabel, 238, 320);
@@ -92,15 +92,15 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
   const effectiveDescription = (block?.properties?.description && String(block.properties.description).trim().length > 0)
     ? description
     : ((styleInfo as any)?.description || description || 'Descrição não disponível');
-  
+
   const handlePropertyChange = (key: string, value: any) => {
     if (onPropertyChange) {
       onPropertyChange(key, value);
     }
   };
-  
+
   const alignClass = textAlign === 'left' ? 'text-left' : textAlign === 'right' ? 'text-right' : 'text-center';
-  
+
   return (
     <div
       className={cn(
@@ -196,7 +196,7 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
                 if (!imageError) {
                   setImageError(true);
                   // como fallback extra, troca o src diretamente
-                  try { (e.currentTarget as HTMLImageElement).src = safePlaceholder(238, 320, 'Imagem indisponível'); } catch {}
+                  try { (e.currentTarget as HTMLImageElement).src = safePlaceholder(238, 320, 'Imagem indisponível'); } catch { }
                 }
               }}
               style={{
@@ -222,7 +222,7 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
               onError={(e) => {
                 if (!guideImageError) {
                   setGuideImageError(true);
-                  try { (e.currentTarget as HTMLImageElement).src = safePlaceholder(540, 300, 'Guia indisponível'); } catch {}
+                  try { (e.currentTarget as HTMLImageElement).src = safePlaceholder(540, 300, 'Guia indisponível'); } catch { }
                 }
               }}
             />

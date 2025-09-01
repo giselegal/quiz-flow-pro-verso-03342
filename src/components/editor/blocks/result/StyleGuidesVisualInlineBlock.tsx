@@ -83,10 +83,10 @@ const StyleGuidesVisualInlineBlock: React.FC<BlockComponentProps> = ({
   // Process secondary styles for thumbnails
   const secondaryThumbnails = Array.isArray(secondaryStyles)
     ? secondaryStyles.slice(0, 2).map((style: any) => ({
-  src: style.guideImage || safeStylePlaceholder(style.category, 80, 120),
-        alt: `Guia de Estilo ${style.category}`,
-        category: style.category,
-      }))
+      src: style.guideImage || safeStylePlaceholder(style.category, 80, 120),
+      alt: `Guia de Estilo ${style.category}`,
+      category: style.category,
+    }))
     : [];
 
   return (

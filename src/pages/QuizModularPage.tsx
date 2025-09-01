@@ -280,6 +280,65 @@ const QuizModularPage: React.FC = () => {
         // silencioso em produção
       }
 
+      // Persistir também uma versão compatível com o motor de cálculo (ids prefixados por estilo)
+      try {
+        // Mapeia cada optionId selecionado para o estilo dominante com base em blockConfig.options[].score
+        const optionsArr = Array.isArray(blockConfig?.options) ? blockConfig.options : [];
+        const derivePrefixed = (optId: string): string => {
+          const opt: any = optionsArr.find((o: any) => o?.id === optId) || null;
+          const scoreObj = (opt && typeof opt === 'object' && opt.score) || {};
+          let bestKey: string | null = null;
+          let bestVal = -Infinity;
+          for (const [k, v] of Object.entries(scoreObj)) {
+            const val = typeof v === 'number' ? v : Number(v);
+            if (!Number.isNaN(val) && val > bestVal) {
+              bestVal = val;
+              bestKey = k;
+            }
+          }
+
+          // Normaliza chave (ex.: 'clássico' → 'classico') e monta prefixo
+          const normalize = (s: string) => s.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase();
+          const styleKey = bestKey ? normalize(bestKey) : 'natural';
+          return `${styleKey}_${optId}`;
+        };
+
+        const scoringMap = (() => {
+          try {
+            const { StorageService } = require('@/services/core/StorageService');
+            return (StorageService.safeGetJSON('userSelections') as any) || {};
+          } catch {
+            return {} as Record<string, string[]>;
+          }
+        })();
+
+        const prefixedSelections = (newSelections || []).map(derivePrefixed);
+        // usar id canônico da questão (q1..q10) quando disponível
+        const canonicalQid = (() => {
+          try {
+            const mqid = FlowCore.mapStepToQuestionId(currentStep);
+            return mqid || null;
+          } catch {
+            return null;
+          }
+        })();
+        const storageKey = canonicalQid || `step-${currentStep}-${questionId}`;
+        const nextScoringMap = { ...scoringMap, [storageKey]: prefixedSelections };
+        try {
+          const { StorageService } = require('@/services/core/StorageService');
+          StorageService.safeSetJSON('userSelections', nextScoringMap);
+        } catch { }
+
+        // Sincronizar com armazenamento unificado para que o fallback do passo 20 use IDs prefixados
+        try {
+          const { unifiedQuizStorage } = require('@/services/core/UnifiedQuizStorage');
+          unifiedQuizStorage.updateSelections(storageKey, prefixedSelections);
+        } catch { }
+      } catch { }
+
+      // Notificar ouvintes que dependem do avanço das respostas
+      try { window.dispatchEvent(new Event('quiz-answer-updated')); } catch { }
+
       // Verificar se a etapa está completa
       // Debounce curto para validação
       debounce(`validate:step-${currentStep}`, () => {
@@ -338,6 +397,12 @@ const QuizModularPage: React.FC = () => {
         }
       } catch { }
 
+      // Sincronizar também com armazenamento unificado (formData)
+      try {
+        const { unifiedQuizStorage } = require('@/services/core/UnifiedQuizStorage');
+        unifiedQuizStorage.updateFormData(dataKey, value);
+      } catch { }
+
       return updated;
     });
   };
@@ -346,6 +411,14 @@ const QuizModularPage: React.FC = () => {
   useEffect(() => {
     cancelAll();
   }, [currentStep, cancelAll]);
+
+  // Registrar progresso no armazenamento unificado ao trocar de etapa
+  useEffect(() => {
+    try {
+      const { unifiedQuizStorage } = require('@/services/core/UnifiedQuizStorage');
+      unifiedQuizStorage.updateProgress(currentStep);
+    } catch { }
+  }, [currentStep]);
 
   const progress = ((currentStep - 1) / 20) * 100;
 
@@ -374,8 +447,18 @@ const QuizModularPage: React.FC = () => {
     // Leitura opcional de pesos do funil otimizado (se usado)
     const weightQuestions = (OPTIMIZED_FUNNEL_CONFIG as any)?.calculations?.scoreWeights?.questions;
 
+    // Preferir seleções persistidas no formato de pontuação (compat com ResultEngine)
+    let selectionsForScoring: Record<string, string[]> = {};
+    try {
+      const { StorageService } = require('@/services/core/StorageService');
+      selectionsForScoring = StorageService.safeGetJSON('userSelections') || {};
+    } catch { selectionsForScoring = {}; }
+    if (!selectionsForScoring || Object.keys(selectionsForScoring).length === 0) {
+      selectionsForScoring = userSelections;
+    }
+
     const { scores, total } = ResultEngine.computeScoresFromSelections(
-      userSelections,
+      selectionsForScoring,
       {
         weightQuestions: typeof weightQuestions === 'number' ? weightQuestions : 1,
       }
