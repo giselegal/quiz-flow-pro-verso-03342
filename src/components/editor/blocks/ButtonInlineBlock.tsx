@@ -510,6 +510,12 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
                 StorageService.safeSetString('userName', userName);
                 // Compatibilidade legada
                 StorageService.safeSetString('quizUserName', userName);
+                // Evento de atualização de nome
+                try {
+                  window.dispatchEvent(
+                    new CustomEvent('quiz-user-name-updated', { detail: { userName, source: 'ButtonInlineBlock' } })
+                  );
+                } catch {}
               } catch {
                 // Fallback silencioso caso StorageService não esteja disponível
                 try {
@@ -517,6 +523,11 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
                   localStorage.setItem('quiz_start_tracked', 'true');
                   localStorage.setItem('userName', userName);
                   localStorage.setItem('quizUserName', userName);
+                  try {
+                    window.dispatchEvent(
+                      new CustomEvent('quiz-user-name-updated', { detail: { userName, source: 'ButtonInlineBlock:fallback' } })
+                    );
+                  } catch {}
                 } catch { }
               }
 

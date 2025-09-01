@@ -1,5 +1,5 @@
 import { useAuth } from '@/context/AuthContext';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 /**
  * 🎯 Hook para buscar nome do usuário dinamicamente
@@ -12,33 +12,47 @@ import { useMemo } from 'react';
  */
 export const useUserName = (): string => {
   const { user } = useAuth();
+  const [name, setName] = useState<string>('Usuário');
 
-  const userName = useMemo(() => {
-    // Prioridade 1: Nome do quiz
-    const quizUserName = localStorage.getItem('quizUserName');
-    if (quizUserName && quizUserName.trim()) {
-      return quizUserName.trim();
-    }
-
-    // Prioridade 2: Nome geral
-    const storedUserName = localStorage.getItem('userName');
-    if (storedUserName && storedUserName.trim()) {
-      return storedUserName.trim();
-    }
-
-    // Prioridade 3: Usuário autenticado - nome
-    if (user?.name && user.name.trim()) {
-      return user.name.trim();
-    }
-
-    // Prioridade 4: Usuário autenticado - email
-    if (user?.email && user.email.trim()) {
-      return user.email.split('@')[0]; // Primeira parte do email
-    }
-
-    // Fallback final
-    return 'Usuário';
+  const compute = useMemo(() => {
+    return () => {
+      // Prioridade 1: Nome do quiz
+      const quizUserName = localStorage.getItem('quizUserName');
+      if (quizUserName && quizUserName.trim()) return quizUserName.trim();
+      // Prioridade 2: Nome geral
+      const storedUserName = localStorage.getItem('userName');
+      if (storedUserName && storedUserName.trim()) return storedUserName.trim();
+      // Prioridade 3: Usuário autenticado
+      if (user?.name && user.name.trim()) return user.name.trim();
+      // Prioridade 4: Email
+      if (user?.email && user.email.trim()) return user.email.split('@')[0];
+      return 'Usuário';
+    };
   }, [user?.name, user?.email]);
 
-  return userName;
+  // Inicializa
+  useEffect(() => {
+    try { setName(compute()); } catch { }
+  }, [compute]);
+
+  // Reagir a eventos do quiz e mudanças de storage
+  useEffect(() => {
+    const onUpdated = () => {
+      try { setName(compute()); } catch { }
+    };
+    const onStorage = (e: StorageEvent) => {
+      if (!e) return;
+      if (e.key === 'userName' || e.key === 'quizUserName') {
+        try { setName(compute()); } catch { }
+      }
+    };
+    window.addEventListener('quiz-user-name-updated', onUpdated as EventListener);
+    window.addEventListener('storage', onStorage);
+    return () => {
+      window.removeEventListener('quiz-user-name-updated', onUpdated as EventListener);
+      window.removeEventListener('storage', onStorage);
+    };
+  }, [compute]);
+
+  return name;
 };

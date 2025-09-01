@@ -3,6 +3,9 @@ import { StorageService } from './StorageService';
 import EVENTS from '@/core/constants/events';
 import { quizSupabaseService } from '@/services/quizSupabaseService';
 import { isUUID } from '@/core/utils/id';
+import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
+import { toCanonicalAny } from './adapters';
+import { accumulateScores as accumulateCanonicalScores } from './CanonicalScorer';
 
 export interface OrchestrateOptions {
     selectionsByQuestion: Record<string, string[]>;
@@ -18,11 +21,61 @@ export interface OrchestrateOptions {
 export const ResultOrchestrator = {
     run: async (opts: OrchestrateOptions) => {
         const { selectionsByQuestion, weightQuestions, persistToSupabase, sessionId } = opts;
-        // cálculo
-        const { scores, total } = ResultEngine.computeScoresFromSelections(
-            selectionsByQuestion,
-            { weightQuestions }
+
+        // Detectar se selections usam prefixos (ex.: "natural_q1...")
+        const STYLE_PREFIXES = [
+            'natural', 'classico', 'contemporaneo', 'elegante', 'romantico', 'sexy', 'dramatico', 'criativo'
+        ];
+        const hasPrefixBased = Object.values(selectionsByQuestion || {}).some(list =>
+            (list || []).some(id => {
+                const key = String(id || '').toLowerCase();
+                return STYLE_PREFIXES.some(p => key.startsWith(p + '_'));
+            })
         );
+
+        // clculo
+        let scores: Record<string, number> = {};
+        let total = 0;
+
+        if (hasPrefixBased) {
+            const res = ResultEngine.computeScoresFromSelections(selectionsByQuestion, { weightQuestions });
+            scores = res.scores;
+            total = res.total;
+        } else {
+            // Fallback can3nico: usar adapters + CanonicalScorer
+            try {
+                const canonical = toCanonicalAny(QUIZ_STYLE_21_STEPS_TEMPLATE);
+                const canonTotals = accumulateCanonicalScores(canonical, selectionsByQuestion);
+                // Mapear c3digos para nomes amig3veis esperados pelo ResultEngine
+                const friendlyMap: Record<string, string> = {
+                    natural: 'Natural',
+                    classico: 'Clássico',
+                    contemporaneo: 'Contemporâneo',
+                    elegante: 'Elegante',
+                    romantico: 'Romântico',
+                    sexy: 'Sexy',
+                    dramatico: 'Dramático',
+                    criativo: 'Criativo',
+                };
+                const allFriendly = Object.values(friendlyMap);
+                const mapped: Record<string, number> = {};
+                for (const [code, pts] of Object.entries(canonTotals)) {
+                    const friendly = friendlyMap[code] || code;
+                    mapped[friendly] = (mapped[friendly] || 0) + (typeof pts === 'number' ? pts : 0);
+                }
+                // Garantir todas as chaves com zero (ordenação consistente)
+                for (const name of allFriendly) {
+                    if (mapped[name] == null) mapped[name] = 0;
+                }
+                scores = mapped;
+                total = Object.values(mapped).reduce((a, b) => a + b, 0) || 1;
+            } catch (e) {
+                // Como fallback final, manter lgica antiga para n3o quebrar
+                const res = ResultEngine.computeScoresFromSelections(selectionsByQuestion, { weightQuestions });
+                scores = res.scores;
+                total = res.total;
+            }
+        }
         const name = (opts.userName || '').trim() || StorageService.safeGetString('userName') || StorageService.safeGetString('quizUserName') || '';
         const payload = ResultEngine.toPayload(scores, total, name);
         // persist local
