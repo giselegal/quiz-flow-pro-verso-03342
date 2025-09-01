@@ -64,7 +64,24 @@ const EditorContext = createContext<EditorContextValue | undefined>(undefined);
 export const useEditor = () => {
   const context = useContext(EditorContext);
   if (!context) {
-    throw new Error('useEditor must be used within an EditorProvider');
+    // 🔍 INVESTIGAÇÃO #1: Enhanced error reporting for context issues
+    console.error('❌ ERRO DE CONTEXTO DO EDITOR:', {
+      location: window.location.href,
+      timestamp: new Date().toISOString(),
+      reactVersion: React.version,
+      contextValue: context,
+      editorElements: document.querySelectorAll('[class*="editor"], [class*="Editor"]').length,
+      providerElements: document.querySelectorAll('[class*="provider"], [class*="Provider"]').length
+    });
+    
+    // Add diagnostic info to window for debugging
+    window.__EDITOR_CONTEXT_ERROR__ = {
+      timestamp: new Date().toISOString(),
+      location: window.location.href,
+      stackTrace: new Error().stack
+    };
+    
+    throw new Error('🚨 useEditor must be used within an EditorProvider - check that EditorPro is wrapped correctly');
   }
   return context;
 };
@@ -425,9 +442,104 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     }
   }, [rawState.currentStep]);
 
+  // 🔧 DIAGNÓSTICO: Expor contexto para debugging via window global
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.__EDITOR_CONTEXT__ = {
+        state: rawState,
+        actions,
+        getBlocksForStep: (step: number) => getBlocksForStep(step, rawState.stepBlocks),
+        ensureStepLoaded: ensureStepLoadedRef.current,
+      };
+      
+      // Análise de estado para diagnóstico
+      const analysis = {
+        timestamp: Date.now(),
+        totalSteps: 21,
+        currentStep: rawState.currentStep,
+        stepBlocksKeys: Object.keys(rawState.stepBlocks || {}),
+        stepsWithBlocks: Object.entries(rawState.stepBlocks || {}).map(([key, blocks]) => ({
+          step: key,
+          count: Array.isArray(blocks) ? blocks.length : 0,
+          types: Array.isArray(blocks) ? blocks.map(b => b.type) : []
+        })),
+        validationSummary: rawState.stepValidation || {},
+        contextHealth: 'healthy'
+      };
+      
+      window.__EDITOR_STATE_ANALYSIS__ = analysis;
+      
+      if (process.env.NODE_ENV === 'development') {
+        console.log('🔧 Editor context exposed for debugging:', analysis);
+      }
+    }
+  }, [rawState, actions]);
+
   // Actions (use functional setState to avoid races)
   const setCurrentStep = useCallback(
     (step: number) => {
+      // 🔍 INVESTIGAÇÃO #2: Enhanced currentStep validation
+      const isValidStep = Number.isInteger(step) && step >= 1 && step <= 21;
+      
+      if (!isValidStep) {
+        console.error('🚨 INVALID STEP DETECTED:', {
+          requestedStep: step,
+          type: typeof step,
+          isInteger: Number.isInteger(step),
+          range: `1-21`,
+          currentStack: new Error().stack
+        });
+        
+        // Track invalid attempts for debugging
+        if (typeof window !== 'undefined') {
+          window.__EDITOR_INVALID_STEPS__ = window.__EDITOR_INVALID_STEPS__ || [];
+          window.__EDITOR_INVALID_STEPS__.push({
+            timestamp: new Date(),
+            requestedStep: step,
+            type: typeof step,
+            stack: new Error().stack
+          });
+        }
+        
+        // Auto-correct to valid range
+        const correctedStep = Math.max(1, Math.min(21, Math.floor(step || 1)));
+        console.warn('🔧 AUTO-CORRECTING step to:', correctedStep);
+        step = correctedStep;
+      }
+      
+      if (process.env.NODE_ENV === 'development') {
+        console.log('🔍 setCurrentStep called:', {
+          requestedStep: step,
+          isValidStep,
+          currentStep: stateRef.current.currentStep,
+          stepType: typeof step,
+          isInteger: Number.isInteger(step),
+          timestamp: new Date().toISOString()
+        });
+      }
+      
+      if (!isValidStep) {
+        console.error('❌ INVESTIGAÇÃO #2: currentStep fora do intervalo válido (1-21):', {
+          invalidStep: step,
+          stepType: typeof step,
+          isNaN: Number.isNaN(step),
+          currentValidStep: stateRef.current.currentStep,
+          stackTrace: new Error().stack?.split('\n').slice(0, 5)
+        });
+        
+        // Add to window for debugging
+        window.__EDITOR_INVALID_STEPS__ = window.__EDITOR_INVALID_STEPS__ || [];
+        window.__EDITOR_INVALID_STEPS__.push({
+          invalidStep: step,
+          timestamp: new Date().toISOString(),
+          currentStep: stateRef.current.currentStep
+        });
+        
+        // Don't allow invalid steps but don't throw - use fallback
+        step = Math.max(1, Math.min(21, Number.isInteger(step) ? step : 1));
+        console.warn('🔧 Corrigindo para step válido:', step);
+      }
+      
       setState(prev => ({
         ...prev,
         currentStep: step,
@@ -870,6 +982,30 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     state,
     actions,
   };
+
+  // 🔍 DIAGNÓSTICO: Expor contexto globalmente para debugging
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      (window as any).__EDITOR_CONTEXT__ = {
+        ...state,
+        actions,
+      };
+      
+      // Detectar erros de contexto
+      if (!state || typeof state !== 'object') {
+        if (!(window as any).__EDITOR_CONTEXT_ERROR__) {
+          (window as any).__EDITOR_CONTEXT_ERROR__ = [];
+        }
+        (window as any).__EDITOR_CONTEXT_ERROR__.push({
+          error: 'Estado do editor inválido',
+          state: state,
+          timestamp: Date.now(),
+          stack: new Error().stack
+        });
+        console.error('🚨 ERRO DE CONTEXTO DO EDITOR: Estado inválido detectado', state);
+      }
+    }
+  }, [state, actions]);
 
   return <EditorContext.Provider value={contextValue}>{children}</EditorContext.Provider>;
 };

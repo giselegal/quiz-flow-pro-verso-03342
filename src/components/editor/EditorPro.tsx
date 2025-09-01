@@ -13,6 +13,8 @@ import { mark } from '@/utils/perf';
 // import CanvasDropZone from '@/components/editor/canvas/CanvasDropZone.simple';
 import { StepDndProvider } from '@/components/editor/dnd/StepDndProvider';
 import CanvasAreaLayout from '@/components/editor/layouts/CanvasArea';
+import { run21StepDiagnostic } from '@/diagnostic/21StepEditorDiagnostic';
+import { runCompleteDiagnostics } from '@/utils/editorDiagnostics';
 
 // Lazy modules para reduzir TTI do editor (Canvas usa o LazyQuizRenderer internamente)
 // const LazyQuizRenderer = React.lazy(() =>
@@ -335,10 +337,44 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   );
 
   const stepHasBlocks = useMemo(() => {
+    // 🔍 INVESTIGAÇÃO #4: Enhanced step calculation validation
     const map: Record<number, boolean> = {};
+    const diagnosticInfo = {
+      timestamp: new Date().toISOString(),
+      totalStepBlocksKeys: state.stepBlocks ? Object.keys(state.stepBlocks).length : 0,
+      stepBlocksKeys: state.stepBlocks ? Object.keys(state.stepBlocks).slice(0, 10) : [], // Limit for logging
+      stepsWithBlocks: [] as number[],
+      stepsWithoutBlocks: [] as number[]
+    };
+    
     for (let i = 1; i <= 21; i++) {
-      map[i] = (getBlocksForStep(i, state.stepBlocks) || []).length > 0;
+      const blocks = getBlocksForStep(i, state.stepBlocks) || [];
+      const hasBlocks = blocks.length > 0;
+      map[i] = hasBlocks;
+      
+      if (hasBlocks) {
+        diagnosticInfo.stepsWithBlocks.push(i);
+      } else {
+        diagnosticInfo.stepsWithoutBlocks.push(i);
+      }
     }
+    
+    if (process.env.NODE_ENV === 'development') {
+      console.log('🔍 stepHasBlocks calculation:', {
+        ...diagnosticInfo,
+        totalStepsWithBlocks: diagnosticInfo.stepsWithBlocks.length,
+        totalStepsWithoutBlocks: diagnosticInfo.stepsWithoutBlocks.length,
+        mandatoryStepsEmpty: diagnosticInfo.stepsWithoutBlocks.filter(step => step <= 10), // First 10 should typically have content
+        finalStepsEmpty: diagnosticInfo.stepsWithoutBlocks.filter(step => step >= 19) // Final steps (19-21)
+      });
+      
+      // Add to window for debugging
+      window.__EDITOR_STEP_ANALYSIS__ = {
+        ...diagnosticInfo,
+        stepHasBlocksMap: map
+      };
+    }
+    
     return map;
   }, [state.stepBlocks]);
 
@@ -372,10 +408,46 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
     };
 
     const handleNavigate = (ev: Event) => {
+      // 🔍 INVESTIGAÇÃO #6: Enhanced event logging for race conditions
       const e = ev as CustomEvent<{ stepId?: string | number; source?: string }>;
       const target = parseStepNumber(e.detail?.stepId);
-      if (!target || target < 1 || target > 21) return;
+      
+      const eventInfo = {
+        timestamp: new Date().toISOString(),
+        eventType: ev.type,
+        rawStepId: e.detail?.stepId,
+        parsedTarget: target,
+        currentStep: state.currentStep,
+        source: e.detail?.source,
+        isValidTarget: target !== null && target >= 1 && target <= 21,
+        hasPayload: !!e.detail,
+        payloadKeys: e.detail ? Object.keys(e.detail) : []
+      };
+      
+      if (process.env.NODE_ENV === 'development') {
+        console.log('🔍 Navigation event received:', eventInfo);
+      }
+      
+      if (!target || target < 1 || target > 21) {
+        console.warn('❌ INVESTIGAÇÃO #6: Invalid navigation target:', eventInfo);
+        
+        // Add to window for debugging
+        window.__EDITOR_INVALID_NAVIGATION__ = window.__EDITOR_INVALID_NAVIGATION__ || [];
+        window.__EDITOR_INVALID_NAVIGATION__.push(eventInfo);
+        return;
+      }
+      
+      // Check for potential race condition
+      if (Math.abs(target - state.currentStep) > 1) {
+        console.log('⚠️  INVESTIGAÇÃO #6: Potential rapid navigation:', {
+          ...eventInfo,
+          stepJump: target - state.currentStep,
+          isRapidNavigation: true
+        });
+      }
+      
       actions.setCurrentStep(target);
+      
       if (process.env.NODE_ENV === 'development') {
         // eslint-disable-next-line no-console
         console.log(
@@ -434,19 +506,105 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
     } catch { }
   }, [safeCurrentStep]);
 
-  // Escutar eventos globais de validação (seleções e inputs) para refletir no editor
+  // 🔍 INVESTIGAÇÃO #6: Enhanced escutar eventos globais com logging detalhado e race condition detection
   useEffect(() => {
     const handleInputChange = (ev: Event) => {
-      const e = ev as CustomEvent<{ value?: any; valid?: boolean } | undefined>;
-      const val = (e.detail as any)?.value;
-      const explicitValid = (e.detail as any)?.valid;
+      const e = ev as CustomEvent<{ 
+        value?: any; 
+        valid?: boolean; 
+        questionId?: string;
+        stepId?: number;
+        source?: string;
+      } | undefined>;
+      
+      const eventData = {
+        value: (e.detail as any)?.value,
+        valid: (e.detail as any)?.valid,
+        questionId: (e.detail as any)?.questionId,
+        stepId: (e.detail as any)?.stepId,
+        source: (e.detail as any)?.source,
+        currentStep: state.currentStep,
+        timestamp: new Date().toISOString()
+      };
+      
+      if (process.env.NODE_ENV === 'development') {
+        console.log('🔊 INVESTIGAÇÃO #6: Input change event received:', eventData);
+      }
+      
+      // Detectar race conditions
+      if (eventData.stepId && eventData.stepId !== state.currentStep) {
+        console.warn('⚠️ RACE CONDITION DETECTED: Input event stepId differs from currentStep', {
+          eventStepId: eventData.stepId,
+          currentStep: state.currentStep,
+          questionId: eventData.questionId,
+          source: eventData.source
+        });
+        
+        // Track para debugging
+        if (typeof window !== 'undefined') {
+          window.__EDITOR_RACE_CONDITIONS__ = window.__EDITOR_RACE_CONDITIONS__ || [];
+          window.__EDITOR_RACE_CONDITIONS__.push({
+            type: 'input-change',
+            timestamp: new Date(),
+            ...eventData,
+            raceCondition: true
+          });
+        }
+      }
+      
+      const val = eventData.value;
+      const explicitValid = eventData.valid;
       const ok = typeof val === 'string' ? val.trim().length > 0 : (explicitValid ?? false);
       actions.setStepValid?.(state.currentStep, !!ok);
     };
 
     const handleSelectionChange = (ev: Event) => {
-      const e = ev as CustomEvent<{ valid?: boolean; selectionCount?: number } | undefined>;
-      const ok = (e.detail as any)?.valid ?? ((e.detail as any)?.selectionCount ?? 0) > 0;
+      const e = ev as CustomEvent<{ 
+        valid?: boolean; 
+        selectionCount?: number;
+        questionId?: string;
+        stepId?: number;
+        selectedIds?: string[];
+        source?: string;
+      } | undefined>;
+      
+      const eventData = {
+        valid: (e.detail as any)?.valid,
+        selectionCount: (e.detail as any)?.selectionCount,
+        questionId: (e.detail as any)?.questionId,
+        stepId: (e.detail as any)?.stepId,
+        selectedIds: (e.detail as any)?.selectedIds,
+        source: (e.detail as any)?.source,
+        currentStep: state.currentStep,
+        timestamp: new Date().toISOString()
+      };
+      
+      if (process.env.NODE_ENV === 'development') {
+        console.log('🔊 INVESTIGAÇÃO #6: Selection change event received:', eventData);
+      }
+      
+      // Detectar race conditions
+      if (eventData.stepId && eventData.stepId !== state.currentStep) {
+        console.warn('⚠️ RACE CONDITION DETECTED: Selection event stepId differs from currentStep', {
+          eventStepId: eventData.stepId,
+          currentStep: state.currentStep,
+          questionId: eventData.questionId,
+          source: eventData.source
+        });
+        
+        // Track para debugging
+        if (typeof window !== 'undefined') {
+          window.__EDITOR_RACE_CONDITIONS__ = window.__EDITOR_RACE_CONDITIONS__ || [];
+          window.__EDITOR_RACE_CONDITIONS__.push({
+            type: 'selection-change',
+            timestamp: new Date(),
+            ...eventData,
+            raceCondition: true
+          });
+        }
+      }
+      
+      const ok = eventData.valid ?? (eventData.selectionCount ?? 0) > 0;
       actions.setStepValid?.(state.currentStep, !!ok);
     };
 
@@ -497,6 +655,76 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       } catch { }
     };
   }, []);
+
+  // 🔍 INVESTIGAÇÃO: Initialize 21-step diagnostic system
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'development') {
+      // Run initial diagnostic after component mount
+      const timeout = setTimeout(() => {
+        try {
+          const diagnosticResults = run21StepDiagnostic();
+          console.log('🎯 21-Step Editor Diagnostic Results:', {
+            status: diagnosticResults.overallStatus,
+            issues: diagnosticResults.issues,
+            timestamp: diagnosticResults.timestamp
+          });
+
+          // Add diagnostic keyboard shortcut for manual testing
+          const handleKeyboardShortcut = async (e: KeyboardEvent) => {
+            // Ctrl+Shift+D to run diagnostic
+            if (e.ctrlKey && e.shiftKey && e.key === 'D') {
+              e.preventDefault();
+              const results = run21StepDiagnostic();
+              console.log('🔍 Manual Diagnostic Run:', results);
+              
+              // Run enhanced diagnostics
+              try {
+                const enhancedResults = await runCompleteDiagnostics();
+                console.log('🎯 Enhanced Diagnostics:', enhancedResults);
+                
+                // Show results in browser alert for quick inspection
+                const summary = `21-Step Editor Diagnostic
+Status: ${results.overallStatus.toUpperCase()}
+Issues: ${results.issues.length}
+Enhanced: ${enhancedResults.summary.success ? 'PASS' : 'FAIL'} (${enhancedResults.summary.data?.successRate?.toFixed(1)}%)
+${results.issues.length > 0 ? '\nIssues:\n' + results.issues.join('\n') : '\nAll systems healthy!'}`;
+                
+                alert(summary);
+              } catch (error) {
+                console.error('❌ Enhanced diagnostics failed:', error);
+              }
+            }
+            
+            // Ctrl+Shift+R to reset diagnostics
+            if (e.ctrlKey && e.shiftKey && e.key === 'R') {
+              e.preventDefault();
+              // Clear diagnostic globals
+              delete (window as any).__EDITOR_CONTEXT_ERROR__;
+              delete (window as any).__EDITOR_INVALID_STEPS__;
+              delete (window as any).__EDITOR_FAILED_BLOCK_LOOKUPS__;
+              delete (window as any).__EDITOR_STEP_ANALYSIS__;
+              delete (window as any).__EDITOR_INVALID_NAVIGATION__;
+              delete (window as any).__EDITOR_DIAGNOSTICS__;
+              console.log('🔄 Diagnostic data cleared');
+            }
+          };
+
+          window.addEventListener('keydown', handleKeyboardShortcut);
+          
+          // Store cleanup function
+          return () => {
+            window.removeEventListener('keydown', handleKeyboardShortcut);
+          };
+        } catch (error) {
+          console.error('🚨 Failed to initialize 21-step diagnostic:', error);
+        }
+      }, 1000); // Wait 1 second after mount for full initialization
+
+      return () => {
+        clearTimeout(timeout);
+      };
+    }
+  }, []); // Run once on mount
 
   // componentes disponíveis - extraídos para config
   const availableComponents = useMemo<ComponentDef[]>(() => AVAILABLE_COMPONENTS_CONFIG, []);
