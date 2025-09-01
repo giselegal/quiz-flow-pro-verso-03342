@@ -2,7 +2,7 @@ import type { BlockComponentProps } from '@/types/blocks';
 import React from 'react';
 import useOptimizedScheduler from '@/hooks/useOptimizedScheduler';
 import { computeSelectionValidity, getEffectiveRequiredSelections, isScoringPhase } from '@/lib/quiz/selectionRules';
-import { useEditor } from '../EditorProvider';
+import { useEditorOptional } from '../EditorProvider';
 
 interface Option {
   id: string;
@@ -142,7 +142,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
   // Acessa etapa atual no modo editor
   let currentStepFromEditor: number | null = null;
   try {
-    const editor = useEditor();
+    const editor = useEditorOptional();
     currentStepFromEditor = editor?.state?.currentStep ?? null;
   } catch (e) {
     currentStepFromEditor = null;
@@ -175,10 +175,10 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
     maxSelections = 1,
     minSelections = 1,
     requiredSelections = 1,
-  // 🎯 PROPRIEDADES DE ESTILO
-  selectionStyle = 'border',
-  selectedColor = '#B89B7A',
-  hoverColor = '#D4C2A8',
+    // 🎯 PROPRIEDADES DE ESTILO
+    selectionStyle = 'border',
+    selectedColor = '#B89B7A',
+    hoverColor = '#D4C2A8',
     // 🎯 PROPRIEDADES DE COMPORTAMENTO
     allowDeselection = true,
     // showSelectionCount = true, // unused
@@ -321,31 +321,31 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
 
       setPreviewSelections(newSelections);
 
-  // Propagar para host (produção/quiz) se disponível
-  externalOnOptionSelect?.(optionId);
+      // Propagar para host (produção/quiz) se disponível
+      externalOnOptionSelect?.(optionId);
 
-  // Disparar evento global para validação (coerente com /quiz)
+      // Disparar evento global para validação (coerente com /quiz)
       try {
         const questionId = (block?.properties as any)?.questionId || block?.id;
-    const step = (window as any)?.__quizCurrentStep ?? null;
-    const validity = computeSelectionValidity(step, newSelections.length, {
+        const step = (window as any)?.__quizCurrentStep ?? null;
+        const validity = computeSelectionValidity(step, newSelections.length, {
           requiredSelections,
           minSelections,
         });
-    const effectiveRequiredSelections = getEffectiveRequiredSelections(step, { requiredSelections, minSelections });
+        const effectiveRequiredSelections = getEffectiveRequiredSelections(step, { requiredSelections, minSelections });
         window.dispatchEvent(
           new CustomEvent('quiz-selection-change', {
             detail: {
-      questionId,
-      gridId: block?.id,
-      selectionCount: newSelections.length,
-      requiredSelections: effectiveRequiredSelections,
-      valid: validity.isValid,
-      isValid: validity.isValid,
+              questionId,
+              gridId: block?.id,
+              selectionCount: newSelections.length,
+              requiredSelections: effectiveRequiredSelections,
+              valid: validity.isValid,
+              isValid: validity.isValid,
             },
           })
         );
-      } catch {}
+      } catch { }
 
       // Save to session data
       if (onUpdateSessionDataCb) {
@@ -363,7 +363,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
             points: option?.points,
           };
         });
-  onUpdateSessionDataCb(`${sessionKey}_details`, selectedOptionDetails);
+        onUpdateSessionDataCb(`${sessionKey}_details`, selectedOptionDetails);
       }
 
       // Check if we should auto-advance - REGRAS UNIFICADAS COM EDIÇÃO
@@ -387,7 +387,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
         };
       });
 
-  if (isScoringPhase(step) && hasRequiredSelections && onNextCb) {
+      if (isScoringPhase(step) && hasRequiredSelections && onNextCb) {
         console.log('🚀 OptionsGrid (preview): Auto-advancing after selection', newSelections);
 
         if (onStepComplete) {
@@ -404,10 +404,10 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
           previewAutoAdvanceRef.current = true;
           const delayMs = Math.max(200, Math.min(1200, autoAdvanceDelay || 600));
           cancel('options-grid-preview-auto-advance');
-      schedule(
+          schedule(
             'options-grid-preview-auto-advance',
             () => {
-        onNextCb?.();
+              onNextCb?.();
               previewAutoAdvanceRef.current = false;
             },
             delayMs,
@@ -425,8 +425,8 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       }
 
       if (!hasRequiredSelections) {
-  previewAutoAdvanceRef.current = false;
-  cancel('options-grid-preview-auto-advance');
+        previewAutoAdvanceRef.current = false;
+        cancel('options-grid-preview-auto-advance');
       }
     } else {
       // Editor mode: Update properties and emit validation event for editor UX
@@ -451,8 +451,8 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
         onPropertyChange?.('selectedOption', optionId);
       }
 
-  // Propagar para host (ex.: produção usando mesmo componente via registry)
-  externalOnOptionSelect?.(optionId);
+      // Propagar para host (ex.: produção usando mesmo componente via registry)
+      externalOnOptionSelect?.(optionId);
       // Calcula regras por etapa
       const step = Number(currentStepFromEditor ?? NaN);
       const validityEditor = computeSelectionValidity(step, newSelections.length, {
@@ -480,9 +480,9 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       );
 
       // Autoavanço somente nas etapas 2–11, ao atingir a última seleção obrigatória
-  if (isScoringPhase(step)) {
+      if (isScoringPhase(step)) {
         // Evitar múltiplos disparos se usuário clicar rapidamente
-  if (hasRequiredSelections && !autoAdvanceScheduledRef.current) {
+        if (hasRequiredSelections && !autoAdvanceScheduledRef.current) {
           autoAdvanceScheduledRef.current = true;
 
           // Ativa visualmente e funcionalmente o botão "Avançar" via evento acima,
@@ -513,14 +513,14 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
         }
 
         // Se caiu abaixo do requisito, libera nova tentativa
-    if (!hasRequiredSelections) {
+        if (!hasRequiredSelections) {
           autoAdvanceScheduledRef.current = false;
           cancel('options-grid-editor-auto-advance');
         }
       } else {
         // Fases sem autoavanço (1 e 13–18): apenas ativação visual/funcional do botão "Avançar"
-  autoAdvanceScheduledRef.current = false;
-  cancel('options-grid-editor-auto-advance');
+        autoAdvanceScheduledRef.current = false;
+        cancel('options-grid-editor-auto-advance');
       }
     }
   };
@@ -550,9 +550,8 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       )}
 
       <div
-        className={`${layout === 'list' ? 'flex flex-col' : `grid ${gridColsClass}`} ${
-          blockClassName || ''
-        }`}
+        className={`${layout === 'list' ? 'flex flex-col' : `grid ${gridColsClass}`} ${blockClassName || ''
+          }`}
         style={{ gap: `${gridGap}px` }}
       >
         {(options || []).map((opt: any) => {
@@ -577,9 +576,9 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
               case 'shadow':
                 return isSelectedOption
                   ? {
-                      boxShadow: `0 0 0 2px ${selectedColor}55, 0 8px 20px ${selectedColor}33`,
-                      borderColor: selectedColor,
-                    }
+                    boxShadow: `0 0 0 2px ${selectedColor}55, 0 8px 20px ${selectedColor}33`,
+                    borderColor: selectedColor,
+                  }
                   : {};
               default:
                 // border
@@ -604,9 +603,8 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
                   handleOptionSelect(opt.id);
                 }
               }}
-              className={`rounded-lg border p-4 transition-all duration-200 cursor-pointer ${
-                isSelectedOption ? '' : 'border-neutral-200 bg-white'
-              } ${cardLayoutClass}`}
+              className={`rounded-lg border p-4 transition-all duration-200 cursor-pointer ${isSelectedOption ? '' : 'border-neutral-200 bg-white'
+                } ${cardLayoutClass}`}
               onClick={() => handleOptionSelect(opt.id)}
               onMouseEnter={e => {
                 (e.currentTarget.style as any).boxShadow = hoverStyles.boxShadow as string;
@@ -630,9 +628,8 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
               )}
               {showTextEffective && (
                 <p
-                  className={`${
-                    effectiveImageLayout === 'horizontal' ? 'flex-1' : 'text-center'
-                  } font-medium`}
+                  className={`${effectiveImageLayout === 'horizontal' ? 'flex-1' : 'text-center'
+                    } font-medium`}
                 >
                   {opt.text}
                 </p>

@@ -1,7 +1,8 @@
-import React, { createContext, useContext, ReactNode } from 'react';
+import React, { createContext, useContext, ReactNode, useEffect, useRef } from 'react';
 import { useQuizLogic } from '../hooks/useQuizLogic';
 import { useToast } from '@/components/ui/use-toast';
 import { QuizResult, StyleResult } from '@/types/quiz';
+import { QuizFlowProvider } from '@/context/QuizFlowProvider';
 
 // Define the context type
 type QuizContextType = ReturnType<typeof useQuizLogic> & {
@@ -16,9 +17,27 @@ type QuizContextType = ReturnType<typeof useQuizLogic> & {
 const QuizContext = createContext<QuizContextType | undefined>(undefined);
 
 // Provider component
+/**
+ * DEPRECATION NOTICE
+ * QuizProvider é legado. Prefira usar QuizFlowProvider + serviços de resultado.
+ * Este provedor agora compõe QuizFlowProvider para compatibilidade.
+ */
 export const QuizProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const quizLogic = useQuizLogic();
   const { toast } = useToast();
+  const warnedRef = useRef(false);
+
+  // Aviso de depreciação em desenvolvimento (uma vez)
+  useEffect(() => {
+    if (warnedRef.current) return;
+    warnedRef.current = true;
+    if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'production') {
+      // eslint-disable-next-line no-console
+      console.warn(
+        '[Deprecation] QuizProvider está obsoleto. Migre para QuizFlowProvider e use os hooks/serviços de resultado atuais.'
+      );
+    }
+  }, []);
 
   // Define all context functions before returning the provider
   const startQuiz = async (name: string, email: string, quizId: string) => {
@@ -53,6 +72,13 @@ export const QuizProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const submitResults = async (results: QuizResult) => {
     try {
       console.log('Results submitted:', results);
+      // Persistência local para compatibilidade com componentes que leem quizResult
+      try {
+        localStorage.setItem('quizResult', JSON.stringify(results));
+        window.dispatchEvent(new Event('quiz-result-updated'));
+      } catch (e) {
+        console.debug('QuizProvider: falha ao persistir quizResult localmente', e);
+      }
       window.location.href = '/resultado';
     } catch (error) {
       toast({
@@ -73,7 +99,12 @@ export const QuizProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   // Return the provider
-  return <QuizContext.Provider value={contextValue}>{children}</QuizContext.Provider>;
+  // Compor com QuizFlowProvider para garantir que o fluxo de etapas esteja disponível
+  return (
+    <QuizFlowProvider>
+      <QuizContext.Provider value={contextValue}>{children}</QuizContext.Provider>
+    </QuizFlowProvider>
+  );
 };
 
 // Hook for using the context
@@ -145,6 +176,13 @@ export const useQuiz = () => {
     submitResults: async (results: QuizResult) => {
       try {
         console.log('Results submitted:', results);
+        // Persistência local + evento para compatibilidade
+        try {
+          localStorage.setItem('quizResult', JSON.stringify(results));
+          window.dispatchEvent(new Event('quiz-result-updated'));
+        } catch (e) {
+          console.debug('useQuiz: falha ao persistir quizResult localmente', e);
+        }
         window.location.href = '/resultado';
       } catch (error) {
         toast({

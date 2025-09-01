@@ -73,17 +73,27 @@ export const useEditor = () => {
       editorElements: document.querySelectorAll('[class*="editor"], [class*="Editor"]').length,
       providerElements: document.querySelectorAll('[class*="provider"], [class*="Provider"]').length
     });
-    
+
     // Add diagnostic info to window for debugging
-    window.__EDITOR_CONTEXT_ERROR__ = {
+    (window as any).__EDITOR_CONTEXT_ERROR__ = {
       timestamp: new Date().toISOString(),
       location: window.location.href,
       stackTrace: new Error().stack
     };
-    
+
     throw new Error('🚨 useEditor must be used within an EditorProvider - check that EditorPro is wrapped correctly');
   }
   return context;
+};
+
+// Versão opcional do hook que NÃO lança erro quando usado fora do Provider.
+// Útil para blocos reutilizados em preview/produção onde o editor não está ativo.
+export const useEditorOptional = (): EditorContextValue | undefined => {
+  try {
+    return useContext(EditorContext);
+  } catch {
+    return undefined;
+  }
 };
 
 export interface EditorProviderProps {
@@ -429,58 +439,28 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
             const key = `step-${i}`;
             validationUpdate[i] = Array.isArray((mergedBlocks as any)[key]) && (mergedBlocks as any)[key].length > 0;
           }
-          return {
+          const next = {
             ...prev,
             stepBlocks: mergedBlocks,
             stepValidation: {
               ...(prev.stepValidation || {}),
               ...validationUpdate,
             },
-          };
+          } as typeof prev;
+          return next;
         });
       }
     }
   }, [rawState.currentStep]);
 
-  // 🔧 DIAGNÓSTICO: Expor contexto para debugging via window global
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      window.__EDITOR_CONTEXT__ = {
-        state: rawState,
-        actions,
-        getBlocksForStep: (step: number) => getBlocksForStep(step, rawState.stepBlocks),
-        ensureStepLoaded: ensureStepLoadedRef.current,
-      };
-      
-      // Análise de estado para diagnóstico
-      const analysis = {
-        timestamp: Date.now(),
-        totalSteps: 21,
-        currentStep: rawState.currentStep,
-        stepBlocksKeys: Object.keys(rawState.stepBlocks || {}),
-        stepsWithBlocks: Object.entries(rawState.stepBlocks || {}).map(([key, blocks]) => ({
-          step: key,
-          count: Array.isArray(blocks) ? blocks.length : 0,
-          types: Array.isArray(blocks) ? blocks.map(b => b.type) : []
-        })),
-        validationSummary: rawState.stepValidation || {},
-        contextHealth: 'healthy'
-      };
-      
-      window.__EDITOR_STATE_ANALYSIS__ = analysis;
-      
-      if (process.env.NODE_ENV === 'development') {
-        console.log('🔧 Editor context exposed for debugging:', analysis);
-      }
-    }
-  }, [rawState, actions]);
+  // (movido para baixo após actions/contextValue p/ evitar TDZ em builds minificados)
 
   // Actions (use functional setState to avoid races)
   const setCurrentStep = useCallback(
     (step: number) => {
       // 🔍 INVESTIGAÇÃO #2: Enhanced currentStep validation
       const isValidStep = Number.isInteger(step) && step >= 1 && step <= 21;
-      
+
       if (!isValidStep) {
         console.error('🚨 INVALID STEP DETECTED:', {
           requestedStep: step,
@@ -489,24 +469,25 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
           range: `1-21`,
           currentStack: new Error().stack
         });
-        
+
         // Track invalid attempts for debugging
         if (typeof window !== 'undefined') {
-          window.__EDITOR_INVALID_STEPS__ = window.__EDITOR_INVALID_STEPS__ || [];
-          window.__EDITOR_INVALID_STEPS__.push({
+          const w = window as any;
+          w.__EDITOR_INVALID_STEPS__ = w.__EDITOR_INVALID_STEPS__ || [];
+          w.__EDITOR_INVALID_STEPS__.push({
             timestamp: new Date(),
             requestedStep: step,
             type: typeof step,
             stack: new Error().stack
           });
         }
-        
+
         // Auto-correct to valid range
         const correctedStep = Math.max(1, Math.min(21, Math.floor(step || 1)));
         console.warn('🔧 AUTO-CORRECTING step to:', correctedStep);
         step = correctedStep;
       }
-      
+
       if (process.env.NODE_ENV === 'development') {
         console.log('🔍 setCurrentStep called:', {
           requestedStep: step,
@@ -517,7 +498,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
           timestamp: new Date().toISOString()
         });
       }
-      
+
       if (!isValidStep) {
         console.error('❌ INVESTIGAÇÃO #2: currentStep fora do intervalo válido (1-21):', {
           invalidStep: step,
@@ -526,20 +507,21 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
           currentValidStep: stateRef.current.currentStep,
           stackTrace: new Error().stack?.split('\n').slice(0, 5)
         });
-        
+
         // Add to window for debugging
-        window.__EDITOR_INVALID_STEPS__ = window.__EDITOR_INVALID_STEPS__ || [];
-        window.__EDITOR_INVALID_STEPS__.push({
+        const w = window as any;
+        w.__EDITOR_INVALID_STEPS__ = w.__EDITOR_INVALID_STEPS__ || [];
+        w.__EDITOR_INVALID_STEPS__.push({
           invalidStep: step,
           timestamp: new Date().toISOString(),
           currentStep: stateRef.current.currentStep
         });
-        
+
         // Don't allow invalid steps but don't throw - use fallback
         step = Math.max(1, Math.min(21, Number.isInteger(step) ? step : 1));
         console.warn('🔧 Corrigindo para step válido:', step);
       }
-      
+
       setState(prev => ({
         ...prev,
         currentStep: step,
@@ -600,7 +582,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
         // Persist draft for this step
         {
           const draftKey = quizId || funnelId || 'local-funnel';
-          try { DraftPersistence.saveStepDraft(draftKey, stepKey, nextState.stepBlocks[stepKey]); } catch {}
+          try { DraftPersistence.saveStepDraft(draftKey, stepKey, nextState.stepBlocks[stepKey]); } catch { }
         }
         return nextState;
       });
@@ -687,7 +669,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
         // Persist draft
         {
           const draftKey = quizId || funnelId || 'local-funnel';
-          try { DraftPersistence.saveStepDraft(draftKey, stepKey, nextBlocks); } catch {}
+          try { DraftPersistence.saveStepDraft(draftKey, stepKey, nextBlocks); } catch { }
         }
         return optimisticState!;
       });
@@ -765,7 +747,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       // Persist draft
       {
         const draftKey = quizId || funnelId || 'local-funnel';
-        try { DraftPersistence.saveStepDraft(draftKey, stepKey, nextBlocks); } catch {}
+        try { DraftPersistence.saveStepDraft(draftKey, stepKey, nextBlocks); } catch { }
       }
 
       // If supabase mode, delegate deletion
@@ -788,7 +770,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
         // Persist draft
         {
           const draftKey = quizId || funnelId || 'local-funnel';
-          try { DraftPersistence.saveStepDraft(draftKey, stepKey, reordered); } catch {}
+          try { DraftPersistence.saveStepDraft(draftKey, stepKey, reordered); } catch { }
         }
         return {
           ...prev,
@@ -844,7 +826,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       // Persist draft
       {
         const draftKey = quizId || funnelId || 'local-funnel';
-        try { DraftPersistence.saveStepDraft(draftKey, stepKey, nextBlocks); } catch {}
+        try { DraftPersistence.saveStepDraft(draftKey, stepKey, nextBlocks); } catch { }
       }
 
       if (state.isSupabaseEnabled && supabaseIntegration?.updateBlockById) {
@@ -983,14 +965,38 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     actions,
   };
 
-  // 🔍 DIAGNÓSTICO: Expor contexto globalmente para debugging
+  // � DIAGNÓSTICO: Expor análise básica de estado (após actions/contextValue)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const w = window as any;
+      const analysis = {
+        timestamp: Date.now(),
+        totalSteps: 21,
+        currentStep: state.currentStep,
+        stepBlocksKeys: Object.keys(state.stepBlocks || {}),
+        stepsWithBlocks: Object.entries(state.stepBlocks || {}).map(([key, blocks]) => ({
+          step: key,
+          count: Array.isArray(blocks) ? blocks.length : 0,
+          types: Array.isArray(blocks) ? (blocks as any[]).map((b: any) => b.type) : [],
+        })),
+        validationSummary: state.stepValidation || {},
+        contextHealth: 'healthy',
+      };
+      w.__EDITOR_STATE_ANALYSIS__ = analysis;
+      if (process.env.NODE_ENV === 'development') {
+        console.log('🔧 Editor context exposed for debugging:', analysis);
+      }
+    }
+  }, [state]);
+
+  // �🔍 DIAGNÓSTICO: Expor contexto globalmente para debugging
   useEffect(() => {
     if (typeof window !== 'undefined') {
       (window as any).__EDITOR_CONTEXT__ = {
         ...state,
         actions,
       };
-      
+
       // Detectar erros de contexto
       if (!state || typeof state !== 'object') {
         if (!(window as any).__EDITOR_CONTEXT_ERROR__) {
