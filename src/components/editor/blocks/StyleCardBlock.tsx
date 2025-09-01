@@ -2,6 +2,7 @@ import { cn } from '@/lib/utils';
 import { useQuizLogic } from '@/hooks/useQuizLogic';
 import { styleConfig } from '@/config/styleConfig';
 import { Progress } from '@/components/ui/progress';
+import { safePlaceholder } from '@/utils/placeholder';
 
 interface StyleCardBlockProps {
   showProgress?: boolean;
@@ -137,6 +138,11 @@ const StyleCardBlock: React.FC<StyleCardBlockProps> = ({
               loading="eager"
               width="238"
               height="auto"
+              onError={e => {
+                try {
+                  (e.currentTarget as HTMLImageElement).src = safePlaceholder(238, 320, `Estilo ${category}`);
+                } catch { }
+              }}
             />
             {/* Decorative corners */}
             <div className="absolute -top-2 -right-2 w-8 h-8 border-t-2 border-r-2 border-[#B89B7A]"></div>

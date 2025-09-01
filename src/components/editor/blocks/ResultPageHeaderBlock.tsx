@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils';
+import { safePlaceholder } from '@/utils/placeholder';
 // import { Progress } from '@/components/ui/progress';
 
 interface ResultPageHeaderBlockProps {
@@ -114,6 +115,12 @@ const ResultPageHeaderBlock: React.FC<ResultPageHeaderBlockProps> = ({
             alt={logoAlt}
             style={{ height: logoHeight }}
             className="object-contain"
+            onError={e => {
+              try {
+                const h = parseInt(String(logoHeight), 10) || 60;
+                (e.currentTarget as HTMLImageElement).src = safePlaceholder(h * 2, h, 'Logo');
+              } catch { }
+            }}
           />
           {showProgress && (
             <div className="flex items-center space-x-3">

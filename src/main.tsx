@@ -28,11 +28,18 @@ if (import.meta.env.DEV && typeof window !== 'undefined') {
       // Simula sucesso e evita 500 no console
       return Promise.resolve(new Response(null, { status: 204 }));
     }
+    // Silencia Sentry em dev para evitar 404/429 e ruído excessivo
+    if (/sentry\.io|ingest\.sentry\.io/.test(url)) {
+      try {
+        console.warn('🛑 Interceptado (Sentry desabilitado em dev):', url);
+      } catch { }
+      return Promise.resolve(new Response(null, { status: 204 }));
+    }
     // Silencia chamadas REST do Supabase quando desabilitado (evita erros 400/403 durante QA)
     if (DISABLE_SUPABASE && url.includes('.supabase.co/rest/v1/')) {
       try {
         console.warn('🛑 Interceptado (Supabase REST desabilitado em dev):', url);
-      } catch {}
+      } catch { }
       // Responder com lista vazia ou sucesso sem corpo
       const wantsJson =
         (init?.headers &&
@@ -42,9 +49,9 @@ if (import.meta.env.DEV && typeof window !== 'undefined') {
       return Promise.resolve(
         wantsJson
           ? new Response('[]', {
-              status: 200,
-              headers: { 'Content-Type': 'application/json' },
-            })
+            status: 200,
+            headers: { 'Content-Type': 'application/json' },
+          })
           : new Response(null, { status: 204 })
       );
     }

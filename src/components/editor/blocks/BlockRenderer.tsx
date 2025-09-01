@@ -160,6 +160,16 @@ const QuizHeaderBlock: React.FC<{ block: Block; stepNumber?: number }> = ({
         alt={logoAlt}
         className="w-12 h-12 rounded object-contain"
         style={{ width: `${logoWidth / 4}px`, height: `${logoHeight / 4}px` }}
+        onError={e => {
+          try {
+            const w = Math.max(24, Math.floor((logoWidth || 96) / 4));
+            const h = Math.max(24, Math.floor((logoHeight || 96) / 4));
+            // Lazy import to avoid top-level dependency if not needed elsewhere in this file
+            import('@/utils/placeholder').then(m => {
+              (e.currentTarget as HTMLImageElement).src = m.safePlaceholder(w, h, 'Logo');
+            });
+          } catch { }
+        }}
       />
 
       {showProgress && (
@@ -299,14 +309,14 @@ const OptionsGridBlock: React.FC<{
     setSelectedOptions(newSelections);
     onUserInput(responseKey, newSelections);
 
-      // Auto-advance logic
-      if (autoAdvance && newSelections.length === requiredSelections) {
-        const { schedule } = useOptimizedScheduler();
-        return schedule('auto-advance', () => {
-          console.log('Auto-advancing to next step...');
-          // Implement navigation logic here
-        }, 1500);
-      }
+    // Auto-advance logic
+    if (autoAdvance && newSelections.length === requiredSelections) {
+      const { schedule } = useOptimizedScheduler();
+      return schedule('auto-advance', () => {
+        console.log('Auto-advancing to next step...');
+        // Implement navigation logic here
+      }, 1500);
+    }
   };
 
   const isComplete = selectedOptions.length === requiredSelections;

@@ -18,6 +18,7 @@ import { runCompleteDiagnostics } from '@/utils/editorDiagnostics';
 import { PerformanceOptimizer } from '@/utils/performanceOptimizer';
 import { useCentralizedStepValidation } from '@/hooks/useCentralizedStepValidation';
 import { validateStep } from '@/utils/stepValidationRegistry';
+import { calculateAndSaveQuizResult } from '@/utils/quizResultCalculator';
 
 // Lazy modules para reduzir TTI do editor (Canvas usa o LazyQuizRenderer internamente)
 // const LazyQuizRenderer = React.lazy(() =>
@@ -398,6 +399,29 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
     stepBlocks: state.stepBlocks as any,
     setStepValid: actions.setStepValid,
   });
+
+  // Calcular resultado automaticamente ao entrar nas etapas 19/20
+  const lastComputedStepRef = useRef<number | null>(null);
+  useEffect(() => {
+    const shouldCompute = safeCurrentStep === 19 || safeCurrentStep === 20;
+    if (!shouldCompute) return;
+    if (lastComputedStepRef.current === safeCurrentStep) return;
+
+    lastComputedStepRef.current = safeCurrentStep;
+
+    (async () => {
+      try {
+        if (process.env.NODE_ENV === 'development') {
+          console.log('🧮 Calculando resultado do quiz (auto) para etapa', safeCurrentStep);
+        }
+        await calculateAndSaveQuizResult();
+        // Forçar refresh de consumidores que escutam diferentes eventos
+        try { window.dispatchEvent(new Event('quiz-result-refresh')); } catch { }
+      } catch (err) {
+        console.error('Falha ao calcular resultado automaticamente:', err);
+      }
+    })();
+  }, [safeCurrentStep]);
 
   // DnD Context é fornecido pelo StepDndProvider com sensores e colisão otimizados por etapa
   // Helper centralizado: calcula índice alvo com base no alvo de drop

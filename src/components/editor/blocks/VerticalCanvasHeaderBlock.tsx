@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { Button } from '@/components/ui/button';
+import { safePlaceholder } from '@/utils/placeholder';
 import { Progress } from '@/components/ui/progress';
 import { ChevronLeft } from 'lucide-react';
 
@@ -72,7 +73,7 @@ const VerticalCanvasHeaderBlock: React.FC<VerticalCanvasHeaderProps> = ({
   progressMax = 100,
   showProgress = true,
   showBackButton = false,
-  onBackClick = () => {},
+  onBackClick = () => { },
   containerWidth = '100%',
   gap = '1rem',
   className = '',
@@ -100,6 +101,11 @@ const VerticalCanvasHeaderBlock: React.FC<VerticalCanvasHeaderProps> = ({
               width={logoWidth}
               height={logoHeight}
               className="object-contain"
+              onError={e => {
+                try {
+                  (e.currentTarget as HTMLImageElement).src = safePlaceholder(logoWidth || 120, logoHeight || 40, 'Logo');
+                } catch { }
+              }}
             />
           ) : (
             <div style={{ color: '#8B7355', width: logoWidth, height: logoHeight }}>Logo</div>

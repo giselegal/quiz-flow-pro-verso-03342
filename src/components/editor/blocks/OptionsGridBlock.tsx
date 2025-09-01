@@ -5,6 +5,7 @@ import { computeSelectionValidity, getEffectiveRequiredSelections, isScoringPhas
 import { useEditorOptional } from '../EditorProvider';
 import { unifiedQuizStorage } from '@/services/core/UnifiedQuizStorage';
 import { StorageService } from '@/services/core/StorageService';
+import { safePlaceholder } from '@/utils/placeholder';
 
 interface Option {
   id: string;
@@ -651,6 +652,11 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
                   style={{ width: `${imgW}px`, height: `${imgH}px` }}
                   loading="lazy"
                   decoding="async"
+                  onError={e => {
+                    try {
+                      (e.currentTarget as HTMLImageElement).src = safePlaceholder(imgW, imgH, opt.text || 'Imagem');
+                    } catch { }
+                  }}
                 />
               )}
               {showTextEffective && (
