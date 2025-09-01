@@ -17,6 +17,8 @@ import {
   XCircle,
 } from 'lucide-react';
 import React, { useState } from 'react';
+import { validateStep } from '@/utils/stepValidationRegistry';
+import { QuizDataService } from '@/services/core/QuizDataService';
 
 interface DiagnosticStatusProps {
   autoRun?: boolean;
@@ -96,6 +98,54 @@ export const DiagnosticStatus: React.FC<DiagnosticStatusProps> = ({
         </div>
       </div>
 
+      {/* Validação Centralizada da Etapa Atual */}
+      {(() => {
+        let currentStep = 1;
+        try {
+          const w: any = window as any;
+          const raw = w?.__quizCurrentStep;
+          const num = typeof raw === 'string' ? parseInt(raw.toString().replace(/\D+/g, '') || '1', 10) : Number(raw);
+          if (Number.isFinite(num) && num >= 1) currentStep = num;
+        } catch { }
+
+        let validation: ReturnType<typeof validateStep> | null = null;
+        try {
+          const blocks = QuizDataService.getStepData(currentStep);
+          validation = validateStep(currentStep, { [`step-${currentStep}`]: blocks } as any);
+        } catch { }
+
+        if (!validation) return null;
+
+        const ok = !!validation.valid;
+        return (
+          <div className="mb-3 p-3 rounded-md border bg-gray-50">
+            <div className="flex items-center gap-2 mb-1">
+              {ok ? (
+                <CheckCircle className="w-4 h-4 text-green-600" />
+              ) : (
+                <AlertTriangle className="w-4 h-4 text-yellow-600" />
+              )}
+              <span className="text-sm font-medium text-gray-800">
+                Etapa atual: {currentStep} — {ok ? 'Válida' : 'Incompleta'}
+              </span>
+            </div>
+            {!ok && validation.reason && (
+              <div className="text-xs text-gray-600">
+                Motivo: <span className="font-medium">{validation.reason}</span>
+              </div>
+            )}
+            {validation.evidence && Object.keys(validation.evidence).length > 0 && (
+              <details className="mt-1">
+                <summary className="text-xs text-blue-600 cursor-pointer">Ver evidências</summary>
+                <pre className="text-xs text-gray-500 mt-1 p-2 bg-gray-100 rounded overflow-auto">
+                  {JSON.stringify(validation.evidence, null, 2)}
+                </pre>
+              </details>
+            )}
+          </div>
+        );
+      })()}
+
       {/* Resumo de Status */}
       <div className="flex items-center gap-4 mb-3">
         <div className="flex items-center gap-1">
@@ -153,7 +203,7 @@ export const DiagnosticStatus: React.FC<DiagnosticStatusProps> = ({
 
           {diagnostic.results.map((result, index) => (
             <div key={index} className="flex items-start gap-2 p-2 bg-gray-50 rounded-md text-sm">
-              {getStatusIcon(result.status)}
+              {getStatusIcon(result.status || 'warning')}
               <div className="flex-1 min-w-0">
                 <div className="font-medium text-gray-800 mb-1">{result.category}</div>
                 <div className="text-gray-600 text-xs">{result.message}</div>

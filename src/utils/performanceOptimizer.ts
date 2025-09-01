@@ -202,33 +202,58 @@ export const QUIZ_PERF = {
 };
 
 // 5️⃣ EXPORT: API pública otimizada com fallbacks
+const __tracked = {
+  timeouts: new Set<number>(),
+  intervals: new Set<number>(),
+  cancelOnNavTimeouts: new Set<number>(),
+  cancelOnNavIntervals: new Set<number>(),
+};
+
 export const PerformanceOptimizer = {
   // Schedulers otimizados com fallbacks seguros
   schedule: (
     callback: () => void,
     delay: number = 0,
-    strategy: 'animation' | 'message' | 'timeout' = 'animation'
+    strategy: 'animation' | 'message' | 'timeout' = 'animation',
+    options?: { cancelOnNav?: boolean; label?: string }
   ) => {
     try {
-      return SmartTimeout.schedule(callback, delay, strategy);
+      const id = SmartTimeout.schedule(callback, delay, strategy);
+      if (strategy === 'timeout' && typeof id === 'number' && id) {
+        __tracked.timeouts.add(id);
+        if (options?.cancelOnNav) __tracked.cancelOnNavTimeouts.add(id);
+      }
+      return id;
     } catch (error) {
       console.warn('PerformanceOptimizer.schedule fallback:', error);
       // Fallback seguro para setTimeout nativo
-      return setTimeout(callback, Math.max(delay, 0));
+      const id = setTimeout(callback, Math.max(delay, 0)) as unknown as number;
+      __tracked.timeouts.add(id);
+      if (options?.cancelOnNav) __tracked.cancelOnNavTimeouts.add(id);
+      return id;
     }
   },
 
   scheduleInterval: (
     callback: () => void,
     delay: number,
-    strategy: 'animation' | 'timeout' = 'animation'
+    strategy: 'animation' | 'timeout' = 'animation',
+    options?: { cancelOnNav?: boolean; label?: string }
   ) => {
     try {
-      return SmartTimeout.scheduleInterval(callback, delay, strategy);
+      const id = SmartTimeout.scheduleInterval(callback, delay, strategy);
+      if (strategy === 'timeout' && typeof id === 'number' && id) {
+        __tracked.intervals.add(id);
+        if (options?.cancelOnNav) __tracked.cancelOnNavIntervals.add(id);
+      }
+      return id;
     } catch (error) {
       console.warn('PerformanceOptimizer.scheduleInterval fallback:', error);
       // Fallback seguro para setInterval nativo
-      return setInterval(callback, Math.max(delay, 16));
+      const id = setInterval(callback, Math.max(delay, 16)) as unknown as number;
+      __tracked.intervals.add(id);
+      if (options?.cancelOnNav) __tracked.cancelOnNavIntervals.add(id);
+      return id;
     }
   },
 
@@ -259,6 +284,49 @@ export const PerformanceOptimizer = {
     if (isUIUpdate || delay < 16) return 'animation';
     if (delay < 100) return 'message';
     return 'timeout';
+  },
+
+  // Cancelamentos utilitários
+  cancelTimeout: (id?: number) => {
+    if (typeof id === 'number') {
+      clearTimeout(id);
+      __tracked.timeouts.delete(id);
+      __tracked.cancelOnNavTimeouts.delete(id);
+    }
+  },
+  cancelInterval: (id?: number) => {
+    if (typeof id === 'number') {
+      clearInterval(id);
+      __tracked.intervals.delete(id);
+      __tracked.cancelOnNavIntervals.delete(id);
+    }
+  },
+  cancelAllTimeouts: () => {
+    for (const id of Array.from(__tracked.timeouts)) {
+      clearTimeout(id);
+      __tracked.timeouts.delete(id);
+      __tracked.cancelOnNavTimeouts.delete(id);
+    }
+  },
+  cancelAllIntervals: () => {
+    for (const id of Array.from(__tracked.intervals)) {
+      clearInterval(id);
+      __tracked.intervals.delete(id);
+      __tracked.cancelOnNavIntervals.delete(id);
+    }
+  },
+  cancelOnNavigation: () => {
+    // Cancela apenas timers marcados explicitamente para navegação
+    for (const id of Array.from(__tracked.cancelOnNavTimeouts)) {
+      clearTimeout(id);
+      __tracked.cancelOnNavTimeouts.delete(id);
+      __tracked.timeouts.delete(id);
+    }
+    for (const id of Array.from(__tracked.cancelOnNavIntervals)) {
+      clearInterval(id);
+      __tracked.cancelOnNavIntervals.delete(id);
+      __tracked.intervals.delete(id);
+    }
   },
 };
 

@@ -484,9 +484,8 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
 
             // Handle step navigation
             if (action === 'next-step' && nextStepId) {
-              const detail = { stepId: nextStepId, source: `button-${block?.id}` };
-              window.dispatchEvent(new CustomEvent('navigate-to-step', { detail }));
-              window.dispatchEvent(new CustomEvent('quiz-navigate-to-step', { detail }));
+              const detail = { stepId: nextStepId, source: `button-${block?.id}` } as any;
+              import('@/utils/stepEvents').then(({ dispatchNavigate }) => dispatchNavigate(nextStepId, detail));
               return;
             }
 
@@ -543,9 +542,8 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
               if (autoAdvanceOnComplete) {
                 const { schedule } = useOptimizedScheduler();
                 return schedule('button-auto-advance', () => {
-                  const detail = { stepId: targetStep, source: 'step1-button' };
-                  window.dispatchEvent(new CustomEvent('navigate-to-step', { detail }));
-                  window.dispatchEvent(new CustomEvent('quiz-navigate-to-step', { detail }));
+                  const detail = { stepId: targetStep, source: 'step1-button' } as any;
+                  import('@/utils/stepEvents').then(({ dispatchNavigate }) => dispatchNavigate(targetStep, detail));
                 }, Number(autoAdvanceDelay) || 0);
               }
             }

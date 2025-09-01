@@ -15,6 +15,9 @@ import { StepDndProvider } from '@/components/editor/dnd/StepDndProvider';
 import CanvasAreaLayout from '@/components/editor/layouts/CanvasArea';
 import { run21StepDiagnostic } from '@/diagnostic/21StepEditorDiagnostic';
 import { runCompleteDiagnostics } from '@/utils/editorDiagnostics';
+import { PerformanceOptimizer } from '@/utils/performanceOptimizer';
+import { useCentralizedStepValidation } from '@/hooks/useCentralizedStepValidation';
+import { validateStep } from '@/utils/stepValidationRegistry';
 
 // Lazy modules para reduzir TTI do editor (Canvas usa o LazyQuizRenderer internamente)
 // const LazyQuizRenderer = React.lazy(() =>
@@ -389,6 +392,13 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
     });
   }
 
+  // Centralizar a validação por etapa (em paralelo às heurísticas existentes)
+  useCentralizedStepValidation({
+    currentStep: safeCurrentStep,
+    stepBlocks: state.stepBlocks as any,
+    setStepValid: actions.setStepValid,
+  });
+
   // DnD Context é fornecido pelo StepDndProvider com sensores e colisão otimizados por etapa
   // Helper centralizado: calcula índice alvo com base no alvo de drop
   // Comentado temporariamente pois não está sendo usado
@@ -409,13 +419,15 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
 
     const handleNavigate = (ev: Event) => {
       // 🔍 INVESTIGAÇÃO #6: Enhanced event logging for race conditions
-      const e = ev as CustomEvent<{ stepId?: string | number; source?: string }>;
-      const target = parseStepNumber(e.detail?.stepId);
+      const e = ev as CustomEvent<{ step?: string | number; stepId?: string | number; stepKey?: string; source?: string }>;
+      const raw = e.detail?.stepId ?? e.detail?.step;
+      const target = parseStepNumber(raw);
 
       const eventInfo = {
         timestamp: new Date().toISOString(),
         eventType: ev.type,
-        rawStepId: e.detail?.stepId,
+        rawStepId: raw,
+        stepKey: e.detail?.stepKey,
         parsedTarget: target,
         currentStep: state.currentStep,
         source: e.detail?.source,
@@ -446,17 +458,21 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         });
       }
 
+      // Antes de alterar etapa, cancelar timers de curto prazo que não devem atravessar navegação
+      try { PerformanceOptimizer.cancelOnNavigation(); } catch { }
       actions.setCurrentStep(target);
 
       if (process.env.NODE_ENV === 'development') {
         // eslint-disable-next-line no-console
         console.log(
           '➡️ EditorPro: navegação por evento',
-          e.detail?.stepId,
+          raw,
           '→',
           target,
           'origem:',
-          e.detail?.source
+          e.detail?.source,
+          'stepKey:',
+          e.detail?.stepKey
         );
       }
     };
@@ -551,10 +567,16 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         }
       }
 
-      const val = eventData.value;
-      const explicitValid = eventData.valid;
-      const ok = typeof val === 'string' ? val.trim().length > 0 : (explicitValid ?? false);
-      actions.setStepValid?.(state.currentStep, !!ok);
+      // Validação centralizada após evento
+      try {
+        const res = validateStep(state.currentStep, state.stepBlocks as any);
+        actions.setStepValid?.(state.currentStep, !!res.valid);
+        if (process.env.NODE_ENV === 'development' && !res.valid) {
+          console.warn('🔎 Centralized validation failed (input):', res);
+        }
+      } catch (err) {
+        console.error('Validation error (input):', err);
+      }
     };
 
     const handleSelectionChange = (ev: Event) => {
@@ -602,8 +624,16 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         }
       }
 
-      const ok = eventData.valid ?? (eventData.selectionCount ?? 0) > 0;
-      actions.setStepValid?.(state.currentStep, !!ok);
+      // Validação centralizada após evento
+      try {
+        const res = validateStep(state.currentStep, state.stepBlocks as any);
+        actions.setStepValid?.(state.currentStep, !!res.valid);
+        if (process.env.NODE_ENV === 'development' && !res.valid) {
+          console.warn('🔎 Centralized validation failed (selection):', res);
+        }
+      } catch (err) {
+        console.error('Validation error (selection):', err);
+      }
     };
 
     window.addEventListener('quiz-input-change', handleInputChange as EventListener);

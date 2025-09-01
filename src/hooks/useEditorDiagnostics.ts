@@ -18,16 +18,41 @@ const EditorDiagnostics = {
   runFullDiagnostic: async (): Promise<DiagnosticResult[]> => {
     try {
       const { summary, details } = await DiagnosticsModule.runCompleteDiagnostics();
-      const status: 'success' | 'warning' | 'error' = summary.success
-        ? 'success'
-        : 'error';
-      const mapped: DiagnosticResult = {
-        ...summary,
-        status,
+
+      const mapItem = (category: string, res: any): DiagnosticResult => ({
+        success: !!res?.success,
+        message: String(res?.message || ''),
+        data: res?.data,
+        timestamp: Number(res?.timestamp || Date.now()),
+        status: res?.success ? 'success' : 'error',
+        category,
+        details: res,
+      });
+
+      const items: DiagnosticResult[] = [];
+
+      // Resumo geral
+      items.push({
+        success: !!summary?.success,
+        message: String(summary?.message || ''),
+        data: summary?.data,
+        timestamp: Number(summary?.timestamp || Date.now()),
+        status: summary?.success ? 'success' : 'error',
         category: 'Editor Health',
         details,
-      };
-      return [mapped];
+      });
+
+      // Detalhes por categoria (quando disponíveis)
+      if (details) {
+        if (details.editorContext) items.push(mapItem('Contexto do Editor', details.editorContext));
+        if (details.currentStep) items.push(mapItem('Etapa Atual', details.currentStep));
+        if (details.blockLoading) items.push(mapItem('Carregamento de Blocos', details.blockLoading));
+        if (details.stepCalculation) items.push(mapItem('Cálculo de Etapas', details.stepCalculation));
+        if (details.globalEvents) items.push(mapItem('Eventos Globais', details.globalEvents));
+        if (details.rapidNavigation) items.push(mapItem('Navegação Rápida', details.rapidNavigation));
+      }
+
+      return items;
     } catch (e: any) {
       return [
         {
@@ -73,6 +98,15 @@ export const useEditorDiagnostics = (options?: {
 
   // 🔍 Executar diagnóstico
   const runDiagnostic = useCallback(async () => {
+    // Evitar concorrência de execuções
+    // Ref local para checar e bloquear reentradas
+    // Não usamos state.isRunning diretamente para evitar stale closures
+    const runningRef = (runDiagnostic as any)._runningRef || ((runDiagnostic as any)._runningRef = { current: false });
+    if (runningRef.current) {
+      return state.results;
+    }
+    runningRef.current = true;
+
     setState(prev => ({ ...prev, isRunning: true }));
 
     try {
@@ -97,8 +131,11 @@ export const useEditorDiagnostics = (options?: {
       console.error('❌ Erro no diagnóstico:', error);
       setState(prev => ({ ...prev, isRunning: false }));
       throw error;
+    } finally {
+      // Libera o lock de execução
+      runningRef.current = false;
     }
-  }, [autoFix]);
+  }, [autoFix, state.results]);
 
   // 📊 Obter estatísticas
   const getStats = useCallback(() => {
@@ -140,17 +177,22 @@ export const useEditorDiagnostics = (options?: {
   useEffect(() => {
     if (!autoRun) return;
 
+    const initialTimeoutRef = { id: null as null | number };
+    const intervalRef = { id: null as null | number };
+
     // Executar diagnóstico inicial
     const runInitialDiagnostic = () => {
-      PerformanceOptimizer.schedule(
+      const id = PerformanceOptimizer.schedule(
         () => {
           runDiagnostic().catch(error => {
             console.error('❌ Erro no diagnóstico automático:', error);
           });
         },
         2000,
-        'timeout'
+        'timeout',
+        { cancelOnNav: true, label: 'editor-diagnostic-initial' }
       ); // Aguardar 2s para o editor carregar
+      if (typeof id === 'number') initialTimeoutRef.id = id;
     };
 
     runInitialDiagnostic();
@@ -163,13 +205,14 @@ export const useEditorDiagnostics = (options?: {
         });
       },
       interval,
-      'timeout'
+      'timeout',
+      { cancelOnNav: true, label: 'editor-diagnostic-interval' }
     );
+    if (typeof intervalId === 'number') intervalRef.id = intervalId;
 
     return () => {
-      if (typeof intervalId === 'number') {
-        clearInterval(intervalId);
-      }
+      if (typeof intervalRef.id === 'number') clearInterval(intervalRef.id);
+      if (typeof initialTimeoutRef.id === 'number') clearTimeout(initialTimeoutRef.id);
     };
   }, [autoRun, interval, runDiagnostic]);
 

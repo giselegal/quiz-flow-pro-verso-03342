@@ -3,7 +3,8 @@ import { useQuizFlow } from '@/hooks/core/useQuizFlow';
 import { Block } from '@/types/editor';
 import React, { useEffect, useMemo, useState } from 'react';
 import { cn } from '@/lib/utils';
-import { computeSelectionValidity } from '@/lib/quiz/selectionRules';
+// Validação centralizada cobre regras por etapa
+import { useCentralizedStepValidation } from '@/hooks/useCentralizedStepValidation';
 
 interface QuizRendererProps {
   mode?: 'production' | 'preview' | 'editor';
@@ -137,8 +138,7 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
     } catch { }
   }, [mode, previewEditable, currentStep, currentStepOverride]);
 
-  // ✅ Validação e gating similares à produção
-  const [stepValidation, setLocalStepValidation] = useState<Record<number, boolean>>({});
+  // Gating passa a ser feito via validação centralizada (quizState.stepValidation)
 
   // Expor etapa atual globalmente (editor/preview dependem de window.__quizCurrentStep)
   useEffect(() => {
@@ -153,13 +153,11 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
     const handleSelectionChange = (ev: Event) => {
       const e = ev as CustomEvent<{ isValid?: boolean; valid?: boolean; selectionCount?: number }>;
       const valid = (e.detail?.isValid ?? e.detail?.valid) ?? false;
-      setLocalStepValidation(prev => ({ ...prev, [currentStep]: valid }));
       setStepValid?.(currentStep, valid);
     };
     const handleInputChange = (ev: Event) => {
       const e = ev as CustomEvent<{ value?: string; valid?: boolean }>;
       const ok = typeof e.detail?.value === 'string' ? (e.detail.value?.trim().length ?? 0) > 0 : !!e.detail?.valid;
-      setLocalStepValidation(prev => ({ ...prev, [currentStep]: ok }));
       setStepValid?.(currentStep, ok);
     };
     window.addEventListener('quiz-selection-change', handleSelectionChange as EventListener);
@@ -173,32 +171,15 @@ export const QuizRenderer: React.FC<QuizRendererProps> = ({
   // Memoize stepBlocks to prevent infinite re-renders
   const stableStepBlocks = useMemo(() => stepBlocks || [], [stepBlocks]);
 
-  // Validação inicial ao mudar blocos
-  useEffect(() => {
-    const blocks = stableStepBlocks;
-    const questionBlocks = blocks.filter((b: any) => b.type === 'options-grid' || b.type === 'form-container');
-    if (questionBlocks.length === 0) {
-      setLocalStepValidation(prev => ({ ...prev, [currentStep]: true }));
-      setStepValid?.(currentStep, true);
-      return;
-    }
-    // Best effort: usa propriedades do bloco para inferir contagens; considera inválido por padrão
-    const inferredValid = questionBlocks.every((b: any) => {
-      if (b.type === 'form-container') {
-        return !(b.content?.required); // sem valor → assume inválido se required
-      }
-      const selCount = Array.isArray(b.properties?.selectedOptions) ? b.properties.selectedOptions.length : 0;
-      const { isValid } = computeSelectionValidity(currentStep, selCount, {
-        requiredSelections: b.properties?.requiredSelections as number | undefined,
-        minSelections: b.properties?.minSelections as number | undefined,
-      });
-      return isValid;
-    });
-    setLocalStepValidation(prev => ({ ...prev, [currentStep]: inferredValid }));
-    setStepValid?.(currentStep, inferredValid);
-  }, [currentStep, stableStepBlocks]);
+  // ✅ Validação centralizada (alinha com EditorPro)
+  useCentralizedStepValidation({
+    currentStep,
+    // Passa um RawStepBlocks mínimo com a etapa atual
+    stepBlocks: { [`step-${currentStep}`]: stableStepBlocks } as any,
+    setStepValid,
+  });
 
-  const isStepValid = !!stepValidation[currentStep];
+  const isStepValid = !!quizState.stepValidation?.[currentStep];
   const mustBeValid = stepConfig?.enableButtonOnlyWhenValid !== false;
   const nextDisabled = (currentStep === totalSteps) || (mustBeValid && !isStepValid);
   const nextLabel = currentStep === totalSteps

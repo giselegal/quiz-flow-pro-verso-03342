@@ -35,20 +35,20 @@ export function getBlocksForStep(step: number | string, stepBlocks?: RawStepBloc
     candidates: candidateKeysForStep(step),
     timestamp: new Date().toISOString()
   };
-  
+
   if (!stepBlocks) {
     if (process.env.NODE_ENV === 'development') {
       console.warn('🔍 getBlocksForStep: stepBlocks is null/undefined', debugInfo);
     }
     return undefined;
   }
-  
+
   const candidates = candidateKeysForStep(step);
-  
+
   for (const key of candidates) {
     const raw = (stepBlocks as any)[key] ?? (stepBlocks as any)[String(key)];
     if (!raw) continue;
-    
+
     // Enhanced logging for successful lookups
     if (process.env.NODE_ENV === 'development') {
       console.log('✅ getBlocksForStep: Found blocks', {
@@ -58,9 +58,9 @@ export function getBlocksForStep(step: number | string, stepBlocks?: RawStepBloc
         blocksType: typeof raw
       });
     }
-    
+
     if (Array.isArray(raw)) {
-  if (process.env.NODE_ENV === 'development' && typeof step === 'number' && step <= 3) { // Log first 3 steps for debugging
+      if (process.env.NODE_ENV === 'development' && typeof step === 'number' && step <= 3) { // Log first 3 steps for debugging
         console.log('🔍 getBlocksForStep SUCCESS:', {
           ...debugInfo,
           foundKey: key,
@@ -70,7 +70,7 @@ export function getBlocksForStep(step: number | string, stepBlocks?: RawStepBloc
       }
       return raw as EditorBlock[];
     }
-    
+
     if (raw && typeof raw === 'object' && 'blocks' in (raw as Record<string, any>)) {
       const maybe = (raw as Record<string, any>).blocks;
       if (Array.isArray(maybe)) {
@@ -84,7 +84,7 @@ export function getBlocksForStep(step: number | string, stepBlocks?: RawStepBloc
         return maybe as EditorBlock[];
       }
     }
-    
+
     if (typeof raw === 'string') {
       try {
         const parsed = JSON.parse(raw);
@@ -92,13 +92,13 @@ export function getBlocksForStep(step: number | string, stepBlocks?: RawStepBloc
         if (parsed && typeof parsed === 'object' && Array.isArray((parsed as any).blocks)) return (parsed as any).blocks;
       } catch (e) { }
     }
-    
+
     if (raw && typeof raw === 'object') {
       const vals = Object.values(raw);
       if (vals.length > 0 && vals.every(v => typeof v === 'object')) return vals as EditorBlock[];
     }
   }
-  
+
   // 🔍 INVESTIGAÇÃO #3: Log failed lookups for debugging
   if (process.env.NODE_ENV === 'development') {
     console.warn('🔍 getBlocksForStep: No blocks found', {
@@ -106,12 +106,12 @@ export function getBlocksForStep(step: number | string, stepBlocks?: RawStepBloc
       availableKeys: stepBlocks ? Object.keys(stepBlocks).slice(0, 10) : [], // Limit output
       firstKeyContent: stepBlocks ? (stepBlocks as any)[Object.keys(stepBlocks)[0]] : null
     });
-    
+
     // Add failed lookups to window for debugging  
     window.__EDITOR_FAILED_BLOCK_LOOKUPS__ = window.__EDITOR_FAILED_BLOCK_LOOKUPS__ || [];
     window.__EDITOR_FAILED_BLOCK_LOOKUPS__.push(debugInfo);
   }
-  
+
   return undefined;
 }
 
@@ -136,6 +136,13 @@ export function normalizeStepBlocks(raw?: RawStepBlocks | null): StepBlocks {
     }
     if (blocks && blocks.length > 0) out[targetKey] = blocks;
   }
+  // Scanner leve de duplicidade em dev (não bloqueante)
+  try {
+    if (process.env.NODE_ENV === 'development') {
+      const { scanDuplicateQuestionIds } = require('@/utils/duplicateQuestionScanner');
+      scanDuplicateQuestionIds(out as any);
+    }
+  } catch { }
   return out;
 }
 
@@ -155,11 +162,11 @@ export function mergeStepBlocks(base: StepBlocks, incoming: RawStepBlocks): Step
       const prev = incId ? existingById.get(incId) : undefined;
       const mergedBlock = prev
         ? {
-            ...prev,
-            ...inc,
-            properties: { ...(prev?.properties || {}), ...(inc?.properties || {}) },
-            content: { ...(prev?.content || {}), ...(inc?.content || {}) },
-          }
+          ...prev,
+          ...inc,
+          properties: { ...(prev?.properties || {}), ...(inc?.properties || {}) },
+          content: { ...(prev?.content || {}), ...(inc?.content || {}) },
+        }
         : inc;
       mergedForStep.push(mergedBlock);
     }
