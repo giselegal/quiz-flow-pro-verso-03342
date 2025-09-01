@@ -43,7 +43,7 @@ export const publishFunnel = async (funnelData: PublishFunnelData): Promise<Publ
     }
 
     // 2. Salvar funil principal
-    const { data: funnelResult, error: funnelError } = await supabase
+    const { error: funnelError } = await supabase
       .from('funnels')
       .upsert({
         id: funnelData.id,

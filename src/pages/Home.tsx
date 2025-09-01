@@ -319,7 +319,7 @@ const Home = () => {
         </TechBackground>
 
         {/* CTA Final */}
-        <TechBackground variant="cta" className="py-20 lg:py-32">
+        <TechBackground variant="section" className="py-20 lg:py-32">
           <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
             <h3 className="text-3xl lg:text-4xl font-bold text-white mb-6 drop-shadow-lg">
               Pronto para{' '}
