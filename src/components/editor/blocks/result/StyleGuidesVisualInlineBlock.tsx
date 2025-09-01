@@ -1,4 +1,5 @@
 import React from 'react';
+import { safeStylePlaceholder } from '@/utils/placeholder';
 import { cn } from '@/lib/utils';
 import type { BlockComponentProps } from '@/types/blocks';
 import { Progress } from '@/components/ui/progress';
@@ -82,7 +83,7 @@ const StyleGuidesVisualInlineBlock: React.FC<BlockComponentProps> = ({
   // Process secondary styles for thumbnails
   const secondaryThumbnails = Array.isArray(secondaryStyles)
     ? secondaryStyles.slice(0, 2).map((style: any) => ({
-        src: style.guideImage || `https://via.placeholder.com/80x120?text=${style.category}`,
+  src: style.guideImage || safeStylePlaceholder(style.category, 80, 120),
         alt: `Guia de Estilo ${style.category}`,
         category: style.category,
       }))

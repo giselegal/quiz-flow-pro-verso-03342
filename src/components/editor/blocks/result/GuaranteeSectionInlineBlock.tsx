@@ -137,7 +137,8 @@ const GuaranteeSectionInlineBlock: React.FC<BlockComponentProps> = ({
                 <img
                   src={
                     sealImage ||
-                    `https://via.placeholder.com/200x200/${accentColor.slice(1)}/ffffff?text=GARANTIA+${guaranteeDays}+DIAS`
+                    // Data URI local para evitar DNS externo
+                    undefined
                   }
                   alt={`Garantia de ${guaranteeDays} dias`}
                   className="w-48 h-48 object-contain"

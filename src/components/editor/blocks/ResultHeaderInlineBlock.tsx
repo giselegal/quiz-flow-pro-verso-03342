@@ -7,6 +7,7 @@ import { useQuizResult } from '@/hooks/useQuizResult';
 import { cn } from '@/lib/utils';
 import { StorageService } from '@/services/core/StorageService';
 import { getStyleConfig } from '@/config/styleConfig';
+import { safePlaceholder, safeStylePlaceholder } from '@/utils/placeholder';
 
 const interpolate = (text: string, vars: Record<string, any>) => {
   if (!text) return '';
@@ -51,8 +52,8 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
     subtitle = '',
     percentage: percentageProp,
     description = 'Descubra como aplicar seu estilo pessoal único na prática...',
-    imageUrl: rawImageUrl = 'https://via.placeholder.com/238x320?text=Estilo',
-    guideImageUrl: rawGuideImageUrl = 'https://via.placeholder.com/540x300?text=Guia+de+Estilo',
+  imageUrl: rawImageUrl,
+  guideImageUrl: rawGuideImageUrl,
     styleGuideImageUrl: rawStyleGuideImageUrl,
     showBothImages = true,
     imageWidth,
@@ -86,8 +87,8 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
   
   // Defaults vindos do styleConfig, quando props do bloco estiverem ausentes
   const styleInfo = getStyleConfig(styleKey || styleLabel) || {};
-  const effectiveImageUrl = imageUrl || (styleInfo as any)?.image || 'https://via.placeholder.com/238x320?text=Estilo';
-  const effectiveGuideImageUrl = guideImageUrl || (styleInfo as any)?.guideImage || 'https://via.placeholder.com/540x300?text=Guia+de+Estilo';
+  const effectiveImageUrl = imageUrl || (styleInfo as any)?.image || safeStylePlaceholder(styleLabel, 238, 320);
+  const effectiveGuideImageUrl = guideImageUrl || (styleInfo as any)?.guideImage || safePlaceholder(540, 300, 'Guia de Estilo');
   const effectiveDescription = (block?.properties?.description && String(block.properties.description).trim().length > 0)
     ? description
     : ((styleInfo as any)?.description || description || 'Descrição não disponível');
@@ -184,14 +185,20 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
           </div>
           <div className="max-w-xs sm:max-w-sm mx-auto relative">
             <img
-              src={imageError ? 'https://via.placeholder.com/238x320?text=Imagem+indisponível' : effectiveImageUrl}
+              src={imageError ? safePlaceholder(238, 320, 'Imagem indisponível') : effectiveImageUrl}
               alt="Estilo"
               className="w-full h-auto rounded-lg shadow-md hover:scale-105 transition-transform duration-300 cursor-pointer"
               onClick={() => {
                 const newUrl = prompt('Nova URL da imagem:', effectiveImageUrl);
                 if (newUrl !== null) handlePropertyChange('imageUrl', newUrl);
               }}
-              onError={() => setImageError(true)}
+              onError={(e) => {
+                if (!imageError) {
+                  setImageError(true);
+                  // como fallback extra, troca o src diretamente
+                  try { (e.currentTarget as HTMLImageElement).src = safePlaceholder(238, 320, 'Imagem indisponível'); } catch {}
+                }
+              }}
               style={{
                 ...(imageWidth ? { maxWidth: typeof imageWidth === 'number' ? `${imageWidth}px` : imageWidth } : {}),
                 ...(imageHeight ? { maxHeight: typeof imageHeight === 'number' ? `${imageHeight}px` : imageHeight } : {}),
@@ -205,14 +212,19 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
         {showBothImages && (
           <div className="mt-8 max-w-lg mx-auto relative">
             <img
-              src={guideImageError ? 'https://via.placeholder.com/540x300?text=Guia+indisponível' : effectiveGuideImageUrl}
+              src={guideImageError ? safePlaceholder(540, 300, 'Guia indisponível') : effectiveGuideImageUrl}
               alt="Guia de Estilo"
               className="w-full h-auto rounded-lg shadow-md hover:scale-105 transition-transform duration-300 cursor-pointer"
               onClick={() => {
                 const newUrl = prompt('Nova URL da imagem do guia:', effectiveGuideImageUrl);
                 if (newUrl !== null) handlePropertyChange('guideImageUrl', newUrl);
               }}
-              onError={() => setGuideImageError(true)}
+              onError={(e) => {
+                if (!guideImageError) {
+                  setGuideImageError(true);
+                  try { (e.currentTarget as HTMLImageElement).src = safePlaceholder(540, 300, 'Guia indisponível'); } catch {}
+                }
+              }}
             />
             {/* Badge */}
             <div
