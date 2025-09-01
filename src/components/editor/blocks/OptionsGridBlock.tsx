@@ -342,8 +342,8 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
 
       setPreviewSelections(newSelections);
 
-  // Persistir seleções para validação centralizada e pontuação
-  persistSelections(newSelections);
+      // Persistir seleções para validação centralizada e pontuação
+      persistSelections(newSelections);
 
       // Propagar para host (produção/quiz) se disponível
       externalOnOptionSelect?.(optionId);
@@ -475,8 +475,8 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
         onPropertyChange?.('selectedOption', optionId);
       }
 
-  // Persistir seleções também fora do preview (produção/editor)
-  persistSelections(newSelections);
+      // Persistir seleções também fora do preview (produção/editor)
+      persistSelections(newSelections);
 
       // Propagar para host (ex.: produção usando mesmo componente via registry)
       externalOnOptionSelect?.(optionId);

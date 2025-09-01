@@ -275,6 +275,22 @@ export const userResponseService = {
             ''
           );
         }
+        // Fallback adicional: salvar-resposta-por-etapa
+        const stepStored = readLocal<any>(`quiz_step_${componentId}`);
+        if (stepStored) {
+          const d = stepStored;
+          return (
+            d?.name || d?.value || (typeof d === 'string' ? d : JSON.stringify(d)) || ''
+          );
+        }
+        // Fallback final para campos de nome
+        if (componentId.includes('name')) {
+          return (
+            StorageService.safeGetString('userName') ||
+            StorageService.safeGetString('quizUserName') ||
+            ''
+          );
+        }
         return '';
       }
       // Primeiro tentar buscar pela session_id ativa e question_id (componentId mapeia para question_id)
@@ -314,6 +330,24 @@ export const userResponseService = {
           ''
         );
       }
+      // Fallback adicional: resposta simples por etapa
+      const stepStored = StorageService.safeGetJSON<any>(`quiz_step_${componentId}`);
+      if (stepStored) {
+        return (
+          stepStored?.name ??
+          stepStored?.value ??
+          (typeof stepStored === 'string' ? stepStored : JSON.stringify(stepStored)) ??
+          ''
+        );
+      }
+      // Fallback final para campos de nome
+      if (componentId.includes('name')) {
+        return (
+          StorageService.safeGetString('userName') ||
+          StorageService.safeGetString('quizUserName') ||
+          ''
+        );
+      }
       return '';
     } catch (error) {
       console.error('❌ Failed to get response:', error);
@@ -325,6 +359,22 @@ export const userResponseService = {
           data?.name ??
           data?.value ??
           (typeof data === 'string' ? data : JSON.stringify(data)) ??
+          ''
+        );
+      }
+      const stepStored = StorageService.safeGetJSON<any>(`quiz_step_${componentId}`);
+      if (stepStored) {
+        return (
+          stepStored?.name ??
+          stepStored?.value ??
+          (typeof stepStored === 'string' ? stepStored : JSON.stringify(stepStored)) ??
+          ''
+        );
+      }
+      if (componentId.includes('name')) {
+        return (
+          StorageService.safeGetString('userName') ||
+          StorageService.safeGetString('quizUserName') ||
           ''
         );
       }
