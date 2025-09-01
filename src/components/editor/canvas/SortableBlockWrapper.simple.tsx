@@ -23,7 +23,7 @@ const SortableBlockWrapperBase: React.FC<SortableBlockWrapperProps> = ({
   block,
   isSelected,
   onSelect,
-  onUpdate,
+  onUpdate: _onUpdate,
   onDelete,
   scopeId,
 }) => {
@@ -62,15 +62,12 @@ const SortableBlockWrapperBase: React.FC<SortableBlockWrapperProps> = ({
     setSortableRef(node);
   };
 
+  // Style configuration for draggable element
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : 1,
     zIndex: isDragging ? 50 : 'auto',
-  };
-
-  const handlePropertyChange = (key: string, value: any) => {
-    onUpdate({ [key]: value });
   };
 
   // Fallback se componente não for encontrado

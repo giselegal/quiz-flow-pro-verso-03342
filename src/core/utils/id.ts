@@ -1,5 +1,5 @@
 // Core ID utilities: centraliza geração/validação de UUID para todo o app
-import { generateUuid as gen } from '@/types/unified-schema';
+import { generateId as gen } from '@/types/unified-schema';
 
 export const isUUID = (value: string | null | undefined): value is string => {
     if (!value) return false;

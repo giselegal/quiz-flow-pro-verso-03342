@@ -86,11 +86,11 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
   
   // Defaults vindos do styleConfig, quando props do bloco estiverem ausentes
   const styleInfo = getStyleConfig(styleKey || styleLabel) || {};
-  const effectiveImageUrl = imageUrl || styleInfo?.image || 'https://via.placeholder.com/238x320?text=Estilo';
-  const effectiveGuideImageUrl = guideImageUrl || styleInfo?.guideImage || 'https://via.placeholder.com/540x300?text=Guia+de+Estilo';
+  const effectiveImageUrl = imageUrl || (styleInfo as any)?.image || 'https://via.placeholder.com/238x320?text=Estilo';
+  const effectiveGuideImageUrl = guideImageUrl || (styleInfo as any)?.guideImage || 'https://via.placeholder.com/540x300?text=Guia+de+Estilo';
   const effectiveDescription = (block?.properties?.description && String(block.properties.description).trim().length > 0)
     ? description
-    : (styleInfo?.description || description || 'Descrição não disponível');
+    : ((styleInfo as any)?.description || description || 'Descrição não disponível');
   
   const handlePropertyChange = (key: string, value: any) => {
     if (onPropertyChange) {

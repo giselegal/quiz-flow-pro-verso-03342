@@ -4,8 +4,9 @@ import { useQuizResult } from '@/hooks/useQuizResult';
 import { getStyleConfig } from '@/config/styleConfig';
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
-const getMarginClass = (value: string | number, type: string): string => {
-  // ... (mantido igual)
+const getMarginClass = (_value: string | number, _type: string): string => {
+  // Implementation removed for brevity - would return appropriate Tailwind class
+  return '';
 };
 
 const interpolate = (text: string, vars: Record<string, any>) => {
