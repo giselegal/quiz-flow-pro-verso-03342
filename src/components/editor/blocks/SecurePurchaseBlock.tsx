@@ -91,6 +91,15 @@ const SecurePurchaseBlock: React.FC<SecurePurchaseBlockProps & { block?: any }> 
               src="https://static.hotmart.com/img/hotmart-logo.png"
               alt="Hotmart"
               className="h-3 sm:h-4 opacity-70"
+              crossOrigin="anonymous"
+              onError={(e) => {
+                // Fallback to text if image fails to load
+                (e.target as HTMLImageElement).style.display = 'none';
+                const fallback = document.createElement('span');
+                fallback.textContent = 'Hotmart';
+                fallback.className = 'font-semibold';
+                (e.target as HTMLImageElement).parentNode?.appendChild(fallback);
+              }}
             />
             <div className="hidden sm:block">•</div>
             <span>Ambiente seguro</span>

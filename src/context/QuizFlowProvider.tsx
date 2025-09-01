@@ -140,6 +140,10 @@ export const QuizFlowProvider: React.FC<QuizFlowProviderProps> = ({
 
     const handleNavigateTo = (e: Event) => {
       const detail = (e as CustomEvent).detail || {};
+      // Prevent infinite loop by ignoring events from this provider
+      if (detail.source === 'quiz-flow-provider') {
+        return;
+      }
       let step: number | null = null;
       if (typeof detail.step === 'number') step = detail.step;
       else if (typeof detail.stepId === 'string') {
