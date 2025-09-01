@@ -3,6 +3,7 @@ import { TextCursorInput } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { userResponseService } from '../../../services/userResponseService';
 import { StorageService } from '@/services/core/StorageService';
+import { unifiedQuizStorage } from '@/services/core/UnifiedQuizStorage';
 
 interface FormInputBlockProps extends BlockComponentProps {
   funnelId?: string;
@@ -210,6 +211,8 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
           try {
             StorageService.safeSetString('userName', newValue.trim());
             StorageService.safeSetString('quizUserName', newValue.trim());
+            // Armazenamento unificado (formData)
+            unifiedQuizStorage.updateFormData('userName', newValue.trim());
           } catch { }
 
           // Evento global para recursos que personalizam textos em tempo real
