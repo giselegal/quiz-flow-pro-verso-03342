@@ -24,7 +24,8 @@ export function validateStep(step: number, stepBlocks?: RawStepBlocks | null): V
     if (step === 1) {
         const answers = StorageService.safeGetJSON<Record<string, any>>('quizAnswers') || {};
         const storedName = (answers.userName || StorageService.safeGetString('userName') || StorageService.safeGetString('quizUserName') || '').trim();
-        const ok = storedName.length >= 2;
+        // Aceitar qualquer nome não vazio (1+ caractere após trim)
+        const ok = storedName.length >= 1;
         return ok ? { valid: true } : { valid: false, reason: 'Nome do usuário ausente (step 1)' };
     }
 

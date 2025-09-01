@@ -280,6 +280,8 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
 
         <input
           type={inputType}
+          name={name}
+          id={String(block?.id || name)}
           placeholder={placeholder}
           value={value}
           onChange={e => handleInputChange(e.target.value)}

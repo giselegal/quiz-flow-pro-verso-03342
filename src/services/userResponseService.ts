@@ -303,14 +303,32 @@ export const userResponseService = {
         }
       }
 
-      // Fallback to localStorage
+      // Fallback para armazenamento local: garantir retorno como string
       const stored = StorageService.safeGetJSON<any>(`quiz_response_${componentId}`);
-      return stored ? stored.data : '';
+      if (stored) {
+        const data = stored.data ?? stored;
+        return (
+          data?.name ??
+          data?.value ??
+          (typeof data === 'string' ? data : JSON.stringify(data)) ??
+          ''
+        );
+      }
+      return '';
     } catch (error) {
       console.error('❌ Failed to get response:', error);
       // Fallback
       const stored = StorageService.safeGetJSON<any>(`quiz_response_${componentId}`);
-      return stored ? stored.data : '';
+      if (stored) {
+        const data = stored.data ?? stored;
+        return (
+          data?.name ??
+          data?.value ??
+          (typeof data === 'string' ? data : JSON.stringify(data)) ??
+          ''
+        );
+      }
+      return '';
     }
   },
 
