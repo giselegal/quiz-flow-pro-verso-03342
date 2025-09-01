@@ -2,6 +2,7 @@ import type { BlockComponentProps } from '@/types/blocks';
 import { TextCursorInput } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { userResponseService } from '../../../services/userResponseService';
+import { StorageService } from '@/services/core/StorageService';
 
 interface FormInputBlockProps extends BlockComponentProps {
   funnelId?: string;
@@ -204,6 +205,21 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
 
           // Also save locally as fallback
           userResponseService.saveUserName(sessionId, newValue.trim());
+
+          // Persistência imediata para consumo por todo o app (compatibilidade)
+          try {
+            StorageService.safeSetString('userName', newValue.trim());
+            StorageService.safeSetString('quizUserName', newValue.trim());
+          } catch { }
+
+          // Evento global para recursos que personalizam textos em tempo real
+          try {
+            window.dispatchEvent(
+              new CustomEvent('quiz-user-name-updated', {
+                detail: { userName: newValue.trim(), source: 'FormInputBlock' },
+              })
+            );
+          } catch { }
         }
 
         console.log('📝 [FormInputBlock] Input change processed:', {
