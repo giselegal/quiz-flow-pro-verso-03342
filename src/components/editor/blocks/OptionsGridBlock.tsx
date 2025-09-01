@@ -3,6 +3,8 @@ import React from 'react';
 import useOptimizedScheduler from '@/hooks/useOptimizedScheduler';
 import { computeSelectionValidity, getEffectiveRequiredSelections, isScoringPhase } from '@/lib/quiz/selectionRules';
 import { useEditorOptional } from '../EditorProvider';
+import { unifiedQuizStorage } from '@/services/core/UnifiedQuizStorage';
+import { StorageService } from '@/services/core/StorageService';
 
 interface Option {
   id: string;
@@ -210,6 +212,25 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
   const [previewSelections, setPreviewSelections] = React.useState<string[]>([]);
   const previewAutoAdvanceRef = React.useRef(false);
 
+  // Persistência unificada das seleções (compatível com validação centralizada)
+  const persistSelections = React.useCallback((selections: string[]) => {
+    try {
+      const questionId = (block?.properties as any)?.questionId || block?.id;
+      if (!questionId) return;
+
+      // 1) Fonte de verdade unificada
+      unifiedQuizStorage.updateSelections(String(questionId), selections);
+
+      // 2) Espelho legado (usado por validateStep)
+      const current =
+        (StorageService.safeGetJSON<Record<string, string[]>>('userSelections') || {});
+      const next = { ...current, [String(questionId)]: selections };
+      StorageService.safeSetJSON('userSelections', next);
+    } catch {
+      // silencioso
+    }
+  }, [block?.id, (block?.properties as any)?.questionId]);
+
   React.useEffect(() => {
     // Initialize from session data in preview mode
     if (isPreviewMode && sessionDataObj) {
@@ -320,6 +341,9 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       }
 
       setPreviewSelections(newSelections);
+
+  // Persistir seleções para validação centralizada e pontuação
+  persistSelections(newSelections);
 
       // Propagar para host (produção/quiz) se disponível
       externalOnOptionSelect?.(optionId);
@@ -450,6 +474,9 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
         newSelections = [optionId];
         onPropertyChange?.('selectedOption', optionId);
       }
+
+  // Persistir seleções também fora do preview (produção/editor)
+  persistSelections(newSelections);
 
       // Propagar para host (ex.: produção usando mesmo componente via registry)
       externalOnOptionSelect?.(optionId);
