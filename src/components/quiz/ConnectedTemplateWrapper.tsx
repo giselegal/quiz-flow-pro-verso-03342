@@ -66,19 +66,24 @@ export const ConnectedTemplateWrapper: React.FC<ConnectedTemplateWrapperProps> =
   // ✅ HANDLER: Respostas às questões (Etapas 2-11)
   const handleQuestionAnswer = useCallback(
     (event: CustomEvent) => {
-      const { selectedOptions, isValid } = event.detail;
+      const { selectedOptions, selectedIds, isValid } = event.detail;
+      const opts: string[] = Array.isArray(selectedOptions)
+        ? selectedOptions
+        : Array.isArray(selectedIds)
+        ? selectedIds
+        : [];
 
-      if (stepType === 'question' && stepNumber >= 2 && stepNumber <= 11 && isValid) {
+      if (stepType === 'question' && stepNumber >= 2 && stepNumber <= 11 && isValid && opts.length) {
         console.log('📊 ConnectedTemplateWrapper: Processando respostas', {
           stepNumber,
-          selectedOptions,
+          selectedOptions: opts,
         });
 
         // Mapear step number para question ID
         const questionId = `q${stepNumber - 1}`; // Step 2 = q1, Step 3 = q2, etc.
 
         // Processar cada opção selecionada
-        selectedOptions.forEach((optionId: string) => {
+  opts.forEach((optionId: string) => {
           console.log('✅ Registrando resposta:', { questionId, optionId });
           quizLogic.answerQuestion(questionId, optionId);
 
@@ -100,19 +105,24 @@ export const ConnectedTemplateWrapper: React.FC<ConnectedTemplateWrapperProps> =
   // ✅ HANDLER: Questões estratégicas (Etapas 12-18)
   const handleStrategicAnswer = useCallback(
     (event: CustomEvent) => {
-      const { selectedOptions, isValid } = event.detail;
+      const { selectedOptions, selectedIds, isValid } = event.detail;
+      const opts: string[] = Array.isArray(selectedOptions)
+        ? selectedOptions
+        : Array.isArray(selectedIds)
+        ? selectedIds
+        : [];
 
-      if (stepType === 'strategic' && stepNumber >= 12 && stepNumber <= 18 && isValid) {
+      if (stepType === 'strategic' && stepNumber >= 12 && stepNumber <= 18 && isValid && opts.length) {
         console.log('🎯 ConnectedTemplateWrapper: Processando resposta estratégica', {
           stepNumber,
-          selectedOptions,
+          selectedOptions: opts,
         });
 
         // Mapear step number para strategic question ID
         const questionId = `strategic-q${stepNumber - 11}`; // Step 12 = strategic-q1, etc.
 
         // Processar respostas estratégicas
-        selectedOptions.forEach((optionId: string) => {
+  opts.forEach((optionId: string) => {
           quizLogic.answerStrategicQuestion(
             questionId,
             optionId,
@@ -127,7 +137,7 @@ export const ConnectedTemplateWrapper: React.FC<ConnectedTemplateWrapperProps> =
 
   // ✅ HANDLER: Cálculo de resultados (Etapas 19-21)
   const handleResultCalculation = useCallback(() => {
-    if (stepType === 'result' && stepNumber >= 19) {
+    if (stepType === 'result' && stepNumber >= 19 && !quizLogic.quizCompleted) {
       console.log('🏆 ConnectedTemplateWrapper: Calculando resultados finais');
 
       // Completar quiz e calcular scores
