@@ -17,7 +17,21 @@ export const useQuizResult = () => {
       } else {
         // Se não houver resultado salvo, tentar calcular
         console.log('Nenhum resultado encontrado, tentando calcular...');
-        calculateAndSaveQuizResult();
+        // Calcular e, quando pronto, atualizar estado imediatamente e notificar listeners
+        Promise.resolve(calculateAndSaveQuizResult())
+          .then(result => {
+            if (result) {
+              try {
+                setPrimaryStyle(result.primaryStyle ?? null);
+                setSecondaryStyles(result.secondaryStyles || []);
+              } catch {}
+              // Emite evento para outros consumidores que dependem de eventos
+              try { window.dispatchEvent(new Event('quiz-result-updated')); } catch {}
+            }
+          })
+          .catch(err => {
+            console.error('Erro ao calcular resultado do quiz:', err);
+          });
       }
     } catch (error) {
       console.error('Error loading quiz result:', error);
