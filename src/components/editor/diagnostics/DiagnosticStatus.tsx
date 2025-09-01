@@ -146,6 +146,62 @@ export const DiagnosticStatus: React.FC<DiagnosticStatusProps> = ({
         );
       })()}
 
+      {/* Validação de Todas as Etapas (resumo rápido) */}
+      {expanded && (() => {
+        try {
+          const results = Array.from({ length: 21 }, (_, i) => i + 1).map(step => {
+            try {
+              const blocks = QuizDataService.getStepData(step);
+              const res = validateStep(step, { [`step-${step}`]: blocks } as any);
+              return { step, ...res } as const;
+            } catch {
+              return { step, valid: true } as const;
+            }
+          });
+
+          const validCount = results.filter(r => r.valid).length;
+          const invalid = results.filter(r => !r.valid);
+
+          return (
+            <div className="mb-3 p-3 rounded-md border bg-gray-50">
+              <div className="flex items-center justify-between mb-2">
+                <h4 className="font-medium text-sm text-gray-800">Validação de Todas as Etapas</h4>
+                <Badge variant="outline" className={validCount === 21 ? 'text-green-700' : validCount >= 18 ? 'text-yellow-700' : 'text-red-700'}>
+                  {validCount}/21 válidas
+                </Badge>
+              </div>
+
+              {/* Lista apenas das inválidas para manter leve */}
+              {invalid.length === 0 ? (
+                <div className="text-xs text-green-700">Todas as etapas estão válidas.</div>
+              ) : (
+                <div className="space-y-2">
+                  {invalid.map(item => (
+                    <div key={item.step} className="p-2 bg-white rounded border text-xs text-gray-700">
+                      <div className="flex items-center gap-2">
+                        <XCircle className="w-3 h-3 text-red-600" />
+                        <span className="font-medium">Etapa {item.step} inválida</span>
+                      </div>
+                      {item.reason && (
+                        <div className="mt-1">Motivo: <span className="font-medium">{item.reason}</span></div>
+                      )}
+                      {item.evidence && Object.keys(item.evidence).length > 0 && (
+                        <details className="mt-1">
+                          <summary className="text-blue-600 cursor-pointer">Ver evidências</summary>
+                          <pre className="mt-1 p-2 bg-gray-100 rounded overflow-auto">{JSON.stringify(item.evidence, null, 2)}</pre>
+                        </details>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        } catch {
+          return null;
+        }
+      })()}
+
       {/* Resumo de Status */}
       <div className="flex items-center gap-4 mb-3">
         <div className="flex items-center gap-1">

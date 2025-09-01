@@ -1,6 +1,7 @@
 // Real Supabase User Response Service (com modo offline)
 import { supabase } from '@/integrations/supabase/client';
 import { sessionService } from '@/services/sessionService';
+import { StorageService } from '@/services/core/StorageService';
 
 const OFFLINE = import.meta.env.VITE_DISABLE_SUPABASE === 'true';
 const isBrowser = typeof window !== 'undefined';
@@ -15,19 +16,13 @@ function isValidUUID(value: string | null | undefined): value is string {
 
 function saveLocal<T>(key: string, value: T) {
   if (!isBrowser) return;
-  try {
-    localStorage.setItem(key, JSON.stringify(value));
-  } catch {}
+  // Usa StorageService para lidar com quota e fallback para sessionStorage
+  StorageService.safeSetJSON(key, value);
 }
 
 function readLocal<T = any>(key: string): T | null {
   if (!isBrowser) return null;
-  try {
-    const v = localStorage.getItem(key);
-    return v ? (JSON.parse(v) as T) : null;
-  } catch {
-    return null;
-  }
+  return StorageService.safeGetJSON<T>(key);
 }
 
 export interface UserResponse {
@@ -53,10 +48,10 @@ export const userResponseService = {
   enqueuePending(response: any) {
     if (!isBrowser) return;
     try {
-      const arr = JSON.parse(localStorage.getItem('quiz_pending_responses') || '[]');
+      const arr = StorageService.safeGetJSON<any[]>('quiz_pending_responses') || [];
       arr.push(response);
-      localStorage.setItem('quiz_pending_responses', JSON.stringify(arr));
-    } catch {}
+      StorageService.safeSetJSON('quiz_pending_responses', arr);
+    } catch { }
   },
 
   async flushPending(): Promise<{ success: boolean; sent: number; remaining: number }> {
@@ -70,7 +65,7 @@ export const userResponseService = {
           .length,
       };
 
-    const pending: any[] = JSON.parse(localStorage.getItem('quiz_pending_responses') || '[]');
+    const pending: any[] = StorageService.safeGetJSON<any[]>('quiz_pending_responses') || [];
     if (!pending.length) return { success: true, sent: 0, remaining: 0 };
 
     let sent = 0;
@@ -83,7 +78,7 @@ export const userResponseService = {
         remaining.push(item);
       }
     }
-    localStorage.setItem('quiz_pending_responses', JSON.stringify(remaining));
+    StorageService.safeSetJSON('quiz_pending_responses', remaining);
     return { success: remaining.length === 0, sent, remaining: remaining.length };
   },
   async createQuizUser(userData: {
@@ -179,15 +174,12 @@ export const userResponseService = {
         const componentKey =
           (response.data && (response.data.componentId || response.data.fieldName)) || undefined;
         if (componentKey) {
-          localStorage.setItem(`quiz_response_${componentKey}`, JSON.stringify(fallbackResponse));
+          StorageService.safeSetJSON(`quiz_response_${componentKey}`, fallbackResponse);
         }
-        localStorage.setItem(
-          `quiz_response_${fallbackResponse.id}`,
-          JSON.stringify(fallbackResponse)
-        );
+        StorageService.safeSetJSON(`quiz_response_${fallbackResponse.id}`, fallbackResponse);
         // Enfileirar para tentar enviar quando obtivermos uma sessão UUID
         this.enqueuePending(response);
-      } catch {}
+      } catch { }
       return fallbackResponse;
     }
     try {
@@ -255,16 +247,16 @@ export const userResponseService = {
       };
       // Salvar indexado pelo id gerado (debug) e pelo componentId/fieldName para leitura por getResponse
       try {
-        localStorage.setItem(
+        StorageService.safeSetJSON(
           `quiz_response_${fallbackResponse.id}`,
-          JSON.stringify(fallbackResponse)
+          fallbackResponse
         );
         const componentKey =
           (response.data && (response.data.componentId || response.data.fieldName)) || undefined;
         if (componentKey) {
-          localStorage.setItem(`quiz_response_${componentKey}`, JSON.stringify(fallbackResponse));
+          StorageService.safeSetJSON(`quiz_response_${componentKey}`, fallbackResponse);
         }
-      } catch {}
+      } catch { }
       console.log('📦 Saved response to localStorage as fallback');
       return fallbackResponse;
     }
@@ -312,13 +304,13 @@ export const userResponseService = {
       }
 
       // Fallback to localStorage
-      const stored = localStorage.getItem(`quiz_response_${componentId}`);
-      return stored ? JSON.parse(stored).data : '';
+      const stored = StorageService.safeGetJSON<any>(`quiz_response_${componentId}`);
+      return stored ? stored.data : '';
     } catch (error) {
       console.error('❌ Failed to get response:', error);
-      // Fallback to localStorage
-      const stored = localStorage.getItem(`quiz_response_${componentId}`);
-      return stored ? JSON.parse(stored).data : '';
+      // Fallback
+      const stored = StorageService.safeGetJSON<any>(`quiz_response_${componentId}`);
+      return stored ? stored.data : '';
     }
   },
 
@@ -329,14 +321,15 @@ export const userResponseService = {
         const out: UserResponse[] = [];
         if (!isBrowser) return out;
         Object.keys(localStorage)
+          .concat(Object.keys(sessionStorage))
           .filter(k => k.startsWith('quiz_response_'))
           .forEach(k => {
             try {
-              const val = JSON.parse(localStorage.getItem(k) || 'null');
+              const val = StorageService.safeGetJSON<any>(k);
               if (val && (val.sessionId === userId || val.userId === userId)) {
                 out.push(val);
               }
-            } catch {}
+            } catch { }
           });
         return out;
       }
@@ -370,12 +363,12 @@ export const userResponseService = {
 
   saveStepResponse(stepId: string, response: any): void {
     console.log('💾 Saving step response locally:', stepId, response);
-    localStorage.setItem(`quiz_step_${stepId}`, JSON.stringify(response));
+    StorageService.safeSetJSON(`quiz_step_${stepId}`, response);
   },
 
   saveUserName(userId: string, name: string): void {
     console.log('👤 Saving user name:', userId, name);
-    localStorage.setItem(`quiz_user_name_${userId}`, name);
+    StorageService.safeSetString(`quiz_user_name_${userId}`, name);
   },
 
   async deleteResponse(id: string): Promise<boolean> {
@@ -405,12 +398,12 @@ export default userResponseService;
 if (typeof window !== 'undefined') {
   window.addEventListener('quiz-session-started', () => {
     setTimeout(() => {
-      userResponseService.flushPending().catch(() => {});
+      userResponseService.flushPending().catch(() => { });
     }, 0);
   });
   window.addEventListener('online', () => {
     setTimeout(() => {
-      userResponseService.flushPending().catch(() => {});
+      userResponseService.flushPending().catch(() => { });
     }, 0);
   });
 }
