@@ -346,19 +346,19 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       stepsWithBlocks: [] as number[],
       stepsWithoutBlocks: [] as number[]
     };
-    
+
     for (let i = 1; i <= 21; i++) {
       const blocks = getBlocksForStep(i, state.stepBlocks) || [];
       const hasBlocks = blocks.length > 0;
       map[i] = hasBlocks;
-      
+
       if (hasBlocks) {
         diagnosticInfo.stepsWithBlocks.push(i);
       } else {
         diagnosticInfo.stepsWithoutBlocks.push(i);
       }
     }
-    
+
     if (process.env.NODE_ENV === 'development') {
       console.log('🔍 stepHasBlocks calculation:', {
         ...diagnosticInfo,
@@ -367,14 +367,14 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         mandatoryStepsEmpty: diagnosticInfo.stepsWithoutBlocks.filter(step => step <= 10), // First 10 should typically have content
         finalStepsEmpty: diagnosticInfo.stepsWithoutBlocks.filter(step => step >= 19) // Final steps (19-21)
       });
-      
+
       // Add to window for debugging
       window.__EDITOR_STEP_ANALYSIS__ = {
         ...diagnosticInfo,
         stepHasBlocksMap: map
       };
     }
-    
+
     return map;
   }, [state.stepBlocks]);
 
@@ -411,7 +411,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       // 🔍 INVESTIGAÇÃO #6: Enhanced event logging for race conditions
       const e = ev as CustomEvent<{ stepId?: string | number; source?: string }>;
       const target = parseStepNumber(e.detail?.stepId);
-      
+
       const eventInfo = {
         timestamp: new Date().toISOString(),
         eventType: ev.type,
@@ -423,20 +423,20 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         hasPayload: !!e.detail,
         payloadKeys: e.detail ? Object.keys(e.detail) : []
       };
-      
+
       if (process.env.NODE_ENV === 'development') {
         console.log('🔍 Navigation event received:', eventInfo);
       }
-      
+
       if (!target || target < 1 || target > 21) {
         console.warn('❌ INVESTIGAÇÃO #6: Invalid navigation target:', eventInfo);
-        
+
         // Add to window for debugging
         window.__EDITOR_INVALID_NAVIGATION__ = window.__EDITOR_INVALID_NAVIGATION__ || [];
         window.__EDITOR_INVALID_NAVIGATION__.push(eventInfo);
         return;
       }
-      
+
       // Check for potential race condition
       if (Math.abs(target - state.currentStep) > 1) {
         console.log('⚠️  INVESTIGAÇÃO #6: Potential rapid navigation:', {
@@ -445,9 +445,9 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
           isRapidNavigation: true
         });
       }
-      
+
       actions.setCurrentStep(target);
-      
+
       if (process.env.NODE_ENV === 'development') {
         // eslint-disable-next-line no-console
         console.log(
@@ -509,14 +509,14 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   // 🔍 INVESTIGAÇÃO #6: Enhanced escutar eventos globais com logging detalhado e race condition detection
   useEffect(() => {
     const handleInputChange = (ev: Event) => {
-      const e = ev as CustomEvent<{ 
-        value?: any; 
-        valid?: boolean; 
+      const e = ev as CustomEvent<{
+        value?: any;
+        valid?: boolean;
         questionId?: string;
         stepId?: number;
         source?: string;
       } | undefined>;
-      
+
       const eventData = {
         value: (e.detail as any)?.value,
         valid: (e.detail as any)?.valid,
@@ -526,11 +526,11 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         currentStep: state.currentStep,
         timestamp: new Date().toISOString()
       };
-      
+
       if (process.env.NODE_ENV === 'development') {
         console.log('🔊 INVESTIGAÇÃO #6: Input change event received:', eventData);
       }
-      
+
       // Detectar race conditions
       if (eventData.stepId && eventData.stepId !== state.currentStep) {
         console.warn('⚠️ RACE CONDITION DETECTED: Input event stepId differs from currentStep', {
@@ -539,19 +539,18 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
           questionId: eventData.questionId,
           source: eventData.source
         });
-        
+
         // Track para debugging
         if (typeof window !== 'undefined') {
           window.__EDITOR_RACE_CONDITIONS__ = window.__EDITOR_RACE_CONDITIONS__ || [];
           window.__EDITOR_RACE_CONDITIONS__.push({
             type: 'input-change',
-            timestamp: new Date(),
             ...eventData,
             raceCondition: true
           });
         }
       }
-      
+
       const val = eventData.value;
       const explicitValid = eventData.valid;
       const ok = typeof val === 'string' ? val.trim().length > 0 : (explicitValid ?? false);
@@ -559,15 +558,15 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
     };
 
     const handleSelectionChange = (ev: Event) => {
-      const e = ev as CustomEvent<{ 
-        valid?: boolean; 
+      const e = ev as CustomEvent<{
+        valid?: boolean;
         selectionCount?: number;
         questionId?: string;
         stepId?: number;
         selectedIds?: string[];
         source?: string;
       } | undefined>;
-      
+
       const eventData = {
         valid: (e.detail as any)?.valid,
         selectionCount: (e.detail as any)?.selectionCount,
@@ -578,11 +577,11 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         currentStep: state.currentStep,
         timestamp: new Date().toISOString()
       };
-      
+
       if (process.env.NODE_ENV === 'development') {
         console.log('🔊 INVESTIGAÇÃO #6: Selection change event received:', eventData);
       }
-      
+
       // Detectar race conditions
       if (eventData.stepId && eventData.stepId !== state.currentStep) {
         console.warn('⚠️ RACE CONDITION DETECTED: Selection event stepId differs from currentStep', {
@@ -591,19 +590,18 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
           questionId: eventData.questionId,
           source: eventData.source
         });
-        
+
         // Track para debugging
         if (typeof window !== 'undefined') {
           window.__EDITOR_RACE_CONDITIONS__ = window.__EDITOR_RACE_CONDITIONS__ || [];
           window.__EDITOR_RACE_CONDITIONS__.push({
             type: 'selection-change',
-            timestamp: new Date(),
             ...eventData,
             raceCondition: true
           });
         }
       }
-      
+
       const ok = eventData.valid ?? (eventData.selectionCount ?? 0) > 0;
       actions.setStepValid?.(state.currentStep, !!ok);
     };
@@ -676,25 +674,25 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               e.preventDefault();
               const results = run21StepDiagnostic();
               console.log('🔍 Manual Diagnostic Run:', results);
-              
+
               // Run enhanced diagnostics
               try {
                 const enhancedResults = await runCompleteDiagnostics();
                 console.log('🎯 Enhanced Diagnostics:', enhancedResults);
-                
+
                 // Show results in browser alert for quick inspection
                 const summary = `21-Step Editor Diagnostic
 Status: ${results.overallStatus.toUpperCase()}
 Issues: ${results.issues.length}
 Enhanced: ${enhancedResults.summary.success ? 'PASS' : 'FAIL'} (${enhancedResults.summary.data?.successRate?.toFixed(1)}%)
 ${results.issues.length > 0 ? '\nIssues:\n' + results.issues.join('\n') : '\nAll systems healthy!'}`;
-                
+
                 alert(summary);
               } catch (error) {
                 console.error('❌ Enhanced diagnostics failed:', error);
               }
             }
-            
+
             // Ctrl+Shift+R to reset diagnostics
             if (e.ctrlKey && e.shiftKey && e.key === 'R') {
               e.preventDefault();
@@ -710,7 +708,7 @@ ${results.issues.length > 0 ? '\nIssues:\n' + results.issues.join('\n') : '\nAll
           };
 
           window.addEventListener('keydown', handleKeyboardShortcut);
-          
+
           // Store cleanup function
           return () => {
             window.removeEventListener('keydown', handleKeyboardShortcut);

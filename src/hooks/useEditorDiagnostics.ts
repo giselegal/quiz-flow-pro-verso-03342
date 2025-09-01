@@ -3,7 +3,50 @@
  * Hook para monitorar e diagnosticar o editor em tempo real
  */
 
-import EditorDiagnostics, { DiagnosticResult } from '@/utils/EditorDiagnostics';
+import * as DiagnosticsModule from '@/utils/editorDiagnostics';
+type DiagnosticResult = {
+  success: boolean;
+  message: string;
+  data?: any;
+  timestamp: number;
+  status?: 'success' | 'warning' | 'error';
+  category?: string;
+  details?: any;
+};
+
+const EditorDiagnostics = {
+  runFullDiagnostic: async (): Promise<DiagnosticResult[]> => {
+    try {
+      const { summary, details } = await DiagnosticsModule.runCompleteDiagnostics();
+      const status: 'success' | 'warning' | 'error' = summary.success
+        ? 'success'
+        : 'error';
+      const mapped: DiagnosticResult = {
+        ...summary,
+        status,
+        category: 'Editor Health',
+        details,
+      };
+      return [mapped];
+    } catch (e: any) {
+      return [
+        {
+          success: false,
+          message: e?.message || String(e),
+          timestamp: Date.now(),
+          status: 'error',
+          category: 'Editor Health',
+        },
+      ];
+    }
+  },
+  applyAutomaticFixes: async (): Promise<DiagnosticResult[]> => [
+    { success: true, message: 'No auto-fixes available', timestamp: Date.now() },
+  ],
+  generateReport: (): string => {
+    try { return JSON.stringify((window as any).__EDITOR_DIAGNOSTICS__ || {}, null, 2); } catch { return '{}'; }
+  },
+};
 import { PerformanceOptimizer } from '@/utils/performanceOptimizer';
 import { useCallback, useEffect, useState } from 'react';
 

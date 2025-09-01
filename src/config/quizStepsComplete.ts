@@ -60,7 +60,7 @@ export function getBlocksForStep(step: number | string, stepBlocks?: RawStepBloc
     }
     
     if (Array.isArray(raw)) {
-      if (process.env.NODE_ENV === 'development' && step <= 3) { // Log first 3 steps for debugging
+  if (process.env.NODE_ENV === 'development' && typeof step === 'number' && step <= 3) { // Log first 3 steps for debugging
         console.log('🔍 getBlocksForStep SUCCESS:', {
           ...debugInfo,
           foundKey: key,

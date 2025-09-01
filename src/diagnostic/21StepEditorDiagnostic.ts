@@ -108,7 +108,7 @@ export function run21StepDiagnostic(): DiagnosticResults {
 
   // Store results for browser debugging
   if (typeof window !== 'undefined') {
-    window.__EDITOR_DIAGNOSTIC_RESULTS__ = results;
+  window.__EDITOR_DIAGNOSTIC_RESULTS__ = results;
   }
 
   return results;
@@ -177,7 +177,8 @@ function investigateCurrentStepIdentification(): DiagnosticResult {
     // Test step validation logic
     const testSteps = [-1, 0, 1, 11, 21, 22, 100, 'invalid', null, undefined];
     const validationResults = testSteps.map(step => {
-      const isValid = Number.isInteger(step) && step >= 1 && step <= 21;
+  const n = typeof step === 'number' ? step : (typeof step === 'string' ? parseInt(step, 10) : NaN);
+  const isValid = Number.isFinite(n) && n >= 1 && n <= 21;
       return { step, isValid, type: typeof step };
     });
 
@@ -306,7 +307,7 @@ function investigateStepCalculation(): DiagnosticResult {
       };
     }
 
-    const { stepsWithBlocks, stepsWithoutBlocks, stepHasBlocksMap } = stepAnalysis;
+  const { stepsWithBlocks, stepsWithoutBlocks } = stepAnalysis;
     
     // Check for missing mandatory steps (1-10 should typically have content)
     const mandatoryStepsEmpty = stepsWithoutBlocks.filter((step: number) => step <= 10);
