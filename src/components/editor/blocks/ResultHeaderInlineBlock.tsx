@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { InlineEditableText } from './InlineEditableText';
 import { Progress } from '@/components/ui/progress';
 import { Card } from '@/components/ui/card';
@@ -21,13 +22,30 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
   className = '',
 }) => {
   const { primaryStyle } = useQuizResult();
+  const [imageError, setImageError] = useState(false);
+  const [guideImageError, setGuideImageError] = useState(false);
+  
+  // Adicione logs para depuração
+  console.log('primaryStyle:', primaryStyle);
+  
+  // Verifique se primaryStyle está definido
+  if (!primaryStyle) {
+    return (
+      <div className="p-4 text-center">
+        <p>Carregando resultado...</p>
+        <p>Se isso persistir, verifique se as respostas foram salvas corretamente.</p>
+      </div>
+    );
+  }
+  
   // Capturar nome de forma robusta
   const storedName =
     StorageService.safeGetString('userName') ||
     StorageService.safeGetString('quizUserName') ||
     (typeof window !== 'undefined' ? (window as any).__quizUserName : '') ||
-    '';
-
+    (block as any)?.properties?.userName ||
+    'Visitante'; // Fallback explícito
+    
   const {
     title = 'Seu Estilo Predominante',
     subtitle = '',
@@ -44,19 +62,20 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
     backgroundColor,
     textAlign = 'center',
   } = block?.properties || {};
-
+  
   // Compatibilidade: aceitar styleGuideImageUrl do template
   const guideImageUrl = rawStyleGuideImageUrl || rawGuideImageUrl;
   const imageUrl = rawImageUrl;
-
+  
   // Normalizar nome do estilo para exibição (preferir category legível)
   const styleKey = (primaryStyle as any)?.style || (primaryStyle as any)?.category || '';
   const styleLabel = (primaryStyle as any)?.category || styleKey || 'Estilo';
+  
   const vars = {
-    userName: storedName || (block as any)?.properties?.userName || '',
+    userName: storedName,
     resultStyle: styleLabel,
   };
-
+  
   // Percentual exibido: usa o calculado (primaryStyle.percentage) se não houver override explícito na prop
   const computedPercentage =
     typeof percentageProp === 'number' && !Number.isNaN(percentageProp)
@@ -64,23 +83,23 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
       : (typeof (primaryStyle as any)?.percentage === 'number'
         ? (primaryStyle as any).percentage
         : 0);
-
+  
   // Defaults vindos do styleConfig, quando props do bloco estiverem ausentes
-  const styleInfo = getStyleConfig(styleKey || styleLabel);
+  const styleInfo = getStyleConfig(styleKey || styleLabel) || {};
   const effectiveImageUrl = imageUrl || styleInfo?.image || 'https://via.placeholder.com/238x320?text=Estilo';
   const effectiveGuideImageUrl = guideImageUrl || styleInfo?.guideImage || 'https://via.placeholder.com/540x300?text=Guia+de+Estilo';
   const effectiveDescription = (block?.properties?.description && String(block.properties.description).trim().length > 0)
     ? description
-    : (styleInfo?.description || description);
-
+    : (styleInfo?.description || description || 'Descrição não disponível');
+  
   const handlePropertyChange = (key: string, value: any) => {
     if (onPropertyChange) {
       onPropertyChange(key, value);
     }
   };
-
+  
   const alignClass = textAlign === 'left' ? 'text-left' : textAlign === 'right' ? 'text-right' : 'text-center';
-
+  
   return (
     <div
       className={cn(
@@ -94,7 +113,6 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
     >
       <Card
         className={cn('p-6 shadow-md border border-[#B89B7A]/20', alignClass)}
-        // Permite sobrepor o fundo do card se desejado
         style={{ backgroundColor: backgroundColor ? backgroundColor : undefined }}
       >
         <div className={cn('mb-8', alignClass)}>
@@ -140,7 +158,6 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
               } as React.CSSProperties}
             />
           </div>
-
           {/* Subtítulo opcional com variáveis interpoladas */}
           {subtitle && (
             <div className={cn('mt-2 text-[#432818] font-semibold', alignClass)}>
@@ -153,7 +170,6 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
             </div>
           )}
         </div>
-
         <div className="grid md:grid-cols-2 gap-8 items-center">
           <div className="space-y-4">
             <p className="text-[#432818] leading-relaxed">
@@ -166,16 +182,16 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
               />
             </p>
           </div>
-
           <div className="max-w-xs sm:max-w-sm mx-auto relative">
             <img
-              src={effectiveImageUrl}
+              src={imageError ? 'https://via.placeholder.com/238x320?text=Imagem+indisponível' : effectiveImageUrl}
               alt="Estilo"
               className="w-full h-auto rounded-lg shadow-md hover:scale-105 transition-transform duration-300 cursor-pointer"
               onClick={() => {
                 const newUrl = prompt('Nova URL da imagem:', effectiveImageUrl);
                 if (newUrl !== null) handlePropertyChange('imageUrl', newUrl);
               }}
+              onError={() => setImageError(true)}
               style={{
                 ...(imageWidth ? { maxWidth: typeof imageWidth === 'number' ? `${imageWidth}px` : imageWidth } : {}),
                 ...(imageHeight ? { maxHeight: typeof imageHeight === 'number' ? `${imageHeight}px` : imageHeight } : {}),
@@ -186,19 +202,18 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
             <div className="absolute -bottom-2 -left-2 w-8 h-8 border-b-2 border-l-2 border-[#B89B7A]"></div>
           </div>
         </div>
-
         {showBothImages && (
           <div className="mt-8 max-w-lg mx-auto relative">
             <img
-              src={effectiveGuideImageUrl}
+              src={guideImageError ? 'https://via.placeholder.com/540x300?text=Guia+indisponível' : effectiveGuideImageUrl}
               alt="Guia de Estilo"
               className="w-full h-auto rounded-lg shadow-md hover:scale-105 transition-transform duration-300 cursor-pointer"
               onClick={() => {
                 const newUrl = prompt('Nova URL da imagem do guia:', effectiveGuideImageUrl);
                 if (newUrl !== null) handlePropertyChange('guideImageUrl', newUrl);
               }}
+              onError={() => setGuideImageError(true)}
             />
-
             {/* Badge */}
             <div
               className="absolute -top-4 -right-4 bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] text-white px-4 py-2 rounded-full shadow-lg text-sm font-medium transform rotate-12 cursor-pointer"

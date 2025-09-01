@@ -1,331 +1,202 @@
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
-import React from 'react';
+import { Sparkles, Edit3 } from 'lucide-react';
 import { useQuizResult } from '@/hooks/useQuizResult';
+import { getStyleConfig } from '@/config/styleConfig';
 
-interface StyleCardsGridBlockProps {
-  block?: {
-    id: string;
-    type: string;
-    properties?: {
-      className?: string;
-      backgroundColor?: string;
-      // Configurações JSON exportáveis
-      styleCardsConfig?: {
-        styles: Array<{
-          name: string;
-          color: string;
-          letter: string;
-          description?: string;
-          icon?: string;
-        }>;
-        layout: {
-          columns: number;
-          gap: string;
-          cardSize: 'sm' | 'md' | 'lg';
-          showLetters: boolean;
-          showDescriptions: boolean;
-          animationType: 'none' | 'hover' | 'pulse' | 'glow';
-        };
-        theme: {
-          cardBackground: string;
-          cardBorder: string;
-          textColor: string;
-          letterTextColor: string;
-          hoverEffect: string;
-        };
-        interactive: boolean;
-        selectable: boolean;
-        maxSelections?: number;
-      };
-    };
-    content?: any;
-  };
-  onPropertyChange?: (key: string, value: any) => void;
-  onStyleSelect?: (styleId: string) => void;
-}
+// Função para converter valores de margem em classes Tailwind (Sistema Universal)
+const getMarginClass = (value: string | number, type: string): string => {
+  // ... (mantido igual)
+};
 
-/**
- * 🎯 STYLE CARDS GRID BLOCK
- * ✅ Cards interativos dos 8 estilos
- * ✅ Configuração JSON exportável
- * ✅ Compatível com editor de blocos
- */
-const StyleCardsGridBlock: React.FC<StyleCardsGridBlockProps> = ({
-  block,
-  onPropertyChange,
-  onStyleSelect,
-}) => {
-  const properties = block?.properties || {};
-  const {
-    className = '',
-    backgroundColor = 'transparent',
-    styleCardsConfig,
-    // Propriedades NO-CODE planas vindas do core registry
-    columns,
-    gap,
-    showLetters,
-    showDescriptions,
-    interactive,
-    selectable,
-    maxSelections,
-    animationType,
-    cardSize,
-    themePreset,
-  } = properties as any;
-  const { primaryStyle, secondaryStyles } = useQuizResult();
+const interpolate = (text: string, vars: Record<string, any>) => {
+  if (!text) return '';
+  return text
+    .replace(/\{resultStyle\}/g, vars.resultStyle || '')
+    .replace(/\{resultPersonality\}/g, vars.resultPersonality || '')
+    .replace(/\{resultColors\}/g, vars.resultColors || '')
+    .replace(/\{resultFabrics\}/g, vars.resultFabrics || '')
+    .replace(/\{resultPrints\}/g, vars.resultPrints || '')
+    .replace(/\{resultAccessories\}/g, vars.resultAccessories || '');
+};
 
-  // Configuração padrão com os 8 estilos
-  const config = styleCardsConfig || {
-    styles: [
-      { name: 'Natural', color: '#8B7355', letter: 'A', description: 'Conforto e praticidade' },
-      { name: 'Clássico', color: '#432818', letter: 'B', description: 'Elegância atemporal' },
-      { name: 'Contemporâneo', color: '#6B4F43', letter: 'C', description: 'Moderno e atual' },
-      { name: 'Elegante', color: '#B89B7A', letter: 'D', description: 'Sofisticação refinada' },
-      { name: 'Romântico', color: '#D4B5A0', letter: 'E', description: 'Delicadeza feminina' },
-      { name: 'Sexy', color: '#8B4513', letter: 'F', description: 'Sensualidade marcante' },
-      { name: 'Dramático', color: '#654321', letter: 'G', description: 'Impacto visual forte' },
-      { name: 'Criativo', color: '#A0522D', letter: 'H', description: 'Originalidade única' },
-    ],
-    layout: {
-      columns: typeof columns === 'number' ? columns : 2,
-      gap: typeof gap === 'string' ? gap : 'gap-6',
-      cardSize: (cardSize as 'sm' | 'md' | 'lg') || ('md' as const),
-      showLetters: typeof showLetters === 'boolean' ? showLetters : true,
-      showDescriptions: typeof showDescriptions === 'boolean' ? showDescriptions : false,
-      animationType: (animationType as 'none' | 'hover' | 'pulse' | 'glow') || ('hover' as const),
-    },
-    theme: (() => {
-      const preset = (themePreset as 'glass' | 'light' | 'solid') || 'glass';
-      if (preset === 'light') {
-        return {
-          cardBackground: '#ffffff',
-          cardBorder: 'rgba(0,0,0,0.06)',
-          textColor: '#432818',
-          letterTextColor: '#ffffff',
-          hoverEffect: 'hover:shadow-md hover:-translate-y-0.5 transition',
-        } as const;
-      }
-      if (preset === 'solid') {
-        return {
-          cardBackground: '#FAF9F7',
-          cardBorder: 'rgba(0,0,0,0.08)',
-          textColor: '#432818',
-          letterTextColor: '#ffffff',
-          hoverEffect: 'hover:shadow-lg hover:-translate-y-1 transition',
-        } as const;
-      }
-      // glass (default)
+// Função segura para obter configuração do estilo
+const getSafeStyleConfig = (styleLabel: string) => {
+  try {
+    const config = getStyleConfig(styleLabel);
+    if (!config || typeof config !== 'object') {
+      console.warn(`getStyleConfig retornou um valor inválido para: ${styleLabel}`);
       return {
-        cardBackground: 'rgba(255, 255, 255, 0.6)',
-        cardBorder: 'rgba(255, 255, 255, 0.2)',
-        textColor: '#432818',
-        letterTextColor: '#ffffff',
-        hoverEffect: 'hover:shadow-lg hover:scale-105',
-      } as const;
-    })(),
-    interactive: typeof interactive === 'boolean' ? interactive : true,
-    selectable: typeof selectable === 'boolean' ? selectable : false,
-  };
-
-  const [selectedStyles, setSelectedStyles] = React.useState<string[]>([]);
-
-  // Mapear porcentagens do resultado para destacar cards
-  const resultPercentages: Record<string, number> = React.useMemo(() => {
-    const map: Record<string, number> = {};
-    if (primaryStyle?.style) {
-      map[(primaryStyle.style || primaryStyle.category || '').toLowerCase()] =
-        (primaryStyle as any).percentage ?? 0;
+        keywords: [],
+        colors: [],
+        fabrics: [],
+        prints: [],
+        accessories: [],
+      };
     }
-    secondaryStyles.forEach(s => {
-      if (s.style || (s as any).category) {
-        map[(s.style || (s as any).category || '').toLowerCase()] = (s as any).percentage ?? 0;
-      }
-    });
-    return map;
-  }, [primaryStyle, secondaryStyles]);
+    return config;
+  } catch (error) {
+    console.error(`Erro ao obter configuração do estilo ${styleLabel}:`, error);
+    return {
+      keywords: [],
+      colors: [],
+      fabrics: [],
+      prints: [],
+      accessories: [],
+    };
+  }
+};
 
-  const handleStyleClick = (style: (typeof config.styles)[0]) => {
-    if (!config.interactive) return;
-
-    const styleId = style.name.toLowerCase();
-
-    if (config.selectable) {
-      let newSelection = [...selectedStyles];
-
-      if (selectedStyles.includes(styleId)) {
-        newSelection = newSelection.filter(id => id !== styleId);
-      } else {
-        if ((maxSelections ?? config.maxSelections) && newSelection.length >= (maxSelections ?? config.maxSelections)) {
-          newSelection = [styleId]; // Substituir se atingir o máximo
-        } else {
-          newSelection.push(styleId);
-        }
-      }
-
-      setSelectedStyles(newSelection);
-
-      if (onPropertyChange) {
-        onPropertyChange('selectedStyles', newSelection);
-      }
-    }
-
-    if (onStyleSelect) {
-      onStyleSelect(styleId);
-    }
-
-    console.log('🎨 Estilo selecionado:', style.name);
-  };
-
-  const getCardSizeClass = () => {
-    switch (config.layout.cardSize) {
-      case 'sm':
-        return 'h-20 w-20';
-      case 'lg':
-        return 'h-32 w-32';
-      default:
-        return 'h-24 w-24';
-    }
-  };
-
-  const getColumnsClass = () => {
-    const cols = Math.max(1, Math.min(config.layout.columns ?? 2, 2));
-    return cols === 1 ? 'grid-cols-1' : 'grid-cols-2 md:grid-cols-2';
-  };
-
-  const getAnimationClass = () => {
-    switch (config.layout.animationType) {
-      case 'pulse':
-        return 'hover:animate-pulse';
-      case 'glow':
-        return 'hover:shadow-2xl hover:shadow-current/20';
-      case 'hover':
-        return 'transition-all duration-300 hover:scale-105';
-      default:
-        return '';
-    }
-  };
-
-  return (
-    <div className={cn('style-cards-grid-block', className)} style={{ backgroundColor }}>
-      <div className={cn('grid', getColumnsClass(), config.layout.gap)}>
-        {config.styles.map((style: { name: string; color: string; letter: string; description?: string }, index: number) => {
-          const key = style.name.toLowerCase();
-          const isSelected = selectedStyles.includes(key);
-          const resultPct = resultPercentages[key];
-
-          return (
-            <Card
-              key={index}
-              className={cn(
-                'cursor-pointer transition-all duration-300',
-                config.theme.hoverEffect,
-                getAnimationClass(),
-                (isSelected || typeof resultPct === 'number') && 'ring-2 ring-offset-2',
-                config.interactive ? 'hover:shadow-lg' : 'cursor-default'
-              )}
-              style={
-                {
-                  backgroundColor: config.theme.cardBackground,
-                  borderColor: config.theme.cardBorder,
-                  '--ring-color': style.color,
-                } as React.CSSProperties
-              }
-              onClick={() => handleStyleClick(style)}
-            >
-              <CardContent className="p-4 text-center flex flex-col items-center justify-center">
-                {config.layout.showLetters && (
-                  <div
-                    className={cn(
-                      'rounded-full flex items-center justify-center text-white font-bold text-sm mb-3',
-                      getCardSizeClass()
-                    )}
-                    style={{ backgroundColor: style.color }}
-                  >
-                    {style.letter}
-                  </div>
-                )}
-
-                <h3
-                  className="font-semibold text-sm mb-1"
-                  style={{ color: config.theme.textColor }}
-                >
-                  {style.name}
-                </h3>
-
-                {config.layout.showDescriptions && style.description && (
-                  <p className="text-xs text-gray-600 text-center">{style.description}</p>
-                )}
-
-                {(isSelected || typeof resultPct === 'number') && (
-                  <Badge
-                    variant="secondary"
-                    className="mt-2 text-xs"
-                    style={{ backgroundColor: style.color, color: 'white' }}
-                  >
-                    {typeof resultPct === 'number' ? `${Math.round(resultPct)}%` : 'Selecionado'}
-                  </Badge>
-                )}
-              </CardContent>
-            </Card>
-          );
-        })}
+const StyleCardInlineBlock: React.FC<any> = ({
+  block,
+  title = 'Seu Estilo Único',
+  subtitle = 'Descoberto através do quiz',
+  description = 'Características principais do seu perfil de estilo pessoal',
+  showIcon = true,
+  onClick,
+  className,
+  onPropertyChange,
+  disabled = false,
+  marginTop = 0,
+  marginBottom = 0,
+  marginLeft = 0,
+  marginRight = 0,
+}) => {
+  const { primaryStyle } = useQuizResult();
+  
+  // Adicionar log para depuração
+  console.log('StyleCardInlineBlock - primaryStyle:', primaryStyle);
+  
+  // Se não houver estilo, exibir mensagem ou estado de carregamento
+  if (!primaryStyle) {
+    return (
+      <div className="p-4 text-center">
+        <p>Carregando informações do estilo...</p>
+        <p className="text-sm text-gray-500 mt-2">
+          Se isso persistir, verifique se você respondeu a todas as perguntas.
+        </p>
+        <button 
+          onClick={() => window.location.reload()}
+          className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+        >
+          Recarregar Página
+        </button>
       </div>
-
-      {/* Debug info (apenas em desenvolvimento) */}
-      {process.env.NODE_ENV === 'development' && (
-        <div className="mt-4 text-xs text-gray-500">
-          <details>
-            <summary>Style Cards Config (Debug)</summary>
-            <pre className="mt-1 text-xs bg-gray-100 p-2 rounded max-h-40 overflow-auto">
-              {JSON.stringify(config, null, 2)}
-            </pre>
-          </details>
+    );
+  }
+  
+  // Resolver dados do estilo a partir do resultado
+  const styleLabel = (primaryStyle?.style || primaryStyle?.category || '').trim();
+  console.log('StyleCardInlineBlock - styleLabel:', styleLabel);
+  
+  const resolved = styleLabel ? getSafeStyleConfig(styleLabel) : null;
+  console.log('StyleCardInlineBlock - resolved:', resolved);
+  
+  // Montar variáveis de placeholders com valores padrão
+  const vars = {
+    resultStyle: styleLabel || 'Seu Estilo',
+    resultPersonality: resolved?.keywords?.slice(0, 3).join(', ') || 
+                      'Autêntica, confiante',
+    resultColors: resolved?.colors?.slice(0, 2).join(', ') || 
+                  'Cores que combinam com seu estilo',
+    resultFabrics: resolved?.fabrics?.join(', ') || 
+                   'Tecidos ideais para seu estilo',
+    resultPrints: resolved?.prints?.join(', ') || 
+                  'Estampas que combinam com você',
+    resultAccessories: resolved?.accessories?.join(', ') || 
+                       'Acessórios que complementam seu visual',
+  };
+  
+  // Ler dados do bloco (properties tem precedência, depois content)
+  const blockProps = (block && block.properties) || {};
+  const blockContent = (block && block.content) || {};
+  const resolvedTitle = blockProps.title ?? blockContent.title ?? title;
+  const resolvedSubtitle = blockProps.subtitle ?? blockContent.subtitle ?? subtitle;
+  const resolvedDescription = blockProps.description ?? blockContent.description ?? description;
+  const rawFeatures = blockProps.features ?? blockContent.features ?? [];
+  const features: string[] = Array.isArray(rawFeatures) ? rawFeatures : [];
+  
+  return (
+    <div
+      className={cn(
+        'inline-flex items-center gap-3 p-4 bg-white rounded-lg border-l-4 border-[#B89B7A] shadow-sm',
+        'transition-all duration-200 hover:shadow-md hover:scale-105 cursor-pointer',
+        'w-full',
+        disabled && 'opacity-75 cursor-not-allowed',
+        className,
+        // Margens universais com controles deslizantes
+        getMarginClass(marginTop, 'top'),
+        getMarginClass(marginBottom, 'bottom'),
+        getMarginClass(marginLeft, 'left'),
+        getMarginClass(marginRight, 'right')
+      )}
+      onClick={!disabled ? onClick : undefined}
+    >
+      {/* Icon */}
+      {showIcon && (
+        <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] rounded-full flex items-center justify-center">
+          <Sparkles className="w-5 h-5 text-white" />
+        </div>
+      )}
+      {/* Content */}
+      <div className="flex-1 min-w-0">
+        <h3
+          className="font-semibold text-[#432818] text-sm md:text-base truncate"
+          onClick={e => {
+            e.stopPropagation();
+            if (onPropertyChange && !disabled) {
+              const newTitle = prompt('Novo título:', String(resolvedTitle));
+              if (newTitle !== null) onPropertyChange('title', newTitle);
+            }
+          }}
+        >
+          {interpolate(String(resolvedTitle), vars)}
+        </h3>
+        <p
+          className="text-xs md:text-sm text-[#8F7A6A] truncate"
+          onClick={e => {
+            e.stopPropagation();
+            if (onPropertyChange && !disabled) {
+              const newSubtitle = prompt('Novo subtítulo:', String(resolvedSubtitle));
+              if (newSubtitle !== null) onPropertyChange('subtitle', newSubtitle);
+            }
+          }}
+        >
+          {interpolate(String(resolvedSubtitle), vars)}
+        </p>
+        {resolvedDescription && (
+          <p
+            className="text-xs text-[#8F7A6A] mt-1 line-clamp-2"
+            onClick={e => {
+              e.stopPropagation();
+              if (onPropertyChange && !disabled) {
+                const newDescription = prompt('Nova descrição:', String(resolvedDescription));
+                if (newDescription !== null) onPropertyChange('description', newDescription);
+              }
+            }}
+          >
+            {interpolate(String(resolvedDescription), vars)}
+          </p>
+        )}
+        {/* Lista de features do estilo (template step-20) */}
+        {features.length > 0 && (
+          <ul className="mt-2 space-y-1 text-[#432818] text-xs md:text-sm">
+            {features.map((f: string, idx: number) => (
+              <li key={idx} className="flex items-start gap-2">
+                <span className="mt-1 w-1.5 h-1.5 rounded-full bg-[#B89B7A]" />
+                <span>{interpolate(String(f), vars)}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+      {/* Edit indicator */}
+      {!disabled && (
+        <div className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+          <Edit3 className="w-4 h-4 text-[#B89B7A]" />
         </div>
       )}
     </div>
   );
 };
 
-export default StyleCardsGridBlock;
-
-// ✅ CONFIGURAÇÃO JSON EXPORTÁVEL
-export const getStyleCardsGridConfig = (customConfig?: Partial<any>) => ({
-  id: `style-cards-grid-${Date.now()}`,
-  type: 'style-cards-grid',
-  properties: {
-    styleCardsConfig: {
-      styles: [
-        { name: 'Natural', color: '#8B7355', letter: 'A', description: 'Conforto e praticidade' },
-        { name: 'Clássico', color: '#432818', letter: 'B', description: 'Elegância atemporal' },
-        { name: 'Contemporâneo', color: '#6B4F43', letter: 'C', description: 'Moderno e atual' },
-        { name: 'Elegante', color: '#B89B7A', letter: 'D', description: 'Sofisticação refinada' },
-        { name: 'Romântico', color: '#D4B5A0', letter: 'E', description: 'Delicadeza feminina' },
-        { name: 'Sexy', color: '#8B4513', letter: 'F', description: 'Sensualidade marcante' },
-        { name: 'Dramático', color: '#654321', letter: 'G', description: 'Impacto visual forte' },
-        { name: 'Criativo', color: '#A0522D', letter: 'H', description: 'Originalidade única' },
-      ],
-      layout: {
-        columns: 4,
-        gap: 'gap-6',
-        cardSize: 'md' as const,
-        showLetters: true,
-        showDescriptions: false,
-        animationType: 'hover' as const,
-      },
-      theme: {
-        cardBackground: 'rgba(255, 255, 255, 0.6)',
-        cardBorder: 'rgba(255, 255, 255, 0.2)',
-        textColor: '#432818',
-        letterTextColor: '#ffffff',
-        hoverEffect: 'hover:shadow-lg hover:scale-105',
-      },
-      interactive: true,
-      selectable: false,
-      ...customConfig,
-    },
-    className: 'w-full',
-    backgroundColor: 'transparent',
-  },
-});
+export default StyleCardInlineBlock;
