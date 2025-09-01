@@ -49,6 +49,16 @@ export function getBlocksForStep(step: number | string, stepBlocks?: RawStepBloc
     const raw = (stepBlocks as any)[key] ?? (stepBlocks as any)[String(key)];
     if (!raw) continue;
     
+    // Enhanced logging for successful lookups
+    if (process.env.NODE_ENV === 'development') {
+      console.log('✅ getBlocksForStep: Found blocks', {
+        ...debugInfo,
+        foundKey: key,
+        blocksCount: Array.isArray(raw) ? raw.length : 0,
+        blocksType: typeof raw
+      });
+    }
+    
     if (Array.isArray(raw)) {
       if (process.env.NODE_ENV === 'development' && step <= 3) { // Log first 3 steps for debugging
         console.log('🔍 getBlocksForStep SUCCESS:', {

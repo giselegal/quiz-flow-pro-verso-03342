@@ -68,3 +68,6 @@ jspm_packages/
 
 # Temporary files and audit reports
 tmp/
+
+# Test scripts and diagnostics
+test-diagnostics.mjs

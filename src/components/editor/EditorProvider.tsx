@@ -442,11 +442,70 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     }
   }, [rawState.currentStep]);
 
+  // 🔧 DIAGNÓSTICO: Expor contexto para debugging via window global
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.__EDITOR_CONTEXT__ = {
+        state: rawState,
+        actions,
+        getBlocksForStep: (step: number) => getBlocksForStep(step, rawState.stepBlocks),
+        ensureStepLoaded: ensureStepLoadedRef.current,
+      };
+      
+      // Análise de estado para diagnóstico
+      const analysis = {
+        timestamp: Date.now(),
+        totalSteps: 21,
+        currentStep: rawState.currentStep,
+        stepBlocksKeys: Object.keys(rawState.stepBlocks || {}),
+        stepsWithBlocks: Object.entries(rawState.stepBlocks || {}).map(([key, blocks]) => ({
+          step: key,
+          count: Array.isArray(blocks) ? blocks.length : 0,
+          types: Array.isArray(blocks) ? blocks.map(b => b.type) : []
+        })),
+        validationSummary: rawState.stepValidation || {},
+        contextHealth: 'healthy'
+      };
+      
+      window.__EDITOR_STATE_ANALYSIS__ = analysis;
+      
+      if (process.env.NODE_ENV === 'development') {
+        console.log('🔧 Editor context exposed for debugging:', analysis);
+      }
+    }
+  }, [rawState, actions]);
+
   // Actions (use functional setState to avoid races)
   const setCurrentStep = useCallback(
     (step: number) => {
       // 🔍 INVESTIGAÇÃO #2: Enhanced currentStep validation
       const isValidStep = Number.isInteger(step) && step >= 1 && step <= 21;
+      
+      if (!isValidStep) {
+        console.error('🚨 INVALID STEP DETECTED:', {
+          requestedStep: step,
+          type: typeof step,
+          isInteger: Number.isInteger(step),
+          range: `1-21`,
+          currentStack: new Error().stack
+        });
+        
+        // Track invalid attempts for debugging
+        if (typeof window !== 'undefined') {
+          window.__EDITOR_INVALID_STEPS__ = window.__EDITOR_INVALID_STEPS__ || [];
+          window.__EDITOR_INVALID_STEPS__.push({
+            timestamp: new Date(),
+            requestedStep: step,
+            type: typeof step,
+            stack: new Error().stack
+          });
+        }
+        
+        // Auto-correct to valid range
+        const correctedStep = Math.max(1, Math.min(21, Math.floor(step || 1)));
+        console.warn('🔧 AUTO-CORRECTING step to:', correctedStep);
+        step = correctedStep;
+      }
       
       if (process.env.NODE_ENV === 'development') {
         console.log('🔍 setCurrentStep called:', {
@@ -923,6 +982,30 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     state,
     actions,
   };
+
+  // 🔍 DIAGNÓSTICO: Expor contexto globalmente para debugging
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      (window as any).__EDITOR_CONTEXT__ = {
+        ...state,
+        actions,
+      };
+      
+      // Detectar erros de contexto
+      if (!state || typeof state !== 'object') {
+        if (!(window as any).__EDITOR_CONTEXT_ERROR__) {
+          (window as any).__EDITOR_CONTEXT_ERROR__ = [];
+        }
+        (window as any).__EDITOR_CONTEXT_ERROR__.push({
+          error: 'Estado do editor inválido',
+          state: state,
+          timestamp: Date.now(),
+          stack: new Error().stack
+        });
+        console.error('🚨 ERRO DE CONTEXTO DO EDITOR: Estado inválido detectado', state);
+      }
+    }
+  }, [state, actions]);
 
   return <EditorContext.Provider value={contextValue}>{children}</EditorContext.Provider>;
 };
