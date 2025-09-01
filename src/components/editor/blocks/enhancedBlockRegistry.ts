@@ -2,7 +2,7 @@
 import { lazy } from 'react';
 // Importações estáticas essenciais para renderização imediata dos blocos principais
 import ButtonInlineBlock from '@/components/editor/blocks/ButtonInlineBlock';
-import FormContainerBlock from '@/components/editor/blocks/FormContainerBlock';
+import BasicContainerBlock from '@/components/editor/blocks/BasicContainerBlock';
 import FormInputBlock from '@/components/editor/blocks/FormInputBlock';
 import ImageInlineBlock from '@/components/editor/blocks/ImageInlineBlock';
 import LegalNoticeInlineBlock from '@/components/editor/blocks/LegalNoticeInlineBlock';
@@ -35,7 +35,11 @@ export const ENHANCED_BLOCK_REGISTRY = {
   'quiz-question-inline': TextInlineBlock,
   'quiz-options-inline': OptionsGridBlock,
   'options-grid': OptionsGridBlock,
-  'form-container': FormContainerBlock,
+  'form-container': BasicContainerBlock,
+  // Aliases de container estável
+  'container': BasicContainerBlock,
+  'section': BasicContainerBlock,
+  'box': BasicContainerBlock,
 
   // ✅ STEP 12 - TRANSIÇÃO
   hero: lazy(() => import('@/components/editor/blocks/QuizTransitionBlock')),

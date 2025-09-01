@@ -515,7 +515,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
                   window.dispatchEvent(
                     new CustomEvent('quiz-user-name-updated', { detail: { userName, source: 'ButtonInlineBlock' } })
                   );
-                } catch {}
+                } catch { }
               } catch {
                 // Fallback silencioso caso StorageService não esteja disponível
                 try {
@@ -527,7 +527,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
                     window.dispatchEvent(
                       new CustomEvent('quiz-user-name-updated', { detail: { userName, source: 'ButtonInlineBlock:fallback' } })
                     );
-                  } catch {}
+                  } catch { }
                 } catch { }
               }
 
