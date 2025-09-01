@@ -1,0 +1,66 @@
+{
+    "sources": [
+        "src/config/optimized21StepsFunnel.ts",
+        "src/templates/quiz21StepsComplete.ts",
+        "src/config/quizStepsComplete.ts (não analisado)"
+    ],
+    "summary": {
+        "status": "initial",
+        "notes": [
+            "Optimized usa questionData e options[].score (mapa estilo→pontos)",
+            "Template usa options-grid com ids prefixados (ex: natural_q1) e properties.scoreValues",
+            "Ambos expressam pontuação por estilo, porém com formatos diferentes",
+            "Etapas estratégicas (12–17) não têm pontuação (kind: strategic)",
+            "Q1–Q10: 1 ponto por questão (quando scored)",
+            "Etapas estratégicas no optimized usam 'segment' opcional"
+        ]
+    },
+    "differences": [
+        {
+            "area": "question/options schema",
+            "optimized": "questionData com options[].score como mapa de estilos",
+            "template": "block options-grid com options ids prefixados e properties.scoreValues",
+            "impact": "Calculadora deve aceitar ambos ou usar adapter para formato canônico"
+        },
+        {
+            "area": "strategic questions",
+            "optimized": "options podem incluir 'segment'",
+            "template": "ids q12..q17 sem 'segment' explícito",
+            "impact": "Adapter mapeia ids para 'segment' opcional no canônico"
+        },
+        {
+            "area": "images",
+            "optimized": "exibe imagens por step; options podem não ter imageUrl",
+            "template": "options incluem imageUrl nas etapas visuais",
+            "impact": "Canonical deve permitir imageUrl por opção"
+        }
+    ],
+    "canonicalProposal": {
+        "Question": {
+            "id": "string",
+            "title": "string",
+            "text": "string",
+            "kind": "scored|strategic",
+            "options": [
+                {
+                    "id": "string",
+                    "text": "string",
+                    "imageUrl": "string opcional",
+                    "score": "mapa estilo→pontos (opcional)",
+                    "segment": "string opcional"
+                }
+            ]
+        }
+    },
+    "policy": {
+        "defaultScoring": {
+            "q1ToQ10": 1,
+            "q12ToQ17": 0,
+            "notes": "Q1–Q10 pontuam 1 por questão; Q12–Q17 são estratégicas sem pontuação"
+        }
+    },
+    "samples": [
+        "reports/samples/optimized_step2.json",
+        "reports/samples/template_step2.json"
+    ]
+}

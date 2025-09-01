@@ -1,0 +1,86 @@
+{
+    "generatedAt": "2025-09-01T00:00:00.000Z",
+    "summary": "Relatório expandido — formatos detectados e locais (config otimizada vs template completo vs outros templates)",
+    "findings": {
+        "optimized_config_score_objects": {
+            "description": "O arquivo `src/config/optimized21StepsFunnel.ts` usa opções com campo 'score' onde cada option traz um mapeamento por estilo (ex: { natural: 3, classico: 1 }).",
+            "exampleFile": "src/config/optimized21StepsFunnel.ts",
+            "occurrencesApprox": 80
+        },
+        "template_prefix_ids_and_scoreValues": {
+            "description": "O template completo `src/templates/quiz21StepsComplete.ts` usa option ids prefixados (ex: 'natural_q1') e um objeto `scoreValues` nas properties do bloco `options-grid` que atribui pontos por option id.
+      ","exampleFile": "src/templates/quiz21StepsComplete.ts",
+            "occurrencesApprox": 120
+        },
+        "other_template_variants": {
+            "description": "Existem variações: `services/templates/*` (ex: `styleQuizTemplate2.ts`) usam estruturas próprias (QuizBuilderState) com arrays de options, optionImages e optionStyleCategories; alguns templates são simplificados ou proprietários.",
+            "files": [
+                "src/services/templates/styleQuizTemplate.ts",
+                "src/services/templates/styleQuizTemplate2.ts",
+                "src/services/templates/giseleStyleTemplate.ts",
+                "src/services/templates/strategicQuestionsTemplate.ts"
+            ]
+        },
+        "components_and_usage": {
+            "optionsGridComponent": "src/components/blocks/quiz/QuizOptionsGridBlock.tsx and editor variants read option.imageUrl and scoreValues; properties differ between config and template formats.",
+            "result_engine_and_orchestrator": "src/services/core/ResultEngine.ts (computeScoresFromSelections) and src/components/core/QuizFlowOrchestrator.tsx (parsing optionId with split '_' to infer style) — both codepaths observed."
+        }
+    },
+    "locations_by_pattern": {
+        "files_with_score_object_style": [
+            "src/config/optimized21StepsFunnel.ts"
+        ],
+        "files_with_scoreValues": [
+            "src/templates/quiz21StepsComplete.ts",
+            "src/config/templates/step-02.json",
+            "src/config/templates/step-04.json",
+            "src/config/templates/step-06.json",
+            "src/config/templates/step-20.json"
+        ],
+        "files_with_prefix_option_ids": [
+            "src/templates/quiz21StepsComplete.ts",
+            "src/data/quizData.ts",
+            "src/data/correctQuizQuestions.ts"
+        ],
+        "files_reading_imageUrl": [
+            "src/components/blocks/quiz/QuizOptionsGridBlock.tsx",
+            "src/components/core/BlockRenderer.tsx",
+            "src/components/editor/blocks/OptionsGridBlock.tsx",
+            "src/components/editor/blocks/ResultHeaderInlineBlock.tsx",
+            "src/config/templates/*.json"
+        ]
+    },
+    "primary_issues_and_impact": [
+        {
+            "issue": "Mismatch de formato entre templates e config otimizada",
+            "impact": "Selections persistidas em formato prefix-based (ex: 'natural_q1') podem não ser interpretadas por uma engine que espera option ids neutros com score object, e vice-versa. Isso causa ausência de pontuação no cálculo e falha de hidratação do Step 20.",
+            "priority": "high"
+        },
+        {
+            "issue": "Localização da regra de pontuação (option.score vs block.properties.scoreValues)",
+            "impact": "Duplica lógica e dificulta manter coerência; dificulta testes unitários do ResultEngine.",
+            "priority": "high"
+        },
+        {
+            "issue": "Chaves de imagem inconsistentes (imageUrl vs src)",
+            "impact": "Quebra visual ocasional e exige fallbacks no renderer; já corrigido parcialmente com data-URI placeholders.",
+            "priority": "medium"
+        }
+    ],
+    "recommendations_immediate": [
+        "Implementar um loader-adapter que normalize templates variados para um 'canonical quiz schema' (aceitar ambos: option.score ou block.scoreValues e option ids prefixados)",
+        "Adicionar 'schemaVersion' a templates e usar feature-flag para migração gradual",
+        "Implementar testes de snapshot do ResultEngine com exemplos de cada formato para validar compatibilidade antes/apos adapter"
+    ],
+    "next_steps_for_phase_A": [
+        "(feito parcial) Extrair amostras por step (steps 2..6 já amostrados)",
+        "Expandir extração para todas as steps (1..21) e coletar exemplos representativos dos templates legacy e services templates",
+        "Gerar relatório detalhado com diffs por step e transformações necessárias para conversão automática"
+    ],
+    "artifacts_created": [
+        "reports/quiz-schema-diff.json",
+        "reports/samples/optimized_step2.json",
+        "reports/samples/template_step2.json",
+        "reports/expanded-quiz-schema-diff.json"
+    ]
+}

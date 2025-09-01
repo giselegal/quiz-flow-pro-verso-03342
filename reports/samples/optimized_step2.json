@@ -1,0 +1,40 @@
+{
+    "source": "src/config/optimized21StepsFunnel.ts",
+    "stepKey": "step-2",
+    "questionData": {
+        "id": "q1",
+        "title": "Qual seu estilo de vida?",
+        "optionsSample": [
+            {
+                "id": "a",
+                "text": "Prática e dinâmica",
+                "score": {
+                    "natural": 3,
+                    "classico": 1
+                }
+            },
+            {
+                "id": "b",
+                "text": "Organizada e estruturada",
+                "score": {
+                    "classico": 3,
+                    "elegante": 1
+                }
+            }
+        ]
+    },
+    "blocksSample": [
+        {
+            "id": "header-progress",
+            "type": "quiz-intro-header"
+        },
+        {
+            "id": "question-title",
+            "type": "heading-inline"
+        },
+        {
+            "id": "options-grid",
+            "type": "options-grid"
+        }
+    ]
+}

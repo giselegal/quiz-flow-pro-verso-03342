@@ -4,8 +4,8 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { run21StepDiagnostic } from '@/diagnostic/21StepEditorDiagnostic';
 
-// Mock window object for tests
-const mockWindow = {
+// Mock window object for tests (use any to avoid strict typing conflicts with window-debug.d.ts)
+const mockWindow: any = {
   __EDITOR_CONTEXT_ERROR__: undefined,
   __EDITOR_INVALID_STEPS__: [],
   __EDITOR_FAILED_BLOCK_LOOKUPS__: [],
@@ -53,7 +53,7 @@ describe('21-Step Editor Diagnostic System', () => {
 
   it('should detect context loading issues', () => {
     // Simulate context error
-    mockWindow.__EDITOR_CONTEXT_ERROR__ = {
+  mockWindow.__EDITOR_CONTEXT_ERROR__ = {
       timestamp: new Date().toISOString(),
       location: 'test',
       stackTrace: 'mock-stack'
@@ -68,7 +68,7 @@ describe('21-Step Editor Diagnostic System', () => {
 
   it('should detect current step identification issues', () => {
     // Simulate invalid step attempts
-    mockWindow.__EDITOR_INVALID_STEPS__ = [
+  mockWindow.__EDITOR_INVALID_STEPS__ = [
       { requestedStep: -1, timestamp: new Date() },
       { requestedStep: 22, timestamp: new Date() },
       { requestedStep: 'invalid', timestamp: new Date() },
@@ -101,7 +101,7 @@ describe('21-Step Editor Diagnostic System', () => {
     
     // Second test: simulate step analysis data with many empty mandatory steps  
     // Steps 1-5 have blocks, steps 6-21 are empty (16 empty steps total, 5 mandatory steps empty: 6-10)
-    mockWindow.__EDITOR_STEP_ANALYSIS__ = {
+  mockWindow.__EDITOR_STEP_ANALYSIS__ = {
       stepsWithBlocks: [1, 2, 3, 4, 5],
       stepsWithoutBlocks: [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21],
       stepHasBlocksMap: {}
@@ -114,7 +114,7 @@ describe('21-Step Editor Diagnostic System', () => {
     
     // Third test: simulate more empty mandatory steps to trigger failure
     // Only step 1 has blocks, steps 2-21 are empty (9 mandatory steps empty: 2-10) 
-    mockWindow.__EDITOR_STEP_ANALYSIS__ = {
+  mockWindow.__EDITOR_STEP_ANALYSIS__ = {
       stepsWithBlocks: [1],
       stepsWithoutBlocks: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21],
       stepHasBlocksMap: {}
@@ -139,7 +139,7 @@ describe('21-Step Editor Diagnostic System', () => {
 
   it('should monitor event system', () => {
     // Simulate invalid navigation events
-    mockWindow.__EDITOR_INVALID_NAVIGATION__ = [
+  mockWindow.__EDITOR_INVALID_NAVIGATION__ = [
       { rawStepId: 'invalid', timestamp: new Date() },
       { rawStepId: -1, timestamp: new Date() },
       { rawStepId: null, timestamp: new Date() },
@@ -174,7 +174,7 @@ describe('21-Step Editor Diagnostic System', () => {
     expect(['healthy', 'warning', 'critical']).toContain(results.overallStatus);
 
     // Critical state - simulate multiple issues
-    mockWindow.__EDITOR_CONTEXT_ERROR__ = { error: 'test' };
+  mockWindow.__EDITOR_CONTEXT_ERROR__ = { error: 'test' };
     mockWindow.__EDITOR_INVALID_STEPS__ = new Array(10).fill({ invalid: true });
     mockWindow.__EDITOR_FAILED_BLOCK_LOOKUPS__ = new Array(15).fill({ failed: true });
 
@@ -194,7 +194,7 @@ describe('21-Step Editor Diagnostic System', () => {
 
   it('should provide actionable recommendations', () => {
     // Create a condition that triggers recommendations
-    mockWindow.__EDITOR_CONTEXT_ERROR__ = { test: true };
+  mockWindow.__EDITOR_CONTEXT_ERROR__ = { test: true };
     
     const results = run21StepDiagnostic();
     

@@ -1,3 +1,4 @@
+
 /**
  * Comprehensive diagnostic tool for the 21-step editor funnel
  * Implements all 10 investigation points from the problem statement
@@ -37,7 +38,7 @@ export interface DiagnosticResult {
 export function run21StepDiagnostic(): DiagnosticResults {
   const timestamp = new Date().toISOString();
   const issues: string[] = [];
-  
+
   console.log('🔍 Starting 21-Step Editor Funnel Diagnostic...', { timestamp });
 
   // Investigation 1: Context Loading
@@ -108,7 +109,7 @@ export function run21StepDiagnostic(): DiagnosticResults {
 
   // Store results for browser debugging
   if (typeof window !== 'undefined') {
-    window.__EDITOR_DIAGNOSTIC_RESULTS__ = results;
+    (window as any).__EDITOR_DIAGNOSTIC_RESULTS__ = results;
   }
 
   return results;
@@ -128,10 +129,10 @@ function investigateContextLoading(): DiagnosticResult {
     // Check for EditorProvider elements
     const editorProviders = document.querySelectorAll('[class*="provider"], [class*="Provider"]');
     const editorElements = document.querySelectorAll('[class*="editor"], [class*="Editor"]');
-    
+
     // Check for context error markers
     const hasContextError = !!(window as any).__EDITOR_CONTEXT_ERROR__;
-    
+
     if (hasContextError) {
       return {
         status: 'fail',
@@ -173,12 +174,13 @@ function investigateCurrentStepIdentification(): DiagnosticResult {
   try {
     // Check for invalid step tracking
     const invalidSteps = typeof window !== 'undefined' ? (window as any).__EDITOR_INVALID_STEPS__ : [];
-    
+
     // Test step validation logic
-    const testSteps = [-1, 0, 1, 11, 21, 22, 100, 'invalid', null, undefined];
+    const testSteps: Array<number | string | null | undefined> = [-1, 0, 1, 11, 21, 22, 100, 'invalid', null, undefined];
     const validationResults = testSteps.map(step => {
-      const isValid = Number.isInteger(step) && step >= 1 && step <= 21;
-      return { step, isValid, type: typeof step };
+      const n = typeof step === 'number' ? step : Number.NaN;
+      const isValid = Number.isInteger(n) && n >= 1 && n <= 21;
+      return { step, isValid, type: typeof step } as const;
     });
 
     const invalidCount = validationResults.filter(r => !r.isValid).length;
@@ -222,7 +224,7 @@ function investigateCurrentStepIdentification(): DiagnosticResult {
 function investigateBlockLoading(): DiagnosticResult {
   try {
     // Test getBlocksForStep function for all 21 steps
-    const stepResults = [];
+    const stepResults: Array<{ step: number; hasBlocks: boolean; blockCount: number; blockTypes: string[]; error?: string }> = [];
     let successCount = 0;
     let failureCount = 0;
 
@@ -230,12 +232,12 @@ function investigateBlockLoading(): DiagnosticResult {
       try {
         const blocks = getBlocksForStep(step, QUIZ_STYLE_21_STEPS_TEMPLATE);
         const isSuccess = Array.isArray(blocks);
-        
+
         stepResults.push({
           step,
           hasBlocks: isSuccess,
           blockCount: isSuccess ? blocks.length : 0,
-          blockTypes: isSuccess ? blocks.map(b => b?.type || 'unknown').slice(0, 3) : []
+          blockTypes: isSuccess ? (blocks as any[]).map(b => (b as any)?.type || 'unknown').slice(0, 3) : []
         });
 
         if (isSuccess) successCount++;
@@ -245,6 +247,8 @@ function investigateBlockLoading(): DiagnosticResult {
         stepResults.push({
           step,
           hasBlocks: false,
+          blockCount: 0,
+          blockTypes: [],
           error: String(error)
         });
       }
@@ -296,7 +300,7 @@ function investigateStepCalculation(): DiagnosticResult {
   try {
     // Check step analysis data
     const stepAnalysis = typeof window !== 'undefined' ? (window as any).__EDITOR_STEP_ANALYSIS__ : null;
-    
+
     if (!stepAnalysis) {
       return {
         status: 'warning',
@@ -306,8 +310,8 @@ function investigateStepCalculation(): DiagnosticResult {
       };
     }
 
-    const { stepsWithBlocks, stepsWithoutBlocks, stepHasBlocksMap } = stepAnalysis;
-    
+    const { stepsWithBlocks, stepsWithoutBlocks } = stepAnalysis as any;
+
     // Check for missing mandatory steps (1-10 should typically have content)
     const mandatoryStepsEmpty = stepsWithoutBlocks.filter((step: number) => step <= 10);
     const finalStepsEmpty = stepsWithoutBlocks.filter((step: number) => step >= 19);
@@ -354,7 +358,7 @@ function investigateGlobalState(): DiagnosticResult {
   try {
     // Check for global state indicators
     const hasWindowGlobals = typeof window !== 'undefined';
-    
+
     if (!hasWindowGlobals) {
       return {
         status: 'pass',
@@ -365,7 +369,7 @@ function investigateGlobalState(): DiagnosticResult {
 
     // Check for persistence issues
     const persistenceDisabled = !!(window as any).__DISABLE_EDITOR_PERSISTENCE__;
-    
+
     // Check for React DevTools availability
     const hasReactDevTools = !!(window as any).__REACT_DEVTOOLS_GLOBAL_HOOK__;
 
@@ -397,7 +401,7 @@ function investigateEventSystem(): DiagnosticResult {
   try {
     // Check for invalid navigation events
     const invalidNavigation = typeof window !== 'undefined' ? (window as any).__EDITOR_INVALID_NAVIGATION__ : [];
-    
+
     if (invalidNavigation && invalidNavigation.length > 3) {
       return {
         status: 'warning',
@@ -518,14 +522,14 @@ function investigateLoggingSystem(): DiagnosticResult {
   try {
     // Check if logging is working
     const isDevelopment = process.env.NODE_ENV === 'development';
-    
+
     // Test console methods
-    const consoleMethodsAvailable = ['log', 'warn', 'error', 'info'].every(method => 
+    const consoleMethodsAvailable = ['log', 'warn', 'error', 'info'].every(method =>
       typeof console[method as keyof Console] === 'function'
     );
 
     // Check for diagnostic globals
-    const diagnosticGlobals = typeof window !== 'undefined' ? 
+    const diagnosticGlobals = typeof window !== 'undefined' ?
       Object.keys(window).filter(k => k.startsWith('__EDITOR_')).length : 0;
 
     return {
@@ -551,7 +555,7 @@ function investigateLoggingSystem(): DiagnosticResult {
 function investigateCorrection(): DiagnosticResult {
   try {
     // Check if correction mechanisms are in place
-    const hasAutoCorrection = typeof window !== 'undefined' && 
+    const hasAutoCorrection = typeof window !== 'undefined' &&
       Object.keys(window).some(k => k.includes('INVALID') || k.includes('ERROR'));
 
     return {

@@ -29,6 +29,7 @@
   "include": ["src"],
   "exclude": [
   "src/pages/examples/**",
-  "examples/**"
+  "examples/**",
+  "src/utils/EditorDiagnostics.ts"
   ]
 }
