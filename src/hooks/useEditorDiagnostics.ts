@@ -3,22 +3,13 @@
  * Hook para monitorar e diagnosticar o editor em tempo real
  */
 
-import { runCompleteDiagnostics } from '@/utils/editorDiagnostics';
+import EditorDiagnostics, { DiagnosticResult } from '@/utils/EditorDiagnostics';
 import { PerformanceOptimizer } from '@/utils/performanceOptimizer';
 import { useCallback, useEffect, useState } from 'react';
 
-type DiagnosticStatus = 'success' | 'warning' | 'error';
-
-interface SimpleDiagnosticResult {
-  category: string;
-  status: DiagnosticStatus;
-  message: string;
-  details: any;
-}
-
 interface DiagnosticState {
   isRunning: boolean;
-  results: SimpleDiagnosticResult[];
+  results: DiagnosticResult[];
   lastRun: Date | null;
   autoFix: boolean;
 }
@@ -43,22 +34,7 @@ export const useEditorDiagnostics = (options?: {
 
     try {
       console.log('🔍 Iniciando diagnóstico do editor...');
-      const { summary, details } = await runCompleteDiagnostics();
-
-      // Normaliza em uma lista simples com status
-      const results: SimpleDiagnosticResult[] = Object.entries(details).map(([category, data]: [string, any]) => ({
-        category,
-        status: data?.success ? 'success' : 'error',
-        message: data?.message || 'Sem mensagem',
-        details: data,
-      }));
-      // Garante inclusão do resumo
-      results.push({
-        category: 'summary',
-        status: summary?.success ? 'success' : 'error',
-        message: summary?.message || 'Resumo',
-        details: summary,
-      });
+      const results = await EditorDiagnostics.runFullDiagnostic();
 
       setState(prev => ({
         ...prev,
@@ -67,8 +43,11 @@ export const useEditorDiagnostics = (options?: {
         isRunning: false,
       }));
 
-      // Auto-fix (placeholder): hoje não há rotina automática no módulo editorDiagnostics.
-      // Podemos plugar futuramente uma rotina aqui.
+      // Auto-fix se habilitado e há erros
+      if (autoFix && results.some(r => r.status === 'error')) {
+        console.log('🔧 Aplicando correções automáticas...');
+        await EditorDiagnostics.applyAutomaticFixes();
+      }
 
       return results;
     } catch (error) {
@@ -97,8 +76,7 @@ export const useEditorDiagnostics = (options?: {
   const applyFixes = useCallback(async () => {
     try {
       console.log('🔧 Aplicando correções manuais...');
-      // Placeholder: sem fix automático central aqui; apenas reexecuta o diagnóstico
-      const fixes: any[] = [];
+      const fixes = await EditorDiagnostics.applyAutomaticFixes();
 
       // Re-executar diagnóstico após correções
       await runDiagnostic();
@@ -112,19 +90,8 @@ export const useEditorDiagnostics = (options?: {
 
   // 📋 Gerar relatório
   const generateReport = useCallback(() => {
-    const { results, lastRun } = state as any;
-    const lines = [
-      '📋 RELATÓRIO DE DIAGNÓSTICO DO EDITOR',
-      '====================================',
-      lastRun ? `Última execução: ${lastRun.toISOString()}` : 'Ainda não executado',
-      ''
-    ];
-    for (const r of results as any[]) {
-      const icon = r.status === 'success' ? '✅' : r.status === 'warning' ? '⚠️' : '❌';
-      lines.push(`${icon} ${r.category}: ${r.message}`);
-    }
-    return lines.join('\n');
-  }, [state]);
+    return EditorDiagnostics.generateReport();
+  }, []);
 
   // 🔄 Auto-run periódico
   useEffect(() => {

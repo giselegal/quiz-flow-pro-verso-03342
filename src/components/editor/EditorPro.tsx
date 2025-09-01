@@ -545,9 +545,9 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
           window.__EDITOR_RACE_CONDITIONS__ = window.__EDITOR_RACE_CONDITIONS__ || [];
           window.__EDITOR_RACE_CONDITIONS__.push({
             type: 'input-change',
+            timestamp: new Date(),
             ...eventData,
-            raceCondition: true,
-            timestamp: new Date()
+            raceCondition: true
           });
         }
       }
@@ -597,9 +597,9 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
           window.__EDITOR_RACE_CONDITIONS__ = window.__EDITOR_RACE_CONDITIONS__ || [];
           window.__EDITOR_RACE_CONDITIONS__.push({
             type: 'selection-change',
+            timestamp: new Date(),
             ...eventData,
-            raceCondition: true,
-            timestamp: new Date()
+            raceCondition: true
           });
         }
       }

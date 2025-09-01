@@ -1,21 +1,3 @@
-Relatórios de mapeamento do schema do Quiz
-
-Conteúdo:
-- quiz-schema-diff.json: resumo das diferenças entre fontes (optimized x template), proposta canônica e política padrão.
-- samples/: amostras extraídas para inspeção.
-
-Política aplicada no runtime (ResultEngine):
-- Q1–Q10: 1 ponto por questão (opções com prefixo natural_, classico_, etc.)
-- Q12–Q17: estratégicas (0 pontos)
-
-Onde verificar:
-- src/services/core/ResultEngine.ts (função computeScoresFromSelections)
-- src/pages/QuizModularPage.tsx (chamada com strategicRanges padrão)
-
-Próximos passos sugeridos:
-1) Introduzir loader/adapters para schema canônico (src/services/quizTemplateLoader.ts)
-2) Criar testes unitários para conversão e ResultEngine
-3) Migrar templates gradualmente para o formato canônico
 # Relatórios de Mapeamento do Quiz (Fase A)
 
 Este diretório contém os artefatos iniciais de descoberta do esquema dos templates/configs do quiz (21 etapas).

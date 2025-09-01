@@ -19,7 +19,6 @@ const STYLE_MAP: Record<string, string> = {
   natural: 'Natural',
   classico: 'Clássico',
   contemporaneo: 'Contemporâneo',
-  moderno: 'Contemporâneo',
   elegante: 'Elegante',
   romantico: 'Romântico',
   sexy: 'Sexy',
@@ -31,7 +30,7 @@ export const ResultEngine = {
   // Calcula pontuação a partir de selections (por questão) usando prefixos de optionId
   computeScoresFromSelections(
     selectionsByQuestion: Record<string, string[]>,
-    options?: { weightQuestions?: number; strategicRanges?: Array<{ from: number; to: number }> }
+    options?: { weightQuestions?: number }
   ): { scores: RawScores; total: number } {
     const scores: RawScores = {};
     Object.values(STYLE_MAP).forEach(name => (scores[name] = 0));
@@ -40,24 +39,8 @@ export const ResultEngine = {
       ? options.weightQuestions
       : 1;
 
-    // Faixas estratégicas padrão: q12..q17 não pontuam
-    const strategicRanges = options?.strategicRanges?.length
-      ? options.strategicRanges
-      : [{ from: 12, to: 17 }];
-
-    const isStrategicQuestion = (key: string): boolean => {
-      // tenta extrair número de questão de padrões como 'q12', 'Q13', 'question-14', etc.
-      const m = String(key).toLowerCase().match(/q(\d+)|(question[-_ ]?(\d+))/);
-      const numStr = m?.[1] || m?.[3];
-      const n = numStr ? parseInt(numStr, 10) : NaN;
-      if (!Number.isFinite(n)) return false;
-      return strategicRanges.some(r => n >= r.from && n <= r.to);
-    };
-
     const entries = Object.entries(selectionsByQuestion);
-    for (const [qKey, selection] of entries) {
-      // Ignorar questões estratégicas (sem pontuação)
-      if (isStrategicQuestion(qKey)) continue;
+    for (const [, selection] of entries) {
       for (const optId of selection || []) {
         const key = String(optId).toLowerCase();
         const prefix = Object.keys(STYLE_MAP).find(p => key.startsWith(p + '_'));

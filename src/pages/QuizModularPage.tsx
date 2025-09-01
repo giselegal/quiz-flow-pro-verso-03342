@@ -461,7 +461,6 @@ const QuizModularPage: React.FC = () => {
       selectionsForScoring,
       {
         weightQuestions: typeof weightQuestions === 'number' ? weightQuestions : 1,
-        strategicRanges: [{ from: 12, to: 17 }],
       }
     );
     let userName = quizAnswers.userName || '';

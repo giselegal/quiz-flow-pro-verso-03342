@@ -1,35 +1,22 @@
 {
-    "source": "src/templates/quiz21StepsComplete.ts",
-    "stepKey": "step-2",
-    "contentSample": [
-        {
-            "id": "step2-quiz-header",
-            "type": "quiz-intro-header",
-            "properties": {
-                "logoUrl": "https://res.cloudinary.com/..."
-            }
-        },
-        {
-            "id": "step2-question",
-            "type": "options-grid",
-            "content": {
-                "options": [
-                    {
-                        "id": "natural_q1",
-                        "text": "Conforto, leveza e praticidade no vestir"
-                    },
-                    {
-                        "id": "classico_q1",
-                        "text": "Discrição, caimento clássico e sobriedade"
-                    }
-                ]
-            },
-            "properties": {
-                "requiredSelections": 3,
-                "scoreValues": {
-                    "natural_q1": 1
-                }
-            }
-        }
-    ]
+  "source": "src/templates/quiz21StepsComplete.ts",
+  "stepKey": "step-2",
+  "contentSample": [
+    {
+      "id": "step2-quiz-header",
+      "type": "quiz-intro-header",
+      "properties": { "logoUrl": "https://res.cloudinary.com/..." }
+    },
+    {
+      "id": "step2-question",
+      "type": "options-grid",
+      "content": {
+        "options": [
+          { "id": "natural_q1", "text": "Conforto, leveza e praticidade no vestir" },
+          { "id": "classico_q1", "text": "Discrição, caimento clássico e sobriedade" }
+        ]
+      },
+      "properties": { "requiredSelections": 3, "scoreValues": { "natural_q1": 1 } }
+    }
+  ]
 }
