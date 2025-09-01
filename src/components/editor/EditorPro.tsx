@@ -335,10 +335,44 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   );
 
   const stepHasBlocks = useMemo(() => {
+    // 🔍 INVESTIGAÇÃO #4: Enhanced step calculation validation
     const map: Record<number, boolean> = {};
+    const diagnosticInfo = {
+      timestamp: new Date().toISOString(),
+      totalStepBlocksKeys: state.stepBlocks ? Object.keys(state.stepBlocks).length : 0,
+      stepBlocksKeys: state.stepBlocks ? Object.keys(state.stepBlocks).slice(0, 10) : [], // Limit for logging
+      stepsWithBlocks: [] as number[],
+      stepsWithoutBlocks: [] as number[]
+    };
+    
     for (let i = 1; i <= 21; i++) {
-      map[i] = (getBlocksForStep(i, state.stepBlocks) || []).length > 0;
+      const blocks = getBlocksForStep(i, state.stepBlocks) || [];
+      const hasBlocks = blocks.length > 0;
+      map[i] = hasBlocks;
+      
+      if (hasBlocks) {
+        diagnosticInfo.stepsWithBlocks.push(i);
+      } else {
+        diagnosticInfo.stepsWithoutBlocks.push(i);
+      }
     }
+    
+    if (process.env.NODE_ENV === 'development') {
+      console.log('🔍 stepHasBlocks calculation:', {
+        ...diagnosticInfo,
+        totalStepsWithBlocks: diagnosticInfo.stepsWithBlocks.length,
+        totalStepsWithoutBlocks: diagnosticInfo.stepsWithoutBlocks.length,
+        mandatoryStepsEmpty: diagnosticInfo.stepsWithoutBlocks.filter(step => step <= 10), // First 10 should typically have content
+        finalStepsEmpty: diagnosticInfo.stepsWithoutBlocks.filter(step => step >= 19) // Final steps (19-21)
+      });
+      
+      // Add to window for debugging
+      window.__EDITOR_STEP_ANALYSIS__ = {
+        ...diagnosticInfo,
+        stepHasBlocksMap: map
+      };
+    }
+    
     return map;
   }, [state.stepBlocks]);
 
@@ -372,10 +406,46 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
     };
 
     const handleNavigate = (ev: Event) => {
+      // 🔍 INVESTIGAÇÃO #6: Enhanced event logging for race conditions
       const e = ev as CustomEvent<{ stepId?: string | number; source?: string }>;
       const target = parseStepNumber(e.detail?.stepId);
-      if (!target || target < 1 || target > 21) return;
+      
+      const eventInfo = {
+        timestamp: new Date().toISOString(),
+        eventType: ev.type,
+        rawStepId: e.detail?.stepId,
+        parsedTarget: target,
+        currentStep: state.currentStep,
+        source: e.detail?.source,
+        isValidTarget: target !== null && target >= 1 && target <= 21,
+        hasPayload: !!e.detail,
+        payloadKeys: e.detail ? Object.keys(e.detail) : []
+      };
+      
+      if (process.env.NODE_ENV === 'development') {
+        console.log('🔍 Navigation event received:', eventInfo);
+      }
+      
+      if (!target || target < 1 || target > 21) {
+        console.warn('❌ INVESTIGAÇÃO #6: Invalid navigation target:', eventInfo);
+        
+        // Add to window for debugging
+        window.__EDITOR_INVALID_NAVIGATION__ = window.__EDITOR_INVALID_NAVIGATION__ || [];
+        window.__EDITOR_INVALID_NAVIGATION__.push(eventInfo);
+        return;
+      }
+      
+      // Check for potential race condition
+      if (Math.abs(target - state.currentStep) > 1) {
+        console.log('⚠️  INVESTIGAÇÃO #6: Potential rapid navigation:', {
+          ...eventInfo,
+          stepJump: target - state.currentStep,
+          isRapidNavigation: true
+        });
+      }
+      
       actions.setCurrentStep(target);
+      
       if (process.env.NODE_ENV === 'development') {
         // eslint-disable-next-line no-console
         console.log(

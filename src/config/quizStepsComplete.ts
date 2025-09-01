@@ -26,16 +26,55 @@ export function candidateKeysForStep(step: number | string) {
 }
 
 export function getBlocksForStep(step: number | string, stepBlocks?: RawStepBlocks | null): EditorBlock[] | undefined {
-  if (!stepBlocks) return undefined;
+  // 🔍 INVESTIGAÇÃO #3: Enhanced block loading diagnostics
+  const debugInfo = {
+    step,
+    stepType: typeof step,
+    hasStepBlocks: !!stepBlocks,
+    stepBlocksKeys: stepBlocks ? Object.keys(stepBlocks) : [],
+    candidates: candidateKeysForStep(step),
+    timestamp: new Date().toISOString()
+  };
+  
+  if (!stepBlocks) {
+    if (process.env.NODE_ENV === 'development') {
+      console.warn('🔍 getBlocksForStep: stepBlocks is null/undefined', debugInfo);
+    }
+    return undefined;
+  }
+  
   const candidates = candidateKeysForStep(step);
+  
   for (const key of candidates) {
     const raw = (stepBlocks as any)[key] ?? (stepBlocks as any)[String(key)];
     if (!raw) continue;
-    if (Array.isArray(raw)) return raw as EditorBlock[];
+    
+    if (Array.isArray(raw)) {
+      if (process.env.NODE_ENV === 'development' && step <= 3) { // Log first 3 steps for debugging
+        console.log('🔍 getBlocksForStep SUCCESS:', {
+          ...debugInfo,
+          foundKey: key,
+          blocksCount: raw.length,
+          blockTypes: raw.map(b => b?.type || 'unknown')
+        });
+      }
+      return raw as EditorBlock[];
+    }
+    
     if (raw && typeof raw === 'object' && 'blocks' in (raw as Record<string, any>)) {
       const maybe = (raw as Record<string, any>).blocks;
-      if (Array.isArray(maybe)) return maybe as EditorBlock[];
+      if (Array.isArray(maybe)) {
+        if (process.env.NODE_ENV === 'development') {
+          console.log('🔍 getBlocksForStep SUCCESS (nested blocks):', {
+            ...debugInfo,
+            foundKey: key,
+            blocksCount: maybe.length
+          });
+        }
+        return maybe as EditorBlock[];
+      }
     }
+    
     if (typeof raw === 'string') {
       try {
         const parsed = JSON.parse(raw);
@@ -43,11 +82,26 @@ export function getBlocksForStep(step: number | string, stepBlocks?: RawStepBloc
         if (parsed && typeof parsed === 'object' && Array.isArray((parsed as any).blocks)) return (parsed as any).blocks;
       } catch (e) { }
     }
+    
     if (raw && typeof raw === 'object') {
       const vals = Object.values(raw);
       if (vals.length > 0 && vals.every(v => typeof v === 'object')) return vals as EditorBlock[];
     }
   }
+  
+  // 🔍 INVESTIGAÇÃO #3: Log failed lookups for debugging
+  if (process.env.NODE_ENV === 'development') {
+    console.warn('🔍 getBlocksForStep: No blocks found', {
+      ...debugInfo,
+      availableKeys: stepBlocks ? Object.keys(stepBlocks).slice(0, 10) : [], // Limit output
+      firstKeyContent: stepBlocks ? (stepBlocks as any)[Object.keys(stepBlocks)[0]] : null
+    });
+    
+    // Add failed lookups to window for debugging  
+    window.__EDITOR_FAILED_BLOCK_LOOKUPS__ = window.__EDITOR_FAILED_BLOCK_LOOKUPS__ || [];
+    window.__EDITOR_FAILED_BLOCK_LOOKUPS__.push(debugInfo);
+  }
+  
   return undefined;
 }
 
