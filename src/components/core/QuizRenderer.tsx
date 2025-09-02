@@ -5,6 +5,8 @@ import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import { cn } from '@/lib/utils';
 // Validação centralizada cobre regras por etapa
 import { useCentralizedStepValidation } from '@/hooks/useCentralizedStepValidation';
+import { useStepNavigationStore } from '@/stores/useStepNavigationStore';
+import { StorageService } from '@/services/core/StorageService';
 
 interface QuizRendererProps {
   mode?: 'production' | 'preview' | 'editor';
@@ -98,17 +100,16 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
   // };
 
   // 🎨 Fundo configurável por etapa (store NoCode)
+  const getStepConfig = useStepNavigationStore(s => s.getStepConfig);
   const { stepConfig } = useMemo(() => {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const store = require('@/stores/useStepNavigationStore');
       const stepNum = currentStepOverride ?? currentStep;
-      const cfg = store.useStepNavigationStore.getState().getStepConfig(`step-${stepNum}`);
+      const cfg = getStepConfig(`step-${stepNum}`);
       return { stepConfig: cfg } as any;
     } catch {
       return { stepConfig: undefined } as any;
     }
-  }, [currentStep, currentStepOverride]);
+  }, [currentStep, currentStepOverride, getStepConfig]);
 
   const bgStyle = useMemo(() => {
     const from = stepConfig?.backgroundFrom || '#FAF9F7';
@@ -128,7 +129,7 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
       // Se não houver resultado persistido, cria um básico a partir do estado atual
       const hasResult = (() => {
         try {
-          const r = (require('@/services/core/StorageService') as any).StorageService.safeGetJSON('quizResult');
+          const r = StorageService.safeGetJSON('quizResult');
           return !!r && !!r.primaryStyle;
         } catch { return false; }
       })();
@@ -137,8 +138,7 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
         try {
           // Instanciar hook fora de React não é possível; em vez disso, tenta reaproveitar estado salvo
           // Fallback: cria um resultado mínimo neutro para não quebrar renderização
-          const Storage = (require('@/services/core/StorageService') as any).StorageService;
-          const name = Storage.safeGetString('userName') || Storage.safeGetString('quizUserName') || '';
+          const name = StorageService.safeGetString('userName') || StorageService.safeGetString('quizUserName') || '';
           const minimal = {
             primaryStyle: { category: 'Neutro', style: 'neutro', score: 0, points: 0, percentage: 0, rank: 1 },
             secondaryStyles: [],
@@ -147,7 +147,7 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
             scores: {},
             userData: { name, completionTime: new Date(), strategicAnswersCount: 0 },
           };
-          Storage.safeSetJSON('quizResult', minimal);
+          StorageService.safeSetJSON('quizResult', minimal);
         } catch { }
       }
     } catch { }

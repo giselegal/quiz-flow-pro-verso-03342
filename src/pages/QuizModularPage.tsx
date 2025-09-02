@@ -6,11 +6,17 @@ import { useStep01Validation } from '@/hooks/useStep01Validation';
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
 import { TemplateManager } from '@/utils/TemplateManager';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, Suspense } from 'react';
 import { ResultEngine } from '@/services/core/ResultEngine';
 import { SelectionRules, FlowCore } from '@/services/core/FlowCore';
 import OPTIMIZED_FUNNEL_CONFIG from '@/config/optimized21StepsFunnel';
 import useOptimizedScheduler from '@/hooks/useOptimizedScheduler';
+import { useStepNavigationStore } from '@/stores/useStepNavigationStore';
+
+// Lazy-loaded components (evita require() no runtime ESM)
+const Step20FallbackTemplate = React.lazy(() => import('@/components/quiz/Step20FallbackTemplate'));
+const QuizResultMetrics = React.lazy(() => import('@/components/quiz/QuizResultMetrics'));
+const QuizResultValidator = React.lazy(() => import('@/components/quiz/QuizResultValidator'));
 import DevResultDebug from '@/components/dev/DevResultDebug';
 
 /**
@@ -305,8 +311,8 @@ const QuizModularPage: React.FC = () => {
 
         const scoringMap = (() => {
           try {
-            const { StorageService } = require('@/services/core/StorageService');
-            return (StorageService.safeGetJSON('userSelections') as any) || {};
+            const raw = localStorage.getItem('userSelections');
+            return (raw ? JSON.parse(raw) : {}) as Record<string, string[]>;
           } catch {
             return {} as Record<string, string[]>;
           }
@@ -325,14 +331,14 @@ const QuizModularPage: React.FC = () => {
         const storageKey = canonicalQid || `step-${currentStep}-${questionId}`;
         const nextScoringMap = { ...scoringMap, [storageKey]: prefixedSelections };
         try {
-          const { StorageService } = require('@/services/core/StorageService');
-          StorageService.safeSetJSON('userSelections', nextScoringMap);
+          localStorage.setItem('userSelections', JSON.stringify(nextScoringMap));
         } catch { }
 
         // Sincronizar com armazenamento unificado para que o fallback do passo 20 use IDs prefixados
         try {
-          const { unifiedQuizStorage } = require('@/services/core/UnifiedQuizStorage');
-          unifiedQuizStorage.updateSelections(storageKey, prefixedSelections);
+          import('@/services/core/UnifiedQuizStorage')
+            .then(({ unifiedQuizStorage }) => unifiedQuizStorage.updateSelections(storageKey, prefixedSelections))
+            .catch(() => { });
         } catch { }
       } catch { }
 
@@ -389,9 +395,8 @@ const QuizModularPage: React.FC = () => {
             // manter compat com outros blocos
             try {
               const v = value.trim();
-              const { StorageService } = require('@/services/core/StorageService');
-              StorageService.safeSetString('userName', v);
-              StorageService.safeSetString('quizUserName', v);
+              localStorage.setItem('userName', v);
+              localStorage.setItem('quizUserName', v);
             } catch { }
           }
         }
@@ -399,8 +404,9 @@ const QuizModularPage: React.FC = () => {
 
       // Sincronizar também com armazenamento unificado (formData)
       try {
-        const { unifiedQuizStorage } = require('@/services/core/UnifiedQuizStorage');
-        unifiedQuizStorage.updateFormData(dataKey, value);
+        import('@/services/core/UnifiedQuizStorage')
+          .then(({ unifiedQuizStorage }) => unifiedQuizStorage.updateFormData(dataKey, value))
+          .catch(() => { });
       } catch { }
 
       return updated;
@@ -414,10 +420,12 @@ const QuizModularPage: React.FC = () => {
 
   // Registrar progresso no armazenamento unificado ao trocar de etapa
   useEffect(() => {
-    try {
-      const { unifiedQuizStorage } = require('@/services/core/UnifiedQuizStorage');
-      unifiedQuizStorage.updateProgress(currentStep);
-    } catch { }
+    (async () => {
+      try {
+        const { unifiedQuizStorage } = await import('@/services/core/UnifiedQuizStorage');
+        unifiedQuizStorage.updateProgress(currentStep);
+      } catch { }
+    })();
   }, [currentStep]);
 
   const progress = ((currentStep - 1) / 20) * 100;
@@ -425,10 +433,7 @@ const QuizModularPage: React.FC = () => {
   // 🎨 Fundo configurável por etapa (store NoCode)
   const { stepConfig } = (() => {
     try {
-      // Importar leve dentro do componente para evitar ciclos
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const store = require('@/stores/useStepNavigationStore');
-      const cfg = store.useStepNavigationStore.getState().getStepConfig(`step-${currentStep}`);
+      const cfg = useStepNavigationStore.getState().getStepConfig(`step-${currentStep}`);
       return { stepConfig: cfg } as any;
     } catch {
       return { stepConfig: undefined } as any;
@@ -445,16 +450,16 @@ const QuizModularPage: React.FC = () => {
   // ===== ✅ CÁLCULO ROBUSTO E PERSISTÊNCIA DO RESULTADO =====
   const computeAndPersistResult = React.useCallback(async (): Promise<void> => {
     console.log('🔄 [QuizModular] Iniciando cálculo de resultado...');
-    
+
     try {
       // ✅ 1. VALIDAÇÃO PRÉVIA: Garantir dados suficientes
-      const { unifiedQuizStorage } = require('@/services/core/UnifiedQuizStorage');
-      const { StorageService } = require('@/services/core/StorageService');
-      
+      const { unifiedQuizStorage } = await import('@/services/core/UnifiedQuizStorage');
+      const { StorageService } = await import('@/services/core/StorageService');
+
       if (!unifiedQuizStorage.hasEnoughDataForResult()) {
         const stats = unifiedQuizStorage.getDataStats();
         console.warn('⚠️ Dados insuficientes:', stats);
-        
+
         if (stats.selectionsCount === 0) {
           throw new Error('Nenhuma resposta registrada para calcular resultado');
         }
@@ -463,7 +468,7 @@ const QuizModularPage: React.FC = () => {
       // ✅ 2. CONSOLIDAR DADOS: Priorizar unificado, fallback para legado
       let selectionsForScoring: Record<string, string[]> = {};
       let userName = '';
-      
+
       // Primeiro: tentar dados unificados
       const unifiedData = unifiedQuizStorage.loadData();
       if (Object.keys(unifiedData.selections).length > 0) {
@@ -483,7 +488,7 @@ const QuizModularPage: React.FC = () => {
 
       // ✅ 3. EXECUTAR CÁLCULO ROBUSTO
       const weightQuestions = (OPTIMIZED_FUNNEL_CONFIG as any)?.calculations?.scoreWeights?.questions;
-      
+
       const { scores, total } = ResultEngine.computeScoresFromSelections(
         selectionsForScoring,
         {
@@ -496,11 +501,11 @@ const QuizModularPage: React.FC = () => {
       }
 
       const payload = ResultEngine.toPayload(scores, total, userName || 'Usuário');
-      
+
       // ✅ 4. PERSISTIR EM AMBOS OS SISTEMAS (sincronização completa)
       ResultEngine.persist(payload);
       unifiedQuizStorage.saveResult(payload);
-      
+
       // Persistir nome do usuário em locais compatíveis
       if (userName) {
         StorageService.safeSetString('quizUserName', userName);
@@ -520,26 +525,26 @@ const QuizModularPage: React.FC = () => {
 
     } catch (error: any) {
       console.error('❌ [QuizModular] Erro no cálculo:', error);
-      
+
       // ✅ FASE 4: Registrar falha nas métricas
       if ((window as any).__quizMetrics?.recordFailedCalculation) {
         (window as any).__quizMetrics.recordFailedCalculation((error as Error)?.message || 'Erro desconhecido');
       }
-      
+
       // ✅ 5. FALLBACK ROBUSTO: Usar calculadora externa
       try {
         console.log('🔄 Tentando fallback com calculadora robusta...');
-        const { calculateAndSaveQuizResult } = require('@/utils/quizResultCalculator');
+        const { calculateAndSaveQuizResult } = await import('@/utils/quizResultCalculator');
         await calculateAndSaveQuizResult();
         console.log('✅ Fallback bem-sucedido');
       } catch (fallbackError) {
         console.error('❌ Fallback também falhou:', fallbackError);
-        
+
         // Registrar falha dupla nas métricas
         if ((window as any).__quizMetrics?.recordFailedCalculation) {
           (window as any).__quizMetrics.recordFailedCalculation('Fallback failed: ' + (fallbackError as Error)?.message);
         }
-        
+
         throw new Error(`Falha completa no cálculo: ${(error as Error)?.message || 'Erro desconhecido'}`);
       }
     }
@@ -554,22 +559,22 @@ const QuizModularPage: React.FC = () => {
           console.log('🎯 Iniciando cálculo obrigatório na etapa 19...');
           await computeAndPersistResult();
           console.log('✅ Cálculo completado na etapa 19');
-          
+
           // Emitir evento para confirmar que resultado está pronto
           window.dispatchEvent(new Event('quiz-result-updated'));
         } catch (error) {
           console.error('❌ Falha no cálculo da etapa 19:', error);
-          
+
           // Fallback: tentar via calculadora robusta
           try {
-            const { calculateAndSaveQuizResult } = require('@/utils/quizResultCalculator');
+            const { calculateAndSaveQuizResult } = await import('@/utils/quizResultCalculator');
             await calculateAndSaveQuizResult();
           } catch (fallbackError) {
             console.error('❌ Fallback também falhou:', fallbackError);
           }
         }
       };
-      
+
       performCalculation();
     }
   }, [currentStep, computeAndPersistResult]);
@@ -579,22 +584,22 @@ const QuizModularPage: React.FC = () => {
     if (currentStep === 20) {
       const ensureResult = async () => {
         try {
-          const { StorageService } = require('@/services/core/StorageService');
-          const { unifiedQuizStorage } = require('@/services/core/UnifiedQuizStorage');
-          
+          const { StorageService } = await import('@/services/core/StorageService');
+          const { unifiedQuizStorage } = await import('@/services/core/UnifiedQuizStorage');
+
           // Verificar múltiplas fontes de resultado
           const legacyResult = StorageService.safeGetJSON('quizResult');
           const unifiedResult = unifiedQuizStorage.loadData().result;
-          
+
           if (!legacyResult && !unifiedResult) {
             console.log('⚠️ Nenhum resultado encontrado na etapa 20, recalculando...');
             await computeAndPersistResult();
           } else {
-            console.log('✅ Resultado encontrado na etapa 20:', { 
-              legacy: Boolean(legacyResult), 
-              unified: Boolean(unifiedResult) 
+            console.log('✅ Resultado encontrado na etapa 20:', {
+              legacy: Boolean(legacyResult),
+              unified: Boolean(unifiedResult)
             });
-            
+
             // Sincronizar sistemas se necessário
             if (legacyResult && !unifiedResult) {
               unifiedQuizStorage.saveResult(legacyResult);
@@ -602,7 +607,7 @@ const QuizModularPage: React.FC = () => {
               StorageService.safeSetJSON('quizResult', unifiedResult);
             }
           }
-          
+
           // Sempre notificar UI para reagir
           window.dispatchEvent(new Event('quiz-result-updated'));
           window.dispatchEvent(new Event('quiz-result-refresh'));
@@ -610,7 +615,7 @@ const QuizModularPage: React.FC = () => {
           console.error('❌ Falha ao garantir resultado na etapa 20:', error);
         }
       };
-      
+
       ensureResult();
     }
   }, [currentStep, computeAndPersistResult]);
@@ -778,10 +783,11 @@ const QuizModularPage: React.FC = () => {
                       {(() => {
                         // ✅ FASE 3: Template robusto para etapa 20 com fallback inteligente
                         if (currentStep === 20 && blocks.length === 0) {
-                          const Step20FallbackTemplate = require('@/components/quiz/Step20FallbackTemplate').default;
                           return (
                             <div className="quiz-content p-8">
-                              <Step20FallbackTemplate />
+                              <Suspense fallback={<div className="text-center p-6">Carregando resultado…</div>}>
+                                <Step20FallbackTemplate />
+                              </Suspense>
                             </div>
                           );
                         }
@@ -899,25 +905,19 @@ const QuizModularPage: React.FC = () => {
       </div>
       {/* ✅ FASE 4: Métricas e monitoramento avançado */}
       {import.meta?.env?.DEV && (
-        <>
-          {(() => {
-            const QuizResultMetrics = require('@/components/quiz/QuizResultMetrics').default;
-            return <QuizResultMetrics />;
-          })()}
-        </>
+        <Suspense fallback={null}>
+          <QuizResultMetrics />
+        </Suspense>
       )}
-      
+
       {/* Dev-only result debug widget */}
       <DevResultDebug />
-      
+
       {/* ✅ Validador de resultado sempre ativo na etapa 20 */}
       {currentStep === 20 && (
-        <>
-          {(() => {
-            const QuizResultValidator = require('@/components/quiz/QuizResultValidator').default;
-            return <QuizResultValidator />;
-          })()}
-        </>
+        <Suspense fallback={null}>
+          <QuizResultValidator />
+        </Suspense>
       )}
     </>
   );
