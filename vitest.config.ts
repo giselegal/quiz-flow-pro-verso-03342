@@ -21,8 +21,11 @@ export default defineConfig({
     poolOptions: {
       threads: {
         minThreads: 1,
-        maxThreads: 2,
+        maxThreads: 1,
       },
+    },
+    sequence: {
+      concurrent: false,
     },
     include: [
       'src/**/*.{test,spec}.{js,ts,jsx,tsx}',

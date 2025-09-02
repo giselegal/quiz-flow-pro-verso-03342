@@ -34,7 +34,7 @@
     "test:render": "vitest run -t render",
     "test:21steps": "vitest run -t steps",
     "test:ui": "vitest --ui",
-    "test:run": "vitest run",
+  "test:run": "cross-env NODE_OPTIONS=--max-old-space-size=2048 vitest run",
     "test:coverage": "vitest --coverage",
     "audit:data": "tsx scripts/audit/dataAudit.ts",
     "migrate:data": "tsx scripts/migration/dataMigration.ts",

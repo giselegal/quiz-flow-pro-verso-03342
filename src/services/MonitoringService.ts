@@ -298,8 +298,9 @@ export const useMonitoring = () => {
   };
 };
 
-// Capturar erros globais
-if (typeof window !== 'undefined') {
+// Capturar erros globais (desabilitado em ambiente de teste para evitar ruído/memória)
+const __IS_TEST__ = typeof import.meta !== 'undefined' && (import.meta as any).env && Boolean((import.meta as any).env.VITEST);
+if (typeof window !== 'undefined' && !__IS_TEST__) {
   window.onerror = (message, source, lineno, colno, error) => {
     const monitoring = MonitoringService.getInstance();
     monitoring.trackError(error || new Error(String(message)), {
