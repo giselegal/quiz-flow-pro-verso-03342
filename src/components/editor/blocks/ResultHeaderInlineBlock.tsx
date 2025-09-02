@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { InlineEditableText } from './InlineEditableText';
 import { Progress } from '@/components/ui/progress';
 import { Card } from '@/components/ui/card';
@@ -149,20 +149,20 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
   const alignClass = textAlign === 'left' ? 'text-left' : textAlign === 'right' ? 'text-right' : 'text-center';
 
   // Compat: classes/estilo para faixa de header simples (se logoUrl estiver presente)
-  const legacyContainerClasses = useMemo(() => {
+  const legacyContainerClasses = (() => {
     const widthCls = containerWidth === 'small' ? 'max-w-sm' : containerWidth === 'medium' ? 'max-w-md' : containerWidth === 'large' ? 'max-w-lg' : 'max-w-full';
     const padCls = spacing === 'small' ? 'py-2' : spacing === 'large' ? 'py-6' : 'py-4';
     const mtCls = marginTop <= 0 ? 'mt-0' : marginTop <= 8 ? 'mt-2' : marginTop <= 16 ? 'mt-4' : marginTop <= 24 ? 'mt-6' : 'mt-8';
     const mbCls = marginBottom <= 0 ? 'mb-0' : marginBottom <= 8 ? 'mb-2' : marginBottom <= 16 ? 'mb-4' : marginBottom <= 24 ? 'mb-6' : 'mb-8';
     return cn('w-full mx-auto', widthCls, padCls, mtCls, mbCls);
-  }, [containerWidth, spacing, marginTop, marginBottom]);
+  })();
 
-  const legacyHeaderStyle = useMemo(() => {
+  const legacyHeaderStyle: React.CSSProperties = (() => {
     const style: React.CSSProperties = {};
     if (backgroundColor) style.backgroundColor = backgroundColor as any;
     if (showBorder && borderColor) Object.assign(style, { borderColor, borderWidth: '1px', borderStyle: 'solid' });
     return style;
-  }, [backgroundColor, showBorder, borderColor]);
+  })();
 
   return (
     <div
