@@ -217,8 +217,14 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
 
       // 🔗 Persistência unificada (produção/runtime)
       try {
-        const { unifiedQuizStorage } = require('@/services/core/UnifiedQuizStorage');
-        unifiedQuizStorage.updateSelections(String(questionId), selectedIds);
+        // usar import dinâmico para evitar require no cliente
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
+        (async () => {
+          try {
+            const { unifiedQuizStorage } = await import('@/services/core/UnifiedQuizStorage');
+            unifiedQuizStorage.updateSelections(String(questionId), selectedIds);
+          } catch { /* noop */ }
+        })();
       } catch { /* noop */ }
 
       // 🧰 Espelho legado para compatibilidade com validadores antigos

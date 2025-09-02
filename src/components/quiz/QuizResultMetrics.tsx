@@ -7,6 +7,8 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { BarChart3, TrendingUp, Clock, Users } from 'lucide-react';
+import { StorageService } from '@/services/core/StorageService';
+import { unifiedQuizStorage } from '@/services/core/UnifiedQuizStorage';
 
 interface QuizMetrics {
   calculationAttempts: number;
@@ -39,7 +41,7 @@ export const QuizResultMetrics: React.FC = () => {
 
     window.addEventListener('quiz-result-updated', handleResultUpdate);
     window.addEventListener('quiz-calculation-started', handleCalculationStart);
-    
+
     return () => {
       window.removeEventListener('quiz-result-updated', handleResultUpdate);
       window.removeEventListener('quiz-calculation-started', handleCalculationStart);
@@ -85,7 +87,7 @@ export const QuizResultMetrics: React.FC = () => {
     };
     setMetrics(updated);
     localStorage.setItem('quiz-metrics', JSON.stringify(updated));
-    
+
     // Emitir evento customizado para tracking
     window.dispatchEvent(new CustomEvent('quiz-calculation-started', {
       detail: { timestamp: Date.now() }
@@ -95,7 +97,7 @@ export const QuizResultMetrics: React.FC = () => {
   const recordSuccessfulCalculation = () => {
     const current = metrics || initializeMetricsSync();
     const calculationTime = Date.now() - current.lastCalculationTime;
-    
+
     const updated = {
       ...current,
       successfulCalculations: current.successfulCalculations + 1,
@@ -116,7 +118,7 @@ export const QuizResultMetrics: React.FC = () => {
       };
       setMetrics(updated);
       localStorage.setItem('quiz-metrics', JSON.stringify(updated));
-      
+
       // Log para debugging
       console.error('❌ [Metrics] Cálculo falhou:', error);
     };
@@ -146,15 +148,10 @@ export const QuizResultMetrics: React.FC = () => {
 
   const calculateDataQuality = () => {
     try {
-      const { StorageService } = require('@/services/core/StorageService');
-      const { unifiedQuizStorage } = require('@/services/core/UnifiedQuizStorage');
-      
       const stats = unifiedQuizStorage.getDataStats();
       const userSelections = StorageService.safeGetJSON('userSelections') || {};
-      
       const totalQuestions = Math.max(stats.selectionsCount, Object.keys(userSelections).length);
       const expectedQuestions = 10; // Quiz tem 10 perguntas pontuadas
-      
       return {
         selectionsCount: totalQuestions,
         averageSelectionsPerQuestion: stats.selectionsCount / Math.max(1, expectedQuestions),
@@ -181,13 +178,13 @@ export const QuizResultMetrics: React.FC = () => {
 
   const exportMetrics = () => {
     if (!metrics) return;
-    
+
     const data = {
       ...metrics,
       timestamp: new Date().toISOString(),
       successRate: getSuccessRate()
     };
-    
+
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -244,12 +241,12 @@ export const QuizResultMetrics: React.FC = () => {
           <span>Tentativas:</span>
           <span>{metrics.calculationAttempts}</span>
         </div>
-        
+
         <div className="flex items-center justify-between">
           <span>Sucessos:</span>
           <span className="text-green-600">{metrics.successfulCalculations}</span>
         </div>
-        
+
         <div className="flex items-center justify-between">
           <span>Falhas:</span>
           <span className="text-red-600">{metrics.failedCalculations}</span>
@@ -275,7 +272,7 @@ export const QuizResultMetrics: React.FC = () => {
               {metrics.dataQuality.completionRate.toFixed(0)}%
             </span>
           </div>
-          
+
           <div className="flex items-center justify-between">
             <span>Seleções:</span>
             <span>{metrics.dataQuality.selectionsCount}</span>

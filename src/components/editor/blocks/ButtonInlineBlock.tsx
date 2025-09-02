@@ -6,6 +6,7 @@ import { sessionService } from '../../../services/sessionService';
 import { userResponseService } from '../../../services/userResponseService';
 import { trackQuizStart } from '../../../utils/analytics';
 import { useOptimizedScheduler } from '@/hooks/useOptimizedScheduler';
+import { StorageService } from '@/services/core/StorageService';
 
 /**
  * ButtonInlineBlock - Componente modular inline horizontal
@@ -503,7 +504,6 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
 
               // Save start time and user data (via StorageService com fallback)
               try {
-                const { StorageService } = require('@/services/core/StorageService');
                 StorageService.safeSetString('quiz_start_time', Date.now().toString());
                 StorageService.safeSetString('quiz_start_tracked', 'true');
                 StorageService.safeSetString('userName', userName);

@@ -76,13 +76,7 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
       if (fromUrl) return fromUrl;
     } catch { }
     if (_funnelId) return _funnelId;
-    try {
-      // Tentar ler de um contexto central se exposto globalmente
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const ctx = require('@/context/EditorContext');
-      const id = ctx?.useEditor?.()?.currentFunnelId;
-      if (typeof id === 'string' && id) return id;
-    } catch { }
+    // Fallback estável quando não encontramos via URL ou prop
     return 'optimized-21-steps-funnel';
   }, [_funnelId]);
   // Verificação de segurança para evitar erro de undefined

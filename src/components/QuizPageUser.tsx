@@ -1,6 +1,7 @@
 // @ts-nocheck
 import { useAuth } from '@/context/AuthContext';
 import { useLoadingState } from '@/hooks/useLoadingState';
+import { StorageService } from '@/services/core/StorageService';
 
 const UserQuizPage: React.FC = () => {
   const { user } = useAuth();
@@ -10,7 +11,6 @@ const UserQuizPage: React.FC = () => {
   let userName = user?.name || user?.email || '';
   if (!userName) {
     try {
-      const { StorageService } = require('@/services/core/StorageService');
       userName =
         StorageService.safeGetString('userName') ||
         StorageService.safeGetString('quizUserName') ||

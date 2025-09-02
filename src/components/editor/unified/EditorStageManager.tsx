@@ -153,46 +153,46 @@ export const EditorStageManager: React.FC<EditorStageManagerProps> = ({
     }
 
     if (quizState.currentStep === 19 || quizState.currentStep === 20) {
-      try {
-        // Evitar recálculo se já existe resultado válido
-        const { StorageService } = require('@/services/core/StorageService');
-        const existing = StorageService.safeGetJSON('quizResult');
-        if (existing?.primaryStyle) {
-          try { window.dispatchEvent(new Event('quiz-result-updated')); } catch { }
-          return;
-        }
-
-        if (computedOnceRef.current) {
-          return;
-        }
-        computedOnceRef.current = true;
-
-        // Coletar respostas incrementais salvas no editor
-        const raw = (StorageService.safeGetJSON('quizResponses') as any) || {};
-        const selectionsByQuestion: Record<string, string[]> = {};
+      (async () => {
         try {
-          Object.values(raw || {}).forEach((questions: any) => {
-            Object.entries(questions || {}).forEach(([qid, entry]: any) => {
-              if (Array.isArray(entry?.ids)) {
-                selectionsByQuestion[qid] = Array.from(new Set([...(selectionsByQuestion[qid] || []), ...entry.ids]));
-              } else if (Array.isArray(entry?.texts) && entry.texts.length > 0) {
-                // textos livres não pontuam diretamente; podem ser usados por IA futura
-                if (!selectionsByQuestion[qid]) selectionsByQuestion[qid] = [];
-              }
+          // Evitar recálculo se já existe resultado válido
+          const { StorageService } = await import('@/services/core/StorageService');
+          const existing = StorageService.safeGetJSON('quizResult');
+          if (existing?.primaryStyle) {
+            try { window.dispatchEvent(new Event('quiz-result-updated')); } catch { }
+            return;
+          }
+
+          if (computedOnceRef.current) {
+            return;
+          }
+          computedOnceRef.current = true;
+
+          // Coletar respostas incrementais salvas no editor
+          const raw = (StorageService.safeGetJSON('quizResponses') as any) || {};
+          const selectionsByQuestion: Record<string, string[]> = {};
+          try {
+            Object.values(raw || {}).forEach((questions: any) => {
+              Object.entries(questions || {}).forEach(([qid, entry]: any) => {
+                if (Array.isArray(entry?.ids)) {
+                  selectionsByQuestion[qid] = Array.from(new Set([...(selectionsByQuestion[qid] || []), ...entry.ids]));
+                } else if (Array.isArray(entry?.texts) && entry.texts.length > 0) {
+                  // textos livres não pontuam diretamente; podem ser usados por IA futura
+                  if (!selectionsByQuestion[qid]) selectionsByQuestion[qid] = [];
+                }
+              });
             });
-          });
-        } catch { /* ignora transformação */ }
+          } catch { /* ignora transformação */ }
 
-        const name =
-          StorageService.safeGetString('userName') ||
-          StorageService.safeGetString('quizUserName') ||
-          '';
-        const sessionId = StorageService.safeGetString('quizSessionId') || null;
+          const name =
+            StorageService.safeGetString('userName') ||
+            StorageService.safeGetString('quizUserName') ||
+            '';
+          const sessionId = StorageService.safeGetString('quizSessionId') || null;
 
-        // Usar orquestrador central para calcular e persistir localmente
-        Promise.resolve()
-          .then(async () => {
-            const { ResultOrchestrator } = require('@/services/core/ResultOrchestrator');
+          // Usar orquestrador central para calcular e persistir localmente
+          try {
+            const { ResultOrchestrator } = await import('@/services/core/ResultOrchestrator');
             await ResultOrchestrator.run({
               selectionsByQuestion,
               userName: name,
@@ -200,20 +200,20 @@ export const EditorStageManager: React.FC<EditorStageManagerProps> = ({
               persistToSupabase: false,
               sessionId,
             });
-          })
-          .catch(() => {
+          } catch {
             // fallback mínimo local em caso de erro inesperado
             try {
-              const { ResultEngine } = require('@/services/core/ResultEngine');
+              const { ResultEngine } = await import('@/services/core/ResultEngine');
               const { scores, total } = ResultEngine.computeScoresFromSelections(selectionsByQuestion, { weightQuestions: 1 });
               const payload = ResultEngine.toPayload(scores, total, name);
               ResultEngine.persist(payload);
               try { window.dispatchEvent(new Event('quiz-result-updated')); } catch { }
             } catch { }
-          });
-      } catch {
-        // ignora em modo editor
-      }
+          }
+        } catch {
+          // ignora em modo editor
+        }
+      })();
     }
   }, [quizState.currentStep]);
 

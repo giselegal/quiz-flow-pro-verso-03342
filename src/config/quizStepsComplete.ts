@@ -139,8 +139,14 @@ export function normalizeStepBlocks(raw?: RawStepBlocks | null): StepBlocks {
   // Scanner leve de duplicidade em dev (não bloqueante)
   try {
     if (process.env.NODE_ENV === 'development') {
-      const { scanDuplicateQuestionIds } = require('@/utils/duplicateQuestionScanner');
-      scanDuplicateQuestionIds(out as any);
+      // usar import dinâmico para evitar require() no bundle do cliente
+      import('@/utils/duplicateQuestionScanner')
+        .then(mod => {
+          try {
+            (mod as any).scanDuplicateQuestionIds?.(out as any);
+          } catch { }
+        })
+        .catch(() => { /* noop em produção */ });
     }
   } catch { }
   return out;

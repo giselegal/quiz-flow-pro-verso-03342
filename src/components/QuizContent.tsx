@@ -2,6 +2,7 @@ import QuizQuestion from './QuizQuestion';
 import { UserResponse } from '@/types/quiz';
 import { QuizHeader } from './quiz/QuizHeader';
 import { StrategicQuestions } from './quiz/StrategicQuestions';
+import { StorageService } from '@/services/core/StorageService';
 
 interface QuizContentProps {
   user: any;
@@ -28,7 +29,6 @@ export const QuizContent: React.FC<QuizContentProps> = ({
   let userName = user?.userName || '';
   if (!userName) {
     try {
-      const { StorageService } = require('@/services/core/StorageService');
       userName =
         StorageService.safeGetString('userName') ||
         StorageService.safeGetString('quizUserName') ||
@@ -45,11 +45,11 @@ export const QuizContent: React.FC<QuizContentProps> = ({
   // Create strategic answers object safely
   const strategicAnswers = showingStrategicQuestions
     ? currentAnswers.reduce((acc: Record<string, string[]>, optionId) => {
-        if (currentQuestion?.id) {
-          acc[currentQuestion.id] = [optionId];
-        }
-        return acc;
-      }, {})
+      if (currentQuestion?.id) {
+        acc[currentQuestion.id] = [optionId];
+      }
+      return acc;
+    }, {})
     : {};
 
   return (

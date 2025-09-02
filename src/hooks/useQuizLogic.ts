@@ -187,7 +187,7 @@ export const useQuizLogic = () => {
     [userName, strategicAnswers.length]
   );
 
-  const completeQuiz = useCallback(() => {
+  const completeQuiz = useCallback(async () => {
     const calculatedResult = calculateResults(answers);
     setQuizResult(calculatedResult);
 
@@ -198,7 +198,7 @@ export const useQuizLogic = () => {
 
       // Tentar calcular via serviço central (se disponível) com respostas agregadas
       try {
-        const central = (require('@/services/quizResultsService') as any).quizResultsService;
+        const { quizResultsService: central } = await import('@/services/quizResultsService');
         // Montar responses a partir do storage incremental das seleções
         const incremental = (StorageService.safeGetJSON('quizResponses') as any) || {};
         const sessionId = StorageService.safeGetString('quizSessionId') || `local-${Date.now()}`;

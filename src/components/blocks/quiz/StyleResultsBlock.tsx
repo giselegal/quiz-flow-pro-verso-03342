@@ -20,14 +20,9 @@ const getMarginClass = (value, type) => {
   // ... (mantido igual)
 };
 
-// Carregar styleConfig com tratamento de erro
-let safeStyleConfig = {};
-try {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  safeStyleConfig = require('@/config/styleConfig').styleConfig || {};
-} catch (error) {
-  console.error('Erro ao carregar styleConfig:', error);
-}
+// Carregar styleConfig com tratamento de erro (ESM)
+import { styleConfig as __styleConfig } from '@/config/styleConfig';
+const safeStyleConfig = __styleConfig || {};
 
 const StyleResultsBlock: React.FC<StyleResultsBlockProps> = ({
   result,
@@ -41,11 +36,11 @@ const StyleResultsBlock: React.FC<StyleResultsBlockProps> = ({
   const { user } = useAuth();
   const userName = user?.name || user?.email || 'Usuário';
   const [showGuideModal, setShowGuideModal] = useState(false);
-  
+
   // Adicionar logs para depuração
   console.log('StyleResultsBlock - result:', result);
   console.log('StyleResultsBlock - categoryScores:', categoryScores);
-  
+
   // Verificar se result é válido
   if (!result) {
     return (
@@ -69,7 +64,7 @@ const StyleResultsBlock: React.FC<StyleResultsBlockProps> = ({
       </div>
     );
   }
-  
+
   // Verificar se categoryScores é válido
   if (!categoryScores || Object.keys(categoryScores).length === 0) {
     return (
@@ -93,20 +88,20 @@ const StyleResultsBlock: React.FC<StyleResultsBlockProps> = ({
       </div>
     );
   }
-  
+
   // Obter estilos ordenados por pontuação
   const sortedStyles = Object.entries(categoryScores)
     .sort(([, scoreA], [, scoreB]) => scoreB - scoreA)
     .filter(([style]) => style in safeStyleConfig);
-    
+
   // Se não houver estilos após o filtro, usar todos os estilos
-  const finalStyles = sortedStyles.length > 0 
-    ? sortedStyles 
+  const finalStyles = sortedStyles.length > 0
+    ? sortedStyles
     : Object.entries(categoryScores).sort(([, scoreA], [, scoreB]) => scoreB - scoreA);
-    
+
   // Estilo principal (maior pontuação)
   const mainStyle = finalStyles[0]?.[0] as keyof typeof safeStyleConfig | undefined;
-  
+
   return (
     <div className="max-w-3xl mx-auto p-6 bg-white rounded-2xl shadow-lg">
       <div className="text-center mb-8">

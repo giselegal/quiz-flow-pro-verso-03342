@@ -192,14 +192,15 @@ export const QuizFlowProvider: React.FC<QuizFlowProviderProps> = ({
     const computeAndPersist = async () => {
       try {
         // Evitar recálculo contínuo se já existe
-        const existing = (require('@/services/core/StorageService') as any).StorageService.safeGetJSON('quizResult');
+        const { StorageService } = await import('@/services/core/StorageService');
+        const existing = StorageService.safeGetJSON('quizResult');
         if (existing && existing.primaryStyle) {
           // Notificar listeners para sincronizar blocos
           try { window.dispatchEvent(new Event('quiz-result-updated')); } catch { }
           return;
         }
 
-        const Storage = (require('@/services/core/StorageService') as any).StorageService;
+        const { StorageService: Storage } = await import('@/services/core/StorageService');
         const raw = (Storage.safeGetJSON('quizResponses') as any) || {};
         // Transformar respostas incrementais para formato consumível pelo serviço central
         const transformed: Record<string, any> = {};
@@ -221,7 +222,7 @@ export const QuizFlowProvider: React.FC<QuizFlowProviderProps> = ({
         // Tentar serviço central
         let scores: Record<string, number> | null = null;
         try {
-          const { quizResultsService } = require('@/services/quizResultsService');
+          const { quizResultsService } = await import('@/services/quizResultsService');
           const results = await quizResultsService.calculateResults({
             id: sessionId,
             session_id: sessionId,
@@ -277,7 +278,7 @@ export const QuizFlowProvider: React.FC<QuizFlowProviderProps> = ({
       } catch {
         // Último fallback: persistir um resultado neutro
         try {
-          const Storage = (require('@/services/core/StorageService') as any).StorageService;
+          const { StorageService: Storage } = await import('@/services/core/StorageService');
           Storage.safeSetJSON('quizResult', {
             primaryStyle: { category: 'Neutro', style: 'neutro', score: 0, percentage: 0, rank: 1 },
             secondaryStyles: [],
