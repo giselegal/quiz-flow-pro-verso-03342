@@ -50,8 +50,8 @@ const Step20Template: React.FC<Step20TemplateProps> = ({
   const handleRecalculate = async () => {
     setIsLoading(true);
     try {
-  // Aguardar o recálculo para refletir estado corretamente e capturar falhas
-  const success = await recalculateQuizResult();
+      // Aguardar o recálculo para refletir estado corretamente e capturar falhas
+      const success = await recalculateQuizResult();
       if (!success) {
         setValidationErrors(['Falha ao recalcular resultado']);
       }
@@ -71,7 +71,7 @@ const Step20Template: React.FC<Step20TemplateProps> = ({
             <div className="text-2xl font-bold text-[#432818]">
               {isLoading ? 'Calculando seu resultado...' : 'Resultado não disponível'}
             </div>
-            
+
             {validationErrors.length > 0 && (
               <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
                 <h3 className="font-medium text-yellow-800 mb-2">Problemas encontrados:</h3>
@@ -148,7 +148,7 @@ const Step20Template: React.FC<Step20TemplateProps> = ({
             <h1 className="text-3xl md:text-4xl font-bold text-[#432818] mb-4">
               Seu Estilo: {styleLabel}
             </h1>
-            
+
             <div className="text-xl text-[#6B4F43] mb-6">
               {percentage}% de compatibilidade
             </div>

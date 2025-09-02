@@ -20,7 +20,7 @@ export const useQuizResult = () => {
     try {
       // Verificar múltiplas fontes de dados
       const legacyResult = StorageService.safeGetJSON<any>('quizResult');
-      
+
       let unifiedResult = null;
       try {
         const { unifiedQuizStorage } = await import('@/services/core/UnifiedQuizStorage');
@@ -38,7 +38,7 @@ export const useQuizResult = () => {
 
       // ✅ Só calcular se não há resultado E há dados suficientes
       console.log('⚠️ Nenhum resultado encontrado, verificando dados...');
-      
+
       // Verificar se há dados suficientes para calcular
       let hasEnoughData = false;
       try {
@@ -63,14 +63,14 @@ export const useQuizResult = () => {
       });
 
       const calculationPromise = calculateAndSaveQuizResult();
-      
+
       const result = await Promise.race([calculationPromise, timeoutPromise]) as any;
-      
+
       if (result) {
         setPrimaryStyle(result.primaryStyle ?? null);
         setSecondaryStyles(result.secondaryStyles || []);
         setRetryCount(0); // Reset retry count on success
-        
+
         // Emitir eventos para outros consumidores
         window.dispatchEvent(new Event('quiz-result-updated'));
         console.log('✅ Resultado calculado e definido:', result.primaryStyle?.style);
@@ -81,7 +81,7 @@ export const useQuizResult = () => {
     } catch (error: any) {
       console.error('❌ Erro ao carregar/calcular resultado:', error);
       setError(error.message || 'Erro desconhecido');
-      
+
       // ✅ Retry automático até 3 vezes com delay crescente
       if (retryCount < 3) {
         const delay = (retryCount + 1) * 2000; // 2s, 4s, 6s
@@ -103,10 +103,10 @@ export const useQuizResult = () => {
     const handler = () => loadFromStorage();
 
     // Reage a mudanças do localStorage (em outras abas) e a eventos customizados internos
-  window.addEventListener('storage', handler);
-  window.addEventListener(EVENTS.QUIZ_RESULT_UPDATED, handler as EventListener);
-  window.addEventListener('quiz-result-refresh', handler as EventListener);
-  window.addEventListener('unified-quiz-data-updated', handler as EventListener);
+    window.addEventListener('storage', handler);
+    window.addEventListener(EVENTS.QUIZ_RESULT_UPDATED, handler as EventListener);
+    window.addEventListener('quiz-result-refresh', handler as EventListener);
+    window.addEventListener('unified-quiz-data-updated', handler as EventListener);
 
     // Adicionar listener para respostas atualizadas
     const answerHandler = () => {
@@ -120,14 +120,14 @@ export const useQuizResult = () => {
       }
     };
 
-  window.addEventListener(EVENTS.QUIZ_ANSWER_UPDATED, answerHandler);
+    window.addEventListener(EVENTS.QUIZ_ANSWER_UPDATED, answerHandler);
 
     return () => {
-  window.removeEventListener('storage', handler);
-  window.removeEventListener(EVENTS.QUIZ_RESULT_UPDATED, handler as EventListener);
-  window.removeEventListener('quiz-result-refresh', handler as EventListener);
-  window.removeEventListener('unified-quiz-data-updated', handler as EventListener);
-  window.removeEventListener(EVENTS.QUIZ_ANSWER_UPDATED, answerHandler);
+      window.removeEventListener('storage', handler);
+      window.removeEventListener(EVENTS.QUIZ_RESULT_UPDATED, handler as EventListener);
+      window.removeEventListener('quiz-result-refresh', handler as EventListener);
+      window.removeEventListener('unified-quiz-data-updated', handler as EventListener);
+      window.removeEventListener(EVENTS.QUIZ_ANSWER_UPDATED, answerHandler);
     };
   }, [loadFromStorage]);
 
