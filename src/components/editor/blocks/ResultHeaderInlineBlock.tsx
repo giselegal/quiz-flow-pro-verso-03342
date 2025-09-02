@@ -16,6 +16,38 @@ const interpolate = (text: string, vars: Record<string, any>) => {
     .replace(/\{resultStyle\}/g, vars.resultStyle || '');
 };
 
+// Helpers para normalizar nomes de estilos (aceita slugs, lower/upper, sem acentos)
+const removeDiacritics = (s: string) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+const normalizeToken = (s: string) => removeDiacritics(String(s || '')).toLowerCase().replace(/[^a-z0-9]+/g, '-');
+const mapToFriendlyStyle = (raw: string): string => {
+  const t = normalizeToken(raw);
+  // Mapear tokens conhecidos para nomes amigáveis (iguais às chaves do styleConfig)
+  const table: Record<string, string> = {
+    'natural': 'Natural',
+    'classico': 'Clássico',
+    'contemporaneo': 'Contemporâneo',
+    'elegante': 'Elegante',
+    'romantico': 'Romântico',
+    'sexy': 'Sexy',
+    'dramatico': 'Dramático',
+    'criativo': 'Criativo',
+    // Slugs alternativos
+    'estilo-natural': 'Natural',
+    'estilo-classico': 'Clássico',
+    'estilo-contemporaneo': 'Contemporâneo',
+    'estilo-elegante': 'Elegante',
+    'estilo-romantico': 'Romântico',
+    'estilo-sexy': 'Sexy',
+    'estilo-dramatico': 'Dramático',
+    'estilo-criativo': 'Criativo',
+    // Fallbacks "neutro"
+    'neutro': 'Natural',
+    'neutral': 'Natural',
+    'estilo-neutro': 'Natural',
+  };
+  return table[t] || table[t.replace(/^estilo-/, '')] || 'Natural';
+};
+
 const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
@@ -74,13 +106,23 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
     );
   }
 
-  // Capturar nome de forma robusta
-  const storedName =
+  // Capturar nome de forma robusta (incluindo UnifiedQuizStorage)
+  let storedName =
     StorageService.safeGetString('userName') ||
     StorageService.safeGetString('quizUserName') ||
     (typeof window !== 'undefined' ? (window as any).__quizUserName : '') ||
     (block as any)?.properties?.userName ||
-    'Visitante'; // Fallback explícito
+    '';
+
+  if (!storedName) {
+    try {
+      const unified = StorageService.safeGetJSON<any>('unifiedQuizData') || {};
+      const formData = unified.formData || {};
+      storedName = formData.userName || formData.name || '';
+    } catch { /* ignore */ }
+  }
+
+  if (!storedName) storedName = 'Visitante';
 
   const {
     title = 'Seu Estilo Predominante',
@@ -117,7 +159,7 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
 
   // Normalizar nome do estilo para exibição (preferir category legível)
   const styleKey = (primaryStyle as any)?.style || (primaryStyle as any)?.category || '';
-  const styleLabel = (primaryStyle as any)?.category || styleKey || 'Estilo';
+  const styleLabel = mapToFriendlyStyle((primaryStyle as any)?.category || styleKey || 'Natural');
 
   const vars = {
     userName: storedName,
@@ -133,7 +175,7 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
         : 0);
 
   // Defaults vindos do styleConfig, quando props do bloco estiverem ausentes
-  const styleInfo = getStyleConfig(styleKey || styleLabel) || {};
+  const styleInfo = getStyleConfig(styleLabel) || {};
   const effectiveImageUrl = imageUrl || (styleInfo as any)?.image || safeStylePlaceholder(styleLabel, 238, 320);
   const effectiveGuideImageUrl = guideImageUrl || (styleInfo as any)?.guideImage || safePlaceholder(540, 300, 'Guia de Estilo');
   const effectiveDescription = (block?.properties?.description && String(block.properties.description).trim().length > 0)
