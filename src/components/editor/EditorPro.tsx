@@ -341,18 +341,34 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   );
 
   const stepHasBlocks = useMemo(() => {
-    // 🔍 INVESTIGAÇÃO #4: Enhanced step calculation validation
+    // 🔍 INVESTIGAÇÃO #4: Enhanced step calculation validation with stabilized reference
+    const stepBlocksRef = state.stepBlocks;
+    if (!stepBlocksRef) {
+      return {};
+    }
+
+    // Create a stable key for memoization to prevent unnecessary recalculations
+    const stepBlocksKeys = Object.keys(stepBlocksRef).sort().join(',');
+    const stepBlocksLengths = Object.values(stepBlocksRef).map(blocks => Array.isArray(blocks) ? blocks.length : 0).join(',');
+    const stableKey = `${stepBlocksKeys}:${stepBlocksLengths}`;
+    
+    // Use a cache to prevent recalculation if the step blocks structure hasn't changed
+    const cache = (window as any).__stepHasBlocksCache = (window as any).__stepHasBlocksCache || {};
+    if (cache.key === stableKey && cache.result) {
+      return cache.result;
+    }
+
     const map: Record<number, boolean> = {};
     const diagnosticInfo = {
       timestamp: new Date().toISOString(),
-      totalStepBlocksKeys: state.stepBlocks ? Object.keys(state.stepBlocks).length : 0,
-      stepBlocksKeys: state.stepBlocks ? Object.keys(state.stepBlocks).slice(0, 10) : [], // Limit for logging
+      totalStepBlocksKeys: Object.keys(stepBlocksRef).length,
+      stepBlocksKeys: Object.keys(stepBlocksRef).slice(0, 10), // Limit for logging
       stepsWithBlocks: [] as number[],
       stepsWithoutBlocks: [] as number[]
     };
 
     for (let i = 1; i <= 21; i++) {
-      const blocks = getBlocksForStep(i, state.stepBlocks) || [];
+      const blocks = getBlocksForStep(i, stepBlocksRef) || [];
       const hasBlocks = blocks.length > 0;
       map[i] = hasBlocks;
 
@@ -363,13 +379,18 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       }
     }
 
+    // Cache the result
+    cache.key = stableKey;
+    cache.result = map;
+
     if (process.env.NODE_ENV === 'development') {
       console.log('🔍 stepHasBlocks calculation:', {
         ...diagnosticInfo,
         totalStepsWithBlocks: diagnosticInfo.stepsWithBlocks.length,
         totalStepsWithoutBlocks: diagnosticInfo.stepsWithoutBlocks.length,
         mandatoryStepsEmpty: diagnosticInfo.stepsWithoutBlocks.filter(step => step <= 10), // First 10 should typically have content
-        finalStepsEmpty: diagnosticInfo.stepsWithoutBlocks.filter(step => step >= 19) // Final steps (19-21)
+        finalStepsEmpty: diagnosticInfo.stepsWithoutBlocks.filter(step => step >= 19), // Final steps (19-21)
+        cacheKey: stableKey
       });
 
       // Add to window for debugging

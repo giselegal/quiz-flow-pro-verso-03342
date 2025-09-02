@@ -17,7 +17,7 @@ interface StepDndProviderProps {
   onDragCancel?: () => void;
 }
 
-export const StepDndProvider: React.FC<StepDndProviderProps> = ({
+export const StepDndProvider: React.FC<StepDndProviderProps> = React.memo(({
   stepNumber,
   children,
   onDragStart,
@@ -68,4 +68,7 @@ export const StepDndProvider: React.FC<StepDndProviderProps> = ({
       {children}
     </DndContext>
   );
-};
+});
+
+// Display name for debugging
+StepDndProvider.displayName = 'StepDndProvider';

@@ -96,7 +96,7 @@ async function testEditor21Etapas() {
 }
 
 // Executar teste se chamado diretamente
-if (require.main === module) {
+if (import.meta.url === `file://${process.argv[1]}`) {
   testEditor21Etapas();
 }
 

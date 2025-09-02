@@ -2,7 +2,7 @@
 import { cn } from '@/lib/utils';
 import type { BlockComponentProps } from '@/types/blocks';
 import { Edit3, Image as ImageIcon } from 'lucide-react';
-import React from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 
 /**
  * ImageInlineBlock - Componente modular inline horizontal
@@ -139,56 +139,78 @@ const ImageInlineBlock: React.FC<BlockComponentProps> = ({
     right: 'mx-0 ml-auto',
   };
 
-  const handleImageClick = () => {
+  const handleImageClick = useCallback(() => {
     if (clickable && href) {
       window.open(href, target);
     }
-  };
+  }, [clickable, href, target]);
+
+  // Memoize expensive class calculations
+  const containerClasses = useMemo(() => cn(
+    // INLINE HORIZONTAL: Flexível
+    'flex-shrink-0 flex-grow-0 relative group',
+    // Container editável
+    'p-2 rounded-lg border border-transparent',
+    'hover:border-gray-200 hover:bg-gray-50/30 transition-all duration-200',
+    'cursor-pointer',
+    isSelected && 'border-[#B89B7A] bg-[#B89B7A]/10/30',
+    className,
+    // Margens universais com controles deslizantes
+    getMarginClass(marginTop, 'top'),
+    getMarginClass(marginBottom, 'bottom'),
+    getMarginClass(marginLeft, 'left'),
+    getMarginClass(marginRight, 'right')
+  ), [isSelected, className, marginTop, marginBottom, marginLeft, marginRight]);
+
+  const imageClasses = useMemo(() => cn(
+    'relative overflow-hidden',
+    borderRadiusClasses[borderRadius as keyof typeof borderRadiusClasses],
+    aspectRatioClasses[aspectRatio as keyof typeof aspectRatioClasses],
+    resolveMaxWidth(maxWidth).className,
+    alignmentClasses[alignment as keyof typeof alignmentClasses],
+    clickable && 'cursor-pointer'
+  ), [borderRadius, aspectRatio, maxWidth, alignment, clickable]);
+
+  const imgClasses = useMemo(() => cn(
+    'w-full h-full transition-transform duration-200 hover:scale-105 block',
+    objectFitClasses[objectFit as keyof typeof objectFitClasses]
+  ), [objectFit]);
+
+  const imageStyle = useMemo(() => ({
+    width: width === 'auto' ? undefined : width,
+    height: height === 'auto' ? undefined : height,
+    ...resolveMaxWidth(maxWidth).style,
+  }), [width, height, maxWidth]);
+
+  // Stable image error handling
+  const [imageError, setImageError] = useState(false);
+  const handleImageError = useCallback(() => {
+    setImageError(true);
+  }, []);
+
+  const handleImageLoad = useCallback(() => {
+    setImageError(false);
+  }, []);
 
   return (
     <div
-      className={cn(
-        // INLINE HORIZONTAL: Flexível
-        'flex-shrink-0 flex-grow-0 relative group',
-        // Container editável
-        'p-2 rounded-lg border border-transparent',
-        'hover:border-gray-200 hover:bg-gray-50/30 transition-all duration-200',
-        'cursor-pointer',
-        isSelected && 'border-[#B89B7A] bg-[#B89B7A]/10/30',
-        className,
-        // Margens universais com controles deslizantes
-        getMarginClass(marginTop, 'top'),
-        getMarginClass(marginBottom, 'bottom'),
-        getMarginClass(marginLeft, 'left'),
-        getMarginClass(marginRight, 'right')
-      )}
+      className={containerClasses}
       onClick={onClick}
     >
-      {src ? (
+      {src && !imageError ? (
         <div className="space-y-2">
           <div
-            className={cn(
-              'relative overflow-hidden',
-              borderRadiusClasses[borderRadius as keyof typeof borderRadiusClasses],
-              aspectRatioClasses[aspectRatio as keyof typeof aspectRatioClasses],
-              resolveMaxWidth(maxWidth).className,
-              alignmentClasses[alignment as keyof typeof alignmentClasses],
-              clickable && 'cursor-pointer'
-            )}
+            className={imageClasses}
             onClick={handleImageClick}
           >
             <img
               src={src}
               alt={alt}
-              className={cn(
-                'w-full h-full transition-transform duration-200 hover:scale-105 block',
-                objectFitClasses[objectFit as keyof typeof objectFitClasses]
-              )}
-              style={{
-                width: width === 'auto' ? undefined : width,
-                height: height === 'auto' ? undefined : height,
-                ...resolveMaxWidth(maxWidth).style,
-              }}
+              className={imgClasses}
+              style={imageStyle}
+              onError={handleImageError}
+              onLoad={handleImageLoad}
+              loading="lazy"
             />
           </div>
 
@@ -213,4 +235,4 @@ const ImageInlineBlock: React.FC<BlockComponentProps> = ({
   );
 };
 
-export default ImageInlineBlock;
+export default React.memo(ImageInlineBlock);
