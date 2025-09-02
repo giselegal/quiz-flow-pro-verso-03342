@@ -7,36 +7,95 @@ import { calculateAndSaveQuizResult } from '@/utils/quizResultCalculator';
 export const useQuizResult = () => {
   const [primaryStyle, setPrimaryStyle] = useState<StyleResult | null>(null);
   const [secondaryStyles, setSecondaryStyles] = useState<StyleResult[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [retryCount, setRetryCount] = useState(0);
 
-  const loadFromStorage = useCallback(() => {
+  const loadFromStorage = useCallback(async () => {
+    // ✅ CORREÇÃO CRÍTICA: Evitar loading infinito com timeout e retry
+    setIsLoading(true);
+    setError(null);
+
     try {
-      const parsedResult = StorageService.safeGetJSON<any>('quizResult');
-      if (parsedResult) {
-        setPrimaryStyle(parsedResult.primaryStyle ?? null);
-        setSecondaryStyles(parsedResult.secondaryStyles || []);
-      } else {
-        // Se não houver resultado salvo, tentar calcular
-        console.log('Nenhum resultado encontrado, tentando calcular...');
-        // Calcular e, quando pronto, atualizar estado imediatamente e notificar listeners
-        Promise.resolve(calculateAndSaveQuizResult())
-          .then(result => {
-            if (result) {
-              try {
-                setPrimaryStyle(result.primaryStyle ?? null);
-                setSecondaryStyles(result.secondaryStyles || []);
-              } catch { }
-              // Emite evento para outros consumidores que dependem de eventos
-              try { window.dispatchEvent(new Event('quiz-result-updated')); } catch { }
-            }
-          })
-          .catch(err => {
-            console.error('Erro ao calcular resultado do quiz:', err);
-          });
+      // Verificar múltiplas fontes de dados
+      const legacyResult = StorageService.safeGetJSON<any>('quizResult');
+      
+      let unifiedResult = null;
+      try {
+        const { unifiedQuizStorage } = await import('@/services/core/UnifiedQuizStorage');
+        unifiedResult = unifiedQuizStorage.loadData().result;
+      } catch { /* ignore */ }
+
+      // Usar resultado existente se disponível
+      if (legacyResult || unifiedResult) {
+        const result = legacyResult || unifiedResult;
+        setPrimaryStyle(result.primaryStyle ?? null);
+        setSecondaryStyles(result.secondaryStyles || []);
+        console.log('✅ Resultado carregado do storage:', result.primaryStyle?.style);
+        return;
       }
-    } catch (error) {
-      console.error('Error loading quiz result:', error);
+
+      // ✅ Só calcular se não há resultado E há dados suficientes
+      console.log('⚠️ Nenhum resultado encontrado, verificando dados...');
+      
+      // Verificar se há dados suficientes para calcular
+      let hasEnoughData = false;
+      try {
+        const { unifiedQuizStorage } = await import('@/services/core/UnifiedQuizStorage');
+        hasEnoughData = unifiedQuizStorage.hasEnoughDataForResult();
+      } catch {
+        // Fallback: verificar dados legados
+        const userSelections = StorageService.safeGetJSON<Record<string, string[]>>('userSelections') || {};
+        hasEnoughData = Object.keys(userSelections).length >= 3;
+      }
+
+      if (!hasEnoughData) {
+        console.warn('⚠️ Dados insuficientes para calcular resultado');
+        setError('Dados insuficientes para calcular resultado');
+        return;
+      }
+
+      // ✅ Calcular com timeout de 10 segundos
+      console.log('🔄 Iniciando cálculo com timeout...');
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error('Timeout: cálculo demorou mais de 10 segundos')), 10000);
+      });
+
+      const calculationPromise = calculateAndSaveQuizResult();
+      
+      const result = await Promise.race([calculationPromise, timeoutPromise]) as any;
+      
+      if (result) {
+        setPrimaryStyle(result.primaryStyle ?? null);
+        setSecondaryStyles(result.secondaryStyles || []);
+        setRetryCount(0); // Reset retry count on success
+        
+        // Emitir eventos para outros consumidores
+        window.dispatchEvent(new Event('quiz-result-updated'));
+        console.log('✅ Resultado calculado e definido:', result.primaryStyle?.style);
+      } else {
+        throw new Error('Cálculo retornou resultado vazio');
+      }
+
+    } catch (error: any) {
+      console.error('❌ Erro ao carregar/calcular resultado:', error);
+      setError(error.message || 'Erro desconhecido');
+      
+      // ✅ Retry automático até 3 vezes com delay crescente
+      if (retryCount < 3) {
+        const delay = (retryCount + 1) * 2000; // 2s, 4s, 6s
+        console.log(`🔄 Tentativa ${retryCount + 1}/3 em ${delay}ms...`);
+        setTimeout(() => {
+          setRetryCount(prev => prev + 1);
+          loadFromStorage();
+        }, delay);
+      } else {
+        console.error('❌ Esgotadas tentativas de retry');
+      }
+    } finally {
+      setIsLoading(false);
     }
-  }, []);
+  }, [retryCount]);
 
   useEffect(() => {
     loadFromStorage();
@@ -69,8 +128,19 @@ export const useQuizResult = () => {
     };
   }, [loadFromStorage]);
 
+  // ✅ Função manual de retry para componentes
+  const retry = useCallback(() => {
+    setRetryCount(0);
+    setError(null);
+    loadFromStorage();
+  }, [loadFromStorage]);
+
   return {
     primaryStyle,
     secondaryStyles,
+    isLoading,
+    error,
+    retry,
+    hasResult: Boolean(primaryStyle),
   };
 };

@@ -22,19 +22,54 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
   onPropertyChange,
   className = '',
 }) => {
-  const { primaryStyle } = useQuizResult();
+  const { primaryStyle, isLoading, error, retry, hasResult } = useQuizResult();
   const [imageError, setImageError] = useState(false);
   const [guideImageError, setGuideImageError] = useState(false);
 
-  // Adicione logs para depuração
-  console.log('primaryStyle:', primaryStyle);
-
-  // Verifique se primaryStyle está definido
-  if (!primaryStyle) {
+  // ✅ CORREÇÃO CRÍTICA: Estados de loading, erro e retry
+  if (isLoading) {
     return (
-      <div className="p-4 text-center">
-        <p>Carregando resultado...</p>
-        <p>Se isso persistir, verifique se as respostas foram salvas corretamente.</p>
+      <div className={cn("text-center p-8", className)}>
+        <div className="animate-pulse space-y-4">
+          <div className="h-8 bg-gray-200 rounded w-3/4 mx-auto"></div>
+          <div className="h-4 bg-gray-200 rounded w-1/2 mx-auto"></div>
+          <div className="h-32 bg-gray-200 rounded mx-auto w-64"></div>
+        </div>
+        <p className="text-sm text-gray-500 mt-4">Calculando seu resultado...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className={cn("text-center p-8", className)}>
+        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+          <div className="text-yellow-800 mb-2">⚠️ Problema no resultado</div>
+          <p className="text-sm text-yellow-700 mb-4">{error}</p>
+          <button
+            onClick={retry}
+            className="border border-yellow-300 text-yellow-800 hover:bg-yellow-100 px-4 py-2 rounded"
+          >
+            🔄 Tentar Novamente
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!hasResult || !primaryStyle) {
+    return (
+      <div className={cn("text-center p-8", className)}>
+        <div className="bg-gray-50 border border-gray-200 rounded-lg p-6">
+          <div className="text-gray-800 mb-2">📋 Resultado não disponível</div>
+          <p className="text-sm text-gray-600 mb-4">Nenhum resultado foi calculado ainda.</p>
+          <button
+            onClick={retry}
+            className="border border-gray-300 text-gray-800 hover:bg-gray-100 px-4 py-2 rounded"
+          >
+            🔄 Calcular Resultado
+          </button>
+        </div>
       </div>
     );
   }

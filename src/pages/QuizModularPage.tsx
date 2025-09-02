@@ -442,60 +442,160 @@ const QuizModularPage: React.FC = () => {
     return { from, via, to };
   }, [stepConfig?.backgroundFrom, stepConfig?.backgroundVia, stepConfig?.backgroundTo]);
 
-  // ===== CÁLCULO E PERSISTÊNCIA DO RESULTADO (core/ResultEngine) =====
-  const computeAndPersistResult = React.useCallback(() => {
-    // Leitura opcional de pesos do funil otimizado (se usado)
-    const weightQuestions = (OPTIMIZED_FUNNEL_CONFIG as any)?.calculations?.scoreWeights?.questions;
-
-    // Preferir seleções persistidas no formato de pontuação (compat com ResultEngine)
-    let selectionsForScoring: Record<string, string[]> = {};
+  // ===== ✅ CÁLCULO ROBUSTO E PERSISTÊNCIA DO RESULTADO =====
+  const computeAndPersistResult = React.useCallback(async (): Promise<void> => {
+    console.log('🔄 [QuizModular] Iniciando cálculo de resultado...');
+    
     try {
+      // ✅ 1. VALIDAÇÃO PRÉVIA: Garantir dados suficientes
+      const { unifiedQuizStorage } = require('@/services/core/UnifiedQuizStorage');
       const { StorageService } = require('@/services/core/StorageService');
-      selectionsForScoring = StorageService.safeGetJSON('userSelections') || {};
-    } catch { selectionsForScoring = {}; }
-    if (!selectionsForScoring || Object.keys(selectionsForScoring).length === 0) {
-      selectionsForScoring = userSelections;
-    }
-
-    const { scores, total } = ResultEngine.computeScoresFromSelections(
-      selectionsForScoring,
-      {
-        weightQuestions: typeof weightQuestions === 'number' ? weightQuestions : 1,
+      
+      if (!unifiedQuizStorage.hasEnoughDataForResult()) {
+        const stats = unifiedQuizStorage.getDataStats();
+        console.warn('⚠️ Dados insuficientes:', stats);
+        
+        if (stats.selectionsCount === 0) {
+          throw new Error('Nenhuma resposta registrada para calcular resultado');
+        }
       }
-    );
-    let userName = quizAnswers.userName || '';
-    try {
-      const { StorageService } = require('@/services/core/StorageService');
-      userName = userName || StorageService.safeGetString('userName') || StorageService.safeGetString('quizUserName') || '';
-    } catch { }
-    const payload = ResultEngine.toPayload(scores, total, userName);
-    ResultEngine.persist(payload);
-    try {
-      const { StorageService } = require('@/services/core/StorageService');
-      StorageService.safeSetString('quizUserName', userName);
-    } catch { }
+
+      // ✅ 2. CONSOLIDAR DADOS: Priorizar unificado, fallback para legado
+      let selectionsForScoring: Record<string, string[]> = {};
+      let userName = '';
+      
+      // Primeiro: tentar dados unificados
+      const unifiedData = unifiedQuizStorage.loadData();
+      if (Object.keys(unifiedData.selections).length > 0) {
+        selectionsForScoring = unifiedData.selections;
+        userName = unifiedData.formData.userName || unifiedData.formData.name || '';
+        console.log('📦 Usando dados unificados:', Object.keys(selectionsForScoring).length, 'seleções');
+      } else {
+        // Fallback: dados legados
+        selectionsForScoring = StorageService.safeGetJSON('userSelections') || userSelections || {};
+        userName = quizAnswers.userName || StorageService.safeGetString('userName') || StorageService.safeGetString('quizUserName') || '';
+        console.log('📦 Usando dados legados:', Object.keys(selectionsForScoring).length, 'seleções');
+      }
+
+      if (Object.keys(selectionsForScoring).length === 0) {
+        throw new Error('Nenhuma seleção encontrada para processar');
+      }
+
+      // ✅ 3. EXECUTAR CÁLCULO ROBUSTO
+      const weightQuestions = (OPTIMIZED_FUNNEL_CONFIG as any)?.calculations?.scoreWeights?.questions;
+      
+      const { scores, total } = ResultEngine.computeScoresFromSelections(
+        selectionsForScoring,
+        {
+          weightQuestions: typeof weightQuestions === 'number' ? weightQuestions : 1,
+        }
+      );
+
+      if (!scores || Object.keys(scores).length === 0) {
+        throw new Error('Falha no cálculo: nenhum score foi gerado');
+      }
+
+      const payload = ResultEngine.toPayload(scores, total, userName || 'Usuário');
+      
+      // ✅ 4. PERSISTIR EM AMBOS OS SISTEMAS (sincronização completa)
+      ResultEngine.persist(payload);
+      unifiedQuizStorage.saveResult(payload);
+      
+      // Persistir nome do usuário em locais compatíveis
+      if (userName) {
+        StorageService.safeSetString('quizUserName', userName);
+        StorageService.safeSetString('userName', userName);
+      }
+
+      console.log('✅ [QuizModular] Resultado calculado e salvo:', {
+        primaryStyle: (payload as any).primaryStyle?.style,
+        totalScores: Object.keys(scores).length,
+        userName: userName || 'Não informado'
+      });
+
+    } catch (error) {
+      console.error('❌ [QuizModular] Erro no cálculo:', error);
+      
+      // ✅ 5. FALLBACK ROBUSTO: Usar calculadora externa
+      try {
+        console.log('🔄 Tentando fallback com calculadora robusta...');
+        const { calculateAndSaveQuizResult } = require('@/utils/quizResultCalculator');
+        await calculateAndSaveQuizResult();
+        console.log('✅ Fallback bem-sucedido');
+      } catch (fallbackError) {
+        console.error('❌ Fallback também falhou:', fallbackError);
+        throw new Error(`Falha completa no cálculo: ${(error as Error)?.message || 'Erro desconhecido'}`);
+      }
+    }
   }, [userSelections, quizAnswers.userName]);
 
-  // Disparar cálculo na etapa 19 (transição para resultado)
+  // ✅ CORREÇÃO CRÍTICA: Disparar cálculo SÍNCRONO na etapa 19
   useEffect(() => {
     if (currentStep === 19) {
-      computeAndPersistResult();
+      // Aguardar cálculo completar antes de permitir avanço
+      const performCalculation = async () => {
+        try {
+          console.log('🎯 Iniciando cálculo obrigatório na etapa 19...');
+          await computeAndPersistResult();
+          console.log('✅ Cálculo completado na etapa 19');
+          
+          // Emitir evento para confirmar que resultado está pronto
+          window.dispatchEvent(new Event('quiz-result-updated'));
+        } catch (error) {
+          console.error('❌ Falha no cálculo da etapa 19:', error);
+          
+          // Fallback: tentar via calculadora robusta
+          try {
+            const { calculateAndSaveQuizResult } = require('@/utils/quizResultCalculator');
+            await calculateAndSaveQuizResult();
+          } catch (fallbackError) {
+            console.error('❌ Fallback também falhou:', fallbackError);
+          }
+        }
+      };
+      
+      performCalculation();
     }
   }, [currentStep, computeAndPersistResult]);
 
-  // Fallback: garantir resultado ao entrar na etapa 20 (caso 19 tenha sido pulada)
+  // ✅ CORREÇÃO CRÍTICA: Garantir resultado válido na etapa 20 com timeout
   useEffect(() => {
     if (currentStep === 20) {
-      try {
-        const { StorageService } = require('@/services/core/StorageService');
-        const existing = StorageService.safeGetJSON('quizResult');
-        if (!existing) {
-          computeAndPersistResult();
-        } else {
-          // Notificar UI para reagir (caso exista mas não tenha disparado evento)
-          try { window.dispatchEvent(new Event('quiz-result-refresh')); } catch { }
+      const ensureResult = async () => {
+        try {
+          const { StorageService } = require('@/services/core/StorageService');
+          const { unifiedQuizStorage } = require('@/services/core/UnifiedQuizStorage');
+          
+          // Verificar múltiplas fontes de resultado
+          const legacyResult = StorageService.safeGetJSON('quizResult');
+          const unifiedResult = unifiedQuizStorage.loadData().result;
+          
+          if (!legacyResult && !unifiedResult) {
+            console.log('⚠️ Nenhum resultado encontrado na etapa 20, recalculando...');
+            await computeAndPersistResult();
+          } else {
+            console.log('✅ Resultado encontrado na etapa 20:', { 
+              legacy: Boolean(legacyResult), 
+              unified: Boolean(unifiedResult) 
+            });
+            
+            // Sincronizar sistemas se necessário
+            if (legacyResult && !unifiedResult) {
+              unifiedQuizStorage.saveResult(legacyResult);
+            } else if (unifiedResult && !legacyResult) {
+              StorageService.safeSetJSON('quizResult', unifiedResult);
+            }
+          }
+          
+          // Sempre notificar UI para reagir
+          window.dispatchEvent(new Event('quiz-result-updated'));
+          window.dispatchEvent(new Event('quiz-result-refresh'));
+        } catch (error) {
+          console.error('❌ Falha ao garantir resultado na etapa 20:', error);
         }
-      } catch { /* silencioso */ }
+      };
+      
+      ensureResult();
     }
   }, [currentStep, computeAndPersistResult]);
 
@@ -785,6 +885,16 @@ const QuizModularPage: React.FC = () => {
       </div>
       {/* Dev-only result debug widget */}
       <DevResultDebug />
+      
+      {/* ✅ Validador de resultado sempre ativo na etapa 20 */}
+      {currentStep === 20 && (
+        <>
+          {(() => {
+            const QuizResultValidator = require('@/components/quiz/QuizResultValidator').default;
+            return <QuizResultValidator />;
+          })()}
+        </>
+      )}
     </>
   );
 };
