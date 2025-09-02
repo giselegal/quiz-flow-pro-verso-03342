@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
+import { computeEffectivePrimaryPercentage } from '@/core/result/percentage';
 import { AnimatedWrapper } from '@/components/ui/animated-wrapper';
 import { Button } from '@/components/ui/button';
 import { RefreshCw, CheckCircle } from 'lucide-react';
 import { useQuizResult } from '@/hooks/useQuizResult';
 import { validateQuizData, recalculateQuizResult } from '@/utils/quizResultCalculator';
 import { cn } from '@/lib/utils';
+import { getBestUserName } from '@/core/user/name';
 
 interface Step20TemplateProps {
   className?: string;
@@ -26,14 +28,18 @@ const Step20Template: React.FC<Step20TemplateProps> = ({
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const [showDebug, setShowDebug] = useState(false);
   const [neutralFixTried, setNeutralFixTried] = useState(false);
+  // Evitar recálculos concorrentes/duplicados (StrictMode)
+  const inFlightRef = useRef(false);
+  const triedInitialRecalcRef = useRef(false);
 
   // Validar dados ao montar
   useEffect(() => {
     const { isValid, errors } = validateQuizData();
     setValidationErrors(errors);
 
-    // 1) Se não há resultado válido, tentar recalcular
-    if (!primaryStyle && isValid) {
+    // 1) Se não há resultado válido, tentar recalcular apenas uma vez (por montagem)
+    if (!primaryStyle && isValid && !triedInitialRecalcRef.current) {
+      triedInitialRecalcRef.current = true;
       handleRecalculate();
       return;
     }
@@ -48,6 +54,8 @@ const Step20Template: React.FC<Step20TemplateProps> = ({
   }, [primaryStyle, neutralFixTried]);
 
   const handleRecalculate = async () => {
+    if (inFlightRef.current) return; // evita concorrência e double-fire do StrictMode
+    inFlightRef.current = true;
     setIsLoading(true);
     try {
       // Aguardar o recálculo para refletir estado corretamente e capturar falhas
@@ -59,6 +67,7 @@ const Step20Template: React.FC<Step20TemplateProps> = ({
       setValidationErrors(['Erro durante recálculo']);
     } finally {
       setIsLoading(false);
+      inFlightRef.current = false;
     }
   };
 
@@ -131,7 +140,20 @@ const Step20Template: React.FC<Step20TemplateProps> = ({
 
   // Resultado válido encontrado
   const styleLabel = primaryStyle.style || primaryStyle.category || 'Seu Estilo';
-  const percentage = primaryStyle.percentage || 0;
+  const rawPct = typeof primaryStyle.percentage === 'number' ? primaryStyle.percentage : 0;
+  const effectivePct = computeEffectivePrimaryPercentage(primaryStyle as any, secondaryStyles as any[], rawPct);
+  const displayPct = effectivePct > 0 ? effectivePct : 70;
+
+  // Nome saneado para exibição
+  const normalizeName = (name?: string) => {
+    const s = (name || '').trim();
+    if (s.length <= 1) return '';
+    return s
+      .split(/\s+/)
+      .map(w => (w ? w.charAt(0).toUpperCase() + w.slice(1) : w))
+      .join(' ');
+  };
+  const userName = normalizeName(getBestUserName());
 
   return (
     <div className={cn('max-w-4xl mx-auto p-6', className)}>
@@ -145,19 +167,20 @@ const Step20Template: React.FC<Step20TemplateProps> = ({
 
           {/* Primary Style Display */}
           <div className="bg-white rounded-2xl shadow-lg p-8 border border-[#B89B7A]/20">
-            <h1 className="text-3xl md:text-4xl font-bold text-[#432818] mb-4">
-              Seu Estilo: {styleLabel}
+            <h1 className="text-3xl md:text-4xl font-bold text-[#432818] mb-2">
+              {userName ? `${userName}, seu estilo predominante é:` : 'Seu estilo predominante é:'}
             </h1>
+            <div className="text-2xl md:text-3xl font-semibold text-[#6B4F43] mb-4">{styleLabel}</div>
 
             <div className="text-xl text-[#6B4F43] mb-6">
-              {percentage}% de compatibilidade
+              {displayPct}% de compatibilidade
             </div>
 
             {/* Progress Bar */}
             <div className="w-full bg-[#F3E8E6] rounded-full h-3 mb-8">
               <div
                 className="bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] h-3 rounded-full transition-all duration-1000"
-                style={{ width: `${percentage}%` }}
+                style={{ width: `${displayPct}%` }}
               />
             </div>
           </div>

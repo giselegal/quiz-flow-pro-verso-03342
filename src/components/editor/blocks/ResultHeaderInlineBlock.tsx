@@ -77,8 +77,17 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
     );
   }
 
-  // Capturar nome de forma robusta (incluindo UnifiedQuizStorage)
+  // Capturar nome de forma robusta (incluindo UnifiedQuizStorage) e sanitizar para exibição
   const storedName = getBestUserName(block);
+  const normalizeName = (name?: string) => {
+    const s = (name || '').trim();
+    if (s.length <= 1) return '';
+    return s
+      .split(/\s+/)
+      .map(w => (w ? w.charAt(0).toUpperCase() + w.slice(1) : w))
+      .join(' ');
+  };
+  const displayName = normalizeName(storedName);
 
   const {
     title = 'Seu Estilo Predominante',
@@ -118,7 +127,7 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
   const styleLabel = mapToFriendlyStyle((primaryStyle as any)?.category || styleKey || 'Natural');
 
   const vars = {
-    userName: storedName,
+    userName: displayName,
     resultStyle: styleLabel,
   };
 
@@ -126,7 +135,15 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
   const computedPercentage = typeof percentageProp === 'number' && !Number.isNaN(percentageProp)
     ? percentageProp
     : (typeof (primaryStyle as any)?.percentage === 'number' ? (primaryStyle as any).percentage : 0);
-  const effectivePercentage = computeEffectivePrimaryPercentage(primaryStyle as any, secondaryStyles as any[], computedPercentage);
+  const effectivePercentage = computeEffectivePrimaryPercentage(
+    primaryStyle as any,
+    secondaryStyles as any[],
+    computedPercentage
+  );
+  // Evitar exibir 0% quando já existe um estilo definido mas sem dados numéricos suficientes
+  const displayPercentage = (effectivePercentage && effectivePercentage > 0)
+    ? effectivePercentage
+    : (primaryStyle ? 70 : 0);
 
   // Defaults vindos do styleConfig, quando props do bloco estiverem ausentes
   const styleInfo = getStyleConfig(styleLabel) || {};
@@ -206,7 +223,7 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
               <span
                 className="text-[#aa6b5d] font-medium cursor-pointer"
                 onClick={() => {
-                  const newPercentage = prompt('Nova porcentagem (0-100):', String(effectivePercentage));
+                  const newPercentage = prompt('Nova porcentagem (0-100):', String(displayPercentage));
                   if (newPercentage !== null && !isNaN(Number(newPercentage))) {
                     handlePropertyChange(
                       'percentage',
@@ -215,20 +232,20 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
                   }
                 }}
               >
-                {effectivePercentage}%
+                {displayPercentage}%
               </span>
             </div>
             {/* Mostrar o nome do estilo atual quando disponível */}
             {styleLabel && (
               <div className="text-base font-semibold text-[#432818] mb-2">
                 {styleLabel}
-                {vars.userName ? (
+                {displayName ? (
                   <span className="ml-1 text-[#6B4F43] font-normal">• {vars.userName}</span>
                 ) : null}
               </div>
             )}
             <Progress
-              value={effectivePercentage}
+              value={displayPercentage}
               className="h-2 bg-[#F3E8E6]"
               style={{
                 '--progress-color': progressColor,
