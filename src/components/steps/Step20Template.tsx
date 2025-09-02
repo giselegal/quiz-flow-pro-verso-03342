@@ -25,17 +25,27 @@ const Step20Template: React.FC<Step20TemplateProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const [showDebug, setShowDebug] = useState(false);
+  const [neutralFixTried, setNeutralFixTried] = useState(false);
 
   // Validar dados ao montar
   useEffect(() => {
     const { isValid, errors } = validateQuizData();
     setValidationErrors(errors);
-    
-    // Se não há resultado válido, tentar recalcular
+
+    // 1) Se não há resultado válido, tentar recalcular
     if (!primaryStyle && isValid) {
       handleRecalculate();
+      return;
     }
-  }, [primaryStyle]);
+
+    // 2) Se veio um fallback "Neutro" mas temos dados válidos, forçar um recálculo uma única vez
+    const isNeutral = Boolean(primaryStyle &&
+      ((primaryStyle.style || '').toLowerCase() === 'neutro' || (primaryStyle.category || '').toLowerCase() === 'neutro'));
+    if (isValid && isNeutral && !neutralFixTried) {
+      setNeutralFixTried(true);
+      handleRecalculate();
+    }
+  }, [primaryStyle, neutralFixTried]);
 
   const handleRecalculate = async () => {
     setIsLoading(true);
