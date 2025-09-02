@@ -6,6 +6,7 @@ import { isUUID } from '@/core/utils/id';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import { toCanonicalAny } from './adapters';
 import { accumulateScores as accumulateCanonicalScores } from './CanonicalScorer';
+import { STYLE_TIEBREAK_ORDER, stabilizeScoresOrder } from '@/utils/styleKeywordMap';
 
 export interface OrchestrateOptions {
     selectionsByQuestion: Record<string, string[]>;
@@ -34,7 +35,7 @@ export const ResultOrchestrator = {
         );
 
         // clculo
-        let scores: Record<string, number> = {};
+    let scores: Record<string, number> = {};
         let total = 0;
 
         if (hasPrefixBased) {
@@ -47,7 +48,8 @@ export const ResultOrchestrator = {
                 const canonical = toCanonicalAny(QUIZ_STYLE_21_STEPS_TEMPLATE);
                 const canonTotals = accumulateCanonicalScores(canonical, selectionsByQuestion);
                 // Mapear c3digos para nomes amig3veis esperados pelo ResultEngine
-                const friendlyMap: Record<string, string> = {
+                // manter compat com códigos canônicos conhecidos
+                const compat: Record<string, string> = {
                     natural: 'Natural',
                     classico: 'Clássico',
                     contemporaneo: 'Contemporâneo',
@@ -57,14 +59,13 @@ export const ResultOrchestrator = {
                     dramatico: 'Dramático',
                     criativo: 'Criativo',
                 };
-                const allFriendly = Object.values(friendlyMap);
                 const mapped: Record<string, number> = {};
                 for (const [code, pts] of Object.entries(canonTotals)) {
-                    const friendly = friendlyMap[code] || code;
+                    const friendly = compat[code] || code;
                     mapped[friendly] = (mapped[friendly] || 0) + (typeof pts === 'number' ? pts : 0);
                 }
                 // Garantir todas as chaves com zero (ordenação consistente)
-                for (const name of allFriendly) {
+                for (const name of STYLE_TIEBREAK_ORDER) {
                     if (mapped[name] == null) mapped[name] = 0;
                 }
                 scores = mapped;
@@ -76,8 +77,10 @@ export const ResultOrchestrator = {
                 total = res.total;
             }
         }
-        const name = (opts.userName || '').trim() || StorageService.safeGetString('userName') || StorageService.safeGetString('quizUserName') || '';
-        const payload = ResultEngine.toPayload(scores, total, name);
+        // Aplicar ordenação determinística por desempate
+        scores = stabilizeScoresOrder(scores);
+    const name = (opts.userName || '').trim() || StorageService.safeGetString('userName') || StorageService.safeGetString('quizUserName') || '';
+    const payload = ResultEngine.toPayload(scores, total, name);
         // persist local
         ResultEngine.persist(payload);
         StorageService.safeSetString('quizUserName', name);

@@ -2,6 +2,7 @@
 import { styleConfig, type StyleConfig } from '@/config/styleConfig';
 import { supabase } from '@/integrations/supabase/client';
 import { StorageService } from '@/services/core/StorageService';
+import { STYLE_KEYWORDS_MAPPING, STYLE_TIEBREAK_ORDER } from '@/utils/styleKeywordMap';
 
 /**
  * 🎯 Serviço para cálculo e armazenamento de resultados do quiz
@@ -74,72 +75,6 @@ export interface QuizResults {
   };
 }
 
-// Mapear palavras-chave das respostas para estilos
-const STYLE_KEYWORDS_MAPPING = {
-  // Natural (A)
-  natural: 'Natural',
-  casual: 'Natural',
-  conforto: 'Natural',
-  praticidade: 'Natural',
-  descontraido: 'Natural',
-  jeans: 'Natural',
-  tenis: 'Natural',
-
-  // Clássico (B)
-  classico: 'Clássico',
-  elegancia: 'Clássico',
-  sofisticacao: 'Clássico',
-  atemporal: 'Clássico',
-  refinado: 'Clássico',
-  blazer: 'Clássico',
-  social: 'Clássico',
-
-  // Contemporâneo (C)
-  contemporaneo: 'Contemporâneo',
-  equilibrado: 'Contemporâneo',
-  pratico: 'Contemporâneo',
-  atual: 'Contemporâneo',
-  versatil: 'Contemporâneo',
-  funcional: 'Contemporâneo',
-
-  // Elegante (D)
-  elegante: 'Elegante',
-  qualidade: 'Elegante',
-  luxo: 'Elegante',
-  distinto: 'Elegante',
-  premium: 'Elegante',
-
-  // Romântico (E)
-  romantico: 'Romântico',
-  delicado: 'Romântico',
-  feminino: 'Romântico',
-  suave: 'Romântico',
-  vestidos: 'Romântico',
-  floral: 'Romântico',
-
-  // Sexy (F)
-  sexy: 'Sexy',
-  sensual: 'Sexy',
-  confiante: 'Sexy',
-  ousado: 'Sexy',
-  sedutor: 'Sexy',
-  empoderado: 'Sexy',
-
-  // Dramático (G)
-  dramatico: 'Dramático',
-  marcante: 'Dramático',
-  impactante: 'Dramático',
-  presenca: 'Dramático',
-  statement: 'Dramático',
-
-  // Criativo (H)
-  criativo: 'Criativo',
-  unico: 'Criativo',
-  artistico: 'Criativo',
-  individual: 'Criativo',
-  expressivo: 'Criativo',
-  original: 'Criativo',
-};
 
 type StyleKey = keyof typeof styleConfig;
 
@@ -344,7 +279,12 @@ class QuizResultsService {
 
     // Determinar estilo primário e secundário
     const sortedStyles = Object.entries(styleScores)
-      .sort(([, a], [, b]) => b - a)
+      .sort(([, a], [, b]) => {
+        const diff = b - a;
+        if (diff !== 0) return diff;
+        // desempate determinístico pela ordem canônica
+        return (STYLE_TIEBREAK_ORDER.indexOf as any)(arguments[0]?.[0]) - (STYLE_TIEBREAK_ORDER.indexOf as any)(arguments[1]?.[0]);
+      })
       .filter(([, score]) => score > 0);
 
     const primaryStyleName = sortedStyles[0]?.[0] || 'Natural';
@@ -376,7 +316,7 @@ class QuizResultsService {
     const lowerAnswer = answer.toLowerCase();
 
     // Verificar palavras-chave diretas
-    Object.entries(STYLE_KEYWORDS_MAPPING).forEach(([keyword, styleName]) => {
+  Object.entries(STYLE_KEYWORDS_MAPPING).forEach(([keyword, styleName]) => {
       if (lowerAnswer.includes(keyword)) {
         styleScores[styleName] = (styleScores[styleName] || 0) + 2;
       }

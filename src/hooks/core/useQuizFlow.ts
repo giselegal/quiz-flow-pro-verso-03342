@@ -143,16 +143,48 @@ export const useQuizFlow = ({
     [answerStrategicQuestion, nextStep, currentStep, stepNavStore, cancel, schedule]
   );
 
-  // Auto-avançar na etapa 19 (calculando)
+  // Auto-avançar na etapa 19 (processamento)
   useEffect(() => {
     if (currentStep === 19) {
       setIsLoading(true);
       cancel('quizflow-step19');
-      schedule('quizflow-step19', () => {
-        completeQuiz();
-        setIsLoading(false);
-        nextStep();
-      }, 2000, 'timeout');
+      schedule(
+        'quizflow-step19',
+        async () => {
+          try {
+            // 1) Checar threshold mínimo usando UnifiedQuizStorage
+            const { unifiedQuizStorage } = await import('@/services/core/UnifiedQuizStorage');
+            const hasEnough = unifiedQuizStorage.hasEnoughDataForResult();
+
+            if (!hasEnough) {
+              // Não calcular; apenas avançar
+              setIsLoading(false);
+              nextStep();
+              return;
+            }
+
+            // 2) Obter selections e nome e orquestrar cálculo único
+            const data = unifiedQuizStorage.loadData();
+            const { ResultOrchestrator } = await import('@/services/core/ResultOrchestrator');
+            const sessionId = StorageService.safeGetString('quizSessionId') || `local-${Date.now()}`;
+            try { StorageService.safeSetString('quizSessionId', sessionId); } catch {}
+            await ResultOrchestrator.run({
+              selectionsByQuestion: data.selections,
+              userName: data.formData.userName || data.formData.name || '',
+              persistToSupabase: false,
+              sessionId,
+            });
+            try { window.dispatchEvent(new Event('quiz-result-updated')); } catch {}
+          } catch (e) {
+            // Silencioso: a tela de resultado terá fallback neutro se necessário
+          } finally {
+            setIsLoading(false);
+            nextStep();
+          }
+        },
+        600,
+        'timeout'
+      );
       return () => cancel('quizflow-step19');
     }
   }, [currentStep, completeQuiz, nextStep]);

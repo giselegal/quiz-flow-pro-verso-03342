@@ -213,13 +213,13 @@ const initialQuiz21Steps: QuizStep[] = [
     description: 'Quanto investiria em consultoria',
   },
   {
-    id: 'etapa-19',
-    name: 'S6: Ajuda Imediata',
+  id: 'etapa-19',
+  name: 'Processamento',
     order: 19,
     blocksCount: 0,
     isActive: false,
-    type: 'strategic',
-    description: 'O que mais precisa de ajuda',
+  type: 'transition',
+  description: 'Processando e consolidando seu resultado',
   },
   {
     id: 'etapa-20',

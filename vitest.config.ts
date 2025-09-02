@@ -9,6 +9,14 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.ts'],
     css: true,
+    // Reduz threads para evitar OOM em ambientes com pouca memória
+    pool: 'threads',
+    poolOptions: {
+      threads: {
+        minThreads: 1,
+        maxThreads: 2,
+      },
+    },
     include: [
       'src/**/*.{test,spec}.{js,ts,jsx,tsx}',
       'src/**/__tests__/**/*.{js,ts,jsx,tsx}',
