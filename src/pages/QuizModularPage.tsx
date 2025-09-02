@@ -507,14 +507,24 @@ const QuizModularPage: React.FC = () => {
         StorageService.safeSetString('userName', userName);
       }
 
+      // ✅ FASE 4: Emitir eventos para métricas
+      window.dispatchEvent(new CustomEvent('quiz-calculation-started', {
+        detail: { step: currentStep, timestamp: Date.now() }
+      }));
+
       console.log('✅ [QuizModular] Resultado calculado e salvo:', {
         primaryStyle: (payload as any).primaryStyle?.style,
         totalScores: Object.keys(scores).length,
         userName: userName || 'Não informado'
       });
 
-    } catch (error) {
+    } catch (error: any) {
       console.error('❌ [QuizModular] Erro no cálculo:', error);
+      
+      // ✅ FASE 4: Registrar falha nas métricas
+      if ((window as any).__quizMetrics?.recordFailedCalculation) {
+        (window as any).__quizMetrics.recordFailedCalculation((error as Error)?.message || 'Erro desconhecido');
+      }
       
       // ✅ 5. FALLBACK ROBUSTO: Usar calculadora externa
       try {
@@ -524,6 +534,12 @@ const QuizModularPage: React.FC = () => {
         console.log('✅ Fallback bem-sucedido');
       } catch (fallbackError) {
         console.error('❌ Fallback também falhou:', fallbackError);
+        
+        // Registrar falha dupla nas métricas
+        if ((window as any).__quizMetrics?.recordFailedCalculation) {
+          (window as any).__quizMetrics.recordFailedCalculation('Fallback failed: ' + (fallbackError as Error)?.message);
+        }
+        
         throw new Error(`Falha completa no cálculo: ${(error as Error)?.message || 'Erro desconhecido'}`);
       }
     }
@@ -759,21 +775,19 @@ const QuizModularPage: React.FC = () => {
                   {/* Renderização dos blocos */}
                   {!isLoading && !error && (
                     <div className="quiz-content p-8 space-y-6">
-                      {blocks.length === 0 ? (
-                        <div className="text-center py-12">
-                          <div className="w-16 h-16 bg-stone-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <span className="text-stone-400 text-2xl">📝</span>
-                          </div>
-                          <h3 className="text-lg font-medium text-stone-800 mb-2">
-                            Etapa em construção
-                          </h3>
-                          <p className="text-stone-600">
-                            Esta etapa ainda não possui conteúdo. Você pode continuar para a próxima
-                            etapa ou arrastar componentes da barra lateral.
-                          </p>
-                        </div>
-                      ) : (
-                        blocks.map(block => (
+                      {(() => {
+                        // ✅ FASE 3: Template robusto para etapa 20 com fallback inteligente
+                        if (currentStep === 20 && blocks.length === 0) {
+                          const Step20FallbackTemplate = require('@/components/quiz/Step20FallbackTemplate').default;
+                          return (
+                            <div className="quiz-content p-8">
+                              <Step20FallbackTemplate />
+                            </div>
+                          );
+                        }
+
+                        // Renderização normal dos blocos
+                        return blocks.map(block => (
                           <div
                             key={block.id}
                             className={cn(
@@ -805,8 +819,8 @@ const QuizModularPage: React.FC = () => {
                               onClick={() => { }}
                             />
                           </div>
-                        ))
-                      )}
+                        ));
+                      })()}
                     </div>
                   )}
                 </div>
@@ -883,6 +897,16 @@ const QuizModularPage: React.FC = () => {
           </div>
         </div>
       </div>
+      {/* ✅ FASE 4: Métricas e monitoramento avançado */}
+      {import.meta?.env?.DEV && (
+        <>
+          {(() => {
+            const QuizResultMetrics = require('@/components/quiz/QuizResultMetrics').default;
+            return <QuizResultMetrics />;
+          })()}
+        </>
+      )}
+      
       {/* Dev-only result debug widget */}
       <DevResultDebug />
       
