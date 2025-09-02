@@ -1,4 +1,5 @@
 import caktoquizQuestions from '@/data/caktoquizQuestions';
+import { isScorableQuestion } from '@/core/constants/quiz';
 import { QuizAnswer, QuizQuestion, QuizResult, StyleResult } from '@/types/quiz';
 import { useCallback, useState } from 'react';
 import { StorageService } from '@/services/core/StorageService';
@@ -111,21 +112,10 @@ export const useQuizLogic = () => {
       const question = caktoquizQuestions.find((q: any) => q.id === answer.questionId);
       const option = question?.options.find((opt: any) => opt.id === answer.optionId);
 
-      // ✅ FILTRO: Só conta se for questão que pontua (q1-q10 = etapas 2-11)
-      const isScorableQuestion = [
-        'q1',
-        'q2',
-        'q3',
-        'q4',
-        'q5',
-        'q6',
-        'q7',
-        'q8',
-        'q9',
-        'q10',
-      ].includes(question?.id || '');
+  // ✅ FILTRO: Só conta se for questão que pontua (centralizado em constants/quiz.ts)
+  const scorable = isScorableQuestion(question?.id || '');
 
-      if (option?.style && isScorableQuestion) {
+  if (option?.style && scorable) {
         styleScores[option.style] = (styleScores[option.style] || 0) + (option.weight || 1);
       }
     });
