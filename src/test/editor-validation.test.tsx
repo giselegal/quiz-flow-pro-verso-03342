@@ -3,7 +3,7 @@
  * Tests all key components of the EditorPro funnel system
  */
 
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import React from 'react';
 import { EditorProvider } from '@/components/editor/EditorProvider';

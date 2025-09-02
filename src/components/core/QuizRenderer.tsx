@@ -1,7 +1,7 @@
 import UniversalBlockRenderer from '@/components/editor/blocks/UniversalBlockRenderer';
 import { useQuizFlow } from '@/hooks/core/useQuizFlow';
 import { Block } from '@/types/editor';
-import React, { useEffect, useMemo, useState, useCallback } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { cn } from '@/lib/utils';
 // Validação centralizada cobre regras por etapa
 import { useCentralizedStepValidation } from '@/hooks/useCentralizedStepValidation';
@@ -66,14 +66,7 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
     return canUseOverrides ? (blocksOverride as Block[]) : getStepData();
   }, [canUseOverrides, blocksOverride, getStepData]);
 
-  // Stable step synchronization
-  const handleStepSync = useCallback(() => {
-    if (typeof currentStepOverride === 'number' && currentStepOverride !== currentStep) {
-      try {
-        goToStep?.(currentStepOverride);
-      } catch { }
-    }
-  }, [currentStepOverride, currentStep, goToStep]);
+  // Stable step synchronization (handled via effect below)
 
   // 🔄 Sincronizar passo interno com o passo do Editor/Preview
   useEffect(() => {
