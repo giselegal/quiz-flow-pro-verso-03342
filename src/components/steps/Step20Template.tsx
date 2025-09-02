@@ -40,7 +40,8 @@ const Step20Template: React.FC<Step20TemplateProps> = ({
   const handleRecalculate = async () => {
     setIsLoading(true);
     try {
-      const success = recalculateQuizResult();
+  // Aguardar o recálculo para refletir estado corretamente e capturar falhas
+  const success = await recalculateQuizResult();
       if (!success) {
         setValidationErrors(['Falha ao recalcular resultado']);
       }

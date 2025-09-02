@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { StyleResult } from '@/types/quiz';
 import { StorageService } from '@/services/core/StorageService';
 import { calculateAndSaveQuizResult } from '@/utils/quizResultCalculator';
+import EVENTS from '@/core/constants/events';
 
 export const useQuizResult = () => {
   const [primaryStyle, setPrimaryStyle] = useState<StyleResult | null>(null);
@@ -102,9 +103,10 @@ export const useQuizResult = () => {
     const handler = () => loadFromStorage();
 
     // Reage a mudanças do localStorage (em outras abas) e a eventos customizados internos
-    window.addEventListener('storage', handler);
-    window.addEventListener('quiz-result-updated', handler as EventListener);
-    window.addEventListener('quiz-result-refresh', handler as EventListener);
+  window.addEventListener('storage', handler);
+  window.addEventListener(EVENTS.QUIZ_RESULT_UPDATED, handler as EventListener);
+  window.addEventListener('quiz-result-refresh', handler as EventListener);
+  window.addEventListener('unified-quiz-data-updated', handler as EventListener);
 
     // Adicionar listener para respostas atualizadas
     const answerHandler = () => {
@@ -118,13 +120,14 @@ export const useQuizResult = () => {
       }
     };
 
-    window.addEventListener('quiz-answer-updated', answerHandler);
+  window.addEventListener(EVENTS.QUIZ_ANSWER_UPDATED, answerHandler);
 
     return () => {
-      window.removeEventListener('storage', handler);
-      window.removeEventListener('quiz-result-updated', handler as EventListener);
-      window.removeEventListener('quiz-result-refresh', handler as EventListener);
-      window.removeEventListener('quiz-answer-updated', answerHandler);
+  window.removeEventListener('storage', handler);
+  window.removeEventListener(EVENTS.QUIZ_RESULT_UPDATED, handler as EventListener);
+  window.removeEventListener('quiz-result-refresh', handler as EventListener);
+  window.removeEventListener('unified-quiz-data-updated', handler as EventListener);
+  window.removeEventListener(EVENTS.QUIZ_ANSWER_UPDATED, answerHandler);
     };
   }, [loadFromStorage]);
 
