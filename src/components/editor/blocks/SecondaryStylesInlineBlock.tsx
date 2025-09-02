@@ -13,7 +13,24 @@ const SecondaryStylesInlineBlock: React.FC<BlockComponentProps> = ({ block }) =>
   const title = props.title || 'Seus estilos complementares';
   const subtitle = props.subtitle || 'Você também apresenta elementos destes estilos:';
 
-  const styles = (secondaryStyles || []).slice(0, 2);
+  // Helpers locais para normalização
+  const removeDiacritics = (s: string) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  const normalizeToken = (s: string) => removeDiacritics(String(s || '')).toLowerCase().replace(/[^a-z0-9]+/g, '-');
+  const mapToFriendlyStyle = (raw: string): string => {
+    const t = normalizeToken(raw);
+    const table: Record<string, string> = {
+      natural: 'Natural', classico: 'Clássico', contemporaneo: 'Contemporâneo', elegante: 'Elegante', romantico: 'Romântico', sexy: 'Sexy', dramatico: 'Dramático', criativo: 'Criativo',
+      'estilo-natural': 'Natural', 'estilo-classico': 'Clássico', 'estilo-contemporaneo': 'Contemporâneo', 'estilo-elegante': 'Elegante', 'estilo-romantico': 'Romântico', 'estilo-sexy': 'Sexy', 'estilo-dramatico': 'Dramático', 'estilo-criativo': 'Criativo',
+      neutro: 'Natural', neutral: 'Natural', 'estilo-neutro': 'Natural',
+    };
+    return table[t] || table[t.replace(/^estilo-/, '')] || 'Natural';
+  };
+
+  const styles = (secondaryStyles || []).slice(0, 2).map(s => ({
+    ...s,
+    style: mapToFriendlyStyle((s as any)?.style || (s as any)?.name || ''),
+    name: mapToFriendlyStyle((s as any)?.name || (s as any)?.style || ''),
+  }));
 
   return (
     <div className="w-full">

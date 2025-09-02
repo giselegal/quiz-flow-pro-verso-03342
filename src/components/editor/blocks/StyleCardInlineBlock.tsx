@@ -59,6 +59,35 @@ const interpolate = (text: string, vars: Record<string, any>) => {
     .replace(/\{resultAccessories\}/g, vars.resultAccessories || '');
 };
 
+// Helpers para normalizar nomes de estilos (slugs -> nomes amigáveis)
+const removeDiacritics = (s: string) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+const normalizeToken = (s: string) => removeDiacritics(String(s || '')).toLowerCase().replace(/[^a-z0-9]+/g, '-');
+const mapToFriendlyStyle = (raw: string): string => {
+  const t = normalizeToken(raw);
+  const table: Record<string, string> = {
+    natural: 'Natural',
+    classico: 'Clássico',
+    contemporaneo: 'Contemporâneo',
+    elegante: 'Elegante',
+    romantico: 'Romântico',
+    sexy: 'Sexy',
+    dramatico: 'Dramático',
+    criativo: 'Criativo',
+    'estilo-natural': 'Natural',
+    'estilo-classico': 'Clássico',
+    'estilo-contemporaneo': 'Contemporâneo',
+    'estilo-elegante': 'Elegante',
+    'estilo-romantico': 'Romântico',
+    'estilo-sexy': 'Sexy',
+    'estilo-dramatico': 'Dramático',
+    'estilo-criativo': 'Criativo',
+    neutro: 'Natural',
+    neutral: 'Natural',
+    'estilo-neutro': 'Natural',
+  };
+  return table[t] || table[t.replace(/^estilo-/, '')] || 'Natural';
+};
+
 const StyleCardInlineBlock: React.FC<any> = ({
   block,
   title = 'Seu Estilo Único',
@@ -77,12 +106,13 @@ const StyleCardInlineBlock: React.FC<any> = ({
   const { primaryStyle } = useQuizResult();
 
   // Resolver dados do estilo a partir do resultado
-  const styleLabel = (primaryStyle?.style || primaryStyle?.category || '').trim();
+  const rawStyle = (primaryStyle?.style || primaryStyle?.category || '').trim();
+  const styleLabel = mapToFriendlyStyle(rawStyle);
   const resolved = styleLabel ? getStyleConfig(styleLabel) : null;
 
   // Montar variáveis de placeholders
   const vars = {
-    resultStyle: styleLabel || 'Seu Estilo',
+  resultStyle: styleLabel || 'Seu Estilo',
     resultPersonality: resolved?.keywords?.slice(0, 3).join(', ') || 'Autêntica, confiante',
     // styleConfig não contém cores hex agrupadas; usar keywords como proxy amigável
     resultColors: (resolved?.keywords || []).slice(0, 2).join(', ') || 'Cores ideais do seu estilo',

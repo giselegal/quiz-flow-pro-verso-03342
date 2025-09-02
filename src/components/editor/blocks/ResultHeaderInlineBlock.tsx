@@ -200,9 +200,19 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
   const primaryScore = typeof (primaryStyle as any)?.score === 'number' ? (primaryStyle as any).score : 0;
   const totalScore = [primaryScore, ...safeSecondary.map(s => (typeof (s as any)?.score === 'number' ? (s as any).score : 0))]
     .reduce((a, b) => a + b, 0);
-  const effectivePercentage = computedPercentage === 0 && totalScore > 0
-    ? Math.round((primaryScore / totalScore) * 100)
-    : computedPercentage;
+  let effectivePercentage = computedPercentage;
+  if (computedPercentage === 0) {
+    if (totalScore > 0) {
+      effectivePercentage = Math.round((primaryScore / totalScore) * 100);
+    } else {
+      const secondaryPctSum = safeSecondary
+        .map(s => (typeof (s as any)?.percentage === 'number' ? (s as any).percentage : 0))
+        .reduce((a, b) => a + b, 0);
+      if (secondaryPctSum > 0 && secondaryPctSum < 100) {
+        effectivePercentage = Math.max(0, Math.min(100, 100 - secondaryPctSum));
+      }
+    }
+  }
 
   // Defaults vindos do styleConfig, quando props do bloco estiverem ausentes
   const styleInfo = getStyleConfig(styleLabel) || {};
