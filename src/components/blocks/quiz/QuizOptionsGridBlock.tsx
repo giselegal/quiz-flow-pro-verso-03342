@@ -213,6 +213,22 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
     // Evento padrão unificado
     try {
       const questionId = properties?.questionId || id;
+      const selectedIds = opts.map(opt => opt.id);
+
+      // 🔗 Persistência unificada (produção/runtime)
+      try {
+        const { unifiedQuizStorage } = require('@/services/core/UnifiedQuizStorage');
+        unifiedQuizStorage.updateSelections(String(questionId), selectedIds);
+      } catch { /* noop */ }
+
+      // 🧰 Espelho legado para compatibilidade com validadores antigos
+      try {
+        const current = (StorageService.safeGetJSON<Record<string, string[]>>('userSelections') || {});
+        const next = { ...current, [String(questionId)]: selectedIds };
+        StorageService.safeSetJSON('userSelections', next);
+      } catch { /* noop */ }
+
+      // 📢 Evento unificado para consumidores (wrapper, navegadores, etc.)
       window.dispatchEvent(
         new CustomEvent('quiz-selection-change', {
           detail: {
@@ -224,10 +240,14 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
             selectedCount: currentCount,
             minRequired: minSelections,
             maxAllowed: maxSelections,
-            selectedOptions: opts.map(opt => opt.id),
+            selectedOptions: selectedIds,
+            selectedIds, // compat
           },
         })
       );
+
+      // 🔔 Notificar que respostas foram atualizadas (para hooks que recalculam)
+      try { window.dispatchEvent(new Event('quiz-answer-updated')); } catch { }
     } catch { }
 
     // Notificar o editor que uma seleção foi feita
