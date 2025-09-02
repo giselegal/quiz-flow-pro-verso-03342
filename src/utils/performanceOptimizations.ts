@@ -187,7 +187,8 @@ export const createPerformanceMonitor = () => {
 };
 
 // Auto-cleanup quando a página é descarregada
-if (typeof window !== 'undefined') {
+const __IS_TEST__ = typeof import.meta !== 'undefined' && (import.meta as any).env && Boolean((import.meta as any).env.VITEST);
+if (typeof window !== 'undefined' && !__IS_TEST__) {
   window.addEventListener('beforeunload', cleanupAllTimers);
 
   // Cleanup no Visibility API

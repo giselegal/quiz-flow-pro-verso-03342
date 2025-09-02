@@ -4,9 +4,9 @@ import { PerformanceOptimizer } from '@/utils/performanceOptimizer';
 
 // Setup global test environment
 global.ResizeObserver = class ResizeObserver {
-  observe() {}
-  unobserve() {}
-  disconnect() {}
+  observe() { }
+  unobserve() { }
+  disconnect() { }
 };
 
 // Mock window.matchMedia
@@ -30,10 +30,10 @@ global.IntersectionObserver = class IntersectionObserver {
   rootMargin: string = '';
   thresholds: ReadonlyArray<number> = [];
 
-  constructor() {}
-  observe() {}
-  disconnect() {}
-  unobserve() {}
+  constructor() { }
+  observe() { }
+  disconnect() { }
+  unobserve() { }
   takeRecords(): IntersectionObserverEntry[] {
     return [];
   }
@@ -52,9 +52,9 @@ global.IntersectionObserver = class IntersectionObserver {
   const activeIdles = new Set<number>();
 
   const originalSetTimeout = g.setTimeout?.bind(g) || ((fn: any) => fn());
-  const originalClearTimeout = g.clearTimeout?.bind(g) || (() => {});
+  const originalClearTimeout = g.clearTimeout?.bind(g) || (() => { });
   const originalSetInterval = g.setInterval?.bind(g) || ((fn: any) => fn());
-  const originalClearInterval = g.clearInterval?.bind(g) || (() => {});
+  const originalClearInterval = g.clearInterval?.bind(g) || (() => { });
   const originalRequestAnimationFrame = g.requestAnimationFrame?.bind(g) || ((cb: any) => originalSetTimeout(cb, 16));
   const originalCancelAnimationFrame = g.cancelAnimationFrame?.bind(g) || ((id: any) => originalClearTimeout(id));
 
@@ -113,8 +113,8 @@ global.IntersectionObserver = class IntersectionObserver {
 
   // After each test, clear any leftover timers to prevent accumulation
   afterEach(() => {
-  try { PerformanceOptimizer.cancelAllTimeouts(); } catch {}
-  try { PerformanceOptimizer.cancelAllIntervals(); } catch {}
+    try { PerformanceOptimizer.cancelAllTimeouts(); } catch { }
+    try { PerformanceOptimizer.cancelAllIntervals(); } catch { }
     for (const id of Array.from(activeTimeouts)) {
       originalClearTimeout(id as any);
       activeTimeouts.delete(id);
@@ -135,8 +135,8 @@ global.IntersectionObserver = class IntersectionObserver {
 
   // As a final safeguard, also clear on suite teardown
   afterAll(() => {
-  try { PerformanceOptimizer.cancelAllTimeouts(); } catch {}
-  try { PerformanceOptimizer.cancelAllIntervals(); } catch {}
+    try { PerformanceOptimizer.cancelAllTimeouts(); } catch { }
+    try { PerformanceOptimizer.cancelAllIntervals(); } catch { }
     for (const id of Array.from(activeTimeouts)) {
       originalClearTimeout(id as any);
       activeTimeouts.delete(id);
@@ -153,5 +153,11 @@ global.IntersectionObserver = class IntersectionObserver {
       cancelIdleCallback(id as any);
       activeIdles.delete(id);
     }
+    // Forçar GC quando disponível para aliviar uso de heap em teardown
+    try {
+      if (typeof (globalThis as any).gc === 'function') {
+        (globalThis as any).gc();
+      }
+    } catch { }
   });
 })();
