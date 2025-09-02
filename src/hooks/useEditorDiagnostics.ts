@@ -178,7 +178,7 @@ export const useEditorDiagnostics = (options?: {
     if (!autoRun) return;
 
     const initialTimeoutRef = { id: null as null | number };
-  const intervalRef = { id: null as null | number };
+    const intervalRef = { id: null as null | number };
 
     // Executar diagnóstico inicial
     const runInitialDiagnostic = () => {
@@ -218,7 +218,7 @@ export const useEditorDiagnostics = (options?: {
         PerformanceOptimizer.cancelTimeout(initialTimeoutRef.id);
       }
       // Segurança extra: cancelar timers marcados para navegação
-      try { PerformanceOptimizer.cancelOnNavigation(); } catch {}
+      try { PerformanceOptimizer.cancelOnNavigation(); } catch { }
     };
   }, [autoRun, interval, runDiagnostic]);
 

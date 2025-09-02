@@ -118,8 +118,8 @@ describe('EditorPro - Comprehensive Validation', () => {
         // Check for main layout sections
         const stepsPanel = screen.getByText('Etapas do Quiz');
         const componentsPanel = screen.getByText('Componentes');
-  // Canvas instructions may include additional text; use partial match
-  const canvas = screen.getByText(/Selecione um bloco no canvas/i);
+        // Canvas instructions may include additional text; use partial match
+        const canvas = screen.getByText(/Selecione um bloco no canvas/i);
 
         expect(stepsPanel).toBeInTheDocument();
         expect(componentsPanel).toBeInTheDocument();
@@ -245,11 +245,11 @@ describe('EditorPro - Comprehensive Validation', () => {
 
       await waitFor(() => {
         // Check for progress indicators
-  expect(screen.getAllByText(/5%/).length).toBeGreaterThan(0);
-  // Use role-based queries to handle leading arrows or extra spaces
-  expect(screen.getByRole('button', { name: /Anterior/i })).toBeInTheDocument();
-  // Next button may read "Complete a etapa" (invalid) or "Próxima →" (valid)
-  expect(screen.getByRole('button', { name: /(Complete a etapa|Próxima)/i })).toBeInTheDocument();
+        expect(screen.getAllByText(/5%/).length).toBeGreaterThan(0);
+        // Use role-based queries to handle leading arrows or extra spaces
+        expect(screen.getByRole('button', { name: /Anterior/i })).toBeInTheDocument();
+        // Next button may read "Complete a etapa" (invalid) or "Próxima →" (valid)
+        expect(screen.getByRole('button', { name: /(Complete a etapa|Próxima)/i })).toBeInTheDocument();
       });
     });
 

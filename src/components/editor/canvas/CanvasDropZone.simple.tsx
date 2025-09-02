@@ -20,10 +20,10 @@ const InterBlockDropZoneBase: React.FC<{
   const data = React.useMemo(() => ({ type: 'dropzone', accepts, position }), [accepts, position]);
 
   const { setNodeRef, isOver } = useDroppable({
-    id: generateUniqueId({ 
-      stepNumber: scopeId ?? 'default', 
-      position, 
-      type: 'slot' 
+    id: generateUniqueId({
+      stepNumber: scopeId ?? 'default',
+      position,
+      type: 'slot'
     }),
     data: { ...data, scopeId: scopeId ?? 'default' },
   });
@@ -99,9 +99,9 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
 
   const { setNodeRef, isOver } = useDroppable({
     // Escopar o id do droppable raiz por etapa para evitar colisões entre etapas 2–21
-    id: generateUniqueId({ 
-      stepNumber: scopeId ?? 'default', 
-      type: 'dropzone' 
+    id: generateUniqueId({
+      stepNumber: scopeId ?? 'default',
+      type: 'dropzone'
     }),
     data: { ...rootData, scopeId: scopeId ?? 'default' },
   });
@@ -355,10 +355,10 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
       ) : (
         <SortableContext
           items={React.useMemo(
-            () => blocks.map(block => generateUniqueId({ 
-              stepNumber: scopeId ?? 'default', 
-              blockId: String(block.id), 
-              type: 'block' 
+            () => blocks.map(block => generateUniqueId({
+              stepNumber: scopeId ?? 'default',
+              blockId: String(block.id),
+              type: 'block'
             })),
             [blocks, scopeId]
           )}
