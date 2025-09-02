@@ -178,7 +178,7 @@ export const useEditorDiagnostics = (options?: {
     if (!autoRun) return;
 
     const initialTimeoutRef = { id: null as null | number };
-    const intervalRef = { id: null as null | number };
+  const intervalRef = { id: null as null | number };
 
     // Executar diagnóstico inicial
     const runInitialDiagnostic = () => {
@@ -211,8 +211,14 @@ export const useEditorDiagnostics = (options?: {
     if (typeof intervalId === 'number') intervalRef.id = intervalId;
 
     return () => {
-      if (typeof intervalRef.id === 'number') clearInterval(intervalRef.id);
-      if (typeof initialTimeoutRef.id === 'number') clearTimeout(initialTimeoutRef.id);
+      if (typeof intervalRef.id === 'number') {
+        PerformanceOptimizer.cancelInterval(intervalRef.id);
+      }
+      if (typeof initialTimeoutRef.id === 'number') {
+        PerformanceOptimizer.cancelTimeout(initialTimeoutRef.id);
+      }
+      // Segurança extra: cancelar timers marcados para navegação
+      try { PerformanceOptimizer.cancelOnNavigation(); } catch {}
     };
   }, [autoRun, interval, runDiagnostic]);
 

@@ -9,14 +9,14 @@ export interface QuizStep {
   blocksCount: number;
   isActive: boolean;
   type:
-    | 'intro'
-    | 'name-input'
-    | 'question'
-    | 'transition'
-    | 'strategic'
-    | 'result'
-    | 'offer'
-    | 'custom';
+  | 'intro'
+  | 'name-input'
+  | 'question'
+  | 'transition'
+  | 'strategic'
+  | 'result'
+  | 'offer'
+  | 'custom';
   description: string;
   multiSelect?: number;
 }
@@ -213,13 +213,13 @@ const initialQuiz21Steps: QuizStep[] = [
     description: 'Quanto investiria em consultoria',
   },
   {
-  id: 'etapa-19',
-  name: 'Processamento',
+    id: 'etapa-19',
+    name: 'Processamento',
     order: 19,
     blocksCount: 0,
     isActive: false,
-  type: 'transition',
-  description: 'Processando e consolidando seu resultado',
+    type: 'transition',
+    description: 'Processando e consolidando seu resultado',
   },
   {
     id: 'etapa-20',
@@ -246,10 +246,10 @@ export const StepsProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   // Recuperar estado salvo ou usar o padrão
   const getSavedSteps = () => {
     try {
-  const saved = StorageService.safeGetJSON<QuizStep[]>('quiz-steps');
-  return Array.isArray(saved) && saved.length ? saved : initialQuiz21Steps;
+      const saved = StorageService.safeGetJSON<QuizStep[]>('quiz-steps');
+      return Array.isArray(saved) && saved.length ? saved : initialQuiz21Steps;
     } catch (error) {
-  if (import.meta?.env?.DEV) console.error('Erro ao carregar etapas:', error);
+      if (import.meta?.env?.DEV) console.error('Erro ao carregar etapas:', error);
       return initialQuiz21Steps;
     }
   };
@@ -261,7 +261,7 @@ export const StepsProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   useEffect(() => {
     try {
       StorageService.safeSetJSON('quiz-steps', steps);
-    } catch {}
+    } catch { }
   }, [steps]);
 
   // Adicionar nova etapa

@@ -35,7 +35,7 @@ export const ResultOrchestrator = {
         );
 
         // clculo
-    let scores: Record<string, number> = {};
+        let scores: Record<string, number> = {};
         let total = 0;
 
         if (hasPrefixBased) {
@@ -79,8 +79,8 @@ export const ResultOrchestrator = {
         }
         // Aplicar ordenação determinística por desempate
         scores = stabilizeScoresOrder(scores);
-    const name = (opts.userName || '').trim() || StorageService.safeGetString('userName') || StorageService.safeGetString('quizUserName') || '';
-    const payload = ResultEngine.toPayload(scores, total, name);
+        const name = (opts.userName || '').trim() || StorageService.safeGetString('userName') || StorageService.safeGetString('quizUserName') || '';
+        const payload = ResultEngine.toPayload(scores, total, name);
         // persist local
         ResultEngine.persist(payload);
         StorageService.safeSetString('quizUserName', name);

@@ -67,7 +67,6 @@ export const useQuizFlow = ({
     answerQuestion,
     answerStrategicQuestion,
     setUserNameFromInput,
-    completeQuiz,
     quizResult,
   } = useQuizLogic();
 
@@ -167,14 +166,14 @@ export const useQuizFlow = ({
             const data = unifiedQuizStorage.loadData();
             const { ResultOrchestrator } = await import('@/services/core/ResultOrchestrator');
             const sessionId = StorageService.safeGetString('quizSessionId') || `local-${Date.now()}`;
-            try { StorageService.safeSetString('quizSessionId', sessionId); } catch {}
+            try { StorageService.safeSetString('quizSessionId', sessionId); } catch { }
             await ResultOrchestrator.run({
               selectionsByQuestion: data.selections,
               userName: data.formData.userName || data.formData.name || '',
               persistToSupabase: false,
               sessionId,
             });
-            try { window.dispatchEvent(new Event('quiz-result-updated')); } catch {}
+            try { window.dispatchEvent(new Event('quiz-result-updated')); } catch { }
           } catch (e) {
             // Silencioso: a tela de resultado terá fallback neutro se necessário
           } finally {
@@ -187,7 +186,7 @@ export const useQuizFlow = ({
       );
       return () => cancel('quizflow-step19');
     }
-  }, [currentStep, completeQuiz, nextStep]);
+  }, [currentStep, nextStep]);
 
   // Persistir resultado calculado no core para consumo universal (blocos de resultado)
   useEffect(() => {

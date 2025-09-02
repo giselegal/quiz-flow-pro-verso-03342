@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import ResultHeaderInlineBlock from '@/components/editor/blocks/ResultHeaderInlineBlock';
 import { StorageService } from '@/services/core/StorageService';
 
@@ -18,7 +18,7 @@ describe('ResultHeaderInlineBlock', () => {
         localStorage.clear();
     });
 
-    it('exibe estilo, nome e percentual quando quizResult e userName estão no Storage', () => {
+    it('exibe estilo, nome e percentual quando quizResult e userName estão no Storage', async () => {
         StorageService.safeSetString('userName', 'Alice');
         StorageService.safeSetJSON('quizResult', {
             primaryStyle: { category: 'Natural', style: 'Natural', score: 7, percentage: 70 },
@@ -33,11 +33,13 @@ describe('ResultHeaderInlineBlock', () => {
             />
         );
 
-        // Mostra estilo principal (rótulo humano) – seleção exata do rótulo
-        expect(screen.getAllByText(/^Natural$/i)[0]).toBeTruthy();
-        // Mostra nome ao lado como saudação compacta
-        expect(screen.getByText(/Alice/)).toBeTruthy();
-        // Mostra percentual formatado
-        expect(screen.getByText('70%')).toBeTruthy();
+        await waitFor(() => {
+            // Mostra estilo principal (rótulo humano) – seleção exata do rótulo
+            expect(screen.getAllByText(/^Natural$/i).length).toBeGreaterThan(0);
+            // Mostra nome ao lado como saudação compacta
+            expect(screen.getAllByText(/Alice/).length).toBeGreaterThan(0);
+            // Mostra percentual formatado
+            expect(screen.getAllByText(/70%/).length).toBeGreaterThan(0);
+        });
     });
 });

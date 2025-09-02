@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import ResultHeaderInlineBlock from '@/components/editor/blocks/ResultHeaderInlineBlock';
 import { StorageService } from '@/services/core/StorageService';
 
@@ -18,7 +18,7 @@ describe('ResultHeaderInlineBlock', () => {
     localStorage.clear();
   });
 
-  it('exibe estilo, nome e percentual quando quizResult e userName estão no Storage', () => {
+  it('exibe estilo, nome e percentual quando quizResult e userName estão no Storage', async () => {
     StorageService.safeSetString('userName', 'Alice');
     StorageService.safeSetJSON('quizResult', {
       primaryStyle: { category: 'Natural', style: 'Natural', score: 7, percentage: 70 },
@@ -33,15 +33,17 @@ describe('ResultHeaderInlineBlock', () => {
       />
     );
 
-    // Mostra estilo principal (rótulo humano) - termo exato
-    expect(screen.getByText('Natural')).toBeTruthy();
-    // Mostra nome ao lado como saudação compacta
-    expect(screen.getByText(/Alice/)).toBeTruthy();
-    // Valida percentual via progressbar (70% -> translateX(-30%))
-    const progressBars = screen.getAllByRole('progressbar');
-    expect(progressBars.length).toBeGreaterThan(0);
-    const fill = progressBars[0].querySelector('div');
-    expect(fill).toBeTruthy();
-    expect(fill!.getAttribute('style') || '').toContain('translateX(-30%');
+    await waitFor(() => {
+      // Mostra estilo principal (rótulo humano) - termo exato
+      expect(screen.getAllByText('Natural').length).toBeGreaterThan(0);
+      // Mostra nome ao lado como saudação compacta
+      expect(screen.getAllByText(/Alice/).length).toBeGreaterThan(0);
+      // Valida percentual via progressbar (70% -> translateX(-30%))
+      const progressBars = screen.getAllByRole('progressbar');
+      expect(progressBars.length).toBeGreaterThan(0);
+      const fill = progressBars[0].querySelector('div');
+      expect(fill).toBeTruthy();
+      expect(fill!.getAttribute('style') || '').toContain('translateX(-30%');
+    });
   });
 });

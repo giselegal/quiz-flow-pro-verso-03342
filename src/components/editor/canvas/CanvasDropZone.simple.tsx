@@ -252,6 +252,9 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
     if (editRenderCount >= blocks.length) return;
 
     let cancelled = false;
+    let rafId: number | null = null;
+    let timeoutId: number | null = null;
+    let idleId: number | null = null;
     const step = () => {
       if (cancelled) return;
       setEditRenderCount(prev => {
@@ -264,16 +267,22 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
     const schedule = () => {
       const g: any = typeof globalThis !== 'undefined' ? (globalThis as any) : undefined;
       if (g?.requestIdleCallback) {
-        g.requestIdleCallback(() => step());
+        idleId = g.requestIdleCallback(() => step()) as unknown as number;
       } else if (g?.requestAnimationFrame) {
-        g.requestAnimationFrame(() => step());
+        rafId = g.requestAnimationFrame(() => step()) as unknown as number;
       } else {
-        setTimeout(step, 16);
+        timeoutId = setTimeout(step, 16) as unknown as number;
       }
     };
     schedule();
     return () => {
       cancelled = true;
+      try {
+        const g: any = typeof globalThis !== 'undefined' ? (globalThis as any) : undefined;
+        if (rafId != null && g?.cancelAnimationFrame) g.cancelAnimationFrame(rafId as unknown as number);
+        if (timeoutId != null) clearTimeout(timeoutId as unknown as number);
+        if (idleId != null && g?.cancelIdleCallback) g.cancelIdleCallback(idleId as unknown as number);
+      } catch { /* noop */ }
     };
   }, [enableProgressiveEdit, editRenderCount, blocks.length]);
 

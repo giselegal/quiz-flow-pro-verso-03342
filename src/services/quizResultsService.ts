@@ -171,7 +171,7 @@ class QuizResultsService {
             try {
               StorageService.safeSetString('userName', name);
               StorageService.safeSetString('quizUserName', name);
-            } catch {}
+            } catch { }
             return name;
           }
         }
@@ -187,7 +187,7 @@ class QuizResultsService {
         console.log('👤 Nome recuperado do StorageService:', storedName);
         return storedName.trim();
       }
-    } catch {}
+    } catch { }
 
     console.log('⚠️ Nome do usuário não encontrado nas respostas');
     return '';
@@ -316,7 +316,7 @@ class QuizResultsService {
     const lowerAnswer = answer.toLowerCase();
 
     // Verificar palavras-chave diretas
-  Object.entries(STYLE_KEYWORDS_MAPPING).forEach(([keyword, styleName]) => {
+    Object.entries(STYLE_KEYWORDS_MAPPING).forEach(([keyword, styleName]) => {
       if (lowerAnswer.includes(keyword)) {
         styleScores[styleName] = (styleScores[styleName] || 0) + 2;
       }

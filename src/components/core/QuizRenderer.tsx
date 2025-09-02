@@ -178,12 +178,14 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
 
   // Memoize stepBlocks to prevent infinite re-renders
   const stableStepBlocks = useMemo(() => stepBlocks || [], [stepBlocks]);
+  // Memoizar o wrapper de stepBlocks por chave de etapa para estabilidade de identidade
+  const validationBlocks = useMemo(() => ({ [`step-${currentStep}`]: stableStepBlocks } as any), [currentStep, stableStepBlocks]);
 
   // ✅ Validação centralizada (alinha com EditorPro)
   useCentralizedStepValidation({
     currentStep,
     // Passa um RawStepBlocks mínimo com a etapa atual
-    stepBlocks: { [`step-${currentStep}`]: stableStepBlocks } as any,
+    stepBlocks: validationBlocks,
     setStepValid,
   });
 

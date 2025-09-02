@@ -30,12 +30,17 @@ describe('editorUtils', () => {
 
       const newBlock = createBlockFromComponent('form-container', existingBlocks);
 
-      expect(newBlock).toEqual({
+      expect(newBlock).toMatchObject({
         id: 'block-form-container-mock-id-12345678',
         type: 'form-container',
         order: 3,
         content: {},
-        properties: {},
+      });
+      // Deve aplicar defaults vindos do registry
+      expect(newBlock.properties).toMatchObject({
+        title: 'Fale com a gente',
+        description: 'Preencha seus dados',
+        submitText: 'Enviar',
       });
     });
 

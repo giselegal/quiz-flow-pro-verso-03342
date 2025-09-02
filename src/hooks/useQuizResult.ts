@@ -1,5 +1,5 @@
 // hooks/useQuizResult.ts
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { StyleResult } from '@/types/quiz';
 import { StorageService } from '@/services/core/StorageService';
 import { calculateAndSaveQuizResult } from '@/utils/quizResultCalculator';
@@ -11,6 +11,8 @@ export const useQuizResult = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [retryCount, setRetryCount] = useState(0);
+  // Rastreia timers para evitar vazamentos entre testes e permitir cleanup
+  const timersRef = useRef<Set<number>>(new Set());
 
   const loadFromStorage = useCallback(async () => {
     // ✅ CORREÇÃO CRÍTICA: Evitar loading infinito com timeout e retry
@@ -56,15 +58,23 @@ export const useQuizResult = () => {
         return;
       }
 
-      // ✅ Calcular com timeout de 10 segundos
+      // ✅ Calcular com timeout de 10 segundos (com cleanup do timer)
       console.log('🔄 Iniciando cálculo com timeout...');
+      let timeoutId: number | undefined;
       const timeoutPromise = new Promise((_, reject) => {
-        setTimeout(() => reject(new Error('Timeout: cálculo demorou mais de 10 segundos')), 10000);
+        timeoutId = setTimeout(() => reject(new Error('Timeout: cálculo demorou mais de 10 segundos')), 10000) as unknown as number;
+        timersRef.current.add(timeoutId!);
       });
 
       const calculationPromise = calculateAndSaveQuizResult();
 
       const result = await Promise.race([calculationPromise, timeoutPromise]) as any;
+
+      // Cancelar timeout se cálculo venceu a corrida
+      if (timeoutId !== undefined) {
+        clearTimeout(timeoutId as unknown as number);
+        timersRef.current.delete(timeoutId as unknown as number);
+      }
 
       if (result) {
         setPrimaryStyle(result.primaryStyle ?? null);
@@ -82,14 +92,15 @@ export const useQuizResult = () => {
       console.error('❌ Erro ao carregar/calcular resultado:', error);
       setError(error.message || 'Erro desconhecido');
 
-      // ✅ Retry automático até 3 vezes com delay crescente
+      // ✅ Retry automático até 3 vezes com delay crescente (com cleanup)
       if (retryCount < 3) {
         const delay = (retryCount + 1) * 2000; // 2s, 4s, 6s
         console.log(`🔄 Tentativa ${retryCount + 1}/3 em ${delay}ms...`);
-        setTimeout(() => {
+        const id = setTimeout(() => {
           setRetryCount(prev => prev + 1);
           loadFromStorage();
-        }, delay);
+        }, delay) as unknown as number;
+        timersRef.current.add(id);
       } else {
         console.error('❌ Esgotadas tentativas de retry');
       }
@@ -128,6 +139,12 @@ export const useQuizResult = () => {
       window.removeEventListener('quiz-result-refresh', handler as EventListener);
       window.removeEventListener('unified-quiz-data-updated', handler as EventListener);
       window.removeEventListener(EVENTS.QUIZ_ANSWER_UPDATED, answerHandler);
+
+      // Limpar qualquer timer pendente
+      try {
+        timersRef.current.forEach(id => clearTimeout(id as unknown as number));
+        timersRef.current.clear();
+      } catch { /* ignore */ }
     };
   }, [loadFromStorage]);
 

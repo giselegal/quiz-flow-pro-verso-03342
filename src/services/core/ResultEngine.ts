@@ -26,6 +26,18 @@ const STYLE_MAP: Record<string, string> = {
   criativo: 'Criativo',
 };
 
+// Ordem determinística para desempate entre estilos com mesma pontuação
+export const STYLES_ORDER: string[] = [
+  'Natural',
+  'Clássico',
+  'Contemporâneo',
+  'Elegante',
+  'Romântico',
+  'Sexy',
+  'Dramático',
+  'Criativo',
+];
+
 export const ResultEngine = {
   // Calcula pontuação a partir de selections (por questão) usando prefixos de optionId
   computeScoresFromSelections(
@@ -63,7 +75,16 @@ export const ResultEngine = {
         score,
         percentage: Math.round((score / (total || 1)) * 100),
       }))
-      .sort((a, b) => b.score - a.score);
+      .sort((a, b) => {
+        if (b.score !== a.score) return b.score - a.score;
+        // Desempate estável pela ordem de STYLES_ORDER
+        const ai = STYLES_ORDER.indexOf(a.style);
+        const bi = STYLES_ORDER.indexOf(b.style);
+        if (ai !== -1 && bi !== -1) return ai - bi;
+        if (ai !== -1) return -1;
+        if (bi !== -1) return 1;
+        return String(a.style).localeCompare(String(b.style));
+      });
 
     const primary = ordered[0] || {
       style: 'Natural',

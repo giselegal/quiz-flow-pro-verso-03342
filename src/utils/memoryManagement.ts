@@ -79,7 +79,13 @@ class MemoryManager {
   // Remover item específico
   removeEventListener(element: Element | Window | Document, event: string, handler: EventListener) {
     element.removeEventListener(event, handler);
-    this.eventListeners.delete({ element, event, handler });
+    // Encontrar a entrada correspondente para remoção correta
+    for (const entry of Array.from(this.eventListeners)) {
+      if (entry.element === element && entry.event === event && entry.handler === handler) {
+        this.eventListeners.delete(entry);
+        break;
+      }
+    }
   }
 
   clearInterval(id: number) {

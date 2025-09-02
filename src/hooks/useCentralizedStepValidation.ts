@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { validateStep } from '@/utils/stepValidationRegistry';
 
 type Ctx = {
@@ -9,11 +9,18 @@ type Ctx = {
 
 export function useCentralizedStepValidation(ctx: Ctx) {
     const { currentStep, stepBlocks, setStepValid } = ctx;
+    // Guarda validade anterior por etapa para evitar loops de atualização
+    const lastValidityRef = useRef<Record<number, boolean>>({});
 
     useEffect(() => {
         if (!currentStep) return;
         const res = validateStep(currentStep, stepBlocks as any);
-        try { setStepValid?.(currentStep, !!res.valid); } catch { }
+        const valid = !!res.valid;
+        const prev = lastValidityRef.current[currentStep];
+        if (prev !== valid) {
+            lastValidityRef.current[currentStep] = valid;
+            try { setStepValid?.(currentStep, valid); } catch { }
+        }
     }, [currentStep, stepBlocks, setStepValid]);
 }
 

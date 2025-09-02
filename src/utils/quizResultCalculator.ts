@@ -14,81 +14,89 @@ import { unifiedQuizStorage } from '@/services/core/UnifiedQuizStorage';
 
 export const calculateAndSaveQuizResult = async () => {
   console.log('🔄 Iniciando cálculo do resultado do quiz...');
-  
+
   try {
     // 1. Tentar usar dados unificados primeiro
     const unifiedData = unifiedQuizStorage.loadData();
     let userSelections = unifiedData.selections;
     let userName = unifiedData.formData.userName || unifiedData.formData.name;
-    
+    const hasEnough = unifiedQuizStorage.hasEnoughDataForResult();
+
     // 2. Fallback para dados legados se necessário
     if (Object.keys(userSelections).length === 0) {
       console.log('📦 Usando dados legados como fallback...');
       userSelections = StorageService.safeGetJSON<Record<string, string[]>>('userSelections') || {};
-      
+
       if (!userName) {
         const quizAnswers = StorageService.safeGetJSON<any>('quizAnswers') || {};
         userName = quizAnswers.userName || StorageService.safeGetString('userName') || StorageService.safeGetString('quizUserName');
       }
     }
-    
-    console.log('📊 Dados coletados:', { 
+
+    console.log('📊 Dados coletados:', {
       userSelections: Object.keys(userSelections).length,
       userName: Boolean(userName),
       source: Object.keys(unifiedData.selections).length > 0 ? 'unified' : 'legacy'
     });
-    
-    // 3. Validar se há dados suficientes
+
+    // 3. Validar se há dados suficientes (gating)
     const hasSelections = Object.keys(userSelections).length > 0;
-    
     if (!hasSelections) {
       console.warn('⚠️ Nenhuma seleção encontrada para cálculo');
-      return createFallbackResult(userName || 'Usuário');
+      // Não persistir fallback quando não há dados suficientes
+      return createFallbackResult(userName || 'Usuário', { persist: false });
     }
-    
+    if (!hasEnough) {
+      console.warn('⚠️ Dados insuficientes segundo UnifiedQuizStorage.hasEnoughDataForResult()');
+      // Não persistir fallback quando threshold não atingido
+      return createFallbackResult(userName || 'Usuário', { persist: false });
+    }
+
     // 4. Validar qualidade dos dados
     const selectionCount = Object.keys(userSelections).length;
     if (selectionCount < 5) {
       console.warn(`⚠️ Poucas seleções para resultado confiável: ${selectionCount}/10+`);
     }
-    
+
     console.log('👤 Calculando para usuário:', userName || 'Usuário');
-    
+
     // 5. Executar cálculo usando ResultOrchestrator
     const result = await ResultOrchestrator.run({
       selectionsByQuestion: userSelections,
       userName: userName || 'Usuário',
       persistToSupabase: false // Para etapa 20, não precisa persistir no Supabase
     });
-    
+
     console.log('✅ Resultado calculado com sucesso:', {
       primaryStyle: result.payload.primaryStyle,
       total: result.total,
       selectionCount
     });
-    
-    // 6. Salvar no sistema unificado
+
+    // 6. Salvar no sistema unificado (apenas quando dados suficientes)
     unifiedQuizStorage.saveResult(result.payload);
-    
+
     return result.payload;
-    
+
   } catch (error) {
     console.error('❌ Erro ao calcular resultado:', error);
-    return createFallbackResult(StorageService.safeGetString('userName') || 'Usuário');
+    // Persistir fallback em erro real de execução
+    return createFallbackResult(StorageService.safeGetString('userName') || 'Usuário', { persist: true });
   }
 };
 
 /**
  * Cria resultado de fallback quando cálculo falha
  */
-function createFallbackResult(userName: string) {
+function createFallbackResult(userName: string, opts: { persist?: boolean } = {}) {
   console.log('🔄 Criando resultado de fallback...');
-  
+  const persist = opts.persist !== false; // padrão: persiste apenas quando chamado em erro real
+
   const fallbackResult = {
     version: 'v1',
     primaryStyle: {
       style: 'Natural',
-      category: 'Natural', 
+      category: 'Natural',
       score: 8,
       percentage: 80
     },
@@ -100,7 +108,7 @@ function createFallbackResult(userName: string) {
         percentage: 60
       }
     ],
-    scores: { 
+    scores: {
       Natural: 8,
       Clássico: 6,
       Romântico: 4,
@@ -110,12 +118,15 @@ function createFallbackResult(userName: string) {
     totalQuestions: 10,
     userData: { name: userName }
   };
-  
-  // Salvar em ambos os sistemas
-  StorageService.safeSetJSON('quizResult', fallbackResult);
-  unifiedQuizStorage.saveResult(fallbackResult);
-  
-  console.log('✅ Resultado de fallback salvo');
+
+  if (persist) {
+    // Salvar em ambos os sistemas
+    StorageService.safeSetJSON('quizResult', fallbackResult);
+    unifiedQuizStorage.saveResult(fallbackResult);
+    console.log('✅ Resultado de fallback salvo');
+  } else {
+    console.log('ℹ️ Fallback não persistido (dados insuficientes)');
+  }
   return fallbackResult;
 }
 
@@ -123,21 +134,21 @@ function createFallbackResult(userName: string) {
 export const validateQuizData = () => {
   const hasEnoughData = unifiedQuizStorage.hasEnoughDataForResult();
   const stats = unifiedQuizStorage.getDataStats();
-  
+
   const errors: string[] = [];
-  
+
   if (stats.selectionsCount === 0) {
     errors.push('Nenhuma resposta foi registrada');
   }
-  
+
   if (stats.selectionsCount < 5) {
     errors.push(`Apenas ${stats.selectionsCount} perguntas respondidas (mínimo 5)`);
   }
-  
+
   if (!stats.formDataCount || stats.formDataCount === 0) {
     errors.push('Dados do usuário não encontrados');
   }
-  
+
   return {
     isValid: hasEnoughData && errors.length === 0,
     errors

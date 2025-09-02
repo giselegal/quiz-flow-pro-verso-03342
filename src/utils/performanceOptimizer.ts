@@ -112,18 +112,11 @@ class SmartTimeout {
     delay: number,
     strategy: 'animation' | 'timeout' = 'animation'
   ): number {
-    if (strategy === 'animation' && delay < 100) {
-      // Para intervalos rápidos, usar requestAnimationFrame recursivo
-      const recursiveCallback = () => {
-        callback();
-        requestAnimationFrame(recursiveCallback);
-      };
-      requestAnimationFrame(recursiveCallback);
-      return 0;
-    }
-
-    // Fallback para setInterval nativo
-    return window.setInterval(callback, Math.max(delay, 16)) as unknown as number;
+  // IMPORTANTE: Sempre retornar um ID cancelável para evitar vazamentos.
+  // Mesmo quando a estratégia sugerir 'animation', preferimos setInterval
+  // para garantir que clearInterval funcione corretamente durante o cleanup
+  // (especialmente em ambientes de teste/CI).
+  return window.setInterval(callback, Math.max(delay, 16)) as unknown as number;
   }
 }
 
