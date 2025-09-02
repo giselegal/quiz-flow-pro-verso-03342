@@ -54,7 +54,7 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
   onPropertyChange,
   className = '',
 }) => {
-  const { primaryStyle, isLoading, error, retry, hasResult } = useQuizResult();
+  const { primaryStyle, secondaryStyles, isLoading, error, retry, hasResult } = useQuizResult();
   const [imageError, setImageError] = useState(false);
   const [guideImageError, setGuideImageError] = useState(false);
 
@@ -118,7 +118,28 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
     try {
       const unified = StorageService.safeGetJSON<any>('unifiedQuizData') || {};
       const formData = unified.formData || {};
-      storedName = formData.userName || formData.name || '';
+      // Tentar o melhor candidato disponível
+      const candidates = [
+        formData.userName,
+        formData.fullName,
+        formData.nomeCompleto,
+        formData.nome,
+        formData.name,
+        [formData.firstName, formData.lastName].filter(Boolean).join(' ')
+      ].filter((v: any) => typeof v === 'string' && v.trim().length > 0) as string[];
+      if (candidates.length > 0) {
+        // Escolher o texto mais longo
+        storedName = candidates.sort((a, b) => b.trim().length - a.trim().length)[0].trim();
+      }
+    } catch { /* ignore */ }
+  }
+
+  // Fallback adicional: verificar quizAnswers legado
+  if (!storedName) {
+    try {
+      const quizAnswers = StorageService.safeGetJSON<any>('quizAnswers') || {};
+      const candidate = quizAnswers.userName || quizAnswers.name || '';
+      if (typeof candidate === 'string' && candidate.trim().length > 0) storedName = candidate.trim();
     } catch { /* ignore */ }
   }
 
@@ -174,6 +195,14 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
         ? (primaryStyle as any).percentage
         : 0);
 
+  // Se percentage veio 0 mas temos pontuações, calcular a partir dos scores
+  const primaryScore = typeof (primaryStyle as any)?.score === 'number' ? (primaryStyle as any).score : 0;
+  const totalScore = [primaryScore, ...secondaryStyles.map(s => (typeof (s as any)?.score === 'number' ? (s as any).score : 0))]
+    .reduce((a, b) => a + b, 0);
+  const effectivePercentage = computedPercentage === 0 && totalScore > 0
+    ? Math.round((primaryScore / totalScore) * 100)
+    : computedPercentage;
+
   // Defaults vindos do styleConfig, quando props do bloco estiverem ausentes
   const styleInfo = getStyleConfig(styleLabel) || {};
   const effectiveImageUrl = imageUrl || (styleInfo as any)?.image || safeStylePlaceholder(styleLabel, 238, 320);
@@ -181,6 +210,20 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
   const effectiveDescription = (block?.properties?.description && String(block.properties.description).trim().length > 0)
     ? description
     : ((styleInfo as any)?.description || description || 'Descrição não disponível');
+
+  const sanitizeStyleMentions = (text: string, label: string) => {
+    if (!text) return text;
+    let out = text;
+    // Trocar padrões comuns de slug por nome amigável
+    const tokens = ['estilo-neutro', 'estilo neutro', 'neutro', 'neutral'];
+    tokens.forEach(t => {
+      const re = new RegExp(`\\b${t.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')}\\b`, 'gi');
+      out = out.replace(re, label);
+    });
+    // Remover duplicação "estilo <label>" quando já há prefixo
+    out = out.replace(new RegExp(`\\bestilo\\s+${label}\\b`, 'gi'), `estilo ${label}`);
+    return out;
+  };
 
   const handlePropertyChange = (key: string, value: any) => {
     if (onPropertyChange) {
@@ -252,7 +295,7 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
               <span
                 className="text-[#aa6b5d] font-medium cursor-pointer"
                 onClick={() => {
-                  const newPercentage = prompt('Nova porcentagem (0-100):', String(computedPercentage));
+                  const newPercentage = prompt('Nova porcentagem (0-100):', String(effectivePercentage));
                   if (newPercentage !== null && !isNaN(Number(newPercentage))) {
                     handlePropertyChange(
                       'percentage',
@@ -261,7 +304,7 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
                   }
                 }}
               >
-                {computedPercentage}%
+                {effectivePercentage}%
               </span>
             </div>
             {/* Mostrar o nome do estilo atual quando disponível */}
@@ -274,7 +317,7 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
               </div>
             )}
             <Progress
-              value={computedPercentage}
+              value={effectivePercentage}
               className="h-2 bg-[#F3E8E6]"
               style={{
                 '--progress-color': progressColor,
@@ -295,9 +338,9 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
         </div>
         <div className="grid md:grid-cols-2 gap-8 items-center">
           <div className="space-y-4">
-            <p className="text-[#432818] leading-relaxed">
+      <p className="text-[#432818] leading-relaxed">
               <InlineEditableText
-                value={interpolate(effectiveDescription, vars)}
+        value={sanitizeStyleMentions(interpolate(effectiveDescription, vars), styleLabel)}
                 onChange={value => handlePropertyChange('description', value)}
                 placeholder="Descrição do estilo predominante..."
                 className="text-[#432818] leading-relaxed"
