@@ -30,7 +30,7 @@ describe('Quiz Flow core (name + results)', () => {
         // 2) responder questões q1–q10 (uma opção por pergunta suficiente para pontuar)
         const pick = (qid: string) => caktoquizQuestions.find((q: any) => q.id === qid)!;
 
-        act(() => {
+        await act(async () => {
             // Escolhas tendendo para "natural" para validar agregação
             result.current.answerQuestion('q1', pick('q1').options.find((o: any) => o.style === 'natural')!.id);
             result.current.answerQuestion('q2', pick('q2').options.find((o: any) => o.style === 'natural')!.id);
@@ -42,9 +42,8 @@ describe('Quiz Flow core (name + results)', () => {
             result.current.answerQuestion('q8', pick('q8').options.find((o: any) => o.style === 'natural')!.id);
             result.current.answerQuestion('q9', pick('q9').options.find((o: any) => o.style === 'natural')!.id);
             result.current.answerQuestion('q10', pick('q10').options.find((o: any) => o.style === 'natural')!.id);
-
-            // concluir
-            result.current.completeQuiz();
+            // concluir e aguardar quaisquer promessas internas
+            await result.current.completeQuiz();
         });
 
         const quizResult = StorageService.safeGetJSON<any>('quizResult');

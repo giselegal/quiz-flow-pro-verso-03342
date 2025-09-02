@@ -1,5 +1,6 @@
 import '@testing-library/jest-dom';
 import { vi, afterEach, afterAll } from 'vitest';
+import { PerformanceOptimizer } from '@/utils/performanceOptimizer';
 
 // Setup global test environment
 global.ResizeObserver = class ResizeObserver {
@@ -112,6 +113,8 @@ global.IntersectionObserver = class IntersectionObserver {
 
   // After each test, clear any leftover timers to prevent accumulation
   afterEach(() => {
+  try { PerformanceOptimizer.cancelAllTimeouts(); } catch {}
+  try { PerformanceOptimizer.cancelAllIntervals(); } catch {}
     for (const id of Array.from(activeTimeouts)) {
       originalClearTimeout(id as any);
       activeTimeouts.delete(id);
@@ -132,6 +135,8 @@ global.IntersectionObserver = class IntersectionObserver {
 
   // As a final safeguard, also clear on suite teardown
   afterAll(() => {
+  try { PerformanceOptimizer.cancelAllTimeouts(); } catch {}
+  try { PerformanceOptimizer.cancelAllIntervals(); } catch {}
     for (const id of Array.from(activeTimeouts)) {
       originalClearTimeout(id as any);
       activeTimeouts.delete(id);
