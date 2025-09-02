@@ -196,8 +196,9 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
         : 0);
 
   // Se percentage veio 0 mas temos pontuações, calcular a partir dos scores
+  const safeSecondary = Array.isArray(secondaryStyles) ? secondaryStyles : [];
   const primaryScore = typeof (primaryStyle as any)?.score === 'number' ? (primaryStyle as any).score : 0;
-  const totalScore = [primaryScore, ...secondaryStyles.map(s => (typeof (s as any)?.score === 'number' ? (s as any).score : 0))]
+  const totalScore = [primaryScore, ...safeSecondary.map(s => (typeof (s as any)?.score === 'number' ? (s as any).score : 0))]
     .reduce((a, b) => a + b, 0);
   const effectivePercentage = computedPercentage === 0 && totalScore > 0
     ? Math.round((primaryScore / totalScore) * 100)
