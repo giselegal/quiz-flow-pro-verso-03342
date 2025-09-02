@@ -112,10 +112,10 @@ export const useQuizLogic = () => {
       const question = caktoquizQuestions.find((q: any) => q.id === answer.questionId);
       const option = question?.options.find((opt: any) => opt.id === answer.optionId);
 
-  // ✅ FILTRO: Só conta se for questão que pontua (centralizado em constants/quiz.ts)
-  const scorable = isScorableQuestion(question?.id || '');
+      // ✅ FILTRO: Só conta se for questão que pontua (centralizado em constants/quiz.ts)
+      const scorable = isScorableQuestion(question?.id || '');
 
-  if (option?.style && scorable) {
+      if (option?.style && scorable) {
         styleScores[option.style] = (styleScores[option.style] || 0) + (option.weight || 1);
       }
     });

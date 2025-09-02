@@ -2,6 +2,7 @@ import { cn } from '@/lib/utils';
 import { Sparkles, Edit3 } from 'lucide-react';
 import { useQuizResult } from '@/hooks/useQuizResult';
 import { getStyleConfig } from '@/config/styleConfig';
+import { mapToFriendlyStyle } from '@/core/style/naming';
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value: string | number, type: string): string => {
@@ -59,34 +60,6 @@ const interpolate = (text: string, vars: Record<string, any>) => {
     .replace(/\{resultAccessories\}/g, vars.resultAccessories || '');
 };
 
-// Helpers para normalizar nomes de estilos (slugs -> nomes amigáveis)
-const removeDiacritics = (s: string) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-const normalizeToken = (s: string) => removeDiacritics(String(s || '')).toLowerCase().replace(/[^a-z0-9]+/g, '-');
-const mapToFriendlyStyle = (raw: string): string => {
-  const t = normalizeToken(raw);
-  const table: Record<string, string> = {
-    natural: 'Natural',
-    classico: 'Clássico',
-    contemporaneo: 'Contemporâneo',
-    elegante: 'Elegante',
-    romantico: 'Romântico',
-    sexy: 'Sexy',
-    dramatico: 'Dramático',
-    criativo: 'Criativo',
-    'estilo-natural': 'Natural',
-    'estilo-classico': 'Clássico',
-    'estilo-contemporaneo': 'Contemporâneo',
-    'estilo-elegante': 'Elegante',
-    'estilo-romantico': 'Romântico',
-    'estilo-sexy': 'Sexy',
-    'estilo-dramatico': 'Dramático',
-    'estilo-criativo': 'Criativo',
-    neutro: 'Natural',
-    neutral: 'Natural',
-    'estilo-neutro': 'Natural',
-  };
-  return table[t] || table[t.replace(/^estilo-/, '')] || 'Natural';
-};
 
 const StyleCardInlineBlock: React.FC<any> = ({
   block,

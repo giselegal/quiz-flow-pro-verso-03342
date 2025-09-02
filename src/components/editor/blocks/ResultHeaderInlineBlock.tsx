@@ -5,8 +5,10 @@ import { Card } from '@/components/ui/card';
 import type { BlockComponentProps } from '@/types/blocks';
 import { useQuizResult } from '@/hooks/useQuizResult';
 import { cn } from '@/lib/utils';
-import { StorageService } from '@/services/core/StorageService';
 import { getStyleConfig } from '@/config/styleConfig';
+import { mapToFriendlyStyle, sanitizeStyleMentions } from '@/core/style/naming';
+import { computeEffectivePrimaryPercentage } from '@/core/result/percentage';
+import { getBestUserName } from '@/core/user/name';
 import { safePlaceholder, safeStylePlaceholder } from '@/utils/placeholder';
 
 const interpolate = (text: string, vars: Record<string, any>) => {
@@ -16,37 +18,6 @@ const interpolate = (text: string, vars: Record<string, any>) => {
     .replace(/\{resultStyle\}/g, vars.resultStyle || '');
 };
 
-// Helpers para normalizar nomes de estilos (aceita slugs, lower/upper, sem acentos)
-const removeDiacritics = (s: string) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-const normalizeToken = (s: string) => removeDiacritics(String(s || '')).toLowerCase().replace(/[^a-z0-9]+/g, '-');
-const mapToFriendlyStyle = (raw: string): string => {
-  const t = normalizeToken(raw);
-  // Mapear tokens conhecidos para nomes amigáveis (iguais às chaves do styleConfig)
-  const table: Record<string, string> = {
-    'natural': 'Natural',
-    'classico': 'Clássico',
-    'contemporaneo': 'Contemporâneo',
-    'elegante': 'Elegante',
-    'romantico': 'Romântico',
-    'sexy': 'Sexy',
-    'dramatico': 'Dramático',
-    'criativo': 'Criativo',
-    // Slugs alternativos
-    'estilo-natural': 'Natural',
-    'estilo-classico': 'Clássico',
-    'estilo-contemporaneo': 'Contemporâneo',
-    'estilo-elegante': 'Elegante',
-    'estilo-romantico': 'Romântico',
-    'estilo-sexy': 'Sexy',
-    'estilo-dramatico': 'Dramático',
-    'estilo-criativo': 'Criativo',
-    // Fallbacks "neutro"
-    'neutro': 'Natural',
-    'neutral': 'Natural',
-    'estilo-neutro': 'Natural',
-  };
-  return table[t] || table[t.replace(/^estilo-/, '')] || 'Natural';
-};
 
 const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
   block,
@@ -107,43 +78,7 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
   }
 
   // Capturar nome de forma robusta (incluindo UnifiedQuizStorage)
-  let storedName =
-    StorageService.safeGetString('userName') ||
-    StorageService.safeGetString('quizUserName') ||
-    (typeof window !== 'undefined' ? (window as any).__quizUserName : '') ||
-    (block as any)?.properties?.userName ||
-    '';
-
-  if (!storedName) {
-    try {
-      const unified = StorageService.safeGetJSON<any>('unifiedQuizData') || {};
-      const formData = unified.formData || {};
-      // Tentar o melhor candidato disponível
-      const candidates = [
-        formData.userName,
-        formData.fullName,
-        formData.nomeCompleto,
-        formData.nome,
-        formData.name,
-        [formData.firstName, formData.lastName].filter(Boolean).join(' ')
-      ].filter((v: any) => typeof v === 'string' && v.trim().length > 0) as string[];
-      if (candidates.length > 0) {
-        // Escolher o texto mais longo
-        storedName = candidates.sort((a, b) => b.trim().length - a.trim().length)[0].trim();
-      }
-    } catch { /* ignore */ }
-  }
-
-  // Fallback adicional: verificar quizAnswers legado
-  if (!storedName) {
-    try {
-      const quizAnswers = StorageService.safeGetJSON<any>('quizAnswers') || {};
-      const candidate = quizAnswers.userName || quizAnswers.name || '';
-      if (typeof candidate === 'string' && candidate.trim().length > 0) storedName = candidate.trim();
-    } catch { /* ignore */ }
-  }
-
-  if (!storedName) storedName = 'Visitante';
+  const storedName = getBestUserName(block);
 
   const {
     title = 'Seu Estilo Predominante',
@@ -188,31 +123,10 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
   };
 
   // Percentual exibido: usa o calculado (primaryStyle.percentage) se não houver override explícito na prop
-  const computedPercentage =
-    typeof percentageProp === 'number' && !Number.isNaN(percentageProp)
-      ? percentageProp
-      : (typeof (primaryStyle as any)?.percentage === 'number'
-        ? (primaryStyle as any).percentage
-        : 0);
-
-  // Se percentage veio 0 mas temos pontuações, calcular a partir dos scores
-  const safeSecondary = Array.isArray(secondaryStyles) ? secondaryStyles : [];
-  const primaryScore = typeof (primaryStyle as any)?.score === 'number' ? (primaryStyle as any).score : 0;
-  const totalScore = [primaryScore, ...safeSecondary.map(s => (typeof (s as any)?.score === 'number' ? (s as any).score : 0))]
-    .reduce((a, b) => a + b, 0);
-  let effectivePercentage = computedPercentage;
-  if (computedPercentage === 0) {
-    if (totalScore > 0) {
-      effectivePercentage = Math.round((primaryScore / totalScore) * 100);
-    } else {
-      const secondaryPctSum = safeSecondary
-        .map(s => (typeof (s as any)?.percentage === 'number' ? (s as any).percentage : 0))
-        .reduce((a, b) => a + b, 0);
-      if (secondaryPctSum > 0 && secondaryPctSum < 100) {
-        effectivePercentage = Math.max(0, Math.min(100, 100 - secondaryPctSum));
-      }
-    }
-  }
+  const computedPercentage = typeof percentageProp === 'number' && !Number.isNaN(percentageProp)
+    ? percentageProp
+    : (typeof (primaryStyle as any)?.percentage === 'number' ? (primaryStyle as any).percentage : 0);
+  const effectivePercentage = computeEffectivePrimaryPercentage(primaryStyle as any, secondaryStyles as any[], computedPercentage);
 
   // Defaults vindos do styleConfig, quando props do bloco estiverem ausentes
   const styleInfo = getStyleConfig(styleLabel) || {};
@@ -221,20 +135,6 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
   const effectiveDescription = (block?.properties?.description && String(block.properties.description).trim().length > 0)
     ? description
     : ((styleInfo as any)?.description || description || 'Descrição não disponível');
-
-  const sanitizeStyleMentions = (text: string, label: string) => {
-    if (!text) return text;
-    let out = text;
-    // Trocar padrões comuns de slug por nome amigável
-    const tokens = ['estilo-neutro', 'estilo neutro', 'neutro', 'neutral'];
-    tokens.forEach(t => {
-      const re = new RegExp(`\\b${t.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')}\\b`, 'gi');
-      out = out.replace(re, label);
-    });
-    // Remover duplicação "estilo <label>" quando já há prefixo
-    out = out.replace(new RegExp(`\\bestilo\\s+${label}\\b`, 'gi'), `estilo ${label}`);
-    return out;
-  };
 
   const handlePropertyChange = (key: string, value: any) => {
     if (onPropertyChange) {
