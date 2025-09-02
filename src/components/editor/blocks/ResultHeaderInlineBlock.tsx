@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { InlineEditableText } from './InlineEditableText';
 import { Progress } from '@/components/ui/progress';
 import { Card } from '@/components/ui/card';
@@ -97,6 +97,18 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
     badgeText = 'Exclusivo',
     backgroundColor,
     textAlign = 'center',
+    // Props legadas (compat): renderizam uma faixa de header simples acima do conteúdo rico
+    logoUrl,
+    logoAlt = 'Logo',
+    logoHeight = 40,
+    logoWidth = 'auto',
+    showUserName = false,
+    borderColor,
+    showBorder = false,
+    containerWidth = 'full', // 'small' | 'medium' | 'large' | 'full'
+    spacing = 'normal', // 'small' | 'normal' | 'large'
+    marginTop = 0,
+    marginBottom = 0,
   } = block?.properties || {};
 
   // Compatibilidade: aceitar styleGuideImageUrl do template
@@ -136,6 +148,22 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
 
   const alignClass = textAlign === 'left' ? 'text-left' : textAlign === 'right' ? 'text-right' : 'text-center';
 
+  // Compat: classes/estilo para faixa de header simples (se logoUrl estiver presente)
+  const legacyContainerClasses = useMemo(() => {
+    const widthCls = containerWidth === 'small' ? 'max-w-sm' : containerWidth === 'medium' ? 'max-w-md' : containerWidth === 'large' ? 'max-w-lg' : 'max-w-full';
+    const padCls = spacing === 'small' ? 'py-2' : spacing === 'large' ? 'py-6' : 'py-4';
+    const mtCls = marginTop <= 0 ? 'mt-0' : marginTop <= 8 ? 'mt-2' : marginTop <= 16 ? 'mt-4' : marginTop <= 24 ? 'mt-6' : 'mt-8';
+    const mbCls = marginBottom <= 0 ? 'mb-0' : marginBottom <= 8 ? 'mb-2' : marginBottom <= 16 ? 'mb-4' : marginBottom <= 24 ? 'mb-6' : 'mb-8';
+    return cn('w-full mx-auto', widthCls, padCls, mtCls, mbCls);
+  }, [containerWidth, spacing, marginTop, marginBottom]);
+
+  const legacyHeaderStyle = useMemo(() => {
+    const style: React.CSSProperties = {};
+    if (backgroundColor) style.backgroundColor = backgroundColor as any;
+    if (showBorder && borderColor) Object.assign(style, { borderColor, borderWidth: '1px', borderStyle: 'solid' });
+    return style;
+  }, [backgroundColor, showBorder, borderColor]);
+
   return (
     <div
       className={cn(
@@ -147,6 +175,23 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
       )}
       style={{ backgroundColor }}
     >
+      {/* Faixa de header simples (compat) */}
+      {logoUrl && (
+        <div className={legacyContainerClasses} style={legacyHeaderStyle}>
+          <div className="flex items-center justify-between gap-4">
+            <img
+              src={logoUrl}
+              alt={logoAlt}
+              style={{ height: typeof logoHeight === 'number' ? `${logoHeight}px` : logoHeight, width: logoWidth as any }}
+              className="object-contain"
+            />
+            {showUserName && storedName && (
+              <div className="text-sm text-[#432818]">{storedName}</div>
+            )}
+          </div>
+        </div>
+      )}
+
       <Card
         className={cn('p-6 shadow-md border border-[#B89B7A]/20', alignClass)}
         style={{ backgroundColor: backgroundColor ? backgroundColor : undefined }}
