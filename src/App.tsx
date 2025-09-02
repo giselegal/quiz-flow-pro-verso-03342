@@ -18,6 +18,9 @@ const StepPage = lazy(() => import('./pages/StepPage'));
 // ✅ Página de produção modular limpa (cliente final)
 const QuizModularPage = lazy(() => import('./pages/QuizModularPage'));
 
+// Importação da nova página
+import AgentStyleFunnelTestPage from './pages/AgentStyleFunnelTestPage';
+
 // Loading component
 const PageLoading = () => (
   <div className="min-h-screen flex items-center justify-center">
@@ -103,6 +106,13 @@ function App() {
                 <Route path="/editor-templates">
                   <Suspense fallback={<PageLoading />}>
                     <EditorTemplatesPage />
+                  </Suspense>
+                </Route>
+
+                {/* 🧪 AGENT TEST PAGE */}
+                <Route path="/agent/style-funnel-test">
+                  <Suspense fallback={<PageLoading />}>
+                    <AgentStyleFunnelTestPage />
                   </Suspense>
                 </Route>
 
