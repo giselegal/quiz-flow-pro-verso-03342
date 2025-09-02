@@ -358,7 +358,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
           minSelections,
         });
         const effectiveRequiredSelections = getEffectiveRequiredSelections(step, { requiredSelections, minSelections });
-    window.dispatchEvent(
+        window.dispatchEvent(
           new CustomEvent('quiz-selection-change', {
             detail: {
               questionId,
@@ -366,10 +366,10 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
               selectionCount: newSelections.length,
               requiredSelections: effectiveRequiredSelections,
               valid: validity.isValid,
-      isValid: validity.isValid,
-      // Compat: fornecer arrays para consumidores externos
-      selectedOptions: newSelections,
-      selectedIds: newSelections,
+              isValid: validity.isValid,
+              // Compat: fornecer arrays para consumidores externos
+              selectedOptions: newSelections,
+              selectedIds: newSelections,
             },
           })
         );
@@ -497,7 +497,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       });
 
       // Emitir evento global para que o EditorStageManager possa refletir validação visual
-  window.dispatchEvent(
+      window.dispatchEvent(
         new CustomEvent('quiz-selection-change', {
           detail: {
             questionId: (block?.properties as any)?.questionId || block?.id,
@@ -505,10 +505,10 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
             selectionCount: newSelections.length,
             requiredSelections: effectiveRequiredSelectionsEditor,
             valid: hasRequiredSelections,
-    isValid: hasRequiredSelections,
-    // Compat: fornecer arrays para consumidores externos
-    selectedOptions: newSelections,
-    selectedIds: newSelections,
+            isValid: hasRequiredSelections,
+            // Compat: fornecer arrays para consumidores externos
+            selectedOptions: newSelections,
+            selectedIds: newSelections,
           },
         })
       );

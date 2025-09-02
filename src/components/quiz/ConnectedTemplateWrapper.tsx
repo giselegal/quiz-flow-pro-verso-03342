@@ -70,8 +70,8 @@ export const ConnectedTemplateWrapper: React.FC<ConnectedTemplateWrapperProps> =
       const opts: string[] = Array.isArray(selectedOptions)
         ? selectedOptions
         : Array.isArray(selectedIds)
-        ? selectedIds
-        : [];
+          ? selectedIds
+          : [];
 
       if (stepType === 'question' && stepNumber >= 2 && stepNumber <= 11 && isValid && opts.length) {
         console.log('📊 ConnectedTemplateWrapper: Processando respostas', {
@@ -83,7 +83,7 @@ export const ConnectedTemplateWrapper: React.FC<ConnectedTemplateWrapperProps> =
         const questionId = `q${stepNumber - 1}`; // Step 2 = q1, Step 3 = q2, etc.
 
         // Processar cada opção selecionada
-  opts.forEach((optionId: string) => {
+        opts.forEach((optionId: string) => {
           console.log('✅ Registrando resposta:', { questionId, optionId });
           quizLogic.answerQuestion(questionId, optionId);
 
@@ -109,8 +109,8 @@ export const ConnectedTemplateWrapper: React.FC<ConnectedTemplateWrapperProps> =
       const opts: string[] = Array.isArray(selectedOptions)
         ? selectedOptions
         : Array.isArray(selectedIds)
-        ? selectedIds
-        : [];
+          ? selectedIds
+          : [];
 
       if (stepType === 'strategic' && stepNumber >= 12 && stepNumber <= 18 && isValid && opts.length) {
         console.log('🎯 ConnectedTemplateWrapper: Processando resposta estratégica', {
@@ -122,7 +122,7 @@ export const ConnectedTemplateWrapper: React.FC<ConnectedTemplateWrapperProps> =
         const questionId = `strategic-q${stepNumber - 11}`; // Step 12 = strategic-q1, etc.
 
         // Processar respostas estratégicas
-  opts.forEach((optionId: string) => {
+        opts.forEach((optionId: string) => {
           quizLogic.answerStrategicQuestion(
             questionId,
             optionId,

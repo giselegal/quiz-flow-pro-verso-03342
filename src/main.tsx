@@ -29,7 +29,7 @@ if (import.meta.env.DEV && typeof window !== 'undefined') {
       return Promise.resolve(new Response(null, { status: 204 }));
     }
     // Silencia Sentry em dev para evitar 404/429 e ruído excessivo
-  if (/sentry\.io|ingest\.sentry\.io/.test(url)) {
+    if (/sentry\.io|ingest\.sentry\.io/.test(url)) {
       try {
         console.warn('🛑 Interceptado (Sentry desabilitado em dev):', url);
       } catch { }
