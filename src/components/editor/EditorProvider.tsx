@@ -714,7 +714,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
         // Persist draft
         const draftKey = quizId || funnelId || 'local-funnel';
         try { DraftPersistence.saveStepDraft(draftKey, stepKey, nextBlocks); } catch { }
-        
+
         return {
           ...prev,
           stepBlocks: {

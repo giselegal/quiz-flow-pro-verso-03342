@@ -118,7 +118,7 @@ describe('EditorPro - Comprehensive Validation', () => {
         const stepsPanel = screen.getByText('Etapas do Quiz');
         const componentsPanel = screen.getByText('Componentes');
         const canvas = screen.getByText('Selecione um bloco no canvas');
-        
+
         expect(stepsPanel).toBeInTheDocument();
         expect(componentsPanel).toBeInTheDocument();
         expect(canvas).toBeInTheDocument();
@@ -197,7 +197,7 @@ describe('EditorPro - Comprehensive Validation', () => {
       await waitFor(() => {
         const step2Button = screen.getByText('Etapa 2');
         expect(step2Button).toBeInTheDocument();
-        
+
         // Click should work without errors
         fireEvent.click(step2Button);
       });
@@ -272,14 +272,14 @@ describe('EditorPro - Comprehensive Validation', () => {
 
     it('should handle missing context gracefully', () => {
       // Test without EditorProvider wrapper
-      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-      
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => { });
+
       render(<EditorPro />);
-      
+
       // Should show error message instead of crashing
       expect(screen.getByText('Erro de Contexto do Editor')).toBeInTheDocument();
       expect(screen.getByText('O EditorPro deve ser usado dentro de um EditorProvider.')).toBeInTheDocument();
-      
+
       consoleSpy.mockRestore();
     });
   });
@@ -287,7 +287,7 @@ describe('EditorPro - Comprehensive Validation', () => {
   describe('Performance Validation', () => {
     it('should render within reasonable time', async () => {
       const startTime = Date.now();
-      
+
       render(
         <TestWrapper>
           <EditorPro />
@@ -304,7 +304,7 @@ describe('EditorPro - Comprehensive Validation', () => {
 
     it('should not have excessive re-renders', () => {
       const renderCount = vi.fn();
-      
+
       const TestComponent = () => {
         renderCount();
         return (
@@ -315,7 +315,7 @@ describe('EditorPro - Comprehensive Validation', () => {
       };
 
       render(<TestComponent />);
-      
+
       // Should not re-render excessively during initial mount
       expect(renderCount).toHaveBeenCalledTimes(1);
     });

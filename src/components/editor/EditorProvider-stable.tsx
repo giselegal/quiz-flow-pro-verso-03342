@@ -33,7 +33,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({ children }) => {
   const [rawState, setRawState] = React.useState<EditorState>(createInitialState);
   const stateRef = useRef(rawState);
   const setStateRef = useRef(setRawState);
-  
+
   // Update refs when state changes, but don't trigger re-renders
   React.useLayoutEffect(() => {
     stateRef.current = rawState;
@@ -44,7 +44,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({ children }) => {
     try {
       const template = templateLibraryService.getById('quiz-estilo-completo');
       if (!template) return {};
-      
+
       const blocks: { [key: string]: Block[] } = {};
       Object.entries(template.steps).forEach(([stepKey, stepBlocks]) => {
         blocks[stepKey] = (stepBlocks as any[]).map((block: any, index: number) => ({
@@ -107,7 +107,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({ children }) => {
           id: `${stepKey}-${block.type}-${Date.now()}`,
           order: stepBlocks.length
         };
-        
+
         return {
           ...prev,
           stepBlocks: {
@@ -145,7 +145,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({ children }) => {
         const stepBlocks = [...(prev.stepBlocks[stepKey] || [])];
         const [removed] = stepBlocks.splice(startIndex, 1);
         stepBlocks.splice(endIndex, 0, removed);
-        
+
         // Update order property
         stepBlocks.forEach((block, index) => {
           block.order = index;
@@ -167,10 +167,10 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({ children }) => {
       try {
         // Implement save logic here
         await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate save
-        setRawState(prev => ({ 
-          ...prev, 
-          isLoading: false, 
-          hasUnsavedChanges: false 
+        setRawState(prev => ({
+          ...prev,
+          isLoading: false,
+          hasUnsavedChanges: false
         }));
       } catch (error) {
         setRawState(prev => ({ ...prev, isLoading: false }));
@@ -209,7 +209,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({ children }) => {
           timestamp: new Date().toISOString()
         });
       }, 500); // Debounced logging
-      
+
       return () => clearTimeout(timer);
     }
   }, [rawState.currentStep, rawState.selectedBlockId]); // Only log on meaningful changes

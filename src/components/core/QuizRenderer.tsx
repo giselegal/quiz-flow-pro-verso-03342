@@ -50,7 +50,7 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
     onStepChange,
     initialStep,
   }), [mode, onStepChange, initialStep]);
-  
+
   const { quizState, actions } = useQuizFlow(quizFlowConfig);
 
   const { currentStep, totalSteps, progress, isLoading } = quizState;
