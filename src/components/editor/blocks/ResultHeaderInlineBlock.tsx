@@ -349,9 +349,9 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
         </div>
         <div className="grid md:grid-cols-2 gap-8 items-center">
           <div className="space-y-4">
-      <p className="text-[#432818] leading-relaxed">
+            <p className="text-[#432818] leading-relaxed">
               <InlineEditableText
-        value={sanitizeStyleMentions(interpolate(effectiveDescription, vars), styleLabel)}
+                value={sanitizeStyleMentions(interpolate(effectiveDescription, vars), styleLabel)}
                 onChange={value => handlePropertyChange('description', value)}
                 placeholder="Descrição do estilo predominante..."
                 className="text-[#432818] leading-relaxed"

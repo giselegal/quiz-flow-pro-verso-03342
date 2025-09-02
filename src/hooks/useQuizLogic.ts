@@ -151,7 +151,7 @@ export const useQuizLogic = () => {
       const sortedStyles = Object.entries(styleScores).sort(
         ([, scoreA], [, scoreB]) => scoreB - scoreA
       );
-  const topStyle = sortedStyles[0]?.[0] || 'Natural';
+      const topStyle = sortedStyles[0]?.[0] || 'Natural';
 
       // Total de pontos somando todos os estilos (considera multi-seleção por questão)
       const totalPoints = Object.values(styleScores).reduce((acc, v) => acc + (v || 0), 0);

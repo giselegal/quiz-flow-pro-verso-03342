@@ -112,7 +112,7 @@ const StyleCardInlineBlock: React.FC<any> = ({
 
   // Montar variáveis de placeholders
   const vars = {
-  resultStyle: styleLabel || 'Seu Estilo',
+    resultStyle: styleLabel || 'Seu Estilo',
     resultPersonality: resolved?.keywords?.slice(0, 3).join(', ') || 'Autêntica, confiante',
     // styleConfig não contém cores hex agrupadas; usar keywords como proxy amigável
     resultColors: (resolved?.keywords || []).slice(0, 2).join(', ') || 'Cores ideais do seu estilo',

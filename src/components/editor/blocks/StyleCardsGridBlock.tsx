@@ -92,10 +92,10 @@ const StyleCardInlineBlock: React.FC<any> = ({
   marginRight = 0,
 }) => {
   const { primaryStyle } = useQuizResult();
-  
+
   // Adicionar log para depuração
   console.log('StyleCardInlineBlock - primaryStyle:', primaryStyle);
-  
+
   // Se não houver estilo, exibir mensagem ou estado de carregamento
   if (!primaryStyle) {
     return (
@@ -104,7 +104,7 @@ const StyleCardInlineBlock: React.FC<any> = ({
         <p className="text-sm text-gray-500 mt-2">
           Se isso persistir, verifique se você respondeu a todas as perguntas.
         </p>
-        <button 
+        <button
           onClick={() => window.location.reload()}
           className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
         >
@@ -113,30 +113,30 @@ const StyleCardInlineBlock: React.FC<any> = ({
       </div>
     );
   }
-  
+
   // Resolver dados do estilo a partir do resultado
   const rawStyle = (primaryStyle?.style || primaryStyle?.category || '').trim();
   const styleLabel = mapToFriendlyStyle(rawStyle);
   console.log('StyleCardInlineBlock - styleLabel:', styleLabel);
-  
+
   const resolved = styleLabel ? getSafeStyleConfig(styleLabel) : null;
   console.log('StyleCardInlineBlock - resolved:', resolved);
-  
+
   // Montar variáveis de placeholders com valores padrão
   const vars = {
     resultStyle: styleLabel || 'Seu Estilo',
-    resultPersonality: resolved?.keywords?.slice(0, 3).join(', ') || 
-                      'Autêntica, confiante',
-    resultColors: resolved?.colors?.slice(0, 2).join(', ') || 
-                  'Cores que combinam com seu estilo',
-    resultFabrics: resolved?.fabrics?.join(', ') || 
-                   'Tecidos ideais para seu estilo',
-    resultPrints: resolved?.prints?.join(', ') || 
-                  'Estampas que combinam com você',
-    resultAccessories: resolved?.accessories?.join(', ') || 
-                       'Acessórios que complementam seu visual',
+    resultPersonality: resolved?.keywords?.slice(0, 3).join(', ') ||
+      'Autêntica, confiante',
+    resultColors: resolved?.colors?.slice(0, 2).join(', ') ||
+      'Cores que combinam com seu estilo',
+    resultFabrics: resolved?.fabrics?.join(', ') ||
+      'Tecidos ideais para seu estilo',
+    resultPrints: resolved?.prints?.join(', ') ||
+      'Estampas que combinam com você',
+    resultAccessories: resolved?.accessories?.join(', ') ||
+      'Acessórios que complementam seu visual',
   };
-  
+
   // Ler dados do bloco (properties tem precedência, depois content)
   const blockProps = (block && block.properties) || {};
   const blockContent = (block && block.content) || {};
@@ -145,7 +145,7 @@ const StyleCardInlineBlock: React.FC<any> = ({
   const resolvedDescription = blockProps.description ?? blockContent.description ?? description;
   const rawFeatures = blockProps.features ?? blockContent.features ?? [];
   const features: string[] = Array.isArray(rawFeatures) ? rawFeatures : [];
-  
+
   return (
     <div
       className={cn(
