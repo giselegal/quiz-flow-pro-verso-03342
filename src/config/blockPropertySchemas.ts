@@ -243,6 +243,38 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       },
     ],
   },
+  // Versão inline básica da imagem (alias comum do editor)
+  'image-inline': {
+    label: 'Imagem (Inline)',
+    fields: [
+      { key: 'src', label: 'URL da Imagem', type: 'text' },
+      { key: 'alt', label: 'Texto Alternativo', type: 'text' },
+      { key: 'width', label: 'Largura', type: 'number' },
+      { key: 'height', label: 'Altura', type: 'number' },
+      { key: 'marginBottom', label: 'Margem Inferior', type: 'number' },
+      {
+        key: 'scale',
+        label: 'Escala (%)',
+        type: 'range',
+        min: 10,
+        max: 300,
+        step: 1,
+        group: 'transform',
+        defaultValue: 100,
+      },
+      {
+        key: 'scaleOrigin',
+        label: 'Origem da Escala',
+        type: 'select',
+        group: 'transform',
+        options: [
+          { label: 'Centro', value: 'center' },
+          { label: 'Topo Centro', value: 'top center' },
+          { label: 'Base Centro', value: 'bottom center' },
+        ],
+      },
+    ],
+  },
   'form-container': {
     label: 'Formulário',
     fields: [
@@ -346,6 +378,58 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'fieldSpacing', label: 'Espaçamento entre Campos', type: 'number' },
     ],
   },
+  // Título inline
+  'heading-inline': {
+    label: 'Título (Inline)',
+    fields: [
+      { key: 'content', label: 'Conteúdo', type: 'text' },
+      {
+        key: 'level',
+        label: 'Nível',
+        type: 'select',
+        options: [
+          { label: 'H1', value: 'h1' },
+          { label: 'H2', value: 'h2' },
+          { label: 'H3', value: 'h3' },
+          { label: 'H4', value: 'h4' },
+        ],
+      },
+      {
+        key: 'textAlign',
+        label: 'Alinhamento',
+        type: 'select',
+        options: [
+          { label: 'Esquerda', value: 'left' },
+          { label: 'Centro', value: 'center' },
+          { label: 'Direita', value: 'right' },
+        ],
+      },
+      { key: 'color', label: 'Cor', type: 'color' },
+      { key: 'marginTop', label: 'Margem Superior', type: 'number' },
+      { key: 'marginBottom', label: 'Margem Inferior', type: 'number' },
+      {
+        key: 'scale',
+        label: 'Escala (%)',
+        type: 'range',
+        min: 10,
+        max: 300,
+        step: 1,
+        group: 'transform',
+        defaultValue: 100,
+      },
+      {
+        key: 'scaleOrigin',
+        label: 'Origem da Escala',
+        type: 'select',
+        group: 'transform',
+        options: [
+          { label: 'Centro', value: 'center' },
+          { label: 'Topo Centro', value: 'top center' },
+          { label: 'Base Centro', value: 'bottom center' },
+        ],
+      },
+    ],
+  },
   // Cartão de estilo único (usado em resultado/estilo)
   'style-card-inline': {
     label: 'Card de Estilo',
@@ -382,6 +466,18 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'cardRadius', label: 'Arredondamento (px)', type: 'number' },
     ],
   },
+  // Wrapper conectado de template
+  'connected-template-wrapper': {
+    label: 'Wrapper de Template Conectado',
+    fields: [
+      { key: 'templateKey', label: 'Chave do Template', type: 'text' },
+      { key: 'variant', label: 'Variante', type: 'text' },
+      { key: 'padding', label: 'Padding (classes)', type: 'text' },
+      { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color' },
+      { key: 'marginTop', label: 'Margem Superior', type: 'number' },
+      { key: 'marginBottom', label: 'Margem Inferior', type: 'number' },
+    ],
+  },
   'button-inline': {
     label: 'Botão',
     fields: [
@@ -392,7 +488,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color' },
       { key: 'textColor', label: 'Cor do Texto', type: 'color' },
       { key: 'requiresValidInput', label: 'Requer Input Válido', type: 'boolean' },
-  { key: 'requiresValidSelection', label: 'Requer Seleção Válida', type: 'boolean' },
+      { key: 'requiresValidSelection', label: 'Requer Seleção Válida', type: 'boolean' },
       { key: 'disabledText', label: 'Texto Desabilitado', type: 'text' },
       { key: 'showDisabledState', label: 'Mostrar Estado Desabilitado', type: 'boolean' },
       { key: 'disabledOpacity', label: 'Opacidade Desabilitado', type: 'number' },
@@ -651,6 +747,49 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'marginBottom', label: 'Margem Inferior (px)', type: 'number', group: 'spacing' },
       { key: 'marginLeft', label: 'Margem Esquerda (px)', type: 'number', group: 'spacing' },
       { key: 'marginRight', label: 'Margem Direita (px)', type: 'number', group: 'spacing' },
+    ],
+  },
+
+  // Cabeçalho de resultado (Step 20)
+  'result-header-inline': {
+    label: 'Cabeçalho de Resultado',
+    fields: [
+      { key: 'title', label: 'Título', type: 'text' },
+      { key: 'subtitle', label: 'Subtítulo', type: 'text' },
+      {
+        key: 'alignment',
+        label: 'Alinhamento',
+        type: 'select',
+        options: [
+          { label: 'Esquerda', value: 'left' },
+          { label: 'Centro', value: 'center' },
+          { label: 'Direita', value: 'right' },
+        ],
+      },
+      { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color' },
+      { key: 'marginTop', label: 'Margem Superior (px)', type: 'number' },
+      { key: 'marginBottom', label: 'Margem Inferior (px)', type: 'number' },
+      {
+        key: 'scale',
+        label: 'Escala (%)',
+        type: 'range',
+        min: 10,
+        max: 300,
+        step: 1,
+        group: 'transform',
+        defaultValue: 100,
+      },
+      {
+        key: 'scaleOrigin',
+        label: 'Origem da Escala',
+        type: 'select',
+        group: 'transform',
+        options: [
+          { label: 'Centro', value: 'center' },
+          { label: 'Topo Centro', value: 'top center' },
+          { label: 'Base Centro', value: 'bottom center' },
+        ],
+      },
     ],
   },
 

@@ -21,6 +21,8 @@ const QuizModularPage = lazy(() => import('./pages/QuizModularPage'));
 
 // Importação da nova página
 import AgentStyleFunnelTestPage from './pages/AgentStyleFunnelTestPage';
+const StepsShowcasePage = lazy(() => import('./pages/StepsShowcase'));
+const SchemaEditorPage = lazy(() => import('./pages/SchemaEditorPage'));
 
 // Loading component
 const PageLoading = () => (
@@ -54,6 +56,13 @@ function App() {
                 <Route path="/editor">
                   {/* MainEditor importado estaticamente para maior estabilidade */}
                   <MainEditor />
+                </Route>
+
+                {/* 🧪 Editor alternativo baseado em schema (rota dedicada) */}
+                <Route path="/editor/schema">
+                  <Suspense fallback={<PageLoading />}>
+                    <SchemaEditorPage />
+                  </Suspense>
                 </Route>
 
                 {/* 🔐 AUTENTICAÇÃO */}
@@ -128,6 +137,13 @@ function App() {
                 <Route path="/agent/style-funnel-test">
                   <Suspense fallback={<PageLoading />}>
                     <AgentStyleFunnelTestPage />
+                  </Suspense>
+                </Route>
+
+                {/* 🧪 SHOWCASE DAS 21 ETAPAS */}
+                <Route path="/showcase/steps">
+                  <Suspense fallback={<PageLoading />}>
+                    <StepsShowcasePage />
                   </Suspense>
                 </Route>
 

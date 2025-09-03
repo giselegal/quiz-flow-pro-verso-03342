@@ -4,6 +4,8 @@
  */
 
 import * as DiagnosticsModule from '@/utils/editorDiagnostics';
+import type { DiagnosticResult as CoreDiagnosticResult, DiagnosticDetails as CoreDiagnosticDetails } from '@/utils/editorDiagnostics';
+
 type DiagnosticResult = {
   success: boolean;
   message: string;
@@ -17,39 +19,37 @@ type DiagnosticResult = {
 const EditorDiagnostics = {
   runFullDiagnostic: async (): Promise<DiagnosticResult[]> => {
     try {
-      const { summary, details } = await DiagnosticsModule.runCompleteDiagnostics();
+      const core: CoreDiagnosticResult = await DiagnosticsModule.runCompleteDiagnostics();
+      const { summary, details, timestamp } = core;
 
-      const mapItem = (category: string, res: any): DiagnosticResult => ({
-        success: !!res?.success,
-        message: String(res?.message || ''),
-        data: res?.data,
-        timestamp: Number(res?.timestamp || Date.now()),
-        status: res?.success ? 'success' : 'error',
-        category,
-        details: res,
-      });
+      const summaryMessage = `Issues: total=${summary.totalIssues}, critical=${summary.criticalIssues}, warnings=${summary.warningIssues}, info=${summary.infoIssues}, fixable=${summary.fixableIssues}, fixed=${summary.fixedIssues}`;
 
       const items: DiagnosticResult[] = [];
 
-      // Resumo geral
+      // Item de resumo (considera sucesso quando não há críticos)
       items.push({
-        success: !!summary?.success,
-        message: String(summary?.message || ''),
-        data: summary?.data,
-        timestamp: Number(summary?.timestamp || Date.now()),
-        status: summary?.success ? 'success' : 'error',
+        success: summary.criticalIssues === 0,
+        message: summaryMessage,
+        data: summary,
+        timestamp: timestamp || Date.now(),
+        status: summary.criticalIssues === 0 ? 'success' : 'error',
         category: 'Editor Health',
         details,
       });
 
-      // Detalhes por categoria (quando disponíveis)
-      if (details) {
-        if (details.editorContext) items.push(mapItem('Contexto do Editor', details.editorContext));
-        if (details.currentStep) items.push(mapItem('Etapa Atual', details.currentStep));
-        if (details.blockLoading) items.push(mapItem('Carregamento de Blocos', details.blockLoading));
-        if (details.stepCalculation) items.push(mapItem('Cálculo de Etapas', details.stepCalculation));
-        if (details.globalEvents) items.push(mapItem('Eventos Globais', details.globalEvents));
-        if (details.rapidNavigation) items.push(mapItem('Navegação Rápida', details.rapidNavigation));
+      // Mapear cada detalhe como item separado
+      if (Array.isArray(details)) {
+        for (const d of details as CoreDiagnosticDetails[]) {
+          items.push({
+            success: d.type !== 'critical',
+            message: d.message,
+            data: { location: d.location, code: d.code, fixable: d.fixable, fixed: d.fixed },
+            timestamp: timestamp || Date.now(),
+            status: d.type === 'critical' ? 'error' : d.type === 'warning' ? 'warning' : 'success',
+            category: d.type.toUpperCase(),
+            details: d,
+          });
+        }
       }
 
       return items;

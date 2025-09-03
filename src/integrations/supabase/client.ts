@@ -5,6 +5,12 @@ import type { Database } from './types';
 const supabaseUrl = (import.meta as any)?.env?.VITE_SUPABASE_URL as string | undefined;
 const supabaseAnonKey = (import.meta as any)?.env?.VITE_SUPABASE_ANON_KEY as string | undefined;
 
+// Detecta ambiente de teste/CI para preferir stub e evitar acesso a localStorage/rede
+const isTestEnv = (
+  typeof process !== 'undefined' &&
+  (process.env.VITEST || process.env.NODE_ENV === 'test')
+) || (typeof (globalThis as any).vitest !== 'undefined');
+
 // Stub mínimo compatível com a API usada no app quando Supabase estiver desabilitado
 function createSupabaseStub() {
   const ok = {
@@ -12,7 +18,7 @@ function createSupabaseStub() {
     error: { message: 'Supabase disabled', status: 0, details: null, hint: null },
   } as any;
   const okNoError = { data: null, error: null } as any;
-  const sub = { unsubscribe: () => {} };
+  const sub = { unsubscribe: () => { } };
   return {
     auth: {
       onAuthStateChange: (_cb: any) => ({ data: { subscription: sub } }),
@@ -34,12 +40,12 @@ function createSupabaseStub() {
 // Exporta cliente real sempre que as credenciais existirem (mesmo com DISABLE),
 // e usamos o interceptor de fetch (em main.tsx) para bloquear chamadas em dev/offline.
 export const supabase =
-  supabaseUrl && supabaseAnonKey
+  supabaseUrl && supabaseAnonKey && !isTestEnv && typeof window !== 'undefined' && typeof localStorage !== 'undefined'
     ? createClient<Database>(supabaseUrl, supabaseAnonKey, {
-        auth: {
-          storage: localStorage,
-          persistSession: true,
-          autoRefreshToken: true,
-        },
-      })
+      auth: {
+        storage: localStorage,
+        persistSession: true,
+        autoRefreshToken: true,
+      },
+    })
     : createSupabaseStub();
