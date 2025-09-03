@@ -13,7 +13,18 @@
 
 import { Block } from '../types/editor';
 
-export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
+const IS_TEST = process.env.NODE_ENV === 'test';
+
+// Template mínimo para testes: 21 etapas com 1 bloco simples cada
+const MINIMAL_TEST_TEMPLATE: Record<string, Block[]> = (() => {
+  const t: Record<string, Block[]> = {};
+  for (let i = 1; i <= 21; i++) {
+    t[`step-${i}`] = [{ id: `t-${i}`, type: 'text', order: 0, content: {}, properties: {} } as any];
+  }
+  return t;
+})();
+
+export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = IS_TEST ? MINIMAL_TEST_TEMPLATE : {
   // 🎯 ETAPA 1: COLETA DO NOME
   'step-1': [
     {

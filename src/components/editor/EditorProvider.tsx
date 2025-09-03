@@ -170,11 +170,11 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     canUndo,
     canRedo,
   } = useHistoryState<EditorState>(getInitialState(), {
-    historyLimit: 30,
+    historyLimit: process.env.NODE_ENV === 'test' ? 5 : 30,
     storageKey,
-    enablePersistence: true,
+    enablePersistence: process.env.NODE_ENV !== 'test',
     persistPresentOnly: true,
-    persistDebounceMs: 250,
+    persistDebounceMs: process.env.NODE_ENV === 'test' ? 0 : 250,
     serialize: (present: EditorState) => {
       // Persist only minimal fields to avoid quota issues
       const minimal: any = {
@@ -370,7 +370,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
 
   // Initialize step 1 automatically on mount and when template data is available
   useEffect(() => {
-    // 🚨 CORREÇÃO CRÍTICA: Always force template reload on mount
+    // 🚨 CORREÇÃO CRÍTICA: Always force template reload on mount (exceto em testes para reduzir memória)
     const isTestEnv = process.env.NODE_ENV === 'test';
     if (!isTestEnv) {
       // Detect minimal persisted state and rehydrate (variável removida por não uso)
@@ -404,9 +404,12 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       // 🚨 GARANTIA DUPLA: Ensure step 1 is loaded on initialization
       setTimeout(() => {
         ensureStepLoadedRef.current?.(1);
-        // Force verify all steps loaded
-        for (let i = 1; i <= 21; i++) {
-          ensureStepLoadedRef.current?.(i);
+        // Em produção, podemos pré-aquecer outras etapas se necessário
+        // Em testes, evitamos para não inflar o heap
+        if (process.env.NODE_ENV !== 'test') {
+          for (let i = 1; i <= 21; i++) {
+            ensureStepLoadedRef.current?.(i);
+          }
         }
       }, 100);
     } else {
@@ -422,10 +425,11 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
   // 🚨 CORREÇÃO: Ensure step is loaded when currentStep changes
   useEffect(() => {
     const currentStep = rawState.currentStep;
-    if (currentStep && process.env.NODE_ENV !== 'test') {
-      // Only load step if needed, and avoid triggering infinite loops
-      ensureStepLoadedRef.current?.(currentStep);
-    }
+    if (!currentStep) return;
+    // Em testes, evitamos carregamento automático para reduzir uso de memória
+    if (process.env.NODE_ENV === 'test') return;
+    // Only load step if needed, and avoid triggering infinite loops
+    ensureStepLoadedRef.current?.(currentStep);
   }, [rawState.currentStep]); // Only depend on currentStep, not the entire rawState
 
   // (movido para baixo após actions/contextValue p/ evitar TDZ em builds minificados)

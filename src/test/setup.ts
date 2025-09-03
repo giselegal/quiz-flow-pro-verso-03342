@@ -1,5 +1,6 @@
 import '@testing-library/jest-dom';
 import { vi, afterEach, afterAll } from 'vitest';
+import { cleanup } from '@testing-library/react';
 import { PerformanceOptimizer } from '@/utils/performanceOptimizer';
 
 // Setup global test environment
@@ -113,6 +114,8 @@ global.IntersectionObserver = class IntersectionObserver {
 
   // After each test, clear any leftover timers to prevent accumulation
   afterEach(() => {
+  // Desmonta árvores React e limpa DOM entre testes para evitar retenção
+  try { cleanup(); } catch { }
     try { PerformanceOptimizer.cancelAllTimeouts(); } catch { }
     try { PerformanceOptimizer.cancelAllIntervals(); } catch { }
     for (const id of Array.from(activeTimeouts)) {

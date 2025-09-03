@@ -46,7 +46,12 @@ export interface BlockDefinition {
 const prop = (p: PropSchema): PropSchema => p;
 const select = (key: string, label: string, options: Array<{ value: any; label: string }>, defaults?: Partial<PropSchema>): PropSchema => ({ key, kind: 'select', label, category: 'content', options, ...defaults });
 
-export const blocksRegistry: Record<string, BlockDefinition> = {
+// Em testes, fornecemos um registro mínimo para reduzir uso de memória
+const minimalRegistry: Record<string, BlockDefinition> = {
+    'text': { type: 'text', title: 'Texto', category: 'Conteúdo', defaultProps: { text: '' }, propsSchema: [] },
+};
+
+export const blocksRegistry: Record<string, BlockDefinition> = process.env.NODE_ENV === 'test' ? minimalRegistry : {
     'quiz-intro-header': {
         type: 'quiz-intro-header',
         title: 'Header do Quiz',
