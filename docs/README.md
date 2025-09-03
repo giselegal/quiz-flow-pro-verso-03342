@@ -62,6 +62,11 @@ Este é o componente mais completo e funcional do sistema, incluindo todas as fu
 
 ## 📚 Documentação
 
+- [Arquitetura (central)](./ARCHITECTURE.md)
+- [Editores principais](./EDITORS.md)
+- [Fluxo 21 etapas (flowchart)](./21-steps-flowchart.md)
+- [Fluxo 21 etapas (sequence)](./21-steps-sequence.md)
+- [Mapa de código 21 etapas](./21-steps-code-map.md)
 - **Análises:** `docs/analysis/` - Análises técnicas detalhadas
 - **Exemplos:** `docs/examples/` - Snippets e exemplos práticos
 - **Scripts:** `scripts/` - Scripts de automação e análise
