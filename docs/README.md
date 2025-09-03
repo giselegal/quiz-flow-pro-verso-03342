@@ -70,6 +70,7 @@ Este é o componente mais completo e funcional do sistema, incluindo todas as fu
 - **Análises:** `docs/analysis/` - Análises técnicas detalhadas
 - **Exemplos:** `docs/examples/` - Snippets e exemplos práticos
 - **Scripts:** `scripts/` - Scripts de automação e análise
+- **Auditoria dos componentes do editor:** consulte EDITOR_COMPONENTS_AUDIT.md
 
 ## 🚀 Como Executar
 
