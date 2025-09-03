@@ -16,13 +16,13 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
-import { 
-  Search, 
-  Settings, 
-  Palette, 
-  Type, 
-  Layout, 
-  Zap, 
+import {
+  Search,
+  Settings,
+  Palette,
+  Type,
+  Layout,
+  Zap,
   Eye,
   RotateCcw,
   Copy,
@@ -52,51 +52,51 @@ interface EnhancedNocodePropertiesPanelProps {
 
 // Category metadata for UI
 const CATEGORY_META = {
-  [PropertyCategory.CONTENT]: { 
-    icon: Type, 
-    label: 'Conteúdo', 
+  [PropertyCategory.CONTENT]: {
+    icon: Type,
+    label: 'Conteúdo',
     description: 'Textos, títulos e mídia',
     color: 'text-blue-600'
   },
-  [PropertyCategory.STYLE]: { 
-    icon: Palette, 
-    label: 'Estilo', 
+  [PropertyCategory.STYLE]: {
+    icon: Palette,
+    label: 'Estilo',
     description: 'Cores, fontes e aparência',
     color: 'text-purple-600'
   },
-  [PropertyCategory.LAYOUT]: { 
-    icon: Layout, 
-    label: 'Layout', 
+  [PropertyCategory.LAYOUT]: {
+    icon: Layout,
+    label: 'Layout',
     description: 'Tamanho, posição e espaçamento',
     color: 'text-green-600'
   },
-  [PropertyCategory.BEHAVIOR]: { 
-    icon: Zap, 
-    label: 'Comportamento', 
+  [PropertyCategory.BEHAVIOR]: {
+    icon: Zap,
+    label: 'Comportamento',
     description: 'Interações e regras',
     color: 'text-orange-600'
   },
-  [PropertyCategory.ADVANCED]: { 
-    icon: Settings, 
-    label: 'Avançado', 
+  [PropertyCategory.ADVANCED]: {
+    icon: Settings,
+    label: 'Avançado',
     description: 'Configurações técnicas',
     color: 'text-gray-600'
   },
-  [PropertyCategory.ANIMATION]: { 
-    icon: Sparkles, 
-    label: 'Animação', 
+  [PropertyCategory.ANIMATION]: {
+    icon: Sparkles,
+    label: 'Animação',
     description: 'Transições e efeitos',
     color: 'text-pink-600'
   },
-  [PropertyCategory.ACCESSIBILITY]: { 
-    icon: Eye, 
-    label: 'Acessibilidade', 
+  [PropertyCategory.ACCESSIBILITY]: {
+    icon: Eye,
+    label: 'Acessibilidade',
     description: 'Suporte a leitores de tela',
     color: 'text-indigo-600'
   },
-  [PropertyCategory.SEO]: { 
-    icon: Search, 
-    label: 'SEO', 
+  [PropertyCategory.SEO]: {
+    icon: Search,
+    label: 'SEO',
     description: 'Otimização para buscadores',
     color: 'text-teal-600'
   },
@@ -113,6 +113,18 @@ export const EnhancedNocodePropertiesPanel: React.FC<EnhancedNocodePropertiesPan
   totalSteps = 21,
   onStepChange
 }) => {
+  // 🔍 DEBUG: Adicionar logs para diagnosticar problemas
+  console.log('🎨 EnhancedNocodePropertiesPanel renderizado:', {
+    selectedBlock: selectedBlock ? {
+      id: selectedBlock.id,
+      type: selectedBlock.type,
+      hasProperties: !!selectedBlock.properties
+    } : null,
+    currentStep,
+    totalSteps,
+    hasOnUpdate: !!onUpdate
+  });
+
   const [searchTerm, setSearchTerm] = useState('');
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [activeCategory, setActiveCategory] = useState<PropertyCategory>(PropertyCategory.CONTENT);
@@ -120,8 +132,25 @@ export const EnhancedNocodePropertiesPanel: React.FC<EnhancedNocodePropertiesPan
 
   // Discover properties from the selected block
   const discoveredProperties = useMemo(() => {
-    if (!selectedBlock?.type) return null;
-    return discoverComponentProperties(selectedBlock.type);
+    console.log('🔍 Descobrindo propriedades para:', selectedBlock?.type);
+
+    if (!selectedBlock?.type) {
+      console.log('❌ Nenhum tipo de bloco selecionado');
+      return null;
+    }
+
+    const result = discoverComponentProperties(selectedBlock.type);
+    console.log('🎯 Propriedades descobertas:', {
+      componentType: selectedBlock.type,
+      result: result ? {
+        componentName: result.componentName,
+        totalProperties: result.properties.length,
+        categories: Array.from(result.categories),
+        firstFewProperties: result.properties.slice(0, 3).map(p => ({ key: p.key, type: p.type, category: p.category }))
+      } : null
+    });
+
+    return result;
   }, [selectedBlock?.type]);
 
   // Filter properties based on search and category
@@ -132,7 +161,7 @@ export const EnhancedNocodePropertiesPanel: React.FC<EnhancedNocodePropertiesPan
 
     // Filter by search term
     if (searchTerm) {
-      properties = properties.filter((prop: DiscoveredProperty) => 
+      properties = properties.filter((prop: DiscoveredProperty) =>
         prop.label.toLowerCase().includes(searchTerm.toLowerCase()) ||
         prop.key.toLowerCase().includes(searchTerm.toLowerCase()) ||
         (prop.description && prop.description.toLowerCase().includes(searchTerm.toLowerCase()))
@@ -152,7 +181,7 @@ export const EnhancedNocodePropertiesPanel: React.FC<EnhancedNocodePropertiesPan
     if (!discoveredProperties) return new Map();
 
     const grouped = new Map<PropertyCategory, DiscoveredProperty[]>();
-    
+
     discoveredProperties.properties.forEach((prop: DiscoveredProperty) => {
       if (!grouped.has(prop.category)) {
         grouped.set(prop.category, []);
@@ -176,7 +205,7 @@ export const EnhancedNocodePropertiesPanel: React.FC<EnhancedNocodePropertiesPan
     discoveredProperties.properties.forEach((prop: DiscoveredProperty) => {
       defaults[prop.key] = prop.defaultValue;
     });
-    
+
     onUpdate(defaults);
   }, [discoveredProperties, onUpdate]);
 
@@ -249,7 +278,7 @@ export const EnhancedNocodePropertiesPanel: React.FC<EnhancedNocodePropertiesPan
                 <TooltipContent>Duplicar Componente</TooltipContent>
               </Tooltip>
             </TooltipProvider>
-            
+
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -303,10 +332,10 @@ export const EnhancedNocodePropertiesPanel: React.FC<EnhancedNocodePropertiesPan
                 const meta = CATEGORY_META[category];
                 const Icon = meta.icon;
                 const count = propertiesByCategory.get(category)?.length || 0;
-                
+
                 return (
-                  <TabsTrigger 
-                    key={String(category)} 
+                  <TabsTrigger
+                    key={String(category)}
                     value={String(category)}
                     className="flex items-center gap-1 text-xs"
                   >
@@ -327,13 +356,13 @@ export const EnhancedNocodePropertiesPanel: React.FC<EnhancedNocodePropertiesPan
               const meta = CATEGORY_META[category];
               const categoryProperties = propertiesByCategory.get(category) || [];
               const isCollapsed = collapsedCategories.has(category);
-              
+
               return (
                 <TabsContent key={String(category)} value={String(category)} className="mt-0">
                   <div className="p-4">
                     <div className="space-y-4">
                       {/* Category Header */}
-                      <div 
+                      <div
                         className="flex items-center justify-between cursor-pointer p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors"
                         onClick={() => toggleCategory(category)}
                       >
@@ -366,7 +395,7 @@ export const EnhancedNocodePropertiesPanel: React.FC<EnhancedNocodePropertiesPan
                               <Separator className="opacity-30" />
                             </div>
                           ))}
-                          
+
                           {categoryProperties.length === 0 && (
                             <div className="text-center py-8 text-muted-foreground">
                               <Filter className="w-8 h-8 mx-auto mb-2 opacity-50" />
@@ -387,17 +416,17 @@ export const EnhancedNocodePropertiesPanel: React.FC<EnhancedNocodePropertiesPan
       {/* Footer Actions */}
       <div className="p-4 border-t bg-gray-50">
         <div className="flex gap-2">
-          <Button 
-            variant="destructive" 
-            size="sm" 
+          <Button
+            variant="destructive"
+            size="sm"
             onClick={onDelete}
             className="flex-1"
           >
             Excluir Componente
           </Button>
-          <Button 
-            variant="outline" 
-            size="sm" 
+          <Button
+            variant="outline"
+            size="sm"
             onClick={onClose}
             className="flex-1"
           >
