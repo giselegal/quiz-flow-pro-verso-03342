@@ -62,7 +62,7 @@ const MainEditor: React.FC = () => {
                     templateId={templateId || undefined}
                     funnelId={funnelId || undefined}
                   />
-                  
+
                   {showFullAnalytics ? (
                     <StepAnalyticsDashboard totalSteps={21} />
                   ) : (
@@ -81,14 +81,14 @@ const MainEditor: React.FC = () => {
 const EditorInitializer: React.FC<{ templateId?: string; funnelId?: string }> = ({
   templateId,
 }) => {
-  // Carregar EditorPro dinamicamente para evitar ciclos e manter ESM compatível
+  // 🎯 CONSENSO CORRIGIDO: EditorPro é quem usa MAIS a arquitetura CORE
   const [EditorProComp, setEditorProComp] = React.useState<React.ComponentType | null>(null);
 
   React.useEffect(() => {
     let cancelled = false;
     (async () => {
       try {
-        const mod = await import('../components/editor/EditorPro');
+        const mod = await import('../legacy/editor/EditorPro');
         // Preferir default (ModularEditorPro). Manter fallback por segurança.
         const Comp = (mod as any).default || (mod as any).ModularEditorPro || (mod as any).EditorPro;
         if (!cancelled && Comp) setEditorProComp(() => Comp);
