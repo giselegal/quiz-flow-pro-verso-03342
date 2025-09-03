@@ -146,13 +146,21 @@ const FinalCTABlock: React.FC<FinalCTABlockProps> = ({
             <div className="mt-6 pt-6 border-t border-[#B89B7A]/20">
               <div className="flex items-center justify-center gap-4 text-xs text-[#8F7A6A]">
                 <img
-                  src="https://static.hotmart.com/img/hotmart-logo.png"
+                  src="https://res.cloudinary.com/dqljyf76t/image/upload/v1756905800/hotmart-logo_ixgzxr.png"
                   alt="Hotmart"
                   className="h-4 opacity-70"
                   crossOrigin="anonymous"
                   onError={(e) => {
                     // Fallback to text if image fails to load
                     (e.target as HTMLImageElement).style.display = 'none';
+                    // Adicionar texto como fallback
+                    const parent = (e.target as HTMLImageElement).parentElement;
+                    if (parent) {
+                      const fallbackText = document.createElement('span');
+                      fallbackText.textContent = 'Hotmart';
+                      fallbackText.className = 'font-semibold';
+                      parent.appendChild(fallbackText);
+                    }
                     const fallback = document.createElement('span');
                     fallback.textContent = 'Hotmart';
                     fallback.className = 'font-semibold';

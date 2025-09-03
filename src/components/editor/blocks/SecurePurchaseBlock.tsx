@@ -88,17 +88,21 @@ const SecurePurchaseBlock: React.FC<SecurePurchaseBlockProps & { block?: any }> 
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 text-xs text-[#8F7A6A]">
             <img
-              src="https://static.hotmart.com/img/hotmart-logo.png"
+              src="https://res.cloudinary.com/dqljyf76t/image/upload/v1756905800/hotmart-logo_ixgzxr.png"
               alt="Hotmart"
               className="h-3 sm:h-4 opacity-70"
               crossOrigin="anonymous"
               onError={(e) => {
                 // Fallback to text if image fails to load
                 (e.target as HTMLImageElement).style.display = 'none';
-                const fallback = document.createElement('span');
-                fallback.textContent = 'Hotmart';
-                fallback.className = 'font-semibold';
-                (e.target as HTMLImageElement).parentNode?.appendChild(fallback);
+                // Adicionar texto como fallback
+                const parent = (e.target as HTMLImageElement).parentElement;
+                if (parent) {
+                  const fallbackText = document.createElement('span');
+                  fallbackText.textContent = 'Hotmart';
+                  fallbackText.className = 'font-semibold';
+                  parent.appendChild(fallbackText);
+                }
               }}
             />
             <div className="hidden sm:block">•</div>
