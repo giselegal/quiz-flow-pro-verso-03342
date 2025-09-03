@@ -68,10 +68,23 @@ export default defineConfig({
         inlineDynamicImports: true,
       },
     },
+    // Configurações para resolver problemas com módulos CommonJS
+    commonjsOptions: {
+      // Transformar módulos CommonJS para ESM
+      transformMixedEsModules: true,
+      // Adicionar shim para 'require' em ambiente ESM
+      include: [/node_modules/],
+    },
   },
   optimizeDeps: {
     exclude: ['lucide-react'],
     include: ['react', 'react-dom', 'wouter'],
+    esbuildOptions: {
+      // Necessário para resolver problemas com módulos CommonJS em ambiente ESM
+      define: {
+        global: 'globalThis',
+      },
+    },
   },
   // Configurações de performance adicionais
   define: {
