@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useMemo, useCallback } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -24,7 +24,6 @@ import {
   Layout, 
   Zap, 
   Eye,
-  EyeOff,
   RotateCcw,
   Copy,
   Sparkles,
@@ -34,8 +33,9 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { PropertyCategory } from '@/hooks/useUnifiedProperties';
-import { discoverComponentProperties, DiscoveredProperty } from './PropertyDiscovery';
-import { UniversalPropertyRenderer } from './UniversalPropertyRenderer';
+import { discoverComponentProperties, DiscoveredProperty } from './core/PropertyDiscovery';
+import { UniversalPropertyRenderer } from './core/UniversalPropertyRenderer';
+import StepNavigation from './core/StepNavigation';
 import type { Block } from '@/types/editor';
 
 interface EnhancedNocodePropertiesPanelProps {
@@ -107,7 +107,7 @@ export const EnhancedNocodePropertiesPanel: React.FC<EnhancedNocodePropertiesPan
   onUpdate,
   onDelete,
   onDuplicate,
-  onReset,
+  // onReset, // Commented out since we have our own reset handler
   onClose,
   currentStep = 1,
   totalSteps = 21,
@@ -132,7 +132,7 @@ export const EnhancedNocodePropertiesPanel: React.FC<EnhancedNocodePropertiesPan
 
     // Filter by search term
     if (searchTerm) {
-      properties = properties.filter(prop => 
+      properties = properties.filter((prop: DiscoveredProperty) => 
         prop.label.toLowerCase().includes(searchTerm.toLowerCase()) ||
         prop.key.toLowerCase().includes(searchTerm.toLowerCase()) ||
         (prop.description && prop.description.toLowerCase().includes(searchTerm.toLowerCase()))
@@ -141,7 +141,7 @@ export const EnhancedNocodePropertiesPanel: React.FC<EnhancedNocodePropertiesPan
 
     // Filter by category
     if (activeCategory) {
-      properties = properties.filter(prop => prop.category === activeCategory);
+      properties = properties.filter((prop: DiscoveredProperty) => prop.category === activeCategory);
     }
 
     return properties;
@@ -153,7 +153,7 @@ export const EnhancedNocodePropertiesPanel: React.FC<EnhancedNocodePropertiesPan
 
     const grouped = new Map<PropertyCategory, DiscoveredProperty[]>();
     
-    discoveredProperties.properties.forEach(prop => {
+    discoveredProperties.properties.forEach((prop: DiscoveredProperty) => {
       if (!grouped.has(prop.category)) {
         grouped.set(prop.category, []);
       }
@@ -173,7 +173,7 @@ export const EnhancedNocodePropertiesPanel: React.FC<EnhancedNocodePropertiesPan
     if (!discoveredProperties || !onUpdate) return;
 
     const defaults: Record<string, any> = {};
-    discoveredProperties.properties.forEach(prop => {
+    discoveredProperties.properties.forEach((prop: DiscoveredProperty) => {
       defaults[prop.key] = prop.defaultValue;
     });
     
@@ -220,6 +220,15 @@ export const EnhancedNocodePropertiesPanel: React.FC<EnhancedNocodePropertiesPan
 
   return (
     <div className="h-full flex flex-col">
+      {/* Step Navigation */}
+      {onStepChange && (
+        <StepNavigation
+          currentStep={currentStep}
+          totalSteps={totalSteps}
+          onStepChange={onStepChange}
+        />
+      )}
+
       {/* Header */}
       <div className="p-4 border-b bg-gradient-to-r from-blue-50 to-purple-50">
         <div className="flex items-center justify-between mb-3">
@@ -290,15 +299,15 @@ export const EnhancedNocodePropertiesPanel: React.FC<EnhancedNocodePropertiesPan
           {/* Category Tabs */}
           <div className="border-b px-4 py-2">
             <TabsList className="grid w-full grid-cols-4 gap-1">
-              {Array.from(discoveredProperties.categories).map((category) => {
+              {Array.from(discoveredProperties.categories).map((category: PropertyCategory) => {
                 const meta = CATEGORY_META[category];
                 const Icon = meta.icon;
                 const count = propertiesByCategory.get(category)?.length || 0;
                 
                 return (
                   <TabsTrigger 
-                    key={category} 
-                    value={category}
+                    key={String(category)} 
+                    value={String(category)}
                     className="flex items-center gap-1 text-xs"
                   >
                     <Icon className="w-3 h-3" />
@@ -314,13 +323,13 @@ export const EnhancedNocodePropertiesPanel: React.FC<EnhancedNocodePropertiesPan
 
           {/* Properties Content */}
           <ScrollArea className="flex-1">
-            {Array.from(discoveredProperties.categories).map((category) => {
+            {Array.from(discoveredProperties.categories).map((category: PropertyCategory) => {
               const meta = CATEGORY_META[category];
               const categoryProperties = propertiesByCategory.get(category) || [];
               const isCollapsed = collapsedCategories.has(category);
               
               return (
-                <TabsContent key={category} value={category} className="mt-0">
+                <TabsContent key={String(category)} value={String(category)} className="mt-0">
                   <div className="p-4">
                     <div className="space-y-4">
                       {/* Category Header */}
@@ -346,7 +355,7 @@ export const EnhancedNocodePropertiesPanel: React.FC<EnhancedNocodePropertiesPan
                       {/* Properties */}
                       {!isCollapsed && (
                         <div className="space-y-4 pl-2">
-                          {categoryProperties.map((property) => (
+                          {categoryProperties.map((property: DiscoveredProperty) => (
                             <div key={property.key} className="space-y-2">
                               <UniversalPropertyRenderer
                                 property={property}

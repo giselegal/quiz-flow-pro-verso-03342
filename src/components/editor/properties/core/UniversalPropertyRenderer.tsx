@@ -14,14 +14,13 @@ import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
+import { Card, CardContent } from '@/components/ui/card';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import ColorPicker from '@/components/visual-controls/ColorPicker';
 import { SpacingControl, GradientPicker, FileUploadControl, PositionControl } from '@/components/visual-controls/EnhancedControls';
 import { PropertyType } from '@/hooks/useUnifiedProperties';
 import { DiscoveredProperty } from './PropertyDiscovery';
-import { Upload, Plus, Trash2, Eye, EyeOff, Info, Copy } from 'lucide-react';
+import { Plus, Trash2, Eye, EyeOff, Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface UniversalPropertyRendererProps {
@@ -321,50 +320,6 @@ const ObjectRenderer: React.FC<{
     </div>
   );
 };
-
-/**
- * Upload Renderer (for file uploads)
- */
-const UploadRenderer: React.FC<{
-  property: DiscoveredProperty;
-  value: string;
-  onChange: (value: string) => void;
-  disabled?: boolean;
-}> = ({ property, value, onChange, disabled }) => (
-  <div className="space-y-2">
-    <Label className="text-sm font-medium">{property.label}</Label>
-    <div className="flex gap-2">
-      <Input
-        type="url"
-        value={value || ''}
-        onChange={(e) => onChange(e.target.value)}
-        disabled={disabled || !property.isEditable}
-        placeholder="URL da imagem ou arquivo"
-        className="flex-1"
-      />
-      <Button
-        size="sm"
-        variant="outline"
-        disabled={disabled || !property.isEditable}
-        className="h-9 px-3"
-      >
-        <Upload className="w-3 h-3" />
-      </Button>
-    </div>
-    {value && (
-      <div className="mt-2">
-        <img 
-          src={value} 
-          alt="Preview" 
-          className="max-w-full h-20 object-cover border rounded"
-          onError={(e) => {
-            (e.target as HTMLImageElement).style.display = 'none';
-          }}
-        />
-      </div>
-    )}
-  </div>
-);
 
 /**
  * Main Universal Property Renderer Component

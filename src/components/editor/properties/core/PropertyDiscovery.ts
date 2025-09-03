@@ -37,7 +37,16 @@ export interface ComponentPropertySchema {
 /**
  * Infers property type from value and configuration
  */
-function inferPropertyType(property: any): PropertyType {
+function inferPropertyType(property: {
+  type?: string;
+  default?: any;
+  options?: any[];
+  min?: number;
+  max?: number;
+  step?: number;
+  editable?: boolean;
+  description?: string;
+}): PropertyType {
   if (property.options && Array.isArray(property.options)) {
     return PropertyType.SELECT;
   }
@@ -173,7 +182,7 @@ export function discoverComponentProperties(componentType: string): ComponentPro
   const discoveredProperties: DiscoveredProperty[] = [];
   const categories = new Set<PropertyCategory>();
   
-  Object.entries(component.properties).forEach(([key, propertyConfig]) => {
+  Object.entries(component.properties).forEach(([key, propertyConfig]: [string, any]) => {
     const type = inferPropertyType(propertyConfig);
     const category = categorizeProperty(key, type);
     
