@@ -29,6 +29,8 @@ export interface EditorActions {
   setSelectedBlockId: (blockId: string | null) => void;
   // Validation management (used by EditorPro to reflect selections)
   setStepValid: (step: number, isValid: boolean) => void;
+  // Load/Reset defaults
+  loadDefaultTemplate: () => void;
 
   // Block operations
   addBlock: (stepKey: string, block: Block) => Promise<void>;
@@ -421,6 +423,37 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       }));
     }
   }, []); // Empty dependency array - run only once on mount
+
+  // Failsafe: se após a inicialização todas as etapas estiverem vazias, recarregar o template padrão
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'test') return;
+    const timer = setTimeout(() => {
+      try {
+        const total = Object.values(rawState.stepBlocks || {}).reduce((acc, arr: any) => acc + (Array.isArray(arr) ? arr.length : 0), 0);
+        if (total === 0) {
+          if (process.env.NODE_ENV === 'development') {
+            console.warn('⚠️ Nenhum bloco encontrado após o mount. Recarregando template padrão...');
+          }
+          const normalizedBlocks = normalizeStepBlocks(QUIZ_STYLE_21_STEPS_TEMPLATE);
+          setState(prev => {
+            const mergedBlocks = mergeStepBlocks(prev.stepBlocks, normalizedBlocks);
+            const validation: Record<number, boolean> = {};
+            for (let i = 1; i <= 21; i++) {
+              const key = `step-${i}`;
+              validation[i] = Array.isArray((mergedBlocks as any)[key]) && (mergedBlocks as any)[key].length > 0;
+            }
+            return {
+              ...prev,
+              stepBlocks: mergedBlocks,
+              stepValidation: { ...(prev.stepValidation || {}), ...validation },
+              currentStep: prev.currentStep || 1,
+            };
+          });
+        }
+      } catch { }
+    }, 600);
+    return () => clearTimeout(timer);
+  }, [rawState.stepBlocks, setState]);
 
   // 🚨 CORREÇÃO: Ensure step is loaded when currentStep changes
   useEffect(() => {
@@ -826,6 +859,28 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     [setState, state.isSupabaseEnabled, supabaseIntegration, quizId, funnelId]
   );
 
+  const loadDefaultTemplate = useCallback(() => {
+    try {
+      const normalizedBlocks = normalizeStepBlocks(QUIZ_STYLE_21_STEPS_TEMPLATE);
+      setState(prev => {
+        const mergedBlocks = mergeStepBlocks(prev.stepBlocks, normalizedBlocks);
+        const validation: Record<number, boolean> = {};
+        for (let i = 1; i <= 21; i++) {
+          const key = `step-${i}`;
+          validation[i] = Array.isArray((mergedBlocks as any)[key]) && (mergedBlocks as any)[key].length > 0;
+        }
+        return {
+          ...prev,
+          stepBlocks: mergedBlocks,
+          stepValidation: { ...(prev.stepValidation || {}), ...validation },
+          currentStep: prev.currentStep || 1,
+        };
+      });
+    } catch (err) {
+      console.error('Failed to load default template:', err);
+    }
+  }, [setState]);
+
   const exportJSON = useCallback(() => {
     // Normalize step keys to canonical format step-<n>
     const normalizedStepBlocks: Record<string, Block[]> = {};
@@ -928,6 +983,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     setCurrentStep,
     setSelectedBlockId,
     setStepValid,
+    loadDefaultTemplate,
     addBlock,
     addBlockAtIndex,
     removeBlock,

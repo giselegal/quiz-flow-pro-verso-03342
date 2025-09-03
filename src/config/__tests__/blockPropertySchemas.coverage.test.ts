@@ -1,6 +1,5 @@
 import { describe, it, expect } from 'vitest';
 import { blockPropertySchemas } from '@/config/blockPropertySchemas';
-import { ENHANCED_BLOCK_REGISTRY } from '@/config/enhancedBlockRegistry';
 
 // Este teste garante que a maioria dos tipos de bloco expostos pelo registry
 // possuem um schema no blockPropertySchemas (ou um equivalente direto/alias).

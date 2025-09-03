@@ -2,25 +2,26 @@
 
 Este documento apresenta os principais editores do projeto, suas arquiteturas, diretórios e a explicação detalhada de cada um, para facilitar a escolha e a manutenção.
 
-## Visão geral rápida
-- Oficial: rota `/editor` → `MainEditor` → `SchemaDrivenEditorResponsive` (recomendado)
-- Legado/compat: EditorPro (mantido para cenários específicos e testes)
+## Visão geral rápida (status atual)
+- Oficial em produção (neste branch): rota `/editor` → `MainEditor` → `EditorPro` (shim legado, estável)
+- Alternativo disponível: `SchemaDrivenEditorResponsive` (pronto no código, não está na rota `/editor`)
 - Especializados:
   - Quiz Modular (componentes em `components/quiz-editor`)
   - Result Page Editors (componentes em `components/result-editor`)
 
 Rotas relevantes
-- `/editor` → `src/pages/MainEditor.tsx` → `SchemaDrivenEditorResponsive`
+- `/editor` → `src/pages/MainEditor.tsx` → import dinâmico de `src/components/editor/EditorPro.tsx` → `src/legacy/editor/EditorPro.tsx`
+- `/editor/schema` → `src/pages/SchemaEditorPage.tsx` → `src/components/editor/SchemaDrivenEditorResponsive.tsx`
+- `/showcase/steps` → `src/pages/StepsShowcase.tsx` (renderiza as 21 etapas + painel de propriedades)
 - `/quiz` → `src/pages/QuizModularPage.tsx` (execução/preview)
-- Páginas de teste do EditorPro: `src/pages/EditorPro*`
 
 ---
 
-## 1) Editor oficial: SchemaDrivenEditorResponsive
+## 1) Editor recomendado (alternativo): SchemaDrivenEditorResponsive
 
 Onde está
 - Shell: `src/components/editor/SchemaDrivenEditorResponsive.tsx`
-- Entrada de rota: `src/pages/MainEditor.tsx` (monta `EditorProvider` e renderiza)
+- Não está plugado em `/editor` neste branch; pode ser usado em rotas próprias quando necessário
 
 Arquitetura (resumo)
 - Provider central: `EditorProvider` (estado de etapas/blocos, undo/redo, validações)
@@ -49,16 +50,17 @@ Diretórios e arquivos-chave
 - `src/services/stepTemplateService.ts` — entrega dos templates por etapa (JSON)
 
 Quando usar
-- Sempre que precisar do editor padrão com 21 etapas, DnD e painel de propriedades
-- É o editor que a rota `/editor` usa oficialmente
+- Quando quiser experimentar um layout mais enxuto ou evoluir o editor sem tocar no legado
+- Hoje não é o editor servido em `/editor`; o ativo é o EditorPro (abaixo)
 
 ---
 
-## 2) Editor legado: EditorPro
+## 2) Editor ativo em /editor (legado): EditorPro
 
 Onde está
-- Implementação principal: `src/components/editor/EditorPro.tsx`
-- Testes de página: `src/pages/EditorPro*.tsx`
+- Shim: `src/components/editor/EditorPro.tsx` (reexporta)
+- Implementação: `src/legacy/editor/EditorPro.tsx`
+- Carregado por: `src/pages/MainEditor.tsx` (import dinâmico)
 
 Arquitetura (resumo)
 - Usa `EditorProvider` como contexto
@@ -74,8 +76,9 @@ Diretórios e arquivos-chave
 - `src/components/editor/dnd/*` — DnD kit wrappers e itens
 
 Observações
-- Mantido por compatibilidade e para alguns testes de regressão
-- Mais pesado e complexo que o editor oficial; evitar evoluções nele
+- Mantido por compatibilidade e por abranger fluxos antigos
+- Conta com fail-safe de template: `EditorProvider` faz merge do template padrão no mount, e há watchdog que recarrega se tudo estiver vazio; no header do Canvas existe botão “Recarregar template”
+- Mais pesado e complexo; preferir evoluções no editor alternativo quando possível
 
 Quando usar
 - Apenas se existir fluxo específico ainda não migrado para o editor oficial
