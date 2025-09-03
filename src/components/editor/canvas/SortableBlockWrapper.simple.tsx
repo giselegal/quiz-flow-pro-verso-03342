@@ -29,6 +29,23 @@ const SortableBlockWrapperBase: React.FC<SortableBlockWrapperProps> = ({
 }) => {
   // Normalizar bloco para unificar content/properties (mesma lógica do UniversalBlockRenderer)
   const normalizedBlock = normalizeBlockProps(block);
+  
+  // 🔍 DEBUG: Log block details to identify the issue
+  React.useEffect(() => {
+    if (process.env.NODE_ENV === 'development') {
+      console.log('🔍 SortableBlockWrapper block details:', {
+        blockId: block?.id,
+        originalBlockType: block?.type,
+        normalizedBlockType: normalizedBlock?.type,
+        hasOriginalType: !!block?.type,
+        hasNormalizedType: !!normalizedBlock?.type,
+        blockProperties: block?.properties,
+        normalizedProperties: normalizedBlock?.properties,
+        scopeId
+      });
+    }
+  }, [block, normalizedBlock, scopeId]);
+  
   // Buscar componente no registry simplificado
   const Component = React.useMemo(
     () => getOptimizedBlockComponent(normalizedBlock.type),
