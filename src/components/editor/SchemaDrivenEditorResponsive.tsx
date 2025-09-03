@@ -8,6 +8,7 @@ import FunnelStagesPanel from './funnel/FunnelStagesPanelUnified';
 import './interactive/styles/quiz-animations.css';
 import { FourColumnLayout } from './layout/FourColumnLayout';
 import { EditorToolbar } from './toolbar/EditorToolbar';
+import { Step20EditorFallback } from './fallback/Step20EditorFallback';
 
 import React, { useState } from 'react';
 import { createBlockFromComponent } from '@/utils/editorUtils';
@@ -35,6 +36,10 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
   const setSelectedBlockId = actions.setSelectedBlockId;
 
   const [isInteractiveMode, setIsInteractiveMode] = useState(mode === 'interactive');
+
+  // 🎯 FASE 2: Integrar fallback para etapa 20
+  const isStep20 = state.currentStep === 20;
+  const hasResultHeaderBlock = currentBlocks.some(block => block.type === 'result-header-inline');
 
   const handleComponentSelect = async (type: string) => {
     try {
@@ -118,14 +123,27 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
           stagesPanel={<FunnelStagesPanel />}
           componentsPanel={<ComponentsSidebar onComponentSelect={handleComponentSelect} />}
           canvas={
-            <CanvasDropZone
-              blocks={currentBlocks}
-              selectedBlockId={selectedBlockId}
-              onSelectBlock={setSelectedBlockId}
-              onUpdateBlock={(id, updates) => actions.updateBlock(currentStepKey, id, updates)}
-              onDeleteBlock={id => actions.removeBlock(currentStepKey, id)}
-              scopeId={state.currentStep}
-            />
+            <>
+              {/* 🛡️ FASE 2: Fallback robusto para etapa 20 */}
+              {isStep20 && (!hasResultHeaderBlock || currentBlocks.length === 0) ? (
+                <Step20EditorFallback
+                  blocks={currentBlocks}
+                  onSelectBlock={setSelectedBlockId}
+                  selectedBlockId={selectedBlockId}
+                  onUpdateBlock={(id, updates) => actions.updateBlock(currentStepKey, id, updates)}
+                  onDeleteBlock={id => actions.removeBlock(currentStepKey, id)}
+                />
+              ) : (
+                <CanvasDropZone
+                  blocks={currentBlocks}
+                  selectedBlockId={selectedBlockId}
+                  onSelectBlock={setSelectedBlockId}
+                  onUpdateBlock={(id, updates) => actions.updateBlock(currentStepKey, id, updates)}
+                  onDeleteBlock={id => actions.removeBlock(currentStepKey, id)}
+                  scopeId={state.currentStep}
+                />
+              )}
+            </>
           }
           propertiesPanel={
             <EnhancedUniversalPropertiesPanelFixed

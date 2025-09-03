@@ -2,7 +2,8 @@
 // ✨ SERVIÇO UNIFICADO PARA TEMPLATES POR ETAPA
 // Este serviço centraliza o acesso aos templates individuais mantendo a modularidade
 
-// ⚠️ NOTA: Step01 migrado para sistema JSON (step-01.json) - não usa mais componente
+// ⚠️ NOTA: Migrado para sistema JSON (step-XX.json) - usa templates dinâmicos
+import { getStepTemplate as getJSONTemplate } from '@/config/templates/templates';
 
 export interface StepInfo {
   id: string;
@@ -30,149 +31,165 @@ const STEP_MAPPING: Record<
     name: 'Introdução',
     type: 'intro',
     description: 'Apresentação do Quiz de Estilo',
-    getTemplate: () => {
-      // ⚠️ STEP01 MIGRADO PARA JSON - Este service não é mais usado para Step01
-      console.warn(
-        '⚠️ Step01 migrado para sistema JSON. Use templateService.getTemplateByStep(1) em vez do stepTemplateService'
-      );
-      return [];
-    },
+    getTemplate: () => getJSONTemplateBlocks(1),
   },
   2: {
     name: 'Coleta de Nome',
     type: 'intro',
     description: 'Captura do nome do participante',
-    getTemplate: getStep02Template,
+    getTemplate: () => getJSONTemplateBlocks(2),
   },
   3: {
     name: 'Q1: Tipo de Roupa',
     type: 'question',
     description: 'QUAL O SEU TIPO DE ROUPA FAVORITA?',
-    getTemplate: getStep03Template,
+    getTemplate: () => getJSONTemplateBlocks(3),
     multiSelect: 3,
   },
   4: {
     name: 'Q2: Personalidade',
     type: 'question',
     description: 'RESUMA A SUA PERSONALIDADE:',
-    getTemplate: getStep04Template,
+    getTemplate: () => getJSONTemplateBlocks(4),
     multiSelect: 3,
   },
   5: {
     name: 'Q3: Estampas',
     type: 'question',
     description: 'QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?',
-    getTemplate: getStep05Template,
+    getTemplate: () => getJSONTemplateBlocks(5),
     multiSelect: 3,
   },
   6: {
     name: 'Q4: Casacos',
     type: 'question',
     description: 'QUAL CASACO É SEU FAVORITO?',
-    getTemplate: getStep06Template,
+    getTemplate: () => getJSONTemplateBlocks(6),
     multiSelect: 3,
   },
   7: {
     name: 'Q5: Calças',
     type: 'question',
     description: 'QUAL SUA CALÇA FAVORITA?',
-    getTemplate: getStep07Template,
+    getTemplate: () => getJSONTemplateBlocks(7),
     multiSelect: 3,
   },
   8: {
     name: 'Q6: Calças (2)',
     type: 'question',
     description: 'QUAL SUA CALÇA FAVORITA? (Continuação)',
+    getTemplate: () => getJSONTemplateBlocks(8),
     multiSelect: 3,
   },
   9: {
     name: 'Q7: Sapatos',
     type: 'question',
     description: 'QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA?',
-    getTemplate: getStep09Template,
+    getTemplate: () => getJSONTemplateBlocks(9),
     multiSelect: 3,
   },
   10: {
     name: 'Q8: Acessórios',
     type: 'question',
     description: 'QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA?',
-    getTemplate: getStep10Template,
+    getTemplate: () => getJSONTemplateBlocks(10),
     multiSelect: 3,
   },
   11: {
     name: 'Q9: Tecidos',
     type: 'question',
     description: 'VOCÊ ESCOLHE CERTOS TECIDOS, PRINCIPALMENTE PORQUE ELES...',
-    getTemplate: getStep11Template,
+    getTemplate: () => getJSONTemplateBlocks(11),
     multiSelect: 3,
   },
   12: {
     name: 'Transição Principal',
     type: 'transition',
     description: 'Análise dos resultados parciais',
-    getTemplate: getStep12Template,
+    getTemplate: () => getJSONTemplateBlocks(12),
   },
   13: {
     name: 'S1: Guarda-roupa',
     type: 'strategic',
     description: 'Percepção sobre o guarda-roupa atual',
-    getTemplate: getStep13Template,
+    getTemplate: () => getJSONTemplateBlocks(13),
     multiSelect: 1,
   },
   14: {
     name: 'S2: Problemas',
     type: 'strategic',
     description: 'Principais problemas com roupas',
-    getTemplate: getStep14Template,
+    getTemplate: () => getJSONTemplateBlocks(14),
     multiSelect: 1,
   },
   15: {
     name: 'S3: Frequência',
     type: 'strategic',
     description: 'Frequência do dilema "com que roupa eu vou?"',
-    getTemplate: getStep15Template,
+    getTemplate: () => getJSONTemplateBlocks(15),
     multiSelect: 1,
   },
   16: {
     name: 'S4: Investimento',
     type: 'strategic',
     description: 'Considerações para investir em roupas',
-    getTemplate: getStep16Template,
+    getTemplate: () => getJSONTemplateBlocks(16),
     multiSelect: 1,
   },
   17: {
     name: 'S5: Orçamento',
     type: 'strategic',
     description: 'Orçamento mensal para roupas',
-    getTemplate: getStep17Template,
+    getTemplate: () => getJSONTemplateBlocks(17),
     multiSelect: 1,
   },
   18: {
     name: 'S6: Objetivos',
     type: 'strategic',
     description: 'O que deseja alcançar com novo estilo',
-    getTemplate: getStep18Template,
+    getTemplate: () => getJSONTemplateBlocks(18),
     multiSelect: 1,
   },
   19: {
     name: 'Transição Final',
     type: 'transition',
     description: 'Preparando resultado personalizado',
-    getTemplate: getStep19Template,
+    getTemplate: () => getJSONTemplateBlocks(19),
   },
   20: {
     name: 'Resultado',
     type: 'result',
     description: 'Página de resultado personalizada',
-    getTemplate: getStep20Template,
+    getTemplate: () => getJSONTemplateBlocks(20),
   },
   21: {
     name: 'Oferta',
     type: 'offer',
     description: 'Apresentação da oferta final',
-    getTemplate: getStep21Template,
+    getTemplate: () => getJSONTemplateBlocks(21),
   },
 };
+
+// 🔧 FUNÇÃO HELPER: Converter template JSON para format esperado
+async function getJSONTemplateBlocks(stepNumber: number): Promise<any[]> {
+  try {
+    console.log(`🔍 [JSONTemplate] Carregando etapa ${stepNumber}...`);
+    
+    const template = await getJSONTemplate(stepNumber);
+    if (!template || !template.blocks) {
+      console.warn(`⚠️ Template JSON ${stepNumber} não encontrado ou sem blocos`);
+      return [];
+    }
+
+    console.log(`✅ Template JSON ${stepNumber} carregado: ${template.blocks.length} blocos`);
+    console.log(`🧱 [DEBUG] Tipos de blocos:`, template.blocks.map((b: any) => b.type));
+
+    return template.blocks;
+  } catch (error) {
+    console.error(`❌ Erro ao carregar template JSON ${stepNumber}:`, error);
+    return [];
+  }
+}
 
 class StepTemplateService {
   /**
