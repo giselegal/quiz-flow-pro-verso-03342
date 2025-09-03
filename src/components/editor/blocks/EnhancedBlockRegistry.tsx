@@ -1,5 +1,5 @@
 // Enhanced Block Registry - Componentes específicos do quiz com identidade visual
-import { lazy } from 'react';
+import { lazy, type ComponentType } from 'react';
 // Importações estáticas essenciais para renderização imediata dos blocos principais
 import ButtonInlineBlock from '@/components/editor/blocks/ButtonInlineBlock';
 import BasicContainerBlock from '@/components/editor/blocks/BasicContainerBlock';
@@ -11,7 +11,7 @@ import QuizIntroHeaderBlock from '@/components/editor/blocks/QuizIntroHeaderBloc
 import TextInlineBlock from '@/components/editor/blocks/TextInlineBlock';
 
 // 🎯 REGISTRY COMPLETO - 150+ COMPONENTES MAPEADOS
-export const ENHANCED_BLOCK_REGISTRY = {
+export const ENHANCED_BLOCK_REGISTRY: Record<string, ComponentType<any>> = {
   // ✅ STEP 01 - COMPONENTES BÁSICOS
   // Preferir versões estáticas para tipos críticos usados no template
   'quiz-intro-header': QuizIntroHeaderBlock,
