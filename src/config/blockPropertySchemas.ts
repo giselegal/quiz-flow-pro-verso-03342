@@ -488,7 +488,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color' },
       { key: 'textColor', label: 'Cor do Texto', type: 'color' },
       { key: 'requiresValidInput', label: 'Requer Input Válido', type: 'boolean' },
-  { key: 'requiresValidSelection', label: 'Requer Seleção Válida', type: 'boolean' },
+      { key: 'requiresValidSelection', label: 'Requer Seleção Válida', type: 'boolean' },
       { key: 'disabledText', label: 'Texto Desabilitado', type: 'text' },
       { key: 'showDisabledState', label: 'Mostrar Estado Desabilitado', type: 'boolean' },
       { key: 'disabledOpacity', label: 'Opacidade Desabilitado', type: 'number' },
