@@ -502,112 +502,318 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
     ],
   },
   'options-grid': {
-    label: 'Grade de Opções',
+    label: 'Grade de Opções - Configuração Completa',
     fields: [
-      // === CONFIGURAÇÃO VISUAL PRINCIPAL ===
-      { key: 'options', label: 'Lista de Opções', type: 'options-list' },
-
-      {
-        key: 'layout',
-        label: 'Layout',
-        type: 'select',
-        options: [
-          { label: 'Grade', value: 'grid' },
-          { label: 'Lista', value: 'list' },
-        ],
+      // === CONTEÚDO ===
+      { 
+        key: 'title', 
+        label: 'Título/Questão', 
+        type: 'text', 
+        group: 'content',
+        defaultValue: 'Escolha uma opção:',
+        required: true,
+        description: 'Título ou pergunta que aparece acima das opções'
       },
+      { 
+        key: 'options', 
+        label: 'Opções da Questão', 
+        type: 'options-list', 
+        group: 'content',
+        description: 'Configure as opções disponíveis - texto, imagem, pontuação e categoria'
+      },
+
+      // === LAYOUT ===
       {
         key: 'columns',
         label: 'Número de Colunas',
-        type: 'select',
-        options: [
-          { label: '1 Coluna', value: 1 },
-          { label: '2 Colunas', value: 2 },
-          { label: '3 Colunas', value: 3 },
-          { label: '4 Colunas', value: 4 },
-        ],
+        type: 'range',
+        min: 1,
+        max: 4,
+        step: 1,
+        group: 'layout',
+        defaultValue: 2,
+        description: 'Quantas colunas terá o grid de opções'
       },
-      {
-        key: 'layoutOrientation',
-        label: 'Direção do Layout',
-        type: 'select',
-        options: [
-          { label: 'Vertical', value: 'vertical' },
-          { label: 'Horizontal', value: 'horizontal' },
-        ],
+      { 
+        key: 'gridGap', 
+        label: 'Espaçamento entre Opções (px)', 
+        type: 'range', 
+        min: 0,
+        max: 48,
+        step: 2,
+        group: 'layout',
+        defaultValue: 16,
+        description: 'Espaço entre as opções no grid'
       },
-      {
-        key: 'contentType',
-        label: 'Tipo de Conteúdo',
-        type: 'select',
-        options: [
-          { label: 'Imagem + Texto', value: 'text-and-image' },
-          { label: 'Apenas Imagem', value: 'image-only' },
-          { label: 'Apenas Texto', value: 'text-only' },
-        ],
+      { 
+        key: 'responsiveColumns', 
+        label: 'Colunas Responsivas', 
+        type: 'boolean', 
+        group: 'layout',
+        defaultValue: true,
+        description: 'Ajusta automaticamente o número de colunas em diferentes telas'
+      },
+      { 
+        key: 'padding', 
+        label: 'Padding Interno (px)', 
+        type: 'range', 
+        min: 0,
+        max: 48,
+        step: 2,
+        group: 'layout',
+        defaultValue: 16,
+        description: 'Espaçamento interno de cada opção'
       },
 
-      // === CONFIGURAÇÃO DE IMAGENS ===
-      { key: 'showImages', label: 'Mostrar Imagens', type: 'boolean' },
+      // === IMAGENS ===
+      { 
+        key: 'showImages', 
+        label: 'Mostrar Imagens', 
+        type: 'boolean', 
+        group: 'images',
+        defaultValue: true,
+        description: 'Exibir ou ocultar imagens nas opções'
+      },
+      {
+        key: 'imageSize',
+        label: 'Tamanho das Imagens',
+        type: 'select',
+        group: 'images',
+        defaultValue: 'medium',
+        options: [
+          { label: 'Pequena (200px)', value: 'small' },
+          { label: 'Média (256px)', value: 'medium' },
+          { label: 'Grande (300px)', value: 'large' },
+          { label: 'Personalizado', value: 'custom' },
+        ],
+        description: 'Tamanho padrão das imagens'
+      },
+      { 
+        key: 'imageWidth', 
+        label: 'Largura da Imagem (px)', 
+        type: 'range', 
+        min: 100,
+        max: 500,
+        step: 10,
+        group: 'images',
+        defaultValue: 256,
+        showIf: 'imageSize === "custom"',
+        description: 'Largura personalizada das imagens'
+      },
+      { 
+        key: 'imageHeight', 
+        label: 'Altura da Imagem (px)', 
+        type: 'range', 
+        min: 100,
+        max: 500,
+        step: 10,
+        group: 'images',
+        defaultValue: 256,
+        showIf: 'imageSize === "custom"',
+        description: 'Altura personalizada das imagens'
+      },
       {
         key: 'imagePosition',
         label: 'Posição da Imagem',
         type: 'select',
+        group: 'images',
+        defaultValue: 'top',
         options: [
           { label: 'Acima do Texto', value: 'top' },
           { label: 'À Esquerda', value: 'left' },
           { label: 'À Direita', value: 'right' },
-          { label: 'Como Fundo', value: 'background' },
+          { label: 'Abaixo do Texto', value: 'bottom' },
         ],
+        description: 'Onde a imagem aparece em relação ao texto'
       },
-      { key: 'imageSize', label: 'Tamanho da Imagem (px)', type: 'number' },
       {
-        key: 'imageAspect',
-        label: 'Proporção da Imagem',
+        key: 'imageLayout',
+        label: 'Layout da Opção',
         type: 'select',
+        group: 'images',
+        defaultValue: 'vertical',
         options: [
-          { label: '1:1 (Quadrado)', value: '1:1' },
-          { label: '4:3 (Paisagem)', value: '4:3' },
-          { label: '16:9 (Widescreen)', value: '16:9' },
+          { label: 'Vertical', value: 'vertical' },
+          { label: 'Horizontal', value: 'horizontal' },
         ],
+        description: 'Orientação geral de cada opção'
       },
 
-      // === COMPORTAMENTO DE SELEÇÃO ===
-      { key: 'multipleSelection', label: 'Seleção Múltipla', type: 'boolean' },
-      { key: 'minSelections', label: 'Mínimo de Seleções', type: 'number' },
-      { key: 'maxSelections', label: 'Máximo de Seleções', type: 'number' },
-      { key: 'allowDeselect', label: 'Permitir Desmarcar', type: 'boolean' },
-      { key: 'showCheckmark', label: 'Mostrar Marcador', type: 'boolean' },
+      // === COMPORTAMENTO ===
+      { 
+        key: 'multipleSelection', 
+        label: 'Permitir Seleção Múltipla', 
+        type: 'boolean', 
+        group: 'behavior',
+        defaultValue: false,
+        description: 'Permite selecionar mais de uma opção'
+      },
+      { 
+        key: 'minSelections', 
+        label: 'Mínimo de Seleções', 
+        type: 'range', 
+        min: 0,
+        max: 10,
+        step: 1,
+        group: 'behavior',
+        defaultValue: 1,
+        description: 'Número mínimo de opções que devem ser selecionadas'
+      },
+      { 
+        key: 'maxSelections', 
+        label: 'Máximo de Seleções', 
+        type: 'range', 
+        min: 1,
+        max: 10,
+        step: 1,
+        group: 'behavior',
+        defaultValue: 1,
+        description: 'Número máximo de opções que podem ser selecionadas'
+      },
+      { 
+        key: 'requiredSelections', 
+        label: 'Seleções Obrigatórias', 
+        type: 'range', 
+        min: 0,
+        max: 10,
+        step: 1,
+        group: 'behavior',
+        defaultValue: 1,
+        description: 'Quantas seleções são necessárias para prosseguir'
+      },
+      { 
+        key: 'allowDeselection', 
+        label: 'Permitir Desmarcar', 
+        type: 'boolean', 
+        group: 'behavior',
+        defaultValue: true,
+        description: 'Permite clicar novamente para desmarcar uma opção'
+      },
+      { 
+        key: 'showSelectionCount', 
+        label: 'Mostrar Contador de Seleção', 
+        type: 'boolean', 
+        group: 'behavior',
+        defaultValue: true,
+        description: 'Exibe quantas opções foram selecionadas'
+      },
+      { 
+        key: 'autoAdvanceOnComplete', 
+        label: 'Auto Avançar ao Completar', 
+        type: 'boolean', 
+        group: 'behavior',
+        defaultValue: false,
+        description: 'Avança automaticamente quando atingir o número de seleções'
+      },
+      { 
+        key: 'autoAdvanceDelay', 
+        label: 'Atraso do Auto Avanço (ms)', 
+        type: 'range', 
+        min: 0,
+        max: 5000,
+        step: 100,
+        group: 'behavior',
+        defaultValue: 0,
+        showIf: 'autoAdvanceOnComplete === true',
+        description: 'Tempo de espera antes de avançar automaticamente'
+      },
 
       // === ESTILO VISUAL ===
-      { key: 'gap', label: 'Espaçamento entre Itens (px)', type: 'number' },
-      { key: 'cardRadius', label: 'Arredondamento (px)', type: 'number' },
-      { key: 'borderColor', label: 'Cor da Borda', type: 'color' },
-      { key: 'selectedBorderColor', label: 'Cor da Borda Selecionada', type: 'color' },
-      { key: 'hoverColor', label: 'Cor de Hover', type: 'color' },
+      { 
+        key: 'backgroundColor', 
+        label: 'Cor de Fundo', 
+        type: 'color', 
+        group: 'style',
+        defaultValue: '#FFFFFF',
+        description: 'Cor de fundo de cada opção'
+      },
+      { 
+        key: 'selectedColor', 
+        label: 'Cor da Seleção', 
+        type: 'color', 
+        group: 'style',
+        defaultValue: '#B89B7A',
+        description: 'Cor quando a opção está selecionada'
+      },
+      { 
+        key: 'hoverColor', 
+        label: 'Cor no Hover', 
+        type: 'color', 
+        group: 'style',
+        defaultValue: '#D4C2A8',
+        description: 'Cor quando o mouse passa sobre a opção'
+      },
+      { 
+        key: 'borderRadius', 
+        label: 'Arredondamento das Bordas (px)', 
+        type: 'range', 
+        min: 0,
+        max: 32,
+        step: 1,
+        group: 'style',
+        defaultValue: 8,
+        description: 'Quão arredondadas são as bordas das opções'
+      },
       {
-        key: 'labelPosition',
-        label: 'Posição do Rótulo',
+        key: 'selectionStyle',
+        label: 'Estilo de Seleção',
         type: 'select',
+        group: 'style',
+        defaultValue: 'border',
         options: [
-          { label: 'Abaixo da Imagem', value: 'bottom' },
-          { label: 'À Direita da Imagem', value: 'right' },
-          { label: 'Sobreposto', value: 'overlay' },
+          { label: 'Borda', value: 'border' },
+          { label: 'Fundo', value: 'background' },
+          { label: 'Brilho', value: 'glow' },
+          { label: 'Escala', value: 'scale' },
         ],
+        description: 'Como destacar visualmente a opção selecionada'
       },
 
-      // === CONFIGURAÇÃO AVANÇADA ===
-      { key: 'showBorders', label: 'Mostrar Bordas', type: 'boolean' },
-      { key: 'showShadows', label: 'Mostrar Sombras', type: 'boolean' },
-      { key: 'responsiveColumns', label: 'Colunas Responsivas', type: 'boolean' },
-      {
-        key: 'scale',
-        label: 'Escala do Componente (%)',
-        type: 'range',
+      // === VALIDAÇÃO E FEEDBACK ===
+      { 
+        key: 'enableButtonOnlyWhenValid', 
+        label: 'Botão Ativo Apenas se Válido', 
+        type: 'boolean', 
+        group: 'validation',
+        defaultValue: true,
+        description: 'Só ativa o botão continuar quando as seleções estão corretas'
+      },
+      { 
+        key: 'showValidationFeedback', 
+        label: 'Mostrar Feedback de Validação', 
+        type: 'boolean', 
+        group: 'validation',
+        defaultValue: true,
+        description: 'Mostra mensagens de erro ou sucesso'
+      },
+      { 
+        key: 'validationMessage', 
+        label: 'Mensagem de Validação', 
+        type: 'text', 
+        group: 'validation',
+        defaultValue: 'Selecione uma opção para continuar',
+        description: 'Mensagem mostrada quando a validação falha'
+      },
+
+      // === CONFIGURAÇÕES AVANÇADAS ===
+      { 
+        key: 'scale', 
+        label: 'Escala do Componente (%)', 
+        type: 'range', 
         min: 50,
         max: 200,
-        step: 1,
-        description: 'Zoom do componente de grid como um todo. 100% = padrão.',
+        step: 5,
+        group: 'advanced',
+        defaultValue: 100,
+        description: 'Controle de zoom geral do componente inteiro'
+      },
+      { 
+        key: 'scoreValues', 
+        label: 'Pontuação por Opção (JSON)', 
+        type: 'json', 
+        group: 'advanced',
+        defaultValue: {},
+        description: 'Configuração avançada de pontuação personalizada'
       },
     ],
   },
