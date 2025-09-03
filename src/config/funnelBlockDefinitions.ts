@@ -1,9 +1,12 @@
 /**
  * Definições de Blocos do Sistema de Funil - Quiz Quest Challenge Verse
  *
- * AVISO: Schema legado (fallback). A fonte canônica para schemas do painel de propriedades
+ * @deprecated AVISO: Schema legado (fallback). A fonte canônica para schemas do painel de propriedades
  * é `src/config/blockPropertySchemas.ts`. Este arquivo permanece apenas para compatibilidade
  * durante a migração e deve ser consultado como fallback quando não houver schema canônico.
+ * 
+ * NÃO ADICIONE NOVOS SCHEMAS AQUI. Adicione-os em blockPropertySchemas.ts.
+ * Este arquivo será removido em uma versão futura.
  *
  * Sistema completo de blocos para funis configuráveis baseado no modelo fornecido
  * Integra com os componentes existentes e adiciona novos tipos específicos para quiz
