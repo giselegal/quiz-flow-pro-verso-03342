@@ -6,7 +6,8 @@ import { useLocation } from 'wouter';
 import { EditorProvider } from '../components/editor/EditorProvider';
 import { ErrorBoundary } from '../components/editor/ErrorBoundary';
 import { EditorTelemetryPanel } from '../components/editor/EditorTelemetryPanel';
-import { StepAnalyticsDashboard } from '../components/dev/StepAnalyticsDashboard';
+// Dashboard de Análise de Etapas desativado conforme solicitado
+// import { StepAnalyticsDashboard } from '../components/dev/StepAnalyticsDashboard';
 import { FunnelsProvider } from '@/context/FunnelsContext';
 import { EditorQuizProvider } from '@/context/EditorQuizContext';
 import { Quiz21StepsProvider } from '@/components/quiz/Quiz21StepsProvider';
@@ -30,7 +31,8 @@ const MainEditor: React.FC = () => {
   const stepParam = params.get('step');
   const initialStep = stepParam ? Math.max(1, Math.min(21, parseInt(stepParam))) : undefined;
 
-  const [showFullAnalytics, setShowFullAnalytics] = React.useState(false);
+  // Dashboard de Análise de Etapas desativado conforme solicitado
+  // const [showFullAnalytics, setShowFullAnalytics] = React.useState(false);
 
   return (
     <div>
@@ -49,25 +51,30 @@ const MainEditor: React.FC = () => {
               <Quiz21StepsProvider debug={true} initialStep={initialStep}>
                 <QuizFlowProvider initialStep={initialStep} totalSteps={21}>
                   {/* 🎯 EDITOR PRINCIPAL COM CABEÇALHO EDITÁVEL */}
-                  <div className="fixed top-4 right-4 z-50">
+                  {/* Dashboard de Análise de Etapas desativado conforme solicitado */}
+                  {/* <div className="fixed top-4 right-4 z-50">
                     <button
                       onClick={() => setShowFullAnalytics(!showFullAnalytics)}
                       className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
                     >
                       {showFullAnalytics ? 'Painel Simples' : 'Dashboard Completo'}
                     </button>
-                  </div>
+                  </div> */}
 
                   <EditorInitializer
                     templateId={templateId || undefined}
                     funnelId={funnelId || undefined}
                   />
 
-                  {showFullAnalytics ? (
+                  {/* Dashboard de Análise de Etapas desativado */}
+                  {/* {showFullAnalytics ? (
                     <StepAnalyticsDashboard totalSteps={21} />
                   ) : (
                     <EditorTelemetryPanel quizId={funnelId || undefined} />
-                  )}
+                  )} */}
+                  
+                  {/* Mantendo apenas o painel de telemetria simples */}
+                  <EditorTelemetryPanel quizId={funnelId || undefined} />
                 </QuizFlowProvider>
               </Quiz21StepsProvider>
             </EditorQuizProvider>
