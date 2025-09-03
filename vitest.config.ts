@@ -15,14 +15,14 @@ export default defineConfig({
     ],
     setupFiles: ['./src/test/setup.ts'],
     css: true,
-  // Garante que mocks e espioes sejam limpos entre testes para evitar retenção de memória
-  clearMocks: true,
-  mockReset: true,
-  restoreMocks: true,
-  unstubEnvs: true,
-  unstubGlobals: true,
-  // Evita concorrência dentro do mesmo arquivo de teste e diminui pico de memória
-  maxConcurrency: 1,
+    // Garante que mocks e espioes sejam limpos entre testes para evitar retenção de memória
+    clearMocks: true,
+    mockReset: true,
+    restoreMocks: true,
+    unstubEnvs: true,
+    unstubGlobals: true,
+    // Evita concorrência dentro do mesmo arquivo de teste e diminui pico de memória
+    maxConcurrency: 1,
     // Reduz ruído de logs para evitar acumular memória no worker
     silent: true,
     onConsoleLog(log, type) {
