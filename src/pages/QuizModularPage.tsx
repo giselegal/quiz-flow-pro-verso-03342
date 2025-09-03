@@ -553,10 +553,11 @@ const QuizModularPage: React.FC = () => {
   // ✅ CORREÇÃO CRÍTICA: Disparar cálculo SÍNCRONO na etapa 19
   useEffect(() => {
     if (currentStep === 19) {
-      // Aguardar cálculo completar antes de permitir avanço
+      // ✅ CORREÇÃO: Aguardar cálculo completar com async/await correto
       const performCalculation = async () => {
         try {
           console.log('🎯 Iniciando cálculo obrigatório na etapa 19...');
+          // ✅ CRÍTICO: Aguardar completion do cálculo
           await computeAndPersistResult();
           console.log('✅ Cálculo completado na etapa 19');
 
@@ -569,13 +570,15 @@ const QuizModularPage: React.FC = () => {
           try {
             const { calculateAndSaveQuizResult } = await import('@/utils/quizResultCalculator');
             await calculateAndSaveQuizResult();
+            console.log('✅ Fallback completado');
           } catch (fallbackError) {
             console.error('❌ Fallback também falhou:', fallbackError);
           }
         }
       };
 
-      performCalculation();
+      // ✅ CRÍTICO: Não bloquear thread, executar de forma independente
+      performCalculation().catch(console.error);
     }
   }, [currentStep, computeAndPersistResult]);
 
@@ -616,7 +619,8 @@ const QuizModularPage: React.FC = () => {
         }
       };
 
-      ensureResult();
+      // ✅ CRÍTICO: Não bloquear thread, executar de forma independente  
+      ensureResult().catch(console.error);
     }
   }, [currentStep, computeAndPersistResult]);
 

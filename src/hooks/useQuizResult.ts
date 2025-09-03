@@ -121,12 +121,13 @@ export const useQuizResult = () => {
 
     // Adicionar listener para respostas atualizadas
     const answerHandler = () => {
-      // Verificar se todas as perguntas foram respondidas
-      const answers = StorageService.safeGetJSON<any[]>('quizAnswers') || [];
-      const uniqueSteps = [...new Set(answers.map(a => a.step))];
+      // ✅ CORREÇÃO CRÍTICA: quizAnswers é um objeto, não array
+      const answers = StorageService.safeGetJSON<Record<string, any>>('quizAnswers') || {};
+      const answerKeys = Object.keys(answers);
 
-      // Se tiver respostas das etapas 2-11, recalcular o resultado
-      if (uniqueSteps.length >= 10) {
+      // Se tiver dados suficientes (userName + algumas respostas), recalcular
+      if (answerKeys.length >= 3 || answers.userName) {
+        console.log('🔄 Recalculando resultado devido a novas respostas');
         calculateAndSaveQuizResult();
       }
     };
