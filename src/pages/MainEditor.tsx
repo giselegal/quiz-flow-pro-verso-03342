@@ -72,7 +72,7 @@ const MainEditor: React.FC = () => {
                   ) : (
                     <EditorTelemetryPanel quizId={funnelId || undefined} />
                   )} */}
-                  
+
                   {/* Mantendo apenas o painel de telemetria simples */}
                   <EditorTelemetryPanel quizId={funnelId || undefined} />
                 </QuizFlowProvider>
