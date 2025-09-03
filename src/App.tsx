@@ -7,6 +7,7 @@ import { Toaster } from './components/ui/toaster';
 import { AuthProvider } from './context/AuthContext';
 
 const EditorTemplatesPage = lazy(() => import('./pages/editor-templates'));
+const ComQueRoupaEuVouPage = lazy(() => import('./pages/ComQueRoupaEuVouPage'));
 
 // 🎯 PÁGINAS ESSENCIAIS - SEM CONFLITOS
 const Home = lazy(() => import('./pages/Home'));
@@ -86,6 +87,20 @@ function App() {
 
                 {/* 🌐 VERSÃO DE PRODUÇÃO MODULAR (sem colunas de edição) */}
                 <Route path="/quiz">
+                  <Suspense fallback={<PageLoading />}>
+                    <QuizModularPage />
+                  </Suspense>
+                </Route>
+
+                {/* 👗 FUNIL ESPECIALIZADO: "COM QUE ROUPA EU VOU" */}
+                <Route path="/com-que-roupa-eu-vou">
+                  <Suspense fallback={<PageLoading />}>
+                    <ComQueRoupaEuVouPage />
+                  </Suspense>
+                </Route>
+
+                {/* 🎯 STEP20 - ROTA DIRETA */}
+                <Route path="/step20">
                   <Suspense fallback={<PageLoading />}>
                     <QuizModularPage />
                   </Suspense>

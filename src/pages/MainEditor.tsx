@@ -2,10 +2,14 @@ import { QuizFlowProvider } from '@/context/QuizFlowProvider';
 import { templateLibraryService } from '@/services/templateLibraryService';
 import React from 'react';
 import { useLocation } from 'wouter';
-// Trocado: usar o editor responsivo baseado em esquema
-import SchemaDrivenEditorResponsive from '@/components/editor/SchemaDrivenEditorResponsive';
+// EditorPro será usado via require dinâmico no EditorInitializer para evitar ciclos
 import { EditorProvider } from '../components/editor/EditorProvider';
 import { ErrorBoundary } from '../components/editor/ErrorBoundary';
+import { EditorTelemetryPanel } from '../components/editor/EditorTelemetryPanel';
+import { StepAnalyticsDashboard } from '../components/dev/StepAnalyticsDashboard';
+import { FunnelsProvider } from '@/context/FunnelsContext';
+import { EditorQuizProvider } from '@/context/EditorQuizContext';
+import { Quiz21StepsProvider } from '@/components/quiz/Quiz21StepsProvider';
 
 /**
  * 🎯 EDITOR PRINCIPAL - ÚNICO E LIMPO
@@ -26,10 +30,12 @@ const MainEditor: React.FC = () => {
   const stepParam = params.get('step');
   const initialStep = stepParam ? Math.max(1, Math.min(21, parseInt(stepParam))) : undefined;
 
+  const [showFullAnalytics, setShowFullAnalytics] = React.useState(false);
+
   return (
     <div>
       <ErrorBoundary>
-        <QuizFlowProvider>
+        <FunnelsProvider debug={true}>
           <EditorProvider
             enableSupabase={(import.meta as any)?.env?.VITE_ENABLE_SUPABASE === 'true'}
             // Prefer ID vindo da URL; cai para env se ausente
@@ -39,22 +45,65 @@ const MainEditor: React.FC = () => {
             storageKey="main-editor-state"
             initial={initialStep ? { currentStep: initialStep } : undefined}
           >
-            {/* 🎯 EDITOR PRINCIPAL: SchemaDrivenEditorResponsive (com fallback robusto da etapa 20) */}
-            <EditorInitializer
-              templateId={templateId || undefined}
-              funnelId={funnelId || undefined}
-            />
+            <EditorQuizProvider>
+              <Quiz21StepsProvider debug={true} initialStep={initialStep}>
+                <QuizFlowProvider initialStep={initialStep} totalSteps={21}>
+                  {/* 🎯 EDITOR PRINCIPAL COM CABEÇALHO EDITÁVEL */}
+                  <div className="fixed top-4 right-4 z-50">
+                    <button
+                      onClick={() => setShowFullAnalytics(!showFullAnalytics)}
+                      className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
+                    >
+                      {showFullAnalytics ? 'Painel Simples' : 'Dashboard Completo'}
+                    </button>
+                  </div>
+
+                  <EditorInitializer
+                    templateId={templateId || undefined}
+                    funnelId={funnelId || undefined}
+                  />
+                  
+                  {showFullAnalytics ? (
+                    <StepAnalyticsDashboard totalSteps={21} />
+                  ) : (
+                    <EditorTelemetryPanel quizId={funnelId || undefined} />
+                  )}
+                </QuizFlowProvider>
+              </Quiz21StepsProvider>
+            </EditorQuizProvider>
           </EditorProvider>
-        </QuizFlowProvider>
+        </FunnelsProvider>
       </ErrorBoundary>
     </div>
   );
 };
 
-const EditorInitializer: React.FC<{ templateId?: string; funnelId?: string }> = ({ templateId }) => {
-  // Aplicação opcional de template via evento (compat)
+const EditorInitializer: React.FC<{ templateId?: string; funnelId?: string }> = ({
+  templateId,
+}) => {
+  // Carregar EditorPro dinamicamente para evitar ciclos e manter ESM compatível
+  const [EditorProComp, setEditorProComp] = React.useState<React.ComponentType | null>(null);
+
   React.useEffect(() => {
-    if (!templateId) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const mod = await import('../components/editor/EditorPro');
+        // Preferir default (ModularEditorPro). Manter fallback por segurança.
+        const Comp = (mod as any).default || (mod as any).ModularEditorPro || (mod as any).EditorPro;
+        if (!cancelled && Comp) setEditorProComp(() => Comp);
+      } catch (e) {
+        console.error('Falha ao carregar EditorPro dinamicamente:', e);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  React.useEffect(() => {
+    if (!EditorProComp || !templateId) return;
+    // const { useEditor } = editor.current!; // reservado para futuras integrações
     try {
       const tpl = templateLibraryService.getById(templateId);
       if (!tpl) return;
@@ -68,15 +117,17 @@ const EditorInitializer: React.FC<{ templateId?: string; funnelId?: string }> = 
           content: b.properties || {},
         }));
       });
-      // Dispara evento de compatibilidade (componentes podem ignorar)
+      // apply into editor state
+      // Hook must be used inside component; instead, dispatch via window event and let EditorPro handle if needed
       window.dispatchEvent(new CustomEvent('editor-load-template', { detail: { stepBlocks } }));
     } catch (e) {
       console.warn('Falha ao aplicar template:', e);
     }
-  }, [templateId]);
+  }, [EditorProComp, templateId]);
 
-  // Renderiza o editor responsivo baseado em esquema
-  return <SchemaDrivenEditorResponsive mode="editor" />;
+  if (!EditorProComp) return null;
+  const EditorPro = EditorProComp as React.ComponentType;
+  return <EditorPro />;
 };
 
 export default MainEditor;

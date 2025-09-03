@@ -4,8 +4,8 @@ import { defineConfig, splitVendorChunkPlugin } from 'vite';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  // Garante caminhos relativos corretos em ambientes hospedados (chunks dinâmicos)
-  base: './',
+  // Garante caminhos absolutos corretos para rotas e recursos
+  base: '/',
   plugins: [react(), splitVendorChunkPlugin()],
   resolve: {
     alias: {
