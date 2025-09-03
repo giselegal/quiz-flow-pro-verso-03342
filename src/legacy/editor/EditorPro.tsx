@@ -313,7 +313,18 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   const [isDragging, setIsDragging] = useState(false);
 
   const currentStepData = useMemo(
-    () => getBlocksForStep(safeCurrentStep, state.stepBlocks) || [],
+    () => {
+      const blocks = getBlocksForStep(safeCurrentStep, state.stepBlocks) || [];
+      console.log('🔍 EditorPro currentStepData:', {
+        step: safeCurrentStep,
+        stepKey: `step-${safeCurrentStep}`,
+        blocksFound: blocks.length,
+        blockTypes: blocks.map(b => b.type),
+        stepBlocksKeys: state.stepBlocks ? Object.keys(state.stepBlocks) : 'undefined',
+        stepBlocksTotal: state.stepBlocks ? Object.values(state.stepBlocks).reduce((acc: number, arr: any) => acc + (Array.isArray(arr) ? arr.length : 0), 0) : 0
+      });
+      return blocks;
+    },
     [safeCurrentStep, state.stepBlocks]
   );
 
@@ -326,7 +337,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
     const stepBlocksKeys = Object.keys(stepBlocksRef).sort().join(',');
     const stepBlocksLengths = Object.values(stepBlocksRef).map(blocks => Array.isArray(blocks) ? blocks.length : 0).join(',');
     const stableKey = `${stepBlocksKeys}:${stepBlocksLengths}`;
-    
+
     const cache = (window as any).__stepHasBlocksCache = (window as any).__stepHasBlocksCache || {};
     if (cache.key === stableKey && cache.result) {
       return cache.result;
@@ -407,14 +418,14 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         if (process.env.NODE_ENV === 'development') {
           console.log('🧮 Calculando resultado do quiz (auto) para etapa', safeCurrentStep);
         }
-        
+
         if (safeCurrentStep === 20) {
           console.log('🎯 Etapa 20: garantindo cálculo de resultado');
-          
+
           await calculateAndSaveQuizResult();
-          
+
           try { window.dispatchEvent(new Event('quiz-result-refresh')); } catch { }
-          
+
           setTimeout(async () => {
             try {
               console.log('🎯 Etapa 20: segunda tentativa de cálculo');
@@ -663,7 +674,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   // Carregar stepBlocks de um template via evento externo
   useEffect(() => {
     const handler = (ev: Event) => {
-  const e = ev as CustomEvent<{ stepBlocks?: Record<string, Block[]> }>;
+      const e = ev as CustomEvent<{ stepBlocks?: Record<string, Block[]> }>;
       const incoming = e.detail?.stepBlocks;
       if (!incoming) return;
       Object.entries(incoming).forEach(([key, list]) => {

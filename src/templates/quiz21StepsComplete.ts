@@ -13,7 +13,15 @@
 
 import { Block } from '../types/editor';
 
-const IS_TEST = process.env.NODE_ENV === 'test';
+// Verificar se estamos em ambiente de desenvolvimento real do Vite
+const IS_TEST = false; // Forçar template completo para debugging
+
+console.log('🔍 Template loading:', {
+  NODE_ENV: import.meta.env?.MODE || 'unknown',
+  DEV: import.meta.env?.DEV || false,
+  IS_TEST,
+  willUseMinimalTemplate: IS_TEST
+});
 
 // Template mínimo para testes: 21 etapas com 1 bloco simples cada
 const MINIMAL_TEST_TEMPLATE: Record<string, Block[]> = (() => {

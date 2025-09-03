@@ -377,11 +377,16 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     if (!isTestEnv) {
       // Detect minimal persisted state and rehydrate (variável removida por não uso)
       const normalizedBlocks = normalizeStepBlocks(QUIZ_STYLE_21_STEPS_TEMPLATE);
-      console.log('🔧 FORCE RELOAD TEMPLATE:', {
-        normalizedBlocks,
-        keys: Object.keys(normalizedBlocks),
-        totalSteps: Object.keys(normalizedBlocks).length,
-      });
+      if (process.env.NODE_ENV === 'development') {
+        console.log('🔧 FORCE RELOAD TEMPLATE:', {
+          normalizedBlocks,
+          keys: Object.keys(normalizedBlocks),
+          totalSteps: Object.keys(normalizedBlocks).length,
+          blockCounts: Object.entries(normalizedBlocks).map(([key, blocks]) => [key, Array.isArray(blocks) ? blocks.length : 0]),
+          isTestEnv,
+          templateSource: QUIZ_STYLE_21_STEPS_TEMPLATE
+        });
+      }
 
       // 🚨 FORÇA CARREGAMENTO: Aplicar template normalizado por merge não-destrutivo e computar validação
       setState(prev => {
@@ -860,15 +865,28 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
   );
 
   const loadDefaultTemplate = useCallback(() => {
+    console.log('🚀 EditorProvider: loadDefaultTemplate iniciado');
     try {
+      console.log('📦 Template original keys:', Object.keys(QUIZ_STYLE_21_STEPS_TEMPLATE));
+      console.log('📦 Template step-1 blocks:', QUIZ_STYLE_21_STEPS_TEMPLATE['step-1']?.length || 0);
+      console.log('📦 Template step-2 blocks:', QUIZ_STYLE_21_STEPS_TEMPLATE['step-2']?.length || 0);
+
       const normalizedBlocks = normalizeStepBlocks(QUIZ_STYLE_21_STEPS_TEMPLATE);
+      console.log('🔄 Normalized blocks keys:', Object.keys(normalizedBlocks));
+
       setState(prev => {
         const mergedBlocks = mergeStepBlocks(prev.stepBlocks, normalizedBlocks);
+        console.log('🔀 Merged blocks keys:', Object.keys(mergedBlocks));
+        console.log('🔀 Merged step-1 blocks:', (mergedBlocks as any)['step-1']?.length || 0);
+
         const validation: Record<number, boolean> = {};
         for (let i = 1; i <= 21; i++) {
           const key = `step-${i}`;
           validation[i] = Array.isArray((mergedBlocks as any)[key]) && (mergedBlocks as any)[key].length > 0;
         }
+
+        console.log('✅ Validation summary:', validation);
+
         return {
           ...prev,
           stepBlocks: mergedBlocks,
@@ -876,8 +894,9 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
           currentStep: prev.currentStep || 1,
         };
       });
+      console.log('💾 Estado atualizado com sucesso');
     } catch (err) {
-      console.error('Failed to load default template:', err);
+      console.error('❌ Failed to load default template:', err);
     }
   }, [setState]);
 

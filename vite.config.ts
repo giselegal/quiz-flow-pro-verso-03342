@@ -89,6 +89,9 @@ export default defineConfig({
   // Configurações de performance adicionais
   define: {
     __DEV__: JSON.stringify(process.env.NODE_ENV === 'development'),
+    // Define process.env variables for client-side code
+    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
+    'process.env.VITEST': JSON.stringify(process.env.VITEST || false),
   },
   esbuild: {
     drop: process.env.NODE_ENV === 'production' ? ['console', 'debugger'] : [],
