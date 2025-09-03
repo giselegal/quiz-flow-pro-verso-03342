@@ -3,6 +3,16 @@ import { cn } from '@/lib/utils';
 import CanvasDropZone from '@/components/editor/canvas/CanvasDropZone.simple';
 import type { Block } from '@/types/editor';
 import { useTheme } from '@/components/theme-provider';
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
+
+const LoadingFallback = () => (
+  <div className="flex items-center justify-center h-full w-full">
+    <div className="flex flex-col items-center gap-3">
+      <LoadingSpinner size="large" color="#B89B7A" />
+      <span className="text-gray-600 font-medium">Carregando editor...</span>
+    </div>
+  </div>
+);
 
 const LazyQuizRenderer = React.lazy(() =>
   import('@/components/core/QuizRenderer').then(mod => ({ default: mod.QuizRenderer }))
@@ -384,7 +394,7 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
             )}
           >
             {mode === 'preview' ? (
-              <Suspense fallback={<div className="p-4 text-sm text-gray-600">Carregando preview…</div>}>
+              <Suspense fallback={<LoadingFallback />}>
                 <LazyQuizRenderer
                   mode="preview"
                   blocksOverride={currentStepData as any}
@@ -397,7 +407,7 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
                 />
               </Suspense>
             ) : (
-              <Suspense fallback={<div className="p-4 text-sm text-gray-600">Carregando editor…</div>}>
+              <Suspense fallback={<LoadingFallback />}>
                 <LazyQuizRenderer
                   mode="editor"
                   currentStepOverride={safeCurrentStep}

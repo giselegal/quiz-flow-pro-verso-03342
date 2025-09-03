@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 import { useCentralizedStepValidation } from '@/hooks/useCentralizedStepValidation';
 import { useStepNavigationStore } from '@/stores/useStepNavigationStore';
 import { StorageService } from '@/services/core/StorageService';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 
 interface QuizRendererProps {
   mode?: 'production' | 'preview' | 'editor';
@@ -343,6 +344,19 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
       </div>
     );
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#FAF9F7] via-[#F5F2E9] to-[#EEEBE1]">
+        <div className="flex flex-col items-center">
+          <LoadingSpinner size="lg" color="#B89B7A" />
+          <p className="text-stone-500 text-sm mt-4">
+            Carregando etapa {currentStep}...
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div

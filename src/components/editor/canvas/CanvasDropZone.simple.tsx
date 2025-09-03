@@ -8,6 +8,7 @@ import { useRenderCount } from '@/hooks/useRenderCount';
 import { CANVAS_ROOT_ID } from '../dnd/constants';
 import { generateUniqueId } from '@/utils/generateUniqueId';
 import { SortableBlockWrapper } from './SortableBlockWrapper.simple';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 
 // Componente para drop zone entre blocos (sempre presente para maximizar detecção)
 const InterBlockDropZoneBase: React.FC<{
@@ -308,15 +309,26 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
     >
       {blocks.length === 0 ? (
         <div className="text-center py-12">
-          <p className="text-stone-500 text-lg mb-2">
-            {isPreviewing
-              ? 'Modo Preview - Nenhum componente nesta etapa'
-              : 'Canvas vazio - Arraste componentes da sidebar para começar'}
-          </p>
-          {(isOver || isDraggingAnyValidComponent) && !isPreviewing && (
-            <div className="mt-4 p-4 border-2 border-dashed border-brand/30 rounded-lg bg-brand/5">
-              <p className="text-brand font-medium">Solte o componente aqui</p>
+          {enableProgressiveEdit && editRenderCount < blocks.length ? (
+            <div className="flex flex-col items-center justify-center gap-4">
+              <LoadingSpinner size="lg" color="#B89B7A" />
+              <p className="text-stone-500 text-sm">
+                Carregando componentes ({editRenderCount} de {blocks.length})...
+              </p>
             </div>
+          ) : (
+            <>
+              <p className="text-stone-500 text-lg mb-2">
+                {isPreviewing
+                  ? 'Modo Preview - Nenhum componente nesta etapa'
+                  : 'Canvas vazio - Arraste componentes da sidebar para começar'}
+              </p>
+              {(isOver || isDraggingAnyValidComponent) && !isPreviewing && (
+                <div className="mt-4 p-4 border-2 border-dashed border-brand/30 rounded-lg bg-brand/5">
+                  <p className="text-brand font-medium">Solte o componente aqui</p>
+                </div>
+              )}
+            </>
           )}
         </div>
       ) : enableVirtualization ? (
@@ -327,30 +339,39 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
           className="w-full max-w-[37rem] mx-auto overflow-y-auto"
           style={{ maxHeight: '70vh' }}
         >
-          <div className="space-y-6">
-            <div style={{ height: visibleMeta.topPad }} />
-            {/* Drop zone no início absoluto do canvas (posição 0) quando no topo */}
-            {visibleMeta.startIndex === 0 && (
-              <InterBlockDropZone position={0} isActive={false} scopeId={scopeId} />
-            )}
-            {blocks.slice(visibleMeta.startIndex, visibleMeta.endIndex).map((block, i) => {
-              const realIndex = visibleMeta.startIndex + i;
-              return (
-                <React.Fragment key={String(block.id)}>
-                  <SortableBlockWrapper
-                    block={block}
-                    isSelected={false}
-                    onSelect={() => { }}
-                    onUpdate={() => { }}
-                    onDelete={() => { }}
-                    scopeId={scopeId}
-                  />
-                  <InterBlockDropZone position={realIndex + 1} isActive={false} scopeId={scopeId} />
-                </React.Fragment>
-              );
-            })}
-            <div style={{ height: visibleMeta.bottomPad }} />
-          </div>
+          {blocks.length > 0 ? (
+            <div className="space-y-6">
+              <div style={{ height: visibleMeta.topPad }} />
+              {/* Drop zone no início absoluto do canvas (posição 0) quando no topo */}
+              {visibleMeta.startIndex === 0 && (
+                <InterBlockDropZone position={0} isActive={false} scopeId={scopeId} />
+              )}
+              {blocks.slice(visibleMeta.startIndex, visibleMeta.endIndex).map((block, i) => {
+                const realIndex = visibleMeta.startIndex + i;
+                return (
+                  <React.Fragment key={String(block.id)}>
+                    <SortableBlockWrapper
+                      block={block}
+                      isSelected={false}
+                      onSelect={() => { }}
+                      onUpdate={() => { }}
+                      onDelete={() => { }}
+                      scopeId={scopeId}
+                    />
+                    <InterBlockDropZone position={realIndex + 1} isActive={false} scopeId={scopeId} />
+                  </React.Fragment>
+                );
+              })}
+              <div style={{ height: visibleMeta.bottomPad }} />
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-12">
+              <LoadingSpinner size="lg" color="#B89B7A" />
+              <p className="text-stone-500 text-sm mt-4">
+                Carregando visualização...
+              </p>
+            </div>
+          )}
         </div>
       ) : (
         <SortableContext

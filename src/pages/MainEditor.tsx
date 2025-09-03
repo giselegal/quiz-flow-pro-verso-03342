@@ -88,7 +88,7 @@ const EditorInitializer: React.FC<{ templateId?: string; funnelId?: string }> = 
     let cancelled = false;
     (async () => {
       try {
-        const mod = await import('../components/editor/EditorPro');
+        const mod = await import('../legacy/editor/EditorPro');
         // Preferir default (ModularEditorPro). Manter fallback por segurança.
         const Comp = (mod as any).default || (mod as any).ModularEditorPro || (mod as any).EditorPro;
         if (!cancelled && Comp) setEditorProComp(() => Comp);
