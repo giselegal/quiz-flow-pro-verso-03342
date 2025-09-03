@@ -5,7 +5,8 @@ import { useLocation } from 'wouter';
 // EditorPro será usado via require dinâmico no EditorInitializer para evitar ciclos
 import { EditorProvider } from '../components/editor/EditorProvider';
 import { ErrorBoundary } from '../components/editor/ErrorBoundary';
-import { EditorTelemetryPanel } from '../components/editor/EditorTelemetryPanel';
+// Painel de telemetria desativado conforme solicitado
+// import { EditorTelemetryPanel } from '../components/editor/EditorTelemetryPanel';
 // Dashboard de Análise de Etapas desativado conforme solicitado
 // import { StepAnalyticsDashboard } from '../components/dev/StepAnalyticsDashboard';
 import { FunnelsProvider } from '@/context/FunnelsContext';
@@ -73,8 +74,8 @@ const MainEditor: React.FC = () => {
                     <EditorTelemetryPanel quizId={funnelId || undefined} />
                   )} */}
 
-                  {/* Mantendo apenas o painel de telemetria simples */}
-                  <EditorTelemetryPanel quizId={funnelId || undefined} />
+                  {/* Painel de telemetria também desativado conforme solicitado */}
+                  {/* <EditorTelemetryPanel quizId={funnelId || undefined} /> */}
                 </QuizFlowProvider>
               </Quiz21StepsProvider>
             </EditorQuizProvider>
