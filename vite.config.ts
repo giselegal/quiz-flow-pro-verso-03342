@@ -66,6 +66,11 @@ export default defineConfig({
       // e desativamos code-splitting neste build padrão.
       output: {
         inlineDynamicImports: true,
+        manualChunks: {
+          'editor-core': ['./src/legacy/editor/EditorPro'],
+          'canvas-components': ['./src/components/editor/canvas/CanvasDropZone.simple'],
+          'dnd-kit': ['@dnd-kit/core', '@dnd-kit/sortable'],
+        }
       },
     },
     // Configurações para resolver problemas com módulos CommonJS

@@ -317,7 +317,6 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
       data-over={isOver}
       data-preview={isPreviewing}
       data-id="canvas-drop-zone"
-      data-canvas-optimized="true"
       data-dnd-dropzone-type="raiz-da-tela"
     >
       {blocks.length === 0 ? (

@@ -646,3 +646,4 @@ img:hover,
 .animate-float {
   animation: float 6s ease-in-out infinite;
 }
+@import "./styles/canvas-performance.css";
