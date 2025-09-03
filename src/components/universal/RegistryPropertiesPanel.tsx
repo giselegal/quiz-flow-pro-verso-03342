@@ -1,20 +1,14 @@
-import React from 'react';
-import { blocksRegistry, PropSchema } from '@/core/blocks/registry';
-import { getEnhancedBlockDefinition } from '@/config/enhancedPropertyConfigurations';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
-import { Slider } from '@/components/ui/slider';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { Trash2, Plus, GripVertical, Upload, X } from 'lucide-react';
+import { Textarea } from '@/components/ui/textarea';
+import { X, Plus, Trash2, Upload, GripVertical, ChevronDown, ChevronUp } from 'lucide-react';
+import { enhancedPropertyConfigurations } from '@/config/enhancedPropertyConfigurations';
+import { blocksRegistry } from '@/core/blocks/registry';
 
 interface RegistryPropertiesPanelProps {
   selectedBlock: any;
