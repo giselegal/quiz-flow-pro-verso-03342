@@ -224,14 +224,28 @@ export const FileUploadControl: React.FC<FileUploadControlProps> = ({
 }) => {
   const [isDragOver, setIsDragOver] = useState(false);
   const [uploadMode, setUploadMode] = useState<'url' | 'upload'>('url');
+  const [objectUrl, setObjectUrl] = useState<string | null>(null);
 
   const handleFileSelect = (file: File) => {
     // In a real implementation, this would upload to a service like Cloudinary
     // For now, we'll create a local object URL
+    // Revoke previous object URL if exists
+    if (objectUrl) {
+      URL.revokeObjectURL(objectUrl);
+    }
     const url = URL.createObjectURL(file);
+    setObjectUrl(url);
     onChange(url);
   };
 
+  // Cleanup object URL on unmount or when value changes away from objectUrl
+  React.useEffect(() => {
+    return () => {
+      if (objectUrl) {
+        URL.revokeObjectURL(objectUrl);
+      }
+    };
+  }, [objectUrl]);
   const isImage = value && (value.includes('image') || /\.(jpg|jpeg|png|gif|webp)$/i.test(value));
 
   return (
