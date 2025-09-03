@@ -175,13 +175,13 @@ function createLabel(key: string): string {
  */
 export function discoverComponentProperties(componentType: string): ComponentPropertySchema | null {
   console.log('🔍 PropertyDiscovery: buscando componente:', componentType);
-  
+
   // 🔗 Aplicar mapeamento de tipos
   const mappedType = mapComponentType(componentType);
   console.log('🔗 Tipo mapeado:', componentType, '->', mappedType);
-  
+
   const component = MODULAR_COMPONENTS.find(c => c.type === mappedType);
-  
+
   console.log('🎯 PropertyDiscovery: resultado da busca:', {
     componentType,
     mappedType,
@@ -189,11 +189,11 @@ export function discoverComponentProperties(componentType: string): ComponentPro
     totalComponentes: MODULAR_COMPONENTS.length,
     tiposDisponiveis: MODULAR_COMPONENTS.slice(0, 5).map(c => c.type)
   });
-  
+
   if (!component || !component.properties) {
     console.log('❌ PropertyDiscovery: componente não encontrado ou sem propriedades');
     return null;
-  }  const discoveredProperties: DiscoveredProperty[] = [];
+  } const discoveredProperties: DiscoveredProperty[] = [];
   const categories = new Set<PropertyCategory>();
 
   Object.entries(component.properties).forEach(([key, propertyConfig]: [string, any]) => {
