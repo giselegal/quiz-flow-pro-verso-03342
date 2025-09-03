@@ -1,4 +1,9 @@
-// Enhanced Block Registry - Componentes específicos do quiz com identidade visual
+/**
+ * Enhanced Block Registry - Componentes específicos do quiz com identidade visual
+ * 
+ * Este é o arquivo canônico para o registro de blocos do editor.
+ * Todos os componentes devem ser importados daqui.
+ */
 import { lazy } from 'react';
 // Importações estáticas essenciais para renderização imediata dos blocos principais
 import ButtonInlineBlock from '@/components/editor/blocks/ButtonInlineBlock';
