@@ -1,5 +1,7 @@
 # 🏗️ Arquitetura do Sistema
 
+[Documento central de arquitetura →](../ARCHITECTURE.md)
+
 Esta pasta contém documentação sobre a arquitetura e design do sistema.
 
 ## 🎯 Conteúdo

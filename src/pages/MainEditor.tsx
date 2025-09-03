@@ -2,7 +2,8 @@ import { QuizFlowProvider } from '@/context/QuizFlowProvider';
 import { templateLibraryService } from '@/services/templateLibraryService';
 import React from 'react';
 import { useLocation } from 'wouter';
-// EditorPro será usado via require dinâmico no EditorInitializer para evitar ciclos
+// Trocado: usar o editor responsivo baseado em esquema
+import SchemaDrivenEditorResponsive from '@/components/editor/SchemaDrivenEditorResponsive';
 import { EditorProvider } from '../components/editor/EditorProvider';
 import { ErrorBoundary } from '../components/editor/ErrorBoundary';
 
@@ -38,7 +39,7 @@ const MainEditor: React.FC = () => {
             storageKey="main-editor-state"
             initial={initialStep ? { currentStep: initialStep } : undefined}
           >
-            {/* 🎯 EDITOR PRINCIPAL COM CABEÇALHO EDITÁVEL */}
+            {/* 🎯 EDITOR PRINCIPAL: SchemaDrivenEditorResponsive (com fallback robusto da etapa 20) */}
             <EditorInitializer
               templateId={templateId || undefined}
               funnelId={funnelId || undefined}
@@ -50,32 +51,10 @@ const MainEditor: React.FC = () => {
   );
 };
 
-const EditorInitializer: React.FC<{ templateId?: string; funnelId?: string }> = ({
-  templateId,
-}) => {
-  // Carregar EditorPro dinamicamente para evitar ciclos e manter ESM compatível
-  const [EditorProComp, setEditorProComp] = React.useState<React.ComponentType | null>(null);
-
+const EditorInitializer: React.FC<{ templateId?: string; funnelId?: string }> = ({ templateId }) => {
+  // Aplicação opcional de template via evento (compat)
   React.useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      try {
-        const mod = await import('../components/editor/EditorPro');
-        // Preferir default (ModularEditorPro). Manter fallback por segurança.
-        const Comp = (mod as any).default || (mod as any).ModularEditorPro || (mod as any).EditorPro;
-        if (!cancelled && Comp) setEditorProComp(() => Comp);
-      } catch (e) {
-        console.error('Falha ao carregar EditorPro dinamicamente:', e);
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  React.useEffect(() => {
-    if (!EditorProComp || !templateId) return;
-    // const { useEditor } = editor.current!; // reservado para futuras integrações
+    if (!templateId) return;
     try {
       const tpl = templateLibraryService.getById(templateId);
       if (!tpl) return;
@@ -89,17 +68,15 @@ const EditorInitializer: React.FC<{ templateId?: string; funnelId?: string }> = 
           content: b.properties || {},
         }));
       });
-      // apply into editor state
-      // Hook must be used inside component; instead, dispatch via window event and let EditorPro handle if needed
+      // Dispara evento de compatibilidade (componentes podem ignorar)
       window.dispatchEvent(new CustomEvent('editor-load-template', { detail: { stepBlocks } }));
     } catch (e) {
       console.warn('Falha ao aplicar template:', e);
     }
-  }, [EditorProComp, templateId]);
+  }, [templateId]);
 
-  if (!EditorProComp) return null;
-  const EditorPro = EditorProComp as React.ComponentType;
-  return <EditorPro />;
+  // Renderiza o editor responsivo baseado em esquema
+  return <SchemaDrivenEditorResponsive mode="editor" />;
 };
 
 export default MainEditor;

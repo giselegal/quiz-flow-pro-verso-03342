@@ -41,6 +41,18 @@ flowchart TD
       A21[Encerramento e ações\n(recomendações/CTA/export)]
     end
 
+    %% Editor (Etapa 20) – Fallback de Template
+    subgraph E20[Editor Etapa 20 (design/preview)]
+      direction TB
+      TPL[Carregar Template Step 20\n(stepTemplateService → JSON)]
+      CHK{Tem result-header-inline\ne cálculo OK?}
+      FB[Step20EditorFallback\n(usa Step20FallbackTemplate)]
+      DZ[CanvasDropZone\n(render normal)]
+      TPL --> CHK
+      CHK -- "Não" --> FB
+      CHK -- "Sim" --> DZ
+    end
+
     %% Fluxo principal
     COLETA --> P19
 
@@ -61,7 +73,7 @@ flowchart TD
 
     class D19,SAVE,REM store
     class ORCH,PERC io
-    class S1,S2,S3,S4,S5,S6,S7,S8,S9,S10,S11,S12,S13,S14,S15,S16,S17,S18,P19,P20,P21,FBACK,NEXTD,COLETA,A21 step
+  class S1,S2,S3,S4,S5,S6,S7,S8,S9,S10,S11,S12,S13,S14,S15,S16,S17,S18,P19,P20,P21,FBACK,NEXTD,COLETA,A21,E20,TPL,CHK,FB,DZ step
 ```
 
 ## Pontos de controle e regras
@@ -70,5 +82,6 @@ flowchart TD
 - Etapa 20: chama ResultOrchestrator, estabiliza empate, calcula percentual e persiste localmente.
 - Persistência remota: apenas quando sessão/ambiente válidos; não é pré-requisito.
 - UI: cabeçalho personalizado e proteção contra recálculo duplo (StrictMode) na Etapa 20.
+ - Editor Etapa 20: carrega template via `stepTemplateService` (JSON). Se faltar `result-header-inline` ou houver erro/cálculo inválido, ativa `Step20EditorFallback` com `Step20FallbackTemplate` para garantir conteúdo.
 
 Para detalhes das chamadas e eventos, veja também os testes em `src/utils/__tests__/quizResultCalculator.step19to20.test.ts` e os serviços `quizResultCalculator`, `ResultOrchestrator` e `UnifiedQuizStorage`.

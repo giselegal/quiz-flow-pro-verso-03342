@@ -111,3 +111,5 @@ npm run build
 ---
 
 Desenvolvido com ❤️ para criação de funis de conversão eficazes.
+
+Arquitetura atual e análise sistêmica: veja docs/ARCHITECTURE.md

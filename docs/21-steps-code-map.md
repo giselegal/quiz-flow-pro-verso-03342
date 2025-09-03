@@ -23,18 +23,21 @@ graph TD
     RE[services/core/ResultEngine.ts]
     MS[services/MonitoringService.ts]
     DP[services/editor/DraftPersistence.ts]
+  STS[services/stepTemplateService.ts]
   end
 
   subgraph Editor
+  SDE[components/editor/SchemaDrivenEditorResponsive.tsx]
     EP[components/editor/EditorProvider.tsx]
     HState[hooks/useHistoryState.ts]
     SupaInt[hooks/useEditorSupabaseIntegration.ts]
   end
 
   subgraph Config & Types
-    TPL[templates/quiz21StepsComplete.ts]
+  TPL[templates/quiz21StepsComplete.ts]
     CFG[config/quizStepsComplete.ts]
     Types[types/editor.ts]
+  JTPL[config/templates/templates (JSON)]
   end
 
   S20 -- recalculate/validate --> QRC
@@ -45,6 +48,9 @@ graph TD
   EP -- state/actions --> CFG & TPL & DP
   EP -- history --> HState
   EP -- (opcional) Supabase --> SupaInt
+  SDE -- canvas/fallback etapa 20 --> STS & JTPL
+  SDE -- fallback check --> Step20EditorFallback.tsx
+  Step20EditorFallback.tsx -- usa --> hooks/useQuizResult.ts
   MS -. desativado nos testes .- UI/Utils/Services
   PO & Opt -. timers/listeners .- UI/Editor
 ```
@@ -69,10 +75,12 @@ graph TD
 
 - `src/components/steps/Step20Template.tsx`
   - UI do resultado: cabeçalho com nome, percentual primário (fallback visual 70% quando inválido), gatilho de validação/recalc protegido contra StrictMode
+  - Complementa o editor: o design/preview da Etapa 20 é protegido por fallback no `SchemaDrivenEditorResponsive`
 
 - `src/components/editor/EditorProvider.tsx`
   - Estado do editor e ações (adicionar/remover/ordenar blocos, currentStep, validação por etapa)
   - Integrações: histórico (`useHistoryState`), Supabase (opcional), templates/merge, rascunhos (`DraftPersistence`)
+  - Carregamento de templates no editor via `stepTemplateService` é consumido por `SchemaDrivenEditorResponsive`
 
 - `src/utils/performanceOptimizer.ts` e `src/utils/performanceOptimizations.ts`
   - Agendadores e otimizações de performance com rastreio/cancelamento de timers e listeners (auto-desativados em testes)
@@ -82,6 +90,22 @@ graph TD
 
 - `src/config/quizStepsComplete.ts` e `src/templates/quiz21StepsComplete.ts`
   - Estrutura de blocos por etapa e templates padrão das 21 etapas
+  - Novo: sistema JSON `config/templates/templates` consumido por `services/stepTemplateService.ts`
+- `src/services/stepTemplateService.ts`
+  - Sistema unificado de templates por etapa com carregamento JSON (step-XX.json). Expõe `getStepTemplate()` e mapeia 1–21.
+  - Garante template padrão caso JSON esteja ausente/indisponível.
+
+- `src/components/editor/SchemaDrivenEditorResponsive.tsx`
+  - Editor responsivo que integra: Toolbar, Stages, Components, Canvas e Properties.
+  - Etapa 20: detecta ausência/falha do bloco `result-header-inline` e ativa `Step20EditorFallback` automaticamente.
+
+- `src/components/editor/fallback/Step20EditorFallback.tsx`
+  - Fallback inteligente para garantir conteúdo na Etapa 20 do editor.
+  - Verifica: bloco `result-header-inline`, erros de cálculo, estado de loading e contagem de blocos; usa `Step20FallbackTemplate` quando necessário.
+
+- `src/hooks/useQuizResult.ts`
+  - Hook que calcula/carrega resultado, com timeout, retries e limpeza de timers/listeners.
+  - Dispara `calculateAndSaveQuizResult()` quando há dados suficientes; emite eventos para atualização cruzada.
 
 - `src/types/editor.ts`
   - Tipos como `Block` e contratos do editor
