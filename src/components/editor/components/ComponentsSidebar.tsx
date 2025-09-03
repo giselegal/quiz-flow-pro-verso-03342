@@ -1,5 +1,7 @@
 // @ts-nocheck
 import { Button } from '@/components/ui/button';
+import { useMemo } from 'react';
+import { generateBlockDefinitions } from '@/config/enhancedBlockRegistry';
 
 interface ComponentsSidebarProps {
   onComponentSelect: (type: string) => void;
@@ -51,19 +53,25 @@ export const getMarginClass = (value, type) => {
 };
 
 export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({ onComponentSelect }) => {
-  // Componentes específicos do quiz com identidade visual da marca
-  const components = [
-    { type: 'quiz-intro-header', label: 'Cabeçalho Quiz', category: '🧩 Quiz' },
-    { type: 'text-inline', label: 'Texto', category: '📝 Conteúdo' },
-    { type: 'options-grid', label: 'Opções em Grid', category: '🧩 Quiz' },
-    { type: 'button-inline', label: 'Botão', category: '🎯 Ação' },
-    { type: 'lead-form', label: 'Formulário Lead', category: '📧 Conversão' },
-    { type: 'image-display-inline', label: 'Imagem', category: '📝 Conteúdo' },
-    { type: 'result-card', label: 'Card de Resultado', category: '🧩 Quiz' },
-    { type: 'loading-animation', label: 'Animação Loading', category: '⚡ UI' },
-    { type: 'progress-bar', label: 'Barra de Progresso', category: '⚡ UI' },
-    { type: 'decorative-bar', label: 'Barra Decorativa', category: '⚡ UI' },
-  ];
+  // Fonte única: gerar a partir do registro canônico
+  const components = useMemo(() => {
+    try {
+      const defs = generateBlockDefinitions();
+      return defs.map(def => ({
+        type: def.type,
+        label: def.label || def.name || def.type,
+        category: def.category ? `# ${def.category}` : 'Componentes',
+      }));
+    } catch {
+      // Fallback mínimo em caso de erro
+      return [
+        { type: 'text-inline', label: 'Texto', category: 'Conteúdo' },
+        { type: 'button-inline', label: 'Botão', category: 'Ação' },
+        { type: 'image-inline', label: 'Imagem', category: 'Mídia' },
+        { type: 'decorative-bar-inline', label: 'Barra Decorativa', category: 'UI' },
+      ];
+    }
+  }, []);
 
   return (
     <div className="h-full">
