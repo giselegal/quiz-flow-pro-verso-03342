@@ -116,7 +116,16 @@ class UnifiedQuizStorageService {
     const selectionCount = Object.keys(data.selections).length;
     const formHasName = Boolean(data.formData.userName || data.formData.name);
     
-    // Precisa de pelo menos 8 seleções das etapas 2-11 e um nome
+    // Verificar se estamos na etapa 20 (resultado)
+    const isResultStep = data.metadata?.currentStep === 20;
+    
+    // Se estamos na etapa 20, sempre permitir o cálculo
+    if (isResultStep) {
+      console.log('🎯 Etapa 20 detectada: permitindo cálculo de resultado');
+      return true;
+    }
+    
+    // Caso contrário, precisa de pelo menos 8 seleções das etapas 2-11 e um nome
     return selectionCount >= 8 && formHasName;
   }
 

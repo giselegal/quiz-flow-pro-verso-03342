@@ -41,15 +41,30 @@ export const calculateAndSaveQuizResult = async () => {
 
     // 3. Validar se há dados suficientes (gating)
     const hasSelections = Object.keys(userSelections).length > 0;
+    
+    // Verificar se estamos na etapa 20 (resultado)
+    const isResultStep = unifiedData.metadata?.currentStep === 20;
+    
     if (!hasSelections) {
       console.warn('⚠️ Nenhuma seleção encontrada para cálculo');
-      // Não persistir fallback quando não há dados suficientes
+      // Na etapa 20, forçar cálculo mesmo sem seleções
+      if (isResultStep) {
+        console.log('🎯 Etapa 20: forçando cálculo mesmo sem seleções');
+      } else {
+        // Não persistir fallback quando não há dados suficientes
+        return createFallbackResult(userName || 'Usuário', { persist: false });
+      }
+    }
+    
+    if (!hasEnough && !isResultStep) {
+      console.warn('⚠️ Dados insuficientes segundo UnifiedQuizStorage.hasEnoughDataForResult()');
+      // Não persistir fallback quando threshold não atingido, exceto na etapa 20
       return createFallbackResult(userName || 'Usuário', { persist: false });
     }
-    if (!hasEnough) {
-      console.warn('⚠️ Dados insuficientes segundo UnifiedQuizStorage.hasEnoughDataForResult()');
-      // Não persistir fallback quando threshold não atingido
-      return createFallbackResult(userName || 'Usuário', { persist: false });
+    
+    // Na etapa 20, sempre calcular resultado
+    if (isResultStep) {
+      console.log('🎯 Etapa 20: prosseguindo com cálculo de resultado');
     }
 
     // 4. Validar qualidade dos dados

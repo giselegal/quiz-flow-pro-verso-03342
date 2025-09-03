@@ -43,8 +43,12 @@ export const useQuizResult = () => {
 
       // Verificar se há dados suficientes para calcular
       let hasEnoughData = false;
+      let isResultStep = false;
+      
       try {
         const { unifiedQuizStorage } = await import('@/services/core/UnifiedQuizStorage');
+        const unifiedData = unifiedQuizStorage.loadData();
+        isResultStep = unifiedData.metadata?.currentStep === 20;
         hasEnoughData = unifiedQuizStorage.hasEnoughDataForResult();
       } catch {
         // Fallback: verificar dados legados
@@ -52,10 +56,15 @@ export const useQuizResult = () => {
         hasEnoughData = Object.keys(userSelections).length >= 3;
       }
 
-      if (!hasEnoughData) {
+      // Na etapa 20, sempre tentar calcular resultado
+      if (!hasEnoughData && !isResultStep) {
         console.warn('⚠️ Dados insuficientes para calcular resultado');
         setError('Dados insuficientes para calcular resultado');
         return;
+      }
+      
+      if (isResultStep) {
+        console.log('🎯 Etapa 20: forçando cálculo de resultado mesmo com dados insuficientes');
       }
 
       // ✅ Calcular com timeout de 10 segundos (com cleanup do timer)

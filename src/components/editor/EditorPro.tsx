@@ -435,9 +435,33 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         if (process.env.NODE_ENV === 'development') {
           console.log('🧮 Calculando resultado do quiz (auto) para etapa', safeCurrentStep);
         }
-        await calculateAndSaveQuizResult();
-        // Forçar refresh de consumidores que escutam diferentes eventos
-        try { window.dispatchEvent(new Event('quiz-result-refresh')); } catch { }
+        
+        // Na etapa 20, tentar várias vezes para garantir que o resultado seja calculado
+        if (safeCurrentStep === 20) {
+          console.log('🎯 Etapa 20: garantindo cálculo de resultado');
+          
+          // Primeira tentativa
+          await calculateAndSaveQuizResult();
+          
+          // Forçar refresh de consumidores que escutam diferentes eventos
+          try { window.dispatchEvent(new Event('quiz-result-refresh')); } catch { }
+          
+          // Segunda tentativa após um pequeno delay
+          setTimeout(async () => {
+            try {
+              console.log('🎯 Etapa 20: segunda tentativa de cálculo');
+              await calculateAndSaveQuizResult();
+              try { window.dispatchEvent(new Event('quiz-result-refresh')); } catch { }
+            } catch (err) {
+              console.error('Falha na segunda tentativa de cálculo:', err);
+            }
+          }, 1000);
+        } else {
+          // Para outras etapas, apenas uma tentativa
+          await calculateAndSaveQuizResult();
+          // Forçar refresh de consumidores que escutam diferentes eventos
+          try { window.dispatchEvent(new Event('quiz-result-refresh')); } catch { }
+        }
       } catch (err) {
         console.error('Falha ao calcular resultado automaticamente:', err);
       }
