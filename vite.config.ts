@@ -70,14 +70,14 @@ export default defineConfig({
           'icons-vendor': ['lucide-react'],
           'charts-vendor': ['recharts'],
           'ui-vendor': ['@radix-ui/react-dropdown-menu', '@radix-ui/react-tabs', '@radix-ui/react-select'],
-          
+
           // Componentes grandes separados
           'editor-core': ['./src/legacy/editor/EditorPro'],
           'canvas-components': ['./src/components/editor/canvas/CanvasDropZone.simple'],
           'properties-system': ['./src/components/editor/properties/ModernPropertiesPanel'],
           'schema-editor': ['./src/pages/SchemaEditorPage'],
           'metrics-page': ['./src/pages/admin/MetricsPage'],
-          
+
           // Sistemas modulares
           'funnel-system': [
             './src/core/funnel/FunnelCore',
