@@ -360,14 +360,7 @@ const createProperty = (
   isAdvanced: options?.isAdvanced || false,
 });
 
-const BRAND_COLORS = {
-  primary: '#B89B7A',
-  secondary: '#D4C2A8',
-  accent: '#F3E8D3',
-  text: '#432818',
-  textPrimary: '#2c1810',
-  textSecondary: '#8F7A6A',
-};
+// (removido) BRAND_COLORS duplicado; usar a versão declarada mais abaixo no arquivo
 
 // Mapping functions
 function mapFieldTypeToPropertyType(fieldType: any): PropertyType {
@@ -743,9 +736,36 @@ function getHardcodedPropertiesForType(blockType: string, currentBlock?: BlockCo
             default: category = PropertyCategory.CONTENT; break;
           }
 
+          // Normalize keys to match where real data lives (content vs properties)
+          // - title -> content.question (fonte real)
+          // - subtitle/description -> content.subtitle/content.description
+          // - options: manter 'options' (compat), mas valor vem de content.options se existir
+          let normalizedKey = field.key as string;
+          if (field.group === 'content') {
+            if (field.key === 'title') {
+              normalizedKey = 'content.question';
+            } else if (field.key === 'subtitle' || field.key === 'description') {
+              normalizedKey = `content.${field.key}`;
+            } else if (field.key !== 'options' && !field.key.startsWith('content.')) {
+              // Para outros campos de conteúdo específicos (opcionais), prefixar content.
+              normalizedKey = `content.${field.key}`;
+            }
+          }
+
+          // Resolver valor atual a partir do local correto
+          let currentValue: any = field.defaultValue;
+          if (normalizedKey.startsWith('content.')) {
+            const contentKey = normalizedKey.slice(8);
+            currentValue = (currentBlock as any)?.content?.[contentKey] ?? (currentBlock as any)?.properties?.[field.key] ?? field.defaultValue;
+          } else if (normalizedKey === 'options') {
+            currentValue = (currentBlock as any)?.content?.options ?? (currentBlock as any)?.properties?.options ?? field.defaultValue;
+          } else {
+            currentValue = (currentBlock as any)?.properties?.[field.key] ?? field.defaultValue;
+          }
+
           return createProperty(
-            field.key,
-            currentBlock?.properties?.[field.key] ?? field.defaultValue,
+            normalizedKey,
+            currentValue,
             propertyType,
             field.label,
             category,
