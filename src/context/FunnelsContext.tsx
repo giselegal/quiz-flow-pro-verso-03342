@@ -448,17 +448,29 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
 
   // Função para obter blocos de um template específico
   const getTemplateBlocks = useCallback((templateId: string, stepId: string) => {
+    // 🛡️ FUNÇÃO HELPER: Clone profundo dos blocos para evitar mutação compartilhada
+    const cloneBlocks = (blocks: any[]) => {
+      return blocks.map(block => ({
+        ...block,
+        id: `${templateId}-${stepId}-${block.id}`, // ID único por funil
+        content: { ...block.content },
+        properties: { ...block.properties }
+      }));
+    };
+
     // Verifica se é o template quiz-estilo-completo
     if (templateId === 'quiz-estilo-completo') {
-      return QUIZ_STYLE_21_STEPS_TEMPLATE[stepId] || [];
+      const originalBlocks = QUIZ_STYLE_21_STEPS_TEMPLATE[stepId] || [];
+      return cloneBlocks(originalBlocks);
     }
 
     // ✅ CORREÇÃO: Template funil-21-etapas também deve usar QUIZ_STYLE_21_STEPS_TEMPLATE
     if (templateId === 'funil-21-etapas') {
       console.log(`🔄 Carregando blocos para template funil-21-etapas, etapa ${stepId}`);
-      const blocos = QUIZ_STYLE_21_STEPS_TEMPLATE[stepId] || [];
-      console.log(`📦 Encontrados ${blocos.length} blocos para a etapa ${stepId}`);
-      return blocos;
+      const originalBlocks = QUIZ_STYLE_21_STEPS_TEMPLATE[stepId] || [];
+      const clonedBlocks = cloneBlocks(originalBlocks);
+      console.log(`📦 Clonados ${clonedBlocks.length} blocos únicos para a etapa ${stepId}`);
+      return clonedBlocks;
     }
 
     // Para outros templates, retorna array vazio (implementação futura)

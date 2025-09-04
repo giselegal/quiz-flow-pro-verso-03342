@@ -19,9 +19,12 @@
 
 /* Variáveis Globais de Estilo para o Canvas */
 :root {
-  --global-gap: 0.25rem; /* 4px */
-  --global-width: 38rem; /* 608px */
-  --global-radius: 0.5rem; /* 8px */
+  --global-gap: 0.25rem;
+  /* 4px */
+  --global-width: 38rem;
+  /* 608px */
+  --global-radius: 0.5rem;
+  /* 8px */
 }
 
 /* Neutralizar sticky dentro do canvas do editor para evitar saltos/desproporção */
@@ -43,47 +46,58 @@
 .canvas-logo {
   width: 96px;
   height: 96px;
-  max-width: 6rem; /* 96px */
+  max-width: 6rem;
+  /* 96px */
 }
 
 .canvas-progress-bar {
-  height: 0.5rem; /* 8px */
+  height: 0.5rem;
+  /* 8px */
   width: 100%;
   border-radius: var(--global-radius);
 }
 
 .canvas-main-title {
-  font-size: 1.875rem; /* 30px */
+  font-size: 1.875rem;
+  /* 30px */
   font-weight: 700;
   line-height: 1.2;
 }
 
 .canvas-main-image {
   width: 100%;
-  max-width: 24rem; /* 384px */
+  max-width: 24rem;
+  /* 384px */
   height: auto;
 }
 
 .canvas-input-field {
-  height: 2.5rem; /* 40px */
+  height: 2.5rem;
+  /* 40px */
   width: 100%;
-  padding: 1rem; /* 16px */
-  font-size: 1rem; /* 16px */
+  padding: 1rem;
+  /* 16px */
+  font-size: 1rem;
+  /* 16px */
   border-radius: var(--global-radius);
 }
 
 .canvas-input-label {
-  font-size: 0.875rem; /* 14px */
+  font-size: 0.875rem;
+  /* 14px */
   font-weight: 500;
   margin-bottom: 0.5rem;
 }
 
 .canvas-continue-button {
-  height: 3.5rem; /* 56px */
+  height: 3.5rem;
+  /* 56px */
   width: 100%;
   min-width: 100%;
-  padding: 0.5rem 1rem; /* 8px vertical, 16px horizontal */
-  font-size: 0.875rem; /* 14px */
+  padding: 0.5rem 1rem;
+  /* 8px vertical, 16px horizontal */
+  font-size: 0.875rem;
+  /* 14px */
   font-weight: 600;
   border-radius: var(--global-radius);
   background: #b89b7a;
@@ -98,6 +112,7 @@
 
 /* Layout responsivo CORRETO para o editor */
 @media (max-width: 1024px) {
+
   /* Sidebar mobile fixa com overlay */
   .mobile-sidebar {
     position: fixed !important;
@@ -258,7 +273,8 @@
 /* Desabilitar efeitos hover de escala para melhorar performance */
 img:hover,
 .hover-scale:hover {
-  transform: none !important; /* Remover efeito de escala no hover */
+  transform: none !important;
+  /* Remover efeito de escala no hover */
 }
 
 /* Classe para animação 3D */
@@ -277,6 +293,7 @@ img:hover,
   0% {
     transform: translateX(-100%);
   }
+
   100% {
     transform: translateX(100%);
   }
@@ -288,12 +305,14 @@ img:hover,
 
 /* Animação de pulso aprimorada para destaque do botão */
 @keyframes enhanced-pulse {
+
   0%,
   100% {
     opacity: 1;
     transform: scale(1);
     box-shadow: 0 0 0 0 rgba(184, 155, 122, 0.7);
   }
+
   50% {
     opacity: 0.95;
     transform: scale(1.03);
@@ -418,7 +437,8 @@ img:hover,
 
   /* Destaque de termos estratégicos */
   .highlight-strategic {
-    background-color: rgba(240, 240, 245, 0.3); /* Versão mais segura do hsl(var(--accent) / 0.3) */
+    background-color: rgba(240, 240, 245, 0.3);
+    /* Versão mais segura do hsl(var(--accent) / 0.3) */
     padding: 0.1em 0.2em;
     border-radius: 0.2em;
     font-weight: 600;
@@ -427,6 +447,7 @@ img:hover,
 
 /* Media queries para dispositivos móveis */
 @media (max-width: 640px) {
+
   /* Questões só com texto em mobile - aumentar fonte */
   .text-only-question .question-text,
   .text-only-question .options {
@@ -443,13 +464,15 @@ img:hover,
 
   /* Destaque mais pronunciado em mobile */
   .highlight-strategic {
-    background-color: rgba(240, 240, 245, 0.4); /* Versão mais segura do hsl(var(--accent) / 0.4) */
+    background-color: rgba(240, 240, 245, 0.4);
+    /* Versão mais segura do hsl(var(--accent) / 0.4) */
     padding: 0.15em 0.25em;
   }
 }
 
 /* Dispositivos móveis muito pequenos */
 @media (max-width: 375px) {
+
   /* Ajuste para telas muito pequenas */
   .text-only-question .question-text,
   .text-only-question .options {
@@ -569,11 +592,13 @@ img:hover,
 }
 
 @keyframes button-pulse {
+
   0%,
   100% {
     opacity: 1;
     transform: scale(1);
   }
+
   50% {
     opacity: 0.9;
     transform: scale(1.02);
@@ -635,13 +660,25 @@ img:hover,
 
 /* Animações para TechBackground */
 @keyframes grid-move {
-  0% { transform: translate(0, 0); }
-  100% { transform: translate(50px, 50px); }
+  0% {
+    transform: translate(0, 0);
+  }
+
+  100% {
+    transform: translate(50px, 50px);
+  }
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-20px); }
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-20px);
+  }
 }
 
 .animate-float {
