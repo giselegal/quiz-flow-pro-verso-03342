@@ -208,7 +208,7 @@ const PropertyControl: React.FC<PropertyControlProps> = ({ property, value, onCh
             </Button>
           </div>
 
-          <div className="space-y-2 max-h-40 overflow-y-auto">
+          <div className="space-y-2 max-h-64 overflow-y-auto">
             {Array.isArray(value) && value.length > 0 ? (
               value.map((option: any, index: number) => (
                 <div key={option.id || index} className="flex items-center gap-2 p-2 border rounded-md bg-muted/50">
@@ -225,6 +225,28 @@ const PropertyControl: React.FC<PropertyControlProps> = ({ property, value, onCh
                       }}
                       className="h-7 text-xs"
                     />
+                    <div className="flex gap-1 items-center">
+                      <Input
+                        placeholder="URL da imagem (imageUrl)"
+                        value={option.imageUrl || ''}
+                        onChange={(e) => {
+                          const newArray = [...(Array.isArray(value) ? value : [])];
+                          newArray[index] = { ...option, imageUrl: e.target.value };
+                          onChange(newArray);
+                        }}
+                        className="h-6 text-xs flex-1"
+                      />
+                      {option.imageUrl ? (
+                        <img
+                          src={option.imageUrl}
+                          alt={option.text || `opção ${index + 1}`}
+                          className="h-8 w-8 rounded object-cover border"
+                          onError={(ev) => {
+                            (ev.currentTarget as HTMLImageElement).style.display = 'none';
+                          }}
+                        />
+                      ) : null}
+                    </div>
                     <div className="flex gap-1">
                       <Input
                         placeholder="Score"
