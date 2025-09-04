@@ -5,69 +5,13 @@
  * Será removido em uma versão futura.
  */
 
-// Importações diretas para evitar ciclos de dependência
-import { lazy } from 'react';
-import ButtonInlineBlock from '@/components/editor/blocks/ButtonInlineBlock';
-import BasicContainerBlock from '@/components/editor/blocks/BasicContainerBlock';
-import FormInputBlock from '@/components/editor/blocks/FormInputBlock';
-import ImageInlineBlock from '@/components/editor/blocks/ImageInlineBlock';
-import LegalNoticeInlineBlock from '@/components/editor/blocks/LegalNoticeInlineBlock';
-import OptionsGridBlock from '@/components/editor/blocks/OptionsGridBlock';
-import QuizIntroHeaderBlock from '@/components/editor/blocks/QuizIntroHeaderBlock';
-import TextInlineBlock from '@/components/editor/blocks/TextInlineBlock';
-
-// Re-export direto dos componentes para evitar ciclos
-export const ENHANCED_BLOCK_REGISTRY = {
-  'text': TextInlineBlock,
-  'button': ButtonInlineBlock,
-  'image': ImageInlineBlock,
-  'form-input': FormInputBlock,
-  'options-grid': OptionsGridBlock,
-  'container': BasicContainerBlock,
-};
-
-export const getEnhancedBlockComponent = (type: string) => {
-  // Implementação simplificada para compatibilidade
-  if (ENHANCED_BLOCK_REGISTRY[type]) {
-    return ENHANCED_BLOCK_REGISTRY[type];
-  }
-  return TextInlineBlock; // Fallback padrão
-};
-
-// Lista de componentes disponíveis para a sidebar do editor
-export const AVAILABLE_COMPONENTS = [
-  { type: 'text', label: 'Texto', category: 'content' },
-  { type: 'button', label: 'Botão', category: 'action' },
-  { type: 'image', label: 'Imagem', category: 'content' },
-  { type: 'form-input', label: 'Campo de Formulário', category: 'form' },
-  { type: 'options-grid', label: 'Opções em Grid', category: 'quiz' },
-  { type: 'container', label: 'Container', category: 'layout' },
-];
-
-// Função para obter estatísticas do registro de blocos
-export const getRegistryStats = () => {
-  const totalComponents = Object.keys(ENHANCED_BLOCK_REGISTRY).length;
-  
-  return {
-    totalComponents,
-    staticComponents: totalComponents,
-    lazyComponents: 0,
-    categoryCounts: {
-      content: 2,
-      action: 1,
-      form: 1,
-      quiz: 1,
-      layout: 1,
-    },
-    wildcardPatterns: [],
-    availableComponentsCount: AVAILABLE_COMPONENTS.length,
-  };
-};
-
-// Função para normalizar propriedades de blocos
-export const normalizeBlockProperties = (block: any) => {
-  if (!block) return {};
-  return block.properties || {};
-};
-
-export default ENHANCED_BLOCK_REGISTRY;
+// 🔁 Arquivo somente compatibilidade: reexporta o registro canônico
+export {
+  ENHANCED_BLOCK_REGISTRY,
+  getEnhancedBlockComponent,
+  AVAILABLE_COMPONENTS,
+  getRegistryStats,
+  normalizeBlockProperties,
+  getRegistryStats as getDeprecatedRegistryStats
+} from './EnhancedBlockRegistry';
+export { default } from './EnhancedBlockRegistry';

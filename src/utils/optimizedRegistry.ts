@@ -4,7 +4,7 @@ import {
   getEnhancedBlockComponent,
   normalizeBlockProperties,
   getRegistryStats
-} from '@/components/editor/blocks/enhancedBlockRegistry';
+} from '@/components/editor/blocks/EnhancedBlockRegistry';
 import VisualBlockFallback from '@/components/core/renderers/VisualBlockFallback';
 
 /**
