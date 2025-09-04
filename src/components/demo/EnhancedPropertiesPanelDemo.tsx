@@ -18,53 +18,53 @@ import type { Block } from '@/types/editor';
 // ===== MOCK DATA =====
 
 const MOCK_BLOCKS: Block[] = [
-  {
-    id: 'demo-header',
-    type: 'header',
-    order: 0,
-    properties: {
-      showLogo: true,
-      enableProgressBar: true,
-      logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
-      backgroundColor: '#FEFDFB',
-      textColor: '#432818'
+    {
+        id: 'demo-header',
+        type: 'header',
+        order: 0,
+        properties: {
+            showLogo: true,
+            enableProgressBar: true,
+            logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+            backgroundColor: '#FEFDFB',
+            textColor: '#432818'
+        },
+        content: {
+            title: 'Quiz de Estilo Pessoal',
+            subtitle: 'Descubra seu estilo único'
+        }
     },
-    content: {
-      title: 'Quiz de Estilo Pessoal',
-      subtitle: 'Descubra seu estilo único'
-    }
-  },
-  {
-    id: 'demo-question',
-    type: 'text',
-    order: 1,
-    properties: {
-      fontSize: 'large',
-      fontWeight: 'bold',
-      textColor: '#432818',
-      alignment: 'center'
+    {
+        id: 'demo-question',
+        type: 'text',
+        order: 1,
+        properties: {
+            fontSize: 'large',
+            fontWeight: 'bold',
+            textColor: '#432818',
+            alignment: 'center'
+        },
+        content: {
+            text: 'Qual é o seu tipo de roupa favorita?'
+        }
     },
-    content: {
-      text: 'Qual é o seu tipo de roupa favorita?'
+    {
+        id: 'demo-options',
+        type: 'options-grid',
+        order: 2,
+        properties: {
+            backgroundColor: '#B89B7A',
+            textColor: '#FFFFFF',
+            borderRadius: '8px',
+            padding: '16px',
+            hoverEffect: true
+        },
+        content: {
+            label: 'Opções de Escolha',
+            action: 'next-step'
+        }
     }
-  },
-  {
-    id: 'demo-options',
-    type: 'options-grid',
-    order: 2,
-    properties: {
-      backgroundColor: '#B89B7A',
-      textColor: '#FFFFFF',
-      borderRadius: '8px',
-      padding: '16px',
-      hoverEffect: true
-    },
-    content: {
-      label: 'Opções de Escolha',
-      action: 'next-step'
-    }
-  }
-];const QUIZ_STEPS = [
+]; const QUIZ_STEPS = [
     { id: 'step-1', name: 'Questão 1: Estilo Favorito', type: 'question' },
     { id: 'step-2', name: 'Questão 2: Cores Preferidas', type: 'question' },
     { id: 'step-3', name: 'Questão 3: Ocasião', type: 'question' },
@@ -220,10 +220,10 @@ export default function EnhancedPropertiesPanelDemo() {
                                                     }`}
                                             >
                                                 <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium ${index + 1 === currentStep
-                                                        ? 'bg-primary text-white'
-                                                        : index + 1 < currentStep
-                                                            ? 'bg-green-500 text-white'
-                                                            : 'bg-gray-200 text-gray-600'
+                                                    ? 'bg-primary text-white'
+                                                    : index + 1 < currentStep
+                                                        ? 'bg-green-500 text-white'
+                                                        : 'bg-gray-200 text-gray-600'
                                                     }`}>
                                                     {index + 1}
                                                 </div>
@@ -241,8 +241,8 @@ export default function EnhancedPropertiesPanelDemo() {
 
                                 {/* Mock Canvas */}
                                 <div className={`border-2 border-dashed border-gray-300 rounded-lg p-6 transition-all duration-300 ${device === 'desktop' ? 'min-h-[500px]' :
-                                        device === 'tablet' ? 'min-h-[400px] max-w-md mx-auto' :
-                                            'min-h-[300px] max-w-sm mx-auto'
+                                    device === 'tablet' ? 'min-h-[400px] max-w-md mx-auto' :
+                                        'min-h-[300px] max-w-sm mx-auto'
                                     }`}>
                                     <div className="space-y-4">
                                         {MOCK_BLOCKS.map((block) => (

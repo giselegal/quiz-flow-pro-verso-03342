@@ -879,10 +879,10 @@ export const MultipleChoiceOptionsPanel: React.FC<MultipleChoiceOptionsPanelProp
                                                 <div className="flex-1">
                                                     <Label className="text-sm font-medium capitalize">
                                                         {key === 'background' ? 'Fundo' :
-                                                         key === 'text' ? 'Texto' :
-                                                         key === 'border' ? 'Borda' :
-                                                         key === 'hover' ? 'Hover' :
-                                                         'Selecionado'}
+                                                            key === 'text' ? 'Texto' :
+                                                                key === 'border' ? 'Borda' :
+                                                                    key === 'hover' ? 'Hover' :
+                                                                        'Selecionado'}
                                                     </Label>
                                                     <div className="flex items-center gap-2 mt-1">
                                                         <Input

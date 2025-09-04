@@ -4,7 +4,14 @@ import { cn } from '@/lib/utils';
 
 // Import the enhanced NOCODE properties panel
 const EnhancedNocodePropertiesPanel = React.lazy(
-  () => import('@/components/editor/properties/EnhancedNocodePropertiesPanel')
+  () => import('@/components/editor/properties/EnhancedNoCodePropertiesPanel').then(module => ({
+    default: module.EnhancedNoCodePropertiesPanel
+  }))
+);
+
+// Import the specialized Multiple Choice Options Panel
+const MultipleChoiceOptionsPanel = React.lazy(
+  () => import('@/components/editor/properties/MultipleChoiceOptionsPanel')
 );
 
 // Fallback to original panel if needed
@@ -39,7 +46,6 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
   onPreviewModeChange,
   currentStep = 1,
   totalSteps = 21,
-  onStepChange,
   useEnhancedPanel = true, // Enable by default
   className = '',
 }) => {
@@ -57,17 +63,24 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
             Carregando painel NOCODE…
           </div>
         }>
-          {useEnhancedPanel ? (
+          {/* Use specialized panel for options-grid blocks */}
+          {selectedBlock.type === 'options-grid' ? (
+            <MultipleChoiceOptionsPanel
+              selectedBlock={selectedBlock as any}
+              onUpdate={onUpdate}
+              onClose={onClose}
+              onDelete={onDelete}
+              onDuplicate={onDuplicate}
+            />
+          ) : useEnhancedPanel ? (
             <EnhancedNocodePropertiesPanel
               selectedBlock={selectedBlock as any}
               onUpdate={onUpdate}
               onClose={onClose}
               onDelete={onDelete}
               onDuplicate={onDuplicate}
-              onReset={onReset}
               currentStep={currentStep}
               totalSteps={totalSteps}
-              onStepChange={onStepChange}
             />
           ) : (
             <PropertiesPanel
