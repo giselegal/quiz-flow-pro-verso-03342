@@ -172,7 +172,11 @@ function createLabel(key: string): string {
  * Extracts properties generation logic from useUnifiedProperties
  * This allows us to reuse the same logic without calling the hook
  */
-function getPropertiesForComponentType(blockType: string, currentBlock: any): any[] {
+interface BlockConfig {
+  [key: string]: any; // Replace with more specific properties if known
+}
+
+function getPropertiesForComponentType(blockType: string, currentBlock: BlockConfig): DiscoveredProperty[] {
   console.log('🔧 getPropertiesForComponentType called with:', { blockType, currentBlock: !!currentBlock });
   
   // This is adapted from the useUnifiedProperties hook logic
