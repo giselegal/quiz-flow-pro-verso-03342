@@ -5,8 +5,7 @@
  * to ensure the NOCODE panel displays ALL available settings.
  */
 
-import { MODULAR_COMPONENTS } from '../../../../config/modularComponents';
-import { PropertyType, PropertyCategory } from '../../../../hooks/useUnifiedProperties';
+import { PropertyType, PropertyCategory } from '@/hooks/useUnifiedProperties';
 
 export interface DiscoveredProperty {
   key: string;
