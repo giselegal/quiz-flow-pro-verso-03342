@@ -151,48 +151,50 @@ export const ModernLevaPropertiesPanel: React.FC<ModernLevaPropertiesPanelProps>
     }, [discoveredProperties]);
 
     // Criar controles LEVA organizados por categoria
-    const values = useControls('Options Grid Properties', {
-        // === CONTENT ===
-        ...(Object.keys(levaSchema.contentProps || {}).length > 0 && {
-            'Content': folder(levaSchema.contentProps)
-        }),
-
-        // === LAYOUT ===
-        ...(Object.keys(levaSchema.layoutProps || {}).length > 0 && {
-            'Layout': folder(levaSchema.layoutProps)
-        }),
-
-        // === BEHAVIOR ===
-        ...(Object.keys(levaSchema.behaviorProps || {}).length > 0 && {
-            'Behavior': folder(levaSchema.behaviorProps)
-        }),
-
-        // === STYLE ===
-        ...(Object.keys(levaSchema.styleProps || {}).length > 0 && {
-            'Style': folder(levaSchema.styleProps)
-        }),
-
-        // === ADVANCED ===
-        ...(Object.keys(levaSchema.advancedProps || {}).length > 0 && {
-            'Advanced': folder(levaSchema.advancedProps)
-        }),
-
-        // === ACTIONS ===
-        'Actions': folder({
-            'Duplicate Block': button(() => {
-                console.log('🔄 Duplicating block via LEVA');
-                onDuplicate?.();
+    const values = useControls(() => {
+        return {
+            // === CONTENT ===
+            ...(Object.keys(levaSchema.contentProps || {}).length > 0 && {
+                'Content': folder(levaSchema.contentProps)
             }),
-            'Delete Block': button(() => {
-                console.log('🗑️ Deleting block via LEVA');
-                onDelete?.();
+
+            // === LAYOUT ===
+            ...(Object.keys(levaSchema.layoutProps || {}).length > 0 && {
+                'Layout': folder(levaSchema.layoutProps)
             }),
-            'Close Panel': button(() => {
-                console.log('❌ Closing panel via LEVA');
-                onClose?.();
+
+            // === BEHAVIOR ===
+            ...(Object.keys(levaSchema.behaviorProps || {}).length > 0 && {
+                'Behavior': folder(levaSchema.behaviorProps)
+            }),
+
+            // === STYLE ===
+            ...(Object.keys(levaSchema.styleProps || {}).length > 0 && {
+                'Style': folder(levaSchema.styleProps)
+            }),
+
+            // === ADVANCED ===
+            ...(Object.keys(levaSchema.advancedProps || {}).length > 0 && {
+                'Advanced': folder(levaSchema.advancedProps)
+            }),
+
+            // === ACTIONS ===
+            'Actions': folder({
+                'Duplicate Block': button(() => {
+                    console.log('🔄 Duplicating block via LEVA');
+                    onDuplicate?.();
+                }),
+                'Delete Block': button(() => {
+                    console.log('🗑️ Deleting block via LEVA');
+                    onDelete?.();
+                }),
+                'Close Panel': button(() => {
+                    console.log('❌ Closing panel via LEVA');
+                    onClose?.();
+                })
             })
-        })
-    });
+        };
+    }, [levaSchema, selectedBlock?.type, onDuplicate, onDelete, onClose]);
 
     // Auto-sincronizar mudanças com o sistema existente
     useEffect(() => {

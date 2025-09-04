@@ -395,12 +395,59 @@ export function getPropertiesForComponentType(blockType: string, currentBlock: B
       console.log('✅ getPropertiesForComponentType: Found header case for:', blockType);
       return [
         ...getUniversalProperties(),
+        // === CONTENT PROPERTIES ===
         createProperty('showLogo', currentBlock?.properties?.showLogo ?? true, PropertyType.SWITCH, 'Mostrar Logo', PropertyCategory.CONTENT),
         createProperty('logoUrl', currentBlock?.properties?.logoUrl || 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp', PropertyType.URL, 'URL do Logo', PropertyCategory.CONTENT),
         createProperty('logoAlt', currentBlock?.properties?.logoAlt || 'Logo', PropertyType.TEXT, 'Texto Alternativo do Logo', PropertyCategory.ACCESSIBILITY),
+        createProperty('title', currentBlock?.properties?.title || '', PropertyType.TEXT, 'Título do Cabeçalho', PropertyCategory.CONTENT),
+        createProperty('subtitle', currentBlock?.properties?.subtitle || '', PropertyType.TEXT, 'Subtítulo', PropertyCategory.CONTENT),
+        
+        // === LAYOUT PROPERTIES ===
+        createProperty('logoWidth', currentBlock?.properties?.logoWidth || 120, PropertyType.RANGE, 'Largura do Logo', PropertyCategory.LAYOUT, { min: 50, max: 300, step: 10, unit: 'px' }),
+        createProperty('logoHeight', currentBlock?.properties?.logoHeight || 40, PropertyType.RANGE, 'Altura do Logo', PropertyCategory.LAYOUT, { min: 20, max: 150, step: 5, unit: 'px' }),
+        createProperty('containerWidth', currentBlock?.properties?.containerWidth || '100%', PropertyType.SELECT, 'Largura do Container', PropertyCategory.LAYOUT, {
+          options: [
+            { value: '100%', label: 'Largura Total' },
+            { value: 'max-w-4xl', label: 'Container Médio' },
+            { value: 'max-w-6xl', label: 'Container Grande' },
+            { value: 'max-w-full', label: 'Sem Limite' }
+          ]
+        }),
+        createProperty('alignment', currentBlock?.properties?.alignment || 'center', PropertyType.SELECT, 'Alinhamento', PropertyCategory.LAYOUT, {
+          options: [
+            { value: 'left', label: 'Esquerda' },
+            { value: 'center', label: 'Centro' },
+            { value: 'right', label: 'Direita' }
+          ]
+        }),
+        createProperty('spacing', currentBlock?.properties?.spacing || 'normal', PropertyType.SELECT, 'Espaçamento Interno', PropertyCategory.LAYOUT, {
+          options: [
+            { value: 'compact', label: 'Compacto' },
+            { value: 'normal', label: 'Normal' },
+            { value: 'spacious', label: 'Espaçoso' }
+          ]
+        }),
+
+        // === BEHAVIOR PROPERTIES ===
         createProperty('enableProgressBar', currentBlock?.properties?.enableProgressBar ?? false, PropertyType.SWITCH, 'Mostrar Barra de Progresso', PropertyCategory.BEHAVIOR),
         createProperty('progressValue', currentBlock?.properties?.progressValue || 0, PropertyType.RANGE, 'Porcentagem do Progresso', PropertyCategory.BEHAVIOR, { min: 0, max: 100, step: 1, unit: '%' }),
+        createProperty('progressMax', currentBlock?.properties?.progressMax || 100, PropertyType.RANGE, 'Valor Máximo do Progresso', PropertyCategory.BEHAVIOR, { min: 1, max: 21, step: 1 }),
+        createProperty('showBackButton', currentBlock?.properties?.showBackButton ?? false, PropertyType.SWITCH, 'Mostrar Botão Voltar', PropertyCategory.BEHAVIOR),
+
+        // === STYLE PROPERTIES ===
         createProperty('textColor', currentBlock?.properties?.textColor || BRAND_COLORS.text, PropertyType.COLOR, 'Cor do Texto', PropertyCategory.STYLE),
+        createProperty('progressBarColor', currentBlock?.properties?.progressBarColor || BRAND_COLORS.primary, PropertyType.COLOR, 'Cor da Barra de Progresso', PropertyCategory.STYLE),
+        createProperty('progressBackgroundColor', currentBlock?.properties?.progressBackgroundColor || '#E5E7EB', PropertyType.COLOR, 'Cor de Fundo da Barra', PropertyCategory.STYLE),
+
+        // === ADVANCED PROPERTIES ===
+        createProperty('scale', currentBlock?.properties?.scale || 100, PropertyType.RANGE, 'Escala do Cabeçalho', PropertyCategory.ADVANCED, { min: 50, max: 200, step: 5, unit: '%' }),
+        createProperty('scaleOrigin', currentBlock?.properties?.scaleOrigin || 'center', PropertyType.SELECT, 'Origem da Escala', PropertyCategory.ADVANCED, {
+          options: [
+            { value: 'center', label: 'Centro' },
+            { value: 'top center', label: 'Topo Centro' },
+            { value: 'bottom center', label: 'Base Centro' }
+          ]
+        }),
       ];
 
     case 'text-inline':
