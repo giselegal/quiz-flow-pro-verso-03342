@@ -275,7 +275,7 @@ export const ComprehensiveStepNavigation: React.FC<ComprehensiveStepNavigationPr
 
       const propertyCount = blocks.reduce((total, block) => total + countBlockProperties(block), 0);
       const isValid = blocks.every(validateBlock);
-      
+
       return {
         key: stepKey,
         number,
@@ -304,7 +304,7 @@ export const ComprehensiveStepNavigation: React.FC<ComprehensiveStepNavigationPr
       filtered = filtered.filter(step =>
         step.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         step.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        step.blocks.some(block => 
+        step.blocks.some(block =>
           block.type.toLowerCase().includes(searchTerm.toLowerCase()) ||
           block.id.toLowerCase().includes(searchTerm.toLowerCase())
         )
@@ -374,7 +374,7 @@ export const ComprehensiveStepNavigation: React.FC<ComprehensiveStepNavigationPr
 
   const navigateStep = useCallback((direction: 'prev' | 'next') => {
     const currentIndex = stepsInfo.findIndex(step => step.key === activeStep);
-    
+
     if (direction === 'prev' && currentIndex > 0) {
       setActiveStep(stepsInfo[currentIndex - 1].key);
     } else if (direction === 'next' && currentIndex < stepsInfo.length - 1) {
@@ -494,7 +494,7 @@ export const ComprehensiveStepNavigation: React.FC<ComprehensiveStepNavigationPr
                           <AlertCircle className="w-4 h-4 text-red-500" />
                         )}
                       </div>
-                      
+
                       <Button
                         variant="ghost"
                         size="sm"
@@ -658,11 +658,11 @@ export const ComprehensiveStepNavigation: React.FC<ComprehensiveStepNavigationPr
                         )}
                       </div>
                     </div>
-                    
+
                     <div className="text-xs text-gray-600 mb-2">
                       {blockSummary.propertyCount} propriedades
                     </div>
-                    
+
                     <div className="text-sm truncate">
                       {blockSummary.preview}
                     </div>

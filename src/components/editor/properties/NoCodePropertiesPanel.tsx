@@ -80,7 +80,7 @@ interface PropertyField {
 
 enum PropertyCategory {
   CONTENT = 'content',
-  STYLE = 'style', 
+  STYLE = 'style',
   LAYOUT = 'layout',
   BEHAVIOR = 'behavior',
   ADVANCED = 'advanced',
@@ -105,7 +105,7 @@ interface InterpolationVariable {
 const useInterpolationSystem = () => {
   const userName = useUserName();
   const { primaryStyle } = useQuizResult();
-  
+
   const [currentStep, setCurrentStep] = useState(1);
   const [offerPrice, setOfferPrice] = useState('R$ 297,00');
 
@@ -172,7 +172,7 @@ const useInterpolationSystem = () => {
     matches.forEach(match => {
       const variableKey = match[1];
       const isValidVariable = availableVariables.some(v => v.key === variableKey);
-      
+
       if (!isValidVariable) {
         errors.push(`Variável desconhecida: {${variableKey}}`);
       }
@@ -237,15 +237,15 @@ const extractAllProperties = (block: Block): PropertyField[] => {
  * Cria um campo de propriedade baseado no valor e contexto
  */
 const createPropertyField = (
-  key: string, 
-  label: string, 
-  value: any, 
-  blockType: string, 
+  key: string,
+  label: string,
+  value: any,
+  blockType: string,
   category?: PropertyCategory
 ): PropertyField => {
   const inferredType = inferFieldType(value);
   const inferredCategory = category || categorizeProperty(key, inferredType);
-  
+
   return {
     key,
     label: formatLabel(label),
@@ -270,21 +270,21 @@ const inferFieldType = (value: any): PropertyField['type'] => {
   if (typeof value === 'number') return 'number';
   if (Array.isArray(value)) return 'array';
   if (typeof value === 'object' && value !== null) return 'object';
-  
+
   const stringValue = String(value);
-  
+
   // Detectar cores
-  if (stringValue.match(/^#[0-9A-Fa-f]{6}$/) || 
-      stringValue.match(/^rgb\(/) || 
-      stringValue.match(/^hsl\(/)) {
+  if (stringValue.match(/^#[0-9A-Fa-f]{6}$/) ||
+    stringValue.match(/^rgb\(/) ||
+    stringValue.match(/^hsl\(/)) {
     return 'color';
   }
-  
+
   // Detectar texto longo
   if (stringValue.length > 100) {
     return 'textarea';
   }
-  
+
   return 'text';
 };
 
@@ -293,39 +293,39 @@ const inferFieldType = (value: any): PropertyField['type'] => {
  */
 const categorizeProperty = (key: string, type: PropertyField['type']): PropertyCategory => {
   const keyLower = key.toLowerCase();
-  
-  if (keyLower.includes('text') || keyLower.includes('title') || 
-      keyLower.includes('content') || keyLower.includes('label')) {
+
+  if (keyLower.includes('text') || keyLower.includes('title') ||
+    keyLower.includes('content') || keyLower.includes('label')) {
     return PropertyCategory.CONTENT;
   }
-  
-  if (keyLower.includes('color') || keyLower.includes('font') || 
-      keyLower.includes('background') || type === 'color') {
+
+  if (keyLower.includes('color') || keyLower.includes('font') ||
+    keyLower.includes('background') || type === 'color') {
     return PropertyCategory.STYLE;
   }
-  
-  if (keyLower.includes('width') || keyLower.includes('height') || 
-      keyLower.includes('margin') || keyLower.includes('padding')) {
+
+  if (keyLower.includes('width') || keyLower.includes('height') ||
+    keyLower.includes('margin') || keyLower.includes('padding')) {
     return PropertyCategory.LAYOUT;
   }
-  
-  if (keyLower.includes('click') || keyLower.includes('hover') || 
-      keyLower.includes('enable') || type === 'boolean') {
+
+  if (keyLower.includes('click') || keyLower.includes('hover') ||
+    keyLower.includes('enable') || type === 'boolean') {
     return PropertyCategory.BEHAVIOR;
   }
-  
+
   if (keyLower.includes('animation') || keyLower.includes('transition')) {
     return PropertyCategory.ANIMATION;
   }
-  
+
   if (keyLower.includes('aria') || keyLower.includes('alt')) {
     return PropertyCategory.ACCESSIBILITY;
   }
-  
+
   if (keyLower.includes('meta') || keyLower.includes('seo')) {
     return PropertyCategory.SEO;
   }
-  
+
   return PropertyCategory.ADVANCED;
 };
 
@@ -492,7 +492,7 @@ export const NoCodePropertiesPanel: React.FC<NoCodePropertiesPanelProps> = ({
   // Propriedades agrupadas por categoria
   const propertiesByCategory = useMemo(() => {
     const grouped = new Map<PropertyCategory, PropertyField[]>();
-    
+
     Object.values(PropertyCategory).forEach(category => {
       const categoryProps = allProperties.filter(prop => prop.category === category);
       if (categoryProps.length > 0) {
@@ -582,7 +582,7 @@ export const NoCodePropertiesPanel: React.FC<NoCodePropertiesPanelProps> = ({
               <p className="text-xs text-gray-500 mt-1">{property.description}</p>
             )}
           </div>
-          
+
           {property.supportsInterpolation && (
             <TooltipProvider>
               <Tooltip>
@@ -607,7 +607,7 @@ export const NoCodePropertiesPanel: React.FC<NoCodePropertiesPanelProps> = ({
         {/* Campo de entrada */}
         <div className="space-y-2">
           {renderFieldInput(property, currentValue, updateValue, hasChanges)}
-          
+
           {/* Validação */}
           {!validation.isValid && (
             <div className="flex items-center gap-1 text-red-600 text-xs">
@@ -633,9 +633,9 @@ export const NoCodePropertiesPanel: React.FC<NoCodePropertiesPanelProps> = ({
 
   // Renderizar input baseado no tipo
   const renderFieldInput = (
-    property: PropertyField, 
-    value: any, 
-    onChange: (value: any) => void, 
+    property: PropertyField,
+    value: any,
+    onChange: (value: any) => void,
     hasChanges: boolean
   ) => {
     const baseClassName = cn(hasChanges && 'border-blue-500 bg-blue-50');
@@ -769,7 +769,7 @@ export const NoCodePropertiesPanel: React.FC<NoCodePropertiesPanelProps> = ({
             <Settings className="h-5 w-5" />
             Propriedades NOCODE
           </CardTitle>
-          
+
           <div className="flex items-center gap-2">
             {/* Preview toggle */}
             <TooltipProvider>
@@ -804,7 +804,7 @@ export const NoCodePropertiesPanel: React.FC<NoCodePropertiesPanelProps> = ({
             <Badge variant="secondary">{selectedBlock.type}</Badge>
             <span className="text-sm text-gray-600 truncate">{selectedBlock.id}</span>
           </div>
-          
+
           <div className="text-sm text-muted-foreground">
             Etapa {currentStep} de {totalSteps} • {allProperties.length} propriedades
           </div>
@@ -824,7 +824,7 @@ export const NoCodePropertiesPanel: React.FC<NoCodePropertiesPanelProps> = ({
         <EnhancedValidationSystem
           properties={{ ...selectedBlock.properties, ...selectedBlock.content, ...tempValues }}
           context={validationContext}
-          onValidationChange={() => {}} // Placeholder function
+          onValidationChange={() => { }} // Placeholder function
           onAutoFix={handleAutoFix}
           className="mb-3"
         />
@@ -957,7 +957,7 @@ export const NoCodePropertiesPanel: React.FC<NoCodePropertiesPanelProps> = ({
             <RotateCcw className="h-4 w-4" />
             Restaurar Padrões
           </Button>
-          
+
           <Button
             variant="outline"
             size="sm"

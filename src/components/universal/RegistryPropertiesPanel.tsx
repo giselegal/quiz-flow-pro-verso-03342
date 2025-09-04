@@ -98,11 +98,10 @@ const EnhancedPropertyField: React.FC<EnhancedPropertyFieldProps> = ({
                 key={option.value}
                 type="button"
                 onClick={() => onChange(option.value)}
-                className={`flex items-center justify-center space-x-2 px-3 py-2 rounded-md border text-sm transition-colors ${
-                  currentValue === option.value
+                className={`flex items-center justify-center space-x-2 px-3 py-2 rounded-md border text-sm transition-colors ${currentValue === option.value
                     ? 'border-amber-500 bg-amber-50 text-amber-900'
                     : 'border-gray-200 bg-white hover:bg-gray-50'
-                }`}
+                  }`}
               >
                 {option.icon && <span>{option.icon}</span>}
                 <span>{option.label}</span>
@@ -294,7 +293,7 @@ const OptionsArrayEditor: React.FC<OptionsArrayEditorProps> = ({ value = [], onC
             Adicionar Opção
           </Button>
         </div>
-        
+
         {/* Quick Configuration */}
         <div className="grid grid-cols-3 gap-3">
           <div>
@@ -325,7 +324,7 @@ const OptionsArrayEditor: React.FC<OptionsArrayEditorProps> = ({ value = [], onC
             </Select>
           </div>
           <div>
-            <Button 
+            <Button
               onClick={() => {
                 const sampleOptions = [
                   { id: '1', text: 'Opção A', description: 'Primeira opção', imageUrl: 'https://via.placeholder.com/256', value: 'a', category: 'Categoria A', points: 1 },
@@ -335,8 +334,8 @@ const OptionsArrayEditor: React.FC<OptionsArrayEditorProps> = ({ value = [], onC
                 ];
                 onChange(sampleOptions);
               }}
-              variant="outline" 
-              size="sm" 
+              variant="outline"
+              size="sm"
               className="text-xs w-full"
             >
               🚀 Gerar Exemplo
@@ -426,7 +425,7 @@ const OptionsArrayEditor: React.FC<OptionsArrayEditorProps> = ({ value = [], onC
                       rows={2}
                     />
                   </div>
-                  
+
                   <div>
                     <Label className="text-xs">Descrição</Label>
                     <Input
@@ -693,10 +692,10 @@ const RegistryPropertiesPanel: React.FC<RegistryPropertiesPanelProps> = ({
   // Try to get enhanced block definition first, then fall back to registry
   const enhancedDefinition = getEnhancedBlockDefinition(selectedBlock.type);
   const blockDefinition = blocksRegistry[selectedBlock.type];
-  
+
   // 🎯 Use enhanced definition if available, especially for options-grid
   const useEnhancedPanel = enhancedDefinition && selectedBlock.type === 'options-grid';
-  
+
   if (useEnhancedPanel) {
     // Render enhanced properties panel for options-grid
     return (
@@ -719,7 +718,7 @@ const RegistryPropertiesPanel: React.FC<RegistryPropertiesPanelProps> = ({
               <X className="h-4 w-4" />
             </Button>
           </div>
-          
+
           <div className="mt-4 flex items-center gap-2 text-sm">
             <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
             <span className="text-gray-600">Sistema No-Code Ativo</span>
@@ -853,7 +852,7 @@ const RegistryPropertiesPanel: React.FC<RegistryPropertiesPanelProps> = ({
 
   const categoryIcons: Record<string, string> = {
     content: '📝',
-    layout: '📐', 
+    layout: '📐',
     style: '🎨',
     behavior: '⚙️',
     advanced: '🔧',
@@ -893,7 +892,7 @@ const RegistryPropertiesPanel: React.FC<RegistryPropertiesPanelProps> = ({
             <X className="h-4 w-4" />
           </Button>
         </div>
-        
+
         <div className="mt-4 flex items-center gap-2 text-sm">
           <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
           <span className="text-gray-600">Propriedades no-code ativas</span>

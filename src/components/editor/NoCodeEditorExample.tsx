@@ -9,11 +9,11 @@ import React, { useState, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Tabs,  TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { 
-  Settings, 
-  Eye, 
-  Play, 
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import {
+  Settings,
+  Eye,
+  Play,
   Monitor,
   Smartphone,
   Tablet
@@ -22,7 +22,7 @@ import NoCodePropertiesPanel from './properties/NoCodePropertiesPanel';
 import ComprehensiveStepNavigation from './properties/ComprehensiveStepNavigation';
 import type { Block } from '@/types/editor';
 
-interface NoCodeEditorExampleProps {}
+interface NoCodeEditorExampleProps { }
 
 /**
  * Exemplo de integração completa do sistema NOCODE
@@ -45,7 +45,7 @@ export const NoCodeEditorExample: React.FC<NoCodeEditorExampleProps> = () => {
     },
     properties: {
       fontSize: 'text-3xl',
-      fontWeight: 'font-bold', 
+      fontWeight: 'font-bold',
       textAlign: 'center',
       color: '#432818',
       backgroundColor: '#F8F9FA',
@@ -190,9 +190,8 @@ export const NoCodeEditorExample: React.FC<NoCodeEditorExampleProps> = () => {
                       <div className="space-y-4">
                         {/* Bloco Mock */}
                         <div
-                          className={`p-4 border-2 border-dashed rounded-lg cursor-pointer transition-colors ${
-                            selectedBlock ? 'border-blue-500 bg-blue-50' : 'border-gray-300 hover:border-gray-400'
-                          }`}
+                          className={`p-4 border-2 border-dashed rounded-lg cursor-pointer transition-colors ${selectedBlock ? 'border-blue-500 bg-blue-50' : 'border-gray-300 hover:border-gray-400'
+                            }`}
                           onClick={() => setSelectedBlock(selectedBlock ? null : mockBlock)}
                         >
                           <div className="text-center">
@@ -213,7 +212,7 @@ export const NoCodeEditorExample: React.FC<NoCodeEditorExampleProps> = () => {
                               {/* Simular interpolação */}
                               {mockBlock.content?.text?.replace('{userName}', 'Ana') || 'Texto do bloco'}
                             </div>
-                            
+
                             {selectedBlock && (
                               <Badge variant="default" className="mt-2">
                                 Bloco Selecionado: {mockBlock.type}
@@ -232,10 +231,9 @@ export const NoCodeEditorExample: React.FC<NoCodeEditorExampleProps> = () => {
                   </Card>
                 ) : (
                   // Mode de preview
-                  <div className={`mx-auto transition-all duration-300 ${
-                    previewDevice === 'mobile' ? 'max-w-sm' :
-                    previewDevice === 'tablet' ? 'max-w-2xl' : 'max-w-6xl'
-                  }`}>
+                  <div className={`mx-auto transition-all duration-300 ${previewDevice === 'mobile' ? 'max-w-sm' :
+                      previewDevice === 'tablet' ? 'max-w-2xl' : 'max-w-6xl'
+                    }`}>
                     <Card>
                       <CardContent className="p-8">
                         <div className="text-center">
@@ -284,7 +282,7 @@ export const NoCodeEditorExample: React.FC<NoCodeEditorExampleProps> = () => {
             {selectedBlock && <span>Bloco: {selectedBlock.id}</span>}
           </div>
           <div className="flex items-center gap-4">
-            <span>Total de propriedades: {selectedBlock ? Object.keys({...selectedBlock.properties, ...selectedBlock.content}).length : 0}</span>
+            <span>Total de propriedades: {selectedBlock ? Object.keys({ ...selectedBlock.properties, ...selectedBlock.content }).length : 0}</span>
             <Badge variant="outline" className="text-xs">
               Sistema NOCODE Ativo
             </Badge>

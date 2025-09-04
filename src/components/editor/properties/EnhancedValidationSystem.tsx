@@ -111,10 +111,10 @@ const VALIDATION_RULES: ValidationRule[] = [
 
       const variableRegex = /\{([^}]+)\}/g;
       const matches = Array.from(value.matchAll(variableRegex));
-      
+
       for (const match of matches) {
         const variableName = match[1].trim();
-        
+
         // Verificar se a variável é válida
         if (!variableName) {
           return {
@@ -159,7 +159,7 @@ const VALIDATION_RULES: ValidationRule[] = [
         // Verificar se existe alt text correspondente
         const altKey = context.propertyKey.replace('src', 'alt');
         const altValue = context.otherProperties?.[altKey];
-        
+
         if (!altValue || (typeof altValue === 'string' && !altValue.trim())) {
           return {
             isValid: false,
@@ -168,7 +168,7 @@ const VALIDATION_RULES: ValidationRule[] = [
           };
         }
       }
-      
+
       return { isValid: true };
     }
   },
@@ -187,10 +187,10 @@ const VALIDATION_RULES: ValidationRule[] = [
       // Para cores de texto, verificar contraste com background
       if (context?.propertyKey?.includes('textColor') || context?.propertyKey?.includes('color')) {
         const backgroundColor = context.otherProperties?.backgroundColor || '#FFFFFF';
-        
+
         // Cálculo simplificado de contraste
         const contrast = calculateColorContrast(value, backgroundColor);
-        
+
         if (contrast < 4.5) {
           return {
             isValid: false,
@@ -218,7 +218,7 @@ const VALIDATION_RULES: ValidationRule[] = [
 
       if (context?.propertyKey?.includes('title') || context?.propertyKey?.includes('heading')) {
         const length = value.length;
-        
+
         if (length < 10) {
           return {
             isValid: false,
@@ -226,7 +226,7 @@ const VALIDATION_RULES: ValidationRule[] = [
             suggestion: 'Use pelo menos 10 caracteres para melhor otimização'
           };
         }
-        
+
         if (length > 60) {
           return {
             isValid: false,
@@ -304,10 +304,10 @@ const VALIDATION_RULES: ValidationRule[] = [
     category: ValidationCategory.CONTENT,
     severity: ValidationSeverity.WARNING,
     validator: (value: any, context) => {
-      if (context?.propertyKey?.includes('text') || 
-          context?.propertyKey?.includes('content') ||
-          context?.propertyKey?.includes('title')) {
-        
+      if (context?.propertyKey?.includes('text') ||
+        context?.propertyKey?.includes('content') ||
+        context?.propertyKey?.includes('title')) {
+
         if (!value || (typeof value === 'string' && !value.trim())) {
           return {
             isValid: false,
@@ -333,11 +333,11 @@ function calculateColorContrast(color1: string, color2: string): number {
     const r = parseInt(hex.substr(0, 2), 16) / 255;
     const g = parseInt(hex.substr(2, 2), 16) / 255;
     const b = parseInt(hex.substr(4, 2), 16) / 255;
-    
+
     const sRGB = [r, g, b].map(c => {
       return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
     });
-    
+
     return 0.2126 * sRGB[0] + 0.7152 * sRGB[1] + 0.0722 * sRGB[2];
   };
 
@@ -345,7 +345,7 @@ function calculateColorContrast(color1: string, color2: string): number {
   const lum2 = getLuminance(color2);
   const brightest = Math.max(lum1, lum2);
   const darkest = Math.min(lum1, lum2);
-  
+
   return (brightest + 0.05) / (darkest + 0.05);
 }
 
@@ -450,7 +450,7 @@ export const EnhancedValidationSystem: React.FC<EnhancedValidationSystemProps> =
       VALIDATION_RULES.forEach(rule => {
         try {
           const result = rule.validator(value, propertyContext);
-          
+
           if (!result.isValid) {
             issues.push({
               ruleId: rule.id,
@@ -488,9 +488,9 @@ export const EnhancedValidationSystem: React.FC<EnhancedValidationSystemProps> =
     const errors = validationIssues.filter(i => i.severity === ValidationSeverity.ERROR).length;
     const warnings = validationIssues.filter(i => i.severity === ValidationSeverity.WARNING).length;
     const infos = validationIssues.filter(i => i.severity === ValidationSeverity.INFO).length;
-    
+
     const score = Math.max(0, 100 - (errors * 20) - (warnings * 10) - (infos * 5));
-    
+
     return { total, errors, warnings, infos, score };
   }, [validationIssues]);
 
@@ -525,7 +525,7 @@ export const EnhancedValidationSystem: React.FC<EnhancedValidationSystemProps> =
               Validação ({stats.total} {stats.total === 1 ? 'problema' : 'problemas'})
             </span>
           </div>
-          
+
           <div className="flex items-center gap-2">
             <Badge variant="outline" className="text-xs">
               Score: {stats.score}%
@@ -546,12 +546,12 @@ export const EnhancedValidationSystem: React.FC<EnhancedValidationSystemProps> =
             <span>Qualidade Geral</span>
             <span>{stats.score}%</span>
           </div>
-          <Progress 
-            value={stats.score} 
+          <Progress
+            value={stats.score}
             className={cn(
               'h-2',
-              stats.score >= 80 ? 'bg-green-100' : 
-              stats.score >= 60 ? 'bg-yellow-100' : 'bg-red-100'
+              stats.score >= 80 ? 'bg-green-100' :
+                stats.score >= 60 ? 'bg-yellow-100' : 'bg-red-100'
             )}
           />
         </div>
@@ -585,14 +585,14 @@ export const EnhancedValidationSystem: React.FC<EnhancedValidationSystemProps> =
               >
                 Todos ({validationIssues.length})
               </Button>
-              
+
               {Object.values(ValidationCategory).map(category => {
                 const count = validationIssues.filter(i => i.category === category).length;
                 if (count === 0) return null;
-                
+
                 const meta = CATEGORY_META[category];
                 const Icon = meta.icon;
-                
+
                 return (
                   <Button
                     key={category}
@@ -637,11 +637,11 @@ export const EnhancedValidationSystem: React.FC<EnhancedValidationSystemProps> =
                             {categoryMeta.label}
                           </Badge>
                         </div>
-                        
+
                         <div className={cn('font-medium text-sm', severityMeta.color)}>
                           {issue.message}
                         </div>
-                        
+
                         {issue.suggestion && (
                           <div className="text-xs text-gray-600 mt-1 flex items-start gap-1">
                             <Lightbulb className="w-3 h-3 mt-0.5 text-yellow-500" />
@@ -649,7 +649,7 @@ export const EnhancedValidationSystem: React.FC<EnhancedValidationSystemProps> =
                           </div>
                         )}
                       </div>
-                      
+
                       {issue.autoFixValue !== undefined && (
                         <TooltipProvider>
                           <Tooltip>
