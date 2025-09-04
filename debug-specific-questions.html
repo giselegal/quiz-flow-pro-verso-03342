@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔍 Debug Específico: Questões sem Opções</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-50 p-8">
+    <div class="max-w-6xl mx-auto">
+        <div class="bg-red-50 border border-red-200 rounded-lg p-6 mb-8">
+            <h1 class="text-2xl font-bold text-red-600 mb-4 flex items-center gap-2">
+                🚨 PROBLEMA CRÍTICO: Questões Específicas Sem Opções
+            </h1>
+
+            <div class="grid md:grid-cols-3 gap-4 mb-6">
+                <div class="bg-white border border-red-300 rounded-lg p-4">
+                    <h3 class="font-semibold text-red-800 mb-2">Questão 1</h3>
+                    <p class="text-sm text-red-700 mb-2"><strong>ID:</strong> q1_roupa_favorita</p>
+                    <p class="text-sm text-red-700 mb-2"><strong>Tipo:</strong> options-grid</p>
+                    <p class="text-sm text-red-700 mb-2"><strong>Etapa:</strong> step-2</p>
+                    <p class="text-sm text-red-700"><strong>Status:</strong> ❌ OPÇÕES NÃO APARECEM</p>
+                </div>
+
+                <div class="bg-white border border-red-300 rounded-lg p-4">
+                    <h3 class="font-semibold text-red-800 mb-2">Questão 2</h3>
+                    <p class="text-sm text-red-700 mb-2"><strong>ID:</strong> q2_personalidade</p>
+                    <p class="text-sm text-red-700 mb-2"><strong>Tipo:</strong> options-grid</p>
+                    <p class="text-sm text-red-700 mb-2"><strong>Etapa:</strong> step-3</p>
+                    <p class="text-sm text-red-700"><strong>Status:</strong> ❌ OPÇÕES NÃO APARECEM</p>
+                </div>
+
+                <div class="bg-white border border-red-300 rounded-lg p-4">
+                    <h3 class="font-semibold text-red-800 mb-2">Questão 3</h3>
+                    <p class="text-sm text-red-700 mb-2"><strong>ID:</strong> q3_visual_identificacao</p>
+                    <p class="text-sm text-red-700 mb-2"><strong>Tipo:</strong> options-grid</p>
+                    <p class="text-sm text-red-700 mb-2"><strong>Etapa:</strong> step-4</p>
+                    <p class="text-sm text-red-700"><strong>Status:</strong> ❌ OPÇÕES NÃO APARECEM</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
+            <h2 class="text-lg font-semibold text-blue-800 mb-4">🔍 Análise do Problema</h2>
+
+            <div class="space-y-4">
+                <div class="bg-white border rounded-lg p-4">
+                    <h3 class="font-medium text-blue-800 mb-3">1. Estrutura no Template</h3>
+                    <div class="bg-gray-100 p-3 rounded text-sm font-mono">
+                        <div class="text-green-600">✅ Template tem as opções definidas em content.options</div>
+                        <div class="text-green-600">✅ Questões têm tipo 'options-grid'</div>
+                        <div class="text-green-600">✅ Arrays de opções com 8 itens cada</div>
+                    </div>
+                </div>
+
+                <div class="bg-white border rounded-lg p-4">
+                    <h3 class="font-medium text-blue-800 mb-3">2. Possíveis Causas</h3>
+                    <ul class="space-y-2 text-sm text-blue-700">
+                        <li class="flex items-start gap-2">
+                            <span class="text-red-500">❌</span>
+                            <span>getCurrentValue() não encontra content.options para questionId específico</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-red-500">❌</span>
+                            <span>PropertyDiscovery não detecta 'options' como array para options-grid</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-red-500">❌</span>
+                            <span>ModernPropertiesPanel não renderiza PropertyType.ARRAY corretamente</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-red-500">❌</span>
+                            <span>Filtro por questionId impede que opções sejam mostradas</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-white border rounded-lg p-4">
+                    <h3 class="font-medium text-blue-800 mb-3">3. Debug Path</h3>
+                    <ol class="list-decimal list-inside space-y-1 text-sm text-blue-700">
+                        <li>Verificar se PropertyDiscovery encontra 'options' para options-grid</li>
+                        <li>Verificar se getCurrentValue() retorna content.options</li>
+                        <li>Verificar se PropertyType.ARRAY é tratado no ModernPropertiesPanel</li>
+                        <li>Verificar se questionId está interferindo na busca</li>
+                        <li>Testar editor com uma dessas questões específicas</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+            <h2 class="text-lg font-semibold text-yellow-800 mb-4">🧪 Teste Específico</h2>
+            <p class="text-yellow-700 text-sm mb-4">
+                Para testar, acesse o editor e selecione uma dessas questões específicas:
+            </p>
+
+            <div class="grid md:grid-cols-2 gap-4">
+                <div class="bg-white border rounded-lg p-4">
+                    <h4 class="font-medium text-yellow-800 mb-2">URLs para Teste</h4>
+                    <div class="space-y-2 text-sm">
+                        <a href="http://localhost:5177/editor?step=step-2" class="block text-blue-600 underline">
+                            Editor - Etapa 2 (q1_roupa_favorita)
+                        </a>
+                        <a href="http://localhost:5177/editor?step=step-3" class="block text-blue-600 underline">
+                            Editor - Etapa 3 (q2_personalidade)
+                        </a>
+                        <a href="http://localhost:5177/editor?step=step-4" class="block text-blue-600 underline">
+                            Editor - Etapa 4 (q3_visual_identificacao)
+                        </a>
+                    </div>
+                </div>
+
+                <div class="bg-white border rounded-lg p-4">
+                    <h4 class="font-medium text-yellow-800 mb-2">O que Verificar</h4>
+                    <ul class="space-y-1 text-sm text-yellow-700">
+                        <li>• Console: logs de PropertyDiscovery</li>
+                        <li>• Console: getCurrentValue para 'options'</li>
+                        <li>• Panel: se aparece field 'Opções'</li>
+                        <li>• Panel: se array está vazio ou cheio</li>
+                        <li>• Bloco: se renderiza opções na preview</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-6 flex gap-4">
+            <a href="http://localhost:5177/editor?step=step-2"
+                class="inline-flex items-center gap-2 bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors">
+                🔍 Testar Questão 1
+            </a>
+            <a href="http://localhost:5177/editor?step=step-3"
+                class="inline-flex items-center gap-2 bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors">
+                🔍 Testar Questão 2
+            </a>
+            <a href="http://localhost:5177/editor?step=step-4"
+                class="inline-flex items-center gap-2 bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors">
+                🔍 Testar Questão 3
+            </a>
+        </div>
+    </div>
+
+    <script>
+        console.log('🔍 Debug page loaded for specific questions');
+        console.log('Target questions:', [
+            'q1_roupa_favorita',
+            'q2_personalidade',
+            'q3_visual_identificacao'
+        ]);
+    </script>
+</body>
+
+</html>

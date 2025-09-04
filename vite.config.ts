@@ -57,15 +57,42 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     sourcemap: true,
-    chunkSizeWarningLimit: 1000,
+    chunkSizeWarningLimit: 500,
     // Copiar templates para o build
     copyPublicDir: true,
     rollupOptions: {
-      // Em ambientes de preview (ex.: lovable.app) alguns servidores retornam 404/HTML para chunks dinâmicos,
-      // causando "Failed to fetch dynamically imported module". Para garantir robustez, inlinamos imports dinâmicos
-      // e desativamos code-splitting neste build padrão.
       output: {
-        inlineDynamicImports: true,
+        // Estratégia agressiva de chunking para reduzir tamanhos
+        manualChunks: {
+          // Vendor chunks separados
+          'react-vendor': ['react', 'react-dom'],
+          'dnd-vendor': ['@dnd-kit/core', '@dnd-kit/sortable', '@dnd-kit/utilities'],
+          'icons-vendor': ['lucide-react'],
+          'charts-vendor': ['recharts'],
+          'ui-vendor': ['@radix-ui/react-dropdown-menu', '@radix-ui/react-tabs', '@radix-ui/react-select'],
+
+          // Componentes grandes separados
+          'editor-core': ['./src/legacy/editor/EditorPro'],
+          'canvas-components': ['./src/components/editor/canvas/CanvasDropZone.simple'],
+          'properties-system': ['./src/components/editor/properties/ModernPropertiesPanel'],
+          'schema-editor': ['./src/pages/SchemaEditorPage'],
+          'metrics-page': ['./src/pages/admin/MetricsPage'],
+
+          // Sistemas modulares
+          'funnel-system': [
+            './src/core/funnel/FunnelCore',
+            './src/core/funnel/FunnelEngine',
+            './src/core/funnel/hooks/useFunnelState'
+          ],
+          'quiz-system': [
+            './src/components/quiz/QuizRenderer',
+            './src/services/quizResultsService',
+            './src/hooks/useQuizFlow'
+          ]
+        },
+        chunkFileNames: 'assets/[name]-[hash].js',
+        entryFileNames: 'assets/[name]-[hash].js',
+        assetFileNames: 'assets/[name]-[hash].[ext]',
       },
     },
     // Configurações para resolver problemas com módulos CommonJS
@@ -89,6 +116,9 @@ export default defineConfig({
   // Configurações de performance adicionais
   define: {
     __DEV__: JSON.stringify(process.env.NODE_ENV === 'development'),
+    // Define process.env variables for client-side code
+    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
+    'process.env.VITEST': JSON.stringify(process.env.VITEST || false),
   },
   esbuild: {
     drop: process.env.NODE_ENV === 'production' ? ['console', 'debugger'] : [],

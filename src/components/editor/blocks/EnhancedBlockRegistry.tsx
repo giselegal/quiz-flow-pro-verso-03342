@@ -246,15 +246,16 @@ export const AVAILABLE_COMPONENTS = [
 
 /**
  * Normaliza as propriedades de um bloco para garantir consistência
+ * Retorna o bloco completo com propriedades normalizadas
  */
 export const normalizeBlockProperties = (block: any) => {
-    if (!block) return {};
+    if (!block) return { type: undefined, properties: {} };
 
     // Garantir que properties existe
     const properties = block.properties || {};
 
     // Normalizar propriedades comuns
-    const normalized = {
+    const baseNormalized = {
         ...properties,
         // Garantir que backgroundColor seja uma string válida
         backgroundColor: properties.backgroundColor || '',
@@ -270,38 +271,51 @@ export const normalizeBlockProperties = (block: any) => {
         boxShadow: properties.boxShadow || 'none',
     };
 
+    let normalizedProperties;
+    
     // Normalizar propriedades específicas por tipo de bloco
     switch (block.type) {
         case 'text':
         case 'text-inline':
-            return {
-                ...normalized,
+            normalizedProperties = {
+                ...baseNormalized,
                 content: block.content || properties.content || '',
                 fontSize: properties.fontSize || 16,
                 fontWeight: properties.fontWeight || 'normal',
                 color: properties.color || '#000000',
             };
+            break;
         case 'image':
         case 'image-inline':
-            return {
-                ...normalized,
+            normalizedProperties = {
+                ...baseNormalized,
                 src: properties.src || '',
                 alt: properties.alt || '',
                 width: properties.width || 'auto',
                 height: properties.height || 'auto',
             };
+            break;
         case 'button':
         case 'button-inline':
-            return {
-                ...normalized,
+            normalizedProperties = {
+                ...baseNormalized,
                 text: properties.text || 'Botão',
                 url: properties.url || '#',
                 color: properties.color || '#ffffff',
                 backgroundColor: properties.backgroundColor || '#3b82f6',
             };
+            break;
         default:
-            return normalized;
+            normalizedProperties = baseNormalized;
+            break;
     }
+
+    // Retornar o bloco completo com propriedades normalizadas e preservar todos os campos originais
+    return {
+        ...block,
+        type: block.type,  // Garantir que o tipo seja preservado
+        properties: normalizedProperties
+    };
 };
 
 /**

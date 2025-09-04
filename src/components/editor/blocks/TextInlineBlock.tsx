@@ -17,7 +17,7 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
 }) => {
   // ES7+ Destructuring com default values e optional chaining
   const {
-    content = 'Texto exemplo',
+    content: rawContent = 'Texto exemplo',
     fontSize = 'medium',
     fontWeight = 'normal',
     fontFamily = 'inherit',
@@ -37,6 +37,14 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
     marginRight = 0,
     lineHeight = 'leading-normal',
   } = block?.properties ?? {};
+
+  // Normalizar content para string (pode vir como objeto com .text)
+  const content = useMemo(() => {
+    if (typeof rawContent === 'string') return rawContent;
+    if (typeof rawContent === 'object' && rawContent?.text) return rawContent.text;
+    if (typeof rawContent === 'object' && rawContent?.content) return rawContent.content;
+    return String(rawContent || 'Texto exemplo');
+  }, [rawContent]);
 
   // ES7+ Object property shorthand e computed property names
   const fontSizeClasses = {
@@ -140,9 +148,9 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
   const personalizedContent = useMemo(() => {
     // ES7+ Optional chaining e nullish coalescing
     if (useUsername && usernamePattern) {
-      return content?.replace?.(usernamePattern, 'Usuário') ?? content;
+      return content?.replace?.(usernamePattern, 'Usuário') ?? content ?? '';
     }
-    return content;
+    return content ?? '';
   }, [content, useUsername, usernamePattern]);
 
   // 🎯 Sistema de múltiplas cores e formatação no mesmo texto
@@ -243,19 +251,20 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
 
   // 🎯 Função para detectar se tem marcações de cor ou formatação
   const hasColorMarkings = useMemo(() => {
-    return personalizedContent?.includes('[') && personalizedContent?.includes('[/');
+    return typeof personalizedContent === 'string' && personalizedContent.includes('[') && personalizedContent.includes('[/');
   }, [personalizedContent]);
 
   // 🎯 Função para detectar formatação simples (sem cores)
   const hasSimpleFormatting = useMemo(() => {
-    return !hasColorMarkings && personalizedContent?.includes('**');
+    return !hasColorMarkings && typeof personalizedContent === 'string' && personalizedContent.includes('**');
   }, [personalizedContent, hasColorMarkings]);
 
   // Verificar se o conteúdo contém HTML
   const isHtmlContent = useMemo(() => {
-    const hasHtml = personalizedContent?.includes('<') && personalizedContent?.includes('>');
-    const hasSpanTag = personalizedContent?.includes('<span');
-    const hasStrongTag = personalizedContent?.includes('<strong');
+    if (typeof personalizedContent !== 'string') return false;
+    const hasHtml = personalizedContent.includes('<') && personalizedContent.includes('>');
+    const hasSpanTag = personalizedContent.includes('<span');
+    const hasStrongTag = personalizedContent.includes('<strong');
 
     // Debug controlado e deduplicado: definir window.__TEXT_INLINE_DEBUG = true para ver logs
     try {

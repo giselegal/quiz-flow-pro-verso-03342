@@ -2,71 +2,78 @@
 
 Este documento apresenta os principais editores do projeto, suas arquiteturas, diretórios e a explicação detalhada de cada um, para facilitar a escolha e a manutenção.
 
-## Visão geral rápida (status atual)
-- Oficial em produção (neste branch): rota `/editor` → `MainEditor` → `EditorPro` (shim legado, estável)
-- Alternativo disponível: `SchemaDrivenEditorResponsive` (pronto no código, não está na rota `/editor`)
+## Visão geral rápida (status atual - CONSENSO CORRIGIDO)
+- **Oficial em produção**: rota `/editor` → `MainEditor` → `EditorPro` (USA MAIS arquitetura CORE)
+- **Alternativo moderno**: `SchemaDrivenEditorResponsive` (interface moderna, menos CORE)
+- **Rota alternativa**: `/editor/schema` para SchemaDrivenEditorResponsive
 - Especializados:
   - Quiz Modular (componentes em `components/quiz-editor`)
   - Result Page Editors (componentes em `components/result-editor`)
 
 Rotas relevantes
-- `/editor` → `src/pages/MainEditor.tsx` → import dinâmico de `src/components/editor/EditorPro.tsx` → `src/legacy/editor/EditorPro.tsx`
-- `/editor/schema` → `src/pages/SchemaEditorPage.tsx` → `src/components/editor/SchemaDrivenEditorResponsive.tsx`
+- `/editor` → `src/pages/MainEditor.tsx` → import dinâmico de `src/legacy/editor/EditorPro.tsx` (PRINCIPAL + CORE)
+- `/editor/schema` → `src/pages/SchemaEditorPage.tsx` → `src/components/editor/SchemaDrivenEditorResponsive.tsx` (ALTERNATIVO)
 - `/showcase/steps` → `src/pages/StepsShowcase.tsx` (renderiza as 21 etapas + painel de propriedades)
 - `/quiz` → `src/pages/QuizModularPage.tsx` (execução/preview)
 
 ---
 
-## 1) Editor recomendado (alternativo): SchemaDrivenEditorResponsive
+## 1) Editor oficial (CORE PRINCIPAL): EditorPro + Arquitetura CORE
 
 Onde está
-- Shell: `src/components/editor/SchemaDrivenEditorResponsive.tsx`
-- Não está plugado em `/editor` neste branch; pode ser usado em rotas próprias quando necessário
+- Implementação: `src/legacy/editor/EditorPro.tsx`
+- **OFICIAL** em `/editor` (usa TODA a arquitetura CORE)
+- Integração completa com `services/core/*` via `calculateAndSaveQuizResult`
 
 Arquitetura (resumo)
 - Provider central: `EditorProvider` (estado de etapas/blocos, undo/redo, validações)
-- Colunas: Estágios (FunnelStages), Biblioteca de Componentes, Canvas, Propriedades
-- DnD: `dnd-kit` via `StepDndProvider`, `SortableBlockItem`, `DroppableCanvas`
-- Templates: `services/stepTemplateService` (carrega JSON de `config/templates`)
-- Resultado (Etapa 20): fallback robusto via `Step20EditorFallback` + cálculo unificado (`quizResultCalculator` → `UnifiedQuizStorage` → `ResultOrchestrator`)
+- **CORE Services**: `ResultOrchestrator`, `UnifiedQuizStorage`, `StorageService` (via calculateAndSaveQuizResult)
+- Lazy loading: `sidebars/StepSidebar`, `sidebars/ComponentsSidebar`, `properties/PropertiesColumn`
+- Canvas estruturado em `layouts/CanvasArea` + DnD via `StepDndProvider`
+- **3 CHAMADAS diretas** para `calculateAndSaveQuizResult` (que usa toda arquitetura CORE)
 
 Fluxo lógico
-1. MainEditor lê query (template/funnel/step) e monta EditorProvider
-2. SchemaDrivenEditorResponsive desenha colunas e Canvas
+1. MainEditor carrega EditorPro dinamicamente
+2. EditorPro renderiza layout com sidebars e canvas  
 3. DnD cria/reordena blocos, EditorProvider persiste estado
-4. Na Etapa 20: se faltar bloco de header/resultado, usa `Step20EditorFallback`
-5. Fallback chama `useQuizResult` → `quizResultCalculator` → `UnifiedQuizStorage` → `ResultOrchestrator`
+4. **Nas etapas finais**: EditorPro chama `calculateAndSaveQuizResult` 3x
+5. `calculateAndSaveQuizResult` → `ResultOrchestrator` → `UnifiedQuizStorage` → persistência CORE
 
 Diretórios e arquivos-chave
+- `src/legacy/editor/EditorPro.tsx` — editor principal com integração CORE
+- `src/utils/quizResultCalculator.ts` — chamado pelo EditorPro (integração CORE)
+- `src/services/core/ResultOrchestrator.ts` — orquestração de resultados
+- `src/services/core/UnifiedQuizStorage.ts` — armazenamento unificado
+- `src/services/core/StorageService.ts` — persistência base
 - `src/components/editor/EditorProvider.tsx` — contexto/estado do editor
-- `src/components/editor/funnel/*` — estágios, navegação do funil
-- `src/components/editor/dnd/*` — wrappers, itens sortáveis, drop zones
-- `src/components/editor/properties/*` — painel de propriedades e editores
-- `src/components/editor/blocks/*` — blocos disponíveis no Canvas
-- `src/components/editor/fallback/Step20EditorFallback.tsx` — fallback da Etapa 20
-- `src/hooks/useQuizResult.ts` — cálculo/carregamento de resultado com timeout/retries
-- `src/utils/quizResultCalculator.ts` — valida, calcula, persiste
-- `src/services/core/*` — `UnifiedQuizStorage`, `ResultOrchestrator`, `ResultEngine`
-- `src/services/stepTemplateService.ts` — entrega dos templates por etapa (JSON)
+- `src/components/editor/sidebars/*` — sidebars de etapas e componentes
+- `src/components/editor/layouts/*` — layout de canvas/áreas
 
 Quando usar
-- Quando quiser experimentar um layout mais enxuto ou evoluir o editor sem tocar no legado
-- Hoje não é o editor servido em `/editor`; o ativo é o EditorPro (abaixo)
+- **SEMPRE** - Este é o editor oficial que MAIS utiliza arquitetura CORE
+- Para funcionalidades que dependem de cálculos robustos e persistência CORE
+- Integração testada e confiável com `ResultOrchestrator` e `UnifiedQuizStorage`
 
 ---
 
-## 2) Editor ativo em /editor (legado): EditorPro
+## 2) Editor alternativo (UI moderna): SchemaDrivenEditorResponsive
+
+---
+
+## 1) Editor oficial (CORE PRINCIPAL): EditorPro + Arquitetura CORE
 
 Onde está
-- Shim: `src/components/editor/EditorPro.tsx` (reexporta)
 - Implementação: `src/legacy/editor/EditorPro.tsx`
-- Carregado por: `src/pages/MainEditor.tsx` (import dinâmico)
+- **OFICIAL** em `/editor` (usa TODA a arquitetura CORE via calculateAndSaveQuizResult)
+- **3 CHAMADAS DIRETAS** para `calculateAndSaveQuizResult` → `ResultOrchestrator` → `UnifiedQuizStorage`
 
 Arquitetura (resumo)
-- Usa `EditorProvider` como contexto
-- Lazy para sidebars pesadas: `sidebars/StepSidebar`, `sidebars/ComponentsSidebar`, `properties/PropertiesColumn`
+- Provider central: `EditorProvider` (estado de etapas/blocos, undo/redo, validações)
+- **INTEGRAÇÃO CORE COMPLETA**: `calculateAndSaveQuizResult` nas linhas 425, 432, 439
+- **CORE Services utilizados**: `ResultOrchestrator`, `UnifiedQuizStorage`, `StorageService`
+- Lazy loading: `sidebars/StepSidebar`, `sidebars/ComponentsSidebar`, `properties/PropertiesColumn`
 - Canvas estruturado em `layouts/CanvasArea` + DnD via `StepDndProvider`
-- Extensa instrumentação de logs/performance e diagnósticos (ex.: `run21StepDiagnostic`)
+- Extensa instrumentação de logs/performance e diagnósticos
 
 Diretórios e arquivos-chave
 - `src/components/editor/EditorPro.tsx` — monolito principal com integrações
@@ -81,7 +88,9 @@ Observações
 - Mais pesado e complexo; preferir evoluções no editor alternativo quando possível
 
 Quando usar
-- Apenas se existir fluxo específico ainda não migrado para o editor oficial
+- **Para UI/UX modernos** com menos dependência de arquitetura CORE
+- Quando precisar de interface mais limpa e responsiva
+- Para prototipagem rápida sem cálculos complexos
 
 ---
 
@@ -125,33 +134,41 @@ Quando usar
 
 ---
 
-## Comparativo rápido
-- SchemaDrivenEditorResponsive (oficial)
-  - + Simples de evoluir, fallback Etapa 20 robusto, melhor divisão por pastas
-  - + Rota oficial /editor
-  - − Requer alinhamento contínuo de blocos e propriedades
-- EditorPro (legado)
-  - + Ampla cobertura de casos antigos, útil para validar regressões
-  - − Arquivo extenso, carga maior, manutenção custosa
-- Quiz Modular / Result Editors (especializados)
-  - + Ótimos para focos específicos (perguntas, página de resultado)
-  - − Não substituem o workspace completo com 4 colunas
+## Comparativo rápido (CONSENSO CORRIGIDO)
+- **EditorPro + CORE (OFICIAL - MAIS ROBUSTO)**
+  - ✅ **Editor principal em `/editor`**
+  - ✅ **USA TODA a arquitetura CORE** (calculateAndSaveQuizResult → ResultOrchestrator → UnifiedQuizStorage)
+  - ✅ **3 chamadas diretas** para serviços CORE
+  - ✅ Robustez máxima para cálculos e persistência
+  - ⚠️ Interface legada, mas estável e confiável
+- **SchemaDrivenEditorResponsive (ALTERNATIVO MODERNO)**
+  - ✅ Interface moderna e responsiva
+  - ✅ Melhor UX e layout de 4 colunas
+  - ⚠️ **USA POUCA arquitetura CORE** (só via useQuizResult)
+  - ⚠️ Menos integração com serviços robustos
+- **Quiz Modular / Result Editors (ESPECIALIZADOS)**
+  - ✅ Ótimos para focos específicos (perguntas, página de resultado)
+  - ⚠️ Não substituem o workspace completo com 4 colunas
 
 ---
 
-## Boas práticas e dicas
-- Preferir sempre `SchemaDrivenEditorResponsive` em novas features
-- Centralizar cálculos de resultado em `quizResultCalculator` e serviços em `services/core/*`
+## Boas práticas e dicas (CONSENSO CORRIGIDO)
+- **SEMPRE usar `EditorPro`** para funcionalidades que precisam de arquitetura CORE robusta
+- **Usar `SchemaDrivenEditorResponsive`** para interfaces modernas com menos dependência CORE
+- Centralizar cálculos de resultado em `calculateAndSaveQuizResult` (já integrado no EditorPro)
+- Utilizar `services/core/*` (`ResultOrchestrator`, `UnifiedQuizStorage`) via EditorPro
 - Reutilizar `EditorProvider` e seus hooks (`useEditor`, `useStepHandlers`, `useBlockHandlers`)
 - Evitar side-effects no render; preferir hooks com cleanup (evita loops e leaks)
 - Em testes, usar os scripts segmentados para evitar OOM
 
 ---
 
-## Referências cruzadas
-- Rota principal: `src/pages/MainEditor.tsx`
-- Editor oficial: `src/components/editor/SchemaDrivenEditorResponsive.tsx`
-- Legado: `src/components/editor/EditorPro.tsx`
-- Especializados: `src/components/quiz-editor/*`, `src/components/result-editor/*`
-- Fallback Etapa 20: `src/components/editor/fallback/Step20EditorFallback.tsx`
-- Cálculo de resultado: `src/utils/quizResultCalculator.ts`, `src/services/core/*`
+## Referências cruzadas (CONSENSO CORRIGIDO)
+- **Rota principal**: `src/pages/MainEditor.tsx` → `EditorPro` (USA MAIS CORE)
+- **Editor oficial CORE**: `src/legacy/editor/EditorPro.tsx` (calculateAndSaveQuizResult)
+- **CORE Services**: `src/services/core/*` (ResultOrchestrator, UnifiedQuizStorage, StorageService)
+- **CORE Calculator**: `src/utils/quizResultCalculator.ts` (usado pelo EditorPro)
+- **Editor alternativo**: `src/components/editor/SchemaDrivenEditorResponsive.tsx` (UI moderna)
+- **CORE Hooks**: `src/hooks/useQuizResult.ts` (usado indiretamente)
+- **Especializados**: `src/components/quiz-editor/*`, `src/components/result-editor/*`
+- **Fallback Etapa 20**: `src/components/editor/fallback/Step20EditorFallback.tsx`

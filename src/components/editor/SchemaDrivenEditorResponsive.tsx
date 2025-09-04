@@ -1,4 +1,4 @@
-import EnhancedUniversalPropertiesPanelFixed from '@/components/universal/EnhancedUniversalPropertiesPanelFixed';
+import RegistryPropertiesPanel from '@/components/universal/RegistryPropertiesPanel';
 import { useEditor } from './EditorProvider';
 import { BlockType } from '@/types/editor';
 import { QuizMainDemo } from './QuizMainDemo';
@@ -146,7 +146,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
             </>
           }
           propertiesPanel={
-            <EnhancedUniversalPropertiesPanelFixed
+            <RegistryPropertiesPanel
               selectedBlock={selectedBlock || null}
               onUpdate={handleUpdateSelectedBlock}
               onClose={() => setSelectedBlockId(null)}

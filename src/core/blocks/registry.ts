@@ -115,53 +115,232 @@ export const blocksRegistry: Record<string, BlockDefinition> = process.env.NODE_
         category: 'Interação',
         icon: 'flash',
         defaultProps: {
+            // === CONTEÚDO ===
+            title: 'Escolha uma opção:',
+            description: '',
             options: [
-                { id: 'a', label: 'Opção A' },
-                { id: 'b', label: 'Opção B' },
+                { 
+                    id: 'option-1', 
+                    text: 'Opção A',
+                    description: 'Descrição da opção A',
+                    imageUrl: 'https://via.placeholder.com/256x256',
+                    value: 'a',
+                    category: 'Categoria A',
+                    points: 1
+                },
+                { 
+                    id: 'option-2', 
+                    text: 'Opção B', 
+                    description: 'Descrição da opção B',
+                    imageUrl: 'https://via.placeholder.com/256x256',
+                    value: 'b',
+                    category: 'Categoria B',
+                    points: 2
+                },
             ],
+            
+            // === LAYOUT E GRID ===
             columns: 2,
+            gridGap: 16,
+            responsiveColumns: true,
+            containerWidth: 'full',
+            padding: 16,
+            marginTop: 0,
+            marginBottom: 16,
+            
+            // === CONFIGURAÇÃO DE IMAGENS ===
+            showImages: true,
+            imageSize: 256,
+            imageWidth: 256,
+            imageHeight: 256,
+            imagePosition: 'top',
+            imageLayout: 'vertical',
+            imageObjectFit: 'cover',
+            imageBorderRadius: 8,
+            
+            // === OPÇÕES DE CONTEÚDO ===
+            contentMode: 'text-and-image', // 'text-only', 'image-only', 'text-and-image'
+            textPosition: 'below',
+            showDescription: true,
+            showCategory: false,
+            showPoints: false,
+            
+            // === COMPORTAMENTO DE SELEÇÃO ===
+            multipleSelection: false,
+            minSelections: 1,
+            maxSelections: 1,
+            requiredSelections: 1,
+            allowDeselection: true,
+            showSelectionCount: false,
+            selectionCountText: 'Selecionados: {count}',
+            
+            // === AUTO AVANÇO ===
+            autoAdvanceOnComplete: false,
+            autoAdvanceDelay: 1000,
+            autoAdvanceOnMaxSelection: false,
+            
+            // === CORES E ESTILO ===
+            backgroundColor: '#FFFFFF',
+            borderColor: '#E5E7EB',
+            selectedColor: '#B89B7A',
+            selectedBorderColor: '#B89B7A',
+            hoverColor: '#F3E8D3',
+            hoverBorderColor: '#D4C2A8',
+            textColor: '#1F2937',
+            selectedTextColor: '#1F2937',
+            borderRadius: 8,
+            borderWidth: 1,
+            
+            // === ESTILO DE SELEÇÃO ===
+            selectionStyle: 'border', // 'border', 'background', 'glow', 'scale', 'overlay'
+            selectionAnimation: 'smooth', // 'none', 'smooth', 'bounce', 'pulse'
+            hoverEffect: true,
+            
+            // === VALIDAÇÃO ===
+            enableValidation: true,
+            showValidationMessage: true,
+            validationMessage: 'Selecione pelo menos uma opção para continuar',
+            validationMessageColor: '#EF4444',
+            
+            // === CONTROLE AVANÇADO ===
+            scale: 100,
+            opacity: 100,
+            disabledOpacity: 50,
+            
+            // === BOTÕES E NAVEGAÇÃO ===
+            showButtons: true,
+            buttonPosition: 'bottom',
+            enableButtonOnlyWhenValid: true,
+            nextButtonText: 'Continuar',
+            nextButtonUrl: '',
+            nextButtonAction: 'next-step',
+            showPreviousButton: false,
+            previousButtonText: 'Voltar',
         },
         propsSchema: [
-            // Conteúdo
-            prop({ key: 'question', kind: 'text', label: 'Título/Questão', category: 'content', default: '' }),
-            prop({ key: 'options', kind: 'array', label: 'Opções', category: 'content', default: [] }),
-            // Seleções e validação
-            prop({ key: 'requiredSelections', kind: 'number', label: 'Seleções Obrigatórias', category: 'behavior', default: 1 }),
-            prop({ key: 'minSelections', kind: 'number', label: 'Mínimo de Seleções', category: 'behavior', default: 1 }),
-            prop({ key: 'maxSelections', kind: 'number', label: 'Máximo de Seleções', category: 'behavior', default: 1 }),
-            prop({ key: 'multipleSelection', kind: 'switch', label: 'Permitir Multiseleção', category: 'behavior', default: false }),
-            prop({ key: 'enableButtonOnlyWhenValid', kind: 'switch', label: 'Habilitar Botão Apenas se Válido', category: 'behavior', default: true }),
-            prop({ key: 'showValidationFeedback', kind: 'switch', label: 'Mostrar Feedback de Validação', category: 'behavior', default: true }),
-            prop({ key: 'validationMessage', kind: 'text', label: 'Mensagem de Validação', category: 'behavior', default: '' }),
-            prop({ key: 'progressMessage', kind: 'text', label: 'Mensagem de Progresso', category: 'behavior', default: '' }),
-            prop({ key: 'showSelectionCount', kind: 'switch', label: 'Mostrar Contador de Seleção', category: 'behavior', default: true }),
-            // Avanço
-            prop({ key: 'autoAdvanceOnComplete', kind: 'switch', label: 'Auto Avançar ao Completar', category: 'behavior', default: false }),
-            prop({ key: 'autoAdvanceDelay', kind: 'number', label: 'Atraso de Auto Avanço (ms)', category: 'behavior', default: 0 }),
-            // Pontuação
-            prop({ key: 'scoreValues', kind: 'object', label: 'Pontuação por Opção', category: 'advanced', default: {} }),
-            // Visual
-            prop({ key: 'showImages', kind: 'switch', label: 'Mostrar Imagens', category: 'style', default: true }),
+            // === SEÇÃO: CONTEÚDO ===
+            prop({ key: 'title', kind: 'text', label: 'Título da Questão', category: 'content', default: 'Escolha uma opção:', required: true, description: 'Pergunta principal exibida acima das opções' }),
+            prop({ key: 'description', kind: 'textarea', label: 'Descrição/Subtítulo', category: 'content', default: '', description: 'Texto adicional explicativo (opcional)' }),
+            prop({ key: 'options', kind: 'array', label: 'Opções da Questão', category: 'content', default: [], description: 'Configure todas as opções disponíveis para seleção' }),
+            
+            // === SEÇÃO: LAYOUT DO GRID ===
+            prop({ key: 'columns', kind: 'range', label: 'Número de Colunas', category: 'layout', min: 1, max: 4, step: 1, default: 2, description: 'Quantas colunas terá o grid de opções' }),
+            prop({ key: 'gridGap', kind: 'range', label: 'Espaçamento entre Opções', category: 'layout', min: 0, max: 48, step: 2, unit: 'px', default: 16, description: 'Distância entre cada opção no grid' }),
+            prop({ key: 'responsiveColumns', kind: 'switch', label: 'Colunas Responsivas', category: 'layout', default: true, description: 'Ajusta automaticamente o número de colunas em telas menores' }),
+            prop({ key: 'padding', kind: 'range', label: 'Padding Interno', category: 'layout', min: 0, max: 48, step: 2, unit: 'px', default: 16, description: 'Espaçamento interno de cada opção' }),
+            prop({ key: 'marginTop', kind: 'range', label: 'Margem Superior', category: 'layout', min: 0, max: 64, step: 2, unit: 'px', default: 0 }),
+            prop({ key: 'marginBottom', kind: 'range', label: 'Margem Inferior', category: 'layout', min: 0, max: 64, step: 2, unit: 'px', default: 16 }),
+            
+            // === SEÇÃO: CONFIGURAÇÃO DE IMAGENS ===
+            prop({ key: 'showImages', kind: 'switch', label: 'Exibir Imagens', category: 'style', default: true, description: 'Ativar/desativar imagens nas opções' }),
+            select('contentMode', 'Modo de Conteúdo', [
+                { value: 'text-and-image', label: '🖼️ Imagem + Texto' },
+                { value: 'image-only', label: '📷 Apenas Imagem' },
+                { value: 'text-only', label: '📝 Apenas Texto' },
+            ], { category: 'style', default: 'text-and-image', description: 'Que tipo de conteúdo exibir nas opções' }),
+            prop({ key: 'imageSize', kind: 'range', label: 'Tamanho das Imagens', category: 'style', min: 100, max: 400, step: 10, unit: 'px', default: 256, description: 'Tamanho padrão das imagens', when: { key: 'showImages', value: true } }),
+            prop({ key: 'imageWidth', kind: 'range', label: 'Largura Customizada', category: 'style', min: 100, max: 500, step: 10, unit: 'px', default: 256, when: { key: 'showImages', value: true } }),
+            prop({ key: 'imageHeight', kind: 'range', label: 'Altura Customizada', category: 'style', min: 100, max: 500, step: 10, unit: 'px', default: 256, when: { key: 'showImages', value: true } }),
+            select('imagePosition', 'Posição da Imagem', [
+                { value: 'top', label: '⬆️ Acima do Texto' },
+                { value: 'left', label: '⬅️ À Esquerda' },
+                { value: 'right', label: '➡️ À Direita' },
+                { value: 'bottom', label: '⬇️ Abaixo do Texto' },
+            ], { category: 'style', default: 'top', when: { key: 'showImages', value: true } }),
+            select('imageLayout', 'Layout da Opção', [
+                { value: 'vertical', label: 'Vertical (empilhado)' },
+                { value: 'horizontal', label: 'Horizontal (lado a lado)' },
+            ], { category: 'style', default: 'vertical', when: { key: 'showImages', value: true } }),
+            select('imageObjectFit', 'Ajuste da Imagem', [
+                { value: 'cover', label: 'Cobrir (crop)' },
+                { value: 'contain', label: 'Conter (fit)' },
+                { value: 'fill', label: 'Preencher (stretch)' },
+            ], { category: 'style', default: 'cover', when: { key: 'showImages', value: true } }),
+            prop({ key: 'imageBorderRadius', kind: 'range', label: 'Bordas Arredondadas da Imagem', category: 'style', min: 0, max: 32, step: 1, unit: 'px', default: 8, when: { key: 'showImages', value: true } }),
+            
+            // === SEÇÃO: CONTEÚDO E TEXTO ===
+            select('textPosition', 'Posição do Texto', [
+                { value: 'above', label: 'Acima da Imagem' },
+                { value: 'below', label: 'Abaixo da Imagem' },
+                { value: 'overlay', label: 'Sobreposto à Imagem' },
+            ], { category: 'style', default: 'below' }),
+            prop({ key: 'showDescription', kind: 'switch', label: 'Mostrar Descrição', category: 'content', default: true, description: 'Exibir texto descritivo nas opções' }),
+            prop({ key: 'showCategory', kind: 'switch', label: 'Mostrar Categoria', category: 'content', default: false, description: 'Exibir categoria/palavra-chave das opções' }),
+            prop({ key: 'showPoints', kind: 'switch', label: 'Mostrar Pontuação', category: 'content', default: false, description: 'Exibir pontos de cada opção (para debug)' }),
+            
+            // === SEÇÃO: COMPORTAMENTO DE SELEÇÃO ===
+            prop({ key: 'multipleSelection', kind: 'switch', label: 'Permitir Seleção Múltipla', category: 'behavior', default: false, description: 'Permitir selecionar várias opções simultaneamente' }),
+            prop({ key: 'minSelections', kind: 'range', label: 'Mínimo de Seleções', category: 'behavior', min: 0, max: 10, step: 1, default: 1, description: 'Número mínimo de opções que devem ser selecionadas' }),
+            prop({ key: 'maxSelections', kind: 'range', label: 'Máximo de Seleções', category: 'behavior', min: 1, max: 10, step: 1, default: 1, description: 'Número máximo de opções que podem ser selecionadas' }),
+            prop({ key: 'requiredSelections', kind: 'range', label: 'Seleções Obrigatórias', category: 'behavior', min: 0, max: 10, step: 1, default: 1, description: 'Quantas seleções são necessárias para prosseguir' }),
+            prop({ key: 'allowDeselection', kind: 'switch', label: 'Permitir Desmarcar', category: 'behavior', default: true, description: 'Permitir clicar novamente para desselecionar uma opção' }),
+            prop({ key: 'showSelectionCount', kind: 'switch', label: 'Mostrar Contador', category: 'behavior', default: false, description: 'Exibir quantas opções foram selecionadas' }),
+            prop({ key: 'selectionCountText', kind: 'text', label: 'Texto do Contador', category: 'behavior', default: 'Selecionados: {count}', when: { key: 'showSelectionCount', value: true } }),
+            
+            // === SEÇÃO: AUTO AVANÇO ===
+            prop({ key: 'autoAdvanceOnComplete', kind: 'switch', label: 'Auto Avançar ao Completar', category: 'behavior', default: false, description: 'Avançar automaticamente quando atingir seleções obrigatórias' }),
+            prop({ key: 'autoAdvanceDelay', kind: 'range', label: 'Delay do Auto Avanço', category: 'behavior', min: 0, max: 5000, step: 100, unit: 'ms', default: 1000, when: { key: 'autoAdvanceOnComplete', value: true } }),
+            prop({ key: 'autoAdvanceOnMaxSelection', kind: 'switch', label: 'Auto Avançar no Máximo', category: 'behavior', default: false, description: 'Avançar automaticamente ao atingir número máximo de seleções' }),
+            
+            // === SEÇÃO: CORES E VISUAL ===
+            prop({ key: 'backgroundColor', kind: 'color', label: 'Cor de Fundo', category: 'style', default: '#FFFFFF', description: 'Cor de fundo das opções não selecionadas' }),
+            prop({ key: 'borderColor', kind: 'color', label: 'Cor da Borda', category: 'style', default: '#E5E7EB', description: 'Cor da borda padrão das opções' }),
+            prop({ key: 'selectedColor', kind: 'color', label: 'Cor de Fundo Selecionado', category: 'style', default: '#B89B7A', description: 'Cor de fundo quando a opção está selecionada' }),
+            prop({ key: 'selectedBorderColor', kind: 'color', label: 'Cor da Borda Selecionada', category: 'style', default: '#B89B7A', description: 'Cor da borda quando a opção está selecionada' }),
+            prop({ key: 'hoverColor', kind: 'color', label: 'Cor no Hover', category: 'style', default: '#F3E8D3', description: 'Cor de fundo ao passar o mouse' }),
+            prop({ key: 'hoverBorderColor', kind: 'color', label: 'Cor da Borda no Hover', category: 'style', default: '#D4C2A8' }),
+            prop({ key: 'textColor', kind: 'color', label: 'Cor do Texto', category: 'style', default: '#1F2937' }),
+            prop({ key: 'selectedTextColor', kind: 'color', label: 'Cor do Texto Selecionado', category: 'style', default: '#1F2937' }),
+            
+            // === SEÇÃO: BORDAS E FORMA ===
+            prop({ key: 'borderRadius', kind: 'range', label: 'Bordas Arredondadas', category: 'style', min: 0, max: 32, step: 1, unit: 'px', default: 8, description: 'Raio das bordas arredondadas' }),
+            prop({ key: 'borderWidth', kind: 'range', label: 'Largura da Borda', category: 'style', min: 0, max: 8, step: 1, unit: 'px', default: 1 }),
+            
+            // === SEÇÃO: EFEITOS VISUAIS ===
             select('selectionStyle', 'Estilo de Seleção', [
-                { value: 'border', label: 'Borda' },
-                { value: 'background', label: 'Fundo' },
-            ], { category: 'style', default: 'border' }),
-            prop({ key: 'selectedColor', kind: 'color', label: 'Cor ao Selecionar', category: 'style', default: '#3B82F6' }),
-            prop({ key: 'hoverColor', kind: 'color', label: 'Cor no Hover', category: 'style', default: '#EBF5FF' }),
-            // Imagem
-            select('imageSize', 'Tamanho da Imagem', [
-                { value: 'auto', label: 'Automático' },
-                { value: 'small', label: 'Pequena' },
-                { value: 'medium', label: 'Média' },
-                { value: 'large', label: 'Grande' },
-                { value: 'custom', label: 'Personalizado' },
-            ], { category: 'style', default: 'auto' }),
-            prop({ key: 'imageWidth', kind: 'number', label: 'Largura (px)', category: 'style', default: 300 }),
-            prop({ key: 'imageHeight', kind: 'number', label: 'Altura (px)', category: 'style', default: 300 }),
-            // Layout
-            prop({ key: 'columns', kind: 'range', label: 'Colunas', category: 'layout', min: 1, max: 4, step: 1, default: 2 }),
-            prop({ key: 'gridGap', kind: 'number', label: 'Espaçamento da Grade (px)', category: 'layout', default: 16 }),
-            prop({ key: 'responsiveColumns', kind: 'switch', label: 'Colunas Responsivas', category: 'layout', default: true }),
+                { value: 'border', label: '🔲 Destaque na Borda' },
+                { value: 'background', label: '🎨 Mudança de Fundo' },
+                { value: 'glow', label: '✨ Efeito Brilho' },
+                { value: 'scale', label: '🔍 Aumentar Tamanho' },
+                { value: 'overlay', label: '📋 Overlay com Ícone' },
+            ], { category: 'style', default: 'border', description: 'Como destacar visualmente opções selecionadas' }),
+            select('selectionAnimation', 'Animação de Seleção', [
+                { value: 'none', label: 'Sem Animação' },
+                { value: 'smooth', label: 'Suave' },
+                { value: 'bounce', label: 'Saltitante' },
+                { value: 'pulse', label: 'Pulsante' },
+            ], { category: 'animation', default: 'smooth' }),
+            prop({ key: 'hoverEffect', kind: 'switch', label: 'Ativar Efeito Hover', category: 'style', default: true, description: 'Mostrar efeito visual ao passar o mouse' }),
+            
+            // === SEÇÃO: VALIDAÇÃO ===
+            prop({ key: 'enableValidation', kind: 'switch', label: 'Ativar Validação', category: 'behavior', default: true, description: 'Verificar se seleções são válidas antes de prosseguir' }),
+            prop({ key: 'showValidationMessage', kind: 'switch', label: 'Mostrar Mensagem de Erro', category: 'behavior', default: true, when: { key: 'enableValidation', value: true } }),
+            prop({ key: 'validationMessage', kind: 'text', label: 'Mensagem de Validação', category: 'behavior', default: 'Selecione pelo menos uma opção para continuar', when: { key: 'showValidationMessage', value: true } }),
+            prop({ key: 'validationMessageColor', kind: 'color', label: 'Cor da Mensagem de Erro', category: 'style', default: '#EF4444', when: { key: 'showValidationMessage', value: true } }),
+            
+            // === SEÇÃO: BOTÕES E NAVEGAÇÃO ===
+            prop({ key: 'showButtons', kind: 'switch', label: 'Exibir Botões', category: 'behavior', default: true, description: 'Mostrar botões de navegação' }),
+            select('buttonPosition', 'Posição dos Botões', [
+                { value: 'top', label: 'Acima das Opções' },
+                { value: 'bottom', label: 'Abaixo das Opções' },
+                { value: 'both', label: 'Acima e Abaixo' },
+            ], { category: 'layout', default: 'bottom', when: { key: 'showButtons', value: true } }),
+            prop({ key: 'enableButtonOnlyWhenValid', kind: 'switch', label: 'Botão Apenas se Válido', category: 'behavior', default: true, description: 'Habilitar botão "Continuar" somente quando seleção for válida' }),
+            prop({ key: 'nextButtonText', kind: 'text', label: 'Texto do Botão "Continuar"', category: 'content', default: 'Continuar', when: { key: 'showButtons', value: true } }),
+            prop({ key: 'nextButtonUrl', kind: 'url', label: 'URL do Botão "Continuar"', category: 'behavior', default: '', when: { key: 'showButtons', value: true } }),
+            select('nextButtonAction', 'Ação do Botão', [
+                { value: 'next-step', label: 'Próxima Etapa' },
+                { value: 'open-url', label: 'Abrir URL' },
+                { value: 'submit', label: 'Enviar Formulário' },
+                { value: 'custom', label: 'Ação Personalizada' },
+            ], { category: 'behavior', default: 'next-step', when: { key: 'showButtons', value: true } }),
+            prop({ key: 'showPreviousButton', kind: 'switch', label: 'Mostrar Botão "Voltar"', category: 'behavior', default: false, when: { key: 'showButtons', value: true } }),
+            prop({ key: 'previousButtonText', kind: 'text', label: 'Texto do Botão "Voltar"', category: 'content', default: 'Voltar', when: { key: 'showPreviousButton', value: true } }),
+            
+            // === SEÇÃO: CONTROLES AVANÇADOS ===
+            prop({ key: 'scale', kind: 'range', label: 'Escala do Componente', category: 'advanced', min: 50, max: 200, step: 5, unit: '%', default: 100, description: 'Controle de zoom geral do componente inteiro' }),
+            prop({ key: 'opacity', kind: 'range', label: 'Opacidade', category: 'advanced', min: 0, max: 100, step: 5, unit: '%', default: 100, description: 'Transparência do componente' }),
+            prop({ key: 'disabledOpacity', kind: 'range', label: 'Opacidade Desabilitado', category: 'advanced', min: 0, max: 100, step: 5, unit: '%', default: 50, description: 'Transparência quando opções estão desabilitadas' }),
         ],
     },
     'form-container': {

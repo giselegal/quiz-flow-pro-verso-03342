@@ -64,22 +64,24 @@ const Switch: React.FC<{ checked: boolean; onChange: (val: boolean) => void }> =
 
 const OptionsListEditor: React.FC<{
   value?: Array<{
+    id?: string;
     text: string;
     value?: string;
     category?: string;
-    keyword?: string;
     styleCategory?: string;
+    keyword?: string;
     imageUrl?: string;
     description?: string;
     points?: number;
   }>;
   onChange: (
     val: Array<{
+      id?: string;
       text: string;
       value?: string;
       category?: string;
-      keyword?: string;
       styleCategory?: string;
+      keyword?: string;
       imageUrl?: string;
       description?: string;
       points?: number;
@@ -88,214 +90,307 @@ const OptionsListEditor: React.FC<{
 }> = ({ value = [], onChange }) => {
   return (
     <div className="space-y-4">
-      {/* Seção de Configuração Visual */}
-      <div className="p-3 bg-muted/50 rounded-lg border">
-        <h4 className="text-sm font-medium mb-3 text-foreground">Configuração Visual</h4>
-        <div className="grid grid-cols-3 gap-2">
+      {/* Seção de Configuração Rápida */}
+      <div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border border-blue-200">
+        <h4 className="text-sm font-medium mb-3 text-blue-800 flex items-center gap-2">
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+          Configuração Rápida do Grid
+        </h4>
+        <div className="grid grid-cols-3 gap-3">
           <div>
-            <label className="block text-xs font-medium mb-1">Colunas</label>
-            <select className="w-full text-xs p-1 border rounded">
-              <option value="1">1 Coluna</option>
-              <option value="2" selected>
-                2 Colunas
-              </option>
-              <option value="3">3 Colunas</option>
-              <option value="4">4 Colunas</option>
+            <label className="block text-xs font-medium mb-1 text-blue-700">Tipo de Conteúdo</label>
+            <select className="w-full text-xs p-2 border border-blue-300 rounded bg-white">
+              <option value="text-and-image">🖼️ Imagem + Texto</option>
+              <option value="image-only">📷 Só Imagem</option>
+              <option value="text-only">📝 Só Texto</option>
             </select>
           </div>
           <div>
-            <label className="block text-xs font-medium mb-1">Direção</label>
-            <select className="w-full text-xs p-1 border rounded">
-              <option value="vertical" selected>
-                Vertical
-              </option>
-              <option value="horizontal">Horizontal</option>
+            <label className="block text-xs font-medium mb-1 text-blue-700">Layout</label>
+            <select className="w-full text-xs p-2 border border-blue-300 rounded bg-white">
+              <option value="vertical">⬇️ Vertical</option>
+              <option value="horizontal">➡️ Horizontal</option>
             </select>
           </div>
           <div>
-            <label className="block text-xs font-medium mb-1">Disposição</label>
-            <select className="w-full text-xs p-1 border rounded">
-              <option value="image-text" selected>
-                Imagem|Texto
-              </option>
-              <option value="text-image">Texto|Imagem</option>
-              <option value="image-only">Só Imagem</option>
-              <option value="text-only">Só Texto</option>
+            <label className="block text-xs font-medium mb-1 text-blue-700">Posição da Imagem</label>
+            <select className="w-full text-xs p-2 border border-blue-300 rounded bg-white">
+              <option value="top">⬆️ Acima</option>
+              <option value="left">⬅️ Esquerda</option>
+              <option value="right">➡️ Direita</option>
+              <option value="bottom">⬇️ Abaixo</option>
             </select>
           </div>
         </div>
       </div>
 
       {/* Lista de Opções */}
-      <div className="space-y-2">
-        <h4 className="text-sm font-medium text-foreground">Opções ({(value || []).length})</h4>
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <h4 className="text-sm font-medium text-foreground flex items-center gap-2">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+            </svg>
+            Opções da Questão ({(value || []).length})
+          </h4>
+          <div className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+            {value.length === 0 ? 'Nenhuma opção' : `${value.length} opç${value.length === 1 ? 'ão' : 'ões'}`}
+          </div>
+        </div>
+        
         {(value || []).map((opt, idx) => (
-          <div key={idx} className="flex flex-col gap-2 p-2 bg-background border rounded-lg">
-            {/* Miniatura da Imagem */}
-            <div className="flex items-center gap-2">
-              <div className="flex-shrink-0 w-12 h-12 border-2 border-dashed rounded-lg flex items-center justify-center bg-muted/50 cursor-pointer hover:border-primary transition-colors overflow-hidden">
-                {opt.imageUrl ? (
-                  <img
-                    src={opt.imageUrl}
-                    alt="Preview"
-                    className="w-full h-full object-cover rounded"
+          <div key={idx} className="bg-white border-2 border-gray-200 rounded-lg overflow-hidden hover:border-blue-300 transition-colors">
+            {/* Header da Opção */}
+            <div className="bg-gray-50 px-4 py-2 border-b border-gray-200 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 bg-blue-500 text-white rounded text-xs flex items-center justify-center font-bold">
+                  {String.fromCharCode(65 + idx)}
+                </div>
+                <span className="text-sm font-medium text-gray-700">Opção {idx + 1}</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <button
+                  type="button"
+                  className="text-xs py-1 px-2 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded transition-colors flex items-center gap-1"
+                  title="Duplicar opção"
+                  onClick={() => {
+                    const arr = [...value];
+                    arr.splice(idx + 1, 0, { 
+                      ...arr[idx], 
+                      id: `option-${Date.now()}`,
+                      text: arr[idx].text + ' (cópia)'
+                    });
+                    onChange(arr);
+                  }}
+                >
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  </svg>
+                  Duplicar
+                </button>
+                <button
+                  type="button"
+                  className="text-xs py-1 px-2 bg-red-100 hover:bg-red-200 text-red-700 rounded transition-colors flex items-center gap-1"
+                  onClick={() => onChange(value.filter((_, i) => i !== idx))}
+                  title="Remover opção"
+                >
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                  Remover
+                </button>
+              </div>
+            </div>
+
+            {/* Conteúdo da Opção */}
+            <div className="p-4 space-y-4">
+              {/* Imagem e Texto Principal */}
+              <div className="grid grid-cols-3 gap-4">
+                {/* Preview da Imagem */}
+                <div className="space-y-2">
+                  <label className="block text-xs font-medium text-gray-700">Imagem</label>
+                  <div className="relative group">
+                    <div className="w-full h-20 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center bg-gray-50 cursor-pointer hover:border-blue-400 transition-colors overflow-hidden">
+                      {opt.imageUrl ? (
+                        <img
+                          src={opt.imageUrl}
+                          alt="Preview"
+                          className="w-full h-full object-cover rounded"
+                        />
+                      ) : (
+                        <div className="text-center text-gray-400">
+                          <svg className="w-8 h-8 mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          </svg>
+                          <span className="text-xs">Clique para adicionar</span>
+                        </div>
+                      )}
+                    </div>
+                    <Input
+                      placeholder="URL da imagem..."
+                      value={opt.imageUrl || ''}
+                      onChange={e => {
+                        const arr = [...value];
+                        arr[idx] = { ...arr[idx], imageUrl: e.target.value };
+                        onChange(arr);
+                      }}
+                      className="text-xs mt-1"
+                    />
+                  </div>
+                </div>
+
+                {/* Texto Principal */}
+                <div className="col-span-2 space-y-2">
+                  <label className="block text-xs font-medium text-gray-700">Texto da Opção</label>
+                  <Textarea
+                    placeholder="Ex: Conforto, leveza e praticidade no vestir..."
+                    value={opt.text || ''}
+                    onChange={e => {
+                      const arr = [...value];
+                      arr[idx] = { ...arr[idx], text: e.target.value };
+                      onChange(arr);
+                    }}
+                    className="text-sm resize-none"
+                    rows={3}
                   />
-                ) : (
-                  <span className="text-sm text-muted-foreground">📷</span>
-                )}
+                  
+                  {/* Configurações Rápidas */}
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <label className="block text-xs font-medium text-gray-700 mb-1">Valor/ID</label>
+                      <Input
+                        placeholder="ex: 1a, option-natural"
+                        value={opt.value || opt.id || ''}
+                        onChange={e => {
+                          const arr = [...value];
+                          arr[idx] = { ...arr[idx], value: e.target.value, id: e.target.value };
+                          onChange(arr);
+                        }}
+                        className="text-xs"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-gray-700 mb-1">Pontos</label>
+                      <div className="flex items-center gap-2">
+                        <Input
+                          type="range"
+                          min="0"
+                          max="10"
+                          value={opt.points || 1}
+                          onChange={e => {
+                            const arr = [...value];
+                            arr[idx] = { ...arr[idx], points: parseInt(e.target.value) };
+                            onChange(arr);
+                          }}
+                          className="flex-1"
+                        />
+                        <span className="text-xs font-mono bg-gray-100 px-2 py-1 rounded min-w-[2rem] text-center">
+                          {opt.points || 1}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <Input
-                placeholder="URL da imagem"
-                value={opt.imageUrl || ''}
-                onChange={e => {
-                  const arr = [...value];
-                  arr[idx] = { ...arr[idx], imageUrl: e.target.value };
-                  onChange(arr);
-                }}
-                className="text-xs flex-1"
-              />
-            </div>
 
-            {/* Texto Descritivo */}
-            <div className="flex-1">
-              <Input
-                placeholder="Título da opção"
-                value={opt.text || ''}
-                onChange={e => {
-                  const arr = [...value];
-                  arr[idx] = { ...arr[idx], text: e.target.value };
-                  onChange(arr);
-                }}
-                className="text-sm font-medium mb-1"
-              />
-              <Textarea
-                placeholder="Descrição (ex: Amo roupas confortáveis e práticas...)"
-                value={opt.description || ''}
-                onChange={e => {
-                  const arr = [...value];
-                  arr[idx] = { ...arr[idx], description: e.target.value };
-                  onChange(arr);
-                }}
-                className="text-xs resize-none"
-                rows={2}
-              />
-              <div className="grid grid-cols-2 gap-2 mt-2">
-                <Input
-                  placeholder="Categoria"
-                  value={opt.category || ''}
-                  onChange={e => {
-                    const arr = [...value];
-                    arr[idx] = { ...arr[idx], category: e.target.value };
-                    onChange(arr);
-                  }}
-                  className="text-xs"
-                />
-                <Input
-                  placeholder="Categoria de Estilo"
-                  value={opt.styleCategory || ''}
-                  onChange={e => {
-                    const arr = [...value];
-                    arr[idx] = { ...arr[idx], styleCategory: e.target.value };
-                    onChange(arr);
-                  }}
-                  className="text-xs"
-                />
-                <Input
-                  placeholder="Palavra-chave"
-                  value={opt.keyword || ''}
-                  onChange={e => {
-                    const arr = [...value];
-                    arr[idx] = { ...arr[idx], keyword: e.target.value };
-                    onChange(arr);
-                  }}
-                  className="text-xs"
-                />
-                <Input
-                  placeholder="Valor/ID"
-                  value={opt.value || ''}
-                  onChange={e => {
-                    const arr = [...value];
-                    arr[idx] = { ...arr[idx], value: e.target.value };
-                    onChange(arr);
-                  }}
-                  className="text-xs"
-                />
-                <Input
-                  placeholder="Pontos"
-                  type="number"
-                  value={Number.isFinite(opt.points as any) ? String(opt.points) : ''}
-                  onChange={e => {
-                    const arr = [...value];
-                    const n = parseInt(e.target.value || '0', 10);
-                    arr[idx] = { ...arr[idx], points: isNaN(n) ? 0 : n };
-                    onChange(arr);
-                  }}
-                  className="text-xs"
-                />
+              {/* Categorização */}
+              <div className="grid grid-cols-2 gap-3 pt-3 border-t border-gray-200">
+                <div>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">Categoria Principal</label>
+                  <Input
+                    placeholder="ex: Natural, Clássico, Romântico"
+                    value={opt.category || ''}
+                    onChange={e => {
+                      const arr = [...value];
+                      arr[idx] = { ...arr[idx], category: e.target.value };
+                      onChange(arr);
+                    }}
+                    className="text-xs"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">Categoria de Estilo</label>
+                  <Input
+                    placeholder="ex: styleCategory, keyword"
+                    value={opt.styleCategory || opt.keyword || ''}
+                    onChange={e => {
+                      const arr = [...value];
+                      arr[idx] = { 
+                        ...arr[idx], 
+                        styleCategory: e.target.value,
+                        keyword: e.target.value
+                      };
+                      onChange(arr);
+                    }}
+                    className="text-xs"
+                  />
+                </div>
               </div>
-            </div>
-
-            {/* Ações */}
-            <div className="flex-shrink-0 flex items-center gap-2 border-t border-gray-200 dark:border-gray-700 pt-3 mt-3">
-              <button
-                type="button"
-                className="text-xs py-1.5 px-2.5 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors flex items-center gap-1"
-                title="Duplicar"
-                onClick={() => {
-                  const arr = [...value];
-                  arr.splice(idx + 1, 0, { ...arr[idx] });
-                  onChange(arr);
-                }}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor"><path d="M7 9a2 2 0 012-2h6a2 2 0 012 2v6a2 2 0 01-2 2H9a2 2 0 01-2-2V9z" /><path d="M5 3a2 2 0 00-2 2v6a2 2 0 002 2h1V9a2 2 0 012-2h6V5a2 2 0 00-2-2H5z" /></svg>
-                Duplicar
-              </button>
-              <button
-                type="button"
-                className="text-xs py-1.5 px-2.5 border border-red-300 dark:border-red-700/50 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-md hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors flex items-center gap-1"
-                onClick={() => onChange(value.filter((_, i) => i !== idx))}
-                title="Remover"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm4 0a1 1 0 012 0v6a1 1 0 11-2 0V8z" clipRule="evenodd" /></svg>
-                Remover
-              </button>
             </div>
           </div>
         ))}
       </div>
 
+      {/* Ações de Adição */}
       <div className="flex gap-3">
         <button
           type="button"
-          className="flex-1 text-sm py-2.5 px-4 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700/50 hover:border-primary transition-colors text-gray-600 dark:text-gray-400"
+          className="flex-1 text-sm py-3 px-4 border-2 border-dashed border-gray-300 rounded-lg hover:bg-gray-50 hover:border-blue-400 transition-colors text-gray-600 flex items-center justify-center gap-2"
           onClick={() =>
             onChange([
               ...(value || []),
               {
-                text: '',
-                value: '',
-                category: '',
-                styleCategory: '',
-                keyword: '',
-                imageUrl: '',
-                description: '',
-                points: 0,
+                id: `option-${Date.now()}`,
+                text: `Opção ${(value || []).length + 1}`,
+                value: `option-${(value || []).length + 1}`,
+                category: 'Categoria',
+                styleCategory: 'Estilo',
+                keyword: 'keyword',
+                imageUrl: 'https://via.placeholder.com/256x256',
+                description: 'Descrição da opção...',
+                points: 1,
               },
             ])
           }
         >
-          + Adicionar Opção
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+          </svg>
+          Adicionar Nova Opção
         </button>
         {value.length > 0 && (
           <button
             type="button"
-            className="text-sm py-2.5 px-4 border border-red-300 dark:border-red-700/50 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors"
-            onClick={() => onChange(value.slice(0, -1))}
+            className="text-sm py-3 px-4 bg-red-50 border border-red-200 text-red-600 rounded-lg hover:bg-red-100 transition-colors flex items-center gap-2"
+            onClick={() => onChange([])}
           >
-            Remover Última
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+            Limpar Todas
           </button>
         )}
       </div>
+
+      {value.length === 0 && (
+        <div className="text-center py-8 text-gray-500 bg-gray-50 rounded-lg border-2 border-dashed border-gray-200">
+          <div className="text-4xl mb-2">📝</div>
+          <p className="text-sm mb-4">Nenhuma opção configurada</p>
+          <button
+            type="button"
+            className="inline-flex items-center gap-2 text-sm bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors"
+            onClick={() =>
+              onChange([
+                {
+                  id: 'option-1',
+                  text: 'Primeira opção',
+                  value: 'option-1',
+                  category: 'Categoria A',
+                  styleCategory: 'Estilo',
+                  imageUrl: 'https://via.placeholder.com/256x256',
+                  points: 1,
+                },
+                {
+                  id: 'option-2',
+                  text: 'Segunda opção',
+                  value: 'option-2',
+                  category: 'Categoria B',
+                  styleCategory: 'Estilo',
+                  imageUrl: 'https://via.placeholder.com/256x256',
+                  points: 2,
+                },
+              ])
+            }
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
+            Criar Opções de Exemplo
+          </button>
+        </div>
+      )}
     </div>
   );
 };
@@ -315,17 +410,28 @@ function PropertyField({
       return (
         <FieldWrapper>
           <Label>{field.label}</Label>
-          <Input type="text" value={effectiveValue} onChange={e => onChange(e.target.value)} />
+          <Input 
+            type="text" 
+            value={effectiveValue} 
+            onChange={e => onChange(e.target.value)} 
+            placeholder={(field as any).placeholder}
+            required={field.required}
+          />
         </FieldWrapper>
       );
     case 'textarea':
       return (
         <FieldWrapper>
           <Label>{field.label}</Label>
-          <Textarea value={effectiveValue} onChange={e => onChange(e.target.value)} />
+          <Textarea 
+            value={effectiveValue} 
+            onChange={e => onChange(e.target.value)} 
+            placeholder={(field as any).placeholder}
+            required={field.required}
+          />
         </FieldWrapper>
       );
-  case 'number':
+    case 'number':
       return (
         <FieldWrapper>
           <Label>{field.label}</Label>
@@ -333,7 +439,11 @@ function PropertyField({
             type="number"
             value={Number(effectiveValue) || 0}
             onChange={e => onChange(Number(e.target.value))}
-      placeholder={(field as any).placeholder}
+            placeholder={(field as any).placeholder}
+            min={field.min}
+            max={field.max}
+            step={field.step}
+            required={field.required}
           />
         </FieldWrapper>
       );
@@ -341,12 +451,16 @@ function PropertyField({
       // Unidades auxiliares para escala (%) ou fator (×)
       const isPercent = /Escala \(\%\)|Escala do Componente \(\%\)/i.test(field.label);
       const isFactor = /\(fator\)/i.test(field.label);
-      const suffix = isPercent ? '%' : isFactor ? '×' : '';
+      const unit = (field as any).unit || (isPercent ? '%' : isFactor ? '×' : '');
+      const suffix = unit ? ` ${unit}` : '';
       const displayVal =
         effectiveValue !== '' && effectiveValue !== undefined ? `${effectiveValue}${suffix}` : '';
       return (
         <FieldWrapper>
-          <Label>{field.label}</Label>
+          <div className="flex items-center justify-between mb-1">
+            <Label>{field.label}</Label>
+            <span className="text-xs font-mono bg-gray-100 px-2 py-1 rounded">{displayVal}</span>
+          </div>
           <input
             type="range"
             min={field.min ?? 0}
@@ -364,8 +478,10 @@ function PropertyField({
       const boolVal = Boolean(effectiveValue);
       return (
         <FieldWrapper>
-          <Label>{field.label}</Label>
-          <Switch checked={boolVal} onChange={val => onChange(val)} />
+          <div className="flex items-center justify-between">
+            <Label>{field.label}</Label>
+            <Switch checked={boolVal} onChange={val => onChange(val)} />
+          </div>
         </FieldWrapper>
       );
     }
@@ -373,11 +489,39 @@ function PropertyField({
       return (
         <FieldWrapper>
           <Label>{field.label}</Label>
-          <Input
-            type="color"
-            value={effectiveValue || '#ffffff'}
+          <div className="flex items-center gap-2">
+            <Input
+              type="color"
+              value={effectiveValue || '#ffffff'}
+              onChange={e => onChange(e.target.value)}
+              className="w-12 h-8 p-1 border rounded cursor-pointer"
+            />
+            <Input
+              type="text"
+              value={effectiveValue || '#ffffff'}
+              onChange={e => onChange(e.target.value)}
+              placeholder="#ffffff"
+              className="flex-1 font-mono text-sm"
+            />
+          </div>
+        </FieldWrapper>
+      );
+    case 'select':
+      return (
+        <FieldWrapper>
+          <Label>{field.label}</Label>
+          <select
+            value={effectiveValue}
             onChange={e => onChange(e.target.value)}
-          />
+            className="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-3 py-2 text-sm text-gray-900 dark:text-gray-100 outline-none focus:ring-2 focus:ring-primary/60 transition-all duration-200"
+            required={field.required}
+          >
+            {field.options?.map(option => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
         </FieldWrapper>
       );
     case 'options-list': {
@@ -400,9 +544,11 @@ function PropertyField({
                 const parsed = JSON.parse(e.target.value);
                 onChange(parsed);
               } catch {
-                // ignore parse error
+                // ignore parse error - keep editing
               }
             }}
+            className="font-mono text-xs"
+            rows={6}
           />
         </FieldWrapper>
       );
@@ -423,6 +569,24 @@ const EnhancedUniversalPropertiesPanelFixed: React.FC<PanelProps> = ({
   onDelete,
 }) => {
   if (!selectedBlock) return null;
+
+  // Mapeamento de grupos para nomes amigáveis
+  const getGroupDisplayName = (group: string): string => {
+    const groupNames: Record<string, string> = {
+      'content': '📝 Conteúdo',
+      'layout': '📐 Layout',
+      'images': '🖼️ Imagens',
+      'behavior': '⚙️ Comportamento',
+      'style': '🎨 Aparência',
+      'validation': '✅ Validação',
+      'advanced': '🔧 Avançado',
+      'transform': '↔️ Transformação',
+      'spacing': '📏 Espaçamento',
+      'animation': '✨ Animação',
+      'default': '⚙️ Configurações'
+    };
+    return groupNames[group] || `📋 ${group.charAt(0).toUpperCase() + group.slice(1)}`;
+  };
 
   const schema =
     blockPropertySchemas[selectedBlock.type] ||
@@ -563,8 +727,8 @@ const EnhancedUniversalPropertiesPanelFixed: React.FC<PanelProps> = ({
                 <div className="bg-gradient-to-r from-gray-50 to-white border-b border-gray-200/60 px-4 py-3">
                   <div className="flex items-center gap-2">
                     <div className="w-1.5 h-4 bg-gradient-to-b from-blue-500 to-purple-600 rounded-full" />
-                    <h4 className="text-sm font-bold text-gray-800 dark:text-gray-200 uppercase tracking-wider">
-                      {group}
+                    <h4 className="text-sm font-bold text-gray-800 dark:text-gray-200 tracking-wider">
+                      {getGroupDisplayName(group)}
                     </h4>
                     <div className="flex-1 h-px bg-gradient-to-r from-gray-200 to-transparent" />
                     <span className="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded-full">

@@ -83,6 +83,19 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
   scopeId,
 }) => {
   useRenderCount('CanvasDropZone');
+
+  // 🔍 DEBUG: Log blocks data
+  React.useEffect(() => {
+    if (process.env.NODE_ENV === 'development') {
+      console.log('🎯 CanvasDropZone received blocks:', {
+        blocksCount: blocks?.length || 0,
+        blocks: blocks?.slice(0, 3), // Log first 3 blocks
+        scopeId,
+        selectedBlockId
+      });
+    }
+  }, [blocks, scopeId, selectedBlockId]);
+
   React.useEffect(() => {
     mark('CanvasDropZone:mounted');
   }, []);
@@ -305,6 +318,7 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
       data-over={isOver}
       data-preview={isPreviewing}
       data-id="canvas-drop-zone"
+      data-canvas-optimized="true"
       data-dnd-dropzone-type="raiz-da-tela"
     >
       {blocks.length === 0 ? (

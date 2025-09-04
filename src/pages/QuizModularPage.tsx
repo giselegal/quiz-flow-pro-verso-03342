@@ -27,9 +27,21 @@ import DevResultDebug from '@/components/dev/DevResultDebug';
  * - Renderização idêntica via UniversalBlockRenderer
  * - Layout limpo focado no usuário final
  * - Navegação entre etapas fluida
+ * - Detecção automática de URL /step20
  */
 const QuizModularPage: React.FC = () => {
-  const [currentStep, setCurrentStep] = useState(1);
+  // 🎯 DETECTAR ETAPA INICIAL BASEADA NA URL
+  const getInitialStep = () => {
+    if (typeof window !== 'undefined') {
+      const pathname = window.location.pathname;
+      if (pathname === '/step20') {
+        return 20;
+      }
+    }
+    return 1;
+  };
+
+  const [currentStep, setCurrentStep] = useState(getInitialStep());
   const [blocks, setBlocks] = useState<Block[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

@@ -69,6 +69,7 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
     logoAlt,
     logoWidth,
     logoHeight,
+    showLogo = true, // 🎛️ Nova propriedade para controlar visibilidade do logo
     showProgress,
     progressValue,
     progressMax,
@@ -77,6 +78,22 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
     isSticky,
     marginTop,
     marginBottom,
+    // 🎨 Propriedades avançadas de configuração de header
+    logoPosition = 'center', // left, center, right
+    headerStyle = 'default', // default, minimal, compact, full
+    showBorder = false,
+    borderColor = '#E5E7EB',
+    enableAnimation = true,
+    customCssClass = '',
+    // 📊 Configurações de progresso avançadas
+    progressHeight = 4,
+    progressStyle = 'bar',
+    progressColor = '#B89B7A',
+    progressBackgroundColor = '#E5DDD5',
+    // 🔙 Configurações de botão de voltar avançadas
+    backButtonStyle = 'icon',
+    backButtonText = 'Voltar',
+    backButtonPosition = 'left',
   } = (block?.properties as HeaderProperties) || {};
 
   // Conteúdo textual (suporta HTML no título/subtítulo)
@@ -95,12 +112,38 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
 
   // Layout sugerido e responsividade
   const contentMaxWidth = (block as any)?.properties?.contentMaxWidth || 640; // px
-  const progressHeight = (block as any)?.properties?.progressHeight || 8; // px
   const backSafePadding = showBackButton ? 48 : 0; // px (equivale a pl-12)
+
+  // 🎨 Estilos dinâmicos baseados nas configurações avançadas
+  const getLogoJustifyClass = () => {
+    switch (logoPosition) {
+      case 'left': return 'justify-start';
+      case 'right': return 'justify-end';
+      case 'center':
+      default: return 'justify-center';
+    }
+  };
+
+  const getHeaderStyleClasses = () => {
+    const baseClasses = 'relative w-full flex items-center';
+    const minHeight = headerStyle === 'compact' ? 'min-h-[60px]' :
+      headerStyle === 'minimal' ? 'min-h-[40px]' : 'min-h-[80px]';
+    return `${baseClasses} ${minHeight} ${getLogoJustifyClass()}`;
+  };
+
   const contentWrapperStyle: React.CSSProperties = {
     maxWidth: contentMaxWidth,
     margin: '0 auto',
     paddingLeft: backSafePadding,
+  };
+
+  // 🎨 Estilo do container principal com bordas e animações
+  const mainContainerStyle: React.CSSProperties = {
+    backgroundColor: backgroundColor || '#ffffff',
+    marginTop: marginTop || 0,
+    marginBottom: marginBottom || 0,
+    borderBottom: showBorder ? `1px solid ${borderColor}` : 'none',
+    transition: enableAnimation ? 'all 0.3s ease' : 'none',
   };
 
   return (
@@ -108,42 +151,66 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
       className={cn(
         'relative w-full p-6',
         isSticky ? 'sticky top-0 z-50' : '',
-        'transition-colors',
+        enableAnimation ? 'transition-colors' : '',
+        customCssClass,
         className
       )}
-      style={{
-        backgroundColor: backgroundColor || '#ffffff',
-        marginTop: marginTop || 0,
-        marginBottom: marginBottom || 0,
-      }}
+      style={mainContainerStyle}
     >
       {/* Header Content */}
       <div
-        className="relative w-full min-h-[80px] flex items-center justify-center"
+        className={getHeaderStyleClasses()}
         style={contentWrapperStyle}
       >
+        {/* 🔙 Botão de Voltar Avançado */}
         {showBackButton && (
           <button
-            className="absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full hover:bg-gray-100/50 transition-colors"
+            className={cn(
+              "p-2 rounded-full hover:bg-gray-100/50",
+              enableAnimation ? "transition-colors" : "",
+              backButtonPosition === 'left' ? "absolute left-4 top-1/2 -translate-y-1/2" :
+                backButtonPosition === 'right' ? "absolute right-4 top-1/2 -translate-y-1/2" :
+                  "absolute left-4 top-1/2 -translate-y-1/2"
+            )}
             style={{ backgroundColor: backgroundColor ? `${backgroundColor}dd` : '#E5DDD5' }}
-            aria-label="Voltar"
+            aria-label={backButtonText}
           >
-            <ArrowLeft className="w-6 h-6" style={{ color: '#6B4F43' }} />
+            {backButtonStyle === 'text' && (
+              <span className="text-sm font-medium" style={{ color: '#6B4F43' }}>
+                {backButtonText}
+              </span>
+            )}
+            {backButtonStyle === 'icon' && (
+              <ArrowLeft className="w-6 h-6" style={{ color: '#6B4F43' }} />
+            )}
+            {backButtonStyle === 'both' && (
+              <div className="flex items-center gap-2">
+                <ArrowLeft className="w-4 h-4" style={{ color: '#6B4F43' }} />
+                <span className="text-sm font-medium" style={{ color: '#6B4F43' }}>
+                  {backButtonText}
+                </span>
+              </div>
+            )}
           </button>
         )}
 
-        {/* Logo */}
-        <div className="flex items-center justify-center">
-          <img
-            src={logoUrl}
-            alt={logoAlt}
-            style={{ width: `${logoWidth}px`, height: `${logoHeight}px` }}
-            className="object-contain"
-            onError={e => {
-              e.currentTarget.src = 'https://via.placeholder.com/96x96?text=Logo';
-            }}
-          />
-        </div>
+        {/* 🎨 Logo com Posicionamento Dinâmico */}
+        {showLogo && (
+          <div className="flex items-center">
+            <img
+              src={logoUrl}
+              alt={logoAlt}
+              style={{ width: `${logoWidth}px`, height: `${logoHeight}px` }}
+              className={cn(
+                "object-contain",
+                enableAnimation ? "transition-all duration-300" : ""
+              )}
+              onError={e => {
+                e.currentTarget.src = 'https://via.placeholder.com/96x96?text=Logo';
+              }}
+            />
+          </div>
+        )}
       </div>
 
       {/* Título / Subtítulo / Descrição */}
@@ -183,28 +250,85 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
         </div>
       )}
 
-      {/* Progress Bar */}
+      {/* 📊 Barra de Progresso Avançada */}
       {showProgress && (
         <div className="mt-4" style={contentWrapperStyle}>
-          <div
-            role="progressbar"
-            aria-valuemin={0}
-            aria-valuemax={progressMax || 100}
-            aria-valuenow={Math.min(progressValue || 0, progressMax || 100)}
-            className="relative w-full overflow-hidden rounded-full"
-            style={{
-              backgroundColor: backgroundColor ? `${backgroundColor}dd` : '#E5DDD5',
-              height: progressHeight,
-            }}
-          >
+          {progressStyle === 'bar' && (
             <div
-              className="h-full flex-1 transition-all"
+              role="progressbar"
+              aria-valuemin={0}
+              aria-valuemax={progressMax || 100}
+              aria-valuenow={Math.min(progressValue || 0, progressMax || 100)}
+              className={cn(
+                "relative w-full overflow-hidden rounded-full",
+                enableAnimation ? "transition-all duration-500" : ""
+              )}
               style={{
-                width: `${Math.min(progressValue || 0, progressMax || 100)}%`,
-                backgroundColor: '#B89B7A',
+                backgroundColor: progressBackgroundColor,
+                height: progressHeight,
               }}
-            />
-          </div>
+            >
+              <div
+                className={cn(
+                  "h-full flex-1",
+                  enableAnimation ? "transition-all duration-500 ease-out" : ""
+                )}
+                style={{
+                  width: `${Math.min(progressValue || 0, progressMax || 100)}%`,
+                  backgroundColor: progressColor,
+                }}
+              />
+            </div>
+          )}
+
+          {progressStyle === 'dots' && (
+            <div className="flex justify-center gap-2">
+              {Array.from({ length: progressMax || 5 }).map((_, index) => (
+                <div
+                  key={index}
+                  className={cn(
+                    "w-3 h-3 rounded-full",
+                    enableAnimation ? "transition-colors duration-300" : ""
+                  )}
+                  style={{
+                    backgroundColor: index < (progressValue || 0) ? progressColor : progressBackgroundColor,
+                  }}
+                />
+              ))}
+            </div>
+          )}
+
+          {progressStyle === 'circle' && (
+            <div className="flex justify-center">
+              <div className="relative w-16 h-16">
+                <svg className="w-full h-full" viewBox="0 0 36 36">
+                  <path
+                    className="stroke-current"
+                    style={{ color: progressBackgroundColor }}
+                    strokeWidth="3"
+                    fill="none"
+                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                  />
+                  <path
+                    className={cn(
+                      "stroke-current",
+                      enableAnimation ? "transition-all duration-500" : ""
+                    )}
+                    style={{ color: progressColor }}
+                    strokeWidth="3"
+                    fill="none"
+                    strokeDasharray={`${(progressValue || 0) / (progressMax || 100) * 100}, 100`}
+                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                  />
+                </svg>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="text-xs font-medium" style={{ color: progressColor }}>
+                    {Math.round((progressValue || 0) / (progressMax || 100) * 100)}%
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>

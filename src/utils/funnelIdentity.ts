@@ -14,7 +14,7 @@ export const getFunnelIdFromEnvOrStorage = (): string | null => {
   try {
     // Primeira tentativa: parâmetro da URL
     const url = new URL(window.location.href);
-    const fromUrl = url.searchParams.get('funnelId');
+    const fromUrl = url.searchParams.get('funnel'); // ✅ CORRIGIDO: usar 'funnel' em vez de 'funnelId'
     if (fromUrl) {
       console.log('🔍 FunnelId da URL:', fromUrl);
       return fromUrl;

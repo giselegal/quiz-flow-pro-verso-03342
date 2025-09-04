@@ -383,13 +383,39 @@ const FUNNEL_TEMPLATES: Record<
 };
 
 export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debug = true }) => {
-  const [currentFunnelId, setCurrentFunnelId] = useState<string>('quiz-estilo-completo');
+  // ✅ CORRIGIDO: Obter funnelId dinamicamente da URL ou fallback
+  const [currentFunnelId, setCurrentFunnelId] = useState<string>(() => {
+    try {
+      // Primeiro, tentar obter da URL
+      const url = new URL(window.location.href);
+      const funnelFromUrl = url.searchParams.get('funnel');
+      if (funnelFromUrl) {
+        console.log('🔍 FunnelsContext: funnelId da URL:', funnelFromUrl);
+        return funnelFromUrl;
+      }
+
+      // Segundo, tentar obter do localStorage
+      const funnelFromStorage = localStorage.getItem('editor:funnelId');
+      if (funnelFromStorage) {
+        console.log('🔍 FunnelsContext: funnelId do localStorage:', funnelFromStorage);
+        return funnelFromStorage;
+      }
+
+      // Fallback para o template padrão
+      console.log('🔍 FunnelsContext: usando fallback quiz-estilo-completo');
+      return 'quiz-estilo-completo';
+    } catch (error) {
+      console.error('❌ Erro ao obter funnelId:', error);
+      return 'quiz-estilo-completo';
+    }
+  });
+
   // ✅ FASE 1: Inicialização imediata com dados pré-carregados
   const [steps, setSteps] = useState<FunnelStep[]>(() => {
     const initialTemplate = FUNNEL_TEMPLATES['quiz-estilo-completo'];
     console.log('🚀 FunnelsContext: Inicialização IMEDIATA com template completo');
     console.log('📊 Steps carregadas na inicialização:', initialTemplate.defaultSteps.length);
-    console.log('🎯 Template ID forçado:', 'quiz-estilo-completo');
+    console.log('🎯 Template ID inicial:', currentFunnelId);
     console.log('🔍 QUIZ_QUESTIONS_COMPLETE keys:', Object.keys(QUIZ_QUESTIONS_COMPLETE));
     console.log('📋 QUIZ_STYLE_21_STEPS_TEMPLATE keys:', Object.keys(QUIZ_STYLE_21_STEPS_TEMPLATE));
     return initialTemplate.defaultSteps;
@@ -422,17 +448,29 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
 
   // Função para obter blocos de um template específico
   const getTemplateBlocks = useCallback((templateId: string, stepId: string) => {
+    // 🛡️ FUNÇÃO HELPER: Clone profundo dos blocos para evitar mutação compartilhada
+    const cloneBlocks = (blocks: any[]) => {
+      return blocks.map(block => ({
+        ...block,
+        id: `${templateId}-${stepId}-${block.id}`, // ID único por funil
+        content: { ...block.content },
+        properties: { ...block.properties }
+      }));
+    };
+
     // Verifica se é o template quiz-estilo-completo
     if (templateId === 'quiz-estilo-completo') {
-      return QUIZ_STYLE_21_STEPS_TEMPLATE[stepId] || [];
+      const originalBlocks = QUIZ_STYLE_21_STEPS_TEMPLATE[stepId] || [];
+      return cloneBlocks(originalBlocks);
     }
 
     // ✅ CORREÇÃO: Template funil-21-etapas também deve usar QUIZ_STYLE_21_STEPS_TEMPLATE
     if (templateId === 'funil-21-etapas') {
       console.log(`🔄 Carregando blocos para template funil-21-etapas, etapa ${stepId}`);
-      const blocos = QUIZ_STYLE_21_STEPS_TEMPLATE[stepId] || [];
-      console.log(`📦 Encontrados ${blocos.length} blocos para a etapa ${stepId}`);
-      return blocos;
+      const originalBlocks = QUIZ_STYLE_21_STEPS_TEMPLATE[stepId] || [];
+      const clonedBlocks = cloneBlocks(originalBlocks);
+      console.log(`📦 Clonados ${clonedBlocks.length} blocos únicos para a etapa ${stepId}`);
+      return clonedBlocks;
     }
 
     // Para outros templates, retorna array vazio (implementação futura)

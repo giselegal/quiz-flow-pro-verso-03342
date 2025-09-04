@@ -2,6 +2,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { funnelTemplateService, type FunnelTemplate } from '@/services/funnelTemplateService';
+import { handleEditTemplate } from '@/utils/templateToFunnelCreator';
 import {
   Copy,
   Download,
@@ -380,11 +381,10 @@ const FunnelTemplatesDashboard: React.FC<FunnelTemplatesDashboardProps> = ({
           <Button
             variant={selectedCategory === 'all' ? 'default' : 'outline'}
             onClick={() => setSelectedCategory('all')}
-            className={`h-auto p-4 flex flex-col items-center space-y-2 ${
-              selectedCategory === 'all'
+            className={`h-auto p-4 flex flex-col items-center space-y-2 ${selectedCategory === 'all'
                 ? 'bg-[#B89B7A] hover:bg-[#A38A69]'
                 : 'border-[#B89B7A] text-[#6B4F43] hover:bg-[#B89B7A]/10'
-            }`}
+              }`}
           >
             <FileText className="w-6 h-6" />
             <span className="text-xs">Todos</span>
@@ -397,11 +397,10 @@ const FunnelTemplatesDashboard: React.FC<FunnelTemplatesDashboardProps> = ({
                 key={key}
                 variant={selectedCategory === key ? 'default' : 'outline'}
                 onClick={() => setSelectedCategory(key)}
-                className={`h-auto p-4 flex flex-col items-center space-y-2 ${
-                  selectedCategory === key
+                className={`h-auto p-4 flex flex-col items-center space-y-2 ${selectedCategory === key
                     ? 'bg-[#B89B7A] hover:bg-[#A38A69]'
                     : 'border-[#B89B7A] text-[#6B4F43] hover:bg-[#B89B7A]/10'
-                }`}
+                  }`}
                 style={selectedCategory === key ? {} : { borderColor: theme.color }}
               >
                 <IconComponent
@@ -419,160 +418,162 @@ const FunnelTemplatesDashboard: React.FC<FunnelTemplatesDashboardProps> = ({
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {isLoading
           ? // Loading skeleton
-            Array.from({ length: 8 }).map((_, index) => (
-              <Card key={index} className="overflow-hidden">
-                <div className="h-48 bg-gray-200 animate-pulse"></div>
-                <CardContent className="p-4">
-                  <div className="h-4 bg-gray-200 animate-pulse mb-2"></div>
-                  <div className="h-3 bg-gray-200 animate-pulse mb-3"></div>
-                  <div className="flex space-x-2">
-                    <div className="h-8 bg-gray-200 animate-pulse flex-1"></div>
-                    <div className="h-8 w-8 bg-gray-200 animate-pulse"></div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))
+          Array.from({ length: 8 }).map((_, index) => (
+            <Card key={index} className="overflow-hidden">
+              <div className="h-48 bg-gray-200 animate-pulse"></div>
+              <CardContent className="p-4">
+                <div className="h-4 bg-gray-200 animate-pulse mb-2"></div>
+                <div className="h-3 bg-gray-200 animate-pulse mb-3"></div>
+                <div className="flex space-x-2">
+                  <div className="h-8 bg-gray-200 animate-pulse flex-1"></div>
+                  <div className="h-8 w-8 bg-gray-200 animate-pulse"></div>
+                </div>
+              </CardContent>
+            </Card>
+          ))
           : filteredTemplates.map(template => {
-              const CategoryIcon = getCategoryIcon(template.category);
-              const categoryColor = getCategoryColor(template.category);
+            const CategoryIcon = getCategoryIcon(template.category);
+            const categoryColor = getCategoryColor(template.category);
 
-              return (
-                <Card
-                  key={template.id}
-                  className="overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer group"
-                  onClick={() => onSelectTemplate?.(template.id)}
-                >
-                  {/* Template Image */}
-                  <div className="relative h-48 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
-                    {template.thumbnailUrl ? (
-                      <img
-                        src={template.thumbnailUrl}
-                        alt={template.name}
-                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                      />
-                    ) : (
-                      <div
-                        className="w-full h-full flex items-center justify-center"
-                        style={{ backgroundColor: `${categoryColor}20` }}
-                      >
-                        <CategoryIcon
-                          className="w-16 h-16 opacity-60"
-                          style={{ color: categoryColor }}
-                        />
-                      </div>
-                    )}
-                    {/* Category Badge */}
-                    <div className="absolute top-3 left-3">
-                      <div
-                        className="flex items-center px-2 py-1 rounded-full text-xs font-medium text-white bg-black bg-opacity-60 backdrop-blur-sm"
-                        style={{ backgroundColor: `${categoryColor}90` }}
-                      >
-                        <CategoryIcon className="w-3 h-3 mr-1" />
-                        {TEMPLATE_THEMES[template.category as keyof typeof TEMPLATE_THEMES]?.name ||
-                          template.category}
-                      </div>
-                    </div>
-                    {/* Official Badge */}
-                    <div className="absolute top-3 right-3">
-                      {template.isOfficial && (
-                        <Badge className="bg-[#B89B7A] text-white text-xs">Oficial</Badge>
-                      )}
-                    </div>
-                    {/* Hover overlay */}
-                    <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
-                      <div className="flex space-x-2">
-                        <Button
-                          size="sm"
-                          variant="secondary"
-                          className="bg-white/90 hover:bg-white"
-                        >
-                          <Eye className="w-4 h-4" />
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="secondary"
-                          className="bg-white/90 hover:bg-white"
-                        >
-                          <Edit3 className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-
-                  <CardContent className="p-4">
-                    <div className="flex items-start justify-between mb-2">
-                      <h3 className="font-semibold text-sm" style={{ color: '#432818' }}>
-                        {template.name}
-                      </h3>
+            return (
+              <Card
+                key={template.id}
+                className="overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer group"
+                onClick={() => onSelectTemplate?.(template.id)}
+              >
+                {/* Template Image */}
+                <div className="relative h-48 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
+                  {template.thumbnailUrl ? (
+                    <img
+                      src={template.thumbnailUrl}
+                      alt={template.name}
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                  ) : (
+                    <div
+                      className="w-full h-full flex items-center justify-center"
+                      style={{ backgroundColor: `${categoryColor}20` }}
+                    >
                       <CategoryIcon
-                        className="w-4 h-4 flex-shrink-0"
+                        className="w-16 h-16 opacity-60"
                         style={{ color: categoryColor }}
                       />
                     </div>
-
-                    <p className="text-xs mb-3" style={{ color: '#6B4F43' }}>
-                      {template.description}
-                    </p>
-
+                  )}
+                  {/* Category Badge */}
+                  <div className="absolute top-3 left-3">
                     <div
-                      className="flex items-center justify-between text-xs mb-3"
-                      style={{ color: '#8B7355' }}
+                      className="flex items-center px-2 py-1 rounded-full text-xs font-medium text-white bg-black bg-opacity-60 backdrop-blur-sm"
+                      style={{ backgroundColor: `${categoryColor}90` }}
                     >
-                      <span>{template.stepCount} etapas</span>
-                      <span>{template.usageCount} usos</span>
+                      <CategoryIcon className="w-3 h-3 mr-1" />
+                      {TEMPLATE_THEMES[template.category as keyof typeof TEMPLATE_THEMES]?.name ||
+                        template.category}
                     </div>
-
-                    <div className="flex flex-wrap gap-1 mb-3">
-                      {template.tags.slice(0, 2).map(tag => (
-                        <Badge key={tag} variant="secondary" className="text-xs">
-                          {tag}
-                        </Badge>
-                      ))}
-                      {template.tags.length > 2 && (
-                        <Badge variant="secondary" className="text-xs">
-                          +{template.tags.length - 2}
-                        </Badge>
-                      )}
-                    </div>
-
+                  </div>
+                  {/* Official Badge */}
+                  <div className="absolute top-3 right-3">
+                    {template.isOfficial && (
+                      <Badge className="bg-[#B89B7A] text-white text-xs">Oficial</Badge>
+                    )}
+                  </div>
+                  {/* Hover overlay */}
+                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
                     <div className="flex space-x-2">
                       <Button
                         size="sm"
-                        className="flex-1 bg-[#B89B7A] hover:bg-[#A38A69] text-xs"
-                        onClick={e => {
-                          e.stopPropagation();
-                          onCreateFromTemplate?.(template.id);
-                        }}
+                        variant="secondary"
+                        className="bg-white/90 hover:bg-white"
                       >
-                        Usar Modelo
+                        <Eye className="w-4 h-4" />
                       </Button>
                       <Button
                         size="sm"
-                        variant="outline"
-                        className="border-[#B89B7A] text-[#6B4F43] hover:bg-[#B89B7A]/10"
-                        onClick={e => {
-                          e.stopPropagation();
-                          onExportTemplate?.(template.id);
-                        }}
+                        variant="secondary"
+                        className="bg-white/90 hover:bg-white"
                       >
-                        <Download className="w-3 h-3" />
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="border-[#B89B7A] text-[#6B4F43] hover:bg-[#B89B7A]/10"
-                        onClick={e => {
-                          e.stopPropagation();
-                          onCreateFromTemplate?.(`copy-${template.id}`);
-                        }}
-                      >
-                        <Copy className="w-3 h-3" />
+                        <Edit3 className="w-4 h-4" />
                       </Button>
                     </div>
-                  </CardContent>
-                </Card>
-              );
-            })}
+                  </div>
+                </div>
+
+                <CardContent className="p-4">
+                  <div className="flex items-start justify-between mb-2">
+                    <h3 className="font-semibold text-sm" style={{ color: '#432818' }}>
+                      {template.name}
+                    </h3>
+                    <CategoryIcon
+                      className="w-4 h-4 flex-shrink-0"
+                      style={{ color: categoryColor }}
+                    />
+                  </div>
+
+                  <p className="text-xs mb-3" style={{ color: '#6B4F43' }}>
+                    {template.description}
+                  </p>
+
+                  <div
+                    className="flex items-center justify-between text-xs mb-3"
+                    style={{ color: '#8B7355' }}
+                  >
+                    <span>{template.stepCount} etapas</span>
+                    <span>{template.usageCount} usos</span>
+                  </div>
+
+                  <div className="flex flex-wrap gap-1 mb-3">
+                    {template.tags.slice(0, 2).map(tag => (
+                      <Badge key={tag} variant="secondary" className="text-xs">
+                        {tag}
+                      </Badge>
+                    ))}
+                    {template.tags.length > 2 && (
+                      <Badge variant="secondary" className="text-xs">
+                        +{template.tags.length - 2}
+                      </Badge>
+                    )}
+                  </div>
+
+                  <div className="flex space-x-2">
+                    <Button
+                      size="sm"
+                      className="flex-1 bg-[#B89B7A] hover:bg-[#A38A69] text-xs"
+                      onClick={e => {
+                        e.stopPropagation();
+                        // Usar nova função que cria funil isolado
+                        handleEditTemplate(template.id, template.name);
+                      }}
+                    >
+                      Usar Modelo
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="border-[#B89B7A] text-[#6B4F43] hover:bg-[#B89B7A]/10"
+                      onClick={e => {
+                        e.stopPropagation();
+                        onExportTemplate?.(template.id);
+                      }}
+                    >
+                      <Download className="w-3 h-3" />
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="border-[#B89B7A] text-[#6B4F43] hover:bg-[#B89B7A]/10"
+                      onClick={e => {
+                        e.stopPropagation();
+                        // Criar cópia com nome personalizado
+                        handleEditTemplate(template.id, `${template.name} - Cópia`);
+                      }}
+                    >
+                      <Copy className="w-3 h-3" />
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
       </div>
 
       {/* Empty State */}

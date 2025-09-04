@@ -13,7 +13,15 @@
 
 import { Block } from '../types/editor';
 
-const IS_TEST = process.env.NODE_ENV === 'test';
+// Verificar se estamos em ambiente de desenvolvimento real do Vite
+const IS_TEST = false; // Forçar template completo para debugging
+
+console.log('🔍 Template loading:', {
+  NODE_ENV: import.meta.env?.MODE || 'unknown',
+  DEV: import.meta.env?.DEV || false,
+  IS_TEST,
+  willUseMinimalTemplate: IS_TEST
+});
 
 // Template mínimo para testes: 21 etapas com 1 bloco simples cada
 const MINIMAL_TEST_TEMPLATE: Record<string, Block[]> = (() => {
@@ -58,6 +66,12 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = IS_TEST ? M
         // Layout refinado
         contentMaxWidth: 640,
         progressHeight: 8,
+        // 🔧 CONFIGURAÇÕES DE PAINEL MODERNO
+        propertiesPanelConfig: {
+          enabled: true,
+          inlineEditingDisabled: true,
+          categories: ['content', 'style', 'layout', 'behavior'],
+        },
       },
     },
     {
@@ -76,6 +90,12 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = IS_TEST ? M
         maxWidth: '640px',
         marginTop: 12,
         marginBottom: 10,
+        // 🔧 CONFIGURAÇÕES DE PAINEL MODERNO
+        propertiesPanelConfig: {
+          enabled: true,
+          inlineEditingDisabled: true,
+          categories: ['content', 'style', 'layout'],
+        },
       },
     },
     {
@@ -103,7 +123,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = IS_TEST ? M
       content: {},
       properties: {
         src: 'https://res.cloudinary.com/der8kogzu/image/upload/f_avif,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.avif',
-        alt: '',
+        alt: 'Descubra seu estilo predominante',
         width: 'auto',
         height: 'auto',
         maxWidth: 'lg',
@@ -111,6 +131,12 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = IS_TEST ? M
         borderRadius: 'large',
         marginTop: 8,
         marginBottom: 12,
+        // 🔧 CONFIGURAÇÕES DE PAINEL MODERNO
+        propertiesPanelConfig: {
+          enabled: true,
+          inlineEditingDisabled: true,
+          categories: ['content', 'style', 'layout'],
+        },
       },
     },
     {
@@ -129,6 +155,12 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = IS_TEST ? M
         marginBottom: 24,
         showShadow: true,
         backgroundColor: '#B89B7A',
+        // 🔧 CONFIGURAÇÕES DE PAINEL MODERNO
+        propertiesPanelConfig: {
+          enabled: true,
+          inlineEditingDisabled: true,
+          categories: ['style', 'layout'],
+        },
       },
     },
     {
@@ -136,8 +168,8 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = IS_TEST ? M
       type: 'form-container',
       order: 5,
       content: {
-        title: 'NOME',
-        placeholder: 'Digite seu nome',
+        title: 'Como posso te chamar?',
+        placeholder: 'Digite seu primeiro nome aqui...',
         buttonText: 'Quero Descobrir meu Estilo Agora!',
         requiredMessage: 'Por favor, digite seu nome para continuar',
         validationMessage: 'Digite seu nome para continuar',
@@ -161,6 +193,12 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = IS_TEST ? M
         paddingBottom: 16,
         paddingLeft: 16,
         paddingRight: 16,
+        // 🔗 INTEGRAÇÃO SUPABASE para coleta de nome
+        saveToSupabase: true,
+        supabaseTable: 'quiz_users',
+        supabaseColumn: 'name',
+        minLength: 2,
+        maxLength: 50,
       },
       properties: {
         // ID opcional para integração com o container
@@ -175,13 +213,24 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = IS_TEST ? M
         paddingBottom: 16,
         paddingLeft: 16,
         paddingRight: 16,
+        // 🔧 CONFIGURAÇÕES DE PAINEL MODERNO
+        supabaseConfig: {
+          enabled: true,
+          table: 'quiz_users',
+          column: 'name',
+        },
+        propertiesPanelConfig: {
+          enabled: true,
+          inlineEditingDisabled: true,
+          categories: ['content', 'behavior', 'style', 'layout'],
+        },
         // Filhos do container: input + botão
         children: [
           {
             id: 'intro-name-input',
             type: 'form-input',
             properties: {
-              label: 'NOME',
+              label: 'Como posso te chamar?',
               placeholder: 'Digite seu primeiro nome aqui...',
               name: 'userName',
               inputType: 'text',
@@ -197,6 +246,15 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = IS_TEST ? M
               borderRadius: '8',
               marginTop: 8,
               marginBottom: 8,
+              // 🔗 COLETA DE NOME PARA RESULTADO FINAL
+              minLength: 2,
+              maxLength: 50,
+              saveToSupabase: true,
+              supabaseTable: 'quiz_users',
+              supabaseColumn: 'name',
+              // Para uso no resultado final
+              storeAsUserName: true,
+              resultDisplayKey: 'userName',
             },
           },
           {
@@ -236,18 +294,26 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = IS_TEST ? M
       properties: {
         // Texto principal e links legais
         copyrightText:
-          'Suas informações são seguras. Ao continuar, você concorda com nossa Política de Privacidade e Termos.',
+          '© 2025 Gisele Galvão - Todos os direitos reservados. Suas informações são seguras.',
         privacyText: 'Política de Privacidade',
         termsText: 'Termos de Uso',
         privacyLinkUrl: '/privacy',
         termsLinkUrl: '/terms',
+        showPrivacyLink: true,
+        showTermsLink: true,
         // Estilo
-        fontSize: '12',
+        fontSize: 'text-xs',
         textAlign: 'center',
         textColor: '#9CA3AF',
         linkColor: '#B89B7A',
-        marginTop: 24,
-        marginBottom: 0,
+        marginTop: 32,
+        marginBottom: 8,
+        // 🔧 CONFIGURAÇÕES DE PAINEL MODERNO
+        propertiesPanelConfig: {
+          enabled: true,
+          inlineEditingDisabled: true,
+          categories: ['content', 'style', 'layout'],
+        },
       },
     },
     {
