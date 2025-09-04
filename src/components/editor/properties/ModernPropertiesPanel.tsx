@@ -20,6 +20,7 @@ import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { getPropertiesForComponentType } from './core/PropertyDiscovery';
 import { useEditor } from '@/hooks/useEditor';
+import { PropertyType } from '@/hooks/useUnifiedProperties';
 import type { Block } from '@/types/editor';
 import {
   LayoutIcon,
@@ -163,10 +164,12 @@ const PropertyControl: React.FC<PropertyControlProps> = ({ property, value, onCh
 
     case 'array':
     case 'options-list':
+    case PropertyType.ARRAY:
       // Debug: verificar dados das opções
       if (process.env.NODE_ENV === 'development') {
         console.log('🔍 DEBUG - Array/Options-list control:', {
           property: property.key,
+          propertyType: property.type,
           value: value,
           valueType: typeof value,
           isArray: Array.isArray(value),
