@@ -358,6 +358,23 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
 
     const props = getPropertiesForComponentType(selectedBlock.type, selectedBlock);
     console.log('📊 ModernPropertiesPanel: Found properties:', props.length);
+    
+    // Debug específico para options-grid
+    if (selectedBlock.type === 'options-grid') {
+      console.log('🎯 OPTIONS-GRID DEBUG:');
+      console.log('   - Total properties found:', props.length);
+      const optionsProperty = props.find(p => p.key === 'options');
+      if (optionsProperty) {
+        console.log('   ✅ OPTIONS property found:', optionsProperty);
+        console.log('   - Type:', optionsProperty.type);
+        console.log('   - Default value:', optionsProperty.defaultValue);
+        console.log('   - Current value from block:', getCurrentValue('options', selectedBlock));
+      } else {
+        console.log('   ❌ OPTIONS property NOT found!');
+        console.log('   - Available properties:', props.map(p => p.key));
+      }
+    }
+    
     return props;
   }, [selectedBlock]);
 
