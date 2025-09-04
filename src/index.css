@@ -5,6 +5,7 @@
 @import './styles/typography.css';
 @import './styles/animations.css';
 @import './styles/spinner.css';
+@import "./styles/canvas-performance.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -646,4 +647,3 @@ img:hover,
 .animate-float {
   animation: float 6s ease-in-out infinite;
 }
-@import "./styles/canvas-performance.css";
