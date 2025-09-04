@@ -23,6 +23,7 @@ const QuizModularPage = lazy(() => import('./pages/QuizModularPage'));
 import AgentStyleFunnelTestPage from './pages/AgentStyleFunnelTestPage';
 const StepsShowcasePage = lazy(() => import('./pages/StepsShowcase'));
 const SchemaEditorPage = lazy(() => import('./pages/SchemaEditorPage'));
+const EnhancedPropertiesPanelDemo = lazy(() => import('./components/demo/EnhancedPropertiesPanelDemo'));
 
 // Loading component
 const PageLoading = () => (
@@ -144,6 +145,13 @@ function App() {
                 <Route path="/showcase/steps">
                   <Suspense fallback={<PageLoading />}>
                     <StepsShowcasePage />
+                  </Suspense>
+                </Route>
+
+                {/* 🚀 DEMO DO PAINEL DE PROPRIEDADES APRIMORADO */}
+                <Route path="/demo/properties-panel">
+                  <Suspense fallback={<PageLoading />}>
+                    <EnhancedPropertiesPanelDemo />
                   </Suspense>
                 </Route>
 
