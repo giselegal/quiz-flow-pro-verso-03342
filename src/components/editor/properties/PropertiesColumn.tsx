@@ -1,6 +1,7 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useState } from 'react';
 import { Block } from '@/types/editor';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
 
 // Import the enhanced NOCODE properties panel
 const EnhancedNocodePropertiesPanel = React.lazy(
@@ -12,6 +13,11 @@ const EnhancedNocodePropertiesPanel = React.lazy(
 // Import the specialized Multiple Choice Options Panel
 const MultipleChoiceOptionsPanel = React.lazy(
   () => import('@/components/editor/properties/MultipleChoiceOptionsPanel')
+);
+
+// Import the modern LEVA panel
+const ModernLevaPropertiesPanel = React.lazy(
+  () => import('@/components/editor/properties/ModernLevaPropertiesPanel')
 );
 
 // Fallback to original panel if needed
@@ -49,6 +55,9 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
   useEnhancedPanel = true, // Enable by default
   className = '',
 }) => {
+  // State para alternar entre diferentes tipos de painel
+  const [panelType, setPanelType] = useState<'traditional' | 'specialized' | 'modern-leva'>('specialized');
+
   return (
     <div
       className={cn(
@@ -57,14 +66,63 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
         className
       )}
     >
+      {/* Panel Type Switcher */}
+      {selectedBlock && (
+        <div className="p-3 border-b bg-gray-50">
+          <div className="text-xs text-gray-600 mb-2">🎛️ Tipo de Painel:</div>
+          <div className="flex gap-1 text-xs">
+            <Button
+              size="sm"
+              variant={panelType === 'specialized' ? 'default' : 'outline'}
+              onClick={() => setPanelType('specialized')}
+              className="text-xs py-1 px-2 h-auto"
+            >
+              📋 Especializado
+            </Button>
+            <Button
+              size="sm"
+              variant={panelType === 'modern-leva' ? 'default' : 'outline'}
+              onClick={() => setPanelType('modern-leva')}
+              className="text-xs py-1 px-2 h-auto"
+            >
+              🎯 LEVA Moderno
+            </Button>
+            <Button
+              size="sm"
+              variant={panelType === 'traditional' ? 'default' : 'outline'}
+              onClick={() => setPanelType('traditional')}
+              className="text-xs py-1 px-2 h-auto"
+            >
+              ⚙️ Tradicional
+            </Button>
+          </div>
+        </div>
+      )}
+
       {selectedBlock ? (
         <Suspense fallback={
           <div className="p-4 text-sm text-gray-600 animate-pulse">
-            Carregando painel NOCODE…
+            Carregando painel…
           </div>
         }>
-          {/* Use specialized panel for options-grid blocks */}
-          {selectedBlock.type === 'options-grid' ? (
+          {/* Render different panels based on selection */}
+          {panelType === 'modern-leva' ? (
+            <div className="flex-1">
+              <div className="p-4 bg-green-50 border-b border-green-200">
+                <div className="text-sm font-medium text-green-800">🎯 Painel LEVA Moderno</div>
+                <div className="text-xs text-green-600 mt-1">
+                  Painel profissional estilo Chrome DevTools - auto-organizador por categorias
+                </div>
+              </div>
+              <ModernLevaPropertiesPanel
+                selectedBlock={selectedBlock as any}
+                onUpdate={onUpdate}
+                onClose={onClose}
+                onDelete={onDelete}
+                onDuplicate={onDuplicate}
+              />
+            </div>
+          ) : panelType === 'specialized' && selectedBlock.type === 'options-grid' ? (
             <MultipleChoiceOptionsPanel
               selectedBlock={selectedBlock as any}
               onUpdate={onUpdate}
@@ -72,7 +130,7 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
               onDelete={onDelete}
               onDuplicate={onDuplicate}
             />
-          ) : useEnhancedPanel ? (
+          ) : panelType === 'specialized' && useEnhancedPanel ? (
             <EnhancedNocodePropertiesPanel
               selectedBlock={selectedBlock as any}
               onUpdate={onUpdate}
