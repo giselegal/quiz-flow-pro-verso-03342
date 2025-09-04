@@ -321,7 +321,9 @@ function getPropertiesForComponentType(blockType: string, currentBlock: BlockCon
       ];
 
     case 'button-inline':
-      console.log('✅ getPropertiesForComponentType: Found button-inline case for:', blockType);
+      if (process.env.DEBUG) {
+        console.log('✅ getPropertiesForComponentType: Found button-inline case for:', blockType);
+      }
       return [
         ...getUniversalProperties(),
         createProperty('text', currentBlock?.properties?.text ?? 'Clique aqui', PropertyType.TEXT, 'Texto do Botão', PropertyCategory.CONTENT),
