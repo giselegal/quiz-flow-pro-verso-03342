@@ -154,7 +154,7 @@ const VALIDATION_RULES: ValidationRule[] = [
     description: 'Imagens devem ter texto alternativo para acessibilidade',
     category: ValidationCategory.ACCESSIBILITY,
     severity: ValidationSeverity.ERROR,
-    validator: (value: string, context) => {
+    validator: (_value: string, context) => {
       if (context?.propertyKey === 'content.src' || context?.propertyKey === 'properties.src') {
         // Verificar se existe alt text correspondente
         const altKey = context.propertyKey.replace('src', 'alt');

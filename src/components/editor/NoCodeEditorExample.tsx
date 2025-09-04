@@ -22,16 +22,12 @@ import NoCodePropertiesPanel from './properties/NoCodePropertiesPanel';
 import ComprehensiveStepNavigation from './properties/ComprehensiveStepNavigation';
 import type { Block } from '@/types/editor';
 
-interface NoCodeEditorExampleProps {
-  className?: string;
-}
+interface NoCodeEditorExampleProps {}
 
 /**
  * Exemplo de integração completa do sistema NOCODE
  */
-export const NoCodeEditorExample: React.FC<NoCodeEditorExampleProps> = ({
-  className
-}) => {
+export const NoCodeEditorExample: React.FC<NoCodeEditorExampleProps> = () => {
   // Estados do editor
   const [activeMode, setActiveMode] = useState<'edit' | 'preview' | 'comprehensive'>('edit');
   const [selectedBlock, setSelectedBlock] = useState<Block | null>(null);

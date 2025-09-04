@@ -84,13 +84,10 @@ const OptimizedCanvasDropZone: React.FC<OptimizedCanvasProps> = React.memo(({
     selectedBlockId,
     isPreviewing = false,
     onSelectBlock,
-    onUpdateBlock,
-    onDeleteBlock,
-    onBlocksReorder,
     className,
     scopeId
 }) => {
-    const { renderCount, throttledRender } = useCanvasPerformance();
+    const { renderCount } = useCanvasPerformance();
     const [visibleBlocks, setVisibleBlocks] = React.useState<Block[]>(blocks);
     const [renderProgress, setRenderProgress] = React.useState(0);
     const containerRef = React.useRef<HTMLDivElement>(null);
@@ -108,12 +105,6 @@ const OptimizedCanvasDropZone: React.FC<OptimizedCanvasProps> = React.memo(({
             scopeId
         }
     });
-
-    // 🚀 VIRTUALIZAÇÃO INTELIGENTE
-    const useVirtualization = React.useMemo(() => {
-        return PERFORMANCE_CONFIG.ENABLE_VIRTUALIZATION &&
-            blocks.length > PERFORMANCE_CONFIG.VIRTUAL_THRESHOLD;
-    }, [blocks.length]);
 
     // 🚀 RENDERIZAÇÃO PROGRESSIVA
     const useProgressiveRender = React.useMemo(() => {
@@ -194,7 +185,9 @@ const OptimizedCanvasDropZone: React.FC<OptimizedCanvasProps> = React.memo(({
         <div
             ref={(node) => {
                 setNodeRef(node);
-                containerRef.current = node;
+                if (containerRef.current !== node) {
+                    (containerRef as any).current = node;
+                }
             }}
             className={containerClasses}
             data-canvas-optimized="true"
@@ -238,7 +231,7 @@ const OptimizedCanvasDropZone: React.FC<OptimizedCanvasProps> = React.memo(({
                     strategy={verticalListSortingStrategy}
                 >
                     <div className="space-y-4 max-w-2xl mx-auto">
-                        {visibleBlocks.map((block, index) => (
+                        {visibleBlocks.map((block) => (
                             <div key={block.id} className="relative">
                                 {/* Block Component - Placeholder por agora */}
                                 <div

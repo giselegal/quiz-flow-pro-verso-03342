@@ -5,35 +5,17 @@
  * mostrando uma visão completa de todas as propriedades configuráveis.
  */
 
-import React, { useState, useMemo, useCallback, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import React, { useState, useMemo, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Separator } from '@/components/ui/separator';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Progress } from '@/components/ui/progress';
 import {
   ChevronLeft,
   ChevronRight,
   ChevronDown,
   ChevronUp,
-  Settings,
-  Eye,
-  Edit3,
-  Copy,
-  Trash2,
-  Plus,
-  Check,
   AlertCircle,
-  Info,
-  Play,
-  SkipForward,
-  SkipBack,
-  Layers,
-  Grid,
-  List,
   Search
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -275,13 +257,11 @@ export const ComprehensiveStepNavigation: React.FC<ComprehensiveStepNavigationPr
   onBlockUpdate,
   onBlockDuplicate,
   onBlockDelete,
-  onStepValidate,
   className
 }) => {
   // Estados locais
   const [activeStep, setActiveStep] = useState('step-1');
   const [selectedBlock, setSelectedBlock] = useState<Block | null>(null);
-  const [viewMode, setViewMode] = useState<'list' | 'grid' | 'overview'>('list');
   const [expandedSteps, setExpandedSteps] = useState<Set<string>>(new Set(['step-1']));
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState<'all' | 'intro' | 'question' | 'strategic' | 'transition' | 'result' | 'offer'>('all');
@@ -542,7 +522,7 @@ export const ComprehensiveStepNavigation: React.FC<ComprehensiveStepNavigationPr
                   {/* Blocos expandidos */}
                   {isExpanded && (
                     <div className="ml-4 space-y-1">
-                      {step.blocks.map((block, index) => (
+                      {step.blocks.map((block) => (
                         <div
                           key={block.id}
                           className={cn(

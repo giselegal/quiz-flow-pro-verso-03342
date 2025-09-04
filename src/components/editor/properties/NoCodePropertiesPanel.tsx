@@ -31,28 +31,15 @@ import {
   Copy,
   Sparkles,
   Filter,
-  ChevronDown,
-  ChevronUp,
   Code,
   Info,
   AlertCircle,
-  CheckCircle,
-  Save,
-  Clipboard,
-  Undo,
-  Redo,
-  Download,
-  Upload,
-  Play,
-  Plus,
-  Minus,
-  Edit3
+  Save
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useUserName } from '@/hooks/useUserName';
 import { useQuizResult } from '@/hooks/useQuizResult';
-import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
-import EnhancedValidationSystem, { ValidationIssue, ValidationContext } from './EnhancedValidationSystem';
+import EnhancedValidationSystem, { ValidationContext } from './EnhancedValidationSystem';
 import type { Block } from '@/types/editor';
 
 // ===== INTERFACES =====
@@ -448,9 +435,7 @@ export const NoCodePropertiesPanel: React.FC<NoCodePropertiesPanelProps> = ({
   onUpdate,
   onDelete,
   onDuplicate,
-  onReset,
   onClose,
-  onStepChange,
   previewMode = false,
   onPreviewToggle
 }) => {
@@ -458,10 +443,8 @@ export const NoCodePropertiesPanel: React.FC<NoCodePropertiesPanelProps> = ({
   const [searchTerm, setSearchTerm] = useState('');
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [activeCategory, setActiveCategory] = useState<PropertyCategory>(PropertyCategory.CONTENT);
-  const [collapsedCategories, setCollapsedCategories] = useState<Set<PropertyCategory>>(new Set());
   const [tempValues, setTempValues] = useState<Record<string, any>>({});
   const [showInterpolationHelper, setShowInterpolationHelper] = useState(false);
-  const [validationIssues, setValidationIssues] = useState<ValidationIssue[]>([]);
 
   // Hooks de interpolação
   const {
@@ -549,16 +532,6 @@ export const NoCodePropertiesPanel: React.FC<NoCodePropertiesPanelProps> = ({
     onUpdate(defaults);
     setTempValues({});
   }, [selectedBlock, allProperties, onUpdate]);
-
-  const toggleCategory = useCallback((category: PropertyCategory) => {
-    const newCollapsed = new Set(collapsedCategories);
-    if (newCollapsed.has(category)) {
-      newCollapsed.delete(category);
-    } else {
-      newCollapsed.add(category);
-    }
-    setCollapsedCategories(newCollapsed);
-  }, [collapsedCategories]);
 
   const handleAutoFix = useCallback((propertyKey: string, value: any) => {
     handlePropertyChange(propertyKey, value);
@@ -851,7 +824,7 @@ export const NoCodePropertiesPanel: React.FC<NoCodePropertiesPanelProps> = ({
         <EnhancedValidationSystem
           properties={{ ...selectedBlock.properties, ...selectedBlock.content, ...tempValues }}
           context={validationContext}
-          onValidationChange={setValidationIssues}
+          onValidationChange={() => {}} // Placeholder function
           onAutoFix={handleAutoFix}
           className="mb-3"
         />
