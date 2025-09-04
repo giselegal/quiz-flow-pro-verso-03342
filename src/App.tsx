@@ -24,6 +24,7 @@ const AgentStyleFunnelTestPage = lazy(() => import('./pages/AgentStyleFunnelTest
 const StepsShowcasePage = lazy(() => import('./pages/StepsShowcase'));
 const SchemaEditorPage = lazy(() => import('./pages/SchemaEditorPage'));
 const EnhancedPropertiesPanelDemo = lazy(() => import('./components/demo/EnhancedPropertiesPanelDemo'));
+const FunnelDashboardPage = lazy(() => import('./pages/FunnelDashboardPage'));
 
 // Loading component
 const PageLoading = () => (
@@ -52,6 +53,13 @@ function App() {
               <Switch>
                 {/* 🏠 PÁGINA INICIAL */}
                 <Route path="/" component={Home} />
+
+                {/* 🎯 DASHBOARD DE FUNIS */}
+                <Route path="/funnels">
+                  <Suspense fallback={<PageLoading />}>
+                    <FunnelDashboardPage />
+                  </Suspense>
+                </Route>
 
                 {/* 🎯 EDITOR PRINCIPAL ÚNICO - SEM ANINHAMENTO */}
                 <Route path="/editor">

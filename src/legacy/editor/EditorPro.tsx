@@ -19,6 +19,7 @@ import { PerformanceOptimizer } from '@/utils/performanceOptimizer';
 import { useCentralizedStepValidation } from '@/hooks/useCentralizedStepValidation';
 import { validateStep } from '@/utils/stepValidationRegistry';
 import { calculateAndSaveQuizResult } from '@/utils/quizResultCalculator';
+import { FunnelHeader } from '@/components/editor/FunnelHeader';
 
 // Lazy modules para reduzir TTI do editor (Canvas usa o LazyQuizRenderer internamente)
 // const LazyQuizRenderer = React.lazy(() =>
@@ -923,12 +924,15 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
 
   return (
     <>
+      {/* 🎯 Cabeçalho do Funil */}
+      <FunnelHeader />
+      
       <StepDndProvider
         stepNumber={safeCurrentStep}
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
       >
-        <div className={`editor-pro h-screen bg-gray-50 flex overflow-x-hidden max-w-screen ${className}`}>
+        <div className={`editor-pro h-[calc(100vh-80px)] bg-gray-50 flex overflow-x-hidden max-w-screen ${className}`}>
           {/* 1) Etapas - 10% */}
           <Suspense fallback={<div className="w-[10%] min-w-0 max-w-none p-4">Carregando etapas…</div>}>
             <StepSidebar
