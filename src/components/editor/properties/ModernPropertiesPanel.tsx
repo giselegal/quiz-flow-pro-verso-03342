@@ -22,6 +22,7 @@ import { getPropertiesForComponentType } from './core/PropertyDiscovery';
 import { useEditor } from '@/hooks/useEditor';
 import { PropertyType } from '@/hooks/useUnifiedProperties';
 import type { Block } from '@/types/editor';
+import OptionsGridQuickPanel from './quick/OptionsGridQuickPanel';
 import {
   LayoutIcon,
   PaletteIcon,
@@ -460,6 +461,45 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
     }
   }, [selectedBlock, updateBlock, onUpdate]);
 
+  // Atualização em lote (usado pelo Quick Panel)
+  const handleBatchUpdate = React.useCallback((updates: Record<string, any>) => {
+    if (!selectedBlock) return;
+
+    const propertyUpdates: Record<string, any> = {};
+    const contentUpdates: Record<string, any> = {};
+
+    Object.entries(updates).forEach(([key, val]) => {
+      if (key === 'options') {
+        contentUpdates.options = val;
+      } else if (key.startsWith('content.')) {
+        const contentKey = key.substring(8);
+        contentUpdates[contentKey] = val;
+      } else {
+        propertyUpdates[key] = val;
+      }
+    });
+
+    const finalUpdates: any = {};
+    if (Object.keys(propertyUpdates).length > 0) {
+      finalUpdates.properties = {
+        ...selectedBlock.properties,
+        ...propertyUpdates
+      };
+    }
+    if (Object.keys(contentUpdates).length > 0) {
+      finalUpdates.content = {
+        ...selectedBlock.content,
+        ...contentUpdates
+      };
+    }
+
+    if (onUpdate) {
+      onUpdate(finalUpdates);
+    } else {
+      updateBlock(selectedBlock.id, finalUpdates);
+    }
+  }, [selectedBlock, onUpdate, updateBlock]);
+
   if (!selectedBlock) {
     return (
       <div className="h-full flex items-center justify-center p-6">
@@ -520,6 +560,13 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
           </p>
           <Separator />
         </div>
+
+        {/* Quick Panel para Options Grid (Fase 1) */}
+        {selectedBlock.type === 'options-grid' && (
+          <div className="sticky top-0 z-10 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60 border rounded-md p-3">
+            <OptionsGridQuickPanel block={selectedBlock} onBatchUpdate={handleBatchUpdate} />
+          </div>
+        )}
 
         {/* Tabs por categoria */}
         <Tabs defaultValue={categorizedProperties[0]?.[0]} className="w-full">
