@@ -180,7 +180,7 @@ interface BlockConfig {
 
 function getPropertiesForComponentType(blockType: string, currentBlock: BlockConfig): DiscoveredProperty[] {
   console.log('🔧 getPropertiesForComponentType called with:', { blockType, currentBlock: !!currentBlock });
-  
+
   // This is adapted from the useUnifiedProperties hook logic
   const createProperty = (
     key: string,
@@ -399,26 +399,26 @@ export function discoverComponentProperties(componentType: string): ComponentPro
   try {
     // Create a mock block to pass to the property generation function
     const mockBlock = { id: 'temp', type: componentType, properties: {}, content: {} };
-    
+
     // Call our property generation function directly
     const unifiedPropsResult = getPropertiesForComponentType(componentType, mockBlock);
-    
+
     console.log('🧪 PropertyDiscovery: resultado direto do getPropertiesForComponentType:', {
       componentType,
       hasResult: !!unifiedPropsResult,
       resultLength: unifiedPropsResult?.length || 0,
       resultType: Array.isArray(unifiedPropsResult) ? 'array' : typeof unifiedPropsResult
     });
-    
+
     if (unifiedPropsResult && Array.isArray(unifiedPropsResult) && unifiedPropsResult.length > 0) {
       console.log('🎯 PropertyDiscovery: propriedades encontradas via useUnifiedProperties:', {
         componentType,
         totalProperties: unifiedPropsResult.length,
-        firstFewProperties: unifiedPropsResult.slice(0, 3).map(p => ({ 
-          key: p.key, 
-          type: p.type, 
+        firstFewProperties: unifiedPropsResult.slice(0, 3).map(p => ({
+          key: p.key,
+          type: p.type,
           category: p.category,
-          label: p.label 
+          label: p.label
         }))
       });
 
@@ -464,11 +464,11 @@ export function discoverComponentProperties(componentType: string): ComponentPro
 
   // Fallback to MODULAR_COMPONENTS (for backwards compatibility)
   console.log('🔄 PropertyDiscovery: Tentando fallback para MODULAR_COMPONENTS...');
-  
+
   // 🔗 Aplicar mapeamento de tipos para compatibilidade
   const mappedType = mapComponentType(componentType);
   console.log('🔗 Tipo mapeado:', componentType, '->', mappedType);
-  
+
   const component = MODULAR_COMPONENTS.find(c => c.type === mappedType);
 
   console.log('🎯 PropertyDiscovery: resultado da busca no MODULAR_COMPONENTS:', {
