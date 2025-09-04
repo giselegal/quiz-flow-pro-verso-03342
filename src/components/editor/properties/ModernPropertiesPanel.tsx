@@ -163,6 +163,17 @@ const PropertyControl: React.FC<PropertyControlProps> = ({ property, value, onCh
 
     case 'array':
     case 'options-list':
+      // Debug: verificar dados das opções
+      if (process.env.NODE_ENV === 'development') {
+        console.log('🔍 DEBUG - Array/Options-list control:', {
+          property: property.key,
+          value: value,
+          valueType: typeof value,
+          isArray: Array.isArray(value),
+          length: Array.isArray(value) ? value.length : 'N/A'
+        });
+      }
+      
       return (
         <div className="space-y-3">
           <div className="flex items-center justify-between">
@@ -175,12 +186,16 @@ const PropertyControl: React.FC<PropertyControlProps> = ({ property, value, onCh
               onClick={() => {
                 const currentArray = Array.isArray(value) ? value : [];
                 const newOption = {
+                  id: `option-${Date.now()}`,
                   text: `Nova opção ${currentArray.length + 1}`,
-                  image: '',
-                  score: currentArray.length + 1,
-                  category: ''
+                  imageUrl: '',
+                  value: `option-${currentArray.length + 1}`,
+                  category: '',
+                  points: currentArray.length + 1
                 };
-                onChange([...currentArray, newOption]);
+                const newArray = [...currentArray, newOption];
+                console.log('🔍 Adding new option:', newOption, 'New array:', newArray);
+                onChange(newArray);
               }}
               className="h-7 px-2"
             >
@@ -188,11 +203,11 @@ const PropertyControl: React.FC<PropertyControlProps> = ({ property, value, onCh
               Adicionar
             </Button>
           </div>
-          
+
           <div className="space-y-2 max-h-40 overflow-y-auto">
             {Array.isArray(value) && value.length > 0 ? (
               value.map((option: any, index: number) => (
-                <div key={index} className="flex items-center gap-2 p-2 border rounded-md bg-muted/50">
+                <div key={option.id || index} className="flex items-center gap-2 p-2 border rounded-md bg-muted/50">
                   <GripVerticalIcon className="h-4 w-4 text-muted-foreground" />
                   <div className="flex-1 space-y-1">
                     <Input
@@ -201,6 +216,7 @@ const PropertyControl: React.FC<PropertyControlProps> = ({ property, value, onCh
                       onChange={(e) => {
                         const newArray = [...(Array.isArray(value) ? value : [])];
                         newArray[index] = { ...option, text: e.target.value };
+                        console.log('🔍 Updating option text:', newArray[index]);
                         onChange(newArray);
                       }}
                       className="h-7 text-xs"
@@ -209,10 +225,10 @@ const PropertyControl: React.FC<PropertyControlProps> = ({ property, value, onCh
                       <Input
                         placeholder="Score"
                         type="number"
-                        value={option.score || ''}
+                        value={option.points || option.score || ''}
                         onChange={(e) => {
                           const newArray = [...(Array.isArray(value) ? value : [])];
-                          newArray[index] = { ...option, score: parseInt(e.target.value) || 0 };
+                          newArray[index] = { ...option, points: parseInt(e.target.value) || 0 };
                           onChange(newArray);
                         }}
                         className="h-6 text-xs w-16"
@@ -234,6 +250,7 @@ const PropertyControl: React.FC<PropertyControlProps> = ({ property, value, onCh
                     size="sm"
                     onClick={() => {
                       const newArray = Array.isArray(value) ? value.filter((_, i) => i !== index) : [];
+                      console.log('🔍 Removing option at index:', index, 'New array:', newArray);
                       onChange(newArray);
                     }}
                     className="h-7 w-7 p-0 text-destructive hover:text-destructive"
@@ -248,7 +265,7 @@ const PropertyControl: React.FC<PropertyControlProps> = ({ property, value, onCh
               </div>
             )}
           </div>
-          
+
           {property.description && (
             <p className="text-xs text-muted-foreground">{property.description}</p>
           )}

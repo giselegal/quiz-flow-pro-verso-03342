@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔧 Teste: Correção de Opções no Painel Moderno</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-50 p-8">
+    <div class="max-w-4xl mx-auto">
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h1 class="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+                🔧 Correção Aplicada: Opções do Quiz
+            </h1>
+
+            <div class="grid md:grid-cols-2 gap-6 mb-6">
+                <div class="space-y-4">
+                    <h2 class="text-lg font-semibold text-gray-800">❌ Problema Identificado</h2>
+                    <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                        <h3 class="font-medium text-red-800 mb-2">Opções Desaparecendo</h3>
+                        <p class="text-red-700 text-sm">
+                            Quando clicava para editar questões, as opções sumiam porque:
+                        </p>
+                        <ul class="list-disc list-inside text-red-700 text-sm mt-2 space-y-1">
+                            <li>PropertyType.ARRAY não tinha case no PropertyControl</li>
+                            <li>Caía no case 'default' (input texto simples)</li>
+                            <li>Array de opções era renderizado como string</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <h2 class="text-lg font-semibold text-gray-800">✅ Solução Implementada</h2>
+                    <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                        <h3 class="font-medium text-green-800 mb-2">Controle de Array Adicionado</h3>
+                        <p class="text-green-700 text-sm">
+                            Novo case 'array' e 'options-list' com:
+                        </p>
+                        <ul class="list-disc list-inside text-green-700 text-sm mt-2 space-y-1">
+                            <li>Interface visual para adicionar/remover opções</li>
+                            <li>Campos para texto, score e categoria</li>
+                            <li>Botões de ação com ícones</li>
+                            <li>Scroll para listas longas</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-6">
+                <h2 class="text-lg font-semibold text-blue-800 mb-4">🧪 Como Testar a Correção</h2>
+                <ol class="list-decimal list-inside text-blue-700 space-y-2">
+                    <li><strong>Acesse:</strong> <a href="http://localhost:5173/editor"
+                            class="underline">http://localhost:5173/editor</a></li>
+                    <li><strong>Adicione um componente:</strong> Clique em "Options Grid" na sidebar esquerda</li>
+                    <li><strong>Selecione o componente:</strong> Clique no componente adicionado no canvas</li>
+                    <li><strong>Vá para a aba "Content":</strong> No painel direito, clique na aba "Content"</li>
+                    <li><strong>Encontre "Opções da Questão":</strong> Deve mostrar interface de lista com botão
+                        "Adicionar"</li>
+                    <li><strong>Teste adicionar opções:</strong> Clique em "Adicionar" e configure texto, score e
+                        categoria</li>
+                    <li><strong>Teste remover opções:</strong> Use o ícone de lixeira para remover</li>
+                </ol>
+            </div>
+
+            <div class="mt-6 p-4 bg-gray-100 rounded-lg">
+                <h3 class="font-medium text-gray-800 mb-2">🎯 Resultado Esperado</h3>
+                <p class="text-gray-700 text-sm">
+                    Agora quando você clicar para editar questões do tipo "Options Grid",
+                    as opções NÃO vão mais desaparecer. Em vez disso, você verá uma interface
+                    moderna para gerenciar a lista de opções com campos individuais para
+                    texto, pontuação e categoria.
+                </p>
+            </div>
+
+            <div class="mt-4 text-center">
+                <a href="http://localhost:5173/editor"
+                    class="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors">
+                    🚀 Testar Correção no Editor
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
