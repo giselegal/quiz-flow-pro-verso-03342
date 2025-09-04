@@ -1,35 +1,24 @@
 /**
- * 🎯 MODERN LEVA PROPERTIES PANEL
+ * 🎯 CONNECTED LEVA PANEL
  * 
- * Painel moderno usando LEVA - biblioteca especializada em property panels
- * que auto-gera interfaces limpas e profissionais baseadas em objetos de configuração.
- * 
- * ✨ VANTAGENS:
- * - 🎨 Design moderno estilo Chrome DevTools
- * - 🚀 95% menos código que o painel atual
- * - 🔄 Auto-sincronização com propriedades descobertas
- * - 📱 Responsivo e acessível por padrão
- * - 🎛️ Controles especializados para cada tipo de dados
- * - 📂 Organização automática por pastas/categorias
+ * Painel LEVA conectado aos dados reais das 21 etapas do quiz
+ * Integra com EditorContext para sincronização em tempo real
  */
 
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useCallback } from 'react';
 import { useControls, folder, button } from 'leva';
 import { getPropertiesForComponentType } from './core/PropertyDiscovery';
+import { useEditor } from '@/hooks/useEditor';
 import type { Block } from '@/types/editor';
 
-interface ModernLevaPropertiesPanelProps {
+interface ConnectedLevaPanelProps {
     selectedBlock?: Block | null;
-    onUpdate?: (updates: Record<string, any>) => void;
-    onDelete?: () => void;
-    onDuplicate?: () => void;
-    onClose?: () => void;
 }
 
 /**
  * Converte propriedades descobertas para o formato do LEVA
  */
-function convertDiscoveredPropertiesToLevaSchema(discoveredProperties: any[]) {
+function convertDiscoveredPropertiesToLevaSchema(discoveredProperties: any[], currentBlock?: Block) {
     const contentProps: any = {};
     const layoutProps: any = {};
     const behaviorProps: any = {};
@@ -37,13 +26,16 @@ function convertDiscoveredPropertiesToLevaSchema(discoveredProperties: any[]) {
     const advancedProps: any = {};
 
     discoveredProperties.forEach(prop => {
+        // Usar valor atual do bloco se disponível, senão usar defaultValue
+        const currentValue = getCurrentValue(prop.key, currentBlock) ?? prop.defaultValue;
+
         let levaConfig: any;
 
         // Converter tipos de propriedade para controles LEVA
         switch (prop.type) {
             case 'number':
                 levaConfig = {
-                    value: prop.defaultValue || 0,
+                    value: currentValue || 0,
                     min: prop.constraints?.min || 0,
                     max: prop.constraints?.max || 100,
                     step: prop.constraints?.step || 1
@@ -51,21 +43,21 @@ function convertDiscoveredPropertiesToLevaSchema(discoveredProperties: any[]) {
                 break;
             case 'range':
                 levaConfig = {
-                    value: prop.defaultValue || 0,
+                    value: currentValue || 0,
                     min: prop.constraints?.min || 0,
                     max: prop.constraints?.max || 100,
                     step: prop.constraints?.step || 1
                 };
                 break;
             case 'switch':
-                levaConfig = prop.defaultValue || false;
+                levaConfig = currentValue !== undefined ? currentValue : (prop.defaultValue || false);
                 break;
             case 'color':
-                levaConfig = prop.defaultValue || '#ffffff';
+                levaConfig = currentValue || prop.defaultValue || '#ffffff';
                 break;
             case 'select':
                 levaConfig = {
-                    value: prop.defaultValue,
+                    value: currentValue || prop.defaultValue,
                     options: prop.options?.reduce((acc: any, option: any) => {
                         acc[option.label] = option.value;
                         return acc;
@@ -75,7 +67,7 @@ function convertDiscoveredPropertiesToLevaSchema(discoveredProperties: any[]) {
             case 'text':
             case 'textarea':
             default:
-                levaConfig = prop.defaultValue || '';
+                levaConfig = currentValue || prop.defaultValue || '';
                 break;
         }
 
@@ -108,33 +100,53 @@ function convertDiscoveredPropertiesToLevaSchema(discoveredProperties: any[]) {
     };
 }
 
-interface LevaSchema {
-    contentProps: Record<string, any>;
-    layoutProps: Record<string, any>;
-    behaviorProps: Record<string, any>;
-    styleProps: Record<string, any>;
-    advancedProps: Record<string, any>;
+/**
+ * Obtém o valor atual de uma propriedade do bloco
+ */
+function getCurrentValue(propKey: string, currentBlock?: Block): any {
+    if (!currentBlock) return undefined;
+
+    // Verificar em properties
+    if (currentBlock.properties && currentBlock.properties[propKey] !== undefined) {
+        return currentBlock.properties[propKey];
+    }
+
+    // Verificar em content com chave composta (ex: content.text)
+    if (propKey.startsWith('content.')) {
+        const contentKey = propKey.substring(8); // Remove 'content.'
+        if (currentBlock.content && currentBlock.content[contentKey] !== undefined) {
+            return currentBlock.content[contentKey];
+        }
+    }
+
+    // Verificar diretamente em content
+    if (currentBlock.content && currentBlock.content[propKey] !== undefined) {
+        return currentBlock.content[propKey];
+    }
+
+    return undefined;
 }
 
-export const ModernLevaPropertiesPanel: React.FC<ModernLevaPropertiesPanelProps> = ({
-    selectedBlock,
-    onUpdate,
-    onDelete,
-    onDuplicate,
-    onClose
+export const ConnectedLevaPanel: React.FC<ConnectedLevaPanelProps> = ({
+    selectedBlock
 }) => {
+    // Conectar ao EditorContext para atualizações em tempo real
+    const { updateBlock, deleteBlock } = useEditor();
+
     // Descobrir propriedades usando sistema existente
     const discoveredProperties = useMemo(() => {
         if (!selectedBlock) return [];
 
-        console.log('🔍 ModernLevaPanel: Discovering properties for block:', selectedBlock.type);
+        console.log('🔍 ConnectedLevaPanel: Discovering properties for block:', selectedBlock.type);
+        console.log('📦 Current block data:', selectedBlock);
+
         const props = getPropertiesForComponentType(selectedBlock.type, selectedBlock);
-        console.log('📊 ModernLevaPanel: Found properties:', props.length);
+        console.log('📊 ConnectedLevaPanel: Found properties:', props.length);
         return props;
     }, [selectedBlock]);
 
     // Converter para formato LEVA
-    const levaSchema: LevaSchema = useMemo(() => {
+    const levaSchema = useMemo(() => {
         if (discoveredProperties.length === 0) {
             return {
                 contentProps: {},
@@ -145,13 +157,56 @@ export const ModernLevaPropertiesPanel: React.FC<ModernLevaPropertiesPanelProps>
             };
         }
 
-        const converted = convertDiscoveredPropertiesToLevaSchema(discoveredProperties);
-        console.log('🎛️ LEVA Schema generated:', converted);
+        const converted = convertDiscoveredPropertiesToLevaSchema(discoveredProperties, selectedBlock || undefined);
+        console.log('🎛️ LEVA Schema generated with REAL values:', converted);
         return converted;
-    }, [discoveredProperties]);
+    }, [discoveredProperties, selectedBlock]);
+
+    // Callback para atualizar bloco no EditorContext
+    const handleUpdate = useCallback((updates: Record<string, any>) => {
+        if (!selectedBlock) return;
+
+        console.log('📤 ConnectedLevaPanel sending updates to EditorContext:', updates);
+
+        // Separar updates entre properties e content
+        const propertyUpdates: any = {};
+        const contentUpdates: any = {};
+
+        Object.entries(updates).forEach(([key, value]) => {
+            if (key.startsWith('content.')) {
+                const contentKey = key.substring(8);
+                contentUpdates[contentKey] = value;
+            } else {
+                propertyUpdates[key] = value;
+            }
+        });
+
+        // Atualizar bloco via EditorContext
+        const finalUpdates: any = {};
+
+        if (Object.keys(propertyUpdates).length > 0) {
+            finalUpdates.properties = {
+                ...selectedBlock.properties,
+                ...propertyUpdates
+            };
+        }
+
+        if (Object.keys(contentUpdates).length > 0) {
+            finalUpdates.content = {
+                ...selectedBlock.content,
+                ...contentUpdates
+            };
+        }
+
+        console.log('🔄 Final updates to EditorContext:', finalUpdates);
+        updateBlock(selectedBlock.id, finalUpdates);
+    }, [selectedBlock, updateBlock]);
 
     // Criar controles LEVA organizados por categoria
     const values = useControls(() => {
+        const blockTypeName = selectedBlock?.type || 'Block';
+        console.log('🎛️ Creating controls for block type:', blockTypeName);
+
         return {
             // === CONTENT ===
             ...(Object.keys(levaSchema.contentProps || {}).length > 0 && {
@@ -181,22 +236,20 @@ export const ModernLevaPropertiesPanel: React.FC<ModernLevaPropertiesPanelProps>
             // === ACTIONS ===
             'Actions': folder({
                 'Duplicate Block': button(() => {
-                    console.log('🔄 Duplicating block via LEVA');
-                    onDuplicate?.();
+                    console.log('🔄 Duplicating block via ConnectedLEVA');
+                    // TODO: implementar duplicação
                 }),
                 'Delete Block': button(() => {
-                    console.log('🗑️ Deleting block via LEVA');
-                    onDelete?.();
-                }),
-                'Close Panel': button(() => {
-                    console.log('❌ Closing panel via LEVA');
-                    onClose?.();
+                    console.log('🗑️ Deleting block via ConnectedLEVA');
+                    if (selectedBlock) {
+                        deleteBlock(selectedBlock.id);
+                    }
                 })
             })
         };
-    }, [levaSchema, selectedBlock?.type, onDuplicate, onDelete, onClose]);
+    }, [levaSchema, selectedBlock?.type, selectedBlock?.id, updateBlock, deleteBlock]);
 
-    // Auto-sincronizar mudanças com o sistema existente
+    // Auto-sincronizar mudanças com EditorContext
     useEffect(() => {
         if (Object.keys(values).length > 0) {
             console.log('🔄 LEVA values changed:', values);
@@ -219,16 +272,16 @@ export const ModernLevaPropertiesPanel: React.FC<ModernLevaPropertiesPanelProps>
 
             // Só atualizar se houver mudanças reais
             if (Object.keys(allUpdates).length > 0) {
-                console.log('📤 LEVA sending updates to system:', allUpdates);
-                onUpdate?.(allUpdates);
+                handleUpdate(allUpdates);
             }
         }
-    }, [values, onUpdate]);
+    }, [values, handleUpdate]);
 
     // Log para debug
     useEffect(() => {
-        console.log('🎛️ ModernLevaPanel rendered with:', {
+        console.log('🎛️ ConnectedLevaPanel rendered with:', {
             selectedBlock: selectedBlock?.type,
+            selectedBlockId: selectedBlock?.id,
             propertiesCount: discoveredProperties.length,
             levaSchemaKeys: Object.keys(levaSchema),
             currentValues: values
@@ -240,4 +293,4 @@ export const ModernLevaPropertiesPanel: React.FC<ModernLevaPropertiesPanelProps>
     return null;
 };
 
-export default ModernLevaPropertiesPanel;
+export default ConnectedLevaPanel;

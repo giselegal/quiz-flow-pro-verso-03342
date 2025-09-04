@@ -2,9 +2,9 @@ import React, { Suspense } from 'react';
 import { Block } from '@/types/editor';
 import { cn } from '@/lib/utils';
 
-// Import only the modern LEVA panel
-const ModernLevaPropertiesPanel = React.lazy(
-  () => import('@/components/editor/properties/ModernLevaPropertiesPanel')
+// Import the modern properties panel (shadcn/ui based)
+const ModernPropertiesPanel = React.lazy(
+  () => import('@/components/editor/properties/ModernPropertiesPanel')
 );
 
 export interface PropertiesColumnProps {
@@ -35,19 +35,19 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
       {selectedBlock ? (
         <Suspense fallback={
           <div className="p-4 text-sm text-gray-600 animate-pulse">
-            Carregando painel LEVA…
+            Carregando painel moderno…
           </div>
         }>
-          {/* Always use LEVA modern panel */}
+          {/* Modern Properties Panel with shadcn/ui */}
           <div className="flex-1">
-            <div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 border-b border-blue-200">
-              <div className="text-sm font-medium text-blue-800">🎯 Painel LEVA Moderno</div>
-              <div className="text-xs text-blue-600 mt-1">
-                Painel profissional estilo Chrome DevTools - auto-organizador por categorias
+            <div className="p-4 bg-gradient-to-r from-violet-50 to-purple-50 border-b border-violet-200">
+              <div className="text-sm font-medium text-violet-800">🎛️ Painel Moderno</div>
+              <div className="text-xs text-violet-600 mt-1">
+                Interface profissional baseada em shadcn/ui + Radix UI
               </div>
             </div>
-            <ModernLevaPropertiesPanel
-              selectedBlock={selectedBlock as any}
+            <ModernPropertiesPanel 
+              selectedBlock={selectedBlock}
               onUpdate={onUpdate}
               onClose={onClose}
               onDelete={onDelete}
@@ -64,12 +64,12 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
             </div>
-            <h3 className="text-lg font-medium text-blue-700">🎯 Painel LEVA Ativo</h3>
+            <h3 className="text-lg font-medium text-violet-700">🎛️ Painel Moderno</h3>
             <p className="text-sm max-w-xs leading-relaxed">
-              Selecione qualquer componente no canvas para editar suas propriedades através do painel <strong>LEVA moderno</strong>
+              Selecione qualquer componente no canvas para editar suas propriedades através do <strong>painel moderno</strong> com interface profissional
             </p>
-            <div className="mt-4 text-xs text-blue-600 bg-blue-50 px-3 py-2 rounded-full">
-              ✨ Sistema Auto-Organizador
+            <div className="mt-4 text-xs text-violet-600 bg-violet-50 px-3 py-2 rounded-full">
+              🎯 shadcn/ui + Radix UI
             </div>
           </div>
         </div>

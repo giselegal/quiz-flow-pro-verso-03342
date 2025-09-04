@@ -179,7 +179,7 @@ function createLabel(key: string): string {
 function extractPropertiesFromBlock(block: Block): DiscoveredProperty[] {
   const properties: DiscoveredProperty[] = [];
 
-  // Extract properties from block.properties
+  // Extract properties from block.properties with REAL current values
   if (block.properties) {
     Object.entries(block.properties).forEach(([key, value]) => {
       if (value !== undefined && value !== null) {
@@ -191,8 +191,8 @@ function extractPropertiesFromBlock(block: Block): DiscoveredProperty[] {
           type,
           category,
           label: createLabel(key),
-          description: `Propriedade do bloco ${block.type}`,
-          defaultValue: value,
+          description: `Propriedade real do bloco ${block.type}`,
+          defaultValue: value, // Use REAL current value, not generic default
           isEditable: true,
           isAdvanced: category === PropertyCategory.ADVANCED,
         });
@@ -200,7 +200,7 @@ function extractPropertiesFromBlock(block: Block): DiscoveredProperty[] {
     });
   }
 
-  // Extract properties from block.content
+  // Extract properties from block.content with REAL current values
   if (block.content) {
     Object.entries(block.content).forEach(([key, value]) => {
       if (value !== undefined && value !== null && key !== 'children') {
@@ -212,8 +212,8 @@ function extractPropertiesFromBlock(block: Block): DiscoveredProperty[] {
           type,
           category,
           label: createLabel(`Content ${key}`),
-          description: `Conteúdo do bloco ${block.type}`,
-          defaultValue: value,
+          description: `Conteúdo real do bloco ${block.type}`,
+          defaultValue: value, // Use REAL current value
           isEditable: true,
           isAdvanced: false,
         });
@@ -327,11 +327,136 @@ function discoverAllQuizStepProperties(): Map<string, ComponentPropertySchema> {
  * This allows us to reuse the same logic without calling the hook
  */
 interface BlockConfig {
+  id?: string;
+  type?: string;
+  properties?: any;
+  content?: any;
   [key: string]: any; // Replace with more specific properties if known
+}
+
+// Helper functions
+const createProperty = (
+  key: string,
+  value: any,
+  type: PropertyType,
+  label: string,
+  category: PropertyCategory,
+  options?: any
+): DiscoveredProperty => ({
+  key,
+  type,
+  label,
+  category,
+  defaultValue: value,
+  description: options?.description,
+  options: options?.options,
+  constraints: {
+    min: options?.min,
+    max: options?.max,
+    step: options?.step,
+    required: options?.required,
+  },
+  isEditable: true, // All properties are editable by default
+  isAdvanced: options?.isAdvanced || false,
+});
+
+const BRAND_COLORS = {
+  primary: '#B89B7A',
+  secondary: '#D4C2A8',
+  accent: '#F3E8D3',
+  text: '#432818',
+  textPrimary: '#2c1810',
+  textSecondary: '#8F7A6A',
+};
+
+// Mapping functions
+function mapFieldTypeToPropertyType(fieldType: any): PropertyType {
+  switch (fieldType) {
+    case 'text': return PropertyType.TEXT;
+    case 'textarea': return PropertyType.TEXTAREA;
+    case 'number': return PropertyType.NUMBER;
+    case 'range': return PropertyType.RANGE;
+    case 'boolean': return PropertyType.SWITCH;
+    case 'color': return PropertyType.COLOR;
+    case 'select': return PropertyType.SELECT;
+    case 'options-list': return PropertyType.SELECT;
+    default: return PropertyType.TEXT;
+  }
+}
+
+function mapGroupToCategory(group?: string): PropertyCategory {
+  switch (group) {
+    case 'content': return PropertyCategory.CONTENT;
+    case 'style': return PropertyCategory.STYLE;
+    case 'layout': return PropertyCategory.LAYOUT;
+    case 'behavior': return PropertyCategory.BEHAVIOR;
+    case 'transform': return PropertyCategory.ADVANCED;
+    default: return PropertyCategory.CONTENT;
+  }
 }
 
 export function getPropertiesForComponentType(blockType: string, currentBlock: BlockConfig): DiscoveredProperty[] {
   console.log('🔧 getPropertiesForComponentType called with:', { blockType, currentBlock: !!currentBlock });
+
+  // PRIORIDADE 1: Se temos um bloco atual com dados reais, extrair deles
+  if (currentBlock && (currentBlock.properties || currentBlock.content)) {
+    console.log('🎯 Using REAL data from current block:', currentBlock);
+    const realProperties = extractPropertiesFromBlock(currentBlock as any);
+
+    if (realProperties.length > 0) {
+      console.log('✅ Found REAL properties from current block:', realProperties.length);
+      return [...getUniversalPropertiesForBlock(currentBlock), ...realProperties];
+    }
+  }
+
+  // PRIORIDADE 2: Usar schemas específicos do blockPropertySchemas
+  if (blockPropertySchemas[blockType]) {
+    console.log('✅ Using blockPropertySchemas for:', blockType);
+    const schema = blockPropertySchemas[blockType];
+    const schemaProperties = schema.fields.map(field => createProperty(
+      field.key,
+      currentBlock?.properties?.[field.key] || currentBlock?.content?.[field.key] || field.defaultValue,
+      mapFieldTypeToPropertyType(field.type),
+      field.label,
+      mapGroupToCategory(field.group),
+      {
+        description: field.description,
+        options: field.options,
+        min: field.min,
+        max: field.max,
+        step: field.step,
+        required: field.required,
+      }
+    ));
+
+    return [...getUniversalPropertiesForBlock(currentBlock), ...schemaProperties];
+  }
+
+  // PRIORIDADE 3: Fallback para definições hardcoded por tipo
+  return getHardcodedPropertiesForType(blockType, currentBlock);
+}
+
+// Função auxiliar para propriedades universais que considera o bloco atual
+function getUniversalPropertiesForBlock(currentBlock?: BlockConfig) {
+  return [
+    createProperty('marginTop', currentBlock?.properties?.marginTop || 0, PropertyType.RANGE, 'Margem Superior', PropertyCategory.LAYOUT, {
+      min: 0, max: 100, step: 2, unit: 'px'
+    }),
+    createProperty('marginBottom', currentBlock?.properties?.marginBottom || 0, PropertyType.RANGE, 'Margem Inferior', PropertyCategory.LAYOUT, {
+      min: 0, max: 100, step: 2, unit: 'px'
+    }),
+    createProperty('paddingTop', currentBlock?.properties?.paddingTop || 0, PropertyType.RANGE, 'Padding Superior', PropertyCategory.LAYOUT, {
+      min: 0, max: 100, step: 2, unit: 'px'
+    }),
+    createProperty('paddingBottom', currentBlock?.properties?.paddingBottom || 0, PropertyType.RANGE, 'Padding Inferior', PropertyCategory.LAYOUT, {
+      min: 0, max: 100, step: 2, unit: 'px'
+    }),
+    createProperty('backgroundColor', currentBlock?.properties?.backgroundColor || 'transparent', PropertyType.COLOR, 'Cor de Fundo', PropertyCategory.STYLE),
+  ];
+}
+
+// Função para definições hardcoded por tipo (como fallback)
+function getHardcodedPropertiesForType(blockType: string, currentBlock?: BlockConfig): DiscoveredProperty[] {
 
   // This is adapted from the useUnifiedProperties hook logic
   const createProperty = (
@@ -401,7 +526,7 @@ export function getPropertiesForComponentType(blockType: string, currentBlock: B
         createProperty('logoAlt', currentBlock?.properties?.logoAlt || 'Logo', PropertyType.TEXT, 'Texto Alternativo do Logo', PropertyCategory.ACCESSIBILITY),
         createProperty('title', currentBlock?.properties?.title || '', PropertyType.TEXT, 'Título do Cabeçalho', PropertyCategory.CONTENT),
         createProperty('subtitle', currentBlock?.properties?.subtitle || '', PropertyType.TEXT, 'Subtítulo', PropertyCategory.CONTENT),
-        
+
         // === LAYOUT PROPERTIES ===
         createProperty('logoWidth', currentBlock?.properties?.logoWidth || 120, PropertyType.RANGE, 'Largura do Logo', PropertyCategory.LAYOUT, { min: 50, max: 300, step: 10, unit: 'px' }),
         createProperty('logoHeight', currentBlock?.properties?.logoHeight || 40, PropertyType.RANGE, 'Altura do Logo', PropertyCategory.LAYOUT, { min: 20, max: 150, step: 5, unit: 'px' }),
