@@ -62,41 +62,33 @@ export default defineConfig({
     copyPublicDir: true,
     rollupOptions: {
       output: {
-        // Configuração otimizada para chunks menores e melhor cache
-        manualChunks: (id) => {
-          // Vendor chunks para melhor cache
-          if (id.includes('node_modules')) {
-            if (id.includes('react') || id.includes('react-dom')) {
-              return 'react-vendor';
-            }
-            if (id.includes('@dnd-kit')) {
-              return 'dnd-vendor';
-            }
-            if (id.includes('lucide-react')) {
-              return 'icons-vendor';
-            }
-            if (id.includes('recharts') || id.includes('chart')) {
-              return 'charts-vendor';
-            }
-            return 'vendor';
-          }
-
-          // Pages chunks para lazy loading
-          if (id.includes('/pages/MetricsPage')) {
-            return 'metrics-page';
-          }
-          if (id.includes('/pages/SchemaEditorPage')) {
-            return 'schema-page';
-          }
-          if (id.includes('/legacy/editor/EditorPro')) {
-            return 'editor-pro';
-          }
-          if (id.includes('/components/editor/canvas/')) {
-            return 'canvas-components';
-          }
-          if (id.includes('/components/editor/properties/')) {
-            return 'properties-components';
-          }
+        // Estratégia agressiva de chunking para reduzir tamanhos
+        manualChunks: {
+          // Vendor chunks separados
+          'react-vendor': ['react', 'react-dom'],
+          'dnd-vendor': ['@dnd-kit/core', '@dnd-kit/sortable', '@dnd-kit/utilities'],
+          'icons-vendor': ['lucide-react'],
+          'charts-vendor': ['recharts'],
+          'ui-vendor': ['@radix-ui/react-dropdown-menu', '@radix-ui/react-tabs', '@radix-ui/react-select'],
+          
+          // Componentes grandes separados
+          'editor-core': ['./src/legacy/editor/EditorPro'],
+          'canvas-components': ['./src/components/editor/canvas/CanvasDropZone.simple'],
+          'properties-system': ['./src/components/editor/properties/ModernPropertiesPanel'],
+          'schema-editor': ['./src/pages/SchemaEditorPage'],
+          'metrics-page': ['./src/pages/admin/MetricsPage'],
+          
+          // Sistemas modulares
+          'funnel-system': [
+            './src/core/funnel/FunnelCore',
+            './src/core/funnel/FunnelEngine',
+            './src/core/funnel/hooks/useFunnelState'
+          ],
+          'quiz-system': [
+            './src/components/quiz/QuizRenderer',
+            './src/services/quizResultsService',
+            './src/hooks/useQuizFlow'
+          ]
         },
         chunkFileNames: 'assets/[name]-[hash].js',
         entryFileNames: 'assets/[name]-[hash].js',

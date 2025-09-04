@@ -12,15 +12,15 @@ const ComQueRoupaEuVouPage = lazy(() => import('./pages/ComQueRoupaEuVouPage'));
 // 🎯 PÁGINAS ESSENCIAIS - SEM CONFLITOS
 const Home = lazy(() => import('./pages/Home'));
 const AuthPage = lazy(() => import('./pages/AuthPage'));
-// Import estático para evitar falhas de dynamic import em alguns ambientes (ex.: Lovable)
-import MainEditor from './pages/MainEditor';
+// Lazy loading otimizado para melhor performance
+const MainEditor = lazy(() => import('./pages/MainEditor'));
 const DashboardPage = lazy(() => import('./pages/admin/DashboardPage'));
 const StepPage = lazy(() => import('./pages/StepPage'));
 // ✅ Página de produção modular limpa (cliente final)
 const QuizModularPage = lazy(() => import('./pages/QuizModularPage'));
 
-// Importação da nova página
-import AgentStyleFunnelTestPage from './pages/AgentStyleFunnelTestPage';
+// Importação da nova página também lazy
+const AgentStyleFunnelTestPage = lazy(() => import('./pages/AgentStyleFunnelTestPage'));
 const StepsShowcasePage = lazy(() => import('./pages/StepsShowcase'));
 const SchemaEditorPage = lazy(() => import('./pages/SchemaEditorPage'));
 const EnhancedPropertiesPanelDemo = lazy(() => import('./components/demo/EnhancedPropertiesPanelDemo'));
