@@ -68,7 +68,7 @@ export default function TestModernPropertiesPanel() {
       <div className="flex-1 p-8">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-3xl font-bold mb-6">🧪 Teste - Modern Properties Panel</h1>
-          
+
           <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
             <h2 className="text-xl font-semibold mb-4">Bloco Selecionado</h2>
             <pre className="bg-gray-100 p-4 rounded text-sm overflow-auto">

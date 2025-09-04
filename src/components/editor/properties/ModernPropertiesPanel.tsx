@@ -21,13 +21,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { getPropertiesForComponentType } from './core/PropertyDiscovery';
 import { useEditor } from '@/hooks/useEditor';
 import type { Block } from '@/types/editor';
-import { 
-  LayoutIcon, 
-  PaletteIcon, 
-  SettingsIcon, 
+import {
+  LayoutIcon,
+  PaletteIcon,
+  SettingsIcon,
   CodeIcon,
   CheckCircleIcon,
-  AlignLeftIcon
+  AlignLeftIcon,
+  PlusIcon,
+  TrashIcon,
+  GripVerticalIcon
 } from 'lucide-react';
 
 interface ModernPropertiesPanelProps {
@@ -158,6 +161,100 @@ const PropertyControl: React.FC<PropertyControlProps> = ({ property, value, onCh
         </div>
       );
 
+    case 'array':
+    case 'options-list':
+      return (
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <Label className="text-sm font-medium">
+              {property.label}
+            </Label>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                const currentArray = Array.isArray(value) ? value : [];
+                const newOption = {
+                  text: `Nova opção ${currentArray.length + 1}`,
+                  image: '',
+                  score: currentArray.length + 1,
+                  category: ''
+                };
+                onChange([...currentArray, newOption]);
+              }}
+              className="h-7 px-2"
+            >
+              <PlusIcon className="h-3 w-3 mr-1" />
+              Adicionar
+            </Button>
+          </div>
+          
+          <div className="space-y-2 max-h-40 overflow-y-auto">
+            {Array.isArray(value) && value.length > 0 ? (
+              value.map((option: any, index: number) => (
+                <div key={index} className="flex items-center gap-2 p-2 border rounded-md bg-muted/50">
+                  <GripVerticalIcon className="h-4 w-4 text-muted-foreground" />
+                  <div className="flex-1 space-y-1">
+                    <Input
+                      placeholder="Texto da opção"
+                      value={option.text || ''}
+                      onChange={(e) => {
+                        const newArray = [...(Array.isArray(value) ? value : [])];
+                        newArray[index] = { ...option, text: e.target.value };
+                        onChange(newArray);
+                      }}
+                      className="h-7 text-xs"
+                    />
+                    <div className="flex gap-1">
+                      <Input
+                        placeholder="Score"
+                        type="number"
+                        value={option.score || ''}
+                        onChange={(e) => {
+                          const newArray = [...(Array.isArray(value) ? value : [])];
+                          newArray[index] = { ...option, score: parseInt(e.target.value) || 0 };
+                          onChange(newArray);
+                        }}
+                        className="h-6 text-xs w-16"
+                      />
+                      <Input
+                        placeholder="Categoria"
+                        value={option.category || ''}
+                        onChange={(e) => {
+                          const newArray = [...(Array.isArray(value) ? value : [])];
+                          newArray[index] = { ...option, category: e.target.value };
+                          onChange(newArray);
+                        }}
+                        className="h-6 text-xs flex-1"
+                      />
+                    </div>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {
+                      const newArray = Array.isArray(value) ? value.filter((_, i) => i !== index) : [];
+                      onChange(newArray);
+                    }}
+                    className="h-7 w-7 p-0 text-destructive hover:text-destructive"
+                  >
+                    <TrashIcon className="h-3 w-3" />
+                  </Button>
+                </div>
+              ))
+            ) : (
+              <div className="text-center py-4 text-sm text-muted-foreground">
+                Nenhuma opção configurada. Clique em "Adicionar" para começar.
+              </div>
+            )}
+          </div>
+          
+          {property.description && (
+            <p className="text-xs text-muted-foreground">{property.description}</p>
+          )}
+        </div>
+      );
+
     default:
       return (
         <div className="space-y-2">
@@ -241,7 +338,7 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
 
     console.log('🔍 ModernPropertiesPanel: Discovering properties for block:', selectedBlock.type);
     console.log('📦 Current block data:', selectedBlock);
-    
+
     const props = getPropertiesForComponentType(selectedBlock.type, selectedBlock);
     console.log('📊 ModernPropertiesPanel: Found properties:', props.length);
     return props;
@@ -257,7 +354,7 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
     if (!selectedBlock) return;
 
     console.log('📤 ModernPropertiesPanel updating property:', propKey, 'with value:', value);
-    
+
     // Separar updates entre properties e content
     const propertyUpdates: any = {};
     const contentUpdates: any = {};
@@ -271,14 +368,14 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
 
     // Atualizar bloco via EditorContext ou callback
     const finalUpdates: any = {};
-    
+
     if (Object.keys(propertyUpdates).length > 0) {
       finalUpdates.properties = {
         ...selectedBlock.properties,
         ...propertyUpdates
       };
     }
-    
+
     if (Object.keys(contentUpdates).length > 0) {
       finalUpdates.content = {
         ...selectedBlock.content,
@@ -287,7 +384,7 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
     }
 
     console.log('🔄 Final updates to EditorContext:', finalUpdates);
-    
+
     // Use onUpdate callback if provided, otherwise use EditorContext
     if (onUpdate) {
       onUpdate(finalUpdates);
@@ -340,8 +437,8 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
                 {selectedBlock.type}
               </Badge>
               {onClose && (
-                <Button 
-                  variant="ghost" 
+                <Button
+                  variant="ghost"
                   size="sm"
                   onClick={onClose}
                   className="h-6 w-6 p-0"
@@ -363,8 +460,8 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
             {categorizedProperties.slice(0, 6).map(([categoryKey, category]) => {
               const IconComponent = category.icon;
               return (
-                <TabsTrigger 
-                  key={categoryKey} 
+                <TabsTrigger
+                  key={categoryKey}
                   value={categoryKey}
                   className="text-xs flex items-center gap-1"
                 >
@@ -412,17 +509,17 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
-            <Button 
-              variant="outline" 
-              size="sm" 
+            <Button
+              variant="outline"
+              size="sm"
               className="w-full"
               onClick={() => onDuplicate?.()}
             >
               Duplicar Componente
             </Button>
-            <Button 
-              variant="destructive" 
-              size="sm" 
+            <Button
+              variant="destructive"
+              size="sm"
               className="w-full"
               onClick={() => {
                 if (selectedBlock) {

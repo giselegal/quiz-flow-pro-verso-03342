@@ -46,7 +46,7 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
                 Interface profissional baseada em shadcn/ui + Radix UI
               </div>
             </div>
-            <ModernPropertiesPanel 
+            <ModernPropertiesPanel
               selectedBlock={selectedBlock}
               onUpdate={onUpdate}
               onClose={onClose}
