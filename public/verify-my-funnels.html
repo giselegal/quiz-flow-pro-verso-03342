@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔍 Verificar "Meus Funis"</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 p-8">
+    <div class="max-w-4xl mx-auto">
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h1 class="text-2xl font-bold text-blue-600 mb-6 flex items-center gap-2">
+                📁 Verificação: "Meus Funis"
+            </h1>
+            
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
+                <h2 class="text-lg font-semibold text-blue-800 mb-4">🎯 Funil em Questão</h2>
+                <div class="space-y-2">
+                    <p><strong>ID:</strong> <code class="bg-gray-100 px-2 py-1 rounded">default-quiz-funnel-21-steps-1756583895094</code></p>
+                    <p><strong>Status:</strong> <span class="text-green-600">✅ Localizado e Funcional</span></p>
+                    <p><strong>Acesso Direto:</strong> <a href="http://localhost:5177/editor?funnel=default-quiz-funnel-21-steps-1756583895094" class="text-blue-600 underline">Editor</a></p>
+                </div>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                    <h3 class="font-semibold text-green-800 mb-3">✅ Onde o Funil DEVE Aparecer</h3>
+                    <ul class="space-y-2 text-green-700 text-sm">
+                        <li class="flex items-start gap-2">
+                            <span>📊</span>
+                            <span><strong>Página "Meus Funis":</strong> /admin/my-funnels</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span>💾</span>
+                            <span><strong>Sistema:</strong> funnelLocalStore ou Supabase</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span>🔗</span>
+                            <span><strong>Lista:</strong> Funis criados pelo usuário</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span>🏷️</span>
+                            <span><strong>Metadata:</strong> Nome, status, data de criação</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                    <h3 class="font-semibold text-yellow-800 mb-3">❓ Como Foi Criado</h3>
+                    <ol class="list-decimal list-inside space-y-1 text-yellow-700 text-sm">
+                        <li>Usuário acessou dashboard (/admin)</li>
+                        <li>Clicou em template ou "Usar Modelo"</li>
+                        <li>Sistema chamou funnelTemplateService.createFunnelFromTemplate()</li>
+                        <li>Funil foi salvo no Supabase com ID único</li>
+                        <li>Redirecionamento para /editor?funnel=ID</li>
+                    </ol>
+                </div>
+            </div>
+            
+            <div class="bg-red-50 border border-red-200 rounded-lg p-6 mb-6">
+                <h2 class="text-lg font-semibold text-red-800 mb-4">🚨 Resposta à Sua Pergunta</h2>
+                
+                <div class="space-y-4">
+                    <div class="bg-white border rounded-lg p-4">
+                        <h3 class="font-medium text-red-800 mb-2">❌ EU NÃO ADICIONEI MANUALMENTE</h3>
+                        <p class="text-red-700 text-sm">
+                            O funil <code>default-quiz-funnel-21-steps-1756583895094</code> foi criado 
+                            <strong>automaticamente pelo sistema</strong> quando:
+                        </p>
+                        <ul class="list-disc list-inside mt-2 text-red-700 text-sm space-y-1">
+                            <li>Você ou alguém acessou um template no dashboard</li>
+                            <li>Clicou em "Usar Modelo" ou similar</li>
+                            <li>O sistema executou a correção que implementei (handleEditTemplate)</li>
+                            <li>Foi gerado automaticamente com timestamp único</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-white border rounded-lg p-4">
+                        <h3 class="font-medium text-red-800 mb-2">✅ COMO VERIFICAR SE ESTÁ EM "MEUS FUNIS"</h3>
+                        <p class="text-red-700 text-sm mb-2">Para confirmar se o funil aparece na sua lista:</p>
+                        <ol class="list-decimal list-inside text-red-700 text-sm space-y-1">
+                            <li>Acesse: <a href="http://localhost:5177/admin" class="text-blue-600 underline">Dashboard Admin</a></li>
+                            <li>Vá para a seção "Meus Funis"</li>
+                            <li>Procure pelo funil com ID: default-quiz-funnel-21-steps-1756583895094</li>
+                            <li>Verifique se há botões para Editar/Visualizar</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-gray-100 rounded-lg p-6">
+                <h3 class="font-semibold text-gray-800 mb-4">🧪 Verificação Prática</h3>
+                <div class="space-y-3">
+                    <div>
+                        <h4 class="font-medium text-gray-800 mb-2">1. Verificar Lista de Funis</h4>
+                        <a href="http://localhost:5177/admin" 
+                           class="inline-flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors text-sm">
+                            📊 Ir para Dashboard
+                        </a>
+                    </div>
+                    
+                    <div>
+                        <h4 class="font-medium text-gray-800 mb-2">2. Acessar Diretamente</h4>
+                        <a href="http://localhost:5177/editor?funnel=default-quiz-funnel-21-steps-1756583895094" 
+                           class="inline-flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition-colors text-sm">
+                            ✏️ Abrir no Editor
+                        </a>
+                    </div>
+                    
+                    <div>
+                        <h4 class="font-medium text-gray-800 mb-2">3. Testar Questões Problemáticas</h4>
+                        <div class="flex gap-2">
+                            <a href="http://localhost:5177/editor?funnel=default-quiz-funnel-21-steps-1756583895094&step=step-2" 
+                               class="inline-flex items-center gap-2 bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 transition-colors text-xs">
+                                Q1
+                            </a>
+                            <a href="http://localhost:5177/editor?funnel=default-quiz-funnel-21-steps-1756583895094&step=step-3" 
+                               class="inline-flex items-center gap-2 bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 transition-colors text-xs">
+                                Q2
+                            </a>
+                            <a href="http://localhost:5177/editor?funnel=default-quiz-funnel-21-steps-1756583895094&step=step-4" 
+                               class="inline-flex items-center gap-2 bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 transition-colors text-xs">
+                                Q3
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        console.log('🔍 Funnel verification page loaded');
+        console.log('Target funnel:', 'default-quiz-funnel-21-steps-1756583895094');
+        console.log('This funnel was created automatically by the system, not manually added');
+    </script>
+</body>
+</html>

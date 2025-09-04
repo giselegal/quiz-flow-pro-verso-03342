@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔍 Verificar Funil no Supabase</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 p-8">
+    <div class="max-w-4xl mx-auto">
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h1 class="text-2xl font-bold text-blue-600 mb-6 flex items-center gap-2">
+                🔍 Verificar Funil no Supabase
+            </h1>
+            
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
+                <h2 class="text-lg font-semibold text-blue-800 mb-4">Funil Target</h2>
+                <div class="space-y-2">
+                    <p><strong>ID:</strong> <code class="bg-gray-100 px-2 py-1 rounded">default-quiz-funnel-21-steps-1756583895094</code></p>
+                    <p><strong>Timestamp:</strong> 1756583895094 (equivale a: <span id="timestamp-date"></span>)</p>
+                    <p><strong>Padrão:</strong> default-quiz-funnel-21-steps-{timestamp}</p>
+                </div>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                    <h3 class="font-semibold text-yellow-800 mb-3">🔧 Possibilidades</h3>
+                    <ul class="space-y-2 text-yellow-700 text-sm">
+                        <li class="flex items-start gap-2">
+                            <span>📊</span>
+                            <span>Funil criado via funnelTemplateService.createFunnelFromTemplate()</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span>🏗️</span>
+                            <span>Funil gerado automaticamente durante desenvolvimento</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span>💾</span>
+                            <span>Funil salvo no Supabase com ID específico</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span>🧪</span>
+                            <span>Funil de teste ou demo</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                    <h3 class="font-semibold text-green-800 mb-3">✅ Como Verificar</h3>
+                    <ol class="list-decimal list-inside space-y-1 text-green-700 text-sm">
+                        <li>Consultar tabela 'funnels' no Supabase</li>
+                        <li>Verificar se ID existe e está ativo</li>
+                        <li>Checar components relacionados</li>
+                        <li>Verificar user_id do proprietário</li>
+                        <li>Analisar settings e metadados</li>
+                    </ol>
+                </div>
+            </div>
+            
+            <div class="bg-gray-100 rounded-lg p-6 mb-6">
+                <h3 class="font-semibold text-gray-800 mb-4">🔍 Status da Verificação</h3>
+                <div id="verification-status" class="space-y-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-4 h-4 bg-yellow-400 rounded-full animate-pulse"></div>
+                        <span class="text-gray-700">Aguardando verificação manual...</span>
+                    </div>
+                </div>
+                
+                <button 
+                    onclick="simulateSupabaseCheck()"
+                    class="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors"
+                >
+                    🔍 Simular Verificação
+                </button>
+            </div>
+            
+            <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+                <h3 class="font-medium text-red-800 mb-2">⚠️ Observações Importantes</h3>
+                <ul class="space-y-1 text-red-700 text-sm">
+                    <li>• Timestamp 1756583895094 parece ser futuro (ano 2025+)</li>
+                    <li>• ID pode ter sido gerado programaticamente</li>
+                    <li>• Verificar se funnelTemplateService usa esse padrão</li>
+                    <li>• Pode ser ID de template, não de funil instanciado</li>
+                </ul>
+            </div>
+            
+            <div class="flex gap-4">
+                <a href="http://localhost:5177/editor?funnel=default-quiz-funnel-21-steps-1756583895094" 
+                   class="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors">
+                    🔗 Abrir no Editor
+                </a>
+                <a href="http://localhost:5177/admin" 
+                   class="inline-flex items-center gap-2 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors">
+                    🏠 Dashboard Admin
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Converter timestamp para data legível
+        const timestamp = 1756583895094;
+        const date = new Date(timestamp);
+        document.getElementById('timestamp-date').textContent = date.toLocaleString('pt-BR');
+        
+        function simulateSupabaseCheck() {
+            const statusDiv = document.getElementById('verification-status');
+            
+            statusDiv.innerHTML = `
+                <div class="space-y-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-4 h-4 bg-blue-500 rounded-full"></div>
+                        <span class="text-gray-700">Conectando ao Supabase...</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-4 h-4 bg-blue-500 rounded-full"></div>
+                        <span class="text-gray-700">Consultando tabela 'funnels'...</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-4 h-4 bg-yellow-500 rounded-full"></div>
+                        <span class="text-gray-700">
+                            <strong>Resultado:</strong> Funil não encontrado no Supabase
+                            <br><small class="text-gray-500">ID pode ser local ou temporário</small>
+                        </span>
+                    </div>
+                    <div class="bg-yellow-100 border border-yellow-300 rounded p-3 mt-3">
+                        <p class="text-yellow-800 text-sm">
+                            <strong>Sugestão:</strong> Verificar se o funil foi criado localmente 
+                            ou se é um ID de template. Pode estar sendo gerado pelo sistema 
+                            de templates como fallback.
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
+        
+        console.log('🔍 Funnel locator loaded');
+        console.log('Target funnel ID:', 'default-quiz-funnel-21-steps-1756583895094');
+        console.log('Timestamp date:', new Date(1756583895094).toISOString());
+    </script>
+</body>
+</html>

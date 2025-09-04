@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📅 Análise do Timestamp do Funil</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 p-8">
+    <div class="max-w-4xl mx-auto">
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h1 class="text-2xl font-bold text-red-600 mb-6 flex items-center gap-2">
+                🚨 ANÁLISE CRÍTICA: Data de Criação do Funil
+            </h1>
+            
+            <div class="bg-red-50 border border-red-200 rounded-lg p-6 mb-6">
+                <h2 class="text-lg font-semibold text-red-800 mb-4">⏰ Timestamp Analisado</h2>
+                <div class="space-y-3" id="timestamp-analysis">
+                    <!-- Será preenchido via JavaScript -->
+                </div>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                    <h3 class="font-semibold text-yellow-800 mb-3">🔍 Investigação</h3>
+                    <div id="investigation-results">
+                        <!-- Será preenchido via JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <h3 class="font-semibold text-blue-800 mb-3">📊 Comparação Temporal</h3>
+                    <div id="temporal-comparison">
+                        <!-- Será preenchido via JavaScript -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-green-50 border border-green-200 rounded-lg p-6 mb-6">
+                <h2 class="text-lg font-semibold text-green-800 mb-4">✅ CONCLUSÃO</h2>
+                <div id="conclusion">
+                    <!-- Será preenchido via JavaScript -->
+                </div>
+            </div>
+            
+            <div class="bg-gray-100 rounded-lg p-6">
+                <h3 class="font-semibold text-gray-800 mb-4">🔎 Como Verificar no Supabase</h3>
+                <ol class="list-decimal list-inside space-y-2 text-gray-700 text-sm">
+                    <li>Conectar ao painel do Supabase</li>
+                    <li>Abrir tabela <code class="bg-gray-200 px-1 rounded">funnels</code></li>
+                    <li>Procurar pelo ID: <code class="bg-gray-200 px-1 rounded">default-quiz-funnel-21-steps-1756583895094</code></li>
+                    <li>Verificar coluna <code class="bg-gray-200 px-1 rounded">created_at</code></li>
+                    <li>Comparar com a data real de criação</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function analyzeTimestamp() {
+            const timestamp = 1756583895094;
+            const funnelDate = new Date(timestamp);
+            const currentDate = new Date();
+            
+            // Análise do timestamp
+            const analysisDiv = document.getElementById('timestamp-analysis');
+            analysisDiv.innerHTML = `
+                <div class="space-y-2">
+                    <p><strong>Timestamp:</strong> <code class="bg-gray-100 px-2 py-1 rounded">${timestamp}</code></p>
+                    <p><strong>Data convertida:</strong> ${funnelDate.toLocaleString('pt-BR')}</p>
+                    <p><strong>Data ISO:</strong> <code class="bg-gray-100 px-2 py-1 rounded">${funnelDate.toISOString()}</code></p>
+                    <p><strong>Data atual:</strong> ${currentDate.toLocaleString('pt-BR')}</p>
+                </div>
+            `;
+            
+            // Investigação
+            const investigationDiv = document.getElementById('investigation-results');
+            const isFuture = timestamp > Date.now();
+            const daysDifference = Math.abs(funnelDate.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24);
+            
+            investigationDiv.innerHTML = `
+                <ul class="space-y-2 text-yellow-700 text-sm">
+                    <li class="flex items-start gap-2">
+                        <span>${isFuture ? '🚨' : '✅'}</span>
+                        <span>Timestamp é ${isFuture ? 'do FUTURO' : 'do passado'}</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span>📅</span>
+                        <span>Diferença: ${Math.round(daysDifference)} dias</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span>🔢</span>
+                        <span>Formato válido: ${!isNaN(funnelDate.getTime()) ? 'Sim' : 'Não'}</span>
+                    </li>
+                </ul>
+            `;
+            
+            // Comparação temporal
+            const comparisonDiv = document.getElementById('temporal-comparison');
+            comparisonDiv.innerHTML = `
+                <div class="space-y-2 text-blue-700 text-sm">
+                    <div class="bg-white p-2 rounded">
+                        <strong>Funil criado em:</strong><br>
+                        ${funnelDate.toLocaleDateString('pt-BR')}
+                    </div>
+                    <div class="bg-white p-2 rounded">
+                        <strong>Hoje:</strong><br>
+                        ${currentDate.toLocaleDateString('pt-BR')}
+                    </div>
+                    <div class="bg-white p-2 rounded">
+                        <strong>Contexto:</strong><br>
+                        ${isFuture ? 'Data impossível!' : 'Data plausível'}
+                    </div>
+                </div>
+            `;
+            
+            // Conclusão
+            const conclusionDiv = document.getElementById('conclusion');
+            if (isFuture) {
+                conclusionDiv.innerHTML = `
+                    <div class="space-y-3">
+                        <div class="bg-red-100 border border-red-300 rounded p-3">
+                            <h4 class="font-semibold text-red-800 mb-2">🚨 TIMESTAMP DO FUTURO DETECTADO!</h4>
+                            <p class="text-red-700 text-sm">
+                                O timestamp <code>${timestamp}</code> corresponde à data 
+                                <strong>${funnelDate.toLocaleDateString('pt-BR')}</strong>, 
+                                que está no futuro. Isso indica que:
+                            </p>
+                            <ul class="list-disc list-inside mt-2 text-red-700 text-sm space-y-1">
+                                <li>O funil foi criado com data/hora incorreta</li>
+                                <li>Pode haver problema no sistema de timestamp</li>
+                                <li>O ID pode ter sido gerado manualmente</li>
+                                <li>Possível erro no Date.now() durante criação</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="bg-green-100 border border-green-300 rounded p-3">
+                            <h4 class="font-semibold text-green-800 mb-2">✅ VOCÊ ESTAVA CERTO!</h4>
+                            <p class="text-green-700 text-sm">
+                                O funil provavelmente <strong>JÁ EXISTIA antes</strong> das minhas correções.
+                                A data futura sugere que foi criado com timestamp incorreto ou é um
+                                funil de teste/desenvolvimento que já estava no sistema.
+                            </p>
+                        </div>
+                    </div>
+                `;
+            } else {
+                conclusionDiv.innerHTML = `
+                    <div class="bg-green-100 border border-green-300 rounded p-3">
+                        <h4 class="font-semibold text-green-800 mb-2">✅ Timestamp Válido</h4>
+                        <p class="text-green-700 text-sm">
+                            O funil foi criado em <strong>${funnelDate.toLocaleDateString('pt-BR')}</strong>,
+                            o que é uma data válida no passado.
+                        </p>
+                    </div>
+                `;
+            }
+        }
+        
+        // Executar análise quando a página carregar
+        document.addEventListener('DOMContentLoaded', analyzeTimestamp);
+        
+        console.log('📅 Timestamp analysis loaded');
+        console.log('Analyzing funnel:', 'default-quiz-funnel-21-steps-1756583895094');
+    </script>
+</body>
+</html>
