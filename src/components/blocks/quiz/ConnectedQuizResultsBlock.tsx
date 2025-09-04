@@ -1,7 +1,7 @@
 import { useQuizLogic } from '@/hooks/useQuizLogic';
 import { useSupabaseQuiz } from '@/hooks/useSupabaseQuiz';
-import { QuizResult, StyleResult } from '@/types/quiz';
-import { STYLES, getStyleById } from '@/data/styles';
+import { QuizResult } from '@/types/quiz';
+import { STYLES } from '@/data/styles';
 import { getBestUserName } from '@/core/user/name';
 import QuizProgress from '@/components/quiz/components/QuizProgress';
 import React, { useEffect, useState } from 'react';
@@ -28,8 +28,6 @@ export const ConnectedQuizResultsBlock: React.FC<ConnectedQuizResultsBlockProps>
   id,
   className = '',
   sessionId,
-  showScores = true,
-  showAllStyles = false,
   onResultCalculated,
 }) => {
   const { session, result: supabaseResult, isLoading } = useSupabaseQuiz();
