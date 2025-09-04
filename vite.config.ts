@@ -57,20 +57,50 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     sourcemap: true,
-    chunkSizeWarningLimit: 1000,
+    chunkSizeWarningLimit: 500,
     // Copiar templates para o build
     copyPublicDir: true,
     rollupOptions: {
-      // Em ambientes de preview (ex.: lovable.app) alguns servidores retornam 404/HTML para chunks dinâmicos,
-      // causando "Failed to fetch dynamically imported module". Para garantir robustez, inlinamos imports dinâmicos
-      // e desativamos code-splitting neste build padrão.
       output: {
-        inlineDynamicImports: true,
-        manualChunks: {
-          'editor-core': ['./src/legacy/editor/EditorPro'],
-          'canvas-components': ['./src/components/editor/canvas/CanvasDropZone.simple'],
-          'dnd-kit': ['@dnd-kit/core', '@dnd-kit/sortable'],
-        }
+        // Configuração otimizada para chunks menores e melhor cache
+        manualChunks: (id) => {
+          // Vendor chunks para melhor cache
+          if (id.includes('node_modules')) {
+            if (id.includes('react') || id.includes('react-dom')) {
+              return 'react-vendor';
+            }
+            if (id.includes('@dnd-kit')) {
+              return 'dnd-vendor';
+            }
+            if (id.includes('lucide-react')) {
+              return 'icons-vendor';
+            }
+            if (id.includes('recharts') || id.includes('chart')) {
+              return 'charts-vendor';
+            }
+            return 'vendor';
+          }
+
+          // Pages chunks para lazy loading
+          if (id.includes('/pages/MetricsPage')) {
+            return 'metrics-page';
+          }
+          if (id.includes('/pages/SchemaEditorPage')) {
+            return 'schema-page';
+          }
+          if (id.includes('/legacy/editor/EditorPro')) {
+            return 'editor-pro';
+          }
+          if (id.includes('/components/editor/canvas/')) {
+            return 'canvas-components';
+          }
+          if (id.includes('/components/editor/properties/')) {
+            return 'properties-components';
+          }
+        },
+        chunkFileNames: 'assets/[name]-[hash].js',
+        entryFileNames: 'assets/[name]-[hash].js',
+        assetFileNames: 'assets/[name]-[hash].[ext]',
       },
     },
     // Configurações para resolver problemas com módulos CommonJS
