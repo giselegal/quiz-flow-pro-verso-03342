@@ -174,6 +174,8 @@ function createLabel(key: string): string {
  * This allows us to reuse the same logic without calling the hook
  */
 function getPropertiesForComponentType(blockType: string, currentBlock: any): any[] {
+  console.log('🔧 getPropertiesForComponentType called with:', { blockType, currentBlock: !!currentBlock });
+  
   // This is adapted from the useUnifiedProperties hook logic
   const createProperty = (
     key: string,
@@ -226,11 +228,13 @@ function getPropertiesForComponentType(blockType: string, currentBlock: any): an
   ];
 
   // Component-specific properties based on type
+  console.log('🎯 getPropertiesForComponentType: Checking switch case for:', blockType);
   switch (blockType) {
     case 'header':
     case 'quiz-intro-header':
     case 'quiz-result-header':
     case 'unified-header':
+      console.log('✅ getPropertiesForComponentType: Found header case for:', blockType);
       return [
         ...getUniversalProperties(),
         createProperty('showLogo', currentBlock?.properties?.showLogo ?? true, PropertyType.SWITCH, 'Mostrar Logo', PropertyCategory.CONTENT),
@@ -242,6 +246,7 @@ function getPropertiesForComponentType(blockType: string, currentBlock: any): an
       ];
 
     case 'text-inline':
+      console.log('✅ getPropertiesForComponentType: Found text-inline case for:', blockType);
       return [
         ...getUniversalProperties(),
         createProperty('content', currentBlock?.properties?.content ?? currentBlock?.content?.text ?? 'Digite seu texto aqui...', PropertyType.TEXTAREA, 'Conteúdo', PropertyCategory.CONTENT),
@@ -313,6 +318,7 @@ function getPropertiesForComponentType(blockType: string, currentBlock: any): an
       ];
 
     case 'button-inline':
+      console.log('✅ getPropertiesForComponentType: Found button-inline case for:', blockType);
       return [
         ...getUniversalProperties(),
         createProperty('text', currentBlock?.properties?.text ?? 'Clique aqui', PropertyType.TEXT, 'Texto do Botão', PropertyCategory.CONTENT),
@@ -369,6 +375,7 @@ function getPropertiesForComponentType(blockType: string, currentBlock: any): an
       ];
 
     default:
+      console.log('⚠️ getPropertiesForComponentType: Using default case for:', blockType);
       // For unknown component types, return universal properties
       return getUniversalProperties();
   }
