@@ -30,6 +30,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
+import { getPropertiesForComponentType } from './core/PropertyDiscovery';
 import {
     DndContext,
     closestCenter,
@@ -374,6 +375,46 @@ export const MultipleChoiceOptionsPanel: React.FC<MultipleChoiceOptionsPanelProp
     const [collapsedSections, setCollapsedSections] = useState<Set<string>>(new Set());
     const [previewMode, setPreviewMode] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
 
+    // ===== DESCOBERTA DE PROPRIEDADES =====
+    const discoveredProperties = useMemo(() => {
+        if (!selectedBlock) return [];
+
+        console.log('🔍 MultipleChoiceOptionsPanel: Discovering properties for block:', selectedBlock.type);
+        const props = getPropertiesForComponentType(selectedBlock.type, selectedBlock);
+        console.log('📊 MultipleChoiceOptionsPanel: Found properties:', props.length);
+        console.log('📋 MultipleChoiceOptionsPanel: Properties list:', props.map(p => `${p.key}(${p.type})`));
+        return props;
+    }, [selectedBlock]);
+
+    // Efeito para sincronizar propriedades descobertas com o estado interno
+    useEffect(() => {
+        if (discoveredProperties.length > 0) {
+            console.log('🔄 MultipleChoiceOptionsPanel: Syncing discovered properties to internal state');
+            // Atualizar dados internos baseado nas propriedades descobertas
+            setData(currentData => {
+                const newData = { ...currentData };
+
+                discoveredProperties.forEach(prop => {
+                    if (prop.key === 'title' && prop.defaultValue) {
+                        // Exemplo de sincronização de propriedade
+                        console.log('📝 Syncing title:', prop.defaultValue);
+                    }
+                    if (prop.key === 'columns' && prop.defaultValue) {
+                        newData.layout.columns = prop.defaultValue;
+                        console.log('📏 Syncing columns:', prop.defaultValue);
+                    }
+                    if (prop.key === 'multipleSelection' && prop.defaultValue !== undefined) {
+                        newData.validation.multipleChoice = prop.defaultValue;
+                        console.log('✅ Syncing multipleSelection:', prop.defaultValue);
+                    }
+                    // Adicionar mais propriedades conforme necessário
+                });
+
+                return newData;
+            });
+        }
+    }, [discoveredProperties]);
+
     // ===== SENSORS FOR DRAG AND DROP =====
     const sensors = useSensors(
         useSensor(PointerSensor),
@@ -564,13 +605,78 @@ export const MultipleChoiceOptionsPanel: React.FC<MultipleChoiceOptionsPanelProp
             </CardHeader>
 
             <CardContent>
-                <Tabs defaultValue="options" className="w-full">
-                    <TabsList className="grid w-full grid-cols-4">
+                <Tabs defaultValue="properties" className="w-full">
+                    <TabsList className="grid w-full grid-cols-5">
+                        <TabsTrigger value="properties" className="text-xs">Props</TabsTrigger>
                         <TabsTrigger value="options" className="text-xs">Opções</TabsTrigger>
                         <TabsTrigger value="layout" className="text-xs">Layout</TabsTrigger>
                         <TabsTrigger value="style" className="text-xs">Estilo</TabsTrigger>
                         <TabsTrigger value="advanced" className="text-xs">Avançado</TabsTrigger>
                     </TabsList>
+
+                    {/* Properties Tab - Mostra todas as propriedades descobertas */}
+                    <TabsContent value="properties" className="mt-4">
+                        <ScrollArea className="h-[70vh]">
+                            <div className="space-y-4">
+                                <div className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-lg">
+                                    <div>
+                                        <h3 className="font-medium text-green-800">✅ Sistema Conectado</h3>
+                                        <p className="text-sm text-green-600">
+                                            {discoveredProperties.length} propriedades descobertas do schema
+                                        </p>
+                                    </div>
+                                    <Badge variant="secondary">{discoveredProperties.length}</Badge>
+                                </div>
+
+                                {/* Lista de propriedades por categoria */}
+                                {(['content', 'layout', 'behavior', 'style', 'advanced'] as const).map((category) => {
+                                    const categoryProps = discoveredProperties.filter(p => p.category === category);
+                                    if (categoryProps.length === 0) return null;
+
+                                    return (
+                                        <div key={category} className="space-y-2">
+                                            <h4 className="font-medium text-sm text-gray-700 uppercase tracking-wide">
+                                                {category} ({categoryProps.length})
+                                            </h4>
+                                            <div className="space-y-2">
+                                                {categoryProps.map((prop) => (
+                                                    <div key={prop.key} className="p-3 border rounded-lg bg-gray-50">
+                                                        <div className="flex items-center justify-between mb-1">
+                                                            <span className="font-medium text-sm">{prop.label}</span>
+                                                            <Badge variant="outline" className="text-xs">
+                                                                {prop.type}
+                                                            </Badge>
+                                                        </div>
+                                                        <div className="text-xs text-gray-600">
+                                                            <span className="font-mono">{prop.key}</span>
+                                                            {prop.defaultValue !== undefined && (
+                                                                <span className="ml-2">
+                                                                    = {JSON.stringify(prop.defaultValue)}
+                                                                </span>
+                                                            )}
+                                                        </div>
+                                                        {prop.description && (
+                                                            <p className="text-xs text-gray-500 mt-1">{prop.description}</p>
+                                                        )}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+
+                                {/* Debug info */}
+                                <div className="mt-6 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                                    <h4 className="font-medium text-blue-800 mb-2">🐛 Debug Info</h4>
+                                    <div className="text-xs text-blue-600 space-y-1">
+                                        <div>Block Type: <span className="font-mono">{selectedBlock?.type}</span></div>
+                                        <div>Block ID: <span className="font-mono">{selectedBlock?.id}</span></div>
+                                        <div>Properties Schema: <span className="font-mono">blockPropertySchemas['options-grid']</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ScrollArea>
+                    </TabsContent>
 
                     {/* Opções Tab */}
                     <TabsContent value="options" className="mt-4">

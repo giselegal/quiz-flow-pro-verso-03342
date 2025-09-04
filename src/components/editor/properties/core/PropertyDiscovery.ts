@@ -9,6 +9,7 @@ import { PropertyType, PropertyCategory } from '@/hooks/useUnifiedProperties';
 import { mapComponentType } from './ComponentTypeMapping';
 import { MODULAR_COMPONENTS } from '@/config/modularComponents';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
+import { blockPropertySchemas } from '@/config/blockPropertySchemas';
 import type { Block } from '@/types/editor';
 
 export interface DiscoveredProperty {
@@ -329,7 +330,7 @@ interface BlockConfig {
   [key: string]: any; // Replace with more specific properties if known
 }
 
-function getPropertiesForComponentType(blockType: string, currentBlock: BlockConfig): DiscoveredProperty[] {
+export function getPropertiesForComponentType(blockType: string, currentBlock: BlockConfig): DiscoveredProperty[] {
   console.log('🔧 getPropertiesForComponentType called with:', { blockType, currentBlock: !!currentBlock });
 
   // This is adapted from the useUnifiedProperties hook logic
@@ -531,6 +532,70 @@ function getPropertiesForComponentType(blockType: string, currentBlock: BlockCon
             { value: '100%', label: '100%' },
           ]
         }),
+      ];
+
+    case 'options-grid':
+      console.log('✅ getPropertiesForComponentType: Found options-grid case, using full schema');
+      // Use the complete schema from blockPropertySchemas for options-grid
+      const optionsGridSchema = blockPropertySchemas['options-grid'];
+      console.log('📋 optionsGridSchema:', optionsGridSchema);
+      if (optionsGridSchema && optionsGridSchema.fields) {
+        console.log('🔢 Total fields in schema:', optionsGridSchema.fields.length);
+        const propertiesFromSchema: DiscoveredProperty[] = optionsGridSchema.fields.map(field => {
+          // Map field types to PropertyType enum
+          let propertyType: PropertyType;
+          switch (field.type) {
+            case 'boolean': propertyType = PropertyType.SWITCH; break;
+            case 'color': propertyType = PropertyType.COLOR; break;
+            case 'number': propertyType = PropertyType.NUMBER; break;
+            case 'range': propertyType = PropertyType.RANGE; break;
+            case 'select': propertyType = PropertyType.SELECT; break;
+            case 'textarea': propertyType = PropertyType.TEXTAREA; break;
+            case 'options-list': propertyType = PropertyType.ARRAY; break; // Map options-list to ARRAY
+            case 'json': propertyType = PropertyType.JSON; break;
+            default: propertyType = PropertyType.TEXT; break;
+          }
+
+          // Map field group to PropertyCategory
+          let category: PropertyCategory;
+          switch (field.group) {
+            case 'content': category = PropertyCategory.CONTENT; break;
+            case 'layout': category = PropertyCategory.LAYOUT; break;
+            case 'images': category = PropertyCategory.STYLE; break;
+            case 'behavior': category = PropertyCategory.BEHAVIOR; break;
+            case 'style': category = PropertyCategory.STYLE; break;
+            default: category = PropertyCategory.CONTENT; break;
+          }
+
+          return createProperty(
+            field.key,
+            currentBlock?.properties?.[field.key] ?? field.defaultValue,
+            propertyType,
+            field.label,
+            category,
+            {
+              min: field.min,
+              max: field.max,
+              step: field.step,
+              options: field.options,
+              required: field.required,
+              description: field.description
+            }
+          );
+        });
+
+        console.log('🎯 Options-grid properties loaded:', propertiesFromSchema.length, 'properties');
+        console.log('📊 Sample properties:', propertiesFromSchema.slice(0, 5).map(p => p.key));
+        const finalResult = [...getUniversalProperties(), ...propertiesFromSchema];
+        console.log('🏁 Final result total:', finalResult.length, 'properties');
+        return finalResult;
+      }
+      // Fallback if schema not found
+      return [
+        ...getUniversalProperties(),
+        createProperty('title', currentBlock?.properties?.title ?? 'Escolha uma opção:', PropertyType.TEXT, 'Título/Questão', PropertyCategory.CONTENT),
+        createProperty('columns', currentBlock?.properties?.columns ?? 2, PropertyType.RANGE, 'Número de Colunas', PropertyCategory.LAYOUT, { min: 1, max: 4, step: 1 }),
+        createProperty('multipleSelection', currentBlock?.properties?.multipleSelection ?? false, PropertyType.SWITCH, 'Seleção Múltipla', PropertyCategory.BEHAVIOR),
       ];
 
     default:
