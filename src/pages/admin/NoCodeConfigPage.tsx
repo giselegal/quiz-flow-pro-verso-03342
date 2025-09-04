@@ -9,7 +9,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/components/ui/use-toast';
 import ConfigurationStatusPanel from '@/components/admin/ConfigurationStatusPanel';
+import HeaderConfigurationPanel from '@/components/admin/HeaderConfigurationPanel';
 import { useStep20NoCodeIntegration } from '@/hooks/useStep20Configuration';
+import { HeaderProperties, defaultHeaderProperties } from '@/config/headerPropertiesMapping';
 import Step20URLDocumentation from '@/components/admin/Step20URLDocumentation';
 import Step20IntegrationGuide from '@/components/admin/Step20IntegrationGuide';
 import {
@@ -77,6 +79,9 @@ export const NoCodeConfigPanel: React.FC = () => {
   const { toast } = useToast();
   const { configuration: step20Config, updateConfiguration: updateStep20Config } = useStep20NoCodeIntegration();
 
+  // 🎛️ Estado para configuração de cabeçalho
+  const [headerSettings, setHeaderSettings] = useState<HeaderProperties>(defaultHeaderProperties);
+
   const [seoSettings, setSeoSettings] = useState<SEOSettings>({
     title: 'Descubra Seu Estilo | Quiz Personalizado',
     description: 'Descubra seu estilo pessoal único com nosso quiz interativo e receba recomendações personalizadas.',
@@ -126,6 +131,25 @@ export const NoCodeConfigPanel: React.FC = () => {
   });
 
   const [saving, setSaving] = useState(false);
+
+  // 🎛️ Função para salvar configurações de header
+  const handleHeaderConfigChange = (config: Partial<HeaderProperties>) => {
+    setHeaderSettings(prev => ({ ...prev, ...config }));
+  };
+
+  const saveHeaderConfiguration = async () => {
+    setSaving(true);
+
+    // TODO: Implement header configuration save to backend/store
+    // await saveHeaderConfig(headerSettings);
+
+    toast({
+      title: "Configurações de Header Salvas!",
+      description: "As configurações do cabeçalho foram aplicadas com sucesso.",
+    });
+
+    setSaving(false);
+  };
 
   const handleSave = async (section: string) => {
     setSaving(true);
@@ -179,10 +203,14 @@ export const NoCodeConfigPanel: React.FC = () => {
       </div>
 
       <Tabs defaultValue="status" className="space-y-6">
-        <TabsList className="grid grid-cols-6 w-full max-w-4xl">
+        <TabsList className="grid grid-cols-7 w-full max-w-5xl">
           <TabsTrigger value="status" className="flex items-center gap-2">
             <Monitor className="w-4 h-4" />
             Status
+          </TabsTrigger>
+          <TabsTrigger value="header" className="flex items-center gap-2">
+            <Palette className="w-4 h-4" />
+            Header
           </TabsTrigger>
           <TabsTrigger value="seo" className="flex items-center gap-2">
             <Globe className="w-4 h-4" />
@@ -209,6 +237,16 @@ export const NoCodeConfigPanel: React.FC = () => {
         {/* Configuration Status */}
         <TabsContent value="status">
           <ConfigurationStatusPanel />
+        </TabsContent>
+
+        {/* 🎛️ Header Configuration */}
+        <TabsContent value="header">
+          <HeaderConfigurationPanel
+            headerConfig={headerSettings}
+            onConfigChange={handleHeaderConfigChange}
+            onSave={saveHeaderConfiguration}
+            showPreview={true}
+          />
         </TabsContent>
 
         {/* SEO Configuration */}

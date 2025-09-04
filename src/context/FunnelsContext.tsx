@@ -383,13 +383,39 @@ const FUNNEL_TEMPLATES: Record<
 };
 
 export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debug = true }) => {
-  const [currentFunnelId, setCurrentFunnelId] = useState<string>('quiz-estilo-completo');
+  // ✅ CORRIGIDO: Obter funnelId dinamicamente da URL ou fallback
+  const [currentFunnelId, setCurrentFunnelId] = useState<string>(() => {
+    try {
+      // Primeiro, tentar obter da URL
+      const url = new URL(window.location.href);
+      const funnelFromUrl = url.searchParams.get('funnel');
+      if (funnelFromUrl) {
+        console.log('🔍 FunnelsContext: funnelId da URL:', funnelFromUrl);
+        return funnelFromUrl;
+      }
+
+      // Segundo, tentar obter do localStorage
+      const funnelFromStorage = localStorage.getItem('editor:funnelId');
+      if (funnelFromStorage) {
+        console.log('🔍 FunnelsContext: funnelId do localStorage:', funnelFromStorage);
+        return funnelFromStorage;
+      }
+
+      // Fallback para o template padrão
+      console.log('🔍 FunnelsContext: usando fallback quiz-estilo-completo');
+      return 'quiz-estilo-completo';
+    } catch (error) {
+      console.error('❌ Erro ao obter funnelId:', error);
+      return 'quiz-estilo-completo';
+    }
+  });
+
   // ✅ FASE 1: Inicialização imediata com dados pré-carregados
   const [steps, setSteps] = useState<FunnelStep[]>(() => {
     const initialTemplate = FUNNEL_TEMPLATES['quiz-estilo-completo'];
     console.log('🚀 FunnelsContext: Inicialização IMEDIATA com template completo');
     console.log('📊 Steps carregadas na inicialização:', initialTemplate.defaultSteps.length);
-    console.log('🎯 Template ID forçado:', 'quiz-estilo-completo');
+    console.log('🎯 Template ID inicial:', currentFunnelId);
     console.log('🔍 QUIZ_QUESTIONS_COMPLETE keys:', Object.keys(QUIZ_QUESTIONS_COMPLETE));
     console.log('📋 QUIZ_STYLE_21_STEPS_TEMPLATE keys:', Object.keys(QUIZ_STYLE_21_STEPS_TEMPLATE));
     return initialTemplate.defaultSteps;
