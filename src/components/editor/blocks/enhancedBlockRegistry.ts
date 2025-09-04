@@ -7,11 +7,11 @@
 
 // 🔁 Arquivo somente compatibilidade: reexporta o registro canônico
 export {
-  ENHANCED_BLOCK_REGISTRY,
-  getEnhancedBlockComponent,
-  AVAILABLE_COMPONENTS,
-  getRegistryStats,
-  normalizeBlockProperties,
-  getRegistryStats as getDeprecatedRegistryStats
+    ENHANCED_BLOCK_REGISTRY,
+    getEnhancedBlockComponent,
+    AVAILABLE_COMPONENTS,
+    getRegistryStats,
+    normalizeBlockProperties,
+    getRegistryStats as getDeprecatedRegistryStats
 } from './EnhancedBlockRegistry';
 export { default } from './EnhancedBlockRegistry';

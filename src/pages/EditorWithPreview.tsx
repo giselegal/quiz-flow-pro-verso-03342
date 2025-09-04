@@ -22,7 +22,7 @@ import { QuizFlowProvider } from '@/context/QuizFlowProvider';
 import { Quiz21StepsNavigation } from '@/components/quiz/Quiz21StepsNavigation';
 import { Quiz21StepsProvider, useQuiz21Steps } from '@/components/quiz/Quiz21StepsProvider';
 // 🆕 NOVO PAINEL DE PROPRIEDADES (AGORA PADRÃO)
-import PropertiesPanel from '@/components/editor/properties/PropertiesPanel';
+import { PropertiesColumn } from '@/components/editor/properties/PropertiesColumn';
 // 🔍 DEBUG COMPONENT
 import { StepsDebugPanel } from '@/components/debug/StepsDebugPanel';
 
@@ -61,7 +61,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
     activeStageId,
     selectedBlockId,
     blockActions: { setSelectedBlockId, deleteBlock, updateBlock },
-    uiState: { isPreviewing, setIsPreviewing, viewportSize },
+    uiState: { isPreviewing, viewportSize },
     computed: { currentBlocks, selectedBlock },
   } = useEditor();
 
@@ -273,11 +273,11 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
             </div>
           }
           propertiesPanel={
-            <PropertiesPanel
-              selectedBlock={selectedBlock ? { ...selectedBlock, properties: selectedBlock.properties || {} } : null}
+            <PropertiesColumn
+              selectedBlock={selectedBlock || undefined}
               onUpdate={updates => {
                 if (selectedBlock?.id) {
-                  updateBlock(selectedBlock.id, updates);
+                  updateBlock(selectedBlock.id, updates as any);
                 }
               }}
               onClose={() => setSelectedBlockId(null)}
@@ -286,8 +286,6 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
                   handleDeleteBlock(selectedBlock.id);
                 }
               }}
-              previewMode={isPreviewing ? 'desktop' : 'desktop'}
-              onPreviewModeChange={() => setIsPreviewing(!isPreviewing)}
             />
           }
         />

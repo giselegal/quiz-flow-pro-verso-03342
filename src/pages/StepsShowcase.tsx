@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import UniversalBlockRenderer from '@/components/editor/blocks/UniversalBlockRenderer';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import { Block } from '@/types/editor';
-import PropertiesPanel from '@/components/editor/properties/PropertiesPanel';
+import { PropertiesColumn } from '@/components/editor/properties/PropertiesColumn';
 
 type RenderMode = 'production' | 'preview' | 'editor';
 
@@ -49,11 +49,35 @@ const StepsShowcase: React.FC = () => {
             const idx = arr.findIndex(b => b.id === blockId);
             if (idx === -1) return prev;
             const current = arr[idx];
-            const incomingProps = (updates as any).properties ?? updates;
-            const merged: Block = {
-                ...current,
-                properties: { ...(current.properties || {}), ...(incomingProps || {}) },
-            } as Block;
+            const nextBlock: Block = { ...current, properties: { ...(current.properties || {}) }, content: { ...(current.content || {}) } } as Block;
+
+            // Suporta dois formatos de updates:
+            // 1) Estruturado: { properties: {...}, content: {...} }
+            // 2) Plano (ex: { key: value }) vindo de onPropertyChange
+            if ('properties' in updates || 'content' in updates) {
+                const u = updates as any;
+                if (u.properties) {
+                    nextBlock.properties = { ...(nextBlock.properties || {}), ...u.properties };
+                }
+                if (u.content) {
+                    nextBlock.content = { ...(nextBlock.content || {}), ...u.content };
+                }
+            } else {
+                // Formato plano: distribuir entre properties e content
+                Object.entries(updates).forEach(([key, value]) => {
+                    if (key === 'options') {
+                        // Convenção: options vive em content.options
+                        nextBlock.content = { ...(nextBlock.content || {}), options: value } as any;
+                    } else if (key.startsWith('content.')) {
+                        const cKey = key.slice(8);
+                        nextBlock.content = { ...(nextBlock.content || {}), [cKey]: value } as any;
+                    } else {
+                        nextBlock.properties = { ...(nextBlock.properties || {}), [key]: value } as any;
+                    }
+                });
+            }
+
+            const merged: Block = nextBlock as Block;
             const nextArr = [...arr];
             nextArr[idx] = merged;
             return { ...prev, [stepKey]: nextArr };
@@ -128,8 +152,8 @@ const StepsShowcase: React.FC = () => {
                         })}
                     </div>
                     <aside className="lg:col-span-1">
-                        <PropertiesPanel
-                            selectedBlock={selectedBlock ? { ...selectedBlock, properties: selectedBlock.properties || {} } as any : null}
+                        <PropertiesColumn
+                            selectedBlock={selectedBlock || undefined}
                             onUpdate={(updates) => {
                                 if (selected.stepKey && selected.blockId) {
                                     updateBlock(selected.stepKey, selected.blockId, updates as any);
