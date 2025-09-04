@@ -611,6 +611,10 @@ export function getPropertiesForComponentType(blockType: string, currentBlock: B
             case 'images': category = PropertyCategory.STYLE; break;
             case 'behavior': category = PropertyCategory.BEHAVIOR; break;
             case 'style': category = PropertyCategory.STYLE; break;
+            case 'scoring': category = PropertyCategory.ADVANCED; break;
+            case 'rules': category = PropertyCategory.BEHAVIOR; break;
+            case 'validation': category = PropertyCategory.BEHAVIOR; break;
+            case 'advanced': category = PropertyCategory.ADVANCED; break;
             default: category = PropertyCategory.CONTENT; break;
           }
 

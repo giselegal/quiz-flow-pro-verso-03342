@@ -504,7 +504,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
   'options-grid': {
     label: 'Grade de Opções - Configuração Completa',
     fields: [
-      // === CONTEÚDO ===
+      // === CONTEÚDO PRINCIPAL ===
       { 
         key: 'title', 
         label: 'Título/Questão', 
@@ -515,11 +515,157 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         description: 'Título ou pergunta que aparece acima das opções'
       },
       { 
+        key: 'subtitle', 
+        label: 'Subtítulo/Instrução', 
+        type: 'text', 
+        group: 'content',
+        defaultValue: '',
+        description: 'Texto complementar ou instrução adicional'
+      },
+      { 
+        key: 'description', 
+        label: 'Descrição Detalhada', 
+        type: 'textarea', 
+        group: 'content',
+        defaultValue: '',
+        description: 'Texto explicativo mais longo, se necessário'
+      },
+
+      // === OPÇÕES INDIVIDUAIS ===
+      { 
         key: 'options', 
         label: 'Opções da Questão', 
         type: 'options-list', 
         group: 'content',
         description: 'Configure as opções disponíveis - texto, imagem, pontuação e categoria'
+      },
+      { 
+        key: 'option1Text', 
+        label: 'Texto da Opção 1', 
+        type: 'text', 
+        group: 'content',
+        defaultValue: 'Primeira opção',
+        description: 'Texto que aparece na primeira opção'
+      },
+      { 
+        key: 'option1Image', 
+        label: 'Imagem da Opção 1', 
+        type: 'text', 
+        group: 'content',
+        defaultValue: '',
+        description: 'URL da imagem para a primeira opção'
+      },
+      { 
+        key: 'option1Score', 
+        label: 'Pontuação da Opção 1', 
+        type: 'number', 
+        group: 'content',
+        defaultValue: 1,
+        description: 'Pontos atribuídos ao selecionar esta opção'
+      },
+      { 
+        key: 'option1Category', 
+        label: 'Categoria da Opção 1', 
+        type: 'text', 
+        group: 'content',
+        defaultValue: '',
+        description: 'Categoria para agrupamento de resultados'
+      },
+      { 
+        key: 'option2Text', 
+        label: 'Texto da Opção 2', 
+        type: 'text', 
+        group: 'content',
+        defaultValue: 'Segunda opção',
+        description: 'Texto que aparece na segunda opção'
+      },
+      { 
+        key: 'option2Image', 
+        label: 'Imagem da Opção 2', 
+        type: 'text', 
+        group: 'content',
+        defaultValue: '',
+        description: 'URL da imagem para a segunda opção'
+      },
+      { 
+        key: 'option2Score', 
+        label: 'Pontuação da Opção 2', 
+        type: 'number', 
+        group: 'content',
+        defaultValue: 2,
+        description: 'Pontos atribuídos ao selecionar esta opção'
+      },
+      { 
+        key: 'option2Category', 
+        label: 'Categoria da Opção 2', 
+        type: 'text', 
+        group: 'content',
+        defaultValue: '',
+        description: 'Categoria para agrupamento de resultados'
+      },
+      { 
+        key: 'option3Text', 
+        label: 'Texto da Opção 3', 
+        type: 'text', 
+        group: 'content',
+        defaultValue: 'Terceira opção',
+        description: 'Texto que aparece na terceira opção'
+      },
+      { 
+        key: 'option3Image', 
+        label: 'Imagem da Opção 3', 
+        type: 'text', 
+        group: 'content',
+        defaultValue: '',
+        description: 'URL da imagem para a terceira opção'
+      },
+      { 
+        key: 'option3Score', 
+        label: 'Pontuação da Opção 3', 
+        type: 'number', 
+        group: 'content',
+        defaultValue: 3,
+        description: 'Pontos atribuídos ao selecionar esta opção'
+      },
+      { 
+        key: 'option3Category', 
+        label: 'Categoria da Opção 3', 
+        type: 'text', 
+        group: 'content',
+        defaultValue: '',
+        description: 'Categoria para agrupamento de resultados'
+      },
+      { 
+        key: 'option4Text', 
+        label: 'Texto da Opção 4', 
+        type: 'text', 
+        group: 'content',
+        defaultValue: 'Quarta opção',
+        description: 'Texto que aparece na quarta opção'
+      },
+      { 
+        key: 'option4Image', 
+        label: 'Imagem da Opção 4', 
+        type: 'text', 
+        group: 'content',
+        defaultValue: '',
+        description: 'URL da imagem para a quarta opção'
+      },
+      { 
+        key: 'option4Score', 
+        label: 'Pontuação da Opção 4', 
+        type: 'number', 
+        group: 'content',
+        defaultValue: 4,
+        description: 'Pontos atribuídos ao selecionar esta opção'
+      },
+      { 
+        key: 'option4Category', 
+        label: 'Categoria da Opção 4', 
+        type: 'text', 
+        group: 'content',
+        defaultValue: '',
+        description: 'Categoria para agrupamento de resultados'
       },
 
       // === LAYOUT ===
@@ -716,6 +862,126 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         defaultValue: 0,
         showIf: 'autoAdvanceOnComplete === true',
         description: 'Tempo de espera antes de avançar automaticamente'
+      },
+
+      // === SISTEMA DE PONTUAÇÃO ===
+      { 
+        key: 'enableScoring', 
+        label: 'Ativar Sistema de Pontuação', 
+        type: 'boolean', 
+        group: 'scoring',
+        defaultValue: true,
+        description: 'Habilita ou desabilita o sistema de pontuação'
+      },
+      { 
+        key: 'scoringType', 
+        label: 'Tipo de Pontuação', 
+        type: 'select', 
+        group: 'scoring',
+        defaultValue: 'points',
+        options: [
+          { label: 'Pontos Numéricos', value: 'points' },
+          { label: 'Categorias', value: 'categories' },
+          { label: 'Pesos Personalizados', value: 'weights' },
+        ],
+        description: 'Método de cálculo da pontuação'
+      },
+      { 
+        key: 'pointsMultiplier', 
+        label: 'Multiplicador de Pontos', 
+        type: 'range', 
+        min: 1,
+        max: 10,
+        step: 1,
+        group: 'scoring',
+        defaultValue: 1,
+        description: 'Multiplica os pontos base por este valor'
+      },
+      { 
+        key: 'bonusPoints', 
+        label: 'Pontos Bônus', 
+        type: 'number', 
+        group: 'scoring',
+        defaultValue: 0,
+        description: 'Pontos extras adicionados a esta questão'
+      },
+      { 
+        key: 'penaltyPoints', 
+        label: 'Pontos de Penalidade', 
+        type: 'number', 
+        group: 'scoring',
+        defaultValue: 0,
+        description: 'Pontos subtraídos por resposta incorreta'
+      },
+
+      // === REGRAS DE SELEÇÃO AVANÇADAS ===
+      { 
+        key: 'selectionRules', 
+        label: 'Regras de Seleção', 
+        type: 'select', 
+        group: 'rules',
+        defaultValue: 'free',
+        options: [
+          { label: 'Seleção Livre', value: 'free' },
+          { label: 'Exatamente N opções', value: 'exact' },
+          { label: 'Pelo menos N opções', value: 'minimum' },
+          { label: 'No máximo N opções', value: 'maximum' },
+          { label: 'Entre X e Y opções', value: 'range' },
+        ],
+        description: 'Define as regras de quantas opções podem ser selecionadas'
+      },
+      { 
+        key: 'forcedChoices', 
+        label: 'Opções Obrigatórias', 
+        type: 'text', 
+        group: 'rules',
+        defaultValue: '',
+        description: 'IDs das opções que devem ser selecionadas (separadas por vírgula)'
+      },
+      { 
+        key: 'blockedChoices', 
+        label: 'Opções Bloqueadas', 
+        type: 'text', 
+        group: 'rules',
+        defaultValue: '',
+        description: 'IDs das opções que não podem ser selecionadas juntas'
+      },
+      { 
+        key: 'exclusiveGroups', 
+        label: 'Grupos Exclusivos', 
+        type: 'text', 
+        group: 'rules',
+        defaultValue: '',
+        description: 'Configuração de grupos mutuamente exclusivos (JSON)'
+      },
+      { 
+        key: 'enableTimeLimit', 
+        label: 'Ativar Limite de Tempo', 
+        type: 'boolean', 
+        group: 'rules',
+        defaultValue: false,
+        description: 'Define um tempo limite para esta questão'
+      },
+      { 
+        key: 'timeLimitSeconds', 
+        label: 'Tempo Limite (segundos)', 
+        type: 'range', 
+        min: 5,
+        max: 300,
+        step: 5,
+        group: 'rules',
+        defaultValue: 30,
+        showIf: 'enableTimeLimit === true',
+        description: 'Tempo disponível para responder esta questão'
+      },
+      { 
+        key: 'showTimeRemaining', 
+        label: 'Mostrar Tempo Restante', 
+        type: 'boolean', 
+        group: 'rules',
+        defaultValue: true,
+        showIf: 'enableTimeLimit === true',
+        description: 'Exibe um contador regressivo'
       },
 
       // === ESTILO VISUAL ===
