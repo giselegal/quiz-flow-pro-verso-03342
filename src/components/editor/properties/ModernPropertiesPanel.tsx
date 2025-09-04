@@ -176,7 +176,7 @@ const PropertyControl: React.FC<PropertyControlProps> = ({ property, value, onCh
           length: Array.isArray(value) ? value.length : 'N/A'
         });
       }
-      
+
       return (
         <div className="space-y-3">
           <div className="flex items-center justify-between">
@@ -299,7 +299,23 @@ const PropertyControl: React.FC<PropertyControlProps> = ({ property, value, onCh
 function getCurrentValue(propKey: string, currentBlock?: Block): any {
   if (!currentBlock) return undefined;
 
-  // Verificar em properties
+  // Debug para investigar o problema das opções
+  if (propKey === 'options' && process.env.NODE_ENV === 'development') {
+    console.log('🔍 DEBUG - getCurrentValue for options:', {
+      propKey,
+      currentBlock: {
+        id: currentBlock.id,
+        type: currentBlock.type,
+        hasContent: !!currentBlock.content,
+        hasOptions: !!(currentBlock.content?.options),
+        optionsLength: Array.isArray(currentBlock.content?.options) ? currentBlock.content.options.length : 'N/A',
+        hasProperties: !!currentBlock.properties,
+        optionsInProperties: currentBlock.properties?.options
+      }
+    });
+  }
+
+  // Verificar em properties primeiro
   if (currentBlock.properties && currentBlock.properties[propKey] !== undefined) {
     return currentBlock.properties[propKey];
   }
@@ -324,6 +340,16 @@ function getCurrentValue(propKey: string, currentBlock?: Block): any {
  * Organiza propriedades por categoria
  */
 function organizePropertiesByCategory(properties: any[]) {
+  // Debug: verificar propriedades recebidas
+  if (process.env.NODE_ENV === 'development') {
+    console.log('🔍 DEBUG - organizePropertiesByCategory received:', {
+      total: properties.length,
+      propertyKeys: properties.map(p => p.key),
+      arrayProperties: properties.filter(p => p.type === 'array' || p.type === PropertyType.ARRAY).map(p => p.key),
+      optionsProperties: properties.filter(p => p.key.includes('option')).map(p => p.key)
+    });
+  }
+
   const categories = {
     content: { label: 'Conteúdo', icon: AlignLeftIcon, properties: [] as any[] },
     layout: { label: 'Layout', icon: LayoutIcon, properties: [] as any[] },
@@ -361,7 +387,7 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
 
     const props = getPropertiesForComponentType(selectedBlock.type, selectedBlock);
     console.log('📊 ModernPropertiesPanel: Found properties:', props.length);
-    
+
     // Debug específico para options-grid
     if (selectedBlock.type === 'options-grid') {
       console.log('🎯 OPTIONS-GRID DEBUG:');
@@ -377,7 +403,7 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
         console.log('   - Available properties:', props.map(p => p.key));
       }
     }
-    
+
     return props;
   }, [selectedBlock]);
 
@@ -396,7 +422,11 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
     const propertyUpdates: any = {};
     const contentUpdates: any = {};
 
-    if (propKey.startsWith('content.')) {
+    // Caso especial: 'options' deve ser salvo em content.options
+    if (propKey === 'options') {
+      contentUpdates.options = value;
+      console.log('🎯 Special case: Saving options to content.options');
+    } else if (propKey.startsWith('content.')) {
       const contentKey = propKey.substring(8);
       contentUpdates[contentKey] = value;
     } else {

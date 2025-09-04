@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔍 Debug: Opções das Questões</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-50 p-8">
+    <div class="max-w-4xl mx-auto">
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h1 class="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+                🔍 Debug: Opções das Questões Sumiram
+            </h1>
+
+            <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+                <h2 class="font-semibold text-red-800 mb-2">❌ Problema Reportado</h2>
+                <p class="text-red-700">
+                    As opções das questões das <strong>etapas 2, 3 e 4</strong> desapareceram no editor.
+                </p>
+            </div>
+
+            <div class="space-y-4 mb-6">
+                <h2 class="text-lg font-semibold text-gray-800">🔧 Checklist de Diagnóstico</h2>
+
+                <div class="space-y-2">
+                    <h3 class="font-medium text-gray-700">1. Servidor e Compilação</h3>
+                    <ul class="list-disc list-inside text-sm text-gray-600 space-y-1">
+                        <li>✅ Servidor rodando na porta 5175</li>
+                        <li>✅ PropertyType.ARRAY importado no ModernPropertiesPanel</li>
+                        <li>✅ Case 'array' e PropertyType.ARRAY adicionados no switch</li>
+                    </ul>
+                </div>
+
+                <div class="space-y-2">
+                    <h3 class="font-medium text-gray-700">2. Debugging Adicionado</h3>
+                    <ul class="list-disc list-inside text-sm text-gray-600 space-y-1">
+                        <li>✅ Debug no case 'array'/'options-list' do PropertyControl</li>
+                        <li>✅ Debug específico para options-grid no ModernPropertiesPanel</li>
+                        <li>✅ Debug na função organizePropertiesByCategory</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-6">
+                <h2 class="text-lg font-semibold text-blue-800 mb-4">🧪 Como Testar</h2>
+                <ol class="list-decimal list-inside text-blue-700 space-y-2">
+                    <li><strong>Acesse o editor:</strong> <a href="http://localhost:5175/editor" class="underline"
+                            target="_blank">http://localhost:5175/editor</a></li>
+                    <li><strong>Vá para a etapa 2:</strong> Clique na etapa 2 na sidebar esquerda</li>
+                    <li><strong>Adicione Options Grid:</strong> Arraste um "Options Grid" da biblioteca de componentes
+                    </li>
+                    <li><strong>Selecione o componente:</strong> Clique no componente no canvas</li>
+                    <li><strong>Abra o Console do Navegador:</strong> F12 → Console</li>
+                    <li><strong>Vá para a aba "Content":</strong> No painel direito, clique na aba "Content"</li>
+                    <li><strong>Procure por logs de debug:</strong> Devem aparecer logs começando com 🔍 e 🎯</li>
+                </ol>
+            </div>
+
+            <div class="mt-6 grid md:grid-cols-2 gap-4">
+                <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                    <h3 class="font-medium text-green-800 mb-2">✅ Se Funcionando</h3>
+                    <ul class="list-disc list-inside text-sm text-green-700 space-y-1">
+                        <li>Console mostra: "OPTIONS property found"</li>
+                        <li>Aparece seção "Opções da Questão" na aba Content</li>
+                        <li>Interface permite adicionar/remover opções</li>
+                    </ul>
+                </div>
+
+                <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                    <h3 class="font-medium text-red-800 mb-2">❌ Se Ainda Não Funcionando</h3>
+                    <ul class="list-disc list-inside text-sm text-red-700 space-y-1">
+                        <li>Console mostra: "OPTIONS property NOT found"</li>
+                        <li>Não aparece seção de opções na aba Content</li>
+                        <li>Precisamos investigar o PropertyDiscovery</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mt-6 p-4 bg-gray-100 rounded-lg">
+                <h3 class="font-medium text-gray-800 mb-2">📝 Próximos Passos</h3>
+                <p class="text-gray-700 text-sm">
+                    Com base nos logs do console, poderemos identificar se o problema está:
+                    <br>1. Na descoberta das propriedades (PropertyDiscovery)
+                    <br>2. No mapeamento de tipos (PropertyType.ARRAY)
+                    <br>3. Na renderização do controle (PropertyControl)
+                </p>
+            </div>
+
+            <div class="mt-4 text-center">
+                <a href="http://localhost:5175/editor"
+                    class="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors">
+                    🔍 Abrir Editor e Verificar Console
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
