@@ -8,6 +8,8 @@
 import { PropertyType, PropertyCategory } from '@/hooks/useUnifiedProperties';
 import { mapComponentType } from './ComponentTypeMapping';
 import { MODULAR_COMPONENTS } from '@/config/modularComponents';
+import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
+import type { Block } from '@/types/editor';
 
 export interface DiscoveredProperty {
   key: string;
@@ -168,6 +170,155 @@ function createLabel(key: string): string {
     .replace(/[-_]/g, ' ') // Replace dashes and underscores with spaces
     .replace(/\b\w/g, l => l.toUpperCase()) // Capitalize first letter of each word
     .trim();
+}
+
+/**
+ * Extracts real properties from quiz template blocks
+ */
+function extractPropertiesFromBlock(block: Block): DiscoveredProperty[] {
+  const properties: DiscoveredProperty[] = [];
+
+  // Extract properties from block.properties
+  if (block.properties) {
+    Object.entries(block.properties).forEach(([key, value]) => {
+      if (value !== undefined && value !== null) {
+        const type = inferPropertyType({ default: value });
+        const category = categorizeProperty(key, type);
+
+        properties.push({
+          key,
+          type,
+          category,
+          label: createLabel(key),
+          description: `Propriedade do bloco ${block.type}`,
+          defaultValue: value,
+          isEditable: true,
+          isAdvanced: category === PropertyCategory.ADVANCED,
+        });
+      }
+    });
+  }
+
+  // Extract properties from block.content
+  if (block.content) {
+    Object.entries(block.content).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && key !== 'children') {
+        const type = inferPropertyType({ default: value });
+        const category = categorizeProperty(key, type);
+
+        properties.push({
+          key: `content.${key}`,
+          type,
+          category,
+          label: createLabel(`Content ${key}`),
+          description: `Conteúdo do bloco ${block.type}`,
+          defaultValue: value,
+          isEditable: true,
+          isAdvanced: false,
+        });
+      }
+    });
+  }
+
+  return properties;
+}
+
+/**
+ * Discovers properties from quiz template steps
+ */
+function discoverQuizStepProperties(stepKey: string): ComponentPropertySchema | null {
+  const stepBlocks = QUIZ_STYLE_21_STEPS_TEMPLATE[stepKey];
+  
+  if (!stepBlocks || stepBlocks.length === 0) {
+    console.log(`⚠️ PropertyDiscovery: Nenhum bloco encontrado para ${stepKey}`);
+    return null;
+  }
+
+  console.log(`🎯 PropertyDiscovery: Analisando ${stepKey} com ${stepBlocks.length} blocos`);
+
+  const allProperties: DiscoveredProperty[] = [];
+  const categories = new Set<PropertyCategory>();
+
+  // Extract properties from all blocks in the step
+  stepBlocks.forEach((block, index) => {
+    console.log(`  📦 Bloco ${index + 1}: ${block.type} (ID: ${block.id})`);
+    
+    const blockProperties = extractPropertiesFromBlock(block);
+    blockProperties.forEach(prop => {
+      // Prefix property keys with block ID to avoid conflicts
+      const prefixedProperty: DiscoveredProperty = {
+        ...prop,
+        key: `${block.id}.${prop.key}`,
+        label: `${block.type} - ${prop.label}`,
+        description: `${prop.description} (Bloco: ${block.id})`
+      };
+      
+      allProperties.push(prefixedProperty);
+      categories.add(prop.category);
+    });
+  });
+
+  // Generate user-friendly name for the step
+  const componentName = generateQuizStepName(stepKey);
+
+  console.log(`✅ PropertyDiscovery: ${stepKey} descobriu ${allProperties.length} propriedades em ${categories.size} categorias`);
+
+  return {
+    componentType: stepKey,
+    componentName,
+    properties: allProperties,
+    categories
+  };
+}
+
+/**
+ * Generates user-friendly names for quiz steps
+ */
+function generateQuizStepName(stepKey: string): string {
+  const stepTitles: Record<string, string> = {
+    'step-1': 'Quiz Etapa 1: Coleta do Nome',
+    'step-2': 'Quiz Etapa 2: Tipo de Roupa Favorita',
+    'step-3': 'Quiz Etapa 3: Personalidade',
+    'step-4': 'Quiz Etapa 4: Visual de Identificação',
+    'step-5': 'Quiz Etapa 5: Detalhes Preferidos',
+    'step-6': 'Quiz Etapa 6: Estampas Favoritas',
+    'step-7': 'Quiz Etapa 7: Casaco Favorito',
+    'step-8': 'Quiz Etapa 8: Sapatos Favoritos',
+    'step-9': 'Quiz Etapa 9: Cores Preferidas',
+    'step-10': 'Quiz Etapa 10: Acessórios',
+    'step-11': 'Quiz Etapa 11: Ocasião de Uso',
+    'step-12': 'Quiz Etapa 12: Transição Estratégica',
+    'step-13': 'Quiz Etapa 13: Orçamento',
+    'step-14': 'Quiz Etapa 14: Frequência de Compras',
+    'step-15': 'Quiz Etapa 15: Influências',
+    'step-16': 'Quiz Etapa 16: Desafios de Estilo',
+    'step-17': 'Quiz Etapa 17: Objetivo de Imagem',
+    'step-18': 'Quiz Etapa 18: Confiança no Estilo',
+    'step-19': 'Quiz Etapa 19: Transição para Resultado',
+    'step-20': 'Quiz Etapa 20: Página de Resultado',
+    'step-21': 'Quiz Etapa 21: Página de Oferta',
+  };
+
+  return stepTitles[stepKey] || `Quiz ${stepKey.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}`;
+}
+
+/**
+ * Discovers all quiz step properties for global discovery
+ */
+function discoverAllQuizStepProperties(): Map<string, ComponentPropertySchema> {
+  const discovered = new Map<string, ComponentPropertySchema>();
+
+  // Discover properties for all quiz steps
+  Object.keys(QUIZ_STYLE_21_STEPS_TEMPLATE).forEach(stepKey => {
+    const schema = discoverQuizStepProperties(stepKey);
+    if (schema) {
+      discovered.set(stepKey, schema);
+    }
+  });
+
+  console.log(`🎯 PropertyDiscovery: Descobriu ${discovered.size} etapas do quiz com propriedades`);
+  
+  return discovered;
 }
 
 /**
@@ -395,6 +546,12 @@ function getPropertiesForComponentType(blockType: string, currentBlock: BlockCon
 export function discoverComponentProperties(componentType: string): ComponentPropertySchema | null {
   console.log('🔍 PropertyDiscovery: buscando componente:', componentType);
 
+  // Check if this is a quiz step (step-1, step-2, etc.)
+  if (componentType.startsWith('step-') && QUIZ_STYLE_21_STEPS_TEMPLATE[componentType]) {
+    console.log('🎯 PropertyDiscovery: Detectado como etapa do quiz:', componentType);
+    return discoverQuizStepProperties(componentType);
+  }
+
   // First, try to get properties from useUnifiedProperties hook (primary source for 21-step components)
   try {
     // Create a mock block to pass to the property generation function
@@ -546,12 +703,21 @@ export function discoverComponentProperties(componentType: string): ComponentPro
 export function discoverAllComponentProperties(): Map<string, ComponentPropertySchema> {
   const discovered = new Map<string, ComponentPropertySchema>();
 
+  // Add all quiz steps
+  const quizStepSchemas = discoverAllQuizStepProperties();
+  quizStepSchemas.forEach((schema, stepKey) => {
+    discovered.set(stepKey, schema);
+  });
+
+  // Add modular components
   MODULAR_COMPONENTS.forEach(component => {
     const schema = discoverComponentProperties(component.type);
     if (schema) {
       discovered.set(component.type, schema);
     }
   });
+
+  console.log(`🎯 PropertyDiscovery: Total discovered components: ${discovered.size} (${quizStepSchemas.size} quiz steps + ${MODULAR_COMPONENTS.length} modular components)`);
 
   return discovered;
 }
