@@ -228,7 +228,7 @@ function extractPropertiesFromBlock(block: Block): DiscoveredProperty[] {
  */
 function discoverQuizStepProperties(stepKey: string): ComponentPropertySchema | null {
   const stepBlocks = QUIZ_STYLE_21_STEPS_TEMPLATE[stepKey];
-  
+
   if (!stepBlocks || stepBlocks.length === 0) {
     console.log(`⚠️ PropertyDiscovery: Nenhum bloco encontrado para ${stepKey}`);
     return null;
@@ -242,7 +242,7 @@ function discoverQuizStepProperties(stepKey: string): ComponentPropertySchema | 
   // Extract properties from all blocks in the step
   stepBlocks.forEach((block, index) => {
     console.log(`  📦 Bloco ${index + 1}: ${block.type} (ID: ${block.id})`);
-    
+
     const blockProperties = extractPropertiesFromBlock(block);
     blockProperties.forEach(prop => {
       // Prefix property keys with block ID to avoid conflicts
@@ -252,7 +252,7 @@ function discoverQuizStepProperties(stepKey: string): ComponentPropertySchema | 
         label: `${block.type} - ${prop.label}`,
         description: `${prop.description} (Bloco: ${block.id})`
       };
-      
+
       allProperties.push(prefixedProperty);
       categories.add(prop.category);
     });
@@ -317,7 +317,7 @@ function discoverAllQuizStepProperties(): Map<string, ComponentPropertySchema> {
   });
 
   console.log(`🎯 PropertyDiscovery: Descobriu ${discovered.size} etapas do quiz com propriedades`);
-  
+
   return discovered;
 }
 
