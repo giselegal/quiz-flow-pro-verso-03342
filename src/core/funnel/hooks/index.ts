@@ -11,16 +11,16 @@ export * from './useFunnelTemplates';
 
 // Re-export specific types for convenience
 export type {
-  UseFunnelOptions,
-  UseFunnelReturn
+    UseFunnelOptions,
+    UseFunnelReturn
 } from './useFunnel';
 
 export type {
-  UseFunnelStateOptions,
-  UseFunnelStateReturn
+    UseFunnelStateOptions,
+    UseFunnelStateReturn
 } from './useFunnelState';
 
 export type {
-  UseFunnelTemplatesOptions,
-  UseFunnelTemplatesReturn
+    UseFunnelTemplatesOptions,
+    UseFunnelTemplatesReturn
 } from './useFunnelTemplates';
