@@ -20,6 +20,9 @@ import { useCentralizedStepValidation } from '@/hooks/useCentralizedStepValidati
 import { validateStep } from '@/utils/stepValidationRegistry';
 import { calculateAndSaveQuizResult } from '@/utils/quizResultCalculator';
 import { FunnelHeader } from '@/components/editor/FunnelHeader';
+import { useDisableAutoScroll } from '@/hooks/editor/useDisableAutoScroll';
+import { useGlobalHotkeys } from '@/hooks/editor/useGlobalHotkeys';
+import { logger } from '@/utils/debugLogger';
 
 // Lazy modules para reduzir TTI do editor (Canvas usa o LazyQuizRenderer internamente)
 // const LazyQuizRenderer = React.lazy(() =>
@@ -202,52 +205,21 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   // Desativa qualquer auto-scroll dentro do /editor (edição e preview)
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const path = window.location?.pathname || '';
-    if (!path.includes('/editor')) return;
+  useDisableAutoScroll(true);
 
-    const g: any = window as any;
-    g.__DISABLE_AUTO_SCROLL = true;
-    // Também desabilita sincronização de scroll entre colunas para evitar "puxões" no canvas
-    g.__DISABLE_SCROLL_SYNC = true;
-
-    const originalScrollTo = window.scrollTo?.bind(window);
-    const originalScrollIntoView = (Element.prototype as any).scrollIntoView?.bind(Element.prototype);
-
-    try {
-      // No-op para qualquer tentativa de scroll programático
-      window.scrollTo = ((..._args: any[]) => { }) as any;
-      (Element.prototype as any).scrollIntoView = ((..._args: any[]) => { }) as any;
-    } catch { }
-
-    return () => {
-      try {
-        g.__DISABLE_AUTO_SCROLL = false;
-        g.__DISABLE_SCROLL_SYNC = false;
-        if (originalScrollTo) window.scrollTo = originalScrollTo as any;
-        if (originalScrollIntoView) (Element.prototype as any).scrollIntoView = originalScrollIntoView as any;
-      } catch { }
-    };
-  }, []);
-
-  // Atalhos de teclado: Undo/Redo (Ctrl/Cmd + Z/Y)
-  useEffect(() => {
-    const onKeyDown = (e: KeyboardEvent) => {
-      const isUndo = (e.ctrlKey || e.metaKey) && (e.key === 'z' || e.key === 'Z');
-      const isRedo = (e.ctrlKey || e.metaKey) && (e.key === 'y' || e.key === 'Y');
-      if (isUndo) {
-        e.preventDefault();
-        try { (editorContext as any)?.actions?.undo?.(); } catch { }
-        return;
-      }
-      if (isRedo) {
-        e.preventDefault();
-        try { (editorContext as any)?.actions?.redo?.(); } catch { }
-      }
-    };
-    window.addEventListener('keydown', onKeyDown, { capture: true });
-    return () => window.removeEventListener('keydown', onKeyDown, { capture: true } as any);
+  // Atalhos globais com cleanup: Undo/Redo (Ctrl/Cmd + Z/Y)
+  useGlobalHotkeys((e) => {
+    const isUndo = (e.ctrlKey || e.metaKey) && (e.key === 'z' || e.key === 'Z');
+    const isRedo = (e.ctrlKey || e.metaKey) && (e.key === 'y' || e.key === 'Y');
+    if (isUndo) {
+      e.preventDefault();
+      try { (editorContext as any)?.actions?.undo?.(); } catch { }
+      return;
+    }
+    if (isRedo) {
+      e.preventDefault();
+      try { (editorContext as any)?.actions?.redo?.(); } catch { }
+    }
   }, [editorContext]);
 
   // Auto-scroll: desativado no Editor (edição e preview). Mantido apenas fora do editor (produção).
@@ -315,8 +287,8 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
 
   const currentStepData = useMemo(
     () => {
-      const blocks = getBlocksForStep(safeCurrentStep, state.stepBlocks) || [];
-      console.log('🔍 EditorPro currentStepData:', {
+  const blocks = getBlocksForStep(safeCurrentStep, state.stepBlocks) || [];
+  logger.debug('🔍 EditorPro currentStepData:', {
         step: safeCurrentStep,
         stepKey: `step-${safeCurrentStep}`,
         blocksFound: blocks.length,
@@ -369,7 +341,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
     cache.result = map;
 
     if (process.env.NODE_ENV === 'development') {
-      console.log('🔍 stepHasBlocks calculation:', {
+      logger.debug('🔍 stepHasBlocks calculation:', {
         ...diagnosticInfo,
         totalStepsWithBlocks: diagnosticInfo.stepsWithBlocks.length,
         totalStepsWithoutBlocks: diagnosticInfo.stepsWithoutBlocks.length,
@@ -417,11 +389,11 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
     (async () => {
       try {
         if (process.env.NODE_ENV === 'development') {
-          console.log('🧮 Calculando resultado do quiz (auto) para etapa', safeCurrentStep);
+    logger.info('🧮 Calculando resultado do quiz (auto) para etapa', safeCurrentStep);
         }
 
         if (safeCurrentStep === 20) {
-          console.log('🎯 Etapa 20: garantindo cálculo de resultado');
+          logger.info('🎯 Etapa 20: garantindo cálculo de resultado');
 
           await calculateAndSaveQuizResult();
 
@@ -429,11 +401,11 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
 
           setTimeout(async () => {
             try {
-              console.log('🎯 Etapa 20: segunda tentativa de cálculo');
+              logger.info('🎯 Etapa 20: segunda tentativa de cálculo');
               await calculateAndSaveQuizResult();
               try { window.dispatchEvent(new Event('quiz-result-refresh')); } catch { }
             } catch (err) {
-              console.error('Falha na segunda tentativa de cálculo:', err);
+              logger.error('Falha na segunda tentativa de cálculo:', err);
             }
           }, 1000);
         } else {
@@ -441,7 +413,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
           try { window.dispatchEvent(new Event('quiz-result-refresh')); } catch { }
         }
       } catch (err) {
-        console.error('Falha ao calcular resultado automaticamente:', err);
+  logger.error('Falha ao calcular resultado automaticamente:', err);
       }
     })();
   }, [safeCurrentStep]);
@@ -475,18 +447,18 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       };
 
       if (process.env.NODE_ENV === 'development') {
-        console.log('🔍 Navigation event received:', eventInfo);
+        logger.debug('🔍 Navigation event received:', eventInfo);
       }
 
       if (!target || target < 1 || target > 21) {
-        console.warn('❌ INVESTIGAÇÃO #6: Invalid navigation target:', eventInfo);
+  logger.warn('❌ INVESTIGAÇÃO #6: Invalid navigation target:', eventInfo);
         (window as any).__EDITOR_INVALID_NAVIGATION__ = (window as any).__EDITOR_INVALID_NAVIGATION__ || [];
         (window as any).__EDITOR_INVALID_NAVIGATION__.push(eventInfo);
         return;
       }
 
       if (Math.abs(target - state.currentStep) > 1) {
-        console.log('⚠️  INVESTIGAÇÃO #6: Potential rapid navigation:', {
+  logger.warn('⚠️  INVESTIGAÇÃO #6: Potential rapid navigation:', {
           ...eventInfo,
           stepJump: target - state.currentStep,
           isRapidNavigation: true
@@ -497,7 +469,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       actions.setCurrentStep(target);
 
       if (process.env.NODE_ENV === 'development') {
-        console.log(
+        logger.debug(
           '➡️ EditorPro: navegação por evento',
           raw,
           '→',
@@ -533,10 +505,10 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
           notification.success(`Componente ${blockType} adicionado (duplo clique).`);
         }
         if (process.env.NODE_ENV === 'development') {
-          console.log('🧩 Fallback add via evento:', { blockType, step: safeCurrentStep });
+          logger.debug('🧩 Fallback add via evento:', { blockType, step: safeCurrentStep });
         }
       } catch (err) {
-        console.error('Erro ao adicionar componente via evento:', err);
+        logger.error('Erro ao adicionar componente via evento:', err);
         notification?.error?.('Falha ao adicionar componente');
       }
     };
@@ -576,11 +548,11 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       };
 
       if (process.env.NODE_ENV === 'development') {
-        console.log('🔊 INVESTIGAÇÃO #6: Input change event received:', eventData);
+        logger.debug('🔊 INVESTIGAÇÃO #6: Input change event received:', eventData);
       }
 
       if (eventData.stepId && eventData.stepId !== state.currentStep) {
-        console.warn('⚠️ RACE CONDITION DETECTED: Input event stepId differs from currentStep', {
+  logger.warn('⚠️ RACE CONDITION DETECTED: Input event stepId differs from currentStep', {
           eventStepId: eventData.stepId,
           currentStep: state.currentStep,
           questionId: eventData.questionId,
@@ -601,10 +573,10 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         const res = validateStep(state.currentStep, state.stepBlocks as any);
         actions.setStepValid?.(state.currentStep, !!res.valid);
         if (process.env.NODE_ENV === 'development' && !res.valid) {
-          console.warn('🔎 Centralized validation failed (input):', res);
+          logger.warn('🔎 Centralized validation failed (input):', res);
         }
       } catch (err) {
-        console.error('Validation error (input):', err);
+        logger.error('Validation error (input):', err);
       }
     };
 
@@ -630,11 +602,11 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       };
 
       if (process.env.NODE_ENV === 'development') {
-        console.log('🔊 INVESTIGAÇÃO #6: Selection change event received:', eventData);
+        logger.debug('🔊 INVESTIGAÇÃO #6: Selection change event received:', eventData);
       }
 
       if (eventData.stepId && eventData.stepId !== state.currentStep) {
-        console.warn('⚠️ RACE CONDITION DETECTED: Selection event stepId differs from currentStep', {
+  logger.warn('⚠️ RACE CONDITION DETECTED: Selection event stepId differs from currentStep', {
           eventStepId: eventData.stepId,
           currentStep: state.currentStep,
           questionId: eventData.questionId,
@@ -655,10 +627,10 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         const res = validateStep(state.currentStep, state.stepBlocks as any);
         actions.setStepValid?.(state.currentStep, !!res.valid);
         if (process.env.NODE_ENV === 'development' && !res.valid) {
-          console.warn('🔎 Centralized validation failed (selection):', res);
+          logger.warn('🔎 Centralized validation failed (selection):', res);
         }
       } catch (err) {
-        console.error('Validation error (selection):', err);
+        logger.error('Validation error (selection):', err);
       }
     };
 
@@ -692,20 +664,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
     return () => window.removeEventListener('editor-load-template', handler as EventListener);
   }, [actions, state.stepBlocks]);
 
-  // Desabilitar auto-scroll e sincronização de scroll enquanto o editor estiver montado
-  useEffect(() => {
-    try {
-      (window as any).__DISABLE_AUTO_SCROLL = true;
-      (window as any).__DISABLE_SCROLL_SYNC = true;
-    } catch { }
-
-    return () => {
-      try {
-        (window as any).__DISABLE_AUTO_SCROLL = false;
-        (window as any).__DISABLE_SCROLL_SYNC = false;
-      } catch { }
-    };
-  }, []);
+  // Removido: duplicado com useDisableAutoScroll
 
   // 🔍 INVESTIGAÇÃO: Initialize 21-step diagnostic system
   useEffect(() => {
@@ -713,7 +672,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       const timeout = setTimeout(() => {
         try {
           const diagnosticResults = run21StepDiagnostic();
-          console.log('🎯 21-Step Editor Diagnostic Results:', {
+          logger.info('🎯 21-Step Editor Diagnostic Results:', {
             status: diagnosticResults.overallStatus,
             issues: diagnosticResults.issues,
             timestamp: diagnosticResults.timestamp
@@ -723,11 +682,11 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
             if (e.ctrlKey && e.shiftKey && e.key === 'D') {
               e.preventDefault();
               const results = run21StepDiagnostic();
-              console.log('🔍 Manual Diagnostic Run:', results);
+              logger.info('🔍 Manual Diagnostic Run:', results);
 
               try {
                 const enhancedResults = await runCompleteDiagnostics();
-                console.log('🎯 Enhanced Diagnostics:', enhancedResults);
+                logger.info('🎯 Enhanced Diagnostics:', enhancedResults);
 
                 const s: any = (enhancedResults as any)?.summary ?? {};
                 const rate = typeof s.data?.successRate === 'number' ? s.data.successRate.toFixed(1) : 'n/a';
@@ -735,7 +694,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
 
                 alert(summary);
               } catch (error) {
-                console.error('❌ Enhanced diagnostics failed:', error);
+                logger.error('❌ Enhanced diagnostics failed:', error);
               }
             }
 
@@ -747,7 +706,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               delete (window as any).__EDITOR_STEP_ANALYSIS__;
               delete (window as any).__EDITOR_INVALID_NAVIGATION__;
               delete (window as any).__EDITOR_DIAGNOSTICS__;
-              console.log('🔄 Diagnostic data cleared');
+              logger.info('🔄 Diagnostic data cleared');
             }
           };
 
@@ -757,7 +716,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
             window.removeEventListener('keydown', handleKeyboardShortcut);
           };
         } catch (error) {
-          console.error('🚨 Failed to initialize 21-step diagnostic:', error);
+          logger.error('🚨 Failed to initialize 21-step diagnostic:', error);
         }
       }, 1000);
 
@@ -800,7 +759,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
     const { active } = event;
     const dragData = extractDragData(active);
     if (process.env.NODE_ENV === 'development') {
-      console.log('🚀 DRAG START CAPTURADO!', {
+      logger.debug('🚀 DRAG START CAPTURADO!', {
         activeId: active.id,
         dragData,
         activeDataCurrent: active.data.current,
@@ -815,7 +774,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
     (event: DragEndEvent) => {
       const { active, over } = event;
       if (process.env.NODE_ENV === 'development') {
-        console.log('🏯 DRAG END CAPTURADO!', {
+        logger.debug('🏯 DRAG END CAPTURADO!', {
           activeId: active.id,
           overId: over?.id,
           overData: over?.data?.current,
@@ -826,7 +785,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
 
       if (!over) {
         if (process.env.NODE_ENV === 'development') {
-          console.log('❌ Drop cancelado - sem alvo');
+          logger.debug('❌ Drop cancelado - sem alvo');
         }
         const dragData = extractDragData(active);
         const feedback = getDragFeedback(dragData, {
@@ -877,7 +836,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               devLog('Ação de drop não implementada:', (validation as any).action);
         }
       } catch (error) {
-        console.error('Erro durante drag & drop:', error);
+        logger.error('Erro durante drag & drop:', error);
         notification?.error?.('Erro ao processar drag & drop');
       }
     },
