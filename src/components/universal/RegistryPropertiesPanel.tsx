@@ -5,6 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
+import { Slider } from '@/components/ui/slider';
 import { X, Plus, Trash2, Upload, GripVertical } from 'lucide-react';
 import { blocksRegistry } from '@/core/blocks/registry';
 
@@ -492,6 +493,22 @@ const OptionsArrayEditor: React.FC<OptionsArrayEditorProps> = ({ value = [], onC
 };
 
 // ✅ Property Field Renderer
+interface PropSchema {
+  label: string;
+  kind: 'text' | 'number' | 'range' | 'switch' | 'select' | 'color' | 'textarea' | 'url' | 'array';
+  default?: any;
+  options?: Array<{ label: string; value: any }>;
+  min?: number;
+  max?: number;
+  step?: number;
+  unit?: string;
+  category?: string;
+  placeholder?: string;
+  required?: boolean;
+  description?: string;
+  key?: string;
+}
+
 interface PropertyFieldProps {
   schema: PropSchema;
   value: any;
@@ -552,7 +569,7 @@ const PropertyField: React.FC<PropertyFieldProps> = ({ schema, value, onChange }
             </div>
             <Slider
               value={[currentValue || schema.default || 0]}
-              onValueChange={(vals) => onChange(vals[0])}
+              onValueChange={(vals: number[]) => onChange(vals[0])}
               min={schema.min || 0}
               max={schema.max || 100}
               step={schema.step || 1}
@@ -689,141 +706,8 @@ const RegistryPropertiesPanel: React.FC<RegistryPropertiesPanelProps> = ({
     );
   }
 
-  // Try to get enhanced block definition first, then fall back to registry
-  const enhancedDefinition = getEnhancedBlockDefinition(selectedBlock.type);
   const blockDefinition = blocksRegistry[selectedBlock.type];
 
-  // 🎯 Use enhanced definition if available, especially for options-grid
-  const useEnhancedPanel = enhancedDefinition && selectedBlock.type === 'options-grid';
-
-  if (useEnhancedPanel) {
-    // Render enhanced properties panel for options-grid
-    return (
-      <div className="h-full flex flex-col bg-gradient-to-b from-amber-50 to-white">
-        {/* Enhanced Header for Options Grid */}
-        <div className="bg-white border-b border-amber-200 p-6 shadow-sm">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-amber-500 to-orange-600 rounded-xl flex items-center justify-center text-white text-lg">
-                🎯
-              </div>
-              <div>
-                <h2 className="text-xl font-bold text-gray-900">{enhancedDefinition.name}</h2>
-                <p className="text-sm text-amber-600">
-                  Painel No-Code Completo - Todas as Configurações do Backend
-                </p>
-              </div>
-            </div>
-            <Button onClick={onClose} variant="ghost" size="sm">
-              <X className="h-4 w-4" />
-            </Button>
-          </div>
-
-          <div className="mt-4 flex items-center gap-2 text-sm">
-            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-            <span className="text-gray-600">Sistema No-Code Ativo</span>
-            <div className="flex-1 h-px bg-gradient-to-r from-amber-200 to-transparent" />
-            <span className="text-xs text-amber-600 bg-amber-100 px-2 py-1 rounded-full">
-              {Object.keys(enhancedDefinition.properties).length} propriedades
-            </span>
-          </div>
-        </div>
-
-        {/* Enhanced Properties Content */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-6">
-          {(() => {
-            const propertiesByCategory = Object.entries(enhancedDefinition.properties).reduce((acc, [key, property]) => {
-              const category = (property as any).category || 'general';
-              if (!acc[category]) acc[category] = [];
-              acc[category].push([key, property]);
-              return acc;
-            }, {} as Record<string, [string, any][]>);
-
-            const categoryLabels = {
-              content: '📝 Conteúdo',
-              layout: '📐 Layout',
-              images: '🖼️ Imagens',
-              styling: '🎨 Estilização',
-              sizing: '📏 Dimensionamento',
-              behavior: '⚙️ Comportamento',
-              navigation: '🚀 Navegação',
-              buttons: '🔘 Botões',
-              validation: '✅ Validação',
-              general: '⚙️ Geral',
-            };
-
-            const categoryOrder = ['content', 'layout', 'images', 'styling', 'sizing', 'behavior', 'navigation', 'buttons', 'validation', 'general'];
-
-            return categoryOrder.map(categoryKey => {
-              const categoryProperties = propertiesByCategory[categoryKey];
-              if (!categoryProperties || categoryProperties.length === 0) return null;
-
-              return (
-                <div key={categoryKey} className="bg-white rounded-xl border border-amber-200 shadow-sm overflow-hidden">
-                  {/* Category Header */}
-                  <div className="bg-gradient-to-r from-amber-50 to-orange-50 border-b border-amber-200 px-4 py-3">
-                    <div className="flex items-center gap-2">
-                      <h3 className="text-sm font-bold text-amber-800 tracking-wide">
-                        {categoryLabels[categoryKey as keyof typeof categoryLabels] || `📋 ${categoryKey}`}
-                      </h3>
-                      <div className="flex-1 h-px bg-gradient-to-r from-amber-200 to-transparent" />
-                      <span className="text-xs text-amber-600 bg-amber-100 px-2 py-1 rounded-full">
-                        {categoryProperties.length} {categoryProperties.length === 1 ? 'propriedade' : 'propriedades'}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Category Properties */}
-                  <div className="p-4 space-y-4">
-                    {categoryProperties.map(([key, property]) => {
-                      // Handle conditional display
-                      if ((property as any).conditional) {
-                        const conditionMet = Object.entries((property as any).conditional).every(([condKey, condValue]) => {
-                          const condCurrentValue = selectedBlock.properties?.[condKey];
-                          return condCurrentValue === condValue;
-                        });
-                        if (!conditionMet) return null;
-                      }
-
-                      return (
-                        <div key={key} className="bg-amber-50/30 rounded-lg p-3 border border-amber-100">
-                          <EnhancedPropertyField
-                            propertyKey={key}
-                            property={property}
-                            value={selectedBlock.properties?.[key]}
-                            onChange={(value) => onUpdate(selectedBlock.id, { [key]: value })}
-                          />
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              );
-            });
-          })()}
-        </div>
-
-        {/* Actions Footer */}
-        <div className="bg-white border-t border-amber-200 p-4">
-          <div className="flex items-center justify-between">
-            <div className="text-sm text-gray-600">
-              💡 <strong>Dica:</strong> Todas as configurações do backend estão disponíveis aqui!
-            </div>
-            <Button
-              onClick={() => onDelete(selectedBlock.id)}
-              variant="destructive"
-              size="sm"
-            >
-              <Trash2 className="h-4 w-4 mr-2" />
-              Excluir
-            </Button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Fall back to original implementation for other block types
   if (!blockDefinition) {
     return (
       <div className="p-6 text-center">
@@ -842,39 +726,8 @@ const RegistryPropertiesPanel: React.FC<RegistryPropertiesPanelProps> = ({
     );
   }
 
-  // Group properties by category (original implementation)
-  const groupedProps = blockDefinition.propsSchema.reduce((acc, prop) => {
-    const category = prop.category || 'default';
-    if (!acc[category]) acc[category] = [];
-    acc[category].push(prop);
-    return acc;
-  }, {} as Record<string, PropSchema[]>);
-
-  const categoryIcons: Record<string, string> = {
-    content: '📝',
-    layout: '📐',
-    style: '🎨',
-    behavior: '⚙️',
-    advanced: '🔧',
-    animation: '✨',
-    accessibility: '♿',
-    seo: '🔍',
-  };
-
-  const categoryNames: Record<string, string> = {
-    content: 'Conteúdo',
-    layout: 'Layout & Posicionamento',
-    style: 'Aparência & Estilo',
-    behavior: 'Comportamento',
-    advanced: 'Configurações Avançadas',
-    animation: 'Animações & Efeitos',
-    accessibility: 'Acessibilidade',
-    seo: 'SEO & Metadados',
-  };
-
   return (
     <div className="h-full flex flex-col bg-gradient-to-b from-gray-50 to-white">
-      {/* Header */}
       <div className="bg-white border-b border-gray-200 p-6 shadow-sm">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -892,66 +745,19 @@ const RegistryPropertiesPanel: React.FC<RegistryPropertiesPanelProps> = ({
             <X className="h-4 w-4" />
           </Button>
         </div>
+      </div>
 
-        <div className="mt-4 flex items-center gap-2 text-sm">
-          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-          <span className="text-gray-600">Propriedades no-code ativas</span>
-          <div className="flex-1 h-px bg-gradient-to-r from-gray-200 to-transparent" />
-          <span className="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded-full">
-            {blockDefinition.propsSchema.length} propriedades
-          </span>
+      <div className="flex-1 overflow-y-auto p-6">
+        <div className="text-center text-gray-500">
+          <div className="text-4xl mb-2">🚧</div>
+          <p>Painel de propriedades em desenvolvimento</p>
         </div>
       </div>
 
-      {/* Properties Content */}
-      <div className="flex-1 overflow-y-auto p-6 space-y-6">
-        {Object.entries(groupedProps).map(([category, props]) => (
-          <div key={category} className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-            {/* Category Header */}
-            <div className="bg-gradient-to-r from-gray-50 to-white border-b border-gray-200 px-4 py-3">
-              <div className="flex items-center gap-2">
-                <span className="text-lg">{categoryIcons[category] || '📋'}</span>
-                <h3 className="text-sm font-bold text-gray-800 tracking-wide">
-                  {categoryNames[category] || category.toUpperCase()}
-                </h3>
-                <div className="flex-1 h-px bg-gradient-to-r from-gray-200 to-transparent" />
-                <span className="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded-full">
-                  {props.length}
-                </span>
-              </div>
-            </div>
-
-            {/* Category Properties */}
-            <div className="p-4 space-y-4">
-              {props.map((prop) => {
-                // Handle conditional display
-                if (prop.when) {
-                  const conditionValue = selectedBlock.properties?.[prop.when.key];
-                  if (conditionValue !== prop.when.value) {
-                    return null;
-                  }
-                }
-
-                return (
-                  <div key={prop.key} className="bg-gray-50/50 rounded-lg p-3 border border-gray-100">
-                    <PropertyField
-                      schema={prop}
-                      value={selectedBlock.properties?.[prop.key]}
-                      onChange={(value) => onUpdate(selectedBlock.id, { [prop.key]: value })}
-                    />
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Actions Footer */}
       <div className="bg-white border-t border-gray-200 p-4">
         <div className="flex items-center justify-between">
           <div className="text-sm text-gray-600">
-            Sistema de propriedades baseado em registro
+            Sistema de propriedades simplificado
           </div>
           <Button
             onClick={() => onDelete(selectedBlock.id)}

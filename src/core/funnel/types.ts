@@ -180,6 +180,7 @@ export interface NavigationState {
     nextStep?: string;
     previousStep?: string;
     history: string[];
+    direction?: NavigationDirection;
 }
 
 export interface ValidationState {
@@ -252,6 +253,7 @@ export interface FunnelEvent {
     data?: Record<string, any>;
     userId?: string;
     sessionId?: string;
+    payload?: any;
 }
 
 export type FunnelEventType =
@@ -371,13 +373,15 @@ export interface FunnelError {
 
 export type FunnelStatus =
     | 'idle'
-    | 'loading'
+    | 'loading' 
     | 'ready'
     | 'in_progress'
     | 'completed'
     | 'error'
     | 'saving'
-    | 'validating';
+    | 'validating'
+    | 'active'
+    | 'paused';
 
 // ============================================================================
 // HOOKS E CONTEXT TYPES
