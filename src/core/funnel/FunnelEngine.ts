@@ -166,8 +166,9 @@ export class FunnelEngine {
         }
 
         state.currentStep = nextStepId;
+        const computedNav = funnelCore.calculateNavigationState(state);
         state.navigation = {
-            ...state.navigation,
+            ...computedNav,
             history: newHistory,
             direction: direction || 'forward'
         };
@@ -285,7 +286,9 @@ export class FunnelEngine {
 
         // Limpar progresso
         state.completedSteps = [];
+        const computed = funnelCore.calculateNavigationState(state);
         state.navigation = {
+            ...computed,
             history: [],
             direction: 'forward'
         };
@@ -342,7 +345,9 @@ export class FunnelEngine {
 
         // Inicializar navegação
         if (!initializedState.navigation) {
+            const nav = funnelCore.calculateNavigationState(initializedState);
             initializedState.navigation = {
+                ...nav,
                 history: [],
                 direction: 'forward'
             };

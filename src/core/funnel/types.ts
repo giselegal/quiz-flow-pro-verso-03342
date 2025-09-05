@@ -248,6 +248,7 @@ export interface TemplateCategory {
 export interface FunnelEvent {
     type: FunnelEventType;
     timestamp: number;
+    funnelId?: string;
     stepId?: string;
     componentId?: string;
     data?: Record<string, any>;

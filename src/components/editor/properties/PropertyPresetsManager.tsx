@@ -18,16 +18,13 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import {
     Palette,
-    Save,
     Download,
     Upload,
     Star,
     Trash2,
     Copy,
-    Edit3,
     Plus,
     Search,
-    Tag,
     Clock,
     User
 } from 'lucide-react';
@@ -414,6 +411,7 @@ export const PropertyPresetsManager: React.FC<PropertyPresetsManagerProps> = ({
                         )}
                     </div>
                 </div>
+                <Separator className="my-2" />
 
                 {/* Filters */}
                 <div className="flex items-center gap-3">

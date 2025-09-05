@@ -13,7 +13,7 @@ import { Badge } from '@/components/ui/badge';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Slider } from '@/components/ui/slider';
 import { cn } from '@/lib/utils';
-import { Link, Upload, Palette, Move, RotateCcw } from 'lucide-react';
+import { Link, Upload, Move, RotateCcw } from 'lucide-react';
 
 /**
  * Spacing Control - for margins, padding, etc.
