@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { schemaDrivenFunnelService } from '@/services/schemaDrivenFunnelService';
 import { getFunnelIdFromEnvOrStorage } from '@/utils/funnelIdentity';
 import { toast } from '@/hooks/use-toast';
 

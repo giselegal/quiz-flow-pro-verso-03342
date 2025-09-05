@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { schemaDrivenFunnelService, type SchemaDrivenFunnelData } from '@/services/schemaDrivenFunnelService';
+import { schemaDrivenFunnelService } from '@/services/schemaDrivenFunnelService';
 import { generateId } from '@/types/unified-schema';
 import { toast } from '@/hooks/use-toast';
 import { getFunnelIdFromEnvOrStorage, saveFunnelIdToStorage } from '@/utils/funnelIdentity';

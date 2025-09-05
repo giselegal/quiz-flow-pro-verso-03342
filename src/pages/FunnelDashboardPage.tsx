@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { schemaDrivenFunnelService, type SchemaDrivenFunnelData } from '@/services/schemaDrivenFunnelService';
 import { getFunnelIdFromEnvOrStorage, saveFunnelIdToStorage } from '@/utils/funnelIdentity';
 import { FunnelManager } from '@/components/editor/FunnelManager';
 import { useLocation } from 'wouter';
