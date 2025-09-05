@@ -13,6 +13,9 @@ export interface PropertiesColumnProps {
   onClose: () => void;
   onDelete: () => void;
   onDuplicate?: () => void;
+  onReset?: () => void;
+  previewMode?: 'desktop' | 'tablet' | 'mobile';
+  onPreviewModeChange?: (mode: 'desktop' | 'tablet' | 'mobile') => void;
   className?: string;
 }
 
@@ -22,6 +25,9 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
   onClose,
   onDelete,
   onDuplicate,
+  onReset: _onReset,
+  previewMode: _previewMode,
+  onPreviewModeChange: _onPreviewModeChange,
   className = '',
 }) => {
   return (

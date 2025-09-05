@@ -253,8 +253,8 @@ export function useFunnelTemplates(
         }
 
         // Filter by search
-        if (filters.search) {
-            const searchLower = filters.search.toLowerCase();
+            if (filters.search) {
+                const searchLower = filters.search.toLowerCase();
             filtered = filtered.filter(t =>
                 t.name.toLowerCase().includes(searchLower) ||
                 t.description.toLowerCase().includes(searchLower) ||
