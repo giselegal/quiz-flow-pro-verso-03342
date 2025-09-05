@@ -5,7 +5,7 @@
  */
 
 import { useState, useCallback, useEffect } from 'react';
-import { FunnelTemplate, FunnelMetadata } from '../types';
+import { FunnelTemplate } from '../types';
 
 // ============================================================================
 // TYPES
@@ -79,52 +79,28 @@ export function useFunnelTemplates(
                     name: 'Quiz de Estilo Pessoal',
                     description: 'Template para descobrir estilo pessoal do usuário',
                     category: 'lifestyle',
-                    version: '1.0.0',
+                    theme: 'modern',
+                    stepCount: 0,
                     isOfficial: true,
-                    metadata: {
-                        id: 'quiz-style-template',
-                        name: 'Quiz de Estilo Pessoal',
-                        description: 'Template para descobrir estilo pessoal do usuário',
-                        category: 'lifestyle',
-                        theme: 'modern',
-                        version: '1.0.0',
-                        createdAt: new Date().toISOString(),
-                        updatedAt: new Date().toISOString(),
-                        isPublished: true,
-                        isOfficial: true
-                    },
-                    steps: [],
-                    defaultSettings: {
-                        autoSave: true,
-                        autoAdvance: false,
-                        progressTracking: true,
-                        analytics: true,
-                        theme: {
-                            primaryColor: '#3B82F6',
-                            secondaryColor: '#64748B',
-                            fontFamily: 'Inter',
-                            borderRadius: '8px',
-                            spacing: '16px',
-                            layout: 'centered'
-                        },
-                        navigation: {
-                            showProgress: true,
-                            showStepNumbers: true,
-                            allowBackward: true,
-                            showNavigationButtons: true,
-                            autoAdvanceDelay: 0
-                        },
-                        validation: {
-                            strictMode: false,
-                            requiredFields: [],
-                            customValidators: {}
-                        }
-                    },
+                    usageCount: 0,
+                    tags: [],
                     templateData: {
-                        questions: [],
-                        components: [],
-                        styling: {}
-                    }
+                        metadata: {
+                            name: 'Quiz de Estilo Pessoal',
+                            description: 'Template para descobrir estilo pessoal do usuário',
+                            category: 'lifestyle',
+                            theme: 'modern',
+                            version: '1.0.0',
+                            isPublished: true,
+                            isOfficial: true
+                        },
+                        settings: getDefaultSettings(),
+                        steps: []
+                    },
+                    components: [],
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString(),
+                    thumbnailUrl: undefined
                 },
                 // Adicionar mais templates conforme necessário
             ];
@@ -152,23 +128,27 @@ export function useFunnelTemplates(
                 name: template.name || 'Novo Template',
                 description: template.description || '',
                 category: template.category || 'custom',
-                version: '1.0.0',
+                theme: 'modern',
                 isOfficial: false,
-                metadata: {
-                    id: generateTemplateId(),
-                    name: template.name || 'Novo Template',
-                    description: template.description || '',
-                    category: template.category || 'custom',
-                    theme: 'modern',
-                    version: '1.0.0',
-                    createdAt: new Date().toISOString(),
-                    updatedAt: new Date().toISOString(),
-                    isPublished: false,
-                    isOfficial: false
+                stepCount: 0,
+                usageCount: 0,
+                tags: [],
+                templateData: template.templateData || {
+                    metadata: {
+                        name: template.name || 'Novo Template',
+                        description: template.description || '',
+                        category: template.category || 'custom',
+                        theme: 'modern',
+                        version: '1.0.0',
+                        isPublished: false,
+                        isOfficial: false
+                    },
+                    settings: getDefaultSettings(),
+                    steps: []
                 },
-                steps: template.steps || [],
-                defaultSettings: template.defaultSettings || getDefaultSettings(),
-                templateData: template.templateData || { questions: [], components: [], styling: {} }
+                components: [],
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
             };
 
             // Aqui você salvaria no serviço real
@@ -194,11 +174,7 @@ export function useFunnelTemplates(
             const updatedTemplate = {
                 ...templates.find(t => t.id === id),
                 ...updates,
-                metadata: {
-                    ...templates.find(t => t.id === id)?.metadata,
-                    ...updates.metadata,
-                    updatedAt: new Date().toISOString()
-                }
+                updatedAt: new Date().toISOString()
             } as FunnelTemplate;
 
             // Aqui você atualizaria no serviço real
@@ -245,11 +221,7 @@ export function useFunnelTemplates(
             id: undefined, // Será gerado um novo
             name: newName || `${original.name} (Cópia)`,
             isOfficial: false, // Cópias nunca são oficiais
-            metadata: {
-                ...original.metadata,
-                name: newName || `${original.name} (Cópia)`,
-                isOfficial: false
-            }
+            updatedAt: new Date().toISOString()
         };
 
         return createTemplate(duplicated);
@@ -300,7 +272,7 @@ export function useFunnelTemplates(
         }
 
         // Sort
-        if (options.sortBy) {
+    if (options.sortBy) {
             filtered.sort((a, b) => {
                 let aValue: any;
                 let bValue: any;
@@ -311,12 +283,12 @@ export function useFunnelTemplates(
                         bValue = b.name;
                         break;
                     case 'createdAt':
-                        aValue = new Date(a.metadata.createdAt);
-                        bValue = new Date(b.metadata.createdAt);
+            aValue = new Date(a.createdAt);
+            bValue = new Date(b.createdAt);
                         break;
                     case 'updatedAt':
-                        aValue = new Date(a.metadata.updatedAt);
-                        bValue = new Date(b.metadata.updatedAt);
+            aValue = new Date(a.updatedAt);
+            bValue = new Date(b.updatedAt);
                         break;
                     default:
                         return 0;

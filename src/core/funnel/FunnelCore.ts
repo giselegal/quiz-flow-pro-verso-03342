@@ -185,7 +185,8 @@ export class FunnelCore {
             canGoBackward,
             nextStep: this.getNextStep(state) || undefined,
             previousStep: this.getPreviousStep(state) || undefined,
-            history: [...state.navigation.history]
+            history: [...state.navigation.history],
+            direction: state.navigation.direction || undefined
         };
     }
 

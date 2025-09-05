@@ -89,7 +89,7 @@ export function PublicationSettingsButton({
                         title="Configurações de Publicação"
                     >
                         <Settings className="w-4 h-4" />
-                        <span className="hidden sm:inline">Publicação</span>
+                        <span className="hidden sm:inline">{isPublishing ? 'Publicando…' : 'Publicação'}</span>
 
                         {/* Status Badge */}
                         <Badge

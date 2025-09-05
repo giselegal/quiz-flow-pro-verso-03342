@@ -12,8 +12,7 @@ import {
     FunnelEvent,
     FunnelProgress,
     NavigationState,
-    ValidationState,
-    NavigationDirection
+    ValidationState
 } from '../types';
 import { funnelEngine, FunnelActions } from '../FunnelEngine';
 import { funnelCore } from '../FunnelCore';
@@ -331,7 +330,6 @@ export function useFunnelData(state: FunnelState) {
  */
 export function useFunnelProgress(state: FunnelState) {
     const progress = funnelCore.calculateProgress(state);
-    const stats = funnelCore.calculateProgress(state);
 
     return {
         ...progress,

@@ -8,7 +8,6 @@ import { useState, useCallback, useEffect, useReducer } from 'react';
 import {
     FunnelState,
     FunnelAction,
-    FunnelStatus,
     FunnelProgress,
     NavigationState,
     ValidationState
@@ -115,7 +114,7 @@ export function useFunnelState(
 
     const deserialize = useCallback((data: string) => {
         try {
-            const parsedState = JSON.parse(data) as FunnelState;
+            JSON.parse(data) as FunnelState;
             // Aqui você poderia validar a estrutura do estado antes de aplicar
             dispatch({ type: 'reset', payload: { preserveUserData: false } });
             // Aplicar o estado deserializado...
@@ -428,7 +427,7 @@ export function useFunnelComparison() {
             added: {},
             removed: {},
             modified: {},
-            unchanged: {}
+            unchanged: JSON.stringify(state1) === JSON.stringify(state2) ? state1 : {}
         };
     }, []);
 

@@ -99,14 +99,14 @@ export interface UTMConfiguration {
     content?: string;
     customParameters?: Record<string, string>;
 }
-
+                        👁️ Preview ({funnelId})
 // ============================================================================
 // MAIN COMPONENT
 // ============================================================================
 
 export function FunnelPublicationPanel({
     funnelId,
-    settings,
+                        {isPublishing ? '\u{1F680} Publicando...' : '\u{1F680} Publicar'}
     onSettingsChange,
     onPublish
 }: {
