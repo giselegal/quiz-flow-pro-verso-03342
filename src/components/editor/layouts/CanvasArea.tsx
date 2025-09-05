@@ -8,7 +8,7 @@ import { LoadingSpinner } from "@/components/ui/loading-spinner";
 const LoadingFallback = () => (
   <div className="flex items-center justify-center h-full w-full">
     <div className="flex flex-col items-center gap-3">
-  <LoadingSpinner size="lg" color="#B89B7A" />
+      <LoadingSpinner size="lg" color="#B89B7A" />
       <span className="text-gray-600 font-medium">Carregando editor...</span>
     </div>
   </div>

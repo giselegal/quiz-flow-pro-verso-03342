@@ -136,7 +136,7 @@ export const GradientPicker: React.FC<GradientPickerProps> = ({
   return (
     <div className="space-y-2">
       <Label className="text-sm font-medium">{label}</Label>
-      
+
       <Popover open={isOpen} onOpenChange={setIsOpen}>
         <PopoverTrigger asChild>
           <Button
@@ -154,7 +154,7 @@ export const GradientPicker: React.FC<GradientPickerProps> = ({
             </div>
           </Button>
         </PopoverTrigger>
-        
+
         <PopoverContent className="w-64 p-4">
           <div className="space-y-4">
             <div>
@@ -178,7 +178,7 @@ export const GradientPicker: React.FC<GradientPickerProps> = ({
                 ))}
               </div>
             </div>
-            
+
             <div>
               <Label className="text-sm font-medium mb-2 block">Gradiente Personalizado</Label>
               <Input
@@ -191,7 +191,7 @@ export const GradientPicker: React.FC<GradientPickerProps> = ({
           </div>
         </PopoverContent>
       </Popover>
-      
+
       {value && (
         <div
           className="w-full h-8 rounded border"
@@ -389,7 +389,7 @@ export const PositionControl: React.FC<PositionControlProps> = ({
   return (
     <div className="space-y-3">
       <Label className="text-sm font-medium">{label}</Label>
-      
+
       <div className="grid grid-cols-2 gap-3">
         <div className="space-y-1">
           <Label className="text-xs text-muted-foreground">X (Horizontal)</Label>
@@ -407,7 +407,7 @@ export const PositionControl: React.FC<PositionControlProps> = ({
             <span>{maxX}</span>
           </div>
         </div>
-        
+
         <div className="space-y-1">
           <Label className="text-xs text-muted-foreground">Y (Vertical)</Label>
           <Slider
@@ -425,7 +425,7 @@ export const PositionControl: React.FC<PositionControlProps> = ({
           </div>
         </div>
       </div>
-      
+
       <Button
         size="sm"
         variant="outline"

@@ -8,9 +8,7 @@
 import {
     FunnelState,
     FunnelAction,
-    FunnelActionType,
     FunnelError,
-    FunnelStatus,
     NavigationDirection
 } from './types';
 import { funnelCore } from './FunnelCore';

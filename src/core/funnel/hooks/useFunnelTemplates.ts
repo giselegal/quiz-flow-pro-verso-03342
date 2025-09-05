@@ -253,8 +253,8 @@ export function useFunnelTemplates(
         }
 
         // Filter by search
-            if (filters.search) {
-                const searchLower = filters.search.toLowerCase();
+        if (filters.search) {
+            const searchLower = filters.search.toLowerCase();
             filtered = filtered.filter(t =>
                 t.name.toLowerCase().includes(searchLower) ||
                 t.description.toLowerCase().includes(searchLower) ||
@@ -272,7 +272,7 @@ export function useFunnelTemplates(
         }
 
         // Sort
-    if (options.sortBy) {
+        if (options.sortBy) {
             filtered.sort((a, b) => {
                 let aValue: any;
                 let bValue: any;
@@ -283,12 +283,12 @@ export function useFunnelTemplates(
                         bValue = b.name;
                         break;
                     case 'createdAt':
-            aValue = new Date(a.createdAt);
-            bValue = new Date(b.createdAt);
+                        aValue = new Date(a.createdAt);
+                        bValue = new Date(b.createdAt);
                         break;
                     case 'updatedAt':
-            aValue = new Date(a.updatedAt);
-            bValue = new Date(b.updatedAt);
+                        aValue = new Date(a.updatedAt);
+                        bValue = new Date(b.updatedAt);
                         break;
                     default:
                         return 0;
@@ -410,7 +410,7 @@ export function useCreateFunnelFromTemplate() {
  * Hook para preview de template
  */
 export function useFunnelTemplatePreview(templateId: string) {
-    const [preview, setPreview] = useState(null);
+    const [preview, setPreview] = useState<{ steps: any[]; sampleData: Record<string, any>; estimatedTime: string } | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<Error | null>(null);
 

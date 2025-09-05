@@ -99,14 +99,13 @@ export interface UTMConfiguration {
     content?: string;
     customParameters?: Record<string, string>;
 }
-                        👁️ Preview ({funnelId})
 // ============================================================================
 // MAIN COMPONENT
 // ============================================================================
 
 export function FunnelPublicationPanel({
     funnelId,
-                        {isPublishing ? '\u{1F680} Publicando...' : '\u{1F680} Publicar'}
+    settings,
     onSettingsChange,
     onPublish
 }: {
@@ -141,7 +140,7 @@ export function FunnelPublicationPanel({
 
                 <div className="flex gap-2">
                     <Button variant="outline">
-                        👁️ Preview
+                        👁️ Preview ({funnelId})
                     </Button>
                     <Button
                         onClick={handlePublish}

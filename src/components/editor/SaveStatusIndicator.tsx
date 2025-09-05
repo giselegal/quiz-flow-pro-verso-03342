@@ -78,7 +78,7 @@ export const SaveStatusIndicator: React.FC<SaveStatusIndicatorProps> = ({
 
       setSaveStatus('saved');
       setLastSaveTime(new Date());
-      
+
       toast({
         title: 'Salvo com sucesso',
         description: 'Suas alterações foram salvas no Supabase',
@@ -87,7 +87,7 @@ export const SaveStatusIndicator: React.FC<SaveStatusIndicatorProps> = ({
     } catch (error) {
       console.error('❌ Erro no salvamento manual:', error);
       setSaveStatus('error');
-      
+
       toast({
         title: 'Erro ao salvar',
         description: 'Não foi possível salvar as alterações',
@@ -149,15 +149,15 @@ export const SaveStatusIndicator: React.FC<SaveStatusIndicatorProps> = ({
     const now = new Date();
     const diffMs = now.getTime() - date.getTime();
     const diffMins = Math.floor(diffMs / (1000 * 60));
-    
+
     if (diffMins < 1) return 'agora';
     if (diffMins === 1) return '1 min atrás';
     if (diffMins < 60) return `${diffMins} mins atrás`;
-    
+
     const diffHours = Math.floor(diffMins / 60);
     if (diffHours === 1) return '1 hora atrás';
     if (diffHours < 24) return `${diffHours} horas atrás`;
-    
+
     return date.toLocaleDateString();
   };
 
@@ -230,7 +230,7 @@ export const CompactSaveIndicator: React.FC<Pick<SaveStatusIndicatorProps, 'isSa
     const now = new Date();
     const diffMs = now.getTime() - lastSaved.getTime();
     const diffMins = Math.floor(diffMs / (1000 * 60));
-    
+
     return (
       <div className="flex items-center gap-1 text-green-600">
         <span>✅</span>

@@ -4,7 +4,7 @@ import { FunnelManager } from '@/components/editor/FunnelManager';
 import { useLocation } from 'wouter';
 import { toast } from '@/hooks/use-toast';
 
-interface FunnelDashboardPageProps {}
+interface FunnelDashboardPageProps { }
 
 /**
  * 🎯 PÁGINA DO DASHBOARD DE FUNIS
@@ -28,14 +28,14 @@ export const FunnelDashboardPage: React.FC<FunnelDashboardPageProps> = () => {
   // 🎯 Navegar para o editor com funil selecionado
   const handleFunnelSelect = (funnelId: string) => {
     console.log('🎯 Navegando para editor com funil:', funnelId);
-    
+
     // Salvar funil selecionado
     saveFunnelIdToStorage(funnelId);
     setCurrentFunnelId(funnelId);
-    
+
     // Navegar para o editor
     setLocation(`/editor?funnel=${funnelId}`);
-    
+
     toast({
       title: 'Funil selecionado',
       description: `Abrindo editor para o funil: ${funnelId}`,
@@ -134,7 +134,7 @@ export const FunnelDashboardPage: React.FC<FunnelDashboardPageProps> = () => {
                 Abrir o template de 21 etapas
               </p>
             </button>
-            
+
             <button
               onClick={() => setLocation('/editor')}
               className="p-4 border border-gray-200 rounded-lg hover:border-green-300 hover:bg-green-50 transition-colors text-left"
@@ -145,7 +145,7 @@ export const FunnelDashboardPage: React.FC<FunnelDashboardPageProps> = () => {
                 Abrir editor com funil atual
               </p>
             </button>
-            
+
             <button
               onClick={handleGoHome}
               className="p-4 border border-gray-200 rounded-lg hover:border-purple-300 hover:bg-purple-50 transition-colors text-left"

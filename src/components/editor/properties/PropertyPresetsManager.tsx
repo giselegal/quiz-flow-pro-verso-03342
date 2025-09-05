@@ -170,7 +170,6 @@ export const PropertyPresetsManager: React.FC<PropertyPresetsManagerProps> = ({
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState<string>('all');
     const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
-    const [editingPreset, setEditingPreset] = useState<PropertyPreset | null>(null);
     const [newPreset, setNewPreset] = useState({
         name: '',
         description: '',

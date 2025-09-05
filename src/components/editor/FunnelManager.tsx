@@ -47,9 +47,9 @@ export const FunnelManager: React.FC<FunnelManagerProps> = ({
     try {
       setLoading(true);
       console.log('🔄 Carregando lista de funis...');
-      
+
       const funnelList = await schemaDrivenFunnelService.listFunnels();
-      
+
       const mappedFunnels: FunnelInfo[] = funnelList.map(funnel => ({
         id: funnel.id,
         name: funnel.name,
@@ -129,10 +129,10 @@ export const FunnelManager: React.FC<FunnelManagerProps> = ({
 
       // 🔄 Recarregar lista
       await loadFunnels();
-      
+
       // 🎯 Selecionar o novo funil
       handleSelectFunnel(newFunnel.id);
-      
+
       // 🧹 Limpar formulário
       setNewFunnelName('');
       setShowCreateForm(false);
@@ -151,16 +151,16 @@ export const FunnelManager: React.FC<FunnelManagerProps> = ({
   // 🎯 Selecionar funil
   const handleSelectFunnel = (funnelId: string) => {
     console.log('🎯 Selecionando funil:', funnelId);
-    
+
     // 💾 Salvar no localStorage
     saveFunnelIdToStorage(funnelId);
-    
+
     // 🔄 Atualizar lista local
     setFunnels(prev => prev.map(f => ({ ...f, isActive: f.id === funnelId })));
-    
+
     // 📢 Notificar componente pai
     onFunnelSelect?.(funnelId);
-    
+
     toast({
       title: 'Funil selecionado',
       description: `Agora editando: ${funnels.find(f => f.id === funnelId)?.name || funnelId}`,
@@ -273,7 +273,7 @@ export const FunnelManager: React.FC<FunnelManagerProps> = ({
         <h3 className="font-semibold text-gray-800 mb-3">
           Funis Disponíveis ({funnels.length})
         </h3>
-        
+
         {funnels.length === 0 ? (
           <div className="text-center py-8 text-gray-500">
             <p>Nenhum funil encontrado</p>
@@ -283,19 +283,17 @@ export const FunnelManager: React.FC<FunnelManagerProps> = ({
           funnels.map((funnel) => (
             <div
               key={funnel.id}
-              className={`p-4 rounded-lg border transition-all cursor-pointer ${
-                funnel.isActive
+              className={`p-4 rounded-lg border transition-all cursor-pointer ${funnel.isActive
                   ? 'border-blue-500 bg-blue-50 shadow-md'
                   : 'border-gray-200 bg-gray-50 hover:border-gray-300 hover:shadow-sm'
-              }`}
+                }`}
               onClick={() => handleSelectFunnel(funnel.id)}
             >
               <div className="flex justify-between items-start">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
-                    <h4 className={`font-semibold ${
-                      funnel.isActive ? 'text-blue-800' : 'text-gray-800'
-                    }`}>
+                    <h4 className={`font-semibold ${funnel.isActive ? 'text-blue-800' : 'text-gray-800'
+                      }`}>
                       {funnel.name}
                     </h4>
                     {funnel.isActive && (
@@ -309,9 +307,8 @@ export const FunnelManager: React.FC<FunnelManagerProps> = ({
                       </span>
                     )}
                   </div>
-                  <p className={`text-sm ${
-                    funnel.isActive ? 'text-blue-600' : 'text-gray-600'
-                  } mb-2`}>
+                  <p className={`text-sm ${funnel.isActive ? 'text-blue-600' : 'text-gray-600'
+                    } mb-2`}>
                     {funnel.description}
                   </p>
                   <div className="flex items-center gap-4 text-xs text-gray-500">

@@ -27,7 +27,7 @@ export interface PropertyField {
   placeholder?: string;
 }
 
-export type PropertyCategory = 
+export type PropertyCategory =
   | 'content'      // Textos, imagens, dados
   | 'style'        // Cores, tipografia, efeitos
   | 'layout'       // Posicionamento, dimensões
@@ -69,7 +69,7 @@ export const AVAILABLE_VARIABLES: DynamicVariable[] = [
     example: 'Olá, {userName}!'
   },
   {
-    key: 'resultStyle', 
+    key: 'resultStyle',
     label: 'Estilo Predominante',
     description: 'Estilo calculado baseado nas respostas',
     currentValue: 'Clássico Elegante',
@@ -106,7 +106,7 @@ export class PropertyExtractionService {
   /**
    * Extrai TODAS as propriedades de um bloco
    */
-  extractAllProperties(block: Block, templateData?: any): PropertyField[] {
+  extractAllProperties(block: Block, _templateData?: any): PropertyField[] {
     const properties: PropertyField[] = [];
 
     // 1. Extrair propriedades do bloco
@@ -143,7 +143,7 @@ export class PropertyExtractionService {
         key: 'type',
         label: 'Tipo do Bloco',
         type: 'text',
-        category: 'metadata', 
+        category: 'metadata',
         value: block.type,
         supportsInterpolation: false,
         description: 'Tipo do componente',
@@ -173,7 +173,7 @@ export class PropertyExtractionService {
     // Ordenar categorias por prioridade
     const categoryOrder = ['content', 'style', 'layout', 'behavior', 'validation', 'accessibility', 'advanced', 'metadata'];
     const sorted: CategorizedProperties = {};
-    
+
     categoryOrder.forEach(category => {
       if (categorized[category]) {
         sorted[category] = categorized[category];
@@ -206,12 +206,12 @@ export class PropertyExtractionService {
    */
   private isInterpolatableField(key: string): boolean {
     const interpolatableFields = [
-      'title', 'subtitle', 'text', 'content', 'label', 'placeholder', 
+      'title', 'subtitle', 'text', 'content', 'label', 'placeholder',
       'description', 'buttonText', 'heading', 'subheading', 'message',
       'content.title', 'content.subtitle', 'content.text', 'content.description'
     ];
-    
-    return interpolatableFields.some(field => 
+
+    return interpolatableFields.some(field =>
       key.includes(field) || key.toLowerCase().includes('text') || key.toLowerCase().includes('title')
     );
   }
@@ -222,14 +222,14 @@ export class PropertyExtractionService {
   private getAvailableVariables(fieldKey: string): DynamicVariable[] {
     // Para campos de resultado, mostrar variáveis de resultado
     if (fieldKey.includes('result') || fieldKey.includes('final')) {
-      return AVAILABLE_VARIABLES.filter(v => 
+      return AVAILABLE_VARIABLES.filter(v =>
         v.context.includes('result') || v.context.includes('all')
       );
     }
 
     // Para campos de oferta, mostrar variáveis de oferta
     if (fieldKey.includes('offer') || fieldKey.includes('price')) {
-      return AVAILABLE_VARIABLES.filter(v => 
+      return AVAILABLE_VARIABLES.filter(v =>
         v.context.includes('offer') || v.context.includes('all')
       );
     }
@@ -241,10 +241,10 @@ export class PropertyExtractionService {
   /**
    * Cria um campo de propriedade
    */
-  private createPropertyField(key: string, value: any, defaultCategory: PropertyCategory, blockType: string): PropertyField {
+  private createPropertyField(key: string, value: any, _defaultCategory: PropertyCategory, blockType: string): PropertyField {
     const category = this.inferCategory(key, blockType);
     const type = this.inferType(key, value);
-    
+
     return {
       key,
       label: this.generateLabel(key),
@@ -264,11 +264,11 @@ export class PropertyExtractionService {
   /**
    * Infere a categoria baseada na chave
    */
-  private inferCategory(key: string, blockType: string): PropertyCategory {
+  private inferCategory(key: string, _blockType: string): PropertyCategory {
     const categoryMap: Record<string, PropertyCategory> = {
       // Conteúdo
       'title': 'content',
-      'subtitle': 'content', 
+      'subtitle': 'content',
       'text': 'content',
       'content': 'content',
       'label': 'content',
@@ -277,7 +277,7 @@ export class PropertyExtractionService {
       'src': 'content',
       'alt': 'content',
       'href': 'content',
-      
+
       // Estilo
       'color': 'style',
       'backgroundColor': 'style',
@@ -288,7 +288,7 @@ export class PropertyExtractionService {
       'borderRadius': 'style',
       'borderColor': 'style',
       'borderWidth': 'style',
-      
+
       // Layout
       'width': 'layout',
       'height': 'layout',
@@ -296,19 +296,19 @@ export class PropertyExtractionService {
       'padding': 'layout',
       'position': 'layout',
       'display': 'layout',
-      
+
       // Comportamento
       'onClick': 'behavior',
       'onSubmit': 'behavior',
       'disabled': 'behavior',
       'required': 'behavior',
       'validation': 'behavior',
-      
+
       // Acessibilidade
       'aria': 'accessibility',
       'role': 'accessibility',
       'tabIndex': 'accessibility',
-      
+
       // Avançado
       'id': 'advanced',
       'className': 'advanced',
@@ -340,7 +340,7 @@ export class PropertyExtractionService {
     if (key.includes('color') || key.includes('Color')) return 'color';
     if (key.includes('description') || key.includes('content') || key.includes('text')) return 'textarea';
     if (key.includes('size') || key.includes('width') || key.includes('height') || key.includes('radius')) return 'range';
-    
+
     return 'text';
   }
 
@@ -414,12 +414,12 @@ export class PropertyExtractionService {
           max: key.includes('percentage') ? 100 : undefined,
           step: key.includes('percentage') ? 1 : undefined
         };
-      
+
       case 'select':
         return {
           options: this.getSelectOptions(key)
         };
-        
+
       default:
         return {};
     }
@@ -443,7 +443,7 @@ export class PropertyExtractionService {
   /**
    * Obtém valor padrão baseado no tipo
    */
-  private getDefaultValue(key: string, type: string): any {
+  private getDefaultValue(_key: string, type: string): any {
     if (type === 'boolean') return false;
     if (type === 'number' || type === 'range') return 0;
     if (type === 'array') return [];
@@ -457,7 +457,7 @@ export class PropertyExtractionService {
    */
   private getTypeSpecificProperties(block: Block): PropertyField[] {
     const properties: PropertyField[] = [];
-    
+
     switch (block.type) {
       case 'text-inline':
         properties.push(
@@ -474,14 +474,14 @@ export class PropertyExtractionService {
           }
         );
         break;
-        
+
       case 'button-inline':
         properties.push(
           {
             key: 'buttonText',
             label: 'Texto do Botão',
             type: 'interpolated-text',
-            category: 'content', 
+            category: 'content',
             value: block.properties?.text || 'Clique aqui',
             supportsInterpolation: true,
             availableVariables: AVAILABLE_VARIABLES,
@@ -490,7 +490,7 @@ export class PropertyExtractionService {
           }
         );
         break;
-        
+
       case 'image-display-inline':
         properties.push(
           {
@@ -507,7 +507,7 @@ export class PropertyExtractionService {
         );
         break;
     }
-    
+
     return properties;
   }
 }

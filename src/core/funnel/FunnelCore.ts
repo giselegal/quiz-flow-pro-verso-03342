@@ -11,16 +11,11 @@ import {
     FunnelComponent,
     FunnelEvent,
     FunnelEventType,
-    FunnelAction,
-    FunnelActionType,
-    FunnelError,
-    FunnelStatus,
     FunnelProgress,
     NavigationState,
     ValidationState,
     ValidationError,
-    StepCondition,
-    ComponentCondition
+    StepCondition
 } from './types';
 
 // ============================================================================
@@ -370,7 +365,7 @@ export class FunnelCore {
     /**
      * Valida configurações específicas do passo
      */
-    private validateStepSettings(step: FunnelStep, state: FunnelState): ValidationError[] {
+    private validateStepSettings(_step: FunnelStep, _state: FunnelState): ValidationError[] {
         const errors: ValidationError[] = [];
 
         // Implementar validações específicas das configurações do passo

@@ -6,7 +6,7 @@
  */
 
 import { useState, useCallback, useEffect } from 'react';
-import { useFunnel } from '@/core/funnel';
+// import { useFunnel } from '@/core/funnel';
 import type {
     FunnelPublicationSettings,
     ResultConfiguration,

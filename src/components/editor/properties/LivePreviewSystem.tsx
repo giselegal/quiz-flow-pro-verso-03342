@@ -95,29 +95,14 @@ export const LivePreviewSystem: React.FC<LivePreviewSystemProps> = ({
     const [animationQueue, setAnimationQueue] = useState<AnimationFrame[]>([]);
     const [isPlaying, setIsPlaying] = useState(false);
     const [currentFrame, setCurrentFrame] = useState(0);
-    const [previewHistory, setPreviewHistory] = useState<Record<string, any[]>>({});
+    // Histórico detalhado não é utilizado no momento; manter estrutura simples
+    const [/* previewHistory */, setPreviewHistory] = useState<Record<string, any[]>>({});
 
     const animationRef = useRef<number>();
     const lastUpdateRef = useRef<number>(0);
 
     // ===== ANIMATION SYSTEM =====
-    const addAnimationFrame = useCallback((property: string, value: any) => {
-        const frame: AnimationFrame = {
-            timestamp: Date.now(),
-            property,
-            value,
-            duration: settings.animationSpeed,
-            easing: 'ease-out'
-        };
-
-        setAnimationQueue(prev => [...prev.slice(-10), frame]); // Keep last 10 frames
-
-        // Add to history
-        setPreviewHistory(prev => ({
-            ...prev,
-            [property]: [...(prev[property] || []).slice(-5), value] // Keep last 5 values
-        }));
-    }, [settings.animationSpeed]);
+    // addAnimationFrame removido por ora; playAnimation consome animationQueue preenchida por outras interações
 
     const playAnimation = useCallback(() => {
         if (animationQueue.length === 0) return;

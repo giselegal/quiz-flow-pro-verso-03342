@@ -374,7 +374,7 @@ export interface FunnelError {
 
 export type FunnelStatus =
     | 'idle'
-    | 'loading' 
+    | 'loading'
     | 'ready'
     | 'in_progress'
     | 'completed'
