@@ -1,8 +1,14 @@
+import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Badge } from '@/components/ui/badge';
 import { funnelLocalStore } from '@/services/funnelLocalStore';
 import { BarChart3, Edit, Eye, Play, Plus, Sparkles, Zap } from 'lucide-react';
 import { useLocation } from 'wouter';
+import { AdminBreadcrumbs } from '@/components/admin/AdminBreadcrumbs';
+import { useFunnelTemplates } from '@/core/funnel/hooks/useFunnelTemplates';
 
 // Template data for funnel models
 const funnelTemplates = [
@@ -70,6 +76,59 @@ const funnelTemplates = [
 
 const FunnelPanelPage: React.FC = () => {
   const [, setLocation] = useLocation();
+  const {
+    filteredTemplates,
+    filterByCategory,
+    filterBySearch,
+    clearFilters,
+  } = useFunnelTemplates({ includeOfficial: true, includeUserTemplates: true, sortBy: 'name' });
+  const [category, setCategory] = React.useState<string>('');
+  const [search, setSearch] = React.useState<string>('');
+  const [sort, setSort] = React.useState<'name' | 'createdAt' | 'updatedAt'>('name');
+
+  type CardTemplate = {
+    id: string;
+    name: string;
+    description: string;
+    image: string;
+    features: string[];
+    conversionRate: string;
+    category: string;
+  };
+
+  const normalize = (t: any): CardTemplate => {
+    const placeholder = 'https://via.placeholder.com/400x300?text=Funnel+Template';
+    const features: string[] = Array.isArray(t.tags) && t.tags.length
+      ? t.tags.slice(0, 4)
+      : ['Otimizado', 'Conversão', 'Etapas', 'Editor'];
+    return {
+      id: t.id,
+      name: t.name,
+      description: t.description || '',
+      image: t.thumbnailUrl || placeholder,
+      features,
+      conversionRate: '—',
+      category: t.category || 'custom',
+    };
+  };
+
+  const finalTemplates: CardTemplate[] = React.useMemo(() => {
+    if (filteredTemplates && filteredTemplates.length) {
+      let list = [...filteredTemplates];
+      if (sort === 'name') {
+        list.sort((a, b) => a.name.localeCompare(b.name));
+      } else if (sort === 'createdAt') {
+        list.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+      } else if (sort === 'updatedAt') {
+        list.sort((a, b) => new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime());
+      }
+      return list.map(normalize);
+    }
+    // Fallback para modelos locais
+    const local = [...funnelTemplates];
+    if (sort === 'name') local.sort((a, b) => a.name.localeCompare(b.name));
+    return local;
+  }, [filteredTemplates, sort]);
 
   const handleUseTemplate = (templateId: string) => {
     // Criar instância local do funil em rascunho e navegar ao editor com template
@@ -91,6 +150,15 @@ const FunnelPanelPage: React.FC = () => {
 
   return (
     <div className="p-6 space-y-8" style={{ backgroundColor: '#FAF9F7', minHeight: '100vh' }}>
+      {/* Breadcrumbs */}
+      <AdminBreadcrumbs
+        items={[
+          { label: 'Admin', href: '/admin' },
+          { label: 'Funis', href: '/admin/funis' },
+          { label: 'Modelos de Funis' },
+        ]}
+      />
+
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
@@ -111,9 +179,68 @@ const FunnelPanelPage: React.FC = () => {
         </Button>
       </div>
 
+      {/* Filtros */}
+      <Card className="border-0" style={{ backgroundColor: '#FFFFFF' }}>
+        <CardContent className="p-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+            <div className="md:col-span-2">
+              <Input
+                placeholder="Buscar modelos..."
+                value={search}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  filterBySearch(e.target.value);
+                }}
+              />
+            </div>
+            <div>
+              <Select
+                value={category}
+                onValueChange={(v) => {
+                  setCategory(v);
+                  filterByCategory(v);
+                }}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Categoria" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">Todas</SelectItem>
+                  <SelectItem value="lifestyle">Lifestyle</SelectItem>
+                  <SelectItem value="custom">Custom</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Select value={sort} onValueChange={(v: any) => setSort(v)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Ordenar por" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="name">Nome</SelectItem>
+                  <SelectItem value="createdAt">Criado em</SelectItem>
+                  <SelectItem value="updatedAt">Atualizado em</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          {(category || search) && (
+            <div className="mt-3 flex items-center gap-2">
+              {category && <Badge variant="secondary">Categoria: {category}</Badge>}
+              {search && <Badge variant="secondary">Busca: {search}</Badge>}
+              <Button variant="ghost" className="text-[#B89B7A]" onClick={() => {
+                setCategory('');
+                setSearch('');
+                clearFilters();
+              }}>Limpar</Button>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
       {/* Template Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {funnelTemplates.map(template => (
+        {finalTemplates.map(template => (
           <Card
             key={template.id}
             className="group hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border-0"
@@ -163,7 +290,7 @@ const FunnelPanelPage: React.FC = () => {
                   Características
                 </h4>
                 <div className="grid grid-cols-2 gap-2">
-                  {template.features.map((feature, index) => (
+                  {template.features.map((feature: string, index: number) => (
                     <div
                       key={index}
                       className="text-xs px-2 py-1 rounded-md"

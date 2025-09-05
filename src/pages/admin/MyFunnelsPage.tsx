@@ -8,6 +8,7 @@ import { useLocation } from 'wouter';
 import { TemplateManager } from '@/utils/TemplateManager';
 import OPTIMIZED_FUNNEL_CONFIG from '@/config/optimized21StepsFunnel';
 import { publishFunnel } from '@/services/funnelPublishing';
+import { AdminBreadcrumbs } from '@/components/admin/AdminBreadcrumbs';
 
 type Funnel = ReturnType<typeof funnelLocalStore.list>[number];
 
@@ -81,6 +82,13 @@ const MyFunnelsPage: React.FC = () => {
 
   return (
     <div className="p-6 space-y-6" style={{ backgroundColor: '#FAF9F7', minHeight: '100vh' }}>
+      <AdminBreadcrumbs
+        items={[
+          { label: 'Admin', href: '/admin' },
+          { label: 'Funis', href: '/admin/funis' },
+          { label: 'Meus Funis' },
+        ]}
+      />
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold" style={{ color: '#432818' }}>
           Meus Funis
