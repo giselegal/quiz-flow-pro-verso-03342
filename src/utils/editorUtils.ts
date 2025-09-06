@@ -54,16 +54,26 @@ export const duplicateBlock = (blockToDuplicate: Block, existingBlocks: Block[] 
  */
 export const copyToClipboard = async (text: string): Promise<boolean> => {
   try {
-    if (navigator.clipboard && window.isSecureContext) {
-      await navigator.clipboard.writeText(text);
-      return true;
-    } else {
+    const hasNavigator = typeof navigator !== 'undefined';
+    const hasDocument = typeof document !== 'undefined';
+
+    // Preferir API moderna quando disponível (sem exigir isSecureContext em testes/JSdom)
+    if (hasNavigator && (navigator as any).clipboard?.writeText) {
+      try {
+        await (navigator as any).clipboard.writeText(text);
+        return true;
+      } catch (_) {
+        // Continua para fallback
+      }
+    }
+
+    if (hasDocument) {
       // Fallback para ambientes não-HTTPS
       const textArea = document.createElement('textarea');
       textArea.value = text;
-      textArea.style.position = 'fixed';
-      textArea.style.left = '-999999px';
-      textArea.style.top = '-999999px';
+      (textArea.style as any).position = 'fixed';
+      (textArea.style as any).left = '-999999px';
+      (textArea.style as any).top = '-999999px';
       document.body.appendChild(textArea);
       textArea.focus();
       textArea.select();
@@ -72,6 +82,9 @@ export const copyToClipboard = async (text: string): Promise<boolean> => {
       document.body.removeChild(textArea);
       return success;
     }
+
+    // Ambiente sem DOM (ex.: teste node) – não falha, apenas retorna false
+    return false;
   } catch (err) {
     console.error('Failed to copy to clipboard:', err);
     return false;

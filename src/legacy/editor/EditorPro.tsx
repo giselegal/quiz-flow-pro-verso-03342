@@ -1,9 +1,9 @@
 import React, { useCallback, useMemo, useRef, useState, useEffect, Suspense } from 'react';
-import { DragEndEvent, DragStartEvent } from '@dnd-kit/core';
+// import types moved to hook
 // import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import { useNotification } from '@/components/ui/Notification';
 import { Block } from '@/types/editor';
-import { extractDragData, getDragFeedback, logDragEvent, validateDrop } from '@/utils/dragDropUtils';
+// drag/drop utils usados dentro do hook dedicado
 import { createBlockFromComponent, devLog } from '@/utils/editorUtils';
 import { getBlocksForStep } from '@/config/quizStepsComplete';
 // import { cn } from '@/lib/utils';
@@ -23,6 +23,7 @@ import { FunnelHeader } from '@/components/editor/FunnelHeader';
 import { useDisableAutoScroll } from '@/hooks/editor/useDisableAutoScroll';
 import { useGlobalHotkeys } from '@/hooks/editor/useGlobalHotkeys';
 import { logger } from '@/utils/debugLogger';
+import { useEditorDragAndDrop } from '@/hooks/editor/useEditorDragAndDrop';
 
 // Lazy modules para reduzir TTI do editor (Canvas usa o LazyQuizRenderer internamente)
 // const LazyQuizRenderer = React.lazy(() =>
@@ -282,13 +283,10 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   const safeCurrentStep = state.currentStep || 1;
   const currentStepKey = `step-${safeCurrentStep}`;
 
-  // Estados de animação/UX
-  const [isDragging, setIsDragging] = useState(false);
-
   const currentStepData = useMemo(
     () => {
-  const blocks = getBlocksForStep(safeCurrentStep, state.stepBlocks) || [];
-  logger.debug('🔍 EditorPro currentStepData:', {
+      const blocks = getBlocksForStep(safeCurrentStep, state.stepBlocks) || [];
+      logger.debug('🔍 EditorPro currentStepData:', {
         step: safeCurrentStep,
         stepKey: `step-${safeCurrentStep}`,
         blocksFound: blocks.length,
@@ -300,6 +298,14 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
     },
     [safeCurrentStep, state.stepBlocks]
   );
+
+  // Estados de animação/UX via hook de DnD
+  const { isDragging, handleDragStart, handleDragEnd } = useEditorDragAndDrop({
+    currentStepData: currentStepData as any,
+    currentStepKey: currentStepKey,
+    actions: actions as any,
+    notification: notification as any,
+  });
 
   const stepHasBlocks = useMemo(() => {
     const stepBlocksRef = state.stepBlocks;
@@ -389,7 +395,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
     (async () => {
       try {
         if (process.env.NODE_ENV === 'development') {
-    logger.info('🧮 Calculando resultado do quiz (auto) para etapa', safeCurrentStep);
+          logger.info('🧮 Calculando resultado do quiz (auto) para etapa', safeCurrentStep);
         }
 
         if (safeCurrentStep === 20) {
@@ -413,7 +419,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
           try { window.dispatchEvent(new Event('quiz-result-refresh')); } catch { }
         }
       } catch (err) {
-  logger.error('Falha ao calcular resultado automaticamente:', err);
+        logger.error('Falha ao calcular resultado automaticamente:', err);
       }
     })();
   }, [safeCurrentStep]);
@@ -451,14 +457,14 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       }
 
       if (!target || target < 1 || target > 21) {
-  logger.warn('❌ INVESTIGAÇÃO #6: Invalid navigation target:', eventInfo);
+        logger.warn('❌ INVESTIGAÇÃO #6: Invalid navigation target:', eventInfo);
         (window as any).__EDITOR_INVALID_NAVIGATION__ = (window as any).__EDITOR_INVALID_NAVIGATION__ || [];
         (window as any).__EDITOR_INVALID_NAVIGATION__.push(eventInfo);
         return;
       }
 
       if (Math.abs(target - state.currentStep) > 1) {
-  logger.warn('⚠️  INVESTIGAÇÃO #6: Potential rapid navigation:', {
+        logger.warn('⚠️  INVESTIGAÇÃO #6: Potential rapid navigation:', {
           ...eventInfo,
           stepJump: target - state.currentStep,
           isRapidNavigation: true
@@ -552,7 +558,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       }
 
       if (eventData.stepId && eventData.stepId !== state.currentStep) {
-  logger.warn('⚠️ RACE CONDITION DETECTED: Input event stepId differs from currentStep', {
+        logger.warn('⚠️ RACE CONDITION DETECTED: Input event stepId differs from currentStep', {
           eventStepId: eventData.stepId,
           currentStep: state.currentStep,
           questionId: eventData.questionId,
@@ -606,7 +612,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
       }
 
       if (eventData.stepId && eventData.stepId !== state.currentStep) {
-  logger.warn('⚠️ RACE CONDITION DETECTED: Selection event stepId differs from currentStep', {
+        logger.warn('⚠️ RACE CONDITION DETECTED: Selection event stepId differs from currentStep', {
           eventStepId: eventData.stepId,
           currentStep: state.currentStep,
           questionId: eventData.questionId,
@@ -755,93 +761,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
 
   const handleStepSelect = useCallback((step: number) => actions.setCurrentStep(step), [actions]);
 
-  const handleDragStart = useCallback((event: DragStartEvent) => {
-    const { active } = event;
-    const dragData = extractDragData(active);
-    if (process.env.NODE_ENV === 'development') {
-      logger.debug('🚀 DRAG START CAPTURADO!', {
-        activeId: active.id,
-        dragData,
-        activeDataCurrent: active.data.current,
-      });
-    }
-    setIsDragging(true);
-    logDragEvent('start', active);
-    if (process.env.NODE_ENV === 'development') devLog('Drag start', dragData);
-  }, []);
-
-  const handleDragEnd = useCallback(
-    (event: DragEndEvent) => {
-      const { active, over } = event;
-      if (process.env.NODE_ENV === 'development') {
-        logger.debug('🏯 DRAG END CAPTURADO!', {
-          activeId: active.id,
-          overId: over?.id,
-          overData: over?.data?.current,
-        });
-      }
-
-      setIsDragging(false);
-
-      if (!over) {
-        if (process.env.NODE_ENV === 'development') {
-          logger.debug('❌ Drop cancelado - sem alvo');
-        }
-        const dragData = extractDragData(active);
-        const feedback = getDragFeedback(dragData, {
-          isValid: false,
-          message: 'Sem alvo de drop',
-        } as any);
-        notification?.warning?.(feedback.message);
-        return;
-      }
-
-      const validation = validateDrop(active, over, currentStepData);
-      logDragEvent('end', active, over, validation);
-
-      if (!validation.isValid) {
-        const feedback = getDragFeedback(extractDragData(active), validation);
-        notification?.warning?.(feedback.message);
-        return;
-      }
-
-      const dragData = extractDragData(active);
-      if (!dragData) {
-        notification?.error?.('Dados de drag corrompidos');
-        return;
-      }
-
-      try {
-        switch (validation.action) {
-          case 'add':
-            if (dragData.type === 'sidebar-component' && dragData.blockType) {
-              const newBlock = createBlockFromComponent(dragData.blockType as any, currentStepData);
-              actions.addBlock(currentStepKey, newBlock);
-              actions.setSelectedBlockId(newBlock.id);
-              notification?.success?.(`Componente ${dragData.blockType} adicionado!`);
-            }
-            break;
-          case 'reorder':
-            if (dragData.type === 'canvas-block' && typeof over.id === 'string') {
-              const activeIndex = currentStepData.findIndex(block => block.id === active.id);
-              const overIndex = currentStepData.findIndex(block => block.id === over.id);
-              if (activeIndex !== -1 && overIndex !== -1 && activeIndex !== overIndex) {
-                actions.reorderBlocks(currentStepKey, activeIndex, overIndex);
-                notification?.info?.('Blocos reordenados');
-              }
-            }
-            break;
-          default:
-            if (process.env.NODE_ENV === 'development')
-              devLog('Ação de drop não implementada:', (validation as any).action);
-        }
-      } catch (error) {
-        logger.error('Erro durante drag & drop:', error);
-        notification?.error?.('Erro ao processar drag & drop');
-      }
-    },
-    [actions, currentStepData, currentStepKey, notification]
-  );
+  // sem ponte: hook já recebe currentStepData atualizado via dependências
 
   const [previewDevice, setPreviewDevice] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
 
@@ -885,7 +805,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
     <>
       {/* 🎯 Cabeçalho do Funil */}
       <FunnelHeader />
-      
+
       <StepDndProvider
         stepNumber={safeCurrentStep}
         onDragStart={handleDragStart}

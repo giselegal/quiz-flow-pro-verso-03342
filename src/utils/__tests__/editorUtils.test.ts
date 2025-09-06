@@ -136,10 +136,12 @@ describe('editorUtils', () => {
         writable: true,
       });
 
-      Object.defineProperty(window, 'isSecureContext', {
-        value: true,
-        writable: true,
-      });
+      if (typeof window !== 'undefined') {
+        Object.defineProperty(window, 'isSecureContext', {
+          value: true,
+          writable: true,
+        });
+      }
 
       const result = await copyToClipboard('test text');
 
@@ -162,15 +164,27 @@ describe('editorUtils', () => {
         select: vi.fn(),
       };
 
-      const mockCreateElement = vi.fn().mockReturnValue(mockTextArea);
-      const mockAppendChild = vi.fn();
-      const mockRemoveChild = vi.fn();
-      const mockExecCommand = vi.fn().mockReturnValue(true);
+      // Declarar fora do bloco para ser acessível nas asserções
+      let mockCreateElement: any;
+      let mockAppendChild: any;
+      let mockRemoveChild: any;
+      let mockExecCommand: any;
 
-      document.createElement = mockCreateElement;
-      document.body.appendChild = mockAppendChild;
-      document.body.removeChild = mockRemoveChild;
-      document.execCommand = mockExecCommand;
+      // Garantir objeto document em ambiente Node
+      const originalDocument = (globalThis as any).document;
+      if (!originalDocument) {
+        (globalThis as any).document = { body: {} } as any;
+      }
+
+      mockCreateElement = vi.fn().mockReturnValue(mockTextArea as any);
+      mockAppendChild = vi.fn();
+      mockRemoveChild = vi.fn();
+      mockExecCommand = vi.fn().mockReturnValue(true);
+
+      (document as any).createElement = mockCreateElement;
+      (document.body as any).appendChild = mockAppendChild;
+      (document.body as any).removeChild = mockRemoveChild;
+      (document as any).execCommand = mockExecCommand as any;
 
       const result = await copyToClipboard('test text');
 
@@ -178,6 +192,8 @@ describe('editorUtils', () => {
       expect(mockTextArea.value).toBe('test text');
       expect(mockExecCommand).toHaveBeenCalledWith('copy');
       expect(result).toBe(true);
+
+      // Não restauramos o document para não impactar outros testes que assumem DOM.
     });
   });
 });

@@ -41,10 +41,10 @@ export const calculateAndSaveQuizResult = async () => {
 
     // 3. Validar se há dados suficientes (gating)
     const hasSelections = Object.keys(userSelections).length > 0;
-    
+
     // Verificar se estamos na etapa 20 (resultado)
     const isResultStep = unifiedData.metadata?.currentStep === 20;
-    
+
     if (!hasSelections) {
       console.warn('⚠️ Nenhuma seleção encontrada para cálculo');
       // Na etapa 20, forçar cálculo mesmo sem seleções
@@ -55,13 +55,13 @@ export const calculateAndSaveQuizResult = async () => {
         return createFallbackResult(userName || 'Usuário', { persist: false });
       }
     }
-    
+
     if (!hasEnough && !isResultStep) {
       console.warn('⚠️ Dados insuficientes segundo UnifiedQuizStorage.hasEnoughDataForResult()');
       // Não persistir fallback quando threshold não atingido, exceto na etapa 20
       return createFallbackResult(userName || 'Usuário', { persist: false });
     }
-    
+
     // Na etapa 20, sempre calcular resultado
     if (isResultStep) {
       console.log('🎯 Etapa 20: prosseguindo com cálculo de resultado');
@@ -88,7 +88,11 @@ export const calculateAndSaveQuizResult = async () => {
       selectionCount
     });
 
-    // 6. Salvar no sistema unificado (apenas quando dados suficientes)
+    // 6. Salvar resultado
+    // - StorageService legado para compatibilidade (usado em testes e alguns fluxos)
+    //   Importante: os testes de smoke esperam sempre a persistência em 'quizResult'.
+    try { StorageService.safeSetJSON('quizResult', result.payload); } catch { }
+    // - Sistema unificado (persistência normal do app)
     unifiedQuizStorage.saveResult(result.payload);
 
     return result.payload;

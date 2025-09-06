@@ -1,5 +1,6 @@
 import { Block } from '@/types/editor';
 import { Active, Over } from '@dnd-kit/core';
+import { logger } from '@/utils/debugLogger';
 
 /**
  * 🎯 Utilitários para Drag & Drop mais seguros
@@ -28,7 +29,7 @@ const isValidBlockId = (v: unknown) =>
 
 // Compat: ids de wrappers podem usar prefixo como 'dnd-block-'.
 // Importante: não remover 'block-' do ID real, pois os block.id podem começar com 'block-'.
-const normalizeOverId = (id: string | null | undefined): string | null => {
+export const normalizeOverId = (id: string | null | undefined): string | null => {
   if (!id) return null;
   let out = id;
   if (out.startsWith('dnd-block-')) out = out.replace(/^dnd-block-/, '');
@@ -145,7 +146,7 @@ export const logDragEvent = (
   if (process.env.NODE_ENV === 'development') {
     const data = extractDragData(active);
 
-    console.log(`🎯 [Drag ${event.toUpperCase()}]`, {
+    logger.debug(`🎯 [Drag ${event.toUpperCase()}]`, {
       activeId: active.id,
       overId: over?.id,
       dragData: data,

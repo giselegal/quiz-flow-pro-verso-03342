@@ -49,6 +49,18 @@ const select = (key: string, label: string, options: Array<{ value: any; label: 
 // Em testes, fornecemos um registro mínimo para reduzir uso de memória
 const minimalRegistry: Record<string, BlockDefinition> = {
     'text': { type: 'text', title: 'Texto', category: 'Conteúdo', defaultProps: { text: '' }, propsSchema: [] },
+    'form-container': {
+        type: 'form-container',
+        title: 'Formulário',
+        category: 'Captura',
+        icon: 'note',
+        defaultProps: {
+            title: 'Fale com a gente',
+            description: 'Preencha seus dados',
+            submitText: 'Enviar',
+        },
+        propsSchema: [],
+    },
 };
 
 export const blocksRegistry: Record<string, BlockDefinition> = process.env.NODE_ENV === 'test' ? minimalRegistry : {
@@ -119,8 +131,8 @@ export const blocksRegistry: Record<string, BlockDefinition> = process.env.NODE_
             title: 'Escolha uma opção:',
             description: '',
             options: [
-                { 
-                    id: 'option-1', 
+                {
+                    id: 'option-1',
                     text: 'Opção A',
                     description: 'Descrição da opção A',
                     imageUrl: 'https://via.placeholder.com/256x256',
@@ -128,9 +140,9 @@ export const blocksRegistry: Record<string, BlockDefinition> = process.env.NODE_
                     category: 'Categoria A',
                     points: 1
                 },
-                { 
-                    id: 'option-2', 
-                    text: 'Opção B', 
+                {
+                    id: 'option-2',
+                    text: 'Opção B',
                     description: 'Descrição da opção B',
                     imageUrl: 'https://via.placeholder.com/256x256',
                     value: 'b',
@@ -138,7 +150,7 @@ export const blocksRegistry: Record<string, BlockDefinition> = process.env.NODE_
                     points: 2
                 },
             ],
-            
+
             // === LAYOUT E GRID ===
             columns: 2,
             gridGap: 16,
@@ -147,7 +159,7 @@ export const blocksRegistry: Record<string, BlockDefinition> = process.env.NODE_
             padding: 16,
             marginTop: 0,
             marginBottom: 16,
-            
+
             // === CONFIGURAÇÃO DE IMAGENS ===
             showImages: true,
             imageSize: 256,
@@ -157,14 +169,14 @@ export const blocksRegistry: Record<string, BlockDefinition> = process.env.NODE_
             imageLayout: 'vertical',
             imageObjectFit: 'cover',
             imageBorderRadius: 8,
-            
+
             // === OPÇÕES DE CONTEÚDO ===
             contentMode: 'text-and-image', // 'text-only', 'image-only', 'text-and-image'
             textPosition: 'below',
             showDescription: true,
             showCategory: false,
             showPoints: false,
-            
+
             // === COMPORTAMENTO DE SELEÇÃO ===
             multipleSelection: false,
             minSelections: 1,
@@ -173,12 +185,12 @@ export const blocksRegistry: Record<string, BlockDefinition> = process.env.NODE_
             allowDeselection: true,
             showSelectionCount: false,
             selectionCountText: 'Selecionados: {count}',
-            
+
             // === AUTO AVANÇO ===
             autoAdvanceOnComplete: false,
             autoAdvanceDelay: 1000,
             autoAdvanceOnMaxSelection: false,
-            
+
             // === CORES E ESTILO ===
             backgroundColor: '#FFFFFF',
             borderColor: '#E5E7EB',
@@ -190,23 +202,23 @@ export const blocksRegistry: Record<string, BlockDefinition> = process.env.NODE_
             selectedTextColor: '#1F2937',
             borderRadius: 8,
             borderWidth: 1,
-            
+
             // === ESTILO DE SELEÇÃO ===
             selectionStyle: 'border', // 'border', 'background', 'glow', 'scale', 'overlay'
             selectionAnimation: 'smooth', // 'none', 'smooth', 'bounce', 'pulse'
             hoverEffect: true,
-            
+
             // === VALIDAÇÃO ===
             enableValidation: true,
             showValidationMessage: true,
             validationMessage: 'Selecione pelo menos uma opção para continuar',
             validationMessageColor: '#EF4444',
-            
+
             // === CONTROLE AVANÇADO ===
             scale: 100,
             opacity: 100,
             disabledOpacity: 50,
-            
+
             // === BOTÕES E NAVEGAÇÃO ===
             showButtons: true,
             buttonPosition: 'bottom',
@@ -222,7 +234,7 @@ export const blocksRegistry: Record<string, BlockDefinition> = process.env.NODE_
             prop({ key: 'title', kind: 'text', label: 'Título da Questão', category: 'content', default: 'Escolha uma opção:', required: true, description: 'Pergunta principal exibida acima das opções' }),
             prop({ key: 'description', kind: 'textarea', label: 'Descrição/Subtítulo', category: 'content', default: '', description: 'Texto adicional explicativo (opcional)' }),
             prop({ key: 'options', kind: 'array', label: 'Opções da Questão', category: 'content', default: [], description: 'Configure todas as opções disponíveis para seleção' }),
-            
+
             // === SEÇÃO: LAYOUT DO GRID ===
             prop({ key: 'columns', kind: 'range', label: 'Número de Colunas', category: 'layout', min: 1, max: 4, step: 1, default: 2, description: 'Quantas colunas terá o grid de opções' }),
             prop({ key: 'gridGap', kind: 'range', label: 'Espaçamento entre Opções', category: 'layout', min: 0, max: 48, step: 2, unit: 'px', default: 16, description: 'Distância entre cada opção no grid' }),
@@ -230,7 +242,7 @@ export const blocksRegistry: Record<string, BlockDefinition> = process.env.NODE_
             prop({ key: 'padding', kind: 'range', label: 'Padding Interno', category: 'layout', min: 0, max: 48, step: 2, unit: 'px', default: 16, description: 'Espaçamento interno de cada opção' }),
             prop({ key: 'marginTop', kind: 'range', label: 'Margem Superior', category: 'layout', min: 0, max: 64, step: 2, unit: 'px', default: 0 }),
             prop({ key: 'marginBottom', kind: 'range', label: 'Margem Inferior', category: 'layout', min: 0, max: 64, step: 2, unit: 'px', default: 16 }),
-            
+
             // === SEÇÃO: CONFIGURAÇÃO DE IMAGENS ===
             prop({ key: 'showImages', kind: 'switch', label: 'Exibir Imagens', category: 'style', default: true, description: 'Ativar/desativar imagens nas opções' }),
             select('contentMode', 'Modo de Conteúdo', [
@@ -257,7 +269,7 @@ export const blocksRegistry: Record<string, BlockDefinition> = process.env.NODE_
                 { value: 'fill', label: 'Preencher (stretch)' },
             ], { category: 'style', default: 'cover', when: { key: 'showImages', value: true } }),
             prop({ key: 'imageBorderRadius', kind: 'range', label: 'Bordas Arredondadas da Imagem', category: 'style', min: 0, max: 32, step: 1, unit: 'px', default: 8, when: { key: 'showImages', value: true } }),
-            
+
             // === SEÇÃO: CONTEÚDO E TEXTO ===
             select('textPosition', 'Posição do Texto', [
                 { value: 'above', label: 'Acima da Imagem' },
@@ -267,7 +279,7 @@ export const blocksRegistry: Record<string, BlockDefinition> = process.env.NODE_
             prop({ key: 'showDescription', kind: 'switch', label: 'Mostrar Descrição', category: 'content', default: true, description: 'Exibir texto descritivo nas opções' }),
             prop({ key: 'showCategory', kind: 'switch', label: 'Mostrar Categoria', category: 'content', default: false, description: 'Exibir categoria/palavra-chave das opções' }),
             prop({ key: 'showPoints', kind: 'switch', label: 'Mostrar Pontuação', category: 'content', default: false, description: 'Exibir pontos de cada opção (para debug)' }),
-            
+
             // === SEÇÃO: COMPORTAMENTO DE SELEÇÃO ===
             prop({ key: 'multipleSelection', kind: 'switch', label: 'Permitir Seleção Múltipla', category: 'behavior', default: false, description: 'Permitir selecionar várias opções simultaneamente' }),
             prop({ key: 'minSelections', kind: 'range', label: 'Mínimo de Seleções', category: 'behavior', min: 0, max: 10, step: 1, default: 1, description: 'Número mínimo de opções que devem ser selecionadas' }),
@@ -276,12 +288,12 @@ export const blocksRegistry: Record<string, BlockDefinition> = process.env.NODE_
             prop({ key: 'allowDeselection', kind: 'switch', label: 'Permitir Desmarcar', category: 'behavior', default: true, description: 'Permitir clicar novamente para desselecionar uma opção' }),
             prop({ key: 'showSelectionCount', kind: 'switch', label: 'Mostrar Contador', category: 'behavior', default: false, description: 'Exibir quantas opções foram selecionadas' }),
             prop({ key: 'selectionCountText', kind: 'text', label: 'Texto do Contador', category: 'behavior', default: 'Selecionados: {count}', when: { key: 'showSelectionCount', value: true } }),
-            
+
             // === SEÇÃO: AUTO AVANÇO ===
             prop({ key: 'autoAdvanceOnComplete', kind: 'switch', label: 'Auto Avançar ao Completar', category: 'behavior', default: false, description: 'Avançar automaticamente quando atingir seleções obrigatórias' }),
             prop({ key: 'autoAdvanceDelay', kind: 'range', label: 'Delay do Auto Avanço', category: 'behavior', min: 0, max: 5000, step: 100, unit: 'ms', default: 1000, when: { key: 'autoAdvanceOnComplete', value: true } }),
             prop({ key: 'autoAdvanceOnMaxSelection', kind: 'switch', label: 'Auto Avançar no Máximo', category: 'behavior', default: false, description: 'Avançar automaticamente ao atingir número máximo de seleções' }),
-            
+
             // === SEÇÃO: CORES E VISUAL ===
             prop({ key: 'backgroundColor', kind: 'color', label: 'Cor de Fundo', category: 'style', default: '#FFFFFF', description: 'Cor de fundo das opções não selecionadas' }),
             prop({ key: 'borderColor', kind: 'color', label: 'Cor da Borda', category: 'style', default: '#E5E7EB', description: 'Cor da borda padrão das opções' }),
@@ -291,11 +303,11 @@ export const blocksRegistry: Record<string, BlockDefinition> = process.env.NODE_
             prop({ key: 'hoverBorderColor', kind: 'color', label: 'Cor da Borda no Hover', category: 'style', default: '#D4C2A8' }),
             prop({ key: 'textColor', kind: 'color', label: 'Cor do Texto', category: 'style', default: '#1F2937' }),
             prop({ key: 'selectedTextColor', kind: 'color', label: 'Cor do Texto Selecionado', category: 'style', default: '#1F2937' }),
-            
+
             // === SEÇÃO: BORDAS E FORMA ===
             prop({ key: 'borderRadius', kind: 'range', label: 'Bordas Arredondadas', category: 'style', min: 0, max: 32, step: 1, unit: 'px', default: 8, description: 'Raio das bordas arredondadas' }),
             prop({ key: 'borderWidth', kind: 'range', label: 'Largura da Borda', category: 'style', min: 0, max: 8, step: 1, unit: 'px', default: 1 }),
-            
+
             // === SEÇÃO: EFEITOS VISUAIS ===
             select('selectionStyle', 'Estilo de Seleção', [
                 { value: 'border', label: '🔲 Destaque na Borda' },
@@ -311,13 +323,13 @@ export const blocksRegistry: Record<string, BlockDefinition> = process.env.NODE_
                 { value: 'pulse', label: 'Pulsante' },
             ], { category: 'animation', default: 'smooth' }),
             prop({ key: 'hoverEffect', kind: 'switch', label: 'Ativar Efeito Hover', category: 'style', default: true, description: 'Mostrar efeito visual ao passar o mouse' }),
-            
+
             // === SEÇÃO: VALIDAÇÃO ===
             prop({ key: 'enableValidation', kind: 'switch', label: 'Ativar Validação', category: 'behavior', default: true, description: 'Verificar se seleções são válidas antes de prosseguir' }),
             prop({ key: 'showValidationMessage', kind: 'switch', label: 'Mostrar Mensagem de Erro', category: 'behavior', default: true, when: { key: 'enableValidation', value: true } }),
             prop({ key: 'validationMessage', kind: 'text', label: 'Mensagem de Validação', category: 'behavior', default: 'Selecione pelo menos uma opção para continuar', when: { key: 'showValidationMessage', value: true } }),
             prop({ key: 'validationMessageColor', kind: 'color', label: 'Cor da Mensagem de Erro', category: 'style', default: '#EF4444', when: { key: 'showValidationMessage', value: true } }),
-            
+
             // === SEÇÃO: BOTÕES E NAVEGAÇÃO ===
             prop({ key: 'showButtons', kind: 'switch', label: 'Exibir Botões', category: 'behavior', default: true, description: 'Mostrar botões de navegação' }),
             select('buttonPosition', 'Posição dos Botões', [
@@ -336,7 +348,7 @@ export const blocksRegistry: Record<string, BlockDefinition> = process.env.NODE_
             ], { category: 'behavior', default: 'next-step', when: { key: 'showButtons', value: true } }),
             prop({ key: 'showPreviousButton', kind: 'switch', label: 'Mostrar Botão "Voltar"', category: 'behavior', default: false, when: { key: 'showButtons', value: true } }),
             prop({ key: 'previousButtonText', kind: 'text', label: 'Texto do Botão "Voltar"', category: 'content', default: 'Voltar', when: { key: 'showPreviousButton', value: true } }),
-            
+
             // === SEÇÃO: CONTROLES AVANÇADOS ===
             prop({ key: 'scale', kind: 'range', label: 'Escala do Componente', category: 'advanced', min: 50, max: 200, step: 5, unit: '%', default: 100, description: 'Controle de zoom geral do componente inteiro' }),
             prop({ key: 'opacity', kind: 'range', label: 'Opacidade', category: 'advanced', min: 0, max: 100, step: 5, unit: '%', default: 100, description: 'Transparência do componente' }),
