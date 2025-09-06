@@ -12,7 +12,7 @@ export interface UseEditorDragAndDropParams {
     addBlock?: (stepKey: string, block: Block) => void;
     addBlockAtIndex?: (stepKey: string, block: Block, index: number) => void;
     reorderBlocks?: (stepKey: string, from: number, to: number) => void;
-  removeBlock?: (stepKey: string, blockId: string) => void;
+    removeBlock?: (stepKey: string, blockId: string) => void;
     setSelectedBlockId?: (id: string | null) => void;
   };
   notification?: {
@@ -66,7 +66,7 @@ export function useEditorDragAndDrop({ currentStepData, currentStepKey, actions,
       return;
     }
 
-  const validation = validateDrop(active, over, currentStepData);
+    const validation = validateDrop(active, over, currentStepData);
     logDragEvent('end', active, over, validation);
 
     if (!validation.isValid) {
