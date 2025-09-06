@@ -89,19 +89,26 @@ const MainEditor: React.FC = () => {
 const EditorInitializer: React.FC<{ templateId?: string; funnelId?: string }> = ({
   templateId,
 }) => {
-  // 🎯 CONSENSO CORRIGIDO: EditorPro é quem usa MAIS a arquitetura CORE
-  const [EditorProComp, setEditorProComp] = React.useState<React.ComponentType | null>(null);
+  // 🎯 CONSOLIDAÇÃO: Usando UnifiedEditor como ponto de entrada único
+  const [UnifiedEditorComp, setUnifiedEditorComp] = React.useState<React.ComponentType | null>(null);
 
   React.useEffect(() => {
     let cancelled = false;
     (async () => {
       try {
-        const mod = await import('../legacy/editor/EditorPro');
-        // Preferir default (ModularEditorPro). Manter fallback por segurança.
-        const Comp = (mod as any).default || (mod as any).ModularEditorPro || (mod as any).EditorPro;
-        if (!cancelled && Comp) setEditorProComp(() => Comp);
+        const mod = await import('../components/editor/UnifiedEditor');
+        const Comp = mod.default || mod.UnifiedEditor;
+        if (!cancelled && Comp) setUnifiedEditorComp(() => Comp);
       } catch (e) {
-        console.error('Falha ao carregar EditorPro dinamicamente:', e);
+        console.error('Falha ao carregar UnifiedEditor:', e);
+        // Fallback para EditorPro legacy
+        try {
+          const legacyMod = await import('../legacy/editor/EditorPro');
+          const LegacyComp = legacyMod.default || legacyMod.EditorPro;
+          if (!cancelled && LegacyComp) setUnifiedEditorComp(() => LegacyComp);
+        } catch (legacyError) {
+          console.error('Falha ao carregar fallback EditorPro:', legacyError);
+        }
       }
     })();
     return () => {
@@ -110,8 +117,7 @@ const EditorInitializer: React.FC<{ templateId?: string; funnelId?: string }> = 
   }, []);
 
   React.useEffect(() => {
-    if (!EditorProComp || !templateId) return;
-    // const { useEditor } = editor.current!; // reservado para futuras integrações
+    if (!UnifiedEditorComp || !templateId) return;
     try {
       const tpl = templateLibraryService.getById(templateId);
       if (!tpl) return;
@@ -125,17 +131,26 @@ const EditorInitializer: React.FC<{ templateId?: string; funnelId?: string }> = 
           content: b.properties || {},
         }));
       });
-      // apply into editor state
-      // Hook must be used inside component; instead, dispatch via window event and let EditorPro handle if needed
+      // Carregar template via evento para compatibilidade
       window.dispatchEvent(new CustomEvent('editor-load-template', { detail: { stepBlocks } }));
     } catch (e) {
       console.warn('Falha ao aplicar template:', e);
     }
-  }, [EditorProComp, templateId]);
+  }, [UnifiedEditorComp, templateId]);
 
-  if (!EditorProComp) return null;
-  const EditorPro = EditorProComp as React.ComponentType;
-  return <EditorPro />;
+  if (!UnifiedEditorComp) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Carregando editor...</p>
+        </div>
+      </div>
+    );
+  }
+  
+  const UnifiedEditor = UnifiedEditorComp as React.ComponentType;
+  return <UnifiedEditor />;
 };
 
 export default MainEditor;
