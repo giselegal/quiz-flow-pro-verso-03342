@@ -67,13 +67,17 @@ class FunnelService {
   private baseUrl = 'http://localhost:3001/api';
 
   // Funnel operations
-  async createFunnel(data: Omit<InsertFunnel, 'userId'> & { userId?: number }): Promise<Funnel> {
+  async createFunnel(data: Partial<InsertFunnel> & { userId?: string | number }): Promise<Funnel> {
     const response = await fetch(`${this.baseUrl}/funnels`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify({
+        ...data,
+        // Normalize user id naming to backend expectation
+        user_id: (data as any).user_id ?? (data as any).userId ?? undefined,
+      }),
     });
 
     if (!response.ok) {
@@ -472,7 +476,7 @@ class FunnelService {
   }
 
   // High-level operations
-  async saveFunnelData(funnelData: FunnelData, userId?: number): Promise<Funnel> {
+  async saveFunnelData(funnelData: FunnelData, userId?: string | number): Promise<Funnel> {
     // Check if funnel exists
     let funnel = await this.getFunnelById(funnelData.id);
 
@@ -481,7 +485,7 @@ class FunnelService {
       funnel = await this.createFunnel({
         name: funnelData.name,
         description: funnelData.description,
-        userId: userId || undefined,
+        userId: userId ?? undefined,
         settings: funnelData.settings || null,
       });
     } else {

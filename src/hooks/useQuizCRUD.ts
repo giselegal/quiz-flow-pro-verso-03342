@@ -145,10 +145,13 @@ export const useQuizCRUD = () => {
 
     try {
       // 1) Criar funil no schema unificado
-      const { data: funnelData, error: funnelError } = await supabase
+  const { data: funnelData, error: funnelError } = await supabase
         .from('funnels')
         .insert([
           {
+    id: (typeof crypto !== 'undefined' && 'randomUUID' in crypto
+      ? crypto.randomUUID()
+      : `funnel_${Date.now()}`) as string,
             name: metadata.title,
             description: metadata.description,
             user_id: user.id,

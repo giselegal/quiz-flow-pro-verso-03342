@@ -1,5 +1,11 @@
 import { supabase } from '@/integrations/supabase/client';
 
+// Helper para gerar IDs quando necessário
+const genId = () =>
+  (typeof crypto !== 'undefined' && (crypto as any).randomUUID
+    ? (crypto as any).randomUUID()
+    : `funnel_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`);
+
 export interface FunnelTemplate {
   id: string;
   name: string;
@@ -32,8 +38,8 @@ class FunnelTemplateService {
    */
   async getTemplates(category?: string): Promise<FunnelTemplate[]> {
     try {
-      let query = supabase
-        .from('funnel_templates')
+  let query: any = supabase
+        .from('funnel_templates' as any)
         .select('*')
         .order('usage_count', { ascending: false });
 
@@ -41,7 +47,7 @@ class FunnelTemplateService {
         query = query.eq('category', category);
       }
 
-      const { data, error } = await query;
+  const { data, error } = await query;
 
       if (error) {
         console.error('Error fetching templates:', error);
@@ -49,7 +55,7 @@ class FunnelTemplateService {
       }
 
       return (
-        (data || []).map(item => ({
+        ((data as any[]) || []).map((item: any) => ({
           id: item.id,
           name: item.name,
           description: item.description || '',
@@ -99,8 +105,8 @@ class FunnelTemplateService {
    */
   async getTemplateCategories(): Promise<TemplateCategory[]> {
     try {
-      const { data, error } = await supabase
-        .from('funnel_templates')
+  const { data, error } = await supabase
+        .from('funnel_templates' as any)
         .select('category')
         .not('category', 'is', null);
 
@@ -111,8 +117,11 @@ class FunnelTemplateService {
 
       // Count templates per category
       const categoryCounts: Record<string, number> = {};
-      data?.forEach(row => {
-        categoryCounts[row.category] = (categoryCounts[row.category] || 0) + 1;
+      (data as any[])?.forEach((row: any) => {
+        const cat = row?.category;
+        if (typeof cat === 'string') {
+          categoryCounts[cat] = (categoryCounts[cat] || 0) + 1;
+        }
       });
 
       return this.getFallbackCategories().map(cat => ({
@@ -131,28 +140,28 @@ class FunnelTemplateService {
   async getTemplate(id: string): Promise<FunnelTemplate | null> {
     try {
       // First try to get from database
-      const { data, error } = await supabase
-        .from('funnel_templates')
+  const { data, error } = await supabase
+        .from('funnel_templates' as any)
         .select('*')
         .eq('id', id)
         .single();
 
-      if (!error && data) {
+    if (!error && data) {
         return {
-          id: data.id,
-          name: data.name,
-          description: data.description || '',
-          category: data.category,
-          theme: data.theme || 'default',
-          stepCount: data.step_count || 1,
-          isOfficial: data.is_official || false,
-          usageCount: data.usage_count || 0,
-          tags: data.tags || [],
-          thumbnailUrl: data.thumbnail_url || undefined,
-          templateData: data.template_data || {},
-          components: Array.isArray(data.components) ? data.components : [],
-          createdAt: data.created_at || new Date().toISOString(),
-          updatedAt: data.updated_at || new Date().toISOString(),
+      id: (data as any).id,
+      name: (data as any).name,
+      description: (data as any).description || '',
+      category: (data as any).category,
+      theme: (data as any).theme || 'default',
+      stepCount: (data as any).step_count || 1,
+      isOfficial: (data as any).is_official || false,
+      usageCount: (data as any).usage_count || 0,
+      tags: (data as any).tags || [],
+      thumbnailUrl: (data as any).thumbnail_url || undefined,
+      templateData: (data as any).template_data || {},
+      components: Array.isArray((data as any).components) ? (data as any).components : [],
+      createdAt: (data as any).created_at || new Date().toISOString(),
+      updatedAt: (data as any).updated_at || new Date().toISOString(),
         };
       }
 
@@ -225,10 +234,11 @@ class FunnelTemplateService {
       }
 
       // Create new funnel
-      const { data: funnel, error: funnelError } = await supabase
+  const { data: funnel, error: funnelError } = await supabase
         .from('funnels')
         .insert([
           {
+    id: genId(),
             name: funnelName || `${template.name} - Cópia`,
             description: template.description,
             user_id: user.id,
@@ -290,8 +300,8 @@ class FunnelTemplateService {
         throw new Error('User not authenticated');
       }
 
-      const { data, error } = await supabase
-        .from('funnel_templates')
+  const { data, error } = await supabase
+        .from('funnel_templates' as any)
         .insert([
           {
             name: template.name,
@@ -317,7 +327,7 @@ class FunnelTemplateService {
         throw error;
       }
 
-      return data.id;
+  return (data as any).id;
     } catch (error) {
       console.error('Error saving template:', error);
       return null;
@@ -485,10 +495,11 @@ class FunnelTemplateService {
       }
 
       // Create new funnel
-      const { data: funnel, error: funnelError } = await supabase
+  const { data: funnel, error: funnelError } = await supabase
         .from('funnels')
         .insert([
           {
+    id: genId(),
             name: funnelName,
             description: 'Funil completo de quiz de estilo com 21 etapas',
             user_id: user.id,
