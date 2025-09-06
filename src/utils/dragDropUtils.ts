@@ -1,6 +1,8 @@
 import { Block } from '@/types/editor';
 import { Active, Over } from '@dnd-kit/core';
 import { logger } from '@/utils/debugLogger';
+import { parseUniqueId } from '@/utils/generateUniqueId';
+import { makeStepKey } from '@/utils/stepKey';
 
 /**
  * 🎯 Utilitários para Drag & Drop mais seguros
@@ -11,6 +13,7 @@ export interface DragData {
   blockType?: string;
   blockId?: string;
   sourceStepKey?: string;
+  block?: Block;
 }
 
 export interface DropValidationResult {
@@ -92,6 +95,28 @@ export const validateDrop = (
     const overId = normalizeOverId(rawOverId) || rawOverId;
     const overIsBlock = currentStepBlocks.some(block => String(block.id) === overId);
     if (overIsDropZone || overIsBlock || isValidBlockId(overId)) {
+      // Detectar move entre etapas (quando possível)
+      let sourceKey: string | null = null;
+      const rawSource = (active.data.current as any)?.sourceStepKey ?? ((): any => {
+        const parsed = typeof active.id === 'string' ? parseUniqueId(active.id) : null;
+        return parsed?.stepNumber;
+      })();
+      if (rawSource != null) {
+        try { sourceKey = makeStepKey(rawSource); } catch { sourceKey = null; }
+      }
+
+      let targetKey: string | null = null;
+      const rawTarget = (over as any)?.data?.current?.scopeId ?? ((): any => {
+        const parsed = typeof over.id === 'string' ? parseUniqueId(String(over.id)) : null;
+        return parsed?.stepNumber;
+      })();
+      if (rawTarget != null) {
+        try { targetKey = makeStepKey(rawTarget); } catch { targetKey = null; }
+      }
+
+      if (sourceKey && targetKey && sourceKey !== targetKey) {
+        return { isValid: true, action: 'move' };
+      }
       return { isValid: true, action: 'reorder' };
     }
     return { isValid: false, reason: 'Posição de drop inválida para reordenação' };
@@ -126,6 +151,10 @@ export const extractDragData = (active: Active): DragData | null => {
 
     if ('sourceStepKey' in data && typeof data.sourceStepKey === 'string') {
       dragData.sourceStepKey = data.sourceStepKey;
+    }
+
+    if ('block' in data && typeof (data as any).block === 'object') {
+      dragData.block = (data as any).block as Block;
     }
 
     return dragData;
