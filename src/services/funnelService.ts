@@ -10,7 +10,7 @@ import type {
 } from '@/types/unified-schema';
 
 // Additional interfaces for backward compatibility
-interface InsertFunnelVersion extends Omit<FunnelVersion, 'id'> {}
+interface InsertFunnelVersion extends Omit<FunnelVersion, 'id'> { }
 
 export interface FunnelData {
   id: string;
