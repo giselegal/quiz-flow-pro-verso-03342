@@ -109,8 +109,8 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
           <button
             onClick={handleModeToggle}
             className={`px-3 py-2 text-sm rounded-lg transition-colors ${isInteractiveMode
-                ? 'bg-blue-600 text-white hover:bg-blue-700'
-                : 'bg-green-100 hover:bg-green-200 text-green-700'
+              ? 'bg-blue-600 text-white hover:bg-blue-700'
+              : 'bg-green-100 hover:bg-green-200 text-green-700'
               }`}
           >
             {isInteractiveMode ? '✏️ Editor' : '🎮 Quiz Interativo'}

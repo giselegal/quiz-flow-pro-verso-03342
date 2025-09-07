@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 // import { Slider } from '@/components/ui/slider';
 import { X, Trash2 } from 'lucide-react';
 import { blocksRegistry } from '@/core/blocks/registry';
+import QuizQuestionPropertiesPanel from '@/components/editor/properties/QuizQuestionPropertiesPanel';
 
 interface RegistryPropertiesPanelProps {
   selectedBlock: any;
@@ -60,6 +61,17 @@ const RegistryPropertiesPanel: React.FC<RegistryPropertiesPanelProps> = ({
     );
   }
 
+  const isQuestionBlock = (
+    selectedBlock.type === 'options-grid' ||
+    selectedBlock.type === 'quiz-question' ||
+    selectedBlock.type === 'quiz-question-inline'
+  );
+
+  const handleUpdate = (updates: Record<string, any>) => {
+    // Encaminha atualização para o consumidor original
+    _onUpdate(selectedBlock.id, { properties: updates });
+  };
+
   return (
     <div className="h-full flex flex-col bg-gradient-to-b from-gray-50 to-white">
       <div className="bg-white border-b border-gray-200 p-6 shadow-sm">
@@ -82,10 +94,18 @@ const RegistryPropertiesPanel: React.FC<RegistryPropertiesPanelProps> = ({
       </div>
 
       <div className="flex-1 overflow-y-auto p-6">
-        <div className="text-center text-gray-500">
-          <div className="text-4xl mb-2">🚧</div>
-          <p>Painel de propriedades em desenvolvimento</p>
-        </div>
+        {isQuestionBlock ? (
+          <QuizQuestionPropertiesPanel
+            block={selectedBlock}
+            onUpdate={handleUpdate}
+            onDelete={() => onDelete(selectedBlock.id)}
+          />
+        ) : (
+          <div className="text-center text-gray-500">
+            <div className="text-4xl mb-2">🚧</div>
+            <p>Painel de propriedades em desenvolvimento</p>
+          </div>
+        )}
       </div>
 
       <div className="bg-white border-t border-gray-200 p-4">
