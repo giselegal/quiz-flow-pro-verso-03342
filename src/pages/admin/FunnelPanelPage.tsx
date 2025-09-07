@@ -82,7 +82,7 @@ const FunnelPanelPage: React.FC = () => {
     filterBySearch,
     clearFilters,
   } = useFunnelTemplates({ includeOfficial: true, includeUserTemplates: true, sortBy: 'name' });
-  const [category, setCategory] = React.useState<string>('');
+  const [category, setCategory] = React.useState<string>('all');
   const [search, setSearch] = React.useState<string>('');
   const [sort, setSort] = React.useState<'name' | 'createdAt' | 'updatedAt'>('name');
 
@@ -198,14 +198,15 @@ const FunnelPanelPage: React.FC = () => {
                 value={category}
                 onValueChange={(v) => {
                   setCategory(v);
-                  filterByCategory(v);
+                  // Mapear 'all' para filtro vazio no hook
+                  filterByCategory(v === 'all' ? '' : v);
                 }}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Categoria" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Todas</SelectItem>
+                  <SelectItem value="all">Todas</SelectItem>
                   <SelectItem value="lifestyle">Lifestyle</SelectItem>
                   <SelectItem value="custom">Custom</SelectItem>
                 </SelectContent>
@@ -224,12 +225,14 @@ const FunnelPanelPage: React.FC = () => {
               </Select>
             </div>
           </div>
-          {(category || search) && (
+          {((category && category !== 'all') || search) && (
             <div className="mt-3 flex items-center gap-2">
-              {category && <Badge variant="secondary">Categoria: {category}</Badge>}
+              {category && category !== 'all' && (
+                <Badge variant="secondary">Categoria: {category}</Badge>
+              )}
               {search && <Badge variant="secondary">Busca: {search}</Badge>}
               <Button variant="ghost" className="text-[#B89B7A]" onClick={() => {
-                setCategory('');
+                setCategory('all');
                 setSearch('');
                 clearFilters();
               }}>Limpar</Button>
