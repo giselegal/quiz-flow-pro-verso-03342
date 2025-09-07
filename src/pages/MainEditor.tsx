@@ -1,5 +1,6 @@
 import { QuizFlowProvider } from '@/context/QuizFlowProvider';
 import { templateLibraryService } from '@/services/templateLibraryService';
+import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import React from 'react';
 import { useLocation } from 'wouter';
 // EditorPro será usado via require dinâmico no EditorInitializer para evitar ciclos
@@ -123,7 +124,12 @@ const EditorInitializer: React.FC<{ templateId?: string; funnelId?: string }> = 
       if (!tpl) return;
       const stepBlocks: any = {};
       Object.entries(tpl.steps).forEach(([k, arr]: any) => {
-        stepBlocks[k] = (arr || []).map((b: any, idx: number) => ({
+        // Fallback: se o template selecionado não trouxe blocos para a etapa,
+        // usar os blocos canônicos do QUIZ_STYLE_21_STEPS_TEMPLATE (ex.: etapa 2 com options)
+        const fallbackBlocks = (QUIZ_STYLE_21_STEPS_TEMPLATE as any)[k] || [];
+        const sourceArr = (Array.isArray(arr) && arr.length > 0) ? arr : fallbackBlocks;
+
+        stepBlocks[k] = (sourceArr || []).map((b: any, idx: number) => ({
           id: b.id || `${k}-${b.type}-${idx}`,
           type: b.type,
           order: typeof b.order === 'number' ? b.order : idx,
