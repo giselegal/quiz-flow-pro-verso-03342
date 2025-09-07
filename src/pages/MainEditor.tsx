@@ -149,7 +149,7 @@ const EditorInitializer: React.FC<{ templateId?: string; funnelId?: string }> = 
       </div>
     );
   }
-  
+
   const UnifiedEditor = UnifiedEditorComp as React.ComponentType;
   return <UnifiedEditor />;
 };

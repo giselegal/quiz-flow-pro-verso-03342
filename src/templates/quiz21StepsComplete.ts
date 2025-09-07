@@ -333,6 +333,15 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = IS_TEST ? M
     },
   ],
 
+  // =============================================================
+  // 🔧 EDIT AQUI: ETAPA 2 (Questão 1) - TIPO DE ROUPA FAVORITA
+  // Onde editar:
+  // - content.question: texto da pergunta
+  // - content.options: lista de opções (id, text, imageUrl)
+  // - properties: regras de seleção (requiredSelections, maxSelections, etc.)
+  // Observação: o componente OptionsGrid lê primeiro properties.options;
+  // se estiver vazio, usa content.options (onde este template define as opções).
+  // =============================================================
   // 🎯 ETAPA 2: QUESTÃO 1 - TIPO DE ROUPA FAVORITA
   'step-2': [
     {
