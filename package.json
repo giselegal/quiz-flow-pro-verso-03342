@@ -50,11 +50,11 @@
     "migrate:data": "tsx scripts/migration/dataMigration.ts",
     "migrate:dry-run": "tsx scripts/migration/dataMigration.ts --dry-run",
     "audit:dupes": "node scripts/find-duplicates.mjs --md",
-  "extract:questions": "tsx scripts/extract-questions.ts",
-  "backfill:component-instances:dry": "tsx scripts/migration/backfillComponentInstances.ts --dry-run",
-  "backfill:component-instances": "tsx scripts/migration/backfillComponentInstances.ts --apply",
-  "diagnostic:properties-panel": "tsx scripts/diagnostic/checkPropertiesPanel.ts",
-  "diagnostic:backfill": "tsx scripts/diagnostic/checkBackfillReady.ts"
+    "extract:questions": "tsx scripts/extract-questions.ts",
+    "backfill:component-instances:dry": "tsx scripts/migration/backfillComponentInstances.ts --dry-run",
+    "backfill:component-instances": "tsx scripts/migration/backfillComponentInstances.ts --apply",
+    "diagnostic:properties-panel": "tsx scripts/diagnostic/checkPropertiesPanel.ts",
+    "diagnostic:backfill": "tsx scripts/diagnostic/checkBackfillReady.ts"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
