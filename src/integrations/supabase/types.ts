@@ -249,6 +249,60 @@ export type Database = {
         }
         Relationships: []
       }
+      funnel_templates: {
+        Row: {
+          id: string
+          name: string
+          description: string | null
+          category: string | null
+          theme: string | null
+          step_count: number | null
+          is_official: boolean | null
+          usage_count: number | null
+          tags: Json | null
+          thumbnail_url: string | null
+          template_data: Json | null
+          components: Json | null
+          created_by: string | null
+          created_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          name: string
+          description?: string | null
+          category?: string | null
+          theme?: string | null
+          step_count?: number | null
+          is_official?: boolean | null
+          usage_count?: number | null
+          tags?: Json | null
+          thumbnail_url?: string | null
+          template_data?: Json | null
+          components?: Json | null
+          created_by?: string | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          name?: string
+          description?: string | null
+          category?: string | null
+          theme?: string | null
+          step_count?: number | null
+          is_official?: boolean | null
+          usage_count?: number | null
+          tags?: Json | null
+          thumbnail_url?: string | null
+          template_data?: Json | null
+          components?: Json | null
+          created_by?: string | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       quiz_analytics: {
         Row: {
           event_data: Json | null

@@ -38,8 +38,8 @@ class FunnelTemplateService {
    */
   async getTemplates(category?: string): Promise<FunnelTemplate[]> {
     try {
-      let query: any = supabase
-        .from('funnel_templates' as any)
+      let query = supabase
+        .from('funnel_templates')
         .select('*')
         .order('usage_count', { ascending: false });
 
@@ -47,7 +47,7 @@ class FunnelTemplateService {
         query = query.eq('category', category);
       }
 
-      const { data, error } = await query;
+  const { data, error } = await query;
 
       if (error) {
         console.error('Error fetching templates:', error);
@@ -106,7 +106,7 @@ class FunnelTemplateService {
   async getTemplateCategories(): Promise<TemplateCategory[]> {
     try {
       const { data, error } = await supabase
-        .from('funnel_templates' as any)
+        .from('funnel_templates')
         .select('category')
         .not('category', 'is', null);
 
@@ -141,7 +141,7 @@ class FunnelTemplateService {
     try {
       // First try to get from database
       const { data, error } = await supabase
-        .from('funnel_templates' as any)
+        .from('funnel_templates')
         .select('*')
         .eq('id', id)
         .single();
@@ -301,7 +301,7 @@ class FunnelTemplateService {
       }
 
       const { data, error } = await supabase
-        .from('funnel_templates' as any)
+        .from('funnel_templates')
         .insert([
           {
             name: template.name,
