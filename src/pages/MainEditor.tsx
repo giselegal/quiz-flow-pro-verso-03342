@@ -123,7 +123,13 @@ const EditorInitializer: React.FC<{ templateId?: string; funnelId?: string }> = 
       const tpl = templateLibraryService.getById(templateId);
       if (!tpl) return;
       const stepBlocks: any = {};
-      Object.entries(tpl.steps).forEach(([k, arr]: any) => {
+      // União das chaves: garantir que TODAS as etapas canônicas existam
+      const canonicalKeys = Object.keys(QUIZ_STYLE_21_STEPS_TEMPLATE);
+      const chosenKeys = Object.keys((tpl as any).steps || {});
+      const allKeys = Array.from(new Set([...canonicalKeys, ...chosenKeys]));
+
+      allKeys.forEach((k: string) => {
+        const arr = (tpl as any).steps?.[k];
         // Fallback: se o template selecionado não trouxe blocos para a etapa,
         // usar os blocos canônicos do QUIZ_STYLE_21_STEPS_TEMPLATE (ex.: etapa 2 com options)
         const fallbackBlocks = (QUIZ_STYLE_21_STEPS_TEMPLATE as any)[k] || [];

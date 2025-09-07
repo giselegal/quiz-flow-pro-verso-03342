@@ -6,6 +6,7 @@ import { useEditorOptional } from '../EditorProvider';
 import { unifiedQuizStorage } from '@/services/core/UnifiedQuizStorage';
 import { StorageService } from '@/services/core/StorageService';
 import { safePlaceholder } from '@/utils/placeholder';
+import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 
 interface Option {
   id: string;
@@ -208,13 +209,27 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
   // Resolver opções com fallback robusto: se properties.options existir porém vazio, usar content.options
   const propOptions = (block?.properties as any)?.options as Option[] | undefined;
   const contentOptions = (block as any)?.content?.options as Option[] | undefined;
-  const options = (
+  let options = (
     (Array.isArray(propOptions) && propOptions.length > 0)
       ? propOptions
       : (Array.isArray(contentOptions) && contentOptions.length > 0)
         ? contentOptions
         : optionsProp
   ) as Option[];
+
+  // Fallback final: se estamos na etapa 2 no editor e não há opções,
+  // usar as opções canônicas do template (garante visibilidade no /editor)
+  try {
+    const stepNum = Number(currentStepFromEditor ?? NaN);
+    if (block?.type === 'options-grid' && (!options || options.length === 0) && stepNum === 2) {
+      const canonicalStep = (QUIZ_STYLE_21_STEPS_TEMPLATE as any)['step-2'] || [];
+      const canonicalGrid = canonicalStep.find((b: any) => (b?.type || '').toLowerCase() === 'options-grid');
+      const canonicalOptions = canonicalGrid?.content?.options;
+      if (Array.isArray(canonicalOptions) && canonicalOptions.length > 0) {
+        options = canonicalOptions as Option[];
+      }
+    }
+  } catch { /* noop */ }
 
   // State for preview mode selections
   const [previewSelections, setPreviewSelections] = React.useState<string[]>([]);
