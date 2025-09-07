@@ -4,7 +4,8 @@ import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Plus, GripVertical, Eye, Settings, Copy, Trash2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useEditor } from '@/context/EditorContext';
+import { useEditor as useEditorLegacy } from '@/context/EditorContext';
+import { useEditorOptional as useEditorModernOptional } from '@/components/editor/EditorProvider';
 
 interface FunnelStagesPanelProps {
   className?: string;
@@ -15,13 +16,28 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
   className,
   onStageSelect,
 }) => {
-  // ✅ USAR APENAS EDITORCONTEXT UNIFICADO
-  const {
-    stages,
-    activeStageId,
-    stageActions: { setActiveStage, addStage, removeStage },
-    computed: { stageCount, currentBlocks },
-  } = useEditor();
+  // ✅ Preferir contexto moderno (opcional, não lança) e fazer fallback para legado
+  const modern = useEditorModernOptional();
+  const legacy = useEditorLegacy();
+  const stages = modern?.state
+    ? Array.from({ length: 21 }, (_, i) => ({ id: `step-${i + 1}`, order: i + 1, metadata: { blocksCount: (modern.state.stepBlocks?.[`step-${i + 1}`] || []).length } }))
+    : legacy.stages;
+  const activeStageId = modern?.state ? `step-${modern.state.currentStep || 1}` : legacy.activeStageId;
+  const setActiveStage = async (id: string) => {
+    if (modern?.actions?.setCurrentStep) {
+      const digits = parseInt(String(id).replace(/\D/g, ''), 10) || 1;
+      modern.actions.setCurrentStep(digits);
+      await Promise.resolve();
+    } else if (legacy?.stageActions?.setActiveStage) {
+      await legacy.stageActions.setActiveStage(id as any);
+    }
+  };
+  const addStage = () => (legacy?.stageActions?.addStage ? legacy.stageActions.addStage() : `step-${(stages?.length || 0) + 1}`);
+  const removeStage = (id: string) => legacy?.stageActions?.removeStage?.(id);
+  const stageCount = modern?.state ? 21 : legacy?.computed?.stageCount || (stages?.length || 0);
+  const currentBlocks = modern?.state
+    ? modern.state.stepBlocks?.[activeStageId as any] || []
+    : legacy?.computed?.currentBlocks || [];
 
   // ✅ TIMESTAMP PARA DEBUG
   const timestamp = new Date().toLocaleTimeString();

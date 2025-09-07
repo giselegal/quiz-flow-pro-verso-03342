@@ -32,7 +32,7 @@ export const useFunnelNavigation = () => {
         if ((import.meta as any)?.env?.DEV) {
           console.warn('localStorage.setItem desativado após falha:', key, (e as any)?.message || e);
         }
-      } catch {}
+      } catch { }
     }
   };
   const safeGetItem = (key: string) => {
@@ -46,7 +46,7 @@ export const useFunnelNavigation = () => {
         if ((import.meta as any)?.env?.DEV) {
           console.warn('localStorage.getItem desativado após falha:', key, (e as any)?.message || e);
         }
-      } catch {}
+      } catch { }
     }
     return null;
   };
@@ -90,7 +90,7 @@ export const useFunnelNavigation = () => {
     if (lastSavedStageIdRef.current !== activeStageId) {
       lastSavedStageIdRef.current = activeStageId;
       safeSetItem('funnel-current-step', activeStageId);
-      try { console.log(`📌 Etapa persistida: ${activeStageId} (${stepName})`); } catch {}
+      try { console.log(`📌 Etapa persistida: ${activeStageId} (${stepName})`); } catch { }
     }
   }, [activeStageId, stepName]);
 
