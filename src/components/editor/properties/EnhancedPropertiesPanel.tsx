@@ -24,6 +24,7 @@ import {
   Type,
 } from 'lucide-react';
 import React, { useState } from 'react';
+import QuizQuestionPropertiesPanel from '@/components/editor/properties/QuizQuestionPropertiesPanel';
 
 interface EnhancedPropertiesPanelProps {
   selectedBlock?: BlockData | null;
@@ -141,6 +142,25 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState('visual');
   const [searchTerm, setSearchTerm] = useState('');
+
+  // Special-case: question blocks get the dedicated panel (texto + imagem + opções)
+  const isQuestionBlock = !!selectedBlock && (
+    (selectedBlock as any).type === 'options-grid' ||
+    (selectedBlock as any).type === 'quiz-question' ||
+    (selectedBlock as any).type === 'quiz-question-inline'
+  );
+
+  if (selectedBlock && isQuestionBlock) {
+    return (
+      <div className="p-3">
+        <QuizQuestionPropertiesPanel
+          block={selectedBlock}
+          onUpdate={(propsUpdates) => onUpdate?.({ properties: propsUpdates })}
+          onDelete={onDelete}
+        />
+      </div>
+    );
+  }
 
   if (!selectedBlock) {
     return (
