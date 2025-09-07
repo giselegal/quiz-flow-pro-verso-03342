@@ -7,6 +7,7 @@ import { Block } from '@/types/editor';
 import { extractStepNumberFromKey } from '@/utils/supabaseMapper';
 import { arrayMove } from '@dnd-kit/sortable';
 import React, { createContext, ReactNode, useCallback, useContext, useEffect } from 'react';
+import { unifiedQuizStorage } from '@/services/core/UnifiedQuizStorage';
 
 // Utilitário simples para aguardar o próximo tick do event loop (garante flush de setState em testes)
 const waitNextTick = (ms: number = 0) => new Promise<void>(resolve => setTimeout(resolve, ms));
@@ -567,6 +568,17 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
         currentStep: step,
         selectedBlockId: null,
       }));
+      // 🔗 Sincronizar etapa atual com o sistema unificado e expor para blocos/quiz
+      try {
+        if (typeof window !== 'undefined') {
+          (window as any).__quizCurrentStep = step;
+        }
+        // Atualiza metadados para permitir cálculo na etapa 20 mesmo com dados parciais
+        unifiedQuizStorage.updateProgress(step);
+      } catch (err) {
+        // Silencioso em SSR/preview restrito
+        console.warn('EditorProvider: falha ao atualizar progresso unificado', err);
+      }
       // Ensure the new step is loaded will be handled by the effect watching currentStep
     },
     [setState]
