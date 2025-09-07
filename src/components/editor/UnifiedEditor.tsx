@@ -68,14 +68,16 @@ export const UnifiedEditor: React.FC<UnifiedEditorProps> = ({ className = '' }) 
         const legacyMod = await import('@/legacy/editor/EditorPro');
         const LegacyComp = legacyMod.default || legacyMod.EditorPro;
         logger.info('✅ UnifiedEditor: Carregado EditorPro (padrão)');
+        try { (window as any).__ACTIVE_EDITOR__ = 'EditorPro'; } catch {}
         return { default: LegacyComp };
       } catch (legacyError) {
         logger.warn('⚠️ UnifiedEditor: EditorPro não disponível, fallback para SchemaDrivenEditorResponsive');
         try {
           // Fallback para arquitetura moderna baseada em schema
           const modernMod = await import('@/components/editor/SchemaDrivenEditorResponsive');
-          const ModernComp = modernMod.default || modernMod.SchemaDrivenEditorResponsive;
+          const ModernComp = modernMod.default;
           logger.info('✅ UnifiedEditor: Carregado SchemaDrivenEditorResponsive (fallback)');
+          try { (window as any).__ACTIVE_EDITOR__ = 'SchemaDrivenEditorResponsive'; } catch {}
           return { default: ModernComp };
         } catch (modernError) {
           logger.error('❌ UnifiedEditor: Falha ao carregar qualquer editor', { legacyError, modernError });

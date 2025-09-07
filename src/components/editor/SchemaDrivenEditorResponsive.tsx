@@ -9,6 +9,7 @@ import './interactive/styles/quiz-animations.css';
 import { FourColumnLayout } from './layout/FourColumnLayout';
 import { EditorToolbar } from './toolbar/EditorToolbar';
 import { Step20EditorFallback } from './fallback/Step20EditorFallback';
+import { StepDndProvider } from './dnd/StepDndProvider';
 
 import React, { useState } from 'react';
 import { createBlockFromComponent } from '@/utils/editorUtils';
@@ -123,7 +124,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
           stagesPanel={<FunnelStagesPanel />}
           componentsPanel={<ComponentsSidebar onComponentSelect={handleComponentSelect} />}
           canvas={
-            <>
+            <StepDndProvider stepNumber={state.currentStep}>
               {/* 🛡️ FASE 2: Fallback robusto para etapa 20 */}
               {isStep20 && (!hasResultHeaderBlock || currentBlocks.length === 0) ? (
                 <Step20EditorFallback
@@ -143,7 +144,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
                   scopeId={state.currentStep}
                 />
               )}
-            </>
+            </StepDndProvider>
           }
           propertiesPanel={
             <RegistryPropertiesPanel
