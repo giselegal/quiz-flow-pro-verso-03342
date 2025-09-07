@@ -60,24 +60,25 @@ export const UnifiedEditor: React.FC<UnifiedEditorProps> = ({ className = '' }) 
 
   logger.debug('🎯 UnifiedEditor: Contexto válido, carregando editor...');
 
-  // Componente interno que carrega o editor dinâmicamente
+  // Componente interno que carrega o editor dinamicamente
   const DynamicEditor = React.useMemo(() => {
     return React.lazy(async () => {
       try {
-        // Primeiro, tentar carregar SchemaDrivenEditorResponsive (arquitetura moderna)
-        const modernMod = await import('@/components/editor/SchemaDrivenEditorResponsive');
-        logger.info('✅ UnifiedEditor: Carregado SchemaDrivenEditorResponsive');
-        return { default: modernMod.default };
-      } catch (modernError) {
-        logger.warn('⚠️ UnifiedEditor: SchemaDrivenEditorResponsive não disponível, fallback para EditorPro');
+        // Primeiro, tentar carregar EditorPro (preferência do usuário)
+        const legacyMod = await import('@/legacy/editor/EditorPro');
+        const LegacyComp = legacyMod.default || legacyMod.EditorPro;
+        logger.info('✅ UnifiedEditor: Carregado EditorPro (padrão)');
+        return { default: LegacyComp };
+      } catch (legacyError) {
+        logger.warn('⚠️ UnifiedEditor: EditorPro não disponível, fallback para SchemaDrivenEditorResponsive');
         try {
-          // Fallback para EditorPro legacy
-          const legacyMod = await import('@/legacy/editor/EditorPro');
-          const LegacyComp = legacyMod.default || legacyMod.EditorPro;
-          logger.info('✅ UnifiedEditor: Carregado EditorPro legacy');
-          return { default: LegacyComp };
-        } catch (legacyError) {
-          logger.error('❌ UnifiedEditor: Falha ao carregar qualquer editor', { modernError, legacyError });
+          // Fallback para arquitetura moderna baseada em schema
+          const modernMod = await import('@/components/editor/SchemaDrivenEditorResponsive');
+          const ModernComp = modernMod.default || modernMod.SchemaDrivenEditorResponsive;
+          logger.info('✅ UnifiedEditor: Carregado SchemaDrivenEditorResponsive (fallback)');
+          return { default: ModernComp };
+        } catch (modernError) {
+          logger.error('❌ UnifiedEditor: Falha ao carregar qualquer editor', { legacyError, modernError });
           throw new Error('Nenhum editor disponível');
         }
       }
