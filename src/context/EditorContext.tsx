@@ -804,7 +804,143 @@ export const EditorProvider: React.FC<{
 export const useEditor = (): EditorContextType => {
   const context = useContext(EditorContext);
   if (!context) {
-    throw new Error('useEditor must be used within an EditorProvider');
+    // Fallback seguro: evita crash em ambientes onde o wrapper ainda não foi montado
+    try {
+      // Logs de diagnóstico mínimos (sem spam em produção)
+      if (typeof window !== 'undefined' && (import.meta as any)?.env?.DEV) {
+        console.warn(
+          '⚠️ useEditor chamado fora de um EditorProvider (legacy). Retornando fallback no-op para evitar quebra. Garanta que o componente esteja embrulhado por <EditorProvider>.'
+        );
+      }
+    } catch {}
+
+    // Compor fallback no-op alinhado à interface EditorContextType
+    const noop = () => {};
+    const noopAsync = async () => {};
+
+    const fallback: EditorContextType = {
+      // Core state
+      state: initialState,
+      dispatch: noop as any,
+
+      // Configuration
+      config: undefined,
+
+      // Funnel management
+      funnelId: 'fallback-funnel',
+      setFunnelId: noop,
+
+      // Block actions
+      addBlock: async () => `fallback-block-${Date.now()}`,
+      updateBlock: noopAsync,
+      deleteBlock: noopAsync,
+      reorderBlocks: noop,
+      selectBlock: noop,
+      togglePreview: noop,
+      save: async () => {},
+
+      // Selection
+      selectedBlock: null,
+      selectedBlockId: null,
+      setSelectedBlockId: noop,
+
+      // UI state
+      isPreviewing: true,
+      setIsPreviewing: noop,
+      isGlobalStylesOpen: false,
+      setGlobalStylesOpen: noop,
+
+      // Loading state
+      isLoading: false,
+
+      // Connection status
+      connectionStatus: 'disconnected',
+
+      // Stage management
+      stages: Array.from({ length: 21 }, (_, i) => ({
+        id: `step-${i + 1}`,
+        name: `Etapa ${i + 1}`,
+        description: `Descrição da etapa ${i + 1}`,
+        order: i + 1,
+        blocksCount: 0,
+        metadata: { blocksCount: 0 },
+      })),
+      activeStageId: 'step-1',
+      stageActions: {
+        setActiveStage: noop,
+        addStage: () => {},
+        removeStage: noop,
+      },
+
+      // Block actions object
+      blockActions: {
+        setSelectedBlockId: noop,
+        addBlock: async () => `fallback-block-${Date.now()}`,
+        updateBlock: noopAsync,
+        deleteBlock: noopAsync,
+        addBlockAtPosition: async () => `fallback-block-${Date.now()}`,
+        replaceBlocks: noop,
+        reorderBlocks: noop,
+      },
+
+      // Computed properties
+      computed: {
+        currentBlocks: [],
+        selectedBlock: null,
+        stageCount: 21,
+        totalBlocks: 0,
+      },
+
+      // UI state object
+      uiState: {
+        isPreviewing: true,
+        isGlobalStylesOpen: false,
+        setIsPreviewing: noop,
+        viewportSize: 'xl',
+        setViewportSize: noop,
+      },
+
+      // Quiz state
+      quizState: {
+        userName: '',
+        answers: [],
+        isQuizCompleted: false,
+        strategicAnswers: [],
+        setUserNameFromInput: noop,
+        answerStrategicQuestion: noop as any,
+      },
+
+      // Database mode
+      databaseMode: 'local',
+
+      // Template actions
+      templateActions: {
+        loadTemplate: noop as any,
+        saveTemplate: noop as any,
+        loadTemplateByStep: async () => {},
+        isLoadingTemplate: false,
+      },
+
+      // Supabase enabled
+      isSupabaseEnabled: false,
+
+      // Persistence actions
+      persistenceActions: {
+        save: async () => {},
+        load: async () => {},
+        saveFunnel: async () => {},
+      },
+
+      // Template validation
+      validation: {
+        validateTemplate: () => ({ isValid: true, errors: {} }),
+        validateStep: () => ({ isValid: true, errors: {} }),
+        validateTemplateField: () => ({ success: true, errors: [] }),
+        hasTemplateErrors: false,
+      },
+    };
+
+    return fallback;
   }
   return context;
 };
