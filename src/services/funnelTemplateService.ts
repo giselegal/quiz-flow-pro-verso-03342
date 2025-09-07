@@ -47,7 +47,7 @@ class FunnelTemplateService {
         query = query.eq('category', category);
       }
 
-  const { data, error } = await query;
+      const { data, error } = await query;
 
       if (error) {
         console.error('Error fetching templates:', error);
