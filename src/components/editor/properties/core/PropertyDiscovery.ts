@@ -10,6 +10,7 @@ import { mapComponentType } from './ComponentTypeMapping';
 import { MODULAR_COMPONENTS } from '@/config/modularComponents';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import { blockPropertySchemas } from '@/config/blockPropertySchemas';
+import { completeBlockSchemas as completeSchemas, generateFallbackSchema } from '@/config/expandedBlockSchemas';
 import type { Block } from '@/types/editor';
 
 export interface DiscoveredProperty {
@@ -402,11 +403,12 @@ export function getPropertiesForComponentType(blockType: string, currentBlock: B
     }
   }
 
-  // PRIORIDADE 2: Usar schemas específicos do blockPropertySchemas
-  if (blockPropertySchemas[blockType]) {
-    console.log('✅ Using blockPropertySchemas for:', blockType);
-    const schema = blockPropertySchemas[blockType];
-    const schemaProperties = schema.fields.map(field => createProperty(
+  // PRIORIDADE 2: Usar schemas completos (merged) quando disponíveis
+  const mergedSchema = (completeSchemas as any)[blockType];
+  if (mergedSchema) {
+    console.log('✅ Using completeBlockSchemas for:', blockType);
+    const schema = mergedSchema;
+    const schemaProperties = schema.fields.map((field: any) => createProperty(
       field.key,
       currentBlock?.properties?.[field.key] || currentBlock?.content?.[field.key] || field.defaultValue,
       mapFieldTypeToPropertyType(field.type),
@@ -425,7 +427,52 @@ export function getPropertiesForComponentType(blockType: string, currentBlock: B
     return [...getUniversalPropertiesForBlock(currentBlock), ...schemaProperties];
   }
 
-  // PRIORIDADE 3: Fallback para definições hardcoded por tipo
+  // PRIORIDADE 3: Usar schemas específicos do blockPropertySchemas (legado)
+  if (blockPropertySchemas[blockType]) {
+    console.log('✅ Using blockPropertySchemas (fallback) for:', blockType);
+    const schema = blockPropertySchemas[blockType];
+    const schemaProperties = schema.fields.map((field: any) => createProperty(
+      field.key,
+      currentBlock?.properties?.[field.key] || currentBlock?.content?.[field.key] || field.defaultValue,
+      mapFieldTypeToPropertyType(field.type),
+      field.label,
+      mapGroupToCategory(field.group),
+      {
+        description: field.description,
+        options: field.options,
+        min: field.min,
+        max: field.max,
+        step: field.step,
+        required: field.required,
+      }
+    ));
+
+    return [...getUniversalPropertiesForBlock(currentBlock), ...schemaProperties];
+  }
+
+  // PRIORIDADE 4: Gerar schema dinâmico de fallback e mapear
+  console.log('🧩 Generating fallback schema for:', blockType);
+  const dynamicSchema = generateFallbackSchema(blockType);
+  if (dynamicSchema && dynamicSchema.fields?.length) {
+    const fallbackProps = dynamicSchema.fields.map((field: any) => createProperty(
+      field.key,
+      currentBlock?.properties?.[field.key] || currentBlock?.content?.[field.key] || field.defaultValue,
+      mapFieldTypeToPropertyType(field.type),
+      field.label,
+      mapGroupToCategory(field.group),
+      {
+        description: field.description,
+        options: field.options,
+        min: field.min,
+        max: field.max,
+        step: field.step,
+        required: field.required,
+      }
+    ));
+    return [...getUniversalPropertiesForBlock(currentBlock), ...fallbackProps];
+  }
+
+  // PRIORIDADE 5: Fallback final para definições hardcoded por tipo
   return getHardcodedPropertiesForType(blockType, currentBlock);
 }
 
