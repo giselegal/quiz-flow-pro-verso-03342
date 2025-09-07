@@ -78,7 +78,7 @@ export const ImageUploadCell: React.FC<ImageUploadCellProps> = ({
           .finally(() => setIsUploading(false));
         return;
       }
-    } catch {}
+    } catch { }
     fileInputRef.current?.click();
   }, [disabled, isUploading]);
 

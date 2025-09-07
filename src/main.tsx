@@ -25,7 +25,7 @@ if ((import.meta.env.DEV || typeof window !== 'undefined') && typeof window !== 
     const DISABLE_SUPABASE = (import.meta as any)?.env?.VITE_DISABLE_SUPABASE === 'true';
     try {
       (window as any).__USE_CLOUDINARY__ = ((import.meta as any)?.env?.VITE_ENABLE_CLOUDINARY === 'true');
-    } catch {}
+    } catch { }
     const isPreviewHost = typeof location !== 'undefined' && /lovable\.app|stackblitz\.io|codesandbox\.io/.test(location.hostname);
     // Bloqueia logs externos em dev
     if (url.includes('cloudfunctions.net/pushLogsToGrafana')) {

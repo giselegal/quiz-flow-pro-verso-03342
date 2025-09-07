@@ -321,8 +321,8 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
   const organizedProperties = organizeProperties();
   const filteredProperties = searchTerm
     ? Object.entries(selectedBlock.properties || {}).filter(([key]) =>
-        key.toLowerCase().includes(searchTerm.toLowerCase())
-      )
+      key.toLowerCase().includes(searchTerm.toLowerCase())
+    )
     : null;
 
   return (

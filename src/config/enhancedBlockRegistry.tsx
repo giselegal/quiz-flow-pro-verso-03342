@@ -73,6 +73,29 @@ export function generateBlockDefinitions(): BlockDefinition[] {
       defaultProps: {},
       properties: {},
     },
+    // --- Itens de Quiz e Conteúdo ampliados para a coluna de componentes ---
+    {
+      type: 'quiz-intro-header',
+      name: 'Cabeçalho do Quiz',
+      label: 'Cabeçalho do Quiz',
+      category: 'Quiz',
+      description: 'Seção de introdução do quiz',
+      icon: Heading,
+      component: ENHANCED_BLOCK_REGISTRY['quiz-intro-header'],
+      defaultProps: {},
+      properties: {},
+    },
+    {
+      type: 'options-grid',
+      name: 'Pergunta (Opções em Grid)',
+      label: 'Opções em Grid',
+      category: 'Quiz',
+      description: 'Perguntas com opções clicáveis (texto/imagem)',
+      icon: MousePointer,
+      component: ENHANCED_BLOCK_REGISTRY['options-grid'],
+      defaultProps: { options: [] },
+      properties: {},
+    },
   ];
 }
 
