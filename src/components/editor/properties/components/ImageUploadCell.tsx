@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Upload, X, Image as ImageIcon } from 'lucide-react';
 import { toast } from 'sonner';
+import { openCloudinaryWidget } from '@/utils/cloudinary';
 
 interface ImageUploadCellProps {
   imageUrl?: string;
@@ -62,6 +63,22 @@ export const ImageUploadCell: React.FC<ImageUploadCellProps> = ({
 
   const handleClick = useCallback(() => {
     if (disabled || isUploading) return;
+    try {
+      const useCloudinary = (window as any)?.__USE_CLOUDINARY__ === true;
+      const cloudName = (import.meta as any)?.env?.VITE_CLOUDINARY_CLOUD_NAME;
+      const uploadPreset = (import.meta as any)?.env?.VITE_CLOUDINARY_UPLOAD_PRESET;
+      if (useCloudinary && cloudName && uploadPreset) {
+        setIsUploading(true);
+        openCloudinaryWidget({ cloudName, uploadPreset })
+          .then(url => {
+            onImageChange(url);
+            toast.success('Imagem enviada (Cloudinary)');
+          })
+          .catch(() => fileInputRef.current?.click())
+          .finally(() => setIsUploading(false));
+        return;
+      }
+    } catch {}
     fileInputRef.current?.click();
   }, [disabled, isUploading]);
 
