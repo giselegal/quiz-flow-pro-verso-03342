@@ -6,6 +6,7 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import { FunnelTemplate } from '../types';
+import { funnelTemplateService } from '@/services/funnelTemplateService';
 
 // ============================================================================
 // TYPES
@@ -69,44 +70,43 @@ export function useFunnelTemplates(
         setError(null);
 
         try {
-            // Aqui você integraria com o serviço real
-            // const response = await funnelTemplateService.getAllTemplates();
+            // Buscar do serviço (com fallback interno quando DB indisponível)
+            const serviceTemplates = await funnelTemplateService.getTemplates();
 
-            // Mock data para desenvolvimento
-            const mockTemplates: FunnelTemplate[] = [
-                {
-                    id: 'quiz-style-template',
-                    name: 'Quiz de Estilo Pessoal',
-                    description: 'Template para descobrir estilo pessoal do usuário',
-                    category: 'lifestyle',
-                    theme: 'modern',
-                    stepCount: 0,
-                    isOfficial: true,
-                    usageCount: 0,
-                    tags: [],
-                    templateData: {
+            // Adaptar para o tipo do core (quando necessário)
+            const adapted: FunnelTemplate[] = (serviceTemplates || []).map((t: any) => ({
+                id: String(t.id),
+                name: String(t.name || 'Template'),
+                description: String(t.description || ''),
+                category: String(t.category || 'custom'),
+                theme: String(t.theme || 'default'),
+                stepCount: Number(t.stepCount || 0),
+                isOfficial: Boolean(t.isOfficial),
+                usageCount: Number(t.usageCount || 0),
+                tags: Array.isArray(t.tags) ? t.tags : [],
+                thumbnailUrl: t.thumbnailUrl,
+                templateData: t.templateData && t.templateData.metadata && t.templateData.settings
+                    ? t.templateData
+                    : {
                         metadata: {
-                            name: 'Quiz de Estilo Pessoal',
-                            description: 'Template para descobrir estilo pessoal do usuário',
-                            category: 'lifestyle',
-                            theme: 'modern',
+                            name: String(t.name || 'Template'),
+                            description: String(t.description || ''),
+                            category: String(t.category || 'custom'),
+                            theme: String(t.theme || 'default'),
                             version: '1.0.0',
                             isPublished: true,
-                            isOfficial: true
+                            isOfficial: Boolean(t.isOfficial)
                         },
                         settings: getDefaultSettings(),
                         steps: []
                     },
-                    components: [],
-                    createdAt: new Date().toISOString(),
-                    updatedAt: new Date().toISOString(),
-                    thumbnailUrl: undefined
-                },
-                // Adicionar mais templates conforme necessário
-            ];
+                components: Array.isArray(t.components) ? t.components : [],
+                createdAt: t.createdAt || new Date().toISOString(),
+                updatedAt: t.updatedAt || new Date().toISOString()
+            }));
 
-            setTemplates(mockTemplates);
-            setFilteredTemplates(mockTemplates);
+            setTemplates(adapted);
+            setFilteredTemplates(adapted);
         } catch (err) {
             setError(err as Error);
         } finally {

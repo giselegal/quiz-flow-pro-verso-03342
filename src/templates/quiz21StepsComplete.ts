@@ -317,6 +317,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = IS_TEST ? M
       },
     },
     {
+
       id: 'step1-footer',
       type: 'text',
       order: 7,

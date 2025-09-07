@@ -205,9 +205,16 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
 
   // Fallbacks a partir de content (compatibilidade com template)
   const question = (questionProp ?? (block as any)?.content?.question) as string | undefined;
-  const options = ((block?.properties as any)?.options ??
-    (block as any)?.content?.options ??
-    optionsProp) as Option[];
+  // Resolver opções com fallback robusto: se properties.options existir porém vazio, usar content.options
+  const propOptions = (block?.properties as any)?.options as Option[] | undefined;
+  const contentOptions = (block as any)?.content?.options as Option[] | undefined;
+  const options = (
+    (Array.isArray(propOptions) && propOptions.length > 0)
+      ? propOptions
+      : (Array.isArray(contentOptions) && contentOptions.length > 0)
+        ? contentOptions
+        : optionsProp
+  ) as Option[];
 
   // State for preview mode selections
   const [previewSelections, setPreviewSelections] = React.useState<string[]>([]);
