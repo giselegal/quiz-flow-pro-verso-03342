@@ -190,7 +190,7 @@ export const EditorProvider: React.FC<{
   // Efeito para carregar o template inicial automaticamente
   useEffect(() => {
     let isCancelled = false;
-  const loadInitialTemplate = async () => {
+    const loadInitialTemplate = async () => {
       try {
         if (isCancelled) return;
         setIsLoading(true);
@@ -244,8 +244,8 @@ export const EditorProvider: React.FC<{
     const loadStepTemplate = async () => {
       try {
         console.log(`🔄 AUTO-LOAD: Iniciando carregamento para etapa: ${activeStageId}`);
-  // Em ambiente de teste (node), ainda tentamos carregar via getStepTemplate
-  // acima. Se falhar, cairemos no catch e manteremos vazio.
+        // Em ambiente de teste (node), ainda tentamos carregar via getStepTemplate
+        // acima. Se falhar, cairemos no catch e manteremos vazio.
 
         // Carregar via templateService diretamente (preferencial)
         try {
@@ -542,39 +542,39 @@ export const EditorProvider: React.FC<{
   const stageActions = useMemo(
     () => ({
       setActiveStage: async (id: string) => {
-            setIsLoadingStage(true);
-            try {
-              setActiveStageId(id);
-              const stepMatch = id.match(/step-(\d+)/);
-              const stepNumber = stepMatch ? parseInt(stepMatch[1], 10) : NaN;
-              if (!isNaN(stepNumber)) {
-                const template = await getStepTemplate(stepNumber);
-                const templateBlocks = template?.blocks || [];
-                const editorBlocks = templateBlocks.map((block: any, index: number) => ({
-                  id: block.id || `block-${Date.now()}-${Math.random()}`,
-                  type: block.type || 'text',
-                  content: block.content || {},
-                  styles: block.styles || {},
-                  metadata: block.metadata || {},
-                  properties: { funnelId: currentFunnelId, stageId: id },
-                  order: index,
-                }));
-                dispatch({ type: 'SET_BLOCKS', payload: editorBlocks });
-              }
-            } catch (error) {
-              console.error('❌ Erro ao carregar blocos da etapa:', error);
-              dispatch({ type: 'SET_BLOCKS', payload: [] });
-            } finally {
-              setIsLoadingStage(false);
-            }
-          },
+        setIsLoadingStage(true);
+        try {
+          setActiveStageId(id);
+          const stepMatch = id.match(/step-(\d+)/);
+          const stepNumber = stepMatch ? parseInt(stepMatch[1], 10) : NaN;
+          if (!isNaN(stepNumber)) {
+            const template = await getStepTemplate(stepNumber);
+            const templateBlocks = template?.blocks || [];
+            const editorBlocks = templateBlocks.map((block: any, index: number) => ({
+              id: block.id || `block-${Date.now()}-${Math.random()}`,
+              type: block.type || 'text',
+              content: block.content || {},
+              styles: block.styles || {},
+              metadata: block.metadata || {},
+              properties: { funnelId: currentFunnelId, stageId: id },
+              order: index,
+            }));
+            dispatch({ type: 'SET_BLOCKS', payload: editorBlocks });
+          }
+        } catch (error) {
+          console.error('❌ Erro ao carregar blocos da etapa:', error);
+          dispatch({ type: 'SET_BLOCKS', payload: [] });
+        } finally {
+          setIsLoadingStage(false);
+        }
+      },
       addStage: () => {
-            console.log('Add stage not implemented yet');
-            return `step-${stages.length + 1}`;
-          },
+        console.log('Add stage not implemented yet');
+        return `step-${stages.length + 1}`;
+      },
       removeStage: (id: string) => {
-            console.log('Remove stage not implemented:', id);
-          },
+        console.log('Remove stage not implemented:', id);
+      },
       isLoadingStage,
     }),
     [dispatch, setIsLoadingStage, stages.length, currentFunnelId, isLoadingStage]
@@ -812,11 +812,11 @@ export const useEditor = (): EditorContextType => {
           '⚠️ useEditor chamado fora de um EditorProvider (legacy). Retornando fallback no-op para evitar quebra. Garanta que o componente esteja embrulhado por <EditorProvider>.'
         );
       }
-    } catch {}
+    } catch { }
 
     // Compor fallback no-op alinhado à interface EditorContextType
-    const noop = () => {};
-    const noopAsync = async () => {};
+    const noop = () => { };
+    const noopAsync = async () => { };
 
     const fallback: EditorContextType = {
       // Core state
@@ -837,7 +837,7 @@ export const useEditor = (): EditorContextType => {
       reorderBlocks: noop,
       selectBlock: noop,
       togglePreview: noop,
-      save: async () => {},
+      save: async () => { },
 
       // Selection
       selectedBlock: null,
@@ -868,7 +868,7 @@ export const useEditor = (): EditorContextType => {
       activeStageId: 'step-1',
       stageActions: {
         setActiveStage: noop,
-        addStage: () => {},
+        addStage: () => { },
         removeStage: noop,
       },
 
@@ -917,7 +917,7 @@ export const useEditor = (): EditorContextType => {
       templateActions: {
         loadTemplate: noop as any,
         saveTemplate: noop as any,
-        loadTemplateByStep: async () => {},
+        loadTemplateByStep: async () => { },
         isLoadingTemplate: false,
       },
 
@@ -926,9 +926,9 @@ export const useEditor = (): EditorContextType => {
 
       // Persistence actions
       persistenceActions: {
-        save: async () => {},
-        load: async () => {},
-        saveFunnel: async () => {},
+        save: async () => { },
+        load: async () => { },
+        saveFunnel: async () => { },
       },
 
       // Template validation

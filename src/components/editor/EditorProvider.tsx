@@ -133,6 +133,29 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
   quizId,
   enableSupabase = false,
 }) => {
+  // Diagnóstico: sinalizar montagem do provider moderno no escopo global (apenas browser)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        (window as any).__MODERN_EDITOR_PROVIDER__ = {
+          mounted: true,
+          ts: new Date().toISOString(),
+          source: 'src/components/editor/EditorProvider.tsx',
+        };
+      } catch { }
+    }
+    return () => {
+      if (typeof window !== 'undefined') {
+        try {
+          (window as any).__MODERN_EDITOR_PROVIDER__ = {
+            mounted: false,
+            ts: new Date().toISOString(),
+            source: 'src/components/editor/EditorProvider.tsx',
+          };
+        } catch { }
+      }
+    };
+  }, []);
   // Build initial state from template
   const getInitialState = (): EditorState => {
     const initialBlocks: Record<string, Block[]> = {};
