@@ -1,9 +1,12 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import Logo from '@/components/ui/logo';
-import { useEditor } from '@/context/EditorContext';
+import { useEditor as useEditorLegacy } from '@/context/EditorContext';
+import { useEditorOptional as useEditorModernOptional } from '@/components/editor/EditorProvider';
 import { useFunnelNavigation } from '@/hooks/useFunnelNavigation';
 import { cn } from '@/lib/utils';
+import { useMemo, useState } from 'react';
+import { makeStepKey } from '@/utils/stepKey';
 import { motion } from 'framer-motion';
 import { LayoutGrid, Monitor, Save, Settings, Smartphone, Tablet } from 'lucide-react';
 
@@ -21,13 +24,34 @@ interface EditorToolbarProps {
  * - Configurações globais
  */
 export const EditorToolbar: React.FC<EditorToolbarProps> = ({ className = '' }) => {
-  const {
-    // isPreviewing, // Removido: não usado mais
-    // setIsPreviewing, // Removido: não usado mais
-    uiState: { viewportSize, setViewportSize },
-    persistenceActions: { save },
-    computed: { totalBlocks },
-  } = useEditor();
+  // Tenta usar o contexto moderno primeiro (não lança erro fora do provider)
+  const modern = useEditorModernOptional();
+  // Fallback para o contexto legado (possui fallback no-op seguro no projeto)
+  const legacy = useEditorLegacy();
+
+  // Viewport control: o moderno não gerencia viewport; manter local state
+  const [localViewport, setLocalViewport] = useState<'sm' | 'md' | 'lg' | 'xl'>('xl');
+  const viewportSize = (legacy?.uiState?.viewportSize as any) || localViewport;
+  const setViewportSize = (size: 'sm' | 'md' | 'lg' | 'xl') => {
+    if (legacy?.uiState?.setViewportSize) {
+      legacy.uiState.setViewportSize(size);
+    }
+    setLocalViewport(size);
+  };
+
+  // Save action: legado tem persistenceActions.save; no moderno, usar no-op
+  const save = legacy?.persistenceActions?.save || (async () => { console.log('save (no-op)'); });
+
+  // Total de blocos: legado expõe computed.totalBlocks; moderno calcula a partir do step atual
+  const totalBlocks = useMemo(() => {
+    if (legacy?.computed?.totalBlocks != null) return legacy.computed.totalBlocks;
+    if (modern?.state) {
+      const stepKey = makeStepKey(modern.state.currentStep || 1);
+      const blocks = modern.state.stepBlocks?.[stepKey] || [];
+      return Array.isArray(blocks) ? blocks.length : 0;
+    }
+    return 0;
+  }, [legacy?.computed?.totalBlocks, modern?.state]);
 
   const funnelNavigation = useFunnelNavigation();
 

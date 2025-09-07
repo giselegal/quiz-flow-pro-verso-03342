@@ -18,18 +18,19 @@ if (import.meta.env.DEV) {
 }
 
 // � Interceptor simples para bloquear logs externos em dev (Grafana/gpt-engineer)
-if (import.meta.env.DEV && typeof window !== 'undefined') {
+if ((import.meta.env.DEV || typeof window !== 'undefined') && typeof window !== 'undefined') {
   const originalFetch = window.fetch.bind(window);
   window.fetch = (input: RequestInfo | URL, init?: RequestInit) => {
     const url = typeof input === 'string' ? input : input.toString();
     const DISABLE_SUPABASE = (import.meta as any)?.env?.VITE_DISABLE_SUPABASE === 'true';
+  const isPreviewHost = typeof location !== 'undefined' && /lovable\.app|stackblitz\.io|codesandbox\.io/.test(location.hostname);
     // Bloqueia logs externos em dev
     if (url.includes('cloudfunctions.net/pushLogsToGrafana')) {
       // Simula sucesso e evita 500 no console
       return Promise.resolve(new Response(null, { status: 204 }));
     }
     // Silencia Sentry em dev para evitar 404/429 e ruído excessivo
-    if (/sentry\.io|ingest\.sentry\.io/.test(url)) {
+  if (/sentry\.io|ingest\.sentry\.io/.test(url) && (import.meta.env.DEV || isPreviewHost)) {
       try {
         console.warn('🛑 Interceptado (Sentry desabilitado em dev):', url);
       } catch { }

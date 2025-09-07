@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 // Preferir o contexto moderno do EditorProvider; manter fallback para legacy se necessário
 import { useEditor as useEditorModern } from '@/components/editor/EditorProvider';
 import { useQuizFlow } from '@/context/QuizFlowProvider';
@@ -18,11 +18,43 @@ import { makeStepKey } from '@/utils/stepKey';
  * Centraliza toda lógica de navegação entre etapas
  */
 export const useFunnelNavigation = () => {
+  // Utils seguros para localStorage
+  // Desabilita definitivamente após primeira falha (ex.: sandboxes com quota 0)
+  const storageDisabledRef = useRef(false);
+  const safeSetItem = (key: string, value: string) => {
+    try {
+      if (!storageDisabledRef.current && typeof window !== 'undefined' && window?.localStorage) {
+        window.localStorage.setItem(key, value);
+      }
+    } catch (e) {
+      storageDisabledRef.current = true; // Evita futuras tentativas
+      try {
+        if ((import.meta as any)?.env?.DEV) {
+          console.warn('localStorage.setItem desativado após falha:', key, (e as any)?.message || e);
+        }
+      } catch {}
+    }
+  };
+  const safeGetItem = (key: string) => {
+    try {
+      if (!storageDisabledRef.current && typeof window !== 'undefined' && window?.localStorage) {
+        return window.localStorage.getItem(key);
+      }
+    } catch (e) {
+      storageDisabledRef.current = true;
+      try {
+        if ((import.meta as any)?.env?.DEV) {
+          console.warn('localStorage.getItem desativado após falha:', key, (e as any)?.message || e);
+        }
+      } catch {}
+    }
+    return null;
+  };
   // Tentativa de usar o contexto moderno
   let modern: any = null;
   try {
     modern = useEditorModern();
-  } catch {}
+  } catch { }
 
   // Unificar via QuizFlowProvider
   const { currentStep, totalSteps: flowTotal, goTo } = useQuizFlow();
@@ -52,10 +84,14 @@ export const useFunnelNavigation = () => {
   const canNavigateNext = currentStepNumber < totalSteps;
   const canNavigatePrevious = currentStepNumber > 1;
 
-  // Persistir etapa atual no localStorage
+  // Persistir etapa atual no localStorage (com dedupe para evitar writes em excesso)
+  const lastSavedStageIdRef = useRef<string | null>(null);
   useEffect(() => {
-    localStorage.setItem('funnel-current-step', activeStageId);
-    console.log(`📌 Etapa persistida: ${activeStageId} (${stepName})`);
+    if (lastSavedStageIdRef.current !== activeStageId) {
+      lastSavedStageIdRef.current = activeStageId;
+      safeSetItem('funnel-current-step', activeStageId);
+      try { console.log(`📌 Etapa persistida: ${activeStageId} (${stepName})`); } catch {}
+    }
   }, [activeStageId, stepName]);
 
   // Adicionar ao histórico de navegação
@@ -137,7 +173,7 @@ export const useFunnelNavigation = () => {
       // Simular salvamento (implementar Supabase depois)
       await new Promise(resolve => setTimeout(resolve, 1000));
 
-      localStorage.setItem(
+      safeSetItem(
         `funnel-step-${currentStepNumber}-saved`,
         JSON.stringify({
           stageId: activeStageId,
@@ -196,7 +232,7 @@ export const useFunnelNavigation = () => {
 
   // Recuperar etapa salva na inicialização
   useEffect(() => {
-    const savedStep = localStorage.getItem('funnel-current-step');
+    const savedStep = safeGetItem('funnel-current-step');
     if (savedStep && savedStep !== activeStageId) {
       const savedStepNumber = stageIdToNumber(savedStep);
       if (isValidStepNumber(savedStepNumber)) {
