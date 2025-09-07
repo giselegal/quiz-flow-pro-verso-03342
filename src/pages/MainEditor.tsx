@@ -124,11 +124,12 @@ const EditorInitializer: React.FC<{ templateId?: string; funnelId?: string }> = 
       const stepBlocks: any = {};
       Object.entries(tpl.steps).forEach(([k, arr]: any) => {
         stepBlocks[k] = (arr || []).map((b: any, idx: number) => ({
-          id: `${k}-${b.type}-${idx}`,
+          id: b.id || `${k}-${b.type}-${idx}`,
           type: b.type,
-          order: idx,
+          order: typeof b.order === 'number' ? b.order : idx,
           properties: b.properties || {},
-          content: b.properties || {},
+          // CORREÇÃO: usar conteúdo correto (b.content) para preservar options, etc.
+          content: b.content || {},
         }));
       });
       // Carregar template via evento para compatibilidade

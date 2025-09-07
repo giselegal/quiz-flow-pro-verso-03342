@@ -30,7 +30,17 @@ export const templateLibraryService = {
     return [...this.listBuiltins(), ...loadCustomTemplates()];
   },
   getById(id: string): FunnelTemplate | null {
-    return this.listAll().find(t => t.id === id) || null;
+    // Aliases para IDs vindos da UI/serviços
+    const aliases: Record<string, string> = {
+      'default-quiz-funnel-21-steps': (funnel21 as any).id,
+      'style-quiz-21-steps': (funnel21 as any).id,
+      'funil-21-etapas': (funnel21 as any).id,
+      'optimized-21-steps-funnel': (optimized21 as any).id,
+      'optimized-21-steps': (optimized21 as any).id,
+      'quiz-21-otimizado': (optimized21 as any).id,
+    };
+    const resolvedId = aliases[id] || id;
+    return this.listAll().find(t => t.id === resolvedId) || null;
   },
   saveCustom(template: FunnelTemplate) {
     const list = loadCustomTemplates();
