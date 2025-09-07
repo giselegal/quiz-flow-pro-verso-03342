@@ -4,10 +4,14 @@
  * Uso:
  *  - Dry-run (padrão): tsx scripts/migration/backfillComponentInstances.ts --dry-run
  *  - Aplicar:          tsx scripts/migration/backfillComponentInstances.ts --apply [--force]
+ *  - Filtro por funil: adicionar --funnel=<id[,id2,...]>
  *
  * Requisitos para --apply:
- *  - SUPABASE_URL e SUPABASE_SERVICE_KEY no ambiente
+ *  - SUPABASE_URL e SUPABASE_SERVICE_KEY no ambiente (carregadas via dotenv se existir .env)
  */
+
+// Carrega variáveis de ambiente de um arquivo .env, se existir
+import 'dotenv/config';
 
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from '../../src/integrations/supabase/types';
@@ -15,8 +19,22 @@ import type { Database } from '../../src/integrations/supabase/types';
 type Client = ReturnType<typeof createClient<Database>>;
 
 const hasFlag = (flag: string) => process.argv.includes(flag);
+const getArg = (name: string): string | undefined => {
+    const prefix = `--${name}`;
+    for (let i = 0; i < process.argv.length; i++) {
+        const arg = process.argv[i];
+        if (arg === prefix) {
+            return process.argv[i + 1];
+        }
+        if (arg.startsWith(prefix + '=')) {
+            return arg.substring(prefix.length + 1);
+        }
+    }
+    return undefined;
+};
 const DRY_RUN = hasFlag('--dry-run') || !hasFlag('--apply');
 const FORCE = hasFlag('--force');
+const FUNNEL_FILTER = (getArg('funnel') || getArg('only') || '').trim();
 
 const SUPABASE_URL = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || '';
@@ -57,13 +75,25 @@ function genId(prefix = 'ci'): string {
 }
 
 async function backfill(client: Client) {
-    log('Iniciando backfill', { DRY_RUN, FORCE });
+    const filterInfo = FUNNEL_FILTER ? { FUNNEL_FILTER } : {};
+    log('Iniciando backfill', { DRY_RUN, FORCE, ...filterInfo });
 
     // Buscar funis
-    const { data: funnels, error: funnelsErr } = await client
+    let funnelsQuery = client
         .from('funnels')
         .select('id, user_id')
         .order('created_at', { ascending: true });
+
+    if (FUNNEL_FILTER) {
+        const ids = FUNNEL_FILTER.split(',').map((s) => s.trim()).filter(Boolean);
+        if (ids.length === 1) {
+            funnelsQuery = funnelsQuery.eq('id', ids[0]);
+        } else if (ids.length > 1) {
+            funnelsQuery = funnelsQuery.in('id', ids);
+        }
+    }
+
+    const { data: funnels, error: funnelsErr } = await funnelsQuery;
 
     if (funnelsErr) throw funnelsErr;
     if (!funnels || funnels.length === 0) {
