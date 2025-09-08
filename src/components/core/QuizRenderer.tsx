@@ -141,7 +141,11 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
             scores: {},
             userData: { name, completionTime: new Date(), strategicAnswersCount: 0 },
           };
-          StorageService.safeSetJSON('quizResult', minimal);
+          // IMPORTANT: não persistir no localStorage/unified para não contaminar o app de produção
+          // Usamos apenas sessionStorage e uma chave namespaced para preview/editor.
+          try {
+            sessionStorage.setItem('quizResultPreview', JSON.stringify(minimal));
+          } catch { /* ignore */ }
         } catch { }
       }
     } catch { }

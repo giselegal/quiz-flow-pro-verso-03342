@@ -235,17 +235,46 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
     } catch { }
   }
 
-  // Fallback final: se estamos na etapa X no editor e não há opções,
-  // usar as opções canônicas do template para a etapa atual
+  // Fallback final: resolver opções canônicas do template para a etapa atual
   try {
+    // 1) Editor: usar etapa do editor quando disponível
     const stepNum = Number(currentStepFromEditor ?? NaN);
-    if (block?.type === 'options-grid' && (!options || options.length === 0) && Number.isFinite(stepNum) && stepNum >= 1) {
+    if (
+      block?.type === 'options-grid' && (!options || options.length === 0) &&
+      Number.isFinite(stepNum) && stepNum >= 1
+    ) {
       const key = `step-${stepNum}`;
       const canonicalStep = (QUIZ_STYLE_21_STEPS_TEMPLATE as any)[key] || [];
       const canonicalGrid = canonicalStep.find((b: any) => (b?.type || '').toLowerCase() === 'options-grid');
       const canonicalOptions = canonicalGrid?.content?.options;
       if (Array.isArray(canonicalOptions) && canonicalOptions.length > 0) {
         options = canonicalOptions as Option[];
+      }
+    }
+
+    // 2) Produção: se ainda vazio, usar etapa corrente do runtime (/quiz)
+    if (block?.type === 'options-grid' && (!options || options.length === 0)) {
+      let runtimeStep: number | null = null;
+      try {
+        const wStep = (window as any)?.__quizCurrentStep;
+        if (typeof wStep === 'number' && Number.isFinite(wStep)) runtimeStep = wStep;
+      } catch { /* noop */ }
+      if (runtimeStep == null) {
+        try {
+          const data = unifiedQuizStorage.loadData();
+          const s = Number(data?.metadata?.currentStep);
+          if (Number.isFinite(s)) runtimeStep = s;
+        } catch { /* noop */ }
+      }
+
+      if (runtimeStep != null && Number.isFinite(Number(runtimeStep)) && Number(runtimeStep) >= 1) {
+        const key = `step-${runtimeStep}`;
+        const canonicalStep = (QUIZ_STYLE_21_STEPS_TEMPLATE as any)[key] || [];
+        const canonicalGrid = canonicalStep.find((b: any) => (b?.type || '').toLowerCase() === 'options-grid');
+        const canonicalOptions = canonicalGrid?.content?.options;
+        if (Array.isArray(canonicalOptions) && canonicalOptions.length > 0) {
+          options = canonicalOptions as Option[];
+        }
       }
     }
   } catch { /* noop */ }
@@ -677,6 +706,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
               role="button"
               aria-pressed={isSelectedOption}
               data-selected={isSelectedOption ? 'true' : 'false'}
+              data-testid={`grid-option-${opt.id}`}
               tabIndex={0}
               onKeyDown={e => {
                 if (e.key === 'Enter' || e.key === ' ') {

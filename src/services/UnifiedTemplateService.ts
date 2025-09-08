@@ -33,7 +33,7 @@ class UnifiedTemplateService {
   private cache = new Map<string, { blocks: Block[]; timestamp: number; source: string }>();
   private loading = new Set<string>();
   private publishPrefix = 'quiz_published_blocks_';
-  
+
   private config: UnifiedTemplateConfig = {
     enableCache: true,
     enablePreload: true,
@@ -77,7 +77,7 @@ class UnifiedTemplateService {
     // Evitar carregamento duplicado
     if (this.loading.has(stepId)) {
       console.log(`⏳ [UnifiedTemplate] ${stepId} já carregando, aguardando...`);
-      
+
       // Wait for loading to complete (max 5s)
       const startTime = Date.now();
       while (this.loading.has(stepId) && (Date.now() - startTime < 5000)) {
@@ -101,10 +101,10 @@ class UnifiedTemplateService {
       for (const source of this.sources) {
         try {
           const blocks = await source.loader(stepId);
-          
+
           if (blocks && blocks.length > 0) {
             console.log(`✅ [UnifiedTemplate] ${stepId} carregado via ${source.name} (${blocks.length} blocos)`);
-            
+
             // Cache successful result
             if (this.config.enableCache) {
               this.cache.set(stepId, {
@@ -113,7 +113,7 @@ class UnifiedTemplateService {
                 source: source.name
               });
             }
-            
+
             return blocks;
           }
         } catch (error) {
@@ -136,10 +136,10 @@ class UnifiedTemplateService {
    */
   private isCacheValid(stepId: string): boolean {
     if (!this.cache.has(stepId)) return false;
-    
+
     const cached = this.cache.get(stepId)!;
     const age = Date.now() - cached.timestamp;
-    
+
     return age < this.config.cacheTimeout;
   }
 
@@ -160,13 +160,13 @@ class UnifiedTemplateService {
     try {
       const key = this.publishPrefix + stepId;
       const data = StorageService.safeGetJSON(key) as any;
-      
+
       const blocks = Array.isArray(data) ? data : data?.blocks;
-      
+
       if (Array.isArray(blocks) && blocks.length > 0) {
         return blocks as Block[];
       }
-      
+
       return null;
     } catch {
       return null;
@@ -179,19 +179,19 @@ class UnifiedTemplateService {
   private async loadJsonTemplate(stepId: string): Promise<Block[] | null> {
     try {
       const stepNumber = parseInt(stepId.replace('step-', ''));
-      
+
       // Tentar carregar template JSON específico
       const templatePath = `/templates/${stepId}-template.json`;
       const response = await fetch(templatePath);
-      
+
       if (response.ok) {
         const templateData = await response.json();
-        
+
         if (templateData.blocks && Array.isArray(templateData.blocks)) {
           return this.normalizeBlocks(templateData.blocks);
         }
       }
-      
+
       return null;
     } catch {
       return null;
@@ -204,12 +204,12 @@ class UnifiedTemplateService {
   private async loadTypescriptTemplate(stepId: string): Promise<Block[] | null> {
     try {
       const stepNumber = parseInt(stepId.replace('step-', ''));
-      
+
       // Mapear etapas para templates TypeScript
       if (stepNumber === 1) {
         return this.normalizeBlocks(stepTemplates.intro);
       }
-      
+
       if (stepNumber >= 2 && stepNumber <= 11) {
         const questionParams: QuestionParams = {
           questionNumber: stepNumber - 1,
@@ -220,11 +220,11 @@ class UnifiedTemplateService {
         };
         return this.normalizeBlocks(stepTemplates.question(questionParams));
       }
-      
+
       if (stepNumber === 12) {
         return this.normalizeBlocks(stepTemplates.transition);
       }
-      
+
       if (stepNumber >= 13 && stepNumber <= 18) {
         const strategicParams: StrategicParams = {
           questionNumber: stepNumber - 12,
@@ -233,19 +233,19 @@ class UnifiedTemplateService {
         };
         return this.normalizeBlocks(stepTemplates.strategic(strategicParams));
       }
-      
+
       if (stepNumber === 19) {
         return this.normalizeBlocks(stepTemplates.transition);
       }
-      
+
       if (stepNumber === 20) {
         return this.normalizeBlocks(stepTemplates.result);
       }
-      
+
       if (stepNumber === 21) {
         return this.normalizeBlocks(stepTemplates.offer);
       }
-      
+
       return null;
     } catch {
       return null;
@@ -258,11 +258,11 @@ class UnifiedTemplateService {
   private async loadCanonicalTemplate(stepId: string): Promise<Block[] | null> {
     try {
       const templateBlocks = (QUIZ_STYLE_21_STEPS_TEMPLATE as any)[stepId];
-      
+
       if (templateBlocks && Array.isArray(templateBlocks) && templateBlocks.length > 0) {
         return this.normalizeBlocks(templateBlocks);
       }
-      
+
       return null;
     } catch {
       return null;
@@ -274,7 +274,7 @@ class UnifiedTemplateService {
    */
   private async loadFallbackTemplate(stepId: string): Promise<Block[]> {
     const stepNumber = parseInt(stepId.replace('step-', ''));
-    
+
     const fallbackBlocks: Block[] = [
       {
         id: `${stepId}-fallback-header`,
@@ -394,13 +394,26 @@ class UnifiedTemplateService {
    * 🔧 UTILITY: Normaliza blocos para formato padrão
    */
   private normalizeBlocks(rawBlocks: any[]): Block[] {
-    return rawBlocks.map((block, index) => ({
-      id: block.id || `block-${Date.now()}-${index}`,
-      type: block.type as BlockType,
-      order: block.order ?? index,
-      properties: block.properties || {},
-      content: block.content || block.properties || {}
-    }));
+    return rawBlocks.map((block, index) => {
+      const normalized: any = {
+        id: block.id || `block-${Date.now()}-${index}`,
+        type: block.type as BlockType,
+        order: block.order ?? index,
+        properties: block.properties || {},
+        content: block.content || block.properties || {},
+      };
+
+      // ✅ Preservar filhos definidos em templates TypeScript/JSON (ex.: form-container)
+      if (Array.isArray(block.children) && block.children.length > 0) {
+        normalized.children = block.children;
+        // Também espelhar em properties para maior compatibilidade
+        if (!normalized.properties.children) {
+          normalized.properties.children = block.children;
+        }
+      }
+
+      return normalized;
+    });
   }
 
   /**
@@ -410,10 +423,10 @@ class UnifiedTemplateService {
     if (!this.config.enablePreload) return;
 
     console.log('🚀 [UnifiedTemplate] Iniciando preload otimizado...');
-    
+
     // Preload apenas etapas críticas (1, 2, 20, 21)
     const criticalSteps = ['step-1', 'step-2', 'step-20', 'step-21'];
-    
+
     const promises = criticalSteps.map(async (stepId) => {
       try {
         await this.loadStepBlocks(stepId);
@@ -423,7 +436,7 @@ class UnifiedTemplateService {
     });
 
     await Promise.allSettled(promises);
-    
+
     console.log(`✅ [UnifiedTemplate] Preload concluído para ${criticalSteps.length} etapas críticas`);
   }
 
@@ -434,10 +447,10 @@ class UnifiedTemplateService {
     try {
       const key = this.publishPrefix + stepId;
       const payload = { blocks, updatedAt: new Date().toISOString() };
-      
+
       StorageService.safeSetJSON(key, payload);
       this.invalidateCache(stepId);
-      
+
       // Atualizar cache imediatamente
       if (blocks.length > 0) {
         this.cache.set(stepId, {
@@ -450,7 +463,7 @@ class UnifiedTemplateService {
       // Notificar sistema
       try {
         window.dispatchEvent(new CustomEvent('quiz-template-updated', { detail: { stepId } }));
-      } catch {}
+      } catch { }
 
       console.log(`💾 [UnifiedTemplate] ${stepId} publicado (${blocks.length} blocos)`);
     } catch (error) {
@@ -467,7 +480,7 @@ class UnifiedTemplateService {
       // Notificar sistema
       try {
         window.dispatchEvent(new CustomEvent('quiz-template-updated', { detail: { stepId } }));
-      } catch {}
+      } catch { }
 
       console.log(`🗑️ [UnifiedTemplate] ${stepId} despublicado`);
     } catch (error) {

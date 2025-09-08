@@ -514,6 +514,30 @@ const QuizModularPage: React.FC = () => {
     return { from, via, to };
   }, [stepConfig?.backgroundFrom, stepConfig?.backgroundVia, stepConfig?.backgroundTo]);
 
+  // Detectar se o template já inclui um bloco de navegação premium
+  const hasTemplateNavigation = useMemo(() => {
+    try {
+      return blocks.some(b => b.type === 'quiz-navigation');
+    } catch {
+      return false;
+    }
+  }, [blocks]);
+
+  // Derivar o tipo de questão para a navegação
+  const currentQuestionType: 'normal' | 'strategic' | 'final' = useMemo(() => {
+    try {
+      const step = currentStep;
+      // Normal: 2–11 | Estratégica: 13–18 | Final: demais
+      const isNormal = step >= 2 && step <= 11;
+      const isStrategic = step >= 13 && step <= 18;
+      if (isNormal) return 'normal';
+      if (isStrategic) return 'strategic';
+      return 'final';
+    } catch {
+      return 'final';
+    }
+  }, [currentStep]);
+
   // ===== ✅ CÁLCULO ROBUSTO E PERSISTÊNCIA DO RESULTADO =====
   const computeAndPersistResult = React.useCallback(async (): Promise<void> => {
     console.log('🔄 [QuizModular] Iniciando cálculo de resultado...');
@@ -817,6 +841,30 @@ const QuizModularPage: React.FC = () => {
                   )}
                 </div>
 
+                {/* 🚀 Navegação premium (fallback) — aparece quando o template não incluir 'quiz-navigation' */}
+                {!hasTemplateNavigation && (
+                  <div className="mb-4">
+                    {(() => {
+                      const QuizNavigation = React.lazy(() => import('@/components/quiz/QuizNavigation'));
+                      return (
+                        <Suspense fallback={null}>
+                          <QuizNavigation
+                            canProceed={!!stepValidation[currentStep]}
+                            onNext={handleNext}
+                            onPrevious={currentStep > 1 ? handlePrevious : undefined}
+                            currentQuestionType={currentQuestionType}
+                            selectedOptionsCount={selectedCount}
+                            currentStep={currentStep}
+                            totalSteps={21}
+                            stepName={stepConfig?.title || `Etapa ${currentStep}`}
+                            showUserInfo={false}
+                          />
+                        </Suspense>
+                      );
+                    })()}
+                  </div>
+                )}
+
                 {/* 🎨 ÁREA DE RENDERIZAÇÃO DOS BLOCOS */}
                 <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl shadow-stone-200/40 border border-stone-200/30 ring-1 ring-stone-100/20 overflow-hidden">
                   {/* Estado de loading */}
@@ -902,58 +950,60 @@ const QuizModularPage: React.FC = () => {
                   )}
                 </div>
 
-                {/* 🎮 CONTROLES DE NAVEGAÇÃO */}
-                <div className="flex justify-between items-center mt-8">
-                  <button
-                    onClick={handlePrevious}
-                    disabled={currentStep === 1}
-                    className={cn(
-                      'flex items-center gap-2 px-6 py-3 rounded-lg font-medium',
-                      currentStep === 1
-                        ? 'bg-stone-100 text-stone-400 cursor-not-allowed'
-                        : 'bg-white text-stone-700 hover:bg-stone-50 border border-stone-200 shadow-sm hover:shadow'
-                    )}
-                  >
-                    ← Anterior
-                  </button>
-
-                  <div className="text-center">
-                    <div className="text-sm text-stone-500 mb-1">Progresso</div>
-                    <div className="text-lg font-semibold text-stone-800">{currentStep} / 21</div>
-                  </div>
-
-                  <div className="flex items-center gap-2">
+                {/* 🎮 CONTROLES DE NAVEGAÇÃO (ocultados quando navegação premium fallback está ativa) */}
+                {hasTemplateNavigation ? (
+                  <div className="flex justify-between items-center mt-8">
                     <button
-                      onClick={handleNext}
-                      disabled={nextDisabled}
+                      onClick={handlePrevious}
+                      disabled={currentStep === 1}
                       className={cn(
                         'flex items-center gap-2 px-6 py-3 rounded-lg font-medium',
-                        nextDisabled
+                        currentStep === 1
                           ? 'bg-stone-100 text-stone-400 cursor-not-allowed'
-                          : 'bg-gradient-to-r from-[#B89B7A] to-[#8B7355] text-white hover:from-[#A08966] hover:to-[#7A6B4D] shadow-md hover:shadow-lg'
+                          : 'bg-white text-stone-700 hover:bg-stone-50 border border-stone-200 shadow-sm hover:shadow'
                       )}
                     >
-                      {nextLabel}
+                      ← Anterior
                     </button>
-                    {stepConfig?.showValidationFeedback && mustBeValid && !isStepValid && (
-                      <div className="text-xs text-stone-500">
-                        {validationText}
-                      </div>
-                    )}
+
+                    <div className="text-center">
+                      <div className="text-sm text-stone-500 mb-1">Progresso</div>
+                      <div className="text-lg font-semibold text-stone-800">{currentStep} / 21</div>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={handleNext}
+                        disabled={nextDisabled}
+                        className={cn(
+                          'flex items-center gap-2 px-6 py-3 rounded-lg font-medium',
+                          nextDisabled
+                            ? 'bg-stone-100 text-stone-400 cursor-not-allowed'
+                            : 'bg-gradient-to-r from-[#B89B7A] to-[#8B7355] text-white hover:from-[#A08966] hover:to-[#7A6B4D] shadow-md hover:shadow-lg'
+                        )}
+                      >
+                        {nextLabel}
+                      </button>
+                      {stepConfig?.showValidationFeedback && mustBeValid && !isStepValid && (
+                        <div className="text-xs text-stone-500">
+                          {validationText}
+                        </div>
+                      )}
+                    </div>
+                    {/* Utilitário opcional de recarga */}
+                    <button
+                      onClick={() =>
+                        TemplateManager.reloadTemplate(`step-${currentStep}`)
+                          .then(setBlocks)
+                          .catch(() => { })
+                      }
+                      className="ml-4 px-4 py-3 rounded-lg font-medium bg-white text-stone-700 hover:bg-stone-50 border border-stone-200 shadow-sm hover:shadow"
+                      title="Recarregar blocos da etapa"
+                    >
+                      🔄 Recarregar etapa
+                    </button>
                   </div>
-                  {/* Utilitário opcional de recarga */}
-                  <button
-                    onClick={() =>
-                      TemplateManager.reloadTemplate(`step-${currentStep}`)
-                        .then(setBlocks)
-                        .catch(() => { })
-                    }
-                    className="ml-4 px-4 py-3 rounded-lg font-medium bg-white text-stone-700 hover:bg-stone-50 border border-stone-200 shadow-sm hover:shadow"
-                    title="Recarregar blocos da etapa"
-                  >
-                    🔄 Recarregar etapa
-                  </button>
-                </div>
+                ) : null}
 
                 {/* 📊 FOOTER COM ESTATÍSTICAS */}
                 <div className="text-center mt-12 text-sm text-stone-500">

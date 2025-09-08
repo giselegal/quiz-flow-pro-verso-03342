@@ -42,11 +42,16 @@ const run = async () => {
             try { await page.waitForSelector(sel, { timeout: 6000 }); found = true; break; } catch { }
         }
 
-        const rawResult = await page.evaluate(() => {
-            try {
-                return localStorage.getItem('quizResult') || sessionStorage.getItem('quizResult') || null;
-            } catch { return null; }
-        });
+                const rawResult = await page.evaluate(() => {
+                        try {
+                                return (
+                                    localStorage.getItem('quizResult') ||
+                                    sessionStorage.getItem('quizResult') ||
+                                    sessionStorage.getItem('quizResultPreview') ||
+                                    null
+                                );
+                        } catch { return null; }
+                });
 
         let parsed = null;
         try { parsed = rawResult ? JSON.parse(rawResult) : null; } catch { }
