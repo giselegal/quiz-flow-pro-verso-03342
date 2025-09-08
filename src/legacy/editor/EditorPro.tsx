@@ -385,6 +385,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
 
   // Calcular resultado automaticamente ao entrar nas etapas 19/20
   const lastComputedStepRef = useRef<number | null>(null);
+  const calcInflightRef = useRef<Promise<any> | null>(null);
   useEffect(() => {
     const shouldCompute = safeCurrentStep === 19 || safeCurrentStep === 20;
     if (!shouldCompute) return;
@@ -400,15 +401,24 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
 
         if (safeCurrentStep === 20) {
           logger.info('🎯 Etapa 20: garantindo cálculo de resultado');
-
-          await calculateAndSaveQuizResult();
+          if (!calcInflightRef.current) {
+            calcInflightRef.current = calculateAndSaveQuizResult().finally(() => {
+              calcInflightRef.current = null;
+            });
+          }
+          await calcInflightRef.current;
 
           try { window.dispatchEvent(new Event('quiz-result-refresh')); } catch { }
 
           setTimeout(async () => {
             try {
               logger.info('🎯 Etapa 20: segunda tentativa de cálculo');
-              await calculateAndSaveQuizResult();
+              if (!calcInflightRef.current) {
+                calcInflightRef.current = calculateAndSaveQuizResult().finally(() => {
+                  calcInflightRef.current = null;
+                });
+              }
+              await calcInflightRef.current;
               try { window.dispatchEvent(new Event('quiz-result-refresh')); } catch { }
             } catch (err) {
               logger.error('Falha na segunda tentativa de cálculo:', err);

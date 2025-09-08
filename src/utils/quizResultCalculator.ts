@@ -47,18 +47,18 @@ export const calculateAndSaveQuizResult = async () => {
 
     if (!hasSelections) {
       console.warn('⚠️ Nenhuma seleção encontrada para cálculo');
-      // Na etapa 20, forçar cálculo mesmo sem seleções
+      // Na etapa 20, não persiste fallback para evitar sobrepor resultado real e travas
       if (isResultStep) {
-        console.log('🎯 Etapa 20: forçando cálculo mesmo sem seleções');
-      } else {
-        // Não persistir fallback quando não há dados suficientes
+        console.log('🎯 Etapa 20: sem seleções — retornando fallback NÃO persistente');
         return createFallbackResult(userName || 'Usuário', { persist: false });
       }
+      // Fora da etapa 20, também não persistir fallback
+      return createFallbackResult(userName || 'Usuário', { persist: false });
     }
 
     if (!hasEnough && !isResultStep) {
       console.warn('⚠️ Dados insuficientes segundo UnifiedQuizStorage.hasEnoughDataForResult()');
-      // Não persistir fallback quando threshold não atingido, exceto na etapa 20
+      // Não persistir fallback quando threshold não atingido
       return createFallbackResult(userName || 'Usuário', { persist: false });
     }
 

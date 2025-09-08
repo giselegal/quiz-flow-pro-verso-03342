@@ -11,10 +11,10 @@ import EVENTS from '@/core/constants/events';
 export interface UnifiedQuizData {
   // Seleções de múltipla escolha (ex: etapas 2-19)
   selections: Record<string, string[]>;
-  
+
   // Dados de formulário (ex: nome, email, telefone)
   formData: Record<string, any>;
-  
+
   // Metadados
   metadata: {
     currentStep: number;
@@ -23,7 +23,7 @@ export interface UnifiedQuizData {
     lastUpdated: string;
     version: string;
   };
-  
+
   // Resultado calculado (cache)
   result?: any;
 }
@@ -31,7 +31,7 @@ export interface UnifiedQuizData {
 class UnifiedQuizStorageService {
   private readonly STORAGE_KEY = 'unifiedQuizData';
   private readonly LEGACY_KEYS = ['userSelections', 'quizAnswers'];
-  
+
   /**
    * Carrega dados unificados, migrando dados legados se necessário
    */
@@ -49,20 +49,20 @@ class UnifiedQuizStorageService {
   /**
    * Salva dados unificados e notifica mudanças
    */
-  saveData(data: UnifiedQuizData): boolean {
+  saveData(data: UnifiedQuizData, opts?: { skipAnswerEvent?: boolean }): boolean {
     data.metadata.lastUpdated = new Date().toISOString();
     data.metadata.version = '2.0';
-    
+
     const success = StorageService.safeSetJSON(this.STORAGE_KEY, data);
-    
+
     if (success) {
       // Notificar mudanças para hooks e componentes
-      this.dispatchEvents();
-      
+      this.dispatchEvents({ skipAnswerEvent: opts?.skipAnswerEvent });
+
       // Sincronizar com chaves legadas para compatibilidade
       this.syncLegacyKeys(data);
     }
-    
+
     return success;
   }
 
@@ -90,12 +90,12 @@ class UnifiedQuizStorageService {
   updateProgress(currentStep: number): boolean {
     const data = this.loadData();
     data.metadata.currentStep = currentStep;
-    
+
     // Adicionar step aos completos se não estiver lá
     if (!data.metadata.completedSteps.includes(currentStep)) {
       data.metadata.completedSteps.push(currentStep);
     }
-    
+
     return this.saveData(data);
   }
 
@@ -105,7 +105,8 @@ class UnifiedQuizStorageService {
   saveResult(result: any): boolean {
     const data = this.loadData();
     data.result = result;
-    return this.saveData(data);
+    // Evitar emitir QUIZ_ANSWER_UPDATED quando apenas o resultado mudou
+    return this.saveData(data, { skipAnswerEvent: true });
   }
 
   /**
@@ -115,16 +116,16 @@ class UnifiedQuizStorageService {
     const data = this.loadData();
     const selectionCount = Object.keys(data.selections).length;
     const formHasName = Boolean(data.formData.userName || data.formData.name);
-    
+
     // Verificar se estamos na etapa 20 (resultado)
     const isResultStep = data.metadata?.currentStep === 20;
-    
+
     // Se estamos na etapa 20, sempre permitir o cálculo
     if (isResultStep) {
       console.log('🎯 Etapa 20 detectada: permitindo cálculo de resultado');
       return true;
     }
-    
+
     // Caso contrário, precisa de pelo menos 8 seleções das etapas 2-11 e um nome
     return selectionCount >= 8 && formHasName;
   }
@@ -149,23 +150,23 @@ class UnifiedQuizStorageService {
    */
   clearAll(): boolean {
     const success = StorageService.safeRemove(this.STORAGE_KEY);
-    
+
     // Limpar também chaves legadas
     this.LEGACY_KEYS.forEach(key => StorageService.safeRemove(key));
-    
+
     if (success) {
       this.dispatchEvents();
     }
-    
+
     return success;
   }
 
   private migrateLegacyData(): UnifiedQuizData {
     console.log('🔄 UnifiedQuizStorage: Migrando dados legados...');
-    
+
     const userSelections = StorageService.safeGetJSON<Record<string, string[]>>('userSelections') || {};
     const quizAnswers = StorageService.safeGetJSON<Record<string, any>>('quizAnswers') || {};
-    
+
     const unified: UnifiedQuizData = {
       selections: userSelections,
       formData: quizAnswers,
@@ -180,24 +181,24 @@ class UnifiedQuizStorageService {
         version: '2.0'
       }
     };
-    
+
     // Salvar dados migrados
     this.saveData(unified);
-    
+
     console.log('✅ UnifiedQuizStorage: Migração concluída', {
       selections: Object.keys(unified.selections).length,
       formData: Object.keys(unified.formData).length
     });
-    
+
     return unified;
   }
 
   private isValidUnifiedData(data: any): data is UnifiedQuizData {
     return data &&
-           typeof data.selections === 'object' &&
-           typeof data.formData === 'object' &&
-           typeof data.metadata === 'object' &&
-           typeof data.metadata.version === 'string';
+      typeof data.selections === 'object' &&
+      typeof data.formData === 'object' &&
+      typeof data.metadata === 'object' &&
+      typeof data.metadata.version === 'string';
   }
 
   private syncLegacyKeys(data: UnifiedQuizData): void {
@@ -206,9 +207,11 @@ class UnifiedQuizStorageService {
     StorageService.safeSetJSON('quizAnswers', data.formData);
   }
 
-  private dispatchEvents(): void {
+  private dispatchEvents(opts?: { skipAnswerEvent?: boolean }): void {
     try {
-      window.dispatchEvent(new Event(EVENTS.QUIZ_ANSWER_UPDATED));
+      if (!opts?.skipAnswerEvent) {
+        window.dispatchEvent(new Event(EVENTS.QUIZ_ANSWER_UPDATED));
+      }
       window.dispatchEvent(new Event(EVENTS.QUIZ_RESULT_UPDATED));
       window.dispatchEvent(new Event('unified-quiz-data-updated'));
     } catch (e) {
