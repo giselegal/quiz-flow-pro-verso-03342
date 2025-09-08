@@ -217,12 +217,31 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
         : optionsProp
   ) as Option[];
 
-  // Fallback final: se estamos na etapa 2 no editor e não há opções,
-  // usar as opções canônicas do template (garante visibilidade no /editor)
+  // Logs de diagnóstico em desenvolvimento
+  if (import.meta?.env?.DEV) {
+    try {
+      const stepNum = Number(currentStepFromEditor ?? NaN);
+      // Logar apenas para as primeiras etapas para não poluir
+      if (Number.isFinite(stepNum) && stepNum <= 3 && block?.type === 'options-grid') {
+        console.log('🔎 OptionsGridBlock: resolução de opções', {
+          stepNum,
+          fromProperties: Array.isArray(propOptions) ? propOptions.length : 'n/a',
+          fromContent: Array.isArray(contentOptions) ? contentOptions.length : 'n/a',
+          finalCount: Array.isArray(options) ? options.length : 0,
+          question: question || (block as any)?.content?.question,
+          blockId: block?.id,
+        });
+      }
+    } catch { }
+  }
+
+  // Fallback final: se estamos na etapa X no editor e não há opções,
+  // usar as opções canônicas do template para a etapa atual
   try {
     const stepNum = Number(currentStepFromEditor ?? NaN);
-    if (block?.type === 'options-grid' && (!options || options.length === 0) && stepNum === 2) {
-      const canonicalStep = (QUIZ_STYLE_21_STEPS_TEMPLATE as any)['step-2'] || [];
+    if (block?.type === 'options-grid' && (!options || options.length === 0) && Number.isFinite(stepNum) && stepNum >= 1) {
+      const key = `step-${stepNum}`;
+      const canonicalStep = (QUIZ_STYLE_21_STEPS_TEMPLATE as any)[key] || [];
       const canonicalGrid = canonicalStep.find((b: any) => (b?.type || '').toLowerCase() === 'options-grid');
       const canonicalOptions = canonicalGrid?.content?.options;
       if (Array.isArray(canonicalOptions) && canonicalOptions.length > 0) {
@@ -600,6 +619,12 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       data-block-id={block.id}
       data-block-type={block.type}
     >
+      {/* Aviso em dev quando não há opções resolvidas */}
+      {import.meta?.env?.DEV && (!options || options.length === 0) && (
+        <div className="mb-4 p-3 rounded border border-yellow-300 bg-yellow-50 text-yellow-800">
+          Nenhuma opção encontrada para este bloco. Em dev, usamos fallback canônico por etapa, mas nada foi resolvido.
+        </div>
+      )}
       {/* Título interno opcional: só renderiza se existir e for permitido */}
       {question && showQuestionTitle && (
         <h2 className="text-2xl font-bold text-center mb-6">{question}</h2>
