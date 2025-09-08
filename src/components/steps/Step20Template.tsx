@@ -2,11 +2,13 @@ import React, { useEffect, useState, useRef } from 'react';
 import { computeEffectivePrimaryPercentage } from '@/core/result/percentage';
 import { AnimatedWrapper } from '@/components/ui/animated-wrapper';
 import { Button } from '@/components/ui/button';
-import { RefreshCw, CheckCircle } from 'lucide-react';
+import { RefreshCw } from 'lucide-react';
 import { useQuizResult } from '@/hooks/useQuizResult';
 import { validateQuizData, recalculateQuizResult } from '@/utils/quizResultCalculator';
 import { cn } from '@/lib/utils';
 import { getBestUserName } from '@/core/user/name';
+import { getStyleConfig } from '@/config/styleConfig';
+import { ResultDisplay } from '@/components/ui/ResultDisplay';
 
 interface Step20TemplateProps {
   className?: string;
@@ -155,67 +157,33 @@ const Step20Template: React.FC<Step20TemplateProps> = ({
   };
   const userName = normalizeName(getBestUserName());
 
+  // Obter configuração do estilo para imagens e dicas
+  const styleConfig = getStyleConfig(styleLabel);
+
   return (
     <div className={cn('max-w-4xl mx-auto p-6', className)}>
       <AnimatedWrapper show={true}>
-        <div className="text-center space-y-8">
-          {/* Success indicator */}
-          <div className="flex items-center justify-center mb-6">
-            <CheckCircle className="w-8 h-8 text-green-600 mr-2" />
-            <span className="text-green-600 font-medium">Resultado calculado com sucesso!</span>
-          </div>
+        {/* ✅ USAR O NOVO RESULTADO DISPLAY ESTRUTURADO */}
+        <ResultDisplay
+          username={userName || 'Usuário'}
+          styleName={styleLabel}
+          percentage={displayPct}
+          image={styleConfig?.image || 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp'}
+          guideImage={styleConfig?.guideImage || 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp'}
+          description={styleConfig?.description || 'Seu estilo único foi revelado com base nas suas respostas.'}
+          tips={styleConfig?.specialTips || []}
+          category={styleConfig?.category}
+        />
 
-          {/* Primary Style Display */}
-          <div className="bg-white rounded-2xl shadow-lg p-8 border border-[#B89B7A]/20">
-            <h1 className="text-3xl md:text-4xl font-bold text-[#432818] mb-2">
-              {userName ? `${userName}, seu estilo predominante é:` : 'Seu estilo predominante é:'}
-            </h1>
-            <div className="text-2xl md:text-3xl font-semibold text-[#6B4F43] mb-4">{styleLabel}</div>
-
-            <div className="text-xl text-[#6B4F43] mb-6">
-              {displayPct}% de compatibilidade
-            </div>
-
-            {/* Progress Bar */}
-            <div className="w-full bg-[#F3E8E6] rounded-full h-3 mb-8">
-              <div
-                className="bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] h-3 rounded-full transition-all duration-1000"
-                style={{ width: `${displayPct}%` }}
-              />
+        {/* Render additional blocks if provided */}
+        {blocks.map((block) => (
+          <div key={block.id} className="w-full mt-8">
+            {/* Placeholder for block rendering - would integrate with UniversalBlockRenderer */}
+            <div className="text-sm text-gray-500 text-center p-4 bg-gray-50 rounded-lg">
+              Block: {block.type} (ID: {block.id})
             </div>
           </div>
-
-          {/* Secondary Styles */}
-          {secondaryStyles.length > 0 && (
-            <div className="bg-white rounded-2xl shadow-lg p-6 border border-[#B89B7A]/20">
-              <h2 className="text-xl font-semibold text-[#432818] mb-4">
-                Estilos Secundários
-              </h2>
-              <div className="grid md:grid-cols-2 gap-4">
-                {secondaryStyles.slice(0, 4).map((style, idx) => (
-                  <div key={idx} className="flex justify-between items-center p-3 bg-[#FAF9F7] rounded-lg">
-                    <span className="font-medium text-[#432818]">
-                      {style.style || style.category}
-                    </span>
-                    <span className="text-[#6B4F43]">
-                      {style.percentage || 0}%
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Render additional blocks if provided */}
-          {blocks.map((block) => (
-            <div key={block.id} className="w-full">
-              {/* Placeholder for block rendering - would integrate with UniversalBlockRenderer */}
-              <div className="text-sm text-gray-500">
-                Block: {block.type} (ID: {block.id})
-              </div>
-            </div>
-          ))}
-        </div>
+        ))}
       </AnimatedWrapper>
     </div>
   );

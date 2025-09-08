@@ -15,6 +15,7 @@ export interface StyleConfig {
   description: string;
   category: string;
   keywords: string[];
+  specialTips: string[]; // ✅ Novo campo para dicas especiais
   [key: string]: any; // Allow dynamic property access
 }
 
@@ -31,6 +32,12 @@ export const styleConfig: StyleConfigMap = {
       'Você valoriza o conforto e a praticidade, com um visual descontraído e autêntico que reflete sua personalidade natural.',
     category: 'Conforto & Praticidade',
     keywords: ['conforto', 'praticidade', 'descontraído', 'autêntico', 'natural', 'casual'],
+    specialTips: [
+      'Invista em peças de algodão, linho e malha.',
+      'Prefira cores neutras e terrosas.',
+      'Aposte em acessórios discretos e funcionais.',
+      'Mantenha um guarda-roupa versátil e confortável.',
+    ],
   },
   Clássico: {
     image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp',
@@ -39,6 +46,12 @@ export const styleConfig: StyleConfigMap = {
     description: 'Você aprecia a elegância atemporal, com peças de qualidade e caimento perfeito.',
     category: 'Elegância Atemporal',
     keywords: ['elegância', 'sofisticação', 'atemporal', 'clássico', 'refinado', 'tradicional'],
+    specialTips: [
+      'Invista em peças de alfaiataria e camisas bem cortadas.',
+      'Prefira cores sóbrias como azul-marinho, branco e preto.',
+      'Aposte em acessórios discretos e clássicos.',
+      'Mantenha um guarda-roupa organizado e atemporal.',
+    ],
   },
   Contemporâneo: {
     image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/13_uvbciq.webp',
@@ -48,6 +61,12 @@ export const styleConfig: StyleConfigMap = {
       'Você busca um equilíbrio entre o clássico e o moderno, com peças práticas e atuais.',
     category: 'Equilíbrio & Modernidade',
     keywords: ['contemporâneo', 'equilibrado', 'prático', 'atual', 'versátil', 'funcional'],
+    specialTips: [
+      'Invista em peças minimalistas com cortes modernos.',
+      'Prefira cores neutras com pontos de cor.',
+      'Aposte em acessórios geométricos e sofisticados.',
+      'Mantenha um guarda-roupa versátil e atualizado.',
+    ],
   },
   Elegante: {
     image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp',
@@ -56,6 +75,12 @@ export const styleConfig: StyleConfigMap = {
     description: 'Você tem um olhar refinado para detalhes sofisticados e peças de alta qualidade.',
     category: 'Refinamento & Qualidade',
     keywords: ['elegante', 'refinado', 'sofisticado', 'qualidade', 'luxo', 'distinto'],
+    specialTips: [
+      'Invista em peças de tecidos nobres como seda e crepe.',
+      'Prefira cores clássicas como branco, preto, bege e off-white.',
+      'Aposte em acessórios finos e discretos.',
+      'Mantenha um guarda-roupa sofisticado e impecável.',
+    ],
   },
   Romântico: {
     image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/6_gnoxfg.webp',
@@ -64,6 +89,12 @@ export const styleConfig: StyleConfigMap = {
     description: 'Você valoriza a delicadeza e os detalhes femininos, com muita suavidade.',
     category: 'Delicadeza & Feminilidade',
     keywords: ['romântico', 'delicado', 'feminino', 'suave', 'encantador', 'doce'],
+    specialTips: [
+      'Invista em peças com rendas, laços e babados.',
+      'Prefira cores suaves e pastéis.',
+      'Aposte em acessórios delicados e femininos.',
+      'Mantenha um guarda-roupa leve e encantador.',
+    ],
   },
   Sexy: {
     image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735327/7_ynez1z.webp',
@@ -72,6 +103,12 @@ export const styleConfig: StyleConfigMap = {
     description: 'Você gosta de valorizar suas curvas e exibir sua sensualidade com confiança.',
     category: 'Sensualidade & Confiança',
     keywords: ['sexy', 'sensual', 'confiante', 'ousado', 'sedutor', 'empoderado'],
+    specialTips: [
+      'Invista em peças justas e decotadas na medida certa.',
+      'Prefira cores intensas como vermelho e preto.',
+      'Aposte em acessórios marcantes e sedutores.',
+      'Mantenha um guarda-roupa ousado e poderoso.',
+    ],
   },
   Dramático: {
     image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/8_yqu3hw.webp',
@@ -80,6 +117,12 @@ export const styleConfig: StyleConfigMap = {
     description: 'Você tem personalidade forte e gosta de causar impacto com seu visual.',
     category: 'Impacto & Presença',
     keywords: ['dramático', 'marcante', 'impactante', 'presença', 'ousado', 'statement'],
+    specialTips: [
+      'Invista em peças estruturadas e de design arrojado.',
+      'Prefira cores contrastantes e vibrantes.',
+      'Aposte em acessórios grandes e de impacto.',
+      'Mantenha um guarda-roupa ousado e marcante.',
+    ],
   },
   Criativo: {
     image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/9_x6so6a.webp',
@@ -88,6 +131,12 @@ export const styleConfig: StyleConfigMap = {
     description: 'Você aprecia a originalidade e não tem medo de ousar em combinações únicas.',
     category: 'Expressão & Individualidade',
     keywords: ['criativo', 'único', 'artístico', 'individual', 'expressivo', 'original'],
+    specialTips: [
+      'Invista em peças diferentes e estampadas.',
+      'Prefira cores contrastantes e combinações inusitadas.',
+      'Aposte em acessórios criativos e divertidos.',
+      'Mantenha um guarda-roupa original e cheio de personalidade.',
+    ],
   },
 } as const;
 
@@ -115,7 +164,13 @@ export const getStylesByCategory = (category: string): string[] => {
 
 // Obter configuração completa de um estilo
 export const getStyleConfig = (styleName: string): StyleConfig | null => {
-  return styleConfig[styleName] || null;
+  const config = styleConfig[styleName];
+  if (!config) return null;
+
+  return {
+    ...config,
+    specialTips: config.specialTips ?? [], // ✅ garante que sempre exista
+  };
 };
 
 // Lista de todos os estilos disponíveis
