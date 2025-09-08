@@ -7,8 +7,11 @@
 import React, { useEffect, useState } from 'react';
 import { useQuizResult } from '@/hooks/useQuizResult';
 import { Button } from '@/components/ui/button';
-import { RefreshCw, CheckCircle, AlertCircle, Gift } from 'lucide-react';
+import { RefreshCw, AlertCircle, Gift } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { getStyleConfig } from '@/config/styleConfig';
+import { getBestUserName } from '@/core/user/name';
+import { ResultDisplay } from '@/components/ui/ResultDisplay';
 
 interface Step20FallbackTemplateProps {
   className?: string;
@@ -175,83 +178,24 @@ const Step20FallbackTemplate: React.FC<Step20FallbackTemplateProps> = ({
   // Resultado válido encontrado
   const styleLabel = resultStyle.style || resultStyle.category || 'Seu Estilo';
   const percentage = resultStyle.percentage || 0;
-  const userName = resultData?.userData?.name || 'Você';
+  const userName = resultData?.userData?.name || getBestUserName() || 'Você';
+
+  // Obter configuração do estilo
+  const styleConfig = getStyleConfig(styleLabel);
 
   return (
     <div className={cn('max-w-4xl mx-auto p-6 space-y-8', className)}>
-      {/* Success indicator */}
-      <div className="text-center">
-        <CheckCircle className="w-16 h-16 text-green-600 mx-auto mb-4" />
-        <h1 className="text-3xl md:text-4xl font-bold text-[#432818] mb-2">
-          Parabéns, {userName}!
-        </h1>
-        <p className="text-xl text-[#6B4F43]">
-          Seu estilo foi revelado com sucesso
-        </p>
-      </div>
-
-      {/* Primary Style Display */}
-      <div className="bg-white rounded-2xl shadow-lg p-8 border border-[#B89B7A]/20">
-        <div className="text-center">
-          <h2 className="text-2xl md:text-3xl font-bold text-[#432818] mb-4">
-            Seu Estilo: {styleLabel}
-          </h2>
-          
-          <div className="text-lg text-[#6B4F43] mb-6">
-            {percentage}% de compatibilidade
-          </div>
-
-          {/* Progress Bar */}
-          <div className="w-full max-w-md mx-auto bg-[#F3E8E6] rounded-full h-4 mb-8">
-            <div
-              className="bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] h-4 rounded-full transition-all duration-2000 ease-out"
-              style={{ width: `${percentage}%` }}
-            />
-          </div>
-
-          <div className="text-sm text-[#6B4F43] mb-6">
-            ✨ Resultado calculado com base em suas {resultData?.totalQuestions || 10} respostas
-          </div>
-        </div>
-      </div>
-
-      {/* Secondary Styles */}
-      {secondaryStyles && secondaryStyles.length > 0 && (
-        <div className="bg-white rounded-2xl shadow-lg p-6 border border-[#B89B7A]/20">
-          <h3 className="text-xl font-semibold text-[#432818] mb-4 text-center">
-            Estilos Complementares
-          </h3>
-          <div className="grid md:grid-cols-2 gap-4">
-            {secondaryStyles.slice(0, 4).map((style, idx) => (
-              <div key={idx} className="flex justify-between items-center p-3 bg-[#FAF9F7] rounded-lg">
-                <span className="font-medium text-[#432818]">
-                  {style.style || style.category}
-                </span>
-                <span className="text-[#6B4F43]">
-                  {style.percentage || 0}%
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Call to Action */}
-      <div className="text-center bg-gradient-to-br from-[#B89B7A]/10 to-[#aa6b5d]/10 rounded-2xl p-8">
-        <h3 className="text-xl font-bold text-[#432818] mb-4">
-          Pronto para Transformar Sua Imagem?
-        </h3>
-        <p className="text-[#6B4F43] mb-6">
-          Agora que você conhece seu estilo {styleLabel}, descubra como aplicá-lo no seu dia a dia.
-        </p>
-        
-        <Button
-          className="bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] text-white px-8 py-3 text-lg hover:from-[#A08966] hover:to-[#9A5A4D]"
-          onClick={() => window.location.href = "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912"}
-        >
-          Quero Meu Guia Personalizado
-        </Button>
-      </div>
+      {/* ✅ USAR O NOVO RESULTADO DISPLAY ESTRUTURADO */}
+      <ResultDisplay
+        username={userName}
+        styleName={styleLabel}
+        percentage={percentage}
+        image={styleConfig?.image || 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp'}
+        guideImage={styleConfig?.guideImage || 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp'}
+        description={styleConfig?.description || 'Seu estilo único foi revelado com base nas suas respostas.'}
+        tips={styleConfig?.specialTips || []}
+        category={styleConfig?.category}
+      />
     </div>
   );
 };

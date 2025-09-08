@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { InlineEditableText } from './InlineEditableText';
 import { Progress } from '@/components/ui/progress';
 import { Card } from '@/components/ui/card';
+import { SpecialTipsCard } from '@/components/ui/SpecialTipsCard';
 import type { BlockComponentProps } from '@/types/blocks';
 import { useQuizResult } from '@/hooks/useQuizResult';
 import { cn } from '@/lib/utils';
@@ -98,6 +99,7 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
     guideImageUrl: rawGuideImageUrl,
     styleGuideImageUrl: rawStyleGuideImageUrl,
     showBothImages = true,
+    showSpecialTips = true, // ✅ Nova propriedade para mostrar dicas especiais
     imageWidth,
     imageHeight,
     progressColor = '#B89B7A',
@@ -209,6 +211,34 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
         className={cn('p-6 shadow-md border border-[#B89B7A]/20', alignClass)}
         style={{ backgroundColor: backgroundColor ? backgroundColor : undefined }}
       >
+        {/* ✅ NOVA SEÇÃO: Cabeçalho Comemorativo */}
+        <div className={cn('mb-8 text-center')}>
+          <div className="flex items-center justify-center mb-4">
+            <div className="text-3xl mr-2">🎉</div>
+            <h1 className="text-2xl font-bold text-[#432818]">
+              Parabéns! Descobrimos o seu Estilo Pessoal
+            </h1>
+          </div>
+          
+          {displayName && (
+            <p className="text-lg text-[#6B4F43] mb-4">
+              Olá, <span className="font-semibold text-[#432818]">{displayName}</span>! ✨
+            </p>
+          )}
+
+          {/* Estilo Predominante em Destaque */}
+          {styleLabel && (
+            <div className="bg-gradient-to-r from-[#B89B7A]/10 to-[#aa6b5d]/10 rounded-2xl p-6 mb-6">
+              <h2 className="text-2xl font-bold text-[#432818] mb-2">
+                Estilo Predominante: <span className="text-[#B89B7A]">{styleLabel}</span>
+              </h2>
+              {(styleInfo as any)?.category && (
+                <p className="text-[#6B4F43] text-sm">{(styleInfo as any).category}</p>
+              )}
+            </div>
+          )}
+        </div>
+
         <div className={cn('mb-8', alignClass)}>
           <div className="max-w-md mx-auto mb-6">
             <div className="flex justify-between items-center mb-2">
@@ -238,7 +268,7 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
             {/* Mostrar o nome do estilo atual quando disponível */}
             {styleLabel && (
               <div className="text-base font-semibold text-[#432818] mb-2">
-                {styleLabel}
+                Compatibilidade: {displayPercentage}%
                 {displayName ? (
                   <span className="ml-1 text-[#6B4F43] font-normal">• {vars.userName}</span>
                 ) : null}
@@ -246,7 +276,7 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
             )}
             <Progress
               value={displayPercentage}
-              className="h-2 bg-[#F3E8E6]"
+              className="h-3 bg-[#F3E8E6] rounded-full"
               style={{
                 '--progress-color': progressColor,
               } as React.CSSProperties}
@@ -265,72 +295,119 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
           )}
         </div>
         <div className="grid md:grid-cols-2 gap-8 items-center">
-          <div className="space-y-4">
-            <p className="text-[#432818] leading-relaxed">
-              <InlineEditableText
-                value={sanitizeStyleMentions(interpolate(effectiveDescription, vars), styleLabel)}
-                onChange={value => handlePropertyChange('description', value)}
-                placeholder="Descrição do estilo predominante..."
-                className="text-[#432818] leading-relaxed"
-                multiline
+          {/* Seção da Imagem do Estilo */}
+          <div className="text-center">
+            <h3 className="text-lg font-semibold text-[#432818] mb-4">Seu Estilo</h3>
+            <div className="relative">
+              <img
+                src={imageError ? safePlaceholder(300, 400, 'Imagem indisponível') : effectiveImageUrl}
+                alt="Estilo"
+                className="w-full h-auto rounded-xl shadow-lg hover:scale-105 transition-transform duration-300 cursor-pointer"
+                onClick={() => {
+                  const newUrl = prompt('Nova URL da imagem:', effectiveImageUrl);
+                  if (newUrl !== null) handlePropertyChange('imageUrl', newUrl);
+                }}
+                onError={(e) => {
+                  if (!imageError) {
+                    setImageError(true);
+                    try { (e.currentTarget as HTMLImageElement).src = safePlaceholder(300, 400, 'Imagem indisponível'); } catch { }
+                  }
+                }}
+                style={{
+                  ...(imageWidth ? { maxWidth: typeof imageWidth === 'number' ? `${imageWidth}px` : imageWidth } : {}),
+                  ...(imageHeight ? { maxHeight: typeof imageHeight === 'number' ? `${imageHeight}px` : imageHeight } : {}),
+                }}
               />
-            </p>
+              {/* Cantos decorativos */}
+              <div className="absolute -top-2 -right-2 w-8 h-8 border-t-2 border-r-2 border-[#B89B7A]"></div>
+              <div className="absolute -bottom-2 -left-2 w-8 h-8 border-b-2 border-l-2 border-[#B89B7A]"></div>
+            </div>
           </div>
-          <div className="max-w-xs sm:max-w-sm mx-auto relative">
-            <img
-              src={imageError ? safePlaceholder(238, 320, 'Imagem indisponível') : effectiveImageUrl}
-              alt="Estilo"
-              className="w-full h-auto rounded-lg shadow-md hover:scale-105 transition-transform duration-300 cursor-pointer"
-              onClick={() => {
-                const newUrl = prompt('Nova URL da imagem:', effectiveImageUrl);
-                if (newUrl !== null) handlePropertyChange('imageUrl', newUrl);
-              }}
-              onError={(e) => {
-                if (!imageError) {
-                  setImageError(true);
-                  // como fallback extra, troca o src diretamente
-                  try { (e.currentTarget as HTMLImageElement).src = safePlaceholder(238, 320, 'Imagem indisponível'); } catch { }
-                }
-              }}
-              style={{
-                ...(imageWidth ? { maxWidth: typeof imageWidth === 'number' ? `${imageWidth}px` : imageWidth } : {}),
-                ...(imageHeight ? { maxHeight: typeof imageHeight === 'number' ? `${imageHeight}px` : imageHeight } : {}),
-              }}
-            />
-            {/* Decorative corners */}
-            <div className="absolute -top-2 -right-2 w-8 h-8 border-t-2 border-r-2 border-[#B89B7A]"></div>
-            <div className="absolute -bottom-2 -left-2 w-8 h-8 border-b-2 border-l-2 border-[#B89B7A]"></div>
+
+          {/* Seção da Descrição */}
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-lg font-semibold text-[#432818] mb-4">Sua Personalidade Estilística</h3>
+              <p className="text-[#432818] leading-relaxed">
+                <InlineEditableText
+                  value={sanitizeStyleMentions(interpolate(effectiveDescription, vars), styleLabel)}
+                  onChange={value => handlePropertyChange('description', value)}
+                  placeholder="Descrição do estilo predominante..."
+                  className="text-[#432818] leading-relaxed"
+                  multiline
+                />
+              </p>
+            </div>
           </div>
         </div>
         {showBothImages && (
-          <div className="mt-8 max-w-lg mx-auto relative">
-            <img
-              src={guideImageError ? safePlaceholder(540, 300, 'Guia indisponível') : effectiveGuideImageUrl}
-              alt="Guia de Estilo"
-              className="w-full h-auto rounded-lg shadow-md hover:scale-105 transition-transform duration-300 cursor-pointer"
-              onClick={() => {
-                const newUrl = prompt('Nova URL da imagem do guia:', effectiveGuideImageUrl);
-                if (newUrl !== null) handlePropertyChange('guideImageUrl', newUrl);
-              }}
-              onError={(e) => {
-                if (!guideImageError) {
-                  setGuideImageError(true);
-                  try { (e.currentTarget as HTMLImageElement).src = safePlaceholder(540, 300, 'Guia indisponível'); } catch { }
-                }
-              }}
-            />
-            {/* Badge */}
-            <div
-              className="absolute -top-4 -right-4 bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] text-white px-4 py-2 rounded-full shadow-lg text-sm font-medium transform rotate-12 cursor-pointer"
-              onClick={() => {
-                const newBadge = prompt('Novo texto do badge:', badgeText);
-                if (newBadge !== null) handlePropertyChange('badgeText', newBadge);
-              }}
-            >
-              {badgeText}
+          <div className="mt-8">
+            <h3 className="text-lg font-semibold text-[#432818] mb-4 text-center">Guia de Aplicação do Seu Estilo</h3>
+            <div className="max-w-2xl mx-auto relative">
+              <img
+                src={guideImageError ? safePlaceholder(600, 400, 'Guia indisponível') : effectiveGuideImageUrl}
+                alt="Guia de Estilo"
+                className="w-full h-auto rounded-xl shadow-lg hover:scale-105 transition-transform duration-300 cursor-pointer"
+                onClick={() => {
+                  const newUrl = prompt('Nova URL da imagem do guia:', effectiveGuideImageUrl);
+                  if (newUrl !== null) handlePropertyChange('guideImageUrl', newUrl);
+                }}
+                onError={(e) => {
+                  if (!guideImageError) {
+                    setGuideImageError(true);
+                    try { (e.currentTarget as HTMLImageElement).src = safePlaceholder(600, 400, 'Guia indisponível'); } catch { }
+                  }
+                }}
+              />
+              {/* Badge */}
+              <div
+                className="absolute -top-4 -right-4 bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] text-white px-4 py-2 rounded-full shadow-lg text-sm font-medium transform rotate-12 cursor-pointer"
+                onClick={() => {
+                  const newBadge = prompt('Novo texto do badge:', badgeText);
+                  if (newBadge !== null) handlePropertyChange('badgeText', newBadge);
+                }}
+              >
+                {badgeText}
+              </div>
             </div>
           </div>
         )}
+        
+        {/* ✅ NOVA SEÇÃO: Dicas Especiais */}
+        {showSpecialTips && styleInfo && (styleInfo as any).specialTips && (styleInfo as any).specialTips.length > 0 && (
+          <div className="mt-8">
+            <SpecialTipsCard
+              styleName={styleLabel}
+              tips={(styleInfo as any).specialTips}
+              title="💎 Dicas Especiais para Seu Estilo"
+              accentColor="text-[#B89B7A]"
+              className="border-[#B89B7A]/20"
+            />
+          </div>
+        )}
+
+        {/* ✅ NOVA SEÇÃO: CTA Estratégico */}
+        <div className="mt-8 text-center">
+          <div className="bg-gradient-to-br from-[#B89B7A]/10 to-[#aa6b5d]/10 rounded-2xl p-6">
+            <h3 className="text-lg font-bold text-[#432818] mb-3">
+              Pronto para Transformar Sua Imagem?
+            </h3>
+            <p className="text-[#6B4F43] mb-4 text-sm">
+              Agora que você conhece seu estilo {styleLabel}, descubra como aplicá-lo no seu dia a dia.
+            </p>
+            
+            <button
+              onClick={() => {
+                // Navegação para próxima etapa ou abertura de link externo
+                const ctaUrl = "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912";
+                window.open(ctaUrl, '_blank');
+              }}
+              className="bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] text-white px-6 py-3 text-sm font-semibold rounded-xl shadow-lg hover:from-[#A08966] hover:to-[#9A5A4D] transition-all duration-300 hover:scale-105"
+            >
+              👉 Quero Aprimorar Meu Estilo
+            </button>
+          </div>
+        </div>
       </Card>
     </div>
   );
