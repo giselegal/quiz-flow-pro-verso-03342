@@ -54,7 +54,8 @@
     "backfill:component-instances:dry": "tsx scripts/migration/backfillComponentInstances.ts --dry-run",
     "backfill:component-instances": "tsx scripts/migration/backfillComponentInstances.ts --apply",
     "diagnostic:properties-panel": "tsx scripts/diagnostic/checkPropertiesPanel.ts",
-    "diagnostic:backfill": "tsx scripts/diagnostic/checkBackfillReady.ts"
+    "diagnostic:backfill": "tsx scripts/diagnostic/checkBackfillReady.ts",
+    "smoke:step20": "node scripts/smoke-step20.mjs"
   },
   "smoke": {
     "step20": "node scripts/smoke-step20.mjs"
