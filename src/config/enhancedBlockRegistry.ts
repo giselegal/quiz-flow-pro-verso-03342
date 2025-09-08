@@ -83,6 +83,18 @@ export const generateBlockDefinitions = (): BlockDefinition[] => {
       properties: {},
       defaultProps: {},
     },
+    // Blocos de página de vendas
+    {
+      type: 'sales-hero',
+      name: 'Sales Hero',
+      icon: Image,
+      category: 'result',
+      description: 'Seção Hero para páginas de venda',
+      component: ENHANCED_BLOCK_REGISTRY['sales-hero'],
+      label: 'Sales Hero',
+      properties: {},
+      defaultProps: {},
+    },
   ];
 };
 

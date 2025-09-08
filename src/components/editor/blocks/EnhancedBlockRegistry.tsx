@@ -241,6 +241,8 @@ export const AVAILABLE_COMPONENTS = [
     // ✅ COMPONENTES DE RESULTADO
     { type: 'urgency-timer-inline', label: 'Timer de Urgência', category: 'result' },
     { type: 'before-after-inline', label: 'Antes e Depois', category: 'result' },
+    // Novo: bloco de vendas
+    { type: 'sales-hero', label: 'Sales Hero', category: 'result' },
     { type: 'bonus', label: 'Bônus (Seção)', category: 'result' },
     { type: 'testimonials', label: 'Depoimentos', category: 'result' },
     { type: 'value-anchoring', label: 'Ancoragem de Valor', category: 'result' },
