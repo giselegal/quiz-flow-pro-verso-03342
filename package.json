@@ -55,7 +55,8 @@
     "backfill:component-instances": "tsx scripts/migration/backfillComponentInstances.ts --apply",
     "diagnostic:properties-panel": "tsx scripts/diagnostic/checkPropertiesPanel.ts",
     "diagnostic:backfill": "tsx scripts/diagnostic/checkBackfillReady.ts",
-    "smoke:step20": "node scripts/smoke-step20.mjs"
+    "smoke:step20": "node scripts/smoke-step20.mjs",
+    "simulate:dcc": "node scripts/simulate-dcc.mjs"
   },
   "smoke": {
     "step20": "node scripts/smoke-step20.mjs"

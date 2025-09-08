@@ -127,12 +127,21 @@ const QuizModularPage: React.FC = () => {
       const stepId = e?.detail?.stepId;
       const updatedStep =
         typeof stepId === 'string' ? parseInt(stepId.replace(/[^0-9]/g, ''), 10) : NaN;
-      if (!Number.isNaN(updatedStep) && updatedStep === currentStep) {
-        // Recarregar blocos da etapa corrente
-        TemplateManager.reloadTemplate(`step-${currentStep}`)
-          .then(setBlocks)
-          .catch(() => { });
+
+      // Se o evento indicar uma etapa específica, recarregue se for a atual
+      if (!Number.isNaN(updatedStep)) {
+        if (updatedStep === currentStep) {
+          TemplateManager.reloadTemplate(`step-${currentStep}`)
+            .then(setBlocks)
+            .catch(() => { });
+        }
+        return;
       }
+
+      // Caso o evento não traga stepId (atualização global), recarregue a etapa atual
+      TemplateManager.reloadTemplate(`step-${currentStep}`)
+        .then(setBlocks)
+        .catch(() => { });
     };
     window.addEventListener('quiz-template-updated', onTemplateUpdated as EventListener);
     return () => {
@@ -190,19 +199,59 @@ const QuizModularPage: React.FC = () => {
 
     const handleInputChange = (ev: Event) => {
       const e = ev as CustomEvent<{ value?: string; valid?: boolean }>;
-      const ok =
-        typeof e.detail?.value === 'string' ? e.detail.value.trim().length > 0 : !!e.detail?.valid;
+      const value = e.detail?.value;
+      const ok = typeof value === 'string' ? value.trim().length > 0 : !!e.detail?.valid;
       setStepValidation(prev => ({ ...prev, [currentStep]: ok }));
       setStepValid?.(currentStep, ok);
+
+      // Etapa 1: capturar e persistir nome mesmo quando o bloco não conecta onInputChange
+      try {
+        if (currentStep === 1 && typeof value === 'string') {
+          const v = value.trim();
+          if (v.length > 0) {
+            // Fluxo oficial
+            try { saveName?.(v); } catch { }
+
+            // Compatibilidade com outras partes do app
+            try {
+              localStorage.setItem('userName', v);
+              localStorage.setItem('quizUserName', v);
+            } catch { }
+
+            // Armazenamento unificado (formData)
+            try {
+              import('@/services/core/UnifiedQuizStorage')
+                .then(({ unifiedQuizStorage }) => unifiedQuizStorage.updateFormData('userName', v))
+                .catch(() => { });
+            } catch { }
+          }
+        }
+      } catch { }
     };
 
     window.addEventListener('quiz-selection-change', handleSelectionChange as EventListener);
     window.addEventListener('quiz-input-change', handleInputChange as EventListener);
+    // Capturar submissões completas de formulário (ex.: etapa 1 com form-container)
+    const handleFormComplete = (ev: Event) => {
+      const e = ev as CustomEvent<{ formData?: Record<string, string> }>;
+      const formData = e.detail?.formData || {};
+      const rawName = formData.name || formData.userName || '';
+      const v = typeof rawName === 'string' ? rawName.trim() : '';
+      if (currentStep === 1 && v.length > 0) {
+        try { saveName?.(v); } catch { }
+        try { localStorage.setItem('userName', v); localStorage.setItem('quizUserName', v); } catch { }
+        try { import('@/services/core/UnifiedQuizStorage').then(({ unifiedQuizStorage }) => unifiedQuizStorage.updateFormData('userName', v)).catch(() => { }); } catch { }
+        setStepValidation(prev => ({ ...prev, 1: true }));
+        setStepValid?.(1, true);
+      }
+    };
+    window.addEventListener('quiz-form-complete', handleFormComplete as EventListener);
     return () => {
       window.removeEventListener('navigate-to-step', handleNavigate as EventListener);
       window.removeEventListener('quiz-navigate-to-step', handleNavigate as EventListener);
       window.removeEventListener('quiz-selection-change', handleSelectionChange as EventListener);
       window.removeEventListener('quiz-input-change', handleInputChange as EventListener);
+      window.removeEventListener('quiz-form-complete', handleFormComplete as EventListener);
     };
   }, [goToStep]);
 
@@ -260,7 +309,7 @@ const QuizModularPage: React.FC = () => {
       const maxSelections =
         (blockConfig?.maxSelections as number | undefined) ??
         (stepConfig?.maxSelections as number | undefined) ??
-        1;
+        3;
 
       let newSelections;
       if (current.includes(optionId)) {
@@ -363,6 +412,12 @@ const QuizModularPage: React.FC = () => {
         const isValid = validateStep(blocks);
         setStepValidation(prev => ({ ...prev, [currentStep]: isValid }));
         setStepValid?.(currentStep, isValid);
+
+        // Notificar mudança de seleção com status de validade consolidado
+        try {
+          const selectionCount = (updated[questionId] || []).length;
+          window.dispatchEvent(new CustomEvent('quiz-selection-change', { detail: { selectionCount, isValid } }));
+        } catch { }
 
         // Auto avanço se configurado (fallback para store)
         const auto = FlowCore.shouldAutoAdvance({ isValid, stepConfig, blockConfig });
