@@ -278,7 +278,7 @@ export const normalizeBlockProperties = (block: any) => {
     };
 
     let normalizedProperties;
-    
+
     // Normalizar propriedades específicas por tipo de bloco
     switch (block.type) {
         case 'text':
