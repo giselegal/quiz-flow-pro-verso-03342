@@ -28,12 +28,14 @@ export const Step20EditorFallback: React.FC<Step20EditorFallbackProps> = ({
   // 🔍 Monitor storage and result state
   useEffect(() => {
     // Determine if we should show fallback
-    const hasResultHeaderBlock = blocks.some(block => block.type === 'result-header-inline');
+    const hasResultHeaderBlock = blocks.some(block => 
+      block.type === 'result-header-inline' || block.type === 'quiz-result'
+    );
     const hasValidResult = Boolean(primaryStyle) && !error;
     const isStillLoading = isLoading;
     
     // Show fallback if:
-    // 1. No result-header-inline block found in template
+    // 1. No result-related blocks found in template
     // 2. Error in calculation
     // 3. Loading for too long (indicates problem)
     // 4. No blocks at all (template loading failed)
@@ -50,10 +52,16 @@ export const Step20EditorFallback: React.FC<Step20EditorFallbackProps> = ({
         hasValidResult,
         isStillLoading,
         blocksCount: blocks.length,
-        error: typeof error === 'string' ? error : 'Erro no cálculo'
+        error: typeof error === 'string' ? error : 'Erro no cálculo',
+        blockTypes: blocks.map(b => b.type)
       });
       setShowFallback(true);
     } else {
+      console.log('✅ [Step20EditorFallback] Renderização normal:', {
+        hasResultHeaderBlock,
+        hasValidResult,
+        blocksCount: blocks.length
+      });
       setShowFallback(false);
     }
   }, [blocks, primaryStyle, isLoading, error]);

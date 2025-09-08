@@ -47,6 +47,93 @@ export const cleanEditorLocalStorage = () => {
   }
 };
 
+/**
+ * 🧹 CORREÇÃO CRÍTICA - LIMPEZA AUTOMÁTICA PARA ETAPA 20
+ * 
+ * Limpa automaticamente dados corrompidos ou excessivos do localStorage
+ * que podem estar causando falhas no carregamento da etapa 20
+ */
+export const cleanStorageForStep20 = () => {
+  try {
+    const usage = JSON.stringify(localStorage).length;
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    let cleaned = 0;
+    
+    console.log(`📊 [Step20] localStorage usage: ${(usage / 1024 / 1024).toFixed(2)}MB`);
+    
+    // Lista de chaves para limpeza
+    const keysToClean = [
+      'editor_config_backup',
+      'quiz_old_cache',
+      'temp_selections',
+      'draft_blocks',
+      'canvas_state',
+      'preview_cache'
+    ];
+    
+    // Limpar dados obsoletos
+    keysToClean.forEach(key => {
+      if (localStorage.getItem(key)) {
+        localStorage.removeItem(key);
+        cleaned++;
+        console.log(`🧹 Removed obsolete key: ${key}`);
+      }
+    });
+    
+    // Se ainda estiver próximo do limite, limpar dados antigos
+    if (usage > maxSize * 0.8) {
+      console.warn('🚨 [Step20] localStorage próximo do limite, limpeza agressiva...');
+      
+      // Preservar apenas dados essenciais
+      const essentialKeys = ['userName', 'user_name', 'quizResult', 'userSelections', 'quizAnswers'];
+      const backup: Record<string, string> = {};
+      
+      // Backup de dados essenciais
+      essentialKeys.forEach(key => {
+        const value = localStorage.getItem(key);
+        if (value) backup[key] = value;
+      });
+      
+      // Limpar tudo e restaurar essenciais
+      localStorage.clear();
+      Object.entries(backup).forEach(([key, value]) => {
+        try {
+          localStorage.setItem(key, value);
+        } catch (e) {
+          console.warn(`⚠️ Failed to restore ${key}:`, e);
+        }
+      });
+      
+      cleaned += 10; // Aproximado
+      console.log('🧹 Performed aggressive cleanup, restored essential data only');
+    }
+    
+    // Limpar editor_config corrompido
+    try {
+      const editorConfig = localStorage.getItem('editor_config');
+      if (editorConfig) {
+        const parsed = JSON.parse(editorConfig);
+        if (!parsed || typeof parsed !== 'object') {
+          localStorage.removeItem('editor_config');
+          cleaned++;
+          console.log('🧹 Removed corrupted editor_config');
+        }
+      }
+    } catch {
+      localStorage.removeItem('editor_config');
+      cleaned++;
+      console.log('🧹 Removed unparseable editor_config');
+    }
+    
+    console.log(`✅ [Step20] Cleaned ${cleaned} items from localStorage`);
+    return cleaned;
+    
+  } catch (error) {
+    console.error('❌ [Step20] Error in storage cleanup:', error);
+    return 0;
+  }
+};
+
 export const clearEditorLocalStorage = () => {
   try {
     localStorage.removeItem('editor_config');

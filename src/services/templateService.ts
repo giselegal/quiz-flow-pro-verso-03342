@@ -275,25 +275,82 @@ function getFallbackBlocksForStep(step: number): Block[] {
     ];
   }
 
-  // Etapa 20: Resultado personalizado (como no QuizFlowPage)
+  // Etapa 20: Resultado personalizado com blocos robustos
   if (step === 20) {
     return [
       {
-        id: `${baseId}-result`,
-        type: 'quiz-result' as BlockType,
-        content: { showSecondaryStyles: true, showOffer: true },
+        id: `${baseId}-header`,
+        type: 'quiz-intro-header' as BlockType,
+        content: { 
+          logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+          logoAlt: 'Logo Gisele Galvão',
+          logoWidth: '96',
+          logoHeight: '96',
+          progressValue: 100,
+          progressTotal: 100,
+          showProgress: true
+        },
         order: 0,
-        properties: { showSecondaryStyles: true, showOffer: true },
+        properties: { 
+          logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+          logoAlt: 'Logo Gisele Galvão',
+          logoWidth: '96',
+          logoHeight: '96',
+          progressValue: 100,
+          progressTotal: 100,
+          showProgress: true,
+          containerWidth: 'full',
+          spacing: 'small'
+        }
       },
       {
-        id: `${baseId}-button`,
-        type: 'button' as BlockType,
-        content: { text: 'Ver Oferta Especial' },
+        id: `${baseId}-result-header`,
+        type: 'result-header-inline' as BlockType,
+        content: {
+          title: 'Seu Estilo Predominante',
+          subtitle: 'Descubra mais sobre seu estilo único'
+        },
         order: 1,
         properties: {
-          text: 'Ver Oferta Especial',
+          title: 'Seu Estilo Predominante',
+          subtitle: 'Descubra mais sobre seu estilo único',
+          showIcon: true,
+          showPercentage: true,
+          showSecondaryStyles: true,
+          containerWidth: 'full',
+          spacing: 'small'
+        }
+      },
+      {
+        id: `${baseId}-result-content`,
+        type: 'quiz-result' as BlockType,
+        content: { 
+          showSecondaryStyles: true, 
+          showOffer: true,
+          showDescription: true
+        },
+        order: 2,
+        properties: { 
+          showSecondaryStyles: true, 
+          showOffer: true,
+          showDescription: true,
+          containerWidth: 'full',
+          spacing: 'small'
+        },
+      },
+      {
+        id: `${baseId}-cta-button`,
+        type: 'button' as BlockType,
+        content: { text: 'Receber Guia Gratuito' },
+        order: 3,
+        properties: {
+          text: 'Receber Guia Gratuito',
           backgroundColor: '#B89B7A',
           textColor: '#FFFFFF',
+          fullWidth: true,
+          size: 'lg',
+          containerWidth: 'full',
+          spacing: 'small'
         },
       },
     ];
