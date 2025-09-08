@@ -50,6 +50,8 @@ export const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps>
         return 'Passos do Quiz';
       case 'content':
         return 'Componentes de Conteúdo';
+      case 'result':
+        return 'Resultados e Vendas';
       case 'quiz':
       case 'action':
       case 'conversion':
