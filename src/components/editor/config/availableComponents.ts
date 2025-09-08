@@ -104,6 +104,14 @@ export const availableComponents: ComponentDef[] = [
         category: 'Layout',
         description: 'Seção hero para transições e ofertas',
     },
+    // Páginas de Vendas - Hero
+    {
+        type: 'sales-hero',
+        name: 'Sales Hero',
+        icon: 'rocket',
+        category: 'Vendas',
+        description: 'Seção Hero pré-configurada para páginas de venda',
+    },
     {
         type: 'benefits',
         name: 'Benefícios',
