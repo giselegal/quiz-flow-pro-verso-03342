@@ -349,24 +349,67 @@ const QuizModularPage: React.FC = () => {
 
       // Persistir também uma versão compatível com o motor de cálculo (ids prefixados por estilo)
       try {
-        // Mapeia cada optionId selecionado para o estilo dominante com base em blockConfig.options[].score
+        // Mapeia cada optionId selecionado para o estilo dominante suportando múltiplos formatos de configuração
         const optionsArr = Array.isArray(blockConfig?.options) ? blockConfig.options : [];
+        const scoreValues = blockConfig?.scoreValues || blockConfig?.properties?.scoreValues || {};
+
+        const KNOWN_STYLES = ['natural','classico','contemporaneo','elegante','romantico','sexy','dramatico','criativo'];
+        const normalize = (s: string) => (s || '').normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase();
+        const detectStyleFromString = (txt: string | undefined): string | null => {
+          const t = normalize(String(txt || ''));
+          if (!t) return null;
+          for (const st of KNOWN_STYLES) {
+            if (t.includes(st)) return st;
+          }
+          return null;
+        };
+
         const derivePrefixed = (optId: string): string => {
-          const opt: any = optionsArr.find((o: any) => o?.id === optId) || null;
-          const scoreObj = (opt && typeof opt === 'object' && opt.score) || {};
-          let bestKey: string | null = null;
-          let bestVal = -Infinity;
-          for (const [k, v] of Object.entries(scoreObj)) {
-            const val = typeof v === 'number' ? v : Number(v);
-            if (!Number.isNaN(val) && val > bestVal) {
-              bestVal = val;
-              bestKey = k;
+          const opt: any = optionsArr.find((o: any) => String(o?.id) === String(optId)) || null;
+
+          // 1) option.score como objeto { estilo: pontos }
+          const scoreObj = (opt && typeof opt === 'object' && typeof opt.score === 'object') ? opt.score : null;
+          if (scoreObj && Object.keys(scoreObj).length > 0) {
+            let bestKey: string | null = null;
+            let bestVal = -Infinity;
+            for (const [k, v] of Object.entries(scoreObj)) {
+              const val = typeof v === 'number' ? v : Number(v);
+              if (!Number.isNaN(val) && val > bestVal) {
+                bestVal = val;
+                bestKey = k;
+              }
+            }
+            const styleKey = bestKey ? normalize(bestKey) : 'natural';
+            return `${styleKey}_${optId}`;
+          }
+
+          // 2) properties.scoreValues pode vir em dois formatos:
+          //    a) { [optionId]: { estilo: pontos } }
+          //    b) { [optionId]: number } + uso de category/id/value para decidir estilo
+          const svEntry = scoreValues?.[optId];
+          if (svEntry) {
+            if (typeof svEntry === 'object') {
+              let bestKey: string | null = null;
+              let bestVal = -Infinity;
+              for (const [k, v] of Object.entries(svEntry)) {
+                const val = typeof v === 'number' ? v : Number(v);
+                if (!Number.isNaN(val) && val > bestVal) {
+                  bestVal = val;
+                  bestKey = k;
+                }
+              }
+              const styleKey = bestKey ? normalize(bestKey) : (detectStyleFromString(opt?.category) || detectStyleFromString(opt?.id) || detectStyleFromString(opt?.value) || 'natural');
+              return `${styleKey}_${optId}`;
+            }
+            if (typeof svEntry === 'number') {
+              const styleKey = detectStyleFromString(opt?.category) || detectStyleFromString(opt?.id) || detectStyleFromString(opt?.value) || 'natural';
+              return `${styleKey}_${optId}`;
             }
           }
 
-          // Normaliza chave (ex.: 'clássico' → 'classico') e monta prefixo
-          const normalize = (s: string) => s.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase();
-          const styleKey = bestKey ? normalize(bestKey) : 'natural';
+          // 3) Sem score/scoreValues: tentar derivar do próprio option (category/id/value)
+          const derived = detectStyleFromString(opt?.category) || detectStyleFromString(opt?.id) || detectStyleFromString(opt?.value);
+          const styleKey = derived || 'natural';
           return `${styleKey}_${optId}`;
         };
 

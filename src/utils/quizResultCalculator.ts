@@ -111,32 +111,22 @@ function createFallbackResult(userName: string, opts: { persist?: boolean } = {}
   console.log('🔄 Criando resultado de fallback...');
   const persist = opts.persist !== false; // padrão: persiste apenas quando chamado em erro real
 
+  // Fallback NEUTRO não enviesado: usado quando não há dados suficientes ou em erro.
   const fallbackResult = {
     version: 'v1',
+    isFallback: true,
     primaryStyle: {
-      style: 'Natural',
-      category: 'Natural',
-      score: 8,
-      percentage: 80
+      style: 'Neutro',
+      category: 'Neutro',
+      score: 0,
+      percentage: 0,
+      rank: 0,
     },
-    secondaryStyles: [
-      {
-        style: 'Clássico',
-        category: 'Clássico',
-        score: 6,
-        percentage: 60
-      }
-    ],
-    scores: {
-      Natural: 8,
-      Clássico: 6,
-      Romântico: 4,
-      Dramático: 3,
-      Criativo: 2
-    },
-    totalQuestions: 10,
-    userData: { name: userName }
-  };
+    secondaryStyles: [],
+    scores: {},
+    totalQuestions: 0,
+    userData: { name: userName || 'Usuário' },
+  } as any;
 
   if (persist) {
     // Salvar em ambos os sistemas
