@@ -6,6 +6,18 @@ import { calculateAndSaveQuizResult } from '@/utils/quizResultCalculator';
 import EVENTS from '@/core/constants/events';
 
 export const useQuizResult = () => {
+  // 🔒 Guarda global simples para evitar cálculos concorrentes entre múltiplas instâncias do hook
+  // e compartilhar o último resultado/erro rapidamente.
+  // Em ambientes browser com hot-reload, este módulo persiste entre renders.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const globalState = (globalThis as any).__quizResultGlobal || ((globalThis as any).__quizResultGlobal = {
+    inflight: null as Promise<any> | null,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    lastOkResult: null as any,
+    lastError: null as string | null,
+    lastUpdatedAt: 0 as number,
+  });
+
   const [primaryStyle, setPrimaryStyle] = useState<StyleResult | null>(null);
   const [secondaryStyles, setSecondaryStyles] = useState<StyleResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -44,7 +56,7 @@ export const useQuizResult = () => {
       // Verificar se há dados suficientes para calcular
       let hasEnoughData = false;
       let isResultStep = false;
-      
+
       try {
         const { unifiedQuizStorage } = await import('@/services/core/UnifiedQuizStorage');
         const unifiedData = unifiedQuizStorage.loadData();
@@ -62,33 +74,59 @@ export const useQuizResult = () => {
         setError('Dados insuficientes para calcular resultado');
         return;
       }
-      
+
       if (isResultStep) {
         console.log('🎯 Etapa 20: forçando cálculo de resultado mesmo com dados insuficientes');
       }
 
-      // ✅ Calcular com timeout de 10 segundos (com cleanup do timer)
-      console.log('🔄 Iniciando cálculo com timeout...');
-      let timeoutId: number | undefined;
-      const timeoutPromise = new Promise((_, reject) => {
-        timeoutId = setTimeout(() => reject(new Error('Timeout: cálculo demorou mais de 10 segundos')), 10000) as unknown as number;
-        timersRef.current.add(timeoutId!);
-      });
+      // ✅ Calcular com timeout (10s) e guarda global anti-concorrência
+      console.log('🔄 Iniciando cálculo com timeout e guarda global...');
 
-      const calculationPromise = calculateAndSaveQuizResult();
+      const runWithTimeout = async <T>(p: Promise<T>, ms: number): Promise<T> => {
+        let timeoutId: number | undefined;
+        const timeoutPromise = new Promise<never>((_, reject) => {
+          timeoutId = setTimeout(() => reject(new Error('Timeout: cálculo demorou mais de 10 segundos')), ms) as unknown as number;
+          timersRef.current.add(timeoutId!);
+        });
+        try {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const out = (await Promise.race([p, timeoutPromise])) as any;
+          return out as T;
+        } finally {
+          if (timeoutId !== undefined) {
+            clearTimeout(timeoutId as unknown as number);
+            timersRef.current.delete(timeoutId as unknown as number);
+          }
+        }
+      };
 
-      const result = await Promise.race([calculationPromise, timeoutPromise]) as any;
-
-      // Cancelar timeout se cálculo venceu a corrida
-      if (timeoutId !== undefined) {
-        clearTimeout(timeoutId as unknown as number);
-        timersRef.current.delete(timeoutId as unknown as number);
+      // Reutilizar cálculo em andamento, se houver
+      if (!globalState.inflight) {
+        globalState.inflight = (async () => {
+          const r = await calculateAndSaveQuizResult();
+          return r;
+        })();
+      } else {
+        if (process.env.NODE_ENV === 'development') {
+          console.info('⏳ Cálculo de resultado já em andamento — aguardando o mesmo promise');
+        }
       }
+
+      // Tipar explicitamente para evitar inferência como {}
+      const result = await runWithTimeout<any>(globalState.inflight!, 10000) as any;
+
+      // Marcar que terminou a promise atual (libera novas execuções)
+      globalState.inflight = null;
 
       if (result) {
         setPrimaryStyle(result.primaryStyle ?? null);
         setSecondaryStyles(result.secondaryStyles || []);
         setRetryCount(0); // Reset retry count on success
+
+        // Atualizar cache global
+        globalState.lastOkResult = result;
+        globalState.lastError = null;
+        globalState.lastUpdatedAt = Date.now();
 
         // Emitir eventos para outros consumidores
         window.dispatchEvent(new Event('quiz-result-updated'));
@@ -100,6 +138,12 @@ export const useQuizResult = () => {
     } catch (error: any) {
       console.error('❌ Erro ao carregar/calcular resultado:', error);
       setError(error.message || 'Erro desconhecido');
+
+      // Atualizar cache global de erro
+      globalState.lastError = error?.message || 'Erro desconhecido';
+      globalState.lastUpdatedAt = Date.now();
+      // Liberar inflight se a falha foi desta promise
+      globalState.inflight = null;
 
       // ✅ Retry automático até 3 vezes com delay crescente (com cleanup)
       if (retryCount < 3) {
@@ -119,6 +163,14 @@ export const useQuizResult = () => {
   }, [retryCount]);
 
   useEffect(() => {
+    // Se houver resultado recente no cache global, usar imediatamente para evitar flicker
+    if (globalState.lastOkResult) {
+      try {
+        setPrimaryStyle(globalState.lastOkResult.primaryStyle ?? null);
+        setSecondaryStyles(globalState.lastOkResult.secondaryStyles || []);
+      } catch { /* ignore */ }
+    }
+
     loadFromStorage();
     const handler = () => loadFromStorage();
 
