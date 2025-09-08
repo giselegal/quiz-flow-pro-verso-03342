@@ -8,6 +8,8 @@ import { Block } from '@/types/editor';
 import { TemplateManager } from '@/utils/TemplateManager';
 import React, { useEffect, useMemo, useState, Suspense } from 'react';
 import { ResultEngine } from '@/services/core/ResultEngine';
+import ResultOrchestrator from '@/services/core/ResultOrchestrator';
+import { STYLE_KEYWORDS_MAPPING } from '@/utils/styleKeywordMap';
 import { SelectionRules, FlowCore } from '@/services/core/FlowCore';
 import OPTIMIZED_FUNNEL_CONFIG from '@/config/optimized21StepsFunnel';
 import useOptimizedScheduler from '@/hooks/useOptimizedScheduler';
@@ -353,14 +355,18 @@ const QuizModularPage: React.FC = () => {
         const optionsArr = Array.isArray(blockConfig?.options) ? blockConfig.options : [];
         const scoreValues = blockConfig?.scoreValues || blockConfig?.properties?.scoreValues || {};
 
-        const KNOWN_STYLES = ['natural','classico','contemporaneo','elegante','romantico','sexy','dramatico','criativo'];
+        const KNOWN_STYLES = ['natural', 'classico', 'contemporaneo', 'elegante', 'romantico', 'sexy', 'dramatico', 'criativo'];
         const normalize = (s: string) => (s || '').normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase();
+        const knownFromKeywords = Object.keys(STYLE_KEYWORDS_MAPPING);
         const detectStyleFromString = (txt: string | undefined): string | null => {
           const t = normalize(String(txt || ''));
           if (!t) return null;
-          for (const st of KNOWN_STYLES) {
-            if (t.includes(st)) return st;
+          // primeiro: palavras-chave ricas (ex.: conforto -> natural)
+          for (const kw of knownFromKeywords) {
+            if (t.includes(kw)) return normalize(STYLE_KEYWORDS_MAPPING[kw]);
           }
+          // fallback: estilos canônicos por substring
+          for (const st of KNOWN_STYLES) if (t.includes(st)) return st;
           return null;
         };
 
@@ -379,8 +385,11 @@ const QuizModularPage: React.FC = () => {
                 bestKey = k;
               }
             }
-            const styleKey = bestKey ? normalize(bestKey) : 'natural';
-            return `${styleKey}_${optId}`;
+            if (bestKey) {
+              return `${normalize(bestKey)}_${optId}`;
+            }
+            // sem melhor chave: não prefixar, deixe orquestrador lidar
+            return String(optId);
           }
 
           // 2) properties.scoreValues pode vir em dois formatos:
@@ -402,15 +411,18 @@ const QuizModularPage: React.FC = () => {
               return `${styleKey}_${optId}`;
             }
             if (typeof svEntry === 'number') {
-              const styleKey = detectStyleFromString(opt?.category) || detectStyleFromString(opt?.id) || detectStyleFromString(opt?.value) || 'natural';
-              return `${styleKey}_${optId}`;
+              const styleKey = detectStyleFromString(opt?.category) || detectStyleFromString(opt?.id) || detectStyleFromString(opt?.value);
+              if (styleKey) return `${styleKey}_${optId}`;
+              // desconhecido: retornar original sem viés
+              return String(optId);
             }
           }
 
           // 3) Sem score/scoreValues: tentar derivar do próprio option (category/id/value)
           const derived = detectStyleFromString(opt?.category) || detectStyleFromString(opt?.id) || detectStyleFromString(opt?.value);
-          const styleKey = derived || 'natural';
-          return `${styleKey}_${optId}`;
+          if (derived) return `${derived}_${optId}`;
+          // Sem pista de estilo: manter id intacto (orquestrador fará fallback canônico)
+          return String(optId);
         };
 
         const scoringMap = (() => {
@@ -620,25 +632,19 @@ const QuizModularPage: React.FC = () => {
         throw new Error('Nenhuma seleção encontrada para processar');
       }
 
-      // ✅ 3. EXECUTAR CÁLCULO ROBUSTO
+      // ✅ 3. EXECUTAR CÁLCULO ROBUSTO (via Orchestrator)
       const weightQuestions = (OPTIMIZED_FUNNEL_CONFIG as any)?.calculations?.scoreWeights?.questions;
-
-      const { scores, total } = ResultEngine.computeScoresFromSelections(
-        selectionsForScoring,
-        {
-          weightQuestions: typeof weightQuestions === 'number' ? weightQuestions : 1,
-        }
-      );
-
-      if (!scores || Object.keys(scores).length === 0) {
-        throw new Error('Falha no cálculo: nenhum score foi gerado');
-      }
-
-      const payload = ResultEngine.toPayload(scores, total, userName || 'Usuário');
+      const { payload } = await ResultOrchestrator.run({
+        selectionsByQuestion: selectionsForScoring,
+        weightQuestions: typeof weightQuestions === 'number' ? weightQuestions : 1,
+        userName: userName || 'Usuário',
+        persistToSupabase: false,
+        sessionId: null,
+      });
 
       // ✅ 4. PERSISTIR EM AMBOS OS SISTEMAS (sincronização completa)
-      ResultEngine.persist(payload);
-      unifiedQuizStorage.saveResult(payload);
+  ResultEngine.persist(payload);
+  unifiedQuizStorage.saveResult(payload as any);
 
       // Persistir nome do usuário em locais compatíveis
       if (userName) {
@@ -653,8 +659,8 @@ const QuizModularPage: React.FC = () => {
 
       console.log('✅ [QuizModular] Resultado calculado e salvo:', {
         primaryStyle: (payload as any).primaryStyle?.style,
-        totalScores: Object.keys(scores).length,
-        userName: userName || 'Não informado'
+        totalScores: Object.keys(((payload as any).scores || {})).length,
+        userName: (payload as any)?.userData?.name || userName || 'Não informado'
       });
 
     } catch (error: any) {
