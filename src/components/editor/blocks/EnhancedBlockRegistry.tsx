@@ -14,6 +14,7 @@ import LegalNoticeInlineBlock from '@/components/editor/blocks/LegalNoticeInline
 import OptionsGridBlock from '@/components/editor/blocks/OptionsGridBlock';
 import QuizIntroHeaderBlock from '@/components/editor/blocks/QuizIntroHeaderBlock';
 import TextInlineBlock from '@/components/editor/blocks/TextInlineBlock';
+import SalesHeroBlock from '@/components/editor/blocks/SalesHeroBlock';
 
 // 🎯 REGISTRY COMPLETO - 150+ COMPONENTES MAPEADOS
 export const ENHANCED_BLOCK_REGISTRY: Record<string, ComponentType<any>> = {
@@ -45,6 +46,9 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, ComponentType<any>> = {
     'container': BasicContainerBlock,
     'section': BasicContainerBlock,
     'box': BasicContainerBlock,
+
+    // ✅ SALES PAGES - HERO
+    'sales-hero': SalesHeroBlock,
 
     // ✅ STEP 12 - TRANSIÇÃO
     hero: lazy(() => import('@/components/editor/blocks/QuizTransitionBlock')),
