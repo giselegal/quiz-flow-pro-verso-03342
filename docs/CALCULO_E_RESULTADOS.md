@@ -23,6 +23,7 @@ Etapa 1 (dados do usuário)
 - Editor padrão: `src/legacy/editor/EditorPro.tsx` força cálculo em 19/20
 - Fallback moderno: `src/components/editor/SchemaDrivenEditorResponsive.tsx` força cálculo ao detectar `currentStep === 20`, com uma segunda tentativa 800ms depois
 - Eventos: após cálculo, emite `quiz-result-refresh` e `quiz-result-updated`
+- Confiabilidade: o EditorPro serializa cálculos na etapa 20 (evita chamadas concorrentes); o editor moderno tenta 2 vezes com pequeno atraso para capturar dados que chegam logo após a navegação.
 
 4) Cálculo e persistência do resultado
 - Função central: `src/utils/quizResultCalculator.ts` → `calculateAndSaveQuizResult()`
@@ -31,12 +32,15 @@ Etapa 1 (dados do usuário)
   - Legacy: `StorageService.safeSetJSON('quizResult', payload)`
   - Unificado: `unifiedQuizStorage.saveResult(payload)`
 - Eventos emitidos: `quiz-result-updated`, `unified-quiz-data-updated`
+- Observações importantes (robustez):
+  - Etapa 20 sem seleções: o fallback é retornado sem persistir (não sobrescreve resultado real com valores genéricos).
+  - Salvar apenas o resultado no unificado não dispara `quiz-answer-updated` (evita loop de recálculo); apenas `quiz-result-updated` e `unified-quiz-data-updated` são emitidos.
 
 5) Leitura/Exibição do resultado
 - Hook: `src/hooks/useQuizResult.ts`
   - Lê de legacy/unificado; se não houver, tenta calcular (timeout de 10s + retries)
   - Anti-concorrência: guarda global evita cálculos paralelos
-  - Eventos escutados: `quiz-result-updated`, `quiz-result-refresh`, `unified-quiz-data-updated`, `quiz-answer-updated`
+  - Eventos escutados: `quiz-result-updated`, `quiz-result-refresh`, `unified-quiz-data-updated`, `quiz-answer-updated` (nota: salvar apenas o resultado não emite `quiz-answer-updated`)
 - Blocos de UI principais:
   - `ResultHeaderInlineBlock.tsx` (header/percentual/imagens)
   - `Step20Result.tsx` e `Step20Template.tsx` (layouts de resultado)
@@ -100,7 +104,7 @@ Pré-passo — Etapa 1 (dados do usuário)
 ## Eventos importantes
 
 - `quiz-answer-updated` (EVENTS.QUIZ_ANSWER_UPDATED)
-  - Disparado ao salvar seleções/form; o hook pode recalcular
+  - Disparado ao salvar seleções/form; o hook pode recalcular. Salvar apenas o resultado não emite este evento.
 - `quiz-result-updated` (EVENTS.QUIZ_RESULT_UPDATED)
   - Disparado quando um novo resultado é salvo
 - `quiz-result-refresh` (custom)
@@ -116,6 +120,7 @@ Pré-passo — Etapa 1 (dados do usuário)
   - `metadata`: { currentStep, completedSteps[], startedAt, lastUpdated, version }
   - `result`: payload final (primaryStyle, secondaryStyles, etc.)
   - Observação: o `userName` é coletado na etapa 1 e usado na personalização do resultado
+  - Observação (robustez): salvar apenas o `result` não dispara `quiz-answer-updated`; na etapa 20, se não houver seleções, o fallback retornado não é persistido.
 
 - Legacy (compatibilidade):
   - `userSelections`
@@ -129,12 +134,13 @@ Pré-passo — Etapa 1 (dados do usuário)
   - Confirme eventos no console: deve haver logs de cálculo e `quiz-result-updated`
   - Abra Application → Local Storage e veja se `quizResult`/`unifiedQuizData.result` existem
   - O hook tem timeout de 10s e 3 tentativas; use o botão "Tentar Novamente" quando disponível
+  - Se observar spam de `quiz-answer-updated` após salvar resultado, revise integrações externas: o storage unificado não emite mais `quiz-answer-updated` quando apenas o resultado muda.
 
 - Opções não aparecem na etapa 2
   - `OptionsGridBlock` resolve via properties → content → canônico; revise o template e logs em dev
 
 - Resultado "Natural" sempre
-  - Em cenários sem respostas, o orquestrador usa ordenação determinística; com dados reais, o estilo muda
+  - Em cenários sem respostas, um fallback é retornado mas não é persistido na etapa 20; com respostas reais, o estilo muda e é salvo normalmente.
 
 ## Arquivos-chave (referência)
 
@@ -161,11 +167,24 @@ Pré-passo — Etapa 1 (dados do usuário)
   - `src/hooks/useQuizResult.ts`
 
 ## Validação automática (smoke)
+- Execute o script diretamente:
 
-- `npm run step20` executa `scripts/smoke-step20.mjs` que:
+```bash
+node scripts/smoke-step20.mjs
+```
+
+Este script:
   - Abre `/editor`, navega para a etapa 20 por evento,
   - Verifica um cue visual e leitura de `quizResult` no storage,
   - Loga um resumo JSON no terminal.
+
+Opcional: crie um alias no `package.json` para facilitar (ex.: `"smoke:step20": "node scripts/smoke-step20.mjs"`).
+
+## Notas de robustez (set/2025)
+
+- Evitamos loop de recálculo: salvar apenas o resultado no `UnifiedQuizStorage` não emite `quiz-answer-updated`.
+- Evitamos persistir fallback genérico na etapa 20: quando não há seleções suficientes, o fallback é retornado sem salvar, preservando qualquer resultado real existente.
+- EditorPro serializa cálculos na etapa 20 para evitar concorrência; o editor moderno mantém uma segunda tentativa com atraso curto.
 
 ---
 Este documento deve ajudar na evolução e depuração do fluxo de cálculo e exibição do resultado. Atualize sempre que regras de negócio ou eventos mudarem.
