@@ -10,6 +10,7 @@ import { FourColumnLayout } from './layout/FourColumnLayout';
 import { EditorToolbar } from './toolbar/EditorToolbar';
 import { Step20EditorFallback } from './fallback/Step20EditorFallback';
 import { StepDndProvider } from './dnd/StepDndProvider';
+import { calculateAndSaveQuizResult } from '@/utils/quizResultCalculator';
 
 import React, { useState } from 'react';
 import { createBlockFromComponent } from '@/utils/editorUtils';
@@ -41,6 +42,42 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
   // 🎯 FASE 2: Integrar fallback para etapa 20
   const isStep20 = state.currentStep === 20;
   const hasResultHeaderBlock = currentBlocks.some(block => block.type === 'result-header-inline');
+
+  // Garantir cálculo do resultado quando entrar na etapa 20 (paridade com EditorPro)
+  React.useEffect(() => {
+    const step = state.currentStep;
+    if (step !== 20) return;
+
+    let cancelled = false;
+    (async () => {
+      try {
+        if (process.env.NODE_ENV === 'development') {
+          console.info('🧮 [SchemaEditor] Etapa 20: forçando cálculo de resultado');
+        }
+        await calculateAndSaveQuizResult();
+        if (!cancelled) {
+          try { window.dispatchEvent(new Event('quiz-result-refresh')); } catch { }
+        }
+        // Segunda tentativa breve para cobrir condições de corrida
+        setTimeout(async () => {
+          if (cancelled) return;
+          try {
+            if (process.env.NODE_ENV === 'development') {
+              console.info('🧮 [SchemaEditor] Etapa 20: segunda tentativa de cálculo');
+            }
+            await calculateAndSaveQuizResult();
+            try { window.dispatchEvent(new Event('quiz-result-refresh')); } catch { }
+          } catch (err) {
+            console.error('[SchemaEditor] Falha na segunda tentativa de cálculo:', err);
+          }
+        }, 800);
+      } catch (err) {
+        console.error('[SchemaEditor] Falha ao calcular resultado na etapa 20:', err);
+      }
+    })();
+
+    return () => { cancelled = true; };
+  }, [state.currentStep]);
 
   const handleComponentSelect = async (type: string) => {
     try {
