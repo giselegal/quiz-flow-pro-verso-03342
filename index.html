@@ -17,75 +17,17 @@
       content="Descubra Seu Estilo com Gisele Galvão | Vista-se de Você!"
     />
 
-    <!-- Facebook Pixel será carregado dinamicamente via React -->
-    <script>
-      !(function (f, b, e, v, n, t, s) {
-        if (f.fbq) return;
-        n = f.fbq = function () {
-          n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
-        };
-        if (!f._fbq) f._fbq = n;
-        n.push = n;
-        n.loaded = !0;
-        n.version = '2.0';
-        n.queue = [];
-        t = b.createElement(e);
-        t.async = !0;
-        t.src = v;
-        s = b.getElementsByTagName(e)[0];
-        s.parentNode.insertBefore(t, s);
-      })(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
-      // Pixel ID será inicializado dinamicamente baseado na rota
-    </script>
-
-    <!-- Preload de LCP removido: será gerenciado por componentes de rota para evitar warnings de "preloaded but not used" em telas como /editor -->
-
-    <link rel="preconnect" href="https://res.cloudinary.com" crossorigin />
+    <!-- Minimal head for maximum compatibility -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preconnect" href="https://connect.facebook.net" crossorigin />
-    <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin />
 
-    <link rel="dns-prefetch" href="https://res.cloudinary.com" />
-    <link rel="dns-prefetch" href="https://connect.facebook.net" />
-
-    <!-- Preload Playfair Display woff2 direto do Google Fonts para garantir swap e performance -->
+    <!-- Essential font loading -->
     <link
       href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap"
       rel="stylesheet"
     />
 
-    <!-- Favicons usando a logo da marca -->
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="16x16"
-      href="https://res.cloudinary.com/dqljyf76t/image/upload/c_fit,w_16,h_16,f_png/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="32x32"
-      href="https://res.cloudinary.com/dqljyf76t/image/upload/c_fit,w_32,h_32,f_png/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp"
-    />
-    <link
-      rel="apple-touch-icon"
-      sizes="180x180"
-      href="https://res.cloudinary.com/dqljyf76t/image/upload/c_fit,w_180,h_180,f_png/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp"
-    />
-    <!-- Favicon padrão como fallback -->
-    <link
-      rel="shortcut icon"
-      href="https://res.cloudinary.com/dqljyf76t/image/upload/c_fit,w_32,h_32,f_png/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp"
-      type="image/x-icon"
-    />
-    <!-- Manifest com os ícones da marca -->
-    <link rel="manifest" href="/site.webmanifest" />
-    <meta name="msapplication-TileColor" content="#B89B7A" />
-    <meta name="theme-color" content="#B89B7A" />
-    <meta http-equiv="Cache-Control" content="public, max-age=31536000" />
-
-    <!-- Shim para 'require' em ambiente ESM -->
+    <!-- Essential shim -->
     <script src="/require-shim.js"></script>
     
     <!-- Vite irá injetar os assets corretos no build -->
