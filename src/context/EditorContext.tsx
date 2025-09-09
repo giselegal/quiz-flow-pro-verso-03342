@@ -1,6 +1,6 @@
 import { useAutoSaveWithDebounce } from '@/hooks/editor/useAutoSaveWithDebounce';
 import { toast } from '@/hooks/use-toast';
-import { getStepTemplate } from '@/config/templates/templates';
+import { getStepTemplate } from '@/services/UnifiedTemplateLoader';
 // Padronização: preferir templateService para carregar e converter blocos
 // Import dinâmico mantido onde necessário para evitar carga desnecessária do módulo em rotas que não usam
 // import { funnelPersistenceService } from '@/services/funnelPersistence';
@@ -488,17 +488,16 @@ export const EditorProvider: React.FC<{
         const stagesFromTemplates: any[] = [];
         for (let stepNumber = 1; stepNumber <= 21; stepNumber++) {
           const template = await getStepTemplate(stepNumber);
-          const metadata = template?.metadata || {};
           stagesFromTemplates.push({
             id: `step-${stepNumber}`,
-            name: metadata.name || `Etapa ${stepNumber}`,
-            description: metadata.description || `Descrição da etapa ${stepNumber}`,
+            name: `Etapa ${stepNumber}`,
+            description: `Descrição da etapa ${stepNumber}`,
             order: stepNumber,
             blocksCount: (template?.blocks || []).length,
             metadata: {
               blocksCount: (template?.blocks || []).length,
-              templateId: metadata.templateId,
-              version: metadata.version,
+              templateId: `step-${stepNumber}`,
+              version: '1.0.0',
             },
           });
         }

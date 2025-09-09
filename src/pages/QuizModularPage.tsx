@@ -5,7 +5,7 @@ import { useQuizFlow } from '@/hooks/core/useQuizFlow';
 import { useStep01Validation } from '@/hooks/useStep01Validation';
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
-import { TemplateManager } from '@/utils/TemplateManager';
+import { loadStepBlocks, reloadTemplate } from '@/services/UnifiedTemplateLoader';
 import React, { useEffect, useMemo, useState, Suspense } from 'react';
 import { ResultEngine } from '@/services/core/ResultEngine';
 import ResultOrchestrator from '@/services/core/ResultOrchestrator';
@@ -96,9 +96,9 @@ const QuizModularPage: React.FC = () => {
 
         // Carregando blocos da etapa (silencioso em produção)
 
-        // Carregar blocos usando TemplateManager (integra JSON/Editor)
+        // Carregar blocos usando UnifiedTemplateLoader (integra JSON/Editor)
         const stepId = `step-${currentStep}`;
-        const stepBlocks = await TemplateManager.loadStepBlocks(stepId);
+        const stepBlocks = await loadStepBlocks(stepId);
         setBlocks(stepBlocks);
 
         // Validar se a etapa já está completa (idle com timeout)
@@ -124,7 +124,7 @@ const QuizModularPage: React.FC = () => {
 
     loadCurrentStepBlocks();
     // Escuta atualizações publicadas pelo editor
-    const onTemplateUpdated = (ev: Event) => {
+    const onTemplateUpdated = async (ev: Event) => {
       const e = ev as CustomEvent<{ stepId?: string } | undefined>;
       const stepId = e?.detail?.stepId;
       const updatedStep =
@@ -133,17 +133,19 @@ const QuizModularPage: React.FC = () => {
       // Se o evento indicar uma etapa específica, recarregue se for a atual
       if (!Number.isNaN(updatedStep)) {
         if (updatedStep === currentStep) {
-          TemplateManager.reloadTemplate(`step-${currentStep}`)
-            .then(setBlocks)
-            .catch(() => { });
+          const template = await reloadTemplate(currentStep);
+          if (template?.blocks) {
+            setBlocks(template.blocks);
+          }
         }
         return;
       }
 
       // Caso o evento não traga stepId (atualização global), recarregue a etapa atual
-      TemplateManager.reloadTemplate(`step-${currentStep}`)
-        .then(setBlocks)
-        .catch(() => { });
+      const template = await reloadTemplate(currentStep);
+      if (template?.blocks) {
+        setBlocks(template.blocks);
+      }
     };
     window.addEventListener('quiz-template-updated', onTemplateUpdated as EventListener);
     return () => {
@@ -1041,11 +1043,12 @@ const QuizModularPage: React.FC = () => {
                     </div>
                     {/* Utilitário opcional de recarga */}
                     <button
-                      onClick={() =>
-                        TemplateManager.reloadTemplate(`step-${currentStep}`)
-                          .then(setBlocks)
-                          .catch(() => { })
-                      }
+                      onClick={async () => {
+                        const template = await reloadTemplate(currentStep);
+                        if (template?.blocks) {
+                          setBlocks(template.blocks);
+                        }
+                      }}
                       className="ml-4 px-4 py-3 rounded-lg font-medium bg-white text-stone-700 hover:bg-stone-50 border border-stone-200 shadow-sm hover:shadow"
                       title="Recarregar blocos da etapa"
                     >
