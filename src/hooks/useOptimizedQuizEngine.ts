@@ -51,7 +51,7 @@ const STYLE_WEIGHTS = {
 
 export const useOptimizedQuizEngine = (options = DEFAULT_OPTIONS) => {
   const opts = { ...DEFAULT_OPTIONS, ...options };
-  
+
   // State otimizado
   const [state, setState] = useState<OptimizedQuizState>({
     answers: {},
@@ -86,7 +86,7 @@ export const useOptimizedQuizEngine = (options = DEFAULT_OPTIONS) => {
 
     setState(prev => {
       const newScores = { ...prev.intermediateScores };
-      
+
       // Remove score anterior da pergunta se existir
       const oldAnswer = prev.answers[questionId];
       if (oldAnswer) {
@@ -166,7 +166,7 @@ export const useOptimizedQuizEngine = (options = DEFAULT_OPTIONS) => {
     try {
       // Use incremental scores if available
       let finalScores: Record<string, number>;
-      
+
       if (opts.enableIncremental && Object.keys(state.intermediateScores).length > 0) {
         finalScores = { ...state.intermediateScores };
         console.log('⚡ Using incremental scores');
@@ -204,7 +204,7 @@ export const useOptimizedQuizEngine = (options = DEFAULT_OPTIONS) => {
           points: predominantScore,
           rank: 1
         },
-  secondaryStyles: sortedStyles.slice(1, 3).map(([style, score], index) => ({
+        secondaryStyles: sortedStyles.slice(1, 3).map(([style, score], index) => ({
           category: style,
           style: style,
           score,
@@ -216,15 +216,15 @@ export const useOptimizedQuizEngine = (options = DEFAULT_OPTIONS) => {
         completedAt: new Date(),
         scores: finalScores,
         predominantStyle,
-  complementaryStyles: sortedStyles.slice(1, 3).map(([style]) => style),
+        complementaryStyles: sortedStyles.slice(1, 3).map(([style]) => style),
         styleScores: finalScores
       };
 
       // Cache result
       calculationCache.current.set(cacheKey, result);
-      setState(prev => ({ 
-        ...prev, 
-        cachedResult: result, 
+      setState(prev => ({
+        ...prev,
+        cachedResult: result,
         isDirty: false,
         lastCalculation: Date.now()
       }));
@@ -242,12 +242,12 @@ export const useOptimizedQuizEngine = (options = DEFAULT_OPTIONS) => {
       return null;
     }
   }, [
-    isCacheValid, 
-    state.cachedResult, 
-    state.intermediateScores, 
-    state.answers, 
-    cacheKey, 
-    opts.enableIncremental, 
+    isCacheValid,
+    state.cachedResult,
+    state.intermediateScores,
+    state.answers,
+    cacheKey,
+    opts.enableIncremental,
     opts.autoSave,
     getAnswerScore
   ]);
@@ -345,17 +345,17 @@ export const useOptimizedQuizEngine = (options = DEFAULT_OPTIONS) => {
     answers: state.answers,
     currentResult: state.cachedResult,
     isCalculating: state.isDirty,
-    
+
     // Actions
     updateAnswer,
     updateMultipleAnswers,
     calculateResult,
     loadFromStorage,
     clearCache,
-    
+
     // Utils
     getStats,
-    
+
     // Config
     updateOptions: (newOptions: Partial<UseOptimizedQuizEngineOptions>) => {
       Object.assign(opts, newOptions);

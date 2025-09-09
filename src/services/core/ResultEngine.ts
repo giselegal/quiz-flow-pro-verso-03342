@@ -82,7 +82,7 @@ export const ResultEngine = {
         if (!firstByStyle.has(style)) firstByStyle.set(style, ord);
       }
       clickIndex = Object.fromEntries(firstByStyle.entries());
-    } catch {}
+    } catch { }
 
     const ordered = Object.entries(scores)
       .map(([style, score]) => ({
@@ -94,11 +94,11 @@ export const ResultEngine = {
       .sort((a, b) => {
         if (b.score !== a.score) return b.score - a.score;
         // 1) Desempate por ordem de clique (quem foi clicado primeiro vence)
-  const cAi = clickIndex[a.style];
-  const cBi = clickIndex[b.style];
-  if (typeof cAi === 'number' && typeof cBi === 'number' && cAi !== cBi) return cAi - cBi;
-  if (typeof cAi === 'number' && typeof cBi !== 'number') return -1;
-  if (typeof cAi !== 'number' && typeof cBi === 'number') return 1;
+        const cAi = clickIndex[a.style];
+        const cBi = clickIndex[b.style];
+        if (typeof cAi === 'number' && typeof cBi === 'number' && cAi !== cBi) return cAi - cBi;
+        if (typeof cAi === 'number' && typeof cBi !== 'number') return -1;
+        if (typeof cAi !== 'number' && typeof cBi === 'number') return 1;
         // 2) Desempate estável pela ordem de STYLES_ORDER
         const ai = STYLES_ORDER.indexOf(a.style);
         const bi = STYLES_ORDER.indexOf(b.style);
