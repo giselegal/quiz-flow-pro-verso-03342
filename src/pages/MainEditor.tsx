@@ -4,6 +4,7 @@ import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import React from 'react';
 import { useLocation } from 'wouter';
 // EditorPro será usado via require dinâmico no EditorInitializer para evitar ciclos
+// Force rebuild: 2025-09-09T18:59
 import { EditorProvider } from '../components/editor/EditorProvider';
 import { ErrorBoundary } from '../components/editor/ErrorBoundary';
 // Painel de telemetria desativado conforme solicitado
