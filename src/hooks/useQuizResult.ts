@@ -4,6 +4,7 @@ import { StyleResult } from '@/types/quiz';
 import { StorageService } from '@/services/core/StorageService';
 import { calculateAndSaveQuizResult } from '@/utils/quizResultCalculator';
 import { resultCacheService } from '@/services/core/ResultCacheService';
+import { useDebounce } from '@/utils/debounce';
 import EVENTS from '@/core/constants/events';
 
 export const useQuizResult = () => {
@@ -186,6 +187,17 @@ export const useQuizResult = () => {
     }
   }, [retryCount]);
 
+  // 🎯 FASE 2: Debounce para evitar cálculos em cascata durante navegação
+  const debouncedLoadFromStorage = useDebounce(
+    loadFromStorage,
+    500, // 500ms de debounce
+    { 
+      leading: false, // Não executar na borda de entrada
+      trailing: true  // Executar na borda de saída
+    },
+    [loadFromStorage]
+  );
+
   useEffect(() => {
     // Se houver resultado recente no cache global, usar imediatamente para evitar flicker
     if (globalState.lastOkResult) {
@@ -196,7 +208,7 @@ export const useQuizResult = () => {
     }
 
     loadFromStorage();
-    const handler = () => loadFromStorage();
+    const handler = () => debouncedLoadFromStorage(); // 🎯 FASE 2: Usar versão debounced
 
     // Reage a mudanças do localStorage (em outras abas) e a eventos customizados internos
     window.addEventListener('storage', handler);
@@ -212,8 +224,8 @@ export const useQuizResult = () => {
 
       // Se tiver dados suficientes (userName + algumas respostas), recalcular
       if (answerKeys.length >= 3 || answers.userName) {
-        console.log('🔄 Recalculando resultado devido a novas respostas');
-        calculateAndSaveQuizResult();
+        console.log('🔄 Recalculando resultado devido a novas respostas (debounced)');
+        debouncedLoadFromStorage(); // 🎯 FASE 2: Usar versão debounced
       }
     };
 
@@ -231,8 +243,11 @@ export const useQuizResult = () => {
         timersRef.current.forEach(id => clearTimeout(id as unknown as number));
         timersRef.current.clear();
       } catch { /* ignore */ }
+
+      // 🎯 FASE 2: Cancelar debounce pendente
+      debouncedLoadFromStorage.cancel();
     };
-  }, [loadFromStorage]);
+  }, [loadFromStorage, debouncedLoadFromStorage]);
 
   // ✅ Função manual de retry para componentes
   const retry = useCallback(() => {
