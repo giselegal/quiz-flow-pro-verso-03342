@@ -42,7 +42,7 @@ export const useEditorAutoSave = ({
   const [errorMessage, setErrorMessage] = useState<string>();
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const { toast } = useToast();
-  
+
   const currentFunnelId = funnelId || getFunnelIdFromEnvOrStorage() || 'default-funnel';
   const lastDataRef = useRef(data);
 
@@ -50,7 +50,7 @@ export const useEditorAutoSave = ({
   useEffect(() => {
     const currentDataString = JSON.stringify(data);
     const lastDataString = JSON.stringify(lastDataRef.current);
-    
+
     if (currentDataString !== lastDataString) {
       setHasUnsavedChanges(true);
       setSaveStatus('idle');
@@ -68,7 +68,7 @@ export const useEditorAutoSave = ({
       // Para funis do template, não tentar salvar no Supabase
       if (currentFunnelId.startsWith('template-') || currentFunnelId === 'default-funnel') {
         console.log('📋 Funil template/default - salvando apenas localmente');
-        
+
         // Salvar no localStorage como backup
         try {
           localStorage.setItem(
@@ -93,7 +93,7 @@ export const useEditorAutoSave = ({
         };
 
         await schemaDrivenFunnelService.saveFunnel(funnelData);
-        
+
         console.log('✅ Dados salvos no Supabase com sucesso');
       }
 
@@ -115,7 +115,7 @@ export const useEditorAutoSave = ({
       console.error('❌ Erro ao salvar dados:', error);
       setSaveStatus('error');
       setErrorMessage(error instanceof Error ? error.message : 'Erro desconhecido');
-      
+
       if (showToasts) {
         toast({
           title: 'Erro ao salvar',
@@ -123,7 +123,7 @@ export const useEditorAutoSave = ({
           variant: 'destructive'
         });
       }
-      
+
       throw error; // Re-throw para o hook de auto-save
     }
   }, [currentFunnelId, showToasts, toast]);
@@ -153,7 +153,7 @@ export const useEditorAutoSave = ({
       const timer = setTimeout(() => {
         setSaveStatus('idle');
       }, 5000); // Volta para idle após 5 segundos
-      
+
       return () => clearTimeout(timer);
     }
   }, [saveStatus]);

@@ -402,11 +402,11 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
       }
 
       // Fallback para o template padrão
-      console.log('🔍 FunnelsContext: usando fallback quiz-estilo-completo');
-      return 'quiz-estilo-completo';
+      console.log('🔍 FunnelsContext: usando fallback template-quiz-estilo-completo');
+      return 'template-quiz-estilo-completo';
     } catch (error) {
       console.error('❌ Erro ao obter funnelId:', error);
-      return 'quiz-estilo-completo';
+      return 'template-quiz-estilo-completo';
     }
   });
 
