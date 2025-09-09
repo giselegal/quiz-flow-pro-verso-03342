@@ -25,42 +25,48 @@ export const Step20EditorFallback: React.FC<Step20EditorFallbackProps> = ({
   const { primaryStyle, isLoading, error } = useQuizResult();
   const [showFallback, setShowFallback] = useState(false);
 
-  // 🔍 Monitor storage and result state
+  // 🔍 Monitor storage and result state - VERSÃO OTIMIZADA
   useEffect(() => {
-    // Determine if we should show fallback
-    const hasResultHeaderBlock = blocks.some(block => 
-      block.type === 'result-header-inline' || block.type === 'quiz-result'
+    // Detecção mais robusta de blocos relacionados a resultado
+    const hasResultRelatedBlock = blocks.some(block => 
+      block.type === 'result-header-inline' || 
+      block.type === 'quiz-result' ||
+      block.type === 'cakto-quiz-result' ||
+      block.id?.includes('result') ||
+      block.properties?.category === 'result'
     );
+    
     const hasValidResult = Boolean(primaryStyle) && !error;
     const isStillLoading = isLoading;
+    const isEmpty = blocks.length === 0;
     
-    // Show fallback if:
-    // 1. No result-related blocks found in template
-    // 2. Error in calculation
-    // 3. Loading for too long (indicates problem)
-    // 4. No blocks at all (template loading failed)
-    
+    // Lógica aprimorada para ativação do fallback
     const shouldShowFallback = 
-      !hasResultHeaderBlock || 
-      error || 
-      blocks.length === 0 ||
-      (!hasValidResult && !isStillLoading);
+      isEmpty || // Sem blocos
+      error || // Erro no cálculo
+      (!hasResultRelatedBlock && !hasValidResult) || // Sem blocos result E sem resultado
+      (!hasValidResult && !isStillLoading); // Sem resultado E não carregando
 
     if (shouldShowFallback) {
-      console.log('🛡️ [Step20EditorFallback] Ativando fallback:', {
-        hasResultHeaderBlock,
+      console.log('🛡️ [Step20EditorFallback] Ativando fallback - Critérios:', {
+        isEmpty,
+        hasResultRelatedBlock,
         hasValidResult,
         isStillLoading,
-        blocksCount: blocks.length,
-        error: typeof error === 'string' ? error : 'Erro no cálculo',
-        blockTypes: blocks.map(b => b.type)
+        error: typeof error === 'string' ? error : error ? 'Erro no cálculo' : 'Sem erro',
+        blockTypes: blocks.map(b => ({ type: b.type, id: b.id })),
+        primaryStyleExists: Boolean(primaryStyle),
+        fallbackReason: isEmpty ? 'sem_blocos' : 
+                       error ? 'erro_calculo' : 
+                       !hasResultRelatedBlock ? 'sem_blocos_result' : 'sem_resultado_valido'
       });
       setShowFallback(true);
     } else {
-      console.log('✅ [Step20EditorFallback] Renderização normal:', {
-        hasResultHeaderBlock,
+      console.log('✅ [Step20EditorFallback] Renderização normal - Estado:', {
+        hasResultRelatedBlock,
         hasValidResult,
-        blocksCount: blocks.length
+        blocksCount: blocks.length,
+        primaryStyle: primaryStyle?.style || 'indefinido'
       });
       setShowFallback(false);
     }
