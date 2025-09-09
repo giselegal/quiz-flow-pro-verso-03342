@@ -72,12 +72,12 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
     try {
       const search = typeof window !== 'undefined' ? window.location.search : '';
       const urlParams = new URLSearchParams(search || '');
-      const fromUrl = urlParams.get('funnel') || urlParams.get('funnelId') || urlParams.get('quizId');
+      const fromUrl = urlParams.get('funnel');
       if (fromUrl) return fromUrl;
     } catch { }
     if (_funnelId) return _funnelId;
-    // Fallback estável quando não encontramos via URL ou prop
-    return 'optimized-21-steps-funnel';
+    // Usar fallback genérico
+    return 'default-funnel';
   }, [_funnelId]);
   // Verificação de segurança para evitar erro de undefined
   if (!block) {

@@ -43,7 +43,7 @@ export const useEditorAutoSave = ({
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const { toast } = useToast();
   
-  const currentFunnelId = funnelId || getFunnelIdFromEnvOrStorage() || 'quiz-estilo-completo';
+  const currentFunnelId = funnelId || getFunnelIdFromEnvOrStorage() || 'default-funnel';
   const lastDataRef = useRef(data);
 
   // 🔍 Detectar mudanças nos dados
@@ -66,8 +66,8 @@ export const useEditorAutoSave = ({
       setErrorMessage(undefined);
 
       // Para funis do template, não tentar salvar no Supabase
-      if (currentFunnelId === 'quiz-estilo-completo') {
-        console.log('📋 Funil do template - salvando apenas localmente');
+      if (currentFunnelId.startsWith('template-') || currentFunnelId === 'default-funnel') {
+        console.log('📋 Funil template/default - salvando apenas localmente');
         
         // Salvar no localStorage como backup
         try {
