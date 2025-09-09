@@ -69,152 +69,152 @@ function App() {
           <Suspense fallback={<PageLoading />}>
             <Switch>
               {/* Rota principal - Home */}
-              <Route path="/" component={() => 
+              <Route path="/" component={() =>
                 <Suspense fallback={<LoadingFallback />}>
                   <Home />
                 </Suspense>
               } />
-              
+
               {/* Quiz modular - página principal de produção */}
-              <Route path="/quiz" component={() => 
+              <Route path="/quiz" component={() =>
                 <Suspense fallback={<LoadingFallback />}>
                   <QuizModularPage />
                 </Suspense>
               } />
-              <Route path="/quiz/:step" component={() => 
+              <Route path="/quiz/:step" component={() =>
                 <Suspense fallback={<LoadingFallback />}>
                   <QuizModularPage />
                 </Suspense>
               } />
-              
+
               {/* Editor principal */}
-              <Route path="/editor" component={() => 
+              <Route path="/editor" component={() =>
                 <Suspense fallback={<LoadingFallback />}>
                   <MainEditor />
                 </Suspense>
               } />
-              <Route path="/editor/:funnelId" component={() => 
+              <Route path="/editor/:funnelId" component={() =>
                 <Suspense fallback={<LoadingFallback />}>
                   <MainEditor />
                 </Suspense>
               } />
-              
+
               {/* Autenticação */}
-              <Route path="/auth" component={() => 
+              <Route path="/auth" component={() =>
                 <Suspense fallback={<LoadingFallback />}>
                   <AuthPage />
                 </Suspense>
               } />
-              
+
               {/* 🎯 ÁREA ADMINISTRATIVA - ROTAS PROTEGIDAS */}
-              <ProtectedRoute path="/dashboard" component={() => 
+              <ProtectedRoute path="/dashboard" component={() =>
                 <Suspense fallback={<LoadingFallback />}>
                   <DashboardPage />
                 </Suspense>
               } />
-              
+
               {/* 📊 Páginas de Analytics e Métricas */}
-              <ProtectedRoute path="/analytics" component={() => 
+              <ProtectedRoute path="/analytics" component={() =>
                 <Suspense fallback={<LoadingFallback />}>
                   <AnalyticsPage />
                 </Suspense>
               } />
-              
-              <ProtectedRoute path="/metrics" component={() => 
+
+              <ProtectedRoute path="/metrics" component={() =>
                 <Suspense fallback={<LoadingFallback />}>
                   <MetricsPage />
                 </Suspense>
               } />
-              
-              <ProtectedRoute path="/participants" component={() => 
+
+              <ProtectedRoute path="/participants" component={() =>
                 <Suspense fallback={<LoadingFallback />}>
                   <ParticipantsPage />
                 </Suspense>
               } />
-              
-              <ProtectedRoute path="/settings" component={() => 
+
+              <ProtectedRoute path="/settings" component={() =>
                 <Suspense fallback={<LoadingFallback />}>
                   <SettingsPage />
                 </Suspense>
               } />
-              
-              <ProtectedRoute path="/overview" component={() => 
+
+              <ProtectedRoute path="/overview" component={() =>
                 <Suspense fallback={<LoadingFallback />}>
                   <OverviewPage />
                 </Suspense>
               } />
-              
+
               {/* 🎨 Páginas de Desenvolvimento e Testes */}
-              <Route path="/step/:stepId" component={() => 
+              <Route path="/step/:stepId" component={() =>
                 <Suspense fallback={<LoadingFallback />}>
                   <StepPage />
                 </Suspense>
               } />
-              <Route path="/funnel-dashboard" component={() => 
+              <Route path="/funnel-dashboard" component={() =>
                 <Suspense fallback={<LoadingFallback />}>
                   <FunnelDashboardPage />
                 </Suspense>
               } />
-              <Route path="/creatives" component={() => 
+              <Route path="/creatives" component={() =>
                 <Suspense fallback={<LoadingFallback />}>
                   <CreativesPage />
                 </Suspense>
               } />
-              
+
               {/* 🧪 Páginas de Teste e Desenvolvimento */}
-              <Route path="/test-agent-style" component={() => 
+              <Route path="/test-agent-style" component={() =>
                 <Suspense fallback={<LoadingFallback />}>
                   <AgentStyleFunnelTestPage />
                 </Suspense>
               } />
-              <Route path="/test-participants" component={() => 
+              <Route path="/test-participants" component={() =>
                 <Suspense fallback={<LoadingFallback />}>
                   <TestParticipantsPage />
                 </Suspense>
               } />
-              <Route path="/test-steps" component={() => 
+              <Route path="/test-steps" component={() =>
                 <Suspense fallback={<LoadingFallback />}>
                   <StepsShowcasePage />
                 </Suspense>
               } />
-              <Route path="/test-schema" component={() => 
+              <Route path="/test-schema" component={() =>
                 <Suspense fallback={<LoadingFallback />}>
                   <SchemaEditorPage />
                 </Suspense>
               } />
-              <Route path="/test-properties" component={() => 
+              <Route path="/test-properties" component={() =>
                 <Suspense fallback={<LoadingFallback />}>
                   <EnhancedPropertiesPanelDemo />
                 </Suspense>
               } />
-              <Route path="/test-data" component={() => 
+              <Route path="/test-data" component={() =>
                 <Suspense fallback={<LoadingFallback />}>
                   <TestDataPanel />
                 </Suspense>
               } />
-              <Route path="/abtest" component={() => 
+              <Route path="/abtest" component={() =>
                 <Suspense fallback={<LoadingFallback />}>
                   <ABTestPage />
                 </Suspense>
               } />
-              
+
               {/* 🔧 Páginas Especiais */}
-              <Route path="/com-que-roupa-eu-vou" component={() => 
+              <Route path="/com-que-roupa-eu-vou" component={() =>
                 <Suspense fallback={<LoadingFallback />}>
                   <ComQueRoupaEuVouPage />
                 </Suspense>
               } />
-              <Route path="/editor-templates" component={() => 
+              <Route path="/editor-templates" component={() =>
                 <Suspense fallback={<LoadingFallback />}>
                   <EditorTemplatesPage />
                 </Suspense>
               } />
-              <Route path="/nocode" component={() => 
+              <Route path="/nocode" component={() =>
                 <Suspense fallback={<LoadingFallback />}>
                   <NoCodeConfigPage />
                 </Suspense>
               } />
-              
+
               {/* Fallback para rotas não encontradas */}
               <Route>
                 <div className="min-h-screen flex items-center justify-center">
