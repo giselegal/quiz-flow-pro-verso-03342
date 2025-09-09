@@ -17,6 +17,7 @@ const MetricsPage = lazy(() => import('./MetricsPage'));
 const NoCodeConfigPage = lazy(() => import('./NoCodeConfigPage'));
 const EditorPage = lazy(() => import('./EditorPage'));
 const FunnelSettingsPage = lazy(() => import('./FunnelSettingsPage'));
+const FunnelSystemDebugger = lazy(() => import('./FunnelSystemDebugger'));
 // Templates page is temporarily disabled - will be recreated later
 // const TemplatesPage = lazy(() => import('./TemplatesPage'));
 const TemplatePlaceholder = () => (
@@ -65,6 +66,7 @@ const DashboardPage: React.FC = () => {
               <Route path="/admin/editor" component={EditorPage} />
               <Route path="/admin/funnel-settings/:id" component={FunnelSettingsPage} />
               <Route path="/admin/templates" component={TemplatePlaceholder} />
+              <Route path="/admin/debug" component={FunnelSystemDebugger} />
             </Switch>
           </Suspense>
         </main>

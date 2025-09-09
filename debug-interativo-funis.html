@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔧 Debug Interativo dos Funis</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+
+        .section {
+            background: white;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .success {
+            border-left: 4px solid #28a745;
+            background: #f8fff9;
+        }
+
+        .warning {
+            border-left: 4px solid #ffc107;
+            background: #fffdf8;
+        }
+
+        .error {
+            border-left: 4px solid #dc3545;
+            background: #fff8f8;
+        }
+
+        .info {
+            border-left: 4px solid #17a2b8;
+            background: #f7fcfd;
+        }
+
+        pre {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 12px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 8px 16px;
+            margin: 5px;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn:hover {
+            background: #0056b3;
+        }
+
+        .btn.success {
+            background: #28a745;
+        }
+
+        .btn.warning {
+            background: #ffc107;
+            color: #212529;
+        }
+
+        .btn.danger {
+            background: #dc3545;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+        }
+
+        #console {
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 11px;
+        }
+
+        .log-entry {
+            padding: 2px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .log-success {
+            color: #28a745;
+        }
+
+        .log-error {
+            color: #dc3545;
+        }
+
+        .log-warning {
+            color: #ffc107;
+        }
+
+        .log-info {
+            color: #17a2b8;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>🔧 Debug Interativo: Sistema de Funis</h1>
+    <p><strong>Status:</strong> <span id="systemStatus" style="color: #ffc107;">Verificando...</span></p>
+    <p><strong>Timestamp:</strong> <span id="timestamp"></span></p>
+
+    <div class="section info">
+        <h2>📊 Status do Sistema</h2>
+        <div id="quickStatus" class="grid"></div>
+    </div>
+
+    <div class="section">
+        <h2>🧪 Testes Interativos</h2>
+        <div class="grid">
+            <div>
+                <h3>📦 LocalStorage</h3>
+                <button class="btn" onclick="testLocalStorage()">Testar LocalStorage</button>
+                <button class="btn warning" onclick="listAllKeys()">Listar Chaves</button>
+                <button class="btn success" onclick="createTestFunnel()">Criar Funil Teste</button>
+            </div>
+            <div>
+                <h3>🎯 Simulação funnelLocalStore</h3>
+                <button class="btn" onclick="simulateFunnelStore()">Simular list()</button>
+                <button class="btn success" onclick="simulateUpsert()">Simular upsert()</button>
+                <button class="btn warning" onclick="simulateGetSettings()">Simular getSettings()</button>
+            </div>
+            <div>
+                <h3>🔗 Navegação</h3>
+                <button class="btn" onclick="testRoutes()">Testar Rotas</button>
+                <button class="btn success" onclick="navigateToAdmin()">Ir para Admin</button>
+                <button class="btn info" onclick="navigateToEditor()">Ir para Editor</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>📋 Console de Debug</h2>
+        <div>
+            <button class="btn warning" onclick="clearConsole()">Limpar Console</button>
+            <button class="btn" onclick="exportLogs()">Exportar Logs</button>
+        </div>
+        <div id="console"></div>
+    </div>
+
+    <div class="section">
+        <h2>💾 Dados Atuais</h2>
+        <div>
+            <button class="btn" onclick="showCurrentData()">Mostrar Dados</button>
+            <button class="btn success" onclick="exportAllData()">Exportar Tudo</button>
+            <button class="btn danger" onclick="clearAllFunnelData()">Limpar Dados</button>
+        </div>
+        <div id="dataDisplay"></div>
+    </div>
+
+    <script>
+        // Sistema de logging
+        const logs = [];
+
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = { timestamp, message, type };
+            logs.push(logEntry);
+
+            const consoleDiv = document.getElementById('console');
+            const logElement = document.createElement('div');
+            logElement.className = `log-entry log-${type}`;
+            logElement.innerHTML = `<span style="color: #666;">[${timestamp}]</span> ${message}`;
+            consoleDiv.appendChild(logElement);
+            consoleDiv.scrollTop = consoleDiv.scrollHeight;
+
+            // Também logar no console do navegador
+            console.log(`[${timestamp}] ${message}`);
+        }
+
+        function clearConsole() {
+            document.getElementById('console').innerHTML = '';
+            logs.length = 0;
+            log('Console limpo', 'info');
+        }
+
+        function exportLogs() {
+            const blob = new Blob([JSON.stringify(logs, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `debug-logs-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            log('Logs exportados', 'success');
+        }
+
+        // Testes do LocalStorage
+        function testLocalStorage() {
+            log('🧪 Iniciando testes do LocalStorage...', 'info');
+
+            // Teste 1: Suporte
+            if (typeof (Storage) !== "undefined") {
+                log('✅ LocalStorage suportado', 'success');
+            } else {
+                log('❌ LocalStorage NÃO suportado', 'error');
+                return;
+            }
+
+            // Teste 2: Escrita
+            try {
+                localStorage.setItem('debug_test_write', 'ok');
+                log('✅ Escrita: OK', 'success');
+            } catch (e) {
+                log(`❌ Escrita: ${e.message}`, 'error');
+                return;
+            }
+
+            // Teste 3: Leitura
+            try {
+                const value = localStorage.getItem('debug_test_write');
+                if (value === 'ok') {
+                    log('✅ Leitura: OK', 'success');
+                } else {
+                    log(`⚠️ Leitura: valor inesperado "${value}"`, 'warning');
+                }
+            } catch (e) {
+                log(`❌ Leitura: ${e.message}`, 'error');
+            }
+
+            // Teste 4: JSON
+            try {
+                const testObj = { test: true, timestamp: Date.now() };
+                localStorage.setItem('debug_test_json', JSON.stringify(testObj));
+                const parsed = JSON.parse(localStorage.getItem('debug_test_json'));
+                if (parsed.test) {
+                    log('✅ JSON: OK', 'success');
+                } else {
+                    log('⚠️ JSON: parsing falhou', 'warning');
+                }
+            } catch (e) {
+                log(`❌ JSON: ${e.message}`, 'error');
+            }
+
+            // Limpeza
+            localStorage.removeItem('debug_test_write');
+            localStorage.removeItem('debug_test_json');
+            log('🧹 Testes concluídos, dados temporários removidos', 'info');
+        }
+
+        function listAllKeys() {
+            log('📋 Listando todas as chaves do LocalStorage...', 'info');
+
+            const allKeys = [];
+            const funnelKeys = [];
+
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                allKeys.push(key);
+
+                if (key && (key.includes('funnel') || key.includes('qqcv'))) {
+                    funnelKeys.push(key);
+                }
+            }
+
+            log(`📊 Total de chaves: ${allKeys.length}`, 'info');
+            log(`🎯 Chaves relacionadas a funis: ${funnelKeys.length}`, 'info');
+
+            if (funnelKeys.length > 0) {
+                log(`🔑 Chaves de funis: ${funnelKeys.join(', ')}`, 'success');
+
+                // Mostrar conteúdo das chaves de funis
+                funnelKeys.forEach(key => {
+                    try {
+                        const value = localStorage.getItem(key);
+                        const parsed = JSON.parse(value);
+                        if (Array.isArray(parsed)) {
+                            log(`📋 ${key}: Array com ${parsed.length} items`, 'info');
+                        } else if (typeof parsed === 'object') {
+                            log(`📦 ${key}: Objeto com ${Object.keys(parsed).length} propriedades`, 'info');
+                        } else {
+                            log(`📝 ${key}: ${typeof parsed}`, 'info');
+                        }
+                    } catch {
+                        log(`📝 ${key}: Texto simples`, 'info');
+                    }
+                });
+            } else {
+                log('⚠️ Nenhuma chave relacionada a funis encontrada', 'warning');
+            }
+        }
+
+        function createTestFunnel() {
+            log('🎨 Criando funil de teste...', 'info');
+
+            const testFunnel = {
+                id: `debug-test-${Date.now()}`,
+                name: `Funil Debug ${new Date().toLocaleTimeString()}`,
+                status: 'draft',
+                updatedAt: new Date().toISOString()
+            };
+
+            try {
+                // Simular funnelLocalStore.upsert
+                const listKey = 'qqcv_funnels';
+                let list = [];
+
+                try {
+                    const raw = localStorage.getItem(listKey);
+                    list = raw ? JSON.parse(raw) : [];
+                    if (!Array.isArray(list)) list = [];
+                } catch {
+                    list = [];
+                }
+
+                // Verificar se já existe
+                const existingIndex = list.findIndex(f => f.id === testFunnel.id);
+                if (existingIndex >= 0) {
+                    list[existingIndex] = testFunnel;
+                    log(`🔄 Funil atualizado na posição ${existingIndex}`, 'info');
+                } else {
+                    list.push(testFunnel);
+                    log(`➕ Funil adicionado. Total: ${list.length}`, 'success');
+                }
+
+                localStorage.setItem(listKey, JSON.stringify(list));
+                log(`💾 Lista salva com sucesso`, 'success');
+                log(`🎯 ID do funil: ${testFunnel.id}`, 'info');
+
+                // Verificar salvamento
+                const verification = localStorage.getItem(listKey);
+                if (verification) {
+                    log('✅ Verificação: dados salvos corretamente', 'success');
+                } else {
+                    log('❌ Verificação: falha ao salvar', 'error');
+                }
+
+            } catch (error) {
+                log(`❌ Erro ao criar funil: ${error.message}`, 'error');
+            }
+        }
+
+        function simulateFunnelStore() {
+            log('🗄️ Simulando funnelLocalStore.list()...', 'info');
+
+            try {
+                const LIST_KEY = 'qqcv_funnels';
+                const raw = localStorage.getItem(LIST_KEY);
+                log(`📥 Raw data: ${raw ? `${raw.length} caracteres` : 'null'}`, 'info');
+
+                const arr = raw ? JSON.parse(raw) : [];
+                log(`📊 Parsed: ${typeof arr} (isArray: ${Array.isArray(arr)})`, 'info');
+
+                const result = Array.isArray(arr) ? arr : [];
+                log(`✅ Resultado final: ${result.length} funis`, 'success');
+
+                if (result.length > 0) {
+                    result.forEach((funnel, index) => {
+                        log(`  ${index + 1}. ${funnel.name} (${funnel.id}) - ${funnel.status}`, 'info');
+                    });
+                } else {
+                    log('📭 Lista vazia', 'warning');
+                }
+
+                return result;
+
+            } catch (error) {
+                log(`❌ Erro na simulação: ${error.message}`, 'error');
+                return [];
+            }
+        }
+
+        function simulateUpsert() {
+            log('💾 Simulando funnelLocalStore.upsert()...', 'info');
+
+            const testItem = {
+                id: `upsert-test-${Date.now()}`,
+                name: 'Teste Upsert',
+                status: 'draft',
+                updatedAt: new Date().toISOString()
+            };
+
+            try {
+                const LIST_KEY = 'qqcv_funnels';
+                let list = [];
+
+                try {
+                    const raw = localStorage.getItem(LIST_KEY);
+                    list = raw ? JSON.parse(raw) : [];
+                    if (!Array.isArray(list)) list = [];
+                } catch {
+                    list = [];
+                }
+
+                const idx = list.findIndex(f => f.id === testItem.id);
+                if (idx >= 0) {
+                    list[idx] = testItem;
+                    log(`🔄 Item atualizado na posição ${idx}`, 'info');
+                } else {
+                    list.push(testItem);
+                    log(`➕ Item adicionado. Nova posição: ${list.length - 1}`, 'success');
+                }
+
+                localStorage.setItem(LIST_KEY, JSON.stringify(list));
+                log(`💾 Upsert concluído com sucesso`, 'success');
+
+            } catch (error) {
+                log(`❌ Erro no upsert: ${error.message}`, 'error');
+            }
+        }
+
+        function simulateGetSettings() {
+            log('⚙️ Simulando funnelLocalStore.getSettings()...', 'info');
+
+            const testId = 'test-settings-id';
+            const settingsKey = `qqcv_funnel_settings_${testId}`;
+
+            try {
+                const raw = localStorage.getItem(settingsKey);
+                if (raw) {
+                    const settings = JSON.parse(raw);
+                    log(`✅ Settings encontradas para ${testId}`, 'success');
+                    log(`📋 Propriedades: ${Object.keys(settings).join(', ')}`, 'info');
+                } else {
+                    log(`⚠️ Nenhuma setting para ${testId}, usando padrão`, 'warning');
+
+                    // Simular settings padrão
+                    const defaultSettings = {
+                        name: 'Funil Quiz 21 Etapas',
+                        url: '',
+                        seo: { title: 'Quiz de Estilo Pessoal', description: 'Descubra seu estilo' },
+                        custom: {
+                            collectUserName: true,
+                            variables: [
+                                { key: 'romantico', label: 'Romântico' },
+                                { key: 'classico', label: 'Clássico' },
+                            ]
+                        }
+                    };
+
+                    log(`📝 Settings padrão criadas`, 'info');
+                    localStorage.setItem(settingsKey, JSON.stringify(defaultSettings));
+                    log(`💾 Settings padrão salvas`, 'success');
+                }
+
+            } catch (error) {
+                log(`❌ Erro ao obter settings: ${error.message}`, 'error');
+            }
+        }
+
+        function testRoutes() {
+            log('🛤️ Testando informações de roteamento...', 'info');
+
+            log(`🌐 URL atual: ${window.location.href}`, 'info');
+            log(`📍 Pathname: ${window.location.pathname}`, 'info');
+            log(`🔍 Search: ${window.location.search || '(vazio)'}`, 'info');
+            log(`#️⃣ Hash: ${window.location.hash || '(vazio)'}`, 'info');
+            log(`🏠 Host: ${window.location.host}`, 'info');
+            log(`🏢 Origin: ${window.location.origin}`, 'info');
+
+            const isAdmin = window.location.pathname.includes('/admin');
+            log(`👔 Está no admin: ${isAdmin ? 'Sim' : 'Não'}`, isAdmin ? 'success' : 'info');
+
+            // Testar URLs importantes
+            const importantRoutes = [
+                '/admin',
+                '/admin/meus-funis',
+                '/admin/funis',
+                '/editor'
+            ];
+
+            log('🔗 URLs para teste:', 'info');
+            importantRoutes.forEach(route => {
+                const fullUrl = window.location.origin + route;
+                log(`  📌 ${route} → ${fullUrl}`, 'info');
+            });
+        }
+
+        function navigateToAdmin() {
+            const url = window.location.origin + '/admin';
+            log(`🚀 Navegando para: ${url}`, 'info');
+            window.location.href = url;
+        }
+
+        function navigateToEditor() {
+            const url = window.location.origin + '/editor';
+            log(`✏️ Navegando para: ${url}`, 'info');
+            window.location.href = url;
+        }
+
+        function showCurrentData() {
+            log('📊 Coletando dados atuais...', 'info');
+
+            const data = {};
+            const funnelKeys = [];
+
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && (key.includes('funnel') || key.includes('qqcv'))) {
+                    funnelKeys.push(key);
+                    try {
+                        data[key] = JSON.parse(localStorage.getItem(key));
+                    } catch {
+                        data[key] = localStorage.getItem(key);
+                    }
+                }
+            }
+
+            const dataDiv = document.getElementById('dataDisplay');
+            dataDiv.innerHTML = `
+                <h3>📦 Dados do LocalStorage (${funnelKeys.length} chaves)</h3>
+                <pre>${JSON.stringify(data, null, 2)}</pre>
+            `;
+
+            log(`📋 Dados exibidos: ${funnelKeys.length} chaves`, 'success');
+        }
+
+        function exportAllData() {
+            const data = {
+                timestamp: new Date().toISOString(),
+                url: window.location.href,
+                localStorage: {}
+            };
+
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && (key.includes('funnel') || key.includes('qqcv'))) {
+                    data.localStorage[key] = localStorage.getItem(key);
+                }
+            }
+
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `funnels-debug-export-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+
+            log('📤 Dados exportados com sucesso', 'success');
+        }
+
+        function clearAllFunnelData() {
+            if (confirm('⚠️ Isso vai remover TODOS os dados de funis. Continuar?')) {
+                const keysToRemove = [];
+
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    if (key && (key.includes('funnel') || key.includes('qqcv'))) {
+                        keysToRemove.push(key);
+                    }
+                }
+
+                keysToRemove.forEach(key => localStorage.removeItem(key));
+
+                log(`🗑️ ${keysToRemove.length} chaves removidas`, 'warning');
+                log(`📋 Chaves removidas: ${keysToRemove.join(', ')}`, 'info');
+
+                // Limpar display
+                document.getElementById('dataDisplay').innerHTML = '<p>Dados limpos.</p>';
+            }
+        }
+
+        // Status do sistema
+        function updateSystemStatus() {
+            const statusDiv = document.getElementById('quickStatus');
+            const checks = [];
+
+            // LocalStorage
+            if (typeof (Storage) !== "undefined") {
+                checks.push({ name: 'LocalStorage', status: 'success', message: 'Suportado' });
+            } else {
+                checks.push({ name: 'LocalStorage', status: 'error', message: 'Não suportado' });
+            }
+
+            // Lista de funis
+            try {
+                const raw = localStorage.getItem('qqcv_funnels');
+                const list = raw ? JSON.parse(raw) : [];
+                if (Array.isArray(list) && list.length > 0) {
+                    checks.push({ name: 'Funis', status: 'success', message: `${list.length} encontrados` });
+                } else {
+                    checks.push({ name: 'Funis', status: 'warning', message: 'Lista vazia' });
+                }
+            } catch {
+                checks.push({ name: 'Funis', status: 'error', message: 'Erro ao ler' });
+            }
+
+            // Admin area
+            const isAdmin = window.location.pathname.includes('/admin');
+            checks.push({
+                name: 'Localização',
+                status: isAdmin ? 'success' : 'info',
+                message: isAdmin ? 'Área admin' : 'Fora do admin'
+            });
+
+            statusDiv.innerHTML = checks.map(check => `
+                <div class="section ${check.status}">
+                    <h4>${check.name}</h4>
+                    <p>${check.message}</p>
+                </div>
+            `).join('');
+
+            // Status geral
+            const hasErrors = checks.some(c => c.status === 'error');
+            const hasWarnings = checks.some(c => c.status === 'warning');
+
+            const statusEl = document.getElementById('systemStatus');
+            if (hasErrors) {
+                statusEl.textContent = 'ERRO';
+                statusEl.style.color = '#dc3545';
+            } else if (hasWarnings) {
+                statusEl.textContent = 'ATENÇÃO';
+                statusEl.style.color = '#ffc107';
+            } else {
+                statusEl.textContent = 'OK';
+                statusEl.style.color = '#28a745';
+            }
+        }
+
+        // Inicialização
+        window.addEventListener('load', () => {
+            document.getElementById('timestamp').textContent = new Date().toLocaleString('pt-BR');
+            updateSystemStatus();
+            log('🚀 Sistema de debug inicializado', 'success');
+            log('📱 Execute os testes para diagnosticar problemas', 'info');
+        });
+    </script>
+</body>
+
+</html>
