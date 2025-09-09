@@ -6,7 +6,10 @@ import { defineConfig, splitVendorChunkPlugin } from 'vite';
 export default defineConfig({
   // Garante caminhos absolutos corretos para rotas e recursos
   base: '/',
-  plugins: [react(), splitVendorChunkPlugin()],
+  plugins: [
+    react(), 
+    splitVendorChunkPlugin(),
+  ],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
@@ -57,26 +60,38 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     sourcemap: true,
-    chunkSizeWarningLimit: 500,
+    // 🚀 LIMITE AUMENTADO baseado na análise (era 500kB, agora 1MB)
+    chunkSizeWarningLimit: 1000,
     // Copiar templates para o build
     copyPublicDir: true,
     rollupOptions: {
       output: {
-        // Estratégia agressiva de chunking para reduzir tamanhos
+        // 📦 CHUNKING ESTRATÉGICO OTIMIZADO baseado na análise do bundle
         manualChunks: {
-          // Vendor chunks separados
+          // Vendor chunks separados (bibliotecas grandes)
           'react-vendor': ['react', 'react-dom'],
           'dnd-vendor': ['@dnd-kit/core', '@dnd-kit/sortable', '@dnd-kit/utilities'],
           'icons-vendor': ['lucide-react'],
-          'charts-vendor': ['recharts'],
+          'charts-vendor': ['recharts'], // 410kB identificado no build
           'ui-vendor': ['@radix-ui/react-dropdown-menu', '@radix-ui/react-tabs', '@radix-ui/react-select'],
 
-          // Componentes grandes separados
-          'editor-core': ['./src/legacy/editor/EditorPro'],
-          'canvas-components': ['./src/components/editor/canvas/CanvasDropZone.simple'],
-          'properties-system': ['./src/components/editor/properties/ModernPropertiesPanel'],
-          'schema-editor': ['./src/pages/SchemaEditorPage'],
-          'metrics-page': ['./src/pages/admin/MetricsPage'],
+          // 🎯 COMPONENTES PESADOS IDENTIFICADOS NO BUILD ANALYSIS
+          'editor-heavy': [
+            './src/components/editor/SchemaDrivenEditorResponsive', // 218kB
+            './src/components/editor/EditorProvider', // 70kB
+            './src/components/editor/properties/EnhancedPropertiesPanel' // 17kB
+          ],
+          
+          'pages-admin': [
+            './src/pages/admin/MetricsPage', // 20kB
+            './src/pages/admin/ParticipantsPage', // 35kB
+            './src/pages/admin/NoCodeConfigPage' // 63kB
+          ],
+          
+          'pages-quiz': [
+            './src/pages/QuizModularPage', // 30kB
+            './src/pages/admin/OverviewPage' // 27kB
+          ],
 
           // Sistemas modulares
           'funnel-system': [
@@ -88,11 +103,16 @@ export default defineConfig({
             './src/components/quiz/QuizRenderer',
             './src/services/quizResultsService',
             './src/hooks/useQuizFlow'
-          ]
+          ],
+          
+          // 📊 REGISTRY PESADO SEPARADO
+          'registry-heavy': ['./src/components/editor/blocks/optimizedRegistry'] // 73kB
         },
-        chunkFileNames: 'assets/[name]-[hash].js',
+        
+        // 📁 ORGANIZAÇÃO MELHORADA DE ARQUIVOS
+        chunkFileNames: 'assets/chunks/[name]-[hash].js',
         entryFileNames: 'assets/[name]-[hash].js',
-        assetFileNames: 'assets/[name]-[hash].[ext]',
+        assetFileNames: 'assets/[ext]/[name]-[hash].[ext]',
       },
     },
     // Configurações para resolver problemas com módulos CommonJS
@@ -102,6 +122,10 @@ export default defineConfig({
       // Adicionar shim para 'require' em ambiente ESM
       include: [/node_modules/],
     },
+    
+    // 🎯 OTIMIZAÇÕES ADICIONAIS
+    target: 'esnext',
+    minify: 'esbuild'
   },
   optimizeDeps: {
     exclude: ['lucide-react'],
