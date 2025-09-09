@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔍 Diagnóstico: Acesso aos Funis Editados</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+
+        .section {
+            background: white;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .error {
+            color: #dc3545;
+            background: #fff5f5;
+        }
+
+        .success {
+            color: #198754;
+            background: #f0fff4;
+        }
+
+        .warning {
+            color: #fd7e14;
+            background: #fff8f0;
+        }
+
+        .info {
+            color: #0dcaf0;
+            background: #f0f8ff;
+        }
+
+        pre {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 8px 16px;
+            margin: 5px;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: #0056b3;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .status-ok {
+            background: #28a745;
+        }
+
+        .status-error {
+            background: #dc3545;
+        }
+
+        .status-warning {
+            background: #ffc107;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>🔍 Diagnóstico Completo: Acesso aos Funis Editados</h1>
+    <p><strong>Data:</strong> <span id="currentTime"></span></p>
+
+    <div class="section info">
+        <h2>📊 Status do Sistema</h2>
+        <div id="systemStatus">
+            <p>🔄 Verificando...</p>
+        </div>
+    </div>
+
+    <div class="grid">
+        <div class="section">
+            <h3>💾 LocalStorage - Funis</h3>
+            <div id="localStorageStatus">
+                <p>🔄 Carregando...</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>🌐 Navegação - Rotas</h3>
+            <div id="routingStatus">
+                <p>🔄 Verificando...</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🎯 Testes de Navegação</h2>
+        <div id="navigationTests">
+            <button class="btn" onclick="testRoute('/admin')">Testar Dashboard</button>
+            <button class="btn" onclick="testRoute('/admin/meus-funis')">Testar Meus Funis</button>
+            <button class="btn" onclick="testRoute('/admin/funis')">Testar Painel Funis</button>
+            <button class="btn" onclick="testCreateFunnel()">Criar Funil Teste</button>
+            <button class="btn" onclick="testLocalStorageOps()">Testar Storage</button>
+        </div>
+        <div id="testResults"></div>
+    </div>
+
+    <div class="section">
+        <h2>📋 Dados do Sistema</h2>
+        <div id="systemData">
+            <h3>🗄️ Conteúdo do LocalStorage:</h3>
+            <pre id="localStorageContent"></pre>
+
+            <h3>🔗 URLs Testadas:</h3>
+            <div id="urlTests"></div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🔧 Ações de Correção</h2>
+        <div>
+            <button class="btn" onclick="clearAllData()" style="background: #dc3545;">Limpar Todos os Dados</button>
+            <button class="btn" onclick="createSampleFunnels()">Criar Funis de Exemplo</button>
+            <button class="btn" onclick="exportData()">Exportar Dados</button>
+            <button class="btn" onclick="showDebugInfo()">Info Debug Completa</button>
+        </div>
+        <div id="actionResults"></div>
+    </div>
+
+    <script>
+        // Atualizar timestamp
+        document.getElementById('currentTime').textContent = new Date().toLocaleString('pt-BR');
+
+        // Verificar LocalStorage
+        function checkLocalStorage() {
+            const funnelKeys = [];
+            const allData = {};
+
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && (key.includes('funnel') || key.includes('qqcv'))) {
+                    funnelKeys.push(key);
+                    try {
+                        allData[key] = JSON.parse(localStorage.getItem(key));
+                    } catch {
+                        allData[key] = localStorage.getItem(key);
+                    }
+                }
+            }
+
+            const statusDiv = document.getElementById('localStorageStatus');
+            const contentDiv = document.getElementById('localStorageContent');
+
+            if (funnelKeys.length === 0) {
+                statusDiv.innerHTML = `
+                    <span class="status-indicator status-error"></span>
+                    <strong>❌ PROBLEMA IDENTIFICADO:</strong> Nenhum funil encontrado no localStorage
+                    <br><small>Chaves procuradas: funnel*, qqcv*</small>
+                `;
+                contentDiv.textContent = 'Nenhum dado de funil encontrado.';
+            } else {
+                statusDiv.innerHTML = `
+                    <span class="status-indicator status-ok"></span>
+                    <strong>✅ ${funnelKeys.length} chaves encontradas</strong>
+                    <br><small>Chaves: ${funnelKeys.join(', ')}</small>
+                `;
+                contentDiv.textContent = JSON.stringify(allData, null, 2);
+            }
+
+            return { funnelKeys, allData };
+        }
+
+        // Verificar rotas
+        function checkRouting() {
+            const currentUrl = window.location.href;
+            const baseUrl = window.location.origin;
+            const isOnAdmin = currentUrl.includes('/admin');
+
+            const statusDiv = document.getElementById('routingStatus');
+            statusDiv.innerHTML = `
+                <span class="status-indicator ${isOnAdmin ? 'status-ok' : 'status-warning'}"></span>
+                <strong>URL Atual:</strong> ${currentUrl}<br>
+                <strong>Base URL:</strong> ${baseUrl}<br>
+                <strong>No Admin:</strong> ${isOnAdmin ? 'Sim' : 'Não'}
+                <br><br>
+                <small>
+                    📍 Rota atual: ${window.location.pathname}<br>
+                    🔗 Hash: ${window.location.hash || 'Nenhum'}<br>
+                    🔍 Query: ${window.location.search || 'Nenhuma'}
+                </small>
+            `;
+        }
+
+        // Testar navegação para uma rota
+        function testRoute(route) {
+            const baseUrl = window.location.origin;
+            const fullUrl = baseUrl + route;
+
+            const resultsDiv = document.getElementById('testResults');
+            resultsDiv.innerHTML += `
+                <div class="section info" style="margin: 10px 0;">
+                    <p><strong>🔄 Testando:</strong> ${fullUrl}</p>
+                    <p><a href="${fullUrl}" target="_blank" class="btn">Abrir em Nova Aba</a></p>
+                </div>
+            `;
+
+            // Tentar navegar na mesma aba após um delay
+            setTimeout(() => {
+                if (confirm(`Navegar para ${route}? (Clique OK para ir ou Cancel para ficar)`)) {
+                    window.location.href = fullUrl;
+                }
+            }, 500);
+        }
+
+        // Criar funil de teste
+        function testCreateFunnel() {
+            const testFunnel = {
+                id: `test-funnel-${Date.now()}`,
+                name: `Funil Teste ${new Date().toLocaleTimeString()}`,
+                status: 'draft',
+                updatedAt: new Date().toISOString()
+            };
+
+            try {
+                // Simular funnelLocalStore.upsert
+                const listKey = 'qqcv_funnels';
+                let list = [];
+                try {
+                    const raw = localStorage.getItem(listKey);
+                    list = raw ? JSON.parse(raw) : [];
+                } catch {
+                    list = [];
+                }
+
+                list.push(testFunnel);
+                localStorage.setItem(listKey, JSON.stringify(list));
+
+                document.getElementById('actionResults').innerHTML = `
+                    <div class="section success">
+                        <p><strong>✅ Funil criado com sucesso!</strong></p>
+                        <pre>${JSON.stringify(testFunnel, null, 2)}</pre>
+                        <p><a href="/admin/meus-funis" class="btn">Ver em Meus Funis</a></p>
+                    </div>
+                `;
+
+                // Atualizar verificação
+                checkLocalStorage();
+            } catch (error) {
+                document.getElementById('actionResults').innerHTML = `
+                    <div class="section error">
+                        <p><strong>❌ Erro ao criar funil:</strong></p>
+                        <pre>${error.message}</pre>
+                    </div>
+                `;
+            }
+        }
+
+        // Testar operações de localStorage
+        function testLocalStorageOps() {
+            const results = [];
+
+            // Teste 1: Escrever
+            try {
+                localStorage.setItem('test_write', 'ok');
+                results.push('✅ Escrita: OK');
+            } catch (e) {
+                results.push(`❌ Escrita: ${e.message}`);
+            }
+
+            // Teste 2: Ler
+            try {
+                const value = localStorage.getItem('test_write');
+                results.push(`✅ Leitura: ${value === 'ok' ? 'OK' : 'FALHOU'}`);
+            } catch (e) {
+                results.push(`❌ Leitura: ${e.message}`);
+            }
+
+            // Teste 3: JSON
+            try {
+                const testObj = { test: true, time: Date.now() };
+                localStorage.setItem('test_json', JSON.stringify(testObj));
+                const parsed = JSON.parse(localStorage.getItem('test_json'));
+                results.push(`✅ JSON: ${parsed.test ? 'OK' : 'FALHOU'}`);
+            } catch (e) {
+                results.push(`❌ JSON: ${e.message}`);
+            }
+
+            document.getElementById('actionResults').innerHTML = `
+                <div class="section info">
+                    <h3>🔧 Testes de LocalStorage:</h3>
+                    ${results.map(r => `<p>${r}</p>`).join('')}
+                </div>
+            `;
+        }
+
+        // Criar funis de exemplo
+        function createSampleFunnels() {
+            const sampleFunnels = [
+                {
+                    id: 'sample-quiz-style',
+                    name: 'Quiz de Estilo Pessoal',
+                    status: 'draft',
+                    updatedAt: new Date().toISOString()
+                },
+                {
+                    id: 'sample-lead-magnet',
+                    name: 'Lead Magnet - E-book',
+                    status: 'published',
+                    url: 'https://example.com/leadmagnet',
+                    updatedAt: new Date().toISOString()
+                },
+                {
+                    id: 'sample-sales-funnel',
+                    name: 'Funil de Vendas - Curso',
+                    status: 'draft',
+                    updatedAt: new Date().toISOString()
+                }
+            ];
+
+            try {
+                const listKey = 'qqcv_funnels';
+                localStorage.setItem(listKey, JSON.stringify(sampleFunnels));
+
+                document.getElementById('actionResults').innerHTML = `
+                    <div class="section success">
+                        <p><strong>✅ ${sampleFunnels.length} funis de exemplo criados!</strong></p>
+                        <p><a href="/admin/meus-funis" class="btn">Ver Meus Funis</a></p>
+                    </div>
+                `;
+
+                checkLocalStorage();
+            } catch (error) {
+                document.getElementById('actionResults').innerHTML = `
+                    <div class="section error">
+                        <p><strong>❌ Erro:</strong> ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Limpar todos os dados
+        function clearAllData() {
+            if (confirm('⚠️ Isso vai apagar TODOS os dados do localStorage. Continuar?')) {
+                const keysToRemove = [];
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    if (key && (key.includes('funnel') || key.includes('qqcv'))) {
+                        keysToRemove.push(key);
+                    }
+                }
+
+                keysToRemove.forEach(key => localStorage.removeItem(key));
+
+                document.getElementById('actionResults').innerHTML = `
+                    <div class="section warning">
+                        <p><strong>🗑️ ${keysToRemove.length} chaves removidas</strong></p>
+                        <p>Removidas: ${keysToRemove.join(', ')}</p>
+                    </div>
+                `;
+
+                checkLocalStorage();
+            }
+        }
+
+        // Exportar dados
+        function exportData() {
+            const data = {};
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && (key.includes('funnel') || key.includes('qqcv'))) {
+                    data[key] = localStorage.getItem(key);
+                }
+            }
+
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `funnels-backup-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Mostrar informações de debug
+        function showDebugInfo() {
+            const info = {
+                userAgent: navigator.userAgent,
+                url: window.location.href,
+                localStorage: {
+                    supported: typeof (Storage) !== "undefined",
+                    keysCount: localStorage.length,
+                    quota: navigator.storage ? 'Available' : 'Not supported'
+                },
+                sessionStorage: {
+                    supported: typeof (sessionStorage) !== "undefined",
+                    keysCount: sessionStorage.length
+                },
+                cookies: {
+                    enabled: navigator.cookieEnabled,
+                    count: document.cookie.split(';').length
+                },
+                timestamp: new Date().toISOString()
+            };
+
+            document.getElementById('actionResults').innerHTML = `
+                <div class="section info">
+                    <h3>🔍 Informações de Debug:</h3>
+                    <pre>${JSON.stringify(info, null, 2)}</pre>
+                </div>
+            `;
+        }
+
+        // Sistema de status geral
+        function updateSystemStatus() {
+            const { funnelKeys } = checkLocalStorage();
+            const isOnAdmin = window.location.href.includes('/admin');
+            const localStorageWorking = typeof (Storage) !== "undefined";
+
+            let status = '';
+            let statusClass = 'success';
+
+            if (!localStorageWorking) {
+                status = '❌ CRÍTICO: LocalStorage não funciona';
+                statusClass = 'error';
+            } else if (funnelKeys.length === 0) {
+                status = '⚠️ AVISO: Nenhum funil encontrado';
+                statusClass = 'warning';
+            } else if (!isOnAdmin) {
+                status = '📍 INFO: Não está na área admin';
+                statusClass = 'info';
+            } else {
+                status = `✅ OK: ${funnelKeys.length} funis encontrados`;
+                statusClass = 'success';
+            }
+
+            document.getElementById('systemStatus').innerHTML = `
+                <div class="section ${statusClass}">
+                    <h3>${status}</h3>
+                    <p><strong>LocalStorage:</strong> ${localStorageWorking ? 'Funcionando' : 'Erro'}</p>
+                    <p><strong>Funis encontrados:</strong> ${funnelKeys.length}</p>
+                    <p><strong>Área admin:</strong> ${isOnAdmin ? 'Sim' : 'Não'}</p>
+                </div>
+            `;
+        }
+
+        // Executar verificações iniciais
+        window.addEventListener('load', () => {
+            checkLocalStorage();
+            checkRouting();
+            updateSystemStatus();
+
+            // URLs para testar
+            const urlsToTest = [
+                '/admin',
+                '/admin/meus-funis',
+                '/admin/funis',
+                '/editor'
+            ];
+
+            const urlTestsDiv = document.getElementById('urlTests');
+            urlTestsDiv.innerHTML = urlsToTest.map(url => {
+                const fullUrl = window.location.origin + url;
+                return `
+                    <p>
+                        <a href="${fullUrl}" target="_blank" class="btn" style="margin-right: 10px;">
+                            ${url}
+                        </a>
+                        <span style="color: #666; font-size: 0.9em;">${fullUrl}</span>
+                    </p>
+                `;
+            }).join('');
+        });
+    </script>
+</body>
+
+</html>

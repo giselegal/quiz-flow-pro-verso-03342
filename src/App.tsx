@@ -1,10 +1,11 @@
-import { Suspense, lazy } from 'react';
+import { Suspense, lazy, useEffect } from 'react';
 import { Route, Router, Switch } from 'wouter';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { ThemeProvider } from './components/theme-provider';
 import { LoadingFallback } from './components/ui/loading-fallback';
 import { Toaster } from './components/ui/toaster';
 import { AuthProvider } from './context/AuthContext';
+import { performanceManager } from './utils/performanceManager';
 
 const EditorTemplatesPage = lazy(() => import('./pages/editor-templates'));
 const ComQueRoupaEuVouPage = lazy(() => import('./pages/ComQueRoupaEuVouPage'));
@@ -46,6 +47,11 @@ const PageLoading = () => (
  * ✅ Drag & Drop sem aninhamento excessivo
  */
 function App() {
+  // 🚀 Inicializar performance manager
+  useEffect(() => {
+    performanceManager.initialize();
+  }, []);
+
   return (
     <ThemeProvider defaultTheme="light" storageKey="quiz-quest-theme">
       <AuthProvider>

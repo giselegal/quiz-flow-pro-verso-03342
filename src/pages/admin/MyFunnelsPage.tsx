@@ -19,11 +19,72 @@ const MyFunnelsPage: React.FC = () => {
   const [openId, setOpenId] = React.useState<string>('');
 
   React.useEffect(() => {
-    setFunnels(funnelLocalStore.list());
+    console.log('🔍 MyFunnelsPage: Carregando funis...');
+    const loadedFunnels = funnelLocalStore.list();
+    console.log('📋 Funis carregados:', loadedFunnels);
+    setFunnels(loadedFunnels);
+
+    // 🚀 CORREÇÃO: Se não há funis, criar alguns de exemplo
+    if (loadedFunnels.length === 0) {
+      console.log('⚠️ Nenhum funil encontrado, criando exemplos...');
+      createInitialFunnels();
+    }
   }, []);
 
+  // 🆕 Função para criar funis iniciais
+  const createInitialFunnels = () => {
+    const initialFunnels = [
+      {
+        id: 'welcome-quiz-style',
+        name: 'Quiz de Estilo Pessoal',
+        status: 'draft' as const,
+        updatedAt: new Date().toISOString()
+      },
+      {
+        id: 'lead-magnet-example',
+        name: 'Lead Magnet - E-book Grátis',
+        status: 'draft' as const,
+        updatedAt: new Date().toISOString()
+      }
+    ];
+
+    try {
+      funnelLocalStore.saveList(initialFunnels);
+      setFunnels(initialFunnels);
+      console.log('✅ Funis iniciais criados:', initialFunnels);
+    } catch (error) {
+      console.error('❌ Erro ao criar funis iniciais:', error);
+    }
+  };
+
   const goToEditor = (id?: string) => {
-    setLocation(id ? `/editor?funnel=${encodeURIComponent(id)}` : '/editor');
+    console.log('🎯 Navegando para editor:', id ? `com ID ${id}` : 'novo funil');
+
+    if (id) {
+      // Editar funil existente
+      setLocation(`/editor?funnel=${encodeURIComponent(id)}`);
+    } else {
+      // Criar novo funil
+      const now = new Date().toISOString();
+      const newId = `custom-funnel-${Date.now()}`;
+      const name = `Novo Funil ${new Date().toLocaleTimeString()}`;
+
+      const newFunnel = {
+        id: newId,
+        name,
+        status: 'draft' as const,
+        updatedAt: now
+      };
+
+      // Salvar na lista
+      const list = funnelLocalStore.list();
+      list.push(newFunnel);
+      funnelLocalStore.saveList(list);
+      setFunnels(list);
+
+      console.log('✅ Novo funil criado:', newFunnel);
+      setLocation(`/editor?funnel=${encodeURIComponent(newId)}`);
+    }
   };
 
   const createAndOpen21 = () => {
@@ -32,12 +93,30 @@ const MyFunnelsPage: React.FC = () => {
       const templateId = 'template-optimized-21-steps-funnel';
       const newId = `${templateId}-${Date.now()}`;
       const name = 'Funil Quiz 21 Etapas';
+
+      // 🚀 CORREÇÃO: Garantir que o funil seja salvo corretamente
+      const newFunnel = {
+        id: newId,
+        name,
+        status: 'draft' as const,
+        updatedAt: now
+      };
+
       const list = funnelLocalStore.list();
-      list.push({ id: newId, name, status: 'draft', updatedAt: now });
+      list.push(newFunnel);
       funnelLocalStore.saveList(list);
       setFunnels(list);
-    } catch { }
-    setLocation('/editor?template=template-optimized-21-steps-funnel');
+
+      console.log('✅ Funil 21 etapas criado:', newFunnel);
+      console.log('📊 Lista atualizada:', list);
+
+      // Navegar para editor com o ID específico
+      setLocation(`/editor?funnel=${encodeURIComponent(newId)}&template=${templateId}`);
+    } catch (error) {
+      console.error('❌ Erro ao criar funil 21 etapas:', error);
+      // Fallback: navegar mesmo se houver erro
+      setLocation('/editor?template=template-optimized-21-steps-funnel');
+    }
   };
 
   const publishLocalFunnel = async (f: Funnel) => {

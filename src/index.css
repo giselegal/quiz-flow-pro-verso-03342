@@ -6,6 +6,7 @@
 @import './styles/animations.css';
 @import './styles/spinner.css';
 @import "./styles/canvas-performance.css";
+@import "./styles/imageOptimization.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

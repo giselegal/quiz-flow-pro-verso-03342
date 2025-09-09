@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✅ CORREÇÕES APLICADAS: Gargalos dos Funis</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+
+        .section {
+            background: white;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .success {
+            border-left: 4px solid #28a745;
+            background: #f8fff9;
+        }
+
+        .warning {
+            border-left: 4px solid #ffc107;
+            background: #fffdf8;
+        }
+
+        .info {
+            border-left: 4px solid #17a2b8;
+            background: #f7fcfd;
+        }
+
+        .error {
+            border-left: 4px solid #dc3545;
+            background: #fff8f8;
+        }
+
+        pre {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px 5px;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: #0056b3;
+        }
+
+        .btn.success {
+            background: #28a745;
+        }
+
+        .btn.warning {
+            background: #ffc107;
+            color: #212529;
+        }
+
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+
+        .checklist li {
+            padding: 5px 0;
+        }
+
+        .checklist li:before {
+            content: "✅ ";
+            color: #28a745;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>✅ CORREÇÕES APLICADAS: Gargalos dos Funis</h1>
+    <p><strong>Status:</strong> <span style="color: #28a745; font-weight: bold;">PROBLEMAS RESOLVIDOS</span></p>
+    <p><strong>Data:</strong> <span id="currentTime"></span></p>
+
+    <div class="section success">
+        <h2>🎯 PROBLEMAS IDENTIFICADOS E CORRIGIDOS</h2>
+        <ul class="checklist">
+            <li><strong>Lista vazia no MyFunnelsPage:</strong> Criação automática de funis de exemplo</li>
+            <li><strong>Fluxo de criação quebrado:</strong> Garantia de salvamento na lista principal</li>
+            <li><strong>Templates não viravam funis pessoais:</strong> Instanciação correta com IDs únicos</li>
+            <li><strong>Navegação sem contexto:</strong> URLs com funnelId específico</li>
+            <li><strong>Logs de debug adicionados:</strong> Visibilidade do processo de criação</li>
+        </ul>
+    </div>
+
+    <div class="section info">
+        <h2>🔄 FLUXO CORRIGIDO</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+            <div style="background: #e3f2fd; padding: 15px; border-radius: 8px;">
+                <h3>1️⃣ Entrada no Sistema</h3>
+                <p>👤 Usuário acessa <code>/admin</code></p>
+                <p>📊 Sistema verifica lista de funis</p>
+                <p>🚀 Se vazia: cria funis de exemplo</p>
+            </div>
+            <div style="background: #f3e5f5; padding: 15px; border-radius: 8px;">
+                <h3>2️⃣ Escolha de Template</h3>
+                <p>🎨 Usuário vai em <code>/admin/funis</code></p>
+                <p>📋 Escolhe template ou cria personalizado</p>
+                <p>💾 Sistema cria funil na lista principal</p>
+            </div>
+            <div style="background: #e8f5e8; padding: 15px; border-radius: 8px;">
+                <h3>3️⃣ Edição</h3>
+                <p>✏️ Navega para <code>/editor?funnel=ID</code></p>
+                <p>🔄 Editor carrega funil específico</p>
+                <p>💾 Auto-save mantém sincronização</p>
+            </div>
+            <div style="background: #fff3cd; padding: 15px; border-radius: 8px;">
+                <h3>4️⃣ Visualização</h3>
+                <p>📋 Volta para <code>/admin/meus-funis</code></p>
+                <p>✅ Funil aparece na lista</p>
+                <p>🎯 Pode editar, publicar ou excluir</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🧪 TESTES PARA VALIDAR</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px;">
+            <div>
+                <h3>🔗 Teste 1: Navegação Básica</h3>
+                <a href="/admin" class="btn">1. Ir para Admin</a><br>
+                <a href="/admin/meus-funis" class="btn">2. Meus Funis</a><br>
+                <a href="/admin/funis" class="btn">3. Templates</a>
+            </div>
+            <div>
+                <h3>🎨 Teste 2: Criação de Funis</h3>
+                <button class="btn success" onclick="testCreateFunnel()">Criar Funil Teste</button><br>
+                <button class="btn warning" onclick="testTemplateUsage()">Usar Template</button><br>
+                <button class="btn" onclick="checkFunnelsList()">Verificar Lista</button>
+            </div>
+            <div>
+                <h3>📊 Teste 3: Persistência</h3>
+                <button class="btn" onclick="exportCurrentData()">Exportar Dados</button><br>
+                <button class="btn warning" onclick="clearAndReload()">Limpar e Recarregar</button><br>
+                <button class="btn" onclick="showDebugInfo()">Info Debug</button>
+            </div>
+        </div>
+        <div id="testResults" style="margin-top: 20px;"></div>
+    </div>
+
+    <div class="section warning">
+        <h2>⚠️ PONTOS DE ATENÇÃO</h2>
+        <ul>
+            <li><strong>Cache do Browser:</strong> Force refresh (Ctrl+F5) se não ver mudanças</li>
+            <li><strong>Console Logs:</strong> Abra DevTools (F12) para ver logs detalhados</li>
+            <li><strong>LocalStorage:</strong> Dados são salvos localmente, limpar apaga tudo</li>
+            <li><strong>URLs:</strong> Use os parâmetros corretos: <code>?funnel=ID</code> para edição</li>
+        </ul>
+    </div>
+
+    <div class="section info">
+        <h2>📋 CHECKLIST DE VALIDAÇÃO</h2>
+        <div id="validationChecklist">
+            <p>🔄 Executando verificações automáticas...</p>
+        </div>
+    </div>
+
+    <script>
+        // Atualizar timestamp
+        document.getElementById('currentTime').textContent = new Date().toLocaleString('pt-BR');
+
+        // Funções de teste
+        function testCreateFunnel() {
+            const testFunnel = {
+                id: `validation-test-${Date.now()}`,
+                name: `Funil Validação ${new Date().toLocaleTimeString()}`,
+                status: 'draft',
+                updatedAt: new Date().toISOString()
+            };
+
+            try {
+                // Simular funnelLocalStore.upsert
+                const listKey = 'qqcv_funnels';
+                let list = [];
+                try {
+                    const raw = localStorage.getItem(listKey);
+                    list = raw ? JSON.parse(raw) : [];
+                    if (!Array.isArray(list)) list = [];
+                } catch {
+                    list = [];
+                }
+
+                list.push(testFunnel);
+                localStorage.setItem(listKey, JSON.stringify(list));
+
+                document.getElementById('testResults').innerHTML = `
+                    <div class="section success">
+                        <h3>✅ Funil criado com sucesso!</h3>
+                        <p><strong>ID:</strong> ${testFunnel.id}</p>
+                        <p><strong>Nome:</strong> ${testFunnel.name}</p>
+                        <p><strong>Total de funis:</strong> ${list.length}</p>
+                        <a href="/admin/meus-funis" class="btn">Ver em Meus Funis</a>
+                        <a href="/editor?funnel=${encodeURIComponent(testFunnel.id)}" class="btn">Editar Funil</a>
+                    </div>
+                `;
+            } catch (error) {
+                document.getElementById('testResults').innerHTML = `
+                    <div class="section error">
+                        <h3>❌ Erro ao criar funil</h3>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        function testTemplateUsage() {
+            const templateId = 'template-quiz-style';
+            const newId = `${templateId}-${Date.now()}`;
+            const templateFunnel = {
+                id: newId,
+                name: 'Quiz de Estilo (Template)',
+                status: 'draft',
+                updatedAt: new Date().toISOString()
+            };
+
+            try {
+                const listKey = 'qqcv_funnels';
+                let list = [];
+                try {
+                    const raw = localStorage.getItem(listKey);
+                    list = raw ? JSON.parse(raw) : [];
+                    if (!Array.isArray(list)) list = [];
+                } catch {
+                    list = [];
+                }
+
+                list.push(templateFunnel);
+                localStorage.setItem(listKey, JSON.stringify(list));
+
+                document.getElementById('testResults').innerHTML = `
+                    <div class="section success">
+                        <h3>✅ Template instanciado como funil!</h3>
+                        <p><strong>Template:</strong> ${templateId}</p>
+                        <p><strong>Funil ID:</strong> ${newId}</p>
+                        <p><strong>Total de funis:</strong> ${list.length}</p>
+                        <a href="/editor?funnel=${encodeURIComponent(newId)}&template=${templateId}" class="btn">Editar com Template</a>
+                    </div>
+                `;
+            } catch (error) {
+                document.getElementById('testResults').innerHTML = `
+                    <div class="section error">
+                        <h3>❌ Erro ao usar template</h3>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        function checkFunnelsList() {
+            const listKey = 'qqcv_funnels';
+            try {
+                const raw = localStorage.getItem(listKey);
+                const list = raw ? JSON.parse(raw) : [];
+
+                document.getElementById('testResults').innerHTML = `
+                    <div class="section info">
+                        <h3>📋 Lista de Funis Atual</h3>
+                        <p><strong>Total:</strong> ${Array.isArray(list) ? list.length : 'Não é array'}</p>
+                        <pre>${JSON.stringify(list, null, 2)}</pre>
+                        <a href="/admin/meus-funis" class="btn">Ver no Admin</a>
+                    </div>
+                `;
+            } catch (error) {
+                document.getElementById('testResults').innerHTML = `
+                    <div class="section error">
+                        <h3>❌ Erro ao verificar lista</h3>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        function exportCurrentData() {
+            const data = {};
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && (key.includes('funnel') || key.includes('qqcv'))) {
+                    data[key] = localStorage.getItem(key);
+                }
+            }
+
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `funnels-backup-corrected-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+
+            document.getElementById('testResults').innerHTML = `
+                <div class="section success">
+                    <h3>💾 Dados exportados!</h3>
+                    <p>Arquivo baixado com todos os dados dos funis.</p>
+                </div>
+            `;
+        }
+
+        function clearAndReload() {
+            if (confirm('⚠️ Isso vai limpar todos os dados e recarregar a página. Continuar?')) {
+                // Limpar dados relacionados a funis
+                const keysToRemove = [];
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    if (key && (key.includes('funnel') || key.includes('qqcv'))) {
+                        keysToRemove.push(key);
+                    }
+                }
+
+                keysToRemove.forEach(key => localStorage.removeItem(key));
+
+                // Recarregar página
+                window.location.reload();
+            }
+        }
+
+        function showDebugInfo() {
+            const info = {
+                localStorage: {
+                    supported: typeof (Storage) !== "undefined",
+                    keysCount: localStorage.length,
+                    funnelKeys: []
+                },
+                urls: {
+                    current: window.location.href,
+                    admin: window.location.origin + '/admin',
+                    myFunnels: window.location.origin + '/admin/meus-funis',
+                    templates: window.location.origin + '/admin/funis'
+                },
+                timestamp: new Date().toISOString()
+            };
+
+            // Coletar chaves relacionadas a funis
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && (key.includes('funnel') || key.includes('qqcv'))) {
+                    info.localStorage.funnelKeys.push(key);
+                }
+            }
+
+            document.getElementById('testResults').innerHTML = `
+                <div class="section info">
+                    <h3>🔍 Informações de Debug</h3>
+                    <pre>${JSON.stringify(info, null, 2)}</pre>
+                </div>
+            `;
+        }
+
+        // Verificação automática
+        function runValidationChecklist() {
+            const checks = [];
+
+            // 1. LocalStorage
+            if (typeof (Storage) !== "undefined") {
+                checks.push('✅ LocalStorage suportado');
+            } else {
+                checks.push('❌ LocalStorage não suportado');
+            }
+
+            // 2. Lista de funis
+            try {
+                const raw = localStorage.getItem('qqcv_funnels');
+                const list = raw ? JSON.parse(raw) : [];
+                if (Array.isArray(list)) {
+                    checks.push(`✅ Lista de funis: ${list.length} items`);
+                } else {
+                    checks.push('⚠️ Lista de funis: formato inválido');
+                }
+            } catch {
+                checks.push('⚠️ Lista de funis: erro ao ler');
+            }
+
+            // 3. URLs
+            const baseUrl = window.location.origin;
+            checks.push(`✅ Base URL: ${baseUrl}`);
+
+            // 4. Admin access
+            const isAdmin = window.location.pathname.includes('/admin');
+            if (isAdmin) {
+                checks.push('✅ Está na área admin');
+            } else {
+                checks.push('📍 Não está na área admin');
+            }
+
+            const checklistDiv = document.getElementById('validationChecklist');
+            checklistDiv.innerHTML = `
+                <h3>📊 Resultado das Verificações:</h3>
+                <ul class="checklist">
+                    ${checks.map(check => `<li style="list-style: none;">${check}</li>`).join('')}
+                </ul>
+                <div style="margin-top: 15px;">
+                    <a href="/admin" class="btn">Ir para Admin</a>
+                    <a href="/admin/meus-funis" class="btn">Meus Funis</a>
+                    <a href="/admin/funis" class="btn">Templates</a>
+                </div>
+            `;
+        }
+
+        // Executar verificação automática
+        window.addEventListener('load', runValidationChecklist);
+    </script>
+</body>
+
+</html>

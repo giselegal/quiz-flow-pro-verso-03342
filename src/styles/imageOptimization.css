@@ -1,0 +1,119 @@
+/**
+ * 🎨 IMAGE OPTIMIZATION STYLES
+ * 
+ * Estilos específicos para o sistema de otimização de imagens
+ */
+
+/* 🌊 Animação shimmer para placeholder blur */
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+.shimmer {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+/* 🖼️ Otimizações para imagens responsivas */
+.responsive-image-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.responsive-image-container img {
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* 📱 Aspect ratio utilities para diferentes formatos */
+.aspect-square {
+    aspect-ratio: 1 / 1;
+}
+
+.aspect-video {
+    aspect-ratio: 16 / 9;
+}
+
+.aspect-photo {
+    aspect-ratio: 4 / 3;
+}
+
+.aspect-portrait {
+    aspect-ratio: 3 / 4;
+}
+
+.aspect-wide {
+    aspect-ratio: 21 / 9;
+}
+
+/* 🎯 Performance hints para o browser */
+.optimized-image {
+    content-visibility: auto;
+    contain-intrinsic-size: 300px 200px;
+}
+
+/* 📊 Debug mode para desenvolvimento */
+.image-debug::after {
+    content: attr(data-debug);
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 10px;
+    font-family: monospace;
+    z-index: 10;
+}
+
+/* 🔄 Loading states */
+.image-loading {
+    filter: blur(2px);
+    transition: filter 0.3s ease;
+}
+
+.image-loaded {
+    filter: none;
+}
+
+/* 💾 Cache optimization hints */
+img[loading="lazy"] {
+    content-visibility: auto;
+}
+
+/* 🚀 Priority image optimizations */
+img[loading="eager"] {
+    content-visibility: visible;
+}
+
+/* 📐 Responsive breakpoint helpers */
+@media (max-width: 640px) {
+    .responsive-sm {
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .responsive-md {
+        width: 100%;
+    }
+}
+
+@media (max-width: 1024px) {
+    .responsive-lg {
+        width: 50%;
+    }
+}
+
+@media (min-width: 1025px) {
+    .responsive-xl {
+        width: 33.333%;
+    }
+}

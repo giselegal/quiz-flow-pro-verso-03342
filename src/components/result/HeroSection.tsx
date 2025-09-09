@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { HeroImage } from '@/components/ui/EnhancedOptimizedImage';
 import { ArrowRight } from 'lucide-react';
 
 interface HeroSectionProps {
@@ -30,7 +31,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ title, subtitle, image
           </div>
           {image && (
             <div className="relative">
-              <img src={image} alt="Hero Image" className="rounded-lg shadow-lg" />
+              <HeroImage
+                src={image}
+                alt="Hero Image"
+                width={600}
+                height={400}
+                aspectRatio={3 / 2}
+                className="rounded-lg shadow-lg w-full h-auto object-cover"
+              />
             </div>
           )}
         </div>

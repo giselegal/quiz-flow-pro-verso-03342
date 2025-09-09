@@ -7,7 +7,7 @@ export default defineConfig({
   // Garante caminhos absolutos corretos para rotas e recursos
   base: '/',
   plugins: [
-    react(), 
+    react(),
     splitVendorChunkPlugin(),
   ],
   resolve: {
@@ -81,13 +81,13 @@ export default defineConfig({
             './src/components/editor/EditorProvider', // 70kB
             './src/components/editor/properties/EnhancedPropertiesPanel' // 17kB
           ],
-          
+
           'pages-admin': [
             './src/pages/admin/MetricsPage', // 20kB
             './src/pages/admin/ParticipantsPage', // 35kB
             './src/pages/admin/NoCodeConfigPage' // 63kB
           ],
-          
+
           'pages-quiz': [
             './src/pages/QuizModularPage', // 30kB
             './src/pages/admin/OverviewPage' // 27kB
@@ -104,11 +104,11 @@ export default defineConfig({
             './src/services/quizResultsService',
             './src/hooks/useQuizFlow'
           ],
-          
+
           // 📊 REGISTRY PESADO SEPARADO
           'registry-heavy': ['./src/components/editor/blocks/optimizedRegistry'] // 73kB
         },
-        
+
         // 📁 ORGANIZAÇÃO MELHORADA DE ARQUIVOS
         chunkFileNames: 'assets/chunks/[name]-[hash].js',
         entryFileNames: 'assets/[name]-[hash].js',
@@ -122,7 +122,7 @@ export default defineConfig({
       // Adicionar shim para 'require' em ambiente ESM
       include: [/node_modules/],
     },
-    
+
     // 🎯 OTIMIZAÇÕES ADICIONAIS
     target: 'esnext',
     minify: 'esbuild'

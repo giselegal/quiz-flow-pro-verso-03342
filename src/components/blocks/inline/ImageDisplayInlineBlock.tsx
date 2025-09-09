@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { cn } from '@/lib/utils';
+import EnhancedOptimizedImage from '@/components/ui/EnhancedOptimizedImage';
 // Update the import path below to the correct location of BlockComponentProps
 import type { BlockComponentProps } from '@/types/blocks';
 
@@ -162,22 +163,19 @@ const ImageDisplayInlineBlock: React.FC<BlockComponentProps> = ({
           borderRadiusClasses[borderRadius as keyof typeof borderRadiusClasses]
         )}
       >
-        <img
+        <EnhancedOptimizedImage
           src={src}
           alt={alt}
-          style={{
-            ...(width && {
-              width: typeof width === 'number' ? `${width}px` : width,
-            }),
-            ...(height && {
-              height: typeof height === 'number' ? `${height}px` : height,
-            }),
-          }}
+          width={typeof width === 'number' ? width : width ? parseInt(width) : 400}
+          height={typeof height === 'number' ? height : height ? parseInt(height) : 400}
+          aspectRatio={aspectRatio === 'square' ? 1 : aspectRatio === 'portrait' ? 3 / 4 : aspectRatio === 'landscape' ? 4 / 3 : 16 / 9}
           className={cn(
             'w-full h-full transition-transform duration-500 hover:scale-105',
             objectFitClasses[objectFit as keyof typeof objectFitClasses],
             customClassName && 'w-auto h-auto' // Se tem className customizada, não forçar w-full h-full
           )}
+          placeholder="blur"
+          priority={false}
         />
 
         {/* Overlay gradiente */}

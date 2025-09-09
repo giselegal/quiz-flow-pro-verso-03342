@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { ThumbnailImage } from '@/components/ui/EnhancedOptimizedImage';
 import { funnelLocalStore } from '@/services/funnelLocalStore';
 import { customTemplateService, CustomTemplate } from '@/services/customTemplateService';
 import { Edit, Eye, Play, Plus, Sparkles, Zap, Copy, Trash2 } from 'lucide-react';
@@ -110,6 +111,8 @@ const FunnelPanelPage: React.FC = () => {
   // Função para usar template (oficial ou personalizado)
   const handleUseTemplate = (templateId: string, isCustom: boolean = false) => {
     try {
+      console.log('🎯 Usando template:', templateId, isCustom ? '(custom)' : '(oficial)');
+
       if (isCustom) {
         customTemplateService.recordTemplateUsage(templateId, 'custom');
       }
@@ -120,12 +123,29 @@ const FunnelPanelPage: React.FC = () => {
         ? customTemplateService.getCustomTemplate(templateId)
         : TemplateRegistry.getById(templateId);
       const name = template?.name || 'Funil';
-      const list = funnelLocalStore.list();
-      list.push({ id: newId, name, status: 'draft', updatedAt: now });
-      funnelLocalStore.saveList(list);
-    } catch { }
 
-    setLocation(`/editor?template=${templateId}`);
+      // 🚀 CORREÇÃO: Criar funil na lista principal
+      const newFunnel = {
+        id: newId,
+        name,
+        status: 'draft' as const,
+        updatedAt: now
+      };
+
+      const list = funnelLocalStore.list();
+      list.push(newFunnel);
+      funnelLocalStore.saveList(list);
+
+      console.log('✅ Funil criado a partir do template:', newFunnel);
+      console.log('📊 Lista atualizada:', list.length, 'funis');
+
+      // Navegar com ID específico do funil criado
+      setLocation(`/editor?funnel=${encodeURIComponent(newId)}&template=${templateId}`);
+    } catch (error) {
+      console.error('❌ Erro ao usar template:', error);
+      // Fallback: navegar só com template
+      setLocation(`/editor?template=${templateId}`);
+    }
   };
 
   // Converter FunnelTemplate para UnifiedTemplate
@@ -179,7 +199,26 @@ const FunnelPanelPage: React.FC = () => {
   }, [funnelTemplates, sort]);
 
   const handleCreateCustom = () => {
-    setLocation('/editor');
+    console.log('🎨 Criando funil personalizado...');
+
+    const now = new Date().toISOString();
+    const newId = `custom-funnel-${Date.now()}`;
+    const name = `Funil Personalizado ${new Date().toLocaleTimeString()}`;
+
+    // 🚀 CORREÇÃO: Garantir que funil personalizado seja salvo
+    const newFunnel = {
+      id: newId,
+      name,
+      status: 'draft' as const,
+      updatedAt: now
+    };
+
+    const list = funnelLocalStore.list();
+    list.push(newFunnel);
+    funnelLocalStore.saveList(list);
+
+    console.log('✅ Funil personalizado criado:', newFunnel);
+    setLocation(`/editor?funnel=${encodeURIComponent(newId)}`);
   };
 
   return (
@@ -282,12 +321,14 @@ const FunnelPanelPage: React.FC = () => {
                 style={{ backgroundColor: '#FFFFFF' }}
               >
                 <div className="relative">
-                  <img
+                  <ThumbnailImage
                     src={template.image}
                     alt={template.name}
+                    width={400}
+                    height={240}
                     className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-                    onError={(e) => {
-                      e.currentTarget.src = 'https://via.placeholder.com/400x300?text=Funnel+Template';
+                    onError={() => {
+                      console.warn(`Failed to load template image: ${template.image}`);
                     }}
                   />
                   <div className="absolute top-2 right-2">
@@ -376,12 +417,14 @@ const FunnelPanelPage: React.FC = () => {
                     style={{ backgroundColor: '#FFFFFF' }}
                   >
                     <div className="relative">
-                      <img
+                      <ThumbnailImage
                         src={template.image}
                         alt={template.name}
+                        width={400}
+                        height={240}
                         className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-                        onError={(e) => {
-                          e.currentTarget.src = 'https://via.placeholder.com/400x300?text=Custom+Template';
+                        onError={() => {
+                          console.warn(`Failed to load custom template image: ${template.image}`);
                         }}
                       />
                       <div className="absolute top-2 right-2">
