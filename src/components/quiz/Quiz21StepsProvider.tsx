@@ -3,7 +3,7 @@ import { useQuizAnalytics } from '@/hooks/useQuizAnalytics';
 import { useQuizLogic } from '@/hooks/useQuizLogic';
 import { useSupabaseQuiz } from '@/hooks/useSupabaseQuiz';
 import { useStepNavigationStore } from '@/stores/useStepNavigationStore';
-import { trackQuizStarted, trackStepViewed, trackOptionSelected } from '@/services/simpleAnalytics';
+import { trackQuizStarted, trackStepViewed, trackOptionSelected } from '@/services/compatibleAnalytics';
 import React, { createContext, useCallback, useContext, useState } from 'react';
 
 // ✅ FASE 3: Interface adaptadora para compatibilidade entre core e legacy
@@ -448,21 +448,10 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
     // Note: quizLogicResult será atualizado após completeQuizLogic() por useQuizLogic
     setTimeout(() => {
       if (quizLogicResult) {
-        // 📊 Converter QuizResult para Result para analytics
-        const resultForAnalytics = {
-          id: crypto.randomUUID(),
-          quizId: 'quiz-21-steps',
-          styleCategory: quizLogicResult.primaryStyle.category,
-          primaryStyle: quizLogicResult.primaryStyle.category,
-          scores: quizLogicResult.scores,
-          percentages: quizLogicResult.scores,
-          userAnswers: [], // TODO: Mapear de answers se necessário
-          completedAt: quizLogicResult.completedAt,
-          totalScore: Object.values(quizLogicResult.scores).reduce((acc, score) => acc + score, 0),
-        };
-
         // 📊 ANALYTICS: Track quiz completion
-        trackQuizComplete(resultForAnalytics);
+        import('@/services/compatibleAnalytics').then(({ trackQuizCompleted }) => {
+          trackQuizCompleted(quizLogicResult);
+        });
 
         if (debug) {
           console.log('🎯 Quiz21Steps: Quiz completado com analytics:', quizLogicResult);
@@ -471,7 +460,7 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
     }, 100); // Pequeno delay para garantir que quizLogicResult foi atualizado
 
     return quizLogicResult;
-  }, [completeQuizLogic, completeSupabaseQuiz, quizLogicResult, trackQuizComplete, debug]);
+  }, [completeQuizLogic, completeSupabaseQuiz, quizLogicResult, debug]);
 
   // Sistema
   const getCurrentStageData = useCallback(() => {

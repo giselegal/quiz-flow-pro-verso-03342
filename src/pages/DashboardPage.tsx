@@ -8,11 +8,11 @@ import React from 'react';
 import RealTimeDashboard from '@/components/dashboard/RealTimeDashboard';
 
 const DashboardPage: React.FC = () => {
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <RealTimeDashboard />
-    </div>
-  );
+    return (
+        <div className="min-h-screen bg-gray-50">
+            <RealTimeDashboard />
+        </div>
+    );
 };
 
 export default DashboardPage;

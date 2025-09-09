@@ -21,7 +21,7 @@ const AnalyticsPage: React.FC = () => {
           Análise em tempo real do desempenho dos seus quizzes e funis
         </p>
       </div>
-      
+
       <RealTimeDashboard />
     </div>
   );
