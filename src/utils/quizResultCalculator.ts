@@ -1,16 +1,18 @@
 /**
- * 🎯 CALCULADORA DE RESULTADO ROBUSTA - FASE 1, 2 & 3
+ * 🎯 CALCULADORA DE RESULTADO ROBUSTA - FASE 1, 2 & 3 COM CACHE
  *
  * Sistema robusto para calcular resultado do quiz com:
  * - Fallbacks automáticos
  * - Validação de dados
  * - Logs detalhados
  * - Integração com sistema unificado
+ * - 🚀 CACHE INTELIGENTE para evitar recálculos desnecessários
  */
 
 import { ResultOrchestrator } from '@/services/core/ResultOrchestrator';
 import { StorageService } from '@/services/core/StorageService';
 import { unifiedQuizStorage } from '@/services/core/UnifiedQuizStorage';
+import { resultCacheService } from '@/services/core/ResultCacheService';
 
 export const calculateAndSaveQuizResult = async () => {
   console.log('🔄 Iniciando cálculo do resultado do quiz...');
@@ -21,6 +23,20 @@ export const calculateAndSaveQuizResult = async () => {
     let userSelections = unifiedData.selections;
     let userName = unifiedData.formData.userName || unifiedData.formData.name;
     const hasEnough = unifiedQuizStorage.hasEnoughDataForResult();
+
+    // 🎯 FASE 1: Verificar cache primeiro para evitar recálculo desnecessário
+    if (Object.keys(userSelections).length > 0) {
+      const cachedResult = resultCacheService.get(userSelections, userName);
+      if (cachedResult) {
+        console.log('✅ Resultado recuperado do cache no quizResultCalculator');
+        
+        // Salvar resultado em ambos os sistemas
+        try { StorageService.safeSetJSON('quizResult', cachedResult); } catch { }
+        unifiedQuizStorage.saveResult(cachedResult);
+        
+        return cachedResult;
+      }
+    }
 
     // 2. Fallback para dados legados se necessário
     if (Object.keys(userSelections).length === 0) {
@@ -87,6 +103,9 @@ export const calculateAndSaveQuizResult = async () => {
       total: result.total,
       selectionCount
     });
+
+    // 🎯 FASE 1: Armazenar no cache para futuras consultas
+    resultCacheService.set(userSelections, result.payload, userName);
 
     // 6. Salvar resultado
     // - StorageService legado para compatibilidade (usado em testes e alguns fluxos)

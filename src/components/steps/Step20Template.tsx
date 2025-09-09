@@ -1,14 +1,17 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { computeEffectivePrimaryPercentage } from '@/core/result/percentage';
 import { AnimatedWrapper } from '@/components/ui/animated-wrapper';
 import { Button } from '@/components/ui/button';
 import { RefreshCw } from 'lucide-react';
 import { useQuizResult } from '@/hooks/useQuizResult';
-import { validateQuizData, recalculateQuizResult } from '@/utils/quizResultCalculator';
 import { cn } from '@/lib/utils';
 import { getBestUserName } from '@/core/user/name';
 import { getStyleConfig } from '@/config/styleConfig';
 import { ResultDisplay } from '@/components/ui/ResultDisplay';
+// 🎯 FASE 1: Usar apenas o motor principal e cache
+import { quizResultsService } from '@/services/quizResultsService';
+import { unifiedQuizStorage } from '@/services/core/UnifiedQuizStorage';
+import { resultCacheService } from '@/services/core/ResultCacheService';
 
 interface Step20TemplateProps {
   className?: string;
@@ -25,6 +28,7 @@ const Step20Template: React.FC<Step20TemplateProps> = ({
   onPropertyChange: _onPropertyChange,
   blocks = []
 }) => {
+  // 🎯 FASE 1: Usar apenas useQuizResult (que deve ser otimizado) e evitar múltiplos motores
   const { primaryStyle, secondaryStyles } = useQuizResult();
   const [isLoading, setIsLoading] = useState(false);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
@@ -34,13 +38,38 @@ const Step20Template: React.FC<Step20TemplateProps> = ({
   const inFlightRef = useRef(false);
   const triedInitialRecalcRef = useRef(false);
 
+  // 🎯 OTIMIZAÇÃO: Validação memoizada para evitar recálculos desnecessários
+  const validationResult = useMemo(() => {
+    const data = unifiedQuizStorage.loadData();
+    const hasEnoughData = unifiedQuizStorage.hasEnoughDataForResult();
+    const selectionCount = Object.keys(data.selections).length;
+    const formHasName = Boolean(data.formData.userName || data.formData.name);
+    
+    const errors: string[] = [];
+    if (selectionCount === 0) {
+      errors.push('Nenhuma resposta foi registrada');
+    }
+    if (selectionCount < 5) {
+      errors.push(`Apenas ${selectionCount} perguntas respondidas (mínimo 5)`);
+    }
+    if (!formHasName) {
+      errors.push('Dados do usuário não encontrados');
+    }
+
+    return {
+      isValid: hasEnoughData && errors.length === 0,
+      errors,
+      selectionCount,
+      data
+    };
+  }, []);
+
   // Validar dados ao montar
   useEffect(() => {
-    const { isValid, errors } = validateQuizData();
-    setValidationErrors(errors);
+    setValidationErrors(validationResult.errors);
 
     // 1) Se não há resultado válido, tentar recalcular apenas uma vez (por montagem)
-    if (!primaryStyle && isValid && !triedInitialRecalcRef.current) {
+    if (!primaryStyle && validationResult.isValid && !triedInitialRecalcRef.current) {
       triedInitialRecalcRef.current = true;
       handleRecalculate();
       return;
@@ -49,28 +78,108 @@ const Step20Template: React.FC<Step20TemplateProps> = ({
     // 2) Se veio um fallback "Neutro" mas temos dados válidos, forçar um recálculo uma única vez
     const isNeutral = Boolean(primaryStyle &&
       ((primaryStyle.style || '').toLowerCase() === 'neutro' || (primaryStyle.category || '').toLowerCase() === 'neutro'));
-    if (isValid && isNeutral && !neutralFixTried) {
+    if (validationResult.isValid && isNeutral && !neutralFixTried) {
       setNeutralFixTried(true);
       handleRecalculate();
     }
-  }, [primaryStyle, neutralFixTried]);
+  }, [primaryStyle, neutralFixTried, validationResult]);
 
+  // 🎯 FASE 1: Usar apenas quizResultsService como motor principal com cache
   const handleRecalculate = async () => {
     if (inFlightRef.current) return; // evita concorrência e double-fire do StrictMode
     inFlightRef.current = true;
     setIsLoading(true);
+    
     try {
-      // Aguardar o recálculo para refletir estado corretamente e capturar falhas
-      const success = await recalculateQuizResult();
-      if (!success) {
-        setValidationErrors(['Falha ao recalcular resultado']);
+      const { data } = validationResult;
+      const userName = data.formData.userName || data.formData.name || '';
+
+      // 1. Verificar cache primeiro
+      const cachedResult = resultCacheService.get(data.selections, userName);
+      if (cachedResult) {
+        console.log('✅ Resultado recuperado do cache');
+        // Atualizar armazenamento unificado com resultado do cache
+        unifiedQuizStorage.saveResult(cachedResult);
+        setValidationErrors([]);
+        return;
+      }
+
+      // 2. Calcular usando apenas o motor principal
+      console.log('🔄 Calculando resultado usando motor principal...');
+      const session = {
+        id: data.metadata?.currentStep?.toString() || 'step20',
+        session_id: 'step20-session',
+        responses: convertSelectionsToResponses(data.selections),
+        current_step: 20
+      };
+
+      const results = await quizResultsService.calculateResults(session);
+      
+      if (results) {
+        // 3. Converter para formato compatível e armazenar no cache
+        const compatibleResult = convertToCompatibleFormat(results, userName);
+        
+        // 4. Armazenar no cache para evitar recálculos futuros
+        resultCacheService.set(data.selections, compatibleResult, userName);
+        
+        // 5. Salvar no armazenamento unificado
+        unifiedQuizStorage.saveResult(compatibleResult);
+        
+        setValidationErrors([]);
+        console.log('✅ Resultado calculado e armazenado com sucesso');
+      } else {
+        setValidationErrors(['Falha ao calcular resultado']);
       }
     } catch (error) {
+      console.error('❌ Erro durante recálculo:', error);
       setValidationErrors(['Erro durante recálculo']);
     } finally {
       setIsLoading(false);
       inFlightRef.current = false;
     }
+  };
+
+  // Métodos auxiliares para conversão de dados
+  const convertSelectionsToResponses = (selections: Record<string, string[]>): Record<string, any> => {
+    const responses: Record<string, any> = {};
+    
+    Object.entries(selections).forEach(([questionId, selectedOptions]) => {
+      // Extrair número da etapa do questionId (ex: "step-3" -> "3")
+      const stepMatch = questionId.match(/step-?(\d+)/);
+      const stepNumber = stepMatch ? stepMatch[1] : questionId;
+      
+      responses[stepNumber] = {
+        questionId,
+        selectedOptions
+      };
+    });
+    
+    return responses;
+  };
+
+  const convertToCompatibleFormat = (results: any, userName: string) => {
+    return {
+      version: 'v1',
+      primaryStyle: {
+        style: results.styleProfile.primaryStyle,
+        category: results.styleProfile.primaryStyle,
+        score: Math.round(results.styleProfile.confidence * 100),
+        percentage: Math.round(results.styleProfile.confidence * 100),
+        rank: 1,
+      },
+      secondaryStyles: results.styleProfile.secondaryStyle ? [{
+        style: results.styleProfile.secondaryStyle,
+        category: results.styleProfile.secondaryStyle,
+        score: 50,
+        percentage: 50,
+        rank: 2,
+      }] : [],
+      scores: results.styleProfile.styleScores || {},
+      totalQuestions: results.metadata.totalQuestions,
+      userData: { name: userName },
+      styleProfile: results.styleProfile,
+      recommendations: results.recommendations
+    };
   };
 
   // Fallback robusto quando não há resultado

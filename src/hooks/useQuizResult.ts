@@ -1,11 +1,13 @@
 // hooks/useQuizResult.ts
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { StyleResult } from '@/types/quiz';
 import { StorageService } from '@/services/core/StorageService';
 import { calculateAndSaveQuizResult } from '@/utils/quizResultCalculator';
+import { resultCacheService } from '@/services/core/ResultCacheService';
 import EVENTS from '@/core/constants/events';
 
 export const useQuizResult = () => {
+  // 🎯 FASE 1: Cache inteligente + memoização para evitar recálculos desnecessários
   // 🔒 Guarda global simples para evitar cálculos concorrentes entre múltiplas instâncias do hook
   // e compartilhar o último resultado/erro rapidamente.
   // Em ambientes browser com hot-reload, este módulo persiste entre renders.
@@ -32,14 +34,30 @@ export const useQuizResult = () => {
     setError(null);
 
     try {
-      // Verificar múltiplas fontes de dados
-      const legacyResult = StorageService.safeGetJSON<any>('quizResult');
-
-      let unifiedResult = null;
+      // 🎯 FASE 1: Verificar cache primeiro para evitar recálculos desnecessários
+      let unifiedData = null;
       try {
         const { unifiedQuizStorage } = await import('@/services/core/UnifiedQuizStorage');
-        unifiedResult = unifiedQuizStorage.loadData().result;
+        unifiedData = unifiedQuizStorage.loadData();
+        
+        // Verificar cache de resultados se houver dados
+        if (unifiedData.selections && Object.keys(unifiedData.selections).length > 0) {
+          const userName = unifiedData.formData?.userName || unifiedData.formData?.name;
+          const cachedResult = resultCacheService.get(unifiedData.selections, userName);
+          
+          if (cachedResult) {
+            console.log('✅ Resultado recuperado do cache no useQuizResult');
+            setPrimaryStyle(cachedResult.primaryStyle ?? null);
+            setSecondaryStyles(cachedResult.secondaryStyles || []);
+            setIsLoading(false);
+            return;
+          }
+        }
       } catch { /* ignore */ }
+
+      // Verificar múltiplas fontes de dados
+      const legacyResult = StorageService.safeGetJSON<any>('quizResult');
+      const unifiedResult = unifiedData?.result;
 
       // Usar resultado existente se disponível
       if (legacyResult || unifiedResult) {
@@ -59,8 +77,8 @@ export const useQuizResult = () => {
 
       try {
         const { unifiedQuizStorage } = await import('@/services/core/UnifiedQuizStorage');
-        const unifiedData = unifiedQuizStorage.loadData();
-        isResultStep = unifiedData.metadata?.currentStep === 20;
+        const data = unifiedQuizStorage.loadData();
+        isResultStep = data.metadata?.currentStep === 20;
         hasEnoughData = unifiedQuizStorage.hasEnoughDataForResult();
       } catch {
         // Fallback: verificar dados legados
@@ -122,6 +140,12 @@ export const useQuizResult = () => {
         setPrimaryStyle(result.primaryStyle ?? null);
         setSecondaryStyles(result.secondaryStyles || []);
         setRetryCount(0); // Reset retry count on success
+
+        // 🎯 FASE 1: Armazenar no cache para futuras consultas
+        if (unifiedData?.selections) {
+          const userName = unifiedData.formData?.userName || unifiedData.formData?.name;
+          resultCacheService.set(unifiedData.selections, result, userName);
+        }
 
         // Atualizar cache global
         globalState.lastOkResult = result;
@@ -217,12 +241,15 @@ export const useQuizResult = () => {
     loadFromStorage();
   }, [loadFromStorage]);
 
-  return {
+  // 🎯 FASE 1: Memoização do resultado para evitar re-renders desnecessários
+  const memoizedResult = useMemo(() => ({
     primaryStyle,
     secondaryStyles,
     isLoading,
     error,
     retry,
     hasResult: Boolean(primaryStyle),
-  };
+  }), [primaryStyle, secondaryStyles, isLoading, error, retry]);
+
+  return memoizedResult;
 };
