@@ -52,10 +52,10 @@ class FunnelTemplateService {
       if (category && category !== 'all') {
         query = query.eq('category', category);
       }
-      
+
       // Tentar ordenar, mas com fallback se falhar
       query = query.order('usage_count', { ascending: false });
-      
+
       const { data, error } = await query;
 
       if (error) {

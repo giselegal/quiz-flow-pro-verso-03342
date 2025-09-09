@@ -61,7 +61,7 @@ const FunnelPanelPage: React.FC = () => {
       }
       return list.map(normalize);
     }
-    
+
     // ✅ USAR: Registry unificado como fallback
     const unifiedTemplates = getUnifiedTemplates({ sortBy: sort === 'name' ? 'name' : 'usageCount' });
     return unifiedTemplates.map((template) => ({

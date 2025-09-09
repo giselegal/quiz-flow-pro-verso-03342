@@ -122,7 +122,7 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
       if (existing) return existing;
 
       const newSessionId = `session_${effectiveFunnelId}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-      
+
       // ✅ CORRIGIDO: Tratamento de erro QuotaExceeded
       try {
         localStorage.setItem(storageKey, newSessionId);
@@ -131,7 +131,7 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
         // Usar sessionID temporário que não persiste
         return `temp_session_${Date.now()}`;
       }
-      
+
       return newSessionId;
     } catch (error) {
       console.warn('⚠️ Erro ao acessar localStorage, usando sessionID temporário');
