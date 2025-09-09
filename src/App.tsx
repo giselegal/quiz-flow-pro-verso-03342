@@ -112,14 +112,14 @@ function App() {
                   <DashboardPage />
                 </Suspense>
               } />
-              
+
               {/* Rota /admin que redireciona para o DashboardPage */}
               <ProtectedRoute path="/admin" component={() =>
                 <Suspense fallback={<LoadingFallback />}>
                   <DashboardPage />
                 </Suspense>
               } />
-              
+
               {/* Subrotas admin que também carregam o DashboardPage */}
               <ProtectedRoute path="/admin/*" component={() =>
                 <Suspense fallback={<LoadingFallback />}>
