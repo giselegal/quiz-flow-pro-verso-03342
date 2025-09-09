@@ -1,4 +1,4 @@
-import { useOptimizedContainerProperties } from '@/hooks/useOptimizedContainerProperties';
+import { useContainerProperties } from '@/hooks/useContainerProperties';
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
 import { getOptimizedBlockComponent, normalizeBlockProps } from '@/utils/optimizedRegistry';
@@ -83,8 +83,8 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
   // ✅ Buscar componente otimizado com fallback inteligente
   const Component = getOptimizedBlockComponent(normalizedBlock.type);
 
-  // Processar propriedades de container usando o hook otimizado
-  const { containerClasses, inlineStyles, processedProperties } = useOptimizedContainerProperties(
+  // Processar propriedades de container usando o hook
+  const { containerClasses, inlineStyles, processedProperties } = useContainerProperties(
     normalizedBlock.properties
   );
 
