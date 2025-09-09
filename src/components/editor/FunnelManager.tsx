@@ -80,7 +80,7 @@ export const FunnelManager: React.FC<FunnelManagerProps> = ({
         ];
 
         // Verificar se os templates já estão na lista contextual
-        const existingTemplates = mappedFunnels.filter(f => 
+        const existingTemplates = mappedFunnels.filter(f =>
           templateFunnels.some(t => t.id === f.id)
         );
 
@@ -302,8 +302,8 @@ export const FunnelManager: React.FC<FunnelManagerProps> = ({
             <div
               key={funnel.id}
               className={`p-4 rounded-lg border transition-all cursor-pointer ${funnel.isActive
-                  ? 'border-blue-500 bg-blue-50 shadow-md'
-                  : 'border-gray-200 bg-gray-50 hover:border-gray-300 hover:shadow-sm'
+                ? 'border-blue-500 bg-blue-50 shadow-md'
+                : 'border-gray-200 bg-gray-50 hover:border-gray-300 hover:shadow-sm'
                 }`}
               onClick={() => handleSelectFunnel(funnel.id)}
             >

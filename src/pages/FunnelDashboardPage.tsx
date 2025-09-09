@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { getFunnelIdFromEnvOrStorage, saveFunnelIdToStorage } from '@/utils/funnelIdentity';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { FunnelManager } from '@/components/editor/FunnelManager';
+import { FunnelContext } from '@/core/contexts/FunnelContext';
 import { useLocation } from 'wouter';
 import { toast } from '@/hooks/use-toast';
 
@@ -114,6 +117,7 @@ export const FunnelDashboardPage: React.FC<FunnelDashboardPageProps> = () => {
         <FunnelManager
           currentFunnelId={currentFunnelId}
           onFunnelSelect={handleFunnelSelect}
+          context={FunnelContext.DEV}
         />
       </div>
 

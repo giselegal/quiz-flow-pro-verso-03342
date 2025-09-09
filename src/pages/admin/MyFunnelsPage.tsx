@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { funnelLocalStore } from '@/services/funnelLocalStore';
-import { Edit, Eye, Globe2, Plus, Upload, Link as LinkIcon } from 'lucide-react';
+import { Edit, Eye, Globe2, Plus, Upload, Link as LinkIcon, Settings } from 'lucide-react';
 import React from 'react';
 import { Input } from '@/components/ui/input';
 import { useLocation } from 'wouter';
@@ -10,6 +10,7 @@ import { publishFunnel } from '@/services/funnelPublishing';
 import { AdminBreadcrumbs } from '@/components/admin/AdminBreadcrumbs';
 import { useMyFunnelsPersistence } from '@/hooks/editor/useContextualEditorPersistence';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
+import { FunnelSettingsModal } from '@/components/admin/FunnelSettingsModal';
 
 type Funnel = ReturnType<typeof funnelLocalStore.list>[number];
 
@@ -24,7 +25,7 @@ const MyFunnelsPage: React.FC = () => {
 
   React.useEffect(() => {
     console.log('🔍 MyFunnelsPage: Carregando funis do contexto MY_FUNNELS...');
-    
+
     const loadContextualFunnels = async () => {
       try {
         const contextualFunnels = await listFunnels();
@@ -76,7 +77,7 @@ const MyFunnelsPage: React.FC = () => {
       for (const funnel of initialFunnels) {
         await saveFunnel(funnel);
       }
-      
+
       // Recarregar a lista
       const updatedFunnels = await listFunnels();
       setFunnels(updatedFunnels);
@@ -131,7 +132,7 @@ const MyFunnelsPage: React.FC = () => {
       try {
         // Salvar no contexto MY_FUNNELS
         await saveFunnel(newFunnel);
-        
+
         // Atualizar a lista local
         const updatedFunnels = await listFunnels();
         setFunnels(updatedFunnels);
@@ -175,7 +176,7 @@ const MyFunnelsPage: React.FC = () => {
 
       // Salvar no contexto MY_FUNNELS
       await saveFunnel(newFunnel);
-      
+
       // Atualizar a lista local
       const updatedFunnels = await listFunnels();
       setFunnels(updatedFunnels);
@@ -197,7 +198,7 @@ const MyFunnelsPage: React.FC = () => {
     try {
       // Carregar dados completos do funil
       const fullFunnelData = await loadFunnel(funnel.id);
-      
+
       if (!fullFunnelData) {
         console.error('❌ Dados do funil não encontrados:', funnel.id);
         return;
@@ -218,16 +219,16 @@ const MyFunnelsPage: React.FC = () => {
       };
 
       const result = await publishFunnel(publishData);
-      
+
       if (result.success) {
         // Atualizar o funil como publicado
         const updatedFunnel = { ...fullFunnelData, isPublished: true };
         await saveFunnel(updatedFunnel);
-        
+
         // Recarregar a lista
         const updatedFunnels = await listFunnels();
         setFunnels(updatedFunnels);
-        
+
         console.log('✅ Funil publicado com sucesso');
         setOpenId(funnel.id);
       } else {
@@ -244,11 +245,11 @@ const MyFunnelsPage: React.FC = () => {
 
   return (
     <div className="container mx-auto py-8">
-      <AdminBreadcrumbs 
+      <AdminBreadcrumbs
         items={[
           { label: 'Dashboard', href: '/admin' },
           { label: 'Meus Funis', href: '/admin/meus-funis' }
-        ]} 
+        ]}
       />
 
       <div className="flex justify-between items-center mb-8">
@@ -264,9 +265,9 @@ const MyFunnelsPage: React.FC = () => {
             <Plus className="h-4 w-4" />
             Novo Funil
           </Button>
-          
-          <Button 
-            variant="outline" 
+
+          <Button
+            variant="outline"
             onClick={createAndOpen21}
             className="flex items-center gap-2"
           >
@@ -296,7 +297,7 @@ const MyFunnelsPage: React.FC = () => {
                   </div>
                 </CardTitle>
               </CardHeader>
-              
+
               <CardContent>
                 <div className="space-y-4">
                   <div className="text-sm text-muted-foreground">

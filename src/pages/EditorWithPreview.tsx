@@ -8,7 +8,8 @@ import { CanvasDropZone } from '@/components/editor/canvas/CanvasDropZone';
 import { StepDndProvider } from '@/components/editor/dnd/StepDndProvider';
 import UniversalBlockRenderer from '@/components/editor/blocks/UniversalBlockRenderer';
 import CombinedComponentsPanel from '@/components/editor/CombinedComponentsPanel';
-import { FunnelSettingsPanel } from '@/components/editor/funnel-settings/FunnelSettingsPanel';
+// Configurações de funil movidas para "Meus Funis" e "Modelos de Funis"
+// import { FunnelSettingsPanel } from '@/components/editor/funnel-settings/FunnelSettingsPanel';
 import { FunnelStagesPanel } from '@/components/editor/funnel/FunnelStagesPanel';
 import { FourColumnLayout } from '@/components/editor/layout/FourColumnLayout';
 import { SaveTemplateModal } from '@/components/editor/SaveTemplateModal';
@@ -64,7 +65,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
   const { scrollRef } = useSyncedScroll({ source: 'canvas' });
 
   // Estado local
-  const [showFunnelSettings, setShowFunnelSettings] = useState(false);
+  // const [showFunnelSettings, setShowFunnelSettings] = useState(false); // Removido - configurações movidas para Meus Funis
   const [showSaveTemplateModal, setShowSaveTemplateModal] = useState(false);
 
   // Editor Context - Estado centralizado do editor
@@ -305,13 +306,14 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
         <StepsDebugPanel />
 
         {/* MODAIS */}
-        {showFunnelSettings && (
+        {/* CONFIGURAÇÕES DE FUNIL REMOVIDAS - Agora disponíveis em "Meus Funis" */}
+        {/* {showFunnelSettings && (
           <FunnelSettingsPanel
             funnelId={dynamicFunnelId}
             isOpen={showFunnelSettings}
             onClose={() => setShowFunnelSettings(false)}
           />
-        )}
+        )} */}
 
         {showSaveTemplateModal && (
           <SaveTemplateModal

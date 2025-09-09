@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔍 Diagnóstico de Dados - Quiz Quest</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background: #1e1e1e;
+            color: #ffffff;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .step {
+            background: #2d2d2d;
+            border-left: 4px solid #4CAF50;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .code-block {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+
+        .highlight {
+            background: #ffd700;
+            color: #000;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+
+        .warning {
+            border-left-color: #ff9800;
+            background: #2d1f0d;
+        }
+
+        .success {
+            border-left-color: #4CAF50;
+            background: #0d2d1f;
+        }
+
+        .info {
+            border-left-color: #2196F3;
+            background: #0d1f2d;
+        }
+
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+
+        button:hover {
+            background: #45a049;
+        }
+
+        .copy-btn {
+            background: #2196F3;
+        }
+
+        .copy-btn:hover {
+            background: #1976D2;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🔍 DIAGNÓSTICO AUTOMÁTICO DE DADOS</h1>
+        <p><strong>Opção 1 Executada:</strong> Análise completa do localStorage</p>
+
+        <div class="step info">
+            <h2>📊 RESULTADO DO DIAGNÓSTICO SIMULADO</h2>
+            <p>Com base na análise, detectamos <span class="highlight">6 dados legados</span> que podem causar vazamento
+                entre contextos:</p>
+            <ul>
+                <li><code>funnel-abc123</code> - Funis antigos (funnel-*)</li>
+                <li><code>funnels-list</code> - Lista de funis antiga</li>
+                <li><code>editor:funnelId</code> - ID do funil ativo no editor</li>
+                <li><code>quiz_config</code> - Dados de quiz antigos</li>
+                <li><code>quizResponses</code> - Respostas de quiz antigas</li>
+                <li><code>template-template1</code> - Templates antigos</li>
+            </ul>
+        </div>
+
+        <div class="step warning">
+            <h2>⚠️ IMPORTANTE: Execute o Diagnóstico Real</h2>
+            <p>O diagnóstico acima é uma simulação. Para ver os dados <strong>reais</strong> do seu projeto:</p>
+        </div>
+
+        <div class="step">
+            <h2>🚀 PASSOS PARA EXECUTAR O DIAGNÓSTICO REAL</h2>
+
+            <h3>1. Certifique-se que o servidor está rodando</h3>
+            <div class="code-block">
+                <span style="color: #4CAF50;">✅ Servidor já está rodando em http://localhost:5173</span>
+            </div>
+
+            <h3>2. Abra o navegador</h3>
+            <p>Clique no link ou navegue manualmente:</p>
+            <div class="code-block">
+                <a href="http://localhost:5173" target="_blank" style="color: #4CAF50;">🔗 http://localhost:5173</a>
+            </div>
+
+            <h3>3. Abra o Console do Navegador</h3>
+            <p>Pressione <kbd>F12</kbd> ou <kbd>Ctrl+Shift+I</kbd> e vá para a aba "Console"</p>
+
+            <h3>4. Cole e Execute o Script de Diagnóstico</h3>
+            <p>Copie o script abaixo e cole no console:</p>
+            <div class="code-block" id="diagnosticScript">
+                // 🔍 DIAGNÓSTICO COMPLETO DOS DADOS EXISTENTES
+                console.log('🔍 ANÁLISE COMPLETA DOS DADOS NO LOCALSTORAGE');
+                console.log('==============================================');
+
+                // Função para analisar todos os dados
+                window.analyzeCurrentData = function () {
+                console.log('📊 DADOS ATUAIS NO LOCALSTORAGE:');
+                console.log('=================================');
+
+                // Obter todas as chaves
+                const allKeys = [];
+                for (let i = 0; i < localStorage.length; i++) { const key=localStorage.key(i); if (key)
+                    allKeys.push(key); } console.log(`📋 Total de chaves encontradas: ${allKeys.length}`); if
+                    (allKeys.length===0) { console.log('❌ Nenhum dado encontrado no localStorage'); return; } //
+                    Categorizar as chaves const categories={ 'Funis/Editor' : [], 'Quiz/Respostas' : [], 'Templates' :
+                    [], 'Auth/Usuário' : [], 'Configurações' : [], 'Outros' : [] }; allKeys.forEach(key=> {
+                    const value = localStorage.getItem(key);
+                    const size = value ? value.length : 0;
+
+                    let category = 'Outros';
+
+                    if (key.includes('funnel') || key.includes('editor')) {
+                    category = 'Funis/Editor';
+                    } else if (key.includes('quiz') || key.includes('response') || key.includes('answer')) {
+                    category = 'Quiz/Respostas';
+                    } else if (key.includes('template') || key.includes('model')) {
+                    category = 'Templates';
+                    } else if (key.includes('auth') || key.includes('user') || key.includes('login')) {
+                    category = 'Auth/Usuário';
+                    } else if (key.includes('config') || key.includes('setting')) {
+                    category = 'Configurações';
+                    }
+
+                    categories[category].push({
+                    key,
+                    size,
+                    preview: value ? value.substring(0, 100) + (value.length > 100 ? '...' : '') : null
+                    });
+                    });
+
+                    // Mostrar categorias
+                    Object.entries(categories).forEach(([category, items]) => {
+                    if (items.length > 0) {
+                    console.log(`\n📁 ${category} (${items.length} itens):`);
+                    items.forEach(({ key, size, preview }) => {
+                    console.log(` 📄 ${key} (${size} chars)`);
+                    if (preview) {
+                    try {
+                    const parsed = JSON.parse(preview);
+                    console.log(` 💾 Dados:`, parsed);
+                    } catch {
+                    console.log(` 📝 Conteúdo: ${preview}`);
+                    }
+                    }
+                    });
+                    }
+                    });
+
+                    return categories;
+                    };
+
+                    // Função para detectar dados legados específicos
+                    window.detectLegacyData = function () {
+                    console.log('\n🕰️ DETECÇÃO DE DADOS LEGADOS:');
+                    console.log('=============================');
+
+                    const legacyPatterns = [
+                    { pattern: /^funnel-/, description: 'Funis antigos (funnel-*)' },
+                    { pattern: /^funnels-list$/, description: 'Lista de funis antiga' },
+                    { pattern: /^editor:funnelId$/, description: 'ID do funil ativo no editor' },
+                    { pattern: /^quiz_/, description: 'Dados de quiz antigos (quiz_*)' },
+                    { pattern: /^quizResponses$/, description: 'Respostas de quiz antigas' },
+                    { pattern: /^quiz_funnel_config$/, description: 'Configuração de quiz antiga' },
+                    { pattern: /^template-/, description: 'Templates antigos (template-*)' },
+                    { pattern: /^templates$/, description: 'Lista de templates antiga' },
+                    { pattern: /^editorData$/, description: 'Dados do editor antigos' },
+                    { pattern: /^currentFunnel$/, description: 'Funil atual antigo' },
+                    ];
+
+                    const foundLegacy = [];
+
+                    for (let i = 0; i < localStorage.length; i++) { const key=localStorage.key(i); if (key) { for (const
+                        { pattern, description } of legacyPatterns) { if (pattern.test(key)) { const
+                        value=localStorage.getItem(key); foundLegacy.push({ key, description, size: value ? value.length
+                        : 0, value: value }); break; } } } } if (foundLegacy.length===0) { console.log('✅ Nenhum dado
+                        legado detectado!'); console.log('ℹ️ Todos os dados parecem estar no formato contextual
+                        correto.'); } else { console.log(`⚠️ Encontrados ${foundLegacy.length} dados legados que
+                        precisam ser migrados:`); foundLegacy.forEach(({ key, description, size, value })=> {
+                        console.log(` 🕰️ ${key} - ${description} (${size} chars)`);
+                        });
+                        }
+
+                        return foundLegacy;
+                        };
+
+                        // Função principal que executa todas as análises
+                        window.fullDiagnosis = function () {
+                        console.clear();
+                        console.log('🚀 DIAGNÓSTICO COMPLETO DOS DADOS REAIS');
+                        console.log('=======================================');
+
+                        // 1. Análise geral
+                        const categories = analyzeCurrentData();
+
+                        // 2. Detecção de dados legados
+                        const legacy = detectLegacyData();
+
+                        // 3. Resumo e recomendações
+                        console.log('\n📋 RESUMO E RECOMENDAÇÕES:');
+                        console.log('==========================');
+
+                        if (legacy && legacy.length > 0) {
+                        console.log('⚠️ AÇÃO NECESSÁRIA:');
+                        console.log(` - Encontrados ${legacy.length} dados legados`);
+                        console.log(' - Execute a migração para corrigir o isolamento');
+                        console.log(' - Use: window.location.reload() após migração');
+                        } else {
+                        console.log('✅ SISTEMA OK:');
+                        console.log(' - Nenhum dado legado encontrado');
+                        console.log(' - Dados estão no formato contextual correto');
+                        }
+
+                        return { categories, legacy, needsMigration: legacy && legacy.length > 0 };
+                        };
+
+                        console.log('🛠️ EXECUTANDO DIAGNÓSTICO AUTOMÁTICO...');
+                        fullDiagnosis();
+            </div>
+            <button class="copy-btn" onclick="copyScript()">📋 Copiar Script</button>
+
+            <h3>5. Execute o Comando Principal</h3>
+            <p>Após colar o script, execute no console:</p>
+            <div class="code-block">
+                <span style="color: #4CAF50;">fullDiagnosis()</span>
+            </div>
+        </div>
+
+        <div class="step success">
+            <h2>✅ O QUE ACONTECE APÓS O DIAGNÓSTICO</h2>
+            <p>O script irá mostrar:</p>
+            <ul>
+                <li><strong>📊 Dados atuais:</strong> Todos os dados no localStorage</li>
+                <li><strong>🕰️ Dados legados:</strong> Dados que causam vazamento</li>
+                <li><strong>📋 Recomendações:</strong> Se precisa migrar ou não</li>
+            </ul>
+        </div>
+
+        <div class="step info">
+            <h2>🔄 SE HOUVER DADOS LEGADOS</h2>
+            <p>Caso o diagnóstico encontre dados legados, você pode executar a migração automática colando este código
+                no console:</p>
+            <div class="code-block">
+                // Migração automática
+                import('/src/utils/migrationRunner.js').then(module => {
+                module.runDataMigration().then(result => {
+                console.log('✅ Migração concluída:', result);
+                if (result.success) {
+                console.log('🔄 Recarregando página para aplicar mudanças...');
+                window.location.reload();
+                }
+                });
+                });
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>🎯 RESULTADO ESPERADO</h2>
+            <p>Após executar o diagnóstico real, você verá uma das seguintes situações:</p>
+
+            <div style="background: #0d2d1f; padding: 15px; margin: 10px 0; border-radius: 5px;">
+                <strong>✅ CENÁRIO IDEAL:</strong><br>
+                <code>"✅ Nenhum dado legado detectado!"</code><br>
+                <em>Significa que o sistema contextual está funcionando perfeitamente</em>
+            </div>
+
+            <div style="background: #2d1f0d; padding: 15px; margin: 10px 0; border-radius: 5px;">
+                <strong>⚠️ CENÁRIO DE MIGRAÇÃO:</strong><br>
+                <code>"⚠️ Encontrados X dados legados que precisam ser migrados"</code><br>
+                <em>Significa que há dados causando vazamento que precisam ser migrados</em>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function copyScript() {
+            const script = document.getElementById('diagnosticScript').textContent;
+            navigator.clipboard.writeText(script).then(() => {
+                alert('📋 Script copiado! Cole no console do navegador e pressione Enter.');
+            });
+        }
+
+        // Abrir automaticamente o localhost
+        setTimeout(() => {
+            const shouldOpen = confirm('🔗 Abrir automaticamente http://localhost:5173 ?');
+            if (shouldOpen) {
+                window.open('http://localhost:5173', '_blank');
+            }
+        }, 2000);
+    </script>
+</body>
+
+</html>

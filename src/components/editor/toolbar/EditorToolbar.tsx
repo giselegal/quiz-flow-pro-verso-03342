@@ -8,7 +8,7 @@ import { cn } from '@/lib/utils';
 import { useMemo, useState } from 'react';
 import { makeStepKey } from '@/utils/stepKey';
 import { motion } from 'framer-motion';
-import { LayoutGrid, Monitor, Save, Settings, Smartphone, Tablet } from 'lucide-react';
+import { LayoutGrid, Monitor, Save, Smartphone, Tablet } from 'lucide-react';
 
 interface EditorToolbarProps {
   className?: string;
@@ -158,14 +158,15 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({ className = '' }) 
           Salvar
         </Button>
 
-        <Button
+        {/* Botão de configurações removido - configurações agora em "Meus Funis" */}
+        {/* <Button
           variant="ghost"
           size="sm"
           className="text-white hover:bg-white/20 h-8 w-8 p-0"
           title="Configurações"
         >
           <Settings className="w-4 h-4" />
-        </Button>
+        </Button> */}
       </div>
     </div>
   );

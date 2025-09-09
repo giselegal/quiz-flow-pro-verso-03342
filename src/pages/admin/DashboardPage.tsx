@@ -8,6 +8,7 @@ const DashboardOverview = lazy(() => import('./OverviewPage'));
 const QuizPage = lazy(() => import('./QuizPage'));
 const FunnelPanelPage = lazy(() => import('./FunnelPanelPage'));
 const MyFunnelsPage = lazy(() => import('./MyFunnelsPage'));
+const MyTemplatesPage = lazy(() => import('./MyTemplatesPage'));
 const ABTestPage = lazy(() => import('./ABTestPage'));
 const SettingsPage = lazy(() => import('./SettingsPage'));
 const CreativesPage = lazy(() => import('./CreativesPage'));
@@ -56,6 +57,7 @@ const DashboardPage: React.FC = () => {
               <Route path="/admin/quiz" component={QuizPage} />
               <Route path="/admin/funis" component={FunnelPanelPage} />
               <Route path="/admin/meus-funis" component={MyFunnelsPage} />
+              <Route path="/admin/meus-templates" component={MyTemplatesPage} />
               <Route path="/admin/participantes" component={ParticipantsPage} />
               <Route path="/admin/metricas" component={MetricsPage} />
               <Route path="/admin/configuracao" component={NoCodeConfigPage} />

@@ -210,7 +210,7 @@ export const useEditorPersistence = (context: FunnelContext = FunnelContext.EDIT
           const updatedFunnel = { ...funnel, isPublished: true };
           await contextualFunnelService.saveFunnel(updatedFunnel);
         }
-        
+
         toast({
           title: 'Sucesso',
           description: `Funil publicado no contexto ${context}!`,

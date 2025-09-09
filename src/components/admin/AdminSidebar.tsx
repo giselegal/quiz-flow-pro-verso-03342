@@ -62,6 +62,12 @@ const sidebarItems = [
     description: 'Funis em edição e publicados',
   },
   {
+    title: 'Meus Templates',
+    href: '/admin/meus-templates',
+    icon: FileText,
+    description: 'Templates personalizados criados por você',
+  },
+  {
     title: 'Testes A/B',
     href: '/admin/ab-tests',
     icon: Target,

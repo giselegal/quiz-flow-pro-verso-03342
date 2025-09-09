@@ -21,7 +21,7 @@ import {
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from '@/hooks/use-toast';
-import { funnelTemplateService } from '@/services/funnelTemplateService';
+import useMyTemplates from '@/hooks/useMyTemplates';
 import { Block } from '@/types/editor';
 import { FileText, Tag, X } from 'lucide-react';
 import React, { useState } from 'react';
@@ -73,6 +73,9 @@ export const SaveTemplateModal: React.FC<SaveTemplateModalProps> = ({
   const [newTag, setNewTag] = useState('');
   const [isSaving, setIsSaving] = useState(false);
 
+  // Hook para gerenciar templates personalizados
+  const { saveTemplate } = useMyTemplates();
+
   const handleAddTag = () => {
     if (newTag.trim() && !templateData.tags.includes(newTag.trim())) {
       setTemplateData(prev => ({
@@ -119,7 +122,7 @@ export const SaveTemplateModal: React.FC<SaveTemplateModalProps> = ({
     setIsSaving(true);
 
     try {
-      // Preparar dados do template
+      // Preparar dados do template para o novo sistema
       const templatePayload = {
         name: templateData.name.trim(),
         description: templateData.description.trim(),
@@ -132,7 +135,7 @@ export const SaveTemplateModal: React.FC<SaveTemplateModalProps> = ({
         thumbnailUrl: '', // Pode ser gerado automaticamente depois
         templateData: {
           originalFunnelId: currentFunnelId,
-          createdFrom: 'editor',
+          createdFrom: 'editor' as const,
           version: '1.0.0',
         },
         components: currentBlocks.map((block, index) => ({
@@ -145,67 +148,32 @@ export const SaveTemplateModal: React.FC<SaveTemplateModalProps> = ({
         })),
       };
 
-      console.log('💾 Salvando template:', templatePayload);
+      console.log('💾 Salvando template no contexto MY_TEMPLATES:', templatePayload);
 
-      // Salvar o template
-      const templateId = await funnelTemplateService.saveTemplate(templatePayload);
+      // Salvar usando o novo hook contextual
+      const templateId = await saveTemplate(templatePayload);
 
-      if (templateId) {
-        toast({
-          title: 'Sucesso!',
-          description: `Template "${templateData.name}" salvo com sucesso.`,
-          variant: 'default',
-        });
+      toast({
+        title: 'Sucesso!',
+        description: `Template "${templateData.name}" salvo em Meus Templates.`,
+        variant: 'default',
+      });
 
-        // Reset form
-        setTemplateData({
-          name: '',
-          description: '',
-          category: 'custom',
-          theme: 'modern-chic',
-          isOfficial: false,
-          tags: [],
-        });
+      // Reset form
+      resetForm();
 
-        // Callback de sucesso
-        onSaveSuccess?.(templateId);
-        onClose();
-      } else {
-        throw new Error('ID do template não retornado');
-      }
+      // Callback de sucesso
+      onSaveSuccess?.(templateId);
+      onClose();
+
     } catch (error) {
       console.error('❌ Erro ao salvar template:', error);
 
-      // Fallback: salvar no localStorage
-      try {
-        const localTemplate = {
-          id: `template-${Date.now()}`,
-          ...templateData,
-          stepCount: currentBlocks.length,
-          components: currentBlocks,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        };
-
-        const existingTemplates = JSON.parse(localStorage.getItem('saved-templates') || '[]');
-        existingTemplates.push(localTemplate);
-        localStorage.setItem('saved-templates', JSON.stringify(existingTemplates));
-
-        toast({
-          title: 'Template salvo localmente',
-          description: 'Template salvo no navegador. Acesse em Templates Salvos.',
-          variant: 'default',
-        });
-
-        onSaveSuccess?.(localTemplate.id);
-        onClose();
-      } catch (localError) {
-        toast({
-          title: 'Erro',
-          description: 'Falha ao salvar template. Tente novamente.',
-          variant: 'destructive',
-        });
-      }
+      toast({
+        title: 'Erro',
+        description: 'Falha ao salvar template. Tente novamente.',
+        variant: 'destructive',
+      });
     } finally {
       setIsSaving(false);
     }
