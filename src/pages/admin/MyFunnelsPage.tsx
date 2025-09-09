@@ -29,7 +29,7 @@ const MyFunnelsPage: React.FC = () => {
   const createAndOpen21 = () => {
     try {
       const now = new Date().toISOString();
-      const templateId = 'optimized-21-steps-funnel';
+      const templateId = 'template-optimized-21-steps-funnel';
       const newId = `${templateId}-${Date.now()}`;
       const name = 'Funil Quiz 21 Etapas';
       const list = funnelLocalStore.list();
@@ -37,7 +37,7 @@ const MyFunnelsPage: React.FC = () => {
       funnelLocalStore.saveList(list);
       setFunnels(list);
     } catch { }
-    setLocation('/editor?template=optimized-21-steps-funnel');
+    setLocation('/editor?template=template-optimized-21-steps-funnel');
   };
 
   const publishLocalFunnel = async (f: Funnel) => {
@@ -64,7 +64,7 @@ const MyFunnelsPage: React.FC = () => {
         name: f.name,
         description: 'Funil publicado a partir do editor local',
         stages,
-        settings: { source: 'local', template: 'optimized-21-steps-funnel' },
+        settings: { source: 'local', template: 'template-optimized-21-steps-funnel' },
       });
 
       if (res.success) {

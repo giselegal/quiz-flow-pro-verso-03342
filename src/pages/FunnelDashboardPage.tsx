@@ -21,7 +21,7 @@ export const FunnelDashboardPage: React.FC<FunnelDashboardPageProps> = () => {
 
   // 🔄 Carregar funil atual
   useEffect(() => {
-    const activeFunnelId = getFunnelIdFromEnvOrStorage() || 'quiz-estilo-completo';
+    const activeFunnelId = getFunnelIdFromEnvOrStorage() || 'default-funnel';
     setCurrentFunnelId(activeFunnelId);
   }, []);
 
@@ -125,7 +125,7 @@ export const FunnelDashboardPage: React.FC<FunnelDashboardPageProps> = () => {
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <button
-              onClick={() => handleFunnelSelect('quiz-estilo-completo')}
+              onClick={() => handleFunnelSelect('template-quiz-estilo-completo')}
               className="p-4 border border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-colors text-left"
             >
               <div className="text-2xl mb-2">📋</div>

@@ -28,7 +28,7 @@ const funnelTemplates = [
     category: 'Estilo Pessoal',
   },
   {
-    id: 'optimized-21-steps-funnel',
+    id: 'template-optimized-21-steps-funnel',
     name: 'Quiz 21 Etapas (Otimizado)',
     description: 'Versão otimizada com blocos core, perguntas sincronizadas e pesos de pontuação',
     image:
