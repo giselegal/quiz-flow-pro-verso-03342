@@ -67,21 +67,10 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
               </svg>
             </div>
             <div>
-              <h3 className="text-lg font-medium text-white mb-2">🚀 Painel Aprimorado</h3>
-              <p className="text-sm max-w-xs leading-relaxed mb-3 text-gray-300">
-                Selecione qualquer componente para editar suas propriedades com <strong className="text-brand-brightPink">100% de cobertura</strong>
+              <h3 className="text-lg font-medium text-white mb-2">Properties Panel</h3>
+              <p className="text-sm max-w-xs leading-relaxed text-gray-300">
+                Select any component to edit its properties with full coverage
               </p>
-              <div className="space-y-2">
-                <div className="text-xs text-brand-brightBlue bg-brand-brightBlue/10 border border-brand-brightBlue/30 px-3 py-1 rounded-full inline-block backdrop-blur-sm">
-                  ✅ 136+ Blocos Suportados
-                </div>
-                <div className="text-xs text-brand-brightPink bg-brand-brightPink/10 border border-brand-brightPink/30 px-3 py-1 rounded-full inline-block backdrop-blur-sm">
-                  🎛️ Interface Profissional
-                </div>
-                <div className="text-xs text-yellow-400 bg-yellow-400/10 border border-yellow-400/30 px-3 py-1 rounded-full inline-block backdrop-blur-sm">
-                  ⚡ Schema Dinâmico
-                </div>
-              </div>
             </div>
           </div>
         </div>

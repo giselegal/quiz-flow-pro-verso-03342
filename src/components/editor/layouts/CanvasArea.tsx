@@ -180,8 +180,10 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
                   onClick={actions.redo}
                   disabled={!actions.canRedo}
                   className={cn(
-                    'flex items-center gap-1.5 px-3 py-2 text-sm font-medium rounded-r-lg',
-                    actions.canRedo ? 'text-gray-700' : 'text-gray-400 cursor-not-allowed bg-gray-50'
+                    'flex items-center gap-1.5 px-3 py-2 text-sm font-medium rounded-r-lg transition-colors',
+                    actions.canRedo 
+                      ? 'text-white bg-gray-800/50 hover:bg-gray-700/60 border border-gray-700/50' 
+                      : 'text-gray-500 cursor-not-allowed bg-gray-900/30 border border-gray-800/30'
                   )}
                   title="Refazer (Ctrl+Y)"
                 >
@@ -193,7 +195,7 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
               </div>
 
               {/* Controles de Import/Export */}
-              <div className="flex items-center bg-white rounded-lg border border-gray-200 shadow-sm">
+              <div className="flex items-center bg-gray-800/80 rounded-lg border border-gray-700/50 shadow-sm backdrop-blur-sm">
                 <button
                   type="button"
                   onClick={async () => {
@@ -206,7 +208,7 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
                       notification?.error?.('Erro ao exportar JSON');
                     }
                   }}
-                  className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-700 rounded-l-lg"
+                  className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-700/50 rounded-l-lg transition-colors"
                   title="Exportar como JSON"
                   aria-label="Exportar estado atual como JSON"
                 >
@@ -215,7 +217,7 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
                   </svg>
                   Export
                 </button>
-                <div className="w-px h-6 bg-gray-200" />
+                <div className="w-px h-6 bg-gray-700" />
 
                 <input
                   type="file"
@@ -244,7 +246,7 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-blue-600 rounded-r-lg"
+                  className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-700/50 rounded-r-lg transition-colors"
                   title="Importar JSON"
                   aria-label="Importar estado do editor via JSON"
                 >
@@ -256,11 +258,11 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
               </div>
 
               {/* Toggle de Tema */}
-              <div className="flex bg-gray-100 rounded-lg p-1 border border-gray-200 shadow-sm">
+              <div className="flex bg-gray-800/80 rounded-lg p-1 border border-gray-700/50 shadow-sm backdrop-blur-sm">
                 <button
                   type="button"
                   onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                  className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-blue-600 rounded-lg"
+                  className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-700/50 rounded-lg transition-colors"
                   title={`Alternar para tema ${theme === 'dark' ? 'claro' : 'escuro'}`}
                 >
                   {theme === 'dark' ? (
@@ -272,46 +274,35 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
                     </svg>
                   )}
-                  {theme === 'dark' ? 'Claro' : 'Escuro'}
-                </button>
-                <div className="w-px h-6 bg-gray-200 mx-1" />
-                <button
-                  type="button"
-                  onClick={() => {
-                    console.log('🔧 Manual template reload triggered');
-                    (actions as any)?.loadDefaultTemplate?.();
-                  }}
-                  className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg"
-                  title="Recarregar template padrão (failsafe)"
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v6h6M20 20v-6h-6M5 19A9 9 0 1019 5" />
-                  </svg>
-                  🚨 RECARREGAR TEMPLATE
+                  {theme === 'dark' ? 'Light' : 'Dark'}
                 </button>
               </div>
 
               {/* Toggle Edit/Preview */}
-              <div className="flex bg-gray-100 rounded-lg p-1 border border-gray-200 shadow-sm">
+              <div className="flex bg-gray-800/80 rounded-lg p-1 border border-gray-700/50 shadow-sm backdrop-blur-sm">
                 <button
                   type="button"
                   onClick={() => setMode('edit')}
                   className={cn(
-                    'flex items-center gap-2 px-4 py-2 text-sm rounded-md font-medium',
-                    mode === 'edit' ? 'bg-white text-blue-600 shadow-sm border border-blue-200' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                    'flex items-center gap-2 px-4 py-2 text-sm rounded-md font-medium transition-colors',
+                    mode === 'edit' 
+                      ? 'bg-gradient-to-r from-brand-brightBlue to-brand-brightPink text-white shadow-sm' 
+                      : 'text-gray-300 hover:text-white hover:bg-gray-700/50'
                   )}
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                   </svg>
-                  Editar
+                  Edit
                 </button>
                 <button
                   type="button"
                   onClick={() => setMode('preview')}
                   className={cn(
-                    'flex items-center gap-2 px-4 py-2 text-sm rounded-md font-medium',
-                    mode === 'preview' ? 'bg-white text-blue-600 shadow-sm border border-blue-200' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                    'flex items-center gap-2 px-4 py-2 text-sm rounded-md font-medium transition-colors',
+                    mode === 'preview' 
+                      ? 'bg-gradient-to-r from-brand-brightBlue to-brand-brightPink text-white shadow-sm' 
+                      : 'text-gray-300 hover:text-white hover:bg-gray-700/50'
                   )}
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -324,7 +315,7 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
 
               {/* Botão de Salvar */}
               <button
-                className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-sm font-semibold rounded-lg hover:from-blue-700 hover:to-blue-800 shadow-lg"
+                className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-brand-brightBlue to-brand-brightPink text-white text-sm font-medium rounded-lg hover:opacity-90 shadow-lg backdrop-blur-sm transition-opacity"
                 title="Salvar etapa atual"
                 onClick={() => {
                   try {
@@ -352,11 +343,11 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3-3m0 0l-3 3m3-3v12" />
                 </svg>
-                Salvar
+                Save
               </button>
 
               <button
-                className="px-4 py-2 bg-white border border-gray-300 text-gray-700 text-sm rounded-md hover:bg-gray-50"
+                className="px-4 py-2 bg-gray-800/80 border border-gray-700/50 text-gray-300 text-sm rounded-md hover:bg-gray-700/80 hover:text-white transition-colors backdrop-blur-sm"
                 title="Remover publicação da etapa atual"
                 onClick={() => {
                   try {
