@@ -49,6 +49,17 @@ import { saveEditor } from '@/services/editorService';
  * 🚀 SISTEMA DE PREVIEW INTEGRADO
  */
 const EditorFixedPageWithDragDrop: React.FC = () => {
+  // 🎯 OBTER ID DINÂMICO DA URL
+  const getCurrentFunnelId = () => {
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get('funnel') || 'default-funnel';
+    } catch {
+      return 'default-funnel';
+    }
+  };
+
+  const dynamicFunnelId = getCurrentFunnelId();
   // Hooks para funcionalidades avançadas
   const { scrollRef } = useSyncedScroll({ source: 'canvas' });
 
@@ -296,7 +307,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
         {/* MODAIS */}
         {showFunnelSettings && (
           <FunnelSettingsPanel
-            funnelId="quiz-estilo-completo"
+            funnelId={dynamicFunnelId}
             isOpen={showFunnelSettings}
             onClose={() => setShowFunnelSettings(false)}
           />
@@ -307,7 +318,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
             isOpen={showSaveTemplateModal}
             onClose={() => setShowSaveTemplateModal(false)}
             currentBlocks={currentBlocks}
-            currentFunnelId="quiz-estilo-completo"
+            currentFunnelId={dynamicFunnelId}
           />
         )}
       </div>
@@ -317,14 +328,25 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
 
 // EXPORT WRAPPER - Component com Preview System, FunnelsProvider e Quiz21StepsProvider
 export const EditorWithPreview: React.FC = () => {
-  // 🎯 FORÇAR ID CORRETO PARA CARREGAMENTO DAS 21 ETAPAS
+  // 🎯 OBTER ID DINÂMICO DA URL
+  const getCurrentFunnelId = () => {
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get('funnel') || 'default-funnel';
+    } catch {
+      return 'default-funnel';
+    }
+  };
+
+  const dynamicFunnelId = getCurrentFunnelId();
+
   React.useEffect(() => {
-    console.log('🚀 EditorWithPreview: Inicializando com template quiz-estilo-completo');
-  }, []);
+    console.log('🚀 EditorWithPreview: Inicializando com funnelId dinâmico:', dynamicFunnelId);
+  }, [dynamicFunnelId]);
 
   return (
     <FunnelsProvider debug={true}>
-      <EditorProvider funnelId="quiz-estilo-completo">
+      <EditorProvider funnelId={dynamicFunnelId}>
         <EditorQuizProvider>
           <QuizFlowProvider>
             <PreviewProvider>
