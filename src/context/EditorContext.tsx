@@ -1,6 +1,7 @@
 import { useAutoSaveWithDebounce } from '@/hooks/editor/useAutoSaveWithDebounce';
 import { toast } from '@/hooks/use-toast';
-import { getStepTemplate } from '@/services/UnifiedTemplateLoader';
+// Importação direta do TemplateManager para evitar problemas de dependência circular
+import { TemplateManager } from '@/utils/TemplateManager';
 // Padronização: preferir templateService para carregar e converter blocos
 // Import dinâmico mantido onde necessário para evitar carga desnecessária do módulo em rotas que não usam
 // import { funnelPersistenceService } from '@/services/funnelPersistence';
@@ -17,6 +18,18 @@ import React, {
   useState,
 } from 'react';
 // import { useTemplateValidation } from '../hooks/useTemplateValidation';
+
+// Função wrapper para carregar templates usando TemplateManager
+const getStepTemplate = async (stepNumber: number) => {
+  try {
+    const stepId = `step-${stepNumber}`;
+    const blocks = await TemplateManager.loadStepBlocks(stepId);
+    return blocks && blocks.length > 0 ? { blocks } : null;
+  } catch (error) {
+    console.error(`Erro ao carregar template da etapa ${stepNumber}:`, error);
+    return null;
+  }
+};
 
 // Extended interface with all expected properties
 interface EditorContextType {
