@@ -19,36 +19,36 @@ export const FourColumnLayout: React.FC<FourColumnLayoutProps> = ({
 }) => {
   return (
     <ScrollSyncProvider>
-      <div className={cn('h-full w-full bg-background', className)}>
+      <div className={cn('h-full w-full bg-transparent', className)}>
         <ResizablePanelGroup direction="horizontal" className="h-full">
           {/* Coluna 1: Etapas do Funil */}
           <ResizablePanel defaultSize={12} minSize={10} maxSize={20} className="min-w-[180px]">
-            <div className="h-full flex flex-col border-r border-border/50 bg-card/50 overflow-hidden">
+            <div className="h-full flex flex-col border-r border-gray-700/50 bg-gray-900/80 backdrop-blur-sm overflow-hidden">
               <div className="h-full overflow-y-auto">{stagesPanel}</div>
             </div>
           </ResizablePanel>
 
-          <ResizableHandle withHandle />
+          <ResizableHandle withHandle className="bg-gray-700/30 hover:bg-gray-600/50 transition-colors" />
 
           {/* Coluna 2: Componentes */}
           <ResizablePanel defaultSize={15} minSize={12} maxSize={25} className="min-w-[220px]">
-            <div className="h-full flex flex-col border-r border-border/50 bg-card/30 overflow-hidden">
+            <div className="h-full flex flex-col border-r border-gray-700/50 bg-gray-900/60 backdrop-blur-sm overflow-hidden">
               <div className="h-full overflow-y-auto">{componentsPanel}</div>
             </div>
           </ResizablePanel>
 
-          <ResizableHandle withHandle />
+          <ResizableHandle withHandle className="bg-gray-700/30 hover:bg-gray-600/50 transition-colors" />
 
           {/* Coluna 3: Canvas Principal */}
           <ResizablePanel defaultSize={55} minSize={45} className="min-w-[480px]">
-            <div className="h-full flex flex-col bg-background">{canvas}</div>
+            <div className="h-full flex flex-col bg-transparent">{canvas}</div>
           </ResizablePanel>
 
-          <ResizableHandle withHandle />
+          <ResizableHandle withHandle className="bg-gray-700/30 hover:bg-gray-600/50 transition-colors" />
 
           {/* Coluna 4: Painel de Propriedades */}
           <ResizablePanel defaultSize={18} minSize={12} maxSize={25} className="min-w-[260px]">
-            <div className="h-full flex flex-col border-l border-border/50 bg-card/30 overflow-hidden">
+            <div className="h-full flex flex-col border-l border-gray-700/50 bg-gray-900/60 backdrop-blur-sm overflow-hidden">
               <div className="h-full overflow-y-auto">{propertiesPanel}</div>
             </div>
           </ResizablePanel>

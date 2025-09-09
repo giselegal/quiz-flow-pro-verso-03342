@@ -71,10 +71,10 @@ As configurações de funis foram **completamente removidas do `/editor`** e **r
 - **Editor**: Foco na criação e design
 - **Meus Funis**: Gestão e configuração de funis criados
 - **Modelos**: Configuração e personalização de templates
-
-### **2. FLUXO INTUITIVO**
+INTUITIVO**
 ```
-1. Usuário cria funil no editor
+1. Usuário cria f
+### **2. FLUXO unil no editor
 2. Funil aparece em "Meus Funis"
 3. Usuário configura no local apropriado
 4. Templates podem ser configurados antes do uso

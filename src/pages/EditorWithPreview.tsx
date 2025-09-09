@@ -140,10 +140,10 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
     showToasts: false, // Não mostrar toast para auto-save (só para manual)
   });
 
-  // Configuração de viewport responsivo
+  // Configuração de viewport responsivo - MANTÉM O FUNIL COM APARÊNCIA ORIGINAL
   const getCanvasClassName = () => {
     const baseClasses =
-      'transition-all duration-500 ease-out mx-auto bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl shadow-stone-200/40 border border-stone-200/30 ring-1 ring-stone-100/20';
+      'transition-all duration-500 ease-out mx-auto bg-white rounded-2xl shadow-2xl shadow-black/40 border border-gray-300/50 ring-1 ring-gray-200/30';
 
     switch (viewportSize) {
       case 'sm':
@@ -165,10 +165,6 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
     }
   };
 
-  const handleStageSelect = (_stageId: string) => {
-    // O EditorContext já gerencia internamente
-  };
-
   // Configurar atalhos de teclado
   useKeyboardShortcuts({
     onDelete: () => {
@@ -181,72 +177,61 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
 
   return (
     <PreviewProvider>
-      <div className="min-h-screen bg-gradient-to-br from-[#FAF9F7] via-[#F5F2E9] to-[#EEEBE1]">
-        {/* 🚀 TOOLBAR PRINCIPAL - Versão simplificada integrada */}
-        <div className="flex items-center justify-between bg-white border-b border-stone-200 shadow-sm p-4">
+      <div className="h-screen overflow-hidden bg-gradient-to-br from-gray-900 via-black to-gray-900">
+        {/* Navigation optimizado */}
+        {isPreviewing ? (
+          <PreviewNavigation />
+        ) : (
           <EditorToolbar />
-        </div>
+        )}
 
-        {/* 🎯 LAYOUT PRINCIPAL - Layout de 4 colunas estável */}
         <FourColumnLayout
-          stagesPanel={
-            <div className="flex flex-col h-full gap-4">
-              {/* Estágios do funil */}
-              <FunnelStagesPanel onStageSelect={handleStageSelect} />
-            </div>
-          }
+          stagesPanel={<FunnelStagesPanel />}
           componentsPanel={<CombinedComponentsPanel />}
           canvas={
-            <div className="h-full flex flex-col">
-              {/* 🎯 NAVEGAÇÃO SUPERIOR - Sempre visível, sem sobreposição */}
-              <div className="flex-shrink-0 bg-white border-b border-stone-200 shadow-sm">
-                {/* 📱 PREVIEW NAVIGATION - Sistema de Navegação do Preview */}
-                {isPreviewing ? (
-                  <div className="p-4">
-                    <PreviewNavigation position="static" />
-                  </div>
-                ) : (
-                  /* 🎯 QUIZ 21 STEPS NAVIGATION - Navegação das 21 Etapas */
-                  <div className="p-4">
-                    {/* 📊 DEBUG: Status das etapas */}
-                    {stepsLoading ? (
-                      <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-2 rounded mb-4">
-                        🔄 Carregando {totalSteps} etapas...
-                      </div>
-                    ) : totalSteps === 0 ? (
-                      <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4 animate-pulse">
-                        <div className="font-bold">🔴 PONTO CEGO: Nenhuma etapa carregada!</div>
-                        <small>Verifique se FunnelsProvider está configurado corretamente</small>
-                        <div className="mt-2 text-xs">
-                          Timestamp: {new Date().toLocaleTimeString()}
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-2 rounded mb-4">
-                        <div className="font-semibold">
-                          ✅ {totalSteps} etapas carregadas | Etapa atual: {currentStep}
-                        </div>
-                        <div className="text-sm mt-1">
-                          Navegação: {canGoNext ? '➡️' : '🚫'} Próximo |{' '}
-                          {canGoPrevious ? '⬅️' : '🚫'} Anterior
-                        </div>
-                        {!canGoNext && !canGoPrevious && (
-                          <small className="text-orange-600">
-                            ⚠️ Navegação bloqueada - verificar configurações
-                          </small>
-                        )}
-                      </div>
-                    )}
-
-                    <Quiz21StepsNavigation
-                      position="static"
-                      variant="full"
-                      showProgress={true}
-                      showControls={true}
-                    />
-                  </div>
-                )}
+            <div className="flex flex-col h-full">
+              {/* 🎯 NAVEGAÇÃO DAS 21 ETAPAS - Sistema integrado */}
+              <div className="border-b border-gray-700/50 bg-black/20 backdrop-blur-sm">
+                <Quiz21StepsNavigation
+                  className="text-white"
+                />
               </div>
+
+              {/* 🔍 SEÇÃO DE DEBUG E DIAGNÓSTICO */}
+              {!isPreviewing && stepsLoading && (
+                <div className="bg-red-900/20 border border-red-700/30 p-4 m-4 rounded-lg backdrop-blur-sm">
+                  <div className="flex items-center space-x-2 text-red-300">
+                    <div className="w-4 h-4 border-2 border-red-400 border-t-transparent rounded-full animate-spin"></div>
+                    <span className="font-medium">Carregando sistema de 21 etapas...</span>
+                  </div>
+                  <div className="mt-2 text-sm text-red-400">
+                    <details>
+                      <summary className="cursor-pointer hover:text-red-300">Ver diagnóstico</summary>
+                      <div className="mt-2 p-2 bg-red-950/30 rounded border border-red-800/30">
+                        <small>Verificar FunnelsProvider está configurado corretamente</small>
+                        <br />
+                        <small>currentStep: {currentStep}</small>
+                        <br />
+                        <small>totalSteps: {totalSteps}</small>
+                        <br />
+                        <small>isLoading: {String(stepsLoading)}</small>
+                      </div>
+                    </details>
+                  </div>
+                </div>
+              )}
+
+              {/* ⚠️ SISTEMA DE ALERTA - Navegação travada */}
+              {!isPreviewing && !stepsLoading && (!canGoNext && !canGoPrevious) && (
+                <div className="bg-amber-900/20 border border-amber-700/30 p-4 m-4 rounded-lg backdrop-blur-sm">
+                  <div className="text-amber-300">
+                    <span className="font-semibold">⚠️ Navegação bloqueada - verificar configurações</span>
+                    <div className="text-sm text-amber-400 mt-1">
+                      Etapa {currentStep} de {totalSteps} - Verificar contexto do Quiz21Steps
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {/* 🎨 CANVAS PRINCIPAL - Sistema de Drop Zone */}
               <div className="flex-1 overflow-auto">

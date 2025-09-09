@@ -73,13 +73,13 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({ className = '' }) 
   return (
     <div
       className={cn(
-        'border-b border-amber-700/30 p-3 flex items-center justify-between shadow-lg backdrop-blur-sm',
+        'border-b border-gray-700/50 p-4 flex items-center justify-between shadow-2xl backdrop-blur-sm',
+        'bg-gradient-to-r from-black via-gray-900 to-black',
         className
       )}
-      style={{ backgroundColor: '#d1b586' }}
     >
       {/* Logo e informações do projeto */}
-      <div className="flex items-center space-x-4">
+      <div className="flex items-center space-x-6">
         <motion.div
           className="relative group cursor-pointer"
           initial={{ opacity: 0, x: -20 }}
@@ -92,35 +92,41 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({ className = '' }) 
           }}
           whileTap={{ scale: 0.95 }}
         >
-          <Logo className="h-8 w-auto transform-gpu" />
+          <Logo className="h-10 w-auto transform-gpu filter drop-shadow-lg" />
         </motion.div>
 
         {/* Informações do projeto */}
-        <div className="flex items-center gap-2 text-sm text-white/90">
-          <Badge variant="outline" className="text-xs bg-white/20 text-white border-white/30">
-            4 Colunas
+        <div className="flex items-center gap-3 text-sm">
+          <Badge
+            variant="outline"
+            className="text-xs bg-gradient-to-r from-brand-brightBlue/20 to-brand-brightPink/20 text-brand-brightBlue border-brand-brightBlue/30 backdrop-blur-sm"
+          >
+            Editor Pro
           </Badge>
-          <span>•</span>
-          <span>{totalBlocks} blocos</span>
-          <span>•</span>
-          <span>
-            Etapa {funnelNavigation.currentStepNumber || 1} de {funnelNavigation.totalSteps || 21}
+          <div className="h-4 w-px bg-gray-600"></div>
+          <span className="text-gray-300 font-medium">{totalBlocks} blocos</span>
+          <div className="h-4 w-px bg-gray-600"></div>
+          <span className="text-gray-300">
+            Etapa <span className="text-brand-brightPink font-semibold">{funnelNavigation.currentStepNumber || 1}</span> de <span className="text-brand-brightBlue">{funnelNavigation.totalSteps || 21}</span>
           </span>
         </div>
       </div>
 
       {/* Controles de viewport no centro */}
-      <div className="flex items-center space-x-3">
+      <div className="flex items-center space-x-2 bg-gray-800/50 p-2 rounded-xl border border-gray-700/50 backdrop-blur-sm">
         {viewportOptions.map(option => {
           const IconComponent = option.icon;
+          const isActive = viewportSize === option.id;
           return (
             <Button
               key={option.id}
               variant="ghost"
               size="sm"
               className={cn(
-                'text-white hover:bg-white/20 transition-all',
-                viewportSize === option.id && 'bg-white/30 shadow-md'
+                'h-9 w-9 p-0 transition-all duration-200',
+                isActive
+                  ? 'bg-gradient-to-r from-brand-brightBlue to-brand-brightPink text-white shadow-lg scale-105'
+                  : 'text-gray-400 hover:text-white hover:bg-gray-700/50'
               )}
               onClick={() => setViewportSize(option.id as any)}
               title={`${option.label} (${option.size})`}
@@ -133,27 +139,11 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({ className = '' }) 
 
       {/* Botões de ação à direita */}
       <div className="flex items-center space-x-3">
-        {/* Preview button removido */}
-        {/* <Button
-          variant="outline"
+        <Button
+          onClick={handleSave}
           size="sm"
-          onClick={() => setIsPreviewing(!isPreviewing)}
-          className="border-white/30 text-white hover:bg-white/20 bg-transparent"
+          className="bg-gradient-to-r from-brand-brightBlue to-brand-brightPink hover:from-brand-brightPink hover:to-brand-brightBlue text-white shadow-lg font-medium px-6"
         >
-          {isPreviewing ? (
-            <>
-              <EyeOff className="mr-2 h-4 w-4" />
-              Editar
-            </>
-          ) : (
-            <>
-              <Eye className="mr-2 h-4 w-4" />
-              Preview
-            </>
-          )}
-        </Button> */}
-
-        <Button onClick={handleSave} size="sm" style={{ backgroundColor: '#FAF9F7' }}>
           <Save className="mr-2 h-4 w-4" />
           Salvar
         </Button>

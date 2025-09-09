@@ -179,25 +179,27 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
   }
 
   return (
-    <Card className={cn('h-full flex flex-col min-h-[400px]', className)}>
-      <CardHeader>
-        <CardTitle className="text-lg font-semibold flex items-center gap-2">
+    <Card className={cn('h-full flex flex-col min-h-[400px] bg-transparent border-gray-700/30', className)}>
+      <CardHeader className="border-b border-gray-700/30 bg-gray-800/50">
+        <CardTitle className="text-lg font-semibold flex items-center gap-2 text-white">
           Etapas do Funil
           <div className="ml-auto flex items-center gap-2">
-            <Badge variant="secondary">{stages.length}/21</Badge>
+            <Badge variant="secondary" className="bg-brand-brightBlue/20 text-brand-brightBlue border-brand-brightBlue/30">
+              {stages.length}/21
+            </Badge>
             {/* ✅ NOVO: Indicador de progresso do quiz */}
             {quizState.userName && (
-              <Badge variant="outline" className="text-xs">
+              <Badge variant="outline" className="text-xs bg-gray-700/50 text-gray-300 border-gray-600">
                 👤 {quizState.userName}
               </Badge>
             )}
             {quizState.answers.length > 0 && (
-              <Badge variant="default" className="text-xs">
+              <Badge variant="default" className="text-xs bg-brand-brightPink/20 text-brand-brightPink border-brand-brightPink/30">
                 📊 {quizState.answers.length} respostas
               </Badge>
             )}
             {quizState.isQuizCompleted && (
-              <Badge variant="default" className="text-xs bg-green-500">
+              <Badge variant="default" className="text-xs bg-green-500/20 text-green-400 border-green-500/30">
                 ✅ Completo
               </Badge>
             )}
@@ -205,45 +207,53 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
         </CardTitle>
       </CardHeader>
 
-      <CardContent className="flex-1 p-0 overflow-hidden">
+      <CardContent className="flex-1 p-0 overflow-hidden bg-transparent">
         <div className="h-full overflow-y-auto [scrollbar-gutter:stable]">
           <div className="space-y-2 p-4">
             {stages.map(stage => (
               <div
                 key={stage.id}
                 className={cn(
-                  'group relative rounded-lg border-2 transition-all cursor-pointer',
-                  'hover:border-purple-400 hover:shadow-lg',
-                  'min-h-[80px] bg-white p-4',
+                  'group relative rounded-lg border transition-all cursor-pointer backdrop-blur-sm',
+                  'hover:border-brand-brightBlue/50 hover:shadow-lg hover:shadow-brand-brightBlue/10',
+                  'min-h-[80px] p-4',
                   activeStageId === stage.id
-                    ? 'border-purple-500 bg-purple-50 shadow-md'
-                    : 'border-gray-200 hover:bg-gray-50'
+                    ? 'border-brand-brightPink bg-gradient-to-r from-brand-brightPink/10 to-brand-brightBlue/5 shadow-md shadow-brand-brightPink/20'
+                    : 'border-gray-700/50 bg-gray-800/30 hover:bg-gray-800/50'
                 )}
                 onClick={e => handleStageClick(stage.id, e)}
               >
                 <div className="flex items-center gap-2 mb-2">
-                  <GripVertical className="w-4 h-4 text-muted-foreground" />
+                  <GripVertical className="w-4 h-4 text-gray-400" />
                   <div className="flex-1">
                     <div className="flex items-center justify-between">
-                      <span className="font-medium text-sm">Etapa {stage.order}</span>
-                      <Badge variant={stage.isActive ? 'default' : 'secondary'} className="text-xs">
+                      <span className="font-medium text-sm text-white">Etapa {stage.order}</span>
+                      <Badge
+                        variant={stage.isActive ? 'default' : 'secondary'}
+                        className={cn(
+                          "text-xs",
+                          stage.isActive
+                            ? "bg-brand-brightBlue/20 text-brand-brightBlue border-brand-brightBlue/30"
+                            : "bg-gray-700/50 text-gray-400 border-gray-600"
+                        )}
+                      >
                         {stage.type}
                       </Badge>
                     </div>
-                    <h4 className="font-semibold truncate">{stage.name}</h4>
-                    <p className="text-xs text-muted-foreground truncate">{stage.description}</p>
+                    <h4 className="font-semibold truncate text-white">{stage.name}</h4>
+                    <p className="text-xs text-gray-400 truncate">{stage.description}</p>
                   </div>
                 </div>
 
                 <div className="flex items-center justify-between opacity-0 group-hover:opacity-100 transition-opacity">
                   <div className="flex items-center gap-2">
-                    <Badge variant="outline" className="text-xs">
+                    <Badge variant="outline" className="text-xs bg-gray-700/50 text-gray-300 border-gray-600">
                       {stage.blocksCount} componentes
                     </Badge>
                     {/* 🎯 NOVO: Indicador de configuração personalizada de navegação */}
                     {getStepConfig(stage.id).requiredSelections !==
                       getStepConfig(stage.id).requiredSelections && (
-                        <Badge variant="default" className="text-xs bg-blue-500">
+                        <Badge variant="default" className="text-xs bg-brand-brightBlue/20 text-brand-brightBlue border-brand-brightBlue/30">
                           ⚙️ Custom
                         </Badge>
                       )}
@@ -252,7 +262,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="h-6 w-6 p-0"
+                      className="h-6 w-6 p-0 text-gray-400 hover:text-brand-brightBlue hover:bg-brand-brightBlue/10"
                       onClick={e => handleActionClick('view', stage.id, e)}
                       title="Visualizar"
                     >
@@ -261,7 +271,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="h-6 w-6 p-0"
+                      className="h-6 w-6 p-0 text-gray-400 hover:text-brand-brightPink hover:bg-brand-brightPink/10"
                       onClick={e => handleActionClick('navigation', stage.id, e)}
                       title="Configurar Navegação"
                     >
@@ -270,7 +280,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="h-6 w-6 p-0"
+                      className="h-6 w-6 p-0 text-gray-400 hover:text-yellow-400 hover:bg-yellow-400/10"
                       onClick={e => handleActionClick('settings', stage.id, e)}
                       title="Configurações"
                     >
@@ -279,7 +289,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="h-6 w-6 p-0"
+                      className="h-6 w-6 p-0 text-gray-400 hover:text-green-400 hover:bg-green-400/10"
                       onClick={e => handleActionClick('copy', stage.id, e)}
                       title="Copiar"
                     >
