@@ -21,7 +21,7 @@ const ParticipantsPage: React.FC = () => {
                     Acompanhe o progresso e analise as respostas detalhadas de cada participante
                 </p>
             </div>
-            
+
             <ParticipantsTable />
         </div>
     );

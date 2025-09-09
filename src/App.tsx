@@ -26,6 +26,7 @@ const SchemaEditorPage = lazy(() => import('./pages/SchemaEditorPage'));
 const EnhancedPropertiesPanelDemo = lazy(() => import('./components/demo/EnhancedPropertiesPanelDemo'));
 const FunnelDashboardPage = lazy(() => import('./pages/FunnelDashboardPage'));
 const TestParticipantsPage = lazy(() => import('./pages/TestParticipantsPage'));
+const TestDataPanel = lazy(() => import('./components/TestDataPanel'));
 
 // Loading component
 const PageLoading = () => (
@@ -161,6 +162,13 @@ function App() {
                 <Route path="/test/participantes">
                   <Suspense fallback={<PageLoading />}>
                     <TestParticipantsPage />
+                  </Suspense>
+                </Route>
+
+                {/* 🧪 GERADOR DE DADOS DE TESTE */}
+                <Route path="/test/data-generator">
+                  <Suspense fallback={<PageLoading />}>
+                    <TestDataPanel />
                   </Suspense>
                 </Route>
 

@@ -127,7 +127,7 @@ class CompatibleAnalytics {
     private getDeviceInfo() {
         const userAgent = navigator.userAgent;
         let deviceType: 'mobile' | 'tablet' | 'desktop' = 'desktop';
-        
+
         if (/Android|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent)) {
             deviceType = 'mobile';
         } else if (/iPad/i.test(userAgent)) {
@@ -184,7 +184,7 @@ class CompatibleAnalytics {
             const conversionRate = totalSessions > 0 ? Math.round((completedSessions / totalSessions) * 100) : 0;
 
             // Calcular steps médios baseado em current_step
-            const averageSteps = totalSessions > 0 
+            const averageSteps = totalSessions > 0
                 ? Math.round(sessions.reduce((acc, s) => acc + (s.current_step || 0), 0) / totalSessions)
                 : 0;
 
@@ -213,7 +213,7 @@ class CompatibleAnalytics {
             // Atividade recente baseada em sessões
             const last24Hours = new Date(Date.now() - 24 * 60 * 60 * 1000);
             const recentSessions = sessions.filter(s => new Date(s.started_at) > last24Hours);
-            
+
             const recentActivity = new Array(24).fill(0).map((_, i) => {
                 const hour = new Date();
                 hour.setHours(hour.getHours() - (23 - i), 0, 0, 0);
@@ -221,7 +221,7 @@ class CompatibleAnalytics {
                     const sessionHour = new Date(s.started_at);
                     return sessionHour.getHours() === hour.getHours();
                 });
-                
+
                 return {
                     time: hour.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
                     sessions: hourSessions.length,
@@ -237,7 +237,7 @@ class CompatibleAnalytics {
 
             // Usuários ativos (últimos 10 minutos)
             const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
-            const activeUsers = analytics 
+            const activeUsers = analytics
                 ? new Set(analytics
                     .filter(a => new Date(a.timestamp) > tenMinutesAgo)
                     .map(a => a.session_id)).size
