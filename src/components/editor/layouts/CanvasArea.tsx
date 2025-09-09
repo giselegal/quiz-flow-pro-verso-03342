@@ -89,8 +89,8 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
   }, [actions, notification, state]);
 
   return (
-    <div className={cn('!w-[55%] !min-w-0 !max-w-none flex-none flex flex-col bg-gray-50', className)}>
-      <div className="bg-white border-b border-gray-200/60">
+    <div className={cn('!w-[55%] !min-w-0 !max-w-none flex-none flex flex-col bg-gray-900', className)}>
+      <div className="bg-gray-900 border-b border-gray-800/50">
         {/* Header Principal */}
         <div className="px-6 py-4">
           <div className="flex items-center justify-between">
@@ -98,7 +98,7 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
             <div className="flex-1 min-w-0">
               {isEditingTitle ? (
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl flex items-center justify-center">
+                  <div className="w-10 h-10 bg-gradient-to-r from-brand-brightBlue to-brand-brightPink rounded-xl flex items-center justify-center">
                     {renderIcon('target', 'w-5 h-5 text-white')}
                   </div>
                   <input
@@ -109,28 +109,28 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
                     onKeyDown={e => {
                       if (e.key === 'Enter') setIsEditingTitle(false);
                     }}
-                    className="font-bold text-xl text-gray-900 bg-transparent border-b-2 border-blue-500 outline-none flex-1 min-w-0"
+                    className="font-medium text-xl text-gray-200 bg-transparent border-b-2 border-brand-brightBlue outline-none flex-1 min-w-0"
                     autoFocus
                   />
                 </div>
               ) : (
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl flex items-center justify-center">
+                  <div className="w-10 h-10 bg-gradient-to-r from-brand-brightBlue to-brand-brightPink rounded-xl flex items-center justify-center">
                     {renderIcon('target', 'w-5 h-5 text-white')}
                   </div>
                   <div className="flex-1 min-w-0">
                     <h1
-                      className="font-bold text-xl text-gray-900 cursor-pointer hover:text-blue-600 truncate"
+                      className="font-medium text-xl text-gray-200 cursor-pointer hover:text-brand-brightBlue truncate"
                       onClick={() => setIsEditingTitle(true)}
-                      title="Clique para editar o título"
+                      title="Click to edit title"
                     >
                       {customTitle}
                     </h1>
                     <div className="flex items-center gap-2 mt-1">
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                        Etapa {safeCurrentStep}
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-brand-brightBlue/20 text-brand-brightBlue border border-brand-brightBlue/30">
+                        Step {safeCurrentStep}
                       </span>
-                      <span className="text-sm text-gray-600 truncate">
+                      <span className="text-sm text-gray-500 truncate">
                         {getStepAnalysis(safeCurrentStep).label}: {getStepAnalysis(safeCurrentStep).desc}
                       </span>
                     </div>
@@ -145,29 +145,29 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
               <div className="flex items-center gap-2">
                 <div
                   className={cn(
-                    'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border shadow-sm',
+                    'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border shadow-sm',
                     state.isSupabaseEnabled
-                      ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                      : 'bg-amber-50 text-amber-700 border-amber-200'
+                      ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
+                      : 'bg-amber-500/20 text-amber-400 border-amber-500/30'
                   )}
-                  title={state.isSupabaseEnabled ? 'Conectado ao Supabase' : 'Modo offline'}
+                  title={state.isSupabaseEnabled ? 'Connected to Supabase' : 'Offline mode'}
                 >
-                  <div className={cn('w-2 h-2 rounded-full', state.isSupabaseEnabled ? 'bg-emerald-500' : 'bg-amber-500')} />
+                  <div className={cn('w-2 h-2 rounded-full', state.isSupabaseEnabled ? 'bg-emerald-400' : 'bg-amber-400')} />
                   {state.isSupabaseEnabled ? 'Online' : 'Offline'}
                 </div>
               </div>
 
               {/* Controles de Histórico */}
-              <div className="flex items-center bg-white rounded-lg border border-gray-200">
+              <div className="flex items-center bg-gray-800/50 rounded-lg border border-gray-700/50">
                 <button
                   type="button"
                   onClick={actions.undo}
                   disabled={!actions.canUndo}
                   className={cn(
                     'flex items-center gap-1.5 px-3 py-2 text-sm font-medium rounded-l-lg',
-                    actions.canUndo ? 'text-gray-700' : 'text-gray-400 cursor-not-allowed bg-gray-50'
+                    actions.canUndo ? 'text-gray-300 hover:bg-gray-700/50' : 'text-gray-600 cursor-not-allowed bg-gray-800/30'
                   )}
-                  title="Desfazer (Ctrl+Z)"
+                  title="Undo (Ctrl+Z)"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />

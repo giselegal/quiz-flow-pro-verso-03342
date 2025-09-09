@@ -21,15 +21,15 @@ export const CombinedComponentsPanel: React.FC<CombinedComponentsPanelProps> = (
       <Tabs defaultValue="blocks" className="h-full flex flex-col">
         <div className="flex-shrink-0 border-b border-gray-700/30 bg-gray-800/50 p-2 backdrop-blur-sm">
           <TabsList className="grid w-full grid-cols-2 bg-gray-900/50 border border-gray-700/30">
-            <TabsTrigger 
-              value="blocks" 
+            <TabsTrigger
+              value="blocks"
               className="flex items-center gap-2 text-xs text-gray-300 data-[state=active]:bg-brand-brightBlue/20 data-[state=active]:text-brand-brightBlue data-[state=active]:border-brand-brightBlue/30"
             >
               <Grid3X3 className="h-3 w-3" />
               Blocos
             </TabsTrigger>
-            <TabsTrigger 
-              value="reusable" 
+            <TabsTrigger
+              value="reusable"
               className="flex items-center gap-2 text-xs text-gray-300 data-[state=active]:bg-brand-brightPink/20 data-[state=active]:text-brand-brightPink data-[state=active]:border-brand-brightPink/30"
             >
               <Package className="h-3 w-3" />

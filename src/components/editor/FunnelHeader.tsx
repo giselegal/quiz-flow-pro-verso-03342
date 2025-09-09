@@ -105,13 +105,13 @@ export const FunnelHeader: React.FC<FunnelHeaderProps> = ({
 
   if (loading) {
     return (
-      <div className="bg-white border-b border-gray-200 px-6 py-4">
+      <div className="bg-gray-900 border-b border-gray-800/50 px-6 py-4">
         <div className="animate-pulse flex justify-between items-center">
           <div>
-            <div className="h-6 bg-gray-200 rounded w-48 mb-2"></div>
-            <div className="h-4 bg-gray-200 rounded w-32"></div>
+            <div className="h-6 bg-gray-700 rounded w-48 mb-2"></div>
+            <div className="h-4 bg-gray-700 rounded w-32"></div>
           </div>
-          <div className="h-10 bg-gray-200 rounded w-32"></div>
+          <div className="h-10 bg-gray-700 rounded w-32"></div>
         </div>
       </div>
     );
@@ -119,46 +119,48 @@ export const FunnelHeader: React.FC<FunnelHeaderProps> = ({
 
   return (
     <>
-      <div className="bg-white border-b border-gray-200 px-6 py-4 shadow-sm">
+      <div className="bg-gray-900 border-b border-gray-800/50 px-6 py-4 shadow-lg">
         <div className="flex justify-between items-center max-w-7xl mx-auto">
-          {/* 🎯 Informações do Funil */}
+          {/* Informações do Funil */}
           <div className="flex items-center gap-4">
-            {/* 📊 Ícone e Nome */}
+            {/* Ícone e Nome */}
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center text-white font-bold text-lg">
-                🎯
+              <div className="w-10 h-10 bg-gradient-to-r from-brand-brightBlue to-brand-brightPink rounded-lg flex items-center justify-center text-white font-bold text-lg">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
               </div>
               <div>
-                <h1 className="text-xl font-bold text-gray-800">
-                  {currentFunnel?.name || 'Carregando...'}
+                <h1 className="text-xl font-medium text-gray-200">
+                  {currentFunnel?.name || 'Loading...'}
                 </h1>
-                <p className="text-sm text-gray-600">
-                  {currentFunnel?.description || 'Descrição não disponível'}
+                <p className="text-sm text-gray-400">
+                  {currentFunnel?.description || 'Description not available'}
                 </p>
               </div>
             </div>
 
-            {/* 🏷️ Tags */}
+            {/* Tags */}
             <div className="flex items-center gap-2">
               {currentFunnel?.isPublished && (
-                <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
-                  PUBLICADO
+                <span className="bg-green-500/20 text-green-400 text-xs px-2 py-1 rounded-full border border-green-500/30">
+                  PUBLISHED
                 </span>
               )}
               {currentFunnelId === 'quiz-estilo-completo' && (
-                <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
+                <span className="bg-brand-brightBlue/20 text-brand-brightBlue text-xs px-2 py-1 rounded-full border border-brand-brightBlue/30">
                   TEMPLATE
                 </span>
               )}
-              <span className="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-full font-mono">
+              <span className="bg-gray-800/50 text-gray-400 text-xs px-2 py-1 rounded-full font-mono border border-gray-700/50">
                 {currentFunnelId}
               </span>
             </div>
           </div>
 
-          {/* 🛠️ Controles */}
+          {/* Controles */}
           <div className="flex items-center gap-4">
-            {/* 💾 Status de Salvamento */}
+            {/* Status de Salvamento */}
             <SaveStatusIndicator
               funnelId={currentFunnelId}
               lastSaved={lastSaved}
@@ -167,42 +169,44 @@ export const FunnelHeader: React.FC<FunnelHeaderProps> = ({
               autoSaveEnabled={true}
             />
 
-            {/* 📋 Gerenciar Funis */}
+            {/* Gerenciar Funis */}
             <button
               onClick={() => setShowManager(true)}
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+              className="bg-gradient-to-r from-brand-brightBlue to-brand-brightPink text-white px-4 py-2 rounded-lg hover:opacity-80 transition-opacity flex items-center gap-2"
             >
-              <span>📋</span>
-              Gerenciar Funis
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+              </svg>
+              Manage Funnels
             </button>
           </div>
         </div>
 
-        {/* 📊 Informações Adicionais */}
+        {/* Informações Adicionais */}
         {currentFunnel && (
-          <div className="mt-3 pt-3 border-t border-gray-100">
+          <div className="mt-3 pt-3 border-t border-gray-800/50">
             <div className="flex items-center gap-6 text-sm text-gray-500 max-w-7xl mx-auto">
               <span>
-                <strong>Versão:</strong> {currentFunnel.version || 1}
+                <strong>Version:</strong> {currentFunnel.version || 1}
               </span>
               <span>
-                <strong>Criado:</strong> {currentFunnel.createdAt?.toLocaleDateString() || 'N/A'}
+                <strong>Created:</strong> {currentFunnel.createdAt?.toLocaleDateString() || 'N/A'}
               </span>
               <span>
-                <strong>Modificado:</strong> {currentFunnel.lastModified?.toLocaleDateString() || 'N/A'}
+                <strong>Modified:</strong> {currentFunnel.lastModified?.toLocaleDateString() || 'N/A'}
               </span>
               <span>
-                <strong>Páginas:</strong> {Array.isArray(currentFunnel.pages) ? currentFunnel.pages.length : 0}
+                <strong>Pages:</strong> {Array.isArray(currentFunnel.pages) ? currentFunnel.pages.length : 0}
               </span>
             </div>
           </div>
         )}
       </div>
 
-      {/* 📋 Modal do Gerenciador de Funis */}
+      {/* Modal do Gerenciador de Funis */}
       {showManager && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
+          <div className="bg-gray-900 border border-gray-800/50 rounded-lg shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             <FunnelManager
               currentFunnelId={currentFunnelId}
               onFunnelSelect={handleFunnelSelect}

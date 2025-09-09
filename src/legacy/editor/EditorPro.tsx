@@ -246,28 +246,28 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
 
   if (!editorContext) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-6 text-center">
-          <div className="text-red-500 mb-4 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-gray-950">
+        <div className="max-w-md w-full bg-gray-900 rounded-lg shadow-2xl border border-gray-800/50 p-6 text-center">
+          <div className="text-red-400 mb-4 flex items-center justify-center">
             <svg className="w-10 h-10" viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v4m0 4h.01" />
             </svg>
           </div>
-          <h2 className="text-xl font-bold text-gray-900 mb-2">Erro de Contexto do Editor</h2>
-          <p className="text-gray-600 mb-4">
-            O EditorPro deve ser usado dentro de um EditorProvider.
+          <h2 className="text-xl font-bold text-gray-100 mb-2">Editor Context Error</h2>
+          <p className="text-gray-400 mb-4">
+            EditorPro must be used within an EditorProvider.
           </p>
           <button
             type="button"
             onClick={() => window.location.reload()}
-            className="bg-blue-600 text-white py-2 px-4 rounded-lg"
+            className="bg-brand-brightBlue text-white py-2 px-4 rounded-lg hover:opacity-80 transition-opacity"
           >
             <span className="inline-flex items-center gap-2">
               <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v6h6M20 20v-6h-6M5 19A9 9 0 1019 5" />
               </svg>
-              Recarregar
+              Reload
             </span>
           </button>
         </div>
@@ -821,9 +821,9 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
       >
-        <div className={`editor-pro h-[calc(100vh-80px)] bg-gray-50 flex overflow-x-hidden max-w-screen ${className}`}>
+        <div className={`editor-pro h-[calc(100vh-80px)] bg-gray-950 flex overflow-x-hidden max-w-screen ${className}`}>
           {/* 1) Etapas - 10% */}
-          <Suspense fallback={<div className="w-[10%] min-w-0 max-w-none p-4">Carregando etapas…</div>}>
+          <Suspense fallback={<div className="w-[10%] min-w-0 max-w-none p-4 bg-gray-900 border-r border-gray-800/50">Loading steps…</div>}>
             <StepSidebar
               currentStep={safeCurrentStep}
               totalSteps={21}
@@ -832,15 +832,15 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               onSelectStep={handleStepSelect}
               getStepAnalysis={getStepAnalysis as any}
               renderIcon={renderIcon as any}
-              className="!w:[10%] !min-w-0 !max-w-none"
+              className="!w:[10%] !min-w-0 !max-w-none bg-gray-900 border-r border-gray-800/50"
             />
           </Suspense>
           {/* 2) Componentes - 15% */}
-          <Suspense fallback={<div className="w-[15%] min-w-0 max-w-none p-4">Carregando biblioteca…</div>}>
+          <Suspense fallback={<div className="w-[15%] min-w-0 max-w-none p-4 bg-gray-900 border-r border-gray-800/50">Loading library…</div>}>
             <ComponentsSidebar
               groupedComponents={groupedComponents as any}
               renderIcon={renderIcon as any}
-              className="!w-[15%] !min-w-0 !max-w-none"
+              className="!w-[15%] !min-w-0 !max-w-none bg-gray-900 border-r border-gray-800/50"
             />
           </Suspense>
           {/* 3) Canvas - 55% */}
@@ -863,7 +863,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
             isDragging={isDragging}
           />
           {/* 4) Propriedades - 20% */}
-          <Suspense fallback={<div className="w-[20%] min-w-0 max-w-none p-4">Propriedades…</div>}>
+          <Suspense fallback={<div className="w-[20%] min-w-0 max-w-none p-4 bg-gray-900 border-l border-gray-800/50">Properties…</div>}>
             <MemoPropertiesColumn />
           </Suspense>
         </div>
