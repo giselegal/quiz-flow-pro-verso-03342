@@ -4,10 +4,29 @@
  * Página dedicada para visualizar e gerenciar participantes do quiz
  */
 
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import ParticipantsTable from '@/components/dashboard/ParticipantsTable';
+import AnalyticsDashboard from '@/components/dashboard/AnalyticsDashboard';
+import DashboardControls from '@/components/dashboard/DashboardControls';
 
 const ParticipantsPage: React.FC = () => {
+    const [currentView, setCurrentView] = useState<'analytics' | 'table' | 'both'>('both');
+    const [analyticsFilters, setAnalyticsFilters] = useState({
+        dateRange: 'all',
+        deviceType: 'all',
+        status: 'all'
+    });
+
+    const handleRefresh = useCallback(() => {
+        // Função para forçar refresh dos componentes
+        window.location.reload();
+    }, []);
+
+    const handleExport = useCallback(() => {
+        // Função para exportar dados (implementar se necessário)
+        console.log('Exportar dados...');
+    }, []);
+
     return (
         <div className="p-6 space-y-6">
             <div className="mb-6">
@@ -15,14 +34,42 @@ const ParticipantsPage: React.FC = () => {
                     className="text-3xl font-bold text-[#432818]"
                     style={{ fontFamily: 'Playfair Display, serif' }}
                 >
-                    Participantes do Quiz
+                    Dashboard de Participantes
                 </h1>
                 <p className="text-[#8F7A6A] mt-2">
-                    Acompanhe o progresso e analise as respostas detalhadas de cada participante
+                    Análise completa do desempenho do quiz e comportamento dos usuários
                 </p>
             </div>
 
-            <ParticipantsTable />
+            {/* CONTROLES DO DASHBOARD */}
+            <DashboardControls
+                currentView={currentView}
+                onViewChange={setCurrentView}
+                onRefresh={handleRefresh}
+                onExport={handleExport}
+                analyticsFilters={analyticsFilters}
+                onFiltersChange={setAnalyticsFilters}
+            />
+
+            {/* DASHBOARD DE ANALYTICS */}
+            {(currentView === 'analytics' || currentView === 'both') && (
+                <section>
+                    <h2 className="text-xl font-semibold text-[#432818] mb-4">
+                        📊 Analytics e Métricas
+                    </h2>
+                    <AnalyticsDashboard />
+                </section>
+            )}
+
+            {/* TABELA DE PARTICIPANTES */}
+            {(currentView === 'table' || currentView === 'both') && (
+                <section>
+                    <h2 className="text-xl font-semibold text-[#432818] mb-4">
+                        📋 Lista Detalhada de Participantes
+                    </h2>
+                    <ParticipantsTable />
+                </section>
+            )}
         </div>
     );
 };
