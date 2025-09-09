@@ -25,6 +25,7 @@ const StepsShowcasePage = lazy(() => import('./pages/StepsShowcase'));
 const SchemaEditorPage = lazy(() => import('./pages/SchemaEditorPage'));
 const EnhancedPropertiesPanelDemo = lazy(() => import('./components/demo/EnhancedPropertiesPanelDemo'));
 const FunnelDashboardPage = lazy(() => import('./pages/FunnelDashboardPage'));
+const TestParticipantsPage = lazy(() => import('./pages/TestParticipantsPage'));
 
 // Loading component
 const PageLoading = () => (
@@ -153,6 +154,13 @@ function App() {
                 <Route path="/showcase/steps">
                   <Suspense fallback={<PageLoading />}>
                     <StepsShowcasePage />
+                  </Suspense>
+                </Route>
+
+                {/* 🧪 TESTE DA TABELA DE PARTICIPANTES */}
+                <Route path="/test/participantes">
+                  <Suspense fallback={<PageLoading />}>
+                    <TestParticipantsPage />
                   </Suspense>
                 </Route>
 

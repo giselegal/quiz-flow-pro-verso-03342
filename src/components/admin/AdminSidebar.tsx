@@ -10,6 +10,7 @@ import {
   Settings,
   Target,
   TrendingUp,
+  Users,
 } from 'lucide-react';
 import { Link, useLocation } from 'wouter';
 
@@ -80,6 +81,12 @@ const sidebarItems = [
     title: 'Analytics',
     href: '/admin/analytics',
     icon: BarChart3,
+  },
+  {
+    title: 'Participantes',
+    href: '/admin/participantes',
+    icon: Users,
+    description: 'Respostas e progresso dos usuários',
   },
 ];
 
