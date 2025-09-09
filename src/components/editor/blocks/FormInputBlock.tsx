@@ -116,22 +116,41 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
   const [isValid, setIsValid] = useState<boolean>(false);
   const [sessionId] = useState<string>(() => {
     // Get or create session ID PER FUNNEL usando função utilitária
-    const storageKey = getFunnelSessionKey(effectiveFunnelId);
-    const existing = localStorage.getItem(storageKey);
-    if (existing) return existing;
+    try {
+      const storageKey = getFunnelSessionKey(effectiveFunnelId);
+      const existing = localStorage.getItem(storageKey);
+      if (existing) return existing;
 
-    const newSessionId = `session_${effectiveFunnelId}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    localStorage.setItem(storageKey, newSessionId);
-    return newSessionId;
+      const newSessionId = `session_${effectiveFunnelId}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      
+      // ✅ CORRIGIDO: Tratamento de erro QuotaExceeded
+      try {
+        localStorage.setItem(storageKey, newSessionId);
+      } catch (quotaError) {
+        console.warn('⚠️ LocalStorage quota exceeded, usando sessionID temporário');
+        // Usar sessionID temporário que não persiste
+        return `temp_session_${Date.now()}`;
+      }
+      
+      return newSessionId;
+    } catch (error) {
+      console.warn('⚠️ Erro ao acessar localStorage, usando sessionID temporário');
+      return `temp_session_${Date.now()}`;
+    }
   });
 
   // Carregar valor salvo se existir - ÚNICO POR FUNIL usando função utilitária
   useEffect(() => {
-    const storageKey = getFunnelStepKey(effectiveFunnelId, block?.id || '');
-    const savedValue = localStorage.getItem(storageKey);
-    if (savedValue) {
-      setValue(savedValue);
-      setIsValid(true);
+    try {
+      const storageKey = getFunnelStepKey(effectiveFunnelId, block?.id || '');
+      const savedValue = localStorage.getItem(storageKey);
+      if (savedValue) {
+        setValue(savedValue);
+        setIsValid(true);
+      }
+    } catch (error) {
+      console.warn('⚠️ Erro ao carregar valor salvo do localStorage');
+      // Continuar sem valor salvo
     }
   }, [block?.id, effectiveFunnelId]);
 

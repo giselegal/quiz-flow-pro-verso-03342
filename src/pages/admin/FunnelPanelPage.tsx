@@ -9,70 +9,7 @@ import { BarChart3, Edit, Eye, Play, Plus, Sparkles, Zap } from 'lucide-react';
 import { useLocation } from 'wouter';
 import { AdminBreadcrumbs } from '@/components/admin/AdminBreadcrumbs';
 import { useFunnelTemplates } from '@/core/funnel/hooks/useFunnelTemplates';
-
-// Template data for funnel models
-const funnelTemplates = [
-  {
-    id: 'default-quiz-funnel-21-steps',
-    name: 'Quiz Completo: Descoberta de Estilo Pessoal (21 Etapas)',
-    description: 'Funil completo com 21 etapas para descoberta de estilo pessoal',
-    image:
-      'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
-    features: [
-      '21 Etapas Otimizadas',
-      'Quiz Interativo',
-      'Resultado Personalizado',
-      'Oferta Integrada',
-    ],
-    conversionRate: '87%',
-    category: 'Estilo Pessoal',
-  },
-  {
-    id: 'template-optimized-21-steps-funnel',
-    name: 'Quiz 21 Etapas (Otimizado)',
-    description: 'Versão otimizada com blocos core, perguntas sincronizadas e pesos de pontuação',
-    image:
-      'https://res.cloudinary.com/dqljyf76t/image/upload/c_fill,w_400,h_300/v1744911572/LOOKS_COMBINACOES.webp',
-    features: [
-      'Perguntas sincronizadas',
-      'Pesos de pontuação',
-      'Componentes core',
-      'Resultado + Oferta',
-    ],
-    conversionRate: '90%',
-    category: 'Estilo Pessoal',
-  },
-  {
-    id: 'com-que-roupa-eu-vou',
-    name: 'Com que Roupa Eu Vou?',
-    description: 'Quiz especializado em combinações de looks com IA',
-    image:
-      'https://res.cloudinary.com/dqljyf76t/image/upload/c_fill,w_400,h_300/v1744911572/LOOKS_COMBINACOES.webp',
-    features: [
-      'IA Integrada',
-      'Looks Personalizados',
-      'Análise de Cores',
-      'Sugestões Inteligentes',
-    ],
-    conversionRate: '92%',
-    category: 'Looks & Combinações',
-  },
-  {
-    id: 'personal-branding-quiz',
-    name: 'Personal Branding Quiz',
-    description: 'Descubra seu estilo de marca pessoal',
-    image:
-      'https://res.cloudinary.com/dqljyf76t/image/upload/c_fill,w_400,h_300/v1744911572/PERSONAL_BRANDING.webp',
-    features: [
-      'Análise de Personalidade',
-      'Estilo de Marca',
-      'Cores Estratégicas',
-      'Guia Completo',
-    ],
-    conversionRate: '78%',
-    category: 'Personal Branding',
-  },
-];
+import { getUnifiedTemplates, TemplateRegistry } from '@/config/unifiedTemplatesRegistry';
 
 const FunnelPanelPage: React.FC = () => {
   const [, setLocation] = useLocation();
@@ -124,10 +61,18 @@ const FunnelPanelPage: React.FC = () => {
       }
       return list.map(normalize);
     }
-    // Fallback para modelos locais
-    const local = [...funnelTemplates];
-    if (sort === 'name') local.sort((a, b) => a.name.localeCompare(b.name));
-    return local;
+    
+    // ✅ USAR: Registry unificado como fallback
+    const unifiedTemplates = getUnifiedTemplates({ sortBy: sort === 'name' ? 'name' : 'usageCount' });
+    return unifiedTemplates.map((template) => ({
+      id: template.id,
+      name: template.name,
+      description: template.description,
+      image: template.image,
+      features: template.features,
+      conversionRate: template.conversionRate,
+      category: template.category,
+    }));
   }, [filteredTemplates, sort]);
 
   const handleUseTemplate = (templateId: string) => {
@@ -135,7 +80,8 @@ const FunnelPanelPage: React.FC = () => {
     try {
       const now = new Date().toISOString();
       const newId = `${templateId}-${Date.now()}`;
-      const name = funnelTemplates.find(t => t.id === templateId)?.name || 'Funil';
+      const template = TemplateRegistry.getById(templateId);
+      const name = template?.name || 'Funil';
       const list = funnelLocalStore.list();
       list.push({ id: newId, name, status: 'draft', updatedAt: now });
       funnelLocalStore.saveList(list);

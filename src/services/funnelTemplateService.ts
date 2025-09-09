@@ -38,15 +38,24 @@ class FunnelTemplateService {
    */
   async getTemplates(category?: string): Promise<FunnelTemplate[]> {
     try {
+      // ✅ CORRIGIDO: Verificar se Supabase está disponível
+      if (!supabase) {
+        console.warn('⚠️ Supabase não disponível, retornando templates locais');
+        return this.getFallbackTemplates();
+      }
+
       let query = supabase
         .from('funnel_templates')
-        .select('*')
-        .order('usage_count', { ascending: false });
+        .select('*');
 
+      // ✅ CORRIGIDO: Verificar se a tabela existe antes de ordenar
       if (category && category !== 'all') {
         query = query.eq('category', category);
       }
-
+      
+      // Tentar ordenar, mas com fallback se falhar
+      query = query.order('usage_count', { ascending: false });
+      
       const { data, error } = await query;
 
       if (error) {

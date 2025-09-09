@@ -402,11 +402,11 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
       }
 
       // Fallback para o template padrão
-      console.log('🔍 FunnelsContext: usando fallback template-quiz-estilo-completo');
-      return 'template-quiz-estilo-completo';
+      console.log('🔍 FunnelsContext: usando fallback template-optimized-21-steps-funnel');
+      return 'template-optimized-21-steps-funnel';
     } catch (error) {
       console.error('❌ Erro ao obter funnelId:', error);
-      return 'template-quiz-estilo-completo';
+      return 'template-optimized-21-steps-funnel';
     }
   });
 
@@ -471,8 +471,8 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
       });
     };
 
-    // Verifica se é o template quiz-estilo-completo
-    if (templateId === 'quiz-estilo-completo' || templateId === 'template-quiz-estilo-completo') {
+    // Verifica se é o template optimized (que existe)
+    if (templateId === 'template-optimized-21-steps-funnel' || templateId === 'optimized-21-steps-funnel') {
       const originalBlocks = QUIZ_STYLE_21_STEPS_TEMPLATE[stepId] || [];
       const clonedBlocks = cloneBlocks(originalBlocks, currentFunnelId);
       console.log(`🔄 [${currentFunnelId}] Template quiz-estilo-completo: ${clonedBlocks.length} blocos únicos para ${stepId}`);
