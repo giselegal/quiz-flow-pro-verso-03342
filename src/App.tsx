@@ -69,21 +69,49 @@ function App() {
           <Suspense fallback={<PageLoading />}>
             <Switch>
               {/* Rota principal - Home */}
-              <Route path="/" component={Home} />
+              <Route path="/" component={() => 
+                <Suspense fallback={<LoadingFallback />}>
+                  <Home />
+                </Suspense>
+              } />
               
               {/* Quiz modular - página principal de produção */}
-              <Route path="/quiz" component={QuizModularPage} />
-              <Route path="/quiz/:step" component={QuizModularPage} />
+              <Route path="/quiz" component={() => 
+                <Suspense fallback={<LoadingFallback />}>
+                  <QuizModularPage />
+                </Suspense>
+              } />
+              <Route path="/quiz/:step" component={() => 
+                <Suspense fallback={<LoadingFallback />}>
+                  <QuizModularPage />
+                </Suspense>
+              } />
               
               {/* Editor principal */}
-              <Route path="/editor" component={MainEditor} />
-              <Route path="/editor/:funnelId" component={MainEditor} />
+              <Route path="/editor" component={() => 
+                <Suspense fallback={<LoadingFallback />}>
+                  <MainEditor />
+                </Suspense>
+              } />
+              <Route path="/editor/:funnelId" component={() => 
+                <Suspense fallback={<LoadingFallback />}>
+                  <MainEditor />
+                </Suspense>
+              } />
               
               {/* Autenticação */}
-              <Route path="/auth" component={AuthPage} />
+              <Route path="/auth" component={() => 
+                <Suspense fallback={<LoadingFallback />}>
+                  <AuthPage />
+                </Suspense>
+              } />
               
               {/* 🎯 ÁREA ADMINISTRATIVA - ROTAS PROTEGIDAS */}
-              <ProtectedRoute path="/dashboard" component={DashboardPage} />
+              <ProtectedRoute path="/dashboard" component={() => 
+                <Suspense fallback={<LoadingFallback />}>
+                  <DashboardPage />
+                </Suspense>
+              } />
               
               {/* 📊 Páginas de Analytics e Métricas */}
               <ProtectedRoute path="/analytics" component={() => 
@@ -117,8 +145,16 @@ function App() {
               } />
               
               {/* 🎨 Páginas de Desenvolvimento e Testes */}
-              <Route path="/step/:stepId" component={StepPage} />
-              <Route path="/funnel-dashboard" component={FunnelDashboardPage} />
+              <Route path="/step/:stepId" component={() => 
+                <Suspense fallback={<LoadingFallback />}>
+                  <StepPage />
+                </Suspense>
+              } />
+              <Route path="/funnel-dashboard" component={() => 
+                <Suspense fallback={<LoadingFallback />}>
+                  <FunnelDashboardPage />
+                </Suspense>
+              } />
               <Route path="/creatives" component={() => 
                 <Suspense fallback={<LoadingFallback />}>
                   <CreativesPage />
@@ -126,12 +162,36 @@ function App() {
               } />
               
               {/* 🧪 Páginas de Teste e Desenvolvimento */}
-              <Route path="/test-agent-style" component={AgentStyleFunnelTestPage} />
-              <Route path="/test-participants" component={TestParticipantsPage} />
-              <Route path="/test-steps" component={StepsShowcasePage} />
-              <Route path="/test-schema" component={SchemaEditorPage} />
-              <Route path="/test-properties" component={EnhancedPropertiesPanelDemo} />
-              <Route path="/test-data" component={TestDataPanel} />
+              <Route path="/test-agent-style" component={() => 
+                <Suspense fallback={<LoadingFallback />}>
+                  <AgentStyleFunnelTestPage />
+                </Suspense>
+              } />
+              <Route path="/test-participants" component={() => 
+                <Suspense fallback={<LoadingFallback />}>
+                  <TestParticipantsPage />
+                </Suspense>
+              } />
+              <Route path="/test-steps" component={() => 
+                <Suspense fallback={<LoadingFallback />}>
+                  <StepsShowcasePage />
+                </Suspense>
+              } />
+              <Route path="/test-schema" component={() => 
+                <Suspense fallback={<LoadingFallback />}>
+                  <SchemaEditorPage />
+                </Suspense>
+              } />
+              <Route path="/test-properties" component={() => 
+                <Suspense fallback={<LoadingFallback />}>
+                  <EnhancedPropertiesPanelDemo />
+                </Suspense>
+              } />
+              <Route path="/test-data" component={() => 
+                <Suspense fallback={<LoadingFallback />}>
+                  <TestDataPanel />
+                </Suspense>
+              } />
               <Route path="/abtest" component={() => 
                 <Suspense fallback={<LoadingFallback />}>
                   <ABTestPage />
@@ -139,8 +199,16 @@ function App() {
               } />
               
               {/* 🔧 Páginas Especiais */}
-              <Route path="/com-que-roupa-eu-vou" component={ComQueRoupaEuVouPage} />
-              <Route path="/editor-templates" component={EditorTemplatesPage} />
+              <Route path="/com-que-roupa-eu-vou" component={() => 
+                <Suspense fallback={<LoadingFallback />}>
+                  <ComQueRoupaEuVouPage />
+                </Suspense>
+              } />
+              <Route path="/editor-templates" component={() => 
+                <Suspense fallback={<LoadingFallback />}>
+                  <EditorTemplatesPage />
+                </Suspense>
+              } />
               <Route path="/nocode" component={() => 
                 <Suspense fallback={<LoadingFallback />}>
                   <NoCodeConfigPage />
