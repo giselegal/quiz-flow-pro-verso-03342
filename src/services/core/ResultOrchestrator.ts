@@ -23,32 +23,21 @@ export const ResultOrchestrator = {
     run: async (opts: OrchestrateOptions) => {
         const { selectionsByQuestion, weightQuestions, persistToSupabase, sessionId } = opts;
 
-        // Detectar se selections usam prefixos (ex.: "natural_q1...")
-        const STYLE_PREFIXES = [
-            'natural', 'classico', 'contemporaneo', 'elegante', 'romantico', 'sexy', 'dramatico', 'criativo'
-        ];
-        const hasPrefixBased = Object.values(selectionsByQuestion || {}).some(list =>
-            (list || []).some(id => {
-                const key = String(id || '').toLowerCase();
-                return STYLE_PREFIXES.some(p => key.startsWith(p + '_'));
-            })
-        );
-
-        // clculo
+        // c\x1blculo
         let scores: Record<string, number> = {};
         let total = 0;
 
-        if (hasPrefixBased) {
-            const res = ResultEngine.computeScoresFromSelections(selectionsByQuestion, { weightQuestions });
-            scores = res.scores;
-            total = res.total;
-        } else {
-            // Fallback can3nico: usar adapters + CanonicalScorer
+        // 1) Tentar sempre o motor por prefixos/ids (funciona com ids como "natural_q1")
+        const primaryTry = ResultEngine.computeScoresFromSelections(selectionsByQuestion, { weightQuestions });
+        scores = primaryTry.scores;
+        total = primaryTry.total;
+
+        // 2) Se nada foi pontuado (total 0), fazer fallback canônico por template
+        const summed = Object.values(scores).reduce((a, b) => a + b, 0);
+        if (!summed) {
             try {
                 const canonical = toCanonicalAny(QUIZ_STYLE_21_STEPS_TEMPLATE);
                 const canonTotals = accumulateCanonicalScores(canonical, selectionsByQuestion);
-                // Mapear c3digos para nomes amig3veis esperados pelo ResultEngine
-                // manter compat com códigos canônicos conhecidos
                 const compat: Record<string, string> = {
                     natural: 'Natural',
                     classico: 'Clássico',
@@ -64,23 +53,37 @@ export const ResultOrchestrator = {
                     const friendly = compat[code] || code;
                     mapped[friendly] = (mapped[friendly] || 0) + (typeof pts === 'number' ? pts : 0);
                 }
-                // Garantir todas as chaves com zero (ordenação consistente)
                 for (const name of STYLE_TIEBREAK_ORDER) {
                     if (mapped[name] == null) mapped[name] = 0;
                 }
                 scores = mapped;
                 total = Object.values(mapped).reduce((a, b) => a + b, 0) || 1;
             } catch (e) {
-                // Como fallback final, manter lgica antiga para n3o quebrar
-                const res = ResultEngine.computeScoresFromSelections(selectionsByQuestion, { weightQuestions });
-                scores = res.scores;
-                total = res.total;
+                // manter pontuação zero se adapter falhar; payload lida com isso
             }
         }
         // Aplicar ordenação determinística por desempate
         scores = stabilizeScoresOrder(scores);
         const name = (opts.userName || '').trim() || StorageService.safeGetString('userName') || StorageService.safeGetString('quizUserName') || '';
         const payload = ResultEngine.toPayload(scores, total, name);
+
+        // 🔎 Snapshot de diagnóstico no localStorage para análise (não afeta UX)
+        try {
+            const debug = {
+                ts: new Date().toISOString(),
+                // total bruto (antes de toPayload)
+                selectionsKeys: Object.keys(selectionsByQuestion || {}),
+                sample: Object.fromEntries(
+                    Object.entries(selectionsByQuestion || {})
+                        .slice(0, 3)
+                        .map(([k, v]) => [k, (v || []).slice(0, 3)])
+                ),
+                scores,
+                total,
+                primary: (payload as any)?.primaryStyle,
+            };
+            localStorage.setItem('debug_orchestrator_last', JSON.stringify(debug));
+        } catch { /* noop */ }
         // persist local
         ResultEngine.persist(payload);
         StorageService.safeSetString('quizUserName', name);

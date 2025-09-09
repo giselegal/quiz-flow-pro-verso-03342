@@ -147,12 +147,14 @@ const log = (...args) => console.log('[SMOKE-E2E-3X]', ...args);
         const result = await page.evaluate(() => {
             const legacy = localStorage.getItem('quizResult');
             const unified = localStorage.getItem('unifiedQuizData');
+            const debug = localStorage.getItem('debug_orchestrator_last');
             let legacyParsed = null, unifiedParsed = null;
             try { legacyParsed = legacy ? JSON.parse(legacy) : null; } catch { }
             try { unifiedParsed = unified ? JSON.parse(unified)?.result : null; } catch { }
             const hasAny = Boolean(legacyParsed || unifiedParsed);
             const style = legacyParsed?.primaryStyle?.style || unifiedParsed?.primaryStyle?.style || null;
-            return { hasAny, style, unifiedHas: Boolean(unifiedParsed), legacyHas: Boolean(legacyParsed) };
+            let debugParsed = null; try { debugParsed = debug ? JSON.parse(debug) : null; } catch { }
+            return { hasAny, style, unifiedHas: Boolean(unifiedParsed), legacyHas: Boolean(legacyParsed), debug: debugParsed };
         });
 
         const ok = result.hasAny;

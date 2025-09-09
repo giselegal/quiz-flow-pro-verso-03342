@@ -68,6 +68,22 @@ export const ResultEngine = {
 
   // Normaliza objeto de resultado para consumo pelos blocos de resultado
   toPayload(scores: RawScores, total: number, userName?: string): QuizResultPayload {
+    // Construir mapa de ordem de clique por estilo (menor = clicado mais cedo)
+    let clickIndex: Record<string, number> = {};
+    try {
+      const log = StorageService.safeGetJSON<any[]>('selectionClickOrder') || [];
+      // Normalizar para friendly names já usados em "scores" (Natural, Clássico, ...)
+      // O log deve conter entries como { style: 'Natural', order: 1 }
+      const firstByStyle = new Map<string, number>();
+      for (const e of log) {
+        const style = (e?.style || '').toString();
+        const ord = Number(e?.order);
+        if (!style || Number.isNaN(ord)) continue;
+        if (!firstByStyle.has(style)) firstByStyle.set(style, ord);
+      }
+      clickIndex = Object.fromEntries(firstByStyle.entries());
+    } catch {}
+
     const ordered = Object.entries(scores)
       .map(([style, score]) => ({
         style,
@@ -77,7 +93,13 @@ export const ResultEngine = {
       }))
       .sort((a, b) => {
         if (b.score !== a.score) return b.score - a.score;
-        // Desempate estável pela ordem de STYLES_ORDER
+        // 1) Desempate por ordem de clique (quem foi clicado primeiro vence)
+  const cAi = clickIndex[a.style];
+  const cBi = clickIndex[b.style];
+  if (typeof cAi === 'number' && typeof cBi === 'number' && cAi !== cBi) return cAi - cBi;
+  if (typeof cAi === 'number' && typeof cBi !== 'number') return -1;
+  if (typeof cAi !== 'number' && typeof cBi === 'number') return 1;
+        // 2) Desempate estável pela ordem de STYLES_ORDER
         const ai = STYLES_ORDER.indexOf(a.style);
         const bi = STYLES_ORDER.indexOf(b.style);
         if (ai !== -1 && bi !== -1) return ai - bi;

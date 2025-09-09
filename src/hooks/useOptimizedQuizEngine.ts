@@ -204,7 +204,7 @@ export const useOptimizedQuizEngine = (options = DEFAULT_OPTIONS) => {
           points: predominantScore,
           rank: 1
         },
-        secondaryStyles: sortedStyles.slice(1, 4).map(([style, score], index) => ({
+  secondaryStyles: sortedStyles.slice(1, 3).map(([style, score], index) => ({
           category: style,
           style: style,
           score,
@@ -216,7 +216,7 @@ export const useOptimizedQuizEngine = (options = DEFAULT_OPTIONS) => {
         completedAt: new Date(),
         scores: finalScores,
         predominantStyle,
-        complementaryStyles: sortedStyles.slice(1, 4).map(([style]) => style),
+  complementaryStyles: sortedStyles.slice(1, 3).map(([style]) => style),
         styleScores: finalScores
       };
 

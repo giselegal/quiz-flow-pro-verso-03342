@@ -97,8 +97,16 @@ export function makeTemplateAdapter(config: TemplateAdapterConfig = {}): Adapter
                         imageUrl: (o as any).imageUrl ?? (o as any).src,
                     };
                     if (kind === 'scored' && style) {
-                        const pts = typeof scoreValues[style] === 'number' ? scoreValues[style] : 1;
-                        base.score = { [style]: pts };
+                        // scoreValues pode ser { optionId: number } OU { optionId: { estilo: pontos } }
+                        const sv = (scoreValues as any)[o.id as string];
+                        if (typeof sv === 'number') {
+                            base.score = { [style]: sv };
+                        } else if (sv && typeof sv === 'object' && typeof sv[style] === 'number') {
+                            base.score = { [style]: sv[style] };
+                        } else {
+                            const ptsByStyle = typeof (scoreValues as any)[style] === 'number' ? (scoreValues as any)[style] : 1;
+                            base.score = { [style]: ptsByStyle };
+                        }
                     } else if (kind === 'strategic') {
                         base.segment = segmentByOptionId[o.id];
                     }

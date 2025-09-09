@@ -144,7 +144,7 @@ const Step20Template: React.FC<Step20TemplateProps> = ({
   const styleLabel = primaryStyle.style || primaryStyle.category || 'Seu Estilo';
   const rawPct = typeof primaryStyle.percentage === 'number' ? primaryStyle.percentage : 0;
   const effectivePct = computeEffectivePrimaryPercentage(primaryStyle as any, secondaryStyles as any[], rawPct);
-  const displayPct = effectivePct > 0 ? effectivePct : 70;
+  const displayPct = effectivePct > 0 ? effectivePct : 0;
 
   // Nome saneado para exibição
   const normalizeName = (name?: string) => {

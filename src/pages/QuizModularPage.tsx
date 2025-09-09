@@ -643,8 +643,8 @@ const QuizModularPage: React.FC = () => {
       });
 
       // ✅ 4. PERSISTIR EM AMBOS OS SISTEMAS (sincronização completa)
-  ResultEngine.persist(payload);
-  unifiedQuizStorage.saveResult(payload as any);
+      ResultEngine.persist(payload);
+      unifiedQuizStorage.saveResult(payload as any);
 
       // Persistir nome do usuário em locais compatíveis
       if (userName) {

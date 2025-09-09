@@ -145,7 +145,7 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
   // Evitar exibir 0% quando já existe um estilo definido mas sem dados numéricos suficientes
   const displayPercentage = (effectivePercentage && effectivePercentage > 0)
     ? effectivePercentage
-    : (primaryStyle ? 70 : 0);
+    : 0;
 
   // Defaults vindos do styleConfig, quando props do bloco estiverem ausentes
   const styleInfo = getStyleConfig(styleLabel) || {};
@@ -219,7 +219,7 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
               Parabéns! Descobrimos o seu Estilo Pessoal
             </h1>
           </div>
-          
+
           {displayName && (
             <p className="text-lg text-[#6B4F43] mb-4">
               Olá, <span className="font-semibold text-[#432818]">{displayName}</span>! ✨
@@ -372,7 +372,7 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
             </div>
           </div>
         )}
-        
+
         {/* ✅ NOVA SEÇÃO: Dicas Especiais */}
         {showSpecialTips && styleInfo && (styleInfo as any).specialTips && (styleInfo as any).specialTips.length > 0 && (
           <div className="mt-8">
@@ -395,7 +395,7 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
             <p className="text-[#6B4F43] mb-4 text-sm">
               Agora que você conhece seu estilo {styleLabel}, descubra como aplicá-lo no seu dia a dia.
             </p>
-            
+
             <button
               onClick={() => {
                 // Navegação para próxima etapa ou abertura de link externo
