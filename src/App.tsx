@@ -1,207 +1,73 @@
-import { Suspense, lazy, useEffect } from 'react';
+// Versão INLINE sem dynamic imports para contornar problemas Lovable
+import { useEffect } from 'react';
 import { Route, Router, Switch } from 'wouter';
-import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { ThemeProvider } from './components/theme-provider';
-import { LoadingFallback } from './components/ui/loading-fallback';
 import { Toaster } from './components/ui/toaster';
 import { AuthProvider } from './context/AuthContext';
 import { performanceManager } from './utils/performanceManager';
 
-const EditorTemplatesPage = lazy(() => import('./pages/editor-templates'));
-const ComQueRoupaEuVouPage = lazy(() => import('./pages/ComQueRoupaEuVouPage'));
+// IMPORTAÇÕES DIRETAS (sem lazy) para contornar problemas de dynamic imports
+import Home from './pages/Home';
+import AuthPage from './pages/AuthPage';
+import QuizModularPage from './pages/QuizModularPage';
 
-// 🎯 PÁGINAS ESSENCIAIS - SEM CONFLITOS
-const Home = lazy(() => import('./pages/Home'));
-const AuthPage = lazy(() => import('./pages/AuthPage'));
-// Lazy loading otimizado para melhor performance
-const MainEditor = lazy(() => import('./pages/MainEditor'));
-const DashboardPage = lazy(() => import('./pages/admin/DashboardPage'));
-const StepPage = lazy(() => import('./pages/StepPage'));
-// ✅ Página de produção modular limpa (cliente final)
-const QuizModularPage = lazy(() => import('./pages/QuizModularPage'));
-
-// Importação da nova página também lazy
-const AgentStyleFunnelTestPage = lazy(() => import('./pages/AgentStyleFunnelTestPage'));
-const StepsShowcasePage = lazy(() => import('./pages/StepsShowcase'));
-const SchemaEditorPage = lazy(() => import('./pages/SchemaEditorPage'));
-const EnhancedPropertiesPanelDemo = lazy(() => import('./components/demo/EnhancedPropertiesPanelDemo'));
-const FunnelDashboardPage = lazy(() => import('./pages/FunnelDashboardPage'));
-const TestParticipantsPage = lazy(() => import('./pages/TestParticipantsPage'));
-const TestDataPanel = lazy(() => import('./components/TestDataPanel'));
-
-// Loading component
-const PageLoading = () => (
+// FALLBACK para outras páginas que não são essenciais para funcionamento básico
+const SimplePage = ({ title }: { title: string }) => (
   <div className="min-h-screen flex items-center justify-center">
-    <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+    <div className="container mx-auto text-center">
+      <h1 className="text-4xl font-bold mb-4">{title}</h1>
+      <p className="text-lg text-gray-600 mb-8">Esta página foi temporariamente simplificada devido a problemas de infraestrutura.</p>
+      <a href="/" className="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary/90">
+        Voltar ao Quiz
+      </a>
+    </div>
   </div>
 );
 
 /**
- * 🎯 APLICAÇÃO PRINCIPAL - LIMPA E OTIMIZADA
- *
- * Estrutura simplificada:
- * ✅ Editor Principal único (/editor)
- * ✅ Sistema de lazy loading
- * ✅ Rotas essenciais apenas
- * ✅ Sem conflitos entre editores
- * ✅ Drag & Drop sem aninhamento excessivo
+ * 🔧 VERSÃO SIMPLIFICADA PARA CONTORNAR PROBLEMAS LOVABLE
+ * 
+ * Esta versão remove:
+ * - Dynamic imports (lazy loading)
+ * - Páginas complexas que podem ter problemas de carregamento
+ * - Dependências de assets externos
+ * 
+ * Mantém apenas o essencial:
+ * - Quiz principal (QuizModularPage)
+ * - Página home  
+ * - Autenticação
  */
 function App() {
-  // 🚀 Inicializar performance manager
   useEffect(() => {
     performanceManager.initialize();
   }, []);
 
   return (
-    <ThemeProvider defaultTheme="light" storageKey="quiz-quest-theme">
+    <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
       <AuthProvider>
         <Router>
-          <div className="min-h-screen bg-background">
-            <Suspense fallback={<LoadingFallback />}>
-              <Switch>
-                {/* 🏠 PÁGINA INICIAL */}
-                <Route path="/" component={Home} />
-
-                {/* 🎯 DASHBOARD DE FUNIS */}
-                <Route path="/funnels">
-                  <Suspense fallback={<PageLoading />}>
-                    <FunnelDashboardPage />
-                  </Suspense>
-                </Route>
-
-                {/* 🎯 EDITOR PRINCIPAL ÚNICO - SEM ANINHAMENTO */}
-                <Route path="/editor">
-                  {/* MainEditor importado estaticamente para maior estabilidade */}
-                  <MainEditor />
-                </Route>
-
-                {/* 🧪 Editor alternativo baseado em schema (rota dedicada) */}
-                <Route path="/editor/schema">
-                  <Suspense fallback={<PageLoading />}>
-                    <SchemaEditorPage />
-                  </Suspense>
-                </Route>
-
-                {/* 🔐 AUTENTICAÇÃO */}
-                <Route path="/auth">
-                  <Suspense fallback={<PageLoading />}>
-                    <AuthPage />
-                  </Suspense>
-                </Route>
-
-                {/* � Compat: Redirecionar acessos legados para manter apenas /editor */}
-                <Route path="/MainEditor">
-                  {() => {
-                    if (typeof window !== 'undefined') window.location.replace('/editor');
-                    return null;
-                  }}
-                </Route>
-                <Route path="/main-editor">
-                  {() => {
-                    if (typeof window !== 'undefined') window.location.replace('/editor');
-                    return null;
-                  }}
-                </Route>
-
-                {/* �🔀 Compat: Redirecionar /quiz-modular para a versão publicada (/quiz) para evitar duplicidade com /editor */}
-                <Route path="/quiz-modular">
-                  {() => {
-                    if (typeof window !== 'undefined') window.location.replace('/quiz');
-                    return null;
-                  }}
-                </Route>
-
-                {/* 🌐 VERSÃO DE PRODUÇÃO MODULAR (sem colunas de edição) */}
-                <Route path="/quiz">
-                  <Suspense fallback={<PageLoading />}>
-                    <QuizModularPage />
-                  </Suspense>
-                </Route>
-
-                {/* 👗 FUNIL ESPECIALIZADO: "COM QUE ROUPA EU VOU" */}
-                <Route path="/com-que-roupa-eu-vou">
-                  <Suspense fallback={<PageLoading />}>
-                    <ComQueRoupaEuVouPage />
-                  </Suspense>
-                </Route>
-
-                {/* 🎯 STEP20 - ROTA DIRETA */}
-                <Route path="/step20">
-                  <Suspense fallback={<PageLoading />}>
-                    <QuizModularPage />
-                  </Suspense>
-                </Route>
-
-                {/* 👁️ PREVIEW POR ETAPA DO EDITOR */}
-                <Route path="/step/:step">
-                  <Suspense fallback={<PageLoading />}>
-                    <StepPage />
-                  </Suspense>
-                </Route>
-
-                {/* 📊 DASHBOARD ADMINISTRATIVO */}
-                <ProtectedRoute path="/admin" component={DashboardPage} requireAuth={true} />
-                <ProtectedRoute path="/admin/:rest*" component={DashboardPage} requireAuth={true} />
-
-                {/* 📝 EDITOR DE TEMPLATES */}
-                <Route path="/editor-templates">
-                  <Suspense fallback={<PageLoading />}>
-                    <EditorTemplatesPage />
-                  </Suspense>
-                </Route>
-
-                {/* 🧪 AGENT TEST PAGE */}
-                <Route path="/agent/style-funnel-test">
-                  <Suspense fallback={<PageLoading />}>
-                    <AgentStyleFunnelTestPage />
-                  </Suspense>
-                </Route>
-
-                {/* 🧪 SHOWCASE DAS 21 ETAPAS */}
-                <Route path="/showcase/steps">
-                  <Suspense fallback={<PageLoading />}>
-                    <StepsShowcasePage />
-                  </Suspense>
-                </Route>
-
-                {/* 🧪 TESTE DA TABELA DE PARTICIPANTES */}
-                <Route path="/test/participantes">
-                  <Suspense fallback={<PageLoading />}>
-                    <TestParticipantsPage />
-                  </Suspense>
-                </Route>
-
-                {/* 🧪 GERADOR DE DADOS DE TESTE */}
-                <Route path="/test/data-generator">
-                  <Suspense fallback={<PageLoading />}>
-                    <TestDataPanel />
-                  </Suspense>
-                </Route>
-
-                {/* 🚀 DEMO DO PAINEL DE PROPRIEDADES APRIMORADO */}
-                <Route path="/demo/properties-panel">
-                  <Suspense fallback={<PageLoading />}>
-                    <EnhancedPropertiesPanelDemo />
-                  </Suspense>
-                </Route>
-
-                {/* 🔄 FALLBACK */}
-                <Route>
-                  <div className="min-h-screen flex items-center justify-center">
-                    <div className="text-center">
-                      <h1 className="text-2xl font-bold mb-4">Página não encontrada</h1>
-                      <a href="/" className="text-blue-600 hover:underline">
-                        Voltar ao Início
-                      </a>
-                    </div>
-                  </div>
-                </Route>
-              </Switch>
-            </Suspense>
-
-            <Toaster />
-          </div>
+          <Switch>
+            {/* Rota principal - Quiz */}
+            <Route path="/" component={Home} />
+            
+            {/* Quiz modular - página principal de produção */}
+            <Route path="/quiz" component={QuizModularPage} />
+            <Route path="/quiz/:step" component={QuizModularPage} />
+            
+            {/* Autenticação */}
+            <Route path="/auth" component={AuthPage} />
+            
+            {/* Páginas simplificadas temporárias */}
+            <Route path="/editor" component={() => <SimplePage title="Editor" />} />
+            <Route path="/dashboard" component={() => <SimplePage title="Dashboard" />} />
+            
+            {/* Fallback para qualquer outra rota */}
+            <Route>
+              <SimplePage title="Página não encontrada" />
+            </Route>
+          </Switch>
         </Router>
+        <Toaster />
       </AuthProvider>
     </ThemeProvider>
   );
