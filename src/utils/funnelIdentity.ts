@@ -113,8 +113,16 @@ export const generateInstanceKey = (componentType: string, stepNumber: number): 
 export const isValidFunnelId = (funnelId: string | null | undefined): boolean => {
   if (!funnelId || typeof funnelId !== 'string') return false;
 
-  // Aceita UUIDs ou IDs alfanuméricos com hífens
-  const isValid = /^[a-zA-Z0-9\-_]{3,50}$/.test(funnelId);
+  // Aceita UUIDs v4 válidos
+  const uuidV4Pattern = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+  // Aceita IDs de template com prefixo
+  const templatePattern = /^template-[a-zA-Z0-9\-_]{3,50}$/;
+
+  // Aceita fallback padrão
+  const defaultPattern = /^default-funnel$/;
+
+  const isValid = uuidV4Pattern.test(funnelId) || templatePattern.test(funnelId) || defaultPattern.test(funnelId);
 
   if (!isValid) {
     console.warn(`⚠️ FunnelId inválido: ${funnelId}`);
@@ -128,6 +136,18 @@ export const isValidFunnelId = (funnelId: string | null | undefined): boolean =>
  */
 export const getAvailableStepNumbers = (maxSteps: number = 21): number[] => {
   return Array.from({ length: maxSteps }, (_, i) => i + 1);
+};
+
+/**
+ * Gera um UUID v4 válido para novos funis
+ */
+export const generateFunnelId = (): string => {
+  // Gera UUID v4 válido
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    const r = Math.random() * 16 | 0;
+    const v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
 };
 
 /**
