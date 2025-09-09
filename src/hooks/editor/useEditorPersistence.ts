@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import { useToast } from '../../components/ui/use-toast';
-import type { SchemaDrivenFunnelData } from '../../services/schemaDrivenFunnelService';
-import { schemaDrivenFunnelService } from '../../services/schemaDrivenFunnelService';
+import { ContextualFunnelService, type ContextualFunnelData } from '../../services/contextualFunnelService';
+import { FunnelContext } from '../../core/contexts/FunnelContext';
 
 // Interface para compatibilidade com o editor existente
 export interface FunnelData {
@@ -26,23 +26,26 @@ export interface FunnelPage {
   metadata: Record<string, any>;
 }
 
-export const useEditorPersistence = () => {
+export const useEditorPersistence = (context: FunnelContext = FunnelContext.EDITOR) => {
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+
+  // 🎯 Criar uma instância do serviço contextual
+  const contextualFunnelService = new ContextualFunnelService(context);
 
   const saveFunnel = useCallback(
     async (data: FunnelData) => {
       setIsSaving(true);
       try {
-        // Converter FunnelData para SchemaDrivenFunnelData
-        const schemaDrivenData: SchemaDrivenFunnelData = {
+        // Converter FunnelData para ContextualFunnelData
+        const contextualData: ContextualFunnelData = {
           id: data.id,
           name: data.name,
-          description: data.description || '',
+          description: data.description || null,
           theme: 'default',
           isPublished: data.isPublished,
-          pages: data.pages.map(page => ({
+          pages: data.pages.map((page: any) => ({
             id: page.id,
             funnel_id: data.id,
             page_type: page.pageType || 'step',
@@ -65,13 +68,15 @@ export const useEditorPersistence = () => {
           version: data.version,
           lastModified: new Date(),
           createdAt: data.createdAt ? new Date(data.createdAt) : new Date(),
+          context
         };
 
-        await schemaDrivenFunnelService.saveFunnel(schemaDrivenData);
+        // 🎯 Usar o serviço contextual para isolamento completo
+        await contextualFunnelService.saveFunnel(contextualData);
 
         toast({
           title: 'Sucesso',
-          description: 'Funil salvo com sucesso!',
+          description: `Funil salvo no contexto ${context}!`,
         });
         return { success: true };
       } catch (error) {
@@ -86,28 +91,29 @@ export const useEditorPersistence = () => {
         setIsSaving(false);
       }
     },
-    [toast]
+    [toast, context, contextualFunnelService]
   );
 
   const loadFunnel = useCallback(
     async (id: string) => {
       setIsLoading(true);
       try {
-        const schemaDrivenData = await schemaDrivenFunnelService.loadFunnel(id);
+        // 🎯 Usar o serviço contextual para isolamento completo
+        const contextualData = await contextualFunnelService.loadFunnel(id);
 
-        if (!schemaDrivenData) {
+        if (!contextualData) {
           return null;
         }
 
-        // Converter SchemaDrivenFunnelData para FunnelData
+        // Converter ContextualFunnelData para FunnelData
         const funnelData: FunnelData = {
-          id: schemaDrivenData.id,
-          name: schemaDrivenData.name,
-          description: schemaDrivenData.description || '',
-          isPublished: schemaDrivenData.isPublished || false,
-          version: schemaDrivenData.version || 1,
-          settings: schemaDrivenData.config || {},
-          pages: schemaDrivenData.pages.map(page => ({
+          id: contextualData.id,
+          name: contextualData.name,
+          description: contextualData.description || '',
+          isPublished: contextualData.isPublished || false,
+          version: contextualData.version || 1,
+          settings: contextualData.config || {},
+          pages: contextualData.pages.map((page: any) => ({
             id: page.id,
             pageType: page.page_type || 'step',
             pageOrder: page.page_order || 1,
@@ -116,8 +122,8 @@ export const useEditorPersistence = () => {
             metadata:
               typeof page.metadata === 'object' && page.metadata !== null ? page.metadata : {},
           })),
-          createdAt: schemaDrivenData.createdAt?.toISOString(),
-          updatedAt: schemaDrivenData.lastModified?.toISOString(),
+          createdAt: contextualData.createdAt?.toISOString(),
+          updatedAt: contextualData.lastModified?.toISOString(),
         };
 
         return funnelData;
@@ -133,15 +139,32 @@ export const useEditorPersistence = () => {
         setIsLoading(false);
       }
     },
-    [toast]
+    [toast, context, contextualFunnelService]
   );
 
   const listFunnels = useCallback(async () => {
     setIsLoading(true);
     try {
-      // TODO: Implementar listagem de funis no schemaDrivenFunnelService
-      console.warn('listFunnels não implementado ainda no schemaDrivenFunnelService');
-      return [];
+      // 🎯 Usar o serviço contextual para listar funis do contexto específico
+      const funnels = await contextualFunnelService.listFunnels();
+      return funnels.map((funnel: any) => ({
+        id: funnel.id,
+        name: funnel.name,
+        description: funnel.description || '',
+        isPublished: funnel.isPublished || false,
+        version: funnel.version || 1,
+        settings: funnel.config || {},
+        pages: funnel.pages.map((page: any) => ({
+          id: page.id,
+          pageType: page.page_type || 'step',
+          pageOrder: page.page_order || 1,
+          title: page.title || 'Untitled',
+          blocks: Array.isArray(page.blocks) ? page.blocks : [],
+          metadata: typeof page.metadata === 'object' && page.metadata !== null ? page.metadata : {},
+        })),
+        createdAt: funnel.createdAt?.toISOString(),
+        updatedAt: funnel.lastModified?.toISOString(),
+      }));
     } catch (error) {
       console.error('Error listing funnels:', error);
       toast({
@@ -153,16 +176,16 @@ export const useEditorPersistence = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [toast]);
+  }, [toast, context, contextualFunnelService]);
 
   const deleteFunnel = useCallback(
-    async (_id: string) => {
+    async (id: string) => {
       try {
-        // TODO: Implementar deleteFunnel no schemaDrivenFunnelService
-        console.warn('deleteFunnel não implementado ainda no schemaDrivenFunnelService');
+        // 🎯 Usar o serviço contextual para deletar apenas do contexto específico
+        await contextualFunnelService.deleteFunnel(id);
         toast({
           title: 'Sucesso',
-          description: 'Funil deletado com sucesso!',
+          description: `Funil deletado do contexto ${context}!`,
         });
         return { success: true };
       } catch (error) {
@@ -175,17 +198,22 @@ export const useEditorPersistence = () => {
         return { success: false, error: 'Unexpected error' };
       }
     },
-    [toast]
+    [toast, context, contextualFunnelService]
   );
 
   const publishFunnel = useCallback(
-    async (_id: string) => {
+    async (id: string) => {
       try {
-        // TODO: Implementar publishFunnel no schemaDrivenFunnelService
-        console.warn('publishFunnel não implementado ainda no schemaDrivenFunnelService');
+        // 🎯 Usar o serviço contextual para publicar apenas do contexto específico
+        const funnel = await contextualFunnelService.loadFunnel(id);
+        if (funnel) {
+          const updatedFunnel = { ...funnel, isPublished: true };
+          await contextualFunnelService.saveFunnel(updatedFunnel);
+        }
+        
         toast({
           title: 'Sucesso',
-          description: 'Funil publicado com sucesso!',
+          description: `Funil publicado no contexto ${context}!`,
         });
         return { success: true };
       } catch (error) {
@@ -198,7 +226,7 @@ export const useEditorPersistence = () => {
         return { success: false, error: 'Unexpected error' };
       }
     },
-    [toast]
+    [toast, context, contextualFunnelService]
   );
 
   return {

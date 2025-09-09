@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useAutoSaveWithDebounce } from '@/hooks/editor/useAutoSaveWithDebounce';
-import { schemaDrivenFunnelService } from '@/services/schemaDrivenFunnelService';
+import { ContextualFunnelService, type ContextualFunnelData } from '@/services/contextualFunnelService';
+import { FunnelContext, generateContextualStorageKey } from '@/core/contexts/FunnelContext';
 import { getFunnelIdFromEnvOrStorage } from '@/utils/funnelIdentity';
 import { useToast } from '@/hooks/use-toast';
 
@@ -10,6 +11,7 @@ interface UseEditorAutoSaveOptions {
   enabled?: boolean;
   delay?: number;
   showToasts?: boolean;
+  context?: FunnelContext; // 🎯 NOVO: Contexto para isolamento
 }
 
 interface UseEditorAutoSaveReturn {
@@ -35,7 +37,8 @@ export const useEditorAutoSave = ({
   data,
   enabled = true,
   delay = 2000,
-  showToasts = false
+  showToasts = false,
+  context = FunnelContext.EDITOR // 🎯 Contexto padrão é EDITOR
 }: UseEditorAutoSaveOptions): UseEditorAutoSaveReturn => {
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
@@ -45,6 +48,9 @@ export const useEditorAutoSave = ({
 
   const currentFunnelId = funnelId || getFunnelIdFromEnvOrStorage() || 'default-funnel';
   const lastDataRef = useRef(data);
+
+  // 🎯 Criar instância do serviço contextual
+  const contextualFunnelService = new ContextualFunnelService(context);
 
   // 🔍 Detectar mudanças nos dados
   useEffect(() => {
@@ -69,10 +75,11 @@ export const useEditorAutoSave = ({
       if (currentFunnelId.startsWith('template-') || currentFunnelId === 'default-funnel') {
         console.log('📋 Funil template/default - salvando apenas localmente');
 
-        // Salvar no localStorage como backup
+        // Salvar no localStorage como backup usando chave contextual
         try {
+          const contextualKey = generateContextualStorageKey(context, 'editor');
           localStorage.setItem(
-            `editor:${currentFunnelId}`,
+            contextualKey,
             JSON.stringify({
               data: dataToSave,
               timestamp: new Date().toISOString(),
@@ -83,16 +90,17 @@ export const useEditorAutoSave = ({
           console.warn('⚠️ Erro ao salvar no localStorage:', err);
         }
       } else {
-        // Para funis personalizados, salvar no Supabase
-        const funnelData = {
+        // Para funis personalizados, salvar no Supabase usando o serviço contextual
+        const contextualData: ContextualFunnelData = {
           id: currentFunnelId,
           name: `Funil ${currentFunnelId}`,
           description: `Funil editado em ${new Date().toLocaleDateString()}`,
           pages: [], // Os dados do editor vão aqui
-          config: dataToSave || {}
+          config: dataToSave || {},
+          context
         };
 
-        await schemaDrivenFunnelService.saveFunnel(funnelData);
+        await contextualFunnelService.saveFunnel(contextualData);
 
         console.log('✅ Dados salvos no Supabase com sucesso');
       }
@@ -126,7 +134,7 @@ export const useEditorAutoSave = ({
 
       throw error; // Re-throw para o hook de auto-save
     }
-  }, [currentFunnelId, showToasts, toast]);
+  }, [currentFunnelId, showToasts, toast, context, contextualFunnelService]);
 
   // 🔄 Hook de auto-save com debounce
   const { forceSave: forceAutoSave, isSaving } = useAutoSaveWithDebounce({

@@ -1,13 +1,15 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { schemaDrivenFunnelService } from '@/services/schemaDrivenFunnelService';
 import { generateId } from '@/types/unified-schema';
 import { toast } from '@/hooks/use-toast';
 import { getFunnelIdFromEnvOrStorage, saveFunnelIdToStorage } from '@/utils/funnelIdentity';
+import { FunnelContext } from '@/core/contexts/FunnelContext';
+import { ContextualFunnelService } from '@/services/contextualFunnelService';
 
 interface FunnelManagerProps {
   currentFunnelId?: string;
   onFunnelSelect?: (funnelId: string) => void;
   onClose?: () => void;
+  context?: FunnelContext; // 🎯 NOVO: Contexto para isolamento
 }
 
 interface FunnelInfo {
@@ -31,7 +33,8 @@ interface FunnelInfo {
 export const FunnelManager: React.FC<FunnelManagerProps> = ({
   currentFunnelId,
   onFunnelSelect,
-  onClose
+  onClose,
+  context = FunnelContext.EDITOR // 🎯 Contexto padrão é EDITOR
 }) => {
   const [funnels, setFunnels] = useState<FunnelInfo[]>([]);
   const [loading, setLoading] = useState(true);
@@ -39,47 +42,55 @@ export const FunnelManager: React.FC<FunnelManagerProps> = ({
   const [newFunnelName, setNewFunnelName] = useState('');
   const [showCreateForm, setShowCreateForm] = useState(false);
 
+  // 🎯 Criar instância do serviço contextual
+  const contextualFunnelService = new ContextualFunnelService(context);
+
   // 🔍 Determinar funil atual
   const activeFunnelId = currentFunnelId || getFunnelIdFromEnvOrStorage() || 'quiz-estilo-completo';
 
-  // 📋 Carregar lista de funis
+  // 📋 Carregar lista de funis do contexto específico
   const loadFunnels = useCallback(async () => {
     try {
       setLoading(true);
-      console.log('🔄 Carregando lista de funis...');
+      console.log(`🔄 Carregando lista de funis do contexto ${context}...`);
 
-      const funnelList = await schemaDrivenFunnelService.listFunnels();
+      // 🎯 Usar serviço contextual para isolamento
+      const funnelList = await contextualFunnelService.listFunnels();
 
       const mappedFunnels: FunnelInfo[] = funnelList.map(funnel => ({
         id: funnel.id,
         name: funnel.name,
-        description: funnel.description,
+        description: funnel.description || '',
         lastModified: funnel.lastModified || new Date(),
         isPublished: funnel.isPublished || false,
         isActive: funnel.id === activeFunnelId
       }));
 
-      // 🎯 Adicionar funis do template se não existirem
-      const templateFunnels = [
-        {
-          id: 'quiz-estilo-completo',
-          name: 'Quiz de Estilo Completo (Template)',
-          description: 'Template padrão com 21 etapas pré-configuradas',
-          lastModified: new Date(),
-          isPublished: true,
-          isActive: activeFunnelId === 'quiz-estilo-completo'
+      // 🎯 Adicionar funis do template apenas no contexto TEMPLATES ou se não há funis
+      if (context === FunnelContext.TEMPLATES || mappedFunnels.length === 0) {
+        const templateFunnels = [
+          {
+            id: 'quiz-estilo-completo',
+            name: 'Quiz de Estilo Completo (Template)',
+            description: 'Template padrão com 21 etapas pré-configuradas',
+            lastModified: new Date(),
+            isPublished: true,
+            isActive: activeFunnelId === 'quiz-estilo-completo'
+          }
+        ];
+
+        // Verificar se os templates já estão na lista contextual
+        const existingTemplates = mappedFunnels.filter(f => 
+          templateFunnels.some(t => t.id === f.id)
+        );
+
+        if (existingTemplates.length === 0) {
+          mappedFunnels.unshift(...templateFunnels);
         }
-      ];
+      }
 
-      // Combinar funis do banco com templates
-      const existingIds = new Set(mappedFunnels.map(f => f.id));
-      const allFunnels = [
-        ...mappedFunnels,
-        ...templateFunnels.filter(tf => !existingIds.has(tf.id))
-      ];
-
-      setFunnels(allFunnels);
-      console.log('✅ Funis carregados:', allFunnels.length);
+      setFunnels(mappedFunnels);
+      console.log(`✅ Funis carregados do contexto ${context}:`, mappedFunnels.length);
     } catch (error) {
       console.error('❌ Erro ao carregar funis:', error);
       toast({
@@ -90,7 +101,7 @@ export const FunnelManager: React.FC<FunnelManagerProps> = ({
     } finally {
       setLoading(false);
     }
-  }, [activeFunnelId]);
+  }, [activeFunnelId, context, contextualFunnelService]);
 
   // 🔄 Carregar na inicialização
   useEffect(() => {
@@ -110,20 +121,24 @@ export const FunnelManager: React.FC<FunnelManagerProps> = ({
 
     try {
       setCreating(true);
-      console.log('🆕 Criando novo funil:', newFunnelName);
+      console.log(`🆕 Criando novo funil no contexto ${context}:`, newFunnelName);
 
-      const newFunnel = await schemaDrivenFunnelService.createFunnel({
+      // 🎯 Usar serviço contextual para criar funil isolado
+      const newFunnelData = {
         id: generateId(),
         name: newFunnelName.trim(),
         description: `Funil criado em ${new Date().toLocaleDateString()}`,
-        pages: []
-      });
+        pages: [],
+        context
+      };
 
-      console.log('✅ Funil criado com sucesso:', newFunnel.id);
+      await contextualFunnelService.saveFunnel(newFunnelData);
+
+      console.log(`✅ Funil criado com sucesso no contexto ${context}:`, newFunnelData.id);
 
       toast({
         title: 'Funil criado',
-        description: `Funil "${newFunnel.name}" criado com sucesso`,
+        description: `Funil "${newFunnelData.name}" criado com sucesso`,
         variant: 'default'
       });
 
@@ -131,7 +146,10 @@ export const FunnelManager: React.FC<FunnelManagerProps> = ({
       await loadFunnels();
 
       // 🎯 Selecionar o novo funil
-      handleSelectFunnel(newFunnel.id);
+      if (onFunnelSelect) {
+        onFunnelSelect(newFunnelData.id);
+        saveFunnelIdToStorage(newFunnelData.id);
+      }
 
       // 🧹 Limpar formulário
       setNewFunnelName('');
