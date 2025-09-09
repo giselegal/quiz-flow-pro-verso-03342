@@ -79,13 +79,13 @@ const DEVICE_COLORS = {
 // COMPONENTES
 // ============================================================================
 
-const KPICard: React.FC<KPICardProps> = ({ 
-    title, 
-    value, 
-    subtitle, 
-    icon, 
+const KPICard: React.FC<KPICardProps> = ({
+    title,
+    value,
+    subtitle,
+    icon,
     trend = 'neutral',
-    color = 'blue' 
+    color = 'blue'
 }) => {
     const colorClasses = {
         green: 'bg-green-50 border-green-200 text-green-800',
@@ -163,7 +163,7 @@ export const AnalyticsDashboard: React.FC = () => {
     const fetchAnalyticsData = async () => {
         try {
             setLoading(true);
-            
+
             // Buscar sessões
             const { data: sessions, error: sessionsError } = await supabase
                 .from('quiz_sessions')
@@ -246,10 +246,10 @@ export const AnalyticsDashboard: React.FC = () => {
         }).reverse();
 
         const dailyActivity = last7Days.map(date => {
-            const dayParticipants = sessions.filter(s => 
+            const dayParticipants = sessions.filter(s =>
                 s.started_at.startsWith(date)
             );
-            const dayCompleted = dayParticipants.filter(s => 
+            const dayCompleted = dayParticipants.filter(s =>
                 s.status === 'completed'
             );
 
@@ -307,7 +307,7 @@ export const AnalyticsDashboard: React.FC = () => {
 
     useEffect(() => {
         fetchAnalyticsData();
-        
+
         // Auto-refresh a cada 2 minutos
         const interval = setInterval(fetchAnalyticsData, 120000);
         return () => clearInterval(interval);
@@ -381,20 +381,20 @@ export const AnalyticsDashboard: React.FC = () => {
                                 <XAxis dataKey="date" />
                                 <YAxis />
                                 <Tooltip content={<CustomTooltip />} />
-                                <Area 
-                                    type="monotone" 
-                                    dataKey="participants" 
+                                <Area
+                                    type="monotone"
+                                    dataKey="participants"
                                     stackId="1"
-                                    stroke={COLORS.primary} 
+                                    stroke={COLORS.primary}
                                     fill={COLORS.primary}
                                     fillOpacity={0.6}
                                     name="Participantes"
                                 />
-                                <Area 
-                                    type="monotone" 
-                                    dataKey="completed" 
+                                <Area
+                                    type="monotone"
+                                    dataKey="completed"
                                     stackId="2"
-                                    stroke={COLORS.success} 
+                                    stroke={COLORS.success}
                                     fill={COLORS.success}
                                     fillOpacity={0.8}
                                     name="Completaram"
@@ -426,9 +426,9 @@ export const AnalyticsDashboard: React.FC = () => {
                                     dataKey="count"
                                 >
                                     {analytics.deviceDistribution.map((entry, index) => (
-                                        <Cell 
-                                            key={`cell-${index}`} 
-                                            fill={DEVICE_COLORS[entry.device as keyof typeof DEVICE_COLORS] || COLORS.info} 
+                                        <Cell
+                                            key={`cell-${index}`}
+                                            fill={DEVICE_COLORS[entry.device as keyof typeof DEVICE_COLORS] || COLORS.info}
                                         />
                                     ))}
                                 </Pie>
@@ -456,9 +456,9 @@ export const AnalyticsDashboard: React.FC = () => {
                                 <XAxis dataKey="step" />
                                 <YAxis />
                                 <Tooltip content={<CustomTooltip />} />
-                                <Bar 
-                                    dataKey="count" 
-                                    fill={COLORS.danger} 
+                                <Bar
+                                    dataKey="count"
+                                    fill={COLORS.danger}
                                     name="Abandonos"
                                 />
                             </BarChart>
@@ -481,9 +481,9 @@ export const AnalyticsDashboard: React.FC = () => {
                                 <XAxis dataKey="range" />
                                 <YAxis />
                                 <Tooltip content={<CustomTooltip />} />
-                                <Bar 
-                                    dataKey="count" 
-                                    fill={COLORS.warning} 
+                                <Bar
+                                    dataKey="count"
+                                    fill={COLORS.warning}
                                     name="Participantes"
                                 />
                             </BarChart>
@@ -508,9 +508,9 @@ export const AnalyticsDashboard: React.FC = () => {
                                 <XAxis type="number" />
                                 <YAxis dataKey="style" type="category" width={120} />
                                 <Tooltip content={<CustomTooltip />} />
-                                <Bar 
-                                    dataKey="count" 
-                                    fill={COLORS.purple} 
+                                <Bar
+                                    dataKey="count"
+                                    fill={COLORS.purple}
                                     name="Descobertas"
                                 />
                             </BarChart>

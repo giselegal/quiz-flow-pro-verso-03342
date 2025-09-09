@@ -63,7 +63,7 @@ export const DashboardControls: React.FC<DashboardControlsProps> = ({
 
     const handleRefresh = async () => {
         if (!onRefresh) return;
-        
+
         setIsRefreshing(true);
         try {
             await onRefresh();
@@ -125,7 +125,7 @@ export const DashboardControls: React.FC<DashboardControlsProps> = ({
                             <Eye className="w-5 h-5 text-gray-600" />
                             <span className="font-medium text-gray-700">Visualização:</span>
                         </div>
-                        
+
                         <div className="flex gap-2">
                             {viewOptions.map((option) => (
                                 <Button
@@ -176,7 +176,7 @@ export const DashboardControls: React.FC<DashboardControlsProps> = ({
                             <Filter className="w-5 h-5 text-gray-600" />
                             <span className="font-medium text-gray-700">Filtros Analytics:</span>
                         </div>
-                        
+
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             {/* FILTRO DE PERÍODO */}
                             <div className="space-y-2">
@@ -185,7 +185,7 @@ export const DashboardControls: React.FC<DashboardControlsProps> = ({
                                 </label>
                                 <Select
                                     value={analyticsFilters.dateRange}
-                                    onValueChange={(value) => 
+                                    onValueChange={(value) =>
                                         onFiltersChange?.({ ...analyticsFilters, dateRange: value })
                                     }
                                 >
@@ -209,7 +209,7 @@ export const DashboardControls: React.FC<DashboardControlsProps> = ({
                                 </label>
                                 <Select
                                     value={analyticsFilters.deviceType}
-                                    onValueChange={(value) => 
+                                    onValueChange={(value) =>
                                         onFiltersChange?.({ ...analyticsFilters, deviceType: value })
                                     }
                                 >
@@ -233,7 +233,7 @@ export const DashboardControls: React.FC<DashboardControlsProps> = ({
                                 </label>
                                 <Select
                                     value={analyticsFilters.status}
-                                    onValueChange={(value) => 
+                                    onValueChange={(value) =>
                                         onFiltersChange?.({ ...analyticsFilters, status: value })
                                     }
                                 >

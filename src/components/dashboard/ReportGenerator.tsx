@@ -127,7 +127,7 @@ export const ReportGenerator: React.FC<ReportGeneratorProps> = ({
 
             // Para demonstração, vamos criar um download fictício
             const fileName = `quiz-analytics-${config.type}-${config.period}-${new Date().toISOString().split('T')[0]}.${config.format}`;
-            
+
             if (config.format === 'csv') {
                 generateCSVReport(reportData, fileName);
             } else if (config.format === 'pdf') {
@@ -168,7 +168,7 @@ export const ReportGenerator: React.FC<ReportGeneratorProps> = ({
     const generatePDFReport = (data: any, _fileName: string) => {
         // Para uma implementação real, use bibliotecas como jsPDF ou puppeteer
         const htmlContent = generateHTMLReport(data);
-        
+
         // Aqui normalmente você converteria o HTML para PDF
         // Para demonstração, vamos mostrar o HTML
         const printWindow = window.open('', '_blank');
