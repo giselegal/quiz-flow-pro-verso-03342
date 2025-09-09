@@ -4,8 +4,11 @@ import {
   QUIZ_QUESTIONS_COMPLETE,
   QUIZ_STYLE_21_STEPS_TEMPLATE,
 } from '../templates/quiz21StepsComplete';
+import { type FunnelStep as CoreFunnelStep, type FunnelStepType } from '@/core/funnel/types';
+import { type UnifiedTemplate, getUnifiedTemplates, TemplateRegistry } from '@/config/unifiedTemplatesRegistry';
 
-interface FunnelStep {
+// Adaptação temporária para compatibilidade
+interface LegacyFunnelStep {
   id: string;
   name: string;
   order: number;
@@ -18,8 +21,8 @@ interface FunnelStep {
 interface FunnelsContextType {
   currentFunnelId: string;
   setCurrentFunnelId: (id: string) => void;
-  steps: FunnelStep[];
-  setSteps: React.Dispatch<React.SetStateAction<FunnelStep[]>>;
+  steps: LegacyFunnelStep[];
+  setSteps: React.Dispatch<React.SetStateAction<LegacyFunnelStep[]>>;
   getTemplate: (templateId: string) => any;
   getTemplateBlocks: (templateId: string, stepId: string) => any[];
   updateFunnelStep: (stepId: string, updates: any) => void;
@@ -36,6 +39,41 @@ interface FunnelsProviderProps {
 }
 
 const FunnelsContext = createContext<FunnelsContextType | undefined>(undefined);
+
+// ✅ FASE 2: Mapeamento de templates legados para unificados
+const LEGACY_TEMPLATE_MAPPING: Record<string, string> = {
+  'quiz-estilo-completo': 'quiz-estilo-21-steps',
+  'quiz-estilo': 'quiz-estilo-otimizado',
+  'quiz-vazio': 'quiz-style-basic' // Fallback
+};
+
+// ✅ FUNÇÃO HELPER: Obter template unificado com fallback legacy
+const getTemplateWithFallback = (templateId: string) => {
+  // Primeiro, tentar buscar no registry unificado
+  const mappedId = LEGACY_TEMPLATE_MAPPING[templateId] || templateId;
+  const unifiedTemplate = TemplateRegistry.getById(mappedId);
+
+  if (unifiedTemplate) {
+    console.log(`✅ Template unificado encontrado: ${templateId} -> ${mappedId}`);
+    return {
+      unified: unifiedTemplate,
+      legacy: FUNNEL_TEMPLATES[templateId] || null
+    };
+  }
+
+  // Fallback para template legacy
+  const legacyTemplate = FUNNEL_TEMPLATES[templateId];
+  if (legacyTemplate) {
+    console.log(`⚠️ Usando template legacy: ${templateId}`);
+    return {
+      unified: null,
+      legacy: legacyTemplate
+    };
+  }
+
+  console.warn(`❌ Template não encontrado: ${templateId}`);
+  return { unified: null, legacy: null };
+};
 
 const FUNNEL_TEMPLATES: Record<
   string,
@@ -410,14 +448,20 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
     }
   });
 
-  // ✅ FASE 1: Inicialização imediata com dados pré-carregados
-  const [steps, setSteps] = useState<FunnelStep[]>(() => {
-    const initialTemplate = FUNNEL_TEMPLATES['quiz-estilo-completo'];
-    console.log('🚀 FunnelsContext: Inicialização IMEDIATA com template completo');
-    console.log('📊 Steps carregadas na inicialização:', initialTemplate.defaultSteps.length);
-    console.log('🎯 Template ID inicial:', currentFunnelId);
-    console.log('🔍 QUIZ_QUESTIONS_COMPLETE keys:', Object.keys(QUIZ_QUESTIONS_COMPLETE));
-    console.log('📋 QUIZ_STYLE_21_STEPS_TEMPLATE keys:', Object.keys(QUIZ_STYLE_21_STEPS_TEMPLATE));
+  // ✅ FASE 2: Inicialização com mapeamento unificado
+  const [steps, setSteps] = useState<LegacyFunnelStep[]>(() => {
+    const { unified, legacy } = getTemplateWithFallback('quiz-estilo-completo');
+    const initialTemplate = legacy || {
+      name: 'Template Padrão',
+      description: 'Template padrão de inicialização',
+      defaultSteps: []
+    };
+
+    console.log('� FunnelsContext: Inicialização com template unificado');
+    console.log('📊 Template unificado:', unified?.name || 'N/A');
+    console.log('� Template legacy:', initialTemplate.name);
+    console.log('🎯 Steps carregadas:', initialTemplate.defaultSteps.length);
+
     return initialTemplate.defaultSteps;
   });
   const [loading, setLoading] = useState(false);
@@ -438,12 +482,29 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
   }, [steps, currentFunnelId, loading, error, debug]);
 
   const getTemplate = useCallback((templateId: string) => {
-    const template = FUNNEL_TEMPLATES[templateId as keyof typeof FUNNEL_TEMPLATES];
-    if (!template) {
-      console.warn(`Template ${templateId} não encontrado. Usando template padrão.`);
-      return FUNNEL_TEMPLATES['quiz-vazio'];
+    // ✅ FASE 2: Usar mapeamento unificado com fallback legacy
+    const { unified, legacy } = getTemplateWithFallback(templateId);
+
+    if (unified) {
+      return {
+        name: unified.name,
+        description: unified.description,
+        // Manter compatibilidade com estrutura legacy para defaultSteps
+        defaultSteps: legacy?.defaultSteps || []
+      };
     }
-    return template;
+
+    if (legacy) {
+      return legacy;
+    }
+
+    // Fallback final
+    console.warn(`❌ Nenhum template encontrado para ${templateId}. Usando fallback.`);
+    return FUNNEL_TEMPLATES['quiz-vazio'] || {
+      name: 'Template Básico',
+      description: 'Template básico de fallback',
+      defaultSteps: []
+    };
   }, []);
 
   // Função para obter blocos de um template específico

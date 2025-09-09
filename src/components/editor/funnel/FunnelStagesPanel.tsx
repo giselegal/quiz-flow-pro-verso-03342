@@ -9,6 +9,35 @@ import { useStepNavigationStore } from '@/stores/useStepNavigationStore';
 import { Copy, Eye, GripVertical, Navigation, Plus, Settings, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 
+// ✅ FASE 3: Interface adaptadora para stages do painel
+interface AdaptedFunnelStage {
+  id: string;
+  name: string;
+  description?: string;
+  order: number;
+  type: string;
+  isActive?: boolean;
+  blocksCount?: number;
+  // Propriedades do core
+  isRequired?: boolean;
+  isVisible?: boolean;
+}
+
+// ✅ HELPER: Adaptar stage legacy para interface unificada
+const adaptLegacyStage = (legacyStage: any): AdaptedFunnelStage => {
+  return {
+    id: legacyStage.id,
+    name: legacyStage.name,
+    description: legacyStage.description || '',
+    order: legacyStage.order,
+    type: legacyStage.type,
+    isActive: legacyStage.isActive ?? true,
+    blocksCount: legacyStage.blocksCount || 1,
+    isRequired: true,
+    isVisible: legacyStage.isActive ?? true,
+  };
+};
+
 interface FunnelStagesPanelProps {
   className?: string;
   onStageSelect?: (stageId: string) => void;
@@ -24,8 +53,11 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
   // Store de configurações de navegação
   const { updateStepConfig, getStepConfig } = useStepNavigationStore();
 
-  // Get stages from FunnelsContext (21 stages system)
-  const { steps: stages, loading, error, currentFunnelId } = useFunnels();
+  // Get stages from FunnelsContext (21 stages system) with adaptation
+  const { steps: rawStages, loading, error, currentFunnelId } = useFunnels();
+
+  // ✅ FASE 3: Adaptar stages legacy para interface unificada
+  const stages: AdaptedFunnelStage[] = rawStages ? rawStages.map(adaptLegacyStage) : [];
 
   // Get editor functionality for blocks and UI (optional properties)
   const editorContext = useEditor();
@@ -36,7 +68,8 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
 
   // 🔍 DEBUG: Status das etapas no painel
   console.log('🏗️ FunnelStagesPanel:', {
-    totalSteps: stages?.length || 0,
+    rawStagesLength: rawStages?.length || 0,
+    adaptedStagesLength: stages.length,
     currentFunnelId,
     activeStageId,
     loading,
@@ -210,10 +243,10 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
                     {/* 🎯 NOVO: Indicador de configuração personalizada de navegação */}
                     {getStepConfig(stage.id).requiredSelections !==
                       getStepConfig(stage.id).requiredSelections && (
-                      <Badge variant="default" className="text-xs bg-blue-500">
-                        ⚙️ Custom
-                      </Badge>
-                    )}
+                        <Badge variant="default" className="text-xs bg-blue-500">
+                          ⚙️ Custom
+                        </Badge>
+                      )}
                   </div>
                   <div className="flex gap-1">
                     <Button

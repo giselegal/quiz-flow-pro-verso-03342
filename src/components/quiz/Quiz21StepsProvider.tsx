@@ -3,7 +3,37 @@ import { useQuizAnalytics } from '@/hooks/useQuizAnalytics';
 import { useQuizLogic } from '@/hooks/useQuizLogic';
 import { useSupabaseQuiz } from '@/hooks/useSupabaseQuiz';
 import { useStepNavigationStore } from '@/stores/useStepNavigationStore';
+import { trackQuizStarted, trackStepViewed, trackOptionSelected } from '@/services/simpleAnalytics';
 import React, { createContext, useCallback, useContext, useState } from 'react';
+
+// ✅ FASE 3: Interface adaptadora para compatibilidade entre core e legacy
+interface AdaptedFunnelStep {
+  id: string;
+  name: string;
+  description?: string;
+  order: number;
+  type: string;
+  isActive?: boolean;
+  blocksCount?: number;
+  // Propriedades do core
+  isRequired?: boolean;
+  isVisible?: boolean;
+}
+
+// ✅ HELPER: Adaptar step legacy para interface unificada
+const adaptLegacyStep = (legacyStep: any): AdaptedFunnelStep => {
+  return {
+    id: legacyStep.id,
+    name: legacyStep.name,
+    description: legacyStep.description || '',
+    order: legacyStep.order,
+    type: legacyStep.type,
+    isActive: legacyStep.isActive ?? true,
+    blocksCount: legacyStep.blocksCount || 1,
+    isRequired: true, // Default do core
+    isVisible: legacyStep.isActive ?? true,
+  };
+};
 
 interface Quiz21StepsContextType {
   // Estado
@@ -91,13 +121,16 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
 
   // 🎯 INTEGRAÇÃO: FunnelsContext para dados das etapas
   let funnels = funnelsContext;
-  let steps: any[] = [];
+  let steps: AdaptedFunnelStep[] = [];
 
   try {
-    steps = funnels.steps || [];
-    console.log('✅ Quiz21StepsProvider: FunnelsContext obtido com sucesso:', {
-      stepsLength: steps.length,
+    const rawSteps = funnels.steps || [];
+    steps = rawSteps.map(adaptLegacyStep);
+    console.log('✅ Quiz21StepsProvider: Steps adaptados com sucesso:', {
+      rawStepsLength: rawSteps.length,
+      adaptedStepsLength: steps.length,
       currentFunnelId: funnels.currentFunnelId,
+      firstStepAdapted: steps[0] ? `${steps[0].name} (${steps[0].type})` : 'nenhum',
     });
   } catch (error) {
     console.error('❌ Quiz21StepsProvider: Erro ao acessar FunnelsContext:', error);
@@ -105,15 +138,15 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
     steps = [];
     funnels = {
       steps: [],
-      setActiveStageId: () => {},
+      setActiveStageId: () => { },
       currentFunnelId: 'fallback',
-      setCurrentFunnelId: () => {},
-      setSteps: () => {},
+      setCurrentFunnelId: () => { },
+      setSteps: () => { },
       getTemplate: () => ({}),
       getTemplateBlocks: () => [],
-      updateFunnelStep: () => {},
-      addStepBlock: () => {},
-      saveFunnelToDatabase: async () => {},
+      updateFunnelStep: () => { },
+      addStepBlock: () => { },
+      saveFunnelToDatabase: async () => { },
       loading: false,
       error: String(error),
     };
@@ -227,6 +260,9 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
         return;
       }
 
+      // 📊 ANALYTICS: Track step viewed
+      trackStepViewed(step).catch(err => console.warn('Analytics error:', err));
+
       // 📊 ANALYTICS: Track step completion antes de mudar
       if (step > currentStep) {
         // Para trackStepComplete, converter answers para formato correto
@@ -259,7 +295,7 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
         console.log('🎯 Quiz21Steps: Navegou para etapa', step, 'stageId:', stageId);
       }
     },
-    [currentStep, answers, trackStepComplete, trackStepStart, debug]
+    [currentStep, answers, trackStepComplete, trackStepStart, debug, totalSteps]
   );
 
   // 🎯 Próxima etapa
@@ -291,6 +327,9 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
         });
       }
 
+      // 📊 ANALYTICS: Rastrear início do quiz
+      trackQuizStarted(name);
+
       // Salvar em session data
       setSessionData(prev => ({
         ...prev,
@@ -318,6 +357,9 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
 
       // 🗄️ SUPABASE: Salvar resposta no banco
       saveSupabaseAnswer({ questionId, optionId });
+
+      // 📊 ANALYTICS: Rastrear seleção de opção
+      trackOptionSelected(currentStep, optionId, value);
 
       // Atualizar seleções da etapa atual
       setCurrentStepSelections(prev => ({
