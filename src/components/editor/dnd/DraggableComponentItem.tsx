@@ -149,16 +149,16 @@ export const DraggableComponentItem: React.FC<DraggableComponentItemProps> = ({
     <div
       ref={setNodeRef}
       className={cn(
-        'ToolbarButton w-full h-auto p-3 flex flex-col items-start gap-2 text-left border border-stone-200 rounded-lg bg-white',
+        'ToolbarButton w-full h-auto p-3 flex flex-col items-start gap-2 text-left border border-gray-700/50 rounded-lg bg-gray-800/50 text-gray-300',
         // Cursor indicando draggable (sem animações)
         'cursor-grab',
         // Feedback de drag
-        isDragging && 'opacity-70 cursor-grabbing bg-blue-50 border-blue-400',
+        isDragging && 'opacity-70 cursor-grabbing bg-brand-brightBlue/20 border-brand-brightBlue/40',
         // Interatividade básica
-        'pointer-events-auto touch-manipulation select-none',
+        'pointer-events-auto touch-manipulation select-none hover:bg-gray-700/50 hover:border-brand-brightBlue/30 transition-colors',
         // Marcador
         'dnd-draggable-item',
-        disabled && 'opacity-30 cursor-not-allowed bg-gray-100',
+        disabled && 'opacity-30 cursor-not-allowed bg-gray-900/30',
         className
       )}
       style={style}

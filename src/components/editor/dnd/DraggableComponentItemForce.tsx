@@ -44,12 +44,12 @@ export const DraggableComponentItemForce: React.FC<DraggableComponentItemProps> 
       data={data}
       disabled={disabled}
       className={cn(
-        'ToolbarButton w-full h-auto p-3 flex flex-col items-start gap-2 text-left transition-all duration-200 border border-stone-200 rounded-lg bg-white group',
-        'cursor-grab hover:bg-blue-50 hover:border-blue-400',
-        'ring-2 ring-blue-200 hover:ring-blue-400',
+        'ToolbarButton w-full h-auto p-3 flex flex-col items-start gap-2 text-left transition-all duration-200 border border-gray-700/50 rounded-lg bg-gray-800/50 text-gray-300 group',
+        'cursor-grab hover:bg-gray-700/50 hover:border-brand-brightBlue/30',
+        'ring-2 ring-gray-700/30 hover:ring-brand-brightBlue/40',
         'pointer-events-auto touch-manipulation select-none',
         'dnd-draggable-item',
-        disabled && 'opacity-30 cursor-not-allowed bg-gray-100',
+        disabled && 'opacity-30 cursor-not-allowed bg-gray-900/30',
         className
       )}
       // Fallback: permitir adicionar por duplo clique
