@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { userResponseService } from '../../../services/userResponseService';
 import { StorageService } from '@/services/core/StorageService';
 import { unifiedQuizStorage } from '@/services/core/UnifiedQuizStorage';
+import { getFunnelSessionKey, getFunnelStepKey } from '@/utils/funnelStorageKeys';
 
 interface FormInputBlockProps extends BlockComponentProps {
   funnelId?: string;
@@ -114,23 +115,25 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
   const [value, setValue] = useState<string>('');
   const [isValid, setIsValid] = useState<boolean>(false);
   const [sessionId] = useState<string>(() => {
-    // Get or create session ID
-    const existing = localStorage.getItem('quiz_session_id');
+    // Get or create session ID PER FUNNEL usando função utilitária
+    const storageKey = getFunnelSessionKey(effectiveFunnelId);
+    const existing = localStorage.getItem(storageKey);
     if (existing) return existing;
 
-    const newSessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    localStorage.setItem('quiz_session_id', newSessionId);
+    const newSessionId = `session_${effectiveFunnelId}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    localStorage.setItem(storageKey, newSessionId);
     return newSessionId;
   });
 
-  // Carregar valor salvo se existir
+  // Carregar valor salvo se existir - ÚNICO POR FUNIL usando função utilitária
   useEffect(() => {
-    const savedValue = localStorage.getItem(`quiz_step_${block?.id}`);
+    const storageKey = getFunnelStepKey(effectiveFunnelId, block?.id || '');
+    const savedValue = localStorage.getItem(storageKey);
     if (savedValue) {
       setValue(savedValue);
       setIsValid(true);
     }
-  }, [block?.id]);
+  }, [block?.id, effectiveFunnelId]);
 
   const handleInputChange = async (newValue: string) => {
     setValue(newValue);
@@ -162,8 +165,8 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
     // Salvar automaticamente se válido
     if (valid && newValue.trim()) {
       try {
-        // Salvar resposta específica localmente
-        userResponseService.saveStepResponse(block?.id || '', newValue.trim());
+        // Salvar resposta específica localmente com funnelId
+        userResponseService.saveStepResponse(block?.id || '', newValue.trim(), effectiveFunnelId);
 
         // Se for o campo de nome, salvar no Supabase
         if (

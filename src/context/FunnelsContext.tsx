@@ -448,34 +448,49 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
 
   // Função para obter blocos de um template específico
   const getTemplateBlocks = useCallback((templateId: string, stepId: string) => {
-    // 🛡️ FUNÇÃO HELPER: Clone profundo dos blocos para evitar mutação compartilhada
-    const cloneBlocks = (blocks: any[]) => {
-      return blocks.map(block => ({
-        ...block,
-        id: `${templateId}-${stepId}-${block.id}`, // ID único por funil
-        content: { ...block.content },
-        properties: { ...block.properties }
-      }));
+    // 🛡️ FUNÇÃO HELPER: Clone profundo REAL dos blocos para evitar mutação compartilhada
+    const cloneBlocks = (blocks: any[], funnelId: string) => {
+      return blocks.map((block, index) => {
+        // Gerar ID único baseado no funnelId atual para garantir isolamento
+        const uniqueId = `${funnelId}-${stepId}-${block.id || `block-${index}`}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+        
+        return {
+          ...JSON.parse(JSON.stringify(block)), // Clone profundo real
+          id: uniqueId,
+          content: JSON.parse(JSON.stringify(block.content || {})),
+          properties: JSON.parse(JSON.stringify(block.properties || {})),
+          // Marcar com metadados para tracking
+          _metadata: {
+            originalBlockId: block.id,
+            funnelId: currentFunnelId,
+            templateId,
+            stepId,
+            clonedAt: new Date().toISOString()
+          }
+        };
+      });
     };
 
     // Verifica se é o template quiz-estilo-completo
-    if (templateId === 'quiz-estilo-completo') {
+    if (templateId === 'quiz-estilo-completo' || templateId === 'template-quiz-estilo-completo') {
       const originalBlocks = QUIZ_STYLE_21_STEPS_TEMPLATE[stepId] || [];
-      return cloneBlocks(originalBlocks);
+      const clonedBlocks = cloneBlocks(originalBlocks, currentFunnelId);
+      console.log(`🔄 [${currentFunnelId}] Template quiz-estilo-completo: ${clonedBlocks.length} blocos únicos para ${stepId}`);
+      return clonedBlocks;
     }
 
     // ✅ CORREÇÃO: Template funil-21-etapas também deve usar QUIZ_STYLE_21_STEPS_TEMPLATE
-    if (templateId === 'funil-21-etapas') {
-      console.log(`🔄 Carregando blocos para template funil-21-etapas, etapa ${stepId}`);
+    if (templateId === 'funil-21-etapas' || templateId === 'template-optimized-21-steps-funnel') {
+      console.log(`🔄 [${currentFunnelId}] Carregando blocos para template funil-21-etapas, etapa ${stepId}`);
       const originalBlocks = QUIZ_STYLE_21_STEPS_TEMPLATE[stepId] || [];
-      const clonedBlocks = cloneBlocks(originalBlocks);
-      console.log(`📦 Clonados ${clonedBlocks.length} blocos únicos para a etapa ${stepId}`);
+      const clonedBlocks = cloneBlocks(originalBlocks, currentFunnelId);
+      console.log(`📦 [${currentFunnelId}] Clonados ${clonedBlocks.length} blocos únicos para a etapa ${stepId}`);
       return clonedBlocks;
     }
 
     // Para outros templates, retorna array vazio (implementação futura)
     console.warn(
-      `⚠️ Template não suportado: ${templateId}, retornando array vazio para etapa ${stepId}`
+      `⚠️ [${currentFunnelId}] Template não suportado: ${templateId}, retornando array vazio para etapa ${stepId}`
     );
     return [];
   }, []);

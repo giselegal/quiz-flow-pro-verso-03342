@@ -262,7 +262,7 @@ export const userResponseService = {
     }
   },
 
-  async getResponse(componentId: string): Promise<string> {
+  async getResponse(componentId: string, funnelId?: string): Promise<string> {
     try {
       if (OFFLINE) {
         const stored = readLocal<any>(`quiz_response_${componentId}`);
@@ -275,8 +275,9 @@ export const userResponseService = {
             ''
           );
         }
-        // Fallback adicional: salvar-resposta-por-etapa
-        const stepStored = readLocal<any>(`quiz_step_${componentId}`);
+        // Fallback adicional: salvar-resposta-por-etapa com funnelId
+        const stepKey = funnelId ? `quiz_step_${funnelId}_${componentId}` : `quiz_step_${componentId}`;
+        const stepStored = readLocal<any>(stepKey);
         if (stepStored) {
           const d = stepStored;
           return (
@@ -429,9 +430,11 @@ export const userResponseService = {
     }
   },
 
-  saveStepResponse(stepId: string, response: any): void {
-    console.log('💾 Saving step response locally:', stepId, response);
-    StorageService.safeSetJSON(`quiz_step_${stepId}`, response);
+  saveStepResponse(stepId: string, response: any, funnelId?: string): void {
+    // 🎯 USAR FUNNEL ID PARA CHAVE ÚNICA
+    const storageKey = funnelId ? `quiz_step_${funnelId}_${stepId}` : `quiz_step_${stepId}`;
+    console.log('💾 Saving step response locally with funnelId:', storageKey, response);
+    StorageService.safeSetJSON(storageKey, response);
   },
 
   saveUserName(userId: string, name: string): void {
