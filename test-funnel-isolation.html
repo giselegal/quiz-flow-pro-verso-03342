@@ -1,75 +1,101 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Teste de Isolamento entre Funnels</title>
     <style>
-        body { 
-            font-family: Arial, sans-serif; 
+        body {
+            font-family: Arial, sans-serif;
             margin: 20px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
         }
-        .container { 
-            max-width: 1200px; 
-            margin: 0 auto; 
-            background: rgba(0,0,0,0.1);
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(0, 0, 0, 0.1);
             padding: 20px;
             border-radius: 12px;
         }
-        .test-section { 
-            margin: 20px 0; 
-            padding: 15px; 
-            background: rgba(255,255,255,0.1);
+
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 8px;
             border-left: 4px solid #00ff88;
         }
-        button { 
-            padding: 10px 20px; 
-            margin: 5px; 
+
+        button {
+            padding: 10px 20px;
+            margin: 5px;
             background: #00ff88;
             color: #000;
-            border: none; 
-            border-radius: 5px; 
+            border: none;
+            border-radius: 5px;
             cursor: pointer;
             font-weight: bold;
         }
-        button:hover { 
+
+        button:hover {
             background: #00cc6a;
             transform: translateY(-2px);
             transition: all 0.2s;
         }
-        .result { 
-            margin: 10px 0; 
-            padding: 10px; 
-            background: rgba(0,0,0,0.2);
+
+        .result {
+            margin: 10px 0;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.2);
             border-radius: 5px;
             font-family: monospace;
         }
-        .pass { color: #00ff88; }
-        .fail { color: #ff6b6b; }
-        .warning { color: #ffd93d; }
-        h1, h2 { text-align: center; }
-        h1 { color: #00ff88; text-shadow: 0 0 10px rgba(0,255,136,0.3); }
-        iframe { 
-            width: 100%; 
-            height: 300px; 
-            border: 2px solid rgba(255,255,255,0.2); 
+
+        .pass {
+            color: #00ff88;
+        }
+
+        .fail {
+            color: #ff6b6b;
+        }
+
+        .warning {
+            color: #ffd93d;
+        }
+
+        h1,
+        h2 {
+            text-align: center;
+        }
+
+        h1 {
+            color: #00ff88;
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+        }
+
+        iframe {
+            width: 100%;
+            height: 300px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
             border-radius: 8px;
             margin: 10px 0;
         }
-        .grid { 
-            display: grid; 
-            grid-template-columns: 1fr 1fr; 
-            gap: 20px; 
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1>🔒 Teste de Isolamento entre Funnels</h1>
-        
+
         <div class="test-section">
             <h2>📋 Objetivo do Teste</h2>
             <p>Verificar se cada funnel mantém seus dados isolados, sem interferir em outros funnels ou templates.</p>
@@ -77,26 +103,26 @@
 
         <div class="test-section">
             <h2>🧪 Testes de Isolamento</h2>
-            
+
             <button onclick="testLocalStorageIsolation()">Testar Isolamento do LocalStorage</button>
             <button onclick="testBlockInstantiation()">Testar Instanciação de Blocos</button>
             <button onclick="testFunnelContexts()">Testar Contextos de Funnel</button>
             <button onclick="clearAllData()">Limpar Todos os Dados</button>
-            
+
             <div id="testResults" class="result"></div>
         </div>
 
         <div class="test-section">
             <h2>🔀 Teste Prático com 2 Funnels</h2>
             <p>Abra dois funnels diferentes e verifique se as mudanças em um não afetam o outro:</p>
-            
+
             <div class="grid">
                 <div>
                     <h3>Funnel A (Template Quiz)</h3>
                     <button onclick="openFunnel('quiz-template')">Abrir Quiz Template</button>
                     <iframe id="funnelA" src="about:blank"></iframe>
                 </div>
-                
+
                 <div>
                     <h3>Funnel B (Template Lead Magnet)</h3>
                     <button onclick="openFunnel('lead-magnet')">Abrir Lead Magnet</button>
@@ -134,11 +160,11 @@
 
         function testLocalStorageIsolation() {
             log('🧪 Iniciando teste de isolamento do localStorage...', 'info');
-            
+
             const testFunnels = ['funnel-1', 'funnel-2', 'funnel-3'];
             let passed = 0;
             let total = 0;
-            
+
             // Limpar dados anteriores
             testFunnels.forEach(funnelId => {
                 Object.values(funnelStorageKeys).forEach(keyFn => {
@@ -146,19 +172,19 @@
                         try {
                             localStorage.removeItem(keyFn(funnelId));
                             localStorage.removeItem(keyFn(funnelId, 'test-block'));
-                        } catch (e) {}
+                        } catch (e) { }
                     }
                 });
             });
-            
+
             // Teste 1: Verificar chaves únicas por funnel
             testFunnels.forEach(funnelId => {
                 const sessionKey = funnelStorageKeys.session(funnelId);
                 const editorKey = funnelStorageKeys.editorState(funnelId);
-                
+
                 localStorage.setItem(sessionKey, JSON.stringify({ funnelId, data: `session-${funnelId}` }));
                 localStorage.setItem(editorKey, JSON.stringify({ funnelId, data: `editor-${funnelId}` }));
-                
+
                 total++;
                 if (localStorage.getItem(sessionKey)) {
                     passed++;
@@ -167,15 +193,15 @@
                     log(`❌ Funnel ${funnelId}: falha ao criar chave de sessão`, 'fail');
                 }
             });
-            
+
             // Teste 2: Verificar isolamento entre funnels
             testFunnels.forEach((funnelId, index) => {
                 const otherFunnels = testFunnels.filter((_, i) => i !== index);
-                
+
                 otherFunnels.forEach(otherFunnelId => {
                     const myKey = funnelStorageKeys.session(funnelId);
                     const otherKey = funnelStorageKeys.session(otherFunnelId);
-                    
+
                     total++;
                     if (myKey !== otherKey) {
                         passed++;
@@ -185,31 +211,31 @@
                     }
                 });
             });
-            
-            log(`📊 Resultado: ${passed}/${total} testes passaram (${Math.round(passed/total*100)}%)`, passed === total ? 'pass' : 'fail');
+
+            log(`📊 Resultado: ${passed}/${total} testes passaram (${Math.round(passed / total * 100)}%)`, passed === total ? 'pass' : 'fail');
         }
 
         function testBlockInstantiation() {
             log('🧩 Testando instanciação de blocos...', 'info');
-            
+
             const templateBlocks = [
                 { id: 'block-1', type: 'heading', text: 'Template Heading' },
                 { id: 'block-2', type: 'form', fields: ['name', 'email'] }
             ];
-            
+
             const funnelIds = ['funnel-a', 'funnel-b'];
             let passed = 0;
             let total = 0;
-            
+
             // Simula clonagem de blocos com IDs únicos
             funnelIds.forEach(funnelId => {
                 const clonedBlocks = templateBlocks.map(block => ({
                     ...block,
                     id: `${funnelId}_${block.id}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
                 }));
-                
+
                 localStorage.setItem(funnelStorageKeys.blocks(funnelId), JSON.stringify(clonedBlocks));
-                
+
                 total++;
                 if (clonedBlocks.every(block => block.id.includes(funnelId))) {
                     passed++;
@@ -218,15 +244,15 @@
                     log(`❌ Blocos do ${funnelId} não têm IDs únicos`, 'fail');
                 }
             });
-            
+
             // Verificar se os IDs são diferentes entre funnels
             const blocksA = JSON.parse(localStorage.getItem(funnelStorageKeys.blocks('funnel-a')) || '[]');
             const blocksB = JSON.parse(localStorage.getItem(funnelStorageKeys.blocks('funnel-b')) || '[]');
-            
+
             const idsA = blocksA.map(b => b.id);
             const idsB = blocksB.map(b => b.id);
             const hasCommonIds = idsA.some(id => idsB.includes(id));
-            
+
             total++;
             if (!hasCommonIds) {
                 passed++;
@@ -234,29 +260,29 @@
             } else {
                 log(`❌ IDs de blocos compartilhados detectados`, 'fail');
             }
-            
-            log(`📊 Resultado: ${passed}/${total} testes passaram (${Math.round(passed/total*100)}%)`, passed === total ? 'pass' : 'fail');
+
+            log(`📊 Resultado: ${passed}/${total} testes passaram (${Math.round(passed / total * 100)}%)`, passed === total ? 'pass' : 'fail');
         }
 
         function testFunnelContexts() {
             log('📝 Testando contextos de funnel...', 'info');
-            
+
             const testScenarios = [
                 { funnelId: 'quiz-001', stepId: 'step-1', response: 'Resposta A' },
                 { funnelId: 'quiz-002', stepId: 'step-1', response: 'Resposta B' },
                 { funnelId: 'lead-001', stepId: 'step-1', response: 'Resposta C' }
             ];
-            
+
             let passed = 0;
             let total = 0;
-            
+
             // Simula salvamento de respostas por funnel
             testScenarios.forEach(scenario => {
                 const responseKey = funnelStorageKeys.responses(scenario.funnelId);
                 const responses = JSON.parse(localStorage.getItem(responseKey) || '{}');
                 responses[scenario.stepId] = scenario.response;
                 localStorage.setItem(responseKey, JSON.stringify(responses));
-                
+
                 total++;
                 const saved = JSON.parse(localStorage.getItem(responseKey) || '{}');
                 if (saved[scenario.stepId] === scenario.response) {
@@ -266,16 +292,16 @@
                     log(`❌ Falha ao salvar resposta para ${scenario.funnelId}`, 'fail');
                 }
             });
-            
+
             // Verificar isolamento de respostas
             testScenarios.forEach((scenario, index) => {
                 const otherScenarios = testScenarios.filter((_, i) => i !== index);
-                
+
                 otherScenarios.forEach(otherScenario => {
                     total++;
                     const myResponses = JSON.parse(localStorage.getItem(funnelStorageKeys.responses(scenario.funnelId)) || '{}');
                     const otherResponses = JSON.parse(localStorage.getItem(funnelStorageKeys.responses(otherScenario.funnelId)) || '{}');
-                    
+
                     if (JSON.stringify(myResponses) !== JSON.stringify(otherResponses)) {
                         passed++;
                         log(`✅ Respostas isoladas: ${scenario.funnelId} ≠ ${otherScenario.funnelId}`, 'pass');
@@ -284,15 +310,15 @@
                     }
                 });
             });
-            
-            log(`📊 Resultado: ${passed}/${total} testes passaram (${Math.round(passed/total*100)}%)`, passed === total ? 'pass' : 'fail');
+
+            log(`📊 Resultado: ${passed}/${total} testes passaram (${Math.round(passed / total * 100)}%)`, passed === total ? 'pass' : 'fail');
         }
 
         function openFunnel(templateType) {
             const baseUrl = window.location.origin;
             const funnelId = `${templateType}-${Date.now()}`;
             const url = `${baseUrl}/?funnel=${funnelId}`;
-            
+
             if (templateType === 'quiz-template') {
                 document.getElementById('funnelA').src = url;
                 log(`🔗 Funnel A aberto: ${funnelId}`, 'info');
@@ -304,11 +330,11 @@
 
         function showAllFunnelData() {
             log('📊 Mapeando todos os dados de funnels...', 'info');
-            
+
             const funnelData = {};
             const statusDiv = document.getElementById('funnelDataStatus');
             statusDiv.innerHTML = '';
-            
+
             // Scanear localStorage para dados de funnels
             for (let i = 0; i < localStorage.length; i++) {
                 const key = localStorage.key(i);
@@ -327,15 +353,15 @@
                     }
                 }
             }
-            
+
             const funnelCount = Object.keys(funnelData).length;
             if (funnelCount === 0) {
                 statusDiv.innerHTML = '<div class="warning">⚠️ Nenhum dado de funnel encontrado no localStorage</div>';
                 return;
             }
-            
+
             statusDiv.innerHTML = `<div class="pass">✅ ${funnelCount} funnel(s) encontrado(s)</div>`;
-            
+
             Object.entries(funnelData).forEach(([funnelId, data]) => {
                 const keyCount = Object.keys(data).length;
                 statusDiv.innerHTML += `
@@ -348,7 +374,7 @@
                     </div>
                 `;
             });
-            
+
             log(`📋 ${funnelCount} funnel(s) mapeado(s) com sucesso`, 'pass');
         }
 
@@ -360,12 +386,12 @@
                     keysToRemove.push(key);
                 }
             }
-            
+
             keysToRemove.forEach(key => localStorage.removeItem(key));
-            
+
             document.getElementById('testResults').innerHTML = '';
             document.getElementById('funnelDataStatus').innerHTML = '';
-            
+
             log(`🧹 ${keysToRemove.length} chaves de funnel removidas`, 'warning');
         }
 
@@ -376,4 +402,5 @@
         });
     </script>
 </body>
+
 </html>

@@ -453,7 +453,7 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
       return blocks.map((block, index) => {
         // Gerar ID único baseado no funnelId atual para garantir isolamento
         const uniqueId = `${funnelId}-${stepId}-${block.id || `block-${index}`}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-        
+
         return {
           ...JSON.parse(JSON.stringify(block)), // Clone profundo real
           id: uniqueId,
