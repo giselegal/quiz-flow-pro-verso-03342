@@ -59,7 +59,7 @@ export const DraggableComponentItemForce: React.FC<DraggableComponentItemProps> 
             detail: { blockType, source: 'sidebar-double-click' },
           });
           window.dispatchEvent(ev);
-        } catch {}
+        } catch { }
       }}
     >
       {/* Icon and Title */}

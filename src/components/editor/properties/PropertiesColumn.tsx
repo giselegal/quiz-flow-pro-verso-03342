@@ -1,11 +1,7 @@
 import React, { Suspense } from 'react';
 import { Block } from '@/types/editor';
 import { cn } from '@/lib/utils';
-
-// Import the enhanced properties panel with 100% coverage
-const EnhancedPropertiesPanel = React.lazy(
-  () => import('@/components/editor/properties/EnhancedPropertiesPanel')
-);
+import RegistryPropertiesPanel from '@/components/universal/RegistryPropertiesPanel';
 
 export interface PropertiesColumnProps {
   selectedBlock: Block | undefined;
@@ -24,7 +20,7 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
   onUpdate,
   onClose,
   onDelete,
-  onDuplicate,
+  onDuplicate: _onDuplicate,
   onReset: _onReset,
   previewMode: _previewMode,
   onPreviewModeChange: _onPreviewModeChange,
@@ -47,14 +43,13 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
             Carregando painel aprimorado…
           </div>
         }>
-          {/* Enhanced Properties Panel with 100% Coverage */}
+          {/* Registry Properties Panel with Canonical Implementation */}
           <div className="flex-1">
-            <EnhancedPropertiesPanel
+            <RegistryPropertiesPanel
               selectedBlock={selectedBlock as any}
-              onUpdate={onUpdate}
+              onUpdate={(_blockId: string, updates: Record<string, any>) => onUpdate(updates)}
               onClose={onClose}
-              onDelete={onDelete}
-              onDuplicate={onDuplicate}
+              onDelete={(_blockId: string) => onDelete()}
             />
           </div>
         </Suspense>

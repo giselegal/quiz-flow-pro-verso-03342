@@ -137,13 +137,13 @@ export const DraggableComponentItem: React.FC<DraggableComponentItemProps> = ({
   // ✅ CORRIGIDO: CSS Transform + pointer-events garantidos
   const style = transform
     ? {
-        transform: CSS.Transform.toString({ ...transform, scaleX: 1, scaleY: 1 }), // evita crescimento
-        zIndex: isDragging ? 999 : 'auto',
-        pointerEvents: 'auto' as const,
-      }
+      transform: CSS.Transform.toString({ ...transform, scaleX: 1, scaleY: 1 }), // evita crescimento
+      zIndex: isDragging ? 999 : 'auto',
+      pointerEvents: 'auto' as const,
+    }
     : {
-        pointerEvents: 'auto' as const,
-      };
+      pointerEvents: 'auto' as const,
+    };
 
   return (
     <div
@@ -173,7 +173,7 @@ export const DraggableComponentItem: React.FC<DraggableComponentItemProps> = ({
             detail: { blockType, source: 'sidebar-double-click' },
           });
           window.dispatchEvent(ev);
-        } catch {}
+        } catch { }
       }}
       {...attributes}
       {...listeners}

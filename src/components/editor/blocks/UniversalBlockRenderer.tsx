@@ -70,7 +70,7 @@ const getMarginClass = (
   return `${prefix}-32`; // Máximo suportado
 };
 
-const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
+const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = React.memo(({
   block,
   isSelected = false,
   onClick,
@@ -81,7 +81,10 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
   const normalizedBlock = normalizeBlockProps(block);
 
   // ✅ Buscar componente otimizado com fallback inteligente
-  const Component = getOptimizedBlockComponent(normalizedBlock.type);
+  const Component = React.useMemo(() =>
+    getOptimizedBlockComponent(normalizedBlock.type),
+    [normalizedBlock.type]
+  );
 
   // Processar propriedades de container usando o hook
   const { containerClasses, inlineStyles, processedProperties } = useContainerProperties(
@@ -89,31 +92,51 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
   );
 
   // 🎚️ Controle de escala universal (aplicado a TODOS os componentes via wrapper)
-  const {
-    scale: rawScale,
-    scaleX: rawScaleX,
-    scaleY: rawScaleY,
-    scaleClass,
-    scaleOrigin = 'center',
-  } = (normalizedBlock.properties as any) || {};
+  const scaleTransform = React.useMemo(() => {
+    const {
+      scale: rawScale,
+      scaleX: rawScaleX,
+      scaleY: rawScaleY,
+      scaleClass,
+      scaleOrigin = 'center',
+    } = (normalizedBlock.properties as any) || {};
 
-  // Normalizar valores de escala
-  let parsedScale = typeof rawScale === 'string' ? parseFloat(rawScale) : rawScale;
-  const parsedScaleX = typeof rawScaleX === 'string' ? parseFloat(rawScaleX) : rawScaleX;
-  const parsedScaleY = typeof rawScaleY === 'string' ? parseFloat(rawScaleY) : rawScaleY;
+    // Normalizar valores de escala
+    let parsedScale = typeof rawScale === 'string' ? parseFloat(rawScale) : rawScale;
+    const parsedScaleX = typeof rawScaleX === 'string' ? parseFloat(rawScaleX) : rawScaleX;
+    const parsedScaleY = typeof rawScaleY === 'string' ? parseFloat(rawScaleY) : rawScaleY;
 
-  // Compatibilidade: se vier em porcentagem (ex.: 100, 75), converter para fator
-  if (typeof parsedScale === 'number' && parsedScale > 2) {
-    parsedScale = parsedScale / 100;
-  }
+    // Compatibilidade: se vier em porcentagem (ex.: 100, 75), converter para fator
+    if (typeof parsedScale === 'number' && parsedScale > 2) {
+      parsedScale = parsedScale / 100;
+    }
 
-  const sx = parsedScaleX ?? parsedScale ?? 1;
-  const sy = parsedScaleY ?? parsedScale ?? 1;
+    const sx = parsedScaleX ?? parsedScale ?? 1;
+    const sy = parsedScaleY ?? parsedScale ?? 1;
 
-  // Mesclar transform existente com a escala
-  const baseTransform = (inlineStyles as any)?.transform as string | undefined;
-  const scaleTransform = sx === 1 && sy === 1 ? undefined : `scale(${sx}, ${sy})`;
-  const mergedTransform = [baseTransform, scaleTransform].filter(Boolean).join(' ');
+    // Mesclar transform existente com a escala
+    const baseTransform = (inlineStyles as any)?.transform as string | undefined;
+    const scaleTransformValue = sx === 1 && sy === 1 ? undefined : `scale(${sx}, ${sy})`;
+    const mergedTransform = [baseTransform, scaleTransformValue].filter(Boolean).join(' ');
+
+    return {
+      scaleClass,
+      scaleOrigin,
+      mergedTransform,
+      scaleTransformValue
+    };
+  }, [normalizedBlock.properties, inlineStyles]);
+
+  // Otimizar classes de margem com useMemo
+  const marginClasses = React.useMemo(() => {
+    const props = normalizedBlock.properties || {};
+    return [
+      getMarginClass(props.marginTop ?? 0, 'top'),
+      getMarginClass(props.marginBottom ?? 0, 'bottom'),
+      getMarginClass(props.marginLeft ?? 0, 'left'),
+      getMarginClass(props.marginRight ?? 0, 'right')
+    ].filter(Boolean).join(' ');
+  }, [normalizedBlock.properties]);
 
   // Log para debug das propriedades de container (apenas em desenvolvimento)
   if (
@@ -149,19 +172,16 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
             'block-wrapper transition-all duration-200',
             containerClasses,
             // Classe de escala opcional (Tailwind), ex.: 'scale-95 md:scale-100'
-            scaleClass,
-            // Margens universais com controles deslizantes
-            getMarginClass(normalizedBlock.properties?.marginTop ?? 0, 'top'),
-            getMarginClass(normalizedBlock.properties?.marginBottom ?? 0, 'bottom'),
-            getMarginClass(normalizedBlock.properties?.marginLeft ?? 0, 'left'),
-            getMarginClass(normalizedBlock.properties?.marginRight ?? 0, 'right'),
+            scaleTransform.scaleClass,
+            // Margens universais otimizadas
+            marginClasses,
             isSelected && 'ring-2 ring-[#B89B7A] ring-offset-2'
           )}
           onClick={onClick}
           style={{
             ...inlineStyles,
-            ...(mergedTransform && { transform: mergedTransform }),
-            ...(scaleTransform && { transformOrigin: scaleOrigin, willChange: 'transform' }),
+            ...(scaleTransform.mergedTransform && { transform: scaleTransform.mergedTransform }),
+            ...(scaleTransform.scaleTransformValue && { transformOrigin: scaleTransform.scaleOrigin, willChange: 'transform' }),
           }}
         >
           <React.Suspense fallback={<div className="animate-pulse bg-gray-200 h-16 rounded" />}>
@@ -190,6 +210,26 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
       />
     );
   }
-};
+}, (prevProps, nextProps) => {
+  // Comparação otimizada para evitar re-renders desnecessários
+  if (prevProps.isSelected !== nextProps.isSelected) return false;
+  if (prevProps.mode !== nextProps.mode) return false;
+  if (prevProps.block.id !== nextProps.block.id) return false;
+  if (prevProps.block.type !== nextProps.block.type) return false;
+
+  // Comparação superficial das propriedades do bloco
+  const prevProps_ = prevProps.block.properties || {};
+  const nextProps_ = nextProps.block.properties || {};
+  const prevKeys = Object.keys(prevProps_);
+  const nextKeys = Object.keys(nextProps_);
+
+  if (prevKeys.length !== nextKeys.length) return false;
+
+  for (const key of prevKeys) {
+    if (prevProps_[key] !== nextProps_[key]) return false;
+  }
+
+  return true;
+});
 
 export default UniversalBlockRenderer;

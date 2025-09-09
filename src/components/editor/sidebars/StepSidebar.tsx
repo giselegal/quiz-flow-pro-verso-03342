@@ -49,8 +49,8 @@ const StepSidebarComponent: React.FC<StepSidebarProps> = ({
                 onClick={() => onSelectStep(step)}
                 className={cn(
                   'w-full text-left p-2 rounded border border-transparent text-xs transition-all',
-                  isActive 
-                    ? 'bg-gradient-to-r from-brand-brightBlue/20 to-brand-brightPink/20 border-brand-brightBlue/30 text-gray-200' 
+                  isActive
+                    ? 'bg-gradient-to-r from-brand-brightBlue/20 to-brand-brightPink/20 border-brand-brightBlue/30 text-gray-200'
                     : 'hover:bg-gray-800/50 text-gray-400 hover:text-gray-300'
                 )}
               >

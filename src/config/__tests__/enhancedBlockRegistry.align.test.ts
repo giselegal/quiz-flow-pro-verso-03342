@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import {
     ENHANCED_BLOCK_REGISTRY,
-    generateBlockDefinitions,
-    getBlockComponent,
-} from '@/config/enhancedBlockRegistry';
+    getEnhancedBlockComponent,
+} from '@/components/editor/blocks/EnhancedBlockRegistry';
+import { generateBlockDefinitions, getBlockComponent } from '@/config/enhancedBlockRegistry';
 
 // Contrato simples:
 // - Para cada definição gerada, deve existir uma entry correspondente no registry.

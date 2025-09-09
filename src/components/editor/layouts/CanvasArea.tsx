@@ -181,8 +181,8 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
                   disabled={!actions.canRedo}
                   className={cn(
                     'flex items-center gap-1.5 px-3 py-2 text-sm font-medium rounded-r-lg transition-colors',
-                    actions.canRedo 
-                      ? 'text-white bg-gray-800/50 hover:bg-gray-700/60 border border-gray-700/50' 
+                    actions.canRedo
+                      ? 'text-white bg-gray-800/50 hover:bg-gray-700/60 border border-gray-700/50'
                       : 'text-gray-500 cursor-not-allowed bg-gray-900/30 border border-gray-800/30'
                   )}
                   title="Refazer (Ctrl+Y)"
@@ -285,8 +285,8 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
                   onClick={() => setMode('edit')}
                   className={cn(
                     'flex items-center gap-2 px-4 py-2 text-sm rounded-md font-medium transition-colors',
-                    mode === 'edit' 
-                      ? 'bg-gradient-to-r from-brand-brightBlue to-brand-brightPink text-white shadow-sm' 
+                    mode === 'edit'
+                      ? 'bg-gradient-to-r from-brand-brightBlue to-brand-brightPink text-white shadow-sm'
                       : 'text-gray-300 hover:text-white hover:bg-gray-700/50'
                   )}
                 >
@@ -300,8 +300,8 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
                   onClick={() => setMode('preview')}
                   className={cn(
                     'flex items-center gap-2 px-4 py-2 text-sm rounded-md font-medium transition-colors',
-                    mode === 'preview' 
-                      ? 'bg-gradient-to-r from-brand-brightBlue to-brand-brightPink text-white shadow-sm' 
+                    mode === 'preview'
+                      ? 'bg-gradient-to-r from-brand-brightBlue to-brand-brightPink text-white shadow-sm'
                       : 'text-gray-300 hover:text-white hover:bg-gray-700/50'
                   )}
                 >
