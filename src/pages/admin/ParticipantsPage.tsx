@@ -7,6 +7,8 @@
 import React, { useState, useCallback } from 'react';
 import ParticipantsTable from '@/components/dashboard/ParticipantsTable';
 import AnalyticsDashboard from '@/components/dashboard/AnalyticsDashboard';
+import AdvancedAnalytics from '@/components/dashboard/AdvancedAnalytics';
+import ReportGenerator from '@/components/dashboard/ReportGenerator';
 import DashboardControls from '@/components/dashboard/DashboardControls';
 
 const ParticipantsPage: React.FC = () => {
@@ -61,6 +63,16 @@ const ParticipantsPage: React.FC = () => {
                 </section>
             )}
 
+            {/* ANALYTICS AVANÇADOS */}
+            {(currentView === 'analytics' || currentView === 'both') && (
+                <section>
+                    <h2 className="text-xl font-semibold text-[#432818] mb-4">
+                        🎯 Análises Avançadas
+                    </h2>
+                    <AdvancedAnalytics filters={analyticsFilters} />
+                </section>
+            )}
+
             {/* TABELA DE PARTICIPANTES */}
             {(currentView === 'table' || currentView === 'both') && (
                 <section>
@@ -68,6 +80,16 @@ const ParticipantsPage: React.FC = () => {
                         📋 Lista Detalhada de Participantes
                     </h2>
                     <ParticipantsTable />
+                </section>
+            )}
+
+            {/* GERADOR DE RELATÓRIOS */}
+            {(currentView === 'analytics' || currentView === 'both') && (
+                <section>
+                    <h2 className="text-xl font-semibold text-[#432818] mb-4">
+                        📄 Relatórios e Exportação
+                    </h2>
+                    <ReportGenerator />
                 </section>
             )}
         </div>
