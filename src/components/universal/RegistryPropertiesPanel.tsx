@@ -277,6 +277,76 @@ const RegistryPropertiesPanel: React.FC<RegistryPropertiesPanelProps> = ({
             />
           </div>
         );
+      case 'array':
+        return (
+          <div key={schema.key} className="space-y-1">
+            {commonLabel}
+            <div className="border border-gray-200 rounded-md p-2 space-y-2 bg-gray-50">
+              {(Array.isArray(value) ? value : []).map((item: any, index: number) => (
+                <div key={index} className="flex items-center gap-2">
+                  <Input
+                    value={item}
+                    onChange={e => {
+                      const newArray = [...(Array.isArray(value) ? value : [])];
+                      newArray[index] = e.target.value;
+                      handleUpdate({ [schema.key]: newArray });
+                    }}
+                    className="h-8 text-xs flex-1"
+                    placeholder={`Item ${index + 1}`}
+                  />
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {
+                      const newArray = [...(Array.isArray(value) ? value : [])];
+                      newArray.splice(index, 1);
+                      handleUpdate({ [schema.key]: newArray });
+                    }}
+                    className="h-8 w-8 p-0 hover:bg-red-100 hover:text-red-600"
+                  >
+                    <Minus className="h-3 w-3" />
+                  </Button>
+                </div>
+              ))}
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  const newArray = [...(Array.isArray(value) ? value : []), ''];
+                  handleUpdate({ [schema.key]: newArray });
+                }}
+                className="h-8 w-full border-dashed border border-gray-300 hover:border-gray-400"
+              >
+                <Plus className="h-3 w-3 mr-1" />
+                Adicionar Item
+              </Button>
+            </div>
+          </div>
+        );
+      case 'object':
+        return (
+          <div key={schema.key} className="space-y-1">
+            {commonLabel}
+            <div className="border border-gray-200 rounded-md p-2 space-y-2 bg-gray-50">
+              <Textarea
+                value={JSON.stringify(value || {}, null, 2)}
+                onChange={e => {
+                  try {
+                    const parsed = JSON.parse(e.target.value);
+                    handleUpdate({ [schema.key]: parsed });
+                  } catch {
+                    // Ignorar erros de parsing enquanto digita
+                  }
+                }}
+                className="text-xs min-h-[100px] font-mono"
+                placeholder="{ }"
+              />
+              <div className="text-[10px] text-gray-500">
+                Edite o JSON diretamente. Deve ser um objeto válido.
+              </div>
+            </div>
+          </div>
+        );
       default:
         return (
           <div key={schema.key} className="space-y-1 opacity-60">
