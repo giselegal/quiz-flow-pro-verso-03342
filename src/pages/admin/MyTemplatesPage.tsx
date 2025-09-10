@@ -15,7 +15,7 @@
  * Separada de "Meus Funis" para manter organização clara entre funis e templates.
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -34,6 +34,7 @@ import {
 import { useLocation } from 'wouter';
 import { AdminBreadcrumbs } from '@/components/admin/AdminBreadcrumbs';
 import useMyTemplates, { UserTemplate } from '@/hooks/useMyTemplates';
+import { getTemplateThumbnail } from '@/services/templateThumbnailService';
 import {
     Select,
     SelectContent,
@@ -65,6 +66,7 @@ const MyTemplatesPage: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState<string>('all');
     const [templateToDelete, setTemplateToDelete] = useState<UserTemplate | null>(null);
+    const [thumbnails, setThumbnails] = useState<Record<string, string>>({});
 
     // Hook para gerenciar templates personalizados
     const {
@@ -75,7 +77,37 @@ const MyTemplatesPage: React.FC = () => {
         incrementUsage,
         templatesCount,
         totalUsage,
-    } = useMyTemplates();    // Filtrar templates
+    } = useMyTemplates();
+
+    // Carregar thumbnails quando templates carregarem
+    useEffect(() => {
+        const loadThumbnails = async () => {
+            if (templates.length === 0) return;
+
+            console.log('🖼️ Carregando thumbnails para', templates.length, 'templates...');
+            
+            const thumbnailPromises = templates.map(async (template) => {
+                try {
+                    const thumbnailUrl = await getTemplateThumbnail(template.id);
+                    return { id: template.id, url: thumbnailUrl };
+                } catch (error) {
+                    console.error(`Erro ao carregar thumbnail para ${template.id}:`, error);
+                    return { id: template.id, url: '' };
+                }
+            });
+
+            const results = await Promise.all(thumbnailPromises);
+            const thumbnailMap = results.reduce((acc, { id, url }) => {
+                if (url) acc[id] = url;
+                return acc;
+            }, {} as Record<string, string>);
+
+            setThumbnails(thumbnailMap);
+            console.log('✅ Thumbnails carregados:', Object.keys(thumbnailMap).length);
+        };
+
+        loadThumbnails();
+    }, [templates]);    // Filtrar templates
     const filteredTemplates = templates.filter(template => {
         const matchesSearch =
             template.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -294,12 +326,37 @@ const MyTemplatesPage: React.FC = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {filteredTemplates.map((template) => (
                         <Card key={template.id} className="hover:shadow-lg transition-shadow">
+                            {/* Thumbnail da Etapa 1 */}
+                            <div className="relative">
+                                {thumbnails[template.id] ? (
+                                    <img
+                                        src={thumbnails[template.id]}
+                                        alt={`Preview de ${template.name}`}
+                                        className="w-full h-48 object-cover rounded-t-lg"
+                                    />
+                                ) : (
+                                    <div className="w-full h-48 bg-gradient-to-br from-gray-100 to-gray-200 rounded-t-lg flex items-center justify-center">
+                                        <div className="text-center text-gray-500">
+                                            <FileText className="h-12 w-12 mx-auto mb-2" />
+                                            <span className="text-sm">Gerando preview...</span>
+                                        </div>
+                                    </div>
+                                )}
+                                <Badge 
+                                    variant="secondary" 
+                                    className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm"
+                                >
+                                    {TEMPLATE_CATEGORIES[template.category as keyof typeof TEMPLATE_CATEGORIES] || template.category}
+                                </Badge>
+                            </div>
+
                             <CardHeader>
                                 <CardTitle className="flex items-center justify-between">
                                     <span className="truncate">{template.name}</span>
-                                    <Badge variant="secondary">
-                                        {TEMPLATE_CATEGORIES[template.category as keyof typeof TEMPLATE_CATEGORIES] || template.category}
-                                    </Badge>
+                                    <div className="flex items-center gap-1">
+                                        <Star className="h-3 w-3 text-yellow-500" />
+                                        <span className="text-xs text-muted-foreground">{template.usageCount}</span>
+                                    </div>
                                 </CardTitle>
                             </CardHeader>
 
@@ -330,10 +387,6 @@ const MyTemplatesPage: React.FC = () => {
                                         <div className="flex items-center gap-1">
                                             <Calendar className="h-3 w-3" />
                                             Criado: {new Date(template.createdAt).toLocaleDateString()}
-                                        </div>
-                                        <div className="flex items-center gap-1">
-                                            <Copy className="h-3 w-3" />
-                                            Usos: {template.usageCount}
                                         </div>
                                         <div className="flex items-center gap-1">
                                             <FileText className="h-3 w-3" />
