@@ -16,22 +16,14 @@ export default defineConfig({
     host: '0.0.0.0',
     port: 5173,
     cors: {
-      origin: [
-        'http://localhost:5173',
-        'http://localhost:8080',
-        'https://lovable.dev',
-        'https://api.lovable.dev',
-        'https://lovable-api.com',
-        /^https:\/\/.*\.lovable\.app$/,
-        /^https:\/\/.*\.lovable\.dev$/,
-      ],
+      origin: true,
       credentials: true,
       methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
       allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
     },
     strictPort: false,
     fs: {
-      allow: ['templates', 'public', 'src'],
+      allow: ['..', 'templates', 'public', 'src', 'node_modules'],
     },
     watch: {
       ignored: ['**/worktrees/**', '**/examples/**', '**/attached_assets/**'],
