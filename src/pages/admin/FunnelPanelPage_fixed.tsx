@@ -152,7 +152,12 @@ const FunnelPanelPage: React.FC = () => {
             } else if (sort === 'updatedAt') {
                 list.sort((a, b) => new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime());
             }
-            return list.map(normalizeTemplate);
+            return list.map((template: any) => ({
+                ...template,
+                features: template.features || [],
+                conversionRate: template.conversionRate || 0,
+                image: template.image || ''
+            }));
         }
 
         // ✅ USAR: Registry unificado como fallback

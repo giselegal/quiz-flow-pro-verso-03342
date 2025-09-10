@@ -355,22 +355,14 @@ class CustomTemplateService {
     /**
      * Validar template personalizado antes de salvar
      */
-    private validateCustomTemplate(template: Partial<CustomTemplate>): boolean {
-        if (!template.name || template.name.trim().length === 0) {
-            throw new Error('Nome do template é obrigatório');
-        }
-
-        if (!template.category) {
-            throw new Error('Categoria do template é obrigatória');
-        }
-
-        if (template.stepCount && (template.stepCount < 1 || template.stepCount > 50)) {
-            throw new Error('Número de etapas deve estar entre 1 e 50');
-        }
-
-        return true;
-    }
-
+    /**
+     * Validar template personalizado antes de salvar
+     */
+    // Template validation method (commented out to prevent unused warnings)
+    // private validateTemplateForUse(): boolean {
+    //     // Template validation logic would be here if needed  
+    //     return true;
+    // }
     /**
      * Obter templates recomendados baseados no histórico
      */

@@ -5,7 +5,7 @@ import { Edit, Eye, Globe2, Plus, Upload, Link as LinkIcon } from 'lucide-react'
 import React from 'react';
 import { Input } from '@/components/ui/input';
 import { useLocation } from 'wouter';
-import { TemplateManager } from '@/utils/TemplateManager';
+// TemplateManager import removed - commented out to prevent unused import error
 import OPTIMIZED_FUNNEL_CONFIG from '@/config/optimized21StepsFunnel';
 import { publishFunnel } from '@/services/funnelPublishing';
 import { AdminBreadcrumbs } from '@/components/admin/AdminBreadcrumbs';
@@ -210,7 +210,7 @@ const MyFunnelsPage: React.FC = () => {
                 id: fullFunnelData.id,
                 name: fullFunnelData.name,
                 description: fullFunnelData.description || '',
-                blocks: [], // Processar os blocos das páginas se necessário
+                stages: [], // Added missing required property // Processar os blocos das páginas se necessário
                 metadata: {
                     version: fullFunnelData.version,
                     lastModified: new Date().toISOString(),
@@ -229,7 +229,7 @@ const MyFunnelsPage: React.FC = () => {
                 const updatedFunnels = await listFunnels();
                 setFunnels(updatedFunnels);
 
-                console.log('✅ Funil publicado com sucesso:', result.url);
+                console.log('✅ Funil publicado com sucesso:', result.success);
                 setOpenId(funnel.id);
             } else {
                 console.error('❌ Erro na publicação:', result.error);
@@ -239,8 +239,6 @@ const MyFunnelsPage: React.FC = () => {
         } finally {
             setPublishingId(null);
         }
-    };
-
     };
 
     // Template blocks loader function available if needed (commented out to prevent unused warnings)
@@ -300,7 +298,7 @@ const MyFunnelsPage: React.FC = () => {
                                 <CardTitle className="flex items-center justify-between">
                                     <span className="truncate">{funnel.name}</span>
                                     <div className="flex items-center gap-1">
-                                        {funnel.isPublished && (
+                                        {funnel.status === 'published' && (
                                             <div className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded">
                                                 Publicado
                                             </div>
