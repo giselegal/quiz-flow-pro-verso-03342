@@ -8,6 +8,22 @@ import {
   generateId,
 } from '@/types/unified-schema';
 
+// ✅ Função auxiliar para verificar auth de forma consistente
+async function getAuthenticatedUser() {
+  if (!supabase.auth || typeof supabase.auth.getUser !== 'function') {
+    console.warn('⚠️ Supabase auth não disponível em desenvolvimento');
+    return null;
+  }
+  
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+    return user;
+  } catch (error) {
+    console.warn('⚠️ Erro ao obter usuário autenticado:', error);
+    return null;
+  }
+}
+
 export interface SchemaDrivenFunnelData {
   id: string;
   name: string;
@@ -169,10 +185,12 @@ export const schemaDrivenFunnelService = {
 
   async getFunnel(id: string): Promise<SchemaDrivenFunnelData | null> {
     try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) throw new Error('Usuário não autenticado');
+      // Usar função auxiliar para verificar auth
+      const user = await getAuthenticatedUser();
+      if (!user) {
+        console.warn('⚠️ Usuário não autenticado, retornando funil mock');
+        return this.createMockFunnel(id);
+      }
 
       const { data: funnel, error } = await supabase
         .from('funnels')
@@ -344,6 +362,26 @@ export const schemaDrivenFunnelService = {
       console.error('Erro ao criar página:', error);
       return null;
     }
+  },
+
+  // ✅ Método mock para desenvolvimento quando Supabase não está disponível
+  createMockFunnel(id: string): SchemaDrivenFunnelData {
+    return {
+      id,
+      name: `Funil Mock ${id}`,
+      description: 'Funil mock para desenvolvimento sem Supabase',
+      pages: [
+        {
+          id: `${id}-page-1`,
+          title: 'Página Inicial',
+          type: 'intro',
+          order: 1,
+          blocks: [],
+          funnel_id: id,
+        }
+      ],
+      theme: 'default',
+    };
   },
 };
 

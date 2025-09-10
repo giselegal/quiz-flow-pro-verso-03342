@@ -72,8 +72,40 @@ export default MainEditor; // ✅ Correto
 - ✅ **Assets**: Todos presentes
 - ❌ **Deploy**: Lovable desatualizado
 
-## 🎯 CONCLUSÃO
+## � NOVOS ERROS IDENTIFICADOS (Setembro 2025)
 
-**O problema não é do código, é de sincronização de deploy.**
+### ❌ SDK Lovable ConfigManager:
+```
+Failed to fetch the source config - timeout for URL: 
+https://rs.lovable.dev/sourceConfig?p=npm&v=3.23.0
+```
 
-O build local está perfeito. O Lovable precisa ser forçado a usar a versão atual dos arquivos.
+### ❌ Supabase Auth Error:
+```
+Erro ao buscar funil: TypeError: D.auth.getUser is not a function
+at Object.getFunnel (schemaDrivenFunnelService.ts:174:31)
+```
+
+## 🔧 SOLUÇÕES ATUALIZADAS
+
+### 1. **Bloquear SDK Lovable** (IMPLEMENTADO ✅)
+- `blockLovableInDev.ts` já intercepta conexões
+- Precisa ser expandido para interceptar SDK calls
+
+### 2. **Corrigir Supabase Auth** (URGENTE ❌)
+- `D.auth.getUser` não é uma função válida
+- Verificar inicialização do cliente Supabase
+- Garantir auth service correto
+
+### 3. **Interceptar rs.lovable.dev** (NOVO ❌)
+- Bloquear requisições para config remoto
+- Adicionar mock para SDK do Lovable
+
+## 🎯 CONCLUSÃO ATUALIZADA
+
+**Múltiplos problemas de integração externa:**
+1. ✅ Dynamic imports - Resolvido com bloqueio Lovable
+2. ❌ SDK Config timeout - Precisa ser bloqueado
+3. ❌ Supabase auth undefined - Precisa ser corrigido
+
+O build local está perfeito, mas integrações externas estão falhando.

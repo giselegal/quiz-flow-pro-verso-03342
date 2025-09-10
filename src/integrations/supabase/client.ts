@@ -18,11 +18,13 @@ function createSupabaseStub() {
     error: { message: 'Supabase disabled', status: 0, details: null, hint: null },
   } as any;
   const okNoError = { data: null, error: null } as any;
+  const okUser = { data: { user: null }, error: null } as any;
   const sub = { unsubscribe: () => { } };
   return {
     auth: {
       onAuthStateChange: (_cb: any) => ({ data: { subscription: sub } }),
       getSession: async () => ({ data: { session: null }, error: null }),
+      getUser: async () => okUser,  // ✅ Adicionado método getUser faltante
       signInWithPassword: async () => okNoError,
       signOut: async () => okNoError,
     },
@@ -33,6 +35,7 @@ function createSupabaseStub() {
       update: async () => ok,
       delete: async () => ok,
       eq: () => ({ select: async () => ok, update: async () => ok, delete: async () => ok }),
+      single: async () => ok,  // ✅ Adicionado método single faltante
     }),
   } as unknown as ReturnType<typeof createClient<Database>>;
 }
