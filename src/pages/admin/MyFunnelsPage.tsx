@@ -100,18 +100,18 @@ const MyFunnelsPage: React.FC = () => {
     console.log('🎯 Navegando para editor:', id ? `com ID ${id}` : 'novo funil');
 
     if (id) {
-      // Editar funil existente - carregar do contexto MY_FUNNELS
+      // ✅ CORRIGIDO: Usar path parameter em vez de query parameter
       try {
         const funnelData = await loadFunnel(id);
         if (funnelData) {
-          setLocation(`/editor?funnel=${encodeURIComponent(id)}&context=my-funnels`);
+          setLocation(`/editor/${encodeURIComponent(id)}?context=my-funnels`);
         } else {
           console.warn('⚠️ Funil não encontrado no contexto MY_FUNNELS:', id);
-          setLocation(`/editor?funnel=${encodeURIComponent(id)}`);
+          setLocation(`/editor/${encodeURIComponent(id)}`);
         }
       } catch (error) {
         console.error('❌ Erro ao carregar funil:', error);
-        setLocation(`/editor?funnel=${encodeURIComponent(id)}`);
+        setLocation(`/editor/${encodeURIComponent(id)}`);
       }
     } else {
       // Criar novo funil no contexto MY_FUNNELS

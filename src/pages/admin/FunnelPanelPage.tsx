@@ -148,8 +148,8 @@ const FunnelPanelPage: React.FC = () => {
         console.log('✅ Funil clonado criado:', clonedInstance.id);
         console.log('📦 Blocos independentes:', clonedInstance.blocks.length);
 
-        // Navegar para editor com instância clonada
-        setLocation(`/editor?funnel=${encodeURIComponent(clonedInstance.id)}&template=${templateId}`);
+        // ✅ CORRIGIDO: Navegar usando path parameter
+        setLocation(`/editor/${encodeURIComponent(clonedInstance.id)}?template=${templateId}`);
         return;
       }
 
@@ -177,7 +177,7 @@ const FunnelPanelPage: React.FC = () => {
       console.log('📊 Lista atualizada:', list.length, 'funis');
 
       // Navegar com ID específico do funil criado
-      setLocation(`/editor?funnel=${encodeURIComponent(newId)}&template=${templateId}`);
+      setLocation(`/editor/${encodeURIComponent(newId)}?template=${templateId}`);
     } catch (error) {
       console.error('❌ Erro ao usar template:', error);
       // Fallback: navegar só com template
@@ -255,7 +255,7 @@ const FunnelPanelPage: React.FC = () => {
     funnelLocalStore.saveList(list);
 
     console.log('✅ Funil personalizado criado:', newFunnel);
-    setLocation(`/editor?funnel=${encodeURIComponent(newId)}`);
+    setLocation(`/editor/${encodeURIComponent(newId)}`);
   };
 
   return (

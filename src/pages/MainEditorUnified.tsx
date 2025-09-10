@@ -1,7 +1,7 @@
 import { QuizFlowProvider } from '@/context/QuizFlowProvider';
 import { templateLibraryService } from '@/services/templateLibraryService';
 import React from 'react';
-import { useLocation } from 'wouter';
+import { useLocation, useParams } from 'wouter';
 import { ErrorBoundary } from '../components/editor/ErrorBoundary';
 import { FunnelsProvider } from '@/context/FunnelsContext';
 import { EditorQuizProvider } from '@/context/EditorQuizContext';
@@ -34,8 +34,11 @@ import { UnifiedFunnelProvider } from '@/context/UnifiedFunnelContext';
 const MainEditorUnified: React.FC = () => {
     const [location] = useLocation();
     const params = React.useMemo(() => new URLSearchParams(location.split('?')[1] || ''), [location]);
+    const routeParams = useParams<{ funnelId?: string }>();
+
+    // Capturar funnelId tanto da rota (/editor/:funnelId) quanto da query (?funnel=id)
     const templateId = params.get('template');
-    const funnelId = params.get('funnel');
+    const funnelId = routeParams.funnelId || params.get('funnel');
     const duplicateId = params.get('duplicate'); // ID do template a ser duplicado
     const stepParam = params.get('step');
     const initialStep = stepParam ? Math.max(1, Math.min(21, parseInt(stepParam))) : undefined;
@@ -53,6 +56,8 @@ const MainEditorUnified: React.FC = () => {
 
     if (debugMode) {
         console.log('🎯 MainEditorUnified iniciado:', {
+            location,
+            routeParams,
             templateId,
             funnelId,
             duplicateId,
