@@ -14,7 +14,7 @@ async function getAuthenticatedUser() {
     console.warn('⚠️ Supabase auth não disponível em desenvolvimento');
     return null;
   }
-  
+
   try {
     const { data: { user } } = await supabase.auth.getUser();
     return user;
