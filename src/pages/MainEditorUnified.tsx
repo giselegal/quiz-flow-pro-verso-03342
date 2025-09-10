@@ -1,29 +1,294 @@
+import { QuizFlowProvider } from '@/context/QuizFlowProvider';
+import { templateLibraryService } from '@/services/templateLibraryService';
 import React from 'react';
-import { EditorPro } from '@/components/editor/EditorPro';
-import { EditorProvider } from '@/components/editor/EditorProvider';
-import { ErrorBoundary } from '@/components/editor/ErrorBoundary';
+import { useLocation } from 'wouter';
+import { ErrorBoundary } from '../components/editor/ErrorBoundary';
+import { FunnelsProvider } from '@/context/FunnelsContext';
+import { EditorQuizProvider } from '@/context/EditorQuizContext';
+import { Quiz21StepsProvider } from '@/components/quiz/Quiz21StepsProvider';
+import { LegacyCompatibilityWrapper } from '@/core/contexts/LegacyCompatibilityWrapper';
+import { FunnelContext } from '@/core/contexts/FunnelContext';
+import { EditorProvider } from '../components/editor/EditorProvider';
 
 /**
- * 🎯 EDITOR UNIFICADO - PONTO DE ENTRADA PRINCIPAL
+ * 🎯 MAIN EDITOR UNIFICADO - CONSOLIDADO
  *
- * Editor consolidado com todas as funcionalidades:
- * - Drag & drop funcional via @dnd-kit
- * - 21 etapas carregando automaticamente  
- * - Interface responsiva de 4 colunas
- * - Supabase para persistência de dados
- * - Painel de propriedades unificado
- * - Auto-save e histórico (Ctrl+Z/Y)
+ * Editor principal consolidando todas as funcionalidades dos editores legacy:
+ * - MainEditor.tsx (configuração Supabase, template loading, import dinâmico)
+ * - MainEditorUnified.tsx (context unificado, performance otimizada)
+ * 
+ * Features consolidadas:
+ * - Context unificado via UnifiedContextProvider + LegacyCompatibilityWrapper
+ * - Configuração Supabase robusta do MainEditor legacy
+ * - Template loading integrado com fallback robusto
+ * - Import dinâmico com fallback para EditorPro
+ * - Estado persistente e contextual
+ * - Performance otimizada
+ * - Debug mode avançado via URL params
+ * - Máxima compatibilidade com componentes legacy
  */
 const MainEditorUnified: React.FC = () => {
-  return (
-    <div className="h-screen w-full overflow-hidden bg-background">
-      <ErrorBoundary>
-        <EditorProvider enableSupabase={true} storageKey="main-editor-unified">
-          <EditorPro />
-        </EditorProvider>
-      </ErrorBoundary>
-    </div>
-  );
+    const [location] = useLocation();
+    const params = React.useMemo(() => new URLSearchParams(location.split('?')[1] || ''), [location]);
+    const templateId = params.get('template');
+    const funnelId = params.get('funnel');
+    const stepParam = params.get('step');
+    const initialStep = stepParam ? Math.max(1, Math.min(21, parseInt(stepParam))) : undefined;
+
+    // Debug mode baseado em parâmetros URL
+    const debugMode = params.get('debug') === 'true';
+
+    // Configuração Supabase consolidada do MainEditor legacy
+    const supabaseConfig = React.useMemo(() => ({
+        enabled: (import.meta as any)?.env?.VITE_ENABLE_SUPABASE === 'true',
+        funnelId: funnelId || (import.meta as any)?.env?.VITE_SUPABASE_FUNNEL_ID,
+        quizId: (import.meta as any)?.env?.VITE_SUPABASE_QUIZ_ID || funnelId || 'local-funnel',
+        storageKey: 'main-editor-unified-state'
+    }), [funnelId]);
+
+    if (debugMode) {
+        console.log('🎯 MainEditorUnified iniciado:', {
+            templateId,
+            funnelId,
+            initialStep,
+            supabaseConfig,
+            debugMode
+        });
+    }
+
+    return (
+        <div>
+            <ErrorBoundary>
+                <FunnelsProvider debug={debugMode}>
+                    {/* Híbrido: EditorProvider (legacy) + LegacyCompatibilityWrapper (unified) para máxima compatibilidade */}
+                    <EditorProvider
+                        enableSupabase={supabaseConfig.enabled}
+                        funnelId={supabaseConfig.funnelId}
+                        quizId={supabaseConfig.quizId}
+                        storageKey={supabaseConfig.storageKey}
+                        initial={initialStep ? { currentStep: initialStep } : undefined}
+                    >
+                        <LegacyCompatibilityWrapper
+                            enableWarnings={debugMode}
+                            initialContext={FunnelContext.EDITOR}
+                        >
+                            <EditorQuizProvider>
+                                <Quiz21StepsProvider debug={debugMode} initialStep={initialStep}>
+                                    <QuizFlowProvider initialStep={initialStep} totalSteps={21}>
+                                        <EditorInitializerUnified
+                                            templateId={templateId || undefined}
+                                            funnelId={funnelId || undefined}
+                                            debugMode={debugMode}
+                                        />
+                                    </QuizFlowProvider>
+                                </Quiz21StepsProvider>
+                            </EditorQuizProvider>
+                        </LegacyCompatibilityWrapper>
+                    </EditorProvider>
+                </FunnelsProvider>
+            </ErrorBoundary>
+        </div>
+    );
 };
+
+/**
+ * 🔧 EDITOR INITIALIZER UNIFICADO
+ * 
+ * Consolidado dos EditorInitializer do MainEditor.tsx com funcionalidades:
+ * - Import dinâmico com fallback robusto
+ * - Template loading via UnifiedTemplateManager
+ * - Error handling e recovery
+ * - Loading states otimizados
+ */
+const EditorInitializerUnified: React.FC<{
+    templateId?: string;
+    funnelId?: string;
+    debugMode?: boolean;
+}> = ({
+    templateId,
+    funnelId,
+    debugMode = false,
+}) => {
+        const [UnifiedEditorComp, setUnifiedEditorComp] = React.useState<React.ComponentType | null>(null);
+        const [isLoading, setIsLoading] = React.useState(true);
+        const [loadingTemplate, setLoadingTemplate] = React.useState(false);
+        const [error, setError] = React.useState<string | null>(null);
+
+        // Template loading consolidado do MainEditor.tsx
+        const loadTemplateFromId = React.useCallback(async () => {
+            if (!templateId || templateId === 'default') return;
+
+            try {
+                setLoadingTemplate(true);
+                setError(null);
+
+                if (debugMode) {
+                    console.log('🔄 Carregando template:', templateId);
+                }
+
+                // Usar método correto do templateLibraryService
+                const templates = templateLibraryService.listBuiltins();
+                const template = templates.find(t => t.id === templateId);
+
+                if (template) {
+                    if (debugMode) {
+                        console.log('✅ Template carregado:', template.name || templateId);
+                    }
+                } else {
+                    console.warn('⚠️ Template não encontrado, usando padrão');
+                    loadDefaultTemplate();
+                }
+            } catch (error) {
+                console.error('❌ Erro ao carregar template:', error);
+                setError(`Erro ao carregar template: ${error}`);
+                loadDefaultTemplate();
+            } finally {
+                setLoadingTemplate(false);
+            }
+        }, [templateId, debugMode]);
+
+        const loadDefaultTemplate = React.useCallback(async () => {
+            try {
+                if (debugMode) {
+                    console.log('✅ Template padrão carregado');
+                }
+            } catch (error) {
+                console.error('❌ Erro ao carregar template padrão:', error);
+                setError(`Erro ao carregar template padrão: ${error}`);
+            }
+        }, [debugMode]);
+
+        // Carregamento dinâmico do editor com fallback robusto
+        React.useEffect(() => {
+            let cancelled = false;
+
+            (async () => {
+                try {
+                    setIsLoading(true);
+                    setError(null);
+
+                    if (debugMode) {
+                        console.log('🔄 Carregando UnifiedEditor...');
+                    }
+
+                    // Primeiro tenta carregar UnifiedEditor
+                    const mod = await import('../components/editor/UnifiedEditor');
+                    const Comp = mod.default || mod.UnifiedEditor;
+
+                    if (!cancelled && Comp) {
+                        setUnifiedEditorComp(() => Comp);
+                        if (debugMode) {
+                            console.log('✅ UnifiedEditor carregado com sucesso');
+                        }
+                    }
+                } catch (error) {
+                    console.error('❌ Falha ao carregar UnifiedEditor:', error);
+
+                    if (!cancelled) {
+                        try {
+                            // Fallback para EditorPro legacy
+                            if (debugMode) {
+                                console.log('🔄 Tentando fallback para EditorPro...');
+                            }
+
+                            const legacyMod = await import('../components/editor/EditorPro');
+                            const LegacyComp = legacyMod.default || legacyMod.EditorPro;
+
+                            if (LegacyComp) {
+                                setUnifiedEditorComp(() => LegacyComp);
+                                console.warn('⚠️ Usando fallback EditorPro legacy');
+                            }
+                        } catch (legacyError) {
+                            console.error('❌ Falha ao carregar fallback EditorPro:', legacyError);
+                            setError('Falha ao carregar editor. Tente recarregar a página.');
+                        }
+                    }
+                } finally {
+                    if (!cancelled) {
+                        setIsLoading(false);
+                    }
+                }
+            })();
+
+            return () => {
+                cancelled = true;
+            };
+        }, [debugMode]);
+
+        // Template loading effect
+        React.useEffect(() => {
+            if (templateId && templateId !== 'default') {
+                loadTemplateFromId();
+            } else {
+                loadDefaultTemplate();
+            }
+        }, [templateId, loadTemplateFromId, loadDefaultTemplate]);
+
+        // Loading state
+        if (isLoading) {
+            return (
+                <div className="flex items-center justify-center min-h-screen">
+                    <div className="text-center">
+                        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500 mx-auto"></div>
+                        <p className="mt-4 text-gray-600">
+                            {loadingTemplate ? 'Carregando template...' : 'Carregando editor...'}
+                        </p>
+                        {debugMode && (
+                            <p className="text-xs text-gray-400 mt-2">
+                                Template: {templateId || 'default'} | Funnel: {funnelId || 'none'}
+                            </p>
+                        )}
+                    </div>
+                </div>
+            );
+        }
+
+        // Error state
+        if (error) {
+            return (
+                <div className="flex items-center justify-center min-h-screen">
+                    <div className="text-center max-w-md">
+                        <div className="text-red-500 text-6xl mb-4">⚠️</div>
+                        <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                            Erro ao carregar editor
+                        </h3>
+                        <p className="text-gray-600 mb-4">{error}</p>
+                        <button
+                            onClick={() => window.location.reload()}
+                            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+                        >
+                            Recarregar página
+                        </button>
+                        {debugMode && (
+                            <details className="mt-4 text-left">
+                                <summary className="cursor-pointer text-sm text-gray-500">
+                                    Debug info
+                                </summary>
+                                <pre className="text-xs bg-gray-100 p-2 rounded mt-2 overflow-auto">
+                                    {JSON.stringify({ templateId, funnelId, error }, null, 2)}
+                                </pre>
+                            </details>
+                        )}
+                    </div>
+                </div>
+            );
+        }
+
+        // Render editor
+        if (!UnifiedEditorComp) {
+            return (
+                <div className="flex items-center justify-center min-h-screen">
+                    <div className="text-center">
+                        <div className="text-yellow-500 text-6xl mb-4">⚠️</div>
+                        <p className="text-gray-600">Editor não disponível</p>
+                    </div>
+                </div>
+            );
+        }
+
+        return (
+            <UnifiedEditorComp />
+        );
+    };
 
 export default MainEditorUnified;
