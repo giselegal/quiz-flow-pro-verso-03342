@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análise: Configuração URL de Produção ↔ Funil Ativo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .status-item {
+            display: flex;
+            align-items: flex-start;
+            margin: 15px 0;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+            border-left: 4px solid #007bff;
+        }
+
+        .status-success {
+            background-color: #d4edda;
+            color: #155724;
+            border-left-color: #28a745;
+        }
+
+        .status-info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border-left-color: #17a2b8;
+        }
+
+        .status-warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border-left-color: #ffc107;
+        }
+
+        .status-critical {
+            background-color: #f8d7da;
+            color: #721c24;
+            border-left-color: #dc3545;
+        }
+
+        .code-block {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            font-size: 14px;
+        }
+
+        .highlight {
+            background-color: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .flow-diagram {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .flow-step {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #fff;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #dee2e6;
+        }
+
+        .card-title {
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .btn {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin: 10px 5px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+        }
+
+        .btn-success:hover {
+            background-color: #1e7e34;
+        }
+
+        .architecture-box {
+            background: linear-gradient(45deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🔗 Análise: Configuração URL de Produção ↔ Funil Ativo</h1>
+
+        <div class="status-item status-info">
+            <div>
+                <strong>🎯 PERGUNTA ANALISADA:</strong>
+                <br>"Como a configuração da URL de produção é conectada ao funil editado? A URL /quiz está alinhada com
+                o funil ativo?"
+            </div>
+        </div>
+
+        <h2>🏗️ Arquitetura Atual de Conexão URL → Funil</h2>
+
+        <div class="flow-diagram">
+            <h3>📍 FLUXO DE RESOLUÇÃO ROTA → FUNIL</h3>
+
+            <div class="flow-step">
+                <strong>1. USUÁRIO ACESSA:</strong> /quiz (rota fixa no App.tsx)
+            </div>
+
+            <div class="flow-step">
+                <strong>2. APP.TSX RESOLVE:</strong> Route "/quiz" → QuizModularPage
+            </div>
+
+            <div class="flow-step">
+                <strong>3. QUIZMODULARPAGE CARREGA:</strong> UnifiedTemplateLoader.loadStepBlocks()
+            </div>
+
+            <div class="flow-step">
+                <strong>4. TEMPLATE LOADER USA:</strong> UnifiedTemplateService → quiz21StepsComplete.ts
+            </div>
+
+            <div class="flow-step">
+                <strong>5. FUNIL RENDERIZADO:</strong> QUIZ_STYLE_21_STEPS_TEMPLATE (configurações JSON incluídas)
+            </div>
+        </div>
+
+        <h2>📊 Configurações de URL no Funil Ativo</h2>
+
+        <div class="grid">
+            <div class="card">
+                <div class="card-title">🌐 Domínio Principal</div>
+                <div class="code-block">
+                    primaryDomain: 'quiz-sell-genius.com'
+                    canonicalUrl: 'https://quiz-sell-genius.com/'</div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">🔗 Domínios Customizados</div>
+                <div class="code-block">
+                    customDomains: [
+                    'quiz-descubra-seu-estilo.com',
+                    'estilopessoal.gisele.com',
+                    'quiz.giselegaalvao.com'
+                    ]</div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">↩️ Redirecionamentos</div>
+                <div class="code-block">
+                    <span class="highlight">/quiz -> /</span>
+                    /estilo -> /
+                    /descobrir-estilo -> /
+                    /quiz-style -> /
+                    /style-quiz -> /
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">🎨 SEO Configurado</div>
+                <div class="code-block">
+                    title: "Descubra Seu Estilo Pessoal - Quiz Completo"
+                    description: "Descubra seu estilo único..."
+                    keywords: ["estilo pessoal", "moda", "quiz"]</div>
+            </div>
+        </div>
+
+        <h2>⚠️ IMPORTANTE: Configuração de Rota vs Configuração de Domínio</h2>
+
+        <div class="status-item status-warning">
+            <div>
+                <strong>🔍 DESCOBERTA IMPORTANTE:</strong>
+                <br>• A rota <code>/quiz</code> é <strong>HARDCODED</strong> no App.tsx
+                <br>• As configurações de URL no funil são para <strong>PRODUÇÃO/DEPLOY</strong>
+                <br>• Não há conexão automática entre URL config e rota ativa
+                <br>• O sistema sempre carrega o template <code>quiz21StepsComplete</code> na rota <code>/quiz</code>
+            </div>
+        </div>
+
+        <h2>🔧 Como Funciona Atualmente</h2>
+
+        <div class="architecture-box">
+            <h3>📋 SISTEMA ATUAL (Funcional mas Simplificado)</h3>
+
+            <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; margin: 10px 0;">
+                <strong>1. ROTA FIXA:</strong>
+                <br>App.tsx define <code>/quiz</code> → QuizModularPage
+                <br><em>Sempre carrega o mesmo funil independente de configuração</em>
+            </div>
+
+            <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; margin: 10px 0;">
+                <strong>2. TEMPLATE FIXO:</strong>
+                <br>UnifiedTemplateService sempre usa quiz21StepsComplete.ts
+                <br><em>Não há lógica para alternar entre funis</em>
+            </div>
+
+            <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; margin: 10px 0;">
+                <strong>3. CONFIGURAÇÕES JSON:</strong>
+                <br>Estão no template mas não afetam roteamento
+                <br><em>Servem para SEO, tracking, domínios de produção</em>
+            </div>
+        </div>
+
+        <h2>✅ Estado Atual: ALINHADO mas LIMITADO</h2>
+
+        <div class="status-item status-success">
+            <div>
+                <strong>✅ ESTÁ ALINHADO:</strong>
+                <br>• URL <code>/quiz</code> carrega o funil <code>quiz21StepsComplete</code>
+                <br>• Configurações JSON estão no funil ativo
+                <br>• SEO e tracking configurados corretamente
+                <br>• Admin mostra apenas este funil (modo desenvolvimento)
+            </div>
+        </div>
+
+        <div class="status-item status-warning">
+            <div>
+                <strong>⚠️ LIMITAÇÕES:</strong>
+                <br>• Não há sistema dinâmico de mapeamento URL → Funil
+                <br>• Mudança de funil requer alteração de código
+                <br>• Configurações de domínio são apenas metadados
+                <br>• Sistema não suporta múltiplos funis por URL
+            </div>
+        </div>
+
+        <h2>💡 Para Sistema Mais Avançado (Futuro)</h2>
+
+        <div class="code-block">
+            <strong>// EXEMPLO: Sistema Dinâmico de Mapeamento</strong>
+
+            // 1. Configuração de Rotas por Funil
+            const FUNNEL_ROUTES = {
+            '/quiz': 'quiz21StepsComplete',
+            '/style-quiz': 'quiz21StepsComplete',
+            '/personality': 'personalityQuiz',
+            '/business': 'businessQuiz'
+            };
+
+            // 2. Resolver Funil Baseado na URL
+            function resolveFunnelByRoute(pathname: string) {
+            return FUNNEL_ROUTES[pathname] || 'defaultFunnel';
+            }
+
+            // 3. Usar no QuizModularPage
+            const funnelId = resolveFunnelByRoute(window.location.pathname);
+            const template = await loadFunnelTemplate(funnelId);
+        </div>
+
+        <h2>🚀 Testar Configuração Atual</h2>
+
+        <div style="text-align: center; margin: 30px 0;">
+            <a href="http://localhost:5174/quiz" class="btn btn-success" target="_blank">
+                🎯 TESTAR /QUIZ → FUNIL ATIVO
+            </a>
+
+            <a href="http://localhost:5174/admin/funis" class="btn" target="_blank">
+                ⚙️ VER FUNIL NO ADMIN
+            </a>
+
+            <a href="http://localhost:5174/editor" class="btn" target="_blank">
+                ✏️ EDITAR CONFIGURAÇÕES
+            </a>
+        </div>
+
+        <h2>📋 Resumo da Análise</h2>
+
+        <div class="grid">
+            <div class="status-item status-success">
+                <div>
+                    <strong>✅ SIM, ESTÁ ALINHADO:</strong>
+                    <br>• /quiz carrega quiz21StepsComplete
+                    <br>• Configurações JSON ativas
+                    <br>• Funil único no admin
+                    <br>• Sistema funcional
+                </div>
+            </div>
+
+            <div class="status-item status-info">
+                <div>
+                    <strong>📍 COMO FUNCIONA:</strong>
+                    <br>• Rota fixa no código
+                    <br>• Template hardcoded
+                    <br>• Configurações para produção
+                    <br>• Sistema simples mas efetivo
+                </div>
+            </div>
+        </div>
+
+        <div style="background-color: #e7f3ff; padding: 25px; border-radius: 10px; margin-top: 30px;">
+            <h3>🎉 CONCLUSÃO</h3>
+            <p><strong>A URL /quiz ESTÁ ALINHADA com o funil ativo quiz21StepsComplete.</strong></p>
+            <ul style="margin: 15px 0;">
+                <li>✅ Configurações JSON aplicadas no funil carregado</li>
+                <li>✅ SEO, domínio, pixel configurados corretamente</li>
+                <li>✅ Sistema funcional para uso atual</li>
+                <li>📋 Para múltiplos funis: implementar sistema dinâmico</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        console.log('🔗 Análise de Configuração URL ↔ Funil');
+        console.log('📍 Rota: /quiz → QuizModularPage → quiz21StepsComplete');
+        console.log('⚙️ Configurações: SEO, domain, tracking no template');
+        console.log('✅ Sistema alinhado e funcional');
+
+        // Testar conectividade
+        fetch('/quiz')
+            .then(response => {
+                console.log('✅ Rota /quiz acessível:', response.status === 200);
+            })
+            .catch(() => {
+                console.log('⚠️ Verificar servidor na porta 5174');
+            });
+    </script>
+</body>
+
+</html>

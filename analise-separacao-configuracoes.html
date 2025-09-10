@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análise: Separação Configurações App vs Funil</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .architecture-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .problem-section {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .solution-section {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .implementation-section {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .config-box {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #007bff;
+        }
+
+        .app-config {
+            border-left-color: #28a745;
+        }
+
+        .funnel-config {
+            border-left-color: #dc3545;
+        }
+
+        .code-block {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            font-size: 14px;
+        }
+
+        .file-tree {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+        }
+
+        .highlight {
+            background-color: rgba(255, 255, 0, 0.3);
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+
+        .step-box {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #fff;
+        }
+
+        .status-critical {
+            background-color: #f8d7da;
+            color: #721c24;
+            border-left-color: #dc3545;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .status-warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border-left-color: #ffc107;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .status-success {
+            background-color: #d4edda;
+            color: #155724;
+            border-left-color: #28a745;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>⚙️ Separação de Configurações: Aplicativo vs Funil</h1>
+
+        <div class="problem-section">
+            <h2>🚨 PROBLEMA ATUAL IDENTIFICADO</h2>
+            <p><strong>As configurações estão MISTURADAS e ACOPLADAS!</strong></p>
+
+            <div class="step-box">
+                <strong>❌ Configurações do APP misturadas com configurações do FUNIL</strong>
+                <br>• Configurações globais (app) dentro do template do funil
+                <br>• Impossível ter funis com configurações independentes
+                <br>• Mudança de funil afeta configurações do app inteiro
+            </div>
+
+            <div class="step-box">
+                <strong>❌ Estrutura Arquitetural Problemática</strong>
+                <br>• quiz21StepsComplete.ts contém configs globais do app
+                <br>• SEO, domínio, tracking misturados com dados do funil
+                <br>• Não há separação clara entre níveis de configuração
+            </div>
+        </div>
+
+        <h2>📊 ANÁLISE ATUAL: Configurações Misturadas</h2>
+
+        <div class="comparison-grid">
+            <div class="config-box app-config">
+                <h3>🌐 CONFIGURAÇÕES DO APLICATIVO</h3>
+                <strong>Devem ser globais e independentes:</strong>
+                <ul>
+                    <li>SEO básico do site</li>
+                    <li>Analytics/Tracking globais</li>
+                    <li>Domínio principal</li>
+                    <li>Configurações de ambiente</li>
+                    <li>Branding da empresa</li>
+                    <li>Políticas legais</li>
+                    <li>SSL e segurança</li>
+                </ul>
+                <p><em>❌ Atualmente em: quiz21StepsComplete.ts</em></p>
+            </div>
+
+            <div class="config-box funnel-config">
+                <h3>🎯 CONFIGURAÇÕES DO FUNIL</h3>
+                <strong>Devem ser específicas do funil:</strong>
+                <ul>
+                    <li>Nome e descrição</li>
+                    <li>Etapas e fluxo</li>
+                    <li>Perguntas e opções</li>
+                    <li>Tema visual específico</li>
+                    <li>Configurações de resultado</li>
+                    <li>UTMs específicas</li>
+                    <li>Webhooks específicos</li>
+                </ul>
+                <p><em>✅ Atualmente em: quiz21StepsComplete.ts (misturado)</em></p>
+            </div>
+        </div>
+
+        <div class="status-critical">
+            <strong>🔥 PROBLEMA CRÍTICO:</strong>
+            <br>O arquivo <code>quiz21StepsComplete.ts</code> contém tanto configurações globais do aplicativo quanto
+            configurações específicas do funil. Isso impede:
+            <br>• Múltiplos funis com configurações independentes
+            <br>• Configurações globais consistentes entre funis
+            <br>• Manutenção e escalabilidade do sistema
+        </div>
+
+        <div class="architecture-section">
+            <h2>🏗️ ARQUITETURA ATUAL (Problemática)</h2>
+
+            <div class="file-tree">
+                quiz21StepsComplete.ts
+                ├── 🌐 SEO (deveria ser global)
+                ├── 🌐 Domain & Hosting (deveria ser global)
+                ├── 🌐 Tracking & Analytics (deveria ser global)
+                ├── 🌐 UTM & Campaign (deveria ser global)
+                ├── 🌐 Webhooks (deveria ser global)
+                ├── 🌐 Branding (deveria ser global)
+                ├── 🌐 Legal & Compliance (deveria ser global)
+                ├── 🎯 Funnel Metadata (correto aqui)
+                ├── 🎯 Steps Configuration (correto aqui)
+                └── 🎯 Questions & Blocks (correto aqui)
+            </div>
+
+            <div class="step-box">
+                <strong>Resultado:</strong> Acoplamento alto, baixa flexibilidade, configurações duplicadas
+            </div>
+        </div>
+
+        <div class="solution-section">
+            <h2>✅ SOLUÇÃO PROPOSTA: Separação Clara</h2>
+
+            <div class="step-box">
+                <strong>1. CONFIGURAÇÕES GLOBAIS DO APP</strong>
+                <br>Local: <code>src/config/AppConfig.ts</code>
+                <br>Escopo: Todo o aplicativo
+                <br>Independente de qual funil está ativo
+            </div>
+
+            <div class="step-box">
+                <strong>2. CONFIGURAÇÕES DE FUNIL</strong>
+                <br>Local: <code>src/templates/funnel-configs/</code>
+                <br>Escopo: Específico de cada funil
+                <br>Herda configurações globais mas pode sobrescrever
+            </div>
+
+            <div class="step-box">
+                <strong>3. SISTEMA DE HERANÇA</strong>
+                <br>Global → Funil → Runtime
+                <br>Configurações mais específicas sobrescrevem as gerais
+            </div>
+        </div>
+
+        <div class="implementation-section">
+            <h2>🛠️ IMPLEMENTAÇÃO PROPOSTA</h2>
+
+            <h3>📁 Nova Estrutura de Arquivos</h3>
+            <div class="file-tree">
+                src/config/
+                ├── AppConfig.ts # 🌐 Configurações globais
+                ├── EnvironmentConfig.ts # 🌐 Configs por ambiente
+                └── DefaultFunnelConfig.ts # 🎯 Padrões para funis
+
+                src/templates/
+                ├── funnel-configs/
+                │ ├── quiz21StepsComplete.config.ts # 🎯 Config específica
+                │ ├── personalityQuiz.config.ts # 🎯 Config específica
+                │ └── businessQuiz.config.ts # 🎯 Config específica
+                └── funnel-templates/
+                ├── quiz21StepsComplete.ts # 🎯 Apenas template
+                ├── personalityQuiz.ts # 🎯 Apenas template
+                └── businessQuiz.ts # 🎯 Apenas template
+
+                src/services/
+                ├── ConfigurationService.ts # 🔧 Gerencia merge configs
+                └── FunnelConfigLoader.ts # 🔧 Carrega configs do funil
+            </div>
+
+            <h3>💻 Código da Implementação</h3>
+
+            <div class="code-block">
+                <strong>// src/config/AppConfig.ts - Configurações Globais</strong>
+                export const APP_CONFIG = {
+                // SEO padrão para todo o site
+                seo: {
+                siteName: 'Quiz Sell Genius',
+                defaultTitle: 'Descubra Seu Estilo',
+                defaultDescription: 'Quiz personalizado...',
+                defaultOgImage: '/og-default.jpg'
+                },
+
+                // Domínio e hosting
+                domain: {
+                primaryDomain: 'quiz-sell-genius.com',
+                ssl: true,
+                cdn: 'cloudflare'
+                },
+
+                // Analytics globais
+                tracking: {
+                googleAnalytics: 'GA-GLOBAL-ID',
+                facebookPixel: 'FB-GLOBAL-ID',
+                enabled: true
+                },
+
+                // Branding da empresa
+                branding: {
+                primaryColor: '#B89B7A',
+                logoUrl: 'https://cdn.../logo.png',
+                fontFamily: 'Inter'
+                }
+                };
+            </div>
+
+            <div class="code-block">
+                <strong>// src/templates/funnel-configs/quiz21StepsComplete.config.ts</strong>
+                export const QUIZ21_CONFIG = {
+                // Apenas configurações específicas deste funil
+                funnel: {
+                id: 'quiz21StepsComplete',
+                name: 'Quiz de Estilo Completo',
+                description: 'Descubra seu estilo pessoal'
+                },
+
+                // SEO específico (sobrescreve global se necessário)
+                seo: {
+                title: 'Quiz de Estilo - Gisele Galvão',
+                keywords: ['estilo pessoal', 'moda', 'consultoria']
+                },
+
+                // UTMs específicas desta campanha
+                utm: {
+                source: 'facebook_quiz_style',
+                medium: 'quiz_organic',
+                campaign: 'estilo_2025'
+                },
+
+                // Tema visual específico
+                theme: {
+                primaryColor: '#B89B7A', // Pode sobrescrever global
+                backgroundGradient: 'linear-gradient(...)'
+                }
+                };
+            </div>
+
+            <div class="code-block">
+                <strong>// src/services/ConfigurationService.ts</strong>
+                class ConfigurationService {
+                static mergeConfigs(funnelId: string) {
+                const appConfig = APP_CONFIG;
+                const funnelConfig = this.loadFunnelConfig(funnelId);
+
+                return {
+                ...appConfig,
+                seo: { ...appConfig.seo, ...funnelConfig.seo },
+                theme: { ...appConfig.branding, ...funnelConfig.theme },
+                utm: funnelConfig.utm || appConfig.utm,
+                tracking: { ...appConfig.tracking, ...funnelConfig.tracking }
+                };
+                }
+                }
+            </div>
+        </div>
+
+        <h2>📋 Comparação: Antes vs Depois</h2>
+
+        <div class="comparison-grid">
+            <div class="config-box">
+                <h3>❌ ANTES (Atual)</h3>
+                <ul>
+                    <li>Tudo misturado em quiz21StepsComplete.ts</li>
+                    <li>Configurações globais dentro do funil</li>
+                    <li>Impossível ter múltiplos funis</li>
+                    <li>Mudanças no funil afetam o app</li>
+                    <li>Duplicação de configurações</li>
+                    <li>Acoplamento alto</li>
+                    <li>Manutenção difícil</li>
+                </ul>
+            </div>
+
+            <div class="config-box">
+                <h3>✅ DEPOIS (Proposto)</h3>
+                <ul>
+                    <li>Separação clara: App vs Funil</li>
+                    <li>Configurações globais centralizadas</li>
+                    <li>Múltiplos funis independentes</li>
+                    <li>Herança com sobrescrita</li>
+                    <li>Zero duplicação</li>
+                    <li>Baixo acoplamento</li>
+                    <li>Fácil manutenção e escalabilidade</li>
+                </ul>
+            </div>
+        </div>
+
+        <h2>🚀 Plano de Implementação</h2>
+
+        <div class="step-box" style="background: #f8f9fa; color: #333; border-left: 4px solid #007bff;">
+            <strong>ETAPA 1: Extrair Configurações Globais</strong>
+            <br>• Criar AppConfig.ts com configs globais
+            <br>• Mover SEO, domínio, tracking, branding
+            <br>• Manter funcionalidade atual
+        </div>
+
+        <div class="step-box" style="background: #f8f9fa; color: #333; border-left: 4px solid #007bff;">
+            <strong>ETAPA 2: Criar Sistema de Funil Config</strong>
+            <br>• Criar quiz21StepsComplete.config.ts
+            <br>• Mover configs específicas do funil
+            <br>• Implementar ConfigurationService
+        </div>
+
+        <div class="step-box" style="background: #f8f9fa; color: #333; border-left: 4px solid #007bff;">
+            <strong>ETAPA 3: Implementar Merge Sistema</strong>
+            <br>• Atualizar UnifiedTemplateService
+            <br>• Implementar herança de configurações
+            <br>• Testar funcionalidade
+        </div>
+
+        <div class="step-box" style="background: #f8f9fa; color: #333; border-left: 4px solid #007bff;">
+            <strong>ETAPA 4: Migrar e Validar</strong>
+            <br>• Migrar gradualmente
+            <br>• Validar funcionamento
+            <br>• Remover configurações antigas
+        </div>
+
+        <div class="status-success">
+            <strong>🎯 BENEFÍCIOS DA SEPARAÇÃO:</strong>
+            <br>✅ Configurações globais consistentes entre funis
+            <br>✅ Funis com configurações independentes
+            <br>✅ Sistema escalável para múltiplos funis
+            <br>✅ Manutenção simplificada
+            <br>✅ Zero duplicação de código
+            <br>✅ Arquitetura limpa e organizad
+        </div>
+
+        <div style="background-color: #e7f3ff; padding: 25px; border-radius: 10px; margin-top: 30px;">
+            <h3>🎉 CONCLUSÃO</h3>
+            <p><strong>A separação de configurações é ESSENCIAL para:</strong></p>
+            <ul style="margin: 15px 0;">
+                <li>🔧 Manter configurações globais do app independentes</li>
+                <li>🎯 Permitir funis com configurações específicas</li>
+                <li>📈 Escalar para múltiplos funis</li>
+                <li>🛠️ Facilitar manutenção e desenvolvimento</li>
+            </ul>
+            <p><strong>Recomendação: Implementar separação antes de adicionar novos funis!</strong></p>
+        </div>
+    </div>
+
+    <script>
+        console.log('⚙️ Análise de Separação de Configurações');
+        console.log('🚨 Problema: Configurações misturadas');
+        console.log('✅ Solução: App vs Funil separados');
+        console.log('🎯 Benefício: Sistema escalável e manutenível');
+    </script>
+</body>
+
+</html>
