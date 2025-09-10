@@ -8,6 +8,7 @@ import { extractStepNumberFromKey } from '@/utils/supabaseMapper';
 import { arrayMove } from '@dnd-kit/sortable';
 import React, { createContext, ReactNode, useCallback, useContext, useEffect } from 'react';
 import { unifiedQuizStorage } from '@/services/core/UnifiedQuizStorage';
+import { useFunnels } from '@/context/FunnelsContext';
 
 // Utilitário simples para aguardar o próximo tick do event loop (garante flush de setState em testes)
 const waitNextTick = (ms: number = 0) => new Promise<void>(resolve => setTimeout(resolve, ms));
@@ -227,6 +228,36 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     enableSupabase ? funnelId : undefined,
     enableSupabase ? quizId : undefined
   );
+
+  // 🔗 INTEGRAÇÃO CRÍTICA: Conectar ao FunnelsContext para salvamento
+  let funnelsContext;
+  try {
+    funnelsContext = useFunnels();
+  } catch (error) {
+    console.warn('⚠️ FunnelsContext não disponível no EditorProvider:', error);
+    funnelsContext = null;
+  }
+
+  // 🚀 DEBOUNCE PARA SALVAMENTO: Evitar sobrecarga do sistema
+  const debouncedSave = React.useRef<NodeJS.Timeout | null>(null);
+  const saveToFunnelsContext = useCallback((funnelData: any) => {
+    if (!funnelsContext?.saveFunnelToDatabase) return;
+
+    // Clear timeout anterior
+    if (debouncedSave.current) {
+      clearTimeout(debouncedSave.current);
+    }
+
+    // Agendar novo salvamento com debounce de 2 segundos
+    debouncedSave.current = setTimeout(async () => {
+      try {
+        await funnelsContext.saveFunnelToDatabase(funnelData);
+        console.log('✅ Auto-save: Mudanças salvas no FunnelsContext');
+      } catch (error) {
+        console.error('❌ Auto-save: Erro ao salvar no FunnelsContext:', error);
+      }
+    }, 2000);
+  }, [funnelsContext]);
 
   // Compose derived state (ensure defaults)
   const state: EditorState = {
@@ -880,6 +911,14 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
         };
       });
 
+      // 🔗 CORREÇÃO CRÍTICA: Salvar também no FunnelsContext com debounce
+      saveToFunnelsContext({
+        name: `Funil ${funnelId || 'Personalizado'}`,
+        description: `Funil atualizado em ${new Date().toLocaleString()}`,
+        isPublished: false,
+        theme: 'default'
+      });
+
       if (state.isSupabaseEnabled && supabaseIntegration?.updateBlockById) {
         try {
           setState(prev => {
@@ -896,7 +935,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
         }
       }
     },
-    [setState, state.isSupabaseEnabled, supabaseIntegration, quizId, funnelId]
+    [setState, state.isSupabaseEnabled, supabaseIntegration, quizId, funnelId, saveToFunnelsContext]
   );
 
   const loadDefaultTemplate = useCallback(() => {
