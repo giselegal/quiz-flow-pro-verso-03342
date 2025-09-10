@@ -56,10 +56,10 @@ const coreBusinessItems = [
     description: 'Funis criados e publicados',
   },
   {
-    title: 'Participantes',
+    title: 'Leads',
     href: '/admin/participantes',
     icon: Users,
-    description: 'Respostas e dados dos usuários',
+    description: 'Leads e dados dos usuários',
   },
 ];
 
@@ -67,7 +67,7 @@ const coreBusinessItems = [
 const analyticsItems = [
   {
     title: 'Analytics Real-Time',
-    href: '/admin/analytics',
+    href: '/admin/analytics/real-time',
     icon: LineChart,
     description: 'Métricas em tempo real',
     isAdvanced: true,
@@ -75,27 +75,19 @@ const analyticsItems = [
   },
   {
     title: 'A/B Testing',
-    href: '/admin/ab-tests',
+    href: '/admin/ab-testing',
     icon: Target,
     description: 'Testes e otimização',
     isAdvanced: true,
-    badge: 'Avançado',
+    badge: 'Pro',
   },
   {
-    title: 'IA & Recomendações',
+    title: 'Insights de IA',
     href: '/admin/ia-insights',
     icon: Brain,
-    description: 'Insights e automação IA',
+    description: 'Recomendações inteligentes',
     isAdvanced: true,
     badge: 'IA',
-  },
-  {
-    title: 'Métricas Detalhadas',
-    href: '/admin/metricas',
-    icon: TrendingUp,
-    description: 'Análise aprofundada',
-    isAdvanced: true,
-    badge: 'Pro',
   },
 ];
 

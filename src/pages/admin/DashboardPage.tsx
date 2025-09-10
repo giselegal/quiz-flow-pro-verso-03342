@@ -4,7 +4,7 @@ import { Route, Switch } from 'wouter';
 import { AdminSidebar } from '../../components/admin/AdminSidebar';
 
 // Lazy loading das páginas do dashboard
-const DashboardOverview = lazy(() => import('./OverviewPage'));
+const DashboardOverview = lazy(() => import('./ConsolidatedOverviewPage'));
 const QuizPage = lazy(() => import('./QuizPage'));
 const FunnelPanelPage = lazy(() => import('./FunnelPanelPage'));
 const MyFunnelsPage = lazy(() => import('./MyFunnelsPage'));
@@ -19,8 +19,7 @@ const NoCodeConfigPage = lazy(() => import('./NoCodeConfigPage'));
 const EditorPage = lazy(() => import('./EditorPage'));
 const FunnelSettingsPage = lazy(() => import('./FunnelSettingsPage'));
 const FunnelSystemDebugger = lazy(() => import('./FunnelSystemDebugger'));
-const FuncionalidadesAvancadasPage = lazy(() => import('./FuncionalidadesAvancadasPage'));
-const FuncionalidadesIAPage = lazy(() => import('./FuncionalidadesIAPage'));
+const IAInsightsPage = lazy(() => import('./IAInsightsPage'));
 
 // Componente de loading
 const LoadingFallback = () => (
@@ -49,21 +48,29 @@ const DashboardPage: React.FC = () => {
 
               {/* Rotas do dashboard */}
               <Route path="/admin/quiz" component={QuizPage} />
+              <Route path="/admin/quizzes" component={QuizPage} />
               <Route path="/admin/funis" component={FunnelPanelPage} />
+              <Route path="/admin/funnels" component={FunnelPanelPage} />
               <Route path="/admin/meus-funis" component={MyFunnelsPage} />
               <Route path="/admin/meus-templates" component={MyTemplatesPage} />
               <Route path="/admin/participantes" component={ParticipantsPage} />
+              <Route path="/admin/leads" component={ParticipantsPage} />
               <Route path="/admin/metricas" component={MetricsPage} />
               <Route path="/admin/configuracao" component={NoCodeConfigPage} />
               <Route path="/admin/ab-tests" component={ABTestPage} />
               <Route path="/admin/settings" component={SettingsPage} />
               <Route path="/admin/criativos" component={CreativesPage} />
               <Route path="/admin/analytics" component={AnalyticsPage} />
-              <Route path="/admin/funcionalidades-avancadas" component={FuncionalidadesAvancadasPage} />
-              <Route path="/admin/funcionalidades-ia" component={FuncionalidadesIAPage} />
+              <Route path="/admin/analytics/real-time" component={AnalyticsPage} />
+              <Route path="/admin/ab-testing" component={ABTestPage} />
+              <Route path="/admin/ia-insights" component={IAInsightsPage} />
               <Route path="/admin/editor" component={EditorPage} />
               <Route path="/admin/funnel-settings/:id" component={FunnelSettingsPage} />
               <Route path="/admin/templates" component={MyTemplatesPage} />
+              <Route path="/admin/webhooks" component={NoCodeConfigPage} />
+              <Route path="/admin/themes" component={SettingsPage} />
+              <Route path="/admin/databases" component={MyTemplatesPage} />
+              <Route path="/admin/preview" component={CreativesPage} />
               <Route path="/admin/debug" component={FunnelSystemDebugger} />
             </Switch>
           </Suspense>
