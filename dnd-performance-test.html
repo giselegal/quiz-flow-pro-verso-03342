@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,7 +13,7 @@
             padding: 20px;
             margin: 0;
         }
-        
+
         .console {
             background: #161b22;
             border: 1px solid #30363d;
@@ -24,11 +25,19 @@
             white-space: pre-wrap;
             overflow-x: auto;
         }
-        
-        .status-good { color: #28a745; }
-        .status-warning { color: #ffa500; }
-        .status-error { color: #dc3545; }
-        
+
+        .status-good {
+            color: #28a745;
+        }
+
+        .status-warning {
+            color: #ffa500;
+        }
+
+        .status-error {
+            color: #dc3545;
+        }
+
         button {
             background: #238636;
             color: white;
@@ -39,22 +48,22 @@
             font-size: 14px;
             margin: 10px 10px 10px 0;
         }
-        
+
         button:hover {
             background: #2ea043;
         }
-        
+
         .header {
             text-align: center;
             margin-bottom: 30px;
         }
-        
+
         .simulated-dnd {
             display: flex;
             gap: 10px;
             margin: 20px 0;
         }
-        
+
         .dnd-item {
             background: #21262d;
             border: 1px solid #30363d;
@@ -66,19 +75,20 @@
             transition: all 0.2s;
             user-select: none;
         }
-        
+
         .dnd-item:hover {
             background: #282e34;
             transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
-        
+
         .dnd-item.dragging {
             opacity: 0.5;
             transform: rotate(5deg);
         }
     </style>
 </head>
+
 <body>
     <div class="header">
         <h1>🔍 DnD Performance Analyzer</h1>
@@ -110,8 +120,8 @@
     </div>
 
     <div id="console-output" class="console">
-🚀 DnD Performance Analyzer carregado!
-📝 Clique nos botões acima para executar análises...
+        🚀 DnD Performance Analyzer carregado!
+        📝 Clique nos botões acima para executar análises...
     </div>
 
     <script type="module">
@@ -166,7 +176,7 @@
 
                 const hierarchy = {
                     level1: 'MainEditorUnified.tsx',
-                    level2: 'EditorProvider.tsx', 
+                    level2: 'EditorProvider.tsx',
                     level3: 'LegacyCompatibilityWrapper.tsx',
                     level4: 'EditorPro.tsx',
                     level5: 'StepDndProvider.tsx (DndContext)',
@@ -181,7 +191,7 @@
                 // Detectar contexts aninhados
                 const dndContexts = document.querySelectorAll('[data-rbd-droppable-context-id], [data-dnd-context]');
                 const dndProviders = document.querySelectorAll('[class*="dnd"], [class*="DndContext"]');
-                
+
                 output.push(`\\n📊 CONTEXTS ENCONTRADOS: ${dndContexts.length}`);
                 output.push(`📊 PROVIDERS ENCONTRADOS: ${dndProviders.length}`);
 
@@ -209,7 +219,7 @@
                 output.push('=====================================');
 
                 const startTime = performance.now();
-                
+
                 // Medir elementos DnD
                 const draggables = document.querySelectorAll('[data-dnd-kit-draggable-handle]');
                 const droppables = document.querySelectorAll('[data-dnd-kit-droppable]');
@@ -251,7 +261,7 @@
                 output.push('=====================================');
 
                 const draggables = document.querySelectorAll('[data-dnd-kit-draggable-handle]');
-                
+
                 if (draggables.length === 0) {
                     output.push('❌ Nenhum elemento draggable encontrado!');
                     return { output: output.join('\\n'), success: false, reason: 'No draggables found' };
@@ -263,7 +273,7 @@
                 // Simular 5 operações de drag
                 for (let i = 0; i < 5; i++) {
                     const startTime = performance.now();
-                    
+
                     // Simular mousedown
                     const mouseDownEvent = new MouseEvent('mousedown', {
                         bubbles: true,
@@ -271,12 +281,12 @@
                         clientX: 100 + i * 10,
                         clientY: 100 + i * 10
                     });
-                    
+
                     firstDraggable.dispatchEvent(mouseDownEvent);
-                    
+
                     // Aguardar um frame
                     await new Promise(resolve => requestAnimationFrame(resolve));
-                    
+
                     // Simular mousemove
                     const mouseMoveEvent = new MouseEvent('mousemove', {
                         bubbles: true,
@@ -284,20 +294,20 @@
                         clientX: 150 + i * 10,
                         clientY: 150 + i * 10
                     });
-                    
+
                     document.dispatchEvent(mouseMoveEvent);
-                    
+
                     // Simular mouseup
                     const mouseUpEvent = new MouseEvent('mouseup', {
                         bubbles: true,
                         cancelable: true
                     });
-                    
+
                     document.dispatchEvent(mouseUpEvent);
-                    
+
                     const endTime = performance.now();
                     measurements.push(endTime - startTime);
-                    
+
                     // Aguardar entre simulações
                     await new Promise(resolve => setTimeout(resolve, 50));
                 }
@@ -332,7 +342,7 @@
                 output.push('=====================================');
 
                 const elementsWithListeners = [];
-                
+
                 // Verificar elementos DnD com listeners
                 const draggables = document.querySelectorAll('[data-dnd-kit-draggable-handle]');
                 const droppables = document.querySelectorAll('[data-dnd-kit-droppable]');
@@ -362,7 +372,7 @@
                 });
 
                 output.push(`📋 Total elements with listeners: ${elementsWithListeners.length}`);
-                
+
                 // Verificar vazamentos de memory
                 const globalListeners = ['mousedown', 'mousemove', 'mouseup', 'touchstart', 'touchmove', 'touchend'];
                 const activeGlobalListeners = globalListeners.filter(event => {
@@ -408,7 +418,7 @@
 
                 // Calcular score geral
                 let score = 100;
-                
+
                 // Penalidades
                 if (results.hierarchy.hasNesting) score -= 30;
                 if (!results.dragSimulation.isPerformant) score -= 25;
@@ -418,26 +428,25 @@
                 output.push('\\n🏆 SCORE FINAL:');
                 output.push('=====================================');
                 output.push(`📊 Score: ${Math.max(0, score)}/100`);
-                output.push(`${score >= 80 ? '✅' : score >= 60 ? '⚠️' : '❌'} Status: ${
-                    score >= 80 ? 'EXCELENTE' : score >= 60 ? 'BOM' : 'NECESSITA MELHORIA'
-                }`);
+                output.push(`${score >= 80 ? '✅' : score >= 60 ? '⚠️' : '❌'} Status: ${score >= 80 ? 'EXCELENTE' : score >= 60 ? 'BOM' : 'NECESSITA MELHORIA'
+                    }`);
 
                 // Recomendações
                 output.push('\\n💡 RECOMENDAÇÕES:');
                 output.push('=====================================');
-                
+
                 if (results.hierarchy.hasNesting) {
                     output.push('❌ Remover aninhamento de DndContext');
                 }
-                
+
                 if (!results.dragSimulation.isPerformant) {
                     output.push('❌ Otimizar performance de drag operations');
                 }
-                
+
                 if (results.eventListeners.potentialGlobalListeners > 5) {
                     output.push('❌ Reduzir listeners globais');
                 }
-                
+
                 if (results.performance.draggableCount > 50) {
                     output.push('⚠️ Considerar virtualização para muitos elements');
                 }
@@ -484,4 +493,5 @@
         window.DnDPerformanceAnalyzer = DnDPerformanceAnalyzer;
     </script>
 </body>
+
 </html>
