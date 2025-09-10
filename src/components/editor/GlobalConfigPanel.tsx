@@ -459,7 +459,7 @@ export const GlobalConfigPanel: React.FC = () => {
                             <div className="flex items-center space-x-2">
                                 <Switch
                                     checked={config.domain.ssl}
-                                    onCheckedChange={(checked) => updateConfig('domain', 'ssl', checked)}
+                                    onCheckedChange={(checked: boolean) => updateConfig('domain', 'ssl', checked)}
                                 />
                                 <Label>SSL Habilitado (HTTPS)</Label>
                             </div>
@@ -494,7 +494,7 @@ export const GlobalConfigPanel: React.FC = () => {
                             <div className="flex items-center space-x-2">
                                 <Switch
                                     checked={config.tracking.enableTracking}
-                                    onCheckedChange={(checked) => updateConfig('tracking', 'enableTracking', checked)}
+                                    onCheckedChange={(checked: boolean) => updateConfig('tracking', 'enableTracking', checked)}
                                 />
                                 <Label>Habilitar Rastreamento</Label>
                             </div>
@@ -577,7 +577,7 @@ export const GlobalConfigPanel: React.FC = () => {
                             <div className="flex items-center space-x-2">
                                 <Switch
                                     checked={config.campaign.autoUTM}
-                                    onCheckedChange={(checked) => updateConfig('campaign', 'autoUTM', checked)}
+                                    onCheckedChange={(checked: boolean) => updateConfig('campaign', 'autoUTM', checked)}
                                 />
                                 <Label>Adicionar UTMs automaticamente</Label>
                             </div>
@@ -645,7 +645,7 @@ export const GlobalConfigPanel: React.FC = () => {
                             <div className="flex items-center space-x-2">
                                 <Switch
                                     checked={config.webhooks.enableWebhooks}
-                                    onCheckedChange={(checked) => updateConfig('webhooks', 'enableWebhooks', checked)}
+                                    onCheckedChange={(checked: boolean) => updateConfig('webhooks', 'enableWebhooks', checked)}
                                 />
                                 <Label>Habilitar Webhooks</Label>
                             </div>
@@ -857,7 +857,7 @@ export const GlobalConfigPanel: React.FC = () => {
                                 <div className="flex items-center space-x-2">
                                     <Switch
                                         checked={config.legal.gdprCompliant}
-                                        onCheckedChange={(checked) => updateConfig('legal', 'gdprCompliant', checked)}
+                                        onCheckedChange={(checked: boolean) => updateConfig('legal', 'gdprCompliant', checked)}
                                     />
                                     <Label>Conformidade GDPR</Label>
                                 </div>
@@ -865,7 +865,7 @@ export const GlobalConfigPanel: React.FC = () => {
                                 <div className="flex items-center space-x-2">
                                     <Switch
                                         checked={config.legal.showCookieBanner}
-                                        onCheckedChange={(checked) => updateConfig('legal', 'showCookieBanner', checked)}
+                                        onCheckedChange={(checked: boolean) => updateConfig('legal', 'showCookieBanner', checked)}
                                     />
                                     <Label>Exibir Banner de Cookies</Label>
                                 </div>
