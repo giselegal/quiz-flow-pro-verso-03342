@@ -71,12 +71,12 @@ describe('RegistryPropertiesPanel', () => {
         );
 
         // Verifica se o preview está presente
-        expect(getByText('Preview de Propriedades')).toBeInTheDocument();
-        expect(getByText('title: "Título Original"')).toBeInTheDocument();
+        expect(getByText('Preview Propriedades')).toBeInTheDocument();
+        expect(getByText('"Título Original"')).toBeInTheDocument();
     });
 
     it('renderiza botões de reset para campos específicos', () => {
-        const { getAllByText } = render(
+        const { container } = render(
             <RegistryPropertiesPanel
                 selectedBlock={mockBlock as any}
                 onUpdate={() => { }}
@@ -85,8 +85,8 @@ describe('RegistryPropertiesPanel', () => {
             />
         );
 
-        // Verifica se os botões de reset estão presentes
-        const resetButtons = getAllByText('Reset');
+        // Verifica se os botões de reset estão presentes (procura por title)
+        const resetButtons = container.querySelectorAll('[title="Resetar para valor padrão"]');
         expect(resetButtons.length).toBeGreaterThan(0);
     });
 });
