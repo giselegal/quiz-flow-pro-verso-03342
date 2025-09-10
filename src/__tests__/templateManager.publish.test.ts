@@ -28,6 +28,26 @@ vi.mock('../services/templateService', () => {
   };
 });
 
+// Mock do unifiedTemplateService para usar nos testes
+vi.mock('../services/unifiedTemplateService', () => {
+  return {
+    unifiedTemplateService: {
+      loadStepBlocks: vi.fn(async (_stepId: string) => {
+        // Simula carregamento de template quando não há override
+        return [
+          {
+            id: `tmpl-step-3-header`,
+            type: 'text-inline',
+            order: 0,
+            properties: { content: `Template Step 3` },
+            content: { content: `Template Step 3` },
+          },
+        ];
+      }),
+    },
+  };
+});
+
 import type { Block } from '@/types/editor';
 import { TemplateManager } from '@/utils/TemplateManager';
 
