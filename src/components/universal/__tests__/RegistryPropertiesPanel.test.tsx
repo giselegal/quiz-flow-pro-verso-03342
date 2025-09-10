@@ -59,4 +59,34 @@ describe('RegistryPropertiesPanel', () => {
             expect(onUpdate).toHaveBeenCalled();
         });
     });
+
+    it('exibe preview dos valores atuais das propriedades', () => {
+        const { getByText } = render(
+            <RegistryPropertiesPanel
+                selectedBlock={mockBlock as any}
+                onUpdate={() => { }}
+                onClose={() => { }}
+                onDelete={() => { }}
+            />
+        );
+
+        // Verifica se o preview está presente
+        expect(getByText('Preview de Propriedades')).toBeInTheDocument();
+        expect(getByText('title: "Título Original"')).toBeInTheDocument();
+    });
+
+    it('renderiza botões de reset para campos específicos', () => {
+        const { getAllByText } = render(
+            <RegistryPropertiesPanel
+                selectedBlock={mockBlock as any}
+                onUpdate={() => { }}
+                onClose={() => { }}
+                onDelete={() => { }}
+            />
+        );
+
+        // Verifica se os botões de reset estão presentes
+        const resetButtons = getAllByText('Reset');
+        expect(resetButtons.length).toBeGreaterThan(0);
+    });
 });
