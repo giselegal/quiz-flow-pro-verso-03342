@@ -67,6 +67,29 @@ const FunnelPanelPage: React.FC = () => {
   // Carregar templates personalizados
   React.useEffect(() => {
     loadCustomTemplates();
+    
+    // Carregar função de limpeza
+    const loadCleanupScript = async () => {
+      try {
+        // Verificar se a função já está disponível
+        if (typeof window !== 'undefined' && !(window as any).cleanupFunnels) {
+          // Carregar e executar o script de limpeza
+          const script = document.createElement('script');
+          script.src = '/src/utils/cleanupFunnels.js';
+          script.onload = () => {
+            console.log('✅ Script de limpeza carregado');
+          };
+          script.onerror = () => {
+            console.warn('⚠️ Erro ao carregar script de limpeza');
+          };
+          document.head.appendChild(script);
+        }
+      } catch (error) {
+        console.warn('⚠️ Erro ao carregar script de limpeza:', error);
+      }
+    };
+    
+    loadCleanupScript();
   }, []);
 
   const loadCustomTemplates = () => {
@@ -783,6 +806,165 @@ const FunnelPanelPage: React.FC = () => {
                 Salvar Template
               </Button>
             </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Modal de Limpeza de Duplicatas */}
+      <Dialog open={isCleanupModalOpen} onOpenChange={setIsCleanupModalOpen}>
+        <DialogContent className="max-w-4xl max-h-[80vh] overflow-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Broom className="w-5 h-5 text-orange-600" />
+              Limpeza de Funis Duplicados
+            </DialogTitle>
+          </DialogHeader>
+
+          <div className="space-y-6">
+            {/* Status de escaneamento */}
+            {isScanning && (
+              <Card className="border-blue-200 bg-blue-50">
+                <CardContent className="p-4">
+                  <div className="flex items-center gap-3">
+                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+                    <span className="text-blue-700 font-medium">Escaneando localStorage em busca de duplicatas...</span>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Resultado do escaneamento */}
+            {duplicateInfo && !isScanning && (
+              <div className="space-y-4">
+                <Card className="border-orange-200 bg-orange-50">
+                  <CardContent className="p-4">
+                    <div className="flex items-start gap-3">
+                      <AlertTriangle className="w-6 h-6 text-orange-600 flex-shrink-0 mt-0.5" />
+                      <div className="flex-1">
+                        <h3 className="text-lg font-semibold text-orange-800 mb-2">
+                          Duplicatas Detectadas
+                        </h3>
+                        <div className="grid grid-cols-2 gap-4 text-sm">
+                          <div>
+                            <span className="text-orange-700">Total de itens: </span>
+                            <span className="font-bold">{duplicateInfo.total}</span>
+                          </div>
+                          <div>
+                            <span className="text-orange-700">Espaço usado: </span>
+                            <span className="font-bold">
+                              {(duplicateInfo.spaceToFree / 1024).toFixed(1)} KB
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Lista de duplicatas */}
+                <Card>
+                  <CardContent className="p-4">
+                    <h4 className="font-semibold mb-3">Itens que serão removidos:</h4>
+                    <div className="max-h-64 overflow-y-auto space-y-2">
+                      {duplicateInfo.duplicates.map((item, index) => (
+                        <div
+                          key={index}
+                          className="flex justify-between items-center p-2 bg-gray-50 rounded text-sm"
+                        >
+                          <span className="font-mono text-gray-700 truncate">
+                            {item.name}
+                          </span>
+                          <span className="text-gray-500 text-xs">
+                            {(item.size / 1024).toFixed(1)} KB
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Ações */}
+                <div className="flex justify-between items-center pt-4">
+                  <Button
+                    variant="outline"
+                    onClick={() => setIsCleanupModalOpen(false)}
+                  >
+                    Cancelar
+                  </Button>
+                  <Button
+                    onClick={executeCleanup}
+                    disabled={isCleaningUp}
+                    className="bg-orange-600 hover:bg-orange-700 text-white"
+                  >
+                    {isCleaningUp ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                        Limpando...
+                      </>
+                    ) : (
+                      <>
+                        <Trash2 className="w-4 h-4 mr-2" />
+                        Excluir {duplicateInfo.total} itens
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            {/* Resultado da limpeza */}
+            {cleanupResult && (
+              <Card className={`border-2 ${cleanupResult.success ? 'border-green-200 bg-green-50' : 'border-red-200 bg-red-50'}`}>
+                <CardContent className="p-4">
+                  <div className="flex items-start gap-3">
+                    {cleanupResult.success ? (
+                      <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5" />
+                    ) : (
+                      <AlertTriangle className="w-6 h-6 text-red-600 flex-shrink-0 mt-0.5" />
+                    )}
+                    <div className="flex-1">
+                      <h3 className={`text-lg font-semibold mb-2 ${cleanupResult.success ? 'text-green-800' : 'text-red-800'}`}>
+                        {cleanupResult.success ? 'Limpeza Concluída!' : 'Erro na Limpeza'}
+                      </h3>
+                      {cleanupResult.success ? (
+                        <div className="text-sm text-green-700">
+                          <p>✅ {cleanupResult.removedCount} itens removidos com sucesso</p>
+                          <p>✅ Funis duplicados foram excluídos</p>
+                          <p>✅ localStorage otimizado</p>
+                        </div>
+                      ) : (
+                        <div className="text-sm text-red-700">
+                          <p>❌ Erro: {cleanupResult.error}</p>
+                          <p>Tente novamente ou entre em contato com o suporte</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Estado inicial */}
+            {!duplicateInfo && !isScanning && (
+              <Card className="border-gray-200">
+                <CardContent className="p-8 text-center">
+                  <Broom className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold text-gray-700 mb-2">
+                    Limpeza de Funis Duplicados
+                  </h3>
+                  <p className="text-gray-600 mb-4">
+                    Esta ferramenta irá escanear e remover funis duplicados, temporários e obsoletos do seu navegador.
+                  </p>
+                  <Button
+                    onClick={scanForDuplicates}
+                    className="bg-orange-600 hover:bg-orange-700 text-white"
+                  >
+                    <Broom className="w-4 h-4 mr-2" />
+                    Iniciar Escaneamento
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
           </div>
         </DialogContent>
       </Dialog>
