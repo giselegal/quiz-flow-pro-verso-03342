@@ -11,7 +11,7 @@ console.log('='.repeat(60));
 // IDs de teste reportados pelo usuário
 const testFunnelIds = [
     'personality-assessment-1757514679394',
-    'lead-capture-simple-1757514692752', 
+    'lead-capture-simple-1757514692752',
     'com-que-roupa-eu-vou-1757514710892',
     'style-quiz-21-steps-1757514731045'
 ];
@@ -36,7 +36,7 @@ testFunnelIds.forEach((funnelId, index) => {
     ];
 
     console.log(`\n📋 ${index + 1}. TESTANDO ${funnelId}:`);
-    
+
     storageKeys.forEach(key => {
         const data = localStorage.getItem(key);
         if (data) {
