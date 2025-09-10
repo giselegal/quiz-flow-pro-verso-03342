@@ -623,11 +623,11 @@ class PerformanceManager {
             'https://cakto-quiz-br01.b-cdn.net'
         ]);
 
-        // Preload de fontes críticas
-        this.resourceHints.preloadCriticalFonts([
-            { url: '/fonts/inter.woff2', format: 'woff2' },
-            { url: '/fonts/playfair.woff2', format: 'woff2' }
-        ]);
+        // Preload de fontes críticas - DESABILITADO: fontes carregadas via Google Fonts no index.html
+        // this.resourceHints.preloadCriticalFonts([
+        //     { url: '/fonts/inter.woff2', format: 'woff2' },
+        //     { url: '/fonts/playfair.woff2', format: 'woff2' }
+        // ]);
 
         // Extração de CSS crítico
         this.criticalCSS.extractCriticalCSS();

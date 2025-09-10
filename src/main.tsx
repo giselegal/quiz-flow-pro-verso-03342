@@ -6,6 +6,8 @@ import './index.css';
 // 🧹 DEVELOPMENT: Sistema de limpeza de avisos do console
 import { initBrowserCleanup } from './utils/browserCleanup';
 import { cleanupConsoleWarnings } from './utils/development';
+// 🛡️ DEVELOPMENT: Bloquear conexões Lovable em desenvolvimento
+import './utils/blockLovableInDev';
 // import "./utils/hotmartWebhookSimulator"; // Carregar simulador de webhook - temporariamente desabilitado
 
 // 🧹 DEVELOPMENT: Ativa limpeza de avisos apenas em desenvolvimento
