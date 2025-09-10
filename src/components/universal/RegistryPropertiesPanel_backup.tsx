@@ -14,7 +14,7 @@ import { Progress } from '@/components/ui/progress';
 import { 
   X, Trash2, RotateCcw, Plus, Minus, Upload, Eye, EyeOff, 
   Info, Palette, Image, Settings, Layout, Type, Check,
-  RefreshCw, Save, AlertCircle, Cloud, CloudOff,
+  RefreshCw, Save, AlertCircle, CloudCheck, CloudOff,
   MoveUp, MoveDown, Copy, Zap, Monitor, Sparkles
 } from 'lucide-react';
 import { blocksRegistry, type PropSchema } from '@/core/blocks/registry';
