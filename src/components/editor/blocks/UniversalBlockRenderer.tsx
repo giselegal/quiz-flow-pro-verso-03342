@@ -289,7 +289,7 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = React.memo
   const nextResponses = nextProps.userResponses || {};
   const prevResponseKeys = Object.keys(prevResponses);
   const nextResponseKeys = Object.keys(nextResponses);
-  
+
   if (prevResponseKeys.length !== nextResponseKeys.length) return false;
   for (const key of prevResponseKeys) {
     if (prevResponses[key] !== nextResponses[key]) return false;
@@ -298,7 +298,7 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = React.memo
   // Comparação superficial das propriedades do bloco
   const prevProps_ = prevProps.block.properties || {};
   const nextProps_ = nextProps.block.properties || {};
-  
+
   // ✅ Verificar apenas propriedades críticas para re-render (otimização)
   const criticalProps = ['content', 'src', 'text', 'backgroundColor', 'color', 'fontSize', 'title', 'options'];
   for (const prop of criticalProps) {

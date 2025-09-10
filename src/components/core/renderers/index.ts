@@ -15,7 +15,7 @@ export type { UniversalBlockRendererProps as ConsolidatedBlockRendererProps } fr
 export { default as VisualBlockFallback } from './VisualBlockFallback';
 
 // Re-export optimized registry utilities
-export { 
+export {
   getOptimizedBlockComponent,
   hasOptimizedBlockComponent,
   getAvailableOptimizedComponents,
