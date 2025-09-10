@@ -86,6 +86,9 @@ const useBackendSync = (selectedBlock: any, onUpdate: Function) => {
             try {
                 setSaveProgress(50);
 
+                const properties: Record<string, any> = {};
+                const content: Record<string, any> = {};
+
                 Object.entries(updates).forEach(([key, value]) => {
                     // Campos que tradicionalmente são conteúdo
                     const contentFields = ['title', 'subtitle', 'description', 'text', 'question', 'options', 'placeholder'];
