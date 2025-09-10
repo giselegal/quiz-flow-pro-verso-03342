@@ -4,7 +4,7 @@ import { defineConfig } from 'vite';
 
 // Configuração INLINE para contornar problemas de infraestrutura Lovable
 export default defineConfig({
-  base: '/',
+  base: './',
   plugins: [react()],
   resolve: {
     alias: {
@@ -52,7 +52,6 @@ export default defineConfig({
     chunkSizeWarningLimit: 2000, // Allow larger single bundle
     copyPublicDir: true,
     rollupOptions: {
-      input: './public/index.html',
       output: {
         // FORÇA BUNDLE ÚNICO para contornar problemas Lovable
         manualChunks: undefined,
