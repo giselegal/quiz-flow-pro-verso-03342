@@ -33,9 +33,13 @@ import { Cloud } from 'lucide-react';
 import { CloudOff } from 'lucide-react';
 import { MoveUp } from 'lucide-react';
 import { MoveDown } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
+import { Settings2 } from 'lucide-react';
 import { Sparkles } from 'lucide-react';
+import { Layers } from 'lucide-react';
 import { blocksRegistry, type PropSchema, type PropKind } from '@/core/blocks/registry';
 import { debounce } from 'lodash';
+import StepPropertiesSection from '@/components/editor/StepPropertiesSection';
 
 interface RegistryPropertiesPanelProps {
   selectedBlock: any;
@@ -66,6 +70,8 @@ const CATEGORIES = {
   style: { label: 'Estilo', icon: Palette, color: 'text-purple-600' },
   validation: { label: 'Validação', icon: Check, color: 'text-orange-600' },
   behavior: { label: 'Comportamento', icon: Settings, color: 'text-red-600' },
+  step: { label: 'Configurações da Etapa', icon: ArrowRight, color: 'text-indigo-600' },
+  funnel: { label: 'Configurações do Funil', icon: Settings2, color: 'text-emerald-600' },
   general: { label: 'Geral', icon: Sparkles, color: 'text-gray-600' }
 };
 
@@ -890,6 +896,32 @@ const RegistryPropertiesPanel: React.FC<RegistryPropertiesPanelProps> = ({
         {/* Conteúdo principal */}
         <div className="flex-1 overflow-y-auto p-6">
           <div className="space-y-6">
+            {/* Seção especial para configurações de etapa (quando aplicável) */}
+            {selectedBlock?.type === 'step' && (
+              <Card className="border border-indigo-200 shadow-sm bg-gradient-to-r from-indigo-50 to-blue-50">
+                <CardHeader className="pb-3">
+                  <CardTitle className="flex items-center gap-2 text-base">
+                    <ArrowRight className="w-4 h-4 text-indigo-600" />
+                    Configurações da Etapa
+                    <Badge variant="secondary" className="ml-auto text-xs bg-indigo-100 text-indigo-700">
+                      NOCODE
+                    </Badge>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <StepPropertiesSection
+                    currentStepId={selectedBlock.stepNumber || "1"}
+                    totalSteps={selectedBlock.totalSteps || 21}
+                    onStepConfigChange={(config) => {
+                      console.log('Configuração da etapa atualizada:', config);
+                      // Aqui podemos integrar com o sistema principal
+                      onUpdate(selectedBlock.id, { stepConfig: config });
+                    }}
+                  />
+                </CardContent>
+              </Card>
+            )}
+
             {Object.entries(groupedSchemas).map(([category, schemas]) => {
               const categoryDef = CATEGORIES[category as keyof typeof CATEGORIES] || CATEGORIES.general;
               const CategoryIcon = categoryDef.icon;
