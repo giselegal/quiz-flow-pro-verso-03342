@@ -10,12 +10,30 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import {
-  X, Trash2, RotateCcw, Plus, Minus, Upload, Eye, EyeOff,
-  Info, Palette, Image, Settings, Layout, Type, Check,
-  RefreshCw, Save, AlertCircle, Cloud, CloudOff,
-  MoveUp, MoveDown, Sparkles
-} from 'lucide-react';
+// Imports individuais para evitar problema de cache
+import { X } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
+import { RotateCcw } from 'lucide-react';
+import { Plus } from 'lucide-react';
+import { Minus } from 'lucide-react';
+import { Upload } from 'lucide-react';
+import { Eye } from 'lucide-react';
+import { EyeOff } from 'lucide-react';
+import { Info } from 'lucide-react';
+import { Palette } from 'lucide-react';
+import { Image } from 'lucide-react';
+import { Settings } from 'lucide-react';
+import { Layout } from 'lucide-react';
+import { Type } from 'lucide-react';
+import { Check } from 'lucide-react';
+import { RefreshCw } from 'lucide-react';
+import { Save } from 'lucide-react';
+import { AlertCircle } from 'lucide-react';
+import { Cloud } from 'lucide-react';
+import { CloudOff } from 'lucide-react';
+import { MoveUp } from 'lucide-react';
+import { MoveDown } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 import { blocksRegistry, type PropSchema, type PropKind } from '@/core/blocks/registry';
 import { debounce } from 'lodash';
 
