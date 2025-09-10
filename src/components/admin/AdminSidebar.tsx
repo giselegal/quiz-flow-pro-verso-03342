@@ -14,6 +14,7 @@ import {
   Zap,
   Activity,
   Award,
+  Brain,
 } from 'lucide-react';
 import { Link, useLocation } from 'wouter';
 import { Badge } from '../ui/badge';
@@ -52,6 +53,14 @@ const advancedFeatures = [
     description: 'Ver todas as funcionalidades ativadas',
     isNew: true,
     badge: 'NOVO',
+  },
+  {
+    title: '🧠 Inteligência Artificial',
+    href: '/admin/funcionalidades-ia',
+    icon: Brain,
+    description: 'Sistemas de IA, ML e automação',
+    isNew: true,
+    badge: 'IA',
   },
   {
     title: 'Analytics Avançado',

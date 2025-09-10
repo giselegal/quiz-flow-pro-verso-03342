@@ -20,6 +20,7 @@ const EditorPage = lazy(() => import('./EditorPage'));
 const FunnelSettingsPage = lazy(() => import('./FunnelSettingsPage'));
 const FunnelSystemDebugger = lazy(() => import('./FunnelSystemDebugger'));
 const FuncionalidadesAvancadasPage = lazy(() => import('./FuncionalidadesAvancadasPage'));
+const FuncionalidadesIAPage = lazy(() => import('./FuncionalidadesIAPage'));
 
 // Componente de loading
 const LoadingFallback = () => (
@@ -59,6 +60,7 @@ const DashboardPage: React.FC = () => {
               <Route path="/admin/criativos" component={CreativesPage} />
               <Route path="/admin/analytics" component={AnalyticsPage} />
               <Route path="/admin/funcionalidades-avancadas" component={FuncionalidadesAvancadasPage} />
+              <Route path="/admin/funcionalidades-ia" component={FuncionalidadesIAPage} />
               <Route path="/admin/editor" component={EditorPage} />
               <Route path="/admin/funnel-settings/:id" component={FunnelSettingsPage} />
               <Route path="/admin/templates" component={MyTemplatesPage} />
