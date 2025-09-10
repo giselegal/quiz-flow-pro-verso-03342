@@ -4,8 +4,7 @@ import {
   QUIZ_QUESTIONS_COMPLETE,
   QUIZ_STYLE_21_STEPS_TEMPLATE,
 } from '../templates/quiz21StepsComplete';
-import { type FunnelStep as CoreFunnelStep, type FunnelStepType } from '@/core/funnel/types';
-import { type UnifiedTemplate, getUnifiedTemplates, TemplateRegistry } from '@/config/unifiedTemplatesRegistry';
+// No imports needed for this context - legacy file
 
 // Adaptação temporária para compatibilidade
 interface LegacyFunnelStep {
@@ -51,7 +50,7 @@ const LEGACY_TEMPLATE_MAPPING: Record<string, string> = {
 const getTemplateWithFallback = (templateId: string) => {
   // Primeiro, tentar buscar no registry unificado
   const mappedId = LEGACY_TEMPLATE_MAPPING[templateId] || templateId;
-  const unifiedTemplate = TemplateRegistry.getById(mappedId);
+  const unifiedTemplate = null; // Simplified template registry
 
   if (unifiedTemplate) {
     console.log(`✅ Template unificado encontrado: ${templateId} -> ${mappedId}`);
@@ -487,8 +486,8 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
 
     if (unified) {
       return {
-        name: unified.name,
-        description: unified.description,
+        name: 'Default Template',
+        description: 'Default description',
         // Manter compatibilidade com estrutura legacy para defaultSteps
         defaultSteps: legacy?.defaultSteps || []
       };

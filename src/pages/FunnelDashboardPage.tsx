@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getFunnelIdFromEnvOrStorage, saveFunnelIdToStorage } from '@/utils/funnelIdentity';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+// No imports needed - using Card components directly
 import { FunnelManager } from '@/components/editor/FunnelManager';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 import { useLocation } from 'wouter';

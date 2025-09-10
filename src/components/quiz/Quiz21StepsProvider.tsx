@@ -209,7 +209,7 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
   const [currentStepSelections, setCurrentStepSelections] = useState<Record<string, any>>({});
 
   // 📊 INTEGRAÇÃO: Analytics para tracking
-  const { trackStepStart, trackStepComplete, trackQuizComplete } = useQuizAnalytics();
+  const { trackStepStart, trackStepComplete } = useQuizAnalytics();
 
   // 🗄️ INTEGRAÇÃO: Supabase para persistência
   const {
@@ -359,7 +359,7 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
       saveSupabaseAnswer({ questionId, optionId });
 
       // 📊 ANALYTICS: Rastrear seleção de opção
-      trackOptionSelected(currentStep, optionId, value);
+      trackOptionSelected(currentStep, optionId);
 
       // Atualizar seleções da etapa atual
       setCurrentStepSelections(prev => ({

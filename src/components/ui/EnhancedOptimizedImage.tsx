@@ -11,7 +11,7 @@
  */
 
 import React, { useState, useEffect, useRef, memo } from 'react';
-import { useResponsiveOptimization, imageOptimizer } from '../../utils/imageOptimizationManager';
+import { useResponsiveOptimization } from '../../utils/imageOptimizationManager';
 
 interface EnhancedOptimizedImageProps {
     src: string;
@@ -95,9 +95,7 @@ const EnhancedOptimizedImage: React.FC<EnhancedOptimizedImageProps> = memo(({
     priority = false,
     onLoad,
     onError,
-    sizes,
-    quality,
-    formats
+    sizes
 }) => {
     const [isLoaded, setIsLoaded] = useState(false);
     const [hasError, setHasError] = useState(false);

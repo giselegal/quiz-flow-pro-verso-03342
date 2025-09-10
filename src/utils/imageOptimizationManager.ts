@@ -164,7 +164,7 @@ class ImageOptimizationManager {
             // 3. Ou serviço backend de otimização
 
             // Por agora, simula o processamento
-            const optimizedBlob = await this.simulateImageProcessing(src, options);
+            const optimizedBlob = await this.simulateImageProcessing(options);
 
             const processTime = performance.now() - startTime;
             const optimizedUrl = URL.createObjectURL(optimizedBlob);
@@ -194,7 +194,6 @@ class ImageOptimizationManager {
      * Simula o processamento real que seria feito via Canvas/Worker
      */
     private async simulateImageProcessing(
-        src: string,
         options: { width: number; height: number; format: string; quality: number }
     ): Promise<Blob> {
         // Em produção, aqui seria:
