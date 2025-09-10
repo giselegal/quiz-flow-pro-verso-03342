@@ -14,10 +14,10 @@ import { Progress } from '@/components/ui/progress';
 import {
     X, Trash2, RotateCcw, Plus, Minus, Upload, Eye, EyeOff,
     Info, Palette, Image, Settings, Layout, Type, Check,
-    RefreshCw, Save, AlertCircle, CloudCheck, CloudOff,
-    MoveUp, MoveDown, Copy, Zap, Monitor, Sparkles
+    RefreshCw, Save, AlertCircle, Cloud, CloudOff,
+    MoveUp, MoveDown, Sparkles
 } from 'lucide-react';
-import { blocksRegistry, type PropSchema } from '@/core/blocks/registry';
+import { blocksRegistry, type PropSchema, type PropKind } from '@/core/blocks/registry';
 import { debounce } from 'lodash';
 
 interface RegistryPropertiesPanelProps {
@@ -29,26 +29,15 @@ interface RegistryPropertiesPanelProps {
 
 // ✨ TIPOS AVANÇADOS PARA PROPRIEDADES MODERNAS
 interface ModernPropSchema extends PropSchema {
-    min?: number;
-    max?: number;
-    step?: number;
-    unit?: string;
-    tooltip?: string;
-    helpText?: string;
+    icon?: React.ComponentType<any>;
+    gradient?: boolean;
     preview?: boolean;
-    imageWidth?: number;
-    imageHeight?: number;
-    acceptedFormats?: string[];
-    placeholder?: string;
-    options?: { value: string; label: string; icon?: string }[];
-    dependsOn?: string[];
-    when?: Record<string, any>;
-    validation?: {
-        required?: boolean;
-        pattern?: string;
-        minLength?: number;
-        maxLength?: number;
-    };
+    advanced?: boolean;
+    group?: string;
+    tooltip?: string;
+    validation?: (value: any) => boolean;
+    defaultValue?: any;
+    type?: PropKind;
 }
 
 // ✨ CATEGORIAS MODERNAS PARA AGRUPAMENTO
@@ -390,7 +379,7 @@ const OptionsArrayEditor: React.FC<{
 
             {/* Botão para adicionar opção */}
             <Button
-                variant="dashed"
+                variant="outline"
                 onClick={addOption}
                 className="w-full border-dashed border-2 border-gray-300 text-gray-600 hover:border-gray-400 hover:text-gray-700"
             >
@@ -411,7 +400,7 @@ const ModernFieldRenderer: React.FC<{
     const isModified = value !== schema.defaultValue;
 
     const renderField = () => {
-        switch (schema.type) {
+        switch (schema.kind) {
             case 'text':
                 return (
                     <Input
@@ -468,7 +457,7 @@ const ModernFieldRenderer: React.FC<{
                     );
                 }
 
-            case 'boolean':
+            case 'switch':
                 return (
                     <div className="flex items-center space-x-2">
                         <Switch
@@ -665,7 +654,7 @@ const ModernFieldRenderer: React.FC<{
                     )}
                 </div>
 
-                {isModified && schema.type !== 'color' && (
+                {isModified && schema.kind !== 'color' && (
                     <Button
                         variant="ghost"
                         size="sm"
@@ -783,7 +772,7 @@ const RegistryPropertiesPanel: React.FC<RegistryPropertiesPanelProps> = ({
                                 </>
                             ) : (
                                 <>
-                                    <CloudCheck className="w-3 h-3 text-green-500" />
+                                    <Cloud className="w-3 h-3 text-green-500" />
                                     <span className="text-green-600">
                                         {lastSaved ? `Salvo ${lastSaved.toLocaleTimeString()}` : 'Sincronizado'}
                                     </span>

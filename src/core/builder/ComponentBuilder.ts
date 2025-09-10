@@ -359,10 +359,10 @@ export class ComponentBuilder {
             case 'switch':
                 return typeof value === 'boolean';
             case 'select':
-                return schema.options?.some(opt => opt.value === value);
+                return schema.options?.some(opt => opt.value === value) ?? false;
             case 'array':
                 return Array.isArray(value);
-            case 'image':
+            case 'url':
                 return typeof value === 'string' && (value.startsWith('http') || value.startsWith('data:'));
             default:
                 return true;

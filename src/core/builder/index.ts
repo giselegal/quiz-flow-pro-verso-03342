@@ -7,13 +7,9 @@
 
 // ✨ IMPORTS PARA USO INTERNO
 import ComponentBuilder, {
-    ComponentConfig,
-    BuilderContext,
-    BuildResult,
     ValidationResult,
     ValidationError,
     ValidationWarning,
-    COMPONENT_TEMPLATES,
     createQuizQuestion,
     createLeadCapture,
     createHero,
@@ -24,12 +20,6 @@ import ComponentBuilder, {
 
 import FunnelBuilder, {
     FunnelConfig,
-    FunnelStep,
-    StepTransition,
-    TransitionCondition,
-    FunnelSettings,
-    FunnelAnalytics,
-    FUNNEL_TEMPLATES,
     createFunnel,
     createFunnelFromTemplate,
     createOptimizedFunnel
@@ -37,13 +27,6 @@ import FunnelBuilder, {
 
 import UIBuilder, {
     LayoutConfig,
-    LayoutType,
-    ThemeConfig,
-    ColorPalette,
-    AnimationConfig,
-    AccessibilityConfig,
-    LAYOUT_TEMPLATES,
-    THEME_PRESETS,
     createSingleColumnLayout,
     createTwoColumnLayout,
     createGridLayout,
@@ -56,30 +39,17 @@ export { ComponentBuilder, FunnelBuilder, UIBuilder };
 
 // ✨ EXPORTAR TIPOS
 export type {
-    ComponentConfig,
-    BuilderContext,
-    BuildResult,
     ValidationResult,
     ValidationError,
     ValidationWarning
 } from './ComponentBuilder';
 
 export type {
-    FunnelConfig,
-    FunnelStep,
-    StepTransition,
-    TransitionCondition,
-    FunnelSettings,
-    FunnelAnalytics
+    FunnelConfig
 } from './FunnelBuilder';
 
 export type {
-    LayoutConfig,
-    LayoutType,
-    ThemeConfig,
-    ColorPalette,
-    AnimationConfig,
-    AccessibilityConfig
+    LayoutConfig
 } from './UIBuilder';
 
 // ✨ EXPORTAR TEMPLATES
@@ -118,7 +88,6 @@ export class QuizBuilderFacade {
      */
     static createCompleteQuiz(name: string) {
         const funnel = createFunnelFromTemplate('product-quiz')
-            .withName(name)
             .autoConnect()
             .optimize();
 
@@ -152,7 +121,6 @@ export class QuizBuilderFacade {
      */
     static createLeadQualification(name: string) {
         const funnel = createFunnelFromTemplate('lead-qualification')
-            .withName(name)
             .withAnalytics({
                 trackingEnabled: true,
                 events: ['step_start', 'step_complete', 'lead_captured', 'funnel_complete']

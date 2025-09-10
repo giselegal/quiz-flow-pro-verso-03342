@@ -113,7 +113,7 @@ const useBackendSync = (selectedBlock: any, onUpdate: Function) => {
   }, [selectedBlock?.id, onUpdate]);
 
   const updateField = useCallback((key: string, value: any) => {
-    setLocalState(prev => {
+    setLocalState((prev: any) => {
       const newState = { ...prev, [key]: value };
       debouncedSave(newState);
       return newState;
@@ -537,7 +537,7 @@ const RegistryPropertiesPanel: React.FC<RegistryPropertiesPanelProps> = ({
             />
           );
 
-        case 'image':
+        case 'url':
           return (
             <ImageFieldEditor
               schema={schema}
