@@ -512,7 +512,6 @@ const ModernFieldRenderer: React.FC<{
                             {schema.options?.map((option) => (
                                 <SelectItem key={option.value} value={option.value}>
                                     <div className="flex items-center gap-2">
-                                        {option.icon && <span>{option.icon}</span>}
                                         {option.label}
                                     </div>
                                 </SelectItem>
@@ -635,7 +634,7 @@ const ModernFieldRenderer: React.FC<{
                 <div className="flex items-center gap-2">
                     <Label className="text-sm font-medium text-gray-700">
                         {schema.label}
-                        {schema.validation?.required && (
+                        {schema.required && (
                             <span className="text-red-500 ml-1">*</span>
                         )}
                     </Label>
