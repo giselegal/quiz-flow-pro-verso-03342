@@ -13,7 +13,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { ThumbnailImage } from '@/components/ui/EnhancedOptimizedImage';
 import { funnelLocalStore } from '@/services/funnelLocalStore';
 import { customTemplateService, CustomTemplate } from '@/services/customTemplateService';
-import { Edit, Eye, Play, Plus, Sparkles, Zap, Copy, Trash2, Broom, AlertTriangle, CheckCircle } from 'lucide-react';
+import { Edit, Eye, Play, Plus, Sparkles, Zap, Copy, Trash2, RefreshCw, AlertTriangle, CheckCircle } from 'lucide-react';
 import { useLocation } from 'wouter';
 import { AdminBreadcrumbs } from '@/components/admin/AdminBreadcrumbs';
 import { useFunnelTemplates } from '@/core/funnel/hooks/useFunnelTemplates';
@@ -451,7 +451,7 @@ const FunnelPanelPage: React.FC = () => {
             variant="outline"
             className="border-orange-300 text-orange-700 hover:bg-orange-50 px-4 py-3"
           >
-            <Broom className="w-5 h-5 mr-2" />
+            <RefreshCw className="w-5 h-5 mr-2" />
             Limpar Duplicatas
           </Button>
           <Button
@@ -815,7 +815,7 @@ const FunnelPanelPage: React.FC = () => {
         <DialogContent className="max-w-4xl max-h-[80vh] overflow-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Broom className="w-5 h-5 text-orange-600" />
+              <RefreshCw className="w-5 h-5 text-orange-600" />
               Limpeza de Funis Duplicados
             </DialogTitle>
           </DialogHeader>
@@ -948,7 +948,7 @@ const FunnelPanelPage: React.FC = () => {
             {!duplicateInfo && !isScanning && (
               <Card className="border-gray-200">
                 <CardContent className="p-8 text-center">
-                  <Broom className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                  <RefreshCw className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                   <h3 className="text-lg font-semibold text-gray-700 mb-2">
                     Limpeza de Funis Duplicados
                   </h3>
@@ -959,7 +959,7 @@ const FunnelPanelPage: React.FC = () => {
                     onClick={scanForDuplicates}
                     className="bg-orange-600 hover:bg-orange-700 text-white"
                   >
-                    <Broom className="w-4 h-4 mr-2" />
+                    <RefreshCw className="w-4 h-4 mr-2" />
                     Iniciar Escaneamento
                   </Button>
                 </CardContent>
