@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { Slider } from '@/components/ui/slider';
-import { X, Trash2 } from 'lucide-react';
+import { X, Trash2, RotateCcw, Plus, Minus } from 'lucide-react';
 import { blocksRegistry, type PropSchema } from '@/core/blocks/registry';
 import QuizQuestionPropertiesPanel from '@/components/editor/properties/QuizQuestionPropertiesPanel';
 
@@ -89,26 +89,74 @@ const RegistryPropertiesPanel: React.FC<RegistryPropertiesPanelProps> = ({
     applyUpdates(updates);
   };
 
+  // ✨ NOVA FUNCIONALIDADE: Reset de campo individual
+  const handleResetField = (schema: PropSchema) => {
+    handleUpdate({ [schema.key]: schema.default ?? '' });
+  };
+
+  // ✨ NOVA FUNCIONALIDADE: Verificar condições dependsOn/when
+  const isFieldVisible = (schema: PropSchema): boolean => {
+    // Verificar dependsOn (campo deve existir e ter valor)
+    if (schema.dependsOn) {
+      for (const dep of schema.dependsOn) {
+        const depValue = localDraft[dep];
+        if (!depValue && depValue !== 0 && depValue !== false) {
+          return false;
+        }
+      }
+    }
+
+    // Verificar condição when (campo específico deve ter valor específico)
+    if (schema.when) {
+      const conditionValue = localDraft[schema.when.key];
+      if (conditionValue !== schema.when.value) {
+        return false;
+      }
+    }
+
+    return true;
+  };
+
   const groupedSchemas = useMemo(() => {
     const groups: Record<string, PropSchema[]> = {};
     (blockDefinition.propsSchema || []).forEach(schema => {
+      // ✨ FILTRAR POR CONDIÇÕES DEPENDSON/WHEN
+      if (!isFieldVisible(schema)) return;
+      
       const cat = schema.category || 'content';
       if (!groups[cat]) groups[cat] = [];
       groups[cat].push(schema);
     });
     return groups;
-  }, [blockDefinition.propsSchema]);
+  }, [blockDefinition.propsSchema, localDraft]); // ✨ DEPENDÊNCIA ADICIONAL: localDraft
 
   const renderField = (schema: PropSchema) => {
     const value = localDraft[schema.key] ?? schema.default ?? '';
+    const isModified = value !== (schema.default ?? '');
+    
     const commonLabel = (
       <div className="flex items-center justify-between mb-1">
         <Label htmlFor={schema.key} className="text-xs font-medium text-gray-600">
           {schema.label}
+          {schema.required && <span className="text-red-500 ml-1">*</span>}
         </Label>
-        {schema.kind === 'range' && typeof value === 'number' && (
-          <span className="text-[10px] text-gray-400 font-mono">{value}{schema.unit || ''}</span>
-        )}
+        <div className="flex items-center gap-1">
+          {schema.kind === 'range' && typeof value === 'number' && (
+            <span className="text-[10px] text-gray-400 font-mono">{value}{schema.unit || ''}</span>
+          )}
+          {/* ✨ BOTÃO DE RESET POR CAMPO */}
+          {isModified && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => handleResetField(schema)}
+              className="h-5 w-5 p-0 hover:bg-gray-100"
+              title="Resetar para valor padrão"
+            >
+              <RotateCcw className="h-3 w-3" />
+            </Button>
+          )}
+        </div>
       </div>
     );
 
