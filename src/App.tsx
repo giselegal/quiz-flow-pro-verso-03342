@@ -117,72 +117,24 @@ function App() {
               } />
 
               {/* 🎯 ÁREA ADMINISTRATIVA - ROTAS PROTEGIDAS */}
-              <Route path="/dashboard" component={() =>
-                <ProtectedRoute path="/dashboard" component={() =>
-                  <Suspense fallback={<LoadingFallback />}>
-                    <DashboardPage />
-                  </Suspense>
-                } />
-              } />
+              <ProtectedRoute path="/dashboard" component={DashboardPage} />
 
               {/* Rota /admin que redireciona para o DashboardPage */}
-              <Route path="/admin" component={() =>
-                <ProtectedRoute path="/admin" component={() =>
-                  <Suspense fallback={<LoadingFallback />}>
-                    <DashboardPage />
-                  </Suspense>
-                } />
-              } />
+              <ProtectedRoute path="/admin" component={DashboardPage} />
 
               {/* Subrotas admin que também carregam o DashboardPage */}
-              <Route path="/admin/*" component={() =>
-                <ProtectedRoute path="/admin/*" component={() =>
-                  <Suspense fallback={<LoadingFallback />}>
-                    <DashboardPage />
-                  </Suspense>
-                } />
-              } />
+              <ProtectedRoute path="/admin/*" component={DashboardPage} />
 
               {/* 📊 Páginas de Analytics e Métricas */}
-              <Route path="/analytics" component={() =>
-                <ProtectedRoute path="/analytics" component={() =>
-                  <Suspense fallback={<LoadingFallback />}>
-                    <AnalyticsPage />
-                  </Suspense>
-                } />
-              } />
+              <ProtectedRoute path="/analytics" component={AnalyticsPage} />
 
-              <Route path="/metrics" component={() =>
-                <ProtectedRoute path="/metrics" component={() =>
-                  <Suspense fallback={<LoadingFallback />}>
-                    <MetricsPage />
-                  </Suspense>
-                } />
-              } />
+              <ProtectedRoute path="/metrics" component={MetricsPage} />
 
-              <Route path="/participants" component={() =>
-                <ProtectedRoute path="/participants" component={() =>
-                  <Suspense fallback={<LoadingFallback />}>
-                    <ParticipantsPage />
-                  </Suspense>
-                } />
-              } />
+              <ProtectedRoute path="/participants" component={ParticipantsPage} />
 
-              <Route path="/settings" component={() =>
-                <ProtectedRoute path="/settings" component={() =>
-                  <Suspense fallback={<LoadingFallback />}>
-                    <SettingsPage />
-                  </Suspense>
-                } />
-              } />
+              <ProtectedRoute path="/settings" component={SettingsPage} />
 
-              <Route path="/overview" component={() =>
-                <ProtectedRoute path="/overview" component={() =>
-                  <Suspense fallback={<LoadingFallback />}>
-                    <OverviewPage />
-                  </Suspense>
-                } />
-              } />
+              <ProtectedRoute path="/overview" component={OverviewPage} />
 
               {/* 🎨 Páginas de Desenvolvimento e Testes */}
               <Route path="/step/:stepId" component={() =>

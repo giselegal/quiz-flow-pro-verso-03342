@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { useLocation } from 'wouter';
@@ -73,7 +73,11 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
         }
 
         console.log('✅ ProtectedRoute: ACESSO PERMITIDO para', path, '- Carregando componente');
-        return <Component />;
+        return (
+          <Suspense fallback={<LoadingSpinner size="lg" color="#B89B7A" />}>
+            <Component />
+          </Suspense>
+        );
       }}
     </Route>
   );
