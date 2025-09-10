@@ -9,8 +9,8 @@ import { Slider } from '@/components/ui/slider';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { 
-  X, Trash2, RotateCcw, Plus, Minus, Upload, Eye, EyeOff, 
+import {
+  X, Trash2, RotateCcw, Plus, Minus, Upload, Eye, EyeOff,
   Info, Palette, Image, Settings, Layout, Type, Check,
   RefreshCw, Save
 } from 'lucide-react';
@@ -27,7 +27,7 @@ interface RegistryPropertiesPanelProps {
 // ✨ CATEGORIAS MODERNAS PARA AGRUPAMENTO
 const categoryIcons = {
   content: Type,
-  layout: Layout, 
+  layout: Layout,
   style: Palette,
   validation: Check,
   behavior: Settings,
@@ -36,7 +36,7 @@ const categoryIcons = {
 
 const categoryLabels = {
   content: 'Conteúdo',
-  layout: 'Layout', 
+  layout: 'Layout',
   style: 'Estilo',
   validation: 'Validação',
   behavior: 'Comportamento',
@@ -79,7 +79,7 @@ const useBackendSync = (selectedBlock: any, onUpdate: Function) => {
           // Separar propriedades e conteúdo
           const properties: Record<string, any> = {};
           const content: Record<string, any> = {};
-          
+
           Object.entries(updates).forEach(([key, value]) => {
             // Lógica para determinar se é propriedade ou conteúdo
             if (['title', 'subtitle', 'description', 'text', 'question', 'options'].includes(key)) {
@@ -89,18 +89,18 @@ const useBackendSync = (selectedBlock: any, onUpdate: Function) => {
             }
           });
 
-          await onUpdate(selectedBlock.id, { 
+          await onUpdate(selectedBlock.id, {
             ...(Object.keys(properties).length > 0 && { properties }),
             ...(Object.keys(content).length > 0 && { content })
           });
-          
+
           setHasUnsavedChanges(false);
           setSaveStatus('saved');
           setLastSaved(new Date());
-          
+
           // Reset status após 2 segundos
           setTimeout(() => setSaveStatus('idle'), 2000);
-          
+
         } catch (error) {
           console.error('❌ Erro ao salvar:', error);
           setSaveStatus('error');
@@ -120,13 +120,13 @@ const useBackendSync = (selectedBlock: any, onUpdate: Function) => {
     });
   }, [debouncedSave]);
 
-  return { 
-    localState, 
-    updateField, 
-    isSaving, 
-    hasUnsavedChanges, 
-    saveStatus, 
-    lastSaved 
+  return {
+    localState,
+    updateField,
+    isSaving,
+    hasUnsavedChanges,
+    saveStatus,
+    lastSaved
   };
 };
 
@@ -176,13 +176,13 @@ const ImageFieldEditor: React.FC<{
       {/* Preview da imagem */}
       {showPreview && value && (
         <div className="relative bg-white rounded border p-2">
-          <img 
-            src={value} 
+          <img
+            src={value}
             alt="Preview"
             className="max-w-full h-20 object-contain mx-auto rounded"
-            style={{ 
+            style={{
               width: currentWidth ? `${currentWidth}px` : 'auto',
-              height: currentHeight ? `${currentHeight}px` : 'auto' 
+              height: currentHeight ? `${currentHeight}px` : 'auto'
             }}
           />
           <div className="absolute top-1 right-1 bg-black/50 text-white text-[8px] px-1 rounded">
@@ -261,13 +261,13 @@ const RegistryPropertiesPanel: React.FC<RegistryPropertiesPanelProps> = ({
   onDelete,
 }) => {
   // ✨ USAR HOOK DE SINCRONIZAÇÃO BIDIRECIONAL
-  const { 
-    localState, 
-    updateField, 
-    isSaving, 
-    hasUnsavedChanges, 
-    saveStatus, 
-    lastSaved 
+  const {
+    localState,
+    updateField,
+    isSaving,
+    hasUnsavedChanges,
+    saveStatus,
+    lastSaved
   } = useBackendSync(selectedBlock, _onUpdate);
   if (!selectedBlock) {
     return (
@@ -349,7 +349,7 @@ const RegistryPropertiesPanel: React.FC<RegistryPropertiesPanelProps> = ({
     // Helper para tooltip com informações
     const renderFieldWithTooltip = (field: React.ReactNode, helpText?: string) => {
       if (!helpText) return field;
-      
+
       return (
         <TooltipProvider>
           <Tooltip>
@@ -445,8 +445,8 @@ const RegistryPropertiesPanel: React.FC<RegistryPropertiesPanelProps> = ({
                 placeholder="#ffffff"
                 className="h-9 font-mono text-sm flex-1"
               />
-              <div 
-                className="w-9 h-9 rounded border-2 border-gray-200" 
+              <div
+                className="w-9 h-9 rounded border-2 border-gray-200"
                 style={{ backgroundColor: value || '#ffffff' }}
                 title="Preview da cor"
               />
@@ -652,20 +652,18 @@ const RegistryPropertiesPanel: React.FC<RegistryPropertiesPanelProps> = ({
           <div className="flex items-center gap-2">
             {/* Indicador de status */}
             <div className="flex items-center gap-2 text-xs text-gray-500">
-              <div className={`w-2 h-2 rounded-full ${
-                saveStatus === 'saving' ? 'bg-blue-400 animate-pulse' : 
-                saveStatus === 'error' ? 'bg-red-400 animate-bounce' :
-                saveStatus === 'saved' ? 'bg-green-400' :
-                hasUnsavedChanges ? 'bg-orange-400' : 'bg-green-400'
-              }`} />
-              <span className={`${
-                saveStatus === 'error' ? 'text-red-600' : 
-                saveStatus === 'saved' ? 'text-green-600' : ''
-              }`}>
-                {saveStatus === 'saving' ? 'Salvando...' : 
-                 saveStatus === 'error' ? 'Erro ao salvar' :
-                 saveStatus === 'saved' ? 'Salvo com sucesso' :
-                 hasUnsavedChanges ? 'Alterações pendentes' : 'Sincronizado'}
+              <div className={`w-2 h-2 rounded-full ${saveStatus === 'saving' ? 'bg-blue-400 animate-pulse' :
+                  saveStatus === 'error' ? 'bg-red-400 animate-bounce' :
+                    saveStatus === 'saved' ? 'bg-green-400' :
+                      hasUnsavedChanges ? 'bg-orange-400' : 'bg-green-400'
+                }`} />
+              <span className={`${saveStatus === 'error' ? 'text-red-600' :
+                  saveStatus === 'saved' ? 'text-green-600' : ''
+                }`}>
+                {saveStatus === 'saving' ? 'Salvando...' :
+                  saveStatus === 'error' ? 'Erro ao salvar' :
+                    saveStatus === 'saved' ? 'Salvo com sucesso' :
+                      hasUnsavedChanges ? 'Alterações pendentes' : 'Sincronizado'}
               </span>
               {saveStatus === 'saved' && lastSaved && (
                 <span className="text-gray-400 ml-1">
@@ -717,10 +715,10 @@ const RegistryPropertiesPanel: React.FC<RegistryPropertiesPanelProps> = ({
                           {typeof value === 'string' && value.length > 25
                             ? `"${value.slice(0, 25)}..."`
                             : typeof value === 'string'
-                            ? `"${value}"`
-                            : JSON.stringify(value).length > 30
-                            ? JSON.stringify(value).slice(0, 30) + '...'
-                            : JSON.stringify(value)
+                              ? `"${value}"`
+                              : JSON.stringify(value).length > 30
+                                ? JSON.stringify(value).slice(0, 30) + '...'
+                                : JSON.stringify(value)
                           }
                         </span>
                       </div>
@@ -744,7 +742,7 @@ const RegistryPropertiesPanel: React.FC<RegistryPropertiesPanelProps> = ({
             {Object.entries(groupedSchemas).map(([category, schemas]) => {
               const CategoryIcon = categoryIcons[category as keyof typeof categoryIcons] || Settings;
               const categoryLabel = categoryLabels[category as keyof typeof categoryLabels] || category;
-              
+
               return (
                 <Card key={category} className="shadow-md hover:shadow-lg transition-shadow">
                   <CardHeader className="pb-3 bg-gradient-to-r from-gray-50 to-gray-100">
@@ -789,7 +787,7 @@ const RegistryPropertiesPanel: React.FC<RegistryPropertiesPanelProps> = ({
             <span>Sincronização automática com backend</span>
             {hasUnsavedChanges && (
               <Badge variant="outline" className="text-[10px] text-orange-600">
-                Salvando em {Math.ceil(500/1000)}s...
+                Salvando em {Math.ceil(500 / 1000)}s...
               </Badge>
             )}
           </div>
