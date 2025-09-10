@@ -30,7 +30,7 @@ const StepSidebarComponent: React.FC<StepSidebarProps> = ({
       )}
     >
       <div className="p-4 border-b border-gray-800/50">
-        <h3 className="font-medium text-sm text-gray-200">Quiz Steps</h3>
+        <h3 className="font-medium text-sm text-gray-200">Etapas do Quiz</h3>
         <p className="text-xs text-gray-500 mt-1">{totalSteps} steps configured</p>
       </div>
 

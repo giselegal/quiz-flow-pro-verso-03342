@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState, useEffect } from 'react';
+import React, { useCallback, useMemo, useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -55,7 +55,7 @@ const useBackendSync = (selectedBlock: any, onUpdate: Function) => {
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
 
   // Sincronizar quando o bloco selecionado mudar
-  React.useEffect(() => {
+  useEffect(() => {
     if (selectedBlock) {
       setLocalState({
         ...selectedBlock.properties || {},
@@ -67,8 +67,8 @@ const useBackendSync = (selectedBlock: any, onUpdate: Function) => {
   }, [selectedBlock?.id]);
 
   // Salvar automaticamente com debounce e feedback visual avançado
-  const debouncedSave = React.useMemo(() => {
-    let timeoutId: NodeJS.Timeout;
+  const debouncedSave = useMemo(() => {
+    let timeoutId: ReturnType<typeof setTimeout>;
     return (updates: Record<string, any>) => {
       setHasUnsavedChanges(true);
       setSaveStatus('saving');
@@ -110,9 +110,9 @@ const useBackendSync = (selectedBlock: any, onUpdate: Function) => {
         }
       }, 500);
     };
-  }, [selectedBlock.id, onUpdate]);
+  }, [selectedBlock?.id, onUpdate]);
 
-  const updateField = React.useCallback((key: string, value: any) => {
+  const updateField = useCallback((key: string, value: any) => {
     setLocalState(prev => {
       const newState = { ...prev, [key]: value };
       debouncedSave(newState);
@@ -141,7 +141,7 @@ const ImageFieldEditor: React.FC<{
   currentHeight?: number;
 }> = ({ schema, value, onUpdate, onSizeUpdate, currentWidth, currentHeight }) => {
   const [showPreview, setShowPreview] = useState(true);
-  const fileInputRef = React.useRef<HTMLInputElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -269,11 +269,12 @@ const RegistryPropertiesPanel: React.FC<RegistryPropertiesPanelProps> = ({
     saveStatus,
     lastSaved
   } = useBackendSync(selectedBlock, _onUpdate);
+
   if (!selectedBlock) {
     return (
       <div className="p-6 text-center text-gray-500">
         <div className="text-4xl mb-2">🎯</div>
-        <p>Selecione um componente para editar suas propriedades</p>
+        <p>Selecione um bloco no canvas para editar suas propriedades.</p>
       </div>
     );
   }

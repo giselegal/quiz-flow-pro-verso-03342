@@ -254,9 +254,9 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v4m0 4h.01" />
             </svg>
           </div>
-          <h2 className="text-xl font-bold text-gray-100 mb-2">Editor Context Error</h2>
+          <h2 className="text-xl font-bold text-gray-100 mb-2">Erro de Contexto do Editor</h2>
           <p className="text-gray-400 mb-4">
-            EditorPro must be used within an EditorProvider.
+            O EditorPro deve ser usado dentro de um EditorProvider.
           </p>
           <button
             type="button"
