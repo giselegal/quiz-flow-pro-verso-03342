@@ -76,37 +76,37 @@ const MainEditorUnified: React.FC = () => {
     return (
         <div>
             <ErrorBoundary>
-                <UnifiedFunnelProvider 
+                <UnifiedFunnelProvider
                     funnelId={funnelId || undefined}
                     debugMode={debugMode}
                 >
                     <FunnelsProvider debug={debugMode}>
                         {/* Híbrido: EditorProvider (legacy) + LegacyCompatibilityWrapper (unified) para máxima compatibilidade */}
                         <EditorProvider
-                        enableSupabase={supabaseConfig.enabled}
-                        funnelId={supabaseConfig.funnelId}
-                        quizId={supabaseConfig.quizId}
-                        storageKey={supabaseConfig.storageKey}
-                        initial={initialStep ? { currentStep: initialStep } : undefined}
-                    >
-                        <LegacyCompatibilityWrapper
-                            enableWarnings={debugMode}
-                            initialContext={FunnelContext.EDITOR}
+                            enableSupabase={supabaseConfig.enabled}
+                            funnelId={supabaseConfig.funnelId}
+                            quizId={supabaseConfig.quizId}
+                            storageKey={supabaseConfig.storageKey}
+                            initial={initialStep ? { currentStep: initialStep } : undefined}
                         >
-                            <EditorQuizProvider>
-                                <Quiz21StepsProvider debug={debugMode} initialStep={initialStep}>
-                                    <QuizFlowProvider initialStep={initialStep} totalSteps={21}>
-                                        <FunnelValidatedEditor
-                                            templateId={resolvedTemplateId || undefined}
-                                            funnelId={funnelId || undefined}
-                                            debugMode={debugMode}
-                                        />
-                                    </QuizFlowProvider>
-                                </Quiz21StepsProvider>
-                            </EditorQuizProvider>
-                        </LegacyCompatibilityWrapper>
-                    </EditorProvider>
-                </FunnelsProvider>
+                            <LegacyCompatibilityWrapper
+                                enableWarnings={debugMode}
+                                initialContext={FunnelContext.EDITOR}
+                            >
+                                <EditorQuizProvider>
+                                    <Quiz21StepsProvider debug={debugMode} initialStep={initialStep}>
+                                        <QuizFlowProvider initialStep={initialStep} totalSteps={21}>
+                                            <FunnelValidatedEditor
+                                                templateId={resolvedTemplateId || undefined}
+                                                funnelId={funnelId || undefined}
+                                                debugMode={debugMode}
+                                            />
+                                        </QuizFlowProvider>
+                                    </Quiz21StepsProvider>
+                                </EditorQuizProvider>
+                            </LegacyCompatibilityWrapper>
+                        </EditorProvider>
+                    </FunnelsProvider>
                 </UnifiedFunnelProvider>
             </ErrorBoundary>
         </div>
@@ -131,89 +131,89 @@ const FunnelValidatedEditor: React.FC<{
     funnelId,
     debugMode = false,
 }) => {
-    const funnelContext = useFunnelContext(funnelId);
+        const funnelContext = useFunnelContext(funnelId);
 
-    if (debugMode) {
-        console.log('🔐 FunnelValidatedEditor:', {
-            funnelId,
-            isReady: funnelContext.isReady,
-            isLoading: funnelContext.isLoading,
-            hasError: funnelContext.hasError,
-            errorType: funnelContext.errorType
-        });
-    }
+        if (debugMode) {
+            console.log('🔐 FunnelValidatedEditor:', {
+                funnelId,
+                isReady: funnelContext.isReady,
+                isLoading: funnelContext.isLoading,
+                hasError: funnelContext.hasError,
+                errorType: funnelContext.errorType
+            });
+        }
 
-    // Se não há funnelId, prosseguir sem validação (modo template)
-    if (!funnelId) {
-        return (
-            <EditorInitializerUnified
-                templateId={templateId}
-                funnelId={undefined}
-                debugMode={debugMode}
-            />
-        );
-    }
+        // Se não há funnelId, prosseguir sem validação (modo template)
+        if (!funnelId) {
+            return (
+                <EditorInitializerUnified
+                    templateId={templateId}
+                    funnelId={undefined}
+                    debugMode={debugMode}
+                />
+            );
+        }
 
-    // Loading state durante validação
-    if (funnelContext.isLoading) {
+        // Loading state durante validação
+        if (funnelContext.isLoading) {
+            return (
+                <div className="flex items-center justify-center min-h-screen bg-gray-50">
+                    <div className="text-center">
+                        <LoadingSpinner size="lg" className="mb-4" />
+                        <p className="text-gray-600 text-lg font-medium">
+                            Validando acesso ao funil...
+                        </p>
+                        {debugMode && (
+                            <p className="text-xs text-gray-400 mt-2 font-mono">
+                                Funil: {funnelId}
+                            </p>
+                        )}
+                    </div>
+                </div>
+            );
+        }
+
+        // Error state - mostrar fallback
+        if (funnelContext.hasError) {
+            return (
+                <FunnelFallback
+                    errorType={funnelContext.errorType || 'UNKNOWN'}
+                    errorMessage={funnelContext.errorMessage || 'Erro desconhecido'}
+                    funnelId={funnelId}
+                    suggestions={funnelContext.suggestions}
+                    onRetry={funnelContext.retry}
+                    onCreateNew={() => {
+                        window.location.href = '/editor?template=default';
+                    }}
+                />
+            );
+        }
+
+        // Sucesso - funil validado, carregar editor
+        if (funnelContext.isReady) {
+            return (
+                <EditorInitializerUnified
+                    templateId={templateId}
+                    funnelId={funnelId}
+                    debugMode={debugMode}
+                    validatedFunnel={funnelContext.currentFunnel}
+                    canEdit={funnelContext.canEdit}
+                />
+            );
+        }
+
+        // Estado desconhecido - mostrar loading como fallback
         return (
             <div className="flex items-center justify-center min-h-screen bg-gray-50">
                 <div className="text-center">
                     <LoadingSpinner size="lg" className="mb-4" />
                     <p className="text-gray-600 text-lg font-medium">
-                        Validando acesso ao funil...
+                        Carregando editor...
                     </p>
-                    {debugMode && (
-                        <p className="text-xs text-gray-400 mt-2 font-mono">
-                            Funil: {funnelId}
-                        </p>
-                    )}
                 </div>
             </div>
         );
-    }
-
-    // Error state - mostrar fallback
-    if (funnelContext.hasError) {
-        return (
-            <FunnelFallback
-                errorType={funnelContext.errorType || 'UNKNOWN'}
-                errorMessage={funnelContext.errorMessage || 'Erro desconhecido'}
-                funnelId={funnelId}
-                suggestions={funnelContext.suggestions}
-                onRetry={funnelContext.retry}
-                onCreateNew={() => {
-                    window.location.href = '/editor?template=default';
-                }}
-            />
-        );
-    }
-
-    // Sucesso - funil validado, carregar editor
-    if (funnelContext.isReady) {
-        return (
-            <EditorInitializerUnified
-                templateId={templateId}
-                funnelId={funnelId}
-                debugMode={debugMode}
-                validatedFunnel={funnelContext.currentFunnel}
-                canEdit={funnelContext.canEdit}
-            />
-        );
-    }
-
-    // Estado desconhecido - mostrar loading como fallback
-    return (
-        <div className="flex items-center justify-center min-h-screen bg-gray-50">
-            <div className="text-center">
-                <LoadingSpinner size="lg" className="mb-4" />
-                <p className="text-gray-600 text-lg font-medium">
-                    Carregando editor...
-                </p>
-            </div>
-        </div>
-    );
-};
+    };
 
 /**
  * �🔧 EDITOR INITIALIZER UNIFICADO
