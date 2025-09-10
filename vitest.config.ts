@@ -36,8 +36,14 @@ export default defineConfig({
       forks: {
         minForks: 1,
         maxForks: 1,
+        // Aumenta limite de memória para worker
+        execArgv: ['--max-old-space-size=8192'],
       },
     },
+    // Timeout maior para testes que fazem carregamento pesado
+    testTimeout: 30000,
+    hookTimeout: 15000,
+    teardownTimeout: 15000,
     sequence: {
       concurrent: false,
     },

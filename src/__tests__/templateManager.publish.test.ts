@@ -113,6 +113,6 @@ describe('TemplateManager publish/unpublish flow', () => {
     const loaded = await TemplateManager.loadStepBlocks(stepId);
     // Com mock do templateService, espera 1 bloco vindo do template (id começa com tmpl)
     expect(loaded.length).toBeGreaterThan(0);
-    expect(String(loaded[0].id)).toContain('tmpl-step-3');
+    expect(String(loaded[0].id)).toMatch(/tmpl-step-3/);
   });
 });
