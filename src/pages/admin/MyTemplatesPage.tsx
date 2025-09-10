@@ -85,7 +85,7 @@ const MyTemplatesPage: React.FC = () => {
             if (templates.length === 0) return;
 
             console.log('🖼️ Carregando thumbnails para', templates.length, 'templates...');
-            
+
             const thumbnailPromises = templates.map(async (template) => {
                 try {
                     const thumbnailUrl = await getTemplateThumbnail(template.id);
@@ -342,8 +342,8 @@ const MyTemplatesPage: React.FC = () => {
                                         </div>
                                     </div>
                                 )}
-                                <Badge 
-                                    variant="secondary" 
+                                <Badge
+                                    variant="secondary"
                                     className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm"
                                 >
                                     {TEMPLATE_CATEGORIES[template.category as keyof typeof TEMPLATE_CATEGORIES] || template.category}

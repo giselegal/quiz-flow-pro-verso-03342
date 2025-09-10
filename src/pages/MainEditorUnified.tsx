@@ -33,6 +33,7 @@ const MainEditorUnified: React.FC = () => {
     const params = React.useMemo(() => new URLSearchParams(location.split('?')[1] || ''), [location]);
     const templateId = params.get('template');
     const funnelId = params.get('funnel');
+    const duplicateId = params.get('duplicate'); // ID do template a ser duplicado
     const stepParam = params.get('step');
     const initialStep = stepParam ? Math.max(1, Math.min(21, parseInt(stepParam))) : undefined;
 
@@ -51,11 +52,23 @@ const MainEditorUnified: React.FC = () => {
         console.log('🎯 MainEditorUnified iniciado:', {
             templateId,
             funnelId,
+            duplicateId,
             initialStep,
             supabaseConfig,
             debugMode
         });
     }
+
+    // Determinar que ID de template usar (template direto ou duplicação)
+    const resolvedTemplateId = React.useMemo(() => {
+        if (duplicateId) {
+            if (debugMode) {
+                console.log('🔄 Modo duplicação ativado para template:', duplicateId);
+            }
+            return duplicateId;
+        }
+        return templateId;
+    }, [templateId, duplicateId, debugMode]);
 
     return (
         <div>
@@ -77,7 +90,7 @@ const MainEditorUnified: React.FC = () => {
                                 <Quiz21StepsProvider debug={debugMode} initialStep={initialStep}>
                                     <QuizFlowProvider initialStep={initialStep} totalSteps={21}>
                                         <EditorInitializerUnified
-                                            templateId={templateId || undefined}
+                                            templateId={resolvedTemplateId || undefined}
                                             funnelId={funnelId || undefined}
                                             debugMode={debugMode}
                                         />
