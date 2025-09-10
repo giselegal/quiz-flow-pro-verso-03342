@@ -2,7 +2,7 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 import { defineConfig } from 'vite';
 
-// Configuração INLINE para contornar problemas de infraestrutura Lovable
+// Configuração OTIMIZADA para funcionar com Lovable
 export default defineConfig({
   base: './',
   plugins: [react()],
@@ -15,44 +15,41 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',
     port: 5173,
-    cors: {
-      origin: true,
-      credentials: true,
-      methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-      allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-    },
+    open: false,
+    cors: true,
     strictPort: false,
     fs: {
-      allow: ['..', 'templates', 'public', 'src', 'node_modules'],
-    },
-    watch: {
-      ignored: ['**/worktrees/**', '**/examples/**', '**/attached_assets/**'],
+      allow: ['..'],
     },
     headers: {
       'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With',
-      'Cross-Origin-Embedder-Policy': 'unsafe-none',
-      'Cross-Origin-Opener-Policy': 'same-origin-allow-popups',
+      'Access-Control-Allow-Methods': '*',
+      'Access-Control-Allow-Headers': '*',
+    },
+  },
+  preview: {
+    host: '0.0.0.0',
+    port: 4173,
+    cors: true,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
     },
   },
   publicDir: 'public',
   assetsInclude: ['**/*.json'],
   build: {
     outDir: 'dist',
-    sourcemap: false, // Reduce file count
-    chunkSizeWarningLimit: 2000, // Allow larger single bundle
+    assetsDir: 'assets',
+    sourcemap: false,
+    chunkSizeWarningLimit: 2000,
     copyPublicDir: true,
     rollupOptions: {
       output: {
-        // FORÇA BUNDLE ÚNICO para contornar problemas Lovable
         manualChunks: undefined,
         inlineDynamicImports: true,
-
-        // Simplifica estrutura de arquivos
+        assetFileNames: 'assets/[name]-[hash].[ext]',
         chunkFileNames: 'assets/[name]-[hash].js',
         entryFileNames: 'assets/[name]-[hash].js',
-        assetFileNames: 'assets/[name]-[hash].[ext]',
       },
     },
     commonjsOptions: {
