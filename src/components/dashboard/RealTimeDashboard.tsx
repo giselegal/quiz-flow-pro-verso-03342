@@ -203,7 +203,7 @@ const SimpleLineChart: React.FC<SimpleLineChartProps> = ({ data, title, height =
 export const RealTimeDashboard: React.FC = () => {
     const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
     const [isLoading, setIsLoading] = useState(true);
-    const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
+    const [lastUpdated] = useState<Date>(new Date());
     const [useMockData, setUseMockData] = useState(false);
 
     // ============================================================================

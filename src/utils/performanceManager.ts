@@ -43,7 +43,7 @@ class ResourceHintsManager {
     private preloadedResources = new Set<string>();
     private prefetchedResources = new Set<string>();
     private criticalFonts = new Set<string>();
-    private observer?: PerformanceObserver;
+    // Resource hints observer available if needed
 
     static getInstance(): ResourceHintsManager {
         if (!ResourceHintsManager.instance) {
@@ -206,7 +206,7 @@ class ResourceHintsManager {
                     if (link && routes.includes(link.pathname)) {
                         clearTimeout(hoverTimeout);
                         hoverTimeout = setTimeout(() => {
-                            this.prefetch([link.href]);
+                        this.prefetch([link.href || '']);
                         }, 200); // Debounce de 200ms
                     }
                 });
@@ -529,7 +529,7 @@ class WebVitalsMonitor {
         let maxDelay = 0;
 
         ['click', 'keydown', 'touchstart'].forEach(eventType => {
-            document.addEventListener(eventType, (e) => {
+            document.addEventListener(eventType, () => {
                 const startTime = performance.now();
 
                 requestAnimationFrame(() => {

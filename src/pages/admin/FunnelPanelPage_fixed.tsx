@@ -1,27 +1,27 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { funnelLocalStore } from '@/services/funnelLocalStore';
 import { customTemplateService, CustomTemplate } from '@/services/customTemplateService';
-import { BarChart3, Edit, Eye, Play, Plus, Sparkles, Zap, Copy, Settings, Trash2, Download } from 'lucide-react';
+import { Edit, Eye, Play, Plus, Sparkles, Zap, Copy, Trash2 } from 'lucide-react';
 import { useLocation } from 'wouter';
 import { AdminBreadcrumbs } from '@/components/admin/AdminBreadcrumbs';
 import { useFunnelTemplates } from '@/core/funnel/hooks/useFunnelTemplates';
 import { getUnifiedTemplates, TemplateRegistry, type UnifiedTemplate } from '@/config/unifiedTemplatesRegistry';
-import { type FunnelMetadata } from '@/core/funnel/types';
+// Removed unused import - simplifying admin panel
 
 const FunnelPanelPage: React.FC = () => {
     const [, setLocation] = useLocation();
     const {
         templates: filteredTemplates,
-        error,
+        // Error handling available if needed
         filterBySearch,
         filterByCategory
     } = useFunnelTemplates();

@@ -89,7 +89,7 @@ class CompatibleAnalytics {
         console.log('👁️ Analytics: Step viewed', { step: stepNumber });
     }
 
-    async trackOptionSelected(stepNumber: number, optionId: string, optionValue?: any): Promise<void> {
+    async trackOptionSelected(stepNumber: number, optionId: string): Promise<void> {
         const event: AnalyticsEvent = {
             event_type: 'option_selected',
             session_id: this.sessionId,
@@ -293,8 +293,8 @@ export const compatibleAnalytics = new CompatibleAnalytics();
 
 export const trackQuizStarted = (userName?: string) => compatibleAnalytics.trackQuizStarted(userName);
 export const trackStepViewed = (stepNumber: number) => compatibleAnalytics.trackStepViewed(stepNumber);
-export const trackOptionSelected = (stepNumber: number, optionId: string, optionValue?: any) =>
-    compatibleAnalytics.trackOptionSelected(stepNumber, optionId, optionValue);
+export const trackOptionSelected = (stepNumber: number, optionId: string) =>
+    compatibleAnalytics.trackOptionSelected(stepNumber, optionId);
 export const trackQuizCompleted = (result: any) => compatibleAnalytics.trackQuizCompleted(result);
 export const getDashboardData = () => CompatibleAnalytics.getDashboardData();
 

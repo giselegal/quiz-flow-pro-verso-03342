@@ -14,7 +14,7 @@ const ComQueRoupaEuVouPage = lazy(() => import('./pages/ComQueRoupaEuVouPage'));
 const Home = lazy(() => import('./pages/Home'));
 const AuthPage = lazy(() => import('./pages/AuthPage'));
 // Lazy loading otimizado para melhor performance
-const MainEditor = lazy(() => import('./pages/MainEditor'));
+const MainEditor = lazy(() => import('./pages/MainEditorUnified'));
 const DashboardPage = lazy(() => import('./pages/admin/DashboardPage'));
 const StepPage = lazy(() => import('./pages/StepPage'));
 // ✅ Página de produção modular limpa (cliente final)

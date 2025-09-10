@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { funnelLocalStore } from '@/services/funnelLocalStore';
-import { Edit, Eye, Globe2, Plus, Upload, Link as LinkIcon, Settings } from 'lucide-react';
+import { Edit, Eye, Globe2, Plus, Upload, Link as LinkIcon } from 'lucide-react';
 import React from 'react';
 import { Input } from '@/components/ui/input';
 import { useLocation } from 'wouter';
@@ -10,7 +10,7 @@ import { publishFunnel } from '@/services/funnelPublishing';
 import { AdminBreadcrumbs } from '@/components/admin/AdminBreadcrumbs';
 import { useMyFunnelsPersistence } from '@/hooks/editor/useContextualEditorPersistence';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
-import { FunnelSettingsModal } from '@/components/admin/FunnelSettingsModal';
+// FunnelSettingsModal import removed - not used
 
 type Funnel = ReturnType<typeof funnelLocalStore.list>[number];
 
