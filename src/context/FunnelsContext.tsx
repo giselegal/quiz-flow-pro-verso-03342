@@ -636,13 +636,21 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
       setError(null);
 
       try {
+        // ✅ CORREÇÃO: Obter usuário autenticado corretamente
+        const { data: { user } } = await supabase.auth.getUser();
+        const userId = user?.id || 'anonymous';
+
         const funnelRecord = {
           id: currentFunnelId,
           name: funnelData.name || 'Funnel sem nome',
           description: funnelData.description || '',
           is_published: funnelData.isPublished || false,
-          settings: { theme: funnelData.theme || 'default' },
-          user_id: 'anonymous', // This should come from auth in real implementation
+          // ✅ CORREÇÃO: Incluir context nos settings para compatibilidade com listagem
+          settings: { 
+            theme: funnelData.theme || 'default',
+            context: 'MY_FUNNELS' // Context para "Meus Funis"
+          },
+          user_id: userId, // ✅ CORREÇÃO: Usar ID do usuário real
           updated_at: new Date().toISOString(),
         };
 
@@ -655,9 +663,9 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
           throw supabaseError;
         }
 
-        console.log('Funil salvo com sucesso:', data);
+        console.log('✅ Funil salvo com sucesso no contexto MY_FUNNELS:', data);
       } catch (error) {
-        console.error('Erro ao salvar funil:', error);
+        console.error('❌ Erro ao salvar funil:', error);
         setError(error instanceof Error ? error.message : 'Erro desconhecido');
       } finally {
         setLoading(false);
