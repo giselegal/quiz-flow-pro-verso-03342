@@ -7,15 +7,15 @@ console.log('🚀 Inicializando aplicação...');
 
 // Configuração mínima para desenvolvimento
 if (import.meta.env.DEV) {
-  console.log('🔧 Modo desenvolvimento ativo');
+    console.log('🔧 Modo desenvolvimento ativo');
 }
 
 console.log('🔧 DEBUG: Criando root do React...');
 const rootElement = document.getElementById('root');
 
 if (rootElement) {
-  createRoot(rootElement).render(<AppSimple />);
-  console.log('✅ DEBUG: App renderizado com sucesso');
+    createRoot(rootElement).render(<AppSimple />);
+    console.log('✅ DEBUG: App renderizado com sucesso');
 } else {
-  console.error('❌ Elemento root não encontrado');
+    console.error('❌ Elemento root não encontrado');
 }
