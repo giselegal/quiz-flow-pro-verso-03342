@@ -122,7 +122,7 @@ const FunnelPanelPage: React.FC = () => {
       // ✅ CORREÇÃO: Buscar template base para clonagem do registry unificado
       const unifiedTemplates = getUnifiedTemplates();
       const baseTemplate = unifiedTemplates.find(t => t.id === templateId);
-      
+
       if (baseTemplate && baseTemplate.blocks) {
         // 🚀 Usar cloneFunnelTemplate para garantir isolamento
         const templateData = {
@@ -133,9 +133,9 @@ const FunnelPanelPage: React.FC = () => {
           preview: baseTemplate.thumbnailUrl || '',
           blocks: baseTemplate.blocks || []
         };
-        
+
         const clonedInstance = cloneFunnelTemplate(templateData, `${baseTemplate.name} - Cópia`);
-        
+
         // Salvar instância clonada em "meus funis"
         const newFunnel = {
           id: clonedInstance.id,
@@ -147,7 +147,7 @@ const FunnelPanelPage: React.FC = () => {
         funnelLocalStore.upsert(newFunnel);
         console.log('✅ Funil clonado criado:', clonedInstance.id);
         console.log('📦 Blocos independentes:', clonedInstance.blocks.length);
-        
+
         // Navegar para editor com instância clonada
         setLocation(`/editor?funnel=${encodeURIComponent(clonedInstance.id)}&template=${templateId}`);
         return;
