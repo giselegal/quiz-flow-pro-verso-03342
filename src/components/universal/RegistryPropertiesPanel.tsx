@@ -51,15 +51,7 @@ const CATEGORIES = {
     general: { label: 'Geral', icon: Sparkles, color: 'text-gray-600' }
 };
 
-// ✨ GRIDS OTIMIZADOS PARA CAMPOS RELACIONADOS
-const GRID_LAYOUTS = {
-    // Layout 2x2 para controles de disposição
-    layout_2x2: ['layout', 'direction', 'columns', 'disposition'],
-    // Grid 3x3 para cores
-    colors_3x3: ['backgroundColor', 'textColor', 'borderColor', 'primaryColor', 'secondaryColor', 'accentColor'],
-    // Grid 2x3 para estilos
-    styles_2x3: ['borderRadius', 'borderWidth', 'shadow', 'spacing', 'padding', 'margin']
-};
+// ✨ GRID LAYOUTS PARA ORGANIZAÇÃO VISUAL (aplicados dinamicamente)
 
 // ✨ FUNÇÃO PARA DETECTAR SE CAMPOS DEVEM SER AGRUPADOS
 const shouldUseGrid = (schemas: ModernPropSchema[], category: string) => {
@@ -326,7 +318,7 @@ const OptionsArrayEditor: React.FC<{
     value: any[];
     onUpdate: (value: any[]) => void;
     schema: ModernPropSchema;
-}> = ({ value = [], onUpdate, schema }) => {
+}> = ({ value = [], onUpdate }) => {
     const addOption = () => {
         const newOption = { id: Date.now().toString(), text: '', imageUrl: '' };
         onUpdate([...value, newOption]);
