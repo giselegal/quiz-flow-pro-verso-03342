@@ -23,7 +23,7 @@ const LazyFunnelPanelPage = lazy(() => import('@/pages/admin/FunnelPanelPage'));
 const LazySettingsPage = lazy(() => import('@/pages/admin/SettingsPage')); // 28kB
 
 // Páginas do editor
-const LazyMainEditor = lazy(() => import('@/pages/MainEditor')); // 8.1kB
+const LazyMainEditor = lazy(() => import('@/pages/MainEditorUnified')); // 8.1kB
 const LazySchemaEditorPage = lazy(() => import('@/pages/SchemaEditorPage')); // 3.1kB
 
 // Páginas de dashboard
@@ -268,7 +268,7 @@ export const preloadCriticalPages = () => {
     // Preload das páginas mais acessadas após 3s
     const preloadTimer = setTimeout(() => {
         import('@/pages/admin/DashboardPage');
-        import('@/pages/MainEditor');
+        import('@/pages/MainEditorUnified');
         import('@/pages/QuizPage');
     }, 3000);
 
