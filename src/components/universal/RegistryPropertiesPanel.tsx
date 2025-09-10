@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState, useEffect, useRef } from 'react';
+import React, { useCallback, useMemo, useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -9,16 +9,13 @@ import { Slider } from '@/components/ui/slider';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import { Progress } from '@/components/ui/progress';
 import { 
   X, Trash2, RotateCcw, Plus, Minus, Upload, Eye, EyeOff, 
   Info, Palette, Image, Settings, Layout, Type, Check,
-  RefreshCw, Save, AlertCircle, Cloud, CloudOff,
-  MoveUp, MoveDown, Copy, Zap, Monitor, Sparkles
+  RefreshCw, Save
 } from 'lucide-react';
 import { blocksRegistry, type PropSchema } from '@/core/blocks/registry';
-import { debounce } from 'lodash';
+import QuizQuestionPropertiesPanel from '@/components/editor/properties/QuizQuestionPropertiesPanel';
 
 interface RegistryPropertiesPanelProps {
   selectedBlock: any;
@@ -27,279 +24,119 @@ interface RegistryPropertiesPanelProps {
   onDelete: (blockId: string) => void;
 }
 
-// ✨ TIPOS AVANÇADOS PARA PROPRIEDADES MODERNAS
-interface ModernPropSchema extends PropSchema {
-  min?: number;
-  max?: number;
-  step?: number;
-  unit?: string;
-  tooltip?: string;
-  helpText?: string;
-  preview?: boolean;
-  imageWidth?: number;
-  imageHeight?: number;
-  acceptedFormats?: string[];
-  placeholder?: string;
-  options?: { value: string; label: string; icon?: string }[];
-  dependsOn?: string[];
-  when?: Record<string, any>;
-  validation?: {
-    required?: boolean;
-    pattern?: string;
-    minLength?: number;
-    maxLength?: number;
-  };
-}
-
 // ✨ CATEGORIAS MODERNAS PARA AGRUPAMENTO
-const CATEGORIES = {
-  content: { label: 'Conteúdo', icon: Type, color: 'text-blue-600' },
-  layout: { label: 'Layout', icon: Layout, color: 'text-green-600' },
-  style: { label: 'Estilo', icon: Palette, color: 'text-purple-600' },
-  validation: { label: 'Validação', icon: Check, color: 'text-orange-600' },
-  behavior: { label: 'Comportamento', icon: Settings, color: 'text-red-600' },
-  general: { label: 'Geral', icon: Sparkles, color: 'text-gray-600' }
+const categoryIcons = {
+  content: Type,
+  layout: Layout, 
+  style: Palette,
+  validation: Check,
+  behavior: Settings,
+  general: Settings
+};
+
+const categoryLabels = {
+  content: 'Conteúdo',
+  layout: 'Layout', 
+  style: 'Estilo',
+  validation: 'Validação',
+  behavior: 'Comportamento',
+  general: 'Geral'
 };
 
 // ✨ HOOK PARA SINCRONIZAÇÃO BIDIRECIONAL COM BACKEND
 const useBackendSync = (selectedBlock: any, onUpdate: Function) => {
   const [localState, setLocalState] = useState(() => ({
-    ...selectedBlock?.properties || {},
-    ...selectedBlock?.content || {}
+    ...selectedBlock.properties,
+    ...selectedBlock.content
   }));
   const [isSaving, setIsSaving] = useState(false);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
-  const [saveProgress, setSaveProgress] = useState(0);
-  const [lastSaved, setLastSaved] = useState<Date | null>(null);
 
   // Sincronizar quando o bloco selecionado mudar
-  useEffect(() => {
-    if (selectedBlock) {
-      const newState = {
-        ...selectedBlock.properties || {},
-        ...selectedBlock.content || {}
-      };
-      setLocalState(newState);
-      setHasUnsavedChanges(false);
-      setSaveProgress(0);
-    }
-  }, [selectedBlock?.id]);
+  React.useEffect(() => {
+    setLocalState({
+      ...selectedBlock.properties,
+      ...selectedBlock.content
+    });
+    setHasUnsavedChanges(false);
+  }, [selectedBlock.id]);
 
-  // Salvar automaticamente com debounce e feedback visual
-  const debouncedSave = useMemo(() => {
-    return debounce(async (updates: Record<string, any>) => {
-      if (!selectedBlock) return;
-      
-      setIsSaving(true);
-      setSaveProgress(25);
-      
-      try {
-        // Separar propriedades e conteúdo baseado no schema do bloco
-        const blockDef = blocksRegistry[selectedBlock.type];
-        const properties: Record<string, any> = {};
-        const content: Record<string, any> = {};
-        
-        setSaveProgress(50);
-        
-        Object.entries(updates).forEach(([key, value]) => {
-          // Campos que tradicionalmente são conteúdo
-          const contentFields = ['title', 'subtitle', 'description', 'text', 'question', 'options', 'placeholder'];
-          
-          if (contentFields.includes(key)) {
-            content[key] = value;
-          } else {
-            properties[key] = value;
-          }
-        });
-
-        setSaveProgress(75);
-
-        // Chamar onUpdate com a estrutura correta
-        const updatePayload: any = {};
-        if (Object.keys(properties).length > 0) updatePayload.properties = properties;
-        if (Object.keys(content).length > 0) updatePayload.content = content;
-
-        await onUpdate(selectedBlock.id, updatePayload);
-        
-        setSaveProgress(100);
-        setHasUnsavedChanges(false);
-        setLastSaved(new Date());
-        
-        // Reset do progresso após um tempo
-        setTimeout(() => setSaveProgress(0), 1000);
-        
-      } catch (error) {
-        console.error('❌ Erro ao salvar no backend:', error);
-        setSaveProgress(0);
-      } finally {
-        setIsSaving(false);
-      }
-    }, 800);
-  }, [selectedBlock?.id, onUpdate]);
-
-  const updateField = useCallback((key: string, value: any) => {
-    setLocalState((prev: any) => {
-      const newState = { ...prev, [key]: value };
+  // Salvar automaticamente com debounce
+  const debouncedSave = React.useMemo(() => {
+    let timeoutId: NodeJS.Timeout;
+    return (updates: Record<string, any>) => {
       setHasUnsavedChanges(true);
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(async () => {
+        setIsSaving(true);
+        try {
+          // Separar propriedades e conteúdo
+          const properties: Record<string, any> = {};
+          const content: Record<string, any> = {};
+          
+          Object.entries(updates).forEach(([key, value]) => {
+            // Lógica para determinar se é propriedade ou conteúdo
+            if (['title', 'subtitle', 'description', 'text', 'question', 'options'].includes(key)) {
+              content[key] = value;
+            } else {
+              properties[key] = value;
+            }
+          });
+
+          await onUpdate(selectedBlock.id, { 
+            ...(Object.keys(properties).length > 0 && { properties }),
+            ...(Object.keys(content).length > 0 && { content })
+          });
+          setHasUnsavedChanges(false);
+        } catch (error) {
+          console.error('Erro ao salvar:', error);
+        } finally {
+          setIsSaving(false);
+        }
+      }, 500);
+    };
+  }, [selectedBlock.id, onUpdate]);
+
+  const updateField = React.useCallback((key: string, value: any) => {
+    setLocalState(prev => {
+      const newState = { ...prev, [key]: value };
       debouncedSave(newState);
       return newState;
     });
   }, [debouncedSave]);
 
-  const resetField = useCallback((key: string, defaultValue: any) => {
-    updateField(key, defaultValue);
-  }, [updateField]);
-
-  return {
-    localState,
-    isSaving,
-    hasUnsavedChanges,
-    saveProgress,
-    lastSaved,
-    updateField,
-    resetField
-  };
+  return { localState, updateField, isSaving, hasUnsavedChanges };
 };
 
 
 // ✨ COMPONENTE MODERNO PARA CAMPOS DE IMAGEM
 const ImageFieldEditor: React.FC<{
-  schema: ModernPropSchema;
+  schema: PropSchema;
   value: string;
   onUpdate: (value: string) => void;
   onSizeUpdate?: (width: number, height: number) => void;
   currentWidth?: number;
   currentHeight?: number;
-}> = ({ schema, value, onUpdate, onSizeUpdate, currentWidth = 200, currentHeight = 150 }) => {
+}> = ({ schema, value, onUpdate, onSizeUpdate, currentWidth, currentHeight }) => {
   const [showPreview, setShowPreview] = useState(true);
-  const [isUploading, setIsUploading] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      setIsUploading(true);
       // Simulação de upload - em produção, fazer upload real
       const reader = new FileReader();
       reader.onload = (e) => {
         onUpdate(e.target?.result as string);
-        setIsUploading(false);
       };
       reader.readAsDataURL(file);
     }
   };
 
-  const handleUrlChange = (url: string) => {
-    onUpdate(url);
-  };
-
   return (
-    <div className="space-y-3">
-      {/* Miniatura e controles */}
-      <div className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg bg-gray-50">
-        {/* Miniatura da imagem */}
-        <div className="relative w-16 h-12 bg-gray-100 rounded border overflow-hidden flex-shrink-0">
-          {value && showPreview ? (
-            <img 
-              src={value} 
-              alt="Preview" 
-              className="w-full h-full object-cover"
-              onError={() => setShowPreview(false)}
-            />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center text-gray-400">
-              <Image className="w-4 h-4" />
-            </div>
-          )}
-        </div>
-
-        {/* Controles de upload */}
-        <div className="flex-1 space-y-2">
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => fileInputRef.current?.click()}
-              disabled={isUploading}
-              className="flex items-center gap-1"
-            >
-              {isUploading ? (
-                <RefreshCw className="w-3 h-3 animate-spin" />
-              ) : (
-                <Upload className="w-3 h-3" />
-              )}
-              {isUploading ? 'Enviando...' : 'Substituir'}
-            </Button>
-            
-            {value && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowPreview(!showPreview)}
-                className="flex items-center gap-1"
-              >
-                {showPreview ? <EyeOff className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
-              </Button>
-            )}
-          </div>
-
-          {/* Campo de URL */}
-          <Input
-            placeholder="ou cole URL da imagem..."
-            value={value}
-            onChange={(e) => handleUrlChange(e.target.value)}
-            className="text-xs"
-          />
-        </div>
-      </div>
-
-      {/* Controles de tamanho */}
-      {onSizeUpdate && (
-        <div className="grid grid-cols-2 gap-3">
-          <div>
-            <Label className="text-xs font-medium text-gray-600">Largura</Label>
-            <div className="flex items-center gap-2">
-              <Slider
-                value={[currentWidth]}
-                onValueChange={([width]) => onSizeUpdate(width, currentHeight)}
-                min={50}
-                max={800}
-                step={10}
-                className="flex-1"
-              />
-              <span className="text-xs text-gray-500 w-12">{currentWidth}px</span>
-            </div>
-          </div>
-          <div>
-            <Label className="text-xs font-medium text-gray-600">Altura</Label>
-            <div className="flex items-center gap-2">
-              <Slider
-                value={[currentHeight]}
-                onValueChange={([height]) => onSizeUpdate(currentWidth, height)}
-                min={50}
-                max={600}
-                step={10}
-                className="flex-1"
-              />
-              <span className="text-xs text-gray-500 w-12">{currentHeight}px</span>
-            </div>
-          </div>
-        </div>
-      )}
-
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept={schema.acceptedFormats?.join(',') || 'image/*'}
-        onChange={handleFileSelect}
-        className="hidden"
-      />
-    </div>
-  );
-};
-
-// ✨ COMPONENTE PARA OPTIONS ARRAY EDITOR MODERNO
-const OptionsArrayEditor: React.FC<{
+    <div className="space-y-3 p-3 border border-gray-200 rounded-lg bg-gradient-to-br from-blue-50 to-indigo-50">
+      {/* Header com preview toggle */}
+      <div className="flex items-center justify-between">
         <Label className="text-xs font-semibold text-blue-700 flex items-center gap-2">
           <Image className="h-3 w-3" />
           {schema.label}
