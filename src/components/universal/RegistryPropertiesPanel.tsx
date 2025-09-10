@@ -9,13 +9,15 @@ import { Slider } from '@/components/ui/slider';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
 import {
   X, Trash2, RotateCcw, Plus, Minus, Upload, Eye, EyeOff,
   Info, Palette, Image, Settings, Layout, Type, Check,
-  RefreshCw
+  RefreshCw, Save, AlertCircle, Cloud, CloudOff,
+  MoveUp, MoveDown, Sparkles
 } from 'lucide-react';
-import { blocksRegistry, type PropSchema } from '@/core/blocks/registry';
-import QuizQuestionPropertiesPanel from '@/components/editor/properties/QuizQuestionPropertiesPanel';
+import { blocksRegistry, type PropSchema, type PropKind } from '@/core/blocks/registry';
+import { debounce } from 'lodash';
 
 interface RegistryPropertiesPanelProps {
   selectedBlock: any;
@@ -24,23 +26,29 @@ interface RegistryPropertiesPanelProps {
   onDelete: (blockId: string) => void;
 }
 
-// ✨ CATEGORIAS MODERNAS PARA AGRUPAMENTO
-const categoryIcons = {
-  content: Type,
-  layout: Layout,
-  style: Palette,
-  validation: Check,
-  behavior: Settings,
-  general: Settings
-};
+// ✨ TIPOS AVANÇADOS PARA PROPRIEDADES MODERNAS
+interface ModernPropSchema extends PropSchema {
+  icon?: React.ComponentType<any>;
+  gradient?: boolean;
+  preview?: boolean;
+  advanced?: boolean;
+  group?: string;
+  tooltip?: string;
+  validation?: (value: any) => boolean;
+  defaultValue?: any;
+  type?: PropKind;
+  acceptedFormats?: string[];
+  helpText?: string;
+}
 
-const categoryLabels = {
-  content: 'Conteúdo',
-  layout: 'Layout',
-  style: 'Estilo',
-  validation: 'Validação',
-  behavior: 'Comportamento',
-  general: 'Geral'
+// ✨ CATEGORIAS MODERNAS PARA AGRUPAMENTO
+const CATEGORIES = {
+  content: { label: 'Conteúdo', icon: Type, color: 'text-blue-600' },
+  layout: { label: 'Layout', icon: Layout, color: 'text-green-600' },
+  style: { label: 'Estilo', icon: Palette, color: 'text-purple-600' },
+  validation: { label: 'Validação', icon: Check, color: 'text-orange-600' },
+  behavior: { label: 'Comportamento', icon: Settings, color: 'text-red-600' },
+  general: { label: 'Geral', icon: Sparkles, color: 'text-gray-600' }
 };
 
 // ✨ HOOK PARA SINCRONIZAÇÃO BIDIRECIONAL COM BACKEND
@@ -51,522 +59,510 @@ const useBackendSync = (selectedBlock: any, onUpdate: Function) => {
   }));
   const [isSaving, setIsSaving] = useState(false);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [saveProgress, setSaveProgress] = useState(0);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
-  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
 
   // Sincronizar quando o bloco selecionado mudar
   useEffect(() => {
     if (selectedBlock) {
-      setLocalState({
+      const newState = {
         ...selectedBlock.properties || {},
         ...selectedBlock.content || {}
-      });
+      };
+      setLocalState(newState);
       setHasUnsavedChanges(false);
-      setSaveStatus('idle');
+      setSaveProgress(0);
     }
   }, [selectedBlock?.id]);
 
-  // Salvar automaticamente com debounce e feedback visual avançado
+  // Salvar automaticamente com debounce e feedback visual
   const debouncedSave = useMemo(() => {
-    let timeoutId: ReturnType<typeof setTimeout>;
-    return (updates: Record<string, any>) => {
-      setHasUnsavedChanges(true);
-      setSaveStatus('saving');
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(async () => {
-        setIsSaving(true);
-        try {
-          // Separar propriedades e conteúdo
-          const properties: Record<string, any> = {};
-          const content: Record<string, any> = {};
+    return debounce(async (updates: Record<string, any>) => {
+      if (!selectedBlock) return;
 
-          Object.entries(updates).forEach(([key, value]) => {
-            // Lógica para determinar se é propriedade ou conteúdo
-            if (['title', 'subtitle', 'description', 'text', 'question', 'options'].includes(key)) {
-              content[key] = value;
-            } else {
-              properties[key] = value;
-            }
-          });
+      setIsSaving(true);
+      setSaveProgress(25);
 
-          await onUpdate(selectedBlock.id, {
-            ...(Object.keys(properties).length > 0 && { properties }),
-            ...(Object.keys(content).length > 0 && { content })
-          });
+      try {
+        setSaveProgress(50);
 
-          setHasUnsavedChanges(false);
-          setSaveStatus('saved');
-          setLastSaved(new Date());
+        const properties: Record<string, any> = {};
+        const content: Record<string, any> = {};
 
-          // Reset status após 2 segundos
-          setTimeout(() => setSaveStatus('idle'), 2000);
+        Object.entries(updates).forEach(([key, value]) => {
+          // Campos que tradicionalmente são conteúdo
+          const contentFields = ['title', 'subtitle', 'description', 'text', 'question', 'options', 'placeholder'];
 
-        } catch (error) {
-          console.error('❌ Erro ao salvar:', error);
-          setSaveStatus('error');
-          setTimeout(() => setSaveStatus('idle'), 3000);
-        } finally {
-          setIsSaving(false);
-        }
-      }, 500);
-    };
+          if (contentFields.includes(key)) {
+            content[key] = value;
+          } else {
+            properties[key] = value;
+          }
+        });
+
+        setSaveProgress(75);
+
+        // Chamar onUpdate com a estrutura correta
+        const updatePayload: any = {};
+        if (Object.keys(properties).length > 0) updatePayload.properties = properties;
+        if (Object.keys(content).length > 0) updatePayload.content = content;
+
+        await onUpdate(selectedBlock.id, updatePayload);
+
+        setSaveProgress(100);
+        setHasUnsavedChanges(false);
+        setLastSaved(new Date());
+
+        // Reset do progresso após um tempo
+        setTimeout(() => setSaveProgress(0), 1000);
+
+      } catch (error) {
+        console.error('❌ Erro ao salvar no backend:', error);
+        setSaveProgress(0);
+      } finally {
+        setIsSaving(false);
+      }
+    }, 800);
   }, [selectedBlock?.id, onUpdate]);
 
   const updateField = useCallback((key: string, value: any) => {
     setLocalState((prev: any) => {
       const newState = { ...prev, [key]: value };
+      setHasUnsavedChanges(true);
       debouncedSave(newState);
       return newState;
     });
   }, [debouncedSave]);
 
+  const resetField = useCallback((key: string, defaultValue: any) => {
+    updateField(key, defaultValue);
+  }, [updateField]);
+
   return {
     localState,
-    updateField,
     isSaving,
     hasUnsavedChanges,
-    saveStatus,
-    lastSaved
+    saveProgress,
+    lastSaved,
+    updateField,
+    resetField
   };
 };
 
-
 // ✨ COMPONENTE MODERNO PARA CAMPOS DE IMAGEM
 const ImageFieldEditor: React.FC<{
-  schema: PropSchema;
+  schema: ModernPropSchema;
   value: string;
   onUpdate: (value: string) => void;
   onSizeUpdate?: (width: number, height: number) => void;
   currentWidth?: number;
   currentHeight?: number;
-}> = ({ schema, value, onUpdate, onSizeUpdate, currentWidth, currentHeight }) => {
+}> = ({ schema, value, onUpdate, onSizeUpdate, currentWidth = 200, currentHeight = 150 }) => {
   const [showPreview, setShowPreview] = useState(true);
+  const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
+      setIsUploading(true);
       // Simulação de upload - em produção, fazer upload real
       const reader = new FileReader();
       reader.onload = (e) => {
         onUpdate(e.target?.result as string);
+        setIsUploading(false);
       };
       reader.readAsDataURL(file);
     }
   };
 
+  const handleUrlChange = (url: string) => {
+    onUpdate(url);
+  };
+
   return (
-    <div className="space-y-3 p-3 border border-gray-200 rounded-lg bg-gradient-to-br from-blue-50 to-indigo-50">
-      {/* Header com preview toggle */}
-      <div className="flex items-center justify-between">
-        <Label className="text-xs font-semibold text-blue-700 flex items-center gap-2">
-          <Image className="h-3 w-3" />
-          {schema.label}
-        </Label>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => setShowPreview(!showPreview)}
-          className="h-6 w-6 p-0"
-        >
-          {showPreview ? <EyeOff className="h-3 w-3" /> : <Eye className="h-3 w-3" />}
-        </Button>
-      </div>
-
-      {/* Preview da imagem */}
-      {showPreview && value && (
-        <div className="relative bg-white rounded border p-2">
-          <img
-            src={value}
-            alt="Preview"
-            className="max-w-full h-20 object-contain mx-auto rounded"
-            style={{
-              width: currentWidth ? `${currentWidth}px` : 'auto',
-              height: currentHeight ? `${currentHeight}px` : 'auto'
-            }}
-          />
-          <div className="absolute top-1 right-1 bg-black/50 text-white text-[8px] px-1 rounded">
-            {currentWidth}x{currentHeight}
-          </div>
+    <div className="space-y-3">
+      {/* Miniatura e controles */}
+      <div className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg bg-gray-50">
+        {/* Miniatura da imagem */}
+        <div className="relative w-16 h-12 bg-gray-100 rounded border overflow-hidden flex-shrink-0">
+          {value && showPreview ? (
+            <img
+              src={value}
+              alt="Preview"
+              className="w-full h-full object-cover"
+              onError={() => setShowPreview(false)}
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center text-gray-400">
+              <Image className="w-4 h-4" />
+            </div>
+          )}
         </div>
-      )}
 
-      {/* URL input */}
-      <div className="space-y-1">
-        <Input
-          value={value}
-          onChange={(e) => onUpdate(e.target.value)}
-          placeholder="https://exemplo.com/imagem.jpg ou data:image/..."
-          className="h-8 text-xs"
-        />
-      </div>
+        {/* Controles de upload */}
+        <div className="flex-1 space-y-2">
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={isUploading}
+              className="flex items-center gap-1"
+            >
+              {isUploading ? (
+                <RefreshCw className="w-3 h-3 animate-spin" />
+              ) : (
+                <Upload className="w-3 h-3" />
+              )}
+              {isUploading ? 'Enviando...' : 'Substituir'}
+            </Button>
 
-      {/* Upload button */}
-      <div className="flex gap-2">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => fileInputRef.current?.click()}
-          className="flex-1 h-8 text-xs"
-        >
-          <Upload className="h-3 w-3 mr-1" />
-          Fazer Upload
-        </Button>
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*"
-          onChange={handleFileSelect}
-          className="hidden"
-        />
+            {value && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowPreview(!showPreview)}
+                className="flex items-center gap-1"
+              >
+                {showPreview ? <EyeOff className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
+              </Button>
+            )}
+          </div>
+
+          {/* Campo de URL */}
+          <Input
+            placeholder="ou cole URL da imagem..."
+            value={value}
+            onChange={(e) => handleUrlChange(e.target.value)}
+            className="text-xs"
+          />
+        </div>
       </div>
 
       {/* Controles de tamanho */}
       {onSizeUpdate && (
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-2 gap-3">
           <div>
-            <Label className="text-[10px] text-gray-600">Largura</Label>
-            <Slider
-              defaultValue={[currentWidth || 100]}
-              min={50}
-              max={500}
-              step={10}
-              onValueChange={(vals) => onSizeUpdate(vals[0], currentHeight || 100)}
-              className="mt-1"
-            />
-            <span className="text-[9px] text-gray-400">{currentWidth}px</span>
+            <Label className="text-xs font-medium text-gray-600">Largura</Label>
+            <div className="flex items-center gap-2">
+              <Slider
+                value={[currentWidth]}
+                onValueChange={([width]) => onSizeUpdate(width, currentHeight)}
+                min={50}
+                max={800}
+                step={10}
+                className="flex-1"
+              />
+              <span className="text-xs text-gray-500 w-12">{currentWidth}px</span>
+            </div>
           </div>
           <div>
-            <Label className="text-[10px] text-gray-600">Altura</Label>
-            <Slider
-              defaultValue={[currentHeight || 100]}
-              min={50}
-              max={500}
-              step={10}
-              onValueChange={(vals) => onSizeUpdate(currentWidth || 100, vals[0])}
-              className="mt-1"
-            />
-            <span className="text-[9px] text-gray-400">{currentHeight}px</span>
+            <Label className="text-xs font-medium text-gray-600">Altura</Label>
+            <div className="flex items-center gap-2">
+              <Slider
+                value={[currentHeight]}
+                onValueChange={([height]) => onSizeUpdate(currentWidth, height)}
+                min={50}
+                max={600}
+                step={10}
+                className="flex-1"
+              />
+              <span className="text-xs text-gray-500 w-12">{currentHeight}px</span>
+            </div>
           </div>
         </div>
       )}
+
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept={schema.acceptedFormats?.join(',') || 'image/*'}
+        onChange={handleFileSelect}
+        className="hidden"
+      />
     </div>
   );
 };
 
-const RegistryPropertiesPanel: React.FC<RegistryPropertiesPanelProps> = ({
-  selectedBlock,
-  onUpdate: _onUpdate,
-  onClose,
-  onDelete,
-}) => {
-  // ✨ USAR HOOK DE SINCRONIZAÇÃO BIDIRECIONAL
-  const {
-    localState,
-    updateField,
-    isSaving,
-    hasUnsavedChanges,
-    saveStatus,
-    lastSaved
-  } = useBackendSync(selectedBlock, _onUpdate);
-
-  if (!selectedBlock) {
-    return (
-      <div className="p-6 text-center text-gray-500">
-        <div className="text-4xl mb-2">🎯</div>
-        <p>Selecione um bloco no canvas para editar suas propriedades.</p>
-      </div>
-    );
-  }
-
-  const blockDefinition = blocksRegistry[selectedBlock.type];
-
-  if (!blockDefinition) {
-    return (
-      <div className="p-6 text-center">
-        <div className="text-4xl mb-2">❌</div>
-        <h3 className="text-lg font-semibold mb-2">Tipo de bloco não suportado</h3>
-        <p className="text-gray-600 mb-4">O tipo "{selectedBlock.type}" não foi encontrado no registro</p>
-        <Button
-          onClick={() => onDelete(selectedBlock.id)}
-          variant="destructive"
-          size="sm"
-        >
-          <Trash2 className="h-4 w-4 mr-2" />
-          Excluir Bloco
-        </Button>
-      </div>
-    );
-  }
-
-  const isQuestionBlock = (
-    selectedBlock.type === 'options-grid' ||
-    selectedBlock.type === 'quiz-question' ||
-    selectedBlock.type === 'quiz-question-inline'
-  );
-
-  // ✨ VERIFICAR CONDIÇÕES DEPENDSON/WHEN
-  const isFieldVisible = (schema: PropSchema): boolean => {
-    // Verificar dependsOn (campo deve existir e ter valor)
-    if (schema.dependsOn) {
-      for (const dep of schema.dependsOn) {
-        const depValue = localState[dep];
-        if (!depValue && depValue !== 0 && depValue !== false) {
-          return false;
-        }
-      }
-    }
-
-    // Verificar condição when (campo específico deve ter valor específico)
-    if (schema.when) {
-      const conditionValue = localState[schema.when.key];
-      if (conditionValue !== schema.when.value) {
-        return false;
-      }
-    }
-
-    return true;
+// ✨ COMPONENTE PARA OPTIONS ARRAY EDITOR MODERNO
+const OptionsArrayEditor: React.FC<{
+  value: any[];
+  onUpdate: (value: any[]) => void;
+  schema: ModernPropSchema;
+}> = ({ value = [], onUpdate, schema }) => {
+  const addOption = () => {
+    const newOption = { id: Date.now().toString(), text: '', imageUrl: '' };
+    onUpdate([...value, newOption]);
   };
 
-  // ✨ AGRUPAMENTO INTELIGENTE POR CATEGORIAS
-  const groupedSchemas = useMemo(() => {
-    const groups: Record<string, PropSchema[]> = {};
-    (blockDefinition.propsSchema || []).forEach(schema => {
-      // Filtrar por condições dependsOn/when
-      if (!isFieldVisible(schema)) return;
-
-      const cat = schema.category || 'general';
-      if (!groups[cat]) groups[cat] = [];
-      groups[cat].push(schema);
-    });
-    return groups;
-  }, [blockDefinition.propsSchema, localState]);
-
-  // ✨ RENDERIZADOR DE CAMPO MODERNO E INTUITIVO
-  const renderModernField = (schema: PropSchema) => {
-    const value = localState[schema.key] ?? schema.default ?? '';
-    const isModified = value !== (schema.default ?? '');
-
-    // Helper para tooltip com informações
-    const renderFieldWithTooltip = (field: React.ReactNode, helpText?: string) => {
-      if (!helpText) return field;
-
-      return (
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <div className="relative">
-                {field}
-                <Info className="absolute -top-1 -right-1 h-3 w-3 text-blue-400 opacity-60" />
-              </div>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p className="text-xs max-w-48">{helpText}</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      );
-    };
-
-    // Label comum moderno
-    const commonLabel = (
-      <div className="flex items-center justify-between mb-2">
-        <div className="flex items-center gap-2">
-          <Label htmlFor={schema.key} className="text-xs font-medium text-gray-700">
-            {schema.label}
-            {schema.required && <span className="text-red-500 ml-1">*</span>}
-          </Label>
-          {isModified && (
-            <Badge variant="secondary" className="text-[8px] px-1 py-0">
-              modificado
-            </Badge>
-          )}
-        </div>
-        <div className="flex items-center gap-1">
-          {/* Indicador de valor atual para sliders */}
-          {schema.kind === 'range' && typeof value === 'number' && (
-            <span className="text-[10px] text-blue-600 font-mono font-bold bg-blue-50 px-1 rounded">
-              {value}{schema.unit || ''}
-            </span>
-          )}
-          {/* Botão de reset individual */}
-          {isModified && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => updateField(schema.key, schema.default ?? '')}
-              className="h-5 w-5 p-0 hover:bg-red-100 hover:text-red-600"
-              title="Resetar para valor padrão"
-            >
-              <RotateCcw className="h-3 w-3" />
-            </Button>
-          )}
-        </div>
-      </div>
+  const updateOption = (index: number, field: string, newValue: string) => {
+    const updated = value.map((option, i) =>
+      i === index ? { ...option, [field]: newValue } : option
     );
+    onUpdate(updated);
+  };
 
-    const fieldContent = (() => {
-      switch (schema.kind) {
-        case 'text':
-          return (
-            <Input
-              id={schema.key}
-              value={value}
-              placeholder={schema.placeholder}
-              onChange={e => updateField(schema.key, e.target.value)}
-              className="h-9 text-sm transition-all focus:ring-2 focus:ring-blue-500"
-            />
-          );
+  const removeOption = (index: number) => {
+    onUpdate(value.filter((_, i) => i !== index));
+  };
 
-        case 'textarea':
-          return (
-            <Textarea
-              id={schema.key}
-              value={value}
-              placeholder={schema.placeholder}
-              onChange={e => updateField(schema.key, e.target.value)}
-              className="text-sm min-h-[80px] transition-all focus:ring-2 focus:ring-blue-500"
-            />
-          );
+  const moveOption = (index: number, direction: 'up' | 'down') => {
+    const newIndex = direction === 'up' ? index - 1 : index + 1;
+    if (newIndex < 0 || newIndex >= value.length) return;
 
-        case 'color':
-          return (
-            <div className="flex gap-2 items-center">
-              <Input
-                type="color"
-                id={schema.key}
-                value={value || '#ffffff'}
-                onChange={e => updateField(schema.key, e.target.value)}
-                className="h-9 w-16 p-1 cursor-pointer"
-              />
-              <Input
-                type="text"
-                value={value}
-                onChange={e => updateField(schema.key, e.target.value)}
-                placeholder="#ffffff"
-                className="h-9 font-mono text-sm flex-1"
-              />
-              <div
-                className="w-9 h-9 rounded border-2 border-gray-200"
-                style={{ backgroundColor: value || '#ffffff' }}
-                title="Preview da cor"
-              />
+    const updated = [...value];
+    [updated[index], updated[newIndex]] = [updated[newIndex], updated[index]];
+    onUpdate(updated);
+  };
+
+  return (
+    <div className="space-y-3">
+      {value.map((option, index) => (
+        <Card key={option.id || index} className="p-3">
+          <div className="space-y-3">
+            {/* Controles de ordem */}
+            <div className="flex items-center justify-between">
+              <Badge variant="outline" className="text-xs">
+                Opção {index + 1}
+              </Badge>
+              <div className="flex gap-1">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => moveOption(index, 'up')}
+                  disabled={index === 0}
+                  className="h-6 w-6 p-0"
+                >
+                  <MoveUp className="w-3 h-3" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => moveOption(index, 'down')}
+                  disabled={index === value.length - 1}
+                  className="h-6 w-6 p-0"
+                >
+                  <MoveDown className="w-3 h-3" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => removeOption(index)}
+                  className="h-6 w-6 p-0 text-red-500 hover:text-red-700"
+                >
+                  <Trash2 className="w-3 h-3" />
+                </Button>
+              </div>
             </div>
-          );
 
-        case 'number':
-          return (
+            {/* Campo de texto */}
             <Input
-              type="number"
-              id={schema.key}
-              value={value}
-              min={schema.min}
-              max={schema.max}
-              step={schema.step}
-              onChange={e => updateField(schema.key, e.target.value === '' ? '' : Number(e.target.value))}
-              className="h-9 text-sm"
+              placeholder="Texto da opção..."
+              value={option.text || ''}
+              onChange={(e) => updateOption(index, 'text', e.target.value)}
+              className="font-medium"
             />
-          );
 
-        case 'range':
+            {/* Campo de imagem (se aplicável) */}
+            {(option.imageUrl !== undefined || schema.key === 'options') && (
+              <ImageFieldEditor
+                schema={{ ...schema, label: 'Imagem da opção' }}
+                value={option.imageUrl || ''}
+                onUpdate={(url) => updateOption(index, 'imageUrl', url)}
+              />
+            )}
+          </div>
+        </Card>
+      ))}
+
+      {/* Botão para adicionar opção */}
+      <Button
+        variant="outline"
+        onClick={addOption}
+        className="w-full border-dashed border-2 border-gray-300 text-gray-600 hover:border-gray-400 hover:text-gray-700"
+      >
+        <Plus className="w-4 h-4 mr-2" />
+        Adicionar Opção
+      </Button>
+    </div>
+  );
+};
+
+// ✨ RENDERIZADOR DE CAMPO MODERNO
+const ModernFieldRenderer: React.FC<{
+  schema: ModernPropSchema;
+  value: any;
+  onUpdate: (value: any) => void;
+  onReset: () => void;
+}> = ({ schema, value, onUpdate, onReset }) => {
+  const isModified = value !== schema.defaultValue;
+
+  const renderField = () => {
+    switch (schema.kind) {
+      case 'text':
+        return (
+          <Input
+            value={value || ''}
+            onChange={(e) => onUpdate(e.target.value)}
+            placeholder={schema.placeholder || `Digite ${schema.label.toLowerCase()}...`}
+            className="w-full"
+          />
+        );
+
+      case 'textarea':
+        return (
+          <Textarea
+            value={value || ''}
+            onChange={(e) => onUpdate(e.target.value)}
+            placeholder={schema.placeholder || `Digite ${schema.label.toLowerCase()}...`}
+            rows={3}
+            className="w-full resize-none"
+          />
+        );
+
+      case 'number':
+        if (schema.min !== undefined && schema.max !== undefined) {
+          // Usar slider para números com range
           return (
             <div className="space-y-2">
               <Slider
-                defaultValue={[typeof value === 'number' ? value : schema.min || 0]}
-                min={schema.min ?? 0}
-                max={schema.max ?? 100}
-                step={schema.step ?? 1}
-                onValueChange={vals => updateField(schema.key, vals[0])}
+                value={[value || schema.defaultValue || 0]}
+                onValueChange={([val]) => onUpdate(val)}
+                min={schema.min}
+                max={schema.max}
+                step={schema.step || 1}
                 className="w-full"
               />
-              <div className="flex justify-between text-[10px] text-gray-400">
-                <span>{schema.min ?? 0}{schema.unit || ''}</span>
-                <span>{schema.max ?? 100}{schema.unit || ''}</span>
+              <div className="flex justify-between text-xs text-gray-500">
+                <span>{schema.min}{schema.unit}</span>
+                <span className="font-medium">{value || 0}{schema.unit}</span>
+                <span>{schema.max}{schema.unit}</span>
               </div>
             </div>
           );
-
-        case 'select':
-          return (
-            <Select
-              value={value}
-              onValueChange={val => updateField(schema.key, val)}
-            >
-              <SelectTrigger id={schema.key} className="h-9 text-sm">
-                <SelectValue placeholder={schema.placeholder || 'Selecione...'} />
-              </SelectTrigger>
-              <SelectContent className="max-h-60">
-                {schema.options?.map(opt => (
-                  <SelectItem key={opt.value} value={String(opt.value)} className="text-sm">
-                    {opt.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          );
-
-        case 'switch':
-          return (
-            <div className="flex items-center justify-between py-2">
-              <div className="flex-1">
-                <Label htmlFor={schema.key} className="text-sm text-gray-700 cursor-pointer">
-                  {schema.label}
-                </Label>
-                {schema.description && (
-                  <p className="text-xs text-gray-500 mt-1">{schema.description}</p>
-                )}
-              </div>
-              <Switch
-                id={schema.key}
-                checked={!!value}
-                onCheckedChange={val => updateField(schema.key, val)}
-                className="ml-3"
-              />
-            </div>
-          );
-
-        case 'url':
+        } else {
           return (
             <Input
+              type="number"
+              value={value || ''}
+              onChange={(e) => onUpdate(Number(e.target.value))}
+              placeholder={schema.placeholder}
+              min={schema.min}
+              max={schema.max}
+              step={schema.step}
+              className="w-full"
+            />
+          );
+        }
+
+      case 'switch':
+        return (
+          <div className="flex items-center space-x-2">
+            <Switch
+              checked={Boolean(value)}
+              onCheckedChange={onUpdate}
               id={schema.key}
-              type="url"
-              value={value}
-              placeholder={schema.placeholder || 'https://...'}
-              onChange={e => updateField(schema.key, e.target.value)}
-              className="h-9 text-sm"
             />
-          );
+            <Label
+              htmlFor={schema.key}
+              className="text-sm font-medium cursor-pointer"
+            >
+              {Boolean(value) ? 'Ativado' : 'Desativado'}
+            </Label>
+          </div>
+        );
 
-        case 'url':
+      case 'color':
+        return (
+          <div className="flex items-center gap-3">
+            <input
+              type="color"
+              value={value || '#000000'}
+              onChange={(e) => onUpdate(e.target.value)}
+              className="w-12 h-8 rounded border border-gray-300 cursor-pointer"
+            />
+            <Input
+              value={value || ''}
+              onChange={(e) => onUpdate(e.target.value)}
+              placeholder="#000000"
+              className="flex-1 font-mono text-sm"
+            />
+            {isModified && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={onReset}
+                className="h-8 w-8 p-0"
+                title="Resetar cor"
+              >
+                <RotateCcw className="w-3 h-3" />
+              </Button>
+            )}
+          </div>
+        );
+
+      case 'select':
+        return (
+          <Select value={value || ''} onValueChange={onUpdate}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder={`Selecione ${schema.label.toLowerCase()}...`} />
+            </SelectTrigger>
+            <SelectContent>
+              {schema.options?.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  <div className="flex items-center gap-2">
+                    {option.label}
+                  </div>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        );
+
+      case 'range':
+        return (
+          <div className="space-y-2">
+            <Slider
+              value={[value || schema.defaultValue || 0]}
+              onValueChange={([val]) => onUpdate(val)}
+              min={schema.min || 0}
+              max={schema.max || 100}
+              step={schema.step || 1}
+              className="w-full"
+            />
+            <div className="flex justify-between text-xs text-gray-500">
+              <span>{schema.min || 0}{schema.unit}</span>
+              <span className="font-medium">{value || 0}{schema.unit}</span>
+              <span>{schema.max || 100}{schema.unit}</span>
+            </div>
+          </div>
+        );
+
+      case 'array':
+        if (schema.key === 'options') {
           return (
-            <ImageFieldEditor
+            <OptionsArrayEditor
+              value={value || []}
+              onUpdate={onUpdate}
               schema={schema}
-              value={value}
-              onUpdate={val => updateField(schema.key, val)}
-              onSizeUpdate={(width, height) => {
-                updateField(`${schema.key}Width`, width);
-                updateField(`${schema.key}Height`, height);
-              }}
-              currentWidth={localState[`${schema.key}Width`]}
-              currentHeight={localState[`${schema.key}Height`]}
             />
           );
-
-        case 'array':
+        } else {
+          // Array simples
           return (
-            <div className="border border-gray-200 rounded-lg p-3 space-y-3 bg-gray-50">
+            <div className="space-y-2">
               {(Array.isArray(value) ? value : []).map((item: any, index: number) => (
-                <div key={index} className="flex items-center gap-2 bg-white p-2 rounded border">
-                  <span className="text-xs text-gray-400 w-6 text-center">{index + 1}</span>
+                <div key={index} className="flex gap-2">
                   <Input
-                    value={item}
-                    onChange={e => {
+                    value={item || ''}
+                    onChange={(e) => {
                       const newArray = [...(Array.isArray(value) ? value : [])];
                       newArray[index] = e.target.value;
-                      updateField(schema.key, newArray);
+                      onUpdate(newArray);
                     }}
-                    className="h-8 text-sm flex-1"
                     placeholder={`Item ${index + 1}`}
+                    className="flex-1"
                   />
                   <Button
                     variant="ghost"
@@ -574,11 +570,11 @@ const RegistryPropertiesPanel: React.FC<RegistryPropertiesPanelProps> = ({
                     onClick={() => {
                       const newArray = [...(Array.isArray(value) ? value : [])];
                       newArray.splice(index, 1);
-                      updateField(schema.key, newArray);
+                      onUpdate(newArray);
                     }}
-                    className="h-8 w-8 p-0 hover:bg-red-100 hover:text-red-600"
+                    className="h-10 w-10 p-0 text-red-500"
                   >
-                    <Minus className="h-3 w-3" />
+                    <Minus className="w-4 h-4" />
                   </Button>
                 </div>
               ))}
@@ -587,236 +583,291 @@ const RegistryPropertiesPanel: React.FC<RegistryPropertiesPanelProps> = ({
                 size="sm"
                 onClick={() => {
                   const newArray = [...(Array.isArray(value) ? value : []), ''];
-                  updateField(schema.key, newArray);
+                  onUpdate(newArray);
                 }}
-                className="h-9 w-full border-dashed border-gray-300 hover:border-blue-400 hover:bg-blue-50"
+                className="w-full"
               >
-                <Plus className="h-4 w-4 mr-2" />
+                <Plus className="w-4 h-4 mr-2" />
                 Adicionar Item
               </Button>
             </div>
           );
+        }
 
-        default:
+      case 'url':
+        if (schema.key.includes('image') || schema.key.includes('logo') || schema.key.includes('src')) {
           return (
-            <div className="text-xs italic text-gray-400 p-2 border border-dashed rounded">
-              Tipo não suportado: {schema.kind}
-            </div>
+            <ImageFieldEditor
+              schema={schema}
+              value={value || ''}
+              onUpdate={onUpdate}
+            />
           );
-      }
-    })();
+        } else {
+          return (
+            <Input
+              type="url"
+              value={value || ''}
+              onChange={(e) => onUpdate(e.target.value)}
+              placeholder={schema.placeholder || 'https://...'}
+              className="w-full"
+            />
+          );
+        }
 
-    return (
-      <div key={schema.key} className="space-y-1">
-        {schema.kind !== 'switch' && commonLabel}
-        {renderFieldWithTooltip(fieldContent, schema.description)}
-      </div>
-    );
+      default:
+        return (
+          <Input
+            value={value || ''}
+            onChange={(e) => onUpdate(e.target.value)}
+            placeholder={schema.placeholder}
+            className="w-full"
+          />
+        );
+    }
   };
 
   return (
-    <div className="h-full flex flex-col bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-      {/* ✨ CABEÇALHO MODERNO COM INDICADORES */}
-      <div className="bg-white/90 backdrop-blur-sm border-b border-gray-200 p-6 shadow-lg">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            {/* Ícone do bloco */}
-            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 via-purple-600 to-indigo-700 rounded-xl flex items-center justify-center text-white font-bold shadow-lg">
-              {blockDefinition.icon || '🧩'}
-            </div>
-            {/* Informações do bloco */}
-            <div>
-              <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                {blockDefinition.title}
-                {hasUnsavedChanges && (
-                  <Badge variant="outline" className="text-[10px] text-orange-600 border-orange-200">
-                    não salvo
-                  </Badge>
-                )}
-                {isSaving && (
-                  <Badge variant="outline" className="text-[10px] text-blue-600 border-blue-200 animate-pulse">
-                    salvando...
-                  </Badge>
-                )}
-              </h2>
-              <div className="flex items-center gap-3 mt-1">
+    <div className="space-y-2">
+      {/* Label com tooltip e reset */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Label className="text-sm font-medium text-gray-700">
+            {schema.label}
+            {schema.required && (
+              <span className="text-red-500 ml-1">*</span>
+            )}
+          </Label>
+          {schema.tooltip && (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <Info className="w-3 h-3 text-gray-400" />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p className="text-xs">{schema.tooltip}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          )}
+        </div>
+
+        {isModified && schema.kind !== 'color' && (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onReset}
+            className="h-6 w-6 p-0"
+            title="Resetar para valor padrão"
+          >
+            <RotateCcw className="w-3 h-3" />
+          </Button>
+        )}
+      </div>
+
+      {/* Campo */}
+      {renderField()}
+
+      {/* Texto de ajuda */}
+      {schema.helpText && (
+        <p className="text-xs text-gray-500">{schema.helpText}</p>
+      )}
+    </div>
+  );
+};
+
+// ✨ COMPONENTE PRINCIPAL DO PAINEL
+const RegistryPropertiesPanel: React.FC<RegistryPropertiesPanelProps> = ({
+  selectedBlock,
+  onUpdate,
+  onClose,
+  onDelete
+}) => {
+  const {
+    localState,
+    isSaving,
+    hasUnsavedChanges,
+    saveProgress,
+    lastSaved,
+    updateField,
+    resetField
+  } = useBackendSync(selectedBlock, onUpdate);
+
+  if (!selectedBlock) {
+    return (
+      <div className="h-full flex items-center justify-center text-gray-500 p-6">
+        <div className="text-center">
+          <Settings className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+          <p className="text-lg font-medium">Nenhum bloco selecionado</p>
+          <p className="text-sm">Clique em um elemento para editar suas propriedades</p>
+        </div>
+      </div>
+    );
+  }
+
+  const blockDef = blocksRegistry[selectedBlock.type];
+  if (!blockDef?.propsSchema) {
+    return (
+      <div className="h-full flex items-center justify-center text-gray-500 p-6">
+        <div className="text-center">
+          <AlertCircle className="w-12 h-12 mx-auto mb-4 text-yellow-500" />
+          <p className="text-lg font-medium">Tipo de bloco não suportado</p>
+          <p className="text-sm">O tipo "{selectedBlock.type}" não tem propriedades editáveis</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Agrupar schemas por categoria
+  const groupedSchemas = blockDef.propsSchema.reduce((acc, schema) => {
+    const category = schema.category || 'general';
+    if (!acc[category]) acc[category] = [];
+    acc[category].push(schema);
+    return acc;
+  }, {} as Record<string, ModernPropSchema[]>);
+
+  return (
+    <TooltipProvider>
+      <div className="h-full flex flex-col bg-gradient-to-b from-gray-50 to-white">
+        {/* Header com status de salvamento */}
+        <div className="bg-white border-b border-gray-200 p-6 shadow-sm">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold">
+                {blockDef.icon || '🧩'}
+              </div>
+              <div>
+                <h2 className="text-xl font-bold text-gray-900">
+                  {blockDef.title}
+                </h2>
                 <p className="text-sm text-gray-500 font-mono">
-                  ID: {selectedBlock.id.slice(0, 8)}...
+                  {selectedBlock.id}
                 </p>
-                <Badge variant="secondary" className="text-[10px]">
-                  {selectedBlock.type}
-                </Badge>
               </div>
             </div>
-          </div>
-          {/* Controles do cabeçalho */}
-          <div className="flex items-center gap-2">
-            {/* Indicador de status */}
-            <div className="flex items-center gap-2 text-xs text-gray-500">
-              <div className={`w-2 h-2 rounded-full ${saveStatus === 'saving' ? 'bg-blue-400 animate-pulse' :
-                saveStatus === 'error' ? 'bg-red-400 animate-bounce' :
-                  saveStatus === 'saved' ? 'bg-green-400' :
-                    hasUnsavedChanges ? 'bg-orange-400' : 'bg-green-400'
-                }`} />
-              <span className={`${saveStatus === 'error' ? 'text-red-600' :
-                saveStatus === 'saved' ? 'text-green-600' : ''
-                }`}>
-                {saveStatus === 'saving' ? 'Salvando...' :
-                  saveStatus === 'error' ? 'Erro ao salvar' :
-                    saveStatus === 'saved' ? 'Salvo com sucesso' :
-                      hasUnsavedChanges ? 'Alterações pendentes' : 'Sincronizado'}
-              </span>
-              {saveStatus === 'saved' && lastSaved && (
-                <span className="text-gray-400 ml-1">
-                  ({lastSaved.toLocaleTimeString()})
-                </span>
-              )}
-            </div>
-            <Button onClick={onClose} variant="ghost" size="sm" className="hover:bg-gray-100">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onClose}
+              className="h-9 w-9 p-0"
+            >
               <X className="h-4 w-4" />
             </Button>
           </div>
+
+          {/* Status de salvamento */}
+          <div className="flex items-center justify-between text-xs">
+            <div className="flex items-center gap-2">
+              {isSaving ? (
+                <>
+                  <RefreshCw className="w-3 h-3 animate-spin text-blue-500" />
+                  <span className="text-blue-600">Salvando...</span>
+                </>
+              ) : hasUnsavedChanges ? (
+                <>
+                  <CloudOff className="w-3 h-3 text-orange-500" />
+                  <span className="text-orange-600">Alterações não salvas</span>
+                </>
+              ) : (
+                <>
+                  <Cloud className="w-3 h-3 text-green-500" />
+                  <span className="text-green-600">
+                    {lastSaved ? `Salvo ${lastSaved.toLocaleTimeString()}` : 'Sincronizado'}
+                  </span>
+                </>
+              )}
+            </div>
+
+            {saveProgress > 0 && saveProgress < 100 && (
+              <Progress value={saveProgress} className="w-20 h-2" />
+            )}
+          </div>
         </div>
-      </div>
 
-      {/* ✨ CONTEÚDO PRINCIPAL COM SCROLL SUAVE */}
-      <div className="flex-1 overflow-y-auto p-6 space-y-6">
-        {isQuestionBlock ? (
-          <QuizQuestionPropertiesPanel
-            block={selectedBlock}
-            onUpdate={(updates) => {
-              Object.entries(updates).forEach(([key, value]) => {
-                updateField(key, value);
-              });
-            }}
-            onDelete={() => onDelete(selectedBlock.id)}
-          />
-        ) : (
+        {/* Conteúdo principal */}
+        <div className="flex-1 overflow-y-auto p-6">
           <div className="space-y-6">
-            {/* ✨ PREVIEW EM TEMPO REAL MODERNO */}
-            <Card className="border-blue-200 shadow-lg bg-gradient-to-r from-blue-50 to-indigo-50">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-semibold text-blue-700 flex items-center gap-2">
-                  <Eye className="h-4 w-4" />
-                  Preview em Tempo Real
-                  <Badge variant="outline" className="text-[10px] ml-auto">
-                    {Object.keys(localState).length} propriedades
-                  </Badge>
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="pt-0">
-                {Object.keys(localState).length > 0 ? (
-                  <div className="grid grid-cols-1 gap-2 max-h-48 overflow-y-auto">
-                    {Object.entries(localState).slice(0, 8).map(([key, value]) => (
-                      <div key={key} className="flex justify-between items-center p-2 bg-white/70 rounded border border-blue-100">
-                        <span className="text-xs font-medium text-blue-800 truncate max-w-20">
-                          {key}
-                        </span>
-                        <span className="text-xs text-gray-700 text-right font-mono bg-white px-2 py-1 rounded border">
-                          {typeof value === 'string' && value.length > 25
-                            ? `"${value.slice(0, 25)}..."`
-                            : typeof value === 'string'
-                              ? `"${value}"`
-                              : JSON.stringify(value).length > 30
-                                ? JSON.stringify(value).slice(0, 30) + '...'
-                                : JSON.stringify(value)
-                          }
-                        </span>
-                      </div>
-                    ))}
-                    {Object.keys(localState).length > 8 && (
-                      <div className="text-center text-xs text-blue-600 mt-2">
-                        +{Object.keys(localState).length - 8} mais propriedades...
-                      </div>
-                    )}
-                  </div>
-                ) : (
-                  <div className="text-center text-xs text-gray-400 py-6">
-                    <Settings className="h-6 w-6 mx-auto mb-2 opacity-50" />
-                    Nenhuma propriedade configurada ainda
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-
-            {/* ✨ CATEGORIAS MODERNAS COM ÍCONES */}
             {Object.entries(groupedSchemas).map(([category, schemas]) => {
-              const CategoryIcon = categoryIcons[category as keyof typeof categoryIcons] || Settings;
-              const categoryLabel = categoryLabels[category as keyof typeof categoryLabels] || category;
+              const categoryDef = CATEGORIES[category as keyof typeof CATEGORIES] || CATEGORIES.general;
+              const CategoryIcon = categoryDef.icon;
 
               return (
-                <Card key={category} className="shadow-md hover:shadow-lg transition-shadow">
-                  <CardHeader className="pb-3 bg-gradient-to-r from-gray-50 to-gray-100">
-                    <CardTitle className="text-sm font-semibold text-gray-700 flex items-center gap-2">
-                      <CategoryIcon className="h-4 w-4 text-gray-600" />
-                      {categoryLabel}
-                      <Badge variant="outline" className="text-[10px] ml-auto">
-                        {schemas.length} {schemas.length === 1 ? 'campo' : 'campos'}
+                <Card key={category} className="border border-gray-200 shadow-sm">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="flex items-center gap-2 text-base">
+                      <CategoryIcon className={`w-4 h-4 ${categoryDef.color}`} />
+                      {categoryDef.label}
+                      <Badge variant="secondary" className="ml-auto text-xs">
+                        {schemas.length}
                       </Badge>
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="pt-0 space-y-4">
-                    {schemas.map(schema => renderModernField(schema))}
+                    {schemas.map((schema) => {
+                      // Verificar condições dependsOn
+                      if (schema.dependsOn) {
+                        const shouldShow = schema.dependsOn.every(dep => {
+                          const depValue = localState[dep];
+                          return depValue !== undefined && depValue !== null && depValue !== '';
+                        });
+                        if (!shouldShow) return null;
+                      }
+
+                      // Verificar condições when
+                      if (schema.when) {
+                        const shouldShow = Object.entries(schema.when).every(([key, expectedValue]) => {
+                          return localState[key] === expectedValue;
+                        });
+                        if (!shouldShow) return null;
+                      }
+
+                      return (
+                        <ModernFieldRenderer
+                          key={schema.key}
+                          schema={schema as ModernPropSchema}
+                          value={localState[schema.key]}
+                          onUpdate={(value) => updateField(schema.key, value)}
+                          onReset={() => resetField(schema.key, schema.defaultValue)}
+                        />
+                      );
+                    })}
                   </CardContent>
                 </Card>
               );
             })}
-
-            {/* Caso não haja propriedades */}
-            {(!blockDefinition.propsSchema || blockDefinition.propsSchema.length === 0) && (
-              <Card className="border-dashed border-gray-300">
-                <CardContent className="text-center py-12">
-                  <Settings className="h-12 w-12 mx-auto mb-4 text-gray-300" />
-                  <h3 className="text-lg font-medium text-gray-600 mb-2">
-                    Nenhuma propriedade configurável
-                  </h3>
-                  <p className="text-sm text-gray-400">
-                    Este bloco não possui propriedades editáveis definidas.
-                  </p>
-                </CardContent>
-              </Card>
-            )}
           </div>
-        )}
-      </div>
+        </div>
 
-      {/* ✨ RODAPÉ COM AÇÕES PRINCIPAIS */}
-      <div className="bg-white/90 backdrop-blur-sm border-t border-gray-200 p-4 shadow-lg">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3 text-sm text-gray-600">
-            <RefreshCw className="h-4 w-4" />
-            <span>Sincronização automática com backend</span>
-            {hasUnsavedChanges && (
-              <Badge variant="outline" className="text-[10px] text-orange-600">
-                Salvando em {Math.ceil(500 / 1000)}s...
-              </Badge>
-            )}
-          </div>
-          <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" onClick={() => {
-              // Reset todas as propriedades
-              Object.keys(localState).forEach(key => {
-                const schema = blockDefinition.propsSchema?.find(s => s.key === key);
-                if (schema) {
-                  updateField(key, schema.default ?? '');
-                }
-              });
-            }}>
-              <RotateCcw className="h-4 w-4 mr-2" />
-              Reset Tudo
-            </Button>
+        {/* Footer com ações principais */}
+        <div className="bg-white border-t border-gray-200 p-4">
+          <div className="flex items-center justify-between">
             <Button
-              onClick={() => onDelete(selectedBlock.id)}
               variant="destructive"
               size="sm"
+              onClick={() => onDelete(selectedBlock.id)}
+              className="flex items-center gap-2"
             >
-              <Trash2 className="h-4 w-4 mr-2" />
+              <Trash2 className="w-4 h-4" />
               Excluir Bloco
             </Button>
+
+            <div className="flex gap-2">
+              <Button variant="outline" size="sm" onClick={onClose}>
+                Fechar
+              </Button>
+              <Button
+                size="sm"
+                disabled={!hasUnsavedChanges}
+                className="flex items-center gap-2"
+              >
+                <Save className="w-4 h-4" />
+                {isSaving ? 'Salvando...' : 'Salvar'}
+              </Button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </TooltipProvider>
   );
 };
 
