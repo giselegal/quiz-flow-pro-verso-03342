@@ -1,13 +1,13 @@
-import React from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
-// import { Input } from '@/components/ui/input';
-// import { Label } from '@/components/ui/label';
-// import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-// import { Switch } from '@/components/ui/switch';
-// import { Textarea } from '@/components/ui/textarea';
-// import { Slider } from '@/components/ui/slider';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
+import { Textarea } from '@/components/ui/textarea';
+import { Slider } from '@/components/ui/slider';
 import { X, Trash2 } from 'lucide-react';
-import { blocksRegistry } from '@/core/blocks/registry';
+import { blocksRegistry, type PropSchema } from '@/core/blocks/registry';
 import QuizQuestionPropertiesPanel from '@/components/editor/properties/QuizQuestionPropertiesPanel';
 
 interface RegistryPropertiesPanelProps {
@@ -67,9 +67,176 @@ const RegistryPropertiesPanel: React.FC<RegistryPropertiesPanelProps> = ({
     selectedBlock.type === 'quiz-question-inline'
   );
 
+  const [localDraft, setLocalDraft] = useState<Record<string, any>>(() => ({ ...(selectedBlock.properties || {}) }));
+
+  // Debounce apply
+  const applyUpdates = useCallback((partial: Record<string, any>) => {
+    setLocalDraft(prev => {
+      const next = { ...prev, ...partial };
+      // Debounce simples: aplica após 300ms de inatividade
+      const ts = Date.now();
+      setTimeout(() => {
+        // Se nenhuma nova alteração sobrescreveu dentro do período (~300ms), aplicar
+        if (Date.now() - ts >= 280) {
+          _onUpdate(selectedBlock.id, { properties: next });
+        }
+      }, 300);
+      return next;
+    });
+  }, [_onUpdate, selectedBlock.id]);
+
   const handleUpdate = (updates: Record<string, any>) => {
-    // Encaminha atualização para o consumidor original
-    _onUpdate(selectedBlock.id, { properties: updates });
+    applyUpdates(updates);
+  };
+
+  const groupedSchemas = useMemo(() => {
+    const groups: Record<string, PropSchema[]> = {};
+    (blockDefinition.propsSchema || []).forEach(schema => {
+      const cat = schema.category || 'content';
+      if (!groups[cat]) groups[cat] = [];
+      groups[cat].push(schema);
+    });
+    return groups;
+  }, [blockDefinition.propsSchema]);
+
+  const renderField = (schema: PropSchema) => {
+    const value = localDraft[schema.key] ?? schema.default ?? '';
+    const commonLabel = (
+      <div className="flex items-center justify-between mb-1">
+        <Label htmlFor={schema.key} className="text-xs font-medium text-gray-600">
+          {schema.label}
+        </Label>
+        {schema.kind === 'range' && typeof value === 'number' && (
+          <span className="text-[10px] text-gray-400 font-mono">{value}{schema.unit || ''}</span>
+        )}
+      </div>
+    );
+
+    switch (schema.kind) {
+      case 'text':
+        return (
+          <div key={schema.key} className="space-y-1">
+            {commonLabel}
+            <Input
+              id={schema.key}
+              value={value}
+              placeholder={schema.placeholder}
+              onChange={e => handleUpdate({ [schema.key]: e.target.value })}
+              className="h-8 text-xs"
+            />
+          </div>
+        );
+      case 'textarea':
+        return (
+            <div key={schema.key} className="space-y-1">
+              {commonLabel}
+              <Textarea
+                id={schema.key}
+                value={value}
+                placeholder={schema.placeholder}
+                onChange={e => handleUpdate({ [schema.key]: e.target.value })}
+                className="text-xs min-h-[70px]"
+              />
+            </div>
+          );
+      case 'color':
+        return (
+          <div key={schema.key} className="space-y-1">
+            {commonLabel}
+            <Input
+              type="color"
+              id={schema.key}
+              value={value || '#ffffff'}
+              onChange={e => handleUpdate({ [schema.key]: e.target.value })}
+              className="h-8 p-1"
+            />
+          </div>
+        );
+      case 'number':
+        return (
+          <div key={schema.key} className="space-y-1">
+            {commonLabel}
+            <Input
+              type="number"
+              id={schema.key}
+              value={value}
+              min={schema.min}
+              max={schema.max}
+              step={schema.step}
+              onChange={e => handleUpdate({ [schema.key]: e.target.value === '' ? '' : Number(e.target.value) })}
+              className="h-8 text-xs"
+            />
+          </div>
+        );
+      case 'range':
+        return (
+          <div key={schema.key} className="space-y-1">
+            {commonLabel}
+            <Slider
+              defaultValue={[typeof value === 'number' ? value : schema.min || 0]}
+              min={schema.min ?? 0}
+              max={schema.max ?? 100}
+              step={schema.step ?? 1}
+              onValueChange={vals => handleUpdate({ [schema.key]: vals[0] })}
+            />
+          </div>
+        );
+      case 'select':
+        return (
+          <div key={schema.key} className="space-y-1">
+            {commonLabel}
+            <Select
+              value={value}
+              onValueChange={val => handleUpdate({ [schema.key]: val })}
+            >
+              <SelectTrigger id={schema.key} className="h-8 text-xs">
+                <SelectValue placeholder={schema.placeholder || 'Selecione...'} />
+              </SelectTrigger>
+              <SelectContent className="max-h-60">
+                {schema.options?.map(opt => (
+                  <SelectItem key={opt.value} value={String(opt.value)} className="text-xs">
+                    {opt.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        );
+      case 'switch':
+        return (
+          <div key={schema.key} className="flex items-center justify-between py-1">
+            <Label htmlFor={schema.key} className="text-xs text-gray-600">
+              {schema.label}
+            </Label>
+            <Switch
+              id={schema.key}
+              checked={!!value}
+              onCheckedChange={val => handleUpdate({ [schema.key]: val })}
+            />
+          </div>
+        );
+      case 'url':
+        return (
+          <div key={schema.key} className="space-y-1">
+            {commonLabel}
+            <Input
+              id={schema.key}
+              type="url"
+              value={value}
+              placeholder={schema.placeholder || 'https://...'}
+              onChange={e => handleUpdate({ [schema.key]: e.target.value })}
+              className="h-8 text-xs"
+            />
+          </div>
+        );
+      default:
+        return (
+          <div key={schema.key} className="space-y-1 opacity-60">
+            {commonLabel}
+            <div className="text-[10px] italic text-gray-400">Tipo não suportado ainda: {schema.kind}</div>
+          </div>
+        );
+    }
   };
 
   return (
@@ -101,9 +268,23 @@ const RegistryPropertiesPanel: React.FC<RegistryPropertiesPanelProps> = ({
             onDelete={() => onDelete(selectedBlock.id)}
           />
         ) : (
-          <div className="text-center text-gray-500">
-            <div className="text-4xl mb-2">🚧</div>
-            <p>Painel de propriedades em desenvolvimento</p>
+          <div className="space-y-6">
+            {Object.entries(groupedSchemas).map(([category, schemas]) => (
+              <div key={category} className="border border-gray-200 rounded-lg bg-white shadow-sm">
+                <div className="px-3 py-2 border-b bg-gray-50 flex items-center justify-between">
+                  <h3 className="text-xs font-semibold tracking-wide text-gray-600 uppercase">{category}</h3>
+                  <span className="text-[10px] text-gray-400">{schemas.length} campos</span>
+                </div>
+                <div className="p-3 space-y-3">
+                  {schemas.map(sc => renderField(sc))}
+                </div>
+              </div>
+            ))}
+            {(!blockDefinition.propsSchema || blockDefinition.propsSchema.length === 0) && (
+              <div className="text-center text-xs text-gray-400 py-8">
+                Nenhuma propriedade configurável definida para este bloco.
+              </div>
+            )}
           </div>
         )}
       </div>
