@@ -17,103 +17,567 @@
  * - Webhooks: Integração com ferramentas externas
  * - Branding: Cores, fontes e identidade visual
  * - Legal: Políticas de privacidade e conformidade
+ * - Persistência: Estrutura completa de armazenamento
+ * - Analytics: Configuração de métricas e eventos
+ * - Performance: Otimizações de velocidade e cacheamento
  */
 
 import { Block } from '../types/editor';
 
-// 🌐 CONFIGURAÇÕES GLOBAIS NOCODE
+// 🔧 ESTRUTURA COMPLETA DE PERSISTÊNCIA JSON
+export const FUNNEL_PERSISTENCE_SCHEMA = {
+  // Metadados básicos
+  id: 'quiz21StepsComplete',
+  name: 'Quiz de Estilo Pessoal - 21 Etapas Completo',
+  description: 'Template completo para descoberta do estilo pessoal com 21 etapas, incluindo coleta de dados, quiz pontuado, questões estratégicas e ofertas.',
+  version: '2.0.0',
+  category: 'quiz',
+  templateType: 'quiz-complete',
+  
+  // Configurações de persistência
+  persistence: {
+    enabled: true,
+    storage: ['localStorage', 'supabase', 'session'] as const,
+    autoSave: true,
+    autoSaveInterval: 30000, // 30 segundos
+    compression: true,
+    encryption: false,
+    backupEnabled: true,
+    
+    // Estrutura de dados para armazenamento
+    dataStructure: {
+      funnel_data: {
+        id: 'string',
+        name: 'string',
+        description: 'string',
+        category: 'string',
+        user_id: 'string?',
+        is_published: 'boolean',
+        created_at: 'timestamp',
+        updated_at: 'timestamp',
+        
+        // Dados do funil
+        settings: 'FunnelSettings',
+        steps: 'FunnelStep[]',
+        blocks: 'Block[]',
+        metadata: 'FunnelMetadata',
+        
+        // Dados da sessão do usuário
+        user_session: {
+          userName: 'string',
+          email: 'string?',
+          phone: 'string?',
+          startedAt: 'timestamp',
+          completedAt: 'timestamp?',
+          currentStep: 'number',
+          progress: 'number',
+          
+          // Respostas do quiz
+          quiz_answers: {
+            question_id: 'string',
+            selected_options: 'string[]',
+            scores: 'Record<string, number>',
+            timestamp: 'timestamp'
+          },
+          
+          // Respostas estratégicas
+          strategic_answers: {
+            question_id: 'string',
+            answer: 'string',
+            timestamp: 'timestamp'
+          },
+          
+          // Resultado final
+          result: {
+            primary_style: 'string',
+            secondary_styles: 'string[]',
+            total_score: 'number',
+            style_scores: 'Record<string, number>',
+            personalized_recommendations: 'string[]'
+          }
+        }
+      }
+    }
+  },
+
+  // Configurações de analytics e tracking
+  analytics: {
+    enabled: true,
+    realTime: true,
+    trackingId: 'GA4-XXXXXXXXX', // Para ser configurado
+    
+    // Eventos personalizados
+    events: [
+      'funnel_started',
+      'step_completed',
+      'quiz_question_answered',
+      'strategic_question_answered',
+      'result_calculated',
+      'offer_viewed',
+      'conversion_completed',
+      'user_drop_off',
+      'session_timeout'
+    ],
+    
+    // Métricas de performance
+    performance: {
+      trackPageLoad: true,
+      trackInteractions: true,
+      trackScrollDepth: true,
+      trackTimeOnStep: true,
+      trackCompletionRate: true
+    },
+    
+    // Configurações de heatmap e session recording
+    heatmap: {
+      enabled: true,
+      hotjarId: '1234567', // Para ser configurado
+      recordSessions: true,
+      trackClicks: true,
+      trackScrolls: true
+    }
+  }
+};
+
+// 🌐 CONFIGURAÇÕES GLOBAIS NOCODE EXPANDIDAS
 export const QUIZ_GLOBAL_CONFIG = {
-  // SEO Configuration
+  // SEO Configuration - Otimizada para conversão
   seo: {
     title: 'Descubra Seu Estilo Pessoal - Quiz Interativo | Gisele Galvão',
     description: 'Descubra seu estilo predominante através do nosso quiz personalizado e transforme seu guarda-roupa com confiança. Consultoria de imagem profissional.',
-    keywords: 'estilo pessoal, consultoria de imagem, quiz de estilo, moda feminina, guarda-roupa, personal stylist, Gisele Galvão',
+    keywords: 'estilo pessoal, consultoria de imagem, quiz de estilo, moda feminina, guarda-roupa, personal stylist, Gisele Galvão, quiz interativo, descobrir estilo, transformação visual',
+    
+    // Open Graph otimizado para redes sociais
     ogTitle: 'Descubra Seu Estilo Pessoal - Quiz Interativo',
     ogDescription: 'Faça nosso quiz personalizado e descubra qual é o seu estilo predominante. Transforme seu guarda-roupa e se vista com mais confiança.',
     ogImage: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/og-image-style-quiz-gisele.webp',
+    ogType: 'website',
+    ogLocale: 'pt_BR',
+    
+    // Twitter Cards
+    twitterCard: 'summary_large_image',
+    twitterTitle: 'Descubra Seu Estilo Pessoal - Quiz Interativo',
+    twitterDescription: 'Faça nosso quiz personalizado e descubra qual é o seu estilo predominante.',
+    twitterImage: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/og-image-style-quiz-gisele.webp',
+    twitterSite: '@giselegaalvao',
+    
+    // Meta tags técnicas
     favicon: '/favicon.ico',
+    canonicalUrl: 'https://quiz-sell-genius.com/',
+    robots: 'index, follow',
+    viewport: 'width=device-width, initial-scale=1.0',
+    themeColor: '#B89B7A',
+    
+    // Structured Data (JSON-LD) para SEO
+    structuredData: {
+      '@context': 'https://schema.org',
+      '@type': 'Quiz',
+      name: 'Quiz de Estilo Pessoal',
+      description: 'Descubra seu estilo predominante através de perguntas personalizadas',
+      author: {
+        '@type': 'Person',
+        name: 'Gisele Galvão',
+        url: 'https://giselegaalvao.com'
+      },
+      provider: {
+        '@type': 'Organization',
+        name: 'Gisele Galvão - Consultoria de Imagem',
+        url: 'https://giselegaalvao.com'
+      }
+    },
+    
     customMetaTags: `
       <meta name="author" content="Gisele Galvão">
       <meta name="robots" content="index, follow">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="theme-color" content="#B89B7A">
+      <meta name="apple-mobile-web-app-capable" content="yes">
+      <meta name="apple-mobile-web-app-status-bar-style" content="default">
+      <meta name="format-detection" content="telephone=no">
       <link rel="canonical" href="https://quiz-sell-genius.com/">
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://www.google-analytics.com">
+      <link rel="prefetch" href="https://res.cloudinary.com/dqljyf76t/">
     `
   },
 
-  // Domain & Hosting
+  // Domain & Hosting - Configuração completa de domínios
   domain: {
     primaryDomain: 'quiz-sell-genius.com',
-    customDomains: ['quiz-descubra-seu-estilo.com', 'estilopessoal.gisele.com'],
+    customDomains: [
+      'quiz-descubra-seu-estilo.com',
+      'estilopessoal.gisele.com',
+      'quiz.giselegaalvao.com'
+    ],
     ssl: true,
+    enforceHTTPS: true,
+    
+    // Configurações de CDN
+    cdn: {
+      enabled: true,
+      provider: 'cloudflare',
+      regions: ['US', 'BR', 'EU'],
+      cacheSettings: {
+        static: '30d',
+        dynamic: '1h',
+        api: '5m'
+      }
+    },
+    
+    // Redirecionamentos
     redirects: `
       /quiz -> /
       /estilo -> /
       /descobrir-estilo -> /
-    `
+      /quiz-style -> /
+      /style-quiz -> /
+      /consultoria -> /resultado
+    `,
+    
+    // Configurações de CORS
+    cors: {
+      allowedOrigins: ['https://giselegaalvao.com', 'https://quiz-sell-genius.com'],
+      allowedMethods: ['GET', 'POST', 'PUT', 'DELETE'],
+      allowedHeaders: ['Content-Type', 'Authorization']
+    }
   },
 
-  // Tracking & Analytics
+  // Tracking & Analytics - Configuração completa de rastreamento
   tracking: {
-    googleAnalytics: 'GA4-XXXXXXXXX', // Para ser configurado
-    facebookPixel: '123456789012345', // Para ser configurado
-    googleTagManager: 'GTM-XXXXXXX', // Para ser configurado
-    hotjar: '1234567', // Para ser configurado
+    // Google Analytics 4
+    googleAnalytics: {
+      measurementId: 'GA4-XXXXXXXXX', // Para ser configurado
+      enhanced: true,
+      demographics: true,
+      advertising: true,
+      
+      // Eventos personalizados
+      customEvents: [
+        'quiz_started',
+        'quiz_completed',
+        'step_completed',
+        'offer_viewed',
+        'conversion'
+      ]
+    },
+    
+    // Facebook Pixel
+    facebookPixel: {
+      pixelId: '123456789012345', // Para ser configurado
+      enabled: true,
+      
+      // Eventos do Facebook
+      events: [
+        'PageView',
+        'ViewContent',
+        'CompleteRegistration',
+        'Lead',
+        'Purchase'
+      ],
+      
+      // Configurações avançadas
+      advanced: {
+        automaticMatching: true,
+        firstPartyData: true,
+        serverSideEvents: false
+      }
+    },
+    
+    // Google Tag Manager
+    googleTagManager: {
+      containerId: 'GTM-XXXXXXX', // Para ser configurado
+      enabled: true,
+      dataLayer: 'dataLayer',
+      
+      // Configurações personalizadas
+      custom: {
+        trackFormSubmissions: true,
+        trackClicks: true,
+        trackScrollDepth: true,
+        trackFileDownloads: true
+      }
+    },
+    
+    // Hotjar para heatmaps
+    hotjar: {
+      siteId: '1234567', // Para ser configurado
+      enabled: true,
+      
+      // Configurações de privacy
+      respectDNT: true,
+      cookieless: false,
+      
+      // Configurações de recording
+      sessionRecording: {
+        enabled: true,
+        sampleRate: 100,
+        recordConsoleErrors: true
+      }
+    },
+    
+    // Scripts personalizados
     customScripts: `
       <!-- Criativo Ads Tracking -->
       <script>
         window.criativoTracking = {
           campaign: 'quiz_style_abtest_2025',
           source: 'facebook',
-          medium: 'cpc'
+          medium: 'cpc',
+          version: '2.0.0'
+        };
+        
+        // Tracking personalizado para etapas do quiz
+        window.quizTracking = {
+          trackStepCompletion: function(step, data) {
+            gtag('event', 'quiz_step_completed', {
+              'custom_step': step,
+              'custom_data': JSON.stringify(data)
+            });
+          },
+          
+          trackQuizCompletion: function(result) {
+            gtag('event', 'quiz_completed', {
+              'custom_primary_style': result.primaryStyle,
+              'custom_score': result.totalScore
+            });
+            
+            // Facebook Pixel
+            fbq('track', 'CompleteRegistration', {
+              content_name: 'Quiz de Estilo Pessoal',
+              status: 'completed'
+            });
+          }
         };
       </script>
     `,
-    enableTracking: true
+    
+    enableTracking: true,
+    privacyCompliant: true,
+    gdprCompliant: true
   },
 
-  // UTM & Campaign (integrado com utmConfig.js existente)
+  // UTM & Campaign - Integração com campanhas de marketing
   campaign: {
     defaultSource: 'facebook',
     defaultMedium: 'cpc',
     defaultCampaign: 'quiz_style_abtest_2025',
     autoUTM: true,
     trackingPrefix: 'qsq',
+    
+    // Configurações de attribution
+    attribution: {
+      window: 30, // dias
+      model: 'last_click',
+      crossDevice: true
+    },
+    
+    // Parâmetros UTM personalizados
+    customParameters: [
+      'creative_id',
+      'ad_set_id',
+      'placement',
+      'audience'
+    ],
+    
     // Referência ao arquivo UTM existente
-    utmConfigPath: '/src/config/utmConfig.js'
+    utmConfigPath: '/src/config/utmConfig.js',
+    
+    // Configurações de A/B testing
+    abTesting: {
+      enabled: true,
+      platform: 'facebook',
+      
+      variants: [
+        {
+          id: 'variant_a',
+          name: 'Quiz Focus',
+          traffic: 50,
+          utmContent: 'quiz_focus'
+        },
+        {
+          id: 'variant_b',
+          name: 'Result Focus',
+          traffic: 50,
+          utmContent: 'result_focus'
+        }
+      ]
+    }
   },
 
-  // Webhooks & Integrations
+  // Webhooks & Integrations - Integrações com ferramentas externas
   webhooks: {
-    leadCapture: 'https://hooks.zapier.com/hooks/catch/123456/lead-capture/',
-    formSubmission: 'https://hooks.zapier.com/hooks/catch/123456/form-submit/',
-    purchaseComplete: 'https://hooks.zapier.com/hooks/catch/123456/purchase/',
-    quizComplete: 'https://hooks.zapier.com/hooks/catch/123456/quiz-complete/',
+    // Configurações gerais
     enableWebhooks: true,
     secretKey: 'your-webhook-secret-key-here',
+    timeout: 10000, // 10 segundos
+    retryAttempts: 3,
+    retryDelay: 1000, // 1 segundo
+    
+    // URLs de webhook por evento
+    endpoints: {
+      leadCapture: 'https://hooks.zapier.com/hooks/catch/123456/lead-capture/',
+      formSubmission: 'https://hooks.zapier.com/hooks/catch/123456/form-submit/',
+      purchaseComplete: 'https://hooks.zapier.com/hooks/catch/123456/purchase/',
+      quizComplete: 'https://hooks.zapier.com/hooks/catch/123456/quiz-complete/',
+      stepCompleted: 'https://hooks.zapier.com/hooks/catch/123456/step-completed/',
+      userDropOff: 'https://hooks.zapier.com/hooks/catch/123456/user-drop-off/'
+    },
+    
     // Configurações específicas para cada evento
     events: {
       leadCapture: {
-        fields: ['userName', 'email', 'phone', 'quizScore', 'resultStyle'],
+        fields: ['userName', 'email', 'phone', 'quizScore', 'resultStyle', 'timestamp'],
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'application/json' },
+        includeMetadata: true
       },
+      
       quizComplete: {
-        fields: ['userName', 'answers', 'score', 'resultStyle', 'secondaryStyles'],
+        fields: [
+          'userName', 'email', 'answers', 'score', 'resultStyle', 
+          'secondaryStyles', 'recommendations', 'timestamp', 'sessionDuration'
+        ],
         method: 'POST',
-        includeTimestamp: true
+        includeTimestamp: true,
+        includeUserAgent: true,
+        includeReferrer: true
+      },
+      
+      stepCompleted: {
+        fields: ['stepId', 'stepName', 'timeSpent', 'answers', 'timestamp'],
+        method: 'POST',
+        batchMode: true,
+        batchSize: 10
+      }
+    },
+    
+    // Integrações específicas
+    integrations: {
+      // Zapier
+      zapier: {
+        enabled: true,
+        webhookUrl: 'https://hooks.zapier.com/hooks/catch/123456/main/',
+        fields: ['all']
+      },
+      
+      // ActiveCampaign
+      activeCampaign: {
+        enabled: false,
+        apiUrl: 'https://youraccountname.api-us1.com',
+        apiKey: '', // Para ser configurado
+        listId: '', // Para ser configurado
+        tags: ['quiz-lead', 'style-interested']
+      },
+      
+      // Mailchimp
+      mailchimp: {
+        enabled: false,
+        apiKey: '', // Para ser configurado
+        audienceId: '', // Para ser configurado
+        tags: ['quiz-completed', 'style-quiz']
+      },
+      
+      // RD Station
+      rdStation: {
+        enabled: false,
+        token: '', // Para ser configurado
+        eventName: 'quiz_completed'
       }
     }
   },
 
-  // Branding & Design
+  // Branding & Design - Identidade visual completa
   branding: {
-    primaryColor: '#B89B7A',
-    secondaryColor: '#432818',
-    accentColor: '#3B82F6',
-    fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-    logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
-    faviconUrl: '/favicon.ico',
+    // Cores primárias
+    colors: {
+      primary: '#B89B7A',
+      secondary: '#432818',
+      accent: '#3B82F6',
+      success: '#10B981',
+      warning: '#F59E0B',
+      error: '#EF4444',
+      
+      // Gradientes
+      gradients: {
+        primary: 'linear-gradient(135deg, #B89B7A, #D4C2A8)',
+        accent: 'linear-gradient(135deg, #3B82F6, #60A5FA)',
+        warm: 'linear-gradient(135deg, #B89B7A, #432818)'
+      },
+      
+      // Backgrounds
+      backgrounds: {
+        primary: '#FAF9F7',
+        secondary: '#FFFFFF',
+        card: '#FEFEFE',
+        border: '#E6DDD4'
+      }
+    },
+    
+    // Tipografia
+    typography: {
+      fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+      headingFont: "'Playfair Display', serif",
+      
+      // Tamanhos
+      sizes: {
+        xs: '0.75rem',
+        sm: '0.875rem',
+        base: '1rem',
+        lg: '1.125rem',
+        xl: '1.25rem',
+        '2xl': '1.5rem',
+        '3xl': '1.875rem',
+        '4xl': '2.25rem'
+      },
+      
+      // Pesos
+      weights: {
+        light: '300',
+        normal: '400',
+        medium: '500',
+        semibold: '600',
+        bold: '700'
+      }
+    },
+    
+    // Logos e imagens
+    assets: {
+      logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+      logoAlt: 'Gisele Galvão - Consultoria de Imagem',
+      faviconUrl: '/favicon.ico',
+      
+      // Imagens padrão
+      defaultImages: {
+        placeholder: 'https://via.placeholder.com/400x300/B89B7A/FFFFFF?text=Carregando...',
+        error: 'https://via.placeholder.com/400x300/EF4444/FFFFFF?text=Erro+ao+carregar'
+      }
+    },
+    
+    // Layout e espaçamento
+    layout: {
+      maxWidth: '1200px',
+      containerPadding: '1rem',
+      
+      // Breakpoints responsivos
+      breakpoints: {
+        sm: '640px',
+        md: '768px',
+        lg: '1024px',
+        xl: '1280px'
+      },
+      
+      // Espaçamentos
+      spacing: {
+        xs: '0.25rem',
+        sm: '0.5rem',
+        md: '1rem',
+        lg: '1.5rem',
+        xl: '2rem',
+        '2xl': '3rem'
+      }
+    },
+    
+    // CSS customizado
     customCSS: `
       :root {
         --brand-primary: #B89B7A;
@@ -121,63 +585,269 @@ export const QUIZ_GLOBAL_CONFIG = {
         --brand-accent: #3B82F6;
         --brand-bg: #FAF9F7;
         --brand-border: #E6DDD4;
+        --brand-shadow: rgba(184, 155, 122, 0.1);
+        --brand-gradient: linear-gradient(135deg, var(--brand-primary), var(--brand-accent));
       }
       
       .quiz-container {
         font-family: var(--brand-font-family);
         background-color: var(--brand-bg);
+        min-height: 100vh;
       }
       
       .brand-gradient {
-        background: linear-gradient(135deg, var(--brand-primary), var(--brand-accent));
+        background: var(--brand-gradient);
+      }
+      
+      .brand-shadow {
+        box-shadow: 0 4px 6px -1px var(--brand-shadow), 0 2px 4px -1px var(--brand-shadow);
+      }
+      
+      .brand-glow {
+        box-shadow: 0 0 20px var(--brand-shadow);
+      }
+      
+      @media (prefers-reduced-motion: reduce) {
+        .animate-pulse, .animate-bounce, .animate-spin {
+          animation: none;
+        }
       }
     `
   },
 
-  // Legal & Compliance
+  // Legal & Compliance - Conformidade legal completa
   legal: {
+    // URLs de políticas
     privacyPolicyUrl: '/privacy',
     termsOfServiceUrl: '/terms',
-    cookiePolicy: 'Este site utiliza cookies para melhorar sua experiência e personalizar o conteúdo. Ao continuar navegando, você concorda com nossa política de cookies.',
-    gdprCompliant: true,
-    showCookieBanner: true,
+    cookiePolicyUrl: '/cookies',
+    
+    // Configurações de cookies
+    cookies: {
+      showBanner: true,
+      bannerText: 'Este site utiliza cookies para melhorar sua experiência e personalizar o conteúdo. Ao continuar navegando, você concorda com nossa política de cookies.',
+      acceptText: 'Aceitar todos',
+      rejectText: 'Recusar opcionais',
+      settingsText: 'Configurar',
+      
+      // Categorias de cookies
+      categories: {
+        necessary: {
+          name: 'Essenciais',
+          description: 'Necessários para o funcionamento básico do site',
+          required: true
+        },
+        analytics: {
+          name: 'Analíticos',
+          description: 'Nos ajudam a entender como você usa o site',
+          required: false
+        },
+        marketing: {
+          name: 'Marketing',
+          description: 'Usados para personalizar anúncios e conteúdo',
+          required: false
+        }
+      }
+    },
+    
+    // Conformidade GDPR/LGPD
+    dataProtection: {
+      gdprCompliant: true,
+      lgpdCompliant: true,
+      
+      // Direitos do usuário
+      userRights: [
+        'access', 'rectification', 'erasure', 'portability', 'restriction', 'objection'
+      ],
+      
+      // Configurações de consentimento
+      consent: {
+        explicit: true,
+        granular: true,
+        withdrawable: true,
+        recordKeeping: true
+      }
+    },
+    
+    // Informações da empresa
     companyInfo: {
       name: 'Gisele Galvão - Consultoria de Imagem',
+      legalName: 'Gisele Galvão ME',
       cnpj: '00.000.000/0001-00', // Para ser configurado
-      address: 'Seu endereço aqui',
-      phone: '(11) 99999-9999',
-      email: 'contato@giselegaalvao.com'
+      address: {
+        street: 'Rua Exemplo, 123',
+        city: 'São Paulo',
+        state: 'SP',
+        zipCode: '00000-000',
+        country: 'Brasil'
+      },
+      contact: {
+        phone: '(11) 99999-9999',
+        email: 'contato@giselegaalvao.com',
+        website: 'https://giselegaalvao.com'
+      }
+    },
+    
+    // Disclaimers
+    disclaimers: {
+      quiz: 'Os resultados deste quiz são baseados em suas respostas e têm caráter orientativo.',
+      consultation: 'Para uma análise completa, recomendamos uma consultoria personalizada.',
+      results: 'Os resultados podem variar de pessoa para pessoa.'
     }
   },
 
-  // A/B Testing Configuration
+  // A/B Testing Configuration - Testes A/B avançados
   abTesting: {
     enabled: true,
-    variants: {
-      pageA: {
-        name: 'Quiz como Isca',
-        path: '/',
-        description: 'Página com quiz interativo + resultado + oferta',
-        weight: 50
+    
+    // Configurações globais
+    settings: {
+      cookieDuration: 30, // dias
+      trafficSplit: 'equal',
+      statisticalSignificance: 0.95,
+      minimumSampleSize: 100
+    },
+    
+    // Testes ativos
+    activeTests: [
+      {
+        id: 'homepage_variant_2025',
+        name: 'Homepage Quiz vs Landing',
+        status: 'active',
+        trafficPercentage: 100,
+        
+        variants: [
+          {
+            id: 'control',
+            name: 'Quiz Direto',
+            path: '/',
+            weight: 50,
+            description: 'Página com quiz interativo direto'
+          },
+          {
+            id: 'landing',
+            name: 'Landing Page',
+            path: '/landing',
+            weight: 50,
+            description: 'Landing page com apresentação + quiz'
+          }
+        ],
+        
+        goals: [
+          {
+            name: 'quiz_completion',
+            type: 'conversion',
+            priority: 'primary'
+          },
+          {
+            name: 'email_capture',
+            type: 'conversion',
+            priority: 'secondary'
+          }
+        ]
+      }
+    ]
+  },
+
+  // Performance & Optimization - Otimizações de performance
+  performance: {
+    // Configurações de cache
+    caching: {
+      enableBrowserCache: true,
+      enableServiceWorker: true,
+      cacheStrategy: 'stale-while-revalidate',
+      
+      // TTL por tipo de resource
+      cacheTTL: {
+        static: 2592000, // 30 dias
+        images: 604800,  // 7 dias
+        api: 300,        // 5 minutos
+        html: 3600       // 1 hora
+      }
+    },
+    
+    // Compressão
+    compression: {
+      enableGzip: true,
+      enableBrotli: true,
+      compressionLevel: 6
+    },
+    
+    // Otimização de imagens
+    images: {
+      enableLazyLoading: true,
+      enableWebP: true,
+      enableAVIF: true,
+      
+      // Formatos por device
+      responsive: {
+        mobile: { width: 375, format: 'webp' },
+        tablet: { width: 768, format: 'webp' },
+        desktop: { width: 1200, format: 'webp' }
       },
-      pageB: {
-        name: 'Oferta Direta',
-        path: '/quiz-descubra-seu-estilo',
-        description: 'Landing page de oferta direta',
-        weight: 50
+      
+      // CDN settings
+      cdn: {
+        provider: 'cloudinary',
+        baseUrl: 'https://res.cloudinary.com/dqljyf76t/',
+        transformations: 'f_auto,q_auto'
+      }
+    },
+    
+    // Preloading crítico
+    criticalResources: [
+      'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+      'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap',
+      'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap'
+    ],
+    
+    // Configurações de loading
+    loading: {
+      showSkeletons: true,
+      showProgressBar: true,
+      enablePrefetch: true,
+      enablePreconnect: true
+    },
+    
+    // Monitoramento de performance
+    monitoring: {
+      enableWebVitals: true,
+      reportToGA: true,
+      
+      // Thresholds de alerta
+      thresholds: {
+        LCP: 2500,  // Largest Contentful Paint
+        FID: 100,   // First Input Delay
+        CLS: 0.1    // Cumulative Layout Shift
       }
     }
   },
 
-  // Performance & Optimization
-  performance: {
-    enableCompression: true,
-    enableCaching: true,
-    optimizeImages: true,
-    lazyLoading: true,
-    preloadCriticalResources: [
-      'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp'
-    ]
+  // Configurações de segurança
+  security: {
+    // Headers de segurança
+    headers: {
+      contentSecurityPolicy: "default-src 'self'; script-src 'self' 'unsafe-inline' *.google-analytics.com *.googletagmanager.com *.facebook.net *.hotjar.com; style-src 'self' 'unsafe-inline' fonts.googleapis.com; font-src 'self' fonts.gstatic.com; img-src 'self' data: *.cloudinary.com *.google-analytics.com *.facebook.com *.hotjar.com; connect-src 'self' *.google-analytics.com *.hotjar.com *.supabase.co;",
+      frameOptions: 'DENY',
+      contentTypeOptions: 'nosniff',
+      referrerPolicy: 'strict-origin-when-cross-origin'
+    },
+    
+    // Rate limiting
+    rateLimiting: {
+      enabled: true,
+      requests: 100,
+      window: 3600000, // 1 hora
+      skipSuccessfulRequests: true
+    },
+    
+    // Validation
+    inputValidation: {
+      enableXSSProtection: true,
+      enableSQLInjectionProtection: true,
+      maxInputLength: 1000,
+      allowedFileTypes: ['jpg', 'jpeg', 'png', 'webp']
+    }
   }
 };
 
