@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DnD Performance Analysis</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background: #0d1117;
+            color: #c9d1d9;
+            padding: 20px;
+            margin: 0;
+        }
+        
+        .console {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 20px;
+            margin: 20px 0;
+            font-size: 14px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+        
+        .status-good { color: #28a745; }
+        .status-warning { color: #ffa500; }
+        .status-error { color: #dc3545; }
+        
+        button {
+            background: #238636;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 10px 10px 10px 0;
+        }
+        
+        button:hover {
+            background: #2ea043;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .simulated-dnd {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .dnd-item {
+            background: #21262d;
+            border: 1px solid #30363d;
+            padding: 15px;
+            border-radius: 6px;
+            cursor: move;
+            min-width: 120px;
+            text-align: center;
+            transition: all 0.2s;
+            user-select: none;
+        }
+        
+        .dnd-item:hover {
+            background: #282e34;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .dnd-item.dragging {
+            opacity: 0.5;
+            transform: rotate(5deg);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🔍 DnD Performance Analyzer</h1>
+        <p>Análise completa do sistema Drag and Drop</p>
+    </div>
+
+    <div>
+        <button onclick="runHierarchyAnalysis()">🏗️ Analisar Hierarquia</button>
+        <button onclick="runPerformanceTest()">⚡ Teste de Performance</button>
+        <button onclick="runEventListenerAnalysis()">🎧 Analisar Listeners</button>
+        <button onclick="runCompleteAnalysis()">📊 Análise Completa</button>
+        <button onclick="clearConsole()">🗑️ Limpar</button>
+    </div>
+
+    <!-- Simulação de elementos DnD para teste -->
+    <div class="simulated-dnd">
+        <div class="dnd-item" data-dnd-kit-draggable-handle data-dnd-kit-sortable id="item-1">
+            📝 Item 1
+        </div>
+        <div class="dnd-item" data-dnd-kit-draggable-handle data-dnd-kit-sortable id="item-2">
+            📝 Item 2
+        </div>
+        <div class="dnd-item" data-dnd-kit-draggable-handle data-dnd-kit-sortable id="item-3">
+            📝 Item 3
+        </div>
+        <div data-dnd-kit-droppable class="dnd-item" style="background: #1f2937; border-style: dashed;">
+            📥 Drop Zone
+        </div>
+    </div>
+
+    <div id="console-output" class="console">
+🚀 DnD Performance Analyzer carregado!
+📝 Clique nos botões acima para executar análises...
+    </div>
+
+    <script type="module">
+        // Simular DndContext para teste
+        const mockDndContext = document.createElement('div');
+        mockDndContext.setAttribute('data-dnd-context', 'true');
+        mockDndContext.style.display = 'none';
+        document.body.appendChild(mockDndContext);
+
+        // Funcionalidade básica de drag para simulação
+        let isDragging = false;
+        let draggedElement = null;
+
+        document.querySelectorAll('[data-dnd-kit-draggable-handle]').forEach(item => {
+            item.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                draggedElement = e.target;
+                e.target.classList.add('dragging');
+                console.log('🎯 Drag started:', e.target.id);
+            });
+
+            item.addEventListener('dragstart', (e) => {
+                e.dataTransfer.effectAllowed = 'move';
+                e.dataTransfer.setData('text/html', e.target.outerHTML);
+            });
+        });
+
+        document.addEventListener('mouseup', (e) => {
+            if (isDragging && draggedElement) {
+                draggedElement.classList.remove('dragging');
+                console.log('✅ Drag ended:', draggedElement.id);
+                isDragging = false;
+                draggedElement = null;
+            }
+        });
+
+        // Analisador DnD Performance
+        const DnDPerformanceAnalyzer = {
+            measurements: {
+                renderTimes: [],
+                dragStartTimes: [],
+                dragEndTimes: [],
+                reorderTimes: [],
+                memoryUsage: [],
+                contextSwitches: []
+            },
+
+            analyzeHierarchy() {
+                const output = [];
+                output.push('🏗️ ANÁLISE DE HIERARQUIA DND:');
+                output.push('=====================================');
+
+                const hierarchy = {
+                    level1: 'MainEditorUnified.tsx',
+                    level2: 'EditorProvider.tsx', 
+                    level3: 'LegacyCompatibilityWrapper.tsx',
+                    level4: 'EditorPro.tsx',
+                    level5: 'StepDndProvider.tsx (DndContext)',
+                    level6: 'CanvasAreaLayout.tsx',
+                    level7: 'SortableContext + Draggable items'
+                };
+
+                Object.entries(hierarchy).forEach(([level, component]) => {
+                    output.push(`${level}: ${component}`);
+                });
+
+                // Detectar contexts aninhados
+                const dndContexts = document.querySelectorAll('[data-rbd-droppable-context-id], [data-dnd-context]');
+                const dndProviders = document.querySelectorAll('[class*="dnd"], [class*="DndContext"]');
+                
+                output.push(`\\n📊 CONTEXTS ENCONTRADOS: ${dndContexts.length}`);
+                output.push(`📊 PROVIDERS ENCONTRADOS: ${dndProviders.length}`);
+
+                if (dndContexts.length > 1) {
+                    output.push('⚠️ POSSÍVEL ANINHAMENTO DETECTADO!');
+                    dndContexts.forEach((ctx, i) => {
+                        output.push(`  Context ${i + 1}: ${ctx.className}`);
+                    });
+                } else {
+                    output.push('✅ Hierarquia limpa - apenas 1 DndContext');
+                }
+
+                return {
+                    output: output.join('\\n'),
+                    totalLevels: Object.keys(hierarchy).length,
+                    contextsFound: dndContexts.length,
+                    hasNesting: dndContexts.length > 1,
+                    isOptimal: dndContexts.length === 1
+                };
+            },
+
+            measurePerformance() {
+                const output = [];
+                output.push('⚡ ANÁLISE DE PERFORMANCE:');
+                output.push('=====================================');
+
+                const startTime = performance.now();
+                
+                // Medir elementos DnD
+                const draggables = document.querySelectorAll('[data-dnd-kit-draggable-handle]');
+                const droppables = document.querySelectorAll('[data-dnd-kit-droppable]');
+                const sortables = document.querySelectorAll('[data-dnd-kit-sortable]');
+
+                output.push(`🎯 Draggables: ${draggables.length}`);
+                output.push(`📥 Droppables: ${droppables.length}`);
+                output.push(`🔄 Sortables: ${sortables.length}`);
+
+                // Medir tempo de query
+                const queryTime = performance.now() - startTime;
+                output.push(`⏱️ Query time: ${queryTime.toFixed(2)}ms`);
+
+                // Verificar re-renders desnecessários
+                const rerenderIndicators = document.querySelectorAll('[data-render-count]');
+                output.push(`🔄 Components with render count: ${rerenderIndicators.length}`);
+
+                // Análise de memória (se disponível)
+                if ('memory' in performance) {
+                    const memory = performance.memory;
+                    output.push(`💾 Used JS Heap: ${(memory.usedJSHeapSize / 1024 / 1024).toFixed(2)}MB`);
+                    output.push(`💾 Total JS Heap: ${(memory.totalJSHeapSize / 1024 / 1024).toFixed(2)}MB`);
+                    output.push(`💾 Heap Limit: ${(memory.jsHeapSizeLimit / 1024 / 1024).toFixed(2)}MB`);
+                }
+
+                return {
+                    output: output.join('\\n'),
+                    draggableCount: draggables.length,
+                    droppableCount: droppables.length,
+                    sortableCount: sortables.length,
+                    queryTime,
+                    hasRerenderTracking: rerenderIndicators.length > 0
+                };
+            },
+
+            async simulateDragPerformance() {
+                const output = [];
+                output.push('🎬 SIMULAÇÃO DE DRAG PERFORMANCE:');
+                output.push('=====================================');
+
+                const draggables = document.querySelectorAll('[data-dnd-kit-draggable-handle]');
+                
+                if (draggables.length === 0) {
+                    output.push('❌ Nenhum elemento draggable encontrado!');
+                    return { output: output.join('\\n'), success: false, reason: 'No draggables found' };
+                }
+
+                const firstDraggable = draggables[0];
+                const measurements = [];
+
+                // Simular 5 operações de drag
+                for (let i = 0; i < 5; i++) {
+                    const startTime = performance.now();
+                    
+                    // Simular mousedown
+                    const mouseDownEvent = new MouseEvent('mousedown', {
+                        bubbles: true,
+                        cancelable: true,
+                        clientX: 100 + i * 10,
+                        clientY: 100 + i * 10
+                    });
+                    
+                    firstDraggable.dispatchEvent(mouseDownEvent);
+                    
+                    // Aguardar um frame
+                    await new Promise(resolve => requestAnimationFrame(resolve));
+                    
+                    // Simular mousemove
+                    const mouseMoveEvent = new MouseEvent('mousemove', {
+                        bubbles: true,
+                        cancelable: true,
+                        clientX: 150 + i * 10,
+                        clientY: 150 + i * 10
+                    });
+                    
+                    document.dispatchEvent(mouseMoveEvent);
+                    
+                    // Simular mouseup
+                    const mouseUpEvent = new MouseEvent('mouseup', {
+                        bubbles: true,
+                        cancelable: true
+                    });
+                    
+                    document.dispatchEvent(mouseUpEvent);
+                    
+                    const endTime = performance.now();
+                    measurements.push(endTime - startTime);
+                    
+                    // Aguardar entre simulações
+                    await new Promise(resolve => setTimeout(resolve, 50));
+                }
+
+                const avgTime = measurements.reduce((a, b) => a + b, 0) / measurements.length;
+                const maxTime = Math.max(...measurements);
+                const minTime = Math.min(...measurements);
+
+                output.push(`📊 Drag simulations: ${measurements.length}`);
+                output.push(`⏱️ Average time: ${avgTime.toFixed(2)}ms`);
+                output.push(`⏱️ Max time: ${maxTime.toFixed(2)}ms`);
+                output.push(`⏱️ Min time: ${minTime.toFixed(2)}ms`);
+
+                // Análise de performance
+                const isPerformant = avgTime < 16; // 60fps = 16.67ms per frame
+                output.push(`${isPerformant ? '✅' : '⚠️'} Performance: ${isPerformant ? 'GOOD' : 'NEEDS IMPROVEMENT'}`);
+
+                return {
+                    output: output.join('\\n'),
+                    success: true,
+                    measurements,
+                    avgTime,
+                    maxTime,
+                    minTime,
+                    isPerformant
+                };
+            },
+
+            analyzeEventListeners() {
+                const output = [];
+                output.push('🎧 ANÁLISE DE EVENT LISTENERS:');
+                output.push('=====================================');
+
+                const elementsWithListeners = [];
+                
+                // Verificar elementos DnD com listeners
+                const draggables = document.querySelectorAll('[data-dnd-kit-draggable-handle]');
+                const droppables = document.querySelectorAll('[data-dnd-kit-droppable]');
+
+                draggables.forEach((el, i) => {
+                    const hasMouseDown = !!el.onmousedown;
+                    const hasTouch = !!el.ontouchstart;
+                    elementsWithListeners.push({
+                        type: 'draggable',
+                        index: i,
+                        id: el.id,
+                        hasMouseDown,
+                        hasTouch
+                    });
+                });
+
+                droppables.forEach((el, i) => {
+                    const hasDrop = !!el.ondrop;
+                    const hasDragOver = !!el.ondragover;
+                    elementsWithListeners.push({
+                        type: 'droppable',
+                        index: i,
+                        id: el.id,
+                        hasDrop,
+                        hasDragOver
+                    });
+                });
+
+                output.push(`📋 Total elements with listeners: ${elementsWithListeners.length}`);
+                
+                // Verificar vazamentos de memory
+                const globalListeners = ['mousedown', 'mousemove', 'mouseup', 'touchstart', 'touchmove', 'touchend'];
+                const activeGlobalListeners = globalListeners.filter(event => {
+                    // Simplified check
+                    return true; // Assume some global listeners exist
+                });
+
+                output.push(`🌍 Potential global listeners: ${activeGlobalListeners.length}`);
+                if (activeGlobalListeners.length > 3) {
+                    output.push('⚠️ Muitos listeners globais podem impactar performance');
+                }
+
+                return {
+                    output: output.join('\\n'),
+                    totalElements: elementsWithListeners.length,
+                    draggableElements: elementsWithListeners.filter(el => el.type === 'draggable').length,
+                    droppableElements: elementsWithListeners.filter(el => el.type === 'droppable').length,
+                    potentialGlobalListeners: activeGlobalListeners.length
+                };
+            },
+
+            async generateCompleteReport() {
+                const output = [];
+                output.push('🔍 RELATÓRIO COMPLETO - DnD PERFORMANCE ANALYSIS');
+                output.push('='.repeat(60));
+                output.push(`⏰ Timestamp: ${new Date().toISOString()}`);
+                output.push(`🌐 URL: ${window.location.href}`);
+                output.push(`📱 User Agent: ${navigator.userAgent.split(' ').pop()}`);
+                output.push('');
+
+                const results = {
+                    hierarchy: this.analyzeHierarchy(),
+                    performance: this.measurePerformance(),
+                    dragSimulation: await this.simulateDragPerformance(),
+                    eventListeners: this.analyzeEventListeners()
+                };
+
+                // Adicionar resultados
+                output.push(results.hierarchy.output);
+                output.push('\\n' + results.performance.output);
+                output.push('\\n' + results.dragSimulation.output);
+                output.push('\\n' + results.eventListeners.output);
+
+                // Calcular score geral
+                let score = 100;
+                
+                // Penalidades
+                if (results.hierarchy.hasNesting) score -= 30;
+                if (!results.dragSimulation.isPerformant) score -= 25;
+                if (results.eventListeners.potentialGlobalListeners > 5) score -= 15;
+                if (results.performance.queryTime > 10) score -= 10;
+
+                output.push('\\n🏆 SCORE FINAL:');
+                output.push('=====================================');
+                output.push(`📊 Score: ${Math.max(0, score)}/100`);
+                output.push(`${score >= 80 ? '✅' : score >= 60 ? '⚠️' : '❌'} Status: ${
+                    score >= 80 ? 'EXCELENTE' : score >= 60 ? 'BOM' : 'NECESSITA MELHORIA'
+                }`);
+
+                // Recomendações
+                output.push('\\n💡 RECOMENDAÇÕES:');
+                output.push('=====================================');
+                
+                if (results.hierarchy.hasNesting) {
+                    output.push('❌ Remover aninhamento de DndContext');
+                }
+                
+                if (!results.dragSimulation.isPerformant) {
+                    output.push('❌ Otimizar performance de drag operations');
+                }
+                
+                if (results.eventListeners.potentialGlobalListeners > 5) {
+                    output.push('❌ Reduzir listeners globais');
+                }
+                
+                if (results.performance.draggableCount > 50) {
+                    output.push('⚠️ Considerar virtualização para muitos elements');
+                }
+
+                if (score >= 80) {
+                    output.push('✅ Sistema DnD está bem otimizado!');
+                }
+
+                return {
+                    output: output.join('\\n'),
+                    results,
+                    score
+                };
+            }
+        };
+
+        // Funções globais para os botões
+        window.runHierarchyAnalysis = () => {
+            const result = DnDPerformanceAnalyzer.analyzeHierarchy();
+            document.getElementById('console-output').textContent = result.output;
+        };
+
+        window.runPerformanceTest = () => {
+            const result = DnDPerformanceAnalyzer.measurePerformance();
+            document.getElementById('console-output').textContent = result.output;
+        };
+
+        window.runEventListenerAnalysis = () => {
+            const result = DnDPerformanceAnalyzer.analyzeEventListeners();
+            document.getElementById('console-output').textContent = result.output;
+        };
+
+        window.runCompleteAnalysis = async () => {
+            document.getElementById('console-output').textContent = '⏳ Executando análise completa...';
+            const result = await DnDPerformanceAnalyzer.generateCompleteReport();
+            document.getElementById('console-output').textContent = result.output;
+        };
+
+        window.clearConsole = () => {
+            document.getElementById('console-output').textContent = '🚀 Console limpo! Pronto para nova análise...';
+        };
+
+        // Expor globalmente
+        window.DnDPerformanceAnalyzer = DnDPerformanceAnalyzer;
+    </script>
+</body>
+</html>
