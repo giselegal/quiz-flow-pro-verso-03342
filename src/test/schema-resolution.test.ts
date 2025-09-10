@@ -39,27 +39,27 @@ describe('Schema resolution preference', () => {
     it('should have schema in blockPropertySchemas for all blocks in EnhancedBlockRegistry', () => {
         // Obter todos os tipos de blocos do registry (excluindo wildcards com *)
         const registryTypes = Object.keys(ENHANCED_BLOCK_REGISTRY).filter(type => !type.includes('*'));
-        
+
         // Verificar quais tipos não têm schema em blockPropertySchemas
         const missingSchemas: string[] = [];
         const fallbackSchemas: string[] = [];
-        
+
         for (const type of registryTypes) {
             const canonicalSchema = (blockPropertySchemas as any)[type];
             const fallbackSchema = getBlockDefinition(type);
-            
+
             if (!canonicalSchema && !fallbackSchema) {
                 missingSchemas.push(type);
             } else if (!canonicalSchema && fallbackSchema) {
                 fallbackSchemas.push(type);
             }
         }
-        
+
         // Tolerância: aceitar até 50 blocos sem schema (muitos são decorativos/auxiliares)
-        expect(missingSchemas.length, 
+        expect(missingSchemas.length,
             `Muitos blocos sem schema (${missingSchemas.length}): ${missingSchemas.slice(0, 10).join(', ')}${missingSchemas.length > 10 ? '...' : ''}`
         ).toBeLessThan(50);
-        
+
         // Listar blocos que usam fallback (não crítico, mas bom saber)
         if (fallbackSchemas.length > 0) {
             console.warn(`⚠️ ${fallbackSchemas.length} blocos usando schema legado: ${fallbackSchemas.slice(0, 5).join(', ')}${fallbackSchemas.length > 5 ? '...' : ''}`);

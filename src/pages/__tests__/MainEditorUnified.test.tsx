@@ -6,249 +6,249 @@ import { Router } from 'wouter';
 
 // Mock dos contextos necessários
 vi.mock('@/context/QuizFlowProvider', () => ({
-  QuizFlowProvider: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+    QuizFlowProvider: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
 }));
 
 vi.mock('@/context/FunnelsContext', () => ({
-  FunnelsProvider: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+    FunnelsProvider: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
 }));
 
 vi.mock('@/context/EditorQuizContext', () => ({
-  EditorQuizProvider: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+    EditorQuizProvider: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
 }));
 
 vi.mock('@/components/quiz/Quiz21StepsProvider', () => ({
-  Quiz21StepsProvider: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+    Quiz21StepsProvider: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
 }));
 
 vi.mock('@/core/contexts/LegacyCompatibilityWrapper', () => ({
-  LegacyCompatibilityWrapper: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+    LegacyCompatibilityWrapper: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
 }));
 
 vi.mock('@/core/contexts/FunnelContext', () => ({
-  FunnelContext: React.createContext({}),
+    FunnelContext: React.createContext({}),
 }));
 
 vi.mock('../components/editor/EditorProvider', () => ({
-  EditorProvider: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+    EditorProvider: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
 }));
 
 // Mock do componente UnifiedEditor
 const MockUnifiedEditor = () => (
-  <div data-testid="unified-editor">
-    <h1>Editor Unificado</h1>
-    <div>Template: default</div>
-  </div>
+    <div data-testid="unified-editor">
+        <h1>Editor Unificado</h1>
+        <div>Template: default</div>
+    </div>
 );
 
 vi.mock('../components/editor/UnifiedEditor', () => ({
-  default: MockUnifiedEditor,
-  UnifiedEditor: MockUnifiedEditor,
+    default: MockUnifiedEditor,
+    UnifiedEditor: MockUnifiedEditor,
 }));
 
 // Mock do EditorPro como fallback
 const MockEditorPro = () => (
-  <div data-testid="editor-pro-fallback">
-    <h1>Editor Pro (Fallback)</h1>
-  </div>
+    <div data-testid="editor-pro-fallback">
+        <h1>Editor Pro (Fallback)</h1>
+    </div>
 );
 
 vi.mock('../components/editor/EditorPro', () => ({
-  default: MockEditorPro,
-  EditorPro: MockEditorPro,
+    default: MockEditorPro,
+    EditorPro: MockEditorPro,
 }));
 
 describe('MainEditorUnified', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-    // Reset environment variables
-    (import.meta as any).env = {
-      VITE_ENABLE_SUPABASE: 'false',
-      VITE_SUPABASE_FUNNEL_ID: 'test-funnel',
-      VITE_SUPABASE_QUIZ_ID: 'test-quiz',
-    };
-  });
-
-  describe('Renderização Básica', () => {
-    it('deve renderizar o editor unificado corretamente', async () => {
-      render(
-        <Router>
-          <MainEditorUnified />
-        </Router>
-      );
-
-      await waitFor(() => {
-        expect(screen.getByTestId('unified-editor')).toBeInTheDocument();
-      });
-
-      expect(screen.getByText('Editor Unificado')).toBeInTheDocument();
+    beforeEach(() => {
+        vi.clearAllMocks();
+        // Reset environment variables
+        (import.meta as any).env = {
+            VITE_ENABLE_SUPABASE: 'false',
+            VITE_SUPABASE_FUNNEL_ID: 'test-funnel',
+            VITE_SUPABASE_QUIZ_ID: 'test-quiz',
+        };
     });
 
-    it('deve exibir estado de carregamento inicialmente', () => {
-      render(
-        <Router>
-          <MainEditorUnified />
-        </Router>
-      );
+    describe('Renderização Básica', () => {
+        it('deve renderizar o editor unificado corretamente', async () => {
+            render(
+                <Router>
+                    <MainEditorUnified />
+                </Router>
+            );
 
-      // Pode ter loading state no início
-      // Como os mocks são síncronos, isso passa rapidamente
-    });
-  });
+            await waitFor(() => {
+                expect(screen.getByTestId('unified-editor')).toBeInTheDocument();
+            });
 
-  describe('Configuração via URL', () => {
-    it('deve extrair parâmetros da URL corretamente', async () => {
-      // Mock da location
-      Object.defineProperty(window, 'location', {
-        value: {
-          pathname: '/editor',
-          search: '?template=quiz-completo&funnel=test-funnel&step=5&debug=true'
-        },
-        writable: true
-      });
+            expect(screen.getByText('Editor Unificado')).toBeInTheDocument();
+        });
 
-      render(
-        <Router base="/editor">
-          <MainEditorUnified />
-        </Router>
-      );
+        it('deve exibir estado de carregamento inicialmente', () => {
+            render(
+                <Router>
+                    <MainEditorUnified />
+                </Router>
+            );
 
-      await waitFor(() => {
-        expect(screen.getByTestId('unified-editor')).toBeInTheDocument();
-      });
+            // Pode ter loading state no início
+            // Como os mocks são síncronos, isso passa rapidamente
+        });
     });
 
-    it('deve ativar modo debug quando solicitado', async () => {
-      // Spy no console.log para verificar debug
-      const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    describe('Configuração via URL', () => {
+        it('deve extrair parâmetros da URL corretamente', async () => {
+            // Mock da location
+            Object.defineProperty(window, 'location', {
+                value: {
+                    pathname: '/editor',
+                    search: '?template=quiz-completo&funnel=test-funnel&step=5&debug=true'
+                },
+                writable: true
+            });
 
-      Object.defineProperty(window, 'location', {
-        value: {
-          pathname: '/editor',
-          search: '?debug=true'
-        },
-        writable: true
-      });
+            render(
+                <Router base="/editor">
+                    <MainEditorUnified />
+                </Router>
+            );
 
-      render(
-        <Router>
-          <MainEditorUnified />
-        </Router>
-      );
+            await waitFor(() => {
+                expect(screen.getByTestId('unified-editor')).toBeInTheDocument();
+            });
+        });
 
-      await waitFor(() => {
-        expect(screen.getByTestId('unified-editor')).toBeInTheDocument();
-      });
+        it('deve ativar modo debug quando solicitado', async () => {
+            // Spy no console.log para verificar debug
+            const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => { });
 
-      // Verificar se logs de debug foram chamados
-      expect(consoleSpy).toHaveBeenCalled();
-      
-      consoleSpy.mockRestore();
-    });
-  });
+            Object.defineProperty(window, 'location', {
+                value: {
+                    pathname: '/editor',
+                    search: '?debug=true'
+                },
+                writable: true
+            });
 
-  describe('Configuração Supabase', () => {
-    it('deve configurar Supabase quando habilitado', () => {
-      (import.meta as any).env.VITE_ENABLE_SUPABASE = 'true';
+            render(
+                <Router>
+                    <MainEditorUnified />
+                </Router>
+            );
 
-      render(
-        <Router>
-          <MainEditorUnified />
-        </Router>
-      );
+            await waitFor(() => {
+                expect(screen.getByTestId('unified-editor')).toBeInTheDocument();
+            });
 
-      // Teste pode verificar se configuração foi aplicada
-      // através de mocks ou props passadas
-    });
+            // Verificar se logs de debug foram chamados
+            expect(consoleSpy).toHaveBeenCalled();
 
-    it('deve usar configuração local quando Supabase desabilitado', () => {
-      (import.meta as any).env.VITE_ENABLE_SUPABASE = 'false';
-
-      render(
-        <Router>
-          <MainEditorUnified />
-        </Router>
-      );
-
-      // Verificar configuração local
-    });
-  });
-
-  describe('Error Handling', () => {
-    it('deve lidar com erros de carregamento graciosamente', async () => {
-      // Mock erro no UnifiedEditor
-      vi.doMock('../components/editor/UnifiedEditor', () => {
-        throw new Error('Falha no carregamento');
-      });
-
-      render(
-        <Router>
-          <MainEditorUnified />
-        </Router>
-      );
-
-      // Deve tentar carregar fallback
-      await waitFor(() => {
-        expect(screen.getByTestId('editor-pro-fallback')).toBeInTheDocument();
-      });
+            consoleSpy.mockRestore();
+        });
     });
 
-    it('não deve quebrar quando contextos estão ausentes', () => {
-      expect(() => {
-        render(
-          <Router>
-            <MainEditorUnified />
-          </Router>
-        );
-      }).not.toThrow();
+    describe('Configuração Supabase', () => {
+        it('deve configurar Supabase quando habilitado', () => {
+            (import.meta as any).env.VITE_ENABLE_SUPABASE = 'true';
+
+            render(
+                <Router>
+                    <MainEditorUnified />
+                </Router>
+            );
+
+            // Teste pode verificar se configuração foi aplicada
+            // através de mocks ou props passadas
+        });
+
+        it('deve usar configuração local quando Supabase desabilitado', () => {
+            (import.meta as any).env.VITE_ENABLE_SUPABASE = 'false';
+
+            render(
+                <Router>
+                    <MainEditorUnified />
+                </Router>
+            );
+
+            // Verificar configuração local
+        });
     });
-  });
 
-  describe('Lazy Loading', () => {
-    it('deve carregar UnifiedEditor dinamicamente', async () => {
-      render(
-        <Router>
-          <MainEditorUnified />
-        </Router>
-      );
+    describe('Error Handling', () => {
+        it('deve lidar com erros de carregamento graciosamente', async () => {
+            // Mock erro no UnifiedEditor
+            vi.doMock('../components/editor/UnifiedEditor', () => {
+                throw new Error('Falha no carregamento');
+            });
 
-      await waitFor(() => {
-        expect(screen.getByTestId('unified-editor')).toBeInTheDocument();
-      });
+            render(
+                <Router>
+                    <MainEditorUnified />
+                </Router>
+            );
+
+            // Deve tentar carregar fallback
+            await waitFor(() => {
+                expect(screen.getByTestId('editor-pro-fallback')).toBeInTheDocument();
+            });
+        });
+
+        it('não deve quebrar quando contextos estão ausentes', () => {
+            expect(() => {
+                render(
+                    <Router>
+                        <MainEditorUnified />
+                    </Router>
+                );
+            }).not.toThrow();
+        });
     });
 
-    it('deve fazer fallback para EditorPro quando UnifiedEditor falha', async () => {
-      // Simular falha no UnifiedEditor
-      vi.doMock('../components/editor/UnifiedEditor', () => {
-        return Promise.reject(new Error('Módulo não encontrado'));
-      });
+    describe('Lazy Loading', () => {
+        it('deve carregar UnifiedEditor dinamicamente', async () => {
+            render(
+                <Router>
+                    <MainEditorUnified />
+                </Router>
+            );
 
-      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+            await waitFor(() => {
+                expect(screen.getByTestId('unified-editor')).toBeInTheDocument();
+            });
+        });
 
-      render(
-        <Router>
-          <MainEditorUnified />
-        </Router>
-      );
+        it('deve fazer fallback para EditorPro quando UnifiedEditor falha', async () => {
+            // Simular falha no UnifiedEditor
+            vi.doMock('../components/editor/UnifiedEditor', () => {
+                return Promise.reject(new Error('Módulo não encontrado'));
+            });
 
-      await waitFor(() => {
-        expect(screen.getByTestId('editor-pro-fallback')).toBeInTheDocument();
-      });
+            const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => { });
 
-      consoleSpy.mockRestore();
+            render(
+                <Router>
+                    <MainEditorUnified />
+                </Router>
+            );
+
+            await waitFor(() => {
+                expect(screen.getByTestId('editor-pro-fallback')).toBeInTheDocument();
+            });
+
+            consoleSpy.mockRestore();
+        });
     });
-  });
 
-  describe('Contextos Integrados', () => {
-    it('deve renderizar todos os providers necessários', () => {
-      const { container } = render(
-        <Router>
-          <MainEditorUnified />
-        </Router>
-      );
+    describe('Contextos Integrados', () => {
+        it('deve renderizar todos os providers necessários', () => {
+            const { container } = render(
+                <Router>
+                    <MainEditorUnified />
+                </Router>
+            );
 
-      // Verificar se a árvore de contextos foi montada
-      expect(container.firstChild).toBeTruthy();
+            // Verificar se a árvore de contextos foi montada
+            expect(container.firstChild).toBeTruthy();
+        });
     });
-  });
 });
