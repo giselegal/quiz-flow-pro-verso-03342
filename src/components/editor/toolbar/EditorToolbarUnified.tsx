@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils';
 import { useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { LayoutGrid, Monitor, Save, Smartphone, Tablet } from 'lucide-react';
+import EditorNoCodePanel from '@/components/editor/EditorNoCodePanel';
 
 interface EditorToolbarUnifiedProps {
     className?: string;
@@ -212,6 +213,9 @@ export const EditorToolbarUnified: React.FC<EditorToolbarUnifiedProps> = ({
 
             {/* Botões de ação à direita */}
             <div className="flex items-center space-x-3">
+                {/* Painel NOCODE - Novo botão integrado ao editor */}
+                <EditorNoCodePanel />
+
                 <Button
                     onClick={handleSave}
                     disabled={!editorData.canSave}
