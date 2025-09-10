@@ -5,31 +5,31 @@
  * a limpeza e manter apenas um funil ativo baseado no quiz21StepsComplete.ts
  */
 
-(function() {
+(function () {
     console.log('🚀 Iniciando aplicação de funil único...');
-    
+
     try {
         // 1. Limpar localStorage existente
         console.log('🧹 Limpando localStorage...');
         const keys = Object.keys(localStorage);
-        const funnelKeys = keys.filter(key => 
-            key.startsWith('funnel-') || 
+        const funnelKeys = keys.filter(key =>
+            key.startsWith('funnel-') ||
             key.startsWith('funnelData-') ||
             key.includes('funnel') ||
             key.includes('Funnel') ||
             key.includes('quiz') ||
             key.includes('Quiz')
         );
-        
+
         console.log('📋 Encontradas', funnelKeys.length, 'chaves de funis para remover');
         funnelKeys.forEach(key => {
             localStorage.removeItem(key);
             console.log('   ✅ Removido:', key);
         });
-        
+
         // 2. Criar funil único baseado no quiz21StepsComplete.ts
         console.log('🎯 Criando funil único...');
-        
+
         const activeFunnelData = {
             id: 'quiz-style-main',
             name: 'Quiz de Estilo Pessoal - 21 Etapas',
@@ -249,16 +249,16 @@
                 baseTemplate: 'quiz21StepsComplete.ts'
             }
         };
-        
+
         // 3. Salvar dados no localStorage
         const funnelKey = 'active-funnel-main';
         localStorage.setItem(funnelKey, JSON.stringify(activeFunnelData));
         localStorage.setItem('current-active-funnel-id', activeFunnelData.id);
         localStorage.setItem('funnel-cleanup-timestamp', new Date().toISOString());
         localStorage.setItem('cleanup-method', 'browser-script');
-        
+
         console.log('✅ Funil único criado e salvo como:', funnelKey);
-        
+
         // 4. Verificar resultado
         const savedFunnel = JSON.parse(localStorage.getItem(funnelKey));
         console.log('\n📊 RESUMO DO FUNIL ATIVO:');
@@ -271,7 +271,7 @@
         console.log('   - Configurações de etapa:', Object.keys(savedFunnel.stepConfigurations).length);
         console.log('   - Status:', savedFunnel.status);
         console.log('   - NOCODE habilitado:', savedFunnel.metadata.isNoCodeEnabled);
-        
+
         // 5. Disparar evento personalizado
         window.dispatchEvent(new CustomEvent('funnelCleanupCompleted', {
             detail: {
@@ -281,17 +281,17 @@
                 removedCount: funnelKeys.length
             }
         }));
-        
+
         console.log('\n🎉 LIMPEZA CONCLUÍDA COM SUCESSO!');
         console.log('🎯 Agora você tem apenas UM funil ativo baseado no quiz21StepsComplete.ts');
         console.log('📝 Para verificar: localStorage.getItem("active-funnel-main")');
-        
+
         return {
             success: true,
             activeFunnelId: savedFunnel.id,
             message: 'Funil único aplicado com sucesso!'
         };
-        
+
     } catch (error) {
         console.error('❌ Erro durante a aplicação:', error);
         return {
@@ -302,7 +302,7 @@
 })();
 
 // Criar função global para fácil acesso
-window.applyUniqueFunnel = function() {
+window.applyUniqueFunnel = function () {
     console.log('🔄 Reaplicando funil único...');
     return arguments.callee();
 };

@@ -8,10 +8,12 @@ import {
     Link as LinkIcon,
     Zap,
     Eye,
-    ArrowRight
+    ArrowRight,
+    Globe
 } from 'lucide-react';
 import StepNoCodeConnections from './StepNoCodeConnections';
 import { NoCodeConfigPanel } from '@/pages/admin/NoCodeConfigPage';
+import GlobalConfigPanel from './GlobalConfigPanel';
 
 interface EditorNoCodePanelProps {
     className?: string;
@@ -61,7 +63,7 @@ const EditorNoCodePanel: React.FC<EditorNoCodePanelProps> = ({ className = '' })
                 </SheetHeader>
 
                 <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-                    <TabsList className="grid grid-cols-3 w-full max-w-md">
+                    <TabsList className="grid grid-cols-4 w-full max-w-lg">
                         <TabsTrigger value="connections" className="flex items-center gap-2">
                             <LinkIcon className="w-4 h-4" />
                             Conexões
@@ -79,6 +81,10 @@ const EditorNoCodePanel: React.FC<EditorNoCodePanelProps> = ({ className = '' })
                                     ✓
                                 </Badge>
                             )}
+                        </TabsTrigger>
+                        <TabsTrigger value="global" className="flex items-center gap-2">
+                            <Globe className="w-4 h-4" />
+                            Global
                         </TabsTrigger>
                         <TabsTrigger value="preview" className="flex items-center gap-2">
                             <Eye className="w-4 h-4" />
@@ -109,6 +115,21 @@ const EditorNoCodePanel: React.FC<EditorNoCodePanelProps> = ({ className = '' })
                         </div>
 
                         <StepNoCodeConnections onClose={() => setIsOpen(false)} />
+                    </TabsContent>
+
+                    {/* Aba de Configurações Globais */}
+                    <TabsContent value="global" className="space-y-4">
+                        <div className="bg-white rounded-lg p-4 border" style={{ borderColor: '#E6DDD4' }}>
+                            <div className="flex items-center gap-2 mb-3">
+                                <Globe className="w-5 h-5" style={{ color: '#B89B7A' }} />
+                                <h3 className="font-semibold text-[#432818]">Configurações Globais</h3>
+                            </div>
+                            <p className="text-sm text-[#8F7A6A] mb-4">
+                                Configure SEO, pixel, domínio, UTM, webhooks e outras configurações estratégicas do seu funil.
+                            </p>
+                        </div>
+
+                        <GlobalConfigPanel />
                     </TabsContent>
 
                     {/* Aba de Configurações Gerais */}

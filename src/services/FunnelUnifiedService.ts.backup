@@ -1,11 +1,3 @@
-// Configuração de funil único para quiz21StepsComplete
-export const SINGLE_FUNNEL_CONFIG = {
-    activeFunnel: 'quiz21StepsComplete',
-    enforceUniqueFunnel: true,
-    allowMultipleFunnels: false,
-    globalConfigEnabled: true,
-    nocodeConfigEnabled: true
-};
 /**
  * 🎯 FUNNEL UNIFIED SERVICE
  * 

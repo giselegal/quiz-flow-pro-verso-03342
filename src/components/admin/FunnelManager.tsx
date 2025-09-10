@@ -10,10 +10,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { 
-    CheckCircle, 
-    AlertTriangle, 
-    Trash2, 
+import {
+    CheckCircle,
+    AlertTriangle,
+    Trash2,
     RefreshCw,
     Database,
     Settings,
@@ -40,8 +40,8 @@ const FunnelManager: React.FC = () => {
         try {
             // Verificar localStorage
             const keys = Object.keys(localStorage);
-            const funnelKeys = keys.filter(key => 
-                key.startsWith('funnel-') || 
+            const funnelKeys = keys.filter(key =>
+                key.startsWith('funnel-') ||
                 key.startsWith('funnelData-') ||
                 key.includes('funnel') ||
                 key.includes('Funnel') ||
@@ -88,7 +88,7 @@ const FunnelManager: React.FC = () => {
         try {
             // Simular progresso
             const progressSteps = [20, 40, 60, 80, 100];
-            
+
             for (let i = 0; i < progressSteps.length; i++) {
                 setProgress(progressSteps[i]);
                 await new Promise(resolve => setTimeout(resolve, 200));
@@ -96,8 +96,8 @@ const FunnelManager: React.FC = () => {
 
             // Executar limpeza
             const keys = Object.keys(localStorage);
-            const funnelKeys = keys.filter(key => 
-                key.startsWith('funnel-') || 
+            const funnelKeys = keys.filter(key =>
+                key.startsWith('funnel-') ||
                 key.startsWith('funnelData-') ||
                 key.includes('funnel') ||
                 key.includes('Funnel') ||
@@ -193,17 +193,17 @@ const FunnelManager: React.FC = () => {
 
     useEffect(() => {
         checkFunnelStatus();
-        
+
         // Verificar a cada 5 segundos
         const interval = setInterval(checkFunnelStatus, 5000);
-        
+
         return () => clearInterval(interval);
     }, []);
 
-    const isValidSetup = funnelInfo && 
-                        funnelInfo.origin === 'quiz21StepsComplete.ts' && 
-                        totalFunnelKeys <= 1 &&
-                        funnelInfo.isActive;
+    const isValidSetup = funnelInfo &&
+        funnelInfo.origin === 'quiz21StepsComplete.ts' &&
+        totalFunnelKeys <= 1 &&
+        funnelInfo.isActive;
 
     return (
         <div className="max-w-4xl mx-auto p-6 space-y-6">

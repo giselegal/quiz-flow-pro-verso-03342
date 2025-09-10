@@ -44,8 +44,8 @@ export const useSingleActiveFunnel = (options: UseSingleActiveFunnelOptions = {}
 
             // 1. Verificar localStorage
             const keys = Object.keys(localStorage);
-            const funnelKeys = keys.filter(key => 
-                key.startsWith('funnel-') || 
+            const funnelKeys = keys.filter(key =>
+                key.startsWith('funnel-') ||
                 key.startsWith('funnelData-') ||
                 key.includes('funnel') ||
                 key.includes('Funnel') ||
@@ -62,7 +62,7 @@ export const useSingleActiveFunnel = (options: UseSingleActiveFunnelOptions = {}
             // 2. Buscar funil ativo principal
             const activeFunnelKey = 'active-funnel-main';
             const activeFunnelData = localStorage.getItem(activeFunnelKey);
-            
+
             let activeFunnel = null;
             if (activeFunnelData) {
                 try {
@@ -73,20 +73,20 @@ export const useSingleActiveFunnel = (options: UseSingleActiveFunnelOptions = {}
             }
 
             // 3. Verificar se precisamos de limpeza
-            const needsCleanup = funnelKeys.length > 1 || 
-                                !activeFunnel || 
-                                activeFunnel.origin !== requiredOrigin;
+            const needsCleanup = funnelKeys.length > 1 ||
+                !activeFunnel ||
+                activeFunnel.origin !== requiredOrigin;
 
             // 4. Executar limpeza automática se necessário
             let cleanupPerformed = false;
             if (needsCleanup && autoCleanup) {
                 console.log('🧹 Executando limpeza automática...');
-                
+
                 // Importar e executar limpeza
                 if (typeof window !== 'undefined' && window.cleanupFunnels) {
                     const result = window.cleanupFunnels();
                     cleanupPerformed = result.success;
-                    
+
                     if (cleanupPerformed) {
                         // Recarregar dados após limpeza
                         const cleanedData = localStorage.getItem(activeFunnelKey);
@@ -158,7 +158,7 @@ export const useSingleActiveFunnel = (options: UseSingleActiveFunnelOptions = {}
         };
 
         window.addEventListener('funnelCleanupCompleted', handleCleanupComplete);
-        
+
         // Listener para mudanças no localStorage
         const handleStorageChange = (event) => {
             if (event.key?.includes('funnel') || event.key?.includes('Funnel')) {

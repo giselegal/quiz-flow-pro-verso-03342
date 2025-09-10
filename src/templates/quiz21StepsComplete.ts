@@ -9,9 +9,177 @@
  * - Etapa 19: Transição para resultado
  * - Etapa 20: Página de resultado personalizada
  * - Etapa 21: Página de oferta
+ * 
+ * 🔧 CONFIGURAÇÕES GLOBAIS NOCODE INCLUÍDAS:
+ * - SEO: Meta tags, Open Graph, descrições otimizadas
+ * - Tracking: Google Analytics, Facebook Pixel, GTM
+ * - UTM: Configuração completa para campanhas Facebook
+ * - Webhooks: Integração com ferramentas externas
+ * - Branding: Cores, fontes e identidade visual
+ * - Legal: Políticas de privacidade e conformidade
  */
 
 import { Block } from '../types/editor';
+
+// 🌐 CONFIGURAÇÕES GLOBAIS NOCODE
+export const QUIZ_GLOBAL_CONFIG = {
+  // SEO Configuration
+  seo: {
+    title: 'Descubra Seu Estilo Pessoal - Quiz Interativo | Gisele Galvão',
+    description: 'Descubra seu estilo predominante através do nosso quiz personalizado e transforme seu guarda-roupa com confiança. Consultoria de imagem profissional.',
+    keywords: 'estilo pessoal, consultoria de imagem, quiz de estilo, moda feminina, guarda-roupa, personal stylist, Gisele Galvão',
+    ogTitle: 'Descubra Seu Estilo Pessoal - Quiz Interativo',
+    ogDescription: 'Faça nosso quiz personalizado e descubra qual é o seu estilo predominante. Transforme seu guarda-roupa e se vista com mais confiança.',
+    ogImage: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/og-image-style-quiz-gisele.webp',
+    favicon: '/favicon.ico',
+    customMetaTags: `
+      <meta name="author" content="Gisele Galvão">
+      <meta name="robots" content="index, follow">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="theme-color" content="#B89B7A">
+      <link rel="canonical" href="https://quiz-sell-genius.com/">
+    `
+  },
+
+  // Domain & Hosting
+  domain: {
+    primaryDomain: 'quiz-sell-genius.com',
+    customDomains: ['quiz-descubra-seu-estilo.com', 'estilopessoal.gisele.com'],
+    ssl: true,
+    redirects: `
+      /quiz -> /
+      /estilo -> /
+      /descobrir-estilo -> /
+    `
+  },
+
+  // Tracking & Analytics
+  tracking: {
+    googleAnalytics: 'GA4-XXXXXXXXX', // Para ser configurado
+    facebookPixel: '123456789012345', // Para ser configurado
+    googleTagManager: 'GTM-XXXXXXX', // Para ser configurado
+    hotjar: '1234567', // Para ser configurado
+    customScripts: `
+      <!-- Criativo Ads Tracking -->
+      <script>
+        window.criativoTracking = {
+          campaign: 'quiz_style_abtest_2025',
+          source: 'facebook',
+          medium: 'cpc'
+        };
+      </script>
+    `,
+    enableTracking: true
+  },
+
+  // UTM & Campaign (integrado com utmConfig.js existente)
+  campaign: {
+    defaultSource: 'facebook',
+    defaultMedium: 'cpc',
+    defaultCampaign: 'quiz_style_abtest_2025',
+    autoUTM: true,
+    trackingPrefix: 'qsq',
+    // Referência ao arquivo UTM existente
+    utmConfigPath: '/src/config/utmConfig.js'
+  },
+
+  // Webhooks & Integrations
+  webhooks: {
+    leadCapture: 'https://hooks.zapier.com/hooks/catch/123456/lead-capture/',
+    formSubmission: 'https://hooks.zapier.com/hooks/catch/123456/form-submit/',
+    purchaseComplete: 'https://hooks.zapier.com/hooks/catch/123456/purchase/',
+    quizComplete: 'https://hooks.zapier.com/hooks/catch/123456/quiz-complete/',
+    enableWebhooks: true,
+    secretKey: 'your-webhook-secret-key-here',
+    // Configurações específicas para cada evento
+    events: {
+      leadCapture: {
+        fields: ['userName', 'email', 'phone', 'quizScore', 'resultStyle'],
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      },
+      quizComplete: {
+        fields: ['userName', 'answers', 'score', 'resultStyle', 'secondaryStyles'],
+        method: 'POST',
+        includeTimestamp: true
+      }
+    }
+  },
+
+  // Branding & Design
+  branding: {
+    primaryColor: '#B89B7A',
+    secondaryColor: '#432818',
+    accentColor: '#3B82F6',
+    fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+    logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+    faviconUrl: '/favicon.ico',
+    customCSS: `
+      :root {
+        --brand-primary: #B89B7A;
+        --brand-secondary: #432818;
+        --brand-accent: #3B82F6;
+        --brand-bg: #FAF9F7;
+        --brand-border: #E6DDD4;
+      }
+      
+      .quiz-container {
+        font-family: var(--brand-font-family);
+        background-color: var(--brand-bg);
+      }
+      
+      .brand-gradient {
+        background: linear-gradient(135deg, var(--brand-primary), var(--brand-accent));
+      }
+    `
+  },
+
+  // Legal & Compliance
+  legal: {
+    privacyPolicyUrl: '/privacy',
+    termsOfServiceUrl: '/terms',
+    cookiePolicy: 'Este site utiliza cookies para melhorar sua experiência e personalizar o conteúdo. Ao continuar navegando, você concorda com nossa política de cookies.',
+    gdprCompliant: true,
+    showCookieBanner: true,
+    companyInfo: {
+      name: 'Gisele Galvão - Consultoria de Imagem',
+      cnpj: '00.000.000/0001-00', // Para ser configurado
+      address: 'Seu endereço aqui',
+      phone: '(11) 99999-9999',
+      email: 'contato@giselegaalvao.com'
+    }
+  },
+
+  // A/B Testing Configuration
+  abTesting: {
+    enabled: true,
+    variants: {
+      pageA: {
+        name: 'Quiz como Isca',
+        path: '/',
+        description: 'Página com quiz interativo + resultado + oferta',
+        weight: 50
+      },
+      pageB: {
+        name: 'Oferta Direta',
+        path: '/quiz-descubra-seu-estilo',
+        description: 'Landing page de oferta direta',
+        weight: 50
+      }
+    }
+  },
+
+  // Performance & Optimization
+  performance: {
+    enableCompression: true,
+    enableCaching: true,
+    optimizeImages: true,
+    lazyLoading: true,
+    preloadCriticalResources: [
+      'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp'
+    ]
+  }
+};
 
 // Verificar se estamos em ambiente de desenvolvimento real do Vite
 const IS_TEST = false; // Forçar template completo para debugging

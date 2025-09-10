@@ -14,8 +14,8 @@ function cleanupFunnels() {
         const keys = Object.keys(localStorage);
         console.log('📊 Total de chaves no localStorage:', keys.length);
 
-        const funnelKeys = keys.filter(key => 
-            key.startsWith('funnel-') || 
+        const funnelKeys = keys.filter(key =>
+            key.startsWith('funnel-') ||
             key.startsWith('funnelData-') ||
             key.includes('funnel') ||
             key.includes('Funnel') ||
@@ -39,7 +39,7 @@ function cleanupFunnels() {
         });
 
         // 3. Limpar dados temporários e caches
-        const tempKeys = keys.filter(key => 
+        const tempKeys = keys.filter(key =>
             key.includes('draft') ||
             key.includes('temp') ||
             key.includes('backup') ||
@@ -174,7 +174,7 @@ function cleanupFunnels() {
         // 5. Salvar o funil único e ativo
         const funnelKey = 'active-funnel-main';
         localStorage.setItem(funnelKey, JSON.stringify(activeFunnelData));
-        
+
         // Criar também uma referência rápida
         localStorage.setItem('current-active-funnel-id', activeFunnelData.id);
         localStorage.setItem('funnel-cleanup-timestamp', new Date().toISOString());
@@ -205,7 +205,7 @@ function cleanupFunnels() {
 
         console.log('\n🎉 Limpeza concluída com sucesso!');
         console.log('📝 Para verificar: localStorage.getItem("active-funnel-main")');
-        
+
         return {
             success: true,
             removedCount,
@@ -227,11 +227,11 @@ if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
     // Executar após um pequeno delay para garantir que o DOM esteja pronto
     setTimeout(() => {
         const result = cleanupFunnels();
-        
+
         if (result.success) {
             console.log('\n✨ LIMPEZA AUTOMÁTICA CONCLUÍDA ✨');
             console.log('Agora você tem apenas UM funil ativo baseado no quiz21StepsComplete.ts');
-            
+
             // Dispatch event para notificar outros componentes
             window.dispatchEvent(new CustomEvent('funnelCleanupCompleted', {
                 detail: result

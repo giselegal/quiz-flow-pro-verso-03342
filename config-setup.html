@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Configuração do Funil Único</title>
+</head>
+<body>
+    <h1>Configurando funil único com NOCODE...</h1>
+    <div id="log"></div>
+    
+    <script>
+        const log = document.getElementById('log');
+        
+        // Limpar localStorage
+        const keysToClean = [
+            'quiz-funnel-template',
+            'quiz-active-template', 
+            'quiz-templates-list',
+            'editor-state',
+            'funnel-blocks',
+            'quiz-settings'
+        ];
+
+        keysToClean.forEach(key => {
+            if (localStorage.getItem(key)) {
+                console.log(`🗑️ Removendo ${key}`);
+                log.innerHTML += `<p>🗑️ Removendo ${key}</p>`;
+                localStorage.removeItem(key);
+            }
+        });
+
+        // Configurar template único
+        localStorage.setItem('quiz-active-template', 'quiz21StepsComplete');
+        localStorage.setItem('quiz-single-funnel-mode', 'true');
+        
+        const templateConfig = {
+            activeTemplate: 'quiz21StepsComplete',
+            availableTemplates: ['quiz21StepsComplete'],
+            globalConfig: {
+                enforceUnique: true,
+                nocodeEnabled: true,
+                globalSettingsEnabled: true
+            }
+        };
+        
+        localStorage.setItem('quiz-template-config', JSON.stringify(templateConfig));
+        localStorage.setItem('quiz-global-config-enabled', 'true');
+        
+        // Configuração NOCODE
+        const nocodeConfig = {
+            stepConnections: {
+                enabled: true,
+                autoAdvance: true,
+                connectionType: 'linear-with-conditionals'
+            },
+            globalSettings: {
+                seoEnabled: true,
+                trackingEnabled: true,
+                utmEnabled: true,
+                webhooksEnabled: true,
+                brandingEnabled: true
+            },
+            template: 'quiz21StepsComplete'
+        };
+        
+        const globalConfig = {
+            seo: {
+                title: 'Descubra Seu Estilo Pessoal - Quiz Interativo | Gisele Galvão',
+                description: 'Descubra seu estilo predominante através do nosso quiz personalizado e transforme seu guarda-roupa com confiança.',
+                configured: true
+            },
+            tracking: {
+                enabled: true,
+                configured: false
+            },
+            utm: {
+                enabled: true,
+                configured: true
+            },
+            webhooks: {
+                enabled: false,
+                configured: false
+            },
+            branding: {
+                enabled: true,
+                configured: true
+            }
+        };
+        
+        localStorage.setItem('quiz-nocode-config', JSON.stringify(nocodeConfig));
+        localStorage.setItem('quiz-global-config', JSON.stringify(globalConfig));
+        
+        log.innerHTML += `
+            <p>✅ LocalStorage limpo e configurado</p>
+            <p>🎯 Template único configurado: quiz21StepsComplete</p>
+            <p>🔧 Configuração NOCODE aplicada</p>
+            <p>🌐 Configurações globais inicializadas</p>
+            <p><strong>🎉 Configuração concluída com sucesso!</strong></p>
+            <br>
+            <p><strong>📋 Status das configurações:</strong></p>
+            <ul>
+                <li>✅ SEO: Configurado</li>
+                <li>⚠️ Tracking: Aguardando configuração</li>
+                <li>✅ UTM: Configurado (utmConfig.js)</li>
+                <li>⚠️ Webhooks: Aguardando configuração</li>
+                <li>✅ Branding: Configurado</li>
+            </ul>
+            <br>
+            <p><em>Acesse o editor e vá em "Configurações NOCODE" > "Global" para configurar tracking e webhooks.</em></p>
+        `;
+        
+        console.log('🎉 Configuração de funil único com NOCODE concluída!');
+    </script>
+</body>
+</html>
