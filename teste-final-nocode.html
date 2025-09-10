@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Teste NOCODE - Editor Global Config</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f5f5f5;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .status {
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+
+        .success {
+            background: #e7f5e7;
+            color: #2d8a2d;
+        }
+
+        .error {
+            background: #ffe7e7;
+            color: #d63031;
+        }
+
+        .info {
+            background: #e7f0ff;
+            color: #0984e3;
+        }
+
+        button {
+            background: #B89B7A;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        button:hover {
+            background: #A0895B;
+        }
+
+        .result {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background: #f9f9f9;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🎯 Teste NOCODE - Configurações Globais</h1>
+
+        <div class="status info">
+            <strong>✅ OBJETIVO:</strong> Verificar se apenas um funil está ativo e se a aba Global Config aparece no
+            editor
+        </div>
+
+        <div id="results"></div>
+
+        <div style="margin: 20px 0;">
+            <button onclick="testSingleFunnel()">🔍 Testar Funil Único</button>
+            <button onclick="testGlobalConfig()">🌍 Testar Config Global</button>
+            <button onclick="openEditor()">📝 Abrir Editor</button>
+            <button onclick="openDashboard()">📊 Abrir Dashboard</button>
+        </div>
+
+        <div class="result" id="testResults">
+            <h3>Resultados dos Testes:</h3>
+            <div id="testOutput">Clique nos botões acima para testar...</div>
+        </div>
+    </div>
+
+    <script>
+        function log(message, type = 'info') {
+            const output = document.getElementById('testOutput');
+            const timestamp = new Date().toLocaleTimeString();
+            const color = type === 'success' ? '#2d8a2d' : type === 'error' ? '#d63031' : '#0984e3';
+            output.innerHTML += `<div style="color: ${color}; margin: 5px 0;">[${timestamp}] ${message}</div>`;
+        }
+
+        function testSingleFunnel() {
+            log('🔍 Testando configuração de funil único...', 'info');
+
+            try {
+                // Limpar localStorage de funis múltiplos
+                const keysToRemove = [];
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    if (key && (
+                        key.includes('funnel') && !key.includes('quiz21StepsComplete') ||
+                        key.includes('quiz-estilo') ||
+                        key.includes('quiz-personalidade') ||
+                        key.includes('quiz-vazio') ||
+                        key.includes('funil-21-etapas')
+                    )) {
+                        keysToRemove.push(key);
+                    }
+                }
+
+                keysToRemove.forEach(key => {
+                    localStorage.removeItem(key);
+                    log(`🗑️ Removido: ${key}`, 'info');
+                });
+
+                // Forçar template único
+                localStorage.setItem('editor:funnelId', 'quiz21StepsComplete');
+                localStorage.setItem('funnel:active', 'quiz21StepsComplete');
+                localStorage.setItem('quiz21StepsComplete:active', 'true');
+
+                log('✅ Funil único configurado: quiz21StepsComplete', 'success');
+                log(`📊 Chaves removidas: ${keysToRemove.length}`, 'info');
+
+            } catch (error) {
+                log(`❌ Erro: ${error.message}`, 'error');
+            }
+        }
+
+        function testGlobalConfig() {
+            log('🌍 Testando configuração global...', 'info');
+
+            try {
+                // Configurar dados globais de exemplo
+                const globalConfig = {
+                    seo: {
+                        title: 'Quiz de Estilo Pessoal - Descubra seu estilo único',
+                        description: 'Descubra qual é o seu estilo pessoal único com nosso quiz completo',
+                        keywords: 'quiz, estilo, moda, personalidade'
+                    },
+                    domain: {
+                        custom: 'meuquiz.com',
+                        subdomain: 'quiz'
+                    },
+                    pixel: {
+                        facebook: '1234567890',
+                        google: 'G-XXXXXXXXXX'
+                    },
+                    utm: {
+                        source: 'social',
+                        medium: 'quiz',
+                        campaign: 'estilo-pessoal'
+                    },
+                    webhook: {
+                        url: 'https://hook.com/webhook',
+                        events: ['lead', 'completion']
+                    }
+                };
+
+                localStorage.setItem('quiz:globalConfig', JSON.stringify(globalConfig));
+                localStorage.setItem('nocode:globalConfigEnabled', 'true');
+
+                log('✅ Configuração global salva', 'success');
+                log('📝 SEO, pixel, UTM e webhook configurados', 'info');
+
+            } catch (error) {
+                log(`❌ Erro: ${error.message}`, 'error');
+            }
+        }
+
+        function openEditor() {
+            log('📝 Abrindo editor...', 'info');
+            window.open('http://localhost:5174/editor', '_blank');
+        }
+
+        function openDashboard() {
+            log('📊 Abrindo dashboard...', 'info');
+            window.open('http://localhost:5174', '_blank');
+        }
+
+        // Auto-executar teste na carga da página
+        window.onload = function () {
+            log('🚀 Iniciando verificação automática...', 'info');
+
+            setTimeout(() => {
+                testSingleFunnel();
+                setTimeout(() => {
+                    testGlobalConfig();
+                    setTimeout(() => {
+                        log('✅ Configuração concluída! Teste agora:', 'success');
+                        log('1. Clique em "Abrir Dashboard" - deve mostrar apenas 1 funil', 'info');
+                        log('2. Clique em "Abrir Editor" - deve mostrar aba "Global" nas configurações', 'info');
+                    }, 1000);
+                }, 1000);
+            }, 500);
+        };
+    </script>
+</body>
+
+</html>

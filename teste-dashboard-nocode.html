@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,44 +13,71 @@
             background: linear-gradient(135deg, #FAF9F7, #F0F9FF);
             min-height: 100vh;
         }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
             background: white;
             border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             overflow: hidden;
         }
+
         .header {
             background: linear-gradient(135deg, #B89B7A, #432818);
             color: white;
             padding: 24px;
             text-align: center;
         }
+
         .status-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 20px;
             padding: 24px;
         }
+
         .status-card {
             border: 1px solid #E6DDD4;
             border-radius: 8px;
             padding: 20px;
             background: #FAFAFA;
         }
-        .status-ok { border-left: 4px solid #10B981; }
-        .status-warning { border-left: 4px solid #F59E0B; }
-        .status-error { border-left: 4px solid #EF4444; }
+
+        .status-ok {
+            border-left: 4px solid #10B981;
+        }
+
+        .status-warning {
+            border-left: 4px solid #F59E0B;
+        }
+
+        .status-error {
+            border-left: 4px solid #EF4444;
+        }
+
         .test-result {
             margin: 10px 0;
             padding: 8px 12px;
             border-radius: 4px;
             font-size: 14px;
         }
-        .success { background: #D1FAE5; color: #065F46; }
-        .warning { background: #FEF3C7; color: #92400E; }
-        .error { background: #FEE2E2; color: #991B1B; }
+
+        .success {
+            background: #D1FAE5;
+            color: #065F46;
+        }
+
+        .warning {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+
+        .error {
+            background: #FEE2E2;
+            color: #991B1B;
+        }
+
         .button {
             display: inline-block;
             padding: 12px 24px;
@@ -61,15 +89,18 @@
             font-weight: 500;
             transition: all 0.2s;
         }
+
         .button:hover {
             background: #A0895B;
             transform: translateY(-1px);
         }
+
         .actions {
             text-align: center;
             padding: 24px;
             background: #F8F6F3;
         }
+
         #log {
             background: #1a1a1a;
             color: #00ff00;
@@ -83,6 +114,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
@@ -186,7 +218,7 @@
             <a href="config-setup.html" class="button" target="_blank">
                 ⚙️ Configurar LocalStorage
             </a>
-            
+
             <div style="margin-top: 24px;">
                 <h4>📝 Como Testar as Configurações NOCODE:</h4>
                 <ol style="text-align: left; max-width: 600px; margin: 0 auto;">
@@ -208,7 +240,7 @@
 
     <script>
         const log = document.getElementById('log');
-        
+
         function logMessage(message, type = 'info') {
             const timestamp = new Date().toLocaleTimeString();
             const color = type === 'success' ? '#00ff00' : type === 'error' ? '#ff4444' : '#ffffff';
@@ -219,23 +251,23 @@
         function testarConfiguracoesNOCODE() {
             log.innerHTML = '';
             logMessage('🚀 Iniciando teste das configurações NOCODE...');
-            
+
             // 1. Verificar se os arquivos principais existem
             logMessage('📁 Verificando arquivos implementados...');
             logMessage('   ✅ GlobalConfigPanel.tsx - Implementado', 'success');
             logMessage('   ✅ EditorNoCodePanel.tsx - Atualizado', 'success');
             logMessage('   ✅ quiz21StepsComplete.ts - Configurações globais incluídas', 'success');
-            
+
             // 2. Verificar localStorage
             logMessage('💾 Verificando localStorage...');
             const keys = Object.keys(localStorage);
             const funnelKeys = keys.filter(key => key.includes('funnel') || key.includes('quiz'));
             logMessage(`   📊 ${keys.length} chaves totais, ${funnelKeys.length} relacionadas a funis`);
-            
+
             // 3. Verificar configurações salvas
             const globalConfig = localStorage.getItem('quiz-global-config');
             const nocodeConfig = localStorage.getItem('quiz-nocode-config');
-            
+
             if (globalConfig) {
                 logMessage('   ✅ Configurações globais encontradas no localStorage', 'success');
                 try {
@@ -247,13 +279,13 @@
             } else {
                 logMessage('   ⚠️ Configurações globais não encontradas (primeira execução)', 'warning');
             }
-            
+
             if (nocodeConfig) {
                 logMessage('   ✅ Configurações NOCODE encontradas', 'success');
             } else {
                 logMessage('   ⚠️ Configurações NOCODE não encontradas', 'warning');
             }
-            
+
             // 4. Testar acesso ao servidor
             logMessage('🌐 Testando acesso ao servidor...');
             fetch('http://localhost:5174/')
@@ -288,4 +320,5 @@
         }, 500);
     </script>
 </body>
+
 </html>
