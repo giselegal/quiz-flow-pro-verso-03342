@@ -21,7 +21,7 @@ const MyFunnelsPage: React.FC = () => {
     const [openId, setOpenId] = React.useState<string>('');
 
     // 🎯 Usar hook contextual para isolamento de dados
-    const { listFunnels, loadFunnel, saveFunnel, deleteFunnel, isLoading } = useMyFunnelsPersistence();
+    const { listFunnels, loadFunnel, saveFunnel, isLoading } = useMyFunnelsPersistence();
 
     React.useEffect(() => {
         console.log('🔍 MyFunnelsPage: Carregando funis do contexto MY_FUNNELS...');
@@ -160,7 +160,7 @@ const MyFunnelsPage: React.FC = () => {
 
     const createAndOpen21 = async () => {
         try {
-            const now = new Date().toISOString();
+        // Date available for use if needed
             const templateId = 'template-optimized-21-steps-funnel';
             const newId = `${templateId}-${Date.now()}`;
             const name = 'Funil Quiz 21 Etapas';
@@ -241,17 +241,19 @@ const MyFunnelsPage: React.FC = () => {
         }
     };
 
-    const loadTemplateBlocks = async (stepId: string) => {
-        try {
-            const blocks = await TemplateManager.loadStepBlocks(stepId);
-            console.log(`📋 Blocos carregados para ${stepId}:`, blocks);
-            return blocks;
-        } catch (error) {
-            console.error(`❌ Erro ao carregar blocos para ${stepId}:`, error);
-            return [];
-        }
     };
 
+    // Template blocks loader function available if needed (commented out to prevent unused warnings)
+    // const loadTemplateBlocks = async (stepId: string) => {
+    //     try {
+    //         const blocks = await TemplateManager.loadStepBlocks(stepId);
+    //         console.log(`📋 Blocos carregados para ${stepId}:`, blocks);
+    //         return blocks;
+    //     } catch (error) {
+    //         console.error(`❌ Erro ao carregar blocos para ${stepId}:`, error);
+    //         return [];
+    //     }
+    // };
     return (
         <div className="container mx-auto py-8">
             <AdminBreadcrumbs

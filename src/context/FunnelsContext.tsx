@@ -449,7 +449,7 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
 
   // ✅ FASE 2: Inicialização com mapeamento unificado
   const [steps, setSteps] = useState<LegacyFunnelStep[]>(() => {
-    const { unified, legacy } = getTemplateWithFallback('quiz-estilo-completo');
+    const { legacy } = getTemplateWithFallback('quiz-estilo-completo');
     const initialTemplate = legacy || {
       name: 'Template Padrão',
       description: 'Template padrão de inicialização',
@@ -457,7 +457,7 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
     };
 
     console.log('� FunnelsContext: Inicialização com template unificado');
-    console.log('📊 Template unificado:', unified?.name || 'N/A');
+    console.log('📊 Template: Usando template padrão');
     console.log('� Template legacy:', initialTemplate.name);
     console.log('🎯 Steps carregadas:', initialTemplate.defaultSteps.length);
 

@@ -26,10 +26,8 @@ import {
     Trash2,
     Plus,
     Search,
-    Filter,
     FileText,
     Copy,
-    Download,
     Star,
     Calendar
 } from 'lucide-react';

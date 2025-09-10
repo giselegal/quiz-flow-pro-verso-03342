@@ -352,6 +352,9 @@ class CustomTemplateService {
     /**
      * Validar template personalizado antes de salvar
      */
+    /**
+     * Validar template personalizado antes de salvar
+     */
     private validateCustomTemplate(template: Partial<CustomTemplate>): boolean {
         if (!template.name || template.name.trim().length === 0) {
             throw new Error('Nome do template é obrigatório');
