@@ -1,6 +1,5 @@
 import { cn } from '@/lib/utils';
 import {
-  BarChart3,
   Code,
   Eye,
   FileText,
@@ -12,123 +11,113 @@ import {
   TrendingUp,
   Users,
   Zap,
-  Activity,
-  Award,
   Brain,
+  LineChart,
+  Database,
+  Link2,
 } from 'lucide-react';
 import { Link, useLocation } from 'wouter';
 import { Badge } from '../ui/badge';
 
-const sidebarItems = [
+// 🏠 SEÇÃO PRINCIPAL - DASHBOARD
+const dashboardItems = [
   {
-    title: 'Dashboard',
+    title: 'Overview',
     href: '/admin',
     icon: Home,
+    description: 'KPIs principais e insights gerais',
   },
+];
+
+// 🎯 CORE BUSINESS - FUNCIONALIDADES PRINCIPAIS
+const coreBusinessItems = [
   {
-    title: 'Quiz',
-    href: '/admin/quiz',
-    icon: Palette,
-  },
-  {
-    title: 'Editor (novo)',
+    title: 'Editor Unificado',
     href: '/editor',
     icon: Code,
-    description: 'Editor unificado',
+    description: 'Editor drag & drop principal',
   },
   {
-    title: 'Funis',
+    title: 'Quiz Manager',
+    href: '/admin/quiz',
+    icon: Palette,
+    description: 'Configuração de quizzes',
+  },
+  {
+    title: 'Funis & Templates',
     href: '/admin/funis',
     icon: Layers,
-    description: 'Gerenciar funis de vendas',
-  },
-];
-
-// 🎯 FUNCIONALIDADES AVANÇADAS DESTACADAS
-const advancedFeatures = [
-  {
-    title: '🚀 Showcase Completo',
-    href: '/admin/funcionalidades-avancadas',
-    icon: Award,
-    description: 'Ver todas as funcionalidades ativadas',
-    isNew: true,
-    badge: 'NOVO',
-  },
-  {
-    title: '🧠 Inteligência Artificial',
-    href: '/admin/funcionalidades-ia',
-    icon: Brain,
-    description: 'Sistemas de IA, ML e automação',
-    isNew: true,
-    badge: 'IA',
-  },
-  {
-    title: 'Analytics Avançado',
-    href: '/admin/analytics',
-    icon: Activity,
-    description: 'Dashboard empresarial, A/B tests, conversão',
-    isNew: true,
-    badge: 'Empresarial',
-  },
-  {
-    title: 'Testes A/B',
-    href: '/admin/ab-tests',
-    icon: Target,
-    description: 'Comparação e otimização de performance',
-    isNew: true,
-    badge: 'Avançado',
-  },
-  {
-    title: 'Métricas Pro',
-    href: '/admin/metricas',
-    icon: TrendingUp,
-    description: 'Análise de performance e ROI',
-    isNew: true,
-    badge: 'Pro',
-  },
-];
-
-const regularItems = [
-  {
-    title: 'Configuração',
-    href: '/admin/configuracao',
-    icon: Settings,
-    description: 'SEO, Domínio, Pixel, UTM',
-  },
-  {
-    title: 'Modelos de Funis',
-    href: '/admin/funis',
-    icon: FileText,
-    description: 'Biblioteca de modelos prontos (21 etapas)',
+    description: 'Gerenciar funis e templates',
   },
   {
     title: 'Meus Funis',
     href: '/admin/meus-funis',
-    icon: Layers,
-    description: 'Funis em edição e publicados',
-  },
-  {
-    title: 'Meus Templates',
-    href: '/admin/meus-templates',
     icon: FileText,
-    description: 'Templates personalizados criados por você',
-  },
-  {
-    title: 'Configurações',
-    href: '/admin/settings',
-    icon: Settings,
-    description: 'Configurações avançadas',
-  },
-  {
-    title: 'Criativos',
-    href: '/admin/criativos',
-    icon: BarChart3,
+    description: 'Funis criados e publicados',
   },
   {
     title: 'Participantes',
     href: '/admin/participantes',
     icon: Users,
-    description: 'Respostas e progresso dos usuários',
+    description: 'Respostas e dados dos usuários',
+  },
+];
+
+// 📊 ANALYTICS & IA - INTELIGÊNCIA
+const analyticsItems = [
+  {
+    title: 'Analytics Real-Time',
+    href: '/admin/analytics',
+    icon: LineChart,
+    description: 'Métricas em tempo real',
+    isAdvanced: true,
+    badge: 'Pro',
+  },
+  {
+    title: 'A/B Testing',
+    href: '/admin/ab-tests',
+    icon: Target,
+    description: 'Testes e otimização',
+    isAdvanced: true,
+    badge: 'Avançado',
+  },
+  {
+    title: 'IA & Recomendações',
+    href: '/admin/ia-insights',
+    icon: Brain,
+    description: 'Insights e automação IA',
+    isAdvanced: true,
+    badge: 'IA',
+  },
+  {
+    title: 'Métricas Detalhadas',
+    href: '/admin/metricas',
+    icon: TrendingUp,
+    description: 'Análise aprofundada',
+    isAdvanced: true,
+    badge: 'Pro',
+  },
+];
+
+// ⚙️ CONFIGURAÇÃO - SISTEMA
+const configItems = [
+  {
+    title: 'Configurações',
+    href: '/admin/settings',
+    icon: Settings,
+    description: 'Configurações do sistema',
+  },
+  {
+    title: 'Integrações',
+    href: '/admin/configuracao',
+    icon: Link2,
+    description: 'SEO, Pixel, UTM, Webhooks',
+  },
+  {
+    title: 'Templates',
+    href: '/admin/meus-templates',
+    icon: Database,
+    description: 'Biblioteca de templates',
   },
 ];
 
@@ -146,9 +135,9 @@ export function AdminSidebar() {
         href={item.href}
         className={cn(
           'flex flex-col gap-1 px-4 py-3 rounded-lg transition-colors relative',
-          isActive
-            ? isAdvanced
-              ? 'bg-gradient-to-r from-[#B89B7A] to-[#A08968] text-white shadow-md'
+          isActive 
+            ? isAdvanced 
+              ? 'bg-gradient-to-r from-[#B89B7A] to-[#A08968] text-white shadow-md' 
               : 'bg-[#B89B7A] text-white'
             : 'text-[#432818] hover:bg-[#F5F2E9]'
         )}
@@ -156,21 +145,21 @@ export function AdminSidebar() {
         <div className="flex items-center gap-3">
           <Icon className="w-5 h-5" />
           <span className="font-medium">{item.title}</span>
-          {item.isNew && (
-            <Badge
-              variant="secondary"
+          {(item.badge || item.isAdvanced) && (
+            <Badge 
+              variant={item.isAdvanced ? "default" : "secondary"}
               className={cn(
                 "text-xs px-2 py-0.5 ml-auto",
-                isActive ? "bg-white/20 text-white" : "bg-green-100 text-green-700"
+                isActive ? "bg-white/20 text-white" : item.isAdvanced ? "bg-purple-100 text-purple-700" : "bg-green-100 text-green-700"
               )}
             >
-              {item.badge || 'Novo'}
+              {item.badge || 'Pro'}
             </Badge>
           )}
         </div>
         {item.description && (
           <span className={cn(
-            'text-xs ml-8',
+            'text-xs ml-8', 
             isActive ? 'text-white/70' : 'text-[#8F7A6A]'
           )}>
             {item.description}
@@ -185,44 +174,46 @@ export function AdminSidebar() {
     );
   };
 
+  // Renderizar seção com título
+  const renderSection = (title: string, items: any[], isAdvanced = false, icon?: any) => {
+    const SectionIcon = icon;
+    return (
+      <div className="space-y-2">
+        <div className="px-4 py-2">
+          <div className="flex items-center gap-2 text-xs font-semibold text-[#B89B7A] uppercase tracking-wide">
+            {SectionIcon && <SectionIcon className="w-4 h-4" />}
+            {title}
+          </div>
+        </div>
+        {items.map(item => renderSidebarItem(item, isAdvanced))}
+      </div>
+    );
+  };
+
   return (
-    <div className="w-64 bg-white border-r border-[#D4C4A0] h-screen">
+    <div className="w-64 bg-white border-r border-[#D4C4A0] h-screen overflow-y-auto">
       <div className="p-6">
-        <h2 className="text-xl font-bold text-[#432818]">Admin Panel</h2>
+        <h2 className="text-xl font-bold text-[#432818]">Quiz Quest</h2>
         <div className="flex items-center gap-2 mt-2">
           <Badge variant="default" className="bg-green-500 text-white text-xs">
             <Zap className="w-3 h-3 mr-1" />
-            Modo Avançado
+            Pro Active
           </Badge>
         </div>
       </div>
 
-      <nav className="px-4 space-y-2">
-        {/* Seção principal */}
-        {sidebarItems.map(item => renderSidebarItem(item))}
-
-        {/* Divisor para funcionalidades avançadas */}
-        <div className="my-4 px-4">
-          <div className="flex items-center gap-2 mb-2">
-            <div className="h-px bg-[#E5DDD5] flex-1"></div>
-            <span className="text-xs text-[#B89B7A] font-medium flex items-center gap-1">
-              <Award className="w-3 h-3" />
-              FUNCIONALIDADES AVANÇADAS
-            </span>
-            <div className="h-px bg-[#E5DDD5] flex-1"></div>
-          </div>
-        </div>
-
-        {/* Funcionalidades avançadas destacadas */}
-        {advancedFeatures.map(item => renderSidebarItem(item, true))}
-
-        {/* Divisor para itens regulares */}
-        <div className="my-4 px-4">
-          <div className="h-px bg-[#E5DDD5]"></div>
-        </div>
-
-        {/* Outros itens */}
-        {regularItems.map(item => renderSidebarItem(item))}
+      <nav className="px-4 space-y-6">
+        {/* Dashboard Principal */}
+        {renderSection('Dashboard', dashboardItems, false, Home)}
+        
+        {/* Core Business */}
+        {renderSection('Core Business', coreBusinessItems, false, Target)}
+        
+        {/* Analytics & IA */}
+        {renderSection('Analytics & IA', analyticsItems, true, Brain)}
+        
+        {/* Configuração */}
+        {renderSection('Configuração', configItems, false, Settings)}
       </nav>
 
       <div className="absolute bottom-4 px-4 w-64">
