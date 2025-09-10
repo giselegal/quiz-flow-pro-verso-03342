@@ -122,7 +122,7 @@ const RegistryPropertiesPanel: React.FC<RegistryPropertiesPanelProps> = ({
     (blockDefinition.propsSchema || []).forEach(schema => {
       // ✨ FILTRAR POR CONDIÇÕES DEPENDSON/WHEN
       if (!isFieldVisible(schema)) return;
-      
+
       const cat = schema.category || 'content';
       if (!groups[cat]) groups[cat] = [];
       groups[cat].push(schema);
@@ -133,7 +133,7 @@ const RegistryPropertiesPanel: React.FC<RegistryPropertiesPanelProps> = ({
   const renderField = (schema: PropSchema) => {
     const value = localDraft[schema.key] ?? schema.default ?? '';
     const isModified = value !== (schema.default ?? '');
-    
+
     const commonLabel = (
       <div className="flex items-center justify-between mb-1">
         <Label htmlFor={schema.key} className="text-xs font-medium text-gray-600">
@@ -407,11 +407,11 @@ const RegistryPropertiesPanel: React.FC<RegistryPropertiesPanelProps> = ({
                           {key}
                         </span>
                         <span className="text-xs text-gray-600 text-right font-mono bg-white px-2 py-1 rounded border min-w-0 flex-1">
-                          {typeof value === 'string' 
-                            ? `"${value.length > 20 ? value.slice(0, 20) + '...' : value}"` 
+                          {typeof value === 'string'
+                            ? `"${value.length > 20 ? value.slice(0, 20) + '...' : value}"`
                             : JSON.stringify(value).length > 25
-                            ? JSON.stringify(value).slice(0, 25) + '...'
-                            : JSON.stringify(value)
+                              ? JSON.stringify(value).slice(0, 25) + '...'
+                              : JSON.stringify(value)
                           }
                         </span>
                       </div>
