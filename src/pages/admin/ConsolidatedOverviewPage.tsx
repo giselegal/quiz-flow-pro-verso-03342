@@ -74,8 +74,8 @@ const ConsolidatedOverviewPage: React.FC = () => {
                 // Carregar métricas em cache dos últimos 30 dias
                 const cachedMetrics = getCachedMetrics('30d');
 
-        // Carregar métricas em tempo real
-        const realtimeMetrics = await getDashboardMetrics();                setDashboardData({
+                // Carregar métricas em tempo real
+                const realtimeMetrics = await getDashboardMetrics(); setDashboardData({
                     metrics: cachedMetrics,
                     realtimeMetrics,
                 });

@@ -5,18 +5,18 @@ import { Progress } from '@/components/ui/progress';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'wouter';
 import {
-  Brain,
-  Target,
-  TrendingUp,
-  Users,
-  Zap,
-  Star,
-  ArrowUpRight,
-  ChevronRight,
-  Lightbulb,
-  BarChart3,
-  Activity,
-} from 'lucide-react';interface IAInsight {
+    Brain,
+    Target,
+    TrendingUp,
+    Users,
+    Zap,
+    Star,
+    ArrowUpRight,
+    ChevronRight,
+    Lightbulb,
+    BarChart3,
+    Activity,
+} from 'lucide-react'; interface IAInsight {
     id: string;
     title: string;
     description: string;
