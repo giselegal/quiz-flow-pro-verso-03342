@@ -51,21 +51,27 @@ const useBackendSync = (selectedBlock: any, onUpdate: Function) => {
   }));
   const [isSaving, setIsSaving] = useState(false);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [lastSaved, setLastSaved] = useState<Date | null>(null);
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
 
   // Sincronizar quando o bloco selecionado mudar
   React.useEffect(() => {
-    setLocalState({
-      ...selectedBlock.properties,
-      ...selectedBlock.content
-    });
-    setHasUnsavedChanges(false);
-  }, [selectedBlock.id]);
+    if (selectedBlock) {
+      setLocalState({
+        ...selectedBlock.properties || {},
+        ...selectedBlock.content || {}
+      });
+      setHasUnsavedChanges(false);
+      setSaveStatus('idle');
+    }
+  }, [selectedBlock?.id]);
 
-  // Salvar automaticamente com debounce
+  // Salvar automaticamente com debounce e feedback visual avançado
   const debouncedSave = React.useMemo(() => {
     let timeoutId: NodeJS.Timeout;
     return (updates: Record<string, any>) => {
       setHasUnsavedChanges(true);
+      setSaveStatus('saving');
       clearTimeout(timeoutId);
       timeoutId = setTimeout(async () => {
         setIsSaving(true);
@@ -87,9 +93,18 @@ const useBackendSync = (selectedBlock: any, onUpdate: Function) => {
             ...(Object.keys(properties).length > 0 && { properties }),
             ...(Object.keys(content).length > 0 && { content })
           });
+          
           setHasUnsavedChanges(false);
+          setSaveStatus('saved');
+          setLastSaved(new Date());
+          
+          // Reset status após 2 segundos
+          setTimeout(() => setSaveStatus('idle'), 2000);
+          
         } catch (error) {
-          console.error('Erro ao salvar:', error);
+          console.error('❌ Erro ao salvar:', error);
+          setSaveStatus('error');
+          setTimeout(() => setSaveStatus('idle'), 3000);
         } finally {
           setIsSaving(false);
         }
@@ -105,7 +120,14 @@ const useBackendSync = (selectedBlock: any, onUpdate: Function) => {
     });
   }, [debouncedSave]);
 
-  return { localState, updateField, isSaving, hasUnsavedChanges };
+  return { 
+    localState, 
+    updateField, 
+    isSaving, 
+    hasUnsavedChanges, 
+    saveStatus, 
+    lastSaved 
+  };
 };
 
 
@@ -239,7 +261,14 @@ const RegistryPropertiesPanel: React.FC<RegistryPropertiesPanelProps> = ({
   onDelete,
 }) => {
   // ✨ USAR HOOK DE SINCRONIZAÇÃO BIDIRECIONAL
-  const { localState, updateField, isSaving, hasUnsavedChanges } = useBackendSync(selectedBlock, _onUpdate);
+  const { 
+    localState, 
+    updateField, 
+    isSaving, 
+    hasUnsavedChanges, 
+    saveStatus, 
+    lastSaved 
+  } = useBackendSync(selectedBlock, _onUpdate);
   if (!selectedBlock) {
     return (
       <div className="p-6 text-center text-gray-500">
@@ -624,10 +653,25 @@ const RegistryPropertiesPanel: React.FC<RegistryPropertiesPanelProps> = ({
             {/* Indicador de status */}
             <div className="flex items-center gap-2 text-xs text-gray-500">
               <div className={`w-2 h-2 rounded-full ${
-                isSaving ? 'bg-blue-400 animate-pulse' : 
+                saveStatus === 'saving' ? 'bg-blue-400 animate-pulse' : 
+                saveStatus === 'error' ? 'bg-red-400 animate-bounce' :
+                saveStatus === 'saved' ? 'bg-green-400' :
                 hasUnsavedChanges ? 'bg-orange-400' : 'bg-green-400'
               }`} />
-              {isSaving ? 'Salvando...' : hasUnsavedChanges ? 'Alterações pendentes' : 'Salvo'}
+              <span className={`${
+                saveStatus === 'error' ? 'text-red-600' : 
+                saveStatus === 'saved' ? 'text-green-600' : ''
+              }`}>
+                {saveStatus === 'saving' ? 'Salvando...' : 
+                 saveStatus === 'error' ? 'Erro ao salvar' :
+                 saveStatus === 'saved' ? 'Salvo com sucesso' :
+                 hasUnsavedChanges ? 'Alterações pendentes' : 'Sincronizado'}
+              </span>
+              {saveStatus === 'saved' && lastSaved && (
+                <span className="text-gray-400 ml-1">
+                  ({lastSaved.toLocaleTimeString()})
+                </span>
+              )}
             </div>
             <Button onClick={onClose} variant="ghost" size="sm" className="hover:bg-gray-100">
               <X className="h-4 w-4" />
