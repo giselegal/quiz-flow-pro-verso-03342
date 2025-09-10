@@ -25,6 +25,7 @@ export default defineConfig({
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': '*',
       'Access-Control-Allow-Headers': '*',
+      'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
     },
   },
   preview: {
@@ -33,6 +34,7 @@ export default defineConfig({
     cors: true,
     headers: {
       'Access-Control-Allow-Origin': '*',
+      'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
     },
   },
   publicDir: 'public',
