@@ -26,7 +26,7 @@ interface RegistryPropertiesPanelProps {
   onDelete: (blockId: string) => void;
 }
 
-// ✨ TIPOS AVANÇADOS PARA PROPRIEDADES MODERNAS
+// ✨ TIPOS AVANÇADOS PARA PROPRIEDADES MODERNAS - TESTE DE HOT RELOAD
 interface ModernPropSchema extends PropSchema {
   icon?: React.ComponentType<any>;
   gradient?: boolean;
@@ -815,17 +815,17 @@ const RegistryPropertiesPanel: React.FC<RegistryPropertiesPanelProps> = ({
     <TooltipProvider>
       <div className="h-full flex flex-col bg-gradient-to-b from-gray-50 to-white">
         {/* Header com status de salvamento */}
-        <div className="bg-white border-b border-gray-200 p-6 shadow-sm">
+        <div className="bg-red-500 border-b border-gray-200 p-6 shadow-sm">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold">
                 {blockDef.icon || '🧩'}
               </div>
               <div>
-                <h2 className="text-xl font-bold text-gray-900">
-                  {blockDef.title}
+                <h2 className="text-xl font-bold text-white">
+                  🔥 TESTE HOT RELOAD - {blockDef.title}
                 </h2>
-                <p className="text-sm text-gray-500 font-mono">
+                <p className="text-sm text-gray-200 font-mono">
                   {selectedBlock.id}
                 </p>
               </div>
