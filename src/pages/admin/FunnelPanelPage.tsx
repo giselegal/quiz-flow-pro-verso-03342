@@ -67,7 +67,7 @@ const FunnelPanelPage: React.FC = () => {
   // Carregar templates personalizados
   React.useEffect(() => {
     loadCustomTemplates();
-    
+
     // Carregar função de limpeza
     const loadCleanupScript = async () => {
       try {
@@ -88,7 +88,7 @@ const FunnelPanelPage: React.FC = () => {
         console.warn('⚠️ Erro ao carregar script de limpeza:', error);
       }
     };
-    
+
     loadCleanupScript();
   }, []);
 
@@ -104,7 +104,7 @@ const FunnelPanelPage: React.FC = () => {
 
     try {
       const keys = Object.keys(localStorage);
-      
+
       // Detectar chaves relacionadas a funis
       const funnelKeys = keys.filter(key =>
         key.startsWith('funnel-') ||
@@ -158,7 +158,7 @@ const FunnelPanelPage: React.FC = () => {
       // Importar e executar função de limpeza existente
       if (typeof window !== 'undefined' && (window as any).cleanupFunnels) {
         const result = (window as any).cleanupFunnels();
-        
+
         setCleanupResult({
           success: result.success,
           removedCount: result.removedCount || 0,

@@ -9,27 +9,27 @@ function createTestDuplicates() {
         { key: 'funnel-quiz-style-1', data: { id: '1', name: 'Quiz Estilo', type: 'quiz' } },
         { key: 'funnelData-quiz-style-2', data: { id: '2', name: 'Quiz Estilo', type: 'quiz' } },
         { key: 'quiz-funnel-style-3', data: { id: '3', name: 'Quiz Estilo', type: 'quiz' } },
-        
+
         // Funis temporários/rascunhos
         { key: 'funnel-draft-lead-magnet-1', data: { id: 'draft1', name: 'Lead Magnet Draft', type: 'lead' } },
         { key: 'temp-funnel-lead-magnet-2', data: { id: 'temp1', name: 'Lead Magnet Temp', type: 'lead' } },
         { key: 'funnel-backup-lead-magnet-3', data: { id: 'backup1', name: 'Lead Magnet Backup', type: 'lead' } },
-        
+
         // Cópias e duplicatas
         { key: 'funnel-copy-webinar-1', data: { id: 'copy1', name: 'Webinar Copy', type: 'webinar' } },
         { key: 'funnel-duplicate-webinar-2', data: { id: 'dup1', name: 'Webinar Duplicate', type: 'webinar' } },
-        
+
         // Templates antigos
         { key: 'template-old-quiz-1', data: { id: 'oldquiz1', name: 'Quiz Template Old', type: 'template' } },
         { key: 'Funnel-Legacy-Template-2', data: { id: 'legacy1', name: 'Legacy Template', type: 'template' } },
-        
+
         // Dados de cache/sessão
         { key: 'cache-funnel-session-1', data: { id: 'cache1', name: 'Session Cache', type: 'cache' } },
         { key: 'session-funnel-data-2', data: { id: 'session1', name: 'Session Data', type: 'session' } }
     ];
 
     console.log('🚀 Criando funis de teste para demonstrar funcionalidade...');
-    
+
     testFunnels.forEach((funnel, index) => {
         localStorage.setItem(funnel.key, JSON.stringify(funnel.data));
         console.log(`${index + 1}. Criado: ${funnel.key}`);
@@ -42,7 +42,7 @@ function createTestDuplicates() {
 // Função para analisar duplicatas existentes
 function analyzeDuplicates() {
     const keys = Object.keys(localStorage);
-    
+
     const funnelKeys = keys.filter(key =>
         key.startsWith('funnel-') ||
         key.startsWith('funnelData-') ||
@@ -64,7 +64,7 @@ function analyzeDuplicates() {
     console.log('========================');
     console.log(`Total de chaves no localStorage: ${keys.length}`);
     console.log(`Chaves relacionadas a funis: ${funnelKeys.length}`);
-    
+
     if (funnelKeys.length > 0) {
         console.log('\n📋 Lista de funis encontrados:');
         funnelKeys.forEach((key, index) => {
@@ -72,12 +72,12 @@ function analyzeDuplicates() {
             const size = value ? new Blob([value]).size : 0;
             console.log(`${index + 1}. ${key} (${size} bytes)`);
         });
-        
+
         const totalSize = funnelKeys.reduce((acc, key) => {
             const value = localStorage.getItem(key) || '';
             return acc + new Blob([value]).size;
         }, 0);
-        
+
         console.log(`\n💾 Espaço total usado: ${(totalSize / 1024).toFixed(2)} KB`);
         console.log(`🧹 Potencial de limpeza: ${funnelKeys.length} itens`);
     } else {
@@ -100,7 +100,7 @@ const analysis = analyzeDuplicates();
 if (analysis.total === 0) {
     console.log('\n🎯 Criando funis de teste para demonstrar a funcionalidade...');
     createTestDuplicates();
-    
+
     // Re-analisar após criar
     console.log('\n🔄 Re-analisando após criar funis de teste...');
     analyzeDuplicates();
