@@ -3,23 +3,20 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import React, { useEffect, useState } from 'react';
-import Link from 'wouter/link';
+import { Link } from 'wouter';
 import {
-    Brain,
-    Target,
-    TrendingUp,
-    Users,
-    Zap,
-    Star,
-    ArrowUpRight,
-    ChevronRight,
-    Lightbulb,
-    BarChart3,
-    PieChart,
-    Activity,
-} from 'lucide-react';
-
-interface IAInsight {
+  Brain,
+  Target,
+  TrendingUp,
+  Users,
+  Zap,
+  Star,
+  ArrowUpRight,
+  ChevronRight,
+  Lightbulb,
+  BarChart3,
+  Activity,
+} from 'lucide-react';interface IAInsight {
     id: string;
     title: string;
     description: string;

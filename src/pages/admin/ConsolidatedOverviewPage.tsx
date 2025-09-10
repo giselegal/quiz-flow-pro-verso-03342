@@ -3,17 +3,14 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { useNavigationSafe } from '@/hooks/useNavigationSafe';
-import RealTimeAnalytics from '@/services/realTimeAnalytics';
-import { AnalyticsService } from '@/services/analyticsService';
+import { getDashboardMetrics } from '@/services/realTimeAnalytics';
 import { getCachedMetrics } from '@/utils/analyticsHelpers';
 import {
     Activity,
     ArrowUpRight,
-    BarChart3,
     Brain,
     Clock,
     Crown,
-    DollarSign,
     Eye,
     Layers,
     LineChart,
@@ -22,12 +19,11 @@ import {
     Settings,
     Star,
     Target,
-    TrendingUp,
     Users,
     Zap,
 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
-import Link from 'wouter/link';
+import { Link } from 'wouter';
 
 interface DashboardData {
     metrics: {
@@ -78,10 +74,8 @@ const ConsolidatedOverviewPage: React.FC = () => {
                 // Carregar métricas em cache dos últimos 30 dias
                 const cachedMetrics = getCachedMetrics('30d');
 
-                // Carregar métricas em tempo real
-                const realtimeMetrics = await RealTimeAnalytics.getDashboardMetrics();
-
-                setDashboardData({
+        // Carregar métricas em tempo real
+        const realtimeMetrics = await getDashboardMetrics();                setDashboardData({
                     metrics: cachedMetrics,
                     realtimeMetrics,
                 });

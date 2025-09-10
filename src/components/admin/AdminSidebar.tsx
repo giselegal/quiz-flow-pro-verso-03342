@@ -8,7 +8,6 @@ import {
   Palette,
   Settings,
   Target,
-  TrendingUp,
   Users,
   Zap,
   Brain,
