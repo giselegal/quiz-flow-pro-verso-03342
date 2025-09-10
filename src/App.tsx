@@ -30,6 +30,9 @@ const CreativesPage = lazy(() => import('./pages/admin/CreativesPage'));
 const ABTestPage = lazy(() => import('./pages/admin/ABTestPage'));
 const NoCodeConfigPage = lazy(() => import('./pages/admin/NoCodeConfigPage'));
 
+// Página de teste do sistema de configuração
+const ConfigurationTest = lazy(() => import('./pages/ConfigurationTest'));
+
 // Lazy loading para páginas de teste
 const AgentStyleFunnelTestPage = lazy(() => import('./pages/AgentStyleFunnelTestPage'));
 const StepsShowcasePage = lazy(() => import('./pages/StepsShowcase'));
@@ -226,6 +229,13 @@ function App() {
               <Route path="/nocode" component={() =>
                 <Suspense fallback={<LoadingFallback />}>
                   <NoCodeConfigPage />
+                </Suspense>
+              } />
+
+              {/* Teste do sistema de configuração */}
+              <Route path="/config-test" component={() =>
+                <Suspense fallback={<LoadingFallback />}>
+                  <ConfigurationTest />
                 </Suspense>
               } />
 

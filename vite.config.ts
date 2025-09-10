@@ -57,7 +57,7 @@ export default defineConfig({
         // FORÇA BUNDLE ÚNICO para contornar problemas Lovable
         manualChunks: undefined,
         inlineDynamicImports: true,
-        
+
         // Simplifica estrutura de arquivos
         chunkFileNames: 'assets/[name]-[hash].js',
         entryFileNames: 'assets/[name]-[hash].js',
