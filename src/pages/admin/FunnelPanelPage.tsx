@@ -13,7 +13,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { ThumbnailImage } from '@/components/ui/EnhancedOptimizedImage';
 import { funnelLocalStore } from '@/services/funnelLocalStore';
 import { customTemplateService, CustomTemplate } from '@/services/customTemplateService';
-import { Edit, Eye, Play, Plus, Sparkles, Zap, Copy, Trash2 } from 'lucide-react';
+import { Edit, Eye, Play, Plus, Sparkles, Zap, Copy, Trash2, Broom, AlertTriangle, CheckCircle } from 'lucide-react';
 import { useLocation } from 'wouter';
 import { AdminBreadcrumbs } from '@/components/admin/AdminBreadcrumbs';
 import { useFunnelTemplates } from '@/core/funnel/hooks/useFunnelTemplates';
@@ -42,6 +42,27 @@ const FunnelPanelPage: React.FC = () => {
     theme: 'modern',
     notes: ''
   });
+
+  // Estados para limpeza de duplicatas
+  const [isCleanupModalOpen, setIsCleanupModalOpen] = React.useState(false);
+  const [duplicateInfo, setDuplicateInfo] = React.useState<{
+    total: number;
+    duplicates: Array<{
+      key: string;
+      name: string;
+      size: number;
+      lastModified: string;
+    }>;
+    spaceToFree: number;
+  } | null>(null);
+  const [isScanning, setIsScanning] = React.useState(false);
+  const [isCleaningUp, setIsCleaningUp] = React.useState(false);
+  const [cleanupResult, setCleanupResult] = React.useState<{
+    success: boolean;
+    removedCount: number;
+    freedSpace: number;
+    error?: string;
+  } | null>(null);
 
   // Carregar templates personalizados
   React.useEffect(() => {
