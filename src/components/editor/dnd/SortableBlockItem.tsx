@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { getEnhancedBlockComponent as getBlockComponent } from '@/components/editor/blocks/enhancedBlockRegistry';
+import { getEnhancedBlockComponent as getBlockComponent } from '@/components/editor/blocks/EnhancedBlockRegistry';
 import { useContainerProperties } from '@/hooks/useContainerProperties';
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
