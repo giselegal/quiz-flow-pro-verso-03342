@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧹 Teste - Limpeza de Funis Duplicados</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f8f9fa;
+            line-height: 1.6;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2563eb;
+            border-bottom: 3px solid #2563eb;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+        .section {
+            margin: 30px 0;
+            padding: 20px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            background: #f9fafb;
+        }
+        .button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px;
+            font-weight: 500;
+        }
+        .button:hover {
+            background: #1d4ed8;
+        }
+        .button.danger {
+            background: #dc2626;
+        }
+        .button.danger:hover {
+            background: #b91c1c;
+        }
+        .button.success {
+            background: #059669;
+        }
+        .button.success:hover {
+            background: #047857;
+        }
+        .output {
+            background: #1f2937;
+            color: #f3f4f6;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: monospace;
+            margin: 10px 0;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .stat-card {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+            border: 1px solid #e5e7eb;
+        }
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2563eb;
+        }
+        .stat-label {
+            color: #6b7280;
+            font-size: 14px;
+        }
+        .warning {
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            color: #92400e;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+        }
+        .success {
+            background: #d1fae5;
+            border: 1px solid #10b981;
+            color: #065f46;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+        }
+        .list-item {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 4px;
+            padding: 10px;
+            margin: 5px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .list-item code {
+            background: #f3f4f6;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧹 Teste - Limpeza de Funis Duplicados</h1>
+        
+        <div class="warning">
+            <strong>⚠️ Aviso:</strong> Esta é uma página de teste para demonstrar a funcionalidade de limpeza de funis duplicados implementada em <code>/admin/funis</code>.
+        </div>
+
+        <!-- Seção de estatísticas -->
+        <div class="section">
+            <h2>📊 Estatísticas do localStorage</h2>
+            <div class="stats" id="stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalKeys">-</div>
+                    <div class="stat-label">Total de chaves</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="funnelKeys">-</div>
+                    <div class="stat-label">Chaves de funis</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalSize">-</div>
+                    <div class="stat-label">Espaço usado (KB)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="duplicateCount">-</div>
+                    <div class="stat-label">Duplicatas detectadas</div>
+                </div>
+            </div>
+            <button class="button" onclick="updateStats()">🔄 Atualizar Estatísticas</button>
+        </div>
+
+        <!-- Seção de ações -->
+        <div class="section">
+            <h2>🎯 Ações de Teste</h2>
+            <div>
+                <button class="button" onclick="createTestDuplicates()">➕ Criar Funis de Teste</button>
+                <button class="button" onclick="analyzeDuplicates()">🔍 Analisar Duplicatas</button>
+                <button class="button success" onclick="openAdminPage()">🚀 Abrir Página /admin/funis</button>
+                <button class="button danger" onclick="clearAllFunnels()">🗑️ Limpar Todos os Funis</button>
+            </div>
+        </div>
+
+        <!-- Lista de funis -->
+        <div class="section">
+            <h2>📋 Funis Detectados</h2>
+            <div id="funnelsList">
+                <p>Clique em "Analisar Duplicatas" para ver a lista</p>
+            </div>
+        </div>
+
+        <!-- Log de output -->
+        <div class="section">
+            <h2>🖥️ Log de Output</h2>
+            <div class="output" id="output">Aguardando comandos...</div>
+            <button class="button" onclick="clearOutput()">🧹 Limpar Log</button>
+        </div>
+
+        <!-- Instruções -->
+        <div class="section">
+            <h2>📖 Como Testar a Funcionalidade</h2>
+            <ol>
+                <li><strong>Criar dados de teste:</strong> Clique em "Criar Funis de Teste" para adicionar funis duplicados ao localStorage</li>
+                <li><strong>Verificar duplicatas:</strong> Clique em "Analisar Duplicatas" para ver quais itens serão removidos</li>
+                <li><strong>Acessar a página principal:</strong> Clique em "Abrir Página /admin/funis" para testar a interface real</li>
+                <li><strong>Testar limpeza:</strong> Na página /admin/funis, clique no botão "Limpar Duplicatas"</li>
+                <li><strong>Verificar resultado:</strong> Volte aqui e clique em "Analiizar Duplicatas" para confirmar que os itens foram removidos</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        let outputElement = document.getElementById('output');
+
+        function log(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            outputElement.textContent += `[${timestamp}] ${message}\n`;
+            outputElement.scrollTop = outputElement.scrollHeight;
+        }
+
+        function clearOutput() {
+            outputElement.textContent = 'Log limpo...\n';
+        }
+
+        function updateStats() {
+            log('🔄 Atualizando estatísticas...');
+            
+            const keys = Object.keys(localStorage);
+            const funnelKeys = keys.filter(key =>
+                key.startsWith('funnel-') ||
+                key.startsWith('funnelData-') ||
+                key.includes('funnel') ||
+                key.includes('Funnel') ||
+                key.includes('quiz') ||
+                key.includes('Quiz') ||
+                key.includes('template') ||
+                key.includes('draft') ||
+                key.includes('temp') ||
+                key.includes('backup') ||
+                key.includes('copy') ||
+                key.includes('duplicate') ||
+                key.includes('cache') ||
+                key.includes('session')
+            );
+
+            const totalSize = funnelKeys.reduce((acc, key) => {
+                const value = localStorage.getItem(key) || '';
+                return acc + new Blob([value]).size;
+            }, 0);
+
+            document.getElementById('totalKeys').textContent = keys.length;
+            document.getElementById('funnelKeys').textContent = funnelKeys.length;
+            document.getElementById('totalSize').textContent = (totalSize / 1024).toFixed(1);
+            document.getElementById('duplicateCount').textContent = funnelKeys.length;
+
+            log(`✅ Stats: ${keys.length} chaves total, ${funnelKeys.length} funis, ${(totalSize/1024).toFixed(1)}KB`);
+        }
+
+        function createTestDuplicates() {
+            log('🚀 Criando funis de teste...');
+
+            const testFunnels = [
+                { key: 'funnel-quiz-style-1', data: { id: '1', name: 'Quiz Estilo', type: 'quiz' } },
+                { key: 'funnelData-quiz-style-2', data: { id: '2', name: 'Quiz Estilo', type: 'quiz' } },
+                { key: 'quiz-funnel-style-3', data: { id: '3', name: 'Quiz Estilo', type: 'quiz' } },
+                { key: 'funnel-draft-lead-magnet-1', data: { id: 'draft1', name: 'Lead Magnet Draft', type: 'lead' } },
+                { key: 'temp-funnel-lead-magnet-2', data: { id: 'temp1', name: 'Lead Magnet Temp', type: 'lead' } },
+                { key: 'funnel-backup-lead-magnet-3', data: { id: 'backup1', name: 'Lead Magnet Backup', type: 'lead' } },
+                { key: 'funnel-copy-webinar-1', data: { id: 'copy1', name: 'Webinar Copy', type: 'webinar' } },
+                { key: 'funnel-duplicate-webinar-2', data: { id: 'dup1', name: 'Webinar Duplicate', type: 'webinar' } },
+                { key: 'template-old-quiz-1', data: { id: 'oldquiz1', name: 'Quiz Template Old', type: 'template' } },
+                { key: 'Funnel-Legacy-Template-2', data: { id: 'legacy1', name: 'Legacy Template', type: 'template' } },
+                { key: 'cache-funnel-session-1', data: { id: 'cache1', name: 'Session Cache', type: 'cache' } },
+                { key: 'session-funnel-data-2', data: { id: 'session1', name: 'Session Data', type: 'session' } }
+            ];
+
+            testFunnels.forEach((funnel, index) => {
+                localStorage.setItem(funnel.key, JSON.stringify(funnel.data));
+                log(`${index + 1}. Criado: ${funnel.key}`);
+            });
+
+            log(`✅ ${testFunnels.length} funis de teste criados!`);
+            updateStats();
+        }
+
+        function analyzeDuplicates() {
+            log('🔍 Analisando duplicatas...');
+
+            const keys = Object.keys(localStorage);
+            const funnelKeys = keys.filter(key =>
+                key.startsWith('funnel-') ||
+                key.startsWith('funnelData-') ||
+                key.includes('funnel') ||
+                key.includes('Funnel') ||
+                key.includes('quiz') ||
+                key.includes('Quiz') ||
+                key.includes('template') ||
+                key.includes('draft') ||
+                key.includes('temp') ||
+                key.includes('backup') ||
+                key.includes('copy') ||
+                key.includes('duplicate') ||
+                key.includes('cache') ||
+                key.includes('session')
+            );
+
+            const funnelsListElement = document.getElementById('funnelsList');
+            
+            if (funnelKeys.length === 0) {
+                funnelsListElement.innerHTML = '<p class="success">✨ Nenhuma duplicata encontrada!</p>';
+                log('✨ Nenhuma duplicata encontrada');
+            } else {
+                let html = `<p><strong>Encontradas ${funnelKeys.length} duplicatas:</strong></p>`;
+                
+                funnelKeys.forEach((key, index) => {
+                    const value = localStorage.getItem(key) || '';
+                    const size = new Blob([value]).size;
+                    html += `
+                        <div class="list-item">
+                            <code>${key}</code>
+                            <span>${(size/1024).toFixed(1)} KB</span>
+                        </div>
+                    `;
+                    log(`${index + 1}. ${key} (${size} bytes)`);
+                });
+
+                funnelsListElement.innerHTML = html;
+                
+                const totalSize = funnelKeys.reduce((acc, key) => {
+                    const value = localStorage.getItem(key) || '';
+                    return acc + new Blob([value]).size;
+                }, 0);
+                
+                log(`📊 Total: ${funnelKeys.length} itens, ${(totalSize/1024).toFixed(2)} KB`);
+            }
+            
+            updateStats();
+        }
+
+        function clearAllFunnels() {
+            if (!confirm('⚠️ Isso vai remover TODOS os funis do localStorage. Continuar?')) {
+                return;
+            }
+
+            log('🗑️ Removendo todos os funis...');
+
+            const keys = Object.keys(localStorage);
+            const funnelKeys = keys.filter(key =>
+                key.startsWith('funnel-') ||
+                key.startsWith('funnelData-') ||
+                key.includes('funnel') ||
+                key.includes('Funnel') ||
+                key.includes('quiz') ||
+                key.includes('Quiz') ||
+                key.includes('template') ||
+                key.includes('draft') ||
+                key.includes('temp') ||
+                key.includes('backup') ||
+                key.includes('copy') ||
+                key.includes('duplicate') ||
+                key.includes('cache') ||
+                key.includes('session')
+            );
+
+            funnelKeys.forEach(key => {
+                localStorage.removeItem(key);
+                log(`❌ Removido: ${key}`);
+            });
+
+            log(`✅ ${funnelKeys.length} funis removidos!`);
+            document.getElementById('funnelsList').innerHTML = '<p class="success">✨ Todos os funis foram removidos</p>';
+            updateStats();
+        }
+
+        function openAdminPage() {
+            log('🚀 Abrindo página /admin/funis...');
+            window.open('/admin/funis', '_blank');
+        }
+
+        // Atualizar stats iniciais
+        window.addEventListener('load', () => {
+            updateStats();
+            log('🔥 Página de teste carregada!');
+            log('💡 Use os botões acima para testar a funcionalidade');
+        });
+    </script>
+</body>
+</html>
