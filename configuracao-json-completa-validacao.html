@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,7 +14,7 @@
             background: linear-gradient(135deg, #FAF9F7 0%, #F3F0EC 100%);
             line-height: 1.6;
         }
-        
+
         .header {
             text-align: center;
             margin-bottom: 40px;
@@ -22,27 +23,27 @@
             border-radius: 16px;
             box-shadow: 0 4px 20px rgba(184, 155, 122, 0.1);
         }
-        
+
         .header h1 {
             color: #432818;
             margin: 0 0 10px 0;
             font-size: 2.5rem;
             font-weight: 700;
         }
-        
+
         .header p {
             color: #6B7280;
             font-size: 1.1rem;
             margin: 0;
         }
-        
+
         .config-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
             gap: 25px;
             margin-bottom: 40px;
         }
-        
+
         .config-section {
             background: white;
             border-radius: 12px;
@@ -51,12 +52,12 @@
             border: 1px solid #E6DDD4;
             transition: transform 0.2s ease;
         }
-        
+
         .config-section:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 20px rgba(184, 155, 122, 0.15);
         }
-        
+
         .config-title {
             font-size: 1.3rem;
             font-weight: 600;
@@ -66,19 +67,19 @@
             align-items: center;
             gap: 10px;
         }
-        
+
         .config-description {
             color: #6B7280;
             margin-bottom: 20px;
             font-size: 0.95rem;
         }
-        
+
         .config-items {
             list-style: none;
             padding: 0;
             margin: 0;
         }
-        
+
         .config-items li {
             padding: 8px 0;
             border-bottom: 1px solid #F3F4F6;
@@ -86,43 +87,43 @@
             justify-content: space-between;
             align-items: center;
         }
-        
+
         .config-items li:last-child {
             border-bottom: none;
         }
-        
+
         .config-key {
             font-weight: 500;
             color: #374151;
         }
-        
+
         .config-value {
             color: #6B7280;
             font-size: 0.9rem;
         }
-        
+
         .status {
             padding: 4px 8px;
             border-radius: 6px;
             font-size: 0.8rem;
             font-weight: 500;
         }
-        
+
         .status.configured {
             background: #D1FAE5;
             color: #065F46;
         }
-        
+
         .status.pending {
             background: #FEF3C7;
             color: #92400E;
         }
-        
+
         .status.optional {
             background: #E0E7FF;
             color: #3730A3;
         }
-        
+
         .json-preview {
             background: #1F2937;
             color: #F9FAFB;
@@ -134,7 +135,7 @@
             margin: 20px 0;
             border: 1px solid #374151;
         }
-        
+
         .implementation-guide {
             background: linear-gradient(135deg, #B89B7A 0%, #D4C2A8 100%);
             color: white;
@@ -142,37 +143,37 @@
             border-radius: 16px;
             margin-top: 40px;
         }
-        
+
         .implementation-guide h2 {
             margin: 0 0 20px 0;
             font-size: 1.8rem;
         }
-        
+
         .implementation-steps {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 20px;
             margin-top: 25px;
         }
-        
+
         .step {
             background: rgba(255, 255, 255, 0.1);
             padding: 20px;
             border-radius: 10px;
             backdrop-filter: blur(10px);
         }
-        
+
         .step h3 {
             margin: 0 0 10px 0;
             font-size: 1.1rem;
         }
-        
+
         .step p {
             margin: 0;
             opacity: 0.9;
             font-size: 0.95rem;
         }
-        
+
         .validation-results {
             background: #F8F9FA;
             padding: 20px;
@@ -180,12 +181,12 @@
             border-left: 4px solid #10B981;
             margin: 20px 0;
         }
-        
+
         .validation-error {
             border-left-color: #EF4444;
             background: #FEF2F2;
         }
-        
+
         .code-block {
             background: #F8F9FA;
             border: 1px solid #E5E7EB;
@@ -196,14 +197,14 @@
             font-size: 0.85rem;
             overflow-x: auto;
         }
-        
+
         .highlight {
             background: #FEF3C7;
             padding: 2px 4px;
             border-radius: 4px;
             font-weight: 500;
         }
-        
+
         .btn {
             background: #B89B7A;
             color: white;
@@ -218,21 +219,22 @@
             display: inline-block;
             margin: 10px 5px;
         }
-        
+
         .btn:hover {
             background: #A68B6F;
             transform: translateY(-1px);
         }
-        
+
         .btn-secondary {
             background: #6B7280;
         }
-        
+
         .btn-secondary:hover {
             background: #4B5563;
         }
     </style>
 </head>
+
 <body>
     <div class="header">
         <h1>🎯 Configuração JSON Completa</h1>
@@ -243,7 +245,8 @@
         <!-- SEO & Meta Tags -->
         <div class="config-section">
             <h2 class="config-title">🔍 SEO & Meta Tags</h2>
-            <p class="config-description">Configurações completas de SEO, Open Graph e meta tags para máxima visibilidade.</p>
+            <p class="config-description">Configurações completas de SEO, Open Graph e meta tags para máxima
+                visibilidade.</p>
             <ul class="config-items">
                 <li>
                     <span class="config-key">Title & Description</span>
@@ -271,7 +274,8 @@
         <!-- Domínio & Hosting -->
         <div class="config-section">
             <h2 class="config-title">🌐 Domínio & Hosting</h2>
-            <p class="config-description">Configurações de domínio, SSL, CDN e redirecionamentos para performance máxima.</p>
+            <p class="config-description">Configurações de domínio, SSL, CDN e redirecionamentos para performance
+                máxima.</p>
             <ul class="config-items">
                 <li>
                     <span class="config-key">Domínio Principal</span>
@@ -355,7 +359,8 @@
         <!-- UTM & Campanhas -->
         <div class="config-section">
             <h2 class="config-title">🚀 UTM & Campanhas</h2>
-            <p class="config-description">Sistema completo de tracking UTM e configurações de campanha para Facebook/Google.</p>
+            <p class="config-description">Sistema completo de tracking UTM e configurações de campanha para
+                Facebook/Google.</p>
             <ul class="config-items">
                 <li>
                     <span class="config-key">Auto UTM Tracking</span>
@@ -581,52 +586,52 @@
     <div class="config-section">
         <h2 class="config-title">📋 Estrutura JSON Simplificada</h2>
         <p class="config-description">Exemplo da estrutura JSON para persistência no localStorage/Supabase:</p>
-        
+
         <div class="json-preview">
-{
-  "id": "quiz-style-21-steps-2025",
-  "name": "Quiz de Estilo Pessoal - 21 Etapas",
-  "version": "2.0.0",
-  "category": "quiz-interativo",
-  
-  "seo": {
-    "title": "Descubra Seu Estilo Pessoal - Quiz Interativo",
-    "description": "Descubra seu estilo predominante...",
-    "keywords": ["estilo pessoal", "consultoria de imagem", ...],
-    "openGraph": { "title": "...", "image": "...", ... },
-    "structuredData": { "@type": "Quiz", ... }
-  },
-  
-  "domain": {
-    "primary": "quiz-sell-genius.com",
-    "aliases": ["quiz-descubra-seu-estilo.com", ...],
-    "ssl": { "enabled": true, "forceHTTPS": true },
-    "cdn": { "provider": "cloudflare", ... }
-  },
-  
-  "analytics": {
-    "googleAnalytics": { "measurementId": "GA4-XXXXXXXXX", ... },
-    "facebookPixel": { "pixelId": "123456789012345", ... },
-    "hotjar": { "siteId": "1234567", ... }
-  },
-  
-  "webhooks": {
-    "enabled": true,
-    "endpoints": {
-      "zapier": { "leadCapture": "https://hooks.zapier.com/...", ... }
-    },
-    "payloadStructure": { "leadCapture": { "fields": [...] } }
-  },
-  
-  "userData": {
-    "collection": {
-      "basic": { "userName": { "required": true }, ... },
-      "quiz": { "answers": { "type": "array" }, ... },
-      "session": { "startedAt": { "type": "datetime" }, ... }
-    },
-    "privacy": { "encryption": true, "anonymization": true }
-  }
-}
+            {
+            "id": "quiz-style-21-steps-2025",
+            "name": "Quiz de Estilo Pessoal - 21 Etapas",
+            "version": "2.0.0",
+            "category": "quiz-interativo",
+
+            "seo": {
+            "title": "Descubra Seu Estilo Pessoal - Quiz Interativo",
+            "description": "Descubra seu estilo predominante...",
+            "keywords": ["estilo pessoal", "consultoria de imagem", ...],
+            "openGraph": { "title": "...", "image": "...", ... },
+            "structuredData": { "@type": "Quiz", ... }
+            },
+
+            "domain": {
+            "primary": "quiz-sell-genius.com",
+            "aliases": ["quiz-descubra-seu-estilo.com", ...],
+            "ssl": { "enabled": true, "forceHTTPS": true },
+            "cdn": { "provider": "cloudflare", ... }
+            },
+
+            "analytics": {
+            "googleAnalytics": { "measurementId": "GA4-XXXXXXXXX", ... },
+            "facebookPixel": { "pixelId": "123456789012345", ... },
+            "hotjar": { "siteId": "1234567", ... }
+            },
+
+            "webhooks": {
+            "enabled": true,
+            "endpoints": {
+            "zapier": { "leadCapture": "https://hooks.zapier.com/...", ... }
+            },
+            "payloadStructure": { "leadCapture": { "fields": [...] } }
+            },
+
+            "userData": {
+            "collection": {
+            "basic": { "userName": { "required": true }, ... },
+            "quiz": { "answers": { "type": "array" }, ... },
+            "session": { "startedAt": { "type": "datetime" }, ... }
+            },
+            "privacy": { "encryption": true, "anonymization": true }
+            }
+            }
         </div>
     </div>
 
@@ -634,39 +639,43 @@
     <div class="implementation-guide">
         <h2>🚀 Guia de Implementação</h2>
         <p>Siga estes passos para configurar completamente o sistema de persistência:</p>
-        
+
         <div class="implementation-steps">
             <div class="step">
                 <h3>1. Configure Analytics</h3>
-                <p>Substitua os IDs de exemplo pelos seus IDs reais do Google Analytics, Facebook Pixel e outras ferramentas.</p>
+                <p>Substitua os IDs de exemplo pelos seus IDs reais do Google Analytics, Facebook Pixel e outras
+                    ferramentas.</p>
             </div>
-            
+
             <div class="step">
                 <h3>2. Configure Webhooks</h3>
-                <p>Configure as URLs do Zapier ou outras integrações para receber os dados dos usuários em tempo real.</p>
+                <p>Configure as URLs do Zapier ou outras integrações para receber os dados dos usuários em tempo real.
+                </p>
             </div>
-            
+
             <div class="step">
                 <h3>3. Configure Domínio</h3>
-                <p>Atualize o domínio principal e configure SSL, CDN e redirecionamentos conforme sua infraestrutura.</p>
+                <p>Atualize o domínio principal e configure SSL, CDN e redirecionamentos conforme sua infraestrutura.
+                </p>
             </div>
-            
+
             <div class="step">
                 <h3>4. Configure Dados Legais</h3>
                 <p>Adicione as informações reais da empresa (CNPJ, endereço, contatos) e URLs das políticas.</p>
             </div>
-            
+
             <div class="step">
                 <h3>5. Teste e Valide</h3>
-                <p>Use a função de validação para verificar se todas as configurações estão corretas antes do deploy.</p>
+                <p>Use a função de validação para verificar se todas as configurações estão corretas antes do deploy.
+                </p>
             </div>
-            
+
             <div class="step">
                 <h3>6. Monitore Performance</h3>
                 <p>Ative o monitoramento de Web Vitals e configure alertas para métricas de performance.</p>
             </div>
         </div>
-        
+
         <div style="text-align: center; margin-top: 30px;">
             <a href="http://localhost:5174/editor" class="btn">🎯 Testar no Editor</a>
             <a href="http://localhost:5174/" class="btn btn-secondary">🏠 Ver Quiz</a>
@@ -686,11 +695,11 @@
     <script>
         console.log('🔧 Configuração JSON Completa Carregada!');
         console.log('📊 Estrutura disponível para validação e implementação');
-        
+
         // Exemplo de como acessar as configurações
         console.log('📝 Para implementar, importe o arquivo:');
         console.log('import { COMPLETE_FUNNEL_CONFIG_EXAMPLE } from "./config/funnelConfigValidation.ts"');
-        
+
         // Simular validação
         const mockValidation = {
             isValid: true,
@@ -701,9 +710,9 @@
                 'Configure dados da empresa (CNPJ)'
             ]
         };
-        
+
         console.log('🧪 Resultado da validação:', mockValidation);
-        
+
         // Event tracking exemplo
         function trackConfigurationView() {
             if (typeof gtag !== 'undefined') {
@@ -714,8 +723,9 @@
             }
             console.log('📈 Evento de visualização registrado');
         }
-        
+
         trackConfigurationView();
     </script>
 </body>
+
 </html>

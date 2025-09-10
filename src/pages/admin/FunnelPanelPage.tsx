@@ -380,6 +380,20 @@ const FunnelPanelPage: React.FC = () => {
   };
 
   const finalTemplates: UnifiedTemplate[] = React.useMemo(() => {
+    // ⚠️ MODO DESENVOLVIMENTO: Mostrando apenas quiz21StepsComplete
+    // Para desenvolvimento e validação das configurações JSON
+    const developmentMode = true;
+
+    if (developmentMode) {
+      // Filtra para mostrar apenas o quiz21StepsComplete
+      const unifiedTemplates = getUnifiedTemplates({ sortBy: sort === 'name' ? 'name' : 'usageCount' });
+      const filteredTemplates = unifiedTemplates.filter(template =>
+        template.id === 'quiz-estilo-21-steps' ||
+        template.name.toLowerCase().includes('quiz')
+      );
+      return filteredTemplates.map(normalizeTemplate);
+    }
+
     if (funnelTemplates && funnelTemplates.length) {
       let list = [...funnelTemplates];
       if (sort === 'name') {

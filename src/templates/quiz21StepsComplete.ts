@@ -33,7 +33,7 @@ export const FUNNEL_PERSISTENCE_SCHEMA = {
   version: '2.0.0',
   category: 'quiz',
   templateType: 'quiz-complete',
-  
+
   // Configurações de persistência
   persistence: {
     enabled: true,
@@ -43,7 +43,7 @@ export const FUNNEL_PERSISTENCE_SCHEMA = {
     compression: true,
     encryption: false,
     backupEnabled: true,
-    
+
     // Estrutura de dados para armazenamento
     dataStructure: {
       funnel_data: {
@@ -55,13 +55,13 @@ export const FUNNEL_PERSISTENCE_SCHEMA = {
         is_published: 'boolean',
         created_at: 'timestamp',
         updated_at: 'timestamp',
-        
+
         // Dados do funil
         settings: 'FunnelSettings',
         steps: 'FunnelStep[]',
         blocks: 'Block[]',
         metadata: 'FunnelMetadata',
-        
+
         // Dados da sessão do usuário
         user_session: {
           userName: 'string',
@@ -71,7 +71,7 @@ export const FUNNEL_PERSISTENCE_SCHEMA = {
           completedAt: 'timestamp?',
           currentStep: 'number',
           progress: 'number',
-          
+
           // Respostas do quiz
           quiz_answers: {
             question_id: 'string',
@@ -79,14 +79,14 @@ export const FUNNEL_PERSISTENCE_SCHEMA = {
             scores: 'Record<string, number>',
             timestamp: 'timestamp'
           },
-          
+
           // Respostas estratégicas
           strategic_answers: {
             question_id: 'string',
             answer: 'string',
             timestamp: 'timestamp'
           },
-          
+
           // Resultado final
           result: {
             primary_style: 'string',
@@ -105,7 +105,7 @@ export const FUNNEL_PERSISTENCE_SCHEMA = {
     enabled: true,
     realTime: true,
     trackingId: 'GA4-XXXXXXXXX', // Para ser configurado
-    
+
     // Eventos personalizados
     events: [
       'funnel_started',
@@ -118,7 +118,7 @@ export const FUNNEL_PERSISTENCE_SCHEMA = {
       'user_drop_off',
       'session_timeout'
     ],
-    
+
     // Métricas de performance
     performance: {
       trackPageLoad: true,
@@ -127,7 +127,7 @@ export const FUNNEL_PERSISTENCE_SCHEMA = {
       trackTimeOnStep: true,
       trackCompletionRate: true
     },
-    
+
     // Configurações de heatmap e session recording
     heatmap: {
       enabled: true,
@@ -146,28 +146,28 @@ export const QUIZ_GLOBAL_CONFIG = {
     title: 'Descubra Seu Estilo Pessoal - Quiz Interativo | Gisele Galvão',
     description: 'Descubra seu estilo predominante através do nosso quiz personalizado e transforme seu guarda-roupa com confiança. Consultoria de imagem profissional.',
     keywords: 'estilo pessoal, consultoria de imagem, quiz de estilo, moda feminina, guarda-roupa, personal stylist, Gisele Galvão, quiz interativo, descobrir estilo, transformação visual',
-    
+
     // Open Graph otimizado para redes sociais
     ogTitle: 'Descubra Seu Estilo Pessoal - Quiz Interativo',
     ogDescription: 'Faça nosso quiz personalizado e descubra qual é o seu estilo predominante. Transforme seu guarda-roupa e se vista com mais confiança.',
     ogImage: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/og-image-style-quiz-gisele.webp',
     ogType: 'website',
     ogLocale: 'pt_BR',
-    
+
     // Twitter Cards
     twitterCard: 'summary_large_image',
     twitterTitle: 'Descubra Seu Estilo Pessoal - Quiz Interativo',
     twitterDescription: 'Faça nosso quiz personalizado e descubra qual é o seu estilo predominante.',
     twitterImage: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/og-image-style-quiz-gisele.webp',
     twitterSite: '@giselegaalvao',
-    
+
     // Meta tags técnicas
     favicon: '/favicon.ico',
     canonicalUrl: 'https://quiz-sell-genius.com/',
     robots: 'index, follow',
     viewport: 'width=device-width, initial-scale=1.0',
     themeColor: '#B89B7A',
-    
+
     // Structured Data (JSON-LD) para SEO
     structuredData: {
       '@context': 'https://schema.org',
@@ -185,7 +185,7 @@ export const QUIZ_GLOBAL_CONFIG = {
         url: 'https://giselegaalvao.com'
       }
     },
-    
+
     customMetaTags: `
       <meta name="author" content="Gisele Galvão">
       <meta name="robots" content="index, follow">
@@ -211,7 +211,7 @@ export const QUIZ_GLOBAL_CONFIG = {
     ],
     ssl: true,
     enforceHTTPS: true,
-    
+
     // Configurações de CDN
     cdn: {
       enabled: true,
@@ -223,7 +223,7 @@ export const QUIZ_GLOBAL_CONFIG = {
         api: '5m'
       }
     },
-    
+
     // Redirecionamentos
     redirects: `
       /quiz -> /
@@ -233,7 +233,7 @@ export const QUIZ_GLOBAL_CONFIG = {
       /style-quiz -> /
       /consultoria -> /resultado
     `,
-    
+
     // Configurações de CORS
     cors: {
       allowedOrigins: ['https://giselegaalvao.com', 'https://quiz-sell-genius.com'],
@@ -250,7 +250,7 @@ export const QUIZ_GLOBAL_CONFIG = {
       enhanced: true,
       demographics: true,
       advertising: true,
-      
+
       // Eventos personalizados
       customEvents: [
         'quiz_started',
@@ -260,12 +260,12 @@ export const QUIZ_GLOBAL_CONFIG = {
         'conversion'
       ]
     },
-    
+
     // Facebook Pixel
     facebookPixel: {
       pixelId: '123456789012345', // Para ser configurado
       enabled: true,
-      
+
       // Eventos do Facebook
       events: [
         'PageView',
@@ -274,7 +274,7 @@ export const QUIZ_GLOBAL_CONFIG = {
         'Lead',
         'Purchase'
       ],
-      
+
       // Configurações avançadas
       advanced: {
         automaticMatching: true,
@@ -282,13 +282,13 @@ export const QUIZ_GLOBAL_CONFIG = {
         serverSideEvents: false
       }
     },
-    
+
     // Google Tag Manager
     googleTagManager: {
       containerId: 'GTM-XXXXXXX', // Para ser configurado
       enabled: true,
       dataLayer: 'dataLayer',
-      
+
       // Configurações personalizadas
       custom: {
         trackFormSubmissions: true,
@@ -297,16 +297,16 @@ export const QUIZ_GLOBAL_CONFIG = {
         trackFileDownloads: true
       }
     },
-    
+
     // Hotjar para heatmaps
     hotjar: {
       siteId: '1234567', // Para ser configurado
       enabled: true,
-      
+
       // Configurações de privacy
       respectDNT: true,
       cookieless: false,
-      
+
       // Configurações de recording
       sessionRecording: {
         enabled: true,
@@ -314,7 +314,7 @@ export const QUIZ_GLOBAL_CONFIG = {
         recordConsoleErrors: true
       }
     },
-    
+
     // Scripts personalizados
     customScripts: `
       <!-- Criativo Ads Tracking -->
@@ -350,7 +350,7 @@ export const QUIZ_GLOBAL_CONFIG = {
         };
       </script>
     `,
-    
+
     enableTracking: true,
     privacyCompliant: true,
     gdprCompliant: true
@@ -363,14 +363,14 @@ export const QUIZ_GLOBAL_CONFIG = {
     defaultCampaign: 'quiz_style_abtest_2025',
     autoUTM: true,
     trackingPrefix: 'qsq',
-    
+
     // Configurações de attribution
     attribution: {
       window: 30, // dias
       model: 'last_click',
       crossDevice: true
     },
-    
+
     // Parâmetros UTM personalizados
     customParameters: [
       'creative_id',
@@ -378,15 +378,15 @@ export const QUIZ_GLOBAL_CONFIG = {
       'placement',
       'audience'
     ],
-    
+
     // Referência ao arquivo UTM existente
     utmConfigPath: '/src/config/utmConfig.js',
-    
+
     // Configurações de A/B testing
     abTesting: {
       enabled: true,
       platform: 'facebook',
-      
+
       variants: [
         {
           id: 'variant_a',
@@ -412,7 +412,7 @@ export const QUIZ_GLOBAL_CONFIG = {
     timeout: 10000, // 10 segundos
     retryAttempts: 3,
     retryDelay: 1000, // 1 segundo
-    
+
     // URLs de webhook por evento
     endpoints: {
       leadCapture: 'https://hooks.zapier.com/hooks/catch/123456/lead-capture/',
@@ -422,7 +422,7 @@ export const QUIZ_GLOBAL_CONFIG = {
       stepCompleted: 'https://hooks.zapier.com/hooks/catch/123456/step-completed/',
       userDropOff: 'https://hooks.zapier.com/hooks/catch/123456/user-drop-off/'
     },
-    
+
     // Configurações específicas para cada evento
     events: {
       leadCapture: {
@@ -431,10 +431,10 @@ export const QUIZ_GLOBAL_CONFIG = {
         headers: { 'Content-Type': 'application/json' },
         includeMetadata: true
       },
-      
+
       quizComplete: {
         fields: [
-          'userName', 'email', 'answers', 'score', 'resultStyle', 
+          'userName', 'email', 'answers', 'score', 'resultStyle',
           'secondaryStyles', 'recommendations', 'timestamp', 'sessionDuration'
         ],
         method: 'POST',
@@ -442,7 +442,7 @@ export const QUIZ_GLOBAL_CONFIG = {
         includeUserAgent: true,
         includeReferrer: true
       },
-      
+
       stepCompleted: {
         fields: ['stepId', 'stepName', 'timeSpent', 'answers', 'timestamp'],
         method: 'POST',
@@ -450,7 +450,7 @@ export const QUIZ_GLOBAL_CONFIG = {
         batchSize: 10
       }
     },
-    
+
     // Integrações específicas
     integrations: {
       // Zapier
@@ -459,7 +459,7 @@ export const QUIZ_GLOBAL_CONFIG = {
         webhookUrl: 'https://hooks.zapier.com/hooks/catch/123456/main/',
         fields: ['all']
       },
-      
+
       // ActiveCampaign
       activeCampaign: {
         enabled: false,
@@ -468,7 +468,7 @@ export const QUIZ_GLOBAL_CONFIG = {
         listId: '', // Para ser configurado
         tags: ['quiz-lead', 'style-interested']
       },
-      
+
       // Mailchimp
       mailchimp: {
         enabled: false,
@@ -476,7 +476,7 @@ export const QUIZ_GLOBAL_CONFIG = {
         audienceId: '', // Para ser configurado
         tags: ['quiz-completed', 'style-quiz']
       },
-      
+
       // RD Station
       rdStation: {
         enabled: false,
@@ -496,14 +496,14 @@ export const QUIZ_GLOBAL_CONFIG = {
       success: '#10B981',
       warning: '#F59E0B',
       error: '#EF4444',
-      
+
       // Gradientes
       gradients: {
         primary: 'linear-gradient(135deg, #B89B7A, #D4C2A8)',
         accent: 'linear-gradient(135deg, #3B82F6, #60A5FA)',
         warm: 'linear-gradient(135deg, #B89B7A, #432818)'
       },
-      
+
       // Backgrounds
       backgrounds: {
         primary: '#FAF9F7',
@@ -512,12 +512,12 @@ export const QUIZ_GLOBAL_CONFIG = {
         border: '#E6DDD4'
       }
     },
-    
+
     // Tipografia
     typography: {
       fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
       headingFont: "'Playfair Display', serif",
-      
+
       // Tamanhos
       sizes: {
         xs: '0.75rem',
@@ -529,7 +529,7 @@ export const QUIZ_GLOBAL_CONFIG = {
         '3xl': '1.875rem',
         '4xl': '2.25rem'
       },
-      
+
       // Pesos
       weights: {
         light: '300',
@@ -539,25 +539,25 @@ export const QUIZ_GLOBAL_CONFIG = {
         bold: '700'
       }
     },
-    
+
     // Logos e imagens
     assets: {
       logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
       logoAlt: 'Gisele Galvão - Consultoria de Imagem',
       faviconUrl: '/favicon.ico',
-      
+
       // Imagens padrão
       defaultImages: {
         placeholder: 'https://via.placeholder.com/400x300/B89B7A/FFFFFF?text=Carregando...',
         error: 'https://via.placeholder.com/400x300/EF4444/FFFFFF?text=Erro+ao+carregar'
       }
     },
-    
+
     // Layout e espaçamento
     layout: {
       maxWidth: '1200px',
       containerPadding: '1rem',
-      
+
       // Breakpoints responsivos
       breakpoints: {
         sm: '640px',
@@ -565,7 +565,7 @@ export const QUIZ_GLOBAL_CONFIG = {
         lg: '1024px',
         xl: '1280px'
       },
-      
+
       // Espaçamentos
       spacing: {
         xs: '0.25rem',
@@ -576,7 +576,7 @@ export const QUIZ_GLOBAL_CONFIG = {
         '2xl': '3rem'
       }
     },
-    
+
     // CSS customizado
     customCSS: `
       :root {
@@ -621,7 +621,7 @@ export const QUIZ_GLOBAL_CONFIG = {
     privacyPolicyUrl: '/privacy',
     termsOfServiceUrl: '/terms',
     cookiePolicyUrl: '/cookies',
-    
+
     // Configurações de cookies
     cookies: {
       showBanner: true,
@@ -629,7 +629,7 @@ export const QUIZ_GLOBAL_CONFIG = {
       acceptText: 'Aceitar todos',
       rejectText: 'Recusar opcionais',
       settingsText: 'Configurar',
-      
+
       // Categorias de cookies
       categories: {
         necessary: {
@@ -649,17 +649,17 @@ export const QUIZ_GLOBAL_CONFIG = {
         }
       }
     },
-    
+
     // Conformidade GDPR/LGPD
     dataProtection: {
       gdprCompliant: true,
       lgpdCompliant: true,
-      
+
       // Direitos do usuário
       userRights: [
         'access', 'rectification', 'erasure', 'portability', 'restriction', 'objection'
       ],
-      
+
       // Configurações de consentimento
       consent: {
         explicit: true,
@@ -668,7 +668,7 @@ export const QUIZ_GLOBAL_CONFIG = {
         recordKeeping: true
       }
     },
-    
+
     // Informações da empresa
     companyInfo: {
       name: 'Gisele Galvão - Consultoria de Imagem',
@@ -687,7 +687,7 @@ export const QUIZ_GLOBAL_CONFIG = {
         website: 'https://giselegaalvao.com'
       }
     },
-    
+
     // Disclaimers
     disclaimers: {
       quiz: 'Os resultados deste quiz são baseados em suas respostas e têm caráter orientativo.',
@@ -699,7 +699,7 @@ export const QUIZ_GLOBAL_CONFIG = {
   // A/B Testing Configuration - Testes A/B avançados
   abTesting: {
     enabled: true,
-    
+
     // Configurações globais
     settings: {
       cookieDuration: 30, // dias
@@ -707,7 +707,7 @@ export const QUIZ_GLOBAL_CONFIG = {
       statisticalSignificance: 0.95,
       minimumSampleSize: 100
     },
-    
+
     // Testes ativos
     activeTests: [
       {
@@ -715,7 +715,7 @@ export const QUIZ_GLOBAL_CONFIG = {
         name: 'Homepage Quiz vs Landing',
         status: 'active',
         trafficPercentage: 100,
-        
+
         variants: [
           {
             id: 'control',
@@ -732,7 +732,7 @@ export const QUIZ_GLOBAL_CONFIG = {
             description: 'Landing page com apresentação + quiz'
           }
         ],
-        
+
         goals: [
           {
             name: 'quiz_completion',
@@ -756,7 +756,7 @@ export const QUIZ_GLOBAL_CONFIG = {
       enableBrowserCache: true,
       enableServiceWorker: true,
       cacheStrategy: 'stale-while-revalidate',
-      
+
       // TTL por tipo de resource
       cacheTTL: {
         static: 2592000, // 30 dias
@@ -765,27 +765,27 @@ export const QUIZ_GLOBAL_CONFIG = {
         html: 3600       // 1 hora
       }
     },
-    
+
     // Compressão
     compression: {
       enableGzip: true,
       enableBrotli: true,
       compressionLevel: 6
     },
-    
+
     // Otimização de imagens
     images: {
       enableLazyLoading: true,
       enableWebP: true,
       enableAVIF: true,
-      
+
       // Formatos por device
       responsive: {
         mobile: { width: 375, format: 'webp' },
         tablet: { width: 768, format: 'webp' },
         desktop: { width: 1200, format: 'webp' }
       },
-      
+
       // CDN settings
       cdn: {
         provider: 'cloudinary',
@@ -793,14 +793,14 @@ export const QUIZ_GLOBAL_CONFIG = {
         transformations: 'f_auto,q_auto'
       }
     },
-    
+
     // Preloading crítico
     criticalResources: [
       'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
       'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap',
       'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap'
     ],
-    
+
     // Configurações de loading
     loading: {
       showSkeletons: true,
@@ -808,12 +808,12 @@ export const QUIZ_GLOBAL_CONFIG = {
       enablePrefetch: true,
       enablePreconnect: true
     },
-    
+
     // Monitoramento de performance
     monitoring: {
       enableWebVitals: true,
       reportToGA: true,
-      
+
       // Thresholds de alerta
       thresholds: {
         LCP: 2500,  // Largest Contentful Paint
@@ -832,7 +832,7 @@ export const QUIZ_GLOBAL_CONFIG = {
       contentTypeOptions: 'nosniff',
       referrerPolicy: 'strict-origin-when-cross-origin'
     },
-    
+
     // Rate limiting
     rateLimiting: {
       enabled: true,
@@ -840,7 +840,7 @@ export const QUIZ_GLOBAL_CONFIG = {
       window: 3600000, // 1 hora
       skipSuccessfulRequests: true
     },
-    
+
     // Validation
     inputValidation: {
       enableXSSProtection: true,
