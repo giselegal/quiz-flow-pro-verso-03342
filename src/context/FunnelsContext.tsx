@@ -646,7 +646,7 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
           description: funnelData.description || '',
           is_published: funnelData.isPublished || false,
           // ✅ CORREÇÃO: Incluir context nos settings para compatibilidade com listagem
-          settings: { 
+          settings: {
             theme: funnelData.theme || 'default',
             context: 'MY_FUNNELS' // Context para "Meus Funis"
           },
