@@ -2,11 +2,16 @@ import { Suspense, lazy } from 'react';
 import { Route, Router, Switch } from 'wouter';
 import { ThemeProvider } from './components/theme-provider';
 import { AuthProvider } from './context/AuthContext';
+import { ProtectedRoute } from './components/auth/ProtectedRoute';
 
 // Lazy loading apenas das páginas essenciais
 const Home = lazy(() => import('./pages/Home'));
 const QuizModularPage = lazy(() => import('./pages/QuizModularPage'));
 const ConfigurationTest = lazy(() => import('./pages/ConfigurationTest'));
+
+// Admin pages - lazy loaded
+const DashboardPage = lazy(() => import('./pages/admin/DashboardPage'));
+const MainEditorUnified = lazy(() => import('./pages/MainEditorUnified'));
 
 // Loading component simples
 const PageLoading = () => (
@@ -38,6 +43,30 @@ function AppSimple() {
                             <Route path="/quiz" component={() =>
                                 <Suspense fallback={<PageLoading />}>
                                     <QuizModularPage />
+                                </Suspense>
+                            } />
+
+                            {/* Editor principal */}
+                            <Route path="/editor" component={() =>
+                                <Suspense fallback={<PageLoading />}>
+                                    <MainEditorUnified />
+                                </Suspense>
+                            } />
+                            <Route path="/editor/:funnelId" component={() =>
+                                <Suspense fallback={<PageLoading />}>
+                                    <MainEditorUnified />
+                                </Suspense>
+                            } />
+
+                            {/* Admin Dashboard - todas as rotas /admin/* */}
+                            <ProtectedRoute path="/admin" component={() =>
+                                <Suspense fallback={<PageLoading />}>
+                                    <DashboardPage />
+                                </Suspense>
+                            } />
+                            <ProtectedRoute path="/admin/*" component={() =>
+                                <Suspense fallback={<PageLoading />}>
+                                    <DashboardPage />
                                 </Suspense>
                             } />
 
