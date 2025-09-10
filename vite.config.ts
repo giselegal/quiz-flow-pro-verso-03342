@@ -14,9 +14,10 @@ export default defineConfig({
   },
   server: {
     host: '0.0.0.0',
-    port: 8080,
+    port: 5173,
     cors: {
       origin: [
+        'http://localhost:5173',
         'http://localhost:8080',
         'https://lovable.dev',
         'https://api.lovable.dev',
@@ -51,6 +52,7 @@ export default defineConfig({
     chunkSizeWarningLimit: 2000, // Allow larger single bundle
     copyPublicDir: true,
     rollupOptions: {
+      input: './public/index.html',
       output: {
         // FORÇA BUNDLE ÚNICO para contornar problemas Lovable
         manualChunks: undefined,
