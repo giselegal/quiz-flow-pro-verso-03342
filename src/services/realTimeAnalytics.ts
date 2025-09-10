@@ -251,32 +251,26 @@ class RealTimeAnalytics {
         if (!this.isEnabled) return;
 
         try {
-            // Tentar usar quiz_events primeiro, fallback para quiz_analytics
-            try {
-                await supabase
-                    .from('quiz_events')
-                    .insert([event]);
-            } catch (error) {
-                console.log('📊 Analytics: Fallback to quiz_analytics table');
-                // Adaptar para tabela quiz_analytics existente
-                const adaptedEvent = {
-                    session_id: this.sessionId,
-                    event_type: event.event_type,
+            // Use quiz_analytics table with correct schema
+            const adaptedEvent = {
+                funnel_id: 'quiz-main', // Default funnel ID
+                event_type: event.event_type,
+                event_data: {
                     step_number: event.step_number || 0,
-                    metadata: {
-                        ...event.metadata,
-                        option_selected: event.option_selected,
-                        time_spent: event.time_spent,
-                        user_data: event.user_data,
-                        quiz_data: event.quiz_data,
-                    },
-                    created_at: event.timestamp,
-                };
+                    option_selected: event.option_selected,
+                    time_spent: event.time_spent,
+                    user_data: event.user_data,
+                    quiz_data: event.quiz_data,
+                    ...event.metadata,
+                },
+                session_id: this.sessionId,
+                user_id: null, // Will be set if user is authenticated
+                timestamp: event.timestamp,
+            };
 
-                await supabase
-                    .from('quiz_analytics')
-                    .insert([adaptedEvent]);
-            }
+            await supabase
+                .from('quiz_analytics')
+                .insert([adaptedEvent]);
         } catch (error) {
             console.error('❌ Analytics: Failed to save event:', error);
         }
@@ -307,9 +301,9 @@ class RealTimeAnalytics {
                 .select('*')
                 .order('started_at', { ascending: false });
 
-            // Buscar eventos
+            // Buscar eventos do quiz_analytics
             const { data: events } = await supabase
-                .from('quiz_events')
+                .from('quiz_analytics')
                 .select('*')
                 .order('timestamp', { ascending: false });
 
@@ -322,16 +316,21 @@ class RealTimeAnalytics {
             const completedSessions = sessions.filter(s => s.completed_at).length;
             const conversionRate = totalSessions > 0 ? (completedSessions / totalSessions) * 100 : 0;
 
-            // Tempo médio de conclusão
-            const completedSessionsWithTime = sessions.filter(s => s.completed_at && s.time_spent_total);
+            // Tempo médio de conclusão - usar dados das sessions existentes
+            const completedSessionsWithTime = sessions.filter(s => s.completed_at && s.started_at);
             const averageCompletionTime = completedSessionsWithTime.length > 0
-                ? Math.round(completedSessionsWithTime.reduce((acc, s) => acc + s.time_spent_total, 0) / completedSessionsWithTime.length)
+                ? Math.round(completedSessionsWithTime.reduce((acc, s) => {
+                    const startTime = new Date(s.started_at).getTime();
+                    const endTime = new Date(s.completed_at!).getTime();
+                    return acc + (endTime - startTime);
+                }, 0) / completedSessionsWithTime.length / 1000) // Convert to seconds
                 : 0;
 
-            // Estilos populares
+            // Estilos populares - usar metadata das sessões
             const styleResults = sessions
-                .filter(s => s.final_result?.style_category)
-                .map(s => s.final_result.style_category);
+                .filter(s => s.metadata && typeof s.metadata === 'object' && 'final_result' in s.metadata)
+                .map(s => (s.metadata as any).final_result?.style_category)
+                .filter(Boolean);
 
             const styleCounts = styleResults.reduce((acc, style) => {
                 acc[style] = (acc[style] || 0) + 1;
@@ -341,16 +340,19 @@ class RealTimeAnalytics {
             const popularStyles = Object.entries(styleCounts)
                 .map(([style, count]) => ({
                     style,
-                    count,
-                    percentage: Math.round((count / styleResults.length) * 100),
+                    count: count as number,
+                    percentage: Math.round(((count as number) / styleResults.length) * 100),
                 }))
-                .sort((a, b) => b.count - a.count)
+                .sort((a, b) => (b.count as number) - (a.count as number))
                 .slice(0, 5);
 
             // Taxa de conclusão por etapa
             const stepCompletionRates = [];
             for (let step = 1; step <= 21; step++) {
-                const stepEvents = events.filter(e => e.step_number === step && e.event_type === 'step_viewed');
+                const stepEvents = events?.filter(e => {
+                    const eventData = e.event_data as any;
+                    return eventData?.step_number === step && e.event_type === 'step_viewed';
+                }) || [];
                 const completionRate = totalSessions > 0 ? (stepEvents.length / totalSessions) * 100 : 0;
                 stepCompletionRates.push({ step, completion_rate: Math.round(completionRate) });
             }
@@ -364,7 +366,9 @@ class RealTimeAnalytics {
 
             // Breakdown por dispositivo
             const deviceCounts = sessions.reduce((acc, s) => {
-                const device = s.device_info?.type || 'unknown';
+                const deviceInfo = s.metadata && typeof s.metadata === 'object' && 'device_info' in s.metadata
+                    ? (s.metadata as any).device_info : null;
+                const device = deviceInfo?.type || 'unknown';
                 acc[device] = (acc[device] || 0) + 1;
                 return acc;
             }, {} as Record<string, number>);
@@ -378,8 +382,8 @@ class RealTimeAnalytics {
 
             // Usuários ativos em tempo real (últimos 5 minutos)
             const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
-            const recentEvents = events.filter(e => e.timestamp > fiveMinutesAgo);
-            const activeUsers = new Set(recentEvents.map(e => e.user_session_id)).size;
+            const recentEvents = events?.filter(e => e.timestamp > fiveMinutesAgo) || [];
+            const activeUsers = new Set(recentEvents.map(e => e.session_id)).size;
 
             return {
                 total_sessions: totalSessions,

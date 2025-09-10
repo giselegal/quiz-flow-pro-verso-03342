@@ -32,7 +32,7 @@ const LazyAnalyticsPage = lazy(() => import('@/pages/admin/AnalyticsPage')); // 
 const LazyOverviewPage = lazy(() => import('@/pages/admin/OverviewPage')); // 27.5kB
 
 // Quiz pages
-const LazyQuizPage = lazy(() => import('@/pages/QuizPage')); // 4.1kB
+const LazyQuizPage = lazy(() => import('@/pages/QuizModularPage')); // 4.1kB
 const LazyStepsShowcase = lazy(() => import('@/pages/StepsShowcase')); // 4.3kB
 
 // 🎨 SKELETONS ESPECÍFICOS POR TIPO DE PÁGINA
@@ -269,7 +269,7 @@ export const preloadCriticalPages = () => {
     const preloadTimer = setTimeout(() => {
         import('@/pages/admin/DashboardPage');
         import('@/pages/MainEditorUnified');
-        import('@/pages/QuizPage');
+        import('@/pages/QuizModularPage');
     }, 3000);
 
     return () => clearTimeout(preloadTimer);
