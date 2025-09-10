@@ -1,3 +1,5 @@
+import { cloneFunnelTemplate } from '@/utils/cloneFunnel';
+import { funnelTemplates } from '@/config/funnelTemplates';
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -117,6 +119,41 @@ const FunnelPanelPage: React.FC = () => {
         customTemplateService.recordTemplateUsage(templateId, 'custom');
       }
 
+      // ✅ CORREÇÃO: Buscar template base para clonagem do registry unificado
+      const unifiedTemplates = getUnifiedTemplates();
+      const baseTemplate = unifiedTemplates.find(t => t.id === templateId);
+      
+      if (baseTemplate && baseTemplate.blocks) {
+        // 🚀 Usar cloneFunnelTemplate para garantir isolamento
+        const templateData = {
+          id: baseTemplate.id,
+          name: baseTemplate.name,
+          description: baseTemplate.description || '',
+          category: baseTemplate.category || 'general',
+          preview: baseTemplate.thumbnailUrl || '',
+          blocks: baseTemplate.blocks || []
+        };
+        
+        const clonedInstance = cloneFunnelTemplate(templateData, `${baseTemplate.name} - Cópia`);
+        
+        // Salvar instância clonada em "meus funis"
+        const newFunnel = {
+          id: clonedInstance.id,
+          name: clonedInstance.name,
+          status: 'draft' as const,
+          updatedAt: clonedInstance.createdAt
+        };
+
+        funnelLocalStore.upsert(newFunnel);
+        console.log('✅ Funil clonado criado:', clonedInstance.id);
+        console.log('📦 Blocos independentes:', clonedInstance.blocks.length);
+        
+        // Navegar para editor com instância clonada
+        setLocation(`/editor?funnel=${encodeURIComponent(clonedInstance.id)}&template=${templateId}`);
+        return;
+      }
+
+      // Fallback para outros templates
       const now = new Date().toISOString();
       const newId = `${templateId}-${Date.now()}`;
       const template = isCustom
