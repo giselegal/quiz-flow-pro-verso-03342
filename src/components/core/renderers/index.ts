@@ -1,5 +1,5 @@
 /**
- * 🎯 CORE RENDERERS - Sistema centralizado de renderização
+ * 🎯 CORE RENDERERS - Sistema centralizado de renderização (Phase 3.2 Updated)
  * 
  * Exports principais para uso no quiz unificado
  */
@@ -7,13 +7,15 @@
 export { default as UniversalBlockRenderer } from '@/components/editor/blocks/UniversalBlockRenderer';
 export type { UniversalBlockRendererProps } from '@/components/editor/blocks/UniversalBlockRenderer';
 
-export { default as ConsolidatedBlockRenderer } from '@/components/unified/ConsolidatedBlockRenderer';
-export type { ConsolidatedBlockRendererProps } from '@/components/unified/ConsolidatedBlockRenderer';
+// ✅ Legacy compatibility - ConsolidatedBlockRenderer now redirects to UniversalBlockRenderer
+import UniversalBlockRenderer from '@/components/editor/blocks/UniversalBlockRenderer';
+export { UniversalBlockRenderer as ConsolidatedBlockRenderer };
+export type { UniversalBlockRendererProps as ConsolidatedBlockRendererProps } from '@/components/editor/blocks/UniversalBlockRenderer';
 
 export { default as VisualBlockFallback } from './VisualBlockFallback';
 
 // Re-export optimized registry utilities
-export { 
+export {
   getOptimizedBlockComponent,
   hasOptimizedBlockComponent,
   getAvailableOptimizedComponents,

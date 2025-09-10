@@ -76,7 +76,7 @@ class IntelligentPreloader {
         const preloadMap = {
             '[href="/admin/metrics"]': () => import('@/pages/admin/MetricsPage'),
             '[href="/admin/participants"]': () => import('@/pages/admin/ParticipantsPage'),
-            '[href="/editor"]': () => import('@/pages/MainEditor'),
+            '[href="/editor"]': () => import('@/pages/MainEditorUnified'),
             '[href*="quiz"]': () => import('@/pages/QuizModularPage'),
         };
 
