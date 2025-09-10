@@ -231,6 +231,7 @@ export const applyTemplate = (template: FunnelTemplate, generateId: () => string
   return template.blocks.map(blockData => ({
     id: generateId(),
     type: blockData.type,
-    properties: { ...blockData.properties },
+    // ✅ CORRIGIDO: Deep clone para evitar referências compartilhadas
+    properties: JSON.parse(JSON.stringify(blockData.properties || {})),
   }));
 };
