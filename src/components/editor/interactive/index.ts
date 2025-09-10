@@ -10,7 +10,7 @@
  */
 
 // Componentes principais
-export { InteractiveBlockRenderer } from './InteractiveBlockRenderer';
+// InteractiveBlockRenderer movido para cleanup-backup-renderers
 export { InteractiveQuizCanvas } from './InteractiveQuizCanvas';
 
 // Navegação e controles
