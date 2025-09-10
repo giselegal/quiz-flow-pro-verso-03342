@@ -14,8 +14,20 @@ const server = createServer(app);
 app.use(cors());
 app.use(express.json());
 
-// Servir arquivos estáticos do build
-app.use(express.static(path.join(__dirname, '../dist')));
+// Servir arquivos estáticos do build com tipos MIME corretos
+app.use(express.static(path.join(__dirname, '../dist'), {
+  setHeaders: (res, filePath) => {
+    if (filePath.endsWith('.css')) {
+      res.setHeader('Content-Type', 'text/css');
+    }
+    if (filePath.endsWith('.js') || filePath.endsWith('.mjs')) {
+      res.setHeader('Content-Type', 'application/javascript');
+    }
+    if (filePath.endsWith('.json')) {
+      res.setHeader('Content-Type', 'application/json');
+    }
+  }
+}));
 
 // Health check endpoint
 app.get('/health', (req, res) => {
