@@ -127,9 +127,9 @@ export function AdminSidebar() {
         href={item.href}
         className={cn(
           'flex flex-col gap-1 px-4 py-3 rounded-lg transition-colors relative',
-          isActive 
-            ? isAdvanced 
-              ? 'bg-gradient-to-r from-[#B89B7A] to-[#A08968] text-white shadow-md' 
+          isActive
+            ? isAdvanced
+              ? 'bg-gradient-to-r from-[#B89B7A] to-[#A08968] text-white shadow-md'
               : 'bg-[#B89B7A] text-white'
             : 'text-[#432818] hover:bg-[#F5F2E9]'
         )}
@@ -138,7 +138,7 @@ export function AdminSidebar() {
           <Icon className="w-5 h-5" />
           <span className="font-medium">{item.title}</span>
           {(item.badge || item.isAdvanced) && (
-            <Badge 
+            <Badge
               variant={item.isAdvanced ? "default" : "secondary"}
               className={cn(
                 "text-xs px-2 py-0.5 ml-auto",
@@ -151,7 +151,7 @@ export function AdminSidebar() {
         </div>
         {item.description && (
           <span className={cn(
-            'text-xs ml-8', 
+            'text-xs ml-8',
             isActive ? 'text-white/70' : 'text-[#8F7A6A]'
           )}>
             {item.description}
@@ -197,13 +197,13 @@ export function AdminSidebar() {
       <nav className="px-4 space-y-6">
         {/* Dashboard Principal */}
         {renderSection('Dashboard', dashboardItems, false, Home)}
-        
+
         {/* Core Business */}
         {renderSection('Core Business', coreBusinessItems, false, Target)}
-        
+
         {/* Analytics & IA */}
         {renderSection('Analytics & IA', analyticsItems, true, Brain)}
-        
+
         {/* Configuração */}
         {renderSection('Configuração', configItems, false, Settings)}
       </nav>
