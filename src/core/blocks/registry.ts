@@ -61,6 +61,29 @@ const minimalRegistry: Record<string, BlockDefinition> = {
         },
         propsSchema: [],
     },
+    'quiz-intro-header': {
+        type: 'quiz-intro-header',
+        title: 'Header do Quiz',
+        category: 'Estrutura',
+        defaultProps: {
+            title: 'Descubra seu estilo',
+            subtitle: 'Responda algumas perguntas e veja o resultado',
+            showLogo: true,
+            logoUrl: '',
+            textAlign: 'center'
+        },
+        propsSchema: [
+            prop({ key: 'title', kind: 'text', label: 'Título', category: 'content', default: 'Descubra seu estilo' }),
+            prop({ key: 'subtitle', kind: 'textarea', label: 'Subtítulo', category: 'content', default: 'Responda algumas perguntas e veja o resultado' }),
+            prop({ key: 'showLogo', kind: 'switch', label: 'Mostrar Logotipo', category: 'content', default: true }),
+            prop({ key: 'logoUrl', kind: 'url', label: 'URL do Logotipo', category: 'content', default: '' }),
+            select('textAlign', 'Alinhamento', [
+                { value: 'left', label: 'Esquerda' },
+                { value: 'center', label: 'Centro' },
+                { value: 'right', label: 'Direita' },
+            ], { category: 'layout', default: 'center' })
+        ]
+    }
 };
 
 export const blocksRegistry: Record<string, BlockDefinition> = process.env.NODE_ENV === 'test' ? minimalRegistry : {

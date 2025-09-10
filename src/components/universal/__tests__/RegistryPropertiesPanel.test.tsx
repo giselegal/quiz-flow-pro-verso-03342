@@ -28,7 +28,7 @@ describe('RegistryPropertiesPanel', () => {
   });
 
   it('renderiza campos do bloco selecionado', () => {
-    const { getByText } = render(
+    const { getByText, getAllByText } = render(
       <RegistryPropertiesPanel
         selectedBlock={mockBlock as any}
         onUpdate={() => {}}
@@ -37,7 +37,8 @@ describe('RegistryPropertiesPanel', () => {
       />
     );
     expect(getByText('Header do Quiz')).toBeInTheDocument();
-    expect(getByText(/Título/i)).toBeInTheDocument();
+    const tituloMatches = getAllByText(/Título/i);
+    expect(tituloMatches.length).toBeGreaterThan(0);
   });
 
   it('dispara onUpdate ao alterar campo de texto', async () => {
