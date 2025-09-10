@@ -9,6 +9,7 @@ import { Quiz21StepsProvider } from '@/components/quiz/Quiz21StepsProvider';
 import { LegacyCompatibilityWrapper } from '@/core/contexts/LegacyCompatibilityWrapper';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 import { EditorProvider } from '../components/editor/EditorProvider';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 
 /**
  * 🎯 MAIN EDITOR UNIFICADO - CONSOLIDADO
@@ -227,14 +228,14 @@ const EditorInitializerUnified: React.FC<{
         // Loading state
         if (isLoading) {
             return (
-                <div className="flex items-center justify-center min-h-screen">
+                <div className="flex items-center justify-center min-h-screen bg-gray-50">
                     <div className="text-center">
-                        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500 mx-auto"></div>
-                        <p className="mt-4 text-gray-600">
+                        <LoadingSpinner size="lg" className="mb-4" />
+                        <p className="text-gray-600 text-lg font-medium">
                             {loadingTemplate ? 'Carregando template...' : 'Carregando editor...'}
                         </p>
                         {debugMode && (
-                            <p className="text-xs text-gray-400 mt-2">
+                            <p className="text-xs text-gray-400 mt-2 font-mono">
                                 Template: {templateId || 'default'} | Funnel: {funnelId || 'none'}
                             </p>
                         )}

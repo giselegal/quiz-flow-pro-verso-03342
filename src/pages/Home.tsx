@@ -2,6 +2,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import QuizFlowLogo from '@/components/ui/QuizFlowLogo';
 import TechBackground from '@/components/ui/TechBackground';
+import { LoadingFallback } from '@/components/ui/loading-fallback';
 import { useAuth } from '@/context/AuthContext';
 import {
   ArrowRight,
@@ -56,11 +57,7 @@ const Home = () => {
   }, []);
 
   if (isLoading) {
-    return (
-      <TechBackground variant="minimal" className="min-h-screen flex items-center justify-center">
-        <QuizFlowLogo size="lg" variant="full" className="animate-pulse" />
-      </TechBackground>
-    );
+    return <LoadingFallback message="Carregando QuizFlow..." />;
   }
 
   return (

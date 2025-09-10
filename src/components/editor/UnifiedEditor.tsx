@@ -6,6 +6,7 @@
 
 import React, { Suspense } from 'react';
 import { useEditor } from '@/components/editor/EditorProvider';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { logger } from '@/utils/debugLogger';
 
 interface UnifiedEditorProps {
@@ -90,10 +91,10 @@ export const UnifiedEditor: React.FC<UnifiedEditorProps> = ({ className = '' }) 
   return (
     <div className={`unified-editor-container ${className}`}>
       <Suspense fallback={
-        <div className="flex items-center justify-center h-64">
+        <div className="flex items-center justify-center h-64 bg-gray-50">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-            <p className="text-gray-600">Carregando editor unificado...</p>
+            <LoadingSpinner size="md" className="mb-4" />
+            <p className="text-gray-600 font-medium">Carregando editor unificado...</p>
           </div>
         </div>
       }>

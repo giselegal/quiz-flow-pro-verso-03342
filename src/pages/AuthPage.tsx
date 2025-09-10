@@ -1,6 +1,7 @@
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { useAuth } from '@/context/AuthContext';
 import { AlertCircle, Chrome, Lock, Mail } from 'lucide-react';
 import React, { useState } from 'react';
@@ -224,7 +225,14 @@ const AuthPage: React.FC = () => {
               boxShadow: '0 4px 10px rgba(255, 105, 180, 0.3)',
             }}
           >
-            {isLoading ? 'Carregando...' : isLogin ? 'Entrar' : 'Criar conta'}
+            {isLoading ? (
+              <div className="flex items-center justify-center gap-2">
+                <LoadingSpinner size="sm" color="white" />
+                <span>Carregando...</span>
+              </div>
+            ) : (
+              isLogin ? 'Entrar' : 'Criar conta'
+            )}
           </Button>
         </form>
 
