@@ -84,9 +84,16 @@ function App() {
                   <QuizModularPage />
                 </Suspense>
               } />
-              <Route path="/quiz/:step" component={() =>
+              {/* Encaminha o parâmetro :step para QuizModularPage */}
+              <Route path="/quiz/:step" component={(params: any) =>
                 <Suspense fallback={<LoadingFallback />}>
-                  <QuizModularPage />
+                  <QuizModularPage initialStep={Number(params.step)} />
+                </Suspense>
+              } />
+              {/* Compat extra: /step20 redireciona para etapa 20 */}
+              <Route path="/step20" component={() =>
+                <Suspense fallback={<LoadingFallback />}>
+                  <QuizModularPage initialStep={20} />
                 </Suspense>
               } />
 

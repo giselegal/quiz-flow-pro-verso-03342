@@ -31,19 +31,36 @@ import DevResultDebug from '@/components/dev/DevResultDebug';
  * - Navegação entre etapas fluida
  * - Detecção automática de URL /step20
  */
-const QuizModularPage: React.FC = () => {
-  // 🎯 DETECTAR ETAPA INICIAL BASEADA NA URL
-  const getInitialStep = () => {
-    if (typeof window !== 'undefined') {
-      const pathname = window.location.pathname;
-      if (pathname === '/step20') {
-        return 20;
-      }
-    }
-    return 1;
-  };
+export interface QuizModularPageProps {
+  /** Etapa inicial opcional (1..21) vinda das rotas */
+  initialStep?: number;
+}
 
-  const [currentStep, setCurrentStep] = useState(getInitialStep());
+const normalizeStep = (n: any): number => {
+  const num = parseInt(String(n ?? ''), 10);
+  if (!Number.isFinite(num)) return 1;
+  if (num < 1) return 1;
+  if (num > 21) return 21;
+  return num;
+};
+
+const detectInitialStepFromLocation = (): number => {
+  try {
+    if (typeof window === 'undefined') return 1;
+    const p = window.location.pathname;
+    // Suporta /step20 e /quiz/20 e /quiz/step20
+    const direct = p.match(/(?:^|\/)step-?([0-9]{1,2})$/i);
+    if (direct && direct[1]) return normalizeStep(direct[1]);
+    const quizParam = p.match(/\/quiz\/(?:step)?([0-9]{1,2})$/i);
+    if (quizParam && quizParam[1]) return normalizeStep(quizParam[1]);
+  } catch { }
+  return 1;
+};
+
+const QuizModularPage: React.FC<QuizModularPageProps> = ({ initialStep }) => {
+  // Prioridade: prop > URL (fallback) > 1
+  const resolvedInitialStep = normalizeStep(initialStep ?? detectInitialStepFromLocation());
+  const [currentStep, setCurrentStep] = useState(resolvedInitialStep);
   const [blocks, setBlocks] = useState<Block[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -99,6 +116,12 @@ const QuizModularPage: React.FC = () => {
         // Carregar blocos usando UnifiedTemplateLoader (integra JSON/Editor)
         const stepId = `step-${currentStep}`;
         const stepBlocks = await loadStepBlocks(stepId);
+        try {
+          if (import.meta?.env?.DEV) {
+            const sourceMeta = (stepBlocks as any)?.__source || (stepBlocks as any)?.[0]?.__source;
+            console.log(`[QuizModular] Blocos carregados para ${stepId}:`, stepBlocks.length, 'source=', sourceMeta || 'desconhecido');
+          }
+        } catch { }
         setBlocks(stepBlocks);
 
         // Validar se a etapa já está completa (idle com timeout)
