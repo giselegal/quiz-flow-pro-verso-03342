@@ -58,10 +58,10 @@ export interface UseFunnelLoaderOptions {
 }
 
 export function useFunnelLoader(
-    initialFunnelId?: string, 
+    initialFunnelId?: string,
     options: UseFunnelLoaderOptions = {}
 ): FunnelLoadingState {
-    
+
     const {
         context = FunnelContext.EDITOR,
         autoLoad = true,
@@ -127,7 +127,7 @@ export function useFunnelLoader(
 
             // Usar serviço unificado (com cache automático)
             const loadedFunnel = await funnelUnifiedService.getFunnel(id, userId);
-            
+
             if (loadedFunnel) {
                 setFunnel(loadedFunnel);
                 setFunnelId(id);
@@ -152,7 +152,7 @@ export function useFunnelLoader(
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : 'Erro desconhecido';
             console.error('❌ Erro ao carregar funil:', errorMessage);
-            
+
             setErrorState(
                 errorMessage,
                 'LOAD_ERROR',
@@ -306,7 +306,7 @@ export function useFunnelLoader(
             console.log('🗑️ useFunnelLoader: Deletando funil', funnelId);
 
             const success = await funnelUnifiedService.deleteFunnel(funnelId, userId);
-            
+
             if (success) {
                 setFunnel(null);
                 setFunnelId(null);

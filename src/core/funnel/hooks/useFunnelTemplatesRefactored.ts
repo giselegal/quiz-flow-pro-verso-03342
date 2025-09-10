@@ -272,8 +272,8 @@ export function useFunnelTemplates(
     // ============================================================================
 
     const createFunnelFromTemplate = useCallback(async (
-        templateId: string, 
-        funnelName?: string, 
+        templateId: string,
+        funnelName?: string,
         customizations: any = {}
     ): Promise<UnifiedFunnelData> => {
         setIsLoading(true);
@@ -490,7 +490,7 @@ export function useCreateFunnelFromTemplate(userId?: string) {
     const [error, setError] = useState<Error | null>(null);
 
     const createFromTemplate = useCallback(async (
-        templateId: string, 
+        templateId: string,
         funnelName?: string,
         customizations: any = {}
     ): Promise<UnifiedFunnelData> => {
@@ -503,7 +503,7 @@ export function useCreateFunnelFromTemplate(userId?: string) {
             // Buscar template do serviço
             const templates = await funnelTemplateService.getTemplates();
             const template = templates.find((t: any) => t.id === templateId);
-            
+
             if (!template) {
                 throw new Error(`Template ${templateId} não encontrado`);
             }
@@ -554,9 +554,9 @@ export function useCreateFunnelFromTemplate(userId?: string) {
  * Hook para preview de template
  */
 export function useFunnelTemplatePreview(templateId: string) {
-    const [preview, setPreview] = useState<{ 
-        steps: any[]; 
-        sampleData: Record<string, any>; 
+    const [preview, setPreview] = useState<{
+        steps: any[];
+        sampleData: Record<string, any>;
         estimatedTime: string;
         previewFunnel?: UnifiedFunnelData;
     } | null>(null);

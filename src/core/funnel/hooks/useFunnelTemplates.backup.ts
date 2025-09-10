@@ -1,13 +1,10 @@
 /**
- * 🏗️ FUNNEL TEMPLATES HOOKS - REFATORADO
+ * 🏗️ FUNNEL TEMPLATES HOOKS
  * 
  * Hooks especializados para gerenciamento de templates de funis
- * USANDO FunnelUnifiedService para máxima consistência e cache
  */
 
 import { useState, useCallback, useEffect } from 'react';
-import { funnelUnifiedService, type UnifiedFunnelData } from '@/services/FunnelUnifiedService';
-import { FunnelContext } from '@/core/contexts/FunnelContext';
 import { FunnelTemplate } from '../types';
 import { funnelTemplateService } from '@/services/funnelTemplateService';
 
@@ -21,8 +18,6 @@ export interface UseFunnelTemplatesOptions {
     includeUserTemplates?: boolean;
     sortBy?: 'name' | 'createdAt' | 'updatedAt' | 'popularity';
     sortOrder?: 'asc' | 'desc';
-    enableCache?: boolean;
-    userId?: string;
 }
 
 export interface UseFunnelTemplatesReturn {
@@ -37,9 +32,6 @@ export interface UseFunnelTemplatesReturn {
     updateTemplate: (id: string, updates: Partial<FunnelTemplate>) => Promise<FunnelTemplate>;
     deleteTemplate: (id: string) => Promise<void>;
     duplicateTemplate: (id: string, newName?: string) => Promise<FunnelTemplate>;
-
-    // ⭐ NEW: Create funnel from template integration
-    createFunnelFromTemplate: (templateId: string, funnelName?: string, customizations?: any) => Promise<UnifiedFunnelData>;
 
     // Filters
     filterByCategory: (category: string) => void;
@@ -60,21 +52,12 @@ export interface UseFunnelTemplatesReturn {
 export function useFunnelTemplates(
     options: UseFunnelTemplatesOptions = {}
 ): UseFunnelTemplatesReturn {
-    const {
-        category = '',
-        includeOfficial = true,
-        includeUserTemplates = true,
-        sortBy = 'createdAt',
-        sortOrder = 'desc',
-        userId
-    } = options;
-
     const [templates, setTemplates] = useState<FunnelTemplate[]>([]);
     const [filteredTemplates, setFilteredTemplates] = useState<FunnelTemplate[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<Error | null>(null);
     const [filters, setFilters] = useState({
-        category: category,
+        category: options.category || '',
         search: ''
     });
 
@@ -87,12 +70,10 @@ export function useFunnelTemplates(
         setError(null);
 
         try {
-            console.log('🏗️ useFunnelTemplates: Carregando templates...');
-
-            // Buscar do serviço com fallback
+            // Buscar do serviço (com fallback interno quando DB indisponível)
             const serviceTemplates = await funnelTemplateService.getTemplates();
 
-            // Adaptar para o tipo do core
+            // Adaptar para o tipo do core (quando necessário)
             const adapted: FunnelTemplate[] = (serviceTemplates || []).map((t: any) => ({
                 id: String(t.id),
                 name: String(t.name || 'Template'),
@@ -125,10 +106,8 @@ export function useFunnelTemplates(
             }));
 
             setTemplates(adapted);
-            console.log(`✅ Templates carregados: ${adapted.length}`);
-
+            setFilteredTemplates(adapted);
         } catch (err) {
-            console.error('❌ Erro ao carregar templates:', err);
             setError(err as Error);
         } finally {
             setIsLoading(false);
@@ -144,8 +123,6 @@ export function useFunnelTemplates(
         setError(null);
 
         try {
-            console.log('➕ useFunnelTemplates: Criando template', template.name);
-
             const newTemplate: FunnelTemplate = {
                 id: generateTemplateId(),
                 name: template.name || 'Novo Template',
@@ -174,15 +151,14 @@ export function useFunnelTemplates(
                 updatedAt: new Date().toISOString()
             };
 
-            // TODO: Integrar com funnelTemplateService.createTemplate
+            // Aqui você salvaria no serviço real
             // await funnelTemplateService.createTemplate(newTemplate);
 
             setTemplates(prev => [...prev, newTemplate]);
-            console.log('✅ Template criado:', newTemplate.id);
+            setFilteredTemplates(prev => [...prev, newTemplate]);
 
             return newTemplate;
         } catch (err) {
-            console.error('❌ Erro ao criar template:', err);
             setError(err as Error);
             throw err;
         } finally {
@@ -195,28 +171,20 @@ export function useFunnelTemplates(
         setError(null);
 
         try {
-            console.log('✏️ useFunnelTemplates: Atualizando template', id);
-
-            const existingTemplate = templates.find(t => t.id === id);
-            if (!existingTemplate) {
-                throw new Error(`Template ${id} não encontrado`);
-            }
-
             const updatedTemplate = {
-                ...existingTemplate,
+                ...templates.find(t => t.id === id),
                 ...updates,
                 updatedAt: new Date().toISOString()
             } as FunnelTemplate;
 
-            // TODO: Integrar com funnelTemplateService.updateTemplate
+            // Aqui você atualizaria no serviço real
             // await funnelTemplateService.updateTemplate(id, updatedTemplate);
 
             setTemplates(prev => prev.map(t => t.id === id ? updatedTemplate : t));
-            console.log('✅ Template atualizado:', id);
+            setFilteredTemplates(prev => prev.map(t => t.id === id ? updatedTemplate : t));
 
             return updatedTemplate;
         } catch (err) {
-            console.error('❌ Erro ao atualizar template:', err);
             setError(err as Error);
             throw err;
         } finally {
@@ -229,16 +197,12 @@ export function useFunnelTemplates(
         setError(null);
 
         try {
-            console.log('🗑️ useFunnelTemplates: Deletando template', id);
-
-            // TODO: Integrar com funnelTemplateService.deleteTemplate
+            // Aqui você deletaria no serviço real
             // await funnelTemplateService.deleteTemplate(id);
 
             setTemplates(prev => prev.filter(t => t.id !== id));
-            console.log('✅ Template deletado:', id);
-
+            setFilteredTemplates(prev => prev.filter(t => t.id !== id));
         } catch (err) {
-            console.error('❌ Erro ao deletar template:', err);
             setError(err as Error);
             throw err;
         } finally {
@@ -247,8 +211,6 @@ export function useFunnelTemplates(
     }, []);
 
     const duplicateTemplate = useCallback(async (id: string, newName?: string): Promise<FunnelTemplate> => {
-        console.log('🔄 useFunnelTemplates: Duplicando template', id);
-
         const original = templates.find(t => t.id === id);
         if (!original) {
             throw new Error(`Template ${id} não encontrado`);
@@ -259,80 +221,11 @@ export function useFunnelTemplates(
             id: undefined, // Será gerado um novo
             name: newName || `${original.name} (Cópia)`,
             isOfficial: false, // Cópias nunca são oficiais
-            usageCount: 0, // Reset usage count
-            createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString()
         };
 
         return createTemplate(duplicated);
     }, [templates, createTemplate]);
-
-    // ============================================================================
-    // ⭐ NEW: CREATE FUNNEL FROM TEMPLATE
-    // ============================================================================
-
-    const createFunnelFromTemplate = useCallback(async (
-        templateId: string, 
-        funnelName?: string, 
-        customizations: any = {}
-    ): Promise<UnifiedFunnelData> => {
-        setIsLoading(true);
-        setError(null);
-
-        try {
-            console.log('🎯 useFunnelTemplates: Criando funil do template', templateId);
-
-            // Buscar template
-            const template = templates.find(t => t.id === templateId);
-            if (!template) {
-                throw new Error(`Template ${templateId} não encontrado`);
-            }
-
-            // Usar FunnelUnifiedService para criar funil
-            const funnelData = {
-                name: funnelName || `${template.name} - ${new Date().toLocaleDateString()}`,
-                description: template.description,
-                category: template.category,
-                theme: template.theme,
-                templateId,
-                context: FunnelContext.TEMPLATES, // ⭐ Context obrigatório
-                settings: {
-                    ...template.templateData.settings,
-                    ...customizations.settings
-                },
-                metadata: {
-                    ...template.templateData.metadata,
-                    templateId,
-                    templateName: template.name,
-                    templateVersion: template.templateData.metadata.version,
-                    customizations
-                },
-                steps: template.templateData.steps || [],
-                analytics: customizations.analytics || {},
-                userId
-            };
-
-            const newFunnel = await funnelUnifiedService.createFunnel(funnelData);
-
-            // Incrementar contador de uso do template
-            if (template) {
-                await updateTemplate(templateId, {
-                    usageCount: (template.usageCount || 0) + 1,
-                    updatedAt: new Date().toISOString()
-                });
-            }
-
-            console.log('✅ Funil criado do template:', newFunnel.id);
-            return newFunnel;
-
-        } catch (err) {
-            console.error('❌ Erro ao criar funil do template:', err);
-            setError(err as Error);
-            throw err;
-        } finally {
-            setIsLoading(false);
-        }
-    }, [templates, updateTemplate, userId]);
 
     // ============================================================================
     // FILTERING
@@ -365,27 +258,26 @@ export function useFunnelTemplates(
             filtered = filtered.filter(t =>
                 t.name.toLowerCase().includes(searchLower) ||
                 t.description.toLowerCase().includes(searchLower) ||
-                t.category.toLowerCase().includes(searchLower) ||
-                (t.tags && t.tags.some(tag => tag.toLowerCase().includes(searchLower)))
+                t.category.toLowerCase().includes(searchLower)
             );
         }
 
         // Apply options filters
-        if (!includeOfficial) {
+        if (options.includeOfficial === false) {
             filtered = filtered.filter(t => !t.isOfficial);
         }
 
-        if (!includeUserTemplates) {
+        if (options.includeUserTemplates === false) {
             filtered = filtered.filter(t => t.isOfficial);
         }
 
         // Sort
-        if (sortBy) {
+        if (options.sortBy) {
             filtered.sort((a, b) => {
                 let aValue: any;
                 let bValue: any;
 
-                switch (sortBy) {
+                switch (options.sortBy) {
                     case 'name':
                         aValue = a.name;
                         bValue = b.name;
@@ -398,15 +290,11 @@ export function useFunnelTemplates(
                         aValue = new Date(a.updatedAt);
                         bValue = new Date(b.updatedAt);
                         break;
-                    case 'popularity':
-                        aValue = a.usageCount || 0;
-                        bValue = b.usageCount || 0;
-                        break;
                     default:
                         return 0;
                 }
 
-                if (sortOrder === 'desc') {
+                if (options.sortOrder === 'desc') {
                     return aValue > bValue ? -1 : aValue < bValue ? 1 : 0;
                 } else {
                     return aValue < bValue ? -1 : aValue > bValue ? 1 : 0;
@@ -415,7 +303,7 @@ export function useFunnelTemplates(
         }
 
         setFilteredTemplates(filtered);
-    }, [templates, filters, includeOfficial, includeUserTemplates, sortBy, sortOrder]);
+    }, [templates, filters, options]);
 
     // ============================================================================
     // UTILITY FUNCTIONS
@@ -462,9 +350,6 @@ export function useFunnelTemplates(
         deleteTemplate,
         duplicateTemplate,
 
-        // ⭐ NEW: Integration with FunnelUnifiedService
-        createFunnelFromTemplate,
-
         // Filters
         filterByCategory,
         filterBySearch,
@@ -479,74 +364,45 @@ export function useFunnelTemplates(
 }
 
 // ============================================================================
-// SPECIALIZED HOOKS - REFACTORED
+// SPECIALIZED HOOKS
 // ============================================================================
 
 /**
- * Hook para criar funil a partir de template (agora integrado com FunnelUnifiedService)
+ * Hook para criar funil a partir de template
  */
-export function useCreateFunnelFromTemplate(userId?: string) {
+export function useCreateFunnelFromTemplate() {
     const [isCreating, setIsCreating] = useState(false);
     const [error, setError] = useState<Error | null>(null);
 
-    const createFromTemplate = useCallback(async (
-        templateId: string, 
-        funnelName?: string,
-        customizations: any = {}
-    ): Promise<UnifiedFunnelData> => {
+    const createFromTemplate = useCallback(async (templateId: string, customizations?: Record<string, any>) => {
         setIsCreating(true);
         setError(null);
 
         try {
-            console.log('🎯 useCreateFunnelFromTemplate: Criando funil', templateId);
+            // Aqui você integraria com o serviço de criação
+            // const funnel = await funnelService.createFromTemplate(templateId, customizations);
 
-            // Buscar template do serviço
-            const templates = await funnelTemplateService.getTemplates();
-            const template = templates.find((t: any) => t.id === templateId);
-            
-            if (!template) {
-                throw new Error(`Template ${templateId} não encontrado`);
-            }
-
-            // Criar funil usando FunnelUnifiedService
-            const funnelData = {
-                name: funnelName || `${template.name} - ${new Date().toLocaleDateString()}`,
-                description: template.description || '',
-                context: FunnelContext.TEMPLATES, // ⭐ Context obrigatório
+            // Mock implementation
+            const mockFunnel = {
+                id: `funnel-${Date.now()}`,
                 templateId,
-                settings: {
-                    ...getDefaultSettings(),
-                    ...template.templateData?.settings,
-                    ...customizations.settings
-                },
-                metadata: {
-                    templateId,
-                    templateName: template.name,
-                    templateVersion: template.templateData?.metadata?.version || '1.0.0',
-                    customizations
-                },
-                userId
+                name: `Novo Funil - ${Date.now()}`,
+                customizations: customizations || {}
             };
 
-            const funnel = await funnelUnifiedService.createFunnel(funnelData);
-            console.log('✅ Funil criado do template:', funnel.id);
-
-            return funnel;
-
+            return mockFunnel;
         } catch (err) {
-            console.error('❌ Erro ao criar funil do template:', err);
             setError(err as Error);
             throw err;
         } finally {
             setIsCreating(false);
         }
-    }, [userId]);
+    }, []);
 
     return {
         createFromTemplate,
         isCreating,
-        error,
-        clearError: () => setError(null)
+        error
     };
 }
 
@@ -554,12 +410,7 @@ export function useCreateFunnelFromTemplate(userId?: string) {
  * Hook para preview de template
  */
 export function useFunnelTemplatePreview(templateId: string) {
-    const [preview, setPreview] = useState<{ 
-        steps: any[]; 
-        sampleData: Record<string, any>; 
-        estimatedTime: string;
-        previewFunnel?: UnifiedFunnelData;
-    } | null>(null);
+    const [preview, setPreview] = useState<{ steps: any[]; sampleData: Record<string, any>; estimatedTime: string } | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<Error | null>(null);
 
@@ -570,50 +421,18 @@ export function useFunnelTemplatePreview(templateId: string) {
         setError(null);
 
         try {
-            console.log('👁️ useFunnelTemplatePreview: Carregando preview', templateId);
+            // Aqui você carregaria o preview do template
+            // const previewData = await funnelTemplateService.getPreview(templateId);
 
-            // Buscar template
-            const templates = await funnelTemplateService.getTemplates();
-            const template = templates.find((t: any) => t.id === templateId);
-
-            if (!template) {
-                throw new Error(`Template ${templateId} não encontrado`);
-            }
-
-            // Criar um preview simulado
+            // Mock preview
             const mockPreview = {
-                steps: template.templateData?.steps || [],
-                sampleData: {
-                    totalSteps: template.stepCount || 0,
-                    category: template.category,
-                    theme: template.theme,
-                    components: template.components?.length || 0
-                },
-                estimatedTime: calculateEstimatedTime(template.stepCount || 0),
-                previewFunnel: {
-                    id: `preview-${templateId}`,
-                    name: `Preview: ${template.name}`,
-                    description: template.description,
-                    context: FunnelContext.PREVIEW,
-                    userId: 'preview',
-                    templateId,
-                    isPreview: true,
-                    isPublished: false,
-                    version: 1,
-                    settings: template.templateData?.settings || getDefaultSettings(),
-                    metadata: template.templateData?.metadata || {},
-                    steps: template.templateData?.steps || [],
-                    pages: [],
-                    createdAt: new Date(),
-                    updatedAt: new Date()
-                } as UnifiedFunnelData
+                steps: [],
+                sampleData: {},
+                estimatedTime: '5 minutos'
             };
 
             setPreview(mockPreview);
-            console.log('✅ Preview carregado');
-
         } catch (err) {
-            console.error('❌ Erro ao carregar preview:', err);
             setError(err as Error);
         } finally {
             setIsLoading(false);
@@ -668,17 +487,3 @@ function getDefaultSettings() {
         }
     };
 }
-
-function calculateEstimatedTime(stepCount: number): string {
-    const baseTime = 2; // 2 minutos base
-    const timePerStep = 1.5; // 1.5 minutos por step
-    const totalMinutes = baseTime + (stepCount * timePerStep);
-
-    if (totalMinutes < 5) return '3-5 minutos';
-    if (totalMinutes < 10) return '5-10 minutos';
-    if (totalMinutes < 15) return '10-15 minutos';
-    if (totalMinutes < 30) return '15-30 minutos';
-    return '30+ minutos';
-}
-
-export default useFunnelTemplates;
