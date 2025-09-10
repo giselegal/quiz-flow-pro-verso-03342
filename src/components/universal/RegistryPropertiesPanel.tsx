@@ -300,72 +300,44 @@ const ImageFieldEditor: React.FC<{
 
 // ✨ COMPONENTE PARA OPTIONS ARRAY EDITOR MODERNO
 const OptionsArrayEditor: React.FC<{
-  value: any[];
-  onUpdate: (value: any[]) => void;
-  schema: PropSchema;
-}> = ({ value = [], onUpdate, schema }) => {
-  const addOption = () => {
-    const newOption = { id: Date.now().toString(), text: '', imageUrl: '' };
-    onUpdate([...value, newOption]);
-  };
+        <Label className="text-xs font-semibold text-blue-700 flex items-center gap-2">
+          <Image className="h-3 w-3" />
+          {schema.label}
+        </Label>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => setShowPreview(!showPreview)}
+          className="h-6 w-6 p-0"
+        >
+          {showPreview ? <EyeOff className="h-3 w-3" /> : <Eye className="h-3 w-3" />}
+        </Button>
+      </div>
 
-  const updateOption = (index: number, field: string, newValue: string) => {
-    const updated = value.map((option, i) => 
-      i === index ? { ...option, [field]: newValue } : option
-    );
-    onUpdate(updated);
-  };
-
-  const removeOption = (index: number) => {
-    onUpdate(value.filter((_, i) => i !== index));
-  };
-
-  return (
-    <div className="space-y-3">
-      {value.map((option, index) => (
-        <div key={option.id || index} className="p-3 border border-gray-200 rounded-lg bg-gray-50">
-          <div className="flex items-center justify-between mb-2">
-            <Badge variant="outline" className="text-xs">
-              Opção {index + 1}
-            </Badge>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => removeOption(index)}
-              className="h-6 w-6 p-0 text-red-500 hover:text-red-700"
-            >
-              <Trash2 className="w-3 h-3" />
-            </Button>
-          </div>
-          
-          <Input
-            placeholder="Texto da opção..."
-            value={option.text || ''}
-            onChange={(e) => updateOption(index, 'text', e.target.value)}
-            className="mb-2"
+      {/* Preview da imagem */}
+      {showPreview && value && (
+        <div className="relative bg-white rounded border p-2">
+          <img 
+            src={value} 
+            alt="Preview"
+            className="max-w-full h-20 object-contain mx-auto rounded"
+            style={{ 
+              width: currentWidth ? `${currentWidth}px` : 'auto',
+              height: currentHeight ? `${currentHeight}px` : 'auto' 
+            }}
           />
-          
-          {(option.imageUrl !== undefined || schema.key === 'options') && (
-            <Input
-              placeholder="URL da imagem (opcional)"
-              value={option.imageUrl || ''}
-              onChange={(e) => updateOption(index, 'imageUrl', e.target.value)}
-            />
-          )}
+          <div className="absolute top-1 right-1 bg-black/50 text-white text-[8px] px-1 rounded">
+            {currentWidth}x{currentHeight}
+          </div>
         </div>
-      ))}
+      )}
 
-      <Button
-        variant="outline"
-        onClick={addOption}
-        className="w-full border-dashed border-2 border-gray-300 text-gray-600 hover:border-gray-400"
-      >
-        <Plus className="w-4 h-4 mr-2" />
-        Adicionar Opção
-      </Button>
-    </div>
-  );
-};
+      {/* URL input */}
+      <div className="space-y-1">
+        <Input
+          value={value}
+          onChange={(e) => onUpdate(e.target.value)}
+          placeholder="https://exemplo.com/imagem.jpg ou data:image/..."
           className="h-8 text-xs"
         />
       </div>
