@@ -5,6 +5,8 @@ import { cn } from '@/lib/utils';
 
 interface ProgressProps extends React.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root> {
   indicatorClassName?: string;
+  value?: number;
+  className?: string;
 }
 
 const Progress = React.forwardRef<React.ElementRef<typeof ProgressPrimitive.Root>, ProgressProps>(
@@ -12,6 +14,7 @@ const Progress = React.forwardRef<React.ElementRef<typeof ProgressPrimitive.Root
     <ProgressPrimitive.Root
       ref={ref}
       className={cn('relative h-4 w-full overflow-hidden rounded-full bg-[#F4E9DD]', className)}
+      value={value}
       {...props}
     >
       <ProgressPrimitive.Indicator
