@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,6 +13,7 @@
             padding: 20px;
             margin: 0;
         }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -20,6 +22,7 @@
             border-radius: 8px;
             border: 2px solid #00ff00;
         }
+
         .btn {
             background: #ff4444;
             color: white;
@@ -30,9 +33,11 @@
             cursor: pointer;
             font-weight: bold;
         }
+
         .btn:hover {
             background: #ff6666;
         }
+
         .status {
             background: #333;
             padding: 15px;
@@ -40,15 +45,19 @@
             border-radius: 4px;
             border-left: 4px solid #00ff00;
         }
+
         .error {
             border-left-color: #ff4444;
         }
+
         .success {
             border-left-color: #00ff00;
         }
+
         .warning {
             border-left-color: #ffaa00;
         }
+
         #log {
             background: #000;
             color: #00ff00;
@@ -63,10 +72,11 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1>🚨 TESTE URGENTE: Localizar Suas Alterações</h1>
-        
+
         <div class="status">
             <h3>🎯 OBJETIVO:</h3>
             <p>Encontrar onde estão as alterações que você fez:</p>
@@ -104,10 +114,10 @@
 
         function testarAlteracoes() {
             log('🔍 Iniciando teste de alterações...', 'info');
-            
+
             // Abrir editor e testar
             const editorWindow = window.open('http://localhost:5173/editor', '_blank');
-            
+
             setTimeout(() => {
                 if (editorWindow) {
                     try {
@@ -174,7 +184,7 @@
 
         function limparCache() {
             log('🗑️ Limpando cache...', 'info');
-            
+
             // Limpar localStorage
             const lsKeys = Object.keys(localStorage);
             lsKeys.forEach(key => {
@@ -182,16 +192,16 @@
                     localStorage.removeItem(key);
                 }
             });
-            
+
             // Limpar sessionStorage
             sessionStorage.clear();
-            
+
             log(`✅ Cache limpo (${lsKeys.length} chaves localStorage removidas)`, 'success');
         }
 
         function injetarScript() {
             log('💉 Carregando script de teste...', 'info');
-            
+
             fetch('/teste-alteracoes-urgente.js')
                 .then(response => response.text())
                 .then(scriptContent => {
@@ -210,4 +220,5 @@
         log('💡 Clique em "Testar Alterações" para verificar', 'info');
     </script>
 </body>
+
 </html>
