@@ -1,4 +1,4 @@
-import { getEnhancedBlockComponent } from '@/components/editor/blocks/enhancedBlockRegistry';
+import { getEnhancedBlockComponent } from '@/components/editor/blocks/EnhancedBlockRegistry';
 import type { BlockComponentProps, BlockData } from '@/types/blocks';
 import React, { useEffect } from 'react';
 
