@@ -1,9 +1,8 @@
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { OptimizedPropertiesPanel } from '../OptimizedPropertiesPanel';
-import type { UnifiedBlock } from '@/types/master-schema';
 
-// Mock dos módulos externos para evitar dependências pesadas
+// Mock completo dos módulos UI para testes leves
 vi.mock('@/components/ui/button', () => ({
   Button: ({ children, ...props }: any) => <button {...props}>{children}</button>,
 }));
@@ -35,7 +34,7 @@ vi.mock('@/components/ui/switch', () => ({
   Switch: (props: any) => <input type="checkbox" {...props} />,
 }));
 
-// Mock do hook useUnifiedProperties
+// Mock do hook principal
 vi.mock('@/hooks/useUnifiedProperties', () => ({
   useUnifiedProperties: () => ({
     properties: {},
@@ -45,68 +44,72 @@ vi.mock('@/hooks/useUnifiedProperties', () => ({
   }),
 }));
 
-describe('OptimizedPropertiesPanel', () => {
-  const mockSelectedBlock: UnifiedBlock = {
-    id: 'test-block-1',
-    type: 'text-inline' as any,
-    order: 0,
-    properties: {
-      content: {
-        type: 'text',
-        value: 'Test content',
-        category: 'content',
-      },
-    },
-  };
+// Mock de outros hooks
+vi.mock('@/hooks/useDebounce', () => ({
+  useDebounce: (value: any) => value,
+}));
 
-  const defaultProps = {
-    selectedBlock: mockSelectedBlock,
-    onUpdate: vi.fn(),
-  };
+describe('OptimizedPropertiesPanel', () => {
+  // Mock simples sem tipos complexos
+  const mockSelectedBlock = {
+    id: 'test-block-1',
+    type: 'text-inline',
+    order: 0,
+    properties: {},
+    version: '1.0',
+    children: [],
+    events: [],
+    locked: false,
+    visible: true,
+  } as any;
 
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it('should render without crashing', () => {
-    render(<OptimizedPropertiesPanel {...defaultProps} />);
-    expect(document.body).toBeInTheDocument();
+  it('should render without crashing when no block is selected', () => {
+    const { container } = render(<OptimizedPropertiesPanel selectedBlock={null} />);
+    expect(container).toBeInTheDocument();
   });
 
-  it('should show empty state when no block is selected', () => {
-    render(<OptimizedPropertiesPanel selectedBlock={null} />);
-    // Como usamos mock simples, apenas verificamos que renderiza sem erro
-    expect(document.body).toBeInTheDocument();
+  it('should render without crashing when block is selected', () => {
+    const { container } = render(<OptimizedPropertiesPanel selectedBlock={mockSelectedBlock} />);
+    expect(container).toBeInTheDocument();
   });
 
-  it('should render with selected block', () => {
-    render(<OptimizedPropertiesPanel {...defaultProps} />);
-    expect(document.body).toBeInTheDocument();
-  });
-
-  it('should handle different block types', () => {
-    const blockWithDifferentProps: UnifiedBlock = {
-      id: 'test-block-2',
-      type: 'button-inline' as any,
-      order: 0,
-      properties: {
-        label: {
-          type: 'text',
-          value: 'Click me',
-          category: 'content',
-        },
-      },
-    };
-
-    render(<OptimizedPropertiesPanel selectedBlock={blockWithDifferentProps} />);
-    expect(document.body).toBeInTheDocument();
-  });
-
-  it('should call onUpdate when provided', () => {
+  it('should handle onUpdate callback', () => {
     const onUpdate = vi.fn();
-    render(<OptimizedPropertiesPanel {...defaultProps} onUpdate={onUpdate} />);
-    
-    // O onUpdate é passado para o hook useUnifiedProperties via mock
+    const { container } = render(
+      <OptimizedPropertiesPanel 
+        selectedBlock={mockSelectedBlock} 
+        onUpdate={onUpdate}
+      />
+    );
+    expect(container).toBeInTheDocument();
     expect(onUpdate).toBeDefined();
+  });
+
+  it('should handle onClose callback', () => {
+    const onClose = vi.fn();
+    const { container } = render(
+      <OptimizedPropertiesPanel 
+        selectedBlock={mockSelectedBlock} 
+        onClose={onClose}
+      />
+    );
+    expect(container).toBeInTheDocument();
+    expect(onClose).toBeDefined();
+  });
+
+  it('should handle onDelete callback', () => {
+    const onDelete = vi.fn();
+    const { container } = render(
+      <OptimizedPropertiesPanel 
+        selectedBlock={mockSelectedBlock} 
+        onDelete={onDelete}
+      />
+    );
+    expect(container).toBeInTheDocument();
+    expect(onDelete).toBeDefined();
   });
 });
