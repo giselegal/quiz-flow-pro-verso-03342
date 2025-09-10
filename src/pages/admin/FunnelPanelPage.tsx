@@ -74,6 +74,124 @@ const FunnelPanelPage: React.FC = () => {
     setCustomTemplates(templates);
   };
 
+  // Função para detectar funis duplicados
+  const scanForDuplicates = React.useCallback(() => {
+    setIsScanning(true);
+    setCleanupResult(null);
+
+    try {
+      const keys = Object.keys(localStorage);
+      
+      // Detectar chaves relacionadas a funis
+      const funnelKeys = keys.filter(key =>
+        key.startsWith('funnel-') ||
+        key.startsWith('funnelData-') ||
+        key.includes('funnel') ||
+        key.includes('Funnel') ||
+        key.includes('quiz') ||
+        key.includes('Quiz') ||
+        key.includes('template') ||
+        key.includes('draft') ||
+        key.includes('temp') ||
+        key.includes('backup') ||
+        key.includes('copy') ||
+        key.includes('duplicate')
+      );
+
+      let totalSize = 0;
+      const duplicates = funnelKeys.map(key => {
+        const value = localStorage.getItem(key) || '';
+        const size = new Blob([value]).size;
+        totalSize += size;
+
+        return {
+          key,
+          name: key.length > 50 ? `${key.substring(0, 47)}...` : key,
+          size,
+          lastModified: 'Desconhecido'
+        };
+      });
+
+      setDuplicateInfo({
+        total: funnelKeys.length,
+        duplicates,
+        spaceToFree: totalSize
+      });
+
+    } catch (error) {
+      console.error('❌ Erro ao escanear duplicatas:', error);
+      setDuplicateInfo(null);
+    } finally {
+      setIsScanning(false);
+    }
+  }, []);
+
+  // Função para executar limpeza
+  const executeCleanup = React.useCallback(async () => {
+    setIsCleaningUp(true);
+    setCleanupResult(null);
+
+    try {
+      // Importar e executar função de limpeza existente
+      if (typeof window !== 'undefined' && (window as any).cleanupFunnels) {
+        const result = (window as any).cleanupFunnels();
+        
+        setCleanupResult({
+          success: result.success,
+          removedCount: result.removedCount || 0,
+          freedSpace: 0, // Calcular com base nos dados removidos
+          error: result.error
+        });
+
+        if (result.success) {
+          // Re-escanear após limpeza
+          setTimeout(() => {
+            scanForDuplicates();
+          }, 1000);
+        }
+      } else {
+        // Fallback: limpeza manual básica
+        const keys = Object.keys(localStorage);
+        const funnelKeys = keys.filter(key =>
+          key.startsWith('funnel-') ||
+          key.startsWith('funnelData-') ||
+          key.includes('temp') ||
+          key.includes('draft') ||
+          key.includes('backup') ||
+          key.includes('copy') ||
+          key.includes('duplicate')
+        );
+
+        let removedCount = 0;
+        funnelKeys.forEach(key => {
+          localStorage.removeItem(key);
+          removedCount++;
+        });
+
+        setCleanupResult({
+          success: true,
+          removedCount,
+          freedSpace: 0
+        });
+
+        // Re-escanear após limpeza
+        setTimeout(() => {
+          scanForDuplicates();
+        }, 1000);
+      }
+    } catch (error) {
+      console.error('❌ Erro durante limpeza:', error);
+      setCleanupResult({
+        success: false,
+        removedCount: 0,
+        freedSpace: 0,
+        error: error instanceof Error ? error.message : 'Erro desconhecido'
+      });
+    } finally {
+      setIsCleaningUp(false);
+    }
+  }, [scanForDuplicates]);
+
   // Função para personalizar template
   const handleCustomizeTemplate = (template: UnifiedTemplate) => {
     setSelectedTemplateToCustomize(template);
@@ -301,13 +419,26 @@ const FunnelPanelPage: React.FC = () => {
           </h1>
           <p className="text-[#8F7A6A] mt-2 text-lg">Escolha um modelo otimizado ou crie do zero</p>
         </div>
-        <Button
-          onClick={handleCreateCustom}
-          className="bg-[#B89B7A] hover:bg-[#A0895B] text-white px-6 py-3"
-        >
-          <Plus className="w-5 h-5 mr-2" />
-          Criar Funil Personalizado
-        </Button>
+        <div className="flex gap-3">
+          <Button
+            onClick={() => {
+              setIsCleanupModalOpen(true);
+              scanForDuplicates();
+            }}
+            variant="outline"
+            className="border-orange-300 text-orange-700 hover:bg-orange-50 px-4 py-3"
+          >
+            <Broom className="w-5 h-5 mr-2" />
+            Limpar Duplicatas
+          </Button>
+          <Button
+            onClick={handleCreateCustom}
+            className="bg-[#B89B7A] hover:bg-[#A0895B] text-white px-6 py-3"
+          >
+            <Plus className="w-5 h-5 mr-2" />
+            Criar Funil Personalizado
+          </Button>
+        </div>
       </div>
 
       {/* Tabs para alternar entre modelos oficiais e personalizados */}
