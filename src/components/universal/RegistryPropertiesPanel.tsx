@@ -128,17 +128,17 @@ const RegistryPropertiesPanel: React.FC<RegistryPropertiesPanelProps> = ({
         );
       case 'textarea':
         return (
-            <div key={schema.key} className="space-y-1">
-              {commonLabel}
-              <Textarea
-                id={schema.key}
-                value={value}
-                placeholder={schema.placeholder}
-                onChange={e => handleUpdate({ [schema.key]: e.target.value })}
-                className="text-xs min-h-[70px]"
-              />
-            </div>
-          );
+          <div key={schema.key} className="space-y-1">
+            {commonLabel}
+            <Textarea
+              id={schema.key}
+              value={value}
+              placeholder={schema.placeholder}
+              onChange={e => handleUpdate({ [schema.key]: e.target.value })}
+              className="text-xs min-h-[70px]"
+            />
+          </div>
+        );
       case 'color':
         return (
           <div key={schema.key} className="space-y-1">
