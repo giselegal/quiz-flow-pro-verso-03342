@@ -1,5 +1,4 @@
 import { cloneFunnelTemplate } from '@/utils/cloneFunnel';
-import { funnelTemplates } from '@/config/funnelTemplates';
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -73,16 +72,40 @@ const FunnelPanelPage: React.FC = () => {
       try {
         // Verificar se a função já está disponível
         if (typeof window !== 'undefined' && !(window as any).cleanupFunnels) {
-          // Carregar e executar o script de limpeza
-          const script = document.createElement('script');
-          script.src = '/src/utils/cleanupFunnels.js';
-          script.onload = () => {
-            console.log('✅ Script de limpeza carregado');
+          // Definir função de limpeza inline para evitar 404
+          (window as any).cleanupFunnels = () => {
+            try {
+              const keys = Object.keys(localStorage);
+              const funnelKeys = keys.filter(key =>
+                key.startsWith('funnel-') ||
+                key.startsWith('funnelData-') ||
+                key.includes('temp') ||
+                key.includes('draft') ||
+                key.includes('backup') ||
+                key.includes('copy') ||
+                key.includes('duplicate')
+              );
+              
+              let removedCount = 0;
+              funnelKeys.forEach(key => {
+                localStorage.removeItem(key);
+                removedCount++;
+              });
+
+              return {
+                success: true,
+                removedCount,
+                error: null
+              };
+            } catch (error) {
+              return {
+                success: false,
+                removedCount: 0,
+                error: (error as Error).message
+              };
+            }
           };
-          script.onerror = () => {
-            console.warn('⚠️ Erro ao carregar script de limpeza');
-          };
-          document.head.appendChild(script);
+          console.log('✅ Função de limpeza definida inline');
         }
       } catch (error) {
         console.warn('⚠️ Erro ao carregar script de limpeza:', error);
@@ -285,15 +308,15 @@ const FunnelPanelPage: React.FC = () => {
       const unifiedTemplates = getUnifiedTemplates();
       const baseTemplate = unifiedTemplates.find(t => t.id === templateId);
 
-      if (baseTemplate && baseTemplate.blocks) {
+      if (baseTemplate) {
         // 🚀 Usar cloneFunnelTemplate para garantir isolamento
         const templateData = {
           id: baseTemplate.id,
           name: baseTemplate.name,
           description: baseTemplate.description || '',
           category: baseTemplate.category || 'general',
-          preview: baseTemplate.thumbnailUrl || '',
-          blocks: baseTemplate.blocks || []
+          preview: baseTemplate.image || '',
+          blocks: [] // Será preenchido pelo sistema de templates
         };
 
         const clonedInstance = cloneFunnelTemplate(templateData, `${baseTemplate.name} - Cópia`);
