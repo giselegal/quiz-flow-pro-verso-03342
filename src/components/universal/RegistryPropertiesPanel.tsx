@@ -387,6 +387,45 @@ const RegistryPropertiesPanel: React.FC<RegistryPropertiesPanelProps> = ({
           />
         ) : (
           <div className="space-y-6">
+            {/* Preview em Tempo Real */}
+            <div className="border border-gray-200 rounded-lg bg-white shadow-sm">
+              <div className="px-3 py-2 border-b bg-gradient-to-r from-blue-50 to-indigo-50 flex items-center justify-between">
+                <h3 className="text-xs font-semibold tracking-wide text-blue-700 uppercase flex items-center gap-2">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                  Preview Propriedades
+                </h3>
+                <span className="text-[10px] text-blue-500">
+                  {Object.keys(selectedBlock.properties || {}).length} propriedades
+                </span>
+              </div>
+              <div className="p-3">
+                {Object.keys(selectedBlock.properties || {}).length > 0 ? (
+                  <div className="space-y-2">
+                    {Object.entries(selectedBlock.properties || {}).map(([key, value]) => (
+                      <div key={key} className="flex justify-between items-start gap-3 p-2 bg-gray-50 rounded border">
+                        <span className="text-xs font-medium text-gray-700 truncate flex-shrink-0 min-w-0 max-w-[80px]">
+                          {key}
+                        </span>
+                        <span className="text-xs text-gray-600 text-right font-mono bg-white px-2 py-1 rounded border min-w-0 flex-1">
+                          {typeof value === 'string' 
+                            ? `"${value.length > 20 ? value.slice(0, 20) + '...' : value}"` 
+                            : JSON.stringify(value).length > 25
+                            ? JSON.stringify(value).slice(0, 25) + '...'
+                            : JSON.stringify(value)
+                          }
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center text-xs text-gray-400 py-4">
+                    Nenhuma propriedade definida ainda
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Campos agrupados por categoria */}
             {Object.entries(groupedSchemas).map(([category, schemas]) => (
               <div key={category} className="border border-gray-200 rounded-lg bg-white shadow-sm">
                 <div className="px-3 py-2 border-b bg-gray-50 flex items-center justify-between">
