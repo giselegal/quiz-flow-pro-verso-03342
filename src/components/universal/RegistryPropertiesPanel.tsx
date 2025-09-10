@@ -12,7 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   X, Trash2, RotateCcw, Plus, Minus, Upload, Eye, EyeOff,
   Info, Palette, Image, Settings, Layout, Type, Check,
-  RefreshCw, Save
+  RefreshCw
 } from 'lucide-react';
 import { blocksRegistry, type PropSchema } from '@/core/blocks/registry';
 import QuizQuestionPropertiesPanel from '@/components/editor/properties/QuizQuestionPropertiesPanel';
@@ -654,12 +654,12 @@ const RegistryPropertiesPanel: React.FC<RegistryPropertiesPanelProps> = ({
             {/* Indicador de status */}
             <div className="flex items-center gap-2 text-xs text-gray-500">
               <div className={`w-2 h-2 rounded-full ${saveStatus === 'saving' ? 'bg-blue-400 animate-pulse' :
-                  saveStatus === 'error' ? 'bg-red-400 animate-bounce' :
-                    saveStatus === 'saved' ? 'bg-green-400' :
-                      hasUnsavedChanges ? 'bg-orange-400' : 'bg-green-400'
+                saveStatus === 'error' ? 'bg-red-400 animate-bounce' :
+                  saveStatus === 'saved' ? 'bg-green-400' :
+                    hasUnsavedChanges ? 'bg-orange-400' : 'bg-green-400'
                 }`} />
               <span className={`${saveStatus === 'error' ? 'text-red-600' :
-                  saveStatus === 'saved' ? 'text-green-600' : ''
+                saveStatus === 'saved' ? 'text-green-600' : ''
                 }`}>
                 {saveStatus === 'saving' ? 'Salvando...' :
                   saveStatus === 'error' ? 'Erro ao salvar' :

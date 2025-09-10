@@ -9,7 +9,6 @@ import { Slider } from '@/components/ui/slider';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
 import { Progress } from '@/components/ui/progress';
 import {
     X, Trash2, RotateCcw, Plus, Minus, Upload, Eye, EyeOff,
@@ -38,6 +37,8 @@ interface ModernPropSchema extends PropSchema {
     validation?: (value: any) => boolean;
     defaultValue?: any;
     type?: PropKind;
+    acceptedFormats?: string[];
+    helpText?: string;
 }
 
 // ✨ CATEGORIAS MODERNAS PARA AGRUPAMENTO
@@ -83,11 +84,6 @@ const useBackendSync = (selectedBlock: any, onUpdate: Function) => {
             setSaveProgress(25);
 
             try {
-                // Separar propriedades e conteúdo baseado no schema do bloco
-                const blockDef = blocksRegistry[selectedBlock.type];
-                const properties: Record<string, any> = {};
-                const content: Record<string, any> = {};
-
                 setSaveProgress(50);
 
                 Object.entries(updates).forEach(([key, value]) => {
@@ -740,7 +736,7 @@ const RegistryPropertiesPanel: React.FC<RegistryPropertiesPanelProps> = ({
                             </div>
                             <div>
                                 <h2 className="text-xl font-bold text-gray-900">
-                                    {blockDef.displayName}
+                                    {blockDef.title}
                                 </h2>
                                 <p className="text-sm text-gray-500 font-mono">
                                     {selectedBlock.id}
