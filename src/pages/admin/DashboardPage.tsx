@@ -19,14 +19,6 @@ const NoCodeConfigPage = lazy(() => import('./NoCodeConfigPage'));
 const EditorPage = lazy(() => import('./EditorPage'));
 const FunnelSettingsPage = lazy(() => import('./FunnelSettingsPage'));
 const FunnelSystemDebugger = lazy(() => import('./FunnelSystemDebugger'));
-// Templates page is temporarily disabled - will be recreated later
-// const TemplatesPage = lazy(() => import('./TemplatesPage'));
-const TemplatePlaceholder = () => (
-  <div className="p-8">
-    <h1 className="text-2xl font-bold mb-4">Templates</h1>
-    <p className="text-muted-foreground">This section is under construction.</p>
-  </div>
-);
 
 // Componente de loading
 const LoadingFallback = () => (
@@ -67,7 +59,7 @@ const DashboardPage: React.FC = () => {
               <Route path="/admin/analytics" component={AnalyticsPage} />
               <Route path="/admin/editor" component={EditorPage} />
               <Route path="/admin/funnel-settings/:id" component={FunnelSettingsPage} />
-              <Route path="/admin/templates" component={TemplatePlaceholder} />
+              <Route path="/admin/templates" component={MyTemplatesPage} />
               <Route path="/admin/debug" component={FunnelSystemDebugger} />
             </Switch>
           </Suspense>
