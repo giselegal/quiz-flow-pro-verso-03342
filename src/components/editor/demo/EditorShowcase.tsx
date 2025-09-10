@@ -112,7 +112,7 @@ export const EditorShowcase: React.FC = () => {
     properties: {
       title: 'Painel de Propriedades Dinâmico',
       description: 'Sistema schema-driven para configuração automática e completa de componentes.',
-      components: ['DynamicPropertiesPanel.tsx', 'PropertyInput.tsx', 'blockDefinitions.ts'],
+      components: ['OptimizedPropertiesPanel.tsx', 'PropertyInput.tsx', 'blockDefinitions.ts'],
       features: [
         'Schema automático baseado em blockDefinitions',
         'Suporte a propriedades aninhadas',
