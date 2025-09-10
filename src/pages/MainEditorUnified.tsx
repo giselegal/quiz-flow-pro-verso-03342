@@ -10,6 +10,9 @@ import { LegacyCompatibilityWrapper } from '@/core/contexts/LegacyCompatibilityW
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 import { EditorProvider } from '../components/editor/EditorProvider';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { useFunnelContext } from '@/hooks/useFunnelLoader';
+import FunnelFallback from '@/components/editor/FunnelFallback';
+import { UnifiedFunnelProvider } from '@/context/UnifiedFunnelContext';
 
 /**
  * 🎯 MAIN EDITOR UNIFICADO - CONSOLIDADO
@@ -73,9 +76,13 @@ const MainEditorUnified: React.FC = () => {
     return (
         <div>
             <ErrorBoundary>
-                <FunnelsProvider debug={debugMode}>
-                    {/* Híbrido: EditorProvider (legacy) + LegacyCompatibilityWrapper (unified) para máxima compatibilidade */}
-                    <EditorProvider
+                <UnifiedFunnelProvider 
+                    funnelId={funnelId || undefined}
+                    debugMode={debugMode}
+                >
+                    <FunnelsProvider debug={debugMode}>
+                        {/* Híbrido: EditorProvider (legacy) + LegacyCompatibilityWrapper (unified) para máxima compatibilidade */}
+                        <EditorProvider
                         enableSupabase={supabaseConfig.enabled}
                         funnelId={supabaseConfig.funnelId}
                         quizId={supabaseConfig.quizId}
@@ -89,7 +96,7 @@ const MainEditorUnified: React.FC = () => {
                             <EditorQuizProvider>
                                 <Quiz21StepsProvider debug={debugMode} initialStep={initialStep}>
                                     <QuizFlowProvider initialStep={initialStep} totalSteps={21}>
-                                        <EditorInitializerUnified
+                                        <FunnelValidatedEditor
                                             templateId={resolvedTemplateId || undefined}
                                             funnelId={funnelId || undefined}
                                             debugMode={debugMode}
@@ -100,21 +107,22 @@ const MainEditorUnified: React.FC = () => {
                         </LegacyCompatibilityWrapper>
                     </EditorProvider>
                 </FunnelsProvider>
+                </UnifiedFunnelProvider>
             </ErrorBoundary>
         </div>
     );
 };
 
 /**
- * 🔧 EDITOR INITIALIZER UNIFICADO
+ * � EDITOR COM VALIDAÇÃO DE FUNIL
  * 
- * Consolidado dos EditorInitializer do MainEditor.tsx com funcionalidades:
- * - Import dinâmico com fallback robusto
- * - Template loading via UnifiedTemplateManager
- * - Error handling e recovery
- * - Loading states otimizados
+ * Wrapper que valida o funil antes de carregar o editor:
+ * - Verifica existência e permissões
+ * - Mostra loading states apropriados
+ * - Fornece fallbacks para erros
+ * - Centraliza estado do funil
  */
-const EditorInitializerUnified: React.FC<{
+const FunnelValidatedEditor: React.FC<{
     templateId?: string;
     funnelId?: string;
     debugMode?: boolean;
@@ -122,6 +130,113 @@ const EditorInitializerUnified: React.FC<{
     templateId,
     funnelId,
     debugMode = false,
+}) => {
+    const funnelContext = useFunnelContext(funnelId);
+
+    if (debugMode) {
+        console.log('🔐 FunnelValidatedEditor:', {
+            funnelId,
+            isReady: funnelContext.isReady,
+            isLoading: funnelContext.isLoading,
+            hasError: funnelContext.hasError,
+            errorType: funnelContext.errorType
+        });
+    }
+
+    // Se não há funnelId, prosseguir sem validação (modo template)
+    if (!funnelId) {
+        return (
+            <EditorInitializerUnified
+                templateId={templateId}
+                funnelId={undefined}
+                debugMode={debugMode}
+            />
+        );
+    }
+
+    // Loading state durante validação
+    if (funnelContext.isLoading) {
+        return (
+            <div className="flex items-center justify-center min-h-screen bg-gray-50">
+                <div className="text-center">
+                    <LoadingSpinner size="lg" className="mb-4" />
+                    <p className="text-gray-600 text-lg font-medium">
+                        Validando acesso ao funil...
+                    </p>
+                    {debugMode && (
+                        <p className="text-xs text-gray-400 mt-2 font-mono">
+                            Funil: {funnelId}
+                        </p>
+                    )}
+                </div>
+            </div>
+        );
+    }
+
+    // Error state - mostrar fallback
+    if (funnelContext.hasError) {
+        return (
+            <FunnelFallback
+                errorType={funnelContext.errorType || 'UNKNOWN'}
+                errorMessage={funnelContext.errorMessage || 'Erro desconhecido'}
+                funnelId={funnelId}
+                suggestions={funnelContext.suggestions}
+                onRetry={funnelContext.retry}
+                onCreateNew={() => {
+                    window.location.href = '/editor?template=default';
+                }}
+            />
+        );
+    }
+
+    // Sucesso - funil validado, carregar editor
+    if (funnelContext.isReady) {
+        return (
+            <EditorInitializerUnified
+                templateId={templateId}
+                funnelId={funnelId}
+                debugMode={debugMode}
+                validatedFunnel={funnelContext.currentFunnel}
+                canEdit={funnelContext.canEdit}
+            />
+        );
+    }
+
+    // Estado desconhecido - mostrar loading como fallback
+    return (
+        <div className="flex items-center justify-center min-h-screen bg-gray-50">
+            <div className="text-center">
+                <LoadingSpinner size="lg" className="mb-4" />
+                <p className="text-gray-600 text-lg font-medium">
+                    Carregando editor...
+                </p>
+            </div>
+        </div>
+    );
+};
+
+/**
+ * �🔧 EDITOR INITIALIZER UNIFICADO
+ * 
+ * Consolidado dos EditorInitializer do MainEditor.tsx com funcionalidades:
+ * - Import dinâmico com fallback robusto
+ * - Template loading via UnifiedTemplateManager
+ * - Error handling e recovery
+ * - Loading states otimizados
+ * - Suporte para funil validado
+ */
+const EditorInitializerUnified: React.FC<{
+    templateId?: string;
+    funnelId?: string;
+    debugMode?: boolean;
+    validatedFunnel?: any;
+    canEdit?: boolean;
+}> = ({
+    templateId,
+    funnelId,
+    debugMode = false,
+    validatedFunnel,
+    canEdit = true
 }) => {
         const [UnifiedEditorComp, setUnifiedEditorComp] = React.useState<React.ComponentType | null>(null);
         const [isLoading, setIsLoading] = React.useState(true);
