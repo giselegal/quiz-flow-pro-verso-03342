@@ -46,8 +46,8 @@ const categoryLabels = {
 // ✨ HOOK PARA SINCRONIZAÇÃO BIDIRECIONAL COM BACKEND
 const useBackendSync = (selectedBlock: any, onUpdate: Function) => {
   const [localState, setLocalState] = useState(() => ({
-    ...selectedBlock.properties,
-    ...selectedBlock.content
+    ...selectedBlock?.properties || {},
+    ...selectedBlock?.content || {}
   }));
   const [isSaving, setIsSaving] = useState(false);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
