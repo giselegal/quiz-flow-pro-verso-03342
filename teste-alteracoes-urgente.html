@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔥 TESTE URGENTE - Localizar Alterações</title>
+    <style>
+        body {
+            font-family: monospace;
+            background: #1a1a1a;
+            color: #00ff00;
+            padding: 20px;
+            margin: 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #000;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid #00ff00;
+        }
+        .btn {
+            background: #ff4444;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .btn:hover {
+            background: #ff6666;
+        }
+        .status {
+            background: #333;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+            border-left: 4px solid #00ff00;
+        }
+        .error {
+            border-left-color: #ff4444;
+        }
+        .success {
+            border-left-color: #00ff00;
+        }
+        .warning {
+            border-left-color: #ffaa00;
+        }
+        #log {
+            background: #000;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #333;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚨 TESTE URGENTE: Localizar Suas Alterações</h1>
+        
+        <div class="status">
+            <h3>🎯 OBJETIVO:</h3>
+            <p>Encontrar onde estão as alterações que você fez:</p>
+            <ul>
+                <li>🔥 Texto "TESTE HOT RELOAD"</li>
+                <li>🎨 Background vermelho (bg-red-500)</li>
+                <li>🎛️ Painel de propriedades moderno</li>
+            </ul>
+        </div>
+
+        <div style="margin: 20px 0;">
+            <button class="btn" onclick="abrirEditor()">📝 Abrir Editor</button>
+            <button class="btn" onclick="testarAlteracoes()">🔍 Testar Alterações</button>
+            <button class="btn" onclick="forcarRefresh()">🔄 Forçar Refresh</button>
+            <button class="btn" onclick="limparCache()">🗑️ Limpar Cache</button>
+            <button class="btn" onclick="injetarScript()">💉 Injetar Teste</button>
+        </div>
+
+        <div id="log">📋 LOG: Aguardando teste...\n</div>
+    </div>
+
+    <script>
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const logEl = document.getElementById('log');
+            const prefix = type === 'error' ? '❌' : type === 'warning' ? '⚠️' : type === 'success' ? '✅' : '📝';
+            logEl.textContent += `[${timestamp}] ${prefix} ${message}\n`;
+            logEl.scrollTop = logEl.scrollHeight;
+        }
+
+        function abrirEditor() {
+            log('📝 Abrindo editor...', 'info');
+            window.open('http://localhost:5173/editor', '_blank');
+        }
+
+        function testarAlteracoes() {
+            log('🔍 Iniciando teste de alterações...', 'info');
+            
+            // Abrir editor e testar
+            const editorWindow = window.open('http://localhost:5173/editor', '_blank');
+            
+            setTimeout(() => {
+                if (editorWindow) {
+                    try {
+                        // Injetar script no editor
+                        const script = editorWindow.document.createElement('script');
+                        script.textContent = `
+                            console.log('🔥 TESTE INJETADO NO EDITOR');
+                            
+                            setTimeout(() => {
+                                // Verificar texto HOT RELOAD
+                                const hasHotReload = document.body.textContent.includes('🔥 TESTE HOT RELOAD');
+                                console.log('🔥 HOT RELOAD encontrado:', hasHotReload);
+                                
+                                // Verificar background vermelho
+                                const redBg = document.querySelector('[class*="bg-red"]');
+                                console.log('🎨 Background vermelho:', !!redBg);
+                                
+                                // Verificar painel de propriedades
+                                const panel = document.querySelector('[class*="properties"]');
+                                console.log('🎛️ Painel de propriedades:', !!panel);
+                                
+                                // Tentar encontrar componentes clicáveis
+                                const blocks = document.querySelectorAll('[class*="block"], [data-block], [class*="component"]');
+                                console.log('🧩 Blocos encontrados:', blocks.length);
+                                
+                                if (blocks.length > 0) {
+                                    console.log('🖱️ Clicando no primeiro bloco...');
+                                    blocks[0].click();
+                                    
+                                    setTimeout(() => {
+                                        const hasHotReloadAfter = document.body.textContent.includes('🔥 TESTE HOT RELOAD');
+                                        console.log('🔥 Após clique - HOT RELOAD:', hasHotReloadAfter);
+                                        
+                                        if (hasHotReloadAfter) {
+                                            console.log('🎉 SUCESSO! As alterações estão funcionando!');
+                                        } else {
+                                            console.log('❌ As alterações ainda não aparecem');
+                                        }
+                                    }, 1000);
+                                }
+                            }, 2000);
+                        `;
+                        editorWindow.document.head.appendChild(script);
+                        log('💉 Script injetado no editor', 'success');
+                    } catch (e) {
+                        log('❌ Erro ao injetar script: ' + e.message, 'error');
+                    }
+                } else {
+                    log('❌ Não foi possível abrir o editor', 'error');
+                }
+            }, 2000);
+        }
+
+        function forcarRefresh() {
+            log('🔄 Forçando refresh...', 'info');
+            const editorWindow = window.open('http://localhost:5173/editor', '_blank');
+            setTimeout(() => {
+                if (editorWindow) {
+                    editorWindow.location.reload(true);
+                    log('✅ Refresh forçado no editor', 'success');
+                }
+            }, 1000);
+        }
+
+        function limparCache() {
+            log('🗑️ Limpando cache...', 'info');
+            
+            // Limpar localStorage
+            const lsKeys = Object.keys(localStorage);
+            lsKeys.forEach(key => {
+                if (key.includes('funnel') || key.includes('quiz') || key.includes('editor')) {
+                    localStorage.removeItem(key);
+                }
+            });
+            
+            // Limpar sessionStorage
+            sessionStorage.clear();
+            
+            log(`✅ Cache limpo (${lsKeys.length} chaves localStorage removidas)`, 'success');
+        }
+
+        function injetarScript() {
+            log('💉 Carregando script de teste...', 'info');
+            
+            fetch('/teste-alteracoes-urgente.js')
+                .then(response => response.text())
+                .then(scriptContent => {
+                    const script = document.createElement('script');
+                    script.textContent = scriptContent;
+                    document.head.appendChild(script);
+                    log('✅ Script de teste carregado', 'success');
+                })
+                .catch(error => {
+                    log('❌ Erro ao carregar script: ' + error.message, 'error');
+                });
+        }
+
+        // Auto-teste inicial
+        log('🚀 Sistema de teste carregado', 'success');
+        log('💡 Clique em "Testar Alterações" para verificar', 'info');
+    </script>
+</body>
+</html>
