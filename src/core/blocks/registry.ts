@@ -837,6 +837,87 @@ export const blocksRegistry: Record<string, BlockDefinition> = process.env.NODE_
             prop({ key: 'backgroundUrl', kind: 'url', label: 'Imagem de Fundo', category: 'style', default: '' }),
         ],
     },
+    'quiz-question': {
+        type: 'quiz-question',
+        title: 'Pergunta de Quiz',
+        category: 'Quiz',
+        icon: '❓',
+        defaultProps: {
+            title: 'Qual é a sua pergunta?',
+            question: 'Qual é a sua pergunta?',
+            options: [
+                {
+                    id: 'opt-1',
+                    text: 'Opção A',
+                    imageUrl: '',
+                    value: 'a'
+                },
+                {
+                    id: 'opt-2',
+                    text: 'Opção B',
+                    imageUrl: '',
+                    value: 'b'
+                }
+            ],
+            columns: 2,
+            gridGap: 16,
+            multipleSelection: false,
+            showImages: true,
+            imagePosition: 'top'
+        },
+        propsSchema: [
+            prop({ key: 'title', kind: 'text', label: 'Título da Pergunta', category: 'content', default: 'Qual é a sua pergunta?' }),
+            prop({ key: 'question', kind: 'text', label: 'Pergunta', category: 'content', default: 'Qual é a sua pergunta?' }),
+            prop({ key: 'options', kind: 'array', label: 'Opções', category: 'content', default: [] }),
+            prop({ key: 'columns', kind: 'number', label: 'Colunas', category: 'layout', min: 1, max: 4, default: 2 }),
+            prop({ key: 'gridGap', kind: 'number', label: 'Espaçamento', category: 'layout', min: 0, max: 32, default: 16 }),
+            prop({ key: 'multipleSelection', kind: 'switch', label: 'Seleção Múltipla', category: 'behavior', default: false }),
+            prop({ key: 'showImages', kind: 'switch', label: 'Mostrar Imagens', category: 'content', default: true }),
+            prop({
+                key: 'imagePosition', kind: 'select', label: 'Posição da Imagem', category: 'layout', options: [
+                    { value: 'top', label: 'Acima' },
+                    { value: 'left', label: 'Esquerda' },
+                    { value: 'right', label: 'Direita' }
+                ], default: 'top'
+            })
+        ],
+    },
+    'quiz-question-inline': {
+        type: 'quiz-question-inline',
+        title: 'Pergunta de Quiz Inline',
+        category: 'Quiz',
+        icon: '💭',
+        defaultProps: {
+            title: 'Pergunta inline?',
+            question: 'Pergunta inline?',
+            options: [
+                {
+                    id: 'opt-1',
+                    text: 'Sim',
+                    value: 'yes'
+                },
+                {
+                    id: 'opt-2',
+                    text: 'Não',
+                    value: 'no'
+                }
+            ],
+            layout: 'horizontal',
+            showImages: false
+        },
+        propsSchema: [
+            prop({ key: 'title', kind: 'text', label: 'Título', category: 'content', default: 'Pergunta inline?' }),
+            prop({ key: 'question', kind: 'text', label: 'Pergunta', category: 'content', default: 'Pergunta inline?' }),
+            prop({ key: 'options', kind: 'array', label: 'Opções', category: 'content', default: [] }),
+            prop({
+                key: 'layout', kind: 'select', label: 'Layout', category: 'layout', options: [
+                    { value: 'horizontal', label: 'Horizontal' },
+                    { value: 'vertical', label: 'Vertical' }
+                ], default: 'horizontal'
+            }),
+            prop({ key: 'showImages', kind: 'switch', label: 'Mostrar Imagens', category: 'content', default: false })
+        ],
+    },
 };
 
 export const getBlockDefinition = (type: string): BlockDefinition | undefined => blocksRegistry[type];
