@@ -11,18 +11,32 @@ export interface UniversalBlockRendererProps {
   onClick?: () => void;
   onPropertyChange?: (key: string, value: any) => void;
   mode?: 'production' | 'preview' | 'editor';
+  // ✅ Novas props para interação (do BlockRenderer.tsx)
+  isPreviewMode?: boolean;
+  stepNumber?: number;
+  userResponses?: Record<string, any>;
+  setUserResponses?: (responses: Record<string, any>) => void;
+  // ✅ Nova prop para performance (do OptimizedBlockRenderer.tsx)
+  isPreviewing?: boolean;
 }
 
 /**
- * 🎯 UNIVERSAL BLOCK RENDERER - VERSÃO 2.0 OTIMIZADA
+ * 🎯 UNIVERSAL BLOCK RENDERER - VERSÃO 3.0 CONSOLIDADA (FASE 3.2)
  * ✅ Usa Enhanced Registry com 150+ componentes
  * ✅ Sistema de fallback inteligente por categoria
  * ✅ Normalização automática de propriedades
  * ✅ Compatível com templates e editor
  * ✅ Performance otimizada com Suspense
+ * 
+ * 🔄 CONSOLIDAÇÕES DA FASE 3.2:
+ * ✅ Lógica de interação do BlockRenderer.tsx (userResponses, handleUserInput, stepNumber)
+ * ✅ Otimizações de performance do OptimizedBlockRenderer.tsx (comparação customizada, hover effects)
+ * ✅ Sistema de margens expandido do ConsolidatedBlockRenderer.tsx (até 160px)
+ * ✅ Suporte a múltiplos modos (production, preview, editor, isPreviewMode, isPreviewing)
+ * ✅ Zero perda de funcionalidade - compatibilidade total
  */
 
-// Função para converter valores de margem em classes Tailwind (Sistema Universal)
+// Função para converter valores de margem em classes Tailwind (Sistema Universal Expandido)
 const getMarginClass = (
   value: number | string,
   type: 'top' | 'bottom' | 'left' | 'right'
@@ -46,10 +60,12 @@ const getMarginClass = (
     if (absValue <= 32) return `-${prefix}-8`;
     if (absValue <= 36) return `-${prefix}-9`;
     if (absValue <= 40) return `-${prefix}-10`;
-    return `-${prefix}-10`; // Máximo para negativas
+    if (absValue <= 44) return `-${prefix}-11`;
+    if (absValue <= 48) return `-${prefix}-12`;
+    return `-${prefix}-12`; // Máximo para negativas
   }
 
-  // Margens positivas (expandido para suportar até 100px)
+  // ✅ Margens positivas expandidas (até 128px como ConsolidatedBlockRenderer)
   if (numValue <= 4) return `${prefix}-1`;
   if (numValue <= 8) return `${prefix}-2`;
   if (numValue <= 12) return `${prefix}-3`;
@@ -67,7 +83,10 @@ const getMarginClass = (
   if (numValue <= 80) return `${prefix}-20`;
   if (numValue <= 96) return `${prefix}-24`;
   if (numValue <= 112) return `${prefix}-28`;
-  return `${prefix}-32`; // Máximo suportado
+  if (numValue <= 128) return `${prefix}-32`;
+  if (numValue <= 144) return `${prefix}-36`;
+  if (numValue <= 160) return `${prefix}-40`;
+  return `${prefix}-40`; // Máximo suportado expandido
 };
 
 const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = React.memo(({
@@ -76,9 +95,43 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = React.memo
   onClick,
   onPropertyChange,
   mode = 'production',
+  // ✅ Suporte a interação
+  isPreviewMode,
+  stepNumber,
+  userResponses = {},
+  setUserResponses,
+  // ✅ Suporte a performance otimizada
+  isPreviewing = false,
 }) => {
   // ✅ Normalizar propriedades para compatibilidade template/editor
   const normalizedBlock = normalizeBlockProps(block);
+
+  // ✅ Lógica de interação (do BlockRenderer.tsx)
+  const handleUserInput = React.useCallback(
+    (key: string, value: any) => {
+      if (setUserResponses) {
+        setUserResponses({
+          ...userResponses,
+          [key]: value,
+        });
+      }
+    },
+    [userResponses, setUserResponses]
+  );
+
+  // ✅ Determinar modo real (compatibilidade com isPreviewMode)
+  const effectiveMode = React.useMemo(() => {
+    if (isPreviewMode !== undefined) return isPreviewMode ? 'preview' : mode;
+    if (isPreviewing) return 'preview';
+    return mode;
+  }, [mode, isPreviewMode, isPreviewing]);
+
+  // ✅ Callback otimizado para click (do OptimizedBlockRenderer.tsx)
+  const handleClick = React.useCallback(() => {
+    if (effectiveMode !== 'preview' && onClick) {
+      onClick();
+    }
+  }, [effectiveMode, onClick]);
 
   // ✅ Buscar componente otimizado com fallback inteligente
   const Component = React.useMemo(() =>
@@ -175,24 +228,35 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = React.memo
             scaleTransform.scaleClass,
             // Margens universais otimizadas
             marginClasses,
-            isSelected && 'ring-2 ring-[#B89B7A] ring-offset-2'
+            // ✅ Estados otimizados (do OptimizedBlockRenderer.tsx)
+            effectiveMode !== 'preview' && isSelected && 'ring-2 ring-[#B89B7A] ring-offset-2',
+            effectiveMode !== 'preview' && 'cursor-pointer hover:scale-[1.005]'
           )}
-          onClick={onClick}
+          onClick={handleClick}
           style={{
             ...inlineStyles,
             ...(scaleTransform.mergedTransform && { transform: scaleTransform.mergedTransform }),
             ...(scaleTransform.scaleTransformValue && { transformOrigin: scaleTransform.scaleOrigin, willChange: 'transform' }),
           }}
+          data-block-type={normalizedBlock.type}
+          data-block-id={normalizedBlock.id}
         >
           <React.Suspense fallback={<div className="animate-pulse bg-gray-200 h-16 rounded" />}>
             <Component
               block={normalizedBlock}
               properties={processedProperties}
               isSelected={isSelected}
-              onClick={onClick}
+              onClick={handleClick}
               onPropertyChange={onPropertyChange}
-              mode={mode}
-              isPreviewMode={mode === 'preview'}
+              mode={effectiveMode}
+              isPreviewMode={effectiveMode === 'preview'}
+              // ✅ Props de interação (do BlockRenderer.tsx)
+              stepNumber={stepNumber}
+              userResponses={userResponses}
+              setUserResponses={setUserResponses}
+              onUserInput={handleUserInput}
+              // ✅ Props de compatibilidade
+              isPreviewing={effectiveMode === 'preview'}
               {...processedProperties}
             />
           </React.Suspense>
@@ -211,22 +275,44 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = React.memo
     );
   }
 }, (prevProps, nextProps) => {
-  // Comparação otimizada para evitar re-renders desnecessários
+  // ✅ Comparação otimizada (do OptimizedBlockRenderer.tsx) para evitar re-renders desnecessários
   if (prevProps.isSelected !== nextProps.isSelected) return false;
   if (prevProps.mode !== nextProps.mode) return false;
+  if (prevProps.isPreviewMode !== nextProps.isPreviewMode) return false;
+  if (prevProps.isPreviewing !== nextProps.isPreviewing) return false;
+  if (prevProps.stepNumber !== nextProps.stepNumber) return false;
   if (prevProps.block.id !== nextProps.block.id) return false;
   if (prevProps.block.type !== nextProps.block.type) return false;
+
+  // ✅ Comparação de userResponses (shallow)
+  const prevResponses = prevProps.userResponses || {};
+  const nextResponses = nextProps.userResponses || {};
+  const prevResponseKeys = Object.keys(prevResponses);
+  const nextResponseKeys = Object.keys(nextResponses);
+  
+  if (prevResponseKeys.length !== nextResponseKeys.length) return false;
+  for (const key of prevResponseKeys) {
+    if (prevResponses[key] !== nextResponses[key]) return false;
+  }
 
   // Comparação superficial das propriedades do bloco
   const prevProps_ = prevProps.block.properties || {};
   const nextProps_ = nextProps.block.properties || {};
+  
+  // ✅ Verificar apenas propriedades críticas para re-render (otimização)
+  const criticalProps = ['content', 'src', 'text', 'backgroundColor', 'color', 'fontSize', 'title', 'options'];
+  for (const prop of criticalProps) {
+    if (prevProps_[prop] !== nextProps_[prop]) return false;
+  }
+
+  // Comparação completa das outras propriedades apenas se necessário
   const prevKeys = Object.keys(prevProps_);
   const nextKeys = Object.keys(nextProps_);
 
   if (prevKeys.length !== nextKeys.length) return false;
 
   for (const key of prevKeys) {
-    if (prevProps_[key] !== nextProps_[key]) return false;
+    if (!criticalProps.includes(key) && prevProps_[key] !== nextProps_[key]) return false;
   }
 
   return true;

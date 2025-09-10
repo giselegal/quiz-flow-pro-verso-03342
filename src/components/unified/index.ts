@@ -1,23 +1,24 @@
 /**
- * UNIFIED COMPONENTS INDEX - Sistema Consolidado de Componentes
+ * UNIFIED COMPONENTS INDEX - Sistema Consolidado de Componentes (Phase 3.2 Updated)
  */
 
-import ConsolidatedBlockRenderer from './ConsolidatedBlockRenderer';
+// ✅ Import UniversalBlockRenderer instead of ConsolidatedBlockRenderer (Phase 3.2)
+import UniversalBlockRenderer from '../editor/blocks/UniversalBlockRenderer';
 import ConsolidatedPropertiesPanel from './ConsolidatedPropertiesPanel';
 
-// Componentes consolidados principais
-export { ConsolidatedBlockRenderer, ConsolidatedPropertiesPanel };
+// ✅ Updated exports to use UniversalBlockRenderer (Phase 3.2 consolidation)
+export { UniversalBlockRenderer, ConsolidatedPropertiesPanel };
 
 // Types unificados
-export type { ConsolidatedBlockRendererProps } from './ConsolidatedBlockRenderer';
+export type { UniversalBlockRendererProps } from '../editor/blocks/UniversalBlockRenderer';
 
-// Aliases para compatibilidade
-export { ConsolidatedBlockRenderer as UniversalBlockRenderer };
+// Legacy compatibility aliases
+export { UniversalBlockRenderer as ConsolidatedBlockRenderer };
 export { ConsolidatedPropertiesPanel as UniversalPropertiesPanel };
 
 // Sistema completo consolidado
 export const ConsolidatedSystem = {
-  BlockRenderer: ConsolidatedBlockRenderer,
+  BlockRenderer: UniversalBlockRenderer,
   PropertiesPanel: ConsolidatedPropertiesPanel,
 };
 
