@@ -9,7 +9,6 @@ import { useMemo, useState } from 'react';
 import { makeStepKey } from '@/utils/stepKey';
 import { motion } from 'framer-motion';
 import { LayoutGrid, Monitor, Save, Smartphone, Tablet } from 'lucide-react';
-import EditorNoCodePanel from '@/components/editor/EditorNoCodePanel';
 
 interface EditorToolbarProps {
   className?: string;
@@ -140,9 +139,6 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({ className = '' }) 
 
       {/* Botões de ação à direita */}
       <div className="flex items-center space-x-3">
-        {/* Painel NOCODE integrado ao editor */}
-        <EditorNoCodePanel />
-
         <Button
           onClick={handleSave}
           size="sm"

@@ -23,18 +23,18 @@ console.log('📍 URL atual:', currentUrl);
 // Simular diferentes cenários de URL
 const testUrls = [
     '/editor/personality-assessment-1757514679394',
-    '/editor/lead-capture-simple-1757514692752',
+    '/editor/lead-capture-simple-1757514692752', 
     '/editor?funnel=personality-assessment-1757514679394',
     '/editor?template=personality-assessment'
 ];
 
 testUrls.forEach(url => {
     console.log(`✅ Padrão de URL: ${url}`);
-
+    
     // Extrair ID da URL
     let funnelId = null;
     let templateId = null;
-
+    
     if (url.includes('/editor/') && !url.includes('?')) {
         // Novo padrão: /editor/ID
         funnelId = url.split('/editor/')[1];
@@ -50,7 +50,7 @@ testUrls.forEach(url => {
         templateId = params.get('template');
         console.log(`   📋 TemplateId extraído: ${templateId}`);
     }
-
+    
     console.log('');
 });
 
@@ -69,41 +69,41 @@ if (isInEditor) {
     // Extrair informações da URL atual
     const pathParts = window.location.pathname.split('/');
     const params = new URLSearchParams(window.location.search);
-
+    
     let funnelId = null;
     let templateId = null;
-
+    
     // Verificar novo padrão (/editor/ID)
     if (pathParts.length >= 3 && pathParts[2]) {
         funnelId = pathParts[2];
         console.log(`🎯 FunnelId da URL (path): ${funnelId}`);
     }
-
+    
     // Verificar padrão legado (?funnel=ID)
     if (params.get('funnel')) {
         const legacyId = params.get('funnel');
         console.log(`🎯 FunnelId da URL (query): ${legacyId}`);
         if (!funnelId) funnelId = legacyId;
     }
-
+    
     // Verificar template
     if (params.get('template')) {
         templateId = params.get('template');
         console.log(`📋 TemplateId da URL: ${templateId}`);
     }
-
+    
     console.log('\n📊 RESUMO DA NAVEGAÇÃO:');
     console.log(`   FunnelId final: ${funnelId || 'NENHUM'}`);
     console.log(`   TemplateId: ${templateId || 'NENHUM'}`);
     console.log(`   Debug mode: ${params.get('debug') === 'true' ? 'ATIVO' : 'INATIVO'}`);
-
+    
     // ============================================================================
     // TESTE 3: VERIFICAR SE DADOS EXISTEM NO STORAGE
     // ============================================================================
-
+    
     console.log('\n3️⃣ VERIFICANDO DADOS NO STORAGE');
     console.log('-'.repeat(50));
-
+    
     if (funnelId) {
         const storagePatterns = [
             `unified_funnel:${funnelId}`,
@@ -111,9 +111,9 @@ if (isInEditor) {
             `contextual-my-templates-funnel-${funnelId}`,
             funnelId
         ];
-
+        
         let dataFound = false;
-
+        
         storagePatterns.forEach(pattern => {
             const data = localStorage.getItem(pattern);
             if (data) {
@@ -129,7 +129,7 @@ if (isInEditor) {
                 }
             }
         });
-
+        
         if (!dataFound) {
             console.log('❌ PROBLEMA: Nenhum dado encontrado para o funnelId');
             console.log('🔧 Possíveis causas:');
@@ -138,10 +138,10 @@ if (isInEditor) {
             console.log('   - Dados foram perdidos/limpos');
         }
     }
-
+    
     if (templateId) {
         console.log(`\n📋 Verificando template: ${templateId}`);
-
+        
         // Verificar se template existe no registry
         if (typeof window.funnelTemplates !== 'undefined') {
             const template = window.funnelTemplates[templateId];
@@ -187,24 +187,24 @@ console.log('\n🧪 Testando URL gerada:');
 try {
     const testUrl = new URL(expectedUrl, window.location.origin);
     console.log('✅ URL válida:', testUrl.href);
-
+    
     // Extrair parâmetros da URL de teste
     const testPathParts = testUrl.pathname.split('/');
     const testParams = new URLSearchParams(testUrl.search);
-
+    
     const extractedFunnelId = testPathParts[2];
     const extractedTemplateId = testParams.get('template');
-
+    
     console.log('📊 Parâmetros extraídos:');
     console.log(`   FunnelId: ${extractedFunnelId}`);
     console.log(`   TemplateId: ${extractedTemplateId}`);
-
+    
     if (extractedFunnelId === newFunnelId && extractedTemplateId === mockTemplate.id) {
         console.log('🎉 SUCESSO: URL gerada corretamente!');
     } else {
         console.log('❌ PROBLEMA: Parâmetros não conferem');
     }
-
+    
 } catch (error) {
     console.log('❌ URL inválida:', error.message);
 }
@@ -228,7 +228,7 @@ if (!isInEditor && !window.location.pathname.includes('/admin')) {
 if (isInEditor) {
     const pathParts = window.location.pathname.split('/');
     const hasPathParam = pathParts.length >= 3 && pathParts[2];
-
+    
     if (hasPathParam) {
         score += 20;
         console.log('✅ BONUS: Usando novo padrão de URL com path parameter');
