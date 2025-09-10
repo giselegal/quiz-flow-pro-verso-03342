@@ -117,55 +117,71 @@ function App() {
               } />
 
               {/* 🎯 ÁREA ADMINISTRATIVA - ROTAS PROTEGIDAS */}
-              <ProtectedRoute path="/dashboard" component={() =>
-                <Suspense fallback={<LoadingFallback />}>
-                  <DashboardPage />
-                </Suspense>
+              <Route path="/dashboard" component={() =>
+                <ProtectedRoute path="/dashboard" component={() =>
+                  <Suspense fallback={<LoadingFallback />}>
+                    <DashboardPage />
+                  </Suspense>
+                } />
               } />
 
               {/* Rota /admin que redireciona para o DashboardPage */}
-              <ProtectedRoute path="/admin" component={() =>
-                <Suspense fallback={<LoadingFallback />}>
-                  <DashboardPage />
-                </Suspense>
+              <Route path="/admin" component={() =>
+                <ProtectedRoute path="/admin" component={() =>
+                  <Suspense fallback={<LoadingFallback />}>
+                    <DashboardPage />
+                  </Suspense>
+                } />
               } />
 
               {/* Subrotas admin que também carregam o DashboardPage */}
-              <ProtectedRoute path="/admin/*" component={() =>
-                <Suspense fallback={<LoadingFallback />}>
-                  <DashboardPage />
-                </Suspense>
+              <Route path="/admin/*" component={() =>
+                <ProtectedRoute path="/admin/*" component={() =>
+                  <Suspense fallback={<LoadingFallback />}>
+                    <DashboardPage />
+                  </Suspense>
+                } />
               } />
 
               {/* 📊 Páginas de Analytics e Métricas */}
-              <ProtectedRoute path="/analytics" component={() =>
-                <Suspense fallback={<LoadingFallback />}>
-                  <AnalyticsPage />
-                </Suspense>
+              <Route path="/analytics" component={() =>
+                <ProtectedRoute path="/analytics" component={() =>
+                  <Suspense fallback={<LoadingFallback />}>
+                    <AnalyticsPage />
+                  </Suspense>
+                } />
               } />
 
-              <ProtectedRoute path="/metrics" component={() =>
-                <Suspense fallback={<LoadingFallback />}>
-                  <MetricsPage />
-                </Suspense>
+              <Route path="/metrics" component={() =>
+                <ProtectedRoute path="/metrics" component={() =>
+                  <Suspense fallback={<LoadingFallback />}>
+                    <MetricsPage />
+                  </Suspense>
+                } />
               } />
 
-              <ProtectedRoute path="/participants" component={() =>
-                <Suspense fallback={<LoadingFallback />}>
-                  <ParticipantsPage />
-                </Suspense>
+              <Route path="/participants" component={() =>
+                <ProtectedRoute path="/participants" component={() =>
+                  <Suspense fallback={<LoadingFallback />}>
+                    <ParticipantsPage />
+                  </Suspense>
+                } />
               } />
 
-              <ProtectedRoute path="/settings" component={() =>
-                <Suspense fallback={<LoadingFallback />}>
-                  <SettingsPage />
-                </Suspense>
+              <Route path="/settings" component={() =>
+                <ProtectedRoute path="/settings" component={() =>
+                  <Suspense fallback={<LoadingFallback />}>
+                    <SettingsPage />
+                  </Suspense>
+                } />
               } />
 
-              <ProtectedRoute path="/overview" component={() =>
-                <Suspense fallback={<LoadingFallback />}>
-                  <OverviewPage />
-                </Suspense>
+              <Route path="/overview" component={() =>
+                <ProtectedRoute path="/overview" component={() =>
+                  <Suspense fallback={<LoadingFallback />}>
+                    <OverviewPage />
+                  </Suspense>
+                } />
               } />
 
               {/* 🎨 Páginas de Desenvolvimento e Testes */}
