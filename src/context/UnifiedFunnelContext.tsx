@@ -42,7 +42,7 @@ interface UnifiedFunnelContextType {
     updateFunnel: (updates: any) => Promise<UnifiedFunnelData>;
     duplicateFunnel: (newName?: string) => Promise<UnifiedFunnelData>;
     deleteFunnel: () => Promise<boolean>;
-    
+
     // Ações de controle
     retry: () => void;
     reload: () => void;
@@ -145,7 +145,7 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
 
             // Usar serviço unificado (com cache automático)
             const loadedFunnel = await funnelUnifiedService.getFunnel(id, userId);
-            
+
             if (loadedFunnel) {
                 setFunnel(loadedFunnel);
 
@@ -275,7 +275,7 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
             console.log('🗑️ UnifiedFunnelContext: Deletando funil', funnelId);
 
             const success = await funnelUnifiedService.deleteFunnel(funnelId, userId);
-            
+
             if (success) {
                 setFunnel(null);
                 setPermissions({
@@ -432,7 +432,7 @@ interface UnifiedFunnelContextType {
     updateFunnel: (updates: any) => Promise<UnifiedFunnelData>;
     duplicateFunnel: (newName?: string) => Promise<UnifiedFunnelData>;
     deleteFunnel: () => Promise<boolean>;
-    
+
     // Ações de controle
     retry: () => void;
     reload: () => void;
@@ -535,7 +535,7 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
 
             // Usar serviço unificado (com cache automático)
             const loadedFunnel = await funnelUnifiedService.getFunnel(id, userId);
-            
+
             if (loadedFunnel) {
                 setFunnel(loadedFunnel);
 
@@ -665,7 +665,7 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
             console.log('🗑️ UnifiedFunnelContext: Deletando funil', funnelId);
 
             const success = await funnelUnifiedService.deleteFunnel(funnelId, userId);
-            
+
             if (success) {
                 setFunnel(null);
                 setPermissions({

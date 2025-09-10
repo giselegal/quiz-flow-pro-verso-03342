@@ -26,17 +26,17 @@ export interface UnifiedFunnelData {
     category?: string;
     context: FunnelContext;
     userId: string;
-    
+
     // Dados do funil
     settings: any;
     pages: any[];
-    
+
     // Metadados
     isPublished: boolean;
     version: number;
     createdAt: Date;
     updatedAt: Date;
-    
+
     // Template info
     templateId?: string;
     isFromTemplate?: boolean;
@@ -303,10 +303,10 @@ export class FunnelUnifiedService {
 
             // Cache com isolamento
             this.cache.set(
-                `funnel:${id}`, 
-                savedFunnel, 
-                undefined, 
-                options.context, 
+                `funnel:${id}`,
+                savedFunnel,
+                undefined,
+                options.context,
                 userId
             );
 
@@ -342,17 +342,17 @@ export class FunnelUnifiedService {
 
             // Buscar no Supabase
             const funnel = await this.loadFromSupabase(id, userId);
-            
+
             if (funnel) {
                 // Cache com deep clone
                 this.cache.set(
-                    `funnel:${id}`, 
-                    funnel, 
-                    undefined, 
-                    funnel.context, 
+                    `funnel:${id}`,
+                    funnel,
+                    undefined,
+                    funnel.context,
                     funnel.userId
                 );
-                
+
                 console.log('✅ Funil carregado do Supabase:', id);
                 return deepClone(funnel); // Deep clone para isolamento
             }
@@ -362,7 +362,7 @@ export class FunnelUnifiedService {
 
         } catch (error) {
             console.error('❌ Erro ao carregar funil:', error);
-            
+
             // Tentar fallback localStorage
             return this.loadFromLocalStorage(id);
         }
@@ -442,8 +442,8 @@ export class FunnelUnifiedService {
 
             // Cache com TTL menor para listas
             this.cache.set(
-                cacheKey, 
-                funnels, 
+                cacheKey,
+                funnels,
                 2 * 60 * 1000, // 2 minutos
                 options.context,
                 userId
@@ -454,7 +454,7 @@ export class FunnelUnifiedService {
 
         } catch (error) {
             console.error('❌ Erro ao listar funis:', error);
-            
+
             // Fallback para localStorage
             return this.listFromLocalStorage(options);
         }
@@ -554,7 +554,7 @@ export class FunnelUnifiedService {
     private async validateFunnelData(funnel: UnifiedFunnelData): Promise<void> {
         // Usar serviço de validação existente
         const validation = await funnelValidationService.validateFunnelAccess(funnel.id, funnel.userId);
-        
+
         if (!validation.isValid) {
             throw new Error(`Funil inválido: ${validation.error || 'Erro desconhecido'}`);
         }
@@ -609,7 +609,7 @@ export class FunnelUnifiedService {
      */
     private deepCloneFunnel(original: UnifiedFunnelData, newName?: string): UnifiedFunnelData {
         const cloned = deepClone(original);
-        
+
         // Regenerar IDs únicos
         cloned.id = this.generateUniqueId();
         cloned.name = newName || `${original.name} (Cópia)`;
@@ -640,14 +640,14 @@ export class FunnelUnifiedService {
     private async applyTemplateToFunnel(funnel: UnifiedFunnelData, templateId: string): Promise<void> {
         // TODO: Implementar carregamento e aplicação de template
         console.log('🎨 Aplicando template:', templateId, 'ao funil:', funnel.id);
-        
+
         // Por enquanto, aplicar estrutura básica
         funnel.settings = deepClone({
             theme: 'default',
             templateId: templateId,
             appliedAt: new Date().toISOString()
         });
-        
+
         funnel.pages = [];
     }
 
@@ -892,7 +892,7 @@ export class FunnelUnifiedService {
         try {
             const key = `unified_funnel:${id}`;
             const data = localStorage.getItem(key);
-            
+
             if (!data) return null;
 
             const funnel = JSON.parse(data);
@@ -912,7 +912,7 @@ export class FunnelUnifiedService {
             const userId = options.userId || 'unknown';
             const context = options.context || FunnelContext.EDITOR;
             const listKey = `unified_funnels_list:${userId}:${context}`;
-            
+
             const data = localStorage.getItem(listKey);
             if (!data) return [];
 
@@ -935,7 +935,7 @@ export class FunnelUnifiedService {
 
     private convertFromSupabaseFormat(data: any): UnifiedFunnelData {
         const settings = data.settings || {};
-        
+
         return {
             id: data.id,
             name: data.name,

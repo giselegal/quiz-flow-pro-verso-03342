@@ -128,26 +128,26 @@ export function deepClone<T>(obj: T): T {
  * Deep clone com regeneração automática de IDs
  */
 export function deepCloneWithNewIds<T extends Record<string, any>>(
-    obj: T, 
+    obj: T,
     options: CloneOptions = {}
 ): CloneResult<T> {
     const startTime = Date.now();
     const idMapping = new Map<string, string>();
-    
+
     try {
         // Clone inicial
         const cloned = deepClone(obj);
-        
+
         // Regenerar IDs se solicitado
         if (options.regenerateIds !== false) {
             regenerateObjectIds(cloned, idMapping);
         }
-        
+
         // Atualizar nome se necessário
         if (cloned && typeof cloned === 'object' && 'name' in cloned) {
             updateClonedName(cloned, options);
         }
-        
+
         // Limpar metadados se solicitado
         if (!options.preserveMetadata && cloned && typeof cloned === 'object') {
             cleanMetadata(cloned);
@@ -219,7 +219,7 @@ function updateIdReferences(obj: any, idMapping: Map<string, string>): void {
 
     // Lista de propriedades que podem conter referências de ID
     const referenceFields = [
-        'funnelId', 'funnel_id', 'parentId', 'parent_id', 
+        'funnelId', 'funnel_id', 'parentId', 'parent_id',
         'targetId', 'target_id', 'sourceId', 'source_id',
         'stepId', 'step_id', 'blockId', 'block_id',
         'pageId', 'page_id', 'componentId', 'component_id'
@@ -233,12 +233,12 @@ function updateIdReferences(obj: any, idMapping: Map<string, string>): void {
     for (const key in obj) {
         if (obj.hasOwnProperty(key)) {
             const value = obj[key];
-            
+
             // Atualizar referências de ID
             if (referenceFields.includes(key) && typeof value === 'string' && idMapping.has(value)) {
                 obj[key] = idMapping.get(value);
             }
-            
+
             // Recursão para objetos aninhados
             else if (typeof value === 'object') {
                 updateIdReferences(value, idMapping);
@@ -265,17 +265,17 @@ function updateClonedName(obj: any, options: CloneOptions): void {
         obj.name = options.customName;
     } else {
         let newName = obj.name;
-        
+
         if (options.namePrefix) {
             newName = `${options.namePrefix}${newName}`;
         }
-        
+
         if (options.nameSuffix) {
             newName = `${newName}${options.nameSuffix}`;
         } else if (!options.customName && !options.namePrefix) {
             newName = `${newName} (Cópia)`;
         }
-        
+
         obj.name = newName;
     }
 }
@@ -375,11 +375,11 @@ export function cloneFunnelPages(pages: any[], funnelId?: string): any[] {
 
     return pages.map((page) => {
         const clonedPage = deepClone(page);
-        
+
         // Regenerar IDs
         clonedPage.id = generateUniqueId('page');
         if (funnelId) clonedPage.funnel_id = funnelId;
-        
+
         // Regenerar IDs dos blocos
         if (clonedPage.blocks) {
             clonedPage.blocks = clonedPage.blocks.map((block: any) => ({
@@ -387,7 +387,7 @@ export function cloneFunnelPages(pages: any[], funnelId?: string): any[] {
                 id: generateUniqueId('block')
             }));
         }
-        
+
         return clonedPage;
     });
 }
@@ -405,15 +405,15 @@ export function verifyIsolation<T>(original: T, cloned: T): boolean {
         if (typeof cloned === 'object' && cloned !== null && !Array.isArray(cloned)) {
             const testKey = '__test_isolation__';
             (cloned as any)[testKey] = 'test_value';
-            
+
             const isIsolated = !(testKey in (original as any));
             delete (cloned as any)[testKey];
-            
+
             return isIsolated;
         }
-        
+
         return true; // Primitivos são sempre isolados
-        
+
     } catch (error) {
         console.warn('⚠️ Não foi possível verificar isolamento:', error);
         return false;
@@ -426,10 +426,10 @@ export function verifyIsolation<T>(original: T, cloned: T): boolean {
 export function findDuplicateIds(obj: any): string[] {
     const ids = new Set<string>();
     const duplicates = new Set<string>();
-    
+
     function collectIds(current: any): void {
         if (!current || typeof current !== 'object') return;
-        
+
         if (current.id && typeof current.id === 'string') {
             if (ids.has(current.id)) {
                 duplicates.add(current.id);
@@ -437,14 +437,14 @@ export function findDuplicateIds(obj: any): string[] {
                 ids.add(current.id);
             }
         }
-        
+
         if (Array.isArray(current)) {
             current.forEach(collectIds);
         } else {
             Object.values(current).forEach(collectIds);
         }
     }
-    
+
     collectIds(obj);
     return Array.from(duplicates);
 }
