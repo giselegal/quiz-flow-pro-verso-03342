@@ -11,14 +11,14 @@ import { funnelLocalStore } from '@/services/funnelLocalStore';
 const EditorTemplatesPage: React.FC = () => {
   const [, setLocation] = useLocation();
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
-  
+
   // Carregar templates unificados
   const templates = getUnifiedTemplates();
 
   const handleSelectTemplate = async (templateId: string) => {
     try {
       console.log('🎯 Selecionando template:', templateId);
-      
+
       // Buscar template selecionado
       const template = templates.find(t => t.id === templateId);
       if (!template) {
@@ -51,7 +51,7 @@ const EditorTemplatesPage: React.FC = () => {
 
       // Navegar para o editor com o funil criado
       setLocation(`/editor/${encodeURIComponent(clonedInstance.id)}`);
-      
+
     } catch (error) {
       console.error('❌ Erro ao selecionar template:', error);
       // Fallback: navegar direto para editor
@@ -79,13 +79,12 @@ const EditorTemplatesPage: React.FC = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {templates.map((template) => (
-          <Card 
-            key={template.id} 
-            className={`cursor-pointer transition-all duration-200 hover:shadow-lg ${
-              selectedTemplate === template.id 
-                ? 'ring-2 ring-[#B89B7A] shadow-lg' 
+          <Card
+            key={template.id}
+            className={`cursor-pointer transition-all duration-200 hover:shadow-lg ${selectedTemplate === template.id
+                ? 'ring-2 ring-[#B89B7A] shadow-lg'
                 : 'hover:shadow-md'
-            }`}
+              }`}
             onClick={() => setSelectedTemplate(template.id)}
           >
             <CardHeader className="pb-3">
@@ -98,7 +97,7 @@ const EditorTemplatesPage: React.FC = () => {
                     {template.description || 'Modelo de funil profissional'}
                   </p>
                 </div>
-                <Badge 
+                <Badge
                   variant={template.isOfficial ? "default" : "secondary"}
                   className="ml-2"
                 >
