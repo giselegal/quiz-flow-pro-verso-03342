@@ -46,7 +46,7 @@ export const generateTemplateThumbnail = async (
     // Extrair informações principais dos blocos
     const titleBlock = blocks.find(b => b.type === 'text' || b.id.includes('title'));
     const headerBlock = blocks.find(b => b.type === 'quiz-intro-header');
-    const inputBlock = blocks.find(b => b.type === 'text-input');
+    const inputBlock = blocks.find(b => b.type.includes('input'));
 
     let yOffset = 20;
 
@@ -64,7 +64,7 @@ export const generateTemplateThumbnail = async (
                     resolve(true);
                 };
                 img.onerror = reject;
-                img.src = headerBlock.properties.logoUrl;
+                img.src = headerBlock.properties?.logoUrl || '';
             });
 
             yOffset += 100;
@@ -166,8 +166,6 @@ export const getTemplateThumbnail = async (
     templateId: string,
     step1Blocks?: Block[]
 ): Promise<string> => {
-    const cacheKey = `${templateId}-${Date.now()}`;
-
     if (thumbnailCache.has(templateId)) {
         const cached = thumbnailCache.get(templateId)!;
         // Cache válido por 1 hora
