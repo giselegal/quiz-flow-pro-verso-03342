@@ -1092,7 +1092,6 @@ const QuizModularPage: React.FC<QuizModularPageProps> = ({ initialStep }) => {
                   🔄 Recarregar etapa
                 </button>
               </div>
-                ) : null}
 
               {/* 📊 FOOTER COM ESTATÍSTICAS */}
               <div className="text-center mt-12 text-sm text-stone-500">
@@ -1112,27 +1111,23 @@ const QuizModularPage: React.FC<QuizModularPageProps> = ({ initialStep }) => {
           </div>
         </div>
       </div>
-    </div >
-      {/* ✅ FASE 4: Métricas e monitoramento avançado */ }
-  {
-    import.meta?.env?.DEV && (
-      <Suspense fallback={null}>
-        <QuizResultMetrics />
-      </Suspense>
-    )
-  }
 
-  {/* Dev-only result debug widget */ }
-  <DevResultDebug />
+      {/* ✅ FASE 4: Métricas e monitoramento avançado */}
+      {import.meta?.env?.DEV && (
+        <Suspense fallback={null}>
+          <QuizResultMetrics />
+        </Suspense>
+      )}
 
-  {/* ✅ Validador de resultado sempre ativo na etapa 20 */ }
-  {
-    currentStep === 20 && (
-      <Suspense fallback={null}>
-        <QuizResultValidator />
-      </Suspense>
-    )
-  }
+      {/* Dev-only result debug widget */}
+      <DevResultDebug />
+
+      {/* ✅ Validador de resultado sempre ativo na etapa 20 */}
+      {currentStep === 20 && (
+        <Suspense fallback={null}>
+          <QuizResultValidator />
+        </Suspense>
+      )}
     </>
   );
 };
