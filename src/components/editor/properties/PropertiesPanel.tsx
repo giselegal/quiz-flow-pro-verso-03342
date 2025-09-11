@@ -8,7 +8,6 @@ import { useUnifiedProperties, PropertyCategory } from '@/hooks/useUnifiedProper
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { QuestionPropertyEditor } from "./editors/QuestionPropertyEditor";
 import { CanvasContainerPropertyEditor } from "./editors/CanvasContainerPropertyEditor";
-import { FunnelBlock } from "@/types";
 import type { Block } from '@/types/editor';
 import {
   Copy,
@@ -408,19 +407,19 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
 export default EnhancedPropertiesPanel;
 
 // PropertiesPanel simples para integração rápida
-export const PropertiesPanel: React.FC<{ selectedBlock?: any; onUpdate?: (updates: any) => void }> = ({ 
+export const PropertiesPanel: React.FC<{ selectedBlock?: any; onUpdate?: (updates: any) => void }> = ({
   selectedBlock,
-  onUpdate 
+  onUpdate
 }) => {
   const [containerProperties, setContainerProperties] = useState<{ [key: string]: any }>({});
 
   // Usa o hook unified properties apenas se tivermos um bloco selecionado
-  const unifiedProps = selectedBlock 
+  const unifiedProps = selectedBlock
     ? useUnifiedProperties(selectedBlock.type, selectedBlock.id, selectedBlock, onUpdate)
     : null;
 
   // Determina se é um bloco de questão (quiz)
-  const isQuestionBlock = selectedBlock && 
+  const isQuestionBlock = selectedBlock &&
     ['single_choice_question', 'multiple_choice_question', 'open_question', 'scale_question']
       .includes(selectedBlock.type);
 
@@ -437,9 +436,9 @@ export const PropertiesPanel: React.FC<{ selectedBlock?: any; onUpdate?: (update
           <h2 className="text-sm font-semibold text-slate-200">Canvas & Container</h2>
           <p className="text-xs text-slate-400 mt-1">Editar cores e estilos do canvas</p>
         </div>
-        
+
         <ScrollArea className="flex-1 p-4 overflow-auto">
-          <CanvasContainerPropertyEditor 
+          <CanvasContainerPropertyEditor
             properties={containerProperties as any}
             onUpdate={handleContainerUpdate}
           />
@@ -449,7 +448,7 @@ export const PropertiesPanel: React.FC<{ selectedBlock?: any; onUpdate?: (update
   }
 
   // Para blocos de questão, usa o QuestionPropertyEditor
-  if (isQuestionBlock && unifiedProps?.properties.length > 0) {
+  if (isQuestionBlock && unifiedProps?.properties && unifiedProps.properties.length > 0) {
     return (
       <div className="w-80 bg-slate-900 border-l border-slate-700 flex flex-col h-full overflow-hidden">
         <div className="p-4 border-b border-slate-700">
@@ -459,15 +458,13 @@ export const PropertiesPanel: React.FC<{ selectedBlock?: any; onUpdate?: (update
         
         <ScrollArea className="flex-1 p-4 overflow-auto">
           <QuestionPropertyEditor 
-            block={selectedBlock as FunnelBlock}
-            onChange={(key, value) => unifiedProps?.updateProperty(key, value)}
+            block={selectedBlock as any}
+            onChange={(key: string, value: any) => unifiedProps?.updateProperty(key, value)}
           />
         </ScrollArea>
       </div>
     );
-  }
-
-  // Fallback para outros blocos usando editor padrão
+  }  // Fallback para outros blocos usando editor padrão
   return (
     <div className="w-80 bg-slate-900 border-l border-slate-700 flex flex-col h-full overflow-hidden">
       <div className="p-4 border-b border-slate-700">
@@ -476,7 +473,7 @@ export const PropertiesPanel: React.FC<{ selectedBlock?: any; onUpdate?: (update
         </h2>
         <p className="text-xs text-slate-400 mt-1">Configure o elemento</p>
       </div>
-      
+
       <ScrollArea className="flex-1 p-4 overflow-auto">
         <EnhancedPropertiesPanel
           selectedBlock={selectedBlock as any}

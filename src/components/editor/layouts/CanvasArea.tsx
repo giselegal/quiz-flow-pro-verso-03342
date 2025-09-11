@@ -61,7 +61,7 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [customTitle, setCustomTitle] = useState('Quiz Quest - Editor Principal');
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-  
+
   // Hook para aplicar estilos dinâmicos
   useCanvasContainerStyles();
 

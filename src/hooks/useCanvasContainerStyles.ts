@@ -8,140 +8,140 @@
 import { useState, useEffect, useCallback } from 'react';
 
 interface CanvasContainerStyles {
-  // === ÁREA PRINCIPAL DO CANVAS ===
-  canvasBackground: string;
-  canvasOpacity: number;
-  canvasBorder: string;
-  canvasBorderRadius: number;
-  canvasPadding: number;
-  canvasMargin: number;
+    // === ÁREA PRINCIPAL DO CANVAS ===
+    canvasBackground: string;
+    canvasOpacity: number;
+    canvasBorder: string;
+    canvasBorderRadius: number;
+    canvasPadding: number;
+    canvasMargin: number;
 
-  // === CONTAINERS DOS COMPONENTES ===
-  componentContainerBackground: string;
-  componentContainerBorder: string;
-  componentContainerBorderRadius: number;
-  componentContainerPadding: number;
-  componentContainerShadow: string;
-  componentContainerHoverEffect: boolean;
+    // === CONTAINERS DOS COMPONENTES ===
+    componentContainerBackground: string;
+    componentContainerBorder: string;
+    componentContainerBorderRadius: number;
+    componentContainerPadding: number;
+    componentContainerShadow: string;
+    componentContainerHoverEffect: boolean;
 
-  // === BOTÕES DE NAVEGAÇÃO ===
-  navigationButtonBackground: string;
-  navigationButtonTextColor: string;
-  navigationButtonHoverBackground: string;
-  navigationButtonBorder: string;
-  navigationButtonBorderRadius: number;
-  navigationButtonPadding: string;
+    // === BOTÕES DE NAVEGAÇÃO ===
+    navigationButtonBackground: string;
+    navigationButtonTextColor: string;
+    navigationButtonHoverBackground: string;
+    navigationButtonBorder: string;
+    navigationButtonBorderRadius: number;
+    navigationButtonPadding: string;
 
-  // === ÁREA DE TOOLBAR ===
-  toolbarBackground: string;
-  toolbarBorder: string;
-  toolbarButtonBackground: string;
-  toolbarButtonHoverBackground: string;
+    // === ÁREA DE TOOLBAR ===
+    toolbarBackground: string;
+    toolbarBorder: string;
+    toolbarButtonBackground: string;
+    toolbarButtonHoverBackground: string;
 
-  // === DROPZONES ===
-  dropzoneActiveBackground: string;
-  dropzoneActiveBorder: string;
-  dropzoneHoverBackground: string;
-  dropzoneIndicatorColor: string;
+    // === DROPZONES ===
+    dropzoneActiveBackground: string;
+    dropzoneActiveBorder: string;
+    dropzoneHoverBackground: string;
+    dropzoneIndicatorColor: string;
 }
 
 const DEFAULT_CANVAS_STYLES: CanvasContainerStyles = {
-  // Canvas principal
-  canvasBackground: '#FEFEFE',
-  canvasOpacity: 100,
-  canvasBorder: '#E5E5E5',
-  canvasBorderRadius: 8,
-  canvasPadding: 16,
-  canvasMargin: 0,
+    // Canvas principal
+    canvasBackground: '#FEFEFE',
+    canvasOpacity: 100,
+    canvasBorder: '#E5E5E5',
+    canvasBorderRadius: 8,
+    canvasPadding: 16,
+    canvasMargin: 0,
 
-  // Containers dos componentes
-  componentContainerBackground: '#FFFFFF',
-  componentContainerBorder: '#B89B7A',
-  componentContainerBorderRadius: 8,
-  componentContainerPadding: 16,
-  componentContainerShadow: '0 2px 4px rgba(0,0,0,0.1)',
-  componentContainerHoverEffect: true,
+    // Containers dos componentes
+    componentContainerBackground: '#FFFFFF',
+    componentContainerBorder: '#B89B7A',
+    componentContainerBorderRadius: 8,
+    componentContainerPadding: 16,
+    componentContainerShadow: '0 2px 4px rgba(0,0,0,0.1)',
+    componentContainerHoverEffect: true,
 
-  // Botões de navegação
-  navigationButtonBackground: '#F8F9FA',
-  navigationButtonTextColor: '#374151',
-  navigationButtonHoverBackground: '#E5E7EB',
-  navigationButtonBorder: '#D1D5DB',
-  navigationButtonBorderRadius: 6,
-  navigationButtonPadding: '8px 16px',
+    // Botões de navegação
+    navigationButtonBackground: '#F8F9FA',
+    navigationButtonTextColor: '#374151',
+    navigationButtonHoverBackground: '#E5E7EB',
+    navigationButtonBorder: '#D1D5DB',
+    navigationButtonBorderRadius: 6,
+    navigationButtonPadding: '8px 16px',
 
-  // Toolbar
-  toolbarBackground: '#1F2937',
-  toolbarBorder: '#374151',
-  toolbarButtonBackground: 'transparent',
-  toolbarButtonHoverBackground: '#374151',
+    // Toolbar
+    toolbarBackground: '#1F2937',
+    toolbarBorder: '#374151',
+    toolbarButtonBackground: 'transparent',
+    toolbarButtonHoverBackground: '#374151',
 
-  // Dropzones
-  dropzoneActiveBackground: '#B89B7A10',
-  dropzoneActiveBorder: '#B89B7A40',
-  dropzoneHoverBackground: '#B89B7A05',
-  dropzoneIndicatorColor: '#B89B7A',
+    // Dropzones
+    dropzoneActiveBackground: '#B89B7A10',
+    dropzoneActiveBorder: '#B89B7A40',
+    dropzoneHoverBackground: '#B89B7A05',
+    dropzoneIndicatorColor: '#B89B7A',
 };
 
 const STORAGE_KEY = 'quiz-quest-canvas-container-styles';
 
 export const useCanvasContainerStyles = () => {
-  const [styles, setStyles] = useState<CanvasContainerStyles>(DEFAULT_CANVAS_STYLES);
-  const [isLoaded, setIsLoaded] = useState(false);
+    const [styles, setStyles] = useState<CanvasContainerStyles>(DEFAULT_CANVAS_STYLES);
+    const [isLoaded, setIsLoaded] = useState(false);
 
-  // Carregar estilos do localStorage
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        const parsedStyles = JSON.parse(saved);
-        setStyles({ ...DEFAULT_CANVAS_STYLES, ...parsedStyles });
-      }
-    } catch (error) {
-      console.warn('Erro ao carregar estilos dos containers:', error);
-    } finally {
-      setIsLoaded(true);
-    }
-  }, []);
+    // Carregar estilos do localStorage
+    useEffect(() => {
+        try {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                const parsedStyles = JSON.parse(saved);
+                setStyles({ ...DEFAULT_CANVAS_STYLES, ...parsedStyles });
+            }
+        } catch (error) {
+            console.warn('Erro ao carregar estilos dos containers:', error);
+        } finally {
+            setIsLoaded(true);
+        }
+    }, []);
 
-  // Salvar estilos no localStorage
-  const saveStyles = useCallback((newStyles: Partial<CanvasContainerStyles>) => {
-    try {
-      const updatedStyles = { ...styles, ...newStyles };
-      setStyles(updatedStyles);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedStyles));
-    } catch (error) {
-      console.warn('Erro ao salvar estilos dos containers:', error);
-    }
-  }, [styles]);
+    // Salvar estilos no localStorage
+    const saveStyles = useCallback((newStyles: Partial<CanvasContainerStyles>) => {
+        try {
+            const updatedStyles = { ...styles, ...newStyles };
+            setStyles(updatedStyles);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedStyles));
+        } catch (error) {
+            console.warn('Erro ao salvar estilos dos containers:', error);
+        }
+    }, [styles]);
 
-  // Resetar para padrão
-  const resetStyles = useCallback(() => {
-    setStyles(DEFAULT_CANVAS_STYLES);
-    try {
-      localStorage.removeItem(STORAGE_KEY);
-    } catch (error) {
-      console.warn('Erro ao resetar estilos dos containers:', error);
-    }
-  }, []);
+    // Resetar para padrão
+    const resetStyles = useCallback(() => {
+        setStyles(DEFAULT_CANVAS_STYLES);
+        try {
+            localStorage.removeItem(STORAGE_KEY);
+        } catch (error) {
+            console.warn('Erro ao resetar estilos dos containers:', error);
+        }
+    }, []);
 
-  // Aplicar estilos CSS dinâmicos
-  const applyStyles = useCallback(() => {
-    if (!isLoaded) return;
+    // Aplicar estilos CSS dinâmicos
+    const applyStyles = useCallback(() => {
+        if (!isLoaded) return;
 
-    try {
-      // Remover estilos anteriores se existirem
-      const existingStyle = document.getElementById('canvas-container-dynamic-styles');
-      if (existingStyle) {
-        existingStyle.remove();
-      }
+        try {
+            // Remover estilos anteriores se existirem
+            const existingStyle = document.getElementById('canvas-container-dynamic-styles');
+            if (existingStyle) {
+                existingStyle.remove();
+            }
 
-      // Criar novo elemento style
-      const styleElement = document.createElement('style');
-      styleElement.id = 'canvas-container-dynamic-styles';
-      
-      // Gerar CSS dinâmico
-      const css = `
+            // Criar novo elemento style
+            const styleElement = document.createElement('style');
+            styleElement.id = 'canvas-container-dynamic-styles';
+
+            // Gerar CSS dinâmico
+            const css = `
         /* === ÁREA PRINCIPAL DO CANVAS === */
         [data-canvas-container] {
           background-color: ${styles.canvasBackground} !important;
@@ -270,23 +270,23 @@ export const useCanvasContainerStyles = () => {
         }
       `;
 
-      styleElement.textContent = css;
-      document.head.appendChild(styleElement);
+            styleElement.textContent = css;
+            document.head.appendChild(styleElement);
 
-      console.log('🎨 Estilos dos containers aplicados:', styles);
-    } catch (error) {
-      console.error('Erro ao aplicar estilos dos containers:', error);
-    }
-  }, [styles, isLoaded]);
+            console.log('🎨 Estilos dos containers aplicados:', styles);
+        } catch (error) {
+            console.error('Erro ao aplicar estilos dos containers:', error);
+        }
+    }, [styles, isLoaded]);
 
-  // Aplicar estilos sempre que mudarem
-  useEffect(() => {
-    applyStyles();
-  }, [applyStyles]);
+    // Aplicar estilos sempre que mudarem
+    useEffect(() => {
+        applyStyles();
+    }, [applyStyles]);
 
-  // Função para obter CSS customizado como string (útil para exports/imports)
-  const getCustomCSS = useCallback(() => {
-    return `/* Canvas Container Styles - Gerado automaticamente */
+    // Função para obter CSS customizado como string (útil para exports/imports)
+    const getCustomCSS = useCallback(() => {
+        return `/* Canvas Container Styles - Gerado automaticamente */
 :root {
   --canvas-bg: ${styles.canvasBackground};
   --canvas-opacity: ${styles.canvasOpacity / 100};
@@ -315,17 +315,17 @@ export const useCanvasContainerStyles = () => {
   --dropzone-hover-bg: ${styles.dropzoneHoverBackground};
   --dropzone-indicator: ${styles.dropzoneIndicatorColor};
 }`;
-  }, [styles]);
+    }, [styles]);
 
-  return {
-    styles,
-    isLoaded,
-    updateStyles: saveStyles,
-    resetStyles,
-    applyStyles,
-    getCustomCSS,
-    defaultStyles: DEFAULT_CANVAS_STYLES
-  };
+    return {
+        styles,
+        isLoaded,
+        updateStyles: saveStyles,
+        resetStyles,
+        applyStyles,
+        getCustomCSS,
+        defaultStyles: DEFAULT_CANVAS_STYLES
+    };
 };
 
 export type { CanvasContainerStyles };

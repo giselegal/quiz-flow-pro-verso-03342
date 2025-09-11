@@ -84,7 +84,7 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
   scopeId,
 }) => {
   useRenderCount('CanvasDropZone');
-  
+
   // Hook para aplicar estilos dinâmicos
   useCanvasContainerStyles();
 

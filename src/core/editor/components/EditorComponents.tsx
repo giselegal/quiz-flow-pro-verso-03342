@@ -426,8 +426,8 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
                             <div
                                 key={block.id}
                                 className={`relative border rounded-lg p-4 bg-white transition-all ${block.id === selectedBlockId
-                                        ? 'border-blue-500 shadow-md'
-                                        : 'border-gray-200 hover:border-gray-300'
+                                    ? 'border-blue-500 shadow-md'
+                                    : 'border-gray-200 hover:border-gray-300'
                                     }`}
                                 style={{
                                     backgroundColor: theme.backgroundColor,
@@ -597,8 +597,8 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
                             key={m}
                             onClick={() => onModeChange(m)}
                             className={`px-3 py-1 rounded text-sm font-medium transition-colors ${mode === m
-                                    ? 'bg-white text-gray-900 shadow-sm'
-                                    : 'text-gray-600 hover:text-gray-900'
+                                ? 'bg-white text-gray-900 shadow-sm'
+                                : 'text-gray-600 hover:text-gray-900'
                                 }`}
                         >
                             {m.charAt(0).toUpperCase() + m.slice(1)}
