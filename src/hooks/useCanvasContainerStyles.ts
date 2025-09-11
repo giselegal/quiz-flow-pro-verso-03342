@@ -115,6 +115,13 @@ export const useCanvasContainerStyles = () => {
         }
     }, [styles]);
 
+    // Aplicar estilos automaticamente quando mudarem
+    useEffect(() => {
+        if (isLoaded) {
+            applyStyles();
+        }
+    }, [styles, isLoaded]);
+
     // Resetar para padrão
     const resetStyles = useCallback(() => {
         setStyles(DEFAULT_CANVAS_STYLES);

@@ -8,6 +8,7 @@ import { useUnifiedProperties, PropertyCategory } from '@/hooks/useUnifiedProper
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { QuestionPropertyEditor } from "./editors/QuestionPropertyEditor";
 import { CanvasContainerPropertyEditor } from "./editors/CanvasContainerPropertyEditor";
+import { useCanvasContainerStyles } from "@/hooks/useCanvasContainerStyles";
 import type { Block } from '@/types/editor';
 import {
   Copy,
@@ -411,7 +412,8 @@ export const PropertiesPanel: React.FC<{ selectedBlock?: any; onUpdate?: (update
   selectedBlock,
   onUpdate
 }) => {
-  const [containerProperties, setContainerProperties] = useState<{ [key: string]: any }>({});
+  // Hook para gerenciar estilos do canvas/container
+  const { styles, updateStyles, resetStyles } = useCanvasContainerStyles();
 
   // Usa o hook unified properties apenas se tivermos um bloco selecionado
   const unifiedProps = selectedBlock
@@ -423,9 +425,9 @@ export const PropertiesPanel: React.FC<{ selectedBlock?: any; onUpdate?: (update
     ['single_choice_question', 'multiple_choice_question', 'open_question', 'scale_question']
       .includes(selectedBlock.type);
 
-  // Handler para atualização das propriedades do container/canvas
+  // Handler para atualização das propriedades do container/canvas usando dados reais
   const handleContainerUpdate = (updates: { [key: string]: any }) => {
-    setContainerProperties(prev => ({ ...prev, ...updates }));
+    updateStyles(updates); // Salva no localStorage e aplica estilos
   };
 
   // Se não há bloco selecionado, mostra editor de canvas/container
@@ -439,8 +441,9 @@ export const PropertiesPanel: React.FC<{ selectedBlock?: any; onUpdate?: (update
 
         <ScrollArea className="flex-1 p-4 overflow-auto">
           <CanvasContainerPropertyEditor
-            properties={containerProperties as any}
+            properties={styles as any}
             onUpdate={handleContainerUpdate}
+            onReset={resetStyles}
           />
         </ScrollArea>
       </div>

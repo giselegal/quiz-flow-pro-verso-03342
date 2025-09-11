@@ -18,56 +18,28 @@ import BoxModelEditor from './BoxModelEditor';
 import EnhancedUploadEditor from './EnhancedUploadEditor';
 import AnimationPreviewEditor from './AnimationPreviewEditor';
 import CanvasContainerPropertyEditor from '../editors/CanvasContainerPropertyEditor';
+import { useCanvasContainerStyles } from '@/hooks/useCanvasContainerStyles';
 import React from 'react';
 import type { PropertyEditorProps, PropertyEditorRegistry } from './types';
 
 // Wrapper para compatibilidade com PropertyEditorComponent
 const CanvasContainerWrapper: React.FC<PropertyEditorProps> = ({ property, onChange }) => {
-  // Cria props simuladas para o editor de container
-  const mockProperties = {
-    canvasBackground: '#111827',
-    canvasOpacity: 1,
-    canvasBorder: '#374151',
-    canvasBorderRadius: 0,
-    canvasPadding: 20,
-    canvasMargin: 0,
-    canvasShadow: false,
-    componentContainerBackground: '#1F2937',
-    componentContainerBorder: '#374151',
-    componentContainerBorderRadius: 8,
-    componentContainerPadding: 16,
-    componentContainerShadow: 'none',
-    componentContainerHoverEffect: true,
-    componentHoverBackground: '#374151',
-    navigationButtonBackground: '#3B82F6',
-    navigationButtonTextColor: '#FFFFFF',
-    navigationButtonHoverBackground: '#2563EB',
-    navigationButtonBorder: '#3B82F6',
-    navigationButtonBorderRadius: 6,
-    navigationButtonPadding: '8px',
-    toolbarBackground: '#1F2937',
-    toolbarBorder: '#374151',
-    toolbarButtonBackground: 'transparent',
-    toolbarButtonHoverBackground: '#374151',
-    dropzoneActiveBackground: '#1E40AF',
-    dropzoneActiveBorder: '#3B82F6',
-    dropzoneHoverBackground: '#2563EB',
-    dropzoneIndicatorColor: '#60A5FA',
-  };
+  // Usar dados reais do hook
+  const { styles, updateStyles, resetStyles } = useCanvasContainerStyles();
 
   const handleUpdate = (updates: { [key: string]: any }) => {
-    console.log('CanvasContainer updates:', updates);
+    updateStyles(updates); // Conecta às fontes de dados reais
+    console.log('CanvasContainer updates aplicados:', updates);
   };
 
   return (
     <CanvasContainerPropertyEditor
-      properties={mockProperties}
+      properties={styles as any}
       onUpdate={handleUpdate}
+      onReset={resetStyles}
     />
   );
-};
-
-// Editor de texto básico
+};// Editor de texto básico
 const TextEditor: React.FC<PropertyEditorProps> = ({ property, onChange }) => (
   <div className="space-y-2">
     <Label htmlFor={property.key}>{property.label}</Label>
