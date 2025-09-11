@@ -4,7 +4,7 @@ import React from 'react';
 import { useLocation, useParams } from 'wouter';
 import { ErrorBoundary } from '../components/editor/ErrorBoundary';
 import { FunnelsProvider } from '@/context/FunnelsContext';
-import { EditorQuizProvider } from '@/context/EditorQuizContext';
+import { EditorQuizProvider } from '@/context/EditorQuizProvider';
 import { Quiz21StepsProvider } from '@/components/quiz/Quiz21StepsProvider';
 import { LegacyCompatibilityWrapper } from '@/core/contexts/LegacyCompatibilityWrapper';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
@@ -13,6 +13,7 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { useFunnelContext } from '@/hooks/useFunnelLoader';
 import FunnelFallback from '@/components/editor/FunnelFallback';
 import { UnifiedFunnelProvider } from '@/context/UnifiedFunnelContext';
+import EditorFallback from '@/components/editor/EditorFallback';
 
 /**
  * 🎯 MAIN EDITOR UNIFICADO - CONSOLIDADO
