@@ -1,5 +1,6 @@
 import { cloneFunnelTemplate } from '@/utils/cloneFunnel';
 import React from 'react';
+import { getLogger } from '@/utils/logging';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -19,6 +20,7 @@ import { useFunnelTemplates } from '@/core/funnel/hooks/useFunnelTemplates';
 import { getUnifiedTemplates, TemplateRegistry, type UnifiedTemplate } from '@/config/unifiedTemplatesRegistry';
 
 const FunnelPanelPage: React.FC = () => {
+  const logger = getLogger();
   const [, setLocation] = useLocation();
   const {
     templates: funnelTemplates,
@@ -105,10 +107,10 @@ const FunnelPanelPage: React.FC = () => {
               };
             }
           };
-          console.log('✅ Função de limpeza definida inline');
+          logger.info('funnel-cleanup', 'Função de limpeza definida inline');
         }
       } catch (error) {
-        console.warn('⚠️ Erro ao carregar script de limpeza:', error);
+        logger.warn('funnel-cleanup', 'Erro ao carregar script de limpeza', { error });
       }
     };
 
@@ -165,7 +167,7 @@ const FunnelPanelPage: React.FC = () => {
       });
 
     } catch (error) {
-      console.error('❌ Erro ao escanear duplicatas:', error);
+      logger.error('funnel-cleanup', 'Erro ao escanear duplicatas', { error });
       setDuplicateInfo(null);
     } finally {
       setIsScanning(false);
@@ -226,7 +228,7 @@ const FunnelPanelPage: React.FC = () => {
         }, 1000);
       }
     } catch (error) {
-      console.error('❌ Erro durante limpeza:', error);
+      logger.error('funnel-cleanup', 'Erro durante limpeza', { error });
       setCleanupResult({
         success: false,
         removedCount: 0,
@@ -273,14 +275,14 @@ const FunnelPanelPage: React.FC = () => {
         }
       );
 
-      console.log('✅ Template personalizado criado:', customTemplateId);
+      logger.info('custom-template', 'Template personalizado criado', { templateId: customTemplateId });
       loadCustomTemplates(); // Recarregar lista
       setIsCustomizeModalOpen(false);
 
       // Opcional: mudar para aba de templates personalizados
       setActiveTab('custom');
     } catch (error) {
-      console.error('❌ Erro ao salvar template personalizado:', error);
+      logger.error('custom-template', 'Erro ao salvar template personalizado', { error });
     }
   };
 
@@ -298,9 +300,11 @@ const FunnelPanelPage: React.FC = () => {
   // Função para usar template (oficial ou personalizado)
   const handleUseTemplate = (templateId: string, isCustom: boolean = false) => {
     try {
-      console.log('🎯 [DIAGNÓSTICO] Usando template:', templateId, isCustom ? '(custom)' : '(oficial)');
-      console.log('🎯 [DIAGNÓSTICO] Location atual:', window.location.href);
-      console.log('🎯 [DIAGNÓSTICO] Timestamp:', new Date().toISOString());
+      logger.info('funnel-creation', 'Usando template', {
+        templateId,
+        type: isCustom ? 'custom' : 'official',
+        location: window.location.href
+      });
 
       if (isCustom) {
         customTemplateService.recordTemplateUsage(templateId, 'custom');
@@ -309,8 +313,10 @@ const FunnelPanelPage: React.FC = () => {
       // ✅ CORREÇÃO: Buscar template base para clonagem do registry unificado
       const unifiedTemplates = getUnifiedTemplates();
       const baseTemplate = unifiedTemplates.find(t => t.id === templateId);
-      console.log('🎯 [DIAGNÓSTICO] Template encontrado:', baseTemplate ? 'SIM' : 'NÃO');
-      console.log('🎯 [DIAGNÓSTICO] Templates disponíveis:', unifiedTemplates.map(t => t.id));
+      logger.debug('funnel-creation', 'Template encontrado', {
+        found: !!baseTemplate,
+        availableTemplates: unifiedTemplates.map(t => t.id)
+      });
 
       if (baseTemplate) {
         // 🚀 Usar cloneFunnelTemplate para garantir isolamento
@@ -323,10 +329,12 @@ const FunnelPanelPage: React.FC = () => {
           blocks: [] // Será preenchido pelo sistema de templates
         };
 
-        console.log('🎯 [DIAGNÓSTICO] Clonando template data:', templateData);
+        logger.debug('funnel-creation', 'Clonando template data', { templateData });
         const clonedInstance = cloneFunnelTemplate(templateData, `${baseTemplate.name} - Cópia`);
-        console.log('🎯 [DIAGNÓSTICO] Instância clonada:', clonedInstance);
-        console.log('🎯 [DIAGNÓSTICO] ID da instância clonada:', clonedInstance.id);
+        logger.debug('funnel-creation', 'Instância clonada', {
+          instanceId: clonedInstance.id,
+          blockCount: clonedInstance.blocks.length
+        });
 
         // Salvar instância clonada em "meus funis"
         const newFunnel = {
@@ -337,18 +345,22 @@ const FunnelPanelPage: React.FC = () => {
         };
 
         funnelLocalStore.upsert(newFunnel);
-        console.log('✅ [DIAGNÓSTICO] Funil clonado criado:', clonedInstance.id);
-        console.log('📦 [DIAGNÓSTICO] Blocos independentes:', clonedInstance.blocks.length);
-        console.log('💾 [DIAGNÓSTICO] Salvo no localStorage');
+        logger.info('funnel-creation', 'Funil clonado criado com sucesso', {
+          funnelId: clonedInstance.id,
+          blockCount: clonedInstance.blocks.length,
+          storageStatus: 'saved'
+        });
 
         // ✅ CORRIGIDO: Navegar usando path parameter
         const editorUrl = `/editor/${encodeURIComponent(clonedInstance.id)}?template=${templateId}`;
-        console.log('🔗 [DIAGNÓSTICO] Navegando para:', editorUrl);
-        console.log('🔗 [DIAGNÓSTICO] URL completa:', `${window.location.origin}${editorUrl}`);
+        logger.debug('funnel-creation', 'Navegando para editor', {
+          editorUrl,
+          fullUrl: `${window.location.origin}${editorUrl}`
+        });
 
         // Adicionar delay para garantir que os logs sejam vistos
         setTimeout(() => {
-          console.log('🚀 [DIAGNÓSTICO] Executando setLocation...');
+          logger.debug('funnel-creation', 'Executando navegação');
 
           // Testar múltiplas abordagens de navegação
           try {
