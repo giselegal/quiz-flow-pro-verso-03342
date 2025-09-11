@@ -814,7 +814,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   return (
     <>
       {/* 🎯 Cabeçalho do Funil */}
-      <FunnelHeader 
+      <FunnelHeader
         viewportMode={previewDevice}
         onViewportModeChange={setPreviewDevice}
       />

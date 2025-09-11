@@ -182,8 +182,8 @@ export const FunnelHeader: React.FC<FunnelHeaderProps> = ({
                       onClick={() => onViewportModeChange?.('mobile')}
                       className={cn(
                         "h-8 px-3 rounded-md transition-colors",
-                        viewportMode === 'mobile' 
-                          ? "bg-brand-brightBlue text-white shadow-sm" 
+                        viewportMode === 'mobile'
+                          ? "bg-brand-brightBlue text-white shadow-sm"
                           : "text-gray-300 hover:text-white hover:bg-gray-700/50"
                       )}
                     >
@@ -201,8 +201,8 @@ export const FunnelHeader: React.FC<FunnelHeaderProps> = ({
                       onClick={() => onViewportModeChange?.('tablet')}
                       className={cn(
                         "h-8 px-3 rounded-md transition-colors",
-                        viewportMode === 'tablet' 
-                          ? "bg-brand-brightBlue text-white shadow-sm" 
+                        viewportMode === 'tablet'
+                          ? "bg-brand-brightBlue text-white shadow-sm"
                           : "text-gray-300 hover:text-white hover:bg-gray-700/50"
                       )}
                     >
@@ -220,8 +220,8 @@ export const FunnelHeader: React.FC<FunnelHeaderProps> = ({
                       onClick={() => onViewportModeChange?.('desktop')}
                       className={cn(
                         "h-8 px-3 rounded-md transition-colors",
-                        viewportMode === 'desktop' 
-                          ? "bg-brand-brightBlue text-white shadow-sm" 
+                        viewportMode === 'desktop'
+                          ? "bg-brand-brightBlue text-white shadow-sm"
                           : "text-gray-300 hover:text-white hover:bg-gray-700/50"
                       )}
                     >
@@ -239,8 +239,8 @@ export const FunnelHeader: React.FC<FunnelHeaderProps> = ({
                       onClick={() => onViewportModeChange?.('xl')}
                       className={cn(
                         "h-8 px-3 rounded-md transition-colors",
-                        viewportMode === 'xl' 
-                          ? "bg-brand-brightBlue text-white shadow-sm" 
+                        viewportMode === 'xl'
+                          ? "bg-brand-brightBlue text-white shadow-sm"
                           : "text-gray-300 hover:text-white hover:bg-gray-700/50"
                       )}
                     >
