@@ -1,11 +1,17 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Teste - Propriedades de Blocos - Quiz Quest</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #1e3a8a, #1e40af);
@@ -13,7 +19,12 @@
             min-height: 100vh;
             padding: 20px;
         }
-        .container { max-width: 1200px; margin: 0 auto; }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
         .header {
             text-align: center;
             margin-bottom: 40px;
@@ -21,6 +32,7 @@
             background: rgba(255, 255, 255, 0.1);
             border-radius: 12px;
         }
+
         .test-section {
             background: rgba(255, 255, 255, 0.1);
             margin: 20px 0;
@@ -28,6 +40,7 @@
             border-radius: 12px;
             border-left: 4px solid #10b981;
         }
+
         .test-section h3 {
             color: #10b981;
             margin-bottom: 15px;
@@ -35,9 +48,19 @@
             align-items: center;
             gap: 8px;
         }
-        .success { color: #10b981; }
-        .error { color: #f87171; }
-        .warning { color: #fbbf24; }
+
+        .success {
+            color: #10b981;
+        }
+
+        .error {
+            color: #f87171;
+        }
+
+        .warning {
+            color: #fbbf24;
+        }
+
         .code {
             background: rgba(0, 0, 0, 0.3);
             padding: 10px;
@@ -47,12 +70,14 @@
             margin: 10px 0;
             white-space: pre-wrap;
         }
+
         .flow-diagram {
             background: rgba(0, 0, 0, 0.2);
             padding: 15px;
             border-radius: 8px;
             margin: 15px 0;
         }
+
         .step {
             padding: 8px 12px;
             margin: 5px 0;
@@ -60,6 +85,7 @@
             border-left: 3px solid #3b82f6;
             border-radius: 4px;
         }
+
         .status-badge {
             display: inline-block;
             padding: 4px 12px;
@@ -68,11 +94,24 @@
             font-weight: bold;
             margin-left: 10px;
         }
-        .connected { background: #10b981; color: white; }
-        .disconnected { background: #f87171; color: white; }
-        .pending { background: #fbbf24; color: black; }
+
+        .connected {
+            background: #10b981;
+            color: white;
+        }
+
+        .disconnected {
+            background: #f87171;
+            color: white;
+        }
+
+        .pending {
+            background: #fbbf24;
+            color: black;
+        }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
@@ -110,53 +149,53 @@
         <!-- Teste de Conexões -->
         <div class="test-section">
             <h3>🔍 Validação das Conexões</h3>
-            
+
             <h4 class="success">✅ Canvas/Container Properties</h4>
             <div class="code">✓ CanvasContainerPropertyEditor → useCanvasContainerStyles
-✓ Real data from localStorage
-✓ Live CSS injection via useEffect
-✓ Persistence working</div>
+                ✓ Real data from localStorage
+                ✓ Live CSS injection via useEffect
+                ✓ Persistence working</div>
 
             <h4 class="success">✅ Block Properties (Questions, Text, etc.)</h4>
             <div class="code">✓ PropertiesPanel → useUnifiedProperties → updateProperty
-✓ onUpdate callback correctly passed from EditorPro → PropertiesColumn → PropertiesPanel
-✓ EditorProvider.updateBlock merges properties and persists
-✓ State updates trigger re-render</div>
+                ✓ onUpdate callback correctly passed from EditorPro → PropertiesColumn → PropertiesPanel
+                ✓ EditorProvider.updateBlock merges properties and persists
+                ✓ State updates trigger re-render</div>
 
             <h4 class="success">✅ Question Properties</h4>
             <div class="code">✓ QuestionPropertyEditor receives real block data
-✓ Updates via onUpdate callback
-✓ Special handling for question types with question block adaptation</div>
+                ✓ Updates via onUpdate callback
+                ✓ Special handling for question types with question block adaptation</div>
         </div>
 
         <!-- Análise Técnica -->
         <div class="test-section">
             <h3>⚙️ Análise Técnica Detalhada</h3>
-            
+
             <h4>🔗 Cadeia de Callbacks:</h4>
             <div class="code">EditorPro MemoPropertiesColumn:
-selectedBlock ? actions.updateBlock(currentStepKey, selectedBlock.id, updates) : undefined
-    ↓
-EditorProvider updateBlock:
-setState(prev => merge properties in stepBlocks[stepKey])
-    ↓
-PropertiesPanel onUpdate:
-onUpdate ? (_blockId: string, updates: any) => onUpdate(updates) : undefined
-    ↓
-useUnifiedProperties updateProperty:
-onUpdateExternal(block.id, { properties: updatedProps })</div>
+                selectedBlock ? actions.updateBlock(currentStepKey, selectedBlock.id, updates) : undefined
+                ↓
+                EditorProvider updateBlock:
+                setState(prev => merge properties in stepBlocks[stepKey])
+                ↓
+                PropertiesPanel onUpdate:
+                onUpdate ? (_blockId: string, updates: any) => onUpdate(updates) : undefined
+                ↓
+                useUnifiedProperties updateProperty:
+                onUpdateExternal(block.id, { properties: updatedProps })</div>
 
             <h4>💾 Persistência:</h4>
             <div class="code">✓ Local State: setState updates stepBlocks
-✓ Draft Persistence: DraftPersistence.saveStepDraft
-✓ Supabase: supabaseIntegration.updateBlockById
-✓ FunnelsContext: saveToFunnelsContext with debounce</div>
+                ✓ Draft Persistence: DraftPersistence.saveStepDraft
+                ✓ Supabase: supabaseIntegration.updateBlockById
+                ✓ FunnelsContext: saveToFunnelsContext with debounce</div>
         </div>
 
         <!-- Status Final -->
         <div class="test-section">
             <h3>🎯 Status Final da Auditoria</h3>
-            
+
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
                 <div style="background: rgba(16, 185, 129, 0.2); padding: 15px; border-radius: 8px;">
                     <h4 class="success">✅ PROPRIEDADES CONECTADAS</h4>
@@ -180,7 +219,8 @@ onUpdateExternal(block.id, { properties: updatedProps })</div>
                 </div>
             </div>
 
-            <div style="text-align: center; margin-top: 30px; padding: 20px; background: rgba(16, 185, 129, 0.3); border-radius: 12px;">
+            <div
+                style="text-align: center; margin-top: 30px; padding: 20px; background: rgba(16, 185, 129, 0.3); border-radius: 12px;">
                 <h2 class="success">🎉 TODAS AS PROPRIEDADES ESTÃO CONECTADAS!</h2>
                 <p>✅ Fontes de dados reais | ✅ Aplicação live | ✅ Persistência completa</p>
             </div>
@@ -190,22 +230,22 @@ onUpdateExternal(block.id, { properties: updatedProps })</div>
         <div class="test-section">
             <h3>📋 Arquivos Principais Validados</h3>
             <div class="code">src/legacy/editor/EditorPro.tsx:796
-  → MemoPropertiesColumn com onUpdate callback ✓
+                → MemoPropertiesColumn com onUpdate callback ✓
 
-src/components/editor/EditorProvider.tsx:886  
-  → updateBlock com merge properties ✓
+                src/components/editor/EditorProvider.tsx:886
+                → updateBlock com merge properties ✓
 
-src/components/editor/properties/PropertiesColumn.tsx
-  → onUpdate passed to PropertiesPanel ✓
+                src/components/editor/properties/PropertiesColumn.tsx
+                → onUpdate passed to PropertiesPanel ✓
 
-src/components/editor/properties/PropertiesPanel.tsx:133
-  → useUnifiedProperties with onUpdate callback ✓
+                src/components/editor/properties/PropertiesPanel.tsx:133
+                → useUnifiedProperties with onUpdate callback ✓
 
-src/hooks/useUnifiedProperties.ts:2847
-  → onUpdateExternal execution ✓
+                src/hooks/useUnifiedProperties.ts:2847
+                → onUpdateExternal execution ✓
 
-src/hooks/useCanvasContainerStyles.ts
-  → Canvas properties with real data ✓</div>
+                src/hooks/useCanvasContainerStyles.ts
+                → Canvas properties with real data ✓</div>
         </div>
     </div>
 
@@ -214,7 +254,7 @@ src/hooks/useCanvasContainerStyles.ts
         console.log('✅ Todas as validações técnicas confirmadas');
         console.log('✅ Fluxo de dados completo e funcional');
         console.log('✅ Persistência em múltiplas camadas implementada');
-        
+
         // Simular teste de conexão
         setTimeout(() => {
             console.log('🔗 Conexões validadas:');
@@ -226,4 +266,5 @@ src/hooks/useCanvasContainerStyles.ts
         }, 1000);
     </script>
 </body>
+
 </html>

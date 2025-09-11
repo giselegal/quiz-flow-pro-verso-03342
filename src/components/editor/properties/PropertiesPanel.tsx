@@ -307,24 +307,25 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
           </div>
         </CardHeader>
 
-        {/* Conteúdo com scroll otimizado e fontes claras */}
+        {/* Conteúdo com scroll vertical otimizado e fontes com contraste */}
         <CardContent className="flex-1 px-0 overflow-hidden">
-          <div className="h-full overflow-y-auto scrollbar-thin scrollbar-track-gray-800 scrollbar-thumb-gray-600 hover:scrollbar-thumb-gray-500">
-            {filteredProps ? (
-              <div className="px-4 space-y-4 pb-6">
-                <div className="flex items-center justify-between">
-                  <p className="text-sm font-medium text-gray-200">
-                    {filteredProps.length} {filteredProps.length === 1 ? 'propriedade encontrada' : 'propriedades encontradas'}
-                  </p>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setSearchTerm('')}
-                    className="text-xs text-gray-300 hover:text-white hover:bg-gray-700"
-                  >
-                    Limpar busca
-                  </Button>
-                </div>
+          <ScrollArea className="h-full">
+            <div className="px-4 space-y-4 pb-6">
+              {filteredProps ? (
+                <>
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm font-medium text-white">
+                      {filteredProps.length} {filteredProps.length === 1 ? 'propriedade encontrada' : 'propriedades encontradas'}
+                    </p>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setSearchTerm('')}
+                      className="text-xs text-gray-300 hover:text-white hover:bg-gray-700"
+                    >
+                      Limpar busca
+                    </Button>
+                  </div>
                 {filteredProps.length > 0 ? (
                   <div className="space-y-4">
                     {filteredProps.map(prop => {
