@@ -51,6 +51,7 @@ const DashboardPage: React.FC = () => {
               <Route path="/admin/quizzes" component={QuizPage} />
               <Route path="/admin/funis" component={FunnelPanelPage} />
               <Route path="/admin/funnels" component={FunnelPanelPage} />
+              <Route path="/admin/funil" component={FunnelPanelPage} />
               <Route path="/admin/meus-funis" component={MyFunnelsPage} />
               <Route path="/admin/meus-templates" component={MyTemplatesPage} />
               <Route path="/admin/participantes" component={ParticipantsPage} />
