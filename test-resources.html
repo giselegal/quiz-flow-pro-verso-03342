@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,19 +12,29 @@
             margin: 0 auto;
             padding: 20px;
         }
+
         .test-item {
             margin: 10px 0;
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 5px;
         }
-        .success { background-color: #d4edda; border-color: #c3e6cb; }
-        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+
+        .success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
     </style>
 </head>
+
 <body>
     <h1>🔍 Diagnóstico de Recursos</h1>
-    
+
     <div class="test-item">
         <h3>Informações do Ambiente</h3>
         <p><strong>URL Atual:</strong> <span id="current-url"></span></p>
@@ -52,11 +63,11 @@
 
         function testNavigation(path) {
             console.log('🔍 Testando navegação para:', path);
-            
+
             // Simular navegação sem recarregar a página
             const fullUrl = new URL(path, window.location.origin);
             console.log('📍 URL completa:', fullUrl.href);
-            
+
             // Abrir em nova aba para teste
             window.open(fullUrl.href, '_blank');
         }
@@ -78,11 +89,11 @@
             for (const test of tests) {
                 try {
                     console.log('🧪 Testando:', test.name, '→', test.url);
-                    
+
                     const response = await fetch(test.url);
                     const status = response.status;
                     const contentType = response.headers.get('content-type') || 'não especificado';
-                    
+
                     results.push({
                         name: test.name,
                         url: test.url,
@@ -90,9 +101,9 @@
                         contentType: contentType,
                         success: status >= 200 && status < 400
                     });
-                    
+
                     console.log('✅ Resultado:', test.name, status, contentType);
-                    
+
                 } catch (error) {
                     console.error('❌ Erro no teste:', test.name, error);
                     results.push({
@@ -128,4 +139,5 @@
         setTimeout(testResources, 1000);
     </script>
 </body>
+
 </html>
