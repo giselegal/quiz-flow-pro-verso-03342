@@ -431,6 +431,7 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
                       onUpdateBlock={(id: string, updates: any) => actions.updateBlock(currentStepKey, id, updates)}
                       onDeleteBlock={(id: string) => actions.removeBlock(currentStepKey, id)}
                       className="h-full w-full"
+                      isPreviewing={mode !== 'edit'}
                       scopeId={safeCurrentStep}
                     />
                   }
