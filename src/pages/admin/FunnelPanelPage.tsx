@@ -85,7 +85,7 @@ const FunnelPanelPage: React.FC = () => {
                 key.includes('copy') ||
                 key.includes('duplicate')
               );
-              
+
               let removedCount = 0;
               funnelKeys.forEach(key => {
                 localStorage.removeItem(key);
