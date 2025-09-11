@@ -10,7 +10,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { ThumbnailImage } from '@/components/ui/EnhancedOptimizedImage';
-import { funnelLocalStore } from '@/services/funnelLocalStore';
+// OTIMIZAÇÕES: Usar serviços avançados ao invés dos antigos
+import { advancedFunnelStorage } from '@/services/AdvancedFunnelStorage';
 import { funnelUnifiedService } from '@/services/FunnelUnifiedService';
 import { customTemplateService, CustomTemplate } from '@/services/customTemplateService';
 import { Edit, Eye, Play, Plus, Sparkles, Zap, Copy, Trash2, RefreshCw, AlertTriangle, CheckCircle } from 'lucide-react';
@@ -23,6 +24,13 @@ import { FunnelContext } from '@/core/contexts/FunnelContext';
 const FunnelPanelPage: React.FC = () => {
   const logger = getLogger();
   const [, setLocation] = useLocation();
+
+  // 🚀 INSTÂNCIA DO SERVIÇO AVANÇADO: usar instância exportada
+  const advancedStorage = advancedFunnelStorage;
+  
+  // 🚀 TODO: Integrar hook refatorado quando necessário
+  // const { isLoading, funnel, canEdit, createFunnel } = useFunnelLoaderRefactored(FunnelContext.MY_FUNNELS);
+
   const {
     templates: funnelTemplates,
     filterBySearch,
@@ -391,12 +399,20 @@ const FunnelPanelPage: React.FC = () => {
         updatedAt: now
       };
 
-      const list = funnelLocalStore.list();
-      list.push(newFunnel);
-      funnelLocalStore.saveList(list);
+      // 🚀 USAR ADVANCED STORAGE ao invés do localStorage básico
+      const newFunnelItem = {
+        id: newId,
+        name,
+        status: 'draft' as const,
+        updatedAt: now,
+        createdAt: now,
+        url: `/editor/${encodeURIComponent(newId)}`
+      };
+      await advancedStorage.upsertFunnel(newFunnelItem);
 
       console.log('✅ [DIAGNÓSTICO] Funil criado (fallback):', newFunnel);
-      console.log('📊 [DIAGNÓSTICO] Lista atualizada:', list.length, 'funis');
+      const updatedFunnels = await advancedStorage.listFunnels();
+      console.log('📊 [DIAGNÓSTICO] Lista atualizada:', updatedFunnels.length, 'funis');
 
       // Navegar com ID específico do funil criado
       const fallbackUrl = `/editor/${encodeURIComponent(newId)}?template=${templateId}`;
@@ -518,9 +534,16 @@ const FunnelPanelPage: React.FC = () => {
         updatedAt: now
       };
 
-      const list = funnelLocalStore.list();
-      list.push(newFunnel);
-      funnelLocalStore.saveList(list);
+      // 🚀 USAR ADVANCED STORAGE para salvar funil personalizado
+      const newFunnelItem = {
+        id: newId,
+        name,
+        status: 'draft' as const,
+        updatedAt: now,
+        createdAt: now,
+        url: `/editor/${encodeURIComponent(newId)}`
+      };
+      await advancedStorage.upsertFunnel(newFunnelItem);
 
       console.log('✅ Funil personalizado criado (fallback):', newFunnel);
       setLocation(`/editor/${encodeURIComponent(newId)}`);
