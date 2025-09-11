@@ -384,7 +384,7 @@ const FunnelPanelPage: React.FC = () => {
       tags: template.tags || [],
       features: template.features || ['Otimizado', 'Conversão', 'Etapas', 'Editor'],
       conversionRate: template.conversionRate || '—',
-      image: template.thumbnailUrl || template.image || 'https://via.placeholder.com/400x300?text=Funnel+Template',
+      image: template.thumbnailUrl || template.image || 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
       createdAt: template.createdAt,
       updatedAt: template.updatedAt,
     };
@@ -392,7 +392,7 @@ const FunnelPanelPage: React.FC = () => {
 
   // Normalizar template para formato de card
   const normalizeTemplate = (template: UnifiedTemplate): UnifiedTemplate => {
-    const placeholder = 'https://via.placeholder.com/400x300?text=Funnel+Template';
+    const placeholder = 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp';
 
     return {
       ...template,
