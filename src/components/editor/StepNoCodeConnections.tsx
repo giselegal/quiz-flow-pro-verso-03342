@@ -59,7 +59,6 @@ const StepNoCodeConnections: React.FC<StepNoCodeConnectionsProps> = ({ onClose }
         hasConditionalLogic: false
     });
 
-    const [editingConnection, setEditingConnection] = useState<StepConnection | null>(null);
     const [newConnection, setNewConnection] = useState<Partial<StepConnection>>({
         fromStep: 1,
         toStep: 2,

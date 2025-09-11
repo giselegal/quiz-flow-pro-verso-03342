@@ -51,8 +51,8 @@ function App() {
                         <Route path="/" component={Home} />
 
                         {/* Quiz modular - página principal de produção */}
-                        <Route path="/quiz" component={QuizModularPage} />
-                        <Route path="/quiz/:step" component={QuizModularPage} />
+                        <Route path="/quiz" component={() => <QuizModularPage />} />
+                        <Route path="/quiz/:step" component={(params: any) => <QuizModularPage initialStep={params.step ? Number(params.step) : undefined} />} />
 
                         {/* Autenticação */}
                         <Route path="/auth" component={AuthPage} />
