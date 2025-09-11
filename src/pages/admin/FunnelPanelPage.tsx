@@ -27,7 +27,7 @@ const FunnelPanelPage: React.FC = () => {
 
   // 🚀 INSTÂNCIA DO SERVIÇO AVANÇADO: usar instância exportada
   const advancedStorage = advancedFunnelStorage;
-  
+
   // 🚀 TODO: Integrar hook refatorado quando necessário
   // const { isLoading, funnel, canEdit, createFunnel } = useFunnelLoaderRefactored(FunnelContext.MY_FUNNELS);
 
