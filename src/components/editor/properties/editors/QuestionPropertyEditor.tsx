@@ -10,7 +10,7 @@
  * - Integração com editores avançados existentes
  */
 
-import React, { useState, useMemo, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -25,12 +25,9 @@ import {
   Trash2, 
   GripVertical, 
   Eye, 
-  Settings,
-  Image,
   Type,
   Target,
   CheckCircle2,
-  AlertCircle,
   Palette,
   Layout,
   Zap,
@@ -454,6 +451,9 @@ export const QuestionPropertyEditor: React.FC<QuestionPropertyEditorProps> = ({
                     <Layout className="w-4 h-4" />
                     Opções da Questão
                     <Badge variant="secondary">{localOptions.length}</Badge>
+                    <TooltipHelper content={questionTooltips.options.content}>
+                      <HelpCircle className="w-3 h-3 text-gray-400 hover:text-gray-600 cursor-help" />
+                    </TooltipHelper>
                   </CardTitle>
                   <Button 
                     size="sm" 
@@ -740,7 +740,12 @@ export const QuestionPropertyEditor: React.FC<QuestionPropertyEditorProps> = ({
             {/* Box Model Editor */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-base">Espaçamento (Box Model)</CardTitle>
+                <CardTitle className="text-base flex items-center gap-2">
+                  Espaçamento (Box Model)
+                  <TooltipHelper content={questionTooltips.layout.content}>
+                    <HelpCircle className="w-3 h-3 text-gray-400 hover:text-gray-600 cursor-help" />
+                  </TooltipHelper>
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -771,7 +776,12 @@ export const QuestionPropertyEditor: React.FC<QuestionPropertyEditorProps> = ({
             {/* Animation Editor */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-base">Animações</CardTitle>
+                <CardTitle className="text-base flex items-center gap-2">
+                  Animações
+                  <TooltipHelper content={questionTooltips.animation.content}>
+                    <HelpCircle className="w-3 h-3 text-gray-400 hover:text-gray-600 cursor-help" />
+                  </TooltipHelper>
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <AnimationPreviewEditor
@@ -814,7 +824,12 @@ export const QuestionPropertyEditor: React.FC<QuestionPropertyEditorProps> = ({
             {/* Score por opção individual */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-base">Pontuação por Opção</CardTitle>
+                <CardTitle className="text-base flex items-center gap-2">
+                  Pontuação por Opção
+                  <TooltipHelper content={questionTooltips.scoring.content}>
+                    <HelpCircle className="w-3 h-3 text-gray-400 hover:text-gray-600 cursor-help" />
+                  </TooltipHelper>
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
