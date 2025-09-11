@@ -30,7 +30,7 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
   return (
     <div
       className={cn(
-        'flex-shrink-0 h-screen sticky top-0 overflow-y-auto bg-gray-900/80 backdrop-blur-sm border-l border-gray-700/50 flex flex-col',
+        'flex-shrink-0 h-screen sticky top-0 bg-gray-900/80 backdrop-blur-sm border-l border-gray-700/50 flex flex-col',
         'w-[24rem] min-w-[24rem] max-w-[24rem]', // Slightly wider for better UX
         className
       )}

@@ -71,20 +71,18 @@ const questionTooltips = {
 };
 
 // Simple tooltip component
-const TooltipHelper: React.FC<{ content: string; children: React.ReactNode }> = ({
-  content,
-  children
+const TooltipHelper: React.FC<{ content: string; children: React.ReactNode }> = ({ 
+  content, 
+  children 
 }) => (
   <div className="relative group inline-block">
     {children}
-    <div className="invisible group-hover:visible absolute z-10 w-64 px-3 py-2 text-sm text-white bg-gray-900 rounded-lg shadow-lg -top-12 left-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+    <div className="invisible group-hover:visible absolute z-10 w-64 px-3 py-2 text-sm text-white bg-gray-800 rounded-lg shadow-lg -top-12 left-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
       {content}
-      <div className="absolute top-full left-4 w-2 h-2 bg-gray-900 transform rotate-45 -mt-1"></div>
+      <div className="absolute top-full left-4 w-2 h-2 bg-gray-800 transform rotate-45 -mt-1"></div>
     </div>
   </div>
-);
-
-// Types
+);// Types
 interface QuestionOption {
   id: string;
   text: string;
@@ -312,17 +310,17 @@ export const QuestionPropertyEditor: React.FC<QuestionPropertyEditorProps> = ({
   ];
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-full flex flex-col bg-gray-900">
       {/* Header */}
-      <div className="border-b border-gray-200 p-4">
+      <div className="border-b border-gray-700 p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-              <HelpCircle className="w-4 h-4 text-blue-600" />
+            <div className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center">
+              <HelpCircle className="w-4 h-4 text-blue-400" />
             </div>
             <div>
-              <h2 className="font-semibold text-gray-900">Editor de Questão</h2>
-              <p className="text-sm text-gray-500">
+              <h2 className="font-semibold text-white">Editor de Questão</h2>
+              <p className="text-sm text-gray-400">
                 {block.type} • ID: {block.id}
               </p>
             </div>
