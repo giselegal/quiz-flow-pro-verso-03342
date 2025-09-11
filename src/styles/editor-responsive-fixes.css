@@ -1,0 +1,341 @@
+/**
+ * 🎯 CORREÇÕES ESPECÍFICAS DO LAYOUT DO EDITOR
+ * 
+ * Correções para problemas de responsividade e layout confuso no editor
+ */
+
+/* ========================================
+   EDITOR PRO - LAYOUT FIXES
+   ======================================== */
+
+/* Container principal do editor */
+.editor-pro-container {
+    height: 100vh !important;
+    overflow: hidden !important;
+}
+
+/* Layout de 4 colunas responsivo */
+.editor-four-column-layout {
+    display: flex !important;
+    height: 100% !important;
+    min-height: 100vh !important;
+}
+
+/* Colunas individuais */
+.editor-column {
+    display: flex !important;
+    flex-direction: column !important;
+    min-height: 100% !important;
+    overflow: hidden !important;
+}
+
+.editor-column-content {
+    flex: 1 !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+}
+
+/* ========================================
+   MOBILE LAYOUT (< 1024px)
+   ======================================== */
+
+@media (max-width: 1024px) {
+    /* Forçar layout mobile */
+    .editor-four-column-layout {
+        position: relative !important;
+        flex-direction: column !important;
+    }
+
+    /* Ocultar colunas laterais no mobile */
+    .editor-column:not(.editor-canvas-column) {
+        display: none !important;
+    }
+
+    /* Canvas ocupar toda a tela */
+    .editor-canvas-column {
+        width: 100% !important;
+        flex: 1 !important;
+    }
+
+    /* Header mobile para controles */
+    .mobile-editor-header {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        padding: 0.75rem 1rem !important;
+        background: rgb(17 24 39) !important;
+        border-bottom: 1px solid rgb(55 65 81) !important;
+        color: white !important;
+        min-height: 3.5rem !important;
+        z-index: 50 !important;
+    }
+
+    .mobile-editor-title {
+        font-size: 1rem !important;
+        font-weight: 600 !important;
+        color: white !important;
+    }
+
+    .mobile-editor-controls {
+        display: flex !important;
+        gap: 0.5rem !important;
+    }
+
+    .mobile-editor-button {
+        display: flex !important;
+        align-items: center !important;
+        gap: 0.25rem !important;
+        padding: 0.5rem 0.75rem !important;
+        background: rgb(55 65 81) !important;
+        border: 1px solid rgb(75 85 99) !important;
+        border-radius: 0.5rem !important;
+        color: white !important;
+        font-size: 0.875rem !important;
+        font-weight: 500 !important;
+        cursor: pointer !important;
+        transition: all 0.2s ease !important;
+    }
+
+    .mobile-editor-button:hover {
+        background: rgb(75 85 99) !important;
+        border-color: rgb(107 114 128) !important;
+    }
+
+    .mobile-editor-button:active {
+        transform: scale(0.95) !important;
+    }
+
+    /* Canvas ajustado para mobile */
+    .editor-canvas-area {
+        height: calc(100vh - 3.5rem) !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+}
+
+/* ========================================
+   DESKTOP LAYOUT (>= 1024px)
+   ======================================== */
+
+@media (min-width: 1024px) {
+    /* Layout de colunas desktop */
+    .editor-four-column-layout {
+        flex-direction: row !important;
+    }
+
+    /* Colunas laterais visíveis */
+    .editor-stages-column {
+        width: 12% !important;
+        min-width: 180px !important;
+        max-width: 250px !important;
+        background: rgba(17, 24, 39, 0.95) !important;
+        border-right: 1px solid rgb(55 65 81) !important;
+        backdrop-filter: blur(8px) !important;
+    }
+
+    .editor-components-column {
+        width: 15% !important;
+        min-width: 220px !important;
+        max-width: 300px !important;
+        background: rgba(17, 24, 39, 0.9) !important;
+        border-right: 1px solid rgb(55 65 81) !important;
+        backdrop-filter: blur(8px) !important;
+    }
+
+    .editor-canvas-column {
+        flex: 1 !important;
+        min-width: 480px !important;
+        background: transparent !important;
+    }
+
+    .editor-properties-column {
+        width: 18% !important;
+        min-width: 260px !important;
+        max-width: 350px !important;
+        background: rgba(17, 24, 39, 0.9) !important;
+        border-left: 1px solid rgb(55 65 81) !important;
+        backdrop-filter: blur(8px) !important;
+    }
+
+    /* Ocultar header mobile */
+    .mobile-editor-header {
+        display: none !important;
+    }
+}
+
+/* ========================================
+   PANEL OVERLAYS MOBILE
+   ======================================== */
+
+@media (max-width: 1024px) {
+    /* Overlay base */
+    .mobile-panel-overlay {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        z-index: 999 !important;
+        background: rgba(0, 0, 0, 0.7) !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+        transition: opacity 0.3s ease, visibility 0.3s ease !important;
+    }
+
+    .mobile-panel-overlay.active {
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+
+    /* Panel content */
+    .mobile-panel-content {
+        position: absolute !important;
+        top: 0 !important;
+        height: 100vh !important;
+        width: 20rem !important;
+        max-width: 85vw !important;
+        background: rgb(17 24 39) !important;
+        border: 1px solid rgb(55 65 81) !important;
+        overflow-y: auto !important;
+        transform: translateX(-100%) !important;
+        transition: transform 0.3s ease !important;
+    }
+
+    .mobile-panel-overlay.active .mobile-panel-content {
+        transform: translateX(0) !important;
+    }
+
+    /* Right panel */
+    .mobile-panel-overlay.right .mobile-panel-content {
+        right: 0 !important;
+        left: auto !important;
+        transform: translateX(100%) !important;
+    }
+
+    .mobile-panel-overlay.right.active .mobile-panel-content {
+        transform: translateX(0) !important;
+    }
+
+    /* Panel header */
+    .mobile-panel-header {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        padding: 1rem !important;
+        background: rgb(31 41 55) !important;
+        border-bottom: 1px solid rgb(55 65 81) !important;
+        color: white !important;
+    }
+
+    .mobile-panel-title {
+        font-size: 1.125rem !important;
+        font-weight: 600 !important;
+        margin: 0 !important;
+    }
+
+    .mobile-panel-close {
+        background: transparent !important;
+        border: none !important;
+        color: rgb(156 163 175) !important;
+        font-size: 1.5rem !important;
+        cursor: pointer !important;
+        padding: 0.25rem !important;
+        line-height: 1 !important;
+        transition: color 0.2s ease !important;
+    }
+
+    .mobile-panel-close:hover {
+        color: white !important;
+    }
+
+    .mobile-panel-body {
+        flex: 1 !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+}
+
+/* ========================================
+   PERFORMANCE OPTIMIZATIONS
+   ======================================== */
+
+/* Reduzir reflows desnecessários */
+.editor-column,
+.editor-column-content {
+    will-change: transform !important;
+}
+
+/* GPU acceleration para animações */
+.mobile-panel-overlay,
+.mobile-panel-content {
+    will-change: transform, opacity !important;
+    backface-visibility: hidden !important;
+    -webkit-transform: translate3d(0, 0, 0) !important;
+    transform: translate3d(0, 0, 0) !important;
+}
+
+/* Otimização de scroll */
+.editor-column-content,
+.mobile-panel-body,
+.editor-canvas-area {
+    scrollbar-width: thin !important;
+    scrollbar-color: rgb(75 85 99) transparent !important;
+}
+
+.editor-column-content::-webkit-scrollbar,
+.mobile-panel-body::-webkit-scrollbar,
+.editor-canvas-area::-webkit-scrollbar {
+    width: 6px !important;
+}
+
+.editor-column-content::-webkit-scrollbar-track,
+.mobile-panel-body::-webkit-scrollbar-track,
+.editor-canvas-area::-webkit-scrollbar-track {
+    background: transparent !important;
+}
+
+.editor-column-content::-webkit-scrollbar-thumb,
+.mobile-panel-body::-webkit-scrollbar-thumb,
+.editor-canvas-area::-webkit-scrollbar-thumb {
+    background: rgb(75 85 99) !important;
+    border-radius: 3px !important;
+}
+
+.editor-column-content::-webkit-scrollbar-thumb:hover,
+.mobile-panel-body::-webkit-scrollbar-thumb:hover,
+.editor-canvas-area::-webkit-scrollbar-thumb:hover {
+    background: rgb(107 114 128) !important;
+}
+
+/* ========================================
+   UTILITY CLASSES
+   ======================================== */
+
+@media (max-width: 1024px) {
+    .mobile-hide {
+        display: none !important;
+    }
+
+    .mobile-show {
+        display: block !important;
+    }
+
+    .mobile-flex {
+        display: flex !important;
+    }
+}
+
+@media (min-width: 1024px) {
+    .desktop-hide {
+        display: none !important;
+    }
+
+    .desktop-show {
+        display: block !important;
+    }
+
+    .desktop-flex {
+        display: flex !important;
+    }
+}
