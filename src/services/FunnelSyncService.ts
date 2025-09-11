@@ -9,6 +9,11 @@
  * - Delta sync para otimização
  */
 
+import { FunnelErrorCode } from '../core/errors/FunnelErrorCodes';
+import { FunnelError } from '../core/errors/FunnelError';
+import { globalFunnelErrorHandler } from '../core/errors/FunnelErrorHandler';
+import { globalFunnelRecovery } from '../core/errors/FunnelErrorRecovery';
+
 // ============================================================================
 // TYPES AND INTERFACES
 // ============================================================================
@@ -155,7 +160,16 @@ class FunnelSyncService {
                 console.log('[FunnelSync] Loaded queue', { items: this.syncQueue.length });
             }
         } catch (error) {
-            console.error('[FunnelSync] Failed to load queue', error);
+            const funnelError = new FunnelError(
+                FunnelErrorCode.STORAGE_ERROR,
+                'Failed to load sync queue',
+                { 
+                    operation: 'loadSyncQueue',
+                    component: 'FunnelSyncService',
+                    stackTrace: error instanceof Error ? error.stack : undefined
+                }
+            );
+            globalFunnelErrorHandler.handleError(funnelError);
             this.syncQueue = [];
         }
     }
@@ -164,7 +178,17 @@ class FunnelSyncService {
         try {
             localStorage.setItem('qqcv_sync_queue', JSON.stringify(this.syncQueue));
         } catch (error) {
-            console.error('[FunnelSync] Failed to save queue', error);
+            const funnelError = new FunnelError(
+                FunnelErrorCode.STORAGE_ERROR,
+                'Failed to save sync queue',
+                { 
+                    operation: 'saveSyncQueue',
+                    component: 'FunnelSyncService',
+                    appState: { queueSize: this.syncQueue.length },
+                    stackTrace: error instanceof Error ? error.stack : undefined
+                }
+            );
+            globalFunnelErrorHandler.handleError(funnelError);
         }
     }
 
@@ -231,6 +255,21 @@ class FunnelSyncService {
 
             } catch (error) {
                 item.attempts++;
+                const funnelError = new FunnelError(
+                    FunnelErrorCode.NETWORK_ERROR,
+                    `Sync failed for ${item.entityType} ${item.entityId}`,
+                    {
+                        operation: 'syncItem',
+                        component: 'FunnelSyncService',
+                        appState: { 
+                            item: item,
+                            attempts: item.attempts,
+                            maxRetries: this.config.retryAttempts 
+                        },
+                        stackTrace: error instanceof Error ? error.stack : undefined
+                    }
+                );
+                globalFunnelErrorHandler.handleError(funnelError);
                 result.errors.push(`Sync failed for ${item.entityType} ${item.entityId}: ${error}`);
                 console.error('[FunnelSync] Sync error', { item, error });
             }
@@ -284,11 +323,44 @@ class FunnelSyncService {
 
                 return true;
             } else {
+                const networkError = new FunnelError(
+                    FunnelErrorCode.NETWORK_ERROR,
+                    `HTTP error during sync: ${response.status} ${response.statusText}`,
+                    {
+                        operation: 'syncItem',
+                        component: 'FunnelSyncService',
+                        method: item.type === 'delete' ? 'DELETE' : 'POST',
+                        appState: { 
+                            url,
+                            statusCode: response.status,
+                            statusText: response.statusText,
+                            entityType: item.entityType,
+                            entityId: item.entityId
+                        }
+                    }
+                );
+                globalFunnelErrorHandler.handleError(networkError);
                 console.error('[FunnelSync] HTTP error', { status: response.status, statusText: response.statusText });
                 return false;
             }
 
         } catch (error) {
+            const networkError = new FunnelError(
+                FunnelErrorCode.NETWORK_ERROR,
+                'Network error during sync operation',
+                {
+                    operation: 'syncItem',
+                    component: 'FunnelSyncService',
+                    method: item.type === 'delete' ? 'DELETE' : 'POST',
+                    appState: { 
+                        url,
+                        entityType: item.entityType,
+                        entityId: item.entityId
+                    },
+                    stackTrace: error instanceof Error ? error.stack : undefined
+                }
+            );
+            globalFunnelErrorHandler.handleError(networkError);
             console.error('[FunnelSync] Network error', error);
             return false;
         }

@@ -9,7 +9,22 @@
  * - Validação de integridade dos dados
  */
 
-import { advancedFunnelStorage, type FunnelItem, type FunnelSettings, type MigrationResult } from './AdvancedFunnelStorage';
+import { FunnelItem, FunnelSettings, advancedFunnelStorage } from './AdvancedFunnelStorage';
+import { FunnelErrorCode } from '../core/errors/FunnelErrorCodes';
+import { FunnelError } from '../core/errors/FunnelError';
+import { globalFunnelErrorHandler } from '../core/errors/FunnelErrorHandler';
+
+// ============================================================================
+// INTERFACES E TIPOS
+// ============================================================================
+
+export interface MigrationResult {
+    success: boolean;
+    migratedFunnels: number;
+    migratedSettings: number;
+    errors: string[];
+    duration: number;
+}
 
 // Simple console logger for migration process - fallback approach
 const logger = {
@@ -134,6 +149,22 @@ class FunnelDataMigrationService {
         } catch (error) {
             result.errors.push(`Migration failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
             result.duration = Date.now() - startTime;
+
+            const migrationError = new FunnelError(
+                FunnelErrorCode.MIGRATION_FAILED,
+                'Failed to perform funnel data migration',
+                {
+                    operation: 'performMigration',
+                    component: 'FunnelDataMigrationService',
+                    appState: { 
+                        migratedFunnels: result.migratedFunnels,
+                        migratedSettings: result.migratedSettings,
+                        duration: result.duration
+                    },
+                    stackTrace: error instanceof Error ? error.stack : undefined
+                }
+            );
+            globalFunnelErrorHandler.handleError(migrationError);
 
             logger.error('Migration failed', {
                 error,
@@ -376,6 +407,16 @@ class FunnelDataMigrationService {
             return backupString;
 
         } catch (error) {
+            const backupError = new FunnelError(
+                FunnelErrorCode.STORAGE_ERROR,
+                'Failed to create full backup',
+                {
+                    operation: 'createFullBackup',
+                    component: 'FunnelDataMigrationService',
+                    stackTrace: error instanceof Error ? error.stack : undefined
+                }
+            );
+            globalFunnelErrorHandler.handleError(backupError);
             logger.error('Failed to create backup', { error }, 'Migration');
             throw new Error(`Backup creation failed: ${error}`);
         }
@@ -427,6 +468,20 @@ class FunnelDataMigrationService {
             result.errors.push(`Restore failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
             result.duration = Date.now() - startTime;
 
+            const restoreError = new FunnelError(
+                FunnelErrorCode.CORRUPTED_DATA,
+                'Failed to restore from backup',
+                {
+                    operation: 'restoreFromBackup',
+                    component: 'FunnelDataMigrationService',
+                    appState: { 
+                        result: result,
+                        backupSize: backupString.length
+                    },
+                    stackTrace: error instanceof Error ? error.stack : undefined
+                }
+            );
+            globalFunnelErrorHandler.handleError(restoreError);
             logger.error('Restore failed', { error, result }, 'Migration');
         }
 
@@ -477,5 +532,5 @@ class FunnelDataMigrationService {
 
 export const funnelDataMigration = new FunnelDataMigrationService();
 
-// Export types
-export type { MigrationResult };
+// Export types (removed duplicate export)
+// MigrationResult is already exported at interface definition
