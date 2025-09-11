@@ -1,7 +1,8 @@
 // src/utils/logging/transports/ConsoleTransport.ts
-import type { LogTransport, LogEntry, LoggerConfig } from '../LoggerService';
-import type { LogFormatter } from '../formatters';
-import { DevelopmentFormatter } from '../formatters';
+import type { LogTransport, LogEntry } from '../LoggerService';
+import type { LoggerConfig } from '../LoggerConfig';
+import type { LogFormatter } from '../formatters/LogFormatter';
+import { DevelopmentFormatter } from '../formatters/DevelopmentFormatter';
 
 export class ConsoleTransport implements LogTransport {
     private formatter: LogFormatter;

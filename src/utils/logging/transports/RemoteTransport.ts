@@ -1,5 +1,6 @@
 // src/utils/logging/transports/RemoteTransport.ts
-import type { LogTransport, LogEntry, LoggerConfig } from '../LoggerService';
+import type { LogTransport, LogEntry } from '../LoggerService';
+import type { LoggerConfig } from '../LoggerConfig';
 
 interface RemoteLogPayload {
     logs: LogEntry[];

@@ -14,7 +14,7 @@ export class RateLimitFilter implements LogFilter {
 
     constructor(private config: RateLimitConfig) { }
 
-    shouldLog(entry: LogEntry): boolean {
+    shouldLog(_entry: LogEntry): boolean {
         const now = Date.now();
 
         // Reset burst counter every second

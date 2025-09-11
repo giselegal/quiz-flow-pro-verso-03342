@@ -2,4 +2,4 @@
 export { ConsoleTransport } from './ConsoleTransport';
 export { StorageTransport } from './StorageTransport';
 export { RemoteTransport } from './RemoteTransport';
-export { IndexedDBTransport } from './IndexedDBTransport';
+// export { IndexedDBTransport } from './IndexedDBTransport'; // TODO: Implementar quando necessário
