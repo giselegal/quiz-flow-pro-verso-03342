@@ -4,6 +4,7 @@ import CanvasDropZone from '@/components/editor/canvas/CanvasDropZone.simple';
 import type { Block } from '@/types/editor';
 import { useTheme } from '@/components/theme-provider';
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { useCanvasContainerStyles } from '@/hooks/useCanvasContainerStyles';
 
 const LoadingFallback = () => (
   <div className="flex items-center justify-center h-full w-full">
@@ -60,6 +61,9 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [customTitle, setCustomTitle] = useState('Quiz Quest - Editor Principal');
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  
+  // Hook para aplicar estilos dinâmicos
+  useCanvasContainerStyles();
 
   const handlePublishAll = useCallback(() => {
     try {

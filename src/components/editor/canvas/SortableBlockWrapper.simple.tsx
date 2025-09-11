@@ -8,6 +8,7 @@ import { GripVertical, Trash2 } from 'lucide-react';
 import React from 'react';
 import { generateUniqueId } from '@/utils/generateUniqueId';
 import { useStepSelection } from '@/hooks/useStepSelection';
+import { useCanvasContainerStyles } from '@/hooks/useCanvasContainerStyles';
 
 interface SortableBlockWrapperProps {
   block: Block;
@@ -29,6 +30,9 @@ const SortableBlockWrapperBase: React.FC<SortableBlockWrapperProps> = ({
 }) => {
   // Normalizar bloco para unificar content/properties (mesma lógica do UniversalBlockRenderer)
   const normalizedBlock = normalizeBlockProps(block);
+  
+  // Hook para aplicar estilos dinâmicos
+  useCanvasContainerStyles();
   
   // 🔍 DEBUG: Log block details to identify the issue
   React.useEffect(() => {

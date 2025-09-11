@@ -9,6 +9,7 @@ import { CANVAS_ROOT_ID } from '../dnd/constants';
 import { generateUniqueId } from '@/utils/generateUniqueId';
 import { SortableBlockWrapper } from './SortableBlockWrapper.simple';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { useCanvasContainerStyles } from '@/hooks/useCanvasContainerStyles';
 
 // Componente para drop zone entre blocos (sempre presente para maximizar detecção)
 const InterBlockDropZoneBase: React.FC<{
@@ -83,6 +84,9 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
   scopeId,
 }) => {
   useRenderCount('CanvasDropZone');
+  
+  // Hook para aplicar estilos dinâmicos
+  useCanvasContainerStyles();
 
   // 🔍 DEBUG: Log blocks data
   React.useEffect(() => {

@@ -17,8 +17,15 @@ import ResponsiveColumnsEditor from './ResponsiveColumnsEditor';
 import BoxModelEditor from './BoxModelEditor';
 import EnhancedUploadEditor from './EnhancedUploadEditor';
 import AnimationPreviewEditor from './AnimationPreviewEditor';
+import CanvasContainerPropertyEditor from '../editors/CanvasContainerPropertyEditor';
 import React from 'react';
 import type { PropertyEditorProps, PropertyEditorRegistry } from './types';
+
+// Wrapper para compatibilidade com PropertyEditorComponent
+const CanvasContainerWrapper: React.FC<PropertyEditorProps> = ({ property, onChange }) => {
+  // As props serão passadas pelo contexto no PropertiesPanel
+  return <CanvasContainerPropertyEditor />;
+};
 
 // Editor de texto básico
 const TextEditor: React.FC<PropertyEditorProps> = ({ property, onChange }) => (
@@ -579,6 +586,7 @@ export const propertyEditors: PropertyEditorRegistry = {
   padding: BoxModelEditor,
   upload: EnhancedUploadEditor,
   animation: AnimationPreviewEditor,
+  canvasContainer: CanvasContainerWrapper,
 };
 
 // HOC para selecionar editor automaticamente
