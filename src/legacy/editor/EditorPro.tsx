@@ -825,14 +825,14 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         onDragEnd={handleDragEnd}
       >
         <div className={`editor-pro h-[calc(100vh-80px)] bg-gray-950 flex overflow-x-hidden max-w-screen ${className} relative`}>
-          
+
           {/* 📱 MOBILE OVERLAYS - Navegação e Propriedades */}
           <div className="lg:hidden">
             {/* Mobile Navigation Overlay */}
             <div id="mobile-nav-overlay" className="mobile-overlay mobile-nav-overlay">
               <div className="mobile-overlay-header">
                 <h3>Navegação</h3>
-                <button 
+                <button
                   onClick={() => {
                     const overlay = document.getElementById('mobile-nav-overlay');
                     if (overlay) overlay.classList.remove('show');
@@ -873,7 +873,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
             <div id="mobile-props-overlay" className="mobile-overlay mobile-props-overlay">
               <div className="mobile-overlay-header">
                 <h3>Propriedades</h3>
-                <button 
+                <button
                   onClick={() => {
                     const overlay = document.getElementById('mobile-props-overlay');
                     if (overlay) overlay.classList.remove('show');
@@ -905,7 +905,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               </svg>
               <span className="text-xs">Menu</span>
             </button>
-            
+
             <button
               onClick={() => {
                 const overlay = document.getElementById('mobile-props-overlay');
@@ -946,7 +946,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               />
             </Suspense>
           </div>
-          
+
           {/* 3) Canvas - Mobile: full width, Desktop: 55% */}
           <div className="w-full lg:w-[55%] min-w-0 flex-1">
             <CanvasAreaLayout
@@ -968,7 +968,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               isDragging={isDragging}
             />
           </div>
-          
+
           {/* 4) Propriedades - 20% - Hidden on mobile */}
           <div className="hidden lg:block w-[20%] min-w-0 max-w-none">
             <Suspense fallback={<div className="p-4 bg-gray-900 border-l border-gray-800/50">Properties…</div>}>

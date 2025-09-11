@@ -213,7 +213,7 @@
    ======================================== */
 
 @media (max-width: 1024px) {
-    
+
     /* Editor Mobile Overlays */
     .mobile-overlay {
         position: fixed !important;
