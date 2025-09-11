@@ -66,7 +66,7 @@ const EditorTemplatesPage: React.FC = () => {
 
       console.log('💾 Salvando funil no localStorage:', newFunnel);
       funnelLocalStore.upsert(newFunnel);
-      
+
       // Verificar se foi salvo
       const savedFunnel = funnelLocalStore.get(clonedInstance.id);
       console.log('🔍 Funil salvo verificado:', savedFunnel);
@@ -110,8 +110,8 @@ const EditorTemplatesPage: React.FC = () => {
           <Card
             key={template.id}
             className={`cursor-pointer transition-all duration-200 hover:shadow-lg ${selectedTemplate === template.id
-                ? 'ring-2 ring-[#B89B7A] shadow-lg'
-                : 'hover:shadow-md'
+              ? 'ring-2 ring-[#B89B7A] shadow-lg'
+              : 'hover:shadow-md'
               }`}
             onClick={() => setSelectedTemplate(template.id)}
           >
