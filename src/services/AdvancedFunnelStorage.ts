@@ -276,12 +276,12 @@ class AdvancedFunnelStorageService {
             return funnels;
         } catch (error) {
             logger.error('Failed to list funnels', { error }, 'FunnelStorage');
-            
+
             // Criar erro padronizado e tentar recovery
             const errorMessage = error instanceof Error ? error.message : String(error);
             const funnelError = FunnelErrorFactory.storageError('listFunnels', errorMessage);
             await handleFunnelError(funnelError, { operation: 'listFunnels' });
-            
+
             return this.fallbackToLocalStorage();
         }
     }
@@ -317,12 +317,12 @@ class AdvancedFunnelStorageService {
             return funnel;
         } catch (error) {
             logger.error('Failed to get funnel', { id, error }, 'FunnelStorage');
-            
+
             // Criar erro padronizado
             const errorMessage = error instanceof Error ? error.message : String(error);
             const funnelError = FunnelErrorFactory.storageError('getFunnel', errorMessage);
             await handleFunnelError(funnelError, { operation: 'getFunnel', funnelId: id });
-            
+
             return this.fallbackGetFunnel(id);
         }
     }
@@ -363,7 +363,7 @@ class AdvancedFunnelStorageService {
             return funnelItem;
         } catch (error) {
             logger.error('Failed to upsert funnel', { id: item.id, error }, 'FunnelStorage');
-            
+
             // Verificar se é erro de quota/storage
             if (error instanceof Error && error.name === 'QuotaExceededError') {
                 const quotaError = new FunnelError(FunnelErrorCode.STORAGE_FULL, undefined, {
@@ -376,7 +376,7 @@ class AdvancedFunnelStorageService {
                 const funnelError = FunnelErrorFactory.storageError('upsertFunnel', errorMessage);
                 await handleFunnelError(funnelError, { operation: 'upsertFunnel', funnelId: item.id });
             }
-            
+
             throw new Error(`Failed to save funnel: ${error}`);
         }
     }

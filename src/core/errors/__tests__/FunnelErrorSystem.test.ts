@@ -35,10 +35,10 @@ class TestRunner {
                 this.results.push({ name: test.name, passed: true });
                 console.log(`✅ ${test.name}`);
             } catch (error) {
-                this.results.push({ 
-                    name: test.name, 
-                    passed: false, 
-                    error: error instanceof Error ? error.message : String(error) 
+                this.results.push({
+                    name: test.name,
+                    passed: false,
+                    error: error instanceof Error ? error.message : String(error)
                 });
                 console.log(`❌ ${test.name}: ${error}`);
             }
@@ -69,7 +69,7 @@ async function testErrorCodes(): Promise<void> {
     runner.test('Error Codes - Deve ter todos os códigos essenciais', () => {
         const essentialCodes = [
             'NOT_FOUND',
-            'NO_PERMISSION', 
+            'NO_PERMISSION',
             'TIMEOUT',
             'NETWORK_ERROR',
             'STORAGE_ERROR',
@@ -86,11 +86,11 @@ async function testErrorCodes(): Promise<void> {
 
     runner.test('Error Definitions - Deve retornar definições válidas', () => {
         const definition = getErrorDefinition(FunnelErrorCode.NOT_FOUND);
-        
+
         if (!definition) {
             throw new Error('Definição de erro não encontrada');
         }
-        
+
         if (!definition.userMessage || !definition.severity || !definition.recoveryStrategy) {
             throw new Error('Definição incompleta de erro');
         }
@@ -103,7 +103,7 @@ async function testErrorCodes(): Promise<void> {
     runner.test('Error Definitions - Deve ter severidades corretas', () => {
         const lowSeverityDefinition = getErrorDefinition(FunnelErrorCode.NOT_FOUND);
         const highSeverityDefinition = getErrorDefinition(FunnelErrorCode.CORRUPTED_DATA);
-        
+
         if (!lowSeverityDefinition || lowSeverityDefinition.severity === 'critical') {
             throw new Error('Severidade incorreta para NOT_FOUND');
         }
@@ -153,7 +153,7 @@ async function testFunnelError(): Promise<void> {
 
     runner.test('FunnelError - Deve herdar de Error nativo', () => {
         const error = new FunnelError(FunnelErrorCode.TIMEOUT, 'Test timeout');
-        
+
         if (!(error instanceof Error)) {
             throw new Error('FunnelError deve herdar de Error');
         }
@@ -165,7 +165,7 @@ async function testFunnelError(): Promise<void> {
 
     runner.test('FunnelError - Deve ter dados de recovery', () => {
         const error = new FunnelError(FunnelErrorCode.NETWORK_ERROR, 'Network failed');
-        
+
         if (!error.definition.recoveryStrategy) {
             throw new Error('Sem estratégias de recovery');
         }
@@ -193,7 +193,7 @@ async function testErrorHandler(): Promise<void> {
         );
 
         const result: ErrorHandlingResult = await globalFunnelErrorHandler.handleError(error);
-        
+
         if (!result.handled) {
             throw new Error('Erro não foi tratado');
         }
@@ -201,9 +201,9 @@ async function testErrorHandler(): Promise<void> {
 
     runner.test('Error Handler - Deve processar Error nativo', async () => {
         const nativeError = new Error('Generic error');
-        
+
         const result: ErrorHandlingResult = await globalFunnelErrorHandler.handleError(nativeError);
-        
+
         if (!result.handled) {
             throw new Error('Erro nativo não foi tratado');
         }
@@ -238,7 +238,7 @@ async function testIntegration(): Promise<void> {
     runner.test('Integração - Sistema completo está funcional', async () => {
         // Simula um erro real de storage
         const originalError = new Error('QuotaExceededError: Storage quota exceeded');
-        
+
         // Handler deveria processar sem falhar
         const result = await globalFunnelErrorHandler.handleError(originalError);
 
@@ -250,12 +250,12 @@ async function testIntegration(): Promise<void> {
     runner.test('Integração - Múltiplos erros consecutivos', async () => {
         const errors = [
             new FunnelError(FunnelErrorCode.NETWORK_ERROR, 'Network 1'),
-            new FunnelError(FunnelErrorCode.TIMEOUT, 'Timeout 1'),  
+            new FunnelError(FunnelErrorCode.TIMEOUT, 'Timeout 1'),
             new FunnelError(FunnelErrorCode.STORAGE_ERROR, 'Storage 1')
         ];
 
         const results = [];
-        
+
         for (const error of errors) {
             const result = await globalFunnelErrorHandler.handleError(error);
             results.push(result);
@@ -286,7 +286,7 @@ export async function runFunnelErrorSystemTests(): Promise<void> {
         await testErrorHandler();
         await testErrorRecovery();
         await testIntegration();
-        
+
         console.log('🎉 Todos os testes do sistema de erros concluídos!\n');
     } catch (error) {
         console.error('💥 Erro durante execução dos testes:', error);

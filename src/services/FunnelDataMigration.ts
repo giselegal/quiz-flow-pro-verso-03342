@@ -156,7 +156,7 @@ class FunnelDataMigrationService {
                 {
                     operation: 'performMigration',
                     component: 'FunnelDataMigrationService',
-                    appState: { 
+                    appState: {
                         migratedFunnels: result.migratedFunnels,
                         migratedSettings: result.migratedSettings,
                         duration: result.duration
@@ -474,7 +474,7 @@ class FunnelDataMigrationService {
                 {
                     operation: 'restoreFromBackup',
                     component: 'FunnelDataMigrationService',
-                    appState: { 
+                    appState: {
                         result: result,
                         backupSize: backupString.length
                     },

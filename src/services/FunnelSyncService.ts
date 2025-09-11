@@ -163,7 +163,7 @@ class FunnelSyncService {
             const funnelError = new FunnelError(
                 FunnelErrorCode.STORAGE_ERROR,
                 'Failed to load sync queue',
-                { 
+                {
                     operation: 'loadSyncQueue',
                     component: 'FunnelSyncService',
                     stackTrace: error instanceof Error ? error.stack : undefined
@@ -181,7 +181,7 @@ class FunnelSyncService {
             const funnelError = new FunnelError(
                 FunnelErrorCode.STORAGE_ERROR,
                 'Failed to save sync queue',
-                { 
+                {
                     operation: 'saveSyncQueue',
                     component: 'FunnelSyncService',
                     appState: { queueSize: this.syncQueue.length },
@@ -261,10 +261,10 @@ class FunnelSyncService {
                     {
                         operation: 'syncItem',
                         component: 'FunnelSyncService',
-                        appState: { 
+                        appState: {
                             item: item,
                             attempts: item.attempts,
-                            maxRetries: this.config.retryAttempts 
+                            maxRetries: this.config.retryAttempts
                         },
                         stackTrace: error instanceof Error ? error.stack : undefined
                     }
@@ -330,7 +330,7 @@ class FunnelSyncService {
                         operation: 'syncItem',
                         component: 'FunnelSyncService',
                         method: item.type === 'delete' ? 'DELETE' : 'POST',
-                        appState: { 
+                        appState: {
                             url,
                             statusCode: response.status,
                             statusText: response.statusText,
@@ -352,7 +352,7 @@ class FunnelSyncService {
                     operation: 'syncItem',
                     component: 'FunnelSyncService',
                     method: item.type === 'delete' ? 'DELETE' : 'POST',
-                    appState: { 
+                    appState: {
                         url,
                         entityType: item.entityType,
                         entityId: item.entityId
