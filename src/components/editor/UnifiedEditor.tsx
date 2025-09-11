@@ -1,13 +1,16 @@
 /**
- * 🎯 UNIFIED EDITOR - CONSOLIDAÇÃO SIMPLIFICADA
+ * 🎯 UNIFIED EDITOR - CONSOLIDAÇÃO SIMPLIFICADA COM OTIMIZAÇÕES DE PERFORMANCE
  * 
  * Editor consolidado que unifica EditorPro legacy com estrutura moderna
+ * Integrado com sistema de lazy loading inteligente, memoização avançada e profiling
  */
 
 import React, { Suspense } from 'react';
 import { useEditor } from '@/components/editor/EditorProvider';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { logger } from '@/utils/debugLogger';
+import { PerformanceProfiler, withPerformanceProfiler } from '@/utils/performance/PerformanceProfiler';
+import { EditorLazyComponents } from '@/utils/performance/LazyLoadingSystem';
 
 interface UnifiedEditorProps {
   className?: string;
@@ -61,25 +64,35 @@ export const UnifiedEditor: React.FC<UnifiedEditorProps> = ({ className = '' }) 
 
   logger.debug('🎯 UnifiedEditor: Contexto válido, carregando editor...');
 
-  // Componente interno que carrega o editor dinamicamente
+  // Componente interno que carrega o editor dinamicamente com otimizações de performance
   const DynamicEditor = React.useMemo(() => {
     return React.lazy(async () => {
       try {
-        // Primeiro, tentar carregar EditorPro (preferência do usuário)
-        const legacyMod = await import('@/legacy/editor/EditorPro');
-        const LegacyComp = legacyMod.default || legacyMod.EditorPro;
-        logger.info('✅ UnifiedEditor: Carregado EditorPro (padrão)');
-        try { (window as any).__ACTIVE_EDITOR__ = 'EditorPro'; } catch { }
-        return { default: LegacyComp };
+        // Primeiro, tentar carregar EditorPro (preferência do usuário) com lazy loading otimizado
+        logger.info('🚀 UnifiedEditor: Iniciando carregamento do EditorPro com lazy loading...');
+
+        // Usar sistema de lazy loading inteligente para EditorPro
+        const LegacyEditor = EditorLazyComponents.EditorPro;
+
+        // Wrapper com performance profiling
+        const ProfiledEditor = withPerformanceProfiler(LegacyEditor, 'EditorPro-Unified');
+
+        logger.info('✅ UnifiedEditor: Carregado EditorPro com otimizações (padrão)');
+        try { (window as any).__ACTIVE_EDITOR__ = 'EditorPro-Optimized'; } catch { }
+
+        return { default: ProfiledEditor };
       } catch (legacyError) {
         logger.warn('⚠️ UnifiedEditor: EditorPro não disponível, fallback para SchemaDrivenEditorResponsive');
         try {
-          // Fallback para arquitetura moderna baseada em schema
+          // Fallback para arquitetura moderna baseada em schema (carregamento manual)
           const modernMod = await import('@/components/editor/SchemaDrivenEditorResponsive');
-          const ModernComp = modernMod.default;
-          logger.info('✅ UnifiedEditor: Carregado SchemaDrivenEditorResponsive (fallback)');
-          try { (window as any).__ACTIVE_EDITOR__ = 'SchemaDrivenEditorResponsive'; } catch { }
-          return { default: ModernComp };
+          const ModernEditor = modernMod.default;
+          const ProfiledModernEditor = withPerformanceProfiler(ModernEditor, 'SchemaDriven-Unified');
+
+          logger.info('✅ UnifiedEditor: Carregado SchemaDrivenEditorResponsive com otimizações (fallback)');
+          try { (window as any).__ACTIVE_EDITOR__ = 'SchemaDriven-Optimized'; } catch { }
+
+          return { default: ProfiledModernEditor };
         } catch (modernError) {
           logger.error('❌ UnifiedEditor: Falha ao carregar qualquer editor', { legacyError, modernError });
           throw new Error('Nenhum editor disponível');
@@ -88,19 +101,25 @@ export const UnifiedEditor: React.FC<UnifiedEditorProps> = ({ className = '' }) 
     });
   }, []);
 
-  return (
-    <div className={`unified-editor-container ${className}`}>
-      <Suspense fallback={
-        <div className="flex items-center justify-center h-64 bg-gray-50">
-          <div className="text-center">
-            <LoadingSpinner size="md" className="mb-4" />
-            <p className="text-gray-600 font-medium">Carregando editor unificado...</p>
-          </div>
-        </div>
-      }>
-        <DynamicEditor />
-      </Suspense>
+  // Fallback loading otimizado
+  const optimizedLoadingFallback = React.useMemo(() => (
+    <div className="flex items-center justify-center h-64 bg-gray-50">
+      <div className="text-center">
+        <LoadingSpinner size="md" className="mb-4" />
+        <p className="text-gray-600 font-medium">Carregando editor unificado...</p>
+        <p className="text-gray-400 text-sm mt-2">Aplicando otimizações de performance...</p>
+      </div>
     </div>
+  ), []);
+
+  return (
+    <PerformanceProfiler id="UnifiedEditor-Container" enableLogging>
+      <div className={`unified-editor-container ${className}`}>
+        <Suspense fallback={optimizedLoadingFallback}>
+          <DynamicEditor />
+        </Suspense>
+      </div>
+    </PerformanceProfiler>
   );
 };
 
