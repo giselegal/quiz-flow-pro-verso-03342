@@ -24,7 +24,6 @@ import { useDisableAutoScroll } from '@/hooks/editor/useDisableAutoScroll';
 import { useGlobalHotkeys } from '@/hooks/editor/useGlobalHotkeys';
 import { logger } from '@/utils/debugLogger';
 import { useEditorDragAndDrop } from '@/hooks/editor/useEditorDragAndDrop';
-import ResponsiveEditorLayout from '@/components/editor/layout/ResponsiveEditorLayout';
 
 // Lazy modules para reduzir TTI do editor (Canvas usa o LazyQuizRenderer internamente)
 // const LazyQuizRenderer = React.lazy(() =>
@@ -825,10 +824,106 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
       >
-        {/* 🎯 LAYOUT RESPONSIVO UNIFICADO */}
-        <ResponsiveEditorLayout
-          stagesPanel={
-            <Suspense fallback={<div className="p-4 text-gray-400">Carregando etapas…</div>}>
+        <div className={`editor-pro h-[calc(100vh-80px)] bg-gray-950 flex overflow-x-hidden max-w-screen ${className} relative`}>
+
+          {/* 📱 MOBILE OVERLAYS - Navegação e Propriedades */}
+          <div className="lg:hidden">
+            {/* Mobile Navigation Overlay */}
+            <div id="mobile-nav-overlay" className="mobile-overlay mobile-nav-overlay">
+              <div className="mobile-overlay-header">
+                <h3>Navegação</h3>
+                <button
+                  onClick={() => {
+                    const overlay = document.getElementById('mobile-nav-overlay');
+                    if (overlay) overlay.classList.remove('show');
+                  }}
+                  className="mobile-overlay-close"
+                >
+                  ×
+                </button>
+              </div>
+              <div className="mobile-overlay-content">
+                <Suspense fallback={<div className="p-4">Loading steps…</div>}>
+                  <StepSidebar
+                    currentStep={safeCurrentStep}
+                    totalSteps={21}
+                    stepHasBlocks={stepHasBlocks}
+                    stepValidation={(state as any)?.stepValidation || {}}
+                    onSelectStep={(step) => {
+                      handleStepSelect(step);
+                      const overlay = document.getElementById('mobile-nav-overlay');
+                      if (overlay) overlay.classList.remove('show');
+                    }}
+                    getStepAnalysis={getStepAnalysis as any}
+                    renderIcon={renderIcon as any}
+                    className="bg-gray-900"
+                  />
+                </Suspense>
+                <Suspense fallback={<div className="p-4">Loading library…</div>}>
+                  <ComponentsSidebar
+                    groupedComponents={groupedComponents as any}
+                    renderIcon={renderIcon as any}
+                    className="bg-gray-900 mt-4"
+                  />
+                </Suspense>
+              </div>
+            </div>
+
+            {/* Mobile Properties Overlay */}
+            <div id="mobile-props-overlay" className="mobile-overlay mobile-props-overlay">
+              <div className="mobile-overlay-header">
+                <h3>Propriedades</h3>
+                <button
+                  onClick={() => {
+                    const overlay = document.getElementById('mobile-props-overlay');
+                    if (overlay) overlay.classList.remove('show');
+                  }}
+                  className="mobile-overlay-close"
+                >
+                  ×
+                </button>
+              </div>
+              <div className="mobile-overlay-content">
+                <Suspense fallback={<div className="p-4">Properties…</div>}>
+                  <MemoPropertiesColumn />
+                </Suspense>
+              </div>
+            </div>
+          </div>
+
+          {/* 📱 MOBILE ACTION BUTTONS */}
+          <div className="lg:hidden fixed bottom-4 left-4 right-4 flex justify-between z-40">
+            <button
+              onClick={() => {
+                const overlay = document.getElementById('mobile-nav-overlay');
+                if (overlay) overlay.classList.add('show');
+              }}
+              className="mobile-action-btn bg-blue-600"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+              <span className="text-xs">Menu</span>
+            </button>
+
+            <button
+              onClick={() => {
+                const overlay = document.getElementById('mobile-props-overlay');
+                if (overlay) overlay.classList.add('show');
+              }}
+              className="mobile-action-btn bg-green-600"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4" />
+              </svg>
+              <span className="text-xs">Props</span>
+            </button>
+          </div>
+
+          {/* DESKTOP LAYOUT - Hidden on mobile */}
+          {/* 1) Etapas - 10% */}
+          <div className="hidden lg:block w-[10%] min-w-0 max-w-none">
+            <Suspense fallback={<div className="p-4 bg-gray-900 border-r border-gray-800/50">Loading steps…</div>}>
               <StepSidebar
                 currentStep={safeCurrentStep}
                 totalSteps={21}
@@ -837,20 +932,23 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
                 onSelectStep={handleStepSelect}
                 getStepAnalysis={getStepAnalysis as any}
                 renderIcon={renderIcon as any}
-                className="bg-transparent"
+                className="!w-full bg-gray-900 border-r border-gray-800/50"
               />
             </Suspense>
-          }
-          componentsPanel={
-            <Suspense fallback={<div className="p-4 text-gray-400">Carregando componentes…</div>}>
+          </div>
+          {/* 2) Componentes - 15% */}
+          <div className="hidden lg:block w-[15%] min-w-0 max-w-none">
+            <Suspense fallback={<div className="p-4 bg-gray-900 border-r border-gray-800/50">Loading library…</div>}>
               <ComponentsSidebar
                 groupedComponents={groupedComponents as any}
                 renderIcon={renderIcon as any}
-                className="bg-transparent"
+                className="!w-full bg-gray-900 border-r border-gray-800/50"
               />
             </Suspense>
-          }
-          canvas={
+          </div>
+
+          {/* 3) Canvas - Mobile: full width, Desktop: 55% */}
+          <div className="w-full lg:w-[55%] min-w-0 flex-1">
             <CanvasAreaLayout
               className=""
               containerRef={containerRef}
@@ -869,14 +967,15 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               getStepAnalysis={getStepAnalysis as any}
               isDragging={isDragging}
             />
-          }
-          propertiesPanel={
-            <Suspense fallback={<div className="p-4 text-gray-400">Carregando propriedades…</div>}>
+          </div>
+
+          {/* 4) Propriedades - 20% - Hidden on mobile */}
+          <div className="hidden lg:block w-[20%] min-w-0 max-w-none">
+            <Suspense fallback={<div className="p-4 bg-gray-900 border-l border-gray-800/50">Properties…</div>}>
               <MemoPropertiesColumn />
             </Suspense>
-          }
-          className={className}
-        />
+          </div>
+        </div>
       </StepDndProvider>
 
       {NotificationContainer ? <NotificationContainer /> : null}

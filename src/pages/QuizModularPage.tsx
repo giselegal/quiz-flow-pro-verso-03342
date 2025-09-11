@@ -11,7 +11,7 @@ import { ResultEngine } from '@/services/core/ResultEngine';
 import ResultOrchestrator from '@/services/core/ResultOrchestrator';
 import { STYLE_KEYWORDS_MAPPING } from '@/utils/styleKeywordMap';
 import { SelectionRules, FlowCore } from '@/services/core/FlowCore';
-import OPTIMIZED_FUNNEL_CONFIG from '@/templates/quiz21StepsComplete';
+import OPTIMIZED_FUNNEL_CONFIG from '@/config/optimized21StepsFunnel';
 import useOptimizedScheduler from '@/hooks/useOptimizedScheduler';
 import { useStepNavigationStore } from '@/stores/useStepNavigationStore';
 
