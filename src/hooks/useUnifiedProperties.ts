@@ -250,6 +250,27 @@ const getUniversalProperties = (): UnifiedProperty[] => [
     }
   ),
 
+  // Box Model Compostos (para editor visual avançado)
+  createProperty('margin', { top: 0, right: 0, bottom: 0, left: 0 }, PropertyType.OBJECT, 'Margens', PropertyCategory.LAYOUT, {
+    description: 'Controle visual avançado de margens externas'
+  }),
+  createProperty('padding', { top: 0, right: 0, bottom: 0, left: 0 }, PropertyType.OBJECT, 'Paddings', PropertyCategory.LAYOUT, {
+    description: 'Controle visual avançado de espaçamento interno'
+  }),
+
+  // Animações
+  createProperty('animation', {
+    type: 'fadeIn',
+    duration: 0.5,
+    delay: 0,
+    timing: 'ease',
+    direction: 'normal',
+    iteration: 1,
+    trigger: 'load'
+  }, PropertyType.OBJECT, 'Animação', PropertyCategory.STYLE, {
+    description: 'Configuração visual de animação CSS com preview'
+  }),
+
   // 3. Escala geral (tamanho)
   createProperty('sizeScale', '100%', PropertyType.SELECT, 'Tamanho', PropertyCategory.LAYOUT, {
     options: [
@@ -573,6 +594,20 @@ export const useUnifiedProperties = (
             PropertyCategory.STYLE,
             { min: 1, max: 20, step: 1, unit: 'px' }
           ),
+          createProperty(
+            'progressHeight',
+            currentBlock?.properties?.progressHeight || 4,
+            PropertyType.RANGE,
+            'Altura da Barra de Progresso',
+            PropertyCategory.STYLE,
+            {
+              min: 2,
+              max: 20,
+              step: 1,
+              unit: 'px',
+              description: 'Altura em pixels da barra de progresso quando habilitada'
+            }
+          ),
 
           // 🎯 NAVEGAÇÃO (SETAS DISCRETAS)
           createProperty(
@@ -642,6 +677,23 @@ export const useUnifiedProperties = (
             'Escala do Container',
             PropertyCategory.LAYOUT,
             { min: 0.5, max: 2, step: 0.1, unit: 'x' }
+          ),
+          createProperty(
+            'contentMaxWidth',
+            currentBlock?.properties?.contentMaxWidth || '800px',
+            PropertyType.SELECT,
+            'Largura Máxima do Conteúdo',
+            PropertyCategory.LAYOUT,
+            {
+              options: [
+                { value: '600px', label: '600px (Compacto)' },
+                { value: '800px', label: '800px (Padrão)' },
+                { value: '1000px', label: '1000px (Largo)' },
+                { value: '1200px', label: '1200px (Extra Largo)' },
+                { value: '100%', label: '100% (Tela Cheia)' },
+              ],
+              description: 'Define a largura máxima do container de conteúdo do header'
+            }
           ),
 
           // 🎯 MARGENS EXTERNAS
@@ -764,35 +816,50 @@ export const useUnifiedProperties = (
             currentBlock?.properties?.showPrimaryStyleName ?? false,
             PropertyType.SWITCH,
             'Mostrar Nome do Estilo Predominante',
-            PropertyCategory.BEHAVIOR
+            PropertyCategory.BEHAVIOR,
+            {
+              description: 'Exibe o nome do estilo calculado (ex: "Romântico Clássico") no header do resultado'
+            }
           ),
           createProperty(
             'showPrimaryStyleDescription',
             currentBlock?.properties?.showPrimaryStyleDescription ?? false,
             PropertyType.SWITCH,
             'Mostrar Descrição do Estilo Predominante',
-            PropertyCategory.BEHAVIOR
+            PropertyCategory.BEHAVIOR,
+            {
+              description: 'Exibe uma descrição detalhada do estilo predominante calculado'
+            }
           ),
           createProperty(
             'showPrimaryStyleProgress',
             currentBlock?.properties?.showPrimaryStyleProgress ?? false,
             PropertyType.SWITCH,
             'Mostrar Barra de Progresso do Estilo Predominante',
-            PropertyCategory.BEHAVIOR
+            PropertyCategory.BEHAVIOR,
+            {
+              description: 'Exibe uma barra de progresso com a porcentagem de afinidade ao estilo'
+            }
           ),
           createProperty(
             'showPrimaryStyleImage',
             currentBlock?.properties?.showPrimaryStyleImage ?? false,
             PropertyType.SWITCH,
             'Mostrar Imagem do Estilo Predominante',
-            PropertyCategory.BEHAVIOR
+            PropertyCategory.BEHAVIOR,
+            {
+              description: 'Exibe a imagem representativa do estilo predominante ao lado do título'
+            }
           ),
           createProperty(
             'showPrimaryStyleGuide',
             currentBlock?.properties?.showPrimaryStyleGuide ?? false,
             PropertyType.SWITCH,
             'Mostrar Guia do Estilo Predominante',
-            PropertyCategory.BEHAVIOR
+            PropertyCategory.BEHAVIOR,
+            {
+              description: 'Exibe um guia detalhado de como usar o estilo predominante'
+            }
           ),
 
           // ✅ ESTILOS - ESTILOS SECUNDÁRIOS
@@ -1399,6 +1466,29 @@ export const useUnifiedProperties = (
             }
           ),
 
+          // 🎯 NOVAS PROPRIEDADES ADICIONADAS
+          createProperty(
+            'storeAsUserName',
+            currentBlock?.properties?.storeAsUserName ?? false,
+            PropertyType.SWITCH,
+            'Armazenar como Nome do Usuário',
+            PropertyCategory.BEHAVIOR,
+            {
+              description: 'Define este valor como o nome oficial do usuário na sessão para personalização'
+            }
+          ),
+          createProperty(
+            'resultDisplayKey',
+            currentBlock?.properties?.resultDisplayKey || '',
+            PropertyType.TEXT,
+            'Chave para Exibição no Resultado',
+            PropertyCategory.ADVANCED,
+            {
+              placeholder: 'userName, userEmail, etc',
+              description: 'Campo que será usado para personalizar resultados futuros e templates'
+            }
+          ),
+
           // 🎯 STYLE PROPERTIES
           createProperty(
             'backgroundColor',
@@ -1806,6 +1896,56 @@ export const useUnifiedProperties = (
             'URL da Próxima Etapa (Validação)',
             PropertyCategory.BEHAVIOR
           ),
+
+          // 🎯 NOVAS PROPRIEDADES ADICIONADAS
+          createProperty(
+            'disabledOpacity',
+            currentBlock?.properties?.disabledOpacity || 0.5,
+            PropertyType.RANGE,
+            'Opacidade quando Desabilitado',
+            PropertyCategory.STYLE,
+            {
+              min: 0.1,
+              max: 1,
+              step: 0.1,
+              unit: 'x',
+              description: 'Define a transparência do botão quando está desabilitado'
+            }
+          ),
+          createProperty(
+            'effectType',
+            currentBlock?.properties?.effectType || 'none',
+            PropertyType.SELECT,
+            'Tipo de Efeito Visual',
+            PropertyCategory.STYLE,
+            {
+              options: [
+                { value: 'none', label: 'Nenhum' },
+                { value: 'glow', label: 'Brilho' },
+                { value: 'pulse', label: 'Pulso' },
+                { value: 'shake', label: 'Tremor' },
+                { value: 'bounce', label: 'Salto' },
+              ],
+              description: 'Efeito visual especial aplicado ao botão'
+            }
+          ),
+          createProperty(
+            'shadowType',
+            currentBlock?.properties?.shadowType || 'none',
+            PropertyType.SELECT,
+            'Tipo de Sombra',
+            PropertyCategory.STYLE,
+            {
+              options: [
+                { value: 'none', label: 'Nenhuma' },
+                { value: 'soft', label: 'Suave' },
+                { value: 'medium', label: 'Média' },
+                { value: 'strong', label: 'Forte' },
+                { value: 'glow', label: 'Brilho Colorido' },
+              ],
+              description: 'Tipo de sombra a ser aplicada no botão'
+            }
+          ),
         ];
 
       case 'decorative-bar-inline':
@@ -2063,6 +2203,56 @@ export const useUnifiedProperties = (
             PropertyType.ARRAY,
             'Lista de Opções',
             PropertyCategory.CONTENT
+          ),
+
+          // 🎯 PROPRIEDADES FALTANTES ADICIONADAS
+          createProperty(
+            'questionId',
+            currentBlock?.properties?.questionId || '',
+            PropertyType.TEXT,
+            'ID da Questão',
+            PropertyCategory.ADVANCED,
+            {
+              description: 'Identificador único da questão para referência e tracking',
+              placeholder: 'question-1, step-2-fashion, etc.'
+            }
+          ),
+          createProperty(
+            'scoreValues',
+            currentBlock?.properties?.scoreValues || {},
+            PropertyType.OBJECT,
+            'Configuração de Pontuação',
+            PropertyCategory.ADVANCED,
+            {
+              description: 'Define os valores de pontuação para cada estilo baseado nas respostas'
+            }
+          ),
+          createProperty(
+            'animationType',
+            currentBlock?.properties?.animationType || 'fadeIn',
+            PropertyType.SELECT,
+            'Tipo de Animação',
+            PropertyCategory.ANIMATION,
+            {
+              options: [
+                { value: 'none', label: 'Sem animação' },
+                { value: 'fadeIn', label: 'Fade In' },
+                { value: 'slideUp', label: 'Slide Up' },
+                { value: 'scaleIn', label: 'Scale In' },
+                { value: 'bounceIn', label: 'Bounce In' },
+              ],
+              description: 'Animação de entrada das opções quando carregam'
+            }
+          ),
+          createProperty(
+            'responsiveColumns',
+            currentBlock?.properties?.responsiveColumns || { mobile: 1, tablet: 2, desktop: 3 },
+            PropertyType.OBJECT,
+            'Colunas Responsivas',
+            PropertyCategory.LAYOUT,
+            {
+              description: 'Define quantas colunas usar em cada breakpoint (mobile/tablet/desktop)'
+            }
           ),
         ];
 
