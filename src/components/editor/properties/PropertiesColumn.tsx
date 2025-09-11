@@ -46,7 +46,7 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
         }>
           {/* Registry Properties Panel with Canonical Implementation */}
           <div className="flex-1">
-                        <PropertiesPanel
+            <PropertiesPanel
               key={selectedBlock?.id || 'no-selection'}
               selectedBlock={selectedBlock}
               onUpdate={onUpdate}
