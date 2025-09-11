@@ -31,6 +31,9 @@ interface CanvasContainerStyles {
     navigationButtonBorder: string;
     navigationButtonBorderRadius: number;
     navigationButtonPadding: string;
+    navigationButtonAlignment: 'left' | 'center' | 'right';
+    navigationButtonVerticalPosition: 'top' | 'middle' | 'bottom';
+    navigationButtonSpacing: number;
 
     // === ÁREA DE TOOLBAR ===
     toolbarBackground: string;
@@ -69,6 +72,9 @@ const DEFAULT_CANVAS_STYLES: CanvasContainerStyles = {
     navigationButtonBorder: '#D1D5DB',
     navigationButtonBorderRadius: 6,
     navigationButtonPadding: '8px 16px',
+    navigationButtonAlignment: 'right' as const,
+    navigationButtonVerticalPosition: 'bottom' as const,
+    navigationButtonSpacing: 8,
 
     // Toolbar
     toolbarBackground: '#1F2937',
@@ -197,6 +203,20 @@ export const useCanvasContainerStyles = () => {
         .navigation-button:hover,
         [data-navigation-button]:hover {
           background-color: ${styles.navigationButtonHoverBackground} !important;
+        }
+
+        /* Container dos botões de navegação */
+        .navigation-buttons-container,
+        [data-navigation-container] {
+          display: flex !important;
+          gap: ${styles.navigationButtonSpacing}px !important;
+          position: absolute !important;
+          ${styles.navigationButtonVerticalPosition === 'top' ? 'top: 8px;' :
+                    styles.navigationButtonVerticalPosition === 'middle' ? 'top: 50%; transform: translateY(-50%);' : 'bottom: 8px;'} !important;
+          ${styles.navigationButtonAlignment === 'left' ? 'left: 8px;' :
+                    styles.navigationButtonAlignment === 'center' ? 'left: 50%; transform: translateX(-50%);' : 'right: 8px;'} !important;
+          ${styles.navigationButtonVerticalPosition === 'middle' && styles.navigationButtonAlignment === 'center' ?
+                    'transform: translate(-50%, -50%);' : ''} !important;
         }
 
         /* Botões específicos da toolbar (CanvasArea.tsx) */

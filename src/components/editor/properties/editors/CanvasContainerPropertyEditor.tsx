@@ -48,6 +48,9 @@ interface CanvasContainerProperties {
     navigationButtonBorder: string;
     navigationButtonBorderRadius: number;
     navigationButtonPadding: string;
+    navigationButtonAlignment: 'left' | 'center' | 'right';
+    navigationButtonVerticalPosition: 'top' | 'middle' | 'bottom';
+    navigationButtonSpacing: number;
 
     // === ÁREA DE TOOLBAR ===
     toolbarBackground: string;
@@ -93,6 +96,9 @@ const DEFAULT_PROPERTIES: CanvasContainerProperties = {
     navigationButtonBorder: '#D1D5DB',
     navigationButtonBorderRadius: 6,
     navigationButtonPadding: '8px 16px',
+    navigationButtonAlignment: 'right' as const,
+    navigationButtonVerticalPosition: 'bottom' as const,
+    navigationButtonSpacing: 8,
 
     // Toolbar
     toolbarBackground: '#1F2937',
@@ -160,7 +166,13 @@ export const CanvasContainerPropertyEditor: React.FC<CanvasContainerPropertyEdit
                     </div>
 
                     {/* Preview dos botões de navegação */}
-                    <div className="absolute bottom-2 right-2 flex gap-2">
+                    <div
+                        className={`absolute flex gap-${Math.floor(properties.navigationButtonSpacing / 4)} ${properties.navigationButtonVerticalPosition === 'top' ? 'top-2' :
+                                properties.navigationButtonVerticalPosition === 'middle' ? 'top-1/2 -translate-y-1/2' : 'bottom-2'
+                            } ${properties.navigationButtonAlignment === 'left' ? 'left-2' :
+                                properties.navigationButtonAlignment === 'center' ? 'left-1/2 -translate-x-1/2' : 'right-2'
+                            }`}
+                    >
                         <button
                             className="text-xs rounded transition-all"
                             style={{
@@ -473,6 +485,55 @@ export const CanvasContainerPropertyEditor: React.FC<CanvasContainerPropertyEdit
                                         placeholder="8px 16px"
                                         className="w-full px-2 py-1 border rounded text-sm"
                                     />
+                                </div>
+                            </div>
+
+                            <Separator />
+
+                            <div className="space-y-4">
+                                <h4 className="font-medium text-sm">Posicionamento dos Botões</h4>
+
+                                <div className="space-y-2">
+                                    <Label>Alinhamento Horizontal</Label>
+                                    <select
+                                        value={properties.navigationButtonAlignment}
+                                        onChange={(e) => handleUpdate('navigationButtonAlignment', e.target.value)}
+                                        className="w-full px-2 py-1 border rounded text-sm"
+                                    >
+                                        <option value="left">Esquerda</option>
+                                        <option value="center">Centro</option>
+                                        <option value="right">Direita</option>
+                                    </select>
+                                </div>
+
+                                <div className="space-y-2">
+                                    <Label>Posição Vertical</Label>
+                                    <select
+                                        value={properties.navigationButtonVerticalPosition}
+                                        onChange={(e) => handleUpdate('navigationButtonVerticalPosition', e.target.value)}
+                                        className="w-full px-2 py-1 border rounded text-sm"
+                                    >
+                                        <option value="top">Superior</option>
+                                        <option value="middle">Centro</option>
+                                        <option value="bottom">Inferior</option>
+                                    </select>
+                                </div>
+
+                                <div className="space-y-2">
+                                    <Label>Espaçamento entre Botões (px)</Label>
+                                    <div className="flex items-center gap-2">
+                                        <input
+                                            type="range"
+                                            min="0"
+                                            max="32"
+                                            value={properties.navigationButtonSpacing}
+                                            onChange={(e) => handleUpdate('navigationButtonSpacing', parseInt(e.target.value))}
+                                            className="flex-1"
+                                        />
+                                        <Badge variant="outline" className="text-xs min-w-[50px]">
+                                            {properties.navigationButtonSpacing}px
+                                        </Badge>
+                                    </div>
                                 </div>
                             </div>
                         </div>
