@@ -38,9 +38,9 @@ class FunnelTemplateService {
    */
   async getTemplates(category?: string): Promise<FunnelTemplate[]> {
     try {
-      // ✅ CORRIGIDO: Verificar se Supabase está disponível
-      if (!supabase) {
-        console.warn('⚠️ Supabase não disponível, retornando templates locais');
+      // ✅ CORRIGIDO: Verificar se Supabase está disponível e funcional
+      if (!supabase || typeof supabase.from !== 'function') {
+        console.warn('⚠️ Supabase não disponível ou não funcional, retornando templates locais');
         return this.getFallbackTemplates();
       }
 
@@ -48,13 +48,15 @@ class FunnelTemplateService {
         .from('funnel_templates')
         .select('*');
 
-      // ✅ CORRIGIDO: Verificar se a tabela existe antes de ordenar
-      if (category && category !== 'all') {
+      // ✅ CORRIGIDO: Verificar se métodos existem antes de chamar
+      if (category && category !== 'all' && typeof query.eq === 'function') {
         query = query.eq('category', category);
       }
 
       // Tentar ordenar, mas com fallback se falhar
-      query = query.order('usage_count', { ascending: false });
+      if (typeof query.order === 'function') {
+        query = query.order('usage_count', { ascending: false });
+      }
 
       const { data, error } = await query;
 
