@@ -20,11 +20,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { 
-  Plus, 
-  Trash2, 
-  GripVertical, 
-  Eye, 
+import {
+  Plus,
+  Trash2,
+  GripVertical,
+  Eye,
   Type,
   Target,
   CheckCircle2,
@@ -71,9 +71,9 @@ const questionTooltips = {
 };
 
 // Simple tooltip component
-const TooltipHelper: React.FC<{ content: string; children: React.ReactNode }> = ({ 
-  content, 
-  children 
+const TooltipHelper: React.FC<{ content: string; children: React.ReactNode }> = ({
+  content,
+  children
 }) => (
   <div className="relative group inline-block">
     {children}
@@ -100,28 +100,28 @@ interface QuestionProperties {
   text?: string;
   description?: string;
   questionId?: string;
-  
+
   // Options
   options?: QuestionOption[];
-  
+
   // Selection Rules
   multipleSelection?: boolean;
   requiredSelections?: number;
   maxSelections?: number;
   minSelections?: number;
-  
+
   // Validation
   enableButtonOnlyWhenValid?: boolean;
   showValidationFeedback?: boolean;
   validationMessage?: string;
   progressMessage?: string;
   showSelectionCount?: boolean;
-  
+
   // Behavior
   autoAdvanceOnComplete?: boolean;
   autoAdvanceDelay?: number;
   showImages?: boolean;
-  
+
   // Styling
   columns?: number;
   responsiveColumns?: boolean;
@@ -129,7 +129,7 @@ interface QuestionProperties {
   selectedColor?: string;
   hoverColor?: string;
   gridGap?: number;
-  
+
   // Layout
   backgroundColor?: string;
   textAlign?: 'left' | 'center' | 'right';
@@ -137,18 +137,18 @@ interface QuestionProperties {
   margin?: string;
   borderRadius?: string;
   boxShadow?: string;
-  
+
   // Typography
   fontSize?: string;
   fontWeight?: string;
   color?: string;
-  
+
   // Animation
   animation?: any;
-  
+
   // Score values globais
   scoreValues?: Record<string, number>;
-  
+
   [key: string]: any;
 }
 
@@ -174,14 +174,14 @@ export const QuestionPropertyEditor: React.FC<QuestionPropertyEditorProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState('content');
   const [previewMode, setPreviewMode] = useState(false);
-  
+
   const properties = block.properties || {};
-  
+
   // Estado local para opções com drag & drop (futuro)
   const [localOptions, setLocalOptions] = useState<QuestionOption[]>(
     properties.options || []
   );
-  
+
   useEffect(() => {
     setLocalOptions(properties.options || []);
   }, [properties.options]);
@@ -189,11 +189,11 @@ export const QuestionPropertyEditor: React.FC<QuestionPropertyEditorProps> = ({
   // Handlers
   const handlePropertyChange = useCallback((key: string, value: any) => {
     onUpdate({ [key]: value });
-    
+
     // Validação básica
     if (onValidate) {
-      const questionText = key === 'question' || key === 'text' || key === 'title' 
-        ? value 
+      const questionText = key === 'question' || key === 'text' || key === 'title'
+        ? value
         : properties.question || properties.text || properties.title;
       onValidate(!!questionText);
     }
@@ -235,18 +235,18 @@ export const QuestionPropertyEditor: React.FC<QuestionPropertyEditorProps> = ({
         {properties.description && (
           <p className="text-gray-600 mb-4">{properties.description}</p>
         )}
-        
+
         <div className="space-y-3">
           {localOptions.map((option, index) => (
-            <div 
+            <div
               key={option.id}
               className="p-3 border border-gray-200 rounded-lg hover:border-blue-300 cursor-pointer transition-colors"
             >
               <div className="flex items-center gap-3">
                 {option.imageUrl && (
-                  <img 
-                    src={option.imageUrl} 
-                    alt="" 
+                  <img
+                    src={option.imageUrl}
+                    alt=""
                     className="w-12 h-12 object-cover rounded"
                   />
                 )}
@@ -260,7 +260,7 @@ export const QuestionPropertyEditor: React.FC<QuestionPropertyEditorProps> = ({
             </div>
           ))}
         </div>
-        
+
         {properties.showSelectionCount && (
           <div className="mt-4 text-sm text-gray-600">
             Seleções: 0 de {properties.maxSelections || localOptions.length}
@@ -279,33 +279,33 @@ export const QuestionPropertyEditor: React.FC<QuestionPropertyEditorProps> = ({
   }
 
   const tabs = [
-    { 
-      id: 'content', 
-      label: 'Conteúdo', 
+    {
+      id: 'content',
+      label: 'Conteúdo',
       icon: Type,
       description: 'Texto e opções da questão'
     },
-    { 
-      id: 'validation', 
-      label: 'Validação', 
+    {
+      id: 'validation',
+      label: 'Validação',
       icon: CheckCircle2,
       description: 'Regras de seleção e validação'
     },
-    { 
-      id: 'behavior', 
-      label: 'Comportamento', 
+    {
+      id: 'behavior',
+      label: 'Comportamento',
       icon: Zap,
       description: 'Auto-avançar e interações'
     },
-    { 
-      id: 'styling', 
-      label: 'Visual', 
+    {
+      id: 'styling',
+      label: 'Visual',
       icon: Palette,
       description: 'Cores, layout e animações'
     },
-    { 
-      id: 'scoring', 
-      label: 'Pontuação', 
+    {
+      id: 'scoring',
+      label: 'Pontuação',
       icon: Target,
       description: 'Score values por opção'
     }
@@ -327,7 +327,7 @@ export const QuestionPropertyEditor: React.FC<QuestionPropertyEditorProps> = ({
               </p>
             </div>
           </div>
-          
+
           <div className="flex items-center gap-2">
             <Button
               variant={previewMode ? "default" : "outline"}
@@ -337,7 +337,7 @@ export const QuestionPropertyEditor: React.FC<QuestionPropertyEditorProps> = ({
               <Eye className="w-4 h-4 mr-1" />
               Preview
             </Button>
-            
+
             {onDelete && (
               <Button variant="destructive" size="sm" onClick={onDelete}>
                 <Trash2 className="w-4 h-4" />
@@ -368,8 +368,8 @@ export const QuestionPropertyEditor: React.FC<QuestionPropertyEditorProps> = ({
             {tabs.map(tab => {
               const Icon = tab.icon;
               return (
-                <TabsTrigger 
-                  key={tab.id} 
+                <TabsTrigger
+                  key={tab.id}
                   value={tab.id}
                   className="flex flex-col items-center gap-1 py-2 px-1"
                 >
@@ -385,7 +385,7 @@ export const QuestionPropertyEditor: React.FC<QuestionPropertyEditorProps> = ({
       {/* Content */}
       <div className="flex-1 overflow-y-auto p-4">
         <Tabs value={activeTab} className="w-full">
-          
+
           {/* CONTEÚDO */}
           <TabsContent value="content" className="space-y-6">
             <Card>
@@ -415,7 +415,7 @@ export const QuestionPropertyEditor: React.FC<QuestionPropertyEditorProps> = ({
                     rows={3}
                   />
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label htmlFor="description">Descrição (Opcional)</Label>
                   <Textarea
@@ -455,8 +455,8 @@ export const QuestionPropertyEditor: React.FC<QuestionPropertyEditorProps> = ({
                       <HelpCircle className="w-3 h-3 text-gray-400 hover:text-gray-600 cursor-help" />
                     </TooltipHelper>
                   </CardTitle>
-                  <Button 
-                    size="sm" 
+                  <Button
+                    size="sm"
                     onClick={handleAddOption}
                     className="flex items-center gap-1"
                   >
@@ -470,9 +470,9 @@ export const QuestionPropertyEditor: React.FC<QuestionPropertyEditorProps> = ({
                   <div className="text-center py-8 text-gray-500">
                     <Layout className="w-8 h-8 mx-auto mb-2 text-gray-400" />
                     <p>Nenhuma opção adicionada</p>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
+                    <Button
+                      variant="outline"
+                      size="sm"
                       onClick={handleAddOption}
                       className="mt-2"
                     >
@@ -488,14 +488,14 @@ export const QuestionPropertyEditor: React.FC<QuestionPropertyEditorProps> = ({
                             <div className="mt-2">
                               <GripVertical className="w-4 h-4 text-gray-400 cursor-move" />
                             </div>
-                            
+
                             <div className="flex-1 space-y-3">
                               <div className="flex items-center gap-2">
                                 <Badge variant="outline" className="text-xs">
                                   Opção {index + 1}
                                 </Badge>
                               </div>
-                              
+
                               <div className="grid grid-cols-1 gap-3">
                                 <div>
                                   <Label className="text-xs">Texto</Label>
@@ -505,7 +505,7 @@ export const QuestionPropertyEditor: React.FC<QuestionPropertyEditorProps> = ({
                                     onChange={(e) => handleOptionUpdate(index, { text: e.target.value })}
                                   />
                                 </div>
-                                
+
                                 <div className="grid grid-cols-2 gap-2">
                                   <div>
                                     <Label className="text-xs">Imagem URL</Label>
@@ -524,12 +524,12 @@ export const QuestionPropertyEditor: React.FC<QuestionPropertyEditorProps> = ({
                                     />
                                   </div>
                                 </div>
-                                
+
                                 {option.imageUrl && (
                                   <div className="flex justify-center">
-                                    <img 
-                                      src={option.imageUrl} 
-                                      alt="Preview" 
+                                    <img
+                                      src={option.imageUrl}
+                                      alt="Preview"
                                       className="w-16 h-16 object-cover rounded border"
                                       onError={(e) => {
                                         (e.target as HTMLImageElement).style.display = 'none';
@@ -539,9 +539,9 @@ export const QuestionPropertyEditor: React.FC<QuestionPropertyEditorProps> = ({
                                 )}
                               </div>
                             </div>
-                            
-                            <Button 
-                              variant="ghost" 
+
+                            <Button
+                              variant="ghost"
                               size="sm"
                               onClick={() => handleRemoveOption(index)}
                               className="text-red-500 hover:text-red-700"
@@ -750,22 +750,22 @@ export const QuestionPropertyEditor: React.FC<QuestionPropertyEditorProps> = ({
               <CardContent>
                 <div className="space-y-4">
                   <BoxModelEditor
-                    property={{ 
-                      key: 'padding', 
-                      value: properties.padding, 
-                      type: PropertyType.OBJECT, 
+                    property={{
+                      key: 'padding',
+                      value: properties.padding,
+                      type: PropertyType.OBJECT,
                       label: 'Padding',
-                      category: PropertyCategory.LAYOUT 
+                      category: PropertyCategory.LAYOUT
                     }}
                     onChange={handlePropertyChange}
                   />
                   <BoxModelEditor
-                    property={{ 
-                      key: 'margin', 
-                      value: properties.margin, 
-                      type: PropertyType.OBJECT, 
+                    property={{
+                      key: 'margin',
+                      value: properties.margin,
+                      type: PropertyType.OBJECT,
                       label: 'Margin',
-                      category: PropertyCategory.LAYOUT 
+                      category: PropertyCategory.LAYOUT
                     }}
                     onChange={handlePropertyChange}
                   />
@@ -785,12 +785,12 @@ export const QuestionPropertyEditor: React.FC<QuestionPropertyEditorProps> = ({
               </CardHeader>
               <CardContent>
                 <AnimationPreviewEditor
-                  property={{ 
-                    key: 'animation', 
-                    value: properties.animation, 
-                    type: PropertyType.OBJECT, 
+                  property={{
+                    key: 'animation',
+                    value: properties.animation,
+                    type: PropertyType.OBJECT,
                     label: 'Animation',
-                    category: PropertyCategory.ANIMATION 
+                    category: PropertyCategory.ANIMATION
                   }}
                   onChange={handlePropertyChange}
                 />
@@ -809,12 +809,12 @@ export const QuestionPropertyEditor: React.FC<QuestionPropertyEditorProps> = ({
               </CardHeader>
               <CardContent>
                 <ScoreValuesEditor
-                  property={{ 
-                    key: 'scoreValues', 
-                    value: properties.scoreValues, 
-                    type: PropertyType.OBJECT, 
+                  property={{
+                    key: 'scoreValues',
+                    value: properties.scoreValues,
+                    type: PropertyType.OBJECT,
                     label: 'Score Values',
-                    category: PropertyCategory.BEHAVIOR 
+                    category: PropertyCategory.BEHAVIOR
                   }}
                   onChange={handlePropertyChange}
                 />
@@ -841,14 +841,14 @@ export const QuestionPropertyEditor: React.FC<QuestionPropertyEditorProps> = ({
                           {option.text || 'Sem texto'}
                         </span>
                       </div>
-                      
+
                       <ScoreValuesEditor
-                        property={{ 
-                          key: `option-${index}-scores`, 
+                        property={{
+                          key: `option-${index}-scores`,
                           value: option.scoreValues || {},
-                          type: PropertyType.OBJECT, 
+                          type: PropertyType.OBJECT,
                           label: `Option ${index + 1} Scores`,
-                          category: PropertyCategory.BEHAVIOR 
+                          category: PropertyCategory.BEHAVIOR
                         }}
                         onChange={(_key, value) => {
                           handleOptionUpdate(index, { scoreValues: value });
@@ -856,7 +856,7 @@ export const QuestionPropertyEditor: React.FC<QuestionPropertyEditorProps> = ({
                       />
                     </div>
                   ))}
-                  
+
                   {localOptions.length === 0 && (
                     <div className="text-center py-6 text-gray-500">
                       <Target className="w-8 h-8 mx-auto mb-2 text-gray-400" />
@@ -884,7 +884,7 @@ export const QuestionPropertyEditor: React.FC<QuestionPropertyEditorProps> = ({
               </>
             )}
           </div>
-          
+
           <div className="flex items-center gap-2">
             {properties.autoAdvanceOnComplete && (
               <Badge variant="secondary" className="text-xs">Auto-avançar</Badge>
