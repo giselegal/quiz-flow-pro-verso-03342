@@ -26,8 +26,8 @@ export interface CanvasAreaProps {
   containerRef: React.RefObject<HTMLDivElement>;
   mode: 'edit' | 'preview';
   setMode: (m: 'edit' | 'preview') => void;
-  previewDevice: 'desktop' | 'tablet' | 'mobile';
-  setPreviewDevice: (m: 'desktop' | 'tablet' | 'mobile') => void;
+  previewDevice: 'desktop' | 'tablet' | 'mobile' | 'xl';
+  setPreviewDevice: (m: 'desktop' | 'tablet' | 'mobile' | 'xl') => void;
   safeCurrentStep: number;
   currentStepKey: string;
   currentStepData: Block[];

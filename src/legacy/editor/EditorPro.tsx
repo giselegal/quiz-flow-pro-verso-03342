@@ -773,7 +773,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
 
   // sem ponte: hook já recebe currentStepData atualizado via dependências
 
-  const [previewDevice, setPreviewDevice] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
+  const [previewDevice, setPreviewDevice] = useState<'desktop' | 'tablet' | 'mobile' | 'xl'>('desktop');
 
   const handleDuplicateSelected = useCallback(() => {
     const selectedBlock = currentStepData.find((block: Block) => block.id === (editorContext as any).state.selectedBlockId);
@@ -814,7 +814,10 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   return (
     <>
       {/* 🎯 Cabeçalho do Funil */}
-      <FunnelHeader />
+      <FunnelHeader 
+        viewportMode={previewDevice}
+        onViewportModeChange={setPreviewDevice}
+      />
 
       <StepDndProvider
         stepNumber={safeCurrentStep}

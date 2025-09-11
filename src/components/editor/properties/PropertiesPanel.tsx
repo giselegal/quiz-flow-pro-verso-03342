@@ -14,12 +14,9 @@ import './PropertiesPanel.css';
 import {
   Copy,
   Eye,
-  Monitor,
   Palette,
   RotateCcw,
   Settings,
-  Smartphone,
-  Tablet,
   Trash2,
   Type,
   Search,
@@ -36,8 +33,6 @@ interface EnhancedPropertiesPanelProps {
   onDuplicate?: () => void;
   onReset?: () => void;
   onClose?: () => void;
-  previewMode?: 'desktop' | 'tablet' | 'mobile';
-  onPreviewModeChange?: (mode: 'desktop' | 'tablet' | 'mobile') => void;
 }
 
 // Metadados de categorias do schema unificado → UI
@@ -59,8 +54,6 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
   onDuplicate,
   onReset,
   onClose,
-  previewMode = 'desktop',
-  onPreviewModeChange,
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -190,52 +183,8 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
             )}
           </div>
 
-          {/* Barra de ferramentas moderna */}
-          <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-1 bg-gray-800 rounded-lg p-1">
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant={previewMode === 'desktop' ? 'default' : 'ghost'}
-                    size="sm"
-                    onClick={() => onPreviewModeChange?.('desktop')}
-                    className="h-8 px-2 rounded-md"
-                  >
-                    <Monitor className="w-4 h-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>Desktop</TooltipContent>
-              </Tooltip>
-
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant={previewMode === 'tablet' ? 'default' : 'ghost'}
-                    size="sm"
-                    onClick={() => onPreviewModeChange?.('tablet')}
-                    className="h-8 px-2 rounded-md"
-                  >
-                    <Tablet className="w-4 h-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>Tablet</TooltipContent>
-              </Tooltip>
-
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant={previewMode === 'mobile' ? 'default' : 'ghost'}
-                    size="sm"
-                    onClick={() => onPreviewModeChange?.('mobile')}
-                    className="h-8 px-2 rounded-md"
-                  >
-                    <Smartphone className="w-4 h-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>Mobile</TooltipContent>
-              </Tooltip>
-            </div>
-
+          {/* Barra de ferramentas simplificada - viewport removido */}
+          <div className="flex items-center justify-end gap-2">
             <div className="flex gap-1">
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -488,7 +437,6 @@ export const PropertiesPanel: React.FC<{ selectedBlock?: any; onUpdate?: (update
         <EnhancedPropertiesPanel
           selectedBlock={selectedBlock as any}
           onUpdate={onUpdate}
-          previewMode="desktop"
         />
       </ScrollArea>
     </div>
