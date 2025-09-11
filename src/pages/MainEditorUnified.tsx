@@ -361,39 +361,36 @@ const EditorInitializerUnified: React.FC<{
                     setIsLoading(true);
                     setError(null);
 
-                    if (debugMode) {
-                        console.log('🔄 Carregando UnifiedEditor...');
-                    }
+                    console.log('🔄 [EDITOR] Carregando UnifiedEditor...');
 
                     // Primeiro tenta carregar UnifiedEditor
                     const mod = await import('../components/editor/UnifiedEditor');
                     const Comp = mod.default || mod.UnifiedEditor;
 
                     if (!cancelled && Comp) {
+                        clearTimeout(timeoutId);
                         setUnifiedEditorComp(() => Comp);
-                        if (debugMode) {
-                            console.log('✅ UnifiedEditor carregado com sucesso');
-                        }
+                        console.log('✅ [EDITOR] UnifiedEditor carregado com sucesso');
                     }
                 } catch (error) {
-                    console.error('❌ Falha ao carregar UnifiedEditor:', error);
+                    console.error('❌ [EDITOR] Falha ao carregar UnifiedEditor:', error);
 
                     if (!cancelled) {
                         try {
-                            // Fallback para EditorPro legacy
-                            if (debugMode) {
-                                console.log('🔄 Tentando fallback para EditorPro...');
-                            }
+                            console.log('🔄 [EDITOR] Tentando fallback para EditorPro...');
 
                             const legacyMod = await import('../components/editor/EditorPro');
                             const LegacyComp = legacyMod.default || legacyMod.EditorPro;
 
                             if (LegacyComp) {
+                                clearTimeout(timeoutId);
                                 setUnifiedEditorComp(() => LegacyComp);
-                                console.warn('⚠️ Usando fallback EditorPro legacy');
+                                setFallbackMode(true);
+                                console.warn('⚠️ [EDITOR] Usando fallback EditorPro legacy');
                             }
                         } catch (legacyError) {
-                            console.error('❌ Falha ao carregar fallback EditorPro:', legacyError);
+                            console.error('❌ [EDITOR] Falha ao carregar fallback EditorPro:', legacyError);
+                            clearTimeout(timeoutId);
                             setError('Falha ao carregar editor. Tente recarregar a página.');
                         }
                     }
@@ -406,6 +403,7 @@ const EditorInitializerUnified: React.FC<{
 
             return () => {
                 cancelled = true;
+                clearTimeout(timeoutId);
             };
         }, [debugMode]);
 
@@ -418,8 +416,118 @@ const EditorInitializerUnified: React.FC<{
             }
         }, [templateId, loadTemplateFromId, loadDefaultTemplate]);
 
-        // Loading state
+        // 🔄 Função para resetar o estado e tentar novamente
+        const handleRetry = React.useCallback(() => {
+            console.log('🔄 [EDITOR] Tentando recarregar...');
+            setError(null);
+            setIsLoading(true);
+            setLoadingTimeout(false);
+            setFallbackMode(false);
+            startTime.current = Date.now();
+            
+            // Recarregar a página como último recurso
+            window.location.reload();
+        }, []);
+
+        // 🔄 Função para resetar storage local
+        const handleResetStorage = React.useCallback(() => {
+            console.log('🗑️ [STORAGE] Limpando storage local...');
+            try {
+                // Limpar dados específicos do editor
+                const keysToRemove = [];
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    if (key && (key.includes('editor') || key.includes('funnel'))) {
+                        keysToRemove.push(key);
+                    }
+                }
+                
+                keysToRemove.forEach(key => localStorage.removeItem(key));
+                console.log('✅ [STORAGE] Storage limpo, recarregando...');
+                
+                handleRetry();
+            } catch (error) {
+                console.error('❌ [STORAGE] Erro ao limpar storage:', error);
+                setError('Erro ao limpar dados. Tente recarregar manualmente.');
+            }
+        }, [handleRetry]);
+
+        // 💥 Estado de erro crítico
+        if (error && !isLoading) {
+            const timeElapsed = Math.round((Date.now() - startTime.current) / 1000);
+            
+            return (
+                <div className="flex items-center justify-center min-h-screen bg-gray-50">
+                    <div className="text-center max-w-md mx-auto p-6">
+                        <div className="mb-4">
+                            <div className="w-16 h-16 mx-auto mb-4 bg-red-100 rounded-full flex items-center justify-center">
+                                <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                                </svg>
+                            </div>
+                            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                                Erro ao Carregar Editor
+                            </h3>
+                            <p className="text-gray-600 mb-4">{error}</p>
+                            
+                            {loadingTimeout && (
+                                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-4">
+                                    <p className="text-sm text-yellow-800">
+                                        ⏰ Timeout após {timeElapsed}s. O editor pode estar sobrecarregado.
+                                    </p>
+                                </div>
+                            )}
+                            
+                            {fallbackMode && (
+                                <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
+                                    <p className="text-sm text-blue-800">
+                                        🔄 Tentando modo de compatibilidade...
+                                    </p>
+                                </div>
+                            )}
+                        </div>
+                        
+                        <div className="space-y-3">
+                            <button
+                                onClick={handleRetry}
+                                className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
+                            >
+                                🔄 Tentar Novamente
+                            </button>
+                            
+                            <button
+                                onClick={handleResetStorage}
+                                className="w-full bg-yellow-600 text-white py-2 px-4 rounded-md hover:bg-yellow-700 transition-colors"
+                            >
+                                🗑️ Limpar Dados e Tentar Novamente
+                            </button>
+                            
+                            <button
+                                onClick={() => window.location.href = '/admin/funis'}
+                                className="w-full bg-gray-600 text-white py-2 px-4 rounded-md hover:bg-gray-700 transition-colors"
+                            >
+                                ← Voltar aos Modelos
+                            </button>
+                        </div>
+                        
+                        {debugMode && (
+                            <div className="mt-4 p-3 bg-gray-100 rounded text-xs text-gray-600 font-mono text-left">
+                                <p>Debug Info:</p>
+                                <p>Template: {templateId || 'none'}</p>
+                                <p>Funnel: {funnelId || 'none'}</p>
+                                <p>Time: {timeElapsed}s</p>
+                                <p>URL: {window.location.href}</p>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        }
+
+        // 📊 Loading state com timeout visual
         if (isLoading) {
+            const timeElapsed = Math.round((Date.now() - startTime.current) / 1000);
+            
             return (
                 <div className="flex items-center justify-center min-h-screen bg-gray-50">
                     <div className="text-center">
@@ -427,7 +535,65 @@ const EditorInitializerUnified: React.FC<{
                         <p className="text-gray-600 text-lg font-medium">
                             {loadingTemplate ? 'Carregando template...' : 'Carregando editor...'}
                         </p>
+                        
+                        {timeElapsed > 5 && (
+                            <p className="text-sm text-gray-500 mt-2">
+                                Carregando há {timeElapsed}s...
+                            </p>
+                        )}
+                        
+                        {timeElapsed > 8 && (
+                            <div className="mt-3 text-sm text-yellow-600">
+                                ⏰ Carregamento está demorando mais que o normal
+                            </div>
+                        )}
+                        
                         {debugMode && (
+                            <div className="mt-4 text-xs text-gray-400 font-mono">
+                                <p>Template: {templateId || 'default'}</p>
+                                <p>Funnel: {funnelId || 'none'}</p>
+                                <p>Time: {timeElapsed}s</p>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        }
+
+        // ✅ Editor carregado com sucesso
+        if (UnifiedEditorComp) {
+            console.log('🎯 [EDITOR] Renderizando editor carregado');
+            
+            return (
+                <div>
+                    {fallbackMode && (
+                        <div className="bg-yellow-50 border-b border-yellow-200 px-4 py-2">
+                            <p className="text-sm text-yellow-800 text-center">
+                                ⚠️ Executando em modo de compatibilidade
+                            </p>
+                        </div>
+                    )}
+                    <UnifiedEditorComp />
+                </div>
+            );
+        }
+
+        // 🚫 Estado impossível - fallback final
+        return (
+            <div className="flex items-center justify-center min-h-screen bg-gray-50">
+                <div className="text-center">
+                    <p className="text-gray-600 text-lg">
+                        Estado inesperado do editor. 
+                        <button 
+                            onClick={handleRetry}
+                            className="text-blue-600 hover:text-blue-800 underline ml-1"
+                        >
+                            Clique aqui para tentar novamente
+                        </button>
+                    </p>
+                </div>
+            </div>
+        );
                             <p className="text-xs text-gray-400 mt-2 font-mono">
                                 Template: {templateId || 'default'} | Funnel: {funnelId || 'none'}
                             </p>
