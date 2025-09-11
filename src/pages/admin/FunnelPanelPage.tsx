@@ -298,7 +298,8 @@ const FunnelPanelPage: React.FC = () => {
   // Função para usar template (oficial ou personalizado)
   const handleUseTemplate = (templateId: string, isCustom: boolean = false) => {
     try {
-      console.log('🎯 Usando template:', templateId, isCustom ? '(custom)' : '(oficial)');
+      console.log('🎯 [DIAGNÓSTICO] Usando template:', templateId, isCustom ? '(custom)' : '(oficial)');
+      console.log('🎯 [DIAGNÓSTICO] Location atual:', window.location.href);
 
       if (isCustom) {
         customTemplateService.recordTemplateUsage(templateId, 'custom');
@@ -307,6 +308,7 @@ const FunnelPanelPage: React.FC = () => {
       // ✅ CORREÇÃO: Buscar template base para clonagem do registry unificado
       const unifiedTemplates = getUnifiedTemplates();
       const baseTemplate = unifiedTemplates.find(t => t.id === templateId);
+      console.log('🎯 [DIAGNÓSTICO] Template encontrado:', baseTemplate ? 'SIM' : 'NÃO');
 
       if (baseTemplate) {
         // 🚀 Usar cloneFunnelTemplate para garantir isolamento
@@ -319,7 +321,9 @@ const FunnelPanelPage: React.FC = () => {
           blocks: [] // Será preenchido pelo sistema de templates
         };
 
+        console.log('🎯 [DIAGNÓSTICO] Clonando template data:', templateData);
         const clonedInstance = cloneFunnelTemplate(templateData, `${baseTemplate.name} - Cópia`);
+        console.log('🎯 [DIAGNÓSTICO] Instância clonada:', clonedInstance);
 
         // Salvar instância clonada em "meus funis"
         const newFunnel = {
@@ -330,21 +334,30 @@ const FunnelPanelPage: React.FC = () => {
         };
 
         funnelLocalStore.upsert(newFunnel);
-        console.log('✅ Funil clonado criado:', clonedInstance.id);
-        console.log('📦 Blocos independentes:', clonedInstance.blocks.length);
+        console.log('✅ [DIAGNÓSTICO] Funil clonado criado:', clonedInstance.id);
+        console.log('📦 [DIAGNÓSTICO] Blocos independentes:', clonedInstance.blocks.length);
 
         // ✅ CORRIGIDO: Navegar usando path parameter
-        setLocation(`/editor/${encodeURIComponent(clonedInstance.id)}?template=${templateId}`);
+        const editorUrl = `/editor/${encodeURIComponent(clonedInstance.id)}?template=${templateId}`;
+        console.log('🔗 [DIAGNÓSTICO] Navegando para:', editorUrl);
+
+        // Adicionar delay para garantir que os logs sejam vistos
+        setTimeout(() => {
+          setLocation(editorUrl);
+        }, 100);
         return;
       }
 
       // Fallback para outros templates
+      console.log('🎯 [DIAGNÓSTICO] Usando fallback para template:', templateId);
       const now = new Date().toISOString();
       const newId = `${templateId}-${Date.now()}`;
       const template = isCustom
         ? customTemplateService.getCustomTemplate(templateId)
         : TemplateRegistry.getById(templateId);
       const name = template?.name || 'Funil';
+
+      console.log('🎯 [DIAGNÓSTICO] Template fallback encontrado:', template ? 'SIM' : 'NÃO');
 
       // 🚀 CORREÇÃO: Criar funil na lista principal
       const newFunnel = {
@@ -358,15 +371,27 @@ const FunnelPanelPage: React.FC = () => {
       list.push(newFunnel);
       funnelLocalStore.saveList(list);
 
-      console.log('✅ Funil criado a partir do template:', newFunnel);
-      console.log('📊 Lista atualizada:', list.length, 'funis');
+      console.log('✅ [DIAGNÓSTICO] Funil criado (fallback):', newFunnel);
+      console.log('📊 [DIAGNÓSTICO] Lista atualizada:', list.length, 'funis');
 
       // Navegar com ID específico do funil criado
-      setLocation(`/editor/${encodeURIComponent(newId)}?template=${templateId}`);
+      const fallbackUrl = `/editor/${encodeURIComponent(newId)}?template=${templateId}`;
+      console.log('🔗 [DIAGNÓSTICO] Navegando (fallback) para:', fallbackUrl);
+
+      setTimeout(() => {
+        setLocation(fallbackUrl);
+      }, 100);
     } catch (error) {
-      console.error('❌ Erro ao usar template:', error);
+      console.error('❌ [DIAGNÓSTICO] Erro ao usar template:', error);
+      console.error('❌ [DIAGNÓSTICO] Stack trace:', error instanceof Error ? error.stack : 'N/A');
+
       // Fallback: navegar só com template
-      setLocation(`/editor?template=${templateId}`);
+      const errorFallbackUrl = `/editor?template=${templateId}`;
+      console.log('🔗 [DIAGNÓSTICO] Navegando (error fallback) para:', errorFallbackUrl);
+
+      setTimeout(() => {
+        setLocation(errorFallbackUrl);
+      }, 100);
     }
   };
 
@@ -480,6 +505,21 @@ const FunnelPanelPage: React.FC = () => {
           <p className="text-[#8F7A6A] mt-2 text-lg">Escolha um modelo otimizado ou crie do zero</p>
         </div>
         <div className="flex gap-3">
+          {/* Botão de teste para diagnóstico */}
+          <Button
+            onClick={() => {
+              console.log('🧪 [TESTE] Navegação direta para editor');
+              console.log('🧪 [TESTE] Location atual:', window.location.href);
+              const testUrl = '/editor/test-navigation-123?template=quiz-estilo-21-steps';
+              console.log('🧪 [TESTE] Navegando para:', testUrl);
+              setLocation(testUrl);
+            }}
+            variant="outline"
+            className="border-blue-300 text-blue-700 hover:bg-blue-50 px-4 py-2 text-sm"
+          >
+            🧪 Teste Navegação
+          </Button>
+
           <Button
             onClick={() => {
               setIsCleanupModalOpen(true);
