@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔍 Teste de Navegação - Quiz Quest</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            margin: 20px;
+            background: #FAF9F7;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        .test-button {
+            background: #B89B7A;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.2s;
+        }
+        .test-button:hover {
+            background: #A0895B;
+            transform: translateY(-2px);
+        }
+        .test-result {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        .success { border-left: 4px solid #28a745; }
+        .error { border-left: 4px solid #dc3545; }
+        .info { border-left: 4px solid #007bff; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Diagnóstico de Navegação - Quiz Quest</h1>
+        <p><strong>Objetivo:</strong> Verificar se a navegação do `/admin/funis` para `/editor` está funcionando corretamente.</p>
+
+        <div class="test-section">
+            <h2>🧪 Testes de Navegação</h2>
+            
+            <button class="test-button" onclick="testDirectNavigation()">
+                📍 Teste 1: Navegação Direta
+            </button>
+            
+            <button class="test-button" onclick="testParameterNavigation()">
+                🎯 Teste 2: Navegação com Parâmetros
+            </button>
+            
+            <button class="test-button" onclick="testCurrentLocation()">
+                📍 Teste 3: Verificar URL Atual
+            </button>
+
+            <button class="test-button" onclick="testAdminFunis()">
+                📊 Teste 4: Ir para Admin/Funis
+            </button>
+
+            <button class="test-button" onclick="simulateFunnelClick()">
+                🎨 Teste 5: Simular Clique em Template
+            </button>
+        </div>
+
+        <div id="results"></div>
+
+        <div class="test-section" style="margin-top: 40px;">
+            <h2>🔧 Informações do Sistema</h2>
+            <div class="test-result info">
+                <strong>URL Base:</strong> <span id="baseUrl"></span><br>
+                <strong>Location:</strong> <span id="currentLocation"></span><br>
+                <strong>User Agent:</strong> <span id="userAgent"></span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Inicialização
+        document.getElementById('baseUrl').textContent = window.location.origin;
+        document.getElementById('currentLocation').textContent = window.location.href;
+        document.getElementById('userAgent').textContent = navigator.userAgent;
+
+        function addResult(message, type = 'info') {
+            const results = document.getElementById('results');
+            const div = document.createElement('div');
+            div.className = `test-result ${type}`;
+            div.innerHTML = `<strong>[${new Date().toLocaleTimeString()}]</strong> ${message}`;
+            results.appendChild(div);
+        }
+
+        function testDirectNavigation() {
+            addResult('🚀 Iniciando teste de navegação direta para /editor');
+            
+            try {
+                const testUrl = '/editor';
+                addResult(`📍 URL de teste: ${testUrl}`, 'info');
+                
+                // Simular navegação
+                setTimeout(() => {
+                    window.location.href = testUrl;
+                }, 1000);
+                
+                addResult('✅ Navegação iniciada com sucesso', 'success');
+            } catch (error) {
+                addResult(`❌ Erro na navegação: ${error.message}`, 'error');
+            }
+        }
+
+        function testParameterNavigation() {
+            addResult('🎯 Testando navegação com parâmetros');
+            
+            try {
+                const funnelId = `test-funnel-${Date.now()}`;
+                const templateId = 'quiz-estilo-21-steps';
+                const testUrl = `/editor/${funnelId}?template=${templateId}`;
+                
+                addResult(`📍 URL de teste: ${testUrl}`, 'info');
+                addResult(`🆔 Funnel ID: ${funnelId}`, 'info');
+                addResult(`🎨 Template ID: ${templateId}`, 'info');
+                
+                setTimeout(() => {
+                    window.location.href = testUrl;
+                }, 1000);
+                
+                addResult('✅ Navegação com parâmetros iniciada', 'success');
+            } catch (error) {
+                addResult(`❌ Erro na navegação com parâmetros: ${error.message}`, 'error');
+            }
+        }
+
+        function testCurrentLocation() {
+            addResult('📍 Verificando informações da URL atual');
+            
+            try {
+                addResult(`🌐 Origin: ${window.location.origin}`, 'info');
+                addResult(`📄 Pathname: ${window.location.pathname}`, 'info');
+                addResult(`🔗 Search: ${window.location.search}`, 'info');
+                addResult(`#️⃣ Hash: ${window.location.hash}`, 'info');
+                addResult(`📍 Full URL: ${window.location.href}`, 'info');
+                
+                // Testar se é um SPA
+                const isSPA = document.querySelector('script[src*="main"]') || 
+                             document.querySelector('script[src*="index"]') ||
+                             document.querySelector('div[id="root"]');
+                addResult(`🎯 SPA Detectado: ${isSPA ? 'SIM' : 'NÃO'}`, isSPA ? 'success' : 'error');
+                
+            } catch (error) {
+                addResult(`❌ Erro ao verificar location: ${error.message}`, 'error');
+            }
+        }
+
+        function testAdminFunis() {
+            addResult('📊 Testando navegação para /admin/funis');
+            
+            try {
+                const testUrl = '/admin/funis';
+                addResult(`📍 URL de destino: ${testUrl}`, 'info');
+                
+                setTimeout(() => {
+                    window.location.href = testUrl;
+                }, 1000);
+                
+                addResult('✅ Redirecionando para admin/funis', 'success');
+            } catch (error) {
+                addResult(`❌ Erro ao navegar para admin/funis: ${error.message}`, 'error');
+            }
+        }
+
+        function simulateFunnelClick() {
+            addResult('🎨 Simulando clique em template de funil');
+            
+            try {
+                // Simular o mesmo comportamento do FunnelPanelPage
+                const templateId = 'quiz-estilo-21-steps';
+                const funnelId = `funnel-${templateId}-${Date.now()}`;
+                const editorUrl = `/editor/${encodeURIComponent(funnelId)}?template=${templateId}`;
+                
+                addResult(`🎨 Template ID: ${templateId}`, 'info');
+                addResult(`🆔 Funnel ID Gerado: ${funnelId}`, 'info');
+                addResult(`🔗 URL do Editor: ${editorUrl}`, 'info');
+                
+                // Simular salvamento no localStorage
+                const funnelData = {
+                    id: funnelId,
+                    name: `Quiz Template - ${new Date().toLocaleTimeString()}`,
+                    status: 'draft',
+                    updatedAt: new Date().toISOString(),
+                    templateId: templateId
+                };
+                
+                try {
+                    localStorage.setItem(`funnel-${funnelId}`, JSON.stringify(funnelData));
+                    addResult('💾 Dados do funil salvos no localStorage', 'success');
+                } catch (storageError) {
+                    addResult(`⚠️ Erro ao salvar no localStorage: ${storageError.message}`, 'error');
+                }
+                
+                addResult('🚀 Iniciando navegação...', 'info');
+                
+                setTimeout(() => {
+                    window.location.href = editorUrl;
+                }, 1500);
+                
+                addResult('✅ Simulação de clique em template concluída', 'success');
+                
+            } catch (error) {
+                addResult(`❌ Erro na simulação de clique: ${error.message}`, 'error');
+            }
+        }
+
+        // Log inicial
+        addResult('🔍 Diagnóstico de navegação inicializado', 'success');
+        addResult(`📍 Página atual: ${window.location.pathname}`, 'info');
+    </script>
+</body>
+</html>
