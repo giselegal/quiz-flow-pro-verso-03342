@@ -322,7 +322,7 @@ const FunnelPanelPage: React.FC = () => {
       if (baseTemplate) {
         // 🚀 CORREÇÃO: Usar FunnelUnifiedService para criação completa
         const userId = 'admin-user'; // TODO: Pegar do contexto de auth
-        
+
         const newFunnel = await funnelUnifiedService.createFunnel({
           name: `${baseTemplate.name} - Cópia`,
           description: baseTemplate.description || '',
@@ -490,7 +490,7 @@ const FunnelPanelPage: React.FC = () => {
       // ✅ CORREÇÃO: Usar FunnelUnifiedService
       const userId = 'admin-user'; // TODO: Pegar do contexto de auth
       const name = `Funil Personalizado ${new Date().toLocaleTimeString()}`;
-      
+
       const newFunnel = await funnelUnifiedService.createFunnel({
         name: name,
         description: 'Funil personalizado criado do painel admin',
@@ -502,10 +502,10 @@ const FunnelPanelPage: React.FC = () => {
 
       console.log('✅ Funil personalizado criado via FunnelUnifiedService:', newFunnel.id);
       setLocation(`/editor/${encodeURIComponent(newFunnel.id)}`);
-      
+
     } catch (error) {
       console.error('❌ Erro ao criar funil personalizado:', error);
-      
+
       // Fallback para método anterior
       const now = new Date().toISOString();
       const newId = `custom-funnel-${Date.now()}`;
