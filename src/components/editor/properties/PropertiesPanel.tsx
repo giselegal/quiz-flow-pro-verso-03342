@@ -455,9 +455,9 @@ export const PropertiesPanel: React.FC<{ selectedBlock?: any; onUpdate?: (update
           <h2 className="text-sm font-semibold text-slate-200">{selectedBlock.type.replace('_', ' ').toUpperCase()}</h2>
           <p className="text-xs text-slate-400 mt-1">Propriedades da questão</p>
         </div>
-        
+
         <ScrollArea className="flex-1 p-4 overflow-auto">
-          <QuestionPropertyEditor 
+          <QuestionPropertyEditor
             block={selectedBlock as any}
             onChange={(key: string, value: any) => unifiedProps?.updateProperty(key, value)}
           />

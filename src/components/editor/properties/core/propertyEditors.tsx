@@ -60,7 +60,7 @@ const CanvasContainerWrapper: React.FC<PropertyEditorProps> = ({ property, onCha
   };
 
   return (
-    <CanvasContainerPropertyEditor 
+    <CanvasContainerPropertyEditor
       properties={mockProperties}
       onUpdate={handleUpdate}
     />
