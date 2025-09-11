@@ -696,24 +696,29 @@ img:hover,
 }
 
 .scrollbar-thin::-webkit-scrollbar-track {
-  background: #1f2937; /* gray-800 */
+  background: #1f2937;
+  /* gray-800 */
   border-radius: 4px;
 }
 
 .scrollbar-thin::-webkit-scrollbar-thumb {
-  background: #4b5563; /* gray-600 */
+  background: #4b5563;
+  /* gray-600 */
   border-radius: 4px;
-  border: 1px solid #374151; /* gray-700 */
+  border: 1px solid #374151;
+  /* gray-700 */
 }
 
 .scrollbar-thin::-webkit-scrollbar-thumb:hover {
-  background: #6b7280; /* gray-500 */
+  background: #6b7280;
+  /* gray-500 */
 }
 
 /* Firefox */
 .scrollbar-thin {
   scrollbar-width: thin;
-  scrollbar-color: #4b5563 #1f2937; /* thumb track */
+  scrollbar-color: #4b5563 #1f2937;
+  /* thumb track */
 }
 
 /* Hover styles para melhor usabilidade */
@@ -741,41 +746,50 @@ img:hover,
 /* Labels mais claros no painel de propriedades */
 .properties-panel label,
 .properties-panel .text-muted-foreground {
-  color: #d1d5db !important; /* gray-300 */
+  color: #d1d5db !important;
+  /* gray-300 */
 }
 
 /* Inputs com melhor contraste no tema escuro */
 .properties-panel input,
 .properties-panel textarea,
 .properties-panel select {
-  background-color: rgba(31, 41, 55, 0.8) !important; /* gray-800 with opacity */
-  border-color: #4b5563 !important; /* gray-600 */
-  color: #f3f4f6 !important; /* gray-100 */
+  background-color: rgba(31, 41, 55, 0.8) !important;
+  /* gray-800 with opacity */
+  border-color: #4b5563 !important;
+  /* gray-600 */
+  color: #f3f4f6 !important;
+  /* gray-100 */
 }
 
 .properties-panel input::placeholder,
 .properties-panel textarea::placeholder {
-  color: #9ca3af !important; /* gray-400 */
+  color: #9ca3af !important;
+  /* gray-400 */
 }
 
 .properties-panel input:focus,
 .properties-panel textarea:focus,
 .properties-panel select:focus {
-  border-color: #3b82f6 !important; /* blue-500 */
+  border-color: #3b82f6 !important;
+  /* blue-500 */
   box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.2) !important;
 }
 
 /* Botões com melhor contraste */
 .properties-panel button {
-  color: #d1d5db !important; /* gray-300 */
+  color: #d1d5db !important;
+  /* gray-300 */
 }
 
 .properties-panel button:hover {
   color: #ffffff !important;
-  background-color: rgba(55, 65, 81, 0.8) !important; /* gray-700 */
+  background-color: rgba(55, 65, 81, 0.8) !important;
+  /* gray-700 */
 }
 
 /* Textos descritivos mais claros */
 .properties-panel .text-xs {
-  color: #d1d5db !important; /* gray-300 */
+  color: #d1d5db !important;
+  /* gray-300 */
 }
