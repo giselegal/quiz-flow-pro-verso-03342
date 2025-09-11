@@ -146,7 +146,7 @@ const FunnelValidatedEditor: React.FC<{
                 funnelId,
                 isReady: funnelContext.isReady,
                 isLoading: funnelContext.isLoading,
-                hasError: funnelContext.hasError,
+                isError: funnelContext.isError,
                 errorType: funnelContext.errorType
             });
         }
@@ -182,11 +182,11 @@ const FunnelValidatedEditor: React.FC<{
         }
 
         // Error state - mostrar fallback
-        if (funnelContext.hasError) {
+        if (funnelContext.isError) {
             return (
                 <FunnelFallback
                     errorType={funnelContext.errorType || 'UNKNOWN'}
-                    errorMessage={funnelContext.errorMessage || 'Erro desconhecido'}
+                    errorMessage={funnelContext.error || 'Erro desconhecido'}
                     funnelId={funnelId}
                     suggestions={funnelContext.suggestions}
                     onRetry={funnelContext.retry}
@@ -204,7 +204,7 @@ const FunnelValidatedEditor: React.FC<{
                     templateId={templateId}
                     funnelId={funnelId}
                     debugMode={debugMode}
-                    validatedFunnel={funnelContext.currentFunnel}
+                    validatedFunnel={funnelContext.funnel}
                     canEdit={funnelContext.canEdit}
                 />
             );
@@ -242,9 +242,7 @@ const EditorInitializerUnified: React.FC<{
 }> = ({
     templateId,
     funnelId,
-    debugMode = false,
-    validatedFunnel,
-    canEdit = true
+    debugMode = false
 }) => {
         const [UnifiedEditorComp, setUnifiedEditorComp] = React.useState<React.ComponentType | null>(null);
         const [isLoading, setIsLoading] = React.useState(true);

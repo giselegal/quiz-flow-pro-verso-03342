@@ -533,7 +533,7 @@ const StepNoCodeConnections: React.FC<StepNoCodeConnectionsProps> = ({ onClose }
                                                 }
                                             />
                                             <Button
-                                                onClick={() => setEditingConnection(connection)}
+                                                onClick={() => setNewConnection(connection)}
                                                 size="sm"
                                                 variant="outline"
                                             >

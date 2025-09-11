@@ -290,7 +290,7 @@ export class FunnelBuilder {
         this.config.description = template.description;
 
         // Criar etapas do template
-        template.steps.forEach((stepTemplate, index) => {
+        template.steps.forEach((stepTemplate) => {
             const stepBuilder = this.addStep(stepTemplate.name);
 
             // Adicionar componentes da etapa
