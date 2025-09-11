@@ -1,12 +1,11 @@
-imporimport { Smartphone, Tablet, Monitor, Grid, Eye } from 'lucide-react';
+import React from 'react';
+import { Smartphone, Tablet, Monitor, Grid3x3 } from 'lucide-react';
 import ContextualTooltip, { tooltipLibrary } from './ContextualTooltip';
-import type { PropertyEditorProps } from './types';React from 'react';
+import type { PropertyEditorProps } from './types';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Smartphone, Tablet, Monitor, Grid3x3 } from 'lucide-react';
-import type { PropertyEditorProps } from './types';
 
 /**
  * Editor especializado para configurações de colunas responsivas

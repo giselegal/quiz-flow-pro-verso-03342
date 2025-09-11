@@ -562,7 +562,7 @@ export const propertyEditors: PropertyEditorRegistry = {
   select: SelectEditor,
   url: UrlEditor,
   array: ArrayEditor,
-  upload: UploadEditor,
+  // upload: UploadEditor, // REMOVIDO - substituído por EnhancedUploadEditor mais abaixo
   object: ObjectEditorDispatcher,
   json: JsonEditor,
   email: EmailEditor,

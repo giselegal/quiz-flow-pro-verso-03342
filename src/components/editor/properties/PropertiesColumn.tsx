@@ -1,7 +1,8 @@
 import React, { Suspense } from 'react';
 import { Block } from '@/types/editor';
 import { cn } from '@/lib/utils';
-import RegistryPropertiesPanel from '@/components/universal/RegistryPropertiesPanel';
+// ALTERADO: Usar nosso PropertiesPanel com editores avançados ao invés do RegistryPropertiesPanel
+import PropertiesPanel from '@/components/editor/properties/PropertiesPanel';
 
 export interface PropertiesColumnProps {
   selectedBlock: Block | undefined;
@@ -45,11 +46,12 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
         }>
           {/* Registry Properties Panel with Canonical Implementation */}
           <div className="flex-1">
-            <RegistryPropertiesPanel
-              selectedBlock={selectedBlock as any}
-              onUpdate={(_blockId: string, updates: Record<string, any>) => onUpdate(updates)}
+                        <PropertiesPanel
+              key={selectedBlock?.id || 'no-selection'}
+              selectedBlock={selectedBlock}
+              onUpdate={onUpdate}
               onClose={onClose}
-              onDelete={(_blockId: string) => onDelete()}
+              onDelete={onDelete}
             />
           </div>
         </Suspense>
