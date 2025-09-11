@@ -28,7 +28,7 @@ export const EditorLoadingWrapper: React.FC<EditorLoadingWrapperProps> = ({
 
     React.useEffect(() => {
         console.log('🔄 [LOADING] Iniciando timeout de', timeout, 'ms');
-        
+
         const timeoutId = setTimeout(() => {
             console.warn('⏰ [LOADING] Timeout atingido após', timeout, 'ms');
             setIsTimeout(true);
@@ -60,10 +60,10 @@ export const EditorLoadingWrapper: React.FC<EditorLoadingWrapperProps> = ({
                     keysToRemove.push(key);
                 }
             }
-            
+
             keysToRemove.forEach(key => localStorage.removeItem(key));
             console.log('✅ [LOADING] Storage limpo');
-            
+
             handleRetry();
         } catch (error) {
             console.error('❌ [LOADING] Erro ao limpar storage:', error);
@@ -73,7 +73,7 @@ export const EditorLoadingWrapper: React.FC<EditorLoadingWrapperProps> = ({
 
     if (isTimeout) {
         const timeElapsed = Math.round((Date.now() - startTime) / 1000);
-        
+
         return (
             <div className="flex items-center justify-center min-h-screen bg-gray-50">
                 <div className="text-center max-w-md mx-auto p-6">
@@ -87,11 +87,11 @@ export const EditorLoadingWrapper: React.FC<EditorLoadingWrapperProps> = ({
                             Editor Demorou Para Carregar
                         </h3>
                         <p className="text-gray-600 mb-4">
-                            O editor não respondeu em {timeElapsed} segundos. 
+                            O editor não respondeu em {timeElapsed} segundos.
                             Isso pode indicar um problema temporário.
                         </p>
                     </div>
-                    
+
                     <div className="space-y-3">
                         <button
                             onClick={handleRetry}
@@ -99,14 +99,14 @@ export const EditorLoadingWrapper: React.FC<EditorLoadingWrapperProps> = ({
                         >
                             🔄 Tentar Novamente
                         </button>
-                        
+
                         <button
                             onClick={handleResetStorage}
                             className="w-full bg-yellow-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-yellow-700 transition-colors"
                         >
                             🗑️ Limpar Cache e Tentar Novamente
                         </button>
-                        
+
                         <button
                             onClick={handleGoBack}
                             className="w-full bg-gray-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-gray-700 transition-colors"
@@ -114,7 +114,7 @@ export const EditorLoadingWrapper: React.FC<EditorLoadingWrapperProps> = ({
                             ← Voltar aos Modelos
                         </button>
                     </div>
-                    
+
                     <div className="mt-6 p-3 bg-gray-100 rounded-lg text-sm text-gray-600">
                         <p className="font-medium mb-2">Informações de Debug:</p>
                         <div className="font-mono text-xs text-left space-y-1">

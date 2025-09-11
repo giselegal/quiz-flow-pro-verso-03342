@@ -8,7 +8,7 @@ function testEditorNavigation() {
     // Simular clonagem de template
     const templateId = 'quiz-estilo-21-steps';
     const clonedId = `${templateId}-test-${Date.now()}`;
-    
+
     // Criar dados de teste no localStorage
     const testFunnel = {
         id: clonedId,
@@ -17,14 +17,14 @@ function testEditorNavigation() {
         updatedAt: new Date().toISOString(),
         createdAt: new Date().toISOString()
     };
-    
+
     localStorage.setItem(`funnel_${clonedId}`, JSON.stringify(testFunnel));
     console.log('✅ Funil de teste criado:', testFunnel);
-    
+
     // Navegar para o editor
     const editorUrl = `/editor/${encodeURIComponent(clonedId)}?template=${templateId}&debug=true`;
     console.log('🚀 Navegando para:', editorUrl);
-    
+
     window.location.href = editorUrl;
 }
 
@@ -37,7 +37,7 @@ function clearTestData() {
             keysToRemove.push(key);
         }
     }
-    
+
     keysToRemove.forEach(key => localStorage.removeItem(key));
     console.log('🗑️ Dados de teste removidos:', keysToRemove.length);
 }
@@ -48,7 +48,7 @@ function checkCurrentState() {
     console.log('URL:', window.location.href);
     console.log('Path:', window.location.pathname);
     console.log('Search:', window.location.search);
-    
+
     // Verificar localStorage
     const funnelKeys = [];
     for (let i = 0; i < localStorage.length; i++) {

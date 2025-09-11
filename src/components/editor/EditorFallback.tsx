@@ -21,7 +21,7 @@ const EditorFallback: React.FC<{
 
     const loadEditor = React.useCallback(async (attempt = 0) => {
         console.log(`🔄 [FALLBACK] Tentativa ${attempt + 1} de carregar editor`);
-        
+
         try {
             setIsLoading(true);
             setError(null);
@@ -38,7 +38,7 @@ const EditorFallback: React.FC<{
                     console.log(`🔄 [FALLBACK] Tentando carregar: ${editorPath}`);
                     const mod = await import(editorPath);
                     const Component = mod.default || mod.UnifiedEditor || mod.EditorPro || mod.MainEditor;
-                    
+
                     if (Component) {
                         console.log(`✅ [FALLBACK] Editor carregado: ${editorPath}`);
                         setEditorComponent(() => Component);
@@ -56,7 +56,7 @@ const EditorFallback: React.FC<{
 
         } catch (error) {
             console.error(`❌ [FALLBACK] Erro na tentativa ${attempt + 1}:`, error);
-            
+
             if (attempt < 2) {
                 // Tentar novamente até 3 vezes
                 setTimeout(() => {
@@ -122,7 +122,7 @@ const EditorFallback: React.FC<{
                         </h3>
                         <p className="text-gray-600 mb-4">{error}</p>
                     </div>
-                    
+
                     <div className="space-y-3">
                         <button
                             onClick={handleRetry}
@@ -130,7 +130,7 @@ const EditorFallback: React.FC<{
                         >
                             🔄 Tentar Novamente
                         </button>
-                        
+
                         <button
                             onClick={handleGoBack}
                             className="w-full bg-gray-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-gray-700 transition-colors"
@@ -138,7 +138,7 @@ const EditorFallback: React.FC<{
                             ← Voltar aos Modelos
                         </button>
                     </div>
-                    
+
                     <div className="mt-6 p-3 bg-gray-100 rounded-lg text-sm text-gray-600">
                         <p className="font-medium mb-2">Debug:</p>
                         <div className="font-mono text-xs text-left space-y-1">
@@ -156,7 +156,7 @@ const EditorFallback: React.FC<{
     if (editorComponent) {
         const EditorComponent = editorComponent;
         console.log('🎯 [FALLBACK] Renderizando editor com sucesso');
-        
+
         return (
             <div>
                 <EditorComponent />
@@ -169,7 +169,7 @@ const EditorFallback: React.FC<{
         <div className="flex items-center justify-center min-h-screen bg-gray-50">
             <div className="text-center">
                 <p className="text-gray-600">Estado inesperado do editor</p>
-                <button 
+                <button
                     onClick={handleRetry}
                     className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
                 >

@@ -286,7 +286,7 @@ const EditorInitializerUnified: React.FC<{
         // 🔄 Template loading consolidado com timeout
         const loadTemplateFromId = React.useCallback(async () => {
             const { templateId: validTemplateId } = validateParameters();
-            
+
             if (!validTemplateId || validTemplateId === 'default') {
                 console.log('📝 [TEMPLATE] Usando template padrão');
                 return;
@@ -425,7 +425,7 @@ const EditorInitializerUnified: React.FC<{
             setLoadingTimeout(false);
             setFallbackMode(false);
             startTime.current = Date.now();
-            
+
             // Recarregar a página como último recurso
             window.location.reload();
         }, []);
@@ -442,10 +442,10 @@ const EditorInitializerUnified: React.FC<{
                         keysToRemove.push(key);
                     }
                 }
-                
+
                 keysToRemove.forEach(key => localStorage.removeItem(key));
                 console.log('✅ [STORAGE] Storage limpo, recarregando...');
-                
+
                 handleRetry();
             } catch (error) {
                 console.error('❌ [STORAGE] Erro ao limpar storage:', error);
@@ -456,7 +456,7 @@ const EditorInitializerUnified: React.FC<{
         // 💥 Estado de erro crítico
         if (error && !isLoading) {
             const timeElapsed = Math.round((Date.now() - startTime.current) / 1000);
-            
+
             return (
                 <div className="flex items-center justify-center min-h-screen bg-gray-50">
                     <div className="text-center max-w-md mx-auto p-6">
@@ -470,7 +470,7 @@ const EditorInitializerUnified: React.FC<{
                                 Erro ao Carregar Editor
                             </h3>
                             <p className="text-gray-600 mb-4">{error}</p>
-                            
+
                             {loadingTimeout && (
                                 <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-4">
                                     <p className="text-sm text-yellow-800">
@@ -478,7 +478,7 @@ const EditorInitializerUnified: React.FC<{
                                     </p>
                                 </div>
                             )}
-                            
+
                             {fallbackMode && (
                                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
                                     <p className="text-sm text-blue-800">
@@ -487,7 +487,7 @@ const EditorInitializerUnified: React.FC<{
                                 </div>
                             )}
                         </div>
-                        
+
                         <div className="space-y-3">
                             <button
                                 onClick={handleRetry}
@@ -495,14 +495,14 @@ const EditorInitializerUnified: React.FC<{
                             >
                                 🔄 Tentar Novamente
                             </button>
-                            
+
                             <button
                                 onClick={handleResetStorage}
                                 className="w-full bg-yellow-600 text-white py-2 px-4 rounded-md hover:bg-yellow-700 transition-colors"
                             >
                                 🗑️ Limpar Dados e Tentar Novamente
                             </button>
-                            
+
                             <button
                                 onClick={() => window.location.href = '/admin/funis'}
                                 className="w-full bg-gray-600 text-white py-2 px-4 rounded-md hover:bg-gray-700 transition-colors"
@@ -510,7 +510,7 @@ const EditorInitializerUnified: React.FC<{
                                 ← Voltar aos Modelos
                             </button>
                         </div>
-                        
+
                         {debugMode && (
                             <div className="mt-4 p-3 bg-gray-100 rounded text-xs text-gray-600 font-mono text-left">
                                 <p>Debug Info:</p>
@@ -528,7 +528,7 @@ const EditorInitializerUnified: React.FC<{
         // 📊 Loading state com timeout visual
         if (isLoading) {
             const timeElapsed = Math.round((Date.now() - startTime.current) / 1000);
-            
+
             return (
                 <div className="flex items-center justify-center min-h-screen bg-gray-50">
                     <div className="text-center">
@@ -536,19 +536,19 @@ const EditorInitializerUnified: React.FC<{
                         <p className="text-gray-600 text-lg font-medium">
                             {loadingTemplate ? 'Carregando template...' : 'Carregando editor...'}
                         </p>
-                        
+
                         {timeElapsed > 5 && (
                             <p className="text-sm text-gray-500 mt-2">
                                 Carregando há {timeElapsed}s...
                             </p>
                         )}
-                        
+
                         {timeElapsed > 8 && (
                             <div className="mt-3 text-sm text-yellow-600">
                                 ⏰ Carregamento está demorando mais que o normal
                             </div>
                         )}
-                        
+
                         {debugMode && (
                             <div className="mt-4 text-xs text-gray-400 font-mono">
                                 <p>Template: {templateId || 'default'}</p>
@@ -564,7 +564,7 @@ const EditorInitializerUnified: React.FC<{
         // ✅ Editor carregado com sucesso
         if (UnifiedEditorComp) {
             console.log('🎯 [EDITOR] Renderizando editor carregado');
-            
+
             return (
                 <div>
                     {fallbackMode && (
@@ -584,8 +584,8 @@ const EditorInitializerUnified: React.FC<{
             <div className="flex items-center justify-center min-h-screen bg-gray-50">
                 <div className="text-center">
                     <p className="text-gray-600 text-lg">
-                        Estado inesperado do editor. 
-                        <button 
+                        Estado inesperado do editor.
+                        <button
                             onClick={handleRetry}
                             className="text-blue-600 hover:text-blue-800 underline ml-1"
                         >
@@ -595,49 +595,49 @@ const EditorInitializerUnified: React.FC<{
                 </div>
             </div>
         );
-                            <p className="text-xs text-gray-400 mt-2 font-mono">
-                                Template: {templateId || 'default'} | Funnel: {funnelId || 'none'}
-                            </p>
+        <p className="text-xs text-gray-400 mt-2 font-mono">
+            Template: {templateId || 'default'} | Funnel: {funnelId || 'none'}
+        </p>
                         )}
-                    </div>
-                </div>
+                    </div >
+                </div >
             );
         }
 
-        // ✅ Editor carregado com sucesso
-        if (UnifiedEditorComp) {
-            console.log('🎯 [EDITOR] Renderizando editor carregado');
-            
-            return (
-                <div>
-                    {fallbackMode && (
-                        <div className="bg-yellow-50 border-b border-yellow-200 px-4 py-2">
-                            <p className="text-sm text-yellow-800 text-center">
-                                ⚠️ Executando em modo de compatibilidade
-                            </p>
-                        </div>
-                    )}
-                    <UnifiedEditorComp />
-                </div>
-            );
-        }
+// ✅ Editor carregado com sucesso
+if (UnifiedEditorComp) {
+    console.log('🎯 [EDITOR] Renderizando editor carregado');
 
-        // 🚫 Estado impossível - fallback final
-        return (
-            <div className="flex items-center justify-center min-h-screen bg-gray-50">
-                <div className="text-center">
-                    <p className="text-gray-600 text-lg">
-                        Estado inesperado do editor. 
-                        <button 
-                            onClick={handleRetry}
-                            className="text-blue-600 hover:text-blue-800 underline ml-1"
-                        >
-                            Clique aqui para tentar novamente
-                        </button>
+    return (
+        <div>
+            {fallbackMode && (
+                <div className="bg-yellow-50 border-b border-yellow-200 px-4 py-2">
+                    <p className="text-sm text-yellow-800 text-center">
+                        ⚠️ Executando em modo de compatibilidade
                     </p>
                 </div>
-            </div>
-        );
+            )}
+            <UnifiedEditorComp />
+        </div>
+    );
+}
+
+// 🚫 Estado impossível - fallback final
+return (
+    <div className="flex items-center justify-center min-h-screen bg-gray-50">
+        <div className="text-center">
+            <p className="text-gray-600 text-lg">
+                Estado inesperado do editor.
+                <button
+                    onClick={handleRetry}
+                    className="text-blue-600 hover:text-blue-800 underline ml-1"
+                >
+                    Clique aqui para tentar novamente
+                </button>
+            </p>
+        </div>
+    </div>
+);
     };
 
 export default MainEditorUnified;
