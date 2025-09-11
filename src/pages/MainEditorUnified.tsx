@@ -224,14 +224,16 @@ const FunnelValidatedEditor: React.FC<{
     };
 
 /**
- * �🔧 EDITOR INITIALIZER UNIFICADO
+ * � EDITOR INITIALIZER UNIFICADO COM TIMEOUT E FALLBACKS
  * 
  * Consolidado dos EditorInitializer do MainEditor.tsx com funcionalidades:
- * - Import dinâmico com fallback robusto
+ * - Import dinâmico com fallback robusto e timeout
  * - Template loading via UnifiedTemplateManager
- * - Error handling e recovery
- * - Loading states otimizados
+ * - Error handling e recovery automático
+ * - Loading states otimizados com timeout
  * - Suporte para funil validado
+ * - Fallback para editor legacy
+ * - Validação explícita de parâmetros
  */
 const EditorInitializerUnified: React.FC<{
     templateId?: string;
@@ -248,33 +250,79 @@ const EditorInitializerUnified: React.FC<{
         const [isLoading, setIsLoading] = React.useState(true);
         const [loadingTemplate, setLoadingTemplate] = React.useState(false);
         const [error, setError] = React.useState<string | null>(null);
+        const [loadingTimeout, setLoadingTimeout] = React.useState(false);
+        const [fallbackMode, setFallbackMode] = React.useState(false);
 
-        // Template loading consolidado do MainEditor.tsx
+        const startTime = React.useRef(Date.now());
+
+        // 🔍 Validação explícita de parâmetros
+        const validateParameters = React.useCallback(() => {
+            const sanitizedTemplateId = templateId?.trim();
+            const sanitizedFunnelId = funnelId?.trim();
+
+            console.log('🔍 [VALIDAÇÃO] Parâmetros recebidos:', {
+                templateId: sanitizedTemplateId,
+                funnelId: sanitizedFunnelId,
+                debugMode,
+                timestamp: new Date().toISOString()
+            });
+
+            // Validar templateId se fornecido
+            if (sanitizedTemplateId && sanitizedTemplateId.length > 100) {
+                console.warn('⚠️ [VALIDAÇÃO] templateId muito longo:', sanitizedTemplateId.substring(0, 50) + '...');
+                return { templateId: undefined, funnelId: sanitizedFunnelId };
+            }
+
+            // Validar funnelId se fornecido
+            if (sanitizedFunnelId && sanitizedFunnelId.length > 100) {
+                console.warn('⚠️ [VALIDAÇÃO] funnelId muito longo:', sanitizedFunnelId.substring(0, 50) + '...');
+                return { templateId: sanitizedTemplateId, funnelId: undefined };
+            }
+
+            return { templateId: sanitizedTemplateId, funnelId: sanitizedFunnelId };
+        }, [templateId, funnelId, debugMode]);
+
+        // 🔄 Template loading consolidado com timeout
         const loadTemplateFromId = React.useCallback(async () => {
-            if (!templateId || templateId === 'default') return;
+            const { templateId: validTemplateId } = validateParameters();
+            
+            if (!validTemplateId || validTemplateId === 'default') {
+                console.log('📝 [TEMPLATE] Usando template padrão');
+                return;
+            }
 
             try {
                 setLoadingTemplate(true);
                 setError(null);
 
-                if (debugMode) {
-                    console.log('🔄 Carregando template:', templateId);
-                }
+                console.log('🔄 [TEMPLATE] Carregando template:', validTemplateId);
 
-                // Usar método correto do templateLibraryService
-                const templates = templateLibraryService.listBuiltins();
-                const template = templates.find(t => t.id === templateId);
+                // Timeout para template loading
+                const templatePromise = new Promise(async (resolve, reject) => {
+                    try {
+                        const templates = templateLibraryService.listBuiltins();
+                        const template = templates.find(t => t.id === validTemplateId);
 
-                if (template) {
-                    if (debugMode) {
-                        console.log('✅ Template carregado:', template.name || templateId);
+                        if (template) {
+                            console.log('✅ [TEMPLATE] Template encontrado:', template.name || validTemplateId);
+                            resolve(template);
+                        } else {
+                            console.warn('⚠️ [TEMPLATE] Template não encontrado, usando padrão');
+                            resolve(null);
+                        }
+                    } catch (error) {
+                        reject(error);
                     }
-                } else {
-                    console.warn('⚠️ Template não encontrado, usando padrão');
-                    loadDefaultTemplate();
-                }
+                });
+
+                const timeoutPromise = new Promise((_, reject) => {
+                    setTimeout(() => reject(new Error('Timeout ao carregar template')), 5000);
+                });
+
+                await Promise.race([templatePromise, timeoutPromise]);
+
             } catch (error) {
-                console.error('❌ Erro ao carregar template:', error);
+                console.error('❌ [TEMPLATE] Erro ao carregar template:', error);
                 setError(`Erro ao carregar template: ${error}`);
                 loadDefaultTemplate();
             } finally {
@@ -284,18 +332,29 @@ const EditorInitializerUnified: React.FC<{
 
         const loadDefaultTemplate = React.useCallback(async () => {
             try {
-                if (debugMode) {
-                    console.log('✅ Template padrão carregado');
-                }
+                console.log('✅ [TEMPLATE] Template padrão carregado');
             } catch (error) {
-                console.error('❌ Erro ao carregar template padrão:', error);
+                console.error('❌ [TEMPLATE] Erro ao carregar template padrão:', error);
                 setError(`Erro ao carregar template padrão: ${error}`);
             }
         }, [debugMode]);
 
-        // Carregamento dinâmico do editor com fallback robusto
+        // 🔄 Carregamento dinâmico do editor com timeout e fallback
         React.useEffect(() => {
             let cancelled = false;
+            let timeoutId: NodeJS.Timeout;
+
+            console.log('🚀 [EDITOR] Iniciando carregamento do editor...');
+
+            // Timeout de 10 segundos para loading
+            timeoutId = setTimeout(() => {
+                if (!cancelled) {
+                    console.warn('⏰ [EDITOR] Timeout de 10s atingido, ativando fallback');
+                    setLoadingTimeout(true);
+                    setError('O editor está demorando para carregar. Tentando carregar modo compatibilidade...');
+                    setFallbackMode(true);
+                }
+            }, 10000);
 
             (async () => {
                 try {
