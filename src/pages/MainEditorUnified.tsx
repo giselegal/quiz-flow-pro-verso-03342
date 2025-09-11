@@ -54,17 +54,20 @@ const MainEditorUnified: React.FC = () => {
         storageKey: 'main-editor-unified-state'
     }), [funnelId]);
 
+    // Log sempre para depuração
+    console.log('🎯 MainEditorUnified iniciado:', {
+        location,
+        routeParams,
+        templateId,
+        funnelId,
+        duplicateId,
+        initialStep,
+        supabaseConfig,
+        debugMode
+    });
+
     if (debugMode) {
-        console.log('🎯 MainEditorUnified iniciado:', {
-            location,
-            routeParams,
-            templateId,
-            funnelId,
-            duplicateId,
-            initialStep,
-            supabaseConfig,
-            debugMode
-        });
+        console.log('🎯 MainEditorUnified modo debug ativo');
     }
 
     // Determinar que ID de template usar (template direto ou duplicação)

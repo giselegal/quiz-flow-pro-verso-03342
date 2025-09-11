@@ -15,7 +15,7 @@ const EditorTemplatesPage: React.FC = () => {
   // Carregar templates unificados
   const templates = getUnifiedTemplates();
 
-  const handleSelectTemplate = async (templateId: string) => {
+  const handleSelectTemplate = (templateId: string) => {
     try {
       console.log('🎯 Selecionando template:', templateId);
 
@@ -25,6 +25,8 @@ const EditorTemplatesPage: React.FC = () => {
         console.error('❌ Template não encontrado:', templateId);
         return;
       }
+
+      console.log('📄 Template encontrado:', template);
 
       // Clonar template para criar nova instância
       const templateData = {
@@ -36,7 +38,9 @@ const EditorTemplatesPage: React.FC = () => {
         blocks: [] // Será preenchido pelo sistema de templates
       };
 
+      console.log('🔄 Clonando template data:', templateData);
       const clonedInstance = cloneFunnelTemplate(templateData, `${template.name} - Novo Funil`);
+      console.log('✅ Instância clonada:', clonedInstance);
 
       // Salvar no localStorage como um funil
       const newFunnel = {
@@ -46,15 +50,25 @@ const EditorTemplatesPage: React.FC = () => {
         updatedAt: clonedInstance.createdAt
       };
 
+      console.log('💾 Salvando funil no localStorage:', newFunnel);
       funnelLocalStore.upsert(newFunnel);
-      console.log('✅ Funil criado a partir do template:', clonedInstance.id);
+      
+      // Verificar se foi salvo
+      const savedFunnel = funnelLocalStore.get(clonedInstance.id);
+      console.log('🔍 Funil salvo verificado:', savedFunnel);
+
+      console.log('🔄 Navegando para editor com ID:', clonedInstance.id);
 
       // Navegar para o editor com o funil criado
-      setLocation(`/editor/${encodeURIComponent(clonedInstance.id)}`);
+      const editorUrl = `/editor/${encodeURIComponent(clonedInstance.id)}`;
+      console.log('🌐 URL do editor:', editorUrl);
+      setLocation(editorUrl);
 
     } catch (error) {
       console.error('❌ Erro ao selecionar template:', error);
+      console.error('❌ Stack trace:', error instanceof Error ? error.stack : 'N/A');
       // Fallback: navegar direto para editor
+      console.log('🔄 Navegando para editor (fallback)');
       setLocation('/editor');
     }
   };
