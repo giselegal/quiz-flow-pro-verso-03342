@@ -219,7 +219,37 @@ export const useCanvasContainerStyles = () => {
                     'transform: translate(-50%, -50%);' : ''} !important;
         }
 
-        /* Botões específicos da toolbar (CanvasArea.tsx) */
+        /* Responsividade para mobile */
+        @media (max-width: 768px) {
+          .navigation-buttons-container,
+          [data-navigation-container] {
+            gap: ${Math.max(4, styles.navigationButtonSpacing - 2)}px !important;
+            ${styles.navigationButtonVerticalPosition === 'top' ? 'top: 4px;' :
+                    styles.navigationButtonVerticalPosition === 'middle' ? 'top: 50%; transform: translateY(-50%);' : 'bottom: 4px;'} !important;
+            ${styles.navigationButtonAlignment === 'left' ? 'left: 4px;' :
+                    styles.navigationButtonAlignment === 'center' ? 'left: 50%; transform: translateX(-50%);' : 'right: 4px;'} !important;
+            ${styles.navigationButtonVerticalPosition === 'middle' && styles.navigationButtonAlignment === 'center' ?
+                    'transform: translate(-50%, -50%);' : ''} !important;
+          }
+
+          .navigation-button,
+          [data-navigation-button] {
+            padding: ${styles.navigationButtonPadding.replace(/(\d+)px/g, (_, num) => Math.max(4, parseInt(num) - 2) + 'px')} !important;
+            font-size: 0.875rem !important;
+          }
+        }
+
+        /* Responsividade para tablet */
+        @media (min-width: 769px) and (max-width: 1024px) {
+          .navigation-buttons-container,
+          [data-navigation-container] {
+            gap: ${Math.max(6, styles.navigationButtonSpacing - 1)}px !important;
+            ${styles.navigationButtonVerticalPosition === 'top' ? 'top: 6px;' :
+                    styles.navigationButtonVerticalPosition === 'middle' ? 'top: 50%; transform: translateY(-50%);' : 'bottom: 6px;'} !important;
+            ${styles.navigationButtonAlignment === 'left' ? 'left: 6px;' :
+                    styles.navigationButtonAlignment === 'center' ? 'left: 50%; transform: translateX(-50%);' : 'right: 6px;'} !important;
+          }
+        }        /* Botões específicos da toolbar (CanvasArea.tsx) */
         .bg-gray-800\\/80 {
           background-color: ${styles.toolbarBackground} !important;
           border-color: ${styles.toolbarBorder} !important;

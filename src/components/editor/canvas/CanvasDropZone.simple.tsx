@@ -71,6 +71,8 @@ interface CanvasDropZoneProps {
   isPreviewing?: boolean;
   // Identificador de escopo (ex.: número da etapa) para garantir unicidade dos IDs do dnd-kit
   scopeId?: string | number;
+  // Callback para desselecionar blocos quando clica no canvas vazio
+  onDeselectBlocks?: () => void;
 }
 
 const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
@@ -82,6 +84,7 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
   className,
   isPreviewing: isPreviewingProp = false,
   scopeId,
+  onDeselectBlocks,
 }) => {
   useRenderCount('CanvasDropZone');
 
@@ -304,10 +307,19 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
     };
   }, [enableProgressiveEdit, editRenderCount, blocks.length]);
 
+  // Handler para cliques no canvas vazio (desselecionar blocos)
+  const handleCanvasClick = (e: React.MouseEvent) => {
+    // Só desseleciona se o clique foi diretamente no canvas (não em blocos)
+    if (e.target === e.currentTarget && onDeselectBlocks && !isPreviewing) {
+      onDeselectBlocks();
+    }
+  };
+
   return (
     <div
       id={CANVAS_ROOT_ID}
       ref={setNodeRef}
+      onClick={handleCanvasClick}
       className={cn(
         'min-h-[300px] transition-all duration-200 p-4 overflow-visible',
         // Evitar qualquer bloqueio de eventos no canvas

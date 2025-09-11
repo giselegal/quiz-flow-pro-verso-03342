@@ -430,6 +430,7 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
                       onSelectBlock={actions.setSelectedBlockId}
                       onUpdateBlock={(id: string, updates: any) => actions.updateBlock(currentStepKey, id, updates)}
                       onDeleteBlock={(id: string) => actions.removeBlock(currentStepKey, id)}
+                      onDeselectBlocks={() => actions.setSelectedBlockId(null)}
                       className="h-full w-full"
                       isPreviewing={mode !== 'edit'}
                       scopeId={safeCurrentStep}
