@@ -1,4 +1,3 @@
-import { cloneFunnelTemplate } from '@/utils/cloneFunnel';
 import React from 'react';
 import { getLogger } from '@/utils/logging';
 import { Button } from '@/components/ui/button';
@@ -12,12 +11,14 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { ThumbnailImage } from '@/components/ui/EnhancedOptimizedImage';
 import { funnelLocalStore } from '@/services/funnelLocalStore';
+import { funnelUnifiedService } from '@/services/FunnelUnifiedService';
 import { customTemplateService, CustomTemplate } from '@/services/customTemplateService';
 import { Edit, Eye, Play, Plus, Sparkles, Zap, Copy, Trash2, RefreshCw, AlertTriangle, CheckCircle } from 'lucide-react';
 import { useLocation } from 'wouter';
 import { AdminBreadcrumbs } from '@/components/admin/AdminBreadcrumbs';
 import { useFunnelTemplates } from '@/core/funnel/hooks/useFunnelTemplates';
 import { getUnifiedTemplates, TemplateRegistry, type UnifiedTemplate } from '@/config/unifiedTemplatesRegistry';
+import { FunnelContext } from '@/core/contexts/FunnelContext';
 
 const FunnelPanelPage: React.FC = () => {
   const logger = getLogger();
@@ -298,7 +299,7 @@ const FunnelPanelPage: React.FC = () => {
   };
 
   // Função para usar template (oficial ou personalizado)
-  const handleUseTemplate = (templateId: string, isCustom: boolean = false) => {
+  const handleUseTemplate = async (templateId: string, isCustom: boolean = false) => {
     try {
       logger.info('funnel-creation', 'Usando template', {
         templateId,
@@ -319,73 +320,55 @@ const FunnelPanelPage: React.FC = () => {
       });
 
       if (baseTemplate) {
-        // 🚀 Usar cloneFunnelTemplate para garantir isolamento
-        const templateData = {
-          id: baseTemplate.id,
-          name: baseTemplate.name,
+        // 🚀 CORREÇÃO: Usar FunnelUnifiedService para criação completa
+        const userId = 'admin-user'; // TODO: Pegar do contexto de auth
+        
+        const newFunnel = await funnelUnifiedService.createFunnel({
+          name: `${baseTemplate.name} - Cópia`,
           description: baseTemplate.description || '',
           category: baseTemplate.category || 'general',
-          preview: baseTemplate.image || '',
-          blocks: [] // Será preenchido pelo sistema de templates
-        };
-
-        logger.debug('funnel-creation', 'Clonando template data', { templateData });
-        const clonedInstance = cloneFunnelTemplate(templateData, `${baseTemplate.name} - Cópia`);
-        logger.debug('funnel-creation', 'Instância clonada', {
-          instanceId: clonedInstance.id,
-          blockCount: clonedInstance.blocks.length
+          templateId: baseTemplate.id,
+          context: FunnelContext.MY_FUNNELS,
+          userId: userId,
+          autoPublish: false
         });
 
-        // Salvar instância clonada em "meus funis"
-        const newFunnel = {
-          id: clonedInstance.id,
-          name: clonedInstance.name,
-          status: 'draft' as const,
-          updatedAt: clonedInstance.createdAt
-        };
-
-        funnelLocalStore.upsert(newFunnel);
-        logger.info('funnel-creation', 'Funil clonado criado com sucesso', {
-          funnelId: clonedInstance.id,
-          blockCount: clonedInstance.blocks.length,
-          storageStatus: 'saved'
+        logger.info('funnel-creation', 'Funil criado com sucesso via FunnelUnifiedService', {
+          funnelId: newFunnel.id,
+          templateId: templateId,
+          storageStatus: 'unified'
         });
 
-        // ✅ CORRIGIDO: Navegar usando path parameter
-        const editorUrl = `/editor/${encodeURIComponent(clonedInstance.id)}?template=${templateId}`;
+        // ✅ CORREÇÃO: Navegar usando ID do funil criado
+        const editorUrl = `/editor/${encodeURIComponent(newFunnel.id)}?template=${templateId}`;
         logger.debug('funnel-creation', 'Navegando para editor', {
           editorUrl,
+          funnelId: newFunnel.id,
           fullUrl: `${window.location.origin}${editorUrl}`
         });
 
-        // Adicionar delay para garantir que os logs sejam vistos
+        // Navegação direta com verificação
         setTimeout(() => {
           logger.debug('funnel-creation', 'Executando navegação');
 
-          // Testar múltiplas abordagens de navegação
           try {
-            // Abordagem 1: setLocation do wouter
+            // Usar setLocation do wouter
             setLocation(editorUrl);
-            console.log('✅ [DIAGNÓSTICO] setLocation executado');
+            console.log('✅ [CORREÇÃO] Navegação executada para:', editorUrl);
 
-            // Verificar se a navegação funcionou
+            // Verificar se funcionou
             setTimeout(() => {
-              console.log('🔍 [DIAGNÓSTICO] URL após setLocation:', window.location.href);
-              console.log('🔍 [DIAGNÓSTICO] Path após setLocation:', window.location.pathname);
-
-              // Se não funcionou, tentar fallback
-              if (window.location.pathname !== `/editor/${encodeURIComponent(clonedInstance.id)}`) {
-                console.log('⚠️ [DIAGNÓSTICO] setLocation não funcionou, tentando window.location...');
+              if (window.location.pathname !== `/editor/${encodeURIComponent(newFunnel.id)}`) {
+                console.log('⚠️ [CORREÇÃO] Fallback para window.location...');
                 window.location.href = editorUrl;
               }
-            }, 500);
+            }, 200);
 
           } catch (error) {
-            console.error('❌ [DIAGNÓSTICO] Erro no setLocation:', error);
-            // Fallback para navegação manual
+            console.error('❌ [CORREÇÃO] Erro na navegação:', error);
             window.location.href = editorUrl;
           }
-        }, 200);
+        }, 100);
         return;
       }
 
@@ -500,27 +483,48 @@ const FunnelPanelPage: React.FC = () => {
     return unifiedTemplates.map(normalizeTemplate);
   }, [funnelTemplates, sort]);
 
-  const handleCreateCustom = () => {
+  const handleCreateCustom = async () => {
     console.log('🎨 Criando funil personalizado...');
 
-    const now = new Date().toISOString();
-    const newId = `custom-funnel-${Date.now()}`;
-    const name = `Funil Personalizado ${new Date().toLocaleTimeString()}`;
+    try {
+      // ✅ CORREÇÃO: Usar FunnelUnifiedService
+      const userId = 'admin-user'; // TODO: Pegar do contexto de auth
+      const name = `Funil Personalizado ${new Date().toLocaleTimeString()}`;
+      
+      const newFunnel = await funnelUnifiedService.createFunnel({
+        name: name,
+        description: 'Funil personalizado criado do painel admin',
+        category: 'custom',
+        context: FunnelContext.MY_FUNNELS,
+        userId: userId,
+        autoPublish: false
+      });
 
-    // 🚀 CORREÇÃO: Garantir que funil personalizado seja salvo
-    const newFunnel = {
-      id: newId,
-      name,
-      status: 'draft' as const,
-      updatedAt: now
-    };
+      console.log('✅ Funil personalizado criado via FunnelUnifiedService:', newFunnel.id);
+      setLocation(`/editor/${encodeURIComponent(newFunnel.id)}`);
+      
+    } catch (error) {
+      console.error('❌ Erro ao criar funil personalizado:', error);
+      
+      // Fallback para método anterior
+      const now = new Date().toISOString();
+      const newId = `custom-funnel-${Date.now()}`;
+      const name = `Funil Personalizado ${new Date().toLocaleTimeString()}`;
 
-    const list = funnelLocalStore.list();
-    list.push(newFunnel);
-    funnelLocalStore.saveList(list);
+      const newFunnel = {
+        id: newId,
+        name,
+        status: 'draft' as const,
+        updatedAt: now
+      };
 
-    console.log('✅ Funil personalizado criado:', newFunnel);
-    setLocation(`/editor/${encodeURIComponent(newId)}`);
+      const list = funnelLocalStore.list();
+      list.push(newFunnel);
+      funnelLocalStore.saveList(list);
+
+      console.log('✅ Funil personalizado criado (fallback):', newFunnel);
+      setLocation(`/editor/${encodeURIComponent(newId)}`);
+    }
   };
 
   return (
