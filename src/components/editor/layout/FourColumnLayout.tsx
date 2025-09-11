@@ -28,7 +28,7 @@ export const FourColumnLayout: React.FC<FourColumnLayoutProps> = ({
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 1024); // lg breakpoint
     };
-    
+
     checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
@@ -50,9 +50,9 @@ export const FourColumnLayout: React.FC<FourColumnLayoutProps> = ({
               <Menu className="h-4 w-4 mr-2" />
               Menu
             </Button>
-            
+
             <div className="text-sm text-gray-300">Editor</div>
-            
+
             <Button
               variant="ghost"
               size="sm"

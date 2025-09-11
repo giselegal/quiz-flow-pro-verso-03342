@@ -891,7 +891,7 @@ const QuizModularPage: React.FC<QuizModularPageProps> = ({ initialStep }) => {
                       </div>
                     </div>
                   </div>
-                  
+
                   {/* Mensagem de validação - Mobile friendly */}
                   {stepConfig?.showValidationFeedback && mustBeValid && !isStepValid && (
                     <div className="mt-3 text-xs text-stone-500 text-center sm:text-left">
@@ -1078,34 +1078,33 @@ const QuizModularPage: React.FC<QuizModularPageProps> = ({ initialStep }) => {
                     </p>
                   </div>
                 )}
-                    {/* Utilitário opcional de recarga */}
-                    <button
-                      onClick={async () => {
-                        const template = await reloadTemplate(currentStep);
-                        if (template?.blocks) {
-                          setBlocks(template.blocks);
-                        }
-                      }}
-                      className="ml-4 px-4 py-3 rounded-lg font-medium bg-white text-stone-700 hover:bg-stone-50 border border-stone-200 shadow-sm hover:shadow"
-                      title="Recarregar blocos da etapa"
-                    >
-                      🔄 Recarregar etapa
-                    </button>
-                  </div>
+                {/* Utilitário opcional de recarga */}
+                <button
+                  onClick={async () => {
+                    const template = await reloadTemplate(currentStep);
+                    if (template?.blocks) {
+                      setBlocks(template.blocks);
+                    }
+                  }}
+                  className="ml-4 px-4 py-3 rounded-lg font-medium bg-white text-stone-700 hover:bg-stone-50 border border-stone-200 shadow-sm hover:shadow"
+                  title="Recarregar blocos da etapa"
+                >
+                  🔄 Recarregar etapa
+                </button>
+              </div>
                 ) : null}
 
-                {/* 📊 FOOTER COM ESTATÍSTICAS */}
-                <div className="text-center mt-12 text-sm text-stone-500">
-                  <div className="flex justify-center items-center space-x-6">
-                    <div className="flex items-center gap-1">
-                      <span>🎯</span> Etapa: {currentStep}/21
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <span>📊</span> Progresso: {progress}%
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <span>🎨</span> Blocos: {blocks.length}
-                    </div>
+              {/* 📊 FOOTER COM ESTATÍSTICAS */}
+              <div className="text-center mt-12 text-sm text-stone-500">
+                <div className="flex justify-center items-center space-x-6">
+                  <div className="flex items-center gap-1">
+                    <span>🎯</span> Etapa: {currentStep}/21
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <span>📊</span> Progresso: {progress}%
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <span>🎨</span> Blocos: {blocks.length}
                   </div>
                 </div>
               </div>
@@ -1113,22 +1112,27 @@ const QuizModularPage: React.FC<QuizModularPageProps> = ({ initialStep }) => {
           </div>
         </div>
       </div>
-      {/* ✅ FASE 4: Métricas e monitoramento avançado */}
-      {import.meta?.env?.DEV && (
-        <Suspense fallback={null}>
-          <QuizResultMetrics />
-        </Suspense>
-      )}
+    </div >
+      {/* ✅ FASE 4: Métricas e monitoramento avançado */ }
+  {
+    import.meta?.env?.DEV && (
+      <Suspense fallback={null}>
+        <QuizResultMetrics />
+      </Suspense>
+    )
+  }
 
-      {/* Dev-only result debug widget */}
-      <DevResultDebug />
+  {/* Dev-only result debug widget */ }
+  <DevResultDebug />
 
-      {/* ✅ Validador de resultado sempre ativo na etapa 20 */}
-      {currentStep === 20 && (
-        <Suspense fallback={null}>
-          <QuizResultValidator />
-        </Suspense>
-      )}
+  {/* ✅ Validador de resultado sempre ativo na etapa 20 */ }
+  {
+    currentStep === 20 && (
+      <Suspense fallback={null}>
+        <QuizResultValidator />
+      </Suspense>
+    )
+  }
     </>
   );
 };
