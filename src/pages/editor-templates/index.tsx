@@ -29,16 +29,30 @@ const EditorTemplatesPage: React.FC = () => {
       console.log('📄 Template encontrado:', template);
 
       // Clonar template para criar nova instância
+      // Converter UnifiedTemplate para FunnelTemplate format
       const templateData = {
         id: template.id,
         name: template.name,
         description: template.description || '',
         category: template.category || 'general',
-        preview: template.image || '',
-        blocks: [] // Será preenchido pelo sistema de templates
+        preview: template.image || '', // UnifiedTemplate usa 'image', FunnelTemplate usa 'preview'
+        blocks: [
+          // Template básico com hero block
+          {
+            type: 'FunnelHeroBlock',
+            properties: {
+              title: `Bem-vindo ao ${template.name}`,
+              description: template.description || 'Funil criado a partir de template',
+              ctaText: 'Começar',
+              backgroundColor: '#FAF9F7',
+              textColor: '#432818',
+              primaryColor: '#B89B7A',
+            },
+          },
+        ],
       };
 
-      console.log('🔄 Clonando template data:', templateData);
+      console.log('🔄 Template data convertido para FunnelTemplate:', templateData);
       const clonedInstance = cloneFunnelTemplate(templateData, `${template.name} - Novo Funil`);
       console.log('✅ Instância clonada:', clonedInstance);
 
