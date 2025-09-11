@@ -300,6 +300,7 @@ const FunnelPanelPage: React.FC = () => {
     try {
       console.log('🎯 [DIAGNÓSTICO] Usando template:', templateId, isCustom ? '(custom)' : '(oficial)');
       console.log('🎯 [DIAGNÓSTICO] Location atual:', window.location.href);
+      console.log('🎯 [DIAGNÓSTICO] Timestamp:', new Date().toISOString());
 
       if (isCustom) {
         customTemplateService.recordTemplateUsage(templateId, 'custom');
@@ -309,6 +310,7 @@ const FunnelPanelPage: React.FC = () => {
       const unifiedTemplates = getUnifiedTemplates();
       const baseTemplate = unifiedTemplates.find(t => t.id === templateId);
       console.log('🎯 [DIAGNÓSTICO] Template encontrado:', baseTemplate ? 'SIM' : 'NÃO');
+      console.log('🎯 [DIAGNÓSTICO] Templates disponíveis:', unifiedTemplates.map(t => t.id));
 
       if (baseTemplate) {
         // 🚀 Usar cloneFunnelTemplate para garantir isolamento
@@ -324,6 +326,7 @@ const FunnelPanelPage: React.FC = () => {
         console.log('🎯 [DIAGNÓSTICO] Clonando template data:', templateData);
         const clonedInstance = cloneFunnelTemplate(templateData, `${baseTemplate.name} - Cópia`);
         console.log('🎯 [DIAGNÓSTICO] Instância clonada:', clonedInstance);
+        console.log('🎯 [DIAGNÓSTICO] ID da instância clonada:', clonedInstance.id);
 
         // Salvar instância clonada em "meus funis"
         const newFunnel = {
@@ -336,15 +339,41 @@ const FunnelPanelPage: React.FC = () => {
         funnelLocalStore.upsert(newFunnel);
         console.log('✅ [DIAGNÓSTICO] Funil clonado criado:', clonedInstance.id);
         console.log('📦 [DIAGNÓSTICO] Blocos independentes:', clonedInstance.blocks.length);
+        console.log('💾 [DIAGNÓSTICO] Salvo no localStorage');
 
         // ✅ CORRIGIDO: Navegar usando path parameter
         const editorUrl = `/editor/${encodeURIComponent(clonedInstance.id)}?template=${templateId}`;
         console.log('🔗 [DIAGNÓSTICO] Navegando para:', editorUrl);
+        console.log('🔗 [DIAGNÓSTICO] URL completa:', `${window.location.origin}${editorUrl}`);
 
         // Adicionar delay para garantir que os logs sejam vistos
         setTimeout(() => {
-          setLocation(editorUrl);
-        }, 100);
+          console.log('🚀 [DIAGNÓSTICO] Executando setLocation...');
+          
+          // Testar múltiplas abordagens de navegação
+          try {
+            // Abordagem 1: setLocation do wouter
+            setLocation(editorUrl);
+            console.log('✅ [DIAGNÓSTICO] setLocation executado');
+            
+            // Verificar se a navegação funcionou
+            setTimeout(() => {
+              console.log('🔍 [DIAGNÓSTICO] URL após setLocation:', window.location.href);
+              console.log('🔍 [DIAGNÓSTICO] Path após setLocation:', window.location.pathname);
+              
+              // Se não funcionou, tentar fallback
+              if (window.location.pathname !== `/editor/${encodeURIComponent(clonedInstance.id)}`) {
+                console.log('⚠️ [DIAGNÓSTICO] setLocation não funcionou, tentando window.location...');
+                window.location.href = editorUrl;
+              }
+            }, 500);
+            
+          } catch (error) {
+            console.error('❌ [DIAGNÓSTICO] Erro no setLocation:', error);
+            // Fallback para navegação manual
+            window.location.href = editorUrl;
+          }
+        }, 200);
         return;
       }
 
@@ -505,6 +534,33 @@ const FunnelPanelPage: React.FC = () => {
           <p className="text-[#8F7A6A] mt-2 text-lg">Escolha um modelo otimizado ou crie do zero</p>
         </div>
         <div className="flex gap-3">
+          {/* Botão de teste para diagnóstico */}
+          <Button
+            onClick={() => {
+              console.log('🧪 [TESTE] Navegação direta para editor');
+              console.log('🧪 [TESTE] Location atual:', window.location.href);
+              const testUrl = '/editor/test-navigation-123?template=quiz-estilo-21-steps';
+              console.log('🧪 [TESTE] URL de teste:', testUrl);
+              setLocation(testUrl);
+            }}
+            variant="outline"
+            size="sm"
+            className="bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100"
+          >
+            🧪 Teste Navegação
+          </Button>
+
+          {/* Botão diagnóstico completo */}
+          <Button
+            onClick={() => {
+              window.open('/diagnose-editor-navigation.html', '_blank');
+            }}
+            variant="outline"
+            size="sm"
+            className="bg-green-50 border-green-200 text-green-700 hover:bg-green-100"
+          >
+            🔍 Diagnóstico
+          </Button>
           {/* Botão de teste para diagnóstico */}
           <Button
             onClick={() => {
