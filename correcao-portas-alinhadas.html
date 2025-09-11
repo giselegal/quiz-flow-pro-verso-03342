@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔧 Correção de Portas - Sistema Alinhado</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: #333;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .problem-section {
+            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+            border: 3px solid #ef4444;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 25px 0;
+            text-align: center;
+        }
+
+        .solution-section {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border: 3px solid #22c55e;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 25px 0;
+            text-align: center;
+        }
+
+        .port-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .port-card {
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .current-port {
+            background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+            border: 2px solid #22c55e;
+            color: #166534;
+        }
+
+        .wrong-port {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            border: 2px solid #ef4444;
+            color: #991b1b;
+        }
+
+        .test-btn {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            color: white;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin: 8px;
+            font-size: 16px;
+        }
+
+        .test-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(34, 197, 94, 0.4);
+        }
+
+        code {
+            background: #1f2937;
+            color: #f9fafb;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .status {
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .error {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            border: 1px solid #ef4444;
+            color: #991b1b;
+        }
+
+        .success {
+            background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+            border: 1px solid #22c55e;
+            color: #166534;
+        }
+
+        .fix-list {
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .fix-list ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .fix-list li {
+            margin: 10px 0;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔧 Correção de Portas</h1>
+            <p>Problema identificado e corrigido</p>
+        </div>
+
+        <div class="content">
+            <div class="problem-section">
+                <h2 style="color: #991b1b; margin-top: 0;">❌ Problema Identificado</h2>
+                <p style="color: #991b1b; font-size: 1.1em;">
+                    As portas nos links de teste não estavam alinhadas com o servidor em execução!
+                </p>
+            </div>
+
+            <div class="port-comparison">
+                <div class="port-card current-port">
+                    <h3 style="margin-top: 0;">✅ Porta Atual</h3>
+                    <div style="font-size: 2em; margin: 15px 0;">8080</div>
+                    <div>Servidor Vite rodando</div>
+                    <code>http://localhost:8080/</code>
+                </div>
+                <div class="port-card wrong-port">
+                    <h3 style="margin-top: 0;">❌ Porta nos Links</h3>
+                    <div style="font-size: 2em; margin: 15px 0;">5173</div>
+                    <div>Links nos testes</div>
+                    <code>http://localhost:5173/</code>
+                </div>
+            </div>
+
+            <div class="status error">
+                <span style="font-size: 20px;">⚠️</span>
+                <div>
+                    <strong>Causa:</strong> Os links de teste foram criados usando a porta padrão do Vite (5173),
+                    mas o servidor está configurado para rodar na porta 8080.
+                </div>
+            </div>
+
+            <div class="solution-section">
+                <h2 style="color: #166534; margin-top: 0;">✅ Solução Implementada</h2>
+                <p style="color: #166534; font-size: 1.1em;">
+                    Todos os links foram corrigidos para usar a porta correta: <strong>8080</strong>
+                </p>
+            </div>
+
+            <div class="fix-list">
+                <h3>🔧 Correções Realizadas</h3>
+                <ul>
+                    <li>✅ <strong>vite.config.ts:</strong> Porta confirmada como 8080</li>
+                    <li>✅ <strong>Servidor dev:</strong> Rodando corretamente na 8080</li>
+                    <li>✅ <strong>Links de teste:</strong> Atualizados para 8080</li>
+                    <li>✅ <strong>URLs admin:</strong> Corrigidas para 8080</li>
+                    <li>✅ <strong>URLs editor:</strong> Corrigidas para 8080</li>
+                </ul>
+            </div>
+
+            <h2>🧪 Testes com Portas Corretas</h2>
+            <div style="text-align: center; margin: 30px 0;">
+                <a href="http://localhost:8080/admin/funis" class="test-btn" target="_blank">
+                    📋 Admin Funis (8080)
+                </a>
+                <a href="http://localhost:8080/editor/quiz21StepsComplete" class="test-btn" target="_blank">
+                    ✏️ Editor Principal (8080)
+                </a>
+                <a href="http://localhost:8080/" class="test-btn" target="_blank">
+                    🏠 Homepage (8080)
+                </a>
+            </div>
+
+            <div class="status success">
+                <span style="font-size: 20px;">✅</span>
+                <div>
+                    <strong>Status:</strong> Sistema 100% alinhado! Todas as URLs agora usam a porta correta
+                    <code>8080</code>.
+                </div>
+            </div>
+
+            <div style="background: #f1f5f9; padding: 20px; border-radius: 8px; margin-top: 30px;">
+                <h4 style="margin-top: 0;">📋 Configurações Confirmadas</h4>
+                <ul style="margin: 10px 0; padding-left: 20px;">
+                    <li><strong>vite.config.ts:</strong> <code>server.port: 8080</code></li>
+                    <li><strong>package.json:</strong> <code>dev: vite --host 0.0.0.0</code></li>
+                    <li><strong>Servidor ativo:</strong> <code>http://localhost:8080/</code></li>
+                    <li><strong>Network:</strong> <code>http://10.0.0.102:8080/</code></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        console.log('🔧 CORREÇÃO DE PORTAS IMPLEMENTADA');
+        console.log('✅ Porta correta: 8080');
+        console.log('❌ Porta incorreta nos testes: 5173');
+        console.log('🚀 Todos os links atualizados para: http://localhost:8080/');
+
+        // Verificar se a porta atual está acessível
+        fetch('http://localhost:8080/')
+            .then(() => console.log('✅ Porta 8080 confirmada como ativa'))
+            .catch(() => console.log('❌ Erro na porta 8080'));
+    </script>
+</body>
+
+</html>
