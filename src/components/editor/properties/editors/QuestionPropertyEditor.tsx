@@ -38,10 +38,54 @@ import {
 } from 'lucide-react';
 
 import { PropertyType, PropertyCategory } from '@/hooks/useUnifiedProperties';
+
 // Importar editores avançados existentes
 import BoxModelEditor from '../core/BoxModelEditor';
 import AnimationPreviewEditor from '../core/AnimationPreviewEditor';
 import ScoreValuesEditor from '../core/ScoreValuesEditor';
+
+// Tooltip library for contextual help
+const questionTooltips = {
+  title: {
+    title: 'Título da Questão',
+    content: 'Define o texto principal da questão que será exibido aos usuários.',
+    examples: ['Qual é o seu objetivo principal?', 'Como você prefere aprender?']
+  },
+  options: {
+    title: 'Opções de Resposta',
+    content: 'Lista de opções disponíveis para o usuário escolher.',
+    examples: [{ text: 'Opção A', value: 'a', score: 10 }]
+  },
+  scoring: {
+    title: 'Sistema de Pontuação',
+    content: 'Configura como as respostas são pontuadas e avaliadas.',
+    examples: ['Pontuação por opção', 'Pontuação global']
+  },
+  layout: {
+    title: 'Layout e Apresentação',
+    content: 'Controla a aparência visual e disposição dos elementos.',
+    examples: ['Grid', 'Lista', 'Cards']
+  },
+  animation: {
+    title: 'Animações',
+    content: 'Efeitos visuais para transições e interações.',
+    examples: ['Fade in', 'Slide up', 'Bounce']
+  }
+};
+
+// Simple tooltip component
+const TooltipHelper: React.FC<{ content: string; children: React.ReactNode }> = ({ 
+  content, 
+  children 
+}) => (
+  <div className="relative group inline-block">
+    {children}
+    <div className="invisible group-hover:visible absolute z-10 w-64 px-3 py-2 text-sm text-white bg-gray-900 rounded-lg shadow-lg -top-12 left-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+      {content}
+      <div className="absolute top-full left-4 w-2 h-2 bg-gray-900 transform rotate-45 -mt-1"></div>
+    </div>
+  </div>
+);
 
 // Types
 interface QuestionOption {
@@ -352,6 +396,9 @@ export const QuestionPropertyEditor: React.FC<QuestionPropertyEditorProps> = ({
                 <CardTitle className="text-base flex items-center gap-2">
                   <Type className="w-4 h-4" />
                   Pergunta Principal
+                  <TooltipHelper content={questionTooltips.title.content}>
+                    <HelpCircle className="w-3 h-3 text-gray-400 hover:text-gray-600 cursor-help" />
+                  </TooltipHelper>
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
