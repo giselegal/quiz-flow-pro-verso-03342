@@ -349,25 +349,25 @@ const FunnelPanelPage: React.FC = () => {
         // Adicionar delay para garantir que os logs sejam vistos
         setTimeout(() => {
           console.log('🚀 [DIAGNÓSTICO] Executando setLocation...');
-          
+
           // Testar múltiplas abordagens de navegação
           try {
             // Abordagem 1: setLocation do wouter
             setLocation(editorUrl);
             console.log('✅ [DIAGNÓSTICO] setLocation executado');
-            
+
             // Verificar se a navegação funcionou
             setTimeout(() => {
               console.log('🔍 [DIAGNÓSTICO] URL após setLocation:', window.location.href);
               console.log('🔍 [DIAGNÓSTICO] Path após setLocation:', window.location.pathname);
-              
+
               // Se não funcionou, tentar fallback
               if (window.location.pathname !== `/editor/${encodeURIComponent(clonedInstance.id)}`) {
                 console.log('⚠️ [DIAGNÓSTICO] setLocation não funcionou, tentando window.location...');
                 window.location.href = editorUrl;
               }
             }, 500);
-            
+
           } catch (error) {
             console.error('❌ [DIAGNÓSTICO] Erro no setLocation:', error);
             // Fallback para navegação manual

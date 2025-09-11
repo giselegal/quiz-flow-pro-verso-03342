@@ -32,22 +32,22 @@ const simulateTemplateCloning = (templateId) => {
         updatedAt: new Date().toISOString(),
         createdAt: new Date().toISOString()
     };
-    
+
     console.log('Dados do funil simulado:', funnelData);
     localStorage.setItem(`funnel_${clonedId}`, JSON.stringify(funnelData));
-    
+
     return { clonedId, funnelData };
 };
 
 // 4. Testar navegação
 const testNavigation = (url) => {
     console.log(`🚀 Testando navegação para: ${url}`);
-    
+
     // Simular clique em link
     const link = document.createElement('a');
     link.href = url;
     link.click();
-    
+
     // Ou usar history API
     try {
         window.history.pushState(null, '', url);
@@ -76,7 +76,7 @@ testUrls.forEach((url, index) => {
     setTimeout(() => {
         console.log(`\n🧪 Teste ${index + 1}/${testUrls.length}:`);
         testNavigation(url);
-        
+
         // Verificar se a URL mudou
         setTimeout(() => {
             console.log('URL após navegação:', window.location.href);
