@@ -603,51 +603,39 @@ const EditorInitializerUnified: React.FC<{
             );
         }
 
-        // Error state
-        if (error) {
+        // ✅ Editor carregado com sucesso
+        if (UnifiedEditorComp) {
+            console.log('🎯 [EDITOR] Renderizando editor carregado');
+            
             return (
-                <div className="flex items-center justify-center min-h-screen">
-                    <div className="text-center max-w-md">
-                        <div className="text-red-500 text-6xl mb-4">⚠️</div>
-                        <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                            Erro ao carregar editor
-                        </h3>
-                        <p className="text-gray-600 mb-4">{error}</p>
-                        <button
-                            onClick={() => window.location.reload()}
-                            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
-                        >
-                            Recarregar página
-                        </button>
-                        {debugMode && (
-                            <details className="mt-4 text-left">
-                                <summary className="cursor-pointer text-sm text-gray-500">
-                                    Debug info
-                                </summary>
-                                <pre className="text-xs bg-gray-100 p-2 rounded mt-2 overflow-auto">
-                                    {JSON.stringify({ templateId, funnelId, error }, null, 2)}
-                                </pre>
-                            </details>
-                        )}
-                    </div>
+                <div>
+                    {fallbackMode && (
+                        <div className="bg-yellow-50 border-b border-yellow-200 px-4 py-2">
+                            <p className="text-sm text-yellow-800 text-center">
+                                ⚠️ Executando em modo de compatibilidade
+                            </p>
+                        </div>
+                    )}
+                    <UnifiedEditorComp />
                 </div>
             );
         }
 
-        // Render editor
-        if (!UnifiedEditorComp) {
-            return (
-                <div className="flex items-center justify-center min-h-screen">
-                    <div className="text-center">
-                        <div className="text-yellow-500 text-6xl mb-4">⚠️</div>
-                        <p className="text-gray-600">Editor não disponível</p>
-                    </div>
-                </div>
-            );
-        }
-
+        // 🚫 Estado impossível - fallback final
         return (
-            <UnifiedEditorComp />
+            <div className="flex items-center justify-center min-h-screen bg-gray-50">
+                <div className="text-center">
+                    <p className="text-gray-600 text-lg">
+                        Estado inesperado do editor. 
+                        <button 
+                            onClick={handleRetry}
+                            className="text-blue-600 hover:text-blue-800 underline ml-1"
+                        >
+                            Clique aqui para tentar novamente
+                        </button>
+                    </p>
+                </div>
+            </div>
         );
     };
 
