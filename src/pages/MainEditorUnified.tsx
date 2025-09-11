@@ -4,7 +4,7 @@ import React from 'react';
 import { useLocation, useParams } from 'wouter';
 import { ErrorBoundary } from '../components/editor/ErrorBoundary';
 import { FunnelsProvider } from '@/context/FunnelsContext';
-import { EditorQuizProvider } from '@/context/EditorQuizProvider';
+import { EditorQuizProvider } from '@/context/EditorQuizContext';
 import { Quiz21StepsProvider } from '@/components/quiz/Quiz21StepsProvider';
 import { LegacyCompatibilityWrapper } from '@/core/contexts/LegacyCompatibilityWrapper';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
@@ -14,6 +14,7 @@ import { useFunnelContext } from '@/hooks/useFunnelLoader';
 import FunnelFallback from '@/components/editor/FunnelFallback';
 import { UnifiedFunnelProvider } from '@/context/UnifiedFunnelContext';
 import EditorFallback from '@/components/editor/EditorFallback';
+import { EditorRuntimeProviders } from '@/context/EditorRuntimeProviders';
 
 /**
  * 🎯 MAIN EDITOR UNIFICADO - CONSOLIDADO
@@ -41,6 +42,7 @@ const MainEditorUnified: React.FC = () => {
     const templateId = params.get('template');
     const funnelId = routeParams.funnelId || params.get('funnel');
     const duplicateId = params.get('duplicate'); // ID do template a ser duplicado
+    const refactorFlag = params.get('providerRefactor') === 'true';
     const stepParam = params.get('step');
     const initialStep = stepParam ? Math.max(1, Math.min(21, parseInt(stepParam))) : undefined;
 
@@ -85,38 +87,53 @@ const MainEditorUnified: React.FC = () => {
     return (
         <div>
             <ErrorBoundary>
-                <UnifiedFunnelProvider
-                    funnelId={funnelId || undefined}
-                    debugMode={debugMode}
-                >
-                    <FunnelsProvider debug={debugMode}>
-                        {/* Híbrido: EditorProvider (legacy) + LegacyCompatibilityWrapper (unified) para máxima compatibilidade */}
-                        <EditorProvider
-                            enableSupabase={supabaseConfig.enabled}
-                            funnelId={supabaseConfig.funnelId}
-                            quizId={supabaseConfig.quizId}
-                            storageKey={supabaseConfig.storageKey}
-                            initial={initialStep ? { currentStep: initialStep } : undefined}
-                        >
-                            <LegacyCompatibilityWrapper
-                                enableWarnings={debugMode}
-                                initialContext={FunnelContext.EDITOR}
+                {refactorFlag ? (
+                    <EditorRuntimeProviders
+                        funnelId={funnelId || undefined}
+                        initialStep={initialStep}
+                        debugMode={debugMode}
+                        supabaseConfig={supabaseConfig}
+                    >
+                        <FunnelValidatedEditor
+                            templateId={resolvedTemplateId || undefined}
+                            funnelId={funnelId || undefined}
+                            debugMode={debugMode}
+                        />
+                    </EditorRuntimeProviders>
+                ) : (
+                    <UnifiedFunnelProvider
+                        funnelId={funnelId || undefined}
+                        debugMode={debugMode}
+                    >
+                        <FunnelsProvider debug={debugMode}>
+                            {/* Híbrido legacy original */}
+                            <EditorProvider
+                                enableSupabase={supabaseConfig.enabled}
+                                funnelId={supabaseConfig.funnelId}
+                                quizId={supabaseConfig.quizId}
+                                storageKey={supabaseConfig.storageKey}
+                                initial={initialStep ? { currentStep: initialStep } : undefined}
                             >
-                                <EditorQuizProvider>
-                                    <Quiz21StepsProvider debug={debugMode} initialStep={initialStep}>
-                                        <QuizFlowProvider initialStep={initialStep} totalSteps={21}>
-                                            <FunnelValidatedEditor
-                                                templateId={resolvedTemplateId || undefined}
-                                                funnelId={funnelId || undefined}
-                                                debugMode={debugMode}
-                                            />
-                                        </QuizFlowProvider>
-                                    </Quiz21StepsProvider>
-                                </EditorQuizProvider>
-                            </LegacyCompatibilityWrapper>
-                        </EditorProvider>
-                    </FunnelsProvider>
-                </UnifiedFunnelProvider>
+                                <LegacyCompatibilityWrapper
+                                    enableWarnings={debugMode}
+                                    initialContext={FunnelContext.EDITOR}
+                                >
+                                    <EditorQuizProvider>
+                                        <Quiz21StepsProvider debug={debugMode} initialStep={initialStep}>
+                                            <QuizFlowProvider initialStep={initialStep} totalSteps={21}>
+                                                <FunnelValidatedEditor
+                                                    templateId={resolvedTemplateId || undefined}
+                                                    funnelId={funnelId || undefined}
+                                                    debugMode={debugMode}
+                                                />
+                                            </QuizFlowProvider>
+                                        </Quiz21StepsProvider>
+                                    </EditorQuizProvider>
+                                </LegacyCompatibilityWrapper>
+                            </EditorProvider>
+                        </FunnelsProvider>
+                    </UnifiedFunnelProvider>
+                )}
             </ErrorBoundary>
         </div>
     );
@@ -595,49 +612,6 @@ const EditorInitializerUnified: React.FC<{
                 </div>
             </div>
         );
-        <p className="text-xs text-gray-400 mt-2 font-mono">
-            Template: {templateId || 'default'} | Funnel: {funnelId || 'none'}
-        </p>
-                        )}
-                    </div >
-                </div >
-            );
-        }
-
-// ✅ Editor carregado com sucesso
-if (UnifiedEditorComp) {
-    console.log('🎯 [EDITOR] Renderizando editor carregado');
-
-    return (
-        <div>
-            {fallbackMode && (
-                <div className="bg-yellow-50 border-b border-yellow-200 px-4 py-2">
-                    <p className="text-sm text-yellow-800 text-center">
-                        ⚠️ Executando em modo de compatibilidade
-                    </p>
-                </div>
-            )}
-            <UnifiedEditorComp />
-        </div>
-    );
-}
-
-// 🚫 Estado impossível - fallback final
-return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50">
-        <div className="text-center">
-            <p className="text-gray-600 text-lg">
-                Estado inesperado do editor.
-                <button
-                    onClick={handleRetry}
-                    className="text-blue-600 hover:text-blue-800 underline ml-1"
-                >
-                    Clique aqui para tentar novamente
-                </button>
-            </p>
-        </div>
-    </div>
-);
     };
 
 export default MainEditorUnified;
