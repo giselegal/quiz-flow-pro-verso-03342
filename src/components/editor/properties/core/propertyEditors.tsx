@@ -17,6 +17,7 @@ import ResponsiveColumnsEditor from './ResponsiveColumnsEditor';
 import BoxModelEditor from './BoxModelEditor';
 import EnhancedUploadEditor from './EnhancedUploadEditor';
 import AnimationPreviewEditor from './AnimationPreviewEditor';
+import AlignmentEditor from './AlignmentEditor';
 import CanvasContainerPropertyEditor from '../editors/CanvasContainerPropertyEditor';
 import { useCanvasContainerStyles } from '@/hooks/useCanvasContainerStyles';
 import React from 'react';
@@ -598,6 +599,7 @@ export const propertyEditors: PropertyEditorRegistry = {
   padding: BoxModelEditor,
   upload: EnhancedUploadEditor,
   animation: AnimationPreviewEditor,
+  alignment: AlignmentEditor,
   canvasContainer: CanvasContainerWrapper,
 };
 
