@@ -72,13 +72,13 @@ graph TD
     B -->|Preview quebrado| E[📋 Debug Templates]
     B -->|Performance lenta| F[📊 Debug Métricas]
     
-    C --> C1[Check FunnelsProvider]
-    C --> C2[Check EditorContext]
+    C --> C1[Check UnifiedFunnelProvider]
+    C --> C2[Check ContextualFunnelService]
     C1 --> C3[✅ Context Fix]
     C2 --> C3
     
-    D --> D1[Check Supabase Connection]
-    D --> D2[Check Validation Errors]
+    D --> D1[Check AdvancedFunnelStorage]
+    D --> D2[Check Context Isolation]
     D1 --> D3[✅ Network Fix]
     D2 --> D3
     
@@ -87,8 +87,8 @@ graph TD
     E1 --> E3[✅ Template Fix]
     E2 --> E3
     
-    F --> F1[Check EditorMetricsProvider]
-    F --> F2[Check Performance Hooks]
+    F --> F1[Check AdvancedAnalytics]
+    F --> F2[Check AnalyticsDashboard]
     F1 --> F3[✅ Metrics Fix]
     F2 --> F3
     
@@ -267,15 +267,37 @@ graph TB
 graph TD
     A[❌ Editor não carrega] --> B{Check Console}
     
-    B -->|Context Error| C[🔍 FunnelsProvider missing?]
-    B -->|Network Error| D[🌐 Supabase connection?]
-    B -->|Permission Error| E[🔐 User authenticated?]
+    B -->|Context Error| C[🔍 UnifiedFunnelProvider missing?]
+    B -->|Network Error| D[🌐 AdvancedFunnelStorage connection?]
+    B -->|Permission Error| E[🔐 Context isolation issue?]
     
-    C --> C1[✅ Add FunnelsProvider wrapper]
-    D --> D1[✅ Check .env.local]
-    E --> E1[✅ Login first]
+    C --> C1[✅ Add UnifiedFunnelProvider wrapper]
+    D --> D1[✅ Check IndexedDB permissions]
+    E --> E1[✅ Verify FunnelContext enum]
     
     C1 --> F[✅ Editor loads]
+    D1 --> F
+    E1 --> F
+    
+    style A fill:#ffebee
+    style F fill:#e8f5e8
+```
+
+### **Problema: Context Isolation Issues**
+
+```mermaid
+graph TD
+    A[❌ Dados vazando entre contextos] --> B{Qual contexto?}
+    
+    B -->|MY_FUNNELS| C[🎯 useMyFunnelsPersistence]
+    B -->|EDITOR| D[✏️ useEditorPersistence]
+    B -->|TEMPLATES| E[📋 useTemplatesPersistence]
+    
+    C --> C1[✅ Verify context namespace]
+    D --> D1[✅ Check ContextualFunnelService]
+    E --> E1[✅ Validate context isolation]
+    
+    C1 --> F[✅ Context isolated]
     D1 --> F
     E1 --> F
     
@@ -287,15 +309,15 @@ graph TD
 
 ```mermaid
 graph TD
-    A[❌ Auto-save failing] --> B{Check Network Tab}
+    A[❌ Auto-save failing] --> B{Check Storage}
     
-    B -->|403 Forbidden| C[🔐 Permission check]
-    B -->|400 Bad Request| D[📝 Validation error]
-    B -->|500 Server Error| E[🏗️ Service issue]
+    B -->|IndexedDB Error| C[🔐 AdvancedFunnelStorage check]
+    B -->|Context Error| D[📝 Wrong context isolation]
+    B -->|Validation Error| E[🏗️ Schema validation issue]
     
-    C --> C1[✅ Verify user owns funnel]
-    D --> D1[✅ Check schema validation]
-    E --> E1[✅ Check service logs]
+    C --> C1[✅ Verify IndexedDB permissions]
+    D --> D1[✅ Check FunnelContext enum]
+    E --> E1[✅ Check service validation]
     
     C1 --> F[✅ Auto-save works]
     D1 --> F
@@ -304,6 +326,45 @@ graph TD
     style A fill:#ffebee
     style F fill:#e8f5e8
 ```
+
+---
+
+## 🏗️ **Arquitetura Moderna - Para Desenvolvedores Avançados**
+
+```mermaid
+graph LR
+    subgraph "🖥️ UI LAYER"
+        A[FunnelPanelPage] --> B[MyFunnelsPage]
+        B --> C[MainEditorUnified]
+        C --> D[AnalyticsPage]
+    end
+    
+    subgraph "🎯 CONTEXT LAYER"
+        E[FunnelContext.EDITOR] --> F[FunnelContext.MY_FUNNELS]
+        F --> G[FunnelContext.TEMPLATES]
+        G --> H[useContextualEditorPersistence]
+    end
+    
+    subgraph "⚙️ SERVICE LAYER"
+        I[AdvancedFunnelStorage] --> J[ContextualFunnelService]
+        J --> K[UnifiedFunnelProvider]
+    end
+    
+    subgraph "💾 DATA LAYER"
+        L[(IndexedDB)] --> M[(localStorage)]
+        M --> N[(Supabase)]
+    end
+    
+    A --> H
+    H --> E
+    I --> L
+    
+    style D fill:#4caf50,color:white
+    style K fill:#4caf50,color:white
+    style N fill:#4caf50,color:white
+```
+
+**🎯 Foco:** Context isolation, advanced storage, modern architecture patterns
 
 ---
 
@@ -417,5 +478,6 @@ graph TB
 
 ---
 
-**📝 Documento criado:** `{{ new Date().toLocaleDateString('pt-BR') }}`  
-**🎯 Status:** ✅ **Fluxogramas de onboarding implementados e validados**
+**📝 Documento criado:** `11/09/2025`  
+**🎯 Status:** ✅ **Fluxogramas de onboarding implementados e validados**  
+**🔧 Última atualização:** `Alinhamento com arquitetura moderna (AdvancedFunnelStorage + Context Isolation)`

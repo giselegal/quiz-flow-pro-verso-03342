@@ -146,8 +146,8 @@ const AnalyticsPage: React.FC = () => {
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={`group py-4 px-1 border-b-2 font-medium text-sm flex items-center gap-2 ${activeTab === tab.id
-                    ? 'border-[#B89B7A] text-[#B89B7A]'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-[#B89B7A] text-[#B89B7A]'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                   }`}
               >
                 <Icon className="w-4 h-4" />
