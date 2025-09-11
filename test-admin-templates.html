@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,23 +11,27 @@
             margin: 20px;
             background: #f5f5f5;
         }
+
         .template-card {
             background: white;
             border-radius: 8px;
             padding: 15px;
             margin: 10px 0;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+
         .template-title {
             font-size: 18px;
             font-weight: bold;
             color: #333;
         }
+
         .template-id {
             color: #666;
             font-size: 14px;
             margin-top: 5px;
         }
+
         .test-btn {
             background: #007bff;
             color: white;
@@ -36,15 +41,17 @@
             cursor: pointer;
             margin-top: 10px;
         }
+
         .test-btn:hover {
             background: #0056b3;
         }
     </style>
 </head>
+
 <body>
     <h1>Teste de Templates Admin</h1>
     <p>Este teste verifica se os templates do <code>unifiedTemplatesRegistry</code> estão funcionando corretamente.</p>
-    
+
     <div id="templates-container">
         <p>Carregando templates...</p>
     </div>
@@ -103,7 +110,7 @@
         ];
 
         const container = document.getElementById('templates-container');
-        
+
         container.innerHTML = templates.map(template => `
             <div class="template-card">
                 <div class="template-title">${template.title}</div>
@@ -115,10 +122,10 @@
             </div>
         `).join('');
 
-        window.testTemplate = function(templateId) {
+        window.testTemplate = function (templateId) {
             const editorUrl = `/editor/${templateId}`;
             console.log(`🔗 Testando template: ${templateId} -> ${editorUrl}`);
-            
+
             // Verificar se a página admin consegue abrir o template
             window.open(editorUrl, '_blank');
         };
@@ -126,4 +133,5 @@
         console.log('✅ Templates carregados:', templates.length);
     </script>
 </body>
+
 </html>
