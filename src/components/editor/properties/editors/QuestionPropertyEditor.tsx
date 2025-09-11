@@ -71,9 +71,9 @@ const questionTooltips = {
 };
 
 // Simple tooltip component
-const TooltipHelper: React.FC<{ content: string; children: React.ReactNode }> = ({ 
-  content, 
-  children 
+const TooltipHelper: React.FC<{ content: string; children: React.ReactNode }> = ({
+  content,
+  children
 }) => (
   <div className="relative group inline-block">
     {children}
@@ -310,7 +310,7 @@ export const QuestionPropertyEditor: React.FC<QuestionPropertyEditorProps> = ({
   ];
 
   return (
-    <div className="h-full flex flex-col bg-gray-900">
+    <div className="properties-panel h-full flex flex-col bg-gray-900">
       {/* Header */}
       <div className="border-b border-gray-700 p-4">
         <div className="flex items-center justify-between">
@@ -386,17 +386,17 @@ export const QuestionPropertyEditor: React.FC<QuestionPropertyEditorProps> = ({
 
           {/* CONTEÚDO */}
           <TabsContent value="content" className="space-y-6">
-            <Card>
+            <Card className="bg-gray-800 border-gray-700">
               <CardHeader>
-                <CardTitle className="text-base flex items-center gap-2">
+                <CardTitle className="text-base flex items-center gap-2 text-white">
                   <Type className="w-4 h-4" />
                   Pergunta Principal
                   <TooltipHelper content={questionTooltips.title.content}>
-                    <HelpCircle className="w-3 h-3 text-gray-400 hover:text-gray-600 cursor-help" />
+                    <HelpCircle className="w-3 h-3 text-gray-400 hover:text-gray-300 cursor-help" />
                   </TooltipHelper>
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-4">{/* Conteúdo continua igual */}
                 <div className="space-y-2">
                   <Label htmlFor="question">Texto da Pergunta</Label>
                   <Textarea

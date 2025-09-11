@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { pickPropertyEditor } from './core/propertyEditors';
 import { useUnifiedProperties, PropertyCategory } from '@/hooks/useUnifiedProperties';
+import { QuestionPropertyEditor } from './editors/QuestionPropertyEditor';
 import type { Block } from '@/types/editor';
 import {
   Copy,
@@ -73,6 +74,54 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
     );
   }
 
+  // 🎯 ROTEAMENTO CONDICIONAL: Usar QuestionPropertyEditor para blocos de questão
+  const isQuestionBlock = selectedBlock.type === 'quiz-question-inline' ||
+    selectedBlock.type === 'options-grid' ||
+    selectedBlock.type === 'form-input' ||
+    selectedBlock.type === 'quiz-header' ||
+    selectedBlock.type === 'quiz-navigation';
+
+  if (isQuestionBlock) {
+    // Adaptar Block para o formato esperado pelo QuestionPropertyEditor
+    const questionBlock = {
+      id: selectedBlock.id,
+      type: selectedBlock.type,
+      properties: {
+        question: selectedBlock.properties?.question || selectedBlock.properties?.text || '',
+        title: selectedBlock.properties?.title || '',
+        text: selectedBlock.properties?.text || selectedBlock.properties?.question || '',
+        description: selectedBlock.properties?.description || '',
+        options: selectedBlock.properties?.options || [],
+        multipleSelection: selectedBlock.properties?.multipleSelection || false,
+        requiredSelections: selectedBlock.properties?.requiredSelections || 1,
+        maxSelections: selectedBlock.properties?.maxSelections || 1,
+        showImages: selectedBlock.properties?.showImages || false,
+        columns: selectedBlock.properties?.columns || 2,
+        backgroundColor: selectedBlock.properties?.backgroundColor || '',
+        textAlign: selectedBlock.properties?.textAlign || 'left',
+        fontSize: selectedBlock.properties?.fontSize || '',
+        color: selectedBlock.properties?.color || '',
+        scoreValues: selectedBlock.properties?.scoreValues || {},
+        ...selectedBlock.properties
+      },
+      content: selectedBlock.content
+    };
+
+    return (
+      <QuestionPropertyEditor
+        block={questionBlock}
+        onUpdate={(updates) => {
+          if (onUpdate) {
+            // Converter de volta para formato Block
+            onUpdate(updates);
+          }
+        }}
+        onDelete={onDelete}
+        isPreviewMode={false}
+      />
+    );
+  }
+
   // Conectar ao schema unificado
   const { properties, updateProperty, getPropertiesByCategory, validateProperties, applyBrandColors } = useUnifiedProperties(
     selectedBlock.type,
@@ -102,7 +151,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
 
   return (
     <TooltipProvider>
-      <Card className="h-full border-0 shadow-xl bg-gradient-to-br from-gray-900 to-gray-800 flex flex-col transition-all duration-300">
+      <Card className="properties-panel h-full border-0 shadow-xl bg-gradient-to-br from-gray-900 to-gray-800 flex flex-col transition-all duration-300">
         {/* Header modernizado */}
         <CardHeader className="pb-4 border-b border-gray-700">
           <div className="flex items-center justify-between mb-3">
@@ -255,95 +304,98 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
           </div>
         </CardHeader>
 
-        <CardContent className="flex-1 px-0">
-          {filteredProps ? (
-            <div className="px-4 space-y-4">
-              <div className="flex items-center justify-between">
-                <p className="text-sm font-medium text-gray-300">
-                  {filteredProps.length} {filteredProps.length === 1 ? 'propriedade encontrada' : 'propriedades encontradas'}
-                </p>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setSearchTerm('')}
-                  className="text-xs text-gray-400 hover:text-white"
-                >
-                  Limpar busca
-                </Button>
-              </div>
-              {filteredProps.length > 0 ? (
-                <div className="space-y-4">
-                  {filteredProps.map(prop => {
-                    const Editor = pickPropertyEditor(prop as any);
-                    return (
-                      <div key={prop.key} className="bg-gray-800 rounded-lg p-3 shadow-sm border border-gray-700 hover:border-gray-600 transition-colors">
-                        <Editor property={prop as any} onChange={updateProperty} />
-                      </div>
-                    );
-                  })}
-                </div>
-              ) : (
-                <div className="text-center py-12">
-                  <Search className="w-12 h-12 text-gray-500 mx-auto mb-3" />
-                  <p className="text-gray-500 text-sm">Nenhuma propriedade encontrada</p>
+        {/* Conteúdo com scroll otimizado e fontes claras */}
+        <CardContent className="flex-1 px-0 overflow-hidden">
+          <div className="h-full overflow-y-auto scrollbar-thin scrollbar-track-gray-800 scrollbar-thumb-gray-600 hover:scrollbar-thumb-gray-500">
+            {filteredProps ? (
+              <div className="px-4 space-y-4 pb-6">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-medium text-gray-200">
+                    {filteredProps.length} {filteredProps.length === 1 ? 'propriedade encontrada' : 'propriedades encontradas'}
+                  </p>
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={() => setSearchTerm('')}
-                    className="mt-2 text-xs text-gray-400 hover:text-white"
+                    className="text-xs text-gray-300 hover:text-white hover:bg-gray-700"
                   >
                     Limpar busca
                   </Button>
                 </div>
-              )}
-            </div>
-          ) : (
-            <div className="space-y-6">
-              {categories.map(cat => {
-                const meta = CATEGORY_META[cat] || { icon: Settings, label: String(cat) };
-                const Icon = meta.icon;
-                const propsInCat = getPropertiesByCategory(cat);
-
-                if (propsInCat.length === 0) return null;
-
-                return (
-                  <div
-                    key={String(cat)}
-                    className="border-b border-gray-700 last:border-b-0"
-                  >
-                    <div className="px-4 py-3 bg-gradient-to-r from-gray-800 to-gray-800/50">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 bg-gradient-to-br from-blue-500/10 to-blue-600/5 rounded-lg flex items-center justify-center">
-                          <Icon className="w-4 h-4 text-blue-400" />
+                {filteredProps.length > 0 ? (
+                  <div className="space-y-4">
+                    {filteredProps.map(prop => {
+                      const Editor = pickPropertyEditor(prop as any);
+                      return (
+                        <div key={prop.key} className="bg-gray-800/80 rounded-lg p-3 shadow-sm border border-gray-700 hover:border-gray-600 transition-colors backdrop-blur-sm">
+                          <Editor property={prop as any} onChange={updateProperty} />
                         </div>
-                        <div className="text-left flex-1">
-                          <h3 className="font-medium text-white">{meta.label}</h3>
-                          {meta.description && (
-                            <p className="text-xs text-gray-400">{meta.description}</p>
-                          )}
-                        </div>
-                        <Badge variant="secondary" className="bg-blue-500/10 text-blue-300 border-blue-500/20">
-                          {propsInCat.length}
-                        </Badge>
-                      </div>
-                    </div>
-                    <div className="px-4 pb-4 pt-4">
-                      <div className="space-y-4">
-                        {propsInCat.map(prop => {
-                          const Editor = pickPropertyEditor(prop as any);
-                          return (
-                            <div key={prop.key} className="bg-gray-800 rounded-lg p-3 shadow-sm border border-gray-700 hover:border-gray-600 transition-colors">
-                              <Editor property={prop as any} onChange={updateProperty} />
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
+                      );
+                    })}
                   </div>
-                );
-              })}
-            </div>
-          )}
+                ) : (
+                  <div className="text-center py-12">
+                    <Search className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+                    <p className="text-gray-300 text-sm">Nenhuma propriedade encontrada</p>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setSearchTerm('')}
+                      className="mt-2 text-xs text-gray-300 hover:text-white hover:bg-gray-700"
+                    >
+                      Limpar busca
+                    </Button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="space-y-6 pb-6">
+                {categories.map(cat => {
+                  const meta = CATEGORY_META[cat] || { icon: Settings, label: String(cat) };
+                  const Icon = meta.icon;
+                  const propsInCat = getPropertiesByCategory(cat);
+
+                  if (propsInCat.length === 0) return null;
+
+                  return (
+                    <div
+                      key={String(cat)}
+                      className="border-b border-gray-700/50 last:border-b-0"
+                    >
+                      <div className="px-4 py-3 bg-gradient-to-r from-gray-800/60 to-gray-800/30 backdrop-blur-sm">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 bg-gradient-to-br from-blue-500/15 to-blue-600/10 rounded-lg flex items-center justify-center border border-blue-500/20">
+                            <Icon className="w-4 h-4 text-blue-300" />
+                          </div>
+                          <div className="text-left flex-1">
+                            <h3 className="font-semibold text-gray-100 text-sm">{meta.label}</h3>
+                            {meta.description && (
+                              <p className="text-xs text-gray-300 mt-0.5">{meta.description}</p>
+                            )}
+                          </div>
+                          <Badge variant="secondary" className="bg-blue-500/15 text-blue-200 border-blue-500/25 text-xs">
+                            {propsInCat.length}
+                          </Badge>
+                        </div>
+                      </div>
+                      <div className="px-4 pb-4 pt-4">
+                        <div className="space-y-4">
+                          {propsInCat.map(prop => {
+                            const Editor = pickPropertyEditor(prop as any);
+                            return (
+                              <div key={prop.key} className="bg-gray-800/80 rounded-lg p-3 shadow-sm border border-gray-700/80 hover:border-gray-600 transition-all duration-200 backdrop-blur-sm hover:bg-gray-800/90">
+                                <Editor property={prop as any} onChange={updateProperty} />
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
         </CardContent>
       </Card>
     </TooltipProvider>
