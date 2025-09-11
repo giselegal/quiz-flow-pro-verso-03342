@@ -10,6 +10,7 @@ import { QuestionPropertyEditor } from "./editors/QuestionPropertyEditor";
 import { CanvasContainerPropertyEditor } from "./editors/CanvasContainerPropertyEditor";
 import { useCanvasContainerStyles } from "@/hooks/useCanvasContainerStyles";
 import type { Block } from '@/types/editor';
+import './PropertiesPanel.css';
 import {
   Copy,
   Eye,
@@ -309,7 +310,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
 
         {/* Conteúdo com scroll vertical otimizado e fontes com contraste */}
         <CardContent className="flex-1 px-0 overflow-hidden">
-          <ScrollArea className="h-full">
+          <ScrollArea className="h-full scroll-area">
             <div className="px-4 space-y-4 pb-6">
               {filteredProps ? (
                 <>
@@ -326,80 +327,81 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
                       Limpar busca
                     </Button>
                   </div>
-                {filteredProps.length > 0 ? (
-                  <div className="space-y-4">
-                    {filteredProps.map(prop => {
-                      const Editor = pickPropertyEditor(prop as any);
-                      return (
-                        <div key={prop.key} className="bg-gray-800/80 rounded-lg p-3 shadow-sm border border-gray-700 hover:border-gray-600 transition-colors backdrop-blur-sm">
-                          <Editor property={prop as any} onChange={updateProperty} />
-                        </div>
-                      );
-                    })}
-                  </div>
-                ) : (
-                  <div className="text-center py-12">
-                    <Search className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-                    <p className="text-gray-300 text-sm">Nenhuma propriedade encontrada</p>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setSearchTerm('')}
-                      className="mt-2 text-xs text-gray-300 hover:text-white hover:bg-gray-700"
-                    >
-                      Limpar busca
-                    </Button>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div className="space-y-6 pb-6">
-                {categories.map(cat => {
-                  const meta = CATEGORY_META[cat] || { icon: Settings, label: String(cat) };
-                  const Icon = meta.icon;
-                  const propsInCat = getPropertiesByCategory(cat);
-
-                  if (propsInCat.length === 0) return null;
-
-                  return (
-                    <div
-                      key={String(cat)}
-                      className="border-b border-gray-700/50 last:border-b-0"
-                    >
-                      <div className="px-4 py-3 bg-gradient-to-r from-gray-800/60 to-gray-800/30 backdrop-blur-sm">
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 bg-gradient-to-br from-blue-500/15 to-blue-600/10 rounded-lg flex items-center justify-center border border-blue-500/20">
-                            <Icon className="w-4 h-4 text-blue-300" />
+                  {filteredProps.length > 0 ? (
+                    <div className="space-y-4">
+                      {filteredProps.map(prop => {
+                        const Editor = pickPropertyEditor(prop as any);
+                        return (
+                          <div key={prop.key} className="bg-gray-800/80 rounded-lg p-3 shadow-sm border border-gray-700 hover:border-gray-600 transition-colors backdrop-blur-sm">
+                            <Editor property={prop as any} onChange={updateProperty} />
                           </div>
-                          <div className="text-left flex-1">
-                            <h3 className="font-semibold text-gray-100 text-sm">{meta.label}</h3>
-                            {meta.description && (
-                              <p className="text-xs text-gray-300 mt-0.5">{meta.description}</p>
-                            )}
-                          </div>
-                          <Badge variant="secondary" className="bg-blue-500/15 text-blue-200 border-blue-500/25 text-xs">
-                            {propsInCat.length}
-                          </Badge>
-                        </div>
-                      </div>
-                      <div className="px-4 pb-4 pt-4">
-                        <div className="space-y-4">
-                          {propsInCat.map(prop => {
-                            const Editor = pickPropertyEditor(prop as any);
-                            return (
-                              <div key={prop.key} className="bg-gray-800/80 rounded-lg p-3 shadow-sm border border-gray-700/80 hover:border-gray-600 transition-all duration-200 backdrop-blur-sm hover:bg-gray-800/90">
-                                <Editor property={prop as any} onChange={updateProperty} />
-                              </div>
-                            );
-                          })}
-                        </div>
-                      </div>
+                        );
+                      })}
                     </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
+                  ) : (
+                    <div className="text-center py-12">
+                      <Search className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+                      <p className="text-white text-sm font-medium">Nenhuma propriedade encontrada</p>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setSearchTerm('')}
+                        className="mt-2 text-xs text-gray-300 hover:text-white hover:bg-gray-700"
+                      >
+                        Limpar busca
+                      </Button>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div className="space-y-6">
+                  {categories.map(cat => {
+                    const meta = CATEGORY_META[cat] || { icon: Settings, label: String(cat) };
+                    const Icon = meta.icon;
+                    const propsInCat = getPropertiesByCategory(cat);
+
+                    if (propsInCat.length === 0) return null;
+
+                    return (
+                      <div
+                        key={String(cat)}
+                        className="border-b border-gray-700/50 last:border-b-0"
+                      >
+                        <div className="py-3 bg-gradient-to-r from-gray-800/60 to-gray-800/30 backdrop-blur-sm">
+                          <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 bg-gradient-to-br from-blue-500/15 to-blue-600/10 rounded-lg flex items-center justify-center border border-blue-500/20">
+                              <Icon className="w-4 h-4 text-blue-300" />
+                            </div>
+                            <div className="text-left flex-1">
+                              <h3 className="font-semibold text-white text-sm">{meta.label}</h3>
+                              {meta.description && (
+                                <p className="text-xs text-gray-200 mt-0.5">{meta.description}</p>
+                              )}
+                            </div>
+                            <Badge variant="secondary" className="bg-blue-500/15 text-blue-200 border-blue-500/25 text-xs">
+                              {propsInCat.length}
+                            </Badge>
+                          </div>
+                        </div>
+                        <div className="pb-4 pt-4">
+                          <div className="space-y-4">
+                            {propsInCat.map(prop => {
+                              const Editor = pickPropertyEditor(prop as any);
+                              return (
+                                <div key={prop.key} className="bg-gray-800/80 rounded-lg p-3 shadow-sm border border-gray-700/80 hover:border-gray-600 transition-all duration-200 backdrop-blur-sm hover:bg-gray-800/90">
+                                  <Editor property={prop as any} onChange={updateProperty} />
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          </ScrollArea>
         </CardContent>
       </Card>
     </TooltipProvider>
@@ -434,13 +436,13 @@ export const PropertiesPanel: React.FC<{ selectedBlock?: any; onUpdate?: (update
   // Se não há bloco selecionado, mostra editor de canvas/container
   if (!selectedBlock) {
     return (
-      <div className="w-80 bg-slate-900 border-l border-slate-700 flex flex-col h-full overflow-hidden">
+      <div className="properties-panel w-80 bg-slate-900 border-l border-slate-700 flex flex-col h-full overflow-hidden">
         <div className="p-4 border-b border-slate-700">
-          <h2 className="text-sm font-semibold text-slate-200">Canvas & Container</h2>
-          <p className="text-xs text-slate-400 mt-1">Editar cores e estilos do canvas</p>
+          <h2 className="text-sm font-semibold text-white">Canvas & Container</h2>
+          <p className="text-xs text-slate-300 mt-1">Editar cores e estilos do canvas</p>
         </div>
 
-        <ScrollArea className="flex-1 p-4 overflow-auto">
+        <ScrollArea className="flex-1 p-4 scroll-area">
           <CanvasContainerPropertyEditor
             properties={styles as any}
             onUpdate={handleContainerUpdate}
@@ -454,31 +456,35 @@ export const PropertiesPanel: React.FC<{ selectedBlock?: any; onUpdate?: (update
   // Para blocos de questão, usa o QuestionPropertyEditor
   if (isQuestionBlock && unifiedProps?.properties && unifiedProps.properties.length > 0) {
     return (
-      <div className="w-80 bg-slate-900 border-l border-slate-700 flex flex-col h-full overflow-hidden">
+      <div className="properties-panel w-80 bg-slate-900 border-l border-slate-700 flex flex-col h-full overflow-hidden">
         <div className="p-4 border-b border-slate-700">
-          <h2 className="text-sm font-semibold text-slate-200">{selectedBlock.type.replace('_', ' ').toUpperCase()}</h2>
-          <p className="text-xs text-slate-400 mt-1">Propriedades da questão</p>
+          <h2 className="text-sm font-semibold text-white">{selectedBlock.type.replace('_', ' ').toUpperCase()}</h2>
+          <p className="text-xs text-slate-300 mt-1">Propriedades da questão</p>
         </div>
 
-        <ScrollArea className="flex-1 p-4 overflow-auto">
+        <ScrollArea className="flex-1 p-4 scroll-area">
           <QuestionPropertyEditor
             block={selectedBlock as any}
-            onChange={(key: string, value: any) => unifiedProps?.updateProperty(key, value)}
+            onUpdate={(updates: any) => {
+              if (onUpdate) {
+                onUpdate(updates);
+              }
+            }}
           />
         </ScrollArea>
       </div>
     );
   }  // Fallback para outros blocos usando editor padrão
   return (
-    <div className="w-80 bg-slate-900 border-l border-slate-700 flex flex-col h-full overflow-hidden">
+    <div className="properties-panel w-80 bg-slate-900 border-l border-slate-700 flex flex-col h-full overflow-hidden">
       <div className="p-4 border-b border-slate-700">
-        <h2 className="text-sm font-semibold text-slate-200">
+        <h2 className="text-sm font-semibold text-white">
           {selectedBlock?.type || 'Propriedades'}
         </h2>
-        <p className="text-xs text-slate-400 mt-1">Configure o elemento</p>
+        <p className="text-xs text-slate-300 mt-1">Configure o elemento</p>
       </div>
 
-      <ScrollArea className="flex-1 p-4 overflow-auto">
+      <ScrollArea className="flex-1 p-4 scroll-area">
         <EnhancedPropertiesPanel
           selectedBlock={selectedBlock as any}
           onUpdate={onUpdate}
