@@ -6,9 +6,13 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import RealTimeDashboard from '@/components/dashboard/RealTimeDashboard';
-import AnalyticsDashboard from '@/components/analytics/AnalyticsDashboard';
+// OTIMIZAÇÕES: Usar componentes avançados ao invés dos básicos
+import AdvancedAnalytics from '@/components/dashboard/AdvancedAnalytics';
+import { AnalyticsDashboard } from '@/components/admin/analytics/AdvancedAnalytics';
 import ABTestComparison from '@/components/analytics/ABTestComparison';
+// OTIMIZAÇÕES: Usar serviços avançados de analytics
+import { QuizAnalyticsService } from '@/services/core/QuizAnalyticsService';
+import * as realTimeAnalytics from '@/services/realTimeAnalytics';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -188,16 +192,13 @@ const AnalyticsPage: React.FC = () => {
       <div className="min-h-[600px]">
         {activeTab === 'dashboard' && (
           <div>
-            <RealTimeDashboard />
+            <AdvancedAnalytics />
           </div>
         )}
 
         {activeTab === 'advanced' && isAdvancedMode && (
           <div>
-            <AnalyticsDashboard
-              quizId={selectedQuizId}
-              className="bg-white border border-[#E5DDD5] rounded-lg"
-            />
+            <AnalyticsDashboard />
           </div>
         )}
 
