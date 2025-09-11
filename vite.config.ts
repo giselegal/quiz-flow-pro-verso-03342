@@ -4,7 +4,7 @@ import { defineConfig } from 'vite';
 
 // Configuração OTIMIZADA para funcionar com Lovable
 export default defineConfig({
-  base: './',
+  base: '/',
   plugins: [react()],
   resolve: {
     alias: {
