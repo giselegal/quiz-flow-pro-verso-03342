@@ -13,8 +13,8 @@ export const BUILDER_EXAMPLES_DISABLED = true;
 
 // Placeholder para manter compatibilidade
 export const examples = {
-  disabled: true,
-  message: 'Builder examples temporarily disabled for build stability'
+    disabled: true,
+    message: 'Builder examples temporarily disabled for build stability'
 };
 
 // Comentando imports não disponíveis para corrigir erros de build
