@@ -14,7 +14,6 @@ import {
     AlignRight,
     AlignJustify,
     Rows,
-    Columns,
     ArrowUp,
     ArrowDown,
     ArrowLeft,

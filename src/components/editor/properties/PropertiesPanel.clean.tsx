@@ -73,12 +73,11 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
         );
     }
 
-    // Conectar ao schema unificado
+    // Conectar ao schema unificado  
     const { properties, updateProperty, getPropertiesByCategory, validateProperties, applyBrandColors } = useUnifiedProperties(
         selectedBlock.type,
         selectedBlock.id,
-        selectedBlock as any,
-        onUpdate
+        selectedBlock as any
     );
 
     const categories = [
