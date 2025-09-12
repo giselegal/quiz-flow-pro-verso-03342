@@ -49,11 +49,10 @@ const CATEGORY_META: Record<string, { icon: any; label: string; description?: st
 
 const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
     selectedBlock,
-    onUpdate,
+    onClose,
     onDelete,
     onDuplicate,
     onReset,
-    onClose,
     previewMode = 'desktop',
     onPreviewModeChange,
 }) => {

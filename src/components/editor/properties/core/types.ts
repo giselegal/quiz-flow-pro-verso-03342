@@ -7,6 +7,7 @@ export interface BaseProperty {
   category: PropertyCategory;
   value: any;
   defaultValue?: any;
+  description?: string; // Add optional description property
   validation?: (value: any) => boolean | string;
 }
 

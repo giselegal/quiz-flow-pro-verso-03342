@@ -1,83 +1,66 @@
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
-import React, { Suspense, lazy } from 'react';
+import React from 'react';
 import { Route, Switch } from 'wouter';
-import { AdminSidebar } from '../../components/admin/AdminSidebar';
+import { LovableAdminLayout } from '@/components/lovable/LovableAdminLayout';
 
-// Lazy loading das páginas do dashboard
-const DashboardOverview = lazy(() => import('./ConsolidatedOverviewPage'));
-const QuizPage = lazy(() => import('./QuizPage'));
-const FunnelPanelPage = lazy(() => import('./FunnelPanelPage'));
-const MyFunnelsPage = lazy(() => import('./MyFunnelsPage'));
-const MyTemplatesPage = lazy(() => import('./MyTemplatesPage'));
-const ABTestPage = lazy(() => import('./ABTestPage'));
-const SettingsPage = lazy(() => import('./SettingsPage'));
-const CreativesPage = lazy(() => import('./CreativesPage'));
-const AnalyticsPage = lazy(() => import('./AnalyticsPage'));
-const ParticipantsPage = lazy(() => import('./ParticipantsPage'));
-const MetricsPage = lazy(() => import('./MetricsPage'));
-const NoCodeConfigPage = lazy(() => import('./NoCodeConfigPage'));
-const EditorPage = lazy(() => import('./EditorPage'));
-const FunnelSettingsPage = lazy(() => import('./FunnelSettingsPage'));
-const FunnelSystemDebugger = lazy(() => import('./FunnelSystemDebugger'));
-const IAInsightsPage = lazy(() => import('./IAInsightsPage'));
-
-// Componente de loading
-const LoadingFallback = () => (
-  <div className="flex items-center justify-center h-64">
-    <div className="text-center">
-      <LoadingSpinner size="lg" color="#B89B7A" className="mx-auto" />
-      <p style={{ color: '#6B4F43' }}>Carregando...</p>
-    </div>
-  </div>
-);
-
-const DashboardPage: React.FC = () => {
+const DashboardPage = () => {
   return (
-    <div className="min-h-screen flex bg-[#FAF9F7]">
-      {/* Sidebar */}
-      <AdminSidebar />
-
-      {/* Conteúdo principal */}
-      <div className="flex-1 overflow-hidden">
-        <main className="h-full overflow-y-auto">
-          <Suspense fallback={<LoadingFallback />}>
-            <Switch>
-              {/* Rota principal - Overview */}
-              <Route path="/admin" component={DashboardOverview} />
-              <Route path="/admin/" component={DashboardOverview} />
-
-              {/* Rotas do dashboard */}
-              <Route path="/admin/quiz" component={QuizPage} />
-              <Route path="/admin/quizzes" component={QuizPage} />
-              <Route path="/admin/funis" component={FunnelPanelPage} />
-              <Route path="/admin/funnels" component={FunnelPanelPage} />
-              <Route path="/admin/funil" component={FunnelPanelPage} />
-              <Route path="/admin/meus-funis" component={MyFunnelsPage} />
-              <Route path="/admin/meus-templates" component={MyTemplatesPage} />
-              <Route path="/admin/participantes" component={ParticipantsPage} />
-              <Route path="/admin/leads" component={ParticipantsPage} />
-              <Route path="/admin/metricas" component={MetricsPage} />
-              <Route path="/admin/configuracao" component={NoCodeConfigPage} />
-              <Route path="/admin/ab-tests" component={ABTestPage} />
-              <Route path="/admin/settings" component={SettingsPage} />
-              <Route path="/admin/criativos" component={CreativesPage} />
-              <Route path="/admin/analytics" component={AnalyticsPage} />
-              <Route path="/admin/analytics/real-time" component={AnalyticsPage} />
-              <Route path="/admin/ab-testing" component={ABTestPage} />
-              <Route path="/admin/ia-insights" component={IAInsightsPage} />
-              <Route path="/admin/editor" component={EditorPage} />
-              <Route path="/admin/funnel-settings/:id" component={FunnelSettingsPage} />
-              <Route path="/admin/templates" component={MyTemplatesPage} />
-              <Route path="/admin/webhooks" component={NoCodeConfigPage} />
-              <Route path="/admin/themes" component={SettingsPage} />
-              <Route path="/admin/databases" component={MyTemplatesPage} />
-              <Route path="/admin/preview" component={CreativesPage} />
-              <Route path="/admin/debug" component={FunnelSystemDebugger} />
-            </Switch>
-          </Suspense>
-        </main>
-      </div>
-    </div>
+    <LovableAdminLayout>
+      <Switch>
+        <Route path="/admin" component={() => (
+          <div className="space-y-6">
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
+              <p className="text-gray-600">Visão geral do sistema</p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="bg-white p-6 rounded-lg border border-gray-200">
+                <h3 className="text-lg font-medium mb-2">Usuários</h3>
+                <p className="text-3xl font-bold text-blue-600">1,234</p>
+                <p className="text-sm text-gray-500">Total de usuários</p>
+              </div>
+              
+              <div className="bg-white p-6 rounded-lg border border-gray-200">
+                <h3 className="text-lg font-medium mb-2">Funis</h3>
+                <p className="text-3xl font-bold text-green-600">56</p>
+                <p className="text-sm text-gray-500">Funis criados</p>
+              </div>
+              
+              <div className="bg-white p-6 rounded-lg border border-gray-200">
+                <h3 className="text-lg font-medium mb-2">Taxa de Conversão</h3>
+                <p className="text-3xl font-bold text-purple-600">12.5%</p>
+                <p className="text-sm text-gray-500">Média geral</p>
+              </div>
+              
+              <div className="bg-white p-6 rounded-lg border border-gray-200">
+                <h3 className="text-lg font-medium mb-2">Receita</h3>
+                <p className="text-3xl font-bold text-orange-600">R$ 89,320</p>
+                <p className="text-sm text-gray-500">Este mês</p>
+              </div>
+            </div>
+            
+            <div className="bg-white p-6 rounded-lg border border-gray-200">
+              <h2 className="text-lg font-medium mb-4">Atividade Recente</h2>
+              <p className="text-gray-600">Dashboard completo em desenvolvimento...</p>
+            </div>
+          </div>
+        )} />
+        
+        <Route>
+          <div className="space-y-6">
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
+              <p className="text-gray-600">Visão geral do sistema</p>
+            </div>
+            
+            <div className="bg-white p-6 rounded-lg border border-gray-200">
+              <h2 className="text-lg font-medium mb-4">Métricas Principais</h2>
+              <p className="text-gray-600">Dashboard em desenvolvimento...</p>
+            </div>
+          </div>
+        </Route>
+      </Switch>
+    </LovableAdminLayout>
   );
 };
 
