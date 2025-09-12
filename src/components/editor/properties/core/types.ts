@@ -7,8 +7,21 @@ export interface BaseProperty {
   category: PropertyCategory;
   value: any;
   defaultValue?: any;
-  description?: string; // Add optional description property
+  description?: string;
   validation?: (value: any) => boolean | string;
+}
+
+// Specific property types for enhanced editors
+export interface ScoreValuesProperty extends Omit<BaseProperty, 'type'> {
+  type: 'scoreValues';
+  value: Array<{ value: number; label: string }>;
+}
+
+export interface EnhancedUploadProperty extends Omit<BaseProperty, 'type'> {
+  type: 'enhancedUpload';
+  value: { type: 'file' | 'url'; url: string; name?: string; size?: number } | null;
+  accept?: string;
+  maxSize?: number;
 }
 
 export interface PropertyEditorProps {

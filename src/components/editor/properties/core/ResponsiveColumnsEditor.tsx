@@ -1,6 +1,6 @@
 import React from 'react';
 import { Smartphone, Tablet, Monitor, Grid3x3 } from 'lucide-react';
-import ContextualTooltip, { tooltipLibrary } from './ContextualTooltip';
+import { ContextualTooltip } from './ContextualTooltip';
 import type { PropertyEditorProps } from './types';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
@@ -79,7 +79,7 @@ const ResponsiveColumnsEditor: React.FC<PropertyEditorProps> = ({ property, onCh
                 <div className="flex items-center gap-2">
                     <Grid3x3 className="w-4 h-4 text-green-600" />
                     <CardTitle className="text-sm">{property.label}</CardTitle>
-                    <ContextualTooltip info={tooltipLibrary.responsiveColumns} compact />
+                    <ContextualTooltip content="Configure colunas responsivas para diferentes dispositivos" />
                 </div>
                 {property.description && (
                     <p className="text-xs text-muted-foreground">{property.description}</p>

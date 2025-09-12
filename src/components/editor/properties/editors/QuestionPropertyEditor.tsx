@@ -39,7 +39,7 @@ import { PropertyType, PropertyCategory } from '@/hooks/useUnifiedProperties';
 // Importar editores avançados existentes
 import BoxModelEditor from '../core/BoxModelEditor';
 import AnimationPreviewEditor from '../core/AnimationPreviewEditor';
-import ScoreValuesEditor from '../core/ScoreValuesEditor';
+import { ScoreValuesEditor } from '../core/ScoreValuesEditor';
 
 // Tooltip library for contextual help
 const questionTooltips = {
