@@ -996,7 +996,7 @@ const QuizModularPage: React.FC<QuizModularPageProps> = ({ initialStep }) => {
 
                 {/* 🎮 CONTROLES DE NAVEGAÇÃO LIMPOS - Abaixo dos blocos */}
                 <div className="flex flex-col sm:flex-row justify-between items-center mt-6 sm:mt-8 gap-4 p-4 bg-white/50 backdrop-blur-sm rounded-lg border border-stone-200/30">
-                  
+
                   {/* Botão Anterior */}
                   <Button
                     variant="outline"
@@ -1032,7 +1032,7 @@ const QuizModularPage: React.FC<QuizModularPageProps> = ({ initialStep }) => {
                     >
                       {nextLabel} →
                     </Button>
-                    
+
                     {/* Mensagem de validação abaixo do botão */}
                     {stepConfig?.showValidationFeedback && mustBeValid && !isStepValid && (
                       <div className="text-xs text-stone-500 mt-2 text-center">
@@ -1041,7 +1041,7 @@ const QuizModularPage: React.FC<QuizModularPageProps> = ({ initialStep }) => {
                     )}
                   </div>
                 </div>
-                
+
                 {/* Utilitário opcional de recarga */}
                 <button
                   onClick={async () => {

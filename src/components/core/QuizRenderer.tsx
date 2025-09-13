@@ -370,17 +370,22 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
       }}
     >
       <div className="container mx-auto px-6 py-8 max-w-4xl">
-        {renderHeader()}
-        {/* Header secundário de etapa */}
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-center gap-4 mb-4">
-            <div className="text-sm text-stone-500">Etapa {currentStep} de {totalSteps}</div>
-            <div className="w-32 bg-stone-200 rounded-full h-2">
-              <div className="bg-gradient-to-r from-[#B89B7A] to-[#8B7355] h-2 rounded-full" style={{ width: `${progress}%` }} />
+        {/* Apenas mostrar cabeçalho em modo production ou preview, não no editor */}
+        {mode !== 'editor' && renderHeader()}
+        
+        {/* Header secundário de etapa - também só mostrar fora do editor */}
+        {mode !== 'editor' && (
+          <div className="text-center mb-8">
+            <div className="flex items-center justify-center gap-4 mb-4">
+              <div className="text-sm text-stone-500">Etapa {currentStep} de {totalSteps}</div>
+              <div className="w-32 bg-stone-200 rounded-full h-2">
+                <div className="bg-gradient-to-r from-[#B89B7A] to-[#8B7355] h-2 rounded-full" style={{ width: `${progress}%` }} />
+              </div>
+              <div className="text-sm text-stone-600">{progress}%</div>
             </div>
-            <div className="text-sm text-stone-600">{progress}%</div>
           </div>
-        </div>
+        )}
+        
         {renderStepContent()}
       </div>
     </div>
