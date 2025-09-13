@@ -275,8 +275,8 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
             disabled={currentStep === 1}
             className={cn(
               'flex-1 px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm rounded-lg border transition-colors',
-              currentStep === 1 
-                ? 'bg-stone-100 text-stone-400 cursor-not-allowed' 
+              currentStep === 1
+                ? 'bg-stone-100 text-stone-400 cursor-not-allowed'
                 : 'bg-white text-stone-700 hover:bg-stone-50 border-stone-300'
             )}
           >
@@ -287,8 +287,8 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
             disabled={nextDisabled}
             className={cn(
               'flex-1 px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm rounded-lg transition-colors text-center',
-              nextDisabled 
-                ? 'bg-stone-200 text-stone-400 cursor-not-allowed' 
+              nextDisabled
+                ? 'bg-stone-200 text-stone-400 cursor-not-allowed'
                 : 'bg-gradient-to-r from-[#B89B7A] to-[#8B7355] text-white hover:from-[#A08966] hover:to-[#7A6B4D] shadow-sm'
             )}
           >
@@ -431,17 +431,14 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
         // No preview do editor, ajustar padding para responsividade
         mode === 'preview' ? "px-2 sm:px-4" : "px-6"
       )}>
-        {/* Apenas mostrar cabeçalho em modo production ou preview, não no editor */}
-        {mode !== 'editor' && renderHeader()}
+        {/* Apenas mostrar cabeçalho em modo production, não no editor nem no preview do editor */}
+        {mode === 'production' && renderHeader()}
 
-        {/* Header secundário responsivo de etapa - otimizado para preview do editor */}
-        {mode !== 'editor' && (
+        {/* Header secundário responsivo de etapa - somente em modo production */}
+        {mode === 'production' && (
           <div className="text-center mb-6 sm:mb-8">
             {/* Desktop: Layout horizontal - só mostrar em telas grandes quando é preview */}
-            <div className={cn(
-              "items-center justify-center gap-4 mb-4",
-              mode === 'preview' ? "hidden lg:flex" : "hidden sm:flex"
-            )}>
+            <div className="hidden sm:flex items-center justify-center gap-4 mb-4">
               <div className="text-sm text-stone-500">Etapa {currentStep} de {totalSteps}</div>
               <div className="w-32 bg-stone-200 rounded-full h-2">
                 <div className="bg-gradient-to-r from-[#B89B7A] to-[#8B7355] h-2 rounded-full transition-all duration-300" style={{ width: `${progress}%` }} />
@@ -449,11 +446,8 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
               <div className="text-sm text-stone-600">{progress}%</div>
             </div>
 
-            {/* Mobile/Tablet: Layout vertical - mais agressivo para preview */}
-            <div className={cn(
-              "space-y-2 sm:space-y-3 mb-4",
-              mode === 'preview' ? "lg:hidden" : "sm:hidden"
-            )}>
+            {/* Mobile/Tablet: Layout vertical */}
+            <div className="sm:hidden space-y-2 sm:space-y-3 mb-4">
               <div className="text-sm text-stone-500">Etapa {currentStep} de {totalSteps}</div>
               <div className="flex items-center justify-center gap-3 px-2 sm:px-4">
                 <div className="flex-1 max-w-xs bg-stone-200 rounded-full h-2">
