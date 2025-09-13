@@ -235,7 +235,7 @@ export const SinglePropertiesPanel: React.FC<SinglePropertiesPanelProps> = memo(
         blockType: selectedBlock?.type || '',
         blockId: selectedBlock?.id,
         currentBlock: selectedBlock,
-        onUpdate: onUpdate ? (blockId: string, updates: any) => {
+        onUpdate: onUpdate ? (_blockId: string, updates: any) => {
             // Adaptar para o formato esperado pelo editor atual
             onUpdate(updates.properties || updates);
         } : undefined
@@ -248,7 +248,7 @@ export const SinglePropertiesPanel: React.FC<SinglePropertiesPanelProps> = memo(
     const categorizedProperties = useMemo(() => {
         const categories = {
             content: getPropertiesByCategory('content'),
-            style: getPropertiesByCategory('style'), 
+            style: getPropertiesByCategory('style'),
             layout: getPropertiesByCategory('layout'),
             behavior: getPropertiesByCategory('behavior'),
             advanced: getPropertiesByCategory('advanced')
