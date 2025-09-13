@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug - Largura da Coluna de Propriedades</title>
+    <style>
+        body { font-family: monospace; padding: 20px; background: #1a1a1a; color: #fff; }
+        .debug-section { margin: 20px 0; padding: 10px; border: 1px solid #333; border-radius: 5px; }
+        .error { color: #ff6b6b; }
+        .success { color: #51cf66; }
+        .warning { color: #ffd43b; }
+        .info { color: #74c0fc; }
+        pre { background: #2d2d2d; padding: 10px; border-radius: 5px; overflow-x: auto; font-size: 12px; }
+        button { background: #007acc; color: white; border: none; padding: 10px 15px; margin: 5px; cursor: pointer; border-radius: 3px; }
+        button:hover { background: #005c99; }
+        #results { margin-top: 20px; }
+        .measure { background: #333; border: 1px solid #555; margin: 5px 0; padding: 5px; border-radius: 3px; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Debug - Largura da Coluna de Propriedades</h1>
+    
+    <div class="debug-section">
+        <h3>🎯 Diagnóstico de Layout</h3>
+        <button onclick="medirLayoutDesktop()">Medir Layout Desktop</button>
+        <button onclick="verificarCSS()">Verificar CSS dos Containers</button>
+        <button onclick="analisarPropriedades()">Analisar Painel de Propriedades</button>
+        <button onclick="diagnosticoCompleto()">Diagnóstico Completo</button>
+    </div>
+
+    <div id="results"></div>
+
+    <script>
+        function log(message, type = 'info') {
+            const results = document.getElementById('results');
+            const div = document.createElement('div');
+            div.className = `debug-section ${type}`;
+            div.innerHTML = message;
+            results.appendChild(div);
+        }
+
+        function medirLayoutDesktop() {
+            log('<h4>📏 Medindo Layout Desktop</h4>', 'info');
+            
+            // Abrir o editor em nova janela para debugar
+            const editorWindow = window.open('/editor?debug=true', 'editor-debug', 'width=1200,height=800');
+            
+            setTimeout(() => {
+                if (editorWindow && !editorWindow.closed) {
+                    try {
+                        const containers = [
+                            { name: 'Steps Sidebar', selector: 'div.w-\\[10\\%\\]' },
+                            { name: 'Components Sidebar', selector: 'div.w-\\[15\\%\\]' },
+                            { name: 'Canvas Area', selector: 'div.w-\\[55\\%\\]' },
+                            { name: 'Properties Column', selector: 'div.w-\\[20\\%\\]' }
+                        ];
+                        
+                        containers.forEach(container => {
+                            const element = editorWindow.document.querySelector(container.selector);
+                            if (element) {
+                                const rect = element.getBoundingClientRect();
+                                log(`✅ ${container.name}: ${rect.width.toFixed(0)}px (${((rect.width / editorWindow.innerWidth) * 100).toFixed(1)}%)`, 'success');
+                            } else {
+                                log(`❌ ${container.name}: Container não encontrado`, 'error');
+                            }
+                        });
+                        
+                        // Verificar propriedades específicas
+                        const propsColumn = editorWindow.document.querySelector('div.w-\\[20\\%\\]');
+                        if (propsColumn) {
+                            const computedStyle = editorWindow.getComputedStyle(propsColumn);
+                            log(`<div class="measure">
+                                <strong>Properties Column CSS:</strong><br>
+                                Width: ${computedStyle.width}<br>
+                                Min-width: ${computedStyle.minWidth}<br>
+                                Max-width: ${computedStyle.maxWidth}<br>
+                                Flex: ${computedStyle.flex}<br>
+                                Display: ${computedStyle.display}<br>
+                                Overflow: ${computedStyle.overflow}
+                            </div>`, 'info');
+                        }
+                        
+                    } catch (error) {
+                        log(`❌ Erro ao acessar janela do editor: ${error.message}`, 'error');
+                    }
+                } else {
+                    log('❌ Não foi possível abrir o editor para debug', 'error');
+                }
+            }, 3000);
+            
+            log('⏳ Abrindo editor... Aguarde 3 segundos para medições', 'info');
+        }
+
+        function verificarCSS() {
+            log('<h4>🎨 Verificando CSS dos Containers</h4>', 'info');
+            
+            // Simular verificação de conflitos CSS comuns
+            const problemasComuns = [
+                'w-full e largura fixa conflitantes',
+                'overflow-hidden em container pai',
+                'flex-shrink-0 vs flex-1',
+                'min-w-0 causando colapso',
+                'max-w-none conflitos'
+            ];
+            
+            problemasComuns.forEach(problema => {
+                log(`⚠️ Verificar: ${problema}`, 'warning');
+            });
+            
+            log('<div class="measure"><strong>CSS Atual do PropertiesColumn:</strong><br><pre>className="flex-shrink-0 h-full bg-gray-900/80 backdrop-blur-sm border-l border-gray-700/50 flex flex-col overflow-hidden w-full"</pre></div>', 'info');
+            
+            log('<div class="measure"><strong>Container Pai (EditorPro):</strong><br><pre>className="hidden lg:block w-[20%] min-w-0 max-w-none"</pre></div>', 'info');
+        }
+
+        function analisarPropriedades() {
+            log('<h4>🔧 Analisando Painel de Propriedades</h4>', 'info');
+            
+            const checks = [
+                { item: 'PropertiesColumn usa w-full (deve se adaptar)', status: '✅' },
+                { item: 'Container pai usa w-[20%] (largura fixa)', status: '✅' },
+                { item: 'SinglePropertiesPanel usa Card com h-full', status: '✅' },
+                { item: 'ScrollArea dentro do Card', status: '❓' },
+                { item: 'Possível overflow horizontal', status: '⚠️' }
+            ];
+            
+            checks.forEach(check => {
+                log(`${check.status} ${check.item}`, check.status === '✅' ? 'success' : check.status === '⚠️' ? 'warning' : 'info');
+            });
+            
+            log('<strong>💡 Soluções Possíveis:</strong><br>1. Adicionar min-width ao container pai<br>2. Verificar se ScrollArea está funcionando<br>3. Ajustar overflow-x no SinglePropertiesPanel<br>4. Verificar media queries', 'info');
+        }
+
+        function diagnosticoCompleto() {
+            log('<h4>🚀 Iniciando Diagnóstico Completo</h4>', 'info');
+            
+            setTimeout(() => medirLayoutDesktop(), 100);
+            setTimeout(() => verificarCSS(), 500);
+            setTimeout(() => analisarPropriedades(), 1000);
+            
+            setTimeout(() => {
+                log('<h4>📋 Recomendações Finais</h4>', 'info');
+                log('1. 🔍 Abra o DevTools no /editor e inspecione a coluna de propriedades', 'info');
+                log('2. 📏 Verifique se a largura está sendo aplicada corretamente', 'info');
+                log('3. 🎨 Confirme se não há conflitos CSS entre containers', 'info');
+                log('4. 📱 Teste em diferentes tamanhos de tela', 'info');
+                log('5. 🔧 Se necessário, ajuste o CSS do PropertiesColumn', 'warning');
+            }, 1500);
+        }
+
+        // Auto-executar
+        window.addEventListener('load', () => {
+            setTimeout(diagnosticoCompleto, 500);
+        });
+    </script>
+</body>
+</html>

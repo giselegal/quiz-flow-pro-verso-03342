@@ -924,8 +924,8 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
           </div>
 
           {/* DESKTOP LAYOUT - Hidden on mobile */}
-          {/* 1) Etapas - 10% */}
-          <div className="hidden lg:block w-[10%] min-w-0 max-w-none">
+          {/* 1) Etapas - Fixed width */}
+          <div className="hidden lg:block w-[180px] min-w-[180px] max-w-[180px] flex-shrink-0">
             <Suspense fallback={<div className="p-4 bg-gray-900 border-r border-gray-800/50">Loading steps…</div>}>
               <StepSidebar
                 currentStep={safeCurrentStep}
@@ -939,8 +939,8 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               />
             </Suspense>
           </div>
-          {/* 2) Componentes - 15% */}
-          <div className="hidden lg:block w-[15%] min-w-0 max-w-none">
+          {/* 2) Componentes - Fixed width */}
+          <div className="hidden lg:block w-[220px] min-w-[220px] max-w-[220px] flex-shrink-0">
             <Suspense fallback={<div className="p-4 bg-gray-900 border-r border-gray-800/50">Loading library…</div>}>
               <ComponentsSidebar
                 groupedComponents={groupedComponents as any}
@@ -950,8 +950,8 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
             </Suspense>
           </div>
 
-          {/* 3) Canvas - Mobile: full width, Desktop: 55% */}
-          <div className="w-full lg:w-[55%] min-w-0 flex-1">
+          {/* 3) Canvas - Mobile: full width, Desktop: dynamic to accommodate fixed sidebars */}
+          <div className="w-full lg:flex-1 lg:min-w-0">
             <CanvasAreaLayout
               className=""
               containerRef={containerRef}
@@ -973,7 +973,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
           </div>
 
           {/* 4) Propriedades - 20% - Hidden on mobile */}
-          <div className="hidden lg:block w-[20%] min-w-0 max-w-none">
+          <div className="hidden lg:block w-[20%] min-w-[280px] max-w-[400px] flex-shrink-0">
             <Suspense fallback={<div className="p-4 bg-gray-900 border-l border-gray-800/50">Properties…</div>}>
               <MemoPropertiesColumn />
             </Suspense>

@@ -268,7 +268,7 @@ export const SinglePropertiesPanel: React.FC<SinglePropertiesPanelProps> = ({
     }, [onUpdate]);    // Estado vazio
     if (!selectedBlock) {
         return (
-            <Card className="h-full">
+            <Card className="h-full max-w-full overflow-hidden">
                 <CardContent className="flex flex-col items-center justify-center h-full p-8">
                     <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-4">
                         <Settings className="w-8 h-8 text-muted-foreground" />
@@ -283,23 +283,23 @@ export const SinglePropertiesPanel: React.FC<SinglePropertiesPanelProps> = ({
     }
 
     return (
-        <Card className="h-full flex flex-col">
+        <Card className="h-full max-w-full overflow-hidden flex flex-col">
             {/* Header */}
-            <CardHeader className="pb-4">
+            <CardHeader className="pb-4 flex-shrink-0">
                 <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                        <div className="p-2 rounded-lg bg-primary/10">
+                    <div className="flex items-center gap-3 min-w-0 flex-1">
+                        <div className="p-2 rounded-lg bg-primary/10 flex-shrink-0">
                             <Settings className="w-4 h-4 text-primary" />
                         </div>
-                        <div>
-                            <CardTitle className="text-lg">Propriedades</CardTitle>
-                            <p className="text-sm text-muted-foreground">
+                        <div className="min-w-0 flex-1">
+                            <CardTitle className="text-lg truncate">Propriedades</CardTitle>
+                            <p className="text-sm text-muted-foreground truncate">
                                 {selectedBlock.type} • ID: {selectedBlock.id.slice(-6)}
                             </p>
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-shrink-0">
                         {onDuplicate && (
                             <Button variant="outline" size="sm" onClick={onDuplicate}>
                                 <Copy className="w-4 h-4" />

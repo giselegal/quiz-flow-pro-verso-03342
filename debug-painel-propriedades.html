@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug - Painel de Propriedades</title>
+    <style>
+        body { font-family: monospace; padding: 20px; background: #1a1a1a; color: #fff; }
+        .debug-section { margin: 20px 0; padding: 10px; border: 1px solid #333; }
+        .error { color: #ff6b6b; }
+        .success { color: #51cf66; }
+        .warning { color: #ffd43b; }
+        .info { color: #74c0fc; }
+        pre { background: #2d2d2d; padding: 10px; border-radius: 5px; overflow-x: auto; }
+        button { background: #007acc; color: white; border: none; padding: 10px 15px; margin: 5px; cursor: pointer; border-radius: 3px; }
+        button:hover { background: #005c99; }
+        #results { margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Debug do Painel de Propriedades</h1>
+    
+    <div class="debug-section">
+        <h3>🎯 Teste Rápido</h3>
+        <button onclick="verificarEditor()">Verificar Editor Principal</button>
+        <button onclick="verificarPaineis()">Verificar Painéis Ativos</button>
+        <button onclick="verificarIDs()">Verificar IDs Duplicados</button>
+        <button onclick="verificarTudo()">Diagnóstico Completo</button>
+    </div>
+
+    <div id="results"></div>
+
+    <script>
+        function log(message, type = 'info') {
+            const results = document.getElementById('results');
+            const div = document.createElement('div');
+            div.className = `debug-section ${type}`;
+            div.innerHTML = message;
+            results.appendChild(div);
+        }
+
+        function verificarEditor() {
+            log('<h4>🔍 Verificando Editor Principal (/editor)</h4>', 'info');
+            
+            // Verificar se a página carrega
+            fetch('/editor')
+                .then(response => {
+                    if (response.ok) {
+                        log('✅ Editor carrega com sucesso (Status: ' + response.status + ')', 'success');
+                        return response.text();
+                    } else {
+                        log('❌ Editor falhou ao carregar (Status: ' + response.status + ')', 'error');
+                        throw new Error('Status: ' + response.status);
+                    }
+                })
+                .then(html => {
+                    // Verificar se contém referências aos painéis
+                    if (html.includes('SinglePropertiesPanel')) {
+                        log('✅ SinglePropertiesPanel encontrado no HTML', 'success');
+                    } else {
+                        log('⚠️ SinglePropertiesPanel NÃO encontrado no HTML', 'warning');
+                    }
+                    
+                    if (html.includes('PropertiesColumn')) {
+                        log('✅ PropertiesColumn encontrado no HTML', 'success');
+                    } else {
+                        log('⚠️ PropertiesColumn NÃO encontrado no HTML', 'warning');
+                    }
+                    
+                    // Verificar se há erros JavaScript óbvios
+                    if (html.includes('error') || html.includes('Error')) {
+                        log('⚠️ Possíveis erros encontrados no HTML', 'warning');
+                    }
+                })
+                .catch(error => {
+                    log('❌ Erro ao verificar editor: ' + error.message, 'error');
+                });
+        }
+
+        function verificarPaineis() {
+            log('<h4>🔍 Verificando Painéis de Propriedades</h4>', 'info');
+            
+            const paineis = [
+                'SinglePropertiesPanel',
+                'EnhancedUniversalPropertiesPanel', 
+                'RegistryPropertiesPanel',
+                'PropertiesPanel',
+                'PropertiesColumn'
+            ];
+            
+            paineis.forEach(painel => {
+                // Verificar nos arquivos JavaScript
+                fetch(`/src/components/editor/properties/${painel}.tsx`)
+                    .then(response => {
+                        if (response.ok) {
+                            log(`✅ ${painel}.tsx existe`, 'success');
+                            return response.text();
+                        } else if (response.status === 404) {
+                            log(`ℹ️ ${painel}.tsx não existe (esperado para alguns)`, 'info');
+                            return null;
+                        } else {
+                            log(`⚠️ ${painel}.tsx erro ${response.status}`, 'warning');
+                            return null;
+                        }
+                    })
+                    .then(content => {
+                        if (content && content.includes('export')) {
+                            log(`✅ ${painel} tem exports válidos`, 'success');
+                        }
+                    })
+                    .catch(error => {
+                        // Tentar outras localizações
+                        fetch(`/src/components/universal/${painel}.tsx`)
+                            .then(response => response.ok ? log(`✅ ${painel}.tsx encontrado em /universal/`, 'success') : null)
+                            .catch(() => log(`ℹ️ ${painel} não encontrado (pode ser esperado)`, 'info'));
+                    });
+            });
+        }
+
+        function verificarIDs() {
+            log('<h4>🔍 Verificando IDs Duplicados</h4>', 'info');
+            
+            // Simular verificação de IDs duplicados
+            setTimeout(() => {
+                const allIds = document.querySelectorAll('[id]');
+                const idCounts = {};
+                const duplicateIds = [];
+                
+                allIds.forEach(el => {
+                    const id = el.id;
+                    if (idCounts[id]) {
+                        idCounts[id]++;
+                        if (idCounts[id] === 2) {
+                            duplicateIds.push(id);
+                        }
+                    } else {
+                        idCounts[id] = 1;
+                    }
+                });
+                
+                if (duplicateIds.length > 0) {
+                    log(`❌ IDs duplicados encontrados: ${duplicateIds.join(', ')}`, 'error');
+                } else {
+                    log('✅ Nenhum ID duplicado encontrado nesta página', 'success');
+                }
+            }, 1000);
+        }
+
+        function verificarTudo() {
+            log('<h4>🚀 Iniciando Diagnóstico Completo</h4>', 'info');
+            
+            setTimeout(() => verificarEditor(), 100);
+            setTimeout(() => verificarPaineis(), 500);
+            setTimeout(() => verificarIDs(), 1000);
+            
+            setTimeout(() => {
+                log('<h4>📋 Relatório Final</h4>', 'info');
+                log('🔗 Para acessar o editor: <a href="/editor" target="_blank">/editor</a>', 'info');
+                log('🔗 Para testar painel isolado: <a href="/test-properties" target="_blank">/test-properties</a>', 'info');
+                log('💡 Verifique o console do navegador em /editor para erros JavaScript', 'warning');
+            }, 1500);
+        }
+
+        // Auto-executar verificação básica
+        window.addEventListener('load', () => {
+            setTimeout(verificarTudo, 500);
+        });
+    </script>
+</body>
+</html>

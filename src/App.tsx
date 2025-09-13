@@ -217,6 +217,16 @@ function App() {
                 </Suspense>
               } />
 
+              {/* Teste de debug do EditorPro */}
+              <Route path="/test-editor-pro" component={() => {
+                const TestEditorPro = lazy(() => import('./components/debug/TestEditorPro'));
+                return (
+                  <Suspense fallback={<LoadingFallback />}>
+                    <TestEditorPro />
+                  </Suspense>
+                );
+              }} />
+
               {/* Fallback para rotas não encontradas */}
               <Route>
                 <div className="min-h-screen flex items-center justify-center">

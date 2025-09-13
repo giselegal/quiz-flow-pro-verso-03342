@@ -30,7 +30,7 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
     <div
       className={cn(
         'flex-shrink-0 h-full bg-gray-900/80 backdrop-blur-sm border-l border-gray-700/50 flex flex-col overflow-hidden',
-        'w-full', // Use full width within the ResizablePanel container
+        'w-full min-w-0', // Use full width within container + prevent shrinking issues
         className
       )}
     >
