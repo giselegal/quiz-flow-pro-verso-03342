@@ -94,10 +94,10 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
   const debugInfo =
     actualBlock && process.env.NODE_ENV === 'development'
       ? {
-          id: actualBlock.id,
-          type: actualBlock.type,
-          propertiesCount: properties?.length || 0,
-        }
+        id: actualBlock.id,
+        type: actualBlock.type,
+        propertiesCount: properties?.length || 0,
+      }
       : null;
 
   if (debugInfo) {
