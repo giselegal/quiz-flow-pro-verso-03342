@@ -10,7 +10,6 @@ import { useEditor } from '@/components/editor/EditorProvider';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { logger } from '@/utils/debugLogger';
 import { PerformanceProfiler, withPerformanceProfiler } from '@/utils/performance/PerformanceProfiler';
-import { EditorLazyComponents } from '@/utils/performance/LazyLoadingSystem';
 
 interface UnifiedEditorProps {
   className?: string;
@@ -68,17 +67,17 @@ export const UnifiedEditor: React.FC<UnifiedEditorProps> = ({ className = '' }) 
   const DynamicEditor = React.useMemo(() => {
     return React.lazy(async () => {
       try {
-        // Primeiro, tentar carregar EditorPro (preferência do usuário) com lazy loading otimizado
-        logger.info('🚀 UnifiedEditor: Iniciando carregamento do EditorPro com lazy loading...');
+        // Carregar EditorFuncional (versão de produção simplificada)
+        logger.info('🚀 UnifiedEditor: Carregando EditorFuncional para produção...');
 
-        // Usar sistema de lazy loading inteligente para EditorPro
-        const LegacyEditor = EditorLazyComponents.EditorPro;
+        const funcionalMod = await import('@/components/editor/EditorFuncional');
+        const FuncionalEditor = funcionalMod.default;
 
         // Wrapper com performance profiling
-        const ProfiledEditor = withPerformanceProfiler(LegacyEditor, 'EditorPro-Unified');
+        const ProfiledEditor = withPerformanceProfiler(FuncionalEditor, 'EditorFuncional-Production');
 
-        logger.info('✅ UnifiedEditor: Carregado EditorPro com otimizações (padrão)');
-        try { (window as any).__ACTIVE_EDITOR__ = 'EditorPro-Optimized'; } catch { }
+        logger.info('✅ UnifiedEditor: Carregado EditorFuncional (produção)');
+        try { (window as any).__ACTIVE_EDITOR__ = 'EditorFuncional-Production'; } catch { }
 
         return { default: ProfiledEditor };
       } catch (legacyError) {
