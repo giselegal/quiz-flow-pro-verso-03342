@@ -4,6 +4,10 @@ import { schemaDrivenFunnelService, type SchemaDrivenFunnelData } from '@/servic
 import { FunnelManager } from './FunnelManager';
 import { SaveStatusIndicator } from './SaveStatusIndicator';
 import { FunnelSettingsModal } from './FunnelSettingsModal';
+import { Button } from '@/components/ui/button';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Monitor, Tablet, Smartphone, Maximize2 } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface FunnelHeaderProps {
   funnelId?: string;
@@ -11,6 +15,9 @@ interface FunnelHeaderProps {
   lastSaved?: Date | null;
   isSaving?: boolean;
   onManualSave?: () => void;
+  // Controles de viewport responsivo
+  viewportMode?: 'desktop' | 'tablet' | 'mobile' | 'xl';
+  onViewportModeChange?: (mode: 'desktop' | 'tablet' | 'mobile' | 'xl') => void;
 }
 
 /**
@@ -27,7 +34,9 @@ export const FunnelHeader: React.FC<FunnelHeaderProps> = ({
   onFunnelChange,
   lastSaved,
   isSaving,
-  onManualSave
+  onManualSave,
+  viewportMode = 'desktop',
+  onViewportModeChange
 }) => {
   const [currentFunnel, setCurrentFunnel] = useState<SchemaDrivenFunnelData | null>(null);
   const [showManager, setShowManager] = useState(false);
@@ -162,6 +171,87 @@ export const FunnelHeader: React.FC<FunnelHeaderProps> = ({
 
           {/* Controles */}
           <div className="flex items-center gap-4">
+            {/* Controles de Viewport Responsivo */}
+            <TooltipProvider>
+              <div className="flex items-center bg-gray-800/50 rounded-lg p-1 border border-gray-700/50">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => onViewportModeChange?.('mobile')}
+                      className={cn(
+                        "h-8 px-3 rounded-md transition-colors",
+                        viewportMode === 'mobile'
+                          ? "bg-brand-brightBlue text-white shadow-sm"
+                          : "text-gray-300 hover:text-white hover:bg-gray-700/50"
+                      )}
+                    >
+                      <Smartphone className="w-4 h-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>Mobile (sm)</TooltipContent>
+                </Tooltip>
+
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => onViewportModeChange?.('tablet')}
+                      className={cn(
+                        "h-8 px-3 rounded-md transition-colors",
+                        viewportMode === 'tablet'
+                          ? "bg-brand-brightBlue text-white shadow-sm"
+                          : "text-gray-300 hover:text-white hover:bg-gray-700/50"
+                      )}
+                    >
+                      <Tablet className="w-4 h-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>Tablet (md)</TooltipContent>
+                </Tooltip>
+
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => onViewportModeChange?.('desktop')}
+                      className={cn(
+                        "h-8 px-3 rounded-md transition-colors",
+                        viewportMode === 'desktop'
+                          ? "bg-brand-brightBlue text-white shadow-sm"
+                          : "text-gray-300 hover:text-white hover:bg-gray-700/50"
+                      )}
+                    >
+                      <Monitor className="w-4 h-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>Desktop (lg)</TooltipContent>
+                </Tooltip>
+
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => onViewportModeChange?.('xl')}
+                      className={cn(
+                        "h-8 px-3 rounded-md transition-colors",
+                        viewportMode === 'xl'
+                          ? "bg-brand-brightBlue text-white shadow-sm"
+                          : "text-gray-300 hover:text-white hover:bg-gray-700/50"
+                      )}
+                    >
+                      <Maximize2 className="w-4 h-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>Large Desktop (xl)</TooltipContent>
+                </Tooltip>
+              </div>
+            </TooltipProvider>
+
             {/* Status de Salvamento */}
             <SaveStatusIndicator
               funnelId={currentFunnelId}

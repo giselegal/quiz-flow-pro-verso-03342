@@ -847,67 +847,73 @@ const QuizModularPage: React.FC<QuizModularPageProps> = ({ initialStep }) => {
         {/* CONTEÚDO CENTRAL PARA USUÁRIO FINAL */}
         <div className="flex min-h-screen">
           <div className="flex-1 overflow-auto">
-            <div className="container mx-auto px-6 py-8">
+            <div className="container mx-auto px-2 sm:px-4 md:px-6 py-4 md:py-8">
               <div className="max-w-4xl mx-auto">
-                {/* 🎯 CABEÇALHO PRINCIPAL DO QUIZ */}
-                <div className="bg-white/90 backdrop-blur-sm border border-stone-200/50 shadow-sm rounded-lg mb-8 p-6">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <h2 className="text-lg font-semibold text-stone-800">Quiz Style Challenge</h2>
-                      <div className="text-sm text-stone-600">Etapa {currentStep} de 21</div>
+                {/* 🎯 CABEÇALHO PRINCIPAL DO QUIZ - Responsivo */}
+                <div className="bg-white/90 backdrop-blur-sm border border-stone-200/50 shadow-sm rounded-lg mb-4 md:mb-8 p-3 sm:p-4 md:p-6">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div className="flex items-center gap-2 sm:gap-4">
+                      <h2 className="text-base sm:text-lg font-semibold text-stone-800">Quiz Style Challenge</h2>
+                      <div className="text-xs sm:text-sm text-stone-600">Etapa {currentStep} de 21</div>
                     </div>
 
-                    <div className="flex items-center gap-4">
-                      <div className="w-48">
-                        <Progress value={progress} className="h-2" />
-                      </div>
-                      <div className="text-sm font-medium text-stone-700">{progress}%</div>
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={handlePrevious}
-                        disabled={currentStep === 1}
-                      >
-                        ← Anterior
-                      </Button>
-                      <Button
-                        size="sm"
-                        onClick={handleNext}
-                        disabled={nextDisabled}
-                        className={cn(
-                          nextDisabled
-                            ? 'bg-stone-200 text-stone-400 cursor-not-allowed'
-                            : 'bg-gradient-to-r from-[#B89B7A] to-[#8B7355]'
-                        )}
-                      >
-                        {nextLabel}
-                      </Button>
-                      {stepConfig?.showValidationFeedback && mustBeValid && !isStepValid && (
-                        <div className="text-xs text-stone-500 ml-2">
-                          {validationText}
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+                      <div className="flex items-center gap-2 sm:gap-4">
+                        <div className="w-24 sm:w-32 md:w-48">
+                          <Progress value={progress} className="h-1.5 sm:h-2" />
                         </div>
-                      )}
+                        <div className="text-xs sm:text-sm font-medium text-stone-700">{progress}%</div>
+                      </div>
+
+                      <div className="flex items-center gap-2 justify-end">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={handlePrevious}
+                          disabled={currentStep === 1}
+                          className="text-xs sm:text-sm px-2 sm:px-3"
+                        >
+                          ← Anterior
+                        </Button>
+                        <Button
+                          size="sm"
+                          onClick={handleNext}
+                          disabled={nextDisabled}
+                          className={cn(
+                            'text-xs sm:text-sm px-2 sm:px-3',
+                            nextDisabled
+                              ? 'bg-stone-200 text-stone-400 cursor-not-allowed'
+                              : 'bg-gradient-to-r from-[#B89B7A] to-[#8B7355]'
+                          )}
+                        >
+                          {nextLabel}
+                        </Button>
+                      </div>
                     </div>
                   </div>
+
+                  {/* Mensagem de validação - Mobile friendly */}
+                  {stepConfig?.showValidationFeedback && mustBeValid && !isStepValid && (
+                    <div className="mt-3 text-xs text-stone-500 text-center sm:text-left">
+                      {validationText}
+                    </div>
+                  )}
                 </div>
 
-                {/* 📋 HEADER DA ETAPA (limpo: sem textos promocionais fixos) */}
-                <div className="text-center mb-8">
-                  <div className="flex items-center justify-center gap-4 mb-4">
-                    <div className="text-sm text-stone-500">Etapa {currentStep} de 21</div>
-                    <div className="w-32 bg-stone-200 rounded-full h-2">
+                {/* 📋 HEADER DA ETAPA (limpo: sem textos promocionais fixos) - Responsivo */}
+                <div className="text-center mb-4 sm:mb-6 md:mb-8">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center gap-2 sm:gap-4 mb-3 sm:mb-4">
+                    <div className="text-xs sm:text-sm text-stone-500">Etapa {currentStep} de 21</div>
+                    <div className="w-24 sm:w-32 bg-stone-200 rounded-full h-1.5 sm:h-2 mx-auto sm:mx-0">
                       <div
-                        className="bg-gradient-to-r from-[#B89B7A] to-[#8B7355] h-2 rounded-full"
+                        className="bg-gradient-to-r from-[#B89B7A] to-[#8B7355] h-1.5 sm:h-2 rounded-full"
                         style={{ width: `${progress}%` }}
                       />
                     </div>
-                    <div className="text-sm text-stone-600">{progress}%</div>
+                    <div className="text-xs sm:text-sm text-stone-600">{progress}%</div>
                   </div>
                   {(stepConfig?.showProgressMessage || stepConfig?.showSelectionCount) && (
-                    <div className="text-sm text-stone-600">
+                    <div className="text-xs sm:text-sm text-stone-600 px-4">
                       {stepConfig?.showProgressMessage
                         ? (progressText || '')
                         : `Você selecionou ${selectedCount} de ${stepConfig?.requiredSelections ?? 0} opções`}
@@ -939,30 +945,30 @@ const QuizModularPage: React.FC<QuizModularPageProps> = ({ initialStep }) => {
                   </div>
                 )}
 
-                {/* 🎨 ÁREA DE RENDERIZAÇÃO DOS BLOCOS */}
-                <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl shadow-stone-200/40 border border-stone-200/30 ring-1 ring-stone-100/20 overflow-hidden">
+                {/* 🎨 ÁREA DE RENDERIZAÇÃO DOS BLOCOS - Mobile Responsivo */}
+                <div className="bg-white/95 backdrop-blur-sm rounded-xl md:rounded-2xl shadow-lg md:shadow-xl md:shadow-stone-200/40 border border-stone-200/30 ring-1 ring-stone-100/20 overflow-hidden">
                   {/* Estado de loading */}
                   {isLoading && (
-                    <div className="min-h-[500px] flex items-center justify-center">
+                    <div className="min-h-[400px] sm:min-h-[500px] flex items-center justify-center">
                       <div className="text-center">
-                        <div className="w-8 h-8 border-2 border-[#B89B7A] border-t-transparent rounded-full mx-auto mb-4"></div>
-                        <p className="text-stone-600">Carregando etapa {currentStep}...</p>
+                        <div className="w-6 h-6 sm:w-8 sm:h-8 border-2 border-[#B89B7A] border-t-transparent rounded-full mx-auto mb-4 animate-spin"></div>
+                        <p className="text-stone-600 text-sm sm:text-base">Carregando etapa {currentStep}...</p>
                       </div>
                     </div>
                   )}
 
                   {/* Estado de erro */}
                   {error && (
-                    <div className="min-h-[500px] flex items-center justify-center">
-                      <div className="text-center p-8">
-                        <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                          <span className="text-red-600 text-2xl">⚠️</span>
+                    <div className="min-h-[400px] sm:min-h-[500px] flex items-center justify-center">
+                      <div className="text-center p-4 sm:p-8">
+                        <div className="w-12 h-12 sm:w-16 sm:h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                          <span className="text-red-600 text-xl sm:text-2xl">⚠️</span>
                         </div>
-                        <h3 className="text-lg font-semibold text-red-800 mb-2">Erro ao carregar</h3>
-                        <p className="text-red-600 mb-4">{error}</p>
+                        <h3 className="text-base sm:text-lg font-semibold text-red-800 mb-2">Erro ao carregar</h3>
+                        <p className="text-red-600 mb-4 text-sm sm:text-base">{error}</p>
                         <button
                           onClick={() => window.location.reload()}
-                          className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
+                          className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 text-sm sm:text-base"
                         >
                           Tentar novamente
                         </button>
@@ -970,15 +976,15 @@ const QuizModularPage: React.FC<QuizModularPageProps> = ({ initialStep }) => {
                     </div>
                   )}
 
-                  {/* Renderização dos blocos */}
+                  {/* Renderização dos blocos - Otimizado para Mobile */}
                   {!isLoading && !error && (
-                    <div className="quiz-content p-8 space-y-6">
+                    <div className="quiz-content p-3 sm:p-4 md:p-6 lg:p-8 space-y-4 sm:space-y-6">
                       {(() => {
                         // ✅ FASE 3: Template robusto para etapa 20 com fallback inteligente
                         if (currentStep === 20 && blocks.length === 0) {
                           return (
-                            <div className="quiz-content p-8">
-                              <Suspense fallback={<div className="text-center p-6">Carregando resultado…</div>}>
+                            <div className="quiz-content p-3 sm:p-4 md:p-8">
+                              <Suspense fallback={<div className="text-center p-6 text-sm sm:text-base">Carregando resultado…</div>}>
                                 <Step20FallbackTemplate />
                               </Suspense>
                             </div>
@@ -1024,14 +1030,14 @@ const QuizModularPage: React.FC<QuizModularPageProps> = ({ initialStep }) => {
                   )}
                 </div>
 
-                {/* 🎮 CONTROLES DE NAVEGAÇÃO (ocultados quando navegação premium fallback está ativa) */}
+                {/* 🎮 CONTROLES DE NAVEGAÇÃO - Mobile Friendly */}
                 {hasTemplateNavigation ? (
-                  <div className="flex justify-between items-center mt-8">
+                  <div className="flex flex-col sm:flex-row justify-between items-center mt-4 sm:mt-6 md:mt-8 gap-4 sm:gap-0">
                     <button
                       onClick={handlePrevious}
                       disabled={currentStep === 1}
                       className={cn(
-                        'flex items-center gap-2 px-6 py-3 rounded-lg font-medium',
+                        'flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-medium text-sm sm:text-base w-full sm:w-auto justify-center sm:justify-start order-2 sm:order-1',
                         currentStep === 1
                           ? 'bg-stone-100 text-stone-400 cursor-not-allowed'
                           : 'bg-white text-stone-700 hover:bg-stone-50 border border-stone-200 shadow-sm hover:shadow'
@@ -1040,58 +1046,64 @@ const QuizModularPage: React.FC<QuizModularPageProps> = ({ initialStep }) => {
                       ← Anterior
                     </button>
 
-                    <div className="text-center">
-                      <div className="text-sm text-stone-500 mb-1">Progresso</div>
-                      <div className="text-lg font-semibold text-stone-800">{currentStep} / 21</div>
+                    <div className="text-center order-1 sm:order-2">
+                      <div className="text-xs sm:text-sm text-stone-500 mb-1">Progresso</div>
+                      <div className="text-base sm:text-lg font-semibold text-stone-800">{currentStep} / 21</div>
                     </div>
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 w-full sm:w-auto order-3">
                       <button
                         onClick={handleNext}
                         disabled={nextDisabled}
                         className={cn(
-                          'flex items-center gap-2 px-6 py-3 rounded-lg font-medium',
+                          'flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-medium text-sm sm:text-base w-full sm:w-auto justify-center sm:justify-end',
                           nextDisabled
                             ? 'bg-stone-100 text-stone-400 cursor-not-allowed'
                             : 'bg-gradient-to-r from-[#B89B7A] to-[#8B7355] text-white hover:from-[#A08966] hover:to-[#7A6B4D] shadow-md hover:shadow-lg'
                         )}
                       >
-                        {nextLabel}
+                        {nextLabel} →
                       </button>
                       {stepConfig?.showValidationFeedback && mustBeValid && !isStepValid && (
-                        <div className="text-xs text-stone-500">
+                        <div className="text-xs text-stone-500 mt-2 text-center sm:text-left">
                           {validationText}
                         </div>
                       )}
                     </div>
-                    {/* Utilitário opcional de recarga */}
-                    <button
-                      onClick={async () => {
-                        const template = await reloadTemplate(currentStep);
-                        if (template?.blocks) {
-                          setBlocks(template.blocks);
-                        }
-                      }}
-                      className="ml-4 px-4 py-3 rounded-lg font-medium bg-white text-stone-700 hover:bg-stone-50 border border-stone-200 shadow-sm hover:shadow"
-                      title="Recarregar blocos da etapa"
-                    >
-                      🔄 Recarregar etapa
-                    </button>
                   </div>
-                ) : null}
+                ) : (
+                  <div className="mt-4 sm:mt-6 md:mt-8 text-center">
+                    <p className="text-xs sm:text-sm text-stone-500">
+                      Use os botões no cabeçalho para navegar entre as etapas
+                    </p>
+                  </div>
+                )}
+                {/* Utilitário opcional de recarga */}
+                <button
+                  onClick={async () => {
+                    const template = await reloadTemplate(currentStep);
+                    if (template?.blocks) {
+                      setBlocks(template.blocks);
+                    }
+                  }}
+                  className="ml-4 px-4 py-3 rounded-lg font-medium bg-white text-stone-700 hover:bg-stone-50 border border-stone-200 shadow-sm hover:shadow"
+                  title="Recarregar blocos da etapa"
+                >
+                  🔄 Recarregar etapa
+                </button>
+              </div>
 
-                {/* 📊 FOOTER COM ESTATÍSTICAS */}
-                <div className="text-center mt-12 text-sm text-stone-500">
-                  <div className="flex justify-center items-center space-x-6">
-                    <div className="flex items-center gap-1">
-                      <span>🎯</span> Etapa: {currentStep}/21
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <span>📊</span> Progresso: {progress}%
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <span>🎨</span> Blocos: {blocks.length}
-                    </div>
+              {/* 📊 FOOTER COM ESTATÍSTICAS */}
+              <div className="text-center mt-12 text-sm text-stone-500">
+                <div className="flex justify-center items-center space-x-6">
+                  <div className="flex items-center gap-1">
+                    <span>🎯</span> Etapa: {currentStep}/21
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <span>📊</span> Progresso: {progress}%
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <span>🎨</span> Blocos: {blocks.length}
                   </div>
                 </div>
               </div>
@@ -1099,6 +1111,7 @@ const QuizModularPage: React.FC<QuizModularPageProps> = ({ initialStep }) => {
           </div>
         </div>
       </div>
+
       {/* ✅ FASE 4: Métricas e monitoramento avançado */}
       {import.meta?.env?.DEV && (
         <Suspense fallback={null}>

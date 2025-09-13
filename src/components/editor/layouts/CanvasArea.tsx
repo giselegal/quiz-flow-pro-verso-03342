@@ -4,6 +4,7 @@ import CanvasDropZone from '@/components/editor/canvas/CanvasDropZone.simple';
 import type { Block } from '@/types/editor';
 import { useTheme } from '@/components/theme-provider';
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { useCanvasContainerStyles } from '@/hooks/useCanvasContainerStyles';
 
 const LoadingFallback = () => (
   <div className="flex items-center justify-center h-full w-full">
@@ -25,8 +26,8 @@ export interface CanvasAreaProps {
   containerRef: React.RefObject<HTMLDivElement>;
   mode: 'edit' | 'preview';
   setMode: (m: 'edit' | 'preview') => void;
-  previewDevice: 'desktop' | 'tablet' | 'mobile';
-  setPreviewDevice: (m: 'desktop' | 'tablet' | 'mobile') => void;
+  previewDevice: 'desktop' | 'tablet' | 'mobile' | 'xl';
+  setPreviewDevice: (m: 'desktop' | 'tablet' | 'mobile' | 'xl') => void;
   safeCurrentStep: number;
   currentStepKey: string;
   currentStepData: Block[];
@@ -60,6 +61,9 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [customTitle, setCustomTitle] = useState('Quiz Quest - Editor Principal');
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  // Hook para aplicar estilos dinâmicos
+  useCanvasContainerStyles();
 
   const handlePublishAll = useCallback(() => {
     try {
@@ -426,7 +430,9 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
                       onSelectBlock={actions.setSelectedBlockId}
                       onUpdateBlock={(id: string, updates: any) => actions.updateBlock(currentStepKey, id, updates)}
                       onDeleteBlock={(id: string) => actions.removeBlock(currentStepKey, id)}
+                      onDeselectBlocks={() => actions.setSelectedBlockId(null)}
                       className="h-full w-full"
+                      isPreviewing={mode !== 'edit'}
                       scopeId={safeCurrentStep}
                     />
                   }

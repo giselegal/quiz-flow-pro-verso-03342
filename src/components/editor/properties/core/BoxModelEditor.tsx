@@ -11,7 +11,7 @@ import {
     Box,
     RotateCcw
 } from 'lucide-react';
-import ContextualTooltip, { tooltipLibrary } from './ContextualTooltip';
+import { ContextualTooltip } from './ContextualTooltip';
 import type { PropertyEditorProps } from './types';
 
 interface BoxModelEditorProps extends PropertyEditorProps {
@@ -173,10 +173,7 @@ const BoxModelEditor: React.FC<BoxModelEditorProps> = ({
                     <div className="flex items-center gap-2">
                         <Box className={`w-4 h-4 text-${getAccentColor()}-600`} />
                         <CardTitle className="text-sm">{property.label}</CardTitle>
-                        <ContextualTooltip
-                            info={boxType === 'margin' ? tooltipLibrary.margin : tooltipLibrary.padding}
-                            compact
-                        />
+                        <ContextualTooltip content="Configure margens e padding do elemento" />
                     </div>
                     <div className="flex items-center gap-2">
                         <Button

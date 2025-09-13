@@ -773,7 +773,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
 
   // sem ponte: hook já recebe currentStepData atualizado via dependências
 
-  const [previewDevice, setPreviewDevice] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
+  const [previewDevice, setPreviewDevice] = useState<'desktop' | 'tablet' | 'mobile' | 'xl'>('desktop');
 
   const handleDuplicateSelected = useCallback(() => {
     const selectedBlock = currentStepData.find((block: Block) => block.id === (editorContext as any).state.selectedBlockId);
@@ -804,9 +804,9 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         onDelete={() => selectedBlock ? actions.removeBlock(currentStepKey, selectedBlock.id) : undefined}
         onDuplicate={handleDuplicateSelected}
         onReset={handleResetSelected}
-        previewMode={previewDevice}
+        previewMode={previewDevice as 'desktop' | 'tablet' | 'mobile'}
         onPreviewModeChange={setPreviewDevice}
-        className="!w-[20%] !min-w-0 !max-w-none"
+        className="!w-full !h-full bg-gray-900"
       />
     );
   });
@@ -814,58 +814,171 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   return (
     <>
       {/* 🎯 Cabeçalho do Funil */}
-      <FunnelHeader />
+      <FunnelHeader
+        viewportMode={previewDevice}
+        onViewportModeChange={setPreviewDevice}
+      />
 
       <StepDndProvider
         stepNumber={safeCurrentStep}
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
       >
-        <div className={`editor-pro h-[calc(100vh-80px)] bg-gray-950 flex overflow-x-hidden max-w-screen ${className}`}>
-          {/* 1) Etapas - 10% */}
-          <Suspense fallback={<div className="w-[10%] min-w-0 max-w-none p-4 bg-gray-900 border-r border-gray-800/50">Loading steps…</div>}>
-            <StepSidebar
-              currentStep={safeCurrentStep}
-              totalSteps={21}
-              stepHasBlocks={stepHasBlocks}
-              stepValidation={(state as any)?.stepValidation || {}}
-              onSelectStep={handleStepSelect}
+        <div className={`editor-pro h-[calc(100vh-80px)] bg-gray-100 flex overflow-hidden max-w-screen ${className} relative`}>
+
+          {/* 📱 MOBILE OVERLAYS - Navegação e Propriedades */}
+          <div className="lg:hidden">
+            {/* Mobile Navigation Overlay */}
+            <div id="mobile-nav-overlay" className="mobile-overlay mobile-nav-overlay">
+              <div className="mobile-overlay-header">
+                <h3>Navegação</h3>
+                <button
+                  onClick={() => {
+                    const overlay = document.getElementById('mobile-nav-overlay');
+                    if (overlay) overlay.classList.remove('show');
+                  }}
+                  className="mobile-overlay-close"
+                >
+                  ×
+                </button>
+              </div>
+              <div className="mobile-overlay-content">
+                <Suspense fallback={<div className="p-4">Loading steps…</div>}>
+                  <StepSidebar
+                    currentStep={safeCurrentStep}
+                    totalSteps={21}
+                    stepHasBlocks={stepHasBlocks}
+                    stepValidation={(state as any)?.stepValidation || {}}
+                    onSelectStep={(step) => {
+                      handleStepSelect(step);
+                      const overlay = document.getElementById('mobile-nav-overlay');
+                      if (overlay) overlay.classList.remove('show');
+                    }}
+                    getStepAnalysis={getStepAnalysis as any}
+                    renderIcon={renderIcon as any}
+                    className="bg-gray-900"
+                  />
+                </Suspense>
+                <Suspense fallback={<div className="p-4">Loading library…</div>}>
+                  <ComponentsSidebar
+                    groupedComponents={groupedComponents as any}
+                    renderIcon={renderIcon as any}
+                    className="bg-gray-900 mt-4"
+                  />
+                </Suspense>
+              </div>
+            </div>
+
+            {/* Mobile Properties Overlay */}
+            <div id="mobile-props-overlay" className="mobile-overlay mobile-props-overlay">
+              <div className="mobile-overlay-header">
+                <h3>Propriedades</h3>
+                <button
+                  onClick={() => {
+                    const overlay = document.getElementById('mobile-props-overlay');
+                    if (overlay) overlay.classList.remove('show');
+                  }}
+                  className="mobile-overlay-close"
+                >
+                  ×
+                </button>
+              </div>
+              <div className="mobile-overlay-content">
+                <Suspense fallback={<div className="p-4">Properties…</div>}>
+                  <MemoPropertiesColumn />
+                </Suspense>
+              </div>
+            </div>
+          </div>
+
+          {/* 📱 MOBILE ACTION BUTTONS */}
+          <div className="lg:hidden fixed bottom-4 left-4 right-4 flex justify-between z-40">
+            <button
+              onClick={() => {
+                const overlay = document.getElementById('mobile-nav-overlay');
+                if (overlay) overlay.classList.add('show');
+              }}
+              className="mobile-action-btn bg-blue-600"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+              <span className="text-xs">Menu</span>
+            </button>
+
+            <button
+              onClick={() => {
+                const overlay = document.getElementById('mobile-props-overlay');
+                if (overlay) overlay.classList.add('show');
+              }}
+              className="mobile-action-btn bg-green-600"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4" />
+              </svg>
+              <span className="text-xs">Props</span>
+            </button>
+          </div>
+
+          {/* DESKTOP LAYOUT - Melhor distribuição de espaço */}
+          {/* 1) Sidebar Navegação Compacta - Etapas + Componentes - 280px fixo */}
+          <div className="hidden lg:block w-[280px] min-w-[280px] max-w-[280px] bg-gray-900 border-r border-gray-800/50 flex flex-col">
+            {/* Painel de Etapas */}
+            <div className="flex-shrink-0 h-[300px] border-b border-gray-800/50">
+              <Suspense fallback={<div className="p-4">Loading steps…</div>}>
+                <StepSidebar
+                  currentStep={safeCurrentStep}
+                  totalSteps={21}
+                  stepHasBlocks={stepHasBlocks}
+                  stepValidation={(state as any)?.stepValidation || {}}
+                  onSelectStep={handleStepSelect}
+                  getStepAnalysis={getStepAnalysis as any}
+                  renderIcon={renderIcon as any}
+                  className="!w-full bg-transparent h-full"
+                />
+              </Suspense>
+            </div>
+            
+            {/* Painel de Componentes */}
+            <div className="flex-1 overflow-y-auto">
+              <Suspense fallback={<div className="p-4">Loading library…</div>}>
+                <ComponentsSidebar
+                  groupedComponents={groupedComponents as any}
+                  renderIcon={renderIcon as any}
+                  className="!w-full bg-transparent"
+                />
+              </Suspense>
+            </div>
+          </div>
+
+          {/* 2) Canvas Principal - Área flexível principal */}
+          <div className="w-full lg:flex-1 min-w-0 bg-gray-50">
+            <CanvasAreaLayout
+              className="h-full"
+              containerRef={containerRef}
+              mode={mode}
+              setMode={setMode}
+              previewDevice={previewDevice}
+              setPreviewDevice={setPreviewDevice}
+              safeCurrentStep={safeCurrentStep}
+              currentStepKey={currentStepKey}
+              currentStepData={currentStepData as any}
+              selectedBlockId={state.selectedBlockId}
+              actions={actions as any}
+              state={state as any}
+              notification={notification as any}
+              renderIcon={renderIcon as any}
               getStepAnalysis={getStepAnalysis as any}
-              renderIcon={renderIcon as any}
-              className="!w:[10%] !min-w-0 !max-w-none bg-gray-900 border-r border-gray-800/50"
+              isDragging={isDragging}
             />
-          </Suspense>
-          {/* 2) Componentes - 15% */}
-          <Suspense fallback={<div className="w-[15%] min-w-0 max-w-none p-4 bg-gray-900 border-r border-gray-800/50">Loading library…</div>}>
-            <ComponentsSidebar
-              groupedComponents={groupedComponents as any}
-              renderIcon={renderIcon as any}
-              className="!w-[15%] !min-w-0 !max-w-none bg-gray-900 border-r border-gray-800/50"
-            />
-          </Suspense>
-          {/* 3) Canvas - 55% */}
-          <CanvasAreaLayout
-            className=""
-            containerRef={containerRef}
-            mode={mode}
-            setMode={setMode}
-            previewDevice={previewDevice}
-            setPreviewDevice={setPreviewDevice}
-            safeCurrentStep={safeCurrentStep}
-            currentStepKey={currentStepKey}
-            currentStepData={currentStepData as any}
-            selectedBlockId={state.selectedBlockId}
-            actions={actions as any}
-            state={state as any}
-            notification={notification as any}
-            renderIcon={renderIcon as any}
-            getStepAnalysis={getStepAnalysis as any}
-            isDragging={isDragging}
-          />
-          {/* 4) Propriedades - 20% */}
-          <Suspense fallback={<div className="w-[20%] min-w-0 max-w-none p-4 bg-gray-900 border-l border-gray-800/50">Properties…</div>}>
-            <MemoPropertiesColumn />
-          </Suspense>
+          </div>
+
+          {/* 3) Painel de Propriedades - 320px fixo */}
+          <div className="hidden lg:block w-[320px] min-w-[320px] max-w-[320px] bg-gray-900 border-l border-gray-800/50">
+            <Suspense fallback={<div className="p-4">Properties…</div>}>
+              <MemoPropertiesColumn />
+            </Suspense>
+          </div>
         </div>
       </StepDndProvider>
 
