@@ -57,8 +57,9 @@ const EditorNavigationControls: React.FC<{
   const progress = Math.round((currentStep / totalSteps) * 100);
 
   return (
-    <div className="mt-8 p-6 bg-white/90 backdrop-blur-sm border border-stone-200/50 shadow-sm rounded-lg">
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+    <div className="mt-6 sm:mt-8 p-4 sm:p-6 bg-white/90 backdrop-blur-sm border border-stone-200/50 shadow-sm rounded-lg">
+      {/* Layout Desktop/Tablet */}
+      <div className="hidden sm:flex items-center justify-between gap-4">
         {/* Informações da etapa */}
         <div className="flex items-center gap-4">
           <div className="text-sm font-medium text-stone-800">
@@ -94,6 +95,53 @@ const EditorNavigationControls: React.FC<{
             disabled={currentStep === totalSteps}
             className={cn(
               'px-4 py-2 text-sm rounded-lg transition-colors',
+              currentStep === totalSteps
+                ? 'bg-stone-200 text-stone-400 cursor-not-allowed'
+                : 'bg-gradient-to-r from-[#B89B7A] to-[#8B7355] text-white hover:from-[#A08966] hover:to-[#7A6B4D] shadow-sm'
+            )}
+          >
+            {currentStep === totalSteps ? 'Finalizado' : 'Próxima →'}
+          </button>
+        </div>
+      </div>
+
+      {/* Layout Mobile */}
+      <div className="sm:hidden space-y-4">
+        {/* Informações da etapa no topo */}
+        <div className="text-center">
+          <div className="text-sm font-medium text-stone-800 mb-3">
+            Etapa {currentStep} de {totalSteps}
+          </div>
+          <div className="flex items-center justify-center gap-3">
+            <div className="flex-1 max-w-48 bg-stone-200 rounded-full h-2">
+              <div
+                className="bg-gradient-to-r from-[#B89B7A] to-[#8B7355] h-2 rounded-full transition-all duration-300"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+            <div className="text-sm font-medium text-stone-700">{progress}%</div>
+          </div>
+        </div>
+
+        {/* Botões full-width no mobile */}
+        <div className="flex gap-3">
+          <button
+            onClick={handlePrevious}
+            disabled={currentStep === 1}
+            className={cn(
+              'flex-1 flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium rounded-lg border transition-colors',
+              currentStep === 1
+                ? 'bg-stone-100 text-stone-400 border-stone-200 cursor-not-allowed'
+                : 'bg-white text-stone-700 hover:bg-stone-50 border-stone-300 hover:border-stone-400 shadow-sm'
+            )}
+          >
+            ← Anterior
+          </button>
+          <button
+            onClick={handleNext}
+            disabled={currentStep === totalSteps}
+            className={cn(
+              'flex-1 flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium rounded-lg transition-colors',
               currentStep === totalSteps
                 ? 'bg-stone-200 text-stone-400 cursor-not-allowed'
                 : 'bg-gradient-to-r from-[#B89B7A] to-[#8B7355] text-white hover:from-[#A08966] hover:to-[#7A6B4D] shadow-sm'
