@@ -159,12 +159,11 @@ const QuizNavigationBlock: React.FC<QuizNavigationBlockProps> = ({
   const getButtonClasses = (variant: 'primary' | 'secondary' | 'outline' = buttonStyle) => {
     const baseClasses = `
       quiz-nav-button font-semibold transition-all duration-300 transform hover:scale-105
-      ${
-        size === 'sm'
-          ? 'px-3 py-2 text-sm md:px-4 md:py-2'
-          : size === 'lg'
-            ? 'px-6 py-3 text-base md:px-8 md:py-4 md:text-lg'
-            : 'px-4 py-2.5 text-sm md:px-6 md:py-3 md:text-base'
+      ${size === 'sm'
+        ? 'px-3 py-2 text-sm md:px-4 md:py-2'
+        : size === 'lg'
+          ? 'px-6 py-3 text-base md:px-8 md:py-4 md:text-lg'
+          : 'px-4 py-2.5 text-sm md:px-6 md:py-3 md:text-base'
       }
       ${fullWidth ? 'w-full md:w-auto' : 'w-full md:w-auto'}
       flex items-center justify-center
@@ -183,7 +182,7 @@ const QuizNavigationBlock: React.FC<QuizNavigationBlockProps> = ({
   const getContainerClasses = () => {
     const alignmentClasses = {
       left: 'justify-start',
-      center: 'justify-center', 
+      center: 'justify-center',
       right: 'justify-end',
       'space-between': 'justify-between md:justify-between', // Mobile será flex-col via CSS
     };

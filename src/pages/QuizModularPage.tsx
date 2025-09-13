@@ -849,77 +849,41 @@ const QuizModularPage: React.FC<QuizModularPageProps> = ({ initialStep }) => {
           <div className="flex-1 overflow-auto">
             <div className="container mx-auto px-2 sm:px-4 md:px-6 py-4 md:py-8">
               <div className="max-w-4xl mx-auto">
-                {/* 🎯 CABEÇALHO PRINCIPAL DO QUIZ - Responsivo */}
-                <div className="bg-white/90 backdrop-blur-sm border border-stone-200/50 shadow-sm rounded-lg mb-4 md:mb-8 p-3 sm:p-4 md:p-6">
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                    <div className="flex items-center gap-2 sm:gap-4">
-                      <h2 className="text-base sm:text-lg font-semibold text-stone-800">Quiz Style Challenge</h2>
-                      <div className="text-xs sm:text-sm text-stone-600">Etapa {currentStep} de 21</div>
-                    </div>
 
-                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-                      <div className="flex items-center gap-2 sm:gap-4">
-                        <div className="w-24 sm:w-32 md:w-48">
-                          <Progress value={progress} className="h-1.5 sm:h-2" />
-                        </div>
-                        <div className="text-xs sm:text-sm font-medium text-stone-700">{progress}%</div>
+                {/* 📋 HEADER DA ETAPA (limpo: sem textos promocionais fixos) - Responsivo - REMOVIDO PARA EVITAR DUPLICAÇÃO */}
+                {/* O cabeçalho principal já mostra essas informações, não precisamos duplicar */}
+                {false && (
+                  <div className="text-center mb-4 sm:mb-6 md:mb-8">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center gap-2 sm:gap-4 mb-3 sm:mb-4">
+                      <div className="text-xs sm:text-sm text-stone-500">Etapa {currentStep} de 21</div>
+                      <div className="w-24 sm:w-32 bg-stone-200 rounded-full h-1.5 sm:h-2 mx-auto sm:mx-0">
+                        <div
+                          className="bg-gradient-to-r from-[#B89B7A] to-[#8B7355] h-1.5 sm:h-2 rounded-full"
+                          style={{ width: `${progress}%` }}
+                        />
                       </div>
-
-                      <div className="flex items-center gap-2 justify-end">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={handlePrevious}
-                          disabled={currentStep === 1}
-                          className="text-xs sm:text-sm px-2 sm:px-3"
-                        >
-                          ← Anterior
-                        </Button>
-                        <Button
-                          size="sm"
-                          onClick={handleNext}
-                          disabled={nextDisabled}
-                          className={cn(
-                            'text-xs sm:text-sm px-2 sm:px-3',
-                            nextDisabled
-                              ? 'bg-stone-200 text-stone-400 cursor-not-allowed'
-                              : 'bg-gradient-to-r from-[#B89B7A] to-[#8B7355]'
-                          )}
-                        >
-                          {nextLabel}
-                        </Button>
+                      <div className="text-xs sm:text-sm text-stone-600">{progress}%</div>
+                    </div>
+                    {(stepConfig?.showProgressMessage || stepConfig?.showSelectionCount) && (
+                      <div className="text-xs sm:text-sm text-stone-600 px-4">
+                        {stepConfig?.showProgressMessage
+                          ? (progressText || '')
+                          : `Você selecionou ${selectedCount} de ${stepConfig?.requiredSelections ?? 0} opções`}
                       </div>
-                    </div>
+                    )}
                   </div>
+                )}
 
-                  {/* Mensagem de validação - Mobile friendly */}
-                  {stepConfig?.showValidationFeedback && mustBeValid && !isStepValid && (
-                    <div className="mt-3 text-xs text-stone-500 text-center sm:text-left">
-                      {validationText}
-                    </div>
-                  )}
-                </div>
-
-                {/* 📋 HEADER DA ETAPA (limpo: sem textos promocionais fixos) - Responsivo */}
-                <div className="text-center mb-4 sm:mb-6 md:mb-8">
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center gap-2 sm:gap-4 mb-3 sm:mb-4">
-                    <div className="text-xs sm:text-sm text-stone-500">Etapa {currentStep} de 21</div>
-                    <div className="w-24 sm:w-32 bg-stone-200 rounded-full h-1.5 sm:h-2 mx-auto sm:mx-0">
-                      <div
-                        className="bg-gradient-to-r from-[#B89B7A] to-[#8B7355] h-1.5 sm:h-2 rounded-full"
-                        style={{ width: `${progress}%` }}
-                      />
-                    </div>
-                    <div className="text-xs sm:text-sm text-stone-600">{progress}%</div>
-                  </div>
-                  {(stepConfig?.showProgressMessage || stepConfig?.showSelectionCount) && (
+                {/* 🎯 MENSAGENS DE PROGRESSO/SELEÇÃO - Apenas quando necessário */}
+                {(stepConfig?.showProgressMessage || stepConfig?.showSelectionCount) && (
+                  <div className="text-center mb-4 sm:mb-6">
                     <div className="text-xs sm:text-sm text-stone-600 px-4">
                       {stepConfig?.showProgressMessage
                         ? (progressText || '')
                         : `Você selecionou ${selectedCount} de ${stepConfig?.requiredSelections ?? 0} opções`}
                     </div>
-                  )}
-                </div>
+                  </div>
+                )}
 
                 {/* 🚀 Navegação premium (fallback) — aparece quando o template não incluir 'quiz-navigation' */}
                 {!hasTemplateNavigation && (
@@ -1030,54 +994,54 @@ const QuizModularPage: React.FC<QuizModularPageProps> = ({ initialStep }) => {
                   )}
                 </div>
 
-                {/* 🎮 CONTROLES DE NAVEGAÇÃO - Mobile Friendly */}
-                {hasTemplateNavigation ? (
-                  <div className="flex flex-col sm:flex-row justify-between items-center mt-4 sm:mt-6 md:mt-8 gap-4 sm:gap-0">
-                    <button
-                      onClick={handlePrevious}
-                      disabled={currentStep === 1}
+                {/* 🎮 CONTROLES DE NAVEGAÇÃO LIMPOS - Abaixo dos blocos */}
+                <div className="flex flex-col sm:flex-row justify-between items-center mt-6 sm:mt-8 gap-4 p-4 bg-white/50 backdrop-blur-sm rounded-lg border border-stone-200/30">
+                  
+                  {/* Botão Anterior */}
+                  <Button
+                    variant="outline"
+                    onClick={handlePrevious}
+                    disabled={currentStep === 1}
+                    className="w-full sm:w-auto order-2 sm:order-1"
+                  >
+                    ← Anterior
+                  </Button>
+
+                  {/* Informações de progresso no centro */}
+                  <div className="text-center order-1 sm:order-2 flex flex-col sm:flex-row items-center gap-2 sm:gap-4">
+                    <div className="text-sm text-stone-600">
+                      Etapa <span className="font-semibold text-[#B89B7A]">{currentStep}</span> de <span className="font-semibold">21</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Progress value={progress} className="w-24 sm:w-32 h-2" />
+                      <span className="text-sm font-medium text-stone-700">{progress}%</span>
+                    </div>
+                  </div>
+
+                  {/* Botão Próximo/Finalizar */}
+                  <div className="w-full sm:w-auto order-3">
+                    <Button
+                      onClick={handleNext}
+                      disabled={nextDisabled}
                       className={cn(
-                        'flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-medium text-sm sm:text-base w-full sm:w-auto justify-center sm:justify-start order-2 sm:order-1',
-                        currentStep === 1
-                          ? 'bg-stone-100 text-stone-400 cursor-not-allowed'
-                          : 'bg-white text-stone-700 hover:bg-stone-50 border border-stone-200 shadow-sm hover:shadow'
+                        'w-full sm:w-auto',
+                        nextDisabled
+                          ? 'bg-stone-200 text-stone-400 cursor-not-allowed'
+                          : 'bg-gradient-to-r from-[#B89B7A] to-[#8B7355] text-white hover:from-[#A08966] hover:to-[#7A6B4D] shadow-md hover:shadow-lg'
                       )}
                     >
-                      ← Anterior
-                    </button>
-
-                    <div className="text-center order-1 sm:order-2">
-                      <div className="text-xs sm:text-sm text-stone-500 mb-1">Progresso</div>
-                      <div className="text-base sm:text-lg font-semibold text-stone-800">{currentStep} / 21</div>
-                    </div>
-
-                    <div className="flex items-center gap-2 w-full sm:w-auto order-3">
-                      <button
-                        onClick={handleNext}
-                        disabled={nextDisabled}
-                        className={cn(
-                          'flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-medium text-sm sm:text-base w-full sm:w-auto justify-center sm:justify-end',
-                          nextDisabled
-                            ? 'bg-stone-100 text-stone-400 cursor-not-allowed'
-                            : 'bg-gradient-to-r from-[#B89B7A] to-[#8B7355] text-white hover:from-[#A08966] hover:to-[#7A6B4D] shadow-md hover:shadow-lg'
-                        )}
-                      >
-                        {nextLabel} →
-                      </button>
-                      {stepConfig?.showValidationFeedback && mustBeValid && !isStepValid && (
-                        <div className="text-xs text-stone-500 mt-2 text-center sm:text-left">
-                          {validationText}
-                        </div>
-                      )}
-                    </div>
+                      {nextLabel} →
+                    </Button>
+                    
+                    {/* Mensagem de validação abaixo do botão */}
+                    {stepConfig?.showValidationFeedback && mustBeValid && !isStepValid && (
+                      <div className="text-xs text-stone-500 mt-2 text-center">
+                        {validationText}
+                      </div>
+                    )}
                   </div>
-                ) : (
-                  <div className="mt-4 sm:mt-6 md:mt-8 text-center">
-                    <p className="text-xs sm:text-sm text-stone-500">
-                      Use os botões no cabeçalho para navegar entre as etapas
-                    </p>
-                  </div>
-                )}
+                </div>
+                
                 {/* Utilitário opcional de recarga */}
                 <button
                   onClick={async () => {
@@ -1086,7 +1050,7 @@ const QuizModularPage: React.FC<QuizModularPageProps> = ({ initialStep }) => {
                       setBlocks(template.blocks);
                     }
                   }}
-                  className="ml-4 px-4 py-3 rounded-lg font-medium bg-white text-stone-700 hover:bg-stone-50 border border-stone-200 shadow-sm hover:shadow"
+                  className="mt-4 px-4 py-3 rounded-lg font-medium bg-white text-stone-700 hover:bg-stone-50 border border-stone-200 shadow-sm hover:shadow"
                   title="Recarregar blocos da etapa"
                 >
                   🔄 Recarregar etapa
