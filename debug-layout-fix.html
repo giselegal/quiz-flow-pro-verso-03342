@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug: Layout Editor Fix</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #111827;
+            color: #e5e7eb;
+        }
+
+        .debug-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .debug-section {
+            background: #1f2937;
+            border: 1px solid #374151;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .debug-title {
+            color: #60a5fa;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #374151;
+            padding-bottom: 10px;
+        }
+
+        .fix-item {
+            background: #065f46;
+            color: #d1fae5;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            border-left: 4px solid #10b981;
+        }
+
+        .problem-item {
+            background: #7c2d12;
+            color: #fed7aa;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            border-left: 4px solid #ea580c;
+        }
+
+        .code {
+            background: #0f1419;
+            border: 1px solid #374151;
+            border-radius: 4px;
+            padding: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+
+        .test-layout {
+            display: flex;
+            height: 400px;
+            border: 2px solid #374151;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .test-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 120px;
+            background: #1f2937;
+            border-bottom: 1px solid #374151;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #60a5fa;
+            font-weight: 600;
+            z-index: 10;
+        }
+
+        .test-main {
+            margin-top: 120px;
+            height: calc(100vh - 120px);
+            display: flex;
+            width: 100%;
+        }
+
+        .test-sidebar {
+            background: #1f2937;
+            border-right: 1px solid #374151;
+            padding: 10px;
+            font-size: 12px;
+        }
+
+        .test-canvas {
+            flex: 1;
+            background: #0f172a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+        }
+
+        .test-props {
+            background: #1f2937;
+            border-left: 1px solid #374151;
+            padding: 10px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="debug-container">
+        <div class="debug-section">
+            <div class="debug-title">🔧 CORREÇÕES APLICADAS NO LAYOUT DO EDITOR</div>
+
+            <div class="fix-item">
+                <strong>✅ Altura do Cabeçalho Corrigida:</strong><br>
+                Alterado de 80px para 120px no cálculo da altura do container principal
+                <div class="code">h-[calc(100vh-120px)]</div>
+            </div>
+
+            <div class="fix-item">
+                <strong>✅ FunnelHeader Analisado:</strong><br>
+                Altura real: ~120px (padding + conteúdo principal + informações adicionais)
+            </div>
+        </div>
+
+        <div class="debug-section">
+            <div class="debug-title">⚠️ PROBLEMAS IDENTIFICADOS</div>
+
+            <div class="problem-item">
+                <strong>❌ Conflitos CSS:</strong><br>
+                Dois arquivos CSS com regras conflitantes:
+                <ul>
+                    <li><code>src/index.css</code> (editado manualmente)</li>
+                    <li><code>src/styles/mobile-responsive-fixes.css</code> (muitas regras !important)</li>
+                </ul>
+            </div>
+
+            <div class="problem-item">
+                <strong>❌ Layout Responsivo:</strong><br>
+                Breakpoint em 1024px pode conflitar com layout de 4 colunas
+            </div>
+
+            <div class="problem-item">
+                <strong>❌ Overlays Mobile:</strong><br>
+                Z-index e posicionamento dos overlays podem sobrepor o conteúdo
+            </div>
+        </div>
+
+        <div class="debug-section">
+            <div class="debug-title">🎯 ESTRUTURA DO LAYOUT</div>
+
+            <div style="margin: 20px 0;">
+                <strong>Desktop (4 colunas):</strong>
+                <ul>
+                    <li>Etapas: 10% (w-[10%])</li>
+                    <li>Componentes: 15% (w-[15%])</li>
+                    <li>Canvas: 55% (w-[55%])</li>
+                    <li>Propriedades: 20% (w-[20%])</li>
+                </ul>
+            </div>
+
+            <div style="margin: 20px 0;">
+                <strong>Mobile (&lt; 1024px):</strong>
+                <ul>
+                    <li>Canvas: 100% width</li>
+                    <li>Sidebars: Overlays com position fixed</li>
+                    <li>Botões flutuantes no canto inferior</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="debug-section">
+            <div class="debug-title">🧪 TESTE DE LAYOUT</div>
+
+            <div
+                style="position: relative; height: 500px; border: 2px solid #374151; border-radius: 8px; overflow: hidden;">
+                <div class="test-header">FunnelHeader (~120px)</div>
+                <div class="test-main">
+                    <div class="test-sidebar" style="width: 10%;">
+                        Etapas<br>
+                        (10%)
+                    </div>
+                    <div class="test-sidebar" style="width: 15%;">
+                        Componentes<br>
+                        (15%)
+                    </div>
+                    <div class="test-canvas" style="width: 55%;">
+                        Canvas Area<br>
+                        (55%)
+                    </div>
+                    <div class="test-props" style="width: 20%;">
+                        Propriedades<br>
+                        (20%)
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="debug-section">
+            <div class="debug-title">📋 PRÓXIMAS CORREÇÕES RECOMENDADAS</div>
+
+            <ol style="color: #fbbf24;">
+                <li><strong>CSS Cleanup:</strong> Consolidar regras CSS conflitantes</li>
+                <li><strong>Responsive Breakpoints:</strong> Revisar breakpoints para melhor transição</li>
+                <li><strong>Z-index Management:</strong> Padronizar z-index dos overlays</li>
+                <li><strong>Mobile UX:</strong> Testar usabilidade dos botões flutuantes</li>
+                <li><strong>Performance:</strong> Otimizar lazy loading dos componentes</li>
+            </ol>
+        </div>
+
+        <div class="debug-section">
+            <div class="debug-title">🔄 STATUS DA CORREÇÃO</div>
+
+            <div
+                style="background: #065f46; color: #d1fae5; padding: 15px; border-radius: 6px; border-left: 4px solid #10b981;">
+                <strong>✅ APLICADA:</strong> Altura do cabeçalho corrigida de 80px para 120px<br>
+                <strong>📍 TESTE:</strong> Acesse <code>http://localhost:8081/editor</code> para verificar o resultado
+            </div>
+        </div>
+    </div>
+
+    <script>
+        console.log('🔧 Debug Layout Fix loaded');
+        console.log('📊 Layout structure:', {
+            header: '120px',
+            main: 'calc(100vh - 120px)',
+            columns: ['10%', '15%', '55%', '20%'],
+            mobileBreakpoint: '1024px'
+        });
+    </script>
+</body>
+
+</html>

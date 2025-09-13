@@ -824,7 +824,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
       >
-        <div className={`editor-pro h-[calc(100vh-80px)] bg-gray-950 flex overflow-x-hidden max-w-screen ${className} relative`}>
+        <div className={`editor-pro h-[calc(100vh-120px)] bg-gray-950 flex overflow-x-hidden max-w-screen ${className} relative`}>
 
           {/* 📱 MOBILE OVERLAYS - Navegação e Propriedades */}
           <div className="lg:hidden">
