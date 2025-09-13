@@ -9,7 +9,7 @@
  * - ✅ Performance otimizada
  */
 
-import React, { useCallback, useMemo, useId } from 'react';
+import React, { useCallback, useMemo, useId, memo, lazy, Suspense } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -22,10 +22,14 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 
 import { PropertyChangeIndicator } from '@/components/universal/PropertyChangeIndicator';
-import ColorPicker from '@/components/visual-controls/ColorPicker';
-import SizeSlider from '@/components/visual-controls/SizeSlider';
 
-import { useUnifiedProperties, PropertyType, UnifiedBlock } from '@/hooks/useUnifiedProperties';
+// Lazy loading para componentes pesados
+const ColorPicker = lazy(() => import('@/components/visual-controls/ColorPicker'));
+const SizeSlider = lazy(() => import('@/components/visual-controls/SizeSlider'));
+
+import { PropertyType, UnifiedBlock } from '@/hooks/useUnifiedProperties';
+import { useOptimizedUnifiedProperties } from '@/hooks/useOptimizedUnifiedProperties';
+import { useDebouncedCallback } from '@/hooks/useDebounce';
 import { Settings, Type, Palette, Layout, Trash2, Copy } from 'lucide-react';
 
 // ===== INTERFACES =====
@@ -45,7 +49,7 @@ interface SinglePropertiesPanelProps {
 
 // ===== PROPERTY FIELD RENDERER =====
 
-const PropertyField: React.FC<PropertyFieldProps> = ({ property, value, onChange, uniqueId }) => {
+const PropertyField: React.FC<PropertyFieldProps> = memo(({ property, value, onChange, uniqueId }) => {
     const fieldId = `${uniqueId}-${property.key}`;
 
     const handleChange = useCallback((newValue: any) => {
@@ -122,14 +126,16 @@ const PropertyField: React.FC<PropertyFieldProps> = ({ property, value, onChange
                         </span>
                     </div>
                     <PropertyChangeIndicator>
-                        <SizeSlider
-                            value={value || property.min || 0}
-                            onChange={handleChange}
-                            min={property.min || 0}
-                            max={property.max || 100}
-                            step={property.step || 1}
-                            label={property.label}
-                        />
+                        <Suspense fallback={<div className="h-6 bg-muted rounded animate-pulse" />}>
+                            <SizeSlider
+                                value={value || property.min || 0}
+                                onChange={handleChange}
+                                min={property.min || 0}
+                                max={property.max || 100}
+                                step={property.step || 1}
+                                label={property.label}
+                            />
+                        </Suspense>
                     </PropertyChangeIndicator>
                 </div>
             );
@@ -141,11 +147,13 @@ const PropertyField: React.FC<PropertyFieldProps> = ({ property, value, onChange
                         {property.label}
                     </Label>
                     <PropertyChangeIndicator>
-                        <ColorPicker
-                            value={value || property.defaultValue || '#000000'}
-                            onChange={handleChange}
-                            label={property.label}
-                        />
+                        <Suspense fallback={<div className="h-10 bg-muted rounded animate-pulse" />}>
+                            <ColorPicker
+                                value={value || property.defaultValue || '#000000'}
+                                onChange={handleChange}
+                                label={property.label}
+                            />
+                        </Suspense>
                     </PropertyChangeIndicator>
                 </div>
             );
@@ -207,11 +215,13 @@ const PropertyField: React.FC<PropertyFieldProps> = ({ property, value, onChange
                 </div>
             );
     }
-};
+});
+
+PropertyField.displayName = 'PropertyField';
 
 // ===== MAIN COMPONENT =====
 
-export const SinglePropertiesPanel: React.FC<SinglePropertiesPanelProps> = ({
+export const SinglePropertiesPanel: React.FC<SinglePropertiesPanelProps> = memo(({
     selectedBlock,
     onUpdate,
     onDelete,
@@ -220,52 +230,51 @@ export const SinglePropertiesPanel: React.FC<SinglePropertiesPanelProps> = ({
     // ID único para esta instância do painel
     const uniqueId = useId();
 
-    // Usa o hook unificado para obter propriedades
-    const { properties } = useUnifiedProperties(selectedBlock?.type || '');
+    // Hook otimizado de propriedades com debouncing
+    const { updateProperty, getPropertiesByCategory } = useOptimizedUnifiedProperties({
+        blockType: selectedBlock?.type || '',
+        blockId: selectedBlock?.id,
+        currentBlock: selectedBlock,
+        onUpdate: onUpdate ? (blockId: string, updates: any) => {
+            // Adaptar para o formato esperado pelo editor atual
+            onUpdate(updates.properties || updates);
+        } : undefined
+    });
 
-    // Organiza propriedades por categoria
+    // Debounced update para melhor performance
+    const debouncedUpdateProperty = useDebouncedCallback(updateProperty, 300);
+
+    // Organiza propriedades por categoria (usando função otimizada)
     const categorizedProperties = useMemo(() => {
-        if (!properties) return {};
-
-        const categories: Record<string, any[]> = {
-            content: [],
-            style: [],
-            layout: [],
-            behavior: [],
-            advanced: []
+        const categories = {
+            content: getPropertiesByCategory('content'),
+            style: getPropertiesByCategory('style'), 
+            layout: getPropertiesByCategory('layout'),
+            behavior: getPropertiesByCategory('behavior'),
+            advanced: getPropertiesByCategory('advanced')
         };
-
-        properties.forEach(prop => {
-            const category = prop.category || 'advanced';
-            if (categories[category]) {
-                categories[category].push(prop);
-            }
-        });
 
         // Remove categorias vazias
         Object.keys(categories).forEach(key => {
-            if (categories[key].length === 0) {
-                delete categories[key];
+            if (categories[key as keyof typeof categories].length === 0) {
+                delete categories[key as keyof typeof categories];
             }
         });
 
         return categories;
-    }, [properties]);
+    }, [getPropertiesByCategory]);
 
-    // Handlers compatíveis com o formato do editor atual
+    // Handlers otimizados com debouncing
     const handlePropertyUpdate = useCallback((key: string, value: any) => {
-        if (!onUpdate) return;
-
-        // Formato esperado pelo editor atual
-        onUpdate({ [key]: value });
-    }, [onUpdate]);
+        console.log('🚀 SinglePropertiesPanel handlePropertyUpdate:', { key, value });
+        debouncedUpdateProperty(key, value);
+    }, [debouncedUpdateProperty]);
 
     const handleContentUpdate = useCallback((key: string, value: any) => {
-        if (!onUpdate) return;
-
-        // Para conteúdo, usar prefixo 'content.'
-        onUpdate({ [`content.${key}`]: value });
-    }, [onUpdate]);    // Estado vazio
+        console.log('🚀 SinglePropertiesPanel handleContentUpdate:', { key, value });
+        // Para conteúdo, usar o mesmo update mas com indicação de categoria
+        debouncedUpdateProperty(key, value);
+    }, [debouncedUpdateProperty]);    // Estado vazio
     if (!selectedBlock) {
         return (
             <Card className="h-full max-w-full overflow-hidden">
@@ -378,6 +387,8 @@ export const SinglePropertiesPanel: React.FC<SinglePropertiesPanelProps> = ({
             </CardContent>
         </Card>
     );
-};
+});
+
+SinglePropertiesPanel.displayName = 'SinglePropertiesPanel';
 
 export default SinglePropertiesPanel;
