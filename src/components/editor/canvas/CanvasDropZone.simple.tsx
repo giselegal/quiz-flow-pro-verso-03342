@@ -12,50 +12,50 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { useCanvasContainerStyles } from '@/hooks/useCanvasContainerStyles';
 
 // Componente de controles de navegação para aparecer no final dos blocos do editor
-const EditorNavigationControls: React.FC<{ 
+const EditorNavigationControls: React.FC<{
   scopeId?: string | number;
 }> = () => {
   const [currentStep, setCurrentStep] = React.useState(1);
   const totalSteps = 21;
-  
+
   // Escutar mudanças de etapa globais
   React.useEffect(() => {
     const updateStep = () => {
       const step = (window as any).__quizCurrentStep || 1;
       setCurrentStep(step);
     };
-    
+
     updateStep();
     window.addEventListener('navigate-to-step', updateStep);
     window.addEventListener('quiz-navigate-to-step', updateStep);
-    
+
     return () => {
       window.removeEventListener('navigate-to-step', updateStep);
       window.removeEventListener('quiz-navigate-to-step', updateStep);
     };
   }, []);
-  
+
   // Funções de navegação
   const handlePrevious = () => {
     if (currentStep > 1) {
       const newStep = currentStep - 1;
-      window.dispatchEvent(new CustomEvent('navigate-to-step', { 
+      window.dispatchEvent(new CustomEvent('navigate-to-step', {
         detail: { step: newStep, source: 'editor-navigation' }
       }));
     }
   };
-  
+
   const handleNext = () => {
     if (currentStep < totalSteps) {
       const newStep = currentStep + 1;
-      window.dispatchEvent(new CustomEvent('navigate-to-step', { 
+      window.dispatchEvent(new CustomEvent('navigate-to-step', {
         detail: { step: newStep, source: 'editor-navigation' }
       }));
     }
   };
-  
+
   const progress = Math.round((currentStep / totalSteps) * 100);
-  
+
   return (
     <div className="mt-8 p-6 bg-white/90 backdrop-blur-sm border border-stone-200/50 shadow-sm rounded-lg">
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -82,8 +82,8 @@ const EditorNavigationControls: React.FC<{
             disabled={currentStep === 1}
             className={cn(
               'px-4 py-2 text-sm rounded-lg border transition-colors',
-              currentStep === 1 
-                ? 'bg-stone-100 text-stone-400 border-stone-200 cursor-not-allowed' 
+              currentStep === 1
+                ? 'bg-stone-100 text-stone-400 border-stone-200 cursor-not-allowed'
                 : 'bg-white text-stone-700 hover:bg-stone-50 border-stone-300 hover:border-stone-400'
             )}
           >
@@ -540,7 +540,7 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
                   <InterBlockDropZone position={index + 1} isActive={isDraggingAnyValidComponent} scopeId={scopeId} />
                 </React.Fragment>
               ))}
-              
+
               {/* Controles de navegação após todos os blocos - apenas no editor */}
               {!isPreviewing && blocks.length > 0 && (
                 <EditorNavigationControls scopeId={scopeId} />

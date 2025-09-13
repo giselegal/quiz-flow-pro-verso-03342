@@ -201,10 +201,11 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
     ? 'Finalizado'
     : (!isStepValid && mustBeValid ? 'Complete a etapa' : (stepConfig?.nextButtonText || 'Próxima →'));
 
-  // Header (alinhado ao /quiz)
+  // Header responsivo (alinhado ao /quiz)
   const renderHeader = () => (
     <div className="bg-white/90 backdrop-blur-sm border border-stone-200/50 shadow-sm rounded-lg mb-6 p-4">
-      <div className="flex items-center justify-between">
+      {/* Layout Desktop */}
+      <div className="hidden md:flex items-center justify-between">
         <div className="flex items-center gap-4">
           <h2 className="text-lg font-semibold text-stone-800">Quiz Style Challenge</h2>
           <div className="text-sm text-stone-600">Etapa {currentStep} de {totalSteps}</div>
@@ -214,7 +215,7 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
           <div className="w-48">
             <div className="bg-stone-200 rounded-full h-2 w-full">
               <div
-                className="bg-gradient-to-r from-[#B89B7A] to-[#8B7355] h-2 rounded-full"
+                className="bg-gradient-to-r from-[#B89B7A] to-[#8B7355] h-2 rounded-full transition-all duration-300"
                 style={{ width: `${progress}%` }}
               />
             </div>
@@ -234,6 +235,56 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
             onClick={() => !nextDisabled && nextStep()}
             disabled={nextDisabled}
             className={cn('px-3 py-2 text-sm rounded', nextDisabled ? 'bg-stone-200 text-stone-400 cursor-not-allowed' : 'bg-gradient-to-r from-[#B89B7A] to-[#8B7355] text-white hover:from-[#A08966] hover:to-[#7A6B4D] shadow')}
+          >
+            {nextLabel}
+          </button>
+        </div>
+      </div>
+
+      {/* Layout Mobile */}
+      <div className="md:hidden space-y-4">
+        {/* Título e etapa */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+          <h2 className="text-lg font-semibold text-stone-800">Quiz Style Challenge</h2>
+          <div className="text-sm text-stone-600">Etapa {currentStep} de {totalSteps}</div>
+        </div>
+
+        {/* Barra de progresso */}
+        <div className="flex items-center gap-3">
+          <div className="flex-1">
+            <div className="bg-stone-200 rounded-full h-3 w-full">
+              <div
+                className="bg-gradient-to-r from-[#B89B7A] to-[#8B7355] h-3 rounded-full transition-all duration-300"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+          </div>
+          <div className="text-sm font-medium text-stone-700 min-w-[3rem]">{progress}%</div>
+        </div>
+
+        {/* Botões de navegação */}
+        <div className="flex items-center justify-between gap-3">
+          <button
+            onClick={prevStep}
+            disabled={currentStep === 1}
+            className={cn(
+              'flex-1 px-4 py-3 text-sm rounded-lg border transition-colors',
+              currentStep === 1 
+                ? 'bg-stone-100 text-stone-400 cursor-not-allowed' 
+                : 'bg-white text-stone-700 hover:bg-stone-50 border-stone-300'
+            )}
+          >
+            ← Anterior
+          </button>
+          <button
+            onClick={() => !nextDisabled && nextStep()}
+            disabled={nextDisabled}
+            className={cn(
+              'flex-1 px-4 py-3 text-sm rounded-lg transition-colors text-center',
+              nextDisabled 
+                ? 'bg-stone-200 text-stone-400 cursor-not-allowed' 
+                : 'bg-gradient-to-r from-[#B89B7A] to-[#8B7355] text-white hover:from-[#A08966] hover:to-[#7A6B4D] shadow-sm'
+            )}
           >
             {nextLabel}
           </button>
@@ -372,20 +423,32 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
       <div className="container mx-auto px-6 py-8 max-w-4xl">
         {/* Apenas mostrar cabeçalho em modo production ou preview, não no editor */}
         {mode !== 'editor' && renderHeader()}
-        
-        {/* Header secundário de etapa - também só mostrar fora do editor */}
+
+        {/* Header secundário responsivo de etapa - também só mostrar fora do editor */}
         {mode !== 'editor' && (
           <div className="text-center mb-8">
-            <div className="flex items-center justify-center gap-4 mb-4">
+            {/* Desktop: Layout horizontal */}
+            <div className="hidden sm:flex items-center justify-center gap-4 mb-4">
               <div className="text-sm text-stone-500">Etapa {currentStep} de {totalSteps}</div>
               <div className="w-32 bg-stone-200 rounded-full h-2">
-                <div className="bg-gradient-to-r from-[#B89B7A] to-[#8B7355] h-2 rounded-full" style={{ width: `${progress}%` }} />
+                <div className="bg-gradient-to-r from-[#B89B7A] to-[#8B7355] h-2 rounded-full transition-all duration-300" style={{ width: `${progress}%` }} />
               </div>
               <div className="text-sm text-stone-600">{progress}%</div>
             </div>
+
+            {/* Mobile: Layout vertical */}
+            <div className="sm:hidden space-y-3 mb-4">
+              <div className="text-sm text-stone-500">Etapa {currentStep} de {totalSteps}</div>
+              <div className="flex items-center justify-center gap-3 px-4">
+                <div className="flex-1 max-w-xs bg-stone-200 rounded-full h-2">
+                  <div className="bg-gradient-to-r from-[#B89B7A] to-[#8B7355] h-2 rounded-full transition-all duration-300" style={{ width: `${progress}%` }} />
+                </div>
+                <div className="text-sm text-stone-600 min-w-[3rem]">{progress}%</div>
+              </div>
+            </div>
           </div>
         )}
-        
+
         {renderStepContent()}
       </div>
     </div>
