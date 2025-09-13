@@ -44,6 +44,7 @@ import {
   Trash2,
   Type,
 } from 'lucide-react';
+import React, { useId } from 'react';
 
 // A interface UnifiedBlock é importada do hook, garantindo consistência
 interface EnhancedUniversalPropertiesPanelProps {
@@ -70,6 +71,10 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
 }) => {
   // ✅ Hook de sincronização de scroll conectado ao painel de propriedades
   const { scrollRef } = useSyncedScroll({ source: 'properties' });
+  const uniqueId = useId();
+
+  // Função para criar IDs únicos por instância
+  const createId = (suffix: string) => `enhanced-${uniqueId}-${suffix}`;
 
   // ✅ Normaliza `selectedBlock` para ser a única fonte de verdade para o hook.
   const actualBlock = selectedBlock;
@@ -299,8 +304,9 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
         return (
           <PropertyChangeIndicator key={`${key}-${idx}`}>
             <div className="space-y-2">
-              <Label className="text-sm font-medium text-[#432818]">{label}</Label>
+              <Label htmlFor={createId(`score-${key}-${idx}`)} className="text-sm font-medium text-[#432818]">{label}</Label>
               <Input
+                id={createId(`score-${key}-${idx}`)}
                 type="number"
                 value={value || 0}
                 onChange={e => updateProperty(key, Number(e.target.value))}
@@ -385,11 +391,11 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
       case PropertyType.OPTION_SCORE:
         return (
           <div key={key} className="space-y-2">
-            <Label htmlFor={key} className="text-sm font-medium text-[#432818]">
+            <Label htmlFor={createId(`option-score-${key}-${idx}`)} className="text-sm font-medium text-[#432818]">
               {label} {required && <span style={{ color: '#432818' }}>*</span>}
             </Label>
             <Input
-              id={key}
+              id={createId(`option-score-${key}-${idx}`)}
               type="number"
               value={value || 0}
               onChange={e => updateProperty(key, Number(e.target.value))}
@@ -406,11 +412,11 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
       case PropertyType.OPTION_CATEGORY:
         return (
           <div key={key} className="space-y-2">
-            <Label htmlFor={key} className="text-sm font-medium text-[#432818]">
+            <Label htmlFor={createId(`option-category-${key}-${idx}`)} className="text-sm font-medium text-[#432818]">
               {label} {required && <span style={{ color: '#432818' }}>*</span>}
             </Label>
             <Input
-              id={key}
+              id={createId(`option-category-${key}-${idx}`)}
               type="text"
               value={value || ''}
               onChange={e => updateProperty(key, e.target.value)}

@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { PropertyChangeIndicator } from './PropertyChangeIndicator';
 import { usePropertyDebounce } from '@/hooks/usePropertyDebounce';
+import { useId } from 'react';
 
 interface EnhancedPropertyInputProps {
   label: string;
@@ -42,12 +43,13 @@ export const EnhancedPropertyInput: React.FC<EnhancedPropertyInputProps> = ({
     onUpdate: onChange,
   });
 
+  const uniqueId = useId();
+  const inputId = `property-${uniqueId}-${label.toLowerCase().replace(/\s+/g, '-')}`;
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const newValue = e.target.value;
     updateValue(newValue);
   };
-
-  const inputId = `property-${label.toLowerCase().replace(/\s+/g, '-')}`;
 
   return (
     <div className={`space-y-2 ${className}`}>
