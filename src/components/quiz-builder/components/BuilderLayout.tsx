@@ -47,13 +47,13 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({
   return (
     <div className="h-full">
       <ResizablePanelGroup direction="horizontal" className="h-full">
-        <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
+        <ResizablePanel defaultSize={20} className="min-w-[200px] max-w-[350px]">
           <ComponentsSidebar onComponentSelect={handleComponentAdd} />
         </ResizablePanel>
 
         <ResizableHandle withHandle />
 
-        <ResizablePanel defaultSize={55}>
+        <ResizablePanel defaultSize={55} className="min-w-[400px]">
           <PreviewPanel
             components={stageComponents}
             selectedComponentId={selectedComponentId || undefined}
@@ -63,7 +63,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({
 
         <ResizableHandle withHandle />
 
-        <ResizablePanel defaultSize={25}>
+        <ResizablePanel defaultSize={25} className="min-w-[250px] max-w-[400px]">
           <PropertyPanel
             selectedComponentId={selectedComponentId}
             components={components}

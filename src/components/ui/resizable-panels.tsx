@@ -20,17 +20,13 @@ const ResizablePanel = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & {
     defaultSize?: number;
-    minSize?: number;
-    maxSize?: number;
   }
->(({ className, style, defaultSize, minSize, maxSize, ...props }, ref) => (
+>(({ className, style, defaultSize, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn('relative', className)}
+    className={cn('relative flex-shrink-0', className)}
     style={{
       flex: defaultSize ? `0 0 ${defaultSize}%` : '1',
-      minWidth: minSize ? `${minSize}%` : undefined,
-      maxWidth: maxSize ? `${maxSize}%` : undefined,
       ...style,
     }}
     {...props}

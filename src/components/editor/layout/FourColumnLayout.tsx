@@ -136,7 +136,7 @@ export const FourColumnLayout: React.FC<FourColumnLayoutProps> = ({
       <div className={cn('h-full w-full bg-transparent overflow-hidden', className)}>
         <ResizablePanelGroup direction="horizontal" className="h-full">
           {/* Coluna 1: Etapas do Funil */}
-          <ResizablePanel defaultSize={12} minSize={10} maxSize={20} className="min-w-[180px]">
+          <ResizablePanel defaultSize={12} className="min-w-[180px] max-w-[280px]">
             <div className="h-full flex flex-col border-r border-gray-700/50 bg-gray-900/80 backdrop-blur-sm overflow-hidden">
               <div className="h-full overflow-y-auto overflow-x-hidden">{stagesPanel}</div>
             </div>
@@ -145,7 +145,7 @@ export const FourColumnLayout: React.FC<FourColumnLayoutProps> = ({
           <ResizableHandle withHandle className="bg-gray-700/30 hover:bg-gray-600/50 transition-colors" />
 
           {/* Coluna 2: Componentes */}
-          <ResizablePanel defaultSize={15} minSize={12} maxSize={25} className="min-w-[220px]">
+          <ResizablePanel defaultSize={15} className="min-w-[220px] max-w-[320px]">
             <div className="h-full flex flex-col border-r border-gray-700/50 bg-gray-900/60 backdrop-blur-sm overflow-hidden">
               <div className="h-full overflow-y-auto overflow-x-hidden">{componentsPanel}</div>
             </div>
@@ -154,14 +154,14 @@ export const FourColumnLayout: React.FC<FourColumnLayoutProps> = ({
           <ResizableHandle withHandle className="bg-gray-700/30 hover:bg-gray-600/50 transition-colors" />
 
           {/* Coluna 3: Canvas Principal */}
-          <ResizablePanel defaultSize={55} minSize={45} className="min-w-[480px]">
+          <ResizablePanel defaultSize={55} className="min-w-[480px]">
             <div className="h-full flex flex-col bg-transparent overflow-hidden">{canvas}</div>
           </ResizablePanel>
 
           <ResizableHandle withHandle className="bg-gray-700/30 hover:bg-gray-600/50 transition-colors" />
 
           {/* Coluna 4: Painel de Propriedades */}
-          <ResizablePanel defaultSize={18} minSize={12} maxSize={25} className="min-w-[260px]">
+          <ResizablePanel defaultSize={18} className="min-w-[260px] max-w-[400px]">
             <div className="h-full flex flex-col border-l border-gray-700/50 bg-gray-900/60 backdrop-blur-sm overflow-hidden">
               <div className="h-full overflow-y-auto overflow-x-hidden">{propertiesPanel}</div>
             </div>
