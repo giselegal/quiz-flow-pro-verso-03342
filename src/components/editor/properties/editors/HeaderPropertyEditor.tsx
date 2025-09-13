@@ -14,7 +14,7 @@ import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Block } from '@/types/editor';
 import { Eye, Image, Layout, Palette, Type } from 'lucide-react';
-import React, { useState } from 'react';
+import React, { useState, useId } from 'react';
 
 interface HeaderPropertyEditorProps {
   block: Block;
@@ -89,6 +89,10 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
   isPreviewMode = false,
 }) => {
   const [activeTab, setActiveTab] = useState('general');
+  const uniqueId = useId();
+
+  // Função para criar IDs únicos por instância
+  const createId = (suffix: string) => `header-${uniqueId}-${suffix}`;
 
   // Propriedades consolidadas (combina content e properties para compatibilidade)
   const properties = {
@@ -267,9 +271,9 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
           <TabsContent value="general" className="space-y-4 m-0">
             <div className="space-y-4">
               <div>
-                <Label htmlFor="header-title">Título</Label>
+                <Label htmlFor={createId('title')}>Título</Label>
                 <Input
-                  id="header-title"
+                  id={createId('title')}
                   value={properties.title}
                   onChange={e => handlePropertyUpdate('title', e.target.value)}
                   placeholder="Digite o título principal..."
@@ -278,9 +282,9 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
               </div>
 
               <div>
-                <Label htmlFor="header-subtitle">Subtítulo</Label>
+                <Label htmlFor={createId('subtitle')}>Subtítulo</Label>
                 <Input
-                  id="header-subtitle"
+                  id={createId('subtitle')}
                   value={properties.subtitle}
                   onChange={e => handlePropertyUpdate('subtitle', e.target.value)}
                   placeholder="Digite o subtítulo (opcional)..."
@@ -288,12 +292,12 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="header-headerType">Tipo do Header</Label>
+                <Label htmlFor={createId('headerType')}>Tipo do Header</Label>
                 <Select
                   value={properties.headerType}
                   onValueChange={value => handlePropertyUpdate('headerType', value)}
                 >
-                  <SelectTrigger id="header-headerType">
+                  <SelectTrigger id={createId('headerType')}>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -306,11 +310,11 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
 
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
-                  <Label htmlFor="header-showProgress">Barra de Progresso</Label>
+                  <Label htmlFor={createId('showProgress')}>Barra de Progresso</Label>
                   <p className="text-xs text-gray-500">Exibe o progresso do quiz</p>
                 </div>
                 <Switch
-                  id="header-showProgress"
+                  id={createId('showProgress')}
                   checked={properties.showProgress}
                   onCheckedChange={checked => handlePropertyUpdate('showProgress', checked)}
                 />
@@ -326,12 +330,12 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
                       </Badge>
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="header-progressValue" className="text-xs">
+                      <Label htmlFor={createId('progressValue')} className="text-xs">
                         Valor: {properties.progressValue}
                       </Label>
                       <input
                         type="range"
-                        id="header-progressValue"
+                        id={createId('progressValue')}
                         min={0}
                         max={properties.progressMax}
                         step={1}
@@ -343,12 +347,12 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="header-progressMax" className="text-xs">
+                    <Label htmlFor={createId('progressMax')} className="text-xs">
                       Total de Etapas: {properties.progressMax}
                     </Label>
                     <input
                       type="range"
-                      id="header-progressMax"
+                      id={createId('progressMax')}
                       min={1}
                       max={50}
                       step={1}
@@ -359,12 +363,12 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="header-progressBarThickness" className="text-xs">
+                    <Label htmlFor={createId('progressBarThickness')} className="text-xs">
                       Espessura da Barra: {properties.progressBarThickness}px
                     </Label>
                     <input
                       type="range"
-                      id="header-progressBarThickness"
+                      id={createId('progressBarThickness')}
                       min={2}
                       max={20}
                       step={1}
@@ -382,11 +386,11 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
-                  <Label htmlFor="header-showLogo">Exibir Logo</Label>
+                  <Label htmlFor={createId('showLogo')}>Exibir Logo</Label>
                   <p className="text-xs text-gray-500">Mostra/oculta o logo no header</p>
                 </div>
                 <Switch
-                  id="header-showLogo"
+                  id={createId('showLogo')}
                   checked={properties.showLogo}
                   onCheckedChange={checked => handlePropertyUpdate('showLogo', checked)}
                 />
@@ -395,9 +399,9 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
               {properties.showLogo && (
                 <>
                   <div>
-                    <Label htmlFor="header-logoUrl">URL do Logo</Label>
+                    <Label htmlFor={createId('logoUrl')}>URL do Logo</Label>
                     <Input
-                      id="header-logoUrl"
+                      id={createId('logoUrl')}
                       value={properties.logoUrl}
                       onChange={e => handlePropertyUpdate('logoUrl', e.target.value)}
                       placeholder="https://exemplo.com/logo.png"
@@ -405,9 +409,9 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
                   </div>
 
                   <div>
-                    <Label htmlFor="header-logoAlt">Texto Alternativo</Label>
+                    <Label htmlFor={createId('logoAlt')}>Texto Alternativo</Label>
                     <Input
-                      id="header-logoAlt"
+                      id={createId('logoAlt')}
                       value={properties.logoAlt}
                       onChange={e => handlePropertyUpdate('logoAlt', e.target.value)}
                       placeholder="Descrição do logo"
@@ -416,12 +420,12 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
 
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="header-logoWidth" className="text-xs">
+                      <Label htmlFor={createId('logoWidth')} className="text-xs">
                         Largura: {properties.logoWidth}px
                       </Label>
                       <input
                         type="range"
-                        id="header-logoWidth"
+                        id={createId('logoWidth')}
                         min={50}
                         max={300}
                         step={10}
@@ -432,12 +436,12 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="header-logoHeight" className="text-xs">
+                      <Label htmlFor={createId('logoHeight')} className="text-xs">
                         Altura: {properties.logoHeight}px
                       </Label>
                       <input
                         type="range"
-                        id="header-logoHeight"
+                        id={createId('logoHeight')}
                         min={30}
                         max={200}
                         step={5}
@@ -449,12 +453,12 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="header-logoScale" className="text-xs">
+                    <Label htmlFor={createId('logoScale')} className="text-xs">
                       Escala do Logo: {properties.logoScale}%
                     </Label>
                     <input
                       type="range"
-                      id="header-logoScale"
+                      id={createId('logoScale')}
                       min={50}
                       max={200}
                       step={5}
@@ -508,12 +512,12 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
               )}
 
               <div className="space-y-2">
-                <Label htmlFor="header-containerScale" className="text-xs">
+                <Label htmlFor={createId('containerScale')} className="text-xs">
                   Escala do Container: {properties.containerScale}%
                 </Label>
                 <input
                   type="range"
-                  id="header-containerScale"
+                  id={createId('containerScale')}
                   min={50}
                   max={150}
                   step={5}
@@ -530,12 +534,12 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
               <h4 className="text-sm font-medium text-[#6B4F43]">Margens</h4>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="header-marginTop" className="text-xs">
+                  <Label htmlFor={createId('marginTop')} className="text-xs">
                     Superior: {properties.marginTop}px
                   </Label>
                   <input
                     type="range"
-                    id="header-marginTop"
+                    id={createId('marginTop')}
                     min={0}
                     max={100}
                     step={4}
@@ -546,12 +550,12 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="header-marginBottom" className="text-xs">
+                  <Label htmlFor={createId('marginBottom')} className="text-xs">
                     Inferior: {properties.marginBottom}px
                   </Label>
                   <input
                     type="range"
-                    id="header-marginBottom"
+                    id={createId('marginBottom')}
                     min={0}
                     max={100}
                     step={4}
@@ -565,12 +569,12 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
               <h4 className="text-sm font-medium text-[#6B4F43]">Padding</h4>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="header-paddingTop" className="text-xs">
+                  <Label htmlFor={createId('paddingTop')} className="text-xs">
                     Superior: {properties.paddingTop}px
                   </Label>
                   <input
                     type="range"
-                    id="header-paddingTop"
+                    id={createId('paddingTop')}
                     min={0}
                     max={100}
                     step={4}
@@ -581,12 +585,12 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="header-paddingBottom" className="text-xs">
+                  <Label htmlFor={createId('paddingBottom')} className="text-xs">
                     Inferior: {properties.paddingBottom}px
                   </Label>
                   <input
                     type="range"
-                    id="header-paddingBottom"
+                    id={createId('paddingBottom')}
                     min={0}
                     max={100}
                     step={4}
@@ -597,12 +601,12 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="header-paddingLeft" className="text-xs">
+                  <Label htmlFor={createId('paddingLeft')} className="text-xs">
                     Esquerdo: {properties.paddingLeft}px
                   </Label>
                   <input
                     type="range"
-                    id="header-paddingLeft"
+                    id={createId('paddingLeft')}
                     min={0}
                     max={100}
                     step={4}
@@ -613,12 +617,12 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="header-paddingRight" className="text-xs">
+                  <Label htmlFor={createId('paddingRight')} className="text-xs">
                     Direito: {properties.paddingRight}px
                   </Label>
                   <input
                     type="range"
-                    id="header-paddingRight"
+                    id={createId('paddingRight')}
                     min={0}
                     max={100}
                     step={4}
