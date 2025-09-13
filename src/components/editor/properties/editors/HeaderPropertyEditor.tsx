@@ -10,14 +10,11 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
-// Removed unused Slider import
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Block } from '@/types/editor';
 import { Eye, Image, Layout, Palette, Type } from 'lucide-react';
 import React, { useState } from 'react';
-import { PropertyInput } from '../components/PropertyInput';
-import { PropertySlider } from '../components/PropertySlider';
 
 interface HeaderPropertyEditorProps {
   block: Block;
@@ -50,7 +47,7 @@ const ColorPicker: React.FC<{
     <div className="space-y-3">
       <Label className="text-xs font-medium text-[#6B4F43]">{label}</Label>
       <div className="flex items-center gap-2">
-        <div
+        <button
           className="w-8 h-8 rounded border-2 cursor-pointer"
           style={{ backgroundColor: value, borderColor: '#E5DDD5' }}
           onClick={() => {
@@ -60,8 +57,15 @@ const ColorPicker: React.FC<{
             input.onchange = e => onChange((e.target as HTMLInputElement).value);
             input.click();
           }}
+          aria-label={`Escolher cor para ${label}`}
+          title={`Cor atual: ${value}`}
         />
-        <Input value={value} onChange={e => onChange(e.target.value)} className="text-xs h-8" />
+        <Input 
+          value={value} 
+          onChange={e => onChange(e.target.value)} 
+          className="text-xs h-8" 
+          aria-label={`Valor da cor para ${label}`}
+        />
       </div>
       <div className="grid grid-cols-6 gap-1">
         {presetColors.map(color => (
@@ -70,6 +74,8 @@ const ColorPicker: React.FC<{
             className="w-6 h-6 rounded border hover:scale-110 transition-transform"
             style={{ backgroundColor: color, borderColor: '#E5DDD5' }}
             onClick={() => onChange(color)}
+            aria-label={`Definir cor como ${color}`}
+            title={color}
           />
         ))}
       </div>
@@ -260,28 +266,34 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
 
           <TabsContent value="general" className="space-y-4 m-0">
             <div className="space-y-4">
-              <PropertyInput
-                label="Título"
-                value={properties.title}
-                onChange={value => handlePropertyUpdate('title', value)}
-                required={true}
-                placeholder="Digite o título principal..."
-              />
+              <div>
+                <Label htmlFor="header-title">Título</Label>
+                <Input
+                  id="header-title"
+                  value={properties.title}
+                  onChange={e => handlePropertyUpdate('title', e.target.value)}
+                  placeholder="Digite o título principal..."
+                  required
+                />
+              </div>
 
-              <PropertyInput
-                label="Subtítulo"
-                value={properties.subtitle}
-                onChange={value => handlePropertyUpdate('subtitle', value)}
-                placeholder="Digite o subtítulo (opcional)..."
-              />
+              <div>
+                <Label htmlFor="header-subtitle">Subtítulo</Label>
+                <Input
+                  id="header-subtitle"
+                  value={properties.subtitle}
+                  onChange={e => handlePropertyUpdate('subtitle', e.target.value)}
+                  placeholder="Digite o subtítulo (opcional)..."
+                />
+              </div>
 
               <div className="space-y-2">
-                <Label className="text-sm font-medium">Tipo do Header</Label>
+                <Label htmlFor="header-headerType">Tipo do Header</Label>
                 <Select
                   value={properties.headerType}
                   onValueChange={value => handlePropertyUpdate('headerType', value)}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger id="header-headerType">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -313,34 +325,54 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
                         {properties.progressValue}/{properties.progressMax}
                       </Badge>
                     </div>
-                    <PropertySlider
-                      label=""
-                      value={properties.progressValue}
-                      onChange={value => handlePropertyUpdate('progressValue', value)}
-                      min={0}
-                      max={properties.progressMax}
+                    <div className="space-y-2">
+                      <Label htmlFor="header-progressValue" className="text-xs">
+                        Valor: {properties.progressValue}
+                      </Label>
+                      <input
+                        type="range"
+                        id="header-progressValue"
+                        min={0}
+                        max={properties.progressMax}
+                        step={1}
+                        value={properties.progressValue}
+                        onChange={e => handlePropertyUpdate('progressValue', parseInt(e.target.value))}
+                        className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="header-progressMax" className="text-xs">
+                      Total de Etapas: {properties.progressMax}
+                    </Label>
+                    <input
+                      type="range"
+                      id="header-progressMax"
+                      min={1}
+                      max={50}
                       step={1}
+                      value={properties.progressMax}
+                      onChange={e => handlePropertyUpdate('progressMax', parseInt(e.target.value))}
+                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
                     />
                   </div>
 
-                  <PropertySlider
-                    label="Total de Etapas"
-                    value={properties.progressMax}
-                    onChange={value => handlePropertyUpdate('progressMax', value)}
-                    min={1}
-                    max={50}
-                    step={1}
-                  />
-
-                  <PropertySlider
-                    label="Espessura da Barra"
-                    value={properties.progressBarThickness}
-                    onChange={value => handlePropertyUpdate('progressBarThickness', value)}
-                    min={2}
-                    max={20}
-                    step={1}
-                    unit="px"
-                  />
+                  <div className="space-y-2">
+                    <Label htmlFor="header-progressBarThickness" className="text-xs">
+                      Espessura da Barra: {properties.progressBarThickness}px
+                    </Label>
+                    <input
+                      type="range"
+                      id="header-progressBarThickness"
+                      min={2}
+                      max={20}
+                      step={1}
+                      value={properties.progressBarThickness}
+                      onChange={e => handlePropertyUpdate('progressBarThickness', parseInt(e.target.value))}
+                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                    />
+                  </div>
                 </div>
               )}
             </div>
@@ -362,51 +394,75 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
 
               {properties.showLogo && (
                 <>
-                  <PropertyInput
-                    label="URL do Logo"
-                    value={properties.logoUrl}
-                    onChange={value => handlePropertyUpdate('logoUrl', value)}
-                    placeholder="https://exemplo.com/logo.png"
-                  />
-
-                  <PropertyInput
-                    label="Texto Alternativo"
-                    value={properties.logoAlt}
-                    onChange={value => handlePropertyUpdate('logoAlt', value)}
-                    placeholder="Descrição do logo"
-                  />
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <PropertySlider
-                      label="Largura"
-                      value={properties.logoWidth}
-                      onChange={value => handlePropertyUpdate('logoWidth', value)}
-                      min={50}
-                      max={300}
-                      step={10}
-                      unit="px"
-                    />
-
-                    <PropertySlider
-                      label="Altura"
-                      value={properties.logoHeight}
-                      onChange={value => handlePropertyUpdate('logoHeight', value)}
-                      min={30}
-                      max={200}
-                      step={5}
-                      unit="px"
+                  <div>
+                    <Label htmlFor="header-logoUrl">URL do Logo</Label>
+                    <Input
+                      id="header-logoUrl"
+                      value={properties.logoUrl}
+                      onChange={e => handlePropertyUpdate('logoUrl', e.target.value)}
+                      placeholder="https://exemplo.com/logo.png"
                     />
                   </div>
 
-                  <PropertySlider
-                    label="Escala do Logo"
-                    value={properties.logoScale}
-                    onChange={value => handlePropertyUpdate('logoScale', value)}
-                    min={50}
-                    max={200}
-                    step={5}
-                    unit="%"
-                  />
+                  <div>
+                    <Label htmlFor="header-logoAlt">Texto Alternativo</Label>
+                    <Input
+                      id="header-logoAlt"
+                      value={properties.logoAlt}
+                      onChange={e => handlePropertyUpdate('logoAlt', e.target.value)}
+                      placeholder="Descrição do logo"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="header-logoWidth" className="text-xs">
+                        Largura: {properties.logoWidth}px
+                      </Label>
+                      <input
+                        type="range"
+                        id="header-logoWidth"
+                        min={50}
+                        max={300}
+                        step={10}
+                        value={properties.logoWidth}
+                        onChange={e => handlePropertyUpdate('logoWidth', parseInt(e.target.value))}
+                        className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="header-logoHeight" className="text-xs">
+                        Altura: {properties.logoHeight}px
+                      </Label>
+                      <input
+                        type="range"
+                        id="header-logoHeight"
+                        min={30}
+                        max={200}
+                        step={5}
+                        value={properties.logoHeight}
+                        onChange={e => handlePropertyUpdate('logoHeight', parseInt(e.target.value))}
+                        className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="header-logoScale" className="text-xs">
+                      Escala do Logo: {properties.logoScale}%
+                    </Label>
+                    <input
+                      type="range"
+                      id="header-logoScale"
+                      min={50}
+                      max={200}
+                      step={5}
+                      value={properties.logoScale}
+                      onChange={e => handlePropertyUpdate('logoScale', parseInt(e.target.value))}
+                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                    />
+                  </div>
 
                   <div className="mt-3 p-2 border rounded">
                     <div className="text-xs mb-2 text-[#6B4F43]">Preview:</div>
@@ -451,15 +507,21 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
                 />
               )}
 
-              <PropertySlider
-                label="Escala do Container"
-                value={properties.containerScale}
-                onChange={value => handlePropertyUpdate('containerScale', value)}
-                min={50}
-                max={150}
-                step={5}
-                unit="%"
-              />
+              <div className="space-y-2">
+                <Label htmlFor="header-containerScale" className="text-xs">
+                  Escala do Container: {properties.containerScale}%
+                </Label>
+                <input
+                  type="range"
+                  id="header-containerScale"
+                  min={50}
+                  max={150}
+                  step={5}
+                  value={properties.containerScale}
+                  onChange={e => handlePropertyUpdate('containerScale', parseInt(e.target.value))}
+                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                />
+              </div>
             </div>
           </TabsContent>
 
@@ -467,68 +529,104 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
             <div className="space-y-4">
               <h4 className="text-sm font-medium text-[#6B4F43]">Margens</h4>
               <div className="grid grid-cols-2 gap-4">
-                <PropertySlider
-                  label="Superior"
-                  value={properties.marginTop}
-                  onChange={value => handlePropertyUpdate('marginTop', value)}
-                  min={0}
-                  max={100}
-                  step={4}
-                  unit="px"
-                />
+                <div className="space-y-2">
+                  <Label htmlFor="header-marginTop" className="text-xs">
+                    Superior: {properties.marginTop}px
+                  </Label>
+                  <input
+                    type="range"
+                    id="header-marginTop"
+                    min={0}
+                    max={100}
+                    step={4}
+                    value={properties.marginTop}
+                    onChange={e => handlePropertyUpdate('marginTop', parseInt(e.target.value))}
+                    className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                  />
+                </div>
 
-                <PropertySlider
-                  label="Inferior"
-                  value={properties.marginBottom}
-                  onChange={value => handlePropertyUpdate('marginBottom', value)}
-                  min={0}
-                  max={100}
-                  step={4}
-                  unit="px"
-                />
+                <div className="space-y-2">
+                  <Label htmlFor="header-marginBottom" className="text-xs">
+                    Inferior: {properties.marginBottom}px
+                  </Label>
+                  <input
+                    type="range"
+                    id="header-marginBottom"
+                    min={0}
+                    max={100}
+                    step={4}
+                    value={properties.marginBottom}
+                    onChange={e => handlePropertyUpdate('marginBottom', parseInt(e.target.value))}
+                    className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                  />
+                </div>
               </div>
 
               <h4 className="text-sm font-medium text-[#6B4F43]">Padding</h4>
               <div className="grid grid-cols-2 gap-4">
-                <PropertySlider
-                  label="Superior"
-                  value={properties.paddingTop}
-                  onChange={value => handlePropertyUpdate('paddingTop', value)}
-                  min={0}
-                  max={100}
-                  step={4}
-                  unit="px"
-                />
+                <div className="space-y-2">
+                  <Label htmlFor="header-paddingTop" className="text-xs">
+                    Superior: {properties.paddingTop}px
+                  </Label>
+                  <input
+                    type="range"
+                    id="header-paddingTop"
+                    min={0}
+                    max={100}
+                    step={4}
+                    value={properties.paddingTop}
+                    onChange={e => handlePropertyUpdate('paddingTop', parseInt(e.target.value))}
+                    className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                  />
+                </div>
 
-                <PropertySlider
-                  label="Inferior"
-                  value={properties.paddingBottom}
-                  onChange={value => handlePropertyUpdate('paddingBottom', value)}
-                  min={0}
-                  max={100}
-                  step={4}
-                  unit="px"
-                />
+                <div className="space-y-2">
+                  <Label htmlFor="header-paddingBottom" className="text-xs">
+                    Inferior: {properties.paddingBottom}px
+                  </Label>
+                  <input
+                    type="range"
+                    id="header-paddingBottom"
+                    min={0}
+                    max={100}
+                    step={4}
+                    value={properties.paddingBottom}
+                    onChange={e => handlePropertyUpdate('paddingBottom', parseInt(e.target.value))}
+                    className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                  />
+                </div>
 
-                <PropertySlider
-                  label="Esquerdo"
-                  value={properties.paddingLeft}
-                  onChange={value => handlePropertyUpdate('paddingLeft', value)}
-                  min={0}
-                  max={100}
-                  step={4}
-                  unit="px"
-                />
+                <div className="space-y-2">
+                  <Label htmlFor="header-paddingLeft" className="text-xs">
+                    Esquerdo: {properties.paddingLeft}px
+                  </Label>
+                  <input
+                    type="range"
+                    id="header-paddingLeft"
+                    min={0}
+                    max={100}
+                    step={4}
+                    value={properties.paddingLeft}
+                    onChange={e => handlePropertyUpdate('paddingLeft', parseInt(e.target.value))}
+                    className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                  />
+                </div>
 
-                <PropertySlider
-                  label="Direito"
-                  value={properties.paddingRight}
-                  onChange={value => handlePropertyUpdate('paddingRight', value)}
-                  min={0}
-                  max={100}
-                  step={4}
-                  unit="px"
-                />
+                <div className="space-y-2">
+                  <Label htmlFor="header-paddingRight" className="text-xs">
+                    Direito: {properties.paddingRight}px
+                  </Label>
+                  <input
+                    type="range"
+                    id="header-paddingRight"
+                    min={0}
+                    max={100}
+                    step={4}
+                    value={properties.paddingRight}
+                    onChange={e => handlePropertyUpdate('paddingRight', parseInt(e.target.value))}
+                    className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                  />
+                </div>
               </div>
             </div>
           </TabsContent>
