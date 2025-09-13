@@ -13,7 +13,8 @@ const ComQueRoupaEuVouPage = lazy(() => import('./pages/ComQueRoupaEuVouPage'));
 // 🎯 PÁGINAS ESSENCIAIS - SEM CONFLITOS
 const Home = lazy(() => import('./pages/Home'));
 const AuthPage = lazy(() => import('./pages/AuthPage'));
-const EditorSimples = lazy(() => import('./pages/EditorSimples'));
+// Lazy loading otimizado para melhor performance
+const MainEditorUnified = lazy(() => import('./pages/MainEditorUnified'));
 const DashboardPage = lazy(() => import('./pages/admin/DashboardPage'));
 const StepPage = lazy(() => import('./pages/StepPage'));
 // ✅ Página de produção modular limpa (cliente final)
@@ -101,13 +102,13 @@ function App() {
                 console.log('🔗 Rota /editor/:funnelId ativada com params:', params);
                 return (
                   <Suspense fallback={<LoadingFallback />}>
-                    <EditorSimples />
+                    <MainEditorUnified />
                   </Suspense>
                 );
               }} />
               <Route path="/editor" component={() =>
                 <Suspense fallback={<LoadingFallback />}>
-                  <EditorSimples />
+                  <MainEditorUnified />
                 </Suspense>
               } />
 

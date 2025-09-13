@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * 🚀 EXEMPLO DE USO - SISTEMA DE STORAGE AVANÇADO
  * 
