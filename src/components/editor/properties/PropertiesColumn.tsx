@@ -1,8 +1,8 @@
 import React, { Suspense } from 'react';
 import { Block } from '@/types/editor';
 import { cn } from '@/lib/utils';
-// ALTERADO: Usar nosso PropertiesPanel com editores avançados ao invés do RegistryPropertiesPanel
-import PropertiesPanel from '@/components/editor/properties/PropertiesPanel';
+// MIGRADO: Usar SinglePropertiesPanel unificado para resolver IDs duplicados
+import { SinglePropertiesPanel } from '@/components/editor/properties/SinglePropertiesPanel';
 
 export interface PropertiesColumnProps {
   selectedBlock: Block | undefined;
@@ -19,7 +19,6 @@ export interface PropertiesColumnProps {
 export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
   selectedBlock,
   onUpdate,
-  onClose,
   onDelete,
   onDuplicate: _onDuplicate,
   onReset: _onReset,
@@ -44,14 +43,12 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
             Carregando painel aprimorado…
           </div>
         }>
-          {/* Registry Properties Panel with Canonical Implementation */}
+          {/* SinglePropertiesPanel - Painel Unificado com IDs únicos */}
           <div className="flex-1 overflow-hidden">
             <div className="properties-panel h-full max-w-full overflow-x-hidden">
-              <PropertiesPanel
-                key={selectedBlock?.id || 'no-selection'}
+              <SinglePropertiesPanel
                 selectedBlock={selectedBlock}
                 onUpdate={onUpdate}
-                onClose={onClose}
                 onDelete={onDelete}
               />
             </div>
@@ -66,14 +63,12 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
             Carregando configurações do canvas…
           </div>
         }>
-          {/* Canvas Container Properties quando nenhum bloco está selecionado */}
+          {/* SinglePropertiesPanel - Estado vazio quando nenhum bloco selecionado */}
           <div className="flex-1 overflow-hidden">
             <div className="properties-panel h-full max-w-full overflow-x-hidden">
-              <PropertiesPanel
-                key="canvas-container"
-                selectedBlock={undefined}
+              <SinglePropertiesPanel
+                selectedBlock={null}
                 onUpdate={() => { }}
-                onClose={onClose}
                 onDelete={() => { }}
               />
             </div>
