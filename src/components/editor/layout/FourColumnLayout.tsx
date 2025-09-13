@@ -157,7 +157,7 @@ export const FourColumnLayout: React.FC<FourColumnLayoutProps> = ({
 
           {/* Coluna 3: Canvas Principal */}
           <ResizablePanel defaultSize={55} className="min-w-[480px]">
-            <div className="h-full flex flex-col items-center justify-center bg-transparent overflow-hidden">{canvas}</div>
+            <div className="h-full flex flex-col items-center justify-center bg-transparent overflow-y-auto overflow-x-hidden">{canvas}</div>
           </ResizablePanel>
 
           <ResizableHandle withHandle className="bg-gray-700/30 hover:bg-gray-600/50 transition-colors" />
