@@ -404,7 +404,7 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
         >
           <div
             className={cn(
-              'w-full mx-auto px-4',
+              'w-full mx-auto px-4 flex justify-center',
               previewDevice === 'mobile' && 'max-w-sm',
               previewDevice === 'tablet' && 'max-w-2xl',
               previewDevice === 'desktop' && 'max-w-3xl'
