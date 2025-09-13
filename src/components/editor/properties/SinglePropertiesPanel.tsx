@@ -26,6 +26,19 @@ import { PropertyChangeIndicator } from '@/components/universal/PropertyChangeIn
 const ColorPicker = lazy(() => import('@/components/visual-controls/ColorPicker'));
 const SizeSlider = lazy(() => import('@/components/visual-controls/SizeSlider'));
 
+// 🔥 HÍBRIDO: Lazy loading para editores especializados
+const HeaderPropertyEditor = lazy(() => import('./editors/HeaderPropertyEditor').then(m => ({ default: m.HeaderPropertyEditor })));
+const QuestionPropertyEditor = lazy(() => import('./editors/QuestionPropertyEditor').then(m => ({ default: m.QuestionPropertyEditor })));
+const ButtonPropertyEditor = lazy(() => import('./editors/ButtonPropertyEditor').then(m => ({ default: m.ButtonPropertyEditor })));
+const TextPropertyEditor = lazy(() => import('./editors/TextPropertyEditor').then(m => ({ default: m.TextPropertyEditor })));
+const OptionsGridPropertyEditor = lazy(() => import('./editors/OptionsGridPropertyEditor').then(m => ({ default: m.OptionsGridPropertyEditor })));
+const OptionsPropertyEditor = lazy(() => import('./editors/OptionsPropertyEditor').then(m => ({ default: m.OptionsPropertyEditor })));
+const ImagePropertyEditor = lazy(() => import('./editors/ImagePropertyEditor'));
+const FormContainerPropertyEditor = lazy(() => import('./editors/FormContainerPropertyEditor').then(m => ({ default: m.FormContainerPropertyEditor })));
+const NavigationPropertyEditor = lazy(() => import('./editors/NavigationPropertyEditor').then(m => ({ default: m.NavigationPropertyEditor })));
+const TestimonialPropertyEditor = lazy(() => import('./editors/TestimonialPropertyEditor').then(m => ({ default: m.TestimonialPropertyEditor })));
+const PricingPropertyEditor = lazy(() => import('./editors/PricingPropertyEditor').then(m => ({ default: m.PricingPropertyEditor })));
+
 import { PropertyType, UnifiedBlock } from '@/hooks/useUnifiedProperties';
 import { useOptimizedUnifiedProperties } from '@/hooks/useOptimizedUnifiedProperties';
 import { useDebouncedCallback } from '@/hooks/useDebounce';
@@ -46,7 +59,169 @@ interface SinglePropertiesPanelProps {
     uniqueId: string;
 }
 
-// ===== PROPERTY FIELD RENDERER =====
+// ===== PROPERTY FIELD RENDERER WITH HYBRID EDITORS =====
+
+// 🔥 HÍBRIDO: Renderizador de editor especializado
+const SpecializedEditor: React.FC<{
+    blockType: string;
+    selectedBlock: UnifiedBlock;
+    onUpdate: (updates: Record<string, any>) => void;
+}> = memo(({ blockType, selectedBlock, onUpdate }) => {
+    // Adaptar interface para editores especializados
+    const handleUpdate = useCallback((updates: any) => {
+        // Converter updates para formato compatível
+        onUpdate(updates);
+    }, [onUpdate]);
+
+    // Switch para editores especializados com lazy loading
+    switch (blockType) {
+        case 'header':
+        case 'quiz-intro-header':
+        case 'quiz-header':
+            return (
+                <Suspense fallback={<div className="p-4 text-center text-sm text-muted-foreground">Carregando editor de cabeçalho...</div>}>
+                    <HeaderPropertyEditor
+                        block={selectedBlock as any}
+                        onUpdate={handleUpdate as any}
+                        isPreviewMode={false}
+                    />
+                </Suspense>
+            );
+
+        case 'question':
+        case 'quiz-question':
+        case 'quiz-question-inline':
+            return (
+                <Suspense fallback={<div className="p-4 text-center text-sm text-muted-foreground">Carregando editor de questão...</div>}>
+                    <QuestionPropertyEditor
+                        block={selectedBlock as any}
+                        onUpdate={handleUpdate as any}
+                        isPreviewMode={false}
+                    />
+                </Suspense>
+            );
+
+        case 'button':
+        case 'cta':
+        case 'quiz-cta':
+            return (
+                <Suspense fallback={<div className="p-4 text-center text-sm text-muted-foreground">Carregando editor de botão...</div>}>
+                    <ButtonPropertyEditor
+                        block={selectedBlock as any}
+                        onUpdate={handleUpdate as any}
+                        isPreviewMode={false}
+                    />
+                </Suspense>
+            );
+
+        case 'text':
+        case 'headline':
+        case 'title':
+            return (
+                <Suspense fallback={<div className="p-4 text-center text-sm text-muted-foreground">Carregando editor de texto...</div>}>
+                    <TextPropertyEditor
+                        block={selectedBlock as any}
+                        onUpdate={handleUpdate as any}
+                        isPreviewMode={false}
+                    />
+                </Suspense>
+            );
+
+        case 'options-grid':
+        case 'options-grid-inline':
+            return (
+                <Suspense fallback={<div className="p-4 text-center text-sm text-muted-foreground">Carregando editor de opções...</div>}>
+                    <OptionsGridPropertyEditor
+                        block={selectedBlock as any}
+                        onUpdate={handleUpdate as any}
+                        isPreviewMode={false}
+                    />
+                </Suspense>
+            );
+
+        case 'options':
+        case 'result':
+        case 'quiz-result':
+            return (
+                <Suspense fallback={<div className="p-4 text-center text-sm text-muted-foreground">Carregando editor de opções...</div>}>
+                    <OptionsPropertyEditor
+                        block={selectedBlock as any}
+                        onUpdate={handleUpdate as any}
+                        isPreviewMode={false}
+                    />
+                </Suspense>
+            );
+
+        case 'image':
+        case 'image-display-inline':
+            return (
+                <Suspense fallback={<div className="p-4 text-center text-sm text-muted-foreground">Carregando editor de imagem...</div>}>
+                    <ImagePropertyEditor
+                        block={selectedBlock as any}
+                        onUpdate={handleUpdate as any}
+                        isPreviewMode={false}
+                    />
+                </Suspense>
+            );
+
+        case 'form-container':
+        case 'form-input':
+        case 'lead-form':
+            return (
+                <Suspense fallback={<div className="p-4 text-center text-sm text-muted-foreground">Carregando editor de formulário...</div>}>
+                    <FormContainerPropertyEditor
+                        block={selectedBlock as any}
+                        onUpdate={handleUpdate as any}
+                        isPreviewMode={false}
+                    />
+                </Suspense>
+            );
+
+        case 'navigation':
+        case 'nav':
+        case 'menu':
+            return (
+                <Suspense fallback={<div className="p-4 text-center text-sm text-muted-foreground">Carregando editor de navegação...</div>}>
+                    <NavigationPropertyEditor
+                        block={selectedBlock as any}
+                        onUpdate={handleUpdate as any}
+                        isPreviewMode={false}
+                    />
+                </Suspense>
+            );
+
+        case 'testimonial':
+        case 'testimonials':
+        case 'testimonial-card-inline':
+            return (
+                <Suspense fallback={<div className="p-4 text-center text-sm text-muted-foreground">Carregando editor de depoimento...</div>}>
+                    <TestimonialPropertyEditor
+                        block={selectedBlock as any}
+                        onUpdate={handleUpdate as any}
+                        isPreviewMode={false}
+                    />
+                </Suspense>
+            );
+
+        case 'pricing':
+        case 'pricing-card-inline':
+            return (
+                <Suspense fallback={<div className="p-4 text-center text-sm text-muted-foreground">Carregando editor de preços...</div>}>
+                    <PricingPropertyEditor
+                        block={selectedBlock as any}
+                        onUpdate={handleUpdate as any}
+                        isPreviewMode={false}
+                    />
+                </Suspense>
+            );
+
+        default:
+            // Fallback para o sistema genérico (mantém performance original)
+            return null;
+    }
+});
+
+SpecializedEditor.displayName = 'SpecializedEditor';
 
 const PropertyField: React.FC<PropertyFieldProps> = memo(({ property, value, onChange, uniqueId }) => {
     const fieldId = `${uniqueId}-${property.key}`;
@@ -273,7 +448,28 @@ export const SinglePropertiesPanel: React.FC<SinglePropertiesPanelProps> = memo(
         console.log('🚀 SinglePropertiesPanel handleContentUpdate:', { key, value });
         // Para conteúdo, usar o mesmo update mas com indicação de categoria
         debouncedUpdateProperty(key, value);
-    }, [debouncedUpdateProperty]);    // Estado vazio
+    }, [debouncedUpdateProperty]);
+
+    // 🔥 HÍBRIDO: Se tem editor especializado disponível, usar ele
+    const hasSpecializedEditor = useMemo(() => {
+        if (!selectedBlock) return false;
+        const supportedTypes = [
+            'header', 'quiz-intro-header', 'quiz-header',
+            'question', 'quiz-question', 'quiz-question-inline',
+            'button', 'cta', 'quiz-cta',
+            'text', 'headline', 'title',
+            'options-grid', 'options-grid-inline',
+            'options', 'result', 'quiz-result',
+            'image', 'image-display-inline',
+            'form-container', 'form-input', 'lead-form',
+            'navigation', 'nav', 'menu',
+            'testimonial', 'testimonials', 'testimonial-card-inline',
+            'pricing', 'pricing-card-inline'
+        ];
+        return supportedTypes.includes(selectedBlock.type);
+    }, [selectedBlock?.type]);
+
+    // Estado vazio
     if (!selectedBlock) {
         return (
             <Card className="h-full max-w-full overflow-hidden">
@@ -289,6 +485,62 @@ export const SinglePropertiesPanel: React.FC<SinglePropertiesPanelProps> = memo(
             </Card>
         );
     }
+
+    // 🔥 HÍBRIDO: Se tem editor especializado, renderizar ele
+    if (hasSpecializedEditor && selectedBlock) {
+        return (
+            <div className="h-full flex flex-col">
+                {/* Header híbrido */}
+                <div className="flex items-center justify-between p-4 border-b">
+                    <div className="flex items-center gap-2">
+                        <Settings className="h-4 w-4 text-primary" />
+                        <h3 className="font-semibold">Propriedades</h3>
+                        <Badge variant="secondary" className="text-xs">
+                            {selectedBlock.type}
+                        </Badge>
+                        <Badge variant="outline" className="text-xs bg-green-50 text-green-700">
+                            🔥 Especializado
+                        </Badge>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        {onDuplicate && (
+                            <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={onDuplicate}
+                                className="h-8 px-2"
+                                aria-label="Duplicar elemento"
+                            >
+                                <Copy className="h-3 w-3" />
+                            </Button>
+                        )}
+                        {onDelete && (
+                            <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={onDelete}
+                                className="h-8 px-2"
+                                aria-label="Excluir elemento"
+                            >
+                                <Trash2 className="h-3 w-3" />
+                            </Button>
+                        )}
+                    </div>
+                </div>
+
+                {/* Editor especializado */}
+                <div className="flex-1 overflow-auto">
+                    <SpecializedEditor
+                        blockType={selectedBlock.type}
+                        selectedBlock={selectedBlock}
+                        onUpdate={onUpdate || (() => { })}
+                    />
+                </div>
+            </div>
+        );
+    }
+
+    // Fallback para sistema genérico (mantém performance original)
 
     return (
         <Card className="h-full max-w-full overflow-hidden flex flex-col">
