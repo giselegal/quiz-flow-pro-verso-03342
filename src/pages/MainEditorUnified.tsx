@@ -584,7 +584,7 @@ const EditorInitializerUnified: React.FC<{
             console.log('🎯 [EDITOR] Renderizando editor carregado');
 
             return (
-                <div>
+                <div className="editor-mobile-layout h-screen w-screen">
                     {fallbackMode && (
                         <div className="bg-yellow-50 border-b border-yellow-200 px-4 py-2">
                             <p className="text-sm text-yellow-800 text-center">
@@ -592,7 +592,9 @@ const EditorInitializerUnified: React.FC<{
                             </p>
                         </div>
                     )}
-                    <UnifiedEditorComp />
+                    <div className={`editor-main-content ${fallbackMode ? 'h-[calc(100vh-40px)]' : 'h-screen'}`}>
+                        <UnifiedEditorComp />
+                    </div>
                 </div>
             );
         }

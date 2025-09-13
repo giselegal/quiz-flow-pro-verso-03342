@@ -136,7 +136,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
   }
 
   return (
-    <div className={`h-full w-full bg-background ${className}`}>
+    <div className={`editor-mobile-layout h-full w-full bg-background ${className}`}>
       {/* 🎨 TOOLBAR SUPERIOR */}
       <div className="h-14 border-b bg-white flex items-center justify-between px-4">
         <EditorToolbar />
@@ -156,7 +156,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
       </div>
 
       {/* 📐 LAYOUT DE 4 COLUNAS */}
-      <div className="h-[calc(100%-56px)]">
+      <div className="editor-main-content h-[calc(100%-56px)]">
         <FourColumnLayout
           stagesPanel={<FunnelStagesPanel />}
           componentsPanel={<ComponentsSidebar onComponentSelect={handleComponentSelect} />}

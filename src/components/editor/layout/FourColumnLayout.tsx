@@ -38,7 +38,7 @@ export const FourColumnLayout: React.FC<FourColumnLayoutProps> = ({
   if (isMobile) {
     return (
       <ScrollSyncProvider>
-        <div className={cn('h-full w-full bg-transparent relative', className)}>
+        <div className={cn('editor-mobile-layout h-full w-full bg-transparent relative', className)}>
           {/* Mobile Header */}
           <div className="h-12 bg-gray-900 border-b border-gray-700 flex items-center justify-between px-4 lg:hidden">
             <Button
@@ -65,7 +65,7 @@ export const FourColumnLayout: React.FC<FourColumnLayoutProps> = ({
           </div>
 
           {/* Main Canvas Area */}
-          <div className="h-[calc(100%-3rem)] lg:h-full w-full bg-transparent">
+          <div className="editor-canvas-area h-[calc(100%-3rem)] lg:h-full w-full bg-transparent">
             {canvas}
           </div>
 
