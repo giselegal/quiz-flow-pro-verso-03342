@@ -60,10 +60,10 @@ const ColorPicker: React.FC<{
           aria-label={`Escolher cor para ${label}`}
           title={`Cor atual: ${value}`}
         />
-        <Input 
-          value={value} 
-          onChange={e => onChange(e.target.value)} 
-          className="text-xs h-8" 
+        <Input
+          value={value}
+          onChange={e => onChange(e.target.value)}
+          className="text-xs h-8"
           aria-label={`Valor da cor para ${label}`}
         />
       </div>
@@ -194,10 +194,10 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
 
           <h2
             className={`font-bold ${properties.headerType === 'hero'
-                ? 'text-2xl'
-                : properties.headerType === 'section'
-                  ? 'text-xl'
-                  : 'text-lg'
+              ? 'text-2xl'
+              : properties.headerType === 'section'
+                ? 'text-xl'
+                : 'text-lg'
               }`}
             style={{ color: properties.textColor }}
           >
@@ -671,10 +671,10 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
 
             <h2
               className={`font-bold ${properties.headerType === 'hero'
-                  ? 'text-2xl'
-                  : properties.headerType === 'section'
-                    ? 'text-xl'
-                    : 'text-lg'
+                ? 'text-2xl'
+                : properties.headerType === 'section'
+                  ? 'text-xl'
+                  : 'text-lg'
                 }`}
               style={{ color: properties.textColor }}
             >
