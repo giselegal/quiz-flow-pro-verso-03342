@@ -30,7 +30,7 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
   return (
     <div
       className={cn(
-        'flex-shrink-0 h-screen sticky top-0 bg-gray-900/80 backdrop-blur-sm border-l border-gray-700/50 flex flex-col',
+        'flex-shrink-0 h-full bg-gray-900/80 backdrop-blur-sm border-l border-gray-700/50 flex flex-col overflow-hidden',
         'w-[24rem] min-w-[24rem] max-w-[24rem]', // Slightly wider for better UX
         className
       )}
@@ -45,14 +45,16 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
           </div>
         }>
           {/* Registry Properties Panel with Canonical Implementation */}
-          <div className="flex-1">
-            <PropertiesPanel
-              key={selectedBlock?.id || 'no-selection'}
-              selectedBlock={selectedBlock}
+          <div className="flex-1 overflow-hidden">
+            <div className="properties-panel h-full max-w-full overflow-x-hidden">
+              <PropertiesPanel
+                key={selectedBlock?.id || 'no-selection'}
+                selectedBlock={selectedBlock}
               onUpdate={onUpdate}
               onClose={onClose}
               onDelete={onDelete}
             />
+            </div>
           </div>
         </Suspense>
       ) : (
@@ -65,14 +67,16 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
           </div>
         }>
           {/* Canvas Container Properties quando nenhum bloco está selecionado */}
-          <div className="flex-1">
-            <PropertiesPanel
-              key="canvas-container"
-              selectedBlock={undefined}
-              onUpdate={() => { }}
-              onClose={onClose}
-              onDelete={() => { }}
-            />
+          <div className="flex-1 overflow-hidden">
+            <div className="properties-panel h-full max-w-full overflow-x-hidden">
+              <PropertiesPanel
+                key="canvas-container"
+                selectedBlock={undefined}
+                onUpdate={() => { }}
+                onClose={onClose}
+                onDelete={() => { }}
+              />
+            </div>
           </div>
         </Suspense>
       )}

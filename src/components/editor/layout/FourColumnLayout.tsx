@@ -72,8 +72,8 @@ export const FourColumnLayout: React.FC<FourColumnLayoutProps> = ({
           {/* Left Panel Overlay (Stages + Components) */}
           {leftPanelOpen && (
             <div className="absolute inset-0 z-50 lg:hidden">
-              <div className="absolute inset-0 bg-black/50" onClick={() => setLeftPanelOpen(false)} />
-              <div className="absolute left-0 top-0 h-full w-80 bg-gray-900 border-r border-gray-700 flex flex-col">
+              <div className="absolute inset-0 bg-gray-900/70 backdrop-blur-sm" onClick={() => setLeftPanelOpen(false)} />
+              <div className="absolute left-0 top-0 h-full w-80 bg-gray-900 border-r border-gray-700 flex flex-col shadow-2xl">
                 <div className="h-12 border-b border-gray-700 flex items-center justify-between px-4">
                   <span className="text-white font-medium">Navegação</span>
                   <Button
@@ -106,8 +106,8 @@ export const FourColumnLayout: React.FC<FourColumnLayoutProps> = ({
           {/* Right Panel Overlay (Properties) */}
           {rightPanelOpen && (
             <div className="absolute inset-0 z-50 lg:hidden">
-              <div className="absolute inset-0 bg-black/50" onClick={() => setRightPanelOpen(false)} />
-              <div className="absolute right-0 top-0 h-full w-80 bg-gray-900 border-l border-gray-700 flex flex-col">
+              <div className="absolute inset-0 bg-gray-900/70 backdrop-blur-sm" onClick={() => setRightPanelOpen(false)} />
+              <div className="absolute right-0 top-0 h-full w-80 bg-gray-900 border-l border-gray-700 flex flex-col shadow-2xl">
                 <div className="h-12 border-b border-gray-700 flex items-center justify-between px-4">
                   <span className="text-white font-medium">Propriedades</span>
                   <Button
@@ -133,12 +133,12 @@ export const FourColumnLayout: React.FC<FourColumnLayoutProps> = ({
   // Desktop Layout - Original Resizable Panels
   return (
     <ScrollSyncProvider>
-      <div className={cn('h-full w-full bg-transparent', className)}>
+      <div className={cn('h-full w-full bg-transparent overflow-hidden', className)}>
         <ResizablePanelGroup direction="horizontal" className="h-full">
           {/* Coluna 1: Etapas do Funil */}
           <ResizablePanel defaultSize={12} minSize={10} maxSize={20} className="min-w-[180px]">
             <div className="h-full flex flex-col border-r border-gray-700/50 bg-gray-900/80 backdrop-blur-sm overflow-hidden">
-              <div className="h-full overflow-y-auto">{stagesPanel}</div>
+              <div className="h-full overflow-y-auto overflow-x-hidden">{stagesPanel}</div>
             </div>
           </ResizablePanel>
 
@@ -147,7 +147,7 @@ export const FourColumnLayout: React.FC<FourColumnLayoutProps> = ({
           {/* Coluna 2: Componentes */}
           <ResizablePanel defaultSize={15} minSize={12} maxSize={25} className="min-w-[220px]">
             <div className="h-full flex flex-col border-r border-gray-700/50 bg-gray-900/60 backdrop-blur-sm overflow-hidden">
-              <div className="h-full overflow-y-auto">{componentsPanel}</div>
+              <div className="h-full overflow-y-auto overflow-x-hidden">{componentsPanel}</div>
             </div>
           </ResizablePanel>
 
@@ -155,7 +155,7 @@ export const FourColumnLayout: React.FC<FourColumnLayoutProps> = ({
 
           {/* Coluna 3: Canvas Principal */}
           <ResizablePanel defaultSize={55} minSize={45} className="min-w-[480px]">
-            <div className="h-full flex flex-col bg-transparent">{canvas}</div>
+            <div className="h-full flex flex-col bg-transparent overflow-hidden">{canvas}</div>
           </ResizablePanel>
 
           <ResizableHandle withHandle className="bg-gray-700/30 hover:bg-gray-600/50 transition-colors" />
@@ -163,7 +163,7 @@ export const FourColumnLayout: React.FC<FourColumnLayoutProps> = ({
           {/* Coluna 4: Painel de Propriedades */}
           <ResizablePanel defaultSize={18} minSize={12} maxSize={25} className="min-w-[260px]">
             <div className="h-full flex flex-col border-l border-gray-700/50 bg-gray-900/60 backdrop-blur-sm overflow-hidden">
-              <div className="h-full overflow-y-auto">{propertiesPanel}</div>
+              <div className="h-full overflow-y-auto overflow-x-hidden">{propertiesPanel}</div>
             </div>
           </ResizablePanel>
         </ResizablePanelGroup>
