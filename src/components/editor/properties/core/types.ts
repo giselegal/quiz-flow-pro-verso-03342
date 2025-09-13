@@ -4,6 +4,7 @@ export interface BaseProperty {
   key: string;
   type: PropertyType;
   label: string;
+  description?: string;
   category: PropertyCategory;
   value: any;
   defaultValue?: any;

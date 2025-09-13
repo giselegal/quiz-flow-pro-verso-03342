@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Calculator, Plus, Trash2, RotateCcw, Target, Info } from 'lucide-react';
+import { Plus, Trash2, Target } from 'lucide-react';
 import ContextualTooltip, { tooltipLibrary } from './ContextualTooltip';
 import type { PropertyEditorProps } from './types';
 

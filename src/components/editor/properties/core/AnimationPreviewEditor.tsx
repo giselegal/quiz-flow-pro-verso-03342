@@ -471,7 +471,7 @@ const AnimationPreviewEditor: React.FC<PropertyEditorProps> = ({
             </CardContent>
 
             {/* CSS Keyframes for preview */}
-            <style jsx>{`
+            <style>{`
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideIn { from { transform: translateX(-100%); } to { transform: translateX(0); } }
         @keyframes scaleIn { from { transform: scale(0); } to { transform: scale(1); } }

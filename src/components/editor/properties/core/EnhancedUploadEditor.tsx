@@ -10,7 +10,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import {
     Upload,
     X,
-    Image,
     Video,
     File,
     Link,
@@ -160,7 +159,7 @@ const EnhancedUploadEditor: React.FC<PropertyEditorProps> = ({
         }
     };
 
-    const simulateUpload = async (file: File, previewUrl: string) => {
+    const simulateUpload = async (_file: File, previewUrl: string) => {
         // Simular progresso de upload
         for (let progress = 0; progress <= 100; progress += 10) {
             await new Promise(resolve => setTimeout(resolve, 100));

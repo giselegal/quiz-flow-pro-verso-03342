@@ -78,7 +78,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
         selectedBlock.type,
         selectedBlock.id,
         selectedBlock as any,
-        onUpdate
+        onUpdate ? (_blockId: string, updates: Record<string, any>) => onUpdate(updates) : undefined
     );
 
     const categories = [
