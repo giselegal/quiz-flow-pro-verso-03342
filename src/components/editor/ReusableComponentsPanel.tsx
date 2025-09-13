@@ -243,10 +243,20 @@ export const ReusableComponentsPanel: React.FC<ReusableComponentsPanelProps> = (
                       </Badge>
                     </div>
                     <div className="flex gap-1">
-                      <Button size="sm" variant="ghost" className="h-6 w-6 p-0">
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="h-6 w-6 p-0"
+                        aria-label="Editar componente"
+                      >
                         <Edit3 className="h-3 w-3" />
                       </Button>
-                      <Button size="sm" variant="ghost" className="h-6 w-6 p-0">
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="h-6 w-6 p-0"
+                        aria-label="Remover componente"
+                      >
                         <Trash2 className="h-3 w-3" />
                       </Button>
                     </div>

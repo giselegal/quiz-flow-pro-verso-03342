@@ -107,7 +107,12 @@ export const QuizSidebarModular: React.FC<QuizSidebarModularProps> = ({ onClose 
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center justify-between">
                             <p className="font-medium text-sm">{component.name}</p>
-                            <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-6 w-6 p-0"
+                              aria-label={`Adicionar ${component.name}`}
+                            >
                               <Plus className="h-3 w-3" />
                             </Button>
                           </div>

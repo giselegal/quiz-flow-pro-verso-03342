@@ -94,6 +94,7 @@ export const JsonConfigEditor: React.FC<JsonConfigEditorProps> = ({ config, onUp
           accept=".json"
           className="hidden"
           onChange={handleImport}
+          aria-label="Importar arquivo JSON de configuração"
         />
       </div>
 

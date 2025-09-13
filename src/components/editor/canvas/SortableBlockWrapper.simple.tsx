@@ -199,6 +199,7 @@ const SortableBlockWrapperBase: React.FC<SortableBlockWrapperProps> = ({
             data-drag-handle
             {...attributes}
             {...listeners}
+            aria-label="Arrastar bloco"
           >
             <GripVertical className="h-3 w-3" />
           </Button>
@@ -210,6 +211,7 @@ const SortableBlockWrapperBase: React.FC<SortableBlockWrapperProps> = ({
               e.stopPropagation();
               onDelete();
             }}
+            aria-label="Remover bloco"
           >
             <Trash2 className="h-3 w-3" />
           </Button>

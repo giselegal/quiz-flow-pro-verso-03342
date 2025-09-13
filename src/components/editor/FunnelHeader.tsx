@@ -186,6 +186,7 @@ export const FunnelHeader: React.FC<FunnelHeaderProps> = ({
                           ? "bg-brand-brightBlue text-white shadow-sm"
                           : "text-gray-300 hover:text-white hover:bg-gray-700/50"
                       )}
+                      aria-label="Visualização Mobile"
                     >
                       <Smartphone className="w-4 h-4" />
                     </Button>
@@ -205,6 +206,7 @@ export const FunnelHeader: React.FC<FunnelHeaderProps> = ({
                           ? "bg-brand-brightBlue text-white shadow-sm"
                           : "text-gray-300 hover:text-white hover:bg-gray-700/50"
                       )}
+                      aria-label="Visualização Tablet"
                     >
                       <Tablet className="w-4 h-4" />
                     </Button>
@@ -224,6 +226,7 @@ export const FunnelHeader: React.FC<FunnelHeaderProps> = ({
                           ? "bg-brand-brightBlue text-white shadow-sm"
                           : "text-gray-300 hover:text-white hover:bg-gray-700/50"
                       )}
+                      aria-label="Visualização Desktop"
                     >
                       <Monitor className="w-4 h-4" />
                     </Button>
@@ -243,6 +246,7 @@ export const FunnelHeader: React.FC<FunnelHeaderProps> = ({
                           ? "bg-brand-brightBlue text-white shadow-sm"
                           : "text-gray-300 hover:text-white hover:bg-gray-700/50"
                       )}
+                      aria-label="Visualização Large Desktop"
                     >
                       <Maximize2 className="w-4 h-4" />
                     </Button>

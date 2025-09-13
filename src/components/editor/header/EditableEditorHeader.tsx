@@ -159,7 +159,7 @@ export const EditableEditorHeader: React.FC<EditableEditorHeaderProps> = ({
     if (typeof window !== 'undefined' && typeof CustomEvent !== 'undefined') {
       try {
         window.dispatchEvent(new CustomEvent('canvas-virt-flag-changed', { detail: { disabled: next } }));
-      } catch {}
+      } catch { }
     }
     toast({
       title: next ? 'Virtualização desativada' : 'Virtualização ativada',
@@ -244,6 +244,7 @@ export const EditableEditorHeader: React.FC<EditableEditorHeaderProps> = ({
                 style={{ display: 'none' }}
                 ref={fileInputRef}
                 id="import-json"
+                aria-label="Importar arquivo JSON do editor"
               />
               <button
                 type="button"

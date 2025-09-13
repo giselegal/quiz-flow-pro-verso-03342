@@ -246,6 +246,7 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
                   style={{ display: 'none' }}
                   ref={fileInputRef}
                   id="import-json"
+                  aria-label="Importar arquivo JSON para o editor"
                 />
                 <button
                   type="button"
@@ -268,6 +269,7 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
                   onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
                   className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-700/50 rounded-lg transition-colors"
                   title={`Alternar para tema ${theme === 'dark' ? 'claro' : 'escuro'}`}
+                  aria-label={`Alternar para tema ${theme === 'dark' ? 'claro' : 'escuro'}`}
                 >
                   {theme === 'dark' ? (
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -293,6 +295,7 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
                       ? 'bg-gradient-to-r from-brand-brightBlue to-brand-brightPink text-white shadow-sm'
                       : 'text-gray-300 hover:text-white hover:bg-gray-700/50'
                   )}
+                  aria-label="Modo de edição"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -308,6 +311,7 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
                       ? 'bg-gradient-to-r from-brand-brightBlue to-brand-brightPink text-white shadow-sm'
                       : 'text-gray-300 hover:text-white hover:bg-gray-700/50'
                   )}
+                  aria-label="Modo de visualização"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -321,6 +325,7 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
               <button
                 className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-brand-brightBlue to-brand-brightPink text-white text-sm font-medium rounded-lg hover:opacity-90 shadow-lg backdrop-blur-sm transition-opacity"
                 title="Salvar etapa atual"
+                aria-label="Salvar etapa atual"
                 onClick={() => {
                   try {
                     const stepId = currentStepKey;
@@ -353,6 +358,7 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
               <button
                 className="px-4 py-2 bg-gray-800/80 border border-gray-700/50 text-gray-300 text-sm rounded-md hover:bg-gray-700/80 hover:text-white transition-colors backdrop-blur-sm"
                 title="Remover publicação da etapa atual"
+                aria-label="Despublicar etapa atual"
                 onClick={() => {
                   try {
                     if (state.isSupabaseEnabled && (actions as any)?.unpublishStepFromSupabase) {
@@ -378,6 +384,7 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
               <button
                 className="px-4 py-2 bg-green-600 text-white text-sm rounded-md hover:bg-green-700"
                 title="Publicar todas as etapas com conteúdo"
+                aria-label="Publicar todas as etapas"
                 onClick={handlePublishAll}
               >
                 <span className="inline-flex items-center gap-2">

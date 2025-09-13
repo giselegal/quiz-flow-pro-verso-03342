@@ -13,12 +13,12 @@ import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { 
-  Code, 
-  Eye, 
-  EyeOff, 
-  AlertCircle, 
-  CheckCircle, 
+import {
+  Code,
+  Eye,
+  EyeOff,
+  AlertCircle,
+  CheckCircle,
   Plus,
   Info,
   Sparkles
@@ -64,11 +64,11 @@ export const InterpolationField: React.FC<InterpolationFieldProps> = ({
     // Verificar sintaxe de variáveis
     const variablePattern = /\{([^}]+)\}/g;
     const matches = [...value.matchAll(variablePattern)];
-    
+
     matches.forEach(match => {
       const variableName = match[1];
       const availableKeys = availableVariables.map(v => v.key);
-      
+
       if (!availableKeys.includes(variableName)) {
         errors.push(`Variável "{${variableName}}" não encontrada`);
       }
@@ -77,7 +77,7 @@ export const InterpolationField: React.FC<InterpolationFieldProps> = ({
     // Verificar chaves não fechadas
     const openBraces = (value.match(/\{/g) || []).length;
     const closeBraces = (value.match(/\}/g) || []).length;
-    
+
     if (openBraces !== closeBraces) {
       errors.push('Chaves não balanceadas');
     }
@@ -93,19 +93,19 @@ export const InterpolationField: React.FC<InterpolationFieldProps> = ({
   // Preview com interpolação aplicada
   const interpolatedPreview = useMemo(() => {
     let result = value;
-    
+
     availableVariables.forEach(variable => {
       const pattern = new RegExp(`\\{${variable.key}\\}`, 'g');
       result = result.replace(pattern, variable.currentValue);
     });
-    
+
     return result;
   }, [value, availableVariables]);
 
   // Inserir variável na posição do cursor
   const insertVariable = useCallback((variable: DynamicVariable) => {
     const variableText = `{${variable.key}}`;
-    
+
     // Em um caso real, pegaria a posição do cursor
     const newValue = value + variableText;
     onChange(newValue);
@@ -125,7 +125,7 @@ export const InterpolationField: React.FC<InterpolationFieldProps> = ({
               {label}
               {required && <span className="text-destructive">*</span>}
             </Label>
-            
+
             {validation.hasVariables && (
               <Badge variant="secondary" className="text-xs">
                 <Sparkles className="w-3 h-3 mr-1" />
@@ -171,7 +171,12 @@ export const InterpolationField: React.FC<InterpolationFieldProps> = ({
             {/* Menu de variáveis */}
             <Popover open={showVariables} onOpenChange={setShowVariables}>
               <PopoverTrigger asChild>
-                <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-6 w-6 p-0"
+                  aria-label="Adicionar variável"
+                >
                   <Plus className="w-3 h-3" />
                 </Button>
               </PopoverTrigger>
@@ -221,9 +226,8 @@ export const InterpolationField: React.FC<InterpolationFieldProps> = ({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
-          className={`${!validation.isValid ? 'border-destructive' : ''} ${
-            validation.hasVariables ? 'border-primary' : ''
-          }`}
+          className={`${!validation.isValid ? 'border-destructive' : ''} ${validation.hasVariables ? 'border-primary' : ''
+            }`}
           {...(multiline && { className: `${!validation.isValid ? 'border-destructive' : ''} min-h-[100px]` })}
         />
 
@@ -268,34 +272,34 @@ export const InterpolationPreview: React.FC<{
   text: string;
   variables?: DynamicVariable[];
   className?: string;
-}> = ({ 
-  text, 
+}> = ({
+  text,
   variables = AVAILABLE_VARIABLES,
   className = ''
 }) => {
-  const interpolated = useMemo(() => {
-    let result = text;
-    
-    variables.forEach(variable => {
-      const pattern = new RegExp(`\\{${variable.key}\\}`, 'g');
-      result = result.replace(pattern, variable.currentValue);
-    });
-    
-    return result;
-  }, [text, variables]);
+    const interpolated = useMemo(() => {
+      let result = text;
 
-  return (
-    <div className={`p-2 bg-muted/30 rounded text-sm ${className}`}>
-      {interpolated}
-    </div>
-  );
-};
+      variables.forEach(variable => {
+        const pattern = new RegExp(`\\{${variable.key}\\}`, 'g');
+        result = result.replace(pattern, variable.currentValue);
+      });
+
+      return result;
+    }, [text, variables]);
+
+    return (
+      <div className={`p-2 bg-muted/30 rounded text-sm ${className}`}>
+        {interpolated}
+      </div>
+    );
+  };
 
 /**
  * Validador de sintaxe de interpolação
  */
 export const validateInterpolation = (
-  text: string, 
+  text: string,
   availableVariables: DynamicVariable[] = AVAILABLE_VARIABLES
 ) => {
   const errors: string[] = [];
@@ -304,11 +308,11 @@ export const validateInterpolation = (
   // Extrair variáveis do texto
   const variablePattern = /\{([^}]+)\}/g;
   const matches = [...text.matchAll(variablePattern)];
-  
+
   matches.forEach(match => {
     const variableName = match[1];
     variables.push(variableName);
-    
+
     const availableKeys = availableVariables.map(v => v.key);
     if (!availableKeys.includes(variableName)) {
       errors.push(`Variável "${variableName}" não encontrada`);
@@ -318,7 +322,7 @@ export const validateInterpolation = (
   // Verificar chaves balanceadas
   const openBraces = (text.match(/\{/g) || []).length;
   const closeBraces = (text.match(/\}/g) || []).length;
-  
+
   if (openBraces !== closeBraces) {
     errors.push('Chaves não balanceadas');
   }
@@ -339,12 +343,12 @@ export const useInterpolation = (
 ) => {
   const interpolate = useCallback((text: string) => {
     let result = text;
-    
+
     availableVariables.forEach(variable => {
       const pattern = new RegExp(`\\{${variable.key}\\}`, 'g');
       result = result.replace(pattern, variable.currentValue);
     });
-    
+
     return result;
   }, [availableVariables]);
 

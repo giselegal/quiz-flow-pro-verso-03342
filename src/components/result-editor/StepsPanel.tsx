@@ -73,11 +73,10 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
           {steps.map((step, index) => (
             <div
               key={step.id}
-              className={`w-12 h-12 rounded-lg border-2 flex items-center justify-center cursor-pointer ${
-                activeStepId === step.id
+              className={`w-12 h-12 rounded-lg border-2 flex items-center justify-center cursor-pointer ${activeStepId === step.id
                   ? 'border-[#B89B7A] bg-[#B89B7A]/10'
                   : 'border-gray-200 hover:border-gray-300'
-              }`}
+                }`}
               onClick={() => onStepSelect(step.id)}
               title={step.name}
             >
@@ -106,11 +105,10 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
           {steps.map((step, index) => (
             <div
               key={step.id}
-              className={`border-2 rounded-lg p-3 cursor-pointer transition-colors ${
-                activeStepId === step.id
+              className={`border-2 rounded-lg p-3 cursor-pointer transition-colors ${activeStepId === step.id
                   ? 'border-[#B89B7A] bg-[#B89B7A]/10'
                   : 'border-gray-200 hover:border-gray-300'
-              }`}
+                }`}
               onClick={() => onStepSelect(step.id)}
             >
               <div className="flex items-center justify-between mb-2">
@@ -126,7 +124,12 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
 
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-6 w-6 p-0"
+                        aria-label="Opções da etapa"
+                      >
                         <MoreVertical className="w-4 h-4" />
                       </Button>
                     </DropdownMenuTrigger>
