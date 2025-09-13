@@ -21,6 +21,7 @@ const StepPage = lazy(() => import('./pages/StepPage'));
 const QuizModularPage = lazy(() => import('./pages/QuizModularPage'));
 
 // Lazy loading para páginas admin
+const AnalyticsPage = lazy(() => import('./pages/admin/AnalyticsPage'));
 const MetricsPage = lazy(() => import('./pages/admin/MetricsPage'));
 const ParticipantsPage = lazy(() => import('./pages/admin/ParticipantsPage'));
 const SettingsPage = lazy(() => import('./pages/admin/SettingsPage'));
@@ -127,7 +128,9 @@ function App() {
               {/* Subrotas admin que também carregam o DashboardPage */}
               <ProtectedRoute path="/admin/*" component={DashboardPage} />
 
-              {/* 📊 Páginas de Métricas */}
+              {/* 📊 Páginas de Analytics e Métricas */}
+              <ProtectedRoute path="/analytics" component={AnalyticsPage} />
+
               <ProtectedRoute path="/metrics" component={MetricsPage} />
 
               <ProtectedRoute path="/participants" component={ParticipantsPage} />

@@ -1,4 +1,5 @@
 import React from 'react';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 
 interface EditorLoadingWrapperProps {
     children: React.ReactNode;

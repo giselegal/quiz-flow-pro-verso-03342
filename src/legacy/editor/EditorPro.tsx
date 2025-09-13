@@ -804,9 +804,9 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         onDelete={() => selectedBlock ? actions.removeBlock(currentStepKey, selectedBlock.id) : undefined}
         onDuplicate={handleDuplicateSelected}
         onReset={handleResetSelected}
-        previewMode={previewDevice as 'desktop' | 'tablet' | 'mobile'}
+        previewMode={previewDevice}
         onPreviewModeChange={setPreviewDevice}
-        className="!w-full !h-full bg-gray-900"
+        className="!w-[20%] !min-w-0 !max-w-none"
       />
     );
   });
@@ -824,7 +824,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
       >
-        <div className={`editor-pro h-[calc(100vh-80px)] bg-gray-100 flex overflow-hidden max-w-screen ${className} relative`}>
+        <div className={`editor-pro h-[calc(100vh-80px)] bg-gray-950 flex overflow-x-hidden max-w-screen ${className} relative`}>
 
           {/* 📱 MOBILE OVERLAYS - Navegação e Propriedades */}
           <div className="lg:hidden">
@@ -920,41 +920,37 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
             </button>
           </div>
 
-          {/* DESKTOP LAYOUT - Melhor distribuição de espaço */}
-          {/* 1) Sidebar Navegação Compacta - Etapas + Componentes - 280px fixo */}
-          <div className="hidden lg:block w-[280px] min-w-[280px] max-w-[280px] bg-gray-900 border-r border-gray-800/50 flex flex-col">
-            {/* Painel de Etapas */}
-            <div className="flex-shrink-0 h-[300px] border-b border-gray-800/50">
-              <Suspense fallback={<div className="p-4">Loading steps…</div>}>
-                <StepSidebar
-                  currentStep={safeCurrentStep}
-                  totalSteps={21}
-                  stepHasBlocks={stepHasBlocks}
-                  stepValidation={(state as any)?.stepValidation || {}}
-                  onSelectStep={handleStepSelect}
-                  getStepAnalysis={getStepAnalysis as any}
-                  renderIcon={renderIcon as any}
-                  className="!w-full bg-transparent h-full"
-                />
-              </Suspense>
-            </div>
-            
-            {/* Painel de Componentes */}
-            <div className="flex-1 overflow-y-auto">
-              <Suspense fallback={<div className="p-4">Loading library…</div>}>
-                <ComponentsSidebar
-                  groupedComponents={groupedComponents as any}
-                  renderIcon={renderIcon as any}
-                  className="!w-full bg-transparent"
-                />
-              </Suspense>
-            </div>
+          {/* DESKTOP LAYOUT - Hidden on mobile */}
+          {/* 1) Etapas - 10% */}
+          <div className="hidden lg:block w-[10%] min-w-0 max-w-none">
+            <Suspense fallback={<div className="p-4 bg-gray-900 border-r border-gray-800/50">Loading steps…</div>}>
+              <StepSidebar
+                currentStep={safeCurrentStep}
+                totalSteps={21}
+                stepHasBlocks={stepHasBlocks}
+                stepValidation={(state as any)?.stepValidation || {}}
+                onSelectStep={handleStepSelect}
+                getStepAnalysis={getStepAnalysis as any}
+                renderIcon={renderIcon as any}
+                className="!w-full bg-gray-900 border-r border-gray-800/50"
+              />
+            </Suspense>
+          </div>
+          {/* 2) Componentes - 15% */}
+          <div className="hidden lg:block w-[15%] min-w-0 max-w-none">
+            <Suspense fallback={<div className="p-4 bg-gray-900 border-r border-gray-800/50">Loading library…</div>}>
+              <ComponentsSidebar
+                groupedComponents={groupedComponents as any}
+                renderIcon={renderIcon as any}
+                className="!w-full bg-gray-900 border-r border-gray-800/50"
+              />
+            </Suspense>
           </div>
 
-          {/* 2) Canvas Principal - Área flexível principal */}
-          <div className="w-full lg:flex-1 min-w-0 bg-gray-50">
+          {/* 3) Canvas - Mobile: full width, Desktop: 55% */}
+          <div className="w-full lg:w-[55%] min-w-0 flex-1">
             <CanvasAreaLayout
-              className="h-full"
+              className=""
               containerRef={containerRef}
               mode={mode}
               setMode={setMode}
@@ -973,9 +969,9 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
             />
           </div>
 
-          {/* 3) Painel de Propriedades - 320px fixo */}
-          <div className="hidden lg:block w-[320px] min-w-[320px] max-w-[320px] bg-gray-900 border-l border-gray-800/50">
-            <Suspense fallback={<div className="p-4">Properties…</div>}>
+          {/* 4) Propriedades - 20% - Hidden on mobile */}
+          <div className="hidden lg:block w-[20%] min-w-0 max-w-none">
+            <Suspense fallback={<div className="p-4 bg-gray-900 border-l border-gray-800/50">Properties…</div>}>
               <MemoPropertiesColumn />
             </Suspense>
           </div>

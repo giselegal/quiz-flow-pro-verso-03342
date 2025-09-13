@@ -39,7 +39,7 @@ import { PropertyType, PropertyCategory } from '@/hooks/useUnifiedProperties';
 // Importar editores avançados existentes
 import BoxModelEditor from '../core/BoxModelEditor';
 import AnimationPreviewEditor from '../core/AnimationPreviewEditor';
-import { ScoreValuesEditor } from '../core/ScoreValuesEditor';
+import ScoreValuesEditor from '../core/ScoreValuesEditor';
 
 // Tooltip library for contextual help
 const questionTooltips = {
@@ -172,20 +172,6 @@ export const QuestionPropertyEditor: React.FC<QuestionPropertyEditorProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState('content');
   const [previewMode, setPreviewMode] = useState(false);
-
-  // Helper functions to convert between scoreValues formats
-  const convertToScoreValueArray = useCallback((scoreValues: Record<string, number> | undefined): { value: number; label: string }[] => {
-    if (!scoreValues) return [];
-    return Object.entries(scoreValues).map(([label, value]) => ({ label, value }));
-  }, []);
-
-  const convertFromScoreValueArray = useCallback((scoreValueArray: { value: number; label: string }[]): Record<string, number> => {
-    const result: Record<string, number> = {};
-    scoreValueArray.forEach(item => {
-      result[item.label] = item.value;
-    });
-    return result;
-  }, []);
 
   const properties = block.properties || {};
 
@@ -823,14 +809,12 @@ export const QuestionPropertyEditor: React.FC<QuestionPropertyEditorProps> = ({
                 <ScoreValuesEditor
                   property={{
                     key: 'scoreValues',
-                    value: convertToScoreValueArray(properties.scoreValues),
-                    type: 'scoreValues' as const,
+                    value: properties.scoreValues,
+                    type: PropertyType.OBJECT,
                     label: 'Score Values',
                     category: PropertyCategory.BEHAVIOR
                   }}
-                  onChange={(value) => {
-                    handlePropertyChange('scoreValues', convertFromScoreValueArray(value));
-                  }}
+                  onChange={handlePropertyChange}
                 />
               </CardContent>
             </Card>
@@ -859,13 +843,13 @@ export const QuestionPropertyEditor: React.FC<QuestionPropertyEditorProps> = ({
                       <ScoreValuesEditor
                         property={{
                           key: `option-${index}-scores`,
-                          value: convertToScoreValueArray(option.scoreValues),
-                          type: 'scoreValues' as const,
+                          value: option.scoreValues || {},
+                          type: PropertyType.OBJECT,
                           label: `Option ${index + 1} Scores`,
                           category: PropertyCategory.BEHAVIOR
                         }}
-                        onChange={(value) => {
-                          handleOptionUpdate(index, { scoreValues: convertFromScoreValueArray(value) });
+                        onChange={(_key, value) => {
+                          handleOptionUpdate(index, { scoreValues: value });
                         }}
                       />
                     </div>

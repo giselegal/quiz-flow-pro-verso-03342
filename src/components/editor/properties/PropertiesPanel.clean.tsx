@@ -49,10 +49,11 @@ const CATEGORY_META: Record<string, { icon: any; label: string; description?: st
 
 const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
     selectedBlock,
-    onClose,
+    onUpdate,
     onDelete,
     onDuplicate,
     onReset,
+    onClose,
     previewMode = 'desktop',
     onPreviewModeChange,
 }) => {
@@ -72,11 +73,12 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
         );
     }
 
-    // Conectar ao schema unificado  
+    // Conectar ao schema unificado
     const { properties, updateProperty, getPropertiesByCategory, validateProperties, applyBrandColors } = useUnifiedProperties(
         selectedBlock.type,
         selectedBlock.id,
-        selectedBlock as any
+        selectedBlock as any,
+        onUpdate
     );
 
     const categories = [
