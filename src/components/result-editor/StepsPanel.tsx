@@ -181,6 +181,8 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
               {editingStepId === step.id ? (
                 <div className="space-y-2">
                   <Input
+                    id={`step-edit-${step.id}`}
+                    name={`stepName-${step.id}`}
                     value={editingName}
                     onChange={e => setEditingName(e.target.value)}
                     onKeyDown={e => {

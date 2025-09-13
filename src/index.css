@@ -722,6 +722,33 @@ img:hover,
   /* thumb track */
 }
 
+/* Safari fallbacks - properties panel specific */
+.properties-panel .scroll-area {
+  /* WebKit scrollbars for Safari/Chrome */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(107, 114, 128, 0.8) rgba(55, 65, 81, 0.5);
+}
+
+.properties-panel .scroll-area::-webkit-scrollbar {
+  width: 8px;
+  background: rgba(55, 65, 81, 0.5);
+}
+
+.properties-panel .scroll-area::-webkit-scrollbar-thumb {
+  background: rgba(107, 114, 128, 0.8);
+  border-radius: 4px;
+  border: 1px solid rgba(75, 85, 99, 0.6);
+}
+
+.properties-panel .scroll-area::-webkit-scrollbar-thumb:hover {
+  background: rgba(107, 114, 128, 1);
+}
+
+.properties-panel .scroll-area::-webkit-scrollbar-track {
+  background: rgba(55, 65, 81, 0.5);
+  border-radius: 4px;
+}
+
 /* Hover styles para melhor usabilidade */
 .scrollbar-track-gray-800 {
   --scrollbar-track: #1f2937;

@@ -98,18 +98,22 @@ export default {
       keyframes: {
         'accordion-down': {
           from: {
-            height: '0',
+            maxHeight: '0',
+            overflow: 'hidden',
           },
           to: {
-            height: 'var(--radix-accordion-content-height)',
+            maxHeight: 'var(--radix-accordion-content-height)',
+            overflow: 'hidden',
           },
         },
         'accordion-up': {
           from: {
-            height: 'var(--radix-accordion-content-height)',
+            maxHeight: 'var(--radix-accordion-content-height)',
+            overflow: 'hidden',
           },
           to: {
-            height: '0',
+            maxHeight: '0',
+            overflow: 'hidden',
           },
         },
       },
