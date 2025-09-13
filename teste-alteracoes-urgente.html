@@ -109,14 +109,14 @@
 
         function abrirEditor() {
             log('📝 Abrindo editor...', 'info');
-            window.open('http://localhost:8080/editor', '_blank');
+            window.open('http://localhost:5173/editor', '_blank');
         }
 
         function testarAlteracoes() {
             log('🔍 Iniciando teste de alterações...', 'info');
 
             // Abrir editor e testar
-            const editorWindow = window.open('http://localhost:8080/editor', '_blank');
+            const editorWindow = window.open('http://localhost:5173/editor', '_blank');
 
             setTimeout(() => {
                 if (editorWindow) {
@@ -173,7 +173,7 @@
 
         function forcarRefresh() {
             log('🔄 Forçando refresh...', 'info');
-            const editorWindow = window.open('http://localhost:8080/editor', '_blank');
+            const editorWindow = window.open('http://localhost:5173/editor', '_blank');
             setTimeout(() => {
                 if (editorWindow) {
                     editorWindow.location.reload(true);
