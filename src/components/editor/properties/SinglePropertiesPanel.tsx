@@ -31,11 +31,11 @@ import { Settings, Type, Palette, Layout, Trash2, Copy } from 'lucide-react';
 // ===== INTERFACES =====
 
 interface SinglePropertiesPanelProps {
-  selectedBlock: UnifiedBlock | null;
-  onUpdate?: (updates: Record<string, any>) => void; // Compatível com o formato do editor atual
-  onDelete?: () => void;
-  onDuplicate?: () => void;
-  onClose?: () => void;
+    selectedBlock: UnifiedBlock | null;
+    onUpdate?: (updates: Record<string, any>) => void; // Compatível com o formato do editor atual
+    onDelete?: () => void;
+    onDuplicate?: () => void;
+    onClose?: () => void;
 }interface PropertyFieldProps {
     property: any;
     value: any;
@@ -252,20 +252,20 @@ export const SinglePropertiesPanel: React.FC<SinglePropertiesPanelProps> = ({
         return categories;
     }, [properties]);
 
-  // Handlers compatíveis com o formato do editor atual
-  const handlePropertyUpdate = useCallback((key: string, value: any) => {
-    if (!onUpdate) return;
+    // Handlers compatíveis com o formato do editor atual
+    const handlePropertyUpdate = useCallback((key: string, value: any) => {
+        if (!onUpdate) return;
 
-    // Formato esperado pelo editor atual
-    onUpdate({ [key]: value });
-  }, [onUpdate]);
+        // Formato esperado pelo editor atual
+        onUpdate({ [key]: value });
+    }, [onUpdate]);
 
-  const handleContentUpdate = useCallback((key: string, value: any) => {
-    if (!onUpdate) return;
+    const handleContentUpdate = useCallback((key: string, value: any) => {
+        if (!onUpdate) return;
 
-    // Para conteúdo, usar prefixo 'content.'
-    onUpdate({ [`content.${key}`]: value });
-  }, [onUpdate]);    // Estado vazio
+        // Para conteúdo, usar prefixo 'content.'
+        onUpdate({ [`content.${key}`]: value });
+    }, [onUpdate]);    // Estado vazio
     if (!selectedBlock) {
         return (
             <Card className="h-full">
