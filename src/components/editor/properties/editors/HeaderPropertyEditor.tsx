@@ -187,13 +187,12 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
           )}
 
           <h2
-            className={`font-bold ${
-              properties.headerType === 'hero'
+            className={`font-bold ${properties.headerType === 'hero'
                 ? 'text-2xl'
                 : properties.headerType === 'section'
                   ? 'text-xl'
                   : 'text-lg'
-            }`}
+              }`}
             style={{ color: properties.textColor }}
           >
             {properties.title || 'Título do Header'}
@@ -573,13 +572,12 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
             )}
 
             <h2
-              className={`font-bold ${
-                properties.headerType === 'hero'
+              className={`font-bold ${properties.headerType === 'hero'
                   ? 'text-2xl'
                   : properties.headerType === 'section'
                     ? 'text-xl'
                     : 'text-lg'
-              }`}
+                }`}
               style={{ color: properties.textColor }}
             >
               {properties.title || 'Título do Header'}
