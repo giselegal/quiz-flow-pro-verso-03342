@@ -95,9 +95,9 @@ export const StepNavigationPropertyEditor: React.FC<StepNavigationPropertyEditor
     selectionStyle: currentConfig?.selectionStyle ?? 'border',
     selectedColor: currentConfig?.selectedColor ?? '#3B82F6',
     hoverColor: currentConfig?.hoverColor ?? '#EBF5FF',
-  backgroundFrom: currentConfig?.backgroundFrom ?? '#FAF9F7',
-  backgroundVia: currentConfig?.backgroundVia ?? '#F5F2E9',
-  backgroundTo: currentConfig?.backgroundTo ?? '#EEEBE1',
+    backgroundFrom: currentConfig?.backgroundFrom ?? '#FAF9F7',
+    backgroundVia: currentConfig?.backgroundVia ?? '#F5F2E9',
+    backgroundTo: currentConfig?.backgroundTo ?? '#EEEBE1',
   });
 
   const [hasChanges, setHasChanges] = useState(false);
@@ -132,9 +132,9 @@ export const StepNavigationPropertyEditor: React.FC<StepNavigationPropertyEditor
       selectionStyle: 'border',
       selectedColor: '#3B82F6',
       hoverColor: '#EBF5FF',
-  backgroundFrom: '#FAF9F7',
-  backgroundVia: '#F5F2E9',
-  backgroundTo: '#EEEBE1',
+      backgroundFrom: '#FAF9F7',
+      backgroundVia: '#F5F2E9',
+      backgroundTo: '#EEEBE1',
     });
     setHasChanges(true);
   };
