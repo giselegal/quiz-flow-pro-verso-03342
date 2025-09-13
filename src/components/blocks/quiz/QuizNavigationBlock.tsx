@@ -158,15 +158,16 @@ const QuizNavigationBlock: React.FC<QuizNavigationBlockProps> = ({
 }) => {
   const getButtonClasses = (variant: 'primary' | 'secondary' | 'outline' = buttonStyle) => {
     const baseClasses = `
-      font-semibold transition-all duration-300 transform hover:scale-105
+      quiz-nav-button font-semibold transition-all duration-300 transform hover:scale-105
       ${
         size === 'sm'
-          ? 'px-4 py-2 text-sm'
+          ? 'px-3 py-2 text-sm md:px-4 md:py-2'
           : size === 'lg'
-            ? 'px-8 py-4 text-lg'
-            : 'px-6 py-3 text-base'
+            ? 'px-6 py-3 text-base md:px-8 md:py-4 md:text-lg'
+            : 'px-4 py-2.5 text-sm md:px-6 md:py-3 md:text-base'
       }
-      ${fullWidth ? 'w-full' : ''}
+      ${fullWidth ? 'w-full md:w-auto' : 'w-full md:w-auto'}
+      flex items-center justify-center
     `;
 
     const variants = {
@@ -182,12 +183,13 @@ const QuizNavigationBlock: React.FC<QuizNavigationBlockProps> = ({
   const getContainerClasses = () => {
     const alignmentClasses = {
       left: 'justify-start',
-      center: 'justify-center',
+      center: 'justify-center', 
       right: 'justify-end',
-      'space-between': 'justify-between',
+      'space-between': 'justify-between md:justify-between', // Mobile será flex-col via CSS
     };
 
-    return `flex items-center gap-4 ${alignmentClasses[alignment]}`;
+    // Adicionar classes responsivas adequadas
+    return `quiz-navigation flex items-center gap-4 ${alignmentClasses[alignment]} md:flex-row flex-col md:gap-4 gap-3`;
   };
 
   const handleBack = () => {
@@ -219,8 +221,8 @@ const QuizNavigationBlock: React.FC<QuizNavigationBlockProps> = ({
   const isActuallyLast = isLastQuestion || currentQuestion === totalQuestions;
 
   return (
-    <div className={`quiz-navigation-block ${className}`} style={style} data-block-id={blockId}>
-      <div className="py-6">
+    <div className={`quiz-navigation-block quiz-navigation-inline ${className}`} style={style} data-block-id={blockId}>
+      <div className="py-4 md:py-6">
         <div className={getContainerClasses()}>
           {/* Botão Voltar */}
           {showBackButton && !isActuallyFirst && (
@@ -234,7 +236,7 @@ const QuizNavigationBlock: React.FC<QuizNavigationBlockProps> = ({
               ) : (
                 <ChevronLeft className="w-4 h-4 mr-2" />
               )}
-              {backButtonText}
+              <span className="truncate">{backButtonText}</span>
             </Button>
           )}
 
@@ -250,15 +252,17 @@ const QuizNavigationBlock: React.FC<QuizNavigationBlockProps> = ({
               ) : (
                 <RotateCcw className="w-4 h-4 mr-2" />
               )}
-              {resetButtonText}
+              <span className="truncate">{resetButtonText}</span>
             </Button>
           )}
 
-          {/* Spacer para space-between quando não há botão esquerdo */}
-          {alignment === 'space-between' && (!showBackButton || isActuallyFirst) && <div></div>}
+          {/* Spacer para space-between quando não há botão esquerdo - apenas em desktop */}
+          {alignment === 'space-between' && (!showBackButton || isActuallyFirst) && (
+            <div className="hidden md:block"></div>
+          )}
 
           {/* Grupo de botões direitos */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 w-full md:w-auto flex-col md:flex-row">
             {/* Botão Pular */}
             {showSkipButton && !isActuallyLast && (
               <Button
@@ -267,7 +271,7 @@ const QuizNavigationBlock: React.FC<QuizNavigationBlockProps> = ({
                 className={getButtonClasses('outline')}
                 variant="ghost"
               >
-                {skipButtonText}
+                <span className="truncate">{skipButtonText}</span>
               </Button>
             )}
 
@@ -281,10 +285,10 @@ const QuizNavigationBlock: React.FC<QuizNavigationBlockProps> = ({
                 {loadingNext ? (
                   <RotateCcw className="w-4 h-4 animate-spin mr-2" />
                 ) : (
-                  !isActuallyLast && <ChevronRight className="w-4 h-4 ml-2" />
+                  !isActuallyLast && <ChevronRight className="hidden md:inline w-4 h-4 ml-2" />
                 )}
-                {isActuallyLast ? 'Finalizar' : nextButtonText}
-                {!isActuallyLast && !loadingNext && <ChevronRight className="w-4 h-4 ml-2" />}
+                <span className="truncate">{isActuallyLast ? 'Finalizar' : nextButtonText}</span>
+                {!isActuallyLast && !loadingNext && <ChevronRight className="hidden md:inline w-4 h-4 ml-2" />}
               </Button>
             )}
           </div>
@@ -292,7 +296,7 @@ const QuizNavigationBlock: React.FC<QuizNavigationBlockProps> = ({
 
         {/* Informações contextuais */}
         {currentQuestion && totalQuestions && (
-          <div className="text-center mt-4 text-sm text-[#6B5B73]">
+          <div className="text-center mt-3 md:mt-4 text-xs md:text-sm text-[#6B5B73] px-2">
             {isActuallyLast
               ? 'Última questão - clique em "Finalizar" para ver seu resultado'
               : `${totalQuestions - currentQuestion} questões restantes`}

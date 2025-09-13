@@ -469,10 +469,26 @@
         padding: 1rem !important;
     }
 
+    .quiz-navigation {
+        flex-direction: column !important;
+        gap: 0.75rem !important;
+        align-items: stretch !important;
+    }
+
     .quiz-nav-button {
         width: 100% !important;
         justify-content: center !important;
         min-height: 3rem !important;
+        padding: 0.75rem 1rem !important;
+    }
+
+    /* Garantir que ícones não sobreponham texto */
+    .quiz-nav-button .truncate {
+        flex: 1;
+        text-align: center;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 }
 
