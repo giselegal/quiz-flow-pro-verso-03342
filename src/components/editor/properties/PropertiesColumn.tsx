@@ -50,10 +50,10 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
               <PropertiesPanel
                 key={selectedBlock?.id || 'no-selection'}
                 selectedBlock={selectedBlock}
-              onUpdate={onUpdate}
-              onClose={onClose}
-              onDelete={onDelete}
-            />
+                onUpdate={onUpdate}
+                onClose={onClose}
+                onDelete={onDelete}
+              />
             </div>
           </div>
         </Suspense>
