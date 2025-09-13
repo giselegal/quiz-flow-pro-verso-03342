@@ -460,6 +460,95 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
         )}
 
         {renderStepContent()}
+
+        {/* Botões de navegação no preview - abaixo do último bloco */}
+        {mode === 'preview' && (
+          <div className="mt-6 sm:mt-8 pt-4 sm:pt-6 border-t border-stone-200">
+            {/* Layout Desktop/Tablet */}
+            <div className="hidden sm:flex items-center justify-between gap-4">
+              <button
+                onClick={prevStep}
+                disabled={currentStep === 1}
+                className={cn(
+                  'flex items-center gap-2 px-4 py-3 text-sm font-medium rounded-lg border transition-colors',
+                  currentStep === 1
+                    ? 'bg-stone-100 text-stone-400 cursor-not-allowed border-stone-200'
+                    : 'bg-white text-stone-700 hover:bg-stone-50 border-stone-300 shadow-sm'
+                )}
+              >
+                ← Anterior
+              </button>
+
+              <div className="flex items-center gap-3 text-sm text-stone-600">
+                <span>Etapa {currentStep} de {totalSteps}</span>
+                <div className="w-24 bg-stone-200 rounded-full h-2">
+                  <div
+                    className="bg-gradient-to-r from-[#B89B7A] to-[#8B7355] h-2 rounded-full transition-all duration-300"
+                    style={{ width: `${progress}%` }}
+                  />
+                </div>
+                <span>{progress}%</span>
+              </div>
+
+              <button
+                onClick={() => !nextDisabled && nextStep()}
+                disabled={nextDisabled}
+                className={cn(
+                  'flex items-center gap-2 px-4 py-3 text-sm font-medium rounded-lg transition-colors',
+                  nextDisabled
+                    ? 'bg-stone-200 text-stone-400 cursor-not-allowed'
+                    : 'bg-gradient-to-r from-[#B89B7A] to-[#8B7355] text-white hover:from-[#A08966] hover:to-[#7A6B4D] shadow-sm'
+                )}
+              >
+                {nextLabel} →
+              </button>
+            </div>
+
+            {/* Layout Mobile */}
+            <div className="sm:hidden space-y-4">
+              {/* Progress no topo mobile */}
+              <div className="flex items-center justify-center gap-3 text-sm text-stone-600">
+                <span>Etapa {currentStep} de {totalSteps}</span>
+                <div className="flex-1 max-w-32 bg-stone-200 rounded-full h-2">
+                  <div
+                    className="bg-gradient-to-r from-[#B89B7A] to-[#8B7355] h-2 rounded-full transition-all duration-300"
+                    style={{ width: `${progress}%` }}
+                  />
+                </div>
+                <span>{progress}%</span>
+              </div>
+
+              {/* Botões full-width no mobile */}
+              <div className="flex gap-3">
+                <button
+                  onClick={prevStep}
+                  disabled={currentStep === 1}
+                  className={cn(
+                    'flex-1 flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium rounded-lg border transition-colors',
+                    currentStep === 1
+                      ? 'bg-stone-100 text-stone-400 cursor-not-allowed border-stone-200'
+                      : 'bg-white text-stone-700 hover:bg-stone-50 border-stone-300 shadow-sm'
+                  )}
+                >
+                  ← Anterior
+                </button>
+
+                <button
+                  onClick={() => !nextDisabled && nextStep()}
+                  disabled={nextDisabled}
+                  className={cn(
+                    'flex-1 flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium rounded-lg transition-colors',
+                    nextDisabled
+                      ? 'bg-stone-200 text-stone-400 cursor-not-allowed'
+                      : 'bg-gradient-to-r from-[#B89B7A] to-[#8B7355] text-white hover:from-[#A08966] hover:to-[#7A6B4D] shadow-sm'
+                  )}
+                >
+                  {nextLabel} →
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
