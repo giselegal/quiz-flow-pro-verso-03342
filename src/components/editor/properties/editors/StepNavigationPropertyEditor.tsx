@@ -206,7 +206,7 @@ export const StepNavigationPropertyEditor: React.FC<StepNavigationPropertyEditor
   const stepInfo = getStepInfo();
 
   return (
-    <Card className="w-full max-w-2xl mx-auto">
+    <Card className="w-full max-w-full">
       <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">

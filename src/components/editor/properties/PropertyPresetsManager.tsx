@@ -300,7 +300,7 @@ export const PropertyPresetsManager: React.FC<PropertyPresetsManagerProps> = ({
 
     // ===== RENDER =====
     return (
-        <Card className={cn("w-full max-w-4xl", className)}>
+        <Card className={cn("w-full max-w-full", className)}>
             <CardHeader>
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">

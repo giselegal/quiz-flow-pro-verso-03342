@@ -14,9 +14,25 @@
 }
 
 .properties-panel * {
-    max-width: 100%;
+    max-width: 100% !important;
     word-wrap: break-word;
     overflow-wrap: break-word;
+    box-sizing: border-box !important;
+}
+
+/* Impede cards e containers de vazarem */
+.properties-panel .card,
+.properties-panel [class*="max-w-"],
+.properties-panel [class*="w-["] {
+    max-width: 100% !important;
+    width: auto !important;
+}
+
+/* Força containers grandes a se ajustarem */
+.properties-panel .max-w-4xl,
+.properties-panel .max-w-2xl,
+.properties-panel .max-w-xl {
+    max-width: 100% !important;
 }
 
 /* Impede botões e inputs de vazarem */
