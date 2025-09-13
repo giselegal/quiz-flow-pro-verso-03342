@@ -825,7 +825,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
       >
-        <div className={`editor-pro h-[calc(100vh-120px)] bg-gray-950 flex overflow-x-hidden max-w-screen ${className} relative`}>
+        <div className={`editor-pro h-[calc(100vh-120px)] bg-gray-950 flex overflow-hidden max-w-screen ${className} relative`}>
 
           {/* 📱 MOBILE OVERLAYS - Navegação e Propriedades */}
           <div className="lg:hidden">
@@ -972,8 +972,8 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
             />
           </div>
 
-          {/* 4) Propriedades - 20% - Hidden on mobile */}
-          <div className="hidden lg:block w-[20%] min-w-[280px] max-w-[400px] flex-shrink-0">
+          {/* 4) Propriedades - Fixed width - Hidden on mobile */}
+          <div className="hidden lg:block w-[320px] min-w-[320px] max-w-[320px] flex-shrink-0">
             <Suspense fallback={<div className="p-4 bg-gray-900 border-l border-gray-800/50">Properties…</div>}>
               <MemoPropertiesColumn />
             </Suspense>

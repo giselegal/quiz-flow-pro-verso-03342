@@ -44,15 +44,11 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
           </div>
         }>
           {/* SinglePropertiesPanel - Painel Unificado com IDs únicos */}
-          <div className="flex-1 overflow-hidden">
-            <div className="properties-panel h-full max-w-full overflow-x-hidden">
-              <SinglePropertiesPanel
-                selectedBlock={selectedBlock}
-                onUpdate={onUpdate}
-                onDelete={onDelete}
-              />
-            </div>
-          </div>
+          <SinglePropertiesPanel
+            selectedBlock={selectedBlock}
+            onUpdate={onUpdate}
+            onDelete={onDelete}
+          />
         </Suspense>
       ) : (
         <Suspense fallback={
@@ -64,15 +60,11 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
           </div>
         }>
           {/* SinglePropertiesPanel - Estado vazio quando nenhum bloco selecionado */}
-          <div className="flex-1 overflow-hidden">
-            <div className="properties-panel h-full max-w-full overflow-x-hidden">
-              <SinglePropertiesPanel
-                selectedBlock={null}
-                onUpdate={() => { }}
-                onDelete={() => { }}
-              />
-            </div>
-          </div>
+          <SinglePropertiesPanel
+            selectedBlock={null}
+            onUpdate={() => { }}
+            onDelete={() => { }}
+          />
         </Suspense>
       )}
     </div>

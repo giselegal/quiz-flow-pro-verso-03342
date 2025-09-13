@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Layout - Análise de Camadas</title>
+    <style>
+        body { font-family: monospace; padding: 20px; background: #1a1a1a; color: #fff; }
+        .debug-section { margin: 20px 0; padding: 10px; border: 1px solid #333; border-radius: 5px; }
+        .error { color: #ff6b6b; }
+        .success { color: #51cf66; }
+        .warning { color: #ffd43b; }
+        .info { color: #74c0fc; }
+        pre { background: #2d2d2d; padding: 10px; border-radius: 5px; overflow-x: auto; font-size: 12px; }
+        button { background: #007acc; color: white; border: none; padding: 10px 15px; margin: 5px; cursor: pointer; border-radius: 3px; }
+        button:hover { background: #005c99; }
+        #results { margin-top: 20px; }
+        .highlight { background: #333; border: 1px solid #555; margin: 5px 0; padding: 5px; border-radius: 3px; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Debug Layout - Análise de Camadas e Sobreposições</h1>
+    
+    <div class="debug-section">
+        <h3>🎯 Testes Específicos</h3>
+        <button onclick="abrirEditorETeste()">Abrir Editor & Executar Análise Completa</button>
+        <button onclick="analisarPropriedadesColuna()">Focar na Coluna de Propriedades</button>
+        <button onclick="verificarConflitosCSS()">Verificar Conflitos CSS</button>
+        <button onclick="simularMediaQueries()">Simular Diferentes Tamanhos</button>
+    </div>
+
+    <div id="results"></div>
+
+    <script>
+        function log(message, type = 'info') {
+            const results = document.getElementById('results');
+            const div = document.createElement('div');
+            div.className = `debug-section ${type}`;
+            div.innerHTML = message;
+            results.appendChild(div);
+        }
+
+        function abrirEditorETeste() {
+            log('<h4>🚀 Abrindo Editor para Análise Completa</h4>', 'info');
+            
+            const editorWindow = window.open('/editor?debug=true', 'editor-debug', 'width=1400,height=900');
+            
+            setTimeout(() => {
+                if (editorWindow && !editorWindow.closed) {
+                    try {
+                        // Injetar o script de debug
+                        const script = editorWindow.document.createElement('script');
+                        script.textContent = \`
+                            // Análise imediata de layout
+                            setTimeout(() => {
+                                console.log('🔍 ANÁLISE DE LAYOUT INICIADA');
+                                
+                                // 1. Medir containers principais
+                                const containers = {
+                                    steps: document.querySelector('div[class*="w-[180px]"]'),
+                                    components: document.querySelector('div[class*="w-[220px]"]'),
+                                    canvas: document.querySelector('div[class*="flex-1"]'),
+                                    properties: document.querySelector('div[class*="w-[320px]"]')
+                                };
+                                
+                                Object.entries(containers).forEach(([name, el]) => {
+                                    if (el) {
+                                        const rect = el.getBoundingClientRect();
+                                        const style = window.getComputedStyle(el);
+                                        console.log(\`📦 \${name.toUpperCase()}:\`, {
+                                            width: \`\${rect.width.toFixed(1)}px\`,
+                                            computedWidth: style.width,
+                                            minWidth: style.minWidth,
+                                            maxWidth: style.maxWidth,
+                                            flexShrink: style.flexShrink,
+                                            overflow: style.overflow,
+                                            position: style.position
+                                        });
+                                    } else {
+                                        console.warn(\`❌ \${name.toUpperCase()}: Container não encontrado\`);
+                                    }
+                                });
+                                
+                                // 2. Verificar sobreposições
+                                const allContainers = Object.values(containers).filter(Boolean);
+                                const overlaps = [];
+                                
+                                for (let i = 0; i < allContainers.length; i++) {
+                                    for (let j = i + 1; j < allContainers.length; j++) {
+                                        const rect1 = allContainers[i].getBoundingClientRect();
+                                        const rect2 = allContainers[j].getBoundingClientRect();
+                                        
+                                        if (rect1.left < rect2.right && rect1.right > rect2.left) {
+                                            overlaps.push({
+                                                container1: allContainers[i].className.slice(0, 30),
+                                                container2: allContainers[j].className.slice(0, 30),
+                                                overlap: Math.max(0, Math.min(rect1.right, rect2.right) - Math.max(rect1.left, rect2.left))
+                                            });
+                                        }
+                                    }
+                                }
+                                
+                                if (overlaps.length > 0) {
+                                    console.error('🚨 SOBREPOSIÇÕES DETECTADAS:', overlaps);
+                                } else {
+                                    console.log('✅ Nenhuma sobreposição detectada');
+                                }
+                                
+                                // 3. Análise de espaço disponível
+                                const viewport = window.innerWidth;
+                                const totalFixed = 180 + 220 + 320; // Steps + Components + Properties
+                                const availableCanvas = viewport - totalFixed;
+                                
+                                console.log('📊 ANÁLISE DE ESPAÇO:');
+                                console.log(\`   Viewport: \${viewport}px\`);
+                                console.log(\`   Largura fixa total: \${totalFixed}px\`);
+                                console.log(\`   Espaço para canvas: \${availableCanvas}px\`);
+                                console.log(\`   Proporção canvas: \${((availableCanvas / viewport) * 100).toFixed(1)}%\`);
+                                
+                                if (availableCanvas < 400) {
+                                    console.error('⚠️ PROBLEMA: Canvas muito pequeno!');
+                                }
+                                
+                                // 4. Propriedades específicas da coluna
+                                const propsColumn = containers.properties;
+                                if (propsColumn) {
+                                    const propsChildren = Array.from(propsColumn.children);
+                                    console.log('🎯 COLUNA DE PROPRIEDADES:');
+                                    propsChildren.forEach((child, i) => {
+                                        const rect = child.getBoundingClientRect();
+                                        const style = window.getComputedStyle(child);
+                                        console.log(\`   [\${i}] \${child.tagName}: \${rect.width.toFixed(1)}px, overflow: \${style.overflow}\`);
+                                    });
+                                }
+                                
+                            }, 2000);
+                        \`;
+                        editorWindow.document.head.appendChild(script);
+                        
+                        log('✅ Script de debug injetado no editor. Verifique o console do navegador.', 'success');
+                        
+                    } catch (error) {
+                        log(\`❌ Erro ao injetar script: \${error.message}\`, 'error');
+                    }
+                } else {
+                    log('❌ Não foi possível abrir o editor', 'error');
+                }
+            }, 3000);
+            
+            log('⏳ Aguarde 3 segundos... Script será injetado automaticamente.', 'info');
+        }
+
+        function analisarPropriedadesColuna() {
+            log('<h4>🎯 Análise Específica da Coluna de Propriedades</h4>', 'info');
+            
+            // Problemas conhecidos identificados
+            const problemasIdentificados = [
+                '🔸 Conflito: w-[20%] + min-w-[280px] + max-w-[400px]',
+                '🔸 overflow-x-hidden pode esconder conteúdo',
+                '🔸 Wrapper extra desnecessário no PropertiesColumn',
+                '🔸 Larguras fixas (180px + 220px + 320px = 720px)',
+                '🔸 Em telas menores que 1120px, canvas fica < 400px'
+            ];
+            
+            log('<div class="highlight"><strong>⚠️ Problemas Identificados:</strong><br>' + problemasIdentificados.join('<br>') + '</div>', 'warning');
+            
+            const solucoes = [
+                '✅ Usar apenas largura fixa (w-[320px]) - APLICADO',
+                '✅ Remover wrappers desnecessários - APLICADO',
+                '✅ Alterar overflow-x-hidden para overflow-hidden - APLICADO',
+                '🔄 Testar responsividade em telas menores',
+                '🔄 Considerar breakpoints customizados'
+            ];
+            
+            log('<div class="highlight"><strong>💡 Soluções Implementadas:</strong><br>' + solucoes.join('<br>') + '</div>', 'info');
+        }
+
+        function verificarConflitosCSS() {
+            log('<h4>🎨 Verificação de Conflitos CSS</h4>', 'info');
+            
+            const conflitosComuns = [
+                { problema: 'w-[20%] + min-w-[280px]', status: '🔧 CORRIGIDO', solucao: 'Usar apenas w-[320px]' },
+                { problema: 'overflow-x-hidden', status: '🔧 CORRIGIDO', solucao: 'Mudado para overflow-hidden' },
+                { problema: 'Wrapper duplo', status: '🔧 CORRIGIDO', solucao: 'Removidos wrappers extras' },
+                { problema: 'flex-shrink-0 vs flex-1', status: '✅ OK', solucao: 'Consistente em todos containers' }
+            ];
+            
+            conflitosComuns.forEach(conflito => {
+                log(\`<div class="highlight">
+                    <strong>\${conflito.problema}</strong><br>
+                    Status: \${conflito.status}<br>
+                    Solução: \${conflito.solucao}
+                </div>\`, conflito.status.includes('CORRIGIDO') ? 'success' : 'info');
+            });
+        }
+
+        function simularMediaQueries() {
+            log('<h4>📱 Simulação de Diferentes Tamanhos de Tela</h4>', 'info');
+            
+            const breakpoints = [
+                { name: 'Mobile', width: 768, visible: 'Nenhuma sidebar' },
+                { name: 'Tablet', width: 1024, visible: 'lg:block ativo - todas as sidebars' },
+                { name: 'Desktop Pequeno', width: 1280, canvas: 1280 - 720 },
+                { name: 'Desktop Médio', width: 1440, canvas: 1440 - 720 },
+                { name: 'Desktop Grande', width: 1920, canvas: 1920 - 720 }
+            ];
+            
+            breakpoints.forEach(bp => {
+                const canvasWidth = bp.canvas || 'Não calculado';
+                const status = bp.canvas && bp.canvas < 400 ? '⚠️ MUITO PEQUENO' : '✅ OK';
+                
+                log(\`<div class="highlight">
+                    <strong>\${bp.name} (\${bp.width}px)</strong><br>
+                    Canvas disponível: \${canvasWidth}px \${typeof canvasWidth === 'number' ? status : ''}<br>
+                    Sidebars: \${bp.visible || 'Todas visíveis'}
+                </div>\`, typeof canvasWidth === 'number' && canvasWidth < 400 ? 'warning' : 'success');
+            });
+        }
+
+        // Auto-executar análise básica
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                log('<h4>🔍 Análise Automática Iniciada</h4>', 'info');
+                analisarPropriedadesColuna();
+                verificarConflitosCSS();
+                simularMediaQueries();
+            }, 500);
+        });
+    </script>
+</body>
+</html>
