@@ -85,6 +85,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
                     )}
                     style={{ backgroundColor: color }}
                     title={name}
+                    aria-label={`Selecionar cor ${name}`}
                   />
                 ))}
               </div>
@@ -102,6 +103,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
                     'w-full h-10 rounded border-2 border-dashed hover:bg-gray-50 transition-colors flex items-center justify-center',
                     value === 'transparent' ? 'border-[#B89B7A] bg-[#B89B7A]/10' : 'border-gray-300'
                   )}
+                  aria-label="Selecionar cor transparente"
                 >
                   <span style={{ color: '#6B4F43' }}>Sem cor de fundo</span>
                 </button>

@@ -169,12 +169,12 @@ const PropertyField: React.FC<PropertyFieldProps> = ({ property, value, onChange
         case PropertyType.SELECT:
             return (
                 <div className="space-y-2">
-                    <Label className="text-sm font-medium">
+                    <Label htmlFor={fieldId} className="text-sm font-medium">
                         {property.label}
                     </Label>
                     <PropertyChangeIndicator>
                         <Select value={value || ''} onValueChange={handleChange}>
-                            <SelectTrigger id={fieldId}>
+                            <SelectTrigger id={fieldId} aria-label={property.label}>
                                 <SelectValue placeholder="Selecione..." />
                             </SelectTrigger>
                             <SelectContent>
@@ -301,12 +301,22 @@ export const SinglePropertiesPanel: React.FC<SinglePropertiesPanelProps> = ({
 
                     <div className="flex items-center gap-2 flex-shrink-0">
                         {onDuplicate && (
-                            <Button variant="outline" size="sm" onClick={onDuplicate}>
+                            <Button 
+                                variant="outline" 
+                                size="sm" 
+                                onClick={onDuplicate}
+                                aria-label="Duplicar elemento"
+                            >
                                 <Copy className="w-4 h-4" />
                             </Button>
                         )}
                         {onDelete && (
-                            <Button variant="outline" size="sm" onClick={onDelete}>
+                            <Button 
+                                variant="outline" 
+                                size="sm" 
+                                onClick={onDelete}
+                                aria-label="Excluir elemento"
+                            >
                                 <Trash2 className="w-4 h-4" />
                             </Button>
                         )}

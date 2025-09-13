@@ -45,6 +45,8 @@ export const SizeSlider: React.FC<SizeSliderProps> = ({
           max={max}
           step={step}
           className="w-full"
+          aria-label={`${label} (${min} a ${max} ${unit})`}
+          aria-valuetext={`${value}${unit}`}
         />
       </div>
 
