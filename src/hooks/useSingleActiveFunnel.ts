@@ -83,8 +83,8 @@ export const useSingleActiveFunnel = (options: UseSingleActiveFunnelOptions = {}
                 console.log('🧹 Executando limpeza automática...');
 
                 // Importar e executar limpeza
-                if (typeof window !== 'undefined' && window.cleanupFunnels) {
-                    const result = window.cleanupFunnels();
+                if (typeof window !== 'undefined' && (window as any).cleanupFunnels) {
+                    const result = (window as any).cleanupFunnels();
                     cleanupPerformed = result.success;
 
                     if (cleanupPerformed) {
@@ -121,8 +121,8 @@ export const useSingleActiveFunnel = (options: UseSingleActiveFunnelOptions = {}
     const forceCleanup = async () => {
         setIsLoading(true);
         try {
-            if (typeof window !== 'undefined' && window.cleanupFunnels) {
-                const result = window.cleanupFunnels();
+            if (typeof window !== 'undefined' && (window as any).cleanupFunnels) {
+                const result = (window as any).cleanupFunnels();
                 if (result.success) {
                     await checkFunnelStatus();
                     return result;
@@ -131,7 +131,7 @@ export const useSingleActiveFunnel = (options: UseSingleActiveFunnelOptions = {}
             return { success: false, error: 'Função de limpeza não disponível' };
         } catch (error) {
             console.error('❌ Erro na limpeza forçada:', error);
-            return { success: false, error: error.message };
+            return { success: false, error: error instanceof Error ? error.message : 'Erro desconhecido' };
         } finally {
             setIsLoading(false);
         }
@@ -152,7 +152,7 @@ export const useSingleActiveFunnel = (options: UseSingleActiveFunnelOptions = {}
         checkFunnelStatus();
 
         // Listener para evento de limpeza
-        const handleCleanupComplete = (event) => {
+        const handleCleanupComplete = (_event: Event) => {
             console.log('🎉 Limpeza detectada, atualizando status...');
             checkFunnelStatus();
         };
@@ -160,7 +160,7 @@ export const useSingleActiveFunnel = (options: UseSingleActiveFunnelOptions = {}
         window.addEventListener('funnelCleanupCompleted', handleCleanupComplete);
 
         // Listener para mudanças no localStorage
-        const handleStorageChange = (event) => {
+        const handleStorageChange = (event: StorageEvent) => {
             if (event.key?.includes('funnel') || event.key?.includes('Funnel')) {
                 checkFunnelStatus();
             }

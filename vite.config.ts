@@ -4,7 +4,7 @@ import { defineConfig } from 'vite';
 
 // Configuração OTIMIZADA para funcionar com Lovable
 export default defineConfig({
-  base: './',
+  base: '/',
   plugins: [react()],
   resolve: {
     alias: {
@@ -14,7 +14,7 @@ export default defineConfig({
   },
   server: {
     host: '0.0.0.0',
-    port: 5173,
+    port: 8080,
     open: false,
     cors: true,
     strictPort: false,
@@ -47,8 +47,12 @@ export default defineConfig({
     copyPublicDir: true,
     rollupOptions: {
       output: {
-        manualChunks: undefined,
-        inlineDynamicImports: true,
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          router: ['wouter'],
+          ui: ['@radix-ui/react-dialog', '@radix-ui/react-tabs', '@radix-ui/react-accordion'],
+          utils: ['clsx', 'class-variance-authority', 'tailwind-merge'],
+        },
         assetFileNames: 'assets/[name]-[hash].[ext]',
         chunkFileNames: 'assets/[name]-[hash].js',
         entryFileNames: 'assets/[name]-[hash].js',
@@ -77,5 +81,6 @@ export default defineConfig({
   },
   esbuild: {
     drop: process.env.NODE_ENV === 'production' ? ['console', 'debugger'] : [],
+    legalComments: 'none',
   },
 });

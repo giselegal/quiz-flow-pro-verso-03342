@@ -11,14 +11,14 @@ import { funnelLocalStore } from '@/services/funnelLocalStore';
 const EditorTemplatesPage: React.FC = () => {
   const [, setLocation] = useLocation();
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
-  
+
   // Carregar templates unificados
   const templates = getUnifiedTemplates();
 
-  const handleSelectTemplate = async (templateId: string) => {
+  const handleSelectTemplate = (templateId: string) => {
     try {
       console.log('🎯 Selecionando template:', templateId);
-      
+
       // Buscar template selecionado
       const template = templates.find(t => t.id === templateId);
       if (!template) {
@@ -26,17 +26,35 @@ const EditorTemplatesPage: React.FC = () => {
         return;
       }
 
+      console.log('📄 Template encontrado:', template);
+
       // Clonar template para criar nova instância
+      // Converter UnifiedTemplate para FunnelTemplate format
       const templateData = {
         id: template.id,
         name: template.name,
         description: template.description || '',
         category: template.category || 'general',
-        preview: template.image || '',
-        blocks: [] // Será preenchido pelo sistema de templates
+        preview: template.image || '', // UnifiedTemplate usa 'image', FunnelTemplate usa 'preview'
+        blocks: [
+          // Template básico com hero block
+          {
+            type: 'FunnelHeroBlock',
+            properties: {
+              title: `Bem-vindo ao ${template.name}`,
+              description: template.description || 'Funil criado a partir de template',
+              ctaText: 'Começar',
+              backgroundColor: '#FAF9F7',
+              textColor: '#432818',
+              primaryColor: '#B89B7A',
+            },
+          },
+        ],
       };
 
+      console.log('🔄 Template data convertido para FunnelTemplate:', templateData);
       const clonedInstance = cloneFunnelTemplate(templateData, `${template.name} - Novo Funil`);
+      console.log('✅ Instância clonada:', clonedInstance);
 
       // Salvar no localStorage como um funil
       const newFunnel = {
@@ -46,15 +64,25 @@ const EditorTemplatesPage: React.FC = () => {
         updatedAt: clonedInstance.createdAt
       };
 
+      console.log('💾 Salvando funil no localStorage:', newFunnel);
       funnelLocalStore.upsert(newFunnel);
-      console.log('✅ Funil criado a partir do template:', clonedInstance.id);
+
+      // Verificar se foi salvo
+      const savedFunnel = funnelLocalStore.get(clonedInstance.id);
+      console.log('🔍 Funil salvo verificado:', savedFunnel);
+
+      console.log('🔄 Navegando para editor com ID:', clonedInstance.id);
 
       // Navegar para o editor com o funil criado
-      setLocation(`/editor/${encodeURIComponent(clonedInstance.id)}`);
-      
+      const editorUrl = `/editor/${encodeURIComponent(clonedInstance.id)}`;
+      console.log('🌐 URL do editor:', editorUrl);
+      setLocation(editorUrl);
+
     } catch (error) {
       console.error('❌ Erro ao selecionar template:', error);
+      console.error('❌ Stack trace:', error instanceof Error ? error.stack : 'N/A');
       // Fallback: navegar direto para editor
+      console.log('🔄 Navegando para editor (fallback)');
       setLocation('/editor');
     }
   };
@@ -79,13 +107,12 @@ const EditorTemplatesPage: React.FC = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {templates.map((template) => (
-          <Card 
-            key={template.id} 
-            className={`cursor-pointer transition-all duration-200 hover:shadow-lg ${
-              selectedTemplate === template.id 
-                ? 'ring-2 ring-[#B89B7A] shadow-lg' 
-                : 'hover:shadow-md'
-            }`}
+          <Card
+            key={template.id}
+            className={`cursor-pointer transition-all duration-200 hover:shadow-lg ${selectedTemplate === template.id
+              ? 'ring-2 ring-[#B89B7A] shadow-lg'
+              : 'hover:shadow-md'
+              }`}
             onClick={() => setSelectedTemplate(template.id)}
           >
             <CardHeader className="pb-3">
@@ -98,7 +125,7 @@ const EditorTemplatesPage: React.FC = () => {
                     {template.description || 'Modelo de funil profissional'}
                   </p>
                 </div>
-                <Badge 
+                <Badge
                   variant={template.isOfficial ? "default" : "secondary"}
                   className="ml-2"
                 >

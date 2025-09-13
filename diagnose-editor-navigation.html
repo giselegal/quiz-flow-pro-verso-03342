@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔍 Diagnóstico de Navegação Editor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .test-item {
+            margin: 10px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #fafafa;
+        }
+
+        .success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+
+        .warning {
+            background-color: #fff3cd;
+            border-color: #ffeaa7;
+        }
+
+        .info {
+            background-color: #d1ecf1;
+            border-color: #bee5eb;
+        }
+
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        .danger {
+            background: #dc3545;
+        }
+
+        .danger:hover {
+            background: #c82333;
+        }
+
+        .success-btn {
+            background: #28a745;
+        }
+
+        .success-btn:hover {
+            background: #218838;
+        }
+
+        pre {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-size: 12px;
+        }
+
+        .log-item {
+            padding: 5px 10px;
+            margin: 2px 0;
+            border-radius: 3px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+
+        .log-info {
+            background: #e7f3ff;
+        }
+
+        .log-warn {
+            background: #fff3cd;
+        }
+
+        .log-error {
+            background: #f8d7da;
+        }
+
+        .log-success {
+            background: #d4edda;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🔍 Diagnóstico Completo de Navegação do Editor</h1>
+        <p><strong>Objetivo:</strong> Diagnosticar por que os modelos não carregam o /editor</p>
+    </div>
+
+    <div class="container">
+        <h2>📊 Informações do Ambiente</h2>
+        <div class="test-item info">
+            <p><strong>URL Atual:</strong> <span id="current-url"></span></p>
+            <p><strong>Base URL:</strong> <span id="base-url"></span></p>
+            <p><strong>Timestamp:</strong> <span id="timestamp"></span></p>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>💾 Análise do LocalStorage</h2>
+        <div id="localStorage-analysis" class="test-item"></div>
+        <button onclick="analyzeLocalStorage()">🔄 Analisar LocalStorage</button>
+    </div>
+
+    <div class="container">
+        <h2>🧪 Teste de Navegação Direta</h2>
+        <div class="test-item">
+            <p>Teste direto das rotas do editor:</p>
+            <button onclick="testNavigation('/')">🏠 Homepage</button>
+            <button onclick="testNavigation('/admin/funis')">📋 Admin Funis</button>
+            <button onclick="testNavigation('/editor')">✏️ Editor Vazio</button>
+            <button onclick="testNavigation('/editor/test-funnel-123')">🎯 Editor com ID</button>
+            <button onclick="testNavigation('/editor?template=sales-funnel')">📝 Editor com Template</button>
+        </div>
+        <div id="navigation-results" class="test-item"></div>
+    </div>
+
+    <div class="container">
+        <h2>🎯 Simulação de Clonagem de Template</h2>
+        <div class="test-item">
+            <p>Simular o processo completo de seleção e clonagem:</p>
+            <button onclick="simulateTemplateCloning('sales-funnel')" class="success-btn">💼 Funil de Vendas</button>
+            <button onclick="simulateTemplateCloning('quiz-funnel')" class="success-btn">❓ Funil de Quiz</button>
+            <button onclick="simulateTemplateCloning('lead-gen')" class="success-btn">🎣 Geração de Leads</button>
+        </div>
+        <div id="cloning-results" class="test-item"></div>
+    </div>
+
+    <div class="container">
+        <h2>🔧 Ferramentas de Limpeza</h2>
+        <div class="test-item warning">
+            <p><strong>⚠️ Cuidado:</strong> Estas ações podem afetar dados salvos!</p>
+            <button onclick="clearFunnelData()" class="danger">🗑️ Limpar Dados de Funis</button>
+            <button onclick="clearAllData()" class="danger">💥 Limpar Tudo</button>
+            <button onclick="resetToDefault()" class="success-btn">🔄 Reset para Padrão</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>📝 Log de Operações</h2>
+        <div id="operation-log"
+            style="max-height: 300px; overflow-y: auto; background: #f8f9fa; padding: 10px; border-radius: 5px;"></div>
+        <button onclick="clearLog()">🧹 Limpar Log</button>
+    </div>
+
+    <script>
+        let operationLog = [];
+
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = { timestamp, message, type };
+            operationLog.push(logEntry);
+
+            console.log(`[${timestamp}] ${message}`);
+            updateLogDisplay();
+        }
+
+        function updateLogDisplay() {
+            const logDiv = document.getElementById('operation-log');
+            const logs = operationLog.slice(-50).map(entry =>
+                `<div class="log-item log-${entry.type}">[${entry.timestamp}] ${entry.message}</div>`
+            ).join('');
+            logDiv.innerHTML = logs;
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        function clearLog() {
+            operationLog = [];
+            updateLogDisplay();
+        }
+
+        // Inicialização
+        document.getElementById('current-url').textContent = window.location.href;
+        document.getElementById('base-url').textContent = document.baseURI;
+        document.getElementById('timestamp').textContent = new Date().toLocaleString();
+
+        function analyzeLocalStorage() {
+            log('🔍 Iniciando análise do LocalStorage...', 'info');
+
+            const analysis = {
+                total: localStorage.length,
+                funnelKeys: [],
+                quizKeys: [],
+                otherKeys: []
+            };
+
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                const value = localStorage.getItem(key);
+                const size = new Blob([value]).size;
+
+                if (key.includes('funnel')) {
+                    analysis.funnelKeys.push({ key, size, preview: value.substring(0, 100) });
+                } else if (key.includes('quiz')) {
+                    analysis.quizKeys.push({ key, size, preview: value.substring(0, 100) });
+                } else {
+                    analysis.otherKeys.push({ key, size, preview: value.substring(0, 100) });
+                }
+            }
+
+            let html = `<h4>📊 Análise Completa:</h4>`;
+            html += `<p><strong>Total de chaves:</strong> ${analysis.total}</p>`;
+
+            html += `<h5>🎯 Chaves de Funis (${analysis.funnelKeys.length}):</h5>`;
+            analysis.funnelKeys.forEach(item => {
+                html += `<div style="margin: 5px 0; padding: 5px; background: #e7f3ff; border-radius: 3px; font-family: monospace; font-size: 11px;">
+                    <strong>${item.key}</strong> (${item.size} bytes)<br>
+                    <em>${item.preview}...</em>
+                </div>`;
+            });
+
+            html += `<h5>❓ Chaves de Quiz (${analysis.quizKeys.length}):</h5>`;
+            analysis.quizKeys.forEach(item => {
+                html += `<div style="margin: 5px 0; padding: 5px; background: #fff3cd; border-radius: 3px; font-family: monospace; font-size: 11px;">
+                    <strong>${item.key}</strong> (${item.size} bytes)<br>
+                    <em>${item.preview}...</em>
+                </div>`;
+            });
+
+            document.getElementById('localStorage-analysis').innerHTML = html;
+            log(`✅ Análise concluída: ${analysis.total} chaves, ${analysis.funnelKeys.length} funis, ${analysis.quizKeys.length} quiz`, 'success');
+        }
+
+        function testNavigation(path) {
+            log(`🚀 Testando navegação para: ${path}`, 'info');
+
+            const fullUrl = new URL(path, window.location.origin);
+            log(`📍 URL completa: ${fullUrl.href}`, 'info');
+
+            // Abrir em nova aba
+            const newWindow = window.open(fullUrl.href, '_blank');
+
+            if (newWindow) {
+                log(`✅ Navegação iniciada para ${path}`, 'success');
+
+                // Tentar detectar se carregou
+                setTimeout(() => {
+                    try {
+                        if (newWindow.closed) {
+                            log(`⚠️ Janela fechada para ${path}`, 'warn');
+                        } else {
+                            log(`🔄 Janela ainda aberta para ${path}`, 'info');
+                        }
+                    } catch (e) {
+                        log(`❌ Erro ao verificar janela: ${e.message}`, 'error');
+                    }
+                }, 2000);
+            } else {
+                log(`❌ Falha ao abrir janela para ${path}`, 'error');
+            }
+        }
+
+        function simulateTemplateCloning(templateId) {
+            log(`🎯 Simulando clonagem do template: ${templateId}`, 'info');
+
+            try {
+                // Simular dados do template
+                const templateData = {
+                    id: templateId,
+                    name: `Template ${templateId}`,
+                    description: `Descrição do template ${templateId}`,
+                    category: 'general'
+                };
+
+                log(`📝 Dados do template: ${JSON.stringify(templateData)}`, 'info');
+
+                // Simular clonagem
+                const clonedId = `${templateId}-cloned-${Date.now()}`;
+                const clonedFunnel = {
+                    id: clonedId,
+                    name: `${templateData.name} - Cópia`,
+                    status: 'draft',
+                    updatedAt: new Date().toISOString(),
+                    templateId: templateId,
+                    createdFrom: 'template-cloning'
+                };
+
+                log(`🔄 Funil clonado: ${JSON.stringify(clonedFunnel)}`, 'info');
+
+                // Salvar no localStorage (simulando)
+                localStorage.setItem(`funnel_${clonedId}`, JSON.stringify(clonedFunnel));
+                log(`💾 Salvo no localStorage: funnel_${clonedId}`, 'success');
+
+                // Simular navegação
+                const editorUrl = `/editor/${encodeURIComponent(clonedId)}?template=${templateId}`;
+                log(`🔗 URL do editor: ${editorUrl}`, 'info');
+
+                // Testar a navegação
+                setTimeout(() => {
+                    log(`🚀 Navegando para o editor...`, 'info');
+                    testNavigation(editorUrl);
+                }, 500);
+
+                document.getElementById('cloning-results').innerHTML = `
+                    <div class="test-item success">
+                        <h4>✅ Clonagem Simulada com Sucesso!</h4>
+                        <p><strong>Template ID:</strong> ${templateId}</p>
+                        <p><strong>Funil Clonado ID:</strong> ${clonedId}</p>
+                        <p><strong>URL do Editor:</strong> ${editorUrl}</p>
+                        <button onclick="testNavigation('${editorUrl}')">🎯 Testar Navegação</button>
+                    </div>
+                `;
+
+            } catch (error) {
+                log(`❌ Erro na simulação: ${error.message}`, 'error');
+                document.getElementById('cloning-results').innerHTML = `
+                    <div class="test-item error">
+                        <h4>❌ Erro na Simulação</h4>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        function clearFunnelData() {
+            if (!confirm('⚠️ Tem certeza que quer limpar todos os dados de funis?')) return;
+
+            log('🗑️ Limpando dados de funis...', 'warn');
+
+            const keysToRemove = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && key.includes('funnel')) {
+                    keysToRemove.push(key);
+                }
+            }
+
+            keysToRemove.forEach(key => {
+                localStorage.removeItem(key);
+                log(`🗑️ Removido: ${key}`, 'warn');
+            });
+
+            log(`✅ Limpeza concluída: ${keysToRemove.length} chaves removidas`, 'success');
+            analyzeLocalStorage();
+        }
+
+        function clearAllData() {
+            if (!confirm('💥 ATENÇÃO: Isso vai limpar TODOS os dados do localStorage! Continuar?')) return;
+
+            log('💥 Limpando TODOS os dados...', 'error');
+            localStorage.clear();
+            log('✅ Todos os dados foram removidos', 'success');
+            analyzeLocalStorage();
+        }
+
+        function resetToDefault() {
+            log('🔄 Resetando para configuração padrão...', 'info');
+
+            // Limpar dados problemáticos
+            clearFunnelData();
+
+            // Configurar dados padrão
+            const defaultFunnel = {
+                id: 'default-funnel',
+                name: 'Funil Padrão',
+                status: 'draft',
+                updatedAt: new Date().toISOString(),
+                createdAt: new Date().toISOString()
+            };
+
+            localStorage.setItem('funnel_default-funnel', JSON.stringify(defaultFunnel));
+            log('✅ Funil padrão criado', 'success');
+
+            analyzeLocalStorage();
+        }
+
+        // Auto-executar análise ao carregar
+        setTimeout(analyzeLocalStorage, 1000);
+    </script>
+</body>
+
+</html>

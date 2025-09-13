@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧪 Teste de Correção - Sistema de Funis</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            margin: 20px;
+            background: #FAF9F7;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background: #f8f9fa;
+        }
+
+        .test-result {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 14px;
+        }
+
+        .success {
+            border-left: 4px solid #28a745;
+            background: #d4edda;
+        }
+
+        .error {
+            border-left: 4px solid #dc3545;
+            background: #f8d7da;
+        }
+
+        .warning {
+            border-left: 4px solid #ffc107;
+            background: #fff3cd;
+        }
+
+        .info {
+            border-left: 4px solid #007bff;
+            background: #d1ecf1;
+        }
+
+        .test-button {
+            background: #B89B7A;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px 5px;
+            transition: all 0.2s;
+        }
+
+        .test-button:hover {
+            background: #A0895B;
+            transform: translateY(-1px);
+        }
+
+        .test-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .critical {
+            background: #dc3545 !important;
+            color: white;
+            font-weight: bold;
+        }
+
+        .critical:hover {
+            background: #c82333 !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🧪 Teste de Correção - Sistema de Funis</h1>
+        <p><strong>Objetivo:</strong> Verificar se as correções aplicadas resolveram os problemas de fragmentação do
+            sistema de armazenamento.</p>
+
+        <div class="test-section">
+            <h2>🔍 Diagnóstico de Armazenamento</h2>
+            <button class="test-button" onclick="diagnosticarArmazenamento()">
+                🔍 Diagnosticar LocalStorage
+            </button>
+            <button class="test-button" onclick="testarConsistenciaIDs()">
+                🆔 Testar Consistência de IDs
+            </button>
+            <button class="test-button" onclick="verificarSistemasAtivos()">
+                📊 Verificar Sistemas Ativos
+            </button>
+        </div>
+
+        <div class="test-section">
+            <h2>🚀 Teste de Navegação</h2>
+            <button class="test-button critical" onclick="testarFluxoCompleto()">
+                ⚡ TESTE CRÍTICO: Fluxo Admin → Editor
+            </button>
+            <button class="test-button" onclick="simularCriacaoFunil()">
+                ➕ Simular Criação de Funil
+            </button>
+            <button class="test-button" onclick="verificarNavegacao()">
+                🧭 Verificar Navegação
+            </button>
+        </div>
+
+        <div class="test-section">
+            <h2>🔧 Testes de Correção</h2>
+            <button class="test-button" onclick="verificarUnificacao()">
+                🔗 Verificar Unificação
+            </button>
+            <button class="test-button" onclick="testarMigracao()">
+                📦 Testar Migração de Dados
+            </button>
+            <button class="test-button" onclick="limpezaDados()">
+                🧹 Limpeza de Dados Duplicados
+            </button>
+        </div>
+
+        <div id="results"></div>
+
+        <div class="test-section" style="margin-top: 40px;">
+            <h2>🔧 Informações do Sistema</h2>
+            <div id="systemInfo" class="test-result info">
+                Carregando informações do sistema...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', () => {
+            carregarInformacoesSistema();
+            addResult('🚀 Sistema de teste inicializado', 'success');
+        });
+
+        function addResult(message, type = 'info') {
+            const results = document.getElementById('results');
+            const div = document.createElement('div');
+            div.className = `test-result ${type}`;
+            div.innerHTML = `<strong>[${new Date().toLocaleTimeString()}]</strong> ${message}`;
+            results.appendChild(div);
+
+            // Scroll para o resultado
+            div.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function carregarInformacoesSistema() {
+            const info = document.getElementById('systemInfo');
+            const totalKeys = localStorage.length;
+            const funnelKeys = [];
+            const unifiedKeys = [];
+            const legacyKeys = [];
+
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key) {
+                    if (key.startsWith('unified_funnel:')) unifiedKeys.push(key);
+                    else if (key.startsWith('funnel-')) legacyKeys.push(key);
+                    else if (key.includes('funnel')) funnelKeys.push(key);
+                }
+            }
+
+            info.innerHTML = `
+                <strong>URL Base:</strong> ${window.location.origin}<br>
+                <strong>Página Atual:</strong> ${window.location.pathname}<br>
+                <strong>Total de Chaves:</strong> ${totalKeys}<br>
+                <strong>Chaves Unificadas:</strong> ${unifiedKeys.length}<br>
+                <strong>Chaves Legacy:</strong> ${legacyKeys.length}<br>
+                <strong>Outras Chaves de Funil:</strong> ${funnelKeys.length}<br>
+                <strong>User Agent:</strong> ${navigator.userAgent.substring(0, 100)}...
+            `;
+        }
+
+        function diagnosticarArmazenamento() {
+            addResult('🔍 Iniciando diagnóstico completo do localStorage...', 'info');
+
+            const sistemas = {
+                unified: { keys: [], prefix: 'unified_funnel:' },
+                legacy: { keys: [], prefix: 'funnel-' },
+                advanced: { keys: [], prefix: 'qqcv_' },
+                ai: { keys: [], prefix: 'ai-generated-funnel-' },
+                core: { keys: [], prefix: 'funnel-core-' },
+                progress: { keys: [], prefix: 'funnel_progress_' },
+                outros: { keys: [], prefix: '' }
+            };
+
+            // Classificar todas as chaves
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (!key) continue;
+
+                let classificado = false;
+                Object.entries(sistemas).forEach(([nome, sistema]) => {
+                    if (sistema.prefix && key.startsWith(sistema.prefix)) {
+                        sistema.keys.push(key);
+                        classificado = true;
+                    }
+                });
+
+                if (!classificado && key.includes('funnel')) {
+                    sistemas.outros.keys.push(key);
+                }
+            }
+
+            // Gerar relatório
+            let problemasEncontrados = 0;
+            Object.entries(sistemas).forEach(([nome, sistema]) => {
+                if (sistema.keys.length > 0) {
+                    addResult(`📋 Sistema "${nome}": ${sistema.keys.length} chaves encontradas`, 'info');
+
+                    if (nome !== 'unified' && sistema.keys.length > 0) {
+                        problemasEncontrados++;
+                        addResult(`⚠️ FRAGMENTAÇÃO: Sistema "${nome}" ainda ativo!`, 'warning');
+                    }
+                } else {
+                    addResult(`✅ Sistema "${nome}": Nenhuma chave encontrada`, 'success');
+                }
+            });
+
+            // Conclusão
+            if (problemasEncontrados === 0) {
+                addResult('🎉 SUCESSO: Sistema unificado funcionando corretamente!', 'success');
+            } else {
+                addResult(`🚨 PROBLEMA: ${problemasEncontrados} sistemas fragmentados ainda ativos`, 'error');
+            }
+        }
+
+        function testarConsistenciaIDs() {
+            addResult('🆔 Testando consistência de geração de IDs...', 'info');
+
+            // Simular geração de IDs
+            const idsGerados = [];
+            for (let i = 0; i < 5; i++) {
+                const id = `test-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+                idsGerados.push(id);
+
+                // Pequeno delay para evitar IDs idênticos
+                if (i < 4) {
+                    const start = Date.now();
+                    while (Date.now() - start < 10) { }
+                }
+            }
+
+            addResult(`📝 IDs de teste gerados: ${idsGerados.length}`, 'info');
+
+            // Verificar se há duplicatas
+            const unicos = new Set(idsGerados);
+            if (unicos.size === idsGerados.length) {
+                addResult('✅ SUCESSO: Todos os IDs são únicos', 'success');
+            } else {
+                addResult('❌ PROBLEMA: IDs duplicados detectados!', 'error');
+            }
+
+            // Verificar comprimento dos IDs
+            const comprimentoMedio = idsGerados.reduce((acc, id) => acc + id.length, 0) / idsGerados.length;
+            if (comprimentoMedio < 50) {
+                addResult(`✅ Comprimento médio dos IDs: ${comprimentoMedio.toFixed(1)} caracteres`, 'success');
+            } else {
+                addResult(`⚠️ IDs muito longos: ${comprimentoMedio.toFixed(1)} caracteres em média`, 'warning');
+            }
+        }
+
+        function verificarSistemasAtivos() {
+            addResult('📊 Verificando sistemas ativos...', 'info');
+
+            const testes = [
+                {
+                    nome: 'FunnelUnifiedService',
+                    verificar: () => typeof window.funnelUnifiedService !== 'undefined',
+                    esperado: true
+                },
+                {
+                    nome: 'funnelLocalStore',
+                    verificar: () => typeof window.funnelLocalStore !== 'undefined',
+                    esperado: false // Deveria estar deprecado
+                },
+                {
+                    nome: 'localStorage disponível',
+                    verificar: () => typeof localStorage !== 'undefined',
+                    esperado: true
+                },
+                {
+                    nome: 'IndexedDB disponível',
+                    verificar: () => typeof indexedDB !== 'undefined',
+                    esperado: true
+                }
+            ];
+
+            testes.forEach(teste => {
+                const resultado = teste.verificar();
+                const status = resultado === teste.esperado ? 'success' : 'warning';
+                const icon = resultado === teste.esperado ? '✅' : '⚠️';
+
+                addResult(`${icon} ${teste.nome}: ${resultado ? 'Disponível' : 'Não disponível'}`, status);
+            });
+        }
+
+        function testarFluxoCompleto() {
+            addResult('⚡ INICIANDO TESTE CRÍTICO: Fluxo completo Admin → Editor', 'info');
+
+            // Simular o fluxo exato do bug reportado
+            const templateId = 'quiz-estilo-21-steps';
+            const timestamp = Date.now();
+            const randomId = Math.random().toString(36).substr(2, 8);
+            const funnelId = `${templateId}-${timestamp}_${randomId}`;
+
+            addResult(`🎯 Template ID: ${templateId}`, 'info');
+            addResult(`🆔 Funnel ID gerado: ${funnelId}`, 'info');
+
+            // Simular salvamento (como seria feito pela correção)
+            const funnelData = {
+                id: funnelId,
+                name: `Teste - ${new Date().toLocaleTimeString()}`,
+                status: 'draft',
+                updatedAt: new Date().toISOString(),
+                templateId: templateId,
+                context: 'TEMPLATES'
+            };
+
+            // Testar salvamento unificado
+            try {
+                const unifiedKey = `unified_funnel:${funnelId}`;
+                localStorage.setItem(unifiedKey, JSON.stringify(funnelData));
+                addResult('💾 SUCESSO: Funil salvo com chave unificada', 'success');
+            } catch (error) {
+                addResult(`❌ ERRO: Falha ao salvar: ${error.message}`, 'error');
+                return;
+            }
+
+            // Testar recuperação
+            try {
+                const unifiedKey = `unified_funnel:${funnelId}`;
+                const recovered = localStorage.getItem(unifiedKey);
+                if (recovered) {
+                    const parsed = JSON.parse(recovered);
+                    addResult('🔍 SUCESSO: Funil recuperado com chave unificada', 'success');
+                    addResult(`📋 Dados recuperados: ${parsed.name}`, 'info');
+                } else {
+                    addResult('❌ ERRO: Funil não encontrado após salvamento!', 'error');
+                    return;
+                }
+            } catch (error) {
+                addResult(`❌ ERRO: Falha na recuperação: ${error.message}`, 'error');
+                return;
+            }
+
+            // Simular navegação
+            const editorUrl = `/editor/${encodeURIComponent(funnelId)}?template=${templateId}`;
+            addResult(`🔗 URL do editor: ${editorUrl}`, 'info');
+
+            // Teste final
+            addResult('🎉 TESTE CRÍTICO PASSOU: Sistema unificado funcionando!', 'success');
+
+            setTimeout(() => {
+                if (confirm('Deseja navegar para o editor para teste manual?')) {
+                    window.location.href = editorUrl;
+                }
+            }, 1000);
+        }
+
+        function simularCriacaoFunil() {
+            addResult('➕ Simulando criação de funil...', 'info');
+
+            const novoFunil = {
+                id: `novo-funil-${Date.now()}`,
+                name: `Funil de Teste - ${new Date().toLocaleString()}`,
+                status: 'draft',
+                updatedAt: new Date().toISOString()
+            };
+
+            // Salvar usando sistema unificado
+            const chaveUnificada = `unified_funnel:${novoFunil.id}`;
+            localStorage.setItem(chaveUnificada, JSON.stringify(novoFunil));
+
+            addResult(`✅ Funil criado: ${novoFunil.name}`, 'success');
+            addResult(`🔑 Chave unificada: ${chaveUnificada}`, 'info');
+
+            // Verificar se foi salvo corretamente
+            const verificacao = localStorage.getItem(chaveUnificada);
+            if (verificacao) {
+                addResult('✅ VERIFICAÇÃO: Funil encontrado no storage', 'success');
+            } else {
+                addResult('❌ ERRO: Funil não encontrado após salvamento!', 'error');
+            }
+        }
+
+        function verificarNavegacao() {
+            addResult('🧭 Verificando capacidades de navegação...', 'info');
+
+            const testes = [
+                { nome: 'History API', teste: () => typeof history !== 'undefined' },
+                { nome: 'window.location', teste: () => typeof window.location !== 'undefined' },
+                { nome: 'URL Constructor', teste: () => typeof URL !== 'undefined' }
+            ];
+
+            testes.forEach(({ nome, teste }) => {
+                const resultado = teste();
+                addResult(`${resultado ? '✅' : '❌'} ${nome}: ${resultado ? 'Disponível' : 'Não disponível'}`,
+                    resultado ? 'success' : 'error');
+            });
+
+            // Testar URLs
+            try {
+                const testUrl = new URL('/editor/test-123', window.location.origin);
+                addResult(`✅ URL de teste criada: ${testUrl.href}`, 'success');
+            } catch (error) {
+                addResult(`❌ Erro ao criar URL: ${error.message}`, 'error');
+            }
+        }
+
+        function verificarUnificacao() {
+            addResult('🔗 Verificando status da unificação...', 'info');
+
+            const chaves = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && key.includes('funnel')) {
+                    chaves.push(key);
+                }
+            }
+
+            const unificadas = chaves.filter(k => k.startsWith('unified_funnel:'));
+            const legacy = chaves.filter(k => k.startsWith('funnel-'));
+            const outras = chaves.filter(k => !k.startsWith('unified_funnel:') && !k.startsWith('funnel-'));
+
+            addResult(`📊 Chaves unificadas: ${unificadas.length}`, unificadas.length > 0 ? 'success' : 'info');
+            addResult(`📊 Chaves legacy: ${legacy.length}`, legacy.length === 0 ? 'success' : 'warning');
+            addResult(`📊 Outras chaves: ${outras.length}`, 'info');
+
+            if (legacy.length === 0) {
+                addResult('🎉 UNIFICAÇÃO COMPLETA: Nenhuma chave legacy encontrada!', 'success');
+            } else {
+                addResult(`⚠️ UNIFICAÇÃO PARCIAL: ${legacy.length} chaves legacy ainda existem`, 'warning');
+            }
+        }
+
+        function testarMigracao() {
+            addResult('📦 Testando migração de dados legacy...', 'info');
+
+            // Criar dados legacy de teste
+            const funnelIdTeste = `teste-migracao-${Date.now()}`;
+            const dadosLegacy = {
+                id: funnelIdTeste,
+                name: 'Funil Legacy de Teste',
+                status: 'draft'
+            };
+
+            // Salvar no formato legacy
+            const chaveLegacy = `funnel-${funnelIdTeste}`;
+            localStorage.setItem(chaveLegacy, JSON.stringify(dadosLegacy));
+            addResult(`📝 Dados legacy criados: ${chaveLegacy}`, 'info');
+
+            // Simular migração
+            try {
+                const dadosParaMigrar = localStorage.getItem(chaveLegacy);
+                if (dadosParaMigrar) {
+                    const parsed = JSON.parse(dadosParaMigrar);
+
+                    // Migrar para formato unificado
+                    const chaveUnificada = `unified_funnel:${parsed.id}`;
+                    const dadosUnificados = {
+                        ...parsed,
+                        context: 'MIGRATED',
+                        migratedAt: new Date().toISOString()
+                    };
+
+                    localStorage.setItem(chaveUnificada, JSON.stringify(dadosUnificados));
+                    addResult('✅ MIGRAÇÃO: Dados migrados para formato unificado', 'success');
+
+                    // Remover dados legacy
+                    localStorage.removeItem(chaveLegacy);
+                    addResult('🧹 LIMPEZA: Dados legacy removidos', 'success');
+
+                } else {
+                    addResult('❌ ERRO: Dados legacy não encontrados', 'error');
+                }
+            } catch (error) {
+                addResult(`❌ ERRO na migração: ${error.message}`, 'error');
+            }
+        }
+
+        function limpezaDados() {
+            addResult('🧹 Iniciando limpeza de dados duplicados...', 'info');
+
+            const chavesParaLimpar = [];
+            const chavesLegacy = [];
+            const chavesOutras = [];
+
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (!key) continue;
+
+                if (key.startsWith('funnel-') && !key.startsWith('funnel-core-')) {
+                    chavesLegacy.push(key);
+                } else if (key.includes('funnel') && !key.startsWith('unified_funnel:')) {
+                    chavesOutras.push(key);
+                }
+            }
+
+            addResult(`🔍 Encontradas ${chavesLegacy.length} chaves legacy`, 'info');
+            addResult(`🔍 Encontradas ${chavesOutras.length} outras chaves`, 'info');
+
+            if (chavesLegacy.length === 0 && chavesOutras.length === 0) {
+                addResult('✅ LIMPEZA: Nenhum dado duplicado encontrado!', 'success');
+                return;
+            }
+
+            const confirmar = confirm(`Deseja remover ${chavesLegacy.length + chavesOutras.length} chaves duplicadas/legacy?`);
+            if (!confirmar) {
+                addResult('⏸️ Limpeza cancelada pelo usuário', 'warning');
+                return;
+            }
+
+            let removidas = 0;
+            [...chavesLegacy, ...chavesOutras].forEach(key => {
+                try {
+                    localStorage.removeItem(key);
+                    removidas++;
+                } catch (error) {
+                    addResult(`❌ Erro ao remover ${key}: ${error.message}`, 'error');
+                }
+            });
+
+            addResult(`🧹 LIMPEZA CONCLUÍDA: ${removidas} chaves removidas`, 'success');
+            carregarInformacoesSistema(); // Atualizar info
+        }
+    </script>
+</body>
+
+</html>

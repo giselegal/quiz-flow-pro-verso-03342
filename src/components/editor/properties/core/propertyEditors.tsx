@@ -12,6 +12,11 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import ColorPicker from '@/components/visual-controls/ColorPicker';
+import ScoreValuesEditor from './ScoreValuesEditor';
+import ResponsiveColumnsEditor from './ResponsiveColumnsEditor';
+import BoxModelEditor from './BoxModelEditor';
+import EnhancedUploadEditor from './EnhancedUploadEditor';
+import AnimationPreviewEditor from './AnimationPreviewEditor';
 import React from 'react';
 import type { PropertyEditorProps, PropertyEditorRegistry } from './types';
 
@@ -22,8 +27,8 @@ const TextEditor: React.FC<PropertyEditorProps> = ({ property, onChange }) => (
     <Input
       id={property.key}
       value={property.value || ''}
-  onChange={e => onChange(property.key, e.target.value)}
-  placeholder={(property as any).placeholder || ''}
+      onChange={e => onChange(property.key, e.target.value)}
+      placeholder={(property as any).placeholder || ''}
     />
     {(property as any).description ? (
       <p className="text-xs text-muted-foreground">{(property as any).description}</p>
@@ -160,7 +165,7 @@ const UrlEditor: React.FC<PropertyEditorProps> = ({ property, onChange }) => (
       type="url"
       value={property.value || ''}
       onChange={e => onChange(property.key, e.target.value)}
-  placeholder={(property as any).placeholder || 'https://...'}
+      placeholder={(property as any).placeholder || 'https://...'}
     />
     {(property as any).description ? (
       <p className="text-xs text-muted-foreground">{(property as any).description}</p>
@@ -342,7 +347,7 @@ const ObjectEditor: React.FC<PropertyEditorProps> = ({ property, onChange }) => 
         try {
           const parsed = JSON.parse(e.target.value || '{}');
           onChange(property.key, parsed);
-        } catch {}
+        } catch { }
       }}
       className="font-mono text-xs min-h-[120px]"
     />
@@ -471,80 +476,80 @@ const BorderEditor: React.FC<PropertyEditorProps> = ({ property, onChange }) => 
 };
 
 // Editor composto: Background (espera objeto { type, color, gradientFrom, gradientTo, imageUrl, size, position })
-const 
-BackgroundEditor: React.FC<PropertyEditorProps> = ({ property, onChange }) => {
-  const val =
-    property.value || ({ type: 'color', color: '#ffffff', gradientFrom: '#ffffff', gradientTo: '#ffffff', imageUrl: '', size: 'cover', position: 'center' } as any);
-  const update = (patch: any) => onChange(property.key, { ...val, ...patch });
-  return (
-    <div className="space-y-2">
-      <Label>{property.label}</Label>
-      <div className="grid grid-cols-12 gap-2 items-end">
-        <div className="col-span-3">
-          <Label className="text-xs">Tipo</Label>
-          <Select value={String(val.type ?? 'color')} onValueChange={v => update({ type: v })}>
-            <SelectTrigger><SelectValue /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="color">Cor</SelectItem>
-              <SelectItem value="gradient">Gradiente</SelectItem>
-              <SelectItem value="image">Imagem</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        {val.type === 'color' && (
+const
+  BackgroundEditor: React.FC<PropertyEditorProps> = ({ property, onChange }) => {
+    const val =
+      property.value || ({ type: 'color', color: '#ffffff', gradientFrom: '#ffffff', gradientTo: '#ffffff', imageUrl: '', size: 'cover', position: 'center' } as any);
+    const update = (patch: any) => onChange(property.key, { ...val, ...patch });
+    return (
+      <div className="space-y-2">
+        <Label>{property.label}</Label>
+        <div className="grid grid-cols-12 gap-2 items-end">
           <div className="col-span-3">
-            <Label className="text-xs">Cor</Label>
-            <ColorPicker value={val.color || '#ffffff'} onChange={c => update({ color: c })} />
+            <Label className="text-xs">Tipo</Label>
+            <Select value={String(val.type ?? 'color')} onValueChange={v => update({ type: v })}>
+              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="color">Cor</SelectItem>
+                <SelectItem value="gradient">Gradiente</SelectItem>
+                <SelectItem value="image">Imagem</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
-        )}
-        {val.type === 'gradient' && (
-          <>
+          {val.type === 'color' && (
             <div className="col-span-3">
-              <Label className="text-xs">De</Label>
-              <ColorPicker value={val.gradientFrom || '#ffffff'} onChange={c => update({ gradientFrom: c })} />
+              <Label className="text-xs">Cor</Label>
+              <ColorPicker value={val.color || '#ffffff'} onChange={c => update({ color: c })} />
             </div>
-            <div className="col-span-3">
-              <Label className="text-xs">Para</Label>
-              <ColorPicker value={val.gradientTo || '#ffffff'} onChange={c => update({ gradientTo: c })} />
-            </div>
-          </>
-        )}
-        {val.type === 'image' && (
-          <>
-            <div className="col-span-6">
-              <Label className="text-xs">Imagem</Label>
-              <Input value={val.imageUrl || ''} onChange={e => update({ imageUrl: e.target.value })} placeholder="URL da imagem" />
-            </div>
-            <div className="col-span-3">
-              <Label className="text-xs">Tamanho</Label>
-              <Select value={String(val.size ?? 'cover')} onValueChange={v => update({ size: v })}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="cover">Cover</SelectItem>
-                  <SelectItem value="contain">Contain</SelectItem>
-                  <SelectItem value="auto">Auto</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="col-span-3">
-              <Label className="text-xs">Posição</Label>
-              <Select value={String(val.position ?? 'center')} onValueChange={v => update({ position: v })}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="left">Esquerda</SelectItem>
-                  <SelectItem value="center">Centro</SelectItem>
-                  <SelectItem value="right">Direita</SelectItem>
-                  <SelectItem value="top">Topo</SelectItem>
-                  <SelectItem value="bottom">Base</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </>
-        )}
+          )}
+          {val.type === 'gradient' && (
+            <>
+              <div className="col-span-3">
+                <Label className="text-xs">De</Label>
+                <ColorPicker value={val.gradientFrom || '#ffffff'} onChange={c => update({ gradientFrom: c })} />
+              </div>
+              <div className="col-span-3">
+                <Label className="text-xs">Para</Label>
+                <ColorPicker value={val.gradientTo || '#ffffff'} onChange={c => update({ gradientTo: c })} />
+              </div>
+            </>
+          )}
+          {val.type === 'image' && (
+            <>
+              <div className="col-span-6">
+                <Label className="text-xs">Imagem</Label>
+                <Input value={val.imageUrl || ''} onChange={e => update({ imageUrl: e.target.value })} placeholder="URL da imagem" />
+              </div>
+              <div className="col-span-3">
+                <Label className="text-xs">Tamanho</Label>
+                <Select value={String(val.size ?? 'cover')} onValueChange={v => update({ size: v })}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="cover">Cover</SelectItem>
+                    <SelectItem value="contain">Contain</SelectItem>
+                    <SelectItem value="auto">Auto</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="col-span-3">
+                <Label className="text-xs">Posição</Label>
+                <Select value={String(val.position ?? 'center')} onValueChange={v => update({ position: v })}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="left">Esquerda</SelectItem>
+                    <SelectItem value="center">Centro</SelectItem>
+                    <SelectItem value="right">Direita</SelectItem>
+                    <SelectItem value="top">Topo</SelectItem>
+                    <SelectItem value="bottom">Base</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </>
+          )}
+        </div>
       </div>
-    </div>
-  );
-};
+    );
+  };
 
 // Registro de editores
 export const propertyEditors: PropertyEditorRegistry = {
@@ -557,7 +562,7 @@ export const propertyEditors: PropertyEditorRegistry = {
   select: SelectEditor,
   url: UrlEditor,
   array: ArrayEditor,
-  upload: UploadEditor,
+  // upload: UploadEditor, // REMOVIDO - substituído por EnhancedUploadEditor mais abaixo
   object: ObjectEditorDispatcher,
   json: JsonEditor,
   email: EmailEditor,
@@ -570,6 +575,10 @@ export const propertyEditors: PropertyEditorRegistry = {
   code: CodeEditor,
   border: BorderEditor,
   background: BackgroundEditor,
+  margin: BoxModelEditor,
+  padding: BoxModelEditor,
+  upload: EnhancedUploadEditor,
+  animation: AnimationPreviewEditor,
 };
 
 // HOC para selecionar editor automaticamente
@@ -582,19 +591,42 @@ export const withPropertyEditor = (propertyType: string) => {
 export const pickPropertyEditor = (property: any) => {
   const type = String(property?.type ?? 'text');
   const key = String(property?.key ?? '').toLowerCase();
+
+  // Editores especializados por key
+  if (key === 'scorevalues') return ScoreValuesEditor;
+  if (key === 'responsivecolumns') return ResponsiveColumnsEditor;
+
+  // Box Model (margin/padding)
+  if (key.includes('margin') || key.includes('padding')) return BoxModelEditor;
+
+  // Upload avançado
+  if (type === 'upload' || key.includes('image') || key.includes('video') || key.includes('media')) {
+    return EnhancedUploadEditor;
+  }
+
+  // Animations
+  if (type === 'animation' || key.includes('animation') || key.includes('transition')) {
+    return AnimationPreviewEditor;
+  }
+
   // Arrays
   if (type === 'array') {
     if (key === 'options') return OptionsArrayEditor;
     return ArrayJsonEditor;
   }
+
   // Objetos
   if (type === 'object' || type === 'json') {
     if (key.includes('border')) return BorderEditor;
     if (key.includes('background')) return BackgroundEditor;
+    if (key === 'scorevalues') return ScoreValuesEditor;
+    if (key === 'responsivecolumns') return ResponsiveColumnsEditor;
     return type === 'json' ? JsonEditor : ObjectEditor;
   }
+
   // Upload
   if (type === 'upload') return UploadEditor;
+
   // Padrão pelo registro
   return propertyEditors[type] || TextEditor;
 };

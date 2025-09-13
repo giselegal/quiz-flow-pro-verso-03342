@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Recursos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .test-item {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>🔍 Diagnóstico de Recursos</h1>
+
+    <div class="test-item">
+        <h3>Informações do Ambiente</h3>
+        <p><strong>URL Atual:</strong> <span id="current-url"></span></p>
+        <p><strong>Base URL:</strong> <span id="base-url"></span></p>
+        <p><strong>User Agent:</strong> <span id="user-agent"></span></p>
+    </div>
+
+    <div class="test-item">
+        <h3>Teste de Navegação</h3>
+        <button onclick="testNavigation('/editor')">Testar /editor</button>
+        <button onclick="testNavigation('/admin/funis')">Testar /admin/funis</button>
+        <button onclick="testNavigation('/')">Testar Homepage</button>
+    </div>
+
+    <div class="test-item">
+        <h3>Teste de Recursos</h3>
+        <div id="resource-tests"></div>
+        <button onclick="testResources()">Executar Testes</button>
+    </div>
+
+    <script>
+        // Informações do ambiente
+        document.getElementById('current-url').textContent = window.location.href;
+        document.getElementById('base-url').textContent = document.baseURI;
+        document.getElementById('user-agent').textContent = navigator.userAgent;
+
+        function testNavigation(path) {
+            console.log('🔍 Testando navegação para:', path);
+
+            // Simular navegação sem recarregar a página
+            const fullUrl = new URL(path, window.location.origin);
+            console.log('📍 URL completa:', fullUrl.href);
+
+            // Abrir em nova aba para teste
+            window.open(fullUrl.href, '_blank');
+        }
+
+        async function testResources() {
+            const resourceTests = document.getElementById('resource-tests');
+            resourceTests.innerHTML = '<p>🔄 Executando testes...</p>';
+
+            const tests = [
+                { name: 'Index HTML', url: '/' },
+                { name: 'Editor Route', url: '/editor' },
+                { name: 'Admin Route', url: '/admin/funis' },
+                { name: 'Assets Check', url: '/assets/' },
+                { name: 'Vite Client', url: '/@vite/client' }
+            ];
+
+            const results = [];
+
+            for (const test of tests) {
+                try {
+                    console.log('🧪 Testando:', test.name, '→', test.url);
+
+                    const response = await fetch(test.url);
+                    const status = response.status;
+                    const contentType = response.headers.get('content-type') || 'não especificado';
+
+                    results.push({
+                        name: test.name,
+                        url: test.url,
+                        status: status,
+                        contentType: contentType,
+                        success: status >= 200 && status < 400
+                    });
+
+                    console.log('✅ Resultado:', test.name, status, contentType);
+
+                } catch (error) {
+                    console.error('❌ Erro no teste:', test.name, error);
+                    results.push({
+                        name: test.name,
+                        url: test.url,
+                        status: 'ERRO',
+                        contentType: 'erro',
+                        success: false,
+                        error: error.message
+                    });
+                }
+            }
+
+            // Mostrar resultados
+            let html = '<h4>📊 Resultados dos Testes:</h4>';
+            results.forEach(result => {
+                const className = result.success ? 'success' : 'error';
+                html += `
+                    <div class="test-item ${className}">
+                        <strong>${result.name}</strong><br>
+                        URL: ${result.url}<br>
+                        Status: ${result.status}<br>
+                        Content-Type: ${result.contentType}
+                        ${result.error ? `<br>Erro: ${result.error}` : ''}
+                    </div>
+                `;
+            });
+
+            resourceTests.innerHTML = html;
+        }
+
+        // Auto-executar testes ao carregar
+        setTimeout(testResources, 1000);
+    </script>
+</body>
+
+</html>

@@ -4,7 +4,7 @@
  * Página de teste para verificar se o sistema está funcionando
  */
 
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { configurationService } from '@/services/ConfigurationService';
 import { useConfiguration } from '@/hooks/useConfiguration';
 
