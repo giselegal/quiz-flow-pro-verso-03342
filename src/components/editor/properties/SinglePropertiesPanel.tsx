@@ -301,9 +301,9 @@ export const SinglePropertiesPanel: React.FC<SinglePropertiesPanelProps> = ({
 
                     <div className="flex items-center gap-2 flex-shrink-0">
                         {onDuplicate && (
-                            <Button 
-                                variant="outline" 
-                                size="sm" 
+                            <Button
+                                variant="outline"
+                                size="sm"
                                 onClick={onDuplicate}
                                 aria-label="Duplicar elemento"
                             >
@@ -311,9 +311,9 @@ export const SinglePropertiesPanel: React.FC<SinglePropertiesPanelProps> = ({
                             </Button>
                         )}
                         {onDelete && (
-                            <Button 
-                                variant="outline" 
-                                size="sm" 
+                            <Button
+                                variant="outline"
+                                size="sm"
                                 onClick={onDelete}
                                 aria-label="Excluir elemento"
                             >

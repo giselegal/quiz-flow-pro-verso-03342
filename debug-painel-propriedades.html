@@ -1,25 +1,70 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Debug - Painel de Propriedades</title>
     <style>
-        body { font-family: monospace; padding: 20px; background: #1a1a1a; color: #fff; }
-        .debug-section { margin: 20px 0; padding: 10px; border: 1px solid #333; }
-        .error { color: #ff6b6b; }
-        .success { color: #51cf66; }
-        .warning { color: #ffd43b; }
-        .info { color: #74c0fc; }
-        pre { background: #2d2d2d; padding: 10px; border-radius: 5px; overflow-x: auto; }
-        button { background: #007acc; color: white; border: none; padding: 10px 15px; margin: 5px; cursor: pointer; border-radius: 3px; }
-        button:hover { background: #005c99; }
-        #results { margin-top: 20px; }
+        body {
+            font-family: monospace;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #fff;
+        }
+
+        .debug-section {
+            margin: 20px 0;
+            padding: 10px;
+            border: 1px solid #333;
+        }
+
+        .error {
+            color: #ff6b6b;
+        }
+
+        .success {
+            color: #51cf66;
+        }
+
+        .warning {
+            color: #ffd43b;
+        }
+
+        .info {
+            color: #74c0fc;
+        }
+
+        pre {
+            background: #2d2d2d;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+
+        button {
+            background: #007acc;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+
+        button:hover {
+            background: #005c99;
+        }
+
+        #results {
+            margin-top: 20px;
+        }
     </style>
 </head>
+
 <body>
     <h1>🔍 Debug do Painel de Propriedades</h1>
-    
+
     <div class="debug-section">
         <h3>🎯 Teste Rápido</h3>
         <button onclick="verificarEditor()">Verificar Editor Principal</button>
@@ -41,7 +86,7 @@
 
         function verificarEditor() {
             log('<h4>🔍 Verificando Editor Principal (/editor)</h4>', 'info');
-            
+
             // Verificar se a página carrega
             fetch('/editor')
                 .then(response => {
@@ -60,13 +105,13 @@
                     } else {
                         log('⚠️ SinglePropertiesPanel NÃO encontrado no HTML', 'warning');
                     }
-                    
+
                     if (html.includes('PropertiesColumn')) {
                         log('✅ PropertiesColumn encontrado no HTML', 'success');
                     } else {
                         log('⚠️ PropertiesColumn NÃO encontrado no HTML', 'warning');
                     }
-                    
+
                     // Verificar se há erros JavaScript óbvios
                     if (html.includes('error') || html.includes('Error')) {
                         log('⚠️ Possíveis erros encontrados no HTML', 'warning');
@@ -79,15 +124,15 @@
 
         function verificarPaineis() {
             log('<h4>🔍 Verificando Painéis de Propriedades</h4>', 'info');
-            
+
             const paineis = [
                 'SinglePropertiesPanel',
-                'EnhancedUniversalPropertiesPanel', 
+                'EnhancedUniversalPropertiesPanel',
                 'RegistryPropertiesPanel',
                 'PropertiesPanel',
                 'PropertiesColumn'
             ];
-            
+
             paineis.forEach(painel => {
                 // Verificar nos arquivos JavaScript
                 fetch(`/src/components/editor/properties/${painel}.tsx`)
@@ -119,13 +164,13 @@
 
         function verificarIDs() {
             log('<h4>🔍 Verificando IDs Duplicados</h4>', 'info');
-            
+
             // Simular verificação de IDs duplicados
             setTimeout(() => {
                 const allIds = document.querySelectorAll('[id]');
                 const idCounts = {};
                 const duplicateIds = [];
-                
+
                 allIds.forEach(el => {
                     const id = el.id;
                     if (idCounts[id]) {
@@ -137,7 +182,7 @@
                         idCounts[id] = 1;
                     }
                 });
-                
+
                 if (duplicateIds.length > 0) {
                     log(`❌ IDs duplicados encontrados: ${duplicateIds.join(', ')}`, 'error');
                 } else {
@@ -148,11 +193,11 @@
 
         function verificarTudo() {
             log('<h4>🚀 Iniciando Diagnóstico Completo</h4>', 'info');
-            
+
             setTimeout(() => verificarEditor(), 100);
             setTimeout(() => verificarPaineis(), 500);
             setTimeout(() => verificarIDs(), 1000);
-            
+
             setTimeout(() => {
                 log('<h4>📋 Relatório Final</h4>', 'info');
                 log('🔗 Para acessar o editor: <a href="/editor" target="_blank">/editor</a>', 'info');
@@ -167,4 +212,5 @@
         });
     </script>
 </body>
+
 </html>

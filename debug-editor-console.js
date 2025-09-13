@@ -4,7 +4,7 @@ console.log('🔍 DEBUG: Verificando painéis ativos...');
 // Verificar qual editor está ativo
 setTimeout(() => {
     console.log('🎯 Editor ativo:', window.__ACTIVE_EDITOR__ || 'Não definido');
-    
+
     // Verificar painéis na DOM
     const painelElements = [
         { name: 'SinglePropertiesPanel', selector: '[class*="single-properties"], [data-testid*="single-properties"]' },
@@ -12,7 +12,7 @@ setTimeout(() => {
         { name: 'RegistryPropertiesPanel', selector: '[class*="registry-properties"], [data-testid*="registry-properties"]' },
         { name: 'PropertiesColumn', selector: '[class*="properties-column"], [data-testid*="properties-column"]' }
     ];
-    
+
     console.log('📋 Painéis encontrados na DOM:');
     painelElements.forEach(painel => {
         const elements = document.querySelectorAll(painel.selector);
@@ -26,7 +26,7 @@ setTimeout(() => {
             console.log(`❌ ${painel.name}: não encontrado`);
         }
     });
-    
+
     // Verificar IDs duplicados
     const allIds = document.querySelectorAll('[id]');
     const idCounts = {};
@@ -38,7 +38,7 @@ setTimeout(() => {
             idCounts[id] = 1;
         }
     });
-    
+
     const duplicates = Object.entries(idCounts).filter(([id, count]) => count > 1);
     if (duplicates.length > 0) {
         console.error('🚨 IDs DUPLICADOS encontrados:');
@@ -52,7 +52,7 @@ setTimeout(() => {
     } else {
         console.log('✅ Nenhum ID duplicado encontrado');
     }
-    
+
     // Verificar labels órfãs
     const labels = document.querySelectorAll('label[for]');
     const orphanLabels = [];
@@ -63,13 +63,13 @@ setTimeout(() => {
             orphanLabels.push(forId);
         }
     });
-    
+
     if (orphanLabels.length > 0) {
         console.warn('⚠️ Labels órfãos encontrados (for sem elemento):');
         orphanLabels.forEach(id => console.warn(`   for="${id}"`));
     } else {
         console.log('✅ Todos os labels têm elementos correspondentes');
     }
-    
+
     console.log('🏁 Debug concluído. Verifique os resultados acima.');
 }, 2000);
