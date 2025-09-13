@@ -33,8 +33,8 @@ export interface PerformanceReport {
 // Store global para métricas
 class PerformanceStore {
     private metrics: Map<string, PerformanceMetrics[]> = new Map();
-    private renderThreshold = 16; // 60fps = 16ms
-    private renderCountThreshold = 10; // Máximo 10 renders em 1 segundo
+    private renderThreshold = 50; // Aumentar threshold para 50ms (mais realista)
+    private renderCountThreshold = 15; // Permitir mais renders em desenvolvimento
 
     addMetric(metric: PerformanceMetrics) {
         const existing = this.metrics.get(metric.componentName) || [];
@@ -52,6 +52,11 @@ class PerformanceStore {
     }
 
     private checkPerformanceWarnings(metric: PerformanceMetrics) {
+        // Desabilitar warnings em produção para evitar spam no console
+        if (process.env.NODE_ENV === 'production') {
+            return;
+        }
+
         // Alerta para renders lentos
         if (metric.actualDuration > this.renderThreshold) {
             console.warn(`🐌 Slow render detected in ${metric.componentName}: ${metric.actualDuration.toFixed(2)}ms`);
@@ -210,6 +215,11 @@ export const PerformanceProfiler: React.FC<PerformanceProfilerProps> = ({
     enableLogging = false,
     onRender
 }) => {
+    // Em produção, apenas renderizar children sem profiling para evitar overhead
+    if (process.env.NODE_ENV === 'production' && !enableLogging) {
+        return <>{children}</>;
+    }
+
     const onRenderCallback: ProfilerOnRenderCallback = (
         profilerID: string,
         phase: "mount" | "update" | "nested-update",
