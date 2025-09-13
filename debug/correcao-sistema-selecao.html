@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔧 Correção do Sistema de Seleção - Editor</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            color: #333;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .problem-section {
+            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+            border: 3px solid #ef4444;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 25px 0;
+        }
+
+        .solution-section {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border: 3px solid #22c55e;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 25px 0;
+        }
+
+        .code-fix {
+            background: #1f2937;
+            color: #f9fafb;
+            padding: 20px;
+            border-radius: 12px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 14px;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        .test-btn {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin: 10px 10px 10px 0;
+            font-size: 16px;
+        }
+
+        .test-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(34, 197, 94, 0.4);
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .step-card {
+            background: #f8fafc;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .step-card:hover {
+            border-color: #22c55e;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.1);
+        }
+
+        .status {
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .success {
+            background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+            border: 1px solid #22c55e;
+            color: #166534;
+        }
+
+        .error {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            border: 1px solid #ef4444;
+            color: #991b1b;
+        }
+
+        .technical-details {
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔧 Correção do Sistema de Seleção</h1>
+            <p>Problema identificado e corrigido no editor</p>
+        </div>
+
+        <div class="content">
+            <div class="problem-section">
+                <h2 style="color: #991b1b; margin-top: 0;">❌ Problema Identificado</h2>
+                <p style="color: #991b1b; font-size: 1.1em; margin-bottom: 20px;">
+                    O painel de propriedades não aparecia porque os blocos no canvas não eram clicáveis para seleção.
+                </p>
+                <div class="status error">
+                    <span style="font-size: 24px;">⚠️</span>
+                    <div>
+                        <strong>Causa raiz:</strong> O CanvasDropZone não estava recebendo a propriedade
+                        <code>isPreviewing</code>, fazendo com que todos os blocos fossem tratados como não-clicáveis.
+                    </div>
+                </div>
+            </div>
+
+            <div class="solution-section">
+                <h2 style="color: #166534; margin-top: 0;">✅ Correção Implementada</h2>
+                <p style="color: #166534; font-size: 1.1em; margin-bottom: 20px;">
+                    Adicionada a propriedade <code>isPreviewing</code> no CanvasDropZone para permitir seleção em modo
+                    de edição.
+                </p>
+
+                <div class="code-fix">
+                    <pre><strong>// CanvasArea.tsx - Linha 434</strong>
+&lt;CanvasDropZone
+  blocks={currentStepData}
+  selectedBlockId={selectedBlockId}
+  onSelectBlock={actions.setSelectedBlockId}
+  onUpdateBlock={(id: string, updates: any) => actions.updateBlock(currentStepKey, id, updates)}
+  onDeleteBlock={(id: string) => actions.removeBlock(currentStepKey, id)}
+  className="h-full w-full"
+  <strong style="color: #22c55e;">+ isPreviewing={mode !== 'edit'}</strong>
+  scopeId={safeCurrentStep}
+/></pre>
+                </div>
+            </div>
+
+            <div class="technical-details">
+                <h3 style="margin-top: 0;">🔍 Detalhes Técnicos da Correção</h3>
+                <div class="steps-grid">
+                    <div class="step-card">
+                        <h4 style="color: #1e40af; margin-top: 0;">1. Fluxo de Seleção</h4>
+                        <ul style="padding-left: 20px;">
+                            <li>Usuário clica no bloco no canvas</li>
+                            <li>SortableBlockWrapper chama onSelect</li>
+                            <li>CanvasDropZone executa onSelectBlock</li>
+                            <li>EditorPro atualiza selectedBlockId</li>
+                            <li>PropertiesPanel renderiza para bloco selecionado</li>
+                        </ul>
+                    </div>
+
+                    <div class="step-card">
+                        <h4 style="color: #1e40af; margin-top: 0;">2. Lógica isPreviewing</h4>
+                        <ul style="padding-left: 20px;">
+                            <li><code>mode === 'edit'</code> → isPreviewing = false</li>
+                            <li><code>mode === 'preview'</code> → isPreviewing = true</li>
+                            <li>Seleção só funciona quando isPreviewing = false</li>
+                            <li>Painel só aparece com bloco selecionado</li>
+                        </ul>
+                    </div>
+
+                    <div class="step-card">
+                        <h4 style="color: #1e40af; margin-top: 0;">3. Sistema de Props</h4>
+                        <ul style="padding-left: 20px;">
+                            <li>EditorPro → CanvasArea → CanvasDropZone</li>
+                            <li>selectedBlockId passa por toda cadeia</li>
+                            <li>onSelectBlock conecta canvas → estado</li>
+                            <li>PropertiesColumn recebe selectedBlock</li>
+                        </ul>
+                    </div>
+
+                    <div class="step-card">
+                        <h4 style="color: #1e40af; margin-top: 0;">4. Validações</h4>
+                        <ul style="padding-left: 20px;">
+                            <li>Bloco deve estar em modo edição</li>
+                            <li>selectedBlockId deve ser válido</li>
+                            <li>PropertiesPanel valida selectedBlock</li>
+                            <li>Editores específicos por tipo de bloco</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="status success">
+                <span style="font-size: 24px;">✅</span>
+                <div>
+                    <strong>Status:</strong> Sistema de seleção corrigido! Agora os blocos no canvas são clicáveis
+                    e o painel de propriedades deve aparecer corretamente.
+                </div>
+            </div>
+
+            <h2>🧪 Teste a Correção</h2>
+            <div style="text-align: center;">
+                <a href="http://localhost:8080/editor/quiz21StepsComplete" class="test-btn" target="_blank">
+                    🎯 Testar Editor Principal
+                </a>
+                <a href="http://localhost:8080/admin/funis" class="test-btn" target="_blank"
+                    style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);">
+                    📋 Painel Admin
+                </a>
+            </div>
+
+            <div
+                style="background: #fef3c7; border: 1px solid #f59e0b; border-radius: 12px; padding: 20px; margin-top: 30px;">
+                <h4 style="margin-top: 0; color: #92400e;">📝 Como Testar:</h4>
+                <ol style="color: #92400e; padding-left: 20px;">
+                    <li>Abra o editor principal no link acima</li>
+                    <li>Clique em qualquer bloco no canvas (centro da tela)</li>
+                    <li>Verifique se o painel de propriedades aparece na lateral direita</li>
+                    <li>Tente alterar configurações como cores, textos, etc.</li>
+                    <li>Confirme se as mudanças são aplicadas em tempo real</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        console.log('🔧 CORREÇÃO DO SISTEMA DE SELEÇÃO IMPLEMENTADA');
+        console.log('✅ Correção: isPreviewing={mode !== "edit"} adicionado ao CanvasDropZone');
+        console.log('🎯 Resultado esperado: Blocos clicáveis no canvas mostram painel de propriedades');
+        console.log('🧪 Teste: http://localhost:8080/editor/quiz21StepsComplete');
+    </script>
+</body>
+
+</html>

@@ -129,7 +129,7 @@
 
         function abrirEditor() {
             log('📝 Abrindo editor em nova aba...', 'info');
-            const editorWindow = window.open('http://localhost:5173/editor', '_blank');
+            const editorWindow = window.open('http://localhost:8080/editor', '_blank');
 
             if (editorWindow) {
                 log('✅ Editor aberto com sucesso', 'success');
@@ -143,7 +143,7 @@
             log('🔍 Iniciando diagnóstico completo...', 'info');
 
             // Carregar e executar script de diagnóstico
-            fetch('http://localhost:5173/diagnostico-editor-critico.js')
+            fetch('http://localhost:8080/diagnostico-editor-critico.js')
                 .then(response => response.text())
                 .then(scriptContent => {
                     log('📄 Script de diagnóstico carregado', 'success');
