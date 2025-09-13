@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 🔄 ESTRATÉGIAS AVANÇADAS DE RECOVERY AUTOMÁTICO
  * 

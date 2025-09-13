@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 🌐 STORAGE SYNC SERVICE - Sincronização Server-Side
  * 

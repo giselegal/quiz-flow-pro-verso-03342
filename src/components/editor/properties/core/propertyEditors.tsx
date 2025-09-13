@@ -24,7 +24,7 @@ import React from 'react';
 import type { PropertyEditorProps, PropertyEditorRegistry } from './types';
 
 // Wrapper para compatibilidade com PropertyEditorComponent
-const CanvasContainerWrapper: React.FC<PropertyEditorProps> = ({ property, onChange }) => {
+const CanvasContainerWrapper: React.FC<PropertyEditorProps> = () => {
   // Usar dados reais do hook
   const { styles, updateStyles, resetStyles } = useCanvasContainerStyles();
 

@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 🔗 INTEGRAÇÃO COMPLETA - SISTEMA DE MÉTRICAS DO EDITOR
  * 

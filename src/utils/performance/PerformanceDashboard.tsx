@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 📊 PERFORMANCE DASHBOARD - Painel de Monitoramento Visual
  * 

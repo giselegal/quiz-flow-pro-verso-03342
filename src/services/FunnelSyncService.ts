@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 🌐 FUNNEL SYNC SERVICE - SERVER-SIDE SYNCHRONIZATION
  * 

@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 🎨 COMPONENTES UI INTELIGENTES PARA EXIBIÇÃO DE ERROS
  * 

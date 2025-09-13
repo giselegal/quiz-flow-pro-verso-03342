@@ -10,9 +10,6 @@ import {
     Play,
     Pause,
     RotateCcw,
-    Zap,
-    Settings,
-    Eye,
     Code,
     Sparkles,
     Timer

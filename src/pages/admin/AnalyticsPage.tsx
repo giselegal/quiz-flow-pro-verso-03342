@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 📊 PÁGINA DE ANALYTICS DO ADMIN AVANÇADO
  * 

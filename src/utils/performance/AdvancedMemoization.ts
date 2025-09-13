@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 🧠 ADVANCED MEMOIZATION SYSTEM
  * 

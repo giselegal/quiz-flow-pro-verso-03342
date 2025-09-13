@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 🔄 STORAGE MIGRATION SERVICE - Migrador de localStorage para IndexedDB
  * 

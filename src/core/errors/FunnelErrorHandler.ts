@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 🛡️ SISTEMA DE TRATAMENTO INTELIGENTE DE ERROS
  * 

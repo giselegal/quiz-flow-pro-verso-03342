@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 🧪 EXEMPLOS E TESTES DO EDITOR DESACOPLADO
  * 

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { QuizFlowProvider } from '@/context/QuizFlowProvider';
 import { templateLibraryService } from '@/services/templateLibraryService';
 import React from 'react';

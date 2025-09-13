@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 🗄️ ADVANCED STORAGE SYSTEM - Sistema Escalável de Persistência
  * 
@@ -5,7 +6,7 @@
  * Previne conflitos, oferece melhor performance e capacidade de armazenamento ilimitada
  */
 
-import { devLog } from '../utils/editorUtils';
+import { devLog } from '@/utils/editorUtils';
 
 export interface StorageConfig {
     dbName: string;

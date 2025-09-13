@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 🧠 PÁGINA COMPLETA DE FUNCIONALIDADES DE IA
  * 

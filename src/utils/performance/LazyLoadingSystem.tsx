@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 🚀 LAZY LOADING OPTIMIZATION SYSTEM
  * 

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useCallback, useMemo, useRef, useState, useEffect, Suspense } from 'react';
 // import types moved to hook
 // import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';

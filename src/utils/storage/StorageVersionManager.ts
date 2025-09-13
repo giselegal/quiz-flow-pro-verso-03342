@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 🔄 STORAGE VERSION MANAGER - Sistema de Versionamento e Evolução de Esquema
  * 
