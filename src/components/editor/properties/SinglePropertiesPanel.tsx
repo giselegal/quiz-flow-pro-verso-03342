@@ -18,7 +18,6 @@ import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 
 import { PropertyChangeIndicator } from '@/components/universal/PropertyChangeIndicator';
@@ -335,7 +334,7 @@ export const SinglePropertiesPanel: React.FC<SinglePropertiesPanelProps> = memo(
 
             {/* Content */}
             <CardContent className="flex-1 overflow-hidden">
-                <ScrollArea className="h-full">
+                <div className="h-full overflow-y-auto">
                     <div className="space-y-6">
                         {/* Renderiza propriedades por categoria */}
                         {Object.entries(categorizedProperties).map(([category, categoryProps]) => (
@@ -383,7 +382,7 @@ export const SinglePropertiesPanel: React.FC<SinglePropertiesPanelProps> = memo(
                             </div>
                         ))}
                     </div>
-                </ScrollArea>
+                </div>
             </CardContent>
         </Card>
     );

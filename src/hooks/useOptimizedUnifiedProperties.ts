@@ -30,16 +30,16 @@ const generatePropertiesForBlockType = (blockType: string): UnifiedProperty[] =>
 
     let properties: UnifiedProperty[] = [];
 
-  // Propriedades básicas para todos os tipos
-  const baseProperties: UnifiedProperty[] = [
-    {
-      key: 'id',
-      value: '',
-      type: PropertyType.TEXT,
-      label: 'ID',
-      category: PropertyCategory.ADVANCED
-    }
-  ];    // Propriedades específicas por tipo
+    // Propriedades básicas para todos os tipos
+    const baseProperties: UnifiedProperty[] = [
+        {
+            key: 'id',
+            value: '',
+            type: PropertyType.TEXT,
+            label: 'ID',
+            category: PropertyCategory.ADVANCED
+        }
+    ];    // Propriedades específicas por tipo
     switch (blockType) {
         case 'header':
         case 'heading':

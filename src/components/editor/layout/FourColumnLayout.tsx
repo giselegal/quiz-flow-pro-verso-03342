@@ -165,7 +165,7 @@ export const FourColumnLayout: React.FC<FourColumnLayoutProps> = ({
           {/* Coluna 4: Painel de Propriedades */}
           <ResizablePanel defaultSize={18} className="min-w-[260px] max-w-[400px]">
             <div className="h-full flex flex-col border-l border-gray-700/50 bg-gray-900/60 backdrop-blur-sm overflow-hidden">
-              <div className="h-full overflow-y-auto overflow-x-hidden">{propertiesPanel}</div>
+              <div className="h-full overflow-hidden">{propertiesPanel}</div>
             </div>
           </ResizablePanel>
         </ResizablePanelGroup>
