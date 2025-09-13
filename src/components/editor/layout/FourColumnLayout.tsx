@@ -81,6 +81,7 @@ export const FourColumnLayout: React.FC<FourColumnLayoutProps> = ({
                     size="sm"
                     onClick={() => setLeftPanelOpen(false)}
                     className="text-gray-300 hover:text-white"
+                    aria-label="Fechar painel de navegação"
                   >
                     <X className="h-4 w-4" />
                   </Button>
@@ -115,6 +116,7 @@ export const FourColumnLayout: React.FC<FourColumnLayoutProps> = ({
                     size="sm"
                     onClick={() => setRightPanelOpen(false)}
                     className="text-gray-300 hover:text-white"
+                    aria-label="Fechar painel de propriedades"
                   >
                     <X className="h-4 w-4" />
                   </Button>

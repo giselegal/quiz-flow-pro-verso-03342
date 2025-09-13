@@ -90,9 +90,9 @@ export const ResultStepProperties: React.FC<ResultStepPropertiesProps> = ({
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
-            <Label htmlFor="title">Título da Página</Label>
+            <Label htmlFor="result-title">Título da Página</Label>
             <Input
-              id="title"
+              id="result-title"
               value={title}
               onChange={e => onUpdate('title', e.target.value)}
               placeholder="Título principal da página de resultado"
@@ -410,11 +410,11 @@ export const ResultStepProperties: React.FC<ResultStepPropertiesProps> = ({
 
           <div className="flex items-center space-x-2">
             <Switch
-              id="showProgress"
+              id="result-showProgress"
               checked={showProgress}
               onCheckedChange={checked => onUpdate('showProgress', checked)}
             />
-            <Label htmlFor="showProgress">Mostrar Indicador de Progresso</Label>
+            <Label htmlFor="result-showProgress">Mostrar Indicador de Progresso</Label>
           </div>
         </CardContent>
       </Card>

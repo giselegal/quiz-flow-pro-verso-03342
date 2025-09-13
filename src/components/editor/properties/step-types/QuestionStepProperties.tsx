@@ -397,11 +397,11 @@ export const QuestionStepProperties: React.FC<QuestionStepPropertiesProps> = ({
         <CardContent className="space-y-4">
           <div className="flex items-center space-x-2">
             <Switch
-              id="showProgress"
+              id="question-showProgress"
               checked={showProgress}
               onCheckedChange={checked => onUpdate('showProgress', checked)}
             />
-            <Label htmlFor="showProgress">Mostrar Barra de Progresso</Label>
+            <Label htmlFor="question-showProgress">Mostrar Barra de Progresso</Label>
           </div>
 
           {showProgress && (

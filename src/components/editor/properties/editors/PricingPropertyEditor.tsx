@@ -209,9 +209,9 @@ export const PricingPropertyEditor: React.FC<PricingPropertyEditorProps> = ({
         {/* Informações Básicas */}
         <div className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="title">Nome do Plano</Label>
+            <Label htmlFor="pricing-title">Nome do Plano</Label>
             <Input
-              id="title"
+              id="pricing-title"
               value={title}
               onChange={e => handleContentUpdate('title', e.target.value)}
               placeholder="Plano Básico, Premium, etc."

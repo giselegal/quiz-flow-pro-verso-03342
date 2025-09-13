@@ -839,6 +839,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
                     if (overlay) overlay.classList.remove('show');
                   }}
                   className="mobile-overlay-close"
+                  aria-label="Fechar painel de navegação"
                 >
                   ×
                 </button>
@@ -880,6 +881,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
                     if (overlay) overlay.classList.remove('show');
                   }}
                   className="mobile-overlay-close"
+                  aria-label="Fechar painel de propriedades"
                 >
                   ×
                 </button>

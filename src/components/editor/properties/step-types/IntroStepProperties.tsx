@@ -57,9 +57,9 @@ export const IntroStepProperties: React.FC<IntroStepPropertiesProps> = ({
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
-            <Label htmlFor="logoUrl">URL da Logo</Label>
+            <Label htmlFor="intro-logoUrl">URL da Logo</Label>
             <Input
-              id="logoUrl"
+              id="intro-logoUrl"
               value={logoUrl}
               onChange={e => onUpdate('logoUrl', e.target.value)}
               placeholder="URL da imagem da logo"
@@ -67,9 +67,9 @@ export const IntroStepProperties: React.FC<IntroStepPropertiesProps> = ({
           </div>
 
           <div>
-            <Label htmlFor="logoAlt">Texto Alternativo da Logo</Label>
+            <Label htmlFor="intro-logoAlt">Texto Alternativo da Logo</Label>
             <Input
-              id="logoAlt"
+              id="intro-logoAlt"
               value={logoAlt}
               onChange={e => onUpdate('logoAlt', e.target.value)}
               placeholder="Descrição da logo"
@@ -78,9 +78,9 @@ export const IntroStepProperties: React.FC<IntroStepPropertiesProps> = ({
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <Label htmlFor="logoWidth">Largura da Logo: {logoWidth}px</Label>
+              <Label htmlFor="intro-logoWidth">Largura da Logo: {logoWidth}px</Label>
               <Slider
-                id="logoWidth"
+                id="intro-logoWidth"
                 min={24}
                 max={240}
                 step={2}
@@ -91,9 +91,9 @@ export const IntroStepProperties: React.FC<IntroStepPropertiesProps> = ({
             </div>
 
             <div>
-              <Label htmlFor="logoHeight">Altura da Logo: {logoHeight}px</Label>
+              <Label htmlFor="intro-logoHeight">Altura da Logo: {logoHeight}px</Label>
               <Slider
-                id="logoHeight"
+                id="intro-logoHeight"
                 min={24}
                 max={240}
                 step={2}
@@ -106,27 +106,27 @@ export const IntroStepProperties: React.FC<IntroStepPropertiesProps> = ({
 
           <div className="flex items-center space-x-2">
             <Switch
-              id="showBackButton"
+              id="intro-showBackButton"
               checked={showBackButton}
               onCheckedChange={checked => onUpdate('showBackButton', checked)}
             />
-            <Label htmlFor="showBackButton">Mostrar Botão Voltar</Label>
+            <Label htmlFor="intro-showBackButton">Mostrar Botão Voltar</Label>
           </div>
 
           <div className="flex items-center space-x-2">
             <Switch
-              id="showProgressBar"
+              id="intro-showProgressBar"
               checked={showProgressBar}
               onCheckedChange={checked => onUpdate('showProgress', checked)}
             />
-            <Label htmlFor="showProgressBar">Mostrar Barra de Progresso</Label>
+            <Label htmlFor="intro-showProgressBar">Mostrar Barra de Progresso</Label>
           </div>
 
           {showProgressBar && (
             <div>
-              <Label htmlFor="progressValue">Progresso: {progressValue}%</Label>
+              <Label htmlFor="intro-progressValue">Progresso: {progressValue}%</Label>
               <Slider
-                id="progressValue"
+                id="intro-progressValue"
                 min={0}
                 max={100}
                 step={1}
@@ -148,9 +148,9 @@ export const IntroStepProperties: React.FC<IntroStepPropertiesProps> = ({
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
-            <Label htmlFor="title">Título Principal</Label>
+            <Label htmlFor="intro-title">Título Principal</Label>
             <Input
-              id="title"
+              id="intro-title"
               value={title}
               onChange={e => onUpdate('title', e.target.value)}
               placeholder="Título da página de introdução"
@@ -158,9 +158,9 @@ export const IntroStepProperties: React.FC<IntroStepPropertiesProps> = ({
           </div>
 
           <div>
-            <Label htmlFor="subtitle">Subtítulo</Label>
+            <Label htmlFor="intro-subtitle">Subtítulo</Label>
             <Input
-              id="subtitle"
+              id="intro-subtitle"
               value={subtitle}
               onChange={e => onUpdate('subtitle', e.target.value)}
               placeholder="Descrição do quiz"
@@ -350,11 +350,11 @@ export const IntroStepProperties: React.FC<IntroStepPropertiesProps> = ({
 
           <div className="flex items-center space-x-2">
             <Switch
-              id="showProgress"
+              id="intro-showProgress"
               checked={showProgress}
               onCheckedChange={checked => onUpdate('showProgress', checked)}
             />
-            <Label htmlFor="showProgress">Mostrar Barra de Progresso</Label>
+            <Label htmlFor="intro-showProgress">Mostrar Barra de Progresso</Label>
           </div>
         </CardContent>
       </Card>

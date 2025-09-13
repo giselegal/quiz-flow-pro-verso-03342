@@ -20,9 +20,9 @@ export const HeaderProperties: React.FC<HeaderPropertiesProps> = ({ component, o
   return (
     <div className="space-y-4">
       <div>
-        <Label htmlFor="title">Título</Label>
+        <Label htmlFor="quiz-builder-title">Título</Label>
         <Input
-          id="title"
+          id="quiz-builder-title"
           value={data.title || ''}
           onChange={e => handleUpdate('title', e.target.value)}
           placeholder="Digite o título"
@@ -30,9 +30,9 @@ export const HeaderProperties: React.FC<HeaderPropertiesProps> = ({ component, o
       </div>
 
       <div>
-        <Label htmlFor="subtitle">Subtítulo</Label>
+        <Label htmlFor="quiz-builder-subtitle">Subtítulo</Label>
         <Input
-          id="subtitle"
+          id="quiz-builder-subtitle"
           value={data.subtitle || ''}
           onChange={e => handleUpdate('subtitle', e.target.value)}
           placeholder="Digite o subtítulo"

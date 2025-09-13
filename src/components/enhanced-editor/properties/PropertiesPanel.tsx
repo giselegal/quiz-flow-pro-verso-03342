@@ -67,18 +67,18 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
         {selectedBlock.type === 'header' && (
           <>
             <div>
-              <Label htmlFor="title">Title</Label>
+              <Label htmlFor="enhanced-title">Title</Label>
               <Input
-                id="title"
+                id="enhanced-title"
                 value={selectedBlock.content?.title || ''}
                 onChange={e => handleContentUpdate('title', e.target.value)}
                 placeholder="Enter title..."
               />
             </div>
             <div>
-              <Label htmlFor="subtitle">Subtitle</Label>
+              <Label htmlFor="enhanced-subtitle">Subtitle</Label>
               <Input
-                id="subtitle"
+                id="enhanced-subtitle"
                 value={selectedBlock.content?.subtitle || ''}
                 onChange={e => handleContentUpdate('subtitle', e.target.value)}
                 placeholder="Enter subtitle..."

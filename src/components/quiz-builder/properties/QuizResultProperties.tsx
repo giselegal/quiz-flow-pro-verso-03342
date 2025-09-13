@@ -13,9 +13,9 @@ const QuizResultProperties: React.FC<QuizResultPropertiesProps> = ({ data = {}, 
   return (
     <div className="space-y-5">
       <div className="space-y-2">
-        <Label htmlFor="title">Título do Resultado</Label>
+        <Label htmlFor="quiz-result-title">Título do Resultado</Label>
         <Input
-          id="title"
+          id="quiz-result-title"
           value={data.title || ''}
           onChange={e => onUpdate({ ...data, title: e.target.value })}
           placeholder="Seu Resultado"

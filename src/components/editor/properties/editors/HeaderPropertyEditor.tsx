@@ -295,11 +295,11 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
 
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
-                  <Label htmlFor="showProgress">Barra de Progresso</Label>
+                  <Label htmlFor="header-showProgress">Barra de Progresso</Label>
                   <p className="text-xs text-gray-500">Exibe o progresso do quiz</p>
                 </div>
                 <Switch
-                  id="showProgress"
+                  id="header-showProgress"
                   checked={properties.showProgress}
                   onCheckedChange={checked => handlePropertyUpdate('showProgress', checked)}
                 />
@@ -351,11 +351,11 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
-                  <Label htmlFor="showLogo">Exibir Logo</Label>
+                  <Label htmlFor="header-showLogo">Exibir Logo</Label>
                   <p className="text-xs text-gray-500">Mostra/oculta o logo no header</p>
                 </div>
                 <Switch
-                  id="showLogo"
+                  id="header-showLogo"
                   checked={properties.showLogo}
                   onCheckedChange={checked => handlePropertyUpdate('showLogo', checked)}
                 />

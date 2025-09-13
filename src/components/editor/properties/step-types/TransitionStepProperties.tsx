@@ -41,9 +41,9 @@ export const TransitionStepProperties: React.FC<TransitionStepPropertiesProps> =
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
-            <Label htmlFor="title">Título Principal</Label>
+            <Label htmlFor="transition-title">Título Principal</Label>
             <Input
-              id="title"
+              id="transition-title"
               value={title}
               onChange={e => onUpdate('title', e.target.value)}
               placeholder="Título da tela de transição"
@@ -165,11 +165,11 @@ export const TransitionStepProperties: React.FC<TransitionStepPropertiesProps> =
         <CardContent className="space-y-4">
           <div className="flex items-center space-x-2">
             <Switch
-              id="showProgress"
+              id="transition-showProgress"
               checked={showProgress}
               onCheckedChange={checked => onUpdate('showProgress', checked)}
             />
-            <Label htmlFor="showProgress">Mostrar Barra de Progresso</Label>
+            <Label htmlFor="transition-showProgress">Mostrar Barra de Progresso</Label>
           </div>
 
           {showProgress && (

@@ -14,18 +14,18 @@ export function ContentPropertiesEditor({ block, onUpdate }: ContentPropertiesEd
       return (
         <div className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="title">Título</Label>
+            <Label htmlFor="content-title">Título</Label>
             <Input
-              id="title"
+              id="content-title"
               value={block.content?.title || ''}
               onChange={e => onUpdate({ title: e.target.value })}
               placeholder="Digite o título..."
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="subtitle">Subtítulo</Label>
+            <Label htmlFor="content-subtitle">Subtítulo</Label>
             <Input
-              id="subtitle"
+              id="content-subtitle"
               value={block.content?.subtitle || ''}
               onChange={e => onUpdate({ subtitle: e.target.value })}
               placeholder="Digite o subtítulo..."
