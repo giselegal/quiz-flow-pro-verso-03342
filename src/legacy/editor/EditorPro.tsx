@@ -807,7 +807,6 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
         onReset={handleResetSelected}
         previewMode={previewDevice}
         onPreviewModeChange={setPreviewDevice}
-        className="!w-[20%] !min-w-0 !max-w-none"
       />
     );
   });

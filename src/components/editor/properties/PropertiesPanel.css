@@ -1,7 +1,6 @@
 /* Barra de rolagem customizada para o painel de propriedades */
 .properties-panel .scroll-area {
-    /* Força rolagem apenas vertical e impede vazamento */
-    overflow-x: hidden !important;
+    /* Força rolagem apenas vertical */
     overflow-y: auto;
     max-width: 100%;
     word-wrap: break-word;
@@ -9,7 +8,6 @@
 
 /* Impede vazamento de conteúdo */
 .properties-panel {
-    overflow-x: hidden !important;
     max-width: 100%;
 }
 
@@ -46,7 +44,6 @@
 
 /* Container para elementos com risco de vazar */
 .properties-panel .property-container {
-    overflow-x: hidden !important;
     max-width: 100%;
 }
 
