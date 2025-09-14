@@ -344,6 +344,7 @@ const EditorInitializerUnified: React.FC<{
         const [error, setError] = React.useState<string | null>(null);
         const [loadingTimeout, setLoadingTimeout] = React.useState(false);
         const [fallbackMode, setFallbackMode] = React.useState(false);
+        const readOnly = false; // Adicionar controle de readonly se necessário
 
         const startTime = React.useRef(Date.now());
 
@@ -431,45 +432,60 @@ const EditorInitializerUnified: React.FC<{
             }
         }, [debugMode]);
 
-        // 🔄 Carregamento dinâmico do editor com timeout e fallback
+        // 🔄 Carregamento dinâmico DIRETO do UniversalStepEditor
         React.useEffect(() => {
             let cancelled = false;
             let timeoutId: NodeJS.Timeout;
 
-            console.log('🚀 [EDITOR] Iniciando carregamento do editor...');
+            console.log('🚀 [EDITOR] Iniciando carregamento DIRETO do UniversalStepEditor...');
 
-            // Timeout de 10 segundos para loading
+            // Timeout de 5 segundos para loading
             timeoutId = setTimeout(() => {
                 if (!cancelled) {
-                    console.warn('⏰ [EDITOR] Timeout de 10s atingido, ativando fallback');
+                    console.warn('⏰ [EDITOR] Timeout de 5s atingido, ativando fallback');
                     setLoadingTimeout(true);
                     setError('O editor está demorando para carregar. Tentando carregar modo compatibilidade...');
                     setFallbackMode(true);
                 }
-            }, 10000);
+            }, 5000);
 
             (async () => {
                 try {
                     setIsLoading(true);
                     setError(null);
 
-                    console.log('🔄 [EDITOR] Carregando UnifiedEditor...');
+                    if (useUniversalEditor) {
+                        console.log('🎯 [EDITOR] Carregando UniversalStepEditor DIRETAMENTE...');
 
-                    // Primeiro tenta carregar UnifiedEditor
+                        // Carregar DIRETAMENTE o UniversalStepEditor
+                        const universalMod = await import('../components/editor/universal/UniversalStepEditor');
+                        const UniversalComp = universalMod.default || universalMod.UniversalStepEditor;
+
+                        if (!cancelled && UniversalComp) {
+                            clearTimeout(timeoutId);
+                            setUnifiedEditorComp(() => UniversalComp);
+                            console.log('✅ [EDITOR] UniversalStepEditor carregado DIRETAMENTE com sucesso!');
+                            return;
+                        }
+                    }
+
+                    // Fallback: tentar UnifiedEditor
+                    console.log('🔄 [EDITOR] Fallback para UnifiedEditor...');
                     const mod = await import('../components/editor/UnifiedEditor');
                     const Comp = mod.default || mod.UnifiedEditor;
 
                     if (!cancelled && Comp) {
                         clearTimeout(timeoutId);
                         setUnifiedEditorComp(() => Comp);
-                        console.log('✅ [EDITOR] UnifiedEditor carregado com sucesso');
+                        setFallbackMode(true);
+                        console.log('⚠️ [EDITOR] UnifiedEditor carregado como fallback');
                     }
                 } catch (error) {
-                    console.error('❌ [EDITOR] Falha ao carregar UnifiedEditor:', error);
+                    console.error('❌ [EDITOR] Falha ao carregar editores:', error);
 
                     if (!cancelled) {
                         try {
-                            console.log('🔄 [EDITOR] Tentando fallback para EditorPro...');
+                            console.log('🔄 [EDITOR] Último fallback para EditorPro...');
 
                             const legacyMod = await import('../components/editor/EditorPro');
                             const LegacyComp = legacyMod.default || legacyMod.EditorPro;
@@ -478,12 +494,12 @@ const EditorInitializerUnified: React.FC<{
                                 clearTimeout(timeoutId);
                                 setUnifiedEditorComp(() => LegacyComp);
                                 setFallbackMode(true);
-                                console.warn('⚠️ [EDITOR] Usando fallback EditorPro legacy');
+                                console.warn('⚠️ [EDITOR] Usando último fallback EditorPro');
                             }
                         } catch (legacyError) {
-                            console.error('❌ [EDITOR] Falha ao carregar fallback EditorPro:', legacyError);
+                            console.error('❌ [EDITOR] Todos os editores falharam:', legacyError);
                             clearTimeout(timeoutId);
-                            setError('Falha ao carregar editor. Tente recarregar a página.');
+                            setError('Falha ao carregar qualquer editor. Tente recarregar a página.');
                         }
                     }
                 } finally {
@@ -497,7 +513,7 @@ const EditorInitializerUnified: React.FC<{
                 cancelled = true;
                 clearTimeout(timeoutId);
             };
-        }, [debugMode]);
+        }, [debugMode, useUniversalEditor]);
 
         // Template loading effect
         React.useEffect(() => {
@@ -652,10 +668,45 @@ const EditorInitializerUnified: React.FC<{
             );
         }
 
-        // ✅ Editor carregado com sucesso
+        // ✅ Editor carregado - RENDERIZAÇÃO DIRETA
         if (UnifiedEditorComp) {
-            console.log('🎯 [EDITOR] Renderizando editor carregado');
+            console.log('🎯 [EDITOR] Renderizando editor carregado DIRETAMENTE');
 
+            // Se for UniversalStepEditor, renderizar diretamente sem wrappers
+            if (useUniversalEditor && !fallbackMode) {
+                return (
+                    <div className="h-screen w-screen">
+                        <div className="bg-green-50 border-b border-green-200 px-4 py-2">
+                            <p className="text-sm text-green-800 text-center">
+                                🎯 UniversalStepEditor DIRETO - Editor Completo de 4 Colunas
+                            </p>
+                        </div>
+                        <div className="h-[calc(100vh-40px)]">
+                            <UnifiedEditorComp
+                                stepId={initialStep ? `step-${initialStep}` : 'step-1'}
+                                stepNumber={initialStep || 1}
+                                funnelId={funnelId || 'quiz-21-steps-complete'}
+                                onStepChange={(stepId: string) => {
+                                    console.log('🔄 Step mudou:', stepId);
+                                    // Atualizar URL se necessário
+                                    const stepNumber = stepId.replace('step-', '');
+                                    const url = new URL(window.location.href);
+                                    url.searchParams.set('step', stepNumber);
+                                    window.history.replaceState({}, '', url.toString());
+                                }}
+                                onSave={(stepId: string, data: any) => {
+                                    console.log('💾 Step salvo:', stepId, data);
+                                    // Implementar lógica de salvamento real
+                                }}
+                                readOnly={readOnly}
+                                showNavigation={true}
+                            />
+                        </div>
+                    </div>
+                );
+            }
+
+            // Para outros editores (fallback), usar estrutura original
             return (
                 <div className="editor-mobile-layout h-screen w-screen">
                     {fallbackMode && (
@@ -665,14 +716,7 @@ const EditorInitializerUnified: React.FC<{
                             </p>
                         </div>
                     )}
-                    {useUniversalEditor && !fallbackMode && (
-                        <div className="bg-green-50 border-b border-green-200 px-4 py-2">
-                            <p className="text-sm text-green-800 text-center">
-                                🎯 UniversalStepEditor Ativo - Modo Visual Universal
-                            </p>
-                        </div>
-                    )}
-                    <div className={`editor-main-content ${(fallbackMode || useUniversalEditor) ? 'h-[calc(100vh-40px)]' : 'h-screen'}`}>
+                    <div className={`editor-main-content ${fallbackMode ? 'h-[calc(100vh-40px)]' : 'h-screen'}`}>
                         <UnifiedEditorComp
                             stepId={initialStep ? `step-${initialStep}` : 'step-1'}
                             stepNumber={initialStep || 1}
