@@ -189,6 +189,555 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
         setHasUnsavedChanges(true);
     };
 
+    // Renderizar campos específicos por tipo de componente
+    const renderPropertiesFields = (blockData: any) => {
+        const { type, content, properties } = blockData;
+
+        switch (type) {
+            case 'quiz-intro-header':
+                return (
+                    <div className="space-y-4">
+                        <h4 className="font-medium text-gray-800 pb-2 border-b">Configurações do Header</h4>
+
+                        {/* Logo */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">URL do Logo</label>
+                            <input
+                                type="url"
+                                value={properties?.logoUrl || ''}
+                                onChange={(e) => updateBlockProperty(blockData.id, 'properties.logoUrl', e.target.value)}
+                                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                                placeholder="https://exemplo.com/logo.png"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Alt do Logo</label>
+                            <input
+                                type="text"
+                                value={properties?.logoAlt || ''}
+                                onChange={(e) => updateBlockProperty(blockData.id, 'properties.logoAlt', e.target.value)}
+                                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                                placeholder="Descrição da logo"
+                            />
+                        </div>
+
+                        {/* Background */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Cor de Fundo</label>
+                            <div className="flex space-x-2">
+                                <input
+                                    type="color"
+                                    value={properties?.backgroundColor || '#F8F9FA'}
+                                    onChange={(e) => updateBlockProperty(blockData.id, 'properties.backgroundColor', e.target.value)}
+                                    className="w-12 h-10 border border-gray-300 rounded"
+                                />
+                                <input
+                                    type="text"
+                                    value={properties?.backgroundColor || '#F8F9FA'}
+                                    onChange={(e) => updateBlockProperty(blockData.id, 'properties.backgroundColor', e.target.value)}
+                                    className="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm"
+                                />
+                            </div>
+                        </div>
+
+                        {/* Layout */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Alinhamento</label>
+                            <select
+                                value={properties?.textAlign || 'center'}
+                                onChange={(e) => updateBlockProperty(blockData.id, 'properties.textAlign', e.target.value)}
+                                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                            >
+                                <option value="left">Esquerda</option>
+                                <option value="center">Centro</option>
+                                <option value="right">Direita</option>
+                            </select>
+                        </div>
+
+                        {/* Progress Bar */}
+                        <div className="flex items-center space-x-3">
+                            <input
+                                type="checkbox"
+                                checked={properties?.enableProgressBar || false}
+                                onChange={(e) => updateBlockProperty(blockData.id, 'properties.enableProgressBar', e.target.checked)}
+                                className="w-4 h-4 text-blue-600"
+                            />
+                            <label className="text-sm text-gray-700">Mostrar Barra de Progresso</label>
+                        </div>
+
+                        {properties?.enableProgressBar && (
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Valor do Progresso (%)</label>
+                                <input
+                                    type="range"
+                                    min="0"
+                                    max="100"
+                                    value={properties?.progressValue || 0}
+                                    onChange={(e) => updateBlockProperty(blockData.id, 'properties.progressValue', parseInt(e.target.value))}
+                                    className="w-full"
+                                />
+                                <div className="text-xs text-gray-500 text-center mt-1">
+                                    {properties?.progressValue || 0}%
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Spacing */}
+                        <div className="grid grid-cols-2 gap-3">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Padding</label>
+                                <input
+                                    type="text"
+                                    value={properties?.padding || '24px'}
+                                    onChange={(e) => updateBlockProperty(blockData.id, 'properties.padding', e.target.value)}
+                                    className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Border Radius</label>
+                                <input
+                                    type="text"
+                                    value={properties?.borderRadius || '8px'}
+                                    onChange={(e) => updateBlockProperty(blockData.id, 'properties.borderRadius', e.target.value)}
+                                    className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                );
+
+            case 'text':
+                return (
+                    <div className="space-y-4">
+                        <h4 className="font-medium text-gray-800 pb-2 border-b">Configurações do Texto</h4>
+
+                        {/* Conteúdo */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Texto</label>
+                            <textarea
+                                value={content?.text || ''}
+                                onChange={(e) => updateBlockProperty(blockData.id, 'content.text', e.target.value)}
+                                rows={4}
+                                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                                placeholder="Digite o texto aqui..."
+                            />
+                            <div className="text-xs text-gray-500 mt-1">
+                                Suporte HTML: &lt;span&gt;, &lt;strong&gt;, &lt;em&gt;, etc.
+                            </div>
+                        </div>
+
+                        {/* Tipografia */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Tamanho da Fonte</label>
+                            <select
+                                value={properties?.fontSize || 'text-base'}
+                                onChange={(e) => updateBlockProperty(blockData.id, 'properties.fontSize', e.target.value)}
+                                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                            >
+                                <option value="text-xs">Extra Pequeno</option>
+                                <option value="text-sm">Pequeno</option>
+                                <option value="text-base">Normal</option>
+                                <option value="text-lg">Grande</option>
+                                <option value="text-xl">Extra Grande</option>
+                                <option value="text-2xl">2XL</option>
+                                <option value="text-3xl">3XL</option>
+                                <option value="text-4xl">4XL</option>
+                                <option value="text-3xl md:text-4xl">Responsivo (3XL/4XL)</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Peso da Fonte</label>
+                            <select
+                                value={properties?.fontWeight || 'font-normal'}
+                                onChange={(e) => updateBlockProperty(blockData.id, 'properties.fontWeight', e.target.value)}
+                                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                            >
+                                <option value="font-light">Leve</option>
+                                <option value="font-normal">Normal</option>
+                                <option value="font-medium">Médio</option>
+                                <option value="font-semibold">Semi-negrito</option>
+                                <option value="font-bold">Negrito</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Alinhamento</label>
+                            <select
+                                value={properties?.textAlign || 'text-left'}
+                                onChange={(e) => updateBlockProperty(blockData.id, 'properties.textAlign', e.target.value)}
+                                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                            >
+                                <option value="text-left">Esquerda</option>
+                                <option value="text-center">Centro</option>
+                                <option value="text-right">Direita</option>
+                                <option value="text-justify">Justificado</option>
+                            </select>
+                        </div>
+
+                        {/* Cor */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Cor do Texto</label>
+                            <div className="flex space-x-2">
+                                <input
+                                    type="color"
+                                    value={properties?.color || '#000000'}
+                                    onChange={(e) => updateBlockProperty(blockData.id, 'properties.color', e.target.value)}
+                                    className="w-12 h-10 border border-gray-300 rounded"
+                                />
+                                <input
+                                    type="text"
+                                    value={properties?.color || '#000000'}
+                                    onChange={(e) => updateBlockProperty(blockData.id, 'properties.color', e.target.value)}
+                                    className="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm"
+                                />
+                            </div>
+                        </div>
+
+                        {/* Espaçamento */}
+                        <div className="grid grid-cols-2 gap-3">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Margem Superior</label>
+                                <input
+                                    type="number"
+                                    value={properties?.marginTop || 0}
+                                    onChange={(e) => updateBlockProperty(blockData.id, 'properties.marginTop', parseInt(e.target.value))}
+                                    className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Margem Inferior</label>
+                                <input
+                                    type="number"
+                                    value={properties?.marginBottom || 0}
+                                    onChange={(e) => updateBlockProperty(blockData.id, 'properties.marginBottom', parseInt(e.target.value))}
+                                    className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                                />
+                            </div>
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Largura Máxima</label>
+                            <input
+                                type="text"
+                                value={properties?.maxWidth || '100%'}
+                                onChange={(e) => updateBlockProperty(blockData.id, 'properties.maxWidth', e.target.value)}
+                                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                                placeholder="640px, 100%, auto"
+                            />
+                        </div>
+                    </div>
+                );
+
+            case 'image':
+                return (
+                    <div className="space-y-4">
+                        <h4 className="font-medium text-gray-800 pb-2 border-b">Configurações da Imagem</h4>
+
+                        {/* Imagem */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">URL da Imagem</label>
+                            <input
+                                type="url"
+                                value={properties?.src || ''}
+                                onChange={(e) => updateBlockProperty(blockData.id, 'properties.src', e.target.value)}
+                                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                                placeholder="https://exemplo.com/imagem.jpg"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Texto Alternativo</label>
+                            <input
+                                type="text"
+                                value={properties?.alt || ''}
+                                onChange={(e) => updateBlockProperty(blockData.id, 'properties.alt', e.target.value)}
+                                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                                placeholder="Descrição da imagem"
+                            />
+                        </div>
+
+                        {/* Dimensões */}
+                        <div className="grid grid-cols-2 gap-3">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Largura</label>
+                                <input
+                                    type="text"
+                                    value={properties?.width || 'auto'}
+                                    onChange={(e) => updateBlockProperty(blockData.id, 'properties.width', e.target.value)}
+                                    className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                                    placeholder="auto, 300px, 100%"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Altura</label>
+                                <input
+                                    type="text"
+                                    value={properties?.height || 'auto'}
+                                    onChange={(e) => updateBlockProperty(blockData.id, 'properties.height', e.target.value)}
+                                    className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                                    placeholder="auto, 200px, 100%"
+                                />
+                            </div>
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Largura Máxima</label>
+                            <select
+                                value={properties?.maxWidth || 'md'}
+                                onChange={(e) => updateBlockProperty(blockData.id, 'properties.maxWidth', e.target.value)}
+                                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                            >
+                                <option value="sm">Pequeno (max-w-sm)</option>
+                                <option value="md">Médio (max-w-md)</option>
+                                <option value="lg">Grande (max-w-lg)</option>
+                                <option value="xl">Extra Grande (max-w-xl)</option>
+                                <option value="2xl">2XL (max-w-2xl)</option>
+                                <option value="full">Completa (max-w-full)</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Alinhamento</label>
+                            <select
+                                value={properties?.alignment || 'center'}
+                                onChange={(e) => updateBlockProperty(blockData.id, 'properties.alignment', e.target.value)}
+                                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                            >
+                                <option value="left">Esquerda</option>
+                                <option value="center">Centro</option>
+                                <option value="right">Direita</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Border Radius</label>
+                            <select
+                                value={properties?.borderRadius || 'large'}
+                                onChange={(e) => updateBlockProperty(blockData.id, 'properties.borderRadius', e.target.value)}
+                                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                            >
+                                <option value="none">Nenhum</option>
+                                <option value="small">Pequeno</option>
+                                <option value="medium">Médio</option>
+                                <option value="large">Grande</option>
+                                <option value="full">Circular</option>
+                            </select>
+                        </div>
+
+                        {/* Espaçamento */}
+                        <div className="grid grid-cols-2 gap-3">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Margem Superior</label>
+                                <input
+                                    type="number"
+                                    value={properties?.marginTop || 8}
+                                    onChange={(e) => updateBlockProperty(blockData.id, 'properties.marginTop', parseInt(e.target.value))}
+                                    className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Margem Inferior</label>
+                                <input
+                                    type="number"
+                                    value={properties?.marginBottom || 12}
+                                    onChange={(e) => updateBlockProperty(blockData.id, 'properties.marginBottom', parseInt(e.target.value))}
+                                    className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                );
+
+            case 'button':
+                return (
+                    <div className="space-y-4">
+                        <h4 className="font-medium text-gray-800 pb-2 border-b">Configurações do Botão</h4>
+
+                        {/* Texto do Botão */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Texto do Botão</label>
+                            <input
+                                type="text"
+                                value={content?.text || properties?.text || ''}
+                                onChange={(e) => updateBlockProperty(blockData.id, 'content.text', e.target.value)}
+                                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                                placeholder="Clique aqui"
+                            />
+                        </div>
+
+                        {/* Tipo do Botão */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Tipo</label>
+                            <select
+                                value={properties?.variant || 'primary'}
+                                onChange={(e) => updateBlockProperty(blockData.id, 'properties.variant', e.target.value)}
+                                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                            >
+                                <option value="primary">Primário</option>
+                                <option value="secondary">Secundário</option>
+                                <option value="outline">Contorno</option>
+                                <option value="ghost">Fantasma</option>
+                                <option value="destructive">Destrutivo</option>
+                            </select>
+                        </div>
+
+                        {/* Ação */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Ação</label>
+                            <select
+                                value={properties?.action || 'next'}
+                                onChange={(e) => updateBlockProperty(blockData.id, 'properties.action', e.target.value)}
+                                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                            >
+                                <option value="next">Próximo Step</option>
+                                <option value="submit">Enviar Formulário</option>
+                                <option value="back">Voltar</option>
+                            </select>
+                        </div>
+                    </div>
+                );
+
+            case 'input':
+            case 'form-input':
+                return (
+                    <div className="space-y-4">
+                        <h4 className="font-medium text-gray-800 pb-2 border-b">Configurações do Input</h4>
+
+                        {/* Label */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Label</label>
+                            <input
+                                type="text"
+                                value={properties?.label || content?.label || ''}
+                                onChange={(e) => updateBlockProperty(blockData.id, 'properties.label', e.target.value)}
+                                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                                placeholder="Nome do campo"
+                            />
+                        </div>
+
+                        {/* Tipo */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Tipo do Input</label>
+                            <select
+                                value={properties?.type || 'text'}
+                                onChange={(e) => updateBlockProperty(blockData.id, 'properties.type', e.target.value)}
+                                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                            >
+                                <option value="text">Texto</option>
+                                <option value="email">E-mail</option>
+                                <option value="password">Senha</option>
+                                <option value="number">Número</option>
+                            </select>
+                        </div>
+
+                        {/* Nome do Campo */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Nome do Campo</label>
+                            <input
+                                type="text"
+                                value={properties?.name || ''}
+                                onChange={(e) => updateBlockProperty(blockData.id, 'properties.name', e.target.value)}
+                                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                                placeholder="campo_nome"
+                            />
+                        </div>
+
+                        {/* Validações */}
+                        <div className="flex items-center space-x-3">
+                            <input
+                                type="checkbox"
+                                checked={properties?.required || false}
+                                onChange={(e) => updateBlockProperty(blockData.id, 'properties.required', e.target.checked)}
+                                className="w-4 h-4 text-blue-600"
+                            />
+                            <label className="text-sm text-gray-700">Campo Obrigatório</label>
+                        </div>
+                    </div>
+                );
+
+            case 'quiz-question':
+                return (
+                    <div className="space-y-4">
+                        <h4 className="font-medium text-gray-800 pb-2 border-b">Configurações da Pergunta</h4>
+
+                        {/* Pergunta */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Pergunta</label>
+                            <textarea
+                                value={content?.question || content?.text || ''}
+                                onChange={(e) => updateBlockProperty(blockData.id, 'content.question', e.target.value)}
+                                rows={3}
+                                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                                placeholder="Digite a pergunta aqui..."
+                            />
+                        </div>
+
+                        {/* Tipo da Pergunta */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Tipo da Pergunta</label>
+                            <select
+                                value={properties?.questionType || 'multiple-choice'}
+                                onChange={(e) => updateBlockProperty(blockData.id, 'properties.questionType', e.target.value)}
+                                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                            >
+                                <option value="multiple-choice">Múltipla Escolha</option>
+                                <option value="single-choice">Escolha Única</option>
+                                <option value="yes-no">Sim/Não</option>
+                                <option value="rating">Avaliação</option>
+                            </select>
+                        </div>
+
+                        {/* Opções (para múltipla escolha) */}
+                        {(properties?.questionType === 'multiple-choice' || properties?.questionType === 'single-choice') && content?.options && (
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Opções de Resposta</label>
+                                <div className="space-y-2">
+                                    {content.options.map((option: any, index: number) => (
+                                        <div key={index} className="flex space-x-2">
+                                            <input
+                                                type="text"
+                                                value={option.text || ''}
+                                                onChange={(e) => {
+                                                    const newOptions = [...content.options];
+                                                    newOptions[index] = { ...option, text: e.target.value };
+                                                    updateBlockProperty(blockData.id, 'content.options', newOptions);
+                                                }}
+                                                className="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm"
+                                                placeholder={`Opção ${index + 1}`}
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Configurações */}
+                        <div className="flex items-center space-x-3">
+                            <input
+                                type="checkbox"
+                                checked={properties?.required || false}
+                                onChange={(e) => updateBlockProperty(blockData.id, 'properties.required', e.target.checked)}
+                                className="w-4 h-4 text-blue-600"
+                            />
+                            <label className="text-sm text-gray-700">Resposta Obrigatória</label>
+                        </div>
+                    </div>
+                );
+
+            default:
+                return (
+                    <div className="space-y-4">
+                        <h4 className="font-medium text-gray-800 pb-2 border-b">Configurações Gerais</h4>
+                        <div className="text-sm text-gray-600">
+                            Propriedades específicas para o tipo "{type}" ainda não foram implementadas.
+                        </div>
+                    </div>
+                );
+        }
+    };
+
     // Auto-save das mudanças
     React.useEffect(() => {
         if (!hasUnsavedChanges) return;
@@ -217,8 +766,8 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
             <div
                 key={index}
                 className={`cursor-pointer transition-all duration-200 ${isSelected
-                        ? 'ring-2 ring-blue-500 ring-offset-2 shadow-lg'
-                        : 'hover:shadow-md hover:ring-1 hover:ring-gray-300'
+                    ? 'ring-2 ring-blue-500 ring-offset-2 shadow-lg'
+                    : 'hover:shadow-md hover:ring-1 hover:ring-gray-300'
                     }`}
                 onClick={handleBlockClick}
             >
@@ -498,8 +1047,8 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                             setHasUnsavedChanges(false);
                         }}
                         className={`px-4 py-2 rounded-md transition-colors flex items-center space-x-2 ${hasUnsavedChanges
-                                ? 'bg-yellow-600 text-white hover:bg-yellow-700'
-                                : 'bg-blue-600 text-white hover:bg-blue-700'
+                            ? 'bg-yellow-600 text-white hover:bg-yellow-700'
+                            : 'bg-blue-600 text-white hover:bg-blue-700'
                             }`}
                     >
                         <span>💾</span>
@@ -771,96 +1320,8 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
 
                     {selectedBlockData ? (
                         <div className="space-y-6">
-                            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-                                <h4 className="font-medium text-blue-900 mb-2">Bloco Selecionado</h4>
-                                <div className="text-sm space-y-1">
-                                    <div><strong>ID:</strong> {selectedBlockData.id}</div>
-                                    <div><strong>Tipo:</strong> {selectedBlockData.type}</div>
-                                    <div><strong>Ordem:</strong> {selectedBlockData.order}</div>
-                                </div>
-                            </div>
-
-                            {/* Propriedades editáveis */}
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    ID do Componente
-                                </label>
-                                <input
-                                    type="text"
-                                    defaultValue={selectedBlockData.id}
-                                    className="w-full border border-gray-300 rounded-md px-3 py-2"
-                                    readOnly={readOnly}
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Tipo do Componente
-                                </label>
-                                <input
-                                    type="text"
-                                    defaultValue={selectedBlockData.type}
-                                    className="w-full border border-gray-300 rounded-md px-3 py-2 bg-gray-50"
-                                    readOnly
-                                />
-                            </div>
-
-                            {/* Content Properties */}
-                            {selectedBlockData.content && Object.keys(selectedBlockData.content).length > 0 && (
-                                <div>
-                                    <h4 className="text-sm font-medium text-gray-700 mb-2">Conteúdo</h4>
-                                    <div className="space-y-3">
-                                        {Object.entries(selectedBlockData.content).map(([key, value]) => (
-                                            <div key={key}>
-                                                <label className="block text-xs font-medium text-gray-600 mb-1">
-                                                    {key}
-                                                </label>
-                                                {typeof value === 'string' ? (
-                                                    key === 'text' ? (
-                                                        <textarea
-                                                            defaultValue={value}
-                                                            className="w-full border border-gray-300 rounded-md px-2 py-1 text-sm"
-                                                            rows={3}
-                                                            readOnly={readOnly}
-                                                            onChange={(e) => {
-                                                                if (!readOnly) {
-                                                                    updateBlockProperty(selectedBlockData.id, `content.${key}`, e.target.value);
-                                                                }
-                                                            }}
-                                                        />
-                                                    ) : (
-                                                        <input
-                                                            type="text"
-                                                            defaultValue={value}
-                                                            className="w-full border border-gray-300 rounded-md px-2 py-1 text-sm"
-                                                            readOnly={readOnly}
-                                                            onChange={(e) => {
-                                                                if (!readOnly) {
-                                                                    updateBlockProperty(selectedBlockData.id, `content.${key}`, e.target.value);
-                                                                }
-                                                            }}
-                                                        />
-                                                    )
-                                                ) : (
-                                                    <div className="text-xs bg-gray-100 p-2 rounded">
-                                                        {JSON.stringify(value, null, 2)}
-                                                    </div>
-                                                )}
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* Properties */}
-                            {selectedBlockData.properties && Object.keys(selectedBlockData.properties).length > 0 && (
-                                <div>
-                                    <h4 className="text-sm font-medium text-gray-700 mb-2">Propriedades</h4>
-                                    <pre className="text-xs bg-gray-100 p-3 rounded-md overflow-auto max-h-40">
-                                        {JSON.stringify(selectedBlockData.properties, null, 2)}
-                                    </pre>
-                                </div>
-                            )}
+                            {/* Propriedades dinâmicas baseadas no tipo */}
+                            {renderPropertiesFields(selectedBlockData)}
 
                             <div className="pt-4 border-t border-gray-200">
                                 <button
