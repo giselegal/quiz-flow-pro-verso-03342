@@ -5,7 +5,7 @@
 
 // Principais componentes do editor
 export { default as ComponentList } from './ComponentList';
-export { default as PageEditorCanvas } from './PageEditorCanvas';
+// PageEditorCanvas removido - era apenas um placeholder que retornava null
 export { default as QuizEditorSteps } from './QuizEditorSteps';
 export { default as SchemaDrivenEditorResponsive } from './SchemaDrivenEditorResponsive';
 

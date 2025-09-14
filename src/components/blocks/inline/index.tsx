@@ -4,7 +4,7 @@
 // Componentes básicos que existem
 export { default as TextInlineBlock } from './TextInline';
 export { default as ImageDisplayInlineBlock } from './ImageDisplayInline';
-export { default as CountdownInlineBlock } from './CountdownInlineBlock';
+// CountdownInlineBlock removido - existe UrgencyCountdownInlineBlock como alternativa funcional
 
 // Componentes de cards que existem
 export { default as PricingCardInlineBlock } from './PricingCardInlineBlock';
