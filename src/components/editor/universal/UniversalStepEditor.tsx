@@ -28,6 +28,8 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
 }) => {
     const [isLoading, setIsLoading] = React.useState(true);
     const [currentStepData, setCurrentStepData] = React.useState<any>(null);
+    const [selectedBlockId, setSelectedBlockId] = React.useState<string | null>(null);
+    const [selectedBlockData, setSelectedBlockData] = React.useState<any>(null);
 
     // Carregar dados do step atual
     React.useEffect(() => {
@@ -137,11 +139,37 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
     // Renderizar componente visual baseado no tipo
     const renderComponent = (component: any, index: number) => {
         const { type, content, properties } = component;
+        const isSelected = selectedBlockId === component.id;
+        
+        const handleBlockClick = () => {
+            setSelectedBlockId(component.id);
+            setSelectedBlockData(component);
+            console.log('🎯 Bloco selecionado:', component);
+        };
+
+        const blockWrapper = (children: React.ReactNode) => (
+            <div 
+                key={index} 
+                className={`cursor-pointer transition-all duration-200 ${
+                    isSelected 
+                        ? 'ring-2 ring-blue-500 ring-offset-2 shadow-lg' 
+                        : 'hover:shadow-md hover:ring-1 hover:ring-gray-300'
+                }`}
+                onClick={handleBlockClick}
+            >
+                {children}
+                {isSelected && (
+                    <div className="absolute top-2 right-2 bg-blue-500 text-white px-2 py-1 rounded text-xs font-medium">
+                        Selecionado
+                    </div>
+                )}
+            </div>
+        );
 
         switch (type) {
             case 'quiz-intro-header':
-                return (
-                    <div key={index} className="bg-white rounded-lg border border-gray-200 p-6 mb-4">
+                return blockWrapper(
+                    <div className="bg-white rounded-lg border border-gray-200 p-6 mb-4 relative">
                         <div className="flex items-center justify-between mb-4">
                             <h3 className="text-lg font-semibold text-gray-900">📋 Quiz Header</h3>
                             <span className="text-xs text-gray-500">{type}</span>
@@ -169,8 +197,8 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                 );
 
             case 'text':
-                return (
-                    <div key={index} className="bg-white rounded-lg border border-gray-200 p-6 mb-4">
+                return blockWrapper(
+                    <div className="bg-white rounded-lg border border-gray-200 p-6 mb-4 relative">
                         <div className="flex items-center justify-between mb-4">
                             <h3 className="text-lg font-semibold text-gray-900">📝 Texto</h3>
                             <span className="text-xs text-gray-500">{type}</span>
@@ -183,63 +211,9 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                     </div>
                 );
 
-            case 'image':
-                return (
-                    <div key={index} className="bg-white rounded-lg border border-gray-200 p-6 mb-4">
-                        <div className="flex items-center justify-between mb-4">
-                            <h3 className="text-lg font-semibold text-gray-900">🖼️ Imagem</h3>
-                            <span className="text-xs text-gray-500">{type}</span>
-                        </div>
-                        {properties?.src ? (
-                            <div className="text-center">
-                                <img
-                                    src={properties.src}
-                                    alt={properties.alt || 'Imagem'}
-                                    className={`mx-auto rounded-lg ${properties?.maxWidth === 'lg' ? 'max-w-lg' : 'max-w-md'}`}
-                                    style={{
-                                        width: properties?.width || 'auto',
-                                        height: properties?.height || 'auto'
-                                    }}
-                                />
-                            </div>
-                        ) : (
-                            <div className="bg-gray-100 rounded-lg h-48 flex items-center justify-center">
-                                <div className="text-center">
-                                    <div className="text-4xl mb-2">🖼️</div>
-                                    <p className="text-gray-500">Imagem não definida</p>
-                                </div>
-                            </div>
-                        )}
-                    </div>
-                );
-
-            case 'decorative-bar':
-                return (
-                    <div key={index} className="bg-white rounded-lg border border-gray-200 p-6 mb-4">
-                        <div className="flex items-center justify-between mb-4">
-                            <h3 className="text-lg font-semibold text-gray-900">✨ Barra Decorativa</h3>
-                            <span className="text-xs text-gray-500">{type}</span>
-                        </div>
-                        <div className="flex justify-center">
-                            <div
-                                className="rounded"
-                                style={{
-                                    width: properties?.width || '100px',
-                                    height: `${properties?.height || 4}px`,
-                                    background: properties?.gradientColors
-                                        ? `linear-gradient(90deg, ${properties.gradientColors.join(', ')})`
-                                        : (properties?.color || '#B89B7A'),
-                                    borderRadius: `${properties?.borderRadius || 3}px`,
-                                    boxShadow: properties?.showShadow ? '0 2px 4px rgba(0,0,0,0.1)' : 'none'
-                                }}
-                            />
-                        </div>
-                    </div>
-                );
-
             case 'form-container':
-                return (
-                    <div key={index} className="bg-white rounded-lg border border-gray-200 p-6 mb-4">
+                return blockWrapper(
+                    <div className="bg-white rounded-lg border border-gray-200 p-6 mb-4 relative">
                         <div className="flex items-center justify-between mb-4">
                             <h3 className="text-lg font-semibold text-gray-900">📝 Formulário</h3>
                             <span className="text-xs text-gray-500">{type}</span>
@@ -489,7 +463,18 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">🧩 Componentes</h3>
 
                     <div className="space-y-3">
-                        <div className="bg-white rounded-lg p-3 border border-gray-200 cursor-pointer hover:bg-gray-50">
+                        <div 
+                            className="bg-white rounded-lg p-3 border border-gray-200 cursor-grab hover:bg-gray-50 hover:shadow-md transition-all"
+                            draggable
+                            onDragStart={(e) => {
+                                e.dataTransfer.setData('text/plain', JSON.stringify({
+                                    type: 'HeaderSection',
+                                    id: `new-header-${Date.now()}`,
+                                    content: { title: 'Novo Título', subtitle: 'Novo Subtítulo' },
+                                    properties: { fontSize: 'text-2xl', fontWeight: 'font-bold' }
+                                }));
+                            }}
+                        >
                             <div className="flex items-center space-x-3">
                                 <span className="text-2xl">📋</span>
                                 <div>
@@ -499,9 +484,41 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                             </div>
                         </div>
 
-                        <div className="bg-white rounded-lg p-3 border border-gray-200 cursor-pointer hover:bg-gray-50">
+                        <div 
+                            className="bg-white rounded-lg p-3 border border-gray-200 cursor-grab hover:bg-gray-50 hover:shadow-md transition-all"
+                            draggable
+                            onDragStart={(e) => {
+                                e.dataTransfer.setData('text/plain', JSON.stringify({
+                                    type: 'text',
+                                    id: `new-text-${Date.now()}`,
+                                    content: { text: 'Novo texto aqui...' },
+                                    properties: { fontSize: 'text-base', textAlign: 'left' }
+                                }));
+                            }}
+                        >
                             <div className="flex items-center space-x-3">
-                                <span className="text-2xl">👤</span>
+                                <span className="text-2xl">�</span>
+                                <div>
+                                    <p className="font-medium text-gray-900">Texto</p>
+                                    <p className="text-xs text-gray-500">Parágrafo de texto</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div 
+                            className="bg-white rounded-lg p-3 border border-gray-200 cursor-grab hover:bg-gray-50 hover:shadow-md transition-all"
+                            draggable
+                            onDragStart={(e) => {
+                                e.dataTransfer.setData('text/plain', JSON.stringify({
+                                    type: 'UserInfoSection',
+                                    id: `new-userinfo-${Date.now()}`,
+                                    content: {},
+                                    properties: {}
+                                }));
+                            }}
+                        >
+                            <div className="flex items-center space-x-3">
+                                <span className="text-2xl">�</span>
                                 <div>
                                     <p className="font-medium text-gray-900">User Info</p>
                                     <p className="text-xs text-gray-500">Informações do usuário</p>
@@ -509,17 +526,22 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                             </div>
                         </div>
 
-                        <div className="bg-white rounded-lg p-3 border border-gray-200 cursor-pointer hover:bg-gray-50">
-                            <div className="flex items-center space-x-3">
-                                <span className="text-2xl">📊</span>
-                                <div>
-                                    <p className="font-medium text-gray-900">Progress</p>
-                                    <p className="text-xs text-gray-500">Barra de progresso</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="bg-white rounded-lg p-3 border border-gray-200 cursor-pointer hover:bg-gray-50">
+                        <div 
+                            className="bg-white rounded-lg p-3 border border-gray-200 cursor-grab hover:bg-gray-50 hover:shadow-md transition-all"
+                            draggable
+                            onDragStart={(e) => {
+                                e.dataTransfer.setData('text/plain', JSON.stringify({
+                                    type: 'image',
+                                    id: `new-image-${Date.now()}`,
+                                    content: {},
+                                    properties: { 
+                                        src: 'https://via.placeholder.com/400x300',
+                                        alt: 'Nova imagem',
+                                        maxWidth: 'md'
+                                    }
+                                }));
+                            }}
+                        >
                             <div className="flex items-center space-x-3">
                                 <span className="text-2xl">🖼️</span>
                                 <div>
@@ -529,7 +551,26 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                             </div>
                         </div>
 
-                        <div className="bg-white rounded-lg p-3 border border-gray-200 cursor-pointer hover:bg-gray-50">
+                        <div 
+                            className="bg-white rounded-lg p-3 border border-gray-200 cursor-grab hover:bg-gray-50 hover:shadow-md transition-all"
+                            draggable
+                            onDragStart={(e) => {
+                                e.dataTransfer.setData('text/plain', JSON.stringify({
+                                    type: 'form-container',
+                                    id: `new-form-${Date.now()}`,
+                                    content: {
+                                        title: 'Nova Pergunta',
+                                        placeholder: 'Digite sua resposta...',
+                                        buttonText: 'Enviar',
+                                        backgroundColor: '#FFFFFF',
+                                        borderColor: '#B89B7A',
+                                        buttonBackgroundColor: '#B89B7A',
+                                        buttonTextColor: '#FFFFFF'
+                                    },
+                                    properties: {}
+                                }));
+                            }}
+                        >
                             <div className="flex items-center space-x-3">
                                 <span className="text-2xl">❓</span>
                                 <div>
@@ -543,7 +584,40 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
 
                 {/* Coluna 3: Editor Visual Principal */}
                 <div className="flex-1 p-6 overflow-y-auto">
-                    <div className="bg-white rounded-lg border border-gray-200 p-6">
+                    <div 
+                        className="bg-white rounded-lg border border-gray-200 p-6 min-h-full"
+                        onDragOver={(e) => {
+                            e.preventDefault();
+                            e.currentTarget.classList.add('ring-2', 'ring-blue-300', 'bg-blue-50');
+                        }}
+                        onDragLeave={(e) => {
+                            e.currentTarget.classList.remove('ring-2', 'ring-blue-300', 'bg-blue-50');
+                        }}
+                        onDrop={(e) => {
+                            e.preventDefault();
+                            e.currentTarget.classList.remove('ring-2', 'ring-blue-300', 'bg-blue-50');
+                            
+                            try {
+                                const componentData = JSON.parse(e.dataTransfer.getData('text/plain'));
+                                console.log('🎯 Componente solto:', componentData);
+                                
+                                // Adicionar o novo componente à lista de blocos
+                                const newBlock = {
+                                    ...componentData,
+                                    order: currentStepData?.blocks?.length || 0
+                                };
+                                
+                                setCurrentStepData((prev: any) => ({
+                                    ...prev,
+                                    blocks: [...(prev?.blocks || []), newBlock]
+                                }));
+                                
+                                console.log('✅ Novo componente adicionado:', newBlock);
+                            } catch (error) {
+                                console.error('❌ Erro ao processar drop:', error);
+                            }
+                        }}
+                    >
                         <div className="flex items-center justify-between mb-6">
                             <h2 className="text-xl font-semibold text-gray-900">
                                 🎯 Preview - Step {stepNumber}
@@ -575,6 +649,42 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                                     </div>
                                 </div>
                             )}
+                            
+                            {/* Botões de Navegação abaixo dos blocos */}
+                            <div className="mt-8 pt-6 border-t border-gray-200">
+                                <div className="flex items-center justify-between">
+                                    <button
+                                        onClick={handlePrevious}
+                                        disabled={stepNumber <= 1}
+                                        className="flex items-center space-x-2 px-4 py-3 bg-gray-600 text-white rounded-md hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                    >
+                                        <span>←</span>
+                                        <span>Step Anterior</span>
+                                    </button>
+
+                                    <div className="flex items-center space-x-3">
+                                        <span className="text-sm text-gray-500">Step {stepNumber} de 21</span>
+                                        <div className="w-32 bg-gray-200 rounded-full h-2">
+                                            <div
+                                                className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                                                style={{ width: `${(stepNumber / 21) * 100}%` }}
+                                            ></div>
+                                        </div>
+                                        <span className="text-sm font-medium text-gray-700">
+                                            {Math.round((stepNumber / 21) * 100)}%
+                                        </span>
+                                    </div>
+
+                                    <button
+                                        onClick={handleNext}
+                                        disabled={stepNumber >= 21}
+                                        className="flex items-center space-x-2 px-4 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                    >
+                                        <span>Próximo Step</span>
+                                        <span>→</span>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -583,72 +693,168 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                 <div className="w-80 bg-white border-l border-gray-200 p-4 overflow-y-auto">
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">⚙️ Propriedades</h3>
 
-                    <div className="space-y-6">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Nome do Step
-                            </label>
-                            <input
-                                type="text"
-                                defaultValue={currentStepData?.name || `Step ${stepNumber}`}
-                                className="w-full border border-gray-300 rounded-md px-3 py-2"
-                                readOnly={readOnly}
-                            />
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Descrição
-                            </label>
-                            <textarea
-                                defaultValue={currentStepData?.description || `Conteúdo do step ${stepNumber}`}
-                                rows={3}
-                                className="w-full border border-gray-300 rounded-md px-3 py-2"
-                                readOnly={readOnly}
-                            />
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Tipo do Step
-                            </label>
-                            <select
-                                defaultValue="quiz-question"
-                                className="w-full border border-gray-300 rounded-md px-3 py-2"
-                                disabled={readOnly}
-                            >
-                                <option value="intro">Introdução</option>
-                                <option value="quiz-question">Pergunta Quiz</option>
-                                <option value="strategic-question">Pergunta Estratégica</option>
-                                <option value="result">Resultado</option>
-                            </select>
-                        </div>
-
-                        <div>
-                            <h4 className="text-sm font-medium text-gray-700 mb-2">Dados Brutos</h4>
-                            <pre className="text-xs bg-gray-100 p-3 rounded-md overflow-auto max-h-40">
-                                {JSON.stringify(currentStepData, null, 2)}
-                            </pre>
-                        </div>
-
-                        <div>
-                            <h4 className="text-sm font-medium text-gray-700 mb-2">Estatísticas</h4>
-                            <div className="bg-gray-50 rounded-md p-3 space-y-2">
-                                <div className="flex justify-between">
-                                    <span className="text-sm text-gray-600">Componentes:</span>
-                                    <span className="text-sm font-medium">{currentStepData?.blocks?.length || 0}</span>
+                    {selectedBlockData ? (
+                        <div className="space-y-6">
+                            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                                <h4 className="font-medium text-blue-900 mb-2">Bloco Selecionado</h4>
+                                <div className="text-sm space-y-1">
+                                    <div><strong>ID:</strong> {selectedBlockData.id}</div>
+                                    <div><strong>Tipo:</strong> {selectedBlockData.type}</div>
+                                    <div><strong>Ordem:</strong> {selectedBlockData.order}</div>
                                 </div>
-                                <div className="flex justify-between">
-                                    <span className="text-sm text-gray-600">Progresso:</span>
-                                    <span className="text-sm font-medium">{Math.round((stepNumber / 21) * 100)}%</span>
+                            </div>
+
+                            {/* Propriedades editáveis */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    ID do Componente
+                                </label>
+                                <input
+                                    type="text"
+                                    defaultValue={selectedBlockData.id}
+                                    className="w-full border border-gray-300 rounded-md px-3 py-2"
+                                    readOnly={readOnly}
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Tipo do Componente
+                                </label>
+                                <input
+                                    type="text"
+                                    defaultValue={selectedBlockData.type}
+                                    className="w-full border border-gray-300 rounded-md px-3 py-2 bg-gray-50"
+                                    readOnly
+                                />
+                            </div>
+
+                            {/* Content Properties */}
+                            {selectedBlockData.content && Object.keys(selectedBlockData.content).length > 0 && (
+                                <div>
+                                    <h4 className="text-sm font-medium text-gray-700 mb-2">Conteúdo</h4>
+                                    <div className="space-y-3">
+                                        {Object.entries(selectedBlockData.content).map(([key, value]) => (
+                                            <div key={key}>
+                                                <label className="block text-xs font-medium text-gray-600 mb-1">
+                                                    {key}
+                                                </label>
+                                                {typeof value === 'string' ? (
+                                                    key === 'text' ? (
+                                                        <textarea
+                                                            defaultValue={value}
+                                                            className="w-full border border-gray-300 rounded-md px-2 py-1 text-sm"
+                                                            rows={3}
+                                                            readOnly={readOnly}
+                                                        />
+                                                    ) : (
+                                                        <input
+                                                            type="text"
+                                                            defaultValue={value}
+                                                            className="w-full border border-gray-300 rounded-md px-2 py-1 text-sm"
+                                                            readOnly={readOnly}
+                                                        />
+                                                    )
+                                                ) : (
+                                                    <div className="text-xs bg-gray-100 p-2 rounded">
+                                                        {JSON.stringify(value, null, 2)}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
-                                <div className="flex justify-between">
-                                    <span className="text-sm text-gray-600">Step:</span>
-                                    <span className="text-sm font-medium">{stepNumber}/21</span>
+                            )}
+
+                            {/* Properties */}
+                            {selectedBlockData.properties && Object.keys(selectedBlockData.properties).length > 0 && (
+                                <div>
+                                    <h4 className="text-sm font-medium text-gray-700 mb-2">Propriedades</h4>
+                                    <pre className="text-xs bg-gray-100 p-3 rounded-md overflow-auto max-h-40">
+                                        {JSON.stringify(selectedBlockData.properties, null, 2)}
+                                    </pre>
+                                </div>
+                            )}
+
+                            <div className="pt-4 border-t border-gray-200">
+                                <button 
+                                    className="w-full bg-red-600 text-white py-2 px-3 rounded-md hover:bg-red-700 transition-colors text-sm"
+                                    onClick={() => {
+                                        setSelectedBlockId(null);
+                                        setSelectedBlockData(null);
+                                    }}
+                                >
+                                    Desselecionar Bloco
+                                </button>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="space-y-6">
+                            <div className="text-center py-8 text-gray-500">
+                                <div className="text-4xl mb-2">👆</div>
+                                <p className="text-sm">Clique em um componente para editá-lo</p>
+                            </div>
+
+                            {/* Propriedades gerais do step */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Nome do Step
+                                </label>
+                                <input
+                                    type="text"
+                                    defaultValue={currentStepData?.name || `Step ${stepNumber}`}
+                                    className="w-full border border-gray-300 rounded-md px-3 py-2"
+                                    readOnly={readOnly}
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Descrição
+                                </label>
+                                <textarea
+                                    defaultValue={currentStepData?.description || `Conteúdo do step ${stepNumber}`}
+                                    rows={3}
+                                    className="w-full border border-gray-300 rounded-md px-3 py-2"
+                                    readOnly={readOnly}
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Tipo do Step
+                                </label>
+                                <select
+                                    defaultValue="quiz-question"
+                                    className="w-full border border-gray-300 rounded-md px-3 py-2"
+                                    disabled={readOnly}
+                                >
+                                    <option value="intro">Introdução</option>
+                                    <option value="quiz-question">Pergunta Quiz</option>
+                                    <option value="strategic-question">Pergunta Estratégica</option>
+                                    <option value="result">Resultado</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <h4 className="text-sm font-medium text-gray-700 mb-2">Estatísticas</h4>
+                                <div className="bg-gray-50 rounded-md p-3 space-y-2">
+                                    <div className="flex justify-between">
+                                        <span className="text-sm text-gray-600">Componentes:</span>
+                                        <span className="text-sm font-medium">{currentStepData?.blocks?.length || 0}</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span className="text-sm text-gray-600">Progresso:</span>
+                                        <span className="text-sm font-medium">{Math.round((stepNumber / 21) * 100)}%</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span className="text-sm text-gray-600">Step:</span>
+                                        <span className="text-sm font-medium">{stepNumber}/21</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    )}
                 </div>
             </div>
 
