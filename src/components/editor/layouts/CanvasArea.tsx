@@ -93,7 +93,7 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
   }, [actions, notification, state]);
 
   return (
-    <div className={cn('!w-[55%] !min-w-0 !max-w-none flex-none flex flex-col bg-gray-900 overflow-y-auto', className)}>
+    <div className={cn('!w-[55%] !min-w-0 !max-w-none flex-none flex flex-col bg-gray-900', className)}>
       <div className="bg-gray-900 border-b border-gray-800/50">
         {/* Header Principal */}
         <div className="px-6 py-4">
@@ -398,7 +398,7 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
 
         {/* Canvas principal: edição (DnD) ou preview com renderização real de produção */}
         <div
-          className={cn('flex-1 min-w-0 p-2 overflow-y-auto overflow-x-hidden flex justify-center', isDragging && 'editor-drop-zone-active')}
+          className={cn('flex-1 min-w-0 p-2 overflow-y-auto overflow-x-hidden', isDragging && 'editor-drop-zone-active')}
           data-canvas-container
           ref={containerRef}
         >
