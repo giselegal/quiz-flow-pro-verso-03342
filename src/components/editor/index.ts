@@ -35,7 +35,11 @@ export * from './properties';
 // ============================================================================
 
 // Componentes principais
-export { UniversalStepEditor } from './universal/UniversalStepEditor';
+// Universal Editor - Versão Híbrida Pro
+export { default as UniversalStepEditorPro } from './universal/UniversalStepEditorPro';
+
+// Universal Editor - Versão Original
+export { default as UniversalStepEditor } from './universal/UniversalStepEditor';
 export type { UniversalStepEditorProps } from './universal/UniversalStepEditor';
 
 // Demos e exemplos (importações serão adicionadas conforme necessário)
