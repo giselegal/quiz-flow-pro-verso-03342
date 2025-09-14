@@ -19,7 +19,7 @@
 
 import React from 'react';
 import { SinglePropertiesPanel } from './SinglePropertiesPanel';
-import { UnifiedBlock, PropertyType, PropertyCategory } from '@/hooks/useUnifiedProperties';
+import { UnifiedBlock } from '@/hooks/useUnifiedProperties';
 
 // ===== DADOS DE EXEMPLO =====
 

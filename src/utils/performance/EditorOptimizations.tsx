@@ -118,11 +118,11 @@ export function createOptimizedLazy<T extends React.ComponentType<any>>(
 ) {
     const LazyComponent = React.lazy(importFn);
 
-    return React.forwardRef<any, React.ComponentProps<T>>((props, ref) => (
+    const ForwardedComponent = React.forwardRef<any, React.ComponentProps<T>>((props, ref) => (
         <React.Suspense
             fallback={
                 fallback ? (
-                    <fallback />
+                    React.createElement(fallback)
                 ) : (
                     <div className="flex items-center justify-center p-4">
                         <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div>
@@ -130,9 +130,11 @@ export function createOptimizedLazy<T extends React.ComponentType<any>>(
                 )
             }
         >
-            <LazyComponent ref={ref} {...props} />
+            {React.createElement(LazyComponent as any, { ...props, ref })}
         </React.Suspense>
     ));
+
+    return ForwardedComponent;
 }
 
 // Configurações de memory cleanup
