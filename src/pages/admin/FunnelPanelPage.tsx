@@ -478,17 +478,17 @@ const FunnelPanelPage: React.FC = () => {
       // Filtra para mostrar APENAS o funil principal para edição
       const unifiedTemplates = getUnifiedTemplates({ sortBy: sort === 'name' ? 'name' : 'usageCount' });
       const filteredTemplates = unifiedTemplates.filter(template =>
-        template.id === 'quiz-estilo-21-steps' || 
+        template.id === 'quiz-estilo-21-steps' ||
         template.name === 'Quiz 21 Steps Complete' ||
         template.name.includes('Quiz 21 Etapas')
       );
-      
+
       // Se não encontrar o template específico, usar o primeiro disponível
       if (filteredTemplates.length === 0 && unifiedTemplates.length > 0) {
         console.log('🎯 Usando primeiro template disponível como funil ativo');
         return [unifiedTemplates[0]].map(normalizeTemplate);
       }
-      
+
       console.log(`🎯 Modo desenvolvimento ativo: ${filteredTemplates.length} funil(s) disponível(is) para edição`);
       return filteredTemplates.map(normalizeTemplate);
     }
@@ -582,7 +582,7 @@ const FunnelPanelPage: React.FC = () => {
             Modelos de Funis
           </h1>
           <p className="text-[#8F7A6A] mt-2 text-lg">Escolha um modelo otimizado ou crie do zero</p>
-          
+
           {/* Indicators de modo desenvolvimento */}
           <div className="flex items-center gap-2 mt-4">
             <Badge variant="outline" className="bg-blue-50 border-blue-200 text-blue-700">
