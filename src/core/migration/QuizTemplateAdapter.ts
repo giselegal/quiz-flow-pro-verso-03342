@@ -1,15 +1,23 @@
 /**
- * 🔄 CARREGADOR E ADAPTADOR PARA MIGRAÇÃO DE TEMPLATES
+ * 🔄 CARREGADOR E ADAPTADOR PARA MI  static loadLegacyTemplate() {
+    // Template básico temporário até implementar o sistema completo
+    return {
+      template: null, // QUIZ_STYLE_21_STEPS_TEMPLATE,
+      questions: [], // QUIZ_QUESTIONS_COMPLETE,
+      persistence: null, // FUNNEL_PERSISTENCE_SCHEMA,
+      globalConfig: null // QUIZ_GLOBAL_CONFIG
+    };
+  }E TEMPLATES
  * 
  * Sistema para converter templates antigos (quiz21StepsComplete) para o novo 
  * esquema unificado (QuizFunnelSchema), garantindo equivalência lógica e 
  * compatibilidade completa com o editor visual.
  */
 
-import { QuizFunnelSchema, FunnelStep, StepType, UserSession } from '../types/quiz-schema';
-import { Block } from '../types/editor';
-import { QUIZ_STYLE_21_STEPS_TEMPLATE, QUIZ_QUESTIONS_COMPLETE } from '../templates/quiz21StepsComplete';
-import { FUNNEL_PERSISTENCE_SCHEMA, QUIZ_GLOBAL_CONFIG } from '../templates/quiz21StepsComplete';
+import { QuizFunnelSchema, FunnelStep, StepType } from '@/types/quiz-schema';
+import { Block } from '@/types/editor';
+// import { QUIZ_STYLE_21_STEPS_TEMPLATE, QUIZ_QUESTIONS_COMPLETE } from '../templates/quiz21StepsComplete';
+// import { FUNNEL_PERSISTENCE_SCHEMA, QUIZ_GLOBAL_CONFIG } from '../templates/quiz21StepsComplete';
 
 // ============================================================================
 // ADAPTADOR PRINCIPAL
@@ -40,10 +48,10 @@ export class QuizTemplateAdapter {
    */
   private static loadLegacyTemplate() {
     return {
-      template: QUIZ_STYLE_21_STEPS_TEMPLATE,
-      questions: QUIZ_QUESTIONS_COMPLETE,
-      persistence: FUNNEL_PERSISTENCE_SCHEMA,
-      globalConfig: QUIZ_GLOBAL_CONFIG
+      template: null, // QUIZ_STYLE_21_STEPS_TEMPLATE,
+      questions: [], // QUIZ_QUESTIONS_COMPLETE,
+      persistence: null, // FUNNEL_PERSISTENCE_SCHEMA,
+      globalConfig: null // QUIZ_GLOBAL_CONFIG
     };
   }
 

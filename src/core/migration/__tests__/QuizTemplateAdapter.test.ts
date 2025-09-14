@@ -8,7 +8,7 @@
 import { describe, it, expect, beforeAll } from '@jest/globals';
 import { QuizTemplateAdapter, MigrationUtils } from '../QuizTemplateAdapter';
 import { QuizFunnelSchema, StepType } from '../../types/quiz-schema';
-import { QUIZ_STYLE_21_STEPS_TEMPLATE, QUIZ_QUESTIONS_COMPLETE } from '../../templates/quiz21StepsComplete';
+// import { QUIZ_STYLE_21_STEPS_TEMPLATE, QUIZ_QUESTIONS_COMPLETE } from '../../templates/quiz21StepsComplete';
 
 describe('QuizTemplateAdapter - Testes de Equivalência', () => {
   let migratedSchema: QuizFunnelSchema;
