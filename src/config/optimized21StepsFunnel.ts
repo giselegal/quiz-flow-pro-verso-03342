@@ -2059,78 +2059,50 @@ export const OPTIMIZED_FUNNEL_CONFIG = {
       type: 'result',
       blocks: [
         {
-          id: 'header-clean',
-          type: 'quiz-intro-header',
+          id: 'modular-result-header',
+          type: 'modular-result-header',
           properties: {
-            logoUrl:
-              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+            // Configuração do header
+            showHeader: true,
+            logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
             logoAlt: 'Logo Gisele Galvão',
-            showProgress: false,
+
+            // Informações do usuário
+            showUserInfo: true,
+            userName: '{userName}',
+            userEmail: '{userEmail}',
+
+            // Progresso
+            showProgress: true,
+            currentStep: 20,
+            totalSteps: 21,
+            progressPercentage: 95,
+
+            // Imagem principal
+            showMainImage: true,
+            mainImageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1745071344/GUIA_NATURAL_fzp6fc.webp',
+            mainImageAlt: 'Seu Estilo Descoberto',
+            imageWidth: 400,
+            imageHeight: 400,
+
+            // Conteúdo
+            title: 'Parabéns! Seu estilo predominante é:',
+            subtitle: 'Estilo {resultStyle}',
+            description: 'Com base nas suas respostas, identificamos que seu estilo predominante é o {resultStyle}. Agora você pode criar looks incríveis que refletem sua personalidade!',
+
+            // Layout e estilo
+            containerLayout: 'split',
+            mobileLayout: 'stack',
             backgroundColor: '#F9F5F1',
-          },
-        },
-        {
-          id: 'result-title',
-          type: 'heading-inline',
-          properties: {
-            content: 'Parabéns! Seu estilo predominante é:',
-            level: 'h1',
             textAlign: 'center',
-            color: '#432818',
-          },
-        },
-        {
-          id: 'quiz-results',
-          type: 'quiz-results',
-          properties: {
-            title: 'Análise Completa',
-            showScores: true,
-            showPercentages: true,
-            showRanking: false,
-            primaryColor: '#B89B7A',
-            secondaryColor: '#D4C2A8',
-            layout: 'vertical',
-            showImages: true,
-            animatedEntry: true,
-          },
-        },
-        {
-          id: 'style-results',
-          type: 'style-results',
-          properties: {
-            title: 'Características do Seu Estilo',
-            showAllStyles: false,
-            showGuideImage: true,
-            guideImageUrl:
-              'https://res.cloudinary.com/dqljyf76t/image/upload/v1745071344/GUIA_NATURAL_fzp6fc.webp',
-            primaryStyle: 'Natural',
-            layout: 'card',
-            showDescription: true,
-            showPercentage: true,
-          },
-        },
-        {
-          id: 'result-image',
-          type: 'image-display-inline',
-          properties: {
-            src: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1745071344/GUIA_NATURAL_fzp6fc.webp',
-            alt: 'Guia do Estilo Natural',
-            width: '100%',
-            height: 'auto',
-            borderRadius: 12,
-            shadow: true,
-            alignment: 'center',
-          },
-        },
-        {
-          id: 'cta-offer',
-          type: 'button-inline',
-          properties: {
-            text: 'Quero Meu Guia Personalizado',
-            style: 'primary',
-            size: 'large',
-            backgroundColor: '#4CAF50',
-            textColor: '#FFFFFF',
+            padding: 'xl',
+            borderRadius: 'lg',
+
+            // Botão de ação
+            showCTA: true,
+            ctaText: 'Quero Meu Guia Personalizado',
+            ctaStyle: 'primary',
+            ctaColor: '#4CAF50',
           },
         },
       ],

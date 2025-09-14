@@ -69,6 +69,7 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, ComponentType<any>> = {
 
     // ✅ STEP 20 - RESULTADO
     'result-header-inline': lazy(() => import('@/components/editor/blocks/ResultHeaderInlineBlock')),
+    'modular-result-header': lazy(() => import('@/components/editor/modules/ModularResultHeader')),
     'quiz-result-header': QuizIntroHeaderBlock,
     'quiz-result-style': lazy(() => import('@/components/editor/blocks/StyleCardInlineBlock')),
     'secondary-styles': lazy(() => import('@/components/editor/blocks/SecondaryStylesInlineBlock')),
