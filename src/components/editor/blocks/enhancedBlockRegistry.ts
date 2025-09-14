@@ -5,13 +5,11 @@
  * Será removido em uma versão futura.
  */
 
-// 🔁 Arquivo somente compatibilidade: reexporta o registro canônico
-export {
-    ENHANCED_BLOCK_REGISTRY,
-    getEnhancedBlockComponent,
-    AVAILABLE_COMPONENTS,
-    getRegistryStats,
-    normalizeBlockProperties,
-    getRegistryStats as getDeprecatedRegistryStats
-} from './EnhancedBlockRegistry';
-export { default } from './EnhancedBlockRegistry';
+// 🔁 Evitar ciclo circular: não reexportar, apenas definir stub
+export const ENHANCED_BLOCK_REGISTRY = {};
+export const getEnhancedBlockComponent = (type: string) => null;
+export const AVAILABLE_COMPONENTS = [];
+export const getRegistryStats = () => ({ total: 0, loaded: 0 });
+export const normalizeBlockProperties = (block: any) => block;
+export const getDeprecatedRegistryStats = getRegistryStats;
+export default ENHANCED_BLOCK_REGISTRY;

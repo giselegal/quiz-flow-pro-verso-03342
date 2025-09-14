@@ -4,7 +4,7 @@ import React from 'react';
 import {
   ENHANCED_BLOCK_REGISTRY as CANONICAL_REGISTRY,
   getEnhancedBlockComponent,
-} from '../components/editor/blocks/enhancedBlockRegistry';
+} from '../components/editor/blocks/EnhancedBlockRegistry';
 import type { BlockDefinition } from '../types/editor';
 
 export const ENHANCED_BLOCK_REGISTRY = CANONICAL_REGISTRY as Record<
