@@ -446,9 +446,9 @@ const FUNNEL_TEMPLATES: Record<
                     : stepNumber === 20
                       ? 'result'
                       : 'sales-page',
-        description: stepNumber === 1 
-          ? 'Página de captura de leads' 
-          : stepNumber <= 11 
+        description: stepNumber === 1
+          ? 'Página de captura de leads'
+          : stepNumber <= 11
             ? `Pergunta do quiz: ${questionText}`
             : stepNumber === 12 || stepNumber === 19
               ? 'Página de transição'
