@@ -465,7 +465,7 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
       ref={setNodeRef}
       onClick={handleCanvasClick}
       className={cn(
-        'min-h-[300px] transition-all duration-200 p-4 overflow-visible',
+        'min-h-[calc(100vh-200px)] max-h-[calc(100vh-200px)] transition-all duration-200 p-4 overflow-y-auto overflow-x-hidden',
         // Evitar qualquer bloqueio de eventos no canvas
         'z-0',
         isOver && !isPreviewing && 'bg-brand/5 ring-2 ring-brand/20 ring-dashed',
@@ -473,6 +473,7 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
         // ✅ CLASSE CSS DE FORÇA BRUTA
         'dnd-droppable-zone',
         'customizable-width',
+        'mx-auto w-full max-w-4xl',
         className
       )}
       data-over={isOver}
