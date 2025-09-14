@@ -141,13 +141,13 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
     const updateBlockProperty = (blockId: string, path: string, value: any) => {
         setCurrentStepData((prev: any) => {
             if (!prev?.blocks) return prev;
-            
+
             const updatedBlocks = prev.blocks.map((block: any) => {
                 if (block.id !== blockId) return block;
-                
+
                 const newBlock = { ...block };
                 const pathParts = path.split('.');
-                
+
                 if (pathParts[0] === 'content') {
                     newBlock.content = { ...newBlock.content };
                     newBlock.content[pathParts[1]] = value;
@@ -157,20 +157,20 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                 } else {
                     newBlock[pathParts[0]] = value;
                 }
-                
+
                 return newBlock;
             });
-            
+
             return { ...prev, blocks: updatedBlocks };
         });
-        
+
         // Atualizar dados do bloco selecionado se for o mesmo
         if (selectedBlockData?.id === blockId) {
             setSelectedBlockData((prev: any) => {
                 if (!prev) return prev;
                 const newData = { ...prev };
                 const pathParts = path.split('.');
-                
+
                 if (pathParts[0] === 'content') {
                     newData.content = { ...newData.content };
                     newData.content[pathParts[1]] = value;
@@ -180,11 +180,11 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                 } else {
                     newData[pathParts[0]] = value;
                 }
-                
+
                 return newData;
             });
         }
-        
+
         console.log('🔄 Propriedade atualizada:', blockId, path, value);
         setHasUnsavedChanges(true);
     };
@@ -206,7 +206,7 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
     const renderComponent = (component: any, index: number) => {
         const { type, content, properties } = component;
         const isSelected = selectedBlockId === component.id;
-        
+
         const handleBlockClick = () => {
             setSelectedBlockId(component.id);
             setSelectedBlockData(component);
@@ -214,13 +214,12 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
         };
 
         const blockWrapper = (children: React.ReactNode) => (
-            <div 
-                key={index} 
-                className={`cursor-pointer transition-all duration-200 ${
-                    isSelected 
-                        ? 'ring-2 ring-blue-500 ring-offset-2 shadow-lg' 
+            <div
+                key={index}
+                className={`cursor-pointer transition-all duration-200 ${isSelected
+                        ? 'ring-2 ring-blue-500 ring-offset-2 shadow-lg'
                         : 'hover:shadow-md hover:ring-1 hover:ring-gray-300'
-                }`}
+                    }`}
                 onClick={handleBlockClick}
             >
                 {children}
@@ -498,11 +497,10 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                             handleSave();
                             setHasUnsavedChanges(false);
                         }}
-                        className={`px-4 py-2 rounded-md transition-colors flex items-center space-x-2 ${
-                            hasUnsavedChanges 
-                                ? 'bg-yellow-600 text-white hover:bg-yellow-700' 
+                        className={`px-4 py-2 rounded-md transition-colors flex items-center space-x-2 ${hasUnsavedChanges
+                                ? 'bg-yellow-600 text-white hover:bg-yellow-700'
                                 : 'bg-blue-600 text-white hover:bg-blue-700'
-                        }`}
+                            }`}
                     >
                         <span>💾</span>
                         <span>{hasUnsavedChanges ? 'Salvar Alterações' : 'Salvar'}</span>
@@ -540,7 +538,7 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">🧩 Componentes</h3>
 
                     <div className="space-y-3">
-                        <div 
+                        <div
                             className="bg-white rounded-lg p-3 border border-gray-200 cursor-grab hover:bg-gray-50 hover:shadow-md transition-all"
                             draggable
                             onDragStart={(e) => {
@@ -561,7 +559,7 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                             </div>
                         </div>
 
-                        <div 
+                        <div
                             className="bg-white rounded-lg p-3 border border-gray-200 cursor-grab hover:bg-gray-50 hover:shadow-md transition-all"
                             draggable
                             onDragStart={(e) => {
@@ -582,7 +580,7 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                             </div>
                         </div>
 
-                        <div 
+                        <div
                             className="bg-white rounded-lg p-3 border border-gray-200 cursor-grab hover:bg-gray-50 hover:shadow-md transition-all"
                             draggable
                             onDragStart={(e) => {
@@ -603,7 +601,7 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                             </div>
                         </div>
 
-                        <div 
+                        <div
                             className="bg-white rounded-lg p-3 border border-gray-200 cursor-grab hover:bg-gray-50 hover:shadow-md transition-all"
                             draggable
                             onDragStart={(e) => {
@@ -611,7 +609,7 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                                     type: 'image',
                                     id: `new-image-${Date.now()}`,
                                     content: {},
-                                    properties: { 
+                                    properties: {
                                         src: 'https://via.placeholder.com/400x300',
                                         alt: 'Nova imagem',
                                         maxWidth: 'md'
@@ -628,7 +626,7 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                             </div>
                         </div>
 
-                        <div 
+                        <div
                             className="bg-white rounded-lg p-3 border border-gray-200 cursor-grab hover:bg-gray-50 hover:shadow-md transition-all"
                             draggable
                             onDragStart={(e) => {
@@ -661,7 +659,7 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
 
                 {/* Coluna 3: Editor Visual Principal */}
                 <div className="flex-1 p-6 overflow-y-auto">
-                    <div 
+                    <div
                         className="bg-white rounded-lg border border-gray-200 p-6 min-h-full"
                         onDragOver={(e) => {
                             e.preventDefault();
@@ -673,22 +671,22 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                         onDrop={(e) => {
                             e.preventDefault();
                             e.currentTarget.classList.remove('ring-2', 'ring-blue-300', 'bg-blue-50');
-                            
+
                             try {
                                 const componentData = JSON.parse(e.dataTransfer.getData('text/plain'));
                                 console.log('🎯 Componente solto:', componentData);
-                                
+
                                 // Adicionar o novo componente à lista de blocos
                                 const newBlock = {
                                     ...componentData,
                                     order: currentStepData?.blocks?.length || 0
                                 };
-                                
+
                                 setCurrentStepData((prev: any) => ({
                                     ...prev,
                                     blocks: [...(prev?.blocks || []), newBlock]
                                 }));
-                                
+
                                 setHasUnsavedChanges(true);
                                 console.log('✅ Novo componente adicionado:', newBlock);
                             } catch (error) {
@@ -727,7 +725,7 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                                     </div>
                                 </div>
                             )}
-                            
+
                             {/* Botões de Navegação abaixo dos blocos */}
                             <div className="mt-8 pt-6 border-t border-gray-200">
                                 <div className="flex items-center justify-between">
@@ -865,7 +863,7 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                             )}
 
                             <div className="pt-4 border-t border-gray-200">
-                                <button 
+                                <button
                                     className="w-full bg-red-600 text-white py-2 px-3 rounded-md hover:bg-red-700 transition-colors text-sm"
                                     onClick={() => {
                                         setSelectedBlockId(null);
