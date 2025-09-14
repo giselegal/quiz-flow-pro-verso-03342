@@ -2,18 +2,16 @@ import React, { useState } from 'react';
 import { Editor, Frame, Element, useEditor } from '@craftjs/core';
 import { Layers } from '@craftjs/layers';
 import { cn } from '@/lib/utils';
-import {
-    HeaderSection,
-    UserInfoSection,
-    ProgressSection,
-    MainImageSection
-} from './modules';
+import { HeaderSection } from './HeaderSection';
+import { UserInfoSection } from './UserInfoSection';
+import { ProgressSection } from './ProgressSection';
+import { MainImageSection } from './MainImageSection';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
 // Painel de propriedades
 const SettingsPanel: React.FC = () => {
-    const { actions, query, enabled } = useEditor((state) => ({
+    const { enabled } = useEditor((state) => ({
         enabled: state.options.enabled
     }));
 
@@ -39,7 +37,7 @@ const SettingsPanel: React.FC = () => {
 
 // Toolbar superior
 const Toolbar: React.FC = () => {
-    const { enabled, actions } = useEditor((state) => ({
+    const { enabled, actions, query } = useEditor((state) => ({
         enabled: state.options.enabled
     }));
 
@@ -91,34 +89,7 @@ const Toolbar: React.FC = () => {
 
 // Painel lateral com componentes disponíveis
 const ComponentPanel: React.FC = () => {
-    const { connectors, query } = useEditor();
-
-    const components = [
-        {
-            name: 'Header',
-            icon: '🏷️',
-            component: HeaderSection,
-            description: 'Cabeçalho com título e logo'
-        },
-        {
-            name: 'User Info',
-            icon: '👤',
-            component: UserInfoSection,
-            description: 'Informações do usuário e badge'
-        },
-        {
-            name: 'Progress',
-            icon: '📊',
-            component: ProgressSection,
-            description: 'Barra de progresso animada'
-        },
-        {
-            name: 'Image',
-            icon: '🖼️',
-            component: MainImageSection,
-            description: 'Imagem com efeitos visuais'
-        }
-    ];
+    const { connectors } = useEditor();
 
     return (
         <div className="w-64 bg-gray-50 border-r border-gray-200 p-4 overflow-y-auto">
@@ -128,25 +99,77 @@ const ComponentPanel: React.FC = () => {
                 </h3>
 
                 <div className="space-y-2">
-                    {components.map((comp, index) => (
-                        <div
-                            key={index}
-                            className={cn(
-                                'p-3 bg-white rounded-lg border border-gray-200 cursor-grab',
-                                'hover:border-[#B89B7A] hover:bg-[#B89B7A]/5 transition-colors',
-                                'active:cursor-grabbing'
-                            )}
-                            ref={(ref) =>
-                                connectors.create(ref!, React.createElement(comp.component))
-                            }
-                        >
-                            <div className="flex items-center space-x-2 mb-1">
-                                <span className="text-lg">{comp.icon}</span>
-                                <span className="font-medium text-sm">{comp.name}</span>
-                            </div>
-                            <p className="text-xs text-gray-600">{comp.description}</p>
+                    {/* Header Section */}
+                    <div
+                        className={cn(
+                            'p-3 bg-white rounded-lg border border-gray-200 cursor-grab',
+                            'hover:border-[#B89B7A] hover:bg-[#B89B7A]/5 transition-colors',
+                            'active:cursor-grabbing'
+                        )}
+                        ref={(ref) =>
+                            connectors.create(ref!, React.createElement(HeaderSection))
+                        }
+                    >
+                        <div className="flex items-center space-x-2 mb-1">
+                            <span className="text-lg">🏷️</span>
+                            <span className="font-medium text-sm">Header</span>
                         </div>
-                    ))}
+                        <p className="text-xs text-gray-600">Cabeçalho com título e logo</p>
+                    </div>
+
+                    {/* User Info Section */}
+                    <div
+                        className={cn(
+                            'p-3 bg-white rounded-lg border border-gray-200 cursor-grab',
+                            'hover:border-[#B89B7A] hover:bg-[#B89B7A]/5 transition-colors',
+                            'active:cursor-grabbing'
+                        )}
+                        ref={(ref) =>
+                            connectors.create(ref!, React.createElement(UserInfoSection))
+                        }
+                    >
+                        <div className="flex items-center space-x-2 mb-1">
+                            <span className="text-lg">👤</span>
+                            <span className="font-medium text-sm">User Info</span>
+                        </div>
+                        <p className="text-xs text-gray-600">Informações do usuário e badge</p>
+                    </div>
+
+                    {/* Progress Section */}
+                    <div
+                        className={cn(
+                            'p-3 bg-white rounded-lg border border-gray-200 cursor-grab',
+                            'hover:border-[#B89B7A] hover:bg-[#B89B7A]/5 transition-colors',
+                            'active:cursor-grabbing'
+                        )}
+                        ref={(ref) =>
+                            connectors.create(ref!, React.createElement(ProgressSection))
+                        }
+                    >
+                        <div className="flex items-center space-x-2 mb-1">
+                            <span className="text-lg">📊</span>
+                            <span className="font-medium text-sm">Progress</span>
+                        </div>
+                        <p className="text-xs text-gray-600">Barra de progresso animada</p>
+                    </div>
+
+                    {/* Main Image Section */}
+                    <div
+                        className={cn(
+                            'p-3 bg-white rounded-lg border border-gray-200 cursor-grab',
+                            'hover:border-[#B89B7A] hover:bg-[#B89B7A]/5 transition-colors',
+                            'active:cursor-grabbing'
+                        )}
+                        ref={(ref) =>
+                            connectors.create(ref!, React.createElement(MainImageSection))
+                        }
+                    >
+                        <div className="flex items-center space-x-2 mb-1">
+                            <span className="text-lg">🖼️</span>
+                            <span className="font-medium text-sm">Image</span>
+                        </div>
+                        <p className="text-xs text-gray-600">Imagem com efeitos visuais</p>
+                    </div>
                 </div>
 
                 <div className="mt-6 pt-4 border-t border-gray-200">
@@ -244,13 +267,6 @@ export const ModularResultEditor: React.FC = () => {
                     UserInfoSection,
                     ProgressSection,
                     MainImageSection,
-                }}
-                onRender={({ render }) => {
-                    // Renderizar o painel de propriedades
-                    const settingsPanel = document.getElementById('settings-panel');
-                    if (settingsPanel) {
-                        render(settingsPanel);
-                    }
                 }}
             >
                 {/* Toolbar superior */}
