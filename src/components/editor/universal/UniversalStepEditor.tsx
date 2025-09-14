@@ -35,11 +35,11 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
             try {
                 setIsLoading(true);
                 console.log('🔍 Carregando dados para:', stepId, 'step number:', stepNumber);
-                
+
                 // Buscar dados do step no template
                 const stepKey = `step${stepNumber}`;
                 const stepData = QUIZ_STYLE_21_STEPS_TEMPLATE[stepKey];
-                
+
                 if (stepData && Array.isArray(stepData)) {
                     const stepInfo = {
                         name: `Step ${stepNumber}`,
@@ -89,7 +89,7 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                             }
                         ]
                     };
-                    
+
                     setCurrentStepData(fallbackData);
                     console.warn('⚠️ Step não encontrado, usando fallback:', stepKey, fallbackData);
                 }
@@ -149,17 +149,17 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                         <div className="space-y-4">
                             {properties?.logoUrl && (
                                 <div className="text-center">
-                                    <img 
-                                        src={properties.logoUrl} 
-                                        alt={properties.logoAlt || 'Logo'} 
+                                    <img
+                                        src={properties.logoUrl}
+                                        alt={properties.logoAlt || 'Logo'}
                                         className="h-12 mx-auto"
                                     />
                                 </div>
                             )}
                             {properties?.enableProgressBar && (
                                 <div className="w-full bg-gray-200 rounded-full h-2">
-                                    <div 
-                                        className="bg-blue-600 h-2 rounded-full" 
+                                    <div
+                                        className="bg-blue-600 h-2 rounded-full"
                                         style={{ width: `${properties.progressValue || 0}%` }}
                                     ></div>
                                 </div>
@@ -175,7 +175,7 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                             <h3 className="text-lg font-semibold text-gray-900">📝 Texto</h3>
                             <span className="text-xs text-gray-500">{type}</span>
                         </div>
-                        <div 
+                        <div
                             className={`${properties?.fontSize || 'text-base'} ${properties?.fontWeight || 'font-normal'} ${properties?.textAlign || 'text-left'}`}
                             style={{ color: properties?.color || '#000000' }}
                             dangerouslySetInnerHTML={{ __html: content?.text || 'Texto não definido' }}
@@ -192,11 +192,11 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                         </div>
                         {properties?.src ? (
                             <div className="text-center">
-                                <img 
-                                    src={properties.src} 
-                                    alt={properties.alt || 'Imagem'} 
+                                <img
+                                    src={properties.src}
+                                    alt={properties.alt || 'Imagem'}
                                     className={`mx-auto rounded-lg ${properties?.maxWidth === 'lg' ? 'max-w-lg' : 'max-w-md'}`}
-                                    style={{ 
+                                    style={{
                                         width: properties?.width || 'auto',
                                         height: properties?.height || 'auto'
                                     }}
@@ -221,13 +221,13 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                             <span className="text-xs text-gray-500">{type}</span>
                         </div>
                         <div className="flex justify-center">
-                            <div 
+                            <div
                                 className="rounded"
                                 style={{
                                     width: properties?.width || '100px',
                                     height: `${properties?.height || 4}px`,
-                                    background: properties?.gradientColors 
-                                        ? `linear-gradient(90deg, ${properties.gradientColors.join(', ')})` 
+                                    background: properties?.gradientColors
+                                        ? `linear-gradient(90deg, ${properties.gradientColors.join(', ')})`
                                         : (properties?.color || '#B89B7A'),
                                     borderRadius: `${properties?.borderRadius || 3}px`,
                                     boxShadow: properties?.showShadow ? '0 2px 4px rgba(0,0,0,0.1)' : 'none'
@@ -354,8 +354,8 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                                 <span className="text-sm font-medium text-gray-900">{Math.round((stepNumber / 21) * 100)}%</span>
                             </div>
                             <div className="w-full bg-gray-200 rounded-full h-2">
-                                <div 
-                                    className="bg-blue-600 h-2 rounded-full transition-all duration-300" 
+                                <div
+                                    className="bg-blue-600 h-2 rounded-full transition-all duration-300"
                                     style={{ width: `${(stepNumber / 21) * 100}%` }}
                                 ></div>
                             </div>
@@ -394,8 +394,8 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                                 <div className="space-y-2">
                                     {(properties?.options || ['Opção A', 'Opção B', 'Opção C']).map((option: string, optIndex: number) => (
                                         <label key={optIndex} className="flex items-center space-x-3">
-                                            <input 
-                                                type="radio" 
+                                            <input
+                                                type="radio"
                                                 name={`question-${index}`}
                                                 className="w-4 h-4 text-blue-600"
                                             />
@@ -451,7 +451,7 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                         {currentStepData?.description || `Conteúdo do step ${stepNumber}`}
                     </p>
                 </div>
-                
+
                 <div className="flex items-center space-x-3">
                     <button
                         onClick={handleSave}
@@ -467,17 +467,16 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                 {/* Coluna 1: Navegação / Estrutura */}
                 <div className="w-64 bg-white border-r border-gray-200 p-4">
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">🗂️ Estrutura</h3>
-                    
+
                     <div className="space-y-2">
                         {Array.from({ length: 21 }, (_, i) => i + 1).map((num) => (
                             <button
                                 key={num}
                                 onClick={() => onStepChange?.(`step-${num}`)}
-                                className={`w-full text-left px-3 py-2 rounded-md transition-colors ${
-                                    num === stepNumber 
-                                        ? 'bg-blue-100 text-blue-800 font-medium' 
+                                className={`w-full text-left px-3 py-2 rounded-md transition-colors ${num === stepNumber
+                                        ? 'bg-blue-100 text-blue-800 font-medium'
                                         : 'text-gray-600 hover:bg-gray-100'
-                                }`}
+                                    }`}
                             >
                                 Step {num}
                             </button>
@@ -488,7 +487,7 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                 {/* Coluna 2: Componentes Disponíveis */}
                 <div className="w-64 bg-gray-50 border-r border-gray-200 p-4">
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">🧩 Componentes</h3>
-                    
+
                     <div className="space-y-3">
                         <div className="bg-white rounded-lg p-3 border border-gray-200 cursor-pointer hover:bg-gray-50">
                             <div className="flex items-center space-x-3">
@@ -583,7 +582,7 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                 {/* Coluna 4: Propriedades */}
                 <div className="w-80 bg-white border-l border-gray-200 p-4 overflow-y-auto">
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">⚙️ Propriedades</h3>
-                    
+
                     <div className="space-y-6">
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -613,7 +612,7 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                                 Tipo do Step
                             </label>
-                            <select 
+                            <select
                                 defaultValue="quiz-question"
                                 className="w-full border border-gray-300 rounded-md px-3 py-2"
                                 disabled={readOnly}
@@ -664,17 +663,17 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                         <span>←</span>
                         <span>Step {stepNumber - 1}</span>
                     </button>
-                    
+
                     <div className="text-center">
                         <span className="text-sm text-gray-500">Step {stepNumber} de 21</span>
                         <div className="w-32 bg-gray-200 rounded-full h-1 mt-1">
-                            <div 
-                                className="bg-blue-600 h-1 rounded-full transition-all duration-300" 
+                            <div
+                                className="bg-blue-600 h-1 rounded-full transition-all duration-300"
                                 style={{ width: `${(stepNumber / 21) * 100}%` }}
                             ></div>
                         </div>
                     </div>
-                    
+
                     <button
                         onClick={handleNext}
                         disabled={stepNumber >= 21}
