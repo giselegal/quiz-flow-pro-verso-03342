@@ -1,5 +1,22 @@
-// @ts-nocheck
-export const getDefaultContentForType = (type: string) => {
+/**
+ * TODO: TypeScript Migration - Deadline: Janeiro 2025
+ * - [ ] Criar union type para editor block types (EditorBlockType = 'header' | 'text' | ...)
+ * - [ ] Implementar interfaces específicas para cada tipo (HeaderConfig, TextConfig, etc)
+ * - [ ] Adicionar factory pattern com validação de propriedades obrigatórias
+ * - [ ] Separar configurações de layout das configurações de conteúdo
+ * - [ ] Implementar theme system com variações de cores e estilos
+ */
+
+import { appLogger } from './logger';
+
+// Tipos mínimos para migração
+type EditorBlockType = string; // TODO: criar enum específico
+type EditorContent = Record<string, any>; // TODO: criar interfaces específicas
+type ContentFactory = (type: EditorBlockType) => EditorContent;
+
+export const getDefaultContentForType: ContentFactory = (type: EditorBlockType): EditorContent => {
+  appLogger.debug('Getting default content for editor block', { type });
+
   switch (type) {
     case 'header':
       return {

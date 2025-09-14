@@ -1,16 +1,30 @@
-// @ts-nocheck
+/**
+ * TODO: TypeScript Migration - Deadline: Janeiro 2025
+ * - [ ] Criar interfaces para parâmetros de otimização (OptimizationParams, ResizeParams)
+ * - [ ] Implementar enum para provedores de imagens (Cloudinary, AWS, etc.)
+ * - [ ] Tipar adequadamente retornos e validar URLs
+ * - [ ] Adicionar tratamento robusto de erros com tipos específicos
+ * - [ ] Separar transformações por provider em classes especializadas
+ */
+
+import { appLogger } from './logger';
+
+// Tipos mínimos para migração
+type OptimizedImageUrl = string;
+type ImageUrl = string;
+type QualityLevel = number; // 1-100
+
 /**
  * Image optimization utility functions
  */
 
 /**
  * Optimize image quality
- * @param url The image URL
- * @param quality Quality level (1-100)
- * @returns Optimized image URL
  */
-export function optimizeImageQuality(url: string, quality: number = 85): string {
+export function optimizeImageQuality(url: ImageUrl, quality: QualityLevel = 85): OptimizedImageUrl {
   if (!url) return url;
+
+  appLogger.debug('Optimizing image quality', { url, quality });
 
   try {
     // Handle Cloudinary URLs
@@ -25,19 +39,15 @@ export function optimizeImageQuality(url: string, quality: number = 85): string 
 
     return url;
   } catch (error) {
-    console.error('Error optimizing image quality:', error);
+    appLogger.error('Error optimizing image quality', { url, quality, error });
     return url;
   }
 }
 
 /**
  * Resize image to specific dimensions
- * @param url The image URL
- * @param width Desired width
- * @param height Desired height
- * @returns Resized image URL
  */
-export function resizeImage(url: string, width: number, height?: number): string {
+export function resizeImage(url: ImageUrl, width: number, height?: number): OptimizedImageUrl {
   if (!url) return url;
 
   try {

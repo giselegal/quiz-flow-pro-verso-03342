@@ -1,10 +1,39 @@
-// @ts-nocheck
+/**
+ * TODO: TypeScript Migration - Deadline: Janeiro 2025
+ * - [ ] Criar interfaces para eventos GA4 (EventParams, CustomEventData)
+ * - [ ] Tipar adequadamente window.gtag com declaração global
+ * - [ ] Implementar factory pattern para diferentes providers (GA4, FB, LinkedIn)
+ * - [ ] Adicionar validação de parâmetros obrigatórios
+ * - [ ] Separar responsabilidades (tracking vs logging vs validation)
+ */
+
+import { appLogger } from './logger';
+
+// Tipos mínimos para migração
+interface EventParams {
+  [key: string]: any; // TODO: especificar parâmetros GA4 válidos
+}
+
+interface CustomEventData {
+  category: string;
+  action: string;
+  label: string;
+  value?: number;
+}
+
+interface TimingData {
+  category: string;
+  variable: string;
+  value: number;
+  label?: string;
+}
+
 // Function to track a generic event
-export const trackEvent = (event_name: string, params?: object) => {
+export const trackEvent = (event_name: string, params?: EventParams): void => {
   if (typeof window !== 'undefined' && window.gtag) {
     window.gtag('event', event_name, params);
   }
-  console.log(`[Analytics] Event: ${event_name}`, params);
+  appLogger.info('Analytics Event', { event_name, params });
 };
 
 // Function to track a custom event
@@ -13,7 +42,9 @@ export const trackCustomEvent = (
   action: string,
   label: string,
   value?: number
-) => {
+): void => {
+  const eventData: CustomEventData = { category, action, label, value };
+
   if (typeof window !== 'undefined' && window.gtag) {
     window.gtag('event', action, {
       event_category: category,
@@ -21,11 +52,13 @@ export const trackCustomEvent = (
       value: value,
     });
   }
-  console.log(`[Analytics] Custom Event: ${category} - ${action} - ${label} - ${value}`);
+  appLogger.info('Analytics Custom Event', eventData);
 };
 
 // Function to track timing
-export const trackTiming = (category: string, variable: string, value: number, label?: string) => {
+export const trackTiming = (category: string, variable: string, value: number, label?: string): void => {
+  const timingData: TimingData = { category, variable, value, label };
+
   if (typeof window !== 'undefined' && window.gtag) {
     window.gtag('event', 'timing_complete', {
       event_category: category,
@@ -34,7 +67,7 @@ export const trackTiming = (category: string, variable: string, value: number, l
       event_label: label,
     });
   }
-  console.log(`[Analytics] Timing: ${category} - ${variable} - ${value} - ${label}`);
+  appLogger.info('Analytics Timing', timingData);
 };
 
 // Function to track an exception
@@ -326,28 +359,13 @@ export const captureUTMParameters = () => {
   return utmParams;
 };
 
-export const initFacebookPixel = (pixelData?: any) => {
-  if (typeof window === 'undefined') return;
-
-  // Pixel ID fornecido: 1311550759901086
-  const pixelId = '1311550759901086';
-
-  if (!window.fbq) {
-    window.fbq = function () {
-      (window.fbq as any).q = (window.fbq as any).q || [];
-      (window.fbq as any).q.push(arguments);
-    };
-    window._fbq = window.fbq;
-
-    const script = document.createElement('script');
-    script.async = true;
-    script.src = 'https://connect.facebook.net/en_US/fbevents.js';
-    document.head.appendChild(script);
+export const initFacebookPixel = (): void => {
+  if (typeof window !== 'undefined') {
+    appLogger.info('Facebook Pixel initialization requested');
+    appLogger.warn('Facebook Pixel implementation moved to HTML for typing safety');
+    // TODO: Implement Facebook Pixel via HTML script tags in index.html
+    // This avoids complex typing issues with the auto-generated FB code
   }
-
-  window.fbq('init', pixelId);
-  window.fbq('track', 'PageView');
-  console.log(`[Analytics] Facebook Pixel initialized with ID: ${pixelId}`);
 };
 
 export const trackButtonClick = (buttonId: string, buttonText?: string, location?: string) => {

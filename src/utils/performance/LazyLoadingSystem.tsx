@@ -108,8 +108,7 @@ class LazyLoadingManager {
                 return import('@/components/editor/ReusableComponentsPanel');
             case '@/components/editor/CombinedComponentsPanel':
                 return import('@/components/editor/CombinedComponentsPanel');
-            case '@/components/editor/PageEditorCanvas':
-                return import('@/components/editor/PageEditorCanvas');
+            // PageEditorCanvas removido - componente órfão que só retornava null
             case '@/components/editor/interactive/InteractiveQuizCanvas':
                 return import('@/components/editor/interactive/InteractiveQuizCanvas');
             case '@/legacy/editor/EditorPro':
@@ -183,7 +182,7 @@ class LazyLoadingManager {
     async preloadCriticalComponents(): Promise<void> {
         const criticalComponents = [
             '@/components/editor/EnhancedComponentsSidebar',
-            '@/components/editor/PageEditorCanvas',
+            // '@/components/editor/PageEditorCanvas', // Removido - componente órfão
             '@/components/editor/UniversalBlockRenderer'
         ];
 
@@ -203,7 +202,7 @@ class LazyLoadingManager {
         const routeComponents: Record<string, string[]> = {
             '/editor': [
                 '@/components/editor/EnhancedComponentsSidebar',
-                '@/components/editor/PageEditorCanvas',
+                // '@/components/editor/PageEditorCanvas', // Removido - componente órfão
                 '@/components/editor/CombinedComponentsPanel'
             ],
             '/editor-interactive': [
@@ -352,10 +351,7 @@ export const EditorLazyComponents = {
         { preload: true, criticalPath: true }
     ),
 
-    PageEditorCanvas: lazyLoadingManager.createLazyComponent(
-        '@/components/editor/PageEditorCanvas',
-        { preload: true, criticalPath: true }
-    ),
+    // PageEditorCanvas removido - componente órfão que só retornava null
 
     // Componentes secundários - lazy load sob demanda
     ReusableComponentsPanel: lazyLoadingManager.createLazyComponent(

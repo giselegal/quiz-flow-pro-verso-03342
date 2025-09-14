@@ -1,6 +1,20 @@
-// @ts-nocheck
+/**
+ * TODO: TypeScript Migration - Deadline: Janeiro 2025
+ * - [ ] Criar interfaces específicas para cada tipo de default data
+ * - [ ] Tipar adequadamente retornos de getDefaultData e getDefaultStyle
+ * - [ ] Substituir switch statements por strategy pattern com tipos seguros
+ * - [ ] Adicionar validação de tipos para componentes
+ * - [ ] Separar dados default de estilos default (responsabilidades distintas)
+ */
+
 import { SimpleComponent, QuizOption, BonusItem, FaqItem } from '@/interfaces/quiz';
 import PlaceholderUtils from './placeholderUtils';
+import { appLogger } from './logger';
+
+// Tipos mínimos para migração gradual
+type ComponentType = SimpleComponent['type'];
+type ComponentData = SimpleComponent['data'];
+type ComponentStyle = SimpleComponent['style'];
 
 // Dados padrão para componentes
 export const defaultImageData = {
@@ -20,7 +34,9 @@ export const defaultTestimonialData = {
   role: 'Cliente satisfeito',
 };
 
-export const getDefaultData = (type: SimpleComponent['type']): SimpleComponent['data'] => {
+export const getDefaultData = (type: ComponentType): ComponentData => {
+  appLogger.debug('Getting default data for component type', { type });
+
   switch (type) {
     case 'logo':
       return {
@@ -141,7 +157,9 @@ export const getDefaultData = (type: SimpleComponent['type']): SimpleComponent['
   }
 };
 
-export const getDefaultStyle = (type: SimpleComponent['type']): SimpleComponent['style'] => {
+export const getDefaultStyle = (type: ComponentType): ComponentStyle => {
+  appLogger.debug('Getting default style for component type', { type });
+
   switch (type) {
     case 'title':
       return {

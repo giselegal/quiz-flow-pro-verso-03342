@@ -1,4 +1,14 @@
-// @ts-nocheck
+/**
+ * TODO: TypeScript Migration - Deadline: Janeiro 2025
+ * - [ ] Expandir interface PreloadResource com metadata adicional
+ * - [ ] Criar enum para resource types e priorities
+ * - [ ] Implementar error handling e retry logic para preload failures
+ * - [ ] Adicionar métodos para cleanup de preloaded resources
+ * - [ ] Substituir console.log temporário por implementação real + logger
+ */
+
+import { appLogger } from './logger';
+
 // Simplified preload resources utility
 
 export interface PreloadResource {
@@ -8,6 +18,8 @@ export interface PreloadResource {
 }
 
 export const preloadResources = (resources: PreloadResource[]): void => {
+  appLogger.debug('Preloading resources', { count: resources.length });
+
   resources.forEach(resource => {
     const link = document.createElement('link');
     link.rel = 'preload';
@@ -51,11 +63,13 @@ export const preloadImage = (url: string, priority?: 'high' | 'low'): void => {
 };
 
 export const initializeResourcePreloading = (): void => {
-  console.log('Would initialize resource preloading');
+  appLogger.info('Initializing resource preloading');
+  // TODO: Implementar preloading baseado em route predictions
 };
 
 export const setupRouteChangePreloading = (): void => {
-  console.log('Would setup route change preloading');
+  appLogger.info('Setting up route change preloading');
+  // TODO: Implementar preloading inteligente baseado em histórico de navegação
 };
 
 export default preloadResources;

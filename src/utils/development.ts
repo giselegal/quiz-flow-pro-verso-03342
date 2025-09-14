@@ -1,12 +1,41 @@
-// @ts-nocheck
+/**
+ * TODO: TypeScript Migration - Deadline: Janeiro 2025
+ * - [ ] Tipa    appLogger.info('Console warnings cleanup active');
+  }
+};
+
+// Enhanced drag and drop debugging
+export const dragDropDebugger = {
+  logDragStart: (data: DragEventData) => {adamente parâmetros dos debuggers (DragData, PerformanceData)
+ * - [ ] Criar interfaces para dados de drag & drop
+ * - [ ] Substituir console.* por logger com níveis apropriados
+ * - [ ] Adicionar types para performance monitoring
+ * - [ ] Separar responsabilidades (console cleanup vs drag debug vs performance)
+ */
+
+import { appLogger } from './logger';
+
+// Tipos mínimos para migração
+interface DragEventData {
+  id?: string;
+  type?: string;
+  blockType?: string;
+  activeId?: string;
+  overId?: string;
+  activeType?: string;
+  overType?: string;
+  success?: boolean;
+  [key: string]: any; // TODO: especificar propriedades exatas
+}
+
 // Console warnings cleanup and development utilities
-export const cleanupConsoleWarnings = () => {
+export const cleanupConsoleWarnings = (): void => {
   // Suppress known non-critical warnings in development
   if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
+    appLogger.info('Initializing console warnings cleanup');
+
     // Store original console methods
     const originalWarn = console.warn;
-    const originalError = console.error;
-    const originalLog = console.log;
 
     // Override console.warn to filter out known harmless warnings
     console.warn = (...args) => {
@@ -62,7 +91,7 @@ export const dragDropDebugger = {
     console.groupEnd();
   },
 
-  logDragEnd: (data: any) => {
+  logDragEnd: (data: DragEventData) => {
     console.group('🔄 Drag End Event');
     console.log('Active ID:', data.activeId);
     console.log('Over ID:', data.overId);
@@ -88,7 +117,7 @@ export const performanceMonitor = {
 
       const measure = performance.getEntriesByName(label)[0];
       if (measure && measure.duration > 16) {
-        console.warn(`⚡ Performance: ${label} took ${measure.duration.toFixed(2)}ms`);
+        appLogger.warn(`Performance: ${label} took ${measure.duration.toFixed(2)}ms`);
       }
     }
   },
@@ -97,5 +126,5 @@ export const performanceMonitor = {
 // Initialize cleanup on app start
 if (typeof window !== 'undefined') {
   cleanupConsoleWarnings();
-  console.log('⚡ Performance optimizations active');
+  appLogger.info('Performance optimizations active');
 }

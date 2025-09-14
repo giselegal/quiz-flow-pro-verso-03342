@@ -1,5 +1,11 @@
-// @ts-nocheck
 /**
+ * TODO: TypeScript Migration - Deadline: Janeiro 2025
+ * - [ ] Criar interface StorageChangeEvent para eventos de sincronização
+ * - [ ] Implementar generic types para StorageItem<T> mais específicos
+ * - [ ] Adicionar error handling tipado para IndexedDB operations
+ * - [ ] Separar concerns: manager vs sync vs compression vs cache
+ * - [ ] Adicionar retry logic e circuit breaker patterns
+ * 
  * 🗄️ ADVANCED STORAGE SYSTEM - Sistema Escalável de Persistência
  * 
  * Substitui localStorage por sistema híbrido com IndexedDB + contextos globais sincronizados
@@ -7,6 +13,15 @@
  */
 
 import { devLog } from '@/utils/editorUtils';
+import { appLogger } from '../logger';
+
+// Tipos mínimos para migração
+export interface StorageChangeEvent {
+    type: 'set' | 'delete' | 'clear';
+    key?: string;
+    namespace?: string;
+    timestamp: number;
+}
 
 export interface StorageConfig {
     dbName: string;
@@ -114,7 +129,7 @@ export class AdvancedStorageManager {
             const request = indexedDB.open(this.config.dbName, this.config.version);
 
             request.onerror = () => {
-                console.error('Falha ao abrir IndexedDB:', request.error);
+                appLogger.error('Falha ao abrir IndexedDB', { error: request.error });
                 reject(request.error);
             };
 
@@ -359,10 +374,12 @@ export class AdvancedStorageManager {
         try {
             const {
                 maxAge = 7 * 24 * 60 * 60 * 1000, // 7 dias
-                maxItems = 1000,
+                maxItems = 1000, // TODO: implementar lógica de limpeza por quantidade
                 namespace,
                 preserveEssential = true
             } = options;
+
+            appLogger.debug('Cleaning storage', { maxAge, maxItems, namespace });
 
             await this.ensureReady();
             let cleaned = 0;
@@ -632,13 +649,6 @@ export class AdvancedStorageManager {
 // ========================================
 // INTERFACES E TYPES
 // ========================================
-
-export interface StorageChangeEvent {
-    type: 'set' | 'delete';
-    key: string;
-    namespace: string;
-    timestamp: number;
-}
 
 // ========================================
 // SINGLETON E FACTORY

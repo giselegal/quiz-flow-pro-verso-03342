@@ -120,16 +120,7 @@ export const OptimizedEditorComponents = {
         }
     ),
 
-    /**
-     * PageEditorCanvas otimizado
-     */
-    PageEditorCanvas: withFullPerformanceOptimization(
-        EditorLazyComponents.PageEditorCanvas,
-        {
-            profileId: 'PageCanvas-Optimized',
-            memoOptions: { strategy: 'shallow', ttl: 60000, propBlacklist: ['onRender', 'debug', 'timestamp'] }
-        }
-    ),
+    // PageEditorCanvas removido - componente órfão que só retornava null
 
     /**
      * InteractiveQuizCanvas otimizado

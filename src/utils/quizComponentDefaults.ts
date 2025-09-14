@@ -1,7 +1,22 @@
-// @ts-nocheck
-import { QuizComponentType } from '@/types/quizBuilder';
+/**
+ * TODO: TypeScript Migration - Deadline: Janeiro 2025
+ * - [ ] Criar interfaces específicas para cada tipo de quiz component (HeaderData, TextData, etc)
+ * - [ ] Implementar validation schema para dados obrigatórios por tipo
+ * - [ ] Adicionar factory methods com configurações pré-definidas (beginner, intermediate, advanced)
+ * - [ ] Separar defaults de dados dos defaults de estilo/aparência
+ * - [ ] Implementar sistema de templates reutilizáveis
+ */
 
-export const getDefaultData = (type: QuizComponentType) => {
+import { QuizComponentType } from '@/types/quizBuilder';
+import { appLogger } from './logger';
+
+// Tipos mínimos para migração
+type QuizComponentData = Record<string, any>; // TODO: criar interfaces específicas
+type ComponentFactory = (type: QuizComponentType) => QuizComponentData;
+
+export const getDefaultData: ComponentFactory = (type: QuizComponentType): QuizComponentData => {
+  appLogger.debug('Getting default data for quiz component', { type });
+
   switch (type) {
     case 'header':
       return {

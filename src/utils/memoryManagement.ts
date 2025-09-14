@@ -1,20 +1,40 @@
-// @ts-nocheck
+/**
+ * TODO: TypeScript Migration - Deadline: Janeiro 2025
+ * - [ ] Criar interfaces para EventListenerEntry, MemoryStats, CleanupHandlers
+ * - [ ] Tipar adequadamente performance.memory com declaração global
+ * - [ ] Implementar generic types para observers (T extends Observer)
+ * - [ ] Adicionar union types para diferentes tipos de observers
+ * - [ ] Separar hooks React do core MemoryManager (responsabilidades distintas)
+ */
+
 import { PerformanceOptimizer } from './performanceOptimizer';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { appLogger } from './logger';
+
+// Tipos mínimos para migração
+interface EventListenerEntry {
+  element: Element | Window | Document;
+  event: string;
+  handler: EventListener;
+}
+
+interface MemoryStats {
+  memoryUsage: number;
+  isHighUsage: boolean;
+}
+
+type ObserverType = IntersectionObserver | MutationObserver | ResizeObserver;
+type CleanupFunction = () => void;
 
 // Gerenciador de memory leaks
 class MemoryManager {
   private static instance: MemoryManager;
-  private eventListeners = new Set<{
-    element: Element | Window | Document;
-    event: string;
-    handler: EventListener;
-  }>();
+  private eventListeners = new Set<EventListenerEntry>();
   private intervals = new Set<number>();
   private timeouts = new Set<number>();
-  private observers = new Set<IntersectionObserver | MutationObserver | ResizeObserver>();
+  private observers = new Set<ObserverType>();
 
-  static getInstance() {
+  static getInstance(): MemoryManager {
     if (!MemoryManager.instance) {
       MemoryManager.instance = new MemoryManager();
     }
@@ -27,13 +47,14 @@ class MemoryManager {
     event: string,
     handler: EventListener,
     options?: boolean | AddEventListenerOptions
-  ) {
+  ): void {
+    appLogger.debug('Adding event listener for cleanup', { event });
     element.addEventListener(event, handler, options);
     this.eventListeners.add({ element, event, handler });
   }
 
   // Registrar interval para cleanup automático
-  setInterval(callback: () => void, ms: number) {
+  setInterval(callback: CleanupFunction, ms: number): number {
     // 🚀 OTIMIZAÇÃO: Usar PerformanceOptimizer
     const id = PerformanceOptimizer.scheduleInterval(callback, ms);
     this.intervals.add(id);
@@ -41,7 +62,7 @@ class MemoryManager {
   }
 
   // Registrar timeout para cleanup automático
-  setTimeout(callback: () => void, ms: number) {
+  setTimeout(callback: CleanupFunction, ms: number): number {
     // 🚀 OTIMIZAÇÃO: Usar PerformanceOptimizer
     const strategy = PerformanceOptimizer.getSuggestedStrategy(ms);
     const id = PerformanceOptimizer.schedule(callback, ms, strategy);
@@ -50,13 +71,20 @@ class MemoryManager {
   }
 
   // Registrar observer para cleanup automático
-  addObserver(observer: IntersectionObserver | MutationObserver | ResizeObserver) {
+  addObserver(observer: ObserverType): ObserverType {
     this.observers.add(observer);
     return observer;
   }
 
   // Cleanup completo
-  cleanup() {
+  cleanup(): void {
+    appLogger.info('Performing memory cleanup', {
+      eventListeners: this.eventListeners.size,
+      intervals: this.intervals.size,
+      timeouts: this.timeouts.size,
+      observers: this.observers.size
+    });
+
     // Remover event listeners
     this.eventListeners.forEach(({ element, event, handler }) => {
       element.removeEventListener(event, handler);
@@ -135,7 +163,7 @@ export const useWeakRef = <T extends object>(value: T) => {
 };
 
 // Hook para monitoramento de memória
-export const useMemoryMonitor = (threshold = 50) => {
+export const useMemoryMonitor = (threshold = 50): MemoryStats => {
   const [memoryUsage, setMemoryUsage] = useState<number>(0);
   const [isHighUsage, setIsHighUsage] = useState(false);
 
@@ -150,7 +178,7 @@ export const useMemoryMonitor = (threshold = 50) => {
       setIsHighUsage(usagePercent > threshold);
 
       if (usagePercent > 80) {
-        console.warn(`High memory usage detected: ${usagePercent.toFixed(2)}%`);
+        appLogger.warn('High memory usage detected', { usagePercent: usagePercent.toFixed(2) });
       }
     };
 
