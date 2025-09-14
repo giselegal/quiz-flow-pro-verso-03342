@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
+import { QUIZ_STYLE_21_STEPS_TEMPLATE, FUNNEL_PERSISTENCE_SCHEMA } from '@/templates/quiz21StepsComplete';
 
 export interface UniversalStepEditorProps {
     stepId: string;
@@ -31,6 +31,10 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
     const [selectedBlockId, setSelectedBlockId] = React.useState<string | null>(null);
     const [selectedBlockData, setSelectedBlockData] = React.useState<any>(null);
     const [hasUnsavedChanges, setHasUnsavedChanges] = React.useState(false);
+    const [schemaValidation, setSchemaValidation] = React.useState<{
+        isValid: boolean;
+        message: string;
+    }>({ isValid: true, message: 'Schema válido' });
 
     // Carregar dados do step atual
     React.useEffect(() => {
@@ -127,14 +131,131 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
     };
 
     const handleSave = () => {
+        // 🎯 USAR SCHEMA CORRETO baseado no FUNNEL_PERSISTENCE_SCHEMA
         const saveData = {
-            stepId,
-            stepNumber,
-            data: currentStepData,
-            timestamp: Date.now()
+            // Metadados do funil baseados no schema
+            funnel_data: {
+                id: funnelId || 'quiz-21-steps-complete',
+                name: 'Quiz de Estilo Pessoal - 21 Etapas Completo',
+                description: 'Template completo para descoberta do estilo pessoal com 21 etapas',
+                category: 'quiz',
+                user_id: null,
+                is_published: false,
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString(),
+
+                // Configurações do funil
+                settings: {
+                    version: '2.0.0',
+                    templateType: 'quiz-complete',
+                    persistence: {
+                        enabled: true,
+                        storage: ['localStorage', 'supabase', 'session'],
+                        autoSave: true,
+                        autoSaveInterval: 30000,
+                        compression: true,
+                        encryption: false,
+                        backupEnabled: true
+                    }
+                },
+
+                // Steps do funil
+                steps: [{
+                    id: stepId,
+                    name: `Step ${stepNumber}`,
+                    description: currentStepData?.description || `Conteúdo do step ${stepNumber}`,
+                    order: stepNumber,
+                    type: stepNumber === 1 ? 'intro' : stepNumber <= 11 ? 'quiz' : stepNumber <= 18 ? 'strategic' : stepNumber === 19 ? 'transition' : stepNumber === 20 ? 'result' : 'offer',
+                    blocks: currentStepData?.blocks || []
+                }],
+
+                // Blocos atualizados
+                blocks: currentStepData?.blocks || [],
+
+                // Metadados do funil
+                metadata: {
+                    totalSteps: 21,
+                    coreComponents: currentStepData?.blocks?.length || 0,
+                    hasCalculations: stepNumber >= 2 && stepNumber <= 11,
+                    hasPersonalization: stepNumber === 20,
+                    hasConversion: stepNumber === 21,
+                    optimization: 'complete',
+                    lastModified: {
+                        stepId: stepId,
+                        stepNumber: stepNumber,
+                        timestamp: Date.now(),
+                        user: 'editor'
+                    }
+                },
+
+                // Dados da sessão do usuário (inicializados vazios)
+                user_session: {
+                    userName: '',
+                    email: null,
+                    phone: null,
+                    startedAt: new Date().toISOString(),
+                    completedAt: null,
+                    currentStep: stepNumber,
+                    progress: Math.round((stepNumber / 21) * 100),
+
+                    // Respostas do quiz (vazias inicialmente)
+                    quiz_answers: [],
+
+                    // Respostas estratégicas (vazias inicialmente)
+                    strategic_answers: [],
+
+                    // Resultado final (vazio inicialmente)
+                    result: {
+                        primary_style: '',
+                        secondary_styles: [],
+                        total_score: 0,
+                        style_scores: {},
+                        personalized_recommendations: []
+                    }
+                }
+            }
         };
+
+        // 🔍 Validar schema antes de salvar
+        if (!validateFunnelSchema(saveData)) {
+            console.error('❌ Erro: Dados não seguem o FUNNEL_PERSISTENCE_SCHEMA');
+            return;
+        }
+
         onSave?.(stepId, saveData);
-        console.log('✅ Step salvo:', saveData);
+        console.log('✅ Step salvo no formato FUNNEL_PERSISTENCE_SCHEMA:', saveData);
+    };
+
+    // 🔍 Função para validar se os dados seguem o FUNNEL_PERSISTENCE_SCHEMA
+    const validateFunnelSchema = (data: any): boolean => {
+        const schema = FUNNEL_PERSISTENCE_SCHEMA;
+        console.log('🔍 Validando dados contra FUNNEL_PERSISTENCE_SCHEMA:', {
+            schema: schema.persistence.dataStructure,
+            data: data
+        });
+
+        // Validação básica da estrutura
+        const hasRequiredFields = data?.funnel_data &&
+            typeof data.funnel_data.id === 'string' &&
+            typeof data.funnel_data.name === 'string' &&
+            Array.isArray(data.funnel_data.steps) &&
+            Array.isArray(data.funnel_data.blocks);
+
+        if (!hasRequiredFields) {
+            console.warn('❌ Schema inválido: Campos obrigatórios ausentes');
+            setSchemaValidation({
+                isValid: false,
+                message: 'Schema inválido: Estrutura não conforme com FUNNEL_PERSISTENCE_SCHEMA'
+            });
+            return false;
+        }
+
+        console.log('✅ Schema válido: Estrutura conforme FUNNEL_PERSISTENCE_SCHEMA');
+        setSchemaValidation({
+            isValid: true,
+            message: 'Schema válido: Conforme FUNNEL_PERSISTENCE_SCHEMA'
+        });
+        return true;
     };
 
     // Função para atualizar propriedades de bloco em tempo real
@@ -1244,9 +1365,20 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                         }}
                     >
                         <div className="flex items-center justify-between mb-6">
-                            <h2 className="text-xl font-semibold text-gray-900">
-                                🎯 Preview - Step {stepNumber}
-                            </h2>
+                            <div className="flex items-center space-x-4">
+                                <h2 className="text-xl font-semibold text-gray-900">
+                                    🎯 Preview - Step {stepNumber}
+                                </h2>
+
+                                {/* Indicador de Schema */}
+                                <div className={`flex items-center space-x-2 px-3 py-1 rounded-md text-sm font-medium ${schemaValidation.isValid
+                                        ? 'bg-green-100 text-green-800'
+                                        : 'bg-red-100 text-red-800'
+                                    }`}>
+                                    <span>{schemaValidation.isValid ? '✅' : '❌'}</span>
+                                    <span>{schemaValidation.isValid ? 'Schema OK' : 'Schema Inválido'}</span>
+                                </div>
+                            </div>
                             <div className="flex items-center space-x-2">
                                 <span className="text-sm text-gray-500">ID:</span>
                                 <span className="text-sm font-mono text-gray-700">{stepId}</span>
