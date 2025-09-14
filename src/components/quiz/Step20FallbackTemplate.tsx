@@ -1,7 +1,9 @@
 /**
  * 🎯 TEMPLATE ROBUSTO PARA ETAPA 20
  * 
- * Fallback inteligente que funciona mesmo quando result-header-inline falha
+ * ATUALIZAÇÃO: Integração com sistema modular
+ * - Prioriza sistema modular quando disponível
+ * - Fallback inteligente que funciona mesmo quando result-header-inline falha
  */
 
 import React, { useEffect, useState } from 'react';
@@ -12,15 +14,19 @@ import { cn } from '@/lib/utils';
 import { getStyleConfig } from '@/config/styleConfig';
 import { getBestUserName } from '@/core/user/name';
 import { ResultDisplay } from '@/components/ui/ResultDisplay';
+import { ModularResultHeaderBlock } from '@/components/editor/modules';
+import { mapToFriendlyStyle } from '@/core/style/naming';
 
 interface Step20FallbackTemplateProps {
   className?: string;
   onRetry?: () => void;
+  useModularSystem?: boolean; // Nova opção para usar sistema modular
 }
 
-const Step20FallbackTemplate: React.FC<Step20FallbackTemplateProps> = ({ 
+const Step20FallbackTemplate: React.FC<Step20FallbackTemplateProps> = ({
   className,
-  onRetry 
+  onRetry,
+  useModularSystem = false // Padrão é false para manter compatibilidade
 }) => {
   const { primaryStyle, secondaryStyles, isLoading, error, retry, hasResult } = useQuizResult();
   const [showDebug, setShowDebug] = useState(false);
@@ -95,7 +101,7 @@ const Step20FallbackTemplate: React.FC<Step20FallbackTemplateProps> = ({
             Problema no Cálculo do Resultado
           </h2>
           <p className="text-red-700 mb-6">{error}</p>
-          
+
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
               onClick={handleForceRecalculate}
@@ -104,7 +110,7 @@ const Step20FallbackTemplate: React.FC<Step20FallbackTemplateProps> = ({
               <RefreshCw className="w-4 h-4 mr-2" />
               Forçar Recálculo
             </Button>
-            
+
             <Button
               variant="outline"
               onClick={() => setShowDebug(!showDebug)}
@@ -162,7 +168,7 @@ const Step20FallbackTemplate: React.FC<Step20FallbackTemplateProps> = ({
           <p className="text-gray-600 mb-6">
             Estamos finalizando a análise do seu perfil de estilo.
           </p>
-          
+
           <Button
             onClick={handleForceRecalculate}
             className="bg-[#B89B7A] hover:bg-[#A08966] text-white"
@@ -183,9 +189,49 @@ const Step20FallbackTemplate: React.FC<Step20FallbackTemplateProps> = ({
   // Obter configuração do estilo
   const styleConfig = getStyleConfig(styleLabel);
 
+  // ✨ NOVA FUNCIONALIDADE: Opção de usar sistema modular
+  if (useModularSystem && resultStyle) {
+    return (
+      <div className={cn('max-w-4xl mx-auto p-6', className)}>
+        <div className="mb-4 text-center">
+          <div className="inline-flex items-center gap-2 bg-green-50 border border-green-200 rounded-full px-4 py-2 text-sm">
+            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+            <span className="text-green-800 font-medium">
+              🧩 Sistema Modular Ativado
+            </span>
+          </div>
+        </div>
+
+        <ModularResultHeaderBlock
+          block={{
+            id: 'step20-modular-result',
+            type: 'modular-result-header',
+            content: {},
+            order: 0,
+            properties: {
+              containerLayout: 'two-column',
+              backgroundColor: 'transparent',
+              mobileLayout: 'stack',
+              padding: 'lg',
+              borderRadius: 'xl',
+              userName,
+              styleName: styleLabel,
+              percentage
+            }
+          }}
+          isSelected={false}
+          onPropertyChange={(key, value) => {
+            console.log('🔄 [Step20Template] Propriedade modular atualizada:', key, value);
+          }}
+          className="transition-all duration-300"
+        />
+      </div>
+    );
+  }
+
   return (
     <div className={cn('max-w-4xl mx-auto p-6 space-y-8', className)}>
-      {/* ✅ USAR O NOVO RESULTADO DISPLAY ESTRUTURADO */}
+      {/* ✅ USAR O RESULTADO DISPLAY ESTRUTURADO ORIGINAL */}
       <ResultDisplay
         username={userName}
         styleName={styleLabel}

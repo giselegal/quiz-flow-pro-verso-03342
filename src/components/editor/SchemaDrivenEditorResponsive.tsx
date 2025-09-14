@@ -39,9 +39,14 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
 
   const [isInteractiveMode, setIsInteractiveMode] = useState(mode === 'interactive');
 
-  // 🎯 FASE 2: Integrar fallback para etapa 20
+  // 🎯 FASE 2: Integrar fallback para etapa 20 com sistema modular
   const isStep20 = state.currentStep === 20;
-  const hasResultHeaderBlock = currentBlocks.some(block => block.type === 'result-header-inline');
+  const hasResultHeaderBlock = currentBlocks.some(block =>
+    block.type === 'result-header-inline'
+  );
+
+  // ✨ NOVA FUNCIONALIDADE: Usar sistema modular quando apropriado
+  const shouldUseModularFallback = isStep20 && !hasResultHeaderBlock;
 
   // Garantir cálculo do resultado quando entrar na etapa 20 (paridade com EditorPro)
   React.useEffect(() => {
@@ -162,8 +167,8 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
           componentsPanel={<ComponentsSidebar onComponentSelect={handleComponentSelect} />}
           canvas={
             <StepDndProvider stepNumber={state.currentStep}>
-              {/* 🛡️ FASE 2: Fallback robusto para etapa 20 */}
-              {isStep20 && (!hasResultHeaderBlock || currentBlocks.length === 0) ? (
+              {/* 🛡️ FASE 2: Fallback robusto para etapa 20 com sistema modular */}
+              {shouldUseModularFallback || (isStep20 && currentBlocks.length === 0) ? (
                 <Step20EditorFallback
                   blocks={currentBlocks}
                   onSelectBlock={setSelectedBlockId}

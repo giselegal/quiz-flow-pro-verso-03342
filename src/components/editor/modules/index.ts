@@ -17,7 +17,9 @@ export {
     ResponsivePreview
 } from './ModularResultEditor';
 
-// Re-exportar os tipos das props para facilitar uso
+export {
+    Step20SystemSelector
+} from './Step20SystemSelector';// Re-exportar os tipos das props para facilitar uso
 export type { HeaderSectionProps } from './HeaderSection';
 export type { UserInfoSectionProps } from './UserInfoSection';
 export type { ProgressSectionProps } from './ProgressSection';

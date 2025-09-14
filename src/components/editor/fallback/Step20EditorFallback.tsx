@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useQuizResult } from '@/hooks/useQuizResult';
 import Step20FallbackTemplate from '@/components/quiz/Step20FallbackTemplate';
+import { ModularResultHeaderBlock } from '@/components/editor/modules';
+import { getBestUserName } from '@/core/user/name';
+import { mapToFriendlyStyle } from '@/core/style/naming';
 
 interface Step20EditorFallbackProps {
   blocks: any[];
@@ -13,38 +16,44 @@ interface Step20EditorFallbackProps {
 /**
  * 🛡️ FALLBACK INTELIGENTE PARA ETAPA 20 NO EDITOR
  * 
- * FASE 2: Sistema de fallback robusto para o editor
+ * ATUALIZAÇÃO: Integração com sistema modular
+ * - Usa ModularResultHeaderBlock quando possível (melhor experiência)
+ * - Fallback para Step20FallbackTemplate quando necessário
  * - Detecta se result-header-inline está falhando
- * - Usa Step20FallbackTemplate quando necessário
  * - Monitora loading states do EditorPro
  * - Garante que a etapa 20 sempre tenha conteúdo
  */
 export const Step20EditorFallback: React.FC<Step20EditorFallbackProps> = ({
   blocks,
+  onUpdateBlock
 }) => {
   const { primaryStyle, isLoading, error } = useQuizResult();
   const [showFallback, setShowFallback] = useState(false);
+  const [useModularSystem, setUseModularSystem] = useState(false);
 
   // 🔍 Monitor storage and result state
   useEffect(() => {
     // Determine if we should show fallback
-    const hasResultHeaderBlock = blocks.some(block => 
+    const hasResultHeaderBlock = blocks.some(block =>
       block.type === 'result-header-inline' || block.type === 'quiz-result'
     );
     const hasValidResult = Boolean(primaryStyle) && !error;
     const isStillLoading = isLoading;
-    
+
     // Show fallback if:
     // 1. No result-related blocks found in template
     // 2. Error in calculation
     // 3. Loading for too long (indicates problem)
     // 4. No blocks at all (template loading failed)
-    
-    const shouldShowFallback = 
-      !hasResultHeaderBlock || 
-      error || 
+
+    const shouldShowFallback =
+      !hasResultHeaderBlock ||
+      error ||
       blocks.length === 0 ||
       (!hasValidResult && !isStillLoading);
+
+    // Use modular system if we have valid result data
+    const shouldUseModular = Boolean(hasValidResult && !error && primaryStyle);
 
     if (shouldShowFallback) {
       console.log('🛡️ [Step20EditorFallback] Ativando fallback:', {
@@ -53,9 +62,11 @@ export const Step20EditorFallback: React.FC<Step20EditorFallbackProps> = ({
         isStillLoading,
         blocksCount: blocks.length,
         error: typeof error === 'string' ? error : 'Erro no cálculo',
-        blockTypes: blocks.map(b => b.type)
+        blockTypes: blocks.map(b => b.type),
+        useModular: shouldUseModular
       });
       setShowFallback(true);
+      setUseModularSystem(shouldUseModular);
     } else {
       console.log('✅ [Step20EditorFallback] Renderização normal:', {
         hasResultHeaderBlock,
@@ -63,6 +74,7 @@ export const Step20EditorFallback: React.FC<Step20EditorFallbackProps> = ({
         blocksCount: blocks.length
       });
       setShowFallback(false);
+      setUseModularSystem(false);
     }
   }, [blocks, primaryStyle, isLoading, error]);
 
@@ -114,15 +126,51 @@ export const Step20EditorFallback: React.FC<Step20EditorFallbackProps> = ({
         <div className="flex items-center gap-2">
           <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
           <p className="text-sm text-blue-800 font-medium">
-            🛡️ Modo Fallback Ativo - Template de resultado robusto carregado
+            {useModularSystem
+              ? '🧩 Sistema Modular Ativo - Experiência aprimorada'
+              : '🛡️ Modo Fallback Ativo - Template de resultado robusto carregado'
+            }
           </p>
         </div>
         <p className="text-xs text-blue-600 mt-1">
-          Template original não disponível. Usando fallback para garantir funcionalidade.
+          {useModularSystem
+            ? 'Usando sistema modular responsivo para melhor experiência.'
+            : 'Template original não disponível. Usando fallback para garantir funcionalidade.'
+          }
         </p>
       </div>
 
-      <Step20FallbackTemplate />
+      {/* ✨ NOVA FUNCIONALIDADE: Usar sistema modular quando disponível */}
+      {useModularSystem ? (
+        <ModularResultHeaderBlock
+          block={{
+            id: 'modular-result-fallback',
+            type: 'modular-result-header',
+            content: {},
+            order: 0,
+            properties: {
+              containerLayout: 'two-column',
+              backgroundColor: 'transparent',
+              mobileLayout: 'stack',
+              padding: 'lg',
+              borderRadius: 'lg',
+              // Dados do quiz para os módulos
+              userName: getBestUserName(),
+              styleName: mapToFriendlyStyle((primaryStyle as any)?.category || 'Natural'),
+              percentage: (primaryStyle as any)?.percentage || 0
+            }
+          }}
+          isSelected={false}
+          onPropertyChange={onUpdateBlock ? (key, value) => {
+            // Notificar o editor sobre mudanças nas propriedades
+            console.log('🔄 [Step20EditorFallback] Propriedade atualizada:', key, value);
+            onUpdateBlock?.('modular-result-fallback', { [key]: value });
+          } : undefined}
+          className="transition-all duration-500 opacity-100"
+        />
+      ) : (
+        <Step20FallbackTemplate />
+      )}
     </div>
   );
 };
