@@ -35,7 +35,7 @@ const LoadingFallback = React.memo(() => (
     <div className="text-center">
       <LoadingSpinner size="md" className="mb-4" />
       <p className="text-gray-600 font-medium">Carregando editor unificado...</p>
-      <p className="text-gray-400 text-sm mt-2">Prioridade: UniversalStepEditor</p>
+      <p className="text-gray-400 text-sm mt-2">Prioridade: UniversalStepEditorPro → UniversalStepEditor → EditorPro</p>
     </div>
   </div>
 ));
@@ -65,10 +65,36 @@ export const UnifiedEditor: React.FC<UnifiedEditorProps> = React.memo(({
     return React.lazy(() => {
       return new Promise<{ default: React.ComponentType<any> }>(async (resolve) => {
         try {
+          logger.info('UnifiedEditor: Carregando UniversalStepEditorPro...');
+          // 🎯 PRIORIDADE: Tenta carregar UniversalStepEditorPro primeiro
+          const universalProMod = await import('@/components/editor/universal/UniversalStepEditorPro');
+          const UniversalStepEditorPro = universalProMod.default;
+
+          if (UniversalStepEditorPro) {
+            const WrappedUniversalEditorPro: React.FC = (props: any) => (
+              <UniversalStepEditorPro
+                stepNumber={stepNumber}
+                onStepChange={onStepChange}
+                onSave={onSave}
+                {...props}
+              />
+            );
+
+            logger.info('UnifiedEditor: UniversalStepEditorPro carregado (PRIORIDADE MÁXIMA)');
+            try { (window as any).__ACTIVE_EDITOR__ = 'UniversalStepEditorPro-Primary'; } catch { }
+
+            resolve({ default: WrappedUniversalEditorPro });
+            return;
+          }
+        } catch (proError) {
+          logger.warn('UniversalStepEditorPro não disponível, fallback para UniversalStepEditor:', proError);
+        }
+
+        try {
           logger.info('UnifiedEditor: Carregando UniversalStepEditor...');
 
           const universalMod = await import('@/components/editor/universal/UniversalStepEditor');
-          const UniversalStepEditor = universalMod.default || universalMod.UniversalStepEditor;
+          const UniversalStepEditor = universalMod.default;
 
           if (UniversalStepEditor) {
             const WrappedUniversalEditor: React.FC = (props: any) => (

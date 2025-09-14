@@ -44,6 +44,9 @@ const FunnelDashboardPage = lazy(() => import('./pages/FunnelDashboardPage'));
 const TestParticipantsPage = lazy(() => import('./pages/TestParticipantsPage'));
 const TestDataPanel = lazy(() => import('./components/TestDataPanel'));
 
+// 🎯 NOVO: Editor Híbrido UniversalStepEditorPro
+const UniversalStepEditorProDemo = lazy(() => import('./components/demos/UniversalStepEditorProDemo'));
+
 // Loading component
 const PageLoading = () => (
   <div className="min-h-screen flex items-center justify-center">
@@ -96,6 +99,13 @@ function App() {
               <Route path="/step20" component={() =>
                 <Suspense fallback={<LoadingFallback />}>
                   <QuizModularPage initialStep={20} />
+                </Suspense>
+              } />
+
+              {/* 🎯 NOVO: Editor Híbrido UniversalStepEditorPro */}
+              <Route path="/editor-pro" component={() =>
+                <Suspense fallback={<LoadingFallback />}>
+                  <UniversalStepEditorProDemo />
                 </Suspense>
               } />
 
@@ -229,7 +239,6 @@ function App() {
                 </Suspense>
               } />
 
-              {/* Teste de debug do EditorPro */}
               <Route path="/test-editor-pro" component={() => {
                 const TestEditorPro = lazy(() => import('./components/debug/TestEditorPro'));
                 return (
@@ -238,6 +247,13 @@ function App() {
                   </Suspense>
                 );
               }} />
+
+              {/* 🎯 NOVO: Demo UniversalStepEditorPro */}
+              <Route path="/demo-editor-pro" component={() =>
+                <Suspense fallback={<LoadingFallback />}>
+                  <UniversalStepEditorProDemo />
+                </Suspense>
+              } />
 
               {/* Fallback para rotas não encontradas */}
               <Route>

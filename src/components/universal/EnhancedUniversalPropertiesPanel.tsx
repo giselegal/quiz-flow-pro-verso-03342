@@ -20,10 +20,10 @@ import SizeSlider from '@/components/visual-controls/SizeSlider';
 import { EnhancedPropertyInput } from './EnhancedPropertyInput';
 import { PropertyChangeIndicator } from './PropertyChangeIndicator';
 // ✅ Importa painel específico do quiz
-import { OptionsGridPropertiesPanel } from '@/components/editor/quiz/OptionsGridPropertiesPanel';
-import { QuizConfigurationPanel } from '@/components/editor/quiz/QuizConfigurationPanel';
-import { QuizHeaderPropertiesPanel } from '@/components/editor/quiz/QuizHeaderPropertiesPanel';
-import { IntroPropertiesPanel } from '@/components/steps/step01/IntroPropertiesPanel';
+// import { OptionsGridPropertiesPanel } from '@/components/editor/quiz/OptionsGridPropertiesPanel'; // TODO: Fix import
+// import { QuizConfigurationPanel } from '@/components/editor/quiz/QuizConfigurationPanel'; // TODO: Fix import
+// import { QuizHeaderPropertiesPanel } from '@/components/editor/quiz/QuizHeaderPropertiesPanel'; // TODO: Fix import
+// import { IntroPropertiesPanel } from '@/components/steps/step01/IntroPropertiesPanel'; // TODO: Fix import
 // ✅ Importa UnifiedBlock, useUnifiedProperties e PropertyType do hook
 import {
   PropertyType,
