@@ -320,5 +320,4 @@ export class Quiz21StepsToFunnelAdapter {
 // INSTÂNCIA SINGLETON E EXPORT
 // ============================================================================
 
-export const quiz21StepsToFunnelAdapter = new Quiz21StepsToFunnelAdapter();
 export default Quiz21StepsToFunnelAdapter;

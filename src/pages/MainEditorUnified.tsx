@@ -51,6 +51,9 @@ const MainEditorUnified: React.FC = () => {
     const useUniversalEditor = params.get('universal') === 'true' || params.get('editor') === 'universal';
     const forceUniversal = params.get('forceUniversal') === 'true'; // Força uso mesmo com problemas
 
+    // Debug mode baseado em parâmetros URL
+    const debugMode = params.get('debug') === 'true';
+
     // 🤖 DETECÇÃO AUTOMÁTICA: Quando usar UniversalStepEditor automaticamente
     const shouldUseUniversalEditor = React.useMemo(() => {
         // Se explicitamente solicitado via URL
@@ -89,9 +92,6 @@ const MainEditorUnified: React.FC = () => {
         console.log('🎯 Usando UniversalStepEditor como padrão');
         return true;
     }, [useUniversalEditor, forceUniversal, params, initialStep, funnelId, templateId, debugMode]);
-
-    // Debug mode baseado em parâmetros URL
-    const debugMode = params.get('debug') === 'true';
 
     // Configuração Supabase consolidada do MainEditor legacy
     const supabaseConfig = React.useMemo(() => ({
