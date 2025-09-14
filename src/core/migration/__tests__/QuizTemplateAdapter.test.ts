@@ -12,7 +12,7 @@ import { QUIZ_STYLE_21_STEPS_TEMPLATE, QUIZ_QUESTIONS_COMPLETE } from '../../tem
 
 describe('QuizTemplateAdapter - Testes de Equivalência', () => {
   let migratedSchema: QuizFunnelSchema;
-  
+
   beforeAll(async () => {
     migratedSchema = await QuizTemplateAdapter.convertLegacyTemplate();
   });
@@ -129,9 +129,9 @@ describe('QuizTemplateAdapter - Testes de Equivalência', () => {
 
     it('deve adicionar ações de cálculo para etapas de quiz', () => {
       const quizSteps = migratedSchema.steps.filter(step => step.type === 'quiz-question');
-      
+
       quizSteps.forEach(step => {
-        const hasScoreAction = step.navigation.actions.some(action => 
+        const hasScoreAction = step.navigation.actions.some(action =>
           action.type === 'calculate-score'
         );
         expect(hasScoreAction).toBe(true);
@@ -140,9 +140,9 @@ describe('QuizTemplateAdapter - Testes de Equivalência', () => {
 
     it('deve adicionar ações de variável para etapas estratégicas', () => {
       const strategicSteps = migratedSchema.steps.filter(step => step.type === 'strategic-question');
-      
+
       strategicSteps.forEach(step => {
-        const hasVariableAction = step.navigation.actions.some(action => 
+        const hasVariableAction = step.navigation.actions.some(action =>
           action.type === 'set-variable'
         );
         expect(hasVariableAction).toBe(true);
@@ -185,12 +185,12 @@ describe('QuizTemplateAdapter - Testes de Equivalência', () => {
   describe('Validação de Dados', () => {
     it('deve marcar etapas com formulários como obrigatórias', () => {
       migratedSchema.steps.forEach(step => {
-        const hasFormInput = step.blocks.some(block => 
-          block.type === 'form-input' || 
+        const hasFormInput = step.blocks.some(block =>
+          block.type === 'form-input' ||
           block.type === 'options-grid' ||
           block.type === 'quiz-question-inline'
         );
-        
+
         expect(step.validation.required).toBe(hasFormInput);
       });
     });
@@ -208,18 +208,18 @@ describe('QuizTemplateAdapter - Testes de Equivalência', () => {
   describe('Configurações Globais', () => {
     it('deve ter configurações de SEO completas', () => {
       const seo = migratedSchema.settings.seo;
-      
+
       expect(seo.title).toBeDefined();
       expect(seo.description).toBeDefined();
       expect(seo.keywords).toBeInstanceOf(Array);
       expect(seo.keywords.length).toBeGreaterThan(0);
       expect(seo.robots).toBe('index,follow');
-      
+
       expect(seo.openGraph.title).toBeDefined();
       expect(seo.openGraph.description).toBeDefined();
       expect(seo.openGraph.image).toBeDefined();
       expect(seo.openGraph.type).toBe('website');
-      
+
       expect(seo.twitter.card).toBe('summary_large_image');
       expect(seo.twitter.title).toBeDefined();
       expect(seo.twitter.description).toBeDefined();
@@ -228,7 +228,7 @@ describe('QuizTemplateAdapter - Testes de Equivalência', () => {
 
     it('deve ter configurações de analytics', () => {
       const analytics = migratedSchema.settings.analytics;
-      
+
       expect(analytics.enabled).toBe(true);
       expect(analytics.googleAnalytics).toBeDefined();
       expect(analytics.customEvents).toBeInstanceOf(Array);
@@ -237,11 +237,11 @@ describe('QuizTemplateAdapter - Testes de Equivalência', () => {
 
     it('deve ter configurações de branding completas', () => {
       const branding = migratedSchema.settings.branding;
-      
+
       expect(branding.colors.primary).toBe('#B89B7A');
       expect(branding.colors.secondary).toBe('#D4C2A8');
       expect(branding.colors.accent).toBe('#4CAF50');
-      
+
       expect(branding.typography.fontFamily.primary).toBeDefined();
       expect(branding.logo.primary).toBeDefined();
       expect(branding.spacing).toBeDefined();
@@ -253,7 +253,7 @@ describe('QuizTemplateAdapter - Testes de Equivalência', () => {
   describe('Configurações de Publicação', () => {
     it('deve ter configurações de publicação básicas', () => {
       const publication = migratedSchema.publication;
-      
+
       expect(publication.status).toBe('draft');
       expect(publication.baseUrl).toBeDefined();
       expect(publication.slug).toBeDefined();
@@ -274,7 +274,7 @@ describe('QuizTemplateAdapter - Testes de Equivalência', () => {
   describe('Metadados do Editor', () => {
     it('deve ter metadados básicos', () => {
       const editorMeta = migratedSchema.editorMeta;
-      
+
       expect(editorMeta.lastModified).toBeDefined();
       expect(editorMeta.lastModifiedBy).toBe('sistema-migracao');
       expect(editorMeta.editorVersion).toBe('2.0.0');
@@ -283,7 +283,7 @@ describe('QuizTemplateAdapter - Testes de Equivalência', () => {
 
     it('deve ter estatísticas corretas', () => {
       const stats = migratedSchema.editorMeta.stats;
-      
+
       expect(stats.totalSteps).toBe(21);
       expect(stats.totalBlocks).toBeGreaterThan(0);
       expect(stats.estimatedCompletionTime).toBe(15);
@@ -293,7 +293,7 @@ describe('QuizTemplateAdapter - Testes de Equivalência', () => {
       expect(migratedSchema.editorMeta.tags).toContain('quiz');
       expect(migratedSchema.editorMeta.tags).toContain('estilo-pessoal');
       expect(migratedSchema.editorMeta.tags).toContain('migrado');
-      
+
       expect(migratedSchema.editorMeta.categories).toContain('quiz');
       expect(migratedSchema.editorMeta.categories).toContain('conversão');
     });
@@ -308,7 +308,7 @@ describe('MigrationUtils', () => {
 
     it('deve retornar schema válido', async () => {
       const schema = await MigrationUtils.runMigration();
-      
+
       expect(schema).toBeDefined();
       expect(schema.id).toBeDefined();
       expect(schema.steps).toBeInstanceOf(Array);
@@ -331,18 +331,18 @@ describe('Validação de Equivalência Funcional', () => {
 
     // Verificar se as perguntas essenciais foram preservadas
     expect(migratedQuestions.length).toBeGreaterThan(0);
-    
+
     // TODO: Implementar comparação mais rigorosa quando tivermos acesso às perguntas específicas
   });
 
   it('deve manter lógica de pontuação equivalente', () => {
     const quizSteps = migratedSchema.steps.filter(step => step.type === 'quiz-question');
-    
+
     quizSteps.forEach(step => {
-      const scoreAction = step.navigation.actions.find(action => 
+      const scoreAction = step.navigation.actions.find(action =>
         action.type === 'calculate-score'
       );
-      
+
       expect(scoreAction).toBeDefined();
       expect(scoreAction?.parameters.scoreType).toBe('style-points');
       expect(scoreAction?.parameters.method).toBe('accumulative');
@@ -351,10 +351,10 @@ describe('Validação de Equivalência Funcional', () => {
 
   it('deve preservar estrutura de resultado', () => {
     const resultStep = migratedSchema.steps.find(step => step.type === 'result');
-    
+
     expect(resultStep).toBeDefined();
-    expect(resultStep?.navigation.actions.some(action => 
-      action.type === 'calculate-score' && 
+    expect(resultStep?.navigation.actions.some(action =>
+      action.type === 'calculate-score' &&
       action.parameters.method === 'determine-primary-style'
     )).toBe(true);
   });

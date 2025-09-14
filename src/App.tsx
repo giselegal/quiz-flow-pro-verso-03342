@@ -109,7 +109,7 @@ function App() {
                   </Suspense>
                 );
               }} />
-              
+
               <Route path="/editor/:funnelId" component={({ params }: { params: { funnelId: string } }) => {
                 console.log('🔗 Rota /editor/:funnelId ativada com params:', params);
                 return (

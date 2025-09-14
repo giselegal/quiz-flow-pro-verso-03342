@@ -106,22 +106,22 @@ export const InstantPublishingSystem: React.FC = () => {
   }, [schema, validateSchema, saveSchema, addLog]);
 
   if (!schema) {
-    return <div className=\"p-4 text-gray-500\">Carregando...</div>;
+    return <div className="p-4 text-gray-500">Carregando...</div>;
   }
 
   return (
-    <div className=\"p-6 space-y-6\">
-      <div className=\"flex items-center justify-between\">
-        <h2 className=\"text-xl font-semibold text-gray-900\">Publicação Instantânea</h2>
+    <div className="p-6 space-y-6">
+      <div className="flex items-center justify-between">
+        <h2 className="text-xl font-semibold text-gray-900">Publicação Instantânea</h2>
         <PublishStatusBadge status={publishingStatus} />
       </div>
 
       {/* Informações atuais */}
-      <div className=\"bg-gray-50 rounded-lg p-4\">
-        <h3 className=\"font-medium mb-3\">Status Atual</h3>
-        <div className=\"grid grid-cols-2 gap-4 text-sm\">
+      <div className="bg-gray-50 rounded-lg p-4">
+        <h3 className="font-medium mb-3">Status Atual</h3>
+        <div className="grid grid-cols-2 gap-4 text-sm">
           <div>
-            <span className=\"text-gray-600\">Status:</span>
+            <span className="text-gray-600">Status:</span>
             <span className={`ml-2 font-medium ${
               schema.publication.status === 'published' ? 'text-green-600' :
               schema.publication.status === 'draft' ? 'text-yellow-600' : 'text-gray-600'
@@ -131,30 +131,30 @@ export const InstantPublishingSystem: React.FC = () => {
             </span>
           </div>
           <div>
-            <span className=\"text-gray-600\">Versão:</span>
-            <span className=\"ml-2 font-mono\">{schema.publication.version}</span>
+            <span className="text-gray-600">Versão:</span>
+            <span className="ml-2 font-mono">{schema.publication.version}</span>
           </div>
           <div>
-            <span className=\"text-gray-600\">Última publicação:</span>
-            <span className=\"ml-2\">
+            <span className="text-gray-600">Última publicação:</span>
+            <span className="ml-2">
               {schema.publication.publishedAt 
                 ? new Date(schema.publication.publishedAt).toLocaleString()
                 : 'Nunca'}
             </span>
           </div>
           <div>
-            <span className=\"text-gray-600\">URL atual:</span>
+            <span className="text-gray-600">URL atual:</span>
             {schema.publication.url ? (
               <a 
                 href={schema.publication.url} 
-                target=\"_blank\" 
-                rel=\"noopener noreferrer\"
-                className=\"ml-2 text-blue-600 hover:underline\"
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="ml-2 text-blue-600 hover:underline"
               >
                 Ver funil
               </a>
             ) : (
-              <span className=\"ml-2 text-gray-400\">Não publicado</span>
+              <span className="ml-2 text-gray-400">Não publicado</span>
             )}
           </div>
         </div>
@@ -168,7 +168,7 @@ export const InstantPublishingSystem: React.FC = () => {
       />
 
       {/* Botão de publicação */}
-      <div className=\"flex items-center justify-center\">
+      <div className="flex items-center justify-center">
         <button
           onClick={publishInstantly}
           disabled={publishingStatus !== 'idle' && publishingStatus !== 'error' && publishingStatus !== 'success'}
@@ -189,14 +189,14 @@ export const InstantPublishingSystem: React.FC = () => {
 
       {/* Progresso */}
       {publishingStatus !== 'idle' && publishingStatus !== 'success' && publishingStatus !== 'error' && (
-        <div className=\"space-y-2\">
-          <div className=\"flex justify-between text-sm text-gray-600\">
+        <div className="space-y-2">
+          <div className="flex justify-between text-sm text-gray-600">
             <span>Progresso</span>
             <span>{Math.round(buildProgress)}%</span>
           </div>
-          <div className=\"w-full bg-gray-200 rounded-full h-2\">
+          <div className="w-full bg-gray-200 rounded-full h-2">
             <div 
-              className=\"bg-blue-600 h-2 rounded-full transition-all duration-300\"
+              className="bg-blue-600 h-2 rounded-full transition-all duration-300"
               style={{ width: `${buildProgress}%` }}
             />
           </div>
@@ -205,22 +205,22 @@ export const InstantPublishingSystem: React.FC = () => {
 
       {/* URL da publicação */}
       {publishUrl && (
-        <div className=\"bg-green-50 border border-green-200 rounded-lg p-4\">
-          <h3 className=\"font-medium text-green-800 mb-2\">🎉 Funil Publicado!</h3>
-          <div className=\"flex items-center justify-between bg-white rounded border p-3\">
-            <code className=\"text-sm text-gray-800 flex-1 mr-4\">{publishUrl}</code>
-            <div className=\"flex space-x-2\">
+        <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+          <h3 className="font-medium text-green-800 mb-2">🎉 Funil Publicado!</h3>
+          <div className="flex items-center justify-between bg-white rounded border p-3">
+            <code className="text-sm text-gray-800 flex-1 mr-4">{publishUrl}</code>
+            <div className="flex space-x-2">
               <button
                 onClick={() => navigator.clipboard.writeText(publishUrl)}
-                className=\"px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 rounded border\"
+                className="px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 rounded border"
               >
                 📋 Copiar
               </button>
               <a
                 href={publishUrl}
-                target=\"_blank\"
-                rel=\"noopener noreferrer\"
-                className=\"px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700\"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700"
               >
                 🔗 Abrir
               </a>
@@ -231,7 +231,7 @@ export const InstantPublishingSystem: React.FC = () => {
 
       {/* Log de publicação */}
       {publishLog.length > 0 && (
-        <div className=\"bg-gray-900 text-green-400 rounded-lg p-4 font-mono text-sm space-y-1 max-h-64 overflow-y-auto\">
+        <div className="bg-gray-900 text-green-400 rounded-lg p-4 font-mono text-sm space-y-1 max-h-64 overflow-y-auto">
           {publishLog.map((log, index) => (
             <div key={index}>{log}</div>
           ))}
@@ -281,19 +281,19 @@ const ValidationPanel: React.FC<ValidationPanelProps> = ({ schema, errors, onRev
   const [isExpanded, setIsExpanded] = useState(errors.length > 0);
 
   return (
-    <div className=\"border border-gray-200 rounded-lg\">
+    <div className="border border-gray-200 rounded-lg">
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className=\"w-full px-4 py-3 flex items-center justify-between text-left hover:bg-gray-50\"
+        className="w-full px-4 py-3 flex items-center justify-between text-left hover:bg-gray-50"
       >
-        <div className=\"flex items-center space-x-2\">
-          <span className=\"font-medium\">Validação</span>
+        <div className="flex items-center space-x-2">
+          <span className="font-medium">Validação</span>
           {errors.length === 0 ? (
-            <span className=\"bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium\">
+            <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">
               ✅ {schema.steps.length} etapa(s) válida(s)
             </span>
           ) : (
-            <span className=\"bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs font-medium\">
+            <span className="bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs font-medium">
               ❌ {errors.length} erro(s)
             </span>
           )}
@@ -304,28 +304,28 @@ const ValidationPanel: React.FC<ValidationPanelProps> = ({ schema, errors, onRev
       </button>
 
       {isExpanded && (
-        <div className=\"border-t border-gray-200 p-4\">
-          <div className=\"flex justify-between items-center mb-3\">
-            <h4 className=\"font-medium text-gray-900\">Resultado da Validação</h4>
+        <div className="border-t border-gray-200 p-4">
+          <div className="flex justify-between items-center mb-3">
+            <h4 className="font-medium text-gray-900">Resultado da Validação</h4>
             <button
               onClick={onRevalidate}
-              className=\"px-3 py-1 text-sm border border-gray-300 rounded hover:bg-gray-50\"
+              className="px-3 py-1 text-sm border border-gray-300 rounded hover:bg-gray-50"
             >
               🔄 Revalidar
             </button>
           </div>
 
           {errors.length === 0 ? (
-            <div className=\"text-green-600 text-sm space-y-1\">
+            <div className="text-green-600 text-sm space-y-1">
               <div>✅ Todas as etapas possuem pelo menos um bloco</div>
               <div>✅ Configurações globais estão completas</div>
               <div>✅ Schema está pronto para publicação</div>
             </div>
           ) : (
-            <div className=\"space-y-2\">
+            <div className="space-y-2">
               {errors.map((error, index) => (
-                <div key={index} className=\"flex items-start space-x-2 text-sm text-red-600\">
-                  <span className=\"text-red-400\">•</span>
+                <div key={index} className="flex items-start space-x-2 text-sm text-red-600">
+                  <span className="text-red-400">•</span>
                   <span>{error}</span>
                 </div>
               ))}
@@ -333,19 +333,19 @@ const ValidationPanel: React.FC<ValidationPanelProps> = ({ schema, errors, onRev
           )}
 
           {/* Estatísticas */}
-          <div className=\"mt-4 pt-4 border-t border-gray-200 grid grid-cols-3 gap-4 text-sm text-gray-600\">
+          <div className="mt-4 pt-4 border-t border-gray-200 grid grid-cols-3 gap-4 text-sm text-gray-600">
             <div>
-              <span className=\"font-medium\">{schema.steps.length}</span>
+              <span className="font-medium">{schema.steps.length}</span>
               <div>Etapas</div>
             </div>
             <div>
-              <span className=\"font-medium\">
+              <span className="font-medium">
                 {schema.steps.reduce((total, step) => total + step.blocks.length, 0)}
               </span>
               <div>Blocos</div>
             </div>
             <div>
-              <span className=\"font-medium\">
+              <span className="font-medium">
                 {schema.publication.changelog.length}
               </span>
               <div>Versões</div>
@@ -443,31 +443,31 @@ async function deployToEdge(
 
 function generateStaticHTML(schema: QuizFunnelSchema): string {
   return `<!DOCTYPE html>
-<html lang=\"pt-BR\">
+<html lang="pt-BR">
 <head>
-    <meta charset=\"UTF-8\">
-    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>${schema.settings.seo.title}</title>
-    <meta name=\"description\" content=\"${schema.settings.seo.description}\">
-    <meta name=\"keywords\" content=\"${schema.settings.seo.keywords.join(', ')}\">
+    <meta name="description" content="${schema.settings.seo.description}">
+    <meta name="keywords" content="${schema.settings.seo.keywords.join(', ')}">
     
     <!-- Open Graph -->
-    <meta property=\"og:title\" content=\"${schema.settings.seo.openGraph.title || schema.settings.seo.title}\">
-    <meta property=\"og:description\" content=\"${schema.settings.seo.openGraph.description || schema.settings.seo.description}\">
-    <meta property=\"og:image\" content=\"${schema.settings.seo.openGraph.image}\">
+    <meta property="og:title" content="${schema.settings.seo.openGraph.title || schema.settings.seo.title}">
+    <meta property="og:description" content="${schema.settings.seo.openGraph.description || schema.settings.seo.description}">
+    <meta property="og:image" content="${schema.settings.seo.openGraph.image}">
     
     <!-- Styles -->
-    <link rel=\"stylesheet\" href=\"./styles.css\">
+    <link rel="stylesheet" href="./styles.css">
     
     <!-- Analytics -->
     ${schema.settings.analytics.enabled ? generateAnalyticsScript(schema.settings.analytics) : ''}
 </head>
 <body>
-    <div id=\"quiz-app\">
+    <div id="quiz-app">
         ${schema.steps.map(step => generateStepHTML(step)).join('\\n')}
     </div>
     
-    <script src=\"./app.js\"></script>
+    <script src="./app.js"></script>
 </body>
 </html>`;
 }
@@ -476,8 +476,8 @@ function generateStepHTML(step: any): string {
   const sortedBlocks = step.blocks.sort((a: any, b: any) => (a.order || 0) - (b.order || 0));
   
   return `
-    <div class=\"step\" id=\"step-${step.id}\" data-step-type=\"${step.type}\">
-        <div class=\"step-content\">
+    <div class="step" id="step-${step.id}" data-step-type="${step.type}">
+        <div class="step-content">
             ${sortedBlocks.map((block: any) => generateBlockHTML(block)).join('\\n')}
         </div>
         ${generateNavigationHTML(step)}
@@ -490,23 +490,23 @@ function generateBlockHTML(block: any): string {
   
   switch (block.type) {
     case 'heading-inline':
-      return `<h2 class=\"heading\" style=\"color: ${props.color || '#000'}\">${props.content || ''}</h2>`;
+      return `<h2 class="heading" style="color: ${props.color || '#000'}">${props.content || ''}</h2>`;
     case 'text-inline':
-      return `<p class=\"text\" style=\"color: ${props.color || '#000'}\">${props.content || ''}</p>`;
+      return `<p class="text" style="color: ${props.color || '#000'}">${props.content || ''}</p>`;
     case 'image-inline':
-      return `<img class=\"image\" src=\"${props.src}\" alt=\"${props.alt}\" />`;
+      return `<img class="image" src="${props.src}" alt="${props.alt}" />`;
     case 'button-inline':
-      return `<button class=\"button\" style=\"background: ${props.backgroundColor}; color: ${props.textColor}\">${props.text}</button>`;
+      return `<button class="button" style="background: ${props.backgroundColor}; color: ${props.textColor}">${props.text}</button>`;
     default:
-      return `<div class=\"block-${block.type}\">${JSON.stringify(props)}</div>`;
+      return `<div class="block-${block.type}">${JSON.stringify(props)}</div>`;
   }
 }
 
 function generateNavigationHTML(step: any): string {
   return `
-    <div class=\"navigation\">
-        ${step.settings.showBackButton ? '<button class=\"btn btn-back\">← Voltar</button>' : ''}
-        ${step.settings.showNextButton ? '<button class=\"btn btn-next\">Continuar →</button>' : ''}
+    <div class="navigation">
+        ${step.settings.showBackButton ? '<button class="btn btn-back">← Voltar</button>' : ''}
+        ${step.settings.showNextButton ? '<button class="btn btn-next">Continuar →</button>' : ''}
     </div>
   `;
 }
@@ -662,7 +662,7 @@ function generateMinifiedJS(schema: QuizFunnelSchema): string {
 function generateAnalyticsScript(analytics: any): string {
   if (analytics.googleAnalytics) {
     return `
-      <script async src=\"https://www.googletagmanager.com/gtag/js?id=${analytics.googleAnalytics.measurementId}\"></script>
+      <script async src="https://www.googletagmanager.com/gtag/js?id=${analytics.googleAnalytics.measurementId}"></script>
       <script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}

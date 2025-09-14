@@ -20,16 +20,16 @@ export interface QuizFunnelSchema {
   version: string;
   category: 'quiz' | 'lead-magnet' | 'sales-funnel' | 'assessment';
   templateType: 'quiz-complete' | 'quiz-simple' | 'lead-capture' | 'sales-page';
-  
+
   // Configurações globais
   settings: FunnelGlobalSettings;
-  
+
   // Estrutura do funil
   steps: FunnelStep[];
-  
+
   // Configurações de publicação
   publication: PublicationSettings;
-  
+
   // Metadados do editor
   editorMeta: EditorMetadata;
 }
@@ -41,22 +41,22 @@ export interface QuizFunnelSchema {
 export interface FunnelGlobalSettings {
   // SEO e Meta Tags
   seo: SEOConfiguration;
-  
+
   // Analytics e Tracking
   analytics: AnalyticsConfiguration;
-  
+
   // Branding e Visual
   branding: BrandingConfiguration;
-  
+
   // Persistência e Dados
   persistence: PersistenceConfiguration;
-  
+
   // Integrações
   integrations: IntegrationsConfiguration;
-  
+
   // Performance
   performance: PerformanceConfiguration;
-  
+
   // Legal e Conformidade
   legal: LegalConfiguration;
 }
@@ -67,7 +67,7 @@ export interface SEOConfiguration {
   keywords: string[];
   canonical?: string;
   robots: 'index,follow' | 'noindex,nofollow' | 'index,nofollow' | 'noindex,follow';
-  
+
   // Open Graph
   openGraph: {
     title: string;
@@ -78,7 +78,7 @@ export interface SEOConfiguration {
     url: string;
     siteName: string;
   };
-  
+
   // Twitter Cards
   twitter: {
     card: 'summary' | 'summary_large_image' | 'app' | 'player';
@@ -88,7 +88,7 @@ export interface SEOConfiguration {
     creator?: string;
     site?: string;
   };
-  
+
   // Schema.org structured data
   structuredData: {
     '@type': 'Quiz' | 'WebApplication' | 'Service';
@@ -108,29 +108,29 @@ export interface SEOConfiguration {
 
 export interface AnalyticsConfiguration {
   enabled: boolean;
-  
+
   // Google Analytics 4
   googleAnalytics?: {
     measurementId: string;
     enableEcommerce: boolean;
     customEvents: string[];
   };
-  
+
   // Google Tag Manager
   googleTagManager?: {
     containerId: string;
     dataLayerName: string;
   };
-  
+
   // Facebook Pixel
   facebookPixel?: {
     pixelId: string;
     events: FacebookPixelEvent[];
   };
-  
+
   // Eventos personalizados
   customEvents: AnalyticsEvent[];
-  
+
   // UTM Configuration
   utm: {
     source: string;
@@ -139,7 +139,7 @@ export interface AnalyticsConfiguration {
     content?: string;
     term?: string;
   };
-  
+
   // Heatmap e Session Recording
   heatmap?: {
     provider: 'hotjar' | 'fullstory' | 'logrocket';
@@ -167,7 +167,7 @@ export interface BrandingConfiguration {
     warning: string;
     success: string;
   };
-  
+
   // Tipografia
   typography: {
     fontFamily: {
@@ -198,7 +198,7 @@ export interface BrandingConfiguration {
       relaxed: number;
     };
   };
-  
+
   // Logo e Assets
   logo: {
     primary: string;
@@ -206,7 +206,7 @@ export interface BrandingConfiguration {
     favicon: string;
     appleTouchIcon: string;
   };
-  
+
   // Espaçamento e Layout
   spacing: {
     xs: string;
@@ -216,7 +216,7 @@ export interface BrandingConfiguration {
     xl: string;
     '2xl': string;
   };
-  
+
   // Border Radius
   borderRadius: {
     none: string;
@@ -226,7 +226,7 @@ export interface BrandingConfiguration {
     xl: string;
     full: string;
   };
-  
+
   // Shadows
   shadows: {
     sm: string;
@@ -244,7 +244,7 @@ export interface PersistenceConfiguration {
   compression: boolean;
   encryption: boolean;
   backupEnabled: boolean;
-  
+
   // Supabase configuration
   supabase?: {
     url: string;
@@ -255,7 +255,7 @@ export interface PersistenceConfiguration {
       results: string;
     };
   };
-  
+
   // Webhook configuration
   webhooks?: WebhookConfiguration[];
 }
@@ -268,21 +268,21 @@ export interface IntegrationsConfiguration {
     listId: string;
     tags: string[];
   };
-  
+
   // CRM
   crm?: {
     provider: 'hubspot' | 'salesforce' | 'pipedrive' | 'custom';
     apiKey: string;
     pipelineId?: string;
   };
-  
+
   // Payment
   payment?: {
     provider: 'stripe' | 'paypal' | 'hotmart' | 'custom';
     apiKey: string;
     products: PaymentProduct[];
   };
-  
+
   // Webhooks
   webhooks: WebhookConfiguration[];
 }
@@ -308,20 +308,20 @@ export interface PerformanceConfiguration {
     strategy: 'stale-while-revalidate' | 'cache-first' | 'network-first';
     ttl: number; // seconds
   };
-  
+
   // Lazy Loading
   lazyLoading: {
     images: boolean;
     components: boolean;
     threshold: number; // pixels
   };
-  
+
   // Preloading
   preload: {
     criticalResources: string[];
     nextStep: boolean;
   };
-  
+
   // Compression
   compression: {
     images: boolean;
@@ -338,14 +338,14 @@ export interface LegalConfiguration {
     consentRequired: boolean;
     cookieNotice: boolean;
   };
-  
+
   // Terms of Service
   terms: {
     enabled: boolean;
     termsUrl: string;
     acceptanceRequired: boolean;
   };
-  
+
   // Data Processing
   dataProcessing: {
     purpose: string[];
@@ -366,24 +366,24 @@ export interface FunnelStep {
   description: string;
   order: number;
   type: StepType;
-  
+
   // Configurações da etapa
   settings: StepSettings;
-  
+
   // Blocos de conteúdo
   blocks: Block[];
-  
+
   // Lógica de navegação
   navigation: NavigationLogic;
-  
+
   // Validação e regras
   validation: ValidationRules;
-  
+
   // SEO específico da etapa
   seo?: Partial<SEOConfiguration>;
 }
 
-export type StepType = 
+export type StepType =
   | 'intro'           // Página inicial/boas-vindas
   | 'lead-capture'    // Captura de dados (nome, email)
   | 'quiz-question'   // Pergunta do quiz com pontuação
@@ -400,21 +400,21 @@ export interface StepSettings {
   maxTimeOnStep?: number; // milliseconds
   autoAdvance?: boolean;
   autoAdvanceDelay?: number; // milliseconds
-  
+
   // Visual
   backgroundColor?: string;
   backgroundImage?: string;
   backgroundVideo?: string;
-  
+
   // Progress
   showProgress: boolean;
   progressStyle: 'bar' | 'steps' | 'percentage' | 'custom';
-  
+
   // Navigation
   showBackButton: boolean;
   showNextButton: boolean;
   allowSkip: boolean;
-  
+
   // Analytics
   trackTimeOnStep: boolean;
   trackInteractions: boolean;
@@ -424,11 +424,11 @@ export interface StepSettings {
 export interface NavigationLogic {
   // Navegação condicional
   conditions: NavigationCondition[];
-  
+
   // Navegação padrão
   nextStep?: string;
   prevStep?: string;
-  
+
   // Ações especiais
   actions: NavigationAction[];
 }
@@ -465,16 +465,16 @@ export interface PublicationSettings {
   // Status
   status: 'draft' | 'published' | 'archived';
   publishedAt?: string;
-  
+
   // URLs
   baseUrl: string;
   customDomain?: string;
   slug: string;
-  
+
   // Versioning
   version: string;
   changelog: ChangelogEntry[];
-  
+
   // Access Control
   accessControl: {
     public: boolean;
@@ -482,7 +482,7 @@ export interface PublicationSettings {
     allowedDomains?: string[];
     ipWhitelist?: string[];
   };
-  
+
   // CDN e Performance
   cdn: {
     enabled: boolean;
@@ -506,7 +506,7 @@ export interface EditorMetadata {
   // Histórico de edições
   lastModified: string;
   lastModifiedBy: string;
-  
+
   // Configurações do editor
   editorVersion: string;
   editorSettings: {
@@ -515,18 +515,18 @@ export interface EditorMetadata {
     showGrid: boolean;
     snapToGrid: boolean;
   };
-  
+
   // Templates e variações
   baseTemplate?: string;
   variations: TemplateVariation[];
-  
+
   // Colaboração
   collaborators: Collaborator[];
-  
+
   // Tags e categorização
   tags: string[];
   categories: string[];
-  
+
   // Estatísticas
   stats: {
     totalBlocks: number;
@@ -565,7 +565,7 @@ export interface Collaborator {
 // TIPOS AUXILIARES
 // ============================================================================
 
-export type FacebookPixelEvent = 
+export type FacebookPixelEvent =
   | 'PageView'
   | 'Lead'
   | 'CompleteRegistration'
@@ -592,7 +592,7 @@ export interface PaymentProduct {
   features: string[];
 }
 
-export type WebhookEvent = 
+export type WebhookEvent =
   | 'step_completed'
   | 'quiz_completed'
   | 'result_calculated'
@@ -607,7 +607,7 @@ export type WebhookEvent =
 export interface UserSession {
   id: string;
   funnelId: string;
-  
+
   // Dados do usuário
   userData: {
     name?: string;
@@ -615,7 +615,7 @@ export interface UserSession {
     phone?: string;
     customFields?: Record<string, any>;
   };
-  
+
   // Progresso
   progress: {
     currentStep: string;
@@ -625,16 +625,16 @@ export interface UserSession {
     completedAt?: string;
     totalTimeSpent: number; // milliseconds
   };
-  
+
   // Respostas do quiz
   answers: QuizAnswer[];
-  
+
   // Respostas estratégicas
   strategicAnswers: StrategyAnswer[];
-  
+
   // Resultado calculado
   result?: QuizResult;
-  
+
   // Dados de tracking
   tracking: {
     utm: Record<string, string>;

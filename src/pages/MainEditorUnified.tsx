@@ -47,6 +47,49 @@ const MainEditorUnified: React.FC = () => {
     const stepParam = params.get('step');
     const initialStep = stepParam ? Math.max(1, Math.min(21, parseInt(stepParam))) : undefined;
 
+    // 🎯 NOVO: Controle do UniversalStepEditor via URL
+    const useUniversalEditor = params.get('universal') === 'true' || params.get('editor') === 'universal';
+    const forceUniversal = params.get('forceUniversal') === 'true'; // Força uso mesmo com problemas
+
+    // 🤖 DETECÇÃO AUTOMÁTICA: Quando usar UniversalStepEditor automaticamente
+    const shouldUseUniversalEditor = React.useMemo(() => {
+        // Se explicitamente solicitado via URL
+        if (useUniversalEditor || forceUniversal) return true;
+
+        // Se explicitamente desabilitado via URL
+        if (params.get('universal') === 'false' || params.get('editor') === 'legacy') return false;
+
+        // CRITÉRIOS AUTOMÁTICOS para ativar UniversalStepEditor:
+
+        // 1. Se é um step específico (editando step individual)
+        if (initialStep && initialStep >= 1 && initialStep <= 21) {
+            console.log('🎯 Detectado step específico, usando UniversalStepEditor');
+            return true;
+        }
+
+        // 2. Se é um funil novo sem dados legado
+        if (!funnelId || funnelId === 'new' || funnelId.startsWith('temp-')) {
+            console.log('🎯 Detectado funil novo, usando UniversalStepEditor');
+            return true;
+        }
+
+        // 3. Se template é modular/universal
+        if (templateId && (templateId.includes('modular') || templateId.includes('universal'))) {
+            console.log('🎯 Detectado template modular, usando UniversalStepEditor');
+            return true;
+        }
+
+        // 4. Se no modo debug (para testes)
+        if (debugMode) {
+            console.log('🎯 Modo debug ativo, usando UniversalStepEditor');
+            return true;
+        }
+
+        // PADRÃO: usar UniversalStepEditor (nova arquitetura como padrão)
+        console.log('🎯 Usando UniversalStepEditor como padrão');
+        return true;
+    }, [useUniversalEditor, forceUniversal, params, initialStep, funnelId, templateId, debugMode]);
+
     // Debug mode baseado em parâmetros URL
     const debugMode = params.get('debug') === 'true';
 
@@ -66,6 +109,9 @@ const MainEditorUnified: React.FC = () => {
         funnelId,
         duplicateId,
         initialStep,
+        useUniversalEditor,
+        shouldUseUniversalEditor,
+        forceUniversal,
         supabaseConfig,
         debugMode
     });
@@ -99,6 +145,9 @@ const MainEditorUnified: React.FC = () => {
                             templateId={resolvedTemplateId || undefined}
                             funnelId={funnelId || undefined}
                             debugMode={debugMode}
+                            useUniversalEditor={shouldUseUniversalEditor}
+                            forceUniversal={forceUniversal}
+                            initialStep={initialStep}
                         />
                     </EditorRuntimeProviders>
                 ) : (
@@ -126,6 +175,9 @@ const MainEditorUnified: React.FC = () => {
                                                     templateId={resolvedTemplateId || undefined}
                                                     funnelId={funnelId || undefined}
                                                     debugMode={debugMode}
+                                                    useUniversalEditor={shouldUseUniversalEditor}
+                                                    forceUniversal={forceUniversal}
+                                                    initialStep={initialStep}
                                                 />
                                             </QuizFlowProvider>
                                         </Quiz21StepsProvider>
@@ -153,16 +205,25 @@ const FunnelValidatedEditor: React.FC<{
     templateId?: string;
     funnelId?: string;
     debugMode?: boolean;
+    useUniversalEditor?: boolean;
+    forceUniversal?: boolean;
+    initialStep?: number;
 }> = ({
     templateId,
     funnelId,
     debugMode = false,
+    useUniversalEditor = true, // 🎯 PADRÃO: usar UniversalStepEditor
+    forceUniversal = false,
+    initialStep,
 }) => {
         const funnelContext = useFunnelContext(funnelId);
 
         if (debugMode) {
             console.log('🔐 FunnelValidatedEditor:', {
                 funnelId,
+                useUniversalEditor,
+                forceUniversal,
+                initialStep,
                 isReady: funnelContext.isReady,
                 isLoading: funnelContext.isLoading,
                 isError: funnelContext.isError,
@@ -177,6 +238,9 @@ const FunnelValidatedEditor: React.FC<{
                     templateId={templateId}
                     funnelId={undefined}
                     debugMode={debugMode}
+                    useUniversalEditor={useUniversalEditor}
+                    forceUniversal={forceUniversal}
+                    initialStep={initialStep}
                 />
             );
         }
@@ -223,6 +287,9 @@ const FunnelValidatedEditor: React.FC<{
                     templateId={templateId}
                     funnelId={funnelId}
                     debugMode={debugMode}
+                    useUniversalEditor={useUniversalEditor}
+                    forceUniversal={forceUniversal}
+                    initialStep={initialStep}
                     validatedFunnel={funnelContext.funnel}
                     canEdit={funnelContext.canEdit}
                 />
@@ -258,12 +325,18 @@ const EditorInitializerUnified: React.FC<{
     templateId?: string;
     funnelId?: string;
     debugMode?: boolean;
+    useUniversalEditor?: boolean;
+    forceUniversal?: boolean;
+    initialStep?: number;
     validatedFunnel?: any;
     canEdit?: boolean;
 }> = ({
     templateId,
     funnelId,
-    debugMode = false
+    debugMode = false,
+    useUniversalEditor = true,
+    forceUniversal = false,
+    initialStep,
 }) => {
         const [UnifiedEditorComp, setUnifiedEditorComp] = React.useState<React.ComponentType | null>(null);
         const [isLoading, setIsLoading] = React.useState(true);
@@ -592,8 +665,33 @@ const EditorInitializerUnified: React.FC<{
                             </p>
                         </div>
                     )}
-                    <div className={`editor-main-content ${fallbackMode ? 'h-[calc(100vh-40px)]' : 'h-screen'}`}>
-                        <UnifiedEditorComp />
+                    {useUniversalEditor && !fallbackMode && (
+                        <div className="bg-green-50 border-b border-green-200 px-4 py-2">
+                            <p className="text-sm text-green-800 text-center">
+                                🎯 UniversalStepEditor Ativo - Modo Visual Universal
+                            </p>
+                        </div>
+                    )}
+                    <div className={`editor-main-content ${(fallbackMode || useUniversalEditor) ? 'h-[calc(100vh-40px)]' : 'h-screen'}`}>
+                        <UnifiedEditorComp
+                            stepId={initialStep ? `step-${initialStep}` : 'step-1'}
+                            stepNumber={initialStep || 1}
+                            funnelId={funnelId}
+                            onStepChange={(stepId: string) => {
+                                console.log('🔄 Step mudou:', stepId);
+                                // Atualizar URL se necessário
+                                const stepNumber = stepId.replace('step-', '');
+                                if (window.location.search.includes('step=')) {
+                                    const url = new URL(window.location.href);
+                                    url.searchParams.set('step', stepNumber);
+                                    window.history.replaceState({}, '', url.toString());
+                                }
+                            }}
+                            onSave={(stepId: string, data: any) => {
+                                console.log('💾 Step salvo:', stepId, data);
+                                // Implementar lógica de salvamento
+                            }}
+                        />
                     </div>
                 </div>
             );

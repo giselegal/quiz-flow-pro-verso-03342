@@ -21,16 +21,16 @@ export class QuizTemplateAdapter {
    */
   static async convertLegacyTemplate(): Promise<QuizFunnelSchema> {
     console.log('🔄 Iniciando conversão do template legacy para esquema unificado...');
-    
+
     const legacyTemplate = this.loadLegacyTemplate();
     const unifiedSchema = await this.transformToUnifiedSchema(legacyTemplate);
-    
+
     // Validar equivalência
     const validation = this.validateConversion(legacyTemplate, unifiedSchema);
     if (!validation.isValid) {
       throw new Error(`Conversão falhou: ${validation.errors.join(', ')}`);
     }
-    
+
     console.log('✅ Conversão concluída com sucesso');
     return unifiedSchema;
   }
@@ -53,7 +53,7 @@ export class QuizTemplateAdapter {
   private static async transformToUnifiedSchema(legacyTemplate: any): Promise<QuizFunnelSchema> {
     const steps = await this.convertSteps(legacyTemplate.template, legacyTemplate.questions);
     const settings = this.convertGlobalSettings(legacyTemplate.globalConfig);
-    
+
     return {
       id: 'migrated-quiz21-steps-complete',
       name: 'Quiz de Estilo Pessoal - 21 Etapas (Migrado)',
@@ -61,10 +61,10 @@ export class QuizTemplateAdapter {
       version: '3.0.0',
       category: 'quiz',
       templateType: 'quiz-complete',
-      
+
       settings,
       steps,
-      
+
       publication: {
         status: 'draft',
         baseUrl: 'https://quiz.giselegalvao.com.br',
@@ -89,7 +89,7 @@ export class QuizTemplateAdapter {
           provider: 'cloudflare'
         }
       },
-      
+
       editorMeta: {
         lastModified: new Date().toISOString(),
         lastModifiedBy: 'sistema-migracao',
@@ -119,13 +119,13 @@ export class QuizTemplateAdapter {
    */
   private static async convertSteps(legacyTemplate: Record<string, Block[]>, questions: Record<number, string>): Promise<FunnelStep[]> {
     const steps: FunnelStep[] = [];
-    
+
     for (const [stepId, blocks] of Object.entries(legacyTemplate)) {
       const stepNumber = parseInt(stepId.replace('step-', ''));
       const step = await this.convertSingleStep(stepId, stepNumber, blocks, questions[stepNumber]);
       steps.push(step);
     }
-    
+
     // Ordenar por número da etapa
     return steps.sort((a, b) => a.order - b.order);
   }
@@ -134,21 +134,21 @@ export class QuizTemplateAdapter {
    * Converte uma única etapa
    */
   private static async convertSingleStep(
-    stepId: string, 
-    stepNumber: number, 
-    blocks: Block[], 
+    stepId: string,
+    stepNumber: number,
+    blocks: Block[],
     questionText?: string
   ): Promise<FunnelStep> {
     const stepType = this.determineStepType(stepNumber);
     const stepName = this.generateStepName(stepNumber, stepType, questionText);
-    
+
     return {
       id: stepId,
       name: stepName,
       description: this.generateStepDescription(stepNumber, stepType, questionText),
       order: stepNumber,
       type: stepType,
-      
+
       settings: {
         showProgress: stepNumber > 1,
         progressStyle: 'bar',
@@ -159,13 +159,13 @@ export class QuizTemplateAdapter {
         trackInteractions: true,
         customEvents: [`step_${stepNumber}_viewed`]
       },
-      
+
       blocks: this.convertBlocks(blocks),
-      
+
       navigation: this.generateNavigationLogic(stepId, stepNumber, stepType),
-      
+
       validation: this.generateValidationRules(stepType, blocks),
-      
+
       seo: this.generateStepSEO(stepNumber, stepType, questionText)
     };
   }
@@ -263,7 +263,7 @@ export class QuizTemplateAdapter {
           }
         });
         break;
-      
+
       case 'strategic-question':
         baseLogic.actions.push({
           type: 'set-variable',
@@ -273,7 +273,7 @@ export class QuizTemplateAdapter {
           }
         });
         break;
-      
+
       case 'result':
         baseLogic.actions.push({
           type: 'calculate-score',
@@ -292,8 +292,8 @@ export class QuizTemplateAdapter {
    * Gera regras de validação para a etapa
    */
   private static generateValidationRules(stepType: StepType, blocks: Block[]) {
-    const hasFormInput = blocks.some(block => 
-      block.type === 'form-input' || 
+    const hasFormInput = blocks.some(block =>
+      block.type === 'form-input' ||
       block.type === 'options-grid' ||
       block.type === 'quiz-question-inline'
     );
@@ -315,32 +315,32 @@ export class QuizTemplateAdapter {
    */
   private static generateStepSEO(stepNumber: number, stepType: StepType, questionText?: string) {
     const baseTitle = 'Descubra Seu Estilo Pessoal';
-    
+
     switch (stepType) {
       case 'lead-capture':
         return {
           title: `${baseTitle} - Comece Agora`,
           description: 'Descubra seu estilo pessoal através de nosso quiz exclusivo'
         };
-      
+
       case 'quiz-question':
         return {
           title: `${baseTitle} - Pergunta ${stepNumber - 1}`,
           description: questionText || `Responda à pergunta ${stepNumber - 1} do quiz de estilo`
         };
-      
+
       case 'result':
         return {
           title: `${baseTitle} - Seu Resultado`,
           description: 'Descubra seu estilo predominante e transforme seu guarda-roupa'
         };
-      
+
       case 'offer':
         return {
           title: `${baseTitle} - Oferta Exclusiva`,
           description: 'Transforme seu resultado em um guia personalizado completo'
         };
-      
+
       default:
         return undefined;
     }
@@ -370,7 +370,7 @@ export class QuizTemplateAdapter {
       description: seoConfig?.description || 'Descubra seu estilo predominante através do nosso quiz personalizado e transforme seu guarda-roupa com confiança.',
       keywords: seoConfig?.keywords || ['estilo pessoal', 'consultoria de imagem', 'quiz de estilo'],
       robots: 'index,follow' as const,
-      
+
       openGraph: {
         title: seoConfig?.openGraph?.title || 'Quiz de Estilo Pessoal',
         description: seoConfig?.openGraph?.description || 'Descubra seu estilo único',
@@ -380,14 +380,14 @@ export class QuizTemplateAdapter {
         url: 'https://quiz.giselegalvao.com.br',
         siteName: 'Gisele Galvão - Consultoria de Imagem'
       },
-      
+
       twitter: {
         card: 'summary_large_image' as const,
         title: 'Quiz de Estilo Pessoal',
         description: 'Descubra seu estilo único',
         image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735378/quiz_twitter_card.webp'
       },
-      
+
       structuredData: {
         '@type': 'Quiz' as const,
         name: 'Quiz de Estilo Pessoal',
@@ -411,7 +411,7 @@ export class QuizTemplateAdapter {
   private static convertAnalyticsConfig(analyticsConfig: any) {
     return {
       enabled: true,
-      
+
       googleAnalytics: {
         measurementId: analyticsConfig?.googleAnalytics?.measurementId || 'GA4-XXXXXXXXX',
         enableEcommerce: true,
@@ -424,7 +424,7 @@ export class QuizTemplateAdapter {
           'conversion'
         ]
       },
-      
+
       customEvents: [
         {
           name: 'quiz_progression',
@@ -439,7 +439,7 @@ export class QuizTemplateAdapter {
           label: 'quiz_result'
         }
       ],
-      
+
       utm: {
         source: 'organic',
         medium: 'quiz',
@@ -468,7 +468,7 @@ export class QuizTemplateAdapter {
         warning: '#F59E0B',
         success: '#10B981'
       },
-      
+
       typography: {
         fontFamily: {
           primary: 'Inter, system-ui, sans-serif',
@@ -498,13 +498,13 @@ export class QuizTemplateAdapter {
           relaxed: 1.75
         }
       },
-      
+
       logo: {
         primary: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
         favicon: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/favicon.ico',
         appleTouchIcon: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/apple-touch-icon.png'
       },
-      
+
       spacing: {
         xs: '0.25rem',
         sm: '0.5rem',
@@ -513,7 +513,7 @@ export class QuizTemplateAdapter {
         xl: '2rem',
         '2xl': '3rem'
       },
-      
+
       borderRadius: {
         none: '0',
         sm: '0.25rem',
@@ -522,7 +522,7 @@ export class QuizTemplateAdapter {
         xl: '1rem',
         full: '9999px'
       },
-      
+
       shadows: {
         sm: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
         md: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
@@ -544,7 +544,7 @@ export class QuizTemplateAdapter {
       compression: true,
       encryption: false,
       backupEnabled: true,
-      
+
       webhooks: []
     };
   }
@@ -584,20 +584,20 @@ export class QuizTemplateAdapter {
         strategy: 'stale-while-revalidate' as const,
         ttl: 3600
       },
-      
+
       lazyLoading: {
         images: true,
         components: true,
         threshold: 100
       },
-      
+
       preload: {
         criticalResources: [
           'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp'
         ],
         nextStep: true
       },
-      
+
       compression: {
         images: true,
         scripts: true,
@@ -617,13 +617,13 @@ export class QuizTemplateAdapter {
         consentRequired: true,
         cookieNotice: true
       },
-      
+
       terms: {
         enabled: true,
         termsUrl: 'https://giselegalvao.com.br/termos',
         acceptanceRequired: false
       },
-      
+
       dataProcessing: {
         purpose: ['Personalização de conteúdo', 'Análise de comportamento', 'Marketing direcionado'],
         legalBasis: 'Consentimento explícito do usuário',
@@ -639,29 +639,29 @@ export class QuizTemplateAdapter {
    */
   private static validateConversion(legacyTemplate: any, unifiedSchema: QuizFunnelSchema) {
     const errors: string[] = [];
-    
+
     // Validar número de etapas
     const legacyStepsCount = Object.keys(legacyTemplate.template).length;
     if (unifiedSchema.steps.length !== legacyStepsCount) {
       errors.push(`Número de etapas divergente: legacy=${legacyStepsCount}, unified=${unifiedSchema.steps.length}`);
     }
-    
+
     // Validar presença de blocos essenciais
     for (const step of unifiedSchema.steps) {
       if (step.blocks.length === 0) {
         errors.push(`Etapa ${step.id} não possui blocos`);
       }
     }
-    
+
     // Validar configurações obrigatórias
     if (!unifiedSchema.settings.seo.title) {
       errors.push('Título SEO é obrigatório');
     }
-    
+
     if (!unifiedSchema.settings.branding.colors.primary) {
       errors.push('Cor primária da marca é obrigatória');
     }
-    
+
     return {
       isValid: errors.length === 0,
       errors
@@ -673,29 +673,29 @@ export class QuizTemplateAdapter {
 // UTILITÁRIOS DE MIGRAÇÃO
 // ============================================================================
 
-export class MigrationUtils {
+class MigrationUtils {
   /**
    * Executa a migração completa
    */
   static async runMigration(): Promise<QuizFunnelSchema> {
     console.log('🚀 Iniciando processo de migração completo...');
-    
+
     try {
       // 1. Converter template
       const unifiedSchema = await QuizTemplateAdapter.convertLegacyTemplate();
-      
+
       // 2. Salvar esquema unificado
       await this.saveUnifiedSchema(unifiedSchema);
-      
+
       // 3. Criar backup do template antigo
       await this.backupLegacyTemplate();
-      
+
       // 4. Executar testes de equivalência
       await this.runEquivalenceTests(unifiedSchema);
-      
+
       console.log('✅ Migração concluída com sucesso!');
       return unifiedSchema;
-      
+
     } catch (error) {
       console.error('❌ Erro durante a migração:', error);
       throw error;
@@ -723,13 +723,13 @@ export class MigrationUtils {
    */
   private static async runEquivalenceTests(schema: QuizFunnelSchema): Promise<void> {
     console.log('🧪 Executando testes de equivalência...');
-    
+
     // TODO: Implementar testes unitários para validar equivalência
     // - Mesma quantidade de etapas
     // - Mesma lógica de pontuação
     // - Mesma estrutura de navegação
     // - Mesmas validações
-    
+
     console.log('✅ Testes de equivalência aprovados');
   }
 }
