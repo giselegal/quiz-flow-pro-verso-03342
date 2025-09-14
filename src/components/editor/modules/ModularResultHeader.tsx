@@ -1,15 +1,12 @@
 import React from 'react';
-import { useEditor, Editor, Frame } from '@craftjs/core';
 import { cn } from '@/lib/utils';
 import { Card } from '@/components/ui/card';
-import {
-    HeaderSection,
-    UserInfoSection,
-    ProgressSection,
-    MainImageSection,
-    BaseModuleProps,
-    themeColors
-} from './modules';
+import { HeaderSection } from './HeaderSection';
+import { UserInfoSection } from './UserInfoSection';
+import { ProgressSection } from './ProgressSection';
+import { MainImageSection } from './MainImageSection';
+import type { BaseModuleProps } from './types';
+import { themeColors } from './types';
 import type { BlockComponentProps } from '@/types/blocks';
 import { useQuizResult } from '@/hooks/useQuizResult';
 import { getBestUserName } from '@/core/user/name';
@@ -36,13 +33,7 @@ const ModularResultHeaderComponent: React.FC<ModularResultHeaderProps> = ({
     padding = 'lg',
     borderRadius = 'lg',
     mobileLayout = 'stack',
-    editMode = false,
-    className = '',
-    isSelected = false,
 }) => {
-    const { enabled } = useEditor((state) => ({
-        enabled: state.options.enabled
-    }), { collect: (state) => ({ enabled: state.options.enabled }) });
 
     // Classes para layout do container
     const containerLayoutClasses = {
@@ -83,11 +74,7 @@ const ModularResultHeaderComponent: React.FC<ModularResultHeaderProps> = ({
                 // Layout responsivo
                 'block md:' + containerLayoutClasses[containerLayout].replace('grid ', '').replace('flex ', ''),
                 // Mobile layout
-                mobileLayoutClasses[mobileLayout],
-                // Estados do editor
-                enabled && isSelected && 'ring-2 ring-[#B89B7A] ring-offset-2 bg-[#B89B7A]/5',
-                enabled && !isSelected && 'hover:ring-1 hover:ring-[#B89B7A]/50 hover:bg-[#B89B7A]/5',
-                className
+                mobileLayoutClasses[mobileLayout]
             )}
             style={{ backgroundColor: backgroundColor !== 'transparent' ? backgroundColor : undefined }}
         >
@@ -176,12 +163,6 @@ const ModularResultHeaderComponent: React.FC<ModularResultHeaderProps> = ({
                 </div>
             </div>
 
-            {/* Editor overlay quando selecionado */}
-            {enabled && isSelected && (
-                <div className="absolute -top-1 -right-1 bg-[#B89B7A] text-white text-xs px-2 py-1 rounded shadow-lg">
-                    Modular Container
-                </div>
-            )}
         </Card>
     );
 };
