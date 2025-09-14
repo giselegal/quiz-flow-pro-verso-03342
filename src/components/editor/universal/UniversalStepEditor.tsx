@@ -30,6 +30,7 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
     const [currentStepData, setCurrentStepData] = React.useState<any>(null);
     const [selectedBlockId, setSelectedBlockId] = React.useState<string | null>(null);
     const [selectedBlockData, setSelectedBlockData] = React.useState<any>(null);
+    const [hasUnsavedChanges, setHasUnsavedChanges] = React.useState(false);
 
     // Carregar dados do step atual
     React.useEffect(() => {
@@ -135,6 +136,71 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
         onSave?.(stepId, saveData);
         console.log('✅ Step salvo:', saveData);
     };
+
+    // Função para atualizar propriedades de bloco em tempo real
+    const updateBlockProperty = (blockId: string, path: string, value: any) => {
+        setCurrentStepData((prev: any) => {
+            if (!prev?.blocks) return prev;
+            
+            const updatedBlocks = prev.blocks.map((block: any) => {
+                if (block.id !== blockId) return block;
+                
+                const newBlock = { ...block };
+                const pathParts = path.split('.');
+                
+                if (pathParts[0] === 'content') {
+                    newBlock.content = { ...newBlock.content };
+                    newBlock.content[pathParts[1]] = value;
+                } else if (pathParts[0] === 'properties') {
+                    newBlock.properties = { ...newBlock.properties };
+                    newBlock.properties[pathParts[1]] = value;
+                } else {
+                    newBlock[pathParts[0]] = value;
+                }
+                
+                return newBlock;
+            });
+            
+            return { ...prev, blocks: updatedBlocks };
+        });
+        
+        // Atualizar dados do bloco selecionado se for o mesmo
+        if (selectedBlockData?.id === blockId) {
+            setSelectedBlockData((prev: any) => {
+                if (!prev) return prev;
+                const newData = { ...prev };
+                const pathParts = path.split('.');
+                
+                if (pathParts[0] === 'content') {
+                    newData.content = { ...newData.content };
+                    newData.content[pathParts[1]] = value;
+                } else if (pathParts[0] === 'properties') {
+                    newData.properties = { ...newData.properties };
+                    newData.properties[pathParts[1]] = value;
+                } else {
+                    newData[pathParts[0]] = value;
+                }
+                
+                return newData;
+            });
+        }
+        
+        console.log('🔄 Propriedade atualizada:', blockId, path, value);
+        setHasUnsavedChanges(true);
+    };
+
+    // Auto-save das mudanças
+    React.useEffect(() => {
+        if (!hasUnsavedChanges) return;
+
+        const autoSaveTimer = setTimeout(() => {
+            handleSave();
+            setHasUnsavedChanges(false);
+            console.log('💾 Auto-save executado');
+        }, 2000); // Auto-save após 2 segundos de inatividade
+
+        return () => clearTimeout(autoSaveTimer);
+    }, [hasUnsavedChanges, currentStepData]);
 
     // Renderizar componente visual baseado no tipo
     const renderComponent = (component: any, index: number) => {
@@ -428,10 +494,21 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
 
                 <div className="flex items-center space-x-3">
                     <button
-                        onClick={handleSave}
-                        className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
+                        onClick={() => {
+                            handleSave();
+                            setHasUnsavedChanges(false);
+                        }}
+                        className={`px-4 py-2 rounded-md transition-colors flex items-center space-x-2 ${
+                            hasUnsavedChanges 
+                                ? 'bg-yellow-600 text-white hover:bg-yellow-700' 
+                                : 'bg-blue-600 text-white hover:bg-blue-700'
+                        }`}
                     >
-                        💾 Salvar
+                        <span>💾</span>
+                        <span>{hasUnsavedChanges ? 'Salvar Alterações' : 'Salvar'}</span>
+                        {hasUnsavedChanges && (
+                            <div className="w-2 h-2 bg-red-400 rounded-full animate-pulse"></div>
+                        )}
                     </button>
                 </div>
             </div>
@@ -612,6 +689,7 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                                     blocks: [...(prev?.blocks || []), newBlock]
                                 }));
                                 
+                                setHasUnsavedChanges(true);
                                 console.log('✅ Novo componente adicionado:', newBlock);
                             } catch (error) {
                                 console.error('❌ Erro ao processar drop:', error);
@@ -746,6 +824,11 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                                                             className="w-full border border-gray-300 rounded-md px-2 py-1 text-sm"
                                                             rows={3}
                                                             readOnly={readOnly}
+                                                            onChange={(e) => {
+                                                                if (!readOnly) {
+                                                                    updateBlockProperty(selectedBlockData.id, `content.${key}`, e.target.value);
+                                                                }
+                                                            }}
                                                         />
                                                     ) : (
                                                         <input
@@ -753,6 +836,11 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                                                             defaultValue={value}
                                                             className="w-full border border-gray-300 rounded-md px-2 py-1 text-sm"
                                                             readOnly={readOnly}
+                                                            onChange={(e) => {
+                                                                if (!readOnly) {
+                                                                    updateBlockProperty(selectedBlockData.id, `content.${key}`, e.target.value);
+                                                                }
+                                                            }}
                                                         />
                                                     )
                                                 ) : (
