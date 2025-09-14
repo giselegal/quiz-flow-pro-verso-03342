@@ -347,17 +347,19 @@ const FunnelPanelPage: React.FC = () => {
           storageStatus: 'unified'
         });
 
-        // ✅ CORREÇÃO: Navegar usando ID do funil criado
-        const editorUrl = `/editor/${encodeURIComponent(newFunnel.id)}?template=${templateId}`;
-        logger.debug('funnel-creation', 'Navegando para editor', {
+        // ✅ CORREÇÃO: Navegar diretamente para o editor com UniversalStepEditor ativo
+        const editorUrl = `/editor?useUniversalStepEditor=true&template=${templateId}&funnelId=${encodeURIComponent(newFunnel.id)}`;
+        logger.debug('funnel-creation', 'Navegando para editor com UniversalStepEditor', {
           editorUrl,
           funnelId: newFunnel.id,
+          universalEditor: true,
           fullUrl: `${window.location.origin}${editorUrl}`
         });
 
-        // Navegação direta com verificação
+        // Navegação direta com UniversalStepEditor ativo
+        console.log('🎯 Navegando para editor com UniversalStepEditor ativo:', editorUrl);
         setTimeout(() => {
-          logger.debug('funnel-creation', 'Executando navegação');
+          logger.debug('funnel-creation', 'Executando navegação para UniversalStepEditor');
 
           try {
             // Usar setLocation do wouter
@@ -468,17 +470,26 @@ const FunnelPanelPage: React.FC = () => {
   };
 
   const finalTemplates: UnifiedTemplate[] = React.useMemo(() => {
-    // ⚠️ MODO DESENVOLVIMENTO: Mostrando apenas quiz21StepsComplete
+    // ⚠️ MODO DESENVOLVIMENTO: Mostrando apenas quiz21StepsComplete para edição focada
     // Para desenvolvimento e validação das configurações JSON
     const developmentMode = true;
 
     if (developmentMode) {
-      // Filtra para mostrar apenas o quiz21StepsComplete
+      // Filtra para mostrar APENAS o funil principal para edição
       const unifiedTemplates = getUnifiedTemplates({ sortBy: sort === 'name' ? 'name' : 'usageCount' });
       const filteredTemplates = unifiedTemplates.filter(template =>
-        template.id === 'quiz-estilo-21-steps' ||
-        template.name.toLowerCase().includes('quiz')
+        template.id === 'quiz-estilo-21-steps' || 
+        template.name === 'Quiz 21 Steps Complete' ||
+        template.name.includes('Quiz 21 Etapas')
       );
+      
+      // Se não encontrar o template específico, usar o primeiro disponível
+      if (filteredTemplates.length === 0 && unifiedTemplates.length > 0) {
+        console.log('🎯 Usando primeiro template disponível como funil ativo');
+        return [unifiedTemplates[0]].map(normalizeTemplate);
+      }
+      
+      console.log(`🎯 Modo desenvolvimento ativo: ${filteredTemplates.length} funil(s) disponível(is) para edição`);
       return filteredTemplates.map(normalizeTemplate);
     }
 
@@ -571,6 +582,19 @@ const FunnelPanelPage: React.FC = () => {
             Modelos de Funis
           </h1>
           <p className="text-[#8F7A6A] mt-2 text-lg">Escolha um modelo otimizado ou crie do zero</p>
+          
+          {/* Indicators de modo desenvolvimento */}
+          <div className="flex items-center gap-2 mt-4">
+            <Badge variant="outline" className="bg-blue-50 border-blue-200 text-blue-700">
+              🎯 Modo Desenvolvimento: Funil Único Ativo
+            </Badge>
+            <Badge variant="outline" className="bg-green-50 border-green-200 text-green-700">
+              ✨ UniversalStepEditor Ativo
+            </Badge>
+          </div>
+          <p className="text-[#8F7A6A] mt-2 text-sm">
+            Sistema configurado para exibir apenas o funil principal, editável com o novo UniversalStepEditor.
+          </p>
         </div>
         <div className="flex gap-3">
           {/* Botão de teste para diagnóstico */}
