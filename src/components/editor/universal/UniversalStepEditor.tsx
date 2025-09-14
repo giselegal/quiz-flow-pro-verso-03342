@@ -33,18 +33,65 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
     React.useEffect(() => {
         const loadStepData = () => {
             try {
+                setIsLoading(true);
+                console.log('🔍 Carregando dados para:', stepId, 'step number:', stepNumber);
+                
                 // Buscar dados do step no template
-                const stepData = QUIZ_STYLE_21_STEPS_TEMPLATE[stepId];
-                if (stepData) {
-                    setCurrentStepData(stepData);
-                    console.log('✅ Dados do step carregados:', stepId, stepData);
-                } else {
-                    console.warn('⚠️ Step não encontrado:', stepId);
-                    setCurrentStepData({
-                        blocks: [],
+                const stepKey = `step${stepNumber}`;
+                const stepData = QUIZ_STYLE_21_STEPS_TEMPLATE[stepKey];
+                
+                if (stepData && Array.isArray(stepData)) {
+                    const stepInfo = {
                         name: `Step ${stepNumber}`,
-                        description: `Conteúdo do step ${stepNumber}`
+                        description: `Conteúdo do step ${stepNumber}`,
+                        blocks: stepData
+                    };
+                    setCurrentStepData(stepInfo);
+                    console.log('✅ Dados do step carregados:', stepKey, {
+                        nome: stepInfo.name,
+                        blocos: stepData.length,
+                        primeiroBloco: stepData[0]
                     });
+                } else {
+                    // Dados de fallback mais realistas
+                    const fallbackData = {
+                        name: `Step ${stepNumber}`,
+                        description: `Conteúdo do step ${stepNumber}`,
+                        blocks: [
+                            {
+                                id: `step${stepNumber}-title`,
+                                type: "text",
+                                order: 1,
+                                content: {
+                                    text: `<span style="color: #B89B7A; font-weight: 700;">Step ${stepNumber}</span> do quiz interativo`
+                                },
+                                properties: {
+                                    fontSize: "text-2xl",
+                                    fontWeight: "font-bold",
+                                    textAlign: "center",
+                                    color: "#432818"
+                                }
+                            },
+                            {
+                                id: `step${stepNumber}-question`,
+                                type: "form-container",
+                                order: 2,
+                                content: {
+                                    title: `Pergunta do Step ${stepNumber}`,
+                                    placeholder: "Digite sua resposta...",
+                                    buttonText: "Continuar",
+                                    backgroundColor: "#FFFFFF",
+                                    borderColor: "#B89B7A",
+                                    buttonBackgroundColor: "#B89B7A",
+                                    buttonTextColor: "#FFFFFF"
+                                },
+                                properties: {}
+                            }
+                        ]
+                    };
+                    
+                    setCurrentStepData(fallbackData);
+                    console.warn('⚠️ Step não encontrado, usando fallback:', stepKey, fallbackData);
                 }
             } catch (error) {
                 console.error('❌ Erro ao carregar step:', error);
@@ -89,9 +136,170 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
 
     // Renderizar componente visual baseado no tipo
     const renderComponent = (component: any, index: number) => {
-        const { type, props } = component;
+        const { type, content, properties } = component;
 
         switch (type) {
+            case 'quiz-intro-header':
+                return (
+                    <div key={index} className="bg-white rounded-lg border border-gray-200 p-6 mb-4">
+                        <div className="flex items-center justify-between mb-4">
+                            <h3 className="text-lg font-semibold text-gray-900">📋 Quiz Header</h3>
+                            <span className="text-xs text-gray-500">{type}</span>
+                        </div>
+                        <div className="space-y-4">
+                            {properties?.logoUrl && (
+                                <div className="text-center">
+                                    <img 
+                                        src={properties.logoUrl} 
+                                        alt={properties.logoAlt || 'Logo'} 
+                                        className="h-12 mx-auto"
+                                    />
+                                </div>
+                            )}
+                            {properties?.enableProgressBar && (
+                                <div className="w-full bg-gray-200 rounded-full h-2">
+                                    <div 
+                                        className="bg-blue-600 h-2 rounded-full" 
+                                        style={{ width: `${properties.progressValue || 0}%` }}
+                                    ></div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                );
+
+            case 'text':
+                return (
+                    <div key={index} className="bg-white rounded-lg border border-gray-200 p-6 mb-4">
+                        <div className="flex items-center justify-between mb-4">
+                            <h3 className="text-lg font-semibold text-gray-900">📝 Texto</h3>
+                            <span className="text-xs text-gray-500">{type}</span>
+                        </div>
+                        <div 
+                            className={`${properties?.fontSize || 'text-base'} ${properties?.fontWeight || 'font-normal'} ${properties?.textAlign || 'text-left'}`}
+                            style={{ color: properties?.color || '#000000' }}
+                            dangerouslySetInnerHTML={{ __html: content?.text || 'Texto não definido' }}
+                        />
+                    </div>
+                );
+
+            case 'image':
+                return (
+                    <div key={index} className="bg-white rounded-lg border border-gray-200 p-6 mb-4">
+                        <div className="flex items-center justify-between mb-4">
+                            <h3 className="text-lg font-semibold text-gray-900">🖼️ Imagem</h3>
+                            <span className="text-xs text-gray-500">{type}</span>
+                        </div>
+                        {properties?.src ? (
+                            <div className="text-center">
+                                <img 
+                                    src={properties.src} 
+                                    alt={properties.alt || 'Imagem'} 
+                                    className={`mx-auto rounded-lg ${properties?.maxWidth === 'lg' ? 'max-w-lg' : 'max-w-md'}`}
+                                    style={{ 
+                                        width: properties?.width || 'auto',
+                                        height: properties?.height || 'auto'
+                                    }}
+                                />
+                            </div>
+                        ) : (
+                            <div className="bg-gray-100 rounded-lg h-48 flex items-center justify-center">
+                                <div className="text-center">
+                                    <div className="text-4xl mb-2">🖼️</div>
+                                    <p className="text-gray-500">Imagem não definida</p>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                );
+
+            case 'decorative-bar':
+                return (
+                    <div key={index} className="bg-white rounded-lg border border-gray-200 p-6 mb-4">
+                        <div className="flex items-center justify-between mb-4">
+                            <h3 className="text-lg font-semibold text-gray-900">✨ Barra Decorativa</h3>
+                            <span className="text-xs text-gray-500">{type}</span>
+                        </div>
+                        <div className="flex justify-center">
+                            <div 
+                                className="rounded"
+                                style={{
+                                    width: properties?.width || '100px',
+                                    height: `${properties?.height || 4}px`,
+                                    background: properties?.gradientColors 
+                                        ? `linear-gradient(90deg, ${properties.gradientColors.join(', ')})` 
+                                        : (properties?.color || '#B89B7A'),
+                                    borderRadius: `${properties?.borderRadius || 3}px`,
+                                    boxShadow: properties?.showShadow ? '0 2px 4px rgba(0,0,0,0.1)' : 'none'
+                                }}
+                            />
+                        </div>
+                    </div>
+                );
+
+            case 'form-container':
+                return (
+                    <div key={index} className="bg-white rounded-lg border border-gray-200 p-6 mb-4">
+                        <div className="flex items-center justify-between mb-4">
+                            <h3 className="text-lg font-semibold text-gray-900">📝 Formulário</h3>
+                            <span className="text-xs text-gray-500">{type}</span>
+                        </div>
+                        <div className="space-y-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    {content?.title || 'Campo de formulário'}
+                                </label>
+                                <input
+                                    type="text"
+                                    placeholder={content?.placeholder || 'Digite aqui...'}
+                                    className="w-full border border-gray-300 rounded-md px-3 py-2"
+                                    style={{
+                                        backgroundColor: content?.backgroundColor || '#FFFFFF',
+                                        borderColor: content?.borderColor || '#B89B7A',
+                                        color: content?.textColor || '#432818'
+                                    }}
+                                />
+                            </div>
+                            <button
+                                className="w-full py-3 px-4 rounded-md font-medium transition-colors"
+                                style={{
+                                    backgroundColor: content?.buttonBackgroundColor || '#B89B7A',
+                                    color: content?.buttonTextColor || '#FFFFFF'
+                                }}
+                            >
+                                {content?.buttonText || 'Enviar'}
+                            </button>
+                        </div>
+                    </div>
+                );
+
+            case 'legal-notice':
+                return (
+                    <div key={index} className="bg-white rounded-lg border border-gray-200 p-6 mb-4">
+                        <div className="flex items-center justify-between mb-4">
+                            <h3 className="text-lg font-semibold text-gray-900">⚖️ Aviso Legal</h3>
+                            <span className="text-xs text-gray-500">{type}</span>
+                        </div>
+                        <div className="text-center space-y-2">
+                            <p className="text-xs text-gray-500">
+                                {properties?.copyrightText || '© 2025 - Todos os direitos reservados'}
+                            </p>
+                            <div className="space-x-4">
+                                {properties?.showPrivacyLink && (
+                                    <a href={properties.privacyLinkUrl || '#'} className="text-xs text-blue-600 hover:underline">
+                                        {properties.privacyText || 'Política de Privacidade'}
+                                    </a>
+                                )}
+                                {properties?.showTermsLink && (
+                                    <a href={properties.termsLinkUrl || '#'} className="text-xs text-blue-600 hover:underline">
+                                        {properties.termsText || 'Termos de Uso'}
+                                    </a>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                );
+
             case 'HeaderSection':
                 return (
                     <div key={index} className="bg-white rounded-lg border border-gray-200 p-6 mb-4">
@@ -102,11 +310,11 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                         <div className="space-y-4">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">Título</label>
-                                <h2 className="text-2xl font-bold text-gray-900">{props?.title || 'Título do Step'}</h2>
+                                <h2 className="text-2xl font-bold text-gray-900">{properties?.title || 'Título do Step'}</h2>
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">Subtítulo</label>
-                                <p className="text-gray-600">{props?.subtitle || 'Subtítulo do step'}</p>
+                                <p className="text-gray-600">{properties?.subtitle || 'Subtítulo do step'}</p>
                             </div>
                         </div>
                     </div>
@@ -181,10 +389,10 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                         <div className="space-y-4">
                             <div>
                                 <h4 className="text-lg font-medium text-gray-900 mb-3">
-                                    {props?.question || `Pergunta do Step ${stepNumber}?`}
+                                    {properties?.question || `Pergunta do Step ${stepNumber}?`}
                                 </h4>
                                 <div className="space-y-2">
-                                    {(props?.options || ['Opção A', 'Opção B', 'Opção C']).map((option: string, optIndex: number) => (
+                                    {(properties?.options || ['Opção A', 'Opção B', 'Opção C']).map((option: string, optIndex: number) => (
                                         <label key={optIndex} className="flex items-center space-x-3">
                                             <input 
                                                 type="radio" 
@@ -204,13 +412,17 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                 return (
                     <div key={index} className="bg-gray-50 rounded-lg border border-gray-200 p-6 mb-4">
                         <div className="flex items-center justify-between mb-4">
-                            <h3 className="text-lg font-semibold text-gray-700">🧩 Componente Genérico</h3>
+                            <h3 className="text-lg font-semibold text-gray-700">🧩 {type || 'Componente'}</h3>
                             <span className="text-xs text-gray-500">{type}</span>
                         </div>
-                        <p className="text-gray-600">Tipo: {type}</p>
-                        <pre className="text-xs text-gray-500 mt-2 bg-gray-100 p-2 rounded overflow-auto">
-                            {JSON.stringify(props, null, 2)}
-                        </pre>
+                        {content?.text && (
+                            <div dangerouslySetInnerHTML={{ __html: content.text }} />
+                        )}
+                        {properties && Object.keys(properties).length > 0 && (
+                            <pre className="text-xs text-gray-500 mt-2 bg-gray-100 p-2 rounded overflow-auto">
+                                {JSON.stringify(properties, null, 2)}
+                            </pre>
+                        )}
                     </div>
                 );
         }
