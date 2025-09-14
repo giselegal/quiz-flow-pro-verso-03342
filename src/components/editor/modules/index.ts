@@ -8,13 +8,13 @@ export { ProgressSection } from './ProgressSection';
 export { MainImageSection } from './MainImageSection';
 
 // Exportar componentes principais
-export { 
-  ModularResultHeaderBlock 
+export {
+    ModularResultHeaderBlock
 } from './ModularResultHeader';
 
-export { 
-  ModularResultEditor,
-  ResponsivePreview 
+export {
+    ModularResultEditor,
+    ResponsivePreview
 } from './ModularResultEditor';
 
 // Re-exportar os tipos das props para facilitar uso

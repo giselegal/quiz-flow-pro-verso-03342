@@ -3,16 +3,16 @@ import { ModularResultEditor, ModularResultHeaderBlock, ResponsivePreview } from
 
 // Página de demonstração do sistema modular
 export const ModularResultDemo: React.FC = () => {
-  return (
-    <div>
-      <h1 className="text-3xl font-bold p-8 bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] text-white text-center">
-        🧩 Sistema Modular de Resultado - Demonstração
-      </h1>
-      
-      {/* Editor completo */}
-      <ModularResultEditor />
-      
-      {/* Preview responsivo do componente integrado
+    return (
+        <div>
+            <h1 className="text-3xl font-bold p-8 bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] text-white text-center">
+                🧩 Sistema Modular de Resultado - Demonstração
+            </h1>
+
+            {/* Editor completo */}
+            <ModularResultEditor />
+
+            {/* Preview responsivo do componente integrado
       <ResponsivePreview>
         <ModularResultHeaderBlock 
           block={{
@@ -27,8 +27,8 @@ export const ModularResultDemo: React.FC = () => {
         />
       </ResponsivePreview>
       */}
-    </div>
-  );
+        </div>
+    );
 };
 
 export default ModularResultDemo;
