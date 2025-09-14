@@ -320,109 +320,484 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                     <div className="space-y-4">
                         <h4 className="font-medium text-gray-800 pb-2 border-b">Configurações do Header</h4>
 
-                        {/* Logo */}
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">URL do Logo</label>
-                            <input
-                                type="url"
-                                value={properties?.logoUrl || ''}
-                                onChange={(e) => updateBlockProperty(blockData.id, 'properties.logoUrl', e.target.value)}
-                                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
-                                placeholder="https://exemplo.com/logo.png"
-                            />
-                        </div>
+                        {/* Content Settings */}
+                        <div className="space-y-3">
+                            <h5 className="text-sm font-medium text-gray-700 border-l-2 border-blue-500 pl-2">Conteúdo</h5>
 
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Alt do Logo</label>
-                            <input
-                                type="text"
-                                value={properties?.logoAlt || ''}
-                                onChange={(e) => updateBlockProperty(blockData.id, 'properties.logoAlt', e.target.value)}
-                                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
-                                placeholder="Descrição da logo"
-                            />
-                        </div>
+                            <div className="flex items-center space-x-3">
+                                <input
+                                    type="checkbox"
+                                    checked={content?.showLogo || properties?.showLogo || false}
+                                    onChange={(e) => updateBlockProperty(blockData.id, 'content.showLogo', e.target.checked)}
+                                    className="w-4 h-4 text-blue-600"
+                                />
+                                <label className="text-sm text-gray-700">Mostrar Logo</label>
+                            </div>
 
-                        {/* Background */}
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Cor de Fundo</label>
-                            <div className="flex space-x-2">
+                            <div className="flex items-center space-x-3">
                                 <input
-                                    type="color"
-                                    value={properties?.backgroundColor || '#F8F9FA'}
-                                    onChange={(e) => updateBlockProperty(blockData.id, 'properties.backgroundColor', e.target.value)}
-                                    className="w-12 h-10 border border-gray-300 rounded"
+                                    type="checkbox"
+                                    checked={content?.showProgress || properties?.enableProgressBar || false}
+                                    onChange={(e) => updateBlockProperty(blockData.id, 'properties.enableProgressBar', e.target.checked)}
+                                    className="w-4 h-4 text-blue-600"
                                 />
+                                <label className="text-sm text-gray-700">Mostrar Barra de Progresso</label>
+                            </div>
+
+                            <div className="flex items-center space-x-3">
                                 <input
-                                    type="text"
-                                    value={properties?.backgroundColor || '#F8F9FA'}
-                                    onChange={(e) => updateBlockProperty(blockData.id, 'properties.backgroundColor', e.target.value)}
-                                    className="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm"
+                                    type="checkbox"
+                                    checked={content?.showNavigation || properties?.showBackButton || false}
+                                    onChange={(e) => updateBlockProperty(blockData.id, 'properties.showBackButton', e.target.checked)}
+                                    className="w-4 h-4 text-blue-600"
                                 />
+                                <label className="text-sm text-gray-700">Mostrar Navegação</label>
                             </div>
                         </div>
 
-                        {/* Layout */}
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Alinhamento</label>
-                            <select
-                                value={properties?.textAlign || 'center'}
-                                onChange={(e) => updateBlockProperty(blockData.id, 'properties.textAlign', e.target.value)}
-                                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
-                            >
-                                <option value="left">Esquerda</option>
-                                <option value="center">Centro</option>
-                                <option value="right">Direita</option>
-                            </select>
-                        </div>
+                        {/* Logo Settings */}
+                        {(content?.showLogo || properties?.showLogo) && (
+                            <div className="space-y-3">
+                                <h5 className="text-sm font-medium text-gray-700 border-l-2 border-green-500 pl-2">Logo</h5>
 
-                        {/* Progress Bar */}
-                        <div className="flex items-center space-x-3">
-                            <input
-                                type="checkbox"
-                                checked={properties?.enableProgressBar || false}
-                                onChange={(e) => updateBlockProperty(blockData.id, 'properties.enableProgressBar', e.target.checked)}
-                                className="w-4 h-4 text-blue-600"
-                            />
-                            <label className="text-sm text-gray-700">Mostrar Barra de Progresso</label>
-                        </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">URL do Logo</label>
+                                    <input
+                                        type="url"
+                                        value={properties?.logoUrl || ''}
+                                        onChange={(e) => updateBlockProperty(blockData.id, 'properties.logoUrl', e.target.value)}
+                                        className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                                        placeholder="https://exemplo.com/logo.png"
+                                    />
+                                </div>
 
-                        {properties?.enableProgressBar && (
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Valor do Progresso (%)</label>
-                                <input
-                                    type="range"
-                                    min="0"
-                                    max="100"
-                                    value={properties?.progressValue || 0}
-                                    onChange={(e) => updateBlockProperty(blockData.id, 'properties.progressValue', parseInt(e.target.value))}
-                                    className="w-full"
-                                />
-                                <div className="text-xs text-gray-500 text-center mt-1">
-                                    {properties?.progressValue || 0}%
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Alt do Logo</label>
+                                    <input
+                                        type="text"
+                                        value={properties?.logoAlt || ''}
+                                        onChange={(e) => updateBlockProperty(blockData.id, 'properties.logoAlt', e.target.value)}
+                                        className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                                        placeholder="Descrição da logo"
+                                    />
                                 </div>
                             </div>
                         )}
 
-                        {/* Spacing */}
-                        <div className="grid grid-cols-2 gap-3">
+                        {/* Progress Settings */}
+                        {(content?.showProgress || properties?.enableProgressBar) && (
+                            <div className="space-y-3">
+                                <h5 className="text-sm font-medium text-gray-700 border-l-2 border-yellow-500 pl-2">Barra de Progresso</h5>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Valor do Progresso (%)</label>
+                                    <input
+                                        type="range"
+                                        min="0"
+                                        max="100"
+                                        value={properties?.progressValue || 0}
+                                        onChange={(e) => updateBlockProperty(blockData.id, 'properties.progressValue', parseInt(e.target.value))}
+                                        className="w-full"
+                                    />
+                                    <div className="text-xs text-gray-500 text-center mt-1">
+                                        {properties?.progressValue || 0}%
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Máximo</label>
+                                    <input
+                                        type="number"
+                                        value={properties?.progressMax || 100}
+                                        onChange={(e) => updateBlockProperty(blockData.id, 'properties.progressMax', parseInt(e.target.value))}
+                                        className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Altura da Barra (px)</label>
+                                    <input
+                                        type="number"
+                                        value={properties?.progressHeight || 8}
+                                        onChange={(e) => updateBlockProperty(blockData.id, 'properties.progressHeight', parseInt(e.target.value))}
+                                        className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                                    />
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Background & Style */}
+                        <div className="space-y-3">
+                            <h5 className="text-sm font-medium text-gray-700 border-l-2 border-purple-500 pl-2">Estilo</h5>
+
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Padding</label>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Cor de Fundo</label>
+                                <div className="flex space-x-2">
+                                    <input
+                                        type="color"
+                                        value={properties?.backgroundColor || '#F8F9FA'}
+                                        onChange={(e) => updateBlockProperty(blockData.id, 'properties.backgroundColor', e.target.value)}
+                                        className="w-12 h-10 border border-gray-300 rounded"
+                                    />
+                                    <input
+                                        type="text"
+                                        value={properties?.backgroundColor || '#F8F9FA'}
+                                        onChange={(e) => updateBlockProperty(blockData.id, 'properties.backgroundColor', e.target.value)}
+                                        className="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm"
+                                    />
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Alinhamento</label>
+                                <select
+                                    value={properties?.textAlign || 'center'}
+                                    onChange={(e) => updateBlockProperty(blockData.id, 'properties.textAlign', e.target.value)}
+                                    className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                                >
+                                    <option value="left">Esquerda</option>
+                                    <option value="center">Centro</option>
+                                    <option value="right">Direita</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Sombra</label>
+                                <select
+                                    value={properties?.boxShadow || 'sm'}
+                                    onChange={(e) => updateBlockProperty(blockData.id, 'properties.boxShadow', e.target.value)}
+                                    className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                                >
+                                    <option value="none">Nenhuma</option>
+                                    <option value="sm">Pequena</option>
+                                    <option value="md">Média</option>
+                                    <option value="lg">Grande</option>
+                                    <option value="xl">Extra Grande</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        {/* Layout */}
+                        <div className="space-y-3">
+                            <h5 className="text-sm font-medium text-gray-700 border-l-2 border-orange-500 pl-2">Layout</h5>
+
+                            <div className="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Padding</label>
+                                    <input
+                                        type="text"
+                                        value={properties?.padding || '24px'}
+                                        onChange={(e) => updateBlockProperty(blockData.id, 'properties.padding', e.target.value)}
+                                        className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Border Radius</label>
+                                    <input
+                                        type="text"
+                                        value={properties?.borderRadius || '8px'}
+                                        onChange={(e) => updateBlockProperty(blockData.id, 'properties.borderRadius', e.target.value)}
+                                        className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                                    />
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Largura Máxima do Conteúdo (px)</label>
                                 <input
-                                    type="text"
-                                    value={properties?.padding || '24px'}
-                                    onChange={(e) => updateBlockProperty(blockData.id, 'properties.padding', e.target.value)}
+                                    type="number"
+                                    value={properties?.contentMaxWidth || 640}
+                                    onChange={(e) => updateBlockProperty(blockData.id, 'properties.contentMaxWidth', parseInt(e.target.value))}
                                     className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
                                 />
                             </div>
+
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Border Radius</label>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Margem Inferior</label>
                                 <input
                                     type="text"
-                                    value={properties?.borderRadius || '8px'}
-                                    onChange={(e) => updateBlockProperty(blockData.id, 'properties.borderRadius', e.target.value)}
+                                    value={properties?.marginBottom || '16px'}
+                                    onChange={(e) => updateBlockProperty(blockData.id, 'properties.marginBottom', e.target.value)}
                                     className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
                                 />
+                            </div>
+                        </div>
+
+                        {/* Animation */}
+                        <div className="space-y-3">
+                            <h5 className="text-sm font-medium text-gray-700 border-l-2 border-red-500 pl-2">Animação</h5>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Tipo de Animação</label>
+                                <select
+                                    value={properties?.animation || 'fadeIn'}
+                                    onChange={(e) => updateBlockProperty(blockData.id, 'properties.animation', e.target.value)}
+                                    className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                                >
+                                    <option value="none">Nenhuma</option>
+                                    <option value="fadeIn">Fade In</option>
+                                    <option value="slideUp">Slide Up</option>
+                                    <option value="slideDown">Slide Down</option>
+                                    <option value="zoomIn">Zoom In</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Duração</label>
+                                <input
+                                    type="text"
+                                    value={properties?.animationDuration || '0.8s'}
+                                    onChange={(e) => updateBlockProperty(blockData.id, 'properties.animationDuration', e.target.value)}
+                                    className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                                    placeholder="0.8s, 500ms, etc."
+                                />
+                            </div>
+                        </div>
+                    </div>
+                );
+
+            case 'form-container':
+                return (
+                    <div className="space-y-4">
+                        <h4 className="font-medium text-gray-800 pb-2 border-b">Configurações do Container de Formulário</h4>
+
+                        {/* Content */}
+                        <div className="space-y-3">
+                            <h5 className="text-sm font-medium text-gray-700 border-l-2 border-blue-500 pl-2">Conteúdo</h5>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Título do Campo</label>
+                                <input
+                                    type="text"
+                                    value={content?.title || ''}
+                                    onChange={(e) => updateBlockProperty(blockData.id, 'content.title', e.target.value)}
+                                    className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                                    placeholder="Como posso te chamar?"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Texto do Botão</label>
+                                <input
+                                    type="text"
+                                    value={content?.buttonText || ''}
+                                    onChange={(e) => updateBlockProperty(blockData.id, 'content.buttonText', e.target.value)}
+                                    className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                                    placeholder="Quero Descobrir meu Estilo Agora!"
+                                />
+                            </div>
+                        </div>
+
+                        {/* Supabase Integration */}
+                        <div className="space-y-3">
+                            <h5 className="text-sm font-medium text-gray-700 border-l-2 border-red-500 pl-2">Integração Supabase</h5>
+
+                            <div className="flex items-center space-x-3">
+                                <input
+                                    type="checkbox"
+                                    checked={content?.saveToSupabase || false}
+                                    onChange={(e) => updateBlockProperty(blockData.id, 'content.saveToSupabase', e.target.checked)}
+                                    className="w-4 h-4 text-blue-600"
+                                />
+                                <label className="text-sm text-gray-700">Salvar no Supabase</label>
+                            </div>
+
+                            {content?.saveToSupabase && (
+                                <>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">Tabela</label>
+                                        <input
+                                            type="text"
+                                            value={content?.supabaseTable || 'quiz_users'}
+                                            onChange={(e) => updateBlockProperty(blockData.id, 'content.supabaseTable', e.target.value)}
+                                            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">Coluna</label>
+                                        <input
+                                            type="text"
+                                            value={content?.supabaseColumn || 'name'}
+                                            onChange={(e) => updateBlockProperty(blockData.id, 'content.supabaseColumn', e.target.value)}
+                                            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                                        />
+                                    </div>
+                                </>
+                            )}
+                        </div>
+                    </div>
+                );
+
+            case 'legal-notice':
+                return (
+                    <div className="space-y-4">
+                        <h4 className="font-medium text-gray-800 pb-2 border-b">Configurações do Aviso Legal</h4>
+
+                        {/* Content */}
+                        <div className="space-y-3">
+                            <h5 className="text-sm font-medium text-gray-700 border-l-2 border-blue-500 pl-2">Conteúdo</h5>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Texto de Copyright</label>
+                                <textarea
+                                    value={properties?.copyrightText || ''}
+                                    onChange={(e) => updateBlockProperty(blockData.id, 'properties.copyrightText', e.target.value)}
+                                    rows={2}
+                                    className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                                    placeholder="© 2025 Gisele Galvão - Todos os direitos reservados..."
+                                />
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Texto Privacidade</label>
+                                    <input
+                                        type="text"
+                                        value={properties?.privacyText || 'Política de Privacidade'}
+                                        onChange={(e) => updateBlockProperty(blockData.id, 'properties.privacyText', e.target.value)}
+                                        className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Texto Termos</label>
+                                    <input
+                                        type="text"
+                                        value={properties?.termsText || 'Termos de Uso'}
+                                        onChange={(e) => updateBlockProperty(blockData.id, 'properties.termsText', e.target.value)}
+                                        className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">URL Privacidade</label>
+                                    <input
+                                        type="url"
+                                        value={properties?.privacyLinkUrl || '/privacy'}
+                                        onChange={(e) => updateBlockProperty(blockData.id, 'properties.privacyLinkUrl', e.target.value)}
+                                        className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">URL Termos</label>
+                                    <input
+                                        type="url"
+                                        value={properties?.termsLinkUrl || '/terms'}
+                                        onChange={(e) => updateBlockProperty(blockData.id, 'properties.termsLinkUrl', e.target.value)}
+                                        className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="space-y-2">
+                                <div className="flex items-center space-x-3">
+                                    <input
+                                        type="checkbox"
+                                        checked={properties?.showPrivacyLink || true}
+                                        onChange={(e) => updateBlockProperty(blockData.id, 'properties.showPrivacyLink', e.target.checked)}
+                                        className="w-4 h-4 text-blue-600"
+                                    />
+                                    <label className="text-sm text-gray-700">Mostrar Link de Privacidade</label>
+                                </div>
+                                <div className="flex items-center space-x-3">
+                                    <input
+                                        type="checkbox"
+                                        checked={properties?.showTermsLink || true}
+                                        onChange={(e) => updateBlockProperty(blockData.id, 'properties.showTermsLink', e.target.checked)}
+                                        className="w-4 h-4 text-blue-600"
+                                    />
+                                    <label className="text-sm text-gray-700">Mostrar Link de Termos</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Styling */}
+                        <div className="space-y-3">
+                            <h5 className="text-sm font-medium text-gray-700 border-l-2 border-purple-500 pl-2">Estilo</h5>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Tamanho da Fonte</label>
+                                <select
+                                    value={properties?.fontSize || 'text-xs'}
+                                    onChange={(e) => updateBlockProperty(blockData.id, 'properties.fontSize', e.target.value)}
+                                    className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                                >
+                                    <option value="text-xs">Extra Pequeno</option>
+                                    <option value="text-sm">Pequeno</option>
+                                    <option value="text-base">Normal</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Alinhamento</label>
+                                <select
+                                    value={properties?.textAlign || 'center'}
+                                    onChange={(e) => updateBlockProperty(blockData.id, 'properties.textAlign', e.target.value)}
+                                    className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                                >
+                                    <option value="left">Esquerda</option>
+                                    <option value="center">Centro</option>
+                                    <option value="right">Direita</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Cor do Texto</label>
+                                <div className="flex space-x-2">
+                                    <input
+                                        type="color"
+                                        value={properties?.textColor || '#9CA3AF'}
+                                        onChange={(e) => updateBlockProperty(blockData.id, 'properties.textColor', e.target.value)}
+                                        className="w-12 h-10 border border-gray-300 rounded"
+                                    />
+                                    <input
+                                        type="text"
+                                        value={properties?.textColor || '#9CA3AF'}
+                                        onChange={(e) => updateBlockProperty(blockData.id, 'properties.textColor', e.target.value)}
+                                        className="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm"
+                                    />
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Cor dos Links</label>
+                                <div className="flex space-x-2">
+                                    <input
+                                        type="color"
+                                        value={properties?.linkColor || '#B89B7A'}
+                                        onChange={(e) => updateBlockProperty(blockData.id, 'properties.linkColor', e.target.value)}
+                                        className="w-12 h-10 border border-gray-300 rounded"
+                                    />
+                                    <input
+                                        type="text"
+                                        value={properties?.linkColor || '#B89B7A'}
+                                        onChange={(e) => updateBlockProperty(blockData.id, 'properties.linkColor', e.target.value)}
+                                        className="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Margem Superior</label>
+                                    <input
+                                        type="number"
+                                        value={properties?.marginTop || 32}
+                                        onChange={(e) => updateBlockProperty(blockData.id, 'properties.marginTop', parseInt(e.target.value))}
+                                        className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Margem Inferior</label>
+                                    <input
+                                        type="number"
+                                        value={properties?.marginBottom || 8}
+                                        onChange={(e) => updateBlockProperty(blockData.id, 'properties.marginBottom', parseInt(e.target.value))}
+                                        className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                                    />
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -931,7 +1306,144 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                     </div>
                 );
 
-            case 'text':
+            case 'decorative-bar':
+                return (
+                    <div className="space-y-4">
+                        <h4 className="font-medium text-gray-800 pb-2 border-b">Configurações da Barra Decorativa</h4>
+
+                        {/* Dimensions */}
+                        <div className="space-y-3">
+                            <h5 className="text-sm font-medium text-gray-700 border-l-2 border-blue-500 pl-2">Dimensões</h5>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Largura</label>
+                                <input
+                                    type="text"
+                                    value={properties?.width || 'min(640px, 100%)'}
+                                    onChange={(e) => updateBlockProperty(component.id, 'properties.width', e.target.value)}
+                                    className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                                    placeholder="min(640px, 100%), 300px, 50%"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Altura (px)</label>
+                                <input
+                                    type="number"
+                                    value={properties?.height || 4}
+                                    onChange={(e) => updateBlockProperty(component.id, 'properties.height', parseInt(e.target.value))}
+                                    className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                                />
+                            </div>
+                        </div>
+
+                        {/* Colors */}
+                        <div className="space-y-3">
+                            <h5 className="text-sm font-medium text-gray-700 border-l-2 border-green-500 pl-2">Cores</h5>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Cor Principal</label>
+                                <div className="flex space-x-2">
+                                    <input
+                                        type="color"
+                                        value={properties?.color || properties?.backgroundColor || '#B89B7A'}
+                                        onChange={(e) => updateBlockProperty(component.id, 'properties.color', e.target.value)}
+                                        className="w-12 h-10 border border-gray-300 rounded"
+                                    />
+                                    <input
+                                        type="text"
+                                        value={properties?.color || properties?.backgroundColor || '#B89B7A'}
+                                        onChange={(e) => updateBlockProperty(component.id, 'properties.color', e.target.value)}
+                                        className="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm"
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Gradient Colors */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Cores do Gradiente (opcional)</label>
+                                <div className="space-y-2">
+                                    {(properties?.gradientColors || ['#B89B7A', '#D4C2A8', '#B89B7A']).map((color: string, index: number) => (
+                                        <div key={index} className="flex space-x-2 items-center">
+                                            <span className="text-xs text-gray-500 w-8">{index + 1}:</span>
+                                            <input
+                                                type="color"
+                                                value={color}
+                                                onChange={(e) => {
+                                                    const newColors = [...(properties?.gradientColors || ['#B89B7A', '#D4C2A8', '#B89B7A'])];
+                                                    newColors[index] = e.target.value;
+                                                    updateBlockProperty(component.id, 'properties.gradientColors', newColors);
+                                                }}
+                                                className="w-10 h-8 border border-gray-300 rounded"
+                                            />
+                                            <input
+                                                type="text"
+                                                value={color}
+                                                onChange={(e) => {
+                                                    const newColors = [...(properties?.gradientColors || ['#B89B7A', '#D4C2A8', '#B89B7A'])];
+                                                    newColors[index] = e.target.value;
+                                                    updateBlockProperty(component.id, 'properties.gradientColors', newColors);
+                                                }}
+                                                className="flex-1 border border-gray-300 rounded-md px-2 py-1 text-sm"
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Style */}
+                        <div className="space-y-3">
+                            <h5 className="text-sm font-medium text-gray-700 border-l-2 border-purple-500 pl-2">Estilo</h5>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Border Radius (px)</label>
+                                <input
+                                    type="number"
+                                    value={properties?.borderRadius || 3}
+                                    onChange={(e) => updateBlockProperty(component.id, 'properties.borderRadius', parseInt(e.target.value))}
+                                    className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                                />
+                            </div>
+
+                            <div className="flex items-center space-x-3">
+                                <input
+                                    type="checkbox"
+                                    checked={properties?.showShadow || false}
+                                    onChange={(e) => updateBlockProperty(component.id, 'properties.showShadow', e.target.checked)}
+                                    className="w-4 h-4 text-blue-600"
+                                />
+                                <label className="text-sm text-gray-700">Mostrar Sombra</label>
+                            </div>
+                        </div>
+
+                        {/* Spacing */}
+                        <div className="space-y-3">
+                            <h5 className="text-sm font-medium text-gray-700 border-l-2 border-orange-500 pl-2">Espaçamento</h5>
+
+                            <div className="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Margem Superior</label>
+                                    <input
+                                        type="number"
+                                        value={properties?.marginTop || 12}
+                                        onChange={(e) => updateBlockProperty(component.id, 'properties.marginTop', parseInt(e.target.value))}
+                                        className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Margem Inferior</label>
+                                    <input
+                                        type="number"
+                                        value={properties?.marginBottom || 24}
+                                        onChange={(e) => updateBlockProperty(component.id, 'properties.marginBottom', parseInt(e.target.value))}
+                                        className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
                 return blockWrapper(
                     <div className="bg-white rounded-lg border border-gray-200 p-6 mb-4 relative">
                         <div className="flex items-center justify-between mb-4">
@@ -1372,8 +1884,8 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
 
                                 {/* Indicador de Schema */}
                                 <div className={`flex items-center space-x-2 px-3 py-1 rounded-md text-sm font-medium ${schemaValidation.isValid
-                                        ? 'bg-green-100 text-green-800'
-                                        : 'bg-red-100 text-red-800'
+                                    ? 'bg-green-100 text-green-800'
+                                    : 'bg-red-100 text-red-800'
                                     }`}>
                                     <span>{schemaValidation.isValid ? '✅' : '❌'}</span>
                                     <span>{schemaValidation.isValid ? 'Schema OK' : 'Schema Inválido'}</span>
