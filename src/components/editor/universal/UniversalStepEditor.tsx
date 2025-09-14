@@ -37,7 +37,7 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                 console.log('🔍 Carregando dados para:', stepId, 'step number:', stepNumber);
 
                 // Buscar dados do step no template
-                const stepKey = `step${stepNumber}`;
+                const stepKey = `step-${stepNumber}`;
                 const stepData = QUIZ_STYLE_21_STEPS_TEMPLATE[stepKey];
 
                 if (stepData && Array.isArray(stepData)) {
