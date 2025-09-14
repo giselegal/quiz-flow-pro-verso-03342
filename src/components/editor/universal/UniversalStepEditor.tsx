@@ -474,8 +474,8 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                                 key={num}
                                 onClick={() => onStepChange?.(`step-${num}`)}
                                 className={`w-full text-left px-3 py-2 rounded-md transition-colors ${num === stepNumber
-                                        ? 'bg-blue-100 text-blue-800 font-medium'
-                                        : 'text-gray-600 hover:bg-gray-100'
+                                    ? 'bg-blue-100 text-blue-800 font-medium'
+                                    : 'text-gray-600 hover:bg-gray-100'
                                     }`}
                             >
                                 Step {num}
