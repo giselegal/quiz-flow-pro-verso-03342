@@ -15,6 +15,8 @@ const Home = lazy(() => import('./pages/Home'));
 const AuthPage = lazy(() => import('./pages/AuthPage'));
 // Lazy loading otimizado para melhor performance
 const MainEditorUnified = lazy(() => import('./pages/MainEditorUnified'));
+// 🚀 NOVO: Editor Visual Headless
+const HeadlessVisualEditor = lazy(() => import('./core/editor/HeadlessVisualEditor'));
 const DashboardPage = lazy(() => import('./pages/admin/DashboardPage'));
 const StepPage = lazy(() => import('./pages/StepPage'));
 // ✅ Página de produção modular limpa (cliente final)
@@ -98,6 +100,16 @@ function App() {
               } />
 
               {/* Editor - ordem importante: mais específico primeiro */}
+              {/* 🚀 NOVO: Editor Visual Headless */}
+              <Route path="/headless-editor/:funnelId?" component={({ params }: { params: { funnelId?: string } }) => {
+                console.log('🎯 Rota /headless-editor ativada com params:', params);
+                return (
+                  <Suspense fallback={<LoadingFallback />}>
+                    <HeadlessVisualEditor />
+                  </Suspense>
+                );
+              }} />
+              
               <Route path="/editor/:funnelId" component={({ params }: { params: { funnelId: string } }) => {
                 console.log('🔗 Rota /editor/:funnelId ativada com params:', params);
                 return (
