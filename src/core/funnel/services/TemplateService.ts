@@ -43,7 +43,10 @@ export class TemplateService {
                 query = query.eq('category', category);
             }
 
-            query = query.order('usage_count', { ascending: false });
+            // ✅ CORRIGIDO: Verificar se o método order existe antes de usá-lo
+            if (typeof query.order === 'function') {
+                query = query.order('usage_count', { ascending: false });
+            }
 
             const { data, error } = await query;
 
