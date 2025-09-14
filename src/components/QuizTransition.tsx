@@ -1,6 +1,15 @@
-// @ts-nocheck
+/**
+ * TODO: TypeScript Migration - Deadline: Janeiro 2025
+ * - [ ] Adicionar React import explicitamente (useEffect usado)
+ * - [ ] Melhorar interface QuizTransitionProps com documentação
+ * - [ ] Implementar loading animation mais sofisticada
+ * - [ ] Adicionar acessibilidade (aria-live, role=status)
+ * - [ ] Considerar usar loading state management
+ */
+
+import React from 'react';
 import { CheckCircle } from 'lucide-react';
-import QuizQuestion from './QuizQuestion';
+import { appLogger } from '@/utils/logger';
 
 interface QuizTransitionProps {
   isCompleting: boolean;
@@ -8,9 +17,13 @@ interface QuizTransitionProps {
 }
 
 const QuizTransition: React.FC<QuizTransitionProps> = ({ isCompleting, onComplete }) => {
+  appLogger.debug('QuizTransition rendered', { isCompleting });
+
   React.useEffect(() => {
     if (isCompleting) {
+      appLogger.info('Quiz completion started, will complete in 3s');
       const timer = setTimeout(() => {
+        appLogger.info('Quiz completion timer finished, calling onComplete');
         onComplete();
       }, 3000);
       return () => clearTimeout(timer);

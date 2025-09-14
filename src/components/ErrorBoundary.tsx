@@ -1,5 +1,13 @@
-// @ts-nocheck
-import React, { Component, ErrorInfo, ReactNode } from 'react';
+/**
+ * TODO: MIGRAÇÃO EM ANDAMENTO (FASE 2) - ErrorBoundary
+ * - [x] Remove @ts-nocheck
+ * - [x] Adiciona tipos adequados para as props e estado
+ * - [x] Integra logger utility
+ * - [ ] Refina validações e tratamento de erros
+ * - [ ] Otimiza performance se necessário
+ */
+import { Component, ErrorInfo, ReactNode } from 'react';
+import { appLogger } from '@/utils/logger';
 
 interface Props {
   children: ReactNode;
@@ -24,8 +32,8 @@ class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    // Log the error to console for debugging
-    console.error('ErrorBoundary caught an error:', error, errorInfo);
+    // Log the error to logger for debugging
+    appLogger.error(`ErrorBoundary caught an error: ${error.message}`, { error, errorInfo });
 
     this.setState({
       error,
