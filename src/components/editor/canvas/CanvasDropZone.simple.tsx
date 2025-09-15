@@ -511,7 +511,7 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
           style={{ maxWidth: 800, margin: '0 auto', maxHeight: '70vh' }}
         >
           {blocks.length > 0 ? (
-            <div className="space-y-6">
+            <div className="space-y-3">
               <div style={{ height: visibleMeta.topPad }} />
               {visibleMeta.startIndex === 0 && (
                 <InterBlockDropZone position={0} isActive={false} scopeId={scopeId} />
@@ -556,7 +556,7 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
           strategy={verticalListSortingStrategy}
         >
           <div className="w-full" style={{ maxWidth: 800, margin: '0 auto' }}>
-            <div className="space-y-6">
+            <div className="space-y-3">
               <InterBlockDropZone position={0} isActive={isDraggingAnyValidComponent} scopeId={scopeId} />
 
               {(enableProgressiveEdit ? blocks.slice(0, editRenderCount) : blocks).map((block, index) => (
