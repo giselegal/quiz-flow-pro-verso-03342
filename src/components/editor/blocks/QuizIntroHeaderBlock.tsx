@@ -2,6 +2,7 @@ import { cn } from '@/lib/utils';
 import type { BlockComponentProps } from '@/types/blocks';
 import { ArrowLeft } from 'lucide-react';
 import React from 'react';
+import { useImageWithFallback } from '@/hooks/useImageWithFallback';
 
 import { HeaderProperties } from '@/config/headerPropertiesMapping';
 
@@ -197,17 +198,12 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
         {/* 🎨 Logo com Posicionamento Dinâmico */}
         {showLogo && (
           <div className="flex items-center">
-            <img
+            <LogoImage
               src={logoUrl}
               alt={logoAlt}
-              style={{ width: `${logoWidth}px`, height: `${logoHeight}px` }}
-              className={cn(
-                "object-contain",
-                enableAnimation ? "transition-all duration-300" : ""
-              )}
-              onError={e => {
-                e.currentTarget.src = 'https://via.placeholder.com/96x96?text=Logo';
-              }}
+              width={logoWidth}
+              height={logoHeight}
+              enableAnimation={enableAnimation}
             />
           </div>
         )}
@@ -237,15 +233,11 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
       {/* Imagem de Introdução (opcional) */}
       {introImageUrl && (
         <div className="mt-6 flex justify-center" style={contentWrapperStyle}>
-          <img
+          <IntroImage
             src={introImageUrl}
             alt={introImageAlt}
             width={introImageWidth}
             height={introImageHeight}
-            className="object-cover w-full max-w-lg h-auto rounded-xl shadow"
-            onError={e => {
-              e.currentTarget.src = 'https://via.placeholder.com/300x200?text=Imagem';
-            }}
           />
         </div>
       )}
@@ -332,6 +324,77 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
         </div>
       )}
     </div>
+  );
+};
+
+// Componentes internos que usam IndexedDB para cache de imagens
+
+interface LogoImageProps {
+  src?: string;
+  alt?: string;
+  width?: number;
+  height?: number;
+  enableAnimation?: boolean;
+}
+
+const LogoImage: React.FC<LogoImageProps> = ({ 
+  src, 
+  alt = 'Logo', 
+  width = 96, 
+  height = 96, 
+  enableAnimation = true 
+}) => {
+  const { src: imageSrc, isLoading } = useImageWithFallback(src, {
+    width,
+    height,
+    fallbackText: 'Logo',
+    fallbackBgColor: '#e2e8f0',
+    fallbackTextColor: '#64748b',
+    enableCache: true,
+  });
+
+  return (
+    <img
+      src={imageSrc}
+      alt={alt}
+      style={{ width: `${width}px`, height: `${height}px` }}
+      className={cn(
+        "object-contain",
+        enableAnimation ? "transition-all duration-300" : "",
+        isLoading ? "opacity-75" : ""
+      )}
+    />
+  );
+};
+
+interface IntroImageProps {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+}
+
+const IntroImage: React.FC<IntroImageProps> = ({ src, alt, width, height }) => {
+  const { src: imageSrc, isLoading } = useImageWithFallback(src, {
+    width,
+    height,
+    fallbackText: 'Imagem',
+    fallbackBgColor: '#f1f5f9',
+    fallbackTextColor: '#64748b',
+    enableCache: true,
+  });
+
+  return (
+    <img
+      src={imageSrc}
+      alt={alt}
+      width={width}
+      height={height}
+      className={cn(
+        "object-cover w-full max-w-lg h-auto rounded-xl shadow",
+        isLoading ? "opacity-75" : ""
+      )}
+    />
   );
 };
 
