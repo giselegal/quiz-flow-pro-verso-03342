@@ -42,6 +42,25 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
     const [mode, setMode] = useState<'edit' | 'preview'>('edit');
     const [previewDevice] = useState<ViewportMode>('desktop');
 
+    // Forçar carregamento de todas as etapas ao montar o componente
+    React.useEffect(() => {
+        // Usar setTimeout para permitir que o EditorProvider inicialize primeiro
+        const timer = setTimeout(() => {
+            if (actions.loadDefaultTemplate) {
+                actions.loadDefaultTemplate();
+            }
+
+            // Garantir que todas as etapas estejam carregadas
+            if (actions.ensureStepLoaded) {
+                for (let i = 1; i <= 21; i++) {
+                    actions.ensureStepLoaded(i);
+                }
+            }
+        }, 100);
+
+        return () => clearTimeout(timer);
+    }, [actions]);
+
     // Valores calculados
     const NotificationContainer = (notification as any)?.NotificationContainer ?? null;
     const safeCurrentStep = stepNumber || state.currentStep || 1;
@@ -107,7 +126,7 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
     const handleStepSelect = useCallback((step: number) => {
         actions.setCurrentStep(step);
         onStepChange?.(step.toString());
-        
+
         // Garantir que a etapa seja carregada se não existir
         if (actions.ensureStepLoaded) {
             actions.ensureStepLoaded(step);
