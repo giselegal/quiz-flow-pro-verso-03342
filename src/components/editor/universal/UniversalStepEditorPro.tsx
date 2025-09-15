@@ -46,22 +46,31 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
     React.useEffect(() => {
         // Usar setTimeout para permitir que o EditorProvider inicialize primeiro
         const timer = setTimeout(() => {
+            // Primeira tentativa: forçar carregamento do template
             if (actions.loadDefaultTemplate) {
+                console.log('🔄 Forçando carregamento do template...');
                 actions.loadDefaultTemplate();
             }
-
-            // Garantir que todas as etapas estejam carregadas
+            
+            // Segunda tentativa: garantir que todas as etapas estejam carregadas
             if (actions.ensureStepLoaded) {
+                console.log('🔄 Carregando todas as 21 etapas...');
                 for (let i = 1; i <= 21; i++) {
                     actions.ensureStepLoaded(i);
                 }
             }
+            
+            // Terceira tentativa: após um pouco mais de tempo, verificar novamente
+            setTimeout(() => {
+                console.log('🔍 Estado após carregamento:', {
+                    stepBlocks: Object.keys(state.stepBlocks || {}),
+                    totalBlocks: Object.values(state.stepBlocks || {}).reduce((acc: number, blocks: any) => acc + (Array.isArray(blocks) ? blocks.length : 0), 0)
+                });
+            }, 500);
         }, 100);
 
         return () => clearTimeout(timer);
-    }, [actions]);
-
-    // Valores calculados
+    }, [actions, state.stepBlocks]);    // Valores calculados
     const NotificationContainer = (notification as any)?.NotificationContainer ?? null;
     const safeCurrentStep = stepNumber || state.currentStep || 1;
     const currentStepKey = `step-${safeCurrentStep}`;
