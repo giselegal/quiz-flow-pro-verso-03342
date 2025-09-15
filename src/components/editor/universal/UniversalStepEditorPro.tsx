@@ -47,6 +47,22 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
     const safeCurrentStep = stepNumber || state.currentStep || 1;
     const currentStepKey = `step-${safeCurrentStep}`;
 
+    // Calcula stepHasBlocks baseado no estado atual
+    const stepHasBlocks = useMemo(() => {
+        const stepBlocksRef = state.stepBlocks;
+        if (!stepBlocksRef) {
+            return {};
+        }
+
+        const map: Record<number, boolean> = {};
+        for (let step = 1; step <= 21; step++) {
+            const stepKey = `step-${step}`;
+            const blocks = stepBlocksRef[stepKey];
+            map[step] = Array.isArray(blocks) && blocks.length > 0;
+        }
+        return map;
+    }, [state.stepBlocks]);
+
     // Dados do step atual
     const currentStepData = useMemo(() => {
         const blocks = getBlocksForStep(safeCurrentStep, state.stepBlocks) || [];
@@ -140,7 +156,9 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                                 <Suspense fallback={<div className="w-full bg-gray-900 border-r border-gray-800/50 h-full" />}>
                                     <StepSidebar
                                         currentStep={safeCurrentStep}
-                                        stepHasBlocks={{}}
+                                        totalSteps={21}
+                                        stepHasBlocks={stepHasBlocks}
+                                        stepValidation={state.stepValidation}
                                         onSelectStep={handleStepSelect}
                                         getStepAnalysis={getStepAnalysis}
                                         renderIcon={renderIcon}
