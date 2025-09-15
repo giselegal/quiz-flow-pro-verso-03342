@@ -79,18 +79,18 @@ const StepSidebarComponent: React.FC<StepSidebarProps> = ({
                         role="status"
                       />
                     ) : hasBlocks ? (
-                      <span 
+                      <span
                         id={`step-${step}-status`}
-                        className="w-2 h-2 bg-gray-500 rounded-full" 
-                        title="Step has content" 
+                        className="w-2 h-2 bg-gray-500 rounded-full"
+                        title="Step has content"
                         aria-label="Step has content"
                         role="status"
                       />
                     ) : (
-                      <span 
+                      <span
                         id={`step-${step}-status`}
-                        className="w-2 h-2 bg-gray-700 rounded-full" 
-                        title="Step is empty" 
+                        className="w-2 h-2 bg-gray-700 rounded-full"
+                        title="Step is empty"
                         aria-label="Step is empty"
                         role="status"
                       />
