@@ -140,8 +140,7 @@
 .universal-properties-panel select:focus,
 .universal-properties-panel textarea:focus {
     outline: none;
-    ring: 2px;
-    ring-color: rgb(59 130 246);
+    box-shadow: 0 0 0 2px rgb(59 130 246);
     border-color: transparent;
 }
 
