@@ -16,7 +16,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Switch } from '@/components/ui/switch';
 import { Slider } from '@/components/ui/slider';
@@ -312,48 +311,58 @@ export const UniversalNoCodePanel: React.FC<UniversalNoCodePanelProps> = ({
       </div>
 
       {/* Tabs por categoria */}
-      <Tabs value={selectedCategory} onValueChange={handleCategoryChange} className="flex-1 flex flex-col">
-        <TabsList className="w-full" style={{ display: 'grid', gridTemplateColumns: `repeat(${Math.min(availableCategories.length, 6)}, 1fr)` }}>
-          {availableCategories.map(categoryKey => {
+      <div className="flex-1 flex flex-col">
+        <div className="flex border-b border-border">
+          {availableCategories.map((categoryKey) => {
             const categoryInfo = getCategoryInfo(categoryKey);
+            const isActive = selectedCategory === categoryKey;
             return (
-              <TabsTrigger key={categoryKey} value={categoryKey} className="text-xs">
-                <categoryInfo.icon className="w-3 h-3 mr-1" />
+              <button
+                key={categoryKey}
+                onClick={() => handleCategoryChange(categoryKey)}
+                className={`
+                  flex-1 px-3 py-2 text-xs font-medium transition-colors
+                  flex items-center justify-center gap-1
+                  ${isActive 
+                    ? 'bg-background text-foreground border-b-2 border-primary' 
+                    : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
+                  }
+                `}
+              >
+                <categoryInfo.icon className="w-3 h-3" />
                 {categoryInfo.label}
-              </TabsTrigger>
+              </button>
             );
           })}
-        </TabsList>
+        </div>
 
-        {/* Conteúdo das tabs com preview sidebar */}
-        <div className="flex flex-1 min-h-0">
+        {/* Conteúdo das tabs */}
+        <div className="flex-1 min-h-0">
           <div className="flex-1 min-w-0">
-            {availableCategories.map(categoryKey => (
-              <TabsContent key={categoryKey} value={categoryKey} className="h-full m-0">
-                <ScrollArea className="h-full">
-                  <div className="p-4 space-y-4">
-                    {filteredProperties[categoryKey] && (
-                      <CategorySection
-                        key={categoryKey}
-                        category={categoryKey}
-                        properties={filteredProperties[categoryKey]}
-                        allProperties={extractedProperties}
-                        isCollapsed={collapsedCategories.has(categoryKey)}
-                        onToggle={() => toggleCategory(categoryKey)}
-                        onPropertyUpdate={handlePropertyUpdate}
-                      />
-                    )}
+            <div className="h-full">
+              <ScrollArea className="h-full">
+                <div className="p-4 space-y-4">
+                  {filteredProperties[selectedCategory] && (
+                    <CategorySection
+                      key={selectedCategory}
+                      category={selectedCategory}
+                      properties={filteredProperties[selectedCategory]}
+                      allProperties={extractedProperties}
+                      isCollapsed={collapsedCategories.has(selectedCategory)}
+                      onToggle={() => toggleCategory(selectedCategory)}
+                      onPropertyUpdate={handlePropertyUpdate}
+                    />
+                  )}
 
-                    {!filteredProperties[categoryKey] && (
-                      <div className="text-center py-8 text-muted-foreground">
-                        <Filter className="w-8 h-8 mx-auto mb-2" />
-                        <p>Nenhuma propriedade encontrada nesta categoria</p>
-                      </div>
-                    )}
-                  </div>
-                </ScrollArea>
-              </TabsContent>
-            ))}
+                  {!filteredProperties[selectedCategory] && (
+                    <div className="text-center py-8 text-muted-foreground">
+                      <Filter className="w-8 h-8 mx-auto mb-2" />
+                      <p>Nenhuma propriedade encontrada nesta categoria</p>
+                    </div>
+                  )}
+                </div>
+              </ScrollArea>
+            </div>
           </div>
 
           {/* Preview sidebar para options-grid */}
@@ -366,7 +375,7 @@ export const UniversalNoCodePanel: React.FC<UniversalNoCodePanelProps> = ({
             </div>
           )}
         </div>
-      </Tabs>
+      </div>
     </Card>
   );
 };
