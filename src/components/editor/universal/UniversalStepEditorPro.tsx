@@ -53,7 +53,7 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
     // Estados locais para UX
     const [mode, setMode] = useState<'edit' | 'preview'>('edit');
     const [previewDevice, setPreviewDevice] = useState<ViewportMode>('desktop');
-    
+
     // 🎯 CORREÇÃO CRÍTICA: Estados para overlays (substitui document.getElementById)
     const [mobileNavOpen, setMobileNavOpen] = useState(false);
     const [mobilePropsOpen, setMobilePropsOpen] = useState(false);
