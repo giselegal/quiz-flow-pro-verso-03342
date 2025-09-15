@@ -27,10 +27,15 @@ export const getOptimizedBlockComponent = (type: string): React.ComponentType<an
   if (cached) return cached;
 
   try {
+    console.log(`🔍 getOptimizedBlockComponent chamado para tipo: "${type}"`);
+
     // Usar função inteligente do enhanced registry
     const component = getEnhancedBlockComponent(type);
 
+    console.log(`🎯 getEnhancedBlockComponent retornou para "${type}":`, component ? component.name || component : 'undefined/null');
+
     if (component) {
+      console.log(`✅ Componente válido encontrado para "${type}", adicionando ao cache`);
       // Armazenar no cache para identidade estável entre renders
       COMPONENT_CACHE.set(type, component as unknown as React.ComponentType<any>);
       return component as unknown as React.ComponentType<any>;

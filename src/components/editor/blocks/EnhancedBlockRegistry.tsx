@@ -145,13 +145,18 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, ComponentType<any>> = {
  * Inclui fallbacks inteligentes para tipos desconhecidos
  */
 export const getEnhancedBlockComponent = (type: string) => {
+    console.log(`🔍 getEnhancedBlockComponent chamado para tipo: "${type}"`);
+
     if (!type) {
         console.warn('getEnhancedBlockComponent: tipo não fornecido, usando fallback');
         return TextInlineBlock;
     }
 
+    console.log(`🔎 Verificando tipo exato no registry: "${type}"`);
+
     // Verificar se o tipo existe diretamente no registro
     if (ENHANCED_BLOCK_REGISTRY[type]) {
+        console.log(`✅ Tipo exato encontrado no registry: "${type}"`);
         return ENHANCED_BLOCK_REGISTRY[type];
     }
 
@@ -256,6 +261,14 @@ export const AVAILABLE_COMPONENTS = [
  * Retorna o bloco completo com propriedades normalizadas
  */
 export const normalizeBlockProperties = (block: any) => {
+    console.log(`🔧 normalizeBlockProperties chamado para bloco:`, {
+        blockId: block?.id,
+        originalType: block?.type,
+        hasType: !!block?.type,
+        blockKeys: Object.keys(block || {}),
+        fullBlock: block
+    });
+
     if (!block) return { type: undefined, properties: {} };
 
     // Garantir que properties existe
