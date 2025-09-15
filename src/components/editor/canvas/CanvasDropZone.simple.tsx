@@ -466,11 +466,9 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
       onClick={handleCanvasClick}
       className={cn(
         'min-h-[300px] transition-all duration-200 p-2 overflow-visible',
-        // Evitar qualquer bloqueio de eventos no canvas
         'z-0',
         isOver && !isPreviewing && 'bg-brand/5 ring-2 ring-brand/20 ring-dashed',
         'border border-dashed border-gray-200 rounded-lg',
-        // ✅ CLASSE CSS DE FORÇA BRUTA
         'dnd-droppable-zone',
         'customizable-width',
         className
@@ -506,17 +504,15 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
           )}
         </div>
       ) : enableVirtualization ? (
-        // Virtualização leve em preview
         <div
           ref={scrollRef}
           onScroll={onScroll}
-          className="w-full max-w-[37rem] mx-auto overflow-y-auto"
-          style={{ maxHeight: '70vh' }}
+          className="w-full"
+          style={{ maxWidth: 800, margin: '0 auto', maxHeight: '70vh' }}
         >
           {blocks.length > 0 ? (
             <div className="space-y-6">
               <div style={{ height: visibleMeta.topPad }} />
-              {/* Drop zone no início absoluto do canvas (posição 0) quando no topo */}
               {visibleMeta.startIndex === 0 && (
                 <InterBlockDropZone position={0} isActive={false} scopeId={scopeId} />
               )}
@@ -559,10 +555,8 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
           )}
           strategy={verticalListSortingStrategy}
         >
-          {/* Wrapper interno para limitar largura dos componentes no canvas (≈15% mais largo) */}
-          <div className="w-full max-w-[37rem] mx-auto">
+          <div className="w-full" style={{ maxWidth: 800, margin: '0 auto' }}>
             <div className="space-y-6">
-              {/* Drop zone no início - sempre presente (ativa durante drag) */}
               <InterBlockDropZone position={0} isActive={isDraggingAnyValidComponent} scopeId={scopeId} />
 
               {(enableProgressiveEdit ? blocks.slice(0, editRenderCount) : blocks).map((block, index) => (
@@ -584,12 +578,10 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
                     scopeId={scopeId}
                   />
 
-                  {/* Drop zone entre blocos - sempre presente (ativa durante drag) */}
                   <InterBlockDropZone position={index + 1} isActive={isDraggingAnyValidComponent} scopeId={scopeId} />
                 </React.Fragment>
               ))}
 
-              {/* Controles de navegação após todos os blocos - apenas no editor */}
               {!isPreviewing && blocks.length > 0 && (
                 <EditorNavigationControls scopeId={scopeId} />
               )}
