@@ -347,217 +347,32 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
             >
                 <div className={`universal-step-editor-pro min-h-screen w-full bg-gradient-to-br from-gray-950 via-slate-900 to-gray-950 overflow-hidden ${className} relative`}>
                 
-                    {/* 🎯 LAYOUT 4-COLUNAS DESKTOP */}
+                    {/* 🎯 DESKTOP LAYOUT 4-COLUNAS */}
                     <div className="hidden lg:flex h-[calc(100vh-80px)] w-full">
-
-                        {/* 🎯 DESKTOP LAYOUT 4-COLUNAS DENTRO DO WRAPPER ACIMA */}
-
-                    {/* 📱 MOBILE OVERLAYS - DESIGN PREMIUM */}
-                    <div className="lg:hidden">
-                        {/* Mobile Navigation Overlay */}
-                        <div className={`fixed inset-0 z-40 transition-all duration-300 ${mobileNavOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
-                            }`}>
-                            {/* Backdrop */}
-                            <div
-                                className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-                                onClick={() => setMobileNavOpen(false)}
-                            ></div>
-
-                            {/* Overlay Content */}
-                            <div className={`absolute top-0 left-0 w-80 h-full bg-gradient-to-br from-gray-900 via-slate-900 to-gray-900 border-r border-gray-800/50 shadow-2xl transition-transform duration-300 ${mobileNavOpen ? 'translate-x-0' : '-translate-x-full'
-                                }`}>
-                                {/* Header */}
-                                <div className="flex items-center justify-between p-6 border-b border-gray-800/50 bg-gradient-to-r from-gray-800/50 to-transparent">
-                                    <div>
-                                        <h3 className="text-lg font-bold text-white">Navegação</h3>
-                                        <p className="text-xs text-gray-400">Steps e componentes</p>
-                                    </div>
-                                    <button
-                                        onClick={() => setMobileNavOpen(false)}
-                                        className="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/50 transition-all"
-                                    >
-                                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                        </svg>
-                                    </button>
-                                </div>
-
-                                {/* Content */}
-                                <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800">
-                                    <Suspense fallback={
-                                        <div className="p-6 flex items-center justify-center">
-                                            <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-                                        </div>
-                                    }>
-                                        <div className="p-4">
-                                            <h4 className="text-sm font-semibold text-white/90 mb-3 px-2">STEPS DO FUNIL</h4>
-                                            <StepSidebar
-                                                currentStep={safeCurrentStep}
-                                                totalSteps={21}
-                                                stepHasBlocks={stepHasBlocks}
-                                                stepValidation={(state as any)?.stepValidation || {}}
-                                                onSelectStep={(step) => {
-                                                    handleStepSelect(step);
-                                                    setMobileNavOpen(false);
-                                                }}
-                                                getStepAnalysis={getStepAnalysis}
-                                                renderIcon={renderIcon}
-                                                className="mb-6"
-                                            />
-
-                                            <h4 className="text-sm font-semibold text-white/90 mb-3 px-2">COMPONENTES</h4>
-                                            <ComponentsSidebar
-                                                groupedComponents={groupedComponents}
-                                                renderIcon={renderIcon}
-                                                className=""
-                                            />
-                                        </div>
-                                    </Suspense>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Mobile Properties Overlay */}
-                        <div className={`fixed inset-0 z-40 transition-all duration-300 ${mobilePropsOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
-                            }`}>
-                            {/* Backdrop */}
-                            <div
-                                className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-                                onClick={() => setMobilePropsOpen(false)}
-                            ></div>
-
-                            {/* Overlay Content */}
-                            <div className={`absolute top-0 right-0 w-80 h-full bg-gradient-to-bl from-gray-900 via-slate-900 to-gray-900 border-l border-gray-800/50 shadow-2xl transition-transform duration-300 ${mobilePropsOpen ? 'translate-x-0' : 'translate-x-full'
-                                }`}>
-                                {/* Header */}
-                                <div className="flex items-center justify-between p-6 border-b border-gray-800/50 bg-gradient-to-l from-gray-800/50 to-transparent">
-                                    <div>
-                                        <h3 className="text-lg font-bold text-white">Propriedades</h3>
-                                        <p className="text-xs text-gray-400">Configure o elemento</p>
-                                    </div>
-                                    <button
-                                        onClick={() => setMobilePropsOpen(false)}
-                                        className="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/50 transition-all"
-                                    >
-                                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                        </svg>
-                                    </button>
-                                </div>
-
-                                {/* Content */}
-                                <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800">
-                                    <Suspense fallback={
-                                        <div className="p-6 flex items-center justify-center">
-                                            <div className="w-8 h-8 border-2 border-violet-500 border-t-transparent rounded-full animate-spin"></div>
-                                        </div>
-                                    }>
-                                        <UniversalPropertiesPanel
-                                            selectedBlockId={state.selectedBlockId}
-                                            stepData={currentStepData}
-                                            stepNumber={safeCurrentStep}
-                                            onSave={handleSave}
-                                            className="p-4"
-                                        />
-                                    </Suspense>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* 📱 MOBILE ACTION BUTTONS - DESIGN PREMIUM */}
-                    <div className="lg:hidden fixed bottom-6 left-4 right-4 z-50">
-                        <div className="flex justify-between items-center">
-                            {/* Menu Button */}
-                            <button
-                                onClick={() => setMobileNavOpen(true)}
-                                className="group relative bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white p-4 rounded-2xl shadow-2xl border border-blue-400/20 transition-all duration-300 hover:scale-110 hover:shadow-blue-500/25"
-                            >
-                                <div className="absolute inset-0 bg-gradient-to-r from-blue-400/20 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                                <svg className="w-6 h-6 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                                </svg>
-                                <div className="absolute -top-2 -left-2 w-3 h-3 bg-blue-400 rounded-full opacity-75 animate-ping"></div>
-                            </button>
-
-                            {/* Center Actions */}
-                            <div className="flex space-x-3">
-                                {/* Save Button */}
-                                <button
-                                    onClick={handleSave}
-                                    className="group relative bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white p-4 rounded-2xl shadow-2xl border border-green-400/20 transition-all duration-300 hover:scale-110 hover:shadow-green-500/25"
-                                >
-                                    <div className="absolute inset-0 bg-gradient-to-r from-green-400/20 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                                    <svg className="w-6 h-6 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
-                                    </svg>
-                                    <div className="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                                </button>
-
-                                {/* Mode Toggle */}
-                                <button
-                                    onClick={() => setMode(mode === 'edit' ? 'preview' : 'edit')}
-                                    className={`group relative p-4 rounded-2xl shadow-2xl border transition-all duration-300 hover:scale-110 ${mode === 'edit'
-                                        ? 'bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white border-purple-400/20 hover:shadow-purple-500/25'
-                                        : 'bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-amber-400/20 hover:shadow-amber-500/25'
-                                        }`}
-                                >
-                                    <div className={`absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity ${mode === 'edit'
-                                        ? 'bg-gradient-to-r from-purple-400/20 to-transparent'
-                                        : 'bg-gradient-to-r from-amber-400/20 to-transparent'
-                                        }`}></div>
-                                    {mode === 'edit' ? (
-                                        <svg className="w-6 h-6 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                                        </svg>
-                                    ) : (
-                                        <svg className="w-6 h-6 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                        </svg>
-                                    )}
-                                </button>
-                            </div>
-
-                            {/* Properties Button */}
-                            <button
-                                onClick={() => setMobilePropsOpen(true)}
-                                className="group relative bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white p-4 rounded-2xl shadow-2xl border border-violet-400/20 transition-all duration-300 hover:scale-110 hover:shadow-violet-500/25"
-                            >
-                                <div className="absolute inset-0 bg-gradient-to-r from-violet-400/20 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                                <svg className="w-6 h-6 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4" />
-                                </svg>
-                                <div className="absolute -top-2 -right-2 w-3 h-3 bg-violet-400 rounded-full opacity-75 animate-ping"></div>
-                            </button>
-                        </div>
-                    </div>
-
-                    {/* 🎯 DESKTOP LAYOUT 4-COLUNAS DENTRO DO WRAPPER ACIMA */}
+                        
                         {/* 1) Steps Sidebar - 180px */}
                         <div className="w-48 flex-shrink-0 bg-gray-900/95 backdrop-blur-xl border-r border-gray-800/50">
                             <div className="p-4 border-b border-gray-800/50">
                                 <h2 className="text-sm font-bold text-white/90 mb-1">NAVEGAÇÃO</h2>
                                 <p className="text-xs text-gray-400">Steps do funil</p>
                             </div>
-                            <Suspense fallback={
-                                <div className="p-4 flex items-center justify-center">
-                                    <div className="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                            <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800">
+                                <div className="p-2">
+                                    {Array.from({ length: 21 }, (_, i) => i + 1).map((num) => (
+                                        <button
+                                            key={num}
+                                            onClick={() => handleStepSelect(num)}
+                                            className={`w-full text-left px-3 py-2 mb-1 rounded-md text-sm transition-colors ${num === safeCurrentStep
+                                                ? 'bg-blue-600 text-white font-medium'
+                                                : 'text-gray-300 hover:bg-gray-800/50'
+                                                }`}
+                                        >
+                                            Step {num}
+                                        </button>
+                                    ))}
                                 </div>
-                            }>
-                                <StepSidebar
-                                    currentStep={safeCurrentStep}
-                                    totalSteps={21}
-                                    stepHasBlocks={stepHasBlocks}
-                                    stepValidation={(state as any)?.stepValidation || {}}
-                                    onSelectStep={handleStepSelect}
-                                    getStepAnalysis={getStepAnalysis}
-                                    renderIcon={renderIcon}
-                                    className="h-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800"
-                                />
-                            </Suspense>
+                            </div>
                         </div>
-                    </div>
 
                         {/* 2) Components Sidebar - 220px */}
                         <div className="w-56 flex-shrink-0 bg-gray-900/95 backdrop-blur-xl border-r border-gray-800/50">
@@ -565,132 +380,59 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                                 <h2 className="text-sm font-bold text-white/90 mb-1">COMPONENTES</h2>
                                 <p className="text-xs text-gray-400">Arraste para o canvas</p>
                             </div>
-                            <Suspense fallback={
-                                <div className="p-4 flex items-center justify-center">
-                                    <div className="w-6 h-6 border-2 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+                            <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800 p-2">
+                                <div className="text-sm text-gray-400 text-center py-8">
+                                    Componentes em desenvolvimento
                                 </div>
-                            }>
-                                <ComponentsSidebar
-                                    groupedComponents={groupedComponents}
-                                    renderIcon={renderIcon}
-                                    className="h-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800"
-                                />
-                            </Suspense>
+                            </div>
                         </div>
-                    </div>
 
                         {/* 3) Canvas Area - Dynamic */}
                         <div className="flex-1 min-w-0 flex flex-col">
                             {/* Canvas Header */}
                             <div className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border-b border-gray-200/50 dark:border-gray-800/50 px-6 py-4">
-                            <div className="flex items-center justify-between max-w-7xl mx-auto">
-                                <div className="flex items-center gap-3">
-                                    <div className="p-2.5 rounded-xl bg-gradient-to-r from-blue-500 to-violet-500 text-white shadow-lg shadow-blue-500/25">
-                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v6a4 4 0 004 4h4a2 2 0 002-2V5z" />
-                                        </svg>
+                                <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-3">
+                                        <div className="p-2.5 rounded-xl bg-gradient-to-r from-blue-500 to-violet-500 text-white shadow-lg shadow-blue-500/25">
+                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v6a4 4 0 004 4h4a2 2 0 002-2V5z" />
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+                                                Step {safeCurrentStep}
+                                            </h2>
+                                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                                                {(currentStepData as any)?.blocks?.length || 0} elementos • {mode === 'edit' ? 'Modo edição' : 'Preview'}
+                                            </p>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <h2 className="text-xl font-bold text-gray-900 dark:text-white">
-                                            Step {safeCurrentStep}
-                                        </h2>
-                                        <p className="text-sm text-gray-600 dark:text-gray-400">
-                                            {(currentStepData as any)?.blocks?.length || 0} elementos • {mode === 'edit' ? 'Modo edição' : 'Preview'}
-                                        </p>
+
+                                    <div className="flex items-center gap-3">
+                                        <button
+                                            onClick={() => setMode(mode === 'edit' ? 'preview' : 'edit')}
+                                            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${mode === 'preview'
+                                                ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg'
+                                                : 'bg-gradient-to-r from-blue-500 to-violet-500 text-white shadow-lg'
+                                                }`}
+                                        >
+                                            {mode === 'preview' ? 'Preview' : 'Editar'}
+                                        </button>
                                     </div>
                                 </div>
+                            </div>
 
-                                {/* Canvas Actions */}
-                                <div className="flex items-center gap-3">
-                                    {/* Viewport Mode Toggle */}
-                                    <div className="flex items-center gap-1 p-1 bg-gray-100 dark:bg-gray-800 rounded-lg">
-                                        {['desktop', 'tablet', 'mobile'].map((device) => (
-                                            <button
-                                                key={device}
-                                                onClick={() => handleViewportModeChange(device as any)}
-                                                className={`p-2 rounded-md text-xs font-medium transition-all ${previewDevice === device
-                                                    ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
-                                                    : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
-                                                    }`}
-                                            >
-                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    {device === 'desktop' && <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />}
-                                                    {device === 'tablet' && <rect x="6" y="2" width="12" height="20" rx="2" ry="2" />}
-                                                    {device === 'mobile' && <rect x="9" y="1" width="6" height="22" rx="2" ry="2" />}
-                                                </svg>
-                                            </button>
-                                        ))}
+                            {/* Canvas Content */}
+                            <div className="flex-1 bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100 dark:from-gray-900 dark:via-slate-900 dark:to-gray-900 overflow-hidden">
+                                <div className="h-full flex items-center justify-center p-6">
+                                    <div className="text-center">
+                                        <div className="w-16 h-16 mx-auto mb-4 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                                        <div className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Canvas de Edição</div>
+                                        <p className="text-sm text-gray-600 dark:text-gray-400">Layout 4-colunas funcional implementado</p>
                                     </div>
-
-                                    <div className="w-px h-6 bg-gray-300 dark:bg-gray-700"></div>
-
-                                    {/* Mode Toggle */}
-                                    <button
-                                        onClick={() => setMode(mode === 'edit' ? 'preview' : 'edit')}
-                                        className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${mode === 'preview'
-                                            ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg shadow-green-500/25'
-                                            : 'bg-gradient-to-r from-blue-500 to-violet-500 text-white shadow-lg shadow-blue-500/25'
-                                            }`}
-                                    >
-                                        <div className="flex items-center gap-2">
-                                            {mode === 'preview' ? (
-                                                <>
-                                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                                    </svg>
-                                                    Preview
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                                    </svg>
-                                                    Editar
-                                                </>
-                                            )}
-                                        </div>
-                                    </button>
                                 </div>
                             </div>
                         </div>
-
-                        {/* Canvas Content Area */}
-                        <div className="flex-1 bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100 dark:from-gray-900 dark:via-slate-900 dark:to-gray-900 overflow-hidden">
-                            <div className="h-full flex items-center justify-center p-6">
-                                <div className="w-full max-w-6xl h-full">
-                                    <Suspense fallback={
-                                        <div className="h-full flex items-center justify-center">
-                                            <div className="text-center">
-                                                <div className="w-16 h-16 mx-auto mb-4 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-                                                <div className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Carregando Canvas</div>
-                                                <p className="text-sm text-gray-600 dark:text-gray-400">Preparando ambiente de edição premium</p>
-                                            </div>
-                                        </div>
-                                    }>
-                                        <CanvasAreaLayout
-                                            className="h-full w-full bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200/50 dark:border-gray-700/50 overflow-hidden"
-                                            mode={mode}
-                                            setMode={setMode}
-                                            previewDevice={previewDevice}
-                                            setPreviewDevice={handleViewportModeChange}
-                                            safeCurrentStep={safeCurrentStep}
-                                            currentStepKey={currentStepKey}
-                                            currentStepData={currentStepData as any}
-                                            selectedBlockId={state.selectedBlockId}
-                                            actions={actions as any}
-                                            state={state as any}
-                                            notification={notification as any}
-                                            containerRef={React.createRef<HTMLDivElement>()}
-                                            getStepAnalysis={getStepAnalysis}
-                                            renderIcon={renderIcon}
-                                            isDragging={isDragging}
-                                        />
-                                    </Suspense>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
                         {/* 4) Properties Panel - 320px */}
                         <div className="w-80 flex-shrink-0 bg-gray-900/95 backdrop-blur-xl border-l border-gray-800/50">
@@ -698,33 +440,101 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                                 <h2 className="text-sm font-bold text-white/90 mb-1">PROPRIEDADES</h2>
                                 <p className="text-xs text-gray-400">Configure o elemento</p>
                             </div>
-                            <Suspense fallback={
-                                <div className="p-4 flex items-center justify-center">
-                                    <div className="w-6 h-6 border-2 border-green-500 border-t-transparent rounded-full animate-spin"></div>
+                            <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800 p-4">
+                                <div className="text-sm text-gray-400 text-center py-8">
+                                    Clique em um elemento para editar propriedades
                                 </div>
-                            }>
-                                <UniversalPropertiesPanel
-                                    selectedBlockId={state.selectedBlockId}
-                                    stepData={currentStepData}
-                                    stepNumber={safeCurrentStep}
-                                    onSave={handleSave}
-                                    className="h-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800"
-                                />
-                            </Suspense>
+                            </div>
                         </div>
                     </div>
-                    
-                    {/* 🎯 FECHA O LAYOUT DESKTOP 4-COLUNAS */}
-                    </div>
 
-                    {/* 📱 LAYOUT MOBILE RESPONSIVO */}
+                    {/* 📱 MOBILE LAYOUT */}
                     <div className="lg:hidden h-[calc(100vh-80px)] relative bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100 dark:from-gray-900 dark:via-slate-900 dark:to-gray-900">
-                        {/* Mobile content will be handled by the existing overlays above */}
+                        
+                        {/* Mobile Navigation Overlay */}
+                        <div className={`fixed inset-0 z-40 transition-all duration-300 ${mobileNavOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
+                            <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setMobileNavOpen(false)}></div>
+                            <div className={`absolute top-0 left-0 w-80 h-full bg-gradient-to-br from-gray-900 via-slate-900 to-gray-900 border-r border-gray-800/50 shadow-2xl transition-transform duration-300 ${mobileNavOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+                                <div className="flex items-center justify-between p-6 border-b border-gray-800/50 bg-gradient-to-r from-gray-800/50 to-transparent">
+                                    <div>
+                                        <h3 className="text-lg font-bold text-white">Navegação</h3>
+                                        <p className="text-xs text-gray-400">Steps do funil</p>
+                                    </div>
+                                    <button onClick={() => setMobileNavOpen(false)} className="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/50 transition-all">
+                                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800 p-4">
+                                    {Array.from({ length: 21 }, (_, i) => i + 1).map((num) => (
+                                        <button
+                                            key={num}
+                                            onClick={() => { handleStepSelect(num); setMobileNavOpen(false); }}
+                                            className={`w-full text-left px-3 py-3 mb-2 rounded-md text-sm transition-colors ${num === safeCurrentStep
+                                                ? 'bg-blue-600 text-white font-medium'
+                                                : 'text-gray-300 hover:bg-gray-800/50'
+                                                }`}
+                                        >
+                                            Step {num}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Mobile Properties Overlay */}
+                        <div className={`fixed inset-0 z-40 transition-all duration-300 ${mobilePropsOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
+                            <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setMobilePropsOpen(false)}></div>
+                            <div className={`absolute top-0 right-0 w-80 h-full bg-gradient-to-bl from-gray-900 via-slate-900 to-gray-900 border-l border-gray-800/50 shadow-2xl transition-transform duration-300 ${mobilePropsOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+                                <div className="flex items-center justify-between p-6 border-b border-gray-800/50 bg-gradient-to-l from-gray-800/50 to-transparent">
+                                    <div>
+                                        <h3 className="text-lg font-bold text-white">Propriedades</h3>
+                                        <p className="text-xs text-gray-400">Configure elementos</p>
+                                    </div>
+                                    <button onClick={() => setMobilePropsOpen(false)} className="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/50 transition-all">
+                                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800 p-4">
+                                    <div className="text-sm text-gray-400 text-center py-8">
+                                        Clique em um elemento para editar propriedades
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Mobile Action Buttons */}
+                        <div className="fixed bottom-6 left-4 right-4 z-50">
+                            <div className="flex justify-between items-center">
+                                <button onClick={() => setMobileNavOpen(true)} className="group relative bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white p-4 rounded-2xl shadow-2xl border border-blue-400/20 transition-all duration-300 hover:scale-110">
+                                    <svg className="w-6 h-6 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                                    </svg>
+                                </button>
+                                <div className="flex space-x-3">
+                                    <button onClick={handleSave} className="group relative bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white p-4 rounded-2xl shadow-2xl border border-green-400/20 transition-all duration-300 hover:scale-110">
+                                        <svg className="w-6 h-6 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+                                        </svg>
+                                    </button>
+                                </div>
+                                <button onClick={() => setMobilePropsOpen(true)} className="group relative bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white p-4 rounded-2xl shadow-2xl border border-violet-400/20 transition-all duration-300 hover:scale-110">
+                                    <svg className="w-6 h-6 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Mobile Canvas */}
                         <div className="h-full flex items-center justify-center p-4">
                             <div className="text-center">
                                 <div className="w-12 h-12 mx-auto mb-4 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-                                <div className="text-sm font-semibold text-gray-900 dark:text-white mb-1">Editor Mobile</div>
-                                <p className="text-xs text-gray-600 dark:text-gray-400">Use os botões no canto inferior</p>
+                                <div className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Editor Mobile</div>
+                                <p className="text-sm text-gray-600 dark:text-gray-400">Step {safeCurrentStep} - Use os botões no canto inferior</p>
                             </div>
                         </div>
                     </div>
@@ -736,5 +546,3 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
         </>
     );
 };
-
-export default UniversalStepEditorPro;
