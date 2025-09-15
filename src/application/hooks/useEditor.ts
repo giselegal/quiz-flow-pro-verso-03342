@@ -198,8 +198,7 @@ export function useEditor(
   // 🔍 Block Operations
   const addBlock = useCallback(async (
     blockType: string,
-    content: any,
-    position?: { x: number; y: number }
+    content: any
   ) => {
     if (!sessionIdRef.current) {
       setError('No active session');
@@ -211,8 +210,7 @@ export function useEditor(
       const session = await editorService.addBlock(
         sessionIdRef.current,
         blockType,
-        content,
-        position
+        content
       );
       syncStateFromSession(session);
     } catch (error) {
