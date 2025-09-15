@@ -7,7 +7,7 @@
  * ✅ UX responsivo, lazy loading, notificações
  */
 
-import React, { Suspense, useMemo, useState, useCallback } from 'react';
+import React, { Suspense, useMemo, useState, useCallback, useRef } from 'react';
 import { useNotification } from '@/components/ui/Notification';
 import { useEditor } from '@/components/editor/EditorProvider';
 import './UniversalStepEditorPro.css';
@@ -57,6 +57,9 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
     // 🎯 CORREÇÃO CRÍTICA: Estados para overlays (substitui document.getElementById)
     const [mobileNavOpen, setMobileNavOpen] = useState(false);
     const [mobilePropsOpen, setMobilePropsOpen] = useState(false);
+
+    // 🎯 CORREÇÃO: Ref para canvas container
+    const canvasRef = useRef<HTMLDivElement>(null);
 
     // Sistema de notificações
     const notification = useNotification();
@@ -388,7 +391,7 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                         </div>
 
                         {/* 3) Canvas Area - Dynamic */}
-                        <div className="flex-1 min-w-0 flex flex-col">
+                        <div className="flex-1 min-w-0 flex flex-col" ref={canvasRef}>
                             {/* Canvas Header */}
                             <div className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border-b border-gray-200/50 dark:border-gray-800/50 px-6 py-4">
                                 <div className="flex items-center justify-between">
@@ -425,10 +428,35 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                             {/* Canvas Content */}
                             <div className="flex-1 bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100 dark:from-gray-900 dark:via-slate-900 dark:to-gray-900 overflow-hidden">
                                 <div className="h-full flex items-center justify-center p-6">
-                                    <div className="text-center">
-                                        <div className="w-16 h-16 mx-auto mb-4 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-                                        <div className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Canvas de Edição</div>
-                                        <p className="text-sm text-gray-600 dark:text-gray-400">Layout 4-colunas funcional implementado</p>
+                                    <div className="w-full max-w-6xl h-full">
+                                        <Suspense fallback={
+                                            <div className="h-full flex items-center justify-center">
+                                                <div className="text-center">
+                                                    <div className="w-16 h-16 mx-auto mb-4 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                                                    <div className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Carregando Canvas</div>
+                                                    <p className="text-sm text-gray-600 dark:text-gray-400">Preparando ambiente de edição premium</p>
+                                                </div>
+                                            </div>
+                                        }>
+                                            <CanvasAreaLayout
+                                                className="h-full w-full bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200/50 dark:border-gray-700/50 overflow-hidden"
+                                                containerRef={canvasRef}
+                                                mode={mode}
+                                                setMode={setMode}
+                                                previewDevice={previewDevice}
+                                                setPreviewDevice={handleViewportModeChange}
+                                                safeCurrentStep={safeCurrentStep}
+                                                currentStepKey={currentStepKey}
+                                                currentStepData={currentStepData as any}
+                                                selectedBlockId={state.selectedBlockId}
+                                                actions={actions as any}
+                                                state={state as any}
+                                                notification={notification as any}
+                                                renderIcon={renderIcon}
+                                                getStepAnalysis={getStepAnalysis}
+                                                isDragging={isDragging}
+                                            />
+                                        </Suspense>
                                     </div>
                                 </div>
                             </div>
@@ -452,7 +480,7 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                     <div className="lg:hidden h-[calc(100vh-80px)] relative bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100 dark:from-gray-900 dark:via-slate-900 dark:to-gray-900">
                         
                         {/* Mobile Navigation Overlay */}
-                        <div className={`fixed inset-0 z-40 transition-all duration-300 ${mobileNavOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
+                        <div className={`fixed inset-0 z-41 transition-all duration-300 ${mobileNavOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
                             <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setMobileNavOpen(false)}></div>
                             <div className={`absolute top-0 left-0 w-80 h-full bg-gradient-to-br from-gray-900 via-slate-900 to-gray-900 border-r border-gray-800/50 shadow-2xl transition-transform duration-300 ${mobileNavOpen ? 'translate-x-0' : '-translate-x-full'}`}>
                                 <div className="flex items-center justify-between p-6 border-b border-gray-800/50 bg-gradient-to-r from-gray-800/50 to-transparent">
@@ -484,7 +512,7 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                         </div>
 
                         {/* Mobile Properties Overlay */}
-                        <div className={`fixed inset-0 z-40 transition-all duration-300 ${mobilePropsOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
+                        <div className={`fixed inset-0 z-42 transition-all duration-300 ${mobilePropsOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
                             <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setMobilePropsOpen(false)}></div>
                             <div className={`absolute top-0 right-0 w-80 h-full bg-gradient-to-bl from-gray-900 via-slate-900 to-gray-900 border-l border-gray-800/50 shadow-2xl transition-transform duration-300 ${mobilePropsOpen ? 'translate-x-0' : 'translate-x-full'}`}>
                                 <div className="flex items-center justify-between p-6 border-b border-gray-800/50 bg-gradient-to-l from-gray-800/50 to-transparent">
@@ -546,3 +574,5 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
         </>
     );
 };
+
+export default UniversalStepEditorPro;
