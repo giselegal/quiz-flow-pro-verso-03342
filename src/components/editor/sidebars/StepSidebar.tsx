@@ -25,7 +25,7 @@ const StepSidebarComponent: React.FC<StepSidebarProps> = ({
   return (
     <div
       className={cn(
-        'w-[13rem] min-w-[13rem] max-w-[13rem] flex-shrink-0 h-full bg-gray-900 border-r border-gray-800/50 flex flex-col',
+        'w-full min-w-0 h-full bg-gray-900 border-r border-gray-800/50 flex flex-col',
         className
       )}
       role="navigation"
