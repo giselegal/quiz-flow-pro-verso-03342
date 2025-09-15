@@ -927,14 +927,14 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
           {/* DESKTOP LAYOUT - Hidden on mobile */}
           <ResizablePanelGroup 
             direction="horizontal" 
-            className="hidden lg:flex w-full h-full"
+            className="hidden lg:flex w-full h-full min-h-0"
           >
             {/* 1) Etapas - Resizable width */}
             <ResizablePanel 
               defaultSize={18} 
               minSize={12} 
               maxSize={25}
-              className="min-w-0"
+              className="min-w-0 min-h-0"
             >
               <div className="h-full overflow-y-auto">
                 <Suspense fallback={<div className="p-4 bg-gray-900 border-r border-gray-800/50">Loading steps…</div>}>
@@ -962,7 +962,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               defaultSize={22} 
               minSize={15} 
               maxSize={45}
-              className="min-w-0"
+              className="min-w-0 min-h-0"
             >
               <div className="h-full overflow-y-auto">
                 <Suspense fallback={<div className="p-4 bg-gray-900 border-r border-gray-800/50">Loading library…</div>}>
@@ -985,7 +985,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               defaultSize={40} 
               minSize={25} 
               maxSize={65}
-              className="min-w-0"
+              className="min-w-0 min-h-0"
             >
               <CanvasAreaLayout
                 className="h-full overflow-y-auto"
@@ -1017,7 +1017,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               defaultSize={20} 
               minSize={15} 
               maxSize={35}
-              className="min-w-0"
+              className="min-w-0 min-h-0"
             >
               <Suspense fallback={<div className="p-4 bg-gray-900 border-l border-gray-800/50">Properties…</div>}>
                 <MemoPropertiesColumn />

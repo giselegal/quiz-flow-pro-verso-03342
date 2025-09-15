@@ -62,7 +62,7 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
             selectedBlockId={selectedBlockId}
             onBlockClick={(blockId: string) => actions.setSelectedBlockId(blockId)}
             onStepChange={(step: number) => actions.setCurrentStep(step)}
-            className="h-full w-full"
+            className="w-full"
           />
         ) : (
           <CanvasDropZone
@@ -72,7 +72,7 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
             onUpdateBlock={(id: string, updates: any) => actions.updateBlock(`step-${safeCurrentStep}`, id, updates)}
             onDeleteBlock={(id: string) => actions.removeBlock(`step-${safeCurrentStep}`, id)}
             onDeselectBlocks={() => actions.setSelectedBlockId(null)}
-            className="h-full w-full"
+            className="w-full"
             isPreviewing={mode !== 'edit'}
             scopeId={safeCurrentStep}
           />
