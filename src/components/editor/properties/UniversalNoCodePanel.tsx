@@ -73,13 +73,26 @@ export const UniversalNoCodePanel: React.FC<UniversalNoCodePanelProps> = ({
 
   // Extrair e categorizar propriedades
   const { extractedProperties, categorizedProperties } = useMemo(() => {
+    console.log('🔍 UniversalNoCodePanel - Extraindo propriedades:', {
+      hasSelectedBlock: !!selectedBlock,
+      blockType: selectedBlock?.type,
+      blockId: selectedBlock?.id
+    });
+
     if (!selectedBlock) {
       return { extractedProperties: [], categorizedProperties: {} };
     }
 
     const extracted = propertyExtractionService.extractAllProperties(selectedBlock);
+    console.log('🔍 Propriedades extraídas:', { count: extracted.length, properties: extracted.slice(0, 3) });
+    
     const withInterpolation = propertyExtractionService.identifyInterpolationFields(extracted);
     const categorized = propertyExtractionService.categorizeProperties(withInterpolation);
+    
+    console.log('🏷️  Propriedades categorizadas:', Object.keys(categorized).map(cat => ({ 
+      category: cat, 
+      count: categorized[cat].length 
+    })));
 
     return { 
       extractedProperties: withInterpolation,

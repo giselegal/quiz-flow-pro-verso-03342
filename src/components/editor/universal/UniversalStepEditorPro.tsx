@@ -86,6 +86,16 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
     // Block selecionado
     const selectedBlockId = state.selectedBlockId;
     const selectedBlock = currentStepData.find((b: any) => b.id === selectedBlockId);
+    
+    // Debug logs para seleção de bloco
+    React.useEffect(() => {
+        console.log('🎯 Estado de seleção de bloco:', {
+            selectedBlockId,
+            selectedBlock: selectedBlock ? { id: selectedBlock.id, type: selectedBlock.type } : null,
+            currentStepData: currentStepData.length,
+            currentStepKey
+        });
+    }, [selectedBlockId, selectedBlock, currentStepData.length, currentStepKey]);
 
     // Callbacks
     const renderIcon = useCallback((_name: string, className = 'w-4 h-4') => (
@@ -112,8 +122,11 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
     }, [actions, onStepChange]);
 
     const handleUpdateBlock = useCallback((updates: any) => {
+        console.log('🔄 handleUpdateBlock chamado:', { selectedBlockId, updates, currentStepKey });
         if (selectedBlockId) {
             actions.updateBlock(currentStepKey, selectedBlockId, updates);
+        } else {
+            console.warn('⚠️  Nenhum bloco selecionado para atualizar');
         }
     }, [actions, currentStepKey, selectedBlockId]);
 

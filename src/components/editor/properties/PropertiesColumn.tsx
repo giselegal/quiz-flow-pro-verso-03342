@@ -26,6 +26,15 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
   onPreviewModeChange: _onPreviewModeChange,
   className = '',
 }) => {
+  // Debug logs
+  React.useEffect(() => {
+    console.log('🏗️  PropertiesColumn renderizado:', {
+      hasSelectedBlock: !!selectedBlock,
+      selectedBlockType: selectedBlock?.type,
+      selectedBlockId: selectedBlock?.id
+    });
+  }, [selectedBlock]);
+
   return (
     <div
       className={cn(
@@ -50,6 +59,7 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
               activeStageId="current-step"
               onUpdate={(blockId: string, updates: Record<string, any>) => {
                 console.log('🔄 PropertiesColumn -> UniversalNoCodePanel update:', { blockId, updates });
+                console.log('🔄 Chamando onUpdate com:', updates);
                 onUpdate(updates);
               }}
               onDelete={onDelete}
