@@ -42,6 +42,7 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
         previewDevice === 'mobile' && 'px-2',
         previewDevice === 'tablet' && 'px-4',
         previewDevice === 'desktop' && 'px-6',
+        previewDevice === 'xl' && 'px-8',
         className
       )}
       data-canvas-container
@@ -50,8 +51,9 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
       <div className={cn(
         'w-full',
         previewDevice === 'mobile' && 'max-w-sm',
-        previewDevice === 'tablet' && 'max-w-2xl',
-        previewDevice === 'desktop' && 'max-w-4xl'
+        previewDevice === 'tablet' && 'max-w-4xl',
+        previewDevice === 'desktop' && 'max-w-5xl',
+        previewDevice === 'xl' && 'max-w-6xl'
       )}>
         {mode === 'preview' ? (
           <LazyQuizRenderer
