@@ -50,6 +50,14 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
     const [mode, setMode] = useState<'edit' | 'preview'>('edit');
     const [previewDevice] = useState<ViewportMode>('desktop');
 
+    // Forçar carregamento do template na inicialização
+    React.useEffect(() => {
+        console.log('🔧 UniversalStepEditorPro: Forçando carregamento do template');
+        if (actions.loadDefaultTemplate) {
+            actions.loadDefaultTemplate();
+        }
+    }, [actions]);
+
     // Valores calculados
     const NotificationContainer = (notification as any)?.NotificationContainer ?? null;
     const safeCurrentStep = stepNumber || state.currentStep || 1;
