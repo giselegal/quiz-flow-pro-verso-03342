@@ -158,21 +158,9 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                                 </Suspense>
                             </div>
 
-                            {/* Área do Canvas Central */}
+                            {/* Área do Canvas Central - Sem Header interno */}
                             <div className="flex flex-col bg-gray-100 dark:bg-gray-800 overflow-y-auto" ref={canvasRef}>
                                 <Suspense fallback={<div className="h-full flex items-center justify-center">Carregando Canvas...</div>}>
-                                    <EditorHeader
-                                        mode={mode}
-                                        setMode={setMode}
-                                        safeCurrentStep={safeCurrentStep}
-                                        currentStepKey={currentStepKey}
-                                        currentStepData={currentStepData}
-                                        actions={actions as any}
-                                        state={state as any}
-                                        notification={notification as any}
-                                        renderIcon={renderIcon}
-                                        getStepAnalysis={getStepAnalysis}
-                                    />
                                     <CanvasAreaLayout
                                         className="flex-1"
                                         containerRef={canvasRef}
