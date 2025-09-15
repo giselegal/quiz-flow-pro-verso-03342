@@ -47,7 +47,7 @@ const SortableBlockWrapperBase: React.FC<SortableBlockWrapperProps> = ({
         normalizedProperties: normalizedBlock?.properties,
         scopeId
       });
-      
+
       // DEBUG EXTRA: Teste manual do registry
       if (normalizedBlock?.type) {
         console.log('🧪 Teste manual do registry para:', normalizedBlock.type);
