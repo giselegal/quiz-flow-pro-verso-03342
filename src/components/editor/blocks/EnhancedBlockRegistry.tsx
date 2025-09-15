@@ -150,11 +150,11 @@ export const getEnhancedBlockComponent = (type: string) => {
     // 🧪 TESTE: Verificar se o registry está populado
     const registryKeys = Object.keys(ENHANCED_BLOCK_REGISTRY);
     console.log(`📊 Registry tem ${registryKeys.length} chaves:`, registryKeys.slice(0, 10));
-    
+
     // 🧪 TESTE CRÍTICO: Verificar se a chave específica existe
     const hasExactKey = Object.prototype.hasOwnProperty.call(ENHANCED_BLOCK_REGISTRY, type);
     console.log(`🔑 Registry.hasOwnProperty("${type}"):`, hasExactKey);
-    
+
     if (hasExactKey) {
         const component = ENHANCED_BLOCK_REGISTRY[type];
         console.log(`🎯 Componente encontrado para "${type}":`, {

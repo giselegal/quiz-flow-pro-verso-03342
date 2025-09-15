@@ -155,7 +155,7 @@ export const getOptimizedBlockComponent = (type: string): React.ComponentType<an
     }
 
     // 4. Tentar função do enhanced registry
-    const component = getEnhancedBlockComponent(type);    console.log(`🎯 getEnhancedBlockComponent retornou para "${type}":`, component ? component.name || component : 'undefined/null');
+    const component = getEnhancedBlockComponent(type); console.log(`🎯 getEnhancedBlockComponent retornou para "${type}":`, component ? component.name || component : 'undefined/null');
 
     if (component) {
       console.log(`✅ Componente válido encontrado para "${type}", adicionando ao cache`);
@@ -233,7 +233,7 @@ export const getOptimizedRegistryStats = () => {
 // 🚀 WARM-UP: Pré-carregar componentes críticos no carregamento da página
 const warmUpCriticalComponents = () => {
   const criticalTypes = ['quiz-intro-header', 'text', 'image', 'button'];
-  
+
   criticalTypes.forEach(type => {
     try {
       getOptimizedBlockComponent(type);

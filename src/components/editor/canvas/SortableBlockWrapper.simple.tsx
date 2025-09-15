@@ -54,7 +54,7 @@ const SortableBlockWrapperBase: React.FC<SortableBlockWrapperProps> = ({
         try {
           const testComponent = getOptimizedBlockComponent(normalizedBlock.type);
           console.log('🎯 Resultado do teste:', testComponent ? 'SUCESSO' : 'FALHOU');
-          
+
           // Teste adicional: verificar se o componente tem as propriedades esperadas
           if (testComponent) {
             console.log('📋 Propriedades do componente:', {
@@ -76,7 +76,7 @@ const SortableBlockWrapperBase: React.FC<SortableBlockWrapperProps> = ({
       return getOptimizedBlockComponent(normalizedBlock.type);
     } catch (error) {
       console.error('❌ Erro fatal ao buscar componente, usando fallback direto:', error);
-      
+
       // Fallback direto baseado no tipo
       const type = normalizedBlock.type;
       if (type === 'quiz-intro-header') {
@@ -91,7 +91,7 @@ const SortableBlockWrapperBase: React.FC<SortableBlockWrapperProps> = ({
         const ImageInlineBlock = require('@/components/editor/blocks/ImageInlineBlock').default;
         return ImageInlineBlock;
       }
-      
+
       // Fallback visual final
       return ({ block }: { block?: any }) => (
         <div className="border border-red-200 bg-red-50 p-4 rounded">
