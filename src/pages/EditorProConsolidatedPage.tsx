@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { EditorStandalone } from '@/components/editor/EditorStandalone';
+import EditorStandalone from '@/components/editor/EditorStandalone';
 
 interface EditorProConsolidatedPageProps {
   initialStep?: number;
@@ -23,7 +23,7 @@ const EditorProConsolidatedPage: React.FC<EditorProConsolidatedPageProps> = ({
     <EditorStandalone
       stepNumber={initialStep}
       funnelId={funnelId}
-      debugMode={process.env.NODE_ENV === 'development'}
+      debugMode={import.meta.env.DEV}
     />
   );
 };
