@@ -51,7 +51,7 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
       <div className={cn(
         'w-full',
         previewDevice === 'mobile' && 'max-w-sm',
-        previewDevice === 'tablet' && 'max-w-4xl',
+        previewDevice === 'tablet' && 'max-w-3xl',
         previewDevice === 'desktop' && 'max-w-5xl',
         previewDevice === 'xl' && 'max-w-6xl'
       )}>
