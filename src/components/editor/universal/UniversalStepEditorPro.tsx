@@ -44,6 +44,16 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
 
     // Forçar carregamento de todas as etapas ao montar o componente
     React.useEffect(() => {
+        // Primeiro, vamos verificar o que está no template
+        import('@/templates/quiz21StepsComplete').then(template => {
+            console.log('🔍 Template importado:', {
+                hasTemplate: !!template.QUIZ_STYLE_21_STEPS_TEMPLATE,
+                keys: Object.keys(template.QUIZ_STYLE_21_STEPS_TEMPLATE || {}),
+                step1: template.QUIZ_STYLE_21_STEPS_TEMPLATE?.['step-1']?.length,
+                step2: template.QUIZ_STYLE_21_STEPS_TEMPLATE?.['step-2']?.length,
+            });
+        });
+        
         // Usar setTimeout para permitir que o EditorProvider inicialize primeiro
         const timer = setTimeout(() => {
             // Primeira tentativa: forçar carregamento do template
