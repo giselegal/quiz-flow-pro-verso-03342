@@ -87,6 +87,276 @@ const minimalRegistry: Record<string, BlockDefinition> = {
 };
 
 export const blocksRegistry: Record<string, BlockDefinition> = process.env.NODE_ENV === 'test' ? minimalRegistry : {
+    // === STEP 20 MODULAR COMPONENTS ===
+    'step20-result-header': {
+        type: 'step20-result-header',
+        title: 'Header do Resultado',
+        category: 'Resultado',
+        icon: 'trophy',
+        defaultProps: {
+            showCelebration: true,
+            congratsMessage: 'Parabéns! Descobrimos seu Estilo Pessoal',
+            subtitle: 'Seu resultado personalizado está pronto',
+            showSubtitle: true,
+            celebrationIcon: 'trophy',
+            iconSize: 'lg',
+            showIcon: true,
+            alignment: 'center',
+            spacing: 'md',
+            backgroundColor: 'transparent',
+            textColor: '#432818',
+            iconColor: '#B89B7A',
+            borderRadius: '0px',
+            padding: '16px'
+        },
+        propsSchema: [
+            prop({ key: 'showCelebration', kind: 'switch', label: 'Mostrar Comemoração', category: 'content', default: true }),
+            prop({ key: 'congratsMessage', kind: 'text', label: 'Mensagem de Parabéns', category: 'content', default: 'Parabéns! Descobrimos seu Estilo Pessoal' }),
+            prop({ key: 'subtitle', kind: 'text', label: 'Subtítulo', category: 'content', default: 'Seu resultado personalizado está pronto' }),
+            prop({ key: 'showSubtitle', kind: 'switch', label: 'Mostrar Subtítulo', category: 'content', default: true }),
+            select('celebrationIcon', 'Ícone de Comemoração', [
+                { value: 'trophy', label: '🏆 Troféu' },
+                { value: 'star', label: '⭐ Estrela' },
+                { value: 'heart', label: '💖 Coração' },
+                { value: 'award', label: '🥇 Medalha' },
+                { value: 'none', label: 'Nenhum' }
+            ], { category: 'style', default: 'trophy' }),
+            select('iconSize', 'Tamanho do Ícone', [
+                { value: 'sm', label: 'Pequeno' },
+                { value: 'md', label: 'Médio' },
+                { value: 'lg', label: 'Grande' },
+                { value: 'xl', label: 'Extra Grande' }
+            ], { category: 'style', default: 'lg' }),
+            prop({ key: 'showIcon', kind: 'switch', label: 'Mostrar Ícone', category: 'content', default: true }),
+            select('alignment', 'Alinhamento', [
+                { value: 'left', label: 'Esquerda' },
+                { value: 'center', label: 'Centro' },
+                { value: 'right', label: 'Direita' }
+            ], { category: 'layout', default: 'center' }),
+            prop({ key: 'textColor', kind: 'color', label: 'Cor do Texto', category: 'style', default: '#432818' }),
+            prop({ key: 'iconColor', kind: 'color', label: 'Cor do Ícone', category: 'style', default: '#B89B7A' }),
+            prop({ key: 'backgroundColor', kind: 'color', label: 'Cor de Fundo', category: 'style', default: 'transparent' }),
+        ]
+    },
+    'step20-style-reveal': {
+        type: 'step20-style-reveal',
+        title: 'Revelação do Estilo',
+        category: 'Resultado',
+        icon: 'image',
+        defaultProps: {
+            showStyleName: true,
+            showDescription: true,
+            customDescription: '',
+            layout: 'card',
+            imagePosition: 'top',
+            showImage: true,
+            imageUrl: '',
+            imageWidth: 200,
+            imageHeight: 200,
+            backgroundColor: '#F8F9FA',
+            borderColor: '#B89B7A',
+            textColor: '#432818',
+            accentColor: '#B89B7A',
+            borderRadius: 16,
+            padding: 24,
+            animateReveal: true
+        },
+        propsSchema: [
+            prop({ key: 'showStyleName', kind: 'switch', label: 'Mostrar Nome do Estilo', category: 'content', default: true }),
+            prop({ key: 'showDescription', kind: 'switch', label: 'Mostrar Descrição', category: 'content', default: true }),
+            prop({ key: 'customDescription', kind: 'textarea', label: 'Descrição Personalizada', category: 'content', default: '' }),
+            select('layout', 'Layout', [
+                { value: 'horizontal', label: 'Horizontal' },
+                { value: 'vertical', label: 'Vertical' },
+                { value: 'card', label: 'Card' }
+            ], { category: 'layout', default: 'card' }),
+            prop({ key: 'showImage', kind: 'switch', label: 'Mostrar Imagem', category: 'content', default: true }),
+            prop({ key: 'imageUrl', kind: 'url', label: 'URL da Imagem', category: 'content', default: '' }),
+            prop({ key: 'imageWidth', kind: 'range', label: 'Largura da Imagem', category: 'style', min: 100, max: 400, default: 200, unit: 'px' }),
+            prop({ key: 'imageHeight', kind: 'range', label: 'Altura da Imagem', category: 'style', min: 100, max: 400, default: 200, unit: 'px' }),
+            prop({ key: 'backgroundColor', kind: 'color', label: 'Cor de Fundo', category: 'style', default: '#F8F9FA' }),
+            prop({ key: 'borderColor', kind: 'color', label: 'Cor da Borda', category: 'style', default: '#B89B7A' }),
+            prop({ key: 'textColor', kind: 'color', label: 'Cor do Texto', category: 'style', default: '#432818' }),
+            prop({ key: 'accentColor', kind: 'color', label: 'Cor de Destaque', category: 'style', default: '#B89B7A' }),
+            prop({ key: 'animateReveal', kind: 'switch', label: 'Animar Revelação', category: 'animation', default: true })
+        ]
+    },
+    'step20-user-greeting': {
+        type: 'step20-user-greeting',
+        title: 'Saudação do Usuário',
+        category: 'Resultado',
+        icon: 'user',
+        defaultProps: {
+            greetingText: 'Parabéns',
+            showUserName: true,
+            userNamePrefix: '',
+            userNameSuffix: '!',
+            showEmoji: true,
+            emoji: '🎉',
+            showBadge: false,
+            badgeText: '✨ Exclusivo',
+            layout: 'horizontal',
+            alignment: 'center',
+            textColor: '#432818',
+            nameColor: '#B89B7A',
+            fontSize: 18,
+            nameSize: 'larger',
+            fontWeight: 'bold'
+        },
+        propsSchema: [
+            prop({ key: 'greetingText', kind: 'text', label: 'Texto de Saudação', category: 'content', default: 'Parabéns' }),
+            prop({ key: 'showUserName', kind: 'switch', label: 'Mostrar Nome do Usuário', category: 'content', default: true }),
+            prop({ key: 'userNamePrefix', kind: 'text', label: 'Prefixo do Nome', category: 'content', default: '' }),
+            prop({ key: 'userNameSuffix', kind: 'text', label: 'Sufixo do Nome', category: 'content', default: '!' }),
+            prop({ key: 'showEmoji', kind: 'switch', label: 'Mostrar Emoji', category: 'content', default: true }),
+            prop({ key: 'emoji', kind: 'text', label: 'Emoji', category: 'content', default: '🎉' }),
+            prop({ key: 'showBadge', kind: 'switch', label: 'Mostrar Badge', category: 'content', default: false }),
+            prop({ key: 'badgeText', kind: 'text', label: 'Texto do Badge', category: 'content', default: '✨ Exclusivo' }),
+            select('layout', 'Layout', [
+                { value: 'horizontal', label: 'Horizontal' },
+                { value: 'vertical', label: 'Vertical' },
+                { value: 'inline', label: 'Inline' }
+            ], { category: 'layout', default: 'horizontal' }),
+            select('alignment', 'Alinhamento', [
+                { value: 'left', label: 'Esquerda' },
+                { value: 'center', label: 'Centro' },
+                { value: 'right', label: 'Direita' }
+            ], { category: 'layout', default: 'center' }),
+            prop({ key: 'textColor', kind: 'color', label: 'Cor do Texto', category: 'style', default: '#432818' }),
+            prop({ key: 'nameColor', kind: 'color', label: 'Cor do Nome', category: 'style', default: '#B89B7A' })
+        ]
+    },
+    'step20-compatibility': {
+        type: 'step20-compatibility',
+        title: 'Indicador de Compatibilidade',
+        category: 'Resultado',
+        icon: 'target',
+        defaultProps: {
+            showLabel: true,
+            label: 'Compatibilidade:',
+            showPercentage: true,
+            showProgressBar: true,
+            progressType: 'circle',
+            size: 'md',
+            animated: true,
+            countUp: true,
+            progressColor: '#B89B7A',
+            textColor: '#432818',
+            trackColor: '#E5E7EB',
+            layout: 'vertical',
+            alignment: 'center',
+            showGlow: true
+        },
+        propsSchema: [
+            prop({ key: 'showLabel', kind: 'switch', label: 'Mostrar Rótulo', category: 'content', default: true }),
+            prop({ key: 'label', kind: 'text', label: 'Texto do Rótulo', category: 'content', default: 'Compatibilidade:' }),
+            prop({ key: 'showPercentage', kind: 'switch', label: 'Mostrar Porcentagem', category: 'content', default: true }),
+            prop({ key: 'showProgressBar', kind: 'switch', label: 'Mostrar Barra de Progresso', category: 'content', default: true }),
+            select('progressType', 'Tipo de Progresso', [
+                { value: 'circle', label: 'Circular' },
+                { value: 'linear', label: 'Linear' }
+            ], { category: 'style', default: 'circle' }),
+            select('size', 'Tamanho', [
+                { value: 'sm', label: 'Pequeno' },
+                { value: 'md', label: 'Médio' },
+                { value: 'lg', label: 'Grande' },
+                { value: 'xl', label: 'Extra Grande' }
+            ], { category: 'style', default: 'md' }),
+            prop({ key: 'animated', kind: 'switch', label: 'Animado', category: 'animation', default: true }),
+            prop({ key: 'countUp', kind: 'switch', label: 'Animação de Contagem', category: 'animation', default: true }),
+            prop({ key: 'progressColor', kind: 'color', label: 'Cor do Progresso', category: 'style', default: '#B89B7A' }),
+            prop({ key: 'textColor', kind: 'color', label: 'Cor do Texto', category: 'style', default: '#432818' }),
+            prop({ key: 'showGlow', kind: 'switch', label: 'Efeito Brilho', category: 'style', default: true })
+        ]
+    },
+    'step20-secondary-styles': {
+        type: 'step20-secondary-styles',
+        title: 'Estilos Complementares',
+        category: 'Resultado',
+        icon: 'grid',
+        defaultProps: {
+            title: 'Estilos Complementares',
+            showTitle: true,
+            subtitle: 'Você também apresenta elementos destes estilos:',
+            showSubtitle: true,
+            maxStyles: 2,
+            columns: 2,
+            gap: 'md',
+            showPercentage: true,
+            cardBackground: '#FFFFFF',
+            cardBorder: '#E5E7EB',
+            titleColor: '#432818',
+            textColor: '#6B4F43',
+            percentageColor: '#B89B7A'
+        },
+        propsSchema: [
+            prop({ key: 'title', kind: 'text', label: 'Título', category: 'content', default: 'Estilos Complementares' }),
+            prop({ key: 'showTitle', kind: 'switch', label: 'Mostrar Título', category: 'content', default: true }),
+            prop({ key: 'subtitle', kind: 'textarea', label: 'Subtítulo', category: 'content', default: 'Você também apresenta elementos destes estilos:' }),
+            prop({ key: 'showSubtitle', kind: 'switch', label: 'Mostrar Subtítulo', category: 'content', default: true }),
+            prop({ key: 'maxStyles', kind: 'range', label: 'Máximo de Estilos', category: 'content', min: 1, max: 5, default: 2 }),
+            prop({ key: 'columns', kind: 'range', label: 'Colunas', category: 'layout', min: 1, max: 4, default: 2 }),
+            select('gap', 'Espaçamento', [
+                { value: 'sm', label: 'Pequeno' },
+                { value: 'md', label: 'Médio' },
+                { value: 'lg', label: 'Grande' }
+            ], { category: 'layout', default: 'md' }),
+            prop({ key: 'showPercentage', kind: 'switch', label: 'Mostrar Porcentagem', category: 'content', default: true }),
+            prop({ key: 'cardBackground', kind: 'color', label: 'Fundo do Card', category: 'style', default: '#FFFFFF' }),
+            prop({ key: 'titleColor', kind: 'color', label: 'Cor do Título', category: 'style', default: '#432818' }),
+            prop({ key: 'percentageColor', kind: 'color', label: 'Cor da Porcentagem', category: 'style', default: '#B89B7A' })
+        ]
+    },
+    'step20-personalized-offer': {
+        type: 'step20-personalized-offer',
+        title: 'Oferta Personalizada',
+        category: 'Resultado',
+        icon: 'gift',
+        defaultProps: {
+            title: 'Pronto para Transformar Sua Imagem?',
+            description: 'Agora que você conhece seu estilo, descubra como aplicá-lo no seu dia a dia com nossa consultoria personalizada.',
+            showTitle: true,
+            showDescription: true,
+            ctaText: 'Ver Minha Consultoria Personalizada',
+            ctaUrl: '#',
+            showMainCTA: true,
+            showShareButton: true,
+            shareText: 'Compartilhar Resultado',
+            layout: 'vertical',
+            backgroundType: 'gradient',
+            gradientFrom: '#B89B7A',
+            gradientTo: '#aa6b5d',
+            ctaColor: '#B89B7A',
+            ctaTextColor: '#FFFFFF',
+            textAlign: 'center'
+        },
+        propsSchema: [
+            prop({ key: 'title', kind: 'text', label: 'Título', category: 'content', default: 'Pronto para Transformar Sua Imagem?' }),
+            prop({ key: 'description', kind: 'textarea', label: 'Descrição', category: 'content', default: 'Agora que você conhece seu estilo, descubra como aplicá-lo no seu dia a dia com nossa consultoria personalizada.' }),
+            prop({ key: 'showTitle', kind: 'switch', label: 'Mostrar Título', category: 'content', default: true }),
+            prop({ key: 'showDescription', kind: 'switch', label: 'Mostrar Descrição', category: 'content', default: true }),
+            prop({ key: 'ctaText', kind: 'text', label: 'Texto do Botão Principal', category: 'content', default: 'Ver Minha Consultoria Personalizada' }),
+            prop({ key: 'ctaUrl', kind: 'url', label: 'URL do Botão', category: 'content', default: '#' }),
+            prop({ key: 'showMainCTA', kind: 'switch', label: 'Mostrar Botão Principal', category: 'content', default: true }),
+            prop({ key: 'showShareButton', kind: 'switch', label: 'Mostrar Botão Compartilhar', category: 'content', default: true }),
+            prop({ key: 'shareText', kind: 'text', label: 'Texto do Compartilhar', category: 'content', default: 'Compartilhar Resultado' }),
+            select('layout', 'Layout', [
+                { value: 'vertical', label: 'Vertical' },
+                { value: 'horizontal', label: 'Horizontal' },
+                { value: 'card', label: 'Card' },
+                { value: 'banner', label: 'Banner' }
+            ], { category: 'layout', default: 'vertical' }),
+            select('backgroundType', 'Tipo de Fundo', [
+                { value: 'solid', label: 'Cor Sólida' },
+                { value: 'gradient', label: 'Gradiente' },
+                { value: 'image', label: 'Imagem' }
+            ], { category: 'style', default: 'gradient' }),
+            prop({ key: 'gradientFrom', kind: 'color', label: 'Gradiente - Início', category: 'style', default: '#B89B7A' }),
+            prop({ key: 'gradientTo', kind: 'color', label: 'Gradiente - Fim', category: 'style', default: '#aa6b5d' }),
+            prop({ key: 'ctaColor', kind: 'color', label: 'Cor do Botão', category: 'style', default: '#B89B7A' }),
+            prop({ key: 'ctaTextColor', kind: 'color', label: 'Cor do Texto do Botão', category: 'style', default: '#FFFFFF' })
+        ]
+    },
     'quiz-intro-header': {
         type: 'quiz-intro-header',
         title: 'Header do Quiz',

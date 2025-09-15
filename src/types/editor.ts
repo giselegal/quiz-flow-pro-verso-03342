@@ -157,7 +157,17 @@ export type BlockType =
   | 'icon'
   | 'faq'
   | 'custom-code'
-  | 'legal-notice';
+  | 'legal-notice'
+
+  // Step 20 Modular Components (NEW)
+  | 'cakto-quiz-result'
+  | 'step20-result-header'
+  | 'step20-style-reveal'
+  | 'step20-user-greeting'
+  | 'step20-compatibility'
+  | 'step20-secondary-styles'
+  | 'step20-personalized-offer'
+  | 'step20-complete-template';
 
 export interface FAQItem {
   id: string;
