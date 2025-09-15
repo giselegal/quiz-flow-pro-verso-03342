@@ -44,8 +44,8 @@ const FunnelDashboardPage = lazy(() => import('./pages/FunnelDashboardPage'));
 const TestParticipantsPage = lazy(() => import('./pages/TestParticipantsPage'));
 const TestDataPanel = lazy(() => import('./components/TestDataPanel'));
 
-// 🎯 NOVO: Editor Híbrido UniversalStepEditorPro
-const UniversalStepEditorProDemo = lazy(() => import('./components/demos/UniversalStepEditorProDemo'));
+// 🎯 NOVO: Editor Pro Consolidado (substitui UniversalStepEditorProDemo)
+const EditorProConsolidatedPage = lazy(() => import('./pages/EditorProConsolidatedPage'));
 
 // Teste simples do navegador
 const SimpleEditorTest = lazy(() => import('./components/test/SimpleEditorTest'));
@@ -105,10 +105,10 @@ function App() {
                 </Suspense>
               } />
 
-              {/* 🎯 NOVO: Editor Híbrido UniversalStepEditorPro */}
+              {/* 🎯 NOVO: Editor Pro Consolidado - Arquitetura Final */}
               <Route path="/editor-pro" component={() =>
                 <Suspense fallback={<LoadingFallback />}>
-                  <UniversalStepEditorProDemo />
+                  <EditorProConsolidatedPage />
                 </Suspense>
               } />
 
@@ -278,10 +278,10 @@ function App() {
                 );
               }} />
 
-              {/* 🎯 NOVO: Demo UniversalStepEditorPro */}
+              {/* 🎯 DEMO: Editor Pro Demo (legacy) */}
               <Route path="/demo-editor-pro" component={() =>
                 <Suspense fallback={<LoadingFallback />}>
-                  <UniversalStepEditorProDemo />
+                  <EditorProConsolidatedPage />
                 </Suspense>
               } />
 

@@ -1,31 +1,41 @@
 /**
- * 🎯 DEMONSTRAÇÃO DO UNIVERSAL STEP EDITOR PRO
+ * 🎯 EDITOR PRO CONSOLIDADO - PRODUÇÃO
  * 
- * Este é um exemplo de como usar o editor híbrido definitivo que combina:
+ * Editor consolidado com stack completo de providers unificado que combina:
  * ✅ Arquitetura robusta do EditorPro
- * ✅ Painéis de propriedades detalhados do UniversalStepEditor
- * ✅ UX responsivo e modular
+ * ✅ Provider stack consolidado (EditorRuntimeProviders)
+ * ✅ Carregamento otimizado das 21 etapas
+ * ✅ Sistema unificado de contextos
  */
 
 import React from 'react';
 import UniversalStepEditorPro from '@/components/editor/universal/UniversalStepEditorPro';
-import { EditorProvider } from '@/components/editor/EditorProvider';
+import { EditorRuntimeProviders } from '@/context/EditorRuntimeProviders';
 
 const UniversalStepEditorProDemo: React.FC = () => {
     const handleStepChange = (stepId: string) => {
-        console.log('Step changed to:', stepId);
+        console.log('🎯 Editor Pro: Step changed to:', stepId);
     };
 
     return (
-        <EditorProvider>
-            <div className="w-full h-screen overflow-hidden bg-gray-900">
+        <EditorRuntimeProviders
+            initialStep={1}
+            debugMode={false}
+            supabaseConfig={{
+                enabled: true,
+                funnelId: 'quiz-style-21-steps',
+                quizId: 'quiz-style-21-steps',
+                storageKey: 'quiz-21-steps-editor-state'
+            }}
+        >
+            <div className="w-full h-screen overflow-hidden bg-background">
                 <UniversalStepEditorPro
                     stepNumber={1}
                     onStepChange={handleStepChange}
                     showNavigation={true}
                 />
             </div>
-        </EditorProvider>
+        </EditorRuntimeProviders>
     );
 };
 

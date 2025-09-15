@@ -164,18 +164,12 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     // Em ambiente de teste, iniciamos vazio para testes previsíveis
     const isTestEnv = process.env.NODE_ENV === 'test';
     if (!isTestEnv) {
-      console.log('🚀 getInitialState: Carregando template completo...');
-      console.log('📦 QUIZ_STYLE_21_STEPS_TEMPLATE keys:', Object.keys(QUIZ_STYLE_21_STEPS_TEMPLATE));
-      
-      // FORCE LOAD: Carregar diretamente do template sem normalização primeiro
+      // Carregar diretamente do template otimizado
       Object.entries(QUIZ_STYLE_21_STEPS_TEMPLATE).forEach(([stepKey, blocks]) => {
         if (Array.isArray(blocks) && blocks.length > 0) {
           initialBlocks[stepKey] = [...blocks];
-          console.log(`✅ Loaded ${stepKey}: ${blocks.length} blocks`);
         }
       });
-      
-      console.log('📊 Total steps loaded:', Object.keys(initialBlocks).length);
     } else {
       // Garante pelo menos arrays vazios para as primeiras etapas usadas nos testes
       initialBlocks['step-1'] = [];
