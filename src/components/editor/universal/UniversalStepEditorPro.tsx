@@ -116,71 +116,71 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                     {/* Desktop Layout: 4 colunas com CSS Grid */}
                     <div className="hidden lg:block">
                         <div className="editor-grid">
-                        {/* Sidebar de Steps */}
-                        <div className="bg-gray-900 border-r border-gray-800/50 overflow-y-auto">
-                            <Suspense fallback={<div className="w-full bg-gray-900 border-r border-gray-800/50 h-full" />}>
-                                <StepSidebar
-                                    currentStep={safeCurrentStep}
-                                    stepHasBlocks={{}}
-                                    onSelectStep={handleStepSelect}
-                                    getStepAnalysis={getStepAnalysis}
-                                    renderIcon={renderIcon}
-                                />
-                            </Suspense>
-                        </div>
+                            {/* Sidebar de Steps */}
+                            <div className="bg-gray-900 border-r border-gray-800/50 overflow-y-auto">
+                                <Suspense fallback={<div className="w-full bg-gray-900 border-r border-gray-800/50 h-full" />}>
+                                    <StepSidebar
+                                        currentStep={safeCurrentStep}
+                                        stepHasBlocks={{}}
+                                        onSelectStep={handleStepSelect}
+                                        getStepAnalysis={getStepAnalysis}
+                                        renderIcon={renderIcon}
+                                    />
+                                </Suspense>
+                            </div>
 
-                        {/* Sidebar de Componentes */}
-                        <div className="bg-gray-900 border-r border-gray-800/50 overflow-y-auto">
-                            <Suspense fallback={<div className="w-full bg-gray-900 border-r border-gray-800/50 h-full" />}>
-                                <ComponentsSidebar
-                                    groupedComponents={groupedComponents}
-                                    renderIcon={renderIcon}
-                                />
-                            </Suspense>
-                        </div>
+                            {/* Sidebar de Componentes */}
+                            <div className="bg-gray-900 border-r border-gray-800/50 overflow-y-auto">
+                                <Suspense fallback={<div className="w-full bg-gray-900 border-r border-gray-800/50 h-full" />}>
+                                    <ComponentsSidebar
+                                        groupedComponents={groupedComponents}
+                                        renderIcon={renderIcon}
+                                    />
+                                </Suspense>
+                            </div>
 
-                        {/* Área do Canvas Central */}
-                        <div className="flex flex-col bg-gray-100 dark:bg-gray-800 overflow-hidden" ref={canvasRef}>
-                            <Suspense fallback={<div className="h-full flex items-center justify-center">Carregando Canvas...</div>}>
-                                <EditorHeader
-                                    mode={mode}
-                                    setMode={setMode}
-                                    safeCurrentStep={safeCurrentStep}
-                                    currentStepKey={currentStepKey}
-                                    currentStepData={currentStepData}
-                                    actions={actions as any}
-                                    state={state as any}
-                                    notification={notification as any}
-                                    renderIcon={renderIcon}
-                                    getStepAnalysis={getStepAnalysis}
-                                />
-                                <CanvasAreaLayout
-                                    className="flex-1"
-                                    containerRef={canvasRef}
-                                    mode={mode}
-                                    previewDevice={previewDevice}
-                                    safeCurrentStep={safeCurrentStep}
-                                    currentStepData={currentStepData as any}
-                                    selectedBlockId={selectedBlockId}
-                                    actions={actions as any}
-                                    isDragging={isDragging}
-                                />
-                            </Suspense>
-                        </div>
+                            {/* Área do Canvas Central */}
+                            <div className="flex flex-col bg-gray-100 dark:bg-gray-800 overflow-hidden" ref={canvasRef}>
+                                <Suspense fallback={<div className="h-full flex items-center justify-center">Carregando Canvas...</div>}>
+                                    <EditorHeader
+                                        mode={mode}
+                                        setMode={setMode}
+                                        safeCurrentStep={safeCurrentStep}
+                                        currentStepKey={currentStepKey}
+                                        currentStepData={currentStepData}
+                                        actions={actions as any}
+                                        state={state as any}
+                                        notification={notification as any}
+                                        renderIcon={renderIcon}
+                                        getStepAnalysis={getStepAnalysis}
+                                    />
+                                    <CanvasAreaLayout
+                                        className="flex-1"
+                                        containerRef={canvasRef}
+                                        mode={mode}
+                                        previewDevice={previewDevice}
+                                        safeCurrentStep={safeCurrentStep}
+                                        currentStepData={currentStepData as any}
+                                        selectedBlockId={selectedBlockId}
+                                        actions={actions as any}
+                                        isDragging={isDragging}
+                                    />
+                                </Suspense>
+                            </div>
 
-                        {/* Painel de Propriedades */}
-                        <div className="bg-gray-900/80 backdrop-blur-sm border-l border-gray-700/50 overflow-y-auto">
-                            <Suspense fallback={<div className="w-full bg-gray-900 border-l border-gray-800/50 h-full" />}>
-                                <PropertiesColumn
-                                    selectedBlock={selectedBlock}
-                                    onUpdate={handleUpdateBlock}
-                                    onDelete={handleDeleteBlock}
-                                    onClose={() => actions.setSelectedBlockId?.(null)}
-                                />
-                            </Suspense>
+                            {/* Painel de Propriedades */}
+                            <div className="bg-gray-900/80 backdrop-blur-sm border-l border-gray-700/50 overflow-y-auto">
+                                <Suspense fallback={<div className="w-full bg-gray-900 border-l border-gray-800/50 h-full" />}>
+                                    <PropertiesColumn
+                                        selectedBlock={selectedBlock}
+                                        onUpdate={handleUpdateBlock}
+                                        onDelete={handleDeleteBlock}
+                                        onClose={() => actions.setSelectedBlockId?.(null)}
+                                    />
+                                </Suspense>
+                            </div>
                         </div>
                     </div>
-                </div>
 
                     {/* Mobile Layout */}
                     <div className="lg:hidden h-screen flex flex-col bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100 dark:from-gray-900 dark:via-slate-900 dark:to-gray-900">
