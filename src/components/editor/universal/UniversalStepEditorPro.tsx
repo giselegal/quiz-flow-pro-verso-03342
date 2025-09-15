@@ -428,34 +428,34 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                             {/* Canvas Content */}
                             <div className="flex-1 bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100 dark:from-gray-900 dark:via-slate-900 dark:to-gray-900 overflow-hidden">
                                 <div className="h-full w-full">
-                                        <Suspense fallback={
-                                            <div className="h-full flex items-center justify-center">
-                                                <div className="text-center">
-                                                    <div className="w-16 h-16 mx-auto mb-4 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-                                                    <div className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Carregando Canvas</div>
-                                                    <p className="text-sm text-gray-600 dark:text-gray-400">Preparando ambiente de edição premium</p>
-                                                </div>
+                                    <Suspense fallback={
+                                        <div className="h-full flex items-center justify-center">
+                                            <div className="text-center">
+                                                <div className="w-16 h-16 mx-auto mb-4 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                                                <div className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Carregando Canvas</div>
+                                                <p className="text-sm text-gray-600 dark:text-gray-400">Preparando ambiente de edição premium</p>
                                             </div>
-                                        }>
-                                            <CanvasAreaLayout
-                                                className="h-full w-full bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200/50 dark:border-gray-700/50 overflow-hidden"
-                                                containerRef={canvasRef}
-                                                mode={mode}
-                                                setMode={setMode}
-                                                previewDevice={previewDevice}
-                                                setPreviewDevice={handleViewportModeChange}
-                                                safeCurrentStep={safeCurrentStep}
-                                                currentStepKey={currentStepKey}
-                                                currentStepData={currentStepData as any}
-                                                selectedBlockId={state.selectedBlockId}
-                                                actions={actions as any}
-                                                state={state as any}
-                                                notification={notification as any}
-                                                renderIcon={renderIcon}
-                                                getStepAnalysis={getStepAnalysis}
-                                                isDragging={isDragging}
-                                            />
-                                        </Suspense>
+                                        </div>
+                                    }>
+                                        <CanvasAreaLayout
+                                            className="h-full w-full bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200/50 dark:border-gray-700/50 overflow-hidden"
+                                            containerRef={canvasRef}
+                                            mode={mode}
+                                            setMode={setMode}
+                                            previewDevice={previewDevice}
+                                            setPreviewDevice={handleViewportModeChange}
+                                            safeCurrentStep={safeCurrentStep}
+                                            currentStepKey={currentStepKey}
+                                            currentStepData={currentStepData as any}
+                                            selectedBlockId={state.selectedBlockId}
+                                            actions={actions as any}
+                                            state={state as any}
+                                            notification={notification as any}
+                                            renderIcon={renderIcon}
+                                            getStepAnalysis={getStepAnalysis}
+                                            isDragging={isDragging}
+                                        />
+                                    </Suspense>
                                 </div>
                             </div>
                         </div>
