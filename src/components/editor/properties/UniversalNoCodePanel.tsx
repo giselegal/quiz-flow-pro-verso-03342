@@ -155,11 +155,11 @@ export const UniversalNoCodePanel: React.FC<UniversalNoCodePanelProps> = ({
 
   // Debug para renderização das tabs
   React.useEffect(() => {
-    console.log('🎮 Renderizando Tabs:', { 
-      selectedCategory, 
-      availableCategories, 
+    console.log('🎮 Renderizando Tabs:', {
+      selectedCategory,
+      availableCategories,
       filteredCategories: Object.keys(filteredProperties),
-      tabsCount: availableCategories.length 
+      tabsCount: availableCategories.length
     });
   }, [selectedCategory, availableCategories, filteredProperties]);
 
@@ -323,8 +323,8 @@ export const UniversalNoCodePanel: React.FC<UniversalNoCodePanelProps> = ({
                 className={`
                   flex-1 px-3 py-2 text-xs font-medium transition-colors
                   flex items-center justify-center gap-1
-                  ${isActive 
-                    ? 'bg-background text-foreground border-b-2 border-primary' 
+                  ${isActive
+                    ? 'bg-background text-foreground border-b-2 border-primary'
                     : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
                   }
                 `}
