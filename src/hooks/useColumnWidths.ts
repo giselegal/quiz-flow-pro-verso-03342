@@ -10,22 +10,22 @@ export interface ColumnWidths {
 const DEFAULT_WIDTHS: ColumnWidths = {
   stepSidebar: 18, // 18% of screen width
   componentsSidebar: 22, // 22% 
-  canvasArea: 40, // 40% - flexible
-  propertiesColumn: 20, // 20%
+  canvasArea: 45, // 45% - flexible (increased)
+  propertiesColumn: 15, // 15% (reduced)
 };
 
 const MIN_WIDTHS: ColumnWidths = {
   stepSidebar: 12, // minimum 12%
   componentsSidebar: 15, // minimum 15%
   canvasArea: 30, // minimum 30%
-  propertiesColumn: 15, // minimum 15%
+  propertiesColumn: 12, // minimum 12% (reduced)
 };
 
 const MAX_WIDTHS: ColumnWidths = {
   stepSidebar: 25, // maximum 25%
   componentsSidebar: 30, // maximum 30%
   canvasArea: 60, // maximum 60%
-  propertiesColumn: 35, // maximum 35%
+  propertiesColumn: 25, // maximum 25% (reduced)
 };
 
 const STORAGE_KEY = 'editor-column-widths';

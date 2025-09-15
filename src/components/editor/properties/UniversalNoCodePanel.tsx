@@ -16,7 +16,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Switch } from '@/components/ui/switch';
 import { Slider } from '@/components/ui/slider';
@@ -279,33 +279,32 @@ export const UniversalNoCodePanel: React.FC<UniversalNoCodePanelProps> = ({
         {/* Conteúdo das tabs com preview sidebar */}
         <div className="flex flex-1 min-h-0">
           <div className="flex-1 min-w-0">
-            <ScrollArea className="h-full">
-              <div className="p-4 space-y-4">
-                {Object.entries(filteredProperties).map(([category, properties]) => {
-                  if (selectedCategory !== 'all' && category !== selectedCategory) return null;
-                  
-                  return (
-                    <CategorySection
-                      key={category}
-                      category={category}
-                      properties={properties}
-                      allProperties={extractedProperties}
-                      isCollapsed={collapsedCategories.has(category)}
-                      onToggle={() => toggleCategory(category)}
-                      onPropertyUpdate={handlePropertyUpdate}
-                    />
-                  );
-                })}
-                
-                {Object.keys(filteredProperties).length === 0 && (
-                  <div className="text-center py-8 text-muted-foreground">
-                    <Filter className="w-8 h-8 mx-auto mb-2" />
-                    <p>Nenhuma propriedade encontrada</p>
-                    <p className="text-xs">Tente ajustar os filtros</p>
+            {['content', 'style', 'layout', 'behavior', 'validation'].map(categoryKey => (
+              <TabsContent key={categoryKey} value={categoryKey} className="h-full m-0">
+                <ScrollArea className="h-full">
+                  <div className="p-4 space-y-4">
+                    {filteredProperties[categoryKey] && (
+                      <CategorySection
+                        key={categoryKey}
+                        category={categoryKey}
+                        properties={filteredProperties[categoryKey]}
+                        allProperties={extractedProperties}
+                        isCollapsed={collapsedCategories.has(categoryKey)}
+                        onToggle={() => toggleCategory(categoryKey)}
+                        onPropertyUpdate={handlePropertyUpdate}
+                      />
+                    )}
+                    
+                    {!filteredProperties[categoryKey] && (
+                      <div className="text-center py-8 text-muted-foreground">
+                        <Filter className="w-8 h-8 mx-auto mb-2" />
+                        <p>Nenhuma propriedade encontrada nesta categoria</p>
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
-            </ScrollArea>
+                </ScrollArea>
+              </TabsContent>
+            ))}
           </div>
 
           {/* Preview sidebar para options-grid */}
