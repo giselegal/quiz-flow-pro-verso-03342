@@ -1,12 +1,3 @@
-/**
- * 🎯 UNIVERSAL STEP EDITOR PRO - VERSÃO HÍBRIDA DEFINITIVA
- * 
- * Combina o melhor dos dois mundos:
- * ✅ Arquitetura robusta do EditorPro (Context, DnD, Modular, Performance)
- * ✅ Painéis de propriedades detalhados do UniversalStepEditor
- * ✅ UX responsivo, lazy loading, notificações
- */
-
 import React, { Suspense, useMemo, useState, useCallback, useRef } from 'react';
 import { useNotification } from '@/components/ui/Notification';
 import { useEditor } from '@/components/editor/EditorProvider';
@@ -18,13 +9,9 @@ import { useGlobalHotkeys } from '@/hooks/editor/useGlobalHotkeys';
 import { useDisableAutoScroll } from '@/hooks/editor/useDisableAutoScroll';
 import { getBlocksForStep } from '@/config/quizStepsComplete';
 import { logger } from '@/utils/debugLogger';
-import { availableComponents as AVAILABLE_COMPONENTS_CONFIG } from '@/components/editor/config/availableComponents';
 
 // Lazy imports para performance
-const StepSidebar = React.lazy(() => import('@/components/editor/sidebars/StepSidebar'));
-const ComponentsSidebar = React.lazy(() => import('@/components/editor/sidebars/ComponentsSidebar'));
 const CanvasAreaLayout = React.lazy(() => import('@/components/editor/layouts/CanvasArea'));
-const UniversalPropertiesPanel = React.lazy(() => import('./components/UniversalPropertiesPanel'));
 
 export interface UniversalStepEditorProProps {
     stepId?: string;
@@ -120,32 +107,6 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
         actions: actions as any,
         notification: notification as any,
     });
-
-    // Verificação de blocos por step
-    const stepHasBlocks = useMemo(() => {
-        const stepBlocksRef = state.stepBlocks;
-        if (!stepBlocksRef) return {};
-
-        const map: Record<number, boolean> = {};
-        for (let i = 1; i <= 21; i++) {
-            const blocks = getBlocksForStep(i, stepBlocksRef) || [];
-            map[i] = blocks.length > 0;
-        }
-
-        return map;
-    }, [state.stepBlocks]);
-
-    // Componentes agrupados para a sidebar
-    const groupedComponents = useMemo(() => {
-        return Object.entries(AVAILABLE_COMPONENTS_CONFIG).reduce((groups, [key, config]) => {
-            const category = config.category || 'Other';
-            if (!groups[category]) {
-                groups[category] = [];
-            }
-            groups[category].push({ key, ...config });
-            return groups;
-        }, {} as Record<string, any[]>);
-    }, []);
 
     // Helper para renderizar ícones
     const renderIcon = useCallback((_name: string, className = 'w-4 h-4') => {
@@ -348,7 +309,7 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                 onDragStart={handleDragStart}
                 onDragEnd={handleDragEnd}
             >
-                <div className={`universal-step-editor-pro min-h-screen w-full bg-gradient-to-br from-gray-950 via-slate-900 to-gray-950 overflow-hidden ${className} relative`}>
+                <div className={`universal-step-editor-pro min-h-screen w-full bg-gradient-to-br from-gray-950 via-slate-900 to-gray-950 overflow-hidden m-0 p-0 ${className} relative`}>
 
                     {/* 🎯 DESKTOP LAYOUT 4-COLUNAS */}
                     <div className="hidden lg:flex h-[calc(100vh-80px)] w-full">
