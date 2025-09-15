@@ -186,9 +186,9 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
         <>
             {/* 🎨 HEADER PREMIUM - Design Moderno */}
             <div className="editor-pro-header bg-gradient-to-r from-slate-900 via-gray-900 to-slate-900 border-b border-gray-800/50 backdrop-blur-lg">
-                <div className="flex items-center justify-between px-6 py-4">
+                <div className="flex items-center justify-between p-0 py-4">
                     {/* Logo e Info */}
-                    <div className="flex items-center space-x-4">
+                    <div className="flex items-center space-x-4 pl-4">
                         <div className="flex items-center space-x-3">
                             <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center shadow-lg">
                                 <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -255,7 +255,7 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                     </div>
 
                     {/* Actions */}
-                    <div className="flex items-center space-x-3">
+                    <div className="flex items-center space-x-3 pr-4">
                         {/* Undo/Redo */}
                         <div className="flex items-center space-x-1">
                             <button
@@ -316,12 +316,12 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
 
                         {/* 1) Steps Sidebar - 180px */}
                         <div className="w-48 flex-shrink-0 bg-gray-900/95 backdrop-blur-xl border-r border-gray-800/50">
-                            <div className="p-4 border-b border-gray-800/50">
+                            <div className="p-2 border-b border-gray-800/50">
                                 <h2 className="text-sm font-bold text-white/90 mb-1">NAVEGAÇÃO</h2>
                                 <p className="text-xs text-gray-400">Steps do funil</p>
                             </div>
                             <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800">
-                                <div className="p-2">
+                                <div className="p-1">
                                     {Array.from({ length: 21 }, (_, i) => i + 1).map((num) => (
                                         <button
                                             key={num}
@@ -340,11 +340,11 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
 
                         {/* 2) Components Sidebar - 220px */}
                         <div className="w-56 flex-shrink-0 bg-gray-900/95 backdrop-blur-xl border-r border-gray-800/50">
-                            <div className="p-4 border-b border-gray-800/50">
+                            <div className="p-2 border-b border-gray-800/50">
                                 <h2 className="text-sm font-bold text-white/90 mb-1">COMPONENTES</h2>
                                 <p className="text-xs text-gray-400">Arraste para o canvas</p>
                             </div>
-                            <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800 p-2">
+                            <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800 p-1">
                                 <div className="text-sm text-gray-400 text-center py-8">
                                     Componentes em desenvolvimento
                                 </div>
@@ -354,8 +354,8 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                         {/* 3) Canvas Area - Dynamic */}
                         <div className="flex-1 min-w-0 flex flex-col" ref={canvasRef}>
                             {/* Canvas Header */}
-                            <div className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border-b border-gray-200/50 dark:border-gray-800/50 px-6 py-4">
-                                <div className="flex items-center justify-between">
+                            <div className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border-b border-gray-200/50 dark:border-gray-800/50 p-0 py-4">
+                                <div className="flex items-center justify-between pl-4 pr-4">
                                     <div className="flex items-center gap-3">
                                         <div className="p-2.5 rounded-xl bg-gradient-to-r from-blue-500 to-violet-500 text-white shadow-lg shadow-blue-500/25">
                                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -423,11 +423,11 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
 
                         {/* 4) Properties Panel - 320px */}
                         <div className="w-80 flex-shrink-0 bg-gray-900/95 backdrop-blur-xl border-l border-gray-800/50">
-                            <div className="p-4 border-b border-gray-800/50">
+                            <div className="p-2 border-b border-gray-800/50">
                                 <h2 className="text-sm font-bold text-white/90 mb-1">PROPRIEDADES</h2>
                                 <p className="text-xs text-gray-400">Configure o elemento</p>
                             </div>
-                            <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800 p-4">
+                            <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800 p-2">
                                 <div className="text-sm text-gray-400 text-center py-8">
                                     Clique em um elemento para editar propriedades
                                 </div>
@@ -442,7 +442,7 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                         <div className={`fixed inset-0 z-41 transition-all duration-300 ${mobileNavOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
                             <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setMobileNavOpen(false)}></div>
                             <div className={`absolute top-0 left-0 w-80 h-full bg-gradient-to-br from-gray-900 via-slate-900 to-gray-900 border-r border-gray-800/50 shadow-2xl transition-transform duration-300 ${mobileNavOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-                                <div className="flex items-center justify-between p-6 border-b border-gray-800/50 bg-gradient-to-r from-gray-800/50 to-transparent">
+                                <div className="flex items-center justify-between p-3 border-b border-gray-800/50 bg-gradient-to-r from-gray-800/50 to-transparent">
                                     <div>
                                         <h3 className="text-lg font-bold text-white">Navegação</h3>
                                         <p className="text-xs text-gray-400">Steps do funil</p>
@@ -453,7 +453,7 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                                         </svg>
                                     </button>
                                 </div>
-                                <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800 p-4">
+                                <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800 p-2">
                                     {Array.from({ length: 21 }, (_, i) => i + 1).map((num) => (
                                         <button
                                             key={num}
@@ -474,7 +474,7 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                         <div className={`fixed inset-0 z-42 transition-all duration-300 ${mobilePropsOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
                             <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setMobilePropsOpen(false)}></div>
                             <div className={`absolute top-0 right-0 w-80 h-full bg-gradient-to-bl from-gray-900 via-slate-900 to-gray-900 border-l border-gray-800/50 shadow-2xl transition-transform duration-300 ${mobilePropsOpen ? 'translate-x-0' : 'translate-x-full'}`}>
-                                <div className="flex items-center justify-between p-6 border-b border-gray-800/50 bg-gradient-to-l from-gray-800/50 to-transparent">
+                                <div className="flex items-center justify-between p-3 border-b border-gray-800/50 bg-gradient-to-l from-gray-800/50 to-transparent">
                                     <div>
                                         <h3 className="text-lg font-bold text-white">Propriedades</h3>
                                         <p className="text-xs text-gray-400">Configure elementos</p>
@@ -485,7 +485,7 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                                         </svg>
                                     </button>
                                 </div>
-                                <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800 p-4">
+                                <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800 p-2">
                                     <div className="text-sm text-gray-400 text-center py-8">
                                         Clique em um elemento para editar propriedades
                                     </div>
@@ -517,7 +517,7 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                         </div>
 
                         {/* Mobile Canvas */}
-                        <div className="h-full flex items-center justify-center p-4">
+                        <div className="h-full flex items-center justify-center p-2">
                             <div className="text-center">
                                 <div className="w-12 h-12 mx-auto mb-4 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
                                 <div className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Editor Mobile</div>
