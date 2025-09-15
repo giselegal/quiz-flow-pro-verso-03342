@@ -360,7 +360,7 @@ export class EditorState {
       throw new Error('Clipboard está vazio');
     }
 
-    let newState = this;
+    let newState: EditorState = this;
     
     this.clipboard.forEach((block, index) => {
       const newBlock = block.clone(
