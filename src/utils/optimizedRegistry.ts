@@ -10,11 +10,11 @@ import VisualBlockFallback from '@/components/core/renderers/VisualBlockFallback
 // 🧪 DEBUG: Teste imediato do registry na importação
 if (process.env.NODE_ENV === 'development') {
   console.log('🔬 INICIALIZANDO optimizedRegistry.ts');
-  
+
   // Verificação com timeout para garantir que a inicialização está completa
   setTimeout(() => {
     console.log('📊 Registry keys após timeout:', Object.keys(ENHANCED_BLOCK_REGISTRY).slice(0, 10));
-    
+
     // Teste direto dos tipos problemáticos
     const testTypes = ['quiz-intro-header', 'text', 'image'];
     testTypes.forEach(type => {
@@ -38,13 +38,40 @@ if (process.env.NODE_ENV === 'development') {
 // Cache simples para manter identidade estável por tipo
 const COMPONENT_CACHE: Map<string, React.ComponentType<any>> = new Map();
 
+/**
+ * Cria um fallback de emergência quando o registry não está disponível
+ */
+const createEmergencyFallback = (type: string): React.ComponentType<any> => {
+  const EmergencyFallback: React.ComponentType<any> = ({ block }) => {
+    return React.createElement(VisualBlockFallback, {
+      blockType: type,
+      blockId: block?.id || 'unknown',
+      block: block,
+      fallbackReason: 'Registry não inicializado'
+    });
+  };
+  EmergencyFallback.displayName = `EmergencyFallback(${type})`;
+  return EmergencyFallback;
+};
+
 export const getOptimizedBlockComponent = (type: string): React.ComponentType<any> => {
   // Retorna do cache se já resolvido
   const cached = COMPONENT_CACHE.get(type);
-  if (cached) return cached;
+  if (cached) {
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`✅ Cache hit para "${type}"`);
+    }
+    return cached;
+  }
 
   try {
     console.log(`🔍 getOptimizedBlockComponent chamado para tipo: "${type}"`);
+    
+    // 🧪 NOVO: Verificar se o registry está inicializado
+    if (!ENHANCED_BLOCK_REGISTRY || Object.keys(ENHANCED_BLOCK_REGISTRY).length === 0) {
+      console.warn(`⚠️ Registry não inicializado ainda para "${type}", usando fallback de emergência`);
+      return createEmergencyFallback(type);
+    }
 
     // Usar função inteligente do enhanced registry
     const component = getEnhancedBlockComponent(type);
