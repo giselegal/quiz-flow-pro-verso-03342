@@ -140,7 +140,7 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                             </div>
 
                             {/* Área do Canvas Central */}
-                            <div className="flex flex-col bg-gray-100 dark:bg-gray-800 overflow-hidden" ref={canvasRef}>
+                            <div className="flex flex-col bg-gray-100 dark:bg-gray-800 overflow-y-auto" ref={canvasRef}>
                                 <Suspense fallback={<div className="h-full flex items-center justify-center">Carregando Canvas...</div>}>
                                     <EditorHeader
                                         mode={mode}
