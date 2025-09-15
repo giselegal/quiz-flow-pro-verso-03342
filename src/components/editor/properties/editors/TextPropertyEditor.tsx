@@ -250,11 +250,10 @@ export const TextPropertyEditor: React.FC<TextPropertyEditorProps> = ({
               <button
                 key={value}
                 onClick={() => handleContentUpdate('textAlign', value)}
-                className={`flex items-center justify-center p-2 rounded border transition-colors ${
-                  textAlign === value
+                className={`flex items-center justify-center p-2 rounded border transition-colors ${textAlign === value
                     ? 'border-[#B89B7A] bg-[#B89B7A]/10 text-[#B89B7A]'
                     : 'border-gray-300 hover:bg-gray-50'
-                }`}
+                  }`}
                 title={label}
               >
                 <Icon className="h-4 w-4" />
