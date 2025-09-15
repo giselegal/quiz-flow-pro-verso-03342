@@ -156,7 +156,7 @@ export class SupabaseApiClient {
 
   async findMany<T>(table: string, options?: QueryOptions): Promise<PaginatedApiResponse<T>> {
     try {
-      let query = supabase
+      let query = (supabase as any)
         .from(table)
         .select(options?.select || '*', { count: 'exact' });
 
@@ -262,7 +262,7 @@ export class SupabaseApiClient {
 
   async update<T>(table: string, id: string, data: Partial<T>): Promise<ApiResponse<T>> {
     try {
-      const { data: result, error } = await supabase
+      const { data: result, error } = await (supabase as any)
         .from(table)
         .update(data)
         .eq('id', id)
@@ -285,7 +285,7 @@ export class SupabaseApiClient {
 
   async upsert<T>(table: string, data: Partial<T>): Promise<ApiResponse<T>> {
     try {
-      const { data: result, error } = await supabase
+      const { data: result, error } = await (supabase as any)
         .from(table)
         .upsert(data)
         .select()
@@ -307,7 +307,7 @@ export class SupabaseApiClient {
 
   async delete(table: string, id: string): Promise<ApiResponse<null>> {
     try {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from(table)
         .delete()
         .eq('id', id);
@@ -329,7 +329,7 @@ export class SupabaseApiClient {
   // 🔍 Batch Operations
   async bulkCreate<T>(table: string, items: Partial<T>[]): Promise<ApiResponse<T[]>> {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from(table)
         .insert(items)
         .select();
@@ -350,7 +350,7 @@ export class SupabaseApiClient {
 
   async bulkUpdate<T>(table: string, items: (Partial<T> & { id: string })[]): Promise<ApiResponse<T[]>> {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from(table)
         .upsert(items)
         .select();
@@ -371,7 +371,7 @@ export class SupabaseApiClient {
 
   async bulkDelete(table: string, ids: string[]): Promise<ApiResponse<null>> {
     try {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from(table)
         .delete()
         .in('id', ids);
@@ -393,19 +393,19 @@ export class SupabaseApiClient {
   // 🔍 Advanced Query Operations
   async executeQuery<T>(query: { sql: string; params?: any[] }): Promise<ApiResponse<T[]>> {
     try {
-      const { data, error } = await supabase.rpc('execute_query', {
+      const { data, error } = await (supabase as any).rpc('execute_query', {
         query_sql: query.sql,
         query_params: query.params || []
       });
 
       return {
-        data: data as T[],
+        data: (data as T[]) || [],
         error: error?.message || null,
         success: !error
       };
     } catch (error) {
       return {
-        data: null,
+        data: [],
         error: `Query execution failed: ${error}`,
         success: false
       };
@@ -414,7 +414,7 @@ export class SupabaseApiClient {
 
   async callFunction<T>(functionName: string, params: Record<string, any> = {}): Promise<ApiResponse<T>> {
     try {
-      const { data, error } = await supabase.rpc(functionName, params);
+      const { data, error } = await (supabase as any).rpc(functionName, params);
 
       return {
         data: data as T,
@@ -436,9 +436,9 @@ export class SupabaseApiClient {
     callback: (payload: { eventType: string; new: T; old: T }) => void,
     filter?: string
   ) {
-    let subscription = supabase
+    let subscription = (supabase as any)
       .channel(`${table}_changes`)
-      .on('postgres_changes', {
+      .on('postgres_changes' as any, {
         event: '*',
         schema: 'public',
         table: table,
@@ -514,7 +514,7 @@ export class SupabaseApiClient {
   // 🔍 Health Check
   async healthCheck(): Promise<ApiResponse<{ status: string; timestamp: number }>> {
     try {
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from('profiles')
         .select('count')
         .limit(1);

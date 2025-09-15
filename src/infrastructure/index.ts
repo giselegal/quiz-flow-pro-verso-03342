@@ -43,17 +43,13 @@ export const isValidUUID = (uuid: string): boolean => {
   return uuidRegex.test(uuid);
 };
 
-export const sanitizeForStorage = (data: any): any => {
-  if (data === null || data === undefined) return null;
-  
-  // Remove functions and undefined values
-  const sanitized = JSON.parse(JSON.stringify(data, (key, value) => {
-    if (typeof value === 'function') return undefined;
-    if (value === undefined) return null;
-    return value;
-  }));
-  
-  return sanitized;
+export const infrastructureLayer = {
+  repositories: {
+    quiz: new SupabaseQuizRepository(),
+    funnel: new SupabaseFunnelRepository()
+  },
+  storage: new LocalStorageAdapter(),
+  api: supabaseApi
 };
 
 export const validateEnvironment = (): {

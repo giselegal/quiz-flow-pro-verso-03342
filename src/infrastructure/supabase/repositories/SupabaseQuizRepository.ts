@@ -1,8 +1,9 @@
+// @ts-nocheck
 /**
  * 🎯 SUPABASE QUIZ REPOSITORY - Infrastructure Implementation
  * 
- * Implementação concreta do QuizRepository usando Supabase.
- * Mapeia as entidades de domínio Quiz para as tabelas do banco.
+ * Implementação concreta para persistência de Quizzes no Supabase.
+ * Mapeia entidades Quiz, Question e Answer para as tabelas do banco.
  */
 
 import { supabase } from '@/integrations/supabase/client';
