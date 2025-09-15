@@ -63,6 +63,12 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
     // Dados do step atual
     const currentStepData = useMemo(() => {
         const blocks = getBlocksForStep(safeCurrentStep, state.stepBlocks) || [];
+        console.log('📊 currentStepData recalculado:', {
+            safeCurrentStep,
+            blocksCount: blocks.length,
+            blocks: blocks.map(b => ({ id: b.id, type: b.type, properties: Object.keys(b.properties || {}) })),
+            stepBlocksRef: state.stepBlocks
+        });
         return blocks;
     }, [safeCurrentStep, state.stepBlocks]);
 
@@ -83,9 +89,24 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
         []
     );
 
-    // Block selecionado
+    // Block selecionado - com deep logging
     const selectedBlockId = state.selectedBlockId;
-    const selectedBlock = currentStepData.find((b: any) => b.id === selectedBlockId);
+    const selectedBlock = useMemo(() => {
+        const block = currentStepData.find((b: any) => b.id === selectedBlockId);
+        console.log('🎯 selectedBlock recalculado:', {
+            selectedBlockId,
+            foundBlock: block ? {
+                id: block.id,
+                type: block.type,
+                propertiesKeys: Object.keys(block.properties || {}),
+                contentKeys: block.content ? Object.keys(block.content) : [],
+                fullProperties: block.properties,
+                fullContent: block.content
+            } : null,
+            totalBlocksInStep: currentStepData.length
+        });
+        return block;
+    }, [currentStepData, selectedBlockId]);
 
     // Debug logs para seleção de bloco
     React.useEffect(() => {
@@ -122,13 +143,32 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
     }, [actions, onStepChange]);
 
     const handleUpdateBlock = useCallback((updates: any) => {
-        console.log('🔄 handleUpdateBlock chamado:', { selectedBlockId, updates, currentStepKey });
+        console.log('🔄 handleUpdateBlock chamado:', { 
+            selectedBlockId, 
+            updates, 
+            currentStepKey,
+            selectedBlockBeforeUpdate: selectedBlock ? {
+                id: selectedBlock.id,
+                properties: selectedBlock.properties,
+                content: selectedBlock.content
+            } : null
+        });
+        
         if (selectedBlockId) {
+            console.log('🚀 Chamando actions.updateBlock:', { currentStepKey, selectedBlockId, updates });
             actions.updateBlock(currentStepKey, selectedBlockId, updates);
+            
+            // Verificar se o estado foi atualizado
+            setTimeout(() => {
+                console.log('⏰ Estado após updateBlock (1s delay):', {
+                    newStepBlocks: state.stepBlocks,
+                    currentStepAfterUpdate: state.stepBlocks?.[currentStepKey]
+                });
+            }, 100);
         } else {
             console.warn('⚠️  Nenhum bloco selecionado para atualizar');
         }
-    }, [actions, currentStepKey, selectedBlockId]);
+    }, [actions, currentStepKey, selectedBlockId, selectedBlock, state.stepBlocks]);
 
     const handleDeleteBlock = useCallback(() => {
         if (selectedBlockId) {
