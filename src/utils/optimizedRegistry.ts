@@ -8,13 +8,38 @@ import {
 import VisualBlockFallback from '@/components/core/renderers/VisualBlockFallback';
 
 // 🧪 DEBUG: Teste imediato do registry na importação
+let registryInitialized = false;
+const initializeRegistry = () => {
+  if (registryInitialized) return true;
+  
+  try {
+    // Forçar a inicialização tentando acessar uma chave específica
+    const testComponent = ENHANCED_BLOCK_REGISTRY['quiz-intro-header'];
+    if (testComponent) {
+      registryInitialized = true;
+      if (process.env.NODE_ENV === 'development') {
+        console.log('✅ Registry inicializado com sucesso');
+      }
+      return true;
+    }
+  } catch (error) {
+    if (process.env.NODE_ENV === 'development') {
+      console.warn('⚠️ Erro ao inicializar registry:', error);
+    }
+  }
+  
+  return false;
+};
+
 if (process.env.NODE_ENV === 'development') {
   console.log('🔬 INICIALIZANDO optimizedRegistry.ts');
-
+  
   // Verificação com timeout para garantir que a inicialização está completa
   setTimeout(() => {
+    const initialized = initializeRegistry();
+    console.log('📊 Registry inicializado após timeout:', initialized);
     console.log('📊 Registry keys após timeout:', Object.keys(ENHANCED_BLOCK_REGISTRY).slice(0, 10));
-
+    
     // Teste direto dos tipos problemáticos
     const testTypes = ['quiz-intro-header', 'text', 'image'];
     testTypes.forEach(type => {
@@ -22,9 +47,7 @@ if (process.env.NODE_ENV === 'development') {
       console.log(`🔍 Registry tem "${type}": ${hasKey}`);
     });
   }, 100);
-}
-
-/**
+}/**
  * 🎯 REGISTRY OTIMIZADO - VERSÃO 2.0 COM FALLBACK INTELIGENTE
  * ✅ 150+ componentes mapeados
  * ✅ Sistema de fallback por categoria
@@ -46,8 +69,7 @@ const createEmergencyFallback = (type: string): React.ComponentType<any> => {
     return React.createElement(VisualBlockFallback, {
       blockType: type,
       blockId: block?.id || 'unknown',
-      block: block,
-      fallbackReason: 'Registry não inicializado'
+      block: block
     });
   };
   EmergencyFallback.displayName = `EmergencyFallback(${type})`;
@@ -68,8 +90,8 @@ export const getOptimizedBlockComponent = (type: string): React.ComponentType<an
     console.log(`🔍 getOptimizedBlockComponent chamado para tipo: "${type}"`);
     
     // 🧪 NOVO: Verificar se o registry está inicializado
-    if (!ENHANCED_BLOCK_REGISTRY || Object.keys(ENHANCED_BLOCK_REGISTRY).length === 0) {
-      console.warn(`⚠️ Registry não inicializado ainda para "${type}", usando fallback de emergência`);
+    if (!initializeRegistry()) {
+      console.warn(`⚠️ Registry não inicializado para "${type}", usando fallback de emergência`);
       return createEmergencyFallback(type);
     }
 
