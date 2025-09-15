@@ -402,7 +402,7 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
             'flex-1 min-w-0 overflow-y-auto overflow-x-hidden flex justify-center',
             isDragging && 'editor-drop-zone-active',
             previewDevice === 'mobile' && 'px-2',
-            previewDevice === 'tablet' && 'px-4', 
+            previewDevice === 'tablet' && 'px-4',
             previewDevice === 'desktop' && 'px-6'
           )}
           data-canvas-container
