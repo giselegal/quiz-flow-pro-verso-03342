@@ -7,6 +7,23 @@ import {
 } from '@/components/editor/blocks/EnhancedBlockRegistry';
 import VisualBlockFallback from '@/components/core/renderers/VisualBlockFallback';
 
+// 🧪 DEBUG: Teste imediato do registry na importação
+if (process.env.NODE_ENV === 'development') {
+  console.log('🔬 INICIALIZANDO optimizedRegistry.ts');
+  
+  // Verificação com timeout para garantir que a inicialização está completa
+  setTimeout(() => {
+    console.log('📊 Registry keys após timeout:', Object.keys(ENHANCED_BLOCK_REGISTRY).slice(0, 10));
+    
+    // Teste direto dos tipos problemáticos
+    const testTypes = ['quiz-intro-header', 'text', 'image'];
+    testTypes.forEach(type => {
+      const hasKey = type in ENHANCED_BLOCK_REGISTRY;
+      console.log(`🔍 Registry tem "${type}": ${hasKey}`);
+    });
+  }, 100);
+}
+
 /**
  * 🎯 REGISTRY OTIMIZADO - VERSÃO 2.0 COM FALLBACK INTELIGENTE
  * ✅ 150+ componentes mapeados

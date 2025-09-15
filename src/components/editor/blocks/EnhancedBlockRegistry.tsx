@@ -146,21 +146,23 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, ComponentType<any>> = {
  */
 export const getEnhancedBlockComponent = (type: string) => {
     console.log(`🔍 getEnhancedBlockComponent chamado para tipo: "${type}"`);
-
+    
+    // 🧪 TESTE: Verificar se o registry está populado
+    const registryKeys = Object.keys(ENHANCED_BLOCK_REGISTRY);
+    console.log(`📊 Registry tem ${registryKeys.length} chaves:`, registryKeys.slice(0, 10));
+    
     if (!type) {
         console.warn('getEnhancedBlockComponent: tipo não fornecido, usando fallback');
         return TextInlineBlock;
     }
 
     console.log(`🔎 Verificando tipo exato no registry: "${type}"`);
-
+    
     // Verificar se o tipo existe diretamente no registro
     if (ENHANCED_BLOCK_REGISTRY[type]) {
         console.log(`✅ Tipo exato encontrado no registry: "${type}"`);
         return ENHANCED_BLOCK_REGISTRY[type];
-    }
-
-    // Verificar se há um alias exato para o tipo
+    }    // Verificar se há um alias exato para o tipo
     const normalizedType = type.toLowerCase().replace(/[^a-z0-9-]/g, '-');
     if (ENHANCED_BLOCK_REGISTRY[normalizedType]) {
         console.log(`🎨 Alias: ${type} → ${normalizedType}`);
