@@ -257,8 +257,8 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                                     key={viewport}
                                     onClick={() => setPreviewDevice(viewport)}
                                     className={`px-3 py-2 rounded-md text-xs font-medium transition-all ${previewDevice === viewport
-                                            ? 'bg-blue-500 text-white shadow-lg'
-                                            : 'text-gray-400 hover:text-white hover:bg-gray-700/50'
+                                        ? 'bg-blue-500 text-white shadow-lg'
+                                        : 'text-gray-400 hover:text-white hover:bg-gray-700/50'
                                         }`}
                                 >
                                     {viewport === 'desktop' ? '🖥️' : viewport === 'tablet' ? '📱' : '📱'}
@@ -272,8 +272,8 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                             <button
                                 onClick={() => setMode('edit')}
                                 className={`px-3 py-2 rounded-md text-xs font-medium transition-all ${mode === 'edit'
-                                        ? 'bg-purple-500 text-white shadow-lg'
-                                        : 'text-gray-400 hover:text-white hover:bg-gray-700/50'
+                                    ? 'bg-purple-500 text-white shadow-lg'
+                                    : 'text-gray-400 hover:text-white hover:bg-gray-700/50'
                                     }`}
                             >
                                 ✏️ Editar
@@ -281,8 +281,8 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                             <button
                                 onClick={() => setMode('preview')}
                                 className={`px-3 py-2 rounded-md text-xs font-medium transition-all ${mode === 'preview'
-                                        ? 'bg-purple-500 text-white shadow-lg'
-                                        : 'text-gray-400 hover:text-white hover:bg-gray-700/50'
+                                    ? 'bg-purple-500 text-white shadow-lg'
+                                    : 'text-gray-400 hover:text-white hover:bg-gray-700/50'
                                     }`}
                             >
                                 👁️ Preview
@@ -350,19 +350,17 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                     {/* 📱 MOBILE OVERLAYS - DESIGN PREMIUM */}
                     <div className="lg:hidden">
                         {/* Mobile Navigation Overlay */}
-                        <div className={`fixed inset-0 z-40 transition-all duration-300 ${
-                            mobileNavOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
-                        }`}>
+                        <div className={`fixed inset-0 z-40 transition-all duration-300 ${mobileNavOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
+                            }`}>
                             {/* Backdrop */}
-                            <div 
+                            <div
                                 className="absolute inset-0 bg-black/60 backdrop-blur-sm"
                                 onClick={() => setMobileNavOpen(false)}
                             ></div>
-                            
+
                             {/* Overlay Content */}
-                            <div className={`absolute top-0 left-0 w-80 h-full bg-gradient-to-br from-gray-900 via-slate-900 to-gray-900 border-r border-gray-800/50 shadow-2xl transition-transform duration-300 ${
-                                mobileNavOpen ? 'translate-x-0' : '-translate-x-full'
-                            }`}>
+                            <div className={`absolute top-0 left-0 w-80 h-full bg-gradient-to-br from-gray-900 via-slate-900 to-gray-900 border-r border-gray-800/50 shadow-2xl transition-transform duration-300 ${mobileNavOpen ? 'translate-x-0' : '-translate-x-full'
+                                }`}>
                                 {/* Header */}
                                 <div className="flex items-center justify-between p-6 border-b border-gray-800/50 bg-gradient-to-r from-gray-800/50 to-transparent">
                                     <div>
@@ -401,7 +399,7 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                                                 renderIcon={renderIcon}
                                                 className="mb-6"
                                             />
-                                            
+
                                             <h4 className="text-sm font-semibold text-white/90 mb-3 px-2">COMPONENTES</h4>
                                             <ComponentsSidebar
                                                 groupedComponents={groupedComponents}
@@ -415,19 +413,17 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                         </div>
 
                         {/* Mobile Properties Overlay */}
-                        <div className={`fixed inset-0 z-40 transition-all duration-300 ${
-                            mobilePropsOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
-                        }`}>
+                        <div className={`fixed inset-0 z-40 transition-all duration-300 ${mobilePropsOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
+                            }`}>
                             {/* Backdrop */}
-                            <div 
+                            <div
                                 className="absolute inset-0 bg-black/60 backdrop-blur-sm"
                                 onClick={() => setMobilePropsOpen(false)}
                             ></div>
-                            
+
                             {/* Overlay Content */}
-                            <div className={`absolute top-0 right-0 w-80 h-full bg-gradient-to-bl from-gray-900 via-slate-900 to-gray-900 border-l border-gray-800/50 shadow-2xl transition-transform duration-300 ${
-                                mobilePropsOpen ? 'translate-x-0' : 'translate-x-full'
-                            }`}>
+                            <div className={`absolute top-0 right-0 w-80 h-full bg-gradient-to-bl from-gray-900 via-slate-900 to-gray-900 border-l border-gray-800/50 shadow-2xl transition-transform duration-300 ${mobilePropsOpen ? 'translate-x-0' : 'translate-x-full'
+                                }`}>
                                 {/* Header */}
                                 <div className="flex items-center justify-between p-6 border-b border-gray-800/50 bg-gradient-to-l from-gray-800/50 to-transparent">
                                     <div>
@@ -497,13 +493,13 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                                 <button
                                     onClick={() => setMode(mode === 'edit' ? 'preview' : 'edit')}
                                     className={`group relative p-4 rounded-2xl shadow-2xl border transition-all duration-300 hover:scale-110 ${mode === 'edit'
-                                            ? 'bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white border-purple-400/20 hover:shadow-purple-500/25'
-                                            : 'bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-amber-400/20 hover:shadow-amber-500/25'
+                                        ? 'bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white border-purple-400/20 hover:shadow-purple-500/25'
+                                        : 'bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-amber-400/20 hover:shadow-amber-500/25'
                                         }`}
                                 >
                                     <div className={`absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity ${mode === 'edit'
-                                            ? 'bg-gradient-to-r from-purple-400/20 to-transparent'
-                                            : 'bg-gradient-to-r from-amber-400/20 to-transparent'
+                                        ? 'bg-gradient-to-r from-purple-400/20 to-transparent'
+                                        : 'bg-gradient-to-r from-amber-400/20 to-transparent'
                                         }`}></div>
                                     {mode === 'edit' ? (
                                         <svg className="w-6 h-6 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -609,31 +605,29 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                                             <button
                                                 key={device}
                                                 onClick={() => handleViewportModeChange(device as any)}
-                                                className={`p-2 rounded-md text-xs font-medium transition-all ${
-                                                    previewDevice === device
+                                                className={`p-2 rounded-md text-xs font-medium transition-all ${previewDevice === device
                                                         ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
                                                         : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
-                                                }`}
+                                                    }`}
                                             >
                                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    {device === 'desktop' && <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>}
-                                                    {device === 'tablet' && <rect x="6" y="2" width="12" height="20" rx="2" ry="2"/>}
-                                                    {device === 'mobile' && <rect x="9" y="1" width="6" height="22" rx="2" ry="2"/>}
+                                                    {device === 'desktop' && <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />}
+                                                    {device === 'tablet' && <rect x="6" y="2" width="12" height="20" rx="2" ry="2" />}
+                                                    {device === 'mobile' && <rect x="9" y="1" width="6" height="22" rx="2" ry="2" />}
                                                 </svg>
                                             </button>
                                         ))}
                                     </div>
-                                    
+
                                     <div className="w-px h-6 bg-gray-300 dark:bg-gray-700"></div>
-                                    
+
                                     {/* Mode Toggle */}
                                     <button
                                         onClick={() => setMode(mode === 'edit' ? 'preview' : 'edit')}
-                                        className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                                            mode === 'preview'
+                                        className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${mode === 'preview'
                                                 ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg shadow-green-500/25'
                                                 : 'bg-gradient-to-r from-blue-500 to-violet-500 text-white shadow-lg shadow-blue-500/25'
-                                        }`}
+                                            }`}
                                     >
                                         <div className="flex items-center gap-2">
                                             {mode === 'preview' ? (
