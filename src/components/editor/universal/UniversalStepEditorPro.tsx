@@ -143,9 +143,9 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
     }, [actions, onStepChange]);
 
     const handleUpdateBlock = useCallback((updates: any) => {
-        console.log('🔄 handleUpdateBlock chamado:', { 
-            selectedBlockId, 
-            updates, 
+        console.log('🔄 handleUpdateBlock chamado:', {
+            selectedBlockId,
+            updates,
             currentStepKey,
             selectedBlockBeforeUpdate: selectedBlock ? {
                 id: selectedBlock.id,
@@ -153,11 +153,11 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                 content: selectedBlock.content
             } : null
         });
-        
+
         if (selectedBlockId) {
             console.log('🚀 Chamando actions.updateBlock:', { currentStepKey, selectedBlockId, updates });
             actions.updateBlock(currentStepKey, selectedBlockId, updates);
-            
+
             // Verificar se o estado foi atualizado
             setTimeout(() => {
                 console.log('⏰ Estado após updateBlock (1s delay):', {
