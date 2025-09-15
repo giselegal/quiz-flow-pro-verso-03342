@@ -38,6 +38,14 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
     const notification = useNotification();
     const canvasRef = useRef<HTMLDivElement>(null);
 
+    // Log do estado para debug
+    console.log('🔍 UniversalStepEditorPro: Editor state:', { 
+        currentStep: state.currentStep, 
+        stepBlocks: Object.keys(state.stepBlocks || {}),
+        stepValidation: state.stepValidation,
+        selectedBlockId: state.selectedBlockId 
+    });
+
     // Estados locais
     const [mode, setMode] = useState<'edit' | 'preview'>('edit');
     const [previewDevice] = useState<ViewportMode>('desktop');
@@ -50,16 +58,27 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
     // Calcula stepHasBlocks baseado no estado atual
     const stepHasBlocks = useMemo(() => {
         const stepBlocksRef = state.stepBlocks;
+        console.log('🔍 UniversalStepEditorPro: stepBlocks:', stepBlocksRef);
+        
         if (!stepBlocksRef) {
+            console.warn('⚠️ UniversalStepEditorPro: stepBlocks é null/undefined');
             return {};
         }
 
         const map: Record<number, boolean> = {};
+        const availableSteps = Object.keys(stepBlocksRef);
+        console.log('📋 UniversalStepEditorPro: Steps disponíveis:', availableSteps);
+        
         for (let step = 1; step <= 21; step++) {
             const stepKey = `step-${step}`;
             const blocks = stepBlocksRef[stepKey];
             map[step] = Array.isArray(blocks) && blocks.length > 0;
+            if (blocks && blocks.length > 0) {
+                console.log(`✅ Step ${step} tem ${blocks.length} blocos`);
+            }
         }
+        
+        console.log('🎯 UniversalStepEditorPro: stepHasBlocks final:', map);
         return map;
     }, [state.stepBlocks]);
 
