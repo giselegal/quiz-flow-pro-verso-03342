@@ -7,11 +7,28 @@ import {
 } from '@/components/editor/blocks/EnhancedBlockRegistry';
 import VisualBlockFallback from '@/components/core/renderers/VisualBlockFallback';
 
+// Importações diretas para fallbacks críticos
+import QuizIntroHeaderBlock from '@/components/editor/blocks/QuizIntroHeaderBlock';
+import TextInlineBlock from '@/components/editor/blocks/TextInlineBlock';
+import ImageInlineBlock from '@/components/editor/blocks/ImageInlineBlock';
+import ButtonInlineBlock from '@/components/editor/blocks/ButtonInlineBlock';
+
+// Mapa de fallbacks diretos para componentes críticos
+const DIRECT_COMPONENT_MAP: Record<string, React.ComponentType<any>> = {
+  'quiz-intro-header': QuizIntroHeaderBlock,
+  'text': TextInlineBlock,
+  'text-inline': TextInlineBlock,
+  'image': ImageInlineBlock,
+  'image-inline': ImageInlineBlock,
+  'button': ButtonInlineBlock,
+  'button-inline': ButtonInlineBlock,
+};
+
 // 🧪 DEBUG: Teste imediato do registry na importação
 let registryInitialized = false;
 const initializeRegistry = () => {
   if (registryInitialized) return true;
-  
+
   try {
     // Forçar a inicialização tentando acessar uma chave específica
     const testComponent = ENHANCED_BLOCK_REGISTRY['quiz-intro-header'];
@@ -27,19 +44,19 @@ const initializeRegistry = () => {
       console.warn('⚠️ Erro ao inicializar registry:', error);
     }
   }
-  
+
   return false;
 };
 
 if (process.env.NODE_ENV === 'development') {
   console.log('🔬 INICIALIZANDO optimizedRegistry.ts');
-  
+
   // Verificação com timeout para garantir que a inicialização está completa
   setTimeout(() => {
     const initialized = initializeRegistry();
     console.log('📊 Registry inicializado após timeout:', initialized);
     console.log('📊 Registry keys após timeout:', Object.keys(ENHANCED_BLOCK_REGISTRY).slice(0, 10));
-    
+
     // Teste direto dos tipos problemáticos
     const testTypes = ['quiz-intro-header', 'text', 'image'];
     testTypes.forEach(type => {
@@ -76,29 +93,69 @@ const createEmergencyFallback = (type: string): React.ComponentType<any> => {
   return EmergencyFallback;
 };
 
+/**
+ * Fallback baseado em padrões de nome do tipo
+ */
+const getPatternFallback = (type: string): React.ComponentType<any> => {
+  console.log(`🎯 [ROBUST] Tentando fallback por padrão para "${type}"`);
+
+  // Fallbacks por padrão de tipo
+  if (type.includes('text') || type.includes('title') || type.includes('paragraph')) {
+    console.log(`✅ [ROBUST] Fallback de texto para "${type}"`);
+    COMPONENT_CACHE.set(type, TextInlineBlock);
+    return TextInlineBlock;
+  }
+
+  if (type.includes('image') || type.includes('img') || type.includes('photo')) {
+    console.log(`✅ [ROBUST] Fallback de imagem para "${type}"`);
+    COMPONENT_CACHE.set(type, ImageInlineBlock);
+    return ImageInlineBlock;
+  }
+
+  if (type.includes('button') || type.includes('btn') || type.includes('cta')) {
+    console.log(`✅ [ROBUST] Fallback de botão para "${type}"`);
+    COMPONENT_CACHE.set(type, ButtonInlineBlock);
+    return ButtonInlineBlock;
+  }
+
+  if (type.includes('header') || type.includes('intro') || type.includes('quiz')) {
+    console.log(`✅ [ROBUST] Fallback de header para "${type}"`);
+    COMPONENT_CACHE.set(type, QuizIntroHeaderBlock);
+    return QuizIntroHeaderBlock;
+  }
+
+  // Fallback visual final
+  console.warn(`⚠️ [ROBUST] Usando fallback visual para "${type}"`);
+  return createEmergencyFallback(type);
+};
+
 export const getOptimizedBlockComponent = (type: string): React.ComponentType<any> => {
-  // Retorna do cache se já resolvido
+  console.log(`🔍 [ROBUST] getOptimizedBlockComponent chamado para: "${type}"`);
+
+  // 1. Retorna do cache se já resolvido
   const cached = COMPONENT_CACHE.get(type);
   if (cached) {
-    if (process.env.NODE_ENV === 'development') {
-      console.log(`✅ Cache hit para "${type}"`);
-    }
+    console.log(`✅ [ROBUST] Cache hit para "${type}"`);
     return cached;
   }
 
+  // 2. Tentar fallback direto PRIMEIRO para componentes críticos
+  if (DIRECT_COMPONENT_MAP[type]) {
+    console.log(`✅ [ROBUST] Fallback direto para "${type}"`);
+    const component = DIRECT_COMPONENT_MAP[type];
+    COMPONENT_CACHE.set(type, component);
+    return component;
+  }
+
   try {
-    console.log(`🔍 getOptimizedBlockComponent chamado para tipo: "${type}"`);
-    
-    // 🧪 NOVO: Verificar se o registry está inicializado
+    // 3. Verificar se o registry está inicializado
     if (!initializeRegistry()) {
-      console.warn(`⚠️ Registry não inicializado para "${type}", usando fallback de emergência`);
-      return createEmergencyFallback(type);
+      console.warn(`⚠️ [ROBUST] Registry não inicializado para "${type}", usando fallback por padrão`);
+      return getPatternFallback(type);
     }
 
-    // Usar função inteligente do enhanced registry
-    const component = getEnhancedBlockComponent(type);
-
-    console.log(`🎯 getEnhancedBlockComponent retornou para "${type}":`, component ? component.name || component : 'undefined/null');
+    // 4. Tentar função do enhanced registry
+    const component = getEnhancedBlockComponent(type);    console.log(`🎯 getEnhancedBlockComponent retornou para "${type}":`, component ? component.name || component : 'undefined/null');
 
     if (component) {
       console.log(`✅ Componente válido encontrado para "${type}", adicionando ao cache`);
@@ -165,10 +222,28 @@ export const getOptimizedRegistryStats = () => {
       'Sistema de busca aprimorado',
       'Cobertura de 150+ componentes'
     ],
-    performance: {
-      cacheEnabled: true,
-      lazyLoading: true,
-      fallbackSystem: 'intelligent',
-    }
+    usage: {
+      cacheSize: COMPONENT_CACHE.size,
+      registryInitialized,
+      cachedTypes: Array.from(COMPONENT_CACHE.keys()),
+    },
   };
 };
+
+// 🚀 WARM-UP: Pré-carregar componentes críticos no carregamento da página
+const warmUpCriticalComponents = () => {
+  const criticalTypes = ['quiz-intro-header', 'text', 'image', 'button'];
+  
+  criticalTypes.forEach(type => {
+    try {
+      getOptimizedBlockComponent(type);
+    } catch (error) {
+      console.warn(`⚠️ Falha no warm-up do componente "${type}":`, error);
+    }
+  });
+};
+
+// Executar warm-up após inicialização
+if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
+  setTimeout(warmUpCriticalComponents, 200);
+}

@@ -54,6 +54,15 @@ const SortableBlockWrapperBase: React.FC<SortableBlockWrapperProps> = ({
         try {
           const testComponent = getOptimizedBlockComponent(normalizedBlock.type);
           console.log('🎯 Resultado do teste:', testComponent ? 'SUCESSO' : 'FALHOU');
+          
+          // Teste adicional: verificar se o componente tem as propriedades esperadas
+          if (testComponent) {
+            console.log('📋 Propriedades do componente:', {
+              name: testComponent.name || testComponent.displayName || 'Anônimo',
+              type: typeof testComponent,
+              isReactComponent: typeof testComponent === 'function'
+            });
+          }
         } catch (error) {
           console.error('❌ Erro no teste manual:', error);
         }
