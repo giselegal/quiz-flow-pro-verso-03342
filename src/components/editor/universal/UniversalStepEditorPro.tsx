@@ -53,6 +53,10 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
     // Estados locais para UX
     const [mode, setMode] = useState<'edit' | 'preview'>('edit');
     const [previewDevice, setPreviewDevice] = useState<ViewportMode>('desktop');
+    
+    // 🎯 CORREÇÃO CRÍTICA: Estados para overlays (substitui document.getElementById)
+    const [mobileNavOpen, setMobileNavOpen] = useState(false);
+    const [mobilePropsOpen, setMobilePropsOpen] = useState(false);
 
     // Sistema de notificações
     const notification = useNotification();
@@ -230,17 +234,14 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
             >
                 <div className={`universal-step-editor-pro h-[calc(100vh-120px)] bg-gray-950 flex overflow-hidden max-w-screen ${className} relative`}>
 
-                    {/* 📱 MOBILE OVERLAYS */}
+                    {/* 📱 MOBILE OVERLAYS - SISTEMA BASEADO EM ESTADO REACT */}
                     <div className="lg:hidden">
                         {/* Mobile Navigation Overlay */}
-                        <div id="mobile-nav-overlay" className="mobile-overlay mobile-nav-overlay">
+                        <div className={`mobile-overlay mobile-nav-overlay ${mobileNavOpen ? 'show' : ''}`}>
                             <div className="mobile-overlay-header">
                                 <h3>Navegação</h3>
                                 <button
-                                    onClick={() => {
-                                        const overlay = document.getElementById('mobile-nav-overlay');
-                                        if (overlay) overlay.classList.remove('show');
-                                    }}
+                                    onClick={() => setMobileNavOpen(false)}
                                     className="mobile-overlay-close"
                                     aria-label="Fechar navegação"
                                 >
@@ -256,8 +257,7 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                                         stepValidation={(state as any)?.stepValidation || {}}
                                         onSelectStep={(step) => {
                                             handleStepSelect(step);
-                                            const overlay = document.getElementById('mobile-nav-overlay');
-                                            if (overlay) overlay.classList.remove('show');
+                                            setMobileNavOpen(false); // Fechar overlay ao selecionar
                                         }}
                                         getStepAnalysis={getStepAnalysis}
                                         renderIcon={renderIcon}
@@ -276,14 +276,11 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                         </div>
 
                         {/* Mobile Properties Overlay */}
-                        <div id="mobile-props-overlay" className="mobile-overlay mobile-props-overlay">
+                        <div className={`mobile-overlay mobile-props-overlay ${mobilePropsOpen ? 'show' : ''}`}>
                             <div className="mobile-overlay-header">
                                 <h3>Propriedades</h3>
                                 <button
-                                    onClick={() => {
-                                        const overlay = document.getElementById('mobile-props-overlay');
-                                        if (overlay) overlay.classList.remove('show');
-                                    }}
+                                    onClick={() => setMobilePropsOpen(false)}
                                     className="mobile-overlay-close"
                                     aria-label="Fechar propriedades"
                                 >
@@ -303,13 +300,10 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                         </div>
                     </div>
 
-                    {/* 📱 MOBILE ACTION BUTTONS */}
+                    {/* 📱 MOBILE ACTION BUTTONS - SISTEMA BASEADO EM ESTADO REACT */}
                     <div className="lg:hidden fixed bottom-4 left-4 right-4 flex justify-between z-40">
                         <button
-                            onClick={() => {
-                                const overlay = document.getElementById('mobile-nav-overlay');
-                                if (overlay) overlay.classList.add('show');
-                            }}
+                            onClick={() => setMobileNavOpen(true)}
                             className="mobile-action-btn bg-blue-600 flex flex-col items-center px-4 py-2 rounded-lg text-white shadow-lg"
                         >
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -329,10 +323,7 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                         </button>
 
                         <button
-                            onClick={() => {
-                                const overlay = document.getElementById('mobile-props-overlay');
-                                if (overlay) overlay.classList.add('show');
-                            }}
+                            onClick={() => setMobilePropsOpen(true)}
                             className="mobile-action-btn bg-purple-600 flex flex-col items-center px-4 py-2 rounded-lg text-white shadow-lg"
                         >
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

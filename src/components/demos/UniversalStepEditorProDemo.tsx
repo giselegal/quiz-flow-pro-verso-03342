@@ -8,7 +8,7 @@
  */
 
 import React from 'react';
-import { UniversalStepEditorPro } from '@/components/editor';
+import UniversalStepEditorPro from '@/components/editor/universal/UniversalStepEditorPro';
 import { EditorProvider } from '@/components/editor/EditorProvider';
 
 const UniversalStepEditorProDemo: React.FC = () => {
