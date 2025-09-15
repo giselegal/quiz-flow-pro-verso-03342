@@ -8,29 +8,18 @@
  */
 
 import React from 'react';
-import UniversalStepEditorPro from '@/components/editor/universal/UniversalStepEditorPro';
-import { EditorProvider } from '@/components/editor/EditorProvider';
 
 const UniversalStepEditorProDemo: React.FC = () => {
-    const handleStepChange = (stepId: string) => {
-        console.log('Step changed to:', stepId);
-    };
-
     return (
-        <div className="min-h-screen bg-gray-900">
-            <EditorProvider>
-                <div className="container mx-auto p-4">
-                    <div className="bg-gray-800 rounded-lg overflow-hidden" style={{ height: '80vh' }}>
-                        <UniversalStepEditorPro
-                            stepNumber={1}
-                            onStepChange={handleStepChange}
-                            showNavigation={true}
-                        />
-                    </div>
-                </div>
-            </EditorProvider>
+        <div className="min-h-screen bg-gray-900 text-white p-8">
+            <h1 className="text-4xl font-bold mb-8">UniversalStepEditorPro Demo</h1>
+            <div className="bg-gray-800 p-6 rounded-lg">
+                <p className="text-xl mb-4">🎯 Editor carregando...</p>
+                <p>Se você está vendo esta mensagem, o navegador simples está funcionando!</p>
+                <p className="mt-4 text-gray-400">Próximo passo: carregar o componente UniversalStepEditorPro</p>
+            </div>
         </div>
     );
-}; 
+};
 
 export default UniversalStepEditorProDemo;

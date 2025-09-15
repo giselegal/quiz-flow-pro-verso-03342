@@ -116,23 +116,27 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                     {/* Desktop Layout: 4 colunas */}
                     <div className="hidden lg:flex h-screen w-full">
                         {/* Sidebar de Steps */}
-                        <Suspense fallback={<div className="w-[13rem] bg-gray-900 border-r border-gray-800/50" />}>
-                            <StepSidebar
-                                currentStep={safeCurrentStep}
-                                stepHasBlocks={{}}
-                                onSelectStep={handleStepSelect}
-                                getStepAnalysis={getStepAnalysis}
-                                renderIcon={renderIcon}
-                            />
-                        </Suspense>
+                        <div className="w-52 flex-shrink-0">
+                            <Suspense fallback={<div className="w-52 bg-gray-900 border-r border-gray-800/50 h-full" />}>
+                                <StepSidebar
+                                    currentStep={safeCurrentStep}
+                                    stepHasBlocks={{}}
+                                    onSelectStep={handleStepSelect}
+                                    getStepAnalysis={getStepAnalysis}
+                                    renderIcon={renderIcon}
+                                />
+                            </Suspense>
+                        </div>
 
                         {/* Sidebar de Componentes */}
-                        <Suspense fallback={<div className="w-[7rem] bg-gray-900 border-r border-gray-800/50" />}>
-                            <ComponentsSidebar
-                                groupedComponents={groupedComponents}
-                                renderIcon={renderIcon}
-                            />
-                        </Suspense>
+                        <div className="w-28 flex-shrink-0">
+                            <Suspense fallback={<div className="w-28 bg-gray-900 border-r border-gray-800/50 h-full" />}>
+                                <ComponentsSidebar
+                                    groupedComponents={groupedComponents}
+                                    renderIcon={renderIcon}
+                                />
+                            </Suspense>
+                        </div>
 
                         {/* Área do Canvas Central */}
                         <div className="flex-1 min-w-0 flex flex-col" ref={canvasRef}>
@@ -164,14 +168,16 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                         </div>
 
                         {/* Painel de Propriedades */}
-                        <Suspense fallback={<div className="w-80 bg-gray-900 border-l border-gray-800/50" />}>
-                            <PropertiesColumn
-                                selectedBlock={selectedBlock}
-                                onUpdate={handleUpdateBlock}
-                                onDelete={handleDeleteBlock}
-                                onClose={() => actions.setSelectedBlockId?.(null)}
-                            />
-                        </Suspense>
+                        <div className="w-80 flex-shrink-0">
+                            <Suspense fallback={<div className="w-80 bg-gray-900 border-l border-gray-800/50 h-full" />}>
+                                <PropertiesColumn
+                                    selectedBlock={selectedBlock}
+                                    onUpdate={handleUpdateBlock}
+                                    onDelete={handleDeleteBlock}
+                                    onClose={() => actions.setSelectedBlockId?.(null)}
+                                />
+                            </Suspense>
+                        </div>
                     </div>
 
                     {/* Mobile Layout */}
