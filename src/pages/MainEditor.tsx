@@ -1,12 +1,14 @@
 import React from 'react';
 import { ErrorBoundary } from '@/components/editor/ErrorBoundary';
 import { EditorProvider } from '@/components/editor/EditorProvider';
+import { FunnelsProvider } from '@/context/FunnelsContext';
 import { EditorPro } from '@/legacy/editor/EditorPro';
 
 /**
  * 🎯 MAIN EDITOR - ESTRUTURA ROBUSTA E PROFISSIONAL
  * 
  * Arquitetura limpa e direta:
+ * ✅ FunnelsProvider - Context de funnels necessário
  * ✅ EditorProvider (1158 linhas) - Estado robusto com Supabase
  * ✅ EditorPro (989 linhas) - Editor 4 colunas completo
  * ✅ ErrorBoundary - Tratamento de erros
@@ -27,20 +29,22 @@ const MainEditor: React.FC = () => {
   return (
     <div className="h-screen w-full bg-background">
       <ErrorBoundary>
-        <EditorProvider
-          enableSupabase={true}
-          funnelId={funnelId}
-          quizId={quizId}
-          storageKey="main-editor-professional"
-          initial={{
-            currentStep: 1,
-            selectedBlockId: null,
-            isSupabaseEnabled: true,
-            databaseMode: 'supabase'
-          }}
-        >
-          <EditorPro className="h-full w-full" />
-        </EditorProvider>
+        <FunnelsProvider debug={true}>
+          <EditorProvider
+            enableSupabase={true}
+            funnelId={funnelId}
+            quizId={quizId}
+            storageKey="main-editor-professional"
+            initial={{
+              currentStep: 1,
+              selectedBlockId: null,
+              isSupabaseEnabled: true,
+              databaseMode: 'supabase'
+            }}
+          >
+            <EditorPro className="h-full w-full" />
+          </EditorProvider>
+        </FunnelsProvider>
       </ErrorBoundary>
     </div>
   );

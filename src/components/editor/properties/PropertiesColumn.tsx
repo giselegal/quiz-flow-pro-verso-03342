@@ -2,8 +2,7 @@ import React, { Suspense } from 'react';
 import { Block } from '@/types/editor';
 import { cn } from '@/lib/utils';
 import { ScrollArea } from '@/components/ui/scroll-area';
-// MIGRADO: Usar SinglePropertiesPanel unificado para resolver IDs duplicados
-import { SinglePropertiesPanel } from '@/components/editor/properties/SinglePropertiesPanel';
+import { UniversalNoCodePanel } from './UniversalNoCodePanel';
 
 export interface PropertiesColumnProps {
   selectedBlock: Block | undefined;
@@ -42,13 +41,17 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
               <svg className="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
               </svg>
-              Carregando painel aprimorado…
+              Carregando painel NOCODE avançado…
             </div>
           }>
-            {/* SinglePropertiesPanel - Painel Unificado com IDs únicos */}
-            <SinglePropertiesPanel
+            {/* UniversalNoCodePanel - Painel completo com todas as configurações */}
+            <UniversalNoCodePanel
               selectedBlock={selectedBlock}
-              onUpdate={onUpdate}
+              activeStageId="current-step"
+              onUpdate={(blockId: string, updates: Record<string, any>) => {
+                console.log('🔄 PropertiesColumn -> UniversalNoCodePanel update:', { blockId, updates });
+                onUpdate(updates);
+              }}
               onDelete={onDelete}
             />
           </Suspense>
@@ -61,9 +64,10 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
               Carregando configurações do canvas…
             </div>
           }>
-            {/* SinglePropertiesPanel - Estado vazio quando nenhum bloco selecionado */}
-            <SinglePropertiesPanel
+            {/* UniversalNoCodePanel - Estado vazio quando nenhum bloco selecionado */}
+            <UniversalNoCodePanel
               selectedBlock={null}
+              activeStageId="current-step"
               onUpdate={() => { }}
               onDelete={() => { }}
             />
