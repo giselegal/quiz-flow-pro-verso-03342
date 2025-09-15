@@ -1,7 +1,7 @@
 import React from 'react';
-import { useEditor } from '@craftjs/core';
+
 import { cn } from '@/lib/utils';
-import { BaseModuleProps, themeColors, withCraftjsComponent } from './types';
+import { BaseModuleProps, withCraftjsComponent } from './types';
 
 export interface HeaderSectionProps extends BaseModuleProps {
     logoUrl?: string;
@@ -10,6 +10,8 @@ export interface HeaderSectionProps extends BaseModuleProps {
     subtitle?: string;
     showLogo?: boolean;
     showTitle?: boolean;
+    showSubtitle?: boolean;
+    [key: string]: any;
 }
 
 const HeaderSectionComponent: React.FC<HeaderSectionProps> = ({
@@ -21,20 +23,15 @@ const HeaderSectionComponent: React.FC<HeaderSectionProps> = ({
     showTitle = true,
     className = '',
 }) => {
-    const { connectors: { connect } } = useEditor();
-
     return (
-        <div
-            ref={connect}
-            className={cn('header-section flex items-center justify-center p-4', className)}
-        >
+        <div className={cn('header-section flex items-center justify-center p-4', className)}>
             {showLogo && (
                 <img src={logoUrl} alt={logoAlt} className="w-12 h-12 mr-4" />
             )}
-            {showTitle && (
+            {(showTitle || typeof subtitle !== 'undefined') && (
                 <div>
-                    <h1 className="text-xl font-bold">{title}</h1>
-                    <h2 className="text-sm opacity-80">{subtitle}</h2>
+                    {showTitle && <h1 className="text-xl font-bold">{title}</h1>}
+                    {typeof subtitle !== 'undefined' && <h2 className="text-sm opacity-80">{subtitle}</h2>}
                 </div>
             )}
         </div>

@@ -7,6 +7,8 @@ export interface ProgressSectionProps extends BaseModuleProps {
     percentage?: number;
     label?: string;
     showLabel?: boolean;
+    showPercentage?: boolean;
+    [key: string]: any;
 }
 
 const ProgressSectionComponent: React.FC<ProgressSectionProps> = ({
@@ -18,7 +20,7 @@ const ProgressSectionComponent: React.FC<ProgressSectionProps> = ({
     const { connectors: { connect } } = useEditor();
 
     return (
-        <div ref={connect} className={cn('progress-section p-4', className)}>
+        <div ref={(ref) => { if (ref) connect(ref as HTMLElement); }} className={cn('progress-section p-4', className)}>
             {showLabel && <label className="text-sm font-medium mb-2 block">{label}</label>}
             <div className="w-full bg-gray-200 rounded-full h-2">
                 <div

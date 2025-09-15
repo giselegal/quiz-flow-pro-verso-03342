@@ -38,10 +38,12 @@ export const themeColors = {
 // Utilitários para Craft.js
 export const withCraftjsComponent = <T extends Record<string, any>>(
     Component: React.ComponentType<T>,
-    craft: Partial<UserComponent<T>>
-): React.ComponentType<T> & { craft: UserComponent<T> } => {
+    craft?: Partial<UserComponent<T>>
+): React.ComponentType<T> & { craft?: UserComponent<T> } => {
     const WrappedComponent = Component as any;
-    WrappedComponent.craft = craft;
+    if (craft) {
+        WrappedComponent.craft = craft;
+    }
     return WrappedComponent;
 };
 
