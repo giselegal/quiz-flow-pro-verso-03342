@@ -44,6 +44,9 @@ import {
   propertyExtractionService
 } from '@/services/PropertyExtractionService';
 import { InterpolationField } from './InterpolationSystem';
+import { OptionsArrayEditor } from './OptionsArrayEditor';
+import { ConditionalFieldsWrapper } from './ConditionalFieldsWrapper';
+import { PropertyPreview } from './PropertyPreview';
 
 interface UniversalNoCodePanelProps {
   selectedBlock?: Block | null;
@@ -58,7 +61,6 @@ interface UniversalNoCodePanelProps {
 export const UniversalNoCodePanel: React.FC<UniversalNoCodePanelProps> = ({
   selectedBlock,
   activeStageId,
-  
   onUpdate,
   onDuplicate,
   onDelete,
@@ -139,12 +141,6 @@ export const UniversalNoCodePanel: React.FC<UniversalNoCodePanelProps> = ({
     onUpdate(selectedBlock.id, updates);
   }, [selectedBlock, onUpdate]);
 
-  // Resetar bloco para valores padrão
-  const handleReset = useCallback(() => {
-    if (!selectedBlock || !onReset) return;
-    onReset(selectedBlock.id);
-  }, [selectedBlock, onReset]);
-
   // Toggle categoria colapsada
   const toggleCategory = useCallback((category: string) => {
     const newCollapsed = new Set(collapsedCategories);
@@ -196,7 +192,7 @@ export const UniversalNoCodePanel: React.FC<UniversalNoCodePanelProps> = ({
             <Button
               variant="ghost"
               size="sm"
-              onClick={handleReset}
+              onClick={() => onReset?.(selectedBlock.id)}
             >
               <RotateCcw className="w-4 h-4" />
             </Button>
@@ -257,7 +253,7 @@ export const UniversalNoCodePanel: React.FC<UniversalNoCodePanelProps> = ({
 
       {/* Tabs por categoria */}
       <Tabs value={selectedCategory} onValueChange={setSelectedCategory} className="flex-1 flex flex-col">
-        <TabsList className="grid grid-cols-4 w-full">
+        <TabsList className="grid grid-cols-5 w-full">
           <TabsTrigger value="content" className="text-xs">
             <Info className="w-3 h-3 mr-1" />
             Conteúdo
@@ -274,35 +270,54 @@ export const UniversalNoCodePanel: React.FC<UniversalNoCodePanelProps> = ({
             <Zap className="w-3 h-3 mr-1" />
             Ação
           </TabsTrigger>
+          <TabsTrigger value="validation" className="text-xs">
+            <Shield className="w-3 h-3 mr-1" />
+            Validação
+          </TabsTrigger>
         </TabsList>
 
-        {/* Conteúdo das tabs */}
-        <ScrollArea className="flex-1">
-          <div className="p-4 space-y-4">
-            {Object.entries(filteredProperties).map(([category, properties]) => {
-              if (selectedCategory !== 'all' && category !== selectedCategory) return null;
-              
-              return (
-                <CategorySection
-                  key={category}
-                  category={category}
-                  properties={properties}
-                  isCollapsed={collapsedCategories.has(category)}
-                  onToggle={() => toggleCategory(category)}
-                  onPropertyUpdate={handlePropertyUpdate}
-                />
-              );
-            })}
-            
-            {Object.keys(filteredProperties).length === 0 && (
-              <div className="text-center py-8 text-muted-foreground">
-                <Filter className="w-8 h-8 mx-auto mb-2" />
-                <p>Nenhuma propriedade encontrada</p>
-                <p className="text-xs">Tente ajustar os filtros</p>
+        {/* Conteúdo das tabs com preview sidebar */}
+        <div className="flex flex-1 min-h-0">
+          <div className="flex-1 min-w-0">
+            <ScrollArea className="h-full">
+              <div className="p-4 space-y-4">
+                {Object.entries(filteredProperties).map(([category, properties]) => {
+                  if (selectedCategory !== 'all' && category !== selectedCategory) return null;
+                  
+                  return (
+                    <CategorySection
+                      key={category}
+                      category={category}
+                      properties={properties}
+                      allProperties={extractedProperties}
+                      isCollapsed={collapsedCategories.has(category)}
+                      onToggle={() => toggleCategory(category)}
+                      onPropertyUpdate={handlePropertyUpdate}
+                    />
+                  );
+                })}
+                
+                {Object.keys(filteredProperties).length === 0 && (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <Filter className="w-8 h-8 mx-auto mb-2" />
+                    <p>Nenhuma propriedade encontrada</p>
+                    <p className="text-xs">Tente ajustar os filtros</p>
+                  </div>
+                )}
               </div>
-            )}
+            </ScrollArea>
           </div>
-        </ScrollArea>
+
+          {/* Preview sidebar para options-grid */}
+          {selectedBlock?.type === 'options-grid' && (
+            <div className="w-80 border-l bg-muted/20">
+              <PropertyPreview
+                block={selectedBlock}
+                properties={extractedProperties}
+              />
+            </div>
+          )}
+        </div>
       </Tabs>
     </Card>
   );
@@ -314,10 +329,11 @@ export const UniversalNoCodePanel: React.FC<UniversalNoCodePanelProps> = ({
 const CategorySection: React.FC<{
   category: string;
   properties: PropertyField[];
+  allProperties: PropertyField[];
   isCollapsed: boolean;
   onToggle: () => void;
   onPropertyUpdate: (property: PropertyField, value: any) => void;
-}> = ({ category, properties, isCollapsed, onToggle, onPropertyUpdate }) => {
+}> = ({ category, properties, allProperties, isCollapsed, onToggle, onPropertyUpdate }) => {
   const categoryInfo = getCategoryInfo(category);
 
   return (
@@ -345,11 +361,16 @@ const CategorySection: React.FC<{
       {!isCollapsed && (
         <div className="space-y-3 pl-4">
           {properties.map(property => (
-            <PropertyEditor
+            <ConditionalFieldsWrapper
               key={property.key}
               property={property}
-              onUpdate={onPropertyUpdate}
-            />
+              allProperties={allProperties}
+            >
+              <PropertyEditor
+                property={property}
+                onUpdate={onPropertyUpdate}
+              />
+            </ConditionalFieldsWrapper>
           ))}
         </div>
       )}
@@ -491,6 +512,27 @@ const PropertyEditor: React.FC<{
         </div>
       );
 
+    case 'array':
+      if (property.key === 'options') {
+        return (
+          <OptionsArrayEditor
+            value={property.value || []}
+            onChange={handleChange}
+          />
+        );
+      }
+      return (
+        <div className="space-y-1">
+          <Label className="text-sm">{property.label}</Label>
+          <div className="text-xs text-muted-foreground">
+            Array de {Array.isArray(property.value) ? property.value.length : 0} itens
+          </div>
+          {property.description && (
+            <p className="text-xs text-muted-foreground">{property.description}</p>
+          )}
+        </div>
+      );
+
     default:
       return (
         <div className="space-y-1">
@@ -509,10 +551,10 @@ const PropertyEditor: React.FC<{
 };
 
 /**
- * Informações de categoria
+ * Obtém informações da categoria
  */
-const getCategoryInfo = (category: string) => {
-  const categoryMap: Record<string, { label: string; icon: any }> = {
+function getCategoryInfo(category: string) {
+  const categoryMap = {
     content: { label: 'Conteúdo', icon: Info },
     style: { label: 'Estilo', icon: Paintbrush },
     layout: { label: 'Layout', icon: Layout },
@@ -524,4 +566,6 @@ const getCategoryInfo = (category: string) => {
   };
 
   return categoryMap[category] || { label: category, icon: Info };
-};
+}
+
+export default UniversalNoCodePanel;

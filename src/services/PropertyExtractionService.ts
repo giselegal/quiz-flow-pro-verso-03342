@@ -506,6 +506,218 @@ export class PropertyExtractionService {
           }
         );
         break;
+
+      case 'options-grid':
+        // === CONTEÚDO ===
+        properties.push(
+          {
+            key: 'title',
+            label: 'Título da Questão',
+            type: 'interpolated-text',
+            category: 'content',
+            value: block.properties?.title || 'Escolha uma opção:',
+            supportsInterpolation: true,
+            availableVariables: AVAILABLE_VARIABLES,
+            description: 'Pergunta principal exibida acima das opções',
+            isRequired: true
+          },
+          {
+            key: 'description',
+            label: 'Descrição/Subtítulo',
+            type: 'textarea',
+            category: 'content',
+            value: block.properties?.description || '',
+            supportsInterpolation: false,
+            description: 'Texto adicional explicativo (opcional)'
+          },
+          {
+            key: 'options',
+            label: 'Opções da Questão',
+            type: 'array',
+            category: 'content',
+            value: block.properties?.options || [],
+            supportsInterpolation: false,
+            description: 'Configure todas as opções disponíveis para seleção'
+          }
+        );
+
+        // === LAYOUT ===
+        properties.push(
+          {
+            key: 'columns',
+            label: 'Número de Colunas',
+            type: 'range',
+            category: 'layout',
+            value: block.properties?.columns || 2,
+            min: 1,
+            max: 4,
+            step: 1,
+            supportsInterpolation: false,
+            description: 'Quantas colunas terá o grid de opções'
+          },
+          {
+            key: 'gridGap',
+            label: 'Espaçamento entre Opções',
+            type: 'range',
+            category: 'layout',
+            value: block.properties?.gridGap || 16,
+            min: 0,
+            max: 48,
+            step: 2,
+            supportsInterpolation: false,
+            description: 'Distância entre cada opção no grid'
+          },
+          {
+            key: 'layoutOrientation',
+            label: 'Orientação do Layout',
+            type: 'select',
+            category: 'layout',
+            value: block.properties?.layoutOrientation || 'vertical',
+            options: [
+              { label: 'Vertical', value: 'vertical' },
+              { label: 'Horizontal', value: 'horizontal' }
+            ],
+            supportsInterpolation: false
+          }
+        );
+
+        // === COMPORTAMENTO ===
+        properties.push(
+          {
+            key: 'multipleSelection',
+            label: 'Permitir Seleção Múltipla',
+            type: 'boolean',
+            category: 'behavior',
+            value: block.properties?.multipleSelection || false,
+            supportsInterpolation: false,
+            description: 'Permitir selecionar várias opções simultaneamente'
+          },
+          {
+            key: 'minSelections',
+            label: 'Mínimo de Seleções',
+            type: 'range',
+            category: 'behavior',
+            value: block.properties?.minSelections || 1,
+            min: 0,
+            max: 10,
+            step: 1,
+            supportsInterpolation: false,
+            description: 'Número mínimo de opções que devem ser selecionadas'
+          },
+          {
+            key: 'maxSelections',
+            label: 'Máximo de Seleções',
+            type: 'range',
+            category: 'behavior',
+            value: block.properties?.maxSelections || 1,
+            min: 1,
+            max: 10,
+            step: 1,
+            supportsInterpolation: false,
+            description: 'Número máximo de opções que podem ser selecionadas'
+          },
+          {
+            key: 'autoAdvanceOnComplete',
+            label: 'Auto Avançar ao Completar',
+            type: 'boolean',
+            category: 'behavior',
+            value: block.properties?.autoAdvanceOnComplete || false,
+            supportsInterpolation: false,
+            description: 'Avançar automaticamente quando atingir seleções obrigatórias'
+          },
+          {
+            key: 'autoAdvanceDelay',
+            label: 'Delay do Auto Avanço (ms)',
+            type: 'range',
+            category: 'behavior',
+            value: block.properties?.autoAdvanceDelay || 1000,
+            min: 0,
+            max: 5000,
+            step: 100,
+            supportsInterpolation: false,
+            description: 'Tempo de espera antes do auto avanço'
+          }
+        );
+
+        // === ESTILO ===
+        properties.push(
+          {
+            key: 'showImages',
+            label: 'Exibir Imagens',
+            type: 'boolean',
+            category: 'style',
+            value: block.properties?.showImages !== false,
+            supportsInterpolation: false,
+            description: 'Ativar/desativar imagens nas opções'
+          },
+          {
+            key: 'contentMode',
+            label: 'Modo de Conteúdo',
+            type: 'select',
+            category: 'style',
+            value: block.properties?.contentMode || 'text-and-image',
+            options: [
+              { label: '🖼️ Imagem + Texto', value: 'text-and-image' },
+              { label: '📷 Apenas Imagem', value: 'image-only' },
+              { label: '📝 Apenas Texto', value: 'text-only' }
+            ],
+            supportsInterpolation: false,
+            description: 'Que tipo de conteúdo exibir nas opções'
+          },
+          {
+            key: 'imageSize',
+            label: 'Tamanho das Imagens',
+            type: 'range',
+            category: 'style',
+            value: block.properties?.imageSize || 256,
+            min: 100,
+            max: 400,
+            step: 10,
+            supportsInterpolation: false,
+            description: 'Tamanho padrão das imagens'
+          },
+          {
+            key: 'backgroundColor',
+            label: 'Cor de Fundo',
+            type: 'color',
+            category: 'style',
+            value: block.properties?.backgroundColor || '#FFFFFF',
+            supportsInterpolation: false,
+            description: 'Cor de fundo das opções não selecionadas'
+          },
+          {
+            key: 'selectedColor',
+            label: 'Cor de Fundo Selecionado',
+            type: 'color',
+            category: 'style',
+            value: block.properties?.selectedColor || '#B89B7A',
+            supportsInterpolation: false,
+            description: 'Cor de fundo quando a opção está selecionada'
+          }
+        );
+
+        // === VALIDAÇÃO ===
+        properties.push(
+          {
+            key: 'enableValidation',
+            label: 'Ativar Validação',
+            type: 'boolean',
+            category: 'validation',
+            value: block.properties?.enableValidation !== false,
+            supportsInterpolation: false,
+            description: 'Verificar se seleções são válidas antes de prosseguir'
+          },
+          {
+            key: 'validationMessage',
+            label: 'Mensagem de Validação',
+            type: 'text',
+            category: 'validation',
+            value: block.properties?.validationMessage || 'Selecione pelo menos uma opção para continuar',
+            supportsInterpolation: false,
+            description: 'Mensagem exibida quando seleção é inválida'
+          }
+        );
+        break;
     }
 
     return properties;
