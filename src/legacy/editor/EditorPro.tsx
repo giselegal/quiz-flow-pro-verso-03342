@@ -11,6 +11,8 @@ import { getBlocksForStep } from '@/config/quizStepsComplete';
 import { useEditor } from '@/components/editor/EditorProvider';
 import { useRenderCount } from '@/hooks/useRenderCount';
 import { mark } from '@/utils/perf';
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
+import { useColumnWidths } from '@/hooks/useColumnWidths';
 // import CanvasDropZone from '@/components/editor/canvas/CanvasDropZone.simple';
 import { StepDndProvider } from '@/components/editor/dnd/StepDndProvider';
 import CanvasAreaLayout from '@/components/editor/layouts/CanvasArea';
@@ -923,60 +925,100 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
           </div>
 
           {/* DESKTOP LAYOUT - Hidden on mobile */}
-          {/* 1) Etapas - Fixed width */}
-          <div className="hidden lg:block w-[180px] min-w-[180px] max-w-[180px] flex-shrink-0">
-            <Suspense fallback={<div className="p-4 bg-gray-900 border-r border-gray-800/50">Loading steps…</div>}>
-              <StepSidebar
-                currentStep={safeCurrentStep}
-                totalSteps={21}
-                stepHasBlocks={stepHasBlocks}
-                stepValidation={(state as any)?.stepValidation || {}}
-                onSelectStep={handleStepSelect}
-                getStepAnalysis={getStepAnalysis as any}
-                renderIcon={renderIcon as any}
-                className="!w-full bg-gray-900 border-r border-gray-800/50"
-              />
-            </Suspense>
-          </div>
-          {/* 2) Componentes - Fixed width */}
-          <div className="hidden lg:block w-[220px] min-w-[220px] max-w-[220px] flex-shrink-0">
-            <Suspense fallback={<div className="p-4 bg-gray-900 border-r border-gray-800/50">Loading library…</div>}>
-              <ComponentsSidebar
-                groupedComponents={groupedComponents as any}
-                renderIcon={renderIcon as any}
-                className="!w-full bg-gray-900 border-r border-gray-800/50"
-              />
-            </Suspense>
-          </div>
+          <ResizablePanelGroup 
+            direction="horizontal" 
+            className="hidden lg:flex w-full h-full"
+          >
+            {/* 1) Etapas - Resizable width */}
+            <ResizablePanel 
+              defaultSize={18} 
+              minSize={12} 
+              maxSize={25}
+              className="min-w-0"
+            >
+              <div className="h-full overflow-y-auto">
+                <Suspense fallback={<div className="p-4 bg-gray-900 border-r border-gray-800/50">Loading steps…</div>}>
+                  <StepSidebar
+                    currentStep={safeCurrentStep}
+                    totalSteps={21}
+                    stepHasBlocks={stepHasBlocks}
+                    stepValidation={(state as any)?.stepValidation || {}}
+                    onSelectStep={handleStepSelect}
+                    getStepAnalysis={getStepAnalysis as any}
+                    renderIcon={renderIcon as any}
+                    className="!w-full bg-gray-900 border-r border-gray-800/50 h-full"
+                  />
+                </Suspense>
+              </div>
+            </ResizablePanel>
+            
+            <ResizableHandle withHandle />
 
-          {/* 3) Canvas - Mobile: full width, Desktop: dynamic to accommodate fixed sidebars */}
-          <div className="w-full lg:flex-1 lg:min-w-0">
-            <CanvasAreaLayout
-              className=""
-              containerRef={containerRef}
-              mode={mode}
-              setMode={setMode}
-              previewDevice={previewDevice}
-              setPreviewDevice={setPreviewDevice}
-              safeCurrentStep={safeCurrentStep}
-              currentStepKey={currentStepKey}
-              currentStepData={currentStepData as any}
-              selectedBlockId={state.selectedBlockId}
-              actions={actions as any}
-              state={state as any}
-              notification={notification as any}
-              renderIcon={renderIcon as any}
-              getStepAnalysis={getStepAnalysis as any}
-              isDragging={isDragging}
-            />
-          </div>
+            {/* 2) Componentes - Resizable width */}
+            <ResizablePanel 
+              defaultSize={22} 
+              minSize={15} 
+              maxSize={30}
+              className="min-w-0"
+            >
+              <div className="h-full overflow-y-auto">
+                <Suspense fallback={<div className="p-4 bg-gray-900 border-r border-gray-800/50">Loading library…</div>}>
+                  <ComponentsSidebar
+                    groupedComponents={groupedComponents as any}
+                    renderIcon={renderIcon as any}
+                    className="!w-full bg-gray-900 border-r border-gray-800/50 h-full"
+                  />
+                </Suspense>
+              </div>
+            </ResizablePanel>
 
-          {/* 4) Propriedades - Fixed width - Hidden on mobile */}
-          <div className="hidden lg:block w-[320px] min-w-[320px] max-w-[320px] flex-shrink-0">
-            <Suspense fallback={<div className="p-4 bg-gray-900 border-l border-gray-800/50">Properties…</div>}>
-              <MemoPropertiesColumn />
-            </Suspense>
-          </div>
+            <ResizableHandle withHandle />
+
+            {/* 3) Canvas - Flexible main area */}
+            <ResizablePanel 
+              defaultSize={40} 
+              minSize={30} 
+              maxSize={60}
+              className="min-w-0"
+            >
+              <div className="h-full overflow-y-auto">
+                <CanvasAreaLayout
+                  className="h-full"
+                  containerRef={containerRef}
+                  mode={mode}
+                  setMode={setMode}
+                  previewDevice={previewDevice}
+                  setPreviewDevice={setPreviewDevice}
+                  safeCurrentStep={safeCurrentStep}
+                  currentStepKey={currentStepKey}
+                  currentStepData={currentStepData as any}
+                  selectedBlockId={state.selectedBlockId}
+                  actions={actions as any}
+                  state={state as any}
+                  notification={notification as any}
+                  renderIcon={renderIcon as any}
+                  getStepAnalysis={getStepAnalysis as any}
+                  isDragging={isDragging}
+                />
+              </div>
+            </ResizablePanel>
+
+            <ResizableHandle withHandle />
+
+            {/* 4) Propriedades - Resizable width */}
+            <ResizablePanel 
+              defaultSize={20} 
+              minSize={15} 
+              maxSize={35}
+              className="min-w-0"
+            >
+              <div className="h-full overflow-y-auto">
+                <Suspense fallback={<div className="p-4 bg-gray-900 border-l border-gray-800/50">Properties…</div>}>
+                  <MemoPropertiesColumn />
+                </Suspense>
+              </div>
+            </ResizablePanel>
+          </ResizablePanelGroup>
         </div>
       </StepDndProvider>
 
