@@ -86,7 +86,7 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
     // Block selecionado
     const selectedBlockId = state.selectedBlockId;
     const selectedBlock = currentStepData.find((b: any) => b.id === selectedBlockId);
-    
+
     // Debug logs para seleção de bloco
     React.useEffect(() => {
         console.log('🎯 Estado de seleção de bloco:', {

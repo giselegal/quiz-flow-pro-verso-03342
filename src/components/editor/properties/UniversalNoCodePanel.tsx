@@ -21,7 +21,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Switch } from '@/components/ui/switch';
 import { Slider } from '@/components/ui/slider';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { 
+import {
   Search,
   Filter,
   RotateCcw,
@@ -38,7 +38,7 @@ import {
   ChevronRight
 } from 'lucide-react';
 import { Block } from '@/types/editor';
-import { 
+import {
   PropertyField,
   CategorizedProperties,
   propertyExtractionService
@@ -85,18 +85,18 @@ export const UniversalNoCodePanel: React.FC<UniversalNoCodePanelProps> = ({
 
     const extracted = propertyExtractionService.extractAllProperties(selectedBlock);
     console.log('🔍 Propriedades extraídas:', { count: extracted.length, properties: extracted.slice(0, 3) });
-    
+
     const withInterpolation = propertyExtractionService.identifyInterpolationFields(extracted);
     const categorized = propertyExtractionService.categorizeProperties(withInterpolation);
-    
-    console.log('🏷️  Propriedades categorizadas:', Object.keys(categorized).map(cat => ({ 
-      category: cat, 
-      count: categorized[cat].length 
+
+    console.log('🏷️  Propriedades categorizadas:', Object.keys(categorized).map(cat => ({
+      category: cat,
+      count: categorized[cat].length
     })));
 
-    return { 
+    return {
       extractedProperties: withInterpolation,
-      categorizedProperties: categorized 
+      categorizedProperties: categorized
     };
   }, [selectedBlock]);
 
@@ -106,10 +106,10 @@ export const UniversalNoCodePanel: React.FC<UniversalNoCodePanelProps> = ({
 
     Object.entries(categorizedProperties).forEach(([category, properties]) => {
       const matchingProps = properties.filter(prop => {
-        const matchesSearch = !searchQuery || 
+        const matchesSearch = !searchQuery ||
           prop.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
           prop.key.toLowerCase().includes(searchQuery.toLowerCase());
-        
+
         const matchesAdvanced = showAdvanced || !prop.isAdvanced;
 
         return matchesSearch && matchesAdvanced;
@@ -138,7 +138,7 @@ export const UniversalNoCodePanel: React.FC<UniversalNoCodePanelProps> = ({
     if (!selectedBlock) return;
 
     const updates: Record<string, any> = {};
-    
+
     // Tratar propriedades aninhadas (ex: content.title)
     if (property.key.includes('.')) {
       const [parent, child] = property.key.split('.');
@@ -248,7 +248,7 @@ export const UniversalNoCodePanel: React.FC<UniversalNoCodePanelProps> = ({
               className="pl-8"
             />
           </div>
-          
+
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Switch
@@ -307,7 +307,7 @@ export const UniversalNoCodePanel: React.FC<UniversalNoCodePanelProps> = ({
                         onPropertyUpdate={handlePropertyUpdate}
                       />
                     )}
-                    
+
                     {!filteredProperties[categoryKey] && (
                       <div className="text-center py-8 text-muted-foreground">
                         <Filter className="w-8 h-8 mx-auto mb-2" />
@@ -501,7 +501,7 @@ const PropertyEditor: React.FC<{
         <div className="space-y-1">
           <Label className="text-sm">{property.label}</Label>
           <div className="flex items-center gap-2">
-            <div 
+            <div
               className="w-8 h-8 rounded border border-border"
               style={{ backgroundColor: property.value || '#000000' }}
             />
