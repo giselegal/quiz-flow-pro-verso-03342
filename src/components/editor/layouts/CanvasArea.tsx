@@ -40,9 +40,9 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
         'flex-1 min-w-0 overflow-y-auto overflow-x-hidden flex justify-center bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100 dark:from-gray-900 dark:via-slate-900 dark:to-gray-900',
         isDragging && 'editor-drop-zone-active',
         previewDevice === 'mobile' && 'px-2',
-        previewDevice === 'tablet' && 'px-8',
-        previewDevice === 'desktop' && 'px-12',
-        previewDevice === 'xl' && 'px-16',
+        previewDevice === 'tablet' && 'px-16',
+        previewDevice === 'desktop' && 'px-24',
+        previewDevice === 'xl' && 'px-32',
         className
       )}
       data-canvas-container
