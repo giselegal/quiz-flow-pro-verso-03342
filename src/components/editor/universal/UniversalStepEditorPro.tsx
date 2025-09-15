@@ -45,7 +45,7 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
     // Forçar carregamento de todas as etapas ao montar o componente
     React.useEffect(() => {
         const stepCount = state.stepBlocks ? Object.keys(state.stepBlocks).length : 0;
-        
+
         // Se não temos steps carregados, forçar carregamento do template
         if (stepCount === 0) {
             console.log('⚠️  Nenhum step carregado, forçando carregamento do template...');
