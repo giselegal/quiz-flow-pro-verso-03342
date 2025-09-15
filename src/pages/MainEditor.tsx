@@ -1,0 +1,49 @@
+import React from 'react';
+import { ErrorBoundary } from '@/components/editor/ErrorBoundary';
+import { EditorProvider } from '@/components/editor/EditorProvider';
+import { EditorPro } from '@/legacy/editor/EditorPro';
+
+/**
+ * 🎯 MAIN EDITOR - ESTRUTURA ROBUSTA E PROFISSIONAL
+ * 
+ * Arquitetura limpa e direta:
+ * ✅ EditorProvider (1158 linhas) - Estado robusto com Supabase
+ * ✅ EditorPro (989 linhas) - Editor 4 colunas completo
+ * ✅ ErrorBoundary - Tratamento de erros
+ * ✅ Zero abstrações desnecessárias
+ * 
+ * Funcionalidades garantidas:
+ * - 4 colunas responsivas
+ * - 21 etapas dinâmicas
+ * - Drag & Drop robusto
+ * - Persistência Supabase
+ * - Validação centralizada
+ * - Cálculo automático de resultados
+ */
+const MainEditor: React.FC = () => {
+  const funnelId = 'quiz-style-21-steps';
+  const quizId = 'professional-quiz-editor';
+
+  return (
+    <div className="h-screen w-full bg-background">
+      <ErrorBoundary>
+        <EditorProvider
+          enableSupabase={true}
+          funnelId={funnelId}
+          quizId={quizId}
+          storageKey="main-editor-professional"
+          initial={{
+            currentStep: 1,
+            selectedBlockId: null,
+            isSupabaseEnabled: true,
+            databaseMode: 'supabase'
+          }}
+        >
+          <EditorPro className="h-full w-full" />
+        </EditorProvider>
+      </ErrorBoundary>
+    </div>
+  );
+};
+
+export default MainEditor;
