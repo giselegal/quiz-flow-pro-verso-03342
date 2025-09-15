@@ -6,11 +6,14 @@
  */
 
 // Supabase Repositories
+import { SupabaseQuizRepository } from './supabase/repositories/SupabaseQuizRepository';
+import { SupabaseFunnelRepository } from './supabase/repositories/SupabaseFunnelRepository';
 export { SupabaseQuizRepository } from './supabase/repositories/SupabaseQuizRepository';
 export { SupabaseFunnelRepository } from './supabase/repositories/SupabaseFunnelRepository';
 export type { FunnelRepository } from './supabase/repositories/SupabaseFunnelRepository';
 
 // Storage Adapters
+import { LocalStorageAdapter } from './storage/LocalStorageAdapter';
 export { 
   LocalStorageAdapter,
   EditorStorageAdapter,
@@ -23,6 +26,7 @@ export type {
 } from './storage/LocalStorageAdapter';
 
 // API Clients
+import { supabaseApi } from './api/SupabaseApiClient';
 export { 
   SupabaseApiClient,
   supabaseApi
