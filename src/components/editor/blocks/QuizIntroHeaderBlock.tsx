@@ -337,12 +337,12 @@ interface LogoImageProps {
   enableAnimation?: boolean;
 }
 
-const LogoImage: React.FC<LogoImageProps> = ({ 
-  src, 
-  alt = 'Logo', 
-  width = 96, 
-  height = 96, 
-  enableAnimation = true 
+const LogoImage: React.FC<LogoImageProps> = ({
+  src,
+  alt = 'Logo',
+  width = 96,
+  height = 96,
+  enableAnimation = true
 }) => {
   const { src: imageSrc, isLoading } = useImageWithFallback(src, {
     width,
