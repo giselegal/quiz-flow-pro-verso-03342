@@ -987,26 +987,24 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               maxSize={65}
               className="min-w-0"
             >
-              <div className="h-full overflow-y-auto">
-                <CanvasAreaLayout
-                  className="h-full"
-                  containerRef={containerRef}
-                  mode={mode}
-                  setMode={setMode}
-                  previewDevice={previewDevice}
-                  setPreviewDevice={setPreviewDevice}
-                  safeCurrentStep={safeCurrentStep}
-                  currentStepKey={currentStepKey}
-                  currentStepData={currentStepData as any}
-                  selectedBlockId={state.selectedBlockId}
-                  actions={actions as any}
-                  state={state as any}
-                  notification={notification as any}
-                  renderIcon={renderIcon as any}
-                  getStepAnalysis={getStepAnalysis as any}
-                  isDragging={isDragging}
-                />
-              </div>
+              <CanvasAreaLayout
+                className="h-full overflow-y-auto"
+                containerRef={containerRef}
+                mode={mode}
+                setMode={setMode}
+                previewDevice={previewDevice}
+                setPreviewDevice={setPreviewDevice}
+                safeCurrentStep={safeCurrentStep}
+                currentStepKey={currentStepKey}
+                currentStepData={currentStepData as any}
+                selectedBlockId={state.selectedBlockId}
+                actions={actions as any}
+                state={state as any}
+                notification={notification as any}
+                renderIcon={renderIcon as any}
+                getStepAnalysis={getStepAnalysis as any}
+                isDragging={isDragging}
+              />
             </ResizablePanel>
 
             <ResizableHandle 
@@ -1021,11 +1019,9 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               maxSize={35}
               className="min-w-0"
             >
-              <div className="h-full overflow-y-auto">
-                <Suspense fallback={<div className="p-4 bg-gray-900 border-l border-gray-800/50">Properties…</div>}>
-                  <MemoPropertiesColumn />
-                </Suspense>
-              </div>
+              <Suspense fallback={<div className="p-4 bg-gray-900 border-l border-gray-800/50">Properties…</div>}>
+                <MemoPropertiesColumn />
+              </Suspense>
             </ResizablePanel>
           </ResizablePanelGroup>
         </div>
