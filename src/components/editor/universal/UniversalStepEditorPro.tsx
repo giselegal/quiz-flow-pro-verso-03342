@@ -132,9 +132,19 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
     }), []);
 
     const handleStepSelect = useCallback((step: number) => {
+        console.log('🎯 UniversalStepEditorPro: Selecionando step', step);
+        console.log('🔍 Estado antes da mudança:', { currentStep: state.currentStep, stepBlocks: Object.keys(state.stepBlocks || {}) });
+        
         actions.setCurrentStep(step);
         onStepChange?.(step.toString());
-    }, [actions, onStepChange]);
+        
+        // Garantir que a etapa seja carregada se não existir
+        if (actions.ensureStepLoaded) {
+            actions.ensureStepLoaded(step);
+        }
+        
+        console.log('✅ Step selecionado:', step);
+    }, [actions, onStepChange, state.currentStep, state.stepBlocks]);
 
     const handleUpdateBlock = useCallback((updates: any) => {
         if (selectedBlockId) {
