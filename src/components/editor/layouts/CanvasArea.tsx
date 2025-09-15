@@ -93,8 +93,8 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
   }, [actions, notification, state]);
 
   return (
-    <div className={cn('!w-full !min-w-0 !max-w-none flex-none flex flex-col bg-gray-900', className)}>
-      <div className="bg-gray-900 border-b border-gray-800/50">
+    <div className={cn('!w-full !min-w-0 !max-w-none flex-none flex flex-col bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100 dark:from-gray-900 dark:via-slate-900 dark:to-gray-900 overflow-hidden', className)}>
+      <div className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border-b border-gray-200/50 dark:border-gray-800/50">
         {/* Header Principal */}
         <div className="px-6 py-4">
           <div className="flex items-center justify-between">
@@ -398,18 +398,22 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
 
         {/* Canvas principal: edição (DnD) ou preview com renderização real de produção */}
         <div
-          className={cn('flex-1 min-w-0 p-2 overflow-y-auto overflow-x-hidden', isDragging && 'editor-drop-zone-active')}
+          className={cn(
+            'flex-1 min-w-0 overflow-y-auto overflow-x-hidden flex justify-center',
+            isDragging && 'editor-drop-zone-active',
+            previewDevice === 'mobile' && 'px-2',
+            previewDevice === 'tablet' && 'px-4', 
+            previewDevice === 'desktop' && 'px-6'
+          )}
           data-canvas-container
           ref={containerRef}
         >
-          <div
-            className={cn(
-              'w-full mx-auto px-4 flex justify-center',
-              previewDevice === 'mobile' && 'max-w-sm',
-              previewDevice === 'tablet' && 'max-w-2xl',
-              previewDevice === 'desktop' && 'max-w-3xl'
-            )}
-          >
+          <div className={cn(
+            'w-full',
+            previewDevice === 'mobile' && 'max-w-sm',
+            previewDevice === 'tablet' && 'max-w-2xl',
+            previewDevice === 'desktop' && 'max-w-4xl'
+          )}>
             {mode === 'preview' ? (
               <Suspense fallback={<LoadingFallback />}>
                 <LazyQuizRenderer
@@ -425,24 +429,16 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
               </Suspense>
             ) : (
               <Suspense fallback={<LoadingFallback />}>
-                <LazyQuizRenderer
-                  mode="editor"
-                  currentStepOverride={safeCurrentStep}
-                  onStepChange={(step: number) => actions.setCurrentStep(step)}
+                <CanvasDropZone
+                  blocks={currentStepData}
+                  selectedBlockId={selectedBlockId}
+                  onSelectBlock={actions.setSelectedBlockId}
+                  onUpdateBlock={(id: string, updates: any) => actions.updateBlock(currentStepKey, id, updates)}
+                  onDeleteBlock={(id: string) => actions.removeBlock(currentStepKey, id)}
+                  onDeselectBlocks={() => actions.setSelectedBlockId(null)}
                   className="h-full w-full"
-                  contentOverride={
-                    <CanvasDropZone
-                      blocks={currentStepData}
-                      selectedBlockId={selectedBlockId}
-                      onSelectBlock={actions.setSelectedBlockId}
-                      onUpdateBlock={(id: string, updates: any) => actions.updateBlock(currentStepKey, id, updates)}
-                      onDeleteBlock={(id: string) => actions.removeBlock(currentStepKey, id)}
-                      onDeselectBlocks={() => actions.setSelectedBlockId(null)}
-                      className="h-full w-full"
-                      isPreviewing={mode !== 'edit'}
-                      scopeId={safeCurrentStep}
-                    />
-                  }
+                  isPreviewing={mode !== 'edit'}
+                  scopeId={safeCurrentStep}
                 />
               </Suspense>
             )}

@@ -465,7 +465,7 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
       ref={setNodeRef}
       onClick={handleCanvasClick}
       className={cn(
-        'min-h-[300px] transition-all duration-200 p-4 overflow-visible',
+        'min-h-[300px] transition-all duration-200 p-2 overflow-visible',
         // Evitar qualquer bloqueio de eventos no canvas
         'z-0',
         isOver && !isPreviewing && 'bg-brand/5 ring-2 ring-brand/20 ring-dashed',
