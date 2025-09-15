@@ -113,9 +113,28 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                 onDragEnd={handleDragEnd}
             >
                 <div className={`universal-step-editor-pro min-h-screen w-full bg-gradient-to-br from-gray-950 via-slate-900 to-gray-950 overflow-hidden m-0 p-0 ${className} relative`}>
-                    {/* Desktop Layout: 4 colunas com CSS Grid */}
-                    <div className="hidden lg:block">
-                        <div className="editor-grid">
+                    {/* Desktop Layout: Header + 4 colunas com CSS Grid */}
+                    <div className="hidden lg:flex lg:flex-col h-screen w-full">
+                        {/* Header Superior - Acima de todas as colunas */}
+                        <div className="flex-shrink-0 border-b border-gray-800/50">
+                            <Suspense fallback={<div className="h-16 bg-gray-900 border-b border-gray-800/50" />}>
+                                <EditorHeader
+                                    mode={mode}
+                                    setMode={setMode}
+                                    safeCurrentStep={safeCurrentStep}
+                                    currentStepKey={currentStepKey}
+                                    currentStepData={currentStepData}
+                                    actions={actions as any}
+                                    state={state as any}
+                                    notification={notification as any}
+                                    renderIcon={renderIcon}
+                                    getStepAnalysis={getStepAnalysis}
+                                />
+                            </Suspense>
+                        </div>
+
+                        {/* Grid das 4 colunas */}
+                        <div className="flex-1 editor-grid">
                             {/* Sidebar de Steps */}
                             <div className="bg-gray-900 border-r border-gray-800/50 overflow-y-auto">
                                 <Suspense fallback={<div className="w-full bg-gray-900 border-r border-gray-800/50 h-full" />}>
