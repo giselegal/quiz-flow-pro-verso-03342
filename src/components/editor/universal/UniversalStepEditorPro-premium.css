@@ -2,6 +2,49 @@
    UniversalStepEditorPro - Premium Styles
    ================================ */
 
+/* ================================
+   UniversalStepEditorPro - Layout Fixes
+   ================================ */
+
+/* 4-Column Layout Container */
+.universal-step-editor-pro .desktop-layout-4cols {
+    display: flex;
+    height: calc(100vh - 80px);
+    width: 100%;
+}
+
+/* Sidebar styling improvements */
+.universal-step-editor-pro .sidebar-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.universal-step-editor-pro .sidebar-header {
+    padding: 1rem;
+    border-bottom: 1px solid rgba(107, 114, 128, 0.5);
+}
+
+.universal-step-editor-pro .sidebar-content {
+    flex: 1;
+    overflow-y: auto;
+}
+
+/* Canvas area improvements */
+.universal-step-editor-pro .canvas-container {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Mobile responsive fixes */
+@media (max-width: 1023px) {
+    .universal-step-editor-pro .desktop-layout-4cols {
+        display: none;
+    }
+}
+
 /* Variables for consistent theming */
 :root {
     --pro-primary: #3b82f6;

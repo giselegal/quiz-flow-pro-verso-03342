@@ -345,7 +345,12 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                 onDragStart={handleDragStart}
                 onDragEnd={handleDragEnd}
             >
-                <div className={`universal-step-editor-pro min-h-screen w-full bg-gradient-to-br from-gray-950 via-slate-900 to-gray-950 flex overflow-hidden ${className} relative`}>
+                <div className={`universal-step-editor-pro min-h-screen w-full bg-gradient-to-br from-gray-950 via-slate-900 to-gray-950 overflow-hidden ${className} relative`}>
+                
+                    {/* 🎯 LAYOUT 4-COLUNAS DESKTOP */}
+                    <div className="hidden lg:flex h-[calc(100vh-80px)] w-full">
+
+                        {/* 🎯 DESKTOP LAYOUT 4-COLUNAS DENTRO DO WRAPPER ACIMA */}
 
                     {/* 📱 MOBILE OVERLAYS - DESIGN PREMIUM */}
                     <div className="lg:hidden">
@@ -528,10 +533,9 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                         </div>
                     </div>
 
-                    {/* 💻 DESKTOP LAYOUT - Design Moderno */}
-                    {/* 1) Steps Sidebar - Glass Effect */}
-                    <div className="hidden lg:block w-56 xl:w-64 min-w-[14rem] flex-shrink-0">
-                        <div className="h-full bg-gray-900/80 backdrop-blur-xl border-r border-gray-800/50 shadow-2xl">
+                    {/* 🎯 DESKTOP LAYOUT 4-COLUNAS DENTRO DO WRAPPER ACIMA */}
+                        {/* 1) Steps Sidebar - 180px */}
+                        <div className="w-48 flex-shrink-0 bg-gray-900/95 backdrop-blur-xl border-r border-gray-800/50">
                             <div className="p-4 border-b border-gray-800/50">
                                 <h2 className="text-sm font-bold text-white/90 mb-1">NAVEGAÇÃO</h2>
                                 <p className="text-xs text-gray-400">Steps do funil</p>
@@ -549,15 +553,14 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                                     onSelectStep={handleStepSelect}
                                     getStepAnalysis={getStepAnalysis}
                                     renderIcon={renderIcon}
-                                    className="!w-full h-[calc(100vh-140px)] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800"
+                                    className="h-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800"
                                 />
                             </Suspense>
                         </div>
                     </div>
 
-                    {/* 2) Components Sidebar - Glass Effect */}
-                    <div className="hidden lg:block w-60 xl:w-72 min-w-[15rem] flex-shrink-0">
-                        <div className="h-full bg-gray-900/80 backdrop-blur-xl border-r border-gray-800/50 shadow-2xl">
+                        {/* 2) Components Sidebar - 220px */}
+                        <div className="w-56 flex-shrink-0 bg-gray-900/95 backdrop-blur-xl border-r border-gray-800/50">
                             <div className="p-4 border-b border-gray-800/50">
                                 <h2 className="text-sm font-bold text-white/90 mb-1">COMPONENTES</h2>
                                 <p className="text-xs text-gray-400">Arraste para o canvas</p>
@@ -570,16 +573,16 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                                 <ComponentsSidebar
                                     groupedComponents={groupedComponents}
                                     renderIcon={renderIcon}
-                                    className="!w-full h-[calc(100vh-140px)] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800"
+                                    className="h-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800"
                                 />
                             </Suspense>
                         </div>
                     </div>
 
-                    {/* 3) Canvas Area - Premium Design */}
-                    <div className="flex-1 min-w-0 flex flex-col">
-                        {/* Canvas Header Premium */}
-                        <div className="hidden lg:block bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border-b border-gray-200/50 dark:border-gray-800/50 px-6 py-4">
+                        {/* 3) Canvas Area - Dynamic */}
+                        <div className="flex-1 min-w-0 flex flex-col">
+                            {/* Canvas Header */}
+                            <div className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border-b border-gray-200/50 dark:border-gray-800/50 px-6 py-4">
                             <div className="flex items-center justify-between max-w-7xl mx-auto">
                                 <div className="flex items-center gap-3">
                                     <div className="p-2.5 rounded-xl bg-gradient-to-r from-blue-500 to-violet-500 text-white shadow-lg shadow-blue-500/25">
@@ -689,9 +692,8 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                         </div>
                     </div>
 
-                    {/* 4) Properties Panel - Premium Design */}
-                    <div className="hidden lg:block w-80 xl:w-96 min-w-[18rem] flex-shrink-0">
-                        <div className="h-full bg-gray-900/80 backdrop-blur-xl border-l border-gray-800/50 shadow-2xl">
+                        {/* 4) Properties Panel - 320px */}
+                        <div className="w-80 flex-shrink-0 bg-gray-900/95 backdrop-blur-xl border-l border-gray-800/50">
                             <div className="p-4 border-b border-gray-800/50">
                                 <h2 className="text-sm font-bold text-white/90 mb-1">PROPRIEDADES</h2>
                                 <p className="text-xs text-gray-400">Configure o elemento</p>
@@ -706,9 +708,24 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                                     stepData={currentStepData}
                                     stepNumber={safeCurrentStep}
                                     onSave={handleSave}
-                                    className="h-[calc(100vh-140px)] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800"
+                                    className="h-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800"
                                 />
                             </Suspense>
+                        </div>
+                    </div>
+                    
+                    {/* 🎯 FECHA O LAYOUT DESKTOP 4-COLUNAS */}
+                    </div>
+
+                    {/* 📱 LAYOUT MOBILE RESPONSIVO */}
+                    <div className="lg:hidden h-[calc(100vh-80px)] relative bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100 dark:from-gray-900 dark:via-slate-900 dark:to-gray-900">
+                        {/* Mobile content will be handled by the existing overlays above */}
+                        <div className="h-full flex items-center justify-center p-4">
+                            <div className="text-center">
+                                <div className="w-12 h-12 mx-auto mb-4 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                                <div className="text-sm font-semibold text-gray-900 dark:text-white mb-1">Editor Mobile</div>
+                                <p className="text-xs text-gray-600 dark:text-gray-400">Use os botões no canto inferior</p>
+                            </div>
                         </div>
                     </div>
                 </div>
