@@ -7,7 +7,7 @@
 
 // 🔁 Evitar ciclo circular: não reexportar, apenas definir stub
 export const ENHANCED_BLOCK_REGISTRY = {};
-export const getEnhancedBlockComponent = (type: string) => null;
+export const getEnhancedBlockComponent = (_type: string) => null;
 export const AVAILABLE_COMPONENTS = [];
 export const getRegistryStats = () => ({ total: 0, loaded: 0 });
 export const normalizeBlockProperties = (block: any) => block;

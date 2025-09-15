@@ -6,7 +6,6 @@ import { Search, Layout } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { AVAILABLE_COMPONENTS } from '@/components/editor/blocks/enhancedBlockRegistry';
 
 interface SmartComponentsPanelProps {
   onAddComponent?: (type: string) => void;
@@ -15,18 +14,18 @@ interface SmartComponentsPanelProps {
 const SmartComponentsPanel: React.FC<SmartComponentsPanelProps> = ({ onAddComponent }) => {
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Use real block definitions from registry
-  const allComponents = AVAILABLE_COMPONENTS.map(comp => ({
-    type: comp.type,
-    name: comp.label,
-    category: comp.category,
-    description: `Componente ${comp.label}`,
-  }));
+  // Use fallback components since registry is deprecated
+  const allComponents = [
+    { type: 'text', label: 'Texto', category: 'conteudo' },
+    { type: 'button', label: 'Botão', category: 'interacao' },
+    { type: 'image', label: 'Imagem', category: 'midia' },
+    { type: 'form', label: 'Formulário', category: 'formulario' }
+  ];
 
   // Filter based on search term
   const components = allComponents.filter(
     (comp: any) =>
-      comp.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      comp.label.toLowerCase().includes(searchTerm.toLowerCase()) ||
       comp.category.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -61,7 +60,7 @@ const SmartComponentsPanel: React.FC<SmartComponentsPanelProps> = ({ onAddCompon
               title={component.description}
             >
               <div className="flex flex-col items-start">
-                <span className="font-medium">{component.name}</span>
+                <span className="font-medium">{component.label}</span>
                 <span className="text-xs text-muted-foreground">{component.category}</span>
               </div>
             </Button>
