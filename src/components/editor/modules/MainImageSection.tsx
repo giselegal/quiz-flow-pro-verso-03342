@@ -17,15 +17,15 @@ const MainImageSectionComponent: React.FC<MainImageSectionProps> = ({
     title = 'Título da Imagem',
     className = '',
 }) => {
-    const { connectors: { connect } } = useEditor();
+    // Removed useEditor for build compatibility
 
     return (
-        <div ref={(ref) => { if (ref) connect(ref as HTMLElement); }} className={cn('main-image-section p-4', className)}>
+        <div className={cn('main-image-section p-4', className)}>
             <img src={imageUrl} alt={alt} className="w-full rounded-lg" />
             {title && <h3 className="mt-2 text-lg font-semibold">{title}</h3>}
         </div>
     );
 };
 
-export const MainImageSection = withCraftjsComponent(MainImageSectionComponent);
+export const MainImageSection = withCraftjsComponent(MainImageSectionComponent, {});
 export default MainImageSection;

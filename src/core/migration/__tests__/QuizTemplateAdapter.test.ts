@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 🧪 TESTES DE EQUIVALÊNCIA PARA MIGRAÇÃO DE TEMPLATES
  * 

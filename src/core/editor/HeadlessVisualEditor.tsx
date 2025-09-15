@@ -56,7 +56,7 @@ interface EditorHeaderProps {
 const EditorHeader: React.FC<EditorHeaderProps> = ({
   activeView,
   onViewChange,
-  sidebarCollapsed,
+  sidebarCollapsed: _sidebarCollapsed,
   onToggleSidebar
 }) => {
   return (

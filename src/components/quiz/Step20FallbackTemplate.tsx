@@ -15,7 +15,6 @@ import { getStyleConfig } from '@/config/styleConfig';
 import { getBestUserName } from '@/core/user/name';
 import { ResultDisplay } from '@/components/ui/ResultDisplay';
 import { ModularResultHeaderBlock } from '@/components/editor/modules';
-import { mapToFriendlyStyle } from '@/core/style/naming';
 
 interface Step20FallbackTemplateProps {
   className?: string;

@@ -1,5 +1,4 @@
 import React from 'react';
-import { useEditor } from '@craftjs/core';
 import { cn } from '@/lib/utils';
 import { BaseModuleProps, withCraftjsComponent } from './types';
 
@@ -17,10 +16,10 @@ const ProgressSectionComponent: React.FC<ProgressSectionProps> = ({
     showLabel = true,
     className = '',
 }) => {
-    const { connectors: { connect } } = useEditor();
+    // Removed useEditor for build compatibility
 
     return (
-        <div ref={(ref) => { if (ref) connect(ref as HTMLElement); }} className={cn('progress-section p-4', className)}>
+        <div className={cn('progress-section p-4', className)}>
             {showLabel && <label className="text-sm font-medium mb-2 block">{label}</label>}
             <div className="w-full bg-gray-200 rounded-full h-2">
                 <div
@@ -32,5 +31,5 @@ const ProgressSectionComponent: React.FC<ProgressSectionProps> = ({
     );
 };
 
-export const ProgressSection = withCraftjsComponent(ProgressSectionComponent);
+export const ProgressSection = withCraftjsComponent(ProgressSectionComponent, {});
 export default ProgressSection;

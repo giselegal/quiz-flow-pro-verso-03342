@@ -50,9 +50,9 @@ export interface UniversalStepEditorReturn extends UniversalStepEditorState, Uni
 
 export function useUniversalStepEditor(options: UseUniversalStepEditorOptions = {}): UniversalStepEditorReturn {
     const {
-        funnelId = 'quiz-21-steps-complete',
-        autoSave = true,
-        autoSaveInterval = 5000,
+        funnelId: _funnelId = 'quiz-21-steps-complete',
+        autoSave: _autoSave = true,
+        autoSaveInterval: _autoSaveInterval = 5000,
         onStepChange,
         onSave,
         onError

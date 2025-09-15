@@ -254,7 +254,7 @@ const GlobalPropertiesPanel: React.FC<GlobalPropertiesPanelProps> = ({
   );
 };
 
-const StylePropertiesPanel: React.FC<{ schema: any }> = ({ schema }) => {
+const StylePropertiesPanel: React.FC<{ schema: any }> = ({ schema: _schema }) => {
   return (
     <div className="space-y-6">
       <div>
@@ -289,7 +289,7 @@ const StylePropertiesPanel: React.FC<{ schema: any }> = ({ schema }) => {
   );
 };
 
-const PublishPropertiesPanel: React.FC<{ schema: any }> = ({ schema }) => {
+const PublishPropertiesPanel: React.FC<{ schema: any }> = ({ schema: _schema }) => {
   return (
     <div className="space-y-6">
       <div>
