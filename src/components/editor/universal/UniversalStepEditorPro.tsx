@@ -349,10 +349,10 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                 onDragEnd={handleDragEnd}
             >
                 <div className={`universal-step-editor-pro min-h-screen w-full bg-gradient-to-br from-gray-950 via-slate-900 to-gray-950 overflow-hidden ${className} relative`}>
-                
+
                     {/* 🎯 DESKTOP LAYOUT 4-COLUNAS */}
                     <div className="hidden lg:flex h-[calc(100vh-80px)] w-full">
-                        
+
                         {/* 1) Steps Sidebar - 180px */}
                         <div className="w-48 flex-shrink-0 bg-gray-900/95 backdrop-blur-xl border-r border-gray-800/50">
                             <div className="p-4 border-b border-gray-800/50">
@@ -427,8 +427,7 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
 
                             {/* Canvas Content */}
                             <div className="flex-1 bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100 dark:from-gray-900 dark:via-slate-900 dark:to-gray-900 overflow-hidden">
-                                <div className="h-full flex items-center justify-center p-6">
-                                    <div className="w-full max-w-6xl h-full">
+                                <div className="h-full w-full">
                                         <Suspense fallback={
                                             <div className="h-full flex items-center justify-center">
                                                 <div className="text-center">
@@ -457,7 +456,6 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                                                 isDragging={isDragging}
                                             />
                                         </Suspense>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -478,7 +476,7 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
 
                     {/* 📱 MOBILE LAYOUT */}
                     <div className="lg:hidden h-[calc(100vh-80px)] relative bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100 dark:from-gray-900 dark:via-slate-900 dark:to-gray-900">
-                        
+
                         {/* Mobile Navigation Overlay */}
                         <div className={`fixed inset-0 z-41 transition-all duration-300 ${mobileNavOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
                             <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setMobileNavOpen(false)}></div>

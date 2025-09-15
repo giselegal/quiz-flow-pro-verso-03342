@@ -93,7 +93,7 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
   }, [actions, notification, state]);
 
   return (
-    <div className={cn('!w-[55%] !min-w-0 !max-w-none flex-none flex flex-col bg-gray-900', className)}>
+    <div className={cn('!w-full !min-w-0 !max-w-none flex-none flex flex-col bg-gray-900', className)}>
       <div className="bg-gray-900 border-b border-gray-800/50">
         {/* Header Principal */}
         <div className="px-6 py-4">
