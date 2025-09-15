@@ -10,12 +10,12 @@
 import React, { Suspense, useMemo, useState, useCallback } from 'react';
 import { useNotification } from '@/components/ui/Notification';
 import { useEditor } from '@/components/editor/EditorProvider';
+import './UniversalStepEditorPro.css';
 import './UniversalStepEditorPro-premium.css';
 import { StepDndProvider } from '@/components/editor/dnd/StepDndProvider';
 import { useEditorDragAndDrop } from '@/hooks/editor/useEditorDragAndDrop';
 import { useGlobalHotkeys } from '@/hooks/editor/useGlobalHotkeys';
 import { useDisableAutoScroll } from '@/hooks/editor/useDisableAutoScroll';
-import { FunnelHeader } from '@/components/editor/FunnelHeader';
 import { getBlocksForStep } from '@/config/quizStepsComplete';
 import { logger } from '@/utils/debugLogger';
 import { availableComponents as AVAILABLE_COMPONENTS_CONFIG } from '@/components/editor/config/availableComponents';
@@ -252,13 +252,13 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                     <div className="flex items-center space-x-3">
                         {/* Viewport Controls */}
                         <div className="flex items-center bg-gray-800/50 rounded-lg p-1 border border-gray-700/50">
-                            {(['desktop', 'tablet', 'mobile'] as ViewportMode[]).map((viewport) => (
+                            {(['desktop', 'tablet', 'mobile'] as const).map((viewport) => (
                                 <button
                                     key={viewport}
-                                    onClick={() => setPreviewDevice(viewport)}
+                                    onClick={() => handleViewportModeChange(viewport as ViewportMode)}
                                     className={`px-3 py-2 rounded-md text-xs font-medium transition-all ${previewDevice === viewport
-                                        ? 'bg-blue-500 text-white shadow-lg'
-                                        : 'text-gray-400 hover:text-white hover:bg-gray-700/50'
+                                            ? 'bg-blue-500 text-white shadow-lg'
+                                            : 'text-gray-400 hover:text-white hover:bg-gray-700/50'
                                         }`}
                                 >
                                     {viewport === 'desktop' ? '🖥️' : viewport === 'tablet' ? '📱' : '📱'}
@@ -267,13 +267,13 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                             ))}
                         </div>
 
-                        {/* Mode Toggle */}
+                        {/* Mode Controls */}
                         <div className="flex items-center bg-gray-800/50 rounded-lg p-1 border border-gray-700/50">
                             <button
                                 onClick={() => setMode('edit')}
                                 className={`px-3 py-2 rounded-md text-xs font-medium transition-all ${mode === 'edit'
-                                    ? 'bg-purple-500 text-white shadow-lg'
-                                    : 'text-gray-400 hover:text-white hover:bg-gray-700/50'
+                                        ? 'bg-purple-500 text-white shadow-lg'
+                                        : 'text-gray-400 hover:text-white hover:bg-gray-700/50'
                                     }`}
                             >
                                 ✏️ Editar
@@ -281,8 +281,8 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                             <button
                                 onClick={() => setMode('preview')}
                                 className={`px-3 py-2 rounded-md text-xs font-medium transition-all ${mode === 'preview'
-                                    ? 'bg-purple-500 text-white shadow-lg'
-                                    : 'text-gray-400 hover:text-white hover:bg-gray-700/50'
+                                        ? 'bg-purple-500 text-white shadow-lg'
+                                        : 'text-gray-400 hover:text-white hover:bg-gray-700/50'
                                     }`}
                             >
                                 👁️ Preview
@@ -606,8 +606,8 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                                                 key={device}
                                                 onClick={() => handleViewportModeChange(device as any)}
                                                 className={`p-2 rounded-md text-xs font-medium transition-all ${previewDevice === device
-                                                        ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
-                                                        : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                                                    ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
+                                                    : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
                                                     }`}
                                             >
                                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -625,8 +625,8 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                                     <button
                                         onClick={() => setMode(mode === 'edit' ? 'preview' : 'edit')}
                                         className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${mode === 'preview'
-                                                ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg shadow-green-500/25'
-                                                : 'bg-gradient-to-r from-blue-500 to-violet-500 text-white shadow-lg shadow-blue-500/25'
+                                            ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg shadow-green-500/25'
+                                            : 'bg-gradient-to-r from-blue-500 to-violet-500 text-white shadow-lg shadow-blue-500/25'
                                             }`}
                                     >
                                         <div className="flex items-center gap-2">
