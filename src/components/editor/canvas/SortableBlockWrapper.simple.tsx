@@ -47,6 +47,17 @@ const SortableBlockWrapperBase: React.FC<SortableBlockWrapperProps> = ({
         normalizedProperties: normalizedBlock?.properties,
         scopeId
       });
+      
+      // DEBUG EXTRA: Teste manual do registry
+      if (normalizedBlock?.type) {
+        console.log('🧪 Teste manual do registry para:', normalizedBlock.type);
+        try {
+          const testComponent = getOptimizedBlockComponent(normalizedBlock.type);
+          console.log('🎯 Resultado do teste:', testComponent ? 'SUCESSO' : 'FALHOU');
+        } catch (error) {
+          console.error('❌ Erro no teste manual:', error);
+        }
+      }
     }
   }, [block, normalizedBlock, scopeId]);
 
