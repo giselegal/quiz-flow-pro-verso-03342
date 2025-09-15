@@ -1,0 +1,437 @@
+{
+    "template_name": "quiz21StepsComplete.ts",
+    "total_steps": 21,
+    "structure": {
+        "step-1": {
+            "name": "Coleta do Nome",
+            "blocks_count": 8,
+            "block_types": [
+                "quiz-intro-header",
+                "text",
+                "image",
+                "decorative-bar",
+                "form-container",
+                "form-input",
+                "button-inline"
+            ],
+            "block_ids": [
+                "step1-quiz-header",
+                "step1-title",
+                "step1-subtitle",
+                "step1-intro-image",
+                "step1-decorative-bar",
+                "step1-lead-form",
+                "intro-name-input",
+                "intro-cta-button"
+            ],
+            "purpose": "Coleta de nome do usuário e introdução ao quiz"
+        },
+        "step-2": {
+            "name": "Questão 1 - Tipo de Roupa Favorita",
+            "blocks_count": 10,
+            "block_types": [
+                "quiz-intro-header",
+                "options-grid"
+            ],
+            "block_ids": [
+                "step2-quiz-header",
+                "step2-question",
+                "natural_q1",
+                "classico_q1",
+                "contemporaneo_q1",
+                "elegante_q1",
+                "romantico_q1",
+                "sexy_q1",
+                "dramatico_q1",
+                "criativo_q1"
+            ],
+            "purpose": "Primeira questão pontuada do quiz de estilo"
+        },
+        "step-3": {
+            "name": "Questão 2 - Personalidade",
+            "blocks_count": 10,
+            "block_types": [
+                "quiz-intro-header",
+                "options-grid"
+            ],
+            "block_ids": [
+                "step3-quiz-header",
+                "step3-question",
+                "natural_q2",
+                "classico_q2",
+                "contemporaneo_q2",
+                "elegante_q2",
+                "romantico_q2",
+                "sexy_q2",
+                "dramatico_q2",
+                "criativo_q2"
+            ],
+            "purpose": "Segunda questão pontuada - perfil de personalidade"
+        },
+        "step-4": {
+            "name": "Questão 3 - Visual Identificação",
+            "blocks_count": 10,
+            "block_types": [
+                "quiz-intro-header",
+                "options-grid"
+            ],
+            "block_ids": [
+                "step4-quiz-header",
+                "step4-question",
+                "natural_q3",
+                "classico_q3",
+                "contemporaneo_q3",
+                "elegante_q3",
+                "romantico_q3",
+                "sexy_q3",
+                "dramatico_q3",
+                "criativo_q3"
+            ],
+            "purpose": "Terceira questão pontuada - identificação visual"
+        },
+        "step-5": {
+            "name": "Questão 4 - Detalhes Preferidos",
+            "blocks_count": 10,
+            "block_types": [
+                "quiz-intro-header",
+                "options-grid"
+            ],
+            "block_ids": [
+                "step5-quiz-header",
+                "step5-question",
+                "natural_q4",
+                "classico_q4",
+                "contemporaneo_q4",
+                "elegante_q4",
+                "romantico_q4",
+                "sexy_q4",
+                "dramatico_q4",
+                "criativo_q4"
+            ],
+            "purpose": "Quarta questão pontuada - preferências de detalhes"
+        },
+        "step-6": {
+            "name": "Questão 5 - Estampas",
+            "blocks_count": 10,
+            "block_types": [
+                "quiz-intro-header",
+                "options-grid"
+            ],
+            "block_ids": [
+                "step6-quiz-header",
+                "step6-question",
+                "natural_q5",
+                "classico_q5",
+                "contemporaneo_q5",
+                "elegante_q5",
+                "romantico_q5",
+                "sexy_q5",
+                "dramatico_q5",
+                "criativo_q5"
+            ],
+            "purpose": "Quinta questão pontuada - preferências de estampas"
+        },
+        "step-7": {
+            "name": "Questão 6 - Casacos",
+            "blocks_count": 10,
+            "block_types": [
+                "quiz-intro-header",
+                "options-grid"
+            ],
+            "block_ids": [
+                "step7-quiz-header",
+                "step7-question",
+                "natural_q6",
+                "classico_q6",
+                "contemporaneo_q6",
+                "elegante_q6",
+                "romantico_q6",
+                "sexy_q6",
+                "dramatico_q6",
+                "criativo_q6"
+            ],
+            "purpose": "Sexta questão pontuada - preferências de casacos"
+        },
+        "step-8": {
+            "name": "Questão 7 - Calças",
+            "blocks_count": 10,
+            "block_types": [
+                "quiz-intro-header",
+                "options-grid"
+            ],
+            "block_ids": [
+                "step8-quiz-header",
+                "step8-question",
+                "natural_q7",
+                "classico_q7",
+                "contemporaneo_q7",
+                "elegante_q7",
+                "romantico_q7",
+                "sexy_q7",
+                "dramatico_q7",
+                "criativo_q7"
+            ],
+            "purpose": "Sétima questão pontuada - preferências de calças"
+        },
+        "step-9": {
+            "name": "Questão 8 - Sapatos",
+            "blocks_count": 10,
+            "block_types": [
+                "quiz-intro-header",
+                "options-grid"
+            ],
+            "block_ids": [
+                "step9-quiz-header",
+                "step9-question",
+                "natural_q8",
+                "classico_q8",
+                "contemporaneo_q8",
+                "elegante_q8",
+                "romantico_q8",
+                "sexy_q8",
+                "dramatico_q8",
+                "criativo_q8"
+            ],
+            "purpose": "Oitava questão pontuada - preferências de sapatos"
+        },
+        "step-10": {
+            "name": "Questão 9 - Acessórios",
+            "blocks_count": 10,
+            "block_types": [
+                "quiz-intro-header",
+                "options-grid"
+            ],
+            "block_ids": [
+                "step10-quiz-header",
+                "step10-question",
+                "natural_q9",
+                "classico_q9",
+                "contemporaneo_q9",
+                "elegante_q9",
+                "romantico_q9",
+                "sexy_q9",
+                "dramatico_q9",
+                "criativo_q9"
+            ],
+            "purpose": "Nona questão pontuada - preferências de acessórios"
+        },
+        "step-11": {
+            "name": "Questão 10 - Tecidos",
+            "blocks_count": 10,
+            "block_types": [
+                "quiz-intro-header",
+                "options-grid"
+            ],
+            "block_ids": [
+                "step11-quiz-header",
+                "step11-question",
+                "natural_q10",
+                "classico_q10",
+                "contemporaneo_q10",
+                "elegante_q10",
+                "romantico_q10",
+                "sexy_q10",
+                "dramatico_q10",
+                "criativo_q10"
+            ],
+            "purpose": "Décima questão pontuada - preferências de tecidos"
+        },
+        "step-12": {
+            "name": "Transição para Questões Estratégicas",
+            "blocks_count": 10,
+            "block_types": [
+                "quiz-intro-header",
+                "text-inline",
+                "options-grid"
+            ],
+            "block_ids": [
+                "step12-header",
+                "step12-transition-title",
+                "step12-transition-text-1",
+                "step12-transition-text-2",
+                "step12-transition-callout",
+                "step12-options-grid",
+                "q12_opt1",
+                "q12_opt2",
+                "q12_opt3",
+                "q12_opt4"
+            ],
+            "purpose": "Página de transição com primeira questão estratégica"
+        },
+        "step-13": {
+            "name": "Questão Estratégica 1 - Autovisão",
+            "blocks_count": 5,
+            "block_types": [
+                "options-grid"
+            ],
+            "block_ids": [
+                "step13-question",
+                "q13_opt1",
+                "q13_opt2",
+                "q13_opt3",
+                "q13_opt4"
+            ],
+            "purpose": "Primeira questão estratégica - como se vê hoje"
+        },
+        "step-14": {
+            "name": "Questão Estratégica 2 - Desafios",
+            "blocks_count": 5,
+            "block_types": [
+                "options-grid"
+            ],
+            "block_ids": [
+                "step14-question",
+                "q14_opt1",
+                "q14_opt2",
+                "q14_opt3",
+                "q14_opt4"
+            ],
+            "purpose": "Segunda questão estratégica - principais desafios"
+        },
+        "step-15": {
+            "name": "Questão Estratégica 3 - Frequência do Problema",
+            "blocks_count": 5,
+            "block_types": [
+                "options-grid"
+            ],
+            "block_ids": [
+                "step15-question",
+                "q15_opt1",
+                "q15_opt2",
+                "q15_opt3",
+                "q15_opt4"
+            ],
+            "purpose": "Terceira questão estratégica - frequência do problema"
+        },
+        "step-16": {
+            "name": "Questão Estratégica 4 - Gastos com Roupas",
+            "blocks_count": 5,
+            "block_types": [
+                "options-grid"
+            ],
+            "block_ids": [
+                "step16-question",
+                "q16_opt1",
+                "q16_opt2",
+                "q16_opt3",
+                "q16_opt4"
+            ],
+            "purpose": "Quarta questão estratégica - reflexão sobre gastos"
+        },
+        "step-17": {
+            "name": "Questão Estratégica 5 - Valor do Conteúdo",
+            "blocks_count": 5,
+            "block_types": [
+                "options-grid"
+            ],
+            "block_ids": [
+                "step17-question",
+                "q17_opt1",
+                "q17_opt2",
+                "q17_opt3",
+                "q17_opt4"
+            ],
+            "purpose": "Quinta questão estratégica - disposição a pagar"
+        },
+        "step-18": {
+            "name": "Questão Estratégica 6 - Objetivos",
+            "blocks_count": 6,
+            "block_types": [
+                "options-grid"
+            ],
+            "block_ids": [
+                "step18-question",
+                "q18_opt1",
+                "q18_opt2",
+                "q18_opt3",
+                "q18_opt4",
+                "q18_opt5"
+            ],
+            "purpose": "Sexta questão estratégica - objetivos principais"
+        },
+        "step-19": {
+            "name": "Transição para Resultado",
+            "blocks_count": 8,
+            "block_types": [
+                "connected-template-wrapper",
+                "form-container",
+                "text-inline",
+                "button-inline"
+            ],
+            "block_ids": [
+                "step19-wrapper",
+                "step19-overlay",
+                "step19-card",
+                "step19-title",
+                "step19-p1",
+                "step19-p2",
+                "step19-p3",
+                "step19-cta"
+            ],
+            "purpose": "Página de transição para o resultado final"
+        },
+        "step-20": {
+            "name": "Resultado Personalizado + Oferta",
+            "blocks_count": 12,
+            "block_types": [
+                "result-header-inline",
+                "urgency-timer-inline",
+                "style-card-inline",
+                "secondary-styles",
+                "before-after-inline",
+                "bonus",
+                "testimonials",
+                "value-anchoring",
+                "secure-purchase",
+                "guarantee",
+                "mentor-section-inline",
+                "button-inline"
+            ],
+            "block_ids": [
+                "step20-result-header",
+                "step20-urgency-top",
+                "step20-style-card",
+                "step20-secondary-styles",
+                "step20-before-after",
+                "step20-bonuses",
+                "step20-testimonials",
+                "step20-value-anchoring",
+                "step20-secure-purchase",
+                "step20-guarantee",
+                "step20-mentor",
+                "step20-cta"
+            ],
+            "purpose": "Página de resultado personalizada com oferta completa"
+        },
+        "step-21": {
+            "name": "Finalização/Checkout",
+            "blocks_count": 0,
+            "block_types": [],
+            "block_ids": [],
+            "purpose": "Página final de checkout (não definida no template atual)"
+        }
+    },
+    "quiz_logic": {
+        "scoring_steps": "Steps 2-11 (questões pontuadas com 8 estilos cada)",
+        "strategic_steps": "Steps 13-18 (questões de qualificação de lead)",
+        "transition_steps": "Steps 12 e 19",
+        "result_step": "Step 20",
+        "styles": [
+            "natural",
+            "classico",
+            "contemporaneo",
+            "elegante",
+            "romantico",
+            "sexy",
+            "dramatico",
+            "criativo"
+        ],
+        "questions_per_style": 10,
+        "total_scoring_questions": 80
+    },
+    "template_issues_found": {
+        "step_21_empty": "Step 21 não tem blocos definidos",
+        "ids_consistency": "Alguns IDs misturam questões e opções no mesmo array",
+        "block_nesting": "Algumas estruturas têm blocos dentro de properties.children"
+    }
+}

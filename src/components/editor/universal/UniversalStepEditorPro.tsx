@@ -44,43 +44,14 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
 
     // Forçar carregamento de todas as etapas ao montar o componente
     React.useEffect(() => {
-        // Primeiro, vamos verificar o que está no template
-        import('@/templates/quiz21StepsComplete').then(template => {
-            console.log('🔍 Template importado:', {
-                hasTemplate: !!template.QUIZ_STYLE_21_STEPS_TEMPLATE,
-                keys: Object.keys(template.QUIZ_STYLE_21_STEPS_TEMPLATE || {}),
-                step1: template.QUIZ_STYLE_21_STEPS_TEMPLATE?.['step-1']?.length,
-                step2: template.QUIZ_STYLE_21_STEPS_TEMPLATE?.['step-2']?.length,
-            });
-        });
-        
-        // Usar setTimeout para permitir que o EditorProvider inicialize primeiro
-        const timer = setTimeout(() => {
-            // Primeira tentativa: forçar carregamento do template
-            if (actions.loadDefaultTemplate) {
-                console.log('🔄 Forçando carregamento do template...');
-                actions.loadDefaultTemplate();
+        // Log simples para verificar se temos todos os steps carregados
+        if (process.env.NODE_ENV === 'development') {
+            const stepCount = state.stepBlocks ? Object.keys(state.stepBlocks).length : 0;
+            if (stepCount > 0) {
+                console.log(`✅ Editor initialized with ${stepCount} steps`);
             }
-            
-            // Segunda tentativa: garantir que todas as etapas estejam carregadas
-            if (actions.ensureStepLoaded) {
-                console.log('🔄 Carregando todas as 21 etapas...');
-                for (let i = 1; i <= 21; i++) {
-                    actions.ensureStepLoaded(i);
-                }
-            }
-            
-            // Terceira tentativa: após um pouco mais de tempo, verificar novamente
-            setTimeout(() => {
-                console.log('🔍 Estado após carregamento:', {
-                    stepBlocks: Object.keys(state.stepBlocks || {}),
-                    totalBlocks: Object.values(state.stepBlocks || {}).reduce((acc: number, blocks: any) => acc + (Array.isArray(blocks) ? blocks.length : 0), 0)
-                });
-            }, 500);
-        }, 100);
-
-        return () => clearTimeout(timer);
-    }, [actions, state.stepBlocks]);    // Valores calculados
+        }
+    }, [state.stepBlocks]);    // Valores calculados
     const NotificationContainer = (notification as any)?.NotificationContainer ?? null;
     const safeCurrentStep = stepNumber || state.currentStep || 1;
     const currentStepKey = `step-${safeCurrentStep}`;

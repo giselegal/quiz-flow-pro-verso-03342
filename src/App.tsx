@@ -258,6 +258,26 @@ function App() {
                 );
               }} />
 
+              {/* 🔍 DEBUG: Página de debug do template */}
+              <Route path="/debug-template" component={() => {
+                const TemplateDebugPage = lazy(() => import('./components/debug/TemplateDebugPage'));
+                return (
+                  <Suspense fallback={<LoadingFallback />}>
+                    <TemplateDebugPage />
+                  </Suspense>
+                );
+              }} />
+
+              {/* 🔍 DEBUG: Teste isolado do StepSidebar */}
+              <Route path="/debug-stepsidebar" component={() => {
+                const StepSidebarTest = lazy(() => import('./components/debug/StepSidebarTest'));
+                return (
+                  <Suspense fallback={<LoadingFallback />}>
+                    <StepSidebarTest />
+                  </Suspense>
+                );
+              }} />
+
               {/* 🎯 NOVO: Demo UniversalStepEditorPro */}
               <Route path="/demo-editor-pro" component={() =>
                 <Suspense fallback={<LoadingFallback />}>

@@ -25,11 +25,11 @@ const StepSidebarComponent: React.FC<StepSidebarProps> = ({
   return (
     <div
       className={cn(
-        'w-[13rem] min-w-[13rem] max-w-[13rem] flex-shrink-0 h-screen sticky top-0 bg-gray-900 border-r border-gray-800/50 flex flex-col',
+        'w-[13rem] min-w-[13rem] max-w-[13rem] flex-shrink-0 h-full bg-gray-900 border-r border-gray-800/50 flex flex-col',
         className
       )}
     >
-      <div className="p-4 border-b border-gray-800/50">
+      <div className="p-4 border-b border-gray-800/50 flex-shrink-0">
         <h3 className="font-medium text-sm text-gray-200">Etapas do Quiz</h3>
         <p className="text-xs text-gray-500 mt-1">{totalSteps} steps configured</p>
       </div>
