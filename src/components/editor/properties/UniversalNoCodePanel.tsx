@@ -554,7 +554,7 @@ const PropertyEditor: React.FC<{
  * Obtém informações da categoria
  */
 function getCategoryInfo(category: string) {
-  const categoryMap = {
+  const categoryMap: Record<string, { label: string; icon: any }> = {
     content: { label: 'Conteúdo', icon: Info },
     style: { label: 'Estilo', icon: Paintbrush },
     layout: { label: 'Layout', icon: Layout },
