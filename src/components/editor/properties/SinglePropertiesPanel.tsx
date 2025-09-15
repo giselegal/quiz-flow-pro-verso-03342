@@ -30,7 +30,7 @@ const SizeSlider = lazy(() => import('@/components/visual-controls/SizeSlider'))
 const HeaderPropertyEditor = lazy(() => import('./editors/HeaderPropertyEditor').then(m => ({ default: m.HeaderPropertyEditor })));
 const QuestionPropertyEditor = lazy(() => import('./editors/QuestionPropertyEditor').then(m => ({ default: m.QuestionPropertyEditor })));
 const ButtonPropertyEditor = lazy(() => import('./editors/ButtonPropertyEditor').then(m => ({ default: m.ButtonPropertyEditor })));
-const TextPropertyEditor = lazy(() => import('./editors/TextPropertyEditor').then(m => ({ default: m.TextPropertyEditor })));
+const TextPropertyEditor = lazy(() => import('./editors/TextPropertyEditor'));
 const OptionsGridPropertyEditor = lazy(() => import('./editors/OptionsGridPropertyEditor').then(m => ({ default: m.OptionsGridPropertyEditor })));
 const OptionsPropertyEditor = lazy(() => import('./editors/OptionsPropertyEditor').then(m => ({ default: m.OptionsPropertyEditor })));
 const ImagePropertyEditor = lazy(() => import('./editors/ImagePropertyEditor'));

@@ -367,3 +367,5 @@ export const TextPropertyEditor: React.FC<TextPropertyEditorProps> = ({
     </Card>
   );
 };
+
+export default TextPropertyEditor;
