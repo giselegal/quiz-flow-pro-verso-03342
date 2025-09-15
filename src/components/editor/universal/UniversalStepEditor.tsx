@@ -2085,4 +2085,5 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
     );
 };
 
+export { UniversalStepEditor };
 export default UniversalStepEditor;

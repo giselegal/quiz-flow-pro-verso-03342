@@ -289,7 +289,7 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
                 <React.Suspense
                   fallback={<div className="animate-pulse bg-gray-200 h-16 rounded" />}
                 >
-                  <Component {...componentProps} />
+                  {React.createElement(Component, componentProps)}
                 </React.Suspense>
               );
             }
@@ -297,7 +297,7 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
             // Modo editor normal
             return (
               <React.Suspense fallback={<div className="animate-pulse bg-gray-200 h-16 rounded" />}>
-                <Component {...componentProps} />
+                {React.createElement(Component, componentProps)}
               </React.Suspense>
             );
           })()}

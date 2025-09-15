@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { ModularResultEditor, ModularResultHeaderBlock } from '@/components/editor/modules';
+import { ModularResultHeaderBlock } from '@/components/editor/modules';
 import { useQuizResult } from '@/hooks/useQuizResult';
 import { getBestUserName } from '@/core/user/name';
 import { mapToFriendlyStyle } from '@/core/style/naming';

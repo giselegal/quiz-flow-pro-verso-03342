@@ -94,14 +94,12 @@ const ConnectedTemplateWrapperBlock: React.FC<ConnectedTemplateWrapperBlockProps
                 order: index,
               };
 
-              return (
-                <Component
-                  key={childBlock.id}
-                  block={childBlock}
-                  properties={childBlock.properties as any}
-                  {...childBlock.properties}
-                />
-              );
+              return React.createElement(Component, {
+                key: childBlock.id,
+                block: childBlock,
+                properties: childBlock.properties as any,
+                ...childBlock.properties
+              });
             })
             : // Ou, se nenhum filho foi declarado nas propriedades, renderiza os filhos React passados
             children}
@@ -122,14 +120,12 @@ const ConnectedTemplateWrapperBlock: React.FC<ConnectedTemplateWrapperBlockProps
                 order: index,
               };
 
-              return (
-                <Component
-                  key={childBlock.id}
-                  block={childBlock}
-                  properties={childBlock.properties as any}
-                  {...childBlock.properties}
-                />
-              );
+              return React.createElement(Component, {
+                key: childBlock.id,
+                block: childBlock,
+                properties: childBlock.properties as any,
+                ...childBlock.properties
+              });
             })
             : children}
         </div>
