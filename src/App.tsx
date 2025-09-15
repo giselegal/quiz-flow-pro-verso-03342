@@ -47,6 +47,9 @@ const TestDataPanel = lazy(() => import('./components/TestDataPanel'));
 // 🎯 NOVO: Editor Híbrido UniversalStepEditorPro
 const UniversalStepEditorProDemo = lazy(() => import('./components/demos/UniversalStepEditorProDemo'));
 
+// Teste simples do navegador
+const SimpleEditorTest = lazy(() => import('./components/test/SimpleEditorTest'));
+
 // Loading component
 const PageLoading = () => (
   <div className="min-h-screen flex items-center justify-center">
@@ -106,6 +109,13 @@ function App() {
               <Route path="/editor-pro" component={() =>
                 <Suspense fallback={<LoadingFallback />}>
                   <UniversalStepEditorProDemo />
+                </Suspense>
+              } />
+
+              {/* Teste simples do navegador */}
+              <Route path="/test-simple" component={() =>
+                <Suspense fallback={<LoadingFallback />}>
+                  <SimpleEditorTest />
                 </Suspense>
               } />
 

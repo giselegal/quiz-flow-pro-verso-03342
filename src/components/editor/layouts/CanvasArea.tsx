@@ -2,7 +2,6 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import CanvasDropZone from '@/components/editor/canvas/CanvasDropZone.simple';
 import type { Block } from '@/types/editor';
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { useCanvasContainerStyles } from '@/hooks/useCanvasContainerStyles';
 
 const LazyQuizRenderer = React.lazy(() =>
