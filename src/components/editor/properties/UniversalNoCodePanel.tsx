@@ -154,6 +154,16 @@ export const UniversalNoCodePanel: React.FC<UniversalNoCodePanelProps> = ({
     });
   }, [selectedCategory, availableCategories, filteredProperties]);
 
+  // Debug para renderização das tabs
+  React.useEffect(() => {
+    console.log('🎮 Renderizando Tabs:', { 
+      selectedCategory, 
+      availableCategories, 
+      filteredCategories: Object.keys(filteredProperties),
+      tabsCount: availableCategories.length 
+    });
+  }, [selectedCategory, availableCategories, filteredProperties]);
+
   // Estatísticas do bloco
   const blockStats = useMemo(() => {
     const totalProps = extractedProperties.length;
@@ -198,9 +208,9 @@ export const UniversalNoCodePanel: React.FC<UniversalNoCodePanelProps> = ({
 
   // Handler para mudança de categoria com debug
   const handleCategoryChange = useCallback((newCategory: string) => {
-    console.log('🔄 Mudando categoria:', { from: selectedCategory, to: newCategory });
+    console.log('🔄 Mudando categoria:', { from: selectedCategory, to: newCategory, availableCategories });
     setSelectedCategory(newCategory);
-  }, [selectedCategory]);
+  }, [selectedCategory, availableCategories]);
 
   if (!selectedBlock) {
     return (
