@@ -113,11 +113,12 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                 onDragEnd={handleDragEnd}
             >
                 <div className={`universal-step-editor-pro min-h-screen w-full bg-gradient-to-br from-gray-950 via-slate-900 to-gray-950 overflow-hidden m-0 p-0 ${className} relative`}>
-                    {/* Desktop Layout: 4 colunas */}
-                    <div className="hidden lg:flex h-screen w-full">
+                    {/* Desktop Layout: 4 colunas com CSS Grid */}
+                    <div className="hidden lg:block">
+                        <div className="editor-grid">
                         {/* Sidebar de Steps */}
-                        <div className="w-52 flex-shrink-0">
-                            <Suspense fallback={<div className="w-52 bg-gray-900 border-r border-gray-800/50 h-full" />}>
+                        <div className="bg-gray-900 border-r border-gray-800/50 overflow-y-auto">
+                            <Suspense fallback={<div className="w-full bg-gray-900 border-r border-gray-800/50 h-full" />}>
                                 <StepSidebar
                                     currentStep={safeCurrentStep}
                                     stepHasBlocks={{}}
@@ -129,8 +130,8 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                         </div>
 
                         {/* Sidebar de Componentes */}
-                        <div className="w-28 flex-shrink-0">
-                            <Suspense fallback={<div className="w-28 bg-gray-900 border-r border-gray-800/50 h-full" />}>
+                        <div className="bg-gray-900 border-r border-gray-800/50 overflow-y-auto">
+                            <Suspense fallback={<div className="w-full bg-gray-900 border-r border-gray-800/50 h-full" />}>
                                 <ComponentsSidebar
                                     groupedComponents={groupedComponents}
                                     renderIcon={renderIcon}
@@ -139,7 +140,7 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                         </div>
 
                         {/* Área do Canvas Central */}
-                        <div className="flex-1 min-w-0 flex flex-col" ref={canvasRef}>
+                        <div className="flex flex-col bg-gray-100 dark:bg-gray-800 overflow-hidden" ref={canvasRef}>
                             <Suspense fallback={<div className="h-full flex items-center justify-center">Carregando Canvas...</div>}>
                                 <EditorHeader
                                     mode={mode}
@@ -168,8 +169,8 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                         </div>
 
                         {/* Painel de Propriedades */}
-                        <div className="w-80 flex-shrink-0">
-                            <Suspense fallback={<div className="w-80 bg-gray-900 border-l border-gray-800/50 h-full" />}>
+                        <div className="bg-gray-900/80 backdrop-blur-sm border-l border-gray-700/50 overflow-y-auto">
+                            <Suspense fallback={<div className="w-full bg-gray-900 border-l border-gray-800/50 h-full" />}>
                                 <PropertiesColumn
                                     selectedBlock={selectedBlock}
                                     onUpdate={handleUpdateBlock}
@@ -179,6 +180,7 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                             </Suspense>
                         </div>
                     </div>
+                </div>
 
                     {/* Mobile Layout */}
                     <div className="lg:hidden h-screen flex flex-col bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100 dark:from-gray-900 dark:via-slate-900 dark:to-gray-900">
