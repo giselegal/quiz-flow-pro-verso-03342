@@ -67,7 +67,7 @@ export const UniversalNoCodePanel: React.FC<UniversalNoCodePanelProps> = ({
   onReset
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<string>('content');
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [collapsedCategories, setCollapsedCategories] = useState<Set<string>>(new Set());
 
@@ -100,6 +100,23 @@ export const UniversalNoCodePanel: React.FC<UniversalNoCodePanelProps> = ({
     };
   }, [selectedBlock]);
 
+  // Categorias disponíveis e seleção inicial automática
+  const availableCategories = useMemo(() => {
+    const categories = Object.keys(categorizedProperties);
+    console.log('📂 Categorias disponíveis:', categories);
+    return categories;
+  }, [categorizedProperties]);
+
+  // Auto selecionar primeira categoria disponível se necessário
+  React.useEffect(() => {
+    if (availableCategories.length > 0 && (!selectedCategory || !availableCategories.includes(selectedCategory))) {
+      const preferredOrder = ['content', 'style', 'layout', 'behavior', 'validation', 'accessibility', 'advanced', 'metadata'];
+      const firstAvailable = preferredOrder.find(cat => availableCategories.includes(cat)) || availableCategories[0];
+      console.log('🎯 Auto-selecionando categoria:', firstAvailable);
+      setSelectedCategory(firstAvailable);
+    }
+  }, [availableCategories, selectedCategory]);
+
   // Filtrar propriedades baseado na busca
   const filteredProperties = useMemo(() => {
     const filtered: CategorizedProperties = {};
@@ -120,8 +137,22 @@ export const UniversalNoCodePanel: React.FC<UniversalNoCodePanelProps> = ({
       }
     });
 
+    console.log('🔍 Propriedades filtradas por categoria:', Object.keys(filtered).map(cat => ({
+      category: cat,
+      count: filtered[cat].length
+    })));
+
     return filtered;
   }, [categorizedProperties, searchQuery, showAdvanced]);
+
+  // Debug para mudanças de categoria
+  React.useEffect(() => {
+    console.log('📋 Categoria selecionada mudou:', {
+      selectedCategory,
+      availableCategories,
+      hasPropertiesInCategory: !!(filteredProperties[selectedCategory] && filteredProperties[selectedCategory].length > 0)
+    });
+  }, [selectedCategory, availableCategories, filteredProperties]);
 
   // Estatísticas do bloco
   const blockStats = useMemo(() => {
@@ -164,6 +195,12 @@ export const UniversalNoCodePanel: React.FC<UniversalNoCodePanelProps> = ({
     }
     setCollapsedCategories(newCollapsed);
   }, [collapsedCategories]);
+
+  // Handler para mudança de categoria com debug
+  const handleCategoryChange = useCallback((newCategory: string) => {
+    console.log('🔄 Mudando categoria:', { from: selectedCategory, to: newCategory });
+    setSelectedCategory(newCategory);
+  }, [selectedCategory]);
 
   if (!selectedBlock) {
     return (
@@ -265,34 +302,23 @@ export const UniversalNoCodePanel: React.FC<UniversalNoCodePanelProps> = ({
       </div>
 
       {/* Tabs por categoria */}
-      <Tabs value={selectedCategory} onValueChange={setSelectedCategory} className="flex-1 flex flex-col">
-        <TabsList className="grid grid-cols-5 w-full">
-          <TabsTrigger value="content" className="text-xs">
-            <Info className="w-3 h-3 mr-1" />
-            Conteúdo
-          </TabsTrigger>
-          <TabsTrigger value="style" className="text-xs">
-            <Paintbrush className="w-3 h-3 mr-1" />
-            Estilo
-          </TabsTrigger>
-          <TabsTrigger value="layout" className="text-xs">
-            <Layout className="w-3 h-3 mr-1" />
-            Layout
-          </TabsTrigger>
-          <TabsTrigger value="behavior" className="text-xs">
-            <Zap className="w-3 h-3 mr-1" />
-            Ação
-          </TabsTrigger>
-          <TabsTrigger value="validation" className="text-xs">
-            <Shield className="w-3 h-3 mr-1" />
-            Validação
-          </TabsTrigger>
+      <Tabs value={selectedCategory} onValueChange={handleCategoryChange} className="flex-1 flex flex-col">
+        <TabsList className="w-full" style={{ display: 'grid', gridTemplateColumns: `repeat(${Math.min(availableCategories.length, 6)}, 1fr)` }}>
+          {availableCategories.map(categoryKey => {
+            const categoryInfo = getCategoryInfo(categoryKey);
+            return (
+              <TabsTrigger key={categoryKey} value={categoryKey} className="text-xs">
+                <categoryInfo.icon className="w-3 h-3 mr-1" />
+                {categoryInfo.label}
+              </TabsTrigger>
+            );
+          })}
         </TabsList>
 
         {/* Conteúdo das tabs com preview sidebar */}
         <div className="flex flex-1 min-h-0">
           <div className="flex-1 min-w-0">
-            {['content', 'style', 'layout', 'behavior', 'validation'].map(categoryKey => (
+            {availableCategories.map(categoryKey => (
               <TabsContent key={categoryKey} value={categoryKey} className="h-full m-0">
                 <ScrollArea className="h-full">
                   <div className="p-4 space-y-4">
