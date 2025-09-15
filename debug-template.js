@@ -10,9 +10,9 @@ console.log('📦 Total steps no template:', Object.keys(QUIZ_STYLE_21_STEPS_TEM
 
 // 2. Verificar primeiros steps
 for (let i = 1; i <= 5; i++) {
-  const key = `step-${i}`;
-  const blocks = QUIZ_STYLE_21_STEPS_TEMPLATE[key];
-  console.log(`📦 Step ${i} (${key}):`, blocks ? blocks.length : 'não encontrado', 'blocks');
+    const key = `step-${i}`;
+    const blocks = QUIZ_STYLE_21_STEPS_TEMPLATE[key];
+    console.log(`📦 Step ${i} (${key}):`, blocks ? blocks.length : 'não encontrado', 'blocks');
 }
 
 // 3. Verificar normalização
@@ -22,9 +22,9 @@ console.log('🔄 Total steps normalizado:', Object.keys(normalized).length);
 
 // 4. Verificar alguns steps normalizados
 for (let i = 1; i <= 5; i++) {
-  const key = `step-${i}`;
-  const blocks = normalized[key];
-  console.log(`🔄 Normalized Step ${i} (${key}):`, blocks ? blocks.length : 'não encontrado', 'blocks');
+    const key = `step-${i}`;
+    const blocks = normalized[key];
+    console.log(`🔄 Normalized Step ${i} (${key}):`, blocks ? blocks.length : 'não encontrado', 'blocks');
 }
 
 console.log('✅ Debug concluído');

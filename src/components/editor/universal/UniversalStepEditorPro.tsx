@@ -44,14 +44,16 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
 
     // Forçar carregamento de todas as etapas ao montar o componente
     React.useEffect(() => {
-        // Log simples para verificar se temos todos os steps carregados
-        if (process.env.NODE_ENV === 'development') {
-            const stepCount = state.stepBlocks ? Object.keys(state.stepBlocks).length : 0;
-            if (stepCount > 0) {
-                console.log(`✅ Editor initialized with ${stepCount} steps`);
-            }
+        const stepCount = state.stepBlocks ? Object.keys(state.stepBlocks).length : 0;
+        
+        // Se não temos steps carregados, forçar carregamento do template
+        if (stepCount === 0) {
+            console.log('⚠️  Nenhum step carregado, forçando carregamento do template...');
+            actions.loadDefaultTemplate();
+        } else {
+            console.log(`✅ Editor initialized with ${stepCount} steps`);
         }
-    }, [state.stepBlocks]);    // Valores calculados
+    }, [state.stepBlocks, actions]);    // Valores calculados
     const NotificationContainer = (notification as any)?.NotificationContainer ?? null;
     const safeCurrentStep = stepNumber || state.currentStep || 1;
     const currentStepKey = `step-${safeCurrentStep}`;
