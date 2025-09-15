@@ -1,321 +1,308 @@
-import { useContainerProperties } from '@/hooks/useContainerProperties';
+/**
+ * 🎨 UNIVERSAL BLOCK RENDERER v3.0 - CLEAN ARCHITECTURE
+ * 
+ * Renderer universal de blocos otimizado com Clean Architecture
+ * Performance máxima e flexibilidade total
+ */
+
+import React, { memo, useMemo, useCallback } from 'react';
 import { cn } from '@/lib/utils';
-import { Block } from '@/types/editor';
-import { getOptimizedBlockComponent, normalizeBlockProps } from '@/utils/optimizedRegistry';
-import React from 'react';
-import { ProductionBlockBoundary, SimpleBlockFallback } from './ProductionBlockBoundary';
+
+// 🎯 INTERFACES (EXPORTADAS)
+export interface Block {
+  id: string;
+  type: string;
+  properties?: Record<string, any>;
+}
 
 export interface UniversalBlockRendererProps {
   block: Block;
   isSelected?: boolean;
-  onClick?: () => void;
-  onPropertyChange?: (key: string, value: any) => void;
-  mode?: 'production' | 'preview' | 'editor';
-  // ✅ Novas props para interação (do BlockRenderer.tsx)
-  isPreviewMode?: boolean;
-  stepNumber?: number;
-  userResponses?: Record<string, any>;
-  setUserResponses?: (responses: Record<string, any>) => void;
-  // ✅ Nova prop para performance (do OptimizedBlockRenderer.tsx)
   isPreviewing?: boolean;
+  mode?: 'production' | 'preview' | 'editor';
+  onSelect?: (blockId: string) => void;
+  onClick?: () => void; // Legacy compatibility
+  onUpdate?: (blockId: string, updates: Partial<Block>) => void;
+  onDelete?: (blockId: string) => void;
+  onPropertyChange?: (key: string, value: any) => void; // Legacy compatibility
+  className?: string;
+  style?: React.CSSProperties;
 }
 
+// 🎨 COMPONENTES DE BLOCOS BÁSICOS
+const TextBlock: React.FC<{ block: Block; isSelected?: boolean; onUpdate?: (updates: any) => void }> = memo(({ 
+  block, 
+  isSelected, 
+  onUpdate 
+}) => {
+  const text = block.properties?.text || 'Digite seu texto aqui...';
+  
+  const handleTextChange = useCallback((e: React.ChangeEvent<HTMLDivElement>) => {
+    onUpdate?.({ properties: { ...block.properties, text: e.currentTarget.textContent } });
+  }, [onUpdate, block.properties]);
+
+  return (
+    <div
+      contentEditable={!isSelected ? false : true}
+      onBlur={handleTextChange}
+      className={cn(
+        'min-h-[2rem] p-2 rounded border-2 transition-all',
+        isSelected 
+          ? 'border-primary bg-primary/5' 
+          : 'border-transparent hover:border-muted-foreground/20'
+      )}
+      suppressContentEditableWarning
+    >
+      {text}
+    </div>
+  );
+});
+
+const ButtonBlock: React.FC<{ block: Block; isSelected?: boolean; onUpdate?: (updates: any) => void }> = memo(({ 
+  block, 
+  isSelected
+}) => {
+  const text = block.properties?.text || 'Botão';
+  const url = block.properties?.url || '#';
+  
+  return (
+    <div className={cn(
+      'inline-block p-2 rounded border-2 transition-all',
+      isSelected 
+        ? 'border-primary bg-primary/5' 
+        : 'border-transparent hover:border-muted-foreground/20'
+    )}>
+      <button 
+        className="px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-primary/90 transition-colors"
+        onClick={(e) => {
+          e.preventDefault();
+          if (url && url !== '#') {
+            window.open(url, '_blank');
+          }
+        }}
+      >
+        {text}
+      </button>
+    </div>
+  );
+});
+
+const ImageBlock: React.FC<{ block: Block; isSelected?: boolean }> = memo(({ 
+  block, 
+  isSelected 
+}) => {
+  const src = block.properties?.src || 'https://via.placeholder.com/300x200';
+  const alt = block.properties?.alt || 'Imagem';
+  
+  return (
+    <div className={cn(
+      'inline-block p-2 rounded border-2 transition-all',
+      isSelected 
+        ? 'border-primary bg-primary/5' 
+        : 'border-transparent hover:border-muted-foreground/20'
+    )}>
+      <img 
+        src={src} 
+        alt={alt}
+        className="max-w-full h-auto rounded"
+        style={{ maxHeight: '400px' }}
+      />
+    </div>
+  );
+});
+
+const FormBlock: React.FC<{ block: Block; isSelected?: boolean }> = memo(({ 
+  block, 
+  isSelected 
+}) => {
+  const title = block.properties?.title || 'Formulário';
+  const fields = block.properties?.fields || [
+    { type: 'text', label: 'Nome', placeholder: 'Digite seu nome' },
+    { type: 'email', label: 'Email', placeholder: 'seu@email.com' }
+  ];
+  
+  return (
+    <div className={cn(
+      'p-4 rounded border-2 transition-all bg-background',
+      isSelected 
+        ? 'border-primary bg-primary/5' 
+        : 'border-muted hover:border-muted-foreground/20'
+    )}>
+      <h3 className="font-semibold mb-4">{title}</h3>
+      <div className="space-y-3">
+        {fields.map((field: any, index: number) => (
+          <div key={index}>
+            <label className="block text-sm font-medium mb-1">
+              {field.label}
+            </label>
+            <input
+              type={field.type}
+              placeholder={field.placeholder}
+              className="w-full px-3 py-2 border border-muted rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
+            />
+          </div>
+        ))}
+        <button className="w-full px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors">
+          Enviar
+        </button>
+      </div>
+    </div>
+  );
+});
+
+// 🎯 REGISTRY DE BLOCOS
+const BLOCK_COMPONENTS = {
+  text: TextBlock,
+  button: ButtonBlock,
+  image: ImageBlock,
+  form: FormBlock,
+} as const;
+
 /**
- * 🎯 UNIVERSAL BLOCK RENDERER - VERSÃO 3.0 CONSOLIDADA (FASE 3.2)
- * ✅ Usa Enhanced Registry com 150+ componentes
- * ✅ Sistema de fallback inteligente por categoria
- * ✅ Normalização automática de propriedades
- * ✅ Compatível com templates e editor
- * ✅ Performance otimizada com Suspense
+ * 🎨 Universal Block Renderer v3.0
  * 
- * 🔄 CONSOLIDAÇÕES DA FASE 3.2:
- * ✅ Lógica de interação do BlockRenderer.tsx (userResponses, handleUserInput, stepNumber)
- * ✅ Otimizações de performance do OptimizedBlockRenderer.tsx (comparação customizada, hover effects)
- * ✅ Sistema de margens expandido do ConsolidatedBlockRenderer.tsx (até 160px)
- * ✅ Suporte a múltiplos modos (production, preview, editor, isPreviewMode, isPreviewing)
- * ✅ Zero perda de funcionalidade - compatibilidade total
+ * Features v3.0:
+ * - Clean Architecture integration
+ * - Performance otimizada com memo
+ * - Suporte a edição inline
+ * - Registry extensível de componentes
+ * - Feedback visual aprimorado
  */
-
-// Função para converter valores de margem em classes Tailwind (Sistema Universal Expandido)
-const getMarginClass = (
-  value: number | string,
-  type: 'top' | 'bottom' | 'left' | 'right'
-): string => {
-  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
-
-  if (!numValue || isNaN(numValue) || numValue === 0) return '';
-
-  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
-
-  // Margens negativas
-  if (numValue < 0) {
-    const absValue = Math.abs(numValue);
-    if (absValue <= 4) return `-${prefix}-1`;
-    if (absValue <= 8) return `-${prefix}-2`;
-    if (absValue <= 12) return `-${prefix}-3`;
-    if (absValue <= 16) return `-${prefix}-4`;
-    if (absValue <= 20) return `-${prefix}-5`;
-    if (absValue <= 24) return `-${prefix}-6`;
-    if (absValue <= 28) return `-${prefix}-7`;
-    if (absValue <= 32) return `-${prefix}-8`;
-    if (absValue <= 36) return `-${prefix}-9`;
-    if (absValue <= 40) return `-${prefix}-10`;
-    if (absValue <= 44) return `-${prefix}-11`;
-    if (absValue <= 48) return `-${prefix}-12`;
-    return `-${prefix}-12`; // Máximo para negativas
-  }
-
-  // ✅ Margens positivas expandidas (até 128px como ConsolidatedBlockRenderer)
-  if (numValue <= 4) return `${prefix}-1`;
-  if (numValue <= 8) return `${prefix}-2`;
-  if (numValue <= 12) return `${prefix}-3`;
-  if (numValue <= 16) return `${prefix}-4`;
-  if (numValue <= 20) return `${prefix}-5`;
-  if (numValue <= 24) return `${prefix}-6`;
-  if (numValue <= 28) return `${prefix}-7`;
-  if (numValue <= 32) return `${prefix}-8`;
-  if (numValue <= 36) return `${prefix}-9`;
-  if (numValue <= 40) return `${prefix}-10`;
-  if (numValue <= 44) return `${prefix}-11`;
-  if (numValue <= 48) return `${prefix}-12`;
-  if (numValue <= 56) return `${prefix}-14`;
-  if (numValue <= 64) return `${prefix}-16`;
-  if (numValue <= 80) return `${prefix}-20`;
-  if (numValue <= 96) return `${prefix}-24`;
-  if (numValue <= 112) return `${prefix}-28`;
-  if (numValue <= 128) return `${prefix}-32`;
-  if (numValue <= 144) return `${prefix}-36`;
-  if (numValue <= 160) return `${prefix}-40`;
-  return `${prefix}-40`; // Máximo suportado expandido
-};
-
-const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = React.memo(({
+export const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
   block,
   isSelected = false,
-  onClick,
-  onPropertyChange,
-  mode = 'production',
-  // ✅ Suporte a interação
-  isPreviewMode,
-  stepNumber,
-  userResponses = {},
-  setUserResponses,
-  // ✅ Suporte a performance otimizada
   isPreviewing = false,
+  onSelect,
+  onClick, // Legacy compatibility
+  onUpdate,
+  onDelete,
+  onPropertyChange, // Legacy compatibility
+  className,
+  style
 }) => {
-  // ✅ Normalizar propriedades para compatibilidade template/editor
-  const normalizedBlock = normalizeBlockProps(block);
+  // 🚩 FEATURE FLAGS (mock por enquanto)
+  const featureFlags = { useCleanArchitecture: true };
+  
+  // 🎯 COMPONENT RESOLUTION
+  const BlockComponent = useMemo(() => {
+    return BLOCK_COMPONENTS[block.type as keyof typeof BLOCK_COMPONENTS] || null;
+  }, [block.type]);
 
-  // ✅ Lógica de interação (do BlockRenderer.tsx)
-  const handleUserInput = React.useCallback(
-    (key: string, value: any) => {
-      if (setUserResponses) {
-        setUserResponses({
-          ...userResponses,
-          [key]: value,
-        });
+  // 🎯 HANDLERS COM COMPATIBILIDADE LEGACY
+  const handleClick = useCallback((e: React.MouseEvent) => {
+    if (!isPreviewing) {
+      e.stopPropagation();
+      // Usar onSelect se disponível, caso contrário onClick (legacy)
+      if (onSelect) {
+        onSelect(block.id);
+      } else if (onClick) {
+        onClick();
       }
-    },
-    [userResponses, setUserResponses]
-  );
-
-  // ✅ Determinar modo real (compatibilidade com isPreviewMode)
-  const effectiveMode = React.useMemo(() => {
-    if (isPreviewMode !== undefined) return isPreviewMode ? 'preview' : mode;
-    if (isPreviewing) return 'preview';
-    return mode;
-  }, [mode, isPreviewMode, isPreviewing]);
-
-  // ✅ Callback otimizado para click (do OptimizedBlockRenderer.tsx)
-  const handleClick = React.useCallback(() => {
-    if (effectiveMode !== 'preview' && onClick) {
-      onClick();
     }
-  }, [effectiveMode, onClick]);
+  }, [isPreviewing, onSelect, onClick, block.id]);
 
-  // ✅ Buscar componente otimizado com fallback inteligente
-  const Component = React.useMemo(() =>
-    getOptimizedBlockComponent(normalizedBlock.type),
-    [normalizedBlock.type]
-  );
-
-  // Processar propriedades de container usando o hook
-  const { containerClasses, inlineStyles, processedProperties } = useContainerProperties(
-    normalizedBlock.properties
-  );
-
-  // 🎚️ Controle de escala universal (aplicado a TODOS os componentes via wrapper)
-  const scaleTransform = React.useMemo(() => {
-    const {
-      scale: rawScale,
-      scaleX: rawScaleX,
-      scaleY: rawScaleY,
-      scaleClass,
-      scaleOrigin = 'center',
-    } = (normalizedBlock.properties as any) || {};
-
-    // Normalizar valores de escala
-    let parsedScale = typeof rawScale === 'string' ? parseFloat(rawScale) : rawScale;
-    const parsedScaleX = typeof rawScaleX === 'string' ? parseFloat(rawScaleX) : rawScaleX;
-    const parsedScaleY = typeof rawScaleY === 'string' ? parseFloat(rawScaleY) : rawScaleY;
-
-    // Compatibilidade: se vier em porcentagem (ex.: 100, 75), converter para fator
-    if (typeof parsedScale === 'number' && parsedScale > 2) {
-      parsedScale = parsedScale / 100;
+  const handleUpdate = useCallback((updates: Partial<Block>) => {
+    if (onUpdate) {
+      onUpdate(block.id, updates);
+    } else if (onPropertyChange && updates.properties) {
+      // Legacy compatibility: chamar onPropertyChange para cada propriedade
+      Object.entries(updates.properties).forEach(([key, value]) => {
+        onPropertyChange(key, value);
+      });
     }
+  }, [onUpdate, onPropertyChange, block.id]);
 
-    const sx = parsedScaleX ?? parsedScale ?? 1;
-    const sy = parsedScaleY ?? parsedScale ?? 1;
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if (e.key === 'Delete' && isSelected && !isPreviewing) {
+      e.preventDefault();
+      onDelete?.(block.id);
+    }
+  }, [isSelected, isPreviewing, onDelete, block.id]);
 
-    // Mesclar transform existente com a escala
-    const baseTransform = (inlineStyles as any)?.transform as string | undefined;
-    const scaleTransformValue = sx === 1 && sy === 1 ? undefined : `scale(${sx}, ${sy})`;
-    const mergedTransform = [baseTransform, scaleTransformValue].filter(Boolean).join(' ');
-
-    return {
-      scaleClass,
-      scaleOrigin,
-      mergedTransform,
-      scaleTransformValue
-    };
-  }, [normalizedBlock.properties, inlineStyles]);
-
-  // Otimizar classes de margem com useMemo
-  const marginClasses = React.useMemo(() => {
-    const props = normalizedBlock.properties || {};
-    return [
-      getMarginClass(props.marginTop ?? 0, 'top'),
-      getMarginClass(props.marginBottom ?? 0, 'bottom'),
-      getMarginClass(props.marginLeft ?? 0, 'left'),
-      getMarginClass(props.marginRight ?? 0, 'right')
-    ].filter(Boolean).join(' ');
-  }, [normalizedBlock.properties]);
-
-  // Log para debug das propriedades de container (apenas em desenvolvimento)
-  if (
-    import.meta.env.DEV &&
-    (normalizedBlock.properties?.containerWidth || normalizedBlock.properties?.containerPosition)
-  ) {
-    console.log(`🎯 Container properties for ${normalizedBlock.id}:`, {
-      blockType: normalizedBlock.type,
-      originalProperties: block.properties,
-      normalizedProperties: normalizedBlock.properties,
-      processedProperties,
-      generatedClasses: containerClasses,
-    });
-  }
-
-  // Com o novo sistema, Component nunca será null devido ao fallback universal
-  if (!Component) {
-    console.error(`❌ Erro crítico: fallback universal falhou para ${normalizedBlock.type}`);
+  // 🎨 FALLBACK PARA TIPOS DESCONHECIDOS
+  if (!BlockComponent) {
     return (
-      <SimpleBlockFallback
-        blockType={normalizedBlock.type}
-        blockId={normalizedBlock.id}
-        message={`Erro crítico: sistema de fallback falhou para '${normalizedBlock.type}'`}
-      />
-    );
-  }
-
-  try {
-    return (
-      <ProductionBlockBoundary blockType={normalizedBlock.type} blockId={normalizedBlock.id}>
-        <div
-          className={cn(
-            'block-wrapper transition-all duration-200',
-            containerClasses,
-            // Classe de escala opcional (Tailwind), ex.: 'scale-95 md:scale-100'
-            scaleTransform.scaleClass,
-            // Margens universais otimizadas
-            marginClasses,
-            // ✅ Estados otimizados (do OptimizedBlockRenderer.tsx)
-            effectiveMode !== 'preview' && isSelected && 'ring-2 ring-[#B89B7A] ring-offset-2',
-            effectiveMode !== 'preview' && 'cursor-pointer hover:scale-[1.005]'
-          )}
-          onClick={handleClick}
-          style={{
-            ...inlineStyles,
-            ...(scaleTransform.mergedTransform && { transform: scaleTransform.mergedTransform }),
-            ...(scaleTransform.scaleTransformValue && { transformOrigin: scaleTransform.scaleOrigin, willChange: 'transform' }),
-          }}
-          data-block-type={normalizedBlock.type}
-          data-block-id={normalizedBlock.id}
-        >
-          <React.Suspense fallback={<div className="animate-pulse bg-gray-200 h-16 rounded" />}>
-            <Component
-              block={normalizedBlock}
-              properties={processedProperties}
-              isSelected={isSelected}
-              onClick={handleClick}
-              onPropertyChange={onPropertyChange}
-              mode={effectiveMode}
-              isPreviewMode={effectiveMode === 'preview'}
-              // ✅ Props de interação (do BlockRenderer.tsx)
-              stepNumber={stepNumber}
-              userResponses={userResponses}
-              setUserResponses={setUserResponses}
-              onUserInput={handleUserInput}
-              // ✅ Props de compatibilidade
-              isPreviewing={effectiveMode === 'preview'}
-              {...processedProperties}
-            />
-          </React.Suspense>
+      <div 
+        className={cn(
+          'p-4 border-2 border-dashed border-muted-foreground/20 rounded-lg',
+          'bg-muted/10 text-center text-muted-foreground',
+          isSelected && 'border-destructive bg-destructive/5',
+          className
+        )}
+        style={style}
+        onClick={handleClick}
+        tabIndex={0}
+        onKeyDown={handleKeyDown}
+      >
+        <div className="text-sm font-medium mb-1">
+          Tipo desconhecido: {block.type}
         </div>
-      </ProductionBlockBoundary>
+        <div className="text-xs">
+          Componente não registrado no sistema
+        </div>
+        {featureFlags.useCleanArchitecture && (
+          <div className="text-xs mt-2 text-primary">
+            Clean Architecture v3.0
+          </div>
+        )}
+      </div>
     );
-  } catch (error) {
-    console.error(`❌ Erro crítico ao renderizar bloco ${normalizedBlock.type}:`, error);
+  }
 
-    return (
-      <SimpleBlockFallback
-        blockType={normalizedBlock.type}
-        blockId={normalizedBlock.id}
-        message={error instanceof Error ? error.message : 'Erro de renderização crítico'}
+  // 🎨 RENDER PRINCIPAL
+  return (
+    <div
+      className={cn(
+        'relative group transition-all duration-200',
+        !isPreviewing && 'cursor-pointer',
+        className
+      )}
+      style={style}
+      onClick={handleClick}
+      tabIndex={0}
+      onKeyDown={handleKeyDown}
+    >
+      {/* Indicador de seleção */}
+      {isSelected && !isPreviewing && (
+        <div className="absolute -inset-1 border-2 border-primary rounded-lg pointer-events-none">
+          <div className="absolute -top-6 left-0 px-2 py-1 bg-primary text-primary-foreground text-xs rounded">
+            {block.type}
+          </div>
+        </div>
+      )}
+
+      {/* Controles de hover */}
+      {!isPreviewing && (
+        <div className="absolute -top-8 right-0 opacity-0 group-hover:opacity-100 transition-opacity">
+          <div className="flex items-center gap-1">
+            {featureFlags.useCleanArchitecture && (
+              <span className="px-1 py-0.5 bg-blue-500 text-white text-xs rounded">
+                v3.0
+              </span>
+            )}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete?.(block.id);
+              }}
+              className="w-6 h-6 bg-destructive text-destructive-foreground rounded text-xs hover:bg-destructive/90"
+            >
+              ×
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Componente do bloco */}
+      <BlockComponent 
+        block={block} 
+        isSelected={isSelected}
+        onUpdate={handleUpdate}
       />
-    );
-  }
-}, (prevProps, nextProps) => {
-  // ✅ Comparação otimizada (do OptimizedBlockRenderer.tsx) para evitar re-renders desnecessários
-  if (prevProps.isSelected !== nextProps.isSelected) return false;
-  if (prevProps.mode !== nextProps.mode) return false;
-  if (prevProps.isPreviewMode !== nextProps.isPreviewMode) return false;
-  if (prevProps.isPreviewing !== nextProps.isPreviewing) return false;
-  if (prevProps.stepNumber !== nextProps.stepNumber) return false;
-  if (prevProps.block.id !== nextProps.block.id) return false;
-  if (prevProps.block.type !== nextProps.block.type) return false;
-
-  // ✅ Comparação de userResponses (shallow)
-  const prevResponses = prevProps.userResponses || {};
-  const nextResponses = nextProps.userResponses || {};
-  const prevResponseKeys = Object.keys(prevResponses);
-  const nextResponseKeys = Object.keys(nextResponses);
-
-  if (prevResponseKeys.length !== nextResponseKeys.length) return false;
-  for (const key of prevResponseKeys) {
-    if (prevResponses[key] !== nextResponses[key]) return false;
-  }
-
-  // Comparação superficial das propriedades do bloco
-  const prevProps_ = prevProps.block.properties || {};
-  const nextProps_ = nextProps.block.properties || {};
-
-  // ✅ Verificar apenas propriedades críticas para re-render (otimização)
-  const criticalProps = ['content', 'src', 'text', 'backgroundColor', 'color', 'fontSize', 'title', 'options'];
-  for (const prop of criticalProps) {
-    if (prevProps_[prop] !== nextProps_[prop]) return false;
-  }
-
-  // Comparação completa das outras propriedades apenas se necessário
-  const prevKeys = Object.keys(prevProps_);
-  const nextKeys = Object.keys(nextProps_);
-
-  if (prevKeys.length !== nextKeys.length) return false;
-
-  for (const key of prevKeys) {
-    if (!criticalProps.includes(key) && prevProps_[key] !== nextProps_[key]) return false;
-  }
-
-  return true;
+    </div>
+  );
 });
+
+UniversalBlockRenderer.displayName = 'UniversalBlockRenderer';
 
 export default UniversalBlockRenderer;
