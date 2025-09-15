@@ -45,6 +45,12 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
     // Forçar carregamento de todas as etapas ao montar o componente
     React.useEffect(() => {
         const stepCount = state.stepBlocks ? Object.keys(state.stepBlocks).length : 0;
+        console.log('🚀 UniversalStepEditorPro - useEffect triggered:', {
+            stepCount,
+            hasStepBlocks: !!state.stepBlocks,
+            stepBlocksKeys: state.stepBlocks ? Object.keys(state.stepBlocks) : [],
+            timestamp: new Date().toISOString()
+        });
 
         // Se não temos steps carregados, forçar carregamento do template
         if (stepCount === 0) {
@@ -52,6 +58,17 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
             actions.loadDefaultTemplate();
         } else {
             console.log(`✅ Editor initialized with ${stepCount} steps`);
+            
+            // Log dos primeiros 3 steps para debug
+            for (let i = 1; i <= 3; i++) {
+                const stepKey = `step-${i}`;
+                const blocks = state.stepBlocks[stepKey];
+                console.log(`🔍 ${stepKey}:`, {
+                    exists: !!blocks,
+                    isArray: Array.isArray(blocks),
+                    length: Array.isArray(blocks) ? blocks.length : 0
+                });
+            }
         }
     }, [state.stepBlocks, actions]);    // Valores calculados
     const NotificationContainer = (notification as any)?.NotificationContainer ?? null;
@@ -61,7 +78,14 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
     // Calcula stepHasBlocks baseado no estado atual
     const stepHasBlocks = useMemo(() => {
         const stepBlocksRef = state.stepBlocks;
+        console.log('🔍 stepHasBlocks - Calculando...', {
+            hasStepBlocks: !!stepBlocksRef,
+            stepBlocksKeys: stepBlocksRef ? Object.keys(stepBlocksRef) : [],
+            stepBlocksCount: stepBlocksRef ? Object.keys(stepBlocksRef).length : 0
+        });
+        
         if (!stepBlocksRef) {
+            console.warn('⚠️ stepHasBlocks - stepBlocks é null/undefined');
             return {};
         }
 
@@ -69,8 +93,23 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
         for (let step = 1; step <= 21; step++) {
             const stepKey = `step-${step}`;
             const blocks = stepBlocksRef[stepKey];
-            map[step] = Array.isArray(blocks) && blocks.length > 0;
+            const hasBlocks = Array.isArray(blocks) && blocks.length > 0;
+            map[step] = hasBlocks;
+            
+            // Log apenas os primeiros 3 steps para não spammar o console
+            if (step <= 3) {
+                console.log(`🔍 stepHasBlocks - ${stepKey}:`, {
+                    exists: !!blocks,
+                    isArray: Array.isArray(blocks),
+                    length: Array.isArray(blocks) ? blocks.length : 0,
+                    hasBlocks
+                });
+            }
         }
+        
+        const totalWithBlocks = Object.values(map).filter(Boolean).length;
+        console.log(`✅ stepHasBlocks - Resultado: ${totalWithBlocks}/21 etapas com blocos`);
+        
         return map;
     }, [state.stepBlocks]);
 
