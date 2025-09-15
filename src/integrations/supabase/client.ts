@@ -2,8 +2,10 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 
-const supabaseUrl = (import.meta as any)?.env?.VITE_SUPABASE_URL as string | undefined;
-const supabaseAnonKey = (import.meta as any)?.env?.VITE_SUPABASE_ANON_KEY as string | undefined;
+// Tentar múltiplas variáveis de ambiente comuns
+const env = (import.meta as any)?.env || {};
+const supabaseUrl = env.VITE_SUPABASE_URL as string | undefined;
+const supabaseAnonKey = (env.VITE_SUPABASE_ANON_KEY || env.VITE_SUPABASE_PUBLISHABLE_KEY) as string | undefined;
 
 // Detecta ambiente de teste/CI para preferir stub e evitar acesso a localStorage/rede
 const isTestEnv = (
@@ -15,28 +17,44 @@ const isTestEnv = (
 function createSupabaseStub() {
   const ok = {
     data: null,
-    error: { message: 'Supabase disabled', status: 0, details: null, hint: null },
+    error: null,
+    status: 200,
   } as any;
-  const okNoError = { data: null, error: null } as any;
   const okUser = { data: { user: null }, error: null } as any;
   const sub = { unsubscribe: () => { } };
+
+  // Builder encadeável e "thenable" para suportar await diretamente
+  const createQueryBuilder = () => {
+    const builder: any = {
+      select: (_sel?: any, _opts?: any) => builder,
+      insert: async (_values?: any) => ok,
+      upsert: async (_values?: any) => ok,
+      update: async (_values?: any) => ok,
+      delete: async () => ok,
+      eq: (_col: string, _val: any) => builder,
+      in: (_col: string, _vals: any[]) => builder,
+      ilike: (_col: string, _pat: string) => builder,
+      like: (_col: string, _pat: string) => builder,
+      order: (_col: string, _opts?: any) => builder,
+      limit: (_n: number) => builder,
+      range: (_from: number, _to: number) => builder,
+      single: async () => ok,
+      maybeSingle: async () => ok,
+      then: (resolve: any) => resolve(ok),
+      catch: (_reject: any) => ({ then: (resolve: any) => resolve(ok) }),
+    };
+    return builder;
+  };
+
   return {
     auth: {
       onAuthStateChange: (_cb: any) => ({ data: { subscription: sub } }),
       getSession: async () => ({ data: { session: null }, error: null }),
-      getUser: async () => okUser,  // ✅ Adicionado método getUser faltante
-      signInWithPassword: async () => okNoError,
-      signOut: async () => okNoError,
+      getUser: async () => okUser,
+      signInWithPassword: async () => ({ data: null, error: null } as any),
+      signOut: async () => ({ data: null, error: null } as any),
     },
-    from: () => ({
-      select: async () => ok,
-      insert: async () => ok,
-      upsert: async () => ok,
-      update: async () => ok,
-      delete: async () => ok,
-      eq: () => ({ select: async () => ok, update: async () => ok, delete: async () => ok }),
-      single: async () => ok,  // ✅ Adicionado método single faltante
-    }),
+    from: (_table?: string) => createQueryBuilder(),
   } as unknown as ReturnType<typeof createClient<Database>>;
 }
 
