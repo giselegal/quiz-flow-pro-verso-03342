@@ -952,13 +952,16 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               </div>
             </ResizablePanel>
             
-            <ResizableHandle withHandle />
+            <ResizableHandle 
+              withHandle 
+              className="w-2 bg-border hover:bg-primary/50 transition-colors cursor-col-resize flex items-center justify-center group relative"
+            />
 
             {/* 2) Componentes - Resizable width */}
             <ResizablePanel 
               defaultSize={22} 
               minSize={15} 
-              maxSize={30}
+              maxSize={45}
               className="min-w-0"
             >
               <div className="h-full overflow-y-auto">
@@ -972,13 +975,16 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               </div>
             </ResizablePanel>
 
-            <ResizableHandle withHandle />
+            <ResizableHandle 
+              withHandle 
+              className="w-2 bg-border hover:bg-primary/50 transition-colors cursor-col-resize flex items-center justify-center group relative"
+            />
 
             {/* 3) Canvas - Flexible main area */}
             <ResizablePanel 
               defaultSize={40} 
-              minSize={30} 
-              maxSize={60}
+              minSize={25} 
+              maxSize={65}
               className="min-w-0"
             >
               <div className="h-full overflow-y-auto">
@@ -1003,7 +1009,10 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               </div>
             </ResizablePanel>
 
-            <ResizableHandle withHandle />
+            <ResizableHandle 
+              withHandle 
+              className="w-2 bg-border hover:bg-primary/50 transition-colors cursor-col-resize flex items-center justify-center group relative"
+            />
 
             {/* 4) Propriedades - Resizable width */}
             <ResizablePanel 
