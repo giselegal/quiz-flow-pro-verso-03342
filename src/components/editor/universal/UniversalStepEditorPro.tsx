@@ -257,8 +257,8 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                                     key={viewport}
                                     onClick={() => handleViewportModeChange(viewport as ViewportMode)}
                                     className={`px-3 py-2 rounded-md text-xs font-medium transition-all ${previewDevice === viewport
-                                            ? 'bg-blue-500 text-white shadow-lg'
-                                            : 'text-gray-400 hover:text-white hover:bg-gray-700/50'
+                                        ? 'bg-blue-500 text-white shadow-lg'
+                                        : 'text-gray-400 hover:text-white hover:bg-gray-700/50'
                                         }`}
                                 >
                                     {viewport === 'desktop' ? '🖥️' : viewport === 'tablet' ? '📱' : '📱'}
@@ -272,8 +272,8 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                             <button
                                 onClick={() => setMode('edit')}
                                 className={`px-3 py-2 rounded-md text-xs font-medium transition-all ${mode === 'edit'
-                                        ? 'bg-purple-500 text-white shadow-lg'
-                                        : 'text-gray-400 hover:text-white hover:bg-gray-700/50'
+                                    ? 'bg-purple-500 text-white shadow-lg'
+                                    : 'text-gray-400 hover:text-white hover:bg-gray-700/50'
                                     }`}
                             >
                                 ✏️ Editar
@@ -281,8 +281,8 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                             <button
                                 onClick={() => setMode('preview')}
                                 className={`px-3 py-2 rounded-md text-xs font-medium transition-all ${mode === 'preview'
-                                        ? 'bg-purple-500 text-white shadow-lg'
-                                        : 'text-gray-400 hover:text-white hover:bg-gray-700/50'
+                                    ? 'bg-purple-500 text-white shadow-lg'
+                                    : 'text-gray-400 hover:text-white hover:bg-gray-700/50'
                                     }`}
                             >
                                 👁️ Preview
@@ -345,7 +345,7 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                 onDragStart={handleDragStart}
                 onDragEnd={handleDragEnd}
             >
-                <div className={`universal-step-editor-pro h-[calc(100vh-120px)] bg-gradient-to-br from-gray-950 via-slate-900 to-gray-950 flex overflow-hidden max-w-screen ${className} relative`}>
+                <div className={`universal-step-editor-pro min-h-screen w-full bg-gradient-to-br from-gray-950 via-slate-900 to-gray-950 flex overflow-hidden ${className} relative`}>
 
                     {/* 📱 MOBILE OVERLAYS - DESIGN PREMIUM */}
                     <div className="lg:hidden">
@@ -530,7 +530,7 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
 
                     {/* 💻 DESKTOP LAYOUT - Design Moderno */}
                     {/* 1) Steps Sidebar - Glass Effect */}
-                    <div className="hidden lg:block w-[200px] min-w-[200px] max-w-[200px] flex-shrink-0">
+                    <div className="hidden lg:block w-56 xl:w-64 min-w-[14rem] flex-shrink-0">
                         <div className="h-full bg-gray-900/80 backdrop-blur-xl border-r border-gray-800/50 shadow-2xl">
                             <div className="p-4 border-b border-gray-800/50">
                                 <h2 className="text-sm font-bold text-white/90 mb-1">NAVEGAÇÃO</h2>
@@ -549,14 +549,14 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                                     onSelectStep={handleStepSelect}
                                     getStepAnalysis={getStepAnalysis}
                                     renderIcon={renderIcon}
-                                    className="!w-full h-[calc(100vh-200px)] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800"
+                                    className="!w-full h-[calc(100vh-140px)] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800"
                                 />
                             </Suspense>
                         </div>
                     </div>
 
                     {/* 2) Components Sidebar - Glass Effect */}
-                    <div className="hidden lg:block w-[240px] min-w-[240px] max-w-[240px] flex-shrink-0">
+                    <div className="hidden lg:block w-60 xl:w-72 min-w-[15rem] flex-shrink-0">
                         <div className="h-full bg-gray-900/80 backdrop-blur-xl border-r border-gray-800/50 shadow-2xl">
                             <div className="p-4 border-b border-gray-800/50">
                                 <h2 className="text-sm font-bold text-white/90 mb-1">COMPONENTES</h2>
@@ -570,17 +570,17 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                                 <ComponentsSidebar
                                     groupedComponents={groupedComponents}
                                     renderIcon={renderIcon}
-                                    className="!w-full h-[calc(100vh-200px)] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800"
+                                    className="!w-full h-[calc(100vh-140px)] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800"
                                 />
                             </Suspense>
                         </div>
                     </div>
 
                     {/* 3) Canvas Area - Premium Design */}
-                    <div className="w-full lg:flex-1 lg:min-w-0 flex flex-col">
+                    <div className="flex-1 min-w-0 flex flex-col">
                         {/* Canvas Header Premium */}
                         <div className="hidden lg:block bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border-b border-gray-200/50 dark:border-gray-800/50 px-6 py-4">
-                            <div className="flex items-center justify-between">
+                            <div className="flex items-center justify-between max-w-7xl mx-auto">
                                 <div className="flex items-center gap-3">
                                     <div className="p-2.5 rounded-xl bg-gradient-to-r from-blue-500 to-violet-500 text-white shadow-lg shadow-blue-500/25">
                                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -653,40 +653,44 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                         </div>
 
                         {/* Canvas Content Area */}
-                        <div className="flex-1 bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100 dark:from-gray-900 dark:via-slate-900 dark:to-gray-900">
-                            <Suspense fallback={
-                                <div className="h-full flex items-center justify-center">
-                                    <div className="text-center">
-                                        <div className="w-16 h-16 mx-auto mb-4 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-                                        <div className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Carregando Canvas</div>
-                                        <p className="text-sm text-gray-600 dark:text-gray-400">Preparando ambiente de edição premium</p>
-                                    </div>
+                        <div className="flex-1 bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100 dark:from-gray-900 dark:via-slate-900 dark:to-gray-900 overflow-hidden">
+                            <div className="h-full flex items-center justify-center p-6">
+                                <div className="w-full max-w-6xl h-full">
+                                    <Suspense fallback={
+                                        <div className="h-full flex items-center justify-center">
+                                            <div className="text-center">
+                                                <div className="w-16 h-16 mx-auto mb-4 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                                                <div className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Carregando Canvas</div>
+                                                <p className="text-sm text-gray-600 dark:text-gray-400">Preparando ambiente de edição premium</p>
+                                            </div>
+                                        </div>
+                                    }>
+                                        <CanvasAreaLayout
+                                            className="h-full w-full bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200/50 dark:border-gray-700/50 overflow-hidden"
+                                            mode={mode}
+                                            setMode={setMode}
+                                            previewDevice={previewDevice}
+                                            setPreviewDevice={handleViewportModeChange}
+                                            safeCurrentStep={safeCurrentStep}
+                                            currentStepKey={currentStepKey}
+                                            currentStepData={currentStepData as any}
+                                            selectedBlockId={state.selectedBlockId}
+                                            actions={actions as any}
+                                            state={state as any}
+                                            notification={notification as any}
+                                            containerRef={React.createRef<HTMLDivElement>()}
+                                            getStepAnalysis={getStepAnalysis}
+                                            renderIcon={renderIcon}
+                                            isDragging={isDragging}
+                                        />
+                                    </Suspense>
                                 </div>
-                            }>
-                                <CanvasAreaLayout
-                                    className="h-full"
-                                    mode={mode}
-                                    setMode={setMode}
-                                    previewDevice={previewDevice}
-                                    setPreviewDevice={handleViewportModeChange}
-                                    safeCurrentStep={safeCurrentStep}
-                                    currentStepKey={currentStepKey}
-                                    currentStepData={currentStepData as any}
-                                    selectedBlockId={state.selectedBlockId}
-                                    actions={actions as any}
-                                    state={state as any}
-                                    notification={notification as any}
-                                    containerRef={React.createRef<HTMLDivElement>()}
-                                    getStepAnalysis={getStepAnalysis}
-                                    renderIcon={renderIcon}
-                                    isDragging={isDragging}
-                                />
-                            </Suspense>
+                            </div>
                         </div>
                     </div>
 
                     {/* 4) Properties Panel - Premium Design */}
-                    <div className="hidden lg:block w-[340px] min-w-[340px] max-w-[340px] flex-shrink-0">
+                    <div className="hidden lg:block w-80 xl:w-96 min-w-[18rem] flex-shrink-0">
                         <div className="h-full bg-gray-900/80 backdrop-blur-xl border-l border-gray-800/50 shadow-2xl">
                             <div className="p-4 border-b border-gray-800/50">
                                 <h2 className="text-sm font-bold text-white/90 mb-1">PROPRIEDADES</h2>
@@ -702,7 +706,7 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                                     stepData={currentStepData}
                                     stepNumber={safeCurrentStep}
                                     onSave={handleSave}
-                                    className="!w-full h-[calc(100vh-200px)] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800"
+                                    className="h-[calc(100vh-140px)] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800"
                                 />
                             </Suspense>
                         </div>
