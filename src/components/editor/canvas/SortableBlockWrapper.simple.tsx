@@ -71,10 +71,37 @@ const SortableBlockWrapperBase: React.FC<SortableBlockWrapperProps> = ({
   }, [block, normalizedBlock, scopeId]);
 
   // Buscar componente no registry simplificado
-  const Component = React.useMemo(
-    () => getOptimizedBlockComponent(normalizedBlock.type),
-    [normalizedBlock.type]
-  );
+  const Component = React.useMemo(() => {
+    try {
+      return getOptimizedBlockComponent(normalizedBlock.type);
+    } catch (error) {
+      console.error('❌ Erro fatal ao buscar componente, usando fallback direto:', error);
+      
+      // Fallback direto baseado no tipo
+      const type = normalizedBlock.type;
+      if (type === 'quiz-intro-header') {
+        const QuizIntroHeaderBlock = require('@/components/editor/blocks/QuizIntroHeaderBlock').default;
+        return QuizIntroHeaderBlock;
+      }
+      if (type === 'text') {
+        const TextInlineBlock = require('@/components/editor/blocks/TextInlineBlock').default;
+        return TextInlineBlock;
+      }
+      if (type === 'image') {
+        const ImageInlineBlock = require('@/components/editor/blocks/ImageInlineBlock').default;
+        return ImageInlineBlock;
+      }
+      
+      // Fallback visual final
+      return ({ block }: { block?: any }) => (
+        <div className="border border-red-200 bg-red-50 p-4 rounded">
+          <p className="text-red-600 font-medium">Erro: Componente não encontrado</p>
+          <p className="text-red-500 text-sm">Tipo: {type}</p>
+          <p className="text-red-500 text-sm">ID: {block?.id}</p>
+        </div>
+      );
+    }
+  }, [normalizedBlock.type]);
 
   // Make block draggable for reordering
   const {
