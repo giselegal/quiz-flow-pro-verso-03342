@@ -184,125 +184,6 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
 
     return (
         <>
-            {/* 🎨 HEADER PREMIUM - Design Moderno */}
-            <div className="editor-pro-header bg-gradient-to-r from-slate-900 via-gray-900 to-slate-900 border-b border-gray-800/50 backdrop-blur-lg">
-                <div className="flex items-center justify-between p-0 py-4">
-                    {/* Logo e Info */}
-                    <div className="flex items-center space-x-4 pl-4">
-                        <div className="flex items-center space-x-3">
-                            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center shadow-lg">
-                                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a1 1 0 01-1-1V7a1 1 0 011-1h1a2 2 0 100-4H4a1 1 0 01-1-1V4a1 1 0 011-1h3a1 1 0 011 1v1z" />
-                                </svg>
-                            </div>
-                            <div>
-                                <h1 className="text-lg font-bold text-white">Editor Pro</h1>
-                                <p className="text-xs text-gray-400">Step {safeCurrentStep} de 21</p>
-                            </div>
-                        </div>
-
-                        {/* Status Badge */}
-                        <div className="flex items-center space-x-2">
-                            <div className="px-3 py-1 bg-green-500/20 border border-green-500/30 rounded-full">
-                                <div className="flex items-center space-x-2">
-                                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                                    <span className="text-xs text-green-400 font-medium">Online</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Toolbar Central */}
-                    <div className="flex items-center space-x-3">
-                        {/* Viewport Controls */}
-                        <div className="flex items-center bg-gray-800/50 rounded-lg p-1 border border-gray-700/50">
-                            {(['desktop', 'tablet', 'mobile'] as const).map((viewport) => (
-                                <button
-                                    key={viewport}
-                                    onClick={() => handleViewportModeChange(viewport as ViewportMode)}
-                                    className={`px-3 py-2 rounded-md text-xs font-medium transition-all ${previewDevice === viewport
-                                        ? 'bg-blue-500 text-white shadow-lg'
-                                        : 'text-gray-400 hover:text-white hover:bg-gray-700/50'
-                                        }`}
-                                >
-                                    {viewport === 'desktop' ? '🖥️' : viewport === 'tablet' ? '📱' : '📱'}
-                                    <span className="ml-1 capitalize">{viewport}</span>
-                                </button>
-                            ))}
-                        </div>
-
-                        {/* Mode Controls */}
-                        <div className="flex items-center bg-gray-800/50 rounded-lg p-1 border border-gray-700/50">
-                            <button
-                                onClick={() => setMode('edit')}
-                                className={`px-3 py-2 rounded-md text-xs font-medium transition-all ${mode === 'edit'
-                                    ? 'bg-purple-500 text-white shadow-lg'
-                                    : 'text-gray-400 hover:text-white hover:bg-gray-700/50'
-                                    }`}
-                            >
-                                ✏️ Editar
-                            </button>
-                            <button
-                                onClick={() => setMode('preview')}
-                                className={`px-3 py-2 rounded-md text-xs font-medium transition-all ${mode === 'preview'
-                                    ? 'bg-purple-500 text-white shadow-lg'
-                                    : 'text-gray-400 hover:text-white hover:bg-gray-700/50'
-                                    }`}
-                            >
-                                👁️ Preview
-                            </button>
-                        </div>
-                    </div>
-
-                    {/* Actions */}
-                    <div className="flex items-center space-x-3 pr-4">
-                        {/* Undo/Redo */}
-                        <div className="flex items-center space-x-1">
-                            <button
-                                onClick={() => {
-                                    try {
-                                        (actions as any)?.undo?.();
-                                        notification?.success('Ação desfeita');
-                                    } catch (error) {
-                                        notification?.error('Erro ao desfazer');
-                                    }
-                                }}
-                                className="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/50 transition-all"
-                                title="Desfazer (Ctrl+Z)"
-                            >
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
-                                </svg>
-                            </button>
-                            <button
-                                onClick={() => {
-                                    try {
-                                        (actions as any)?.redo?.();
-                                        notification?.success('Ação refeita');
-                                    } catch (error) {
-                                        notification?.error('Erro ao refazer');
-                                    }
-                                }}
-                                className="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/50 transition-all"
-                                title="Refazer (Ctrl+Y)"
-                            >
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 10h-10a8 8 0 00-8 8v2m18-10l-6-6m6 6l-6 6" />
-                                </svg>
-                            </button>
-                        </div>
-
-                        {/* Save Button */}
-                        <button
-                            onClick={handleSave}
-                            className="px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg font-medium shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105"
-                        >
-                            💾 Salvar
-                        </button>
-                    </div>
-                </div>
-            </div>
-
             {/* Provider de DnD */}
             <StepDndProvider
                 stepNumber={safeCurrentStep}
@@ -312,7 +193,7 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                 <div className={`universal-step-editor-pro min-h-screen w-full bg-gradient-to-br from-gray-950 via-slate-900 to-gray-950 overflow-hidden m-0 p-0 ${className} relative`}>
 
                     {/* 🎯 DESKTOP LAYOUT 4-COLUNAS */}
-                    <div className="hidden lg:flex h-[calc(100vh-80px)] w-full">
+                    <div className="hidden lg:flex h-screen w-full">
 
                         {/* 1) Steps Sidebar - 180px */}
                         <div className="w-48 flex-shrink-0 bg-gray-900/95 backdrop-blur-xl border-r border-gray-800/50">
@@ -353,39 +234,6 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
 
                         {/* 3) Canvas Area - Dynamic */}
                         <div className="flex-1 min-w-0 flex flex-col" ref={canvasRef}>
-                            {/* Canvas Header */}
-                            <div className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border-b border-gray-200/50 dark:border-gray-800/50 p-0 py-4">
-                                <div className="flex items-center justify-between pl-4 pr-4">
-                                    <div className="flex items-center gap-3">
-                                        <div className="p-2.5 rounded-xl bg-gradient-to-r from-blue-500 to-violet-500 text-white shadow-lg shadow-blue-500/25">
-                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v6a4 4 0 004 4h4a2 2 0 002-2V5z" />
-                                            </svg>
-                                        </div>
-                                        <div>
-                                            <h2 className="text-xl font-bold text-gray-900 dark:text-white">
-                                                Step {safeCurrentStep}
-                                            </h2>
-                                            <p className="text-sm text-gray-600 dark:text-gray-400">
-                                                {(currentStepData as any)?.blocks?.length || 0} elementos • {mode === 'edit' ? 'Modo edição' : 'Preview'}
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    <div className="flex items-center gap-3">
-                                        <button
-                                            onClick={() => setMode(mode === 'edit' ? 'preview' : 'edit')}
-                                            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${mode === 'preview'
-                                                ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg'
-                                                : 'bg-gradient-to-r from-blue-500 to-violet-500 text-white shadow-lg'
-                                                }`}
-                                        >
-                                            {mode === 'preview' ? 'Preview' : 'Editar'}
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
                             {/* Canvas Content */}
                             <div className="flex-1 bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100 dark:from-gray-900 dark:via-slate-900 dark:to-gray-900 overflow-hidden">
                                 <div className="h-full w-full">
@@ -436,7 +284,7 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                     </div>
 
                     {/* 📱 MOBILE LAYOUT */}
-                    <div className="lg:hidden h-[calc(100vh-80px)] relative bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100 dark:from-gray-900 dark:via-slate-900 dark:to-gray-900">
+                    <div className="lg:hidden h-screen relative bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100 dark:from-gray-900 dark:via-slate-900 dark:to-gray-900">
 
                         {/* Mobile Navigation Overlay */}
                         <div className={`fixed inset-0 z-41 transition-all duration-300 ${mobileNavOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
