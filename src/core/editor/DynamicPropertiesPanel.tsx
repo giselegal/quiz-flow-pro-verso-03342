@@ -5,16 +5,16 @@ import { FunnelStep } from '../../types/quiz-schema';
 type PanelTab = 'step' | 'global' | 'style' | 'publish';
 
 export const DynamicPropertiesPanel: React.FC = () => {
-  const { 
-    schema, 
-    currentStep, 
-    updateStep, 
-    updateGlobalSettings, 
+  const {
+    schema,
+    currentStep,
+    updateStep,
+    updateGlobalSettings,
     selectStep,
     goToStep,
-    isLoading 
+    isLoading
   } = useHeadlessEditor();
-  
+
   const [activeTab, setActiveTab] = useState<PanelTab>('step');
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
 
@@ -94,34 +94,34 @@ function renderTabContent(
 ) {
   switch (tab) {
     case 'step':
-      return <StepPropertiesPanel 
+      return <StepPropertiesPanel
         schema={schema}
-        currentStep={currentStep} 
+        currentStep={currentStep}
         updateStep={updateStep}
         selectStep={selectStep}
         goToStep={goToStep}
         selectedBlockId={selectedBlockId}
         setSelectedBlockId={setSelectedBlockId}
       />;
-    
+
     case 'global':
-      return <GlobalPropertiesPanel 
-        schema={schema} 
-        updateGlobalSettings={updateGlobalSettings} 
-      />;
-    
-    case 'style':
-      return <StylePropertiesPanel 
-        schema={schema} 
-        updateGlobalSettings={updateGlobalSettings}
-      />;
-    
-    case 'publish':
-      return <PublishPropertiesPanel 
+      return <GlobalPropertiesPanel
         schema={schema}
         updateGlobalSettings={updateGlobalSettings}
       />;
-    
+
+    case 'style':
+      return <StylePropertiesPanel
+        schema={schema}
+        updateGlobalSettings={updateGlobalSettings}
+      />;
+
+    case 'publish':
+      return <PublishPropertiesPanel
+        schema={schema}
+        updateGlobalSettings={updateGlobalSettings}
+      />;
+
     default:
       return <div className="p-4 text-center text-gray-500">Tab não encontrada</div>;
   }
@@ -154,7 +154,7 @@ const StepPropertiesPanel: React.FC<StepPropertiesPanelProps> = ({
           <h3 className="font-semibold text-gray-900 mb-2">Nenhuma etapa selecionada</h3>
           <p className="text-sm mb-4">Selecione uma etapa para editar suas propriedades</p>
         </div>
-        
+
         {/* Lista de Etapas */}
         <div className="space-y-2">
           <h4 className="font-medium text-gray-900 mb-3">Etapas Disponíveis ({schema?.steps?.length || 0})</h4>
@@ -193,7 +193,7 @@ const StepPropertiesPanel: React.FC<StepPropertiesPanelProps> = ({
             #{currentStep.order}
           </span>
         </div>
-        
+
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -261,12 +261,12 @@ const StepPropertiesPanel: React.FC<StepPropertiesPanelProps> = ({
         <h4 className="font-medium text-gray-900 mb-3">Configurações</h4>
         <div className="space-y-3">
           <label className="flex items-center space-x-2">
-            <input 
-              type="checkbox" 
+            <input
+              type="checkbox"
               checked={currentStep.settings?.showProgress || false}
-              onChange={(e) => handleStepUpdate('settings', { 
-                ...currentStep.settings, 
-                showProgress: e.target.checked 
+              onChange={(e) => handleStepUpdate('settings', {
+                ...currentStep.settings,
+                showProgress: e.target.checked
               })}
               className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
             />
@@ -274,12 +274,12 @@ const StepPropertiesPanel: React.FC<StepPropertiesPanelProps> = ({
           </label>
 
           <label className="flex items-center space-x-2">
-            <input 
-              type="checkbox" 
+            <input
+              type="checkbox"
               checked={currentStep.settings?.showBackButton || false}
-              onChange={(e) => handleStepUpdate('settings', { 
-                ...currentStep.settings, 
-                showBackButton: e.target.checked 
+              onChange={(e) => handleStepUpdate('settings', {
+                ...currentStep.settings,
+                showBackButton: e.target.checked
               })}
               className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
             />
@@ -287,12 +287,12 @@ const StepPropertiesPanel: React.FC<StepPropertiesPanelProps> = ({
           </label>
 
           <label className="flex items-center space-x-2">
-            <input 
-              type="checkbox" 
+            <input
+              type="checkbox"
               checked={currentStep.settings?.allowSkip || false}
-              onChange={(e) => handleStepUpdate('settings', { 
-                ...currentStep.settings, 
-                allowSkip: e.target.checked 
+              onChange={(e) => handleStepUpdate('settings', {
+                ...currentStep.settings,
+                allowSkip: e.target.checked
               })}
               className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
             />
@@ -306,7 +306,7 @@ const StepPropertiesPanel: React.FC<StepPropertiesPanelProps> = ({
         <h4 className="font-medium text-gray-900 mb-3">
           Blocos ({currentStep.blocks?.length || 0})
         </h4>
-        
+
         {!currentStep.blocks || currentStep.blocks.length === 0 ? (
           <div className="text-center py-6 border-2 border-dashed border-gray-300 rounded-lg">
             <div className="text-2xl mb-2">📦</div>
@@ -337,13 +337,13 @@ const StepPropertiesPanel: React.FC<StepPropertiesPanelProps> = ({
                     )}
                   </div>
                 </div>
-                
+
                 {block.content && (
                   <div className="text-xs text-gray-600 mt-1 truncate">
                     {typeof block.content === 'string' ? block.content : JSON.stringify(block.content).substring(0, 50)}...
                   </div>
                 )}
-                
+
                 {selectedBlockId === block.id && (
                   <div className="mt-3 pt-3 border-t border-gray-200">
                     <BlockPropertiesEditor block={block} />
@@ -388,7 +388,7 @@ const GlobalPropertiesPanel: React.FC<GlobalPropertiesPanelProps> = ({
           <span className="mr-2">📋</span>
           Informações Básicas
         </h3>
-        
+
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -455,7 +455,7 @@ const GlobalPropertiesPanel: React.FC<GlobalPropertiesPanelProps> = ({
           <span className="mr-2">🔍</span>
           Configurações SEO
         </h3>
-        
+
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -504,11 +504,11 @@ const GlobalPropertiesPanel: React.FC<GlobalPropertiesPanelProps> = ({
           <span className="mr-2">📊</span>
           Analytics
         </h3>
-        
+
         <div className="space-y-4">
           <label className="flex items-center space-x-2">
-            <input 
-              type="checkbox" 
+            <input
+              type="checkbox"
               checked={schema.settings?.analytics?.enabled || false}
               onChange={(e) => handleUpdate('analytics', 'enabled', e.target.checked)}
               className="rounded border-gray-300 text-green-600 focus:ring-green-500"
@@ -524,9 +524,9 @@ const GlobalPropertiesPanel: React.FC<GlobalPropertiesPanelProps> = ({
               <input
                 type="text"
                 value={schema.settings?.analytics?.googleAnalytics?.measurementId || ''}
-                onChange={(e) => handleUpdate('analytics', 'googleAnalytics', { 
+                onChange={(e) => handleUpdate('analytics', 'googleAnalytics', {
                   ...schema.settings?.analytics?.googleAnalytics,
-                  measurementId: e.target.value 
+                  measurementId: e.target.value
                 })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500"
                 placeholder="G-XXXXXXXXXX"
@@ -542,7 +542,7 @@ const GlobalPropertiesPanel: React.FC<GlobalPropertiesPanelProps> = ({
           <span className="mr-2">📈</span>
           Estatísticas
         </h3>
-        
+
         <div className="grid grid-cols-2 gap-4">
           <div className="bg-gray-50 p-3 rounded-lg">
             <div className="text-2xl font-bold text-green-600">
@@ -550,7 +550,7 @@ const GlobalPropertiesPanel: React.FC<GlobalPropertiesPanelProps> = ({
             </div>
             <div className="text-xs text-gray-600">Total de Etapas</div>
           </div>
-          
+
           <div className="bg-gray-50 p-3 rounded-lg">
             <div className="text-2xl font-bold text-blue-600">
               {schema.editorMeta?.stats?.totalBlocks || 0}
@@ -615,7 +615,7 @@ const StylePropertiesPanel: React.FC<StylePropertiesPanelProps> = ({ schema, upd
           <span className="mr-2">🎨</span>
           Paleta de Cores
         </h3>
-        
+
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <div>
@@ -711,7 +711,7 @@ const StylePropertiesPanel: React.FC<StylePropertiesPanelProps> = ({ schema, upd
           <span className="mr-2">🔤</span>
           Tipografia
         </h3>
-        
+
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -719,9 +719,9 @@ const StylePropertiesPanel: React.FC<StylePropertiesPanelProps> = ({ schema, upd
             </label>
             <select
               value={schema.settings?.branding?.typography?.fontFamily?.primary || 'Inter, system-ui, sans-serif'}
-              onChange={(e) => handleBrandingUpdate('typography', 'fontFamily', { 
+              onChange={(e) => handleBrandingUpdate('typography', 'fontFamily', {
                 ...schema.settings?.branding?.typography?.fontFamily,
-                primary: e.target.value 
+                primary: e.target.value
               })}
               className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
             >
@@ -740,9 +740,9 @@ const StylePropertiesPanel: React.FC<StylePropertiesPanelProps> = ({ schema, upd
             </label>
             <select
               value={schema.settings?.branding?.typography?.fontFamily?.secondary || 'Poppins, sans-serif'}
-              onChange={(e) => handleBrandingUpdate('typography', 'fontFamily', { 
+              onChange={(e) => handleBrandingUpdate('typography', 'fontFamily', {
                 ...schema.settings?.branding?.typography?.fontFamily,
-                secondary: e.target.value 
+                secondary: e.target.value
               })}
               className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
             >
@@ -762,7 +762,7 @@ const StylePropertiesPanel: React.FC<StylePropertiesPanelProps> = ({ schema, upd
           <span className="mr-2">🏷️</span>
           Logo e Marca
         </h3>
-        
+
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -798,7 +798,7 @@ const StylePropertiesPanel: React.FC<StylePropertiesPanelProps> = ({ schema, upd
           <span className="mr-2">📏</span>
           Espaçamento e Layout
         </h3>
-        
+
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -826,27 +826,27 @@ const StylePropertiesPanel: React.FC<StylePropertiesPanelProps> = ({ schema, upd
           <span className="mr-2">👁️</span>
           Preview da Paleta
         </h3>
-        
+
         <div className="grid grid-cols-4 gap-2">
-          <div 
+          <div
             className="h-16 rounded-lg flex items-center justify-center text-white text-xs font-medium"
             style={{ backgroundColor: schema.settings?.branding?.colors?.primary || '#B89B7A' }}
           >
             Primária
           </div>
-          <div 
+          <div
             className="h-16 rounded-lg flex items-center justify-center text-gray-700 text-xs font-medium"
             style={{ backgroundColor: schema.settings?.branding?.colors?.secondary || '#D4C2A8' }}
           >
             Secundária
           </div>
-          <div 
+          <div
             className="h-16 rounded-lg flex items-center justify-center text-white text-xs font-medium"
             style={{ backgroundColor: schema.settings?.branding?.colors?.accent || '#4CAF50' }}
           >
             Destaque
           </div>
-          <div 
+          <div
             className="h-16 rounded-lg flex items-center justify-center text-gray-700 text-xs font-medium border border-gray-200"
             style={{ backgroundColor: schema.settings?.branding?.colors?.background || '#F9F5F1' }}
           >
@@ -881,7 +881,7 @@ const PublishPropertiesPanel: React.FC<PublishPropertiesPanelProps> = ({ schema,
           <span className="mr-2">🚀</span>
           Status da Publicação
         </h3>
-        
+
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -901,19 +901,18 @@ const PublishPropertiesPanel: React.FC<PublishPropertiesPanelProps> = ({ schema,
 
           <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
             <div className="flex items-center">
-              <div className={`w-3 h-3 rounded-full mr-3 ${
-                schema.publication?.status === 'published' ? 'bg-green-500' :
-                schema.publication?.status === 'review' ? 'bg-yellow-500' :
-                'bg-gray-400'
-              }`}></div>
+              <div className={`w-3 h-3 rounded-full mr-3 ${schema.publication?.status === 'published' ? 'bg-green-500' :
+                  schema.publication?.status === 'review' ? 'bg-yellow-500' :
+                    'bg-gray-400'
+                }`}></div>
               <div>
                 <div className="font-medium text-sm">
                   {schema.publication?.status === 'published' ? 'Publicado' :
-                   schema.publication?.status === 'review' ? 'Em Revisão' :
-                   'Rascunho'}
+                    schema.publication?.status === 'review' ? 'Em Revisão' :
+                      'Rascunho'}
                 </div>
                 <div className="text-xs text-gray-600">
-                  {schema.publication?.publishedAt ? 
+                  {schema.publication?.publishedAt ?
                     `Publicado em ${new Date(schema.publication.publishedAt).toLocaleDateString()}` :
                     'Não publicado'
                   }
@@ -930,7 +929,7 @@ const PublishPropertiesPanel: React.FC<PublishPropertiesPanelProps> = ({ schema,
           <span className="mr-2">🔗</span>
           Configurações de URL
         </h3>
-        
+
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -974,11 +973,11 @@ const PublishPropertiesPanel: React.FC<PublishPropertiesPanelProps> = ({ schema,
           <span className="mr-2">🔐</span>
           Controle de Acesso
         </h3>
-        
+
         <div className="space-y-3">
           <label className="flex items-center space-x-2">
-            <input 
-              type="checkbox" 
+            <input
+              type="checkbox"
               checked={schema.publication?.accessControl?.public || false}
               onChange={(e) => handlePublicationUpdate('accessControl', {
                 ...schema.publication?.accessControl,
@@ -990,8 +989,8 @@ const PublishPropertiesPanel: React.FC<PublishPropertiesPanelProps> = ({ schema,
           </label>
 
           <label className="flex items-center space-x-2">
-            <input 
-              type="checkbox" 
+            <input
+              type="checkbox"
               checked={schema.publication?.accessControl?.requiresAuth || false}
               onChange={(e) => handlePublicationUpdate('accessControl', {
                 ...schema.publication?.accessControl,
@@ -1003,8 +1002,8 @@ const PublishPropertiesPanel: React.FC<PublishPropertiesPanelProps> = ({ schema,
           </label>
 
           <label className="flex items-center space-x-2">
-            <input 
-              type="checkbox" 
+            <input
+              type="checkbox"
               checked={schema.publication?.cdn?.enabled || false}
               onChange={(e) => handlePublicationUpdate('cdn', {
                 ...schema.publication?.cdn,
@@ -1023,18 +1022,18 @@ const PublishPropertiesPanel: React.FC<PublishPropertiesPanelProps> = ({ schema,
           <span className="mr-2">📋</span>
           Informações de Versão
         </h3>
-        
+
         <div className="bg-gray-50 p-4 rounded-lg space-y-2">
           <div className="flex justify-between">
             <span className="text-sm text-gray-600">Versão atual:</span>
             <span className="text-sm font-medium">{schema.publication?.version || '1.0.0'}</span>
           </div>
-          
+
           <div className="flex justify-between">
             <span className="text-sm text-gray-600">Última modificação:</span>
             <span className="text-sm font-medium">
-              {schema.editorMeta?.lastModified ? 
-                new Date(schema.editorMeta.lastModified).toLocaleString() : 
+              {schema.editorMeta?.lastModified ?
+                new Date(schema.editorMeta.lastModified).toLocaleString() :
                 'N/A'
               }
             </span>
@@ -1053,23 +1052,23 @@ const PublishPropertiesPanel: React.FC<PublishPropertiesPanelProps> = ({ schema,
           <span className="mr-2">⚡</span>
           Ações Rápidas
         </h3>
-        
+
         <div className="space-y-3">
-          <button 
+          <button
             className="w-full px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 transition-colors"
             onClick={() => alert('Funcionalidade de publicação será implementada!')}
           >
             🚀 Publicar Quiz
           </button>
-          
-          <button 
+
+          <button
             className="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
             onClick={() => alert('Funcionalidade de preview será implementada!')}
           >
             👁️ Preview da Publicação
           </button>
-          
-          <button 
+
+          <button
             className="w-full px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
             onClick={() => alert('Funcionalidade de backup será implementada!')}
           >
@@ -1119,7 +1118,7 @@ const BlockPropertiesEditor: React.FC<BlockPropertiesEditorProps> = ({ block, on
           {block.type || 'Bloco'}
         </span>
       </div>
-      
+
       <div className="space-y-3">
         {/* Conteúdo do Bloco */}
         <div>
