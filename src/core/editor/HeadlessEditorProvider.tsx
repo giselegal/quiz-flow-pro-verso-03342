@@ -8,6 +8,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { QuizFunnelSchema, FunnelStep } from '../../types/quiz-schema';
 import { QuizTemplateAdapter } from '../migration/QuizTemplateAdapter';
+import EditorDataService from './services/EditorDataService';
 
 // ============================================================================
 // CONTEXTO DO EDITOR HEADLESS
@@ -86,13 +87,43 @@ export const HeadlessEditorProvider: React.FC<HeadlessEditorProviderProps> = ({
   const [previewMode, setPreviewMode] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
   const [validationErrors, setValidationErrors] = useState<ValidationError[]>([]);
 
+  // Instância do EditorDataService
+  const dataService = useMemo(() =>
+    EditorDataService.getInstance({
+      autoSave,
+      autoSaveInterval,
+      enableCache: true,
+      enableValidation: true,
+    }), [autoSave, autoSaveInterval]
+  );
+
   // Estado computado
   const currentStep = useMemo(() => {
     return schema?.steps[currentStepIndex] || null;
   }, [schema, currentStepIndex]);
 
   // ============================================================================
-  // CARREGAMENTO DE SCHEMA
+  // SINCRONIZAÇÃO COM EDITORDATA SERVICE
+  // ============================================================================
+
+  useEffect(() => {
+    // Listener para mudanças do EditorDataService
+    const unsubscribe = dataService.addChangeListener((event) => {
+      console.log('🔄 Schema atualizado via EditorDataService:', event);
+
+      const updatedSchema = dataService.getCurrentSchema();
+      if (updatedSchema) {
+        setSchema(updatedSchema);
+        setIsDirty(dataService.isDirtySchema());
+        setLastSaved(updatedSchema.editorMeta.lastModified);
+      }
+    });
+
+    return unsubscribe;
+  }, [dataService]);
+
+  // ============================================================================
+  // CARREGAMENTO DE SCHEMA INTEGRADO COM JSON
   // ============================================================================
 
   const loadSchema = useCallback(async (targetSchemaId?: string) => {
@@ -101,10 +132,24 @@ export const HeadlessEditorProvider: React.FC<HeadlessEditorProviderProps> = ({
       let loadedSchema: QuizFunnelSchema;
 
       if (targetSchemaId) {
-        // Carregar schema específico (TODO: implementar carregamento de storage)
-        loadedSchema = await loadSchemaFromStorage(targetSchemaId);
+        // Usar EditorDataService para carregamento inteligente
+        try {
+          // Tentar carregar como template JSON primeiro
+          loadedSchema = await dataService.loadSchemaFromJson('template', targetSchemaId);
+          console.log('✅ Schema carregado de template JSON');
+        } catch {
+          try {
+            // Fallback para schema salvo
+            loadedSchema = await dataService.loadSchemaFromJson('saved', targetSchemaId);
+            console.log('✅ Schema carregado de localStorage');
+          } catch {
+            // Último fallback - migração legacy
+            console.log('🔄 Carregando schema através de migração do template legacy...');
+            loadedSchema = await QuizTemplateAdapter.convertLegacyTemplate();
+          }
+        }
       } else {
-        // Migrar do template legacy
+        // Migrar do template legacy se nenhum ID especificado
         console.log('🔄 Carregando schema através de migração do template legacy...');
         loadedSchema = await QuizTemplateAdapter.convertLegacyTemplate();
       }
@@ -126,10 +171,10 @@ export const HeadlessEditorProvider: React.FC<HeadlessEditorProviderProps> = ({
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [dataService]);
 
   // ============================================================================
-  // SALVAMENTO DE SCHEMA
+  // SALVAMENTO DE SCHEMA INTEGRADO COM JSON
   // ============================================================================
 
   const saveSchema = useCallback(async () => {
@@ -137,28 +182,18 @@ export const HeadlessEditorProvider: React.FC<HeadlessEditorProviderProps> = ({
 
     setIsLoading(true);
     try {
-      // Atualizar metadados
-      const updatedSchema: QuizFunnelSchema = {
-        ...schema,
-        editorMeta: {
-          ...schema.editorMeta,
-          lastModified: new Date().toISOString(),
-          stats: {
-            ...schema.editorMeta.stats,
-            totalBlocks: schema.steps.reduce((acc, step) => acc + step.blocks.length, 0),
-            totalSteps: schema.steps.length
-          }
-        }
-      };
+      // Usar EditorDataService para salvamento inteligente
+      const results = await dataService.saveSchema();
 
-      // Salvar no storage
-      await saveSchemaToStorage(updatedSchema);
+      const successfulSaves = results.filter(r => r.success);
+      if (successfulSaves.length > 0) {
+        setIsDirty(false);
+        setLastSaved(new Date().toISOString());
 
-      setSchema(updatedSchema);
-      setIsDirty(false);
-      setLastSaved(updatedSchema.editorMeta.lastModified);
-
-      console.log('💾 Schema salvo com sucesso');
+        console.log('✅ Schema salvo com sucesso:', successfulSaves.map(r => r.location));
+      } else {
+        console.warn('⚠️ Nenhum salvamento foi bem-sucedido:', results);
+      }
 
     } catch (error) {
       console.error('❌ Erro ao salvar schema:', error);
@@ -166,48 +201,38 @@ export const HeadlessEditorProvider: React.FC<HeadlessEditorProviderProps> = ({
     } finally {
       setIsLoading(false);
     }
-  }, [schema, isDirty]);
+  }, [schema, isDirty, dataService]);
 
   // ============================================================================
-  // ATUALIZAÇÕES DE CONTEÚDO
+  // ATUALIZAÇÕES DE CONTEÚDO INTEGRADAS COM JSON
   // ============================================================================
 
   const updateStep = useCallback((stepId: string, updates: Partial<FunnelStep>) => {
     if (!schema) return;
 
-    const updatedSteps = schema.steps.map(step =>
-      step.id === stepId ? { ...step, ...updates } : step
-    );
+    // Usar EditorDataService para atualizações
+    dataService.updateStep(stepId, updates);
 
-    setSchema({ ...schema, steps: updatedSteps });
-    setIsDirty(true);
-
-    console.log(`📝 Etapa ${stepId} atualizada`);
-  }, [schema]);
+    console.log(`📝 Etapa ${stepId} atualizada via EditorDataService`);
+  }, [schema, dataService]);
 
   const updateGlobalSettings = useCallback((updates: Partial<QuizFunnelSchema['settings']>) => {
     if (!schema) return;
 
-    setSchema({
-      ...schema,
-      settings: { ...schema.settings, ...updates }
-    });
-    setIsDirty(true);
+    // Usar EditorDataService para atualizações globais
+    dataService.updateGlobalSettings(updates);
 
-    console.log('⚙️ Configurações globais atualizadas');
-  }, [schema]);
+    console.log('⚙️ Configurações globais atualizadas via EditorDataService');
+  }, [schema, dataService]);
 
   const updatePublicationSettings = useCallback((updates: Partial<QuizFunnelSchema['publication']>) => {
     if (!schema) return;
 
-    setSchema({
-      ...schema,
-      publication: { ...schema.publication, ...updates }
-    });
-    setIsDirty(true);
+    // Usar EditorDataService para atualizações de publicação
+    dataService.updatePublicationSettings(updates);
 
-    console.log('📢 Configurações de publicação atualizadas');
-  }, [schema]);
+    console.log('🚀 Configurações de publicação atualizadas via EditorDataService');
+  }, [schema, dataService]);
 
   // ============================================================================
   // NAVEGAÇÃO ENTRE ETAPAS
@@ -264,12 +289,8 @@ export const HeadlessEditorProvider: React.FC<HeadlessEditorProviderProps> = ({
         customEvents: []
       },
 
-      blocks: [],
-
       navigation: {
         conditions: [],
-        nextStep: undefined,
-        prevStep: insertIndex > 0 ? schema.steps[insertIndex - 1].id : undefined,
         actions: []
       },
 
@@ -277,18 +298,16 @@ export const HeadlessEditorProvider: React.FC<HeadlessEditorProviderProps> = ({
         required: false,
         customRules: [],
         errorMessages: {}
-      }
+      },
+
+      blocks: []
     };
 
-    const updatedSteps = [
-      ...schema.steps.slice(0, insertIndex),
-      newStep,
-      ...schema.steps.slice(insertIndex)
-    ];
+    const updatedSteps = [...schema.steps];
+    updatedSteps.splice(insertIndex, 0, newStep);
 
     setSchema({ ...schema, steps: updatedSteps });
     setIsDirty(true);
-    setCurrentStepIndex(insertIndex);
 
     console.log(`➕ Nova etapa adicionada: ${newStep.id}`);
   }, [schema]);
@@ -296,22 +315,22 @@ export const HeadlessEditorProvider: React.FC<HeadlessEditorProviderProps> = ({
   const removeStep = useCallback((stepId: string) => {
     if (!schema) return;
 
-    const stepIndex = schema.steps.findIndex(step => step.id === stepId);
-    if (stepIndex === -1) return;
-
     const updatedSteps = schema.steps.filter(step => step.id !== stepId);
 
-    // Ajustar índice atual se necessário
-    let newCurrentIndex = currentStepIndex;
-    if (stepIndex <= currentStepIndex && currentStepIndex > 0) {
-      newCurrentIndex = currentStepIndex - 1;
+    if (updatedSteps.length === 0) {
+      console.warn('⚠️ Não é possível remover a última etapa');
+      return;
     }
 
     setSchema({ ...schema, steps: updatedSteps });
     setIsDirty(true);
-    setCurrentStepIndex(newCurrentIndex);
 
-    console.log(`❌ Etapa removida: ${stepId}`);
+    // Ajustar currentStepIndex se necessário
+    if (currentStepIndex >= updatedSteps.length) {
+      setCurrentStepIndex(updatedSteps.length - 1);
+    }
+
+    console.log(`🗑️ Etapa removida: ${stepId}`);
   }, [schema, currentStepIndex]);
 
   // ============================================================================
@@ -321,47 +340,40 @@ export const HeadlessEditorProvider: React.FC<HeadlessEditorProviderProps> = ({
   const publishSchema = useCallback(async () => {
     if (!schema) return;
 
-    // Validar antes de publicar
-    const errors = validateSchemaInternal(schema);
-    const criticalErrors = errors.filter(e => e.severity === 'error');
+    try {
+      // Atualizar status para publicado
+      const publicationUpdates = {
+        status: 'published' as const,
+        publishedAt: new Date().toISOString(),
+      };
 
-    if (criticalErrors.length > 0) {
-      throw new Error(`Não é possível publicar: ${criticalErrors.map(e => e.message).join(', ')}`);
+      dataService.updatePublicationSettings(publicationUpdates);
+
+      console.log('🚀 Schema publicado com sucesso');
+    } catch (error) {
+      console.error('❌ Erro ao publicar schema:', error);
+      throw error;
     }
-
-    const publishedSchema: QuizFunnelSchema = {
-      ...schema,
-      publication: {
-        ...schema.publication,
-        status: 'published',
-        publishedAt: new Date().toISOString()
-      }
-    };
-
-    await saveSchemaToStorage(publishedSchema);
-    setSchema(publishedSchema);
-    setIsDirty(false);
-
-    console.log('🚀 Schema publicado com sucesso!');
-  }, [schema]);
+  }, [schema, dataService]);
 
   const unpublishSchema = useCallback(async () => {
     if (!schema) return;
 
-    const unpublishedSchema: QuizFunnelSchema = {
-      ...schema,
-      publication: {
-        ...schema.publication,
-        status: 'draft'
-      }
-    };
+    try {
+      // Atualizar status para rascunho
+      const publicationUpdates = {
+        status: 'draft' as const,
+        publishedAt: undefined,
+      };
 
-    await saveSchemaToStorage(unpublishedSchema);
-    setSchema(unpublishedSchema);
-    setIsDirty(false);
+      dataService.updatePublicationSettings(publicationUpdates);
 
-    console.log('📝 Schema despublicado');
-  }, [schema]);
+      console.log('📝 Schema despublicado (retornado para rascunho)');
+    } catch (error) {
+      console.error('❌ Erro ao despublicar schema:', error);
+      throw error;
+    }
+  }, [schema, dataService]);
 
   // ============================================================================
   // VALIDAÇÃO
@@ -372,6 +384,7 @@ export const HeadlessEditorProvider: React.FC<HeadlessEditorProviderProps> = ({
 
     const errors = validateSchemaInternal(schema);
     setValidationErrors(errors);
+
     return errors;
   }, [schema]);
 
@@ -453,20 +466,6 @@ export const useHeadlessEditor = () => {
 // UTILITÁRIOS INTERNOS
 // ============================================================================
 
-async function loadSchemaFromStorage(schemaId: string): Promise<QuizFunnelSchema> {
-  // TODO: Implementar carregamento real do storage
-  console.log(`📂 Carregando schema do storage: ${schemaId}`);
-  throw new Error('Carregamento de schema específico não implementado ainda');
-}
-
-async function saveSchemaToStorage(schema: QuizFunnelSchema): Promise<void> {
-  // TODO: Implementar salvamento real no storage
-  console.log(`💾 Salvando schema no storage: ${schema.id}`);
-
-  // Por enquanto, salvar no localStorage
-  localStorage.setItem(`headless_schema_${schema.id}`, JSON.stringify(schema));
-}
-
 function validateSchemaInternal(schema: QuizFunnelSchema): ValidationError[] {
   const errors: ValidationError[] = [];
 
@@ -523,7 +522,7 @@ function validateSchemaInternal(schema: QuizFunnelSchema): ValidationError[] {
   });
 
   // Validar configurações de SEO
-  if (!schema.settings.seo.title) {
+  if (!schema.settings?.seo?.title) {
     errors.push({
       path: 'settings.seo.title',
       message: 'Título SEO é obrigatório',
@@ -531,7 +530,7 @@ function validateSchemaInternal(schema: QuizFunnelSchema): ValidationError[] {
     });
   }
 
-  if (!schema.settings.seo.description) {
+  if (!schema.settings?.seo?.description) {
     errors.push({
       path: 'settings.seo.description',
       message: 'Descrição SEO é obrigatória',
