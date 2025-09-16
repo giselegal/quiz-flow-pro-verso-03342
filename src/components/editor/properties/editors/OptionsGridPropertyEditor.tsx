@@ -30,7 +30,7 @@ export const OptionsGridPropertyEditor: React.FC<PropertyEditorProps> = ({
         propertyName === 'options'
           ? Array.isArray(value) && value.length > 0
           : (Array.isArray(block.properties?.options) && block.properties.options.length > 0) ||
-            propertyName !== 'options';
+          propertyName !== 'options';
       onValidate?.(isValid);
     },
     [onUpdate, onValidate, block.properties?.options]
@@ -252,6 +252,86 @@ export const OptionsGridPropertyEditor: React.FC<PropertyEditorProps> = ({
                 </Select>
               </div>
             </div>
+
+            {/* ✨ NOVAS PROPRIEDADES IMPLEMENTADAS */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label className="text-sm font-medium">Seleção Múltipla</Label>
+                <Select
+                  value={String(block.properties?.multipleSelection !== false)}
+                  onValueChange={value => handlePropertyChange('multipleSelection', value === 'true')}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="true">Permitir</SelectItem>
+                    <SelectItem value="false">Única seleção</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <Label className="text-sm font-medium">Largura do Container (px)</Label>
+                <Select
+                  value={String(block.properties?.containerWidth || 'auto')}
+                  onValueChange={value => handlePropertyChange('containerWidth', value === 'auto' ? undefined : parseInt(value))}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="auto">Automática</SelectItem>
+                    <SelectItem value="600">600px</SelectItem>
+                    <SelectItem value="800">800px</SelectItem>
+                    <SelectItem value="1000">1000px</SelectItem>
+                    <SelectItem value="1200">1200px</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label className="text-sm font-medium">Espaçamento Grid (px)</Label>
+                <Select
+                  value={String(block.properties?.spacing || block.properties?.gap || 16)}
+                  onValueChange={value => handlePropertyChange('spacing', parseInt(value))}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="8">8px</SelectItem>
+                    <SelectItem value="12">12px</SelectItem>
+                    <SelectItem value="16">16px</SelectItem>
+                    <SelectItem value="20">20px</SelectItem>
+                    <SelectItem value="24">24px</SelectItem>
+                    <SelectItem value="32">32px</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <Label className="text-sm font-medium">Margem Inferior (px)</Label>
+                <Select
+                  value={String(block.properties?.marginBottom || 24)}
+                  onValueChange={value => handlePropertyChange('marginBottom', parseInt(value))}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="0">0px</SelectItem>
+                    <SelectItem value="12">12px</SelectItem>
+                    <SelectItem value="16">16px</SelectItem>
+                    <SelectItem value="24">24px</SelectItem>
+                    <SelectItem value="32">32px</SelectItem>
+                    <SelectItem value="48">48px</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
           </div>
         )}
 
@@ -315,25 +395,89 @@ export const OptionsGridPropertyEditor: React.FC<PropertyEditorProps> = ({
                 </Select>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label className="text-sm font-medium">Cor Selecionado</Label>
-                  <input
-                    type="color"
-                    className="h-9 w-full rounded border border-border bg-background"
-                    value={selectedColor}
-                    onChange={e => handlePropertyChange('selectedColor', e.target.value)}
-                  />
-                </div>
-                <div>
-                  <Label className="text-sm font-medium">Cor Hover</Label>
-                  <input
-                    type="color"
-                    className="h-9 w-full rounded border border-border bg-background"
-                    value={hoverColor}
-                    onChange={e => handlePropertyChange('hoverColor', e.target.value)}
-                  />
-                </div>
+              <div>
+                <Label className="text-sm font-medium">Tipo de Animação</Label>
+                <Select
+                  value={block.properties?.animationType || 'scale'}
+                  onValueChange={value => handlePropertyChange('animationType', value)}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="scale">Escala</SelectItem>
+                    <SelectItem value="fade">Fade</SelectItem>
+                    <SelectItem value="slide">Deslizar</SelectItem>
+                    <SelectItem value="bounce">Pular</SelectItem>
+                    <SelectItem value="pulse">Pulsar</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            {/* Cores */}
+            <div className="grid grid-cols-3 gap-4">
+              <div>
+                <Label className="text-sm font-medium">Cor da Borda</Label>
+                <input
+                  type="color"
+                  className="h-9 w-full rounded border border-border bg-background"
+                  value={block.properties?.borderColor || '#E5E7EB'}
+                  onChange={e => handlePropertyChange('borderColor', e.target.value)}
+                />
+              </div>
+              <div>
+                <Label className="text-sm font-medium">Cor Selecionado</Label>
+                <input
+                  type="color"
+                  className="h-9 w-full rounded border border-border bg-background"
+                  value={block.properties?.selectedBorderColor || selectedColor}
+                  onChange={e => handlePropertyChange('selectedBorderColor', e.target.value)}
+                />
+              </div>
+              <div>
+                <Label className="text-sm font-medium">Cor Hover</Label>
+                <input
+                  type="color"
+                  className="h-9 w-full rounded border border-border bg-background"
+                  value={hoverColor}
+                  onChange={e => handlePropertyChange('hoverColor', e.target.value)}
+                />
+              </div>
+            </div>
+
+            {/* Sistema de Pontuação e Validação */}
+            <div className="space-y-4 p-4 bg-card border rounded-lg">
+              <h4 className="text-sm font-medium mb-3 text-foreground">Sistema de Pontuação & Validação</h4>
+
+              <div>
+                <Label className="text-sm font-medium">Sistema de Pontuação</Label>
+                <Select
+                  value={String(block.properties?.scoring !== false)}
+                  onValueChange={value => handlePropertyChange('scoring', value === 'true')}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="true">Ativado</SelectItem>
+                    <SelectItem value="false">Desativado</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <Label className="text-sm font-medium">Mensagem de Validação Personalizada</Label>
+                <textarea
+                  className="w-full p-2 border rounded-md text-sm resize-none"
+                  rows={2}
+                  placeholder="Ex: Selecione pelo menos 2 opções para continuar"
+                  value={block.properties?.validationMessage || ''}
+                  onChange={e => handlePropertyChange('validationMessage', e.target.value || undefined)}
+                />
+                <p className="text-xs text-muted-foreground mt-1">
+                  Deixe vazio para usar a mensagem automática
+                </p>
               </div>
             </div>
           </div>

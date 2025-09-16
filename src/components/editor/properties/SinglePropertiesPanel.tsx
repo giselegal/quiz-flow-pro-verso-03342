@@ -35,9 +35,11 @@ const OptionsGridPropertyEditor = lazy(() => import('./editors/OptionsGridProper
 const OptionsPropertyEditor = lazy(() => import('./editors/OptionsPropertyEditor').then(m => ({ default: m.OptionsPropertyEditor })));
 const ImagePropertyEditor = lazy(() => import('./editors/ImagePropertyEditor'));
 const FormContainerPropertyEditor = lazy(() => import('./editors/FormContainerPropertyEditor').then(m => ({ default: m.FormContainerPropertyEditor })));
+const LeadFormPropertyEditor = lazy(() => import('./editors/LeadFormPropertyEditor').then(m => ({ default: m.LeadFormPropertyEditor })));
 const NavigationPropertyEditor = lazy(() => import('./editors/NavigationPropertyEditor').then(m => ({ default: m.NavigationPropertyEditor })));
 const TestimonialPropertyEditor = lazy(() => import('./editors/TestimonialPropertyEditor').then(m => ({ default: m.TestimonialPropertyEditor })));
 const PricingPropertyEditor = lazy(() => import('./editors/PricingPropertyEditor').then(m => ({ default: m.PricingPropertyEditor })));
+const ResultCommonPropertyEditor = lazy(() => import('./editors/ResultCommonPropertyEditor').then(m => ({ default: m.ResultCommonPropertyEditor })));
 
 import { PropertyType, UnifiedBlock } from '@/hooks/useUnifiedProperties';
 import { useOptimizedUnifiedProperties } from '@/hooks/useOptimizedUnifiedProperties';
@@ -115,6 +117,7 @@ const SpecializedEditor: React.FC<{
             );
 
         case 'text':
+        case 'text-inline':
         case 'headline':
         case 'title':
             return (
@@ -132,6 +135,23 @@ const SpecializedEditor: React.FC<{
             return (
                 <Suspense fallback={<div className="p-4 text-center text-sm text-muted-foreground">Carregando editor de opções...</div>}>
                     <OptionsGridPropertyEditor
+                        block={selectedBlock as any}
+                        onUpdate={handleUpdate as any}
+                        isPreviewMode={false}
+                    />
+                </Suspense>
+            );
+
+        // ===== RESULT COMPONENTS (unified) =====
+        case 'result-header-inline':
+        case 'modular-result-header':
+        case 'quiz-result-header':
+        case 'quiz-result-style':
+        case 'quiz-result-secondary':
+        case 'result-card':
+            return (
+                <Suspense fallback={<div className="p-4 text-center text-sm text-muted-foreground">Carregando editor de resultado...</div>}>
+                    <ResultCommonPropertyEditor
                         block={selectedBlock as any}
                         onUpdate={handleUpdate as any}
                         isPreviewMode={false}
@@ -166,12 +186,23 @@ const SpecializedEditor: React.FC<{
 
         case 'form-container':
         case 'form-input':
-        case 'lead-form':
             return (
                 <Suspense fallback={<div className="p-4 text-center text-sm text-muted-foreground">Carregando editor de formulário...</div>}>
                     <FormContainerPropertyEditor
                         block={selectedBlock as any}
                         onUpdate={handleUpdate as any}
+                        isPreviewMode={false}
+                    />
+                </Suspense>
+            );
+
+        case 'lead-form':
+            return (
+                <Suspense fallback={<div className="p-4 text-center text-sm text-muted-foreground">Carregando editor de lead form...</div>}>
+                    <LeadFormPropertyEditor
+                        block={selectedBlock as any}
+                        onUpdate={handleUpdate as any}
+                        onValidate={() => { }}
                         isPreviewMode={false}
                     />
                 </Suspense>
@@ -457,7 +488,7 @@ export const SinglePropertiesPanel: React.FC<SinglePropertiesPanelProps> = memo(
             'header', 'quiz-intro-header', 'quiz-header',
             'question', 'quiz-question', 'quiz-question-inline',
             'button', 'cta', 'quiz-cta',
-            'text', 'headline', 'title',
+            'text', 'text-inline', 'headline', 'title',
             'options-grid', 'options-grid-inline',
             'options', 'result', 'quiz-result',
             'image', 'image-display-inline',
