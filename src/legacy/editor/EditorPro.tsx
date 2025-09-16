@@ -41,7 +41,7 @@ const PropertiesColumn = React.lazy(() => import('@/components/editor/properties
 // Removidos estilos de animação/transição globais do editor
 
 // Tipos de ícones padronizados
-import { availableComponents as AVAILABLE_COMPONENTS_CONFIG, type IconName, type ComponentDef } from '@/components/editor/config/availableComponents';
+import { availableComponents as AVAILABLE_COMPONENTS_CONFIG, type IconName, type ComponentDef } from '@/components/editor/config/availableComponents.step20';
 
 // Tipos de componentes disponíveis vêm da config
 

@@ -15,6 +15,15 @@ import OptionsGridBlock from '@/components/editor/blocks/OptionsGridBlock';
 import QuizIntroHeaderBlock from '@/components/editor/blocks/QuizIntroHeaderBlock';
 import TextInlineBlock from '@/components/editor/blocks/TextInlineBlock';
 import SalesHeroBlock from '@/components/editor/blocks/SalesHeroBlock';
+import { 
+    Step20ResultHeaderBlock,
+    Step20StyleRevealBlock,
+    Step20UserGreetingBlock,
+    Step20CompatibilityBlock,
+    Step20SecondaryStylesBlock,
+    Step20PersonalizedOfferBlock,
+    Step20CompleteTemplateBlock
+} from '@/components/editor/blocks/Step20ModularBlocks';
 
 // 🎯 REGISTRY COMPLETO - 150+ COMPONENTES MAPEADOS
 export const ENHANCED_BLOCK_REGISTRY: Record<string, ComponentType<any>> = {
@@ -75,6 +84,15 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, ComponentType<any>> = {
     'secondary-styles': lazy(() => import('@/components/editor/blocks/SecondaryStylesInlineBlock')),
     'quiz-result-secondary': lazy(() => import('@/components/editor/blocks/StyleCardsGridBlock')),
     'result-card': lazy(() => import('@/components/editor/blocks/StyleCardInlineBlock')),
+
+    // 🆕 STEP 20 - Módulos Modulares
+    'step20-result-header': Step20ResultHeaderBlock,
+    'step20-style-reveal': Step20StyleRevealBlock,
+    'step20-user-greeting': Step20UserGreetingBlock,
+    'step20-compatibility': Step20CompatibilityBlock,
+    'step20-secondary-styles': Step20SecondaryStylesBlock,
+    'step20-personalized-offer': Step20PersonalizedOfferBlock,
+    'step20-complete-template': Step20CompleteTemplateBlock,
 
     // ✅ STEP 21 - OFERTA
     'urgency-timer-inline': lazy(() => import('@/components/editor/blocks/UrgencyTimerInlineBlock')),
