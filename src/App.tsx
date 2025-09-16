@@ -150,7 +150,7 @@ function App() {
                   </div>
                 );
               }} />
-              
+
               {/* 🎯 EDITOR ALTERNATIVO - MainEditor */}
               <Route path="/editor-main" component={() =>
                 <Suspense fallback={<LoadingFallback />}>
