@@ -279,16 +279,16 @@ interface ResultHeaderInlineBlockProps extends BlockComponentProps {
   isSelected?: boolean;
 }
 
-const ResultHeaderInlineBlock = ({
-  block,
-  onPropertyChange,
-  className = '',
-  isSelected = false
+const ResultHeaderInlineBlock = ({ 
+  block, 
+  onPropertyChange, 
+  className = '', 
+  isSelected = false 
 }: ResultHeaderInlineBlockProps) => {
   const [imageError, setImageError] = useState(false);
   const [guideImageError, setGuideImageError] = useState(false);
   const { primaryStyle, secondaryStyles, hasResult, error, retry } = useQuizResult(block);
-
+  
   if (error) {
     return (
       <div className={cn("text-center p-8", className)}>
