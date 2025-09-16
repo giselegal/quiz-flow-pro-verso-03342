@@ -279,16 +279,16 @@ interface ResultHeaderInlineBlockProps extends BlockComponentProps {
   isSelected?: boolean;
 }
 
-const ResultHeaderInlineBlock = ({ 
-  block, 
-  onPropertyChange, 
-  className = '', 
-  isSelected = false 
+const ResultHeaderInlineBlock = ({
+  block,
+  onPropertyChange,
+  className = '',
+  isSelected = false
 }: ResultHeaderInlineBlockProps) => {
   const [imageError, setImageError] = useState(false);
   const [guideImageError, setGuideImageError] = useState(false);
   const { primaryStyle, secondaryStyles, hasResult, error, retry } = useQuizResult(block);
-  
+
   if (error) {
     return (
       <div className={cn("text-center p-8", className)}>
@@ -332,7 +332,7 @@ const ResultHeaderInlineBlock = ({
       .split(/\s+/)
       .map(w => (w ? w.charAt(0).toUpperCase() + w.slice(1) : w))
       .join(' ');
-  }, [storedName]);
+  }, [storedName || '']);
 
   const {
     title = 'Seu Estilo Predominante',
@@ -371,21 +371,21 @@ const ResultHeaderInlineBlock = ({
 
   // Normalizar nome do estilo para exibição (preferir category legível)
   const styleKey = (primaryStyle as any)?.style || (primaryStyle as any)?.category || '';
-  const styleLabel = mapToFriendlyStyle((primaryStyle as any)?.category || styleKey || 'Natural');
+  const styleLabel = mapToFriendlyStyle((primaryStyle as any)?.category || styleKey || 'Natural') || 'Natural';
 
-  const vars = {
-    userName: displayName,
-    resultStyle: styleLabel,
-  };
+  const vars = useMemo(() => ({
+    userName: displayName || '',
+    resultStyle: styleLabel || '',
+  }), [displayName, styleLabel]);
 
   // Percentual exibido: usa o calculado (primaryStyle.percentage) se não houver override explícito na prop
   const computedPercentage = typeof percentageProp === 'number' && !Number.isNaN(percentageProp)
     ? percentageProp
     : (typeof (primaryStyle as any)?.percentage === 'number' ? (primaryStyle as any).percentage : 0);
   const effectivePercentage = computeEffectivePrimaryPercentage(
-    primaryStyle as any,
-    secondaryStyles as any[],
-    computedPercentage
+    primaryStyle || {} as any,
+    secondaryStyles || [] as any[],
+    computedPercentage || 0
   );
   // Evitar exibir 0% quando já existe um estilo definido mas sem dados numéricos suficientes
   const displayPercentage = (effectivePercentage && effectivePercentage > 0)
@@ -396,7 +396,7 @@ const ResultHeaderInlineBlock = ({
   const variant: VariantFlags = useMemo(() => ({
     isCompact: mobileVariant === 'compact',
     isMinimal: mobileVariant === 'minimal'
-  }), [mobileVariant]);
+  }), [mobileVariant || 'stack']);
 
   // Defaults vindos de configuração de estilo
   const styleInfo = getStyleConfig(styleLabel) || {};
