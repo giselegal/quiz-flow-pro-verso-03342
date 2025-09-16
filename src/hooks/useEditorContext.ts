@@ -8,7 +8,8 @@
 import { useContext } from 'react';
 
 // Import direto para evitar problemas de tipos
-import { EditorContext, EditorContextValue } from '@/components/editor/EditorProvider';
+import { EditorContext } from '@/components/editor/EditorProvider';
+import type { EditorContextValue } from '@/components/editor/EditorProvider';
 
 /**
  * Hook unificado que resolve automaticamente conflitos de contexto

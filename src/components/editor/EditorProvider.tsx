@@ -63,7 +63,7 @@ export interface EditorContextValue {
   actions: EditorActions;
 }
 
-const EditorContext = createContext<EditorContextValue | undefined>(undefined);
+export const EditorContext = createContext<EditorContextValue | undefined>(undefined);
 
 export const useEditor = () => {
   const context = useContext(EditorContext);
