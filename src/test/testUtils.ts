@@ -3,10 +3,7 @@
  * Utilities for improved testing experience
  */
 
-import { render } from '@testing-library/react';
-import React from 'react';
-
-// Re-export everything
+// Re-export everything from testing-library/react
 export * from '@testing-library/react';
 
 // Mock data helpers
