@@ -45,12 +45,31 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
     imagePosition = 'top',
     gap = 16,
     cardRadius = 12,
-  selectionStyle = 'border',
-  selectedColor = '#B89B7A',
-  hoverColor = '#D4C2A8',
+    selectionStyle = 'border',
+    selectedColor = '#B89B7A',
+    hoverColor = '#D4C2A8',
+    // ✨ PROPRIEDADES FALTANTES IMPLEMENTADAS
+    containerWidth,
+    spacing = gap, // fallback para gap se spacing não definido
+    marginBottom = 24,
+    validationMessage,
+    borderColor = '#E5E7EB',
+    selectedBorderColor = selectedColor, // fallback para selectedColor
+    animationType = 'scale',
   } = block.properties || {};
 
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+
+  // Configurações de animação baseadas no animationType
+  const animationClasses = {
+    fade: 'transition-opacity duration-300',
+    scale: 'transition-transform duration-300 hover:scale-105',
+    slide: 'transition-transform duration-300 hover:translate-y-[-2px]',
+    bounce: 'transition-transform duration-300 hover:animate-bounce',
+    pulse: 'transition-all duration-300 hover:animate-pulse',
+  };
+
+  const getAnimationClass = () => animationClasses[animationType as keyof typeof animationClasses] || animationClasses.scale;
 
   // Debug leve (somente em dev)
   if (import.meta?.env?.DEV) {
@@ -146,6 +165,29 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
 
   const isValidSelection = selectedOptions.length >= minSelections;
 
+  // Mensagem de validação personalizada ou padrão
+  const getValidationMessage = () => {
+    if (validationMessage) {
+      return validationMessage;
+    }
+
+    if (multipleSelection) {
+      if (selectedOptions.length === 0) {
+        return `Selecione pelo menos ${minSelections} ${minSelections === 1 ? 'opção' : 'opções'}`;
+      }
+      if (selectedOptions.length < minSelections) {
+        return `Selecione mais ${minSelections - selectedOptions.length} ${minSelections - selectedOptions.length === 1 ? 'opção' : 'opções'}`;
+      }
+      if (selectedOptions.length >= minSelections && selectedOptions.length <= maxSelections) {
+        return `${selectedOptions.length} de ${maxSelections} selecionados`;
+      }
+    } else {
+      return selectedOptions.length > 0 ? 'Opção selecionada' : 'Selecione uma opção';
+    }
+
+    return '';
+  };
+
   return (
     <div
       className={cn(
@@ -153,6 +195,11 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
         className,
         isSelected && 'ring-2 ring-blue-500 ring-opacity-50'
       )}
+      style={{
+        maxWidth: containerWidth ? `${containerWidth}px` : undefined,
+        marginBottom: `${marginBottom}px`,
+        margin: containerWidth ? '0 auto' : undefined, // centralizar se containerWidth definido
+      }}
       onClick={onClick}
     >
       {/* Grid de opções */}
@@ -165,7 +212,7 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
           columns === 4 && 'grid-cols-2 md:grid-cols-4'
         )}
         style={{
-          gap: `${gap}px`,
+          gap: spacing ? `${spacing}px` : `${gap}px`, // usar spacing se definido, senão gap
         }}
       >
         {options.map((option: OptionItem) => {
@@ -175,17 +222,19 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
             switch (selectionStyle) {
               case 'background':
                 return isSelectedOption
-                  ? { backgroundColor: `${selectedColor}1A`, borderColor: selectedColor }
-                  : {};
+                  ? { backgroundColor: `${selectedBorderColor}1A`, borderColor: selectedBorderColor }
+                  : { borderColor: borderColor };
               case 'shadow':
                 return isSelectedOption
                   ? {
-                      boxShadow: `0 0 0 2px ${selectedColor}55, 0 8px 20px ${selectedColor}33`,
-                      borderColor: selectedColor,
-                    }
-                  : {};
+                    boxShadow: `0 0 0 2px ${selectedBorderColor}55, 0 8px 20px ${selectedBorderColor}33`,
+                    borderColor: selectedBorderColor,
+                  }
+                  : { borderColor: borderColor };
               default:
-                return isSelectedOption ? { borderColor: selectedColor } : {};
+                return isSelectedOption
+                  ? { borderColor: selectedBorderColor }
+                  : { borderColor: borderColor };
             }
           })();
 
@@ -196,13 +245,14 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
               key={option.id}
               className={cn(
                 'option-card p-4 border-2 cursor-pointer transition-all duration-200',
+                getAnimationClass(), // aplicar classe de animação
                 layoutOrientation === 'horizontal' && imagePosition === 'left'
                   ? 'flex items-center gap-4'
                   : '',
                 layoutOrientation === 'horizontal' && imagePosition === 'right'
                   ? 'flex items-center gap-4 flex-row-reverse'
                   : '',
-                isSelectedOption ? '' : 'border-gray-200'
+                // remover border-gray-200 padrão já que usamos borderColor
               )}
               onClick={e => {
                 e.stopPropagation();
@@ -226,11 +276,11 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
                     'option-image',
                     layoutOrientation === 'vertical' && imagePosition === 'top' && 'mb-3',
                     layoutOrientation === 'vertical' &&
-                      imagePosition === 'bottom' &&
-                      'order-2 mt-3',
+                    imagePosition === 'bottom' &&
+                    'order-2 mt-3',
                     layoutOrientation === 'horizontal' &&
-                      (imagePosition === 'left' || imagePosition === 'right') &&
-                      'flex-shrink-0'
+                    (imagePosition === 'left' || imagePosition === 'right') &&
+                    'flex-shrink-0'
                   )}
                 >
                   <img
@@ -302,12 +352,8 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
 
       {/* Feedback de seleção */}
       <div className="selection-feedback mt-4 text-center">
-        <p className={cn('text-sm', isValidSelection ? 'text-green-600' : 'text-muted-foreground')}>
-          {multipleSelection
-            ? `${selectedOptions.length} de ${maxSelections} selecionados${!isValidSelection ? ` (mínimo ${minSelections})` : ''}`
-            : selectedOptions.length > 0
-              ? 'Opção selecionada'
-              : 'Selecione uma opção'}
+        <p className={cn('text-sm', isValidSelection ? 'text-green-600' : 'text-red-500')}>
+          {getValidationMessage()}
         </p>
       </div>
     </div>
