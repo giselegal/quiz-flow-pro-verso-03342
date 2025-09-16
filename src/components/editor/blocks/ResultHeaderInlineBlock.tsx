@@ -1,4 +1,4 @@
-import { useState, useMemo, memo } from 'react';
+import { useState, useMemo, memo, useCallback } from 'react';
 import { InlineEditableText } from './InlineEditableText';
 import { Progress } from '@/components/ui/progress';
 import { Card } from '@/components/ui/card';
@@ -87,56 +87,64 @@ interface ProgressSectionProps {
   onChange: (k: string, v: any) => void;
   variant: VariantFlags;
 }
-const ProgressSection = ({ title, subtitle, vars, displayPercentage, progressColor, styleLabel, displayName, alignClass, onChange, variant }: ProgressSectionProps) => (
-  <div className={cn('mb-6', alignClass)}>
-    <div className={cn('mx-auto', variant.isMinimal ? 'max-w-sm' : 'max-w-md', variant.isMinimal ? 'mb-4' : 'mb-6')}>
-      <div className={cn('flex justify-between items-center', variant.isMinimal ? 'mb-1' : 'mb-2')}>
-        <span className={cn('text-[#8F7A6A]', variant.isMinimal ? 'text-xs' : 'text-sm')}>
-          <InlineEditableText
-            value={interpolate(title, vars)}
-            onChange={value => onChange('title', value)}
-            placeholder="Título do resultado"
-            className={cn(variant.isMinimal ? 'text-xs' : 'text-sm', 'text-[#8F7A6A]')}
-          />
-        </span>
-        <span
-          className={cn('text-[#aa6b5d] font-medium cursor-pointer', variant.isMinimal ? 'text-xs' : 'text-sm')}
-          onClick={() => {
-            const newPercentage = prompt('Nova porcentagem (0-100):', String(displayPercentage));
-            if (newPercentage !== null && !isNaN(Number(newPercentage))) {
-              onChange('percentage', Math.max(0, Math.min(100, Number(newPercentage))));
-            }
-          }}
-        >
-          {displayPercentage}%
-        </span>
-      </div>
-      {styleLabel && (
-        <div className={cn('font-semibold text-[#432818] mb-1', variant.isMinimal ? 'text-sm' : 'text-base')}>
-          Compatibilidade: {displayPercentage}%
-          {displayName ? (
-            <span className="ml-1 text-[#6B4F43] font-normal">• {vars.userName}</span>
-          ) : null}
+const ProgressSection = memo(({ title, subtitle, vars, displayPercentage, progressColor, styleLabel, displayName, alignClass, onChange, variant }: ProgressSectionProps) => {
+  const handlePercentageClick = useCallback(() => {
+    const newPercentage = prompt('Nova porcentagem (0-100):', String(displayPercentage));
+    if (newPercentage !== null && !isNaN(Number(newPercentage))) {
+      onChange('percentage', Math.max(0, Math.min(100, Number(newPercentage))));
+    }
+  }, [displayPercentage, onChange]);
+
+  const handleTitleChange = useCallback((value: string) => onChange('title', value), [onChange]);
+  const handleSubtitleChange = useCallback((value: string) => onChange('subtitle', value), [onChange]);
+
+  return (
+    <div className={cn('mb-6', alignClass)}>
+      <div className={cn('mx-auto', variant.isMinimal ? 'max-w-sm' : 'max-w-md', variant.isMinimal ? 'mb-4' : 'mb-6')}>
+        <div className={cn('flex justify-between items-center', variant.isMinimal ? 'mb-1' : 'mb-2')}>
+          <span className={cn('text-[#8F7A6A]', variant.isMinimal ? 'text-xs' : 'text-sm')}>
+            <InlineEditableText
+              value={interpolate(title, vars)}
+              onChange={handleTitleChange}
+              placeholder="Título do resultado"
+              className={cn(variant.isMinimal ? 'text-xs' : 'text-sm', 'text-[#8F7A6A]')}
+            />
+          </span>
+          <span
+            className={cn('text-[#aa6b5d] font-medium cursor-pointer', variant.isMinimal ? 'text-xs' : 'text-sm')}
+            onClick={handlePercentageClick}
+          >
+            {displayPercentage}%
+          </span>
         </div>
-      )}
-      <Progress
-        value={displayPercentage}
-        className={cn('bg-[#F3E8E6] rounded-full', variant.isMinimal ? 'h-2' : 'h-3')}
-        style={{ '--progress-color': progressColor } as React.CSSProperties}
-      />
-    </div>
-    {subtitle && !variant.isMinimal && (
-      <div className={cn('mt-2 text-[#432818] font-semibold', alignClass)}>
-        <InlineEditableText
-          value={interpolate(subtitle, vars)}
-          onChange={value => onChange('subtitle', value)}
-          placeholder="Subtítulo do resultado"
-          className="text-[#432818]"
+        {styleLabel && (
+          <div className={cn('font-semibold text-[#432818] mb-1', variant.isMinimal ? 'text-sm' : 'text-base')}>
+            Compatibilidade: {displayPercentage}%
+            {displayName ? (
+              <span className="ml-1 text-[#6B4F43] font-normal">• {vars.userName}</span>
+            ) : null}
+          </div>
+        )}
+        <Progress
+          value={displayPercentage}
+          className={cn('bg-[#F3E8E6] rounded-full', variant.isMinimal ? 'h-2' : 'h-3')}
+          style={{ '--progress-color': progressColor } as React.CSSProperties}
         />
       </div>
-    )}
-  </div>
-);
+      {subtitle && !variant.isMinimal && (
+        <div className={cn('mt-2 text-[#432818] font-semibold', alignClass)}>
+          <InlineEditableText
+            value={interpolate(subtitle, vars)}
+            onChange={handleSubtitleChange}
+            placeholder="Subtítulo do resultado"
+            className="text-[#432818]"
+          />
+        </div>
+      )}
+    </div>
+  );
+});
+ProgressSection.displayName = 'ProgressSection';
 
 interface StyleImageProps {
   imageUrl: string;
@@ -182,20 +190,25 @@ interface DescriptionSectionProps {
   onChange: (k: string, v: any) => void;
   variant: VariantFlags;
 }
-const DescriptionSection = ({ description, vars, styleLabel, onChange, variant }: DescriptionSectionProps) => (
-  <div>
-    <h3 className={cn('font-semibold text-[#432818] mb-3', variant.isMinimal ? 'text-base' : 'text-lg')}>Sua Personalidade Estilística</h3>
-    <p className={cn('text-[#432818] leading-relaxed', variant.isMinimal && 'text-sm')}>
-      <InlineEditableText
-        value={sanitizeStyleMentions(interpolate(description, vars), styleLabel)}
-        onChange={value => onChange('description', value)}
-        placeholder="Descrição do estilo predominante..."
-        className={cn('text-[#432818] leading-relaxed', variant.isMinimal && 'text-sm')}
-        multiline
-      />
-    </p>
-  </div>
-);
+const DescriptionSection = memo(({ description, vars, styleLabel, onChange, variant }: DescriptionSectionProps) => {
+  const handleDescriptionChange = useCallback((value: string) => onChange('description', value), [onChange]);
+
+  return (
+    <div>
+      <h3 className={cn('font-semibold text-[#432818] mb-3', variant.isMinimal ? 'text-base' : 'text-lg')}>Sua Personalidade Estilística</h3>
+      <p className={cn('text-[#432818] leading-relaxed', variant.isMinimal && 'text-sm')}>
+        <InlineEditableText
+          value={sanitizeStyleMentions(interpolate(description, vars), styleLabel)}
+          onChange={handleDescriptionChange}
+          placeholder="Descrição do estilo predominante..."
+          className={cn('text-[#432818] leading-relaxed', variant.isMinimal && 'text-sm')}
+          multiline
+        />
+      </p>
+    </div>
+  );
+});
+DescriptionSection.displayName = 'DescriptionSection';
 
 interface GuideSectionProps {
   guideImageUrl: string;
@@ -204,34 +217,41 @@ interface GuideSectionProps {
   onChange: (k: string, v: any) => void;
   onError: (e: any) => void;
 }
-const GuideSection = ({ guideImageUrl, badgeText, variant, onChange, onError }: GuideSectionProps) => (
-  <div className="mt-8">
-    <h3 className={cn('font-semibold text-[#432818] mb-4 text-center', variant.isMinimal ? 'text-base' : 'text-lg')}>Guia de Aplicação do Seu Estilo</h3>
-    <div className="max-w-2xl mx-auto relative">
-      <img
-        src={guideImageUrl}
-        alt="Guia de Estilo"
-        className="w-full h-auto rounded-xl shadow-lg hover:scale-105 transition-transform duration-300 cursor-pointer"
-        onClick={() => {
-          const newUrl = prompt('Nova URL da imagem do guia:', guideImageUrl);
-          if (newUrl !== null) onChange('guideImageUrl', newUrl);
-        }}
-        onError={onError}
-      />
-      {!variant.isMinimal && (
-        <div
-          className="absolute -top-4 -right-4 bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] text-white px-4 py-2 rounded-full shadow-lg text-sm font-medium transform rotate-12 cursor-pointer"
-          onClick={() => {
-            const newBadge = prompt('Novo texto do badge:', badgeText);
-            if (newBadge !== null) onChange('badgeText', newBadge);
-          }}
-        >
-          {badgeText}
-        </div>
-      )}
+const GuideSection = memo(({ guideImageUrl, badgeText, variant, onChange, onError }: GuideSectionProps) => {
+  const handleGuideImageClick = useCallback(() => {
+    const newUrl = prompt('Nova URL da imagem do guia:', guideImageUrl);
+    if (newUrl !== null) onChange('guideImageUrl', newUrl);
+  }, [guideImageUrl, onChange]);
+
+  const handleBadgeClick = useCallback(() => {
+    const newBadge = prompt('Novo texto do badge:', badgeText);
+    if (newBadge !== null) onChange('badgeText', newBadge);
+  }, [badgeText, onChange]);
+
+  return (
+    <div className="mt-8">
+      <h3 className={cn('font-semibold text-[#432818] mb-4 text-center', variant.isMinimal ? 'text-base' : 'text-lg')}>Guia de Aplicação do Seu Estilo</h3>
+      <div className="max-w-2xl mx-auto relative">
+        <img
+          src={guideImageUrl}
+          alt="Guia de Estilo"
+          className="w-full h-auto rounded-xl shadow-lg hover:scale-105 transition-transform duration-300 cursor-pointer"
+          onClick={handleGuideImageClick}
+          onError={onError}
+        />
+        {!variant.isMinimal && (
+          <div
+            className="absolute -top-4 -right-4 bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] text-white px-4 py-2 rounded-full shadow-lg text-sm font-medium transform rotate-12 cursor-pointer"
+            onClick={handleBadgeClick}
+          >
+            {badgeText}
+          </div>
+        )}
+      </div>
     </div>
-  </div>
-);
+  );
+});
+GuideSection.displayName = 'GuideSection';
 
 interface TipsSectionProps {
   styleLabel: string;
@@ -396,9 +416,29 @@ const ResultHeaderInlineBlock = ({
     ? description
     : ((styleInfo as any)?.description || description || 'Descrição não disponível');
 
-  const handlePropertyChange = (key: string, value: any) => {
+  const handlePropertyChange = useCallback((key: string, value: any) => {
     if (onPropertyChange) onPropertyChange(key, value);
-  };
+  }, [onPropertyChange]);
+
+  const handleImageClick = useCallback(() => {
+    const newUrl = prompt('Nova URL da imagem:', effectiveImageUrl);
+    if (newUrl !== null) handlePropertyChange('imageUrl', newUrl);
+  }, [effectiveImageUrl, handlePropertyChange]);
+
+  const handleImageError = useCallback((e: any) => {
+    if (!imageError) {
+      setImageError(true);
+      try { (e.currentTarget as HTMLImageElement).src = safePlaceholder(300, 400, 'Imagem indisponível'); } catch { }
+    }
+  }, [imageError]);
+
+  const handleGuideImageError = useCallback((e: any) => {
+    if (!guideImageError) {
+      setGuideImageError(true);
+      try { (e.currentTarget as HTMLImageElement).src = safePlaceholder(600, 400, 'Guia indisponível'); } catch { }
+    }
+  }, [guideImageError]);
+
   const alignClass = textAlign === 'left' ? 'text-left' : textAlign === 'right' ? 'text-right' : 'text-center';
 
   return (
@@ -440,16 +480,8 @@ const ResultHeaderInlineBlock = ({
           <StyleImage
             imageUrl={imageError ? safePlaceholder(300, 400, 'Imagem indisponível') : effectiveImageUrl}
             label={variant.isMinimal ? undefined : 'Seu Estilo'}
-            onClick={() => {
-              const newUrl = prompt('Nova URL da imagem:', effectiveImageUrl);
-              if (newUrl !== null) handlePropertyChange('imageUrl', newUrl);
-            }}
-            onError={(e) => {
-              if (!imageError) {
-                setImageError(true);
-                try { (e.currentTarget as HTMLImageElement).src = safePlaceholder(300, 400, 'Imagem indisponível'); } catch { }
-              }
-            }}
+            onClick={handleImageClick}
+            onError={handleImageError}
             width={imageWidth}
             height={imageHeight}
             variant={variant}
@@ -468,12 +500,7 @@ const ResultHeaderInlineBlock = ({
             badgeText={badgeText}
             variant={variant}
             onChange={handlePropertyChange}
-            onError={(e) => {
-              if (!guideImageError) {
-                setGuideImageError(true);
-                try { (e.currentTarget as HTMLImageElement).src = safePlaceholder(600, 400, 'Guia indisponível'); } catch { }
-              }
-            }}
+            onError={handleGuideImageError}
           />
         )}
         {showSpecialTips && (
