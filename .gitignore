@@ -70,4 +70,4 @@ jspm_packages/
 tmp/
 
 # Test scripts and diagnostics
-test-diagnostics.mjs
+test-diagnostics.mjs*.bak
