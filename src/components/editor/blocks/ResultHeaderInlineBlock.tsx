@@ -304,43 +304,10 @@ const ResultHeaderInlineBlock = ({
   className = '',
   isSelected = false
 }: ResultHeaderInlineBlockProps) => {
+  // ⚠️ TODOS os hooks DEVEM vir ANTES de qualquer early return
   const [imageError, setImageError] = useState(false);
   const [guideImageError, setGuideImageError] = useState(false);
   const { primaryStyle, secondaryStyles, hasResult, error, retry } = useQuizResult();
-
-  if (error) {
-    return (
-      <div className={cn("text-center p-8", className)}>
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
-          <div className="text-yellow-800 mb-2">⚠️ Problema no resultado</div>
-          <p className="text-sm text-yellow-700 mb-4">{error}</p>
-          <button
-            onClick={retry}
-            className="border border-yellow-300 text-yellow-800 hover:bg-yellow-100 px-4 py-2 rounded"
-          >
-            🔄 Tentar Novamente
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  if (!hasResult || !primaryStyle) {
-    return (
-      <div className={cn("text-center p-8", className)}>
-        <div className="bg-gray-50 border border-gray-200 rounded-lg p-6">
-          <div className="text-gray-800 mb-2">📋 Resultado não disponível</div>
-          <p className="text-sm text-gray-600 mb-4">Nenhum resultado foi calculado ainda.</p>
-          <button
-            onClick={retry}
-            className="border border-gray-300 text-gray-800 hover:bg-gray-100 px-4 py-2 rounded"
-          >
-            🔄 Calcular Resultado
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   // Capturar nome de forma robusta (incluindo UnifiedQuizStorage) e sanitizar para exibição
   const storedName = getBestUserName(block) || '';
@@ -362,14 +329,14 @@ const ResultHeaderInlineBlock = ({
     guideImageUrl: rawGuideImageUrl,
     styleGuideImageUrl: rawStyleGuideImageUrl,
     showBothImages = true,
-    showSpecialTips = true, // ✅ Nova propriedade para mostrar dicas especiais
+    showSpecialTips = true,
     imageWidth,
     imageHeight,
     progressColor = '#B89B7A',
     badgeText = 'Exclusivo',
     backgroundColor,
     textAlign = 'center',
-    mobileVariant = 'stack', // variantes: stack | compact | minimal
+    mobileVariant = 'stack',
   } = block?.properties || {};
 
   // Compatibilidade: aceitar styleGuideImageUrl do template
@@ -386,7 +353,7 @@ const ResultHeaderInlineBlock = ({
     resultStyle: styleLabel || '',
   }), safeDeps);
 
-  // Percentual exibido: usa o calculado (primaryStyle.percentage) se não houver override explícito na prop
+  // Percentual exibido
   const computedPercentage = typeof percentageProp === 'number' && !Number.isNaN(percentageProp)
     ? percentageProp
     : (typeof (primaryStyle as any)?.percentage === 'number' ? (primaryStyle as any).percentage : 0);
@@ -396,7 +363,6 @@ const ResultHeaderInlineBlock = ({
     computedPercentage || 0
   );
 
-  // Evitar exibir 0% quando já existe um estilo definido mas sem dados numéricos suficientes
   const displayPercentage = (effectivePercentage && effectivePercentage > 0)
     ? effectivePercentage
     : 0;
@@ -440,6 +406,41 @@ const ResultHeaderInlineBlock = ({
   }, [guideImageError]);
 
   const alignClass = textAlign === 'left' ? 'text-left' : textAlign === 'right' ? 'text-right' : 'text-center';
+
+  // ✅ AGORA sim, após TODOS os hooks, podemos ter early returns
+  if (error) {
+    return (
+      <div className={cn("text-center p-8", className)}>
+        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+          <div className="text-yellow-800 mb-2">⚠️ Problema no resultado</div>
+          <p className="text-sm text-yellow-700 mb-4">{error}</p>
+          <button
+            onClick={retry}
+            className="border border-yellow-300 text-yellow-800 hover:bg-yellow-100 px-4 py-2 rounded"
+          >
+            🔄 Tentar Novamente
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!hasResult || !primaryStyle) {
+    return (
+      <div className={cn("text-center p-8", className)}>
+        <div className="bg-gray-50 border border-gray-200 rounded-lg p-6">
+          <div className="text-gray-800 mb-2">📋 Resultado não disponível</div>
+          <p className="text-sm text-gray-600 mb-4">Nenhum resultado foi calculado ainda.</p>
+          <button
+            onClick={retry}
+            className="border border-gray-300 text-gray-800 hover:bg-gray-100 px-4 py-2 rounded"
+          >
+            🔄 Calcular Resultado
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
