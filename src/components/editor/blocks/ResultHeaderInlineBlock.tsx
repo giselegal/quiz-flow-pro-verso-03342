@@ -140,7 +140,6 @@ const ProgressSection = ({ title, subtitle, vars, displayPercentage, progressCol
 
 interface StyleImageProps {
   imageUrl: string;
-  fallbackText: string;
   label?: string;
   onClick?: () => void;
   onError: (e: any) => void;
@@ -148,7 +147,7 @@ interface StyleImageProps {
   height?: string | number;
   variant: VariantFlags;
 }
-const StyleImage = ({ imageUrl, fallbackText, label, onClick, onError, width, height, variant }: StyleImageProps) => (
+const StyleImage = ({ imageUrl, label, onClick, onError, width, height, variant }: StyleImageProps) => (
   <div className="text-center">
     {label && <h3 className={cn('font-semibold text-[#432818] mb-3', variant.isMinimal ? 'text-base' : 'text-lg')}>{label}</h3>}
     <div className="relative">
@@ -279,16 +278,16 @@ interface ResultHeaderInlineBlockProps extends BlockComponentProps {
   isSelected?: boolean;
 }
 
-const ResultHeaderInlineBlock = ({ 
-  block, 
-  onPropertyChange, 
-  className = '', 
-  isSelected = false 
+const ResultHeaderInlineBlock = ({
+  block,
+  onPropertyChange,
+  className = '',
+  isSelected = false
 }: ResultHeaderInlineBlockProps) => {
   const [imageError, setImageError] = useState(false);
   const [guideImageError, setGuideImageError] = useState(false);
-  const { primaryStyle, secondaryStyles, hasResult, error, retry } = useQuizResult(block);
-  
+  const { primaryStyle, secondaryStyles, hasResult, error, retry } = useQuizResult();
+
   if (error) {
     return (
       <div className={cn("text-center p-8", className)}>
@@ -350,18 +349,6 @@ const ResultHeaderInlineBlock = ({
     badgeText = 'Exclusivo',
     backgroundColor,
     textAlign = 'center',
-    // Props legadas (compat): renderizam uma faixa de header simples acima do conteúdo rico
-    logoUrl,
-    logoAlt = 'Logo',
-    logoHeight = 40,
-    logoWidth = 'auto',
-    showUserName = false,
-    borderColor,
-    showBorder = false,
-    containerWidth = 'full', // 'small' | 'medium' | 'large' | 'full'
-    spacing = 'normal', // 'small' | 'normal' | 'large'
-    marginTop = 0,
-    marginBottom = 0,
     mobileVariant = 'stack', // variantes: stack | compact | minimal
   } = block?.properties || {};
 
@@ -387,6 +374,7 @@ const ResultHeaderInlineBlock = ({
     secondaryStyles || [] as any[],
     computedPercentage || 0
   );
+
   // Evitar exibir 0% quando já existe um estilo definido mas sem dados numéricos suficientes
   const displayPercentage = (effectivePercentage && effectivePercentage > 0)
     ? effectivePercentage
@@ -449,7 +437,6 @@ const ResultHeaderInlineBlock = ({
         <div className={cn('grid items-start', variant.isMinimal ? 'gap-6' : 'gap-8', 'md:grid-cols-2')}>
           <StyleImage
             imageUrl={imageError ? safePlaceholder(300, 400, 'Imagem indisponível') : effectiveImageUrl}
-            fallbackText="Imagem indisponível"
             label={variant.isMinimal ? undefined : 'Seu Estilo'}
             onClick={() => {
               const newUrl = prompt('Nova URL da imagem:', effectiveImageUrl);
