@@ -193,14 +193,14 @@ export const ComponentsSidebar: React.FC = () => {
   // Filtrar componentes baseado na etapa ativa
   const getFilteredCategories = () => {
     const isStep20 = activeStageId === 'step-20' || activeStageId === 'step20' || activeStageId?.includes('20');
-    
+
     if (isStep20) {
       // Na etapa 20, mostrar apenas componentes relevantes
-      return blockCategories.filter(category => 
+      return blockCategories.filter(category =>
         category.title === 'Resultado Step 20' || category.title === 'Conteúdo'
       );
     }
-    
+
     // Em outras etapas, mostrar todos exceto Step 20
     return blockCategories.filter(category => category.title !== 'Resultado Step 20');
   };
@@ -215,7 +215,7 @@ export const ComponentsSidebar: React.FC = () => {
           <div className="space-y-4 p-4">
             {/* Componentes Step 20 - Especiais */}
             <Step20ComponentsButton />
-            
+
             {/* Indicador da etapa atual */}
             {activeStageId === 'step-20' && (
               <div className="bg-gradient-to-r from-primary/10 to-secondary/10 p-3 rounded-lg mb-4">
@@ -223,7 +223,7 @@ export const ComponentsSidebar: React.FC = () => {
                 <div className="text-xs text-muted-foreground">Componentes para página de resultado</div>
               </div>
             )}
-            
+
             {getFilteredCategories().map((category, index) => (
               <div key={category.title} className="space-y-2">
                 {index > 0 && <Separator />}

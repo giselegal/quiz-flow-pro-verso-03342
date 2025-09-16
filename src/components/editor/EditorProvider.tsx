@@ -119,14 +119,14 @@ const mapSupabaseRecordToBlock = (c: any): Block => {
 
   // Garantir que ID é sempre string válida
   const id = c.id ? String(c.id) : `fallback-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-  
+
   // Garantir que type é sempre BlockType válido
   const type = c.component_type_key || c.type;
   const validType = (typeof type === 'string' && type.length > 0) ? type as BlockType : 'text' as BlockType;
-  
+
   // Garantir que order é número
-  const order = Number.isFinite(c.order_index) ? c.order_index : 
-                Number.isFinite(c.order) ? c.order : 0;
+  const order = Number.isFinite(c.order_index) ? c.order_index :
+    Number.isFinite(c.order) ? c.order : 0;
 
   // Validar properties e content como objetos
   const properties = (c.properties && typeof c.properties === 'object') ? c.properties : {};

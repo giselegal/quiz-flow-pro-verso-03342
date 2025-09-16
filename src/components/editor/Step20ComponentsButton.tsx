@@ -63,8 +63,8 @@ export const Step20ComponentsButton: React.FC = () => {
 
   // Detectar se estamos na etapa 20
   const isStep20 = state.currentStep === 20 ||
-                   window.location.pathname.includes('step20') ||
-                   window.location.pathname.includes('step-20');
+    window.location.pathname.includes('step20') ||
+    window.location.pathname.includes('step-20');
 
   // Só mostrar na etapa 20
   if (!isStep20) {
