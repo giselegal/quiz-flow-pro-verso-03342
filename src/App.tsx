@@ -13,8 +13,8 @@ const ComQueRoupaEuVouPage = lazy(() => import('./pages/ComQueRoupaEuVouPage'));
 // 🎯 PÁGINAS ESSENCIAIS - SEM CONFLITOS
 const Home = lazy(() => import('./pages/Home'));
 const AuthPage = lazy(() => import('./pages/AuthPage'));
-// 🏗️ EDITOR PRINCIPAL PROFISSIONAL - DIRETO
-const UniversalStepEditor = lazy(() => import('./components/editor/universal/UniversalStepEditor'));
+// 🏗️ EDITOR PRINCIPAL - EditorPro com fundo preto e 4 colunas
+const EditorPro = lazy(() => import('./legacy/editor/EditorPro'));
 // 🚀 NOVO: Editor Visual Headless
 const HeadlessVisualEditor = lazy(() => import('./core/editor/HeadlessVisualEditor'));
 const DashboardPage = lazy(() => import('./pages/admin/DashboardPage'));
@@ -130,26 +130,20 @@ function App() {
                 );
               }} />
 
-              {/* 🎯 EDITOR PRINCIPAL - UniversalStepEditor DIRETO */}
+              {/* 🎯 EDITOR PRINCIPAL - EditorPro com fundo preto e 4 colunas */}
               <Route path="/editor/:funnelId?" component={({ params }: { params: { funnelId?: string } }) => {
-                console.log('🔗 Rota /editor com UniversalStepEditor ativada:', params);
+                console.log('🔗 Rota /editor com EditorPro ativada:', params);
                 return (
-                  <div className="h-screen w-screen bg-gray-900">
+                  <div className="h-screen w-screen">
                     <Suspense fallback={
                       <div className="flex items-center justify-center min-h-screen bg-gray-900">
                         <div className="text-center">
                           <div className="w-16 h-16 mx-auto mb-4 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
-                          <p className="text-white text-lg font-medium">Carregando Editor Completo...</p>
+                          <p className="text-white text-lg font-medium">Carregando Editor Profissional...</p>
                         </div>
                       </div>
                     }>
-                      <UniversalStepEditor
-                        stepId={`step-1`}
-                        stepNumber={1}
-                        funnelId={params?.funnelId || 'quiz-21-steps-complete'}
-                        showNavigation={true}
-                        readOnly={false}
-                      />
+                      <EditorPro />
                     </Suspense>
                   </div>
                 );
