@@ -1,211 +1,142 @@
-/**
- * 🛡️ ERROR BOUNDARY - Captura e recuperação de erros
- * 
- * Boundary otimizado para capturar erros runtime do editor
- * com sistema de retry automático e fallback graceful.
- */
-
-import React, { Component, ErrorInfo, ReactNode } from 'react';
-import { Button } from '@/components/ui/button';
+import React, { Component, ReactNode } from 'react';
 import { AlertTriangle, RefreshCw, Bug } from 'lucide-react';
+import { Button } from '../ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 
-interface Props {
+interface ErrorBoundaryProps {
   children: ReactNode;
-  fallbackComponent?: React.ComponentType<{ error: Error; retry: () => void }>;
-  onError?: (error: Error, errorInfo: ErrorInfo) => void;
+  fallback?: ReactNode;
+  onError?: (error: Error, errorInfo: React.ErrorInfo) => void;
 }
 
-interface State {
+interface ErrorBoundaryState {
   hasError: boolean;
   error: Error | null;
-  errorInfo: ErrorInfo | null;
-  retryCount: number;
+  errorInfo: React.ErrorInfo | null;
 }
 
-export class ErrorBoundary extends Component<Props, State> {
-  private maxRetries = 3;
-  private retryTimeout: NodeJS.Timeout | null = null;
-
-  constructor(props: Props) {
+/**
+ * 🛡️ ERROR BOUNDARY: Captura erros de renderização
+ *
+ * Funcionalidades:
+ * ✅ Captura erros de componentes filhos
+ * ✅ UI de fallback amigável
+ * ✅ Botão de recuperação
+ * ✅ Logging detalhado para debug
+ * ✅ Fallback customizável
+ */
+export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = {
       hasError: false,
       error: null,
       errorInfo: null,
-      retryCount: 0,
     };
   }
 
-  static getDerivedStateFromError(error: Error): Partial<State> {
+  static getDerivedStateFromError(error: Error): Partial<ErrorBoundaryState> {
     return {
       hasError: true,
       error,
     };
   }
 
-  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('🚨 Editor Error Boundary captured:', error, errorInfo);
-    
-    // Log do erro para debugging
-    this.logError(error, errorInfo);
-    
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    console.group('🚨 ErrorBoundary - Erro Capturado');
+    console.error('Error:', error);
+    console.error('Error Info:', errorInfo);
+    console.error('Component Stack:', errorInfo.componentStack);
+    console.groupEnd();
+
     this.setState({
       error,
       errorInfo,
     });
 
-    // Callback personalizado
+    // Callback personalizado para logging
     this.props.onError?.(error, errorInfo);
-
-    // Auto-retry para erros recuperáveis
-    this.scheduleAutoRetry(error);
   }
 
-  private logError = (error: Error, errorInfo: ErrorInfo) => {
-    const errorLog = {
-      timestamp: new Date().toISOString(),
-      error: {
-        name: error.name,
-        message: error.message,
-        stack: error.stack,
-      },
-      componentStack: errorInfo.componentStack,
-      location: window.location.href,
-      userAgent: navigator.userAgent,
-      retryCount: this.state.retryCount,
-    };
-
-    // Salvar no localStorage para debugging
-    try {
-      const existingLogs = JSON.parse(localStorage.getItem('editor-error-logs') || '[]');
-      existingLogs.push(errorLog);
-      // Manter apenas os últimos 10 logs
-      const recentLogs = existingLogs.slice(-10);
-      localStorage.setItem('editor-error-logs', JSON.stringify(recentLogs));
-    } catch (e) {
-      console.warn('Failed to save error log:', e);
-    }
-  };
-
-  private scheduleAutoRetry = (error: Error) => {
-    // Auto-retry apenas para erros conhecidos e recuperáveis
-    const recoverableErrors = [
-      'ChunkLoadError',
-      'Loading chunk',
-      'Loading CSS chunk',
-      'Network Error',
-      'Failed to fetch'
-    ];
-
-    const isRecoverable = recoverableErrors.some(pattern => 
-      error.message.includes(pattern) || error.name.includes(pattern)
-    );
-
-    if (isRecoverable && this.state.retryCount < this.maxRetries) {
-      const retryDelay = Math.min(1000 * Math.pow(2, this.state.retryCount), 5000);
-      
-      console.log(`🔄 Auto-retry scheduled in ${retryDelay}ms (attempt ${this.state.retryCount + 1})`);
-      
-      this.retryTimeout = setTimeout(() => {
-        this.handleRetry();
-      }, retryDelay);
-    }
-  };
-
-  private handleRetry = () => {
-    if (this.retryTimeout) {
-      clearTimeout(this.retryTimeout);
-      this.retryTimeout = null;
-    }
-
-    this.setState(prevState => ({
+  handleReset = () => {
+    this.setState({
       hasError: false,
       error: null,
       errorInfo: null,
-      retryCount: prevState.retryCount + 1,
-    }));
+    });
   };
-
-  private handleManualRetry = () => {
-    this.handleRetry();
-  };
-
-  private handleReload = () => {
-    window.location.reload();
-  };
-
-  componentWillUnmount() {
-    if (this.retryTimeout) {
-      clearTimeout(this.retryTimeout);
-    }
-  }
 
   render() {
     if (this.state.hasError) {
-      // Usar componente customizado se fornecido
-      if (this.props.fallbackComponent) {
-        const FallbackComponent = this.props.fallbackComponent;
-        return (
-          <FallbackComponent 
-            error={this.state.error!} 
-            retry={this.handleManualRetry}
-          />
-        );
+      // Fallback customizado se fornecido
+      if (this.props.fallback) {
+        return this.props.fallback;
       }
 
-      // UI padrão de erro
+      // UI de erro padrão
       return (
-        <div className="min-h-[400px] flex items-center justify-center p-8">
-          <div className="max-w-md w-full bg-background border border-border rounded-lg p-6 text-center space-y-4">
-            <div className="flex justify-center">
-              <AlertTriangle className="h-12 w-12 text-destructive" />
-            </div>
-            
-            <div>
-              <h2 className="text-lg font-semibold text-foreground mb-2">
-                Algo deu errado no editor
-              </h2>
-              <p className="text-sm text-muted-foreground">
-                {this.state.error?.message || 'Erro inesperado no sistema'}
-              </p>
-            </div>
+        <Card className="border-destructive bg-destructive/5">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-destructive">
+              <AlertTriangle size={20} />
+              Ops! Algo deu errado
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              Ocorreu um erro inesperado ao renderizar este componente.
+            </p>
 
-            <div className="flex flex-col sm:flex-row gap-2 justify-center">
-              <Button 
-                onClick={this.handleManualRetry}
-                size="sm"
-                disabled={this.state.retryCount >= this.maxRetries}
-              >
-                <RefreshCw className="h-4 w-4 mr-2" />
-                Tentar novamente
-              </Button>
-              
-              <Button 
-                onClick={this.handleReload}
-                variant="outline"
-                size="sm"
-              >
-                Recarregar página
-              </Button>
-            </div>
-
-            {process.env.NODE_ENV === 'development' && (
-              <details className="text-left text-xs bg-muted p-3 rounded text-muted-foreground">
-                <summary className="cursor-pointer flex items-center gap-2 mb-2">
-                  <Bug className="h-3 w-3" />
-                  Detalhes do erro (dev)
+            {process.env.NODE_ENV === 'development' && this.state.error && (
+              <details className="bg-muted p-3 rounded-md text-xs">
+                <summary className="cursor-pointer font-mono font-medium mb-2 flex items-center gap-2">
+                  <Bug size={14} />
+                  Detalhes do erro (desenvolvimento)
                 </summary>
-                <pre className="whitespace-pre-wrap break-words">
-                  {this.state.error?.stack}
-                </pre>
+                <div className="space-y-2">
+                  <div>
+                    <strong>Erro:</strong>
+                    <pre className="mt-1 overflow-auto">{this.state.error.message}</pre>
+                  </div>
+                  <div>
+                    <strong>Stack:</strong>
+                    <pre className="mt-1 overflow-auto">{this.state.error.stack}</pre>
+                  </div>
+                  {this.state.errorInfo?.componentStack && (
+                    <div>
+                      <strong>Component Stack:</strong>
+                      <pre className="mt-1 overflow-auto">
+                        {this.state.errorInfo.componentStack}
+                      </pre>
+                    </div>
+                  )}
+                </div>
               </details>
             )}
 
-            <p className="text-xs text-muted-foreground">
-              Tentativas: {this.state.retryCount}/{this.maxRetries}
-            </p>
-          </div>
-        </div>
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={this.handleReset}
+                className="flex items-center gap-2"
+              >
+                <RefreshCw size={14} />
+                Tentar Novamente
+              </Button>
+
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => window.location.reload()}
+                className="flex items-center gap-2"
+              >
+                <RefreshCw size={14} />
+                Recarregar Página
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       );
     }
 
@@ -213,7 +144,23 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 }
 
-// Export alias for backward compatibility
-export const EditorErrorBoundary = ErrorBoundary;
+/**
+ * 🔧 WRAPPER FUNCIONAL: Para uso em componentes funcionais
+ */
+export const withErrorBoundary = <P extends object>(
+  Component: React.ComponentType<P>,
+  fallback?: ReactNode,
+  onError?: (error: Error, errorInfo: React.ErrorInfo) => void
+) => {
+  const WrappedComponent = React.forwardRef<any, P>((props, ref) => (
+    <ErrorBoundary fallback={fallback} onError={onError}>
+      <Component {...(props as any)} ref={ref} />
+    </ErrorBoundary>
+  ));
+
+  WrappedComponent.displayName = `withErrorBoundary(${Component.displayName || Component.name})`;
+
+  return WrappedComponent;
+};
 
 export default ErrorBoundary;
