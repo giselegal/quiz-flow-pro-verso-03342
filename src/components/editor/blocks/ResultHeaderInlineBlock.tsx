@@ -331,7 +331,7 @@ const ResultHeaderInlineBlock = ({
       .split(/\s+/)
       .map(w => (w ? w.charAt(0).toUpperCase() + w.slice(1) : w))
       .join(' ');
-  }, [storedName]);
+  }, [storedName || '']);
 
   const {
     title = 'Seu Estilo Predominante',
@@ -363,7 +363,7 @@ const ResultHeaderInlineBlock = ({
   const vars = useMemo(() => ({
     userName: displayName || '',
     resultStyle: styleLabel || '',
-  }), [displayName, styleLabel]);
+  }), [displayName || '', styleLabel || '']);
 
   // Percentual exibido: usa o calculado (primaryStyle.percentage) se não houver override explícito na prop
   const computedPercentage = typeof percentageProp === 'number' && !Number.isNaN(percentageProp)
@@ -384,7 +384,7 @@ const ResultHeaderInlineBlock = ({
   const variant: VariantFlags = useMemo(() => ({
     isCompact: mobileVariant === 'compact',
     isMinimal: mobileVariant === 'minimal'
-  }), [mobileVariant]);
+  }), [mobileVariant || 'stack']);
 
   // Defaults vindos de configuração de estilo
   const styleInfo = getStyleConfig(styleLabel) || {};
