@@ -70,8 +70,7 @@ const ResultHeaderModule: React.FC<ResultHeaderModuleProps> = ({
   borderRadius = '0px',
   padding = '16px',
   className = '',
-  isSelected = false,
-  onPropertyChange // eslint-disable-line @typescript-eslint/no-unused-vars
+  isSelected = false
 }) => {
   const { userName, isLoading } = useQuizData();
   

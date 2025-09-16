@@ -34,16 +34,14 @@ const QuizDataContext = createContext<QuizDataContextType | null>(null);
 
 interface QuizDataProviderProps {
   children: ReactNode;
-  block?: any; // Para acessar propriedades do bloco
+  block?: any;
   fallbackUserName?: string;
-  previewMode?: boolean; // eslint-disable-line @typescript-eslint/no-unused-vars
 }
 
 export const QuizDataProvider: React.FC<QuizDataProviderProps> = ({
   children,
   block,
-  fallbackUserName = 'Participante',
-  previewMode = false // eslint-disable-line @typescript-eslint/no-unused-vars
+  fallbackUserName = 'Participante'
 }) => {
   const { primaryStyle, secondaryStyles, isLoading, error, retry, hasResult } = useQuizResult();
 
